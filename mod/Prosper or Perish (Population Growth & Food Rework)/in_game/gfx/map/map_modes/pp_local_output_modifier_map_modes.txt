@@ -1,0 +1,1824 @@
+﻿# Map modes for local good output modifiers (Geography category).
+# Displays the aggregated local_<good>_output_modifier per location.
+# Only goods modified in goods_output_modifiers.xlsx (vegetation, topography, climate, water).
+# Red = -50%, Green = +150%. Values are additive percentages (0.1 = +10%).
+# Geography `index` is a UI sub-group (vanilla uses only 0–3); PP local-output modes all use index = 2 (terrain/climate bucket). Values >3 are ignored in-game.
+
+@factor_add = 0.5
+@factor_divide = 2.0
+@zoom_step_near = 2
+@data_gradient_alpha_inside = 1
+@data_gradient_alpha_outside = 1
+@data_gradient_width = 0.25
+@data_gradient_color_mult = 0.9
+@data_edge_width = 0
+@data_edge_sharpness = 0.01
+@data_edge_alpha = 0
+@data_edge_color_mult = 0
+@data_before_lighting_blend = 0.5
+@data_after_lighting_blend = 0.5
+
+pp_local_fruit_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_fruit_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_FRUIT_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_FRUIT_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+pp_local_fish_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_fish_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_FISH_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_FISH_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+pp_local_wool_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_wool_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WOOL_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_WOOL_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+pp_local_livestock_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_livestock_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_LIVESTOCK_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_LIVESTOCK_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+pp_local_millet_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_millet_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MILLET_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_MILLET_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+pp_local_wheat_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_wheat_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+pp_local_maize_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_maize_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MAIZE_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_MAIZE_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+pp_local_rice_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_rice_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_RICE_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_RICE_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+pp_local_legumes_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_legumes_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_LEGUMES_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_LEGUMES_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+pp_local_potato_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_potato_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_POTATO_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_POTATO_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+pp_local_olives_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_olives_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_OLIVES_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_OLIVES_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+pp_local_wild_game_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_wild_game_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WILD_GAME_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_WILD_GAME_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+pp_local_fur_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_fur_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }  # grey/neutral for non-ownable (water, etc.)
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_FUR_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_FUR_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_beeswax_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_beeswax_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_BEESWAX_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_BEESWAX_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_fiber_crops_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_fiber_crops_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_FIBER_CROPS_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_FIBER_CROPS_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_cotton_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_cotton_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COTTON_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_COTTON_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_sugar_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_sugar_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SUGAR_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_SUGAR_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_tobacco_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_tobacco_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_TOBACCO_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_TOBACCO_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_cocoa_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_cocoa_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COCOA_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_COCOA_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_tea_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_tea_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_TEA_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_TEA_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_coffee_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_coffee_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COFFEE_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_COFFEE_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_silk_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_silk_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SILK_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_SILK_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+
+pp_local_incense_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_incense_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_INCENSE_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_INCENSE_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_saffron_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_saffron_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SAFFRON_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_SAFFRON_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_pepper_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_pepper_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_PEPPER_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_PEPPER_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_cloves_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_cloves_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CLOVES_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_CLOVES_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_chili_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_chili_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CHILI_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_CHILI_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_horses_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_horses_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_HORSES_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_HORSES_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_dyes_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_dyes_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_DYES_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_DYES_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_elephants_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_elephants_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_ELEPHANTS_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_ELEPHANTS_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_ivory_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_ivory_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_IVORY_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_IVORY_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_medicaments_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_medicaments_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MEDICAMENTS_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_MEDICAMENTS_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+
+pp_local_wine_output_modifier = {
+	map_color = {
+		if = {
+			limit = { is_ownable = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = modifier:local_wine_output_modifier
+					add = @factor_add
+					divide = @factor_divide
+				}
+			}
+		}
+		else = { value = rgb { 128 128 128 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WINE_OUTPUT_MODIFIER" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = {
+			limit = { is_land = yes }
+			value = MAPMODE_PP_LOCAL_WINE_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN
+		}
+		else = {
+			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
+		}
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = geography
+	index = 2
+	allow_allocate_hotkey = no
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+}
+

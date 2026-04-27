@@ -1,0 +1,87 @@
+﻿TRY_INJECT:refused_food_import = {
+	local_monthly_food_modifier = -0.05 # vanilla 0.05
+	local_wheat_output_modifier = -0.05
+	local_rice_output_modifier = -0.05
+	local_millet_output_modifier = -0.05
+	local_maize_output_modifier = -0.05
+	local_legumes_output_modifier = -0.05
+	local_potato_output_modifier = -0.05
+	local_fiber_crops_output_modifier = -0.0125
+}
+
+TRY_INJECT:bountiful_harvest = {
+	local_monthly_food_modifier = -0.25 # vanilla 0.25
+	local_wheat_output_modifier = 0.15
+	local_rice_output_modifier = 0.15
+	local_maize_output_modifier = 0.15
+	local_millet_output_modifier = 0.15
+	local_legumes_output_modifier = 0.12
+	local_potato_output_modifier = 0.12
+	local_fiber_crops_output_modifier = 0.03
+	local_livestock_output_modifier = 0.1
+	local_fruit_output_modifier = 0.1
+	local_olives_output_modifier = 0.08
+	local_beeswax_output_modifier = 0.06
+	local_wool_output_modifier = 0.06
+	local_horses_output_modifier = 0.04
+	local_cotton_output_modifier = 0.08
+	local_sugar_output_modifier = 0.08
+	local_tobacco_output_modifier = 0.08
+	local_cocoa_output_modifier = 0.08
+	local_tea_output_modifier = 0.06
+	local_coffee_output_modifier = 0.06
+	local_silk_output_modifier = 0.06
+	local_incense_output_modifier = 0.05
+	local_saffron_output_modifier = 0.05
+	local_pepper_output_modifier = 0.06
+	local_cloves_output_modifier = 0.06
+	local_chili_output_modifier = 0.06
+}
+
+TRY_INJECT:russian_famine = {
+	local_monthly_food_modifier = 0.75 # vanilla -0.75
+	local_wheat_output_modifier = -0.5
+	local_millet_output_modifier = -0.5
+	local_legumes_output_modifier = -0.45
+	local_potato_output_modifier = -0.4
+	local_fiber_crops_output_modifier = -0.1125
+	local_rice_output_modifier = -0.35
+	local_maize_output_modifier = -0.35
+}
+
+TRY_INJECT:short_harvest_modifier = {
+	local_monthly_food_modifier = 0.5 # vanilla -0.5
+	local_wheat_output_modifier = -0.25
+	local_rice_output_modifier = -0.25
+	local_maize_output_modifier = -0.25
+	local_millet_output_modifier = -0.25
+	local_legumes_output_modifier = -0.22
+	local_potato_output_modifier = -0.22
+	local_fiber_crops_output_modifier = -0.055
+}
+
+TRY_INJECT:recent_white_storm_modifier = {
+	local_monthly_food_modifier = 0.5 # vanilla -0.5
+	local_wheat_output_modifier = -0.3
+	local_millet_output_modifier = -0.25
+	local_fiber_crops_output_modifier = -0.0625
+	local_legumes_output_modifier = -0.2
+	local_fruit_output_modifier = -0.15
+	local_olives_output_modifier = -0.15
+}
+
+TRY_INJECT:expanded_food_production_modifier = {
+	local_monthly_food_modifier = -0.25 # vanilla 0.25
+	local_wheat_output_modifier = 0.1
+	local_rice_output_modifier = 0.1
+	local_maize_output_modifier = 0.08
+	local_millet_output_modifier = 0.08
+	local_legumes_output_modifier = 0.08
+	local_potato_output_modifier = 0.08
+	local_livestock_output_modifier = 0.1
+	local_fiber_crops_output_modifier = 0.015
+	local_horses_output_modifier = 0.035
+	local_fruit_output_modifier = 0.06
+	local_beeswax_output_modifier = 0.04
+	local_wool_output_modifier = 0.05
+}

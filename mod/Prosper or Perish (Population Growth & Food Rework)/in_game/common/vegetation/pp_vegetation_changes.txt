@@ -1,0 +1,237 @@
+﻿# Vegetation Changes
+# These are INJECTS meaning they everything here is ADDED to in_game\common\vegetation\00_default.txt base vegetations
+TRY_INJECT:desert = {
+	location_modifier = {
+		local_population_capacity = -18
+		local_monthly_food_modifier = 0.33
+		local_fish_output_modifier = -0.35
+		local_fruit_output_modifier = -0.35
+		local_fur_output_modifier = -0.35
+		local_legumes_output_modifier = -0.35
+		local_livestock_output_modifier = -0.35
+		local_maize_output_modifier = -0.35
+		local_millet_output_modifier = 0.1
+		local_olives_output_modifier = -0.35
+		local_potato_output_modifier = -0.35
+		local_rice_output_modifier = -0.35
+		local_wheat_output_modifier = -0.35
+		local_wild_game_output_modifier = -0.35
+		local_wool_output_modifier = -0.35
+		local_fiber_crops_output_modifier = -0.0875
+		local_cotton_output_modifier = -0.35
+		local_sugar_output_modifier = -0.35
+		local_tobacco_output_modifier = -0.35
+		local_cocoa_output_modifier = -0.35
+		local_tea_output_modifier = -0.35
+		local_coffee_output_modifier = -0.35
+		local_silk_output_modifier = -0.35
+		local_incense_output_modifier = -0.35
+		local_saffron_output_modifier = -0.35
+		local_pepper_output_modifier = -0.35
+		local_cloves_output_modifier = -0.35
+		local_chili_output_modifier = -0.35
+		local_horses_output_modifier = -0.0625
+	}
+}
+
+TRY_INJECT:sparse = {
+	location_modifier = {
+		local_population_capacity = -23
+		local_fish_output_modifier = -0.2
+		local_fruit_output_modifier = -0.2
+		local_fur_output_modifier = 0.1
+		local_legumes_output_modifier = 0.05
+		local_livestock_output_modifier = 0.15
+		local_maize_output_modifier = 0.1
+		local_millet_output_modifier = 0.2
+		local_olives_output_modifier = 0.1
+		local_potato_output_modifier = 0.1
+		local_rice_output_modifier = -0.2
+		local_wheat_output_modifier = 0.05
+		local_wild_game_output_modifier = 0.05
+		local_wool_output_modifier = 0.1
+		local_fiber_crops_output_modifier = 0.02
+		local_cotton_output_modifier = -0.1
+		local_sugar_output_modifier = -0.15
+		local_tobacco_output_modifier = -0.15
+		local_cocoa_output_modifier = -0.2
+		local_tea_output_modifier = -0.2
+		local_coffee_output_modifier = -0.2
+		local_silk_output_modifier = -0.15
+		local_incense_output_modifier = -0.1
+		local_saffron_output_modifier = -0.1
+		local_pepper_output_modifier = -0.1
+		local_cloves_output_modifier = -0.1
+		local_chili_output_modifier = -0.05
+		local_horses_output_modifier = 0.0175
+	}
+}
+
+TRY_INJECT:grasslands = {
+	location_modifier = {
+		local_population_capacity = 18
+		local_monthly_food_modifier = -0.1
+		local_fruit_output_modifier = 0.1
+		local_legumes_output_modifier = 0.15
+		local_livestock_output_modifier = 0.25
+		local_maize_output_modifier = 0.15
+		local_millet_output_modifier = 0.15
+		local_olives_output_modifier = 0.15
+		local_potato_output_modifier = 0.15
+		local_rice_output_modifier = 0.1
+		local_wheat_output_modifier = 0.2
+		local_wild_game_output_modifier = 0.05
+		local_wool_output_modifier = 0.25
+		local_fiber_crops_output_modifier = 0.045
+		local_cotton_output_modifier = 0.08
+		local_sugar_output_modifier = 0.06
+		local_tobacco_output_modifier = 0.08
+		local_cocoa_output_modifier = 0.05
+		local_tea_output_modifier = 0.05
+		local_coffee_output_modifier = 0.06
+		local_silk_output_modifier = 0.06
+		local_incense_output_modifier = 0.05
+		local_saffron_output_modifier = 0.05
+		local_pepper_output_modifier = 0.06
+		local_cloves_output_modifier = 0.06
+		local_chili_output_modifier = 0.08
+		local_horses_output_modifier = 0.03125
+	}
+}
+
+# Farmland reduced
+TRY_INJECT:farmland = {
+	location_modifier = {
+		local_population_capacity = 5
+		local_monthly_food_modifier = -0.33
+		local_fruit_output_modifier = 0.2
+		local_fur_output_modifier = -0.2
+		local_legumes_output_modifier = 0.25
+		local_livestock_output_modifier = 0.15
+		local_maize_output_modifier = 0.2
+		local_millet_output_modifier = 0.1
+		local_olives_output_modifier = 0.2
+		local_potato_output_modifier = 0.2
+		local_rice_output_modifier = 0.2
+		local_wheat_output_modifier = 0.25
+		local_wild_game_output_modifier = -0.3
+		local_wool_output_modifier = 0.15
+		local_fiber_crops_output_modifier = 0.055
+		local_cotton_output_modifier = 0.1
+		local_sugar_output_modifier = 0.08
+		local_tobacco_output_modifier = 0.1
+		local_cocoa_output_modifier = 0.08
+		local_tea_output_modifier = 0.06
+		local_coffee_output_modifier = 0.08
+		local_silk_output_modifier = 0.08
+		local_incense_output_modifier = 0.06
+		local_saffron_output_modifier = 0.08
+		local_pepper_output_modifier = 0.08
+		local_cloves_output_modifier = 0.08
+		local_chili_output_modifier = 0.1
+		local_horses_output_modifier = 0.025
+	}
+}
+
+# Woods reduced
+TRY_INJECT:woods = {
+	location_modifier = {
+		local_population_capacity = -12
+		local_monthly_food_modifier = -0.1
+		local_beeswax_output_modifier = 0.1
+		local_fruit_output_modifier = 0.1
+		local_fur_output_modifier = 0.15
+		local_legumes_output_modifier = 0.08
+		local_livestock_output_modifier = 0.05
+		local_maize_output_modifier = 0.1
+		local_millet_output_modifier = 0.05
+		local_olives_output_modifier = 0.08
+		local_potato_output_modifier = 0.05
+		local_rice_output_modifier = 0.05
+		local_wheat_output_modifier = 0.05
+		local_wild_game_output_modifier = 0.25
+		local_wool_output_modifier = 0.1
+		local_fiber_crops_output_modifier = 0.0125
+		local_cotton_output_modifier = -0.05
+		local_sugar_output_modifier = -0.08
+		local_tobacco_output_modifier = -0.05
+		local_cocoa_output_modifier = 0.04
+		local_tea_output_modifier = 0.04
+		local_coffee_output_modifier = 0.04
+		local_silk_output_modifier = 0.06
+		local_incense_output_modifier = 0.06
+		local_saffron_output_modifier = 0.04
+		local_pepper_output_modifier = 0.04
+		local_cloves_output_modifier = 0.05
+		local_chili_output_modifier = 0.05
+		local_horses_output_modifier = 0.00875
+	}
+}
+
+# Forest reduced
+TRY_INJECT:forest = {
+	location_modifier = {
+		local_population_capacity = -7
+		local_beeswax_output_modifier = 0.2
+		local_fish_output_modifier = 0.02
+		local_fruit_output_modifier = 0.05
+		local_fur_output_modifier = 0.25
+		local_legumes_output_modifier = 0.05
+		local_livestock_output_modifier = -0.2
+		local_maize_output_modifier = 0.05
+		local_olives_output_modifier = 0.05
+		local_rice_output_modifier = 0.05
+		local_wheat_output_modifier = -0.1
+		local_wild_game_output_modifier = 0.25
+		local_wool_output_modifier = 0.05
+		local_fiber_crops_output_modifier = -0.0125
+		local_cotton_output_modifier = -0.05
+		local_sugar_output_modifier = -0.05
+		local_tobacco_output_modifier = -0.05
+		local_cocoa_output_modifier = 0.04
+		local_tea_output_modifier = 0.05
+		local_coffee_output_modifier = 0.05
+		local_silk_output_modifier = 0.06
+		local_incense_output_modifier = 0.06
+		local_saffron_output_modifier = 0.03
+		local_pepper_output_modifier = 0.04
+		local_cloves_output_modifier = 0.05
+		local_chili_output_modifier = 0.04
+		local_horses_output_modifier = -0.0175
+	}
+}
+
+# Jungle reduced
+TRY_INJECT:jungle = {
+	location_modifier = {
+		local_population_capacity = -38
+		local_monthly_food_modifier = -0.1
+		local_fish_output_modifier = 0.02
+		local_fruit_output_modifier = 0.1
+		local_fur_output_modifier = -0.35
+		local_legumes_output_modifier = 0.05
+		local_livestock_output_modifier = -0.35
+		local_maize_output_modifier = -0.3
+		local_millet_output_modifier = -0.35
+		local_olives_output_modifier = -0.35
+		local_potato_output_modifier = -0.35
+		local_rice_output_modifier = 0.15
+		local_wheat_output_modifier = -0.35
+		local_wild_game_output_modifier = 0.15
+		local_wool_output_modifier = -0.35
+		local_fiber_crops_output_modifier = -0.05
+		local_cotton_output_modifier = 0.08
+		local_sugar_output_modifier = 0.1
+		local_tobacco_output_modifier = 0.06
+		local_cocoa_output_modifier = 0.1
+		local_tea_output_modifier = 0.06
+		local_coffee_output_modifier = 0.08
+		local_silk_output_modifier = 0.04
+		local_incense_output_modifier = 0.05
+		local_saffron_output_modifier = 0.02
+		local_pepper_output_modifier = 0.08
+		local_cloves_output_modifier = 0.08
+		local_chili_output_modifier = 0.08
+		local_horses_output_modifier = -0.0525
+	}
+}

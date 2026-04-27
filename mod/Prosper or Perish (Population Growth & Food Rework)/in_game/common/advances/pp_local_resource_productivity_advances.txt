@@ -1,0 +1,8 @@
+﻿# Massive incentive to create industry in actual province where raw good is produced
+# added # before # now
+TRY_INJECT:rgo_logistics_mil_choice = {
+	raw_material_in_province_impact = 0.025
+}
+TRY_INJECT:rgo_logistics_discovery = {
+	raw_material_in_province_impact = 0.025
+}

@@ -1,0 +1,36 @@
+﻿# Agricultural cultivation: replace global_monthly_food_modifier with per-good output bonuses
+REPLACE:agricultural_cultivation = {
+	age = age_1_traditions
+	country_modifier = {
+		monthly_towards_serfdom = societal_value_monthly_move
+		global_wheat_output_modifier = 0.075
+		global_rice_output_modifier = 0.075
+		global_millet_output_modifier = 0.075
+		global_maize_output_modifier = 0.075
+		global_legumes_output_modifier = 0.075
+		global_fruit_output_modifier = 0.075
+		global_olives_output_modifier = 0.075
+		global_potato_output_modifier = 0.075
+		global_livestock_output_modifier = 0.075
+		global_beeswax_output_modifier = 0.075
+		global_wool_output_modifier = 0.075
+		global_cotton_output_modifier = 0.075
+		global_sugar_output_modifier = 0.075
+		global_tobacco_output_modifier = 0.075
+		global_horses_output_modifier = 0.01875
+		global_silk_output_modifier = 0.075
+		global_incense_output_modifier = 0.075
+		global_tea_output_modifier = 0.075
+		global_cocoa_output_modifier = 0.075
+		global_coffee_output_modifier = 0.075
+		global_fiber_crops_output_modifier = 0.01875
+		global_saffron_output_modifier = 0.075
+		global_pepper_output_modifier = 0.075
+		global_cloves_output_modifier = 0.075
+		global_chili_output_modifier = 0.075
+		global_fish_output_modifier = 0.00
+		global_wild_game_output_modifier = 0.00
+		global_fur_output_modifier = 0.00
+	}
+	years = 2
+}

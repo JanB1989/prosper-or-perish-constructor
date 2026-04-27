@@ -1,0 +1,74 @@
+﻿# Map mode: RGO level per location (heatmap).
+# Uses rgo_workers via a named script_value (pp_rgo_level_for_map).
+
+@pp_rgo_level_cap = 20
+
+@zoom_step_near = 2
+@data_gradient_alpha_inside = 1
+@data_gradient_alpha_outside = 1
+@data_gradient_width = 0.25
+@data_gradient_color_mult = 0.9
+@data_edge_width = 0
+@data_edge_sharpness = 0.01
+@data_edge_alpha = 0
+@data_edge_color_mult = 0
+@data_before_lighting_blend = 0.5
+@data_after_lighting_blend = 0.5
+
+pp_rgo_level = {
+	map_color = {
+		if = {
+			limit = { is_ownable = no }
+			value = rgb { 128 128 128 }
+		}
+		else_if = {
+			limit = { has_owner = yes }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = pp_rgo_level_for_map
+					divide = @pp_rgo_level_cap
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else = {
+			value = rgb { 128 128 128 }
+		}
+	}
+	legend_key = { desc = "MAPMODE_PP_RGO_LEVEL" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = { limit = { is_land = yes } value = MAPMODE_PP_RGO_LEVEL_TT_LAND }
+		else = { value = MAPMODE_PP_RGO_LEVEL_TT_WATER }
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = economy
+	index = 1
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+	color_refresh_counters = { ProductionList LocationDevelopmentChanged }
+	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }
+}

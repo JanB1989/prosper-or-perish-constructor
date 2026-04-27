@@ -1,0 +1,9 @@
+﻿REPLACE:trade_vs_tax = {
+	game_data = {
+		category = country
+	}
+	global_burghers_estate_power = 1.0
+	monthly_towards_capital_economy = societal_value_monthly_move
+	estate_enrichment = 0.1
+	# global_trade_center_power = 0.05
+}

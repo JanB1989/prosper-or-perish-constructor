@@ -1,0 +1,258 @@
+﻿# I want prosperity and devastation to be more sticky in general
+# ADVANCES
+TRY_INJECT:recovery_efforts = {
+	global_devastation_recovery = -0.00475
+}
+TRY_INJECT:mother_of_russian_cities = {
+	global_devastation_recovery = -0.004
+}
+TRY_INJECT:wake_of_the_mongol_horde = {
+	global_devastation_recovery = -0.004
+}
+TRY_INJECT:hidden_cities = {
+	global_devastation_recovery = -0.004
+}
+TRY_INJECT:four_noble_truths = {
+	global_devastation_recovery = -0.004
+}
+TRY_INJECT:thrive_under_persecution = {
+	global_devastation_recovery = -0.004
+}
+TRY_INJECT:paschal_cycle = {
+	global_devastation_recovery = -0.004
+}
+TRY_INJECT:fertile_lands = {
+	global_monthly_food_modifier = -0.05
+	global_rice_output_modifier = 0.15
+	global_wheat_output_modifier = 0.15
+	global_millet_output_modifier = 0.15
+	global_maize_output_modifier = 0.15
+	global_legumes_output_modifier = 0.15
+	global_fruit_output_modifier = 0.15
+	global_olives_output_modifier = 0.15
+	global_potato_output_modifier = 0.15
+	global_livestock_output_modifier = 0.15
+	global_beeswax_output_modifier = 0.15
+	global_wool_output_modifier = 0.15
+	global_cotton_output_modifier = 0.15
+	global_sugar_output_modifier = 0.15
+	global_tobacco_output_modifier = 0.15
+	global_horses_output_modifier = 0.0375
+	global_silk_output_modifier = 0.15
+	global_incense_output_modifier = 0.15
+	global_tea_output_modifier = 0.15
+	global_cocoa_output_modifier = 0.15
+	global_coffee_output_modifier = 0.15
+	global_fiber_crops_output_modifier = 0.0375
+	global_saffron_output_modifier = 0.15
+	global_pepper_output_modifier = 0.15
+	global_cloves_output_modifier = 0.15
+	global_chili_output_modifier = 0.15
+}
+# Serfdom: remove global food modifier, add per-good output bonuses (15% = marginal minimum)
+TRY_INJECT:serfdom = {
+	global_monthly_food_modifier = -0.05
+	global_wheat_output_modifier = 0.08
+	global_rice_output_modifier = 0.08
+	global_millet_output_modifier = 0.08
+	global_maize_output_modifier = 0.08
+	global_legumes_output_modifier = 0.08
+	global_fruit_output_modifier = 0.08
+	global_olives_output_modifier = 0.08
+	global_potato_output_modifier = 0.08
+	global_livestock_output_modifier = 0.08
+	global_beeswax_output_modifier = 0.08
+	global_wool_output_modifier = 0.08
+	global_cotton_output_modifier = 0.08
+	global_sugar_output_modifier = 0.08
+	global_tobacco_output_modifier = 0.08
+	global_horses_output_modifier = 0.02
+	global_silk_output_modifier = 0.08
+	global_incense_output_modifier = 0.08
+	global_tea_output_modifier = 0.08
+	global_cocoa_output_modifier = 0.08
+	global_coffee_output_modifier = 0.08
+	global_fiber_crops_output_modifier = 0.02
+	global_saffron_output_modifier = 0.08
+	global_pepper_output_modifier = 0.08
+	global_cloves_output_modifier = 0.08
+	global_chili_output_modifier = 0.08
+	global_fish_output_modifier = 0.08
+	global_wild_game_output_modifier = 0.08
+	global_fur_output_modifier = 0.08
+	ai_weight = { add = 15 }
+}
+# Food advances: replace global_monthly_food_modifier with per-good output bonuses
+# food_advance_renaissance: Herring Buss (c.1415), cookery-aligned goods
+TRY_INJECT:food_advance_renaissance = {
+	global_peasants_food_consumption = -0.015
+	global_population_capacity_modifier = 0.06
+	global_food_capacity_modifier = 0.06
+	global_monthly_food_modifier = -0.10
+	global_fish_output_modifier = 0.10
+	global_wheat_output_modifier = 0.10
+	global_rice_output_modifier = 0.10
+	global_fruit_output_modifier = 0.10
+	global_olives_output_modifier = 0.10
+	global_legumes_output_modifier = 0.10
+	global_millet_output_modifier = 0.10
+	global_maize_output_modifier = 0.10
+	global_potato_output_modifier = 0.10
+	global_livestock_output_modifier = 0.10
+	global_wool_output_modifier = 0.10
+	global_cotton_output_modifier = 0.10
+	global_sugar_output_modifier = 0.10
+	global_tobacco_output_modifier = 0.10
+	global_horses_output_modifier = 0.025
+	global_silk_output_modifier = 0.10
+	global_incense_output_modifier = 0.10
+	global_tea_output_modifier = 0.10
+	global_cocoa_output_modifier = 0.10
+	global_coffee_output_modifier = 0.10
+	global_fiber_crops_output_modifier = 0.025
+	global_saffron_output_modifier = 0.10
+	global_pepper_output_modifier = 0.10
+	global_cloves_output_modifier = 0.10
+	global_chili_output_modifier = 0.10
+	global_beeswax_output_modifier = 0.08
+	global_wild_game_output_modifier = 0.08
+	ai_weight = { add = 15 }
+}
+# new_world_crops: Columbian Exchange – potato, maize 2–4x caloric yield
+TRY_INJECT:new_world_crops = {
+	global_peasants_food_consumption = -0.02
+	global_population_capacity_modifier = 0.08
+	global_food_capacity_modifier = 0.08
+	global_food_capacity = 20
+	global_monthly_food_modifier = -0.10
+	global_potato_output_modifier = 0.50
+	global_maize_output_modifier = 0.50
+	global_legumes_output_modifier = 0.25
+	global_cocoa_output_modifier = 0.15
+	global_sugar_output_modifier = 0.15
+	global_tobacco_output_modifier = 0.15
+	global_fruit_output_modifier = 0.18
+	global_wheat_output_modifier = 0.18
+	global_rice_output_modifier = 0.18
+	global_millet_output_modifier = 0.18
+	global_wool_output_modifier = 0.18
+	global_livestock_output_modifier = 0.18
+	global_olives_output_modifier = 0.18
+	global_beeswax_output_modifier = 0.18
+	global_cotton_output_modifier = 0.15
+	global_horses_output_modifier = 0.03
+	global_silk_output_modifier = 0.12
+	global_incense_output_modifier = 0.12
+	global_tea_output_modifier = 0.12
+	global_coffee_output_modifier = 0.12
+	global_fiber_crops_output_modifier = 0.045
+	global_saffron_output_modifier = 0.12
+	global_pepper_output_modifier = 0.12
+	global_cloves_output_modifier = 0.12
+	global_chili_output_modifier = 0.12
+	ai_weight = { add = 15 }
+}
+# food_advance_reformation: Grand Banks Cod, early Columbian adoption
+TRY_INJECT:food_advance_reformation = {
+	global_peasants_food_consumption = -0.025
+	global_population_capacity_modifier = 0.10
+	global_food_capacity_modifier = 0.10
+	global_monthly_food_modifier = -0.10
+	global_fish_output_modifier = 0.25
+	global_wheat_output_modifier = 0.18
+	global_legumes_output_modifier = 0.18
+	global_potato_output_modifier = 0.18
+	global_rice_output_modifier = 0.18
+	global_livestock_output_modifier = 0.13
+	global_fruit_output_modifier = 0.15
+	global_olives_output_modifier = 0.15
+	global_wild_game_output_modifier = 0.13
+	global_beeswax_output_modifier = 0.13
+	global_millet_output_modifier = 0.18
+	global_maize_output_modifier = 0.18
+	global_wool_output_modifier = 0.13
+	global_cotton_output_modifier = 0.12
+	global_sugar_output_modifier = 0.12
+	global_tobacco_output_modifier = 0.12
+	global_horses_output_modifier = 0.0325
+	global_silk_output_modifier = 0.12
+	global_incense_output_modifier = 0.12
+	global_tea_output_modifier = 0.12
+	global_cocoa_output_modifier = 0.12
+	global_coffee_output_modifier = 0.12
+	global_fiber_crops_output_modifier = 0.045
+	global_saffron_output_modifier = 0.12
+	global_pepper_output_modifier = 0.12
+	global_cloves_output_modifier = 0.12
+	global_chili_output_modifier = 0.12
+	ai_weight = { add = 15 }
+}
+# food_advance_absolutism: Norfolk Four-Course, Seed Drill, Scientific Animal Husbandry
+TRY_INJECT:food_advance_absolutism = {
+	global_peasants_food_consumption = -0.03
+	global_population_capacity_modifier = 0.12
+	global_food_capacity_modifier = 0.12
+	global_monthly_food_modifier = -0.10
+	global_wheat_output_modifier = 0.25
+	global_maize_output_modifier = 0.25
+	global_legumes_output_modifier = 0.25
+	global_millet_output_modifier = 0.25
+	global_livestock_output_modifier = 0.25
+	global_wool_output_modifier = 0.20
+	global_potato_output_modifier = 0.23
+	global_rice_output_modifier = 0.23
+	global_fruit_output_modifier = 0.20
+	global_olives_output_modifier = 0.20
+	global_beeswax_output_modifier = 0.18
+	global_wild_game_output_modifier = 0.15
+	global_cotton_output_modifier = 0.22
+	global_sugar_output_modifier = 0.22
+	global_tobacco_output_modifier = 0.22
+	global_horses_output_modifier = 0.055
+	global_silk_output_modifier = 0.22
+	global_incense_output_modifier = 0.22
+	global_tea_output_modifier = 0.22
+	global_cocoa_output_modifier = 0.22
+	global_coffee_output_modifier = 0.22
+	global_fiber_crops_output_modifier = 0.0625
+	global_saffron_output_modifier = 0.22
+	global_pepper_output_modifier = 0.22
+	global_cloves_output_modifier = 0.22
+	global_chili_output_modifier = 0.22
+	ai_weight = { add = 15 }
+}
+# rotherham_plough: Reaper, Steel Plow, Guano, Steam Trawling (fish 50% – pp_steam_trawling adds 100%)
+TRY_INJECT:rotherham_plough = {
+	global_peasants_food_consumption = -0.03
+	global_population_capacity_modifier = 0.12
+	global_food_capacity_modifier = 0.12
+	global_monthly_food_modifier = -0.10
+	global_wheat_output_modifier = 0.38
+	global_maize_output_modifier = 0.38
+	global_millet_output_modifier = 0.38
+	global_potato_output_modifier = 0.38
+	global_legumes_output_modifier = 0.38
+	global_fish_output_modifier = 0.25
+	global_livestock_output_modifier = 0.20
+	global_rice_output_modifier = 0.25
+	global_fruit_output_modifier = 0.28
+	global_olives_output_modifier = 0.28
+	global_beeswax_output_modifier = 0.25
+	global_wild_game_output_modifier = 0.20
+	global_cotton_output_modifier = 0.30
+	global_sugar_output_modifier = 0.30
+	global_tobacco_output_modifier = 0.30
+	global_horses_output_modifier = 0.07
+	global_silk_output_modifier = 0.28
+	global_incense_output_modifier = 0.28
+	global_tea_output_modifier = 0.28
+	global_cocoa_output_modifier = 0.30
+	global_coffee_output_modifier = 0.28
+	global_fiber_crops_output_modifier = 0.0875
+	global_saffron_output_modifier = 0.28
+	global_pepper_output_modifier = 0.28
+	global_cloves_output_modifier = 0.28
+	global_chili_output_modifier = 0.28
+	ai_weight = { add = 15 }
+}
+# There are other modifiers from gods or religious_aspects maybe worth changing aswell

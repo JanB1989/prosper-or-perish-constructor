@@ -1,0 +1,106 @@
+﻿apply_regional_harvest_effect = {
+	continent:europe = {
+		every_region = {
+			random_list = {
+				13 ={
+					every_area_in_region = {
+						every_location_in_area = {
+							limit = {
+								province ?= {
+									NOT = { has_province_modifier = russian_famine }
+								}
+							}
+							add_location_modifier = {
+								modifier = bountiful_harvest_modifier
+								years = 1
+								mode = add_and_extend
+							}
+						}
+					}
+				}
+				17 ={
+					every_area_in_region = {
+						every_location_in_area = {
+							limit = {
+								province ?= {
+									NOT = { has_province_modifier = russian_famine }
+								}
+							}
+							add_location_modifier = {
+								modifier = very_good_harvest_modifier
+								years = 1
+								mode = add_and_extend
+							}
+						}
+					}
+				}
+				20 ={
+					every_area_in_region = {
+						every_location_in_area = {
+							limit = {
+								province ?= {
+									NOT = { has_province_modifier = russian_famine }
+								}
+							}
+							add_location_modifier = {
+								modifier = good_harvest_modifier
+								years = 1
+								mode = add_and_extend
+							}
+						}
+					}
+				}
+				0 ={
+				}
+				20 ={
+					every_area_in_region = {
+						every_location_in_area = {
+							limit = {
+								province ?= {
+									NOT = { has_province_modifier = russian_famine }
+								}
+							}
+							add_location_modifier = {
+								modifier = poor_harvest_modifier
+								years = 1
+								mode = add_and_extend
+							}
+						}
+					}
+				}
+				17 ={
+					every_area_in_region = {
+						every_location_in_area = {
+							limit = {
+								province ?= {
+									NOT = { has_province_modifier = russian_famine }
+								}
+							}
+							add_location_modifier = {
+								modifier = very_poor_harvest_modifier
+								years = 1
+								mode = add_and_extend
+							}
+						}
+					}
+				}
+				13 ={
+					every_area_in_region = {
+						every_location_in_area = {
+							limit = {
+								province ?= {
+									NOT = { has_province_modifier = russian_famine }
+								}
+							}
+							add_location_modifier = {
+								modifier = abysmal_harvest_modifier
+								years = 1
+								mode = add_and_extend
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

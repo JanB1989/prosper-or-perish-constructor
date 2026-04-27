@@ -1,0 +1,163 @@
+﻿# Prosper or Perish - Agricultural & Fishing Innovations
+# New advances for innovations with no vanilla counterpart
+# Grand Banks trio: unlock pp_fishing_village_deep_water (no global fish here)
+# Herring Buss / Steam Trawling: still use global_fish_output_modifier; TRY_INJECT food advances may add global fish
+# Small staple-crop spillover (wheat/rice/maize/legumes/potato) scales with fish bonus tier where applicable.
+# Regional staggering: early adopters get advances at earlier ages via potential
+
+# ========== HERRING BUSS (North Sea, c.1415) ==========
+# Floating factories, salt-cure, extended range – marginal early fish preservation
+# North Sea: age 2 | Coastal Europe: age 3 | General: age 4
+pp_herring_buss_north_sea = {
+	age = age_2_renaissance
+	icon = safe_exploration_techniques_advance
+	requires = rgo_size_advance_renaissance
+	global_fish_output_modifier = 0.20
+	ai_weight = { add = 50 }
+	potential = {
+		exists = capital
+		original_capital ?= {
+			OR = {
+				region = region:scandinavian_region
+				region = region:great_britain_region
+				region = region:north_german_region
+			}
+		}
+	}
+}
+pp_herring_buss_coastal = {
+	age = age_3_discovery
+	icon = safe_exploration_techniques_advance
+	requires = new_world_advance
+	global_fish_output_modifier = 0.20
+	ai_weight = { add = 50 }
+	potential = {
+		exists = capital
+		original_capital ?= {
+			AND = {
+				sub_continent = sub_continent:western_europe
+				NOT = {
+					OR = {
+						region = region:scandinavian_region
+						region = region:great_britain_region
+						region = region:north_german_region
+					}
+				}
+			}
+		}
+	}
+}
+pp_herring_buss_general = {
+	age = age_4_reformation
+	icon = safe_exploration_techniques_advance
+	requires = global_trade_advance
+	global_fish_output_modifier = 0.20
+	ai_weight = { add = 50 }
+	potential = {
+		exists = capital
+		NOT = {
+			original_capital ?= { sub_continent = sub_continent:western_europe }
+		}
+	}
+}
+
+# ========== DISTANT-WATER FISHING (1500s–1700s) ==========
+# Fleets crossing oceans to fish; shift from local to distant-water fishery
+# Early (NA/Britain/France/Iberia): age 3 | Maritime Europe: age 4 | General: age 5
+pp_grand_banks_fishery_early = {
+	age = age_3_discovery
+	icon = maritime_advance_age_4
+	requires = new_world_advance
+	unlock_production_method = pp_fishing_village_deep_water
+	ai_weight = { add = 50 }
+	potential = {
+		exists = capital
+		original_capital ?= {
+			OR = {
+				sub_continent = sub_continent:north_america
+				region = region:great_britain_region
+				region = region:france_region
+				region = region:iberia_region
+			}
+		}
+	}
+}
+pp_grand_banks_fishery_maritime = {
+	age = age_4_reformation
+	icon = maritime_advance_age_4
+	requires = maritime_advance_age_4
+	unlock_production_method = pp_fishing_village_deep_water
+	ai_weight = { add = 50 }
+	potential = {
+		exists = capital
+		original_capital ?= {
+			AND = {
+				sub_continent = sub_continent:western_europe
+				NOT = {
+					OR = {
+						sub_continent = sub_continent:north_america
+						region = region:great_britain_region
+						region = region:france_region
+						region = region:iberia_region
+					}
+				}
+			}
+		}
+	}
+}
+pp_grand_banks_fishery_general = {
+	age = age_5_absolutism
+	icon = maritime_advance_age_4
+	requires = food_advance_absolutism
+	unlock_production_method = pp_fishing_village_deep_water
+	ai_weight = { add = 50 }
+	potential = {
+		exists = capital
+		NOT = {
+			OR = {
+				original_capital ?= { sub_continent = sub_continent:north_america }
+				original_capital ?= { sub_continent = sub_continent:western_europe }
+			}
+		}
+	}
+}
+
+# ========== STEAM TRAWLING (North Sea 1880s, then global) ==========
+# Steam engine + heavy nets = industrialized ocean fishing
+# North Sea: age 5 | General: age 6
+pp_steam_trawling_north_sea = {
+	age = age_5_absolutism
+	icon = safe_exploration_techniques_advance
+	requires = food_advance_absolutism
+	global_fish_output_modifier = 1.0
+	ai_weight = { add = 50 }
+	potential = {
+		exists = capital
+		original_capital ?= {
+			OR = {
+				region = region:scandinavian_region
+				region = region:great_britain_region
+				region = region:north_german_region
+			}
+		}
+	}
+}
+pp_steam_trawling_general = {
+	age = age_6_revolutions
+	icon = safe_exploration_techniques_advance
+	requires = rotherham_plough
+	global_fish_output_modifier = 1.0
+	ai_weight = { add = 50 }
+	potential = {
+		exists = capital
+		NOT = {
+			original_capital ?= {
+				OR = {
+					region = region:scandinavian_region
+					region = region:great_britain_region
+					region = region:north_german_region
+				}
+			}
+		}
+	}
+}

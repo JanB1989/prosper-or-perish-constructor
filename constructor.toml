@@ -1,0 +1,27 @@
+[project]
+name = "Prosper or Perish Constructor"
+mod_root = "mod/Prosper or Perish (Population Growth & Food Rework)"
+
+[artifacts]
+root = "artifacts"
+parser = "artifacts/parser"
+reports = "reports"
+accepted_blueprints = "blueprints/accepted"
+generated_blueprints = "blueprints/generated"
+
+[parser]
+profile = "constructor"
+load_order = "constructor.load_order.toml"
+
+[building_outputs]
+building_types = "in_game/common/building_types/zz_constructor_{tag}.txt"
+prices = "in_game/common/prices/zz_constructor_{tag}.txt"
+advances = "in_game/common/advances/zz_constructor_{tag}.txt"
+localization = "main_menu/localization/english/zz_constructor_{tag}_l_english.yml"
+icons = "in_game/gfx/interface/icons/buildings"
+
+[dependencies]
+parser = "../Eu5GameParser"
+building_pipeline = "../ProsperOrPerishBuildingPipeline"
+labeling_pipeline = "../ProsperOrPerishLabelingPipeline"
+orchestrator = "../Eu5ModOrchestrator"

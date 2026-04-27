@@ -1,0 +1,409 @@
+﻿@zoom_step_flatmap_far = 	21 	# the furthest zoom out
+@zoom_step_flatmap = 		12 	# zoom step where the paper map kicks in
+@zoom_step_far = 			11	# furthest zoom before the paper map
+@zoom_step_mid = 			4 	# intorduce some color
+@zoom_step_near = 			2	# closest zoom
+
+# Map mode that works well with data and heatmaps
+@data_gradient_alpha_inside = 			1
+@data_gradient_alpha_outside = 			1
+@data_gradient_width = 					0.25
+@data_gradient_color_mult = 			0.9
+@data_edge_width = 						0
+@data_edge_sharpness = 					0.01
+@data_edge_alpha = 						0
+@data_edge_color_mult = 				0
+@data_before_lighting_blend = 			0.5
+@data_after_lighting_blend = 			0.5
+
+# Map modes for food-producing buildings based on static environmental capacity bonuses.
+
+pp_fruit_orchard_capacity = {
+	map_color = {
+		if = {
+			limit = { is_ownable = no }
+			value = rgb { 128 128 128 }
+		}
+		else_if = {
+			limit = {
+				NOT = { has_variable = pp_fruit_orchard_fixed_env_bonus }
+			}
+			value = rgb { 0 0 0 }
+		}
+		else_if = {
+			limit = { global_var:pp_fruit_orchard_global_range = 0 }
+			value = rgb { 128 128 128 }
+		}
+		else = {
+			lerp = {
+				max_color = rgb { 0 255 0 }   # Green
+				min_color = rgb { 255 0 0 }   # Red
+				factor = {
+					value = var:pp_fruit_orchard_fixed_env_bonus
+					subtract = global_var:pp_fruit_orchard_global_min
+					divide = { value = global_var:pp_fruit_orchard_global_range min = 1 }
+				}
+			}
+		}
+	}
+	
+	legend_key = {
+		desc = "MAPMODE_PP_FRUIT_ORCHARD_CAPACITY"
+		color = define:NMapColors|MAP_COLOR_HIGH
+	}
+
+	tooltip_key = {
+		if = { limit = { is_ownable = yes } value = MAPMODE_PP_FRUIT_ORCHARD_CAPACITY_TT_LAND }
+		else = { value = MAPMODE_PP_FOOD_CAPACITY_TT_WATER }
+	}
+	
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+
+	fill_in_impassable = yes
+	enable_snow = no
+	
+	flatmap_behaviour = always
+	use_fow = no
+	
+	category = geography
+	index = 1
+
+	map_markers = {
+		all = no
+	}
+	
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = 	@data_gradient_alpha_inside
+		gradient_alpha_outside = 	@data_gradient_alpha_outside
+		gradient_width = 			@data_gradient_width
+		gradient_color_mult =		@data_gradient_color_mult
+		edge_width = 				@data_edge_width
+		edge_sharpness = 			@data_edge_sharpness
+		edge_alpha = 				@data_edge_alpha
+		edge_color_mult = 			@data_edge_color_mult
+		before_lighting_blend =		@data_before_lighting_blend
+		after_lighting_blend =		@data_after_lighting_blend
+	}
+
+	color_refresh_counters = { TopographyVegetationDatabaseUpdate }
+	color_and_names_refresh_counters = { TopographyVegetationDatabaseUpdate }
+}
+
+pp_fishing_village_capacity = {
+	map_color = {
+		if = {
+			limit = { is_ownable = no }
+			value = rgb { 128 128 128 }
+		}
+		else_if = {
+			limit = {
+				NOT = { has_variable = pp_fishing_village_fixed_env_bonus }
+			}
+			value = rgb { 0 0 0 }
+		}
+		else_if = {
+			limit = { global_var:pp_fishing_village_global_range = 0 }
+			value = rgb { 128 128 128 }
+		}
+		else = {
+			lerp = {
+				max_color = rgb { 0 255 0 }
+				min_color = rgb { 255 0 0 }
+				factor = {
+					value = var:pp_fishing_village_fixed_env_bonus
+					subtract = global_var:pp_fishing_village_global_min
+					divide = { value = global_var:pp_fishing_village_global_range min = 1 }
+				}
+			}
+		}
+	}
+	
+	legend_key = {
+		desc = "MAPMODE_PP_FISHING_VILLAGE_CAPACITY"
+		color = define:NMapColors|MAP_COLOR_HIGH
+	}
+
+	tooltip_key = {
+		if = { limit = { is_ownable = yes } value = MAPMODE_PP_FISHING_VILLAGE_CAPACITY_TT_LAND }
+		else = { value = MAPMODE_PP_FOOD_CAPACITY_TT_WATER }
+	}
+	
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+
+	fill_in_impassable = yes
+	enable_snow = no
+	
+	flatmap_behaviour = always
+	use_fow = no
+	
+	category = geography
+	index = 1
+
+	map_markers = {
+		all = no
+	}
+	
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = 	@data_gradient_alpha_inside
+		gradient_alpha_outside = 	@data_gradient_alpha_outside
+		gradient_width = 			@data_gradient_width
+		gradient_color_mult =		@data_gradient_color_mult
+		edge_width = 				@data_edge_width
+		edge_sharpness = 			@data_edge_sharpness
+		edge_alpha = 				@data_edge_alpha
+		edge_color_mult = 			@data_edge_color_mult
+		before_lighting_blend =		@data_before_lighting_blend
+		after_lighting_blend =		@data_after_lighting_blend
+	}
+
+	color_refresh_counters = { TopographyVegetationDatabaseUpdate }
+	color_and_names_refresh_counters = { TopographyVegetationDatabaseUpdate }
+}
+
+pp_sheep_farms_capacity = {
+	map_color = {
+		if = {
+			limit = { is_ownable = no }
+			value = rgb { 128 128 128 }
+		}
+		else_if = {
+			limit = {
+				NOT = { has_variable = pp_sheep_farms_fixed_env_bonus }
+			}
+			value = rgb { 0 0 0 }
+		}
+		else_if = {
+			limit = { global_var:pp_sheep_farms_global_range = 0 }
+			value = rgb { 128 128 128 }
+		}
+		else = {
+			lerp = {
+				max_color = rgb { 0 255 0 }
+				min_color = rgb { 255 0 0 }
+				factor = {
+					value = var:pp_sheep_farms_fixed_env_bonus
+					subtract = global_var:pp_sheep_farms_global_min
+					divide = { value = global_var:pp_sheep_farms_global_range min = 1 }
+				}
+			}
+		}
+	}
+	
+	legend_key = {
+		desc = "MAPMODE_PP_SHEEP_FARMS_CAPACITY"
+		color = define:NMapColors|MAP_COLOR_HIGH
+	}
+
+	tooltip_key = {
+		if = { limit = { is_ownable = yes } value = MAPMODE_PP_SHEEP_FARMS_CAPACITY_TT_LAND }
+		else = { value = MAPMODE_PP_FOOD_CAPACITY_TT_WATER }
+	}
+	
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+
+	fill_in_impassable = yes
+	enable_snow = no
+	
+	flatmap_behaviour = always
+	use_fow = no
+	
+	category = geography
+	index = 1
+
+	map_markers = {
+		all = no
+	}
+	
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = 	@data_gradient_alpha_inside
+		gradient_alpha_outside = 	@data_gradient_alpha_outside
+		gradient_width = 			@data_gradient_width
+		gradient_color_mult =		@data_gradient_color_mult
+		edge_width = 				@data_edge_width
+		edge_sharpness = 			@data_edge_sharpness
+		edge_alpha = 				@data_edge_alpha
+		edge_color_mult = 			@data_edge_color_mult
+		before_lighting_blend =		@data_before_lighting_blend
+		after_lighting_blend =		@data_after_lighting_blend
+	}
+
+	color_refresh_counters = { TopographyVegetationDatabaseUpdate }
+	color_and_names_refresh_counters = { TopographyVegetationDatabaseUpdate }
+}
+
+pp_farming_village_capacity = {
+	map_color = {
+		if = {
+			limit = { is_ownable = no }
+			value = rgb { 128 128 128 }
+		}
+		else_if = {
+			limit = {
+				NOT = { has_variable = pp_farming_village_fixed_env_bonus }
+			}
+			value = rgb { 0 0 0 }
+		}
+		else_if = {
+			limit = { global_var:pp_farming_village_global_range = 0 }
+			value = rgb { 128 128 128 }
+		}
+		else = {
+			lerp = {
+				max_color = rgb { 0 255 0 }
+				min_color = rgb { 255 0 0 }
+				factor = {
+					value = var:pp_farming_village_fixed_env_bonus
+					subtract = global_var:pp_farming_village_global_min
+					divide = { value = global_var:pp_farming_village_global_range min = 1 }
+				}
+			}
+		}
+	}
+	
+	legend_key = {
+		desc = "MAPMODE_PP_FARMING_VILLAGE_CAPACITY"
+		color = define:NMapColors|MAP_COLOR_HIGH
+	}
+
+	tooltip_key = {
+		if = { limit = { is_ownable = yes } value = MAPMODE_PP_FARMING_VILLAGE_CAPACITY_TT_LAND }
+		else = { value = MAPMODE_PP_FOOD_CAPACITY_TT_WATER }
+	}
+	
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+
+	fill_in_impassable = yes
+	enable_snow = no
+	
+	flatmap_behaviour = always
+	use_fow = no
+	
+	category = geography
+	index = 1
+
+	map_markers = {
+		all = no
+	}
+	
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = 	@data_gradient_alpha_inside
+		gradient_alpha_outside = 	@data_gradient_alpha_outside
+		gradient_width = 			@data_gradient_width
+		gradient_color_mult =		@data_gradient_color_mult
+		edge_width = 				@data_edge_width
+		edge_sharpness = 			@data_edge_sharpness
+		edge_alpha = 				@data_edge_alpha
+		edge_color_mult = 			@data_edge_color_mult
+		before_lighting_blend =		@data_before_lighting_blend
+		after_lighting_blend =		@data_after_lighting_blend
+	}
+
+	color_refresh_counters = { TopographyVegetationDatabaseUpdate }
+	color_and_names_refresh_counters = { TopographyVegetationDatabaseUpdate }
+}
+
+pp_forest_village_capacity = {
+	map_color = {
+		if = {
+			limit = { is_ownable = no }
+			value = rgb { 128 128 128 }
+		}
+		else_if = {
+			limit = {
+				NOT = { has_variable = pp_forest_village_fixed_env_bonus }
+			}
+			value = rgb { 0 0 0 }
+		}
+		else_if = {
+			limit = { global_var:pp_forest_village_global_range = 0 }
+			value = rgb { 128 128 128 }
+		}
+		else = {
+			lerp = {
+				max_color = rgb { 0 255 0 }
+				min_color = rgb { 255 0 0 }
+				factor = {
+					value = var:pp_forest_village_fixed_env_bonus
+					subtract = global_var:pp_forest_village_global_min
+					divide = { value = global_var:pp_forest_village_global_range min = 1 }
+				}
+			}
+		}
+	}
+	
+	legend_key = {
+		desc = "MAPMODE_PP_FOREST_VILLAGE_CAPACITY"
+		color = define:NMapColors|MAP_COLOR_HIGH
+	}
+
+	tooltip_key = {
+		if = { limit = { is_ownable = yes } value = MAPMODE_PP_FOREST_VILLAGE_CAPACITY_TT_LAND }
+		else = { value = MAPMODE_PP_FOOD_CAPACITY_TT_WATER }
+	}
+	
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+
+	fill_in_impassable = yes
+	enable_snow = no
+	
+	flatmap_behaviour = always
+	use_fow = no
+	
+	category = geography
+	index = 1
+
+	map_markers = {
+		all = no
+	}
+	
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = 	@data_gradient_alpha_inside
+		gradient_alpha_outside = 	@data_gradient_alpha_outside
+		gradient_width = 			@data_gradient_width
+		gradient_color_mult =		@data_gradient_color_mult
+		edge_width = 				@data_edge_width
+		edge_sharpness = 			@data_edge_sharpness
+		edge_alpha = 				@data_edge_alpha
+		edge_color_mult = 			@data_edge_color_mult
+		before_lighting_blend =		@data_before_lighting_blend
+		after_lighting_blend =		@data_after_lighting_blend
+	}
+
+	color_refresh_counters = { TopographyVegetationDatabaseUpdate }
+	color_and_names_refresh_counters = { TopographyVegetationDatabaseUpdate }
+}

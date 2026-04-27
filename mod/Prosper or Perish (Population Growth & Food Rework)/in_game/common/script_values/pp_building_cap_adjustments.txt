@@ -1,0 +1,25 @@
+﻿REPLACE:rural_building_cap = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE"
+		value = 1
+	}
+	add = {
+		desc = "BUILDING_LEVEL_DEVELOPMENT"
+		value = development
+		multiply = 0.3
+	}
+	add = {
+		desc = "BUILDING_LEVEL_RGO_MAX"
+		value = max_rgo_workers
+		multiply = 1.0
+	}
+	if = {
+		limit = {
+			has_river = yes
+		}
+		add = {
+			desc = "BUILDING_LEVEL_HAS_RIVER"
+			value = 1
+		}
+	}
+}

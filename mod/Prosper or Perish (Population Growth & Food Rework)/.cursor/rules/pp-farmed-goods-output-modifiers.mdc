@@ -1,0 +1,21 @@
+---
+description: Canonical list of vanilla farmed goods for local_/global_*_output_modifier bundles in Prosper or Perish
+globs: "**/pp_*adjustments*.txt", "**/pp_*changes*.txt", "**/pp_*modifier*.txt", "**/pp_agricultural_innovations.txt", "**/pp_local_output_modifier_map_modes.txt", "**/pp_building_adjustments_l_english.yml"
+alwaysApply: false
+---
+
+# PP farmed goods (`method = farming` in vanilla goods)
+
+**Goods (modifier: `local_<good>_output_modifier` / `global_<good>_output_modifier`):**
+
+beeswax, chili, cloves, cocoa, coffee, cotton, fiber_crops, fruit, horses, incense, legumes, livestock, maize, millet, olives, pepper, potato, rice, saffron, silk, sugar, tea, tobacco, wheat, wool
+
+**Rural map modes (PP `pp_local_<good>_output_modifier` only; not vanilla farmed goods):**
+
+fish, wild_game, fur
+
+`dyes` and `wine` is vanilla-farmed but omitted here: multiple non-farming sources; no dedicated PP local-output map mode for now.
+
+**Not in this list:** victuals (separate); elephants (PP excludes).
+
+**Map modes:** `pp_local_output_modifier_map_modes.txt` must define exactly the farmed goods plus **Rural map modes** above. Geography `index` must be 0–3 (vanilla sub-tabs); PP modes all use **`index = 2`**. Unique indices 4+ do not show in the Geography picker. English keys in `pp_building_adjustments_l_english.yml`.

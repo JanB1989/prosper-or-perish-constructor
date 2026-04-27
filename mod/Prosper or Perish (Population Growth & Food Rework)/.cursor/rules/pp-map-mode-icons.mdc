@@ -1,0 +1,15 @@
+---
+description: Where PP map mode picker icons live and how to add them when defining new map modes
+globs: "**/pp_*map_modes*.txt", "**/MAP_MODE_ICONS.md", "**/main_menu/gfx/interface/icons/map_modes/**"
+alwaysApply: false
+---
+
+# PP map mode icons
+
+1. **Lookup:** The game loads the picker icon from **`main_menu/gfx/interface/icons/map_modes/<map_mode_id>.dds`**, where `<map_mode_id>` is the **exact block key** in the map modes `.txt` (e.g. `pp_local_wheat_output_modifier.dds`). Do **not** put these under `in_game/gfx/.../map_modes/`.
+
+2. **DDS:** Use mip maps and dimensions divisible by 4 (Clausewitz-friendly).
+
+3. **When adding a map mode:** (a) definition block in `in_game/gfx/map/map_modes/`, (b) `mapmode_<id>_name` and `MAPMODE_<ID>` (and tooltip keys) in localization, (c) matching `.dds` in `main_menu/.../map_modes/`, (d) one row in `in_game/gfx/map/map_modes/MAP_MODE_ICONS.md`.
+
+4. **`pp_local_<good>_output_modifier`:** Copy `game/main_menu/gfx/interface/icons/trade_goods/icon_goods_<good>.dds` → `main_menu/.../map_modes/pp_local_<good>_output_modifier.dds` (per-good icon, not one file for all). For other map mode ids, copy an appropriate vanilla `map_modes/*.dds` only for that id; do not bulk-replace existing working icons.

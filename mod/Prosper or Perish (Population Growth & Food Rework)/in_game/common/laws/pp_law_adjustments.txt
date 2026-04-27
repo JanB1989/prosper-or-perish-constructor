@@ -1,0 +1,553 @@
+﻿# Feudal Administration: replace global_monthly_food_modifier with global_victuals_output_modifier
+
+TRY_REPLACE:administrative_system = {
+
+	law_category = administrative
+	unique = yes
+	potential = {
+		has_tribal_government = no
+	}
+	autonomous_councils = {
+		country_modifier = {
+			legislative_efficiency = 0.1
+			monthly_towards_decentralization = societal_value_monthly_move
+		}
+		estate_preferences = {
+			peasants_estate
+		}
+		years = 2
+	}
+	central_councils = {
+		country_modifier = {
+			country_cabinet_efficiency = 0.05
+			monthly_towards_centralization = societal_value_monthly_move
+			monthly_towards_aristocracy = societal_value_monthly_move
+		}
+		estate_preferences = {
+			nobles_estate
+			clergy_estate
+		}
+		years = 2
+	}
+	local_courts_administration = {
+		country_modifier = {
+			monthly_towards_decentralization = societal_value_monthly_move
+			pop_join_rebel_threshold = -0.05
+			global_max_control = -0.05
+		}
+		estate_preferences = {
+			burghers_estate
+		}
+		years = 2
+	}
+	feudal_administration = {
+		country_modifier = {
+			monthly_towards_decentralization = societal_value_minor_monthly_move
+			global_wheat_output_modifier = 0.1
+			global_rice_output_modifier = 0.1
+			global_millet_output_modifier = 0.1
+			global_maize_output_modifier = 0.1
+			global_legumes_output_modifier = 0.1
+			global_fruit_output_modifier = 0.1
+			global_olives_output_modifier = 0.1
+			global_potato_output_modifier = 0.1
+			global_livestock_output_modifier = 0.1
+			global_beeswax_output_modifier = 0.1
+			global_wool_output_modifier = 0.1
+			global_cotton_output_modifier = 0.1
+			global_sugar_output_modifier = 0.1
+			global_tobacco_output_modifier = 0.1
+			global_horses_output_modifier = 0.025
+			global_silk_output_modifier = 0.1
+			global_incense_output_modifier = 0.1
+			global_tea_output_modifier = 0.1
+			global_cocoa_output_modifier = 0.1
+			global_coffee_output_modifier = 0.1
+			global_fiber_crops_output_modifier = 0.025
+			global_saffron_output_modifier = 0.1
+			global_pepper_output_modifier = 0.1
+			global_cloves_output_modifier = 0.1
+			global_chili_output_modifier = 0.1
+			global_fish_output_modifier = 0.1
+			global_wild_game_output_modifier = 0.1
+			global_fur_output_modifier = 0.1
+			global_peasants_food_consumption = -0.01
+		}
+		estate_preferences = {
+			nobles_estate
+		}
+		years = 2
+	}
+	confederal_union = {
+		potential = {
+			current_age_or_later = { age = age_3_discovery }
+		}
+		country_modifier = {
+			monthly_towards_decentralization = societal_value_monthly_move
+			subject_loyalty = 10
+		}
+		estate_preferences = {
+			burghers_estate
+		}
+		years = 2
+	}
+	federal_state = {
+		potential = {
+			current_age_or_later = { age = age_4_reformation }
+		}
+		country_modifier = {
+			global_estate_target_satisfaction = small_permanent_target_satisfaction
+			monthly_towards_decentralization = societal_value_minor_monthly_move
+		}
+		estate_preferences = {
+			peasants_estate
+		}
+		years = 2
+	}
+	absolute_rulership = {
+		potential = {
+			current_age_or_later = { age = age_5_absolutism }
+		}
+		country_modifier = {
+			global_crown_estate_power = 0.1
+			monthly_towards_absolutism = societal_value_monthly_move
+		}
+		estate_preferences = {
+			crown_estate
+		}
+		years = 2
+	}
+
+	unitary_administration = {
+		potential = {
+			current_age_or_later = { age = age_5_absolutism }
+		}
+		country_modifier = {
+			global_distance_from_capital_speed_propagation = 0.05
+			monthly_towards_centralization = societal_value_monthly_move
+		}
+		estate_preferences = {
+			crown_estate
+		}
+		years = 2
+	}
+	pyatina_policy = {
+		unique = yes
+		potential = {
+			has_or_had_tag = NOV
+		}
+		country_modifier = {
+			global_monthly_prosperity = 0.001
+			global_monthly_development = 0.001
+		}
+		estate_preferences = {
+			burghers_estate
+		}
+		years = 2
+	}
+	eyalet_division = { #https://en.wikipedia.org/wiki/Eyalet
+		potential = {
+			has_unlocked_policy_trigger = { type = eyalet_division }
+		}
+		country_modifier = {
+			land_cost_on_distance_from_capital_speed_propagation = 0.1
+			global_estate_target_satisfaction = small_permanent_target_satisfaction
+			monthly_towards_decentralization = societal_value_monthly_move
+		}
+		estate_preferences = {
+			nobles_estate
+		}
+		years = 2
+	}
+	merindad_policy = {
+		potential = {
+			OR = {
+				culture = culture:aragonese
+				culture = culture:basque
+				culture = culture:castilian
+				has_or_had_tag = ARA
+			}
+		}
+		country_modifier = {
+			global_distance_from_capital_speed_propagation = 0.1
+			global_monthly_development = 0.001
+		}
+		estate_preferences = {
+			nobles_estate
+		}
+		years = 2
+	}
+	calpixque_system_policy = {
+		potential = {
+			culture = culture:nahua_culture
+		}
+		country_modifier = {
+			global_distance_from_capital_speed_propagation = 0.1
+			subject_income_modifier = 0.05
+		}
+		estate_preferences = {
+			nobles_estate
+		}
+		years = 2
+	}
+	tongues_policy = {
+		unique = yes
+		potential = {
+			has_or_had_tag = KNI
+		}
+		country_modifier = {
+			tax_income_efficiency = large_tax_income_efficiency_bonus
+			diplomatic_range_modifier = 0.25
+		}
+		estate_preferences = {
+			clergy_estate
+		}
+		years = 2
+	}
+	rajya_policy = {
+		unique = yes
+		potential = {
+			has_or_had_tag = VIJ
+		}
+		country_modifier = {
+			tax_income_efficiency = large_tax_income_efficiency_bonus
+			diplomatic_range_modifier = 0.25
+		}
+		estate_preferences = {
+			nobles_estate
+			peasants_estate
+		}
+		years = 2
+	}
+	poligar_system_policy = {
+		potential = {
+			OR = {
+				culture.language = language:telugu_language
+				culture.language = language:tamil_language
+				culture.language = language:kannada_language
+				culture.language = language:malayalam_language
+			}
+		}
+		country_modifier = {
+			global_manpower_modifier = 0.1
+			global_levy_size_modifier = 0.1
+		}
+		estate_preferences = {
+			nobles_estate
+		}
+		years = 2
+	}
+	zabt_system_policy = {
+		unique = yes
+		potential = {
+			has_or_had_tag = MUG
+		}
+		country_modifier = {
+			cultures_capacity = 2
+			global_integration_speed_modifier = 0.2
+		}
+		estate_preferences = {
+			nobles_estate
+			crown_estate
+		}
+		years = 2
+	}
+	pronoia_system = {
+		unique = yes
+		potential = {
+			has_or_had_tag = BYZ
+			NOT = { has_unlocked_policy_trigger = { type = reformed_pronoia_system } }
+		}
+		country_modifier = {
+			global_estate_max_tax = -0.1
+			army_infantry_maintenance_cost_modifier = -0.1
+		}
+		estate_preferences = {
+			nobles_estate
+		}
+		years = 2
+	}
+	reformed_pronoia_system = {
+		unique = yes
+		potential = {
+			has_or_had_tag = BYZ
+			has_unlocked_policy_trigger = { type = reformed_pronoia_system }
+		}
+		country_modifier = {
+			nobles_estate_levy_size = -0.1
+			pop_join_rebel_threshold = -0.025
+			tax_income_efficiency = medium_tax_income_efficiency_bonus
+			nobles_estate_target_satisfaction = small_permanent_target_satisfaction
+		}
+		estate_preferences = {
+			crown_estate
+		}
+		years = 2
+	}
+	adelantamiento_system = {
+		potential = {
+			culture = culture:castilian
+		}
+		country_modifier = {
+			global_distance_from_capital_speed_propagation = 0.1
+			global_integration_speed_modifier = 0.1
+			global_nobles_estate_power = 0.1
+		}
+		estate_preferences = {
+			nobles_estate
+		}
+		years = 2
+	}
+	decentralized_trade_federations = {
+		potential = {
+			country_type = building
+			is_merchant_republic = yes
+		}
+		country_modifier = {
+			trade_range_modifier = 0.05
+			monthly_towards_decentralization = societal_value_monthly_move
+		}
+		estate_preferences = {
+			burghers_estate
+		}
+		years = 2
+	}
+
+	regulations_of_the_royal_court = {
+		unique = yes
+		potential = {
+			has_or_had_tag = GEO
+		}
+		country_modifier = {
+			monthly_towards_aristocracy = societal_value_monthly_move
+			monthly_legitimacy = 0.1
+			army_tradition_decay = -0.001
+		}
+		estate_preferences = {
+			crown_estate
+			nobles_estate
+		}
+		years = 2
+	}
+
+	maj_office_of_the_mahapatih = {
+		unique = yes
+		potential = {
+			has_or_had_tag = MAJ
+		}
+		country_modifier = {
+			antagonism_monthly_change_modifier = 0.02
+			government_reform_slots = 1
+			monthly_towards_naval = societal_value_monthly_move
+		}
+		estate_preferences = {
+			crown_estate
+		}
+		years = 2
+	}
+}
+
+TRY_REPLACE:tax_base_system = {
+	custom_tags = { forbids_no_policy }
+	type = international_organization
+	requires_vote = no
+	law_category = socioeconomic
+	potential = {
+		international_organization_type = international_organization_type:middle_kingdom
+		current_age = age_4_reformation
+	}
+	allow = {
+		has_variable = celestial_authority
+		var:celestial_authority > celestial_authority_very_strong_bonus
+		leader_country ?= { government_power >= 25 }
+		leader_country ?= {
+			has_reform = government_reform:single_whip_law
+			gold >= {
+				value = this.monthly_income_trade_and_tax
+				multiply = {
+					value = 6
+					add = {
+						value = 1
+						multiply = {
+							value = international_organization:middle_kingdom.total_members
+							divide = 10
+						}
+					}
+				}
+				max = 100000
+			}
+		}
+		leader_country.capital.market ?= {
+			NOT = { is_import_banned = goods:silver }
+		}
+	}
+	locked = {
+	}
+	rice_based_tax = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			trade_efficiency = small_trade_efficiency_bonus
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			global_rice_output_modifier = 0.3
+			global_peasants_food_consumption = -0.05
+			tax_income_efficiency = small_tax_income_efficiency_bonus
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			global_rice_output_modifier = 0.15
+			global_peasants_food_consumption = -0.025
+			tax_income_efficiency = tiny_tax_income_efficiency_bonus
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	single_whip_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			allow_tribute_in_silver = yes
+			country_cabinet_efficiency = 0.05
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			global_silver_output_modifier = 0.2
+			loyalty_to_overlord = 10
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			global_silver_output_modifier = 0.1
+			loyalty_to_overlord = 5
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+}

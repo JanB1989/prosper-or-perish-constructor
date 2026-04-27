@@ -1,0 +1,30 @@
+[project]
+name = "prosper-or-perish-constructor"
+version = "0.1.0"
+description = "Constructor orchestration workspace for Prosper or Perish."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "eu5-building-pipeline",
+    "eu5-mod-orchestrator",
+    "eu5gameparser",
+    "prosper-or-perish-labeling-pipeline",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.24,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
+
+[tool.uv.sources]
+eu5-building-pipeline = { path = "../ProsperOrPerishBuildingPipeline", editable = true }
+eu5-mod-orchestrator = { path = "../Eu5ModOrchestrator", editable = true }
+eu5gameparser = { path = "../Eu5GameParser", editable = true }
+prosper-or-perish-labeling-pipeline = { path = "../ProsperOrPerishLabelingPipeline", editable = true }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

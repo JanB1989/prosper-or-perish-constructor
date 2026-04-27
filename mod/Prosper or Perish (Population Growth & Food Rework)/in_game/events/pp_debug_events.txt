@@ -1,0 +1,209 @@
+﻿namespace = pp_debug
+
+# ─── EVENT 1: Show province_monthly_food_production value ───
+pp_debug.1 = {
+	title = pp_debug.1.t
+	desc = pp_debug.1.desc
+	is_triggered_only = yes
+	immediate = {
+		province:uppland_province = {
+			save_scope_as = tp
+			set_variable = { name = pp_v value = province_monthly_food_production }
+		}
+		set_variable = { name = pp_v value = scope:tp.var:pp_v }
+	}
+	option = { name = pp_debug.1.a }
+}
+
+# ─── EVENT 2: construct_building direct test ───
+pp_debug.2 = {
+	title = pp_debug.2.t
+	desc = pp_debug.2.desc
+	is_triggered_only = yes
+	immediate = {
+		province:uppland_province = {
+			every_location_in_province = {
+				limit = { is_province_capital = yes }
+				construct_building = {
+					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "pp_debug_test"
+				}
+			}
+		}
+	}
+	option = { name = pp_debug.1.a }
+}
+
+# ─── EVENT 3: Build/remove victuals_market (matches yearly pulse logic) ───
+pp_debug.3 = {
+	title = pp_debug.3.t
+	desc = {
+		first_valid = {
+			triggered_desc = { trigger = { has_variable = pp_r_a } desc = pp_debug.3.desc_built }
+			triggered_desc = { trigger = { has_variable = pp_r_b } desc = pp_debug.3.desc_removed }
+			triggered_desc = { trigger = { has_variable = pp_r_c } desc = pp_debug.3.desc_at_max }
+			triggered_desc = { trigger = { has_variable = pp_r_d } desc = pp_debug.3.desc_no_building }
+			triggered_desc = { trigger = { has_variable = pp_r_e } desc = pp_debug.3.desc_skip_closed }
+			triggered_desc = { trigger = { has_variable = pp_r_f } desc = pp_debug.3.desc_skip_capacity }
+			triggered_desc = { trigger = { has_variable = pp_r_h } desc = pp_debug.3.desc_skip_goods }
+			triggered_desc = { trigger = { has_variable = pp_r_g } desc = pp_debug.3.desc_in_range }
+			desc = pp_debug.r_no_data
+		}
+	}
+	is_triggered_only = yes
+	immediate = {
+		remove_variable = pp_r_a
+		remove_variable = pp_r_b
+		remove_variable = pp_r_c
+		remove_variable = pp_r_d
+		remove_variable = pp_r_e
+		remove_variable = pp_r_f
+		remove_variable = pp_r_g
+		remove_variable = pp_r_h
+		province:uppland_province = {
+			save_scope_as = tp
+			set_variable = { name = pp_v value = province_monthly_food_production }
+		}
+		set_variable = { name = pp_v value = scope:tp.var:pp_v }
+
+		# REMOVE: food > 80, no restrictions
+		if = {
+			limit = {
+				scope:tp = {
+					province_monthly_food_production > 80
+					any_location_in_province = {
+						is_province_capital = yes
+						location_building_level = {
+							building_type = building_type:victuals_market
+							value > 0
+						}
+					}
+				}
+			}
+			scope:tp = {
+				every_location_in_province = {
+					limit = {
+						is_province_capital = yes
+						location_building_level = {
+							building_type = building_type:victuals_market
+							value > 0
+						}
+					}
+					change_building_level_in_location = { building = building_type:victuals_market value = -1 }
+				}
+			}
+			set_variable = pp_r_b
+		}
+		# BUILD: food < -20
+		else_if = {
+			limit = { scope:tp = { province_monthly_food_production < -20 } }
+			# No victuals_market at all → build first one
+			if = {
+				limit = {
+					scope:tp = {
+						any_location_in_province = {
+							is_province_capital = yes
+							NOT = {
+								any_buildings_in_location = {
+									building_type = building_type:victuals_market
+								}
+							}
+						}
+					}
+				}
+				scope:tp = {
+					every_location_in_province = {
+						limit = { is_province_capital = yes }
+						construct_building = {
+							building_type = building_type:victuals_market
+							instant = yes
+							cost_multiplier = 0
+							cost_multiplier_reason = "pp_debug_test"
+						}
+					}
+				}
+				set_variable = pp_r_d
+			}
+			# Victuals_market exists — check health before expanding
+			else_if = {
+				limit = {
+					scope:tp = {
+						any_location_in_province = {
+							is_province_capital = yes
+							any_buildings_in_location = {
+								building_type = building_type:victuals_market
+								is_opened = no
+							}
+						}
+					}
+				}
+				set_variable = pp_r_e
+			}
+			else_if = {
+				limit = {
+					scope:tp = {
+						any_location_in_province = {
+							is_province_capital = yes
+							any_buildings_in_location = {
+								building_type = building_type:victuals_market
+								is_full_capacity = no
+							}
+						}
+					}
+				}
+				set_variable = pp_r_f
+			}
+			else_if = {
+				limit = {
+					scope:tp = {
+						any_location_in_province = {
+							is_province_capital = yes
+							any_buildings_in_location = {
+								building_type = building_type:victuals_market
+								is_lacking_goods = yes
+							}
+						}
+					}
+				}
+				set_variable = pp_r_h
+			}
+			else_if = {
+				limit = {
+					scope:tp = {
+						NOT = {
+							any_location_in_province = {
+								is_province_capital = yes
+								location_building_level = {
+									building_type = building_type:victuals_market
+									value < victuals_market_max_level
+								}
+							}
+						}
+					}
+				}
+				set_variable = pp_r_c
+			}
+			else = {
+				scope:tp = {
+					every_location_in_province = {
+						limit = { is_province_capital = yes }
+						construct_building = {
+							building_type = building_type:victuals_market
+							instant = yes
+							cost_multiplier = 0
+							cost_multiplier_reason = "pp_debug_test"
+						}
+					}
+				}
+				set_variable = pp_r_a
+			}
+		}
+		else = {
+			# Between -20 and 80: do nothing
+			set_variable = pp_r_g
+		}
+	}
+	option = { name = pp_debug.1.a }
+}

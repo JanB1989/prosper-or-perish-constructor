@@ -1,0 +1,23 @@
+﻿l_english:
+ # ─── Shared ───
+ pp_debug.1.a: "OK"
+ pp_debug.r_no_data: "Could not classify the value. Variable may not have been set."
+
+ # ─── Event 1: Show province_monthly_food_production ───
+ pp_debug.1.t: "DEBUG 1: province_monthly_food_production"
+ pp_debug.1.desc: "Uppland (Stockholm)\n\nprovince_monthly_food_production = #Y [ROOT.GetVariable('pp_v').GetValue|2]#!"
+
+ # ─── Event 2: construct_building test ───
+ pp_debug.2.t: "DEBUG 2: construct_building TEST"
+ pp_debug.2.desc: "Attempted to build a victuals_market at Stockholm capital.\n\nIf the building appeared → construct_building works.\nIf nothing → construct_building or location is broken."
+
+ # ─── Event 3: Build/Remove victuals_market ───
+ pp_debug.3.t: "DEBUG 3: Build/Remove victuals_market"
+ pp_debug.3.desc_built: "Uppland (Stockholm)\nFood: #Y [ROOT.GetVariable('pp_v').GetValue|2]#! (below -20)\n\n#G Built +1 victuals_market#! at province capital."
+ pp_debug.3.desc_removed: "Uppland (Stockholm)\nFood: #Y [ROOT.GetVariable('pp_v').GetValue|2]#! (above 80)\n\n#R Removed -1 victuals_market#! from province capital."
+ pp_debug.3.desc_at_max: "Uppland (Stockholm)\nFood: #Y [ROOT.GetVariable('pp_v').GetValue|2]#! (below -20)\n\nAlready at #Y max level#! — nothing to build."
+ pp_debug.3.desc_no_building: "Uppland (Stockholm)\nFood: #Y [ROOT.GetVariable('pp_v').GetValue|2]#! (below -20)\n\nNo victuals_market exists — #G building first one#!."
+ pp_debug.3.desc_skip_closed: "Uppland (Stockholm)\nFood: #Y [ROOT.GetVariable('pp_v').GetValue|2]#! (below -20)\n\nVictuals market is #R turned off#! — skipping build."
+ pp_debug.3.desc_skip_capacity: "Uppland (Stockholm)\nFood: #Y [ROOT.GetVariable('pp_v').GetValue|2]#! (below -20)\n\nVictuals market is #R not fully employing#! — skipping build."
+ pp_debug.3.desc_skip_goods: "Uppland (Stockholm)\nFood: #Y [ROOT.GetVariable('pp_v').GetValue|2]#! (below -20)\n\nVictuals market is #R lacking input goods#! — skipping build."
+ pp_debug.3.desc_in_range: "Uppland (Stockholm)\nFood: #Y [ROOT.GetVariable('pp_v').GetValue|2]#!\n\nBetween -20 and 80 — no action needed."

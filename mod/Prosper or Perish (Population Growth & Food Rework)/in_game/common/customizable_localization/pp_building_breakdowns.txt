@@ -1,0 +1,418 @@
+﻿# Customizable Localization for Building Capacity Breakdowns
+# Used to display individual bonuses in map mode tooltips since direct data calls like GetClimate.GetKey are broken in the data system.
+
+# --- FRUIT ORCHARD ---
+
+pp_fruit_climate_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FRUIT_MEDITERRANEAN
+		trigger = { climate = mediterranean }
+	}
+	text = {
+		localization_key = PP_FRUIT_SUBTROPICAL
+		trigger = { climate = subtropical }
+	}
+	text = {
+		localization_key = PP_FRUIT_OCEANIC
+		trigger = { climate = oceanic }
+	}
+	text = {
+		localization_key = PP_FRUIT_CONTINENTAL
+		trigger = { climate = continental }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_fruit_topography_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FRUIT_FLATLAND
+		trigger = { topography = flatland }
+	}
+	text = {
+		localization_key = PP_FRUIT_HILLS
+		trigger = { topography = hills }
+	}
+	text = {
+		localization_key = PP_FRUIT_PLATEAU
+		trigger = { topography = plateau }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_fruit_vegetation_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FRUIT_FARMLAND
+		trigger = { vegetation = farmland }
+	}
+	text = {
+		localization_key = PP_FRUIT_GRASSLANDS
+		trigger = { vegetation = grasslands }
+	}
+	text = {
+		localization_key = PP_FRUIT_WOODS
+		trigger = { vegetation = woods }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_fruit_water_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FRUIT_RIVER_LAKE_COASTAL
+		trigger = {
+			has_river = yes
+			is_adjacent_to_lake = yes
+			is_coastal = yes
+		}
+	}
+	text = {
+		localization_key = PP_FRUIT_RIVER_LAKE
+		trigger = {
+			has_river = yes
+			is_adjacent_to_lake = yes
+		}
+	}
+	text = {
+		localization_key = PP_FRUIT_RIVER_COASTAL
+		trigger = {
+			has_river = yes
+			is_coastal = yes
+		}
+	}
+	text = {
+		localization_key = PP_FRUIT_LAKE_COASTAL
+		trigger = {
+			is_adjacent_to_lake = yes
+			is_coastal = yes
+		}
+	}
+	text = {
+		localization_key = PP_FRUIT_RIVER
+		trigger = { has_river = yes }
+	}
+	text = {
+		localization_key = PP_FRUIT_LAKE
+		trigger = { is_adjacent_to_lake = yes }
+	}
+	text = {
+		localization_key = PP_FRUIT_COASTAL
+		trigger = { is_coastal = yes }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_fruit_rgo_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FRUIT_RGO
+		trigger = { raw_material = goods:fruit }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+# --- FISHING VILLAGE ---
+
+pp_fishing_water_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FISHING_COASTAL_LAKE_RIVER
+		trigger = {
+			is_coastal = yes
+			is_adjacent_to_lake = yes
+			has_river = yes
+		}
+	}
+	text = {
+		localization_key = PP_FISHING_COASTAL_LAKE
+		trigger = {
+			is_coastal = yes
+			is_adjacent_to_lake = yes
+		}
+	}
+	text = {
+		localization_key = PP_FISHING_COASTAL_RIVER
+		trigger = {
+			is_coastal = yes
+			has_river = yes
+		}
+	}
+	text = {
+		localization_key = PP_FISHING_LAKE_RIVER
+		trigger = {
+			is_adjacent_to_lake = yes
+			has_river = yes
+		}
+	}
+	text = {
+		localization_key = PP_FISHING_COASTAL
+		trigger = { is_coastal = yes }
+	}
+	text = {
+		localization_key = PP_FISHING_LAKE
+		trigger = { is_adjacent_to_lake = yes }
+	}
+	text = {
+		localization_key = PP_FISHING_RIVER
+		trigger = { has_river = yes }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_fishing_climate_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FISHING_OCEANIC
+		trigger = { climate = oceanic }
+	}
+	text = {
+		localization_key = PP_FISHING_MEDITERRANEAN
+		trigger = { climate = mediterranean }
+	}
+	text = {
+		localization_key = PP_FISHING_SUBTROPICAL
+		trigger = { climate = subtropical }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_fishing_rgo_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FISHING_RGO
+		trigger = {
+			OR = {
+				raw_material = goods:fish
+				raw_material = goods:salt
+				raw_material = goods:pearls
+			}
+		}
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+# --- SHEEP FARMS ---
+
+pp_sheep_topography_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_SHEEP_HILLS
+		trigger = { topography = hills }
+	}
+	text = {
+		localization_key = PP_SHEEP_PLATEAU
+		trigger = { topography = plateau }
+	}
+	text = {
+		localization_key = PP_SHEEP_MOUNTAINS
+		trigger = { topography = mountains }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_sheep_vegetation_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_SHEEP_GRASSLANDS
+		trigger = { vegetation = grasslands }
+	}
+	text = {
+		localization_key = PP_SHEEP_SPARSE
+		trigger = { vegetation = sparse }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_sheep_climate_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_SHEEP_CONTINENTAL
+		trigger = { climate = continental }
+	}
+	text = {
+		localization_key = PP_SHEEP_COLD_ARID
+		trigger = { climate = cold_arid }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_sheep_rgo_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_SHEEP_RGO
+		trigger = { raw_material = goods:wool }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+# --- FARMING VILLAGE ---
+
+pp_farming_topography_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FARMING_FLATLAND
+		trigger = { topography = flatland }
+	}
+	text = {
+		localization_key = PP_FARMING_HILLS
+		trigger = { topography = hills }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_farming_vegetation_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FARMING_FARMLAND
+		trigger = { vegetation = farmland }
+	}
+	text = {
+		localization_key = PP_FARMING_GRASSLANDS
+		trigger = { vegetation = grasslands }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_farming_climate_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FARMING_CONTINENTAL
+		trigger = { climate = continental }
+	}
+	text = {
+		localization_key = PP_FARMING_SUBTROPICAL
+		trigger = { climate = subtropical }
+	}
+	text = {
+		localization_key = PP_FARMING_MEDITERRANEAN
+		trigger = { climate = mediterranean }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_farming_water_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FARMING_RIVER
+		trigger = { has_river = yes }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_farming_rgo_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FARMING_RGO
+		trigger = {
+			OR = {
+				raw_material = goods:wheat
+				raw_material = goods:maize
+				raw_material = goods:rice
+				raw_material = goods:millet
+				raw_material = goods:legumes
+				raw_material = goods:potato
+				raw_material = goods:livestock
+				raw_material = goods:olives
+				raw_material = goods:fruit
+				raw_material = goods:wool
+			}
+		}
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+# --- FOREST VILLAGE ---
+
+pp_forest_vegetation_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FOREST_FOREST
+		trigger = { vegetation = forest }
+	}
+	text = {
+		localization_key = PP_FOREST_WOODS
+		trigger = { vegetation = woods }
+	}
+	text = {
+		localization_key = PP_FOREST_JUNGLE
+		trigger = { vegetation = jungle }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_forest_topography_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FOREST_MOUNTAINS
+		trigger = { topography = mountains }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_forest_climate_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FOREST_CONTINENTAL
+		trigger = { climate = continental }
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}
+
+pp_forest_rgo_breakdown = {
+	type = location
+	text = {
+		localization_key = PP_FOREST_RGO
+		trigger = {
+			OR = {
+				raw_material = goods:wild_game
+				raw_material = goods:fur
+				raw_material = goods:lumber
+			}
+		}
+	}
+	text = {
+		localization_key = PP_EMPTY_LOC
+	}
+}

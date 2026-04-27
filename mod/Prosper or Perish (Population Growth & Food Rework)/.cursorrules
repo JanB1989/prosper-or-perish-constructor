@@ -1,0 +1,17 @@
+﻿# Prosper or Perish — Cursor agent rules (mod-specific)
+
+## EU5 custom map modes — icon DDS naming (mandatory)
+
+For any custom map mode with id `X` (the block name in `in_game/gfx/map/map_modes/*.txt`, e.g. `pp_rgo_level`):
+
+1. **Game concept** `main_menu/common/game_concepts/*_map_mode.txt` for that mode MUST use  
+   `texture = "map_modes/X"`  
+   (short path under `gfx/interface/icons/`, no `.dds` in script).
+
+2. **The icon file basename MUST match the map mode id:**  
+   `main_menu/gfx/interface/icons/map_modes/X.dds`  
+   Example: map mode `pp_rgo_level` → `pp_rgo_level.dds` only — do not use a different vanilla name like `raw_material.dds` unless the map mode id is also `raw_material`.
+
+3. Reuse vanilla art by **copying** the vanilla `.dds` to `X.dds` in the mod folder; do not reference a mismatched filename.
+
+Exception: `pp_building_levels` still uses `map_modes/building_based` from before this rule; do not change it unless you rename the DDS to match.

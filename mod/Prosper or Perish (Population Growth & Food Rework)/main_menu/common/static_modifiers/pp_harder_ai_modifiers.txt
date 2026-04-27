@@ -1,0 +1,30 @@
+﻿pp_harder_ai_harder_modifier = {
+	game_data = {
+		category = country
+	}
+	global_nobles_food_consumption = -0.075
+	global_clergy_food_consumption = -0.075
+	global_burghers_food_consumption = -0.075
+	global_laborers_food_consumption = -0.075
+	global_soldiers_food_consumption = -0.075
+}
+pp_harder_ai_very_hard_modifier = {
+	game_data = {
+		category = country
+	}
+	global_nobles_food_consumption = -0.15
+	global_clergy_food_consumption = -0.15
+	global_burghers_food_consumption = -0.15
+	global_laborers_food_consumption = -0.15
+	global_soldiers_food_consumption = -0.15
+}
+pp_harder_ai_insane_modifier = {
+	game_data = {
+		category = country
+	}
+	global_nobles_food_consumption = -0.30
+	global_clergy_food_consumption = -0.30
+	global_burghers_food_consumption = -0.30
+	global_laborers_food_consumption = -0.30
+	global_soldiers_food_consumption = -0.30
+}

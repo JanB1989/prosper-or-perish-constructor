@@ -1,0 +1,35 @@
+﻿# Year-one onboarding: from game start, ends after one in-game year (once per campaign).
+pp_mod_welcome_situation = {
+	monthly_spawn_chance = monthly_spawn_chance_unique
+
+	can_start = {
+		has_global_variable = pp_mod_welcome_situation_pending
+		NOT = { has_global_variable = pp_mod_welcome_situation_completed }
+	}
+
+	can_end = {
+		years_since_situation_start >= 1
+	}
+
+	visible = {
+		is_human = yes
+	}
+
+	on_start = {
+		remove_global_variable = pp_mod_welcome_situation_pending
+	}
+
+	on_ended = {
+		set_global_variable = {
+			name = pp_mod_welcome_situation_completed
+			value = yes
+		}
+	}
+
+	map_color = {
+		if = {
+			limit = { always = yes }
+			value = define:NMapColors|DEFAULT_COLOR
+		}
+	}
+}

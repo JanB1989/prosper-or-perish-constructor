@@ -1,0 +1,37 @@
+﻿pp_player_building_maintenance_rule = {
+	default = pp_player_building_maintenance_normal
+	pp_player_building_maintenance_normal = {
+		flag = general_rule
+	}
+	pp_player_building_maintenance_025 = {
+		apply_modifier = player:pp_player_building_maintenance_025_modifier
+		flag = general_rule
+	}
+	pp_player_building_maintenance_050 = {
+		apply_modifier = player:pp_player_building_maintenance_050_modifier
+		flag = general_rule
+	}
+	pp_player_building_maintenance_075 = {
+		apply_modifier = player:pp_player_building_maintenance_075_modifier
+		flag = general_rule
+	}
+}
+
+pp_ai_building_maintenance_rule = {
+	default = pp_ai_building_maintenance_normal
+	pp_ai_building_maintenance_normal = {
+		flag = general_rule
+	}
+	pp_ai_building_maintenance_neg_025 = {
+		apply_modifier = ai:pp_ai_building_maintenance_neg_025_modifier
+		flag = general_rule
+	}
+	pp_ai_building_maintenance_neg_050 = {
+		apply_modifier = ai:pp_ai_building_maintenance_neg_050_modifier
+		flag = general_rule
+	}
+	pp_ai_building_maintenance_neg_075 = {
+		apply_modifier = ai:pp_ai_building_maintenance_neg_075_modifier
+		flag = general_rule
+	}
+}

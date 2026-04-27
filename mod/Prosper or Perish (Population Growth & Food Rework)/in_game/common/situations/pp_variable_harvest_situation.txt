@@ -1,0 +1,159 @@
+﻿harvest_situation = {
+	monthly_spawn_chance = monthly_spawn_chance_unique
+	
+	can_start = {
+		always = yes
+	}
+	
+	can_end = {
+		always = no
+	}
+	
+	visible = {
+		NOT = { has_game_rule = pp_variable_harvest_disabled }
+	}
+	on_start = {
+	}
+	on_monthly = {
+		if = {
+			limit = {
+				current_month = 9
+				NOT = { has_game_rule = pp_variable_harvest_disabled }
+			}
+			apply_regional_harvest_effect = yes
+		}
+	}
+	tooltip = {
+		if = {
+			limit = {
+				has_owner = yes
+				province = { is_starving = yes }
+			}
+			custom_tooltip = province_is_starving_tt
+		}
+		if = {
+			limit = {
+				has_owner = yes
+				this.market ?= { market_monthly_food_balance < 0 }
+			}
+			custom_tooltip = market_negative_food_balance_tt
+		}
+		if = {
+			limit = {	
+				area = {
+					has_extended_winter = yes
+				}
+			}
+			custom_tooltip = affected_by_extended_winters_tt
+		}
+	}
+	on_ended = {
+		every_country = {
+			limit = {
+				capital ?= {
+					area = {
+						has_extended_winter = yes
+					}
+				}
+			}
+		
+			trigger_event_non_silently = little_ice_age.100
+		}
+	
+		every_area = {
+			every_location_in_area = {
+				remove_location_modifier = harsh_winters_modifier
+			}
+			remove_extended_winter = this 
+		} 
+	}
+	 
+	
+	map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				province = { is_starving = yes }
+			}
+			value = define:NMapColors|POPULATION_STARVING_COLOR_STRIPE
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				has_location_modifier = abysmal_harvest_modifier
+			}
+			value = define:NMapColors|MAP_COLOR_MIN
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				has_location_modifier = very_poor_harvest_modifier
+			}
+			value = define:NMapColors|MAP_COLOR_LOW
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				has_location_modifier = poor_harvest_modifier
+			}
+			value = define:NMapColors|MAP_COLOR_MID
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				has_location_modifier = good_harvest_modifier
+			}
+			value = define:NMapColors|MAP_COLOR_HIGH
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				has_location_modifier = very_good_harvest_modifier
+			}
+			value = define:NMapColors|MAP_COLOR_MAX
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				has_location_modifier = bountiful_harvest_modifier
+			}
+			value = define:NMapColors|MAP_COLOR_TOP
+		}
+		else = {
+			value = define:NMapColors|DEFAULT_COLOR
+		}
+	}
+	
+	legend_key = { 
+		desc = "LEGEND_KEY_ABYSMAL_HARVEST"
+		color = define:NMapColors|MAP_COLOR_MIN
+	}
+	legend_key = { 
+		desc = "LEGEND_KEY_VERY_POOR_HARVEST"
+		color = define:NMapColors|MAP_COLOR_LOW
+	}
+	legend_key = { 
+		desc = "LEGEND_KEY_POOR_HARVEST"
+		color = define:NMapColors|MAP_COLOR_MID
+	}
+	legend_key = { 
+		desc = "LEGEND_KEY_GOOD_HARVEST"
+		color = define:NMapColors|MAP_COLOR_HIGH
+	}
+	legend_key = { 
+		desc = "LEGEND_KEY_VERY_GOOD_HARVEST"
+		color = define:NMapColors|MAP_COLOR_MAX
+	}
+	legend_key = { 
+		desc = "LEGEND_KEY_BOUNTIFUL_GOOD_HARVEST"
+		color = define:NMapColors|MAP_COLOR_TOP
+	}
+	legend_key = { 
+		desc = "LEGEND_KEY_STARVING"
+		color = define:NMapColors|POPULATION_STARVING_COLOR_STRIPE
+	}
+	legend_key = { 
+		desc = "LEGEND_KEY_FOOD_NEG"
+		color = define:NMapColors|MAP_COLOR_MID
+	}
+}

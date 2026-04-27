@@ -1,0 +1,1211 @@
+lateralview_full = {	
+	name = "encyclopedia_lateralview"
+
+    blockoverride "panel_header" {
+        window_header_alt = {
+            blockoverride "header_text" {
+                text = "HEADING_ENCYCLOPEDIA"
+            }
+            blockoverride "window_header_alt_color_texture"{
+				using = color_default_brown_texture
+			}
+        }
+    }
+
+	blockoverride "panel_content" {
+		vbox = {
+            vbox = {
+                using = layoutpolicy_expanding
+                using = bg_main_inner_notabs_alt
+                using = window_main_tabs_margin_alt
+			
+                hbox = {
+                    name = "main"
+                    layoutpolicy_horizontal = expanding
+                    layoutpolicy_vertical = expanding
+                    spacing = 20
+
+                    vbox = {
+                        min_width = 320
+                        max_width = 320
+
+                        margin = { 0 10 }
+                        layoutpolicy_vertical = expanding
+
+                        hbox = {
+                            layoutpolicy_horizontal = expanding
+                            margin_right = 10
+
+                            button_regular = {
+                                name = "select_page"
+                                layoutpolicy_horizontal = expanding
+
+                                text = "ENCYCLOPEDIA_ALL_PAGES"
+
+                                action_tooltip = {
+                                    title = "ENCYCLOPEDIA_ALL_PAGES"
+                                    on_action = "[Encyclopedia.ViewAllEntries]"
+                                }
+
+                                onclick = "[GetVariableSystem.Clear('pp_encyclopedia_active')]"
+
+                                tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                modify_texture = {
+                                    visible = "[And(ObjectsEqual( Encyclopedia.GetCurrentPage, Encyclopedia.GetAllPage ), Not(GetVariableSystem.HasValue('pp_encyclopedia_active', 'yes')))]"
+                                    alpha = 0.1
+                                }
+                            }
+                        }
+
+                        # Prosper or Perish — sibling of scrollbox
+                        hbox = {
+                            layoutpolicy_horizontal = expanding
+                            margin_right = 10
+                            maximumsize = { -1 35 }
+
+                            button_regular = {
+                                name = "pp_select_page"
+                                layoutpolicy_horizontal = expanding
+
+                                text = "ENCYCLOPEDIA_PAGE_PROSPER_OR_PERISH"
+
+                                onclick = "[GetVariableSystem.Set('pp_encyclopedia_active', 'yes')]"
+
+                                action_tooltip = {
+                                    title = "ENCYCLOPEDIA_PAGE_PROSPER_OR_PERISH"
+                                    on_action = "[Encyclopedia.ViewAllEntries]"
+                                }
+
+                                tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                modify_texture = {
+                                    visible = "[GetVariableSystem.HasValue('pp_encyclopedia_active', 'yes')]"
+                                    alpha = 0.1
+                                }
+                            }
+                        }
+
+                        scrollbox = {
+                            layoutpolicy_horizontal = expanding
+                            layoutpolicy_vertical = expanding
+
+                            blockoverride "scrollbox_content" {
+                                fixedgridbox = {
+                                    layoutpolicy_vertical = expanding
+                                    name = "entries"
+                                    addcolumn = 100%
+                                    addrow = 35
+                                    setitemsizefromcell = yes
+                                    datamodel = "[Encyclopedia.AccessPages]"
+
+                                    item = {
+                                        widget = {
+                                            hbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                margin_right = 10
+
+                                                button_regular = {
+                                                    name = "select_page"
+                                                    layoutpolicy_horizontal = expanding
+
+                                                    text = "[EncyclopediaPage.GetTitle]"
+
+                                                    onclick = "[GetVariableSystem.Clear('pp_encyclopedia_active')]"
+
+                                                    action_tooltip = {
+                                                        title = "ENCYCLOPEDIAGE_OPEN_PAGE"
+                                                        on_action = "[GameEncyclopedia.SetCurrentPage( EncyclopediaPage.AccessSelf )]"
+                                                    }
+
+                                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                                    modify_texture = {
+                                                        visible = "[And(ObjectsEqual( Encyclopedia.GetCurrentPage, EncyclopediaPage.Self ), Not(GetVariableSystem.HasValue('pp_encyclopedia_active', 'yes')))]"
+                                                        alpha = 0.1
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        expand = {}
+                    }
+
+                    vbox = {
+                        name = "current"
+                        datacontext = "[Encyclopedia.AccessCurrentPage]"
+                        layoutpolicy_horizontal = expanding
+                        layoutpolicy_vertical = expanding
+                        margin_top = 10
+                        spacing = 10
+
+                        # Vanilla Content
+                        vbox = {
+                            layoutpolicy_horizontal = expanding
+                            layoutpolicy_vertical = expanding
+                            visible = "[Not(GetVariableSystem.HasValue('pp_encyclopedia_active', 'yes'))]"
+
+                            hbox = {
+                                layoutpolicy_horizontal = expanding
+                                margin = { 10 0 }
+                                spacing = 5
+                                hbox = {
+                                    name = "search_controls"
+                                    layoutpolicy_horizontal = expanding
+                                    margin = { 10 0 }
+                                    spacing = 5
+
+                                    using = searchbar_background
+                                    using = searchbar_icon
+
+                                    editbox_search_field =	{
+                                        min_width = 1300
+                                        blockoverride "editbox_properties" {
+                                            name = "search_input" # Do not change name, it is referenced from code
+                                            onreturnpressed = "[EncyclopediaPage.FilterFromText]"
+                                            ontextedited = "[EncyclopediaPage.FilterFromText]"
+                                            maxcharacters = 50
+                                        }
+                                    }
+
+                                    expand = {}
+                                }
+
+                                hbox = {
+                                    ui_direction_button = {
+                                        size = { 22 22 }
+                                        enabled = "[NotEqualTo_int32(GameEncyclopedia.GetCurrentSubpageNumber, '(int32)1')]"
+                                        onclick = "[GameEncyclopedia.GoToPreviousSubPage]"
+                                        tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "ENCYCLOPEDIA_GO_TO_PREVIOUS_SUBPAGE" } } }
+                                        
+                                        mirror = horizontal
+                                        texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+                                        using = button_regular_icon_color
+                                    }
+                                    
+                                    hbox = {
+                                        using = bg_number_container_bckg
+                                        blockoverride "number_container_extra" {
+                                            alpha = 0.4
+                                            margin = {4 4}
+                                        }
+                                        
+                                        hbox = {
+                                            name = "search_controls"
+                                            layoutpolicy_horizontal = expanding
+                                            margin = { 10 0 }
+                                            spacing = 5
+
+                                            using = searchbar_background
+
+                                            editbox_search_field =	{
+                                                min_width = 35
+                                                blockoverride "editbox_standard_size" {
+                                                    size = { 30 30 }
+                                                }
+                                                blockoverride "editbox_properties" {
+                                                    name = "subpage_number" # Do not change name, it is referenced from code
+                                                    onreturnpressed = "[GameEncyclopedia.GoToEditBoxSubPage]"
+                                                    ontextedited = "[GameEncyclopedia.GoToEditBoxSubPage]"
+                                                    maxcharacters = "[GameEncyclopedia.GetCurrentMaxSubpageNumber]"
+                                                    text = "[GameEncyclopedia.GetCurrentSubpageNumber]"
+                                                }
+                                            }
+
+                                            expand = {}
+                                        }
+                                        
+                                        text_single = {
+                                            size = { 30 30 }
+                                            align = center
+                                            using = Font_Type_Headers
+                                            raw_text = "/[GameEncyclopedia.GetCurrentMaxSubpageNumber]"
+                                            autoresize = no
+                                        }
+                                    }
+
+                                    ui_direction_button = {
+                                        size = { 22 22 }
+                                        enabled = "[NotEqualTo_int32(GameEncyclopedia.GetCurrentSubpageNumber, GameEncyclopedia.GetCurrentMaxSubpageNumber)]"
+                                        onclick = "[GameEncyclopedia.GoToNextSubPage]"
+                                        tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "ENCYCLOPEDIA_GO_TO_NEXT_SUBPAGE" } } }
+
+                                        texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+                                        using = button_regular_icon_color
+                                    }
+                                    expand = {}
+                                }
+                            }
+                            
+
+                            scrollbox = {
+                                layoutpolicy_horizontal = expanding
+                                layoutpolicy_vertical = expanding
+
+                                blockoverride "scrollbox_content" {
+                                    dynamicgridbox = {
+                                        name = "entries"
+                                        datamodel = "[GameEncyclopedia.GetCurrentSubPageViewedEntries]"
+
+                                        item = {
+                                            widget = {
+                                                vbox = {
+                                                    set_parent_size_to_minimum = yes
+                                                    margin = { 0 10 }
+
+                                                    vbox = {
+                                                        layoutpolicy_horizontal = expanding
+                                                        datacontext = "[EncyclopediaEntryView.Get]"
+                                                        spacing = 10
+                                                        using = bg_paper_card
+
+                                                        blockoverride "card_color" {
+                                                            using = color_intense_bg_blue_texture
+                                                            blend_mode = multiply
+                                                        }
+
+                                                        max_width = 1450
+                                                        min_width = 1450
+
+                                                        icon = {
+                                                            layoutpolicy_horizontal = expanding
+                                                            using = button_main_tab_texture
+                                                            frame = 4
+                                                
+                                                            modify_texture = {
+                                                                using = color_intense_bg_blue_texture
+                                                                blend_mode = multiply
+                                                            }
+                                                    
+                                                            modify_texture = {
+                                                                using = overlay_leather_texture
+                                                                blend_mode = overlay
+                                                                alpha = 0.2
+                                                            }
+
+                                                            hbox = {
+                                                                margin = { 40 0 }
+                                                                margin_top = 8
+
+                                                                icon = {
+                                                                    name = "image"
+                                                                    texture = "[EncyclopediaEntry.GetImage]"
+                                                                    visible = "[EncyclopediaEntry.HasImage]"
+                                                                    size = { 45 45 }
+                                                                    framesize = "[EncyclopediaEntry.GetFrameSize]"
+                                                                    frame = "[EncyclopediaEntry.GetFrame]"
+                                                                }
+                                                    
+                                                                text_single = {
+                                                                    name = "title"
+                                                                    using = layoutpolicy_expanding
+                                                                    using = Font_Size_Medium
+                                                                    fontsize = 18
+                                                                    autoresize = no
+                                                                    
+                                                                    default_format = "#yellow_titles"
+                                                                    text = "[EncyclopediaEntry.GetTitle]"
+                                                                    
+                                                                }
+                                                            }
+                                                        }
+
+                                                        TooltipListScrollArea = {
+                                                            blockoverride "scrollarea_content" {
+                                                                vbox = {
+                                                                    set_parent_dimension_to_minimum = height
+                                                                    layoutpolicy_horizontal = expanding
+
+                                                                    text_multi = {
+                                                                        name = "body"
+                                                                        max_width = 1450
+                                                                        min_width = 1450
+                                                                        autoresize = yes
+                                                                        
+                                                                        text = "[EncyclopediaEntry.GetBody]"
+                                                                        margin = { 40 10 }
+                                                                    }
+                                                                }
+                                                            }
+                                                            block "block_scrollarea" {
+                                                                maximumsize = { -1 800 }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                expand = {}
+                            }
+                        }
+
+                        # Mod Content — filter buttons and cards per Ingame_Documentation_Rules.md
+                        vbox = {
+                            layoutpolicy_horizontal = expanding
+                            layoutpolicy_vertical = expanding
+                            visible = "[GetVariableSystem.HasValue('pp_encyclopedia_active', 'yes')]"
+
+                            # Filter buttons — row 1 (target order 1-7)
+                            hbox = {
+                                layoutpolicy_horizontal = expanding
+                                margin = { 10 3 }
+                                spacing = 5
+
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "All"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'all')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'all')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "F.A.Q."
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'faq')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'faq')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "Overview"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'overview')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'overview')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "Urbanisation"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'urbanization')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'urbanization')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "Food Production"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'food')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'food')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "Food Consumption"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'food_consumption')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'food_consumption')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "New Buildings"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'cookery')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'cookery')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                            }
+
+                            # Filter buttons — row 2 (target order 8-14)
+                            hbox = {
+                                layoutpolicy_horizontal = expanding
+                                margin = { 10 3 }
+                                spacing = 5
+
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "New Trade Goods"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'victuals')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'victuals')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "Farm Capacity"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'farm_capacity')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'farm_capacity')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "Farm Output"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'farm_output')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'farm_output')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "Variable Harvests"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'harvest')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'harvest')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "Population Growth"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'pop_growth')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'pop_growth')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "Population Distribution"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'pop_dist')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'pop_dist')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "Other Changes"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'other_changes')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'other_changes')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                            }
+
+                            scrollbox = {
+                                layoutpolicy_horizontal = expanding
+                                layoutpolicy_vertical = expanding
+
+                                blockoverride "scrollbox_content" {
+                                    vbox = {
+
+                                        # ---- Overview (Prosper or Perish Mod) ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'overview'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_prosper_perish_mod" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_prosper_perish_mod_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- F.A.Q. ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'faq'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/effect.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_faq" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_faq_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Urbanisation ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'urbanization'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/building_panel/employees.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_urbanization" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_urbanization_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Food Production ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'food'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_food" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_food_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Food Consumption ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'food_consumption'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_food_consumption" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_food_consumption_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- New Buildings (Cookery) ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'cookery'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/balance/buildings_abroad.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_cookery" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_cookery_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- New Trade Goods (Victuals) ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'victuals'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/trade_goods/icon_goods_victuals.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_victuals" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_victuals_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Farm Capacity ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'farm_capacity'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/buildings/farming_village.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_farm_capacity" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_farm_capacity_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Farm Output ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'farm_output'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/modifier_types/wheat_positive.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_farm_output" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_farm_output_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Variable Harvests ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'harvest'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/alerts_icons/weather_system.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "harvest_situation" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "harvest_situation_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Population Growth ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'pop_growth'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_population_growth" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_population_growth_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Population Distribution ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'pop_dist'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/building_panel/employees.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_population_distribution" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_population_distribution_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Buildings in Location (Other Changes) ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/balance/trade.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_buildings_in_location" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_buildings_in_location_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Prosperity (Other Changes) ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_prosperity" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_prosperity_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Devastation (Other Changes) ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/military/bankruptcy.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_devastation" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_devastation_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Province Current Food Storage (Other Changes) ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_province_current_food_storage" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_province_current_food_storage_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Cheap Food (Other Changes) ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_cheap_food" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_cheap_food_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Expensive Food (Other Changes) ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_expensive_food" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_expensive_food_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Starvation (Other Changes) ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/military/bankruptcy.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "#yellow_titles" text = "game_concept_pp_starvation" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_starvation_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+		}
+	}
+}

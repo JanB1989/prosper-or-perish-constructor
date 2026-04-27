@@ -1,0 +1,173 @@
+﻿# Prosper or Perish - Goods Adjustments
+# All goods need to have 0 food value
+TRY_INJECT:wool = {
+    food = -5.0
+    block_rgo_upgrade = no
+}
+TRY_INJECT:wild_game = {
+    food = -3.5
+    block_rgo_upgrade = no
+}
+TRY_INJECT:fur = {
+    food = -2.0
+    block_rgo_upgrade = no
+}
+TRY_INJECT:fish = {
+    food = -5.0
+    block_rgo_upgrade = no
+}
+TRY_INJECT:wheat = {
+    food = -8.0
+    block_rgo_upgrade = no
+}
+TRY_INJECT:maize = {
+    food = -8.0
+    block_rgo_upgrade = no
+}
+TRY_INJECT:rice = {
+    food = -10.0
+    block_rgo_upgrade = no
+}
+TRY_INJECT:millet = {
+    food = -5.0
+    block_rgo_upgrade = no
+}
+TRY_INJECT:legumes = {
+    food = -5.0
+    block_rgo_upgrade = no
+}
+# I need to check what i do with potato RGOs and see how they work out in NA
+TRY_INJECT:potato = {
+    food = -8.0
+    block_rgo_upgrade = no
+}
+TRY_INJECT:livestock = {
+    food = -8.0
+    block_rgo_upgrade = no
+}
+TRY_INJECT:olives = {
+    food = -4.0
+    block_rgo_upgrade = no
+}
+TRY_INJECT:fruit = {
+    food = -4.0
+    block_rgo_upgrade = no
+}
+TRY_INJECT:beeswax = {
+	block_rgo_upgrade = no
+    food = -2.5
+}
+
+# Adjusting transport costs for high-value low-bulk goods
+TRY_INJECT:pepper = {
+	transport_cost = 0.2
+}
+TRY_INJECT:incense = {
+	transport_cost = 0.2
+}
+TRY_INJECT:saffron = {
+	transport_cost = 0.2
+}
+TRY_INJECT:chili = {
+	transport_cost = 0.2
+}
+
+# Reducing burgher demand for salt, because they used salt to preserve foods, so we increase the demand for victuals instead
+TRY_INJECT:salt = {
+	default_market_price = 5 # 4
+	transport_cost = 0.5 # 1
+	demand_add = {
+		burghers = -0.01
+	}
+	block_rgo_upgrade = no
+}
+
+# RGO upgrade blocks (Prosper or Perish building PM matrix); n_pm > 0
+TRY_INJECT:wine = {
+}
+TRY_INJECT:dyes = {
+}
+TRY_INJECT:lumber = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:saltpeter = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:coal = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:iron = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:stone = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:fiber_crops = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:gems = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:medicaments = {
+}
+TRY_INJECT:silver = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:alum = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:clay = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:copper = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:cotton = {
+}
+TRY_INJECT:goods_gold = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:horses = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:ivory = {
+}
+TRY_INJECT:lead = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:marble = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:mercury = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:sand = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:silk = {
+}
+TRY_INJECT:sugar = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:tin = {
+	block_rgo_upgrade = no
+}
+TRY_INJECT:tobacco = {
+	block_rgo_upgrade = no
+}
+
+# Matrix goods with n_pm_outputs = 0 (no block_rgo_upgrade)
+TRY_INJECT:amber = {
+}
+TRY_INJECT:cloves = {
+}
+TRY_INJECT:cocoa = {
+}
+TRY_INJECT:coffee = {
+}
+TRY_INJECT:elephants = {
+}
+TRY_INJECT:pearls = {
+}
+TRY_INJECT:tea = {
+}

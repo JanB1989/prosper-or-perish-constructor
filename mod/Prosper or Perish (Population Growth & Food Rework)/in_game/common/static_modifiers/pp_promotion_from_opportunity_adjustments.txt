@@ -1,0 +1,8 @@
+﻿# I want to move more towards a system where catastrophic things (like starvation) lead to demotion of higher Pops
+# And then i want recovery to take longer
+TRY_INJECT:possible_promotion_percentage = {
+	game_data = {
+		category = location
+	}
+	local_pop_promotion_speed_scaled = 0.0001
+}

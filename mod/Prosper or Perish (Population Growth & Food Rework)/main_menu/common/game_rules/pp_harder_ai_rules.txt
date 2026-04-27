@@ -1,0 +1,18 @@
+﻿pp_harder_ai_rule = {
+	default = pp_harder_ai_normal
+	pp_harder_ai_normal = {
+		flag = general_rule
+	}
+	pp_harder_ai_harder = {
+		apply_modifier = ai:pp_harder_ai_harder_modifier
+		flag = general_rule
+	}
+	pp_harder_ai_very_hard = {
+		apply_modifier = ai:pp_harder_ai_very_hard_modifier
+		flag = general_rule
+	}
+	pp_harder_ai_insane = {
+		apply_modifier = ai:pp_harder_ai_insane_modifier
+		flag = general_rule
+	}
+}

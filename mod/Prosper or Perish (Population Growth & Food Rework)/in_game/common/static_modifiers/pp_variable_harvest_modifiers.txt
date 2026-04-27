@@ -1,0 +1,245 @@
+﻿abysmal_harvest_modifier = {
+	game_data = { category = location }
+	
+	# High Sensitivity (Grains, fiber crops)
+	local_wheat_output_modifier = -1.56
+	local_rice_output_modifier = -1.56
+	local_millet_output_modifier = -1.56
+	local_maize_output_modifier = -1.56
+	local_fiber_crops_output_modifier = -0.39
+	
+	# Medium Sensitivity (Legumes, fruit, olives, plantation & luxury farmed goods)
+	local_legumes_output_modifier = -0.98
+	local_fruit_output_modifier = -0.98
+	local_olives_output_modifier = -0.98
+	local_cotton_output_modifier = -0.98
+	local_sugar_output_modifier = -0.98
+	local_tobacco_output_modifier = -0.98
+	local_cocoa_output_modifier = -0.98
+	local_tea_output_modifier = -0.98
+	local_coffee_output_modifier = -0.98
+	local_silk_output_modifier = -0.98
+	local_incense_output_modifier = -0.98
+	local_saffron_output_modifier = -0.98
+	local_pepper_output_modifier = -0.98
+	local_cloves_output_modifier = -0.98
+	local_chili_output_modifier = -0.98
+	
+	# Low Sensitivity (Tubers, livestock, beeswax, wool, horses)
+	local_potato_output_modifier = -0.58
+	local_livestock_output_modifier = -0.58
+	local_beeswax_output_modifier = -0.58
+	local_wool_output_modifier = -0.58
+	local_horses_output_modifier = -0.10
+	
+	# Fallback (Fish, Wild Game, Fur)
+	local_fish_output_modifier = -0.20
+	local_wild_game_output_modifier = -0.20
+	local_fur_output_modifier = -0.20
+	local_peasants_food_consumption = 0.30
+}
+
+very_poor_harvest_modifier = {
+	game_data = { category = location }
+	
+	# High Sensitivity (Grains, fiber crops)
+	local_wheat_output_modifier = -1.17
+	local_rice_output_modifier = -1.17
+	local_millet_output_modifier = -1.17
+	local_maize_output_modifier = -1.17
+	local_fiber_crops_output_modifier = -0.29
+	
+	# Medium Sensitivity
+	local_legumes_output_modifier = -0.78
+	local_fruit_output_modifier = -0.78
+	local_olives_output_modifier = -0.78
+	local_cotton_output_modifier = -0.78
+	local_sugar_output_modifier = -0.78
+	local_tobacco_output_modifier = -0.78
+	local_cocoa_output_modifier = -0.78
+	local_tea_output_modifier = -0.78
+	local_coffee_output_modifier = -0.78
+	local_silk_output_modifier = -0.78
+	local_incense_output_modifier = -0.78
+	local_saffron_output_modifier = -0.78
+	local_pepper_output_modifier = -0.78
+	local_cloves_output_modifier = -0.78
+	local_chili_output_modifier = -0.78
+	
+	# Low Sensitivity
+	local_potato_output_modifier = -0.49
+	local_livestock_output_modifier = -0.49
+	local_beeswax_output_modifier = -0.49
+	local_wool_output_modifier = -0.49
+	local_horses_output_modifier = -0.09
+	
+	# Fallback (Fish, Wild Game, Fur)
+	local_fish_output_modifier = -0.11
+	local_wild_game_output_modifier = -0.11
+	local_fur_output_modifier = -0.11
+	local_peasants_food_consumption = 0.20
+}
+
+poor_harvest_modifier = {
+	game_data = { category = location }
+	
+	# High Sensitivity (Grains, fiber crops)
+	local_wheat_output_modifier = -0.78
+	local_rice_output_modifier = -0.78
+	local_millet_output_modifier = -0.78
+	local_maize_output_modifier = -0.78
+	local_fiber_crops_output_modifier = -0.20
+	
+	# Medium Sensitivity
+	local_legumes_output_modifier = -0.49
+	local_fruit_output_modifier = -0.49
+	local_olives_output_modifier = -0.49
+	local_cotton_output_modifier = -0.49
+	local_sugar_output_modifier = -0.49
+	local_tobacco_output_modifier = -0.49
+	local_cocoa_output_modifier = -0.49
+	local_tea_output_modifier = -0.49
+	local_coffee_output_modifier = -0.49
+	local_silk_output_modifier = -0.49
+	local_incense_output_modifier = -0.49
+	local_saffron_output_modifier = -0.49
+	local_pepper_output_modifier = -0.49
+	local_cloves_output_modifier = -0.49
+	local_chili_output_modifier = -0.49
+	
+	# Low Sensitivity
+	local_potato_output_modifier = -0.30
+	local_livestock_output_modifier = -0.30
+	local_beeswax_output_modifier = -0.30
+	local_wool_output_modifier = -0.30
+	local_horses_output_modifier = -0.05
+	
+	# Fallback (Fish, Wild Game, Fur)
+	local_fish_output_modifier = -0.04
+	local_wild_game_output_modifier = -0.04
+	local_fur_output_modifier = -0.04
+	local_peasants_food_consumption = 0.11
+}
+
+good_harvest_modifier = {
+	game_data = { category = location }
+	
+	# High Sensitivity (Grains, fiber crops)
+	local_wheat_output_modifier = 0.78
+	local_rice_output_modifier = 0.78
+	local_millet_output_modifier = 0.78
+	local_maize_output_modifier = 0.78
+	local_fiber_crops_output_modifier = 0.20
+	
+	# Medium Sensitivity
+	local_legumes_output_modifier = 0.49
+	local_fruit_output_modifier = 0.49
+	local_olives_output_modifier = 0.49
+	local_cotton_output_modifier = 0.49
+	local_sugar_output_modifier = 0.49
+	local_tobacco_output_modifier = 0.49
+	local_cocoa_output_modifier = 0.49
+	local_tea_output_modifier = 0.49
+	local_coffee_output_modifier = 0.49
+	local_silk_output_modifier = 0.49
+	local_incense_output_modifier = 0.49
+	local_saffron_output_modifier = 0.49
+	local_pepper_output_modifier = 0.49
+	local_cloves_output_modifier = 0.49
+	local_chili_output_modifier = 0.49
+	
+	# Low Sensitivity
+	local_potato_output_modifier = 0.30
+	local_livestock_output_modifier = 0.30
+	local_beeswax_output_modifier = 0.30
+	local_wool_output_modifier = 0.30
+	local_horses_output_modifier = 0.05
+	
+	# Fallback (Fish, Wild Game, Fur)
+	local_fish_output_modifier = 0.04
+	local_wild_game_output_modifier = 0.04
+	local_fur_output_modifier = 0.04
+	local_peasants_food_consumption = -0.11
+}
+
+very_good_harvest_modifier = {
+	game_data = { category = location }
+	
+	# High Sensitivity (Grains, fiber crops)
+	local_wheat_output_modifier = 1.17
+	local_rice_output_modifier = 1.17
+	local_millet_output_modifier = 1.17
+	local_maize_output_modifier = 1.17
+	local_fiber_crops_output_modifier = 0.29
+	
+	# Medium Sensitivity
+	local_legumes_output_modifier = 0.78
+	local_fruit_output_modifier = 0.78
+	local_olives_output_modifier = 0.78
+	local_cotton_output_modifier = 0.78
+	local_sugar_output_modifier = 0.78
+	local_tobacco_output_modifier = 0.78
+	local_cocoa_output_modifier = 0.78
+	local_tea_output_modifier = 0.78
+	local_coffee_output_modifier = 0.78
+	local_silk_output_modifier = 0.78
+	local_incense_output_modifier = 0.78
+	local_saffron_output_modifier = 0.78
+	local_pepper_output_modifier = 0.78
+	local_cloves_output_modifier = 0.78
+	local_chili_output_modifier = 0.78
+	
+	# Low Sensitivity
+	local_potato_output_modifier = 0.49
+	local_livestock_output_modifier = 0.49
+	local_beeswax_output_modifier = 0.49
+	local_wool_output_modifier = 0.49
+	local_horses_output_modifier = 0.09
+	
+	# Fallback (Fish, Wild Game, Fur)
+	local_fish_output_modifier = 0.11
+	local_wild_game_output_modifier = 0.11
+	local_fur_output_modifier = 0.11
+	local_peasants_food_consumption = -0.20
+}
+
+bountiful_harvest_modifier = {
+	game_data = { category = location }
+	
+	# High Sensitivity (Grains, fiber crops)
+	local_wheat_output_modifier = 1.56
+	local_rice_output_modifier = 1.56
+	local_millet_output_modifier = 1.56
+	local_maize_output_modifier = 1.56
+	local_fiber_crops_output_modifier = 0.39
+	
+	# Medium Sensitivity
+	local_legumes_output_modifier = 0.98
+	local_fruit_output_modifier = 0.98
+	local_olives_output_modifier = 0.98
+	local_cotton_output_modifier = 0.98
+	local_sugar_output_modifier = 0.98
+	local_tobacco_output_modifier = 0.98
+	local_cocoa_output_modifier = 0.98
+	local_tea_output_modifier = 0.98
+	local_coffee_output_modifier = 0.98
+	local_silk_output_modifier = 0.98
+	local_incense_output_modifier = 0.98
+	local_saffron_output_modifier = 0.98
+	local_pepper_output_modifier = 0.98
+	local_cloves_output_modifier = 0.98
+	local_chili_output_modifier = 0.98
+	
+	# Low Sensitivity
+	local_potato_output_modifier = 0.58
+	local_livestock_output_modifier = 0.58
+	local_beeswax_output_modifier = 0.58
+	local_wool_output_modifier = 0.58
+	local_horses_output_modifier = 0.10
+	
+	# Fallback (Fish, Wild Game, Fur)
+	local_fish_output_modifier = 0.20
+	local_wild_game_output_modifier = 0.20
+	local_fur_output_modifier = 0.20
+	local_peasants_food_consumption = -0.30
+}

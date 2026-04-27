@@ -1,0 +1,10 @@
+﻿# Unemployed population count for location scope (population * (1 - employment_percentage))
+# Population is stored in thousands internally; multiply by 1000 for display in actual count
+pp_unemployed_population = {
+	value = 1
+	subtract = employment_percentage
+	multiply = population
+	multiply = 1000
+	floor = yes
+	min = 0
+}

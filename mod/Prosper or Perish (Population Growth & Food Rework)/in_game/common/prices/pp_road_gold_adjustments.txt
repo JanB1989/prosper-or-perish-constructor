@@ -1,0 +1,13 @@
+﻿# There sadly is no other interesting way to scale road cost :/
+TRY_INJECT:build_gravel_road = {
+	gold = 10 # 10 
+}
+TRY_INJECT:build_paved_road = {
+	gold = 50 # 25
+}
+TRY_INJECT:build_modern_road = {
+	gold = 150 # 50
+}
+TRY_INJECT:build_railroad = {
+	gold = 400 # 100
+}

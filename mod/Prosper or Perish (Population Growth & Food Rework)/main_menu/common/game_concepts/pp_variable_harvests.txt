@@ -1,0 +1,26 @@
+﻿# Variable Harvests - pp_variable_harvests for section links; harvest_situation shadows situation tooltip
+pp_variable_harvests = {
+	texture = "alerts_icons/weather_system"
+}
+harvest_situation = {
+	texture = "alerts_icons/weather_system"
+}
+# Harvest concepts for mapmode legend - enables blue link styling like [starving|e]
+abysmal_harvest = {
+	texture = "modifiers/locations"
+}
+very_poor_harvest = {
+	texture = "modifiers/locations"
+}
+poor_harvest = {
+	texture = "modifiers/locations"
+}
+good_harvest = {
+	texture = "modifiers/locations"
+}
+very_good_harvest = {
+	texture = "modifiers/locations"
+}
+bountiful_harvest = {
+	texture = "modifiers/locations"
+}

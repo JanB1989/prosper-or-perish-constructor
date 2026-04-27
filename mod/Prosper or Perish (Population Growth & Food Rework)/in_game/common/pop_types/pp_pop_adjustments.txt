@@ -1,0 +1,71 @@
+﻿# Cranked up food consumption base by 50% across the board, except for peasants (10% up)
+TRY_INJECT:nobles = {
+	pop_food_consumption = 25 # 25.0 # 20.0
+}
+TRY_INJECT:clergy = {
+	pop_food_consumption = 7.0 # 6.5 # 5.0
+}
+TRY_INJECT:burghers = {
+	pop_food_consumption = 7.25 # 6.5 # 4.0
+}
+TRY_INJECT:laborers = {
+	pop_food_consumption = 1.60 # 1.5 # 1.0
+	upper = yes
+	pop_percentage_impact = {
+		local_monthly_development = 0.007
+	}
+	literacy_impact = {
+		local_max_rgo_size_modifier = 0.05
+		# local_raw_material_output = 0.05
+	}
+}
+TRY_INJECT:soldiers = {
+	pop_food_consumption = 5.0 # 5.0 # 5.0 # 5.0
+	upper = yes
+	pop_percentage_impact = {
+		local_max_control = 1.0
+	}
+}
+TRY_INJECT:peasants = {
+	pop_food_consumption = 1.0 # 1.0
+	pop_percentage_impact = {
+		local_devastation_recovery = 0.002
+		local_construction_speed = 0.25
+		local_build_buildings_cost = -0.20
+	}
+	literacy_impact = {
+		local_wheat_output_modifier = 0.10
+		local_rice_output_modifier = 0.10
+		local_millet_output_modifier = 0.10
+		local_maize_output_modifier = 0.10
+		local_legumes_output_modifier = 0.10
+		local_fruit_output_modifier = 0.10
+		local_olives_output_modifier = 0.10
+		local_potato_output_modifier = 0.10
+		local_livestock_output_modifier = 0.10
+		local_beeswax_output_modifier = 0.10
+		local_wool_output_modifier = 0.10
+		local_cotton_output_modifier = 0.10
+		local_sugar_output_modifier = 0.10
+		local_tobacco_output_modifier = 0.10
+		local_horses_output_modifier = 0.0175
+		local_silk_output_modifier = 0.10
+		local_incense_output_modifier = 0.10
+		local_tea_output_modifier = 0.10
+		local_cocoa_output_modifier = 0.10
+		local_coffee_output_modifier = 0.10
+		local_fiber_crops_output_modifier = 0.025
+		local_saffron_output_modifier = 0.10
+		local_pepper_output_modifier = 0.10
+		local_cloves_output_modifier = 0.10
+		local_chili_output_modifier = 0.10
+		local_fish_output_modifier = 0.10
+		local_wild_game_output_modifier = 0.10
+		local_fur_output_modifier = 0.10
+		local_victuals_output_modifier = 0.20
+	}	
+}
+
+TRY_INJECT:slaves = {
+	pop_food_consumption = 0.5 # 1.0
+}

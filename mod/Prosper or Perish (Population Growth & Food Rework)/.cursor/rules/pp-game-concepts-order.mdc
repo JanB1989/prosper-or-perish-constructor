@@ -1,0 +1,50 @@
+---
+description: Canonical order of Prosper or Perish game concepts in Europedia
+globs: "**/game_concepts/**", "**/encyclopedia_lateralview.gui"
+alwaysApply: false
+---
+
+# Game Concepts Display Order
+
+When editing game concept definitions, the Europedia GUI, or related files, preserve this order (see Ingame_Documentation_Rules.md):
+
+1. All (done)
+2. F.A.Q. (todo)
+3. Overview (done)
+4. Urbanisation (done)
+5. Food Production (done)
+6. Food Consumption (todo)
+7. New Buildings (done)
+8. New Trade Goods (done)
+9. Farm Capacity (done)
+10. Farm Output (done)
+11. Variable Harvests (done)
+12. Population Growth (done)
+13. Population Distribution (done)
+14. Other Changes (done — Game Rules, Buildings in Location, Pop Capacity, Prosperity, Devastation, Cheap Food, Expensive Food, Province Current Food Storage, Starvation, AI Changes)
+
+More concepts may be added later. Keep the GUI filter buttons and card layout in sync with this order.
+
+## File naming
+
+Filenames in `main_menu/common/game_concepts/` must match card names (snake_case, pp_ prefix). One file per card.
+
+| Card | File |
+|------|------|
+| F.A.Q. | pp_faq.txt |
+| Overview | pp_overview.txt |
+| Urbanisation | pp_urbanisation.txt |
+| Food Production | pp_food_production.txt |
+| Food Consumption | pp_food_consumption.txt |
+| New Buildings | pp_new_buildings.txt |
+| New Trade Goods | pp_new_trade_goods.txt |
+| Farm Capacity | pp_farm_capacity.txt |
+| Farm Output | pp_farm_output.txt |
+| Variable Harvests | pp_variable_harvests.txt |
+| Population Growth | pp_population_growth.txt |
+| Population Distribution | pp_population_distribution.txt |
+| Other Changes | other_changes_pp_buildings_in_location.txt, other_changes_pp_prosperity.txt, other_changes_pp_devastation.txt, other_changes_pp_cheap_food.txt, other_changes_pp_expensive_food.txt, other_changes_pp_province_current_food_storage.txt, other_changes_pp_starvation.txt |
+
+Other Changes sub-cards use the `other_changes_` prefix for easy folder navigation.
+
+See Ingame_Documentation_Rules.md for the full mapping.

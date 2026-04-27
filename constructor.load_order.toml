@@ -1,0 +1,11 @@
+[paths]
+vanilla_root = "C:\\Games\\steamapps\\common\\Europa Universalis V"
+
+[[mods]]
+id = "constructor"
+name = "Prosper or Perish Constructor"
+root = "mod/Prosper or Perish (Population Growth & Food Rework)"
+
+[profiles]
+vanilla = ["vanilla"]
+constructor = ["vanilla", "constructor"]

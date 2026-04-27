@@ -1,0 +1,24 @@
+﻿l_english:
+  # Mining village — only defined here (avoid duplicate keys with other PP English files)
+  pp_mining_coal: "Coal Mining"
+  pp_mining_iron: "Iron Mining"
+  pp_mining_copper: "Copper Mining"
+  pp_mining_goods_gold: "Gold Mining"
+  pp_mining_goods_silver: "Silver Mining"
+  pp_mining_goods_tin: "Tin Mining"
+  pp_mining_goods_lead: "Lead Mining"
+  pp_mining_goods_gems: "Gem Mining"
+  pp_mining_goods_saltpeter: "Saltpeter Mining"
+  pp_mining_goods_alum: "Alum Mining"
+  pp_mining_goods_mercury: "Mercury Mining"
+  pp_mining_goods_marble: "Marble Mining"
+
+  # REPLACE buildings — unique pp_* PM ids (no collision with vanilla after merge)
+  pp_sand_pit_maintenance: "Sand Pits"
+  pp_fiber_crops_farm_maintenance: "Fiber Crops Farms"
+  pp_clay_pit_maintenance: "Clay Pits"
+  pp_bog_iron_maintenance: "Bog Iron Smelters"
+  pp_stone_quarry_maintenance: "Cut Stone Quarry"
+  pp_crude_quarry_maintenance: "Crude Stone Quarry"
+  pp_char_coal_maintenance: "Charcoal Creation"
+  pp_improved_char_coal_maintenance: "Improved Charcoal"

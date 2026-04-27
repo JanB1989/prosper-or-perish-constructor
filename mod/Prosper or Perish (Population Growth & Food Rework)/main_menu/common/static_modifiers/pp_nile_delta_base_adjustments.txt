@@ -1,0 +1,43 @@
+﻿# Nile Delta location base modifiers: raise local crop output from vanilla 0.25 to 1.0
+TRY_REPLACE:nile_delta_rice_base = {
+	game_data = {
+		category = location
+	}
+	local_rice_output_modifier = 1.0
+}
+TRY_REPLACE:nile_delta_wheat_base = {
+	game_data = {
+		category = location
+	}
+	local_wheat_output_modifier = 1.0
+}
+TRY_REPLACE:nile_delta_sugar_base = {
+	game_data = {
+		category = location
+	}
+	local_sugar_output_modifier = 1.0
+}
+TRY_REPLACE:nile_delta_cotton_base = {
+	game_data = {
+		category = location
+	}
+	local_cotton_output_modifier = 1.0
+}
+TRY_REPLACE:nile_delta_legumes_base = {
+	game_data = {
+		category = location
+	}
+	local_legumes_output_modifier = 1.0
+}
+TRY_REPLACE:nile_delta_fiber_crops_base = {
+	game_data = {
+		category = location
+	}
+	local_fiber_crops_output_modifier = 0.25
+}
+TRY_REPLACE:nile_delta_fruit_base = {
+	game_data = {
+		category = location
+	}
+	local_fruit_output_modifier = 1.0
+}

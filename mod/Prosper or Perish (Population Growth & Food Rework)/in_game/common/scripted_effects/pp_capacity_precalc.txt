@@ -1,0 +1,186 @@
+﻿# Prosper or Perish - Building Capacity Pre-calculation
+# This script runs at game start to store fixed environmental bonuses in location variables.
+# This significantly improves performance by avoiding constant re-calculation of complex script values.
+
+pp_precalculate_building_capacities = {
+	every_location_in_the_world = {
+		# Initialize variables
+		set_variable = { name = pp_fruit_orchard_fixed_env_bonus value = 0 }
+		set_variable = { name = pp_sheep_farms_fixed_env_bonus value = 0 }
+		set_variable = { name = pp_farming_village_fixed_env_bonus value = 0 }
+		set_variable = { name = pp_fishing_village_fixed_env_bonus value = 0 }
+		set_variable = { name = pp_forest_village_fixed_env_bonus value = 0 }
+
+		# --- CLIMATE BONUSES ---
+		if = {
+			limit = { climate = tropical }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -2 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -4 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = 2 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = -2 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = 2 }
+		}
+		else_if = {
+			limit = { climate = subtropical }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 1 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -1 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 2 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = 4 }
+		}
+		else_if = {
+			limit = { climate = oceanic }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 2 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = 3 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 8 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = 6 }
+		}
+		else_if = {
+			limit = { climate = arid }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -3 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 2 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = -4 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 0 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = -8 }
+		}
+		else_if = {
+			limit = { climate = cold_arid }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -4 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 1 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = -6 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = -4 }
+		}
+		else_if = {
+			limit = { climate = mediterranean }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 6 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 2 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = 5 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = 2 }
+		}
+		else_if = {
+			limit = { climate = continental }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 0 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 2 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = 6 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 8 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = 6 }
+		}
+		else_if = {
+			limit = { climate = arctic }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -10 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -8 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = -15 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = -10 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = -6 }
+		}
+
+		# --- TOPOGRAPHY BONUSES ---
+		if = {
+			limit = { topography = flatland }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 1 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 2 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = 8 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = -2 }
+		}
+		else_if = {
+			limit = { topography = mountains }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -4 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = -8 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = -6 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = 4 }
+		}
+		else_if = {
+			limit = { topography = hills }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = -2 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = 6 }
+		}
+		else_if = {
+			limit = { topography = plateau }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 1 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 2 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = 2 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 0 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = 2 }
+		}
+		else_if = {
+			limit = { topography = wetlands }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -4 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -5 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = -6 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 6 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = 0 }
+		}
+
+		# --- VEGETATION BONUSES ---
+		if = {
+			limit = { vegetation = desert }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -5 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -2 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = -10 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 0 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = -10 }
+		}
+		else_if = {
+			limit = { vegetation = sparse }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -2 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 3 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = -4 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 1 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = -4 }
+		}
+		else_if = {
+			limit = { vegetation = grasslands }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 1 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = 5 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 2 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = -2 }
+		}
+		else_if = {
+			limit = { vegetation = farmland }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 2 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = 10 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 2 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = -4 }
+		}
+		else_if = {
+			limit = { vegetation = woods }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 0 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -1 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = 0 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = 8 }
+		}
+		else_if = {
+			limit = { vegetation = forest }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -1 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -3 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = -2 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 4 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = 10 }
+		}
+		else_if = {
+			limit = { vegetation = jungle }
+			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -2 }
+			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -5 }
+			change_variable = { name = pp_farming_village_fixed_env_bonus add = -4 }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = -2 }
+			change_variable = { name = pp_forest_village_fixed_env_bonus add = 4 }
+		}
+
+		# --- COASTAL BONUS ---
+		if = {
+			limit = { is_coastal = yes }
+			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 10 }
+		}
+	}
+}

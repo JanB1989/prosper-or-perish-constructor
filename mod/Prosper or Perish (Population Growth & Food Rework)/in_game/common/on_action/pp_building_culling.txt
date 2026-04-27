@@ -1,0 +1,162 @@
+﻿# One random closed (is_opened = no) building per owned location, yearly, AI countries only.
+pp_yearly_cull_one_closed_building = {
+	effect = {
+		if = {
+			limit = {
+				is_ai = yes
+			}
+			every_owned_location = {
+				limit = {
+					any_buildings_in_location = {
+						is_opened = no
+						owner = root
+						building_can_be_destroyed_by = root
+					}
+				}
+				random_buildings_in_location = {
+					limit = {
+						is_opened = no
+						owner = root
+						building_can_be_destroyed_by = root
+					}
+					location = {
+						destroy_building = prev
+					}
+				}
+			}
+		}
+	}
+}
+
+pp_cull_over_cap_buildings = {
+	effect = {
+		every_owned_location = {
+			# Fruit Orchard
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:fruit_orchard
+						value > fruit_orchard_max_level
+					}
+				}
+				change_building_level_in_location = { building = building_type:fruit_orchard value = -1 }
+			}
+			# Fishing Village
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:fishing_village
+						value > fishing_village_max_level
+					}
+				}
+				change_building_level_in_location = { building = building_type:fishing_village value = -1 }
+			}
+			# Sheep Farms
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:sheep_farms
+						value > sheep_farms_max_level
+					}
+				}
+				change_building_level_in_location = { building = building_type:sheep_farms value = -1 }
+			}
+			# Farming Village
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:farming_village
+						value > farming_village_max_level
+					}
+				}
+				change_building_level_in_location = { building = building_type:farming_village value = -1 }
+			}
+			# Forest Village
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:forest_village
+						value > forest_village_max_level
+					}
+				}
+				change_building_level_in_location = { building = building_type:forest_village value = -1 }
+			}
+		}
+	}
+}
+
+pp_ai_victuals_market_on_food_crisis = {
+	effect = {
+		if = {
+			limit = { is_ai = yes }
+			every_province = {
+				if = {
+					limit = {
+						province_monthly_food_production > 100
+						any_location_in_province = {
+							is_province_capital = yes
+							owner ?= root
+							location_building_level = {
+								building_type = building_type:victuals_market
+								value > 0
+							}
+						}
+					}
+					every_location_in_province = {
+						limit = {
+							is_province_capital = yes
+							owner ?= root
+							location_building_level = {
+								building_type = building_type:victuals_market
+								value > 0
+							}
+						}
+						change_building_level_in_location = { building = building_type:victuals_market value = -1 }
+					}
+				}
+				else_if = {
+					limit = {
+						province_monthly_food_production < -30
+						any_location_in_province = {
+							is_province_capital = yes
+							owner ?= root
+							OR = {
+								# No victuals_market at all → build the first one
+								NOT = {
+									any_buildings_in_location = {
+										building_type = building_type:victuals_market
+									}
+								}
+								# Existing victuals_market is healthy and not at max → expand
+								AND = {
+									location_building_level = {
+										building_type = building_type:victuals_market
+										value < victuals_market_max_level
+									}
+									any_buildings_in_location = {
+										building_type = building_type:victuals_market
+										is_opened = yes
+										is_full_capacity = yes
+										is_lacking_goods = no
+									}
+								}
+							}
+						}
+					}
+					every_location_in_province = {
+						limit = {
+							is_province_capital = yes
+							owner ?= root
+						}
+						construct_building = {
+							building_type = building_type:victuals_market
+							instant = yes
+							cost_multiplier = 0
+							cost_multiplier_reason = "pp_ai_food_crisis"
+						}
+					}
+				}
+			}
+		}
+	}
+}

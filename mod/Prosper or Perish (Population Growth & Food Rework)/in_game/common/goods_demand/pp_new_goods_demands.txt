@@ -1,0 +1,23 @@
+﻿## Prosper or Perish - Pop demand extension (debug-simple)
+## We inject into the vanilla `pop_demand` database object so we don't collide with it.
+INJECT:pop_demand = {
+	victuals = {
+		value = 1
+		# Scale demand by how harsh winter can get in this location.
+		# (Derived from climate definitions' `winter = none/mild/normal/severe`.)
+		location = {
+			if = {
+				limit = { location_max_winter_level = severe }
+				multiply = { value = 1.5 desc = "POP_DEMAND_CLIMATE_MAX_WINTER_LEVEL" }
+			}
+			else_if = {
+				limit = { location_max_winter_level = normal }
+				multiply = { value = 1.3 desc = "POP_DEMAND_CLIMATE_MAX_WINTER_LEVEL" }
+			}
+			else_if = {
+				limit = { location_max_winter_level = mild }
+				multiply = { value = 1.15 desc = "POP_DEMAND_CLIMATE_MAX_WINTER_LEVEL" }
+			}
+		}
+	}
+}

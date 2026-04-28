@@ -1,0 +1,82 @@
+version: 2
+tag: cocoa_grove
+building:
+  key: cocoa_grove
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_cocoa_grove_base_cocoa
+    - name: slot_1
+      methods:
+        - pp_cocoa_grove_no_fermentation
+        - pp_cocoa_grove_fermentation_houses
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_cocoa_grove_price
+    category = rgo_building_category
+    icon = cocoa_grove
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:cocoa
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_cocoa_grove_base_cocoa = {
+            produced = cocoa
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_cocoa_grove_no_fermentation = {
+            category = building_maintenance
+        }
+        pp_cocoa_grove_fermentation_houses = {
+            lumber = 0.12
+            glass = 0.04
+            produced = cocoa
+            output = 0.25
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_cocoa_grove_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_cocoa_grove_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('cocoa_grove')|e].
+    MODIFIER_TYPE_NAME_pp_cocoa_grove_price_cost_modifier: Cocoa Grove Cost
+    cocoa_grove_slot_0: Cocoa Trees
+    cocoa_grove_slot_1: Fermentation & Drying
+    cocoa_grove: Cocoa Grove
+    cocoa_grove_desc: A humid tropical grove where laborers cut ripe cacao pods, open them by hand, and dry the beans for market. Basic crews gather and sun-dry the harvest, while fermentation houses use wooden boxes and covered drying frames to cure more beans before they spoil.
+    pp_cocoa_grove_base_cocoa: Cocoa Trees
+    pp_cocoa_grove_no_fermentation: No Fermentation Houses
+    pp_cocoa_grove_fermentation_houses: Fermentation Houses
+    pp_cocoa_grove_price: Cocoa Grove Price
+icon:
+  source_png: ../assets/icons/cocoa_grove.png
+  output_dds: cocoa_grove.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a cocoa grove, transparent background. Center a tropical cacao tree with yellow, orange, and red ribbed pods, opened pods showing pale pulp and cocoa beans, dark fermented cocoa beans on raised wooden drying trays, and a small wooden fermentation box with leaf-covered beans. Use readable painterly shapes, softly outlined historical UI art, warm cocoa browns, muted wood tan, deep green leaves, cacao pod accents, no text, no frame, not photorealistic, not cartoonish.

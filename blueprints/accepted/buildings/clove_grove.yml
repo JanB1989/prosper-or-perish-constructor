@@ -1,0 +1,82 @@
+version: 2
+tag: clove_grove
+building:
+  key: clove_grove
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_clove_grove_base_cloves
+    - name: slot_1
+      methods:
+        - pp_clove_grove_no_curing
+        - pp_clove_grove_curing_houses
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_clove_grove_price
+    category = rgo_building_category
+    icon = clove_grove
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:cloves
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_clove_grove_base_cloves = {
+            produced = cloves
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_clove_grove_no_curing = {
+            category = building_maintenance
+        }
+        pp_clove_grove_curing_houses = {
+            lumber = 0.12
+            coal = 0.04
+            produced = cloves
+            output = 0.25
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_clove_grove_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_clove_grove_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('clove_grove')|e].
+    MODIFIER_TYPE_NAME_pp_clove_grove_price_cost_modifier: Clove Grove Cost
+    clove_grove_slot_0: Clove Trees
+    clove_grove_slot_1: Curing & Drying
+    clove_grove: Clove Grove
+    clove_grove_desc: A warm rural grove where laborers hand-pick unopened clove buds from evergreen trees and dry the spice for market. Basic crews gather and sun-dry the buds, while curing houses use raised wooden racks and controlled heat to finish more of the harvest through wet weather.
+    pp_clove_grove_base_cloves: Clove Trees
+    pp_clove_grove_no_curing: No Curing Houses
+    pp_clove_grove_curing_houses: Curing Houses
+    pp_clove_grove_price: Clove Grove Price
+icon:
+  source_png: ../assets/icons/clove_grove.png
+  output_dds: clove_grove.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a clove grove, transparent background. Center a tropical clove tree branch with green-pink unopened flower buds, dark dried cloves on raised wooden drying racks, a small rustic curing hut or drying screen, and a shallow wicker tray of cloves. Use readable painterly shapes, softly outlined historical UI art, warm dark clove browns, muted wood tan, deep green leaves, small pink-green bud accents, no text, no frame, not photorealistic, not cartoonish.

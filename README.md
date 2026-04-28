@@ -99,7 +99,7 @@ Git. Commit reusable config, accepted blueprints, scripts, docs, and tests.
 For a new mod workspace, use the orchestrator scaffold command:
 
 ```powershell
-uv run eu5-orchestrator init C:/Development/MyEu5Mod --name "My EU5 Mod" --mod-name "My EU5 Mod" --vanilla-root "C:/Games/steamapps/common/Europa Universalis V"
+uv run eu5-orchestrator init C:/Development/my-eu5-mod --name "My EU5 Mod" --mod-name "My EU5 Mod" --vanilla-root "C:/Games/steamapps/common/Europa Universalis V"
 ```
 
 That creates the same baseline folder layout, TOML config, scripts, and README pattern used here.

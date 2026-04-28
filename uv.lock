@@ -401,7 +401,7 @@ wheels = [
 [[package]]
 name = "eu5-building-pipeline"
 version = "0.1.0"
-source = { editable = "../ProsperOrPerishBuildingPipeline" }
+source = { editable = "../eu5-building-pipeline" }
 dependencies = [
     { name = "pillow" },
     { name = "pyyaml" },
@@ -419,7 +419,7 @@ dev = [{ name = "pytest", specifier = ">=9.0.3" }]
 [[package]]
 name = "eu5-mod-orchestrator"
 version = "0.1.0"
-source = { editable = "../Eu5ModOrchestrator" }
+source = { editable = "../eu5-mod-orchestrator" }
 dependencies = [
     { name = "pyyaml" },
     { name = "typer" },
@@ -433,14 +433,14 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "eu5-building-pipeline", editable = "../ProsperOrPerishBuildingPipeline" },
+    { name = "eu5-building-pipeline", editable = "../eu5-building-pipeline" },
     { name = "pytest", specifier = ">=9.0.3" },
 ]
 
 [[package]]
 name = "eu5gameparser"
 version = "0.1.0"
-source = { editable = "../Eu5GameParser" }
+source = { editable = "../eu5-game-parser" }
 dependencies = [
     { name = "ipycytoscape" },
     { name = "ipykernel" },
@@ -1517,9 +1517,9 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "eu5-building-pipeline", editable = "../ProsperOrPerishBuildingPipeline" },
-    { name = "eu5-mod-orchestrator", editable = "../Eu5ModOrchestrator" },
-    { name = "eu5gameparser", editable = "../Eu5GameParser" },
+    { name = "eu5-building-pipeline", editable = "../eu5-building-pipeline" },
+    { name = "eu5-mod-orchestrator", editable = "../eu5-mod-orchestrator" },
+    { name = "eu5gameparser", editable = "../eu5-game-parser" },
     { name = "prosper-or-perish-labeling-pipeline", editable = "../ProsperOrPerishLabelingPipeline" },
 ]
 

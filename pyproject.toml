@@ -21,9 +21,9 @@ dev = [
 ]
 
 [tool.uv.sources]
-eu5-building-pipeline = { path = "../ProsperOrPerishBuildingPipeline", editable = true }
-eu5-mod-orchestrator = { path = "../Eu5ModOrchestrator", editable = true }
-eu5gameparser = { path = "../Eu5GameParser", editable = true }
+eu5-building-pipeline = { path = "../eu5-building-pipeline", editable = true }
+eu5-mod-orchestrator = { path = "../eu5-mod-orchestrator", editable = true }
+eu5gameparser = { path = "../eu5-game-parser", editable = true }
 prosper-or-perish-labeling-pipeline = { path = "../ProsperOrPerishLabelingPipeline", editable = true }
 
 [tool.pytest.ini_options]

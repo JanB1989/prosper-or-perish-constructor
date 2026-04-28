@@ -39,7 +39,7 @@ localization = "main_menu/localization/english/{prefix}{tag}_l_english.yml"
 icons = "in_game/gfx/interface/icons/buildings"
 
 [dependencies]
-parser = "../Eu5GameParser"
-building_pipeline = "../ProsperOrPerishBuildingPipeline"
+parser = "../eu5-game-parser"
+building_pipeline = "../eu5-building-pipeline"
 labeling_pipeline = "../ProsperOrPerishLabelingPipeline"
-orchestrator = "../Eu5ModOrchestrator"
+orchestrator = "../eu5-mod-orchestrator"

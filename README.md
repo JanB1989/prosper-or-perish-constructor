@@ -7,6 +7,16 @@ and orchestrator packages. It keeps a local mod copy under
 `mod/Prosper or Perish (Population Growth & Food Rework)` and writes generated analysis output to
 ignored artifact folders.
 
+## Example Graphs
+
+Curated example graph snapshots are published with GitHub Pages:
+
+- [Goods Flow Explorer](https://janb1989.github.io/prosper-or-perish-constructor/examples/goods_flow_explorer.html)
+- [Savegame Market Explorer](https://janb1989.github.io/prosper-or-perish-constructor/examples/savegame_explorer.html)
+
+Generated local graph outputs stay ignored under `graphs/`; the committed files under
+`docs/examples/` are public demo snapshots.
+
 ## Setup
 
 ```powershell

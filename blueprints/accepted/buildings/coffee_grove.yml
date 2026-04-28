@@ -1,0 +1,82 @@
+version: 2
+tag: coffee_grove
+building:
+  key: coffee_grove
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_coffee_grove_base_coffee
+    - name: slot_1
+      methods:
+        - pp_coffee_grove_no_washing
+        - pp_coffee_grove_washing_stations
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_coffee_grove_price
+    category = rgo_building_category
+    icon = coffee_grove
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:coffee
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_coffee_grove_base_coffee = {
+            produced = coffee
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_coffee_grove_no_washing = {
+            category = building_maintenance
+        }
+        pp_coffee_grove_washing_stations = {
+            lumber = 0.12
+            pottery = 0.06
+            produced = coffee
+            output = 0.25
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_coffee_grove_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_coffee_grove_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('coffee_grove')|e].
+    MODIFIER_TYPE_NAME_pp_coffee_grove_price_cost_modifier: Coffee Grove Cost
+    coffee_grove_slot_0: Coffee Trees
+    coffee_grove_slot_1: Washing & Drying
+    coffee_grove: Coffee Grove
+    coffee_grove_desc: A shaded upland grove where laborers pick ripe coffee cherries and dry them for market. Basic crews rely on natural sun-drying, while washing stations use wooden troughs and lined vats to pulp, ferment, wash, and dry cleaner parchment coffee.
+    pp_coffee_grove_base_coffee: Coffee Trees
+    pp_coffee_grove_no_washing: No Washing Stations
+    pp_coffee_grove_washing_stations: Washing Stations
+    pp_coffee_grove_price: Coffee Grove Price
+icon:
+  source_png: ../assets/icons/coffee_grove.png
+  output_dds: coffee_grove.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a coffee grove, transparent background. Center glossy dark-green coffee branches with red coffee cherries, picked cherries in a shallow wooden tray, pale green coffee beans drying on a raised wooden bed, and a small rustic washing trough or fermentation vat. Use readable painterly shapes, softly outlined historical UI art, red cherries, warm wood, parchment beige, deep green leaves, no text, no frame, not photorealistic, not cartoonish.

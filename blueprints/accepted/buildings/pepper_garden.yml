@@ -1,0 +1,82 @@
+version: 2
+tag: pepper_garden
+building:
+  key: pepper_garden
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_pepper_garden_base_pepper
+    - name: slot_1
+      methods:
+        - pp_pepper_garden_no_garbling
+        - pp_pepper_garden_blanched_garbling_yards
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_pepper_garden_price
+    category = rgo_building_category
+    icon = pepper_garden
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:pepper
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_pepper_garden_base_pepper = {
+            produced = pepper
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_pepper_garden_no_garbling = {
+            category = building_maintenance
+        }
+        pp_pepper_garden_blanched_garbling_yards = {
+            pottery = 0.08
+            coal = 0.04
+            produced = pepper
+            output = 0.25
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_pepper_garden_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_pepper_garden_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('pepper_garden')|e].
+    MODIFIER_TYPE_NAME_pp_pepper_garden_price_cost_modifier: Pepper Garden Cost
+    pepper_garden_slot_0: Pepper Vines
+    pepper_garden_slot_1: Blanching & Garbling
+    pepper_garden: Pepper Garden
+    pepper_garden_desc: A warm spice garden where laborers tend climbing pepper vines and harvest pungent berries prized for seasoning and traditional medicines. Basic crews dry peppercorns in the sun, while blanching and garbling yards scald, rake, sort, and grade more of the crop for market.
+    pp_pepper_garden_base_pepper: Pepper Vines
+    pp_pepper_garden_no_garbling: No Garbling Yards
+    pp_pepper_garden_blanched_garbling_yards: Blanched Garbling Yards
+    pp_pepper_garden_price: Pepper Garden Price
+icon:
+  source_png: ../assets/icons/pepper_garden.png
+  output_dds: pepper_garden.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a pepper garden, transparent background. Center pepper vines climbing a support tree or wooden poles, green and red pepper spikes, dark peppercorns drying on woven mats, a small steaming earthen blanching pot, and a sorting tray with peppercorns. Use readable painterly shapes, softly outlined historical UI art, deep vine greens, red and green pepper spikes, dark peppercorn browns, warm tan mats, muted clay pottery, no text, no frame, not photorealistic, not cartoonish.

@@ -1,0 +1,49 @@
+﻿# >>> eu5-building-pipeline:elephant_kraal:building
+elephant_kraal = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 3
+price = pp_elephant_kraal_price
+category = rgo_building_category
+icon = elephant_kraal
+rural_settlement = yes
+town = yes
+city = yes
+build_time = village_build_time
+
+location_potential = {
+    raw_material = goods:elephants
+}
+
+construction_demand = basic_construction_needs
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_elephant_kraal_base_elephants = {
+        produced = elephants
+        output = 0.2
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_elephant_kraal_no_capture = {
+        category = building_maintenance
+    }
+    pp_elephant_kraal_kheddah_stockades = {
+        lumber = 0.18
+        fruit = 0.30
+        produced = elephants
+        output = 0.25
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_migration_attraction = 0.01
+}
+}
+# <<< eu5-building-pipeline:elephant_kraal:building

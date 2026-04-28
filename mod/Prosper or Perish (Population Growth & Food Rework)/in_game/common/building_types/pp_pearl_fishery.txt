@@ -1,0 +1,49 @@
+﻿# >>> eu5-building-pipeline:pearl_fishery:building
+pearl_fishery = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 3
+price = pp_pearl_fishery_price
+category = rgo_building_category
+icon = pearl_fishery
+rural_settlement = yes
+town = yes
+city = yes
+build_time = village_build_time
+
+location_potential = {
+    raw_material = goods:pearls
+}
+
+construction_demand = basic_construction_needs
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_pearl_fishery_base_pearls = {
+        produced = pearls
+        output = 0.2
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_pearl_fishery_no_diving = {
+        category = building_maintenance
+    }
+    pp_pearl_fishery_dhow_diving_crews = {
+        naval_supplies = 0.10
+        victuals = 0.18
+        produced = pearls
+        output = 0.25
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_migration_attraction = 0.01
+}
+}
+# <<< eu5-building-pipeline:pearl_fishery:building

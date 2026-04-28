@@ -1,0 +1,10 @@
+version: 2
+tag: construction_center
+building:
+  key: construction_center
+  mode: INJECT
+  source: pp_building_adjustments.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |2-
+        rural_settlement = yes

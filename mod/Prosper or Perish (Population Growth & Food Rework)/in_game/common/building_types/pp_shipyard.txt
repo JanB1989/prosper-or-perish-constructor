@@ -1,0 +1,44 @@
+﻿# >>> eu5-building-pipeline:shipyard:building
+REPLACE:shipyard = {
+	is_foreign = no
+	max_levels = 1
+	pop_type = soldiers
+	forbidden_for_estates = yes
+	
+	category = naval_category
+	obsolete = dry_dock
+	
+	employment_size = shipyard_employment
+	location_potential = {
+		is_port = yes
+	}
+	
+	town = yes
+	city = yes
+	
+	
+	build_time = large_port_building_time
+	
+	
+	unique_production_methods = {
+		pp_shipyard_maintenance = {
+			tar = 0.8
+			naval_supplies = 0.4
+			tools = 0.8
+			lumber = 0.8
+			victuals = 1.6
+			category = building_maintenance
+		}
+	}
+	construction_demand = port_building_construction
+	
+	modifier = {
+		max_ships_built_at_same_time = 4
+		local_sailors = 0.064
+		can_build_ships_in_this_location = yes
+		harbor_suitability = 0.2
+		local_repair_speed = 0.06
+		local_merchant_capacity = 4
+	}
+}
+# <<< eu5-building-pipeline:shipyard:building

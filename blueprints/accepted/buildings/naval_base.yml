@@ -1,0 +1,56 @@
+version: 2
+tag: naval_base
+building:
+  key: naval_base
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_naval_base_maintenance
+  possible_production_methods: []
+  body: |2-
+    	is_foreign = no
+    	max_levels = 1
+    	pop_type = soldiers
+    	forbidden_for_estates = yes
+    	category = naval_category
+    	
+    	obsolete = grand_shipyard
+    	
+    	employment_size = naval_base_employment
+    	location_potential = {
+    		is_port = yes
+    	}
+    	
+    	town = yes
+    	city = yes
+    	
+    	
+    	build_time = large_port_building_time
+    	
+    	
+    	unique_production_methods = {
+    		pp_naval_base_maintenance = {
+    			tar = 3.0
+    			naval_supplies = 1.5
+    			tools = 3.0
+    			lumber = 3.0
+    			victuals = 5.0
+    			category = building_maintenance
+    		}
+    	}
+    	construction_demand = port_building_construction
+    	
+    	modifier = {
+    		max_ships_built_at_same_time = 12
+    		local_sailors = 0.2
+    		can_build_ships_in_this_location = yes
+    		harbor_suitability = 0.3
+    		local_navy_attrition = -1
+    		local_repair_speed = 0.1
+    		local_merchant_capacity = 10
+    	}
+localization:
+  entries:
+    pp_naval_base_maintenance: Naval Base Maintenance

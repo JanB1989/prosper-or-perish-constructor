@@ -1,0 +1,280 @@
+version: 2
+tag: mining_village
+building:
+  key: mining_village
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_mining_base_coal
+        - pp_mining_base_iron
+        - pp_mining_base_copper
+        - pp_mining_base_goods_gold
+        - pp_mining_base_goods_silver
+        - pp_mining_base_goods_tin
+        - pp_mining_base_goods_lead
+        - pp_mining_base_goods_gems
+        - pp_mining_base_goods_alum
+        - pp_mining_base_goods_mercury
+        - pp_mining_base_goods_marble
+    - name: slot_1
+      methods:
+        - pp_mining_coal
+        - pp_mining_iron
+        - pp_mining_copper
+        - pp_mining_goods_gold
+        - pp_mining_goods_silver
+        - pp_mining_goods_tin
+        - pp_mining_goods_lead
+        - pp_mining_goods_gems
+        - pp_mining_goods_alum
+        - pp_mining_goods_mercury
+        - pp_mining_goods_marble
+    - name: slot_2
+      methods:
+        - pp_mining_village_no_stone
+        - pp_mining_village_stone_horses
+        - pp_mining_village_stone_livestock
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_mining_village_price
+    category = rgo_building_category
+    icon = mining_village
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        OR = {
+            raw_material = goods:coal # if RGO coal -> mine, else charcoal
+            raw_material = goods:iron
+            raw_material = goods:copper
+            raw_material = goods:goods_gold
+            raw_material = goods:silver
+            # raw_material = goods:stone # -> stone_quarry
+            raw_material = goods:tin
+            raw_material = goods:lead
+            raw_material = goods:gems
+            # raw_material = goods:saltpeter # -> saltpeter_guild
+            raw_material = goods:alum
+            raw_material = goods:marble
+            raw_material = goods:mercury
+        }
+    }
+
+    construction_demand = mercury_patio_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_mining_base_coal = {
+            produced = coal
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_base_iron = {
+            produced = iron
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_base_copper = {
+            produced = copper
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_base_goods_gold = {
+            produced = goods_gold
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_base_goods_silver = {
+            produced = silver
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_base_goods_tin = {
+            produced = tin
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_base_goods_lead = {
+            produced = lead
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_base_goods_gems = {
+            produced = gems
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_base_goods_alum = {
+            produced = alum
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_base_goods_mercury = {
+            produced = mercury
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_base_goods_marble = {
+            produced = marble
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_mining_coal = {
+            lumber = 0.16
+            tools = 0.16
+            beeswax = 0.04
+            produced = coal
+            output = 0.25
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_mining_iron = {
+            lumber = 0.25
+            tools = 0.21
+            beeswax = 0.10
+            produced = iron
+            output = 0.25
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_mining_copper = {
+            lumber = 0.25
+            tools = 0.205
+            beeswax = 0.105
+            produced = copper
+            output = 0.5
+            category = building_maintenance
+        }
+        pp_mining_goods_gold = {
+            lumber = 0.83
+            tools = 0.69
+            beeswax = 0.345
+            produced = goods_gold
+            output = 0.5
+            category = building_maintenance
+        }
+        pp_mining_goods_silver = {
+            lumber = 0.66
+            tools = 0.55
+            beeswax = 0.28
+            produced = silver
+            output = 0.5
+            category = building_maintenance
+        }
+        pp_mining_goods_tin = {
+            lumber = 0.165
+            tools = 0.14
+            beeswax = 0.065
+            produced = tin
+            output = 0.5
+            category = building_maintenance
+        }
+        pp_mining_goods_lead = {
+            lumber = 0.165
+            tools = 0.14
+            beeswax = 0.065
+            produced = lead
+            output = 0.5
+            category = building_maintenance
+        }
+        pp_mining_goods_gems = {
+            lumber = 0.33
+            tools = 0.275
+            beeswax = 0.14
+            produced = gems
+            output = 0.5
+            category = building_maintenance
+        }
+        pp_mining_goods_alum = {
+            lumber = 0.25
+            tools = 0.205
+            beeswax = 0.105
+            produced = alum
+            output = 0.5
+            category = building_maintenance
+        }
+        pp_mining_goods_mercury = {
+            lumber = 0.25
+            tools = 0.205
+            beeswax = 0.105
+            produced = mercury
+            output = 0.5
+            category = building_maintenance
+        }
+        # Marble is more mined in a quarry so horses are needed.
+        pp_mining_goods_marble = {
+            lumber = 0.38
+            tools = 0.315
+            horses = 0.16
+            produced = marble
+            output = 0.5
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_mining_village_no_stone = {
+            category = building_maintenance
+        }
+        pp_mining_village_stone_horses = {
+            horses = 0.07
+            produced = stone
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_village_stone_livestock = {
+            livestock = 0.14
+            produced = stone
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_mining_village_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_mining_village_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('mining_village')|e].
+    MODIFIER_TYPE_NAME_pp_mining_village_price_cost_modifier: Mining Village Cost
+    mining_village_slot_0: Mineral Deposit
+    mining_village_slot_1: Worked Mine
+    mining_village_slot_2: Stone Haulage
+    mining_village: Mining Village
+    mining_village_desc: A compact mining settlement that extracts local ores and minerals, including coal, metals, and ornamental marble where deposits exist. Basic workings gather small amounts without organized inputs, while intensified mines use lumber, tools, and beeswax. Villages can also haul modest amounts of building stone with horse or ox teams.
+    pp_mining_base_coal: Coal Deposit
+    pp_mining_base_iron: Iron Deposit
+    pp_mining_base_copper: Copper Deposit
+    pp_mining_base_goods_gold: Gold Deposit
+    pp_mining_base_goods_silver: Silver Deposit
+    pp_mining_base_goods_tin: Tin Deposit
+    pp_mining_base_goods_lead: Lead Deposit
+    pp_mining_base_goods_gems: Gem Deposit
+    pp_mining_base_goods_alum: Alum Deposit
+    pp_mining_base_goods_mercury: Mercury Deposit
+    pp_mining_base_goods_marble: Marble Deposit
+    pp_mining_village_no_stone: No Stone Haulage
+    pp_mining_village_stone_horses: Horse-Drawn Stone
+    pp_mining_village_stone_livestock: Ox-Drawn Stone
+    pp_mining_village_price: Mining Village Price
+icon:
+  source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/mining_village.dds
+  output_dds: mining_village.dds
+  size: 512

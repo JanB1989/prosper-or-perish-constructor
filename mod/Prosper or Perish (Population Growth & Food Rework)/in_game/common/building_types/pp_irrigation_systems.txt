@@ -1,0 +1,44 @@
+﻿# >>> eu5-building-pipeline:irrigation_systems:building
+INJECT:irrigation_systems = {
+	modifier = {
+		local_monthly_food_modifier = -0.05 # vanilla 0.05
+		fruit_orchard_max_level_modifier = 1
+		farming_village_max_level_modifier = 1
+
+		# Extreme Sensitivity (Wet-Rice)
+		local_rice_output_modifier = 0.05
+
+		# High Sensitivity (Grains & High-Value Trees)
+		local_wheat_output_modifier = 0.025
+		local_millet_output_modifier = 0.025
+		local_maize_output_modifier = 0.025
+		local_fruit_output_modifier = 0.035
+		local_olives_output_modifier = 0.035
+
+		# Medium Sensitivity (Legumes)
+		local_legumes_output_modifier = 0.02
+
+		# Low Sensitivity (Tubers & Animal Products)
+		local_potato_output_modifier = 0.015
+		local_livestock_output_modifier = 0.005
+		local_beeswax_output_modifier = 0.000
+		local_wool_output_modifier = 0.005
+		local_fiber_crops_output_modifier = 0.00625
+		local_cotton_output_modifier = 0.02
+		local_sugar_output_modifier = 0.02
+		local_tobacco_output_modifier = 0.02
+		local_cocoa_output_modifier = 0.02
+		local_tea_output_modifier = 0.04
+		local_coffee_output_modifier = 0.03
+		local_silk_output_modifier = 0.025
+		local_incense_output_modifier = 0.02
+		local_saffron_output_modifier = 0.02
+		local_pepper_output_modifier = 0.02
+		local_cloves_output_modifier = 0.02
+		local_chili_output_modifier = 0.02
+		local_horses_output_modifier = 0.00175
+	}
+	forbidden_for_estates = no
+	ai_forbid_shutdown = yes
+}
+# <<< eu5-building-pipeline:irrigation_systems:building

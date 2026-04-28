@@ -1,0 +1,10 @@
+version: 2
+tag: horse_breeders
+building:
+  key: horse_breeders
+  mode: INJECT
+  source: pp_building_adjustments.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |2-
+    	employment_size = 3

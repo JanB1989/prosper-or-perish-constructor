@@ -1,0 +1,30 @@
+﻿# >>> eu5-building-pipeline:granary:building
+REPLACE:granary = {
+	is_foreign = no
+	max_levels = pp_granary_cap
+	pop_type = peasants
+	employment_size = 1
+	category = infrastructure_category
+	rural_settlement = yes
+	town = yes
+	city = yes
+	location_potential = {
+		is_province_capital = yes
+	}
+	build_time = government_build_time
+	unique_production_methods = {
+		pp_granary_maintenance = {
+			# masonry = 0.05
+			stone = 0.02
+			category = building_maintenance
+		}
+	}
+	construction_demand = granary_construction
+	modifier = {
+		local_food_decay = -0.00035
+		local_food_capacity = 1200
+	}
+	ai_forbid_shutdown = yes
+	forbidden_for_estates = no
+}
+# <<< eu5-building-pipeline:granary:building

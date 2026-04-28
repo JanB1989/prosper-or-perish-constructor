@@ -1,0 +1,16 @@
+version: 2
+tag: pound_lock_canal_infrastructure
+building:
+  key: pound_lock_canal_infrastructure
+  mode: TRY_INJECT
+  source: pp_building_adjustments.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |2-
+    	modifier = {
+    		local_distance_from_capital_speed_propagation = 0.1
+    		local_monthly_food_modifier = -0.05 # vanilla 0.05
+    		local_fish_output_modifier = 0.025
+    	}
+    	ai_forbid_shutdown = yes
+    	forbidden_for_estates = no

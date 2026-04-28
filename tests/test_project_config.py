@@ -12,10 +12,14 @@ def test_constructor_config_loads() -> None:
 
     assert config.name == "Prosper or Perish Constructor"
     assert config.mod_root == ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
-    assert config.deploy_target is None
+    if (ROOT / "constructor.local.toml").exists():
+        assert config.deploy_target is not None
+    else:
+        assert config.deploy_target is None
     assert config.accepted_blueprints_dir == ROOT / "blueprints" / "accepted"
     assert config.profile == "constructor"
     assert config.load_order_path == ROOT / "constructor.load_order.toml"
+    assert config.building_outputs.prefix == "pp_"
 
 
 def test_accepted_blueprints_validate() -> None:

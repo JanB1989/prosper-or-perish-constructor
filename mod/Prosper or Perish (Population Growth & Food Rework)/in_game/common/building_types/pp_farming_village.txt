@@ -1,0 +1,134 @@
+﻿# >>> eu5-building-pipeline:farming_village:building
+REPLACE:farming_village = {
+	is_foreign = no
+	max_levels = farming_village_max_level
+	pop_type = peasants
+	
+	category = village_category
+	employment_size = 5
+	
+	rural_settlement = yes
+	town = yes
+	city = yes
+	forbidden_for_estates = yes
+	ai_forbid_shutdown = no
+
+	location_potential = {
+		has_variable = pp_farming_village_fixed_env_bonus
+		var:pp_farming_village_fixed_env_bonus > 0
+	}
+
+	build_time = village_build_time
+	
+	unique_production_methods = {
+		pp_farming_village_maintenance = {
+			tools = 0.025
+			clay = 0.8
+			output = 0.5
+			produced = livestock
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_millet_farm_maintenance = {
+			tools = 0.15
+			horses = 0.113
+			output = 0.845
+			produced = millet
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_millet_farm_livestock = {
+			tools = 0.15
+			livestock = 0.226
+			output = 0.65
+			produced = millet
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_wheat_farm_maintenance = {
+			tools = 0.15
+			horses = 0.113
+			output = 0.715
+			produced = wheat
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_wheat_farm_livestock = {
+			tools = 0.15
+			livestock = 0.226
+			output = 0.55
+			produced = wheat
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_maize_farm_maintenance = {
+			tools = 0.1
+			livestock = 0.15
+			output = 0.55
+			produced = maize
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_rice_farm_maintenance = {
+			tools = 0.1
+			livestock = 0.15
+			output = 0.6
+			produced = rice
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_legumes_farm_maintenance = {
+			tools = 0.15
+			horses = 0.113
+			output = 0.78
+			produced = legumes
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_legumes_farm_livestock = {
+			tools = 0.15
+			livestock = 0.226
+			output = 0.6
+			produced = legumes
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_potato_farm_maintenance = {
+			tools = 0.1
+			livestock = 0.15
+			output = 0.6
+			produced = potato
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_olives_farm_maintenance = {
+			tools = 0.1
+			livestock = 0.15
+			output = 0.55
+			produced = olives
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+	}
+	unique_production_methods = {
+		pp_farming_village_no_beeswax = {
+			category = building_maintenance
+		}
+		pp_farming_village_minor_beeswax = {
+			furniture = 0.1
+			cloth = 0.1
+			produced = beeswax
+			output = 0.05
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+	}
+	construction_demand = village_construction
+	modifier = {
+		local_monthly_food = 0.0
+		local_peasants_estate_power = 0.2
+		local_laborers_desired_pop = 0
+		local_soldiers_desired_pop = 0
+	}
+}
+# <<< eu5-building-pipeline:farming_village:building

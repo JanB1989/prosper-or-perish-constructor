@@ -1,0 +1,34 @@
+﻿# >>> eu5-building-pipeline:sheep_farms:building
+REPLACE:sheep_farms = {
+	is_foreign = no
+	pop_type = peasants
+	max_levels = sheep_farms_max_level
+	employment_size = 5
+	category = rgo_building_category
+	rural_settlement = yes
+	town = yes
+	city = yes
+	forbidden_for_estates = yes
+	ai_forbid_shutdown = no
+	location_potential = {
+		has_variable = pp_sheep_farms_fixed_env_bonus
+		var:pp_sheep_farms_fixed_env_bonus > 0
+	}
+	unique_production_methods = {
+		pp_sheep_farm_maintenance = {
+			produced = wool
+			output = 0.6
+			lumber = 0.25
+			tools = 0.07
+			category = building_maintenance
+		}
+	}
+	modifier = {
+		local_monthly_food = 0.0
+		# local_food_capacity = 50
+		local_wool_output_modifier = -0.01
+	}
+	build_time = rural_build_time
+	construction_demand = farm_constructions
+}
+# <<< eu5-building-pipeline:sheep_farms:building

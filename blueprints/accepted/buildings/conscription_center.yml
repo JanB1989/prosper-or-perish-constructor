@@ -1,0 +1,56 @@
+version: 2
+tag: conscription_center
+building:
+  key: conscription_center
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_conscription_center_maintenance
+  possible_production_methods: []
+  body: |2-
+    	is_foreign = no
+    	pop_type = soldiers
+    	max_levels = manpower_max_level
+    	
+    	employment_size = manpower_employment
+    	category = military_category
+    	forbidden_for_estates = yes
+    	
+    	obsolete = regimental_camp
+    	obsolete = barracks
+    	
+    	rural_settlement = yes
+    	town = yes
+    	city = yes
+    	
+    	build_time = soldier_building
+    	
+    	allow = {
+    		owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+    	}
+    	remove_if = {
+    		NOT = { owner = { has_primary_or_accepted_culture = prev.location.dominant_culture } }
+    	}	
+    	modifier = {
+    		local_manpower = 0.025
+    		can_recruit_regiment_in_this_location = yes
+    		max_regiments_trained_at_same_time = 5
+    	}
+    	
+    	unique_production_methods = {
+    		pp_conscription_center_maintenance = {
+    			firearms = 1.0
+    			leather = 1.0
+    			cloth = 0.20
+    			paper = 0.50
+    			weaponry = 1.0
+    			victuals = 0.625
+    			category = building_maintenance
+    		}
+    	}
+    	construction_demand = soldier_building_construction
+localization:
+  entries:
+    pp_conscription_center_maintenance: Conscription Center Maintenance

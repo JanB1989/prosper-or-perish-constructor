@@ -1,0 +1,13 @@
+﻿# >>> eu5-building-pipeline:khmer_baray:building
+TRY_INJECT:khmer_baray = {
+	modifier = {
+		local_monthly_food_modifier = -0.20 # vanilla 0.20
+		local_rice_output_modifier = 0.1
+		local_fish_output_modifier = 0.05
+		local_cotton_output_modifier = 0.03
+		local_sugar_output_modifier = 0.03
+		local_tea_output_modifier = 0.02
+	}
+	ai_forbid_shutdown = yes
+}
+# <<< eu5-building-pipeline:khmer_baray:building

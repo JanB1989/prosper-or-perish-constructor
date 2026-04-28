@@ -1,0 +1,35 @@
+﻿# >>> eu5-building-pipeline:victuals_market:building
+victuals_market = {
+	is_foreign = no
+	max_levels = victuals_market_max_level
+	pop_type = peasants
+	employment_size = 1.0
+	# price = pp_test_price_1
+	# price = pp_victuals_market_price
+	category = infrastructure_category
+	icon = victuals_market
+	rural_settlement = yes
+	town = yes
+	city = yes
+	ai_forbid_shutdown = no
+	important_for_AI = no
+	can_close = yes
+	forbidden_for_estates = yes
+	AI_ignore_available_worker_flag = yes
+	build_time = 180
+	construction_demand = victuals_market_construction
+
+	allow = {
+		is_province_capital = yes
+	}
+
+	possible_production_methods = {
+		victuals_market_maintenance
+	}
+	modifier = {
+		local_monthly_food = 60
+		local_market_access = 0.015
+		local_crown_estate_power = 0.025
+	}
+}
+# <<< eu5-building-pipeline:victuals_market:building

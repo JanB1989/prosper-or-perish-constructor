@@ -1,0 +1,36 @@
+﻿# >>> eu5-building-pipeline:clay_pit:building
+REPLACE:clay_pit = {
+	is_foreign = no
+	max_levels = rural_building_cap
+	pop_type = laborers
+	
+	employment_size = rural_peasant_produce_employment
+	
+	rural_settlement = yes
+	town = yes
+	city = yes
+	
+	location_potential = {
+		OR = {
+			is_coastal = yes
+			has_river = yes
+			is_adjacent_to_lake = yes
+			raw_material = goods:clay
+		}
+	}
+
+	category = rgo_building_category
+	
+	unique_production_methods = {
+		pp_clay_pit_maintenance = {
+			produced = clay
+			output = 1
+			lumber = 0.28
+			category = building_maintenance
+		}
+	}
+	
+	build_time = rural_build_time
+	construction_demand = basic_construction_needs
+}
+# <<< eu5-building-pipeline:clay_pit:building

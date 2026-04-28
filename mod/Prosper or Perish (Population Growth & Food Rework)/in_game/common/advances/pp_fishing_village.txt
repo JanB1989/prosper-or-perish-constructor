@@ -1,13 +1,4 @@
-﻿# Prosper or Perish - Agricultural & Fishing Innovations
-# New advances for innovations with no vanilla counterpart
-# Grand Banks trio: unlock pp_fishing_village_deep_water (no global fish here)
-# Herring Buss / Steam Trawling: still use global_fish_output_modifier; TRY_INJECT food advances may add global fish
-# Small staple-crop spillover (wheat/rice/maize/legumes/potato) scales with fish bonus tier where applicable.
-# Regional staggering: early adopters get advances at earlier ages via potential
-
-# ========== HERRING BUSS (North Sea, c.1415) ==========
-# Floating factories, salt-cure, extended range – marginal early fish preservation
-# North Sea: age 2 | Coastal Europe: age 3 | General: age 4
+﻿# >>> eu5-building-pipeline:fishing_village:advancement
 pp_herring_buss_north_sea = {
 	age = age_2_renaissance
 	icon = safe_exploration_techniques_advance
@@ -25,6 +16,7 @@ pp_herring_buss_north_sea = {
 		}
 	}
 }
+
 pp_herring_buss_coastal = {
 	age = age_3_discovery
 	icon = safe_exploration_techniques_advance
@@ -47,6 +39,7 @@ pp_herring_buss_coastal = {
 		}
 	}
 }
+
 pp_herring_buss_general = {
 	age = age_4_reformation
 	icon = safe_exploration_techniques_advance
@@ -61,9 +54,6 @@ pp_herring_buss_general = {
 	}
 }
 
-# ========== DISTANT-WATER FISHING (1500s–1700s) ==========
-# Fleets crossing oceans to fish; shift from local to distant-water fishery
-# Early (NA/Britain/France/Iberia): age 3 | Maritime Europe: age 4 | General: age 5
 pp_grand_banks_fishery_early = {
 	age = age_3_discovery
 	icon = maritime_advance_age_4
@@ -82,6 +72,7 @@ pp_grand_banks_fishery_early = {
 		}
 	}
 }
+
 pp_grand_banks_fishery_maritime = {
 	age = age_4_reformation
 	icon = maritime_advance_age_4
@@ -105,6 +96,7 @@ pp_grand_banks_fishery_maritime = {
 		}
 	}
 }
+
 pp_grand_banks_fishery_general = {
 	age = age_5_absolutism
 	icon = maritime_advance_age_4
@@ -122,9 +114,6 @@ pp_grand_banks_fishery_general = {
 	}
 }
 
-# ========== STEAM TRAWLING (North Sea 1880s, then global) ==========
-# Steam engine + heavy nets = industrialized ocean fishing
-# North Sea: age 5 | General: age 6
 pp_steam_trawling_north_sea = {
 	age = age_5_absolutism
 	icon = safe_exploration_techniques_advance
@@ -142,6 +131,7 @@ pp_steam_trawling_north_sea = {
 		}
 	}
 }
+
 pp_steam_trawling_general = {
 	age = age_6_revolutions
 	icon = safe_exploration_techniques_advance
@@ -161,3 +151,4 @@ pp_steam_trawling_general = {
 		}
 	}
 }
+# <<< eu5-building-pipeline:fishing_village:advancement

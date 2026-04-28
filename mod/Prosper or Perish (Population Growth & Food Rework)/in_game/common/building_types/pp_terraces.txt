@@ -1,0 +1,21 @@
+﻿# >>> eu5-building-pipeline:terraces:building
+TRY_INJECT:terraces = {
+	modifier = {
+		local_monthly_food_modifier = -0.5 # vanilla 0.5
+		local_maize_output_modifier = 0.1
+		local_potato_output_modifier = 0.1
+		local_rice_output_modifier = 0.06
+		local_wheat_output_modifier = 0.05
+		local_millet_output_modifier = 0.05
+		local_legumes_output_modifier = 0.05
+		local_fiber_crops_output_modifier = 0.015
+		local_cotton_output_modifier = 0.04
+		local_tea_output_modifier = 0.05
+		local_coffee_output_modifier = 0.05
+		local_chili_output_modifier = 0.06
+		local_horses_output_modifier = 0.0075
+	}
+	ai_forbid_shutdown = yes
+	forbidden_for_estates = no
+}
+# <<< eu5-building-pipeline:terraces:building

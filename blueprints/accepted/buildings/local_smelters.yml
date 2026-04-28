@@ -1,0 +1,11 @@
+version: 2
+tag: local_smelters
+building:
+  key: local_smelters
+  mode: INJECT
+  source: pp_building_adjustments.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |2-
+    	town = yes
+    	city = yes

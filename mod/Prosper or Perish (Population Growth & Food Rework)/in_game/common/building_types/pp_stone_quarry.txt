@@ -1,0 +1,51 @@
+﻿# >>> eu5-building-pipeline:stone_quarry:building
+REPLACE:stone_quarry = {
+	is_foreign = no
+	max_levels = rural_building_cap
+	pop_type = laborers
+	
+	employment_size = rural_peasant_produce_employment
+	
+	rural_settlement = yes
+	town = yes
+	city = yes
+	
+	location_potential = {
+		OR = {
+			topography = mountains
+			topography = plateau
+			topography = hills
+			raw_material = goods:stone
+		}
+	}
+
+	category = rgo_building_category
+	
+	# 1. Primary output (pick ONE) — stone vs marble
+	unique_production_methods = {
+	
+		pp_stone_quarry_maintenance = {
+			tools = 0.1
+			lumber = 0.12
+			leather = 0.1
+			
+			produced = stone
+			output = 1
+			
+			category = building_maintenance
+		}
+		
+		pp_crude_quarry_maintenance = {
+			lumber = 0.28
+			
+			produced = stone
+			output = 0.5
+			
+			category = building_maintenance
+		}
+	}
+	build_time = rural_build_time
+
+	construction_demand = basic_construction_needs
+}
+# <<< eu5-building-pipeline:stone_quarry:building

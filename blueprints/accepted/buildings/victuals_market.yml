@@ -1,0 +1,55 @@
+version: 2
+tag: victuals_market
+building:
+  key: victuals_market
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots: []
+  possible_production_methods:
+    - victuals_market_maintenance
+  body: |2-
+    	is_foreign = no
+    	max_levels = victuals_market_max_level
+    	pop_type = peasants
+    	employment_size = 1.0
+    	# price = pp_test_price_1
+    	# price = pp_victuals_market_price
+    	category = infrastructure_category
+    	icon = victuals_market
+    	rural_settlement = yes
+    	town = yes
+    	city = yes
+    	ai_forbid_shutdown = no
+    	important_for_AI = no
+    	can_close = yes
+    	forbidden_for_estates = yes
+    	AI_ignore_available_worker_flag = yes
+    	build_time = 180
+    	construction_demand = victuals_market_construction
+    
+    	allow = {
+    		is_province_capital = yes
+    	}
+    
+    	possible_production_methods = {
+    		victuals_market_maintenance
+    	}
+    	modifier = {
+    		local_monthly_food = 60
+    		local_market_access = 0.015
+    		local_crown_estate_power = 0.025
+    	}
+production_methods:
+  - key: victuals_market_maintenance
+    body: |2-
+      	victuals = 2.0
+      	category = building_maintenance
+localization:
+  entries:
+    victuals_market: Victuals Market
+    victuals_market_desc: The final stop in the local food economy, the food market. [ShowGoodsName('victuals')|e] arrive here as freshly cooked meals or more durable rations, providing your population local food.
+    victuals_market_maintenance: Victuals Market Maintenance
+icon:
+  source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/victuals_market.dds
+  output_dds: victuals_market.dds
+  size: 512

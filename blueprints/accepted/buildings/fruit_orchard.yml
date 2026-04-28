@@ -1,0 +1,43 @@
+version: 2
+tag: fruit_orchard
+building:
+  key: fruit_orchard
+  mode: REPLACE
+  source: pp_food_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_fruit_orchard_maintenance
+  possible_production_methods: []
+  body: |2-
+    	is_foreign = no
+    	pop_type = peasants
+    	max_levels = fruit_orchard_max_level
+    	employment_size = 5
+    	category = rgo_building_category
+    	rural_settlement = yes
+    	town = yes
+    	city = yes
+    	forbidden_for_estates = yes
+    	ai_forbid_shutdown = no
+    	location_potential = {
+    		has_variable = pp_fruit_orchard_fixed_env_bonus
+    		var:pp_fruit_orchard_fixed_env_bonus > 0
+    	}
+    	unique_production_methods = {
+    		pp_fruit_orchard_maintenance = {
+    			produced = fruit
+    			output = 0.55
+    			lumber = 0.25
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    	}
+    	build_time = rural_build_time
+    	construction_demand = farm_constructions
+    	modifier = {
+    		local_monthly_food = 0.0
+    	}
+localization:
+  entries:
+    pp_fruit_orchard_maintenance: Fruit Orchard Maintenance

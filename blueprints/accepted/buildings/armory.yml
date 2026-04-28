@@ -1,0 +1,58 @@
+version: 2
+tag: armory
+building:
+  key: armory
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_armory_maintenance
+  possible_production_methods: []
+  body: |2-
+    	is_foreign = no
+    	pop_type = soldiers
+    	max_levels = manpower_max_level
+    	
+    	category = military_category
+    	forbidden_for_estates = yes
+    	employment_size = manpower_employment
+    	
+    	town = yes
+    	city = yes
+    	
+    	important_for_AI = yes
+    	build_time = soldier_building
+    	
+    	obsolete = provincial_garrison
+    	obsolete = korean_barracks
+    	
+    	allow = {
+    		owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+    	}
+    	remove_if = {
+    		NOT = { owner = { has_primary_or_accepted_culture = prev.location.dominant_culture } }
+    	}
+    	
+    	
+    	modifier = {
+    		local_manpower = 0.01
+    		can_recruit_regiment_in_this_location = yes
+    	}
+    	
+    		
+    	unique_production_methods = {
+    		pp_armory_maintenance = {
+    			firearms = 0.5
+    			leather = 0.5
+    			cloth = 0.10
+    			paper = 0.20
+    			weaponry = 0.5
+    			victuals = 0.25
+    			category = building_maintenance
+    		}
+    	}
+    	construction_demand = early_soldier_building_construction
+localization:
+  entries:
+    pp_armory_maintenance: Armory Maintenance

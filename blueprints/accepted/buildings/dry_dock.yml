@@ -1,0 +1,56 @@
+version: 2
+tag: dry_dock
+building:
+  key: dry_dock
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_dry_dock_maintenance
+  possible_production_methods: []
+  body: |2-
+    	is_foreign = no
+    	max_levels = 1
+    	pop_type = soldiers
+    	forbidden_for_estates = yes
+    	
+    	category = naval_category
+    	obsolete = dock
+    	
+    	location_potential = {
+    		is_port = yes
+    	}
+    	
+    	employment_size = dry_dock_employment
+    	
+    	town = yes
+    	city = yes
+    	
+    	
+    	build_time = medium_port_building_time
+    	
+    	
+    	unique_production_methods = {
+    		pp_dry_dock_maintenance = {
+    			tar = 0.4
+    			naval_supplies = 0.2
+    			tools = 0.4
+    			lumber = 0.4
+    			victuals = 0.8
+    			category = building_maintenance
+    		}
+    	}
+    	construction_demand = port_building_construction
+    	
+    	modifier = {
+    		max_ships_built_at_same_time = 2
+    		local_sailors = 0.032
+    		can_build_ships_in_this_location = yes
+    		harbor_suitability = 0.15
+    		local_repair_speed = 0.04
+    		local_merchant_capacity = 2
+    	}
+localization:
+  entries:
+    pp_dry_dock_maintenance: Dry Dock Maintenance

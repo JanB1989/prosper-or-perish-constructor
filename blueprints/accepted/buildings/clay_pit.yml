@@ -1,0 +1,44 @@
+version: 2
+tag: clay_pit
+building:
+  key: clay_pit
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_clay_pit_maintenance
+  possible_production_methods: []
+  body: |2-
+    	is_foreign = no
+    	max_levels = rural_building_cap
+    	pop_type = laborers
+    	
+    	employment_size = rural_peasant_produce_employment
+    	
+    	rural_settlement = yes
+    	town = yes
+    	city = yes
+    	
+    	location_potential = {
+    		OR = {
+    			is_coastal = yes
+    			has_river = yes
+    			is_adjacent_to_lake = yes
+    			raw_material = goods:clay
+    		}
+    	}
+    
+    	category = rgo_building_category
+    	
+    	unique_production_methods = {
+    		pp_clay_pit_maintenance = {
+    			produced = clay
+    			output = 1
+    			lumber = 0.28
+    			category = building_maintenance
+    		}
+    	}
+    	
+    	build_time = rural_build_time
+    	construction_demand = basic_construction_needs

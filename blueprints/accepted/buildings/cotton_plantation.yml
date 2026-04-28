@@ -1,0 +1,10 @@
+version: 2
+tag: cotton_plantation
+building:
+  key: cotton_plantation
+  mode: TRY_INJECT
+  source: pp_building_adjustments.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |2-
+    	price = pp_plantation_building_price

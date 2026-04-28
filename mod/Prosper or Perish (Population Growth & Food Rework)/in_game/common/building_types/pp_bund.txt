@@ -1,0 +1,41 @@
+﻿# >>> eu5-building-pipeline:bund:building
+INJECT:bund = {
+	modifier = {
+		local_monthly_food_modifier = -0.10 # vanilla 0.10
+		fruit_orchard_max_level_modifier = 1
+		farming_village_max_level_modifier = 1
+
+		# The core purpose of bunds: Rice and Terraced Fruit
+		local_rice_output_modifier = 0.05
+		local_fruit_output_modifier = 0.04
+		local_olives_output_modifier = 0.04
+
+		# Soil conservation for other grains
+		local_wheat_output_modifier = 0.02
+		local_millet_output_modifier = 0.02
+		local_maize_output_modifier = 0.02
+		local_legumes_output_modifier = 0.015
+
+		# Minimal or indirect impact
+		local_potato_output_modifier = 0.01
+		local_livestock_output_modifier = 0.005
+		local_beeswax_output_modifier = 0.000
+		local_wool_output_modifier = 0.005
+		local_fiber_crops_output_modifier = 0.00375
+		local_cotton_output_modifier = 0.012
+		local_sugar_output_modifier = 0.012
+		local_tobacco_output_modifier = 0.012
+		local_cocoa_output_modifier = 0.012
+		local_tea_output_modifier = 0.025
+		local_coffee_output_modifier = 0.02
+		local_silk_output_modifier = 0.015
+		local_incense_output_modifier = 0.012
+		local_saffron_output_modifier = 0.012
+		local_pepper_output_modifier = 0.012
+		local_cloves_output_modifier = 0.012
+		local_chili_output_modifier = 0.012
+		local_horses_output_modifier = 0.0015
+	}
+	ai_forbid_shutdown = yes
+}
+# <<< eu5-building-pipeline:bund:building

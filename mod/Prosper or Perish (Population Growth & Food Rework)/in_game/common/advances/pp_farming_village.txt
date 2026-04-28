@@ -1,13 +1,4 @@
-﻿cookery_tin_cans_advance = {
-	age = age_6_revolutions
-	unlock_production_method = pp_cookery_tin_cans
-	requires = steel_mill_advance
-	icon = cookery_tin_cans_advance
-	ai_weight = { add = 150 }
-}
-
-# ========== RICE (Asian origin) ==========
-# Rice — from start: Asia & Middle East (rice heartland)
+﻿# >>> eu5-building-pipeline:farming_village:advancement
 pp_rice_farm_advance_asian = {
 	age = age_1_traditions
 	unlock_production_method = pp_rice_farm_maintenance
@@ -26,7 +17,7 @@ pp_rice_farm_advance_asian = {
 		}
 	}
 }
-# Rice — medieval: Mediterranean (Iberia, Italy)
+
 pp_rice_farm_advance_mediterranean = {
 	age = age_2_renaissance
 	unlock_production_method = pp_rice_farm_maintenance
@@ -43,7 +34,7 @@ pp_rice_farm_advance_mediterranean = {
 		}
 	}
 }
-# Rice — late: rest of Europe, Americas, Africa
+
 pp_rice_farm_advance_general = {
 	age = age_3_discovery
 	unlock_production_method = pp_rice_farm_maintenance
@@ -73,8 +64,6 @@ pp_rice_farm_advance_general = {
 	}
 }
 
-# ========== MAIZE (American origin) ==========
-# Maize — from start: Americas (native/colonial)
 pp_maize_farm_advance_american = {
 	age = age_1_traditions
 	unlock_production_method = pp_maize_farm_maintenance
@@ -91,7 +80,7 @@ pp_maize_farm_advance_american = {
 		}
 	}
 }
-# Maize — early Europe: Iberia (first from Americas)
+
 pp_maize_farm_advance_iberian = {
 	age = age_3_discovery
 	unlock_production_method = pp_maize_farm_maintenance
@@ -103,7 +92,7 @@ pp_maize_farm_advance_iberian = {
 		original_capital ?= { region = region:iberia_region }
 	}
 }
-# Maize — late: rest of world
+
 pp_maize_farm_advance_general = {
 	age = age_4_reformation
 	unlock_production_method = pp_maize_farm_maintenance
@@ -126,8 +115,6 @@ pp_maize_farm_advance_general = {
 	}
 }
 
-# ========== POTATO (South American origin) ==========
-# Potato — from start: Americas (Andes, spread to Mesoamerica)
 pp_potato_farm_advance_american = {
 	age = age_1_traditions
 	unlock_production_method = pp_potato_farm_maintenance
@@ -144,7 +131,7 @@ pp_potato_farm_advance_american = {
 		}
 	}
 }
-# Potato — early Europe: Iberia (Spain 1570s)
+
 pp_potato_farm_advance_iberian = {
 	age = age_4_reformation
 	unlock_production_method = pp_potato_farm_maintenance
@@ -156,7 +143,7 @@ pp_potato_farm_advance_iberian = {
 		original_capital ?= { region = region:iberia_region }
 	}
 }
-# Potato — late: Prussia, Ireland, rest of Europe (18th c.)
+
 pp_potato_farm_advance_general = {
 	age = age_5_absolutism
 	unlock_production_method = pp_potato_farm_maintenance
@@ -179,8 +166,6 @@ pp_potato_farm_advance_general = {
 	}
 }
 
-# ========== OLIVES (Mediterranean origin) ==========
-# Olives — from start: Mediterranean (North Africa, Middle East, Iberia, Italy)
 pp_olives_farm_advance_mediterranean = {
 	age = age_1_traditions
 	unlock_production_method = pp_olives_farm_maintenance
@@ -199,7 +184,7 @@ pp_olives_farm_advance_mediterranean = {
 		}
 	}
 }
-# Olives — late: rest of world (trade/colonial adoption)
+
 pp_olives_farm_advance_general = {
 	age = age_4_reformation
 	unlock_production_method = pp_olives_farm_maintenance
@@ -220,70 +205,4 @@ pp_olives_farm_advance_general = {
 		}
 	}
 }
-
-# ========== FUR (forest village production method) ==========
-# Fur — from start: North Asia, Eastern Europe, Central Asia, Scandinavia (Russia, etc.)
-pp_fur_trapping_advance_native = {
-	age = age_1_traditions
-	unlock_production_method = pp_fur_trapping
-	requires = agriculture_advance
-	# icon = renaissance_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		original_capital ?= {
-			OR = {
-				sub_continent = sub_continent:north_asia
-				sub_continent = sub_continent:eastern_europe
-				sub_continent = sub_continent:central_asia
-				region = region:scandinavian_region
-			}
-		}
-	}
-}
-# Fur — colonial: Western Europe excl. Scandinavia (North American fur trade)
-pp_fur_trapping_advance_colonial = {
-	age = age_3_discovery
-	unlock_production_method = pp_fur_trapping
-	requires = new_world_advance
-	# icon = new_world_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		original_capital ?= {
-			AND = {
-				sub_continent = sub_continent:western_europe
-				NOT = { region = region:scandinavian_region }
-			}
-		}
-	}
-}
-# Fur — late: rest of world
-pp_fur_trapping_advance_general = {
-	age = age_4_reformation
-	unlock_production_method = pp_fur_trapping
-	requires = global_trade_advance
-	# icon = renaissance_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		NOT = {
-			OR = {
-				original_capital ?= {
-					OR = {
-						sub_continent = sub_continent:north_asia
-						sub_continent = sub_continent:eastern_europe
-						sub_continent = sub_continent:central_asia
-						region = region:scandinavian_region
-					}
-				}
-				original_capital ?= {
-					AND = {
-						sub_continent = sub_continent:western_europe
-						NOT = { region = region:scandinavian_region }
-					}
-				}
-			}
-		}
-	}
-}
+# <<< eu5-building-pipeline:farming_village:advancement

@@ -1,0 +1,18 @@
+version: 2
+tag: khmer_baray
+building:
+  key: khmer_baray
+  mode: TRY_INJECT
+  source: pp_building_adjustments.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |2-
+    	modifier = {
+    		local_monthly_food_modifier = -0.20 # vanilla 0.20
+    		local_rice_output_modifier = 0.1
+    		local_fish_output_modifier = 0.05
+    		local_cotton_output_modifier = 0.03
+    		local_sugar_output_modifier = 0.03
+    		local_tea_output_modifier = 0.02
+    	}
+    	ai_forbid_shutdown = yes

@@ -1,0 +1,19 @@
+version: 2
+tag: sugar_plantation
+building:
+  key: sugar_plantation
+  mode: TRY_INJECT
+  source: pp_building_adjustments.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |2-
+    	price = pp_plantation_building_price
+prices:
+  - key: pp_plantation_building_price
+    body: |2-
+      {
+      	gold = 100
+      }
+localization:
+  entries:
+    pp_plantation_building_price: Plantation Building Price

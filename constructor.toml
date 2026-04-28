@@ -9,15 +9,30 @@ reports = "reports"
 accepted_blueprints = "blueprints/accepted"
 generated_blueprints = "blueprints/generated"
 
+[building_blueprints]
+manifest = "blueprints/buildings.manifest.yml"
+clean_paths = [
+    "in_game/common/building_types/pp_building_adjustments.txt",
+    "in_game/common/building_types/pp_food_buildings.txt",
+    "in_game/common/building_types/pp_new_buildings.txt",
+    "in_game/common/production_methods/pp_production_methods.txt",
+    "in_game/common/advances/pp_agricultural_innovations.txt",
+    "in_game/common/advances/pp_production_method_unlocks.txt",
+    "in_game/common/prices/pp_building_price_adjustments.txt",
+    "main_menu/localization/english/pp_new_buildings_l_english.yml",
+]
+
 [parser]
 profile = "constructor"
 load_order = "constructor.load_order.toml"
 
 [building_outputs]
-building_types = "in_game/common/building_types/zz_constructor_{tag}.txt"
-prices = "in_game/common/prices/zz_constructor_{tag}.txt"
-advances = "in_game/common/advances/zz_constructor_{tag}.txt"
-localization = "main_menu/localization/english/zz_constructor_{tag}_l_english.yml"
+prefix = "pp_"
+building_types = "in_game/common/building_types/{prefix}{tag}.txt"
+production_methods = "in_game/common/production_methods/{prefix}{tag}.txt"
+prices = "in_game/common/prices/{prefix}{tag}.txt"
+advances = "in_game/common/advances/{prefix}{tag}.txt"
+localization = "main_menu/localization/english/{prefix}{tag}_l_english.yml"
 icons = "in_game/gfx/interface/icons/buildings"
 
 [dependencies]

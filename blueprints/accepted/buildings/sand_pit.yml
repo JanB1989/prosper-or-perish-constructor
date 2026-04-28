@@ -1,0 +1,39 @@
+version: 2
+tag: sand_pit
+building:
+  key: sand_pit
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_sand_pit_maintenance
+  possible_production_methods: []
+  body: |2-
+    	is_foreign = no
+    	max_levels = rural_building_cap
+    	pop_type = laborers
+    	
+    	employment_size = rural_peasant_produce_employment
+    	
+    	rural_settlement = yes
+    	town = yes
+    	city = yes
+    
+    	category = rgo_building_category
+    	
+    	build_time = rural_build_time
+    	
+    	unique_production_methods = {
+    		pp_sand_pit_maintenance = {
+    			tools = 0.06
+    			lumber = 0.15
+    			category = building_maintenance
+    			
+    			produced = sand
+    			output = 1
+    			
+    		}
+    	}
+    
+    	construction_demand = basic_construction_needs

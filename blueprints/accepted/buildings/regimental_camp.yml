@@ -1,0 +1,52 @@
+version: 2
+tag: regimental_camp
+building:
+  key: regimental_camp
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_regimental_camp_maintenance
+  possible_production_methods: []
+  body: |2-
+    	is_foreign = no
+    	pop_type = soldiers
+    	max_levels = manpower_max_level
+    	
+    	category = military_category
+    	forbidden_for_estates = yes
+    	
+    	employment_size = manpower_employment
+    	
+    	obsolete = training_fields
+    	
+    	rural_settlement = yes
+    	build_time = soldier_building
+    	
+    	allow = {
+    		owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+    	}
+    	remove_if = {
+    		NOT = { owner = { has_primary_or_accepted_culture = prev.location.dominant_culture } }
+    	}	
+    	modifier = {
+    		local_manpower = 0.02
+    		can_recruit_regiment_in_this_location = yes
+    	}
+    	
+    	unique_production_methods = {
+    		pp_regimental_camp_maintenance = {
+    			firearms = 1.0
+    			leather = 1.0
+    			cloth = 0.20
+    			paper = 0.40
+    			weaponry = 1.0
+    			victuals = 0.5
+    			category = building_maintenance
+    		}
+    	}
+    	construction_demand = soldier_building_construction
+localization:
+  entries:
+    pp_regimental_camp_maintenance: Regimental Camp Maintenance

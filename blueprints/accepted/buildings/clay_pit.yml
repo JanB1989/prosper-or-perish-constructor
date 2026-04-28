@@ -7,6 +7,8 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_clay_pit_no_maintenance
+        - pp_clay_pit_base_clay
         - pp_clay_pit_maintenance
   possible_production_methods: []
   body: |2-
@@ -30,15 +32,30 @@ building:
     	}
     
     	category = rgo_building_category
-    	
+    
     	unique_production_methods = {
+    		pp_clay_pit_no_maintenance = {
+    			category = building_maintenance
+    		}
+    		pp_clay_pit_base_clay = {
+    			produced = clay
+    			output = 0.3
+    			category = building_maintenance
+    		}
     		pp_clay_pit_maintenance = {
     			produced = clay
     			output = 1
     			lumber = 0.28
+    			livestock = 0.12
     			category = building_maintenance
     		}
     	}
     	
     	build_time = rural_build_time
     	construction_demand = basic_construction_needs
+localization:
+  entries:
+    clay_pit_slot_0: Pit Working
+    pp_clay_pit_base_clay: Clay Deposit
+    pp_clay_pit_no_maintenance: No Pit Working
+    pp_clay_pit_maintenance: Worked Clay Pit

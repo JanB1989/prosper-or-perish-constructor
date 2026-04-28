@@ -1,0 +1,82 @@
+version: 2
+tag: chili_plantation
+building:
+  key: chili_plantation
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_chili_plantation_base_chili
+    - name: slot_1
+      methods:
+        - pp_chili_plantation_no_drying
+        - pp_chili_plantation_sun_drying_mats
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_chili_plantation_price
+    category = rgo_building_category
+    icon = chili_plantation
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:chili
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_chili_plantation_base_chili = {
+            produced = chili
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_chili_plantation_no_drying = {
+            category = building_maintenance
+        }
+        pp_chili_plantation_sun_drying_mats = {
+            fiber_crops = 0.08
+            tools = 0.04
+            produced = chili
+            output = 0.2
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_chili_plantation_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_chili_plantation_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('chili_plantation')|e].
+    MODIFIER_TYPE_NAME_pp_chili_plantation_price_cost_modifier: Chili Plantation Cost
+    chili_plantation_slot_0: Chili Plots
+    chili_plantation_slot_1: Harvest & Drying
+    chili_plantation: Chili Plantation
+    chili_plantation_desc: A small rural plantation where laborers tend warm chili plots and gather the ripe peppers by hand. Basic crews harvest fresh chilies, while drying teams use woven mats and tools to prepare more of the crop for market.
+    pp_chili_plantation_base_chili: Chili Plots
+    pp_chili_plantation_no_drying: No Drying
+    pp_chili_plantation_sun_drying_mats: Sun-Drying Mats
+    pp_chili_plantation_price: Chili Plantation Price
+icon:
+  source_png: ../assets/icons/chili_plantation.png
+  output_dds: chili_plantation.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a chili plantation, transparent background. Center harvested red chili peppers spread on woven drying mats, a shallow wicker basket filled with chilies, small chili plants or leafy stems, and a simple hand sickle or field knife. Use simplified readable shapes, visible painterly brushwork, softly outlined historical UI art, muted straw and wicker browns with warm red chili accents, no text, no frame, not photorealistic, not cartoonish.

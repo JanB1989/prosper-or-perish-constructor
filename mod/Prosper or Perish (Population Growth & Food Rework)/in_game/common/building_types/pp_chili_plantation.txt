@@ -1,0 +1,49 @@
+﻿# >>> eu5-building-pipeline:chili_plantation:building
+chili_plantation = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 3
+price = pp_chili_plantation_price
+category = rgo_building_category
+icon = chili_plantation
+rural_settlement = yes
+town = yes
+city = yes
+build_time = village_build_time
+
+location_potential = {
+    raw_material = goods:chili
+}
+
+construction_demand = basic_construction_needs
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_chili_plantation_base_chili = {
+        produced = chili
+        output = 0.3
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_chili_plantation_no_drying = {
+        category = building_maintenance
+    }
+    pp_chili_plantation_sun_drying_mats = {
+        fiber_crops = 0.08
+        tools = 0.04
+        produced = chili
+        output = 0.2
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_migration_attraction = 0.01
+}
+}
+# <<< eu5-building-pipeline:chili_plantation:building

@@ -1,0 +1,108 @@
+version: 2
+tag: amber_collector
+building:
+  key: amber_collector
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_amber_collector_base_amber
+    - name: slot_1
+      methods:
+        - pp_amber_collector_no_beach_gathering
+        - pp_amber_collector_basket_gathering
+    - name: slot_2
+      methods:
+        - pp_amber_collector_no_sand
+        - pp_amber_collector_sand_horses
+        - pp_amber_collector_sand_livestock
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_amber_collector_price
+    category = rgo_building_category
+    icon = amber_collector
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:amber
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_amber_collector_base_amber = {
+            produced = amber
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_amber_collector_no_beach_gathering = {
+            category = building_maintenance
+        }
+        pp_amber_collector_basket_gathering = {
+            fiber_crops = 0.08
+            tools = 0.04
+            produced = amber
+            output = 0.2
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_amber_collector_no_sand = {
+            category = building_maintenance
+        }
+        pp_amber_collector_sand_horses = {
+            horses = 0.12
+            produced = sand
+            output = 0.5
+            category = building_maintenance
+        }
+        pp_amber_collector_sand_livestock = {
+            livestock = 0.24
+            produced = sand
+            output = 0.5
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_amber_collector_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_amber_collector_price_cost_modifier: Affects the cost of building an [ShowBuildingTypeName('amber_collector')|e].
+    MODIFIER_TYPE_NAME_pp_amber_collector_price_cost_modifier: Amber Collector Cost
+    amber_collector_slot_0: Amber Deposit
+    amber_collector_slot_1: Beach Gathering
+    amber_collector_slot_2: Sand Carting
+    amber_collector: Amber Collector
+    amber_collector_desc: A small coastal gathering site where laborers collect amber from local beaches and shallow deposits. Basic crews gather loose pieces by hand, while basket teams sort more carefully and carting crews can also move useful sand from the same shore.
+    pp_amber_collector_base_amber: Loose Amber
+    pp_amber_collector_no_beach_gathering: No Beach Gathering
+    pp_amber_collector_basket_gathering: Basket Gathering
+    pp_amber_collector_no_sand: No Sand Carting
+    pp_amber_collector_sand_horses: Horse-Drawn Sand
+    pp_amber_collector_sand_livestock: Ox-Drawn Sand
+    pp_amber_collector_price: Amber Collector Price
+icon:
+  source_png: ../assets/icons/amber_collector.png
+  output_dds: amber_collector.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for an amber collector, transparent background. Center a compact beach-gathering setup with a low wicker basket holding golden amber chunks, a simple wooden sieve, a small hand rake, pale beach sand, and one warm orange amber piece as the focal material. Use simplified readable shapes, visible painterly brushwork, softly outlined historical UI art, muted sand and wicker browns with amber orange accents, no text, no frame, not photorealistic, not cartoonish.

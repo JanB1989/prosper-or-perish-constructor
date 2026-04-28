@@ -41,5 +41,4 @@ icons = "in_game/gfx/interface/icons/buildings"
 [dependencies]
 parser = "../eu5-game-parser"
 building_pipeline = "../eu5-building-pipeline"
-labeling_pipeline = "../ProsperOrPerishLabelingPipeline"
 orchestrator = "../eu5-mod-orchestrator"

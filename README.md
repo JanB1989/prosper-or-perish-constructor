@@ -3,7 +3,7 @@
 Concrete EU5 mod workspace for the Prosper or Perish population growth and food rework mod.
 
 This repo is the example project that wires together the reusable parser, building pipeline,
-labeling pipeline, and orchestrator packages. It keeps a local mod copy under
+and orchestrator packages. It keeps a local mod copy under
 `mod/Prosper or Perish (Population Growth & Food Rework)` and writes generated analysis output to
 ignored artifact folders.
 

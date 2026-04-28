@@ -20,6 +20,9 @@ def test_constructor_config_loads() -> None:
     assert config.profile == "constructor"
     assert config.load_order_path == ROOT / "constructor.load_order.toml"
     assert config.building_outputs.prefix == "pp_"
+    assert config.building_artifact_dir == ROOT / "artifacts" / "data" / "buildings"
+    assert config.savegame_artifact_dir == ROOT / "artifacts" / "data" / "savegame"
+    assert config.graph_dir == ROOT / "graphs"
 
 
 def test_accepted_blueprints_validate() -> None:

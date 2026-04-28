@@ -1,39 +1,105 @@
 # Prosper or Perish Constructor
 
-Concrete orchestration workspace for the Prosper or Perish population growth and food rework mod.
+Concrete EU5 mod workspace for the Prosper or Perish population growth and food rework mod.
 
-This repo owns a local working copy of the mod under `mod/Prosper or Perish (Population Growth & Food Rework)`
-and uses the shared EU5 parser/orchestrator tooling to inspect and analyze it without writing back to the live
-Paradox mod folder.
+This repo is the example project that wires together the reusable parser, building pipeline,
+labeling pipeline, and orchestrator packages. It keeps a local mod copy under
+`mod/Prosper or Perish (Population Growth & Food Rework)` and writes generated analysis output to
+ignored artifact folders.
 
-## Local workflow
+## Setup
 
 ```powershell
 uv sync --dev
 uv run eu5-orchestrator inspect --project constructor.toml
-uv run eu5-orchestrator blueprint list --project constructor.toml
-uv run eu5-orchestrator blueprint parity --project constructor.toml
-.\scripts\analyze-constructor.ps1
-.\scripts\sync-constructor.ps1
 ```
 
-The sync script builds accepted blueprints into the local mod copy, deploys that full mod copy to the configured
-`[deploy].target`, then exports parser fact tables and the interactive goods-flow explorer to:
+Check `constructor.load_order.toml` before analyzing another machine or mod:
 
-```text
-artifacts/parser/goods_flow_explorer.html
-```
+- `[paths].vanilla_root` must point at the EU5 install folder.
+- `[[mods]].root` must point at the local mod copy for the project.
+- `[profiles].constructor` controls the load order used by the parser.
 
-No deploy target is committed to the repo. Keep live-game writes in an ignored `constructor.local.toml`, for example:
+Machine-local deploy targets stay in ignored `constructor.local.toml`. Example:
 
 ```toml
 [deploy]
-target = "C:/Users/Anwender/Documents/Paradox Interactive/Europa Universalis V/mod/Prosper or Perish (Population Growth & Food Rework)"
+target = "C:/Users/<you>/Documents/Paradox Interactive/Europa Universalis V/mod/Prosper or Perish (Population Growth & Food Rework)"
 ```
 
-## Building blueprints
+## Static Mod Analysis
+
+```powershell
+uv run eu5-orchestrator analyze --project constructor.toml
+.\scripts\analyze-constructor.ps1
+```
+
+This exports static parser tables to:
+
+```text
+artifacts/data/buildings/
+```
+
+and writes the goods-flow graph to:
+
+```text
+graphs/goods_flow_explorer.html
+```
+
+## Savegame Analysis
+
+```powershell
+uv run eu5-orchestrator savegame --project constructor.toml
+.\scripts\savegame-constructor.ps1
+```
+
+By default this uses the newest `.eu5` save under the EU5 documents save folder. Pass `--save` or
+`--save-dir` to choose a different save.
+
+Savegame parquet tables are written to:
+
+```text
+artifacts/data/savegame/
+```
+
+and the market/savegame graph is written to:
+
+```text
+graphs/savegame_explorer.html
+```
+
+## Building Blueprints
 
 Accepted building blueprints live under `blueprints/accepted/buildings` and are enabled by
-`blueprints/buildings.manifest.yml`. These blueprints are the active source for the mod's generated
-`zz_constructor_*` building, production method, price, advancement, localization, and icon files.
+`blueprints/buildings.manifest.yml`.
+
+```powershell
+uv run eu5-orchestrator blueprint list --project constructor.toml
+uv run eu5-orchestrator blueprint parity --project constructor.toml
+uv run eu5-orchestrator build --project constructor.toml --overwrite
+```
+
 The generated filename prefix is configured as `building_outputs.prefix` in `constructor.toml`.
+
+## Deploying
+
+After configuring `constructor.local.toml`, deploy the local mod copy into the live Paradox mod
+folder:
+
+```powershell
+uv run eu5-orchestrator deploy --project constructor.toml --clean
+.\scripts\sync-constructor.ps1
+```
+
+Generated parquet, HTML graphs, reports, and generated blueprints are reproducible and ignored by
+Git. Commit reusable config, accepted blueprints, scripts, docs, and tests.
+
+## Reusing This Structure
+
+For a new mod workspace, use the orchestrator scaffold command:
+
+```powershell
+uv run eu5-orchestrator init C:/Development/MyEu5Mod --name "My EU5 Mod" --mod-name "My EU5 Mod" --vanilla-root "C:/Games/steamapps/common/Europa Universalis V"
+```
+
+That creates the same baseline folder layout, TOML config, scripts, and README pattern used here.

@@ -4,7 +4,10 @@ mod_root = "mod/Prosper or Perish (Population Growth & Food Rework)"
 
 [artifacts]
 root = "artifacts"
-parser = "artifacts/parser"
+data = "artifacts/data"
+buildings = "artifacts/data/buildings"
+savegame = "artifacts/data/savegame"
+graphs = "graphs"
 reports = "reports"
 accepted_blueprints = "blueprints/accepted"
 generated_blueprints = "blueprints/generated"

@@ -1,0 +1,49 @@
+﻿# >>> eu5-building-pipeline:saffron_croft:building
+saffron_croft = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 3
+price = pp_saffron_croft_price
+category = rgo_building_category
+icon = saffron_croft
+rural_settlement = yes
+town = yes
+city = yes
+build_time = village_build_time
+
+location_potential = {
+    raw_material = goods:saffron
+}
+
+construction_demand = basic_construction_needs
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_saffron_croft_base_saffron = {
+        produced = saffron
+        output = 0.2
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_saffron_croft_no_drying = {
+        category = building_maintenance
+    }
+    pp_saffron_croft_toasting_braziers = {
+        pottery = 0.06
+        coal = 0.03
+        produced = saffron
+        output = 0.20
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_migration_attraction = 0.01
+}
+}
+# <<< eu5-building-pipeline:saffron_croft:building

@@ -1,0 +1,82 @@
+version: 2
+tag: saffron_croft
+building:
+  key: saffron_croft
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_saffron_croft_base_saffron
+    - name: slot_1
+      methods:
+        - pp_saffron_croft_no_drying
+        - pp_saffron_croft_toasting_braziers
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_saffron_croft_price
+    category = rgo_building_category
+    icon = saffron_croft
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:saffron
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_saffron_croft_base_saffron = {
+            produced = saffron
+            output = 0.2
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_saffron_croft_no_drying = {
+            category = building_maintenance
+        }
+        pp_saffron_croft_toasting_braziers = {
+            pottery = 0.06
+            coal = 0.03
+            produced = saffron
+            output = 0.20
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_saffron_croft_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_saffron_croft_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('saffron_croft')|e].
+    MODIFIER_TYPE_NAME_pp_saffron_croft_price_cost_modifier: Saffron Croft Cost
+    saffron_croft_slot_0: Crocus Beds
+    saffron_croft_slot_1: Stigma Drying
+    saffron_croft: Saffron Croft
+    saffron_croft_desc: A small, intensive croft where laborers hand-pick saffron crocus flowers and separate the fragile red stigmas. The costly threads are prized for cooking, traditional medicines, and as a golden dye for cloth.
+    pp_saffron_croft_base_saffron: Crocus Beds
+    pp_saffron_croft_no_drying: No Stigma Drying
+    pp_saffron_croft_toasting_braziers: Toasting Braziers
+    pp_saffron_croft_price: Saffron Croft Price
+icon:
+  source_png: ../assets/icons/saffron_croft.png
+  output_dds: saffron_croft.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a saffron croft, transparent background. Center purple saffron crocus flowers in low field beds, vivid red stigmas gathered into a shallow tray, delicate red saffron threads drying beside a small clay brazier or warming pan, and folded saffron-gold dyed cloth as a secondary cue. Use readable painterly shapes, softly outlined historical UI art, purple petals, saffron red threads, saffron-gold cloth, muted green leaves, warm tan wood, matte clay pottery, no text, no frame, not photorealistic, not cartoonish.

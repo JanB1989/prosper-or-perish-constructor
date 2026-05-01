@@ -116,6 +116,7 @@ TRY_INJECT:food_advance_renaissance = {
 	global_beeswax_output_modifier = 0.08
 	global_wild_game_output_modifier = 0.08
 	ai_weight = { add = 15 }
+	global_population_capacity_modifier = 0.06
 }
 # new_world_crops: Columbian Exchange – potato, maize 2–4x caloric yield
 TRY_INJECT:new_world_crops = {
@@ -149,6 +150,7 @@ TRY_INJECT:new_world_crops = {
 	global_cloves_output_modifier = 0.12
 	global_chili_output_modifier = 0.12
 	ai_weight = { add = 15 }
+	global_population_capacity_modifier = 0.08
 }
 # food_advance_reformation: Grand Banks Cod, early Columbian adoption
 TRY_INJECT:food_advance_reformation = {
@@ -183,6 +185,7 @@ TRY_INJECT:food_advance_reformation = {
 	global_cloves_output_modifier = 0.12
 	global_chili_output_modifier = 0.12
 	ai_weight = { add = 15 }
+	global_population_capacity_modifier = 0.1
 }
 # food_advance_absolutism: Norfolk Four-Course, Seed Drill, Scientific Animal Husbandry
 TRY_INJECT:food_advance_absolutism = {
@@ -216,6 +219,7 @@ TRY_INJECT:food_advance_absolutism = {
 	global_cloves_output_modifier = 0.22
 	global_chili_output_modifier = 0.22
 	ai_weight = { add = 15 }
+	global_population_capacity_modifier = 0.12
 }
 # rotherham_plough: Reaper, Steel Plow, Guano, Steam Trawling (fish 50% – pp_steam_trawling adds 100%)
 TRY_INJECT:rotherham_plough = {
@@ -249,5 +253,6 @@ TRY_INJECT:rotherham_plough = {
 	global_cloves_output_modifier = 0.28
 	global_chili_output_modifier = 0.28
 	ai_weight = { add = 15 }
+	global_population_capacity_modifier = 0.12
 }
 # There are other modifiers from gods or religious_aspects maybe worth changing aswell

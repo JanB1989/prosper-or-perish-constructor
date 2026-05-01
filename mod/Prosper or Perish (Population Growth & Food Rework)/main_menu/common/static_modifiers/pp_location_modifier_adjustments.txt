@@ -90,6 +90,7 @@ TRY_REPLACE:coastal = {
 	local_monthly_food = 0 # 1
 	local_supply_limit_modifier = 0.05
 	local_monthly_development_modifier = 0.20
+	local_population_capacity = 25
 }
 TRY_REPLACE:building_levels = {
 	game_data = {
@@ -98,6 +99,7 @@ TRY_REPLACE:building_levels = {
 	local_trade_center_power = 0.0004
 	local_road_building_time = 0.01
 	local_build_new_buildings_cost = 0.05
+	local_population_capacity = 1
 }
 TRY_REPLACE:unsupported_building_levels = {
 	game_data = {
@@ -117,6 +119,7 @@ TRY_REPLACE:total_population = {
 	free_building_levels = 0.075
 	local_food_capacity = 1.5
 	local_disease_resistance = -0.001
+	local_population_capacity = 0
 }
 # capped at max 100 this value
 TRY_REPLACE:location_exports = {
@@ -258,6 +261,7 @@ TRY_REPLACE:development = {
 	local_fish_output_modifier = 0.0025
 	local_wild_game_output_modifier = 0.0025
 	local_fur_output_modifier = 0.0025
+	local_population_capacity = 2
 }
 TRY_REPLACE:minor_rebel_uprising = {
 	game_data = {
@@ -282,6 +286,7 @@ TRY_INJECT:province_capital = {
 		category = location
 	}
 	
+	local_population_capacity = 10
 }
 
 TRY_INJECT:market_center = {
@@ -289,12 +294,15 @@ TRY_INJECT:market_center = {
 }
 TRY_INJECT:river_flowing_through = {
 	local_monthly_food_modifier = -0.05 # vanilla 0.05
+	local_population_capacity_modifier = -0.1
+	local_population_capacity = 15
 }
 
 adjacent_to_lake = {
 	game_data = {
 		category = location
 	}
+	local_population_capacity = 20
 }
 
 TRY_INJECT:local_abuses_modifier = {

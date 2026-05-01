@@ -25,7 +25,7 @@ def test_constructor_config_loads() -> None:
     assert config.graph_dir == ROOT / "graphs"
     assert config.labeling is not None
     assert config.labeling.enabled is True
-    assert config.labeling.config_path == ROOT.parent / "ProsperOrPerishLabelingPipeline" / "mod_injector_config.yaml"
+    assert config.labeling.config_path == ROOT / "labeling_output_modifiers.yaml"
     assert config.labeling.modifier_prefix == "pp"
     assert config.labeling.generated_label == "Prosper or Perish"
     assert config.labeling.managed_write_mode == "mod_root"

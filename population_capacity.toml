@@ -1,4 +1,4 @@
-﻿[population_capacity]
+[population_capacity]
 generated_label = "Prosper or Perish"
 managed_write_mode = "mod_root"
 
@@ -12,132 +12,132 @@ capacity_effects = "main_menu/common/static_modifiers/pp_capacity_pressure_effec
 topography = "in_game/common/topography/pp_population_capacity_topography.txt"
 vegetation = "in_game/common/vegetation/pp_population_capacity_vegetation.txt"
 
-[inject_values.advances.food_advance_renaissance]
+[set_values.advances.food_advance_renaissance]
 global_population_capacity_modifier = 0.06
 
-[inject_values.advances.new_world_crops]
+[set_values.advances.new_world_crops]
 global_population_capacity_modifier = 0.08
 
-[inject_values.advances.food_advance_reformation]
+[set_values.advances.food_advance_reformation]
 global_population_capacity_modifier = 0.10
 
-[inject_values.advances.food_advance_absolutism]
+[set_values.advances.food_advance_absolutism]
 global_population_capacity_modifier = 0.12
 
-[inject_values.advances.rotherham_plough]
+[set_values.advances.rotherham_plough]
 global_population_capacity_modifier = 0.12
 
-[inject_values.climates.tropical]
+[set_values.climates.tropical]
 local_population_capacity_modifier = -0.50
 local_population_capacity = 52
 
-[inject_values.climates.subtropical]
+[set_values.climates.subtropical]
 local_population_capacity_modifier = -1.0
 local_population_capacity = 76
 
-[inject_values.climates.oceanic]
+[set_values.climates.oceanic]
 local_population_capacity_modifier = -1.0
 local_population_capacity = 68
 
-[inject_values.climates.arid]
+[set_values.climates.arid]
 local_population_capacity = 38
 
-[inject_values.climates.cold_arid]
+[set_values.climates.cold_arid]
 local_population_capacity = 28
 
-[inject_values.climates.mediterranean]
+[set_values.climates.mediterranean]
 local_population_capacity_modifier = -1.50
 local_population_capacity = 85
 
-[inject_values.climates.continental]
+[set_values.climates.continental]
 local_population_capacity_modifier = -0.5
 local_population_capacity = 62
 
-[inject_values.climates.arctic]
+[set_values.climates.arctic]
 local_population_capacity_modifier = 0.33
 local_population_capacity = 20
 
-[inject_values.location_ranks.city]
+[set_values.location_ranks.city]
 local_population_capacity = 30
 local_population_capacity_modifier = 0.0
 
-[inject_values.location_ranks.town]
+[set_values.location_ranks.town]
 local_population_capacity = 10
 local_population_capacity_modifier = 0.0
 
-[inject_values.location_ranks.rural_settlement]
+[set_values.location_ranks.rural_settlement]
 local_population_capacity = 0
 local_population_capacity_modifier = 0.0
 
-[inject_values.societal_values.capital_economy_vs_traditional_economy]
+[set_values.societal_values.capital_economy_vs_traditional_economy]
 global_population_capacity_modifier = -0.25
 
-[inject_values.static_modifiers.coastal]
+[set_values.static_modifiers.coastal]
 local_population_capacity = 25
 
-[inject_values.static_modifiers.building_levels]
+[set_values.static_modifiers.building_levels]
 local_population_capacity = 1
 
-[inject_values.static_modifiers.total_population]
+[set_values.static_modifiers.total_population]
 local_population_capacity = 0.0
 
-[inject_values.static_modifiers.development]
+[set_values.static_modifiers.development]
 local_population_capacity = 2
 
-[inject_values.static_modifiers.province_capital]
+[set_values.static_modifiers.province_capital]
 local_population_capacity = 10
 
-[inject_values.static_modifiers.river_flowing_through]
+[set_values.static_modifiers.river_flowing_through]
 local_population_capacity_modifier = -0.10
 local_population_capacity = 15
 
-[inject_values.static_modifiers.adjacent_to_lake]
+[set_values.static_modifiers.adjacent_to_lake]
 local_population_capacity = 20
 
-[inject_values.topography.flatland]
+[set_values.topography.flatland]
 local_population_capacity = 88
 
-[inject_values.topography.mountains]
+[set_values.topography.mountains]
 local_population_capacity_modifier = 0.5
 local_population_capacity = -12
 
-[inject_values.topography.hills]
+[set_values.topography.hills]
 local_population_capacity = 51
 
-[inject_values.topography.plateau]
+[set_values.topography.plateau]
 local_population_capacity = 28
 
-[inject_values.topography.wetlands]
+[set_values.topography.wetlands]
 local_population_capacity = 8
 
-[inject_values.topography.salt_pans]
+[set_values.topography.salt_pans]
 local_population_capacity = -12
 
-[inject_values.topography.atoll]
+[set_values.topography.atoll]
 local_population_capacity = -6
 
-[inject_values.vegetation.desert]
+[set_values.vegetation.desert]
 local_population_capacity = -18
 
-[inject_values.vegetation.sparse]
+[set_values.vegetation.sparse]
 local_population_capacity = -23
 
-[inject_values.vegetation.grasslands]
+[set_values.vegetation.grasslands]
 local_population_capacity = 18
 
-[inject_values.vegetation.farmland]
+[set_values.vegetation.farmland]
 local_population_capacity = 5
 
-[inject_values.vegetation.woods]
+[set_values.vegetation.woods]
 local_population_capacity = -12
 
-[inject_values.vegetation.forest]
+[set_values.vegetation.forest]
 local_population_capacity = -7
 
-[inject_values.vegetation.jungle]
+[set_values.vegetation.jungle]
 local_population_capacity = -38
 
-[replace_static_modifiers.available_free_land]
+[whole_blocks.static_modifiers.available_free_land]
 local_migration_attraction = 1.0
 local_population_growth = 0
 local_monthly_food_modifier = 0.0
@@ -178,7 +178,7 @@ local_wild_game_output_modifier = 0.10
 local_wool_output_modifier = 0.10
 local_peasants_food_consumption = -0.30
 
-[replace_static_modifiers.abundant_free_land]
+[whole_blocks.static_modifiers.abundant_free_land]
 local_migration_attraction = 2.0
 local_population_growth = 0.00
 local_monthly_food_modifier = 0.0
@@ -219,7 +219,7 @@ local_wild_game_output_modifier = 0.20
 local_wool_output_modifier = 0.20
 local_peasants_food_consumption = -0.60
 
-[replace_static_modifiers.overpopulation]
+[whole_blocks.static_modifiers.overpopulation]
 cap_maximum_population_growth_at_zero = true
 local_pop_demotion_speed_modifier = 1.0
 local_migration_attraction = -0.25

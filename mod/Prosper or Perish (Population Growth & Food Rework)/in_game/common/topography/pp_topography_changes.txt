@@ -4,38 +4,46 @@
 
 TRY_INJECT:flatland = {
 	location_modifier = {
+		local_population_capacity = 88
 	}
 }
 
 TRY_INJECT:mountains = {
 	location_modifier = {
 		local_monthly_food_modifier = 0.2
+		local_population_capacity_modifier = 0.5
+		local_population_capacity = -12
 	}
 }
 
 TRY_INJECT:hills = {
 	location_modifier = {
 		local_monthly_food_modifier = 0.1
+		local_population_capacity = 51
 	}
 }
 
 TRY_INJECT:plateau = {
 	location_modifier = {
+		local_population_capacity = 28
 	}
 }
 
 TRY_INJECT:wetlands = {
 	location_modifier = {
 		local_monthly_food_modifier = 0.1
+		local_population_capacity = 8
 	}
 }
 
 TRY_INJECT:salt_pans = {
 	location_modifier = {
+		local_population_capacity = -12
 	}
 }
 
 TRY_INJECT:atoll = {
 	location_modifier = {
+		local_population_capacity = -6
 	}
 }

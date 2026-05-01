@@ -3,17 +3,20 @@
 TRY_INJECT:desert = {
 	location_modifier = {
 		local_monthly_food_modifier = 0.33
+		local_population_capacity = -18
 	}
 }
 
 TRY_INJECT:sparse = {
 	location_modifier = {
+		local_population_capacity = -23
 	}
 }
 
 TRY_INJECT:grasslands = {
 	location_modifier = {
 		local_monthly_food_modifier = -0.1
+		local_population_capacity = 18
 	}
 }
 
@@ -21,6 +24,7 @@ TRY_INJECT:grasslands = {
 TRY_INJECT:farmland = {
 	location_modifier = {
 		local_monthly_food_modifier = -0.33
+		local_population_capacity = 5
 	}
 }
 
@@ -28,12 +32,14 @@ TRY_INJECT:farmland = {
 TRY_INJECT:woods = {
 	location_modifier = {
 		local_monthly_food_modifier = -0.1
+		local_population_capacity = -12
 	}
 }
 
 # Forest reduced
 TRY_INJECT:forest = {
 	location_modifier = {
+		local_population_capacity = -7
 	}
 }
 
@@ -41,5 +47,6 @@ TRY_INJECT:forest = {
 TRY_INJECT:jungle = {
 	location_modifier = {
 		local_monthly_food_modifier = -0.1
+		local_population_capacity = -38
 	}
 }

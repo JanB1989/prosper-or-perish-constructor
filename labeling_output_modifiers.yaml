@@ -1,0 +1,25 @@
+mod_name: "Prosper or Perish"
+mod_output_dir: "mod"
+template_dir: "../ProsperOrPerishLabelingPipeline/mod_templates/prosper_or_perish_farming"
+baseline_parquet: "../ProsperOrPerishLabelingPipeline/base_data/locations_with_raw_material.parquet"
+goods_evaluator_root: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator"
+
+defaults:
+  mmr_mean_center: true
+  scale: rank_uniform
+  scale_args: {}
+  round_decimals: 2
+  drop_zero_productivity: true
+
+# Optional per-good overrides use the same schema as the labeling pipeline's
+# mod_injector_config.yaml. Omit goods, set it to null, or set it to [] to
+# auto-discover every GoodsEvaluator/<good>/config.yaml folder.
+#
+# goods:
+#   - trade_good: fish
+#     evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/fish/config.yaml"
+#     enabled: true
+#     scale: linear_percentile
+#     scale_args:
+#       low_q: 0.05
+#       high_q: 0.95

@@ -40,7 +40,7 @@ icons = "in_game/gfx/interface/icons/buildings"
 
 [labeling]
 enabled = true
-config = "../ProsperOrPerishLabelingPipeline/mod_injector_config.yaml"
+config = "labeling_output_modifiers.yaml"
 modifier_prefix = "pp"
 generated_label = "Prosper or Perish"
 managed_write_mode = "mod_root"

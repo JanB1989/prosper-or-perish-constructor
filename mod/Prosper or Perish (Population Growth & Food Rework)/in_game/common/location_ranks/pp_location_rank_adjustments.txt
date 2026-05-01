@@ -35,6 +35,8 @@ TRY_REPLACE:city = {
 		farming_village_max_level_modifier = -6 #
 		fishing_village_max_level_modifier = 0 #
 		forest_village_max_level_modifier = -6 #
+		local_population_capacity = 30
+		local_population_capacity_modifier = 0
 	}
 	
 	country_modifier = {
@@ -86,6 +88,8 @@ TRY_REPLACE:town = {
 		farming_village_max_level_modifier = -2
 		fishing_village_max_level_modifier = 0
 		forest_village_max_level_modifier = -2
+		local_population_capacity = 10
+		local_population_capacity_modifier = 0
 	}
 	
 	country_modifier = {
@@ -123,6 +127,8 @@ TRY_REPLACE:rural_settlement = {
 		farming_village_max_level_modifier = 0
 		fishing_village_max_level_modifier = 0
 		forest_village_max_level_modifier = 0
+		local_population_capacity = 0
+		local_population_capacity_modifier = 0
 	}
 	
 	country_modifier = {

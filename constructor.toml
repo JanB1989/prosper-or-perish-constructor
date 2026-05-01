@@ -45,8 +45,15 @@ modifier_prefix = "pp"
 generated_label = "Prosper or Perish"
 managed_write_mode = "mod_root"
 
+[population_capacity]
+enabled = true
+config = "population_capacity.toml"
+generated_label = "Prosper or Perish"
+managed_write_mode = "mod_root"
+
 [dependencies]
 parser = "../eu5-game-parser"
 building_pipeline = "../eu5-building-pipeline"
 orchestrator = "../eu5-mod-orchestrator"
 labeling_pipeline = "../ProsperOrPerishLabelingPipeline"
+population_capacity_pipeline = "../ProsperOrPerishPopulationCapacityPipeline"

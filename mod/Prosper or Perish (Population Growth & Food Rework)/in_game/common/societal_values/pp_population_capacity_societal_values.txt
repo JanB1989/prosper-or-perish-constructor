@@ -1,0 +1,8 @@
+# <managed by Prosper or Perish population capacity pipeline>
+# Generated for Prosper or Perish. Edit population_capacity.toml, not this file.
+
+TRY_INJECT:capital_economy_vs_traditional_economy = {
+	right_modifier = {
+		global_population_capacity_modifier = -0.25
+	}
+}

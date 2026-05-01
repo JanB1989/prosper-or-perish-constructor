@@ -1,0 +1,44 @@
+# <managed by Prosper or Perish population capacity pipeline>
+# Generated for Prosper or Perish. Edit population_capacity.toml, not this file.
+
+TRY_INJECT:desert = {
+	location_modifier = {
+		local_population_capacity = -18
+	}
+}
+
+TRY_INJECT:farmland = {
+	location_modifier = {
+		local_population_capacity = 5
+	}
+}
+
+TRY_INJECT:forest = {
+	location_modifier = {
+		local_population_capacity = -7
+	}
+}
+
+TRY_INJECT:grasslands = {
+	location_modifier = {
+		local_population_capacity = 18
+	}
+}
+
+TRY_INJECT:jungle = {
+	location_modifier = {
+		local_population_capacity = -38
+	}
+}
+
+TRY_INJECT:sparse = {
+	location_modifier = {
+		local_population_capacity = -23
+	}
+}
+
+TRY_INJECT:woods = {
+	location_modifier = {
+		local_population_capacity = -12
+	}
+}

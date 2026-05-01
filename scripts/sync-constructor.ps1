@@ -119,6 +119,9 @@ try {
 
     Write-Host "Building accepted blueprints into the constructor mod copy..."
     uv run eu5-orchestrator build --project constructor.toml --overwrite
+    if ($LASTEXITCODE -ne 0) {
+        throw "Constructor build failed with exit code $LASTEXITCODE. Refusing to mirror into live mod folder."
+    }
 
     if (-not (Test-Path -LiteralPath $source -PathType Container)) {
         throw "Constructor mod source does not exist: $source"

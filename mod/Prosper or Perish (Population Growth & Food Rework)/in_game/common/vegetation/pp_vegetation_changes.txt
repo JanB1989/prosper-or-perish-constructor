@@ -1,21 +1,18 @@
-﻿# Vegetation Changes
+# Vegetation Changes
 # These are INJECTS meaning they everything here is ADDED to in_game\common\vegetation\00_default.txt base vegetations
 TRY_INJECT:desert = {
 	location_modifier = {
-		local_population_capacity = -18
 		local_monthly_food_modifier = 0.33
 	}
 }
 
 TRY_INJECT:sparse = {
 	location_modifier = {
-		local_population_capacity = -23
 	}
 }
 
 TRY_INJECT:grasslands = {
 	location_modifier = {
-		local_population_capacity = 18
 		local_monthly_food_modifier = -0.1
 	}
 }
@@ -23,7 +20,6 @@ TRY_INJECT:grasslands = {
 # Farmland reduced
 TRY_INJECT:farmland = {
 	location_modifier = {
-		local_population_capacity = 5
 		local_monthly_food_modifier = -0.33
 	}
 }
@@ -31,7 +27,6 @@ TRY_INJECT:farmland = {
 # Woods reduced
 TRY_INJECT:woods = {
 	location_modifier = {
-		local_population_capacity = -12
 		local_monthly_food_modifier = -0.1
 	}
 }
@@ -39,14 +34,12 @@ TRY_INJECT:woods = {
 # Forest reduced
 TRY_INJECT:forest = {
 	location_modifier = {
-		local_population_capacity = -7
 	}
 }
 
 # Jungle reduced
 TRY_INJECT:jungle = {
 	location_modifier = {
-		local_population_capacity = -38
 		local_monthly_food_modifier = -0.1
 	}
 }

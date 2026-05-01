@@ -1,0 +1,31 @@
+# <managed by Prosper or Perish population capacity pipeline>
+# Generated for Prosper or Perish. Edit population_capacity.toml, not this file.
+
+TRY_INJECT:adjacent_to_lake = {
+	local_population_capacity = 20
+}
+
+TRY_INJECT:building_levels = {
+	local_population_capacity = 1
+}
+
+TRY_INJECT:coastal = {
+	local_population_capacity = 25
+}
+
+TRY_INJECT:development = {
+	local_population_capacity = 2
+}
+
+TRY_INJECT:province_capital = {
+	local_population_capacity = 10
+}
+
+TRY_INJECT:river_flowing_through = {
+	local_population_capacity = 15
+	local_population_capacity_modifier = -0.1
+}
+
+TRY_INJECT:total_population = {
+	local_population_capacity = 0
+}

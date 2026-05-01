@@ -1,4 +1,4 @@
-﻿# In general cities and towns are now way worse at producing food.
+# In general cities and towns are now way worse at producing food.
 # Building in cities and towns is also more expensive in general to slow snowball down a bit
 # They are better at storing food though.
 TRY_REPLACE:city = {
@@ -13,8 +13,6 @@ TRY_REPLACE:city = {
 		local_clergy_desired_pop = 0.05
 	
 		local_max_control = 0.1
-		local_population_capacity = 30
-		local_population_capacity_modifier = 0.0
 		local_population_growth = -0.0035 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 		
 		local_food_capacity = 0 # 500
@@ -73,8 +71,6 @@ TRY_REPLACE:town = {
 		local_clergy_desired_pop = 0.040
 		
 		local_max_control = 0.05
-		local_population_capacity = 10
-		local_population_capacity_modifier = 0.0
 		local_population_growth = -0.0035 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 		local_food_capacity = 0 # 250
 		local_food_capacity_modifier = 0
@@ -116,8 +112,6 @@ TRY_REPLACE:rural_settlement = {
 		free_building_levels = 10
 		
 		local_max_control = 0.00
-		local_population_capacity = 0
-		local_population_capacity_modifier = 0
 		local_migration_attraction = 0
 		local_migration_speed = 0.00 # 0
 		local_food_capacity = 0 # 100

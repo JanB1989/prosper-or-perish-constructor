@@ -1,4 +1,4 @@
-﻿# I want prosperity and devastation to be more sticky in general
+# I want prosperity and devastation to be more sticky in general
 # ADVANCES
 TRY_INJECT:recovery_efforts = {
 	global_devastation_recovery = -0.00475
@@ -86,7 +86,6 @@ TRY_INJECT:serfdom = {
 # food_advance_renaissance: Herring Buss (c.1415), cookery-aligned goods
 TRY_INJECT:food_advance_renaissance = {
 	global_peasants_food_consumption = -0.015
-	global_population_capacity_modifier = 0.06
 	global_food_capacity_modifier = 0.06
 	global_monthly_food_modifier = -0.10
 	global_fish_output_modifier = 0.10
@@ -121,7 +120,6 @@ TRY_INJECT:food_advance_renaissance = {
 # new_world_crops: Columbian Exchange – potato, maize 2–4x caloric yield
 TRY_INJECT:new_world_crops = {
 	global_peasants_food_consumption = -0.02
-	global_population_capacity_modifier = 0.08
 	global_food_capacity_modifier = 0.08
 	global_food_capacity = 20
 	global_monthly_food_modifier = -0.10
@@ -155,7 +153,6 @@ TRY_INJECT:new_world_crops = {
 # food_advance_reformation: Grand Banks Cod, early Columbian adoption
 TRY_INJECT:food_advance_reformation = {
 	global_peasants_food_consumption = -0.025
-	global_population_capacity_modifier = 0.10
 	global_food_capacity_modifier = 0.10
 	global_monthly_food_modifier = -0.10
 	global_fish_output_modifier = 0.25
@@ -190,7 +187,6 @@ TRY_INJECT:food_advance_reformation = {
 # food_advance_absolutism: Norfolk Four-Course, Seed Drill, Scientific Animal Husbandry
 TRY_INJECT:food_advance_absolutism = {
 	global_peasants_food_consumption = -0.03
-	global_population_capacity_modifier = 0.12
 	global_food_capacity_modifier = 0.12
 	global_monthly_food_modifier = -0.10
 	global_wheat_output_modifier = 0.25
@@ -224,7 +220,6 @@ TRY_INJECT:food_advance_absolutism = {
 # rotherham_plough: Reaper, Steel Plow, Guano, Steam Trawling (fish 50% – pp_steam_trawling adds 100%)
 TRY_INJECT:rotherham_plough = {
 	global_peasants_food_consumption = -0.03
-	global_population_capacity_modifier = 0.12
 	global_food_capacity_modifier = 0.12
 	global_monthly_food_modifier = -0.10
 	global_wheat_output_modifier = 0.38

@@ -1,4 +1,4 @@
-﻿# Capital vs Traditional: replace global_monthly_food_modifier with per-good output modifiers
+# Capital vs Traditional: replace global_monthly_food_modifier with per-good output modifiers
 TRY_INJECT:capital_economy_vs_traditional_economy = {
 	left_modifier = {
 		global_monthly_food_modifier = 0.2
@@ -38,7 +38,6 @@ TRY_INJECT:capital_economy_vs_traditional_economy = {
 		global_monthly_food_modifier = -0.2
 		global_peasants_food_consumption = -0.075
 		global_victuals_output_modifier = 0.20
-		global_population_capacity_modifier = -0.25
 	}
 }
 

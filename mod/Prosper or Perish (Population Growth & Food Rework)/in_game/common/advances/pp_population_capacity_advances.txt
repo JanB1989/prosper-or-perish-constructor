@@ -1,0 +1,22 @@
+# <managed by Prosper or Perish population capacity pipeline>
+# Generated for Prosper or Perish. Edit population_capacity.toml, not this file.
+
+TRY_INJECT:food_advance_absolutism = {
+	global_population_capacity_modifier = 0.12
+}
+
+TRY_INJECT:food_advance_reformation = {
+	global_population_capacity_modifier = 0.1
+}
+
+TRY_INJECT:food_advance_renaissance = {
+	global_population_capacity_modifier = 0.06
+}
+
+TRY_INJECT:new_world_crops = {
+	global_population_capacity_modifier = 0.08
+}
+
+TRY_INJECT:rotherham_plough = {
+	global_population_capacity_modifier = 0.12
+}

@@ -1508,6 +1508,7 @@ dependencies = [
     { name = "eu5-mod-orchestrator" },
     { name = "eu5gameparser" },
     { name = "prosper-or-perish-labeling-pipeline" },
+    { name = "prosper-or-perish-population-capacity-pipeline" },
 ]
 
 [package.dev-dependencies]
@@ -1521,6 +1522,7 @@ requires-dist = [
     { name = "eu5-mod-orchestrator", editable = "../eu5-mod-orchestrator" },
     { name = "eu5gameparser", editable = "../eu5-game-parser" },
     { name = "prosper-or-perish-labeling-pipeline", editable = "../ProsperOrPerishLabelingPipeline" },
+    { name = "prosper-or-perish-population-capacity-pipeline", editable = "../ProsperOrPerishPopulationCapacityPipeline" },
 ]
 
 [package.metadata.requires-dev]
@@ -1557,6 +1559,23 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6.0" },
 ]
 provides-extras = ["dev"]
+
+[[package]]
+name = "prosper-or-perish-population-capacity-pipeline"
+version = "0.1.0"
+source = { editable = "../ProsperOrPerishPopulationCapacityPipeline" }
+dependencies = [
+    { name = "eu5gameparser" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "eu5gameparser", editable = "../eu5-game-parser" }]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=9.0.3" },
+    { name = "typer", specifier = ">=0.20.0" },
+]
 
 [[package]]
 name = "psutil"

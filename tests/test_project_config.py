@@ -29,6 +29,11 @@ def test_constructor_config_loads() -> None:
     assert config.labeling.modifier_prefix == "pp"
     assert config.labeling.generated_label == "Prosper or Perish"
     assert config.labeling.managed_write_mode == "mod_root"
+    assert config.population_capacity is not None
+    assert config.population_capacity.enabled is True
+    assert config.population_capacity.config_path == ROOT / "population_capacity.toml"
+    assert config.population_capacity.generated_label == "Prosper or Perish"
+    assert config.population_capacity.managed_write_mode == "mod_root"
 
 
 def test_accepted_blueprints_validate() -> None:

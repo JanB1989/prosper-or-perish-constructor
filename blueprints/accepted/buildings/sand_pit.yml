@@ -37,3 +37,8 @@ building:
     	}
     
     	construction_demand = basic_construction_needs
+
+evaluation:
+  production_methods:
+    pp_sand_pit_maintenance:
+      production_efficiency: 1.05

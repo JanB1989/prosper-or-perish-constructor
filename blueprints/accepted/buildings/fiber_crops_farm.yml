@@ -42,3 +42,8 @@ building:
     	}
     
     	construction_demand = farm_constructions
+
+evaluation:
+  production_methods:
+    pp_fiber_crops_farm_maintenance:
+      production_efficiency: 1.10

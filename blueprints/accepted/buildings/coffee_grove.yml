@@ -80,3 +80,10 @@ icon:
   output_dds: coffee_grove.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a coffee grove, transparent background. Center glossy dark-green coffee branches with red coffee cherries, picked cherries in a shallow wooden tray, pale green coffee beans drying on a raised wooden bed, and a small rustic washing trough or fermentation vat. Use readable painterly shapes, softly outlined historical UI art, red cherries, warm wood, parchment beige, deep green leaves, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  production_methods:
+    pp_coffee_grove_base_coffee:
+      production_efficiency: 1.00
+    pp_coffee_grove_washing_stations:
+      production_efficiency: 1.05

@@ -80,3 +80,10 @@ icon:
   output_dds: chili_plantation.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a chili plantation, transparent background. Center harvested red chili peppers spread on woven drying mats, a shallow wicker basket filled with chilies, small chili plants or leafy stems, and a simple hand sickle or field knife. Use simplified readable shapes, visible painterly brushwork, softly outlined historical UI art, muted straw and wicker browns with warm red chili accents, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  production_methods:
+    pp_chili_plantation_base_chili:
+      production_efficiency: 1.00
+    pp_chili_plantation_sun_drying_mats:
+      production_efficiency: 1.05

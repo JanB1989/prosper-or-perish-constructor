@@ -1,0 +1,151 @@
+version: 2
+tag: ocean_fishery
+building:
+  key: ocean_fishery
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_ocean_fishery_base_catch
+    - name: slot_1
+      methods:
+        - pp_ocean_fishery_no_coastal_gear
+        - pp_ocean_fishery_coastal_boats
+    - name: slot_2
+      methods:
+        - pp_ocean_fishery_no_offshore_fleet
+        - pp_ocean_fishery_herring_busses
+        - pp_ocean_fishery_distant_water_schooners
+        - pp_ocean_fishery_steam_trawlers
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = fishing_village_max_level
+    pop_type = laborers
+    employment_size = 5
+    price = pp_ocean_fishery_price
+    category = rgo_building_category
+    icon = ocean_fishery
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        is_coastal = yes
+    }
+
+    construction_demand = village_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_ocean_fishery_base_catch = {
+            produced = fish
+            output = 0.10
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_ocean_fishery_no_coastal_gear = {
+            category = building_maintenance
+        }
+        pp_ocean_fishery_coastal_boats = {
+            lumber = 0.10
+            salt = 0.05
+            produced = fish
+            output = 0.25
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_ocean_fishery_no_offshore_fleet = {
+            category = building_maintenance
+        }
+        pp_ocean_fishery_herring_busses = {
+            lumber = 0.20
+            fiber_crops = 0.12
+            salt = 0.20
+            produced = fish
+            output = 0.45
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_ocean_fishery_distant_water_schooners = {
+            naval_supplies = 0.30
+            victuals = 0.18
+            salt = 0.25
+            produced = fish
+            output = 0.60
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_ocean_fishery_steam_trawlers = {
+            naval_supplies = 0.45
+            coal = 0.35
+            steel = 0.15
+            produced = fish
+            output = 1.20
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_merchant_capacity = 0.20
+        local_maritime_presence = 0.02
+        harbor_suitability = 0.02
+        local_sailors = 0.002
+    }
+prices:
+  - key: pp_ocean_fishery_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_ocean_fishery_price_cost_modifier: Affects the cost of building an [ShowBuildingTypeName('ocean_fishery')|e].
+    MODIFIER_TYPE_NAME_pp_ocean_fishery_price_cost_modifier: Ocean Fishery Cost
+    ocean_fishery_slot_0: Coastal Waters
+    ocean_fishery_slot_1: Coastal Gear
+    ocean_fishery_slot_2: Offshore Fleet
+    ocean_fishery: Ocean Fishery
+    ocean_fishery_desc: A coastal fishery where laborers work boats, nets, curing barrels, and distant-water fleets beyond the local strand. Small crews supply the shore trade, while herring busses, bank schooners, and steam trawlers turn fish into a larger but more demanding maritime industry.
+    pp_ocean_fishery_base_catch: Coastal Waters
+    pp_ocean_fishery_no_coastal_gear: No Coastal Gear
+    pp_ocean_fishery_coastal_boats: Coastal Boats
+    pp_ocean_fishery_no_offshore_fleet: No Offshore Fleet
+    pp_ocean_fishery_herring_busses: Herring Busses
+    pp_ocean_fishery_distant_water_schooners: Distant-Water Schooners
+    pp_ocean_fishery_steam_trawlers: Steam Trawlers
+    pp_ocean_fishery_price: Ocean Fishery Price
+    pp_herring_buss_north_sea_desc: Develop broad-beamed herring busses, drift nets, barrels, and salt-curing routines for longer North Sea fishing voyages.
+    pp_herring_buss_coastal_desc: Adopt herring busses and organized offshore curing fleets along the Atlantic coasts.
+    pp_herring_buss_general_desc: Spread herring-buss fishing methods to wider maritime regions, using larger boats, nets, salt, and curing crews.
+    pp_grand_banks_fishery_early_desc: Organize distant-water schooner fleets for the Grand Banks and other rich offshore grounds, supported by provisions, salt, and naval supplies.
+    pp_grand_banks_fishery_maritime_desc: Expand maritime distant-water fisheries with provisioned schooners and salted catches.
+    pp_grand_banks_fishery_general_desc: Adopt distant-water fishing fleets outside the early Atlantic powers.
+    pp_steam_trawling_north_sea_desc: Use coal-fired steam trawlers and steel gear to work deeper North Sea grounds at much higher material cost.
+    pp_steam_trawling_general_desc: Spread steam trawling to wider fishing fleets, replacing passive output gains with fuel- and steel-intensive production.
+icon:
+  source_png: ../assets/icons/ocean_fishery.png
+  output_dds: ocean_fishery.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for an ocean fishery, transparent background. Center a small offshore herring buss or wooden fishing vessel in shallow coastal water, with drift nets, fish baskets, curing barrels, salt sacks, and a modest sandy shore landing. Use readable painterly shapes, softly outlined historical UI art, muted sea blues, weathered wood, tan nets, silver fish, white salt sacks, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  production_methods:
+    pp_ocean_fishery_base_catch:
+      production_efficiency: 1.00
+    pp_ocean_fishery_coastal_boats:
+      production_efficiency: 1.10
+    pp_ocean_fishery_herring_busses:
+      production_efficiency: 1.15
+    pp_ocean_fishery_distant_water_schooners:
+      production_efficiency: 1.05
+    pp_ocean_fishery_steam_trawlers:
+      production_efficiency: 1.05

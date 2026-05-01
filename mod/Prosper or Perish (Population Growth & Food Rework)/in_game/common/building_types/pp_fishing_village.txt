@@ -34,7 +34,7 @@ REPLACE:fishing_village = {
 			category = building_maintenance
 		}
 	}
-	# Slot 1 — fishing method (handline / clinker boats / deep-water; latter unlocked by regional Distant-Water Fishing advances)
+	# Slot 1 - local fishing method (handline / clinker boats)
 	unique_production_methods = {
 		pp_fishing_village_strand_line = {
 			category = building_maintenance
@@ -46,10 +46,25 @@ REPLACE:fishing_village = {
 			debug_max_profit = 0
 			category = building_maintenance
 		}
-		pp_fishing_village_deep_water = {
-			naval_supplies = 0.25
+	}
+	# Slot 2 - freshwater and local-water works
+	unique_production_methods = {
+		pp_fishing_village_no_freshwater_works = {
+			category = building_maintenance
+		}
+		pp_fishing_village_wattle_weirs = {
+			lumber = 0.10
+			fiber_crops = 0.08
 			produced = fish
-			output = 0.25
+			output = 0.15
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_fishing_village_stew_ponds = {
+			clay = 0.12
+			lumber = 0.08
+			produced = fish
+			output = 0.20
 			debug_max_profit = 0
 			category = building_maintenance
 		}

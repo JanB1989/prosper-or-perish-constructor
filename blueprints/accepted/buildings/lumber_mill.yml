@@ -76,3 +76,12 @@ localization:
     pp_lumber_mill_horse_teams: Horse Teams
     pp_lumber_mill_maintenance: Lumber Mill Maintenance
     pp_lumber_mill_no_extra_rations: No Extra Rations
+
+evaluation:
+  production_methods:
+    pp_lumber_mill_maintenance:
+      production_efficiency: 1.00
+    pp_lumber_mill_horse_teams:
+      production_efficiency: 1.05
+    pp_lumber_mill_extra_rations:
+      production_efficiency: 1.00

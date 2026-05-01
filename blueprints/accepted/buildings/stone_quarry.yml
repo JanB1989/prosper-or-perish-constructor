@@ -61,3 +61,10 @@ building:
 localization:
   entries:
     stone_quarry_slot_0: Cut Stone Quarry
+
+evaluation:
+  production_methods:
+    pp_stone_quarry_maintenance:
+      production_efficiency: 1.05
+    pp_crude_quarry_maintenance:
+      production_efficiency: 1.05

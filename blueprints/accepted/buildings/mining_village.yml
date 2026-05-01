@@ -278,3 +278,54 @@ icon:
   source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/mining_village.dds
   output_dds: mining_village.dds
   size: 512
+
+evaluation:
+  production_methods:
+    pp_mining_base_coal:
+      production_efficiency: 1.00
+    pp_mining_base_iron:
+      production_efficiency: 1.00
+    pp_mining_base_copper:
+      production_efficiency: 1.00
+    pp_mining_base_goods_gold:
+      production_efficiency: 1.00
+    pp_mining_base_goods_silver:
+      production_efficiency: 1.00
+    pp_mining_base_goods_tin:
+      production_efficiency: 1.00
+    pp_mining_base_goods_lead:
+      production_efficiency: 1.00
+    pp_mining_base_goods_gems:
+      production_efficiency: 1.00
+    pp_mining_base_goods_alum:
+      production_efficiency: 1.00
+    pp_mining_base_goods_mercury:
+      production_efficiency: 1.00
+    pp_mining_base_goods_marble:
+      production_efficiency: 1.00
+    pp_mining_coal:
+      production_efficiency: 1.10
+    pp_mining_iron:
+      production_efficiency: 1.10
+    pp_mining_copper:
+      production_efficiency: 1.10
+    pp_mining_goods_gold:
+      production_efficiency: 1.10
+    pp_mining_goods_silver:
+      production_efficiency: 1.10
+    pp_mining_goods_tin:
+      production_efficiency: 1.10
+    pp_mining_goods_lead:
+      production_efficiency: 1.10
+    pp_mining_goods_gems:
+      production_efficiency: 1.10
+    pp_mining_goods_alum:
+      production_efficiency: 1.10
+    pp_mining_goods_mercury:
+      production_efficiency: 1.10
+    pp_mining_goods_marble:
+      production_efficiency: 1.10
+    pp_mining_village_stone_horses:
+      production_efficiency: 1.05
+    pp_mining_village_stone_livestock:
+      production_efficiency: 1.05

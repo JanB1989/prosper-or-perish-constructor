@@ -13,7 +13,11 @@ building:
       methods:
         - pp_fishing_village_strand_line
         - pp_fishing_village_clinker_craft
-        - pp_fishing_village_deep_water
+    - name: slot_2
+      methods:
+        - pp_fishing_village_no_freshwater_works
+        - pp_fishing_village_wattle_weirs
+        - pp_fishing_village_stew_ponds
   possible_production_methods: []
   body: |2-
     	is_foreign = no
@@ -50,7 +54,7 @@ building:
     			category = building_maintenance
     		}
     	}
-    	# Slot 1 — fishing method (handline / clinker boats / deep-water; latter unlocked by regional Distant-Water Fishing advances)
+    	# Slot 1 - local fishing method (handline / clinker boats)
     	unique_production_methods = {
     		pp_fishing_village_strand_line = {
     			category = building_maintenance
@@ -62,10 +66,25 @@ building:
     			debug_max_profit = 0
     			category = building_maintenance
     		}
-    		pp_fishing_village_deep_water = {
-    			naval_supplies = 0.25
+    	}
+    	# Slot 2 - freshwater and local-water works
+    	unique_production_methods = {
+    		pp_fishing_village_no_freshwater_works = {
+    			category = building_maintenance
+    		}
+    		pp_fishing_village_wattle_weirs = {
+    			lumber = 0.10
+    			fiber_crops = 0.08
     			produced = fish
-    			output = 0.25
+    			output = 0.15
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_fishing_village_stew_ponds = {
+    			clay = 0.12
+    			lumber = 0.08
+    			produced = fish
+    			output = 0.20
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -85,7 +104,7 @@ advancements:
       	age = age_2_renaissance
       	icon = safe_exploration_techniques_advance
       	requires = rgo_size_advance_renaissance
-      	global_fish_output_modifier = 0.20
+      	unlock_production_method = pp_ocean_fishery_herring_busses
       	ai_weight = { add = 50 }
       	potential = {
       		exists = capital
@@ -102,7 +121,7 @@ advancements:
       	age = age_3_discovery
       	icon = safe_exploration_techniques_advance
       	requires = new_world_advance
-      	global_fish_output_modifier = 0.20
+      	unlock_production_method = pp_ocean_fishery_herring_busses
       	ai_weight = { add = 50 }
       	potential = {
       		exists = capital
@@ -124,7 +143,7 @@ advancements:
       	age = age_4_reformation
       	icon = safe_exploration_techniques_advance
       	requires = global_trade_advance
-      	global_fish_output_modifier = 0.20
+      	unlock_production_method = pp_ocean_fishery_herring_busses
       	ai_weight = { add = 50 }
       	potential = {
       		exists = capital
@@ -137,7 +156,7 @@ advancements:
       	age = age_3_discovery
       	icon = maritime_advance_age_4
       	requires = new_world_advance
-      	unlock_production_method = pp_fishing_village_deep_water
+      	unlock_production_method = pp_ocean_fishery_distant_water_schooners
       	ai_weight = { add = 50 }
       	potential = {
       		exists = capital
@@ -155,7 +174,7 @@ advancements:
       	age = age_4_reformation
       	icon = maritime_advance_age_4
       	requires = maritime_advance_age_4
-      	unlock_production_method = pp_fishing_village_deep_water
+      	unlock_production_method = pp_ocean_fishery_distant_water_schooners
       	ai_weight = { add = 50 }
       	potential = {
       		exists = capital
@@ -178,7 +197,7 @@ advancements:
       	age = age_5_absolutism
       	icon = maritime_advance_age_4
       	requires = food_advance_absolutism
-      	unlock_production_method = pp_fishing_village_deep_water
+      	unlock_production_method = pp_ocean_fishery_distant_water_schooners
       	ai_weight = { add = 50 }
       	potential = {
       		exists = capital
@@ -194,7 +213,7 @@ advancements:
       	age = age_5_absolutism
       	icon = safe_exploration_techniques_advance
       	requires = food_advance_absolutism
-      	global_fish_output_modifier = 1.0
+      	unlock_production_method = pp_ocean_fishery_steam_trawlers
       	ai_weight = { add = 50 }
       	potential = {
       		exists = capital
@@ -211,7 +230,7 @@ advancements:
       	age = age_6_revolutions
       	icon = safe_exploration_techniques_advance
       	requires = rotherham_plough
-      	global_fish_output_modifier = 1.0
+      	unlock_production_method = pp_ocean_fishery_steam_trawlers
       	ai_weight = { add = 50 }
       	potential = {
       		exists = capital
@@ -225,12 +244,46 @@ advancements:
       			}
       		}
       	}
+  - key: pp_wattle_fish_weirs
+    body: |2-
+      	age = age_2_renaissance
+      	icon = food_advance_renaissance
+      	requires = food_advance_renaissance
+      	unlock_production_method = pp_fishing_village_wattle_weirs
+      	ai_weight = { add = 50 }
+  - key: pp_managed_fishponds
+    body: |2-
+      	age = age_4_reformation
+      	icon = food_advance_reformation
+      	requires = food_advance_reformation
+      	unlock_production_method = pp_fishing_village_stew_ponds
+      	ai_weight = { add = 50 }
 localization:
   entries:
     fishing_village_slot_0: Fishing grounds
     fishing_village_slot_1: Fishing method
+    fishing_village_slot_2: Freshwater Works
     pp_arctic_fishing_village_maintenance: Arctic Fishing Village Maintenance
     pp_fishing_village_clinker_craft: Clinker boats
-    pp_fishing_village_deep_water: Deep-water fishing
     pp_fishing_village_maintenance: Fishing Village Maintenance
+    pp_fishing_village_no_freshwater_works: No Freshwater Works
     pp_fishing_village_strand_line: Handline fishing
+    pp_fishing_village_stew_ponds: Stew Ponds
+    pp_fishing_village_wattle_weirs: Wattle Fish Weirs
+    pp_managed_fishponds: Managed Fishponds
+    pp_managed_fishponds_desc: Manage local ponds, banks, and timber sluices so village fishers can keep freshwater fish close to market.
+    pp_wattle_fish_weirs: Wattle Fish Weirs
+    pp_wattle_fish_weirs_desc: Build wicker traps, wattle fences, and river weirs that guide local fish into village catches.
+
+evaluation:
+  production_methods:
+    pp_fishing_village_maintenance:
+      production_efficiency: 1.05
+    pp_arctic_fishing_village_maintenance:
+      production_efficiency: 1.10
+    pp_fishing_village_clinker_craft:
+      production_efficiency: 1.05
+    pp_fishing_village_wattle_weirs:
+      production_efficiency: 1.10
+    pp_fishing_village_stew_ponds:
+      production_efficiency: 1.10

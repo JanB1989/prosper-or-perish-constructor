@@ -142,3 +142,14 @@ localization:
     pp_fur_trapping_advance_native: Fur Trapping
     pp_fur_trapping_advance_native_desc: Traditional fur harvesting in boreal and northern forests.
     pp_hunting_lodges: Hunting Lodges
+
+evaluation:
+  production_methods:
+    pp_forest_tannery:
+      production_efficiency: 1.10
+    pp_hunting_lodges:
+      production_efficiency: 1.00
+    pp_fur_trapping:
+      production_efficiency: 1.00
+    pp_forest_village_forest_apiary:
+      production_efficiency: 1.00

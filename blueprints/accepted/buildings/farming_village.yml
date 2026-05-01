@@ -392,3 +392,30 @@ localization:
     pp_rice_farm_maintenance: Rice Farm (Oxen)
     pp_wheat_farm_livestock: Wheat Farm (Oxen)
     pp_wheat_farm_maintenance: Wheat Farm (Horses)
+
+evaluation:
+  production_methods:
+    pp_farming_village_maintenance:
+      production_efficiency: 1.05
+    pp_millet_farm_maintenance:
+      production_efficiency: 1.05
+    pp_millet_farm_livestock:
+      production_efficiency: 1.05
+    pp_wheat_farm_maintenance:
+      production_efficiency: 1.05
+    pp_wheat_farm_livestock:
+      production_efficiency: 1.05
+    pp_maize_farm_maintenance:
+      production_efficiency: 1.05
+    pp_rice_farm_maintenance:
+      production_efficiency: 1.05
+    pp_legumes_farm_maintenance:
+      production_efficiency: 1.05
+    pp_legumes_farm_livestock:
+      production_efficiency: 1.05
+    pp_potato_farm_maintenance:
+      production_efficiency: 1.05
+    pp_olives_farm_maintenance:
+      production_efficiency: 1.05
+    pp_farming_village_minor_beeswax:
+      production_efficiency: 1.00

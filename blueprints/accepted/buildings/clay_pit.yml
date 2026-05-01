@@ -59,3 +59,10 @@ localization:
     pp_clay_pit_base_clay: Clay Deposit
     pp_clay_pit_no_maintenance: No Pit Working
     pp_clay_pit_maintenance: Worked Clay Pit
+
+evaluation:
+  production_methods:
+    pp_clay_pit_base_clay:
+      production_efficiency: 1.00
+    pp_clay_pit_maintenance:
+      production_efficiency: 1.10

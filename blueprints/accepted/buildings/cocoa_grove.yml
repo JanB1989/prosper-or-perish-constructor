@@ -80,3 +80,10 @@ icon:
   output_dds: cocoa_grove.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a cocoa grove, transparent background. Center a tropical cacao tree with yellow, orange, and red ribbed pods, opened pods showing pale pulp and cocoa beans, dark fermented cocoa beans on raised wooden drying trays, and a small wooden fermentation box with leaf-covered beans. Use readable painterly shapes, softly outlined historical UI art, warm cocoa browns, muted wood tan, deep green leaves, cacao pod accents, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  production_methods:
+    pp_cocoa_grove_base_cocoa:
+      production_efficiency: 1.00
+    pp_cocoa_grove_fermentation_houses:
+      production_efficiency: 1.05

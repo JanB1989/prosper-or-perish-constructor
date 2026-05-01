@@ -106,3 +106,14 @@ icon:
   output_dds: amber_collector.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for an amber collector, transparent background. Center a compact beach-gathering setup with a low wicker basket holding golden amber chunks, a simple wooden sieve, a small hand rake, pale beach sand, and one warm orange amber piece as the focal material. Use simplified readable shapes, visible painterly brushwork, softly outlined historical UI art, muted sand and wicker browns with amber orange accents, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  production_methods:
+    pp_amber_collector_base_amber:
+      production_efficiency: 1.00
+    pp_amber_collector_basket_gathering:
+      production_efficiency: 1.05
+    pp_amber_collector_sand_horses:
+      production_efficiency: 1.05
+    pp_amber_collector_sand_livestock:
+      production_efficiency: 1.05

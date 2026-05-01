@@ -338,3 +338,54 @@ icon:
   source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/cookery.dds
   output_dds: cookery.dds
   size: 512
+
+evaluation:
+  production_methods:
+    pp_cookery_khichdi:
+      production_efficiency: 1.15
+    pp_cookery_fish_congee:
+      production_efficiency: 1.15
+    pp_cookery_livestock_pottage:
+      production_efficiency: 1.15
+    pp_cookery_mediterranean_fish:
+      production_efficiency: 1.15
+    pp_cookery_mutton_and_pease:
+      production_efficiency: 1.15
+    pp_cookery_surstromming:
+      production_efficiency: 1.15
+    pp_cookery_pozole:
+      production_efficiency: 1.15
+    pp_cookery_pemmican:
+      production_efficiency: 1.15
+    pp_cookery_labskaus:
+      production_efficiency: 1.15
+    pp_cookery_meat_tajine:
+      production_efficiency: 1.15
+    pp_cookery_saltfish_porridge:
+      production_efficiency: 1.15
+    pp_cookery_ika_mata:
+      production_efficiency: 1.15
+    pp_cookery_kheer:
+      production_efficiency: 1.15
+    pp_cookery_honey_gruel:
+      production_efficiency: 1.15
+    pp_cookery_boreal_hunter_stew:
+      production_efficiency: 1.15
+    pp_cookery_beer:
+      production_efficiency: 1.00
+    pp_cookery_wine:
+      production_efficiency: 1.05
+    pp_cookery_liquor:
+      production_efficiency: 1.00
+    pp_cookery_chocolate:
+      production_efficiency: 1.05
+    pp_cookery_coffee:
+      production_efficiency: 1.05
+    pp_cookery_tea:
+      production_efficiency: 1.05
+    pp_cookery_pottery_jars:
+      production_efficiency: 1.00
+    pp_cookery_coopered_barrels:
+      production_efficiency: 1.00
+    pp_cookery_tin_cans:
+      production_efficiency: 1.00

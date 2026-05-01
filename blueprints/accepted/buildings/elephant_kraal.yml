@@ -80,3 +80,10 @@ icon:
   output_dds: elephant_kraal.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for an Elephant Kraal, transparent background. Center a timber elephant stockade in a tropical forest clearing, one calm elephant partly inside the gate, sturdy wooden posts and rails, a raised mahout platform or training post, and bundles of fruit and fodder near the entrance. Use readable painterly shapes, softly outlined historical UI art, muted jungle greens, warm wood browns, natural gray elephant, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  production_methods:
+    pp_elephant_kraal_base_elephants:
+      production_efficiency: 1.00
+    pp_elephant_kraal_kheddah_stockades:
+      production_efficiency: 1.10

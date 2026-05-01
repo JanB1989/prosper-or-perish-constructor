@@ -43,3 +43,8 @@ building:
 localization:
   entries:
     pp_salt_collector_maintenance: Salt Collector Maintenance
+
+evaluation:
+  production_methods:
+    pp_salt_collector_maintenance:
+      production_efficiency: 1.05

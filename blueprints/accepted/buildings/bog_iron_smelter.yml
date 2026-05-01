@@ -57,3 +57,8 @@ building:
     	
     	build_time = rural_build_time
     	construction_demand = basic_construction_needs
+
+evaluation:
+  production_methods:
+    pp_bog_iron_maintenance:
+      production_efficiency: 1.05

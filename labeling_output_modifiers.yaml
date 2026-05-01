@@ -7,19 +7,113 @@ goods_evaluator_root: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator"
 defaults:
   mmr_mean_center: true
   scale: rank_uniform
-  scale_args: {}
+  scale_args:
+    output_min: -0.6
+    output_max: 0.4
+  null_productivity: -0.6
   round_decimals: 2
   drop_zero_productivity: true
 
-# Optional per-good overrides use the same schema as the labeling pipeline's
-# mod_injector_config.yaml. Omit goods, set it to null, or set it to [] to
-# auto-discover every GoodsEvaluator/<good>/config.yaml folder.
-#
-# goods:
-#   - trade_good: fish
-#     evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/fish/config.yaml"
-#     enabled: true
-#     scale: linear_percentile
-#     scale_args:
-#       low_q: 0.05
-#       high_q: 0.95
+goods:
+  - trade_good: beeswax
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/beeswax/config.yaml"
+    enabled: true
+  - trade_good: chili
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/chili/config.yaml"
+    enabled: true
+  - trade_good: cloves
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/cloves/config.yaml"
+    enabled: true
+  - trade_good: cocoa
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/cocoa/config.yaml"
+    enabled: true
+  - trade_good: coffee
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/coffee/config.yaml"
+    enabled: true
+  - trade_good: cotton
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/cotton/config.yaml"
+    enabled: true
+  - trade_good: dyes
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/dyes/config.yaml"
+    enabled: true
+  - trade_good: elephants
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/elephants/config.yaml"
+    enabled: true
+  - trade_good: fiber_crops
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/fiber_crops/config.yaml"
+    enabled: true
+  - trade_good: fish
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/fish/config.yaml"
+    enabled: true
+  - trade_good: fruit
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/fruit/config.yaml"
+    enabled: true
+  - trade_good: fur
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/fur/config.yaml"
+    enabled: true
+  - trade_good: horses
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/horses/config.yaml"
+    enabled: true
+  - trade_good: incense
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/incense/config.yaml"
+    enabled: true
+  - trade_good: ivory
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/ivory/config.yaml"
+    enabled: true
+  - trade_good: legumes
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/legumes/config.yaml"
+    enabled: true
+  - trade_good: livestock
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/livestock/config.yaml"
+    enabled: true
+  - trade_good: lumber
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/lumber/config.yaml"
+    enabled: true
+  - trade_good: maize
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/maize/config.yaml"
+    enabled: true
+  - trade_good: medicaments
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/medicaments/config.yaml"
+    enabled: true
+  - trade_good: millet
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/millet/config.yaml"
+    enabled: true
+  - trade_good: olives
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/olives/config.yaml"
+    enabled: true
+  - trade_good: pepper
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/pepper/config.yaml"
+    enabled: true
+  - trade_good: potato
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/potato/config.yaml"
+    enabled: true
+  - trade_good: rice
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/rice/config.yaml"
+    enabled: true
+  - trade_good: saffron
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/saffron/config.yaml"
+    enabled: true
+  - trade_good: silk
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/silk/config.yaml"
+    enabled: true
+  - trade_good: sugar
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/sugar/config.yaml"
+    enabled: true
+  - trade_good: tea
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/tea/config.yaml"
+    enabled: true
+  - trade_good: tobacco
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/tobacco/config.yaml"
+    enabled: true
+  - trade_good: wheat
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/wheat/config.yaml"
+    enabled: true
+  - trade_good: wild_game
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/wild_game/config.yaml"
+    enabled: true
+  - trade_good: wine
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/wine/config.yaml"
+    enabled: true
+  - trade_good: wool
+    evaluator_config: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator/wool/config.yaml"
+    enabled: true

@@ -2,6 +2,7 @@ from pathlib import Path
 
 from eu5_mod_orchestrator.blueprints import accepted_blueprint_files, validate_blueprint_file
 from eu5_mod_orchestrator.config import load_project_config
+from mod_injector.config import load_mod_injector_config
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,3 +40,47 @@ def test_constructor_config_loads() -> None:
 def test_accepted_blueprints_validate() -> None:
     for blueprint in accepted_blueprint_files(ROOT / "blueprints" / "accepted"):
         validate_blueprint_file(blueprint)
+
+
+def test_labeling_output_modifier_config_loads_explicit_goods() -> None:
+    cfg = load_mod_injector_config(ROOT / "labeling_output_modifiers.yaml")
+
+    assert cfg.defaults["null_productivity"] == -0.6
+    assert cfg.defaults["scale_args"] == {"output_min": -0.6, "output_max": 0.4}
+    assert [g.trade_good for g in cfg.goods] == [
+        "beeswax",
+        "chili",
+        "cloves",
+        "cocoa",
+        "coffee",
+        "cotton",
+        "dyes",
+        "elephants",
+        "fiber_crops",
+        "fish",
+        "fruit",
+        "fur",
+        "horses",
+        "incense",
+        "ivory",
+        "legumes",
+        "livestock",
+        "lumber",
+        "maize",
+        "medicaments",
+        "millet",
+        "olives",
+        "pepper",
+        "potato",
+        "rice",
+        "saffron",
+        "silk",
+        "sugar",
+        "tea",
+        "tobacco",
+        "wheat",
+        "wild_game",
+        "wine",
+        "wool",
+    ]
+    assert all(g.enabled for g in cfg.goods)

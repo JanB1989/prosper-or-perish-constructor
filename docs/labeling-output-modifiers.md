@@ -45,14 +45,22 @@ Important fields:
 - `baseline_parquet`: baseline location table used for feature hashing and raw
   material coverage checks.
 - `goods_evaluator_root`: folder containing `GoodsEvaluator/<good>/config.yaml`
-  directories. When `goods` is omitted, null, or `[]`, every evaluator folder is
-  auto-discovered.
+  directories. The constructor currently uses an explicit `goods:` list; this
+  root remains useful if the list is intentionally removed later to restore
+  auto-discovery.
 - `defaults.mmr_mean_center`: subtracts the mean MMR before export/debug output.
   Current scale modes are translation-equivariant, so this does not change the
   final `productivity` value for the existing modes.
 - `defaults.scale`: default MMR-to-productivity scale mode for every good unless
   a per-good override is configured.
 - `defaults.scale_args`: arguments passed to the selected scale mode.
+- `defaults.scale_args.output_min`: optional lower bound for scaled non-null
+  MMR output. When omitted, the labeler keeps the historical `-1` lower bound.
+- `defaults.scale_args.output_max`: optional upper bound for scaled non-null
+  MMR output. When omitted, the labeler keeps the historical `1` upper bound.
+- `defaults.null_productivity`: optional constructor-level replacement for
+  dealbreaker/fallback productivity rows that previously used each evaluator's
+  `dealbreaker_productivity`, usually `-1.0`.
 - `defaults.round_decimals`: decimal places used when writing EU5 modifier
   values.
 - `defaults.drop_zero_productivity`: drops rounded `0.00` entries from generated
@@ -74,10 +82,10 @@ Supported scale modes are implemented by the labeling pipeline:
 
 ## Per-Good Overrides
 
-By default, all evaluator folders are exported with the shared defaults. Add a
-`goods:` list only when a specific good needs a different setting or should be
-disabled. Each item should include `trade_good`, `evaluator_config`, `enabled`,
-and optionally `scale` / `scale_args`.
+The constructor config uses an explicit `goods:` list so the exported good set is
+stable and each good can be tuned independently. Each item includes
+`trade_good`, `evaluator_config`, and `enabled`; optional per-good `scale` /
+`scale_args` values override the shared defaults.
 
 Example:
 
@@ -94,10 +102,13 @@ goods:
 
 ## Current Defaults
 
-The first local config preserves the previous behavior:
+The current test baseline is:
 
 - `scale: rank_uniform`
 - `mmr_mean_center: true`
+- `scale_args.output_min: -0.6`
+- `scale_args.output_max: 0.4`
+- `null_productivity: -0.6`
 - `round_decimals: 2`
 - `drop_zero_productivity: true`
-- no explicit `goods:` list, so evaluator folders are auto-discovered
+- explicit `goods:` list covering the current labeler evaluator goods

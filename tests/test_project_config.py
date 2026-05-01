@@ -23,6 +23,12 @@ def test_constructor_config_loads() -> None:
     assert config.building_artifact_dir == ROOT / "artifacts" / "data" / "buildings"
     assert config.savegame_artifact_dir == ROOT / "artifacts" / "data" / "savegame"
     assert config.graph_dir == ROOT / "graphs"
+    assert config.labeling is not None
+    assert config.labeling.enabled is True
+    assert config.labeling.config_path == ROOT.parent / "ProsperOrPerishLabelingPipeline" / "mod_injector_config.yaml"
+    assert config.labeling.modifier_prefix == "pp"
+    assert config.labeling.generated_label == "Prosper or Perish"
+    assert config.labeling.managed_write_mode == "mod_root"
 
 
 def test_accepted_blueprints_validate() -> None:

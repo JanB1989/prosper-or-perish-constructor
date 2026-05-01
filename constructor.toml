@@ -38,7 +38,15 @@ advances = "in_game/common/advances/{prefix}{tag}.txt"
 localization = "main_menu/localization/english/{prefix}{tag}_l_english.yml"
 icons = "in_game/gfx/interface/icons/buildings"
 
+[labeling]
+enabled = true
+config = "../ProsperOrPerishLabelingPipeline/mod_injector_config.yaml"
+modifier_prefix = "pp"
+generated_label = "Prosper or Perish"
+managed_write_mode = "mod_root"
+
 [dependencies]
 parser = "../eu5-game-parser"
 building_pipeline = "../eu5-building-pipeline"
 orchestrator = "../eu5-mod-orchestrator"
+labeling_pipeline = "../ProsperOrPerishLabelingPipeline"

@@ -8,6 +8,7 @@ dependencies = [
     "eu5-building-pipeline",
     "eu5-mod-orchestrator",
     "eu5gameparser",
+    "prosper-or-perish-labeling-pipeline",
 ]
 
 [build-system]
@@ -23,6 +24,7 @@ dev = [
 eu5-building-pipeline = { path = "../eu5-building-pipeline", editable = true }
 eu5-mod-orchestrator = { path = "../eu5-mod-orchestrator", editable = true }
 eu5gameparser = { path = "../eu5-game-parser", editable = true }
+prosper-or-perish-labeling-pipeline = { path = "../ProsperOrPerishLabelingPipeline", editable = true }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,51 +1,49 @@
 ﻿# >>> eu5-building-pipeline:bog_iron_smelter:building
 REPLACE:bog_iron_smelter = {
-	is_foreign = no
-	max_levels = rural_building_cap
-	pop_type = laborers
-	
-	employment_size = rural_peasant_produce_employment
-	
-	rural_settlement = yes
-	town = yes
-	city = yes
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = rural_peasant_produce_employment
+price = pp_bog_iron_smelter_price
+category = rgo_building_category
+icon = bog_iron_smelter
+rural_settlement = yes
+town = yes
+city = yes
+build_time = rural_build_time
 
-	
-	location_potential = {
-		OR = {
-			is_adjacent_to_lake = yes
-			topography = wetlands
-		}
-		NOR = {
-			raw_material = goods:coal
-			raw_material = goods:iron
-			raw_material = goods:copper
-			raw_material = goods:goods_gold
-			raw_material = goods:silver
-			# raw_material = goods:stone
-			raw_material = goods:tin
-			raw_material = goods:lead
-			raw_material = goods:gems
-			# raw_material = goods:saltpeter
-			raw_material = goods:alum
-			# raw_material = goods:marble
-			raw_material = goods:mercury
-		}
-	}
+location_potential = {
+    OR = {
+        is_adjacent_to_lake = yes
+        topography = wetlands
+    }
+    NOR = {
+        raw_material = goods:coal
+        raw_material = goods:iron
+        raw_material = goods:copper
+        raw_material = goods:goods_gold
+        raw_material = goods:silver
+        # raw_material = goods:stone
+        raw_material = goods:tin
+        raw_material = goods:lead
+        raw_material = goods:gems
+        # raw_material = goods:saltpeter
+        raw_material = goods:alum
+        # raw_material = goods:marble
+        raw_material = goods:mercury
+    }
+}
 
-	category = rgo_building_category
-	
-	unique_production_methods = {
-		pp_bog_iron_maintenance = {
-			produced = iron
-			output = 0.3
-			coal = 0.40
-			debug_max_profit = 0.2
-			category = building_maintenance
-		}
-	}
-	
-	build_time = rural_build_time
-	construction_demand = basic_construction_needs
+unique_production_methods = {
+    pp_bog_iron_maintenance = {
+        coal = 0.4
+        produced = iron
+        output = 0.3
+        debug_max_profit = 0.2
+        category = building_maintenance
+    }
+}
+
+construction_demand = basic_construction_needs
 }
 # <<< eu5-building-pipeline:bog_iron_smelter:building

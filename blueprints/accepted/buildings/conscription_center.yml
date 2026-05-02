@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: conscription_center
 building:
   key: conscription_center
@@ -54,3 +54,7 @@ building:
 localization:
   entries:
     pp_conscription_center_maintenance: Conscription Center Maintenance
+
+evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.

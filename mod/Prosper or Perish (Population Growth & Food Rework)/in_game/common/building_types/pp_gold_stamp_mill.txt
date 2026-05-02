@@ -1,0 +1,77 @@
+﻿# >>> eu5-building-pipeline:gold_stamp_mill:building
+gold_stamp_mill = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 4
+price = pp_gold_stamp_mill_price
+category = rgo_building_category
+icon = gold_stamp_mill
+rural_settlement = yes
+town = yes
+city = yes
+obsolete = gold_diggings
+build_time = workshop_build_time
+
+location_potential = {
+    raw_material = goods:goods_gold
+}
+
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_gold_stamp_mill_no_deposit_work = {
+        category = building_maintenance
+    }
+    pp_gold_stamp_mill_base_gold = {
+        produced = goods_gold
+        output = 0.3
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_gold_stamp_mill_no_primary = {
+        category = building_maintenance
+    }
+    pp_gold_stamp_mill_gold = {
+        lumber = 1.20
+        tools = 1.25
+        beeswax = 0.20
+        mercury = 0.35
+        produced = goods_gold
+        output = 0.76
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_gold_stamp_mill_no_secondary = {
+        category = building_maintenance
+    }
+    pp_gold_stamp_mill_silver = {
+        lumber = 0.20
+        tools = 0.16
+        mercury = 0.05
+        produced = silver
+        output = 0.12
+        category = building_maintenance
+    }
+    pp_gold_stamp_mill_copper = {
+        lumber = 0.18
+        tools = 0.12
+        mercury = 0.04
+        produced = copper
+        output = 0.18
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:gold_stamp_mill:building

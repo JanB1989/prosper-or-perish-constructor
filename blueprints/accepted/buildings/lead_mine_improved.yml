@@ -1,0 +1,138 @@
+version: 2
+tag: lead_mine_improved
+upgrade_chain:
+  family: lead_mine
+  tier: 1
+  previous: lead_mine
+  next: null
+  unlock_advance: lead_ore_dressing
+building:
+  key: lead_mine_improved
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_lead_mine_improved_no_deposit_work
+        - pp_lead_mine_improved_base_lead
+    - name: slot_1
+      methods:
+        - pp_lead_mine_improved_no_primary
+        - pp_lead_mine_improved_lead
+    - name: slot_2
+      methods:
+        - pp_lead_mine_improved_no_secondary
+        - pp_lead_mine_improved_silver
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_lead_mine_improved_price
+    category = rgo_building_category
+    icon = lead_mine_improved
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = lead_mine
+    build_time = workshop_build_time
+
+    location_potential = {
+        raw_material = goods:lead
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_lead_mine_improved_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_lead_mine_improved_base_lead = {
+            produced = lead
+            output = 0.30
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_lead_mine_improved_no_primary = {
+            category = building_maintenance
+        }
+        pp_lead_mine_improved_lead = {
+            lumber = 0.75
+            tools = 1.74
+            beeswax = 0.20
+            produced = lead
+            output = 3.30
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_lead_mine_improved_no_secondary = {
+            category = building_maintenance
+        }
+        pp_lead_mine_improved_silver = {
+            lumber = 0.14
+            tools = 0.10
+            lead = 0.08
+            produced = silver
+            output = 0.07
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_lead_mine_improved_price
+    body: |2-
+      {gold = 150}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_lead_mine_improved_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('lead_mine_improved')|e].
+    MODIFIER_TYPE_NAME_pp_lead_mine_improved_price_cost_modifier: Lead Ore-Dressing Mine Cost
+    lead_mine_improved_slot_0: Galena Vein
+    lead_mine_improved_slot_1: Dressed Lead Workings
+    lead_mine_improved_slot_2: Silver Recovery
+    lead_mine_improved: Lead Ore-Dressing Mine
+    lead_mine_improved_desc: Timbered galleries and dressing floors crush, wash, and sort galena before smelting. The mine raises lead output from dressed ore first, while argentiferous pieces are separated only as a small silver-bearing byproduct.
+    pp_lead_mine_improved_no_deposit_work: No Vein Work
+    pp_lead_mine_improved_base_lead: Surveyed Galena Vein
+    pp_lead_mine_improved_no_primary: No Lead Ore Dressing
+    pp_lead_mine_improved_lead: Dressed Galena Workings
+    pp_lead_mine_improved_no_secondary: No Silver Recovery
+    pp_lead_mine_improved_silver: Argentiferous Ore Dressing
+    pp_lead_mine_improved_price: Lead Ore-Dressing Mine Price
+    lead_ore_dressing: Lead Ore-Dressing
+    lead_ore_dressing_desc: Better crushing, washing, and dressing floors separate galena from waste rock before smelting, improving lead output while exposing minor silver-bearing ore.
+icon:
+  source_png: ../assets/icons/lead_mine_improved.png
+  output_dds: lead_mine_improved.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Lead Ore-Dressing Mine, transparent background. Center a timbered lead mine with ore carts of dark galena, covered crushing table, washing launder, and sorted galena heaps, no smelting furnace, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_lead_mine_improved_no_deposit_work:
+      production_efficiency: 1.00
+    pp_lead_mine_improved_base_lead:
+      production_efficiency: 1.00
+    pp_lead_mine_improved_no_primary:
+      production_efficiency: 1.00
+    pp_lead_mine_improved_lead:
+      production_efficiency: 1.15
+    pp_lead_mine_improved_no_secondary:
+      production_efficiency: 1.00
+    pp_lead_mine_improved_silver:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Argentiferous ore dressing is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        input_throughput: Argentiferous ore dressing is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        output_throughput: Argentiferous ore dressing is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        amortization_months: Argentiferous ore dressing is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.

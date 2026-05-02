@@ -1,0 +1,152 @@
+version: 2
+tag: gold_diggings
+upgrade_chain:
+  family: gold_mine
+  tier: 0
+  previous: null
+  next: gold_stamp_mill
+  unlock_advance: null
+building:
+  key: gold_diggings
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_gold_diggings_no_deposit_work
+        - pp_gold_diggings_base_gold
+    - name: slot_1
+      methods:
+        - pp_gold_diggings_no_primary
+        - pp_gold_diggings_gold
+    - name: slot_2
+      methods:
+        - pp_gold_diggings_no_secondary
+        - pp_gold_diggings_silver
+        - pp_gold_diggings_copper
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_gold_diggings_price
+    category = rgo_building_category
+    icon = gold_diggings
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:goods_gold
+    }
+
+    construction_demand = mercury_patio_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_gold_diggings_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_gold_diggings_base_gold = {
+            produced = goods_gold
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_gold_diggings_no_primary = {
+            category = building_maintenance
+        }
+        pp_gold_diggings_gold = {
+            lumber = 0.83
+            tools = 0.69
+            beeswax = 0.345
+            produced = goods_gold
+            output = 0.438
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_gold_diggings_no_secondary = {
+            category = building_maintenance
+        }
+        pp_gold_diggings_silver = {
+            lumber = 0.16
+            tools = 0.12
+            produced = silver
+            output = 0.07
+            category = building_maintenance
+        }
+        pp_gold_diggings_copper = {
+            lumber = 0.12
+            tools = 0.08
+            produced = copper
+            output = 0.12
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_gold_diggings_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_gold_diggings_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('gold_diggings')|e].
+    MODIFIER_TYPE_NAME_pp_gold_diggings_price_cost_modifier: Gold Diggings Cost
+    gold_diggings_slot_0: Gold Deposit
+    gold_diggings_slot_1: Gold Workings
+    gold_diggings_slot_2: Associated Ores
+    gold_diggings: Gold Diggings
+    gold_diggings_desc: Auriferous gravels and shallow lode outcrops are washed by hand and worked with simple timbering, while associated ores are picked over for electrum-bearing silver and traces of copper.
+    pp_gold_diggings_no_deposit_work: No Deposit Work
+    pp_gold_diggings_base_gold: Native Gold Deposit
+    pp_gold_diggings_no_primary: No Gold Washing
+    pp_gold_diggings_gold: Placer Washing
+    pp_gold_diggings_no_secondary: No Associated Ore Sorting
+    pp_gold_diggings_silver: Electrum Sorting
+    pp_gold_diggings_copper: Copper Ore Picking
+    pp_gold_diggings_price: Gold Diggings Price
+icon:
+  source_png: ../assets/icons/gold_diggings.png
+  output_dds: gold_diggings.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Gold Diggings, transparent background. Center shallow auriferous gravel pits with a wooden sluice, hand pan, timber props, gold-bearing sediment, and associated ore sorting, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_gold_diggings_no_deposit_work:
+      production_efficiency: 1.00
+    pp_gold_diggings_base_gold:
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: High-value native gold deposits repay faster than the global amortization band even before organized workings.
+    pp_gold_diggings_no_primary:
+      production_efficiency: 1.00
+    pp_gold_diggings_gold:
+      production_efficiency: 1.10
+    pp_gold_diggings_no_secondary:
+      production_efficiency: 1.00
+    pp_gold_diggings_silver:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Silver is an ancillary electrum and associated-ore byproduct, intentionally less profitable than primary gold extraction.
+        input_throughput: Silver is an ancillary electrum and associated-ore byproduct, intentionally less profitable than primary gold extraction.
+        output_throughput: Silver is an ancillary electrum and associated-ore byproduct, intentionally less profitable than primary gold extraction.
+        amortization_months: Silver is an ancillary electrum and associated-ore byproduct, intentionally less profitable than primary gold extraction.
+    pp_gold_diggings_copper:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Copper is an ancillary associated-ore byproduct, intentionally less profitable than primary gold extraction.
+        input_throughput: Copper is an ancillary associated-ore byproduct, intentionally less profitable than primary gold extraction.
+        output_throughput: Copper is an ancillary associated-ore byproduct, intentionally less profitable than primary gold extraction.
+        amortization_months: Copper is an ancillary associated-ore byproduct, intentionally less profitable than primary gold extraction.

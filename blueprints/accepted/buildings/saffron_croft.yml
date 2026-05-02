@@ -82,6 +82,12 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for a saffron croft, transparent background. Center purple saffron crocus flowers in low field beds, vivid red stigmas gathered into a shallow tray, delicate red saffron threads drying beside a small clay brazier or warming pan, and folded saffron-gold dyed cloth as a secondary cue. Use readable painterly shapes, softly outlined historical UI art, purple petals, saffron red threads, saffron-gold cloth, muted green leaves, warm tan wood, matte clay pottery, no text, no frame, not photorealistic, not cartoonish.
 
 evaluation:
+  allow_rules:
+    base_output_per_1k: Existing accepted no-input extraction scale predates the global employment output baseline; revisit during the building-specific rebalance.
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_saffron_croft_base_saffron:
       production_efficiency: 1.00

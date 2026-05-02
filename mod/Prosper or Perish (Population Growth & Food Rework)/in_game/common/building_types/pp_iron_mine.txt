@@ -1,0 +1,66 @@
+﻿# >>> eu5-building-pipeline:iron_mine:building
+iron_mine = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 3
+price = pp_iron_mine_price
+category = rgo_building_category
+icon = iron_mine
+rural_settlement = yes
+town = yes
+city = yes
+build_time = village_build_time
+
+location_potential = {
+    raw_material = goods:iron
+}
+
+construction_demand = mercury_patio_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_iron_mine_no_deposit_work = {
+        category = building_maintenance
+    }
+    pp_iron_mine_base_iron = {
+        produced = iron
+        output = 0.24
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_iron_mine_no_primary = {
+        category = building_maintenance
+    }
+    pp_iron_mine_iron = {
+        lumber = 0.591
+        tools = 0.666
+        beeswax = 0.148
+        produced = iron
+        output = 1.15
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_iron_mine_no_secondary = {
+        category = building_maintenance
+    }
+    pp_iron_mine_ochre = {
+        lumber = 0.12
+        tools = 0.08
+        produced = dyes
+        output = 0.12
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:iron_mine:building

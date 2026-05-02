@@ -1,0 +1,442 @@
+version: 2
+tag: mining_village_coke_blast_furnace
+upgrade_chain:
+  family: mining_village
+  tier: 3
+  previous: mining_village_slitting_mills
+  next: mining_village_hot_blast_furnace
+  unlock_advance: coke_blast_furnace
+building:
+  key: mining_village_coke_blast_furnace
+  mode: CREATE
+  source: pp_mining_village.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_mining_village_coke_blast_furnace_base_coal
+        - pp_mining_village_coke_blast_furnace_base_iron
+        - pp_mining_village_coke_blast_furnace_base_copper
+        - pp_mining_village_coke_blast_furnace_base_goods_gold
+        - pp_mining_village_coke_blast_furnace_base_goods_silver
+        - pp_mining_village_coke_blast_furnace_base_goods_tin
+        - pp_mining_village_coke_blast_furnace_base_goods_lead
+        - pp_mining_village_coke_blast_furnace_base_goods_gems
+        - pp_mining_village_coke_blast_furnace_base_goods_alum
+        - pp_mining_village_coke_blast_furnace_base_goods_mercury
+        - pp_mining_village_coke_blast_furnace_base_goods_marble
+    - name: slot_1
+      methods:
+        - pp_mining_village_coke_blast_furnace_coal
+        - pp_mining_village_coke_blast_furnace_iron
+        - pp_mining_village_coke_blast_furnace_copper
+        - pp_mining_village_coke_blast_furnace_goods_gold
+        - pp_mining_village_coke_blast_furnace_goods_silver
+        - pp_mining_village_coke_blast_furnace_goods_tin
+        - pp_mining_village_coke_blast_furnace_goods_lead
+        - pp_mining_village_coke_blast_furnace_goods_gems
+        - pp_mining_village_coke_blast_furnace_goods_alum
+        - pp_mining_village_coke_blast_furnace_goods_mercury
+        - pp_mining_village_coke_blast_furnace_goods_marble
+    - name: slot_2
+      methods:
+        - mining_village_coke_blast_furnace_no_stone
+        - mining_village_coke_blast_furnace_stone_horses
+        - mining_village_coke_blast_furnace_stone_livestock
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 6
+    price = pp_mining_village_coke_blast_furnace_price
+    category = rgo_building_category
+    icon = mining_village_coke_blast_furnace
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = mining_village_slitting_mills
+    build_time = manufactory_build_time
+
+    location_potential = {
+        OR = {
+            raw_material = goods:coal # if RGO coal -> mine, else charcoal
+            raw_material = goods:iron
+            raw_material = goods:copper
+            raw_material = goods:goods_gold
+            raw_material = goods:silver
+            # raw_material = goods:stone # -> stone_quarry
+            raw_material = goods:tin
+            raw_material = goods:lead
+            raw_material = goods:gems
+            # raw_material = goods:saltpeter # -> saltpeter_guild
+            raw_material = goods:alum
+            raw_material = goods:marble
+            raw_material = goods:mercury
+        }
+    }
+
+    construction_demand = manufactory_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_mining_village_coke_blast_furnace_base_coal = {
+            produced = coal
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_base_iron = {
+            produced = iron
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_base_copper = {
+            produced = copper
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_base_goods_gold = {
+            produced = goods_gold
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_base_goods_silver = {
+            produced = silver
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_base_goods_tin = {
+            produced = tin
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_base_goods_lead = {
+            produced = lead
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_base_goods_gems = {
+            produced = gems
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_base_goods_alum = {
+            produced = alum
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_base_goods_mercury = {
+            produced = mercury
+            output = 0.3
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_base_goods_marble = {
+            produced = marble
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_mining_village_coke_blast_furnace_coal = {
+            lumber = 1.801
+            tools = 1.902
+            beeswax = 0.422
+            horses = 0.316
+            produced = coal
+            output = 4.92
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_iron = {
+            coal = 2.472
+            lumber = 0.934
+            tools = 0.934
+            beeswax = 0.246
+            horses = 0.186
+            produced = iron
+            output = 3.28
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_copper = {
+            lumber = 0.712
+            tools = 0.587
+            beeswax = 0.303
+            coal = 0.085
+            horses = 0.053
+            produced = copper
+            output = 1.4
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_goods_gold = {
+            lumber = 2.457
+            tools = 2.033
+            beeswax = 1.016
+            coal = 0.088
+            horses = 0.055
+            produced = goods_gold
+            output = 1.4
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_goods_silver = {
+            lumber = 1.959
+            tools = 1.626
+            beeswax = 0.832
+            coal = 0.088
+            horses = 0.055
+            produced = silver
+            output = 1.4
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_goods_tin = {
+            lumber = 0.47
+            tools = 0.403
+            beeswax = 0.168
+            coal = 0.08
+            horses = 0.05
+            produced = tin
+            output = 1.4
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_goods_lead = {
+            lumber = 0.47
+            tools = 0.403
+            beeswax = 0.168
+            coal = 0.08
+            horses = 0.05
+            produced = lead
+            output = 1.4
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_goods_gems = {
+            lumber = 0.961
+            tools = 0.798
+            beeswax = 0.4
+            coal = 0.086
+            horses = 0.054
+            produced = gems
+            output = 1.4
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_goods_alum = {
+            lumber = 0.712
+            tools = 0.587
+            beeswax = 0.303
+            coal = 0.085
+            horses = 0.053
+            produced = alum
+            output = 1.4
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_goods_mercury = {
+            lumber = 0.712
+            tools = 0.587
+            beeswax = 0.303
+            coal = 0.085
+            horses = 0.053
+            produced = mercury
+            output = 1.4
+            category = building_maintenance
+        }
+        pp_mining_village_coke_blast_furnace_goods_marble = {
+            lumber = 1.127
+            tools = 0.924
+            horses = 0.536
+            coal = 0.088
+            produced = marble
+            output = 1.4
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        mining_village_coke_blast_furnace_no_stone = {
+            category = building_maintenance
+        }
+        mining_village_coke_blast_furnace_stone_horses = {
+            horses = 0.07
+            produced = stone
+            output = 0.3
+            category = building_maintenance
+        }
+        mining_village_coke_blast_furnace_stone_livestock = {
+            livestock = 0.14
+            produced = stone
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_mining_village_coke_blast_furnace_price
+    body: |2-
+      {gold = 275}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_mining_village_coke_blast_furnace_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('mining_village_coke_blast_furnace')|e].
+    MODIFIER_TYPE_NAME_pp_mining_village_coke_blast_furnace_price_cost_modifier: Coke Furnace Mining Village Cost
+    mining_village_coke_blast_furnace_slot_0: Mineral Deposit
+    mining_village_coke_blast_furnace_slot_1: Worked Mine
+    mining_village_coke_blast_furnace_slot_2: Stone Haulage
+    mining_village_coke_blast_furnace: Coke Furnace Mining Village
+    mining_village_coke_blast_furnace_desc: An upgraded mining settlement using coke blast furnace methods to raise metal and mineral throughput with heavier manufactured inputs and larger organized crews.
+    pp_mining_village_coke_blast_furnace_base_coal: Coal Deposit
+    pp_mining_village_coke_blast_furnace_base_iron: Iron Deposit
+    pp_mining_village_coke_blast_furnace_base_copper: Copper Deposit
+    pp_mining_village_coke_blast_furnace_base_goods_gold: Gold Deposit
+    pp_mining_village_coke_blast_furnace_base_goods_silver: Silver Deposit
+    pp_mining_village_coke_blast_furnace_base_goods_tin: Tin Deposit
+    pp_mining_village_coke_blast_furnace_base_goods_lead: Lead Deposit
+    pp_mining_village_coke_blast_furnace_base_goods_gems: Gem Deposit
+    pp_mining_village_coke_blast_furnace_base_goods_alum: Alum Deposit
+    pp_mining_village_coke_blast_furnace_base_goods_mercury: Mercury Deposit
+    pp_mining_village_coke_blast_furnace_base_goods_marble: Marble Deposit
+    pp_mining_village_coke_blast_furnace_coal: Coke Blast Furnace Coal Workings
+    pp_mining_village_coke_blast_furnace_iron: Coke Blast Furnace Iron Workings
+    pp_mining_village_coke_blast_furnace_copper: Coke Blast Furnace Copper Workings
+    pp_mining_village_coke_blast_furnace_goods_gold: Coke Blast Furnace Gold Workings
+    pp_mining_village_coke_blast_furnace_goods_silver: Coke Blast Furnace Silver Workings
+    pp_mining_village_coke_blast_furnace_goods_tin: Coke Blast Furnace Tin Workings
+    pp_mining_village_coke_blast_furnace_goods_lead: Coke Blast Furnace Lead Workings
+    pp_mining_village_coke_blast_furnace_goods_gems: Coke Blast Furnace Gem Workings
+    pp_mining_village_coke_blast_furnace_goods_alum: Coke Blast Furnace Alum Workings
+    pp_mining_village_coke_blast_furnace_goods_mercury: Coke Blast Furnace Mercury Workings
+    pp_mining_village_coke_blast_furnace_goods_marble: Coke Blast Furnace Marble Workings
+    mining_village_coke_blast_furnace_no_stone: No Stone Haulage
+    mining_village_coke_blast_furnace_stone_horses: Horse-Drawn Stone
+    mining_village_coke_blast_furnace_stone_livestock: Ox-Drawn Stone
+    pp_mining_village_coke_blast_furnace_price: Coke Furnace Mining Village Price
+icon:
+  source_png: ../assets/icons/mining_village_coke_blast_furnace.png
+  output_dds: mining_village_coke_blast_furnace.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Coke Furnace Mining Village, transparent background. Center a compact upgraded mining village with shafts, ore carts, timber supports, furnace or mill equipment matching the tier, no text, no frame, painterly historical UI art.
+
+evaluation:
+  production_methods:
+    pp_mining_village_coke_blast_furnace_base_coal:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+        amortization_months: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_coke_blast_furnace_base_iron:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_coke_blast_furnace_base_copper:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_coke_blast_furnace_base_goods_gold:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+        amortization_months: High-value mineral deposits historically justify faster capital recovery than the global amortization band.
+    pp_mining_village_coke_blast_furnace_base_goods_silver:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+        amortization_months: High-value mineral deposits historically justify faster capital recovery than the global amortization band.
+    pp_mining_village_coke_blast_furnace_base_goods_tin:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+        amortization_months: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_coke_blast_furnace_base_goods_lead:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+        amortization_months: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_coke_blast_furnace_base_goods_gems:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_coke_blast_furnace_base_goods_alum:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_coke_blast_furnace_base_goods_mercury:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_coke_blast_furnace_base_goods_marble:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_coke_blast_furnace_coal:
+      production_efficiency: 1.25
+    pp_mining_village_coke_blast_furnace_iron:
+      production_efficiency: 1.25
+    pp_mining_village_coke_blast_furnace_copper:
+      production_efficiency: 1.25
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+    pp_mining_village_coke_blast_furnace_goods_gold:
+      production_efficiency: 1.25
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        amortization_months: High-value mineral deposits historically justify faster capital recovery than the global amortization band.
+    pp_mining_village_coke_blast_furnace_goods_silver:
+      production_efficiency: 1.25
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        amortization_months: High-value mineral deposits historically justify faster capital recovery than the global amortization band.
+    pp_mining_village_coke_blast_furnace_goods_tin:
+      production_efficiency: 1.25
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+    pp_mining_village_coke_blast_furnace_goods_lead:
+      production_efficiency: 1.25
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+    pp_mining_village_coke_blast_furnace_goods_gems:
+      production_efficiency: 1.25
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+    pp_mining_village_coke_blast_furnace_goods_alum:
+      production_efficiency: 1.25
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+    pp_mining_village_coke_blast_furnace_goods_mercury:
+      production_efficiency: 1.25
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+    pp_mining_village_coke_blast_furnace_goods_marble:
+      production_efficiency: 1.25
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        amortization_months: High-value mineral deposits historically justify faster capital recovery than the global amortization band.
+    mining_village_coke_blast_furnace_no_stone:
+      production_efficiency: 1.00
+    mining_village_coke_blast_furnace_stone_horses:
+      production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+        input_throughput: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+        output_throughput: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+        amortization_months: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+    mining_village_coke_blast_furnace_stone_livestock:
+      production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+        input_throughput: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+        output_throughput: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+        amortization_months: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.

@@ -1,0 +1,73 @@
+﻿# >>> eu5-building-pipeline:gem_gravel_pit:building
+gem_gravel_pit = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 3
+price = pp_gem_gravel_pit_price
+category = rgo_building_category
+icon = gem_gravel_pit
+rural_settlement = yes
+town = yes
+city = yes
+build_time = village_build_time
+
+location_potential = {
+    raw_material = goods:gems
+}
+
+construction_demand = mercury_patio_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_gem_gravel_pit_no_deposit_work = {
+        category = building_maintenance
+    }
+    pp_gem_gravel_pit_base_gems = {
+        produced = gems
+        output = 0.22
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_gem_gravel_pit_no_primary = {
+        category = building_maintenance
+    }
+    pp_gem_gravel_pit_gems = {
+        lumber = 0.70
+        tools = 0.80
+        beeswax = 0.20
+        produced = gems
+        output = 1.05
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_gem_gravel_pit_no_secondary = {
+        category = building_maintenance
+    }
+    pp_gem_gravel_pit_gold = {
+        lumber = 0.14
+        tools = 0.10
+        produced = goods_gold
+        output = 0.035
+        category = building_maintenance
+    }
+    pp_gem_gravel_pit_sand = {
+        lumber = 0.08
+        tools = 0.04
+        produced = sand
+        output = 0.30
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:gem_gravel_pit:building

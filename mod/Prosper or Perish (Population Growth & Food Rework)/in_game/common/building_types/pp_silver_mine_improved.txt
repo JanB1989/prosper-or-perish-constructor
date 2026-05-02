@@ -1,0 +1,68 @@
+﻿# >>> eu5-building-pipeline:silver_mine_improved:building
+silver_mine_improved = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 4
+price = pp_silver_mine_improved_price
+category = rgo_building_category
+icon = silver_mine_improved
+rural_settlement = yes
+town = yes
+city = yes
+obsolete = silver_mine
+build_time = workshop_build_time
+
+location_potential = {
+    raw_material = goods:silver
+}
+
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_silver_mine_improved_no_deposit_work = {
+        category = building_maintenance
+    }
+    pp_silver_mine_improved_base_silver = {
+        produced = silver
+        output = 0.28
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_silver_mine_improved_no_primary = {
+        category = building_maintenance
+    }
+    pp_silver_mine_improved_silver = {
+        lumber = 0.95
+        tools = 1.05
+        beeswax = 0.45
+        produced = silver
+        output = 0.725
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_silver_mine_improved_no_secondary = {
+        category = building_maintenance
+    }
+    pp_silver_mine_improved_lead = {
+        lumber = 0.16
+        tools = 0.12
+        beeswax = 0.04
+        produced = lead
+        output = 0.30
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:silver_mine_improved:building

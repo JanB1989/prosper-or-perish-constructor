@@ -1,0 +1,75 @@
+﻿# >>> eu5-building-pipeline:tin_streamworks:building
+tin_streamworks = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 3
+price = pp_tin_streamworks_price
+category = rgo_building_category
+icon = tin_streamworks
+rural_settlement = yes
+town = yes
+city = yes
+build_time = village_build_time
+
+location_potential = {
+    raw_material = goods:tin
+}
+
+construction_demand = mercury_patio_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_tin_streamworks_no_deposit_work = {
+        category = building_maintenance
+    }
+    pp_tin_streamworks_base_tin = {
+        produced = tin
+        output = 0.3
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_tin_streamworks_no_primary = {
+        category = building_maintenance
+    }
+    pp_tin_streamworks_tin = {
+        lumber = 0.65
+        tools = 0.56
+        beeswax = 0.25
+        produced = tin
+        output = 1.78
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_tin_streamworks_no_secondary = {
+        category = building_maintenance
+    }
+    pp_tin_streamworks_copper = {
+        lumber = 0.12
+        tools = 0.10
+        beeswax = 0.04
+        produced = copper
+        output = 0.18
+        category = building_maintenance
+    }
+    pp_tin_streamworks_lead = {
+        lumber = 0.12
+        tools = 0.08
+        beeswax = 0.04
+        produced = lead
+        output = 0.18
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:tin_streamworks:building

@@ -1,0 +1,75 @@
+﻿# >>> eu5-building-pipeline:copper_mine_adit:building
+copper_mine_adit = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 4
+price = pp_copper_mine_adit_price
+category = rgo_building_category
+icon = copper_mine_adit
+rural_settlement = yes
+town = yes
+city = yes
+obsolete = copper_mine
+build_time = workshop_build_time
+
+location_potential = {
+    raw_material = goods:copper
+}
+
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_copper_mine_adit_no_deposit_work = {
+        category = building_maintenance
+    }
+    pp_copper_mine_adit_base_copper = {
+        produced = copper
+        output = 0.3
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_copper_mine_adit_no_primary = {
+        category = building_maintenance
+    }
+    pp_copper_mine_adit_copper = {
+        lumber = 1.25
+        tools = 1.75
+        beeswax = 0.35
+        produced = copper
+        output = 2.55
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_copper_mine_adit_no_secondary = {
+        category = building_maintenance
+    }
+    pp_copper_mine_adit_silver = {
+        lumber = 0.14
+        tools = 0.10
+        lead = 0.08
+        produced = silver
+        output = 0.07
+        category = building_maintenance
+    }
+    pp_copper_mine_adit_tin = {
+        lumber = 0.10
+        tools = 0.08
+        produced = tin
+        output = 0.10
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:copper_mine_adit:building

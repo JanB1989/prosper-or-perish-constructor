@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: sand_pit
 building:
   key: sand_pit
@@ -39,6 +39,9 @@ building:
     	construction_demand = basic_construction_needs
 
 evaluation:
+  allow_rules:
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_sand_pit_maintenance:
       production_efficiency: 1.05

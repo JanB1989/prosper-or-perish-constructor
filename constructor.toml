@@ -38,6 +38,24 @@ advances = "in_game/common/advances/{prefix}{tag}.txt"
 localization = "main_menu/localization/english/{prefix}{tag}_l_english.yml"
 icons = "in_game/gfx/interface/icons/buildings"
 
+[blueprint_evaluation]
+raw_input_efficiency_per_good = 0.05
+profit_percent_min = -0.30
+profit_percent_max = 0.30
+base_output_per_1k_min = 0.07
+base_output_per_1k_max = 0.15
+age_throughput_growth = 0.15
+throughput_tolerance = 0.30
+amortization_months_max = 360
+amortization_months_min = 120
+
+
+[blueprint_evaluation.throughput_gold_per_1k]
+peasants = 1.0
+laborers = 1.5
+labourers = 1.5
+burghers = 2.5
+
 [labeling]
 enabled = true
 config = "labeling_output_modifiers.yaml"

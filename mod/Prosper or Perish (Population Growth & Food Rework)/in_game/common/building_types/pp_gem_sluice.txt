@@ -1,0 +1,74 @@
+﻿# >>> eu5-building-pipeline:gem_sluice:building
+gem_sluice = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 4
+price = pp_gem_sluice_price
+category = rgo_building_category
+icon = gem_sluice
+rural_settlement = yes
+town = yes
+city = yes
+obsolete = gem_gravel_pit
+build_time = workshop_build_time
+
+location_potential = {
+    raw_material = goods:gems
+}
+
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_gem_sluice_no_deposit_work = {
+        category = building_maintenance
+    }
+    pp_gem_sluice_base_gems = {
+        produced = gems
+        output = 0.28
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_gem_sluice_no_primary = {
+        category = building_maintenance
+    }
+    pp_gem_sluice_gems = {
+        lumber = 1.10
+        tools = 1.35
+        beeswax = 0.32
+        produced = gems
+        output = 1.72
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_gem_sluice_no_secondary = {
+        category = building_maintenance
+    }
+    pp_gem_sluice_gold = {
+        lumber = 0.18
+        tools = 0.14
+        produced = goods_gold
+        output = 0.05
+        category = building_maintenance
+    }
+    pp_gem_sluice_sand = {
+        lumber = 0.10
+        tools = 0.06
+        produced = sand
+        output = 0.40
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:gem_sluice:building

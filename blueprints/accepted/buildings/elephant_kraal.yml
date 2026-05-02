@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: elephant_kraal
 building:
   key: elephant_kraal
@@ -82,8 +82,17 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for an Elephant Kraal, transparent background. Center a timber elephant stockade in a tropical forest clearing, one calm elephant partly inside the gate, sturdy wooden posts and rails, a raised mahout platform or training post, and bundles of fruit and fodder near the entrance. Use readable painterly shapes, softly outlined historical UI art, muted jungle greens, warm wood browns, natural gray elephant, no text, no frame, not photorealistic, not cartoonish.
 
 evaluation:
+  allow_rules:
+    base_output_per_1k: Existing accepted no-input extraction scale predates the global employment output baseline; revisit during the building-specific rebalance.
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_elephant_kraal_base_elephants:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Existing accepted elephant kraal payback is faster than the new amortization minimum; revisit during the elephant kraal rebalance.
     pp_elephant_kraal_kheddah_stockades:
       production_efficiency: 1.10
+      allow_rules:
+        amortization_months: Existing accepted elephant kraal payback is faster than the new amortization minimum; revisit during the elephant kraal rebalance.

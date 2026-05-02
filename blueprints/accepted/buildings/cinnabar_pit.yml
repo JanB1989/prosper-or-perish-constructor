@@ -1,0 +1,148 @@
+version: 2
+tag: cinnabar_pit
+upgrade_chain:
+  family: mercury_mine
+  tier: 0
+  previous: null
+  next: quicksilver_retort
+  unlock_advance: null
+building:
+  key: cinnabar_pit
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_cinnabar_pit_no_deposit_work
+        - pp_cinnabar_pit_base_mercury
+    - name: slot_1
+      methods:
+        - pp_cinnabar_pit_no_primary
+        - pp_cinnabar_pit_mercury
+    - name: slot_2
+      methods:
+        - pp_cinnabar_pit_no_secondary
+        - pp_cinnabar_pit_stone
+        - pp_cinnabar_pit_dyes
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_cinnabar_pit_price
+    category = rgo_building_category
+    icon = cinnabar_pit
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:mercury
+    }
+
+    construction_demand = mercury_patio_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_cinnabar_pit_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_cinnabar_pit_base_mercury = {
+            produced = mercury
+            output = 0.27
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_cinnabar_pit_no_primary = {
+            category = building_maintenance
+        }
+        pp_cinnabar_pit_mercury = {
+            lumber = 0.66
+            tools = 0.54
+            beeswax = 0.28
+            produced = mercury
+            output = 1.14
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_cinnabar_pit_no_secondary = {
+            category = building_maintenance
+        }
+        pp_cinnabar_pit_stone = {
+            lumber = 0.10
+            tools = 0.07
+            produced = stone
+            output = 0.22
+            category = building_maintenance
+        }
+        pp_cinnabar_pit_dyes = {
+            lumber = 0.08
+            tools = 0.05
+            produced = dyes
+            output = 0.08
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_cinnabar_pit_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_cinnabar_pit_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('cinnabar_pit')|e].
+    MODIFIER_TYPE_NAME_pp_cinnabar_pit_price_cost_modifier: Cinnabar Pit Cost
+    cinnabar_pit_slot_0: Cinnabar Deposit
+    cinnabar_pit_slot_1: Cinnabar Workings
+    cinnabar_pit_slot_2: Gangue Sorting
+    cinnabar_pit: Cinnabar Pit
+    cinnabar_pit_desc: Shallow pits and early galleries follow red cinnabar seams for quicksilver ore. Workers break and sort the stone by hand, saving pigment-rich pieces while the richest ore is prepared for roasting.
+    pp_cinnabar_pit_no_deposit_work: No Deposit Work
+    pp_cinnabar_pit_base_mercury: Exposed Cinnabar Seam
+    pp_cinnabar_pit_no_primary: No Mercury Extraction
+    pp_cinnabar_pit_mercury: Cinnabar Vein Workings
+    pp_cinnabar_pit_no_secondary: No Gangue Sorting
+    pp_cinnabar_pit_stone: Gangue Stone Sorting
+    pp_cinnabar_pit_dyes: Cinnabar Pigment Sorting
+    pp_cinnabar_pit_price: Cinnabar Pit Price
+icon:
+  source_png: ../assets/icons/cinnabar_pit.png
+  output_dds: cinnabar_pit.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Cinnabar Pit, transparent background. Center a shallow mercury ore pit with vivid red cinnabar seams, dark gangue stone, timber props, wicker ore baskets, and hand tools, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_cinnabar_pit_no_deposit_work:
+      production_efficiency: 1.00
+    pp_cinnabar_pit_base_mercury:
+      production_efficiency: 1.00
+    pp_cinnabar_pit_no_primary:
+      production_efficiency: 1.00
+    pp_cinnabar_pit_mercury:
+      production_efficiency: 1.10
+    pp_cinnabar_pit_no_secondary:
+      production_efficiency: 1.00
+    pp_cinnabar_pit_stone:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Gangue stone sorting is an ancillary cinnabar byproduct, intentionally less profitable than primary mercury extraction.
+        input_throughput: Gangue stone sorting is an ancillary cinnabar byproduct, intentionally less profitable than primary mercury extraction.
+        output_throughput: Gangue stone sorting is an ancillary cinnabar byproduct, intentionally less profitable than primary mercury extraction.
+    pp_cinnabar_pit_dyes:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Cinnabar pigment sorting is an ancillary mercury-ore byproduct, intentionally less profitable than primary mercury extraction.
+        input_throughput: Cinnabar pigment sorting is an ancillary mercury-ore byproduct, intentionally less profitable than primary mercury extraction.
+        output_throughput: Cinnabar pigment sorting is an ancillary mercury-ore byproduct, intentionally less profitable than primary mercury extraction.

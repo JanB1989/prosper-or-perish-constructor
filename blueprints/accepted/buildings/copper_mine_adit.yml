@@ -1,0 +1,154 @@
+version: 2
+tag: copper_mine_adit
+upgrade_chain:
+  family: copper_mine
+  tier: 1
+  previous: copper_mine
+  next: null
+  unlock_advance: new_currency_demands
+building:
+  key: copper_mine_adit
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_copper_mine_adit_no_deposit_work
+        - pp_copper_mine_adit_base_copper
+    - name: slot_1
+      methods:
+        - pp_copper_mine_adit_no_primary
+        - pp_copper_mine_adit_copper
+    - name: slot_2
+      methods:
+        - pp_copper_mine_adit_no_secondary
+        - pp_copper_mine_adit_silver
+        - pp_copper_mine_adit_tin
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_copper_mine_adit_price
+    category = rgo_building_category
+    icon = copper_mine_adit
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = copper_mine
+    build_time = workshop_build_time
+
+    location_potential = {
+        raw_material = goods:copper
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_copper_mine_adit_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_copper_mine_adit_base_copper = {
+            produced = copper
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_copper_mine_adit_no_primary = {
+            category = building_maintenance
+        }
+        pp_copper_mine_adit_copper = {
+            lumber = 1.25
+            tools = 1.75
+            beeswax = 0.35
+            produced = copper
+            output = 2.55
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_copper_mine_adit_no_secondary = {
+            category = building_maintenance
+        }
+        pp_copper_mine_adit_silver = {
+            lumber = 0.14
+            tools = 0.10
+            lead = 0.08
+            produced = silver
+            output = 0.07
+            category = building_maintenance
+        }
+        pp_copper_mine_adit_tin = {
+            lumber = 0.10
+            tools = 0.08
+            produced = tin
+            output = 0.10
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_copper_mine_adit_price
+    body: |2-
+      {gold = 150}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_copper_mine_adit_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('copper_mine_adit')|e].
+    MODIFIER_TYPE_NAME_pp_copper_mine_adit_price_cost_modifier: Adit Copper Mine Cost
+    copper_mine_adit_slot_0: Copper Lode
+    copper_mine_adit_slot_1: Adit Workings
+    copper_mine_adit_slot_2: Ore Dressing
+    copper_mine_adit: Adit Copper Mine
+    copper_mine_adit_desc: Drainage adits, timbered shafts, haulage rails, and dressing floors let miners work copper lodes more regularly. Picked argentiferous ore can be sent toward liquation work, while tin-bearing stones are dressed where copper and cassiterite lodes share the district.
+    pp_copper_mine_adit_no_deposit_work: No Deposit Work
+    pp_copper_mine_adit_base_copper: Surveyed Copper Lode
+    pp_copper_mine_adit_no_primary: No Adit Workings
+    pp_copper_mine_adit_copper: Adit and Shaft Workings
+    pp_copper_mine_adit_no_secondary: No Secondary Output
+    pp_copper_mine_adit_silver: Saiger Ore Sorting
+    pp_copper_mine_adit_tin: Tin Lode Dressing
+    pp_copper_mine_adit_price: Adit Copper Mine Price
+    new_currency_demands: Currency Metal Demands
+    new_currency_demands_desc: Expanding coinage and artillery demands draw more copper and tin from organized lode mines, with better ore dressing and sorting before smelting.
+icon:
+  source_png: ../assets/icons/copper_mine_adit.png
+  output_dds: copper_mine_adit.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Adit Copper Mine, transparent background. Center a timbered adit entrance with ore cart, drainage channel, dressing floor, green-blue copper ore, and small silver-gray and tin-gray sorting heaps, no text, no frame, painterly historical UI art.
+
+evaluation:
+  production_methods:
+    pp_copper_mine_adit_no_deposit_work:
+      production_efficiency: 1.00
+    pp_copper_mine_adit_base_copper:
+      production_efficiency: 1.00
+    pp_copper_mine_adit_no_primary:
+      production_efficiency: 1.00
+    pp_copper_mine_adit_copper:
+      production_efficiency: 1.15
+    pp_copper_mine_adit_no_secondary:
+      production_efficiency: 1.00
+    pp_copper_mine_adit_silver:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Saiger ore sorting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        input_throughput: Saiger ore sorting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        output_throughput: Saiger ore sorting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        amortization_months: Saiger ore sorting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+    pp_copper_mine_adit_tin:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Tin lode dressing is an ancillary regional copper-district byproduct, intentionally less profitable than primary copper extraction.
+        input_throughput: Tin lode dressing is an ancillary regional copper-district byproduct, intentionally less profitable than primary copper extraction.
+        output_throughput: Tin lode dressing is an ancillary regional copper-district byproduct, intentionally less profitable than primary copper extraction.
+        amortization_months: Tin lode dressing is an ancillary regional copper-district byproduct, intentionally less profitable than primary copper extraction.

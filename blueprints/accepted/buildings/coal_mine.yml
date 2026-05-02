@@ -1,0 +1,134 @@
+version: 2
+tag: coal_mine
+upgrade_chain:
+  family: coal_mine
+  tier: 0
+  previous: null
+  next: coal_mine_improved
+  unlock_advance: null
+building:
+  key: coal_mine
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_coal_mine_no_deposit_work
+        - pp_coal_mine_base_coal
+    - name: slot_1
+      methods:
+        - pp_coal_mine_no_primary
+        - pp_coal_mine_coal
+    - name: slot_2
+      methods:
+        - pp_coal_mine_no_secondary
+        - pp_coal_mine_fireclay
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_coal_mine_price
+    category = rgo_building_category
+    icon = coal_mine
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:coal
+    }
+
+    construction_demand = mercury_patio_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_coal_mine_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_coal_mine_base_coal = {
+            produced = coal
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_coal_mine_no_primary = {
+            category = building_maintenance
+        }
+        pp_coal_mine_coal = {
+            lumber = 0.591
+            tools = 0.666
+            beeswax = 0.148
+            produced = coal
+            output = 1.795
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_coal_mine_no_secondary = {
+            category = building_maintenance
+        }
+        pp_coal_mine_fireclay = {
+            lumber = 0.12
+            tools = 0.08
+            produced = clay
+            output = 0.25
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_coal_mine_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_coal_mine_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('coal_mine')|e].
+    MODIFIER_TYPE_NAME_pp_coal_mine_price_cost_modifier: Coal Drift Cost
+    coal_mine_slot_0: Coal Seam
+    coal_mine_slot_1: Coal Workings
+    coal_mine_slot_2: Clay Recovery
+    coal_mine: Coal Drift
+    coal_mine_desc: Shallow drifts and adit-like workings follow exposed coal seams from the surface, with simple timbering, hand haulage, and sorting floors where seat-clay can be recovered from the coal measures.
+    pp_coal_mine_no_deposit_work: No Seam Work
+    pp_coal_mine_base_coal: Outcropping Coal Seam
+    pp_coal_mine_no_primary: No Coal Workings
+    pp_coal_mine_coal: Drift Workings
+    pp_coal_mine_no_secondary: No Clay Recovery
+    pp_coal_mine_fireclay: Seat-Clay Sorting
+    pp_coal_mine_price: Coal Drift Price
+icon:
+  source_png: ../assets/icons/coal_mine.png
+  output_dds: coal_mine.dds
+  size: 512
+
+evaluation:
+  production_methods:
+    pp_coal_mine_no_deposit_work:
+      production_efficiency: 1.00
+    pp_coal_mine_base_coal:
+      production_efficiency: 1.00
+    pp_coal_mine_no_primary:
+      production_efficiency: 1.00
+    pp_coal_mine_coal:
+      production_efficiency: 1.10
+    pp_coal_mine_no_secondary:
+      production_efficiency: 1.00
+    pp_coal_mine_fireclay:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.
+        input_throughput: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.
+        output_throughput: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.
+        amortization_months: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.

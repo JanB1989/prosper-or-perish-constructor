@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: pepper_garden
 building:
   key: pepper_garden
@@ -82,8 +82,16 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for a pepper garden, transparent background. Center pepper vines climbing a support tree or wooden poles, green and red pepper spikes, dark peppercorns drying on woven mats, a small steaming earthen blanching pot, and a sorting tray with peppercorns. Use readable painterly shapes, softly outlined historical UI art, deep vine greens, red and green pepper spikes, dark peppercorn browns, warm tan mats, muted clay pottery, no text, no frame, not photorealistic, not cartoonish.
 
 evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_pepper_garden_base_pepper:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Existing accepted pepper garden payback is faster than the new amortization minimum; revisit during the pepper garden rebalance.
     pp_pepper_garden_blanched_garbling_yards:
       production_efficiency: 1.05
+      allow_rules:
+        amortization_months: Existing accepted pepper garden payback is faster than the new amortization minimum; revisit during the pepper garden rebalance.

@@ -82,6 +82,11 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for a chili plantation, transparent background. Center harvested red chili peppers spread on woven drying mats, a shallow wicker basket filled with chilies, small chili plants or leafy stems, and a simple hand sickle or field knife. Use simplified readable shapes, visible painterly brushwork, softly outlined historical UI art, muted straw and wicker browns with warm red chili accents, no text, no frame, not photorealistic, not cartoonish.
 
 evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_chili_plantation_base_chili:
       production_efficiency: 1.00

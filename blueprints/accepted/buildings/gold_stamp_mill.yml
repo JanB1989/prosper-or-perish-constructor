@@ -1,0 +1,158 @@
+version: 2
+tag: gold_stamp_mill
+upgrade_chain:
+  family: gold_mine
+  tier: 1
+  previous: gold_diggings
+  next: null
+  unlock_advance: pan_amalgamation_advance
+building:
+  key: gold_stamp_mill
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_gold_stamp_mill_no_deposit_work
+        - pp_gold_stamp_mill_base_gold
+    - name: slot_1
+      methods:
+        - pp_gold_stamp_mill_no_primary
+        - pp_gold_stamp_mill_gold
+    - name: slot_2
+      methods:
+        - pp_gold_stamp_mill_no_secondary
+        - pp_gold_stamp_mill_silver
+        - pp_gold_stamp_mill_copper
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_gold_stamp_mill_price
+    category = rgo_building_category
+    icon = gold_stamp_mill
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = gold_diggings
+    build_time = workshop_build_time
+
+    location_potential = {
+        raw_material = goods:goods_gold
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_gold_stamp_mill_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_gold_stamp_mill_base_gold = {
+            produced = goods_gold
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_gold_stamp_mill_no_primary = {
+            category = building_maintenance
+        }
+        pp_gold_stamp_mill_gold = {
+            lumber = 1.20
+            tools = 1.25
+            beeswax = 0.20
+            mercury = 0.35
+            produced = goods_gold
+            output = 0.76
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_gold_stamp_mill_no_secondary = {
+            category = building_maintenance
+        }
+        pp_gold_stamp_mill_silver = {
+            lumber = 0.20
+            tools = 0.16
+            mercury = 0.05
+            produced = silver
+            output = 0.12
+            category = building_maintenance
+        }
+        pp_gold_stamp_mill_copper = {
+            lumber = 0.18
+            tools = 0.12
+            mercury = 0.04
+            produced = copper
+            output = 0.18
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_gold_stamp_mill_price
+    body: |2-
+      {gold = 300}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_gold_stamp_mill_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('gold_stamp_mill')|e].
+    MODIFIER_TYPE_NAME_pp_gold_stamp_mill_price_cost_modifier: Gold Stamp Mill Cost
+    gold_stamp_mill_slot_0: Gold Deposit
+    gold_stamp_mill_slot_1: Stamp-Mill Recovery
+    gold_stamp_mill_slot_2: Assay Sorting
+    gold_stamp_mill: Gold Stamp Mill
+    gold_stamp_mill_desc: Organized works crush quartz and lode ore under stamp heads, recover gold through mercury amalgamation and retorting, and assay the remaining ore for silver and copper values.
+    pp_gold_stamp_mill_no_deposit_work: No Deposit Work
+    pp_gold_stamp_mill_base_gold: Surveyed Gold Deposit
+    pp_gold_stamp_mill_no_primary: No Stamp Milling
+    pp_gold_stamp_mill_gold: Stamp-Mill Amalgamation
+    pp_gold_stamp_mill_no_secondary: No Assay Sorting
+    pp_gold_stamp_mill_silver: Assay Silver Recovery
+    pp_gold_stamp_mill_copper: Copper Sulphide Sorting
+    pp_gold_stamp_mill_price: Gold Stamp Mill Price
+    pan_amalgamation_advance: Pan Amalgamation
+    pan_amalgamation_advance_desc: Mercury amalgamation improves the recovery of precious metals from crushed ore, supporting larger gold stamp mills and more organized refining.
+icon:
+  source_png: ../assets/icons/gold_stamp_mill.png
+  output_dds: gold_stamp_mill.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Gold Stamp Mill, transparent background. Center a timber stamp mill with waterwheel, ore chute, retort chimney, crushed quartz ore, and restrained gold concentrate highlights, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_gold_stamp_mill_no_deposit_work:
+      production_efficiency: 1.00
+    pp_gold_stamp_mill_base_gold:
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: High-value surveyed gold deposits repay faster than the global amortization band even before stamp milling is selected.
+    pp_gold_stamp_mill_no_primary:
+      production_efficiency: 1.00
+    pp_gold_stamp_mill_gold:
+      production_efficiency: 1.15
+    pp_gold_stamp_mill_no_secondary:
+      production_efficiency: 1.00
+    pp_gold_stamp_mill_silver:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Silver is an ancillary assay byproduct, intentionally less profitable than primary gold amalgamation.
+        input_throughput: Silver is an ancillary assay byproduct, intentionally less profitable than primary gold amalgamation.
+        output_throughput: Silver is an ancillary assay byproduct, intentionally less profitable than primary gold amalgamation.
+        amortization_months: Silver is an ancillary assay byproduct, intentionally less profitable than primary gold amalgamation.
+    pp_gold_stamp_mill_copper:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Copper sulfide sorting is an ancillary associated-ore byproduct, intentionally less profitable than primary gold amalgamation.
+        input_throughput: Copper sulfide sorting is an ancillary associated-ore byproduct, intentionally less profitable than primary gold amalgamation.
+        output_throughput: Copper sulfide sorting is an ancillary associated-ore byproduct, intentionally less profitable than primary gold amalgamation.
+        amortization_months: Copper sulfide sorting is an ancillary associated-ore byproduct, intentionally less profitable than primary gold amalgamation.

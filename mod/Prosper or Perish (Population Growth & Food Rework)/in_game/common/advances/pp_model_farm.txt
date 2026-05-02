@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:model_farm:advancement
+pp_model_farm = {
+icon = model_farm
+age = age_5_absolutism
+requires = scientific_revolution_advance
+unlock_building = model_farm
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:model_farm:advancement

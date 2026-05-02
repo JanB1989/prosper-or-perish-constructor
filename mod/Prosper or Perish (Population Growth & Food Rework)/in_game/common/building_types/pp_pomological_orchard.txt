@@ -1,0 +1,41 @@
+﻿# >>> eu5-building-pipeline:pomological_orchard:building
+pomological_orchard = {
+is_foreign = no
+pop_type = laborers
+max_levels = fruit_orchard_max_level
+employment_size = 8
+price = pp_pomological_orchard_price
+category = rgo_building_category
+icon = pomological_orchard
+rural_settlement = yes
+town = yes
+city = yes
+obsolete = fruit_orchard
+forbidden_for_estates = yes
+ai_forbid_shutdown = no
+can_close = yes
+build_time = workshop_build_time
+construction_demand = workshop_construction
+
+location_potential = {
+    has_variable = pp_fruit_orchard_fixed_env_bonus
+    var:pp_fruit_orchard_fixed_env_bonus > 0
+}
+
+unique_production_methods = {
+    pp_pomological_orchard_grafted_rows = {
+        produced = fruit
+        output = 13.60
+        tools = 2.60
+        lumber = 2.40
+        paper = 1.10
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_monthly_food = 0.0
+}
+}
+# <<< eu5-building-pipeline:pomological_orchard:building

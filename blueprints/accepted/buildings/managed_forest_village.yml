@@ -1,0 +1,137 @@
+version: 2
+tag: managed_forest_village
+upgrade_chain:
+  family: forest_village
+  tier: 1
+  previous: forest_village
+  next: null
+  unlock_advance: pp_managed_forest_village
+building:
+  key: managed_forest_village
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_managed_forest_village_tannery
+        - pp_managed_forest_village_gamekeepers
+        - pp_managed_forest_village_fur_trappers
+        - pp_managed_forest_village_apiaries
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = forest_village_max_level
+    pop_type = laborers
+    employment_size = 6
+    price = pp_managed_forest_village_price
+    category = village_category
+    icon = managed_forest_village
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = forest_village
+    forbidden_for_estates = yes
+    ai_forbid_shutdown = no
+    can_close = yes
+    build_time = workshop_build_time
+    construction_demand = workshop_construction
+
+    location_potential = {
+        has_variable = pp_forest_village_fixed_env_bonus
+        var:pp_forest_village_fixed_env_bonus > 0
+    }
+
+    unique_production_methods = {
+        pp_managed_forest_village_tannery = {
+            produced = leather
+            output = 3.40
+            wild_game = 3.80
+            tools = 1.00
+            horses = 0.45
+            victuals = 0.45
+            paper = 0.10
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_managed_forest_village_gamekeepers = {
+            produced = wild_game
+            output = 9.50
+            tools = 1.35
+            horses = 0.95
+            victuals = 0.85
+            paper = 0.10
+            lumber = 0.60
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_managed_forest_village_fur_trappers = {
+            produced = fur
+            output = 4.70
+            tools = 1.35
+            horses = 0.85
+            victuals = 0.85
+            paper = 0.15
+            lumber = 0.75
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_managed_forest_village_apiaries = {
+            produced = beeswax
+            output = 4.60
+            tools = 1.25
+            cloth = 0.75
+            lumber = 1.00
+            paper = 0.25
+            victuals = 0.80
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_monthly_food = 0.0
+        local_peasants_estate_power = 0.1
+        local_laborers_desired_pop = 0.02
+    }
+prices:
+  - key: pp_managed_forest_village_price
+    body: |2-
+      {gold = 225}
+advancements:
+  - key: pp_managed_forest_village
+    body: |2-
+      icon = managed_forest_village
+      age = age_4_reformation
+      requires = lumber_improvements_reformation
+      unlock_building = managed_forest_village
+      ai_weight = { add = 125 }
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_managed_forest_village_price_cost_modifier: Affects the cost of building [ShowBuildingTypeName('managed_forest_village')|e].
+    MODIFIER_TYPE_NAME_pp_managed_forest_village_price_cost_modifier: Managed Forest Village Cost
+    managed_forest_village: Managed Forest Village
+    managed_forest_village_desc: Managed forest villages use ordinances, marked stands, hauling crews, and recorded rights to turn scattered forest work into larger organized flows of hides, game, fur, and wax.
+    managed_forest_village_slot_0: Forest Work
+    pp_managed_forest_village: Managed Forest Villages
+    pp_managed_forest_village_desc: Timber drives, woodland ordinances, and organized crews let forest settlements work their hinterlands at greater scale.
+    pp_managed_forest_village_apiaries: Managed Forest Apiaries
+    pp_managed_forest_village_fur_trappers: Registered Fur Trappers
+    pp_managed_forest_village_gamekeepers: Gamekeepers
+    pp_managed_forest_village_price: Managed Forest Village Price
+    pp_managed_forest_village_tannery: Managed Forest Tannery
+icon:
+  source_png: ../assets/icons/managed_forest_village.png
+  output_dds: managed_forest_village.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Managed Forest Village, transparent background. Center a compact upgraded woodland settlement with marked tree stands, timber sledges or wagons, stacked hides, beehives, a small tannery shed, survey stakes, and workers' tools. Muted forest greens, bark browns, wax yellow accents, no text, no frame, painterly historical UI art.
+
+evaluation:
+  production_methods:
+    pp_managed_forest_village_tannery:
+      production_efficiency: 1.00
+    pp_managed_forest_village_gamekeepers:
+      production_efficiency: 1.00
+    pp_managed_forest_village_fur_trappers:
+      production_efficiency: 1.00
+    pp_managed_forest_village_apiaries:
+      production_efficiency: 1.00

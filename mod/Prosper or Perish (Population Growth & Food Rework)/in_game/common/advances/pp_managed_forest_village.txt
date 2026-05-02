@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:managed_forest_village:advancement
+pp_managed_forest_village = {
+icon = managed_forest_village
+age = age_4_reformation
+requires = lumber_improvements_reformation
+unlock_building = managed_forest_village
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:managed_forest_village:advancement

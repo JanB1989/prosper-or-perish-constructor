@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:pomological_orchard:advancement
+pp_pomological_orchard = {
+icon = pomological_orchard
+age = age_5_absolutism
+requires = food_advance_absolutism
+unlock_building = pomological_orchard
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:pomological_orchard:advancement

@@ -1,0 +1,73 @@
+﻿# >>> eu5-building-pipeline:alum_quarry:building
+alum_quarry = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 3
+price = pp_alum_quarry_price
+category = rgo_building_category
+icon = alum_quarry
+rural_settlement = yes
+town = yes
+city = yes
+build_time = village_build_time
+
+location_potential = {
+    raw_material = goods:alum
+}
+
+construction_demand = mercury_patio_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_alum_quarry_no_deposit_work = {
+        category = building_maintenance
+    }
+    pp_alum_quarry_base_alum = {
+        produced = alum
+        output = 0.24
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_alum_quarry_no_primary = {
+        category = building_maintenance
+    }
+    pp_alum_quarry_alum = {
+        lumber = 0.591
+        tools = 0.666
+        beeswax = 0.148
+        produced = alum
+        output = 1.15
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_alum_quarry_no_secondary = {
+        category = building_maintenance
+    }
+    pp_alum_quarry_stone = {
+        lumber = 0.12
+        tools = 0.08
+        produced = stone
+        output = 0.25
+        category = building_maintenance
+    }
+    pp_alum_quarry_clay = {
+        lumber = 0.10
+        tools = 0.06
+        produced = clay
+        output = 0.24
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:alum_quarry:building

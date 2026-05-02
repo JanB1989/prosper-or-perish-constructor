@@ -1,0 +1,151 @@
+version: 2
+tag: quicksilver_retort
+upgrade_chain:
+  family: mercury_mine
+  tier: 1
+  previous: cinnabar_pit
+  next: null
+  unlock_advance: pan_amalgamation_advance
+building:
+  key: quicksilver_retort
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_quicksilver_retort_no_deposit_work
+        - pp_quicksilver_retort_base_mercury
+    - name: slot_1
+      methods:
+        - pp_quicksilver_retort_no_primary
+        - pp_quicksilver_retort_mercury
+    - name: slot_2
+      methods:
+        - pp_quicksilver_retort_no_secondary
+        - pp_quicksilver_retort_stone
+        - pp_quicksilver_retort_dyes
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_quicksilver_retort_price
+    category = rgo_building_category
+    icon = quicksilver_retort
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = cinnabar_pit
+    build_time = workshop_build_time
+
+    location_potential = {
+        raw_material = goods:mercury
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_quicksilver_retort_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_quicksilver_retort_base_mercury = {
+            produced = mercury
+            output = 0.34
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_quicksilver_retort_no_primary = {
+            category = building_maintenance
+        }
+        pp_quicksilver_retort_mercury = {
+            lumber = 1.17
+            tools = 1.17
+            beeswax = 0.415
+            produced = mercury
+            output = 2.02
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_quicksilver_retort_no_secondary = {
+            category = building_maintenance
+        }
+        pp_quicksilver_retort_stone = {
+            lumber = 0.12
+            tools = 0.09
+            produced = stone
+            output = 0.28
+            category = building_maintenance
+        }
+        pp_quicksilver_retort_dyes = {
+            lumber = 0.10
+            tools = 0.07
+            produced = dyes
+            output = 0.10
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_quicksilver_retort_price
+    body: |2-
+      {gold = 150}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_quicksilver_retort_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('quicksilver_retort')|e].
+    MODIFIER_TYPE_NAME_pp_quicksilver_retort_price_cost_modifier: Quicksilver Retort Cost
+    quicksilver_retort_slot_0: Cinnabar Deposit
+    quicksilver_retort_slot_1: Retort Works
+    quicksilver_retort_slot_2: Gangue Sorting
+    quicksilver_retort: Quicksilver Retort
+    quicksilver_retort_desc: Deeper shafts and timbered galleries feed retort furnaces where cinnabar is roasted into quicksilver. The works store mercury for gold and silver amalgamation, while toxic fumes make the labor harsh and dangerous.
+    pp_quicksilver_retort_no_deposit_work: No Deposit Work
+    pp_quicksilver_retort_base_mercury: Surveyed Cinnabar Seam
+    pp_quicksilver_retort_no_primary: No Mercury Retorting
+    pp_quicksilver_retort_mercury: Retort Furnace Works
+    pp_quicksilver_retort_no_secondary: No Gangue Sorting
+    pp_quicksilver_retort_stone: Gangue Stone Sorting
+    pp_quicksilver_retort_dyes: Cinnabar Pigment Sorting
+    pp_quicksilver_retort_price: Quicksilver Retort Price
+    pan_amalgamation_advance: Pan Amalgamation
+    pan_amalgamation_advance_desc: Mercury amalgamation improves recovery from crushed precious-metal ores, supporting gold stamp mills, expanded quicksilver retorts, and more reliable mercury supply.
+icon:
+  source_png: ../assets/icons/quicksilver_retort.png
+  output_dds: quicksilver_retort.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Quicksilver Retort, transparent background. Center a historical mercury retort furnace with brick kiln, condenser tubes, red cinnabar ore, sealed mercury flask, light smoke, and timber mine entrance, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_quicksilver_retort_no_deposit_work:
+      production_efficiency: 1.00
+    pp_quicksilver_retort_base_mercury:
+      production_efficiency: 1.00
+    pp_quicksilver_retort_no_primary:
+      production_efficiency: 1.00
+    pp_quicksilver_retort_mercury:
+      production_efficiency: 1.15
+    pp_quicksilver_retort_no_secondary:
+      production_efficiency: 1.00
+    pp_quicksilver_retort_stone:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Gangue stone sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
+        input_throughput: Gangue stone sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
+        output_throughput: Gangue stone sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
+    pp_quicksilver_retort_dyes:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Cinnabar pigment sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
+        input_throughput: Cinnabar pigment sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
+        output_throughput: Cinnabar pigment sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.

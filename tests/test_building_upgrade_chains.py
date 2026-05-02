@@ -1,0 +1,265 @@
+from __future__ import annotations
+
+from pathlib import Path
+import re
+
+import yaml
+
+
+ROOT = Path(__file__).resolve().parents[1]
+BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted"
+MANIFEST_PATH = ROOT / "blueprints" / "buildings.manifest.yml"
+ADVANCES_PATH = (
+    ROOT
+    / "mod"
+    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "in_game"
+    / "common"
+    / "advances"
+    / "pp_local_resource_productivity_advances.txt"
+)
+
+EXPECTED_CHAINS = {
+    "alum_quarry": [
+        ("alum_quarry", "advanced_mining"),
+        ("alum_works", "green_vitriol"),
+    ],
+    "coal_mine": [
+        ("coal_mine", None),
+        ("coal_mine_improved", "coal_improvements_absolutism"),
+    ],
+    "mercury_mine": [
+        ("cinnabar_pit", None),
+        ("quicksilver_retort", "pan_amalgamation_advance"),
+    ],
+    "copper_mine": [
+        ("copper_mine", None),
+        ("copper_mine_adit", "new_currency_demands"),
+    ],
+    "silver_mine": [
+        ("silver_mine", None),
+        ("silver_mine_improved", "saiger_process_discovery"),
+    ],
+    "lead_mine": [
+        ("lead_mine", None),
+        ("lead_mine_improved", "lead_ore_dressing"),
+    ],
+    "tin_mine": [
+        ("tin_streamworks", None),
+        ("tin_stamping_mill", "new_currency_demands"),
+    ],
+    "gold_mine": [
+        ("gold_diggings", None),
+        ("gold_stamp_mill", "pan_amalgamation_advance"),
+    ],
+    "gem_mine": [
+        ("gem_gravel_pit", None),
+        ("gem_sluice", "foreign_mining_techniques"),
+    ],
+    "iron_mine": [
+        ("iron_mine", None),
+        ("iron_mine_improved", "efficient_mining"),
+    ],
+    "bog_iron_smelter": [
+        ("bog_iron_smelter", None),
+        ("bog_iron_smelter_blast_furnace", "blast_furnace"),
+        ("bog_iron_smelter_slitting_mills", "slitting_mills"),
+        ("bog_iron_smelter_coke_blast_furnace", "coke_blast_furnace"),
+        ("bog_iron_smelter_hot_blast_furnace", "hot_blast_furnace"),
+    ],
+}
+
+DEACTIVATED_MINING_VILLAGE_BLUEPRINTS = {
+    "buildings/mining_village.yml",
+    "buildings/mining_village_blast_furnace.yml",
+    "buildings/mining_village_slitting_mills.yml",
+    "buildings/mining_village_coke_blast_furnace.yml",
+    "buildings/mining_village_hot_blast_furnace.yml",
+}
+
+
+def _load_blueprint(key: str) -> dict:
+    with (BLUEPRINT_ROOT / "buildings" / f"{key}.yml").open("r", encoding="utf-8") as stream:
+        raw = yaml.safe_load(stream)
+    assert isinstance(raw, dict)
+    return raw
+
+
+def _advance_block(advance: str, text: str) -> str:
+    match = re.search(rf"REPLACE:{re.escape(advance)}\s*=\s*\{{(?P<body>.*?)\n\}}", text, flags=re.S)
+    assert match is not None, f"{advance} replacement block missing"
+    return match.group("body")
+
+
+def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+    advances = ADVANCES_PATH.read_text(encoding="utf-8")
+
+    for family, chain in EXPECTED_CHAINS.items():
+        for tier, (key, unlock_advance) in enumerate(chain):
+            raw = _load_blueprint(key)
+
+            assert f"buildings/{key}.yml" in enabled
+            assert raw["tag"] == key
+            assert raw["building"]["key"] == key
+
+            upgrade_chain = raw.get("upgrade_chain")
+            assert upgrade_chain == {
+                "family": family,
+                "tier": tier,
+                "previous": chain[tier - 1][0] if tier > 0 else None,
+                "next": chain[tier + 1][0] if tier + 1 < len(chain) else None,
+                "unlock_advance": unlock_advance,
+            }
+
+            body = raw["building"]["body"]
+            if tier == 0:
+                assert "obsolete =" not in body
+            else:
+                previous = chain[tier - 1][0]
+                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                assert "icon" in raw, f"{key} must provide its own icon"
+                assert raw["icon"]["output_dds"] == f"{key}.dds"
+
+            if unlock_advance is not None:
+                block = _advance_block(unlock_advance, advances)
+                assert re.search(rf"^\s*unlock_building\s*=\s*{re.escape(key)}\s*$", block, flags=re.M)
+
+
+def test_mining_village_chain_is_deactivated() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+    advances = ADVANCES_PATH.read_text(encoding="utf-8")
+
+    assert DEACTIVATED_MINING_VILLAGE_BLUEPRINTS.isdisjoint(enabled)
+    assert "unlock_building = mining_village" not in advances
+
+
+def test_coal_mine_tiers_are_coal_deposit_only() -> None:
+    for key in ("coal_mine", "coal_mine_improved"):
+        body = _load_blueprint(key)["building"]["body"]
+        assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:coal\s*\}", body)
+
+
+def test_alum_quarry_tiers_are_alum_deposit_only() -> None:
+    for key in ("alum_quarry", "alum_works"):
+        body = _load_blueprint(key)["building"]["body"]
+        assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:alum\s*\}", body)
+
+
+def test_mercury_mine_tiers_are_mercury_deposit_only() -> None:
+    for key in ("cinnabar_pit", "quicksilver_retort"):
+        body = _load_blueprint(key)["building"]["body"]
+        assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:mercury\s*\}", body)
+
+
+def test_later_alum_modifier_advances_do_not_unlock_alum_buildings() -> None:
+    advances = ADVANCES_PATH.read_text(encoding="utf-8")
+    for advance in ("shared_products_procedures", "ostentatious_clothing"):
+        assert f"REPLACE:{advance}" not in advances
+
+
+def test_iron_mine_tiers_are_iron_deposit_only() -> None:
+    for key in ("iron_mine", "iron_mine_improved"):
+        body = _load_blueprint(key)["building"]["body"]
+        assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:iron\s*\}", body)
+
+
+def test_silver_mine_tiers_are_silver_deposit_only_and_have_unique_icons() -> None:
+    for key in ("silver_mine", "silver_mine_improved"):
+        raw = _load_blueprint(key)
+        body = raw["building"]["body"]
+        assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:silver\s*\}", body)
+        assert raw["icon"]["output_dds"] == f"{key}.dds"
+
+
+def test_lead_mine_tiers_are_lead_deposit_only_and_have_unique_icons() -> None:
+    for key in ("lead_mine", "lead_mine_improved"):
+        raw = _load_blueprint(key)
+        body = raw["building"]["body"]
+        assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:lead\s*\}", body)
+        assert raw["icon"]["output_dds"] == f"{key}.dds"
+
+
+def test_tin_mine_tiers_are_tin_deposit_only_and_have_unique_icons() -> None:
+    for key in ("tin_streamworks", "tin_stamping_mill"):
+        raw = _load_blueprint(key)
+        body = raw["building"]["body"]
+        assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:tin\s*\}", body)
+        assert raw["icon"]["output_dds"] == f"{key}.dds"
+
+
+def test_copper_mine_tiers_are_copper_deposit_only() -> None:
+    for key in ("copper_mine", "copper_mine_adit"):
+        body = _load_blueprint(key)["building"]["body"]
+        assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:copper\s*\}", body)
+
+
+def test_gold_mine_tiers_are_gold_deposit_only() -> None:
+    for key in ("gold_diggings", "gold_stamp_mill"):
+        body = _load_blueprint(key)["building"]["body"]
+        assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:goods_gold\s*\}", body)
+
+
+def test_gem_mine_tiers_are_gem_deposit_only_and_have_unique_icons() -> None:
+    for key in ("gem_gravel_pit", "gem_sluice"):
+        raw = _load_blueprint(key)
+        body = raw["building"]["body"]
+        assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:gems\s*\}", body)
+        assert raw["icon"]["output_dds"] == f"{key}.dds"
+
+
+def test_manifest_uses_dedicated_gold_mines_not_mining_village() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+
+    assert "buildings/gold_diggings.yml" in enabled
+    assert "buildings/gold_stamp_mill.yml" in enabled
+    assert all("mining_village" not in entry for entry in enabled)
+
+
+def test_manifest_uses_dedicated_tin_mines_not_mining_village() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+
+    assert "buildings/tin_streamworks.yml" in enabled
+    assert "buildings/tin_stamping_mill.yml" in enabled
+    assert all("mining_village" not in entry for entry in enabled)
+
+
+def test_bog_iron_smelters_exclude_true_metal_and_coal_deposits() -> None:
+    for key, _unlock_advance in EXPECTED_CHAINS["bog_iron_smelter"]:
+        body = _load_blueprint(key)["building"]["body"]
+        nor_match = re.search(r"NOR\s*=\s*\{(?P<body>.*?)\n\s*\}", body, flags=re.S)
+        assert nor_match is not None
+        nor_body = nor_match.group("body")
+        assert re.search(r"raw_material\s*=\s*goods:iron", nor_body)
+        assert re.search(r"raw_material\s*=\s*goods:coal", nor_body)
+        assert re.search(r"raw_material\s*=\s*goods:copper", nor_body)
+        assert re.search(r"raw_material\s*=\s*goods:gems", nor_body)
+        assert re.search(r"raw_material\s*=\s*goods:mercury", nor_body)
+
+
+def test_pan_amalgamation_unlocks_gold_and_mercury_upgrades() -> None:
+    advances = ADVANCES_PATH.read_text(encoding="utf-8")
+    block = _advance_block("pan_amalgamation_advance", advances)
+    assert re.search(r"^\s*unlock_building\s*=\s*gold_stamp_mill\s*$", block, flags=re.M)
+    assert re.search(r"^\s*unlock_building\s*=\s*quicksilver_retort\s*$", block, flags=re.M)
+
+
+def test_smelting_advances_do_not_unlock_iron_mines() -> None:
+    advances = ADVANCES_PATH.read_text(encoding="utf-8")
+    for advance in ("blast_furnace", "slitting_mills", "coke_blast_furnace", "hot_blast_furnace"):
+        block = _advance_block(advance, advances)
+        assert "unlock_building = iron_mine" not in block
+        assert "unlock_building = iron_mine_improved" not in block
+
+
+def test_charcoal_buildings_exclude_coal_deposits() -> None:
+    for key in ("charcoal_maker", "improved_charcoal_maker"):
+        body = _load_blueprint(key)["building"]["body"]
+        assert re.search(
+            r"location_potential\s*=\s*\{\s*NOT\s*=\s*\{\s*raw_material\s*=\s*goods:coal\s*\}\s*\}",
+            body,
+        )

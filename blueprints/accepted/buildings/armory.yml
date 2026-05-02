@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: armory
 building:
   key: armory
@@ -56,3 +56,7 @@ building:
 localization:
   entries:
     pp_armory_maintenance: Armory Maintenance
+
+evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.

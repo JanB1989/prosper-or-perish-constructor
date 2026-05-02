@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: fishing_village
 building:
   key: fishing_village
@@ -35,7 +35,7 @@ building:
     		var:pp_fishing_village_fixed_env_bonus > 0
     	}
     	build_time = village_build_time
-    	# Slot 0 — fishery ground / climate (temperate vs arctic)
+    	# Slot 0 â€” fishery ground / climate (temperate vs arctic)
     	unique_production_methods = {
     		pp_fishing_village_maintenance = {
     			produced = fish
@@ -276,6 +276,10 @@ localization:
     pp_wattle_fish_weirs_desc: Build wicker traps, wattle fences, and river weirs that guide local fish into village catches.
 
 evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_fishing_village_maintenance:
       production_efficiency: 1.05

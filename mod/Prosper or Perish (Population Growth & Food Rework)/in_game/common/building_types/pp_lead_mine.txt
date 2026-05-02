@@ -1,0 +1,67 @@
+﻿# >>> eu5-building-pipeline:lead_mine:building
+lead_mine = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 3
+price = pp_lead_mine_price
+category = rgo_building_category
+icon = lead_mine
+rural_settlement = yes
+town = yes
+city = yes
+build_time = village_build_time
+
+location_potential = {
+    raw_material = goods:lead
+}
+
+construction_demand = mercury_patio_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_lead_mine_no_deposit_work = {
+        category = building_maintenance
+    }
+    pp_lead_mine_base_lead = {
+        produced = lead
+        output = 0.27
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_lead_mine_no_primary = {
+        category = building_maintenance
+    }
+    pp_lead_mine_lead = {
+        lumber = 0.42
+        tools = 0.76
+        beeswax = 0.12
+        produced = lead
+        output = 1.70
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_lead_mine_no_secondary = {
+        category = building_maintenance
+    }
+    pp_lead_mine_silver = {
+        lumber = 0.10
+        tools = 0.08
+        lead = 0.05
+        produced = silver
+        output = 0.05
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:lead_mine:building

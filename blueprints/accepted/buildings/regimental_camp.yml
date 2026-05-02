@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: regimental_camp
 building:
   key: regimental_camp
@@ -50,3 +50,7 @@ building:
 localization:
   entries:
     pp_regimental_camp_maintenance: Regimental Camp Maintenance
+
+evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.

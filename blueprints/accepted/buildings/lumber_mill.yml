@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: lumber_mill
 building:
   key: lumber_mill
@@ -78,6 +78,9 @@ localization:
     pp_lumber_mill_no_extra_rations: No Extra Rations
 
 evaluation:
+  allow_rules:
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_lumber_mill_maintenance:
       production_efficiency: 1.00

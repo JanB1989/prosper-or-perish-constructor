@@ -22,8 +22,8 @@ REPLACE:farming_village = {
 	
 	unique_production_methods = {
 		pp_farming_village_maintenance = {
-			tools = 0.025
-			clay = 0.8
+			tools = 0.050
+			clay = 1.0
 			output = 0.5
 			produced = livestock
 			debug_max_profit = 0

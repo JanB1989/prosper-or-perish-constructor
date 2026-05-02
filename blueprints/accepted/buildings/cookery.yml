@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: cookery
 building:
   key: cookery
@@ -196,7 +196,7 @@ building:
     			debug_max_profit = 0
     			category = building_maintenance
     		}
-    		pp_cookery_boreal_hunter_stew = { # Fur belt: North Asia, North America, Eastern Europe — game stew; fur = trapping economy
+    		pp_cookery_boreal_hunter_stew = { # Fur belt: North Asia, North America, Eastern Europe â€” game stew; fur = trapping economy
     			fur = 2.30
     			millet = 2.0
     			salt = 0.20
@@ -329,7 +329,7 @@ localization:
     pp_cookery_pottery_jars: Pottery Jars
     pp_cookery_pozole: Pozole
     pp_cookery_saltfish_porridge: Saltfish Porridge
-    pp_cookery_surstromming: Surströmming
+    pp_cookery_surstromming: SurstrÃ¶mming
     pp_cookery_tea: Tea
     pp_cookery_tin_cans: Tin Cans
     pp_cookery_well_water: Well Water
@@ -340,6 +340,10 @@ icon:
   size: 512
 
 evaluation:
+  allow_rules:
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
   production_methods:
     pp_cookery_khichdi:
       production_efficiency: 1.15

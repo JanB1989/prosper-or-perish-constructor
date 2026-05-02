@@ -1,0 +1,68 @@
+﻿# >>> eu5-building-pipeline:lead_mine_improved:building
+lead_mine_improved = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 4
+price = pp_lead_mine_improved_price
+category = rgo_building_category
+icon = lead_mine_improved
+rural_settlement = yes
+town = yes
+city = yes
+obsolete = lead_mine
+build_time = workshop_build_time
+
+location_potential = {
+    raw_material = goods:lead
+}
+
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_lead_mine_improved_no_deposit_work = {
+        category = building_maintenance
+    }
+    pp_lead_mine_improved_base_lead = {
+        produced = lead
+        output = 0.30
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_lead_mine_improved_no_primary = {
+        category = building_maintenance
+    }
+    pp_lead_mine_improved_lead = {
+        lumber = 0.75
+        tools = 1.74
+        beeswax = 0.20
+        produced = lead
+        output = 3.30
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_lead_mine_improved_no_secondary = {
+        category = building_maintenance
+    }
+    pp_lead_mine_improved_silver = {
+        lumber = 0.14
+        tools = 0.10
+        lead = 0.08
+        produced = silver
+        output = 0.07
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:lead_mine_improved:building

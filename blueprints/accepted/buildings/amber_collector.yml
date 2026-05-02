@@ -108,6 +108,11 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for an amber collector, transparent background. Center a compact beach-gathering setup with a low wicker basket holding golden amber chunks, a simple wooden sieve, a small hand rake, pale beach sand, and one warm orange amber piece as the focal material. Use simplified readable shapes, visible painterly brushwork, softly outlined historical UI art, muted sand and wicker browns with amber orange accents, no text, no frame, not photorealistic, not cartoonish.
 
 evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_amber_collector_base_amber:
       production_efficiency: 1.00

@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: clove_grove
 building:
   key: clove_grove
@@ -82,8 +82,16 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for a clove grove, transparent background. Center a tropical clove tree branch with green-pink unopened flower buds, dark dried cloves on raised wooden drying racks, a small rustic curing hut or drying screen, and a shallow wicker tray of cloves. Use readable painterly shapes, softly outlined historical UI art, warm dark clove browns, muted wood tan, deep green leaves, small pink-green bud accents, no text, no frame, not photorealistic, not cartoonish.
 
 evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_clove_grove_base_cloves:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Existing accepted spice grove payback is faster than the new amortization minimum; revisit during the clove grove rebalance.
     pp_clove_grove_curing_houses:
       production_efficiency: 1.10
+      allow_rules:
+        amortization_months: Existing accepted spice grove payback is faster than the new amortization minimum; revisit during the clove grove rebalance.

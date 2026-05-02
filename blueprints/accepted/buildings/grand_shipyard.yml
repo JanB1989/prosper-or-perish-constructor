@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: grand_shipyard
 building:
   key: grand_shipyard
@@ -54,3 +54,7 @@ building:
 localization:
   entries:
     pp_grand_shipyard_maintenance: Grand Shipyard Maintenance
+
+evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.

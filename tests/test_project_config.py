@@ -35,6 +35,17 @@ def test_constructor_config_loads() -> None:
     assert config.population_capacity.config_path == ROOT / "population_capacity.toml"
     assert config.population_capacity.generated_label == "Prosper or Perish"
     assert config.population_capacity.managed_write_mode == "mod_root"
+    assert config.blueprint_evaluation.raw_input_efficiency_per_good == 0.05
+    assert config.blueprint_evaluation.profit_percent_min == -0.30
+    assert config.blueprint_evaluation.profit_percent_max == 0.30
+    assert config.blueprint_evaluation.base_output_per_1k_min == 0.07
+    assert config.blueprint_evaluation.base_output_per_1k_max == 0.15
+    assert config.blueprint_evaluation.throughput_gold_per_1k["laborers"] == 1.5
+    assert config.blueprint_evaluation.age_throughput_growth == 0.15
+    assert config.blueprint_evaluation.throughput_tolerance == 0.30
+    assert config.blueprint_evaluation.amortization_months_min == 120.0
+    assert config.blueprint_evaluation.amortization_months_max == 360.0
+    assert config.blueprint_evaluation.employment_size_constants == {}
 
 
 def test_accepted_blueprints_validate() -> None:

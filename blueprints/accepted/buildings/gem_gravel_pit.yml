@@ -1,0 +1,150 @@
+version: 2
+tag: gem_gravel_pit
+upgrade_chain:
+  family: gem_mine
+  tier: 0
+  previous: null
+  next: gem_sluice
+  unlock_advance: null
+building:
+  key: gem_gravel_pit
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_gem_gravel_pit_no_deposit_work
+        - pp_gem_gravel_pit_base_gems
+    - name: slot_1
+      methods:
+        - pp_gem_gravel_pit_no_primary
+        - pp_gem_gravel_pit_gems
+    - name: slot_2
+      methods:
+        - pp_gem_gravel_pit_no_secondary
+        - pp_gem_gravel_pit_gold
+        - pp_gem_gravel_pit_sand
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_gem_gravel_pit_price
+    category = rgo_building_category
+    icon = gem_gravel_pit
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:gems
+    }
+
+    construction_demand = mercury_patio_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_gem_gravel_pit_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_gem_gravel_pit_base_gems = {
+            produced = gems
+            output = 0.22
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_gem_gravel_pit_no_primary = {
+            category = building_maintenance
+        }
+        pp_gem_gravel_pit_gems = {
+            lumber = 0.70
+            tools = 0.80
+            beeswax = 0.20
+            produced = gems
+            output = 1.05
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_gem_gravel_pit_no_secondary = {
+            category = building_maintenance
+        }
+        pp_gem_gravel_pit_gold = {
+            lumber = 0.14
+            tools = 0.10
+            produced = goods_gold
+            output = 0.035
+            category = building_maintenance
+        }
+        pp_gem_gravel_pit_sand = {
+            lumber = 0.08
+            tools = 0.04
+            produced = sand
+            output = 0.30
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_gem_gravel_pit_price
+    body: |2-
+      {gold = 125}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_gem_gravel_pit_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('gem_gravel_pit')|e].
+    MODIFIER_TYPE_NAME_pp_gem_gravel_pit_price_cost_modifier: Gem Gravel Pit Cost
+    gem_gravel_pit_slot_0: Gem Gravel
+    gem_gravel_pit_slot_1: Gem Washing
+    gem_gravel_pit_slot_2: Placer Byproducts
+    gem_gravel_pit: Gem Gravel Pit
+    gem_gravel_pit_desc: Alluvial gravels are dug from shallow pits and stream beds, then washed in baskets and pans so durable gemstones can be picked from the heavy sand. Small gold specks and washed sand may be recovered as ancillary byproducts.
+    pp_gem_gravel_pit_no_deposit_work: No Deposit Work
+    pp_gem_gravel_pit_base_gems: Gem Gravel Outcrop
+    pp_gem_gravel_pit_no_primary: No Gem Washing
+    pp_gem_gravel_pit_gems: Hand-Washed Gem Gravel
+    pp_gem_gravel_pit_no_secondary: No Secondary Output
+    pp_gem_gravel_pit_gold: Gold Speck Washing
+    pp_gem_gravel_pit_sand: Washed Sand Sorting
+    pp_gem_gravel_pit_price: Gem Gravel Pit Price
+icon:
+  source_png: ../assets/icons/gem_gravel_pit.png
+  output_dds: gem_gravel_pit.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Gem Gravel Pit, transparent background. Center a shallow alluvial gem gravel pit beside a stream with hand washing baskets, wooden pans, jewel-colored stones, heavy sand, and tiny gold flecks, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_gem_gravel_pit_no_deposit_work:
+      production_efficiency: 1.00
+    pp_gem_gravel_pit_base_gems:
+      production_efficiency: 1.00
+    pp_gem_gravel_pit_no_primary:
+      production_efficiency: 1.00
+    pp_gem_gravel_pit_gems:
+      production_efficiency: 1.10
+    pp_gem_gravel_pit_no_secondary:
+      production_efficiency: 1.00
+    pp_gem_gravel_pit_gold:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Gold speck washing is an ancillary placer byproduct, intentionally less profitable than primary gem washing.
+        input_throughput: Gold speck washing is an ancillary placer byproduct, intentionally less profitable than primary gem washing.
+        output_throughput: Gold speck washing is an ancillary placer byproduct, intentionally less profitable than primary gem washing.
+        amortization_months: Gold speck washing is an ancillary placer byproduct, intentionally less profitable than primary gem washing.
+    pp_gem_gravel_pit_sand:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Washed sand sorting is an ancillary placer byproduct, intentionally less profitable than primary gem washing.
+        input_throughput: Washed sand sorting is an ancillary placer byproduct, intentionally less profitable than primary gem washing.
+        output_throughput: Washed sand sorting is an ancillary placer byproduct, intentionally less profitable than primary gem washing.
+        amortization_months: Washed sand sorting is an ancillary placer byproduct, intentionally less profitable than primary gem washing.

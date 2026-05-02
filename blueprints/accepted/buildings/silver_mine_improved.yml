@@ -1,0 +1,140 @@
+version: 2
+tag: silver_mine_improved
+upgrade_chain:
+  family: silver_mine
+  tier: 1
+  previous: silver_mine
+  next: null
+  unlock_advance: saiger_process_discovery
+building:
+  key: silver_mine_improved
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_silver_mine_improved_no_deposit_work
+        - pp_silver_mine_improved_base_silver
+    - name: slot_1
+      methods:
+        - pp_silver_mine_improved_no_primary
+        - pp_silver_mine_improved_silver
+    - name: slot_2
+      methods:
+        - pp_silver_mine_improved_no_secondary
+        - pp_silver_mine_improved_lead
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_silver_mine_improved_price
+    category = rgo_building_category
+    icon = silver_mine_improved
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = silver_mine
+    build_time = workshop_build_time
+
+    location_potential = {
+        raw_material = goods:silver
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_silver_mine_improved_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_silver_mine_improved_base_silver = {
+            produced = silver
+            output = 0.28
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_silver_mine_improved_no_primary = {
+            category = building_maintenance
+        }
+        pp_silver_mine_improved_silver = {
+            lumber = 0.95
+            tools = 1.05
+            beeswax = 0.45
+            produced = silver
+            output = 0.725
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_silver_mine_improved_no_secondary = {
+            category = building_maintenance
+        }
+        pp_silver_mine_improved_lead = {
+            lumber = 0.16
+            tools = 0.12
+            beeswax = 0.04
+            produced = lead
+            output = 0.30
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_silver_mine_improved_price
+    body: |2-
+      {gold = 150}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_silver_mine_improved_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('silver_mine_improved')|e].
+    MODIFIER_TYPE_NAME_pp_silver_mine_improved_price_cost_modifier: Saiger Silver Mine Cost
+    silver_mine_improved_slot_0: Silver Vein
+    silver_mine_improved_slot_1: Saiger Workings
+    silver_mine_improved_slot_2: Galena Recovery
+    silver_mine_improved: Saiger Silver Mine
+    silver_mine_improved_desc: Better timbering, ore dressing, and liquation-minded sorting prepare silver-lead ores for Saiger and cupellation work. The mine raises silver output first, while dressed galena remains a secondary lead recovery.
+    pp_silver_mine_improved_no_deposit_work: No Vein Work
+    pp_silver_mine_improved_base_silver: Surveyed Silver Vein
+    pp_silver_mine_improved_no_primary: No Saiger Workings
+    pp_silver_mine_improved_silver: Saiger Ore Workings
+    pp_silver_mine_improved_no_secondary: No Galena Recovery
+    pp_silver_mine_improved_lead: Galena Ore Dressing
+    pp_silver_mine_improved_price: Saiger Silver Mine Price
+    saiger_process_discovery: Refined Saiger Process
+    saiger_process_discovery_desc: Improved mine dressing, liquation, and cupellation separate silver from argentiferous lead ores more reliably, raising both silver and lead output.
+icon:
+  source_png: ../assets/icons/silver_mine_improved.png
+  output_dds: silver_mine_improved.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Saiger Silver Mine, transparent background. Center a timbered silver mine complex with ore cart, sorting bench, pale silver ore, and dark galena, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_silver_mine_improved_no_deposit_work:
+      production_efficiency: 1.00
+    pp_silver_mine_improved_base_silver:
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: High-value exposed silver veins can repay very quickly even at the normal no-input deposit scale.
+    pp_silver_mine_improved_no_primary:
+      production_efficiency: 1.00
+    pp_silver_mine_improved_silver:
+      production_efficiency: 1.15
+    pp_silver_mine_improved_no_secondary:
+      production_efficiency: 1.00
+    pp_silver_mine_improved_lead:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Galena ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+        input_throughput: Galena ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+        output_throughput: Galena ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+        amortization_months: Galena ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.

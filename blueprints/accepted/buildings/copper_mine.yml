@@ -1,0 +1,151 @@
+version: 2
+tag: copper_mine
+upgrade_chain:
+  family: copper_mine
+  tier: 0
+  previous: null
+  next: copper_mine_adit
+  unlock_advance: null
+building:
+  key: copper_mine
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_copper_mine_no_deposit_work
+        - pp_copper_mine_base_copper
+    - name: slot_1
+      methods:
+        - pp_copper_mine_no_primary
+        - pp_copper_mine_copper
+    - name: slot_2
+      methods:
+        - pp_copper_mine_no_secondary
+        - pp_copper_mine_silver
+        - pp_copper_mine_tin
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_copper_mine_price
+    category = rgo_building_category
+    icon = copper_mine
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:copper
+    }
+
+    construction_demand = mercury_patio_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_copper_mine_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_copper_mine_base_copper = {
+            produced = copper
+            output = 0.27
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_copper_mine_no_primary = {
+            category = building_maintenance
+        }
+        pp_copper_mine_copper = {
+            lumber = 0.80
+            tools = 0.95
+            beeswax = 0.225
+            produced = copper
+            output = 1.55
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_copper_mine_no_secondary = {
+            category = building_maintenance
+        }
+        pp_copper_mine_silver = {
+            lumber = 0.10
+            tools = 0.08
+            lead = 0.05
+            produced = silver
+            output = 0.05
+            category = building_maintenance
+        }
+        pp_copper_mine_tin = {
+            lumber = 0.08
+            tools = 0.06
+            produced = tin
+            output = 0.08
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_copper_mine_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_copper_mine_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('copper_mine')|e].
+    MODIFIER_TYPE_NAME_pp_copper_mine_price_cost_modifier: Copper Work Cost
+    copper_mine_slot_0: Copper Lode
+    copper_mine_slot_1: Copper Workings
+    copper_mine_slot_2: Ore Sorting
+    copper_mine: Copper Work
+    copper_mine_desc: Shallow open works and short headings follow exposed copper lodes with picks, gads, baskets, and simple timbering. Ore pickers separate copper stone from waste and may recover small lots of argentiferous ore or cassiterite where the lode permits.
+    pp_copper_mine_no_deposit_work: No Deposit Work
+    pp_copper_mine_base_copper: Copper Outcrop
+    pp_copper_mine_no_primary: No Copper Workings
+    pp_copper_mine_copper: Pick-and-Gad Workings
+    pp_copper_mine_no_secondary: No Secondary Output
+    pp_copper_mine_silver: Argentiferous Ore Picking
+    pp_copper_mine_tin: Cassiterite Lode Picking
+    pp_copper_mine_price: Copper Work Price
+icon:
+  source_png: ../assets/icons/copper_mine.png
+  output_dds: copper_mine.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Copper Work, transparent background. Center a shallow copper outcrop with green-blue copper ore stones, simple pick and gad tools, small timber supports, and hand baskets, no text, no frame, painterly historical UI art.
+
+evaluation:
+  production_methods:
+    pp_copper_mine_no_deposit_work:
+      production_efficiency: 1.00
+    pp_copper_mine_base_copper:
+      production_efficiency: 1.00
+    pp_copper_mine_no_primary:
+      production_efficiency: 1.00
+    pp_copper_mine_copper:
+      production_efficiency: 1.10
+    pp_copper_mine_no_secondary:
+      production_efficiency: 1.00
+    pp_copper_mine_silver:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Argentiferous ore picking is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        input_throughput: Argentiferous ore picking is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        output_throughput: Argentiferous ore picking is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        amortization_months: Argentiferous ore picking is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+    pp_copper_mine_tin:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Cassiterite lode picking is an ancillary regional copper-district byproduct, intentionally less profitable than primary copper extraction.
+        input_throughput: Cassiterite lode picking is an ancillary regional copper-district byproduct, intentionally less profitable than primary copper extraction.
+        output_throughput: Cassiterite lode picking is an ancillary regional copper-district byproduct, intentionally less profitable than primary copper extraction.
+        amortization_months: Cassiterite lode picking is an ancillary regional copper-district byproduct, intentionally less profitable than primary copper extraction.

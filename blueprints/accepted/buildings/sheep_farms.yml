@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: sheep_farms
 building:
   key: sheep_farms
@@ -45,6 +45,10 @@ localization:
     pp_sheep_farm_maintenance: Sheep Farm Maintenance
 
 evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_sheep_farm_maintenance:
       production_efficiency: 1.05

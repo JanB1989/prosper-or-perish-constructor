@@ -15,7 +15,7 @@ REPLACE:fishing_village = {
 		var:pp_fishing_village_fixed_env_bonus > 0
 	}
 	build_time = village_build_time
-	# Slot 0 — fishery ground / climate (temperate vs arctic)
+	# Slot 0 â€” fishery ground / climate (temperate vs arctic)
 	unique_production_methods = {
 		pp_fishing_village_maintenance = {
 			produced = fish

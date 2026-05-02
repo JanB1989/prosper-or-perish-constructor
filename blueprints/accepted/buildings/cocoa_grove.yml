@@ -82,6 +82,11 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for a cocoa grove, transparent background. Center a tropical cacao tree with yellow, orange, and red ribbed pods, opened pods showing pale pulp and cocoa beans, dark fermented cocoa beans on raised wooden drying trays, and a small wooden fermentation box with leaf-covered beans. Use readable painterly shapes, softly outlined historical UI art, warm cocoa browns, muted wood tan, deep green leaves, cacao pod accents, no text, no frame, not photorealistic, not cartoonish.
 
 evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_cocoa_grove_base_cocoa:
       production_efficiency: 1.00

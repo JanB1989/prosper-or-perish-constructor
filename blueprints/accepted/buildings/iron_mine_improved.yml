@@ -1,0 +1,135 @@
+version: 2
+tag: iron_mine_improved
+upgrade_chain:
+  family: iron_mine
+  tier: 1
+  previous: iron_mine
+  next: null
+  unlock_advance: efficient_mining
+building:
+  key: iron_mine_improved
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_iron_mine_improved_no_deposit_work
+        - pp_iron_mine_improved_base_iron
+    - name: slot_1
+      methods:
+        - pp_iron_mine_improved_no_primary
+        - pp_iron_mine_improved_iron
+    - name: slot_2
+      methods:
+        - pp_iron_mine_improved_no_secondary
+        - pp_iron_mine_improved_ochre
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_iron_mine_improved_price
+    category = rgo_building_category
+    icon = iron_mine_improved
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = iron_mine
+    build_time = workshop_build_time
+
+    location_potential = {
+        raw_material = goods:iron
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_iron_mine_improved_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_iron_mine_improved_base_iron = {
+            produced = iron
+            output = 0.30
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_iron_mine_improved_no_primary = {
+            category = building_maintenance
+        }
+        pp_iron_mine_improved_iron = {
+            lumber = 1.306
+            tools = 1.383
+            beeswax = 0.307
+            produced = iron
+            output = 2.25
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_iron_mine_improved_no_secondary = {
+            category = building_maintenance
+        }
+        pp_iron_mine_improved_ochre = {
+            lumber = 0.15
+            tools = 0.10
+            produced = dyes
+            output = 0.15
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_iron_mine_improved_price
+    body: |2-
+      {gold = 150}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_iron_mine_improved_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('iron_mine_improved')|e].
+    MODIFIER_TYPE_NAME_pp_iron_mine_improved_price_cost_modifier: Iron Mine Cost
+    iron_mine_improved_slot_0: Iron Deposit
+    iron_mine_improved_slot_1: Ore Workings
+    iron_mine_improved_slot_2: Ochre Recovery
+    iron_mine_improved: Iron Mine
+    iron_mine_improved_desc: Timbered ore workings use better dressing floors, haulage, and gangue sorting to raise iron output from true ore deposits, while ochre washers recover minor pigment earths distinct from bog-iron smelting.
+    pp_iron_mine_improved_no_deposit_work: No Deposit Work
+    pp_iron_mine_improved_base_iron: Surveyed Iron Ore
+    pp_iron_mine_improved_no_primary: No Iron Mining
+    pp_iron_mine_improved_iron: Timbered Ore Workings
+    pp_iron_mine_improved_no_secondary: No Ochre Recovery
+    pp_iron_mine_improved_ochre: Ochre Washing
+    pp_iron_mine_improved_price: Iron Mine Price
+    efficient_mining: Ore Dressing
+    efficient_mining_desc: Better mine surveys, timbering, haulage, and dressing floors separate useful iron ore from silica-rich gangue and other waste before smelting.
+icon:
+  source_png: ../assets/icons/iron_mine_improved.png
+  output_dds: iron_mine_improved.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Iron Mine, transparent background. Center a timbered iron mine entrance with carts of red-brown ore, ore dressing floor, ochre-stained waste piles, no text, no frame, painterly historical UI art.
+
+evaluation:
+  production_methods:
+    pp_iron_mine_improved_no_deposit_work:
+      production_efficiency: 1.00
+    pp_iron_mine_improved_base_iron:
+      production_efficiency: 1.00
+    pp_iron_mine_improved_no_primary:
+      production_efficiency: 1.00
+    pp_iron_mine_improved_iron:
+      production_efficiency: 1.15
+    pp_iron_mine_improved_no_secondary:
+      production_efficiency: 1.00
+    pp_iron_mine_improved_ochre:
+      production_efficiency: 0.75
+      allow_rules:
+        input_throughput: Ochre washing is an ancillary iron ore byproduct, intentionally less profitable than primary iron extraction.
+        output_throughput: Ochre washing is an ancillary iron ore byproduct, intentionally less profitable than primary iron extraction.

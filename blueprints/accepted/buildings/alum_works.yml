@@ -1,0 +1,151 @@
+version: 2
+tag: alum_works
+upgrade_chain:
+  family: alum_quarry
+  tier: 1
+  previous: alum_quarry
+  next: null
+  unlock_advance: green_vitriol
+building:
+  key: alum_works
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_alum_works_no_deposit_work
+        - pp_alum_works_base_alum
+    - name: slot_1
+      methods:
+        - pp_alum_works_no_primary
+        - pp_alum_works_alum
+    - name: slot_2
+      methods:
+        - pp_alum_works_no_secondary
+        - pp_alum_works_stone
+        - pp_alum_works_clay
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_alum_works_price
+    category = rgo_building_category
+    icon = alum_works
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = alum_quarry
+    build_time = workshop_build_time
+
+    location_potential = {
+        raw_material = goods:alum
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_alum_works_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_alum_works_base_alum = {
+            produced = alum
+            output = 0.30
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_alum_works_no_primary = {
+            category = building_maintenance
+        }
+        pp_alum_works_alum = {
+            lumber = 1.306
+            tools = 1.383
+            beeswax = 0.307
+            produced = alum
+            output = 2.25
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_alum_works_no_secondary = {
+            category = building_maintenance
+        }
+        pp_alum_works_stone = {
+            lumber = 0.15
+            tools = 0.10
+            produced = stone
+            output = 0.30
+            category = building_maintenance
+        }
+        pp_alum_works_clay = {
+            lumber = 0.12
+            tools = 0.08
+            produced = clay
+            output = 0.28
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_alum_works_price
+    body: |2-
+      {gold = 150}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_alum_works_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('alum_works')|e].
+    MODIFIER_TYPE_NAME_pp_alum_works_price_cost_modifier: Alum Works Cost
+    alum_works_slot_0: Alum Deposit
+    alum_works_slot_1: Alum Works
+    alum_works_slot_2: Waste Sorting
+    alum_works: Alum Works
+    alum_works_desc: Calcining clamps, aging beds, steeping tanks, boiling pans, and crystallizing troughs turn quarried alum shale into alum crystals, while stone and clay waste are sorted from the quarry face.
+    pp_alum_works_no_deposit_work: No Deposit Work
+    pp_alum_works_base_alum: Surveyed Alum Shale
+    pp_alum_works_no_primary: No Alum Extraction
+    pp_alum_works_alum: Calcining and Leaching Works
+    pp_alum_works_no_secondary: No Waste Sorting
+    pp_alum_works_stone: Sandstone Overburden
+    pp_alum_works_clay: Shale Clay Sorting
+    pp_alum_works_price: Alum Works Price
+    green_vitriol: Vitriol and Alum Leaching
+    green_vitriol_desc: Roasting pyritic shale and leaching alum liquor improves the handling of vitriol-bearing earths and raises the yield of alum works.
+icon:
+  source_png: ../assets/icons/alum_works.png
+  output_dds: alum_works.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Alum Works, transparent background. Center calcining clamps, steeping tanks, boiling pans, pale alum crystals, alum shale heaps, and sandstone overburden, no text, no frame, painterly historical UI art.
+
+evaluation:
+  production_methods:
+    pp_alum_works_no_deposit_work:
+      production_efficiency: 1.00
+    pp_alum_works_base_alum:
+      production_efficiency: 1.00
+    pp_alum_works_no_primary:
+      production_efficiency: 1.00
+    pp_alum_works_alum:
+      production_efficiency: 1.15
+    pp_alum_works_no_secondary:
+      production_efficiency: 1.00
+    pp_alum_works_stone:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Sandstone overburden is an ancillary alum works byproduct, intentionally less profitable than primary alum extraction.
+        input_throughput: Sandstone overburden is an ancillary alum works byproduct, intentionally less profitable than primary alum extraction.
+        output_throughput: Sandstone overburden is an ancillary alum works byproduct, intentionally less profitable than primary alum extraction.
+    pp_alum_works_clay:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Shale clay sorting is an ancillary alum works byproduct, intentionally less profitable than primary alum extraction.
+        input_throughput: Shale clay sorting is an ancillary alum works byproduct, intentionally less profitable than primary alum extraction.
+        output_throughput: Shale clay sorting is an ancillary alum works byproduct, intentionally less profitable than primary alum extraction.

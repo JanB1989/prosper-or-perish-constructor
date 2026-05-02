@@ -1,0 +1,93 @@
+version: 2
+tag: bog_iron_smelter_hot_blast_furnace
+upgrade_chain:
+  family: bog_iron_smelter
+  tier: 4
+  previous: bog_iron_smelter_coke_blast_furnace
+  next: null
+  unlock_advance: hot_blast_furnace
+building:
+  key: bog_iron_smelter_hot_blast_furnace
+  mode: CREATE
+  source: pp_bog_iron_smelter.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_bog_iron_smelter_hot_blast_furnace_maintenance
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 7
+    price = pp_bog_iron_smelter_hot_blast_furnace_price
+    category = rgo_building_category
+    icon = bog_iron_smelter_hot_blast_furnace
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = bog_iron_smelter_coke_blast_furnace
+    build_time = mills_build_time
+
+    location_potential = {
+        OR = {
+            is_adjacent_to_lake = yes
+            topography = wetlands
+        }
+        NOR = {
+            raw_material = goods:coal
+            raw_material = goods:iron
+            raw_material = goods:copper
+            raw_material = goods:goods_gold
+            raw_material = goods:silver
+            # raw_material = goods:stone
+            raw_material = goods:tin
+            raw_material = goods:lead
+            raw_material = goods:gems
+            # raw_material = goods:saltpeter
+            raw_material = goods:alum
+            # raw_material = goods:marble
+            raw_material = goods:mercury
+        }
+    }
+
+    unique_production_methods = {
+        pp_bog_iron_smelter_hot_blast_furnace_maintenance = {
+            coal = 1.35
+            tools = 0.25
+            lumber = 0.25
+            produced = iron
+            output = 1.35
+            category = building_maintenance
+        }
+    }
+
+    construction_demand = mill_construction
+prices:
+  - key: pp_bog_iron_smelter_hot_blast_furnace_price
+    body: |2-
+      {gold = 360}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_bog_iron_smelter_hot_blast_furnace_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('bog_iron_smelter_hot_blast_furnace')|e].
+    MODIFIER_TYPE_NAME_pp_bog_iron_smelter_hot_blast_furnace_price_cost_modifier: Hot Blast Bog Iron Furnace Cost
+    bog_iron_smelter_hot_blast_furnace_slot_0: Bog Iron Processing
+    bog_iron_smelter_hot_blast_furnace: Hot Blast Bog Iron Furnace
+    bog_iron_smelter_hot_blast_furnace_desc: An upgraded wetland ironworks using hot blast furnace equipment to increase bog iron throughput with more coal, tools, lumber, and organized labor.
+    pp_bog_iron_smelter_hot_blast_furnace_maintenance: Hot Blast Bog Iron Furnace Processing
+    pp_bog_iron_smelter_hot_blast_furnace_price: Hot Blast Bog Iron Furnace Price
+icon:
+  source_png: ../assets/icons/bog_iron_smelter_hot_blast_furnace.png
+  output_dds: bog_iron_smelter_hot_blast_furnace.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Hot Blast Bog Iron Furnace, transparent background. Center an upgraded bog iron smelter in marshland with furnace, smoke stack, wetland reeds, ore piles, and tier-appropriate industrial equipment, no text, no frame, painterly historical UI art.
+
+evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
+  production_methods:
+    pp_bog_iron_smelter_hot_blast_furnace_maintenance:
+      production_efficiency: 1.25

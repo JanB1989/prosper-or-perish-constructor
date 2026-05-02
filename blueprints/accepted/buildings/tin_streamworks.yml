@@ -1,0 +1,152 @@
+version: 2
+tag: tin_streamworks
+upgrade_chain:
+  family: tin_mine
+  tier: 0
+  previous: null
+  next: tin_stamping_mill
+  unlock_advance: null
+building:
+  key: tin_streamworks
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_tin_streamworks_no_deposit_work
+        - pp_tin_streamworks_base_tin
+    - name: slot_1
+      methods:
+        - pp_tin_streamworks_no_primary
+        - pp_tin_streamworks_tin
+    - name: slot_2
+      methods:
+        - pp_tin_streamworks_no_secondary
+        - pp_tin_streamworks_copper
+        - pp_tin_streamworks_lead
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_tin_streamworks_price
+    category = rgo_building_category
+    icon = tin_streamworks
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:tin
+    }
+
+    construction_demand = mercury_patio_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_tin_streamworks_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_tin_streamworks_base_tin = {
+            produced = tin
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_tin_streamworks_no_primary = {
+            category = building_maintenance
+        }
+        pp_tin_streamworks_tin = {
+            lumber = 0.65
+            tools = 0.56
+            beeswax = 0.25
+            produced = tin
+            output = 1.78
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_tin_streamworks_no_secondary = {
+            category = building_maintenance
+        }
+        pp_tin_streamworks_copper = {
+            lumber = 0.12
+            tools = 0.10
+            beeswax = 0.04
+            produced = copper
+            output = 0.18
+            category = building_maintenance
+        }
+        pp_tin_streamworks_lead = {
+            lumber = 0.12
+            tools = 0.08
+            beeswax = 0.04
+            produced = lead
+            output = 0.18
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_tin_streamworks_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_tin_streamworks_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('tin_streamworks')|e].
+    MODIFIER_TYPE_NAME_pp_tin_streamworks_price_cost_modifier: Tin Streamworks Cost
+    tin_streamworks_slot_0: Tin Ground
+    tin_streamworks_slot_1: Tin Streaming
+    tin_streamworks_slot_2: Associated Ore Sorting
+    tin_streamworks: Tin Streamworks
+    tin_streamworks_desc: Alluvial stream tin is washed from gravel beds and concentrated as dark cassiterite, with small lots of stannite and galena sorted from associated stones when the ground allows.
+    pp_tin_streamworks_no_deposit_work: No Stream Work
+    pp_tin_streamworks_base_tin: Cassiterite Gravel
+    pp_tin_streamworks_no_primary: No Tin Streaming
+    pp_tin_streamworks_tin: Cassiterite Streaming
+    pp_tin_streamworks_no_secondary: No Associated Ore Sorting
+    pp_tin_streamworks_copper: Stannite Sorting
+    pp_tin_streamworks_lead: Galena Picking
+    pp_tin_streamworks_price: Tin Streamworks Price
+icon:
+  source_png: ../assets/icons/tin_streamworks.png
+  output_dds: tin_streamworks.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Tin Streamworks, transparent background. Center alluvial cassiterite streamworks with sluice boxes, gravel washing, dark tin-stone concentrate, baskets, and simple timber props, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_tin_streamworks_no_deposit_work:
+      production_efficiency: 1.00
+    pp_tin_streamworks_base_tin:
+      production_efficiency: 1.00
+    pp_tin_streamworks_no_primary:
+      production_efficiency: 1.00
+    pp_tin_streamworks_tin:
+      production_efficiency: 1.10
+    pp_tin_streamworks_no_secondary:
+      production_efficiency: 1.00
+    pp_tin_streamworks_copper:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Stannite sorting is an ancillary tin-ground byproduct, intentionally less profitable than primary cassiterite streaming.
+        input_throughput: Stannite sorting is an ancillary tin-ground byproduct, intentionally less profitable than primary cassiterite streaming.
+        output_throughput: Stannite sorting is an ancillary tin-ground byproduct, intentionally less profitable than primary cassiterite streaming.
+        amortization_months: Stannite sorting is an ancillary tin-ground byproduct, intentionally less profitable than primary cassiterite streaming.
+    pp_tin_streamworks_lead:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Galena picking is an ancillary tin-ground byproduct, intentionally less profitable than primary cassiterite streaming.
+        input_throughput: Galena picking is an ancillary tin-ground byproduct, intentionally less profitable than primary cassiterite streaming.
+        output_throughput: Galena picking is an ancillary tin-ground byproduct, intentionally less profitable than primary cassiterite streaming.
+        amortization_months: Galena picking is an ancillary tin-ground byproduct, intentionally less profitable than primary cassiterite streaming.

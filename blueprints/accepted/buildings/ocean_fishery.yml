@@ -138,6 +138,12 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for an ocean fishery, transparent background. Center a small offshore herring buss or wooden fishing vessel in shallow coastal water, with drift nets, fish baskets, curing barrels, salt sacks, and a modest sandy shore landing. Use readable painterly shapes, softly outlined historical UI art, muted sea blues, weathered wood, tan nets, silver fish, white salt sacks, no text, no frame, not photorealistic, not cartoonish.
 
 evaluation:
+  allow_rules:
+    base_output_per_1k: Existing accepted no-input extraction scale predates the global employment output baseline; revisit during the building-specific rebalance.
+    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_ocean_fishery_base_catch:
       production_efficiency: 1.00

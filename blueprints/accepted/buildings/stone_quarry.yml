@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: stone_quarry
 building:
   key: stone_quarry
@@ -32,7 +32,7 @@ building:
     
     	category = rgo_building_category
     	
-    	# 1. Primary output (pick ONE) — stone vs marble
+    	# 1. Primary output (pick ONE) â€” stone vs marble
     	unique_production_methods = {
     	
     		pp_stone_quarry_maintenance = {
@@ -63,6 +63,10 @@ localization:
     stone_quarry_slot_0: Cut Stone Quarry
 
 evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_stone_quarry_maintenance:
       production_efficiency: 1.05

@@ -1,0 +1,153 @@
+version: 2
+tag: gem_sluice
+upgrade_chain:
+  family: gem_mine
+  tier: 1
+  previous: gem_gravel_pit
+  next: null
+  unlock_advance: foreign_mining_techniques
+building:
+  key: gem_sluice
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_gem_sluice_no_deposit_work
+        - pp_gem_sluice_base_gems
+    - name: slot_1
+      methods:
+        - pp_gem_sluice_no_primary
+        - pp_gem_sluice_gems
+    - name: slot_2
+      methods:
+        - pp_gem_sluice_no_secondary
+        - pp_gem_sluice_gold
+        - pp_gem_sluice_sand
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_gem_sluice_price
+    category = rgo_building_category
+    icon = gem_sluice
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = gem_gravel_pit
+    build_time = workshop_build_time
+
+    location_potential = {
+        raw_material = goods:gems
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_gem_sluice_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_gem_sluice_base_gems = {
+            produced = gems
+            output = 0.28
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_gem_sluice_no_primary = {
+            category = building_maintenance
+        }
+        pp_gem_sluice_gems = {
+            lumber = 1.10
+            tools = 1.35
+            beeswax = 0.32
+            produced = gems
+            output = 1.72
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_gem_sluice_no_secondary = {
+            category = building_maintenance
+        }
+        pp_gem_sluice_gold = {
+            lumber = 0.18
+            tools = 0.14
+            produced = goods_gold
+            output = 0.05
+            category = building_maintenance
+        }
+        pp_gem_sluice_sand = {
+            lumber = 0.10
+            tools = 0.06
+            produced = sand
+            output = 0.40
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_gem_sluice_price
+    body: |2-
+      {gold = 220}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_gem_sluice_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('gem_sluice')|e].
+    MODIFIER_TYPE_NAME_pp_gem_sluice_price_cost_modifier: Gem Sluice Cost
+    gem_sluice_slot_0: Gem Gravel
+    gem_sluice_slot_1: Sluice Washing
+    gem_sluice_slot_2: Placer Byproducts
+    gem_sluice: Gem Sluice
+    gem_sluice_desc: Timbered water channels, sorting tables, and controlled washing let workers process larger runs of gem-bearing gravel. Imported sluice practice raises gemstone recovery first, while gold specks and sand remain minor byproducts.
+    pp_gem_sluice_no_deposit_work: No Deposit Work
+    pp_gem_sluice_base_gems: Surveyed Gem Gravels
+    pp_gem_sluice_no_primary: No Sluice Washing
+    pp_gem_sluice_gems: Sluiced Gem Gravels
+    pp_gem_sluice_no_secondary: No Secondary Output
+    pp_gem_sluice_gold: Gold Speck Washing
+    pp_gem_sluice_sand: Washed Sand Sorting
+    pp_gem_sluice_price: Gem Sluice Price
+    foreign_mining_techniques: Foreign Mining Techniques
+    foreign_mining_techniques_desc: Imported mine timbering, water control, gravel washing, and sluice practice improve the recovery of gemstones from alluvial deposits and shallow lodes.
+icon:
+  source_png: ../assets/icons/gem_sluice.png
+  output_dds: gem_sluice.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Gem Sluice, transparent background. Center a timber sluice channel with flowing water, sorting table, washed sand pile, gem-bearing gravels, and tiny gold specks, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_gem_sluice_no_deposit_work:
+      production_efficiency: 1.00
+    pp_gem_sluice_base_gems:
+      production_efficiency: 1.00
+    pp_gem_sluice_no_primary:
+      production_efficiency: 1.00
+    pp_gem_sluice_gems:
+      production_efficiency: 1.15
+    pp_gem_sluice_no_secondary:
+      production_efficiency: 1.00
+    pp_gem_sluice_gold:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Gold speck washing is an ancillary placer byproduct, intentionally less profitable than primary sluice washing.
+        input_throughput: Gold speck washing is an ancillary placer byproduct, intentionally less profitable than primary sluice washing.
+        output_throughput: Gold speck washing is an ancillary placer byproduct, intentionally less profitable than primary sluice washing.
+        amortization_months: Gold speck washing is an ancillary placer byproduct, intentionally less profitable than primary sluice washing.
+    pp_gem_sluice_sand:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Washed sand sorting is an ancillary placer byproduct, intentionally less profitable than primary sluice washing.
+        input_throughput: Washed sand sorting is an ancillary placer byproduct, intentionally less profitable than primary sluice washing.
+        output_throughput: Washed sand sorting is an ancillary placer byproduct, intentionally less profitable than primary sluice washing.
+        amortization_months: Washed sand sorting is an ancillary placer byproduct, intentionally less profitable than primary sluice washing.

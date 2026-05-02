@@ -82,6 +82,11 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for a tea garden, transparent background. Center terraced tea bushes, hand-plucked green leaves in a wicker basket, bamboo or reed withering trays, a clay firing pan or small earthen hearth, and curled green and dark tea leaves in sorting trays. Use readable painterly shapes, softly outlined historical UI art, fresh tea greens, bamboo tan, warm clay browns, dark dried tea leaves, muted earth tones, no text, no frame, not photorealistic, not cartoonish.
 
 evaluation:
+  allow_rules:
+    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_tea_garden_base_tea:
       production_efficiency: 1.00

@@ -1,0 +1,149 @@
+version: 2
+tag: alum_quarry
+upgrade_chain:
+  family: alum_quarry
+  tier: 0
+  previous: null
+  next: alum_works
+  unlock_advance: advanced_mining
+building:
+  key: alum_quarry
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_alum_quarry_no_deposit_work
+        - pp_alum_quarry_base_alum
+    - name: slot_1
+      methods:
+        - pp_alum_quarry_no_primary
+        - pp_alum_quarry_alum
+    - name: slot_2
+      methods:
+        - pp_alum_quarry_no_secondary
+        - pp_alum_quarry_stone
+        - pp_alum_quarry_clay
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_alum_quarry_price
+    category = rgo_building_category
+    icon = alum_quarry
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:alum
+    }
+
+    construction_demand = mercury_patio_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_alum_quarry_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_alum_quarry_base_alum = {
+            produced = alum
+            output = 0.24
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_alum_quarry_no_primary = {
+            category = building_maintenance
+        }
+        pp_alum_quarry_alum = {
+            lumber = 0.591
+            tools = 0.666
+            beeswax = 0.148
+            produced = alum
+            output = 1.15
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_alum_quarry_no_secondary = {
+            category = building_maintenance
+        }
+        pp_alum_quarry_stone = {
+            lumber = 0.12
+            tools = 0.08
+            produced = stone
+            output = 0.25
+            category = building_maintenance
+        }
+        pp_alum_quarry_clay = {
+            lumber = 0.10
+            tools = 0.06
+            produced = clay
+            output = 0.24
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_alum_quarry_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_alum_quarry_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('alum_quarry')|e].
+    MODIFIER_TYPE_NAME_pp_alum_quarry_price_cost_modifier: Alum Quarry Cost
+    alum_quarry_slot_0: Alum Deposit
+    alum_quarry_slot_1: Alum Quarrying
+    alum_quarry_slot_2: Waste Sorting
+    alum_quarry: Alum Quarry
+    alum_quarry_desc: Open quarries cut into alum stone and alum shale deposits, stripping sandstone overburden and sorting useful shale before it can be roasted, aged, and leached for alum liquor.
+    pp_alum_quarry_no_deposit_work: No Deposit Work
+    pp_alum_quarry_base_alum: Exposed Alum Shale
+    pp_alum_quarry_no_primary: No Alum Extraction
+    pp_alum_quarry_alum: Open Alum Shale Quarrying
+    pp_alum_quarry_no_secondary: No Waste Sorting
+    pp_alum_quarry_stone: Sandstone Overburden
+    pp_alum_quarry_clay: Shale Clay Sorting
+    pp_alum_quarry_price: Alum Quarry Price
+    advanced_mining_desc: Deeper practical knowledge of mineral extraction opens saltpeter beds and alum deposits to organized working.
+icon:
+  source_png: ../assets/icons/alum_quarry.png
+  output_dds: alum_quarry.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Alum Quarry, transparent background. Center a pale alum shale quarry with white-yellow mineral seams, sandstone overburden, wicker baskets, hand tools, and a small leaching trough, no text, no frame, painterly historical UI art.
+
+evaluation:
+  production_methods:
+    pp_alum_quarry_no_deposit_work:
+      production_efficiency: 1.00
+    pp_alum_quarry_base_alum:
+      production_efficiency: 1.00
+    pp_alum_quarry_no_primary:
+      production_efficiency: 1.00
+    pp_alum_quarry_alum:
+      production_efficiency: 1.10
+    pp_alum_quarry_no_secondary:
+      production_efficiency: 1.00
+    pp_alum_quarry_stone:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Sandstone overburden is an ancillary alum quarry byproduct, intentionally less profitable than primary alum extraction.
+        input_throughput: Sandstone overburden is an ancillary alum quarry byproduct, intentionally less profitable than primary alum extraction.
+        output_throughput: Sandstone overburden is an ancillary alum quarry byproduct, intentionally less profitable than primary alum extraction.
+    pp_alum_quarry_clay:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Shale clay sorting is an ancillary alum quarry byproduct, intentionally less profitable than primary alum extraction.
+        input_throughput: Shale clay sorting is an ancillary alum quarry byproduct, intentionally less profitable than primary alum extraction.
+        output_throughput: Shale clay sorting is an ancillary alum quarry byproduct, intentionally less profitable than primary alum extraction.

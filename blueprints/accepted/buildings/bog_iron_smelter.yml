@@ -1,64 +1,89 @@
 version: 2
 tag: bog_iron_smelter
+upgrade_chain:
+  family: bog_iron_smelter
+  tier: 0
+  previous: null
+  next: bog_iron_smelter_blast_furnace
+  unlock_advance: null
 building:
   key: bog_iron_smelter
   mode: REPLACE
-  source: pp_building_adjustments.txt
+  source: pp_bog_iron_smelter.txt
   production_method_slots:
     - name: slot_0
       methods:
         - pp_bog_iron_maintenance
   possible_production_methods: []
   body: |2-
-    	is_foreign = no
-    	max_levels = rural_building_cap
-    	pop_type = laborers
-    	
-    	employment_size = rural_peasant_produce_employment
-    	
-    	rural_settlement = yes
-    	town = yes
-    	city = yes
-    
-    	
-    	location_potential = {
-    		OR = {
-    			is_adjacent_to_lake = yes
-    			topography = wetlands
-    		}
-    		NOR = {
-    			raw_material = goods:coal
-    			raw_material = goods:iron
-    			raw_material = goods:copper
-    			raw_material = goods:goods_gold
-    			raw_material = goods:silver
-    			# raw_material = goods:stone
-    			raw_material = goods:tin
-    			raw_material = goods:lead
-    			raw_material = goods:gems
-    			# raw_material = goods:saltpeter
-    			raw_material = goods:alum
-    			# raw_material = goods:marble
-    			raw_material = goods:mercury
-    		}
-    	}
-    
-    	category = rgo_building_category
-    	
-    	unique_production_methods = {
-    		pp_bog_iron_maintenance = {
-    			produced = iron
-    			output = 0.3
-    			coal = 0.40
-    			debug_max_profit = 0.2
-    			category = building_maintenance
-    		}
-    	}
-    	
-    	build_time = rural_build_time
-    	construction_demand = basic_construction_needs
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = rural_peasant_produce_employment
+    price = pp_bog_iron_smelter_price
+    category = rgo_building_category
+    icon = bog_iron_smelter
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = rural_build_time
+
+    location_potential = {
+        OR = {
+            is_adjacent_to_lake = yes
+            topography = wetlands
+        }
+        NOR = {
+            raw_material = goods:coal
+            raw_material = goods:iron
+            raw_material = goods:copper
+            raw_material = goods:goods_gold
+            raw_material = goods:silver
+            # raw_material = goods:stone
+            raw_material = goods:tin
+            raw_material = goods:lead
+            raw_material = goods:gems
+            # raw_material = goods:saltpeter
+            raw_material = goods:alum
+            # raw_material = goods:marble
+            raw_material = goods:mercury
+        }
+    }
+
+    unique_production_methods = {
+        pp_bog_iron_maintenance = {
+            coal = 0.4
+            produced = iron
+            output = 0.3
+            debug_max_profit = 0.2
+            category = building_maintenance
+        }
+    }
+
+    construction_demand = basic_construction_needs
+prices:
+  - key: pp_bog_iron_smelter_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_bog_iron_smelter_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('bog_iron_smelter')|e].
+    MODIFIER_TYPE_NAME_pp_bog_iron_smelter_price_cost_modifier: Bog Iron Smelter Cost
+    bog_iron_smelter_slot_0: Bog Iron Processing
+    bog_iron_smelter: Bog Iron Smelter
+    bog_iron_smelter_desc: A small wetland ironworks that gathers and smelts bog iron where conventional ore deposits are absent.
+    pp_bog_iron_maintenance: Bog Iron Smelter
+    pp_bog_iron_smelter_price: Bog Iron Smelter Price
+icon:
+  source_dds: C:/Games/steamapps/common/Europa Universalis V/game/main_menu/gfx/interface/icons/buildings/bog_iron_smelter.dds
+  output_dds: bog_iron_smelter.dds
+  size: 512
 
 evaluation:
+  allow_rules:
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_bog_iron_maintenance:
       production_efficiency: 1.05

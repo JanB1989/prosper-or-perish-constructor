@@ -1,0 +1,76 @@
+﻿# >>> eu5-building-pipeline:tin_stamping_mill:building
+tin_stamping_mill = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 4
+price = pp_tin_stamping_mill_price
+category = rgo_building_category
+icon = tin_stamping_mill
+rural_settlement = yes
+town = yes
+city = yes
+obsolete = tin_streamworks
+build_time = workshop_build_time
+
+location_potential = {
+    raw_material = goods:tin
+}
+
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_tin_stamping_mill_no_deposit_work = {
+        category = building_maintenance
+    }
+    pp_tin_stamping_mill_base_tin = {
+        produced = tin
+        output = 0.3
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_tin_stamping_mill_no_primary = {
+        category = building_maintenance
+    }
+    pp_tin_stamping_mill_tin = {
+        lumber = 1.10
+        tools = 1.25
+        beeswax = 0.45
+        produced = tin
+        output = 3.15
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_tin_stamping_mill_no_secondary = {
+        category = building_maintenance
+    }
+    pp_tin_stamping_mill_copper = {
+        lumber = 0.16
+        tools = 0.12
+        beeswax = 0.04
+        produced = copper
+        output = 0.24
+        category = building_maintenance
+    }
+    pp_tin_stamping_mill_lead = {
+        lumber = 0.16
+        tools = 0.12
+        beeswax = 0.04
+        produced = lead
+        output = 0.24
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:tin_stamping_mill:building

@@ -1,0 +1,137 @@
+version: 2
+tag: silver_mine
+upgrade_chain:
+  family: silver_mine
+  tier: 0
+  previous: null
+  next: silver_mine_improved
+  unlock_advance: null
+building:
+  key: silver_mine
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_silver_mine_no_deposit_work
+        - pp_silver_mine_base_silver
+    - name: slot_1
+      methods:
+        - pp_silver_mine_no_primary
+        - pp_silver_mine_silver
+    - name: slot_2
+      methods:
+        - pp_silver_mine_no_secondary
+        - pp_silver_mine_lead
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_silver_mine_price
+    category = rgo_building_category
+    icon = silver_mine
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:silver
+    }
+
+    construction_demand = mercury_patio_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_silver_mine_no_deposit_work = {
+            category = building_maintenance
+        }
+        pp_silver_mine_base_silver = {
+            produced = silver
+            output = 0.22
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_silver_mine_no_primary = {
+            category = building_maintenance
+        }
+        pp_silver_mine_silver = {
+            lumber = 0.66
+            tools = 0.55
+            beeswax = 0.28
+            produced = silver
+            output = 0.455
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_silver_mine_no_secondary = {
+            category = building_maintenance
+        }
+        pp_silver_mine_lead = {
+            lumber = 0.12
+            tools = 0.08
+            beeswax = 0.04
+            produced = lead
+            output = 0.20
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_silver_mine_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_silver_mine_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('silver_mine')|e].
+    MODIFIER_TYPE_NAME_pp_silver_mine_price_cost_modifier: Silver Adit Cost
+    silver_mine_slot_0: Silver Vein
+    silver_mine_slot_1: Silver Workings
+    silver_mine_slot_2: Galena Recovery
+    silver_mine: Silver Adit
+    silver_mine_desc: Shallow adits and hand-cut veins work silver-bearing stone from the hillside. Ore is broken, washed, and sorted by hand, while argentiferous galena is picked out as a modest lead-bearing byproduct.
+    pp_silver_mine_no_deposit_work: No Vein Work
+    pp_silver_mine_base_silver: Exposed Silver Vein
+    pp_silver_mine_no_primary: No Silver Mining
+    pp_silver_mine_silver: Hand-Sorted Silver Veins
+    pp_silver_mine_no_secondary: No Galena Recovery
+    pp_silver_mine_lead: Argentiferous Galena Picking
+    pp_silver_mine_price: Silver Adit Price
+icon:
+  source_png: ../assets/icons/silver_mine.png
+  output_dds: silver_mine.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Silver Adit, transparent background. Center a timbered mountainside adit with pale silver ore, hand tools, ore baskets, small rails, and argentiferous galena, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_silver_mine_no_deposit_work:
+      production_efficiency: 1.00
+    pp_silver_mine_base_silver:
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: High-value exposed silver veins can repay very quickly even at the normal no-input deposit scale.
+    pp_silver_mine_no_primary:
+      production_efficiency: 1.00
+    pp_silver_mine_silver:
+      production_efficiency: 1.10
+    pp_silver_mine_no_secondary:
+      production_efficiency: 1.00
+    pp_silver_mine_lead:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Galena picking is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+        input_throughput: Galena picking is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+        output_throughput: Galena picking is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+        amortization_months: Galena picking is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.

@@ -82,6 +82,12 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for a pearl fishery, transparent background. Center shallow turquoise coastal water, open pearl oysters with pale pearls, a small wooden dhow or diving boat, rope and stone diving weight, and a woven basket or sorting tray on sandy shore. Use readable painterly shapes, softly outlined historical UI art, pearl whites, shell creams, muted turquoise, warm tan sand, and weathered wood, no text, no frame, not photorealistic, not cartoonish.
 
 evaluation:
+  allow_rules:
+    base_output_per_1k: Existing accepted no-input extraction scale predates the global employment output baseline; revisit during the building-specific rebalance.
+    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_pearl_fishery_base_pearls:
       production_efficiency: 1.00

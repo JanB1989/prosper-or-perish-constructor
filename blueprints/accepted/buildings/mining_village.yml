@@ -1,5 +1,11 @@
 version: 2
 tag: mining_village
+upgrade_chain:
+  family: mining_village
+  tier: 0
+  previous: null
+  next: mining_village_blast_furnace
+  unlock_advance: null
 building:
   key: mining_village
   mode: CREATE
@@ -7,17 +13,17 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_mining_base_coal
-        - pp_mining_base_iron
-        - pp_mining_base_copper
-        - pp_mining_base_goods_gold
-        - pp_mining_base_goods_silver
-        - pp_mining_base_goods_tin
-        - pp_mining_base_goods_lead
-        - pp_mining_base_goods_gems
-        - pp_mining_base_goods_alum
-        - pp_mining_base_goods_mercury
-        - pp_mining_base_goods_marble
+        - pp_mining_village_base_coal
+        - pp_mining_village_base_iron
+        - pp_mining_village_base_copper
+        - pp_mining_village_base_goods_gold
+        - pp_mining_village_base_goods_silver
+        - pp_mining_village_base_goods_tin
+        - pp_mining_village_base_goods_lead
+        - pp_mining_village_base_goods_gems
+        - pp_mining_village_base_goods_alum
+        - pp_mining_village_base_goods_mercury
+        - pp_mining_village_base_goods_marble
     - name: slot_1
       methods:
         - pp_mining_coal
@@ -33,9 +39,9 @@ building:
         - pp_mining_goods_marble
     - name: slot_2
       methods:
-        - pp_mining_village_no_stone
-        - pp_mining_village_stone_horses
-        - pp_mining_village_stone_livestock
+        - mining_village_no_stone
+        - mining_village_stone_horses
+        - mining_village_stone_livestock
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -75,57 +81,57 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_mining_base_coal = {
+        pp_mining_village_base_coal = {
             produced = coal
             output = 0.3
             category = building_maintenance
         }
-        pp_mining_base_iron = {
+        pp_mining_village_base_iron = {
             produced = iron
             output = 0.3
             category = building_maintenance
         }
-        pp_mining_base_copper = {
+        pp_mining_village_base_copper = {
             produced = copper
             output = 0.3
             category = building_maintenance
         }
-        pp_mining_base_goods_gold = {
+        pp_mining_village_base_goods_gold = {
             produced = goods_gold
             output = 0.3
             category = building_maintenance
         }
-        pp_mining_base_goods_silver = {
+        pp_mining_village_base_goods_silver = {
             produced = silver
             output = 0.3
             category = building_maintenance
         }
-        pp_mining_base_goods_tin = {
+        pp_mining_village_base_goods_tin = {
             produced = tin
             output = 0.3
             category = building_maintenance
         }
-        pp_mining_base_goods_lead = {
+        pp_mining_village_base_goods_lead = {
             produced = lead
             output = 0.3
             category = building_maintenance
         }
-        pp_mining_base_goods_gems = {
+        pp_mining_village_base_goods_gems = {
             produced = gems
             output = 0.3
             category = building_maintenance
         }
-        pp_mining_base_goods_alum = {
+        pp_mining_village_base_goods_alum = {
             produced = alum
             output = 0.3
             category = building_maintenance
         }
-        pp_mining_base_goods_mercury = {
+        pp_mining_village_base_goods_mercury = {
             produced = mercury
             output = 0.3
             category = building_maintenance
         }
-        pp_mining_base_goods_marble = {
+        pp_mining_village_base_goods_marble = {
             produced = marble
             output = 0.3
             category = building_maintenance
@@ -133,20 +139,20 @@ building:
     }
     unique_production_methods = {
         pp_mining_coal = {
-            lumber = 0.16
-            tools = 0.16
-            beeswax = 0.04
+            lumber = 0.591
+            tools = 0.666
+            beeswax = 0.148
             produced = coal
-            output = 0.25
+            output = 1.795
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_mining_iron = {
-            lumber = 0.25
-            tools = 0.21
-            beeswax = 0.10
+            lumber = 0.428
+            tools = 0.722
+            beeswax = 0.187
             produced = iron
-            output = 0.25
+            output = 1.197
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -214,7 +220,6 @@ building:
             output = 0.5
             category = building_maintenance
         }
-        # Marble is more mined in a quarry so horses are needed.
         pp_mining_goods_marble = {
             lumber = 0.38
             tools = 0.315
@@ -225,16 +230,16 @@ building:
         }
     }
     unique_production_methods = {
-        pp_mining_village_no_stone = {
+        mining_village_no_stone = {
             category = building_maintenance
         }
-        pp_mining_village_stone_horses = {
+        mining_village_stone_horses = {
             horses = 0.07
             produced = stone
             output = 0.3
             category = building_maintenance
         }
-        pp_mining_village_stone_livestock = {
+        mining_village_stone_livestock = {
             livestock = 0.14
             produced = stone
             output = 0.3
@@ -259,20 +264,31 @@ localization:
     mining_village_slot_2: Stone Haulage
     mining_village: Mining Village
     mining_village_desc: A compact mining settlement that extracts local ores and minerals, including coal, metals, and ornamental marble where deposits exist. Basic workings gather small amounts without organized inputs, while intensified mines use lumber, tools, and beeswax. Villages can also haul modest amounts of building stone with horse or ox teams.
-    pp_mining_base_coal: Coal Deposit
-    pp_mining_base_iron: Iron Deposit
-    pp_mining_base_copper: Copper Deposit
-    pp_mining_base_goods_gold: Gold Deposit
-    pp_mining_base_goods_silver: Silver Deposit
-    pp_mining_base_goods_tin: Tin Deposit
-    pp_mining_base_goods_lead: Lead Deposit
-    pp_mining_base_goods_gems: Gem Deposit
-    pp_mining_base_goods_alum: Alum Deposit
-    pp_mining_base_goods_mercury: Mercury Deposit
-    pp_mining_base_goods_marble: Marble Deposit
-    pp_mining_village_no_stone: No Stone Haulage
-    pp_mining_village_stone_horses: Horse-Drawn Stone
-    pp_mining_village_stone_livestock: Ox-Drawn Stone
+    pp_mining_village_base_coal: Coal Deposit
+    pp_mining_village_base_iron: Iron Deposit
+    pp_mining_village_base_copper: Copper Deposit
+    pp_mining_village_base_goods_gold: Gold Deposit
+    pp_mining_village_base_goods_silver: Silver Deposit
+    pp_mining_village_base_goods_tin: Tin Deposit
+    pp_mining_village_base_goods_lead: Lead Deposit
+    pp_mining_village_base_goods_gems: Gem Deposit
+    pp_mining_village_base_goods_alum: Alum Deposit
+    pp_mining_village_base_goods_mercury: Mercury Deposit
+    pp_mining_village_base_goods_marble: Marble Deposit
+    pp_mining_coal: Coal Galleries
+    pp_mining_iron: Iron Workings
+    pp_mining_copper: Copper Workings
+    pp_mining_goods_gold: Gold Workings
+    pp_mining_goods_silver: Silver Workings
+    pp_mining_goods_tin: Tin Workings
+    pp_mining_goods_lead: Lead Workings
+    pp_mining_goods_gems: Gem Workings
+    pp_mining_goods_alum: Alum Workings
+    pp_mining_goods_mercury: Mercury Workings
+    pp_mining_goods_marble: Marble Quarrying
+    mining_village_no_stone: No Stone Haulage
+    mining_village_stone_horses: Horse-Drawn Stone
+    mining_village_stone_livestock: Ox-Drawn Stone
     pp_mining_village_price: Mining Village Price
 icon:
   source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/mining_village.dds
@@ -281,51 +297,113 @@ icon:
 
 evaluation:
   production_methods:
-    pp_mining_base_coal:
+    pp_mining_village_base_coal:
       production_efficiency: 1.00
-    pp_mining_base_iron:
+    pp_mining_village_base_iron:
       production_efficiency: 1.00
-    pp_mining_base_copper:
+      allow_rules:
+        amortization_months: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_base_copper:
       production_efficiency: 1.00
-    pp_mining_base_goods_gold:
+      allow_rules:
+        amortization_months: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_base_goods_gold:
       production_efficiency: 1.00
-    pp_mining_base_goods_silver:
+      allow_rules:
+        amortization_months: High-value mineral deposits historically justify faster capital recovery than the global amortization band.
+    pp_mining_village_base_goods_silver:
       production_efficiency: 1.00
-    pp_mining_base_goods_tin:
+      allow_rules:
+        amortization_months: High-value mineral deposits historically justify faster capital recovery than the global amortization band.
+    pp_mining_village_base_goods_tin:
       production_efficiency: 1.00
-    pp_mining_base_goods_lead:
+    pp_mining_village_base_goods_lead:
       production_efficiency: 1.00
-    pp_mining_base_goods_gems:
+    pp_mining_village_base_goods_gems:
       production_efficiency: 1.00
-    pp_mining_base_goods_alum:
+      allow_rules:
+        amortization_months: High-value mineral deposits historically justify faster capital recovery than the global amortization band.
+    pp_mining_village_base_goods_alum:
       production_efficiency: 1.00
-    pp_mining_base_goods_mercury:
+      allow_rules:
+        amortization_months: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_base_goods_mercury:
       production_efficiency: 1.00
-    pp_mining_base_goods_marble:
+      allow_rules:
+        amortization_months: Successor mining tiers retain the same free deposit selection output while employment and building cost rise; worked methods carry the tier economy.
+    pp_mining_village_base_goods_marble:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: High-value mineral deposits historically justify faster capital recovery than the global amortization band.
     pp_mining_coal:
       production_efficiency: 1.10
     pp_mining_iron:
       production_efficiency: 1.10
     pp_mining_copper:
       production_efficiency: 1.10
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
     pp_mining_goods_gold:
       production_efficiency: 1.10
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        amortization_months: High-value mineral deposits historically justify faster capital recovery than the global amortization band.
     pp_mining_goods_silver:
       production_efficiency: 1.10
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        amortization_months: High-value mineral deposits historically justify faster capital recovery than the global amortization band.
     pp_mining_goods_tin:
       production_efficiency: 1.10
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
     pp_mining_goods_lead:
       production_efficiency: 1.10
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
     pp_mining_goods_gems:
       production_efficiency: 1.10
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
     pp_mining_goods_alum:
       production_efficiency: 1.10
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
     pp_mining_goods_mercury:
       production_efficiency: 1.10
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
     pp_mining_goods_marble:
       production_efficiency: 1.10
-    pp_mining_village_stone_horses:
+      allow_rules:
+        profit_percent: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        input_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+        output_throughput: Non-coal and non-iron worked-mining balance is intentionally deferred; this pass only retunes coal and iron.
+    mining_village_no_stone:
+      production_efficiency: 1.00
+    mining_village_stone_horses:
       production_efficiency: 1.05
-    pp_mining_village_stone_livestock:
+      allow_rules:
+        profit_percent: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+        input_throughput: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+        output_throughput: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+        amortization_months: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+    mining_village_stone_livestock:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+        input_throughput: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+        output_throughput: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.
+        amortization_months: Stone haulage is an ancillary mining-village transport method, not the primary throughput economy.

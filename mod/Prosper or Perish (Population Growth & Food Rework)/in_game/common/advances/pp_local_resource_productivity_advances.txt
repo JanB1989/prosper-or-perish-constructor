@@ -1,8 +1,120 @@
-﻿# Massive incentive to create industry in actual province where raw good is produced
+# Massive incentive to create industry in actual province where raw good is produced
 # added # before # now
 TRY_INJECT:rgo_logistics_mil_choice = {
 	raw_material_in_province_impact = 0.025
 }
 TRY_INJECT:rgo_logistics_discovery = {
 	raw_material_in_province_impact = 0.025
+}
+
+REPLACE:advanced_mining = {
+	age = age_1_traditions
+	icon = serbian_mining
+	requires = iron_working
+	research_cost = 2.0
+	can_extract_saltpeter = yes
+	can_extract_alum = yes
+	unlock_building = alum_quarry
+}
+
+REPLACE:efficient_mining = {
+	age = age_3_discovery
+	icon = efficient_mining
+	for = adm
+	expand_rgo_mining_cost_modifier = -0.1
+	global_iron_output_modifier = 0.1
+	global_copper_output_modifier = 0.1
+	unlock_building = iron_mine_improved
+}
+
+REPLACE:new_currency_demands = {
+	age = age_3_discovery
+	icon = debt_and_loans
+	global_copper_output_modifier = 0.25
+    global_tin_output_modifier = 0.1
+    requires = blast_furnace
+    unlock_building = copper_mine_adit
+    unlock_building = tin_stamping_mill
+}
+
+REPLACE:green_vitriol = {
+	age = age_3_discovery
+	icon = new_world_advance
+	requires = rgo_logistics_discovery
+	global_alum_output_modifier = 0.1
+	unlock_building = alum_works
+}
+
+# Fold large passive metal bonuses into explicit Bog Iron Smelter building upgrades.
+REPLACE:blast_furnace = {
+	age = age_3_discovery
+	icon = serbian_mining
+	requires = pop_promotion_speed_age_3
+	global_iron_output_modifier = 0.15
+	unlock_building = bog_iron_smelter_blast_furnace
+}
+
+REPLACE:pan_amalgamation_advance = {
+	age = age_4_reformation
+	mercury_patio_max_level = 1
+	global_mercury_output_modifier = 0.1
+	requires = pharmacology_advance
+	unlock_building = gold_stamp_mill
+	unlock_building = quicksilver_retort
+}
+
+REPLACE:slitting_mills = {
+	age = age_4_reformation
+	requires = bole_smelting
+	global_iron_output_modifier = 0.10
+	unlock_building = bog_iron_smelter_slitting_mills
+}
+
+REPLACE:foreign_mining_techniques = {
+	age = age_4_reformation
+	icon = efficient_mining
+	global_gems_output_modifier = 0.2
+	requires = slitting_mills
+	unlock_building = gem_sluice
+}
+
+REPLACE:coke_blast_furnace = {
+	age = age_5_absolutism
+	icon = serbian_mining
+	requires = newspapers_advance
+	global_iron_output_modifier = 0.20
+	unlock_building = bog_iron_smelter_coke_blast_furnace
+}
+
+REPLACE:hot_blast_furnace = {
+	age = age_6_revolutions
+	icon = serbian_mining
+	requires = industrialization_advance
+	global_iron_output_modifier = 0.20
+	unlock_building = bog_iron_smelter_hot_blast_furnace
+}
+
+REPLACE:coal_improvements_absolutism = {
+	age = age_5_absolutism
+	requires = rgo_size_advance_absolutism
+	global_coal_output_modifier = 0.33
+	unlock_building = improved_charcoal_maker
+	unlock_building = coal_mine_improved
+}
+
+REPLACE:saiger_process_discovery = {
+	age = age_3_discovery
+	icon = serbian_mining
+	requires = blast_furnace
+	global_silver_output_modifier = 0.2
+	global_lead_output_modifier = 0.2
+	unlock_building = silver_mine_improved
+}
+
+REPLACE:lead_ore_dressing = {
+	age = age_5_absolutism
+	icon = serbian_mining
+	requires = manufactories_advance
+	global_lead_output_modifier = 0.25
+	unlock_building = lead_mine_improved
 }

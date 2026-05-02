@@ -46,7 +46,17 @@ building:
     
     	construction_demand = guild_construction
 
+localization:
+  entries:
+    charcoal_maker: Charcoal Clamp
+    charcoal_maker_desc: Earth-covered clamps and simple kilns turn coppiced wood into charcoal for hearths and forges. These wood-fuel yards are kept separate from true coal seams, where mined coal is worked by dedicated drifts.
+    pp_char_coal_maintenance: Clamp Burning
+
 evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_char_coal_maintenance:
       production_efficiency: 1.05

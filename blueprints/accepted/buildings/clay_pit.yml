@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: clay_pit
 building:
   key: clay_pit
@@ -7,7 +7,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_clay_pit_no_maintenance
         - pp_clay_pit_base_clay
         - pp_clay_pit_maintenance
   possible_production_methods: []
@@ -33,13 +32,10 @@ building:
     
     	category = rgo_building_category
     
-    	unique_production_methods = {
-    		pp_clay_pit_no_maintenance = {
-    			category = building_maintenance
-    		}
-    		pp_clay_pit_base_clay = {
-    			produced = clay
-    			output = 0.3
+    unique_production_methods = {
+    	pp_clay_pit_base_clay = {
+    		produced = clay
+    		output = 0.3
     			category = building_maintenance
     		}
     		pp_clay_pit_maintenance = {
@@ -57,7 +53,6 @@ localization:
   entries:
     clay_pit_slot_0: Pit Working
     pp_clay_pit_base_clay: Clay Deposit
-    pp_clay_pit_no_maintenance: No Pit Working
     pp_clay_pit_maintenance: Worked Clay Pit
 
 evaluation:

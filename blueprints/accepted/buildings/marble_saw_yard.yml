@@ -1,0 +1,145 @@
+﻿version: 2
+tag: marble_saw_yard
+upgrade_chain:
+  family: marble_quarry
+  tier: 1
+  previous: marble_quarry
+  next: null
+  unlock_advance: renaissance_sculptures
+building:
+  key: marble_saw_yard
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_marble_saw_yard_base_marble
+    - name: slot_1
+      methods:
+        - pp_marble_saw_yard_no_primary
+        - pp_marble_saw_yard_marble
+    - name: slot_2
+      methods:
+        - pp_marble_saw_yard_no_secondary
+        - pp_marble_saw_yard_stone
+        - pp_marble_saw_yard_sand
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_marble_saw_yard_price
+    category = rgo_building_category
+    icon = marble_saw_yard
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = marble_quarry
+    build_time = workshop_build_time
+
+    location_potential = {
+        raw_material = goods:marble
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_marble_saw_yard_base_marble = {
+            produced = marble
+            output = 0.30
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_marble_saw_yard_no_primary = {
+            category = building_maintenance
+        }
+        pp_marble_saw_yard_marble = {
+            lumber = 1.00
+            tools = 1.15
+            leather = 0.28
+            produced = marble
+            output = 1.20
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_marble_saw_yard_no_secondary = {
+            category = building_maintenance
+        }
+        pp_marble_saw_yard_stone = {
+            lumber = 0.16
+            tools = 0.08
+            produced = stone
+            output = 0.32
+            category = building_maintenance
+        }
+        pp_marble_saw_yard_sand = {
+            lumber = 0.10
+            tools = 0.06
+            produced = sand
+            output = 0.40
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_marble_saw_yard_price
+    body: |2-
+      {gold = 220}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_marble_saw_yard_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('marble_saw_yard')|e].
+    MODIFIER_TYPE_NAME_pp_marble_saw_yard_price_cost_modifier: Marble Saw Yard Cost
+    marble_saw_yard_slot_0: Marble Deposit
+    marble_saw_yard_slot_1: Sawed Blocks
+    marble_saw_yard_slot_2: Quarry Waste
+    marble_saw_yard: Marble Saw Yard
+    marble_saw_yard_desc: Sculptural demand supports organized marble yards where quarry saws, pulleys, water troughs, and sorting sheds square larger blocks for transport. Rubble and crushed washable fines remain secondary products beside the dressed stone.
+    pp_marble_saw_yard_base_marble: Surveyed Marble Face
+    pp_marble_saw_yard_no_primary: No Marble Sawing
+    pp_marble_saw_yard_marble: Sawed Block Quarrying
+    pp_marble_saw_yard_no_secondary: No Secondary Output
+    pp_marble_saw_yard_stone: Quarry Rubble Sorting
+    pp_marble_saw_yard_sand: Marble Fines Washing
+    pp_marble_saw_yard_price: Marble Saw Yard Price
+    renaissance_sculptures_desc: Sculptural patronage raises demand for carefully selected stone and marble. Better block selection, quarry saws, and handling of quarry waste improve both ordinary stone and ornamental marble supply.
+icon:
+  source_png: ../assets/icons/marble_saw_yard.png
+  output_dds: marble_saw_yard.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Marble Saw Yard, transparent background. Center a Renaissance marble yard with timber stone saw, water trough, pulley, squared white marble blocks, crushed marble fines, and rubble piles, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_marble_saw_yard_base_marble:
+      production_efficiency: 1.00
+    pp_marble_saw_yard_no_primary:
+      production_efficiency: 1.00
+    pp_marble_saw_yard_marble:
+      production_efficiency: 1.15
+    pp_marble_saw_yard_no_secondary:
+      production_efficiency: 1.00
+    pp_marble_saw_yard_stone:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Quarry rubble sorting is an ancillary marble saw-yard byproduct, intentionally less profitable than primary sawed-block quarrying.
+        input_throughput: Quarry rubble sorting is an ancillary marble saw-yard byproduct, intentionally less profitable than primary sawed-block quarrying.
+        output_throughput: Quarry rubble sorting is an ancillary marble saw-yard byproduct, intentionally less profitable than primary sawed-block quarrying.
+        amortization_months: Quarry rubble sorting is an ancillary marble saw-yard byproduct, intentionally less profitable than primary sawed-block quarrying.
+    pp_marble_saw_yard_sand:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Marble fines washing is an ancillary marble saw-yard byproduct, intentionally less profitable than primary sawed-block quarrying.
+        input_throughput: Marble fines washing is an ancillary marble saw-yard byproduct, intentionally less profitable than primary sawed-block quarrying.
+        output_throughput: Marble fines washing is an ancillary marble saw-yard byproduct, intentionally less profitable than primary sawed-block quarrying.
+        amortization_months: Marble fines washing is an ancillary marble saw-yard byproduct, intentionally less profitable than primary sawed-block quarrying.

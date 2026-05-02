@@ -1,0 +1,71 @@
+﻿# >>> eu5-building-pipeline:marble_saw_yard:building
+marble_saw_yard = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 4
+price = pp_marble_saw_yard_price
+category = rgo_building_category
+icon = marble_saw_yard
+rural_settlement = yes
+town = yes
+city = yes
+obsolete = marble_quarry
+build_time = workshop_build_time
+
+location_potential = {
+    raw_material = goods:marble
+}
+
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_marble_saw_yard_base_marble = {
+        produced = marble
+        output = 0.30
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_marble_saw_yard_no_primary = {
+        category = building_maintenance
+    }
+    pp_marble_saw_yard_marble = {
+        lumber = 1.00
+        tools = 1.15
+        leather = 0.28
+        produced = marble
+        output = 1.20
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_marble_saw_yard_no_secondary = {
+        category = building_maintenance
+    }
+    pp_marble_saw_yard_stone = {
+        lumber = 0.16
+        tools = 0.08
+        produced = stone
+        output = 0.32
+        category = building_maintenance
+    }
+    pp_marble_saw_yard_sand = {
+        lumber = 0.10
+        tools = 0.06
+        produced = sand
+        output = 0.40
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:marble_saw_yard:building

@@ -23,9 +23,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_cinnabar_pit_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_cinnabar_pit_base_mercury = {
         produced = mercury
         output = 0.27

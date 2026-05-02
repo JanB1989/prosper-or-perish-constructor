@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: alum_works
 upgrade_chain:
   family: alum_quarry
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_alum_works_no_deposit_work
         - pp_alum_works_base_alum
     - name: slot_1
       methods:
@@ -50,9 +49,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_alum_works_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_alum_works_base_alum = {
             produced = alum
             output = 0.30
@@ -66,7 +62,7 @@ building:
         pp_alum_works_alum = {
             lumber = 1.306
             tools = 1.383
-            beeswax = 0.307
+            coal = 0.307
             produced = alum
             output = 2.25
             category = building_maintenance
@@ -109,7 +105,6 @@ localization:
     alum_works_slot_2: Waste Sorting
     alum_works: Alum Works
     alum_works_desc: Calcining clamps, aging beds, steeping tanks, boiling pans, and crystallizing troughs turn quarried alum shale into alum crystals, while stone and clay waste are sorted from the quarry face.
-    pp_alum_works_no_deposit_work: No Deposit Work
     pp_alum_works_base_alum: Surveyed Alum Shale
     pp_alum_works_no_primary: No Alum Extraction
     pp_alum_works_alum: Calcining and Leaching Works
@@ -127,8 +122,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_alum_works_no_deposit_work:
-      production_efficiency: 1.00
     pp_alum_works_base_alum:
       production_efficiency: 1.00
     pp_alum_works_no_primary:

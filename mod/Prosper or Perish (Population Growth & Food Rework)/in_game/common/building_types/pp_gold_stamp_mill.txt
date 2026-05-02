@@ -24,9 +24,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_gold_stamp_mill_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_gold_stamp_mill_base_gold = {
         produced = goods_gold
         output = 0.3
@@ -38,9 +35,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_gold_stamp_mill_gold = {
-        lumber = 1.20
+        lumber = 1.467
         tools = 1.25
-        beeswax = 0.20
         mercury = 0.35
         produced = goods_gold
         output = 0.76

@@ -23,9 +23,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_silver_mine_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_silver_mine_base_silver = {
         produced = silver
         output = 0.22
@@ -51,8 +48,7 @@ unique_production_methods = {
     }
     pp_silver_mine_lead = {
         lumber = 0.12
-        tools = 0.08
-        beeswax = 0.04
+        tools = 0.107
         produced = lead
         output = 0.20
         category = building_maintenance

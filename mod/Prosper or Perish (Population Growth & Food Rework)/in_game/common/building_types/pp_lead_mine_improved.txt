@@ -24,9 +24,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_lead_mine_improved_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_lead_mine_improved_base_lead = {
         produced = lead
         output = 0.30

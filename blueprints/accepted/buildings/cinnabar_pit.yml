@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: cinnabar_pit
 upgrade_chain:
   family: mercury_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_cinnabar_pit_no_deposit_work
         - pp_cinnabar_pit_base_mercury
     - name: slot_1
       methods:
@@ -49,9 +48,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_cinnabar_pit_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_cinnabar_pit_base_mercury = {
             produced = mercury
             output = 0.27
@@ -108,7 +104,6 @@ localization:
     cinnabar_pit_slot_2: Gangue Sorting
     cinnabar_pit: Cinnabar Pit
     cinnabar_pit_desc: Shallow pits and early galleries follow red cinnabar seams for quicksilver ore. Workers break and sort the stone by hand, saving pigment-rich pieces while the richest ore is prepared for roasting.
-    pp_cinnabar_pit_no_deposit_work: No Deposit Work
     pp_cinnabar_pit_base_mercury: Exposed Cinnabar Seam
     pp_cinnabar_pit_no_primary: No Mercury Extraction
     pp_cinnabar_pit_mercury: Cinnabar Vein Workings
@@ -124,8 +119,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_cinnabar_pit_no_deposit_work:
-      production_efficiency: 1.00
     pp_cinnabar_pit_base_mercury:
       production_efficiency: 1.00
     pp_cinnabar_pit_no_primary:

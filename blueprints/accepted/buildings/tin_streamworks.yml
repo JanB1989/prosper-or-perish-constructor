@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: tin_streamworks
 upgrade_chain:
   family: tin_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_tin_streamworks_no_deposit_work
         - pp_tin_streamworks_base_tin
     - name: slot_1
       methods:
@@ -49,9 +48,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_tin_streamworks_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_tin_streamworks_base_tin = {
             produced = tin
             output = 0.3
@@ -63,9 +59,8 @@ building:
             category = building_maintenance
         }
         pp_tin_streamworks_tin = {
-            lumber = 0.65
+            lumber = 0.983
             tools = 0.56
-            beeswax = 0.25
             produced = tin
             output = 1.78
             category = building_maintenance
@@ -76,17 +71,15 @@ building:
             category = building_maintenance
         }
         pp_tin_streamworks_copper = {
-            lumber = 0.12
+            lumber = 0.173
             tools = 0.10
-            beeswax = 0.04
             produced = copper
             output = 0.18
             category = building_maintenance
         }
         pp_tin_streamworks_lead = {
-            lumber = 0.12
+            lumber = 0.173
             tools = 0.08
-            beeswax = 0.04
             produced = lead
             output = 0.18
             category = building_maintenance
@@ -110,7 +103,6 @@ localization:
     tin_streamworks_slot_2: Associated Ore Sorting
     tin_streamworks: Tin Streamworks
     tin_streamworks_desc: Alluvial stream tin is washed from gravel beds and concentrated as dark cassiterite, with small lots of stannite and galena sorted from associated stones when the ground allows.
-    pp_tin_streamworks_no_deposit_work: No Stream Work
     pp_tin_streamworks_base_tin: Cassiterite Gravel
     pp_tin_streamworks_no_primary: No Tin Streaming
     pp_tin_streamworks_tin: Cassiterite Streaming
@@ -126,8 +118,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_tin_streamworks_no_deposit_work:
-      production_efficiency: 1.00
     pp_tin_streamworks_base_tin:
       production_efficiency: 1.00
     pp_tin_streamworks_no_primary:

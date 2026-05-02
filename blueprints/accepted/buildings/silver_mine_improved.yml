@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: silver_mine_improved
 upgrade_chain:
   family: silver_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_silver_mine_improved_no_deposit_work
         - pp_silver_mine_improved_base_silver
     - name: slot_1
       methods:
@@ -49,9 +48,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_silver_mine_improved_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_silver_mine_improved_base_silver = {
             produced = silver
             output = 0.28
@@ -77,8 +73,7 @@ building:
         }
         pp_silver_mine_improved_lead = {
             lumber = 0.16
-            tools = 0.12
-            beeswax = 0.04
+            tools = 0.147
             produced = lead
             output = 0.30
             category = building_maintenance
@@ -102,7 +97,6 @@ localization:
     silver_mine_improved_slot_2: Galena Recovery
     silver_mine_improved: Saiger Silver Mine
     silver_mine_improved_desc: Better timbering, ore dressing, and liquation-minded sorting prepare silver-lead ores for Saiger and cupellation work. The mine raises silver output first, while dressed galena remains a secondary lead recovery.
-    pp_silver_mine_improved_no_deposit_work: No Vein Work
     pp_silver_mine_improved_base_silver: Surveyed Silver Vein
     pp_silver_mine_improved_no_primary: No Saiger Workings
     pp_silver_mine_improved_silver: Saiger Ore Workings
@@ -119,8 +113,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_silver_mine_improved_no_deposit_work:
-      production_efficiency: 1.00
     pp_silver_mine_improved_base_silver:
       production_efficiency: 1.00
       allow_rules:

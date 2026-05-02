@@ -165,9 +165,8 @@ building:
             category = building_maintenance
         }
         pp_mining_village_blast_furnace_goods_gold = {
-            lumber = 1.33
+            lumber = 2.063
             tools = 1.1
-            beeswax = 0.55
             produced = goods_gold
             output = 0.8
             category = building_maintenance
@@ -197,17 +196,15 @@ building:
             category = building_maintenance
         }
         pp_mining_village_blast_furnace_goods_gems = {
-            lumber = 0.53
+            lumber = 0.823
             tools = 0.44
-            beeswax = 0.22
             produced = gems
             output = 0.8
             category = building_maintenance
         }
         pp_mining_village_blast_furnace_goods_alum = {
             lumber = 0.4
-            tools = 0.33
-            beeswax = 0.17
+            tools = 0.443
             produced = alum
             output = 0.8
             category = building_maintenance

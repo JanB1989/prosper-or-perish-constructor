@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: iron_mine
 upgrade_chain:
   family: iron_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_iron_mine_no_deposit_work
         - pp_iron_mine_base_iron
     - name: slot_1
       methods:
@@ -48,9 +47,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_iron_mine_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_iron_mine_base_iron = {
             produced = iron
             output = 0.24
@@ -100,7 +96,6 @@ localization:
     iron_mine_slot_2: Ochre Recovery
     iron_mine: Ore Pit
     iron_mine_desc: Shallow pits and short adits work exposed hematite, limonite, and siderite ores. Ore is hauled by hand, broken from its gangue, and washed so small amounts of red and yellow ochre can be recovered for pigments.
-    pp_iron_mine_no_deposit_work: No Deposit Work
     pp_iron_mine_base_iron: Exposed Iron Ore
     pp_iron_mine_no_primary: No Iron Mining
     pp_iron_mine_iron: Open Ore Workings
@@ -115,8 +110,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_iron_mine_no_deposit_work:
-      production_efficiency: 1.00
     pp_iron_mine_base_iron:
       production_efficiency: 1.00
     pp_iron_mine_no_primary:

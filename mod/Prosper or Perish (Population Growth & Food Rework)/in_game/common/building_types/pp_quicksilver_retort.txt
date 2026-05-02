@@ -24,9 +24,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_quicksilver_retort_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_quicksilver_retort_base_mercury = {
         produced = mercury
         output = 0.34

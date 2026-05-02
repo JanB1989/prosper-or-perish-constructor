@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: silver_mine
 upgrade_chain:
   family: silver_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_silver_mine_no_deposit_work
         - pp_silver_mine_base_silver
     - name: slot_1
       methods:
@@ -48,9 +47,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_silver_mine_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_silver_mine_base_silver = {
             produced = silver
             output = 0.22
@@ -76,8 +72,7 @@ building:
         }
         pp_silver_mine_lead = {
             lumber = 0.12
-            tools = 0.08
-            beeswax = 0.04
+            tools = 0.107
             produced = lead
             output = 0.20
             category = building_maintenance
@@ -101,7 +96,6 @@ localization:
     silver_mine_slot_2: Galena Recovery
     silver_mine: Silver Adit
     silver_mine_desc: Shallow adits and hand-cut veins work silver-bearing stone from the hillside. Ore is broken, washed, and sorted by hand, while argentiferous galena is picked out as a modest lead-bearing byproduct.
-    pp_silver_mine_no_deposit_work: No Vein Work
     pp_silver_mine_base_silver: Exposed Silver Vein
     pp_silver_mine_no_primary: No Silver Mining
     pp_silver_mine_silver: Hand-Sorted Silver Veins
@@ -116,8 +110,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_silver_mine_no_deposit_work:
-      production_efficiency: 1.00
     pp_silver_mine_base_silver:
       production_efficiency: 1.00
       allow_rules:

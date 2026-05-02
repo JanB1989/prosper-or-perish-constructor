@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: lead_mine
 upgrade_chain:
   family: lead_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_lead_mine_no_deposit_work
         - pp_lead_mine_base_lead
     - name: slot_1
       methods:
@@ -48,9 +47,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_lead_mine_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_lead_mine_base_lead = {
             produced = lead
             output = 0.27
@@ -101,7 +97,6 @@ localization:
     lead_mine_slot_2: Silver Recovery
     lead_mine: Galena Work
     lead_mine_desc: Hand-worked galena veins supply lead ore from shallow headings and open cuts. The ore is broken, washed, and sorted near the mine, with small silver-bearing pieces picked out where the galena is argentiferous.
-    pp_lead_mine_no_deposit_work: No Vein Work
     pp_lead_mine_base_lead: Exposed Galena Vein
     pp_lead_mine_no_primary: No Lead Mining
     pp_lead_mine_lead: Galena Vein Workings
@@ -116,8 +111,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_lead_mine_no_deposit_work:
-      production_efficiency: 1.00
     pp_lead_mine_base_lead:
       production_efficiency: 1.00
     pp_lead_mine_no_primary:

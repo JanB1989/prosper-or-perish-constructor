@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: alum_quarry
 upgrade_chain:
   family: alum_quarry
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_alum_quarry_no_deposit_work
         - pp_alum_quarry_base_alum
     - name: slot_1
       methods:
@@ -49,9 +48,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_alum_quarry_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_alum_quarry_base_alum = {
             produced = alum
             output = 0.24
@@ -64,8 +60,7 @@ building:
         }
         pp_alum_quarry_alum = {
             lumber = 0.591
-            tools = 0.666
-            beeswax = 0.148
+            tools = 0.765
             produced = alum
             output = 1.15
             category = building_maintenance
@@ -108,7 +103,6 @@ localization:
     alum_quarry_slot_2: Waste Sorting
     alum_quarry: Alum Quarry
     alum_quarry_desc: Open quarries cut into alum stone and alum shale deposits, stripping sandstone overburden and sorting useful shale before it can be roasted, aged, and leached for alum liquor.
-    pp_alum_quarry_no_deposit_work: No Deposit Work
     pp_alum_quarry_base_alum: Exposed Alum Shale
     pp_alum_quarry_no_primary: No Alum Extraction
     pp_alum_quarry_alum: Open Alum Shale Quarrying
@@ -125,8 +119,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_alum_quarry_no_deposit_work:
-      production_efficiency: 1.00
     pp_alum_quarry_base_alum:
       production_efficiency: 1.00
     pp_alum_quarry_no_primary:

@@ -1,0 +1,70 @@
+﻿# >>> eu5-building-pipeline:marble_quarry:building
+marble_quarry = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 3
+price = pp_marble_quarry_price
+category = rgo_building_category
+icon = marble_quarry
+rural_settlement = yes
+town = yes
+city = yes
+build_time = village_build_time
+
+location_potential = {
+    raw_material = goods:marble
+}
+
+construction_demand = mercury_patio_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_marble_quarry_base_marble = {
+        produced = marble
+        output = 0.22
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_marble_quarry_no_primary = {
+        category = building_maintenance
+    }
+    pp_marble_quarry_marble = {
+        lumber = 0.65
+        tools = 0.75
+        leather = 0.18
+        produced = marble
+        output = 0.85
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_marble_quarry_no_secondary = {
+        category = building_maintenance
+    }
+    pp_marble_quarry_stone = {
+        lumber = 0.12
+        tools = 0.06
+        produced = stone
+        output = 0.25
+        category = building_maintenance
+    }
+    pp_marble_quarry_sand = {
+        lumber = 0.08
+        tools = 0.04
+        produced = sand
+        output = 0.30
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:marble_quarry:building

@@ -24,9 +24,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_gem_sluice_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_gem_sluice_base_gems = {
         produced = gems
         output = 0.28
@@ -38,9 +35,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_gem_sluice_gems = {
-        lumber = 1.10
+        lumber = 1.527
         tools = 1.35
-        beeswax = 0.32
         produced = gems
         output = 1.72
         category = building_maintenance

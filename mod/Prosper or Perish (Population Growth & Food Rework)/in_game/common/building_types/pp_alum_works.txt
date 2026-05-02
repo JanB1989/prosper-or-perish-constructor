@@ -24,9 +24,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_alum_works_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_alum_works_base_alum = {
         produced = alum
         output = 0.30
@@ -40,7 +37,7 @@ unique_production_methods = {
     pp_alum_works_alum = {
         lumber = 1.306
         tools = 1.383
-        beeswax = 0.307
+        coal = 0.307
         produced = alum
         output = 2.25
         category = building_maintenance

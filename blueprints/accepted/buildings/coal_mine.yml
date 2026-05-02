@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: coal_mine
 upgrade_chain:
   family: coal_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_coal_mine_no_deposit_work
         - pp_coal_mine_base_coal
     - name: slot_1
       methods:
@@ -48,9 +47,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_coal_mine_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_coal_mine_base_coal = {
             produced = coal
             output = 0.3
@@ -101,7 +97,6 @@ localization:
     coal_mine_slot_2: Clay Recovery
     coal_mine: Coal Drift
     coal_mine_desc: Shallow drifts and adit-like workings follow exposed coal seams from the surface, with simple timbering, hand haulage, and sorting floors where seat-clay can be recovered from the coal measures.
-    pp_coal_mine_no_deposit_work: No Seam Work
     pp_coal_mine_base_coal: Outcropping Coal Seam
     pp_coal_mine_no_primary: No Coal Workings
     pp_coal_mine_coal: Drift Workings
@@ -115,8 +110,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_coal_mine_no_deposit_work:
-      production_efficiency: 1.00
     pp_coal_mine_base_coal:
       production_efficiency: 1.00
     pp_coal_mine_no_primary:

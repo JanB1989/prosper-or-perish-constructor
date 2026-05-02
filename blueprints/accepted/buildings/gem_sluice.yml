@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: gem_sluice
 upgrade_chain:
   family: gem_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_gem_sluice_no_deposit_work
         - pp_gem_sluice_base_gems
     - name: slot_1
       methods:
@@ -50,9 +49,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_gem_sluice_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_gem_sluice_base_gems = {
             produced = gems
             output = 0.28
@@ -64,9 +60,8 @@ building:
             category = building_maintenance
         }
         pp_gem_sluice_gems = {
-            lumber = 1.10
+            lumber = 1.527
             tools = 1.35
-            beeswax = 0.32
             produced = gems
             output = 1.72
             category = building_maintenance
@@ -109,7 +104,6 @@ localization:
     gem_sluice_slot_2: Placer Byproducts
     gem_sluice: Gem Sluice
     gem_sluice_desc: Timbered water channels, sorting tables, and controlled washing let workers process larger runs of gem-bearing gravel. Imported sluice practice raises gemstone recovery first, while gold specks and sand remain minor byproducts.
-    pp_gem_sluice_no_deposit_work: No Deposit Work
     pp_gem_sluice_base_gems: Surveyed Gem Gravels
     pp_gem_sluice_no_primary: No Sluice Washing
     pp_gem_sluice_gems: Sluiced Gem Gravels
@@ -127,8 +121,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_gem_sluice_no_deposit_work:
-      production_efficiency: 1.00
     pp_gem_sluice_base_gems:
       production_efficiency: 1.00
     pp_gem_sluice_no_primary:

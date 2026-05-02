@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: copper_mine_adit
 upgrade_chain:
   family: copper_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_copper_mine_adit_no_deposit_work
         - pp_copper_mine_adit_base_copper
     - name: slot_1
       methods:
@@ -50,9 +49,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_copper_mine_adit_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_copper_mine_adit_base_copper = {
             produced = copper
             output = 0.3
@@ -110,7 +106,6 @@ localization:
     copper_mine_adit_slot_2: Ore Dressing
     copper_mine_adit: Adit Copper Mine
     copper_mine_adit_desc: Drainage adits, timbered shafts, haulage rails, and dressing floors let miners work copper lodes more regularly. Picked argentiferous ore can be sent toward liquation work, while tin-bearing stones are dressed where copper and cassiterite lodes share the district.
-    pp_copper_mine_adit_no_deposit_work: No Deposit Work
     pp_copper_mine_adit_base_copper: Surveyed Copper Lode
     pp_copper_mine_adit_no_primary: No Adit Workings
     pp_copper_mine_adit_copper: Adit and Shaft Workings
@@ -128,8 +123,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_copper_mine_adit_no_deposit_work:
-      production_efficiency: 1.00
     pp_copper_mine_adit_base_copper:
       production_efficiency: 1.00
     pp_copper_mine_adit_no_primary:

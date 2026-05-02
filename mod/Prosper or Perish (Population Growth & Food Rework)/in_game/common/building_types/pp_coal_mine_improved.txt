@@ -24,9 +24,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_coal_mine_improved_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_coal_mine_improved_base_coal = {
         produced = coal
         output = 0.3

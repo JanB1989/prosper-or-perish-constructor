@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: quicksilver_retort
 upgrade_chain:
   family: mercury_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_quicksilver_retort_no_deposit_work
         - pp_quicksilver_retort_base_mercury
     - name: slot_1
       methods:
@@ -50,9 +49,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_quicksilver_retort_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_quicksilver_retort_base_mercury = {
             produced = mercury
             output = 0.34
@@ -109,7 +105,6 @@ localization:
     quicksilver_retort_slot_2: Gangue Sorting
     quicksilver_retort: Quicksilver Retort
     quicksilver_retort_desc: Deeper shafts and timbered galleries feed retort furnaces where cinnabar is roasted into quicksilver. The works store mercury for gold and silver amalgamation, while toxic fumes make the labor harsh and dangerous.
-    pp_quicksilver_retort_no_deposit_work: No Deposit Work
     pp_quicksilver_retort_base_mercury: Surveyed Cinnabar Seam
     pp_quicksilver_retort_no_primary: No Mercury Retorting
     pp_quicksilver_retort_mercury: Retort Furnace Works
@@ -127,8 +122,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_quicksilver_retort_no_deposit_work:
-      production_efficiency: 1.00
     pp_quicksilver_retort_base_mercury:
       production_efficiency: 1.00
     pp_quicksilver_retort_no_primary:

@@ -21,13 +21,10 @@ REPLACE:clay_pit = {
 
 	category = rgo_building_category
 
-	unique_production_methods = {
-		pp_clay_pit_no_maintenance = {
-			category = building_maintenance
-		}
-		pp_clay_pit_base_clay = {
-			produced = clay
-			output = 0.3
+unique_production_methods = {
+	pp_clay_pit_base_clay = {
+		produced = clay
+		output = 0.3
 			category = building_maintenance
 		}
 		pp_clay_pit_maintenance = {

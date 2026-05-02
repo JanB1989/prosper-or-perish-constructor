@@ -18,6 +18,14 @@ ADVANCES_PATH = (
     / "advances"
     / "pp_local_resource_productivity_advances.txt"
 )
+LOCALIZATION_ROOT = (
+    ROOT
+    / "mod"
+    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "main_menu"
+    / "localization"
+    / "english"
+)
 
 EXPECTED_CHAINS = {
     "alum_quarry": [
@@ -43,6 +51,10 @@ EXPECTED_CHAINS = {
     "lead_mine": [
         ("lead_mine", None),
         ("lead_mine_improved", "lead_ore_dressing"),
+    ],
+    "marble_quarry": [
+        ("marble_quarry", None),
+        ("marble_saw_yard", "renaissance_sculptures"),
     ],
     "tin_mine": [
         ("tin_streamworks", None),
@@ -210,6 +222,14 @@ def test_gem_mine_tiers_are_gem_deposit_only_and_have_unique_icons() -> None:
         assert raw["icon"]["output_dds"] == f"{key}.dds"
 
 
+def test_marble_quarry_tiers_are_marble_deposit_only_and_have_unique_icons() -> None:
+    for key in ("marble_quarry", "marble_saw_yard"):
+        raw = _load_blueprint(key)
+        body = raw["building"]["body"]
+        assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:marble\s*\}", body)
+        assert raw["icon"]["output_dds"] == f"{key}.dds"
+
+
 def test_manifest_uses_dedicated_gold_mines_not_mining_village() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])
@@ -239,6 +259,7 @@ def test_bog_iron_smelters_exclude_true_metal_and_coal_deposits() -> None:
         assert re.search(r"raw_material\s*=\s*goods:copper", nor_body)
         assert re.search(r"raw_material\s*=\s*goods:gems", nor_body)
         assert re.search(r"raw_material\s*=\s*goods:mercury", nor_body)
+        assert re.search(r"raw_material\s*=\s*goods:marble", nor_body)
 
 
 def test_pan_amalgamation_unlocks_gold_and_mercury_upgrades() -> None:
@@ -263,3 +284,16 @@ def test_charcoal_buildings_exclude_coal_deposits() -> None:
             r"location_potential\s*=\s*\{\s*NOT\s*=\s*\{\s*raw_material\s*=\s*goods:coal\s*\}\s*\}",
             body,
         )
+
+
+def test_marble_output_localization_uses_dedicated_quarry_chain() -> None:
+    text = (
+        (LOCALIZATION_ROOT / "pp_goods_output_map_modes_l_english.yml").read_text(encoding="utf-8")
+        + "\n"
+        + (LOCALIZATION_ROOT / "pp_rgo_modifiers_l_english.yml").read_text(encoding="utf-8")
+    )
+
+    marble_lines = [line for line in text.splitlines() if "marble" in line.lower()]
+    assert any("marble_quarry" in line for line in marble_lines)
+    assert any("marble_saw_yard" in line for line in marble_lines)
+    assert not any("mining_village" in line for line in marble_lines)

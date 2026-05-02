@@ -23,9 +23,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_iron_mine_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_iron_mine_base_iron = {
         produced = iron
         output = 0.24

@@ -23,9 +23,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_gem_gravel_pit_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_gem_gravel_pit_base_gems = {
         produced = gems
         output = 0.22
@@ -37,9 +34,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_gem_gravel_pit_gems = {
-        lumber = 0.70
+        lumber = 0.967
         tools = 0.80
-        beeswax = 0.20
         produced = gems
         output = 1.05
         category = building_maintenance

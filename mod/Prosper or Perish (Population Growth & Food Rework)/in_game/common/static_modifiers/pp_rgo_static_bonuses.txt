@@ -5,7 +5,7 @@ pp_rgo_bonus_beeswax = {
 	game_data = { category = location }
 	# Apiaries improved pollination and wax trade, but forest and hive rights could cause local friction.
 	local_beeswax_output_modifier = 0.15
-	local_monthly_food_modifier = 0.03
+	local_peasants_food_consumption = -0.03
 	local_trade_center_power = 0.04
 	local_cultural_tradition = 0.03
 	local_unrest = 0.01
@@ -17,7 +17,7 @@ pp_rgo_bonus_chili = {
 	local_chili_output_modifier = 0.15
 	local_population_growth = 0.0002
 	local_migration_attraction = 0.02
-	local_monthly_food_modifier = -0.02
+	local_peasants_food_consumption = 0.02
 }
 
 pp_rgo_bonus_cloves = {
@@ -34,7 +34,7 @@ pp_rgo_bonus_cocoa = {
 	# Cocoa created valuable export groves in humid forests, but monoculture reduced food resilience and health.
 	local_cocoa_output_modifier = 0.15
 	local_trade_center_power = 0.02
-	local_monthly_food_modifier = -0.02
+	local_peasants_food_consumption = 0.02
 	local_disease_resistance = -0.02
 }
 
@@ -70,7 +70,7 @@ pp_rgo_bonus_elephants = {
 	local_elephants_output_modifier = 0.15
 	local_migration_attraction = 0.01
 	local_manpower = 0.01
-	local_monthly_food_modifier = -0.05
+	local_peasants_food_consumption = 0.05
 }
 
 pp_rgo_bonus_fiber_crops = {
@@ -85,9 +85,8 @@ pp_rgo_bonus_fruit = {
 	game_data = { category = location }
 	# Orchards improved diets and settlement capacity, but tree crops required long investment before yield.
 	local_fruit_output_modifier = 0.15
-	local_monthly_food_modifier = 0.03
+	local_peasants_food_consumption = -0.03
 	local_population_capacity_modifier = 0.03
-	local_rgo_build_time = 0.02
 }
 
 pp_rgo_bonus_horses = {
@@ -96,7 +95,7 @@ pp_rgo_bonus_horses = {
 	local_horses_output_modifier = 0.15
 	local_manpower = 0.01
 	local_supply_limit_modifier = 0.03
-	local_monthly_food_modifier = -0.02
+	local_peasants_food_consumption = 0.02
 }
 
 pp_rgo_bonus_incense = {
@@ -193,7 +192,7 @@ pp_rgo_bonus_silk = {
 	local_silk_output_modifier = 0.15
 	local_trade_center_power = 0.02
 	local_migration_attraction = 0.02
-	local_monthly_food_modifier = -0.03
+	local_peasants_food_consumption = 0.03
 }
 
 pp_rgo_bonus_sugar = {
@@ -202,7 +201,7 @@ pp_rgo_bonus_sugar = {
 	local_sugar_output_modifier = 0.15
 	local_slave_pop_satisfaction = -0.005
 	local_disease_resistance = -0.05
-	local_monthly_food_modifier = -0.05
+	local_peasants_food_consumption = 0.05
 }
 
 pp_rgo_bonus_tea = {
@@ -210,7 +209,7 @@ pp_rgo_bonus_tea = {
 	# Tea gardens fed long-distance trade, but upland monoculture reduced local subsistence land.
 	local_tea_output_modifier = 0.15
 	local_trade_center_power = 0.02
-	local_monthly_food_modifier = -0.02
+	local_peasants_food_consumption = 0.02
 }
 
 pp_rgo_bonus_tobacco = {
@@ -226,8 +225,7 @@ pp_rgo_bonus_wheat = {
 	game_data = { category = location }
 	# Wheat supplied bread and grain reserves, though rust, drought, and dense grain districts carried disease risk.
 	local_wheat_output_modifier = 0.15
-	local_peasants_food_consumption = -0.08
-	local_monthly_food_modifier = 0.03
+	local_peasants_food_consumption = -0.11
 	local_disease_resistance = -0.02
 }
 
@@ -251,7 +249,6 @@ pp_rgo_bonus_lumber = {
 	game_data = { category = location }
 	# Timber lowered construction costs and sped extraction, while logging camps pulled in frontier labor.
 	local_lumber_output_modifier = 0.15
-	local_rgo_build_time = -0.05
 	local_build_buildings_cost = -0.02
 	local_migration_attraction = 0.02
 }
@@ -270,7 +267,7 @@ pp_rgo_bonus_clay = {
 	local_clay_output_modifier = 0.15
 	local_production_efficiency = 0.02
 	local_build_buildings_cost = -0.02
-	local_monthly_food_modifier = -0.02
+	local_peasants_food_consumption = 0.02
 }
 
 pp_rgo_bonus_fish = {
@@ -303,7 +300,7 @@ pp_rgo_bonus_salt = {
 	game_data = { category = location }
 	# Salt preserved food and expanded trade, but monopoly taxes and salinization weakened local control.
 	local_salt_output_modifier = 0.15
-	local_monthly_food_modifier = 0.02
+	local_peasants_food_consumption = -0.02
 	local_trades_per_burgher = 0.10
 	local_max_control = -0.02
 }
@@ -331,7 +328,7 @@ pp_rgo_bonus_ivory = {
 	# Ivory caravans created luxury extraction zones, but elephant depletion and coercion damaged local life.
 	local_ivory_output_modifier = 0.15
 	local_elephants_output_modifier = -0.10
-	local_monthly_food_modifier = -0.02
+	local_peasants_food_consumption = 0.02
 	local_migration_attraction = -0.05
 }
 

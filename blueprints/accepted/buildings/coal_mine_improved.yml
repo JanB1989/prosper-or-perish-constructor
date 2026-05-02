@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: coal_mine_improved
 upgrade_chain:
   family: coal_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_coal_mine_improved_no_deposit_work
         - pp_coal_mine_improved_base_coal
     - name: slot_1
       methods:
@@ -49,9 +48,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_coal_mine_improved_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_coal_mine_improved_base_coal = {
             produced = coal
             output = 0.3
@@ -101,7 +97,6 @@ localization:
     coal_mine_improved_slot_2: Clay Recovery
     coal_mine_improved: Colliery
     coal_mine_improved_desc: Organized colliery galleries use better timbering, haulage, drainage, and coal sorting to work deeper seams, while fireclay is recovered where the coal measures expose useful seat-clay beds.
-    pp_coal_mine_improved_no_deposit_work: No Seam Work
     pp_coal_mine_improved_base_coal: Surveyed Coal Seam
     pp_coal_mine_improved_no_primary: No Colliery Workings
     pp_coal_mine_improved_coal: Timbered Colliery Workings
@@ -117,8 +112,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_coal_mine_improved_no_deposit_work:
-      production_efficiency: 1.00
     pp_coal_mine_improved_base_coal:
       production_efficiency: 1.00
     pp_coal_mine_improved_no_primary:

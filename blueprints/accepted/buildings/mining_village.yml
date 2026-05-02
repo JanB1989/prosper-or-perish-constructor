@@ -165,9 +165,8 @@ building:
             category = building_maintenance
         }
         pp_mining_goods_gold = {
-            lumber = 0.83
+            lumber = 1.29
             tools = 0.69
-            beeswax = 0.345
             produced = goods_gold
             output = 0.5
             category = building_maintenance
@@ -197,17 +196,15 @@ building:
             category = building_maintenance
         }
         pp_mining_goods_gems = {
-            lumber = 0.33
+            lumber = 0.517
             tools = 0.275
-            beeswax = 0.14
             produced = gems
             output = 0.5
             category = building_maintenance
         }
         pp_mining_goods_alum = {
             lumber = 0.25
-            tools = 0.205
-            beeswax = 0.105
+            tools = 0.275
             produced = alum
             output = 0.5
             category = building_maintenance

@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: copper_mine
 upgrade_chain:
   family: copper_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_copper_mine_no_deposit_work
         - pp_copper_mine_base_copper
     - name: slot_1
       methods:
@@ -49,9 +48,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_copper_mine_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_copper_mine_base_copper = {
             produced = copper
             output = 0.27
@@ -109,7 +105,6 @@ localization:
     copper_mine_slot_2: Ore Sorting
     copper_mine: Copper Work
     copper_mine_desc: Shallow open works and short headings follow exposed copper lodes with picks, gads, baskets, and simple timbering. Ore pickers separate copper stone from waste and may recover small lots of argentiferous ore or cassiterite where the lode permits.
-    pp_copper_mine_no_deposit_work: No Deposit Work
     pp_copper_mine_base_copper: Copper Outcrop
     pp_copper_mine_no_primary: No Copper Workings
     pp_copper_mine_copper: Pick-and-Gad Workings
@@ -125,8 +120,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_copper_mine_no_deposit_work:
-      production_efficiency: 1.00
     pp_copper_mine_base_copper:
       production_efficiency: 1.00
     pp_copper_mine_no_primary:

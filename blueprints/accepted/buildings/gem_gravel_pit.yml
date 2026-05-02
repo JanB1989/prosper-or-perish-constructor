@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: gem_gravel_pit
 upgrade_chain:
   family: gem_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_gem_gravel_pit_no_deposit_work
         - pp_gem_gravel_pit_base_gems
     - name: slot_1
       methods:
@@ -49,9 +48,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_gem_gravel_pit_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_gem_gravel_pit_base_gems = {
             produced = gems
             output = 0.22
@@ -63,9 +59,8 @@ building:
             category = building_maintenance
         }
         pp_gem_gravel_pit_gems = {
-            lumber = 0.70
+            lumber = 0.967
             tools = 0.80
-            beeswax = 0.20
             produced = gems
             output = 1.05
             category = building_maintenance
@@ -108,7 +103,6 @@ localization:
     gem_gravel_pit_slot_2: Placer Byproducts
     gem_gravel_pit: Gem Gravel Pit
     gem_gravel_pit_desc: Alluvial gravels are dug from shallow pits and stream beds, then washed in baskets and pans so durable gemstones can be picked from the heavy sand. Small gold specks and washed sand may be recovered as ancillary byproducts.
-    pp_gem_gravel_pit_no_deposit_work: No Deposit Work
     pp_gem_gravel_pit_base_gems: Gem Gravel Outcrop
     pp_gem_gravel_pit_no_primary: No Gem Washing
     pp_gem_gravel_pit_gems: Hand-Washed Gem Gravel
@@ -124,8 +118,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_gem_gravel_pit_no_deposit_work:
-      production_efficiency: 1.00
     pp_gem_gravel_pit_base_gems:
       production_efficiency: 1.00
     pp_gem_gravel_pit_no_primary:

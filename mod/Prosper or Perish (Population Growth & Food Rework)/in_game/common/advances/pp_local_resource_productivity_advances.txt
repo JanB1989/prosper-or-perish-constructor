@@ -45,6 +45,15 @@ REPLACE:green_vitriol = {
 	unlock_building = alum_works
 }
 
+REPLACE:renaissance_sculptures = {
+	icon = renaissance_advance
+	age = age_2_renaissance
+	requires = patron_of_art
+	global_stone_output_modifier = 0.1
+	global_marble_output_modifier = 0.1
+	unlock_building = marble_saw_yard
+}
+
 # Fold large passive metal bonuses into explicit Bog Iron Smelter building upgrades.
 REPLACE:blast_furnace = {
 	age = age_3_discovery

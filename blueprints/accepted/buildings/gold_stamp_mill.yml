@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: gold_stamp_mill
 upgrade_chain:
   family: gold_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_gold_stamp_mill_no_deposit_work
         - pp_gold_stamp_mill_base_gold
     - name: slot_1
       methods:
@@ -50,9 +49,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_gold_stamp_mill_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_gold_stamp_mill_base_gold = {
             produced = goods_gold
             output = 0.3
@@ -64,9 +60,8 @@ building:
             category = building_maintenance
         }
         pp_gold_stamp_mill_gold = {
-            lumber = 1.20
+            lumber = 1.467
             tools = 1.25
-            beeswax = 0.20
             mercury = 0.35
             produced = goods_gold
             output = 0.76
@@ -112,7 +107,6 @@ localization:
     gold_stamp_mill_slot_2: Assay Sorting
     gold_stamp_mill: Gold Stamp Mill
     gold_stamp_mill_desc: Organized works crush quartz and lode ore under stamp heads, recover gold through mercury amalgamation and retorting, and assay the remaining ore for silver and copper values.
-    pp_gold_stamp_mill_no_deposit_work: No Deposit Work
     pp_gold_stamp_mill_base_gold: Surveyed Gold Deposit
     pp_gold_stamp_mill_no_primary: No Stamp Milling
     pp_gold_stamp_mill_gold: Stamp-Mill Amalgamation
@@ -130,8 +124,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_gold_stamp_mill_no_deposit_work:
-      production_efficiency: 1.00
     pp_gold_stamp_mill_base_gold:
       production_efficiency: 1.00
       allow_rules:

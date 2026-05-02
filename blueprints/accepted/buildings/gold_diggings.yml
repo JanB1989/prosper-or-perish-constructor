@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_gold_diggings_no_deposit_work
         - pp_gold_diggings_base_gold
     - name: slot_1
       methods:
@@ -49,9 +48,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_gold_diggings_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_gold_diggings_base_gold = {
             produced = goods_gold
             output = 0.3
@@ -63,9 +59,8 @@ building:
             category = building_maintenance
         }
         pp_gold_diggings_gold = {
-            lumber = 0.83
+            lumber = 1.290
             tools = 0.69
-            beeswax = 0.345
             produced = goods_gold
             output = 0.438
             category = building_maintenance
@@ -108,7 +103,6 @@ localization:
     gold_diggings_slot_2: Associated Ores
     gold_diggings: Gold Diggings
     gold_diggings_desc: Auriferous gravels and shallow lode outcrops are washed by hand and worked with simple timbering, while associated ores are picked over for electrum-bearing silver and traces of copper.
-    pp_gold_diggings_no_deposit_work: No Deposit Work
     pp_gold_diggings_base_gold: Native Gold Deposit
     pp_gold_diggings_no_primary: No Gold Washing
     pp_gold_diggings_gold: Placer Washing
@@ -124,8 +118,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_gold_diggings_no_deposit_work:
-      production_efficiency: 1.00
     pp_gold_diggings_base_gold:
       production_efficiency: 1.00
       allow_rules:

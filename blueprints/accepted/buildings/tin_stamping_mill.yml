@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: tin_stamping_mill
 upgrade_chain:
   family: tin_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_tin_stamping_mill_no_deposit_work
         - pp_tin_stamping_mill_base_tin
     - name: slot_1
       methods:
@@ -50,9 +49,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_tin_stamping_mill_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_tin_stamping_mill_base_tin = {
             produced = tin
             output = 0.3
@@ -64,9 +60,8 @@ building:
             category = building_maintenance
         }
         pp_tin_stamping_mill_tin = {
-            lumber = 1.10
+            lumber = 1.700
             tools = 1.25
-            beeswax = 0.45
             produced = tin
             output = 3.15
             category = building_maintenance
@@ -77,17 +72,15 @@ building:
             category = building_maintenance
         }
         pp_tin_stamping_mill_copper = {
-            lumber = 0.16
+            lumber = 0.213
             tools = 0.12
-            beeswax = 0.04
             produced = copper
             output = 0.24
             category = building_maintenance
         }
         pp_tin_stamping_mill_lead = {
-            lumber = 0.16
+            lumber = 0.213
             tools = 0.12
-            beeswax = 0.04
             produced = lead
             output = 0.24
             category = building_maintenance
@@ -111,7 +104,6 @@ localization:
     tin_stamping_mill_slot_2: Sulphide Ore Sorting
     tin_stamping_mill: Tin Stamping Mill
     tin_stamping_mill_desc: Water-powered stamp heads crush lode tin for dressing floors and settling troughs, concentrating cassiterite while associated copper sulphides and lead ores are sorted from the waste.
-    pp_tin_stamping_mill_no_deposit_work: No Lode Work
     pp_tin_stamping_mill_base_tin: Surveyed Tin Lode
     pp_tin_stamping_mill_no_primary: No Tin Dressing
     pp_tin_stamping_mill_tin: Stamped Tin Dressing
@@ -127,8 +119,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_tin_stamping_mill_no_deposit_work:
-      production_efficiency: 1.00
     pp_tin_stamping_mill_base_tin:
       production_efficiency: 1.00
     pp_tin_stamping_mill_no_primary:

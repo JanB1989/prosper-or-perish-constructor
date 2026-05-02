@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: iron_mine_improved
 upgrade_chain:
   family: iron_mine
@@ -13,7 +13,6 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_iron_mine_improved_no_deposit_work
         - pp_iron_mine_improved_base_iron
     - name: slot_1
       methods:
@@ -49,9 +48,6 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_iron_mine_improved_no_deposit_work = {
-            category = building_maintenance
-        }
         pp_iron_mine_improved_base_iron = {
             produced = iron
             output = 0.30
@@ -101,7 +97,6 @@ localization:
     iron_mine_improved_slot_2: Ochre Recovery
     iron_mine_improved: Iron Mine
     iron_mine_improved_desc: Timbered ore workings use better dressing floors, haulage, and gangue sorting to raise iron output from true ore deposits, while ochre washers recover minor pigment earths distinct from bog-iron smelting.
-    pp_iron_mine_improved_no_deposit_work: No Deposit Work
     pp_iron_mine_improved_base_iron: Surveyed Iron Ore
     pp_iron_mine_improved_no_primary: No Iron Mining
     pp_iron_mine_improved_iron: Timbered Ore Workings
@@ -118,8 +113,6 @@ icon:
 
 evaluation:
   production_methods:
-    pp_iron_mine_improved_no_deposit_work:
-      production_efficiency: 1.00
     pp_iron_mine_improved_base_iron:
       production_efficiency: 1.00
     pp_iron_mine_improved_no_primary:

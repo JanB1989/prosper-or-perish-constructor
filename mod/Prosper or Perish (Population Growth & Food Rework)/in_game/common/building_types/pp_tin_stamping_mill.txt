@@ -24,9 +24,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_tin_stamping_mill_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_tin_stamping_mill_base_tin = {
         produced = tin
         output = 0.3
@@ -38,9 +35,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tin_stamping_mill_tin = {
-        lumber = 1.10
+        lumber = 1.700
         tools = 1.25
-        beeswax = 0.45
         produced = tin
         output = 3.15
         category = building_maintenance
@@ -51,17 +47,15 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tin_stamping_mill_copper = {
-        lumber = 0.16
+        lumber = 0.213
         tools = 0.12
-        beeswax = 0.04
         produced = copper
         output = 0.24
         category = building_maintenance
     }
     pp_tin_stamping_mill_lead = {
-        lumber = 0.16
+        lumber = 0.213
         tools = 0.12
-        beeswax = 0.04
         produced = lead
         output = 0.24
         category = building_maintenance

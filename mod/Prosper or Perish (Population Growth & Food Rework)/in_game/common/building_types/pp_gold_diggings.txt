@@ -23,9 +23,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_gold_diggings_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_gold_diggings_base_gold = {
         produced = goods_gold
         output = 0.3
@@ -37,9 +34,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_gold_diggings_gold = {
-        lumber = 0.83
+        lumber = 1.290
         tools = 0.69
-        beeswax = 0.345
         produced = goods_gold
         output = 0.438
         category = building_maintenance

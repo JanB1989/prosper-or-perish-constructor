@@ -23,9 +23,6 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_tin_streamworks_no_deposit_work = {
-        category = building_maintenance
-    }
     pp_tin_streamworks_base_tin = {
         produced = tin
         output = 0.3
@@ -37,9 +34,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tin_streamworks_tin = {
-        lumber = 0.65
+        lumber = 0.983
         tools = 0.56
-        beeswax = 0.25
         produced = tin
         output = 1.78
         category = building_maintenance
@@ -50,17 +46,15 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tin_streamworks_copper = {
-        lumber = 0.12
+        lumber = 0.173
         tools = 0.10
-        beeswax = 0.04
         produced = copper
         output = 0.18
         category = building_maintenance
     }
     pp_tin_streamworks_lead = {
-        lumber = 0.12
+        lumber = 0.173
         tools = 0.08
-        beeswax = 0.04
         produced = lead
         output = 0.18
         category = building_maintenance

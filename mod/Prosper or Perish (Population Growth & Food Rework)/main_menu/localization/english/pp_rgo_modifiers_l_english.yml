@@ -57,7 +57,7 @@ STATIC_MODIFIER_DESC_pp_rgo_bonus_lumber: "Local output of [ShowGoodsName('lumbe
 STATIC_MODIFIER_NAME_pp_rgo_bonus_maize: "Natural [ShowGoodsName('maize')] Output"
 STATIC_MODIFIER_DESC_pp_rgo_bonus_maize: "Local output of [ShowGoodsName('maize')] reflects this [location|e]'s natural [rgo|e]. Local production also eases peasants' food needs."
 STATIC_MODIFIER_NAME_pp_rgo_bonus_marble: "Natural [ShowGoodsName('marble')] Output"
-STATIC_MODIFIER_DESC_pp_rgo_bonus_marble: "Local output of [ShowGoodsName('marble')] reflects this [location|e]'s natural [rgo|e]. Marble is extracted at a [ShowBuildingTypeName('mining_village')|e] where the deposit allows."
+  STATIC_MODIFIER_DESC_pp_rgo_bonus_marble: "Local output of [ShowGoodsName('marble')] reflects this [location|e]'s natural [rgo|e]. Marble is extracted at dedicated [ShowBuildingTypeName('marble_quarry')|e] and [ShowBuildingTypeName('marble_saw_yard')|e] buildings where the deposit allows."
 STATIC_MODIFIER_NAME_pp_rgo_bonus_medicaments: "Natural [ShowGoodsName('medicaments')] Output"
 STATIC_MODIFIER_DESC_pp_rgo_bonus_medicaments: "Local output of [ShowGoodsName('medicaments')] reflects this [location|e]'s natural [rgo|e]."
 STATIC_MODIFIER_NAME_pp_rgo_bonus_mercury: "Natural [ShowGoodsName('mercury')] Output"

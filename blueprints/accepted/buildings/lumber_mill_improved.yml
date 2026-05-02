@@ -1,0 +1,118 @@
+version: 2
+tag: lumber_mill_improved
+upgrade_chain:
+  family: lumber_mill
+  tier: 1
+  previous: lumber_mill
+  next: null
+  unlock_advance: lumber_improvements_absolutism
+building:
+  key: lumber_mill_improved
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_lumber_mill_improved_managed_stands
+    - name: slot_1
+      methods:
+        - pp_lumber_mill_improved_no_primary
+        - pp_lumber_mill_improved_forest_ordinances
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 6
+    price = pp_lumber_mill_improved_price
+    category = rgo_building_category
+    icon = lumber_mill_improved
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = lumber_mill
+    build_time = workshop_build_time
+
+    location_potential = {
+        OR = {
+            vegetation = woods
+            vegetation = forest
+            vegetation = farmland
+            vegetation = jungle
+        }
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_lumber_mill_improved_managed_stands = {
+            produced = lumber
+            output = 0.45
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_lumber_mill_improved_no_primary = {
+            category = building_maintenance
+        }
+        pp_lumber_mill_improved_forest_ordinances = {
+            produced = lumber
+            output = 7.20
+            tools = 1.85
+            horses = 1.15
+            victuals = 0.75
+            paper = 0.10
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_build_buildings_cost = -0.02
+        local_migration_attraction = 0.03
+        local_population_growth = -0.0001
+    }
+prices:
+  - key: pp_lumber_mill_improved_price
+    body: |2-
+      {gold = 150}
+advancements:
+  - key: REPLACE:lumber_improvements_absolutism
+    body: |2-
+      icon = lumber_mill_improved
+      age = age_5_absolutism
+      requires = rgo_size_advance_absolutism
+      unlock_building = lumber_mill_improved
+      ai_weight = { add = 150 }
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_lumber_mill_improved_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('lumber_mill_improved')|e].
+    MODIFIER_TYPE_NAME_pp_lumber_mill_improved_price_cost_modifier: Planned Saw Works Cost
+    lumber_improvements_absolutism: Forest Ordinances
+    lumber_improvements_absolutism_desc: Surveyed stands, harvest registers, forest ordinances, and improved saw frames turn scattered woodland cutting into a larger planned saw-works system.
+    lumber_mill_improved: Planned Saw Works
+    lumber_mill_improved_desc: Planned saw works combine managed timber stands, forest ordinances, log landings, and improved saw frames. They move far more wood by employing larger crews and consuming more supplies, not by making lumber extraction inherently more profitable.
+    lumber_mill_improved_slot_0: Managed Timber Stand
+    lumber_mill_improved_slot_1: Saw Works
+    pp_lumber_mill_improved_forest_ordinances: Forest Ordinances
+    pp_lumber_mill_improved_managed_stands: Managed Timber Stands
+    pp_lumber_mill_improved_no_primary: No Planned Saw Works
+    pp_lumber_mill_improved_price: Planned Saw Works Price
+icon:
+  source_png: ../assets/icons/lumber_mill_improved.png
+  output_dds: lumber_mill_improved.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for an upgraded lumber mill and planned forestry works, transparent background. Center a water-powered saw frame beside stacked logs, marked managed forest stands, log landing, and forester survey stakes, no text, no frame, painterly historical UI art.
+
+evaluation:
+  production_methods:
+    pp_lumber_mill_improved_managed_stands:
+      production_efficiency: 1.00
+    pp_lumber_mill_improved_no_primary:
+      production_efficiency: 1.00
+    pp_lumber_mill_improved_forest_ordinances:
+      production_efficiency: 1.00

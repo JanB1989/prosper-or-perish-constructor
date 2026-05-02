@@ -1,0 +1,130 @@
+version: 2
+tag: coal_mine_revolutions
+upgrade_chain:
+  family: coal_mine
+  tier: 2
+  previous: coal_mine_improved
+  next: null
+  unlock_advance: coal_improvements_revolutions
+building:
+  key: coal_mine_revolutions
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_coal_mine_revolutions_base_coal
+    - name: slot_1
+      methods:
+        - pp_coal_mine_revolutions_no_primary
+        - pp_coal_mine_revolutions_coal
+    - name: slot_2
+      methods:
+        - pp_coal_mine_revolutions_no_secondary
+        - pp_coal_mine_revolutions_fireclay
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 5
+    price = pp_coal_mine_revolutions_price
+    category = rgo_building_category
+    icon = coal_mine_revolutions
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = coal_mine_improved
+    build_time = manufactory_build_time
+
+    location_potential = {
+        raw_material = goods:coal
+    }
+
+    construction_demand = manufactory_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_coal_mine_revolutions_base_coal = {
+            produced = coal
+            output = 0.38
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_coal_mine_revolutions_no_primary = {
+            category = building_maintenance
+        }
+        pp_coal_mine_revolutions_coal = {
+            lumber = 1.70
+            tools = 2.10
+            beeswax = 0.42
+            produced = coal
+            output = 4.55
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_coal_mine_revolutions_no_secondary = {
+            category = building_maintenance
+        }
+        pp_coal_mine_revolutions_fireclay = {
+            lumber = 0.18
+            tools = 0.12
+            produced = clay
+            output = 0.35
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_coal_mine_revolutions_price
+    body: |2-
+      {gold = 225}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_coal_mine_revolutions_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('coal_mine_revolutions')|e].
+    MODIFIER_TYPE_NAME_pp_coal_mine_revolutions_price_cost_modifier: Deep Colliery Cost
+    coal_mine_revolutions_slot_0: Coal Seam
+    coal_mine_revolutions_slot_1: Deep Colliery Workings
+    coal_mine_revolutions_slot_2: Clay Recovery
+    coal_mine_revolutions: Deep Colliery
+    coal_mine_revolutions_desc: Deeper shafts, stronger haulage, better drainage, and systematic sorting raise mined coal output from true coal deposits without extending the gain to charcoal works.
+    pp_coal_mine_revolutions_base_coal: Deep Coal Seam
+    pp_coal_mine_revolutions_no_primary: No Deep Colliery Workings
+    pp_coal_mine_revolutions_coal: Deep Colliery Workings
+    pp_coal_mine_revolutions_no_secondary: No Clay Recovery
+    pp_coal_mine_revolutions_fireclay: Deep Fireclay Sorting
+    pp_coal_mine_revolutions_price: Deep Colliery Price
+    coal_improvements_revolutions: Deep Colliery Improvements
+    coal_improvements_revolutions_desc: Late colliery drainage, haulage, and sorting improvements raise output in true coal mines rather than applying a global coal modifier.
+icon:
+  source_png: ../assets/icons/coal_mine_revolutions.png
+  output_dds: coal_mine_revolutions.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Deep Colliery, transparent background. Center a deep coal mine headframe, coal carts, drainage gear, black coal heaps, timbered shaft, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_coal_mine_revolutions_base_coal:
+      production_efficiency: 1.00
+    pp_coal_mine_revolutions_no_primary:
+      production_efficiency: 1.00
+    pp_coal_mine_revolutions_coal:
+      production_efficiency: 1.20
+    pp_coal_mine_revolutions_no_secondary:
+      production_efficiency: 1.00
+    pp_coal_mine_revolutions_fireclay:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.
+        input_throughput: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.
+        output_throughput: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.
+        amortization_months: Fireclay is an ancillary coal seam byproduct, intentionally less profitable than primary coal extraction.

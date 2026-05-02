@@ -18,6 +18,33 @@ ADVANCES_PATH = (
     / "advances"
     / "pp_local_resource_productivity_advances.txt"
 )
+PROSPERITY_ADVANCES_PATH = (
+    ROOT
+    / "mod"
+    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "in_game"
+    / "common"
+    / "advances"
+    / "pp_prosperity_advances_adjustments.txt"
+)
+FISHING_ADVANCES_PATH = (
+    ROOT
+    / "mod"
+    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "in_game"
+    / "common"
+    / "advances"
+    / "pp_fishing_village.txt"
+)
+GAME_START_PATH = (
+    ROOT
+    / "mod"
+    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "in_game"
+    / "common"
+    / "on_action"
+    / "pp_game_start.txt"
+)
 LOCALIZATION_ROOT = (
     ROOT
     / "mod"
@@ -35,6 +62,7 @@ EXPECTED_CHAINS = {
     "coal_mine": [
         ("coal_mine", None),
         ("coal_mine_improved", "coal_improvements_absolutism"),
+        ("coal_mine_revolutions", "coal_improvements_revolutions"),
     ],
     "mercury_mine": [
         ("cinnabar_pit", None),
@@ -50,7 +78,9 @@ EXPECTED_CHAINS = {
     ],
     "lead_mine": [
         ("lead_mine", None),
+        ("lead_mine_bole_smelting", "bole_smelting"),
         ("lead_mine_improved", "lead_ore_dressing"),
+        ("lead_mine_cupola_smelting", "cupola_smelting"),
     ],
     "marble_quarry": [
         ("marble_quarry", None),
@@ -79,6 +109,10 @@ EXPECTED_CHAINS = {
         ("bog_iron_smelter_coke_blast_furnace", "coke_blast_furnace"),
         ("bog_iron_smelter_hot_blast_furnace", "hot_blast_furnace"),
     ],
+    "cookery": [
+        ("cookery", None),
+        ("victualling_yard", "food_advance_absolutism"),
+    ],
 }
 
 DEACTIVATED_MINING_VILLAGE_BLUEPRINTS = {
@@ -98,15 +132,24 @@ def _load_blueprint(key: str) -> dict:
 
 
 def _advance_block(advance: str, text: str) -> str:
-    match = re.search(rf"REPLACE:{re.escape(advance)}\s*=\s*\{{(?P<body>.*?)\n\}}", text, flags=re.S)
-    assert match is not None, f"{advance} replacement block missing"
+    match = re.search(
+        rf"(?:(?:REPLACE|TRY_INJECT):)?{re.escape(advance)}\s*=\s*\{{(?P<body>.*?)\n\}}",
+        text,
+        flags=re.S,
+    )
+    assert match is not None, f"{advance} block missing"
     return match.group("body")
 
 
 def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])
-    advances = ADVANCES_PATH.read_text(encoding="utf-8")
+    advances = "\n".join(
+        (
+            ADVANCES_PATH.read_text(encoding="utf-8"),
+            PROSPERITY_ADVANCES_PATH.read_text(encoding="utf-8"),
+        )
+    )
 
     for family, chain in EXPECTED_CHAINS.items():
         for tier, (key, unlock_advance) in enumerate(chain):
@@ -139,6 +182,66 @@ def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
                 assert re.search(rf"^\s*unlock_building\s*=\s*{re.escape(key)}\s*$", block, flags=re.M)
 
 
+def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+    advances = FISHING_ADVANCES_PATH.read_text(encoding="utf-8")
+
+    chain = [
+        ("ocean_fishery", None),
+        ("offshore_fishery", "pp_herring_buss"),
+    ]
+    for tier, (key, unlock_advance) in enumerate(chain):
+        raw = _load_blueprint(key)
+
+        assert f"buildings/{key}.yml" in enabled
+        assert raw["tag"] == key
+        assert raw["building"]["key"] == key
+        assert raw.get("upgrade_chain") == {
+            "family": "ocean_fishery",
+            "tier": tier,
+            "previous": chain[tier - 1][0] if tier > 0 else None,
+            "next": chain[tier + 1][0] if tier + 1 < len(chain) else None,
+            "unlock_advance": unlock_advance,
+        }
+
+    offshore_body = _load_blueprint("offshore_fishery")["building"]["body"]
+    assert re.search(r"^\s*obsolete\s*=\s*ocean_fishery\s*$", offshore_body, flags=re.M)
+    assert re.search(r"location_potential\s*=\s*\{\s*is_coastal\s*=\s*yes\s*\}", offshore_body)
+
+    herring_block = _advance_block("pp_herring_buss", advances)
+    assert re.search(r"^\s*unlock_building\s*=\s*offshore_fishery\s*$", herring_block, flags=re.M)
+    assert "potential =" not in herring_block
+
+    distant_water_block = _advance_block("pp_distant_water_fishing", advances)
+    assert re.search(
+        r"^\s*unlock_production_method\s*=\s*pp_offshore_fishery_distant_water_schooners\s*$",
+        distant_water_block,
+        flags=re.M,
+    )
+    assert "potential =" not in distant_water_block
+
+    steam_block = _advance_block("pp_steam_trawling", advances)
+    assert re.search(
+        r"^\s*unlock_production_method\s*=\s*pp_offshore_fishery_steam_trawlers\s*$",
+        steam_block,
+        flags=re.M,
+    )
+    assert "potential =" not in steam_block
+
+
+def test_game_start_never_places_offshore_fishery_directly_and_culls_invalid_locations() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8")
+
+    assert "construct_building = {\n\t\t\t\t\t\tbuilding_type = building_type:offshore_fishery" not in text
+    assert re.search(
+        r"building_type\s*=\s*building_type:offshore_fishery.*?NOT\s*=\s*\{\s*is_coastal\s*=\s*yes\s*\}.*?"
+        r"building\s*=\s*building_type:offshore_fishery",
+        text,
+        flags=re.S,
+    )
+
+
 def test_mining_village_chain_is_deactivated() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])
@@ -149,7 +252,7 @@ def test_mining_village_chain_is_deactivated() -> None:
 
 
 def test_coal_mine_tiers_are_coal_deposit_only() -> None:
-    for key in ("coal_mine", "coal_mine_improved"):
+    for key in ("coal_mine", "coal_mine_improved", "coal_mine_revolutions"):
         body = _load_blueprint(key)["building"]["body"]
         assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:coal\s*\}", body)
 
@@ -187,11 +290,25 @@ def test_silver_mine_tiers_are_silver_deposit_only_and_have_unique_icons() -> No
 
 
 def test_lead_mine_tiers_are_lead_deposit_only_and_have_unique_icons() -> None:
-    for key in ("lead_mine", "lead_mine_improved"):
+    for key in ("lead_mine", "lead_mine_bole_smelting", "lead_mine_improved", "lead_mine_cupola_smelting"):
         raw = _load_blueprint(key)
         body = raw["building"]["body"]
         assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:lead\s*\}", body)
         assert raw["icon"]["output_dds"] == f"{key}.dds"
+
+
+def test_lead_and_coal_late_modifier_advances_unlock_buildings_instead_of_global_output() -> None:
+    advances = ADVANCES_PATH.read_text(encoding="utf-8")
+    expected_unlocks = {
+        "bole_smelting": "lead_mine_bole_smelting",
+        "cupola_smelting": "lead_mine_cupola_smelting",
+        "coal_improvements_revolutions": "coal_mine_revolutions",
+    }
+
+    for advance, building in expected_unlocks.items():
+        block = _advance_block(advance, advances)
+        assert re.search(rf"^\s*unlock_building\s*=\s*{building}\s*$", block, flags=re.M)
+        assert not re.search(r"global_(lead|coal)_output_modifier\s*=", block)
 
 
 def test_tin_mine_tiers_are_tin_deposit_only_and_have_unique_icons() -> None:

@@ -1,0 +1,17 @@
+﻿# >>> eu5-building-pipeline:lumber_mill:advancement
+REPLACE:lumber_improvements_discovery = {
+icon = lumber_improvements_absolutism
+age = age_3_discovery
+requires = improved_book_binding
+unlock_production_method = pp_lumber_mill_coppice_standards
+ai_weight = { add = 150 }
+}
+
+REPLACE:lumber_improvements_reformation = {
+icon = rudimentary_coastal_ship_repair
+age = age_4_reformation
+requires = construction_speed_reformation
+unlock_production_method = pp_lumber_mill_timber_drives
+ai_weight = { add = 150 }
+}
+# <<< eu5-building-pipeline:lumber_mill:advancement

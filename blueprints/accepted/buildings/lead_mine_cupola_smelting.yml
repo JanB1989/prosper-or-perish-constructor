@@ -1,0 +1,131 @@
+version: 2
+tag: lead_mine_cupola_smelting
+upgrade_chain:
+  family: lead_mine
+  tier: 3
+  previous: lead_mine_improved
+  next: null
+  unlock_advance: cupola_smelting
+building:
+  key: lead_mine_cupola_smelting
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_lead_mine_cupola_base_lead
+    - name: slot_1
+      methods:
+        - pp_lead_mine_cupola_no_primary
+        - pp_lead_mine_cupola_lead
+    - name: slot_2
+      methods:
+        - pp_lead_mine_cupola_no_secondary
+        - pp_lead_mine_cupola_silver
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 5
+    price = pp_lead_mine_cupola_smelting_price
+    category = rgo_building_category
+    icon = lead_mine_cupola_smelting
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = lead_mine_improved
+    build_time = manufactory_build_time
+
+    location_potential = {
+        raw_material = goods:lead
+    }
+
+    construction_demand = manufactory_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_lead_mine_cupola_base_lead = {
+            produced = lead
+            output = 0.38
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_lead_mine_cupola_no_primary = {
+            category = building_maintenance
+        }
+        pp_lead_mine_cupola_lead = {
+            lumber = 1.10
+            tools = 2.65
+            beeswax = 0.30
+            produced = lead
+            output = 4.75
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_lead_mine_cupola_no_secondary = {
+            category = building_maintenance
+        }
+        pp_lead_mine_cupola_silver = {
+            lumber = 0.16
+            tools = 0.12
+            lead = 0.10
+            produced = silver
+            output = 0.08
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_lead_mine_cupola_smelting_price
+    body: |2-
+      {gold = 225}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_lead_mine_cupola_smelting_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('lead_mine_cupola_smelting')|e].
+    MODIFIER_TYPE_NAME_pp_lead_mine_cupola_smelting_price_cost_modifier: Cupola Lead Mine Cost
+    lead_mine_cupola_smelting_slot_0: Galena Vein
+    lead_mine_cupola_smelting_slot_1: Cupola Lead Workings
+    lead_mine_cupola_smelting_slot_2: Silver Recovery
+    lead_mine_cupola_smelting: Cupola Lead Mine
+    lead_mine_cupola_smelting_desc: Cupola furnaces, stronger haulage, and organized dressing floors raise lead output from deep galena workings while keeping silver recovery as a minor byproduct.
+    pp_lead_mine_cupola_base_lead: Deep Galena Vein
+    pp_lead_mine_cupola_no_primary: No Cupola Smelting
+    pp_lead_mine_cupola_lead: Cupola Galena Workings
+    pp_lead_mine_cupola_no_secondary: No Silver Recovery
+    pp_lead_mine_cupola_silver: Cupola Silver Dressing
+    pp_lead_mine_cupola_smelting_price: Cupola Lead Mine Price
+    cupola_smelting: Cupola Smelting
+    cupola_smelting_desc: Cupola furnaces concentrate the late lead-output gain in upgraded lead mines instead of multiplying all lead production globally.
+icon:
+  source_png: ../assets/icons/lead_mine_cupola_smelting.png
+  output_dds: lead_mine_cupola_smelting.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Cupola Lead Mine, transparent background. Center a deep lead mine with cupola furnace, galena carts, chimney, dressing floor, workers, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_lead_mine_cupola_base_lead:
+      production_efficiency: 1.00
+    pp_lead_mine_cupola_no_primary:
+      production_efficiency: 1.00
+    pp_lead_mine_cupola_lead:
+      production_efficiency: 1.20
+    pp_lead_mine_cupola_no_secondary:
+      production_efficiency: 1.00
+    pp_lead_mine_cupola_silver:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Cupola silver dressing is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        input_throughput: Cupola silver dressing is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        output_throughput: Cupola silver dressing is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        amortization_months: Cupola silver dressing is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.

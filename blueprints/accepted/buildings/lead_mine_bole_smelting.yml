@@ -1,0 +1,131 @@
+version: 2
+tag: lead_mine_bole_smelting
+upgrade_chain:
+  family: lead_mine
+  tier: 1
+  previous: lead_mine
+  next: lead_mine_improved
+  unlock_advance: bole_smelting
+building:
+  key: lead_mine_bole_smelting
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_lead_mine_bole_base_lead
+    - name: slot_1
+      methods:
+        - pp_lead_mine_bole_no_primary
+        - pp_lead_mine_bole_lead
+    - name: slot_2
+      methods:
+        - pp_lead_mine_bole_no_secondary
+        - pp_lead_mine_bole_silver
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_lead_mine_bole_smelting_price
+    category = rgo_building_category
+    icon = lead_mine_bole_smelting
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = lead_mine
+    build_time = manufactory_build_time
+
+    location_potential = {
+        raw_material = goods:lead
+    }
+
+    construction_demand = manufactory_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_lead_mine_bole_base_lead = {
+            produced = lead
+            output = 0.34
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_lead_mine_bole_no_primary = {
+            category = building_maintenance
+        }
+        pp_lead_mine_bole_lead = {
+            lumber = 0.65
+            tools = 1.65
+            beeswax = 0.21
+            produced = lead
+            output = 3.05
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_lead_mine_bole_no_secondary = {
+            category = building_maintenance
+        }
+        pp_lead_mine_bole_silver = {
+            lumber = 0.12
+            tools = 0.09
+            lead = 0.06
+            produced = silver
+            output = 0.06
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_lead_mine_bole_smelting_price
+    body: |2-
+      {gold = 175}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_lead_mine_bole_smelting_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('lead_mine_bole_smelting')|e].
+    MODIFIER_TYPE_NAME_pp_lead_mine_bole_smelting_price_cost_modifier: Bole Smelting Lead Mine Cost
+    lead_mine_bole_smelting_slot_0: Galena Vein
+    lead_mine_bole_smelting_slot_1: Bole-Smelted Workings
+    lead_mine_bole_smelting_slot_2: Silver Recovery
+    lead_mine_bole_smelting: Bole Smelting Lead Mine
+    lead_mine_bole_smelting_desc: Improved upland hearths and ore handling let lead works smelt dressed galena more consistently, raising mine throughput before later ore-dressing systems take over.
+    pp_lead_mine_bole_base_lead: Open Galena Vein
+    pp_lead_mine_bole_no_primary: No Bole Smelting
+    pp_lead_mine_bole_lead: Bole-Smelted Galena Workings
+    pp_lead_mine_bole_no_secondary: No Silver Recovery
+    pp_lead_mine_bole_silver: Bole Silver Picking
+    pp_lead_mine_bole_smelting_price: Bole Smelting Lead Mine Price
+    bole_smelting: Bole Smelting
+    bole_smelting_desc: Wind-fed upland hearths and better galena preparation improve lead smelting without granting a blanket empire-wide output surge.
+icon:
+  source_png: ../assets/icons/lead_mine_bole_smelting.png
+  output_dds: lead_mine_bole_smelting.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Bole Smelting Lead Mine, transparent background. Center a lead mine with galena heaps, upland stone smelting hearth, timbered shaft, workers sorting ore, no text, no frame.
+
+evaluation:
+  production_methods:
+    pp_lead_mine_bole_base_lead:
+      production_efficiency: 1.00
+    pp_lead_mine_bole_no_primary:
+      production_efficiency: 1.00
+    pp_lead_mine_bole_lead:
+      production_efficiency: 1.15
+    pp_lead_mine_bole_no_secondary:
+      production_efficiency: 1.00
+    pp_lead_mine_bole_silver:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Bole silver picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        input_throughput: Bole silver picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        output_throughput: Bole silver picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        amortization_months: Bole silver picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.

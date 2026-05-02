@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:lumber_mill_improved:advancement
+REPLACE:lumber_improvements_absolutism = {
+icon = lumber_mill_improved
+age = age_5_absolutism
+requires = rgo_size_advance_absolutism
+unlock_building = lumber_mill_improved
+ai_weight = { add = 150 }
+}
+# <<< eu5-building-pipeline:lumber_mill_improved:advancement

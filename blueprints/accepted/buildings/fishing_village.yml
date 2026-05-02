@@ -33,6 +33,10 @@ building:
     	location_potential = {
     		has_variable = pp_fishing_village_fixed_env_bonus
     		var:pp_fishing_village_fixed_env_bonus > 0
+        OR = {
+            has_river = yes
+            is_adjacent_to_lake = yes
+        }
     	}
     	build_time = village_build_time
     	# Slot 0 â€” fishery ground / climate (temperate vs arctic)
@@ -92,158 +96,31 @@ building:
     	construction_demand = village_construction
     	modifier = {
     		local_monthly_food = 0.0
-    		local_merchant_capacity = 0.10
+        local_merchant_capacity = 0.05
     		local_peasants_estate_power = 0.25
-    		local_maritime_presence = 0.01
-    		harbor_suitability = 0.01
-    		local_sailors = 0.001
     	}
 advancements:
-  - key: pp_herring_buss_north_sea
-    body: |2-
-      	age = age_2_renaissance
-      	icon = safe_exploration_techniques_advance
-      	requires = rgo_size_advance_renaissance
-      	unlock_production_method = pp_ocean_fishery_herring_busses
-      	ai_weight = { add = 50 }
-      	potential = {
-      		exists = capital
-      		original_capital ?= {
-      			OR = {
-      				region = region:scandinavian_region
-      				region = region:great_britain_region
-      				region = region:north_german_region
-      			}
-      		}
-      	}
-  - key: pp_herring_buss_coastal
+  - key: pp_herring_buss
     body: |2-
       	age = age_3_discovery
       	icon = safe_exploration_techniques_advance
       	requires = new_world_advance
-      	unlock_production_method = pp_ocean_fishery_herring_busses
+      	unlock_building = offshore_fishery
       	ai_weight = { add = 50 }
-      	potential = {
-      		exists = capital
-      		original_capital ?= {
-      			AND = {
-      				sub_continent = sub_continent:western_europe
-      				NOT = {
-      					OR = {
-      						region = region:scandinavian_region
-      						region = region:great_britain_region
-      						region = region:north_german_region
-      					}
-      				}
-      			}
-      		}
-      	}
-  - key: pp_herring_buss_general
-    body: |2-
-      	age = age_4_reformation
-      	icon = safe_exploration_techniques_advance
-      	requires = global_trade_advance
-      	unlock_production_method = pp_ocean_fishery_herring_busses
-      	ai_weight = { add = 50 }
-      	potential = {
-      		exists = capital
-      		NOT = {
-      			original_capital ?= { sub_continent = sub_continent:western_europe }
-      		}
-      	}
-  - key: pp_grand_banks_fishery_early
-    body: |2-
-      	age = age_3_discovery
-      	icon = maritime_advance_age_4
-      	requires = new_world_advance
-      	unlock_production_method = pp_ocean_fishery_distant_water_schooners
-      	ai_weight = { add = 50 }
-      	potential = {
-      		exists = capital
-      		original_capital ?= {
-      			OR = {
-      				sub_continent = sub_continent:north_america
-      				region = region:great_britain_region
-      				region = region:france_region
-      				region = region:iberia_region
-      			}
-      		}
-      	}
-  - key: pp_grand_banks_fishery_maritime
+  - key: pp_distant_water_fishing
     body: |2-
       	age = age_4_reformation
       	icon = maritime_advance_age_4
       	requires = maritime_advance_age_4
-      	unlock_production_method = pp_ocean_fishery_distant_water_schooners
+      	unlock_production_method = pp_offshore_fishery_distant_water_schooners
       	ai_weight = { add = 50 }
-      	potential = {
-      		exists = capital
-      		original_capital ?= {
-      			AND = {
-      				sub_continent = sub_continent:western_europe
-      				NOT = {
-      					OR = {
-      						sub_continent = sub_continent:north_america
-      						region = region:great_britain_region
-      						region = region:france_region
-      						region = region:iberia_region
-      					}
-      				}
-      			}
-      		}
-      	}
-  - key: pp_grand_banks_fishery_general
-    body: |2-
-      	age = age_5_absolutism
-      	icon = maritime_advance_age_4
-      	requires = food_advance_absolutism
-      	unlock_production_method = pp_ocean_fishery_distant_water_schooners
-      	ai_weight = { add = 50 }
-      	potential = {
-      		exists = capital
-      		NOT = {
-      			OR = {
-      				original_capital ?= { sub_continent = sub_continent:north_america }
-      				original_capital ?= { sub_continent = sub_continent:western_europe }
-      			}
-      		}
-      	}
-  - key: pp_steam_trawling_north_sea
-    body: |2-
-      	age = age_5_absolutism
-      	icon = safe_exploration_techniques_advance
-      	requires = food_advance_absolutism
-      	unlock_production_method = pp_ocean_fishery_steam_trawlers
-      	ai_weight = { add = 50 }
-      	potential = {
-      		exists = capital
-      		original_capital ?= {
-      			OR = {
-      				region = region:scandinavian_region
-      				region = region:great_britain_region
-      				region = region:north_german_region
-      			}
-      		}
-      	}
-  - key: pp_steam_trawling_general
+  - key: pp_steam_trawling
     body: |2-
       	age = age_6_revolutions
       	icon = safe_exploration_techniques_advance
       	requires = rotherham_plough
-      	unlock_production_method = pp_ocean_fishery_steam_trawlers
+      	unlock_production_method = pp_offshore_fishery_steam_trawlers
       	ai_weight = { add = 50 }
-      	potential = {
-      		exists = capital
-      		NOT = {
-      			original_capital ?= {
-      				OR = {
-      					region = region:scandinavian_region
-      					region = region:great_britain_region
-      					region = region:north_german_region
-      				}
-      			}
-      		}
-      	}
   - key: pp_wattle_fish_weirs
     body: |2-
       	age = age_2_renaissance
@@ -270,8 +147,14 @@ localization:
     pp_fishing_village_strand_line: Handline fishing
     pp_fishing_village_stew_ponds: Stew Ponds
     pp_fishing_village_wattle_weirs: Wattle Fish Weirs
+    pp_distant_water_fishing: Distant-Water Fishing
+    pp_distant_water_fishing_desc: Organize provisioned schooner fleets for rich offshore grounds, supported by salt, victuals, and naval supplies.
+    pp_herring_buss: The Herring Buss
+    pp_herring_buss_desc: Develop broad-beamed herring busses, drift nets, barrels, and salt-curing routines for longer offshore fishing voyages.
     pp_managed_fishponds: Managed Fishponds
     pp_managed_fishponds_desc: Manage local ponds, banks, and timber sluices so village fishers can keep freshwater fish close to market.
+    pp_steam_trawling: Steam Trawling
+    pp_steam_trawling_desc: Use coal-fired steam trawlers and specialized tools to work deeper fishing grounds at industrial scale.
     pp_wattle_fish_weirs: Wattle Fish Weirs
     pp_wattle_fish_weirs_desc: Build wicker traps, wattle fences, and river weirs that guide local fish into village catches.
 

@@ -1,0 +1,131 @@
+version: 2
+tag: offshore_fishery
+upgrade_chain:
+  family: ocean_fishery
+  tier: 1
+  previous: ocean_fishery
+  next: null
+  unlock_advance: pp_herring_buss
+building:
+  key: offshore_fishery
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_offshore_fishery_base_catch
+    - name: slot_1
+      methods:
+        - pp_offshore_fishery_no_offshore_fleet
+        - pp_offshore_fishery_herring_busses
+        - pp_offshore_fishery_distant_water_schooners
+        - pp_offshore_fishery_steam_trawlers
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = fishing_village_max_level
+    pop_type = laborers
+    employment_size = 7
+    price = pp_offshore_fishery_price
+    category = rgo_building_category
+    icon = offshore_fishery
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = ocean_fishery
+    build_time = workshop_build_time
+
+    location_potential = {
+        is_coastal = yes
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_offshore_fishery_base_catch = {
+            produced = fish
+            output = 0.70
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_offshore_fishery_no_offshore_fleet = {
+            category = building_maintenance
+        }
+        pp_offshore_fishery_herring_busses = {
+            lumber = 1.40
+            fiber_crops = 0.90
+            salt = 1.30
+            produced = fish
+            output = 9.74
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_offshore_fishery_distant_water_schooners = {
+            naval_supplies = 1.30
+            victuals = 0.70
+            salt = 1.26
+            produced = fish
+            output = 12.00
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_offshore_fishery_steam_trawlers = {
+            naval_supplies = 1.70
+            coal = 1.40
+            tools = 1.05
+            produced = fish
+            output = 13.00
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_merchant_capacity = 0.35
+        local_maritime_presence = 0.04
+        harbor_suitability = 0.04
+        local_sailors = 0.006
+    }
+prices:
+  - key: pp_offshore_fishery_price
+    body: |2-
+      {gold = 175}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_offshore_fishery_price_cost_modifier: Affects the cost of building an [ShowBuildingTypeName('offshore_fishery')|e].
+    MODIFIER_TYPE_NAME_pp_offshore_fishery_price_cost_modifier: Offshore Fishery Cost
+    offshore_fishery_slot_0: Offshore Waters
+    offshore_fishery_slot_1: Offshore Fleet
+    offshore_fishery: Offshore Fishery
+    offshore_fishery_desc: Organized offshore fishing fleets use herring busses, provisioned bank schooners, and later steam trawlers to work richer waters beyond the local coast. The larger crews and fleets raise catch throughput, but salt, provisions, fuel, and gear keep returns modest.
+    pp_offshore_fishery_base_catch: Offshore Waters
+    pp_offshore_fishery_no_offshore_fleet: No Offshore Fleet
+    pp_offshore_fishery_herring_busses: Herring Busses
+    pp_offshore_fishery_distant_water_schooners: Distant-Water Schooners
+    pp_offshore_fishery_steam_trawlers: Steam Trawlers
+    pp_offshore_fishery_price: Offshore Fishery Price
+icon:
+  source_png: ../assets/icons/offshore_fishery.png
+  output_dds: offshore_fishery.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for an offshore fishery, transparent background. Center a larger historical fishing fleet with a herring buss, distant-water schooner, trawl gear, salt barrels, provision crates, and choppy open sea. Use readable painterly shapes, softly outlined historical UI art, muted sea blues, weathered wood, tan nets, silver fish, white salt sacks, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  production_methods:
+    pp_offshore_fishery_base_catch:
+      production_efficiency: 1.00
+    pp_offshore_fishery_herring_busses:
+      production_efficiency: 1.15
+    pp_offshore_fishery_distant_water_schooners:
+      production_efficiency: 1.05
+    pp_offshore_fishery_steam_trawlers:
+      production_efficiency: 1.05
+      allow_rules:
+        input_throughput: Steam trawling moved to Revolutions as a gating-only change; keep the existing method economics until the offshore fishery rebalance.
+        amortization_months: Pre-steel tools keep steam trawlers available before steel mills; revisit the method economics during the offshore fishery rebalance.

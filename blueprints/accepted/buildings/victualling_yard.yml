@@ -1,0 +1,393 @@
+﻿version: 2
+tag: victualling_yard
+upgrade_chain:
+  family: cookery
+  tier: 1
+  previous: cookery
+  next: null
+  unlock_advance: food_advance_absolutism
+building:
+  key: victualling_yard
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_victualling_yard_khichdi
+        - pp_victualling_yard_fish_congee
+        - pp_victualling_yard_livestock_pottage
+        - pp_victualling_yard_mediterranean_fish
+        - pp_victualling_yard_mutton_and_pease
+        - pp_victualling_yard_surstromming
+        - pp_victualling_yard_pozole
+        - pp_victualling_yard_pemmican
+        - pp_victualling_yard_labskaus
+        - pp_victualling_yard_meat_tajine
+        - pp_victualling_yard_saltfish_porridge
+        - pp_victualling_yard_ika_mata
+        - pp_victualling_yard_kheer
+        - pp_victualling_yard_honey_gruel
+        - pp_victualling_yard_boreal_hunter_stew
+    - name: slot_1
+      methods:
+        - pp_victualling_yard_well_water
+        - pp_victualling_yard_beer
+        - pp_victualling_yard_wine
+        - pp_victualling_yard_liquor
+        - pp_victualling_yard_chocolate
+        - pp_victualling_yard_coffee
+        - pp_victualling_yard_tea
+    - name: slot_2
+      methods:
+        - pp_victualling_yard_no_packaging
+        - pp_victualling_yard_pottery_jars
+        - pp_victualling_yard_coopered_barrels
+        - pp_victualling_yard_tin_cans
+  possible_production_methods: []
+  body: |2-
+    	is_foreign = no
+    	max_levels = cookery_max_level
+    	pop_type = laborers
+    	employment_size = 5
+    	category = consumer_goods_category
+    	icon = victualling_yard
+    	obsolete = cookery
+    	rural_settlement = yes
+    	town = yes
+    	city = yes
+    	build_time = workshop_build_time
+    	construction_demand = workshop_construction
+    	ai_forbid_shutdown = no
+    	forbidden_for_estates = no
+    	important_for_AI = yes
+    	can_close = yes
+    	# ==========================================
+    	# 1. PREPARED VICTUALS (pick ONE)
+    	# - Main food preparations
+    	# ==========================================
+    unique_production_methods = {
+    		# --- ASIA ---
+    		pp_victualling_yard_khichdi = {
+    			rice = 8.25
+    			legumes = 7.025
+    			pepper = 0.25
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_fish_congee = { # Adjusted: Swapped game for fish to match the name and Asian RGOs
+    			rice = 8.25
+    			fish = 7.025
+    			pepper = 0.25
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    
+    		# --- EUROPE ---
+    		pp_victualling_yard_livestock_pottage = {
+    			wheat = 8
+    			livestock = 5.75
+    			legumes = 1.625
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_mediterranean_fish = {
+    			fish = 12.5
+    			olives = 3.75
+    			wine = 0.5
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_mutton_and_pease = {
+    			wool = 8.875
+    			legumes = 4.2
+    			salt = 0.5
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_surstromming = {
+    			fish = 11.7
+    			millet = 1.175
+    			salt = 1.175
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    
+    		# --- AMERICA ---
+    		pp_victualling_yard_pozole = {
+    			maize = 5.15
+    			wild_game = 6.5
+    			chili = 1
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_pemmican = { # Adjusted: Flipped livestock and game to match American RGO dominance
+    			wild_game = 11.25
+    			livestock = 2.35
+    			fruit = 2.5
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_labskaus = { # Note: Requires potato, which only exists in America in your data!
+    			potato = 2.35
+    			fish = 3.75
+    			livestock = 7.475
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    
+    		# --- AFRICA (NEW) ---
+    		pp_victualling_yard_meat_tajine = { # Uses Africa's massive livestock, fruit, and saffron RGOs
+    			livestock = 8.75
+    			fruit = 4
+    			saffron = 0.375
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_saltfish_porridge = { # Also fits Africa/Middle East perfectly
+    			millet = 6.5
+    			fish = 9.35
+    			salt = 0.5
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    
+    		# --- OCEANIA (NEW) ---
+    		pp_victualling_yard_ika_mata = { # Capitalizes on Oceania's massive 18.9 fish and 11.7 fruit RGOs
+    			fish = 10
+    			fruit = 6.25
+    			salt = 0.25
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    
+    		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
+    		pp_victualling_yard_kheer = { # Sugar-led; primary fantasy SA / NA / ME; valid anywhere with sugar + starch + livestock
+    			rice = 8.25
+    			sugar = 0.75
+    			livestock = 4.5
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_honey_gruel = {
+    			wheat = 6
+    			fruit = 3.975
+    			beeswax = 4.5
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_boreal_hunter_stew = { # Fur belt: North Asia, North America, Eastern Europe â€” game stew; fur = trapping economy
+    			fur = 5.75
+    			millet = 5
+    			salt = 0.5
+    			produced = victuals
+    			output = 4.125
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    	}
+    	# ==========================================
+    	# 2. TABLE BEVERAGES (pick ONE)
+    	# - Baseline: well water (no trade goods; EU5 has no water good)
+    	# - Upgrades: one drink good each (weights sum prior two-input recipes for similar cost)
+    	# ==========================================
+    	unique_production_methods = {
+    		pp_victualling_yard_well_water = {
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_beer = {
+    			beer = 4.875
+    			produced = victuals
+    			output = 2
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_wine = {
+    			wine = 5.25
+    			produced = victuals
+    			output = 2
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_liquor = {
+    			liquor = 4.125
+    			produced = victuals
+    			output = 2
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_chocolate = {
+    			cocoa = 2
+    			produced = victuals
+    			output = 2
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_coffee = {
+    			coffee = 2.625
+    			produced = victuals
+    			output = 2
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_tea = {
+    			tea = 3.375
+    			produced = victuals
+    			output = 2
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    	}
+    	# ==========================================
+    	# 3. PACKING (pick ONE)
+    	# - One packaging good per tier (or none)
+    	# ==========================================
+    	unique_production_methods = {
+    		pp_victualling_yard_no_packaging = {
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_pottery_jars = {
+    			pottery = 7
+    			produced = victuals
+    			output = 1.25
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_coopered_barrels = {
+    			furniture = 2.25
+    			produced = victuals
+    			output = 1.25
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    		pp_victualling_yard_tin_cans = {
+    			steel = 2.5
+    			produced = victuals
+    			output = 2.5
+    			debug_max_profit = 0
+    			category = building_maintenance
+    		}
+    	}
+    	modifier = {
+    		local_victuals_output_modifier = 0.00
+    	}
+localization:
+  entries:
+    victualling_yard: Victualling Yard
+    victualling_yard_desc: Victualling yards organize larger labor crews, stores, kettles, cooperage, and ration sheds to turn regional staples into durable [ShowGoodsName('victuals')|e] at city and army-supply scale.
+    victualling_yard_slot_0: Prepared Victuals
+    victualling_yard_slot_1: Ration Drink
+    victualling_yard_slot_2: Packing
+    pp_victualling_yard_beer: Beer
+    pp_victualling_yard_boreal_hunter_stew: Boreal Hunter's Stew
+    pp_victualling_yard_chocolate: Chocolate
+    pp_victualling_yard_coffee: Coffee
+    pp_victualling_yard_coopered_barrels: Coopered Barrels
+    pp_victualling_yard_fish_congee: Fish Congee
+    pp_victualling_yard_honey_gruel: Honeyed Gruel
+    pp_victualling_yard_ika_mata: Ika Mata
+    pp_victualling_yard_kheer: Kheer
+    pp_victualling_yard_khichdi: Khichdi
+    pp_victualling_yard_labskaus: Labskaus
+    pp_victualling_yard_liquor: Liquor
+    pp_victualling_yard_livestock_pottage: Commoners Stew
+    pp_victualling_yard_meat_tajine: Tajine
+    pp_victualling_yard_mediterranean_fish: Bouillabaisse
+    pp_victualling_yard_mutton_and_pease: Mutton and Pease
+    pp_victualling_yard_no_packaging: No Packing
+    pp_victualling_yard_pemmican: Pemmican
+    pp_victualling_yard_pottery_jars: Pottery Jars
+    pp_victualling_yard_pozole: Pozole
+    pp_victualling_yard_saltfish_porridge: Saltfish Porridge
+    pp_victualling_yard_surstromming: SurstrÃ¶mming
+    pp_victualling_yard_tea: Tea
+    pp_victualling_yard_tin_cans: Tin Cans
+    pp_victualling_yard_well_water: Well Water
+    pp_victualling_yard_wine: Wine
+icon:
+  source_png: ../assets/icons/victualling_yard.png
+  output_dds: victualling_yard.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a victualling yard, transparent background. Center a large dockside provisioning complex with timber and stone storehouses, stacked barrels, crates, grain and salt sacks, hanging smoked meat, hardtack boxes, loading tackle, a pier edge, and a ship mast. Make it clearly larger, more maritime, and more logistical than a small cookery. Use readable painterly shapes, softly outlined historical UI art, weathered wood, muted stone, tan canvas, barrel browns, small sea-blue accents, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  allow_rules:
+    input_throughput: Existing accepted upgraded cookery intentionally preserves the base recipe economics at larger laborer scale; revisit during a full food-industry rebalance.
+    output_throughput: Existing accepted upgraded cookery intentionally preserves the base recipe economics at larger laborer scale; revisit during a full food-industry rebalance.
+    profit_percent: Existing accepted balance predates the global profit-margin band; upgraded cookery intentionally preserves the base recipe economics.
+  production_methods:
+    pp_victualling_yard_khichdi:
+      production_efficiency: 1.15
+    pp_victualling_yard_fish_congee:
+      production_efficiency: 1.15
+    pp_victualling_yard_livestock_pottage:
+      production_efficiency: 1.15
+    pp_victualling_yard_mediterranean_fish:
+      production_efficiency: 1.15
+    pp_victualling_yard_mutton_and_pease:
+      production_efficiency: 1.15
+    pp_victualling_yard_surstromming:
+      production_efficiency: 1.15
+    pp_victualling_yard_pozole:
+      production_efficiency: 1.15
+    pp_victualling_yard_pemmican:
+      production_efficiency: 1.15
+    pp_victualling_yard_labskaus:
+      production_efficiency: 1.15
+    pp_victualling_yard_meat_tajine:
+      production_efficiency: 1.15
+    pp_victualling_yard_saltfish_porridge:
+      production_efficiency: 1.15
+    pp_victualling_yard_ika_mata:
+      production_efficiency: 1.15
+    pp_victualling_yard_kheer:
+      production_efficiency: 1.15
+    pp_victualling_yard_honey_gruel:
+      production_efficiency: 1.15
+    pp_victualling_yard_boreal_hunter_stew:
+      production_efficiency: 1.15
+    pp_victualling_yard_beer:
+      production_efficiency: 1.00
+    pp_victualling_yard_wine:
+      production_efficiency: 1.05
+    pp_victualling_yard_liquor:
+      production_efficiency: 1.00
+    pp_victualling_yard_chocolate:
+      production_efficiency: 1.05
+    pp_victualling_yard_coffee:
+      production_efficiency: 1.05
+    pp_victualling_yard_tea:
+      production_efficiency: 1.05
+    pp_victualling_yard_pottery_jars:
+      production_efficiency: 1.00
+    pp_victualling_yard_coopered_barrels:
+      production_efficiency: 1.00
+    pp_victualling_yard_tin_cans:
+      production_efficiency: 1.00

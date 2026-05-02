@@ -1,9 +1,10 @@
 ﻿# >>> eu5-building-pipeline:cookery:advancement
 cookery_tin_cans_advance = {
-	age = age_6_revolutions
-	unlock_production_method = pp_cookery_tin_cans
-	requires = steel_mill_advance
-	icon = cookery_tin_cans_advance
-	ai_weight = { add = 150 }
+age = age_6_revolutions
+unlock_production_method = pp_cookery_tin_cans
+unlock_production_method = pp_victualling_yard_tin_cans
+requires = steel_mill_advance
+icon = cookery_tin_cans_advance
+ai_weight = { add = 150 }
 }
 # <<< eu5-building-pipeline:cookery:advancement

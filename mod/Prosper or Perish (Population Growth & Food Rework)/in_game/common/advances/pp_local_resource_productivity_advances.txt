@@ -111,6 +111,12 @@ REPLACE:coal_improvements_absolutism = {
 	unlock_building = coal_mine_improved
 }
 
+REPLACE:coal_improvements_revolutions = {
+	age = age_6_revolutions
+	requires = construction_speed_revolutions
+	unlock_building = coal_mine_revolutions
+}
+
 REPLACE:saiger_process_discovery = {
 	age = age_3_discovery
 	icon = serbian_mining
@@ -126,4 +132,17 @@ REPLACE:lead_ore_dressing = {
 	requires = manufactories_advance
 	global_lead_output_modifier = 0.25
 	unlock_building = lead_mine_improved
+}
+
+REPLACE:bole_smelting = {
+	age = age_4_reformation
+	requires = global_trade_advance
+	unlock_building = lead_mine_bole_smelting
+}
+
+REPLACE:cupola_smelting = {
+	age = age_6_revolutions
+	icon = serbian_mining
+	requires = hot_blast_furnace
+	unlock_building = lead_mine_cupola_smelting
 }

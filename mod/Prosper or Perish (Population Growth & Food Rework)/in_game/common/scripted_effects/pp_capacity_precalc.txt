@@ -176,11 +176,5 @@ pp_precalculate_building_capacities = {
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = -2 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 4 }
 		}
-
-		# --- COASTAL BONUS ---
-		if = {
-			limit = { is_coastal = yes }
-			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 10 }
-		}
 	}
 }

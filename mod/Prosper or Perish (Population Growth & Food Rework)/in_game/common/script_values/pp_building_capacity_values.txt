@@ -245,10 +245,6 @@ pp_fishing_village_capacity_value = {
 		limit = { is_adjacent_to_lake = yes }
 		add = 3
 	}
-	if = {
-		limit = { is_coastal = yes }
-		add = 5
-	}
 
 	# RGO Match Bonus (is_ownable excludes wasteland/ocean; ownable locations have valid raw_material)
 	if = {

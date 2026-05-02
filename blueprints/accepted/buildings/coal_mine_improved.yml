@@ -4,7 +4,7 @@ upgrade_chain:
   family: coal_mine
   tier: 1
   previous: coal_mine
-  next: null
+  next: coal_mine_revolutions
   unlock_advance: coal_improvements_absolutism
 building:
   key: coal_mine_improved

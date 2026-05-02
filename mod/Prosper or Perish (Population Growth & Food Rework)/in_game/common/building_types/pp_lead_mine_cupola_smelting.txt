@@ -1,0 +1,65 @@
+﻿# >>> eu5-building-pipeline:lead_mine_cupola_smelting:building
+lead_mine_cupola_smelting = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 5
+price = pp_lead_mine_cupola_smelting_price
+category = rgo_building_category
+icon = lead_mine_cupola_smelting
+rural_settlement = yes
+town = yes
+city = yes
+obsolete = lead_mine_improved
+build_time = manufactory_build_time
+
+location_potential = {
+    raw_material = goods:lead
+}
+
+construction_demand = manufactory_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_lead_mine_cupola_base_lead = {
+        produced = lead
+        output = 0.38
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_lead_mine_cupola_no_primary = {
+        category = building_maintenance
+    }
+    pp_lead_mine_cupola_lead = {
+        lumber = 1.10
+        tools = 2.65
+        beeswax = 0.30
+        produced = lead
+        output = 4.75
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_lead_mine_cupola_no_secondary = {
+        category = building_maintenance
+    }
+    pp_lead_mine_cupola_silver = {
+        lumber = 0.16
+        tools = 0.12
+        lead = 0.10
+        produced = silver
+        output = 0.08
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:lead_mine_cupola_smelting:building

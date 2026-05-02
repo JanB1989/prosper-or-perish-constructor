@@ -3,7 +3,7 @@ ocean_fishery = {
 is_foreign = no
 max_levels = fishing_village_max_level
 pop_type = laborers
-employment_size = 5
+employment_size = 3
 price = pp_ocean_fishery_price
 category = rgo_building_category
 icon = ocean_fishery
@@ -25,7 +25,7 @@ can_close = yes
 unique_production_methods = {
     pp_ocean_fishery_base_catch = {
         produced = fish
-        output = 0.10
+        output = 0.30
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -35,52 +35,20 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_ocean_fishery_coastal_boats = {
-        lumber = 0.10
-        salt = 0.05
+        lumber = 0.81
+        salt = 0.405
         produced = fish
-        output = 0.25
-        debug_max_profit = 0
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
-    pp_ocean_fishery_no_offshore_fleet = {
-        category = building_maintenance
-    }
-    pp_ocean_fishery_herring_busses = {
-        lumber = 0.20
-        fiber_crops = 0.12
-        salt = 0.20
-        produced = fish
-        output = 0.45
-        debug_max_profit = 0
-        category = building_maintenance
-    }
-    pp_ocean_fishery_distant_water_schooners = {
-        naval_supplies = 0.30
-        victuals = 0.18
-        salt = 0.25
-        produced = fish
-        output = 0.60
-        debug_max_profit = 0
-        category = building_maintenance
-    }
-    pp_ocean_fishery_steam_trawlers = {
-        naval_supplies = 0.45
-        coal = 0.35
-        steel = 0.15
-        produced = fish
-        output = 1.20
+        output = 3.27
         debug_max_profit = 0
         category = building_maintenance
     }
 }
 
 modifier = {
-    local_merchant_capacity = 0.20
-    local_maritime_presence = 0.02
-    harbor_suitability = 0.02
-    local_sailors = 0.002
+    local_merchant_capacity = 0.12
+    local_maritime_presence = 0.015
+    harbor_suitability = 0.01
+    local_sailors = 0.0015
 }
 }
 # <<< eu5-building-pipeline:ocean_fishery:building

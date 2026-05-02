@@ -1,0 +1,60 @@
+﻿# >>> eu5-building-pipeline:lumber_mill_improved:building
+lumber_mill_improved = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 6
+price = pp_lumber_mill_improved_price
+category = rgo_building_category
+icon = lumber_mill_improved
+rural_settlement = yes
+town = yes
+city = yes
+obsolete = lumber_mill
+build_time = workshop_build_time
+
+location_potential = {
+    OR = {
+        vegetation = woods
+        vegetation = forest
+        vegetation = farmland
+        vegetation = jungle
+    }
+}
+
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_lumber_mill_improved_managed_stands = {
+        produced = lumber
+        output = 0.45
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_lumber_mill_improved_no_primary = {
+        category = building_maintenance
+    }
+    pp_lumber_mill_improved_forest_ordinances = {
+        produced = lumber
+        output = 7.20
+        tools = 1.85
+        horses = 1.15
+        victuals = 0.75
+        paper = 0.10
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_build_buildings_cost = -0.02
+    local_migration_attraction = 0.03
+    local_population_growth = -0.0001
+}
+}
+# <<< eu5-building-pipeline:lumber_mill_improved:building

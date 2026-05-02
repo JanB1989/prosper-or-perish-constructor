@@ -189,6 +189,7 @@ TRY_INJECT:food_advance_reformation = {
 }
 # food_advance_absolutism: Norfolk Four-Course, Seed Drill, Scientific Animal Husbandry
 TRY_INJECT:food_advance_absolutism = {
+	unlock_building = victualling_yard
 	global_peasants_food_consumption = -0.03
 	global_food_capacity_modifier = 0.12
 	global_monthly_food_modifier = -0.10

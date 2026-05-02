@@ -1,0 +1,257 @@
+﻿# >>> eu5-building-pipeline:victualling_yard:building
+victualling_yard = {
+	is_foreign = no
+	max_levels = cookery_max_level
+	pop_type = laborers
+	employment_size = 5
+	category = consumer_goods_category
+	icon = victualling_yard
+	obsolete = cookery
+	rural_settlement = yes
+	town = yes
+	city = yes
+	build_time = workshop_build_time
+	construction_demand = workshop_construction
+	ai_forbid_shutdown = no
+	forbidden_for_estates = no
+	important_for_AI = yes
+	can_close = yes
+	# ==========================================
+	# 1. PREPARED VICTUALS (pick ONE)
+	# - Main food preparations
+	# ==========================================
+unique_production_methods = {
+		# --- ASIA ---
+		pp_victualling_yard_khichdi = {
+			rice = 8.25
+			legumes = 7.025
+			pepper = 0.25
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_fish_congee = { # Adjusted: Swapped game for fish to match the name and Asian RGOs
+			rice = 8.25
+			fish = 7.025
+			pepper = 0.25
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+
+		# --- EUROPE ---
+		pp_victualling_yard_livestock_pottage = {
+			wheat = 8
+			livestock = 5.75
+			legumes = 1.625
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_mediterranean_fish = {
+			fish = 12.5
+			olives = 3.75
+			wine = 0.5
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_mutton_and_pease = {
+			wool = 8.875
+			legumes = 4.2
+			salt = 0.5
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_surstromming = {
+			fish = 11.7
+			millet = 1.175
+			salt = 1.175
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+
+		# --- AMERICA ---
+		pp_victualling_yard_pozole = {
+			maize = 5.15
+			wild_game = 6.5
+			chili = 1
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_pemmican = { # Adjusted: Flipped livestock and game to match American RGO dominance
+			wild_game = 11.25
+			livestock = 2.35
+			fruit = 2.5
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_labskaus = { # Note: Requires potato, which only exists in America in your data!
+			potato = 2.35
+			fish = 3.75
+			livestock = 7.475
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+
+		# --- AFRICA (NEW) ---
+		pp_victualling_yard_meat_tajine = { # Uses Africa's massive livestock, fruit, and saffron RGOs
+			livestock = 8.75
+			fruit = 4
+			saffron = 0.375
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_saltfish_porridge = { # Also fits Africa/Middle East perfectly
+			millet = 6.5
+			fish = 9.35
+			salt = 0.5
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+
+		# --- OCEANIA (NEW) ---
+		pp_victualling_yard_ika_mata = { # Capitalizes on Oceania's massive 18.9 fish and 11.7 fruit RGOs
+			fish = 10
+			fruit = 6.25
+			salt = 0.25
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+
+		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
+		pp_victualling_yard_kheer = { # Sugar-led; primary fantasy SA / NA / ME; valid anywhere with sugar + starch + livestock
+			rice = 8.25
+			sugar = 0.75
+			livestock = 4.5
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_honey_gruel = {
+			wheat = 6
+			fruit = 3.975
+			beeswax = 4.5
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_boreal_hunter_stew = { # Fur belt: North Asia, North America, Eastern Europe â€” game stew; fur = trapping economy
+			fur = 5.75
+			millet = 5
+			salt = 0.5
+			produced = victuals
+			output = 4.125
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+	}
+	# ==========================================
+	# 2. TABLE BEVERAGES (pick ONE)
+	# - Baseline: well water (no trade goods; EU5 has no water good)
+	# - Upgrades: one drink good each (weights sum prior two-input recipes for similar cost)
+	# ==========================================
+	unique_production_methods = {
+		pp_victualling_yard_well_water = {
+			category = building_maintenance
+		}
+		pp_victualling_yard_beer = {
+			beer = 4.875
+			produced = victuals
+			output = 2
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_wine = {
+			wine = 5.25
+			produced = victuals
+			output = 2
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_liquor = {
+			liquor = 4.125
+			produced = victuals
+			output = 2
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_chocolate = {
+			cocoa = 2
+			produced = victuals
+			output = 2
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_coffee = {
+			coffee = 2.625
+			produced = victuals
+			output = 2
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_tea = {
+			tea = 3.375
+			produced = victuals
+			output = 2
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+	}
+	# ==========================================
+	# 3. PACKING (pick ONE)
+	# - One packaging good per tier (or none)
+	# ==========================================
+	unique_production_methods = {
+		pp_victualling_yard_no_packaging = {
+			category = building_maintenance
+		}
+		pp_victualling_yard_pottery_jars = {
+			pottery = 7
+			produced = victuals
+			output = 1.25
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_coopered_barrels = {
+			furniture = 2.25
+			produced = victuals
+			output = 1.25
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+		pp_victualling_yard_tin_cans = {
+			steel = 2.5
+			produced = victuals
+			output = 2.5
+			debug_max_profit = 0
+			category = building_maintenance
+		}
+	}
+	modifier = {
+		local_victuals_output_modifier = 0.00
+	}
+}
+# <<< eu5-building-pipeline:victualling_yard:building

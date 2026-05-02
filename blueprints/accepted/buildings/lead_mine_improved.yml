@@ -2,9 +2,9 @@
 tag: lead_mine_improved
 upgrade_chain:
   family: lead_mine
-  tier: 1
-  previous: lead_mine
-  next: null
+  tier: 2
+  previous: lead_mine_bole_smelting
+  next: lead_mine_cupola_smelting
   unlock_advance: lead_ore_dressing
 building:
   key: lead_mine_improved
@@ -34,7 +34,7 @@ building:
     rural_settlement = yes
     town = yes
     city = yes
-    obsolete = lead_mine
+    obsolete = lead_mine_bole_smelting
     build_time = workshop_build_time
 
     location_potential = {

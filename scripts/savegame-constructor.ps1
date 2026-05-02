@@ -6,6 +6,7 @@ Push-Location $repoRoot
 try {
     Write-Host "Exporting latest EU5 savegame facts and savegame explorer..."
     uv run eu5-orchestrator savegame --project constructor.toml
+    & .\scripts\publish-docs-examples.ps1 -Examples savegame_explorer.html
 } finally {
     Pop-Location
 }

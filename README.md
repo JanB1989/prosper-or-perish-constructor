@@ -9,13 +9,14 @@ ignored artifact folders.
 
 ## Example Graphs
 
-Curated example graph snapshots are published from the orchestrator docs site:
+Curated example graph snapshots are published from this constructor repo's docs site:
 
-- [Goods Flow Explorer](https://janb1989.github.io/eu5-mod-orchestrator/examples/goods_flow_explorer.html)
-- [Savegame Market Explorer](https://janb1989.github.io/eu5-mod-orchestrator/examples/savegame_explorer.html)
+- [Goods Flow Explorer](https://janb1989.github.io/prosper-or-perish-constructor/examples/goods_flow_explorer.html)
+- [Savegame Market Explorer](https://janb1989.github.io/prosper-or-perish-constructor/examples/savegame_explorer.html)
 
-Generated local graph outputs stay ignored under `graphs/`; the orchestrator `docs/examples/`
-files are the public demo snapshots.
+Generated local graph outputs stay ignored under `graphs/`; committed `docs/examples/` files are
+the public demo snapshots served by GitHub Pages. Run `.\scripts\publish-docs-examples.ps1` after
+regenerating graphs to refresh the hosted copies before pushing.
 
 ## Setup
 

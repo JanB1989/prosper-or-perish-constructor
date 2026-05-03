@@ -16,6 +16,7 @@ from prosper_or_perish_population_capacity.calibration import (
 )
 from prosper_or_perish_population_capacity.config import COLLECTIONS, load_pipeline_config
 from prosper_or_perish_population_capacity.extraction import STATIC_MODIFIER_BLOCK
+from prosper_or_perish_population_capacity.geometry_calibration import fit_transform, load_control_points
 from prosper_or_perish_population_capacity.merge import load_collection, profile_from
 from prosper_or_perish_population_capacity.render import planned_population_capacity_writes
 
@@ -26,6 +27,7 @@ LABELING_ROOT = ROOT.parent / "ProsperOrPerishLabelingPipeline"
 LABELING_BASELINE = LABELING_ROOT / "base_data" / "locations_with_raw_material.parquet"
 LOCATION_MODIFIERS = MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifiers.txt"
 SATURATION_ANCHORS = ROOT / "population_capacity_saturation_anchors.toml"
+CONTROL_POINTS = ROOT / "population_capacity_control_points.csv"
 CAPACITY_EFFECT_BLOCKS = (
     "TRY_REPLACE:available_free_land",
     "TRY_REPLACE:abundant_free_land",
@@ -416,6 +418,26 @@ def test_location_geometry_inputs_are_available_for_external_target_mapping() ->
     assert baseline["named_location_hex"].n_unique() == baseline["location_tag"].n_unique()
     assert baseline["location_size"].min() > 0
     assert {"soil_quality", "has_river", "is_adjacent_to_lake"}.issubset(baseline.columns)
+
+
+def test_population_capacity_control_points_match_known_locations_and_fit_existing_geometry() -> None:
+    control_points = load_control_points(CONTROL_POINTS)
+    baseline = pl.read_parquet(LABELING_BASELINE)
+    missing = control_points.join(baseline.select("location_tag"), on="location_tag", how="anti")
+
+    assert control_points.height >= 60
+    assert missing.is_empty()
+
+    geometry_path = ROOT / "artifacts" / "data" / "population_capacity" / "location_geometry.parquet"
+    if not geometry_path.exists():
+        return
+    geometry = pl.read_parquet(geometry_path)
+    _transform, residuals = fit_transform(geometry, control_points)
+
+    assert residuals["residual_degrees"].median() <= 2.5
+    assert residuals["residual_degrees"].quantile(0.95) <= 6.0
+    for tag in ("paris", "cairo", "constantinople", "hangzhou", "kyoto", "daha", "tenochtitlan", "quito"):
+        assert residuals.filter(pl.col("location_tag") == tag)["residual_degrees"].item() <= 6.0
 
 
 def _labeler_goods() -> tuple[str, ...]:

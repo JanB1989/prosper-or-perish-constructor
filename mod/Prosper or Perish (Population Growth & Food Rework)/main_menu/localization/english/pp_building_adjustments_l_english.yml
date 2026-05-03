@@ -460,8 +460,10 @@ Aggregated from vegetation, topography, climate, water, and labeling sources."
 
   # Population Capacity map mode
   mapmode_pp_population_capacity_name: "Population Capacity"
-  MAPMODE_PP_POPULATION_CAPACITY: "#T $mapmode_pp_population_capacity_name$#!\nColors [locations|e] by their [population_capacity|e]. Green = high capacity, red = low capacity."
-  MAPMODE_PP_POPULATION_CAPACITY_TT_LAND: "[ROOT.GetLocation.GetName] has a [population_capacity|e] of [ROOT.GetLocation.GetModifierValue('local_population_capacity')|0]."
+  MAPMODE_PP_POPULATION_CAPACITY: "#T $mapmode_pp_population_capacity_name$#!\nColors owned and uncolonized [locations|e] by their [population_capacity|e]."
+  MAPMODE_PP_POPULATION_CAPACITY_LOW: "Low capacity"
+  MAPMODE_PP_POPULATION_CAPACITY_HIGH: "High capacity"
+  MAPMODE_PP_POPULATION_CAPACITY_TT_LAND: "[ROOT.GetLocation.GetName] has a [population_capacity|e] of [ROOT.GetLocation.GetModifierValue('local_population_capacity')|0]. Uncolonized land is included."
   MAPMODE_PP_POPULATION_CAPACITY_TT_WATER: "Sea/Lake [location|e] (no [population_capacity|e])"
 
   # Population Growth map mode

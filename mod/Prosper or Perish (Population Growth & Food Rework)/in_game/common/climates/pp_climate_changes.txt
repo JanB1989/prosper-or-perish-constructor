@@ -3,12 +3,15 @@
 TRY_INJECT:tropical = {
 	location_modifier = {
 		local_population_capacity_modifier = -0.5
+		local_monthly_development_modifier = -0.10
+		local_food_decay = 0.004
 	}
 }
 
 TRY_INJECT:subtropical = {
 	location_modifier = {
 		local_population_capacity_modifier = -1
+		local_food_decay = 0.002
 	}
 }
 
@@ -21,6 +24,7 @@ TRY_INJECT:oceanic = {
 TRY_INJECT:mediterranean = {
 	location_modifier = {
 		local_population_capacity_modifier = -1.5
+		local_food_decay = 0.002
 	}
 }
 

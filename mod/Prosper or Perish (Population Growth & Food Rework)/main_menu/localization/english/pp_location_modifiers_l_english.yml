@@ -1,3 +1,5 @@
 ﻿l_english:
- pp_location_modifiers_title: "Prosper or Perish per-location suitability"
- pp_location_modifiers_title_desc: "One static modifier per RGO location holding every injected local_<good>_output_modifier value.  20929 locations covered."
+  # Start generated location potential modifier help
+  pp_location_modifiers_title: "Prosper or Perish per-location suitability"
+  pp_location_modifiers_title_desc: "Population capacity and local output modifiers for this location are calculated from [pp_location_potential|e]."
+  # End generated location potential modifier help

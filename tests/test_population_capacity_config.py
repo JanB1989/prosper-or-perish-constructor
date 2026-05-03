@@ -26,6 +26,10 @@ MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 LABELING_ROOT = ROOT.parent / "ProsperOrPerishLabelingPipeline"
 LABELING_BASELINE = LABELING_ROOT / "base_data" / "locations_with_raw_material.parquet"
 LOCATION_MODIFIERS = MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifiers.txt"
+LOCATION_MODIFIER_LOCALIZATION = (
+    MOD_ROOT / "main_menu" / "localization" / "english" / "pp_location_modifiers_l_english.yml"
+)
+EUROPEDIA_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_europedia_l_english.yml"
 SATURATION_ANCHORS = ROOT / "population_capacity_saturation_anchors.toml"
 CONTROL_POINTS = ROOT / "population_capacity_control_points.csv"
 CAPACITY_EFFECT_BLOCKS = (
@@ -71,6 +75,9 @@ def test_population_capacity_config_loads() -> None:
     assert config.set_values["topography"]["mountains"]["local_population_capacity_modifier"] == 0.5
     assert config.set_values["climates"]["continental"]["local_population_capacity_modifier"] == -0.5
     assert "province_capital" not in config.set_values["static_modifiers"]
+    assert config.set_values["static_modifiers"]["building_levels"]["local_population_capacity"] == 0.1
+    assert config.set_values["static_modifiers"]["development"]["local_population_capacity"] == 0.25
+    assert config.set_values["static_modifiers"]["development"]["local_population_capacity_modifier"] == 0.02
     assert config.feature_capacity_adjustments.enabled is False
     assert config.feature_capacity_adjustments.removed_values["topography"]["flatland"]["local_population_capacity"] == 88
     assert config.feature_capacity_adjustments.vanilla_values["vegetation"]["farmland"]["local_population_capacity"] == 100
@@ -125,6 +132,46 @@ def test_population_capacity_config_plans_managed_outputs() -> None:
     assert "main_menu/common/static_modifiers/pp_population_capacity_static_modifiers.txt" not in paths
 
 
+def test_location_potential_help_localization_is_shared() -> None:
+    modifier_text = LOCATION_MODIFIER_LOCALIZATION.read_text(encoding="utf-8-sig")
+    europedia_text = EUROPEDIA_LOCALIZATION.read_text(encoding="utf-8-sig")
+
+    assert 'pp_location_modifiers_title: "Prosper or Perish per-location suitability"' in modifier_text
+    assert "pp_location_modifiers_title_desc:" in modifier_text
+    assert "[pp_location_potential|e]" in modifier_text
+    assert modifier_text.count("pp_location_modifiers_title:") == 1
+    assert modifier_text.count("pp_location_modifiers_title_desc:") == 1
+
+    assert 'game_concept_pp_location_potential: "Location Potential"' in europedia_text
+    assert "game_concept_pp_location_potential_desc:" in europedia_text
+    assert europedia_text.count("game_concept_pp_location_potential:") == 1
+    assert europedia_text.count("game_concept_pp_location_potential_desc:") == 1
+
+    required_terms = (
+        "Topography",
+        "Climate",
+        "Vegetation",
+        "River access",
+        "Lake access",
+        "Coastal access",
+        "Location RGO",
+        "Soil data",
+        "GAEZ crop potential and suitability maps",
+        "HYDE historical population coverage",
+        "Freshwater food support maps",
+        "Marine food support maps",
+        "Livestock food support maps",
+        "Plant food support maps",
+        "Wild subsistence support maps",
+        "Land-use confidence maps",
+        "Water confidence maps",
+        "Calibration and control-point data",
+    )
+    missing = [term for term in required_terms if term not in europedia_text]
+
+    assert not missing
+
+
 def test_set_values_are_written_in_place_for_dynamic_config() -> None:
     config = load_pipeline_config(ROOT / "population_capacity.toml")
     managed_names = _managed_set_value_output_names(config)
@@ -140,8 +187,17 @@ def test_set_values_are_written_in_place_for_dynamic_config() -> None:
 
     development = _object_block(_single_non_managed_owner("static_modifiers", "development", managed_names), "development")
     assert development is not None
+    assert _last_value(development, "local_population_capacity") == 0.25
+    assert _last_value(development, "local_population_capacity_modifier") == 0.02
     assert _last_value(development, "local_supply_limit_modifier") == 0.02
     assert _last_value(development, "local_migration_attraction") == 0.0025
+
+    building_levels = _object_block(
+        _single_non_managed_owner("static_modifiers", "building_levels", managed_names),
+        "building_levels",
+    )
+    assert building_levels is not None
+    assert _last_value(building_levels, "local_population_capacity") == 0.1
 
 
 def test_set_values_do_not_generate_managed_patch_blocks() -> None:
@@ -166,6 +222,8 @@ def test_configured_static_modifier_capacity_offsets_neutralize_vanilla_sum() ->
 
     for object_key, modifiers in config.set_values["static_modifiers"].items():
         for modifier_key, expected_value in modifiers.items():
+            if object_key in {"building_levels", "development"}:
+                continue
             assert expected_value < 0
             assert maps["static_modifiers"][object_key][modifier_key] == 0
 
@@ -176,11 +234,23 @@ def test_development_set_value_preserves_non_population_static_modifier_values()
     development = _entry_block(static_modifiers.entries, "development")
 
     assert development is not None
-    assert _last_value(development, "local_population_capacity") is None
+    assert _last_value(development, "local_population_capacity") == 0.25
+    assert _last_value(development, "local_population_capacity_modifier") == 0.02
     assert _last_value(development, "local_distance_from_capital_speed_propagation") == 0.005
     assert _last_value(development, "local_supply_limit_modifier") == 0.02
     assert _last_value(development, "blockade_force_required") == 0.01
     assert _last_value(development, "local_migration_attraction") == 0.0025
+
+
+def test_building_levels_set_value_adds_population_capacity() -> None:
+    profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
+    static_modifiers = load_collection(profile, "static_modifiers")
+    building_levels = _entry_block(static_modifiers.entries, "building_levels")
+
+    assert building_levels is not None
+    assert _last_value(building_levels, "local_population_capacity") == 0.1
+    assert _last_value(building_levels, "local_road_building_time") == 0.01
+    assert _last_value(building_levels, "local_build_new_buildings_cost") == 0.05
 
 
 def test_river_flowing_through_set_value_resolves_to_configured_modifier() -> None:
@@ -259,9 +329,7 @@ def test_static_feature_population_capacity_is_neutralized_in_merged_maps() -> N
         },
         "static_modifiers": {
             "coastal": ("local_population_capacity",),
-            "building_levels": ("local_population_capacity",),
             "total_population": ("local_population_capacity",),
-            "development": ("local_population_capacity",),
             "province_capital": ("local_population_capacity",),
             "river_flowing_through": ("local_population_capacity",),
             "adjacent_to_lake": ("local_population_capacity",),

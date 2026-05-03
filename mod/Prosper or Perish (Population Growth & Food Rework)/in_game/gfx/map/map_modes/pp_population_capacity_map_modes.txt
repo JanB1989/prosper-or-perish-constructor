@@ -1,6 +1,6 @@
 ﻿# Map mode for population capacity per location.
-# Green = high capacity, Red = low capacity.
-# Uses modifier:local_population_capacity (in 1k), scaled 0–500 for factor (0-1).
+# Green = high capacity, Red = low capacity. Uncolonized ownable land is included.
+# Uses modifier:local_population_capacity (in 1k), scaled 0-300 for factor (0-1).
 
 @zoom_step_near = 2
 @data_gradient_alpha_inside = 1
@@ -13,6 +13,7 @@
 @data_edge_color_mult = 0
 @data_before_lighting_blend = 0.5
 @data_after_lighting_blend = 0.5
+@pp_population_capacity_map_cap = 300
 
 # ~0.9% monthly local growth modifier (script fraction) — full gradient + stripe threshold (tune with balance).
 @pp_population_growth_cap_stripe = 0.009
@@ -23,23 +24,21 @@ pp_population_capacity = {
 			limit = { is_ownable = no }
 			value = rgb { 128 128 128 }
 		}
-		else_if = {
-			limit = { has_owner = yes }
+		else = {
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_LOW
 				max_color = define:NMapColors|MAP_COLOR_HIGH
 				factor = {
 					value = modifier:local_population_capacity
-					divide = 500
+					divide = @pp_population_capacity_map_cap
 					max = 1
+					min = 0
 				}
 			}
 		}
-		else = {
-			value = rgb { 128 128 128 }
-		}
 	}
-	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY" color = define:NMapColors|MAP_COLOR_HIGH }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_LOW" color = define:NMapColors|MAP_COLOR_LOW }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_HIGH" color = define:NMapColors|MAP_COLOR_HIGH }
 	tooltip_key = {
 		if = { limit = { is_land = yes } value = MAPMODE_PP_POPULATION_CAPACITY_TT_LAND }
 		else = { value = MAPMODE_PP_POPULATION_CAPACITY_TT_WATER }

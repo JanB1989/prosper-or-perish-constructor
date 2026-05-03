@@ -88,6 +88,13 @@ local_population_capacity = -50
 [set_values.static_modifiers.river_flowing_through]
 local_population_capacity_modifier = -0.10
 
+[set_values.static_modifiers.building_levels]
+local_population_capacity = 0.1
+
+[set_values.static_modifiers.development]
+local_population_capacity = 0.25
+local_population_capacity_modifier = 0.02
+
 [feature_capacity_adjustments]
 enabled = false
 

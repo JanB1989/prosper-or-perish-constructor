@@ -98,6 +98,7 @@ TRY_REPLACE:building_levels = {
 	local_trade_center_power = 0.0004
 	local_road_building_time = 0.01
 	local_build_new_buildings_cost = 0.05
+	local_population_capacity = 0.1
 }
 TRY_REPLACE:unsupported_building_levels = {
 	game_data = {
@@ -258,6 +259,8 @@ TRY_REPLACE:development = {
 	local_fish_output_modifier = 0.0025
 	local_wild_game_output_modifier = 0.0025
 	local_fur_output_modifier = 0.0025
+	local_population_capacity = 0.25
+	local_population_capacity_modifier = 0.02
 }
 TRY_REPLACE:minor_rebel_uprising = {
 	game_data = {

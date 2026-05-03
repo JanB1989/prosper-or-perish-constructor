@@ -49,6 +49,7 @@ building:
     	max_levels = cookery_max_level
     	pop_type = peasants
     	employment_size = 2
+    	price = pp_cookery_price
     	category = consumer_goods_category
     	icon = cookery
     	rural_settlement = yes
@@ -297,6 +298,10 @@ building:
     	modifier = {
     		local_victuals_output_modifier = 0.00
     	}
+prices:
+  - key: pp_cookery_price
+    body: |2-
+      {gold = 150}
 advancements:
   - key: cookery_tin_cans_advance
     body: |2-
@@ -310,6 +315,8 @@ localization:
   entries:
     cookery: Cookery
     cookery_desc: Cookeries turn local staples into durable [ShowGoodsName('victuals')|e], set a ration drink (well water by default, or costlier service), and pack rations in jars, barrels, or tin for garrisons, fleets, expeditions, and the local [ShowBuildingTypeName('victuals_market')|e].
+    MODIFIER_TYPE_DESC_pp_cookery_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('cookery')|e].
+    MODIFIER_TYPE_NAME_pp_cookery_price_cost_modifier: Cookery Cost
     cookery_slot_0: Prepared Victuals
     cookery_slot_1: Ration Drink
     cookery_slot_2: Packing
@@ -341,6 +348,7 @@ localization:
     pp_cookery_tin_cans: Tin Cans
     pp_cookery_well_water: Well Water
     pp_cookery_wine: Wine
+    pp_cookery_price: Cookery Price
 icon:
   source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/cookery.dds
   output_dds: cookery.dds

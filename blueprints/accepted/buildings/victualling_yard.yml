@@ -49,6 +49,7 @@ building:
     	max_levels = cookery_max_level
     	pop_type = laborers
     	employment_size = 5
+    	price = pp_victualling_yard_price
     	category = consumer_goods_category
     	icon = victualling_yard
     	obsolete = cookery
@@ -298,10 +299,16 @@ building:
     	modifier = {
     		local_victuals_output_modifier = 0.00
     	}
+prices:
+  - key: pp_victualling_yard_price
+    body: |2-
+      {gold = 225}
 localization:
   entries:
     victualling_yard: Victualling Yard
     victualling_yard_desc: Victualling yards organize larger labor crews, stores, kettles, cooperage, and ration sheds to turn regional staples into durable [ShowGoodsName('victuals')|e] at city and army-supply scale.
+    MODIFIER_TYPE_DESC_pp_victualling_yard_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('victualling_yard')|e].
+    MODIFIER_TYPE_NAME_pp_victualling_yard_price_cost_modifier: Victualling Yard Cost
     victualling_yard_slot_0: Prepared Victuals
     victualling_yard_slot_1: Ration Drink
     victualling_yard_slot_2: Packing
@@ -331,6 +338,7 @@ localization:
     pp_victualling_yard_tin_cans: Tin Cans
     pp_victualling_yard_well_water: Well Water
     pp_victualling_yard_wine: Wine
+    pp_victualling_yard_price: Victualling Yard Price
 icon:
   source_png: ../assets/icons/victualling_yard.png
   output_dds: victualling_yard.dds

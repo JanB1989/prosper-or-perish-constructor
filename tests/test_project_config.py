@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from eu5gameparser.domain.availability import annotate_building_data_availability
+from eu5gameparser.domain.eu5 import load_eu5_data
 from eu5_mod_orchestrator.blueprints import accepted_blueprint_files, validate_blueprint_file
 from eu5_mod_orchestrator.config import load_project_config
 from mod_injector.config import load_mod_injector_config
@@ -51,6 +53,28 @@ def test_constructor_config_loads() -> None:
 def test_accepted_blueprints_validate() -> None:
     for blueprint in accepted_blueprint_files(ROOT / "blueprints" / "accepted"):
         validate_blueprint_file(blueprint)
+
+
+def test_cookery_building_line_has_resolved_prices() -> None:
+    data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
+    buildings = {row["name"]: row for row in data.building_data.buildings.to_dicts()}
+
+    assert buildings["cookery"]["price"] == "pp_cookery_price"
+    assert buildings["cookery"]["price_gold"] == 150.0
+    assert buildings["victualling_yard"]["price"] == "pp_victualling_yard_price"
+    assert buildings["victualling_yard"]["price_gold"] == 225.0
+
+
+def test_farming_village_uses_baseline_building_price() -> None:
+    data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
+    annotated = annotate_building_data_availability(data.building_data, data.advancements)
+    buildings = {row["name"]: row for row in annotated.buildings.to_dicts()}
+
+    farming_village = buildings["farming_village"]
+    assert farming_village["price"] is None
+    assert farming_village["effective_price"] == "p_building_age_1_traditions"
+    assert farming_village["effective_price_gold"] == 50.0
+    assert farming_village["price_kind"] == "baseline_age"
 
 
 def test_labeling_output_modifier_config_loads_explicit_goods() -> None:

@@ -3,6 +3,8 @@
 # >>> eu5-building-pipeline:cookery:localization
   cookery: "Cookery"
   cookery_desc: "Cookeries turn local staples into durable [ShowGoodsName('victuals')|e], set a ration drink (well water by default, or costlier service), and pack rations in jars, barrels, or tin for garrisons, fleets, expeditions, and the local [ShowBuildingTypeName('victuals_market')|e]."
+  MODIFIER_TYPE_DESC_pp_cookery_price_cost_modifier: "Affects the cost of building a [ShowBuildingTypeName('cookery')|e]."
+  MODIFIER_TYPE_NAME_pp_cookery_price_cost_modifier: "Cookery Cost"
   cookery_slot_0: "Prepared Victuals"
   cookery_slot_1: "Ration Drink"
   cookery_slot_2: "Packing"
@@ -34,4 +36,5 @@
   pp_cookery_tin_cans: "Tin Cans"
   pp_cookery_well_water: "Well Water"
   pp_cookery_wine: "Wine"
+  pp_cookery_price: "Cookery Price"
 # <<< eu5-building-pipeline:cookery:localization

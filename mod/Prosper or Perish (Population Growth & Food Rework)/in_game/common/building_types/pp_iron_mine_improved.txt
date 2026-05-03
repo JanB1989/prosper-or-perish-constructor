@@ -35,11 +35,19 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_iron_mine_improved_iron = {
-        lumber = 1.306
-        tools = 1.383
-        beeswax = 0.307
+        lumber = 1.306 # timbering, dressing floors
+        tools = 1.383 # picks, pumps, stamps
+        beeswax = 0.307 # mine candles, seals
         produced = iron
         output = 2.25
+        category = building_maintenance
+    }
+    pp_iron_mine_improved_slitting_dressed_ore = {
+        lumber = 1.40 # timbering, bar racks
+        tools = 1.52 # slitting rolls, dressing tools
+        beeswax = 0.34 # candles, pump seals
+        produced = iron
+        output = 2.45
         category = building_maintenance
     }
 }
@@ -48,8 +56,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_iron_mine_improved_ochre = {
-        lumber = 0.15
-        tools = 0.10
+        lumber = 0.15 # washing troughs, racks
+        tools = 0.10 # sieves, shovels
         produced = dyes
         output = 0.15
         category = building_maintenance

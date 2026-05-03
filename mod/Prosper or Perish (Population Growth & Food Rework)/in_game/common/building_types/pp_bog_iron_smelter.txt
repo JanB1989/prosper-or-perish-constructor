@@ -36,7 +36,7 @@ location_potential = {
 
 unique_production_methods = {
     pp_bog_iron_maintenance = {
-        coal = 0.4
+        coal = 0.4 # charcoal, furnace fuel
         produced = iron
         output = 0.3
         debug_max_profit = 0.2

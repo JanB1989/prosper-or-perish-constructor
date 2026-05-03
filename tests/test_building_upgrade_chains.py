@@ -101,13 +101,12 @@ EXPECTED_CHAINS = {
     "iron_mine": [
         ("iron_mine", None),
         ("iron_mine_improved", "efficient_mining"),
+        ("iron_mine_deep", "slitting_mills"),
     ],
     "bog_iron_smelter": [
         ("bog_iron_smelter", None),
         ("bog_iron_smelter_blast_furnace", "blast_furnace"),
-        ("bog_iron_smelter_slitting_mills", "slitting_mills"),
         ("bog_iron_smelter_coke_blast_furnace", "coke_blast_furnace"),
-        ("bog_iron_smelter_hot_blast_furnace", "hot_blast_furnace"),
     ],
     "cookery": [
         ("cookery", None),
@@ -121,6 +120,11 @@ DEACTIVATED_MINING_VILLAGE_BLUEPRINTS = {
     "buildings/mining_village_slitting_mills.yml",
     "buildings/mining_village_coke_blast_furnace.yml",
     "buildings/mining_village_hot_blast_furnace.yml",
+}
+
+DEACTIVATED_BOG_IRON_BLUEPRINTS = {
+    "buildings/bog_iron_smelter_slitting_mills.yml",
+    "buildings/bog_iron_smelter_hot_blast_furnace.yml",
 }
 
 
@@ -230,6 +234,51 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
     assert "potential =" not in steam_block
 
 
+def test_rural_food_building_upgrade_chains_are_explicit() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+    expected_chains = {
+        "sheep_farms": [
+            ("sheep_farms", None),
+            ("enclosed_sheep_walks", "pp_enclosed_sheep_walks"),
+        ],
+        "farming_village": [
+            ("farming_village", None),
+            ("model_farm", "pp_model_farm"),
+        ],
+        "forest_village": [
+            ("forest_village", None),
+            ("managed_forest_village", "pp_managed_forest_village"),
+        ],
+        "fruit_orchard": [
+            ("fruit_orchard", None),
+            ("pomological_orchard", "pp_pomological_orchard"),
+        ],
+    }
+
+    for family, chain in expected_chains.items():
+        for tier, (key, unlock_advance) in enumerate(chain):
+            raw = _load_blueprint(key)
+
+            assert f"buildings/{key}.yml" in enabled
+            assert raw["tag"] == key
+            assert raw["building"]["key"] == key
+            assert raw.get("upgrade_chain") == {
+                "family": family,
+                "tier": tier,
+                "previous": chain[tier - 1][0] if tier > 0 else None,
+                "next": chain[tier + 1][0] if tier + 1 < len(chain) else None,
+                "unlock_advance": unlock_advance,
+            }
+
+            body = raw["building"]["body"]
+            if tier == 0:
+                assert "obsolete =" not in body
+            else:
+                previous = chain[tier - 1][0]
+                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+
+
 def test_game_start_never_places_offshore_fishery_directly_and_culls_invalid_locations() -> None:
     text = GAME_START_PATH.read_text(encoding="utf-8")
 
@@ -249,6 +298,16 @@ def test_mining_village_chain_is_deactivated() -> None:
 
     assert DEACTIVATED_MINING_VILLAGE_BLUEPRINTS.isdisjoint(enabled)
     assert "unlock_building = mining_village" not in advances
+
+
+def test_old_bog_iron_extra_tiers_are_deactivated() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+    advances = ADVANCES_PATH.read_text(encoding="utf-8")
+
+    assert DEACTIVATED_BOG_IRON_BLUEPRINTS.isdisjoint(enabled)
+    assert "unlock_building = bog_iron_smelter_slitting_mills" not in advances
+    assert "unlock_building = bog_iron_smelter_hot_blast_furnace" not in advances
 
 
 def test_coal_mine_tiers_are_coal_deposit_only() -> None:
@@ -276,7 +335,7 @@ def test_later_alum_modifier_advances_do_not_unlock_alum_buildings() -> None:
 
 
 def test_iron_mine_tiers_are_iron_deposit_only() -> None:
-    for key in ("iron_mine", "iron_mine_improved"):
+    for key in ("iron_mine", "iron_mine_improved", "iron_mine_deep"):
         body = _load_blueprint(key)["building"]["body"]
         assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:iron\s*\}", body)
 
@@ -388,10 +447,40 @@ def test_pan_amalgamation_unlocks_gold_and_mercury_upgrades() -> None:
 
 def test_smelting_advances_do_not_unlock_iron_mines() -> None:
     advances = ADVANCES_PATH.read_text(encoding="utf-8")
-    for advance in ("blast_furnace", "slitting_mills", "coke_blast_furnace", "hot_blast_furnace"):
+    for advance in ("blast_furnace", "coke_blast_furnace", "hot_blast_furnace"):
         block = _advance_block(advance, advances)
         assert "unlock_building = iron_mine" not in block
         assert "unlock_building = iron_mine_improved" not in block
+
+
+def test_slitting_mills_advances_iron_methods_and_deep_mine() -> None:
+    advances = ADVANCES_PATH.read_text(encoding="utf-8")
+    block = _advance_block("slitting_mills", advances)
+
+    assert re.search(r"^\s*unlock_building\s*=\s*iron_mine_deep\s*$", block, flags=re.M)
+    assert re.search(
+        r"^\s*unlock_production_method\s*=\s*pp_iron_mine_improved_slitting_dressed_ore\s*$",
+        block,
+        flags=re.M,
+    )
+    assert re.search(
+        r"^\s*unlock_production_method\s*=\s*pp_bog_iron_smelter_blast_furnace_finery\s*$",
+        block,
+        flags=re.M,
+    )
+    assert "unlock_building = bog_iron_smelter" not in block
+
+
+def test_hot_blast_unlocks_final_bog_iron_method_not_building() -> None:
+    advances = ADVANCES_PATH.read_text(encoding="utf-8")
+    block = _advance_block("hot_blast_furnace", advances)
+
+    assert re.search(
+        r"^\s*unlock_production_method\s*=\s*pp_bog_iron_smelter_hot_blast_refining_maintenance\s*$",
+        block,
+        flags=re.M,
+    )
+    assert "unlock_building = bog_iron_smelter_hot_blast_furnace" not in block
 
 
 def test_charcoal_buildings_exclude_coal_deposits() -> None:

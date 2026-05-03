@@ -4,7 +4,7 @@ upgrade_chain:
   family: bog_iron_smelter
   tier: 1
   previous: bog_iron_smelter
-  next: bog_iron_smelter_slitting_mills
+  next: bog_iron_smelter_coke_blast_furnace
   unlock_advance: blast_furnace
 building:
   key: bog_iron_smelter_blast_furnace
@@ -14,6 +14,7 @@ building:
     - name: slot_0
       methods:
         - pp_bog_iron_smelter_blast_furnace_maintenance
+        - pp_bog_iron_smelter_blast_furnace_finery
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -53,10 +54,18 @@ building:
 
     unique_production_methods = {
         pp_bog_iron_smelter_blast_furnace_maintenance = {
-            coal = 0.6
-            tools = 0.05
+            coal = 0.6 # charcoal, furnace fuel
+            tools = 0.05 # bloom breaking, tuyere upkeep
             produced = iron
             output = 0.55
+            category = building_maintenance
+        }
+        pp_bog_iron_smelter_blast_furnace_finery = {
+            coal = 0.72 # charcoal, finery heat
+            tools = 0.08 # hammers, furnace repairs
+            lumber = 0.08 # drying racks, frames
+            produced = iron
+            output = 0.80
             category = building_maintenance
         }
     }
@@ -72,8 +81,9 @@ localization:
     MODIFIER_TYPE_NAME_pp_bog_iron_smelter_blast_furnace_price_cost_modifier: Bog Iron Blast Furnace Cost
     bog_iron_smelter_blast_furnace_slot_0: Bog Iron Processing
     bog_iron_smelter_blast_furnace: Bog Iron Blast Furnace
-    bog_iron_smelter_blast_furnace_desc: An upgraded wetland ironworks using blast furnace equipment to increase bog iron throughput with more coal, tools, lumber, and organized labor.
+    bog_iron_smelter_blast_furnace_desc: An upgraded wetland ironworks using blast furnace equipment and finery practice to increase bog iron throughput without matching true ore mines.
     pp_bog_iron_smelter_blast_furnace_maintenance: Bog Iron Blast Furnace Processing
+    pp_bog_iron_smelter_blast_furnace_finery: Bog Iron Finery Hearths
     pp_bog_iron_smelter_blast_furnace_price: Bog Iron Blast Furnace Price
 icon:
   source_png: ../assets/icons/bog_iron_smelter_blast_furnace.png
@@ -90,3 +100,5 @@ evaluation:
   production_methods:
     pp_bog_iron_smelter_blast_furnace_maintenance:
       production_efficiency: 1.10
+    pp_bog_iron_smelter_blast_furnace_finery:
+      production_efficiency: 1.12

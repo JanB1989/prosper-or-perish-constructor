@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: sheep_farms
+upgrade_chain:
+  family: sheep_farms
+  tier: 0
+  previous: null
+  next: enclosed_sheep_walks
+  unlock_advance: null
 building:
   key: sheep_farms
   mode: REPLACE

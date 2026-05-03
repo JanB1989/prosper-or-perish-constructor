@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: fruit_orchard
+upgrade_chain:
+  family: fruit_orchard
+  tier: 0
+  previous: null
+  next: pomological_orchard
+  unlock_advance: null
 building:
   key: fruit_orchard
   mode: REPLACE

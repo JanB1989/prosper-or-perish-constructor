@@ -25,3 +25,11 @@ foreach ($example in $Examples) {
     Copy-Item -LiteralPath $source -Destination $destination -Force
     Write-Host "Updated docs/examples/$example"
 }
+
+$graphAssetsDir = Join-Path $graphsDir "assets"
+if (Test-Path -LiteralPath $graphAssetsDir) {
+    $exampleAssetsDir = Join-Path $examplesDir "assets"
+    New-Item -ItemType Directory -Force -Path $exampleAssetsDir | Out-Null
+    Copy-Item -Path (Join-Path $graphAssetsDir "*") -Destination $exampleAssetsDir -Recurse -Force
+    Write-Host "Updated docs/examples/assets"
+}

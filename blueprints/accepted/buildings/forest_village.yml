@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: forest_village
+upgrade_chain:
+  family: forest_village
+  tier: 0
+  previous: null
+  next: managed_forest_village
+  unlock_advance: null
 building:
   key: forest_village
   mode: REPLACE

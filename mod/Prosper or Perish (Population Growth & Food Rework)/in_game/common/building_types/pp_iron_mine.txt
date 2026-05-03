@@ -34,9 +34,9 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_iron_mine_iron = {
-        lumber = 0.591
-        tools = 0.666
-        beeswax = 0.148
+        lumber = 0.591 # pit props, sorting sheds
+        tools = 0.666 # picks, wedges, hammers
+        beeswax = 0.148 # candles, sealants
         produced = iron
         output = 1.15
         category = building_maintenance
@@ -47,8 +47,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_iron_mine_ochre = {
-        lumber = 0.12
-        tools = 0.08
+        lumber = 0.12 # washing troughs, racks
+        tools = 0.08 # sieves, shovels
         produced = dyes
         output = 0.12
         category = building_maintenance

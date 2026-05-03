@@ -37,10 +37,18 @@ location_potential = {
 
 unique_production_methods = {
     pp_bog_iron_smelter_blast_furnace_maintenance = {
-        coal = 0.6
-        tools = 0.05
+        coal = 0.6 # charcoal, furnace fuel
+        tools = 0.05 # bloom breaking, tuyere upkeep
         produced = iron
         output = 0.55
+        category = building_maintenance
+    }
+    pp_bog_iron_smelter_blast_furnace_finery = {
+        coal = 0.72 # charcoal, finery heat
+        tools = 0.08 # hammers, furnace repairs
+        lumber = 0.08 # drying racks, frames
+        produced = iron
+        output = 0.80
         category = building_maintenance
     }
 }

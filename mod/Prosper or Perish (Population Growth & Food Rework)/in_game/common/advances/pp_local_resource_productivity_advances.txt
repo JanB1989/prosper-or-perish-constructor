@@ -22,7 +22,6 @@ REPLACE:efficient_mining = {
 	icon = efficient_mining
 	for = adm
 	expand_rgo_mining_cost_modifier = -0.1
-	global_iron_output_modifier = 0.1
 	global_copper_output_modifier = 0.1
 	unlock_building = iron_mine_improved
 }
@@ -59,7 +58,6 @@ REPLACE:blast_furnace = {
 	age = age_3_discovery
 	icon = serbian_mining
 	requires = pop_promotion_speed_age_3
-	global_iron_output_modifier = 0.15
 	unlock_building = bog_iron_smelter_blast_furnace
 }
 
@@ -75,8 +73,9 @@ REPLACE:pan_amalgamation_advance = {
 REPLACE:slitting_mills = {
 	age = age_4_reformation
 	requires = bole_smelting
-	global_iron_output_modifier = 0.10
-	unlock_building = bog_iron_smelter_slitting_mills
+	unlock_building = iron_mine_deep
+	unlock_production_method = pp_iron_mine_improved_slitting_dressed_ore
+	unlock_production_method = pp_bog_iron_smelter_blast_furnace_finery
 }
 
 REPLACE:foreign_mining_techniques = {
@@ -91,7 +90,6 @@ REPLACE:coke_blast_furnace = {
 	age = age_5_absolutism
 	icon = serbian_mining
 	requires = newspapers_advance
-	global_iron_output_modifier = 0.20
 	unlock_building = bog_iron_smelter_coke_blast_furnace
 }
 
@@ -99,8 +97,7 @@ REPLACE:hot_blast_furnace = {
 	age = age_6_revolutions
 	icon = serbian_mining
 	requires = industrialization_advance
-	global_iron_output_modifier = 0.20
-	unlock_building = bog_iron_smelter_hot_blast_furnace
+	unlock_production_method = pp_bog_iron_smelter_hot_blast_refining_maintenance
 }
 
 REPLACE:coal_improvements_absolutism = {

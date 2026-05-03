@@ -1,5 +1,7 @@
+import re
 from pathlib import Path
 
+import polars as pl
 from eu5gameparser.clausewitz.parser import parse_file
 from eu5gameparser.clausewitz.syntax import CList
 
@@ -16,6 +18,8 @@ from prosper_or_perish_population_capacity.render import planned_population_capa
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 LABELING_ROOT = ROOT.parent / "ProsperOrPerishLabelingPipeline"
+LABELING_BASELINE = LABELING_ROOT / "base_data" / "locations_with_raw_material.parquet"
+LOCATION_MODIFIERS = MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifiers.txt"
 CAPACITY_EFFECT_BLOCKS = (
     "TRY_REPLACE:available_free_land",
     "TRY_REPLACE:abundant_free_land",
@@ -34,6 +38,16 @@ ANIMAL_PRODUCT_GOODS = (
     "wool",
 )
 MANAGED_CAPACITY_EFFECT_FILE = "pp_capacity_pressure_effects.txt"
+BENCHMARK_GROUPS = (
+    "province",
+    "region",
+    "area",
+    "super_region",
+    "macro_region",
+    "climate",
+    "topography",
+    "vegetation",
+)
 
 
 def test_population_capacity_config_loads() -> None:
@@ -216,6 +230,53 @@ def test_capacity_pressure_effects_are_managed_only() -> None:
     assert not offenders
 
 
+def test_generated_location_modifiers_include_one_population_capacity_per_location() -> None:
+    text = LOCATION_MODIFIERS.read_text(encoding="utf-8-sig")
+    blocks = _location_modifier_blocks(text)
+
+    assert blocks
+    for name, body in blocks.items():
+        assert body.count("local_population_capacity =") == 1, name
+
+
+def test_generated_population_capacity_values_stay_in_v1_bounds() -> None:
+    capacities = _generated_location_capacities()
+
+    assert len(capacities) > 20_000
+    assert min(capacities.values()) >= 0
+    assert max(capacities.values()) <= 120
+    assert any(value >= 100 for value in capacities.values())
+    assert any(value <= 10 for value in capacities.values())
+
+
+def test_generated_population_capacity_benchmark_rollups_are_available() -> None:
+    capacities = _generated_location_capacities()
+    capacity_df = pl.DataFrame(
+        {
+            "location_tag": list(capacities.keys()),
+            "local_population_capacity": list(capacities.values()),
+        }
+    )
+    baseline_raw = pl.read_parquet(LABELING_BASELINE)
+    baseline = baseline_raw.select(
+        [column for column in ("location_tag", *BENCHMARK_GROUPS) if column in baseline_raw.columns]
+    )
+    joined = baseline.join(capacity_df, on="location_tag", how="inner")
+
+    assert joined.height >= len(capacities) - 20
+    for group_key in BENCHMARK_GROUPS:
+        grouped = (
+            joined.group_by(group_key)
+            .agg(
+                pl.len().alias("locations"),
+                pl.col("local_population_capacity").mean().alias("capacity_mean"),
+            )
+            .filter(pl.col(group_key).is_not_null())
+        )
+        assert grouped.height > 0, group_key
+        assert grouped["locations"].sum() > 0, group_key
+
+
 def _labeler_goods() -> tuple[str, ...]:
     evaluator_root = LABELING_ROOT / "GoodsEvaluator"
     return tuple(
@@ -225,6 +286,24 @@ def _labeler_goods() -> tuple[str, ...]:
             if path.is_dir() and (path / "config.yaml").exists()
         )
     )
+
+
+def _location_modifier_blocks(text: str) -> dict[str, str]:
+    starts = list(re.finditer(r"^pp_loc_(.+?)\s*=\s*\{", text, flags=re.MULTILINE))
+    blocks: dict[str, str] = {}
+    for index, match in enumerate(starts):
+        end = starts[index + 1].start() if index + 1 < len(starts) else len(text)
+        blocks[match.group(1)] = text[match.start() : end]
+    return blocks
+
+
+def _generated_location_capacities() -> dict[str, int]:
+    capacities: dict[str, int] = {}
+    for name, body in _location_modifier_blocks(LOCATION_MODIFIERS.read_text(encoding="utf-8-sig")).items():
+        match = re.search(r"^\s*local_population_capacity\s*=\s*(\d+)\s*$", body, flags=re.MULTILINE)
+        assert match is not None, name
+        capacities[name] = int(match.group(1))
+    return capacities
 
 
 def _managed_set_value_output_names(config) -> set[str]:

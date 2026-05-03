@@ -1,0 +1,140 @@
+version: 2
+tag: iron_mine_deep
+upgrade_chain:
+  family: iron_mine
+  tier: 2
+  previous: iron_mine_improved
+  next: null
+  unlock_advance: slitting_mills
+building:
+  key: iron_mine_deep
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_iron_mine_deep_base_iron
+    - name: slot_1
+      methods:
+        - pp_iron_mine_deep_no_primary
+        - pp_iron_mine_deep_drainage_workings
+        - pp_iron_mine_deep_slitting_ore
+    - name: slot_2
+      methods:
+        - pp_iron_mine_deep_no_secondary
+        - pp_iron_mine_deep_ochre
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 5
+    price = pp_iron_mine_deep_price
+    category = rgo_building_category
+    icon = iron_mine_deep
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = iron_mine_improved
+    build_time = manufactory_build_time
+
+    location_potential = {
+        raw_material = goods:iron
+    }
+
+    construction_demand = manufactory_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_iron_mine_deep_base_iron = {
+            produced = iron
+            output = 0.40
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_iron_mine_deep_no_primary = {
+            category = building_maintenance
+        }
+        pp_iron_mine_deep_drainage_workings = {
+            lumber = 1.80 # shaft timbering, headframes
+            tools = 2.00 # pumps, picks, haulage
+            beeswax = 0.42 # candles, pump seals
+            produced = iron
+            output = 3.30
+            category = building_maintenance
+        }
+        pp_iron_mine_deep_slitting_ore = {
+            lumber = 1.90 # galleries, bar racks
+            tools = 2.10 # rolls, stamps, pumps
+            beeswax = 0.45 # candles, pump seals
+            coal = 0.30 # ore roasting fuel
+            produced = iron
+            output = 3.55
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_iron_mine_deep_no_secondary = {
+            category = building_maintenance
+        }
+        pp_iron_mine_deep_ochre = {
+            lumber = 0.18 # washing troughs, racks
+            tools = 0.12 # sieves, shovels
+            produced = dyes
+            output = 0.20
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.02
+    }
+prices:
+  - key: pp_iron_mine_deep_price
+    body: |2-
+      {gold = 275}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_iron_mine_deep_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('iron_mine_deep')|e].
+    MODIFIER_TYPE_NAME_pp_iron_mine_deep_price_cost_modifier: Deep Iron Mine Cost
+    iron_mine_deep_slot_0: Iron Vein
+    iron_mine_deep_slot_1: Deep Workings
+    iron_mine_deep_slot_2: Ochre Recovery
+    iron_mine_deep: Deep Iron Mine
+    iron_mine_deep_desc: Drained shafts, stronger timbering, and more regular ore dressing let true iron deposits support deeper and more labor-efficient workings than wetland bog iron can sustain.
+    pp_iron_mine_deep_base_iron: Surveyed Deep Iron Vein
+    pp_iron_mine_deep_no_primary: No Deep Iron Mining
+    pp_iron_mine_deep_drainage_workings: Drained Shaft Workings
+    pp_iron_mine_deep_slitting_ore: Slitting-Mill Ore Supply
+    pp_iron_mine_deep_no_secondary: No Ochre Recovery
+    pp_iron_mine_deep_ochre: Deep Ochre Washing
+    pp_iron_mine_deep_price: Deep Iron Mine Price
+icon:
+  source_png: ../assets/icons/iron_mine_deep.png
+  output_dds: iron_mine_deep.dds
+  size: 512
+  prompt: >-
+    EU5-inspired hand-painted strategy-game icon for Deep Iron Mine, transparent background. Center a timbered deep iron mine entrance with a shaft headframe, drainage pump gear, ore cart of red-brown iron ore, dressing floor, water channel, mine lamps, and organized tools. No text, no letters, no frame, painterly historical UI art; avoid modern machinery, steel factory imagery, fantasy elements, and dark unreadable cave scenes.
+
+evaluation:
+  production_methods:
+    pp_iron_mine_deep_base_iron:
+      production_efficiency: 1.00
+    pp_iron_mine_deep_no_primary:
+      production_efficiency: 1.00
+    pp_iron_mine_deep_drainage_workings:
+      production_efficiency: 1.18
+    pp_iron_mine_deep_slitting_ore:
+      production_efficiency: 1.20
+    pp_iron_mine_deep_no_secondary:
+      production_efficiency: 1.00
+    pp_iron_mine_deep_ochre:
+      production_efficiency: 0.75
+      allow_rules:
+        input_throughput: Ochre washing is an ancillary iron ore byproduct, intentionally less profitable than primary iron extraction.
+        output_throughput: Ochre washing is an ancillary iron ore byproduct, intentionally less profitable than primary iron extraction.

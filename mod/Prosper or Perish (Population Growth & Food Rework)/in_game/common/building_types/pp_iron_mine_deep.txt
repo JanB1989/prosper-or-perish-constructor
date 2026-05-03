@@ -1,0 +1,73 @@
+﻿# >>> eu5-building-pipeline:iron_mine_deep:building
+iron_mine_deep = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 5
+price = pp_iron_mine_deep_price
+category = rgo_building_category
+icon = iron_mine_deep
+rural_settlement = yes
+town = yes
+city = yes
+obsolete = iron_mine_improved
+build_time = manufactory_build_time
+
+location_potential = {
+    raw_material = goods:iron
+}
+
+construction_demand = manufactory_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_iron_mine_deep_base_iron = {
+        produced = iron
+        output = 0.40
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_iron_mine_deep_no_primary = {
+        category = building_maintenance
+    }
+    pp_iron_mine_deep_drainage_workings = {
+        lumber = 1.80 # shaft timbering, headframes
+        tools = 2.00 # pumps, picks, haulage
+        beeswax = 0.42 # candles, pump seals
+        produced = iron
+        output = 3.30
+        category = building_maintenance
+    }
+    pp_iron_mine_deep_slitting_ore = {
+        lumber = 1.90 # galleries, bar racks
+        tools = 2.10 # rolls, stamps, pumps
+        beeswax = 0.45 # candles, pump seals
+        coal = 0.30 # ore roasting fuel
+        produced = iron
+        output = 3.55
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_iron_mine_deep_no_secondary = {
+        category = building_maintenance
+    }
+    pp_iron_mine_deep_ochre = {
+        lumber = 0.18 # washing troughs, racks
+        tools = 0.12 # sieves, shovels
+        produced = dyes
+        output = 0.20
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:iron_mine_deep:building

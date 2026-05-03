@@ -1,8 +1,11 @@
-mod_name: "Prosper or Perish"
+mod_name: "Prosper or Perish (Population Growth & Food Rework)"
 mod_output_dir: "mod"
 template_dir: "../ProsperOrPerishLabelingPipeline/mod_templates/prosper_or_perish_farming"
 baseline_parquet: "../ProsperOrPerishLabelingPipeline/base_data/locations_with_raw_material.parquet"
 goods_evaluator_root: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator"
+modifier_prefix: "pp"
+generated_label: "Prosper or Perish"
+managed_write_mode: "mod_root"
 
 defaults:
   mmr_mean_center: true

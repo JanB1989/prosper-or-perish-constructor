@@ -10,7 +10,7 @@ icon = bog_iron_smelter_coke_blast_furnace
 rural_settlement = yes
 town = yes
 city = yes
-obsolete = bog_iron_smelter_slitting_mills
+obsolete = bog_iron_smelter_blast_furnace
 build_time = manufactory_build_time
 
 location_potential = {
@@ -37,11 +37,19 @@ location_potential = {
 
 unique_production_methods = {
     pp_bog_iron_smelter_coke_blast_furnace_maintenance = {
-        coal = 1.1
-        tools = 0.18
-        lumber = 0.18
+        coal = 1.1 # coke fuel, furnace heat
+        tools = 0.18 # tuyere, bellows upkeep
+        lumber = 0.18 # racks, furnace frames
         produced = iron
         output = 1.05
+        category = building_maintenance
+    }
+    pp_bog_iron_smelter_hot_blast_refining_maintenance = {
+        coal = 1.25 # coke fuel, hot blast
+        tools = 0.22 # blast gear, repairs
+        lumber = 0.20 # drying racks, staging
+        produced = iron
+        output = 1.20
         category = building_maintenance
     }
 }

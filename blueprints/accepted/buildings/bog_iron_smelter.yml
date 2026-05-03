@@ -52,7 +52,7 @@ building:
 
     unique_production_methods = {
         pp_bog_iron_maintenance = {
-            coal = 0.4
+            coal = 0.4 # charcoal, furnace fuel
             produced = iron
             output = 0.3
             debug_max_profit = 0.2
@@ -71,7 +71,7 @@ localization:
     MODIFIER_TYPE_NAME_pp_bog_iron_smelter_price_cost_modifier: Bog Iron Smelter Cost
     bog_iron_smelter_slot_0: Bog Iron Processing
     bog_iron_smelter: Bog Iron Smelter
-    bog_iron_smelter_desc: A small wetland ironworks that gathers and smelts bog iron where conventional ore deposits are absent.
+    bog_iron_smelter_desc: A small wetland ironworks that gathers, roasts, and smelts bog iron where conventional ore deposits are absent.
     pp_bog_iron_maintenance: Bog Iron Smelter
     pp_bog_iron_smelter_price: Bog Iron Smelter Price
 icon:

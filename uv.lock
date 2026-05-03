@@ -1544,6 +1544,7 @@ dependencies = [
     { name = "notebook" },
     { name = "openskill" },
     { name = "polars" },
+    { name = "prosper-or-perish-population-capacity-pipeline" },
     { name = "pyarrow" },
     { name = "pyyaml" },
 ]
@@ -1557,6 +1558,7 @@ requires-dist = [
     { name = "notebook", specifier = ">=7.0.0" },
     { name = "openskill", specifier = ">=6.2.0" },
     { name = "polars", specifier = ">=1.0.0" },
+    { name = "prosper-or-perish-population-capacity-pipeline", editable = "../ProsperOrPerishPopulationCapacityPipeline" },
     { name = "pyarrow", specifier = ">=15.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0.0" },
     { name = "pyyaml", specifier = ">=6.0" },
@@ -1570,10 +1572,14 @@ version = "0.1.0"
 source = { editable = "../ProsperOrPerishPopulationCapacityPipeline" }
 dependencies = [
     { name = "eu5gameparser" },
+    { name = "polars" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "eu5gameparser", editable = "../eu5-game-parser" }]
+requires-dist = [
+    { name = "eu5gameparser", editable = "../eu5-game-parser" },
+    { name = "polars", specifier = ">=1.0.0" },
+]
 
 [package.metadata.requires-dev]
 dev = [

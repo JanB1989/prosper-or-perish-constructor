@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: farming_village
+upgrade_chain:
+  family: farming_village
+  tier: 0
+  previous: null
+  next: model_farm
+  unlock_advance: null
 building:
   key: farming_village
   mode: REPLACE

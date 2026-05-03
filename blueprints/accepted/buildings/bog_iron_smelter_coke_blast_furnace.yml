@@ -2,9 +2,9 @@ version: 2
 tag: bog_iron_smelter_coke_blast_furnace
 upgrade_chain:
   family: bog_iron_smelter
-  tier: 3
-  previous: bog_iron_smelter_slitting_mills
-  next: bog_iron_smelter_hot_blast_furnace
+  tier: 2
+  previous: bog_iron_smelter_blast_furnace
+  next: null
   unlock_advance: coke_blast_furnace
 building:
   key: bog_iron_smelter_coke_blast_furnace
@@ -14,6 +14,7 @@ building:
     - name: slot_0
       methods:
         - pp_bog_iron_smelter_coke_blast_furnace_maintenance
+        - pp_bog_iron_smelter_hot_blast_refining_maintenance
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -26,7 +27,7 @@ building:
     rural_settlement = yes
     town = yes
     city = yes
-    obsolete = bog_iron_smelter_slitting_mills
+    obsolete = bog_iron_smelter_blast_furnace
     build_time = manufactory_build_time
 
     location_potential = {
@@ -53,11 +54,19 @@ building:
 
     unique_production_methods = {
         pp_bog_iron_smelter_coke_blast_furnace_maintenance = {
-            coal = 1.1
-            tools = 0.18
-            lumber = 0.18
+            coal = 1.1 # coke fuel, furnace heat
+            tools = 0.18 # tuyere, bellows upkeep
+            lumber = 0.18 # racks, furnace frames
             produced = iron
             output = 1.05
+            category = building_maintenance
+        }
+        pp_bog_iron_smelter_hot_blast_refining_maintenance = {
+            coal = 1.25 # coke fuel, hot blast
+            tools = 0.22 # blast gear, repairs
+            lumber = 0.20 # drying racks, staging
+            produced = iron
+            output = 1.20
             category = building_maintenance
         }
     }
@@ -72,9 +81,10 @@ localization:
     MODIFIER_TYPE_DESC_pp_bog_iron_smelter_coke_blast_furnace_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('bog_iron_smelter_coke_blast_furnace')|e].
     MODIFIER_TYPE_NAME_pp_bog_iron_smelter_coke_blast_furnace_price_cost_modifier: Coke-Fired Bog Iron Furnace Cost
     bog_iron_smelter_coke_blast_furnace_slot_0: Bog Iron Processing
-    bog_iron_smelter_coke_blast_furnace: Coke-Fired Bog Iron Furnace
-    bog_iron_smelter_coke_blast_furnace_desc: An upgraded wetland ironworks using coke blast furnace equipment to increase bog iron throughput with more coal, tools, lumber, and organized labor.
+    bog_iron_smelter_coke_blast_furnace: Coke and Hot Blast Bog Iron Furnace
+    bog_iron_smelter_coke_blast_furnace_desc: A late bog ironworks using coke firing and hot-blast refining to push wetland ore to its practical limit, still below the labor efficiency of deep iron mines.
     pp_bog_iron_smelter_coke_blast_furnace_maintenance: Coke-Fired Bog Iron Furnace Processing
+    pp_bog_iron_smelter_hot_blast_refining_maintenance: Hot Blast Bog Iron Refining
     pp_bog_iron_smelter_coke_blast_furnace_price: Coke-Fired Bog Iron Furnace Price
 icon:
   source_png: ../assets/icons/bog_iron_smelter_coke_blast_furnace.png
@@ -90,3 +100,5 @@ evaluation:
   production_methods:
     pp_bog_iron_smelter_coke_blast_furnace_maintenance:
       production_efficiency: 1.20
+    pp_bog_iron_smelter_hot_blast_refining_maintenance:
+      production_efficiency: 1.22

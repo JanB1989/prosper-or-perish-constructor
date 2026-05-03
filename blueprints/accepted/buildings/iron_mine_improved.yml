@@ -4,7 +4,7 @@ upgrade_chain:
   family: iron_mine
   tier: 1
   previous: iron_mine
-  next: null
+  next: iron_mine_deep
   unlock_advance: efficient_mining
 building:
   key: iron_mine_improved
@@ -18,6 +18,7 @@ building:
       methods:
         - pp_iron_mine_improved_no_primary
         - pp_iron_mine_improved_iron
+        - pp_iron_mine_improved_slitting_dressed_ore
     - name: slot_2
       methods:
         - pp_iron_mine_improved_no_secondary
@@ -59,11 +60,19 @@ building:
             category = building_maintenance
         }
         pp_iron_mine_improved_iron = {
-            lumber = 1.306
-            tools = 1.383
-            beeswax = 0.307
+            lumber = 1.306 # timbering, dressing floors
+            tools = 1.383 # picks, pumps, stamps
+            beeswax = 0.307 # mine candles, seals
             produced = iron
             output = 2.25
+            category = building_maintenance
+        }
+        pp_iron_mine_improved_slitting_dressed_ore = {
+            lumber = 1.40 # timbering, bar racks
+            tools = 1.52 # slitting rolls, dressing tools
+            beeswax = 0.34 # candles, pump seals
+            produced = iron
+            output = 2.45
             category = building_maintenance
         }
     }
@@ -72,8 +81,8 @@ building:
             category = building_maintenance
         }
         pp_iron_mine_improved_ochre = {
-            lumber = 0.15
-            tools = 0.10
+            lumber = 0.15 # washing troughs, racks
+            tools = 0.10 # sieves, shovels
             produced = dyes
             output = 0.15
             category = building_maintenance
@@ -100,11 +109,14 @@ localization:
     pp_iron_mine_improved_base_iron: Surveyed Iron Ore
     pp_iron_mine_improved_no_primary: No Iron Mining
     pp_iron_mine_improved_iron: Timbered Ore Workings
+    pp_iron_mine_improved_slitting_dressed_ore: Slitting-Mill Ore Dressing
     pp_iron_mine_improved_no_secondary: No Ochre Recovery
     pp_iron_mine_improved_ochre: Ochre Washing
     pp_iron_mine_improved_price: Iron Mine Price
     efficient_mining: Ore Dressing
     efficient_mining_desc: Better mine surveys, timbering, haulage, and dressing floors separate useful iron ore from silica-rich gangue and other waste before smelting.
+    slitting_mills: Slitting Mills
+    slitting_mills_desc: Water-powered slitting and rolling equipment turns smelted blooms and bars into more regular wrought iron, rewarding mines that can feed cleaner dressed ore into regional ironworks.
 icon:
   source_png: ../assets/icons/iron_mine_improved.png
   output_dds: iron_mine_improved.dds
@@ -119,6 +131,8 @@ evaluation:
       production_efficiency: 1.00
     pp_iron_mine_improved_iron:
       production_efficiency: 1.15
+    pp_iron_mine_improved_slitting_dressed_ore:
+      production_efficiency: 1.16
     pp_iron_mine_improved_no_secondary:
       production_efficiency: 1.00
     pp_iron_mine_improved_ochre:

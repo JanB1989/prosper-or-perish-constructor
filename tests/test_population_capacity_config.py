@@ -425,7 +425,7 @@ def test_population_capacity_control_points_match_known_locations_and_fit_existi
     baseline = pl.read_parquet(LABELING_BASELINE)
     missing = control_points.join(baseline.select("location_tag"), on="location_tag", how="anti")
 
-    assert control_points.height >= 60
+    assert control_points.height >= 150
     assert missing.is_empty()
 
     geometry_path = ROOT / "artifacts" / "data" / "population_capacity" / "location_geometry.parquet"
@@ -436,7 +436,18 @@ def test_population_capacity_control_points_match_known_locations_and_fit_existi
 
     assert residuals["residual_degrees"].median() <= 2.5
     assert residuals["residual_degrees"].quantile(0.95) <= 6.0
-    for tag in ("paris", "cairo", "constantinople", "hangzhou", "kyoto", "daha", "tenochtitlan", "quito"):
+    for tag in (
+        "paris",
+        "cairo",
+        "alexandria",
+        "aswan",
+        "constantinople",
+        "hangzhou",
+        "kyoto",
+        "daha",
+        "tenochtitlan",
+        "quito",
+    ):
         assert residuals.filter(pl.col("location_tag") == tag)["residual_degrees"].item() <= 6.0
 
 

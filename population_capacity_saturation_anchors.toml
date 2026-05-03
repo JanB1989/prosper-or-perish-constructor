@@ -1,0 +1,259 @@
+[metadata]
+version = 1
+historical_population_policy = "saturation_anchors_only"
+notes = "Historical population is used only where sustained dense agrarian settlement supports a near-potential or lower-bound anchor. These anchors calibrate scale and diagnostics; they are not universal labels."
+
+[[anchors]]
+id = "nile_lower_egypt"
+label = "Nile delta and lower Egypt"
+scope = "area"
+key = "lower_egypt_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained high-density irrigated agrarian core; use as near-potential density signal, not exact population label"
+confidence = "high"
+use_role = "scale_anchor"
+capacity_mean_floor = 80
+capacity_median_floor = 90
+evidence = "Long-run irrigated floodplain agriculture and dense settlement make this a strong pre-modern carrying-capacity anchor."
+sources = [
+    "https://models.pbl.nl/image/HYDE_database",
+    "https://clio-infra.eu/Indicators/TotalPopulation.html",
+]
+
+[[anchors]]
+id = "nile_upper_egypt"
+label = "Upper Egypt Nile corridor"
+scope = "area"
+key = "upper_egypt_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained high-density irrigated river corridor; desert-adjacent locations make this a lower-bound anchor"
+confidence = "high"
+use_role = "lower_bound"
+capacity_mean_floor = 70
+capacity_median_floor = 90
+evidence = "Dense settlement follows the Nile corridor, while surrounding desert cells should remain low."
+sources = [
+    "https://models.pbl.nl/image/HYDE_database",
+    "https://clio-infra.eu/Indicators/TotalPopulation.html",
+]
+
+[[anchors]]
+id = "lower_yangtze_jiangnan"
+label = "Lower Yangtze Jiangnan core"
+scope = "area"
+key = "jiangnan_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained very dense wet-rice and market-garden agrarian core"
+confidence = "high"
+use_role = "scale_anchor"
+capacity_mean_floor = 85
+capacity_median_floor = 90
+evidence = "The Lower Yangtze is a high-confidence staple-rich agrarian saturation anchor."
+sources = [
+    "https://www.fao.org/gaez/gaezv4/en",
+    "https://models.pbl.nl/image/HYDE_database",
+]
+
+[[anchors]]
+id = "lower_yangtze_huaidong"
+label = "Huai-Yangzi lower plain"
+scope = "area"
+key = "huaidong_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained dense grain plain with strong water access"
+confidence = "high"
+use_role = "scale_anchor"
+capacity_mean_floor = 80
+capacity_median_floor = 90
+evidence = "Dense lower-plain agriculture should remain high even before later technological modifiers."
+sources = [
+    "https://www.fao.org/gaez/gaezv4/en",
+    "https://models.pbl.nl/image/HYDE_database",
+]
+
+[[anchors]]
+id = "north_china_hebei"
+label = "North China Plain Hebei"
+scope = "area"
+key = "hebei_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained dense wheat/millet agrarian plain"
+confidence = "high"
+use_role = "scale_anchor"
+capacity_mean_floor = 80
+capacity_median_floor = 90
+evidence = "The North China Plain is a durable pre-modern agrarian population core."
+sources = [
+    "https://www.fao.org/gaez/gaezv4/en",
+    "https://models.pbl.nl/image/HYDE_database",
+]
+
+[[anchors]]
+id = "north_china_henan"
+label = "North China Plain Henan"
+scope = "area"
+key = "henan_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained dense wheat/millet agrarian plain"
+confidence = "high"
+use_role = "scale_anchor"
+capacity_mean_floor = 80
+capacity_median_floor = 90
+evidence = "Henan is a core lowland staple zone and should not be pulled down by non-food signals."
+sources = [
+    "https://www.fao.org/gaez/gaezv4/en",
+    "https://models.pbl.nl/image/HYDE_database",
+]
+
+[[anchors]]
+id = "north_china_shandong"
+label = "North China Plain Shandong"
+scope = "area"
+key = "shandong_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained dense wheat/millet agrarian plain"
+confidence = "high"
+use_role = "scale_anchor"
+capacity_mean_floor = 80
+capacity_median_floor = 90
+evidence = "Shandong combines dense dry-grain agriculture with coastal and riverine support."
+sources = [
+    "https://www.fao.org/gaez/gaezv4/en",
+    "https://models.pbl.nl/image/HYDE_database",
+]
+
+[[anchors]]
+id = "bengal_delta_core"
+label = "Bengal delta core"
+scope = "area"
+key = "bengal_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained very dense rice delta and floodplain settlement"
+confidence = "high"
+use_role = "scale_anchor"
+capacity_mean_floor = 85
+capacity_median_floor = 90
+evidence = "Wet-rice delta ecology makes Bengal a high-confidence intrinsic capacity anchor."
+sources = [
+    "https://www.fao.org/gaez/gaezv4/en",
+    "https://models.pbl.nl/image/HYDE_database",
+    "https://clio-infra.eu/Indicators/TotalPopulation.html",
+]
+
+[[anchors]]
+id = "ganges_mithila"
+label = "Ganges plain Mithila"
+scope = "area"
+key = "mithila_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained dense alluvial agrarian settlement"
+confidence = "high"
+use_role = "scale_anchor"
+capacity_mean_floor = 90
+capacity_median_floor = 100
+evidence = "Alluvial Ganges plain conditions should generate top-tier carrying capacity."
+sources = [
+    "https://www.fao.org/gaez/gaezv4/en",
+    "https://models.pbl.nl/image/HYDE_database",
+]
+
+[[anchors]]
+id = "java_core"
+label = "Java rice core"
+scope = "area"
+key = "java_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained dense wet-rice volcanic-island agrarian core"
+confidence = "high"
+use_role = "scale_anchor"
+capacity_mean_floor = 75
+capacity_median_floor = 80
+evidence = "Java should be treated as a high-potential staple region; current misses should become calibration work items."
+sources = [
+    "https://www.fao.org/gaez/gaezv4/en",
+    "https://models.pbl.nl/image/HYDE_database",
+]
+
+[[anchors]]
+id = "po_valley_lombardy"
+label = "Po Valley Lombardy"
+scope = "area"
+key = "lombardy_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained dense irrigated north Italian agrarian and urban hinterland"
+confidence = "high"
+use_role = "scale_anchor"
+capacity_mean_floor = 75
+capacity_median_floor = 90
+evidence = "Po Valley agriculture and water control make Lombardy a strong European capacity anchor."
+sources = [
+    "https://www.fao.org/gaez/gaezv4/en",
+    "https://models.pbl.nl/image/HYDE_database",
+    "https://clio-infra.eu/Indicators/TotalPopulation.html",
+]
+
+[[anchors]]
+id = "flanders_core"
+label = "Flanders agrarian core"
+scope = "area"
+key = "flanders_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained high-density lowland agrarian and urban hinterland"
+confidence = "medium"
+use_role = "lower_bound"
+capacity_mean_floor = 75
+capacity_median_floor = 90
+evidence = "Dense settlement is real, but trade and urbanization mean this should constrain floors more than define full intrinsic scale."
+sources = [
+    "https://models.pbl.nl/image/HYDE_database",
+    "https://clio-infra.eu/Indicators/TotalPopulation.html",
+]
+
+[[anchors]]
+id = "kinai_rice_plain"
+label = "Kinai rice plain"
+scope = "area"
+key = "kinai_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained dense Japanese rice plain and old capital hinterland"
+confidence = "medium"
+use_role = "lower_bound"
+capacity_mean_floor = 75
+capacity_median_floor = 90
+evidence = "Use as a lower-bound rice-plain anchor because capital functions may inflate settlement."
+sources = [
+    "https://www.fao.org/gaez/gaezv4/en",
+    "https://models.pbl.nl/image/HYDE_database",
+]
+
+[[anchors]]
+id = "toukaidou_rice_corridor"
+label = "Tokaido rice corridor"
+scope = "area"
+key = "toukaidou_area"
+years = "1300-1500 CE"
+population_or_density_estimate = "sustained productive rice corridor, with mixed terrain"
+confidence = "medium"
+use_role = "lower_bound"
+capacity_mean_floor = 70
+capacity_median_floor = 75
+evidence = "A useful Japanese rice benchmark, but mixed terrain makes it less clean than individual plains."
+sources = [
+    "https://www.fao.org/gaez/gaezv4/en",
+    "https://models.pbl.nl/image/HYDE_database",
+]
+
+[[anchors]]
+id = "trade_city_population_exclusion"
+label = "Standalone trade and capital city populations"
+scope = "macro_region"
+key = "western_europe"
+years = "1300-1500 CE"
+population_or_density_estimate = "large individual cities can exceed local land support through trade and political concentration"
+confidence = "excluded"
+use_role = "validation_only"
+evidence = "City population estimates are useful diagnostics but should not train intrinsic land capacity unless they represent a saturated agrarian hinterland."
+sources = [
+    "https://www.nature.com/articles/sdata201634",
+    "https://www.ifo.de/en/cesifo/publications/2021/working-paper/we-do-not-know-population-every-country-world-past-two-thousand",
+]

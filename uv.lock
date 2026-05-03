@@ -1572,12 +1572,16 @@ version = "0.1.0"
 source = { editable = "../ProsperOrPerishPopulationCapacityPipeline" }
 dependencies = [
     { name = "eu5gameparser" },
+    { name = "numpy" },
+    { name = "pillow" },
     { name = "polars" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "eu5gameparser", editable = "../eu5-game-parser" },
+    { name = "numpy", specifier = ">=2.0.0" },
+    { name = "pillow", specifier = ">=11.0.0" },
     { name = "polars", specifier = ">=1.0.0" },
 ]
 

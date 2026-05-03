@@ -9,6 +9,11 @@ from prosper_or_perish_population_capacity.analysis import (
     capacity_effect_inventory,
     current_modifier_maps,
 )
+from prosper_or_perish_population_capacity.calibration import (
+    evaluate_saturation_anchors,
+    load_generated_capacity_frame,
+    load_saturation_anchors,
+)
 from prosper_or_perish_population_capacity.config import COLLECTIONS, load_pipeline_config
 from prosper_or_perish_population_capacity.extraction import STATIC_MODIFIER_BLOCK
 from prosper_or_perish_population_capacity.merge import load_collection, profile_from
@@ -20,6 +25,7 @@ MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 LABELING_ROOT = ROOT.parent / "ProsperOrPerishLabelingPipeline"
 LABELING_BASELINE = LABELING_ROOT / "base_data" / "locations_with_raw_material.parquet"
 LOCATION_MODIFIERS = MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifiers.txt"
+SATURATION_ANCHORS = ROOT / "population_capacity_saturation_anchors.toml"
 CAPACITY_EFFECT_BLOCKS = (
     "TRY_REPLACE:available_free_land",
     "TRY_REPLACE:abundant_free_land",
@@ -56,8 +62,16 @@ def test_population_capacity_config_loads() -> None:
 
     assert config.generated_label == "Prosper or Perish"
     assert config.managed_write_mode == "mod_root"
-    assert config.set_values["topography"]["flatland"]["local_population_capacity"] == 88
+    assert config.calibration.historical_population_policy == "saturation_anchors_only"
+    assert config.calibration.saturation_anchors == "population_capacity_saturation_anchors.toml"
+    assert config.calibration.land_potential_sources == ("gaez_v4", "hyde", "archaeoglobe")
+    assert "flatland" not in config.set_values.get("topography", {})
+    assert config.set_values["topography"]["mountains"]["local_population_capacity_modifier"] == 0.5
     assert config.set_values["climates"]["continental"]["local_population_capacity_modifier"] == -0.5
+    assert "province_capital" not in config.set_values["static_modifiers"]
+    assert config.feature_capacity_adjustments.enabled is False
+    assert config.feature_capacity_adjustments.removed_values["topography"]["flatland"]["local_population_capacity"] == 88
+    assert config.feature_capacity_adjustments.vanilla_values["vegetation"]["farmland"]["local_population_capacity"] == 100
     assert config.whole_blocks["static_modifiers"]["available_free_land"]["local_monthly_food"] == 3
     assert config.whole_blocks["static_modifiers"]["abundant_free_land"]["local_monthly_food"] == 6
     assert config.whole_blocks["static_modifiers"]["overpopulation"]["cap_maximum_population_growth_at_zero"] is True
@@ -143,14 +157,15 @@ def test_set_values_do_not_generate_managed_patch_blocks() -> None:
                 assert f"TRY_INJECT:{object_key}" not in text
 
 
-def test_configured_static_modifier_values_are_merged_by_parser() -> None:
+def test_configured_static_modifier_capacity_offsets_neutralize_vanilla_sum() -> None:
     config = load_pipeline_config(ROOT / "population_capacity.toml")
     profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
     maps = current_modifier_maps(profile)
 
     for object_key, modifiers in config.set_values["static_modifiers"].items():
         for modifier_key, expected_value in modifiers.items():
-            assert maps["static_modifiers"][object_key][modifier_key] == expected_value
+            assert expected_value < 0
+            assert maps["static_modifiers"][object_key][modifier_key] == 0
 
 
 def test_development_set_value_preserves_non_population_static_modifier_values() -> None:
@@ -159,7 +174,7 @@ def test_development_set_value_preserves_non_population_static_modifier_values()
     development = _entry_block(static_modifiers.entries, "development")
 
     assert development is not None
-    assert _last_value(development, "local_population_capacity") == 2
+    assert _last_value(development, "local_population_capacity") is None
     assert _last_value(development, "local_distance_from_capital_speed_propagation") == 0.005
     assert _last_value(development, "local_supply_limit_modifier") == 0.02
     assert _last_value(development, "blockade_force_required") == 0.01
@@ -170,8 +185,91 @@ def test_river_flowing_through_set_value_resolves_to_configured_modifier() -> No
     profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
     maps = current_modifier_maps(profile)
 
-    assert maps["static_modifiers"]["river_flowing_through"]["local_population_capacity_modifier"] == -0.1
-    assert maps["static_modifiers"]["river_flowing_through"]["local_population_capacity"] == 15
+    assert maps["static_modifiers"]["river_flowing_through"]["local_population_capacity_modifier"] == 0
+    assert "local_population_capacity" not in maps["static_modifiers"]["river_flowing_through"]
+    assert maps["static_modifiers"]["province_capital"]["local_population_capacity_modifier"] == 0.05
+    assert maps["static_modifiers"]["capital"]["local_population_capacity_modifier"] == 0.1
+
+
+def test_static_feature_population_capacity_is_neutralized_in_merged_maps() -> None:
+    profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
+    maps = current_modifier_maps(profile)
+
+    expected_zero = {
+        "climates": {
+            "tropical": ("location_modifier.local_population_capacity_modifier",),
+            "subtropical": ("location_modifier.local_population_capacity_modifier",),
+            "oceanic": ("location_modifier.local_population_capacity_modifier",),
+            "mediterranean": ("location_modifier.local_population_capacity_modifier",),
+            "continental": ("location_modifier.local_population_capacity_modifier",),
+            "arctic": ("location_modifier.local_population_capacity_modifier",),
+        },
+        "location_ranks": {
+            "city": (
+                "rank_modifier.local_population_capacity",
+                "rank_modifier.local_population_capacity_modifier",
+            ),
+            "town": (
+                "rank_modifier.local_population_capacity",
+                "rank_modifier.local_population_capacity_modifier",
+            ),
+        },
+        "topography": {
+            "mountains": ("location_modifier.local_population_capacity_modifier",),
+        },
+        "vegetation": {
+            "desert": ("location_modifier.local_population_capacity",),
+            "sparse": ("location_modifier.local_population_capacity",),
+            "grasslands": ("location_modifier.local_population_capacity",),
+            "farmland": ("location_modifier.local_population_capacity",),
+            "woods": ("location_modifier.local_population_capacity",),
+            "forest": ("location_modifier.local_population_capacity",),
+            "jungle": ("location_modifier.local_population_capacity",),
+        },
+        "static_modifiers": {
+            "river_flowing_through": ("local_population_capacity_modifier",),
+        },
+    }
+    for collection, objects in expected_zero.items():
+        for object_key, modifier_keys in objects.items():
+            for modifier_key in modifier_keys:
+                assert maps[collection][object_key][modifier_key] == 0
+
+    expected_absent = {
+        "climates": {
+            "tropical": ("location_modifier.local_population_capacity",),
+            "subtropical": ("location_modifier.local_population_capacity",),
+            "oceanic": ("location_modifier.local_population_capacity",),
+            "arid": ("location_modifier.local_population_capacity",),
+            "cold_arid": ("location_modifier.local_population_capacity",),
+            "mediterranean": ("location_modifier.local_population_capacity",),
+            "continental": ("location_modifier.local_population_capacity",),
+            "arctic": ("location_modifier.local_population_capacity",),
+        },
+        "topography": {
+            "flatland": ("location_modifier.local_population_capacity",),
+            "mountains": ("location_modifier.local_population_capacity",),
+            "hills": ("location_modifier.local_population_capacity",),
+            "plateau": ("location_modifier.local_population_capacity",),
+            "wetlands": ("location_modifier.local_population_capacity",),
+            "salt_pans": ("location_modifier.local_population_capacity",),
+            "atoll": ("location_modifier.local_population_capacity",),
+        },
+        "static_modifiers": {
+            "coastal": ("local_population_capacity",),
+            "building_levels": ("local_population_capacity",),
+            "total_population": ("local_population_capacity",),
+            "development": ("local_population_capacity",),
+            "province_capital": ("local_population_capacity",),
+            "river_flowing_through": ("local_population_capacity",),
+            "adjacent_to_lake": ("local_population_capacity",),
+        },
+    }
+    for collection, objects in expected_absent.items():
+        for object_key, modifier_keys in objects.items():
+            object_map = maps.get(collection, {}).get(object_key, {})
+            for modifier_key in modifier_keys:
+                assert modifier_key not in object_map
 
 
 def test_configured_capacity_pressure_effects_are_merged_by_parser() -> None:
@@ -275,6 +373,49 @@ def test_generated_population_capacity_benchmark_rollups_are_available() -> None
         )
         assert grouped.height > 0, group_key
         assert grouped["locations"].sum() > 0, group_key
+
+
+def test_saturation_anchor_dataset_loads_and_documents_initial_training_constraints() -> None:
+    config = load_pipeline_config(ROOT / "population_capacity.toml")
+    anchors = load_saturation_anchors(ROOT / config.calibration.saturation_anchors)
+    by_id = {anchor.id: anchor for anchor in anchors}
+
+    assert len(anchors) >= 10
+    assert SATURATION_ANCHORS.exists()
+    assert by_id["nile_lower_egypt"].scope == "area"
+    assert by_id["nile_lower_egypt"].key == "lower_egypt_area"
+    assert by_id["bengal_delta_core"].use_role == "scale_anchor"
+    assert by_id["java_core"].capacity_mean_floor == 75
+    assert by_id["trade_city_population_exclusion"].confidence == "excluded"
+    assert all(anchor.population_or_density_estimate for anchor in anchors)
+    assert all(anchor.sources for anchor in anchors)
+
+
+def test_saturation_anchor_report_covers_game_scopes_without_training_on_exclusions() -> None:
+    anchors = load_saturation_anchors(SATURATION_ANCHORS)
+    capacity_frame = load_generated_capacity_frame(LOCATION_MODIFIERS, baseline_path=LABELING_BASELINE)
+    rows = evaluate_saturation_anchors(anchors, capacity_frame)
+    by_id = {row["id"]: row for row in rows}
+
+    assert not [row for row in rows if row["status"] == "missing_scope_members"]
+    assert by_id["nile_lower_egypt"]["status"] == "pass"
+    assert by_id["lower_yangtze_jiangnan"]["status"] == "pass"
+    assert by_id["bengal_delta_core"]["status"] == "pass"
+    assert by_id["trade_city_population_exclusion"]["training_constraint"] is False
+    assert by_id["trade_city_population_exclusion"]["status"] == "excluded"
+    assert by_id["java_core"]["locations"] > 0
+
+
+def test_location_geometry_inputs_are_available_for_external_target_mapping() -> None:
+    baseline = pl.read_parquet(LABELING_BASELINE)
+    map_data = ROOT / "constructor.load_order.toml"
+    locations_png = Path("C:/Games/steamapps/common/Europa Universalis V/game/in_game/map_data/locations.png")
+
+    assert map_data.exists()
+    assert locations_png.exists()
+    assert baseline["named_location_hex"].n_unique() == baseline["location_tag"].n_unique()
+    assert baseline["location_size"].min() > 0
+    assert {"soil_quality", "has_river", "is_adjacent_to_lake"}.issubset(baseline.columns)
 
 
 def _labeler_goods() -> tuple[str, ...]:

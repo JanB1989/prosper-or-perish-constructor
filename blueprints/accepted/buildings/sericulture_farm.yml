@@ -1,0 +1,94 @@
+version: 2
+tag: sericulture_farm
+building:
+  key: sericulture_farm
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_sericulture_farm_base_silk
+    - name: slot_1
+      methods:
+        - pp_sericulture_farm_no_reeling
+        - pp_sericulture_farm_cocoon_reeling
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_sericulture_farm_price
+    category = rgo_building_category
+    icon = sericulture_farm
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:silk
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_sericulture_farm_base_silk = {
+            produced = silk
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_sericulture_farm_no_reeling = {
+            category = building_maintenance
+        }
+        pp_sericulture_farm_cocoon_reeling = {
+            lumber = 0.12 # rearing trays, frames
+            tools = 0.04 # knives, reels
+            produced = silk
+            output = 0.2
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_sericulture_farm_price
+    body: |2-
+      {gold = 100}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_sericulture_farm_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('sericulture_farm')|e].
+    MODIFIER_TYPE_NAME_pp_sericulture_farm_price_cost_modifier: Sericulture Farm Cost
+    sericulture_farm_slot_0: Mulberry Groves
+    sericulture_farm_slot_1: Rearing & Reeling
+    sericulture_farm: Sericulture Farm
+    sericulture_farm_desc: A rural sericulture farm where laborers tend mulberry trees, feed silkworms with fresh leaves, and gather cocoons for market. Basic households raise worms on simple trays, while cocoon-reeling teams use wooden frames and hand reels to draw more raw silk before the filament is broken.
+    pp_sericulture_farm_base_silk: Mulberry Groves
+    pp_sericulture_farm_no_reeling: No Cocoon Reeling
+    pp_sericulture_farm_cocoon_reeling: Cocoon Reeling
+    pp_sericulture_farm_price: Sericulture Farm Price
+icon:
+  source_png: ../assets/icons/sericulture_farm.png
+  output_dds: sericulture_farm.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a sericulture farm, transparent background. Center pruned mulberry trees with broad green leaves, shallow wooden trays with pale silkworms, cream-white silk cocoons on woven mats, a small hand reel drawing fine silk thread, and folded raw silk skeins as a secondary cue. Use readable painterly shapes, softly outlined historical UI art, muted mulberry greens, warm wood tan, cream cocoons, pale gold silk thread, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  allow_rules:
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
+  production_methods:
+    pp_sericulture_farm_base_silk:
+      production_efficiency: 1.00
+    pp_sericulture_farm_cocoon_reeling:
+      production_efficiency: 1.05

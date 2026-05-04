@@ -41,6 +41,22 @@ unique_production_methods = {
         output = 1.15
         category = building_maintenance
     }
+    pp_iron_mine_horse_whim_haulage = {
+        horses = 0.38 # whim draft teams
+        leather = 0.18 # harness, buckets
+        beeswax = 0.10 # mine candles, seals
+        produced = iron
+        output = 0.70
+        category = building_maintenance
+    }
+    pp_iron_mine_ore_dressing_floors = {
+        fiber_crops = 0.40 # sacks, screens
+        cloth = 0.20 # sorting cloths
+        beeswax = 0.10 # candles, seals
+        produced = iron
+        output = 0.58
+        category = building_maintenance
+    }
 }
 unique_production_methods = {
     pp_iron_mine_no_secondary = {

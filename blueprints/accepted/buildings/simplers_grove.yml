@@ -1,0 +1,92 @@
+version: 2
+tag: simplers_grove
+building:
+  key: simplers_grove
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_simplers_grove_base_medicaments
+    - name: slot_1
+      methods:
+        - pp_simplers_grove_no_drying
+        - pp_simplers_grove_wicker_drying_racks
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_simplers_grove_price
+    category = rgo_building_category
+    icon = simplers_grove
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:medicaments
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_simplers_grove_base_medicaments = {
+            produced = medicaments
+            output = 0.3
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_simplers_grove_no_drying = {
+            category = building_maintenance
+        }
+        pp_simplers_grove_wicker_drying_racks = {
+            fiber_crops = 0.10 # baskets, ties, drying mats
+            lumber = 0.06 # racks, sheds, sorting boards
+            produced = medicaments
+            output = 0.25
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_simplers_grove_price
+    body: |2-
+      {gold = 50}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_simplers_grove_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('simplers_grove')|e].
+    MODIFIER_TYPE_NAME_pp_simplers_grove_price_cost_modifier: Simplers' Grove Cost
+    simplers_grove_slot_0: Herb Grounds
+    simplers_grove_slot_1: Drying & Sorting
+    simplers_grove: Simplers' Grove
+    simplers_grove_desc: A woodland and meadow gathering site where simplers collect roots, leaves, flowers, and barks for apothecaries. Basic crews forage useful simples by hand, while wicker drying racks and sorting sheds prepare more reliable medicaments for market.
+    pp_simplers_grove_base_medicaments: Herb Grounds
+    pp_simplers_grove_no_drying: No Drying Racks
+    pp_simplers_grove_wicker_drying_racks: Wicker Drying Racks
+    pp_simplers_grove_price: Simplers' Grove Price
+icon:
+  source_png: ../assets/icons/simplers_grove.png
+  output_dds: simplers_grove.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a simplers' grove, transparent background. Center herb bundles, roots, small flowers, strips of medicinal bark, wicker baskets, low drying racks, and a small sorting table in a woodland meadow gathering site. Use readable painterly shapes, softly outlined historical UI art, muted herb greens, root browns, bark browns, wicker tan, pale flower accents, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  allow_rules:
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+  production_methods:
+    pp_simplers_grove_base_medicaments:
+      production_efficiency: 1.00
+    pp_simplers_grove_wicker_drying_racks:
+      production_efficiency: 1.10

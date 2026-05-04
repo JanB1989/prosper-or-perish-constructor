@@ -18,6 +18,8 @@ building:
       methods:
         - pp_iron_mine_no_primary
         - pp_iron_mine_iron
+        - pp_iron_mine_horse_whim_haulage
+        - pp_iron_mine_ore_dressing_floors
     - name: slot_2
       methods:
         - pp_iron_mine_no_secondary
@@ -65,6 +67,22 @@ building:
             output = 1.15
             category = building_maintenance
         }
+        pp_iron_mine_horse_whim_haulage = {
+            horses = 0.38 # whim draft teams
+            leather = 0.18 # harness, buckets
+            beeswax = 0.10 # mine candles, seals
+            produced = iron
+            output = 0.70
+            category = building_maintenance
+        }
+        pp_iron_mine_ore_dressing_floors = {
+            fiber_crops = 0.40 # sacks, screens
+            cloth = 0.20 # sorting cloths
+            beeswax = 0.10 # candles, seals
+            produced = iron
+            output = 0.58
+            category = building_maintenance
+        }
     }
     unique_production_methods = {
         pp_iron_mine_no_secondary = {
@@ -99,6 +117,8 @@ localization:
     pp_iron_mine_base_iron: Exposed Iron Ore
     pp_iron_mine_no_primary: No Iron Mining
     pp_iron_mine_iron: Open Ore Workings
+    pp_iron_mine_horse_whim_haulage: Horse-Whim Haulage
+    pp_iron_mine_ore_dressing_floors: Ore Dressing Floors
     pp_iron_mine_no_secondary: No Ochre Recovery
     pp_iron_mine_ochre: Ochre Washing
     pp_iron_mine_price: Ore Pit Price
@@ -116,6 +136,16 @@ evaluation:
       production_efficiency: 1.00
     pp_iron_mine_iron:
       production_efficiency: 1.10
+    pp_iron_mine_horse_whim_haulage:
+      production_efficiency: 1.08
+      allow_rules:
+        input_throughput: Horse-whim haulage is a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
+        output_throughput: Horse-whim haulage is a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
+    pp_iron_mine_ore_dressing_floors:
+      production_efficiency: 1.06
+      allow_rules:
+        input_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
+        output_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
     pp_iron_mine_no_secondary:
       production_efficiency: 1.00
     pp_iron_mine_ochre:

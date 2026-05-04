@@ -13,11 +13,15 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_lumber_mill_base_lumber
+    - name: slot_1
+      methods:
+        - pp_lumber_mill_no_primary
         - pp_lumber_mill_maintenance
         - pp_lumber_mill_horse_teams
         - pp_lumber_mill_coppice_standards
         - pp_lumber_mill_timber_drives
-    - name: slot_1
+    - name: slot_2
       methods:
         - pp_lumber_mill_no_extra_rations
         - pp_lumber_mill_extra_rations
@@ -33,19 +37,29 @@ building:
     	town = yes
     	city = yes
     	
-    	location_potential = {
-    		OR = {
-    			vegetation = woods
-    			vegetation = forest
-    			vegetation = farmland
-    			vegetation = jungle
-    		}
-    	}
+        location_potential = {
+            OR = {
+                vegetation = woods
+                vegetation = forest
+                vegetation = jungle
+                raw_material = goods:lumber
+            }
+        }
     	category = rgo_building_category
     	
     	build_time = rural_build_time
     	
-    	unique_production_methods = {
+        unique_production_methods = {
+            pp_lumber_mill_base_lumber = {
+                produced = lumber
+                output = 0.30
+                category = building_maintenance
+            }
+        }
+        unique_production_methods = {
+            pp_lumber_mill_no_primary = {
+                category = building_maintenance
+            }
     		pp_lumber_mill_maintenance = {
     			produced = lumber
     			output = 2.4
@@ -112,21 +126,28 @@ advancements:
       ai_weight = { add = 150 }
 localization:
   entries:
-    lumber_mill_slot_0: Logging Method
-    lumber_mill_slot_1: Additional Rations
+    lumber_mill_slot_0: Woodland Cutting
+    lumber_mill_slot_1: Logging Method
+    lumber_mill_slot_2: Additional Rations
     lumber_improvements_discovery: Coppice With Standards
     lumber_improvements_discovery_desc: Manage woodland as recurring coppice stools beneath marked timber standards, coordinating winter cutting, bark stripping, and smallwood recovery instead of relying on a flat lumber yield bonus.
     lumber_improvements_reformation: Timber Drives
     lumber_improvements_reformation_desc: Organize felling crews, log landings, squared timbers, and seasonal river drives so mills can draw wood from a wider forest hinterland at higher logistical cost.
+    pp_lumber_mill_base_lumber: Woodland Cutting
     pp_lumber_mill_coppice_standards: Coppice With Standards
     pp_lumber_mill_extra_rations: Extra Rations
     pp_lumber_mill_horse_teams: Horse Teams
     pp_lumber_mill_maintenance: Lumber Mill Maintenance
     pp_lumber_mill_no_extra_rations: No Extra Rations
+    pp_lumber_mill_no_primary: No Logging Method
     pp_lumber_mill_timber_drives: Timber Drives
 
 evaluation:
   production_methods:
+    pp_lumber_mill_base_lumber:
+      production_efficiency: 1.00
+    pp_lumber_mill_no_primary:
+      production_efficiency: 1.00
     pp_lumber_mill_maintenance:
       production_efficiency: 1.00
     pp_lumber_mill_horse_teams:

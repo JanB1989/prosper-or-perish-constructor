@@ -19,6 +19,8 @@ building:
         - pp_iron_mine_improved_no_primary
         - pp_iron_mine_improved_iron
         - pp_iron_mine_improved_slitting_dressed_ore
+        - pp_iron_mine_improved_horse_whim_haulage
+        - pp_iron_mine_improved_ore_dressing_floors
     - name: slot_2
       methods:
         - pp_iron_mine_improved_no_secondary
@@ -75,6 +77,22 @@ building:
             output = 2.45
             category = building_maintenance
         }
+        pp_iron_mine_improved_horse_whim_haulage = {
+            horses = 0.72 # whim draft teams
+            leather = 0.34 # harness, buckets
+            beeswax = 0.20 # mine candles, seals
+            produced = iron
+            output = 1.35
+            category = building_maintenance
+        }
+        pp_iron_mine_improved_ore_dressing_floors = {
+            fiber_crops = 0.80 # sacks, screens
+            cloth = 0.38 # sorting cloths
+            beeswax = 0.20 # candles, seals
+            produced = iron
+            output = 1.17
+            category = building_maintenance
+        }
     }
     unique_production_methods = {
         pp_iron_mine_improved_no_secondary = {
@@ -110,6 +128,8 @@ localization:
     pp_iron_mine_improved_no_primary: No Iron Mining
     pp_iron_mine_improved_iron: Timbered Ore Workings
     pp_iron_mine_improved_slitting_dressed_ore: Slitting-Mill Ore Dressing
+    pp_iron_mine_improved_horse_whim_haulage: Horse-Whim Haulage
+    pp_iron_mine_improved_ore_dressing_floors: Ore Dressing Floors
     pp_iron_mine_improved_no_secondary: No Ochre Recovery
     pp_iron_mine_improved_ochre: Ochre Washing
     pp_iron_mine_improved_price: Iron Mine Price
@@ -133,6 +153,16 @@ evaluation:
       production_efficiency: 1.15
     pp_iron_mine_improved_slitting_dressed_ore:
       production_efficiency: 1.16
+    pp_iron_mine_improved_horse_whim_haulage:
+      production_efficiency: 1.10
+      allow_rules:
+        input_throughput: Horse-whim haulage is a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
+        output_throughput: Horse-whim haulage is a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
+    pp_iron_mine_improved_ore_dressing_floors:
+      production_efficiency: 1.06
+      allow_rules:
+        input_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
+        output_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
     pp_iron_mine_improved_no_secondary:
       production_efficiency: 1.00
     pp_iron_mine_improved_ochre:

@@ -10,19 +10,29 @@ REPLACE:lumber_mill = {
 	town = yes
 	city = yes
 	
-	location_potential = {
-		OR = {
-			vegetation = woods
-			vegetation = forest
-			vegetation = farmland
-			vegetation = jungle
-		}
-	}
+    location_potential = {
+        OR = {
+            vegetation = woods
+            vegetation = forest
+            vegetation = jungle
+            raw_material = goods:lumber
+        }
+    }
 	category = rgo_building_category
 	
 	build_time = rural_build_time
 	
-	unique_production_methods = {
+    unique_production_methods = {
+        pp_lumber_mill_base_lumber = {
+            produced = lumber
+            output = 0.30
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_lumber_mill_no_primary = {
+            category = building_maintenance
+        }
 		pp_lumber_mill_maintenance = {
 			produced = lumber
 			output = 2.4

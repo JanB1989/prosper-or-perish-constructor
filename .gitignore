@@ -13,6 +13,9 @@ graphs/
 reports/
 blueprints/generated/
 
+# Windows deploy target accidentally rooted inside this WSL checkout.
+/C:/
+
 # Local machine overrides.
 *.local.toml
 .env

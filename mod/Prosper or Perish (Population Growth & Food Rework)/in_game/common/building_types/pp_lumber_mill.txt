@@ -69,18 +69,25 @@ REPLACE:lumber_mill = {
 			category = building_maintenance
 		}
 	}
-	unique_production_methods = {
-		pp_lumber_mill_no_extra_rations = {
-			category = building_maintenance
-		}
-		pp_lumber_mill_extra_rations = {
-			victuals = 1.30
-			produced = lumber
-			output = 2.10
-			debug_max_profit = 0
-			category = building_maintenance
-		}
-	}
+    unique_production_methods = {
+        pp_lumber_mill_no_extra_rations = {
+            category = building_maintenance
+        }
+        pp_lumber_mill_extra_rations = {
+            victuals = 1.30
+            produced = lumber
+            output = 2.10
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_lumber_mill_wound_salves = {
+            medicaments = 0.50
+            produced = lumber
+            output = 0.35
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
 	construction_demand = basic_construction_needs
 }
 # <<< eu5-building-pipeline:lumber_mill:building

@@ -25,6 +25,7 @@ building:
       methods:
         - pp_lumber_mill_no_extra_rations
         - pp_lumber_mill_extra_rations
+        - pp_lumber_mill_wound_salves
   possible_production_methods: []
   body: |2-
     	is_foreign = no
@@ -96,18 +97,25 @@ building:
     			category = building_maintenance
     		}
     	}
-    	unique_production_methods = {
-    		pp_lumber_mill_no_extra_rations = {
-    			category = building_maintenance
-    		}
-    		pp_lumber_mill_extra_rations = {
-    			victuals = 1.30
-    			produced = lumber
-    			output = 2.10
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    	}
+        unique_production_methods = {
+            pp_lumber_mill_no_extra_rations = {
+                category = building_maintenance
+            }
+            pp_lumber_mill_extra_rations = {
+                victuals = 1.30
+                produced = lumber
+                output = 2.10
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+            pp_lumber_mill_wound_salves = {
+                medicaments = 0.50
+                produced = lumber
+                output = 0.35
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+        }
     	construction_demand = basic_construction_needs
 advancements:
   - key: REPLACE:lumber_improvements_discovery
@@ -128,7 +136,7 @@ localization:
   entries:
     lumber_mill_slot_0: Woodland Cutting
     lumber_mill_slot_1: Logging Method
-    lumber_mill_slot_2: Additional Rations
+    lumber_mill_slot_2: Crew Support
     lumber_improvements_discovery: Coppice With Standards
     lumber_improvements_discovery_desc: Manage woodland as recurring coppice stools beneath marked timber standards, coordinating winter cutting, bark stripping, and smallwood recovery instead of relying on a flat lumber yield bonus.
     lumber_improvements_reformation: Timber Drives
@@ -141,6 +149,7 @@ localization:
     pp_lumber_mill_no_extra_rations: No Extra Rations
     pp_lumber_mill_no_primary: No Logging Method
     pp_lumber_mill_timber_drives: Timber Drives
+    pp_lumber_mill_wound_salves: Wound Salves
 
 evaluation:
   production_methods:
@@ -158,3 +167,8 @@ evaluation:
       production_efficiency: 1.00
     pp_lumber_mill_extra_rations:
       production_efficiency: 1.00
+    pp_lumber_mill_wound_salves:
+      production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary logging throughput.
+        output_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary logging throughput.

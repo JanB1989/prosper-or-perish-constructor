@@ -30,6 +30,9 @@ LOCATION_MODIFIER_LOCALIZATION = (
     MOD_ROOT / "main_menu" / "localization" / "english" / "pp_location_modifiers_l_english.yml"
 )
 EUROPEDIA_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_europedia_l_english.yml"
+LOCATION_POTENTIAL_CONCEPT = (
+    MOD_ROOT / "main_menu" / "common" / "game_concepts" / "pp_location_potential.txt"
+)
 SATURATION_ANCHORS = ROOT / "population_capacity_saturation_anchors.toml"
 CONTROL_POINTS = ROOT / "population_capacity_control_points.csv"
 CAPACITY_EFFECT_BLOCKS = (
@@ -135,13 +138,33 @@ def test_population_capacity_config_plans_managed_outputs() -> None:
 def test_location_potential_help_localization_is_shared() -> None:
     modifier_text = LOCATION_MODIFIER_LOCALIZATION.read_text(encoding="utf-8-sig")
     europedia_text = EUROPEDIA_LOCALIZATION.read_text(encoding="utf-8-sig")
+    concept_text = LOCATION_POTENTIAL_CONCEPT.read_text(encoding="utf-8-sig")
+    modifier_keys = {
+        f"pp_loc_{location_tag}"
+        for location_tag in _location_modifier_blocks(LOCATION_MODIFIERS.read_text(encoding="utf-8-sig"))
+    }
+    name_keys = set(re.findall(r"^\s*STATIC_MODIFIER_NAME_(pp_loc_\S+):", modifier_text, flags=re.MULTILINE))
+    desc_keys = set(re.findall(r"^\s*STATIC_MODIFIER_DESC_(pp_loc_\S+):", modifier_text, flags=re.MULTILINE))
 
-    assert 'pp_location_modifiers_title: "Prosper or Perish per-location suitability"' in modifier_text
-    assert "pp_location_modifiers_title_desc:" in modifier_text
+    assert re.search(
+        r'^\s*pp_location_potential_modifier_name: "\[pp_location_potential\|e\]"$',
+        modifier_text,
+        flags=re.MULTILINE,
+    )
+    assert re.search(
+        r'^\s*pp_location_potential_modifier_desc: "Population capacity and local output modifiers for this location are calculated from \[pp_location_potential\|e\]\."$',
+        modifier_text,
+        flags=re.MULTILINE,
+    )
     assert "[pp_location_potential|e]" in modifier_text
-    assert modifier_text.count("pp_location_modifiers_title:") == 1
-    assert modifier_text.count("pp_location_modifiers_title_desc:") == 1
+    assert "pp_location_modifiers_title:" not in modifier_text
+    assert "pp_location_modifiers_title_desc:" not in modifier_text
+    assert 'STATIC_MODIFIER_NAME_pp_loc_sant_feliu: "$pp_location_potential_modifier_name$"' in modifier_text
+    assert 'STATIC_MODIFIER_DESC_pp_loc_sant_feliu: "$pp_location_potential_modifier_desc$"' in modifier_text
+    assert name_keys == modifier_keys
+    assert desc_keys == modifier_keys
 
+    assert re.search(r"^pp_location_potential\s*=\s*\{", concept_text, flags=re.MULTILINE)
     assert 'game_concept_pp_location_potential: "Location Potential"' in europedia_text
     assert "game_concept_pp_location_potential_desc:" in europedia_text
     assert europedia_text.count("game_concept_pp_location_potential:") == 1
@@ -155,7 +178,8 @@ def test_location_potential_help_localization_is_shared() -> None:
         "Lake access",
         "Coastal access",
         "Location RGO",
-        "Soil data",
+        "#T Out-of-game maps and evidence:#!",
+        "$BULLET$ Soil data",
         "GAEZ crop potential and suitability maps",
         "HYDE historical population coverage",
         "Freshwater food support maps",
@@ -165,7 +189,7 @@ def test_location_potential_help_localization_is_shared() -> None:
         "Wild subsistence support maps",
         "Land-use confidence maps",
         "Water confidence maps",
-        "Calibration and control-point data",
+        "The modelling and pipeline for this are in the GitHub repo",
     )
     missing = [term for term in required_terms if term not in europedia_text]
 

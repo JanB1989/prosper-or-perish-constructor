@@ -93,7 +93,7 @@ building:
 prices:
   - key: pp_alum_quarry_price
     body: |2-
-      {gold = 100}
+      {gold = 50}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_alum_quarry_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('alum_quarry')|e].

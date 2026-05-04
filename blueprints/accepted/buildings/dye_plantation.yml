@@ -62,7 +62,7 @@ building:
 prices:
   - key: pp_dye_plantation_price
     body: |2-
-      {gold = 100}
+      {gold = 50}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_dye_plantation_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('dye_plantation')|e].

@@ -97,7 +97,7 @@ building:
 prices:
   - key: pp_iron_mine_deep_price
     body: |2-
-      {gold = 275}
+      {gold = 400}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_iron_mine_deep_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('iron_mine_deep')|e].

@@ -74,7 +74,7 @@ building:
 prices:
   - key: pp_bog_iron_smelter_blast_furnace_price
     body: |2-
-      {gold = 150}
+      {gold = 200}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_bog_iron_smelter_blast_furnace_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('bog_iron_smelter_blast_furnace')|e].

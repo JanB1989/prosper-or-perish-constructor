@@ -95,7 +95,7 @@ building:
 prices:
   - key: pp_offshore_fishery_price
     body: |2-
-      {gold = 175}
+      {gold = 200}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_offshore_fishery_price_cost_modifier: Affects the cost of building an [ShowBuildingTypeName('offshore_fishery')|e].

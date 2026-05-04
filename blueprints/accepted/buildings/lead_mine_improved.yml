@@ -88,7 +88,7 @@ building:
 prices:
   - key: pp_lead_mine_improved_price
     body: |2-
-      {gold = 150}
+      {gold = 800}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_lead_mine_improved_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('lead_mine_improved')|e].

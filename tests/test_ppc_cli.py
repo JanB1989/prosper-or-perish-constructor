@@ -1,0 +1,604 @@
+import os
+from pathlib import Path
+
+import pytest
+
+from prosper_or_perish_constructor import cli
+
+
+def _repo(tmp_path: Path) -> Path:
+    (tmp_path / "constructor.toml").write_text('name = "test"\n')
+    return tmp_path
+
+
+def test_test_command_disables_pytest_capture_by_default(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "test", "tests/test_project_config.py"]) == 0
+
+    assert calls == [
+        [
+            cli.sys.executable,
+            "-m",
+            "pytest",
+            "--capture=no",
+            "tests/test_project_config.py",
+        ]
+    ]
+
+
+def test_test_command_preserves_explicit_capture_args(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "test", "-s", "tests/test_project_config.py"]) == 0
+
+    assert calls == [[cli.sys.executable, "-m", "pytest", "-s", "tests/test_project_config.py"]]
+
+
+def test_sync_requires_explicit_confirmation(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+
+    with pytest.raises(SystemExit, match="without explicit confirmation"):
+        cli.main(["--repo", str(repo), "sync"])
+
+
+def test_powershell_script_converts_paths_for_windows_powershell(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    script = repo / "scripts" / "sync-constructor.ps1"
+    argument = repo / "artifact.txt"
+    calls: list[list[str]] = []
+
+    monkeypatch.setattr(cli, "_find_powershell", lambda: "powershell.exe")
+    monkeypatch.setattr(cli, "_windows_path", lambda path: f"WIN:{path}")
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli._run_powershell_script(script, repo, [argument, "-Literal"]) == 0
+
+    assert calls == [
+        [
+            "powershell.exe",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            f"WIN:{script}",
+            f"WIN:{argument}",
+            "-Literal",
+        ]
+    ]
+
+
+def test_powershell_script_keeps_paths_for_native_pwsh(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    script = repo / "scripts" / "sync-constructor.ps1"
+    calls: list[list[str]] = []
+
+    monkeypatch.setattr(cli, "_find_powershell", lambda: "pwsh")
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli._run_powershell_script(script, repo) == 0
+
+    assert calls == [
+        [
+            "pwsh",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(script),
+        ]
+    ]
+
+
+def test_dashboard_serves_current_capacity_map(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    dashboard = repo / "artifacts" / "data" / "population_capacity" / "current_capacity_map"
+    dashboard.mkdir(parents=True)
+    (dashboard / "index.html").write_text("<!doctype html>\n")
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "dashboard", "--port", "8765"]) == 0
+
+    assert calls == [
+        [
+            cli.sys.executable,
+            "-m",
+            "http.server",
+            "8765",
+            "--bind",
+            "127.0.0.1",
+            "--directory",
+            str(dashboard),
+        ]
+    ]
+
+
+def test_dashboard_reports_missing_index(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+
+    with pytest.raises(SystemExit, match="Dashboard index not found"):
+        cli.main(["--repo", str(repo), "dashboard"])
+
+
+def test_savegame_dashboard_ingest_uses_constructor_defaults(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    save_dir = tmp_path / "save games"
+    save_dir.mkdir()
+    (save_dir / "autosave.eu5").write_text("save\n")
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert (
+        cli.main(
+            ["--repo", str(repo), "savegame-dashboard", "ingest", "--save-dir", str(save_dir)]
+        )
+        == 0
+    )
+
+    assert calls == [
+        [
+            "uv",
+            "run",
+            "eu5parse",
+            "savegame",
+            "ingest",
+            "--save-dir",
+            str(save_dir),
+            "--output",
+            str(repo / "graphs" / "dataset"),
+            "--profile",
+            "constructor",
+            "--load-order",
+            str(repo / "constructor.load_order.toml"),
+            "--workers",
+            "8",
+        ]
+    ]
+
+
+def test_savegame_dashboard_ingest_auto_detects_save_dir(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    missing_home = tmp_path / "home" / "Documents" / "Paradox Interactive" / "Europa Universalis V" / "save games"
+    save_dir = tmp_path / "windows" / "Documents" / "Paradox Interactive" / "Europa Universalis V" / "save games"
+    missing_home.mkdir(parents=True)
+    save_dir.mkdir(parents=True)
+    (save_dir / "autosave.eu5").write_text("save\n")
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+    monkeypatch.setattr(cli, "_savegame_dir_candidates", lambda: [missing_home, save_dir])
+
+    assert cli.main(["--repo", str(repo), "savegame-dashboard", "ingest"]) == 0
+
+    assert calls[0][5:7] == ["--save-dir", str(save_dir)]
+
+
+def test_savegame_dashboard_ingest_reports_checked_auto_dirs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    missing_home = tmp_path / "home" / "Documents" / "Paradox Interactive" / "Europa Universalis V" / "save games"
+    missing_home.mkdir(parents=True)
+
+    monkeypatch.setattr(cli, "_savegame_dir_candidates", lambda: [missing_home])
+
+    with pytest.raises(SystemExit, match="Could not auto-detect"):
+        cli.main(["--repo", str(repo), "savegame-dashboard", "ingest"])
+
+
+def test_savegame_dashboard_ingest_reports_empty_save_dir(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    save_dir = tmp_path / "save games"
+    save_dir.mkdir()
+
+    with pytest.raises(SystemExit, match="No .eu5 saves found"):
+        cli.main(["--repo", str(repo), "savegame-dashboard", "ingest", "--save-dir", str(save_dir)])
+
+
+def test_savegame_dashboard_serve_uses_constructor_defaults(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    calls: list[list[str]] = []
+    stopped: list[tuple[str, ...]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+    monkeypatch.setattr(
+        cli,
+        "_stop_existing_dashboard_processes",
+        lambda markers, port=None: stopped.append((tuple(markers), port)),
+    )
+
+    assert cli.main(["--repo", str(repo), "savegame-dashboard", "serve", "--port", "8765"]) == 0
+
+    assert stopped == [(("eu5parse", "dashboard", "serve", "--port", "8765"), 8765)]
+    assert calls == [
+        [
+            "uv",
+            "run",
+            "eu5parse",
+            "dashboard",
+            "serve",
+            "--dataset",
+            str(repo / "graphs" / "dataset"),
+            "--profile",
+            "constructor",
+            "--load-order",
+            str(repo / "constructor.load_order.toml"),
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "8765",
+        ]
+    ]
+
+
+def test_savegame_dashboard_process_matching_includes_cli_and_python_launches(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[tuple[str, ...]] = []
+    responses = {
+        ("eu5parse", "dashboard", "serve", "--port", "8050"): {101},
+        ("eu5gameparser.savegame.dashboard", "run_dashboard", "port=8050"): {202},
+        ("run_dashboard", "port=8050"): {303},
+    }
+
+    def fake_matching_processes(markers):
+        marker_tuple = tuple(markers)
+        calls.append(marker_tuple)
+        return responses.get(marker_tuple, set())
+
+    monkeypatch.setattr(cli, "_matching_processes", fake_matching_processes)
+
+    assert cli._matching_savegame_dashboard_processes(8050) == {101, 202, 303}
+    assert calls == list(responses)
+
+
+def test_stop_existing_dashboard_processes_uses_listening_port_pid(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    terminated: list[tuple[int, object]] = []
+
+    monkeypatch.setattr(cli, "_matching_processes", lambda markers: set())
+    monkeypatch.setattr(cli, "_matching_savegame_dashboard_processes", lambda port: set())
+    monkeypatch.setattr(cli, "_matching_listening_port_processes", lambda port: {4242})
+    monkeypatch.setattr(cli, "_terminate_process", lambda pid, sig: terminated.append((pid, sig)))
+    monkeypatch.setattr(cli, "_process_exists", lambda pid: False)
+
+    cli._stop_existing_dashboard_processes(("eu5parse",), port=8050)
+
+    assert terminated == [(4242, cli.signal.SIGTERM)]
+
+
+def test_stop_existing_dashboard_processes_never_terminates_current_process(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    terminated: list[tuple[int, object]] = []
+    current_pid = os.getpid()
+
+    monkeypatch.setattr(cli, "_matching_processes", lambda markers: {current_pid, 4242})
+    monkeypatch.setattr(cli, "_matching_savegame_dashboard_processes", lambda port: {current_pid})
+    monkeypatch.setattr(cli, "_matching_listening_port_processes", lambda port: {current_pid})
+    monkeypatch.setattr(cli, "_terminate_process", lambda pid, sig: terminated.append((pid, sig)))
+    monkeypatch.setattr(cli, "_process_exists", lambda pid: False)
+
+    cli._stop_existing_dashboard_processes(("eu5parse",), port=8050)
+
+    assert terminated == [(4242, cli.signal.SIGTERM)]
+
+
+def test_savegame_dashboard_start_uses_constructor_defaults(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "savegame-dashboard", "start", "--port", "8765"]) == 0
+
+    assert calls == [
+        [
+            "uv",
+            "run",
+            "eu5parse",
+            "dashboard",
+            "start",
+            "--dataset",
+            str(repo / "graphs" / "dataset"),
+            "--profile",
+            "constructor",
+            "--load-order",
+            str(repo / "constructor.load_order.toml"),
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "8765",
+            "--timeout",
+            "20.0",
+        ]
+    ]
+
+
+def test_savegame_dashboard_stop_and_status_forward_port(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "savegame-dashboard", "stop", "--port", "8765"]) == 0
+    assert cli.main(["--repo", str(repo), "savegame-dashboard", "status", "--port", "8765"]) == 0
+
+    assert calls == [
+        ["uv", "run", "eu5parse", "dashboard", "stop", "--port", "8765"],
+        [
+            "uv",
+            "run",
+            "eu5parse",
+            "dashboard",
+            "status",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "8765",
+        ],
+    ]
+
+
+def test_savegame_dashboard_watch_uses_constructor_defaults(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    save_dir = tmp_path / "save games"
+    save_dir.mkdir()
+    (save_dir / "autosave.eu5").write_text("save\n")
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert (
+        cli.main(
+            [
+                "--repo",
+                str(repo),
+                "savegame-dashboard",
+                "watch",
+                "--save-dir",
+                str(save_dir),
+                "--max-cycles",
+                "1",
+            ]
+        )
+        == 0
+    )
+
+    assert calls == [
+        [
+            "uv",
+            "run",
+            "eu5parse",
+            "savegame",
+            "watch",
+            "--save-dir",
+            str(save_dir),
+            "--output",
+            str(repo / "graphs" / "dataset"),
+            "--profile",
+            "constructor",
+            "--load-order",
+            str(repo / "constructor.load_order.toml"),
+            "--workers",
+            "8",
+            "--interval",
+            "30.0",
+            "--min-file-age",
+            "0.0",
+            "--max-cycles",
+            "1",
+        ]
+    ]
+
+
+def test_savegame_dashboard_run_starts_then_watches(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    save_dir = tmp_path / "save games"
+    save_dir.mkdir()
+    (save_dir / "autosave.eu5").write_text("save\n")
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert (
+        cli.main(
+            [
+                "--repo",
+                str(repo),
+                "savegame-dashboard",
+                "run",
+                "--save-dir",
+                str(save_dir),
+                "--max-cycles",
+                "1",
+            ]
+        )
+        == 0
+    )
+
+    assert calls[0][:5] == ["uv", "run", "eu5parse", "dashboard", "start"]
+    assert calls[1][:5] == ["uv", "run", "eu5parse", "savegame", "watch"]
+
+
+def test_savegame_dashboard_benchmark_writes_constructor_report(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "savegame-dashboard", "benchmark"]) == 0
+
+    assert calls == [
+        [
+            "uv",
+            "run",
+            "eu5parse",
+            "dashboard",
+            "benchmark",
+            "--dataset",
+            str(repo / "graphs" / "dataset"),
+            "--profile",
+            "constructor",
+            "--load-order",
+            str(repo / "constructor.load_order.toml"),
+            "--output",
+            str(repo / "graphs" / "dashboard_benchmark_report.json"),
+        ]
+    ]
+
+
+def test_savegame_purge_deletes_generated_savegame_outputs(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    savegame_dir = repo / "artifacts" / "data" / "savegame"
+    progression_dir = repo / "artifacts" / "data" / "savegame_progression"
+    dataset_dir = repo / "graphs" / "dataset"
+    dataset_v2_dir = repo / "graphs" / "dataset_v2"
+    progression_dataset_dir = repo / "graphs" / "savegame_progression_dataset"
+    explorer = repo / "graphs" / "savegame_explorer.html"
+    progression_explorer = repo / "graphs" / "savegame_progression.html"
+    published_explorer = repo / "docs" / "examples" / "savegame_explorer.html"
+    benchmark = repo / "graphs" / "dashboard_benchmark_report.json"
+
+    savegame_dir.mkdir(parents=True)
+    (savegame_dir / "facts.parquet").write_text("generated\n")
+    progression_dir.mkdir(parents=True)
+    (progression_dir / "dataset" / "manifest.json").parent.mkdir()
+    (progression_dir / "dataset" / "manifest.json").write_text("{}\n")
+    dataset_dir.mkdir(parents=True)
+    (dataset_dir / "manifest.json").write_text("{}\n")
+    dataset_v2_dir.mkdir(parents=True)
+    (dataset_v2_dir / "manifest.json").write_text("{}\n")
+    progression_dataset_dir.mkdir(parents=True)
+    (progression_dataset_dir / "manifest.json").write_text("{}\n")
+    explorer.write_text("<!doctype html>\n")
+    progression_explorer.write_text("<!doctype html>\n")
+    published_explorer.parent.mkdir(parents=True)
+    published_explorer.write_text("<!doctype html>\n")
+    benchmark.write_text("{}\n")
+
+    assert cli.main(["--repo", str(repo), "savegame-purge"]) == 0
+
+    assert not savegame_dir.exists()
+    assert not progression_dir.exists()
+    assert not dataset_dir.exists()
+    assert not dataset_v2_dir.exists()
+    assert not progression_dataset_dir.exists()
+    assert not explorer.exists()
+    assert not progression_explorer.exists()
+    assert not published_explorer.exists()
+    assert not benchmark.exists()
+
+
+def test_savegame_purge_dry_run_keeps_generated_outputs(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    savegame_dir = repo / "artifacts" / "data" / "savegame"
+    savegame_dir.mkdir(parents=True)
+    (savegame_dir / "facts.parquet").write_text("generated\n")
+
+    assert cli.main(["--repo", str(repo), "savegame-purge", "--dry-run"]) == 0
+
+    assert savegame_dir.exists()

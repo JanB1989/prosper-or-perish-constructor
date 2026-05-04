@@ -96,7 +96,7 @@ building:
 prices:
   - key: pp_copper_mine_adit_price
     body: |2-
-      {gold = 150}
+      {gold = 200}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_copper_mine_adit_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('copper_mine_adit')|e].

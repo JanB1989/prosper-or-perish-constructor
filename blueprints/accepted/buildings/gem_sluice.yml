@@ -94,7 +94,7 @@ building:
 prices:
   - key: pp_gem_sluice_price
     body: |2-
-      {gold = 220}
+      {gold = 400}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_gem_sluice_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('gem_sluice')|e].

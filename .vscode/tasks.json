@@ -1,0 +1,76 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "ppc: help",
+      "type": "shell",
+      "command": "uv run ppc --help",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "ppc: test",
+      "type": "shell",
+      "command": "uv run ppc test",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "ppc: inspect",
+      "type": "shell",
+      "command": "uv run ppc inspect",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "ppc: analyze",
+      "type": "shell",
+      "command": "uv run ppc analyze",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "ppc: savegame",
+      "type": "shell",
+      "command": "uv run ppc savegame",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "ppc: blueprint evaluate",
+      "type": "shell",
+      "command": "uv run ppc blueprint evaluate",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "ppc: blueprint parity",
+      "type": "shell",
+      "command": "uv run ppc blueprint parity",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "ppc: blueprint build",
+      "type": "shell",
+      "command": "uv run ppc blueprint build",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "ppc: publish docs",
+      "type": "shell",
+      "command": "uv run ppc publish-docs",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "ppc: dashboard",
+      "type": "shell",
+      "command": "uv run ppc dashboard",
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}

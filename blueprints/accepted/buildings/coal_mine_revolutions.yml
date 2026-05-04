@@ -87,7 +87,7 @@ building:
 prices:
   - key: pp_coal_mine_revolutions_price
     body: |2-
-      {gold = 225}
+      {gold = 1200}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_coal_mine_revolutions_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('coal_mine_revolutions')|e].

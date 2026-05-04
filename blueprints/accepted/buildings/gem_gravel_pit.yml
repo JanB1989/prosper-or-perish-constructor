@@ -93,7 +93,7 @@ building:
 prices:
   - key: pp_gem_gravel_pit_price
     body: |2-
-      {gold = 125}
+      {gold = 50}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_gem_gravel_pit_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('gem_gravel_pit')|e].

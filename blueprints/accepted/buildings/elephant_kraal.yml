@@ -62,7 +62,7 @@ building:
 prices:
   - key: pp_elephant_kraal_price
     body: |2-
-      {gold = 100}
+      {gold = 50}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_elephant_kraal_price_cost_modifier: Affects the cost of building an [ShowBuildingTypeName('elephant_kraal')|e].

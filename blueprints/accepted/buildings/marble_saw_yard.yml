@@ -95,7 +95,7 @@ building:
 prices:
   - key: pp_marble_saw_yard_price
     body: |2-
-      {gold = 220}
+      {gold = 100}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_marble_saw_yard_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('marble_saw_yard')|e].

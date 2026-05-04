@@ -35,6 +35,63 @@ function Resolve-ProjectPath {
     return [System.IO.Path]::GetFullPath((Join-Path $repoRoot $Path))
 }
 
+function ConvertTo-WslPath {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    if ($Path -match "^([A-Za-z]):\\(.*)$") {
+        $drive = $matches[1].ToLowerInvariant()
+        $tail = $matches[2] -replace "\\", "/"
+        return "/mnt/$drive/$tail"
+    }
+
+    $wsl = Get-Command wsl.exe -ErrorAction SilentlyContinue
+    if ($null -eq $wsl) {
+        throw "Windows uv was not found and wsl.exe is unavailable. Install uv for Windows or run from a Windows shell with uv on PATH."
+    }
+
+    $converted = & $wsl.Source wslpath -u $Path
+    if ([string]::IsNullOrWhiteSpace($converted)) {
+        throw "Failed to convert Windows path for WSL: $Path"
+    }
+
+    return $converted.Trim()
+}
+
+function Get-NativeExitCode {
+    $lastExitCode = Get-Variable -Name LASTEXITCODE -Scope Global -ErrorAction SilentlyContinue
+    if ($null -eq $lastExitCode) {
+        return 0
+    }
+    return $lastExitCode.Value
+}
+
+function Invoke-ConstructorBuild {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RepoRoot
+    )
+
+    $uv = Get-Command uv -ErrorAction SilentlyContinue
+    if ($null -ne $uv) {
+        uv run eu5-orchestrator build --project constructor.toml --overwrite
+        $exitCode = Get-NativeExitCode
+        if ($exitCode -ne 0) {
+            throw "Constructor build failed with exit code $exitCode. Refusing to mirror into live mod folder."
+        }
+        return
+    }
+
+    $wslRepoRoot = ConvertTo-WslPath -Path $RepoRoot
+    wsl.exe --cd $wslRepoRoot --exec bash -lc "uv run eu5-orchestrator build --project constructor.toml --overwrite"
+    $exitCode = Get-NativeExitCode
+    if ($exitCode -ne 0) {
+        throw "Constructor build failed through WSL with exit code $exitCode. Refusing to mirror into live mod folder."
+    }
+}
+
 function Assert-SafeMirrorTarget {
     param(
         [Parameter(Mandatory = $true)]
@@ -325,10 +382,7 @@ try {
     $target = Resolve-ProjectPath (Get-TomlStringValue -Path $localConfig -Key "target")
 
     Write-Host "Building accepted blueprints into the constructor mod copy..."
-    uv run eu5-orchestrator build --project constructor.toml --overwrite
-    if ($LASTEXITCODE -ne 0) {
-        throw "Constructor build failed with exit code $LASTEXITCODE. Refusing to mirror into live mod folder."
-    }
+    Invoke-ConstructorBuild -RepoRoot $repoRoot
 
     if (-not (Test-Path -LiteralPath $source -PathType Container)) {
         throw "Constructor mod source does not exist: $source"
@@ -340,8 +394,12 @@ try {
     Write-Host "Mirroring constructor mod into live Paradox mod folder..."
     Write-Host "Source: $source"
     Write-Host "Target: $target"
-    robocopy $source $target /MIR /R:2 /W:1 /DCOPY:DAT /COPY:DAT /XJ /NFL /NDL /NP
-    $robocopyExitCode = $LASTEXITCODE
+    $robocopy = Join-Path $env:WINDIR "System32\robocopy.exe"
+    if (-not (Test-Path -LiteralPath $robocopy -PathType Leaf)) {
+        throw "robocopy.exe was not found: $robocopy"
+    }
+    & $robocopy $source $target /MIR /R:2 /W:1 /DCOPY:DAT /COPY:DAT /XJ /NFL /NDL /NP
+    $robocopyExitCode = Get-NativeExitCode
     if ($robocopyExitCode -ge 8) {
         throw "Robocopy failed with exit code $robocopyExitCode."
     }

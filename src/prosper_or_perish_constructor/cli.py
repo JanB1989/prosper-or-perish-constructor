@@ -1,0 +1,1129 @@
+"""Command surface for the Prosper or Perish constructor workspace."""
+
+from __future__ import annotations
+
+import argparse
+import os
+import shutil
+import signal
+import subprocess
+import sys
+import time
+from pathlib import Path
+from typing import Sequence
+
+
+ROOT_MARKER = "constructor.toml"
+CONSTRUCTOR_PROFILE = "constructor"
+CONSTRUCTOR_LOAD_ORDER = Path("constructor.load_order.toml")
+SAVEGAME_DASHBOARD_DATASET = Path("graphs/dataset")
+SAVEGAME_DASHBOARD_BENCHMARK = Path("graphs/dashboard_benchmark_report.json")
+SAVEGAME_DASHBOARD_LEGACY_DATASETS = (
+    Path("graphs/dataset_v2"),
+    Path("graphs/savegame_progression_dataset"),
+    Path("artifacts/data/savegame_progression"),
+)
+SAVEGAME_ARTIFACT_DIR = Path("artifacts/data/savegame")
+SAVEGAME_EXPLORER = Path("graphs/savegame_explorer.html")
+SAVEGAME_PROGRESSION_EXPLORER = Path("graphs/savegame_progression.html")
+PUBLISHED_SAVEGAME_EXPLORER = Path("docs/examples/savegame_explorer.html")
+SAVEGAME_PURGE_PATHS = (
+    SAVEGAME_ARTIFACT_DIR,
+    SAVEGAME_EXPLORER,
+    SAVEGAME_PROGRESSION_EXPLORER,
+    PUBLISHED_SAVEGAME_EXPLORER,
+    SAVEGAME_DASHBOARD_DATASET,
+    *SAVEGAME_DASHBOARD_LEGACY_DATASETS,
+    SAVEGAME_DASHBOARD_BENCHMARK,
+)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = _build_parser()
+    args, extra = parser.parse_known_args(argv)
+
+    repo = _resolve_repo(args.repo)
+    project = repo / args.project
+
+    try:
+        return args.handler(args, extra, repo, project)
+    except KeyboardInterrupt:
+        return 130
+
+
+def _build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="ppc",
+        description="Prosper or Perish constructor workflow commands.",
+    )
+    parser.add_argument(
+        "--repo",
+        type=Path,
+        default=None,
+        help="Repository root. Defaults to the nearest parent containing constructor.toml.",
+    )
+    parser.add_argument(
+        "--project",
+        default=ROOT_MARKER,
+        help="Project TOML path relative to --repo. Defaults to constructor.toml.",
+    )
+
+    subcommands = parser.add_subparsers(dest="command", required=True)
+
+    _add_command(
+        subcommands,
+        "setup",
+        "Install dev dependencies, then inspect the constructor project.",
+        _setup,
+    )
+    _add_command(
+        subcommands,
+        "inspect",
+        "Inspect the configured constructor project.",
+        _orchestrator("inspect"),
+    )
+    _add_command(
+        subcommands,
+        "test",
+        "Run pytest. Extra args are passed to pytest.",
+        _test,
+    )
+    _add_command(
+        subcommands,
+        "analyze",
+        "Export static parser tables and refresh the goods-flow docs example.",
+        _script_or_orchestrator("analyze-constructor.ps1", "analyze"),
+    )
+    _add_command(
+        subcommands,
+        "savegame",
+        "Export latest savegame facts and the savegame explorer.",
+        _script_or_orchestrator("savegame-constructor.ps1", "savegame"),
+    )
+    savegame_purge = _add_command(
+        subcommands,
+        "savegame-purge",
+        "Delete generated savegame analysis artifacts and dashboard datasets.",
+        _savegame_purge,
+    )
+    savegame_purge.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print generated savegame paths that would be deleted without deleting them.",
+    )
+    _add_command(
+        subcommands,
+        "publish-docs",
+        "Copy generated graph outputs into docs/examples.",
+        _publish_docs,
+    ).add_argument(
+        "examples",
+        nargs="*",
+        help="Optional graph HTML files to publish. Defaults to all examples.",
+    )
+    dashboard = _add_command(
+        subcommands,
+        "dashboard",
+        "Serve the local population-capacity dashboard.",
+        _dashboard,
+    )
+    dashboard.add_argument(
+        "--host",
+        default="127.0.0.1",
+        help="Host interface for the local dashboard server. Defaults to 127.0.0.1.",
+    )
+    dashboard.add_argument(
+        "--port",
+        type=int,
+        default=8000,
+        help="Port for the local dashboard server. Defaults to 8000.",
+    )
+    dashboard.add_argument(
+        "--dir",
+        type=Path,
+        default=Path("artifacts/data/population_capacity/current_capacity_map"),
+        help="Dashboard directory relative to --repo. Defaults to the current capacity map dashboard.",
+    )
+    savegame_dashboard = subcommands.add_parser(
+        "savegame-dashboard",
+        help="Build, serve, or benchmark the constructor savegame progression dashboard.",
+        description="Savegame progression dashboard commands using the constructor profile and load order.",
+    )
+    savegame_dashboard_subcommands = savegame_dashboard.add_subparsers(
+        dest="savegame_dashboard_command",
+        required=True,
+    )
+    _add_savegame_dashboard_command(
+        savegame_dashboard_subcommands,
+        "ingest",
+        "Build or refresh the multi-save progression dataset.",
+        _savegame_dashboard_ingest,
+    ).add_argument(
+        "--workers",
+        type=int,
+        default=8,
+        help="Parallel save parser workers. Defaults to 8.",
+    )
+    ingest = savegame_dashboard_subcommands.choices["ingest"]
+    ingest.add_argument(
+        "--save-dir",
+        type=Path,
+        default=None,
+        help="Directory containing .eu5 saves. Defaults to auto-detecting the EU5 documents save folder.",
+    )
+    savegame_dashboard_serve = _add_savegame_dashboard_command(
+        savegame_dashboard_subcommands,
+        "serve",
+        "Serve the local Dash savegame progression dashboard.",
+        _savegame_dashboard_serve,
+    )
+    savegame_dashboard_serve.add_argument(
+        "--host",
+        default="127.0.0.1",
+        help="Dashboard bind host. Defaults to 127.0.0.1.",
+    )
+    savegame_dashboard_serve.add_argument(
+        "--port",
+        type=int,
+        default=8050,
+        help="Dashboard bind port. Defaults to 8050.",
+    )
+    savegame_dashboard_serve.add_argument(
+        "--debug",
+        action="store_true",
+        help="Run Dash in debug mode.",
+    )
+    savegame_dashboard_start = _add_savegame_dashboard_command(
+        savegame_dashboard_subcommands,
+        "start",
+        "Start the local Dash savegame progression dashboard in the background.",
+        _savegame_dashboard_start,
+    )
+    _add_dashboard_server_args(savegame_dashboard_start)
+    savegame_dashboard_start.add_argument(
+        "--timeout",
+        type=float,
+        default=20.0,
+        help="Health-check timeout in seconds. Defaults to 20.",
+    )
+    savegame_dashboard_stop = savegame_dashboard_subcommands.add_parser(
+        "stop",
+        help="Stop the background Dash savegame progression dashboard.",
+        description="Stop the background Dash savegame progression dashboard.",
+    )
+    savegame_dashboard_stop.add_argument(
+        "--port",
+        type=int,
+        default=8050,
+        help="Dashboard bind port. Defaults to 8050.",
+    )
+    savegame_dashboard_stop.set_defaults(handler=_savegame_dashboard_stop)
+    savegame_dashboard_status = savegame_dashboard_subcommands.add_parser(
+        "status",
+        help="Show background Dash savegame progression dashboard status.",
+        description="Show background Dash savegame progression dashboard status.",
+    )
+    savegame_dashboard_status.add_argument(
+        "--host",
+        default="127.0.0.1",
+        help="Dashboard bind host. Defaults to 127.0.0.1.",
+    )
+    savegame_dashboard_status.add_argument(
+        "--port",
+        type=int,
+        default=8050,
+        help="Dashboard bind port. Defaults to 8050.",
+    )
+    savegame_dashboard_status.set_defaults(handler=_savegame_dashboard_status)
+    savegame_dashboard_watch = _add_savegame_dashboard_command(
+        savegame_dashboard_subcommands,
+        "watch",
+        "Continuously ingest savegames into the progression dataset.",
+        _savegame_dashboard_watch,
+    )
+    _add_savegame_watch_args(savegame_dashboard_watch)
+    savegame_dashboard_run = _add_savegame_dashboard_command(
+        savegame_dashboard_subcommands,
+        "run",
+        "Start the dashboard in the background, then continuously ingest savegames.",
+        _savegame_dashboard_run,
+    )
+    _add_dashboard_server_args(savegame_dashboard_run)
+    _add_savegame_watch_args(savegame_dashboard_run)
+    _add_savegame_dashboard_command(
+        savegame_dashboard_subcommands,
+        "benchmark",
+        "Benchmark cached dashboard startup and callback paths.",
+        _savegame_dashboard_benchmark,
+    ).add_argument(
+        "--output",
+        type=Path,
+        default=SAVEGAME_DASHBOARD_BENCHMARK,
+        help="Benchmark JSON report path relative to --repo. Defaults to graphs/dashboard_benchmark_report.json.",
+    )
+    _add_command(
+        subcommands,
+        "build",
+        "Build accepted blueprints into the constructor mod copy with --overwrite.",
+        _build,
+    )
+
+    sync = _add_command(
+        subcommands,
+        "sync",
+        "RISKY: build and mirror the constructor mod into the live Paradox mod folder.",
+        _sync,
+    )
+    sync.add_argument(
+        "--yes",
+        action="store_true",
+        help="Required confirmation for live mod folder mirroring.",
+    )
+
+    blueprint = subcommands.add_parser(
+        "blueprint",
+        help="Run blueprint list, parity, evaluate, good, or build workflows.",
+        description="Blueprint workflow commands. Extra args are passed to eu5-orchestrator.",
+    )
+    blueprint_subcommands = blueprint.add_subparsers(dest="blueprint_command", required=True)
+    _add_command(blueprint_subcommands, "list", "List accepted blueprints.", _blueprint("list"))
+    _add_command(
+        blueprint_subcommands,
+        "parity",
+        "Check blueprint output parity against generated mod files.",
+        _blueprint("parity"),
+    )
+    _add_command(
+        blueprint_subcommands,
+        "evaluate",
+        "Evaluate accepted blueprint economics and balance rules.",
+        _blueprint("evaluate"),
+    )
+    good = _add_command(
+        blueprint_subcommands,
+        "good",
+        "Compare production methods that produce one trade good.",
+        _blueprint_good,
+    )
+    good.add_argument("good", help="Trade good id, for example coal or victuals.")
+    _add_command(
+        blueprint_subcommands,
+        "build",
+        "Build accepted blueprints into the constructor mod copy with --overwrite.",
+        _build,
+    )
+
+    return parser
+
+
+def _add_command(
+    subcommands: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    help_text: str,
+    handler,
+) -> argparse.ArgumentParser:
+    command = subcommands.add_parser(
+        name,
+        help=help_text,
+        description=f"{help_text} Use '--' before extra tool arguments when needed.",
+    )
+    command.set_defaults(handler=handler)
+    return command
+
+
+def _add_savegame_dashboard_command(
+    subcommands: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    help_text: str,
+    handler,
+) -> argparse.ArgumentParser:
+    command = subcommands.add_parser(name, help=help_text, description=help_text)
+    command.add_argument(
+        "--dataset",
+        type=Path,
+        default=SAVEGAME_DASHBOARD_DATASET,
+        help="Progression dataset directory relative to --repo. Defaults to graphs/dataset.",
+    )
+    command.add_argument(
+        "--load-order",
+        type=Path,
+        default=CONSTRUCTOR_LOAD_ORDER,
+        help="Load-order TOML path relative to --repo. Defaults to constructor.load_order.toml.",
+    )
+    command.add_argument(
+        "--profile",
+        default=CONSTRUCTOR_PROFILE,
+        help="Parser profile from the load-order TOML. Defaults to constructor.",
+    )
+    command.set_defaults(handler=handler)
+    return command
+
+
+def _add_dashboard_server_args(command: argparse.ArgumentParser) -> None:
+    command.add_argument(
+        "--host",
+        default="127.0.0.1",
+        help="Dashboard bind host. Defaults to 127.0.0.1.",
+    )
+    command.add_argument(
+        "--port",
+        type=int,
+        default=8050,
+        help="Dashboard bind port. Defaults to 8050.",
+    )
+
+
+def _add_savegame_watch_args(command: argparse.ArgumentParser) -> None:
+    command.add_argument(
+        "--save-dir",
+        type=Path,
+        default=None,
+        help="Directory containing .eu5 saves. Defaults to auto-detecting the EU5 documents save folder.",
+    )
+    command.add_argument(
+        "--workers",
+        type=int,
+        default=8,
+        help="Parallel save parser workers. Defaults to 8.",
+    )
+    command.add_argument(
+        "--interval",
+        type=float,
+        default=30.0,
+        help="Seconds between ingest cycles. Defaults to 30.",
+    )
+    command.add_argument(
+        "--min-file-age",
+        type=float,
+        default=0.0,
+        help="Skip saves modified less than this many seconds ago. Defaults to 0.",
+    )
+    command.add_argument(
+        "--max-cycles",
+        type=int,
+        default=None,
+        help="Stop after this many cycles. Intended for smoke checks.",
+    )
+
+
+def _resolve_repo(repo: Path | None) -> Path:
+    if repo is not None:
+        resolved = repo.expanduser().resolve()
+        _require_project_root(resolved)
+        return resolved
+
+    current = Path.cwd().resolve()
+    for candidate in (current, *current.parents):
+        if (candidate / ROOT_MARKER).is_file():
+            return candidate
+
+    raise SystemExit(
+        f"Could not find {ROOT_MARKER}. Run from the repo or pass --repo /path/to/repo."
+    )
+
+
+def _require_project_root(repo: Path) -> None:
+    if not (repo / ROOT_MARKER).is_file():
+        raise SystemExit(f"{repo} does not look like this constructor repo; missing {ROOT_MARKER}.")
+
+
+def _run(command: Sequence[str | os.PathLike[str]], repo: Path) -> int:
+    printable = " ".join(str(part) for part in command)
+    print(f"$ {printable}", flush=True)
+    completed = subprocess.run([str(part) for part in command], cwd=repo, check=False)
+    return completed.returncode
+
+
+def _orchestrator(action: str):
+    def handler(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+        return _run(["eu5-orchestrator", action, "--project", project, *extra], repo)
+
+    return handler
+
+
+def _blueprint(action: str):
+    def handler(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+        return _run(["eu5-orchestrator", "blueprint", action, "--project", project, *extra], repo)
+
+    return handler
+
+
+def _blueprint_good(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    return _run(
+        ["eu5-orchestrator", "blueprint", "good", "--project", project, "--good", args.good, *extra],
+        repo,
+    )
+
+
+def _setup(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("setup does not accept extra arguments.")
+
+    sync_code = _run(["uv", "sync", "--dev"], repo)
+    if sync_code != 0:
+        return sync_code
+    return _run(["eu5-orchestrator", "inspect", "--project", project], repo)
+
+
+def _test(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    pytest_args = list(extra)
+    if not any(arg == "-s" or arg == "--capture" or arg.startswith("--capture=") for arg in pytest_args):
+        pytest_args.insert(0, "--capture=no")
+    return _run([sys.executable, "-m", "pytest", *pytest_args], repo)
+
+
+def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    return _run(["eu5-orchestrator", "build", "--project", project, "--overwrite", *extra], repo)
+
+
+def _script_or_orchestrator(script_name: str, action: str):
+    def handler(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+        if extra:
+            return _run(["eu5-orchestrator", action, "--project", project, *extra], repo)
+        return _run_powershell_script(repo / "scripts" / script_name, repo)
+
+    return handler
+
+
+def _savegame_purge(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("savegame-purge does not accept extra arguments.")
+
+    for path in SAVEGAME_PURGE_PATHS:
+        target = _repo_path(repo, path)
+        if args.dry_run:
+            print(f"Would delete: {target}", flush=True)
+            continue
+        if target.is_dir():
+            shutil.rmtree(target)
+            print(f"Deleted directory: {target}", flush=True)
+        elif target.exists():
+            target.unlink()
+            print(f"Deleted file: {target}", flush=True)
+        else:
+            print(f"Already absent: {target}", flush=True)
+    return 0
+
+
+def _publish_docs(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("publish-docs accepts examples as positional arguments, not extra args.")
+
+    command: list[str | Path] = [repo / "scripts" / "publish-docs-examples.ps1"]
+    if args.examples:
+        command.extend(["-Examples", *args.examples])
+    return _run_powershell_script(command[0], repo, command[1:])
+
+
+def _dashboard(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("dashboard does not accept extra arguments.")
+
+    dashboard_dir = args.dir if args.dir.is_absolute() else repo / args.dir
+    index = dashboard_dir / "index.html"
+    if not index.is_file():
+        raise SystemExit(
+            f"Dashboard index not found: {index}. Generate it first, then rerun `uv run ppc dashboard`."
+        )
+
+    url = f"http://{args.host}:{args.port}/"
+    print(f"Serving population-capacity dashboard: {url}", flush=True)
+    print(f"Dashboard directory: {dashboard_dir}", flush=True)
+    _stop_existing_dashboard_processes(
+        (
+            "http.server",
+            str(args.port),
+            "--directory",
+            str(dashboard_dir),
+        )
+    )
+    return _run(
+        [
+            sys.executable,
+            "-m",
+            "http.server",
+            str(args.port),
+            "--bind",
+            args.host,
+            "--directory",
+            dashboard_dir,
+        ],
+        repo,
+    )
+
+
+def _savegame_dashboard_ingest(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("savegame-dashboard ingest does not accept extra arguments.")
+
+    save_dir = _resolve_save_dir(repo, args.save_dir)
+    saves = sorted(save_dir.glob("*.eu5")) if save_dir.is_dir() else []
+    if not saves:
+        raise SystemExit(
+            f"No .eu5 saves found in {save_dir}. "
+            "Pass --save-dir /path/to/save-games if the EU5 save folder is somewhere else."
+        )
+    print(f"Found {len(saves)} .eu5 saves in {save_dir}", flush=True)
+
+    return _run(
+        [
+            "uv",
+            "run",
+            "eu5parse",
+            "savegame",
+            "ingest",
+            "--save-dir",
+            save_dir,
+            "--output",
+            _repo_path(repo, args.dataset),
+            "--profile",
+            args.profile,
+            "--load-order",
+            _repo_path(repo, args.load_order),
+            "--workers",
+            str(args.workers),
+        ],
+        repo,
+    )
+
+
+def _savegame_dashboard_serve(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("savegame-dashboard serve does not accept extra arguments.")
+
+    command: list[str | Path] = [
+        "uv",
+        "run",
+        "eu5parse",
+        "dashboard",
+        "serve",
+        "--dataset",
+        _repo_path(repo, args.dataset),
+        "--profile",
+        args.profile,
+        "--load-order",
+        _repo_path(repo, args.load_order),
+        "--host",
+        args.host,
+        "--port",
+        str(args.port),
+    ]
+    if args.debug:
+        command.append("--debug")
+    _stop_existing_dashboard_processes(
+        (
+            "eu5parse",
+            "dashboard",
+            "serve",
+            "--port",
+            str(args.port),
+        ),
+        port=args.port,
+    )
+    return _run(command, repo)
+
+
+def _savegame_dashboard_start(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("savegame-dashboard start does not accept extra arguments.")
+
+    return _run(
+        [
+            "uv",
+            "run",
+            "eu5parse",
+            "dashboard",
+            "start",
+            "--dataset",
+            _repo_path(repo, args.dataset),
+            "--profile",
+            args.profile,
+            "--load-order",
+            _repo_path(repo, args.load_order),
+            "--host",
+            args.host,
+            "--port",
+            str(args.port),
+            "--timeout",
+            str(args.timeout),
+        ],
+        repo,
+    )
+
+
+def _savegame_dashboard_stop(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("savegame-dashboard stop does not accept extra arguments.")
+
+    return _run(["uv", "run", "eu5parse", "dashboard", "stop", "--port", str(args.port)], repo)
+
+
+def _savegame_dashboard_status(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("savegame-dashboard status does not accept extra arguments.")
+
+    return _run(
+        [
+            "uv",
+            "run",
+            "eu5parse",
+            "dashboard",
+            "status",
+            "--host",
+            args.host,
+            "--port",
+            str(args.port),
+        ],
+        repo,
+    )
+
+
+def _savegame_dashboard_watch(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("savegame-dashboard watch does not accept extra arguments.")
+
+    save_dir = _resolve_save_dir(repo, args.save_dir)
+    saves = sorted(save_dir.glob("*.eu5")) if save_dir.is_dir() else []
+    if not saves:
+        raise SystemExit(
+            f"No .eu5 saves found in {save_dir}. "
+            "Pass --save-dir /path/to/save-games if the EU5 save folder is somewhere else."
+        )
+    print(f"Found {len(saves)} .eu5 saves in {save_dir}", flush=True)
+
+    command: list[str | Path] = [
+        "uv",
+        "run",
+        "eu5parse",
+        "savegame",
+        "watch",
+        "--save-dir",
+        save_dir,
+        "--output",
+        _repo_path(repo, args.dataset),
+        "--profile",
+        args.profile,
+        "--load-order",
+        _repo_path(repo, args.load_order),
+        "--workers",
+        str(args.workers),
+        "--interval",
+        str(args.interval),
+        "--min-file-age",
+        str(args.min_file_age),
+    ]
+    if args.max_cycles is not None:
+        command.extend(["--max-cycles", str(args.max_cycles)])
+    return _run(command, repo)
+
+
+def _savegame_dashboard_run(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("savegame-dashboard run does not accept extra arguments.")
+
+    start_code = _run(
+        [
+            "uv",
+            "run",
+            "eu5parse",
+            "dashboard",
+            "start",
+            "--dataset",
+            _repo_path(repo, args.dataset),
+            "--profile",
+            args.profile,
+            "--load-order",
+            _repo_path(repo, args.load_order),
+            "--host",
+            args.host,
+            "--port",
+            str(args.port),
+            "--timeout",
+            "20.0",
+        ],
+        repo,
+    )
+    if start_code != 0:
+        return start_code
+    return _savegame_dashboard_watch(args, (), repo, project)
+
+
+def _savegame_dashboard_benchmark(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("savegame-dashboard benchmark does not accept extra arguments.")
+
+    return _run(
+        [
+            "uv",
+            "run",
+            "eu5parse",
+            "dashboard",
+            "benchmark",
+            "--dataset",
+            _repo_path(repo, args.dataset),
+            "--profile",
+            args.profile,
+            "--load-order",
+            _repo_path(repo, args.load_order),
+            "--output",
+            _repo_path(repo, args.output),
+        ],
+        repo,
+    )
+
+
+def _repo_path(repo: Path, path: Path) -> Path:
+    return path if path.is_absolute() else repo / path
+
+
+def _resolve_save_dir(repo: Path, explicit: Path | None) -> Path:
+    if explicit is not None:
+        return _repo_path(repo, explicit).expanduser()
+
+    checked: list[Path] = []
+    for candidate in _savegame_dir_candidates():
+        expanded = candidate.expanduser()
+        if expanded in checked:
+            continue
+        checked.append(expanded)
+        if expanded.is_dir() and any(expanded.glob("*.eu5")):
+            return expanded
+
+    checked_text = "\n".join(f"  - {path}" for path in checked)
+    raise SystemExit(
+        "Could not auto-detect an EU5 save folder containing .eu5 files. Checked:\n"
+        f"{checked_text}\n"
+        "Pass --save-dir /path/to/save-games if the save folder is somewhere else."
+    )
+
+
+def _savegame_dir_candidates() -> list[Path]:
+    candidates: list[Path] = []
+    suffix = Path("Documents/Paradox Interactive/Europa Universalis V/save games")
+
+    for value in (
+        os.environ.get("USERPROFILE"),
+        _windows_userprofile_from_cmd(),
+        Path.home(),
+    ):
+        if value:
+            candidates.append(Path(value) / suffix)
+
+    for base in _wsl_windows_user_dirs():
+        candidates.append(base / suffix)
+        candidates.append(base / "OneDrive" / suffix)
+
+    return candidates
+
+
+def _wsl_windows_user_dirs() -> list[Path]:
+    users = Path("/mnt/c/Users")
+    if not users.is_dir():
+        return []
+    ignored = {"All Users", "Default", "Default User", "Public", "desktop.ini"}
+    return sorted(path for path in users.iterdir() if path.is_dir() and path.name not in ignored)
+
+
+def _windows_userprofile_from_cmd() -> str | None:
+    if shutil.which("cmd.exe") is None:
+        return None
+    completed = subprocess.run(
+        ["cmd.exe", "/c", "echo", "%USERPROFILE%"],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+    )
+    if completed.returncode != 0:
+        return None
+    value = completed.stdout.strip()
+    if not value or "%" in value:
+        return None
+    if shutil.which("wslpath") is None:
+        return value
+    converted = subprocess.run(
+        ["wslpath", "-u", value],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+    )
+    if converted.returncode != 0:
+        return value
+    return converted.stdout.strip()
+
+
+def _stop_existing_dashboard_processes(markers: Sequence[str], port: int | None = None) -> None:
+    pids = set(_matching_processes(markers))
+    if port is not None:
+        pids.update(_matching_savegame_dashboard_processes(port))
+        pids.update(_matching_listening_port_processes(port))
+
+    current_pid = os.getpid()
+    pids = sorted(pid for pid in pids if pid != current_pid)
+    if not pids:
+        return
+
+    print(f"Stopping existing dashboard process(es): {', '.join(str(pid) for pid in pids)}", flush=True)
+    for pid in pids:
+        _terminate_process(pid, signal.SIGTERM)
+
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+        remaining = [pid for pid in pids if _process_exists(pid)]
+        if not remaining:
+            return
+        time.sleep(0.1)
+
+    kill_signal = getattr(signal, "SIGKILL", signal.SIGTERM)
+    for pid in pids:
+        if _process_exists(pid):
+            _terminate_process(pid, kill_signal)
+
+
+def _matching_processes(markers: Sequence[str]) -> set[int]:
+    if os.name == "nt":
+        return _matching_windows_processes(markers)
+    return _matching_procfs_processes(markers)
+
+
+def _matching_savegame_dashboard_processes(port: int) -> set[int]:
+    matches: set[int] = set()
+    for markers in (
+        ("eu5parse", "dashboard", "serve", "--port", str(port)),
+        ("eu5gameparser.savegame.dashboard", "run_dashboard", f"port={port}"),
+        ("run_dashboard", f"port={port}"),
+    ):
+        matches.update(_matching_processes(markers))
+    return matches
+
+
+def _matching_listening_port_processes(port: int) -> set[int]:
+    if os.name == "nt":
+        return _matching_windows_listening_port_processes(port)
+    return _matching_procfs_listening_port_processes(port)
+
+
+def _matching_procfs_processes(markers: Sequence[str]) -> set[int]:
+    matches: set[int] = set()
+    proc = Path("/proc")
+    if not proc.is_dir():
+        return matches
+
+    for entry in proc.iterdir():
+        if not entry.name.isdigit():
+            continue
+        try:
+            raw = (entry / "cmdline").read_bytes()
+        except OSError:
+            continue
+        command = raw.replace(b"\0", b" ").decode(errors="ignore")
+        if command and all(marker in command for marker in markers):
+            matches.add(int(entry.name))
+    return matches
+
+
+def _matching_procfs_listening_port_processes(port: int) -> set[int]:
+    proc = Path("/proc")
+    if not proc.is_dir():
+        return set()
+
+    socket_inodes = _listening_socket_inodes(port)
+    if not socket_inodes:
+        return set()
+
+    matches: set[int] = set()
+    for entry in proc.iterdir():
+        if not entry.name.isdigit():
+            continue
+        fd_dir = entry / "fd"
+        try:
+            fds = list(fd_dir.iterdir())
+        except OSError:
+            continue
+        for fd in fds:
+            try:
+                target = fd.readlink()
+            except OSError:
+                continue
+            if str(target).startswith("socket:[") and str(target)[8:-1] in socket_inodes:
+                matches.add(int(entry.name))
+                break
+    return matches
+
+
+def _listening_socket_inodes(port: int) -> set[str]:
+    inodes: set[str] = set()
+    for table in (Path("/proc/net/tcp"), Path("/proc/net/tcp6")):
+        try:
+            lines = table.read_text().splitlines()
+        except OSError:
+            continue
+        for line in lines[1:]:
+            columns = line.split()
+            if len(columns) <= 9:
+                continue
+            local_address = columns[1]
+            state = columns[3]
+            inode = columns[9]
+            try:
+                local_port = int(local_address.rsplit(":", 1)[1], 16)
+            except (IndexError, ValueError):
+                continue
+            if local_port == port and state == "0A" and inode != "0":
+                inodes.add(inode)
+    return inodes
+
+
+def _matching_windows_processes(markers: Sequence[str]) -> set[int]:
+    command = ["wmic", "process", "get", "ProcessId,CommandLine", "/FORMAT:CSV"]
+    completed = subprocess.run(command, check=False, capture_output=True, text=True)
+    if completed.returncode != 0:
+        return set()
+
+    matches: set[int] = set()
+    for line in completed.stdout.splitlines():
+        if not line.strip() or line.startswith("Node,"):
+            continue
+        try:
+            command_line, pid = line.rsplit(",", 1)
+            pid_value = int(pid)
+        except ValueError:
+            continue
+        if all(marker in command_line for marker in markers):
+            matches.add(pid_value)
+    return matches
+
+
+def _matching_windows_listening_port_processes(port: int) -> set[int]:
+    completed = subprocess.run(
+        ["netstat", "-ano", "-p", "tcp"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if completed.returncode != 0:
+        return set()
+
+    matches: set[int] = set()
+    for line in completed.stdout.splitlines():
+        columns = line.split()
+        if len(columns) < 5 or columns[0].upper() != "TCP":
+            continue
+        local_address, state, pid = columns[1], columns[3], columns[4]
+        if state.upper() != "LISTENING":
+            continue
+        try:
+            local_port = int(local_address.rsplit(":", 1)[1])
+            pid_value = int(pid)
+        except (IndexError, ValueError):
+            continue
+        if local_port == port:
+            matches.add(pid_value)
+    return matches
+
+
+def _terminate_process(pid: int, sig: signal.Signals) -> None:
+    try:
+        os.kill(pid, sig)
+    except ProcessLookupError:
+        return
+    except PermissionError as error:
+        print(f"Could not stop dashboard process {pid}: {error}", flush=True)
+
+
+def _process_exists(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def _sync(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("sync does not accept extra arguments.")
+    if not args.yes:
+        raise SystemExit(
+            "Refusing to mirror into the live Paradox mod folder without explicit confirmation. "
+            "Re-run `uv run ppc sync --yes` only when you intend to update the live mod."
+        )
+    if not (repo / "constructor.local.toml").is_file():
+        raise SystemExit(
+            "Refusing to sync: constructor.local.toml is missing. Configure [deploy].target first."
+        )
+    return _run_powershell_script(repo / "scripts" / "sync-constructor.ps1", repo)
+
+
+def _run_powershell_script(
+    script: Path, repo: Path, arguments: Sequence[str | os.PathLike[str]] = ()
+) -> int:
+    shell = _find_powershell()
+    if shell is None:
+        raise SystemExit(
+            "Could not find pwsh, powershell, or powershell.exe on PATH. "
+            f"Run the script manually instead: {script}"
+        )
+    command = [shell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", script, *arguments]
+    return _run([_powershell_arg(shell, part) for part in command], repo)
+
+
+def _powershell_arg(shell: str, argument: str | os.PathLike[str]) -> str:
+    if not _is_windows_powershell(shell):
+        return str(argument)
+    if not isinstance(argument, os.PathLike):
+        return str(argument)
+    return _windows_path(Path(argument))
+
+
+def _is_windows_powershell(shell: str) -> bool:
+    return Path(shell).name.lower().endswith(".exe")
+
+
+def _windows_path(path: Path) -> str:
+    if shutil.which("wslpath") is None:
+        return str(path)
+    completed = subprocess.run(
+        ["wslpath", "-w", str(path)],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+    )
+    if completed.returncode != 0:
+        return str(path)
+    return completed.stdout.strip()
+
+
+def _find_powershell() -> str | None:
+    for candidate in ("pwsh", "powershell", "powershell.exe"):
+        resolved = shutil.which(candidate)
+        if resolved:
+            return resolved
+    return None
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

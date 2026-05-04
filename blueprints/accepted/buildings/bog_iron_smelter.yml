@@ -64,7 +64,7 @@ building:
 prices:
   - key: pp_bog_iron_smelter_price
     body: |2-
-      {gold = 100}
+      {gold = 50}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_bog_iron_smelter_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('bog_iron_smelter')|e].

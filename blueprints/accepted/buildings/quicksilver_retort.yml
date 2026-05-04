@@ -95,7 +95,7 @@ building:
 prices:
   - key: pp_quicksilver_retort_price
     body: |2-
-      {gold = 150}
+      {gold = 400}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_quicksilver_retort_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('quicksilver_retort')|e].

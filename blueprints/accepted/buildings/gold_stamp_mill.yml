@@ -97,7 +97,7 @@ building:
 prices:
   - key: pp_gold_stamp_mill_price
     body: |2-
-      {gold = 300}
+      {gold = 400}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_gold_stamp_mill_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('gold_stamp_mill')|e].

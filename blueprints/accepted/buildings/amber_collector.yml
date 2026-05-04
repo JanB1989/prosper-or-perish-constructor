@@ -84,7 +84,7 @@ building:
 prices:
   - key: pp_amber_collector_price
     body: |2-
-      {gold = 100}
+      {gold = 50}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_amber_collector_price_cost_modifier: Affects the cost of building an [ShowBuildingTypeName('amber_collector')|e].

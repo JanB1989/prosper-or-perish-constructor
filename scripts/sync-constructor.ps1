@@ -76,7 +76,7 @@ function Invoke-ConstructorBuild {
 
     $uv = Get-Command uv -ErrorAction SilentlyContinue
     if ($null -ne $uv) {
-        uv run eu5-orchestrator build --project constructor.toml --overwrite
+        uv run ppc build
         $exitCode = Get-NativeExitCode
         if ($exitCode -ne 0) {
             throw "Constructor build failed with exit code $exitCode. Refusing to mirror into live mod folder."
@@ -85,7 +85,7 @@ function Invoke-ConstructorBuild {
     }
 
     $wslRepoRoot = ConvertTo-WslPath -Path $RepoRoot
-    wsl.exe --cd $wslRepoRoot --exec bash -lc "uv run eu5-orchestrator build --project constructor.toml --overwrite"
+    wsl.exe --cd $wslRepoRoot --exec bash -lc "uv run ppc build"
     $exitCode = Get-NativeExitCode
     if ($exitCode -ne 0) {
         throw "Constructor build failed through WSL with exit code $exitCode. Refusing to mirror into live mod folder."
@@ -387,8 +387,6 @@ try {
     if (-not (Test-Path -LiteralPath $source -PathType Container)) {
         throw "Constructor mod source does not exist: $source"
     }
-    Invoke-FusedPopulationCapacityInjection -RepoRoot $repoRoot -ModRoot $source
-    Invoke-LocationPotentialLocalizationInjection -ModRoot $source
     Assert-SafeMirrorTarget -Source $source -Target $target
 
     Write-Host "Mirroring constructor mod into live Paradox mod folder..."

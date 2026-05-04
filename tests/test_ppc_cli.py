@@ -62,6 +62,83 @@ def test_sync_requires_explicit_confirmation(tmp_path: Path) -> None:
         cli.main(["--repo", str(repo), "sync"])
 
 
+def test_build_finalizes_location_potential_localization(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    repo.joinpath("constructor.toml").write_text(
+        '[project]\nmod_root = "mod/test-mod"\n',
+        encoding="utf-8",
+    )
+    mod_root = repo / "mod" / "test-mod"
+    static_modifiers = mod_root / "main_menu" / "common" / "static_modifiers"
+    localization = mod_root / "main_menu" / "localization" / "english"
+    static_modifiers.mkdir(parents=True)
+    localization.mkdir(parents=True)
+    (static_modifiers / "pp_location_modifiers.txt").write_text(
+        "pp_loc_slagelse = {\n"
+        "\tgame_data = { category = location }\n"
+        "\tlocal_fish_output_modifier = 0.1\n"
+        "}\n"
+        "pp_loc_sant_feliu = {\n"
+        "\tlocal_medicaments_output_modifier = 0.2\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    (localization / "pp_location_modifiers_l_english.yml").write_text(
+        '\ufeffl_english:\n'
+        ' pp_location_modifiers_title: "Prosper or Perish per-location suitability"\n'
+        ' pp_location_modifiers_title_desc: "stale"\n',
+        encoding="utf-8",
+    )
+    (localization / "pp_europedia_l_english.yml").write_text("l_english:\n", encoding="utf-8")
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "build"]) == 0
+
+    modifier_text = (localization / "pp_location_modifiers_l_english.yml").read_text(
+        encoding="utf-8-sig"
+    )
+    europedia_text = (localization / "pp_europedia_l_english.yml").read_text(encoding="utf-8-sig")
+    assert calls == [
+        ["eu5-orchestrator", "build", "--project", str(repo / "constructor.toml"), "--overwrite"]
+    ]
+    assert 'pp_location_potential_modifier_name: "[pp_location_potential|e]"' in modifier_text
+    assert 'STATIC_MODIFIER_NAME_pp_loc_slagelse: "$pp_location_potential_modifier_name$"' in modifier_text
+    assert 'STATIC_MODIFIER_DESC_pp_loc_slagelse: "$pp_location_potential_modifier_desc$"' in modifier_text
+    assert "pp_location_modifiers_title:" not in modifier_text
+    assert 'game_concept_pp_location_potential: "Location Potential"' in europedia_text
+    assert "\\n\\nThe values combine" in europedia_text
+
+
+def test_build_does_not_finalize_after_failed_orchestrator_build(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    finalized = False
+
+    def fake_run(command, cwd):
+        assert cwd == repo
+        return 7
+
+    def fake_finalize(build_repo, project):
+        nonlocal finalized
+        finalized = True
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+    monkeypatch.setattr(cli, "_finalize_constructor_mod", fake_finalize)
+
+    assert cli.main(["--repo", str(repo), "build"]) == 7
+    assert not finalized
+
+
 def test_powershell_script_converts_paths_for_windows_powershell(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

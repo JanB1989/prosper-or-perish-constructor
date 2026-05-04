@@ -26,9 +26,15 @@ SAVEGAME_DASHBOARD_LEGACY_DATASETS = (
     Path("artifacts/data/savegame_progression"),
 )
 SAVEGAME_ARTIFACT_DIR = Path("artifacts/data/savegame")
+GOODS_FLOW_EXPLORER = Path("graphs/goods_flow_explorer.html")
+PUBLISHED_GOODS_FLOW_EXPLORER = Path("docs/examples/goods_flow_explorer.html")
 SAVEGAME_EXPLORER = Path("graphs/savegame_explorer.html")
 SAVEGAME_PROGRESSION_EXPLORER = Path("graphs/savegame_progression.html")
 PUBLISHED_SAVEGAME_EXPLORER = Path("docs/examples/savegame_explorer.html")
+PUBLISHED_GRAPH_EXAMPLES = (
+    GOODS_FLOW_EXPLORER.name,
+    SAVEGAME_EXPLORER.name,
+)
 SAVEGAME_PURGE_PATHS = (
     SAVEGAME_ARTIFACT_DIR,
     SAVEGAME_EXPLORER,
@@ -100,13 +106,13 @@ def _build_parser() -> argparse.ArgumentParser:
         subcommands,
         "analyze",
         "Export static parser tables and refresh the goods-flow docs example.",
-        _script_or_orchestrator("analyze-constructor.ps1", "analyze"),
+        _analyze,
     )
     _add_command(
         subcommands,
         "savegame",
         "Export latest savegame facts and the savegame explorer.",
-        _script_or_orchestrator("savegame-constructor.ps1", "savegame"),
+        _savegame,
     )
     savegame_purge = _add_command(
         subcommands,
@@ -600,13 +606,25 @@ def _upsert_generated_localization_block(
         handle.write(content)
 
 
-def _script_or_orchestrator(script_name: str, action: str):
-    def handler(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
-        if extra:
-            return _run(["eu5-orchestrator", action, "--project", project, *extra], repo)
-        return _run_powershell_script(repo / "scripts" / script_name, repo)
+def _analyze(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    result = _run(["eu5-orchestrator", "analyze", "--project", project, *extra], repo)
+    if result != 0:
+        return result
+    return _publish_graph_examples(repo, [GOODS_FLOW_EXPLORER.name])
 
-    return handler
+
+def _savegame(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    save_args: list[str | os.PathLike[str]] = []
+    if not _has_option(extra, "--save") and not _has_option(extra, "--save-dir"):
+        save_args.extend(["--save-dir", _resolve_save_dir(repo, None)])
+    result = _run(["eu5-orchestrator", "savegame", "--project", project, *save_args, *extra], repo)
+    if result != 0:
+        return result
+    return _publish_graph_examples(repo, [SAVEGAME_EXPLORER.name])
+
+
+def _has_option(args: Sequence[str], option: str) -> bool:
+    return any(arg == option or arg.startswith(f"{option}=") for arg in args)
 
 
 def _savegame_purge(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
@@ -635,10 +653,28 @@ def _publish_docs(
     if extra:
         raise SystemExit("publish-docs accepts examples as positional arguments, not extra args.")
 
-    command: list[str | Path] = [repo / "scripts" / "publish-docs-examples.ps1"]
-    if args.examples:
-        command.extend(["-Examples", *args.examples])
-    return _run_powershell_script(command[0], repo, command[1:])
+    return _publish_graph_examples(repo, args.examples or PUBLISHED_GRAPH_EXAMPLES)
+
+
+def _publish_graph_examples(repo: Path, examples: Sequence[str]) -> int:
+    graphs_dir = repo / "graphs"
+    examples_dir = repo / "docs" / "examples"
+    examples_dir.mkdir(parents=True, exist_ok=True)
+
+    for example in examples:
+        source = graphs_dir / example
+        destination = examples_dir / example
+        if not source.is_file():
+            raise SystemExit(f"Missing generated graph output: {source}")
+        shutil.copy2(source, destination)
+        print(f"Updated docs/examples/{example}", flush=True)
+
+    graph_assets_dir = graphs_dir / "assets"
+    if graph_assets_dir.is_dir():
+        example_assets_dir = examples_dir / "assets"
+        shutil.copytree(graph_assets_dir, example_assets_dir, dirs_exist_ok=True)
+        print("Updated docs/examples/assets", flush=True)
+    return 0
 
 
 def _dashboard(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
@@ -1196,55 +1232,10 @@ def _sync(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: P
         raise SystemExit(
             "Refusing to sync: constructor.local.toml is missing. Configure [deploy].target first."
         )
-    return _run_powershell_script(repo / "scripts" / "sync-constructor.ps1", repo)
-
-
-def _run_powershell_script(
-    script: Path, repo: Path, arguments: Sequence[str | os.PathLike[str]] = ()
-) -> int:
-    shell = _find_powershell()
-    if shell is None:
-        raise SystemExit(
-            "Could not find pwsh, powershell, or powershell.exe on PATH. "
-            f"Run the script manually instead: {script}"
-        )
-    command = [shell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", script, *arguments]
-    return _run([_powershell_arg(shell, part) for part in command], repo)
-
-
-def _powershell_arg(shell: str, argument: str | os.PathLike[str]) -> str:
-    if not _is_windows_powershell(shell):
-        return str(argument)
-    if not isinstance(argument, os.PathLike):
-        return str(argument)
-    return _windows_path(Path(argument))
-
-
-def _is_windows_powershell(shell: str) -> bool:
-    return Path(shell).name.lower().endswith(".exe")
-
-
-def _windows_path(path: Path) -> str:
-    if shutil.which("wslpath") is None:
-        return str(path)
-    completed = subprocess.run(
-        ["wslpath", "-w", str(path)],
-        check=False,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
-        text=True,
-    )
-    if completed.returncode != 0:
-        return str(path)
-    return completed.stdout.strip()
-
-
-def _find_powershell() -> str | None:
-    for candidate in ("pwsh", "powershell", "powershell.exe"):
-        resolved = shutil.which(candidate)
-        if resolved:
-            return resolved
-    return None
+    build_result = _build(args, (), repo, project)
+    if build_result != 0:
+        return build_result
+    return _run(["eu5-orchestrator", "deploy", "--project", project, "--clean"], repo)
 
 
 if __name__ == "__main__":

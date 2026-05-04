@@ -15,20 +15,20 @@ Curated example graph snapshots are published from this constructor repo's docs 
 - [Savegame Market Explorer](https://janb1989.github.io/prosper-or-perish-constructor/examples/savegame_explorer.html)
 
 Generated local graph outputs stay ignored under `graphs/`; committed `docs/examples/` files are
-the public demo snapshots served by GitHub Pages. Run `.\scripts\publish-docs-examples.ps1` after
-regenerating graphs to refresh the hosted copies before pushing.
+the public demo snapshots served by GitHub Pages. Run `uv run ppc publish-docs` after regenerating
+graphs to refresh the hosted copies before pushing.
 
 ## Command Workflows
 
 Use `ppc` as the canonical command surface for both humans and Codex:
 
-```powershell
+```bash
 uv run ppc --help
 ```
 
 Common workflows:
 
-```powershell
+```bash
 uv run ppc setup
 uv run ppc inspect
 uv run ppc test
@@ -54,14 +54,14 @@ uv run ppc blueprint build
 
 When running from another directory, point `uv` and `ppc` at this repo explicitly:
 
-```powershell
-uv run --project C:\Development\ProsperOrPerishConstructor ppc --repo C:\Development\ProsperOrPerishConstructor --help
+```bash
+uv run --project /mnt/c/Development/ProsperOrPerishConstructor ppc --repo /mnt/c/Development/ProsperOrPerishConstructor --help
 ```
 
 Live deploy is intentionally guarded. Only run it when you mean to mirror the constructor output
 into the configured Paradox mod folder:
 
-```powershell
+```bash
 uv run ppc sync --yes
 ```
 
@@ -69,7 +69,7 @@ uv run ppc sync --yes
 
 Run the current population-capacity dashboard locally:
 
-```powershell
+```bash
 uv run ppc dashboard
 ```
 
@@ -97,7 +97,7 @@ docs/examples/savegame_explorer.html
 
 ## Setup
 
-```powershell
+```bash
 uv sync --dev
 uv run eu5-orchestrator inspect --project constructor.toml
 ```
@@ -117,10 +117,12 @@ target = "C:/Users/<you>/Documents/Paradox Interactive/Europa Universalis V/mod/
 
 ## Static Mod Analysis
 
-```powershell
-uv run eu5-orchestrator analyze --project constructor.toml
-.\scripts\analyze-constructor.ps1
+```bash
+uv run ppc analyze
 ```
+
+STATIC_HTML_GRAPH_UPDATE: `uv run ppc analyze` regenerates
+`graphs/goods_flow_explorer.html` and refreshes `docs/examples/goods_flow_explorer.html`.
 
 This exports static parser tables to:
 
@@ -136,10 +138,12 @@ graphs/goods_flow_explorer.html
 
 ## Savegame Analysis
 
-```powershell
-uv run eu5-orchestrator savegame --project constructor.toml
-.\scripts\savegame-constructor.ps1
+```bash
+uv run ppc savegame
 ```
+
+STATIC_HTML_GRAPH_UPDATE: `uv run ppc savegame` regenerates
+`graphs/savegame_explorer.html` and refreshes `docs/examples/savegame_explorer.html`.
 
 By default this uses the newest `.eu5` save under the EU5 documents save folder. Pass `--save` or
 `--save-dir` to choose a different save.
@@ -158,7 +162,7 @@ graphs/savegame_explorer.html
 
 Delete generated savegame analysis outputs with:
 
-```powershell
+```bash
 uv run ppc savegame-purge
 ```
 
@@ -167,17 +171,17 @@ uv run ppc savegame-purge
 The local Dash dashboard uses the constructor parser profile and load order. Build or refresh the
 multi-save progression dataset first:
 
-```powershell
+```bash
 uv run ppc savegame-dashboard ingest
 ```
 
 Ingestion defaults to 8 parser workers. Override that with `--workers` if needed. The constructor
-wrapper auto-detects the EU5 documents save folder from Linux/WSL and Windows PowerShell; pass
-`--save-dir` only for a non-standard save folder.
+wrapper auto-detects the EU5 documents save folder from WSL; pass `--save-dir` only for a
+non-standard save folder.
 
 For the normal live workflow while EU5 is running, use one command:
 
-```powershell
+```bash
 uv run ppc savegame-dashboard run
 ```
 
@@ -186,7 +190,7 @@ Autosave rotation during gameplay is treated as transient and retried on the nex
 
 To control the dashboard and ingest loop separately:
 
-```powershell
+```bash
 uv run ppc savegame-dashboard start
 uv run ppc savegame-dashboard watch
 uv run ppc savegame-dashboard status
@@ -195,7 +199,7 @@ uv run ppc savegame-dashboard stop
 
 Or serve the dashboard in the foreground from the current dataset:
 
-```powershell
+```bash
 uv run ppc savegame-dashboard serve
 ```
 
@@ -203,7 +207,7 @@ The first dashboard startup builds `graphs/dataset/dashboard_cache/`; later brow
 that cache instead of rescanning every raw parquet table. To benchmark the dashboard path from this
 constructor dataset:
 
-```powershell
+```bash
 uv run ppc savegame-dashboard benchmark
 ```
 
@@ -212,7 +216,7 @@ uv run ppc savegame-dashboard benchmark
 Accepted building blueprints live under `blueprints/accepted/buildings` and are enabled by
 `blueprints/buildings.manifest.yml`.
 
-```powershell
+```bash
 uv run eu5-orchestrator blueprint list --project constructor.toml
 uv run eu5-orchestrator blueprint parity --project constructor.toml
 uv run eu5-orchestrator build --project constructor.toml --overwrite
@@ -225,9 +229,8 @@ The generated filename prefix is configured as `building_outputs.prefix` in `con
 After configuring `constructor.local.toml`, deploy the local mod copy into the live Paradox mod
 folder:
 
-```powershell
-uv run eu5-orchestrator deploy --project constructor.toml --clean
-.\scripts\sync-constructor.ps1
+```bash
+uv run ppc sync --yes
 ```
 
 Generated parquet, HTML graphs, reports, and generated blueprints are reproducible and ignored by
@@ -237,8 +240,8 @@ Git. Commit reusable config, accepted blueprints, scripts, docs, and tests.
 
 For a new mod workspace, use the orchestrator scaffold command:
 
-```powershell
-uv run eu5-orchestrator init C:/Development/my-eu5-mod --name "My EU5 Mod" --mod-name "My EU5 Mod" --vanilla-root "C:/Games/steamapps/common/Europa Universalis V"
+```bash
+uv run eu5-orchestrator init /mnt/c/Development/my-eu5-mod --name "My EU5 Mod" --mod-name "My EU5 Mod" --vanilla-root "/mnt/c/Games/steamapps/common/Europa Universalis V"
 ```
 
 That creates the same baseline folder layout, TOML config, scripts, and README pattern used here.

@@ -139,68 +139,48 @@ def test_build_does_not_finalize_after_failed_orchestrator_build(
     assert not finalized
 
 
-def test_powershell_script_converts_paths_for_windows_powershell(
+def test_publish_docs_copies_generated_graphs_and_assets(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    graphs = repo / "graphs"
+    graphs.mkdir()
+    (graphs / "goods_flow_explorer.html").write_text("goods\n")
+    (graphs / "savegame_explorer.html").write_text("savegame\n")
+    (graphs / "assets").mkdir()
+    (graphs / "assets" / "icon.svg").write_text("<svg />\n")
+
+    assert cli.main(["--repo", str(repo), "publish-docs"]) == 0
+
+    assert (repo / "docs" / "examples" / "goods_flow_explorer.html").read_text() == "goods\n"
+    assert (repo / "docs" / "examples" / "savegame_explorer.html").read_text() == "savegame\n"
+    assert (repo / "docs" / "examples" / "assets" / "icon.svg").read_text() == "<svg />\n"
+
+
+def test_analyze_runs_orchestrator_then_publishes_goods_flow(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repo = _repo(tmp_path)
-    script = repo / "scripts" / "sync-constructor.ps1"
-    argument = repo / "artifact.txt"
     calls: list[list[str]] = []
-
-    monkeypatch.setattr(cli, "_find_powershell", lambda: "powershell.exe")
-    monkeypatch.setattr(cli, "_windows_path", lambda path: f"WIN:{path}")
 
     def fake_run(command, cwd):
         calls.append([str(part) for part in command])
         assert cwd == repo
+        (repo / "graphs").mkdir(exist_ok=True)
+        (repo / "graphs" / "goods_flow_explorer.html").write_text("goods\n")
         return 0
 
     monkeypatch.setattr(cli, "_run", fake_run)
 
-    assert cli._run_powershell_script(script, repo, [argument, "-Literal"]) == 0
+    assert cli.main(["--repo", str(repo), "analyze"]) == 0
 
     assert calls == [
         [
-            "powershell.exe",
-            "-NoProfile",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-File",
-            f"WIN:{script}",
-            f"WIN:{argument}",
-            "-Literal",
+            "eu5-orchestrator",
+            "analyze",
+            "--project",
+            str(repo / "constructor.toml"),
         ]
     ]
-
-
-def test_powershell_script_keeps_paths_for_native_pwsh(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    repo = _repo(tmp_path)
-    script = repo / "scripts" / "sync-constructor.ps1"
-    calls: list[list[str]] = []
-
-    monkeypatch.setattr(cli, "_find_powershell", lambda: "pwsh")
-
-    def fake_run(command, cwd):
-        calls.append([str(part) for part in command])
-        assert cwd == repo
-        return 0
-
-    monkeypatch.setattr(cli, "_run", fake_run)
-
-    assert cli._run_powershell_script(script, repo) == 0
-
-    assert calls == [
-        [
-            "pwsh",
-            "-NoProfile",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-File",
-            str(script),
-        ]
-    ]
+    assert (repo / "docs" / "examples" / "goods_flow_explorer.html").read_text() == "goods\n"
 
 
 def test_dashboard_serves_current_capacity_map(

@@ -7,20 +7,20 @@ description: Use for Prosper or Perish Constructor repo workflows, including set
 
 Use the repo command surface before reaching for raw commands:
 
-```powershell
+```bash
 uv run ppc --help
 ```
 
 Default to the constructor workspace:
 
-```powershell
-Set-Location C:\Development\ProsperOrPerishConstructor
+```bash
+cd /mnt/c/Development/ProsperOrPerishConstructor
 ```
 
 When running from another folder, pass the repo explicitly:
 
-```powershell
-uv run --project C:\Development\ProsperOrPerishConstructor ppc --repo C:\Development\ProsperOrPerishConstructor --help
+```bash
+uv run --project /mnt/c/Development/ProsperOrPerishConstructor ppc --repo /mnt/c/Development/ProsperOrPerishConstructor --help
 ```
 
 ## Command Index
@@ -31,6 +31,8 @@ uv run --project C:\Development\ProsperOrPerishConstructor ppc --repo C:\Develop
 - `uv run ppc analyze`: export static parser tables and refresh the goods-flow docs example.
 - `uv run ppc savegame`: export latest savegame facts and the savegame explorer.
 - `uv run ppc publish-docs`: copy generated graph outputs into `docs/examples`.
+- STATIC_HTML_GRAPH_UPDATE: run `uv run ppc analyze` for `graphs/goods_flow_explorer.html` and `docs/examples/goods_flow_explorer.html`.
+- STATIC_HTML_GRAPH_UPDATE: run `uv run ppc savegame` for `graphs/savegame_explorer.html` and `docs/examples/savegame_explorer.html`.
 - `uv run ppc dashboard`: serve the current population-capacity dashboard at `http://127.0.0.1:8000/`.
 - `uv run ppc blueprint list`: list accepted blueprints.
 - `uv run ppc blueprint parity`: compare accepted blueprints with generated mod output.

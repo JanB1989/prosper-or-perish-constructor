@@ -50,6 +50,13 @@ uv run --project /mnt/c/Development/ProsperOrPerishConstructor ppc --repo /mnt/c
 - Prefer `test`, `inspect`, `blueprint evaluate`, and `blueprint parity` before changes that affect accepted blueprints or generated output.
 - Use parser/evaluator command output as source of truth for game-data answers; do not infer economics from raw text search.
 
+## Building Override Pattern
+
+- For existing vanilla buildings, use a top-level `REPLACE:<building>` blueprint render.
+- If replacing inline `unique_production_methods`, never reuse the vanilla method key. Add a mod-owned `pp_*` method key, reference that same key in `production_method_slots`, define it in `unique_production_methods`, and localize it.
+- Do not put `TRY_REPLACE`, `REPLACE`, or `INJECT` inside `unique_production_methods`; those modes only apply to top-level common database entries.
+- After changing a building override, run `uv run eu5-orchestrator validate --project constructor.toml` and `uv run ppc test tests/test_project_config.py::test_replaced_buildings_do_not_reuse_vanilla_unique_method_names tests/test_project_config.py::test_constructor_building_methods_are_resolved_and_unique`.
+
 ## Output Style
 
 When reporting results, mention the exact `ppc` command used and summarize the important pass/fail lines. If a command writes a graph or dashboard, report the path under `graphs/`, `docs/examples/`, or `artifacts/data/population_capacity/current_capacity_map/`.

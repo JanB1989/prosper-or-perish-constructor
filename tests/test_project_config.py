@@ -82,6 +82,14 @@ def test_replaced_buildings_do_not_reuse_vanilla_unique_method_names() -> None:
     assert not offenders
 
 
+def test_constructor_building_methods_are_resolved_and_unique() -> None:
+    data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
+
+    assert data.building_data.duplicate_production_methods.is_empty()
+    assert data.building_data.unresolved_production_methods.is_empty()
+    assert data.building_data.warnings == []
+
+
 def test_cookery_building_line_has_resolved_prices() -> None:
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
     buildings = {row["name"]: row for row in data.building_data.buildings.to_dicts()}

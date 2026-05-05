@@ -233,6 +233,10 @@ uv run eu5-orchestrator build --project constructor.toml --overwrite
 ```
 
 The generated filename prefix is configured as `building_outputs.prefix` in `constructor.toml`.
+When replacing a vanilla building that has inline `unique_production_methods`, give replacement
+methods new `pp_*` keys, use those same keys in `production_method_slots`, and localize them.
+Do not reuse vanilla inline method names or put database entry modes inside
+`unique_production_methods`.
 
 ## Deploying
 

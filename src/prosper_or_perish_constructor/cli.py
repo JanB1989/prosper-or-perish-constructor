@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import os
 import re
 import shutil
@@ -12,7 +14,7 @@ import sys
 import time
 import tomllib
 from pathlib import Path
-from typing import Sequence
+from typing import Any, Sequence
 
 
 ROOT_MARKER = "constructor.toml"
@@ -27,6 +29,8 @@ SAVEGAME_LEGACY_DATASETS = (
     Path("graphs/dashboard_benchmark_report.json"),
 )
 SAVEGAME_ARTIFACT_DIR = Path("artifacts/data/savegame")
+SYNC_STATE_PATH = Path("artifacts/sync/state.json")
+SYNC_STAGES = ("labeling", "blueprints", "population_capacity")
 GOODS_FLOW_EXPLORER = Path("graphs/goods_flow_explorer.html")
 PUBLISHED_GOODS_FLOW_EXPLORER = Path("docs/examples/goods_flow_explorer.html")
 SAVEGAME_EXPLORER = Path("graphs/savegame_explorer.html")
@@ -201,13 +205,28 @@ def _build_parser() -> argparse.ArgumentParser:
     sync = _add_command(
         subcommands,
         "sync",
-        "RISKY: build and mirror the constructor mod into the live Paradox mod folder.",
+        "RISKY: incrementally build and mirror the constructor mod into the live Paradox mod folder.",
         _sync,
     )
     sync.add_argument(
         "--yes",
         action="store_true",
         help="Required confirmation for live mod folder mirroring.",
+    )
+    sync.add_argument(
+        "--force-build",
+        action="store_true",
+        help="Run smart sync generator stages even when their fingerprints are unchanged.",
+    )
+    sync.add_argument(
+        "--force-deploy",
+        action="store_true",
+        help="Copy all built mod files to the live target even when they look unchanged.",
+    )
+    sync.add_argument(
+        "--full-build",
+        action="store_true",
+        help="Use the previous full eu5-orchestrator build workflow before deploy.",
     )
 
     blueprint = subcommands.add_parser(
@@ -414,7 +433,8 @@ def _inject_location_potential_localization(mod_root: Path) -> None:
         modifier_lines.append(f'  STATIC_MODIFIER_DESC_{modifier_key}: "$pp_location_potential_modifier_desc$"')
     modifier_lines.append("  # End generated location potential modifier help")
 
-    modifier_localization_path.write_text(
+    _write_text_if_changed(
+        modifier_localization_path,
         "l_english:\n" + "\n".join(modifier_lines) + "\n",
         encoding="utf-8-sig",
     )
@@ -477,8 +497,26 @@ def _upsert_generated_localization_block(
             raise SystemExit(f"Cannot inject localization; missing l_english header in {path}")
         content = re.sub(header_pattern, lambda match: match.group(0) + block, content, count=1)
 
-    with path.open("w", encoding="utf-8-sig", newline="") as handle:
-        handle.write(content)
+    _write_text_if_changed(path, content, encoding="utf-8-sig", newline="")
+
+
+def _write_text_if_changed(
+    path: Path,
+    text: str,
+    *,
+    encoding: str = "utf-8",
+    newline: str | None = None,
+) -> bool:
+    wants_bom = encoding.replace("_", "-").lower() == "utf-8-sig"
+    if path.exists():
+        with path.open("r", encoding=encoding, newline=newline) as handle:
+            existing = handle.read()
+        has_required_bom = not wants_bom or path.read_bytes().startswith(b"\xef\xbb\xbf")
+        if existing == text and has_required_bom:
+            return False
+    with path.open("w", encoding=encoding, newline=newline) as handle:
+        handle.write(text)
+    return True
 
 
 def _analyze(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
@@ -905,6 +943,225 @@ def _process_exists(pid: int) -> bool:
     return True
 
 
+def _sync_stage_fingerprints(repo: Path, project: Path) -> dict[str, str]:
+    config = _project_config(project)
+    return {
+        "labeling": _fingerprint_paths(_labeling_fingerprint_paths(repo, project, config)),
+        "blueprints": _fingerprint_paths(_blueprint_fingerprint_paths(repo, project, config)),
+        "population_capacity": _fingerprint_paths(_population_capacity_fingerprint_paths(repo, project, config)),
+    }
+
+
+def _labeling_fingerprint_paths(repo: Path, project: Path, config: dict[str, Any]) -> list[Path]:
+    paths = [project, repo / CONSTRUCTOR_LOAD_ORDER]
+    labeling = _mapping(config.get("labeling", {}))
+    if labeling.get("enabled", True) is False:
+        return paths
+    label_config = _config_path(repo, labeling.get("config"))
+    if label_config is None:
+        return paths
+    paths.append(label_config)
+    population = _mapping(config.get("population_capacity", {}))
+    if population.get("enabled", True) is not False:
+        population_config = _config_path(repo, population.get("config"))
+        if population_config is not None:
+            paths.append(population_config)
+    if not label_config.is_file():
+        return paths
+    raw = _load_yaml_mapping(label_config)
+    paths.extend(
+        _existing_config_paths(
+            label_config.parent,
+            raw,
+            ("baseline_parquet", "template_dir"),
+        )
+    )
+    for good in raw.get("goods", []) or []:
+        if not isinstance(good, dict) or good.get("enabled", True) is False:
+            continue
+        evaluator = good.get("evaluator_config")
+        if evaluator is None:
+            continue
+        evaluator_path = _resolve_config_path(label_config.parent, evaluator)
+        paths.append(evaluator_path)
+        paths.extend(_evaluator_fingerprint_paths(evaluator_path))
+    return paths
+
+
+def _evaluator_fingerprint_paths(evaluator_path: Path) -> list[Path]:
+    if not evaluator_path.is_file():
+        return []
+    raw = _load_yaml_mapping(evaluator_path)
+    trade_good = str(raw.get("trade_good", raw.get("tradeGood", "good")) or "good").strip() or "good"
+    goods_data_dir = raw.get("goods_data_dir") or f"../../goods_data/{trade_good}"
+    runs_filename = raw.get("runs_filename", raw.get("runsFilename")) or f"{trade_good}_ranking_runs.parquet"
+    results_filename = raw.get("results_filename", raw.get("resultsFilename")) or f"{trade_good}_labels.parquet"
+    dealbreaker = raw.get("dealbreaker_rules_csv", raw.get("dealbreakerRulesCsv", "dealbreakers.csv"))
+    return [
+        _resolve_config_path(evaluator_path.parent, raw.get("baseline_parquet") or "../../base_data/locations_with_raw_material.parquet"),
+        _resolve_config_path(evaluator_path.parent, dealbreaker),
+        _resolve_config_path(evaluator_path.parent, goods_data_dir) / str(runs_filename),
+        _resolve_config_path(evaluator_path.parent, goods_data_dir) / str(results_filename),
+    ]
+
+
+def _blueprint_fingerprint_paths(repo: Path, project: Path, config: dict[str, Any]) -> list[Path]:
+    blueprints = _mapping(config.get("building_blueprints", {}))
+    manifest = _config_path(repo, blueprints.get("manifest")) or repo / "blueprints" / "buildings.manifest.yml"
+    return [project, manifest, repo / "blueprints" / "accepted"]
+
+
+def _population_capacity_fingerprint_paths(repo: Path, project: Path, config: dict[str, Any]) -> list[Path]:
+    population = _mapping(config.get("population_capacity", {}))
+    paths = [project]
+    if population.get("enabled", True) is False:
+        return paths
+    population_config = _config_path(repo, population.get("config")) or repo / "population_capacity.toml"
+    paths.append(population_config)
+    return paths
+
+
+def _validation_fingerprint(repo: Path, project: Path) -> str:
+    mod_root = _project_mod_root(repo, project)
+    return _fingerprint_paths(
+        [project, repo / CONSTRUCTOR_LOAD_ORDER, mod_root],
+        file_filter=_is_validation_input,
+    )
+
+
+def _is_validation_input(path: Path) -> bool:
+    return path.suffix.lower() in {".txt", ".yml", ".yaml", ".gui"}
+
+
+def _fingerprint_paths(paths: Sequence[Path], *, file_filter=None) -> str:
+    digest = hashlib.sha256()
+    for path in sorted({item.resolve() if item.exists() else item for item in paths}, key=str):
+        _fingerprint_path(digest, path, path, file_filter=file_filter)
+    return digest.hexdigest()
+
+
+def _fingerprint_path(digest, path: Path, root: Path, *, file_filter=None) -> None:
+    if path.is_dir():
+        files = sorted(candidate for candidate in path.rglob("*") if candidate.is_file())
+        for candidate in files:
+            if file_filter is not None and not file_filter(candidate):
+                continue
+            _fingerprint_file(digest, candidate, candidate.relative_to(root))
+        return
+    if not path.is_file():
+        digest.update(f"missing:{path}\n".encode("utf-8", errors="surrogateescape"))
+        return
+    if file_filter is None or file_filter(path):
+        _fingerprint_file(digest, path, Path(path.name))
+
+
+def _fingerprint_file(digest, path: Path, label: Path) -> None:
+    digest.update(str(label).replace(os.sep, "/").encode("utf-8", errors="surrogateescape"))
+    digest.update(b"\0")
+    digest.update(path.read_bytes())
+    digest.update(b"\0")
+
+
+def _project_config(project: Path) -> dict[str, Any]:
+    with project.open("rb") as handle:
+        return tomllib.load(handle)
+
+
+def _mapping(value: object) -> dict[str, Any]:
+    return value if isinstance(value, dict) else {}
+
+
+def _config_path(repo: Path, value: object) -> Path | None:
+    if value in (None, ""):
+        return None
+    return _resolve_config_path(repo, value)
+
+
+def _existing_config_paths(base: Path, raw: dict[str, Any], keys: Sequence[str]) -> list[Path]:
+    paths = []
+    for key in keys:
+        value = raw.get(key)
+        if value not in (None, ""):
+            paths.append(_resolve_config_path(base, value))
+    return paths
+
+
+def _resolve_config_path(base: Path, value: object) -> Path:
+    path = Path(str(value))
+    return path if path.is_absolute() else (base / path).resolve()
+
+
+def _load_yaml_mapping(path: Path) -> dict[str, Any]:
+    import yaml
+
+    raw = yaml.safe_load(path.read_text(encoding="utf-8-sig"))
+    return raw if isinstance(raw, dict) else {}
+
+
+def _load_sync_state(repo: Path) -> dict[str, str]:
+    path = repo / SYNC_STATE_PATH
+    if not path.is_file():
+        return {}
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        return {}
+    return {str(key): str(value) for key, value in raw.items() if isinstance(value, str)}
+
+
+def _save_sync_state(repo: Path, state: dict[str, str]) -> None:
+    path = repo / SYNC_STATE_PATH
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _record_current_sync_state(repo: Path, project: Path) -> None:
+    state = _sync_stage_fingerprints(repo, project)
+    state["validation"] = _validation_fingerprint(repo, project)
+    _save_sync_state(repo, state)
+
+
+def _deploy_built_mod(repo: Path, project: Path, *, force: bool) -> int:
+    command: list[str | os.PathLike[str]] = ["eu5-orchestrator", "deploy", "--project", project, "--clean"]
+    if force:
+        command.append("--force")
+    return _run(command, repo)
+
+
+def _smart_sync(args: argparse.Namespace, repo: Path, project: Path) -> int:
+    state = _load_sync_state(repo)
+    fingerprints = _sync_stage_fingerprints(repo, project)
+    ran_generator = False
+    commands: dict[str, list[str | os.PathLike[str]]] = {
+        "labeling": ["eu5-orchestrator", "label", "--project", project],
+        "blueprints": ["eu5-orchestrator", "render", "--project", project, "--overwrite"],
+        "population_capacity": ["eu5-orchestrator", "population-capacity", "render", "--project", project],
+    }
+
+    for stage in SYNC_STAGES:
+        if not args.force_build and state.get(stage) == fingerprints[stage]:
+            print(f"Smart sync: {stage} inputs unchanged; skipping.", flush=True)
+            continue
+        result = _run(commands[stage], repo)
+        if result != 0:
+            return result
+        if stage == "labeling":
+            _finalize_constructor_mod(repo, project)
+        state[stage] = fingerprints[stage]
+        ran_generator = True
+
+    validation_before = _validation_fingerprint(repo, project)
+    if ran_generator or args.force_build or state.get("validation") != validation_before:
+        result = _run(["eu5-orchestrator", "validate", "--project", project], repo)
+        if result != 0:
+            return result
+        state["validation"] = _validation_fingerprint(repo, project)
+    else:
+        print("Smart sync: validation inputs unchanged; skipping validation.", flush=True)
+
+    _save_sync_state(repo, state)
+    return _deploy_built_mod(repo, project, force=args.force_deploy)
+
+
 def _sync(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if extra:
         raise SystemExit("sync does not accept extra arguments.")
@@ -917,10 +1174,13 @@ def _sync(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: P
         raise SystemExit(
             "Refusing to sync: constructor.local.toml is missing. Configure [deploy].target first."
         )
-    build_result = _build(args, (), repo, project)
-    if build_result != 0:
-        return build_result
-    return _run(["eu5-orchestrator", "deploy", "--project", project, "--clean"], repo)
+    if args.full_build:
+        build_result = _build(args, (), repo, project)
+        if build_result != 0:
+            return build_result
+        _record_current_sync_state(repo, project)
+        return _deploy_built_mod(repo, project, force=args.force_deploy)
+    return _smart_sync(args, repo, project)
 
 
 if __name__ == "__main__":

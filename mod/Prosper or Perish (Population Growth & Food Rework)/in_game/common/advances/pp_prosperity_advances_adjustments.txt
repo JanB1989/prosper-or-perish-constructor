@@ -118,14 +118,14 @@ TRY_INJECT:food_advance_renaissance = {
 	ai_weight = { add = 15 }
 	global_population_capacity_modifier = 0.06
 }
-# new_world_crops: Columbian Exchange – potato, maize 2–4x caloric yield
+# new_world_crops: Columbian Exchange - potato 2-4x caloric yield, maize adoption
 TRY_INJECT:new_world_crops = {
 	global_peasants_food_consumption = -0.02
 	global_food_capacity_modifier = 0.08
 	global_food_capacity = 20
 	global_monthly_food_modifier = -0.10
 	global_potato_output_modifier = 0.50
-	global_maize_output_modifier = 0.50
+	global_maize_output_modifier = 0.18
 	global_legumes_output_modifier = 0.25
 	global_cocoa_output_modifier = 0.15
 	global_sugar_output_modifier = 0.15

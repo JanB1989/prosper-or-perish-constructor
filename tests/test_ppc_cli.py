@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 
@@ -62,6 +63,186 @@ def test_sync_requires_explicit_confirmation(tmp_path: Path) -> None:
         cli.main(["--repo", str(repo), "sync"])
 
 
+def test_sync_smart_skips_unchanged_build_stages(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    (repo / "constructor.local.toml").write_text("[deploy]\ntarget = 'live'\n", encoding="utf-8")
+    state_path = repo / cli.SYNC_STATE_PATH
+    state_path.parent.mkdir(parents=True)
+    state_path.write_text(
+        json.dumps(
+            {
+                "labeling": "label",
+                "blueprints": "blueprints",
+                "population_capacity": "population",
+                "validation": "validation",
+            }
+        ),
+        encoding="utf-8",
+    )
+    calls: list[list[str]] = []
+
+    monkeypatch.setattr(
+        cli,
+        "_sync_stage_fingerprints",
+        lambda repo_arg, project_arg: {
+            "labeling": "label",
+            "blueprints": "blueprints",
+            "population_capacity": "population",
+        },
+    )
+    monkeypatch.setattr(cli, "_validation_fingerprint", lambda repo_arg, project_arg: "validation")
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "sync", "--yes"]) == 0
+
+    assert calls == [
+        ["eu5-orchestrator", "deploy", "--project", str(repo / "constructor.toml"), "--clean"]
+    ]
+
+
+def test_sync_smart_runs_changed_stages_and_validation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    (repo / "constructor.local.toml").write_text("[deploy]\ntarget = 'live'\n", encoding="utf-8")
+    state_path = repo / cli.SYNC_STATE_PATH
+    state_path.parent.mkdir(parents=True)
+    state_path.write_text(
+        json.dumps(
+            {
+                "labeling": "old-label",
+                "blueprints": "blueprints",
+                "population_capacity": "old-population",
+                "validation": "old-validation",
+            }
+        ),
+        encoding="utf-8",
+    )
+    calls: list[list[str]] = []
+    finalized: list[Path] = []
+
+    monkeypatch.setattr(
+        cli,
+        "_sync_stage_fingerprints",
+        lambda repo_arg, project_arg: {
+            "labeling": "new-label",
+            "blueprints": "blueprints",
+            "population_capacity": "new-population",
+        },
+    )
+    monkeypatch.setattr(cli, "_validation_fingerprint", lambda repo_arg, project_arg: "new-validation")
+    monkeypatch.setattr(cli, "_finalize_constructor_mod", lambda repo_arg, project_arg: finalized.append(project_arg))
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "sync", "--yes"]) == 0
+
+    assert calls == [
+        ["eu5-orchestrator", "label", "--project", str(repo / "constructor.toml")],
+        ["eu5-orchestrator", "population-capacity", "render", "--project", str(repo / "constructor.toml")],
+        ["eu5-orchestrator", "validate", "--project", str(repo / "constructor.toml")],
+        ["eu5-orchestrator", "deploy", "--project", str(repo / "constructor.toml"), "--clean"],
+    ]
+    assert finalized == [repo / "constructor.toml"]
+    saved = json.loads(state_path.read_text(encoding="utf-8"))
+    assert saved["labeling"] == "new-label"
+    assert saved["blueprints"] == "blueprints"
+    assert saved["population_capacity"] == "new-population"
+    assert saved["validation"] == "new-validation"
+
+
+def test_sync_force_build_runs_all_smart_stages(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    (repo / "constructor.local.toml").write_text("[deploy]\ntarget = 'live'\n", encoding="utf-8")
+    state_path = repo / cli.SYNC_STATE_PATH
+    state_path.parent.mkdir(parents=True)
+    state_path.write_text(
+        json.dumps(
+            {
+                "labeling": "label",
+                "blueprints": "blueprints",
+                "population_capacity": "population",
+                "validation": "validation",
+            }
+        ),
+        encoding="utf-8",
+    )
+    calls: list[list[str]] = []
+    finalized: list[Path] = []
+
+    monkeypatch.setattr(
+        cli,
+        "_sync_stage_fingerprints",
+        lambda repo_arg, project_arg: {
+            "labeling": "label",
+            "blueprints": "blueprints",
+            "population_capacity": "population",
+        },
+    )
+    monkeypatch.setattr(cli, "_validation_fingerprint", lambda repo_arg, project_arg: "validation")
+    monkeypatch.setattr(cli, "_finalize_constructor_mod", lambda repo_arg, project_arg: finalized.append(project_arg))
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "sync", "--yes", "--force-build"]) == 0
+
+    assert calls == [
+        ["eu5-orchestrator", "label", "--project", str(repo / "constructor.toml")],
+        ["eu5-orchestrator", "render", "--project", str(repo / "constructor.toml"), "--overwrite"],
+        ["eu5-orchestrator", "population-capacity", "render", "--project", str(repo / "constructor.toml")],
+        ["eu5-orchestrator", "validate", "--project", str(repo / "constructor.toml")],
+        ["eu5-orchestrator", "deploy", "--project", str(repo / "constructor.toml"), "--clean"],
+    ]
+    assert finalized == [repo / "constructor.toml"]
+
+
+def test_sync_full_build_and_force_deploy_use_recovery_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    (repo / "constructor.local.toml").write_text("[deploy]\ntarget = 'live'\n", encoding="utf-8")
+    calls: list[list[str]] = []
+    recorded: list[Path] = []
+
+    monkeypatch.setattr(cli, "_finalize_constructor_mod", lambda repo_arg, project_arg: None)
+    monkeypatch.setattr(cli, "_record_current_sync_state", lambda repo_arg, project_arg: recorded.append(project_arg))
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "sync", "--yes", "--full-build", "--force-deploy"]) == 0
+
+    assert calls == [
+        ["eu5-orchestrator", "build", "--project", str(repo / "constructor.toml"), "--overwrite"],
+        ["eu5-orchestrator", "deploy", "--project", str(repo / "constructor.toml"), "--clean", "--force"],
+    ]
+    assert recorded == [repo / "constructor.toml"]
+
+
 def test_build_finalizes_location_potential_localization(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -73,6 +254,8 @@ def test_build_finalizes_location_potential_localization(
     mod_root = repo / "mod" / "test-mod"
     static_modifiers = mod_root / "main_menu" / "common" / "static_modifiers"
     localization = mod_root / "main_menu" / "localization" / "english"
+    modifier_localization_path = localization / "pp_location_modifiers_l_english.yml"
+    europedia_localization_path = localization / "pp_europedia_l_english.yml"
     static_modifiers.mkdir(parents=True)
     localization.mkdir(parents=True)
     (static_modifiers / "pp_location_modifiers.txt").write_text(
@@ -85,13 +268,13 @@ def test_build_finalizes_location_potential_localization(
         "}\n",
         encoding="utf-8",
     )
-    (localization / "pp_location_modifiers_l_english.yml").write_text(
+    modifier_localization_path.write_text(
         '\ufeffl_english:\n'
         ' pp_location_modifiers_title: "Prosper or Perish per-location suitability"\n'
         ' pp_location_modifiers_title_desc: "stale"\n',
         encoding="utf-8",
     )
-    (localization / "pp_europedia_l_english.yml").write_text("l_english:\n", encoding="utf-8")
+    europedia_localization_path.write_text("l_english:\n", encoding="utf-8")
     calls: list[list[str]] = []
 
     def fake_run(command, cwd):
@@ -103,10 +286,8 @@ def test_build_finalizes_location_potential_localization(
 
     assert cli.main(["--repo", str(repo), "build"]) == 0
 
-    modifier_text = (localization / "pp_location_modifiers_l_english.yml").read_text(
-        encoding="utf-8-sig"
-    )
-    europedia_text = (localization / "pp_europedia_l_english.yml").read_text(encoding="utf-8-sig")
+    modifier_text = modifier_localization_path.read_text(encoding="utf-8-sig")
+    europedia_text = europedia_localization_path.read_text(encoding="utf-8-sig")
     assert calls == [
         ["eu5-orchestrator", "build", "--project", str(repo / "constructor.toml"), "--overwrite"]
     ]
@@ -116,6 +297,14 @@ def test_build_finalizes_location_potential_localization(
     assert "pp_location_modifiers_title:" not in modifier_text
     assert 'game_concept_pp_location_potential: "Location Potential"' in europedia_text
     assert "\\n\\nThe values combine" in europedia_text
+    fixed_time = 1_700_000_000_000_000_000
+    os.utime(modifier_localization_path, ns=(fixed_time, fixed_time))
+    os.utime(europedia_localization_path, ns=(fixed_time, fixed_time))
+
+    cli._inject_location_potential_localization(mod_root)
+
+    assert modifier_localization_path.stat().st_mtime_ns == fixed_time
+    assert europedia_localization_path.stat().st_mtime_ns == fixed_time
 
 
 def test_build_does_not_finalize_after_failed_orchestrator_build(

@@ -14,11 +14,11 @@ from prosper_or_perish_population_capacity.calibration import (
     load_generated_capacity_frame,
     load_saturation_anchors,
 )
-from prosper_or_perish_population_capacity.config import COLLECTIONS, load_pipeline_config
+from prosper_or_perish_population_capacity.config import load_pipeline_config
 from prosper_or_perish_population_capacity.extraction import STATIC_MODIFIER_BLOCK
 from prosper_or_perish_population_capacity.geometry_calibration import fit_transform, load_control_points
 from prosper_or_perish_population_capacity.merge import load_collection, profile_from
-from prosper_or_perish_population_capacity.render import planned_population_capacity_writes
+from prosper_or_perish_population_capacity.render import write_population_capacity_files
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,6 +26,9 @@ MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 LABELING_ROOT = ROOT.parent / "ProsperOrPerishLabelingPipeline"
 LABELING_BASELINE = LABELING_ROOT / "base_data" / "locations_with_raw_material.parquet"
 LOCATION_MODIFIERS = MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifiers.txt"
+CAPACITY_PRESSURE_EFFECTS = (
+    MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_capacity_pressure_effects.txt"
+)
 LOCATION_MODIFIER_LOCALIZATION = (
     MOD_ROOT / "main_menu" / "localization" / "english" / "pp_location_modifiers_l_english.yml"
 )
@@ -52,7 +55,6 @@ ANIMAL_PRODUCT_GOODS = (
     "wild_game",
     "wool",
 )
-MANAGED_CAPACITY_EFFECT_FILE = "pp_capacity_pressure_effects.txt"
 BENCHMARK_GROUPS = (
     "province",
     "region",
@@ -71,22 +73,19 @@ def test_population_capacity_config_loads() -> None:
 
     assert config.generated_label == "Prosper or Perish"
     assert config.managed_write_mode == "mod_root"
+    assert config.capacity_scale.minimum == 0
+    assert config.capacity_scale.maximum == 120
     assert config.calibration.historical_population_policy == "saturation_anchors_only"
     assert config.calibration.saturation_anchors == "population_capacity_saturation_anchors.toml"
     assert config.calibration.land_potential_sources == ("gaez_v4", "hyde", "archaeoglobe")
-    assert "flatland" not in config.set_values.get("topography", {})
-    assert config.set_values["topography"]["mountains"]["local_population_capacity_modifier"] == 0.5
-    assert config.set_values["climates"]["continental"]["local_population_capacity_modifier"] == -0.5
-    assert "province_capital" not in config.set_values["static_modifiers"]
-    assert config.set_values["static_modifiers"]["building_levels"]["local_population_capacity"] == 0.1
-    assert config.set_values["static_modifiers"]["development"]["local_population_capacity"] == 0.25
-    assert config.set_values["static_modifiers"]["development"]["local_population_capacity_modifier"] == 0.02
+    assert config.set_values == {}
+    assert config.whole_blocks == {}
     assert config.feature_capacity_adjustments.enabled is False
-    assert config.feature_capacity_adjustments.removed_values["topography"]["flatland"]["local_population_capacity"] == 88
-    assert config.feature_capacity_adjustments.vanilla_values["vegetation"]["farmland"]["local_population_capacity"] == 100
-    assert config.whole_blocks["static_modifiers"]["available_free_land"]["local_monthly_food"] == 3
-    assert config.whole_blocks["static_modifiers"]["abundant_free_land"]["local_monthly_food"] == 6
-    assert config.whole_blocks["static_modifiers"]["overpopulation"]["cap_maximum_population_growth_at_zero"] is True
+    assert config.feature_capacity_adjustments.removed_values == {}
+    assert config.feature_capacity_adjustments.vanilla_values == {}
+    assert "[set_values." not in config_text
+    assert "[whole_blocks." not in config_text
+    assert "[feature_capacity_adjustments" not in config_text
     assert "[values." not in config_text
     assert "[capacity_effects." not in config_text
     assert "[inject_values." not in config_text
@@ -94,30 +93,31 @@ def test_population_capacity_config_loads() -> None:
 
 
 def test_free_land_effects_cover_all_labeled_goods() -> None:
-    config = load_pipeline_config(ROOT / "population_capacity.toml")
     labeled_goods = _labeler_goods()
 
     for effect in ("available_free_land", "abundant_free_land"):
-        modifiers = config.whole_blocks["static_modifiers"][effect]
+        block = _object_block(CAPACITY_PRESSURE_EFFECTS, effect)
+        assert block is not None
         missing = [
             good
             for good in labeled_goods
-            if f"local_{good}_output_modifier" not in modifiers
+            if _last_value(block, f"local_{good}_output_modifier") is None
         ]
 
         assert not missing
 
 
 def test_free_land_effects_order_plants_before_animal_products() -> None:
-    config = load_pipeline_config(ROOT / "population_capacity.toml")
     labeled_goods = _labeler_goods()
     plant_goods = tuple(good for good in labeled_goods if good not in ANIMAL_PRODUCT_GOODS)
 
     for effect in ("available_free_land", "abundant_free_land"):
+        block = _object_block(CAPACITY_PRESSURE_EFFECTS, effect)
+        assert block is not None
         output_keys = [
-            key
-            for key in config.whole_blocks["static_modifiers"][effect]
-            if key.startswith("local_") and key.endswith("_output_modifier")
+            entry.key
+            for entry in block.entries
+            if entry.key.startswith("local_") and entry.key.endswith("_output_modifier")
         ]
         positions = {key: index for index, key in enumerate(output_keys)}
         last_plant = max(positions[f"local_{good}_output_modifier"] for good in plant_goods)
@@ -126,13 +126,10 @@ def test_free_land_effects_order_plants_before_animal_products() -> None:
         assert last_plant < first_animal
 
 
-def test_population_capacity_config_plans_managed_outputs() -> None:
+def test_population_capacity_config_no_longer_patches_static_mod_files() -> None:
     config = load_pipeline_config(ROOT / "population_capacity.toml")
-    paths = {write.path.relative_to(MOD_ROOT).as_posix() for write in planned_population_capacity_writes(config, MOD_ROOT)}
 
-    assert "main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt" in paths
-    assert "in_game/common/topography/pp_population_capacity_topography.txt" not in paths
-    assert "main_menu/common/static_modifiers/pp_population_capacity_static_modifiers.txt" not in paths
+    assert write_population_capacity_files(config, MOD_ROOT, dry_run=True) == []
 
 
 def test_location_potential_help_localization_is_shared() -> None:
@@ -196,63 +193,7 @@ def test_location_potential_help_localization_is_shared() -> None:
     assert not missing
 
 
-def test_set_values_are_written_in_place_for_dynamic_config() -> None:
-    config = load_pipeline_config(ROOT / "population_capacity.toml")
-    managed_names = _managed_set_value_output_names(config)
-
-    for collection, objects in config.set_values.items():
-        for object_key, modifiers in objects.items():
-            owner = _single_non_managed_owner(collection, object_key, managed_names)
-            block = _object_block(owner, object_key)
-            assert block is not None, f"missing owner block for {collection}.{object_key}"
-            for raw_key, expected_value in modifiers.items():
-                values = _values_at_path(block, _configured_path(collection, raw_key))
-                assert values == [expected_value], f"{collection}.{object_key}.{raw_key} is not set exactly"
-
-    development = _object_block(_single_non_managed_owner("static_modifiers", "development", managed_names), "development")
-    assert development is not None
-    assert _last_value(development, "local_population_capacity") == 0.25
-    assert _last_value(development, "local_population_capacity_modifier") == 0.02
-    assert _last_value(development, "local_supply_limit_modifier") == 0.02
-    assert _last_value(development, "local_migration_attraction") == 0.0025
-
-    building_levels = _object_block(
-        _single_non_managed_owner("static_modifiers", "building_levels", managed_names),
-        "building_levels",
-    )
-    assert building_levels is not None
-    assert _last_value(building_levels, "local_population_capacity") == 0.1
-
-
-def test_set_values_do_not_generate_managed_patch_blocks() -> None:
-    config = load_pipeline_config(ROOT / "population_capacity.toml")
-
-    for collection, objects in config.set_values.items():
-        output = config.outputs.get(collection)
-        if not output:
-            continue
-        path = MOD_ROOT / output
-        assert not path.exists(), f"{output} must not be generated for set_values"
-        if path.exists():
-            text = path.read_text(encoding="utf-8-sig")
-            for object_key in objects:
-                assert f"TRY_INJECT:{object_key}" not in text
-
-
-def test_configured_static_modifier_capacity_offsets_neutralize_vanilla_sum() -> None:
-    config = load_pipeline_config(ROOT / "population_capacity.toml")
-    profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
-    maps = current_modifier_maps(profile)
-
-    for object_key, modifiers in config.set_values["static_modifiers"].items():
-        for modifier_key, expected_value in modifiers.items():
-            if object_key in {"building_levels", "development"}:
-                continue
-            assert expected_value < 0
-            assert maps["static_modifiers"][object_key][modifier_key] == 0
-
-
-def test_development_set_value_preserves_non_population_static_modifier_values() -> None:
+def test_development_modifier_preserves_population_and_other_static_values() -> None:
     profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
     static_modifiers = load_collection(profile, "static_modifiers")
     development = _entry_block(static_modifiers.entries, "development")
@@ -266,7 +207,7 @@ def test_development_set_value_preserves_non_population_static_modifier_values()
     assert _last_value(development, "local_migration_attraction") == 0.0025
 
 
-def test_building_levels_set_value_adds_population_capacity() -> None:
+def test_building_levels_modifier_adds_population_capacity() -> None:
     profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
     static_modifiers = load_collection(profile, "static_modifiers")
     building_levels = _entry_block(static_modifiers.entries, "building_levels")
@@ -277,7 +218,7 @@ def test_building_levels_set_value_adds_population_capacity() -> None:
     assert _last_value(building_levels, "local_build_new_buildings_cost") == 0.05
 
 
-def test_river_flowing_through_set_value_resolves_to_configured_modifier() -> None:
+def test_river_flowing_through_modifier_neutralizes_population_capacity_penalty() -> None:
     profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
     maps = current_modifier_maps(profile)
 
@@ -366,49 +307,47 @@ def test_static_feature_population_capacity_is_neutralized_in_merged_maps() -> N
                 assert modifier_key not in object_map
 
 
-def test_configured_capacity_pressure_effects_are_merged_by_parser() -> None:
-    config = load_pipeline_config(ROOT / "population_capacity.toml")
+def test_capacity_pressure_effects_are_merged_by_parser() -> None:
     profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
     impacts = capacity_effect_inventory(profile)
 
     for effect_key in ("available_free_land", "abundant_free_land", "overpopulation"):
-        for modifier_key, expected_value in config.whole_blocks["static_modifiers"][effect_key].items():
+        block = _object_block(CAPACITY_PRESSURE_EFFECTS, effect_key)
+        assert block is not None
+        for entry in block.entries:
+            if entry.key == "game_data":
+                continue
             assert any(
                 impact.effect_key == effect_key
-                and impact.path == f"{effect_key}.{modifier_key}"
-                and impact.value == _config_scalar_text(expected_value)
-                and Path(impact.source_file).name == MANAGED_CAPACITY_EFFECT_FILE
+                and impact.path == f"{effect_key}.{entry.key}"
+                and impact.value == _config_scalar_text(entry.value)
+                and Path(impact.source_file).name == CAPACITY_PRESSURE_EFFECTS.name
                 and impact.source_mode == "TRY_REPLACE"
                 for impact in impacts
-            ), f"missing merged capacity-pressure effect replacement for {effect_key}.{modifier_key}"
+            ), f"missing merged capacity-pressure effect replacement for {effect_key}.{entry.key}"
 
 
-def test_whole_blocks_are_only_in_managed_replacement_file() -> None:
-    config = load_pipeline_config(ROOT / "population_capacity.toml")
-    managed_path = MOD_ROOT / config.outputs["capacity_effects"]
-    managed_text = managed_path.read_text(encoding="utf-8-sig")
-    whole_blocks = config.whole_blocks["static_modifiers"]
+def test_capacity_pressure_effects_are_hand_authored_replacements() -> None:
+    text = CAPACITY_PRESSURE_EFFECTS.read_text(encoding="utf-8-sig")
 
-    for object_key, modifiers in whole_blocks.items():
-        assert managed_text.count(f"TRY_REPLACE:{object_key}") == 1
-        for modifier_key, expected_value in modifiers.items():
-            assert f"{modifier_key} = {_config_scalar_text(expected_value)}" in managed_text
+    assert "<managed by Prosper or Perish population capacity pipeline>" not in text
+    assert "Edit population_capacity.toml, not this file" not in text
+    for object_key in ("available_free_land", "abundant_free_land", "overpopulation"):
+        assert text.count(f"TRY_REPLACE:{object_key}") == 1
         for path in (MOD_ROOT / "main_menu" / "common" / "static_modifiers").glob("*.txt"):
-            if path.name == managed_path.name:
+            if path.name == CAPACITY_PRESSURE_EFFECTS.name:
                 continue
-            assert not _file_has_object(path, object_key), f"{object_key} is patched outside managed whole-block file"
+            assert not _file_has_object(path, object_key), f"{object_key} is patched outside capacity pressure file"
 
 
-def test_population_capacity_set_values_have_no_managed_patch_files() -> None:
+def test_population_capacity_config_does_not_own_static_mod_files() -> None:
     config = load_pipeline_config(ROOT / "population_capacity.toml")
 
-    for collection in config.set_values:
-        output = config.outputs.get(collection)
-        if output:
-            assert not (MOD_ROOT / output).exists()
+    assert config.set_values == {}
+    assert config.whole_blocks == {}
 
 
-def test_capacity_pressure_effects_are_managed_only() -> None:
+def test_capacity_pressure_effects_are_defined_only_in_pressure_file() -> None:
     offenders: list[str] = []
     for path in MOD_ROOT.rglob("*.txt"):
         if path.name == "pp_capacity_pressure_effects.txt":
@@ -432,11 +371,12 @@ def test_generated_location_modifiers_include_one_population_capacity_per_locati
 
 
 def test_generated_population_capacity_values_stay_in_v1_bounds() -> None:
+    config = load_pipeline_config(ROOT / "population_capacity.toml")
     capacities = _generated_location_capacities()
 
     assert len(capacities) > 20_000
-    assert min(capacities.values()) >= 0
-    assert max(capacities.values()) <= 120
+    assert min(capacities.values()) >= config.capacity_scale.minimum
+    assert max(capacities.values()) <= config.capacity_scale.maximum
     assert any(value >= 100 for value in capacities.values())
     assert any(value <= 10 for value in capacities.values())
 
@@ -572,31 +512,6 @@ def _generated_location_capacities() -> dict[str, int]:
     return capacities
 
 
-def _managed_set_value_output_names(config) -> set[str]:
-    return {
-        Path(config.outputs[collection]).name
-        for collection in config.set_values
-        if collection in config.outputs
-    }
-
-
-def _single_non_managed_owner(collection: str, object_key: str, managed_names: set[str]) -> Path:
-    directory = MOD_ROOT / _collection_relative_dir(collection)
-    owners = [
-        path
-        for path in sorted(directory.glob("*.txt"))
-        if path.name not in managed_names and _file_has_object(path, object_key)
-    ]
-    assert len(owners) == 1, f"expected one owner for {collection}.{object_key}, found {owners}"
-    return owners[0]
-
-
-def _collection_relative_dir(collection: str) -> Path:
-    if collection == "static_modifiers":
-        return Path("main_menu/common/static_modifiers")
-    return Path("in_game/common") / COLLECTIONS[collection].relative_dir
-
-
 def _file_has_object(path: Path, object_key: str) -> bool:
     text = path.read_text(encoding="utf-8-sig", errors="replace")
     return any(
@@ -611,23 +526,6 @@ def _object_block(path: Path, object_key: str) -> CList | None:
         if key == object_key and isinstance(entry.value, CList):
             return entry.value
     return None
-
-
-def _configured_path(collection: str, raw_key: str) -> tuple[str, ...]:
-    path = tuple(raw_key.split("."))
-    if len(path) > 1:
-        return path
-    nested_path = COLLECTIONS.get(collection).nested_path if collection in COLLECTIONS else ()
-    return (*nested_path, raw_key)
-
-
-def _values_at_path(block: CList, path: tuple[str, ...]):
-    current = block
-    for key in path[:-1]:
-        nested = _last_value(current, key)
-        assert isinstance(nested, CList), f"missing nested block {'.'.join(path)}"
-        current = nested
-    return current.values(path[-1])
 
 
 def _entry_block(entries, key: str) -> CList | None:

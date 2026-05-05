@@ -2,37 +2,12 @@ version: 2
 tag: irrigation_systems
 building:
   key: irrigation_systems
-  mode: TRY_REPLACE
+  mode: INJECT
   source: pp_building_adjustments.txt
   production_method_slots: []
   possible_production_methods: []
   body: |2-
-    	is_foreign = no
-    	max_levels = irrigant_cap
-    	pop_type = peasants
-    	category = infrastructure_category
-    	employment_size = generic_peasant_building_employment
-    	rural_settlement = yes
-    	town = yes
-    	city = yes
-    	location_potential = {
-    		OR = {
-    			has_river = yes
-    			is_adjacent_to_lake = yes
-    		}
-    	}
-    	build_time = infrastructure_build_time
-    	unique_production_methods = {
-    		irrigation_maintenance = {
-    			stone = 0.15
-    			lumber = 0.05
-    			tools = 0.025
-    			category = building_maintenance
-    		}
-    	}
-    	construction_demand = village_construction
     	modifier = {
-    		local_population_capacity = 1.0
     		local_monthly_food_modifier = -0.05 # vanilla 0.05
     		fruit_orchard_max_level_modifier = 1
     		farming_village_max_level_modifier = 1

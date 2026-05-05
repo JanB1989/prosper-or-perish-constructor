@@ -1,7 +1,11 @@
 from pathlib import Path
 
+from eu5_building_pipeline.template import load_template
+from eu5gameparser.clausewitz.parser import parse_file, parse_text
+from eu5gameparser.clausewitz.syntax import CList
 from eu5gameparser.domain.availability import annotate_building_data_availability
 from eu5gameparser.domain.eu5 import load_eu5_data
+from eu5gameparser.load_order import LoadOrderConfig
 from eu5_mod_orchestrator.blueprints import accepted_blueprint_files, validate_blueprint_file
 from eu5_mod_orchestrator.config import load_project_config
 from mod_injector.config import load_mod_injector_config
@@ -53,6 +57,29 @@ def test_constructor_config_loads() -> None:
 def test_accepted_blueprints_validate() -> None:
     for blueprint in accepted_blueprint_files(ROOT / "blueprints" / "accepted"):
         validate_blueprint_file(blueprint)
+
+
+def test_replaced_buildings_do_not_reuse_vanilla_unique_method_names() -> None:
+    vanilla_methods_by_building = _vanilla_unique_methods_by_building()
+    offenders = []
+
+    for blueprint in accepted_blueprint_files(ROOT / "blueprints" / "accepted"):
+        template = load_template(blueprint)
+        if template.mode != "REPLACE":
+            continue
+        vanilla_methods = vanilla_methods_by_building.get(template.key)
+        if not vanilla_methods:
+            continue
+        rendered = parse_text(
+            f"{template.key} = {{\n{template.building_body}\n}}\n",
+            path=blueprint,
+        )
+        unique_methods = _unique_production_method_names(rendered.entries[0].value)
+        reused = sorted(unique_methods & vanilla_methods)
+        if reused:
+            offenders.append(f"{blueprint.relative_to(ROOT)}: {', '.join(reused)}")
+
+    assert not offenders
 
 
 def test_cookery_building_line_has_resolved_prices() -> None:
@@ -119,3 +146,24 @@ def test_labeling_output_modifier_config_loads_explicit_goods() -> None:
         "wool",
     ]
     assert all(g.enabled for g in cfg.goods)
+
+
+def _vanilla_unique_methods_by_building() -> dict[str, set[str]]:
+    load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
+    building_dir = load_order.vanilla_root / "game" / "in_game" / "common" / "building_types"
+    result: dict[str, set[str]] = {}
+    for path in sorted(building_dir.glob("*.txt")):
+        for entry in parse_file(path).entries:
+            if isinstance(entry.value, CList):
+                methods = _unique_production_method_names(entry.value)
+                if methods:
+                    result[entry.key] = methods
+    return result
+
+
+def _unique_production_method_names(block: CList) -> set[str]:
+    names: set[str] = set()
+    for value in block.values("unique_production_methods"):
+        if isinstance(value, CList):
+            names.update(entry.key for entry in value.entries)
+    return names

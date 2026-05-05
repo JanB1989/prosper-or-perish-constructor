@@ -159,12 +159,18 @@ def test_irrigation_maintenance_is_not_tool_focused() -> None:
     assert not obsolete_goods_demand_patch.exists()
     assert "REPLACE:irrigation_systems" in building_text
     assert "unique_production_methods = {" in building_text
-    assert "irrigation_maintenance = {" in building_text
+    assert "pp_irrigation_maintenance = {" in building_text
+    assert not re.search(r"^\s*irrigation_maintenance\s*=", building_text, flags=re.MULTILINE)
     assert re.search(r"^\s*stone\s*=\s*0\.15\s*$", building_text, flags=re.MULTILINE)
     assert re.search(r"^\s*lumber\s*=\s*0\.05\s*$", building_text, flags=re.MULTILINE)
     assert re.search(r"^\s*tools\s*=\s*0\.025\s*$", building_text, flags=re.MULTILINE)
     assert re.search(r'^\s*irrigation_systems_slot_0: "Maintenance"\s*$', localization_text, flags=re.MULTILINE)
-    assert re.search(r'^\s*irrigation_maintenance: "Irrigation Maintenance"\s*$', localization_text, flags=re.MULTILINE)
+    assert re.search(
+        r'^\s*pp_irrigation_maintenance: "Irrigation Maintenance"\s*$',
+        localization_text,
+        flags=re.MULTILINE,
+    )
+    assert not re.search(r"^\s*irrigation_maintenance:", localization_text, flags=re.MULTILINE)
 
 
 def test_population_capacity_config_no_longer_patches_static_mod_files() -> None:

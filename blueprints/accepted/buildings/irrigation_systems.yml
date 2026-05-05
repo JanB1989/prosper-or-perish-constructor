@@ -7,7 +7,7 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - irrigation_maintenance
+        - pp_irrigation_maintenance
   possible_production_methods: []
   body: |2-
       is_foreign = no
@@ -26,7 +26,7 @@ building:
       }
       build_time = infrastructure_build_time
       unique_production_methods = {
-        irrigation_maintenance = {
+        pp_irrigation_maintenance = {
           stone = 0.15
           lumber = 0.05
           tools = 0.025
@@ -81,4 +81,4 @@ building:
 localization:
   entries:
     irrigation_systems_slot_0: Maintenance
-    irrigation_maintenance: Irrigation Maintenance
+    pp_irrigation_maintenance: Irrigation Maintenance

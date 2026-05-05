@@ -16,7 +16,7 @@ REPLACE:irrigation_systems = {
   }
   build_time = infrastructure_build_time
   unique_production_methods = {
-    irrigation_maintenance = {
+    pp_irrigation_maintenance = {
       stone = 0.15
       lumber = 0.05
       tools = 0.025

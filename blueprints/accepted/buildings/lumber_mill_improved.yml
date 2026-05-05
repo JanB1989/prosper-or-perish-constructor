@@ -13,11 +13,16 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_lumber_mill_improved_managed_stands
+        - pp_lumber_mill_improved_base_lumber
     - name: slot_1
       methods:
         - pp_lumber_mill_improved_no_primary
+        - pp_lumber_mill_improved_managed_stands
         - pp_lumber_mill_improved_forest_ordinances
+    - name: slot_2
+      methods:
+        - pp_lumber_mill_improved_no_crew_support
+        - pp_lumber_mill_improved_wound_salves
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -37,8 +42,8 @@ building:
         OR = {
             vegetation = woods
             vegetation = forest
-            vegetation = farmland
             vegetation = jungle
+            raw_material = goods:lumber
         }
     }
 
@@ -49,14 +54,19 @@ building:
     can_close = yes
 
     unique_production_methods = {
-        pp_lumber_mill_improved_managed_stands = {
+        pp_lumber_mill_improved_base_lumber = {
             produced = lumber
-            output = 0.45
+            output = 0.30
             category = building_maintenance
         }
     }
     unique_production_methods = {
         pp_lumber_mill_improved_no_primary = {
+            category = building_maintenance
+        }
+        pp_lumber_mill_improved_managed_stands = {
+            produced = lumber
+            output = 0.45
             category = building_maintenance
         }
         pp_lumber_mill_improved_forest_ordinances = {
@@ -66,6 +76,18 @@ building:
             horses = 1.15
             victuals = 0.75
             paper = 0.10
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_lumber_mill_improved_no_crew_support = {
+            category = building_maintenance
+        }
+        pp_lumber_mill_improved_wound_salves = {
+            medicaments = 1.00
+            produced = lumber
+            output = 0.70
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -96,12 +118,16 @@ localization:
     lumber_improvements_absolutism_desc: Surveyed stands, harvest registers, forest ordinances, and improved saw frames turn scattered woodland cutting into a larger planned saw-works system.
     lumber_mill_improved: Planned Saw Works
     lumber_mill_improved_desc: Planned saw works combine managed timber stands, forest ordinances, log landings, and improved saw frames. They move far more wood by employing larger crews and consuming more supplies, not by making lumber extraction inherently more profitable.
-    lumber_mill_improved_slot_0: Managed Timber Stand
+    lumber_mill_improved_slot_0: Managed Woodland Cutting
     lumber_mill_improved_slot_1: Saw Works
+    lumber_mill_improved_slot_2: Crew Support
+    pp_lumber_mill_improved_base_lumber: Managed Woodland Cutting
     pp_lumber_mill_improved_forest_ordinances: Forest Ordinances
     pp_lumber_mill_improved_managed_stands: Managed Timber Stands
+    pp_lumber_mill_improved_no_crew_support: No Crew Support
     pp_lumber_mill_improved_no_primary: No Planned Saw Works
     pp_lumber_mill_improved_price: Planned Saw Works Price
+    pp_lumber_mill_improved_wound_salves: Wound Salves
 icon:
   source_png: ../assets/icons/lumber_mill_improved.png
   output_dds: lumber_mill_improved.dds
@@ -110,9 +136,22 @@ icon:
 
 evaluation:
   production_methods:
+    pp_lumber_mill_improved_base_lumber:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Requested passive baseline for planned saw works; intentionally lower than the global no-input output band.
+        amortization_months: Requested passive baseline for planned saw works; intentionally lower than the global no-input output band.
     pp_lumber_mill_improved_managed_stands:
       production_efficiency: 1.00
     pp_lumber_mill_improved_no_primary:
       production_efficiency: 1.00
     pp_lumber_mill_improved_forest_ordinances:
       production_efficiency: 1.00
+    pp_lumber_mill_improved_no_crew_support:
+      production_efficiency: 1.00
+    pp_lumber_mill_improved_wound_salves:
+      production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary saw-works throughput.
+        output_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary saw-works throughput.
+        amortization_months: Wound salves are an ancillary crew-recovery support method, not a standalone payback driver for planned saw works.

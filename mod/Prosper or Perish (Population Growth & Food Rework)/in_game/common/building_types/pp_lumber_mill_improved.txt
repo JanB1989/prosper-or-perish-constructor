@@ -17,8 +17,8 @@ location_potential = {
     OR = {
         vegetation = woods
         vegetation = forest
-        vegetation = farmland
         vegetation = jungle
+        raw_material = goods:lumber
     }
 }
 
@@ -29,14 +29,19 @@ important_for_AI = no
 can_close = yes
 
 unique_production_methods = {
-    pp_lumber_mill_improved_managed_stands = {
+    pp_lumber_mill_improved_base_lumber = {
         produced = lumber
-        output = 0.45
+        output = 0.30
         category = building_maintenance
     }
 }
 unique_production_methods = {
     pp_lumber_mill_improved_no_primary = {
+        category = building_maintenance
+    }
+    pp_lumber_mill_improved_managed_stands = {
+        produced = lumber
+        output = 0.45
         category = building_maintenance
     }
     pp_lumber_mill_improved_forest_ordinances = {
@@ -46,6 +51,18 @@ unique_production_methods = {
         horses = 1.15
         victuals = 0.75
         paper = 0.10
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_lumber_mill_improved_no_crew_support = {
+        category = building_maintenance
+    }
+    pp_lumber_mill_improved_wound_salves = {
+        medicaments = 1.00
+        produced = lumber
+        output = 0.70
         debug_max_profit = 0
         category = building_maintenance
     }

@@ -18,12 +18,13 @@ from typing import Sequence
 ROOT_MARKER = "constructor.toml"
 CONSTRUCTOR_PROFILE = "constructor"
 CONSTRUCTOR_LOAD_ORDER = Path("constructor.load_order.toml")
-SAVEGAME_DASHBOARD_DATASET = Path("graphs/dataset")
-SAVEGAME_DASHBOARD_BENCHMARK = Path("graphs/dashboard_benchmark_report.json")
-SAVEGAME_DASHBOARD_LEGACY_DATASETS = (
+SAVEGAME_DATASET = Path("graphs/dataset")
+SAVEGAME_NOTEBOOK_DATA = Path("graphs/savegame_notebooks/data")
+SAVEGAME_LEGACY_DATASETS = (
     Path("graphs/dataset_v2"),
     Path("graphs/savegame_progression_dataset"),
     Path("artifacts/data/savegame_progression"),
+    Path("graphs/dashboard_benchmark_report.json"),
 )
 SAVEGAME_ARTIFACT_DIR = Path("artifacts/data/savegame")
 GOODS_FLOW_EXPLORER = Path("graphs/goods_flow_explorer.html")
@@ -40,9 +41,9 @@ SAVEGAME_PURGE_PATHS = (
     SAVEGAME_EXPLORER,
     SAVEGAME_PROGRESSION_EXPLORER,
     PUBLISHED_SAVEGAME_EXPLORER,
-    SAVEGAME_DASHBOARD_DATASET,
-    *SAVEGAME_DASHBOARD_LEGACY_DATASETS,
-    SAVEGAME_DASHBOARD_BENCHMARK,
+    SAVEGAME_DATASET,
+    SAVEGAME_NOTEBOOK_DATA,
+    *SAVEGAME_LEGACY_DATASETS,
 )
 LOCATION_POTENTIAL_CONCEPT_LINES = (
     "  # Start generated location potential concept",
@@ -117,7 +118,7 @@ def _build_parser() -> argparse.ArgumentParser:
     savegame_purge = _add_command(
         subcommands,
         "savegame-purge",
-        "Delete generated savegame analysis artifacts and dashboard datasets.",
+        "Delete generated savegame analysis artifacts and notebook datasets.",
         _savegame_purge,
     )
     savegame_purge.add_argument(
@@ -158,122 +159,37 @@ def _build_parser() -> argparse.ArgumentParser:
         default=Path("artifacts/data/population_capacity/current_capacity_map"),
         help="Dashboard directory relative to --repo. Defaults to the current capacity map dashboard.",
     )
-    savegame_dashboard = subcommands.add_parser(
-        "savegame-dashboard",
-        help="Build, serve, or benchmark the constructor savegame progression dashboard.",
-        description="Savegame progression dashboard commands using the constructor profile and load order.",
+    savegame_notebooks = subcommands.add_parser(
+        "savegame-notebooks",
+        help="Build RAM-efficient parquet data for savegame notebooks.",
+        description="Savegame notebook commands using the constructor profile and load order.",
     )
-    savegame_dashboard_subcommands = savegame_dashboard.add_subparsers(
-        dest="savegame_dashboard_command",
+    savegame_notebooks_subcommands = savegame_notebooks.add_subparsers(
+        dest="savegame_notebooks_command",
         required=True,
     )
-    _add_savegame_dashboard_command(
-        savegame_dashboard_subcommands,
-        "ingest",
-        "Build or refresh the multi-save progression dataset.",
-        _savegame_dashboard_ingest,
-    ).add_argument(
-        "--workers",
-        type=int,
-        default=8,
-        help="Parallel save parser workers. Defaults to 8.",
+    savegame_notebooks_build = _add_savegame_notebooks_command(
+        savegame_notebooks_subcommands,
+        "build",
+        "Ingest savegames, then write notebook-ready parquet data.",
+        _savegame_notebooks_build,
     )
-    ingest = savegame_dashboard_subcommands.choices["ingest"]
-    ingest.add_argument(
+    savegame_notebooks_build.add_argument(
         "--save-dir",
         type=Path,
         default=None,
         help="Directory containing .eu5 saves. Defaults to auto-detecting the EU5 documents save folder.",
     )
-    savegame_dashboard_serve = _add_savegame_dashboard_command(
-        savegame_dashboard_subcommands,
-        "serve",
-        "Serve the local Dash savegame progression dashboard.",
-        _savegame_dashboard_serve,
-    )
-    savegame_dashboard_serve.add_argument(
-        "--host",
-        default="127.0.0.1",
-        help="Dashboard bind host. Defaults to 127.0.0.1.",
-    )
-    savegame_dashboard_serve.add_argument(
-        "--port",
+    savegame_notebooks_build.add_argument(
+        "--workers",
         type=int,
-        default=8050,
-        help="Dashboard bind port. Defaults to 8050.",
+        default=8,
+        help="Parallel save parser workers. Defaults to 8.",
     )
-    savegame_dashboard_serve.add_argument(
-        "--debug",
+    savegame_notebooks_build.add_argument(
+        "--no-ingest",
         action="store_true",
-        help="Run Dash in debug mode.",
-    )
-    savegame_dashboard_start = _add_savegame_dashboard_command(
-        savegame_dashboard_subcommands,
-        "start",
-        "Start the local Dash savegame progression dashboard in the background.",
-        _savegame_dashboard_start,
-    )
-    _add_dashboard_server_args(savegame_dashboard_start)
-    savegame_dashboard_start.add_argument(
-        "--timeout",
-        type=float,
-        default=20.0,
-        help="Health-check timeout in seconds. Defaults to 20.",
-    )
-    savegame_dashboard_stop = savegame_dashboard_subcommands.add_parser(
-        "stop",
-        help="Stop the background Dash savegame progression dashboard.",
-        description="Stop the background Dash savegame progression dashboard.",
-    )
-    savegame_dashboard_stop.add_argument(
-        "--port",
-        type=int,
-        default=8050,
-        help="Dashboard bind port. Defaults to 8050.",
-    )
-    savegame_dashboard_stop.set_defaults(handler=_savegame_dashboard_stop)
-    savegame_dashboard_status = savegame_dashboard_subcommands.add_parser(
-        "status",
-        help="Show background Dash savegame progression dashboard status.",
-        description="Show background Dash savegame progression dashboard status.",
-    )
-    savegame_dashboard_status.add_argument(
-        "--host",
-        default="127.0.0.1",
-        help="Dashboard bind host. Defaults to 127.0.0.1.",
-    )
-    savegame_dashboard_status.add_argument(
-        "--port",
-        type=int,
-        default=8050,
-        help="Dashboard bind port. Defaults to 8050.",
-    )
-    savegame_dashboard_status.set_defaults(handler=_savegame_dashboard_status)
-    savegame_dashboard_watch = _add_savegame_dashboard_command(
-        savegame_dashboard_subcommands,
-        "watch",
-        "Continuously ingest savegames into the progression dataset.",
-        _savegame_dashboard_watch,
-    )
-    _add_savegame_watch_args(savegame_dashboard_watch)
-    savegame_dashboard_run = _add_savegame_dashboard_command(
-        savegame_dashboard_subcommands,
-        "run",
-        "Start the dashboard in the background, then continuously ingest savegames.",
-        _savegame_dashboard_run,
-    )
-    _add_dashboard_server_args(savegame_dashboard_run)
-    _add_savegame_watch_args(savegame_dashboard_run)
-    _add_savegame_dashboard_command(
-        savegame_dashboard_subcommands,
-        "benchmark",
-        "Benchmark cached dashboard startup and callback paths.",
-        _savegame_dashboard_benchmark,
-    ).add_argument(
-        "--output",
-        type=Path,
-        default=SAVEGAME_DASHBOARD_BENCHMARK,
-        help="Benchmark JSON report path relative to --repo. Defaults to graphs/dashboard_benchmark_report.json.",
+        help="Only rebuild notebook parquet from an existing graphs/dataset.",
     )
     _add_command(
         subcommands,
@@ -345,7 +261,7 @@ def _add_command(
     return command
 
 
-def _add_savegame_dashboard_command(
+def _add_savegame_notebooks_command(
     subcommands: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
     help_text: str,
@@ -355,8 +271,14 @@ def _add_savegame_dashboard_command(
     command.add_argument(
         "--dataset",
         type=Path,
-        default=SAVEGAME_DASHBOARD_DATASET,
-        help="Progression dataset directory relative to --repo. Defaults to graphs/dataset.",
+        default=SAVEGAME_DATASET,
+        help="Raw savegame parquet dataset directory relative to --repo. Defaults to graphs/dataset.",
+    )
+    command.add_argument(
+        "--output",
+        type=Path,
+        default=SAVEGAME_NOTEBOOK_DATA,
+        help="Notebook parquet output directory relative to --repo. Defaults to graphs/savegame_notebooks/data.",
     )
     command.add_argument(
         "--load-order",
@@ -371,53 +293,6 @@ def _add_savegame_dashboard_command(
     )
     command.set_defaults(handler=handler)
     return command
-
-
-def _add_dashboard_server_args(command: argparse.ArgumentParser) -> None:
-    command.add_argument(
-        "--host",
-        default="127.0.0.1",
-        help="Dashboard bind host. Defaults to 127.0.0.1.",
-    )
-    command.add_argument(
-        "--port",
-        type=int,
-        default=8050,
-        help="Dashboard bind port. Defaults to 8050.",
-    )
-
-
-def _add_savegame_watch_args(command: argparse.ArgumentParser) -> None:
-    command.add_argument(
-        "--save-dir",
-        type=Path,
-        default=None,
-        help="Directory containing .eu5 saves. Defaults to auto-detecting the EU5 documents save folder.",
-    )
-    command.add_argument(
-        "--workers",
-        type=int,
-        default=8,
-        help="Parallel save parser workers. Defaults to 8.",
-    )
-    command.add_argument(
-        "--interval",
-        type=float,
-        default=30.0,
-        help="Seconds between ingest cycles. Defaults to 30.",
-    )
-    command.add_argument(
-        "--min-file-age",
-        type=float,
-        default=0.0,
-        help="Skip saves modified less than this many seconds ago. Defaults to 0.",
-    )
-    command.add_argument(
-        "--max-cycles",
-        type=int,
-        default=None,
-        help="Stop after this many cycles. Intended for smoke checks.",
-    )
 
 
 def _resolve_repo(repo: Path | None) -> Path:
@@ -714,237 +589,59 @@ def _dashboard(args: argparse.Namespace, extra: Sequence[str], repo: Path, proje
     )
 
 
-def _savegame_dashboard_ingest(
+def _savegame_notebooks_build(
     args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
 ) -> int:
     if extra:
-        raise SystemExit("savegame-dashboard ingest does not accept extra arguments.")
+        raise SystemExit("savegame-notebooks build does not accept extra arguments.")
 
-    save_dir = _resolve_save_dir(repo, args.save_dir)
-    saves = sorted(save_dir.glob("*.eu5")) if save_dir.is_dir() else []
-    if not saves:
-        raise SystemExit(
-            f"No .eu5 saves found in {save_dir}. "
-            "Pass --save-dir /path/to/save-games if the EU5 save folder is somewhere else."
+    if not args.no_ingest:
+        save_dir = _resolve_save_dir(repo, args.save_dir)
+        saves = sorted(save_dir.glob("*.eu5")) if save_dir.is_dir() else []
+        if not saves:
+            raise SystemExit(
+                f"No .eu5 saves found in {save_dir}. "
+                "Pass --save-dir /path/to/save-games if the EU5 save folder is somewhere else."
+            )
+        print(f"Found {len(saves)} .eu5 saves in {save_dir}", flush=True)
+        ingest_code = _run(
+            [
+                "uv",
+                "run",
+                "eu5parse",
+                "savegame",
+                "ingest",
+                "--save-dir",
+                save_dir,
+                "--output",
+                _repo_path(repo, args.dataset),
+                "--profile",
+                args.profile,
+                "--load-order",
+                _repo_path(repo, args.load_order),
+                "--workers",
+                str(args.workers),
+            ],
+            repo,
         )
-    print(f"Found {len(saves)} .eu5 saves in {save_dir}", flush=True)
+        if ingest_code != 0:
+            return ingest_code
 
     return _run(
         [
             "uv",
             "run",
             "eu5parse",
-            "savegame",
-            "ingest",
-            "--save-dir",
-            save_dir,
-            "--output",
-            _repo_path(repo, args.dataset),
-            "--profile",
-            args.profile,
-            "--load-order",
-            _repo_path(repo, args.load_order),
-            "--workers",
-            str(args.workers),
-        ],
-        repo,
-    )
-
-
-def _savegame_dashboard_serve(
-    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
-) -> int:
-    if extra:
-        raise SystemExit("savegame-dashboard serve does not accept extra arguments.")
-
-    command: list[str | Path] = [
-        "uv",
-        "run",
-        "eu5parse",
-        "dashboard",
-        "serve",
-        "--dataset",
-        _repo_path(repo, args.dataset),
-        "--profile",
-        args.profile,
-        "--load-order",
-        _repo_path(repo, args.load_order),
-        "--host",
-        args.host,
-        "--port",
-        str(args.port),
-    ]
-    if args.debug:
-        command.append("--debug")
-    _stop_existing_dashboard_processes(
-        (
-            "eu5parse",
-            "dashboard",
-            "serve",
-            "--port",
-            str(args.port),
-        ),
-        port=args.port,
-    )
-    return _run(command, repo)
-
-
-def _savegame_dashboard_start(
-    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
-) -> int:
-    if extra:
-        raise SystemExit("savegame-dashboard start does not accept extra arguments.")
-
-    return _run(
-        [
-            "uv",
-            "run",
-            "eu5parse",
-            "dashboard",
-            "start",
+            "savegame-notebooks",
+            "build",
             "--dataset",
             _repo_path(repo, args.dataset),
-            "--profile",
-            args.profile,
-            "--load-order",
-            _repo_path(repo, args.load_order),
-            "--host",
-            args.host,
-            "--port",
-            str(args.port),
-            "--timeout",
-            str(args.timeout),
-        ],
-        repo,
-    )
-
-
-def _savegame_dashboard_stop(
-    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
-) -> int:
-    if extra:
-        raise SystemExit("savegame-dashboard stop does not accept extra arguments.")
-
-    return _run(["uv", "run", "eu5parse", "dashboard", "stop", "--port", str(args.port)], repo)
-
-
-def _savegame_dashboard_status(
-    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
-) -> int:
-    if extra:
-        raise SystemExit("savegame-dashboard status does not accept extra arguments.")
-
-    return _run(
-        [
-            "uv",
-            "run",
-            "eu5parse",
-            "dashboard",
-            "status",
-            "--host",
-            args.host,
-            "--port",
-            str(args.port),
-        ],
-        repo,
-    )
-
-
-def _savegame_dashboard_watch(
-    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
-) -> int:
-    if extra:
-        raise SystemExit("savegame-dashboard watch does not accept extra arguments.")
-
-    save_dir = _resolve_save_dir(repo, args.save_dir)
-    saves = sorted(save_dir.glob("*.eu5")) if save_dir.is_dir() else []
-    if not saves:
-        raise SystemExit(
-            f"No .eu5 saves found in {save_dir}. "
-            "Pass --save-dir /path/to/save-games if the EU5 save folder is somewhere else."
-        )
-    print(f"Found {len(saves)} .eu5 saves in {save_dir}", flush=True)
-
-    command: list[str | Path] = [
-        "uv",
-        "run",
-        "eu5parse",
-        "savegame",
-        "watch",
-        "--save-dir",
-        save_dir,
-        "--output",
-        _repo_path(repo, args.dataset),
-        "--profile",
-        args.profile,
-        "--load-order",
-        _repo_path(repo, args.load_order),
-        "--workers",
-        str(args.workers),
-        "--interval",
-        str(args.interval),
-        "--min-file-age",
-        str(args.min_file_age),
-    ]
-    if args.max_cycles is not None:
-        command.extend(["--max-cycles", str(args.max_cycles)])
-    return _run(command, repo)
-
-
-def _savegame_dashboard_run(
-    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
-) -> int:
-    if extra:
-        raise SystemExit("savegame-dashboard run does not accept extra arguments.")
-
-    start_code = _run(
-        [
-            "uv",
-            "run",
-            "eu5parse",
-            "dashboard",
-            "start",
-            "--dataset",
-            _repo_path(repo, args.dataset),
-            "--profile",
-            args.profile,
-            "--load-order",
-            _repo_path(repo, args.load_order),
-            "--host",
-            args.host,
-            "--port",
-            str(args.port),
-            "--timeout",
-            "20.0",
-        ],
-        repo,
-    )
-    if start_code != 0:
-        return start_code
-    return _savegame_dashboard_watch(args, (), repo, project)
-
-
-def _savegame_dashboard_benchmark(
-    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
-) -> int:
-    if extra:
-        raise SystemExit("savegame-dashboard benchmark does not accept extra arguments.")
-
-    return _run(
-        [
-            "uv",
-            "run",
-            "eu5parse",
-            "dashboard",
-            "benchmark",
-            "--dataset",
-            _repo_path(repo, args.dataset),
-            "--profile",
-            args.profile,
-            "--load-order",
-            _repo_path(repo, args.load_order),
             "--output",
             _repo_path(repo, args.output),
+            "--profile",
+            args.profile,
+            "--load-order",
+            _repo_path(repo, args.load_order),
         ],
         repo,
     )
@@ -1034,7 +731,6 @@ def _windows_userprofile_from_cmd() -> str | None:
 def _stop_existing_dashboard_processes(markers: Sequence[str], port: int | None = None) -> None:
     pids = set(_matching_processes(markers))
     if port is not None:
-        pids.update(_matching_savegame_dashboard_processes(port))
         pids.update(_matching_listening_port_processes(port))
 
     current_pid = os.getpid()
@@ -1063,17 +759,6 @@ def _matching_processes(markers: Sequence[str]) -> set[int]:
     if os.name == "nt":
         return _matching_windows_processes(markers)
     return _matching_procfs_processes(markers)
-
-
-def _matching_savegame_dashboard_processes(port: int) -> set[int]:
-    matches: set[int] = set()
-    for markers in (
-        ("eu5parse", "dashboard", "serve", "--port", str(port)),
-        ("eu5gameparser.savegame.dashboard", "run_dashboard", f"port={port}"),
-        ("run_dashboard", f"port={port}"),
-    ):
-        matches.update(_matching_processes(markers))
-    return matches
 
 
 def _matching_listening_port_processes(port: int) -> set[int]:

@@ -55,6 +55,8 @@ ANIMAL_PRODUCT_GOODS = (
     "wild_game",
     "wool",
 )
+NON_IRRIGATED_PLANT_GOODS = ("lumber",)
+MANAGED_CAPACITY_EFFECT_FILE = "pp_capacity_pressure_effects.txt"
 BENCHMARK_GROUPS = (
     "province",
     "region",
@@ -108,22 +110,50 @@ def test_free_land_effects_cover_all_labeled_goods() -> None:
 
 
 def test_free_land_effects_order_plants_before_animal_products() -> None:
+    config = load_pipeline_config(ROOT / "population_capacity.toml")
     labeled_goods = _labeler_goods()
     plant_goods = tuple(good for good in labeled_goods if good not in ANIMAL_PRODUCT_GOODS)
 
     for effect in ("available_free_land", "abundant_free_land"):
-        block = _object_block(CAPACITY_PRESSURE_EFFECTS, effect)
-        assert block is not None
         output_keys = [
-            entry.key
-            for entry in block.entries
-            if entry.key.startswith("local_") and entry.key.endswith("_output_modifier")
+            key
+            for key in config.whole_blocks["static_modifiers"][effect]
+            if key.startswith("local_") and key.endswith("_output_modifier")
         ]
         positions = {key: index for index, key in enumerate(output_keys)}
         last_plant = max(positions[f"local_{good}_output_modifier"] for good in plant_goods)
         first_animal = min(positions[f"local_{good}_output_modifier"] for good in ANIMAL_PRODUCT_GOODS)
 
         assert last_plant < first_animal
+
+
+def test_irrigation_systems_cover_all_irrigated_plant_goods() -> None:
+    blueprint_text = (ROOT / "blueprints" / "accepted" / "buildings" / "irrigation_systems.yml").read_text(
+        encoding="utf-8"
+    )
+    irrigated_plant_goods = tuple(
+        good
+        for good in _labeler_goods()
+        if good not in ANIMAL_PRODUCT_GOODS and good not in NON_IRRIGATED_PLANT_GOODS
+    )
+    missing = [
+        good
+        for good in irrigated_plant_goods
+        if f"local_{good}_output_modifier" not in blueprint_text
+    ]
+
+    assert not missing
+
+
+def test_irrigation_maintenance_is_not_tool_focused() -> None:
+    maintenance_text = (
+        MOD_ROOT / "in_game" / "common" / "goods_demand" / "pp_irrigation_maintenance_adjustment.txt"
+    ).read_text(encoding="utf-8-sig")
+
+    assert "TRY_REPLACE:irrigation_maintenance" in maintenance_text
+    assert re.search(r"^\s*stone\s*=\s*0\.15\s*$", maintenance_text, flags=re.MULTILINE)
+    assert re.search(r"^\s*lumber\s*=\s*0\.05\s*$", maintenance_text, flags=re.MULTILINE)
+    assert re.search(r"^\s*tools\s*=\s*0\.025\s*$", maintenance_text, flags=re.MULTILINE)
 
 
 def test_population_capacity_config_no_longer_patches_static_mod_files() -> None:

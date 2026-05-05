@@ -22,8 +22,11 @@ building:
     		local_fruit_output_modifier = 0.035
     		local_olives_output_modifier = 0.035
     
-    		# Medium Sensitivity (Legumes)
-    		local_legumes_output_modifier = 0.02
+        # Medium Sensitivity (Legumes, vineyards, dyes & medicinal crops)
+        local_legumes_output_modifier = 0.02
+        local_wine_output_modifier = 0.02
+        local_dyes_output_modifier = 0.02
+        local_medicaments_output_modifier = 0.015
     
     		# Low Sensitivity (Tubers & Animal Products)
     		local_potato_output_modifier = 0.015
@@ -43,7 +46,7 @@ building:
     		local_pepper_output_modifier = 0.02
     		local_cloves_output_modifier = 0.02
     		local_chili_output_modifier = 0.02
-    		local_horses_output_modifier = 0.00175
-    	}
-    	forbidden_for_estates = no
-    	ai_forbid_shutdown = yes
+        local_horses_output_modifier = 0.00175
+    }
+    forbidden_for_estates = no
+    ai_forbid_shutdown = yes

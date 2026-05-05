@@ -52,6 +52,7 @@ ANIMAL_PRODUCT_GOODS = (
     "wild_game",
     "wool",
 )
+NON_IRRIGATED_PLANT_GOODS = ("lumber",)
 MANAGED_CAPACITY_EFFECT_FILE = "pp_capacity_pressure_effects.txt"
 BENCHMARK_GROUPS = (
     "province",
@@ -124,6 +125,35 @@ def test_free_land_effects_order_plants_before_animal_products() -> None:
         first_animal = min(positions[f"local_{good}_output_modifier"] for good in ANIMAL_PRODUCT_GOODS)
 
         assert last_plant < first_animal
+
+
+def test_irrigation_systems_cover_all_irrigated_plant_goods() -> None:
+    blueprint_text = (ROOT / "blueprints" / "accepted" / "buildings" / "irrigation_systems.yml").read_text(
+        encoding="utf-8"
+    )
+    irrigated_plant_goods = tuple(
+        good
+        for good in _labeler_goods()
+        if good not in ANIMAL_PRODUCT_GOODS and good not in NON_IRRIGATED_PLANT_GOODS
+    )
+    missing = [
+        good
+        for good in irrigated_plant_goods
+        if f"local_{good}_output_modifier" not in blueprint_text
+    ]
+
+    assert not missing
+
+
+def test_irrigation_maintenance_is_not_tool_focused() -> None:
+    maintenance_text = (
+        MOD_ROOT / "in_game" / "common" / "goods_demand" / "pp_irrigation_maintenance_adjustment.txt"
+    ).read_text(encoding="utf-8-sig")
+
+    assert "TRY_REPLACE:irrigation_maintenance" in maintenance_text
+    assert re.search(r"^\s*stone\s*=\s*0\.15\s*$", maintenance_text, flags=re.MULTILINE)
+    assert re.search(r"^\s*lumber\s*=\s*0\.05\s*$", maintenance_text, flags=re.MULTILINE)
+    assert re.search(r"^\s*tools\s*=\s*0\.025\s*$", maintenance_text, flags=re.MULTILINE)
 
 
 def test_population_capacity_config_plans_managed_outputs() -> None:

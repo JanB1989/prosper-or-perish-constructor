@@ -26,7 +26,16 @@ Use `ppc` as the canonical command surface for both humans and Codex:
 uv run ppc --help
 ```
 
-Common workflows:
+Primary multi-save notebook workflow after or during EU5 runs:
+
+```bash
+uv run ppc savegame-notebooks build
+```
+
+This ingests savegames into `graphs/dataset`, then rewrites them into RAM-efficient parquet under
+`graphs/savegame_notebooks/data` for Jupyter analysis.
+
+Other common workflows:
 
 ```bash
 uv run ppc setup
@@ -34,17 +43,10 @@ uv run ppc inspect
 uv run ppc test
 uv run ppc analyze
 uv run ppc savegame
+uv run ppc savegame-notebooks build
 uv run ppc savegame-purge
 uv run ppc publish-docs
 uv run ppc dashboard
-uv run ppc savegame-dashboard ingest
-uv run ppc savegame-dashboard run
-uv run ppc savegame-dashboard start
-uv run ppc savegame-dashboard watch
-uv run ppc savegame-dashboard status
-uv run ppc savegame-dashboard stop
-uv run ppc savegame-dashboard serve
-uv run ppc savegame-dashboard benchmark
 uv run ppc blueprint list
 uv run ppc blueprint parity
 uv run ppc blueprint evaluate
@@ -186,49 +188,37 @@ Delete generated savegame analysis outputs with:
 uv run ppc savegame-purge
 ```
 
-### Savegame Progression Dashboard
+### Savegame Notebook Dataset
 
-The local Dash dashboard uses the constructor parser profile and load order. Build or refresh the
-multi-save progression dataset first:
+Use this command to rebuild the multi-save notebook parquet dataset:
 
 ```bash
-uv run ppc savegame-dashboard ingest
+uv run ppc savegame-notebooks build
 ```
 
-Ingestion defaults to 8 parser workers. Override that with `--workers` if needed. The constructor
-wrapper auto-detects the EU5 documents save folder from WSL; pass `--save-dir` only for a
-non-standard save folder.
+The command parses `.eu5` saves into the raw progression dataset at `graphs/dataset`, then creates
+a thinner Polars/Jupyter-oriented parquet layer at:
 
-For the normal live workflow while EU5 is running, use one command:
-
-```bash
-uv run ppc savegame-dashboard run
+```text
+graphs/savegame_notebooks/data/
 ```
 
-This starts the dashboard in the background, then keeps ingesting savegames every 30 seconds.
-Autosave rotation during gameplay is treated as transient and retried on the next cycle.
-
-To control the dashboard and ingest loop separately:
+Useful options:
 
 ```bash
-uv run ppc savegame-dashboard start
-uv run ppc savegame-dashboard watch
-uv run ppc savegame-dashboard status
-uv run ppc savegame-dashboard stop
+uv run ppc savegame-notebooks build --save-dir /path/to/saves
+uv run ppc savegame-notebooks build --workers 8
+uv run ppc savegame-notebooks build --no-ingest
 ```
 
-Or serve the dashboard in the foreground from the current dataset:
+`--no-ingest` skips parsing saves and only restructures the existing `graphs/dataset` parquet files.
+The constructor wrapper auto-detects the EU5 documents save folder from WSL; pass `--save-dir` only
+for a non-standard save folder.
 
-```bash
-uv run ppc savegame-dashboard serve
-```
+Open the canonical notebook after the build:
 
-The first dashboard startup builds `graphs/dataset/dashboard_cache/`; later browser updates read
-that cache instead of rescanning every raw parquet table. To benchmark the dashboard path from this
-constructor dataset:
-
-```bash
-uv run ppc savegame-dashboard benchmark
+```text
+graphs/savegame_notebooks/savegame_analysis_workbench.ipynb
 ```
 
 ## Building Blueprints

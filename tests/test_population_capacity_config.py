@@ -146,14 +146,25 @@ def test_irrigation_systems_cover_all_irrigated_plant_goods() -> None:
 
 
 def test_irrigation_maintenance_is_not_tool_focused() -> None:
-    maintenance_text = (
+    obsolete_goods_demand_patch = (
         MOD_ROOT / "in_game" / "common" / "goods_demand" / "pp_irrigation_maintenance_adjustment.txt"
+    )
+    building_text = (
+        MOD_ROOT / "in_game" / "common" / "building_types" / "pp_irrigation_systems.txt"
+    ).read_text(encoding="utf-8-sig")
+    localization_text = (
+        MOD_ROOT / "main_menu" / "localization" / "english" / "pp_irrigation_systems_l_english.yml"
     ).read_text(encoding="utf-8-sig")
 
-    assert "TRY_REPLACE:irrigation_maintenance" in maintenance_text
-    assert re.search(r"^\s*stone\s*=\s*0\.15\s*$", maintenance_text, flags=re.MULTILINE)
-    assert re.search(r"^\s*lumber\s*=\s*0\.05\s*$", maintenance_text, flags=re.MULTILINE)
-    assert re.search(r"^\s*tools\s*=\s*0\.025\s*$", maintenance_text, flags=re.MULTILINE)
+    assert not obsolete_goods_demand_patch.exists()
+    assert "REPLACE:irrigation_systems" in building_text
+    assert "unique_production_methods = {" in building_text
+    assert "irrigation_maintenance = {" in building_text
+    assert re.search(r"^\s*stone\s*=\s*0\.15\s*$", building_text, flags=re.MULTILINE)
+    assert re.search(r"^\s*lumber\s*=\s*0\.05\s*$", building_text, flags=re.MULTILINE)
+    assert re.search(r"^\s*tools\s*=\s*0\.025\s*$", building_text, flags=re.MULTILINE)
+    assert re.search(r'^\s*irrigation_systems_slot_0: "Maintenance"\s*$', localization_text, flags=re.MULTILINE)
+    assert re.search(r'^\s*irrigation_maintenance: "Irrigation Maintenance"\s*$', localization_text, flags=re.MULTILINE)
 
 
 def test_population_capacity_config_no_longer_patches_static_mod_files() -> None:

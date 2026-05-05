@@ -2,51 +2,83 @@ version: 2
 tag: irrigation_systems
 building:
   key: irrigation_systems
-  mode: INJECT
+  mode: REPLACE
   source: pp_building_adjustments.txt
-  production_method_slots: []
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - irrigation_maintenance
   possible_production_methods: []
   body: |2-
-    	modifier = {
-    		local_monthly_food_modifier = -0.05 # vanilla 0.05
-    		fruit_orchard_max_level_modifier = 1
-    		farming_village_max_level_modifier = 1
-    
-    		# Extreme Sensitivity (Wet-Rice)
-    		local_rice_output_modifier = 0.05
-    
-    		# High Sensitivity (Grains & High-Value Trees)
-    		local_wheat_output_modifier = 0.025
-    		local_millet_output_modifier = 0.025
-    		local_maize_output_modifier = 0.025
-    		local_fruit_output_modifier = 0.035
-    		local_olives_output_modifier = 0.035
-    
-    		# Medium Sensitivity (Legumes, vineyards, dyes & medicinal crops)
-    		local_legumes_output_modifier = 0.02
-    		local_wine_output_modifier = 0.02
-    		local_dyes_output_modifier = 0.02
-    		local_medicaments_output_modifier = 0.015
-    
-    		# Low Sensitivity (Tubers & Animal Products)
-    		local_potato_output_modifier = 0.015
-    		local_livestock_output_modifier = 0.005
-    		local_beeswax_output_modifier = 0.000
-    		local_wool_output_modifier = 0.005
-    		local_fiber_crops_output_modifier = 0.00625
-    		local_cotton_output_modifier = 0.02
-    		local_sugar_output_modifier = 0.02
-    		local_tobacco_output_modifier = 0.02
-    		local_cocoa_output_modifier = 0.02
-    		local_tea_output_modifier = 0.04
-    		local_coffee_output_modifier = 0.03
-    		local_silk_output_modifier = 0.025
-    		local_incense_output_modifier = 0.02
-    		local_saffron_output_modifier = 0.02
-    		local_pepper_output_modifier = 0.02
-    		local_cloves_output_modifier = 0.02
-    		local_chili_output_modifier = 0.02
-    		local_horses_output_modifier = 0.00175
-    	}
-    	forbidden_for_estates = no
-    	ai_forbid_shutdown = yes
+      is_foreign = no
+      max_levels = irrigant_cap
+      pop_type = peasants
+      category = infrastructure_category
+      employment_size = generic_peasant_building_employment
+      rural_settlement = yes
+      town = yes
+      city = yes
+      location_potential = {
+        OR = {
+          has_river = yes
+          is_adjacent_to_lake = yes
+        }
+      }
+      build_time = infrastructure_build_time
+      unique_production_methods = {
+        irrigation_maintenance = {
+          stone = 0.15
+          lumber = 0.05
+          tools = 0.025
+          category = building_maintenance
+        }
+      }
+      construction_demand = village_construction
+      modifier = {
+        local_population_capacity = 1.0
+        local_monthly_food_modifier = -0.05 # vanilla 0.05
+        fruit_orchard_max_level_modifier = 1
+        farming_village_max_level_modifier = 1
+
+        # Extreme Sensitivity (Wet-Rice)
+        local_rice_output_modifier = 0.05
+
+        # High Sensitivity (Grains & High-Value Trees)
+        local_wheat_output_modifier = 0.025
+        local_millet_output_modifier = 0.025
+        local_maize_output_modifier = 0.025
+        local_fruit_output_modifier = 0.035
+        local_olives_output_modifier = 0.035
+
+        # Medium Sensitivity (Legumes, vineyards, dyes & medicinal crops)
+        local_legumes_output_modifier = 0.02
+        local_wine_output_modifier = 0.02
+        local_dyes_output_modifier = 0.02
+        local_medicaments_output_modifier = 0.015
+
+        # Low Sensitivity (Tubers & Animal Products)
+        local_potato_output_modifier = 0.015
+        local_livestock_output_modifier = 0.005
+        local_beeswax_output_modifier = 0.000
+        local_wool_output_modifier = 0.005
+        local_fiber_crops_output_modifier = 0.00625
+        local_cotton_output_modifier = 0.02
+        local_sugar_output_modifier = 0.02
+        local_tobacco_output_modifier = 0.02
+        local_cocoa_output_modifier = 0.02
+        local_tea_output_modifier = 0.04
+        local_coffee_output_modifier = 0.03
+        local_silk_output_modifier = 0.025
+        local_incense_output_modifier = 0.02
+        local_saffron_output_modifier = 0.02
+        local_pepper_output_modifier = 0.02
+        local_cloves_output_modifier = 0.02
+        local_chili_output_modifier = 0.02
+        local_horses_output_modifier = 0.00175
+      }
+      forbidden_for_estates = no
+      ai_forbid_shutdown = yes
+localization:
+  entries:
+    irrigation_systems_slot_0: Maintenance
+    irrigation_maintenance: Irrigation Maintenance

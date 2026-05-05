@@ -26,7 +26,7 @@ building:
     is_foreign = no
     max_levels = farming_village_max_level
     pop_type = laborers
-    employment_size = 8
+    employment_size = 7
     price = pp_model_farm_price
     category = village_category
     icon = model_farm
@@ -49,88 +49,88 @@ building:
         pp_model_farm_livestock = {
             produced = livestock
             output = 9.80
-            tools = 2.00
-            horses = 1.90
-            furniture = 0.55
-            paper = 0.30
-            cloth = 0.45
+            tools = 1.80
+            horses = 1.71
+            furniture = 0.495
+            paper = 0.27
+            cloth = 0.405
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_millet = {
             produced = millet
             output = 15.20
-            tools = 2.00
-            horses = 2.00
-            furniture = 0.55
-            paper = 0.30
-            cloth = 0.45
+            tools = 1.80
+            horses = 1.80
+            furniture = 0.495
+            paper = 0.27
+            cloth = 0.405
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_wheat = {
             produced = wheat
             output = 15.00
-            tools = 2.00
-            horses = 2.00
-            furniture = 0.55
-            paper = 0.30
-            cloth = 0.45
+            tools = 1.80
+            horses = 1.80
+            furniture = 0.495
+            paper = 0.27
+            cloth = 0.405
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_maize = {
             produced = maize
             output = 15.00
-            tools = 2.15
-            livestock = 2.65
-            furniture = 0.65
-            paper = 0.35
-            cloth = 0.45
+            tools = 1.935
+            livestock = 2.385
+            furniture = 0.585
+            paper = 0.315
+            cloth = 0.405
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_rice = {
             produced = rice
             output = 15.20
-            tools = 2.15
-            livestock = 2.65
-            furniture = 0.65
-            paper = 0.35
-            cloth = 0.45
+            tools = 1.935
+            livestock = 2.385
+            furniture = 0.585
+            paper = 0.315
+            cloth = 0.405
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_legumes = {
             produced = legumes
             output = 15.10
-            tools = 2.00
-            horses = 2.00
-            furniture = 0.55
-            paper = 0.30
-            cloth = 0.45
+            tools = 1.80
+            horses = 1.80
+            furniture = 0.495
+            paper = 0.27
+            cloth = 0.405
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_potato = {
             produced = potato
             output = 15.20
-            tools = 2.15
-            livestock = 2.65
-            furniture = 0.65
-            paper = 0.35
-            cloth = 0.45
+            tools = 1.935
+            livestock = 2.385
+            furniture = 0.585
+            paper = 0.315
+            cloth = 0.405
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_olives = {
             produced = olives
             output = 15.00
-            tools = 2.15
-            livestock = 2.65
-            furniture = 0.65
-            paper = 0.35
-            cloth = 0.45
+            tools = 1.935
+            livestock = 2.385
+            furniture = 0.585
+            paper = 0.315
+            cloth = 0.405
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -177,6 +177,8 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for a Model Farm, transparent background. Center ordered rectangular fields, an improved barn, survey stakes, hand tools, seed sacks, and a small paper ledger or field plan in the foreground. Warm daylight, practical early modern rural infrastructure, no text, no frame, no modern machinery, no steel factory imagery.
 
 evaluation:
+  allow_rules:
+    amortization_months: 7-pop normalization and 10% lower maintenance inputs intentionally make the upgraded former-food producer methods more profitable; revisit with the rural producer rebalance.
   production_methods:
     pp_model_farm_livestock:
       production_efficiency: 1.00

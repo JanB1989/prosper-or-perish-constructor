@@ -19,7 +19,7 @@ building:
     is_foreign = no
     pop_type = laborers
     max_levels = fruit_orchard_max_level
-    employment_size = 8
+    employment_size = 7
     price = pp_pomological_orchard_price
     category = rgo_building_category
     icon = pomological_orchard
@@ -42,9 +42,9 @@ building:
         pp_pomological_orchard_grafted_rows = {
             produced = fruit
             output = 13.60
-            tools = 2.60
-            lumber = 2.40
-            paper = 1.10
+            tools = 2.34
+            lumber = 2.16
+            paper = 0.99
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -83,6 +83,8 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for a Pomological Orchard, transparent background. Center orderly rows of grafted fruit trees, pruning ladders, wooden trellises, crates of apples and pears, and a small nursery shed with paper ledgers. Warm daylight, early modern agricultural science, no text, no frame, no modern machinery, no steel factory imagery.
 
 evaluation:
+  allow_rules:
+    amortization_months: 7-pop normalization and 10% lower maintenance inputs intentionally make the upgraded former-food producer modestly profitable; revisit with the rural producer rebalance.
   production_methods:
     pp_pomological_orchard_grafted_rows:
       production_efficiency: 1.00

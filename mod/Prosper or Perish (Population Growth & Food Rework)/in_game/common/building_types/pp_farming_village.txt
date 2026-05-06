@@ -172,6 +172,7 @@ REPLACE:farming_village = {
     modifier = {
         local_monthly_food = 0.0
         local_peasants_estate_power = 0.2
+        local_peasant_enfranchisment = 0.01
         local_laborers_desired_pop = 0
         local_soldiers_desired_pop = 0
     }

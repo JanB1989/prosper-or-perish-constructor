@@ -103,6 +103,9 @@ building:
             # vanilla + injected (additive): 1.0-1.0=0, 0.1-0.1=0, 0.05-0.05=0
             local_monthly_food = 0.0
             local_peasants_estate_power = 0.25
+            local_peasant_enfranchisment = 0.01
+            local_laborers_desired_pop = 0.1
+            local_soldiers_desired_pop = 0.05
         }
 advancements:
   - key: pp_fur_trapping_advance_native

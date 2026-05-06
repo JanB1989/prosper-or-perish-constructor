@@ -36,7 +36,6 @@ REPLACE:sheep_farms = {
     modifier = {
         local_monthly_food = 0.0
         # local_food_capacity = 50
-        local_wool_output_modifier = -0.01
     }
     build_time = rural_build_time
     construction_demand = farm_constructions

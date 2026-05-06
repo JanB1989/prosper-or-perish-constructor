@@ -425,16 +425,6 @@ TRY_INJECT:agricultural_revolution = {
 	local_potato_output_modifier = 0.1
 }
 
-TRY_INJECT:aqueduct_sytem = {
-	local_monthly_food_modifier = -0.05 # vanilla 0.05
-	local_wheat_output_modifier = 0.05
-	local_rice_output_modifier = 0.05
-	local_millet_output_modifier = 0.05
-	local_maize_output_modifier = 0.05
-	local_legumes_output_modifier = 0.05
-	local_potato_output_modifier = 0.05
-}
-
 TRY_INJECT:harsh_winters_modifier = {
 	local_monthly_food_modifier = 0.25 # vanilla -0.25
 	local_wheat_output_modifier = -0.1

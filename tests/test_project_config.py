@@ -16,6 +16,9 @@ MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 ESTATE_PRIVILEGE_ADJUSTMENTS = (
     MOD_ROOT / "in_game" / "common" / "estate_privileges" / "pp_estate_privilege_adjustments.txt"
 )
+GOVERNMENT_REFORM_ADJUSTMENTS = (
+    MOD_ROOT / "in_game" / "common" / "government_reforms" / "pp_government_reform_adjustments.txt"
+)
 
 
 def test_constructor_config_loads() -> None:
@@ -113,6 +116,63 @@ def test_land_owning_farmers_is_a_full_privilege_replacement() -> None:
     assert modifier_values["global_peasants_estate_power"] == 0.5
 
 
+def test_powerful_magnates_food_modifier_is_zeroed_by_replacement() -> None:
+    parsed = parse_file(GOVERNMENT_REFORM_ADJUSTMENTS)
+    entries = {entry.key: entry.value for entry in parsed.entries}
+
+    assert "REPLACE:hun_power_to_magnates" in entries
+    assert "TRY_INJECT:hun_power_to_magnates" not in entries
+    reform = entries["REPLACE:hun_power_to_magnates"]
+    assert isinstance(reform, CList)
+
+    reform_values = _entry_values(reform)
+    assert reform_values["age"] == "age_2_renaissance"
+    assert reform_values["unique"] is True
+    assert reform_values["content_priority"] == 600
+    assert "potential" in reform_values
+    assert reform_values["years"] == 2
+
+    country_modifier = reform_values["country_modifier"]
+    assert isinstance(country_modifier, CList)
+    modifier_values = _entry_values(country_modifier)
+    assert modifier_values["global_nobles_estate_power"] == 1.0
+    assert modifier_values["global_estate_target_satisfaction"] == "medium_permanent_target_satisfaction"
+    assert modifier_values["global_monthly_food_modifier"] == 0
+
+
+def test_inject_targets_exist_in_constructor_load_order() -> None:
+    load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
+    vanilla_root = load_order.vanilla_root
+    offenders: list[str] = []
+
+    for relative_common, vanilla_common in (
+        (Path("in_game") / "common", vanilla_root / "game" / "in_game" / "common"),
+        (Path("main_menu") / "common", vanilla_root / "game" / "main_menu" / "common"),
+    ):
+        mod_common = MOD_ROOT / relative_common
+        for collection_dir in sorted(path for path in mod_common.iterdir() if path.is_dir()):
+            collection = collection_dir.relative_to(mod_common)
+            existing = _database_keys(vanilla_common / collection)
+            if collection == Path("static_modifiers"):
+                existing |= _database_keys(vanilla_root / "game" / "main_menu" / "common" / collection)
+
+            for path in sorted(collection_dir.rglob("*.txt")):
+                for entry in parse_file(path).entries:
+                    if not isinstance(entry.value, CList):
+                        continue
+                    mode, key = _entry_mode(entry.key)
+                    if mode in {"INJECT", "TRY_INJECT"} and key not in existing:
+                        offenders.append(
+                            f"{path.relative_to(ROOT)}:{entry.location.line} {mode}:{key}"
+                        )
+                    if mode in {"CREATE", "REPLACE", "REPLACE_OR_CREATE", "INJECT_OR_CREATE"}:
+                        existing.add(key)
+                    elif mode in {"TRY_REPLACE", "INJECT", "TRY_INJECT"} and key in existing:
+                        existing.add(key)
+
+    assert not offenders
+
+
 def test_constructor_building_methods_are_resolved_and_unique() -> None:
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
 
@@ -202,6 +262,24 @@ def _vanilla_unique_methods_by_building() -> dict[str, set[str]]:
 
 def _entry_values(block: CList) -> dict[str, object]:
     return {entry.key: entry.value for entry in block.entries}
+
+
+def _database_keys(root: Path) -> set[str]:
+    if not root.exists():
+        return set()
+    keys: set[str] = set()
+    for path in sorted(root.rglob("*.txt")):
+        for entry in parse_file(path).entries:
+            if isinstance(entry.value, CList):
+                keys.add(_entry_mode(entry.key)[1])
+    return keys
+
+
+def _entry_mode(raw_key: str) -> tuple[str, str]:
+    if ":" not in raw_key:
+        return "CREATE", raw_key
+    mode, key = raw_key.split(":", 1)
+    return mode.strip().upper(), key
 
 
 def _unique_production_method_names(block: CList) -> set[str]:

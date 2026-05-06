@@ -88,6 +88,9 @@ REPLACE:fishing_village = {
         local_monthly_food = 0.0
     local_merchant_capacity = 0.05
         local_peasants_estate_power = 0.25
+        local_peasant_enfranchisment = 0.01
+        local_laborers_desired_pop = 0.1
+        local_soldiers_desired_pop = 0.05
     }
 }
 # <<< eu5-building-pipeline:fishing_village:building

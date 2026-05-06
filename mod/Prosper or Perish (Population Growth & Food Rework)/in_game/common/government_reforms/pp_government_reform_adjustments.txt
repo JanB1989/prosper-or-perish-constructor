@@ -34,3 +34,21 @@ REPLACE:agricultural_cultivation = {
 	}
 	years = 2
 }
+
+# Powerful Magnates: preserve vanilla reform effects but remove direct food generation.
+REPLACE:hun_power_to_magnates = {
+	age = age_2_renaissance
+	unique = yes
+	content_priority = 600
+
+	potential = {
+		has_or_had_tag = HUN
+	}
+
+	country_modifier = {
+		global_nobles_estate_power = 1.0
+		global_estate_target_satisfaction = medium_permanent_target_satisfaction
+		global_monthly_food_modifier = 0
+	}
+	years = 2
+}

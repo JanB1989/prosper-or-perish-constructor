@@ -21,7 +21,7 @@ REPLACE:granary = {
 	}
 	construction_demand = granary_construction
 	modifier = {
-		local_food_decay = -0.00035
+		local_food_decay_modifier = -0.00035
 		local_food_capacity = 1200
 	}
 	ai_forbid_shutdown = yes

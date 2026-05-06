@@ -1,57 +1,82 @@
 ﻿# >>> eu5-building-pipeline:forest_village:building
 REPLACE:forest_village = {
-	is_foreign = no
-	max_levels = forest_village_max_level
-	pop_type = peasants
-	category = village_category
-	employment_size = 5
-	rural_settlement = yes
-	town = yes
-	city = yes
-	forbidden_for_estates = yes
-	ai_forbid_shutdown = no
-	location_potential = {
-		has_variable = pp_forest_village_fixed_env_bonus
-		var:pp_forest_village_fixed_env_bonus > 0
-	}
-	build_time = village_build_time
-	unique_production_methods = {
-		pp_forest_tannery = {
-			produced = leather
-			output = 0.2
-			sand = 0.1
-			tar = 0.02
-			wild_game = 0.4
-			category = building_maintenance
-		}
-		pp_hunting_lodges = {
-			produced = wild_game
-			output = 0.40
-			weaponry = 0.1
-			debug_max_profit = 0
-			category = building_maintenance
-		}
-		pp_fur_trapping = {
-			produced = fur
-			output = 0.25
-			tools = 0.05
-			weaponry = 0.08
-			debug_max_profit = 0
-			category = building_maintenance
-		}
-		pp_forest_village_forest_apiary = {
-			cloth = 0.40
-			produced = beeswax
-			output = 0.25
-			debug_max_profit = 0
-			category = building_maintenance
-		}
-	}
-	construction_demand = village_construction
-	modifier = {
-		# vanilla + injected (additive): 1.0-1.0=0, 0.1-0.1=0, 0.05-0.05=0
-		local_monthly_food = 0.0
-		local_peasants_estate_power = 0.25
-	}
+    is_foreign = no
+    max_levels = forest_village_max_level
+    pop_type = peasants
+    category = village_category
+    employment_size = 5
+    rural_settlement = yes
+    town = yes
+    city = yes
+    forbidden_for_estates = yes
+    ai_forbid_shutdown = no
+    location_potential = {
+        has_variable = pp_forest_village_fixed_env_bonus
+        var:pp_forest_village_fixed_env_bonus > 0
+    }
+    build_time = village_build_time
+    unique_production_methods = {
+        pp_forest_village_base_leather = {
+            produced = leather
+            output = 0.20
+            category = building_maintenance
+        }
+        pp_forest_village_base_wild_game = {
+            produced = wild_game
+            output = 0.30
+            category = building_maintenance
+        }
+        pp_forest_village_base_fur = {
+            produced = fur
+            output = 0.25
+            category = building_maintenance
+        }
+        pp_forest_village_base_beeswax = {
+            produced = beeswax
+            output = 0.25
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_forest_village_no_primary = {
+            category = building_maintenance
+        }
+        pp_forest_tannery = {
+            produced = leather
+            output = 0.00
+            sand = 0.1
+            tar = 0.02
+            wild_game = 0.4
+            category = building_maintenance
+        }
+        pp_hunting_lodges = {
+            produced = wild_game
+            output = 0.10
+            weaponry = 0.1
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_fur_trapping = {
+            produced = fur
+            output = 0.00
+            tools = 0.05
+            weaponry = 0.08
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_forest_village_forest_apiary = {
+            cloth = 0.40
+            produced = beeswax
+            output = 0.00
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    construction_demand = village_construction
+    modifier = {
+        # vanilla + injected (additive): 1.0-1.0=0, 0.1-0.1=0, 0.05-0.05=0
+        local_monthly_food = 0.0
+        local_peasants_estate_power = 0.25
+    }
 }
 # <<< eu5-building-pipeline:forest_village:building

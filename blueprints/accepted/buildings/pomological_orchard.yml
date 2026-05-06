@@ -13,6 +13,10 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_pomological_orchard_base_fruit
+    - name: slot_1
+      methods:
+        - pp_pomological_orchard_no_primary
         - pp_pomological_orchard_grafted_rows
   possible_production_methods: []
   body: |2-
@@ -39,9 +43,19 @@ building:
     }
 
     unique_production_methods = {
+        pp_pomological_orchard_base_fruit = {
+            produced = fruit
+            output = 0.70
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_pomological_orchard_no_primary = {
+            category = building_maintenance
+        }
         pp_pomological_orchard_grafted_rows = {
             produced = fruit
-            output = 13.60
+            output = 12.90
             tools = 2.34
             lumber = 2.16
             paper = 0.99
@@ -71,10 +85,13 @@ localization:
     MODIFIER_TYPE_NAME_pp_pomological_orchard_price_cost_modifier: Pomological Orchard Cost
     pomological_orchard: Pomological Orchard
     pomological_orchard_desc: Pomological orchards organize grafting, pruning, nursery stock, trellises, crates, and written cultivar records into a larger laborer-run fruit estate.
-    pomological_orchard_slot_0: Grafted Rows
+    pomological_orchard_slot_0: Fruit Trees
+    pomological_orchard_slot_1: Grafted Rows
     pp_pomological_orchard: Pomological Orchards
+    pp_pomological_orchard_base_fruit: Fruit Trees
     pp_pomological_orchard_desc: Improved grafting, nursery records, and planned orchard rows increase fruit throughput through technique and supplies.
     pp_pomological_orchard_grafted_rows: Grafted Rows
+    pp_pomological_orchard_no_primary: No Grafted Rows
     pp_pomological_orchard_price: Pomological Orchard Price
 icon:
   source_png: ../assets/icons/pomological_orchard.png
@@ -86,5 +103,9 @@ evaluation:
   allow_rules:
     amortization_months: 7-pop normalization and 10% lower maintenance inputs intentionally make the upgraded former-food producer modestly profitable; revisit with the rural producer rebalance.
   production_methods:
+    pp_pomological_orchard_base_fruit:
+      production_efficiency: 1.00
+    pp_pomological_orchard_no_primary:
+      production_efficiency: 1.00
     pp_pomological_orchard_grafted_rows:
       production_efficiency: 1.00

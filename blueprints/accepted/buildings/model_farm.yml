@@ -13,6 +13,17 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_model_farm_base_livestock
+        - pp_model_farm_base_millet
+        - pp_model_farm_base_wheat
+        - pp_model_farm_base_maize
+        - pp_model_farm_base_rice
+        - pp_model_farm_base_legumes
+        - pp_model_farm_base_potato
+        - pp_model_farm_base_olives
+    - name: slot_1
+      methods:
+        - pp_model_farm_no_primary
         - pp_model_farm_livestock
         - pp_model_farm_millet
         - pp_model_farm_wheat
@@ -46,9 +57,54 @@ building:
     }
 
     unique_production_methods = {
+        pp_model_farm_base_livestock = {
+            produced = livestock
+            output = 0.70
+            category = building_maintenance
+        }
+        pp_model_farm_base_millet = {
+            produced = millet
+            output = 0.70
+            category = building_maintenance
+        }
+        pp_model_farm_base_wheat = {
+            produced = wheat
+            output = 0.70
+            category = building_maintenance
+        }
+        pp_model_farm_base_maize = {
+            produced = maize
+            output = 0.70
+            category = building_maintenance
+        }
+        pp_model_farm_base_rice = {
+            produced = rice
+            output = 0.70
+            category = building_maintenance
+        }
+        pp_model_farm_base_legumes = {
+            produced = legumes
+            output = 0.70
+            category = building_maintenance
+        }
+        pp_model_farm_base_potato = {
+            produced = potato
+            output = 0.70
+            category = building_maintenance
+        }
+        pp_model_farm_base_olives = {
+            produced = olives
+            output = 0.70
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_model_farm_no_primary = {
+            category = building_maintenance
+        }
         pp_model_farm_livestock = {
             produced = livestock
-            output = 9.80
+            output = 9.10
             tools = 1.80
             horses = 1.71
             furniture = 0.495
@@ -59,7 +115,7 @@ building:
         }
         pp_model_farm_millet = {
             produced = millet
-            output = 15.20
+            output = 14.50
             tools = 1.80
             horses = 1.80
             furniture = 0.495
@@ -70,7 +126,7 @@ building:
         }
         pp_model_farm_wheat = {
             produced = wheat
-            output = 15.00
+            output = 14.30
             tools = 1.80
             horses = 1.80
             furniture = 0.495
@@ -81,7 +137,7 @@ building:
         }
         pp_model_farm_maize = {
             produced = maize
-            output = 15.00
+            output = 14.30
             tools = 1.935
             livestock = 2.385
             furniture = 0.585
@@ -92,7 +148,7 @@ building:
         }
         pp_model_farm_rice = {
             produced = rice
-            output = 15.20
+            output = 14.50
             tools = 1.935
             livestock = 2.385
             furniture = 0.585
@@ -103,7 +159,7 @@ building:
         }
         pp_model_farm_legumes = {
             produced = legumes
-            output = 15.10
+            output = 14.40
             tools = 1.80
             horses = 1.80
             furniture = 0.495
@@ -114,7 +170,7 @@ building:
         }
         pp_model_farm_potato = {
             produced = potato
-            output = 15.20
+            output = 14.50
             tools = 1.935
             livestock = 2.385
             furniture = 0.585
@@ -125,7 +181,7 @@ building:
         }
         pp_model_farm_olives = {
             produced = olives
-            output = 15.00
+            output = 14.30
             tools = 1.935
             livestock = 2.385
             furniture = 0.585
@@ -158,13 +214,23 @@ localization:
     MODIFIER_TYPE_NAME_pp_model_farm_price_cost_modifier: Model Farm Cost
     model_farm: Model Farm
     model_farm_desc: Model farms use surveyed fields, planned rotations, improved barns, seed selection, and careful accounts to move far more staple crops through organized labor and supplies.
-    model_farm_slot_0: Improved Cultivation
+    model_farm_slot_0: Improved Fields
+    model_farm_slot_1: Improved Cultivation
     pp_model_farm: Model Farms
+    pp_model_farm_base_legumes: Improved Legume Fields
+    pp_model_farm_base_livestock: Improved Livestock Pasture
+    pp_model_farm_base_maize: Improved Maize Fields
+    pp_model_farm_base_millet: Improved Millet Fields
+    pp_model_farm_base_olives: Improved Olive Groves
+    pp_model_farm_base_potato: Improved Potato Fields
+    pp_model_farm_base_rice: Improved Rice Paddies
+    pp_model_farm_base_wheat: Improved Wheat Fields
     pp_model_farm_desc: Scientific farming, field surveys, and printed agronomy turn village cultivation into a larger managed agricultural system.
     pp_model_farm_legumes: Model Legumes Farm
     pp_model_farm_livestock: Model Livestock Farm
     pp_model_farm_maize: Model Maize Farm
     pp_model_farm_millet: Model Millet Farm
+    pp_model_farm_no_primary: No Improved Cultivation
     pp_model_farm_olives: Model Olive Farm
     pp_model_farm_potato: Model Potato Farm
     pp_model_farm_price: Model Farm Price
@@ -180,6 +246,24 @@ evaluation:
   allow_rules:
     amortization_months: 7-pop normalization and 10% lower maintenance inputs intentionally make the upgraded former-food producer methods more profitable; revisit with the rural producer rebalance.
   production_methods:
+    pp_model_farm_base_livestock:
+      production_efficiency: 1.00
+    pp_model_farm_base_millet:
+      production_efficiency: 1.00
+    pp_model_farm_base_wheat:
+      production_efficiency: 1.00
+    pp_model_farm_base_maize:
+      production_efficiency: 1.00
+    pp_model_farm_base_rice:
+      production_efficiency: 1.00
+    pp_model_farm_base_legumes:
+      production_efficiency: 1.00
+    pp_model_farm_base_potato:
+      production_efficiency: 1.00
+    pp_model_farm_base_olives:
+      production_efficiency: 1.00
+    pp_model_farm_no_primary:
+      production_efficiency: 1.00
     pp_model_farm_livestock:
       production_efficiency: 1.00
     pp_model_farm_millet:

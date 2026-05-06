@@ -209,9 +209,14 @@ Useful options:
 uv run ppc savegame-notebooks build --save-dir /path/to/saves
 uv run ppc savegame-notebooks build --workers 8
 uv run ppc savegame-notebooks build --no-ingest
+uv run ppc savegame-notebooks build --force
 ```
 
 `--no-ingest` skips parsing saves and only restructures the existing `graphs/dataset` parquet files.
+By default the notebook layer is skipped when its metadata already matches the raw savegame dataset;
+use `--force` to rebuild it anyway. The build reports how many raw saves were already digested and
+how many stale raw snapshots were ignored because the source `.eu5` save is no longer in the active
+save folder.
 The constructor wrapper auto-detects the EU5 documents save folder from WSL; pass `--save-dir` only
 for a non-standard save folder.
 

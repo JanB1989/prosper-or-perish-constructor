@@ -412,7 +412,7 @@ def test_dashboard_reports_missing_index(tmp_path: Path) -> None:
 
 
 def test_savegame_notebooks_build_ingests_then_builds_notebook_data(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     repo = _repo(tmp_path)
     save_dir = tmp_path / "save games"
@@ -425,7 +425,13 @@ def test_savegame_notebooks_build_ingests_then_builds_notebook_data(
         assert cwd == repo
         return 0
 
+    def fake_run_collecting_output(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0, "processed: 0\nskipped: 1\n"
+
     monkeypatch.setattr(cli, "_run", fake_run)
+    monkeypatch.setattr(cli, "_run_collecting_output", fake_run_collecting_output)
 
     assert (
         cli.main(
@@ -433,6 +439,8 @@ def test_savegame_notebooks_build_ingests_then_builds_notebook_data(
         )
         == 0
     )
+    output = capsys.readouterr().out
+    assert "raw ingest skipped: no new saves processed (1 already digested)" in output
 
     assert calls == [
         [
@@ -466,6 +474,9 @@ def test_savegame_notebooks_build_ingests_then_builds_notebook_data(
             "constructor",
             "--load-order",
             str(repo / "constructor.load_order.toml"),
+            "--active-save-dir",
+            str(save_dir),
+            "--skip-if-current",
         ],
     ]
 
@@ -500,6 +511,7 @@ def test_savegame_notebooks_build_no_ingest_restructures_existing_dataset(
             "constructor",
             "--load-order",
             str(repo / "constructor.load_order.toml"),
+            "--skip-if-current",
         ],
     ]
 
@@ -520,7 +532,13 @@ def test_savegame_notebooks_build_auto_detects_save_dir(
         assert cwd == repo
         return 0
 
+    def fake_run_collecting_output(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0, "processed: 0\nskipped: 1\n"
+
     monkeypatch.setattr(cli, "_run", fake_run)
+    monkeypatch.setattr(cli, "_run_collecting_output", fake_run_collecting_output)
     monkeypatch.setattr(cli, "_savegame_dir_candidates", lambda: [missing_home, save_dir])
 
     assert cli.main(["--repo", str(repo), "savegame-notebooks", "build"]) == 0

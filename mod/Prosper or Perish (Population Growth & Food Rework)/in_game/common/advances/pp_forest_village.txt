@@ -1,66 +1,69 @@
 ﻿# >>> eu5-building-pipeline:forest_village:advancement
 pp_fur_trapping_advance_native = {
-	age = age_1_traditions
-	unlock_production_method = pp_fur_trapping
-	requires = agriculture_advance
-	# icon = renaissance_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		original_capital ?= {
-			OR = {
-				sub_continent = sub_continent:north_asia
-				sub_continent = sub_continent:eastern_europe
-				sub_continent = sub_continent:central_asia
-				region = region:scandinavian_region
-			}
-		}
-	}
+    age = age_1_traditions
+    unlock_production_method = pp_forest_village_base_fur
+    unlock_production_method = pp_fur_trapping
+    requires = agriculture_advance
+    # icon = renaissance_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        original_capital ?= {
+            OR = {
+                sub_continent = sub_continent:north_asia
+                sub_continent = sub_continent:eastern_europe
+                sub_continent = sub_continent:central_asia
+                region = region:scandinavian_region
+            }
+        }
+    }
 }
 
 pp_fur_trapping_advance_colonial = {
-	age = age_3_discovery
-	unlock_production_method = pp_fur_trapping
-	requires = new_world_advance
-	# icon = new_world_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		original_capital ?= {
-			AND = {
-				sub_continent = sub_continent:western_europe
-				NOT = { region = region:scandinavian_region }
-			}
-		}
-	}
+    age = age_3_discovery
+    unlock_production_method = pp_forest_village_base_fur
+    unlock_production_method = pp_fur_trapping
+    requires = new_world_advance
+    # icon = new_world_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        original_capital ?= {
+            AND = {
+                sub_continent = sub_continent:western_europe
+                NOT = { region = region:scandinavian_region }
+            }
+        }
+    }
 }
 
 pp_fur_trapping_advance_general = {
-	age = age_4_reformation
-	unlock_production_method = pp_fur_trapping
-	requires = global_trade_advance
-	# icon = renaissance_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		NOT = {
-			OR = {
-				original_capital ?= {
-					OR = {
-						sub_continent = sub_continent:north_asia
-						sub_continent = sub_continent:eastern_europe
-						sub_continent = sub_continent:central_asia
-						region = region:scandinavian_region
-					}
-				}
-				original_capital ?= {
-					AND = {
-						sub_continent = sub_continent:western_europe
-						NOT = { region = region:scandinavian_region }
-					}
-				}
-			}
-		}
-	}
+    age = age_4_reformation
+    unlock_production_method = pp_forest_village_base_fur
+    unlock_production_method = pp_fur_trapping
+    requires = global_trade_advance
+    # icon = renaissance_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        NOT = {
+            OR = {
+                original_capital ?= {
+                    OR = {
+                        sub_continent = sub_continent:north_asia
+                        sub_continent = sub_continent:eastern_europe
+                        sub_continent = sub_continent:central_asia
+                        region = region:scandinavian_region
+                    }
+                }
+                original_capital ?= {
+                    AND = {
+                        sub_continent = sub_continent:western_europe
+                        NOT = { region = region:scandinavian_region }
+                    }
+                }
+            }
+        }
+    }
 }
 # <<< eu5-building-pipeline:forest_village:advancement

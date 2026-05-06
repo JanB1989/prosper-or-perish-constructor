@@ -13,6 +13,10 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_enclosed_sheep_walks_base_wool
+    - name: slot_1
+      methods:
+        - pp_enclosed_sheep_walks_no_primary
         - pp_enclosed_sheep_walks_improved_flocks
   possible_production_methods: []
   body: |2-
@@ -39,9 +43,19 @@ building:
     }
 
     unique_production_methods = {
+        pp_enclosed_sheep_walks_base_wool = {
+            produced = wool
+            output = 0.70
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_enclosed_sheep_walks_no_primary = {
+            category = building_maintenance
+        }
         pp_enclosed_sheep_walks_improved_flocks = {
             produced = wool
-            output = 10.80
+            output = 10.10
             tools = 1.80
             cloth = 0.99
             leather = 0.90
@@ -73,10 +87,13 @@ localization:
     MODIFIER_TYPE_NAME_pp_enclosed_sheep_walks_price_cost_modifier: Enclosed Sheep Walks Cost
     enclosed_sheep_walks: Enclosed Sheep Walks
     enclosed_sheep_walks_desc: Enclosed sheep walks organize grazing, shearing sheds, wool sorting, and improved flock management into a larger laborer-run pastoral estate. They move much more wool through the local economy without making sheep farming inherently richer.
-    enclosed_sheep_walks_slot_0: Improved Flocks
+    enclosed_sheep_walks_slot_0: Wool Pasture
+    enclosed_sheep_walks_slot_1: Improved Flocks
     pp_enclosed_sheep_walks: Enclosed Sheep Walks
+    pp_enclosed_sheep_walks_base_wool: Wool Pasture
     pp_enclosed_sheep_walks_desc: Enclosure, flock records, shearing sheds, and improved husbandry raise wool throughput through organization and supplies.
     pp_enclosed_sheep_walks_improved_flocks: Improved Flocks
+    pp_enclosed_sheep_walks_no_primary: No Improved Flocks
     pp_enclosed_sheep_walks_price: Enclosed Sheep Walks Price
 icon:
   source_png: ../assets/icons/enclosed_sheep_walks.png
@@ -88,5 +105,9 @@ evaluation:
   allow_rules:
     amortization_months: 7-pop normalization and 10% lower maintenance inputs intentionally make the upgraded former-food producer modestly profitable; revisit with the rural producer rebalance.
   production_methods:
+    pp_enclosed_sheep_walks_base_wool:
+      production_efficiency: 1.00
+    pp_enclosed_sheep_walks_no_primary:
+      production_efficiency: 1.00
     pp_enclosed_sheep_walks_improved_flocks:
       production_efficiency: 1.00

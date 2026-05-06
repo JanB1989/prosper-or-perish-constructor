@@ -7,143 +7,160 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
+        - pp_fishing_village_base_fish
+    - name: slot_1
+      methods:
+        - pp_fishing_village_no_primary
         - pp_fishing_village_maintenance
         - pp_arctic_fishing_village_maintenance
-    - name: slot_1
+    - name: slot_2
       methods:
         - pp_fishing_village_strand_line
         - pp_fishing_village_clinker_craft
-    - name: slot_2
+    - name: slot_3
       methods:
         - pp_fishing_village_no_freshwater_works
         - pp_fishing_village_wattle_weirs
         - pp_fishing_village_stew_ponds
   possible_production_methods: []
   body: |2-
-    	is_foreign = no
-    	max_levels = fishing_village_max_level
-    	pop_type = peasants
-    	category = village_category
-    	employment_size = 5
-    	rural_settlement = yes
-    	town = yes
-    	city = yes
-    	forbidden_for_estates = yes
-    	ai_forbid_shutdown = no
-    	location_potential = {
-    		has_variable = pp_fishing_village_fixed_env_bonus
-    		var:pp_fishing_village_fixed_env_bonus > 0
+        is_foreign = no
+        max_levels = fishing_village_max_level
+        pop_type = peasants
+        category = village_category
+        employment_size = 5
+        rural_settlement = yes
+        town = yes
+        city = yes
+        forbidden_for_estates = yes
+        ai_forbid_shutdown = no
+        location_potential = {
+            has_variable = pp_fishing_village_fixed_env_bonus
+            var:pp_fishing_village_fixed_env_bonus > 0
         OR = {
             has_river = yes
             is_adjacent_to_lake = yes
         }
-    	}
-    	build_time = village_build_time
-    	# Slot 0 â€” fishery ground / climate (temperate vs arctic)
-    	unique_production_methods = {
-    		pp_fishing_village_maintenance = {
-    			produced = fish
-    			output = 0.35
-    			salt = 0.085
-    			tools = 0.35
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_arctic_fishing_village_maintenance = {
-    			produced = fish
-    			output = 0.35
-    			salt = 0.030
-    			ivory = 0.075
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    	}
-    	# Slot 1 - local fishing method (handline / clinker boats)
-    	unique_production_methods = {
-    		pp_fishing_village_strand_line = {
-    			category = building_maintenance
-    		}
-    		pp_fishing_village_clinker_craft = {
-    			lumber = 0.15
-    			produced = fish
-    			output = 0.10
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    	}
-    	# Slot 2 - freshwater and local-water works
-    	unique_production_methods = {
-    		pp_fishing_village_no_freshwater_works = {
-    			category = building_maintenance
-    		}
-    		pp_fishing_village_wattle_weirs = {
-    			lumber = 0.10
-    			fiber_crops = 0.08
-    			produced = fish
-    			output = 0.15
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_fishing_village_stew_ponds = {
-    			clay = 0.12
-    			lumber = 0.08
-    			produced = fish
-    			output = 0.20
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    	}
-    	construction_demand = village_construction
-    	modifier = {
-    		local_monthly_food = 0.0
+        }
+        build_time = village_build_time
+        # Slot 0 â€” fishery ground / climate (temperate vs arctic)
+        unique_production_methods = {
+            pp_fishing_village_base_fish = {
+                produced = fish
+                output = 0.30
+                category = building_maintenance
+            }
+        }
+        unique_production_methods = {
+            pp_fishing_village_no_primary = {
+                category = building_maintenance
+            }
+            pp_fishing_village_maintenance = {
+                produced = fish
+                output = 0.05
+                salt = 0.085
+                tools = 0.35
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+            pp_arctic_fishing_village_maintenance = {
+                produced = fish
+                output = 0.05
+                salt = 0.030
+                ivory = 0.075
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+        }
+        # Slot 1 - local fishing method (handline / clinker boats)
+        unique_production_methods = {
+            pp_fishing_village_strand_line = {
+                category = building_maintenance
+            }
+            pp_fishing_village_clinker_craft = {
+                lumber = 0.15
+                produced = fish
+                output = 0.10
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+        }
+        # Slot 2 - freshwater and local-water works
+        unique_production_methods = {
+            pp_fishing_village_no_freshwater_works = {
+                category = building_maintenance
+            }
+            pp_fishing_village_wattle_weirs = {
+                lumber = 0.10
+                fiber_crops = 0.08
+                produced = fish
+                output = 0.15
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+            pp_fishing_village_stew_ponds = {
+                clay = 0.12
+                lumber = 0.08
+                produced = fish
+                output = 0.20
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+        }
+        construction_demand = village_construction
+        modifier = {
+            local_monthly_food = 0.0
         local_merchant_capacity = 0.05
-    		local_peasants_estate_power = 0.25
-    	}
+            local_peasants_estate_power = 0.25
+        }
 advancements:
   - key: pp_herring_buss
     body: |2-
-      	age = age_3_discovery
-      	icon = safe_exploration_techniques_advance
-      	requires = new_world_advance
-      	unlock_building = offshore_fishery
-      	ai_weight = { add = 50 }
+          age = age_3_discovery
+          icon = safe_exploration_techniques_advance
+          requires = new_world_advance
+          unlock_building = offshore_fishery
+          ai_weight = { add = 50 }
   - key: pp_distant_water_fishing
     body: |2-
-      	age = age_4_reformation
-      	icon = maritime_advance_age_4
-      	requires = maritime_advance_age_4
-      	unlock_production_method = pp_offshore_fishery_distant_water_schooners
-      	ai_weight = { add = 50 }
+          age = age_4_reformation
+          icon = maritime_advance_age_4
+          requires = maritime_advance_age_4
+          unlock_production_method = pp_offshore_fishery_distant_water_schooners
+          ai_weight = { add = 50 }
   - key: pp_steam_trawling
     body: |2-
-      	age = age_6_revolutions
-      	icon = safe_exploration_techniques_advance
-      	requires = rotherham_plough
-      	unlock_production_method = pp_offshore_fishery_steam_trawlers
-      	ai_weight = { add = 50 }
+          age = age_6_revolutions
+          icon = safe_exploration_techniques_advance
+          requires = rotherham_plough
+          unlock_production_method = pp_offshore_fishery_steam_trawlers
+          ai_weight = { add = 50 }
   - key: pp_wattle_fish_weirs
     body: |2-
-      	age = age_2_renaissance
-      	icon = food_advance_renaissance
-      	requires = food_advance_renaissance
-      	unlock_production_method = pp_fishing_village_wattle_weirs
-      	ai_weight = { add = 50 }
+          age = age_2_renaissance
+          icon = food_advance_renaissance
+          requires = food_advance_renaissance
+          unlock_production_method = pp_fishing_village_wattle_weirs
+          ai_weight = { add = 50 }
   - key: pp_managed_fishponds
     body: |2-
-      	age = age_4_reformation
-      	icon = food_advance_reformation
-      	requires = food_advance_reformation
-      	unlock_production_method = pp_fishing_village_stew_ponds
-      	ai_weight = { add = 50 }
+          age = age_4_reformation
+          icon = food_advance_reformation
+          requires = food_advance_reformation
+          unlock_production_method = pp_fishing_village_stew_ponds
+          ai_weight = { add = 50 }
 localization:
   entries:
     fishing_village_slot_0: Fishing grounds
-    fishing_village_slot_1: Fishing method
-    fishing_village_slot_2: Freshwater Works
+    fishing_village_slot_1: Main Catch
+    fishing_village_slot_2: Fishing method
+    fishing_village_slot_3: Freshwater Works
     pp_arctic_fishing_village_maintenance: Arctic Fishing Village Maintenance
+    pp_fishing_village_base_fish: Fishing Grounds
     pp_fishing_village_clinker_craft: Clinker boats
     pp_fishing_village_maintenance: Fishing Village Maintenance
     pp_fishing_village_no_freshwater_works: No Freshwater Works
+    pp_fishing_village_no_primary: No Main Catch
     pp_fishing_village_strand_line: Handline fishing
     pp_fishing_village_stew_ponds: Stew Ponds
     pp_fishing_village_wattle_weirs: Wattle Fish Weirs
@@ -164,6 +181,12 @@ evaluation:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
+    pp_fishing_village_base_fish:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
+    pp_fishing_village_no_primary:
+      production_efficiency: 1.00
     pp_fishing_village_maintenance:
       production_efficiency: 1.05
     pp_arctic_fishing_village_maintenance:

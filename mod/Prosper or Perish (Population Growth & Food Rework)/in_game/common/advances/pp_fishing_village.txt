@@ -1,41 +1,41 @@
 ﻿# >>> eu5-building-pipeline:fishing_village:advancement
 pp_herring_buss = {
-	age = age_3_discovery
-	icon = safe_exploration_techniques_advance
-	requires = new_world_advance
-	unlock_building = offshore_fishery
-	ai_weight = { add = 50 }
+    age = age_3_discovery
+    icon = safe_exploration_techniques_advance
+    requires = new_world_advance
+    unlock_building = offshore_fishery
+    ai_weight = { add = 50 }
 }
 
 pp_distant_water_fishing = {
-	age = age_4_reformation
-	icon = maritime_advance_age_4
-	requires = maritime_advance_age_4
-	unlock_production_method = pp_offshore_fishery_distant_water_schooners
-	ai_weight = { add = 50 }
+    age = age_4_reformation
+    icon = maritime_advance_age_4
+    requires = maritime_advance_age_4
+    unlock_production_method = pp_offshore_fishery_distant_water_schooners
+    ai_weight = { add = 50 }
 }
 
 pp_steam_trawling = {
-	age = age_6_revolutions
-	icon = safe_exploration_techniques_advance
-	requires = rotherham_plough
-	unlock_production_method = pp_offshore_fishery_steam_trawlers
-	ai_weight = { add = 50 }
+    age = age_6_revolutions
+    icon = safe_exploration_techniques_advance
+    requires = rotherham_plough
+    unlock_production_method = pp_offshore_fishery_steam_trawlers
+    ai_weight = { add = 50 }
 }
 
 pp_wattle_fish_weirs = {
-	age = age_2_renaissance
-	icon = food_advance_renaissance
-	requires = food_advance_renaissance
-	unlock_production_method = pp_fishing_village_wattle_weirs
-	ai_weight = { add = 50 }
+    age = age_2_renaissance
+    icon = food_advance_renaissance
+    requires = food_advance_renaissance
+    unlock_production_method = pp_fishing_village_wattle_weirs
+    ai_weight = { add = 50 }
 }
 
 pp_managed_fishponds = {
-	age = age_4_reformation
-	icon = food_advance_reformation
-	requires = food_advance_reformation
-	unlock_production_method = pp_fishing_village_stew_ponds
-	ai_weight = { add = 50 }
+    age = age_4_reformation
+    icon = food_advance_reformation
+    requires = food_advance_reformation
+    unlock_production_method = pp_fishing_village_stew_ponds
+    ai_weight = { add = 50 }
 }
 # <<< eu5-building-pipeline:fishing_village:advancement

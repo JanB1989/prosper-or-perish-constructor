@@ -1,208 +1,219 @@
 ﻿# >>> eu5-building-pipeline:farming_village:advancement
 pp_rice_farm_advance_asian = {
-	age = age_1_traditions
-	unlock_production_method = pp_rice_farm_maintenance
-	requires = agriculture_advance
-	# icon = renaissance_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		original_capital ?= {
-			OR = {
-				sub_continent = sub_continent:east_asia
-				sub_continent = sub_continent:south_asia
-				sub_continent = sub_continent:south_east_asia
-				sub_continent = sub_continent:middle_east
-			}
-		}
-	}
+    age = age_1_traditions
+    unlock_production_method = pp_rice_farm_base_rice
+    unlock_production_method = pp_rice_farm_maintenance
+    requires = agriculture_advance
+    # icon = renaissance_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        original_capital ?= {
+            OR = {
+                sub_continent = sub_continent:east_asia
+                sub_continent = sub_continent:south_asia
+                sub_continent = sub_continent:south_east_asia
+                sub_continent = sub_continent:middle_east
+            }
+        }
+    }
 }
 
 pp_rice_farm_advance_mediterranean = {
-	age = age_2_renaissance
-	unlock_production_method = pp_rice_farm_maintenance
-	requires = renaissance_advance
-	# icon = renaissance_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		original_capital ?= {
-			OR = {
-				region = region:iberia_region
-				region = region:italy_region
-			}
-		}
-	}
+    age = age_2_renaissance
+    unlock_production_method = pp_rice_farm_base_rice
+    unlock_production_method = pp_rice_farm_maintenance
+    requires = renaissance_advance
+    # icon = renaissance_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        original_capital ?= {
+            OR = {
+                region = region:iberia_region
+                region = region:italy_region
+            }
+        }
+    }
 }
 
 pp_rice_farm_advance_general = {
-	age = age_3_discovery
-	unlock_production_method = pp_rice_farm_maintenance
-	requires = new_world_advance
-	# icon = new_world_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		NOT = {
-			OR = {
-				original_capital ?= {
-					OR = {
-						sub_continent = sub_continent:east_asia
-						sub_continent = sub_continent:south_asia
-						sub_continent = sub_continent:south_east_asia
-						sub_continent = sub_continent:middle_east
-					}
-				}
-				original_capital ?= {
-					OR = {
-						region = region:iberia_region
-						region = region:italy_region
-					}
-				}
-			}
-		}
-	}
+    age = age_3_discovery
+    unlock_production_method = pp_rice_farm_base_rice
+    unlock_production_method = pp_rice_farm_maintenance
+    requires = new_world_advance
+    # icon = new_world_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        NOT = {
+            OR = {
+                original_capital ?= {
+                    OR = {
+                        sub_continent = sub_continent:east_asia
+                        sub_continent = sub_continent:south_asia
+                        sub_continent = sub_continent:south_east_asia
+                        sub_continent = sub_continent:middle_east
+                    }
+                }
+                original_capital ?= {
+                    OR = {
+                        region = region:iberia_region
+                        region = region:italy_region
+                    }
+                }
+            }
+        }
+    }
 }
 
 pp_maize_farm_advance_american = {
-	age = age_1_traditions
-	unlock_production_method = pp_maize_farm_maintenance
-	requires = agriculture_advance
-	# icon = new_world_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		original_capital ?= {
-			OR = {
-				sub_continent = sub_continent:north_america
-				sub_continent = sub_continent:south_america
-			}
-		}
-	}
+    age = age_1_traditions
+    unlock_production_method = pp_maize_farm_base_maize
+    unlock_production_method = pp_maize_farm_maintenance
+    requires = agriculture_advance
+    # icon = new_world_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        original_capital ?= {
+            OR = {
+                sub_continent = sub_continent:north_america
+                sub_continent = sub_continent:south_america
+            }
+        }
+    }
 }
 
 pp_maize_farm_advance_iberian = {
-	age = age_3_discovery
-	unlock_production_method = pp_maize_farm_maintenance
-	requires = new_world_advance
-	# icon = new_world_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		original_capital ?= { region = region:iberia_region }
-	}
+    age = age_3_discovery
+    unlock_production_method = pp_maize_farm_base_maize
+    unlock_production_method = pp_maize_farm_maintenance
+    requires = new_world_advance
+    # icon = new_world_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        original_capital ?= { region = region:iberia_region }
+    }
 }
 
 pp_maize_farm_advance_general = {
-	age = age_4_reformation
-	unlock_production_method = pp_maize_farm_maintenance
-	requires = global_trade_advance
-	# icon = new_world_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		NOT = {
-			OR = {
-				original_capital ?= {
-					OR = {
-						sub_continent = sub_continent:north_america
-						sub_continent = sub_continent:south_america
-					}
-				}
-				original_capital ?= { region = region:iberia_region }
-			}
-		}
-	}
+    age = age_4_reformation
+    unlock_production_method = pp_maize_farm_base_maize
+    unlock_production_method = pp_maize_farm_maintenance
+    requires = global_trade_advance
+    # icon = new_world_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        NOT = {
+            OR = {
+                original_capital ?= {
+                    OR = {
+                        sub_continent = sub_continent:north_america
+                        sub_continent = sub_continent:south_america
+                    }
+                }
+                original_capital ?= { region = region:iberia_region }
+            }
+        }
+    }
 }
 
 pp_potato_farm_advance_american = {
-	age = age_1_traditions
-	unlock_production_method = pp_potato_farm_maintenance
-	requires = agriculture_advance
-	# icon = renaissance_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		original_capital ?= {
-			OR = {
-				sub_continent = sub_continent:north_america
-				sub_continent = sub_continent:south_america
-			}
-		}
-	}
+    age = age_1_traditions
+    unlock_production_method = pp_potato_farm_base_potato
+    unlock_production_method = pp_potato_farm_maintenance
+    requires = agriculture_advance
+    # icon = renaissance_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        original_capital ?= {
+            OR = {
+                sub_continent = sub_continent:north_america
+                sub_continent = sub_continent:south_america
+            }
+        }
+    }
 }
 
 pp_potato_farm_advance_iberian = {
-	age = age_4_reformation
-	unlock_production_method = pp_potato_farm_maintenance
-	requires = global_trade_advance
-	# icon = renaissance_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		original_capital ?= { region = region:iberia_region }
-	}
+    age = age_4_reformation
+    unlock_production_method = pp_potato_farm_base_potato
+    unlock_production_method = pp_potato_farm_maintenance
+    requires = global_trade_advance
+    # icon = renaissance_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        original_capital ?= { region = region:iberia_region }
+    }
 }
 
 pp_potato_farm_advance_general = {
-	age = age_5_absolutism
-	unlock_production_method = pp_potato_farm_maintenance
-	requires = newspapers_advance
-	# icon = renaissance_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		NOT = {
-			OR = {
-				original_capital ?= {
-					OR = {
-						sub_continent = sub_continent:north_america
-						sub_continent = sub_continent:south_america
-					}
-				}
-				original_capital ?= { region = region:iberia_region }
-			}
-		}
-	}
+    age = age_5_absolutism
+    unlock_production_method = pp_potato_farm_base_potato
+    unlock_production_method = pp_potato_farm_maintenance
+    requires = newspapers_advance
+    # icon = renaissance_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        NOT = {
+            OR = {
+                original_capital ?= {
+                    OR = {
+                        sub_continent = sub_continent:north_america
+                        sub_continent = sub_continent:south_america
+                    }
+                }
+                original_capital ?= { region = region:iberia_region }
+            }
+        }
+    }
 }
 
 pp_olives_farm_advance_mediterranean = {
-	age = age_1_traditions
-	unlock_production_method = pp_olives_farm_maintenance
-	requires = agriculture_advance
-	# icon = renaissance_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		original_capital ?= {
-			OR = {
-				sub_continent = sub_continent:north_africa
-				sub_continent = sub_continent:middle_east
-				region = region:iberia_region
-				region = region:italy_region
-			}
-		}
-	}
+    age = age_1_traditions
+    unlock_production_method = pp_olives_farm_base_olives
+    unlock_production_method = pp_olives_farm_maintenance
+    requires = agriculture_advance
+    # icon = renaissance_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        original_capital ?= {
+            OR = {
+                sub_continent = sub_continent:north_africa
+                sub_continent = sub_continent:middle_east
+                region = region:iberia_region
+                region = region:italy_region
+            }
+        }
+    }
 }
 
 pp_olives_farm_advance_general = {
-	age = age_4_reformation
-	unlock_production_method = pp_olives_farm_maintenance
-	requires = global_trade_advance
-	# icon = renaissance_advance
-	ai_weight = { add = 50 }
-	potential = {
-		exists = capital
-		NOT = {
-			original_capital ?= {
-				OR = {
-					sub_continent = sub_continent:north_africa
-					sub_continent = sub_continent:middle_east
-					region = region:iberia_region
-					region = region:italy_region
-				}
-			}
-		}
-	}
+    age = age_4_reformation
+    unlock_production_method = pp_olives_farm_base_olives
+    unlock_production_method = pp_olives_farm_maintenance
+    requires = global_trade_advance
+    # icon = renaissance_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        NOT = {
+            original_capital ?= {
+                OR = {
+                    sub_continent = sub_continent:north_africa
+                    sub_continent = sub_continent:middle_east
+                    region = region:iberia_region
+                    region = region:italy_region
+                }
+            }
+        }
+    }
 }
 # <<< eu5-building-pipeline:farming_village:advancement

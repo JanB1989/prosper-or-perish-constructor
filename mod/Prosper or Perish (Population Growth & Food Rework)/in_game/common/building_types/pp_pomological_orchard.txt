@@ -23,9 +23,19 @@ location_potential = {
 }
 
 unique_production_methods = {
+    pp_pomological_orchard_base_fruit = {
+        produced = fruit
+        output = 0.70
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_pomological_orchard_no_primary = {
+        category = building_maintenance
+    }
     pp_pomological_orchard_grafted_rows = {
         produced = fruit
-        output = 13.60
+        output = 12.90
         tools = 2.34
         lumber = 2.16
         paper = 0.99

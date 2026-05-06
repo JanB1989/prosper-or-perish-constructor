@@ -195,6 +195,11 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Only rebuild notebook parquet from an existing graphs/dataset.",
     )
+    savegame_notebooks_build.add_argument(
+        "--force",
+        action="store_true",
+        help="Rebuild notebook parquet even when existing output metadata is current.",
+    )
     _add_command(
         subcommands,
         "build",
@@ -340,6 +345,25 @@ def _run(command: Sequence[str | os.PathLike[str]], repo: Path) -> int:
     print(f"$ {printable}", flush=True)
     completed = subprocess.run([str(part) for part in command], cwd=repo, check=False)
     return completed.returncode
+
+
+def _run_collecting_output(
+    command: Sequence[str | os.PathLike[str]],
+    repo: Path,
+) -> tuple[int, str]:
+    printable = " ".join(str(part) for part in command)
+    print(f"$ {printable}", flush=True)
+    completed = subprocess.run(
+        [str(part) for part in command],
+        cwd=repo,
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+    if completed.stdout:
+        print(completed.stdout, end="" if completed.stdout.endswith("\n") else "\n", flush=True)
+    return completed.returncode, completed.stdout or ""
 
 
 def _orchestrator(action: str):
@@ -633,8 +657,10 @@ def _savegame_notebooks_build(
     if extra:
         raise SystemExit("savegame-notebooks build does not accept extra arguments.")
 
+    active_save_dir: Path | None = None
     if not args.no_ingest:
         save_dir = _resolve_save_dir(repo, args.save_dir)
+        active_save_dir = save_dir
         saves = sorted(save_dir.glob("*.eu5")) if save_dir.is_dir() else []
         if not saves:
             raise SystemExit(
@@ -642,7 +668,7 @@ def _savegame_notebooks_build(
                 "Pass --save-dir /path/to/save-games if the EU5 save folder is somewhere else."
             )
         print(f"Found {len(saves)} .eu5 saves in {save_dir}", flush=True)
-        ingest_code = _run(
+        ingest_code, ingest_output = _run_collecting_output(
             [
                 "uv",
                 "run",
@@ -664,25 +690,41 @@ def _savegame_notebooks_build(
         )
         if ingest_code != 0:
             return ingest_code
+        processed = _extract_report_count(ingest_output, "processed")
+        skipped = _extract_report_count(ingest_output, "skipped")
+        if processed == 0:
+            suffix = f" ({skipped} already digested)" if skipped is not None else ""
+            print(f"raw ingest skipped: no new saves processed{suffix}", flush=True)
+        elif processed is not None:
+            print(f"raw ingest processed: {processed} new save(s)", flush=True)
+    elif args.save_dir is not None:
+        active_save_dir = _repo_path(repo, args.save_dir).expanduser()
 
-    return _run(
-        [
-            "uv",
-            "run",
-            "eu5parse",
-            "savegame-notebooks",
-            "build",
-            "--dataset",
-            _repo_path(repo, args.dataset),
-            "--output",
-            _repo_path(repo, args.output),
-            "--profile",
-            args.profile,
-            "--load-order",
-            _repo_path(repo, args.load_order),
-        ],
-        repo,
-    )
+    command: list[str | os.PathLike[str]] = [
+        "uv",
+        "run",
+        "eu5parse",
+        "savegame-notebooks",
+        "build",
+        "--dataset",
+        _repo_path(repo, args.dataset),
+        "--output",
+        _repo_path(repo, args.output),
+        "--profile",
+        args.profile,
+        "--load-order",
+        _repo_path(repo, args.load_order),
+    ]
+    if active_save_dir is not None:
+        command.extend(["--active-save-dir", active_save_dir])
+    if not args.force:
+        command.append("--skip-if-current")
+    return _run(command, repo)
+
+
+def _extract_report_count(output: str, key: str) -> int | None:
+    match = re.search(rf"(?m)^{re.escape(key)}:\s*(\d+)\s*$", output)
+    return int(match.group(1)) if match else None
 
 
 def _repo_path(repo: Path, path: Path) -> Path:

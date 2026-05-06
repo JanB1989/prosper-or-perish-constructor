@@ -7,6 +7,8 @@
   MODIFIER_TYPE_DESC_local_victuals_output_modifier: "Local victuals output modifier"
   MODIFIER_TYPE_NAME_global_victuals_output_modifier: "Global victuals output modifier"
   MODIFIER_TYPE_DESC_global_victuals_output_modifier: "Global victuals output modifier"
+  MODIFIER_TYPE_NAME_global_victuals_pop_demand: "Global [ShowGoodsNameWithNoTooltip('victuals')] Demand"
+  MODIFIER_TYPE_DESC_global_victuals_pop_demand: "This modifies the [pop_needs|e] of the [ShowGoodsName('victuals')] [produced_good|e]."
   MODIFIER_TYPE_NAME_can_extract_victuals: "Can extract victuals"
   MODIFIER_TYPE_DESC_can_extract_victuals: "Can extract victuals"
   MODIFIER_TYPE_NAME_victuals_impacts_inflation: "Victuals impacts inflation"

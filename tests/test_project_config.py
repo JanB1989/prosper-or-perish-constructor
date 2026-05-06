@@ -266,6 +266,50 @@ def test_pp_building_prices_have_modifier_type_assets_and_localization() -> None
     ]
 
 
+def test_victuals_pop_demand_modifier_type_is_registered() -> None:
+    modifier_types = _database_keys(MODIFIER_TYPE_DEFINITIONS)
+    localization_text = "\n".join(
+        path.read_text(encoding="utf-8-sig") for path in sorted(LOCALIZATION_ROOT.glob("*.yml"))
+    )
+
+    assert "global_victuals_pop_demand" in modifier_types
+    assert "MODIFIER_TYPE_NAME_global_victuals_pop_demand:" in localization_text
+    assert "MODIFIER_TYPE_DESC_global_victuals_pop_demand:" in localization_text
+
+
+def test_current_megalopolis_buildings_allow_megalopolis() -> None:
+    for blueprint_name in ("dock", "fruit_orchard", "irrigation_systems"):
+        template = load_template(ROOT / "blueprints" / "accepted" / "buildings" / f"{blueprint_name}.yml")
+        rendered = parse_text(
+            f"{template.key} = {{\n{template.building_body}\n}}\n",
+            path=Path(f"{blueprint_name}.yml"),
+        )
+        values = _entry_values(rendered.entries[0].value)
+        assert values["megalopolis"] is True
+
+
+def test_victuals_market_construction_and_salt_collector_debug_keys_are_localized() -> None:
+    victuals_market = load_template(ROOT / "blueprints" / "accepted" / "buildings" / "victuals_market.yml")
+    salt_collector = load_template(ROOT / "blueprints" / "accepted" / "buildings" / "salt_collector.yml")
+
+    assert victuals_market.localization["victuals_market_construction"] == "Victuals Market Construction"
+
+    rendered = parse_text(
+        f"{salt_collector.key} = {{\n{salt_collector.building_body}\n}}\n",
+        path=Path("salt_collector.yml"),
+    )
+    body = rendered.entries[0].value
+    assert isinstance(body, CList)
+    methods = body.values("unique_production_methods")[0]
+    assert isinstance(methods, CList)
+    maintenance = _entry_values(methods)["pp_salt_collector_maintenance"]
+    assert isinstance(maintenance, CList)
+    values = _entry_values(maintenance)
+    assert values["output"] == 0.3
+    assert values["clay"] == 2.0
+    assert values["debug_max_profit"] == 0.3
+
+
 def test_farming_village_uses_baseline_building_price() -> None:
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
     annotated = annotate_building_data_availability(data.building_data, data.advancements)

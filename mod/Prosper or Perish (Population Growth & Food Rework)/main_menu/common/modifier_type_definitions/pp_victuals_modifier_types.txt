@@ -24,6 +24,12 @@ global_victuals_output_modifier={
 		category=country
 	}
 }
+global_victuals_pop_demand={
+	percent=yes
+	game_data={
+		category=country
+	}
+}
 can_extract_victuals={
 	boolean=yes
 	game_data={

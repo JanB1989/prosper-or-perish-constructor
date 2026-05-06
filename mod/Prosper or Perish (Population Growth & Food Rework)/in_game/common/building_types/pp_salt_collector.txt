@@ -22,7 +22,7 @@ REPLACE:salt_collector = {
 			produced = salt
 			output = 0.3
 			clay  = 2.0
-			debug_max_profit = 0
+			debug_max_profit = 0.3
 			category = building_maintenance
 		}
 	}

@@ -268,11 +268,13 @@ def test_pp_building_prices_have_modifier_type_assets_and_localization() -> None
 
 def test_victuals_pop_demand_modifier_type_is_registered() -> None:
     modifier_types = _database_keys(MODIFIER_TYPE_DEFINITIONS)
+    modifier_icons = _database_keys(MODIFIER_ICONS)
     localization_text = "\n".join(
         path.read_text(encoding="utf-8-sig") for path in sorted(LOCALIZATION_ROOT.glob("*.yml"))
     )
 
     assert "global_victuals_pop_demand" in modifier_types
+    assert "global_victuals_pop_demand" in modifier_icons
     assert "MODIFIER_TYPE_NAME_global_victuals_pop_demand:" in localization_text
     assert "MODIFIER_TYPE_DESC_global_victuals_pop_demand:" in localization_text
 

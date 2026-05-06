@@ -24,6 +24,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_marble_quarry_base_marble = {
+        tools = 0.3056 # picks and works upkeep
         produced = marble
         output = 0.22
         category = building_maintenance
@@ -38,7 +39,7 @@ unique_production_methods = {
         tools = 0.75
         leather = 0.18
         produced = marble
-        output = 0.85
+        output = 0.9036
         category = building_maintenance
     }
 }
@@ -50,14 +51,14 @@ unique_production_methods = {
         lumber = 0.12
         tools = 0.06
         produced = stone
-        output = 0.25
+        output = 0.432
         category = building_maintenance
     }
     pp_marble_quarry_sand = {
         lumber = 0.08
         tools = 0.04
         produced = sand
-        output = 0.30
+        output = 0.576
         category = building_maintenance
     }
 }

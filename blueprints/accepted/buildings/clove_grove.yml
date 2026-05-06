@@ -38,6 +38,7 @@ building:
 
     unique_production_methods = {
         pp_clove_grove_base_cloves = {
+            tools = 0.4167 # field tools and upkeep
             produced = cloves
             output = 0.3
             category = building_maintenance
@@ -51,7 +52,7 @@ building:
             lumber = 0.12
             coal = 0.04
             produced = cloves
-            output = 0.25
+            output = 0.065
             category = building_maintenance
         }
     }

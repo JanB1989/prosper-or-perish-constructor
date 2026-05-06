@@ -22,6 +22,7 @@ REPLACE:fishing_village = {
     # Slot 0 â€” fishery ground / climate (temperate vs arctic)
     unique_production_methods = {
         pp_fishing_village_base_fish = {
+            lumber = 0.1667 # boat and gear upkeep
             produced = fish
             output = 0.30
             category = building_maintenance
@@ -33,7 +34,7 @@ REPLACE:fishing_village = {
         }
         pp_fishing_village_maintenance = {
             produced = fish
-            output = 0.05
+            output = 1.5487
             salt = 0.085
             tools = 0.35
             debug_max_profit = 0
@@ -41,7 +42,7 @@ REPLACE:fishing_village = {
         }
         pp_arctic_fishing_village_maintenance = {
             produced = fish
-            output = 0.05
+            output = 0.4725
             salt = 0.030
             ivory = 0.075
             debug_max_profit = 0
@@ -56,7 +57,7 @@ REPLACE:fishing_village = {
         pp_fishing_village_clinker_craft = {
             lumber = 0.15
             produced = fish
-            output = 0.10
+            output = 0.2363
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -70,7 +71,7 @@ REPLACE:fishing_village = {
             lumber = 0.10
             fiber_crops = 0.08
             produced = fish
-            output = 0.15
+            output = 0.3255
             debug_max_profit = 0
             category = building_maintenance
         }

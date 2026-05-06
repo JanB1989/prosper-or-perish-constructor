@@ -29,7 +29,21 @@ building:
     build_time = rural_build_time
 
     location_potential = {
-        NOT = { raw_material = goods:iron }
+        NOR = {
+            raw_material = goods:coal
+            raw_material = goods:iron
+            raw_material = goods:copper
+            raw_material = goods:goods_gold
+            raw_material = goods:silver
+            # raw_material = goods:stone
+            raw_material = goods:tin
+            raw_material = goods:lead
+            raw_material = goods:gems
+            # raw_material = goods:saltpeter
+            raw_material = goods:alum
+            raw_material = goods:marble
+            raw_material = goods:mercury
+        }
     }
 
     unique_production_methods = {

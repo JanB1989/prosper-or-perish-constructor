@@ -263,6 +263,9 @@ def test_build_finalizes_location_potential_localization(
         "\tgame_data = { category = location }\n"
         "\tlocal_fish_output_modifier = 0.1\n"
         "}\n"
+        "pp_loc_washita = {\n"
+        "\tlocal_grain_output_modifier = 0.15\n"
+        "}\n"
         "pp_loc_sant_feliu = {\n"
         "\tlocal_medicaments_output_modifier = 0.2\n"
         "}\n",
@@ -291,9 +294,14 @@ def test_build_finalizes_location_potential_localization(
     assert calls == [
         ["eu5-orchestrator", "build", "--project", str(repo / "constructor.toml"), "--overwrite"]
     ]
+    static_text = (static_modifiers / "pp_location_modifiers.txt").read_text(encoding="utf-8-sig")
+    assert "pp_loc_washita_pp = {" in static_text
+    assert "pp_loc_washita = {" not in static_text
     assert 'pp_location_potential_modifier_name: "[pp_location_potential|e]"' in modifier_text
     assert 'STATIC_MODIFIER_NAME_pp_loc_slagelse: "$pp_location_potential_modifier_name$"' in modifier_text
     assert 'STATIC_MODIFIER_DESC_pp_loc_slagelse: "$pp_location_potential_modifier_desc$"' in modifier_text
+    assert 'STATIC_MODIFIER_DESC_pp_loc_washita_pp: "$pp_location_potential_modifier_desc$"' in modifier_text
+    assert 'STATIC_MODIFIER_DESC_pp_loc_washita: "$pp_location_potential_modifier_desc$"' not in modifier_text
     assert "pp_location_modifiers_title:" not in modifier_text
     assert 'game_concept_pp_location_potential: "Location Potential"' in europedia_text
     assert "\\n\\nThe values combine" in europedia_text

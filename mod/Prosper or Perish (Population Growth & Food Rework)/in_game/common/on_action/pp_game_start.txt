@@ -4,7 +4,6 @@ on_game_start = {
 	on_actions = {
 		# pp_reset_rgo_max_workers
 		pp_mod_welcome_situation_game_start
-		pp_apply_adjacent_to_lake_modifier
 		pp_apply_rgo_static_modifiers
 		pp_reduce_specific_rgo
 		pp_precalculate_building_capacities
@@ -132,27 +131,6 @@ pp_mod_welcome_situation_game_start = {
 				name = pp_mod_welcome_situation_pending
 				value = yes
 			}
-		}
-	}
-}
-
-# Apply adjacent_to_lake modifier to locations that border lakes (engine does not auto-apply this like river_flowing_through/coastal)
-pp_apply_adjacent_to_lake_modifier = {
-	effect = {
-		every_location_in_the_world = {
-			limit = { is_adjacent_to_lake = yes }
-			add_location_modifier = {
-				modifier = adjacent_to_lake
-				months = -1
-				mode = replace
-			}
-		}
-		every_location_in_the_world = {
-			limit = {
-				is_adjacent_to_lake = no
-				has_location_modifier = adjacent_to_lake
-			}
-			remove_location_modifier = adjacent_to_lake
 		}
 	}
 }
@@ -1022,10 +1000,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:rural_settlement
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:alum_quarry }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:alum_quarry
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1037,10 +1015,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:alum_quarry }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:alum_quarry
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1052,10 +1030,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:alum_quarry }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:alum_quarry
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1226,10 +1204,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:rural_settlement
 						population > 15
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:coal_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:coal_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1241,10 +1219,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 15
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:coal_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:coal_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1256,10 +1234,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 15
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:coal_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:coal_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1271,10 +1249,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:rural_settlement
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:copper_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:copper_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1286,10 +1264,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:copper_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:copper_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1301,10 +1279,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:copper_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:copper_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1790,10 +1768,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:rural_settlement
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:gem_gravel_pit }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:gem_gravel_pit
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1805,10 +1783,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:gem_gravel_pit }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:gem_gravel_pit
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1820,10 +1798,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:gem_gravel_pit }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:gem_gravel_pit
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1835,10 +1813,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:rural_settlement
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:gold_diggings }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:gold_diggings
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1850,10 +1828,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:gold_diggings }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:gold_diggings
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1865,10 +1843,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:gold_diggings }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:gold_diggings
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -1994,10 +1972,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:rural_settlement
 						population > 15
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:iron_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:iron_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -2009,18 +1987,18 @@ pp_game_start_effect = {
 						location_rank = location_rank:rural_settlement
 						population > 15
 						development > 10
-						has_building = building_type:mining_village
+						has_building = building_type:iron_mine
 						location_building_level = {
-							building_type = building_type:mining_village
+							building_type = building_type:iron_mine
 							value < 2
 						}
 					}
 					change_building_level_in_location = {
-						building = building_type:mining_village
+						building = building_type:iron_mine
 						value = {
 							value = 2
 							add = {
-								value = "location_building_level(building_type:mining_village)"
+								value = "location_building_level(building_type:iron_mine)"
 								multiply = -1
 							}
 						}
@@ -2032,10 +2010,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 15
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:iron_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:iron_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -2047,18 +2025,18 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 15
 						development > 10
-						has_building = building_type:mining_village
+						has_building = building_type:iron_mine
 						location_building_level = {
-							building_type = building_type:mining_village
+							building_type = building_type:iron_mine
 							value < 2
 						}
 					}
 					change_building_level_in_location = {
-						building = building_type:mining_village
+						building = building_type:iron_mine
 						value = {
 							value = 2
 							add = {
-								value = "location_building_level(building_type:mining_village)"
+								value = "location_building_level(building_type:iron_mine)"
 								multiply = -1
 							}
 						}
@@ -2070,10 +2048,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 15
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:iron_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:iron_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -2085,18 +2063,18 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 15
 						development > 10
-						has_building = building_type:mining_village
+						has_building = building_type:iron_mine
 						location_building_level = {
-							building_type = building_type:mining_village
+							building_type = building_type:iron_mine
 							value < 2
 						}
 					}
 					change_building_level_in_location = {
-						building = building_type:mining_village
+						building = building_type:iron_mine
 						value = {
 							value = 2
 							add = {
-								value = "location_building_level(building_type:mining_village)"
+								value = "location_building_level(building_type:iron_mine)"
 								multiply = -1
 							}
 						}
@@ -2108,10 +2086,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:rural_settlement
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:lead_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:lead_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -2123,10 +2101,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:lead_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:lead_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -2138,10 +2116,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:lead_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:lead_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -2609,10 +2587,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:rural_settlement
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:marble_quarry }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:marble_quarry
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -2624,10 +2602,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:marble_quarry }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:marble_quarry
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -2639,10 +2617,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:marble_quarry }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:marble_quarry
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -2654,10 +2632,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:rural_settlement
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:cinnabar_pit }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:cinnabar_pit
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -2669,10 +2647,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:cinnabar_pit }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:cinnabar_pit
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -2684,10 +2662,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:cinnabar_pit }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:cinnabar_pit
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -3230,10 +3208,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:rural_settlement
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:silver_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:silver_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -3245,10 +3223,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:silver_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:silver_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -3260,10 +3238,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:silver_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:silver_mine
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -3320,10 +3298,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:rural_settlement
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:tin_streamworks }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:tin_streamworks
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -3335,10 +3313,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:tin_streamworks }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:tin_streamworks
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -3350,10 +3328,10 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 20
 						development > 10
-						NOT = { has_building = building_type:mining_village }
+						NOT = { has_building = building_type:tin_streamworks }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:tin_streamworks
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -3707,23 +3685,151 @@ pp_game_start_effect = {
 					limit = {
 						population >= 15
 						development > 15
-						NOT = { has_building = building_type:mining_village }
-						OR = {
-							raw_material = goods:coal
-							raw_material = goods:iron
-							raw_material = goods:copper
-							raw_material = goods:goods_gold
-							raw_material = goods:silver
-							raw_material = goods:tin
-							raw_material = goods:lead
-							raw_material = goods:gems
-							raw_material = goods:alum
-							raw_material = goods:marble
-							raw_material = goods:mercury
-						}
+						raw_material = goods:coal
+						NOT = { has_building = building_type:coal_mine }
 					}
 					construct_building = {
-						building_type = building_type:mining_village
+						building_type = building_type:coal_mine
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 15
+						development > 15
+						raw_material = goods:iron
+						NOT = { has_building = building_type:iron_mine }
+					}
+					construct_building = {
+						building_type = building_type:iron_mine
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 15
+						development > 15
+						raw_material = goods:copper
+						NOT = { has_building = building_type:copper_mine }
+					}
+					construct_building = {
+						building_type = building_type:copper_mine
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 15
+						development > 15
+						raw_material = goods:goods_gold
+						NOT = { has_building = building_type:gold_diggings }
+					}
+					construct_building = {
+						building_type = building_type:gold_diggings
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 15
+						development > 15
+						raw_material = goods:silver
+						NOT = { has_building = building_type:silver_mine }
+					}
+					construct_building = {
+						building_type = building_type:silver_mine
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 15
+						development > 15
+						raw_material = goods:tin
+						NOT = { has_building = building_type:tin_streamworks }
+					}
+					construct_building = {
+						building_type = building_type:tin_streamworks
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 15
+						development > 15
+						raw_material = goods:lead
+						NOT = { has_building = building_type:lead_mine }
+					}
+					construct_building = {
+						building_type = building_type:lead_mine
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 15
+						development > 15
+						raw_material = goods:gems
+						NOT = { has_building = building_type:gem_gravel_pit }
+					}
+					construct_building = {
+						building_type = building_type:gem_gravel_pit
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 15
+						development > 15
+						raw_material = goods:alum
+						NOT = { has_building = building_type:alum_quarry }
+					}
+					construct_building = {
+						building_type = building_type:alum_quarry
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 15
+						development > 15
+						raw_material = goods:marble
+						NOT = { has_building = building_type:marble_quarry }
+					}
+					construct_building = {
+						building_type = building_type:marble_quarry
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 15
+						development > 15
+						raw_material = goods:mercury
+						NOT = { has_building = building_type:cinnabar_pit }
+					}
+					construct_building = {
+						building_type = building_type:cinnabar_pit
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"

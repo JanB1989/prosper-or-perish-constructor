@@ -25,6 +25,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_gold_stamp_mill_base_gold = {
+        tools = 0.6667 # picks and works upkeep
         produced = goods_gold
         output = 0.3
         category = building_maintenance
@@ -39,7 +40,7 @@ unique_production_methods = {
         tools = 1.25
         mercury = 0.35
         produced = goods_gold
-        output = 0.76
+        output = 1.0501
         category = building_maintenance
     }
 }
@@ -52,7 +53,7 @@ unique_production_methods = {
         tools = 0.16
         mercury = 0.05
         produced = silver
-        output = 0.12
+        output = 0.186
         category = building_maintenance
     }
     pp_gold_stamp_mill_copper = {
@@ -60,7 +61,7 @@ unique_production_methods = {
         tools = 0.12
         mercury = 0.04
         produced = copper
-        output = 0.18
+        output = 0.3
         category = building_maintenance
     }
 }

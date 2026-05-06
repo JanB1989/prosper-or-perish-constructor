@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: coffee_grove
 building:
   key: coffee_grove
@@ -38,6 +38,7 @@ building:
 
     unique_production_methods = {
         pp_coffee_grove_base_coffee = {
+            tools = 0.25 # field tools and upkeep
             produced = coffee
             output = 0.3
             category = building_maintenance
@@ -51,7 +52,7 @@ building:
             lumber = 0.12
             pottery = 0.06
             produced = coffee
-            output = 0.25
+            output = 0.1
             category = building_maintenance
         }
     }

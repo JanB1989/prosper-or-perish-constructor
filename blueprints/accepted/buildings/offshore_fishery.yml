@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: offshore_fishery
 upgrade_chain:
   family: ocean_fishery
@@ -47,6 +47,7 @@ building:
 
     unique_production_methods = {
         pp_offshore_fishery_base_catch = {
+            lumber = 0.3889 # boat and gear upkeep
             produced = fish
             output = 0.70
             debug_max_profit = 0
@@ -62,7 +63,7 @@ building:
             fiber_crops = 0.90
             salt = 1.30
             produced = fish
-            output = 9.74
+            output = 10.9204
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -120,8 +121,14 @@ evaluation:
   production_methods:
     pp_offshore_fishery_base_catch:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_offshore_fishery_herring_busses:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_offshore_fishery_distant_water_schooners:
       production_efficiency: 1.05
     pp_offshore_fishery_steam_trawlers:

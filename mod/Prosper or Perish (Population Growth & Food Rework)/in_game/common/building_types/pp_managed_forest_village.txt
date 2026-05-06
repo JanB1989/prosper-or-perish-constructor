@@ -24,21 +24,25 @@ location_potential = {
 
 unique_production_methods = {
     pp_managed_forest_village_base_leather = {
+        tools = 0.5833 # axes and camp upkeep
         produced = leather
         output = 0.70
         category = building_maintenance
     }
     pp_managed_forest_village_base_wild_game = {
+        tools = 0.1944 # axes and camp upkeep
         produced = wild_game
         output = 0.70
         category = building_maintenance
     }
     pp_managed_forest_village_base_fur = {
+        tools = 0.3889 # axes and camp upkeep
         produced = fur
         output = 0.70
         category = building_maintenance
     }
     pp_managed_forest_village_base_beeswax = {
+        tools = 0.3889 # axes and camp upkeep
         produced = beeswax
         output = 0.70
         category = building_maintenance
@@ -50,7 +54,7 @@ unique_production_methods = {
     }
     pp_managed_forest_village_tannery = {
         produced = leather
-        output = 2.70
+        output = 3.3162
         wild_game = 3.80
         tools = 1.00
         horses = 0.45
@@ -61,7 +65,7 @@ unique_production_methods = {
     }
     pp_managed_forest_village_gamekeepers = {
         produced = wild_game
-        output = 8.80
+        output = 9.5682
         tools = 1.215
         horses = 0.855
         victuals = 0.765
@@ -72,7 +76,7 @@ unique_production_methods = {
     }
     pp_managed_forest_village_fur_trappers = {
         produced = fur
-        output = 4.00
+        output = 4.7962
         tools = 1.215
         horses = 0.765
         victuals = 0.765
@@ -83,7 +87,7 @@ unique_production_methods = {
     }
     pp_managed_forest_village_apiaries = {
         produced = beeswax
-        output = 3.90
+        output = 4.7248
         tools = 1.125
         cloth = 0.675
         lumber = 0.90

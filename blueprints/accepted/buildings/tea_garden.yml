@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: tea_garden
 building:
   key: tea_garden
@@ -38,6 +38,7 @@ building:
 
     unique_production_methods = {
         pp_tea_garden_base_tea = {
+            tools = 0.25 # field tools and upkeep
             produced = tea
             output = 0.3
             category = building_maintenance
@@ -51,7 +52,7 @@ building:
             fiber_crops = 0.10
             clay = 0.08
             produced = tea
-            output = 0.25
+            output = 0.1
             category = building_maintenance
         }
     }

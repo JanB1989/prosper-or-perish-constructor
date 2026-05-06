@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: pearl_fishery
 building:
   key: pearl_fishery
@@ -38,6 +38,7 @@ building:
 
     unique_production_methods = {
         pp_pearl_fishery_base_pearls = {
+            lumber = 0.4444 # boat and gear upkeep
             produced = pearls
             output = 0.2
             category = building_maintenance
@@ -51,7 +52,7 @@ building:
             naval_supplies = 0.10
             victuals = 0.18
             produced = pearls
-            output = 0.25
+            output = 0.2344
             category = building_maintenance
         }
     }

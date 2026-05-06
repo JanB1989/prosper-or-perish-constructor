@@ -24,6 +24,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_iron_mine_base_iron = {
+        tools = 0.2 # picks and works upkeep
         produced = iron
         output = 0.24
         category = building_maintenance
@@ -38,7 +39,7 @@ unique_production_methods = {
         tools = 0.666 # picks, wedges, hammers
         beeswax = 0.148 # candles, sealants
         produced = iron
-        output = 1.15
+        output = 1.2722
         category = building_maintenance
     }
     pp_iron_mine_horse_whim_haulage = {
@@ -46,7 +47,7 @@ unique_production_methods = {
         leather = 0.18 # harness, buckets
         beeswax = 0.10 # mine candles, seals
         produced = iron
-        output = 0.70
+        output = 0.752
         category = building_maintenance
     }
     pp_iron_mine_ore_dressing_floors = {
@@ -54,7 +55,7 @@ unique_production_methods = {
         cloth = 0.20 # sorting cloths
         beeswax = 0.10 # candles, seals
         produced = iron
-        output = 0.58
+        output = 0.64
         category = building_maintenance
     }
 }
@@ -66,7 +67,7 @@ unique_production_methods = {
         lumber = 0.12 # washing troughs, racks
         tools = 0.08 # sieves, shovels
         produced = dyes
-        output = 0.12
+        output = 0.126
         category = building_maintenance
     }
 }

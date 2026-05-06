@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: model_farm
 upgrade_chain:
   family: farming_village
@@ -58,41 +58,49 @@ building:
 
     unique_production_methods = {
         pp_model_farm_base_livestock = {
+            tools = 0.2917 # field tools and upkeep
             produced = livestock
             output = 0.70
             category = building_maintenance
         }
         pp_model_farm_base_millet = {
+            tools = 0.1944 # field tools and upkeep
             produced = millet
             output = 0.70
             category = building_maintenance
         }
         pp_model_farm_base_wheat = {
+            tools = 0.1944 # field tools and upkeep
             produced = wheat
             output = 0.70
             category = building_maintenance
         }
         pp_model_farm_base_maize = {
+            tools = 0.1944 # field tools and upkeep
             produced = maize
             output = 0.70
             category = building_maintenance
         }
         pp_model_farm_base_rice = {
+            tools = 0.1944 # field tools and upkeep
             produced = rice
             output = 0.70
             category = building_maintenance
         }
         pp_model_farm_base_legumes = {
+            tools = 0.1944 # field tools and upkeep
             produced = legumes
             output = 0.70
             category = building_maintenance
         }
         pp_model_farm_base_potato = {
+            tools = 0.1944 # field tools and upkeep
             produced = potato
             output = 0.70
             category = building_maintenance
         }
         pp_model_farm_base_olives = {
+            tools = 0.1944 # field tools and upkeep
             produced = olives
             output = 0.70
             category = building_maintenance
@@ -104,7 +112,7 @@ building:
         }
         pp_model_farm_livestock = {
             produced = livestock
-            output = 9.10
+            output = 9.6389
             tools = 1.80
             horses = 1.71
             furniture = 0.495
@@ -248,20 +256,44 @@ evaluation:
   production_methods:
     pp_model_farm_base_livestock:
       production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_millet:
       production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_wheat:
       production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_maize:
       production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_rice:
       production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_legumes:
       production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_potato:
       production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_olives:
       production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_no_primary:
       production_efficiency: 1.00
     pp_model_farm_livestock:

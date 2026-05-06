@@ -38,6 +38,7 @@ building:
 
     unique_production_methods = {
         pp_pepper_garden_base_pepper = {
+            tools = 0.4167 # field tools and upkeep
             produced = pepper
             output = 0.3
             category = building_maintenance
@@ -51,7 +52,7 @@ building:
             pottery = 0.08
             coal = 0.04
             produced = pepper
-            output = 0.25
+            output = 0.04
             category = building_maintenance
         }
     }

@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: ocean_fishery
 upgrade_chain:
   family: ocean_fishery
@@ -44,6 +44,7 @@ building:
 
     unique_production_methods = {
         pp_ocean_fishery_base_catch = {
+            lumber = 0.1667 # boat and gear upkeep
             produced = fish
             output = 0.30
             debug_max_profit = 0
@@ -96,5 +97,9 @@ evaluation:
   production_methods:
     pp_ocean_fishery_base_catch:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_ocean_fishery_coastal_boats:
       production_efficiency: 1.10

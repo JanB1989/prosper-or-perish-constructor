@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: bog_iron_smelter_blast_furnace
 upgrade_chain:
   family: bog_iron_smelter
@@ -65,7 +65,7 @@ building:
             tools = 0.08 # hammers, furnace repairs
             lumber = 0.08 # drying racks, frames
             produced = iron
-            output = 0.80
+            output = 0.75
             category = building_maintenance
         }
     }

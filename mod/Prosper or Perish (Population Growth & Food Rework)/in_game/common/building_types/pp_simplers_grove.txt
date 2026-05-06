@@ -24,6 +24,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_simplers_grove_base_medicaments = {
+        tools = 0.0833 # field tools and upkeep
         produced = medicaments
         output = 0.3
         category = building_maintenance
@@ -37,7 +38,7 @@ unique_production_methods = {
         fiber_crops = 0.10 # baskets, ties, drying mats
         lumber = 0.06 # racks, sheds, sorting boards
         produced = medicaments
-        output = 0.25
+        output = 0.348
         category = building_maintenance
     }
 }

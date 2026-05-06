@@ -24,6 +24,7 @@ REPLACE:lumber_mill = {
 	
     unique_production_methods = {
         pp_lumber_mill_base_lumber = {
+            tools = 0.125 # axes and camp upkeep
             produced = lumber
             output = 0.30
             category = building_maintenance
@@ -35,7 +36,7 @@ REPLACE:lumber_mill = {
         }
 		pp_lumber_mill_maintenance = {
 			produced = lumber
-			output = 2.4
+			output = 2.64
 			tools = 1.10
 			
 			category = building_maintenance
@@ -76,7 +77,7 @@ REPLACE:lumber_mill = {
         pp_lumber_mill_extra_rations = {
             victuals = 1.30
             produced = lumber
-            output = 2.10
+            output = 2.2751
             debug_max_profit = 0
             category = building_maintenance
         }

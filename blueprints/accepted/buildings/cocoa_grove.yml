@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: cocoa_grove
 building:
   key: cocoa_grove
@@ -38,6 +38,7 @@ building:
 
     unique_production_methods = {
         pp_cocoa_grove_base_cocoa = {
+            tools = 0.3333 # field tools and upkeep
             produced = cocoa
             output = 0.3
             category = building_maintenance
@@ -51,7 +52,7 @@ building:
             lumber = 0.12
             glass = 0.04
             produced = cocoa
-            output = 0.25
+            output = 0.0938
             category = building_maintenance
         }
     }

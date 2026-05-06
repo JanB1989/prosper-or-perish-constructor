@@ -93,7 +93,7 @@ def _write_map_modes(path: Path, goods: Iterable[str]) -> None:
     ]
     for good in goods:
         blocks.append(_map_mode_block(good))
-    path.write_text("\n".join(blocks).rstrip() + "\n", encoding="utf-8")
+    path.write_text("\n".join(blocks).rstrip() + "\n", encoding="utf-8-sig")
 
 
 def _map_mode_block(good: str) -> str:
@@ -164,14 +164,14 @@ def _upsert_localization(path: Path, goods: Iterable[str]) -> None:
                 rf"{re.escape(LOCALIZATION_START)}.*?{re.escape(LOCALIZATION_END)}\n?",
                 re.DOTALL,
             )
-            updated = pattern.sub(generated, existing)
+            updated = pattern.sub(lambda _match: generated, existing)
         else:
             legacy_end = re.compile(
                 rf"{re.escape(LOCALIZATION_START)}.*?"
                 r'  MAPMODE_PP_LOCAL_OUTPUT_TT_WATER: "[^"]*"\n?',
                 re.DOTALL,
             )
-            updated = legacy_end.sub(generated, existing)
+            updated = legacy_end.sub(lambda _match: generated, existing)
     else:
         anchor = "  # Unemployed Peasants (Unemployment) map mode - absolute numbers, cap 0-50k"
         if anchor not in existing:

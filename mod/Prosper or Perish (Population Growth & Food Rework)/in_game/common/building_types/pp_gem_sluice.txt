@@ -25,6 +25,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_gem_sluice_base_gems = {
+        tools = 0.3111 # picks and works upkeep
         produced = gems
         output = 0.28
         category = building_maintenance
@@ -38,7 +39,7 @@ unique_production_methods = {
         lumber = 1.527
         tools = 1.35
         produced = gems
-        output = 1.72
+        output = 1.9021
         category = building_maintenance
     }
 }
@@ -50,14 +51,14 @@ unique_production_methods = {
         lumber = 0.18
         tools = 0.14
         produced = goods_gold
-        output = 0.05
+        output = 0.1035
         category = building_maintenance
     }
     pp_gem_sluice_sand = {
         lumber = 0.10
         tools = 0.06
         produced = sand
-        output = 0.40
+        output = 0.7919
         category = building_maintenance
     }
 }

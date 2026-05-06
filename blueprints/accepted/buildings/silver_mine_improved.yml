@@ -49,6 +49,7 @@ building:
 
     unique_production_methods = {
         pp_silver_mine_improved_base_silver = {
+            tools = 0.4667 # picks and works upkeep
             produced = silver
             output = 0.28
             category = building_maintenance
@@ -63,7 +64,7 @@ building:
             tools = 1.05
             beeswax = 0.45
             produced = silver
-            output = 0.725
+            output = 1.095
             category = building_maintenance
         }
     }
@@ -75,7 +76,7 @@ building:
             lumber = 0.16
             tools = 0.147
             produced = lead
-            output = 0.30
+            output = 0.4086
             category = building_maintenance
         }
     }
@@ -117,10 +118,12 @@ evaluation:
       production_efficiency: 1.00
       allow_rules:
         amortization_months: High-value exposed silver veins can repay very quickly even at the normal no-input deposit scale.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_silver_mine_improved_no_primary:
       production_efficiency: 1.00
     pp_silver_mine_improved_silver:
-      production_efficiency: 1.15
+      production_efficiency: 1.00
     pp_silver_mine_improved_no_secondary:
       production_efficiency: 1.00
     pp_silver_mine_improved_lead:

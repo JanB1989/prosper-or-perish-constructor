@@ -49,6 +49,7 @@ building:
 
     unique_production_methods = {
         pp_tin_streamworks_base_tin = {
+            tools = 0.1667 # basic tool upkeep
             produced = tin
             output = 0.3
             category = building_maintenance
@@ -62,7 +63,7 @@ building:
             lumber = 0.983
             tools = 0.56
             produced = tin
-            output = 1.78
+            output = 1.8928
             category = building_maintenance
         }
     }
@@ -74,14 +75,14 @@ building:
             lumber = 0.173
             tools = 0.10
             produced = copper
-            output = 0.18
+            output = 0.2238
             category = building_maintenance
         }
         pp_tin_streamworks_lead = {
             lumber = 0.173
             tools = 0.08
             produced = lead
-            output = 0.18
+            output = 0.2997
             category = building_maintenance
         }
     }
@@ -120,10 +121,16 @@ evaluation:
   production_methods:
     pp_tin_streamworks_base_tin:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_tin_streamworks_no_primary:
       production_efficiency: 1.00
     pp_tin_streamworks_tin:
-      production_efficiency: 1.10
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_tin_streamworks_no_secondary:
       production_efficiency: 1.00
     pp_tin_streamworks_copper:

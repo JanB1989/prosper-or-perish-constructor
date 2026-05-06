@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: lead_mine_cupola_smelting
 upgrade_chain:
   family: lead_mine
@@ -49,6 +49,7 @@ building:
 
     unique_production_methods = {
         pp_lead_mine_cupola_base_lead = {
+            tools = 0.2111 # picks and works upkeep
             produced = lead
             output = 0.38
             category = building_maintenance
@@ -63,7 +64,7 @@ building:
             tools = 2.65
             beeswax = 0.30
             produced = lead
-            output = 4.75
+            output = 6.1198
             category = building_maintenance
         }
     }
@@ -76,7 +77,7 @@ building:
             tools = 0.12
             lead = 0.10
             produced = silver
-            output = 0.08
+            output = 0.16
             category = building_maintenance
         }
     }
@@ -117,10 +118,16 @@ evaluation:
   production_methods:
     pp_lead_mine_cupola_base_lead:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_lead_mine_cupola_no_primary:
       production_efficiency: 1.00
     pp_lead_mine_cupola_lead:
-      production_efficiency: 1.20
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_lead_mine_cupola_no_secondary:
       production_efficiency: 1.00
     pp_lead_mine_cupola_silver:

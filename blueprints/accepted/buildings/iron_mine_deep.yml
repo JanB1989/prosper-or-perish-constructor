@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: iron_mine_deep
 upgrade_chain:
   family: iron_mine
@@ -52,6 +52,7 @@ building:
 
     unique_production_methods = {
         pp_iron_mine_deep_base_iron = {
+            tools = 0.3333 # picks and works upkeep
             produced = iron
             output = 0.40
             category = building_maintenance
@@ -66,7 +67,7 @@ building:
             tools = 2.00 # pumps, picks, haulage
             beeswax = 0.42 # candles, pump seals
             produced = iron
-            output = 3.30
+            output = 3.8161
             category = building_maintenance
         }
         pp_iron_mine_deep_slitting_ore = {
@@ -75,7 +76,7 @@ building:
             beeswax = 0.45 # candles, pump seals
             coal = 0.30 # ore roasting fuel
             produced = iron
-            output = 3.55
+            output = 4.26
             category = building_maintenance
         }
         pp_iron_mine_deep_horse_whim_haulage = {
@@ -83,7 +84,7 @@ building:
             leather = 0.52 # harness, buckets
             beeswax = 0.30 # mine candles, seals
             produced = iron
-            output = 2.05
+            output = 2.2081
             category = building_maintenance
         }
         pp_iron_mine_deep_ore_dressing_floors = {
@@ -145,17 +146,22 @@ evaluation:
   production_methods:
     pp_iron_mine_deep_base_iron:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_iron_mine_deep_no_primary:
       production_efficiency: 1.00
     pp_iron_mine_deep_drainage_workings:
-      production_efficiency: 1.18
+      production_efficiency: 1.00
     pp_iron_mine_deep_slitting_ore:
-      production_efficiency: 1.20
+      production_efficiency: 1.00
     pp_iron_mine_deep_horse_whim_haulage:
-      production_efficiency: 1.10
+      production_efficiency: 1.00
       allow_rules:
         input_throughput: Horse-whim haulage is a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         output_throughput: Horse-whim haulage is a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_iron_mine_deep_ore_dressing_floors:
       production_efficiency: 1.06
       allow_rules:

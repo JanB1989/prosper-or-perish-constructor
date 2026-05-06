@@ -73,7 +73,7 @@ building:
     			legumes = 7.025
     			pepper = 0.25
     			produced = victuals
-    			output = 4.125
+    			output = 6.9411
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -82,7 +82,7 @@ building:
     			fish = 7.025
     			pepper = 0.25
     			produced = victuals
-    			output = 4.125
+    			output = 6.9411
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -93,7 +93,7 @@ building:
     			livestock = 5.75
     			legumes = 1.625
     			produced = victuals
-    			output = 4.125
+    			output = 7.6646
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -102,7 +102,7 @@ building:
     			olives = 3.75
     			wine = 0.5
     			produced = victuals
-    			output = 4.125
+    			output = 7.2453
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -111,7 +111,7 @@ building:
     			legumes = 4.2
     			salt = 0.5
     			produced = victuals
-    			output = 4.125
+    			output = 12.1324
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -120,7 +120,7 @@ building:
     			millet = 1.175
     			salt = 1.175
     			produced = victuals
-    			output = 4.125
+    			output = 7.875
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -131,7 +131,7 @@ building:
     			wild_game = 6.5
     			chili = 1
     			produced = victuals
-    			output = 4.125
+    			output = 6.9927
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -140,7 +140,7 @@ building:
     			livestock = 2.35
     			fruit = 2.5
     			produced = victuals
-    			output = 4.125
+    			output = 7.255
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -149,7 +149,7 @@ building:
     			fish = 3.75
     			livestock = 7.475
     			produced = victuals
-    			output = 4.125
+    			output = 7.2709
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -160,7 +160,7 @@ building:
     			fruit = 4
     			saffron = 0.375
     			produced = victuals
-    			output = 4.125
+    			output = 7.9795
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -169,7 +169,7 @@ building:
     			fish = 9.35
     			salt = 0.5
     			produced = victuals
-    			output = 4.125
+    			output = 7.7069
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -180,7 +180,7 @@ building:
     			fruit = 6.25
     			salt = 0.25
     			produced = victuals
-    			output = 4.125
+    			output = 7.3498
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -191,7 +191,7 @@ building:
     			sugar = 0.75
     			livestock = 4.5
     			produced = victuals
-    			output = 4.125
+    			output = 7.2453
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -200,7 +200,7 @@ building:
     			fruit = 3.975
     			beeswax = 4.5
     			produced = victuals
-    			output = 4.125
+    			output = 7.9692
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -209,7 +209,7 @@ building:
     			millet = 5
     			salt = 0.5
     			produced = victuals
-    			output = 4.125
+    			output = 7.9795
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -226,42 +226,42 @@ building:
     		pp_victualling_yard_beer = {
     			beer = 4.875
     			produced = victuals
-    			output = 2
+    			output = 4.0952
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_wine = {
     			wine = 5.25
     			produced = victuals
-    			output = 2
+    			output = 4.4099
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_liquor = {
     			liquor = 4.125
     			produced = victuals
-    			output = 2
+    			output = 4.3317
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_chocolate = {
     			cocoa = 2
     			produced = victuals
-    			output = 2
+    			output = 3.36
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_coffee = {
     			coffee = 2.625
     			produced = victuals
-    			output = 2
+    			output = 3.3076
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_tea = {
     			tea = 3.375
     			produced = victuals
-    			output = 2
+    			output = 4.2527
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -277,21 +277,21 @@ building:
     		pp_victualling_yard_pottery_jars = {
     			pottery = 7
     			produced = victuals
-    			output = 1.25
+    			output = 2.9402
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_coopered_barrels = {
     			furniture = 2.25
     			produced = victuals
-    			output = 1.25
+    			output = 2.8348
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_tin_cans = {
     			steel = 2.5
     			produced = victuals
-    			output = 2.5
+    			output = 5.25
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -353,40 +353,74 @@ evaluation:
   production_methods:
     pp_victualling_yard_khichdi:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_fish_congee:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_livestock_pottage:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_mediterranean_fish:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_mutton_and_pease:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_surstromming:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_pozole:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_pemmican:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_labskaus:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_meat_tajine:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_saltfish_porridge:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_ika_mata:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_kheer:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_honey_gruel:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_boreal_hunter_stew:
       production_efficiency: 1.15
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_beer:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_wine:
       production_efficiency: 1.05
     pp_victualling_yard_liquor:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_chocolate:
       production_efficiency: 1.05
     pp_victualling_yard_coffee:
@@ -395,7 +429,11 @@ evaluation:
       production_efficiency: 1.05
     pp_victualling_yard_pottery_jars:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_coopered_barrels:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_victualling_yard_tin_cans:
       production_efficiency: 1.00

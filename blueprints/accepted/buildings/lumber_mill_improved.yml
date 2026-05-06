@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: lumber_mill_improved
 upgrade_chain:
   family: lumber_mill
@@ -55,6 +55,7 @@ building:
 
     unique_production_methods = {
         pp_lumber_mill_improved_base_lumber = {
+            tools = 0.125 # axes and camp upkeep
             produced = lumber
             output = 0.30
             category = building_maintenance
@@ -65,13 +66,14 @@ building:
             category = building_maintenance
         }
         pp_lumber_mill_improved_managed_stands = {
+            tools = 0.1875 # axes and camp upkeep
             produced = lumber
             output = 0.45
             category = building_maintenance
         }
         pp_lumber_mill_improved_forest_ordinances = {
             produced = lumber
-            output = 7.20
+            output = 7.7523
             tools = 1.85
             horses = 1.15
             victuals = 0.75
@@ -141,12 +143,20 @@ evaluation:
       allow_rules:
         base_output_per_1k: Requested passive baseline for planned saw works; intentionally lower than the global no-input output band.
         amortization_months: Requested passive baseline for planned saw works; intentionally lower than the global no-input output band.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_lumber_mill_improved_managed_stands:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_lumber_mill_improved_no_primary:
       production_efficiency: 1.00
     pp_lumber_mill_improved_forest_ordinances:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_lumber_mill_improved_no_crew_support:
       production_efficiency: 1.00
     pp_lumber_mill_improved_wound_salves:

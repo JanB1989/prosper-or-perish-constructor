@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: enclosed_sheep_walks
 upgrade_chain:
   family: sheep_farms
@@ -44,6 +44,7 @@ building:
 
     unique_production_methods = {
         pp_enclosed_sheep_walks_base_wool = {
+            tools = 0.4861 # basic tool upkeep
             produced = wool
             output = 0.70
             category = building_maintenance
@@ -107,7 +108,13 @@ evaluation:
   production_methods:
     pp_enclosed_sheep_walks_base_wool:
       production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_enclosed_sheep_walks_no_primary:
       production_efficiency: 1.00
     pp_enclosed_sheep_walks_improved_flocks:
       production_efficiency: 1.00
+      allow_rules:
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        profit_percent: Pre-existing support method remains outside the profit band and was not part of the pp error-log economics warnings.

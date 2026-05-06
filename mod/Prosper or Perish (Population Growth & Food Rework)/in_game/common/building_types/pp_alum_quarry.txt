@@ -24,6 +24,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_alum_quarry_base_alum = {
+        tools = 0.2 # picks and works upkeep
         produced = alum
         output = 0.24
         category = building_maintenance
@@ -37,7 +38,7 @@ unique_production_methods = {
         lumber = 0.591
         tools = 0.765
         produced = alum
-        output = 1.15
+        output = 1.2726
         category = building_maintenance
     }
 }
@@ -49,14 +50,14 @@ unique_production_methods = {
         lumber = 0.12
         tools = 0.08
         produced = stone
-        output = 0.25
+        output = 0.504
         category = building_maintenance
     }
     pp_alum_quarry_clay = {
         lumber = 0.10
         tools = 0.06
         produced = clay
-        output = 0.24
+        output = 0.7921
         category = building_maintenance
     }
 }

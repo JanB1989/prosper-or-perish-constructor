@@ -34,13 +34,14 @@ building:
     
     unique_production_methods = {
     	pp_clay_pit_base_clay = {
+    		tools = 0.0417 # picks and works upkeep
     		produced = clay
     		output = 0.3
     			category = building_maintenance
     		}
     		pp_clay_pit_maintenance = {
     			produced = clay
-    			output = 1
+    			output = 1.4401
     			lumber = 0.28
     			livestock = 0.12
     			category = building_maintenance
@@ -65,4 +66,4 @@ evaluation:
       allow_rules:
         base_output_per_1k: Existing accepted clay deposit output is intentionally above the generic no-input baseline; revisit during the clay pit rebalance.
     pp_clay_pit_maintenance:
-      production_efficiency: 1.10
+      production_efficiency: 1.00

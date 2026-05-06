@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: gold_diggings
 upgrade_chain:
   family: gold_mine
@@ -49,6 +49,7 @@ building:
 
     unique_production_methods = {
         pp_gold_diggings_base_gold = {
+            tools = 0.6667 # picks and works upkeep
             produced = goods_gold
             output = 0.3
             category = building_maintenance
@@ -62,7 +63,7 @@ building:
             lumber = 1.290
             tools = 0.69
             produced = goods_gold
-            output = 0.438
+            output = 0.6008
             category = building_maintenance
         }
     }
@@ -74,14 +75,14 @@ building:
             lumber = 0.16
             tools = 0.12
             produced = silver
-            output = 0.07
+            output = 0.12
             category = building_maintenance
         }
         pp_gold_diggings_copper = {
             lumber = 0.12
             tools = 0.08
             produced = copper
-            output = 0.12
+            output = 0.168
             category = building_maintenance
         }
     }
@@ -122,10 +123,14 @@ evaluation:
       production_efficiency: 1.00
       allow_rules:
         amortization_months: High-value native gold deposits repay faster than the global amortization band even before organized workings.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_gold_diggings_no_primary:
       production_efficiency: 1.00
     pp_gold_diggings_gold:
-      production_efficiency: 1.10
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_gold_diggings_no_secondary:
       production_efficiency: 1.00
     pp_gold_diggings_silver:

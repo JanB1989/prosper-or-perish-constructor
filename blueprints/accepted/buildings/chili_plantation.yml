@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: chili_plantation
 building:
   key: chili_plantation
@@ -38,6 +38,7 @@ building:
 
     unique_production_methods = {
         pp_chili_plantation_base_chili = {
+            tools = 0.4167 # field tools and upkeep
             produced = chili
             output = 0.3
             category = building_maintenance
@@ -51,7 +52,7 @@ building:
             fiber_crops = 0.08
             tools = 0.04
             produced = chili
-            output = 0.2
+            output = 0.07
             category = building_maintenance
         }
     }

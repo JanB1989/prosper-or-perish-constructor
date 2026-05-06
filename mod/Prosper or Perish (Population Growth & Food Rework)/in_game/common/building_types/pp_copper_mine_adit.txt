@@ -25,6 +25,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_copper_mine_adit_base_copper = {
+        tools = 0.25 # picks and works upkeep
         produced = copper
         output = 0.3
         category = building_maintenance
@@ -39,7 +40,7 @@ unique_production_methods = {
         tools = 1.75
         beeswax = 0.35
         produced = copper
-        output = 2.55
+        output = 3.1301
         category = building_maintenance
     }
 }
@@ -52,14 +53,14 @@ unique_production_methods = {
         tools = 0.10
         lead = 0.08
         produced = silver
-        output = 0.07
+        output = 0.134
         category = building_maintenance
     }
     pp_copper_mine_adit_tin = {
         lumber = 0.10
         tools = 0.08
         produced = tin
-        output = 0.10
+        output = 0.234
         category = building_maintenance
     }
 }

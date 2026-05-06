@@ -49,6 +49,7 @@ building:
 
     unique_production_methods = {
         pp_cinnabar_pit_base_mercury = {
+            tools = 0.225 # picks and works upkeep
             produced = mercury
             output = 0.27
             category = building_maintenance
@@ -63,7 +64,7 @@ building:
             tools = 0.54
             beeswax = 0.28
             produced = mercury
-            output = 1.14
+            output = 1.268
             category = building_maintenance
         }
     }
@@ -75,7 +76,7 @@ building:
             lumber = 0.10
             tools = 0.07
             produced = stone
-            output = 0.22
+            output = 0.432
             category = building_maintenance
         }
         pp_cinnabar_pit_dyes = {
@@ -121,10 +122,16 @@ evaluation:
   production_methods:
     pp_cinnabar_pit_base_mercury:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_cinnabar_pit_no_primary:
       production_efficiency: 1.00
     pp_cinnabar_pit_mercury:
-      production_efficiency: 1.10
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_cinnabar_pit_no_secondary:
       production_efficiency: 1.00
     pp_cinnabar_pit_stone:

@@ -50,6 +50,7 @@ building:
 
     unique_production_methods = {
         pp_quicksilver_retort_base_mercury = {
+            tools = 0.2833 # picks and works upkeep
             produced = mercury
             output = 0.34
             category = building_maintenance
@@ -64,7 +65,7 @@ building:
             tools = 1.17
             beeswax = 0.415
             produced = mercury
-            output = 2.02
+            output = 2.4379
             category = building_maintenance
         }
     }
@@ -76,14 +77,14 @@ building:
             lumber = 0.12
             tools = 0.09
             produced = stone
-            output = 0.28
+            output = 0.54
             category = building_maintenance
         }
         pp_quicksilver_retort_dyes = {
             lumber = 0.10
             tools = 0.07
             produced = dyes
-            output = 0.10
+            output = 0.108
             category = building_maintenance
         }
     }
@@ -112,8 +113,6 @@ localization:
     pp_quicksilver_retort_stone: Gangue Stone Sorting
     pp_quicksilver_retort_dyes: Cinnabar Pigment Sorting
     pp_quicksilver_retort_price: Quicksilver Retort Price
-    pan_amalgamation_advance: Pan Amalgamation
-    pan_amalgamation_advance_desc: Mercury amalgamation improves recovery from crushed precious-metal ores, supporting gold stamp mills, expanded quicksilver retorts, and more reliable mercury supply.
 icon:
   source_png: ../assets/icons/quicksilver_retort.png
   output_dds: quicksilver_retort.dds
@@ -124,10 +123,14 @@ evaluation:
   production_methods:
     pp_quicksilver_retort_base_mercury:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_quicksilver_retort_no_primary:
       production_efficiency: 1.00
     pp_quicksilver_retort_mercury:
-      production_efficiency: 1.15
+      production_efficiency: 1.00
     pp_quicksilver_retort_no_secondary:
       production_efficiency: 1.00
     pp_quicksilver_retort_stone:

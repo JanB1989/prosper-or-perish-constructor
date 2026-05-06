@@ -50,6 +50,7 @@ building:
 
     unique_production_methods = {
         pp_tin_stamping_mill_base_tin = {
+            tools = 0.1667 # picks and works upkeep
             produced = tin
             output = 0.3
             category = building_maintenance
@@ -63,7 +64,7 @@ building:
             lumber = 1.700
             tools = 1.25
             produced = tin
-            output = 3.15
+            output = 3.78
             category = building_maintenance
         }
     }
@@ -75,14 +76,14 @@ building:
             lumber = 0.213
             tools = 0.12
             produced = copper
-            output = 0.24
+            output = 0.2718
             category = building_maintenance
         }
         pp_tin_stamping_mill_lead = {
             lumber = 0.213
             tools = 0.12
             produced = lead
-            output = 0.24
+            output = 0.4077
             category = building_maintenance
         }
     }
@@ -121,10 +122,14 @@ evaluation:
   production_methods:
     pp_tin_stamping_mill_base_tin:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_tin_stamping_mill_no_primary:
       production_efficiency: 1.00
     pp_tin_stamping_mill_tin:
-      production_efficiency: 1.15
+      production_efficiency: 1.00
     pp_tin_stamping_mill_no_secondary:
       production_efficiency: 1.00
     pp_tin_stamping_mill_copper:

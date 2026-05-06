@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: sericulture_farm
 building:
   key: sericulture_farm
@@ -38,6 +38,7 @@ building:
 
     unique_production_methods = {
         pp_sericulture_farm_base_silk = {
+            tools = 0.3333 # field tools and upkeep
             produced = silk
             output = 0.3
             category = building_maintenance
@@ -51,7 +52,7 @@ building:
             lumber = 0.12 # rearing trays, frames
             tools = 0.04 # knives, reels
             produced = silk
-            output = 0.2
+            output = 0.0937
             category = building_maintenance
         }
     }

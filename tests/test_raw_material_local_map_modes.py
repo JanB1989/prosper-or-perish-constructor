@@ -79,6 +79,30 @@ def test_local_output_map_modes_have_required_localization() -> None:
     assert not missing
 
 
+def test_local_output_map_mode_localization_uses_literal_newlines() -> None:
+    loc = LOCALIZATION.read_text(encoding="utf-8-sig")
+    block_match = re.search(
+        r"  # Local output modifier map modes \(pp_local_output_modifier_map_modes\.txt\).*?"
+        r"  # End generated local output modifier map modes",
+        loc,
+        flags=re.DOTALL,
+    )
+    assert block_match is not None
+    block = block_match.group(0)
+    bad_lines = [
+        line
+        for line in block.splitlines()
+        if line.strip()
+        and not line.startswith("  #")
+        and not re.match(r'^\s+[A-Za-z0-9_]+:\s*".*"$', line)
+    ]
+
+    assert "\\n" in block
+    assert "\nThis colors " not in block
+    assert "\nAggregated from " not in block
+    assert not bad_lines
+
+
 def test_local_output_map_modes_have_icons_in_both_contexts() -> None:
     missing: list[str] = []
     for good in _raw_material_goods():

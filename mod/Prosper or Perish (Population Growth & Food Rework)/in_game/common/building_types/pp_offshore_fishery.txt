@@ -25,6 +25,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_offshore_fishery_base_catch = {
+        lumber = 0.3889 # boat and gear upkeep
         produced = fish
         output = 0.70
         debug_max_profit = 0
@@ -40,7 +41,7 @@ unique_production_methods = {
         fiber_crops = 0.90
         salt = 1.30
         produced = fish
-        output = 9.74
+        output = 10.9204
         debug_max_profit = 0
         category = building_maintenance
     }

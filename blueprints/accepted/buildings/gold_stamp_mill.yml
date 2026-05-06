@@ -50,6 +50,7 @@ building:
 
     unique_production_methods = {
         pp_gold_stamp_mill_base_gold = {
+            tools = 0.6667 # picks and works upkeep
             produced = goods_gold
             output = 0.3
             category = building_maintenance
@@ -64,7 +65,7 @@ building:
             tools = 1.25
             mercury = 0.35
             produced = goods_gold
-            output = 0.76
+            output = 1.0501
             category = building_maintenance
         }
     }
@@ -77,7 +78,7 @@ building:
             tools = 0.16
             mercury = 0.05
             produced = silver
-            output = 0.12
+            output = 0.186
             category = building_maintenance
         }
         pp_gold_stamp_mill_copper = {
@@ -85,7 +86,7 @@ building:
             tools = 0.12
             mercury = 0.04
             produced = copper
-            output = 0.18
+            output = 0.3
             category = building_maintenance
         }
     }
@@ -114,8 +115,6 @@ localization:
     pp_gold_stamp_mill_silver: Assay Silver Recovery
     pp_gold_stamp_mill_copper: Copper Sulphide Sorting
     pp_gold_stamp_mill_price: Gold Stamp Mill Price
-    pan_amalgamation_advance: Pan Amalgamation
-    pan_amalgamation_advance_desc: Mercury amalgamation improves the recovery of precious metals from crushed ore, supporting larger gold stamp mills and more organized refining.
 icon:
   source_png: ../assets/icons/gold_stamp_mill.png
   output_dds: gold_stamp_mill.dds
@@ -128,10 +127,12 @@ evaluation:
       production_efficiency: 1.00
       allow_rules:
         amortization_months: High-value surveyed gold deposits repay faster than the global amortization band even before stamp milling is selected.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_gold_stamp_mill_no_primary:
       production_efficiency: 1.00
     pp_gold_stamp_mill_gold:
-      production_efficiency: 1.15
+      production_efficiency: 1.00
     pp_gold_stamp_mill_no_secondary:
       production_efficiency: 1.00
     pp_gold_stamp_mill_silver:

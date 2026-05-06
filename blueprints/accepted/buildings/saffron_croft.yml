@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: saffron_croft
 building:
   key: saffron_croft
@@ -38,6 +38,7 @@ building:
 
     unique_production_methods = {
         pp_saffron_croft_base_saffron = {
+            tools = 0.2778 # field tools and upkeep
             produced = saffron
             output = 0.2
             category = building_maintenance
@@ -51,7 +52,7 @@ building:
             pottery = 0.06
             coal = 0.03
             produced = saffron
-            output = 0.20
+            output = 0.03
             category = building_maintenance
         }
     }

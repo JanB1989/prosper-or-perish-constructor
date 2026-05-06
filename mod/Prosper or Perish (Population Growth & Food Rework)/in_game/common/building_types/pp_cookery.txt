@@ -27,7 +27,7 @@ unique_production_methods = {
 			legumes = 1.8733
 			pepper = 0.0667
 			produced = victuals
-			output = 1.1
+			output = 1.851
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -36,7 +36,7 @@ unique_production_methods = {
 			fish = 1.8733
 			pepper = 0.0667
 			produced = victuals
-			output = 1.1
+			output = 1.851
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -47,7 +47,7 @@ unique_production_methods = {
 			livestock = 1.5333
 			legumes = 0.4333
 			produced = victuals
-			output = 1.1
+			output = 2.0439
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -56,7 +56,7 @@ unique_production_methods = {
 			olives = 1
 			wine = 0.1333
 			produced = victuals
-			output = 1.1
+			output = 1.9321
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -65,7 +65,7 @@ unique_production_methods = {
 			legumes = 1.12
 			salt = 0.1333
 			produced = victuals
-			output = 1.1
+			output = 3.2353
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -74,7 +74,7 @@ unique_production_methods = {
 			millet = 0.3133
 			salt = 0.3133
 			produced = victuals
-			output = 1.1
+			output = 2.1
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -85,7 +85,7 @@ unique_production_methods = {
 			wild_game = 1.7333
 			chili = 0.2667
 			produced = victuals
-			output = 1.1
+			output = 1.8647
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -94,7 +94,7 @@ unique_production_methods = {
 			livestock = 0.6267
 			fruit = 0.6667
 			produced = victuals
-			output = 1.1
+			output = 1.935
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -103,7 +103,7 @@ unique_production_methods = {
 			fish = 1
 			livestock = 1.9933
 			produced = victuals
-			output = 1.1
+			output = 1.9389
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -114,7 +114,7 @@ unique_production_methods = {
 			fruit = 1.0667
 			saffron = 0.1
 			produced = victuals
-			output = 1.1
+			output = 2.1279
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -123,7 +123,7 @@ unique_production_methods = {
 			fish = 2.4933
 			salt = 0.1333
 			produced = victuals
-			output = 1.1
+			output = 2.0552
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -134,7 +134,7 @@ unique_production_methods = {
 			fruit = 1.6667
 			salt = 0.0667
 			produced = victuals
-			output = 1.1
+			output = 1.9603
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -145,7 +145,7 @@ unique_production_methods = {
 			sugar = 0.2
 			livestock = 1.2
 			produced = victuals
-			output = 1.1
+			output = 1.9321
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -154,7 +154,7 @@ unique_production_methods = {
 			fruit = 1.06
 			beeswax = 1.2
 			produced = victuals
-			output = 1.1
+			output = 2.1251
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -163,7 +163,7 @@ unique_production_methods = {
 			millet = 1.3333
 			salt = 0.1333
 			produced = victuals
-			output = 1.1
+			output = 2.1279
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -180,42 +180,42 @@ unique_production_methods = {
 		pp_cookery_beer = {
 			beer = 1.3
 			produced = victuals
-			output = 0.5333
+			output = 1.092
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_wine = {
 			wine = 1.4
 			produced = victuals
-			output = 0.5333
+			output = 1.1759
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_liquor = {
 			liquor = 1.1
 			produced = victuals
-			output = 0.5333
+			output = 1.155
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_chocolate = {
 			cocoa = 0.5333
 			produced = victuals
-			output = 0.5333
+			output = 0.8959
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_coffee = {
 			coffee = 0.7
 			produced = victuals
-			output = 0.5333
+			output = 0.882
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_tea = {
 			tea = 0.9
 			produced = victuals
-			output = 0.5333
+			output = 1.134
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -231,21 +231,21 @@ unique_production_methods = {
 		pp_cookery_pottery_jars = {
 			pottery = 1.8667
 			produced = victuals
-			output = 0.3333
+			output = 0.784
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_coopered_barrels = {
 			furniture = 0.6
 			produced = victuals
-			output = 0.3333
+			output = 0.756
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_tin_cans = {
 			steel = 0.6667
 			produced = victuals
-			output = 0.6667
+			output = 1.4001
 			debug_max_profit = 0
 			category = building_maintenance
 		}

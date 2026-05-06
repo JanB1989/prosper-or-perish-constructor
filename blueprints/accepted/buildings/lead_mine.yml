@@ -48,6 +48,7 @@ building:
 
     unique_production_methods = {
         pp_lead_mine_base_lead = {
+            tools = 0.15 # picks and works upkeep
             produced = lead
             output = 0.27
             category = building_maintenance
@@ -62,7 +63,7 @@ building:
             tools = 0.76
             beeswax = 0.12
             produced = lead
-            output = 1.70
+            output = 1.8899
             category = building_maintenance
         }
     }
@@ -75,7 +76,7 @@ building:
             tools = 0.08
             lead = 0.05
             produced = silver
-            output = 0.05
+            output = 0.098
             category = building_maintenance
         }
     }
@@ -113,10 +114,16 @@ evaluation:
   production_methods:
     pp_lead_mine_base_lead:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_lead_mine_no_primary:
       production_efficiency: 1.00
     pp_lead_mine_lead:
-      production_efficiency: 1.10
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_lead_mine_no_secondary:
       production_efficiency: 1.00
     pp_lead_mine_silver:

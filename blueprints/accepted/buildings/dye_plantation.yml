@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: dye_plantation
 building:
   key: dye_plantation
@@ -38,6 +38,7 @@ building:
 
     unique_production_methods = {
         pp_dye_plantation_base_dyes = {
+            tools = 0.3333 # field tools and upkeep
             produced = dyes
             output = 0.3
             category = building_maintenance
@@ -51,7 +52,7 @@ building:
             lumber = 0.12 # drying racks, vats
             tools = 0.04 # knives, presses
             produced = dyes
-            output = 0.2
+            output = 0.0937
             category = building_maintenance
         }
     }

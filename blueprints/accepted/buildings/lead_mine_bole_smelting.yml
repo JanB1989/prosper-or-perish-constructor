@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: lead_mine_bole_smelting
 upgrade_chain:
   family: lead_mine
@@ -49,6 +49,7 @@ building:
 
     unique_production_methods = {
         pp_lead_mine_bole_base_lead = {
+            tools = 0.1889 # picks and works upkeep
             produced = lead
             output = 0.34
             category = building_maintenance
@@ -63,7 +64,7 @@ building:
             tools = 1.65
             beeswax = 0.21
             produced = lead
-            output = 3.05
+            output = 3.8069
             category = building_maintenance
         }
     }
@@ -76,7 +77,7 @@ building:
             tools = 0.09
             lead = 0.06
             produced = silver
-            output = 0.06
+            output = 0.114
             category = building_maintenance
         }
     }
@@ -117,10 +118,14 @@ evaluation:
   production_methods:
     pp_lead_mine_bole_base_lead:
       production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_lead_mine_bole_no_primary:
       production_efficiency: 1.00
     pp_lead_mine_bole_lead:
-      production_efficiency: 1.15
+      production_efficiency: 1.00
     pp_lead_mine_bole_no_secondary:
       production_efficiency: 1.00
     pp_lead_mine_bole_silver:

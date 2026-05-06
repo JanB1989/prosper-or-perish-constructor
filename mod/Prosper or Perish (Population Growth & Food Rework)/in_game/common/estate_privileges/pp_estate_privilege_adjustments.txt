@@ -1,10 +1,26 @@
-# Land-Owning Peasants: replace global_monthly_food_modifier with capacity and targeted food output bonuses
-TRY_INJECT:land_owning_farmers = {
+# Land-Owning Peasants: full override to replace vanilla direct food generation.
+TRY_REPLACE:land_owning_farmers = {
+	estate = peasants_estate
+	content_priority = 200
+	potential = {
+		has_or_had_tag = SWE
+	}
+	allow = {
+	}
+
+	can_revoke = {
+		"estate_power(estate_type:crown_estate)" > 0.66
+	}
+
 	country_modifier = {
-		global_monthly_food_modifier = -0.1
+		levy_combat_efficiency_modifier = 0.05
 		global_population_capacity_modifier = 0.05
 		global_wheat_output_modifier = 0.05
 		global_fish_output_modifier = 0.05
 		global_millet_output_modifier = 0.05
+		global_peasants_estate_power = 0.5
+		peasants_estate_target_satisfaction = medium_privilege_target_satisfaction
+
+		monthly_towards_free_subjects = societal_value_monthly_move
 	}
 }

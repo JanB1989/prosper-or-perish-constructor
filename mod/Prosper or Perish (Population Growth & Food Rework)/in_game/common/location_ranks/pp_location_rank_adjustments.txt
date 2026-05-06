@@ -1,6 +1,11 @@
 # In general cities and towns are now way worse at producing food.
 # Building in cities and towns is also more expensive in general to slow snowball down a bit
 # They are better at storing food though.
+TRY_INJECT:megalopolis = {
+	rank_modifier = {
+		local_monthly_food_modifier = 0.67 # vanilla -0.67
+	}
+}
 TRY_REPLACE:city = {
 	
 	rank_modifier = {

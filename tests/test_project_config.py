@@ -12,6 +12,10 @@ from mod_injector.config import load_mod_injector_config
 
 
 ROOT = Path(__file__).resolve().parents[1]
+MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+ESTATE_PRIVILEGE_ADJUSTMENTS = (
+    MOD_ROOT / "in_game" / "common" / "estate_privileges" / "pp_estate_privilege_adjustments.txt"
+)
 
 
 def test_constructor_config_loads() -> None:
@@ -80,6 +84,33 @@ def test_replaced_buildings_do_not_reuse_vanilla_unique_method_names() -> None:
             offenders.append(f"{blueprint.relative_to(ROOT)}: {', '.join(reused)}")
 
     assert not offenders
+
+
+def test_land_owning_farmers_is_a_full_privilege_replacement() -> None:
+    parsed = parse_file(ESTATE_PRIVILEGE_ADJUSTMENTS)
+    entries = {entry.key: entry.value for entry in parsed.entries}
+
+    assert "TRY_REPLACE:land_owning_farmers" in entries
+    assert "TRY_INJECT:land_owning_farmers" not in entries
+    privilege = entries["TRY_REPLACE:land_owning_farmers"]
+    assert isinstance(privilege, CList)
+
+    privilege_values = _entry_values(privilege)
+    assert privilege_values["estate"] == "peasants_estate"
+    assert privilege_values["content_priority"] == 200
+    assert "potential" in privilege_values
+    assert "can_revoke" in privilege_values
+
+    country_modifier = privilege_values["country_modifier"]
+    assert isinstance(country_modifier, CList)
+    modifier_values = _entry_values(country_modifier)
+    assert "global_monthly_food_modifier" not in modifier_values
+    assert modifier_values["levy_combat_efficiency_modifier"] == 0.05
+    assert modifier_values["global_population_capacity_modifier"] == 0.05
+    assert modifier_values["global_wheat_output_modifier"] == 0.05
+    assert modifier_values["global_fish_output_modifier"] == 0.05
+    assert modifier_values["global_millet_output_modifier"] == 0.05
+    assert modifier_values["global_peasants_estate_power"] == 0.5
 
 
 def test_constructor_building_methods_are_resolved_and_unique() -> None:
@@ -167,6 +198,10 @@ def _vanilla_unique_methods_by_building() -> dict[str, set[str]]:
                 if methods:
                     result[entry.key] = methods
     return result
+
+
+def _entry_values(block: CList) -> dict[str, object]:
+    return {entry.key: entry.value for entry in block.entries}
 
 
 def _unique_production_method_names(block: CList) -> set[str]:

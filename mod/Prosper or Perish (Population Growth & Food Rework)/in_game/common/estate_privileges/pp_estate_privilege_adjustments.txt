@@ -1,0 +1,10 @@
+# Land-Owning Peasants: replace global_monthly_food_modifier with capacity and targeted food output bonuses
+TRY_INJECT:land_owning_farmers = {
+	country_modifier = {
+		global_monthly_food_modifier = -0.1
+		global_population_capacity_modifier = 0.05
+		global_wheat_output_modifier = 0.05
+		global_fish_output_modifier = 0.05
+		global_millet_output_modifier = 0.05
+	}
+}

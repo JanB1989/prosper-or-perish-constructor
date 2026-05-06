@@ -2,6 +2,7 @@ import json
 import os
 from pathlib import Path
 
+import polars as pl
 import pytest
 
 from prosper_or_perish_constructor import cli
@@ -10,6 +11,25 @@ from prosper_or_perish_constructor import cli
 def _repo(tmp_path: Path) -> Path:
     (tmp_path / "constructor.toml").write_text('name = "test"\n')
     return tmp_path
+
+
+def _write_savegame_manifest(repo: Path, save_path: Path | None = None) -> None:
+    manifest = repo / "graphs" / "dataset" / "manifest.parquet"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    pl.DataFrame(
+        [
+            {
+                "snapshot_id": "s1",
+                "playthrough_id": "aaa",
+                "path": str(save_path or "/tmp/s1.eu5"),
+                "year": 1337,
+                "month": 1,
+                "day": 1,
+                "mtime_ns": 1,
+                "size": 1,
+            }
+        ]
+    ).write_parquet(manifest)
 
 
 def test_test_command_disables_pytest_capture_by_default(
@@ -419,7 +439,7 @@ def test_dashboard_reports_missing_index(tmp_path: Path) -> None:
         cli.main(["--repo", str(repo), "dashboard"])
 
 
-def test_savegame_notebooks_build_ingests_then_builds_notebook_data(
+def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     repo = _repo(tmp_path)
@@ -436,6 +456,7 @@ def test_savegame_notebooks_build_ingests_then_builds_notebook_data(
     def fake_run_collecting_output(command, cwd):
         calls.append([str(part) for part in command])
         assert cwd == repo
+        _write_savegame_manifest(repo, save_dir / "autosave.eu5")
         return 0, "processed: 0\nskipped: 1\n"
 
     monkeypatch.setattr(cli, "_run", fake_run)
@@ -449,6 +470,7 @@ def test_savegame_notebooks_build_ingests_then_builds_notebook_data(
     )
     output = capsys.readouterr().out
     assert "raw ingest skipped: no new saves processed (1 already digested)" in output
+    assert "notebook rewrite: skipped (not required)" in output
 
     assert calls == [
         [
@@ -467,32 +489,15 @@ def test_savegame_notebooks_build_ingests_then_builds_notebook_data(
             str(repo / "constructor.load_order.toml"),
             "--workers",
             "8",
-        ],
-        [
-            "uv",
-            "run",
-            "eu5parse",
-            "savegame-notebooks",
-            "build",
-            "--dataset",
-            str(repo / "graphs" / "dataset"),
-            "--output",
-            str(repo / "graphs" / "savegame_notebooks" / "data"),
-            "--profile",
-            "constructor",
-            "--load-order",
-            str(repo / "constructor.load_order.toml"),
-            "--active-save-dir",
-            str(save_dir),
-            "--skip-if-current",
-        ],
+        ]
     ]
 
 
-def test_savegame_notebooks_build_no_ingest_restructures_existing_dataset(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def test_savegame_notebooks_build_no_ingest_reports_existing_raw_dataset(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     repo = _repo(tmp_path)
+    _write_savegame_manifest(repo)
     calls: list[list[str]] = []
 
     def fake_run(command, cwd):
@@ -503,25 +508,11 @@ def test_savegame_notebooks_build_no_ingest_restructures_existing_dataset(
     monkeypatch.setattr(cli, "_run", fake_run)
 
     assert cli.main(["--repo", str(repo), "savegame-notebooks", "build", "--no-ingest"]) == 0
+    output = capsys.readouterr().out
+    assert f"raw dataset: {repo / 'graphs' / 'dataset'}" in output
+    assert "notebook rewrite: skipped (not required)" in output
 
-    assert calls == [
-        [
-            "uv",
-            "run",
-            "eu5parse",
-            "savegame-notebooks",
-            "build",
-            "--dataset",
-            str(repo / "graphs" / "dataset"),
-            "--output",
-            str(repo / "graphs" / "savegame_notebooks" / "data"),
-            "--profile",
-            "constructor",
-            "--load-order",
-            str(repo / "constructor.load_order.toml"),
-            "--skip-if-current",
-        ],
-    ]
+    assert calls == []
 
 
 def test_savegame_notebooks_build_auto_detects_save_dir(

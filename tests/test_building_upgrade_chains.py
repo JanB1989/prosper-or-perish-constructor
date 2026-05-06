@@ -126,6 +126,14 @@ DEACTIVATED_BOG_IRON_BLUEPRINTS = {
     "buildings/bog_iron_smelter_slitting_mills.yml",
     "buildings/bog_iron_smelter_hot_blast_furnace.yml",
 }
+FORWARD_REFERENCE_OBSOLETE_EXEMPTIONS = {
+    ("enclosed_sheep_walks", "sheep_farms"),
+    ("iron_mine_deep", "iron_mine_improved"),
+    ("lead_mine_cupola_smelting", "lead_mine_improved"),
+    ("managed_forest_village", "forest_village"),
+    ("model_farm", "farming_village"),
+    ("tin_stamping_mill", "tin_streamworks"),
+}
 
 
 def _load_blueprint(key: str) -> dict:
@@ -177,7 +185,14 @@ def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
                 assert "obsolete =" not in body
             else:
                 previous = chain[tier - 1][0]
-                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                if (key, previous) in FORWARD_REFERENCE_OBSOLETE_EXEMPTIONS:
+                    assert not re.search(
+                        rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$",
+                        body,
+                        flags=re.M,
+                    )
+                else:
+                    assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
                 assert "icon" in raw, f"{key} must provide its own icon"
                 assert raw["icon"]["output_dds"] == f"{key}.dds"
 
@@ -276,7 +291,23 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
                 assert "obsolete =" not in body
             else:
                 previous = chain[tier - 1][0]
-                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                if (key, previous) in FORWARD_REFERENCE_OBSOLETE_EXEMPTIONS:
+                    assert not re.search(
+                        rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$",
+                        body,
+                        flags=re.M,
+                    )
+                else:
+                    assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+
+
+def test_manpower_building_blueprints_do_not_copy_invalid_owner_culture_gate() -> None:
+    for key in ("armory", "training_fields", "barracks", "regimental_camp", "conscription_center"):
+        body = _load_blueprint(key)["building"]["body"]
+
+        assert "has_primary_or_accepted_culture" not in body
+        assert "prev.dominant_culture" not in body
+        assert "prev.location.dominant_culture" not in body
 
 
 def test_game_start_never_places_offshore_fishery_directly_and_culls_invalid_locations() -> None:

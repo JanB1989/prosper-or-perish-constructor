@@ -19,6 +19,13 @@ ESTATE_PRIVILEGE_ADJUSTMENTS = (
 GOVERNMENT_REFORM_ADJUSTMENTS = (
     MOD_ROOT / "in_game" / "common" / "government_reforms" / "pp_government_reform_adjustments.txt"
 )
+ESTATE_ADJUSTMENTS = MOD_ROOT / "in_game" / "common" / "estates" / "pp_estate_adjustments.txt"
+GOODS_DEMAND = MOD_ROOT / "in_game" / "common" / "goods_demand" / "pp_new_goods_demands.txt"
+LAW_ADJUSTMENTS = MOD_ROOT / "in_game" / "common" / "laws" / "pp_law_adjustments.txt"
+PRICE_ROOT = MOD_ROOT / "in_game" / "common" / "prices"
+MODIFIER_TYPE_DEFINITIONS = MOD_ROOT / "main_menu" / "common" / "modifier_type_definitions"
+MODIFIER_ICONS = MOD_ROOT / "main_menu" / "common" / "modifier_icons"
+LOCALIZATION_ROOT = MOD_ROOT / "main_menu" / "localization" / "english"
 
 
 def test_constructor_config_loads() -> None:
@@ -140,6 +147,29 @@ def test_powerful_magnates_food_modifier_is_zeroed_by_replacement() -> None:
     assert modifier_values["global_monthly_food_modifier"] == 0
 
 
+def test_dhimmi_satisfaction_uses_small_regional_staple_output_package() -> None:
+    parsed = parse_file(ESTATE_ADJUSTMENTS)
+    entries = {entry.key: entry.value for entry in parsed.entries}
+
+    assert "TRY_INJECT:dhimmi_estate" in entries
+    estate = entries["TRY_INJECT:dhimmi_estate"]
+    assert isinstance(estate, CList)
+
+    satisfaction = _entry_values(estate)["satisfaction"]
+    assert isinstance(satisfaction, CList)
+    modifier_values = _entry_values(satisfaction)
+
+    assert "global_monthly_food_modifier" not in modifier_values
+    assert modifier_values == {
+        "global_wheat_output_modifier": 0.05,
+        "global_rice_output_modifier": 0.05,
+        "global_millet_output_modifier": 0.05,
+        "global_legumes_output_modifier": 0.05,
+        "global_fruit_output_modifier": 0.05,
+        "global_olives_output_modifier": 0.05,
+    }
+
+
 def test_inject_targets_exist_in_constructor_load_order() -> None:
     load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
     vanilla_root = load_order.vanilla_root
@@ -189,6 +219,51 @@ def test_cookery_building_line_has_resolved_prices() -> None:
     assert buildings["cookery"]["price_gold"] == 150.0
     assert buildings["victualling_yard"]["price"] == "pp_victualling_yard_price"
     assert buildings["victualling_yard"]["price_gold"] == 225.0
+
+
+def test_victuals_pop_demand_uses_scalar_database_value() -> None:
+    entries = {entry.key: entry.value for entry in parse_file(GOODS_DEMAND).entries}
+    pop_demand = entries["INJECT:pop_demand"]
+    assert isinstance(pop_demand, CList)
+
+    values = _entry_values(pop_demand)
+    assert values["victuals"] == 1
+
+
+def test_pp_law_adjustments_use_existing_modifier_types() -> None:
+    text = LAW_ADJUSTMENTS.read_text(encoding="utf-8-sig")
+
+    assert "army_infantry_maintenance_cost_modifier" not in text
+    assert "trade_efficiency =" not in text
+    assert "army_light_infantry_maintenance_cost_modifier = -0.1" in text
+    assert "army_heavy_infantry_maintenance_cost_modifier = -0.1" in text
+    assert "trade_land_efficiency = small_trade_efficiency_bonus" in text
+    assert "trade_sea_efficiency = small_trade_efficiency_bonus" in text
+
+
+def test_pp_building_prices_have_modifier_type_assets_and_localization() -> None:
+    price_keys = {
+        key
+        for key in _database_keys(PRICE_ROOT)
+        if key.startswith("pp_") and key.endswith("_price")
+    }
+    expected = {f"{price_key}_cost_modifier" for price_key in price_keys}
+
+    modifier_types = _database_keys(MODIFIER_TYPE_DEFINITIONS)
+    modifier_icons = _database_keys(MODIFIER_ICONS)
+    localization_text = "\n".join(
+        path.read_text(encoding="utf-8-sig") for path in sorted(LOCALIZATION_ROOT.glob("*.yml"))
+    )
+
+    assert expected
+    assert not (expected - modifier_types)
+    assert not (expected - modifier_icons)
+    assert not [
+        key
+        for key in sorted(expected)
+        if f"MODIFIER_TYPE_DESC_{key}:" not in localization_text
+        or f"MODIFIER_TYPE_NAME_{key}:" not in localization_text
+    ]
 
 
 def test_farming_village_uses_baseline_building_price() -> None:

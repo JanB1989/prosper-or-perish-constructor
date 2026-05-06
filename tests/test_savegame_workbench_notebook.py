@@ -12,7 +12,7 @@ def test_savegame_workbench_notebook_executes_tiny_dataset(
     matplotlib.use("Agg")
     repo = tmp_path
     (repo / "constructor.toml").write_text('name = "test"\n', encoding="utf-8")
-    _write_tiny_notebook_dataset(repo / "graphs" / "savegame_notebooks" / "data")
+    _write_tiny_notebook_dataset(repo / "graphs" / "dataset")
     monkeypatch.chdir(repo)
 
     notebook = json.loads(
@@ -67,10 +67,8 @@ def test_savegame_workbench_notebook_executes_tiny_dataset(
 
 
 def _write_tiny_notebook_dataset(root: Path) -> None:
-    dims = root / "dims"
-    facts = root / "facts"
-    dims.mkdir(parents=True)
-    facts.mkdir()
+    tables = root / "tables"
+    tables.mkdir(parents=True)
     snapshot = {
         "snapshot_id": "s1",
         "playthrough_id": "aaa",
@@ -84,67 +82,10 @@ def _write_tiny_notebook_dataset(root: Path) -> None:
         "mtime_ns": 1,
         "size": 1,
     }
-    pl.DataFrame([snapshot]).write_parquet(root / "snapshots.parquet")
-    pl.DataFrame(
-        [
-            {
-                "good_code": 0,
-                "good_id": "wheat",
-                "good_label": "Wheat",
-                "goods_category": "food",
-            }
-        ]
-    ).write_parquet(dims / "goods.parquet")
-    pl.DataFrame(
-        [
-            {
-                "market_code": 0,
-                "market_id": 1,
-                "center_location_id": 10,
-                "market_center_slug": "london",
-                "market_label": "London",
-            }
-        ]
-    ).write_parquet(dims / "markets.parquet")
-    pl.DataFrame(
-        [
-            {
-                "location_code": 0,
-                "location_id": 10,
-                "slug": "london",
-                "location_label": "London",
-                "province_slug": "london_province",
-                "area": "london_area",
-                "area_label": "London Area",
-                "region": "england",
-                "region_label": "England",
-                "macro_region": "western_europe",
-                "macro_region_label": "Western Europe",
-                "super_region": "europe",
-                "super_region_label": "Europe",
-                "country_tag": "ENG",
-                "country_label": "England",
-            }
-        ]
-    ).write_parquet(dims / "locations.parquet")
-    pl.DataFrame([{"country_code": 0, "country_tag": "ENG", "country_label": "England"}]).write_parquet(dims / "countries.parquet")
-    pl.DataFrame([{"building_type_code": 0, "building_type": "cookery", "building_label": "Cookery"}]).write_parquet(dims / "building_types.parquet")
-    pl.DataFrame(
-        [
-            {
-                "production_method_code": 0,
-                "production_method": "pm_cook",
-                "production_method_label": "Cooking",
-                "production_method_building": "cookery",
-                "production_method_group": "cookery:0",
-                "production_method_group_index": 0,
-                "slot_label": "Slot 1",
-            }
-        ]
-    ).write_parquet(dims / "production_methods.parquet")
+    pl.DataFrame([snapshot]).write_parquet(root / "manifest.parquet")
 
     _write_fact(
-        facts,
+        tables,
         "locations",
         [
             {
@@ -153,14 +94,20 @@ def _write_tiny_notebook_dataset(root: Path) -> None:
                 "control": 0.8,
                 "tax": 0.5,
                 "total_population": 100.0,
-                "market_code": 0,
-                "location_code": 0,
-                "region_code": 0,
+                "market_id": 1,
+                "location_id": 10,
+                "slug": "london",
+                "province_slug": "london_province",
+                "area": "london_area",
+                "region": "england",
+                "macro_region": "western_europe",
+                "super_region": "europe",
+                "country_tag": "ENG",
             }
         ],
     )
     _write_fact(
-        facts,
+        tables,
         "market_goods",
         [
             {
@@ -171,13 +118,16 @@ def _write_tiny_notebook_dataset(root: Path) -> None:
                 "demand": 8.0,
                 "net": 2.0,
                 "stockpile": 4.0,
-                "good_code": 0,
-                "market_code": 0,
+                "good_id": "wheat",
+                "good_name": "Wheat",
+                "goods_category": "food",
+                "market_id": 1,
+                "market_center_slug": "london",
             }
         ],
     )
     _write_fact(
-        facts,
+        tables,
         "market_food",
         [
             {
@@ -187,12 +137,14 @@ def _write_tiny_notebook_dataset(root: Path) -> None:
                 "food_price": 1.0,
                 "food_balance": 2.0,
                 "population": 100.0,
-                "market_code": 0,
+                "market_id": 1,
+                "center_location_id": 10,
+                "market_center_slug": "london",
             }
         ],
     )
     _write_fact(
-        facts,
+        tables,
         "buildings",
         [
             {
@@ -200,29 +152,29 @@ def _write_tiny_notebook_dataset(root: Path) -> None:
                 "level": 1.0,
                 "employment": 10.0,
                 "last_months_profit": 2.0,
-                "market_code": 0,
-                "location_code": 0,
-                "building_type_code": 0,
-                "building_code": 0,
+                "market_id": 1,
+                "location_id": 10,
+                "building_type": "cookery",
+                "building_id": 100,
             }
         ],
     )
     _write_fact(
-        facts,
+        tables,
         "building_methods",
         [
             {
                 **snapshot,
-                "market_code": 0,
-                "location_code": 0,
-                "building_type_code": 0,
-                "building_code": 0,
-                "production_method_code": 0,
+                "market_id": 1,
+                "location_id": 10,
+                "building_type": "cookery",
+                "building_id": 100,
+                "production_method": "pm_cook",
             }
         ],
     )
-    _write_good_fact(
-        facts,
+    _write_fact(
+        tables,
         "market_good_bucket_flows",
         [
             {
@@ -231,13 +183,16 @@ def _write_tiny_notebook_dataset(root: Path) -> None:
                 "bucket": "Building",
                 "save_column": "demanded_Building",
                 "amount": 3.0,
-                "good_code": 0,
-                "market_code": 0,
+                "good_id": "wheat",
+                "good_name": "Wheat",
+                "goods_category": "food",
+                "market_id": 1,
+                "market_center_slug": "london",
             }
         ],
     )
-    _write_good_fact(
-        facts,
+    _write_fact(
+        tables,
         "rgo_flows",
         [
             {
@@ -245,14 +200,16 @@ def _write_tiny_notebook_dataset(root: Path) -> None:
                 "raw_material": "wheat",
                 "direction": "output",
                 "allocated_amount": 4.0,
-                "good_code": 0,
-                "market_code": 0,
-                "location_code": 0,
+                "good_id": "wheat",
+                "goods_category": "food",
+                "market_id": 1,
+                "market_center_slug": "london",
+                "location_id": 10,
             }
         ],
     )
-    _write_good_fact(
-        facts,
+    _write_fact(
+        tables,
         "production_method_good_flows",
         [
             {
@@ -260,24 +217,20 @@ def _write_tiny_notebook_dataset(root: Path) -> None:
                 "direction": "input",
                 "allocated_amount": 2.0,
                 "level_sum": 1.0,
-                "good_code": 0,
-                "market_code": 0,
-                "location_code": 0,
-                "building_type_code": 0,
-                "building_code": 0,
-                "production_method_code": 0,
+                "good_id": "wheat",
+                "goods_category": "food",
+                "market_id": 1,
+                "market_center_slug": "london",
+                "location_id": 10,
+                "building_type": "cookery",
+                "building_id": 100,
+                "production_method": "pm_cook",
             }
         ],
     )
 
 
-def _write_fact(facts: Path, table: str, rows: list[dict[str, object]]) -> None:
-    path = facts / table / "playthrough_id=aaa" / "s1.parquet"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    pl.DataFrame(rows, infer_schema_length=None).write_parquet(path)
-
-
-def _write_good_fact(facts: Path, table: str, rows: list[dict[str, object]]) -> None:
-    path = facts / table / "playthrough_id=aaa" / "good_code=0" / "s1.parquet"
+def _write_fact(tables: Path, table: str, rows: list[dict[str, object]]) -> None:
+    path = tables / table / "playthrough_id=aaa" / "s1.parquet"
     path.parent.mkdir(parents=True, exist_ok=True)
     pl.DataFrame(rows, infer_schema_length=None).write_parquet(path)

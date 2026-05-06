@@ -32,8 +32,8 @@ Primary multi-save notebook workflow after or during EU5 runs:
 uv run ppc savegame-notebooks build
 ```
 
-This ingests savegames into `graphs/dataset`, then rewrites them into RAM-efficient parquet under
-`graphs/savegame_notebooks/data` for Jupyter analysis.
+This ingests savegames into `graphs/dataset`. The notebook reads that raw parquet dataset directly
+with lazy Polars scans.
 
 Other common workflows:
 
@@ -196,11 +196,10 @@ Use this command to rebuild the multi-save notebook parquet dataset:
 uv run ppc savegame-notebooks build
 ```
 
-The command parses `.eu5` saves into the raw progression dataset at `graphs/dataset`, then creates
-a thinner Polars/Jupyter-oriented parquet layer at:
+The command parses `.eu5` saves into the raw progression dataset read by the notebook:
 
 ```text
-graphs/savegame_notebooks/data/
+graphs/dataset/
 ```
 
 Useful options:
@@ -212,11 +211,10 @@ uv run ppc savegame-notebooks build --no-ingest
 uv run ppc savegame-notebooks build --force
 ```
 
-`--no-ingest` skips parsing saves and only restructures the existing `graphs/dataset` parquet files.
-By default the notebook layer is skipped when its metadata already matches the raw savegame dataset;
-use `--force` to rebuild it anyway. The build reports how many raw saves were already digested and
-how many stale raw snapshots were ignored because the source `.eu5` save is no longer in the active
-save folder.
+`--no-ingest` skips parsing saves and only reports/validates the existing `graphs/dataset` parquet
+files. `--force` is no longer needed because there is no notebook parquet rewrite step. The build
+reports how many raw saves were already digested and how many stale raw snapshots were ignored
+because the source `.eu5` save is no longer in the active save folder.
 The constructor wrapper auto-detects the EU5 documents save folder from WSL; pass `--save-dir` only
 for a non-standard save folder.
 

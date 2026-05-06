@@ -21,14 +21,7 @@ building:
     	
     	rural_settlement = yes
     	build_time = soldier_building
-    	allow = {
-    		owner = { has_primary_or_accepted_culture = prev.dominant_culture }
-    	}
-    	remove_if = {
-    		NOT = { owner = { has_primary_or_accepted_culture = prev.location.dominant_culture } }
-    	}
-    	
-    	modifier = {
+        modifier = {
     		local_manpower = 0.01
     		can_recruit_regiment_in_this_location = yes
     	}

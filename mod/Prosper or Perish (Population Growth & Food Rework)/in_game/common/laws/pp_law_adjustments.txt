@@ -260,7 +260,8 @@ TRY_REPLACE:administrative_system = {
 		}
 		country_modifier = {
 			global_estate_max_tax = -0.1
-			army_infantry_maintenance_cost_modifier = -0.1
+			army_light_infantry_maintenance_cost_modifier = -0.1
+			army_heavy_infantry_maintenance_cost_modifier = -0.1
 		}
 		estate_preferences = {
 			nobles_estate
@@ -410,9 +411,10 @@ TRY_REPLACE:tax_base_system = {
 		country_modifier = {
 			#Emperor benefits
 			potential_trigger = {
-				is_leader_of_international_organization = international_organization:middle_kingdom 
+				is_leader_of_international_organization = international_organization:middle_kingdom
 			}
-			trade_efficiency = small_trade_efficiency_bonus
+			trade_land_efficiency = small_trade_efficiency_bonus
+			trade_sea_efficiency = small_trade_efficiency_bonus
 		}
 		country_modifier = {
 			#Celestial Governor benefits

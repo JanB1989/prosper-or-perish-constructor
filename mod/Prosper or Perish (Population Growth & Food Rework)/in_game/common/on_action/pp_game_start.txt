@@ -3,6 +3,7 @@
 on_game_start = {
 	on_actions = {
 		# pp_reset_rgo_max_workers
+		pp_apply_location_modifiers
 		pp_mod_welcome_situation_game_start
 		pp_apply_rgo_static_modifiers
 		pp_reduce_specific_rgo

@@ -41,40 +41,18 @@ TRY_INJECT:peasants_estate = {
 	}
 }
 
-# Dhimmi, Tribes, Cossacks: replace global_monthly_food_modifier with per-good output bonuses (0.10)
+# Dhimmi: replace food with a small regional staple output package.
 TRY_INJECT:dhimmi_estate = {
 	satisfaction = {
-		global_monthly_food_modifier = -0.10
-		global_wheat_output_modifier = 0.10
-		global_rice_output_modifier = 0.10
-		global_millet_output_modifier = 0.10
-		global_maize_output_modifier = 0.10
-		global_legumes_output_modifier = 0.10
-		global_fruit_output_modifier = 0.10
-		global_olives_output_modifier = 0.10
-		global_potato_output_modifier = 0.10
-		global_livestock_output_modifier = 0.10
-		global_beeswax_output_modifier = 0.10
-		global_wool_output_modifier = 0.10
-		global_cotton_output_modifier = 0.10
-		global_sugar_output_modifier = 0.10
-		global_tobacco_output_modifier = 0.10
-		global_horses_output_modifier = 0.025
-		global_silk_output_modifier = 0.10
-		global_incense_output_modifier = 0.10
-		global_tea_output_modifier = 0.10
-		global_cocoa_output_modifier = 0.10
-		global_coffee_output_modifier = 0.10
-		global_fiber_crops_output_modifier = 0.025
-		global_saffron_output_modifier = 0.10
-		global_pepper_output_modifier = 0.10
-		global_cloves_output_modifier = 0.10
-		global_chili_output_modifier = 0.10
-		global_fish_output_modifier = 0.10
-		global_wild_game_output_modifier = 0.10
-		global_fur_output_modifier = 0.10
+		global_wheat_output_modifier = 0.05
+		global_rice_output_modifier = 0.05
+		global_millet_output_modifier = 0.05
+		global_legumes_output_modifier = 0.05
+		global_fruit_output_modifier = 0.05
+		global_olives_output_modifier = 0.05
 	}
 }
+# Tribes, Cossacks: replace global_monthly_food_modifier with per-good output bonuses (0.10)
 TRY_INJECT:tribes_estate = {
 	satisfaction = {
 		global_monthly_food_modifier = -0.10

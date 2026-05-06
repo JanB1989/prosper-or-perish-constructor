@@ -76,6 +76,11 @@ BOM_TEXT_RELATIVE_PATHS = (
     Path("in_game/common/on_action/pp_apply_location_modifiers.txt"),
     Path("in_game/common/building_types/pp_aqueduct_system.txt"),
 )
+PRICE_MODIFIER_TYPE_DEFINITIONS = Path(
+    "main_menu/common/modifier_type_definitions/pp_modifier_types.txt"
+)
+PRICE_MODIFIER_ICONS = Path("main_menu/common/modifier_icons/pp_price_modifier_icons.txt")
+PRICE_MODIFIER_LOCALIZATION = Path("main_menu/localization/english/pp_modifier_types_l_english.yml")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -323,7 +328,10 @@ def _add_savegame_notebooks_command(
         "--output",
         type=Path,
         default=SAVEGAME_NOTEBOOK_DATA,
-        help="Notebook parquet output directory relative to --repo. Defaults to graphs/savegame_notebooks/data.",
+        help=(
+            "Deprecated. Notebooks now read the raw --dataset parquet directory directly; "
+            "this option is ignored."
+        ),
     )
     command.add_argument(
         "--load-order",
@@ -440,7 +448,10 @@ def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: 
 
 def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     mod_root = _project_mod_root(repo, project)
+    _wrap_location_modifier_application(mod_root)
+    _register_location_modifier_application(mod_root)
     _apply_location_modifier_aliases(mod_root)
+    _ensure_price_cost_modifier_assets(mod_root)
     _ensure_constructor_text_boms(mod_root)
     _inject_location_potential_localization(mod_root)
 
@@ -518,6 +529,177 @@ def _apply_location_modifier_aliases(mod_root: Path) -> None:
                 updated,
             )
         _write_text_if_changed(path, updated, encoding="utf-8-sig")
+
+
+def _wrap_location_modifier_application(mod_root: Path) -> None:
+    path = mod_root / "in_game" / "common" / "on_action" / "pp_apply_location_modifiers.txt"
+    if not path.is_file():
+        return
+
+    text = path.read_text(encoding="utf-8-sig")
+    if re.search(r"(?m)^pp_apply_location_modifiers\s*=\s*\{", text):
+        return
+    updated = text.replace(
+        "\non_game_start = {\n\teffect = {",
+        "\npp_apply_location_modifiers = {\n\teffect = {",
+        1,
+    )
+    if updated == text:
+        raise SystemExit(f"Cannot wrap generated location modifier on_action in {path}")
+    _write_text_if_changed(path, updated, encoding="utf-8-sig")
+
+
+def _register_location_modifier_application(mod_root: Path) -> None:
+    path = mod_root / "in_game" / "common" / "on_action" / "pp_game_start.txt"
+    if not path.is_file():
+        return
+
+    text = path.read_text(encoding="utf-8-sig")
+    registration = "\t\tpp_apply_location_modifiers\n"
+    if registration in text:
+        return
+
+    marker = "\t\t# pp_reset_rgo_max_workers\n"
+    if marker not in text:
+        raise SystemExit(f"Cannot register pp_apply_location_modifiers; missing marker in {path}")
+    updated = text.replace(marker, marker + registration, 1)
+    _write_text_if_changed(path, updated, encoding="utf-8-sig")
+
+
+def _ensure_price_cost_modifier_assets(mod_root: Path) -> None:
+    modifier_keys = [f"{price_key}_cost_modifier" for price_key in _pp_price_keys(mod_root)]
+    if not modifier_keys:
+        return
+
+    _upsert_price_cost_modifier_types(mod_root, modifier_keys)
+    _write_price_cost_modifier_icons(mod_root, modifier_keys)
+    _append_missing_price_cost_modifier_localization(mod_root, modifier_keys)
+
+
+def _pp_price_keys(mod_root: Path) -> list[str]:
+    prices_root = mod_root / "in_game" / "common" / "prices"
+    if not prices_root.is_dir():
+        return []
+
+    keys: set[str] = set()
+    pattern = re.compile(r"(?m)^\s*(pp_[A-Za-z0-9_]+_price)\s*=\s*\{")
+    for path in sorted(prices_root.glob("pp_*.txt")):
+        text = path.read_text(encoding="utf-8-sig")
+        keys.update(pattern.findall(text))
+    return sorted(keys)
+
+
+def _upsert_price_cost_modifier_types(mod_root: Path, modifier_keys: Sequence[str]) -> None:
+    path = mod_root / PRICE_MODIFIER_TYPE_DEFINITIONS
+    if path.is_file():
+        text = path.read_text(encoding="utf-8-sig").rstrip()
+    else:
+        text = ""
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+    existing = _top_level_keys(text)
+    missing = [key for key in modifier_keys if key not in existing]
+    if not missing:
+        return
+
+    blocks = [_price_cost_modifier_type_block(key) for key in missing]
+    updated = "\n\n".join(part for part in (text, "\n\n".join(blocks)) if part).rstrip() + "\n"
+    _write_text_if_changed(path, updated, encoding="utf-8-sig")
+
+
+def _price_cost_modifier_type_block(modifier_key: str) -> str:
+    return "\n".join(
+        (
+            f"{modifier_key}={{",
+            "\tcolor=bad",
+            "\tpercent=yes",
+            "\tgame_data={",
+            "\t\tcategory=country",
+            "\t}",
+            "}",
+        )
+    )
+
+
+def _write_price_cost_modifier_icons(mod_root: Path, modifier_keys: Sequence[str]) -> None:
+    path = mod_root / PRICE_MODIFIER_ICONS
+    path.parent.mkdir(parents=True, exist_ok=True)
+    keys_defined_elsewhere = _modifier_icon_keys(mod_root, exclude=path)
+    keys = [key for key in modifier_keys if key not in keys_defined_elsewhere]
+    if not keys and not path.exists():
+        return
+
+    lines = [
+        "# Prosper or Perish - generated building price cost modifier icons.",
+        "# Generated from in_game/common/prices/pp_*.txt by the ppc finalizer.",
+        "",
+    ]
+    for key in keys:
+        lines.extend(
+            (
+                f"{key} = {{",
+                '\tpositive = "gfx/interface/icons/modifier_types/_default.dds"',
+                "}",
+            )
+        )
+    _write_text_if_changed(path, "\n".join(lines).rstrip() + "\n", encoding="utf-8-sig")
+
+
+def _modifier_icon_keys(mod_root: Path, *, exclude: Path) -> set[str]:
+    icons_root = mod_root / "main_menu" / "common" / "modifier_icons"
+    if not icons_root.is_dir():
+        return set()
+
+    keys: set[str] = set()
+    for path in sorted(icons_root.glob("*.txt")):
+        if path == exclude:
+            continue
+        keys.update(_top_level_keys(path.read_text(encoding="utf-8-sig")))
+    return keys
+
+
+def _append_missing_price_cost_modifier_localization(
+    mod_root: Path,
+    modifier_keys: Sequence[str],
+) -> None:
+    localization_root = mod_root / "main_menu" / "localization" / "english"
+    localization_root.mkdir(parents=True, exist_ok=True)
+    existing_name_keys: set[str] = set()
+    existing_desc_keys: set[str] = set()
+    for path in sorted(localization_root.glob("*.yml")):
+        text = path.read_text(encoding="utf-8-sig", errors="replace")
+        existing_name_keys.update(re.findall(r"(?m)^\s*MODIFIER_TYPE_NAME_([A-Za-z0-9_]+):", text))
+        existing_desc_keys.update(re.findall(r"(?m)^\s*MODIFIER_TYPE_DESC_([A-Za-z0-9_]+):", text))
+
+    target = mod_root / PRICE_MODIFIER_LOCALIZATION
+    if target.is_file():
+        text = target.read_text(encoding="utf-8-sig").rstrip()
+    else:
+        text = "l_english:"
+
+    lines: list[str] = []
+    for modifier_key in modifier_keys:
+        building_key = modifier_key.removeprefix("pp_").removesuffix("_price_cost_modifier")
+        display_name = _title_from_key(building_key)
+        if modifier_key not in existing_desc_keys:
+            lines.append(
+                f'  MODIFIER_TYPE_DESC_{modifier_key}: "Affects the cost of building [ShowBuildingTypeName(\'{building_key}\')|e]."'
+            )
+        if modifier_key not in existing_name_keys:
+            lines.append(f'  MODIFIER_TYPE_NAME_{modifier_key}: "{display_name} Cost"')
+
+    if not lines:
+        return
+    updated = text + "\n" + "\n".join(lines) + "\n"
+    _write_text_if_changed(target, updated, encoding="utf-8-sig")
+
+
+def _title_from_key(key: str) -> str:
+    return " ".join(part.capitalize() for part in key.split("_"))
+
+
+def _top_level_keys(text: str) -> set[str]:
+    return set(re.findall(r"(?m)^\ufeff?([A-Za-z0-9_]+)\s*=\s*\{", text))
 
 
 def _ensure_constructor_text_boms(mod_root: Path) -> None:
@@ -753,31 +935,94 @@ def _savegame_notebooks_build(
     elif args.save_dir is not None:
         active_save_dir = _repo_path(repo, args.save_dir).expanduser()
 
-    command: list[str | os.PathLike[str]] = [
-        "uv",
-        "run",
-        "eu5parse",
-        "savegame-notebooks",
-        "build",
-        "--dataset",
+    _print_savegame_notebook_dataset_status(
+        repo,
         _repo_path(repo, args.dataset),
-        "--output",
-        _repo_path(repo, args.output),
-        "--profile",
-        args.profile,
-        "--load-order",
-        _repo_path(repo, args.load_order),
-    ]
-    if active_save_dir is not None:
-        command.extend(["--active-save-dir", active_save_dir])
-    if not args.force:
-        command.append("--skip-if-current")
-    return _run(command, repo)
+        output=_repo_path(repo, args.output),
+        force=args.force,
+        active_save_dir=active_save_dir,
+        require_manifest=args.no_ingest,
+    )
+    return 0
 
 
 def _extract_report_count(output: str, key: str) -> int | None:
     match = re.search(rf"(?m)^{re.escape(key)}:\s*(\d+)\s*$", output)
     return int(match.group(1)) if match else None
+
+
+def _print_savegame_notebook_dataset_status(
+    repo: Path,
+    dataset: Path,
+    *,
+    output: Path,
+    force: bool,
+    active_save_dir: Path | None,
+    require_manifest: bool,
+) -> None:
+    manifest = dataset / "manifest.parquet"
+    if force:
+        print("--force ignored: notebooks now read the raw dataset directly.", flush=True)
+    if output != repo / SAVEGAME_NOTEBOOK_DATA:
+        print(f"--output ignored: notebooks now read {dataset}", flush=True)
+    print(f"raw dataset: {dataset}", flush=True)
+    print(f"notebook data: {dataset}", flush=True)
+    print("notebook rewrite: skipped (not required)", flush=True)
+    if not manifest.is_file():
+        message = f"raw dataset manifest not found: {manifest}"
+        if require_manifest:
+            raise SystemExit(message)
+        print(message, flush=True)
+        return
+
+    try:
+        import polars as pl
+    except ModuleNotFoundError as exc:
+        raise SystemExit(f"Cannot read raw dataset status; missing dependency: {exc.name}") from exc
+
+    frame = pl.read_parquet(manifest)
+    total = frame.height
+    active = total
+    if active_save_dir is not None and not frame.is_empty():
+        path_column = (
+            "path"
+            if "path" in frame.columns
+            else "source_path"
+            if "source_path" in frame.columns
+            else None
+        )
+        if path_column is not None:
+            active = sum(
+                1
+                for value in frame.get_column(path_column).to_list()
+                if _save_path_is_under_active_dir(value, active_save_dir)
+            )
+    print(f"snapshots: {active}", flush=True)
+    if active != total:
+        print(f"stale_snapshots_ignored: {total - active}", flush=True)
+    table_root = dataset / "tables"
+    if table_root.is_dir():
+        for table_dir in sorted(path for path in table_root.iterdir() if path.is_dir()):
+            count = len(list(table_dir.rglob("*.parquet")))
+            if count:
+                print(f"{table_dir.name}: {count} parquet file(s)", flush=True)
+
+
+def _save_path_is_under_active_dir(value: object, active_save_dir: Path) -> bool:
+    if value is None:
+        return False
+    path = Path(str(value)).expanduser()
+    try:
+        resolved = path.resolve()
+    except OSError:
+        return False
+    if not resolved.is_file():
+        return False
+    try:
+        resolved.relative_to(active_save_dir.expanduser().resolve())
+    except ValueError:
+        return False
+    return True
 
 
 def _repo_path(repo: Path, path: Path) -> Path:

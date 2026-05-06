@@ -214,7 +214,10 @@ def test_location_potential_help_localization_is_shared() -> None:
     assert not re.search(r"^pp_loc_washita\s*=\s*\{", location_modifier_text, flags=re.MULTILINE)
     assert 'STATIC_MODIFIER_DESC_pp_loc_washita: "$pp_location_potential_modifier_desc$"' not in modifier_text
     assert 'STATIC_MODIFIER_DESC_pp_loc_washita_pp: "$pp_location_potential_modifier_desc$"' in modifier_text
-    assert "modifier = pp_loc_washita_pp" in APPLY_LOCATION_MODIFIERS.read_text(encoding="utf-8-sig")
+    apply_location_text = APPLY_LOCATION_MODIFIERS.read_text(encoding="utf-8-sig")
+    assert "modifier = pp_loc_washita_pp" in apply_location_text
+    assert re.search(r"^pp_apply_location_modifiers\s*=\s*\{", apply_location_text, flags=re.MULTILINE)
+    assert not re.search(r"^on_game_start\s*=\s*\{", apply_location_text, flags=re.MULTILINE)
 
     assert re.search(r"^pp_location_potential\s*=\s*\{", concept_text, flags=re.MULTILINE)
     assert 'game_concept_pp_location_potential: "Location Potential"' in europedia_text

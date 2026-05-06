@@ -265,12 +265,20 @@ def test_building_levels_modifier_adds_population_capacity() -> None:
     assert _last_value(building_levels, "local_build_new_buildings_cost") == 0.05
 
 
-def test_river_flowing_through_modifier_neutralizes_population_capacity_penalty() -> None:
+def test_river_flowing_through_modifiers_neutralize_capacity_and_food_bonuses() -> None:
     profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
+    static_modifiers = load_collection(profile, "static_modifiers")
     maps = current_modifier_maps(profile)
 
-    assert maps["static_modifiers"]["river_flowing_through"]["local_population_capacity_modifier"] == 0
-    assert "local_population_capacity" not in maps["static_modifiers"]["river_flowing_through"]
+    for size in range(1, 6):
+        key = f"river_flowing_through_{size}"
+        block = _entry_block(static_modifiers.entries, key)
+
+        assert block is not None
+        assert maps["static_modifiers"][key]["local_population_capacity_modifier"] == 0
+        assert sum(block.values("local_monthly_food_modifier")) == 0
+        assert "local_population_capacity" not in maps["static_modifiers"][key]
+
     assert maps["static_modifiers"]["province_capital"]["local_population_capacity_modifier"] == 0.05
     assert maps["static_modifiers"]["capital"]["local_population_capacity_modifier"] == 0.1
 
@@ -311,7 +319,11 @@ def test_static_feature_population_capacity_is_neutralized_in_merged_maps() -> N
             "jungle": ("location_modifier.local_population_capacity",),
         },
         "static_modifiers": {
-            "river_flowing_through": ("local_population_capacity_modifier",),
+            "river_flowing_through_1": ("local_population_capacity_modifier",),
+            "river_flowing_through_2": ("local_population_capacity_modifier",),
+            "river_flowing_through_3": ("local_population_capacity_modifier",),
+            "river_flowing_through_4": ("local_population_capacity_modifier",),
+            "river_flowing_through_5": ("local_population_capacity_modifier",),
         },
     }
     for collection, objects in expected_zero.items():
@@ -343,7 +355,11 @@ def test_static_feature_population_capacity_is_neutralized_in_merged_maps() -> N
             "coastal": ("local_population_capacity",),
             "total_population": ("local_population_capacity",),
             "province_capital": ("local_population_capacity",),
-            "river_flowing_through": ("local_population_capacity",),
+            "river_flowing_through_1": ("local_population_capacity",),
+            "river_flowing_through_2": ("local_population_capacity",),
+            "river_flowing_through_3": ("local_population_capacity",),
+            "river_flowing_through_4": ("local_population_capacity",),
+            "river_flowing_through_5": ("local_population_capacity",),
             "adjacent_to_lake": ("local_population_capacity",),
         },
     }

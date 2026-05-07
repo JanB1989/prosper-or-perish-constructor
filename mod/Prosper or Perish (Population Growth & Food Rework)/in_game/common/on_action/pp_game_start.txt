@@ -137,13 +137,13 @@ pp_mod_welcome_situation_game_start = {
 	}
 }
 
-# Apply adjacent_to_lake modifier to locations that border lakes (engine does not auto-apply this like river_flowing_through/coastal)
+# Apply is_adjacent_to_lake modifier to locations that border lakes (engine does not auto-apply this like river_flowing_through/coastal)
 pp_apply_adjacent_to_lake_modifier = {
 	effect = {
 		every_location_in_the_world = {
 			limit = { is_adjacent_to_lake = yes }
 			add_location_modifier = {
-				modifier = adjacent_to_lake
+				modifier = is_adjacent_to_lake
 				months = -1
 				mode = replace
 			}
@@ -151,9 +151,9 @@ pp_apply_adjacent_to_lake_modifier = {
 		every_location_in_the_world = {
 			limit = {
 				is_adjacent_to_lake = no
-				has_location_modifier = adjacent_to_lake
+				has_location_modifier = is_adjacent_to_lake
 			}
-			remove_location_modifier = adjacent_to_lake
+			remove_location_modifier = is_adjacent_to_lake
 		}
 	}
 }

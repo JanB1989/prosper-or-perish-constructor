@@ -25,7 +25,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_gem_sluice_base_gems = {
-        tools = 0.311 # picks and works upkeep
         produced = gems
         output = 0.28
         category = building_maintenance

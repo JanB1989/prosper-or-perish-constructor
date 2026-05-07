@@ -38,7 +38,6 @@ building:
 
     unique_production_methods = {
         pp_simplers_grove_base_medicaments = {
-            tools = 0.083 # field tools and upkeep
             produced = medicaments
             output = 0.3
             category = building_maintenance

@@ -24,7 +24,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_elephant_kraal_base_elephants = {
-        tools = 0.278 # basic tool upkeep
         produced = elephants
         output = 0.2
         category = building_maintenance

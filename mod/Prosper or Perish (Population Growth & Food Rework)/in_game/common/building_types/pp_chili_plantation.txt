@@ -24,7 +24,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_chili_plantation_base_chili = {
-        tools = 0.417 # field tools and upkeep
         produced = chili
         output = 0.3
         category = building_maintenance

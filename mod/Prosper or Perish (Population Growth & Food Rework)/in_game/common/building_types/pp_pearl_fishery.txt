@@ -24,7 +24,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_pearl_fishery_base_pearls = {
-        lumber = 0.444 # boat and gear upkeep
         produced = pearls
         output = 0.2
         category = building_maintenance

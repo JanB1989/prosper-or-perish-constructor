@@ -50,7 +50,6 @@ building:
 
     unique_production_methods = {
         pp_iron_mine_base_iron = {
-            tools = 0.2 # picks and works upkeep
             produced = iron
             output = 0.24
             category = building_maintenance

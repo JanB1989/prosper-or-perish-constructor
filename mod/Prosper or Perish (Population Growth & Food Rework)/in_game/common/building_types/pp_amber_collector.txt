@@ -24,7 +24,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_amber_collector_base_amber = {
-        tools = 0.333 # basic tool upkeep
         produced = amber
         output = 0.3
         category = building_maintenance

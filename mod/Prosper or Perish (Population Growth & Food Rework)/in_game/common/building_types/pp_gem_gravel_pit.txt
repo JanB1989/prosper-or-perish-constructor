@@ -24,7 +24,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_gem_gravel_pit_base_gems = {
-        tools = 0.244 # picks and works upkeep
         produced = gems
         output = 0.22
         category = building_maintenance

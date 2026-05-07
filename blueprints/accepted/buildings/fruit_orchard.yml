@@ -37,7 +37,6 @@ building:
         }
         unique_production_methods = {
             pp_fruit_orchard_base_fruit = {
-                tools = 0.083 # field tools and upkeep
                 produced = fruit
                 output = 0.30
                 category = building_maintenance

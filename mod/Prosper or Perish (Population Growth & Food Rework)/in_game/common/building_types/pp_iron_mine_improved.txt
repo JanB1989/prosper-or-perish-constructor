@@ -25,7 +25,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_iron_mine_improved_base_iron = {
-        tools = 0.25 # picks and works upkeep
         produced = iron
         output = 0.30
         category = building_maintenance

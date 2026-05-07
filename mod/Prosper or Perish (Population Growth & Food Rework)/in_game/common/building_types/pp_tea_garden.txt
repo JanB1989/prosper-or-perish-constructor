@@ -24,7 +24,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_tea_garden_base_tea = {
-        tools = 0.25 # field tools and upkeep
         produced = tea
         output = 0.3
         category = building_maintenance

@@ -25,7 +25,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_quicksilver_retort_base_mercury = {
-        tools = 0.283 # picks and works upkeep
         produced = mercury
         output = 0.34
         category = building_maintenance

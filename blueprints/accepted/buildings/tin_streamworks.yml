@@ -49,7 +49,6 @@ building:
 
     unique_production_methods = {
         pp_tin_streamworks_base_tin = {
-            tools = 0.167 # basic tool upkeep
             produced = tin
             output = 0.3
             category = building_maintenance

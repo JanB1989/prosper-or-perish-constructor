@@ -49,7 +49,6 @@ building:
 
     unique_production_methods = {
         pp_gem_gravel_pit_base_gems = {
-            tools = 0.244 # picks and works upkeep
             produced = gems
             output = 0.22
             category = building_maintenance
@@ -122,6 +121,7 @@ evaluation:
     pp_gem_gravel_pit_base_gems:
       production_efficiency: 1.00
       allow_rules:
+        amortization_months: High-value exposed gem gravels can repay very quickly even at the normal no-input deposit scale.
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_gem_gravel_pit_no_primary:

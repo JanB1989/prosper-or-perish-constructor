@@ -38,7 +38,6 @@ building:
 
     unique_production_methods = {
         pp_coffee_grove_base_coffee = {
-            tools = 0.25 # field tools and upkeep
             produced = coffee
             output = 0.3
             category = building_maintenance

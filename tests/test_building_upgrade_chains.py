@@ -61,6 +61,15 @@ LOCALIZATION_ROOT = (
     / "localization"
     / "english"
 )
+LOCATION_MODIFIER_ADJUSTMENTS_PATH = (
+    ROOT
+    / "mod"
+    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "main_menu"
+    / "common"
+    / "static_modifiers"
+    / "pp_location_modifier_adjustments.txt"
+)
 
 EXPECTED_CHAINS = {
     "alum_quarry": [
@@ -195,6 +204,37 @@ def _production_method_precision_offenders(path: Path) -> list[str]:
         depth += line.count("{") - line.count("}")
         while production_method_depths and depth < production_method_depths[-1]:
             production_method_depths.pop()
+
+    return offenders
+
+
+def _base_production_method_input_offenders(path: Path) -> list[str]:
+    text = path.read_text(encoding="utf-8-sig")
+    lines = text.splitlines()
+    offenders: list[str] = []
+
+    for index, line in enumerate(lines):
+        match = re.match(
+            r"\s*(?P<method>pp_[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*_base_[A-Za-z0-9_]+)\s*=\s*\{\s*$",
+            line,
+        )
+        if match is None:
+            continue
+        method = match.group("method")
+        if method.endswith("_base_maintenance"):
+            continue
+        block_lines: list[str] = []
+        depth = line.count("{") - line.count("}")
+        for block_line in lines[index + 1 :]:
+            depth += block_line.count("{") - block_line.count("}")
+            if depth < 1:
+                break
+            block_lines.append(block_line)
+        for block_line in block_lines:
+            key_match = re.match(r"\s*(?P<key>[A-Za-z][A-Za-z0-9_]*)\s*=", block_line)
+            if key_match and key_match.group("key") not in {"produced", "output", "category"}:
+                relative = path.relative_to(ROOT)
+                offenders.append(f"{relative}:{index + 1}: {method} has input {key_match.group('key')}")
 
     return offenders
 
@@ -370,11 +410,22 @@ def test_game_start_never_places_offshore_fishery_directly_and_culls_invalid_loc
 
 def test_game_start_restores_lake_adjacency_modifier() -> None:
     text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    modifier_text = LOCATION_MODIFIER_ADJUSTMENTS_PATH.read_text(encoding="utf-8-sig")
+    localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
+        encoding="utf-8-sig"
+    )
 
     assert re.search(r"on_game_start\s*=\s*\{.*?pp_apply_adjacent_to_lake_modifier", text, flags=re.S)
     assert "pp_apply_adjacent_to_lake_modifier = {" in text
     assert "limit = { is_adjacent_to_lake = yes }" in text
-    assert "modifier = adjacent_to_lake" in text
+    assert "modifier = is_adjacent_to_lake" in text
+    assert "has_location_modifier = is_adjacent_to_lake" in text
+    assert "remove_location_modifier = is_adjacent_to_lake" in text
+    assert "modifier = adjacent_to_lake" not in text
+    assert "has_location_modifier = adjacent_to_lake" not in text
+    assert "remove_location_modifier = adjacent_to_lake" not in text
+    assert re.search(r"^is_adjacent_to_lake\s*=\s*\{.*?category\s*=\s*location", modifier_text, flags=re.S | re.M)
+    assert "STATIC_MODIFIER_NAME_is_adjacent_to_lake" in localization_text
 
 
 def test_game_start_direct_rgo_construction_checks_buildability() -> None:
@@ -400,6 +451,15 @@ def test_building_production_method_quantities_use_at_most_three_decimals() -> N
     paths = sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml")) + sorted(BUILDING_TYPES_ROOT.glob("*.txt"))
     for path in paths:
         offenders.extend(_production_method_precision_offenders(path))
+
+    assert not offenders
+
+
+def test_base_production_methods_are_output_only() -> None:
+    offenders: list[str] = []
+    paths = sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml")) + sorted(BUILDING_TYPES_ROOT.glob("*.txt"))
+    for path in paths:
+        offenders.extend(_base_production_method_input_offenders(path))
 
     assert not offenders
 

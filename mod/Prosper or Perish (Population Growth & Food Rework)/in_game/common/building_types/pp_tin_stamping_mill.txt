@@ -24,7 +24,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_tin_stamping_mill_base_tin = {
-        tools = 0.167 # picks and works upkeep
         produced = tin
         output = 0.3
         category = building_maintenance

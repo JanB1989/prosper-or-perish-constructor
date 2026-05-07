@@ -91,6 +91,12 @@ TRY_REPLACE:coastal = {
 	local_supply_limit_modifier = 0.05
 	local_monthly_development_modifier = 0.20
 }
+# Location marker applied on game start for locations bordering lakes.
+is_adjacent_to_lake = {
+	game_data = {
+		category = location
+	}
+}
 TRY_REPLACE:building_levels = {
 	game_data = {
 		category = location

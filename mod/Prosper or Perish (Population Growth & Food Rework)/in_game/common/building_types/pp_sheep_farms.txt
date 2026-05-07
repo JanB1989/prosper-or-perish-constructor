@@ -16,7 +16,6 @@ REPLACE:sheep_farms = {
     }
     unique_production_methods = {
         pp_sheep_farm_base_wool = {
-            tools = 0.208 # field tools and upkeep
             produced = wool
             output = 0.30
             category = building_maintenance

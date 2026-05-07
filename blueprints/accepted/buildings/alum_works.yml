@@ -50,7 +50,6 @@ building:
 
     unique_production_methods = {
         pp_alum_works_base_alum = {
-            tools = 0.25 # basic tool upkeep
             produced = alum
             output = 0.30
             category = building_maintenance

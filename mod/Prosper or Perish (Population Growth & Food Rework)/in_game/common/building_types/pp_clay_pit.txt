@@ -23,7 +23,6 @@ REPLACE:clay_pit = {
 
 unique_production_methods = {
 	pp_clay_pit_base_clay = {
-		tools = 0.042 # picks and works upkeep
 		produced = clay
 		output = 0.3
 			category = building_maintenance

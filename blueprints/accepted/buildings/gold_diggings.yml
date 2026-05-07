@@ -49,7 +49,6 @@ building:
 
     unique_production_methods = {
         pp_gold_diggings_base_gold = {
-            tools = 0.667 # picks and works upkeep
             produced = goods_gold
             output = 0.3
             category = building_maintenance

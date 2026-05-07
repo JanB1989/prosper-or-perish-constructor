@@ -25,7 +25,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_copper_mine_adit_base_copper = {
-        tools = 0.25 # picks and works upkeep
         produced = copper
         output = 0.3
         category = building_maintenance

@@ -24,7 +24,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_sericulture_farm_base_silk = {
-        tools = 0.333 # field tools and upkeep
         produced = silk
         output = 0.3
         category = building_maintenance

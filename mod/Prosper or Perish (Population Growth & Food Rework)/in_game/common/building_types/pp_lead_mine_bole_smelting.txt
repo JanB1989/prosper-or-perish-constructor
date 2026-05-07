@@ -25,7 +25,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_lead_mine_bole_base_lead = {
-        tools = 0.189 # picks and works upkeep
         produced = lead
         output = 0.34
         category = building_maintenance

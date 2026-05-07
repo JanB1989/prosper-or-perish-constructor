@@ -24,7 +24,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_cinnabar_pit_base_mercury = {
-        tools = 0.225 # picks and works upkeep
         produced = mercury
         output = 0.27
         category = building_maintenance

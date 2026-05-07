@@ -49,7 +49,6 @@ building:
 
     unique_production_methods = {
         pp_copper_mine_base_copper = {
-            tools = 0.225 # picks and works upkeep
             produced = copper
             output = 0.27
             category = building_maintenance

@@ -49,25 +49,21 @@ building:
 
     unique_production_methods = {
         pp_managed_forest_village_base_leather = {
-            tools = 0.583 # axes and camp upkeep
             produced = leather
             output = 0.70
             category = building_maintenance
         }
         pp_managed_forest_village_base_wild_game = {
-            tools = 0.194 # axes and camp upkeep
             produced = wild_game
             output = 0.70
             category = building_maintenance
         }
         pp_managed_forest_village_base_fur = {
-            tools = 0.389 # axes and camp upkeep
             produced = fur
             output = 0.70
             category = building_maintenance
         }
         pp_managed_forest_village_base_beeswax = {
-            tools = 0.389 # axes and camp upkeep
             produced = beeswax
             output = 0.70
             category = building_maintenance

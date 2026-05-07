@@ -25,7 +25,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_coal_mine_revolutions_base_coal = {
-        tools = 0.211 # picks and works upkeep
         produced = coal
         output = 0.38
         category = building_maintenance

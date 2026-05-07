@@ -46,7 +46,6 @@ building:
         # Slot 0 â€” fishery ground / climate (temperate vs arctic)
         unique_production_methods = {
             pp_fishing_village_base_fish = {
-                lumber = 0.167 # boat and gear upkeep
                 produced = fish
                 output = 0.30
                 category = building_maintenance

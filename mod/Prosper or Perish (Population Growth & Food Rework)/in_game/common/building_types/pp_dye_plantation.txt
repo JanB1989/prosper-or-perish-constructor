@@ -24,7 +24,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_dye_plantation_base_dyes = {
-        tools = 0.333 # field tools and upkeep
         produced = dyes
         output = 0.3
         category = building_maintenance

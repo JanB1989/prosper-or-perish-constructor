@@ -24,7 +24,6 @@ can_close = yes
 
 unique_production_methods = {
     pp_cocoa_grove_base_cocoa = {
-        tools = 0.333 # field tools and upkeep
         produced = cocoa
         output = 0.3
         category = building_maintenance

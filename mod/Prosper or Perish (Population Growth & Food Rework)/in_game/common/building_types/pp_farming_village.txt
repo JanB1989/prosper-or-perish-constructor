@@ -23,49 +23,41 @@ REPLACE:farming_village = {
     unique_production_methods = {
         pp_farming_village_base_livestock = {
             output = 0.30
-            tools = 0.125 # field tools and upkeep
             produced = livestock
             category = building_maintenance
         }
         pp_millet_farm_base_millet = {
             output = 0.30
-            tools = 0.083 # field tools and upkeep
             produced = millet
             category = building_maintenance
         }
         pp_wheat_farm_base_wheat = {
             output = 0.30
-            tools = 0.083 # field tools and upkeep
             produced = wheat
             category = building_maintenance
         }
         pp_maize_farm_base_maize = {
             output = 0.30
-            tools = 0.083 # field tools and upkeep
             produced = maize
             category = building_maintenance
         }
         pp_rice_farm_base_rice = {
             output = 0.30
-            tools = 0.083 # field tools and upkeep
             produced = rice
             category = building_maintenance
         }
         pp_legumes_farm_base_legumes = {
             output = 0.30
-            tools = 0.083 # field tools and upkeep
             produced = legumes
             category = building_maintenance
         }
         pp_potato_farm_base_potato = {
             output = 0.30
-            tools = 0.083 # field tools and upkeep
             produced = potato
             category = building_maintenance
         }
         pp_olives_farm_base_olives = {
             output = 0.30
-            tools = 0.083 # field tools and upkeep
             produced = olives
             category = building_maintenance
         }

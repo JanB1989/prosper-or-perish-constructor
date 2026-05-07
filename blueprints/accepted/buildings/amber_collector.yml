@@ -43,7 +43,7 @@ building:
 
     unique_production_methods = {
         pp_amber_collector_base_amber = {
-            tools = 0.3333 # basic tool upkeep
+            tools = 0.333 # basic tool upkeep
             produced = amber
             output = 0.3
             category = building_maintenance
@@ -57,7 +57,7 @@ building:
             fiber_crops = 0.08
             tools = 0.04
             produced = amber
-            output = 0.0875
+            output = 0.088
             category = building_maintenance
         }
     }
@@ -68,13 +68,13 @@ building:
         pp_amber_collector_sand_horses = {
             horses = 0.12
             produced = sand
-            output = 0.8641
+            output = 0.864
             category = building_maintenance
         }
         pp_amber_collector_sand_livestock = {
             livestock = 0.24
             produced = sand
-            output = 0.8641
+            output = 0.864
             category = building_maintenance
         }
     }

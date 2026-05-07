@@ -23,49 +23,49 @@ location_potential = {
 
 unique_production_methods = {
     pp_model_farm_base_livestock = {
-        tools = 0.2917 # field tools and upkeep
+        tools = 0.292 # field tools and upkeep
         produced = livestock
         output = 0.70
         category = building_maintenance
     }
     pp_model_farm_base_millet = {
-        tools = 0.1944 # field tools and upkeep
+        tools = 0.194 # field tools and upkeep
         produced = millet
         output = 0.70
         category = building_maintenance
     }
     pp_model_farm_base_wheat = {
-        tools = 0.1944 # field tools and upkeep
+        tools = 0.194 # field tools and upkeep
         produced = wheat
         output = 0.70
         category = building_maintenance
     }
     pp_model_farm_base_maize = {
-        tools = 0.1944 # field tools and upkeep
+        tools = 0.194 # field tools and upkeep
         produced = maize
         output = 0.70
         category = building_maintenance
     }
     pp_model_farm_base_rice = {
-        tools = 0.1944 # field tools and upkeep
+        tools = 0.194 # field tools and upkeep
         produced = rice
         output = 0.70
         category = building_maintenance
     }
     pp_model_farm_base_legumes = {
-        tools = 0.1944 # field tools and upkeep
+        tools = 0.194 # field tools and upkeep
         produced = legumes
         output = 0.70
         category = building_maintenance
     }
     pp_model_farm_base_potato = {
-        tools = 0.1944 # field tools and upkeep
+        tools = 0.194 # field tools and upkeep
         produced = potato
         output = 0.70
         category = building_maintenance
     }
     pp_model_farm_base_olives = {
-        tools = 0.1944 # field tools and upkeep
+        tools = 0.194 # field tools and upkeep
         produced = olives
         output = 0.70
         category = building_maintenance
@@ -77,7 +77,7 @@ unique_production_methods = {
     }
     pp_model_farm_livestock = {
         produced = livestock
-        output = 9.6389
+        output = 9.639
         tools = 1.80
         horses = 1.71
         furniture = 0.495

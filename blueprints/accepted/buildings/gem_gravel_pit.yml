@@ -49,7 +49,7 @@ building:
 
     unique_production_methods = {
         pp_gem_gravel_pit_base_gems = {
-            tools = 0.2444 # picks and works upkeep
+            tools = 0.244 # picks and works upkeep
             produced = gems
             output = 0.22
             category = building_maintenance
@@ -63,7 +63,7 @@ building:
             lumber = 0.967
             tools = 0.80
             produced = gems
-            output = 1.1551
+            output = 1.155
             category = building_maintenance
         }
     }
@@ -75,7 +75,7 @@ building:
             lumber = 0.14
             tools = 0.10
             produced = goods_gold
-            output = 0.0765
+            output = 0.077
             category = building_maintenance
         }
         pp_gem_gravel_pit_sand = {

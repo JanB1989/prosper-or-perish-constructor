@@ -48,7 +48,7 @@ building:
 
     unique_production_methods = {
         pp_coal_mine_base_coal = {
-            tools = 0.1667 # picks and works upkeep
+            tools = 0.167 # picks and works upkeep
             produced = coal
             output = 0.3
             category = building_maintenance
@@ -76,7 +76,7 @@ building:
             lumber = 0.12
             tools = 0.08
             produced = clay
-            output = 1.0081
+            output = 1.008
             category = building_maintenance
         }
     }

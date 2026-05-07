@@ -38,7 +38,7 @@ building:
 
     unique_production_methods = {
         pp_dye_plantation_base_dyes = {
-            tools = 0.3333 # field tools and upkeep
+            tools = 0.333 # field tools and upkeep
             produced = dyes
             output = 0.3
             category = building_maintenance
@@ -52,7 +52,7 @@ building:
             lumber = 0.12 # drying racks, vats
             tools = 0.04 # knives, presses
             produced = dyes
-            output = 0.0937
+            output = 0.094
             category = building_maintenance
         }
     }

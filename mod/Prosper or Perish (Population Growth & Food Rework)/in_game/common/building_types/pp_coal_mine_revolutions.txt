@@ -25,7 +25,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_coal_mine_revolutions_base_coal = {
-        tools = 0.2111 # picks and works upkeep
+        tools = 0.211 # picks and works upkeep
         produced = coal
         output = 0.38
         category = building_maintenance
@@ -40,7 +40,7 @@ unique_production_methods = {
         tools = 2.10
         beeswax = 0.42
         produced = coal
-        output = 5.8141
+        output = 5.814
         category = building_maintenance
     }
 }
@@ -52,7 +52,7 @@ unique_production_methods = {
         lumber = 0.18
         tools = 0.12
         produced = clay
-        output = 1.5119
+        output = 1.512
         category = building_maintenance
     }
 }

@@ -51,7 +51,7 @@ building:
 
     unique_production_methods = {
         pp_iron_mine_deep_base_iron = {
-            tools = 0.3333 # picks and works upkeep
+            tools = 0.333 # picks and works upkeep
             produced = iron
             output = 0.40
             category = building_maintenance
@@ -66,7 +66,7 @@ building:
             tools = 2.00 # pumps, picks, haulage
             beeswax = 0.42 # candles, pump seals
             produced = iron
-            output = 3.8161
+            output = 3.816
             category = building_maintenance
         }
         pp_iron_mine_deep_slitting_ore = {
@@ -83,7 +83,7 @@ building:
             leather = 0.52 # harness, buckets
             beeswax = 0.30 # mine candles, seals
             produced = iron
-            output = 2.2081
+            output = 2.208
             category = building_maintenance
         }
         pp_iron_mine_deep_ore_dressing_floors = {

@@ -43,25 +43,25 @@ building:
         build_time = village_build_time
         unique_production_methods = {
             pp_forest_village_base_leather = {
-                tools = 0.1667 # axes and camp upkeep
+                tools = 0.167 # axes and camp upkeep
                 produced = leather
                 output = 0.20
                 category = building_maintenance
             }
             pp_forest_village_base_wild_game = {
-                tools = 0.0833 # axes and camp upkeep
+                tools = 0.083 # axes and camp upkeep
                 produced = wild_game
                 output = 0.30
                 category = building_maintenance
             }
             pp_forest_village_base_fur = {
-                tools = 0.1389 # axes and camp upkeep
+                tools = 0.139 # axes and camp upkeep
                 produced = fur
                 output = 0.25
                 category = building_maintenance
             }
             pp_forest_village_base_beeswax = {
-                tools = 0.1389 # axes and camp upkeep
+                tools = 0.139 # axes and camp upkeep
                 produced = beeswax
                 output = 0.25
                 category = building_maintenance
@@ -88,7 +88,7 @@ building:
             }
             pp_fur_trapping = {
                 produced = fur
-                output = 0.2048
+                output = 0.205
                 tools = 0.05
                 weaponry = 0.08
                 debug_max_profit = 0

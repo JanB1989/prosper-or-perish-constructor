@@ -38,7 +38,7 @@ building:
 
     unique_production_methods = {
         pp_pearl_fishery_base_pearls = {
-            lumber = 0.4444 # boat and gear upkeep
+            lumber = 0.444 # boat and gear upkeep
             produced = pearls
             output = 0.2
             category = building_maintenance
@@ -52,7 +52,7 @@ building:
             naval_supplies = 0.10
             victuals = 0.18
             produced = pearls
-            output = 0.2344
+            output = 0.234
             category = building_maintenance
         }
     }

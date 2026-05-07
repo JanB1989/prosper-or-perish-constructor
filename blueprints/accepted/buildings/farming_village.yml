@@ -70,43 +70,43 @@ building:
             }
             pp_millet_farm_base_millet = {
                 output = 0.30
-                tools = 0.0833 # field tools and upkeep
+                tools = 0.083 # field tools and upkeep
                 produced = millet
                 category = building_maintenance
             }
             pp_wheat_farm_base_wheat = {
                 output = 0.30
-                tools = 0.0833 # field tools and upkeep
+                tools = 0.083 # field tools and upkeep
                 produced = wheat
                 category = building_maintenance
             }
             pp_maize_farm_base_maize = {
                 output = 0.30
-                tools = 0.0833 # field tools and upkeep
+                tools = 0.083 # field tools and upkeep
                 produced = maize
                 category = building_maintenance
             }
             pp_rice_farm_base_rice = {
                 output = 0.30
-                tools = 0.0833 # field tools and upkeep
+                tools = 0.083 # field tools and upkeep
                 produced = rice
                 category = building_maintenance
             }
             pp_legumes_farm_base_legumes = {
                 output = 0.30
-                tools = 0.0833 # field tools and upkeep
+                tools = 0.083 # field tools and upkeep
                 produced = legumes
                 category = building_maintenance
             }
             pp_potato_farm_base_potato = {
                 output = 0.30
-                tools = 0.0833 # field tools and upkeep
+                tools = 0.083 # field tools and upkeep
                 produced = potato
                 category = building_maintenance
             }
             pp_olives_farm_base_olives = {
                 output = 0.30
-                tools = 0.0833 # field tools and upkeep
+                tools = 0.083 # field tools and upkeep
                 produced = olives
                 category = building_maintenance
             }
@@ -126,7 +126,7 @@ building:
             pp_millet_farm_maintenance = {
                 tools = 0.15
                 horses = 0.113
-                output = 0.8285
+                output = 0.829
                 produced = millet
                 debug_max_profit = 0
                 category = building_maintenance
@@ -134,7 +134,7 @@ building:
             pp_millet_farm_livestock = {
                 tools = 0.15
                 livestock = 0.226
-                output = 0.8284
+                output = 0.828
                 produced = millet
                 debug_max_profit = 0
                 category = building_maintenance
@@ -142,7 +142,7 @@ building:
             pp_wheat_farm_maintenance = {
                 tools = 0.15
                 horses = 0.113
-                output = 0.8284
+                output = 0.828
                 produced = wheat
                 debug_max_profit = 0
                 category = building_maintenance
@@ -150,7 +150,7 @@ building:
             pp_wheat_farm_livestock = {
                 tools = 0.15
                 livestock = 0.226
-                output = 0.8286
+                output = 0.829
                 produced = wheat
                 debug_max_profit = 0
                 category = building_maintenance
@@ -158,7 +158,7 @@ building:
             pp_maize_farm_maintenance = {
                 tools = 0.1
                 livestock = 0.15
-                output = 0.5512
+                output = 0.551
                 produced = maize
                 debug_max_profit = 0
                 category = building_maintenance
@@ -166,7 +166,7 @@ building:
             pp_rice_farm_maintenance = {
                 tools = 0.1
                 livestock = 0.15
-                output = 0.5513
+                output = 0.551
                 produced = rice
                 debug_max_profit = 0
                 category = building_maintenance
@@ -174,7 +174,7 @@ building:
             pp_legumes_farm_maintenance = {
                 tools = 0.15
                 horses = 0.113
-                output = 0.8284
+                output = 0.828
                 produced = legumes
                 debug_max_profit = 0
                 category = building_maintenance
@@ -182,7 +182,7 @@ building:
             pp_legumes_farm_livestock = {
                 tools = 0.15
                 livestock = 0.226
-                output = 0.8285
+                output = 0.829
                 produced = legumes
                 debug_max_profit = 0
                 category = building_maintenance
@@ -190,7 +190,7 @@ building:
             pp_potato_farm_maintenance = {
                 tools = 0.1
                 livestock = 0.15
-                output = 0.5513
+                output = 0.551
                 produced = potato
                 debug_max_profit = 0
                 category = building_maintenance
@@ -198,7 +198,7 @@ building:
             pp_olives_farm_maintenance = {
                 tools = 0.1
                 livestock = 0.15
-                output = 0.5512
+                output = 0.551
                 produced = olives
                 debug_max_profit = 0
                 category = building_maintenance
@@ -212,7 +212,7 @@ building:
                 furniture = 0.1
                 cloth = 0.1
                 produced = beeswax
-                output = 0.3149
+                output = 0.315
                 debug_max_profit = 0
                 category = building_maintenance
             }

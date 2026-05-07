@@ -50,7 +50,7 @@ building:
 
     unique_production_methods = {
         pp_gold_stamp_mill_base_gold = {
-            tools = 0.6667 # picks and works upkeep
+            tools = 0.667 # picks and works upkeep
             produced = goods_gold
             output = 0.3
             category = building_maintenance
@@ -65,7 +65,7 @@ building:
             tools = 1.25
             mercury = 0.35
             produced = goods_gold
-            output = 1.0501
+            output = 1.05
             category = building_maintenance
         }
     }

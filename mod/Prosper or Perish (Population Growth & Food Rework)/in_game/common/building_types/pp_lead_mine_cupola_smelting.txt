@@ -24,7 +24,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_lead_mine_cupola_base_lead = {
-        tools = 0.2111 # picks and works upkeep
+        tools = 0.211 # picks and works upkeep
         produced = lead
         output = 0.38
         category = building_maintenance
@@ -39,7 +39,7 @@ unique_production_methods = {
         tools = 2.65
         beeswax = 0.30
         produced = lead
-        output = 6.1198
+        output = 6.12
         category = building_maintenance
     }
 }

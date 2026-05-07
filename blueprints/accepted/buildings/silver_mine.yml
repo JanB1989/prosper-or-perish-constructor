@@ -48,7 +48,7 @@ building:
 
     unique_production_methods = {
         pp_silver_mine_base_silver = {
-            tools = 0.3667 # picks and works upkeep
+            tools = 0.367 # picks and works upkeep
             produced = silver
             output = 0.22
             category = building_maintenance
@@ -75,7 +75,7 @@ building:
             lumber = 0.12
             tools = 0.107
             produced = lead
-            output = 0.3006
+            output = 0.301
             category = building_maintenance
         }
     }

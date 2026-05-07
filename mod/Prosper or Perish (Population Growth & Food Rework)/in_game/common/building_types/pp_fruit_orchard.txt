@@ -17,7 +17,7 @@ REPLACE:fruit_orchard = {
     }
     unique_production_methods = {
         pp_fruit_orchard_base_fruit = {
-            tools = 0.0833 # field tools and upkeep
+            tools = 0.083 # field tools and upkeep
             produced = fruit
             output = 0.30
             category = building_maintenance
@@ -29,7 +29,7 @@ REPLACE:fruit_orchard = {
         }
         pp_fruit_orchard_maintenance = {
             produced = fruit
-            output = 0.3937
+            output = 0.394
             lumber = 0.25
             debug_max_profit = 0
             category = building_maintenance

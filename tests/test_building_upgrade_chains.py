@@ -45,6 +45,14 @@ GAME_START_PATH = (
     / "on_action"
     / "pp_game_start.txt"
 )
+BUILDING_TYPES_ROOT = (
+    ROOT
+    / "mod"
+    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "in_game"
+    / "common"
+    / "building_types"
+)
 LOCALIZATION_ROOT = (
     ROOT
     / "mod"
@@ -121,6 +129,23 @@ DEACTIVATED_MINING_VILLAGE_BLUEPRINTS = {
     "buildings/mining_village_coke_blast_furnace.yml",
     "buildings/mining_village_hot_blast_furnace.yml",
 }
+GAME_START_DIRECT_RGO_BUILDINGS = {
+    "alum_quarry",
+    "coal_mine",
+    "copper_mine",
+    "gem_gravel_pit",
+    "gold_diggings",
+    "iron_mine",
+    "lead_mine",
+    "marble_quarry",
+    "cinnabar_pit",
+    "silver_mine",
+    "tin_streamworks",
+}
+PM_PRECISION_RE = re.compile(
+    r"^\s*(?P<key>[A-Za-z][A-Za-z0-9_]*)\s*=\s*(?P<value>-?\d+\.\d{4,})\b"
+)
+PM_PRECISION_SKIP_KEYS = {"debug_max_profit"}
 
 DEACTIVATED_BOG_IRON_BLUEPRINTS = {
     "buildings/bog_iron_smelter_slitting_mills.yml",
@@ -151,6 +176,27 @@ def _advance_block(advance: str, text: str) -> str:
     )
     assert match is not None, f"{advance} block missing"
     return match.group("body")
+
+
+def _production_method_precision_offenders(path: Path) -> list[str]:
+    text = path.read_text(encoding="utf-8-sig")
+    depth = 0
+    production_method_depths: list[int] = []
+    offenders: list[str] = []
+
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        if re.search(r"\bunique_production_methods\s*=\s*\{", line):
+            production_method_depths.append(depth + line.count("{") - line.count("}"))
+        if production_method_depths:
+            match = PM_PRECISION_RE.match(line)
+            if match and match.group("key") not in PM_PRECISION_SKIP_KEYS:
+                relative = path.relative_to(ROOT)
+                offenders.append(f"{relative}:{line_number}: {line.strip()}")
+        depth += line.count("{") - line.count("}")
+        while production_method_depths and depth < production_method_depths[-1]:
+            production_method_depths.pop()
+
+    return offenders
 
 
 def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
@@ -311,7 +357,7 @@ def test_manpower_building_blueprints_do_not_copy_invalid_owner_culture_gate() -
 
 
 def test_game_start_never_places_offshore_fishery_directly_and_culls_invalid_locations() -> None:
-    text = GAME_START_PATH.read_text(encoding="utf-8")
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
 
     assert "construct_building = {\n\t\t\t\t\t\tbuilding_type = building_type:offshore_fishery" not in text
     assert re.search(
@@ -320,6 +366,42 @@ def test_game_start_never_places_offshore_fishery_directly_and_culls_invalid_loc
         text,
         flags=re.S,
     )
+
+
+def test_game_start_restores_lake_adjacency_modifier() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+
+    assert re.search(r"on_game_start\s*=\s*\{.*?pp_apply_adjacent_to_lake_modifier", text, flags=re.S)
+    assert "pp_apply_adjacent_to_lake_modifier = {" in text
+    assert "limit = { is_adjacent_to_lake = yes }" in text
+    assert "modifier = adjacent_to_lake" in text
+
+
+def test_game_start_direct_rgo_construction_checks_buildability() -> None:
+    lines = GAME_START_PATH.read_text(encoding="utf-8-sig").splitlines()
+    offenders: list[str] = []
+
+    for index, line in enumerate(lines):
+        match = re.match(r"\s*building_type\s*=\s*building_type:([A-Za-z0-9_]+)\s*$", line)
+        if not match or match.group(1) not in GAME_START_DIRECT_RGO_BUILDINGS:
+            continue
+        if index == 0 or not re.match(r"\s*construct_building\s*=\s*\{\s*$", lines[index - 1]):
+            continue
+        building = match.group(1)
+        guard = f"can_build_building = building_type:{building}"
+        if guard not in "\n".join(lines[max(0, index - 24) : index]):
+            offenders.append(f"{building} near line {index + 1}")
+
+    assert not offenders
+
+
+def test_building_production_method_quantities_use_at_most_three_decimals() -> None:
+    offenders: list[str] = []
+    paths = sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml")) + sorted(BUILDING_TYPES_ROOT.glob("*.txt"))
+    for path in paths:
+        offenders.extend(_production_method_precision_offenders(path))
+
+    assert not offenders
 
 
 def test_mining_village_chain_is_deactivated() -> None:

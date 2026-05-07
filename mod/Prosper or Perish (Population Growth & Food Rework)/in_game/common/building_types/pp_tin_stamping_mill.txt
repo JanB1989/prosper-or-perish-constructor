@@ -24,7 +24,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_tin_stamping_mill_base_tin = {
-        tools = 0.1667 # picks and works upkeep
+        tools = 0.167 # picks and works upkeep
         produced = tin
         output = 0.3
         category = building_maintenance
@@ -50,14 +50,14 @@ unique_production_methods = {
         lumber = 0.213
         tools = 0.12
         produced = copper
-        output = 0.2718
+        output = 0.272
         category = building_maintenance
     }
     pp_tin_stamping_mill_lead = {
         lumber = 0.213
         tools = 0.12
         produced = lead
-        output = 0.4077
+        output = 0.408
         category = building_maintenance
     }
 }

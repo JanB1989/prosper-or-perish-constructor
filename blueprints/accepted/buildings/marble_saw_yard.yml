@@ -50,7 +50,7 @@ building:
 
     unique_production_methods = {
         pp_marble_saw_yard_base_marble = {
-            tools = 0.4167 # basic tool upkeep
+            tools = 0.417 # basic tool upkeep
             produced = marble
             output = 0.30
             category = building_maintenance
@@ -65,7 +65,7 @@ building:
             tools = 1.15
             leather = 0.28
             produced = marble
-            output = 1.3896
+            output = 1.39
             category = building_maintenance
         }
     }
@@ -84,7 +84,7 @@ building:
             lumber = 0.10
             tools = 0.06
             produced = sand
-            output = 0.7919
+            output = 0.792
             category = building_maintenance
         }
     }

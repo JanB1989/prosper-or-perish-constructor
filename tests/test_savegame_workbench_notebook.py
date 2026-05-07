@@ -47,9 +47,7 @@ def test_savegame_workbench_notebook_executes_tiny_dataset(
         "food_global",
         "building_latest",
         "pm_adoption",
-        "pm_slot_latest",
         "pm_slot_ts",
-        "pm_latest_distribution_by_slot",
         "pm_usage_by_slot_over_time",
         "pm_regional_preferences_by_slot",
         "pm_values",
@@ -60,7 +58,8 @@ def test_savegame_workbench_notebook_executes_tiny_dataset(
     assert "good_label" in namespace["goods_global_ts"].columns
     assert "market_label" in namespace["food_rank"].columns
     assert "building_label" in namespace["building_latest"].columns
-    assert "slot_label" in namespace["pm_slot_latest"].columns
+    assert "slot_label" in namespace["pm_slot_ts"].columns
+    assert "buildings" in namespace["pm_slot_ts"].columns
     assert "year" in namespace["pm_slot_ts"].columns
     assert "consumption_label" in namespace["good_consumption_latest"].columns
     assert "year" in namespace["good_consumption_over_time"].columns

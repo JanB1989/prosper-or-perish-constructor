@@ -66,6 +66,13 @@ RGO_STATIC_BONUS_EFFECTS = (
     MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_rgo_static_bonus_effects.txt"
 )
 RAW_MATERIAL_CHANGED = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_raw_material_changed.txt"
+COLUMBIAN_EXCHANGE_RGO_REFRESH_ACTIONS = (
+    MOD_ROOT
+    / "in_game"
+    / "common"
+    / "generic_actions"
+    / "pp_columbian_exchange_rgo_refresh.txt"
+)
 COLUMBIAN_EXCHANGE_DEBUG_EVENT = (
     MOD_ROOT / "in_game" / "events" / "debug" / "pp_columbian_exchange_debug.txt"
 )
@@ -2154,7 +2161,24 @@ def test_rgo_static_bonus_refresh_removes_and_reapplies_all_bonus_modifiers() ->
         assert f"modifier = {modifier}" in effect_text, good
 
 
-def test_columbian_exchange_debug_event_exercises_raw_material_change_hook() -> None:
+def test_columbian_exchange_actions_refresh_rgo_bonus_after_raw_material_swap() -> None:
+    action_text = COLUMBIAN_EXCHANGE_RGO_REFRESH_ACTIONS.read_text(encoding="utf-8-sig")
+    entries = {entry.key: entry.value for entry in parse_file(COLUMBIAN_EXCHANGE_RGO_REFRESH_ACTIONS).entries}
+
+    for action_key in (
+        "TRY_REPLACE:move_nw_good_to_new_location",
+        "TRY_REPLACE:move_ow_good_to_new_location",
+    ):
+        assert action_key in entries
+
+    assert action_text.count("change_raw_material = scope:target_good") == 2
+    assert action_text.count("pp_refresh_rgo_static_bonus = yes") == 2
+    assert action_text.count(
+        "change_raw_material = scope:target_good\n\t\t\tpp_refresh_rgo_static_bonus = yes"
+    ) == 2
+
+
+def test_columbian_exchange_debug_event_refreshes_after_raw_material_swap() -> None:
     event_text = COLUMBIAN_EXCHANGE_DEBUG_EVENT.read_text(encoding="utf-8-sig")
     entries = {entry.key: entry.value for entry in parse_file(COLUMBIAN_EXCHANGE_DEBUG_EVENT).entries}
 
@@ -2163,7 +2187,10 @@ def test_columbian_exchange_debug_event_exercises_raw_material_change_hook() -> 
     assert "set_variable = { name = is_in_columbian_exchange value = yes }" in event_text
     assert "change_raw_material = goods:maize" in event_text
     assert "change_raw_material = goods:potato" in event_text
-    assert "pp_refresh_rgo_static_bonus" not in event_text
+    assert "pp_refresh_rgo_static_bonus = yes" in event_text
+    assert event_text.count(
+        "change_raw_material = goods:maize\n\t\t\t}\n\t\t\tpp_refresh_rgo_static_bonus = yes"
+    ) == 1
 
 
 def test_columbian_exchange_debug_event_keys_are_localized() -> None:

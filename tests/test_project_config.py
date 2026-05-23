@@ -62,6 +62,13 @@ GAME_CONCEPT_ROOT = MOD_ROOT / "main_menu" / "common" / "game_concepts"
 LOCALIZATION_ROOT = MOD_ROOT / "main_menu" / "localization" / "english"
 CAPACITY_PRECALC = MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_capacity_precalc.txt"
 RGO_STATIC_BONUSES = MOD_ROOT / "in_game" / "common" / "static_modifiers" / "pp_rgo_static_bonuses.txt"
+RGO_STATIC_BONUS_EFFECTS = (
+    MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_rgo_static_bonus_effects.txt"
+)
+RAW_MATERIAL_CHANGED = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_raw_material_changed.txt"
+COLUMBIAN_EXCHANGE_DEBUG_EVENT = (
+    MOD_ROOT / "in_game" / "events" / "debug" / "pp_columbian_exchange_debug.txt"
+)
 BUILDING_BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted" / "buildings"
 FARMING_VILLAGE_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "farming_village.yml"
 MODEL_FARM_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "model_farm.yml"
@@ -1182,8 +1189,10 @@ def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
     assert "NOT = { pp_pasture_friendly_location > 0 }" in game_start
     assert "NOT = { raw_material = goods:fruit }" not in game_start
     assert "NOT = { raw_material = goods:wool }" not in game_start
-    assert "raw_material = goods:fruit" in game_start
-    assert "raw_material = goods:wool" in game_start
+
+    rgo_effects = RGO_STATIC_BONUS_EFFECTS.read_text(encoding="utf-8-sig")
+    assert "raw_material = goods:fruit" in rgo_effects
+    assert "raw_material = goods:wool" in rgo_effects
 
 
 def test_fish_blueprints_use_shared_capacity_pool_and_keep_distinctions() -> None:
@@ -2108,6 +2117,64 @@ def test_rgo_static_bonus_max_control_magnitude_is_capped() -> None:
 
 def test_wool_rgo_bonus_has_no_population_growth_penalty() -> None:
     assert "local_population_growth" not in _rgo_bonus_values()["wool"]
+
+
+def test_rgo_static_bonus_game_start_uses_shared_refresh_effect() -> None:
+    game_start = GAME_START.read_text(encoding="utf-8-sig")
+
+    assert "pp_refresh_rgo_static_bonus = yes" in game_start
+    assert "modifier = pp_rgo_bonus_" not in game_start
+
+
+def test_raw_material_change_hook_refreshes_rgo_static_bonus() -> None:
+    entries = {entry.key: entry.value for entry in parse_file(RAW_MATERIAL_CHANGED).entries}
+
+    on_raw_material_changed = entries["on_raw_material_changed"]
+    refresh_on_action = entries["pp_refresh_rgo_static_bonus_on_raw_material_changed"]
+    assert isinstance(on_raw_material_changed, CList)
+    assert isinstance(refresh_on_action, CList)
+
+    on_actions = _entry_values(on_raw_material_changed)["on_actions"]
+    assert isinstance(on_actions, CList)
+    assert "pp_refresh_rgo_static_bonus_on_raw_material_changed" in {str(item) for item in on_actions.items}
+    assert _clist_contains(refresh_on_action, "pp_refresh_rgo_static_bonus", True)
+
+
+def test_rgo_static_bonus_refresh_removes_and_reapplies_all_bonus_modifiers() -> None:
+    bonuses = _rgo_bonus_values()
+    effect_text = RGO_STATIC_BONUS_EFFECTS.read_text(encoding="utf-8-sig")
+    effects = {entry.key: entry.value for entry in parse_file(RGO_STATIC_BONUS_EFFECTS).entries}
+    refresh = effects["pp_refresh_rgo_static_bonus"]
+    assert isinstance(refresh, CList)
+
+    for good in bonuses:
+        modifier = f"pp_rgo_bonus_{good}"
+        assert _clist_contains(refresh, "remove_location_modifier", modifier), good
+        assert f"raw_material = goods:{good}" in effect_text, good
+        assert f"modifier = {modifier}" in effect_text, good
+
+
+def test_columbian_exchange_debug_event_exercises_raw_material_change_hook() -> None:
+    event_text = COLUMBIAN_EXCHANGE_DEBUG_EVENT.read_text(encoding="utf-8-sig")
+    entries = {entry.key: entry.value for entry in parse_file(COLUMBIAN_EXCHANGE_DEBUG_EVENT).entries}
+
+    assert "pp_columbian_exchange_debug.1" in entries
+    assert "activate_situation = situation:columbian_exchange" in event_text
+    assert "set_variable = { name = is_in_columbian_exchange value = yes }" in event_text
+    assert "change_raw_material = goods:maize" in event_text
+    assert "change_raw_material = goods:potato" in event_text
+    assert "pp_refresh_rgo_static_bonus" not in event_text
+
+
+def test_columbian_exchange_debug_event_keys_are_localized() -> None:
+    localization_text = (LOCALIZATION_ROOT / "pp_debug_l_english.yml").read_text(encoding="utf-8-sig")
+
+    for key in (
+        "pp_columbian_exchange_debug.1.title",
+        "pp_columbian_exchange_debug.1.desc",
+        "pp_columbian_exchange_debug.1.a",
+    ):
+        assert f" {key}:" in localization_text
 
 
 def test_farming_village_uses_baseline_building_price() -> None:

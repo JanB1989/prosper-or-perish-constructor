@@ -1,0 +1,35 @@
+﻿namespace = pp_columbian_exchange_debug
+
+pp_columbian_exchange_debug.1 = {
+	type = country_event
+	title = pp_columbian_exchange_debug.1.title
+	desc = pp_columbian_exchange_debug.1.desc
+	outcome = neutral
+	orphan = yes
+
+	immediate = {
+		if = {
+			limit = {
+				situation:columbian_exchange = {
+					situation_is_active = no
+					situation_has_ended = no
+				}
+			}
+			activate_situation = situation:columbian_exchange
+		}
+		set_variable = { name = is_in_columbian_exchange value = yes }
+	}
+
+	option = {
+		name = pp_columbian_exchange_debug.1.a
+		capital = {
+			if = {
+				limit = { raw_material = goods:maize }
+				change_raw_material = goods:potato
+			}
+			else = {
+				change_raw_material = goods:maize
+			}
+		}
+	}
+}

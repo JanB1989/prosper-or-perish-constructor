@@ -1,0 +1,474 @@
+﻿# Prosper or Perish - shared RGO static bonus refresh helpers.
+# Root scope: location.
+
+pp_refresh_rgo_static_bonus = {
+	remove_location_modifier = pp_rgo_bonus_beeswax
+	remove_location_modifier = pp_rgo_bonus_chili
+	remove_location_modifier = pp_rgo_bonus_cloves
+	remove_location_modifier = pp_rgo_bonus_cocoa
+	remove_location_modifier = pp_rgo_bonus_coffee
+	remove_location_modifier = pp_rgo_bonus_cotton
+	remove_location_modifier = pp_rgo_bonus_dyes
+	remove_location_modifier = pp_rgo_bonus_elephants
+	remove_location_modifier = pp_rgo_bonus_fiber_crops
+	remove_location_modifier = pp_rgo_bonus_fruit
+	remove_location_modifier = pp_rgo_bonus_horses
+	remove_location_modifier = pp_rgo_bonus_incense
+	remove_location_modifier = pp_rgo_bonus_legumes
+	remove_location_modifier = pp_rgo_bonus_livestock
+	remove_location_modifier = pp_rgo_bonus_maize
+	remove_location_modifier = pp_rgo_bonus_millet
+	remove_location_modifier = pp_rgo_bonus_olives
+	remove_location_modifier = pp_rgo_bonus_pepper
+	remove_location_modifier = pp_rgo_bonus_potato
+	remove_location_modifier = pp_rgo_bonus_rice
+	remove_location_modifier = pp_rgo_bonus_saffron
+	remove_location_modifier = pp_rgo_bonus_silk
+	remove_location_modifier = pp_rgo_bonus_sugar
+	remove_location_modifier = pp_rgo_bonus_tea
+	remove_location_modifier = pp_rgo_bonus_tobacco
+	remove_location_modifier = pp_rgo_bonus_wheat
+	remove_location_modifier = pp_rgo_bonus_wine
+	remove_location_modifier = pp_rgo_bonus_wool
+	remove_location_modifier = pp_rgo_bonus_lumber
+	remove_location_modifier = pp_rgo_bonus_amber
+	remove_location_modifier = pp_rgo_bonus_clay
+	remove_location_modifier = pp_rgo_bonus_fish
+	remove_location_modifier = pp_rgo_bonus_medicaments
+	remove_location_modifier = pp_rgo_bonus_pearls
+	remove_location_modifier = pp_rgo_bonus_salt
+	remove_location_modifier = pp_rgo_bonus_sand
+	remove_location_modifier = pp_rgo_bonus_fur
+	remove_location_modifier = pp_rgo_bonus_ivory
+	remove_location_modifier = pp_rgo_bonus_wild_game
+	remove_location_modifier = pp_rgo_bonus_coal
+	remove_location_modifier = pp_rgo_bonus_iron
+	remove_location_modifier = pp_rgo_bonus_copper
+	remove_location_modifier = pp_rgo_bonus_goods_gold
+	remove_location_modifier = pp_rgo_bonus_silver
+	remove_location_modifier = pp_rgo_bonus_stone
+	remove_location_modifier = pp_rgo_bonus_tin
+	remove_location_modifier = pp_rgo_bonus_lead
+	remove_location_modifier = pp_rgo_bonus_gems
+	remove_location_modifier = pp_rgo_bonus_saltpeter
+	remove_location_modifier = pp_rgo_bonus_alum
+	remove_location_modifier = pp_rgo_bonus_marble
+	remove_location_modifier = pp_rgo_bonus_mercury
+
+	if = {
+		limit = { raw_material = goods:beeswax }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_beeswax
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:chili }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_chili
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:cloves }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_cloves
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:cocoa }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_cocoa
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:coffee }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_coffee
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:cotton }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_cotton
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:dyes }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_dyes
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:elephants }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_elephants
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:fiber_crops }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_fiber_crops
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:fruit }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_fruit
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:horses }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_horses
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:incense }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_incense
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:legumes }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_legumes
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:livestock }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_livestock
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:maize }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_maize
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:millet }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_millet
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:olives }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_olives
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:pepper }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_pepper
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:potato }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_potato
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:rice }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_rice
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:saffron }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_saffron
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:silk }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_silk
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:sugar }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_sugar
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:tea }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_tea
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:tobacco }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_tobacco
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:wheat }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_wheat
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:wine }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_wine
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:wool }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_wool
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:lumber }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_lumber
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:amber }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_amber
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:clay }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_clay
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:fish }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_fish
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:medicaments }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_medicaments
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:pearls }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_pearls
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:salt }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_salt
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:sand }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_sand
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:fur }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_fur
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:ivory }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_ivory
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:wild_game }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_wild_game
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:coal }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_coal
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:iron }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_iron
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:copper }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_copper
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:goods_gold }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_goods_gold
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:silver }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_silver
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:stone }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_stone
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:tin }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_tin
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:lead }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_lead
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:gems }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_gems
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:saltpeter }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_saltpeter
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:alum }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_alum
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:marble }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_marble
+			months = -1
+			mode = replace
+		}
+	}
+	else_if = {
+		limit = { raw_material = goods:mercury }
+		add_location_modifier = {
+			modifier = pp_rgo_bonus_mercury
+			months = -1
+			mode = replace
+		}
+	}
+}

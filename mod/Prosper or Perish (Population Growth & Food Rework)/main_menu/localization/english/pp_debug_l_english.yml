@@ -21,3 +21,6 @@
  pp_debug.3.desc_skip_capacity: "Uppland (Stockholm)\nFood: #Y [ROOT.GetVariable('pp_v').GetValue|2]#! (below -20)\n\nVictuals market is #R not fully employing#! — skipping build."
  pp_debug.3.desc_skip_goods: "Uppland (Stockholm)\nFood: #Y [ROOT.GetVariable('pp_v').GetValue|2]#! (below -20)\n\nVictuals market is #R lacking input goods#! — skipping build."
  pp_debug.3.desc_in_range: "Uppland (Stockholm)\nFood: #Y [ROOT.GetVariable('pp_v').GetValue|2]#!\n\nBetween -20 and 80 — no action needed."
+ pp_columbian_exchange_debug.1.title: "DEBUG: Columbian Exchange Raw Good"
+ pp_columbian_exchange_debug.1.desc: "Starts the Columbian Exchange situation for this country and changes the capital raw material between maize and potato for RGO bonus testing."
+ pp_columbian_exchange_debug.1.a: "Change capital raw good"

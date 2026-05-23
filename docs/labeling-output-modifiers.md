@@ -61,6 +61,9 @@ Important fields:
 - `defaults.null_productivity`: optional constructor-level replacement for
   dealbreaker/fallback productivity rows that previously used each evaluator's
   `dealbreaker_productivity`, usually `-1.0`.
+- `defaults.raw_material_output_floor`: optional final export floor for a
+  location's own `raw_material` output modifier. This does not synthesize
+  missing raw-good keys or clamp other goods in the same location.
 - `defaults.round_decimals`: decimal places used when writing EU5 modifier
   values.
 - `defaults.drop_zero_productivity`: drops rounded `0.00` entries from generated
@@ -106,9 +109,10 @@ The current test baseline is:
 
 - `scale: rank_uniform`
 - `mmr_mean_center: true`
-- `scale_args.output_min: -0.6`
-- `scale_args.output_max: 0.4`
-- `null_productivity: -0.6`
+- `scale_args.output_min: -0.7`
+- `scale_args.output_max: 0.3`
+- `null_productivity: -0.7`
+- `raw_material_output_floor: -0.2`
 - `round_decimals: 2`
 - `drop_zero_productivity: true`
 - explicit `goods:` list covering the current labeler evaluator goods

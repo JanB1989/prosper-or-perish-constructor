@@ -456,6 +456,39 @@ def test_generated_location_modifiers_include_one_population_capacity_per_locati
         assert body.count("local_population_capacity =") == 1, name
 
 
+def test_generated_raw_good_output_modifiers_respect_configured_floor() -> None:
+    floor = -0.2
+    raw_by_location = {
+        str(row["location_tag"]): str(row["raw_material"])
+        for row in pl.read_parquet(LABELING_BASELINE)
+        .select("location_tag", "raw_material")
+        .drop_nulls("raw_material")
+        .to_dicts()
+    }
+    blocks = _location_modifier_blocks(LOCATION_MODIFIERS.read_text(encoding="utf-8-sig"))
+
+    checked = 0
+    violations: list[str] = []
+    for location_tag, raw_material in raw_by_location.items():
+        body = blocks.get(location_tag) or blocks.get(f"{location_tag}_pp")
+        if body is None:
+            continue
+        match = re.search(
+            rf"^\s*local_{re.escape(raw_material)}_output_modifier\s*=\s*([-+]?\d+(?:\.\d+)?)\s*$",
+            body,
+            flags=re.MULTILINE,
+        )
+        if match is None:
+            continue
+        checked += 1
+        value = float(match.group(1))
+        if value < floor:
+            violations.append(f"{location_tag}:{raw_material}={value}")
+
+    assert checked > 10_000
+    assert not violations[:20]
+
+
 def test_generated_population_capacity_values_stay_in_v1_bounds() -> None:
     config = load_pipeline_config(ROOT / "population_capacity.toml")
     capacities = _generated_location_capacities()

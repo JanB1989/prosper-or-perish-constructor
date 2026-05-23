@@ -2126,6 +2126,7 @@ def test_labeling_output_modifier_config_loads_explicit_goods() -> None:
     cfg = load_mod_injector_config(ROOT / "labeling_output_modifiers.yaml")
 
     assert cfg.defaults["null_productivity"] == -0.7
+    assert cfg.defaults["raw_material_output_floor"] == -0.2
     assert cfg.defaults["scale_args"] == {"output_min": -0.7, "output_max": 0.3}
     assert [g.trade_good for g in cfg.goods] == [
         "beeswax",

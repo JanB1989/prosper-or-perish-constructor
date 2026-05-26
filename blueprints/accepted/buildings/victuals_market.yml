@@ -12,8 +12,7 @@ building:
     	max_levels = victuals_market_max_level
     	pop_type = laborers
     	employment_size = 0.25
-    	# price = pp_test_price_1
-    	# price = pp_victuals_market_price
+    	price = pp_victuals_market_price
     	category = infrastructure_category
     	custom_tags = { pp_food_security_priority pp_food_distribution_priority }
     	icon = victuals_market
@@ -46,12 +45,17 @@ production_methods:
     body: |2-
       	victuals = 2.0
       	category = building_maintenance
+prices:
+  - key: pp_victuals_market_price
+    body: |2-
+      {gold = 100}
 localization:
   entries:
     victuals_market: Victuals Market
     victuals_market_desc: The final stop in the local food economy, the food market. [ShowGoodsName('victuals')|e] arrive here as freshly cooked meals or more durable rations, providing your population local food.
     victuals_market_construction: Victuals Market Construction
     victuals_market_maintenance: Victuals Market Maintenance
+    pp_victuals_market_price: Victuals Market Price
 icon:
   source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/victuals_market.dds
   output_dds: victuals_market.dds

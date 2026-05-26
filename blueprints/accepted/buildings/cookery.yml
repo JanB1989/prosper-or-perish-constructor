@@ -62,6 +62,7 @@ building:
     	ai_forbid_shutdown = no
     	forbidden_for_estates = no
     	important_for_AI = yes
+    	AI_ignore_available_worker_flag = yes
     	can_close = yes
     	# ==========================================
     	# 1. PREPARED VICTUALS (pick ONE)
@@ -303,7 +304,7 @@ building:
 prices:
   - key: pp_cookery_price
     body: |2-
-      {gold = 150}
+      {gold = 100}
 advancements:
   - key: cookery_tin_cans_advance
     body: |2-

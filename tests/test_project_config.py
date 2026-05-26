@@ -1926,9 +1926,11 @@ def test_cookery_building_line_has_resolved_prices() -> None:
     buildings = {row["name"]: row for row in data.building_data.buildings.to_dicts()}
 
     assert buildings["cookery"]["price"] == "pp_cookery_price"
-    assert buildings["cookery"]["price_gold"] == 150.0
+    assert buildings["cookery"]["price_gold"] == 100.0
     assert buildings["victualling_yard"]["price"] == "pp_victualling_yard_price"
     assert buildings["victualling_yard"]["price_gold"] == 225.0
+    assert buildings["victuals_market"]["price"] == "pp_victuals_market_price"
+    assert buildings["victuals_market"]["price_gold"] == 100.0
 
 
 def test_victuals_pop_demand_uses_scalar_database_value() -> None:

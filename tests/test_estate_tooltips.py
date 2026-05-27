@@ -4,6 +4,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 ESTATE_TOOLTIP = MOD_ROOT / "in_game" / "gui" / "shared" / "zz_pp_estate_tooltips.gui"
+ESTATE_SATISFACTION_TOOLTIP = (
+    MOD_ROOT / "main_menu" / "gui" / "shared" / "zz_pp_estate_satisfaction_tooltips.gui"
+)
 
 
 def test_estate_tooltip_body_is_scrollable() -> None:
@@ -34,3 +37,19 @@ def test_estate_type_tooltip_body_is_scrollable() -> None:
     estate_type_start = text.index("template EstateType_tooltip")
     estate_type_scroll = text.index("TooltipScrolledContentSection", estate_type_start)
     assert estate_type_scroll < text.index("[EstateType.GetTooltip]", estate_type_start)
+
+
+def test_estate_satisfaction_impact_is_scrollable() -> None:
+    assert ESTATE_SATISFACTION_TOOLTIP.exists()
+
+    text = ESTATE_SATISFACTION_TOOLTIP.read_text(encoding="utf-8-sig")
+
+    assert "template estate_satisfaction_tooltip" in text
+    assert "[StringToStringPairList(Estate.GetSatisfactionTooltip)]" in text
+    assert "TooltipScrolledStringPairList" in text
+    assert 'blockoverride "block_scrollarea" { maximumsize = { -1 520 } }' in text
+    assert "CURRENT_SATIS_IMPACT" in text
+    assert "[StringToStringPairList(Estate.GetSatisfactionImpact)]" in text
+    impact_start = text.index("CURRENT_SATIS_IMPACT")
+    impact_scroll = text.rindex("TooltipScrolledStringPairList", 0, impact_start)
+    assert impact_scroll < text.index("[StringToStringPairList(Estate.GetSatisfactionImpact)]")

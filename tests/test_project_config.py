@@ -959,7 +959,7 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
     for blueprint in (FARMING_VILLAGE_BLUEPRINT, MODEL_FARM_BLUEPRINT):
         text = blueprint.read_text(encoding="utf-8-sig")
 
-        assert "pp_general_farmable_food_location > 0" in text
+        assert "pp_general_farmable_food_location_potential = yes" in text
         assert "max_rgo_workers > 0" not in text
         assert "modifier:local_population_capacity > 0" not in text
 
@@ -981,12 +981,11 @@ def test_broad_farm_capacity_buildings_have_static_location_potential_gates() ->
         "vegetation = farmland",
         "vegetation = grasslands",
         "vegetation = sparse",
-        "climate = mediterranean",
-        "climate = continental",
-        "climate = oceanic",
     ):
         assert snippet in compatibility
     assert "farm_capacity_available > 0" in horse_allow
+    _, horse_trigger = compatibility.split("pp_horse_breeders_location_potential = {", 1)
+    assert "climate =" not in horse_trigger
     assert "climate =" not in horse_allow
 
     fiber_crops = (BUILDING_BLUEPRINT_ROOT / "fiber_crops_farm.yml").read_text(encoding="utf-8-sig")
@@ -1010,27 +1009,30 @@ def test_broad_farm_capacity_buildings_have_static_location_potential_gates() ->
         assert snippet in compatibility
 
 
-def test_general_farm_eligibility_script_values_are_conservative() -> None:
-    text = BUILDING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
+def test_general_farm_eligibility_triggers_are_conservative() -> None:
+    capacity_text = BUILDING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
+    trigger_text = (
+        MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_startup_building_compatibility.txt"
+    ).read_text(encoding="utf-8-sig")
     farm_base_block = _text_block_between(
-        text,
+        capacity_text,
         "pp_farm_base_capacity_value = {",
-        "\npp_general_farmable_food_location = {",
+        "\npp_fish_base_capacity_value = {",
     )
     general_block = _text_block_between(
-        text,
-        "pp_general_farmable_food_location = {",
-        "\npp_orchard_friendly_location = {",
+        trigger_text,
+        "pp_general_farmable_food_location_potential = {",
+        "\npp_orchard_friendly_location_potential = {",
     )
     orchard_block = _text_block_between(
-        text,
-        "pp_orchard_friendly_location = {",
-        "\npp_pasture_friendly_location = {",
+        trigger_text,
+        "pp_orchard_friendly_location_potential = {",
+        "\npp_pasture_friendly_location_potential = {",
     )
     pasture_block = _text_block_between(
-        text,
-        "pp_pasture_friendly_location = {",
-        "\npp_fish_base_capacity_value = {",
+        trigger_text,
+        "pp_pasture_friendly_location_potential = {",
+        "\npp_fiber_crops_farm_location_potential = {",
     )
 
     expected_allowed = {
@@ -1067,11 +1069,13 @@ def test_general_farm_eligibility_script_values_are_conservative() -> None:
     forbidden = ("fish", "clay", "lumber", "stone", "tin", "silver", "gold", "goods_gold", "gems", "saltpeter", "amber")
 
     for block, goods in expected_allowed.items():
+        assert "is_ownable = yes" in block
         for good in goods:
             assert f"raw_material = goods:{good}" in block
         for good in forbidden:
             assert f"raw_material = goods:{good}" not in block
 
+    assert "vegetation = farmland" in general_block
     for accepted_old_warning_good in ("wheat", "rice", "legumes", "livestock", "silk", "beeswax", "wine"):
         assert f"raw_material = goods:{accepted_old_warning_good}" in orchard_block
     for rejected_old_warning_good in ("clay", "fish", "tin", "silver", "goods_gold", "gems", "saltpeter", "amber"):
@@ -1129,15 +1133,22 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
     assert len(invalid_rows) == 255
 
     capacity_text = BUILDING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
+    trigger_text = (
+        MOD_ROOT
+        / "in_game"
+        / "common"
+        / "scripted_triggers"
+        / "pp_startup_building_compatibility.txt"
+    ).read_text(encoding="utf-8-sig")
     farm_base_block = _text_block_between(
         capacity_text,
         "pp_farm_base_capacity_value = {",
-        "\npp_general_farmable_food_location = {",
+        "\npp_fish_base_capacity_value = {",
     )
     general_farm_block = _text_block_between(
-        capacity_text,
-        "pp_general_farmable_food_location = {",
-        "\npp_orchard_friendly_location = {",
+        trigger_text,
+        "pp_general_farmable_food_location_potential = {",
+        "\npp_orchard_friendly_location_potential = {",
     )
     granary_text = (BUILDING_BLUEPRINT_ROOT / "granary.yml").read_text(encoding="utf-8-sig")
     fishing_text = (BUILDING_BLUEPRINT_ROOT / "fishing_village.yml").read_text(encoding="utf-8-sig")
@@ -1164,6 +1175,7 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
     assert "pp_vanilla_start_fruit_orchard_location = yes" in fruit_text
     assert "raw_material = goods:beeswax" in farm_base_block
     assert "raw_material = goods:beeswax" in general_farm_block
+    assert "vegetation = farmland" in general_farm_block
     assert "is_coastal = yes" in fishing_potential
     assert "is_province_capital = yes" not in granary_text
     for rank in ("rural_settlement", "town", "city", "megalopolis"):
@@ -1193,23 +1205,26 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
 
 def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
     gates = {
-        "fruit_orchard": "pp_orchard_friendly_location",
-        "pomological_orchard": "pp_orchard_friendly_location",
-        "sheep_farms": "pp_pasture_friendly_location",
-        "enclosed_sheep_walks": "pp_pasture_friendly_location",
+        "fruit_orchard": "pp_orchard_friendly_location_potential",
+        "pomological_orchard": "pp_orchard_friendly_location_potential",
+        "sheep_farms": "pp_pasture_friendly_location_potential",
+        "enclosed_sheep_walks": "pp_pasture_friendly_location_potential",
     }
 
     for building, gate in gates.items():
         text = (BUILDING_BLUEPRINT_ROOT / f"{building}.yml").read_text(encoding="utf-8-sig")
-        assert f"{gate} > 0" in text
+        assert f"{gate} = yes" in text
         assert "farm_capacity_available > 0" in text
         assert "pp_fruit_orchard_fixed_env_bonus" not in text
         assert "pp_sheep_farms_fixed_env_bonus" not in text
 
     game_start = GAME_START.read_text(encoding="utf-8-sig")
-    assert "NOT = { pp_general_farmable_food_location > 0 }" in game_start
-    assert "NOT = { pp_orchard_friendly_location > 0 }" in game_start
-    assert "NOT = { pp_pasture_friendly_location > 0 }" in game_start
+    assert "NOT = { pp_general_farmable_food_location_potential = yes }" in game_start
+    assert "NOT = { pp_orchard_friendly_location_potential = yes }" in game_start
+    assert "NOT = { pp_pasture_friendly_location_potential = yes }" in game_start
+    assert "pp_general_farmable_food_location > 0" not in game_start
+    assert "pp_orchard_friendly_location > 0" not in game_start
+    assert "pp_pasture_friendly_location > 0" not in game_start
     assert "NOT = { raw_material = goods:fruit }" not in game_start
     assert "NOT = { raw_material = goods:wool }" not in game_start
 

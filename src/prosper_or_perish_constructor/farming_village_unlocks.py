@@ -5,12 +5,16 @@ from __future__ import annotations
 import difflib
 import re
 import tomllib
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any
 
 import polars as pl
 import yaml
+from eu5gameparser.clausewitz.parser import parse_text
+from eu5gameparser.clausewitz.syntax import CList
+from eu5gameparser.domain.availability import AGE_ORDER
 from goods_labeler.location_templates import (
     apply_location_template_overlay,
     load_current_location_templates,
@@ -22,6 +26,7 @@ CONFIG_SECTION = "farming_village_rgo_unlocks"
 GAME_START_AGE = "age_1_traditions"
 GAME_START_REQUIRES = "agriculture_advance"
 AI_WEIGHT = 50
+AGE_INDEX = {age: index for index, age in enumerate(AGE_ORDER)}
 
 
 @dataclass(frozen=True)
@@ -161,10 +166,26 @@ def derive_rgo_unlock_gates(
 
 
 def expected_blueprint_advancement_section(repo: Path, project: Path) -> str:
-    config = load_rgo_unlock_config(project)
+    config = effective_rgo_unlock_config(repo, load_rgo_unlock_config(project))
     locations = load_current_location_frame(repo, project)
     gates = derive_rgo_unlock_gates(locations, [item.good for item in config.goods], config.threshold)
     return render_blueprint_advancement_section(config, gates)
+
+
+def effective_rgo_unlock_config(repo: Path, config: RgoUnlockConfig) -> RgoUnlockConfig:
+    additions = _early_descendant_methods(repo, config)
+    goods: list[RgoUnlockGood] = []
+    for item in config.goods:
+        methods = tuple(dict.fromkeys((*item.methods, *additions.get(item.good, ()))))
+        goods.append(
+            RgoUnlockGood(
+                good=item.good,
+                methods=methods,
+                general_age=item.general_age,
+                general_requires=item.general_requires,
+            )
+        )
+    return RgoUnlockConfig(goods=tuple(goods), threshold=config.threshold)
 
 
 def render_blueprint_advancement_section(
@@ -220,6 +241,73 @@ def _rgo_region_frame(locations: pl.DataFrame) -> pl.DataFrame:
         .select("raw_material", "macro_region", "region")
         .unique()
     )
+
+
+def _early_descendant_methods(repo: Path, config: RgoUnlockConfig) -> dict[str, tuple[str, ...]]:
+    additions: dict[str, list[str]] = {item.good: [] for item in config.goods}
+    config_by_good = {item.good: item for item in config.goods}
+    for path in sorted((repo / "blueprints" / "accepted" / "buildings").glob("*.yml")):
+        raw = _load_yaml_mapping(path)
+        chain = raw.get("upgrade_chain")
+        if not isinstance(chain, Mapping) or chain.get("family") != "farming_village":
+            continue
+        tier = chain.get("tier")
+        if not isinstance(tier, int) or tier <= 0:
+            continue
+        building_age = _unlock_advance_age(raw, str(chain.get("unlock_advance") or ""))
+        if building_age is None:
+            continue
+        method_goods = _building_production_method_goods(raw, path)
+        for good, item in config_by_good.items():
+            if _age_index(building_age) >= _age_index(item.general_age):
+                continue
+            for method, produced in method_goods.items():
+                if produced == good and method not in additions[good]:
+                    additions[good].append(method)
+    return {good: tuple(methods) for good, methods in additions.items()}
+
+
+def _unlock_advance_age(raw: Mapping[str, Any], unlock_advance: str) -> str | None:
+    if not unlock_advance:
+        return None
+    advancements = raw.get("advancements")
+    if not isinstance(advancements, list):
+        return None
+    for advancement in advancements:
+        if not isinstance(advancement, Mapping) or advancement.get("key") != unlock_advance:
+            continue
+        body = _string(advancement.get("body"), f"advancements.{unlock_advance}.body")
+        match = re.search(r"(?m)^\s*age\s*=\s*([A-Za-z0-9_]+)\s*$", body)
+        return None if match is None else match.group(1)
+    return None
+
+
+def _building_production_method_goods(raw: Mapping[str, Any], path: Path) -> dict[str, str]:
+    building = _mapping(raw.get("building"), f"{path}: building")
+    body = _string(building.get("body"), f"{path}: building.body")
+    document = parse_text("root = {\n" + body + "\n}")
+    root = document.entries[0].value
+    if not isinstance(root, CList):
+        return {}
+
+    produced_by_method: dict[str, str] = {}
+    for block in root.values("unique_production_methods"):
+        if not isinstance(block, CList):
+            continue
+        for entry in block.entries:
+            if not isinstance(entry.value, CList):
+                continue
+            produced = entry.value.values("produced")
+            if produced:
+                produced_by_method[str(entry.key)] = str(produced[0])
+    return produced_by_method
+
+
+def _age_index(age: str) -> int:
+    if age not in AGE_INDEX:
+        valid = ", ".join(AGE_ORDER)
+        raise ValueError(f"Unknown age {age!r}; expected one of: {valid}")
+    return AGE_INDEX[age]
 
 
 def _advance_yaml_lines(key: str, body: str) -> list[str]:
@@ -310,6 +398,12 @@ def _replace_advancement_section(text: str, replacement: str) -> str:
 def _load_project_config(project: Path) -> dict[str, Any]:
     with project.open("rb") as handle:
         return tomllib.load(handle)
+
+
+def _load_yaml_mapping(path: Path) -> Mapping[str, Any]:
+    with path.open("r", encoding="utf-8-sig") as handle:
+        raw = yaml.safe_load(handle)
+    return _mapping(raw, str(path))
 
 
 def _resolve_repo_path(repo: Path, value: object) -> Path | None:

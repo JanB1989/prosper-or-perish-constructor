@@ -34,7 +34,7 @@ building:
         ai_forbid_shutdown = no
         location_potential = {
             OR = {
-                pp_orchard_friendly_location > 0
+                pp_orchard_friendly_location_potential = yes
                 pp_vanilla_start_fruit_orchard_location = yes
             }
         }

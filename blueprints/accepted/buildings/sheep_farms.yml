@@ -33,7 +33,7 @@ building:
         forbidden_for_estates = yes
         ai_forbid_shutdown = no
         location_potential = {
-            pp_pasture_friendly_location > 0
+            pp_pasture_friendly_location_potential = yes
         }
 
         allow = {

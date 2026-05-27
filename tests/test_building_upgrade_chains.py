@@ -1099,7 +1099,7 @@ def test_game_start_invalid_building_cleanup_matches_current_potentials() -> Non
         if "building_type:fruit_orchard" in block and "change_building_level_in_location" in block
     )
     fruit_orchard_limit = _first_script_block(fruit_orchard_block, "limit")
-    assert "pp_orchard_friendly_location > 0" in fruit_orchard_limit
+    assert "pp_orchard_friendly_location_potential = yes" in fruit_orchard_limit
     assert "pp_vanilla_start_fruit_orchard_location = yes" in fruit_orchard_limit
 
     fishing_village_block = next(

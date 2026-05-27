@@ -27,6 +27,52 @@
 	}
 }
 
+pp_general_farmable_food_location_potential = {
+	is_ownable = yes
+	OR = {
+		raw_material = goods:livestock
+		raw_material = goods:wheat
+		raw_material = goods:legumes
+		raw_material = goods:fruit
+		vegetation = farmland
+		raw_material = goods:millet
+		raw_material = goods:wool
+		raw_material = goods:rice
+		raw_material = goods:beeswax
+		raw_material = goods:maize
+		raw_material = goods:olives
+		raw_material = goods:potato
+	}
+}
+
+pp_orchard_friendly_location_potential = {
+	is_ownable = yes
+	OR = {
+		raw_material = goods:livestock
+		raw_material = goods:wheat
+		raw_material = goods:legumes
+		raw_material = goods:fruit
+		raw_material = goods:millet
+		raw_material = goods:rice
+		raw_material = goods:beeswax
+		raw_material = goods:maize
+		raw_material = goods:wine
+		raw_material = goods:silk
+		raw_material = goods:olives
+		raw_material = goods:tea
+		raw_material = goods:potato
+	}
+}
+
+pp_pasture_friendly_location_potential = {
+	is_ownable = yes
+	OR = {
+		raw_material = goods:livestock
+		raw_material = goods:wool
+		raw_material = goods:horses
+	}
+}
+
 pp_fiber_crops_farm_location_potential = {
 	OR = {
 		raw_material = goods:fiber_crops
@@ -55,11 +101,6 @@ pp_horse_breeders_location_potential = {
 		market = {
 			is_produced_in_market = goods:horses
 		}
-	}
-	OR = {
-		climate = mediterranean
-		climate = continental
-		climate = oceanic
 	}
 	OR = {
 		raw_material = goods:wool

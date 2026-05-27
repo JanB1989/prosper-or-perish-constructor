@@ -212,7 +212,7 @@ pp_remove_invalid_buildings = {
 					}
 					NOT = {
 						OR = {
-							pp_orchard_friendly_location > 0
+							pp_orchard_friendly_location_potential = yes
 							pp_vanilla_start_fruit_orchard_location = yes
 						}
 					}
@@ -231,7 +231,7 @@ pp_remove_invalid_buildings = {
 						building_type = building_type:pomological_orchard
 						value > 0
 					}
-					NOT = { pp_orchard_friendly_location > 0 }
+					NOT = { pp_orchard_friendly_location_potential = yes }
 				}
 				change_building_level_in_location = {
 					building = building_type:pomological_orchard
@@ -330,7 +330,7 @@ pp_remove_invalid_buildings = {
 						building_type = building_type:farming_village
 						value > 0
 					}
-					NOT = { pp_general_farmable_food_location > 0 }
+					NOT = { pp_general_farmable_food_location_potential = yes }
 				}
 				change_building_level_in_location = {
 					building = building_type:farming_village
@@ -347,7 +347,7 @@ pp_remove_invalid_buildings = {
 						building_type = building_type:sheep_farms
 						value > 0
 					}
-					NOT = { pp_pasture_friendly_location > 0 }
+					NOT = { pp_pasture_friendly_location_potential = yes }
 				}
 				change_building_level_in_location = {
 					building = building_type:sheep_farms
@@ -363,7 +363,7 @@ pp_remove_invalid_buildings = {
 						building_type = building_type:enclosed_sheep_walks
 						value > 0
 					}
-					NOT = { pp_pasture_friendly_location > 0 }
+					NOT = { pp_pasture_friendly_location_potential = yes }
 				}
 				change_building_level_in_location = {
 					building = building_type:enclosed_sheep_walks

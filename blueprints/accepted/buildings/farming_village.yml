@@ -57,7 +57,7 @@ building:
         ai_forbid_shutdown = no
 
         location_potential = {
-            pp_general_farmable_food_location > 0
+            pp_general_farmable_food_location_potential = yes
         }
 
         allow = {
@@ -318,6 +318,8 @@ advancements:
           age = age_1_traditions
           unlock_production_method = pp_potato_farm_base_potato
           unlock_production_method = pp_potato_farm_maintenance
+          unlock_production_method = pp_farming_village_rotations_base_potato
+          unlock_production_method = pp_farming_village_rotations_potato
           requires = agriculture_advance
           ai_weight = { add = 50 }
           potential = {
@@ -334,6 +336,8 @@ advancements:
           age = age_5_absolutism
           unlock_production_method = pp_potato_farm_base_potato
           unlock_production_method = pp_potato_farm_maintenance
+          unlock_production_method = pp_farming_village_rotations_base_potato
+          unlock_production_method = pp_farming_village_rotations_potato
           requires = newspapers_advance
           ai_weight = { add = 50 }
           potential = {

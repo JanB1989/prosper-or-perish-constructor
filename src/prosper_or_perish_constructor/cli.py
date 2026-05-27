@@ -235,6 +235,68 @@ def _build_parser() -> argparse.ArgumentParser:
         default=CONSTRUCTOR_LOAD_ORDER,
         help="Load-order TOML path relative to --repo. Defaults to constructor.load_order.toml.",
     )
+    location_changes = subcommands.add_parser(
+        "location-changes",
+        help="Detect location-template baseline drift and run focused relabeling.",
+        description="Location-template drift commands for labeling-output modifiers.",
+    )
+    location_changes_subcommands = location_changes.add_subparsers(
+        dest="location_changes_command",
+        required=True,
+    )
+    location_changes_detect = _add_command(
+        location_changes_subcommands,
+        "detect",
+        "Detect current location-template changes against the labeling baseline.",
+        _location_changes_detect,
+    )
+    location_changes_detect.add_argument(
+        "--config",
+        type=Path,
+        default=None,
+        help="Labeling output modifier config. Defaults to [labeling].config.",
+    )
+    location_changes_detect.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Optional CSV report path relative to --repo.",
+    )
+    location_changes_run = _add_command(
+        location_changes_subcommands,
+        "run",
+        "Run focused relabeling for changed location-template targets.",
+        _location_changes_run,
+    )
+    location_changes_run.add_argument(
+        "--config",
+        type=Path,
+        default=None,
+        help="Labeling output modifier config. Defaults to [labeling].config.",
+    )
+    location_changes_run.add_argument(
+        "--max-rounds-per-good",
+        type=int,
+        default=100,
+        help="Hard cap of focused LLM rounds per affected good. Defaults to 100.",
+    )
+    location_changes_run.add_argument(
+        "--min-target-appearances",
+        type=int,
+        default=3,
+        help="Required parse-ok prompt appearances per target. Defaults to 3.",
+    )
+    location_changes_run.add_argument(
+        "--target-sigma-ratio",
+        type=float,
+        default=0.85,
+        help="Required sigma as a ratio of default OpenSkill sigma. Defaults to 0.85.",
+    )
+    location_changes_run.add_argument(
+        "--goods",
+        default=None,
+        help="Optional comma-separated affected goods filter.",
+    )
     output_modifiers.add_argument(
         "--profile",
         default=CONSTRUCTOR_PROFILE,
@@ -1241,6 +1303,66 @@ def _output_modifiers(
     )
     print(_format_output_modifier_table(rows, ages), flush=True)
     return 0
+
+
+def _location_changes_detect(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("location-changes detect does not accept extra arguments.")
+
+    from prosper_or_perish_constructor.location_changes import (
+        build_location_change_report,
+        print_location_change_report,
+        write_location_change_report,
+    )
+
+    report = build_location_change_report(repo=repo, project=project, config_path=args.config)
+    output = _repo_path(repo, args.output) if args.output is not None else None
+    if output is not None:
+        write_location_change_report(report, output)
+    print_location_change_report(report, output=output)
+    return 0
+
+
+def _location_changes_run(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("location-changes run does not accept extra arguments.")
+    if args.max_rounds_per_good < 1:
+        raise SystemExit("--max-rounds-per-good must be >= 1")
+    if args.min_target_appearances < 1:
+        raise SystemExit("--min-target-appearances must be >= 1")
+    if args.target_sigma_ratio <= 0:
+        raise SystemExit("--target-sigma-ratio must be > 0")
+
+    from prosper_or_perish_constructor.location_changes import (
+        build_location_change_report,
+        print_location_change_report,
+        run_focused_relabel,
+    )
+
+    goods_filter = (
+        {part.strip() for part in str(args.goods).split(",") if part.strip()}
+        if args.goods
+        else None
+    )
+    report = build_location_change_report(repo=repo, project=project, config_path=args.config)
+    print_location_change_report(report)
+    return run_focused_relabel(
+        report,
+        max_rounds_per_good=args.max_rounds_per_good,
+        min_target_appearances=args.min_target_appearances,
+        target_sigma_ratio=args.target_sigma_ratio,
+        goods_filter=goods_filter,
+    )
 
 
 def _load_output_modifier_inputs(

@@ -457,15 +457,40 @@ def test_generated_location_modifiers_include_one_population_capacity_per_locati
 
 
 def test_generated_raw_good_output_modifiers_respect_configured_floor() -> None:
+    from goods_labeler.location_templates import (
+        apply_location_template_overlay,
+        load_current_location_templates,
+    )
+
     floor = -0.2
+    baseline = pl.read_parquet(LABELING_BASELINE)
+    templates, _source = load_current_location_templates(
+        load_order_path=ROOT / "constructor.load_order.toml"
+    )
+    current_locations = apply_location_template_overlay(baseline, templates)
     raw_by_location = {
         str(row["location_tag"]): str(row["raw_material"])
-        for row in pl.read_parquet(LABELING_BASELINE)
-        .select("location_tag", "raw_material")
+        for row in current_locations.select("location_tag", "raw_material")
         .drop_nulls("raw_material")
         .to_dicts()
     }
     blocks = _location_modifier_blocks(LOCATION_MODIFIERS.read_text(encoding="utf-8-sig"))
+
+    assert raw_by_location["rethymno"] == "saffron"
+
+    rethymno_body = blocks["rethymno"]
+    assert re.search(
+        r"^\s*local_cotton_output_modifier\s*=\s*-0\.70\s*$",
+        rethymno_body,
+        flags=re.MULTILINE,
+    )
+    rethymno_saffron = re.search(
+        r"^\s*local_saffron_output_modifier\s*=\s*([-+]?\d+(?:\.\d+)?)\s*$",
+        rethymno_body,
+        flags=re.MULTILINE,
+    )
+    assert rethymno_saffron is not None
+    assert float(rethymno_saffron.group(1)) >= floor
 
     checked = 0
     violations: list[str] = []

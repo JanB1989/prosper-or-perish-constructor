@@ -1220,3 +1220,113 @@ def test_savegame_purge_dry_run_keeps_generated_outputs(tmp_path: Path) -> None:
     assert cli.main(["--repo", str(repo), "savegame-purge", "--dry-run"]) == 0
 
     assert savegame_dir.exists()
+
+
+def test_location_changes_detect_writes_report(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = _repo(tmp_path)
+    calls: list[tuple[str, object]] = []
+    report = object()
+
+    import prosper_or_perish_constructor.location_changes as location_changes
+
+    def fake_build(*, repo: Path, project: Path, config_path: Path | None):
+        calls.append(("build", (repo, project, config_path)))
+        return report
+
+    def fake_write(report_arg, output):
+        calls.append(("write", (report_arg, output)))
+        return output
+
+    def fake_print(report_arg, *, output=None):
+        calls.append(("print", (report_arg, output)))
+
+    monkeypatch.setattr(location_changes, "build_location_change_report", fake_build)
+    monkeypatch.setattr(location_changes, "write_location_change_report", fake_write)
+    monkeypatch.setattr(location_changes, "print_location_change_report", fake_print)
+
+    assert (
+        cli.main(
+            [
+                "--repo",
+                str(repo),
+                "location-changes",
+                "detect",
+                "--config",
+                "labeling.yaml",
+                "--output",
+                "artifacts/data/labeling/location_template_changes.csv",
+            ]
+        )
+        == 0
+    )
+
+    assert calls == [
+        ("build", (repo, repo / "constructor.toml", Path("labeling.yaml"))),
+        ("write", (report, repo / "artifacts/data/labeling/location_template_changes.csv")),
+        ("print", (report, repo / "artifacts/data/labeling/location_template_changes.csv")),
+    ]
+
+
+def test_location_changes_run_invokes_focused_relabel(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = _repo(tmp_path)
+    calls: list[tuple[str, object]] = []
+    report = object()
+
+    import prosper_or_perish_constructor.location_changes as location_changes
+
+    monkeypatch.setattr(
+        location_changes,
+        "build_location_change_report",
+        lambda *, repo, project, config_path: calls.append(
+            ("build", (repo, project, config_path))
+        )
+        or report,
+    )
+    monkeypatch.setattr(
+        location_changes,
+        "print_location_change_report",
+        lambda report_arg, **_: calls.append(("print", report_arg)),
+    )
+
+    def fake_run(report_arg, **kwargs):
+        calls.append(("run", (report_arg, kwargs)))
+        return 0
+
+    monkeypatch.setattr(location_changes, "run_focused_relabel", fake_run)
+
+    assert (
+        cli.main(
+            [
+                "--repo",
+                str(repo),
+                "location-changes",
+                "run",
+                "--max-rounds-per-good",
+                "12",
+                "--min-target-appearances",
+                "2",
+                "--target-sigma-ratio",
+                "0.9",
+                "--goods",
+                "saffron,cotton",
+            ]
+        )
+        == 0
+    )
+
+    assert calls[0] == ("build", (repo, repo / "constructor.toml", None))
+    assert calls[1] == ("print", report)
+    assert calls[2][0] == "run"
+    assert calls[2][1][0] is report
+    assert calls[2][1][1] == {
+        "max_rounds_per_good": 12,
+        "min_target_appearances": 2,
+        "target_sigma_ratio": 0.9,
+        "goods_filter": {"saffron", "cotton"},
+    }

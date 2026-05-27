@@ -44,6 +44,7 @@ uv run ppc inspect
 uv run ppc test
 uv run ppc analyze
 uv run ppc output-modifiers
+uv run ppc location-changes detect --output artifacts/data/labeling/location_template_changes.csv
 uv run ppc production-throughput
 uv run ppc savegame
 uv run ppc europedia
@@ -70,6 +71,34 @@ into the configured Paradox mod folder:
 ```bash
 uv run ppc sync --yes
 ```
+
+### Location-Template Drift
+
+Use this before rebuilding location output modifiers after a game update:
+
+```bash
+uv run ppc location-changes detect --output artifacts/data/labeling/location_template_changes.csv
+```
+
+The command compares the labeling baseline against the resolved current
+`location_templates.txt` from `constructor.load_order.toml`. Terminal output
+starts with a stats block:
+
+```text
+location_template_sources=...
+changed_locations=232
+field_counts=climate=2, modifier=1, natural_harbor_suitability=195, raw_material=33, topography=2, vegetation=4
+raw_material_transitions=cotton->saffron=1, ...
+affected_goods_counts=fish=201, saffron=10, ...
+labelable_counts=false=2, true=230
+relabel_status_counts=not_labelable=2, pending=230
+report_csv=artifacts/data/labeling/location_template_changes.csv
+```
+
+When changes exist it then prints one tab-separated row per changed location,
+including old/new values, affected goods, relabel status, canonical target, and
+canonical feature hash. The CSV artifact contains the same machine-readable
+rows for review or focused relabeling.
 
 ## Mod Ownership
 

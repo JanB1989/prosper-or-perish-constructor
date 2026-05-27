@@ -91,10 +91,13 @@ labeling baseline:
 uv run ppc location-changes detect --output artifacts/data/labeling/location_template_changes.csv
 ```
 
-The report prints per-field counts, changed locations, old/new values, affected
-goods, relabel status, canonical relabel targets, and canonical feature hashes.
-Raw-material changes affect the old and new raw goods; other modeled field
-changes affect goods whose evaluator config uses the changed field.
+The report prints stats for all detected modeled changes before the row table:
+per-field counts, raw-material transitions, affected-good counts, labelable
+counts, and relabel-status counts. It then prints changed locations with old/new
+values, affected goods, relabel status, canonical relabel targets, and canonical
+feature hashes. Raw-material changes affect the old and new raw goods; other
+modeled field changes affect goods whose evaluator config uses the changed
+field.
 
 Focused relabeling can then be run with:
 

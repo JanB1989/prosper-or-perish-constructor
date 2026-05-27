@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import random
 import tomllib
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
@@ -120,6 +120,22 @@ def print_location_change_report(
         f"{field}={count}" for field, count in sorted(report.field_counts.items())
     )
     print(f"field_counts={field_line or 'none'}")
+    print(
+        "raw_material_transitions="
+        f"{_format_counts(_raw_material_transition_counts(report.changes))}"
+    )
+    print(
+        "affected_goods_counts="
+        f"{_format_counts(_pipe_value_counts(report.changes, 'affected_goods'))}"
+    )
+    print(
+        "labelable_counts="
+        f"{_format_counts(_bool_value_counts(report.changes, 'labelable'))}"
+    )
+    print(
+        "relabel_status_counts="
+        f"{_format_counts(_value_counts(report.changes, 'relabel_status'))}"
+    )
     if report.unmodeled_current_fields:
         print(f"unmodeled_current_fields={','.join(report.unmodeled_current_fields)}")
     if output is not None:
@@ -204,3 +220,51 @@ def _format_canonical_targets(canonical_targets_json: str) -> str:
     except json.JSONDecodeError:
         return canonical_targets_json
     return ",".join(f"{good}:{tag}" for good, tag in sorted(targets.items()))
+
+
+def _format_counts(counts: dict[str, int]) -> str:
+    return ", ".join(f"{key}={value}" for key, value in sorted(counts.items())) or "none"
+
+
+def _pipe_value_counts(changes: pl.DataFrame, column: str) -> dict[str, int]:
+    if changes.is_empty() or column not in changes.columns:
+        return {}
+    counts: Counter[str] = Counter()
+    for value in changes[column].to_list():
+        for item in str(value or "").split("|"):
+            if item:
+                counts[item] += 1
+    return dict(counts)
+
+
+def _value_counts(changes: pl.DataFrame, column: str) -> dict[str, int]:
+    if changes.is_empty() or column not in changes.columns:
+        return {}
+    counts: Counter[str] = Counter()
+    for value in changes[column].to_list():
+        if value is not None and str(value):
+            counts[str(value)] += 1
+    return dict(counts)
+
+
+def _bool_value_counts(changes: pl.DataFrame, column: str) -> dict[str, int]:
+    if changes.is_empty() or column not in changes.columns:
+        return {}
+    counts: Counter[str] = Counter()
+    for value in changes[column].to_list():
+        counts["true" if bool(value) else "false"] += 1
+    return dict(counts)
+
+
+def _raw_material_transition_counts(changes: pl.DataFrame) -> dict[str, int]:
+    if changes.is_empty():
+        return {}
+    counts: Counter[str] = Counter()
+    for row in changes.to_dicts():
+        changed_fields = set(str(row.get("changed_fields") or "").split("|"))
+        if "raw_material" not in changed_fields:
+            continue
+        old = str(row.get("old_raw_material") or "-")
+        new = str(row.get("new_raw_material") or "-")
+        counts[f"{old}->{new}"] += 1
+    return dict(counts)

@@ -1270,6 +1270,88 @@ def test_location_changes_detect_writes_report(
     ]
 
 
+def test_location_changes_detect_prints_summary_stats(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    from prosper_or_perish_constructor.location_changes import (
+        ConstructorLocationChangeReport,
+        print_location_change_report,
+    )
+
+    changes = pl.DataFrame(
+        [
+            {
+                "location_id": 1,
+                "location_tag": "loc_a",
+                "changed_fields": "raw_material|topography",
+                "changes_json": json.dumps(
+                    {
+                        "raw_material": {"old": "cotton", "new": "saffron"},
+                        "topography": {"old": "hills", "new": "mountains"},
+                    }
+                ),
+                "old_raw_material": "cotton",
+                "new_raw_material": "saffron",
+                "affected_goods": "cotton|saffron|wheat",
+                "canonical_targets_json": json.dumps({"saffron": "loc_a"}),
+                "canonical_feature_hashes_json": json.dumps({"saffron": 123}),
+                "labelable": True,
+                "relabel_status": "pending",
+            },
+            {
+                "location_id": 2,
+                "location_tag": "loc_b",
+                "changed_fields": "topography",
+                "changes_json": json.dumps(
+                    {"topography": {"old": "flatland", "new": "hills"}}
+                ),
+                "old_raw_material": "wine",
+                "new_raw_material": "wine",
+                "affected_goods": "wheat",
+                "canonical_targets_json": "{}",
+                "canonical_feature_hashes_json": "{}",
+                "labelable": False,
+                "relabel_status": "not_labelable",
+            },
+            {
+                "location_id": 3,
+                "location_tag": "loc_c",
+                "changed_fields": "modifier",
+                "changes_json": json.dumps({"modifier": {"old": None, "new": "foo"}}),
+                "old_raw_material": "fish",
+                "new_raw_material": "fish",
+                "affected_goods": "",
+                "canonical_targets_json": "{}",
+                "canonical_feature_hashes_json": "{}",
+                "labelable": False,
+                "relabel_status": "no_relabel_needed",
+            },
+        ]
+    )
+    report = ConstructorLocationChangeReport(
+        config=object(),
+        changes=changes,
+        field_counts={"raw_material": 1, "topography": 2, "modifier": 1},
+        unmodeled_current_fields=("movement_assistance",),
+        location_template_paths=(tmp_path / "location_templates.txt",),
+        overlaid_baseline=pl.DataFrame(),
+    )
+
+    print_location_change_report(report, output=tmp_path / "changes.csv")
+
+    out = capsys.readouterr().out
+    assert "changed_locations=3" in out
+    assert "field_counts=modifier=1, raw_material=1, topography=2" in out
+    assert "raw_material_transitions=cotton->saffron=1" in out
+    assert "affected_goods_counts=cotton=1, saffron=1, wheat=2" in out
+    assert "labelable_counts=false=2, true=1" in out
+    assert "relabel_status_counts=no_relabel_needed=1, not_labelable=1, pending=1" in out
+    assert "unmodeled_current_fields=movement_assistance" in out
+    assert "location_tag\tchanged_fields\tchanges\taffected_goods" in out
+    assert "loc_a\traw_material|topography" in out
+
+
 def test_location_changes_run_invokes_focused_relabel(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

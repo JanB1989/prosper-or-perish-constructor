@@ -178,6 +178,23 @@ def _build_parser() -> argparse.ArgumentParser:
         "Inspect the configured constructor project.",
         _orchestrator("inspect"),
     )
+    farming_village_unlocks = _add_command(
+        subcommands,
+        "farming-village-unlocks",
+        "Check or regenerate data-driven farming-village RGO unlock advances.",
+        _farming_village_unlocks,
+    )
+    farming_village_unlocks_mode = farming_village_unlocks.add_mutually_exclusive_group()
+    farming_village_unlocks_mode.add_argument(
+        "--check",
+        action="store_true",
+        help="Fail if farming_village.yml unlock advances are stale. This is the default.",
+    )
+    farming_village_unlocks_mode.add_argument(
+        "--write",
+        action="store_true",
+        help="Regenerate the farming_village.yml unlock advances from current location data.",
+    )
     _add_command(
         subcommands,
         "test",
@@ -713,7 +730,49 @@ def _test(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: P
     return _run([sys.executable, "-m", "pytest", *pytest_args], repo)
 
 
+def _farming_village_unlocks(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("farming-village-unlocks does not accept extra arguments.")
+
+    from prosper_or_perish_constructor.farming_village_unlocks import (
+        check_blueprint_advancements,
+        write_blueprint_advancements,
+    )
+
+    if args.write:
+        changed = write_blueprint_advancements(repo, project)
+        print(
+            "farming_village_unlocks=updated" if changed else "farming_village_unlocks=unchanged",
+            flush=True,
+        )
+        return 0
+
+    check = check_blueprint_advancements(repo, project)
+    if check.ok:
+        print("farming_village_unlocks=ok", flush=True)
+        return 0
+    print("farming_village_unlocks=stale", flush=True)
+    diff = check.unified_diff()
+    if diff:
+        print(diff, flush=True)
+    print("Run: uv run ppc farming-village-unlocks --write", flush=True)
+    return 1
+
+
 def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    unlock_code = _farming_village_unlocks(
+        argparse.Namespace(write=False, check=True),
+        (),
+        repo,
+        project,
+    )
+    if unlock_code != 0:
+        return unlock_code
     build_code = _run(["eu5-orchestrator", "build", "--project", project, "--overwrite", *extra], repo)
     if build_code != 0:
         return build_code

@@ -45,6 +45,10 @@ REPLACE:irrigant_cap = {
 		desc = "BUILDING_LEVEL_HAS_RIVER"
 		value = modifier:irrigant_cap_modifier
 	}
+	add = {
+		desc = "BUILDING_LEVEL_FROM_OWNER_MODIFIERS"
+		add = owner.modifier:irrigant_cap_level
+	}
 }
 
 REPLACE:polders_max_level = {

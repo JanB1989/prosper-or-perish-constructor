@@ -1,0 +1,203 @@
+﻿# Prosper or Perish: estate tooltips can include long modifier breakdowns,
+# especially for peasants, so keep vanilla bodies inside bounded scroll areas.
+
+template EstateType_tooltip {
+	ContextualTooltipType = {
+		blockoverride "title_text" {
+			text = "[EstateType.GetNameWithNoTooltip]"
+		}
+
+		blockoverride "title_icon" {
+			icon = {
+				using = tooltip_title_icon_size
+				texture = "[GetEstateIcon(EstateType.Self)]"
+
+				glow = {
+					name = "drop_shadow"
+					glow_radius = 3
+					color = {0.0 0.0 0.0 1.0}
+					alpha = 0.3
+				}
+			}
+		}
+
+		blockoverride "concept_link" {
+			text = [estate|E]
+		}
+
+		blockoverride "tooltip_content" {
+			TooltipScrolledContentSection = {
+				blockoverride "block_scrollarea" { maximumsize = { -1 700 } }
+				blockoverride "section_content" {
+					vbox = {
+						set_parent_dimension_to_minimum = height
+						layoutpolicy_horizontal = expanding
+						spacing = 10
+						ignoreinvisible = yes
+
+						TooltipRowList = {
+							textcontext = "[EstateType.GetTooltip]"
+						}
+
+						TooltipFlavorTextBlock = {
+							blockoverride "text" {
+								text = "[EstateType.GetFlavorText]"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+template Estate_tooltip {
+	ContextualTooltipType = {
+		blockoverride "title_icon_texture" {
+			texture = "[GetEstateIcon(Estate.GetType)]"
+		}
+
+		blockoverride "title_text" {
+			text = "[Estate.GetLongNameWithNoTooltip]"
+		}
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_estates')]"
+				}
+			}
+		}
+
+		blockoverride "concept_link" {
+			text = [estate|E]
+		}
+
+		blockoverride "tooltip_content" {
+			TooltipScrolledContentSection = {
+				blockoverride "block_scrollarea" { maximumsize = { -1 700 } }
+				blockoverride "section_content" {
+					vbox = {
+						set_parent_dimension_to_minimum = height
+						layoutpolicy_horizontal = expanding
+						spacing = 10
+						ignoreinvisible = yes
+
+						block "extra_estates_info" {}
+
+						TooltipStringPairList = {
+							textcontext = "ESTATE_BREAKDOWN"
+						}
+
+						TooltipListBase = {
+							TooltipManualTableField = {
+								visible = "[Not(Estate.GetType.IsAlwaysLoyal)]"
+								text_single = {
+									text = "[gold|e]"
+								}
+								expand = {}
+								text_single = {
+									raw_text = "[Estate.GetGold|2]([Estate.GetBalance|+=2])@gold!"
+								}
+							}
+
+							TooltipManualTableField = {
+								visible = "[Not(Estate.GetType.IsAlwaysLoyal)]"
+								text_single = {
+									text = "ESTATE_INCOME"
+								}
+								expand = {}
+								text_single = {
+									raw_text = "[Estate.GetLastMonthsIncomeAfterTaxWithTooltip]@gold!"
+								}
+							}
+
+							TooltipStringPairList = {
+								visible = "[Not(Estate.GetType.IsAlwaysLoyal)]"
+								textcontext = "[Estate.GetEconomyInfo]"
+							}
+
+							TooltipManualTableField = {
+								visible = "[Not(Estate.GetType.IsAlwaysLoyal)]"
+								text_single = {
+									text = "ESTATE_EXPENSES"
+								}
+								expand = {}
+								text_single = {
+									raw_text = "#R -[Estate.GetLastMonthsExpense|2]@gold!#!"
+								}
+
+								tooltipwidget = {
+									using = estate_expense_tooltip
+								}
+							}
+
+							TooltipManualTableField = {
+								visible = "[Not(Estate.GetType.IsAlwaysLoyal)]"
+								text_single = {
+									text = "ESTATE_WEALTH_IMPACT"
+								}
+								expand = {}
+								text_single = {
+									raw_text = "[Estate.GetWealthImpactString]"
+								}
+							}
+						}
+
+						TooltipTextBlock = {
+							visible = "[Estate.IsNextBuildSetUp]"
+							blockoverride "text" {
+								text = "[Estate.GetCurrentBuildInformation]"
+							}
+						}
+
+						TooltipTextBlock = {
+							visible = "[Not(Estate.GetType.IsAlwaysLoyal)]"
+							blockoverride "text" {
+								text = "[Estate.GetMostLikedCountries]"
+							}
+
+							tooltipwidget = {
+								SimpleContextualStringPairTooltipType = {
+									blockoverride "title_icon_texture" {
+										texture = "[GetEstateIcon(Estate.GetType)]"
+									}
+									blockoverride "concept_link" {
+										text = [estate_opinion|E]
+									}
+
+									textcontext = "[Estate.GetMostLikedCountriesFull]"
+								}
+							}
+						}
+
+						TooltipTextBlock = {
+							visible = "[Not(Estate.GetType.IsAlwaysLoyal)]"
+							blockoverride "text" {
+								text = "[Estate.GetLeastLikedCountries]"
+							}
+
+							tooltipwidget = {
+								SimpleContextualStringPairTooltipType = {
+									blockoverride "title_icon_texture" {
+										texture = "[GetEstateIcon(Estate.GetType)]"
+									}
+									blockoverride "concept_link" {
+										text = [estate_opinion|E]
+									}
+									textcontext = "[Estate.GetLeastLikedCountriesFull]"
+								}
+							}
+						}
+
+						TooltipFlavorTextBlock = {
+							blockoverride "text" {
+								text = "[Estate.GetType.GetFlavorText]"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

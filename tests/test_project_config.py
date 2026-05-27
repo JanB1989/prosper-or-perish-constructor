@@ -1,3 +1,4 @@
+import json
 import re
 from pathlib import Path
 
@@ -803,15 +804,30 @@ def test_irrigation_cap_scales_with_river_static_modifier_level() -> None:
         irrigant_cap,
         flags=re.S,
     )
-    assert "owner.modifier:irrigant_cap_level" not in irrigant_cap
     assert "has_location_modifier = river_flowing_through_" not in irrigant_cap
     assert (
         'desc = "BUILDING_LEVEL_HAS_RIVER"\n\t\tvalue = modifier:irrigant_cap_modifier'
         in irrigant_cap
     )
     assert (
+        'desc = "BUILDING_LEVEL_FROM_OWNER_MODIFIERS"\n\t\tadd = owner.modifier:irrigant_cap_level'
+        in irrigant_cap
+    )
+    assert (
         'irrigant_cap_modifier = {\n\tpositive = "gfx/interface/icons/buildings/irrigation_systems.dds"\n}'
         in modifier_icon_text
+    )
+
+
+def test_saquiyah_increases_irrigation_cap() -> None:
+    data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
+    advances = {row["name"]: row for row in data.advancements.select(["name", "modifiers"]).to_dicts()}
+    buildings = {row["name"]: row for row in data.building_data.buildings.select(["name", "max_levels"]).to_dicts()}
+
+    assert buildings["irrigation_systems"]["max_levels"] == "irrigant_cap"
+    assert json.loads(advances["saquiyah"]["modifiers"])["irrigant_cap_level"] == 2.0
+    assert "owner.modifier:irrigant_cap_level" in BUILDING_CAP_ADJUSTMENTS.read_text(
+        encoding="utf-8-sig"
     )
 
 

@@ -103,7 +103,7 @@ TRY_REPLACE:building_levels = {
 	}
 	local_trade_center_power = 0.0004
 	local_road_building_time = 0.01
-	local_build_buildings_cost = pp_building_level_cost_malus_value
+	local_build_buildings_cost = 0.10
 }
 TRY_REPLACE:unsupported_building_levels = {
 	game_data = {

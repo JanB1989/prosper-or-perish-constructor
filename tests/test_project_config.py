@@ -65,9 +65,6 @@ LOCALIZATION_ROOT = MOD_ROOT / "main_menu" / "localization" / "english"
 BUILDING_MAINTENANCE_RULES = (
     MOD_ROOT / "main_menu" / "common" / "game_rules" / "pp_building_maintenance_rules.txt"
 )
-BUILDING_COST_VALUES = (
-    MOD_ROOT / "main_menu" / "common" / "script_values" / "pp_building_cost_values.txt"
-)
 CAPACITY_PRECALC = MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_capacity_precalc.txt"
 RGO_STATIC_BONUSES = MOD_ROOT / "in_game" / "common" / "static_modifiers" / "pp_rgo_static_bonuses.txt"
 RGO_STATIC_BONUS_EFFECTS = (
@@ -1836,53 +1833,6 @@ def test_setup_estate_building_culling_is_registered_and_internal() -> None:
 
     localization = (LOCALIZATION_ROOT / "pp_game_rules_l_english.yml").read_text(encoding="utf-8-sig")
     assert "estate_setup_culling" not in localization
-
-
-def test_building_level_cost_malus_game_rule_has_requested_tiers() -> None:
-    rule_entries = {entry.key: entry.value for entry in parse_file(BUILDING_MAINTENANCE_RULES).entries}
-    rule = rule_entries["pp_building_level_cost_malus_rule"]
-    assert isinstance(rule, CList)
-
-    rule_values = _entry_values(rule)
-    assert rule_values["default"] == "pp_building_level_cost_malus_100"
-    for setting in (
-        "pp_building_level_cost_malus_100",
-        "pp_building_level_cost_malus_075",
-        "pp_building_level_cost_malus_050",
-        "pp_building_level_cost_malus_025",
-        "pp_building_level_cost_malus_000",
-    ):
-        setting_block = rule_values[setting]
-        assert isinstance(setting_block, CList)
-        assert _entry_values(setting_block)["flag"] == "general_rule"
-
-    value_entries = {entry.key: entry.value for entry in parse_file(BUILDING_COST_VALUES).entries}
-    value = value_entries["pp_building_level_cost_malus_value"]
-    assert isinstance(value, CList)
-    assert value.values("value")[0] == 0.10
-
-    value_text = BUILDING_COST_VALUES.read_text(encoding="utf-8-sig")
-    for setting, amount in (
-        ("pp_building_level_cost_malus_075", "0.075"),
-        ("pp_building_level_cost_malus_050", "0.05"),
-        ("pp_building_level_cost_malus_025", "0.025"),
-        ("pp_building_level_cost_malus_000", "0"),
-    ):
-        assert f"has_game_rule = {setting}" in value_text
-        assert f"value = {amount}" in value_text
-
-    localization = (LOCALIZATION_ROOT / "pp_game_rules_l_english.yml").read_text(
-        encoding="utf-8-sig"
-    )
-    for key in (
-        "rule_pp_building_level_cost_malus_rule",
-        "setting_pp_building_level_cost_malus_100",
-        "setting_pp_building_level_cost_malus_075",
-        "setting_pp_building_level_cost_malus_050",
-        "setting_pp_building_level_cost_malus_025",
-        "setting_pp_building_level_cost_malus_000",
-    ):
-        assert key in localization
 
 
 def test_setup_estate_building_culling_covers_vanilla_estate_buildings() -> None:

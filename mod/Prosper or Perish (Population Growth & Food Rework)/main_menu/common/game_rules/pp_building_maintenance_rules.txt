@@ -71,22 +71,3 @@ pp_ai_building_maintenance_rule = {
 		flag = general_rule
 	}
 }
-
-pp_building_level_cost_malus_rule = {
-	default = pp_building_level_cost_malus_100
-	pp_building_level_cost_malus_100 = {
-		flag = general_rule
-	}
-	pp_building_level_cost_malus_075 = {
-		flag = general_rule
-	}
-	pp_building_level_cost_malus_050 = {
-		flag = general_rule
-	}
-	pp_building_level_cost_malus_025 = {
-		flag = general_rule
-	}
-	pp_building_level_cost_malus_000 = {
-		flag = general_rule
-	}
-}

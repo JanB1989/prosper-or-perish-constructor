@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 import re
 import sys
 import tomllib
@@ -864,11 +865,13 @@ def _sha256_text(text: str) -> str:
 
 
 def _resolve_platform_path(value: str) -> Path:
-    if re.match(r"^[A-Za-z]:\\", value):
-        drive = value[0].lower()
-        tail = value[3:].replace("\\", "/")
-        return Path("/mnt") / drive / tail
-    return Path(value).expanduser().resolve()
+    path = Path(value).expanduser()
+    match = re.match(r"^([A-Za-z]):[\\/](.*)$", str(path))
+    if match is not None and os.name != "nt":
+        drive = match.group(1).lower()
+        tail = match.group(2).replace("\\", "/")
+        return (Path("/mnt") / drive / tail).resolve()
+    return path.resolve()
 
 
 if __name__ == "__main__":

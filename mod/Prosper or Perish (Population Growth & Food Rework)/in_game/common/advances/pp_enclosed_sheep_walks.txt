@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:enclosed_sheep_walks:advancement
+pp_enclosed_sheep_walks = {
+icon = enclosed_sheep_walks
+age = age_5_absolutism
+requires = food_advance_absolutism
+unlock_building = enclosed_sheep_walks
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:enclosed_sheep_walks:advancement

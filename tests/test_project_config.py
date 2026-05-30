@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from pathlib import Path
 
@@ -61,6 +62,12 @@ MODIFIER_TYPE_DEFINITIONS = MOD_ROOT / "main_menu" / "common" / "modifier_type_d
 MODIFIER_ICONS = MOD_ROOT / "main_menu" / "common" / "modifier_icons"
 GAME_CONCEPT_ROOT = MOD_ROOT / "main_menu" / "common" / "game_concepts"
 LOCALIZATION_ROOT = MOD_ROOT / "main_menu" / "localization" / "english"
+BUILDING_MAINTENANCE_RULES = (
+    MOD_ROOT / "main_menu" / "common" / "game_rules" / "pp_building_maintenance_rules.txt"
+)
+BUILDING_COST_VALUES = (
+    MOD_ROOT / "main_menu" / "common" / "script_values" / "pp_building_cost_values.txt"
+)
 CAPACITY_PRECALC = MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_capacity_precalc.txt"
 RGO_STATIC_BONUSES = MOD_ROOT / "in_game" / "common" / "static_modifiers" / "pp_rgo_static_bonuses.txt"
 RGO_STATIC_BONUS_EFFECTS = (
@@ -264,6 +271,51 @@ def test_constructor_config_loads() -> None:
     assert config.blueprint_evaluation.amortization_months_min == 120.0
     assert config.blueprint_evaluation.amortization_months_max == 360.0
     assert config.blueprint_evaluation.employment_size_constants == {}
+
+
+def test_constructor_path_configuration_is_portable_and_documented() -> None:
+    load_order_text = (ROOT / "constructor.load_order.toml").read_text(encoding="utf-8")
+    load_order_example = (ROOT / "constructor.load_order.example.toml").read_text(encoding="utf-8")
+    local_example = (ROOT / "constructor.local.example.toml").read_text(encoding="utf-8")
+
+    assert r'C:\Games\steamapps\common\Europa Universalis V' in load_order_text
+    assert "/mnt/c/Games/steamapps/common/Europa Universalis V" in load_order_text
+    assert "Windows drive paths on WSL/Linux" in load_order_text
+    assert 'root = "mod/Prosper or Perish (Population Growth & Food Rework)"' in load_order_text
+
+    assert r'C:\Games\steamapps\common\Europa Universalis V' in load_order_example
+    assert "/mnt/c/Games/steamapps/common/Europa Universalis V" in load_order_example
+    assert "/mnt/d/SteamLibrary/steamapps/common/Europa Universalis V" in load_order_example
+    assert 'root = "mod/Prosper or Perish (Population Growth & Food Rework)"' in load_order_example
+
+    assert "/mnt/c/Users/<windows-user>/Documents/Paradox Interactive/Europa Universalis V" in local_example
+
+    load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
+    expected_vanilla_root = (
+        Path(r"C:\Games\steamapps\common\Europa Universalis V")
+        if os.name == "nt"
+        else Path("/mnt/c/Games/steamapps/common/Europa Universalis V")
+    )
+    assert load_order.vanilla_root == expected_vanilla_root
+
+
+def test_published_docs_examples_do_not_embed_local_constructor_roots() -> None:
+    docs_examples = ROOT / "docs" / "examples"
+    forbidden = (
+        "/" + "mnt/c/Development/ProsperOrPerishConstructor",
+        "C:" + r"\Development\ProsperOrPerishConstructor",
+        "/" + "home/jan/development/ProsperOrPerishConstructor",
+    )
+    offenders: list[str] = []
+    for path in docs_examples.glob("*"):
+        if path.suffix not in {".html", ".json"}:
+            continue
+        text = path.read_text(encoding="utf-8")
+        for needle in forbidden:
+            if needle in text:
+                offenders.append(f"{path.relative_to(ROOT)}: {needle}")
+
+    assert not offenders
 
 
 def test_accepted_blueprints_validate() -> None:
@@ -1784,6 +1836,53 @@ def test_setup_estate_building_culling_is_registered_and_internal() -> None:
 
     localization = (LOCALIZATION_ROOT / "pp_game_rules_l_english.yml").read_text(encoding="utf-8-sig")
     assert "estate_setup_culling" not in localization
+
+
+def test_building_level_cost_malus_game_rule_has_requested_tiers() -> None:
+    rule_entries = {entry.key: entry.value for entry in parse_file(BUILDING_MAINTENANCE_RULES).entries}
+    rule = rule_entries["pp_building_level_cost_malus_rule"]
+    assert isinstance(rule, CList)
+
+    rule_values = _entry_values(rule)
+    assert rule_values["default"] == "pp_building_level_cost_malus_100"
+    for setting in (
+        "pp_building_level_cost_malus_100",
+        "pp_building_level_cost_malus_075",
+        "pp_building_level_cost_malus_050",
+        "pp_building_level_cost_malus_025",
+        "pp_building_level_cost_malus_000",
+    ):
+        setting_block = rule_values[setting]
+        assert isinstance(setting_block, CList)
+        assert _entry_values(setting_block)["flag"] == "general_rule"
+
+    value_entries = {entry.key: entry.value for entry in parse_file(BUILDING_COST_VALUES).entries}
+    value = value_entries["pp_building_level_cost_malus_value"]
+    assert isinstance(value, CList)
+    assert value.values("value")[0] == 0.10
+
+    value_text = BUILDING_COST_VALUES.read_text(encoding="utf-8-sig")
+    for setting, amount in (
+        ("pp_building_level_cost_malus_075", "0.075"),
+        ("pp_building_level_cost_malus_050", "0.05"),
+        ("pp_building_level_cost_malus_025", "0.025"),
+        ("pp_building_level_cost_malus_000", "0"),
+    ):
+        assert f"has_game_rule = {setting}" in value_text
+        assert f"value = {amount}" in value_text
+
+    localization = (LOCALIZATION_ROOT / "pp_game_rules_l_english.yml").read_text(
+        encoding="utf-8-sig"
+    )
+    for key in (
+        "rule_pp_building_level_cost_malus_rule",
+        "setting_pp_building_level_cost_malus_100",
+        "setting_pp_building_level_cost_malus_075",
+        "setting_pp_building_level_cost_malus_050",
+        "setting_pp_building_level_cost_malus_025",
+        "setting_pp_building_level_cost_malus_000",
+    ):
+        assert key in localization
 
 
 def test_setup_estate_building_culling_covers_vanilla_estate_buildings() -> None:

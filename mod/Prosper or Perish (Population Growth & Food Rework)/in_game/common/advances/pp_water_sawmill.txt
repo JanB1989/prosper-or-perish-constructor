@@ -1,0 +1,10 @@
+﻿# >>> eu5-building-pipeline:water_sawmill:advancement
+REPLACE:lumber_improvements_reformation = {
+icon = water_sawmill
+age = age_4_reformation
+requires = construction_speed_reformation
+unlock_production_method = pp_lumber_mill_timber_drives
+unlock_building = water_sawmill
+ai_weight = { add = 150 }
+}
+# <<< eu5-building-pipeline:water_sawmill:advancement

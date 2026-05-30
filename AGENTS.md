@@ -7,6 +7,9 @@
 - Use parser/evaluator commands for game-data and blueprint questions instead of text-searching generated mod files.
 - Treat `uv run ppc sync --yes` as a live deploy action. Do not run it unless the user explicitly asks to mirror into the live Paradox mod folder.
 - Machine-local paths and deploy targets belong in ignored `constructor.local.toml`.
+- Keep game-install paths in tracked config/examples, not in conversation memory. `constructor.load_order.toml` accepts Windows paths such as `C:\Games\steamapps\common\Europa Universalis V`; parser tooling resolves those to `/mnt/c/...` under WSL/Linux.
+- Keep constructor mod roots relative to the repo where possible so the checkout can live on another native WSL/Linux path.
+- Do not run project tooling from an old Windows-mounted checkout. If a mounted checkout exists, treat it as quarantined; copy specific files only when recovering data. Targeted read-only checks against the configured EU5 install are allowed.
 
 ## Generated Outputs
 

@@ -11,17 +11,32 @@ Use the repo command surface before reaching for raw commands:
 uv run ppc --help
 ```
 
-Default to the constructor workspace:
+Resolve the repository dynamically instead of hardcoding a user's checkout path:
 
 ```bash
-cd /mnt/c/Development/ProsperOrPerishConstructor
+repo="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+test -f "$repo/constructor.toml"
+cd "$repo"
 ```
 
 When running from another folder, pass the repo explicitly:
 
 ```bash
-uv run --project /mnt/c/Development/ProsperOrPerishConstructor ppc --repo /mnt/c/Development/ProsperOrPerishConstructor --help
+repo=/path/to/ProsperOrPerishConstructor
+uv run --project "$repo" ppc --repo "$repo" --help
 ```
+
+Do not run project tooling from the old Windows-mounted checkout. Treat that
+checkout as quarantined: read or copy specific files only when recovering data
+from it.
+
+Use tracked configuration for game paths:
+
+- `constructor.load_order.toml` is the actual parser load-order config.
+- `constructor.load_order.example.toml` is the portable template for other PCs.
+- `[paths].vanilla_root` may be a Windows path such as `C:\Games\steamapps\common\Europa Universalis V`; parser tooling resolves it to `/mnt/c/...` on WSL/Linux.
+- Keep `[[mods]].root` relative to the repo so clones can live anywhere.
+- Machine-local live deploy targets belong in ignored `constructor.local.toml`; start from `constructor.local.example.toml`.
 
 ## Command Index
 

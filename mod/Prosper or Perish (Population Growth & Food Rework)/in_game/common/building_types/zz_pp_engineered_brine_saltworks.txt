@@ -1,0 +1,113 @@
+﻿# >>> eu5-building-pipeline:engineered_brine_saltworks:building
+engineered_brine_saltworks = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 4
+price = pp_engineered_brine_saltworks_price
+category = rgo_building_category
+icon = engineered_brine_saltworks
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = inland_saltworks
+build_time = workshop_build_time
+
+location_potential = {
+    raw_material = goods:salt
+    NOT = { is_coastal = yes }
+    NOT = {
+        OR = {
+            has_location_modifier = sahara_salt_mines_base
+            has_location_modifier = turda_salt_mines_base
+            this = location:wieliczka
+            this = location:khewra
+            this = location:dina
+            this = location:khushab
+            this = location:dinkot
+            this = location:cardona
+            this = location:hallein
+            this = location:salzburg
+            this = location:chicaquicha
+            AND = {
+                OR = {
+                    topography = hills
+                    topography = mountains
+                    topography = plateau
+                }
+                OR = {
+                    climate = continental
+                    climate = oceanic
+                    climate = mediterranean
+                }
+                OR = {
+                    vegetation = forest
+                    vegetation = woods
+                    vegetation = grasslands
+                    vegetation = farmland
+                }
+                NOT = {
+                    OR = {
+                        this = location:salins_les_bains
+                        this = location:moutiers
+                        this = location:anana
+                        this = location:hall
+                        region = region:south_china_region
+                        region = region:west_china_region
+                        region = region:tibet_region
+                        region = region:xinjiang_region
+                    }
+                }
+            }
+        }
+    }
+}
+
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_engineered_brine_saltworks_base_salt = {
+        produced = salt
+        output = 0.280
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_engineered_brine_saltworks_no_concentration = {
+        category = building_maintenance
+    }
+    pp_engineered_brine_saltworks_pumped_brine_channels = {
+        lumber = 1.600 # brine pipes
+        tools = 1.000 # pumps and valves
+        pottery = 0.600 # storage jars
+        produced = salt
+        output = 1.320
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_engineered_brine_saltworks_wood_fired_pans = {
+        category = building_maintenance
+    }
+    pp_engineered_brine_saltworks_mineral_fired_pans = {
+        coal = 1.500 # pan fuel
+        clay = 1.000 # furnace linings
+        pottery = 1.000 # brine vessels
+        tools = 0.600 # iron pans
+        produced = salt
+        output = 1.450
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:engineered_brine_saltworks:building

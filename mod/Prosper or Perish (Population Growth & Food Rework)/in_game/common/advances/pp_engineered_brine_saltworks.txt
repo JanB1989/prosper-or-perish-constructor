@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:engineered_brine_saltworks:advancement
+pp_engineered_brine_saltworks = {
+icon = scientific_revolution_advance
+age = age_5_absolutism
+requires = manufactories_advance
+unlock_building = engineered_brine_saltworks
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:engineered_brine_saltworks:advancement

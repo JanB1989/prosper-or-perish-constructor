@@ -670,7 +670,7 @@ def test_publish_docs_copies_generated_graphs_and_assets(tmp_path: Path) -> None
     repo = _repo(tmp_path)
     graphs = repo / "graphs"
     graphs.mkdir()
-    (graphs / "goods_flow_explorer.html").write_text("goods\n")
+    (graphs / "goods_flow_explorer.html").write_text(f"goods {repo.as_posix()}/mod/file.txt\n")
     (graphs / "savegame_explorer.html").write_text("savegame\n")
     (graphs / "europedia.html").write_text("europedia\n")
     (graphs / "europedia_entries.json").write_text("{}\n")
@@ -679,7 +679,9 @@ def test_publish_docs_copies_generated_graphs_and_assets(tmp_path: Path) -> None
 
     assert cli.main(["--repo", str(repo), "publish-docs"]) == 0
 
-    assert (repo / "docs" / "examples" / "goods_flow_explorer.html").read_text() == "goods\n"
+    assert (
+        repo / "docs" / "examples" / "goods_flow_explorer.html"
+    ).read_text() == "goods <constructor-repo>/mod/file.txt\n"
     assert (repo / "docs" / "examples" / "savegame_explorer.html").read_text() == "savegame\n"
     assert (repo / "docs" / "examples" / "europedia.html").read_text() == "europedia\n"
     assert (repo / "docs" / "examples" / "europedia_entries.json").read_text() == "{}\n"

@@ -1,0 +1,19 @@
+﻿pp_building_level_cost_malus_value = {
+	value = 0.10
+	if = {
+		limit = { has_game_rule = pp_building_level_cost_malus_075 }
+		value = 0.075
+	}
+	else_if = {
+		limit = { has_game_rule = pp_building_level_cost_malus_050 }
+		value = 0.05
+	}
+	else_if = {
+		limit = { has_game_rule = pp_building_level_cost_malus_025 }
+		value = 0.025
+	}
+	else_if = {
+		limit = { has_game_rule = pp_building_level_cost_malus_000 }
+		value = 0
+	}
+}

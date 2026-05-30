@@ -1771,7 +1771,7 @@ def _publish_graph_examples(repo: Path, examples: Sequence[str]) -> int:
         destination = examples_dir / example
         if not source.is_file():
             raise SystemExit(f"Missing generated docs output: {source}")
-        shutil.copy2(source, destination)
+        _copy_published_example(source, destination, repo)
         print(f"Updated docs/examples/{example}", flush=True)
 
     graph_assets_dir = graphs_dir / "assets"
@@ -1780,6 +1780,30 @@ def _publish_graph_examples(repo: Path, examples: Sequence[str]) -> int:
         shutil.copytree(graph_assets_dir, example_assets_dir, dirs_exist_ok=True)
         print("Updated docs/examples/assets", flush=True)
     return 0
+
+
+def _copy_published_example(source: Path, destination: Path, repo: Path) -> None:
+    if source.suffix not in {".html", ".json"}:
+        shutil.copy2(source, destination)
+        return
+
+    text = source.read_text(encoding="utf-8")
+    destination.write_text(_portable_published_text(text, repo), encoding="utf-8")
+
+
+def _portable_published_text(text: str, repo: Path) -> str:
+    resolved = repo.resolve()
+    replacements = {
+        resolved.as_posix(),
+        str(resolved),
+        str(resolved).replace("\\", "\\\\"),
+    }
+    for raw in sorted(replacements, key=len, reverse=True):
+        if not raw:
+            continue
+        text = text.replace(f"{raw}/", "<constructor-repo>/")
+        text = text.replace(raw, "<constructor-repo>")
+    return text
 
 
 def _dashboard(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:

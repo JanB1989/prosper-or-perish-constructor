@@ -1,9 +1,22 @@
 [paths]
+# EU5 install root.
+#
+# Keep this as the host install path for the machine that runs the parser.
+# The eu5gameparser load-order reader resolves Windows drive paths on WSL/Linux:
+#
+#   C:\Games\steamapps\common\Europa Universalis V
+#   -> /mnt/c/Games/steamapps/common/Europa Universalis V
+#
+# On another PC, change this value to that PC's EU5 install root. Windows-style
+# drive paths, native WSL /mnt/<drive>/... paths, and native Linux absolute paths
+# are all valid as long as they point at the folder containing EU5's game/ dir.
 vanilla_root = "C:\\Games\\steamapps\\common\\Europa Universalis V"
 
 [[mods]]
 id = "constructor"
 name = "Prosper or Perish Constructor"
+# Keep the constructor mod root relative to this checkout so the same config
+# works after cloning the repository to a different native WSL/Linux path.
 root = "mod/Prosper or Perish (Population Growth & Food Rework)"
 
 [profiles]

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import re
 import shutil
 import tomllib
@@ -47,17 +48,15 @@ def _load_project_config(path: Path) -> dict:
 
 
 def _project_path(raw: str) -> Path:
-    windows_path = _wsl_path_from_windows(raw)
-    if windows_path is not None:
-        return windows_path
-    path = Path(raw)
+    path = _host_path(Path(raw))
     return path if path.is_absolute() else (ROOT / path).resolve()
 
 
-def _wsl_path_from_windows(raw: str) -> Path | None:
-    match = re.match(r"^([A-Za-z]):[\\/](.*)$", raw)
-    if match is None:
-        return None
+def _host_path(path: Path) -> Path:
+    path_text = str(path)
+    match = re.match(r"^([A-Za-z]):[\\/](.*)$", path_text)
+    if match is None or os.name == "nt":
+        return path
     drive = match.group(1).lower()
     tail = match.group(2).replace("\\", "/")
     return Path("/mnt") / drive / tail

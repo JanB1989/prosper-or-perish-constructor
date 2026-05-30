@@ -2,7 +2,7 @@
 # Displays static local output potential for every generated raw-material bonus good.
 # Red/yellow/green classified diverging scale. Values are additive percentages (0.1 = +10%).
 # Map color = per-location potential + active pp_rgo_bonus_<good> static modifier.
-# Map names use an integer percent script value. Stripes mark matching raw-material locations.
+# Map values use generated helper modifiers so activation does not scan every pp_loc_* modifier.
 # Geography index = 2 keeps these in the terrain/climate bucket.
 
 @zoom_step_near = 2
@@ -144,9 +144,9 @@ pp_local_beeswax_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_beeswax_productivity_map_label_value
-	medium_map_names = pp_beeswax_productivity_map_label_value
-	large_map_names = pp_beeswax_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -300,9 +300,9 @@ pp_local_chili_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_chili_productivity_map_label_value
-	medium_map_names = pp_chili_productivity_map_label_value
-	large_map_names = pp_chili_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -456,9 +456,9 @@ pp_local_cloves_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_cloves_productivity_map_label_value
-	medium_map_names = pp_cloves_productivity_map_label_value
-	large_map_names = pp_cloves_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -612,9 +612,9 @@ pp_local_cocoa_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_cocoa_productivity_map_label_value
-	medium_map_names = pp_cocoa_productivity_map_label_value
-	large_map_names = pp_cocoa_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -768,9 +768,9 @@ pp_local_coffee_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_coffee_productivity_map_label_value
-	medium_map_names = pp_coffee_productivity_map_label_value
-	large_map_names = pp_coffee_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -924,9 +924,9 @@ pp_local_cotton_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_cotton_productivity_map_label_value
-	medium_map_names = pp_cotton_productivity_map_label_value
-	large_map_names = pp_cotton_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -1080,9 +1080,9 @@ pp_local_dyes_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_dyes_productivity_map_label_value
-	medium_map_names = pp_dyes_productivity_map_label_value
-	large_map_names = pp_dyes_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -1236,9 +1236,9 @@ pp_local_elephants_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_elephants_productivity_map_label_value
-	medium_map_names = pp_elephants_productivity_map_label_value
-	large_map_names = pp_elephants_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -1392,9 +1392,9 @@ pp_local_fiber_crops_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_fiber_crops_productivity_map_label_value
-	medium_map_names = pp_fiber_crops_productivity_map_label_value
-	large_map_names = pp_fiber_crops_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -1548,9 +1548,9 @@ pp_local_fruit_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_fruit_productivity_map_label_value
-	medium_map_names = pp_fruit_productivity_map_label_value
-	large_map_names = pp_fruit_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -1704,9 +1704,9 @@ pp_local_horses_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_horses_productivity_map_label_value
-	medium_map_names = pp_horses_productivity_map_label_value
-	large_map_names = pp_horses_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -1860,9 +1860,9 @@ pp_local_incense_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_incense_productivity_map_label_value
-	medium_map_names = pp_incense_productivity_map_label_value
-	large_map_names = pp_incense_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -2016,9 +2016,9 @@ pp_local_legumes_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_legumes_productivity_map_label_value
-	medium_map_names = pp_legumes_productivity_map_label_value
-	large_map_names = pp_legumes_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -2172,9 +2172,9 @@ pp_local_livestock_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_livestock_productivity_map_label_value
-	medium_map_names = pp_livestock_productivity_map_label_value
-	large_map_names = pp_livestock_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -2328,9 +2328,9 @@ pp_local_maize_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_maize_productivity_map_label_value
-	medium_map_names = pp_maize_productivity_map_label_value
-	large_map_names = pp_maize_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -2484,9 +2484,9 @@ pp_local_millet_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_millet_productivity_map_label_value
-	medium_map_names = pp_millet_productivity_map_label_value
-	large_map_names = pp_millet_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -2640,9 +2640,9 @@ pp_local_olives_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_olives_productivity_map_label_value
-	medium_map_names = pp_olives_productivity_map_label_value
-	large_map_names = pp_olives_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -2796,9 +2796,9 @@ pp_local_pepper_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_pepper_productivity_map_label_value
-	medium_map_names = pp_pepper_productivity_map_label_value
-	large_map_names = pp_pepper_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -2952,9 +2952,9 @@ pp_local_potato_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_potato_productivity_map_label_value
-	medium_map_names = pp_potato_productivity_map_label_value
-	large_map_names = pp_potato_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -3108,9 +3108,9 @@ pp_local_rice_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_rice_productivity_map_label_value
-	medium_map_names = pp_rice_productivity_map_label_value
-	large_map_names = pp_rice_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -3264,9 +3264,9 @@ pp_local_saffron_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_saffron_productivity_map_label_value
-	medium_map_names = pp_saffron_productivity_map_label_value
-	large_map_names = pp_saffron_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -3420,9 +3420,9 @@ pp_local_silk_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_silk_productivity_map_label_value
-	medium_map_names = pp_silk_productivity_map_label_value
-	large_map_names = pp_silk_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -3576,9 +3576,9 @@ pp_local_sugar_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_sugar_productivity_map_label_value
-	medium_map_names = pp_sugar_productivity_map_label_value
-	large_map_names = pp_sugar_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -3732,9 +3732,9 @@ pp_local_tea_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_tea_productivity_map_label_value
-	medium_map_names = pp_tea_productivity_map_label_value
-	large_map_names = pp_tea_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -3888,9 +3888,9 @@ pp_local_tobacco_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_tobacco_productivity_map_label_value
-	medium_map_names = pp_tobacco_productivity_map_label_value
-	large_map_names = pp_tobacco_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -4044,9 +4044,9 @@ pp_local_wheat_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_wheat_productivity_map_label_value
-	medium_map_names = pp_wheat_productivity_map_label_value
-	large_map_names = pp_wheat_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -4200,9 +4200,9 @@ pp_local_wine_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_wine_productivity_map_label_value
-	medium_map_names = pp_wine_productivity_map_label_value
-	large_map_names = pp_wine_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -4356,9 +4356,9 @@ pp_local_wool_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_wool_productivity_map_label_value
-	medium_map_names = pp_wool_productivity_map_label_value
-	large_map_names = pp_wool_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -4512,9 +4512,9 @@ pp_local_lumber_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_lumber_productivity_map_label_value
-	medium_map_names = pp_lumber_productivity_map_label_value
-	large_map_names = pp_lumber_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -4668,9 +4668,9 @@ pp_local_amber_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_amber_productivity_map_label_value
-	medium_map_names = pp_amber_productivity_map_label_value
-	large_map_names = pp_amber_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -4824,9 +4824,9 @@ pp_local_clay_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_clay_productivity_map_label_value
-	medium_map_names = pp_clay_productivity_map_label_value
-	large_map_names = pp_clay_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -4980,9 +4980,9 @@ pp_local_fish_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_fish_productivity_map_label_value
-	medium_map_names = pp_fish_productivity_map_label_value
-	large_map_names = pp_fish_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -5136,9 +5136,9 @@ pp_local_medicaments_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_medicaments_productivity_map_label_value
-	medium_map_names = pp_medicaments_productivity_map_label_value
-	large_map_names = pp_medicaments_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -5292,9 +5292,9 @@ pp_local_pearls_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_pearls_productivity_map_label_value
-	medium_map_names = pp_pearls_productivity_map_label_value
-	large_map_names = pp_pearls_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -5448,9 +5448,9 @@ pp_local_salt_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_salt_productivity_map_label_value
-	medium_map_names = pp_salt_productivity_map_label_value
-	large_map_names = pp_salt_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -5604,9 +5604,9 @@ pp_local_sand_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_sand_productivity_map_label_value
-	medium_map_names = pp_sand_productivity_map_label_value
-	large_map_names = pp_sand_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -5760,9 +5760,9 @@ pp_local_fur_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_fur_productivity_map_label_value
-	medium_map_names = pp_fur_productivity_map_label_value
-	large_map_names = pp_fur_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -5916,9 +5916,9 @@ pp_local_ivory_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_ivory_productivity_map_label_value
-	medium_map_names = pp_ivory_productivity_map_label_value
-	large_map_names = pp_ivory_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -6072,9 +6072,9 @@ pp_local_wild_game_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_wild_game_productivity_map_label_value
-	medium_map_names = pp_wild_game_productivity_map_label_value
-	large_map_names = pp_wild_game_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -6228,9 +6228,9 @@ pp_local_coal_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_coal_productivity_map_label_value
-	medium_map_names = pp_coal_productivity_map_label_value
-	large_map_names = pp_coal_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -6384,9 +6384,9 @@ pp_local_iron_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_iron_productivity_map_label_value
-	medium_map_names = pp_iron_productivity_map_label_value
-	large_map_names = pp_iron_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -6540,9 +6540,9 @@ pp_local_copper_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_copper_productivity_map_label_value
-	medium_map_names = pp_copper_productivity_map_label_value
-	large_map_names = pp_copper_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -6696,9 +6696,9 @@ pp_local_goods_gold_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_goods_gold_productivity_map_label_value
-	medium_map_names = pp_goods_gold_productivity_map_label_value
-	large_map_names = pp_goods_gold_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -6852,9 +6852,9 @@ pp_local_silver_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_silver_productivity_map_label_value
-	medium_map_names = pp_silver_productivity_map_label_value
-	large_map_names = pp_silver_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -7008,9 +7008,9 @@ pp_local_stone_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_stone_productivity_map_label_value
-	medium_map_names = pp_stone_productivity_map_label_value
-	large_map_names = pp_stone_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -7164,9 +7164,9 @@ pp_local_tin_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_tin_productivity_map_label_value
-	medium_map_names = pp_tin_productivity_map_label_value
-	large_map_names = pp_tin_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -7320,9 +7320,9 @@ pp_local_lead_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_lead_productivity_map_label_value
-	medium_map_names = pp_lead_productivity_map_label_value
-	large_map_names = pp_lead_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -7476,9 +7476,9 @@ pp_local_gems_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_gems_productivity_map_label_value
-	medium_map_names = pp_gems_productivity_map_label_value
-	large_map_names = pp_gems_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -7632,9 +7632,9 @@ pp_local_saltpeter_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_saltpeter_productivity_map_label_value
-	medium_map_names = pp_saltpeter_productivity_map_label_value
-	large_map_names = pp_saltpeter_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -7788,9 +7788,9 @@ pp_local_alum_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_alum_productivity_map_label_value
-	medium_map_names = pp_alum_productivity_map_label_value
-	large_map_names = pp_alum_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -7944,9 +7944,9 @@ pp_local_marble_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_marble_productivity_map_label_value
-	medium_map_names = pp_marble_productivity_map_label_value
-	large_map_names = pp_marble_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location
@@ -8100,9 +8100,9 @@ pp_local_mercury_output_modifier = {
 			value = MAPMODE_PP_LOCAL_OUTPUT_TT_WATER
 		}
 	}
-	small_map_names = pp_mercury_productivity_map_label_value
-	medium_map_names = pp_mercury_productivity_map_label_value
-	large_map_names = pp_mercury_productivity_map_label_value
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
 	small_tooltip_context = location
 	medium_tooltip_context = location
 	large_tooltip_context = location

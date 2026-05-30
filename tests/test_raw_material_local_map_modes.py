@@ -13,6 +13,27 @@ SCRIPT_VALUES = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_local_ou
 LOCATION_MODIFIERS = MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifiers.txt"
 RGO_STATIC_BONUSES = MOD_ROOT / "in_game" / "common" / "static_modifiers" / "pp_rgo_static_bonuses.txt"
 LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_building_adjustments_l_english.yml"
+MODIFIER_TYPES = (
+    MOD_ROOT
+    / "main_menu"
+    / "common"
+    / "modifier_type_definitions"
+    / "pp_local_output_map_mode_modifier_types.txt"
+)
+MODIFIER_ICONS = (
+    MOD_ROOT
+    / "main_menu"
+    / "common"
+    / "modifier_icons"
+    / "pp_local_output_map_mode_modifier_icons.txt"
+)
+MODIFIER_TYPE_LOCALIZATION = (
+    MOD_ROOT
+    / "main_menu"
+    / "localization"
+    / "english"
+    / "pp_local_output_map_mode_modifier_types_l_english.yml"
+)
 CALIBRATION = ROOT / "tools" / "map_mode_scale_calibration.json"
 ICON_DIRS = (
     MOD_ROOT / "in_game" / "gfx" / "interface" / "icons" / "map_modes",
@@ -107,16 +128,39 @@ def _productivity_value_name(good: str) -> str:
     return f"pp_{good}_productivity_map_value"
 
 
-def _productivity_map_label_value_name(good: str) -> str:
-    return f"pp_{good}_productivity_map_label_value"
-
-
 def _productivity_location_potential_value_name(good: str) -> str:
     return f"pp_{good}_productivity_location_potential_map_value"
 
 
 def _productivity_rgo_bonus_value_name(good: str) -> str:
     return f"pp_{good}_productivity_rgo_bonus_map_value"
+
+
+def _productivity_location_potential_modifier_name(good: str) -> str:
+    return f"pp_{good}_productivity_location_potential_map_modifier"
+
+
+def _productivity_rgo_bonus_modifier_name(good: str) -> str:
+    return f"pp_{good}_productivity_rgo_bonus_map_modifier"
+
+
+def _entry_block(text: str, key: str) -> str:
+    match = re.search(
+        rf"^{re.escape(key)}\s*=\s*\{{(?P<body>.*?)^\}}",
+        text,
+        flags=re.DOTALL | re.MULTILINE,
+    )
+    assert match is not None, key
+    return match.group("body")
+
+
+def _last_numeric_value(block: str, key: str) -> str | None:
+    matches = re.findall(
+        rf"^\s*{re.escape(key)}\s*=\s*([-+]?\d+(?:\.\d+)?)\s*$",
+        block,
+        flags=re.MULTILINE,
+    )
+    return matches[-1] if matches else None
 
 
 def test_local_output_map_modes_match_rgo_bonus_goods() -> None:
@@ -153,6 +197,29 @@ def test_local_output_map_modes_have_required_localization() -> None:
     assert not missing
 
 
+def test_local_output_map_mode_helper_modifiers_have_assets_and_localization() -> None:
+    modifier_types = MODIFIER_TYPES.read_text(encoding="utf-8-sig")
+    modifier_icons = MODIFIER_ICONS.read_text(encoding="utf-8-sig")
+    localization = MODIFIER_TYPE_LOCALIZATION.read_text(encoding="utf-8-sig")
+
+    missing: list[str] = []
+    for good in _raw_material_goods():
+        for modifier in (
+            _productivity_location_potential_modifier_name(good),
+            _productivity_rgo_bonus_modifier_name(good),
+        ):
+            if f"{modifier}={{" not in modifier_types:
+                missing.append(f"{modifier}: missing modifier type")
+            if f"{modifier} = {{" not in modifier_icons:
+                missing.append(f"{modifier}: missing modifier icon")
+            if f"MODIFIER_TYPE_NAME_{modifier}:" not in localization:
+                missing.append(f"{modifier}: missing modifier type name")
+            if f"MODIFIER_TYPE_DESC_{modifier}:" not in localization:
+                missing.append(f"{modifier}: missing modifier type desc")
+
+    assert not missing
+
+
 def test_output_map_modes_use_productivity_script_values() -> None:
     blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
 
@@ -174,8 +241,6 @@ def test_local_output_map_mode_script_values_cover_every_raw_material() -> None:
     for good in _raw_material_goods():
         if f"{_productivity_value_name(good)} = {{" not in script_values:
             missing.append(good)
-        if f"{_productivity_map_label_value_name(good)} = {{" not in script_values:
-            missing.append(f"{good}: missing integer map label value")
         if f"{_productivity_location_potential_value_name(good)} = {{" not in script_values:
             missing.append(f"{good}: missing location-potential component")
         if f"{_productivity_rgo_bonus_value_name(good)} = {{" not in script_values:
@@ -192,10 +257,12 @@ def test_productivity_script_values_use_only_location_potential_and_rgo_bonus() 
         bad.append("uses live local output modifier source")
     if "pp_harvest_" in script_values:
         bad.append("uses variable harvest modifiers")
+    if "has_location_modifier = pp_loc_" in script_values:
+        bad.append("scans generated location modifiers")
     for good, block in _script_value_blocks(script_values).items():
-        if f"value = {_productivity_location_potential_value_name(good)}" not in block:
+        if f"value = modifier:{_productivity_location_potential_modifier_name(good)}" not in block:
             bad.append(f"{good}: total value missing location-potential source")
-        if f"add = {_productivity_rgo_bonus_value_name(good)}" not in block:
+        if f"add = modifier:{_productivity_rgo_bonus_modifier_name(good)}" not in block:
             bad.append(f"{good}: total value missing RGO-bonus source")
 
     assert not bad
@@ -328,27 +395,23 @@ def test_output_map_modes_clamp_extreme_productivity_without_gradient() -> None:
     assert not bad
 
 
-def test_productivity_script_values_have_bounded_location_potential_components() -> None:
+def test_productivity_script_value_components_use_helper_modifiers() -> None:
     script_values = SCRIPT_VALUES.read_text(encoding="utf-8-sig")
-    location_values = _location_potential_values()
 
     bad: list[str] = []
     for good in _raw_material_goods():
-        block = _script_block(script_values, _productivity_location_potential_value_name(good))
-        modifiers = location_values[good]
-        found = set(re.findall(r"has_location_modifier = (pp_loc_[a-z0-9_]+)", block))
-        if found != set(modifiers):
-            bad.append(f"{good}: generated {len(found)} location modifiers, expected {len(modifiers)}")
-        if modifiers and not re.search(r"^\t\t(add|subtract) = [-+]?[0-9.]+$", block, flags=re.MULTILINE):
-            bad.append(f"{good}: location-potential block has modifiers but no operation")
-        if not modifiers and re.search(r"has_location_modifier = pp_loc_", block):
-            bad.append(f"{good}: zero location-potential block contains location modifiers")
+        location_block = _script_block(script_values, _productivity_location_potential_value_name(good))
+        rgo_block = _script_block(script_values, _productivity_rgo_bonus_value_name(good))
+        if f"value = modifier:{_productivity_location_potential_modifier_name(good)}" not in location_block:
+            bad.append(f"{good}: location-potential component does not use helper modifier")
+        if f"value = modifier:{_productivity_rgo_bonus_modifier_name(good)}" not in rgo_block:
+            bad.append(f"{good}: RGO-bonus component does not use helper modifier")
 
     assert not bad
 
 
-def test_productivity_script_values_keep_representative_location_potential_values() -> None:
-    script_values = SCRIPT_VALUES.read_text(encoding="utf-8-sig")
+def test_location_potential_helper_modifiers_match_source_values() -> None:
+    location_text = LOCATION_MODIFIERS.read_text(encoding="utf-8-sig")
     location_values = _location_potential_values()
     representative_goods = ("wheat", "livestock", "fish", "lumber", "wild_game")
 
@@ -356,67 +419,49 @@ def test_productivity_script_values_keep_representative_location_potential_value
     for good in representative_goods:
         modifiers = location_values[good]
         assert modifiers, good
-        block = _script_block(script_values, _productivity_location_potential_value_name(good))
+        helper = _productivity_location_potential_modifier_name(good)
         for modifier, value in list(modifiers.items())[:3]:
-            operation = "subtract" if value.startswith("-") else "add"
-            amount = value.removeprefix("-").removeprefix("+")
-            if not re.search(
-                rf"has_location_modifier = {re.escape(modifier)}.*?\n\t\t{operation} = {re.escape(amount)}",
-                block,
-                flags=re.DOTALL,
-            ):
-                bad.append(f"{good}: missing representative {modifier} {operation} {amount}")
+            block = _entry_block(location_text, modifier)
+            if _last_numeric_value(block, helper) != value:
+                bad.append(f"{good}: {modifier} helper value missing or mismatched")
 
     assert not bad
 
 
-def test_productivity_script_values_match_rgo_bonus_modifier_values() -> None:
-    script_values = SCRIPT_VALUES.read_text(encoding="utf-8-sig")
+def test_rgo_bonus_helper_modifiers_match_rgo_bonus_values() -> None:
+    rgo_text = RGO_STATIC_BONUSES.read_text(encoding="utf-8-sig")
     rgo_values = _rgo_bonus_values()
 
     bad: list[str] = []
     for good, (modifier, value) in rgo_values.items():
-        block = _script_block(script_values, _productivity_rgo_bonus_value_name(good))
-        found = set(re.findall(r"has_location_modifier = (pp_rgo_bonus_[a-z0-9_]+)", block))
-        if found != {modifier}:
-            bad.append(f"{good}: generated {sorted(found)}, expected {modifier}")
-        operation = "subtract" if value.startswith("-") else "add"
-        amount = value.removeprefix("-").removeprefix("+")
-        if f"\t\t{operation} = {amount}" not in block:
-            bad.append(f"{good}: missing {operation} {amount}")
+        block = _entry_block(rgo_text, modifier)
+        helper = _productivity_rgo_bonus_modifier_name(good)
+        if _last_numeric_value(block, helper) != value:
+            bad.append(f"{good}: RGO helper value missing or mismatched")
 
     assert not bad
 
 
-def test_output_map_modes_use_integer_productivity_map_names() -> None:
+def test_output_map_modes_use_vanilla_location_map_names() -> None:
     blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
 
     bad: list[str] = []
     for good, block in blocks.items():
-        label_value = _productivity_map_label_value_name(good)
         for size in ("small", "medium", "large"):
-            if f"{size}_map_names = {label_value}" not in block:
-                bad.append(f"{good}: {size}_map_names is not {label_value}")
-            if f"{size}_map_names = location" in block:
-                bad.append(f"{good}: {size}_map_names still shows location names")
+            match = re.search(rf"^\s*{size}_map_names\s*=\s*(\S+)\s*$", block, flags=re.MULTILINE)
+            if match is None:
+                bad.append(f"{good}: missing {size}_map_names")
+            elif match.group(1) != "location":
+                bad.append(f"{good}: {size}_map_names uses unsupported provider {match.group(1)}")
 
     assert not bad
 
 
-def test_productivity_integer_map_label_values_floor_percent_values() -> None:
+def test_productivity_script_values_keep_only_total_and_component_values() -> None:
     script_values = SCRIPT_VALUES.read_text(encoding="utf-8-sig")
+    value_blocks = re.findall(r"^pp_[a-z0-9_]+_productivity_[a-z0-9_]+_value = \{", script_values, flags=re.MULTILINE)
 
-    bad: list[str] = []
-    for good in _raw_material_goods():
-        block = _script_block(script_values, _productivity_map_label_value_name(good))
-        if f"value = {_productivity_value_name(good)}" not in block:
-            bad.append(f"{good}: label does not source total productivity value")
-        if "\tmultiply = 100" not in block:
-            bad.append(f"{good}: label does not convert to percent")
-        if "\tfloor = yes" not in block:
-            bad.append(f"{good}: label is not floored to integer")
-
-    assert not bad
+    assert len(value_blocks) == len(_raw_material_goods()) * 3
 
 
 def test_local_output_map_mode_localization_explains_static_planning_values_without_balance_numbers() -> None:
@@ -431,10 +476,12 @@ def test_local_output_map_mode_localization_explains_static_planning_values_with
 
     assert "static wheat productivity" in output_text
     assert "static livestock productivity" in output_text
-    assert "Location potential:" in output_text
-    assert "Raw-material bonus:" in output_text
-    assert "uses only those two static planning factors" in output_text
-    assert "integer percent value" in output_text
+    assert "Location potential static modifier:" in output_text
+    assert "RGO bonus static modifier:" in output_text
+    assert "Total static modifier:" in output_text
+    assert "#TOOLTIP:SIMPLE_CUSTOM,PP_LOCAL_WHEAT_OUTPUT_MODIFIER_TOTAL_TT #L" in output_text
+    assert "#TOOLTIP:MODIFIER_TYPE,pp_wheat_productivity_location_potential_map_modifier #L" in output_text
+    assert "#TOOLTIP:MODIFIER_TYPE,pp_wheat_productivity_rgo_bonus_map_modifier #L" in output_text
     assert "wheat is the raw material" in output_text
     assert "livestock is the raw material" in output_text
     assert "Red marks negative productivity" in output_text
@@ -446,6 +493,28 @@ def test_local_output_map_mode_localization_explains_static_planning_values_with
 
     text_without_format_precision = output_text.replace("|2", "").replace("|0", "")
     assert not re.search(r"[-+]?\d+(?:\.\d+)?%?", text_without_format_precision)
+
+
+def test_local_output_map_mode_hover_tooltips_are_short_static_modifier_breakdowns() -> None:
+    loc = LOCALIZATION.read_text(encoding="utf-8-sig")
+    hover_tooltips = re.findall(
+        r'^\s+MAPMODE_PP_LOCAL_[A-Z0-9_]+_OUTPUT_MODIFIER_TT_LAND(?:_BREAKDOWN)?: "(.*)"$',
+        loc,
+        flags=re.MULTILINE,
+    )
+    assert hover_tooltips
+    tooltip_text = "\n".join(hover_tooltips)
+
+    assert "[ROOT.GetLocation.GetName]" not in tooltip_text
+    assert "The map color uses only those two static planning factors" not in tooltip_text
+    assert "Red marks negative productivity" not in tooltip_text
+    assert "Static modifier value:" not in tooltip_text
+    assert "Location potential static modifier:" in tooltip_text
+    assert "RGO bonus static modifier:" in tooltip_text
+    assert "Total static modifier:" in tooltip_text
+    assert "pp_wheat_productivity_map_value')|2" in tooltip_text
+    assert "#TOOLTIP:SIMPLE_CUSTOM" in tooltip_text
+    assert "#TOOLTIP:MODIFIER_TYPE" in tooltip_text
 
 
 def test_non_wheat_local_output_legends_do_not_reference_wheat() -> None:

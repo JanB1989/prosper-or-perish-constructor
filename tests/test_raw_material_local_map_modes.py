@@ -78,6 +78,24 @@ def _script_block(text: str, name: str) -> str:
     return match.group("body")
 
 
+def _localization_value(text: str, key: str) -> str | None:
+    matches = re.findall(rf"^\s*{re.escape(key)}:\s*\"(.*)\"\s*$", text, flags=re.MULTILINE)
+    return matches[-1] if matches else None
+
+
+def _uses_goods_name_reference(value: str, good: str) -> bool:
+    return any(
+        token in value
+        for token in (
+            f"${good}$",
+            f"ShowGoodsName('{good}')",
+            f'ShowGoodsName("{good}")',
+            f"ShowGoodsNameWithNoTooltip('{good}')",
+            f'ShowGoodsNameWithNoTooltip("{good}")',
+        )
+    )
+
+
 def _rgo_bonus_values() -> dict[str, tuple[str, str]]:
     text = RGO_STATIC_BONUSES.read_text(encoding="utf-8-sig")
     values: dict[str, tuple[str, str]] = {}
@@ -195,6 +213,54 @@ def test_local_output_map_modes_have_required_localization() -> None:
         missing.extend(key for key in keys if key not in loc)
 
     assert not missing
+
+
+def test_local_output_map_mode_localization_uses_game_goods_names() -> None:
+    loc = LOCALIZATION.read_text(encoding="utf-8-sig")
+    modifier_type_loc = MODIFIER_TYPE_LOCALIZATION.read_text(encoding="utf-8-sig")
+
+    bad: list[str] = []
+    for good in _raw_material_goods():
+        upper = good.upper()
+        keys = [
+            f"mapmode_pp_local_{good}_output_modifier_name",
+            f"MAPMODE_PP_LOCAL_{upper}_OUTPUT_MODIFIER",
+            f"PP_LOCAL_{upper}_OUTPUT_MODIFIER_TOTAL_TT",
+            *(f"MAPMODE_PP_LOCAL_{upper}_OUTPUT_MODIFIER_{suffix}" for suffix in ANCHOR_LEGEND_KEYS),
+        ]
+        for key in keys:
+            value = _localization_value(loc, key)
+            if value is None:
+                bad.append(f"{key}: missing localization")
+            elif not _uses_goods_name_reference(value, good):
+                bad.append(f"{key}: {value}")
+
+        for modifier in (
+            _productivity_location_potential_modifier_name(good),
+            _productivity_rgo_bonus_modifier_name(good),
+        ):
+            for key in (f"MODIFIER_TYPE_NAME_{modifier}", f"MODIFIER_TYPE_DESC_{modifier}"):
+                value = _localization_value(modifier_type_loc, key)
+                if value is None:
+                    bad.append(f"{key}: missing localization")
+                elif not _uses_goods_name_reference(value, good):
+                    bad.append(f"{key}: {value}")
+
+    assert not bad
+
+
+def test_local_output_map_mode_names_use_productivity_label() -> None:
+    loc = LOCALIZATION.read_text(encoding="utf-8-sig")
+
+    bad: list[str] = []
+    for good in _raw_material_goods():
+        key = f"mapmode_pp_local_{good}_output_modifier_name"
+        value = _localization_value(loc, key)
+        expected = f"Local ${good}$ Productivity"
+        if value != expected:
+            bad.append(f"{key}: {value!r}, expected {expected!r}")
+
+    assert not bad
 
 
 def test_local_output_map_mode_helper_modifiers_have_assets_and_localization() -> None:
@@ -474,16 +540,16 @@ def test_local_output_map_mode_localization_explains_static_planning_values_with
     assert output_keys
     output_text = "\n".join(output_keys)
 
-    assert "static wheat productivity" in output_text
-    assert "static livestock productivity" in output_text
+    assert "static $wheat$ productivity" in output_text
+    assert "static $livestock$ productivity" in output_text
     assert "Location potential static modifier:" in output_text
     assert "RGO bonus static modifier:" in output_text
     assert "Total static modifier:" in output_text
     assert "#TOOLTIP:SIMPLE_CUSTOM,PP_LOCAL_WHEAT_OUTPUT_MODIFIER_TOTAL_TT #L" in output_text
     assert "#TOOLTIP:MODIFIER_TYPE,pp_wheat_productivity_location_potential_map_modifier #L" in output_text
     assert "#TOOLTIP:MODIFIER_TYPE,pp_wheat_productivity_rgo_bonus_map_modifier #L" in output_text
-    assert "wheat is the raw material" in output_text
-    assert "livestock is the raw material" in output_text
+    assert "$wheat$ is the raw material" in output_text
+    assert "$livestock$ is the raw material" in output_text
     assert "Red marks negative productivity" in output_text
     assert "yellow marks near-neutral productivity" in output_text
     assert "green marks positive productivity" in output_text

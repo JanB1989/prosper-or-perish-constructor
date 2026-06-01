@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+from types import SimpleNamespace
 
 import polars as pl
 import pytest
@@ -1222,6 +1223,37 @@ def test_savegame_purge_dry_run_keeps_generated_outputs(tmp_path: Path) -> None:
     assert cli.main(["--repo", str(repo), "savegame-purge", "--dry-run"]) == 0
 
     assert savegame_dir.exists()
+
+
+def test_location_scoring_sheet_cli_writes_configured_output(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = _repo(tmp_path)
+    calls: list[tuple[Path, Path, Path | None]] = []
+
+    import prosper_or_perish_constructor.additive_location_scoring_sheet as scoring
+
+    def fake_build(repo_arg: Path, project_arg: Path, *, output: Path | None = None):
+        calls.append((repo_arg, project_arg, output))
+        return SimpleNamespace(path=repo / "sheet.xlsx", location_count=10, value_count=24)
+
+    monkeypatch.setattr(scoring, "build_additive_location_scoring_sheet", fake_build)
+
+    assert (
+        cli.main(
+            [
+                "--repo",
+                str(repo),
+                "location-scoring-sheet",
+                "--output",
+                "artifacts/spreadsheets/test.xlsx",
+            ]
+        )
+        == 0
+    )
+
+    assert calls == [(repo, repo / "constructor.toml", repo / "artifacts/spreadsheets/test.xlsx")]
 
 
 def test_location_changes_detect_writes_report(

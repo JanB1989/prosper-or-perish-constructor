@@ -353,6 +353,21 @@ def _build_parser() -> argparse.ArgumentParser:
         "Export the custom Prosper or Perish Europedia into the docs examples.",
         _europedia,
     )
+    location_scoring_sheet = _add_command(
+        subcommands,
+        "location-scoring-sheet",
+        "Create an import-ready additive location scoring workbook.",
+        _location_scoring_sheet,
+    )
+    location_scoring_sheet.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help=(
+            "XLSX output path relative to --repo. Defaults to "
+            "[artifacts].root/spreadsheets/additive_location_scoring.xlsx."
+        ),
+    )
     savegame_purge = _add_command(
         subcommands,
         "savegame-purge",
@@ -1341,6 +1356,27 @@ def _update_audit(
     print(f"changed_csv={summary.changed_csv}", flush=True)
     print(f"all_csv={summary.all_csv}", flush=True)
     print(f"changed_json={summary.changed_json}", flush=True)
+    return 0
+
+
+def _location_scoring_sheet(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("location-scoring-sheet does not accept extra arguments.")
+
+    from prosper_or_perish_constructor.additive_location_scoring_sheet import (
+        build_additive_location_scoring_sheet,
+    )
+
+    output = None if args.output is None else _resolve_repo_relative_path(repo, args.output)
+    result = build_additive_location_scoring_sheet(repo, project, output=output)
+    print(f"xlsx={result.path}", flush=True)
+    print(f"locations={result.location_count}", flush=True)
+    print(f"editable_values={result.value_count}", flush=True)
     return 0
 
 

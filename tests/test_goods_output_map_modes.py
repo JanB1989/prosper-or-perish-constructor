@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import json
+import tomllib
 from collections import Counter
 from pathlib import Path
 
@@ -28,6 +29,62 @@ GOODS_OUTPUT_LEGEND_SUFFIXES = ("VERY_LOW", "LOW", "MEDIUM", "HIGH", "CAPPED")
 def _all_goods() -> set[str]:
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
     return set(data.goods.select("name").to_series().to_list())
+
+
+def _host_path(path: Path) -> Path:
+    match = re.match(r"^([A-Za-z]):[\\/](.*)$", str(path))
+    if match is None:
+        return path
+    return Path("/mnt") / match.group(1).lower() / match.group(2).replace("\\", "/")
+
+
+def _vanilla_root() -> Path:
+    with (ROOT / "constructor.load_order.toml").open("rb") as stream:
+        raw = tomllib.load(stream)
+    path = _host_path(Path(raw["paths"]["vanilla_root"]))
+    return path if path.is_absolute() else (ROOT / path).resolve()
+
+
+def _modifier_type_definition_text() -> str:
+    roots = (
+        _vanilla_root() / "game" / "main_menu" / "common" / "modifier_type_definitions",
+        MOD_ROOT / "main_menu" / "common" / "modifier_type_definitions",
+    )
+    return "\n".join(
+        path.read_text(encoding="utf-8-sig")
+        for root in roots
+        for path in sorted(root.glob("*.txt"))
+    )
+
+
+def _english_localization_text() -> str:
+    roots = (
+        _vanilla_root() / "game" / "main_menu" / "localization" / "english",
+        MOD_ROOT / "main_menu" / "localization" / "english",
+    )
+    return "\n".join(
+        path.read_text(encoding="utf-8-sig")
+        for root in roots
+        for path in sorted(root.glob("*_l_english.yml"))
+    )
+
+
+def _localization_value(text: str, key: str) -> str | None:
+    matches = re.findall(rf"^\s*{re.escape(key)}:\s*\"(.*)\"\s*$", text, flags=re.MULTILINE)
+    return matches[-1] if matches else None
+
+
+def _uses_goods_name_reference(value: str, good: str) -> bool:
+    return any(
+        token in value
+        for token in (
+            f"${good}$",
+            f"ShowGoodsName('{good}')",
+            f'ShowGoodsName("{good}")',
+            f"ShowGoodsNameWithNoTooltip('{good}')",
+            f'ShowGoodsNameWithNoTooltip("{good}")',
+        )
+    )
 
 
 def _assert_exact_goods(label: str, found: list[str], expected: set[str]) -> None:
@@ -78,6 +135,54 @@ def test_goods_output_map_modes_cover_all_goods_and_no_more() -> None:
     _assert_exact_goods("script values", script_value_goods, expected)
     _assert_exact_goods("localization", localization_goods, expected)
     _assert_exact_goods("icons", icon_goods, expected)
+
+
+def test_output_modifier_types_cover_all_goods_and_use_goods_localization() -> None:
+    expected = _all_goods()
+    definitions = _modifier_type_definition_text()
+    localization = _english_localization_text()
+
+    for scope in ("local", "global"):
+        found = re.findall(
+            rf"^{scope}_([a-z0-9_]+)_output_modifier\s*=\s*\{{",
+            definitions,
+            flags=re.MULTILINE,
+        )
+        _assert_exact_goods(f"{scope} output modifier types", found, expected)
+
+    bad: list[str] = []
+    for good in sorted(expected):
+        for scope in ("local", "global"):
+            for kind in ("NAME", "DESC"):
+                key = f"MODIFIER_TYPE_{kind}_{scope}_{good}_output_modifier"
+                value = _localization_value(localization, key)
+                if value is None:
+                    bad.append(f"{key}: missing localization")
+                elif not _uses_goods_name_reference(value, good):
+                    bad.append(f"{key}: {value}")
+
+    assert not bad
+
+
+def test_goods_output_map_mode_localization_uses_game_goods_names() -> None:
+    expected = _all_goods()
+    localization = LOCALIZATION.read_text(encoding="utf-8-sig")
+
+    bad: list[str] = []
+    for good in sorted(expected):
+        upper = good.upper()
+        for key in (
+            f"mapmode_pp_{good}_output_name",
+            f"MAPMODE_PP_{upper}_OUTPUT",
+            f"MAPMODE_PP_{upper}_OUTPUT_TT_LAND",
+        ):
+            value = _localization_value(localization, key)
+            if value is None:
+                bad.append(f"{key}: missing localization")
+            elif not _uses_goods_name_reference(value, good):
+                bad.append(f"{key}: {value}")
+
+    assert not bad
 
 
 def test_goods_output_map_modes_use_per_good_vanilla_traffic_light_bucket_format() -> None:

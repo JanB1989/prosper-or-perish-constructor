@@ -20,6 +20,8 @@ building:
         - pp_sheep_farm_maintenance
   possible_production_methods: []
   body: |2-
+        audio_tier = 1
+        startup_ramp_target = rural_startup_ramp_target
         is_foreign = no
         pop_type = peasants
         max_levels = farm_max_level
@@ -59,6 +61,7 @@ building:
             }
         }
         modifier = {
+            pp_land_farm_capacity_used = 1
             local_monthly_food = 0.0
             # local_food_capacity = 50
         }

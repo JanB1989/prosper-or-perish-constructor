@@ -69,6 +69,74 @@ def load_scale_calibration(path: Path = CALIBRATION_PATH) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def savegame_goods_output_samples(savegame_root: Path) -> dict[str, list[float]]:
+    """Return per-good, per-location output samples from exported savegame tables."""
+    try:
+        import polars as pl
+    except ImportError:
+        return {}
+
+    sample_frames = []
+    production = savegame_root / "production_method_good_flows.parquet"
+    buildings = savegame_root / "buildings.parquet"
+    if production.exists():
+        flow = pl.read_parquet(production).filter(
+            (pl.col("direction") == "output")
+            & (pl.col("save_side") == "supplied_Production")
+            & (pl.col("nominal_amount") > 0)
+        )
+        if buildings.exists() and flow.height:
+            building_basis = (
+                pl.read_parquet(buildings)
+                .select(["building_id", "level", "employed", "employment"])
+                .rename({"level": "building_level"})
+                .with_columns(
+                    pl.coalesce(["employed", "employment", "building_level"]).alias("basis"),
+                )
+                .select(["building_id", "building_level", "basis"])
+            )
+            flow = flow.join(building_basis, on="building_id", how="left").with_columns(
+                pl.when(
+                    (pl.col("basis") > 0)
+                    & (pl.col("building_level") > 0)
+                )
+                .then(pl.col("nominal_amount") * pl.col("building_level") / pl.col("basis"))
+                .otherwise(pl.col("nominal_amount"))
+                .alias("output")
+            )
+        else:
+            flow = flow.with_columns(pl.col("nominal_amount").alias("output"))
+        sample_frames.append(
+            flow.group_by(["good_id", "location_id"]).agg(pl.col("output").sum().alias("output"))
+        )
+
+    rgo = savegame_root / "rgo_flows.parquet"
+    if rgo.exists():
+        flow = pl.read_parquet(rgo)
+        sample_frames.append(
+            flow.filter(
+                (pl.col("direction") == "output")
+                & (pl.col("save_side") == "supplied_Production")
+                & (pl.col("nominal_amount") > 0)
+            )
+            .group_by(["good_id", "location_id"])
+            .agg(pl.col("nominal_amount").sum().alias("output"))
+        )
+
+    if not sample_frames:
+        return {}
+
+    samples = pl.concat(sample_frames, how="vertical_relaxed").group_by(["good_id", "location_id"]).agg(
+        pl.col("output").sum().alias("output")
+    )
+    return {
+        row["good_id"]: row["outputs"]
+        for row in samples.group_by("good_id")
+        .agg(pl.col("output").sort().alias("outputs"))
+        .to_dicts()
+    }
+
+
 def sequential_good(thresholds: Sequence[float]) -> tuple[MapColorBucket, ...]:
     return _sequential_buckets(thresholds, (MAP_COLOR_MIN, MAP_COLOR_LOW, MAP_COLOR_MID, MAP_COLOR_HIGH, MAP_COLOR_MAX))
 

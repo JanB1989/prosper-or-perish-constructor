@@ -10,6 +10,7 @@ building:
         - pp_polders_maintenance
   possible_production_methods: []
   body: |2-
+    	audio_tier = 3
     	price = pp_polders_price
       custom_tags = { pp_food_security_priority pp_water_control_priority }
       is_special = yes

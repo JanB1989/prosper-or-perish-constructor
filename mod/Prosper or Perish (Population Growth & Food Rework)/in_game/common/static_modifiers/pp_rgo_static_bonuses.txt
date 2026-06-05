@@ -5,7 +5,6 @@ pp_rgo_bonus_beeswax = {
 	game_data = { category = location }
 	# Apiaries improve pollination and wax craft, while hive and forest rights can still cause friction.
 	local_beeswax_output_modifier = 0.20
-	pp_beeswax_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.03
 	local_cultural_tradition = 0.02
 	local_unrest = 0.005
@@ -15,7 +14,6 @@ pp_rgo_bonus_chili = {
 	game_data = { category = location }
 	# Chili adds useful calories and a labor-attracting cash crop, but competes with staple acreage.
 	local_chili_output_modifier = 0.20
-	pp_chili_productivity_rgo_bonus_map_modifier = 0.20
 	local_population_growth = 0.0002
 	local_migration_attraction = 0.02
 	local_peasants_food_consumption = 0.02
@@ -25,7 +23,6 @@ pp_rgo_bonus_cloves = {
 	game_data = { category = location }
 	# Cloves create intense plantation value, but monopoly pressure and forced planting undermine order.
 	local_cloves_output_modifier = 0.20
-	pp_cloves_productivity_rgo_bonus_map_modifier = 0.20
 	local_monthly_development_modifier = 0.02
 	local_unrest = 0.02
 	local_max_control = -0.02
@@ -35,7 +32,6 @@ pp_rgo_bonus_cocoa = {
 	game_data = { category = location }
 	# Cocoa groves add humid export value, with some food displacement and disease exposure.
 	local_cocoa_output_modifier = 0.20
-	pp_cocoa_productivity_rgo_bonus_map_modifier = 0.20
 	local_monthly_development_modifier = 0.01
 	local_peasants_food_consumption = 0.02
 	local_disease_resistance = -0.02
@@ -45,7 +41,6 @@ pp_rgo_bonus_coffee = {
 	game_data = { category = location }
 	# Coffee hills draw labor and cash-crop development, while humid estates remain unhealthy.
 	local_coffee_output_modifier = 0.20
-	pp_coffee_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.01
 	local_monthly_development_modifier = 0.01
 	local_disease_resistance = -0.03
@@ -55,7 +50,6 @@ pp_rgo_bonus_cotton = {
 	game_data = { category = location }
 	# Cotton supports textile settlement, but plantation pressure reduces carrying capacity and order.
 	local_cotton_output_modifier = 0.20
-	pp_cotton_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.01
 	local_population_capacity_modifier = -0.03
 	local_unrest = 0.01
@@ -65,7 +59,6 @@ pp_rgo_bonus_dyes = {
 	game_data = { category = location }
 	# Dye crops and vats improve workshop efficiency, but intensive processing strains land and labor peace.
 	local_dyes_output_modifier = 0.20
-	pp_dyes_productivity_rgo_bonus_map_modifier = 0.20
 	local_production_efficiency = 0.02
 	local_population_capacity_modifier = -0.02
 	local_unrest = 0.01
@@ -75,7 +68,6 @@ pp_rgo_bonus_elephants = {
 	game_data = { category = location }
 	# Elephant grounds support heavy transport and war animals, at the cost of forage and crop pressure.
 	local_elephants_output_modifier = 0.20
-	pp_elephants_productivity_rgo_bonus_map_modifier = 0.20
 	local_manpower = 0.001
 	local_supply_limit_modifier = 0.03
 	local_peasants_food_consumption = 0.03
@@ -85,7 +77,6 @@ pp_rgo_bonus_fiber_crops = {
 	game_data = { category = location }
 	# Flax and hemp strengthen rope, linen, and field supply while modestly displacing food land.
 	local_fiber_crops_output_modifier = 0.20
-	pp_fiber_crops_productivity_rgo_bonus_map_modifier = 0.20
 	local_supply_limit_modifier = 0.02
 	local_peasants_food_consumption = 0.01
 	local_monthly_development_modifier = 0.01
@@ -95,7 +86,6 @@ pp_rgo_bonus_fruit = {
 	game_data = { category = location }
 	# Orchards improve diets and carrying capacity, with slow but steady local development.
 	local_fruit_output_modifier = 0.20
-	pp_fruit_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.03
 	local_population_capacity_modifier = 0.03
 	local_monthly_development_modifier = 0.01
@@ -105,7 +95,6 @@ pp_rgo_bonus_horses = {
 	game_data = { category = location }
 	# Horse pastures aid cavalry, transport, and supply while still demanding fodder.
 	local_horses_output_modifier = 0.20
-	pp_horses_productivity_rgo_bonus_map_modifier = 0.20
 	local_manpower = 0.001
 	local_supply_limit_modifier = 0.04
 	local_peasants_food_consumption = 0.02
@@ -115,7 +104,6 @@ pp_rgo_bonus_incense = {
 	game_data = { category = location }
 	# Incense resins attract caravan labor and religious commerce while strengthening local authority.
 	local_incense_output_modifier = 0.20
-	pp_incense_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.02
 	local_pop_conversion_speed_modifier = 0.05
 	local_max_control = 0.02
@@ -125,7 +113,6 @@ pp_rgo_bonus_legumes = {
 	game_data = { category = location }
 	# Legumes restore soils and feed peasants with protein, increasing mixed-farm carrying capacity.
 	local_legumes_output_modifier = 0.20
-	pp_legumes_productivity_rgo_bonus_map_modifier = 0.20
 	local_max_rgo_size_modifier = 0.05
 	local_peasants_food_consumption = -0.05
 	local_population_capacity_modifier = 0.03
@@ -135,7 +122,6 @@ pp_rgo_bonus_livestock = {
 	game_data = { category = location }
 	# Herds supply meat, dairy, traction, and manure, but pasture expansion limits dense settlement.
 	local_livestock_output_modifier = 0.20
-	pp_livestock_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.04
 	local_supply_limit_modifier = 0.03
 	local_population_capacity_modifier = -0.02
@@ -145,7 +131,6 @@ pp_rgo_bonus_maize = {
 	game_data = { category = location }
 	# Maize produces dense calories and growth, but monocrop diets bring a small resilience drawback.
 	local_maize_output_modifier = 0.20
-	pp_maize_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.08
 	local_population_growth = 0.0002
 	local_disease_resistance = -0.01
@@ -155,7 +140,6 @@ pp_rgo_bonus_millet = {
 	game_data = { category = location }
 	# Millet stabilizes dryland food supplies and supports marginal settlements and marching stores.
 	local_millet_output_modifier = 0.20
-	pp_millet_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.05
 	local_population_capacity_modifier = 0.02
 	local_supply_limit_modifier = 0.02
@@ -165,7 +149,6 @@ pp_rgo_bonus_olives = {
 	game_data = { category = location }
 	# Olive groves provide oil and cash crops, but hillside groves offer limited army forage.
 	local_olives_output_modifier = 0.20
-	pp_olives_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.02
 	local_monthly_development_modifier = 0.01
 	local_supply_limit_modifier = -0.01
@@ -175,7 +158,6 @@ pp_rgo_bonus_pepper = {
 	game_data = { category = location }
 	# Pepper estates enrich plantation districts, but forced planting and humid work hurt order and health.
 	local_pepper_output_modifier = 0.20
-	pp_pepper_productivity_rgo_bonus_map_modifier = 0.20
 	local_monthly_development_modifier = 0.02
 	local_unrest = 0.01
 	local_disease_resistance = -0.02
@@ -185,7 +167,6 @@ pp_rgo_bonus_potato = {
 	game_data = { category = location }
 	# Potatoes improve food security and highland carrying capacity, enabling faster population growth.
 	local_potato_output_modifier = 0.20
-	pp_potato_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.08
 	local_food_capacity_modifier = 0.05
 	local_population_growth = 0.0002
@@ -195,7 +176,6 @@ pp_rgo_bonus_rice = {
 	game_data = { category = location }
 	# Wet rice feeds dense populations, though paddy labor and standing water add disease pressure.
 	local_rice_output_modifier = 0.20
-	pp_rice_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.10
 	local_population_growth = 0.0004
 	local_disease_resistance = -0.03
@@ -205,7 +185,6 @@ pp_rgo_bonus_saffron = {
 	game_data = { category = location }
 	# Saffron creates labor-intensive luxury income while displacing staple subsistence crops.
 	local_saffron_output_modifier = 0.20
-	pp_saffron_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.01
 	local_monthly_development_modifier = 0.03
 	local_peasants_food_consumption = 0.03
@@ -215,7 +194,6 @@ pp_rgo_bonus_silk = {
 	game_data = { category = location }
 	# Sericulture anchors skilled labor and luxury development, but mulberry acreage competes with food.
 	local_silk_output_modifier = 0.20
-	pp_silk_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.02
 	local_monthly_development_modifier = 0.02
 	local_peasants_food_consumption = 0.03
@@ -225,7 +203,6 @@ pp_rgo_bonus_sugar = {
 	game_data = { category = location }
 	# Sugar plantations generate export wealth, but disease, monoculture, and coercion are severe.
 	local_sugar_output_modifier = 0.20
-	pp_sugar_productivity_rgo_bonus_map_modifier = 0.20
 	local_disease_resistance = -0.05
 	local_peasants_food_consumption = 0.05
 	local_unrest = 0.02
@@ -235,7 +212,6 @@ pp_rgo_bonus_tea = {
 	game_data = { category = location }
 	# Tea gardens create ordered upland estates while reducing local subsistence land.
 	local_tea_output_modifier = 0.20
-	pp_tea_productivity_rgo_bonus_map_modifier = 0.20
 	local_monthly_development_modifier = 0.01
 	local_peasants_food_consumption = 0.02
 	local_max_control = 0.02
@@ -245,7 +221,6 @@ pp_rgo_bonus_tobacco = {
 	game_data = { category = location }
 	# Tobacco brings cash-crop settlement, but soil exhaustion and coercive labor strain society.
 	local_tobacco_output_modifier = 0.20
-	pp_tobacco_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.01
 	local_population_capacity_modifier = -0.02
 	local_unrest = 0.01
@@ -255,7 +230,6 @@ pp_rgo_bonus_wheat = {
 	game_data = { category = location }
 	# Wheat supplies bread and grain reserves, with expanded fields and some disease vulnerability.
 	local_wheat_output_modifier = 0.20
-	pp_wheat_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.11
 	local_max_rgo_size_modifier = 0.03
 	local_disease_resistance = -0.01
@@ -265,7 +239,6 @@ pp_rgo_bonus_wine = {
 	game_data = { category = location }
 	# Vineyards support regulated excise and estate development while displacing staple food fields.
 	local_wine_output_modifier = 0.20
-	pp_wine_productivity_rgo_bonus_map_modifier = 0.20
 	local_monthly_control = 0.001
 	local_peasants_food_consumption = 0.03
 	local_monthly_development_modifier = 0.01
@@ -275,7 +248,6 @@ pp_rgo_bonus_wool = {
 	game_data = { category = location }
 	# Wool represents pastoral food, textiles, and pack supply rather than direct population decline.
 	local_wool_output_modifier = 0.20
-	pp_wool_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.03
 	local_monthly_development_modifier = 0.01
 	local_supply_limit_modifier = 0.02
@@ -285,8 +257,7 @@ pp_rgo_bonus_lumber = {
 	game_data = { category = location }
 	# Timber lowers building costs, speeds worksites, and draws frontier labor.
 	local_lumber_output_modifier = 0.20
-	pp_lumber_productivity_rgo_bonus_map_modifier = 0.20
-	local_build_buildings_cost = -0.02
+	local_build_buildings_efficiency = 0.02
 	local_construction_speed = 0.05
 	local_migration_attraction = 0.02
 }
@@ -295,7 +266,6 @@ pp_rgo_bonus_amber = {
 	game_data = { category = location }
 	# Amber districts draw craft labor and prestige goods without much subsistence value.
 	local_amber_output_modifier = 0.20
-	pp_amber_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.01
 	local_monthly_development_modifier = 0.01
 	local_cultural_tradition = 0.02
@@ -305,8 +275,7 @@ pp_rgo_bonus_clay = {
 	game_data = { category = location }
 	# Clay pits feed ceramics and brickmaking, sharply improving local construction work.
 	local_clay_output_modifier = 0.20
-	pp_clay_productivity_rgo_bonus_map_modifier = 0.20
-	local_build_buildings_cost = -0.02
+	local_build_buildings_efficiency = 0.02
 	local_construction_speed = 0.10
 	local_monthly_development_modifier = 0.01
 }
@@ -315,7 +284,6 @@ pp_rgo_bonus_fish = {
 	game_data = { category = location }
 	# Fisheries improve protein supply, draw labor, and support campaigning provisions.
 	local_fish_output_modifier = 0.20
-	pp_fish_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.05
 	local_migration_attraction = 0.01
 	local_supply_limit_modifier = 0.02
@@ -325,7 +293,6 @@ pp_rgo_bonus_medicaments = {
 	game_data = { category = location }
 	# Medicinal herbs improve local health and support modest population and development growth.
 	local_medicaments_output_modifier = 0.20
-	pp_medicaments_productivity_rgo_bonus_map_modifier = 0.20
 	local_disease_resistance = 0.05
 	local_population_growth = 0.002
 	local_monthly_development_modifier = 0.01
@@ -335,7 +302,6 @@ pp_rgo_bonus_pearls = {
 	game_data = { category = location }
 	# Pearl fisheries draw maritime labor, but dangerous diving and coercive collection breed disorder.
 	local_pearls_output_modifier = 0.20
-	pp_pearls_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.01
 	local_disease_resistance = -0.02
 	local_unrest = 0.01
@@ -345,7 +311,6 @@ pp_rgo_bonus_salt = {
 	game_data = { category = location }
 	# Salt preserves food and expands burgher trade, but monopoly rights weaken local control.
 	local_salt_output_modifier = 0.20
-	pp_salt_productivity_rgo_bonus_map_modifier = 0.20
 	local_food_decay_modifier = -0.00070
 	local_peasants_food_consumption = -0.02
 	local_trades_per_burgher = 0.10
@@ -356,9 +321,8 @@ pp_rgo_bonus_sand = {
 	game_data = { category = location }
 	# Sand supports glass and construction, with dust and erosion causing a small health cost.
 	local_sand_output_modifier = 0.20
-	pp_sand_productivity_rgo_bonus_map_modifier = 0.20
 	local_construction_speed = 0.05
-	local_build_buildings_cost = -0.01
+	local_build_buildings_efficiency = 0.01
 	local_disease_resistance = -0.01
 }
 
@@ -366,7 +330,6 @@ pp_rgo_bonus_fur = {
 	game_data = { category = location }
 	# Fur trade brings hunted food and frontier value, but dispersed trapping weakens control.
 	local_fur_output_modifier = 0.20
-	pp_fur_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.02
 	local_unrest = 0.01
 	local_max_control = -0.02
@@ -376,7 +339,6 @@ pp_rgo_bonus_ivory = {
 	game_data = { category = location }
 	# Ivory caravans create luxury extraction zones, but coercion and depletion reduce settlement appeal.
 	local_ivory_output_modifier = 0.20
-	pp_ivory_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = 0.02
 	local_migration_attraction = -0.03
 	local_unrest = 0.02
@@ -386,7 +348,6 @@ pp_rgo_bonus_wild_game = {
 	game_data = { category = location }
 	# Wild game provides hunted meat buffers and field provisions, but dense settlement remains less attractive.
 	local_wild_game_output_modifier = 0.20
-	pp_wild_game_productivity_rgo_bonus_map_modifier = 0.20
 	local_peasants_food_consumption = -0.035
 	local_migration_attraction = -0.01
 	local_supply_limit_modifier = 0.02
@@ -396,7 +357,6 @@ pp_rgo_bonus_coal = {
 	game_data = { category = location }
 	# Coal attracts mining labor and dense fuel economies, but dust and fumes depress health.
 	local_coal_output_modifier = 0.20
-	pp_coal_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.02
 	local_population_growth = -0.0002
 	local_disease_resistance = -0.03
@@ -406,17 +366,15 @@ pp_rgo_bonus_iron = {
 	game_data = { category = location }
 	# Iron supports tools, weapons, and construction while mines and smelters harm local growth.
 	local_iron_output_modifier = 0.20
-	pp_iron_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.02
 	local_population_growth = -0.0002
-	local_build_buildings_cost = -0.02
+	local_build_buildings_efficiency = 0.02
 }
 
 pp_rgo_bonus_copper = {
 	game_data = { category = location }
 	# Copper feeds metal trades, but smelting pollution harms growth and health.
 	local_copper_output_modifier = 0.20
-	pp_copper_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.02
 	local_population_growth = -0.0002
 	local_disease_resistance = -0.02
@@ -426,7 +384,6 @@ pp_rgo_bonus_goods_gold = {
 	game_data = { category = location }
 	# Gold rushes draw labor, but boomtown extraction brings unrest and unhealthy mining conditions.
 	local_goods_gold_output_modifier = 0.20
-	pp_goods_gold_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.03
 	local_unrest = 0.02
 	local_population_growth = -0.0003
@@ -437,7 +394,6 @@ pp_rgo_bonus_silver = {
 	game_data = { category = location }
 	# Silver rushes pull labor into boomtowns, but toxic processing hurts health and order.
 	local_silver_output_modifier = 0.20
-	pp_silver_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.02
 	local_unrest = 0.01
 	local_population_growth = -0.0002
@@ -448,8 +404,7 @@ pp_rgo_bonus_stone = {
 	game_data = { category = location }
 	# Building stone lowers masonry costs and speeds construction, while quarry dust harms health.
 	local_stone_output_modifier = 0.20
-	pp_stone_productivity_rgo_bonus_map_modifier = 0.20
-	local_build_buildings_cost = -0.03
+	local_build_buildings_efficiency = 0.03
 	local_construction_speed = 0.05
 	local_disease_resistance = -0.01
 }
@@ -458,7 +413,6 @@ pp_rgo_bonus_tin = {
 	game_data = { category = location }
 	# Tin draws miners and smelters for bronze and pewter trades, damaging watercourses and health.
 	local_tin_output_modifier = 0.20
-	pp_tin_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.01
 	local_population_growth = -0.0002
 	local_disease_resistance = -0.02
@@ -468,7 +422,6 @@ pp_rgo_bonus_lead = {
 	game_data = { category = location }
 	# Lead supports munitions, roofing, pipes, and metallurgy, but poisons mining districts.
 	local_lead_output_modifier = 0.20
-	pp_lead_productivity_rgo_bonus_map_modifier = 0.20
 	local_manpower_modifier = 0.001
 	local_disease_resistance = -0.05
 	local_population_growth = -0.0004
@@ -478,7 +431,6 @@ pp_rgo_bonus_gems = {
 	game_data = { category = location }
 	# Gem fields draw rush labor, but luxury extraction brings disorder and unhealthy pits.
 	local_gems_output_modifier = 0.20
-	pp_gems_productivity_rgo_bonus_map_modifier = 0.20
 	local_migration_attraction = 0.02
 	local_unrest = 0.02
 	local_disease_resistance = -0.02
@@ -488,9 +440,8 @@ pp_rgo_bonus_saltpeter = {
 	game_data = { category = location }
 	# Saltpeter strengthens gunpowder logistics and worksites, but niter extraction hurts health and order.
 	local_saltpeter_output_modifier = 0.20
-	pp_saltpeter_productivity_rgo_bonus_map_modifier = 0.20
 	local_manpower_modifier = 0.002
-	local_build_buildings_cost = -0.01
+	local_build_buildings_efficiency = 0.01
 	local_disease_resistance = -0.02
 	local_unrest = 0.01
 }
@@ -499,7 +450,6 @@ pp_rgo_bonus_alum = {
 	game_data = { category = location }
 	# Alum improves dyeing, tanning, paper, and chemical work, but leaching and fumes damage health.
 	local_alum_output_modifier = 0.20
-	pp_alum_productivity_rgo_bonus_map_modifier = 0.20
 	local_production_efficiency = 0.02
 	local_disease_resistance = -0.02
 	local_population_growth = -0.0002
@@ -509,8 +459,7 @@ pp_rgo_bonus_marble = {
 	game_data = { category = location }
 	# Marble feeds monumental building and skilled masonry, but dust and heavy quarry labor strain health.
 	local_marble_output_modifier = 0.20
-	pp_marble_productivity_rgo_bonus_map_modifier = 0.20
-	local_build_buildings_cost = -0.02
+	local_build_buildings_efficiency = 0.02
 	local_construction_speed = 0.05
 	local_monthly_development_modifier = 0.02
 	local_disease_resistance = -0.02
@@ -520,7 +469,6 @@ pp_rgo_bonus_mercury = {
 	game_data = { category = location }
 	# Mercury enables specialized processing, but cinnabar mining and roasting are severely toxic.
 	local_mercury_output_modifier = 0.20
-	pp_mercury_productivity_rgo_bonus_map_modifier = 0.20
 	local_production_efficiency = 0.02
 	local_disease_resistance = -0.08
 	local_population_growth = -0.0005

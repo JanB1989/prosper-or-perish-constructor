@@ -1,8 +1,7 @@
 ﻿# Prosper or Perish - Goods Adjustments
 # All goods need to have 0 food value
 TRY_INJECT:wool = {
-    food = -5.0
-    block_rgo_upgrade = yes
+    block_rgo_upgrade = yes # in 1.3 game doesnt consider it a food anymore so no inject needed
 }
 TRY_INJECT:wild_game = {
     food = -3.5

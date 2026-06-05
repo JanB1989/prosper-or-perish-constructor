@@ -95,6 +95,7 @@ building:
     }
 
     modifier = {
+        pp_fish_capacity_used = 1
         local_fish_output_modifier = -0.03
         local_merchant_capacity = 0.35
         local_maritime_presence = 0.04

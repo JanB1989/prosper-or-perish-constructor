@@ -10,6 +10,7 @@ building:
         - pp_saltpeter_guild_demands
   possible_production_methods: []
   body: |2-
+    startup_ramp_target = guild_startup_ramp_target
     is_foreign = no
     pop_type = burghers
     max_levels = guild_max_level

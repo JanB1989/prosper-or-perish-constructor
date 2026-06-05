@@ -102,7 +102,8 @@ building:
     }
 
     modifier = {
-        local_build_buildings_cost = -0.02
+        pp_forest_capacity_used = 1
+        local_build_buildings_efficiency = 0.02
         local_migration_attraction = 0.03
         local_population_growth = -0.0001
     }

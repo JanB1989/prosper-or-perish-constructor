@@ -7,10 +7,10 @@
     "building_levels": {
       "kind": "sequential",
       "thresholds": [
-        0.25,
-        1.0,
-        4.0,
-        16.0
+        3.0,
+        8.0,
+        22.0,
+        93.0
       ]
     },
     "food_capacity": {
@@ -26,19 +26,19 @@
       "fish": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          1.5,
+          3.0,
+          4.5,
+          9.0
         ]
       },
       "forest": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          3.3,
+          4.4,
+          6.6,
+          11.0
         ]
       }
     },
@@ -46,676 +46,676 @@
       "alum": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          3.0,
+          15.0
         ]
       },
       "amber": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          1.5,
+          2.0,
+          5.0,
+          11.0
         ]
       },
       "beer": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          3.5,
+          14.0
         ]
       },
       "beeswax": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
+          0.63,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          8.5
         ]
       },
       "books": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          0.9,
+          2.0,
+          3.0,
+          8.0
         ]
       },
       "cannons": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          1.5,
+          2.5,
+          6.5,
+          24.0
         ]
       },
       "chili": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          2.0,
+          3.0
         ]
       },
       "clay": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
+          0.3,
           1.0,
           4.0,
-          16.0
+          19.0
         ]
       },
       "cloth": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          0.8,
+          2.0,
+          6.0,
+          18.0
         ]
       },
       "cloves": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          3.0,
+          5.0
         ]
       },
       "coal": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.5,
+          7.0,
+          17.0
         ]
       },
       "cocoa": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          2.0,
+          2.5
         ]
       },
       "coffee": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          2.0,
+          3.0
         ]
       },
       "copper": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          13.0,
+          46.0
         ]
       },
       "cotton": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          2.0,
+          5.0
         ]
       },
       "dyes": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
+          0.3,
+          0.4,
           1.0,
-          4.0,
-          16.0
+          5.0
         ]
       },
       "elephants": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          3.0,
+          4.0
         ]
       },
       "fiber_crops": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
+          0.82,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          6.0
         ]
       },
       "fine_cloth": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          0.7,
+          1.5,
+          3.5,
+          13.0
         ]
       },
       "firearms": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
+          1.5,
           4.0,
-          16.0
+          8.0,
+          29.0
         ]
       },
       "fish": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
+          2.0,
           4.0,
-          16.0
+          41.0
         ]
       },
       "fruit": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          3.5,
+          71.0
         ]
       },
       "fur": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
+          0.64,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          9.5
         ]
       },
       "furniture": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
+          2.0,
           4.0,
-          16.0
+          14.0
         ]
       },
       "gems": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          2.0,
+          7.5
         ]
       },
       "glass": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
+          0.4,
           1.0,
-          4.0,
-          16.0
+          3.0,
+          11.0
         ]
       },
       "goods_gold": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
+          1.5,
           4.0,
-          16.0
+          21.0
         ]
       },
       "horses": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          0.97,
+          2.0,
+          5.0,
+          9.5
         ]
       },
       "incense": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          5.0,
+          11.0
         ]
       },
       "iron": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          0.72,
+          1.5,
+          3.5,
+          33.0
         ]
       },
       "ivory": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          3.0,
+          14.0
         ]
       },
       "jewelry": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
+          0.1,
+          0.2,
           1.0,
-          4.0,
-          16.0
+          7.5
         ]
       },
       "lacquerware": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          3.0,
+          10.0
         ]
       },
       "lead": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          5.5,
+          27.0
         ]
       },
       "leather": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          0.7,
+          2.0,
+          4.5,
+          22.0
         ]
       },
       "legumes": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          2.0,
+          62.0
         ]
       },
       "liquor": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          3.0,
+          6.0,
+          19.0
         ]
       },
       "livestock": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
+          1.5,
+          2.0,
           16.0
         ]
       },
       "lumber": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          11.0,
+          40.0
         ]
       },
       "maize": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          2.0,
+          42.0
         ]
       },
       "marble": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          2.5,
+          4.0
         ]
       },
       "masonry": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
+          0.5,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          4.5
         ]
       },
       "medicaments": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
+          0.5,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          5.0
         ]
       },
       "mercury": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          2.0,
+          7.0
         ]
       },
       "millet": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          2.5,
+          74.0
         ]
       },
       "naval_supplies": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          3.5,
+          12.0
         ]
       },
       "olives": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          11.0,
+          23.0,
+          100.0
         ]
       },
       "paper": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
+          2.0,
           4.0,
-          16.0
+          9.0,
+          27.0
         ]
       },
       "pearls": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
+          2.0,
+          5.5,
           16.0
         ]
       },
       "pepper": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
+          1.5,
+          3.0,
           4.0,
-          16.0
+          5.5
         ]
       },
       "porcelain": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          3.0,
+          12.0
         ]
       },
       "potato": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          21.0,
+          43.0,
+          130.0
         ]
       },
       "pottery": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          1.5,
+          3.5,
+          6.5,
+          19.0
         ]
       },
       "rice": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          3.0,
+          110.0
         ]
       },
       "saffron": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          3.0,
+          4.0
         ]
       },
       "salt": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          9.5,
+          30.0
         ]
       },
       "saltpeter": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          2.5,
+          6.0
         ]
       },
       "sand": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          3.0,
+          10.0
         ]
       },
       "silk": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          3.0,
+          5.0
         ]
       },
       "silver": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
+          0.48,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          23.0
         ]
       },
       "slaves_goods": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
+          2.0,
+          3.0,
           4.0,
-          16.0
+          6.0
         ]
       },
       "steel": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
           4.0,
-          16.0
+          8.0,
+          12.0,
+          28.0
         ]
       },
       "stone": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
+          0.6,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          6.5
         ]
       },
       "sugar": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
+          2.0,
           4.0,
-          16.0
+          6.5
         ]
       },
       "tar": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          3.0,
+          9.0,
+          20.0
         ]
       },
       "tea": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          2.0,
+          3.5,
+          5.0,
+          7.0
         ]
       },
       "tin": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
+          1.5,
           4.0,
-          16.0
+          23.0
         ]
       },
       "tobacco": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          2.0,
+          4.0
         ]
       },
       "tools": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
+          0.5,
           1.0,
-          4.0,
-          16.0
+          5.0,
+          24.0
         ]
       },
       "victuals": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
-          1.0,
-          4.0,
-          16.0
+          3.5,
+          7.0,
+          15.0,
+          44.0
         ]
       },
       "weaponry": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          5.5,
+          24.0
         ]
       },
       "wheat": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          21.0,
+          97.0
         ]
       },
       "wild_game": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          1.5,
+          2.0,
+          20.0
         ]
       },
       "wine": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          3.0,
+          6.0,
+          20.0
         ]
       },
       "wool": {
         "kind": "sequential",
         "thresholds": [
-          0.25,
           1.0,
-          4.0,
-          16.0
+          2.0,
+          22.0,
+          77.0
         ]
       }
     },
@@ -1503,22 +1503,22 @@
     },
     "market_food_price": {
       "high_thresholds": [
-        0.18,
-        0.3
+        0.171,
+        0.462
       ],
       "kind": "reference_centered",
       "low_thresholds": [
-        0.02,
-        0.08
+        0.014,
+        0.054
       ],
       "reference": 0.12,
-      "source": "fallback_market_food_price_scale"
+      "source": "market_food_price_distribution"
     },
     "population_capacity": {
       "kind": "sequential",
       "thresholds": [
-        14.0,
-        37.0,
+        13.0,
+        36.0,
         55.0,
         66.0
       ]
@@ -1540,19 +1540,19 @@
     "rgo_level": {
       "kind": "sequential",
       "thresholds": [
-        0.25,
         1.0,
-        4.0,
-        16.0
+        2.0,
+        3.0,
+        4.0
       ]
     },
     "unemployment": {
       "kind": "sequential",
       "thresholds": [
-        0.25,
-        1.0,
-        4.0,
-        16.0
+        900.0,
+        6790.0,
+        28430.0,
+        107610.0
       ]
     }
   },

@@ -225,6 +225,7 @@ def test_local_output_map_mode_localization_uses_game_goods_names() -> None:
         keys = [
             f"mapmode_pp_local_{good}_output_modifier_name",
             f"MAPMODE_PP_LOCAL_{upper}_OUTPUT_MODIFIER",
+            f"PP_LOCAL_{upper}_OUTPUT_MODIFIER_RGO_BONUS_TT",
             f"PP_LOCAL_{upper}_OUTPUT_MODIFIER_TOTAL_TT",
             *(f"MAPMODE_PP_LOCAL_{upper}_OUTPUT_MODIFIER_{suffix}" for suffix in ANCHOR_LEGEND_KEYS),
         ]
@@ -235,16 +236,13 @@ def test_local_output_map_mode_localization_uses_game_goods_names() -> None:
             elif not _uses_goods_name_reference(value, good):
                 bad.append(f"{key}: {value}")
 
-        for modifier in (
-            _productivity_location_potential_modifier_name(good),
-            _productivity_rgo_bonus_modifier_name(good),
-        ):
-            for key in (f"MODIFIER_TYPE_NAME_{modifier}", f"MODIFIER_TYPE_DESC_{modifier}"):
-                value = _localization_value(modifier_type_loc, key)
-                if value is None:
-                    bad.append(f"{key}: missing localization")
-                elif not _uses_goods_name_reference(value, good):
-                    bad.append(f"{key}: {value}")
+        modifier = _productivity_location_potential_modifier_name(good)
+        for key in (f"MODIFIER_TYPE_NAME_{modifier}", f"MODIFIER_TYPE_DESC_{modifier}"):
+            value = _localization_value(modifier_type_loc, key)
+            if value is None:
+                bad.append(f"{key}: missing localization")
+            elif not _uses_goods_name_reference(value, good):
+                bad.append(f"{key}: {value}")
 
     assert not bad
 
@@ -270,18 +268,25 @@ def test_local_output_map_mode_helper_modifiers_have_assets_and_localization() -
 
     missing: list[str] = []
     for good in _raw_material_goods():
-        for modifier in (
-            _productivity_location_potential_modifier_name(good),
-            _productivity_rgo_bonus_modifier_name(good),
-        ):
-            if f"{modifier}={{" not in modifier_types:
-                missing.append(f"{modifier}: missing modifier type")
-            if f"{modifier} = {{" not in modifier_icons:
-                missing.append(f"{modifier}: missing modifier icon")
-            if f"MODIFIER_TYPE_NAME_{modifier}:" not in localization:
-                missing.append(f"{modifier}: missing modifier type name")
-            if f"MODIFIER_TYPE_DESC_{modifier}:" not in localization:
-                missing.append(f"{modifier}: missing modifier type desc")
+        modifier = _productivity_location_potential_modifier_name(good)
+        if f"{modifier}={{" not in modifier_types:
+            missing.append(f"{modifier}: missing modifier type")
+        if f"{modifier} = {{" not in modifier_icons:
+            missing.append(f"{modifier}: missing modifier icon")
+        if f"MODIFIER_TYPE_NAME_{modifier}:" not in localization:
+            missing.append(f"{modifier}: missing modifier type name")
+        if f"MODIFIER_TYPE_DESC_{modifier}:" not in localization:
+            missing.append(f"{modifier}: missing modifier type desc")
+
+        rgo_modifier = _productivity_rgo_bonus_modifier_name(good)
+        if f"{rgo_modifier}={{" in modifier_types:
+            missing.append(f"{rgo_modifier}: should not have modifier type")
+        if f"{rgo_modifier} = {{" in modifier_icons:
+            missing.append(f"{rgo_modifier}: should not have modifier icon")
+        if f"MODIFIER_TYPE_NAME_{rgo_modifier}:" in localization:
+            missing.append(f"{rgo_modifier}: should not have modifier type name")
+        if f"MODIFIER_TYPE_DESC_{rgo_modifier}:" in localization:
+            missing.append(f"{rgo_modifier}: should not have modifier type desc")
 
     assert not missing
 
@@ -328,8 +333,10 @@ def test_productivity_script_values_use_only_location_potential_and_rgo_bonus() 
     for good, block in _script_value_blocks(script_values).items():
         if f"value = modifier:{_productivity_location_potential_modifier_name(good)}" not in block:
             bad.append(f"{good}: total value missing location-potential source")
-        if f"add = modifier:{_productivity_rgo_bonus_modifier_name(good)}" not in block:
-            bad.append(f"{good}: total value missing RGO-bonus source")
+        if f"raw_material = goods:{good}" not in block:
+            bad.append(f"{good}: total value missing raw-material RGO source")
+        if f"add = modifier:{_productivity_rgo_bonus_modifier_name(good)}" in block:
+            bad.append(f"{good}: total value still uses RGO helper modifier")
 
     assert not bad
 
@@ -461,17 +468,24 @@ def test_output_map_modes_clamp_extreme_productivity_without_gradient() -> None:
     assert not bad
 
 
-def test_productivity_script_value_components_use_helper_modifiers() -> None:
+def test_productivity_script_value_components_use_location_helper_and_raw_material_rgo() -> None:
     script_values = SCRIPT_VALUES.read_text(encoding="utf-8-sig")
+    rgo_values = _rgo_bonus_values()
 
     bad: list[str] = []
-    for good in _raw_material_goods():
+    for good, (_modifier, value) in rgo_values.items():
         location_block = _script_block(script_values, _productivity_location_potential_value_name(good))
         rgo_block = _script_block(script_values, _productivity_rgo_bonus_value_name(good))
         if f"value = modifier:{_productivity_location_potential_modifier_name(good)}" not in location_block:
             bad.append(f"{good}: location-potential component does not use helper modifier")
-        if f"value = modifier:{_productivity_rgo_bonus_modifier_name(good)}" not in rgo_block:
-            bad.append(f"{good}: RGO-bonus component does not use helper modifier")
+        if "value = 0" not in rgo_block:
+            bad.append(f"{good}: RGO-bonus component does not start at zero")
+        if f"raw_material = goods:{good}" not in rgo_block:
+            bad.append(f"{good}: RGO-bonus component does not check raw material")
+        if f"add = {value}" not in rgo_block:
+            bad.append(f"{good}: RGO-bonus component does not add source value {value}")
+        if _productivity_rgo_bonus_modifier_name(good) in rgo_block:
+            bad.append(f"{good}: RGO-bonus component still uses helper modifier")
 
     assert not bad
 
@@ -494,7 +508,7 @@ def test_location_potential_helper_modifiers_match_source_values() -> None:
     assert not bad
 
 
-def test_rgo_bonus_helper_modifiers_match_rgo_bonus_values() -> None:
+def test_rgo_bonus_static_modifiers_do_not_include_map_mode_helper_modifiers() -> None:
     rgo_text = RGO_STATIC_BONUSES.read_text(encoding="utf-8-sig")
     rgo_values = _rgo_bonus_values()
 
@@ -502,8 +516,8 @@ def test_rgo_bonus_helper_modifiers_match_rgo_bonus_values() -> None:
     for good, (modifier, value) in rgo_values.items():
         block = _entry_block(rgo_text, modifier)
         helper = _productivity_rgo_bonus_modifier_name(good)
-        if _last_numeric_value(block, helper) != value:
-            bad.append(f"{good}: RGO helper value missing or mismatched")
+        if _last_numeric_value(block, helper) is not None:
+            bad.append(f"{good}: RGO helper value still present; source value is {value}")
 
     assert not bad
 
@@ -547,7 +561,8 @@ def test_local_output_map_mode_localization_explains_static_planning_values_with
     assert "Total static modifier:" in output_text
     assert "#TOOLTIP:SIMPLE_CUSTOM,PP_LOCAL_WHEAT_OUTPUT_MODIFIER_TOTAL_TT #L" in output_text
     assert "#TOOLTIP:MODIFIER_TYPE,pp_wheat_productivity_location_potential_map_modifier #L" in output_text
-    assert "#TOOLTIP:MODIFIER_TYPE,pp_wheat_productivity_rgo_bonus_map_modifier #L" in output_text
+    assert "#TOOLTIP:SIMPLE_CUSTOM,PP_LOCAL_WHEAT_OUTPUT_MODIFIER_RGO_BONUS_TT #L" in output_text
+    assert "#TOOLTIP:MODIFIER_TYPE,pp_wheat_productivity_rgo_bonus_map_modifier #L" not in output_text
     assert "$wheat$ is the raw material" in output_text
     assert "$livestock$ is the raw material" in output_text
     assert "Red marks negative productivity" in output_text
@@ -579,6 +594,7 @@ def test_local_output_map_mode_hover_tooltips_are_short_static_modifier_breakdow
     assert "RGO bonus static modifier:" in tooltip_text
     assert "Total static modifier:" in tooltip_text
     assert "pp_wheat_productivity_map_value')|2" in tooltip_text
+    assert "#TOOLTIP:SIMPLE_CUSTOM,PP_LOCAL_WHEAT_OUTPUT_MODIFIER_RGO_BONUS_TT #L" in tooltip_text
     assert "#TOOLTIP:SIMPLE_CUSTOM" in tooltip_text
     assert "#TOOLTIP:MODIFIER_TYPE" in tooltip_text
 

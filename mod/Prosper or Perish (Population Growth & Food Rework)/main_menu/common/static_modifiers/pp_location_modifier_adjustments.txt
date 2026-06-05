@@ -103,14 +103,14 @@ TRY_REPLACE:building_levels = {
 	}
 	local_trade_center_power = 0.0004
 	local_road_building_time = 0.01
-	local_build_buildings_cost = 0.10
+	# local_build_buildings_efficiency = -0.10
 }
 TRY_REPLACE:unsupported_building_levels = {
 	game_data = {
 		category = location 
 	}
 	# local_build_new_buildings_cost = 0.05
-	local_build_buildings_cost = 0.15
+	local_build_buildings_efficiency = -0.10
 }
 TRY_REPLACE:total_population = {
 	game_data = {
@@ -232,7 +232,7 @@ TRY_REPLACE:development = {
 	
 	occupation_time = 0.01
 	
-	local_build_buildings_cost = -0.001
+	local_build_buildings_efficiency = 0.001
 	maximum_stockpile_capacity = 10
 	local_production_efficiency = 0.001
 	local_monthly_development = -0.00009

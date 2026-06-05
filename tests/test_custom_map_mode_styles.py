@@ -100,6 +100,9 @@ STRUCTURE_SNIPPETS = {
     "pp_building_levels": (
         "category = economy",
         "index = 0",
+        "secondary_map_color = {",
+        "total_building_levels > modifier:free_building_levels",
+        "MAPMODE_PP_BUILDING_LEVELS_OVER_SUPPORTED",
         "color_refresh_counters = { ProductionList LocationDevelopmentChanged }",
     ),
     "pp_rgo_level": (
@@ -256,6 +259,18 @@ def test_population_growth_preserves_working_gradient_and_stripes() -> None:
     )
     assert "MAPMODE_PP_POPULATION_GROWTH_STARVING" in block
     assert "MAPMODE_PP_POPULATION_GROWTH_STRIPE" in block
+
+
+def test_building_levels_stripes_locations_above_supported_levels() -> None:
+    block = _all_blocks()["pp_building_levels"]
+    text = LOCALIZATION.read_text(encoding="utf-8-sig")
+
+    assert "secondary_map_color = {" in block
+    assert "has_owner = yes" in block
+    assert "total_building_levels > modifier:free_building_levels" in block
+    assert "MAPMODE_PP_BUILDING_LEVELS_OVER_SUPPORTED" in block
+    assert "Above supported building levels" in text
+    assert "supports [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] levels" in text
 
 
 def test_custom_map_modes_preserve_context_and_refresh_behavior() -> None:

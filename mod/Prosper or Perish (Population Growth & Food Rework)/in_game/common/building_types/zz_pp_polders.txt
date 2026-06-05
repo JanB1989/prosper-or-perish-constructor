@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:polders:building
 REPLACE:polders = {
+	audio_tier = 3
 	price = pp_polders_price
   custom_tags = { pp_food_security_priority pp_water_control_priority }
   is_special = yes

@@ -2,7 +2,7 @@
 # Displays static local output potential for every generated raw-material bonus good.
 # Red/yellow/green classified diverging scale. Values are additive percentages (0.1 = +10%).
 # Map color = per-location potential + active pp_rgo_bonus_<good> static modifier.
-# Map values use generated helper modifiers so activation does not scan every pp_loc_* modifier.
+# Map values use generated helper modifiers for location potential and direct raw-material checks for RGO bonus.
 # Geography index = 2 keeps these in the terrain/climate bucket.
 
 @zoom_step_near = 2

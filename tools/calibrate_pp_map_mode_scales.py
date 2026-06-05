@@ -9,7 +9,7 @@ from typing import Iterable
 
 from eu5gameparser.domain.eu5 import load_eu5_data
 
-from map_mode_styles import CALIBRATION_PATH
+from map_mode_styles import CALIBRATION_PATH, savegame_goods_output_samples
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -121,41 +121,7 @@ def _load_parser_data(project: dict):
 
 
 def _goods_output_samples() -> dict[str, list[float]]:
-    try:
-        import polars as pl
-    except ImportError:
-        return {}
-
-    sample_frames = []
-    for path in (
-        ROOT / "artifacts" / "data" / "savegame" / "production_method_good_flows.parquet",
-        ROOT / "artifacts" / "data" / "savegame" / "rgo_flows.parquet",
-    ):
-        if not path.exists():
-            continue
-        flow = pl.read_parquet(path)
-        sample_frames.append(
-            flow.filter(
-                (pl.col("direction") == "output")
-                & (pl.col("save_side") == "supplied_Production")
-                & (pl.col("nominal_amount") > 0)
-            )
-            .group_by(["good_id", "location_id"])
-            .agg(pl.col("nominal_amount").sum().alias("output"))
-        )
-
-    if not sample_frames:
-        return {}
-
-    samples = pl.concat(sample_frames, how="vertical_relaxed").group_by(["good_id", "location_id"]).agg(
-        pl.col("output").sum().alias("output")
-    )
-    return {
-        row["good_id"]: row["outputs"]
-        for row in samples.group_by("good_id")
-        .agg(pl.col("output").sort().alias("outputs"))
-        .to_dicts()
-    }
+    return savegame_goods_output_samples(ROOT / "artifacts" / "data" / "savegame")
 
 
 def _local_output_modifier_samples(path: Path) -> dict[str, list[float]]:

@@ -61,93 +61,49 @@ farm_gross_capacity = {
 }
 
 land_farm_building_levels = {
-	add = {
-		value = "location_building_level(building_type:farming_village)"
-	}
-	add = {
-		value = "location_building_level(building_type:model_farm)"
-	}
-	add = {
-		value = "location_building_level(building_type:fruit_orchard)"
-	}
-	add = {
-		value = "location_building_level(building_type:pomological_orchard)"
-	}
-	add = {
-		value = "location_building_level(building_type:sheep_farms)"
-	}
-	add = {
-		value = "location_building_level(building_type:enclosed_sheep_walks)"
-	}
-	add = {
-		value = "location_building_level(building_type:horse_breeders)"
-	}
-	add = {
-		value = "location_building_level(building_type:elephant_kraal)"
-	}
-	add = {
-		value = "location_building_level(building_type:fiber_crops_farm)"
-	}
-	add = {
-		value = "location_building_level(building_type:cotton_plantation)"
-	}
-	add = {
-		value = "location_building_level(building_type:cotton_farm)"
-	}
-	add = {
-		value = "location_building_level(building_type:sugar_plantation)"
-	}
-	add = {
-		value = "location_building_level(building_type:sugarcane_farm)"
-	}
-	add = {
-		value = "location_building_level(building_type:tobacco_plantation)"
-	}
-	add = {
-		value = "location_building_level(building_type:tobacco_farm)"
-	}
-	add = {
-		value = "location_building_level(building_type:dye_plantation)"
-	}
-	add = {
-		value = "location_building_level(building_type:chili_plantation)"
-	}
-	add = {
-		value = "location_building_level(building_type:clove_grove)"
-	}
-	add = {
-		value = "location_building_level(building_type:cocoa_grove)"
-	}
-	add = {
-		value = "location_building_level(building_type:coffee_grove)"
-	}
-	add = {
-		value = "location_building_level(building_type:incense_grove)"
-	}
-	add = {
-		value = "location_building_level(building_type:pepper_garden)"
-	}
-	add = {
-		value = "location_building_level(building_type:saffron_croft)"
-	}
-	add = {
-		value = "location_building_level(building_type:sericulture_farm)"
-	}
-	add = {
-		value = "location_building_level(building_type:simplers_grove)"
-	}
-	add = {
-		value = "location_building_level(building_type:tea_garden)"
-	}
-	add = {
-		value = "location_building_level(building_type:vineyard_estate)"
-	}
+	add = "location_building_level(building_type:farming_village)"
+	add = "location_building_level(building_type:model_farm)"
+	add = "location_building_level(building_type:fruit_orchard)"
+	add = "location_building_level(building_type:pomological_orchard)"
+	add = "location_building_level(building_type:sheep_farms)"
+	add = "location_building_level(building_type:enclosed_sheep_walks)"
+	add = "location_building_level(building_type:horse_breeders)"
+	add = "location_building_level(building_type:elephant_kraal)"
+	add = "location_building_level(building_type:fiber_crops_farm)"
+	add = "location_building_level(building_type:cotton_plantation)"
+	add = "location_building_level(building_type:cotton_farm)"
+	add = "location_building_level(building_type:sugar_plantation)"
+	add = "location_building_level(building_type:sugarcane_farm)"
+	add = "location_building_level(building_type:tobacco_plantation)"
+	add = "location_building_level(building_type:tobacco_farm)"
+	add = "location_building_level(building_type:dye_plantation)"
+	add = "location_building_level(building_type:chili_plantation)"
+	add = "location_building_level(building_type:clove_grove)"
+	add = "location_building_level(building_type:cocoa_grove)"
+	add = "location_building_level(building_type:coffee_grove)"
+	add = "location_building_level(building_type:incense_grove)"
+	add = "location_building_level(building_type:pepper_garden)"
+	add = "location_building_level(building_type:saffron_croft)"
+	add = "location_building_level(building_type:sericulture_farm)"
+	add = "location_building_level(building_type:simplers_grove)"
+	add = "location_building_level(building_type:tea_garden)"
+	add = "location_building_level(building_type:vineyard_estate)"
+}
+
+land_farm_capacity_used = {
+	# Capacity buckets are shared pools: every member building consumes one
+	# level of the same bucket per building level. Do not add a bucket
+	# member's own current level back into its max_levels path; that makes it
+	# exempt from reducing its own maximum. Use the aggregate occupancy
+	# modifier here so the max-level tooltip does not recurse into raw
+	# location_building_level operands and show missing-key rows.
+	value = modifier:pp_land_farm_capacity_used
 }
 
 non_farm_building_levels = {
 	add = total_building_levels
 	add = {
-		value = land_farm_building_levels
+		value = land_farm_capacity_used
 		multiply = -1
 	}
 	min = 0
@@ -162,7 +118,7 @@ farm_capacity_remaining = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_SPACE_USED"
-		value = land_farm_building_levels
+		value = land_farm_capacity_used
 		multiply = -1
 	}
 }
@@ -171,7 +127,7 @@ farm_capacity_available = {
 	# Hot path for building allow/max_levels. This is equivalent to
 	# farm_gross_capacity - 0.05 * non_farm_building_levels - land_farm_building_levels
 	# when land-farm buildings are a subset of total building levels, but it only
-	# evaluates land_farm_building_levels once.
+	# reads aggregate bucket occupancy instead of expanding per-building levels.
 	add = farm_gross_capacity
 	add = {
 		desc = "BUILDING_LEVEL_FARM_TOTAL_BUILDING_PRESSURE"
@@ -180,7 +136,7 @@ farm_capacity_available = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_CAPACITY_USED_ADJUSTED"
-		value = land_farm_building_levels
+		value = land_farm_capacity_used
 		multiply = -0.95
 	}
 	min = 0
@@ -191,22 +147,23 @@ farm_max_level = {
 }
 
 fruit_orchard_max_level = {
+	# Orchards consume shared land-farm capacity like every other land-farm
+	# building. Do not add current orchard levels back here; doing so makes
+	# orchards exempt from reducing their own maximum level.
 	add = farm_max_level
-	add = {
-		value = "location_building_level(building_type:fruit_orchard)"
-	}
 }
 
 fish_building_levels = {
-	add = {
-		value = "location_building_level(building_type:fishing_village)"
-	}
-	add = {
-		value = "location_building_level(building_type:ocean_fishery)"
-	}
-	add = {
-		value = "location_building_level(building_type:offshore_fishery)"
-	}
+	add = "location_building_level(building_type:fishing_village)"
+	add = "location_building_level(building_type:ocean_fishery)"
+	add = "location_building_level(building_type:offshore_fishery)"
+}
+
+fish_capacity_used = {
+	# Fish buildings consume the shared fish bucket per level. Keep the
+	# visible capacity math on the aggregate modifier rather than raw
+	# location_building_level operands so max-level tooltips stay readable.
+	value = modifier:pp_fish_capacity_used
 }
 
 fish_rgo_scaling_capacity = {
@@ -251,7 +208,7 @@ fish_capacity_remaining = {
 	add = fish_gross_capacity
 	add = {
 		desc = "BUILDING_LEVEL_FISH_SPACE_USED"
-		value = fish_building_levels
+		value = fish_capacity_used
 		multiply = -1
 	}
 }
@@ -262,7 +219,7 @@ fish_capacity_available = {
 	add = fish_gross_capacity
 	add = {
 		desc = "BUILDING_LEVEL_FISH_SPACE_USED"
-		value = fish_building_levels
+		value = fish_capacity_used
 		multiply = -1
 	}
 	min = 0
@@ -273,27 +230,24 @@ fish_max_level = {
 }
 
 forest_building_levels = {
-	add = {
-		value = "location_building_level(building_type:forest_village)"
-	}
-	add = {
-		value = "location_building_level(building_type:managed_forest_village)"
-	}
-	add = {
-		value = "location_building_level(building_type:lumber_mill)"
-	}
-	add = {
-		value = "location_building_level(building_type:water_sawmill)"
-	}
-	add = {
-		value = "location_building_level(building_type:lumber_mill_improved)"
-	}
+	add = "location_building_level(building_type:forest_village)"
+	add = "location_building_level(building_type:managed_forest_village)"
+	add = "location_building_level(building_type:lumber_mill)"
+	add = "location_building_level(building_type:water_sawmill)"
+	add = "location_building_level(building_type:lumber_mill_improved)"
+}
+
+forest_capacity_used = {
+	# Forest and lumber buildings consume the shared forest bucket per level.
+	# Keep raw per-building level operands out of the visible max-level
+	# tooltip path; the aggregate modifier is the bucket occupancy.
+	value = modifier:pp_forest_capacity_used
 }
 
 non_forest_building_levels = {
 	add = total_building_levels
 	add = {
-		value = forest_building_levels
+		value = forest_capacity_used
 		multiply = -1
 	}
 	min = 0
@@ -340,7 +294,7 @@ forest_capacity_remaining = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FOREST_SPACE_USED"
-		value = forest_building_levels
+		value = forest_capacity_used
 		multiply = -1
 	}
 }
@@ -349,7 +303,8 @@ forest_capacity_available = {
 	# Hot path for building allow/max_levels. This is equivalent to
 	# forest_gross_capacity + rank - 0.1 * non_forest_building_levels
 	# - forest_building_levels when forest buildings are a subset of total
-	# building levels, but it only evaluates forest_building_levels once.
+	# building levels, but reads aggregate bucket occupancy instead of
+	# expanding per-building levels.
 	add = forest_gross_capacity
 	add = {
 		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FOREST"
@@ -362,7 +317,7 @@ forest_capacity_available = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FOREST_CAPACITY_USED_ADJUSTED"
-		value = forest_building_levels
+		value = forest_capacity_used
 		multiply = -0.9
 	}
 	min = 0

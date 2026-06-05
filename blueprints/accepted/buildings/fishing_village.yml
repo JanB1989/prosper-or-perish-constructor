@@ -24,6 +24,8 @@ building:
         - pp_fishing_village_stew_ponds
   possible_production_methods: []
   body: |2-
+        audio_tier = 1
+        startup_ramp_target = rural_startup_ramp_target
         is_foreign = no
         max_levels = fish_max_level
         pop_type = peasants
@@ -119,6 +121,7 @@ building:
         }
         construction_demand = village_construction
         modifier = {
+            pp_fish_capacity_used = 1
             local_monthly_food = 0.0
             local_fish_output_modifier = -0.03
             local_merchant_capacity = 0.05

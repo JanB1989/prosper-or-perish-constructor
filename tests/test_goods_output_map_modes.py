@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import re
-import json
 import tomllib
 from collections import Counter
 from pathlib import Path
@@ -15,15 +14,29 @@ MAP_MODES = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes" / "pp_goods_outpu
 SCRIPT_VALUES = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_goods_output_map_modes_generated.txt"
 LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_goods_output_map_modes_l_english.yml"
 ICON_DIR = MOD_ROOT / "in_game" / "gfx" / "interface" / "icons" / "map_modes"
-CALIBRATION = ROOT / "tools" / "map_mode_scale_calibration.json"
+LIVE_SCALE_ARTIFACTS = (
+    MOD_ROOT / "in_game" / "common" / "generic_actions" / "pp_goods_output_map_scale_actions.txt",
+    MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_goods_output_map_scale_effects.txt",
+    MOD_ROOT / "in_game" / "events" / "debug" / "pp_goods_output_map_scale_debug.txt",
+)
+GOODS_OUTPUT_BUCKETS = ((0, 10), (10, 30), (30, 60), (60, 100), (100, 150), (150, 300))
 VANILLA_TRAFFIC_COLORS = (
     "define:NMapColors|MAP_COLOR_MIN",
     "define:NMapColors|MAP_COLOR_LOW",
     "define:NMapColors|MAP_COLOR_MID",
     "define:NMapColors|MAP_COLOR_HIGH",
     "define:NMapColors|MAP_COLOR_MAX",
+    "define:NMapColors|MAP_COLOR_TOP",
 )
-GOODS_OUTPUT_LEGEND_SUFFIXES = ("VERY_LOW", "LOW", "MEDIUM", "HIGH", "CAPPED")
+GOODS_OUTPUT_LEGEND_SUFFIXES = (
+    "RANGE_0_10",
+    "RANGE_10_30",
+    "RANGE_30_60",
+    "RANGE_60_100",
+    "RANGE_100_150",
+    "RANGE_150_300",
+    "CAPPED",
+)
 
 
 def _all_goods() -> set[str]:
@@ -185,7 +198,7 @@ def test_goods_output_map_mode_localization_uses_game_goods_names() -> None:
     assert not bad
 
 
-def test_goods_output_map_modes_use_per_good_vanilla_traffic_light_bucket_format() -> None:
+def test_goods_output_map_modes_use_fixed_bucket_gradient_format() -> None:
     blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
     localization = LOCALIZATION.read_text(encoding="utf-8-sig")
 
@@ -196,11 +209,17 @@ def test_goods_output_map_modes_use_per_good_vanilla_traffic_light_bucket_format
             bad.append(f"{good}: uses saturated red/green")
         if block.count("legend_key =") != len(GOODS_OUTPUT_LEGEND_SUFFIXES):
             bad.append(f"{good}: wrong legend key count")
-        if block.count("lerp = {") != 4:
+        if block.count("lerp = {") != len(GOODS_OUTPUT_BUCKETS):
             bad.append(f"{good}: wrong bucket gradient count")
         for color in VANILLA_TRAFFIC_COLORS:
             if color not in block:
                 bad.append(f"{good}: missing {color}")
+        if "rgb { 245 245 245 }" not in block:
+            bad.append(f"{good}: missing 150-300 cap color")
+        if "secondary_map_color = {" in block:
+            bad.append(f"{good}: still uses a 300+ stripe overlay")
+        if "value = rgb { 70 210 255 }" not in block:
+            bad.append(f"{good}: missing 300+ overflow color")
         for suffix in GOODS_OUTPUT_LEGEND_SUFFIXES:
             key = f"MAPMODE_PP_{upper}_OUTPUT_{suffix}"
             if key not in block:
@@ -213,17 +232,27 @@ def test_goods_output_map_modes_use_per_good_vanilla_traffic_light_bucket_format
             float(match)
             for match in re.findall(rf"pp_{re.escape(good)}_output_raw < ([0-9]+(?:\.[0-9]+)?)", block)
         ]
-        if len(thresholds) != 4 or thresholds != sorted(set(thresholds)):
-            bad.append(f"{good}: thresholds are not four strict per-good cutoffs: {thresholds}")
+        expected_thresholds = [upper for _lower, upper in GOODS_OUTPUT_BUCKETS]
+        if thresholds != expected_thresholds:
+            bad.append(f"{good}: thresholds are not the fixed bucket cutoffs: {thresholds}")
+        for lower, upper in GOODS_OUTPUT_BUCKETS:
+            width = upper - lower
+            if f"divide = {width}" not in block:
+                bad.append(f"{good}: missing bucket width {width}")
+            if lower and f"subtract = {lower}" not in block:
+                bad.append(f"{good}: missing bucket lower offset {lower}")
         if f'"goods_output(goods:{good})" > 0' not in block:
             bad.append(f"{good}: zero-output locations are not guarded")
 
     assert not bad
 
 
-def test_goods_output_map_modes_use_artifact_calibrated_thresholds() -> None:
+def test_goods_output_map_modes_do_not_use_calibrated_or_live_thresholds() -> None:
     blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
-    calibration = json.loads(CALIBRATION.read_text(encoding="utf-8"))["scales"]["goods_output"]
+    generated_files = "\n".join(
+        path.read_text(encoding="utf-8-sig")
+        for path in (MAP_MODES, SCRIPT_VALUES, LOCALIZATION)
+    )
 
     threshold_sets = {
         tuple(
@@ -236,23 +265,14 @@ def test_goods_output_map_modes_use_artifact_calibrated_thresholds() -> None:
         for good, block in blocks.items()
     }
 
-    assert len(threshold_sets) > 10
-    assert (0.25, 1.0, 4.0, 16.0) not in threshold_sets
+    assert threshold_sets == {(10.0, 30.0, 60.0, 100.0, 150.0, 300.0)}
+    assert "pp_livestock_output_live_" not in generated_files
+    assert "pp_refresh_livestock_output_map_scale" not in generated_files
+    assert "map_mode_scale_calibration" not in generated_files
 
-    bad: list[str] = []
-    for good, block in blocks.items():
-        generated = [
-            float(value)
-            for value in re.findall(
-                rf"pp_{re.escape(good)}_output_raw < ([0-9]+(?:\.[0-9]+)?)",
-                block,
-            )
-        ]
-        expected = [float(value) for value in calibration[good]["thresholds"]]
-        if generated != expected:
-            bad.append(f"{good}: generated {generated}, calibration {expected}")
 
-    assert not bad
+def test_goods_output_map_modes_do_not_ship_live_scale_action_artifacts() -> None:
+    assert not [path for path in LIVE_SCALE_ARTIFACTS if path.exists()]
 
 
 def test_goods_output_map_modes_preserve_context_and_refresh_behavior() -> None:
@@ -284,6 +304,8 @@ def test_goods_output_map_mode_localization_avoids_old_red_green_copy() -> None:
     assert "cividis" not in text.lower()
     assert "purple" not in text.lower()
     assert "Heatmap 0" not in text
-    assert "Red marks low output" in text
-    assert "yellow marks the middle" in text
-    assert "green marks the strongest output" in text
+    assert "observed output" not in text
+    assert "fixed buckets: 0-10, 10-30, 30-60, 60-100, 100-150, 150-300, and 300+" in text
+    assert "Colors blend inside each bounded bucket" in text
+    assert "300+ output" in text
+    assert "striped" not in text.lower()

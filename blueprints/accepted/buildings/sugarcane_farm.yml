@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: sugarcane_farm
 building:
   key: sugarcane_farm
@@ -63,6 +63,7 @@ building:
     }
 
     modifier = {
+        pp_land_farm_capacity_used = 1
         local_migration_attraction = 0.01
     }
 prices:

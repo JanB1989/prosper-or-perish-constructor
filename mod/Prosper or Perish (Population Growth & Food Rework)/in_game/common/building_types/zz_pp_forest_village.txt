@@ -1,5 +1,7 @@
 ﻿# >>> eu5-building-pipeline:forest_village:building
 REPLACE:forest_village = {
+    audio_tier = 1
+    startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
     max_levels = forest_max_level
     pop_type = peasants
@@ -86,6 +88,7 @@ REPLACE:forest_village = {
     }
     construction_demand = village_construction
     modifier = {
+        pp_forest_capacity_used = 1
         # vanilla + injected (additive): 1.0-1.0=0, 0.1-0.1=0, 0.05-0.05=0
         local_monthly_food = 0.0
         local_peasants_estate_power = 0.25

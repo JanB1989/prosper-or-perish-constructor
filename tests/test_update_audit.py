@@ -21,8 +21,8 @@ def test_update_audit_reports_referenced_and_patched_vanilla_changes(tmp_path: P
     )
 
     assert summary.changed_count >= 4
-    assert summary.added_count == 1
-    assert summary.removed_count == 1
+    assert summary.added_count == 2
+    assert summary.removed_count == 2
     assert summary.missing_both_count == 1
     assert summary.index_html.is_file()
     assert summary.changed_csv.is_file()
@@ -35,7 +35,11 @@ def test_update_audit_reports_referenced_and_patched_vanilla_changes(tmp_path: P
     assert rows_by_key["in_game/goods/wheat"]["status"] == "changed"
     assert "patch_target" in rows_by_key["in_game/goods/wheat"]["reference_kinds"]
     assert rows_by_key["in_game/goods/added_good"]["status"] == "added"
+    assert rows_by_key["in_game/goods/unreferenced_added_good"]["status"] == "added"
+    assert rows_by_key["in_game/goods/unreferenced_added_good"]["reference_kinds"] == ""
+    assert rows_by_key["in_game/goods/unreferenced_added_good"]["mod_sources"] == ""
     assert rows_by_key["in_game/goods/removed_good"]["status"] == "removed"
+    assert rows_by_key["in_game/goods/unreferenced_removed_good"]["status"] == "removed"
     assert rows_by_key["in_game/goods/unchanged_good"]["status"] == "unchanged"
     assert rows_by_key["in_game/goods/plain_override"]["status"] == "changed"
     assert rows_by_key["in_game/goods/missing_target"]["status"] == "missing_both"
@@ -58,7 +62,9 @@ def test_update_audit_reports_referenced_and_patched_vanilla_changes(tmp_path: P
     assert "in_game/goods/unchanged_good" not in changed_keys
     assert "in_game/goods/missing_target" not in changed_keys
     assert "in_game/goods/added_good" in changed_keys
+    assert "in_game/goods/unreferenced_added_good" in changed_keys
     assert "in_game/goods/removed_good" in changed_keys
+    assert "in_game/goods/unreferenced_removed_good" in changed_keys
 
     payload = json.loads(summary.changed_json.read_text(encoding="utf-8"))
     assert payload["old_ref"] == "eu5-old"
@@ -136,6 +142,9 @@ removed_good = {
 unchanged_good = {
 	value = 1
 }
+unreferenced_removed_good = {
+	value = 1
+}
 plain_override = {
 	value = 1
 }
@@ -180,6 +189,9 @@ cross_scope_static = {
 	value = 2
 }
 added_good = {
+	value = 1
+}
+unreferenced_added_good = {
 	value = 1
 }
 unchanged_good = {

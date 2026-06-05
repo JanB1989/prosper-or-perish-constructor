@@ -1,5 +1,7 @@
 ﻿# >>> eu5-building-pipeline:fiber_crops_farm:building
 REPLACE:fiber_crops_farm = {
+audio_tier = 1
+startup_ramp_target = rural_startup_ramp_target
 is_foreign = no
 max_levels = farm_max_level
 pop_type = laborers
@@ -21,6 +23,7 @@ category = rgo_building_category
 build_time = rural_build_time
 
 modifier = {
+    pp_land_farm_capacity_used = 1
 }
 
 unique_production_methods = {

@@ -21,6 +21,9 @@ from typing import Any, Sequence
 ROOT_MARKER = "constructor.toml"
 CONSTRUCTOR_PROFILE = "constructor"
 CONSTRUCTOR_LOAD_ORDER = Path("constructor.load_order.toml")
+FOCUSED_RELABEL_DEFAULT_MAX_ROUNDS_PER_GOOD = 8
+FOCUSED_RELABEL_DEFAULT_MIN_TARGET_APPEARANCES = 5
+FOCUSED_RELABEL_DEFAULT_TARGET_SIGMA_RATIO = 1.0
 SAVEGAME_DATASET = Path("graphs/dataset")
 SAVEGAME_NOTEBOOK_DATA = Path("graphs/savegame_notebooks/data")
 SAVEGAME_LEGACY_DATASETS = (
@@ -103,6 +106,12 @@ GAME_LOADED_TEXT_ROOTS = ("main_menu", "in_game")
 GAME_LOADED_TEXT_SUFFIXES = {".asset", ".gfx", ".gui", ".info", ".txt", ".yml"}
 EU5_USER_DATA_SUFFIX = Path("Documents/Paradox Interactive/Europa Universalis V")
 GAME_RULE_PRESET_RELATIVE_PATH = Path("player/game_rules/presets.txt")
+OBSOLETE_MOD_GAME_RULE_SETTING_KEYS = {
+    "pp_ai_building_maintenance_normal",
+    "pp_ai_building_maintenance_neg_025",
+    "pp_ai_building_maintenance_neg_050",
+    "pp_ai_building_maintenance_neg_075",
+}
 PRICE_MODIFIER_TYPE_DEFINITIONS = Path(
     "main_menu/common/modifier_type_definitions/pp_modifier_types.txt"
 )
@@ -294,20 +303,29 @@ def _build_parser() -> argparse.ArgumentParser:
     location_changes_run.add_argument(
         "--max-rounds-per-good",
         type=int,
-        default=100,
-        help="Hard cap of focused LLM rounds per affected good. Defaults to 100.",
+        default=FOCUSED_RELABEL_DEFAULT_MAX_ROUNDS_PER_GOOD,
+        help=(
+            "Hard cap of focused LLM rounds per affected good. "
+            f"Defaults to {FOCUSED_RELABEL_DEFAULT_MAX_ROUNDS_PER_GOOD}."
+        ),
     )
     location_changes_run.add_argument(
         "--min-target-appearances",
         type=int,
-        default=3,
-        help="Required parse-ok prompt appearances per target. Defaults to 3.",
+        default=FOCUSED_RELABEL_DEFAULT_MIN_TARGET_APPEARANCES,
+        help=(
+            "Required parse-ok prompt appearances per target. "
+            f"Defaults to {FOCUSED_RELABEL_DEFAULT_MIN_TARGET_APPEARANCES}."
+        ),
     )
     location_changes_run.add_argument(
         "--target-sigma-ratio",
         type=float,
-        default=0.85,
-        help="Required sigma as a ratio of default OpenSkill sigma. Defaults to 0.85.",
+        default=FOCUSED_RELABEL_DEFAULT_TARGET_SIGMA_RATIO,
+        help=(
+            "Required sigma as a ratio of default OpenSkill sigma. "
+            f"Defaults to {FOCUSED_RELABEL_DEFAULT_TARGET_SIGMA_RATIO:g}."
+        ),
     )
     location_changes_run.add_argument(
         "--goods",
@@ -352,21 +370,6 @@ def _build_parser() -> argparse.ArgumentParser:
         "europedia",
         "Export the custom Prosper or Perish Europedia into the docs examples.",
         _europedia,
-    )
-    location_scoring_sheet = _add_command(
-        subcommands,
-        "location-scoring-sheet",
-        "Create an import-ready additive location scoring workbook.",
-        _location_scoring_sheet,
-    )
-    location_scoring_sheet.add_argument(
-        "--output",
-        type=Path,
-        default=None,
-        help=(
-            "XLSX output path relative to --repo. Defaults to "
-            "[artifacts].root/spreadsheets/additive_location_scoring.xlsx."
-        ),
     )
     savegame_purge = _add_command(
         subcommands,
@@ -719,7 +722,7 @@ def _clean_game_rule_presets(
         raise SystemExit("clean-game-rule-presets does not accept extra arguments.")
 
     mod_root = _project_mod_root(repo, project)
-    setting_keys = _mod_game_rule_setting_keys(mod_root)
+    setting_keys = _mod_game_rule_setting_keys(mod_root) | OBSOLETE_MOD_GAME_RULE_SETTING_KEYS
     if not setting_keys:
         print("mod_game_rule_settings=0", flush=True)
         return 0
@@ -1356,27 +1359,6 @@ def _update_audit(
     print(f"changed_csv={summary.changed_csv}", flush=True)
     print(f"all_csv={summary.all_csv}", flush=True)
     print(f"changed_json={summary.changed_json}", flush=True)
-    return 0
-
-
-def _location_scoring_sheet(
-    args: argparse.Namespace,
-    extra: Sequence[str],
-    repo: Path,
-    project: Path,
-) -> int:
-    if extra:
-        raise SystemExit("location-scoring-sheet does not accept extra arguments.")
-
-    from prosper_or_perish_constructor.additive_location_scoring_sheet import (
-        build_additive_location_scoring_sheet,
-    )
-
-    output = None if args.output is None else _resolve_repo_relative_path(repo, args.output)
-    result = build_additive_location_scoring_sheet(repo, project, output=output)
-    print(f"xlsx={result.path}", flush=True)
-    print(f"locations={result.location_count}", flush=True)
-    print(f"editable_values={result.value_count}", flush=True)
     return 0
 
 

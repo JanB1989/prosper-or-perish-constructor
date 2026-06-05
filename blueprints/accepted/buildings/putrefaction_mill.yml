@@ -10,6 +10,8 @@ building:
         - pp_putrefaction_mill_demands
   possible_production_methods: []
   body: |2-
+    audio_tier = 5
+    startup_ramp_target = mills_startup_ramp_target
     is_foreign = no
     pop_type = laborers
     max_levels = manufactory_max_level

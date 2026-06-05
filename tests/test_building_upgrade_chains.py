@@ -297,6 +297,17 @@ def _obsolete_entries(body: str) -> list[str]:
     return re.findall(r"^\s*obsolete\s*=\s*([A-Za-z0-9_]+)\s*$", body, flags=re.M)
 
 
+def _managed_building_output_paths_by_key() -> dict[str, Path]:
+    paths_by_key: dict[str, Path] = {}
+    for path in sorted(BUILDING_TYPES_ROOT.glob("*.txt")):
+        text = path.read_text(encoding="utf-8-sig")
+        for key in re.findall(r"^# >>> eu5-building-pipeline:([a-z0-9_]+):building$", text, flags=re.M):
+            if key in paths_by_key:
+                raise AssertionError(f"duplicate managed building output for {key}: {paths_by_key[key]} and {path}")
+            paths_by_key[key] = path
+    return paths_by_key
+
+
 def _has_salt_mine_marker(row: dict) -> bool:
     modifier = str(row.get("modifier") or "")
     if any(marker in modifier for marker in SALT_MINE_MODIFIERS):
@@ -871,35 +882,60 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
 
 def test_blueprint_upgrade_successors_load_after_obsolete_predecessors() -> None:
     config = load_project_config(ROOT / "constructor.toml")
+    mod_root = BUILDING_TYPES_ROOT.parents[2]
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = {
+        (BLUEPRINT_ROOT / entry).stem
+        for entry in manifest["enabled"]
+        if str(entry).startswith("buildings/")
+    }
     blueprints = {
         path.stem: yaml.safe_load(path.read_text(encoding="utf-8"))
         for path in sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml"))
+        if path.stem in enabled
     }
-    generated_building_paths = {
-        key: config.building_outputs.building_types.format(
-            prefix=config.building_outputs.prefix,
-            tag=raw.get("output_tag", raw["tag"]),
-            key=raw["building"]["key"],
-        )
-        for key, raw in blueprints.items()
-    }
+    actual_paths_by_building_key = _managed_building_output_paths_by_key()
 
     offenders: list[str] = []
     for key, raw in blueprints.items():
+        building_key = raw["building"]["key"]
+        output_tag = raw.get("output_tag", raw["tag"])
+        expected_path = mod_root / config.building_outputs.building_types.format(
+            prefix=config.building_outputs.prefix,
+            tag=output_tag,
+            key=building_key,
+        )
+        actual_path = actual_paths_by_building_key.get(building_key)
+        if actual_path != expected_path:
+            offenders.append(f"{key}: expected generated building output {expected_path}, found {actual_path}")
+
+        legacy_path = mod_root / config.building_outputs.building_types.format(
+            prefix=config.building_outputs.prefix,
+            tag=raw["tag"],
+            key=building_key,
+        )
+        if output_tag != raw["tag"] and legacy_path.exists():
+            offenders.append(f"{key}: stale tag-named managed output still exists: {legacy_path}")
+
         upgrade_chain = raw.get("upgrade_chain")
         if not upgrade_chain or upgrade_chain.get("previous") is None:
             continue
 
         previous = upgrade_chain["previous"]
-        if previous not in generated_building_paths:
+        if previous not in blueprints:
             continue
 
-        previous_path = generated_building_paths[previous]
-        current_path = generated_building_paths[key]
-        if previous_path >= current_path:
+        previous_building_key = blueprints[previous]["building"]["key"]
+        previous_path = actual_paths_by_building_key.get(previous_building_key)
+        current_path = actual_paths_by_building_key.get(building_key)
+        if previous_path is None or current_path is None:
+            continue
+        previous_sort_key = previous_path.relative_to(mod_root).as_posix()
+        current_sort_key = current_path.relative_to(mod_root).as_posix()
+        if previous_sort_key >= current_sort_key:
             offenders.append(f"{key}: {current_path} loads before {previous}: {previous_path}")
 
-    assert not offenders
+    assert not offenders, "\n".join(offenders)
 
 
 def test_accepted_building_upgrade_chains_obsolete_only_direct_predecessor() -> None:

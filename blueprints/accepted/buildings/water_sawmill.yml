@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: water_sawmill
 output_tag: lumber_mill_hydraulic_sawmill
 upgrade_chain:
@@ -124,7 +124,8 @@ building:
     }
 
     modifier = {
-        local_build_buildings_cost = -0.01
+        pp_forest_capacity_used = 1
+        local_build_buildings_efficiency = 0.01
         local_migration_attraction = 0.02
         local_population_growth = -0.00005
     }

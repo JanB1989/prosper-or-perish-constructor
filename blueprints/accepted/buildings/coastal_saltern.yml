@@ -14,6 +14,8 @@ building:
         - pp_coastal_saltern_lined_evaporation_pans
   possible_production_methods: []
   body: |2-
+    audio_tier = 1
+    startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
     pop_type = laborers
     max_levels = rural_building_cap

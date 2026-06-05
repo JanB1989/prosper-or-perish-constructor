@@ -6,7 +6,10 @@
 	}
 	
 	can_end = {
-		always = no
+		end_reason = {
+			trigger = { always = no }
+			desc = "time_limit"
+		}
 	}
 	
 	visible = {

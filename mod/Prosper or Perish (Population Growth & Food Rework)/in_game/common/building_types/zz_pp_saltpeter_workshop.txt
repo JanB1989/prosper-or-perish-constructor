@@ -1,5 +1,7 @@
 ﻿# >>> eu5-building-pipeline:saltpeter_workshop:building
 REPLACE:saltpeter_workshop = {
+audio_tier = 2
+startup_ramp_target = workshop_startup_ramp_target
 is_foreign = no
 pop_type = burghers
 max_levels = workshop_max_level

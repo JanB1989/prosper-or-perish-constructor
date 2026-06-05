@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: farming_village_rotations
 upgrade_chain:
   family: farming_village
@@ -211,6 +211,7 @@ building:
     }
 
     modifier = {
+        pp_land_farm_capacity_used = 1
         local_monthly_food = 0.0
         local_peasants_estate_power = 0.15
         local_peasant_enfranchisment = 0.015

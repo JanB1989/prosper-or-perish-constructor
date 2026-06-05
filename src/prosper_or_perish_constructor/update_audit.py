@@ -665,14 +665,17 @@ def _build_dependency_records(
     new_catalog: dict[SymbolId, SymbolDefinition],
 ) -> list[DependencyRecord]:
     records: list[DependencyRecord] = []
-    for symbol in sorted(references):
+    symbols = set(references)
+    symbols.update(symbol for symbol in new_catalog if symbol not in old_catalog)
+    symbols.update(symbol for symbol in old_catalog if symbol not in new_catalog)
+    for symbol in sorted(symbols):
         old = old_catalog.get(symbol)
         new = new_catalog.get(symbol)
         status = _dependency_status(old, new)
         records.append(
             DependencyRecord(
                 symbol=symbol,
-                references=tuple(sorted(references[symbol], key=_reference_sort_key)),
+                references=tuple(sorted(references.get(symbol, ()), key=_reference_sort_key)),
                 old=old,
                 new=new,
                 status=status,

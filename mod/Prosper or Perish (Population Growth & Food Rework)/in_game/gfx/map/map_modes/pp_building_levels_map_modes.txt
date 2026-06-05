@@ -61,11 +61,21 @@ pp_building_levels = {
 			value = rgb { 128 128 128 }
 		}
 	}
+	secondary_map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				total_building_levels > modifier:free_building_levels
+			}
+			value = rgb { 35 35 42 }
+		}
+	}
 	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_VERY_LOW" color = define:NMapColors|MAP_COLOR_MIN }
 	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_LOW" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_MEDIUM" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_HIGH" color = define:NMapColors|MAP_COLOR_HIGH }
 	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_CAPPED" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_OVER_SUPPORTED" color = rgb { 35 35 42 } }
 	tooltip_key = {
 		if = { limit = { is_land = yes } value = MAPMODE_PP_BUILDING_LEVELS_TT_LAND }
 		else = { value = MAPMODE_PP_BUILDING_LEVELS_TT_WATER }

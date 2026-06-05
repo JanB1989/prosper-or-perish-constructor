@@ -1,5 +1,7 @@
 ﻿# >>> eu5-building-pipeline:fishing_village:building
 REPLACE:fishing_village = {
+    audio_tier = 1
+    startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
     max_levels = fish_max_level
     pop_type = peasants
@@ -95,6 +97,7 @@ REPLACE:fishing_village = {
     }
     construction_demand = village_construction
     modifier = {
+        pp_fish_capacity_used = 1
         local_monthly_food = 0.0
         local_fish_output_modifier = -0.03
         local_merchant_capacity = 0.05

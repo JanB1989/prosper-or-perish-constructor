@@ -10,6 +10,8 @@ building:
         - pp_saltpeter_workshop_demands
   possible_production_methods: []
   body: |2-
+    audio_tier = 2
+    startup_ramp_target = workshop_startup_ramp_target
     is_foreign = no
     pop_type = burghers
     max_levels = workshop_max_level

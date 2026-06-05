@@ -8,7 +8,10 @@ pp_mod_welcome_situation = {
 	}
 
 	can_end = {
-		years_since_situation_start >= 1
+		end_reason = {
+			trigger = { situation:pp_mod_welcome_situation = { years_since_situation_start >= 1 } }
+			desc = "time_limit"
+		}
 	}
 
 	visible = {

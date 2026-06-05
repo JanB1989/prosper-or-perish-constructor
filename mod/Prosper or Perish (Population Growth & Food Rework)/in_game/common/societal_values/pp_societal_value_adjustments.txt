@@ -91,7 +91,7 @@ TRY_INJECT:aristocracy_vs_plutocracy = {
 		global_peasants_food_consumption = -0.075 # the nobles keep squeezing the peasants
 	}
 	right_modifier = {
-		food_purchase_cost = -0.15
+		food_purchase_efficiency = 0.35
 	}
 }
 

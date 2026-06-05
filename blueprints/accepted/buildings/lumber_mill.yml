@@ -28,6 +28,8 @@ building:
         - pp_lumber_mill_wound_salves
   possible_production_methods: []
   body: |2-
+    audio_tier = 1
+    startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
     max_levels = forest_max_level
     pop_type = laborers
@@ -122,6 +124,9 @@ building:
                 category = building_maintenance
             }
         }
+    	modifier = {
+    		pp_forest_capacity_used = 1
+    	}
     	construction_demand = basic_construction_needs
 advancements:
   - key: REPLACE:lumber_improvements_discovery

@@ -1,5 +1,7 @@
 ﻿# >>> eu5-building-pipeline:clay_pit:building
 REPLACE:clay_pit = {
+	audio_tier = 1
+	startup_ramp_target = rural_startup_ramp_target
 	is_foreign = no
 	max_levels = rural_building_cap
 	pop_type = laborers

@@ -10,6 +10,7 @@ building:
         - pp_conscription_center_maintenance
   possible_production_methods: []
   body: |2-
+    	audio_tier = 3
     	is_foreign = no
     	pop_type = soldiers
     	max_levels = manpower_max_level

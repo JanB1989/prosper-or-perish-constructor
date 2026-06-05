@@ -1,5 +1,7 @@
 ﻿# >>> eu5-building-pipeline:putrefaction_works:building
 REPLACE:putrefaction_works = {
+audio_tier = 3
+startup_ramp_target = manufactory_startup_ramp_target
 is_foreign = no
 pop_type = burghers
 max_levels = manufactory_max_level

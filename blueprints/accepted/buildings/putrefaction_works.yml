@@ -10,6 +10,8 @@ building:
         - pp_putrefaction_works_demands
   possible_production_methods: []
   body: |2-
+    audio_tier = 3
+    startup_ramp_target = manufactory_startup_ramp_target
     is_foreign = no
     pop_type = burghers
     max_levels = manufactory_max_level

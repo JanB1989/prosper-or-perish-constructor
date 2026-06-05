@@ -10,6 +10,7 @@ building:
         - pp_barracks_maintenance
   possible_production_methods: []
   body: |2-
+    	audio_tier = 2
     	is_foreign = no
     	pop_type = soldiers
     	max_levels = manpower_max_level

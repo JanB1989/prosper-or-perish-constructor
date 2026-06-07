@@ -1,0 +1,12 @@
+﻿# Governor building capacity — compiled from free_building_levels_sheet.csv on ppc sync.
+TRY_INJECT:naval_governor = {
+	modifier = {
+	free_building_levels = 15
+	}
+}
+
+TRY_INJECT:local_governor = {
+	modifier = {
+	free_building_levels = 15
+	}
+}

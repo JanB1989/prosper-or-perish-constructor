@@ -141,31 +141,31 @@ pp_alum_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_ALUM_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_ALUM_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_ALUM_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_ALUM_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_ALUM_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_ALUM_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_ALUM_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_ALUM_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_ALUM_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_ALUM_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_ALUM_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_ALUM_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_ALUM_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_ALUM_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -329,31 +329,31 @@ pp_amber_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_AMBER_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_AMBER_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_AMBER_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_AMBER_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_AMBER_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_AMBER_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_AMBER_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_AMBER_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_AMBER_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_AMBER_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_AMBER_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_AMBER_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_AMBER_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_AMBER_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -517,31 +517,31 @@ pp_beer_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEER_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_BEER_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEER_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_BEER_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEER_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_BEER_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEER_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_BEER_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEER_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_BEER_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEER_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_BEER_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEER_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_BEER_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -705,31 +705,31 @@ pp_beeswax_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEESWAX_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_BEESWAX_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEESWAX_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_BEESWAX_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEESWAX_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_BEESWAX_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEESWAX_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_BEESWAX_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEESWAX_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_BEESWAX_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEESWAX_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_BEESWAX_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_BEESWAX_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_BEESWAX_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -893,31 +893,31 @@ pp_books_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_BOOKS_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_BOOKS_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_BOOKS_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_BOOKS_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_BOOKS_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_BOOKS_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_BOOKS_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_BOOKS_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_BOOKS_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_BOOKS_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_BOOKS_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_BOOKS_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_BOOKS_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_BOOKS_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -1081,31 +1081,31 @@ pp_cannons_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_CANNONS_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_CANNONS_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_CANNONS_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_CANNONS_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_CANNONS_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_CANNONS_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_CANNONS_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_CANNONS_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_CANNONS_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_CANNONS_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_CANNONS_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_CANNONS_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_CANNONS_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_CANNONS_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -1269,31 +1269,31 @@ pp_chili_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_CHILI_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_CHILI_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_CHILI_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_CHILI_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_CHILI_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_CHILI_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_CHILI_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_CHILI_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_CHILI_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_CHILI_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_CHILI_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_CHILI_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_CHILI_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_CHILI_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -1457,31 +1457,31 @@ pp_clay_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLAY_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_CLAY_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLAY_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_CLAY_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLAY_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_CLAY_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLAY_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_CLAY_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLAY_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_CLAY_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLAY_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_CLAY_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLAY_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_CLAY_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -1645,31 +1645,31 @@ pp_cloth_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOTH_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_CLOTH_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOTH_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_CLOTH_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOTH_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_CLOTH_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOTH_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_CLOTH_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOTH_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_CLOTH_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOTH_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_CLOTH_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOTH_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_CLOTH_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -1833,31 +1833,31 @@ pp_cloves_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOVES_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_CLOVES_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOVES_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_CLOVES_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOVES_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_CLOVES_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOVES_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_CLOVES_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOVES_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_CLOVES_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOVES_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_CLOVES_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_CLOVES_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_CLOVES_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -2021,31 +2021,31 @@ pp_coal_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_COAL_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_COAL_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_COAL_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_COAL_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_COAL_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_COAL_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_COAL_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_COAL_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_COAL_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_COAL_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_COAL_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_COAL_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_COAL_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_COAL_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -2209,31 +2209,31 @@ pp_cocoa_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_COCOA_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_COCOA_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_COCOA_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_COCOA_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_COCOA_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_COCOA_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_COCOA_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_COCOA_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_COCOA_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_COCOA_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_COCOA_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_COCOA_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_COCOA_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_COCOA_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -2397,31 +2397,31 @@ pp_coffee_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_COFFEE_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_COFFEE_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_COFFEE_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_COFFEE_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_COFFEE_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_COFFEE_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_COFFEE_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_COFFEE_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_COFFEE_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_COFFEE_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_COFFEE_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_COFFEE_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_COFFEE_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_COFFEE_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -2585,31 +2585,31 @@ pp_copper_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_COPPER_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_COPPER_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_COPPER_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_COPPER_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_COPPER_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_COPPER_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_COPPER_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_COPPER_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_COPPER_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_COPPER_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_COPPER_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_COPPER_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_COPPER_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_COPPER_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -2773,31 +2773,31 @@ pp_cotton_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_COTTON_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_COTTON_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_COTTON_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_COTTON_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_COTTON_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_COTTON_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_COTTON_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_COTTON_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_COTTON_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_COTTON_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_COTTON_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_COTTON_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_COTTON_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_COTTON_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -2961,31 +2961,31 @@ pp_dyes_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_DYES_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_DYES_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_DYES_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_DYES_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_DYES_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_DYES_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_DYES_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_DYES_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_DYES_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_DYES_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_DYES_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_DYES_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_DYES_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_DYES_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -3149,31 +3149,31 @@ pp_elephants_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_ELEPHANTS_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_ELEPHANTS_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_ELEPHANTS_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_ELEPHANTS_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_ELEPHANTS_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_ELEPHANTS_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_ELEPHANTS_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_ELEPHANTS_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_ELEPHANTS_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_ELEPHANTS_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_ELEPHANTS_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_ELEPHANTS_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_ELEPHANTS_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_ELEPHANTS_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -3337,31 +3337,31 @@ pp_fiber_crops_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIBER_CROPS_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_FIBER_CROPS_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIBER_CROPS_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_FIBER_CROPS_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIBER_CROPS_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_FIBER_CROPS_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIBER_CROPS_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_FIBER_CROPS_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIBER_CROPS_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_FIBER_CROPS_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIBER_CROPS_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_FIBER_CROPS_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIBER_CROPS_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_FIBER_CROPS_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -3525,31 +3525,31 @@ pp_fine_cloth_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_FINE_CLOTH_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_FINE_CLOTH_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_FINE_CLOTH_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_FINE_CLOTH_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_FINE_CLOTH_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_FINE_CLOTH_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_FINE_CLOTH_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_FINE_CLOTH_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_FINE_CLOTH_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_FINE_CLOTH_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_FINE_CLOTH_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_FINE_CLOTH_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_FINE_CLOTH_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_FINE_CLOTH_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -3713,31 +3713,31 @@ pp_firearms_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIREARMS_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_FIREARMS_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIREARMS_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_FIREARMS_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIREARMS_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_FIREARMS_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIREARMS_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_FIREARMS_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIREARMS_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_FIREARMS_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIREARMS_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_FIREARMS_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_FIREARMS_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_FIREARMS_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -3901,31 +3901,31 @@ pp_fish_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_FISH_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_FISH_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_FISH_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_FISH_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_FISH_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_FISH_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_FISH_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_FISH_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_FISH_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_FISH_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_FISH_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_FISH_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_FISH_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_FISH_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -4089,31 +4089,31 @@ pp_fruit_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_FRUIT_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_FRUIT_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_FRUIT_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_FRUIT_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_FRUIT_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_FRUIT_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_FRUIT_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_FRUIT_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_FRUIT_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_FRUIT_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_FRUIT_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_FRUIT_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_FRUIT_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_FRUIT_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -4277,31 +4277,31 @@ pp_fur_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_FUR_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_FUR_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_FUR_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_FUR_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_FUR_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_FUR_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_FUR_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_FUR_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_FUR_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_FUR_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_FUR_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_FUR_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_FUR_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_FUR_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -4465,31 +4465,31 @@ pp_furniture_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_FURNITURE_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_FURNITURE_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_FURNITURE_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_FURNITURE_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_FURNITURE_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_FURNITURE_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_FURNITURE_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_FURNITURE_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_FURNITURE_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_FURNITURE_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_FURNITURE_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_FURNITURE_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_FURNITURE_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_FURNITURE_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -4653,31 +4653,31 @@ pp_gems_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_GEMS_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_GEMS_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_GEMS_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_GEMS_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_GEMS_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_GEMS_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_GEMS_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_GEMS_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_GEMS_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_GEMS_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_GEMS_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_GEMS_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_GEMS_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_GEMS_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -4841,31 +4841,31 @@ pp_glass_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_GLASS_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_GLASS_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_GLASS_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_GLASS_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_GLASS_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_GLASS_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_GLASS_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_GLASS_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_GLASS_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_GLASS_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_GLASS_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_GLASS_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_GLASS_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_GLASS_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -5029,31 +5029,31 @@ pp_goods_gold_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_GOODS_GOLD_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_GOODS_GOLD_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_GOODS_GOLD_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_GOODS_GOLD_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_GOODS_GOLD_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_GOODS_GOLD_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_GOODS_GOLD_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_GOODS_GOLD_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_GOODS_GOLD_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_GOODS_GOLD_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_GOODS_GOLD_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_GOODS_GOLD_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_GOODS_GOLD_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_GOODS_GOLD_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -5217,31 +5217,31 @@ pp_horses_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_HORSES_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_HORSES_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_HORSES_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_HORSES_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_HORSES_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_HORSES_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_HORSES_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_HORSES_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_HORSES_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_HORSES_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_HORSES_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_HORSES_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_HORSES_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_HORSES_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -5405,31 +5405,31 @@ pp_incense_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_INCENSE_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_INCENSE_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_INCENSE_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_INCENSE_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_INCENSE_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_INCENSE_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_INCENSE_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_INCENSE_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_INCENSE_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_INCENSE_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_INCENSE_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_INCENSE_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_INCENSE_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_INCENSE_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -5593,31 +5593,31 @@ pp_iron_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_IRON_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_IRON_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_IRON_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_IRON_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_IRON_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_IRON_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_IRON_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_IRON_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_IRON_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_IRON_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_IRON_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_IRON_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_IRON_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_IRON_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -5781,31 +5781,31 @@ pp_ivory_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_IVORY_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_IVORY_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_IVORY_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_IVORY_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_IVORY_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_IVORY_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_IVORY_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_IVORY_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_IVORY_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_IVORY_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_IVORY_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_IVORY_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_IVORY_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_IVORY_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -5969,31 +5969,31 @@ pp_jewelry_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_JEWELRY_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_JEWELRY_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_JEWELRY_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_JEWELRY_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_JEWELRY_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_JEWELRY_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_JEWELRY_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_JEWELRY_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_JEWELRY_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_JEWELRY_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_JEWELRY_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_JEWELRY_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_JEWELRY_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_JEWELRY_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -6157,31 +6157,31 @@ pp_lacquerware_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_LACQUERWARE_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_LACQUERWARE_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_LACQUERWARE_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_LACQUERWARE_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_LACQUERWARE_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_LACQUERWARE_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_LACQUERWARE_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_LACQUERWARE_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_LACQUERWARE_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_LACQUERWARE_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_LACQUERWARE_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_LACQUERWARE_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_LACQUERWARE_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_LACQUERWARE_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -6345,31 +6345,31 @@ pp_lead_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEAD_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_LEAD_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEAD_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_LEAD_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEAD_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_LEAD_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEAD_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_LEAD_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEAD_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_LEAD_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEAD_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_LEAD_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEAD_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_LEAD_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -6533,31 +6533,31 @@ pp_leather_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEATHER_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_LEATHER_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEATHER_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_LEATHER_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEATHER_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_LEATHER_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEATHER_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_LEATHER_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEATHER_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_LEATHER_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEATHER_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_LEATHER_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEATHER_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_LEATHER_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -6721,31 +6721,31 @@ pp_legumes_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEGUMES_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_LEGUMES_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEGUMES_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_LEGUMES_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEGUMES_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_LEGUMES_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEGUMES_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_LEGUMES_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEGUMES_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_LEGUMES_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEGUMES_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_LEGUMES_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_LEGUMES_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_LEGUMES_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -6909,31 +6909,31 @@ pp_liquor_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIQUOR_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_LIQUOR_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIQUOR_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_LIQUOR_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIQUOR_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_LIQUOR_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIQUOR_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_LIQUOR_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIQUOR_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_LIQUOR_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIQUOR_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_LIQUOR_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIQUOR_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_LIQUOR_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -7097,31 +7097,31 @@ pp_livestock_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIVESTOCK_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_LIVESTOCK_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIVESTOCK_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_LIVESTOCK_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIVESTOCK_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_LIVESTOCK_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIVESTOCK_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_LIVESTOCK_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIVESTOCK_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_LIVESTOCK_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIVESTOCK_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_LIVESTOCK_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_LIVESTOCK_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_LIVESTOCK_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -7285,31 +7285,31 @@ pp_lumber_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_LUMBER_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_LUMBER_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_LUMBER_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_LUMBER_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_LUMBER_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_LUMBER_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_LUMBER_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_LUMBER_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_LUMBER_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_LUMBER_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_LUMBER_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_LUMBER_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_LUMBER_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_LUMBER_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -7473,31 +7473,31 @@ pp_maize_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_MAIZE_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_MAIZE_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_MAIZE_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_MAIZE_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_MAIZE_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_MAIZE_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_MAIZE_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_MAIZE_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_MAIZE_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_MAIZE_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_MAIZE_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_MAIZE_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_MAIZE_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_MAIZE_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -7661,31 +7661,31 @@ pp_marble_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_MARBLE_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_MARBLE_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_MARBLE_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_MARBLE_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_MARBLE_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_MARBLE_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_MARBLE_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_MARBLE_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_MARBLE_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_MARBLE_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_MARBLE_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_MARBLE_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_MARBLE_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_MARBLE_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -7849,31 +7849,31 @@ pp_masonry_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_MASONRY_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_MASONRY_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_MASONRY_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_MASONRY_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_MASONRY_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_MASONRY_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_MASONRY_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_MASONRY_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_MASONRY_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_MASONRY_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_MASONRY_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_MASONRY_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_MASONRY_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_MASONRY_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -8037,31 +8037,31 @@ pp_medicaments_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_MEDICAMENTS_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_MEDICAMENTS_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_MEDICAMENTS_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_MEDICAMENTS_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_MEDICAMENTS_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_MEDICAMENTS_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_MEDICAMENTS_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_MEDICAMENTS_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_MEDICAMENTS_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_MEDICAMENTS_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_MEDICAMENTS_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_MEDICAMENTS_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_MEDICAMENTS_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_MEDICAMENTS_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -8225,31 +8225,31 @@ pp_mercury_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_MERCURY_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_MERCURY_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_MERCURY_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_MERCURY_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_MERCURY_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_MERCURY_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_MERCURY_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_MERCURY_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_MERCURY_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_MERCURY_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_MERCURY_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_MERCURY_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_MERCURY_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_MERCURY_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -8413,31 +8413,31 @@ pp_millet_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_MILLET_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_MILLET_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_MILLET_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_MILLET_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_MILLET_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_MILLET_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_MILLET_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_MILLET_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_MILLET_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_MILLET_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_MILLET_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_MILLET_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_MILLET_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_MILLET_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -8601,31 +8601,31 @@ pp_naval_supplies_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_NAVAL_SUPPLIES_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -8789,31 +8789,31 @@ pp_olives_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_OLIVES_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_OLIVES_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_OLIVES_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_OLIVES_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_OLIVES_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_OLIVES_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_OLIVES_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_OLIVES_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_OLIVES_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_OLIVES_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_OLIVES_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_OLIVES_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_OLIVES_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_OLIVES_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -8977,31 +8977,31 @@ pp_paper_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_PAPER_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_PAPER_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_PAPER_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_PAPER_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_PAPER_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_PAPER_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_PAPER_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_PAPER_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_PAPER_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_PAPER_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_PAPER_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_PAPER_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_PAPER_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_PAPER_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -9165,31 +9165,31 @@ pp_pearls_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEARLS_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_PEARLS_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEARLS_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_PEARLS_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEARLS_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_PEARLS_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEARLS_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_PEARLS_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEARLS_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_PEARLS_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEARLS_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_PEARLS_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEARLS_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_PEARLS_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -9353,31 +9353,31 @@ pp_pepper_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEPPER_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_PEPPER_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEPPER_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_PEPPER_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEPPER_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_PEPPER_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEPPER_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_PEPPER_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEPPER_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_PEPPER_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEPPER_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_PEPPER_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_PEPPER_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_PEPPER_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -9541,31 +9541,31 @@ pp_porcelain_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_PORCELAIN_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_PORCELAIN_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_PORCELAIN_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_PORCELAIN_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_PORCELAIN_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_PORCELAIN_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_PORCELAIN_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_PORCELAIN_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_PORCELAIN_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_PORCELAIN_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_PORCELAIN_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_PORCELAIN_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_PORCELAIN_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_PORCELAIN_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -9729,31 +9729,31 @@ pp_potato_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTATO_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_POTATO_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTATO_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_POTATO_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTATO_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_POTATO_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTATO_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_POTATO_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTATO_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_POTATO_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTATO_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_POTATO_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTATO_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_POTATO_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -9917,31 +9917,31 @@ pp_pottery_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTTERY_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_POTTERY_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTTERY_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_POTTERY_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTTERY_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_POTTERY_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTTERY_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_POTTERY_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTTERY_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_POTTERY_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTTERY_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_POTTERY_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_POTTERY_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_POTTERY_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -10105,31 +10105,31 @@ pp_rice_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_RICE_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_RICE_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_RICE_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_RICE_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_RICE_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_RICE_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_RICE_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_RICE_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_RICE_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_RICE_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_RICE_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_RICE_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_RICE_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_RICE_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -10293,31 +10293,31 @@ pp_saffron_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAFFRON_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_SAFFRON_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAFFRON_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_SAFFRON_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAFFRON_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_SAFFRON_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAFFRON_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_SAFFRON_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAFFRON_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_SAFFRON_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAFFRON_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_SAFFRON_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAFFRON_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_SAFFRON_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -10481,31 +10481,31 @@ pp_salt_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALT_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_SALT_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALT_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_SALT_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALT_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_SALT_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALT_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_SALT_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALT_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_SALT_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALT_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_SALT_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALT_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_SALT_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -10669,31 +10669,31 @@ pp_saltpeter_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALTPETER_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_SALTPETER_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALTPETER_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_SALTPETER_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALTPETER_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_SALTPETER_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALTPETER_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_SALTPETER_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALTPETER_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_SALTPETER_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALTPETER_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_SALTPETER_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_SALTPETER_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_SALTPETER_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -10857,31 +10857,31 @@ pp_sand_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAND_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_SAND_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAND_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_SAND_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAND_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_SAND_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAND_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_SAND_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAND_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_SAND_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAND_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_SAND_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_SAND_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_SAND_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -11045,31 +11045,31 @@ pp_silk_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILK_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_SILK_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILK_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_SILK_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILK_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_SILK_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILK_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_SILK_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILK_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_SILK_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILK_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_SILK_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILK_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_SILK_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -11233,31 +11233,31 @@ pp_silver_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILVER_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_SILVER_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILVER_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_SILVER_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILVER_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_SILVER_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILVER_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_SILVER_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILVER_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_SILVER_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILVER_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_SILVER_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_SILVER_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_SILVER_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -11421,31 +11421,31 @@ pp_slaves_goods_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_SLAVES_GOODS_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_SLAVES_GOODS_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_SLAVES_GOODS_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_SLAVES_GOODS_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_SLAVES_GOODS_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_SLAVES_GOODS_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_SLAVES_GOODS_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_SLAVES_GOODS_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_SLAVES_GOODS_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_SLAVES_GOODS_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_SLAVES_GOODS_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_SLAVES_GOODS_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_SLAVES_GOODS_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_SLAVES_GOODS_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -11609,31 +11609,31 @@ pp_steel_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_STEEL_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_STEEL_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_STEEL_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_STEEL_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_STEEL_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_STEEL_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_STEEL_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_STEEL_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_STEEL_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_STEEL_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_STEEL_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_STEEL_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_STEEL_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_STEEL_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -11797,31 +11797,31 @@ pp_stone_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_STONE_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_STONE_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_STONE_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_STONE_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_STONE_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_STONE_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_STONE_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_STONE_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_STONE_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_STONE_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_STONE_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_STONE_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_STONE_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_STONE_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -11985,31 +11985,31 @@ pp_sugar_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_SUGAR_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_SUGAR_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_SUGAR_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_SUGAR_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_SUGAR_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_SUGAR_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_SUGAR_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_SUGAR_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_SUGAR_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_SUGAR_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_SUGAR_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_SUGAR_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_SUGAR_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_SUGAR_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -12173,31 +12173,31 @@ pp_tar_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_TAR_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_TAR_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_TAR_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_TAR_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_TAR_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_TAR_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_TAR_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_TAR_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_TAR_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_TAR_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_TAR_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_TAR_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_TAR_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_TAR_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -12361,31 +12361,31 @@ pp_tea_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_TEA_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_TEA_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_TEA_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_TEA_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_TEA_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_TEA_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_TEA_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_TEA_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_TEA_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_TEA_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_TEA_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_TEA_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_TEA_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_TEA_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -12549,31 +12549,31 @@ pp_tin_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_TIN_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_TIN_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_TIN_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_TIN_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_TIN_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_TIN_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_TIN_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_TIN_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_TIN_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_TIN_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_TIN_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_TIN_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_TIN_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_TIN_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -12737,31 +12737,31 @@ pp_tobacco_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOBACCO_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_TOBACCO_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOBACCO_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_TOBACCO_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOBACCO_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_TOBACCO_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOBACCO_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_TOBACCO_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOBACCO_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_TOBACCO_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOBACCO_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_TOBACCO_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOBACCO_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_TOBACCO_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -12925,31 +12925,31 @@ pp_tools_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOOLS_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_TOOLS_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOOLS_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_TOOLS_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOOLS_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_TOOLS_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOOLS_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_TOOLS_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOOLS_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_TOOLS_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOOLS_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_TOOLS_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_TOOLS_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_TOOLS_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -13113,31 +13113,31 @@ pp_victuals_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_VICTUALS_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_VICTUALS_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_VICTUALS_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_VICTUALS_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_VICTUALS_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_VICTUALS_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_VICTUALS_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_VICTUALS_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_VICTUALS_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_VICTUALS_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_VICTUALS_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_VICTUALS_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_VICTUALS_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_VICTUALS_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -13301,31 +13301,31 @@ pp_weaponry_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_WEAPONRY_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_WEAPONRY_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_WEAPONRY_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_WEAPONRY_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_WEAPONRY_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_WEAPONRY_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_WEAPONRY_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_WEAPONRY_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_WEAPONRY_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_WEAPONRY_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_WEAPONRY_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_WEAPONRY_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_WEAPONRY_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_WEAPONRY_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -13489,31 +13489,31 @@ pp_wheat_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_WHEAT_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_WHEAT_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_WHEAT_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_WHEAT_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_WHEAT_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_WHEAT_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_WHEAT_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_WHEAT_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_WHEAT_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_WHEAT_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_WHEAT_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_WHEAT_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_WHEAT_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_WHEAT_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -13677,31 +13677,31 @@ pp_wild_game_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_WILD_GAME_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_WILD_GAME_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_WILD_GAME_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_WILD_GAME_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_WILD_GAME_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_WILD_GAME_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_WILD_GAME_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_WILD_GAME_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_WILD_GAME_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_WILD_GAME_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_WILD_GAME_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_WILD_GAME_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_WILD_GAME_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_WILD_GAME_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -13865,31 +13865,31 @@ pp_wine_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_WINE_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_WINE_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_WINE_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_WINE_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_WINE_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_WINE_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_WINE_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_WINE_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_WINE_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_WINE_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_WINE_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_WINE_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_WINE_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_WINE_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {
@@ -14053,31 +14053,31 @@ pp_wool_output = {
 		}
 	}
 	legend_key = {
-		key = MAPMODE_PP_WOOL_OUTPUT_RANGE_0_10
+		desc = "MAPMODE_PP_WOOL_OUTPUT_RANGE_0_10"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 	legend_key = {
-		key = MAPMODE_PP_WOOL_OUTPUT_RANGE_10_30
+		desc = "MAPMODE_PP_WOOL_OUTPUT_RANGE_10_30"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		key = MAPMODE_PP_WOOL_OUTPUT_RANGE_30_60
+		desc = "MAPMODE_PP_WOOL_OUTPUT_RANGE_30_60"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		key = MAPMODE_PP_WOOL_OUTPUT_RANGE_60_100
+		desc = "MAPMODE_PP_WOOL_OUTPUT_RANGE_60_100"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		key = MAPMODE_PP_WOOL_OUTPUT_RANGE_100_150
+		desc = "MAPMODE_PP_WOOL_OUTPUT_RANGE_100_150"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		key = MAPMODE_PP_WOOL_OUTPUT_RANGE_150_300
+		desc = "MAPMODE_PP_WOOL_OUTPUT_RANGE_150_300"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		key = MAPMODE_PP_WOOL_OUTPUT_CAPPED
+		desc = "MAPMODE_PP_WOOL_OUTPUT_CAPPED"
 		color = rgb { 70 210 255 }
 	}
 	tooltip_key = {

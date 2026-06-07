@@ -4,6 +4,20 @@
     "Thresholds are build-time calibration data for bucketed EU5 map modes."
   ],
   "scales": {
+    "building_efficiency": {
+      "kind": "signed_centered",
+      "negative_thresholds": [
+        -1.0,
+        -0.5
+      ],
+      "neutral_high": 0.1,
+      "neutral_low": -0.1,
+      "positive_thresholds": [
+        0.5,
+        1.0
+      ],
+      "source": "building_efficiency_static_anchors"
+    },
     "building_levels": {
       "kind": "sequential",
       "thresholds": [

@@ -28,10 +28,6 @@ building:
     	build_time = 180
     	construction_demand = victuals_market_construction
     
-    	allow = {
-    		is_province_capital = yes
-    	}
-    
     	possible_production_methods = {
     		victuals_market_maintenance
     	}

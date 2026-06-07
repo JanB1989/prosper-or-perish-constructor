@@ -209,6 +209,8 @@ def test_goods_output_map_modes_use_fixed_bucket_gradient_format() -> None:
             bad.append(f"{good}: uses saturated red/green")
         if block.count("legend_key =") != len(GOODS_OUTPUT_LEGEND_SUFFIXES):
             bad.append(f"{good}: wrong legend key count")
+        if re.search(r"legend_key\s*=\s*\{[^{}]*\bkey\s*=", block):
+            bad.append(f"{good}: uses invalid legend_key key field")
         if block.count("lerp = {") != len(GOODS_OUTPUT_BUCKETS):
             bad.append(f"{good}: wrong bucket gradient count")
         for color in VANILLA_TRAFFIC_COLORS:
@@ -222,6 +224,8 @@ def test_goods_output_map_modes_use_fixed_bucket_gradient_format() -> None:
             bad.append(f"{good}: missing 300+ overflow color")
         for suffix in GOODS_OUTPUT_LEGEND_SUFFIXES:
             key = f"MAPMODE_PP_{upper}_OUTPUT_{suffix}"
+            if f'desc = "{key}"' not in block:
+                bad.append(f"{good}: missing legend desc {key} in map block")
             if key not in block:
                 bad.append(f"{good}: missing legend key {key} in map block")
             if key not in localization:

@@ -1,0 +1,39 @@
+# Free building level weights — one row per factor/value pair.
+# local_build_buildings_efficiency and local_construction_speed apply to topography, vegetation, river_level (1-5), is_port, and location_rank.
+# river_level 0 means no river in map data and carries no modifier.
+section,factor,value,free_building_levels,local_build_buildings_efficiency,local_construction_speed
+fixed,topography,flatland,0.0,,
+fixed,topography,hills,-10.0,-0.08,-0.08
+fixed,topography,plateau,-15.0,-0.15,-0.15
+fixed,topography,mountains,-40.0,-0.35,-0.35
+fixed,topography,wetlands,-25.0,-0.25,-0.25
+fixed,topography,atoll,-25.0,-0.25,-0.25
+fixed,topography,mountain_wasteland,-40.0,-0.35,-0.35
+fixed,vegetation,desert,-25.0,-0.2,-0.2
+fixed,vegetation,sparse,-15.0,-0.12,-0.12
+fixed,vegetation,grasslands,0.0,,
+fixed,vegetation,farmland,0.0,,
+fixed,vegetation,woods,-5.0,-0.03,-0.03
+fixed,vegetation,forest,-10.0,-0.08,-0.08
+fixed,vegetation,jungle,-25.0,-0.2,-0.2
+fixed,river_level,1,10.0,0.1,0.1
+fixed,river_level,2,15.0,0.15,0.15
+fixed,river_level,3,20.0,0.2,0.2
+fixed,river_level,4,25.0,0.25,0.25
+fixed,river_level,5,30.0,0.3,0.3
+fixed,is_port,true,15.0,0.15,0.15
+dynamic,location_rank,rural_settlement,70.0,-0.3,-0.3
+dynamic,location_rank,town,70.0,-0.3,-0.3
+dynamic,location_rank,city,70.0,-0.3,-0.3
+dynamic,location_rank,megalopolis,70.0,-0.3,-0.3
+dynamic,road_level,0,0.0,,
+dynamic,road_level,1,10.0,,
+dynamic,road_level,2,20.0,,
+dynamic,road_level,3,30.0,,
+dynamic,road_level,4,40.0,,
+dynamic,market_center,true,15.0,,
+dynamic,capital,true,25.0,,
+dynamic,naval_governor,true,15.0,,
+dynamic,local_governor,true,15.0,,
+dynamic,province_capital,true,10.0,,
+dynamic,development,per_point,0.5,,

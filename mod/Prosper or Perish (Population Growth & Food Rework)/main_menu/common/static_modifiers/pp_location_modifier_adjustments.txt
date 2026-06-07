@@ -103,15 +103,17 @@ TRY_REPLACE:building_levels = {
 	}
 	local_trade_center_power = 0.0004
 	local_road_building_time = 0.01
-	# local_build_buildings_efficiency = -0.10
+	local_market_access = -0.0015
+	local_build_buildings_efficiency = -0.003
 }
 TRY_REPLACE:unsupported_building_levels = {
 	game_data = {
 		category = location 
 	}
-	# local_build_new_buildings_cost = 0.05
-	local_build_buildings_efficiency = -0.10
+	local_build_buildings_efficiency = -0.005
+	local_market_access = -0.01
 }
+
 TRY_REPLACE:total_population = {
 	game_data = {
 		category = location
@@ -121,7 +123,6 @@ TRY_REPLACE:total_population = {
 	
 	local_max_rgo_size = 0.0020
 	
-	free_building_levels = 0.075
 	local_food_capacity = 2.5
 }
 # capped at max 100 this value
@@ -224,7 +225,7 @@ TRY_REPLACE:development = {
 	
 	local_food_capacity = 10
 	
-	free_building_levels = 2
+	free_building_levels = 0.5
 	
 	local_max_rgo_size = 0.15
 	
@@ -287,6 +288,7 @@ TRY_REPLACE:unemployed_peasants = {
 
 TRY_INJECT:market_center = {
 	maximum_stockpile_capacity = 250
+	free_building_levels = 10
 }
 TRY_INJECT:river_flowing_through_1 = {
 	local_monthly_food_modifier = -0.05 # vanilla 0.05
@@ -294,6 +296,9 @@ TRY_INJECT:river_flowing_through_1 = {
 	fish_max_level_modifier = 1
 	farm_max_level_modifier = 1
 	irrigant_cap_modifier = 1
+	free_building_levels = 10
+	local_build_buildings_efficiency = 0.1
+	local_construction_speed = 0.1
 }
 TRY_INJECT:river_flowing_through_2 = {
 	local_monthly_food_modifier = -0.10 # vanilla 0.10
@@ -301,6 +306,9 @@ TRY_INJECT:river_flowing_through_2 = {
 	fish_max_level_modifier = 1
 	farm_max_level_modifier = 1
 	irrigant_cap_modifier = 2
+	free_building_levels = 15
+	local_build_buildings_efficiency = 0.15
+	local_construction_speed = 0.15
 }
 TRY_INJECT:river_flowing_through_3 = {
 	local_monthly_food_modifier = -0.15 # vanilla 0.15
@@ -308,6 +316,9 @@ TRY_INJECT:river_flowing_through_3 = {
 	fish_max_level_modifier = 2
 	farm_max_level_modifier = 2
 	irrigant_cap_modifier = 3
+	free_building_levels = 20
+	local_build_buildings_efficiency = 0.2
+	local_construction_speed = 0.2
 }
 TRY_INJECT:river_flowing_through_4 = {
 	local_monthly_food_modifier = -0.20 # vanilla 0.20
@@ -315,6 +326,9 @@ TRY_INJECT:river_flowing_through_4 = {
 	fish_max_level_modifier = 3
 	farm_max_level_modifier = 3
 	irrigant_cap_modifier = 4
+	free_building_levels = 25
+	local_build_buildings_efficiency = 0.25
+	local_construction_speed = 0.25
 }
 TRY_INJECT:river_flowing_through_5 = {
 	local_monthly_food_modifier = -0.25 # vanilla 0.25
@@ -322,6 +336,9 @@ TRY_INJECT:river_flowing_through_5 = {
 	fish_max_level_modifier = 4
 	farm_max_level_modifier = 4
 	irrigant_cap_modifier = 5
+	free_building_levels = 30
+	local_build_buildings_efficiency = 0.3
+	local_construction_speed = 0.3
 }
 
 TRY_INJECT:local_abuses_modifier = {
@@ -530,4 +547,18 @@ TRY_INJECT:jap_osaka_castle = {
 	local_monthly_food_modifier = -0.1 # vanilla 0.1
 	local_rice_output_modifier = 0.05
 	local_tea_output_modifier = 0.03
+}
+TRY_INJECT:has_road = {
+	free_building_levels = 10
+}
+TRY_INJECT:is_port = {
+	free_building_levels = 15
+	local_build_buildings_efficiency = 0.15
+	local_construction_speed = 0.15
+}
+TRY_INJECT:capital = {
+	free_building_levels = 20
+}
+TRY_INJECT:province_capital = {
+	free_building_levels = 8
 }

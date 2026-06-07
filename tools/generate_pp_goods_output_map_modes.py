@@ -208,7 +208,7 @@ def _goods_output_legend_keys(prefix: str) -> str:
         lines.extend(
             [
                 "\tlegend_key = {",
-                f"\t\tkey = {prefix}_{suffix}",
+                f'\t\tdesc = "{prefix}_{suffix}"',
                 f"\t\tcolor = {color}",
                 "\t}",
             ]
@@ -216,7 +216,7 @@ def _goods_output_legend_keys(prefix: str) -> str:
     lines.extend(
         [
             "\tlegend_key = {",
-            f"\t\tkey = {prefix}_CAPPED",
+            f'\t\tdesc = "{prefix}_CAPPED"',
             f"\t\tcolor = {GOODS_OUTPUT_OVERFLOW_COLOR}",
             "\t}",
         ]

@@ -6,17 +6,52 @@ TRY_INJECT:mountains = {
 	location_modifier = {
 		local_monthly_food_modifier = 0.2
 		local_population_capacity_modifier = 0.5
+		free_building_levels = -40
+		local_build_buildings_efficiency = -0.35
+		local_construction_speed = -0.35
 	}
 }
 
 TRY_INJECT:hills = {
 	location_modifier = {
 		local_monthly_food_modifier = 0.1
+		free_building_levels = -10
+		local_build_buildings_efficiency = -0.08
+		local_construction_speed = -0.08
 	}
 }
 
 TRY_INJECT:wetlands = {
 	location_modifier = {
 		local_monthly_food_modifier = 0.1
+		free_building_levels = -25
+		local_build_buildings_efficiency = -0.25
+		local_construction_speed = -0.25
+	}
+}
+TRY_INJECT:flatland = {
+	location_modifier = {
+		free_building_levels = 0
+	}
+}
+TRY_INJECT:plateau = {
+	location_modifier = {
+		free_building_levels = -15
+		local_build_buildings_efficiency = -0.15
+		local_construction_speed = -0.15
+	}
+}
+TRY_INJECT:atoll = {
+	location_modifier = {
+		free_building_levels = -25
+		local_build_buildings_efficiency = -0.25
+		local_construction_speed = -0.25
+	}
+}
+TRY_INJECT:mountain_wasteland = {
+	location_modifier = {
+		free_building_levels = -40
+		local_build_buildings_efficiency = -0.35
+		local_construction_speed = -0.35
 	}
 }

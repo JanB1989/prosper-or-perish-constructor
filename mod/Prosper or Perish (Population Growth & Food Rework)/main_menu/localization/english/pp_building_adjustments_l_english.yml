@@ -74,6 +74,8 @@
   BUILDING_LEVEL_FOREST_CAPACITY_USED_ADJUSTED: "Additional Forest Occupancy"
   BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING: "Impact from Location Rank#!"
   BUILDING_LEVEL_FROM_LOCATION_RANK_FOREST: "Impact from Location Rank#!"
+  "missing key": "Ignore this value"
+  missing_key: "Ignore this value"
 
   PP_POTENTIAL_BREAKDOWN_HEADER: "#H Capacity Baseline Breakdown:#!"
   PP_DYNAMIC_FACTORS_FOOTER: "\n\n#I This baseline is the static capacity from geography and raw materials. Live Maximum RGO Size, modifiers, rank pressure, urbanization, and used capacity are shown in the building maximum-level tooltip where relevant.#!"
@@ -877,6 +879,34 @@
   MAPMODE_PP_BUILDING_LEVELS_OVER_SUPPORTED: "Above supported building levels"
   MAPMODE_PP_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] has [ROOT.GetLocation.GetNumBuildingLevels|0] total [building|e] levels and supports [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] levels."
   MAPMODE_PP_BUILDING_LEVELS_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"
+
+  # Supported building levels map mode (free_building_levels)
+  # Game concept (map mode picker / encyclopedia); required alongside pp_supported_building_levels_map_mode.txt
+  game_concept_pp_supported_building_levels: "Supported Building Levels"
+  game_concept_pp_supported_building_levels_desc: "Colors [locations|e] by how many [building|e] levels they can support before ordinary construction strains local space. Red marks the least support, yellow marks middle support, and green marks the strongest displayed support."
+  mapmode_pp_supported_building_levels_name: "Supported Building Levels"
+  MAPMODE_PP_SUPPORTED_BUILDING_LEVELS: "#T $mapmode_pp_supported_building_levels_name$#!\nColors [locations|e] by supported [building|e] levels. Red marks 0 to 30, orange marks 30 to 70, yellow marks 70 to 120, light green marks 120 to 200, and green marks 200 to 300."
+  MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_VERY_LOW: "0 to 30 supported building levels"
+  MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_LOW: "30 to 70 supported building levels"
+  MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_MEDIUM: "70 to 120 supported building levels"
+  MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_HIGH: "120 to 200 supported building levels"
+  MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_CAPPED: "200 to 300 supported building levels"
+  MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] supports [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] [building|e] levels. It currently has [ROOT.GetLocation.GetNumBuildingLevels|0] total levels."
+  MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"
+
+  # Building efficiency map mode (local_build_buildings_efficiency)
+  # Game concept (map mode picker / encyclopedia); required alongside pp_building_efficiency_map_mode.txt
+  game_concept_pp_building_efficiency: "Building Cost Modifier"
+  game_concept_pp_building_efficiency_desc: "Colors owned [locations|e] by their local building cost modifier. Red marks higher building costs, yellow marks near-neutral costs, and green marks lower building costs."
+  mapmode_pp_building_efficiency_name: "Building Cost Modifier"
+  MAPMODE_PP_BUILDING_EFFICIENCY: "#T $mapmode_pp_building_efficiency_name$#!\nColors owned [locations|e] by their local building cost modifier. Red marks higher building costs, yellow marks near-neutral costs, and green marks lower building costs."
+  MAPMODE_PP_BUILDING_EFFICIENCY_SEVERE: "Severe building cost penalty"
+  MAPMODE_PP_BUILDING_EFFICIENCY_PENALTY: "Building cost penalty"
+  MAPMODE_PP_BUILDING_EFFICIENCY_NEUTRAL: "Near-neutral building costs"
+  MAPMODE_PP_BUILDING_EFFICIENCY_GOOD: "Good building cost modifier"
+  MAPMODE_PP_BUILDING_EFFICIENCY_STRONG: "Strong building cost modifier"
+  MAPMODE_PP_BUILDING_EFFICIENCY_TT_LAND: "[ROOT.GetLocation.GetName] has a local building cost modifier of [ROOT.GetLocation.GetModifierValue('local_build_buildings_efficiency')|2%+]."
+  MAPMODE_PP_BUILDING_EFFICIENCY_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"
 
   # RGO level map mode (max_rgo_workers / UI level)
   # Game concept (map mode picker / encyclopedia); required alongside pp_rgo_level_map_mode.txt

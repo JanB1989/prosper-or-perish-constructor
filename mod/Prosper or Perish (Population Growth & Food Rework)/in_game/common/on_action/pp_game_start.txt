@@ -12,7 +12,7 @@ on_game_start = {
 		pp_cull_setup_estate_buildings
 		pp_remove_invalid_fiber_and_stud_farms
 		pp_game_start_effect
-		pp_hand_placed_startup
+		pp_food_building_startup
 		# pp_remove_invalid_buildings # we leave this off as it somehow causes crashes?
 	}
 }
@@ -543,197 +543,12 @@ pp_remove_invalid_fiber_and_stud_farms = {
 	}
 }
 
-pp_hand_placed_startup = {
-	effect = {
-		location:pest = {
-			if = {
-				limit = {
-					has_owner = yes
-					NOT = { has_building = building_type:cookery }
-				}
-				construct_building = {
-					building_type = building_type:cookery
-					instant = yes
-					cost_multiplier = 0
-					cost_multiplier_reason = "game_start"
-				}
-			}
-		}
-		location:zagreb = {
-			if = {
-				limit = {
-					has_owner = yes
-					NOT = { has_building = building_type:cookery }
-				}
-				construct_building = {
-					building_type = building_type:cookery
-					instant = yes
-					cost_multiplier = 0
-					cost_multiplier_reason = "game_start"
-				}
-			}
-		}
-		location:norwich = {
-			if = {
-				limit = {
-					has_owner = yes
-					NOT = { has_building = building_type:cookery }
-				}
-				construct_building = {
-					building_type = building_type:cookery
-					instant = yes
-					cost_multiplier = 0
-					cost_multiplier_reason = "game_start"
-				}
-			}
-		}
-		location:lincoln = {
-			if = {
-				limit = {
-					has_owner = yes
-					NOT = { has_building = building_type:cookery }
-				}
-				construct_building = {
-					building_type = building_type:cookery
-					instant = yes
-					cost_multiplier = 0
-					cost_multiplier_reason = "game_start"
-				}
-			}
-		}
-		location:york = {
-			if = {
-				limit = {
-					has_owner = yes
-					NOT = { has_building = building_type:cookery }
-				}
-				construct_building = {
-					building_type = building_type:cookery
-					instant = yes
-					cost_multiplier = 0
-					cost_multiplier_reason = "game_start"
-				}
-			}
-		}
-		location:oxford = {
-			if = {
-				limit = {
-					has_owner = yes
-					NOT = { has_building = building_type:cookery }
-				}
-				construct_building = {
-					building_type = building_type:cookery
-					instant = yes
-					cost_multiplier = 0
-					cost_multiplier_reason = "game_start"
-				}
-			}
-		}
-		location:bristol = {
-			if = {
-				limit = {
-					has_owner = yes
-					NOT = { has_building = building_type:cookery }
-				}
-				construct_building = {
-					building_type = building_type:cookery
-					instant = yes
-					cost_multiplier = 0
-					cost_multiplier_reason = "game_start"
-				}
-			}
-		}
-	}
-}
-
 pp_game_start_effect = {
 	effect = {
 		every_country = {
 			limit = { exists = capital }
-			capital ?= {
-				if = {
-					limit = { has_owner = yes }
-					construct_building = {
-						building_type = building_type:cookery
-						instant = yes
-						cost_multiplier = 0
-						cost_multiplier_reason = "game_start"
-					}
-					if = {
-						limit = { is_province_capital = yes }
-						construct_building = {
-							building_type = building_type:victuals_market
-							instant = yes
-							cost_multiplier = 0
-							cost_multiplier_reason = "game_start"
-						}
-					}
-				}
-			}
 			every_owned_location = {
 				limit = { has_owner = yes }
-				if = {
-					limit = {
-						location_rank = location_rank:rural_settlement
-						population > 300
-						NOT = { has_building = building_type:cookery }
-					}
-					construct_building = {
-						building_type = building_type:cookery
-						instant = yes
-						cost_multiplier = 0
-						cost_multiplier_reason = "game_start"
-					}
-				}
-
-				if = {
-					limit = {
-						location_rank = location_rank:town
-						population > 100
-						development > 25
-						NOT = { has_building = building_type:cookery }
-					}
-					construct_building = {
-						building_type = building_type:cookery
-						instant = yes
-						cost_multiplier = 0
-						cost_multiplier_reason = "game_start"
-					}
-				}
-				else_if = {
-					limit = {
-						location_rank = location_rank:city
-						population > 50
-						development > 30
-					}
-					if = {
-						limit = { NOT = { has_building = building_type:cookery } }
-						construct_building = {
-							building_type = building_type:cookery
-							instant = yes
-							cost_multiplier = 0
-							cost_multiplier_reason = "game_start"
-						}
-					}
-					construct_building = {
-						building_type = building_type:cookery
-						instant = yes
-						cost_multiplier = 0
-						cost_multiplier_reason = "game_start"
-					}
-				}
-				else_if = {
-					limit = {
-						location_rank = location_rank:city
-						NOT = { has_building = building_type:cookery }
-					}
-					construct_building = {
-						building_type = building_type:cookery
-						instant = yes
-						cost_multiplier = 0
-						cost_multiplier_reason = "game_start"
-					}
-				}
 
 				# BEGIN pp_rgo_startup_buildings (generated)
 				# pp_rgo_startup_buildings (generated) - from analysis\building_levels\data\pp_rgo_goods_building_sets.xlsx
@@ -2737,33 +2552,6 @@ pp_game_start_effect = {
 					}
 					construct_building = {
 						building_type = building_type:cinnabar_pit
-						instant = yes
-						cost_multiplier = 0
-						cost_multiplier_reason = "game_start"
-					}
-				}
-
-				if = {
-					limit = {
-						is_province_capital = yes
-						OR = {
-							AND = {
-								location_rank = location_rank:town
-								population > 100
-							}
-							AND = {
-								location_rank = location_rank:city
-								population >= 50
-							}
-							AND = {
-								location_rank = location_rank:rural_settlement
-								population > 200
-							}
-						}
-						NOT = { has_building = building_type:victuals_market }
-					}
-					construct_building = {
-						building_type = building_type:victuals_market
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"

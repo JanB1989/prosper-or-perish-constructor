@@ -1,16 +1,28 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 from pathlib import Path
 
 import numpy as np
 import polars as pl
+import pytest
+from polars.testing import assert_frame_equal
 from eu5gameparser.load_order import DataProfile, GameLayer
 from PIL import Image
 
 from prosper_or_perish_constructor.free_building_levels import (
+    COMPILE_BUILDING_TYPES_RELATIVE,
+    COMPILE_LOCATION_RANKS_RELATIVE,
+    COMPILE_STATIC_MODIFIERS_RELATIVE,
+    COMPILE_TOPOGRAPHY_RELATIVE,
+    COMPILE_VEGETATION_RELATIVE,
+    FREE_BUILDING_LEVELS_MODIFIER_KEY,
     build_game_start_location_frame,
+    audit_compile_modifier_baselines,
+    compile_free_building_level_modifiers,
     compute_free_building_levels,
+    compute_local_build_buildings_efficiency,
+    compute_local_construction_speed,
     contribution_category_summary,
     contribution_factor_group_summary,
     contribution_value_summary,
@@ -20,94 +32,205 @@ from prosper_or_perish_constructor.free_building_levels import (
     google_sheet_browser_url,
     load_country_capitals,
     load_development_weights,
+    load_free_building_level_weights,
     load_location_ranks,
     load_market_centers,
     load_port_locations,
     load_road_locations,
+    load_modifier_baseline_resolver,
     load_road_type_levels,
-    parse_google_sheet_csv_text,
+    LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN,
+    LOCAL_CONSTRUCTION_SPEED_COLUMN,
+    local_free_building_levels_sheet_csv_path,
     parse_free_building_level_sheet,
+    parse_free_building_level_weights_csv,
     public_google_sheet_csv_url,
+    read_local_free_building_level_sheet_csv,
     round_numeric_columns,
     validate_sheet_values_against_game_sources,
+    write_local_free_building_level_sheet_copy,
 )
 
 
-def test_parse_free_building_level_sheet_flattens_flag_columns() -> None:
-    values = [
-        ["FIXED / GEOGRAPHIC FACTORS"],
-        [
-            "topography",
-            "free_building_levels",
-            "vegetation",
-            "free_building_levels",
-            "river_level",
-            "free_building_levels",
-            "fixed_flag",
-            "free_building_levels",
-        ],
-        ["flatland", "1.5", "woods", "-2", 5, "3", "is_port", ""],
-        ["", "", "", "", "", "", "is_port", ""],
-        ["DYNAMIC FACTORS"],
-        [
-            "location_rank",
-            "free_building_levels",
-            "road_level",
-            "free_building_levels",
-            "dynamic_flag",
-            "free_building_levels",
-            "development",
-            "free_building_levels",
-        ],
-        ["city", "2", 1, "1.25", "market_center", "7", "per_point", "0.2"],
-        ["", "", "", "", "province_capital", "4", "", ""],
-    ]
+def test_tidy_weights_csv_parses_flag_rows_and_efficiency_column(tmp_path: Path) -> None:
+    csv_text = (
+        "# comment line\n"
+        "section,factor,value,free_building_levels,local_build_buildings_efficiency,local_construction_speed\n"
+        "fixed,topography,flatland,1.5,,\n"
+        "fixed,vegetation,woods,-2,,\n"
+        "fixed,river_level,5,3,0.25,0.25\n"
+        "fixed,is_port,true,0,\n"
+        "dynamic,location_rank,city,2,\n"
+        "dynamic,road_level,1,1.25,\n"
+        "dynamic,market_center,true,7,\n"
+        "dynamic,province_capital,true,4,\n"
+        "dynamic,development,per_point,0.2,\n"
+    )
+    csv_path = tmp_path / "weights.csv"
+    csv_path.write_text(csv_text, encoding="utf-8")
 
-    weights = parse_free_building_level_sheet(values)
+    weights = parse_free_building_level_weights_csv(csv_path)
+
+    rows = {
+        (row["factor"], row["value"]): row
+        for row in weights.to_dicts()
+    }
+    assert rows[("topography", "flatland")]["free_building_levels"] == 1.5
+    assert rows[("vegetation", "woods")]["free_building_levels"] == -2
+    assert rows[("river_level", "5")]["free_building_levels"] == 3
+    assert rows[("river_level", "5")][LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN] == 0.25
+    assert rows[("river_level", "5")][LOCAL_CONSTRUCTION_SPEED_COLUMN] == 0.25
+    assert rows[("province_capital", "true")]["free_building_levels"] == 4
+    assert rows[("is_port", "true")]["free_building_levels"] == 0
+    assert rows[("is_port", "true")][LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN] is None
+    assert rows[("location_rank", "city")]["free_building_levels"] == 2
+    assert rows[("road_level", "1")]["free_building_levels"] == 1.25
+    assert rows[("market_center", "true")]["free_building_levels"] == 7
+    assert rows[("development", "per_point")]["free_building_levels"] == 0.2
+
+
+def test_tidy_weights_csv_accepts_decimal_commas(tmp_path: Path) -> None:
+    csv_text = (
+        "section,factor,value,free_building_levels,local_build_buildings_efficiency,local_construction_speed\n"
+        'fixed,topography,flatland,"20,00",,\n'
+        'fixed,vegetation,desert,"0,00",,\n'
+        'fixed,river_level,0,"3,00","1,50","1,50"\n'
+        'dynamic,province_capital,true,"20,00",,\n'
+    )
+    csv_path = tmp_path / "weights.csv"
+    csv_path.write_text(csv_text, encoding="utf-8")
+
+    weights = parse_free_building_level_weights_csv(csv_path)
+    rows = {
+        (row["factor"], row["value"]): row
+        for row in weights.to_dicts()
+    }
+
+    assert rows[("topography", "flatland")]["free_building_levels"] == 20.0
+    assert rows[("vegetation", "desert")]["free_building_levels"] == 0.0
+    assert rows[("river_level", "0")]["free_building_levels"] == 3.0
+    assert rows[("river_level", "0")][LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN] == 1.5
+    assert rows[("river_level", "0")][LOCAL_CONSTRUCTION_SPEED_COLUMN] == 1.5
+    assert rows[("province_capital", "true")]["free_building_levels"] == 20.0
+
+
+def test_legacy_sheet_layout_still_parses_for_programmatic_fixtures() -> None:
+    weights = parse_free_building_level_sheet(
+        [
+            ["FIXED / GEOGRAPHIC FACTORS"],
+            ["topography", "free_building_levels", "fixed_flag", "free_building_levels"],
+            ["flatland", "1.5", "is_port", ""],
+            ["DYNAMIC FACTORS"],
+            ["dynamic_flag", "free_building_levels", "development", "free_building_levels"],
+            ["province_capital", "4", "per_point", "0.2"],
+        ]
+    )
 
     rows = {
         (row["factor"], row["value"]): row["free_building_levels"]
         for row in weights.to_dicts()
     }
     assert rows[("topography", "flatland")] == 1.5
-    assert rows[("vegetation", "woods")] == -2
-    assert rows[("river_level", "5")] == 3
-    assert rows[("province_capital", "true")] == 4
     assert rows[("is_port", "true")] == 0
-    assert rows[("location_rank", "city")] == 2
-    assert rows[("road_level", "1")] == 1.25
-    assert rows[("market_center", "true")] == 7
+    assert rows[("province_capital", "true")] == 4
     assert rows[("development", "per_point")] == 0.2
-
-
-def test_public_csv_shape_and_decimal_commas_parse_like_google_export() -> None:
-    csv_text = (
-        "FIXED / GEOGRAPHIC FACTORS,,,,,,,\n"
-        "topography,free_building_levels,vegetation,free_building_levels,"
-        "river_level,free_building_levels,fixed_flag,free_building_levels\n"
-        'flatland,"20,00",desert,"0,00",0,"3,00",is_port,"20,00"\n'
-        "DYNAMIC FACTORS,,,,,,,\n"
-        "location_rank,free_building_levels,road_level,free_building_levels,"
-        "dynamic_flag,free_building_levels,development,free_building_levels\n"
-        'town,"20,00",1,"10,00",province_capital,"20,00",per_point,"0,50"\n'
-    )
-
-    weights = parse_free_building_level_sheet(parse_google_sheet_csv_text(csv_text))
-    rows = {
-        (row["factor"], row["value"]): row["free_building_levels"]
-        for row in weights.to_dicts()
-    }
-
-    assert rows[("topography", "flatland")] == 20.0
-    assert rows[("vegetation", "desert")] == 0.0
-    assert rows[("river_level", "0")] == 3.0
-    assert rows[("province_capital", "true")] == 20.0
 
 
 def test_public_sheet_links_point_at_free_building_levels_tab() -> None:
     assert "gid=602606501" in google_sheet_browser_url()
     assert "gid=602606501" in public_google_sheet_csv_url()
     assert "format=csv" in public_google_sheet_csv_url()
+
+
+def test_committed_local_free_building_levels_copy_loads_via_polars() -> None:
+    repo = Path(__file__).resolve().parents[1]
+    csv_path = local_free_building_levels_sheet_csv_path(repo)
+    assert csv_path.is_file()
+
+    weights = read_local_free_building_level_sheet_csv(repo=repo)
+
+    assert weights.height == 35
+    assert weights.filter(pl.col("factor") == "capital")["free_building_levels"].item() == 25.0
+    assert (
+        weights.filter(pl.col("factor") == "location_rank")["free_building_levels"].unique().to_list()
+        == [70.0]
+    )
+    assert weights.filter(pl.col("factor") == "river_level", pl.col("value") == "0").is_empty()
+    worst_static = (
+        weights.filter(pl.col("factor") == "topography", pl.col("value") == "mountains")[
+            "free_building_levels"
+        ].item()
+        + weights.filter(pl.col("factor") == "vegetation", pl.col("value") == "desert")[
+            "free_building_levels"
+        ].item()
+    )
+    assert worst_static == -65.0
+    best_static = (
+        weights.filter(pl.col("factor") == "topography", pl.col("value") == "flatland")[
+            "free_building_levels"
+        ].item()
+        + weights.filter(pl.col("factor") == "vegetation", pl.col("value") == "farmland")[
+            "free_building_levels"
+        ].item()
+        + weights.filter(pl.col("factor") == "river_level", pl.col("value") == "5")[
+            "free_building_levels"
+        ].item()
+        + weights.filter(pl.col("factor") == "is_port", pl.col("value") == "true")[
+            "free_building_levels"
+        ].item()
+    )
+    assert best_static == 45.0
+    assert weights.filter(pl.col("factor") == "topography").height == 7
+    fixed_efficiency = weights.filter(
+        pl.col("factor").is_in(["topography", "vegetation", "river_level", "is_port"])
+    )
+    assert fixed_efficiency.height == 20
+    assert fixed_efficiency[LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN].null_count() == 3
+    assert fixed_efficiency.filter(pl.col(LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN).is_not_null()).height == 17
+    assert (
+        fixed_efficiency.filter(pl.col("factor") == "topography", pl.col("value") == "mountains")[
+            LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN
+        ].item()
+        == -0.35
+    )
+    assert (
+        fixed_efficiency.filter(pl.col("factor") == "is_port", pl.col("value") == "true")[
+            LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN
+        ].item()
+        == 0.15
+    )
+    fixed_construction_speed = weights.filter(
+        pl.col(LOCAL_CONSTRUCTION_SPEED_COLUMN).is_not_null()
+    )
+    assert fixed_construction_speed.height == 21
+    assert (
+        fixed_construction_speed.filter(pl.col("factor") == "topography", pl.col("value") == "mountains")[
+            LOCAL_CONSTRUCTION_SPEED_COLUMN
+        ].item()
+        == -0.35
+    )
+    efficiency_pairs = {
+        (row["factor"], row["value"]): row[LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN]
+        for row in weights.filter(pl.col(LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN).is_not_null()).to_dicts()
+    }
+    construction_pairs = {
+        (row["factor"], row["value"]): row[LOCAL_CONSTRUCTION_SPEED_COLUMN]
+        for row in weights.filter(pl.col(LOCAL_CONSTRUCTION_SPEED_COLUMN).is_not_null()).to_dicts()
+    }
+    assert efficiency_pairs == construction_pairs
+    assert_frame_equal(load_free_building_level_weights(repo), weights)
+
+
+def test_write_local_free_building_level_sheet_copy_round_trip(tmp_path: Path) -> None:
+    weights = load_free_building_level_weights(Path(__file__).resolve().parents[1])
+    csv_path, parquet_path = write_local_free_building_level_sheet_copy(
+        tmp_path,
+        weights,
+    )
+
+    assert csv_path.is_file()
+    assert parquet_path.is_file()
+    assert_frame_equal(load_free_building_level_weights(tmp_path), weights)
 
 
 def test_round_numeric_columns_keeps_notebook_tables_to_two_decimals() -> None:
@@ -438,15 +561,21 @@ def test_build_game_start_location_frame_smoke_with_fixture_maps(tmp_path: Path)
 
 def test_free_building_levels_notebook_is_valid_json() -> None:
     notebook = Path(__file__).resolve().parents[1] / "graphs" / "building_capacity" / "free_building_levels_workbench.ipynb"
-    raw = json.loads(notebook.read_text(encoding="utf-8"))
+    raw = json.loads(notebook.read_text(encoding="utf-8-sig"))
 
     assert raw["nbformat"] == 4
     sources = "\n".join(
         "".join(cell.get("source", []))
         for cell in raw["cells"]
     )
-    assert "read_public_google_sheet_values" in sources
-    assert "Open the source Google Sheet" in sources
+    assert "load_free_building_level_weights" in sources
+    assert "LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN" in sources
+    assert "LOCAL_CONSTRUCTION_SPEED_COLUMN" in sources
+    assert "compute_local_construction_speed" in sources
+    assert "free_building_levels_sheet.csv" in sources
+    assert "free_building_levels_sheet.csv" in sources
+    assert "google_sheet_browser_url" not in sources
+    assert "sync_free_building_level_weights_from_google" not in sources
     assert "Log in & load sheet" not in sources
     assert "load_free_building_level_location_frame" in sources
     assert "compute_free_building_levels" in sources
@@ -455,6 +584,201 @@ def test_free_building_levels_notebook_is_valid_json() -> None:
     assert "contribution_value_summary" in sources
     assert 'value_contributions.sort("absolute_contribution", descending=True).select(impact_columns)' in sources
     assert '.sort("absolute_contribution", descending=True)\n            .select(impact_columns)' in sources
+
+
+def test_river_level_zero_is_baseline_and_positive_levels_match_old_totals() -> None:
+    repo = Path(__file__).resolve().parents[1]
+    weights = read_local_free_building_level_sheet_csv(repo=repo)
+    location = _base_locations().filter(pl.col("location_tag") == "alpha").with_columns(
+        pl.lit("rural_settlement").alias("location_rank"),
+        pl.lit(0).alias("road_level"),
+        pl.lit(False).alias("province_capital"),
+        pl.lit(True).alias("is_port"),
+        pl.lit(False).alias("market_center"),
+        pl.lit(False).alias("capital"),
+        pl.lit(False).alias("naval_governor"),
+        pl.lit(False).alias("local_governor"),
+        pl.lit(0.0).alias("development"),
+    )
+
+    expected_capacity = {0: 85.0, 1: 95.0, 5: 115.0}
+    expected_efficiency = {0: -0.15, 1: -0.05, 5: 0.15}
+    for river_level, capacity_total in expected_capacity.items():
+        frame = location.with_columns(pl.lit(river_level).alias("river_level"))
+        capacity = compute_free_building_levels(frame, weights).frame["free_building_levels"].item()
+        efficiency = compute_local_build_buildings_efficiency(frame, weights)[
+            LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN
+        ].item()
+        construction_speed = compute_local_construction_speed(frame, weights)[
+            LOCAL_CONSTRUCTION_SPEED_COLUMN
+        ].item()
+        assert capacity == capacity_total
+        assert efficiency == pytest.approx(expected_efficiency[river_level])
+        assert construction_speed == pytest.approx(expected_efficiency[river_level])
+
+
+def test_compile_free_building_level_modifiers_updates_without_clobbering(tmp_path: Path) -> None:
+    repo = Path(__file__).resolve().parents[1]
+    mod_root = tmp_path / "mod"
+    topography_path = mod_root / COMPILE_TOPOGRAPHY_RELATIVE
+    vegetation_path = mod_root / COMPILE_VEGETATION_RELATIVE
+    ranks_path = mod_root / COMPILE_LOCATION_RANKS_RELATIVE
+    static_path = mod_root / COMPILE_STATIC_MODIFIERS_RELATIVE
+    building_types_path = mod_root / COMPILE_BUILDING_TYPES_RELATIVE
+    for path in (topography_path, vegetation_path, ranks_path, static_path, building_types_path):
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+    topography_path.write_text(
+        "TRY_INJECT:hills = {\n"
+        "\tlocation_modifier = {\n"
+        "\t\tlocal_monthly_food_modifier = 0.1\n"
+        "\t}\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    vegetation_path.write_text(
+        "TRY_INJECT:desert = {\n"
+        "\tlocation_modifier = {\n"
+        "\t\tlocal_population_capacity = -10\n"
+        "\t}\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    ranks_path.write_text(
+        "TRY_INJECT:city = {\n"
+        "\trank_modifier = {\n"
+        "\t\tfree_building_levels = -60\n"
+        "\t\tlocal_population_capacity = -100\n"
+        "\t}\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    static_path.write_text(
+        "TRY_INJECT:river_flowing_through_1 = {\n"
+        "\tlocal_monthly_food_modifier = -0.05\n"
+        "}\n"
+        "TRY_REPLACE:development = {\n"
+        "\tgame_data = {\n"
+        "\t\tcategory = location\n"
+        "\t}\n"
+        "\tfree_building_levels = 2\n"
+        "\tlocal_food_capacity = 10\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    building_types_path.write_text(
+        "TRY_INJECT:local_governor = {\n"
+        "\tmodifier = {\n"
+        "\t\tlocal_proximity_source = 80\n"
+        "\t}\n"
+        "}\n",
+        encoding="utf-8",
+    )
+
+    compile_free_building_level_modifiers(repo, mod_root)
+
+    topography_text = topography_path.read_text(encoding="utf-8-sig")
+    assert "local_monthly_food_modifier = 0.1" in topography_text
+    assert "free_building_levels = -10" in topography_text
+    assert "local_build_buildings_efficiency = -0.08" in topography_text
+    assert "local_construction_speed = -0.08" in topography_text
+
+    vegetation_text = vegetation_path.read_text(encoding="utf-8-sig")
+    assert "local_population_capacity = -10" in vegetation_text
+    assert "free_building_levels = -25" in vegetation_text
+
+    ranks_text = ranks_path.read_text(encoding="utf-8-sig")
+    assert "free_building_levels = -30" in ranks_text
+    assert "local_population_capacity = -100" in ranks_text
+    assert "local_build_buildings_efficiency = -0.3" in ranks_text
+    assert "local_construction_speed = -0.3" in ranks_text
+
+    static_text = static_path.read_text(encoding="utf-8-sig")
+    assert "local_monthly_food_modifier = -0.05" in static_text
+    assert "free_building_levels = 10" in static_text
+    assert "local_build_buildings_efficiency = 0.1" in static_text
+    assert "local_construction_speed = 0.1" in static_text
+    assert "TRY_REPLACE:development" in static_text
+    assert "free_building_levels = 0.5" in static_text
+    assert "local_food_capacity = 10" in static_text
+    assert "TRY_INJECT:is_port" in static_text
+    assert "TRY_INJECT:naval_governor" not in static_text
+    assert "TRY_INJECT:local_governor" not in static_text
+
+    building_types_text = building_types_path.read_text(encoding="utf-8-sig")
+    assert "local_proximity_source = 80" in building_types_text
+    assert "free_building_levels = 15" in building_types_text
+    assert "TRY_INJECT:naval_governor" in building_types_text
+    assert "TRY_INJECT:local_governor" in building_types_text
+
+
+def test_audit_compile_modifier_baselines_covers_compiled_targets() -> None:
+    repo = Path(__file__).resolve().parents[1]
+    load_order_path = repo / "constructor.load_order.toml"
+    if not load_order_path.is_file():
+        pytest.skip("constructor.load_order.toml is unavailable")
+    try:
+        audit = audit_compile_modifier_baselines(repo)
+    except (FileNotFoundError, OSError):
+        pytest.skip("vanilla install is unavailable for baseline audit")
+
+    compiled = audit.filter(pl.col("compiled_to_mod"))
+    assert not compiled.is_empty()
+    assert compiled.filter(
+        (pl.col("factor") == "location_rank")
+        & (pl.col("value") == "megalopolis")
+        & (pl.col("modifier_key") == FREE_BUILDING_LEVELS_MODIFIER_KEY)
+    )["vanilla_baseline"].item() == pytest.approx(200.0)
+    assert compiled.filter(
+        (pl.col("factor") == "capital") & (pl.col("modifier_key") == FREE_BUILDING_LEVELS_MODIFIER_KEY)
+    )["vanilla_baseline"].item() == pytest.approx(5.0)
+
+    governors = compiled.filter(pl.col("factor").is_in(["naval_governor", "local_governor"]))
+    assert governors.select("baseline_source").unique().to_series().to_list() == ["building_type"]
+    assert governors.select("entry_exists_in_parser").unique().to_series().to_list() == [True]
+    assert governors.select("vanilla_baseline").unique().to_series().to_list() == [0.0]
+
+    uncompiled_roads = audit.filter(
+        (pl.col("factor") == "road_level") & (~pl.col("compiled_to_mod"))
+    )
+    assert set(uncompiled_roads.select("value").to_series().to_list()) == {"2", "3", "4"}
+
+
+def test_modifier_baseline_resolver_reads_vanilla_values() -> None:
+    repo = Path(__file__).resolve().parents[1]
+    load_order_path = repo / "constructor.load_order.toml"
+    if not load_order_path.is_file():
+        pytest.skip("constructor.load_order.toml is unavailable")
+    try:
+        baselines = load_modifier_baseline_resolver(repo)
+    except (FileNotFoundError, OSError):
+        pytest.skip("vanilla install is unavailable for baseline resolver test")
+
+    assert baselines.baseline(
+        source="location_rank",
+        block_name="megalopolis",
+        inner_header="rank_modifier",
+        modifier_key=FREE_BUILDING_LEVELS_MODIFIER_KEY,
+    ) == pytest.approx(200.0)
+    assert baselines.baseline(
+        source="static_modifier",
+        block_name="capital",
+        inner_header=None,
+        modifier_key=FREE_BUILDING_LEVELS_MODIFIER_KEY,
+    ) == 5.0
+    assert baselines.baseline(
+        source="topography",
+        block_name="hills",
+        inner_header="location_modifier",
+        modifier_key=FREE_BUILDING_LEVELS_MODIFIER_KEY,
+    ) == 0.0
+    assert baselines.baseline(
+        source="building_type",
+        block_name="local_governor",
+        inner_header="modifier",
+        modifier_key=FREE_BUILDING_LEVELS_MODIFIER_KEY,
+    ) == 0.0
+    assert "local_governor" in baselines.building_types._by_name
 
 
 def _fixture_profile(root: Path) -> DataProfile:

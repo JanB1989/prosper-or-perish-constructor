@@ -1,17 +1,18 @@
-"""Game-start free-building-level statistics from a Google Sheet source of truth."""
+﻿"""Game-start free-building-level statistics from a Google Sheet source of truth."""
 
 from __future__ import annotations
 
 import csv
 import io
 import os
+import re
 import tomllib
 import urllib.error
 import urllib.parse
 import urllib.request
 from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -20,10 +21,16 @@ import polars as pl
 import yaml
 from eu5gameparser.clausewitz.parser import parse_file
 from eu5gameparser.clausewitz.syntax import CEntry, CList
+from eu5gameparser.domain.building_types import BuildingTypeData, load_building_type_data
+from eu5gameparser.domain.location_ranks import LocationRankData, load_location_rank_data
+from eu5gameparser.domain.static_modifiers import StaticModifierData, load_static_modifier_data
+from eu5gameparser.domain.topography import TopographyData, load_topography_data
+from eu5gameparser.domain.vegetation import VegetationData, load_vegetation_data
 from eu5gameparser.load_order import DataProfile, GameLayer, LoadOrderConfig
 from PIL import Image
 
 from prosper_or_perish_constructor.farming_village_unlocks import load_current_location_frame
+from prosper_or_perish_population_capacity.geometry import build_location_geometry_frame
 
 
 SPREADSHEET_ID = "1d_zH-wxb9ufW6RgVZgJdGqToJ-VZP_XPS7WhhUAa18U"
@@ -31,6 +38,32 @@ SHEET_NAME = "free_building_levels"
 SHEET_GID = "602606501"
 SHEET_RANGE = f"{SHEET_NAME}!A1:H"
 GOOGLE_SHEETS_READONLY_SCOPE = "https://www.googleapis.com/auth/spreadsheets.readonly"
+FREE_BUILDING_LEVELS_DATA_DIR = Path("graphs/building_capacity/data")
+LOCAL_SHEET_CSV_NAME = "free_building_levels_sheet.csv"
+LOCAL_WEIGHTS_PARQUET_NAME = "free_building_levels_weights.parquet"
+LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN = "local_build_buildings_efficiency"
+LOCAL_CONSTRUCTION_SPEED_COLUMN = "local_construction_speed"
+LOCAL_BUILD_BUILDINGS_EFFICIENCY_FACTORS = frozenset(
+    {"topography", "vegetation", "river_level", "is_port", "location_rank"}
+)
+LOCAL_CONSTRUCTION_SPEED_FACTORS = LOCAL_BUILD_BUILDINGS_EFFICIENCY_FACTORS
+NON_PORT_LOCAL_BUILD_EFFICIENCY_PENALTY = -0.15
+WEIGHTS_CSV_COLUMNS = (
+    "section",
+    "factor",
+    "value",
+    "free_building_levels",
+    LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN,
+    LOCAL_CONSTRUCTION_SPEED_COLUMN,
+)
+WEIGHTS_FRAME_SCHEMA = {
+    "section": pl.String,
+    "factor": pl.String,
+    "value": pl.String,
+    "free_building_levels": pl.Float64,
+    LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN: pl.Float64,
+    LOCAL_CONSTRUCTION_SPEED_COLUMN: pl.Float64,
+}
 
 CATEGORICAL_FACTORS = ("topography", "vegetation", "river_level", "location_rank", "road_level")
 BOOLEAN_FACTORS = (
@@ -40,6 +73,18 @@ BOOLEAN_FACTORS = (
     "capital",
     "naval_governor",
     "local_governor",
+)
+EFFICIENCY_CATEGORICAL_FACTORS = tuple(
+    factor for factor in CATEGORICAL_FACTORS if factor in LOCAL_BUILD_BUILDINGS_EFFICIENCY_FACTORS
+)
+EFFICIENCY_BOOLEAN_FACTORS = tuple(
+    factor for factor in BOOLEAN_FACTORS if factor in LOCAL_BUILD_BUILDINGS_EFFICIENCY_FACTORS
+)
+CONSTRUCTION_SPEED_CATEGORICAL_FACTORS = tuple(
+    factor for factor in CATEGORICAL_FACTORS if factor in LOCAL_CONSTRUCTION_SPEED_FACTORS
+)
+CONSTRUCTION_SPEED_BOOLEAN_FACTORS = tuple(
+    factor for factor in BOOLEAN_FACTORS if factor in LOCAL_CONSTRUCTION_SPEED_FACTORS
 )
 NUMERIC_FACTORS = ("development",)
 FLAG_HEADERS = {"fixed_flag", "dynamic_flag"}
@@ -132,6 +177,97 @@ def parse_google_sheet_csv_text(text: str) -> list[list[str]]:
     return [list(row) for row in csv.reader(io.StringIO(text))]
 
 
+def resolve_free_building_levels_data_dir(repo: Path) -> Path:
+    return repo / FREE_BUILDING_LEVELS_DATA_DIR
+
+
+def local_free_building_levels_sheet_csv_path(repo: Path) -> Path:
+    return resolve_free_building_levels_data_dir(repo) / LOCAL_SHEET_CSV_NAME
+
+
+def local_free_building_levels_weights_parquet_path(repo: Path) -> Path:
+    return resolve_free_building_levels_data_dir(repo) / LOCAL_WEIGHTS_PARQUET_NAME
+
+
+def _resolve_weights_csv_path(
+    csv_path: str | Path | None = None,
+    *,
+    repo: Path | None = None,
+) -> Path:
+    if csv_path is not None:
+        path = Path(csv_path)
+    elif repo is not None:
+        path = local_free_building_levels_sheet_csv_path(repo)
+    else:
+        raise ValueError("A weights CSV path or repo is required")
+    if not path.is_file():
+        raise FileNotFoundError(f"Local free-building-levels CSV not found: {path}")
+    return path
+
+
+def read_local_free_building_level_sheet_csv(
+    csv_path: str | Path | None = None,
+    *,
+    repo: Path | None = None,
+) -> pl.DataFrame:
+    """Read and normalize the tidy local weights CSV."""
+    return parse_free_building_level_weights_csv(
+        _resolve_weights_csv_path(csv_path, repo=repo)
+    )
+
+
+def write_local_free_building_level_sheet_copy(
+    repo: Path,
+    weights: pl.DataFrame,
+) -> tuple[Path, Path]:
+    """Write the tidy weights CSV and parquet cache beside the workbench."""
+    data_dir = resolve_free_building_levels_data_dir(repo)
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    normalized = normalize_free_building_level_weights(weights)
+    csv_path = local_free_building_levels_sheet_csv_path(repo)
+    _write_weights_csv(csv_path, normalized)
+    parquet_path = local_free_building_levels_weights_parquet_path(repo)
+    normalized.write_parquet(parquet_path)
+    return csv_path, parquet_path
+
+
+def load_free_building_level_weights(
+    repo: Path,
+    *,
+    csv_path: Path | None = None,
+    parquet_path: Path | None = None,
+    prefer: str = "csv",
+) -> pl.DataFrame:
+    """Load parsed weights from the local CSV copy (optionally cached parquet)."""
+    resolved_csv = csv_path or local_free_building_levels_sheet_csv_path(repo)
+    resolved_parquet = parquet_path or local_free_building_levels_weights_parquet_path(repo)
+
+    if prefer == "parquet" and resolved_parquet.is_file():
+        return normalize_free_building_level_weights(pl.read_parquet(resolved_parquet))
+    if resolved_csv.is_file():
+        return parse_free_building_level_weights_csv(resolved_csv)
+    if resolved_parquet.is_file():
+        return normalize_free_building_level_weights(pl.read_parquet(resolved_parquet))
+    raise FileNotFoundError(
+        "No local free-building-levels copy found. Expected "
+        f"{resolved_parquet} or {resolved_csv}."
+    )
+
+
+def sync_free_building_level_weights_from_google(
+    repo: Path,
+    *,
+    spreadsheet_id: str = SPREADSHEET_ID,
+    gid: str = SHEET_GID,
+) -> pl.DataFrame:
+    """Refresh the committed local CSV + parquet copy from the public Google export."""
+    values = read_public_google_sheet_values(spreadsheet_id=spreadsheet_id, gid=gid)
+    weights = parse_free_building_level_sheet(values)
+    write_local_free_building_level_sheet_copy(repo, weights)
+    return weights
+
+
 def read_google_sheet_values(
     *,
     spreadsheet_id: str = SPREADSHEET_ID,
@@ -196,17 +332,80 @@ def read_google_sheet_values(
     return response.get("values", [])
 
 
+def parse_free_building_level_weights_csv(source: str | Path) -> pl.DataFrame:
+    """Load the tidy weights CSV into a normalized Polars frame."""
+    path = Path(source)
+    frame = pl.read_csv(path, comment_prefix="#")
+    return normalize_free_building_level_weights(frame)
+
+
+def normalize_free_building_level_weights(frame: pl.DataFrame) -> pl.DataFrame:
+    """Normalize factor/value keys and validate the tidy weights table."""
+    _require_columns(frame, set(WEIGHTS_CSV_COLUMNS))
+    normalized = frame.select(WEIGHTS_CSV_COLUMNS).with_columns(
+        pl.col("section").cast(pl.String).str.strip_chars().str.to_lowercase(),
+        pl.col("factor").map_elements(_normalize_key, return_dtype=pl.String),
+        pl.col("value").map_elements(_normalize_factor_value, return_dtype=pl.String),
+        pl.col("free_building_levels").map_elements(_cell_to_float, return_dtype=pl.Float64),
+        pl.col(LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN).map_elements(
+            _optional_cell_to_float,
+            return_dtype=pl.Float64,
+        ),
+        pl.col(LOCAL_CONSTRUCTION_SPEED_COLUMN).map_elements(
+            _optional_cell_to_float,
+            return_dtype=pl.Float64,
+        ),
+    )
+    duplicates = (
+        normalized.group_by("factor", "value")
+        .len()
+        .filter(pl.col("len") > 1)
+        .select("factor", "value")
+    )
+    if duplicates.height:
+        formatted = ", ".join(
+            f"{row['factor']}:{row['value']}" for row in duplicates.to_dicts()
+        )
+        raise ValueError(f"Duplicate free-building-level rows: {formatted}")
+
+    invalid_efficiency = normalized.filter(
+        pl.col(LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN).is_not_null()
+        & ~pl.col("factor").is_in(sorted(LOCAL_BUILD_BUILDINGS_EFFICIENCY_FACTORS))
+    )
+    if invalid_efficiency.height:
+        formatted = ", ".join(
+            f"{row['factor']}:{row['value']}" for row in invalid_efficiency.to_dicts()
+        )
+        raise ValueError(
+            f"{LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN} is only valid for "
+            f"{sorted(LOCAL_BUILD_BUILDINGS_EFFICIENCY_FACTORS)}; got {formatted}"
+        )
+    invalid_construction_speed = normalized.filter(
+        pl.col(LOCAL_CONSTRUCTION_SPEED_COLUMN).is_not_null()
+        & ~pl.col("factor").is_in(sorted(LOCAL_CONSTRUCTION_SPEED_FACTORS))
+    )
+    if invalid_construction_speed.height:
+        formatted = ", ".join(
+            f"{row['factor']}:{row['value']}" for row in invalid_construction_speed.to_dicts()
+        )
+        raise ValueError(
+            f"{LOCAL_CONSTRUCTION_SPEED_COLUMN} is only valid for "
+            f"{sorted(LOCAL_CONSTRUCTION_SPEED_FACTORS)}; got {formatted}"
+        )
+    return normalized
+
+
 def parse_free_building_level_sheet(values: Sequence[Sequence[Any]]) -> pl.DataFrame:
-    """Parse the visual Google Sheet layout into factor/value/weight rows."""
+    """Parse the legacy visual sheet layout into normalized factor/value rows."""
     active_pairs: dict[int, str] = {}
     section = ""
     rows: list[dict[str, object]] = []
 
-    for row_index, raw_row in enumerate(values, start=1):
+    for raw_row in values:
         row = [_cell_text(value) for value in raw_row]
         first = _cell_text(row[0] if row else "")
         if "FACTORS" in first.upper():
-            section = first
+            section = "fixed" if "FIXED" in first.upper() else "dynamic"
             active_pairs = {}
             continue
 
@@ -233,24 +432,60 @@ def parse_free_building_level_sheet(values: Sequence[Sequence[Any]]) -> pl.DataF
                 normalized_value = _normalize_factor_value(value)
             rows.append(
                 {
+                    "section": section,
                     "factor": factor,
                     "value": normalized_value,
                     "free_building_levels": weight,
-                    "section": section,
-                    "sheet_row": row_index,
-                    "sheet_column": column + 1,
+                    LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN: None,
+                    LOCAL_CONSTRUCTION_SPEED_COLUMN: None,
                 }
             )
 
-    schema = {
-        "factor": pl.String,
-        "value": pl.String,
-        "free_building_levels": pl.Float64,
-        "section": pl.String,
-        "sheet_row": pl.Int64,
-        "sheet_column": pl.Int64,
-    }
-    return pl.DataFrame(rows, schema=schema)
+    return normalize_free_building_level_weights(pl.DataFrame(rows, schema=WEIGHTS_FRAME_SCHEMA))
+
+
+def _write_weights_csv(path: Path, weights: pl.DataFrame) -> None:
+    buffer = io.StringIO()
+    normalize_free_building_level_weights(weights).write_csv(buffer)
+    path.write_text(
+        "# Free building level weights — one row per factor/value pair.\n"
+        f"# {LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN} and {LOCAL_CONSTRUCTION_SPEED_COLUMN} "
+        "apply to topography, vegetation, river_level (1-5), is_port, and location_rank.\n"
+        "# river_level 0 means no river in map data and carries no modifier.\n"
+        + buffer.getvalue(),
+        encoding="utf-8",
+    )
+
+
+def efficiency_lookup(weights: pl.DataFrame) -> dict[tuple[str, str], float]:
+    return _optional_modifier_lookup(weights, LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN)
+
+
+def construction_speed_lookup(weights: pl.DataFrame) -> dict[tuple[str, str], float]:
+    return _optional_modifier_lookup(weights, LOCAL_CONSTRUCTION_SPEED_COLUMN)
+
+
+def _optional_modifier_lookup(
+    weights: pl.DataFrame,
+    column: str,
+) -> dict[tuple[str, str], float]:
+    allowed_factors = (
+        LOCAL_BUILD_BUILDINGS_EFFICIENCY_FACTORS
+        if column == LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN
+        else LOCAL_CONSTRUCTION_SPEED_FACTORS
+    )
+    _require_columns(weights, {"factor", "value", column})
+    lookup: dict[tuple[str, str], float] = {}
+    for row in weights.to_dicts():
+        factor = _normalize_key(row["factor"])
+        if factor not in allowed_factors:
+            continue
+        value = _normalize_factor_value(row["value"])
+        raw = row[column]
+        if raw is None:
+            continue
+        lookup[(factor, value)] = float(raw)
+    return lookup
 
 
 def weights_lookup(weights: pl.DataFrame) -> dict[tuple[str, str], float]:
@@ -553,6 +788,742 @@ def compute_free_building_levels(
         pl.sum_horizontal(component_columns).alias("free_building_levels")
     )
     return FreeBuildingLevelResult(frame=frame, diagnostics=diagnostics)
+
+
+def compute_local_build_buildings_efficiency(
+    locations: pl.DataFrame,
+    weights: pl.DataFrame,
+) -> pl.DataFrame:
+    """Sum fixed-factor building-efficiency modifiers for each location."""
+    _require_columns(
+        locations,
+        {"location_tag", *EFFICIENCY_CATEGORICAL_FACTORS, *EFFICIENCY_BOOLEAN_FACTORS},
+    )
+    lookup = efficiency_lookup(weights)
+    component_exprs: list[pl.Expr] = []
+    component_columns: list[str] = []
+
+    for factor in EFFICIENCY_CATEGORICAL_FACTORS:
+        column = f"{factor}_{LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN}"
+        mapping = {
+            value: weight
+            for (lookup_factor, value), weight in lookup.items()
+            if lookup_factor == factor
+        }
+        component_columns.append(column)
+        component_exprs.append(
+            pl.col(factor)
+            .map_elements(
+                lambda value, mapping=mapping: mapping.get(_normalize_factor_value(value), 0.0),
+                return_dtype=pl.Float64,
+            )
+            .alias(column)
+        )
+
+    for factor in EFFICIENCY_BOOLEAN_FACTORS:
+        column = f"{factor}_{LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN}"
+        port_bonus = lookup.get((factor, "true"), 0.0)
+        component_columns.append(column)
+        component_exprs.append(
+            pl.when(pl.col(factor).fill_null(False))
+            .then(pl.lit(port_bonus))
+            .otherwise(pl.lit(NON_PORT_LOCAL_BUILD_EFFICIENCY_PENALTY))
+            .alias(column)
+        )
+
+    return locations.with_columns(component_exprs).with_columns(
+        pl.sum_horizontal(component_columns).alias(LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN)
+    )
+
+
+def compute_local_construction_speed(
+    locations: pl.DataFrame,
+    weights: pl.DataFrame,
+) -> pl.DataFrame:
+    """Sum fixed-factor construction-speed modifiers for each location."""
+    _require_columns(
+        locations,
+        {"location_tag", *CONSTRUCTION_SPEED_CATEGORICAL_FACTORS, *CONSTRUCTION_SPEED_BOOLEAN_FACTORS},
+    )
+    lookup = construction_speed_lookup(weights)
+    component_exprs: list[pl.Expr] = []
+    component_columns: list[str] = []
+
+    for factor in CONSTRUCTION_SPEED_CATEGORICAL_FACTORS:
+        column = f"{factor}_{LOCAL_CONSTRUCTION_SPEED_COLUMN}"
+        mapping = {
+            value: weight
+            for (lookup_factor, value), weight in lookup.items()
+            if lookup_factor == factor
+        }
+        component_columns.append(column)
+        component_exprs.append(
+            pl.col(factor)
+            .map_elements(
+                lambda value, mapping=mapping: mapping.get(_normalize_factor_value(value), 0.0),
+                return_dtype=pl.Float64,
+            )
+            .alias(column)
+        )
+
+    for factor in CONSTRUCTION_SPEED_BOOLEAN_FACTORS:
+        column = f"{factor}_{LOCAL_CONSTRUCTION_SPEED_COLUMN}"
+        port_bonus = lookup.get((factor, "true"), 0.0)
+        component_columns.append(column)
+        component_exprs.append(
+            pl.when(pl.col(factor).fill_null(False))
+            .then(pl.lit(port_bonus))
+            .otherwise(pl.lit(NON_PORT_LOCAL_BUILD_EFFICIENCY_PENALTY))
+            .alias(column)
+        )
+
+    return locations.with_columns(component_exprs).with_columns(
+        pl.sum_horizontal(component_columns).alias(LOCAL_CONSTRUCTION_SPEED_COLUMN)
+    )
+
+
+def build_location_map_frame(
+    scores: pl.DataFrame,
+    *,
+    repo: Path,
+    project: Path,
+) -> pl.DataFrame:
+    """Join scored locations with map geometry for notebook plotting."""
+    parser_config = resolve_parser_config(repo, project)
+    load_order_path = repo / str(parser_config.get("load_order") or "constructor.load_order.toml")
+    profile_name = str(parser_config.get("profile") or "constructor")
+    profile = LoadOrderConfig.load(load_order_path).profile(profile_name)
+    locations_png = resolve_map_data_file(profile, "locations.png")
+    baseline_path = resolve_labeling_baseline_path(repo, project)
+    geometry = build_location_geometry_frame(
+        baseline_path=baseline_path,
+        locations_png_path=locations_png,
+        equator_y=3340,
+    )
+    return (
+        scores.join(
+            geometry.select("location_tag", "geometry_status", "approx_lon", "approx_lat"),
+            on="location_tag",
+            how="left",
+        )
+        .filter(pl.col("geometry_status") == "ok")
+    )
+
+
+FREE_BUILDING_LEVELS_MODIFIER_KEY = "free_building_levels"
+EFFICIENCY_MODIFIER_KEY = LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN
+CONSTRUCTION_SPEED_MODIFIER_KEY = LOCAL_CONSTRUCTION_SPEED_COLUMN
+COMPILED_MODIFIER_KEYS = (
+    FREE_BUILDING_LEVELS_MODIFIER_KEY,
+    EFFICIENCY_MODIFIER_KEY,
+    CONSTRUCTION_SPEED_MODIFIER_KEY,
+)
+COMPILE_TOPOGRAPHY_RELATIVE = Path(
+    "in_game/common/topography/pp_topography_changes.txt"
+)
+COMPILE_VEGETATION_RELATIVE = Path(
+    "in_game/common/vegetation/pp_vegetation_changes.txt"
+)
+COMPILE_LOCATION_RANKS_RELATIVE = Path(
+    "in_game/common/location_ranks/pp_location_rank_adjustments.txt"
+)
+COMPILE_STATIC_MODIFIERS_RELATIVE = Path(
+    "main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt"
+)
+COMPILE_BUILDING_TYPES_RELATIVE = Path(
+    "in_game/common/building_types/pp_governor_building_adjustments.txt"
+)
+STATIC_MODIFIER_BLOCK_BY_FACTOR: dict[tuple[str, str], str] = {
+    ("river_level", "1"): "river_flowing_through_1",
+    ("river_level", "2"): "river_flowing_through_2",
+    ("river_level", "3"): "river_flowing_through_3",
+    ("river_level", "4"): "river_flowing_through_4",
+    ("river_level", "5"): "river_flowing_through_5",
+    ("road_level", "1"): "has_road",
+    ("is_port", "true"): "is_port",
+    ("market_center", "true"): "market_center",
+    ("capital", "true"): "capital",
+    ("province_capital", "true"): "province_capital",
+}
+BUILDING_TYPE_BLOCK_BY_FACTOR: dict[tuple[str, str], str] = {
+    ("naval_governor", "true"): "naval_governor",
+    ("local_governor", "true"): "local_governor",
+}
+BUILDING_TYPE_INNER_HEADER = "modifier"
+CompileMode = str  # "inject_delta" | "replace_absolute"
+
+
+@dataclass
+class ModifierBaselineResolver:
+    """Resolve vanilla modifier baselines for TRY_INJECT delta compilation."""
+
+    location_ranks: LocationRankData
+    static_modifiers: StaticModifierData
+    topography: TopographyData
+    vegetation: VegetationData
+    building_types: BuildingTypeData
+    _cache: dict[tuple[str, str, str | None, str], float] = field(default_factory=dict, repr=False)
+
+    def inject_value(
+        self,
+        *,
+        source: str,
+        block_name: str,
+        inner_header: str | None,
+        modifier_key: str,
+        csv_final: float,
+    ) -> float:
+        baseline = self.baseline(
+            source=source,
+            block_name=block_name,
+            inner_header=inner_header,
+            modifier_key=modifier_key,
+        )
+        return csv_final - baseline
+
+    def baseline(
+        self,
+        *,
+        source: str,
+        block_name: str,
+        inner_header: str | None,
+        modifier_key: str,
+    ) -> float:
+        cache_key = (source, block_name, inner_header, modifier_key)
+        if cache_key not in self._cache:
+            self._cache[cache_key] = self._load_baseline(
+                source=source,
+                block_name=block_name,
+                inner_header=inner_header,
+                modifier_key=modifier_key,
+            )
+        return self._cache[cache_key]
+
+    def _load_baseline(
+        self,
+        *,
+        source: str,
+        block_name: str,
+        inner_header: str | None,
+        modifier_key: str,
+    ) -> float:
+        if source == "static_modifier":
+            return self.static_modifiers.modifier_baseline(block_name, inner_header, modifier_key)
+        if source == "location_rank":
+            return self.location_ranks.modifier_baseline(block_name, inner_header, modifier_key)
+        if source == "topography":
+            return self.topography.modifier_baseline(block_name, inner_header, modifier_key)
+        if source == "vegetation":
+            return self.vegetation.modifier_baseline(block_name, inner_header, modifier_key)
+        if source == "building_type":
+            return self.building_types.modifier_baseline(block_name, inner_header, modifier_key)
+        return 0.0
+
+
+def load_modifier_baseline_resolver(repo: Path) -> ModifierBaselineResolver:
+    load_order_path = repo / "constructor.load_order.toml"
+    profile = LoadOrderConfig.load(load_order_path).profile("vanilla")
+    return ModifierBaselineResolver(
+        location_ranks=load_location_rank_data(profile=profile, load_order_path=load_order_path),
+        static_modifiers=load_static_modifier_data(profile=profile, load_order_path=load_order_path),
+        topography=load_topography_data(profile=profile, load_order_path=load_order_path),
+        vegetation=load_vegetation_data(profile=profile, load_order_path=load_order_path),
+        building_types=load_building_type_data(profile=profile, load_order_path=load_order_path),
+    )
+
+
+def audit_compile_modifier_baselines(repo: Path) -> pl.DataFrame:
+    """Report parser-resolved vanilla baselines for every compiled sheet target."""
+    weights = read_local_free_building_level_sheet_csv(repo=repo)
+    baselines = load_modifier_baseline_resolver(repo)
+    rows: list[dict[str, object]] = []
+
+    for row in weights.to_dicts():
+        factor = str(row["factor"])
+        value = str(row["value"])
+        if factor in {"topography", "vegetation", "location_rank"}:
+            inner_header = "location_modifier" if factor != "location_rank" else "rank_modifier"
+            block_name = value
+            baseline_source = factor
+            compiled = True
+        elif factor == "development":
+            block_name = "development"
+            inner_header = None
+            baseline_source = "static_modifier"
+            compiled = True
+        elif (factor, value) in BUILDING_TYPE_BLOCK_BY_FACTOR:
+            block_name = BUILDING_TYPE_BLOCK_BY_FACTOR[(factor, value)]
+            baseline_source = "building_type"
+            inner_header = BUILDING_TYPE_INNER_HEADER
+            compiled = True
+        elif (factor, value) in STATIC_MODIFIER_BLOCK_BY_FACTOR:
+            block_name = STATIC_MODIFIER_BLOCK_BY_FACTOR[(factor, value)]
+            baseline_source = "static_modifier"
+            inner_header = None
+            compiled = True
+        elif factor == "road_level" and value != "0":
+            block_name = STATIC_MODIFIER_BLOCK_BY_FACTOR.get((factor, value), "")
+            baseline_source = "static_modifier"
+            inner_header = None
+            compiled = bool(block_name)
+        else:
+            continue
+
+        for modifier_key in COMPILED_MODIFIER_KEYS:
+            csv_value = row.get(modifier_key)
+            if csv_value is None or (isinstance(csv_value, float) and np.isnan(csv_value)):
+                continue
+            vanilla_baseline = baselines.baseline(
+                source=baseline_source,
+                block_name=block_name,
+                inner_header=inner_header,
+                modifier_key=modifier_key,
+            )
+            entry_exists = _compile_target_exists(
+                baselines,
+                baseline_source=baseline_source,
+                block_name=block_name,
+            )
+            rows.append(
+                {
+                    "factor": factor,
+                    "value": value,
+                    "block_name": block_name,
+                    "baseline_source": baseline_source,
+                    "inner_header": inner_header,
+                    "modifier_key": modifier_key,
+                    "csv_final": float(csv_value),
+                    "vanilla_baseline": vanilla_baseline,
+                    "compiled_inject": float(csv_value) - vanilla_baseline
+                    if factor != "development"
+                    else float(csv_value),
+                    "entry_exists_in_parser": entry_exists,
+                    "compiled_to_mod": compiled,
+                }
+            )
+
+    return pl.DataFrame(rows).sort(["factor", "value", "modifier_key"])
+
+
+def _compile_target_exists(
+    baselines: ModifierBaselineResolver,
+    *,
+    baseline_source: str,
+    block_name: str,
+) -> bool:
+    if baseline_source == "static_modifier":
+        return block_name in baselines.static_modifiers._by_name
+    if baseline_source == "location_rank":
+        return block_name in baselines.location_ranks._by_name
+    if baseline_source == "topography":
+        return block_name in baselines.topography._by_name
+    if baseline_source == "vegetation":
+        return block_name in baselines.vegetation._by_name
+    if baseline_source == "building_type":
+        return block_name in baselines.building_types._by_name
+    return False
+
+
+def compile_free_building_level_modifiers(repo: Path, mod_root: Path) -> None:
+    """Compile sheet weights into mod TRY_INJECT / TRY_REPLACE modifier blocks."""
+    weights = read_local_free_building_level_sheet_csv(repo=repo)
+    baselines = load_modifier_baseline_resolver(repo)
+    updated_files = 0
+    updated_files += _compile_category_file(
+        mod_root / COMPILE_TOPOGRAPHY_RELATIVE,
+        weights,
+        baselines=baselines,
+        factor="topography",
+        inner_header="location_modifier",
+    )
+    updated_files += _compile_category_file(
+        mod_root / COMPILE_VEGETATION_RELATIVE,
+        weights,
+        baselines=baselines,
+        factor="vegetation",
+        inner_header="location_modifier",
+    )
+    updated_files += _compile_category_file(
+        mod_root / COMPILE_LOCATION_RANKS_RELATIVE,
+        weights,
+        baselines=baselines,
+        factor="location_rank",
+        inner_header="rank_modifier",
+    )
+    updated_files += _compile_static_modifier_file(
+        mod_root / COMPILE_STATIC_MODIFIERS_RELATIVE,
+        weights,
+        baselines=baselines,
+    )
+    updated_files += _compile_building_type_file(
+        mod_root / COMPILE_BUILDING_TYPES_RELATIVE,
+        weights,
+        baselines=baselines,
+    )
+    if updated_files:
+        print(
+            f"Compiled free building level modifiers into {updated_files} mod file(s).",
+            flush=True,
+        )
+
+
+def _compile_category_file(
+    path: Path,
+    weights: pl.DataFrame,
+    *,
+    baselines: ModifierBaselineResolver,
+    factor: str,
+    inner_header: str,
+) -> int:
+    if not path.is_file():
+        raise FileNotFoundError(f"Cannot compile building modifiers; missing file: {path}")
+    text = _read_compile_text(path)
+    changed = False
+    baseline_source = factor
+    for row in weights.filter(pl.col("factor") == factor).to_dicts():
+        block_name = str(row["value"])
+        updates = _modifier_updates_from_row(
+            row,
+            baselines=baselines,
+            block_name=block_name,
+            inner_header=inner_header,
+            baseline_source=baseline_source,
+            compile_mode="inject_delta",
+        )
+        if not updates:
+            continue
+        result = _update_clausewitz_file_text(
+            text,
+            block_name,
+            inner_header=inner_header,
+            updates=updates,
+        )
+        if result is None:
+            text = _append_try_inject_block(
+                text,
+                block_name,
+                inner_header=inner_header,
+                updates=updates,
+            )
+            changed = True
+        else:
+            new_text, block_changed = result
+            if block_changed:
+                text = new_text
+                changed = True
+    if changed and _write_compile_text_if_changed(path, text):
+        return 1
+    return 1 if changed else 0
+
+
+def _compile_static_modifier_file(
+    path: Path,
+    weights: pl.DataFrame,
+    *,
+    baselines: ModifierBaselineResolver,
+) -> int:
+    if not path.is_file():
+        raise FileNotFoundError(f"Cannot compile building modifiers; missing file: {path}")
+    text = _read_compile_text(path)
+    changed = False
+
+    for (factor, value), block_name in STATIC_MODIFIER_BLOCK_BY_FACTOR.items():
+        row = weights.filter(
+            (pl.col("factor") == factor) & (pl.col("value") == value)
+        )
+        if row.is_empty():
+            continue
+        updates = _modifier_updates_from_row(
+            row.to_dicts()[0],
+            baselines=baselines,
+            block_name=block_name,
+            inner_header=None,
+            baseline_source="static_modifier",
+            compile_mode="inject_delta",
+        )
+        if not updates:
+            continue
+        result = _update_clausewitz_file_text(text, block_name, inner_header=None, updates=updates)
+        if result is None:
+            text = _append_try_inject_block(text, block_name, inner_header=None, updates=updates)
+            changed = True
+        else:
+            new_text, block_changed = result
+            if block_changed:
+                text = new_text
+                changed = True
+
+    development_row = weights.filter(
+        (pl.col("factor") == "development") & (pl.col("value") == "per_point")
+    )
+    if not development_row.is_empty():
+        updates = _modifier_updates_from_row(
+            development_row.to_dicts()[0],
+            baselines=baselines,
+            block_name="development",
+            inner_header=None,
+            baseline_source="static_modifier",
+            compile_mode="replace_absolute",
+        )
+        if updates:
+            result = _update_clausewitz_file_text(
+                text,
+                "development",
+                inner_header=None,
+                updates=updates,
+            )
+            if result is not None:
+                new_text, block_changed = result
+                if block_changed:
+                    text = new_text
+                    changed = True
+
+    if changed and _write_compile_text_if_changed(path, text):
+        return 1
+    return 1 if changed else 0
+
+
+def _compile_building_type_file(
+    path: Path,
+    weights: pl.DataFrame,
+    *,
+    baselines: ModifierBaselineResolver,
+) -> int:
+    if not path.is_file():
+        raise FileNotFoundError(f"Cannot compile building modifiers; missing file: {path}")
+    text = _read_compile_text(path)
+    changed = False
+
+    for (factor, value), block_name in BUILDING_TYPE_BLOCK_BY_FACTOR.items():
+        row = weights.filter(
+            (pl.col("factor") == factor) & (pl.col("value") == value)
+        )
+        if row.is_empty():
+            continue
+        updates = _modifier_updates_from_row(
+            row.to_dicts()[0],
+            baselines=baselines,
+            block_name=block_name,
+            inner_header=BUILDING_TYPE_INNER_HEADER,
+            baseline_source="building_type",
+            compile_mode="inject_delta",
+        )
+        if not updates:
+            continue
+        result = _update_clausewitz_file_text(
+            text,
+            block_name,
+            inner_header=BUILDING_TYPE_INNER_HEADER,
+            updates=updates,
+        )
+        if result is None:
+            text = _append_try_inject_block(
+                text,
+                block_name,
+                inner_header=BUILDING_TYPE_INNER_HEADER,
+                updates=updates,
+            )
+            changed = True
+        else:
+            new_text, block_changed = result
+            if block_changed:
+                text = new_text
+                changed = True
+
+    if changed and _write_compile_text_if_changed(path, text):
+        return 1
+    return 1 if changed else 0
+
+
+def _modifier_updates_from_row(
+    row: Mapping[str, object],
+    *,
+    baselines: ModifierBaselineResolver,
+    block_name: str,
+    inner_header: str | None,
+    baseline_source: str,
+    compile_mode: CompileMode,
+) -> dict[str, float]:
+    updates: dict[str, float] = {}
+    for modifier_key in COMPILED_MODIFIER_KEYS:
+        raw_value = row.get(modifier_key)
+        if raw_value is None or (isinstance(raw_value, float) and np.isnan(raw_value)):
+            continue
+        csv_final = float(raw_value)
+        if compile_mode == "replace_absolute":
+            updates[modifier_key] = csv_final
+        else:
+            updates[modifier_key] = baselines.inject_value(
+                source=baseline_source,
+                block_name=block_name,
+                inner_header=inner_header,
+                modifier_key=modifier_key,
+                csv_final=csv_final,
+            )
+    return updates
+
+
+def _update_clausewitz_file_text(
+    text: str,
+    block_name: str,
+    *,
+    inner_header: str | None,
+    updates: dict[str, float],
+) -> tuple[str, bool] | None:
+    located = _locate_top_level_block(text, block_name)
+    if located is None:
+        return None
+    start, end, block_text = located
+    if inner_header is not None:
+        inner = _locate_inner_block(block_text, inner_header)
+        if inner is None:
+            return None
+        inner_start, inner_end, inner_text = inner
+        updated_inner, changed = _update_block_keys(inner_text, updates)
+        if not changed:
+            return text, False
+        new_block = (
+            block_text[:inner_start]
+            + updated_inner
+            + block_text[inner_end:]
+        )
+    else:
+        new_block, changed = _update_block_keys(block_text, updates)
+        if not changed:
+            return text, False
+    return text[:start] + new_block + text[end:], True
+
+
+def _update_block_keys(block_text: str, updates: dict[str, float]) -> tuple[str, bool]:
+    lines = block_text.splitlines(keepends=True)
+    if not lines:
+        return block_text, False
+    indent = _detect_key_indent(lines)
+    key_pattern = re.compile(rf"^({re.escape(indent)})([A-Za-z0-9_]+)\s*=\s*(-?[0-9.]+)")
+    seen: set[str] = set()
+    changed = False
+    new_lines: list[str] = []
+    for line in lines:
+        match = key_pattern.match(line)
+        if match and match.group(2) in updates:
+            key = match.group(2)
+            seen.add(key)
+            formatted = _format_modifier_value(updates[key])
+            stripped = line.rstrip("\r\n")
+            comment_match = re.search(r"(\s#.*)$", stripped)
+            comment = comment_match.group(1) if comment_match else ""
+            newline = line[len(stripped) :]
+            new_line = f"{indent}{key} = {formatted}{comment}{newline}"
+            new_lines.append(new_line)
+            if new_line != line:
+                changed = True
+        else:
+            new_lines.append(line)
+
+    missing = [key for key in updates if key not in seen]
+    if missing:
+        insert_at = _insertion_index_before_closing_brace(new_lines)
+        newline = new_lines[insert_at - 1][len(new_lines[insert_at - 1].rstrip("\r\n")) :] if insert_at else "\n"
+        additions = [
+            f"{indent}{key} = {_format_modifier_value(updates[key])}{newline}"
+            for key in missing
+        ]
+        new_lines[insert_at:insert_at] = additions
+        changed = True
+    return "".join(new_lines), changed
+
+
+def _append_try_inject_block(
+    text: str,
+    block_name: str,
+    *,
+    inner_header: str | None,
+    updates: dict[str, float],
+) -> str:
+    newline = "\r\n" if "\r\n" in text else "\n"
+    if text and not text.endswith(("\n", "\r\n")):
+        text += newline
+    body_indent = "\t"
+    key_indent = f"{body_indent}\t" if inner_header else body_indent
+    lines = [f"TRY_INJECT:{block_name} = {{{newline}"]
+    if inner_header is not None:
+        lines.append(f"{body_indent}{inner_header} = {{{newline}")
+    for key, value in updates.items():
+        lines.append(f"{key_indent}{key} = {_format_modifier_value(value)}{newline}")
+    if inner_header is not None:
+        lines.append(f"{body_indent}}}{newline}")
+    lines.append(f"}}{newline}")
+    return text + "".join(lines)
+
+
+def _locate_top_level_block(text: str, block_name: str) -> tuple[int, int, str] | None:
+    pattern = re.compile(
+        rf"TRY_(?:INJECT|REPLACE):{re.escape(block_name)}\s*=\s*\{{",
+        re.MULTILINE,
+    )
+    match = pattern.search(text)
+    if not match:
+        return None
+    open_brace, close_brace = _find_block_bounds(text, match.start())
+    return match.start(), close_brace + 1, text[match.start() : close_brace + 1]
+
+
+def _locate_inner_block(outer: str, inner_name: str) -> tuple[int, int, str] | None:
+    pattern = re.compile(rf"{re.escape(inner_name)}\s*=\s*\{{", re.MULTILINE)
+    match = pattern.search(outer)
+    if not match:
+        return None
+    open_brace, close_brace = _find_block_bounds(outer, match.start())
+    return match.start(), close_brace + 1, outer[match.start() : close_brace + 1]
+
+
+def _find_block_bounds(text: str, start_index: int) -> tuple[int, int]:
+    open_brace = text.index("{", start_index)
+    depth = 0
+    for index in range(open_brace, len(text)):
+        char = text[index]
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return open_brace, index
+    raise ValueError(f"Unbalanced braces near index {start_index}")
+
+
+def _detect_key_indent(lines: list[str]) -> str:
+    for line in lines:
+        match = re.match(r"^(\s+)[A-Za-z0-9_]+\s*=", line)
+        if match:
+            return match.group(1)
+    return "\t"
+
+
+def _insertion_index_before_closing_brace(lines: list[str]) -> int:
+    for index in range(len(lines) - 1, -1, -1):
+        if lines[index].strip() == "}":
+            return index
+    return len(lines)
+
+
+def _format_modifier_value(value: float) -> str:
+    if float(value).is_integer():
+        return str(int(value))
+    return f"{value:.6f}".rstrip("0").rstrip(".")
+
+
+def _read_compile_text(path: Path) -> str:
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        return handle.read()
+
+
+def _write_compile_text_if_changed(path: Path, text: str) -> bool:
+    existing = _read_compile_text(path) if path.is_file() else ""
+    if existing == text:
+        return False
+    with path.open("w", encoding="utf-8-sig", newline="") as handle:
+        handle.write(text)
+    return True
 
 
 def summarize_free_building_levels(frame: pl.DataFrame, group_by: str) -> pl.DataFrame:
@@ -1190,6 +2161,8 @@ def _cell_text(value: Any) -> str:
 
 
 def _cell_to_float(value: Any) -> float:
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return float(value)
     text = _cell_text(value)
     if not text:
         return 0.0
@@ -1199,6 +2172,17 @@ def _cell_to_float(value: Any) -> float:
         return float(text)
     except ValueError as exc:
         raise ValueError(f"Expected numeric free_building_levels value, got {value!r}") from exc
+
+
+def _optional_cell_to_float(value: Any) -> float | None:
+    if value is None:
+        return None
+    if isinstance(value, float) and np.isnan(value):
+        return None
+    text = _cell_text(value)
+    if not text:
+        return None
+    return _cell_to_float(text)
 
 
 def _normalize_key(value: Any) -> str:

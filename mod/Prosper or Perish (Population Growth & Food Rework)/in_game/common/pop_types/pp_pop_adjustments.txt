@@ -30,8 +30,8 @@ TRY_INJECT:peasants = {
 	pop_food_consumption = 1.0 # 1.0
 	pop_percentage_impact = {
 		local_devastation_recovery = 0.002
-		local_construction_speed = 0.25
-		local_build_buildings_efficiency = 0.20
+		local_construction_speed = 0.50
+		# local_build_buildings_efficiency = 0.20
 	}
 	literacy_impact = {
 		local_wheat_output_modifier = 0.10

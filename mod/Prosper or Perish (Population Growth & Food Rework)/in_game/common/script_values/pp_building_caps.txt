@@ -123,8 +123,10 @@ farm_capacity_remaining = {
 	}
 }
 
-farm_capacity_available = {
-	# Hot path for building allow/max_levels. This is equivalent to
+farm_max_level = {
+	# Public max_levels path. Keep the clamp here rather than in
+	# farm_capacity_available; nested clamps render as unlabeled tooltip rows.
+	# This is equivalent to
 	# farm_gross_capacity - 0.05 * non_farm_building_levels - land_farm_building_levels
 	# when land-farm buildings are a subset of total building levels, but it only
 	# reads aggregate bucket occupancy instead of expanding per-building levels.
@@ -142,8 +144,8 @@ farm_capacity_available = {
 	min = 0
 }
 
-farm_max_level = {
-	add = farm_capacity_available
+farm_capacity_available = {
+	add = farm_max_level
 }
 
 fruit_orchard_max_level = {
@@ -213,9 +215,9 @@ fish_capacity_remaining = {
 	}
 }
 
-fish_capacity_available = {
-	# Hot path for building allow/max_levels. Keep this direct so capacity-gated
-	# fish buildings do not pay extra script-value indirection in allow.
+fish_max_level = {
+	# Public max_levels path. Keep the clamp here rather than in
+	# fish_capacity_available; nested clamps render as unlabeled tooltip rows.
 	add = fish_gross_capacity
 	add = {
 		desc = "BUILDING_LEVEL_FISH_SPACE_USED"
@@ -225,8 +227,8 @@ fish_capacity_available = {
 	min = 0
 }
 
-fish_max_level = {
-	add = fish_capacity_available
+fish_capacity_available = {
+	add = fish_max_level
 }
 
 forest_building_levels = {
@@ -299,8 +301,10 @@ forest_capacity_remaining = {
 	}
 }
 
-forest_capacity_available = {
-	# Hot path for building allow/max_levels. This is equivalent to
+forest_max_level = {
+	# Public max_levels path. Keep the clamp here rather than in
+	# forest_capacity_available; nested clamps render as unlabeled tooltip rows.
+	# This is equivalent to
 	# forest_gross_capacity + rank - 0.1 * non_forest_building_levels
 	# - forest_building_levels when forest buildings are a subset of total
 	# building levels, but reads aggregate bucket occupancy instead of
@@ -323,8 +327,8 @@ forest_capacity_available = {
 	min = 0
 }
 
-forest_max_level = {
-	add = forest_capacity_available
+forest_capacity_available = {
+	add = forest_max_level
 }
 
 victuals_market_max_level = {

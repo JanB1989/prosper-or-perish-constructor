@@ -1,4 +1,4 @@
-"""Command surface for the Prosper or Perish constructor workspace."""
+﻿"""Command surface for the Prosper or Perish constructor workspace."""
 
 from __future__ import annotations
 
@@ -60,6 +60,7 @@ SAVEGAME_PURGE_PATHS = (
     *SAVEGAME_LEGACY_DATASETS,
 )
 SETUP_CORRECTION_SCRIPT = Path("scripts/generate_setup_building_corrections.py")
+FOOD_STARTUP_SCRIPT = Path("scripts/generate_food_building_startup.py")
 SETUP_CORRECTION_OUTPUTS = (
     Path("main_menu/setup/start/07_cities_and_buildings.txt"),
     Path("in_game/common/town_setups/zz_pp_sanitized_start_town_setups.txt"),
@@ -364,6 +365,29 @@ def _build_parser() -> argparse.ArgumentParser:
         "savegame",
         "Export latest savegame facts and the savegame explorer.",
         _savegame,
+    )
+    food_startup = _add_command(
+        subcommands,
+        "food-startup",
+        "Plan data-driven startup cookery and victuals-market placements.",
+        _food_startup,
+    )
+    food_startup.add_argument(
+        "--config",
+        type=Path,
+        default=Path("food_building_startup.toml"),
+        help="Food startup TOML config relative to --repo.",
+    )
+    food_startup.add_argument(
+        "--output-dir",
+        type=Path,
+        default=None,
+        help="Override artifact output directory. Defaults to [inputs].output_dir in the config.",
+    )
+    food_startup.add_argument(
+        "--compile-script",
+        action="store_true",
+        help="Also render the generated startup effect into the artifact output directory.",
     )
     _add_command(
         subcommands,
@@ -841,6 +865,35 @@ def _setup_corrections(
     return _run(command, repo)
 
 
+def _food_startup(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("food-startup does not accept extra arguments.")
+    script = repo / FOOD_STARTUP_SCRIPT
+    if not script.is_file():
+        raise SystemExit(f"Missing food startup generator: {script}")
+
+    command: list[str | Path] = [
+        sys.executable,
+        script,
+        "--repo",
+        repo,
+        "--project",
+        project,
+        "--config",
+        _resolve_repo_relative_path(repo, args.config),
+    ]
+    if args.output_dir is not None:
+        command.extend(["--output-dir", args.output_dir])
+    if args.compile_script:
+        command.append("--compile-script")
+    return _run(command, repo)
+
+
 def _disable_setup_corrections(repo: Path, project: Path, *, force: bool) -> int:
     mod_root = _project_mod_root(repo, project)
     removed = 0
@@ -863,7 +916,10 @@ def _disable_setup_corrections(repo: Path, project: Path, *, force: bool) -> int
 
 
 def _finalize_constructor_mod(repo: Path, project: Path) -> None:
+    from prosper_or_perish_constructor.free_building_levels import compile_free_building_level_modifiers
+
     mod_root = _project_mod_root(repo, project)
+    compile_free_building_level_modifiers(repo, mod_root)
     _ensure_location_modifier_application_on_action(mod_root)
     _apply_location_modifier_aliases(mod_root)
     _ensure_price_cost_modifier_assets(mod_root)

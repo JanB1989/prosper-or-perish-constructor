@@ -53,6 +53,7 @@ def build_calibration() -> dict:
             "Thresholds are build-time calibration data for bucketed EU5 map modes.",
         ],
         "scales": {
+            "building_efficiency": _building_efficiency_scale_dict(),
             "goods_output": {
                 good: _sequential_scale_dict(_positive_quantity_thresholds(goods_samples.get(good, [])))
                 for good in goods
@@ -396,6 +397,17 @@ def _reference_scale_dict(values: list[float]) -> dict[str, object]:
         "low_thresholds": low_thresholds,
         "high_thresholds": high_thresholds,
         "source": "market_food_price_distribution" if values else "fallback_market_food_price_scale",
+    }
+
+
+def _building_efficiency_scale_dict() -> dict[str, object]:
+    return {
+        "kind": "signed_centered",
+        "negative_thresholds": [-1.0, -0.5],
+        "neutral_low": -0.1,
+        "neutral_high": 0.1,
+        "positive_thresholds": [0.5, 1.0],
+        "source": "building_efficiency_static_anchors",
     }
 
 

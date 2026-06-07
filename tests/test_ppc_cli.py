@@ -191,6 +191,38 @@ def test_setup_corrections_write_passes_write_and_force(
     assert calls[0][-3:] == ["--building", "fruit_orchard", "--direct-building-manager-only"]
 
 
+def test_food_startup_invokes_generator_with_compile_flag(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    script = repo / "scripts" / "generate_food_building_startup.py"
+    script.parent.mkdir()
+    script.write_text("", encoding="utf-8")
+    calls: list[list[str]] = []
+
+    monkeypatch.setattr(
+        cli,
+        "_run",
+        lambda command, cwd: calls.append([str(part) for part in command]) or 0,
+    )
+
+    assert cli.main(["--repo", str(repo), "food-startup", "--compile-script"]) == 0
+
+    assert calls == [
+        [
+            cli.sys.executable,
+            str(script),
+            "--repo",
+            str(repo),
+            "--project",
+            str(repo / "constructor.toml"),
+            "--config",
+            str(repo / "food_building_startup.toml"),
+            "--compile-script",
+        ]
+    ]
+
+
 def test_setup_corrections_disable_removes_generated_files(tmp_path: Path) -> None:
     repo = tmp_path
     mod_root = repo / "mod" / "test-mod"

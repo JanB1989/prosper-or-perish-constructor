@@ -10,6 +10,9 @@ MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 MAP_MODE_ROOT = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes"
 LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_building_adjustments_l_english.yml"
 CALIBRATION = ROOT / "tools" / "map_mode_scale_calibration.json"
+BUILDING_EFFICIENCY_SCRIPT_VALUE = (
+    MOD_ROOT / "in_game" / "common" / "script_values" / "pp_building_efficiency_map_mode.txt"
+)
 
 VANILLA_TRAFFIC_COLORS = (
     "define:NMapColors|MAP_COLOR_MIN",
@@ -46,6 +49,7 @@ VALUE_SOURCE_MODES = {
     "pp_forest_village_capacity": "forest_capacity_available",
     "pp_unemployed_peasants": "pp_unemployed_population",
     "pp_building_levels": "total_building_levels",
+    "pp_building_efficiency": "pp_building_efficiency_map_value",
     "pp_rgo_level": "pp_rgo_level_for_map",
 }
 
@@ -105,6 +109,13 @@ STRUCTURE_SNIPPETS = {
         "MAPMODE_PP_BUILDING_LEVELS_OVER_SUPPORTED",
         "color_refresh_counters = { ProductionList LocationDevelopmentChanged }",
     ),
+    "pp_building_efficiency": (
+        "category = economy",
+        "index = 0",
+        "pp_building_efficiency_map_value",
+        "MAPMODE_PP_BUILDING_EFFICIENCY_TT_LAND",
+        "color_refresh_counters = { ProductionList LocationDevelopmentChanged LocationPopulationChanged }",
+    ),
     "pp_rgo_level": (
         "category = economy",
         "index = 1",
@@ -161,6 +172,18 @@ def test_custom_map_modes_do_not_use_rejected_palettes() -> None:
     assert not bad
 
 
+def test_custom_map_mode_constants_are_numeric_only() -> None:
+    bad: list[str] = []
+    for path in CUSTOM_MAP_MODE_FILES:
+        text = path.read_text(encoding="utf-8-sig")
+        for name, value in re.findall(r"^(@[a-zA-Z0-9_]+)\s*=\s*(.+?)\s*$", text, flags=re.MULTILINE):
+            value = value.split("#", 1)[0].strip()
+            if not re.fullmatch(r"-?[0-9]+(?:\.[0-9]+)?", value):
+                bad.append(f"{path.name}: {name} = {value}")
+
+    assert not bad
+
+
 def test_quantity_map_modes_use_vanilla_traffic_light_buckets_without_losing_sources() -> None:
     blocks = _all_blocks()
 
@@ -200,6 +223,24 @@ def test_static_map_modes_match_calibration_thresholds() -> None:
     for mode, (value_source, thresholds) in expected.items():
         generated = _thresholds(blocks[mode], value_source)
         wanted = [float(value) for value in thresholds]
+        if generated != wanted:
+            bad.append(f"{mode}: generated {generated}, calibration {wanted}")
+
+    expected_signed = {
+        "pp_building_efficiency": (
+            "pp_building_efficiency_map_value",
+            calibration["building_efficiency"],
+        ),
+    }
+
+    for mode, (value_source, scale) in expected_signed.items():
+        generated = _thresholds(blocks[mode], value_source)
+        wanted = [
+            *[float(value) for value in scale["negative_thresholds"]],
+            float(scale["neutral_low"]),
+            float(scale["neutral_high"]),
+            *[float(value) for value in scale["positive_thresholds"]],
+        ]
         if generated != wanted:
             bad.append(f"{mode}: generated {generated}, calibration {wanted}")
 
@@ -271,6 +312,77 @@ def test_building_levels_stripes_locations_above_supported_levels() -> None:
     assert "MAPMODE_PP_BUILDING_LEVELS_OVER_SUPPORTED" in block
     assert "Above supported building levels" in text
     assert "supports [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] levels" in text
+
+
+def test_supported_building_levels_map_mode_uses_weighted_capacity_buckets() -> None:
+    block = _all_blocks()["pp_supported_building_levels"]
+    text = LOCALIZATION.read_text(encoding="utf-8-sig")
+
+    assert _thresholds(block, "modifier:free_building_levels") == [30.0, 70.0, 120.0, 200.0, 300.0]
+    assert "limit = { has_owner = yes }" not in block
+    assert block.count("lerp = {") == 5
+    assert block.count("legend_key =") == 5
+    assert "max_color = rgb { 245 245 245 }" in block
+    assert "color_refresh_counters = { ProductionList LocationDevelopmentChanged LocationPopulationChanged }" in block
+    assert "mapmode_pp_supported_building_levels_name" in text
+    assert 'mapmode_pp_supported_building_levels_name: "Supported Building Levels"' in text
+    assert "MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_LAND" in text
+    assert "GetModifierValueFixed('free_building_levels')|0" in text
+    assert (
+        MOD_ROOT
+        / "main_menu"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "map_modes"
+        / "pp_supported_building_levels.dds"
+    ).is_file()
+    assert (
+        MOD_ROOT
+        / "main_menu"
+        / "common"
+        / "game_concepts"
+        / "pp_supported_building_levels_map_mode.txt"
+    ).is_file()
+
+
+def test_building_efficiency_map_mode_uses_local_modifier_and_assets() -> None:
+    block = _all_blocks()["pp_building_efficiency"]
+    text = LOCALIZATION.read_text(encoding="utf-8-sig")
+    script_value = BUILDING_EFFICIENCY_SCRIPT_VALUE.read_text(encoding="utf-8-sig")
+
+    assert block.count("lerp = {") == 4
+    assert "pp_building_efficiency_map_value < -1" in block
+    assert "pp_building_efficiency_map_value < -0.5" in block
+    assert "pp_building_efficiency_map_value < -0.1" in block
+    assert "pp_building_efficiency_map_value < 0.1" in block
+    assert "pp_building_efficiency_map_value < 0.5" in block
+    assert "pp_building_efficiency_map_value < 1" in block
+    assert "value = pp_building_efficiency_map_value" in block
+    assert "add = 1" in block
+    assert "subtract = 0.5" in block
+    assert "pp_building_efficiency_map_value = {" in script_value
+    assert "value = modifier:local_build_buildings_efficiency" in script_value
+    assert "mapmode_pp_building_efficiency_name" in text
+    assert 'mapmode_pp_building_efficiency_name: "Building Cost Modifier"' in text
+    assert "MAPMODE_PP_BUILDING_EFFICIENCY_TT_LAND" in text
+    assert "GetModifierValue('local_build_buildings_efficiency')|2%+" in text
+    assert (
+        MOD_ROOT
+        / "main_menu"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "map_modes"
+        / "pp_building_efficiency.dds"
+    ).is_file()
+    assert (
+        MOD_ROOT
+        / "main_menu"
+        / "common"
+        / "game_concepts"
+        / "pp_building_efficiency_map_mode.txt"
+    ).is_file()
 
 
 def test_custom_map_modes_preserve_context_and_refresh_behavior() -> None:

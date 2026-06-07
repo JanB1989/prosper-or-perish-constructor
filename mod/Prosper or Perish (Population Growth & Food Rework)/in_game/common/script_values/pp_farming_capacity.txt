@@ -1,0 +1,131 @@
+﻿farm_rgo_capacity_bonus = {
+	if = {
+		limit = { has_variable = pp_farm_base_capacity }
+		add = {
+			desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"
+			value = var:pp_farm_base_capacity
+			multiply = max_rgo_workers
+			multiply = 0.125
+		}
+	}
+}
+
+farm_gross_capacity = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE_FARM_RGO"
+		if = {
+			limit = { has_variable = pp_farm_base_capacity }
+			value = var:pp_farm_base_capacity
+		}
+		else = { value = 0 }
+	}
+	add = farm_rgo_capacity_bonus
+	add = {
+		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
+		value = modifier:local_population_capacity
+		multiply = 0.08
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"
+		value = modifier:farm_rank_capacity_modifier
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FARM_CAPACITY_IMPROVEMENTS"
+		value = modifier:farm_max_level_modifier
+	}
+}
+
+land_farm_building_levels = {
+	add = "location_building_level(building_type:farming_village)"
+	add = "location_building_level(building_type:model_farm)"
+	add = "location_building_level(building_type:fruit_orchard)"
+	add = "location_building_level(building_type:pomological_orchard)"
+	add = "location_building_level(building_type:sheep_farms)"
+	add = "location_building_level(building_type:enclosed_sheep_walks)"
+	add = "location_building_level(building_type:horse_breeders)"
+	add = "location_building_level(building_type:elephant_kraal)"
+	add = "location_building_level(building_type:fiber_crops_farm)"
+	add = "location_building_level(building_type:cotton_plantation)"
+	add = "location_building_level(building_type:cotton_farm)"
+	add = "location_building_level(building_type:sugar_plantation)"
+	add = "location_building_level(building_type:sugarcane_farm)"
+	add = "location_building_level(building_type:tobacco_plantation)"
+	add = "location_building_level(building_type:tobacco_farm)"
+	add = "location_building_level(building_type:dye_plantation)"
+	add = "location_building_level(building_type:chili_plantation)"
+	add = "location_building_level(building_type:clove_grove)"
+	add = "location_building_level(building_type:cocoa_grove)"
+	add = "location_building_level(building_type:coffee_grove)"
+	add = "location_building_level(building_type:incense_grove)"
+	add = "location_building_level(building_type:pepper_garden)"
+	add = "location_building_level(building_type:saffron_croft)"
+	add = "location_building_level(building_type:sericulture_farm)"
+	add = "location_building_level(building_type:simplers_grove)"
+	add = "location_building_level(building_type:tea_garden)"
+	add = "location_building_level(building_type:vineyard_estate)"
+}
+
+land_farm_capacity_used = {
+	# Capacity buckets are shared pools: every member building consumes one
+	# level of the same bucket per building level. Do not add a bucket
+	# member's own current level back into its max_levels path; that makes it
+	# exempt from reducing its own maximum. Use the aggregate occupancy
+	# modifier here so the max-level tooltip does not recurse into raw
+	# location_building_level operands and show missing-key rows.
+	value = modifier:pp_land_farm_capacity_used
+}
+
+non_farm_building_levels = {
+	add = total_building_levels
+	add = {
+		value = land_farm_capacity_used
+		multiply = -1
+	}
+	min = 0
+}
+
+farm_capacity_remaining = {
+	add = farm_gross_capacity
+	add = {
+		desc = "BUILDING_LEVEL_AVAILABLE_SPACE"
+		value = non_farm_building_levels
+		multiply = -0.05
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FARM_SPACE_USED"
+		value = land_farm_capacity_used
+		multiply = -1
+	}
+}
+
+farm_max_level = {
+	# Public max_levels path. Keep the clamp here rather than in
+	# farm_capacity_available; nested clamps render as unlabeled tooltip rows.
+	# This is equivalent to
+	# farm_gross_capacity - 0.05 * non_farm_building_levels - land_farm_building_levels
+	# when land-farm buildings are a subset of total building levels, but it only
+	# reads aggregate bucket occupancy instead of expanding per-building levels.
+	add = farm_gross_capacity
+	add = {
+		desc = "BUILDING_LEVEL_FARM_TOTAL_BUILDING_PRESSURE"
+		value = total_building_levels
+		multiply = -0.05
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FARM_CAPACITY_USED_ADJUSTED"
+		value = land_farm_capacity_used
+		multiply = -0.95
+	}
+	min = 0
+}
+
+farm_capacity_available = {
+	add = farm_max_level
+}
+
+fruit_orchard_max_level = {
+	# Orchards consume shared land-farm capacity like every other land-farm
+	# building. Do not add current orchard levels back here; doing so makes
+	# orchards exempt from reducing their own maximum level.
+	add = farm_max_level
+}

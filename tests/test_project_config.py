@@ -32,13 +32,19 @@ GOVERNMENT_REFORM_ADJUSTMENTS = (
 ESTATE_ADJUSTMENTS = MOD_ROOT / "in_game" / "common" / "estates" / "pp_estate_adjustments.txt"
 GOODS_DEMAND = MOD_ROOT / "in_game" / "common" / "goods_demand" / "pp_new_goods_demands.txt"
 LAW_ADJUSTMENTS = MOD_ROOT / "in_game" / "common" / "laws" / "pp_law_adjustments.txt"
-BUILDING_CAPS = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_building_caps.txt"
-BUILDING_CAP_ADJUSTMENTS = (
-    MOD_ROOT / "in_game" / "common" / "script_values" / "pp_building_cap_adjustments.txt"
+SCRIPT_VALUES_ROOT = MOD_ROOT / "in_game" / "common" / "script_values"
+BUILDING_CAPS = SCRIPT_VALUES_ROOT / "pp_building_caps.txt"
+FARMING_CAPACITY = SCRIPT_VALUES_ROOT / "pp_farming_capacity.txt"
+FISHING_CAPACITY = SCRIPT_VALUES_ROOT / "pp_fishing_capacity.txt"
+FOREST_CAPACITY = SCRIPT_VALUES_ROOT / "pp_forest_capacity.txt"
+BUILDING_CAPACITY_SCRIPT_VALUE_FILES = (
+    BUILDING_CAPS,
+    FARMING_CAPACITY,
+    FISHING_CAPACITY,
+    FOREST_CAPACITY,
 )
-BUILDING_CAPACITY_VALUES = (
-    MOD_ROOT / "in_game" / "common" / "script_values" / "pp_building_capacity_values.txt"
-)
+BUILDING_CAP_ADJUSTMENTS = SCRIPT_VALUES_ROOT / "pp_building_cap_adjustments.txt"
+BUILDING_CAPACITY_VALUES = SCRIPT_VALUES_ROOT / "pp_building_capacity_values.txt"
 BUILDING_TYPE_ROOT = MOD_ROOT / "in_game" / "common" / "building_types"
 EMPLOYMENT_SYSTEMS_ROOT = MOD_ROOT / "in_game" / "common" / "employment_systems"
 AQUEDUCT_SYSTEM = MOD_ROOT / "in_game" / "common" / "building_types" / "pp_aqueduct_system.txt"
@@ -322,7 +328,7 @@ def test_accepted_blueprints_validate() -> None:
 
 
 def test_farm_gross_capacity_uses_live_rgo_population_inputs_only() -> None:
-    parsed = parse_file(BUILDING_CAPS)
+    parsed = parse_file(FARMING_CAPACITY)
     entries = {entry.key: entry.value for entry in parsed.entries}
     assert "farm_rgo_capacity_bonus" in entries
     assert "farm_gross_capacity" in entries
@@ -336,7 +342,7 @@ def test_farm_gross_capacity_uses_live_rgo_population_inputs_only() -> None:
     assert "farming_capacity" not in entries
     assert "farming_village_max_level" not in entries
 
-    text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
+    text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
     bonus_block = _text_block_between(
         text,
         "farm_rgo_capacity_bonus = {",
@@ -382,7 +388,7 @@ def test_farm_gross_capacity_uses_live_rgo_population_inputs_only() -> None:
 
 
 def test_farm_capacity_remaining_tracks_urbanization_and_farm_space() -> None:
-    text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
+    text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
 
     non_farm_block = _text_block_between(
         text,
@@ -410,9 +416,9 @@ def test_farm_capacity_remaining_tracks_urbanization_and_farm_space() -> None:
         "\nfruit_orchard_max_level = {",
     )
     fruit_orchard_max_level_block = _text_block_between(
-        text,
+        text + "\n__END__",
         "fruit_orchard_max_level = {",
-        "\nfish_building_levels = {",
+        "\n__END__",
     )
 
     assert "Do not add a bucket" in land_farm_capacity_used_block
@@ -560,8 +566,8 @@ def test_food_security_storage_and_market_workers_are_laborers() -> None:
 
 
 def test_land_farm_building_levels_count_all_shared_pool_buildings() -> None:
-    text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
-    parsed = parse_file(BUILDING_CAPS)
+    text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
+    parsed = parse_file(FARMING_CAPACITY)
     entries = {entry.key: entry.value for entry in parsed.entries}
     assert not any(key.endswith("_farm_max_level") for key in entries)
 
@@ -575,20 +581,23 @@ def test_land_farm_building_levels_count_all_shared_pool_buildings() -> None:
 
 
 def test_building_capacity_level_contributors_stay_out_of_visible_tooltip_paths() -> None:
-    text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
+    farming_text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
+    fishing_text = FISHING_CAPACITY.read_text(encoding="utf-8-sig")
+    forest_text = FOREST_CAPACITY.read_text(encoding="utf-8-sig")
+    text = "\n".join((farming_text, fishing_text, forest_text))
     localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
         encoding="utf-8-sig"
     )
     visible_blocks = (
-        _text_block_between(text, "farm_capacity_remaining = {", "\nfarm_max_level = {"),
-        _text_block_between(text, "farm_max_level = {", "\nfarm_capacity_available = {"),
-        _text_block_between(text, "farm_capacity_available = {", "\nfruit_orchard_max_level = {"),
-        _text_block_between(text, "fish_capacity_remaining = {", "\nfish_max_level = {"),
-        _text_block_between(text, "fish_max_level = {", "\nfish_capacity_available = {"),
-        _text_block_between(text, "fish_capacity_available = {", "\nforest_building_levels = {"),
-        _text_block_between(text, "forest_capacity_remaining = {", "\nforest_max_level = {"),
-        _text_block_between(text, "forest_max_level = {", "\nforest_capacity_available = {"),
-        _text_block_between(text, "forest_capacity_available = {", "\nvictuals_market_max_level = {"),
+        _text_block_between(farming_text, "farm_capacity_remaining = {", "\nfarm_max_level = {"),
+        _text_block_between(farming_text, "farm_max_level = {", "\nfarm_capacity_available = {"),
+        _text_block_between(farming_text, "farm_capacity_available = {", "\nfruit_orchard_max_level = {"),
+        _text_block_between(fishing_text, "fish_capacity_remaining = {", "\nfish_max_level = {"),
+        _text_block_between(fishing_text, "fish_max_level = {", "\nfish_capacity_available = {"),
+        _text_block_between(fishing_text + "\n__END__", "fish_capacity_available = {", "\n__END__"),
+        _text_block_between(forest_text, "forest_capacity_remaining = {", "\nforest_max_level = {"),
+        _text_block_between(forest_text, "forest_max_level = {", "\nforest_capacity_available = {"),
+        _text_block_between(forest_text + "\n__END__", "forest_capacity_available = {", "\n__END__"),
     )
 
     assert "location_building_level(" not in "\n".join(visible_blocks)
@@ -733,7 +742,9 @@ def test_obsolete_fruit_sheep_capacity_systems_are_removed() -> None:
 
 def test_fish_and_forest_fixed_environment_paths_are_removed() -> None:
     cap_values = BUILDING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
-    cap_text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
+    cap_text = "\n".join(
+        path.read_text(encoding="utf-8-sig") for path in BUILDING_CAPACITY_SCRIPT_VALUE_FILES
+    )
     game_start = GAME_START.read_text(encoding="utf-8-sig")
     map_text = FOOD_MAP_MODES.read_text(encoding="utf-8-sig")
     localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
@@ -777,9 +788,9 @@ def test_fish_and_forest_fixed_environment_paths_are_removed() -> None:
 
 
 def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
-    text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
+    text = FISHING_CAPACITY.read_text(encoding="utf-8-sig")
     cap_values = BUILDING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
-    entries = {entry.key for entry in parse_file(BUILDING_CAPS).entries}
+    entries = {entry.key for entry in parse_file(FISHING_CAPACITY).entries}
     obsolete_value = "fish_" "natural_capacity"
     obsolete_modifier = f"{obsolete_value}_modifier"
 
@@ -818,9 +829,9 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
         "\nfish_capacity_available = {",
     )
     available_block = _text_block_between(
-        text,
+        text + "\n__END__",
         "fish_capacity_available = {",
-        "\nforest_building_levels = {",
+        "\n__END__",
     )
 
     for snippet in (
@@ -930,7 +941,7 @@ def test_direct_fish_capacity_modifier_replaces_hidden_natural_path() -> None:
     checked_text = "\n".join(
         path.read_text(encoding="utf-8-sig")
         for path in (
-            BUILDING_CAPS,
+            *BUILDING_CAPACITY_SCRIPT_VALUE_FILES,
             location_modifier_adjustments,
             MODIFIER_TYPE_DEFINITIONS / "pp_building_cap_modifiers.txt",
             MODIFIER_ICONS / "pp_building_cap_modifier_icons.txt",
@@ -948,9 +959,9 @@ def test_direct_fish_capacity_modifier_replaces_hidden_natural_path() -> None:
 
 
 def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> None:
-    text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
+    text = FOREST_CAPACITY.read_text(encoding="utf-8-sig")
     cap_values = BUILDING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
-    entries = {entry.key for entry in parse_file(BUILDING_CAPS).entries}
+    entries = {entry.key for entry in parse_file(FOREST_CAPACITY).entries}
     assert "forest_rgo_capacity_bonus" in entries
 
     base_block = "pp_forest_base_capacity_value = {" + cap_values.split(
@@ -978,9 +989,9 @@ def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> 
         "\nforest_capacity_available = {",
     )
     available_block = _text_block_between(
-        text,
+        text + "\n__END__",
         "forest_capacity_available = {",
-        "\nvictuals_market_max_level = {",
+        "\n__END__",
     )
 
     for snippet in (

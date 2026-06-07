@@ -1,0 +1,75 @@
+﻿fish_building_levels = {
+	add = "location_building_level(building_type:fishing_village)"
+	add = "location_building_level(building_type:ocean_fishery)"
+	add = "location_building_level(building_type:offshore_fishery)"
+}
+
+fish_capacity_used = {
+	# Fish buildings consume the shared fish bucket per level. Keep the
+	# visible capacity math on the aggregate modifier rather than raw
+	# location_building_level operands so max-level tooltips stay readable.
+	value = modifier:pp_fish_capacity_used
+}
+
+fish_rgo_scaling_capacity = {
+	if = {
+		limit = { has_variable = pp_fish_base_capacity }
+		add = { value = var:pp_fish_base_capacity }
+	}
+	else = {
+		add = pp_fish_base_capacity_value
+	}
+	add = {
+		value = modifier:fish_max_level_modifier
+	}
+}
+
+fish_rgo_capacity_bonus = {
+	add = {
+		desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"
+		value = fish_rgo_scaling_capacity
+		multiply = max_rgo_workers
+		multiply = 0.030
+	}
+}
+
+fish_gross_capacity = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE_FISHING"
+		if = {
+			limit = { has_variable = pp_fish_base_capacity }
+			value = var:pp_fish_base_capacity
+		}
+		else = { value = pp_fish_base_capacity_value }
+	}
+	add = fish_rgo_capacity_bonus
+	add = {
+		desc = "BUILDING_LEVEL_FISH_CAPACITY_IMPROVEMENTS"
+		value = modifier:fish_max_level_modifier
+	}
+}
+
+fish_capacity_remaining = {
+	add = fish_gross_capacity
+	add = {
+		desc = "BUILDING_LEVEL_FISH_SPACE_USED"
+		value = fish_capacity_used
+		multiply = -1
+	}
+}
+
+fish_max_level = {
+	# Public max_levels path. Keep the clamp here rather than in
+	# fish_capacity_available; nested clamps render as unlabeled tooltip rows.
+	add = fish_gross_capacity
+	add = {
+		desc = "BUILDING_LEVEL_FISH_SPACE_USED"
+		value = fish_capacity_used
+		multiply = -1
+	}
+	min = 0
+}
+
+fish_capacity_available = {
+	add = fish_max_level
+}

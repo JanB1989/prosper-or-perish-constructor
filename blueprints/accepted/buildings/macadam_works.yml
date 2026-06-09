@@ -1,0 +1,93 @@
+version: 2
+tag: macadam_works
+output_tag: road_infrastructure_2_macadam_works
+upgrade_chain:
+  family: road_infrastructure
+  tier: 2
+  previous: paviors_yard
+  next: permanent_way_depot
+  unlock_advance: modern_road_advance
+building:
+  key: macadam_works
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots: []
+  possible_production_methods:
+    - pp_macadam_works_maintenance
+  body: |2-
+    is_foreign = no
+    max_levels = 1
+    pop_type = laborers
+    employment_size = 1.0
+    price = pp_macadam_works_price
+    category = infrastructure_category
+    custom_tags = { pp_logistics_infrastructure_priority }
+    icon = macadam_works
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = paviors_yard
+    can_close = yes
+    forbidden_for_estates = yes
+    important_for_AI = no
+    ai_forbid_shutdown = no
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      any_neighbor_location = {
+        has_road_of_type_to = {
+          target = prev
+          type = road_type:modern_road
+        }
+      }
+    }
+
+    construction_demand = pp_macadam_works_construction
+
+    possible_production_methods = {
+      pp_macadam_works_maintenance
+    }
+
+    modifier = {
+      movement_cost = -0.23
+      local_market_access = 0.20
+      local_migration_speed_modifier = 0.27
+      local_proximity_source = 6.5
+    }
+production_methods:
+  - key: pp_macadam_works_maintenance
+    body: |2-
+      masonry = 2.50
+      sand = 2.00
+      tools = 0.90
+      horses = 0.40
+      paper = 0.30
+      category = building_maintenance
+prices:
+  - key: pp_macadam_works_price
+    body: |2-
+      {gold = 50}
+advancements:
+  - key: TRY_INJECT:modern_road_advance
+    body: |2-
+      unlock_building = macadam_works
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_macadam_works_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('macadam_works')|e].
+    MODIFIER_TYPE_NAME_pp_macadam_works_price_cost_modifier: Macadam Works Cost
+    macadam_works: Macadam Works
+    macadam_works_desc: Surveyors and road crews break graded stone, tend rollers and carts, and keep engineered roads crowned, drained, and open to heavy traffic.
+    pp_macadam_works_construction: Macadam Works Construction
+    pp_macadam_works_maintenance: Macadam Crews
+    pp_macadam_works_price: Macadam Works Price
+icon:
+  source_png: ../assets/icons/macadam_works.png
+  output_dds: macadam_works.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game building icon for Macadam Works, transparent background. Center an eighteenth- to nineteenth-century road works yard with crushed stone piles, hand-breaking shed, survey tripod, horse cart, small road roller, and a crowned modern road section. Painterly historical UI art matching water_sawmill and lumber_mill_improved, three-quarter view, readable at low resolution, no text, no frame, not photorealistic, not cartoonish.
+evaluation:
+  allow_rules:
+    profit_percent: Maintenance-only engineered-road infrastructure consumes supplies while its payoff is carried by location modifiers.
+    input_throughput: Macadam works intentionally use light staffing while upkeep is paid through goods maintenance.
+    output_throughput: Macadam works provide road effects rather than direct goods output.

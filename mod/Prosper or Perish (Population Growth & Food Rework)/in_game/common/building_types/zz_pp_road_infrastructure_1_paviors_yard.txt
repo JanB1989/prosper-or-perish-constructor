@@ -1,0 +1,44 @@
+﻿# >>> eu5-building-pipeline:paviors_yard:building
+paviors_yard = {
+is_foreign = no
+max_levels = 1
+pop_type = laborers
+employment_size = 0.75
+price = pp_paviors_yard_price
+category = infrastructure_category
+custom_tags = { pp_logistics_infrastructure_priority }
+icon = paviors_yard
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = road_wardens_yard
+can_close = yes
+forbidden_for_estates = yes
+important_for_AI = no
+ai_forbid_shutdown = no
+build_time = infrastructure_build_time
+
+location_potential = {
+  any_neighbor_location = {
+    has_road_of_type_to = {
+      target = prev
+      type = road_type:paved_road
+    }
+  }
+}
+
+construction_demand = pp_paviors_yard_construction
+
+possible_production_methods = {
+  pp_paviors_yard_maintenance
+}
+
+modifier = {
+  movement_cost = -0.20
+  local_market_access = 0.13
+  local_migration_speed_modifier = 0.20
+  local_proximity_source = 3.5
+}
+}
+# <<< eu5-building-pipeline:paviors_yard:building

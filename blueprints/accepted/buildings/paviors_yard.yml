@@ -1,0 +1,92 @@
+version: 2
+tag: paviors_yard
+output_tag: road_infrastructure_1_paviors_yard
+upgrade_chain:
+  family: road_infrastructure
+  tier: 1
+  previous: road_wardens_yard
+  next: macadam_works
+  unlock_advance: paved_road_advance
+building:
+  key: paviors_yard
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots: []
+  possible_production_methods:
+    - pp_paviors_yard_maintenance
+  body: |2-
+    is_foreign = no
+    max_levels = 1
+    pop_type = laborers
+    employment_size = 0.75
+    price = pp_paviors_yard_price
+    category = infrastructure_category
+    custom_tags = { pp_logistics_infrastructure_priority }
+    icon = paviors_yard
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = road_wardens_yard
+    can_close = yes
+    forbidden_for_estates = yes
+    important_for_AI = no
+    ai_forbid_shutdown = no
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      any_neighbor_location = {
+        has_road_of_type_to = {
+          target = prev
+          type = road_type:paved_road
+        }
+      }
+    }
+
+    construction_demand = pp_paviors_yard_construction
+
+    possible_production_methods = {
+      pp_paviors_yard_maintenance
+    }
+
+    modifier = {
+      movement_cost = -0.20
+      local_market_access = 0.13
+      local_migration_speed_modifier = 0.20
+      local_proximity_source = 3.5
+    }
+production_methods:
+  - key: pp_paviors_yard_maintenance
+    body: |2-
+      masonry = 1.20
+      sand = 0.60
+      tools = 0.30
+      victuals = 0.24
+      category = building_maintenance
+prices:
+  - key: pp_paviors_yard_price
+    body: |2-
+      {gold = 50}
+advancements:
+  - key: TRY_INJECT:paved_road_advance
+    body: |2-
+      unlock_building = paviors_yard
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_paviors_yard_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('paviors_yard')|e].
+    MODIFIER_TYPE_NAME_pp_paviors_yard_price_cost_modifier: Paviors' Yard Cost
+    paviors_yard: Paviors' Yard
+    paviors_yard_desc: Stonecutters, paviors, and day laborers dress paving stone, set kerbs, and patch paved streets and causeways.
+    pp_paviors_yard_construction: Paviors' Yard Construction
+    pp_paviors_yard_maintenance: Paving Crews
+    pp_paviors_yard_price: Paviors' Yard Price
+icon:
+  source_png: ../assets/icons/paviors_yard.png
+  output_dds: paviors_yard.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game building icon for a Paviors' Yard, transparent background. Center a masonry and paving-stone work yard with cut stone blocks, cobbles, sand bed, mallets, measuring line, low stone shed, and a short paved causeway segment. Painterly historical UI art matching water_sawmill and lumber_mill_improved, three-quarter view, readable at low resolution, no text, no frame, not photorealistic, not cartoonish.
+evaluation:
+  allow_rules:
+    profit_percent: Maintenance-only paved-road infrastructure consumes supplies while its payoff is carried by location modifiers.
+    input_throughput: Paviors intentionally use light staffing while upkeep is paid through goods maintenance.
+    output_throughput: Paviors provide road effects rather than direct goods output.

@@ -1,0 +1,44 @@
+﻿# >>> eu5-building-pipeline:permanent_way_depot:building
+permanent_way_depot = {
+is_foreign = no
+max_levels = 1
+pop_type = laborers
+employment_size = 1.5
+price = pp_permanent_way_depot_price
+category = infrastructure_category
+custom_tags = { pp_logistics_infrastructure_priority }
+icon = permanent_way_depot
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = macadam_works
+can_close = yes
+forbidden_for_estates = yes
+important_for_AI = no
+ai_forbid_shutdown = no
+build_time = infrastructure_build_time
+
+location_potential = {
+  any_neighbor_location = {
+    has_road_of_type_to = {
+      target = prev
+      type = road_type:railroad
+    }
+  }
+}
+
+construction_demand = pp_permanent_way_depot_construction
+
+possible_production_methods = {
+  pp_permanent_way_depot_maintenance
+}
+
+modifier = {
+  movement_cost = -0.53
+  local_market_access = 0.27
+  local_migration_speed_modifier = 0.40
+  local_proximity_source = 10
+}
+}
+# <<< eu5-building-pipeline:permanent_way_depot:building

@@ -1,0 +1,37 @@
+﻿# >>> eu5-building-pipeline:road_wardens_yard:building
+road_wardens_yard = {
+is_foreign = no
+max_levels = 1
+pop_type = peasants
+employment_size = 0.5
+price = pp_road_wardens_yard_price
+category = infrastructure_category
+custom_tags = { pp_logistics_infrastructure_priority }
+icon = road_wardens_yard
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+can_close = yes
+forbidden_for_estates = yes
+important_for_AI = no
+ai_forbid_shutdown = no
+build_time = infrastructure_build_time
+
+location_potential = {
+  num_roads > 0
+}
+
+construction_demand = pp_road_wardens_yard_construction
+
+possible_production_methods = {
+  pp_road_wardens_yard_maintenance
+}
+
+modifier = {
+  movement_cost = -0.17
+  local_market_access = 0.07
+  local_migration_speed_modifier = 0.13
+}
+}
+# <<< eu5-building-pipeline:road_wardens_yard:building

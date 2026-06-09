@@ -1,0 +1,35 @@
+﻿# >>> eu5-building-pipeline:transport_office:building
+transport_office = {
+is_foreign = no
+max_levels = 5
+pop_type = laborers
+employment_size = 2.0
+price = pp_transport_office_price
+category = infrastructure_category
+custom_tags = { pp_logistics_infrastructure_priority }
+icon = transport_office
+town = yes
+city = yes
+megalopolis = yes
+can_close = yes
+forbidden_for_estates = yes
+important_for_AI = no
+ai_forbid_shutdown = no
+build_time = infrastructure_build_time
+
+location_potential = {
+  development >= 10
+}
+
+construction_demand = pp_transport_office_construction
+
+possible_production_methods = {
+  pp_transport_office_maintenance
+}
+
+modifier = {
+  local_market_access = 0.015
+  free_building_levels = 3
+}
+}
+# <<< eu5-building-pipeline:transport_office:building

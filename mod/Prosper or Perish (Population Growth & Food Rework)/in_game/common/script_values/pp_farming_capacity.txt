@@ -1,4 +1,5 @@
-﻿farm_rgo_capacity_bonus = {
+﻿# if there is base farm capacity we add more from rgo workers
+farm_capacity_from_max_rgo_workers = {
 	if = {
 		limit = { has_variable = pp_farm_base_capacity }
 		add = {
@@ -10,6 +11,8 @@
 	}
 }
 
+# Sum of all beneficial that add to capacity
+# 
 farm_gross_capacity = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FARM_RGO"
@@ -19,7 +22,7 @@ farm_gross_capacity = {
 		}
 		else = { value = 0 }
 	}
-	add = farm_rgo_capacity_bonus
+	add = farm_capacity_from_max_rgo_workers
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
@@ -27,7 +30,7 @@ farm_gross_capacity = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"
-		value = modifier:farm_rank_capacity_modifier
+		value = modifier:farm_capacity_from_location_rank
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_CAPACITY_IMPROVEMENTS"
@@ -75,7 +78,7 @@ land_farm_capacity_used = {
 	value = modifier:pp_land_farm_capacity_used
 }
 
-non_farm_building_levels = {
+farm_capacity_from_other_building_levels = {
 	add = total_building_levels
 	add = {
 		value = land_farm_capacity_used
@@ -88,7 +91,7 @@ farm_capacity_remaining = {
 	add = farm_gross_capacity
 	add = {
 		desc = "BUILDING_LEVEL_AVAILABLE_SPACE"
-		value = non_farm_building_levels
+		value = farm_capacity_from_other_building_levels
 		multiply = -0.05
 	}
 	add = {
@@ -102,7 +105,7 @@ farm_max_level = {
 	# Public max_levels path. Keep the clamp here rather than in
 	# farm_capacity_available; nested clamps render as unlabeled tooltip rows.
 	# This is equivalent to
-	# farm_gross_capacity - 0.05 * non_farm_building_levels - land_farm_building_levels
+	# farm_gross_capacity - 0.05 * farm_capacity_from_other_building_levels - land_farm_building_levels
 	# when land-farm buildings are a subset of total building levels, but it only
 	# reads aggregate bucket occupancy instead of expanding per-building levels.
 	add = farm_gross_capacity

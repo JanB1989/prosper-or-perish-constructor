@@ -82,6 +82,9 @@ laborers = 1.5
 labourers = 1.5
 burghers = 2.5
 
+[blueprint_evaluation.modifier_categories.infrastructure_category]
+modifiers = ["market_access", "local_market_access", "free_building_levels"]
+
 [labeling]
 enabled = true
 config = "labeling_output_modifiers.yaml"

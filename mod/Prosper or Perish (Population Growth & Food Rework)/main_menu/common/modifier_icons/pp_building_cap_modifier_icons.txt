@@ -3,7 +3,7 @@
 farm_max_level_modifier = {
 	positive = "gfx/interface/icons/modifier_types/farm_max_level_modifier.dds"
 }
-farm_rank_capacity_modifier = {
+farm_capacity_from_location_rank = {
 	positive = "gfx/interface/icons/modifier_types/farm_max_level_modifier.dds"
 }
 pp_land_farm_capacity_used = {
@@ -17,6 +17,9 @@ pp_fish_capacity_used = {
 }
 irrigant_cap_modifier = {
 	positive = "gfx/interface/icons/buildings/irrigation_systems.dds"
+}
+pp_river_boatmen_yard_cap_modifier = {
+	positive = "gfx/interface/icons/buildings/river_boatmen_yard.dds"
 }
 forest_max_level_modifier = {
 	positive = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"

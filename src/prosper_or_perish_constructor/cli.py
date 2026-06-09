@@ -77,6 +77,9 @@ LOCATION_POTENTIAL_CONCEPT_LINES = (
 LOCATION_MODIFIER_ALIASES = {
     "pp_loc_washita": "pp_loc_washita_pp",
 }
+LOCAL_OUTPUT_MODIFIER_RE = re.compile(
+    r"^(?P<indent>\s*)local_(?P<good>[a-z0-9_]+)_output_modifier\s*=\s*(?P<value>[-+]?\d+(?:\.\d+)?)\s*$"
+)
 BOM_TEXT_RELATIVE_PATHS = (
     Path("main_menu/common/game_concepts/pp_location_potential.txt"),
     Path("main_menu/common/game_concepts/pp_fish_capacity.txt"),
@@ -807,19 +810,26 @@ def _farming_village_unlocks(
 
 
 def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
-    unlock_code = _farming_village_unlocks(
-        argparse.Namespace(write=False, check=True),
-        (),
-        repo,
-        project,
-    )
-    if unlock_code != 0:
-        return unlock_code
+    if _has_farming_village_blueprint(repo):
+        unlock_code = _farming_village_unlocks(
+            argparse.Namespace(write=False, check=True),
+            (),
+            repo,
+            project,
+        )
+        if unlock_code != 0:
+            return unlock_code
     build_code = _run(["eu5-orchestrator", "build", "--project", project, "--overwrite", *extra], repo)
     if build_code != 0:
         return build_code
     _finalize_constructor_mod(repo, project)
     return 0
+
+
+def _has_farming_village_blueprint(repo: Path) -> bool:
+    from prosper_or_perish_constructor.farming_village_unlocks import BLUEPRINT_RELATIVE_PATH
+
+    return (repo / BLUEPRINT_RELATIVE_PATH).is_file()
 
 
 def _setup_corrections(
@@ -916,12 +926,17 @@ def _disable_setup_corrections(repo: Path, project: Path, *, force: bool) -> int
 
 
 def _finalize_constructor_mod(repo: Path, project: Path) -> None:
-    from prosper_or_perish_constructor.free_building_levels import compile_free_building_level_modifiers
+    from prosper_or_perish_constructor.free_building_levels import (
+        compile_free_building_level_modifiers,
+        local_free_building_levels_sheet_csv_path,
+    )
 
     mod_root = _project_mod_root(repo, project)
-    compile_free_building_level_modifiers(repo, mod_root)
+    if local_free_building_levels_sheet_csv_path(repo).is_file():
+        compile_free_building_level_modifiers(repo, mod_root)
     _ensure_location_modifier_application_on_action(mod_root)
     _apply_location_modifier_aliases(mod_root)
+    _ensure_location_potential_map_helpers(mod_root)
     _ensure_price_cost_modifier_assets(mod_root)
     _ensure_constructor_text_boms(mod_root)
     _inject_location_potential_localization(mod_root)
@@ -942,6 +957,33 @@ def _project_mod_root(repo: Path, project: Path) -> Path:
 
 def _resolve_repo_relative_path(repo: Path, path: Path) -> Path:
     return path if path.is_absolute() else repo / path
+
+
+def _ensure_location_potential_map_helpers(mod_root: Path) -> None:
+    modifiers_path = mod_root / "main_menu" / "common" / "static_modifiers" / "pp_location_modifiers.txt"
+    if not modifiers_path.is_file():
+        return
+
+    text = _read_text_preserving_newlines(modifiers_path, encoding="utf-8-sig")
+    newline = "\r\n" if "\r\n" in text else "\n"
+    lines = text.splitlines(keepends=True)
+    updated_lines: list[str] = []
+    inserted = 0
+    for index, line in enumerate(lines):
+        updated_lines.append(line)
+        match = LOCAL_OUTPUT_MODIFIER_RE.match(line.rstrip("\r\n"))
+        if match is None:
+            continue
+        helper_key = f"pp_{match.group('good')}_productivity_location_potential_map_modifier"
+        next_line = lines[index + 1].strip() if index + 1 < len(lines) else ""
+        if re.match(rf"{re.escape(helper_key)}\s*=", next_line):
+            continue
+        updated_lines.append(f"{match.group('indent')}{helper_key} = {match.group('value')}{newline}")
+        inserted += 1
+
+    if inserted:
+        _write_text_if_changed(modifiers_path, "".join(updated_lines), encoding="utf-8-sig", newline="")
+        print(f"Injected {inserted} Location Potential map helper modifier values.", flush=True)
 
 
 def _inject_location_potential_localization(mod_root: Path) -> None:

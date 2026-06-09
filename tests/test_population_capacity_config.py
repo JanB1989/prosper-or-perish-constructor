@@ -277,7 +277,8 @@ def test_building_levels_modifier_does_not_add_population_capacity() -> None:
     assert building_levels is not None
     assert _last_value(building_levels, "local_population_capacity") is None
     assert _last_value(building_levels, "local_road_building_time") == 0.01
-    assert _last_value(building_levels, "local_build_buildings_cost") == 0.10
+    assert _last_value(building_levels, "local_build_buildings_cost") is None
+    assert _last_value(building_levels, "local_build_buildings_efficiency") == -0.003
     assert _last_value(building_levels, "local_build_new_buildings_cost") is None
 
 

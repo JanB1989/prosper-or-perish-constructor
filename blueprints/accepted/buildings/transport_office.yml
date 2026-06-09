@@ -1,0 +1,72 @@
+version: 2
+tag: transport_office
+building:
+  key: transport_office
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots: []
+  possible_production_methods:
+    - pp_transport_office_maintenance
+  body: |2-
+    is_foreign = no
+    max_levels = 5
+    pop_type = laborers
+    employment_size = 2.0
+    price = pp_transport_office_price
+    category = infrastructure_category
+    custom_tags = { pp_logistics_infrastructure_priority }
+    icon = transport_office
+    town = yes
+    city = yes
+    megalopolis = yes
+    can_close = yes
+    forbidden_for_estates = yes
+    important_for_AI = no
+    ai_forbid_shutdown = no
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      development >= 10
+    }
+
+    construction_demand = pp_transport_office_construction
+
+    possible_production_methods = {
+      pp_transport_office_maintenance
+    }
+
+    modifier = {
+      local_market_access = 0.015
+      free_building_levels = 3
+    }
+production_methods:
+  - key: pp_transport_office_maintenance
+    body: |2-
+      victuals = 1.00
+      paper = 0.50
+      tools = 0.30
+      cloth = 0.20
+      category = building_maintenance
+prices:
+  - key: pp_transport_office_price
+    body: |2-
+      {gold = 600}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_transport_office_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('transport_office')|e].
+    MODIFIER_TYPE_NAME_pp_transport_office_price_cost_modifier: Transport Office Cost
+    pp_transport_office_construction: Transport Office Construction
+    pp_transport_office_maintenance: Transport Office Maintenance
+    pp_transport_office_price: Transport Office Price
+    transport_office: Transport Office
+    transport_office_desc: Freight clerks, porters, haulers, and weighmen crowd the transport office. Ledgers, yard gates, and hired hands turn urban bulk into ordered dispatches for the market.
+icon:
+  source_png: ../assets/icons/transport_office.png
+  output_dds: transport_office.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for an urban transport office, transparent background. Center a large blocky stone-and-timber freight office with warehouse doors, a ledger counter window, handcarts, oversized crates, sacks, weighing scale, and two or three simplified porters. Make the urban labor sink readable at low resolution; no water, no text, no frame.
+evaluation:
+  allow_rules:
+    profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
+    input_throughput: Transport offices are tuned as labor-absorbing urban infrastructure, not as a profitable production method.
+    output_throughput: Transport offices provide market access and building support rather than direct goods output.

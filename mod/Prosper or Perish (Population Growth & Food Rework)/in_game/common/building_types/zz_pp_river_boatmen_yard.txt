@@ -1,0 +1,36 @@
+﻿# >>> eu5-building-pipeline:river_boatmen_yard:building
+river_boatmen_yard = {
+is_foreign = no
+max_levels = pp_river_boatmen_yard_max_level
+pop_type = laborers
+employment_size = 0.25
+price = pp_river_boatmen_yard_price
+category = infrastructure_category
+custom_tags = { pp_logistics_infrastructure_priority }
+icon = river_boatmen_yard
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+can_close = yes
+forbidden_for_estates = yes
+important_for_AI = no
+ai_forbid_shutdown = no
+build_time = infrastructure_build_time
+
+location_potential = {
+  has_river = yes
+}
+
+construction_demand = pp_river_boatmen_yard_construction
+
+possible_production_methods = {
+  pp_river_boatmen_yard_maintenance
+}
+
+modifier = {
+  local_market_access = 0.0075
+  free_building_levels = 1.5
+}
+}
+# <<< eu5-building-pipeline:river_boatmen_yard:building

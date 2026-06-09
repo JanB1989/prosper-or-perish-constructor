@@ -1,0 +1,7 @@
+﻿pp_river_boatmen_yard_max_level = {
+	add = {
+		desc = "BUILDING_LEVEL_RIVER_FREIGHT_CAPACITY"
+		value = modifier:pp_river_boatmen_yard_cap_modifier
+	}
+	min = 0
+}

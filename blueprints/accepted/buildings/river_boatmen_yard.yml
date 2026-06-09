@@ -1,0 +1,74 @@
+version: 2
+tag: river_boatmen_yard
+building:
+  key: river_boatmen_yard
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots: []
+  possible_production_methods:
+    - pp_river_boatmen_yard_maintenance
+  body: |2-
+    is_foreign = no
+    max_levels = pp_river_boatmen_yard_max_level
+    pop_type = laborers
+    employment_size = 0.25
+    price = pp_river_boatmen_yard_price
+    category = infrastructure_category
+    custom_tags = { pp_logistics_infrastructure_priority }
+    icon = river_boatmen_yard
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    can_close = yes
+    forbidden_for_estates = yes
+    important_for_AI = no
+    ai_forbid_shutdown = no
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      has_river = yes
+    }
+
+    construction_demand = pp_river_boatmen_yard_construction
+
+    possible_production_methods = {
+      pp_river_boatmen_yard_maintenance
+    }
+
+    modifier = {
+      local_market_access = 0.0075
+      free_building_levels = 1.5
+    }
+production_methods:
+  - key: pp_river_boatmen_yard_maintenance
+    body: |2-
+      naval_supplies = 0.35
+      lumber = 0.25
+      tools = 0.20
+      victuals = 0.20
+      tar = 0.10
+      category = building_maintenance
+prices:
+  - key: pp_river_boatmen_yard_price
+    body: |2-
+      {gold = 250}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_river_boatmen_yard_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('river_boatmen_yard')|e].
+    MODIFIER_TYPE_NAME_pp_river_boatmen_yard_price_cost_modifier: River Boatmen's Yard Cost
+    pp_river_boatmen_yard_construction: River Boatmen's Yard Construction
+    pp_river_boatmen_yard_maintenance: River Boatmen's Yard Maintenance
+    pp_river_boatmen_yard_price: River Boatmen's Yard Price
+    river_boatmen_yard: River Boatmen's Yard
+    river_boatmen_yard_desc: Boatmen, barges, rope stores, and timber landings turn a riverbank into a working freight yard. Goods move with the current, against it by labor, and into the market by habit.
+icon:
+  source_png: ../assets/icons/river_boatmen_yard.png
+  output_dds: river_boatmen_yard.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a river boatmen's yard, transparent background. Center a timber river landing with a small shed, cargo crates, rope coils, and two broad shallow cargo barges. Make the river unmistakable at low resolution with a wide bright blue river band curving through the foreground and side of the icon; use strong silhouettes, high contrast, fewer tiny props, no text, no frame.
+evaluation:
+  allow_rules:
+    profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
+    input_throughput: River freight yards intentionally keep modest labor but costly boat, rope, timber, tar, and naval-supply upkeep.
+    output_throughput: River boatmen's yards provide market access and building support rather than direct goods output.

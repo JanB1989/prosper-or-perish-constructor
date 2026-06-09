@@ -90,7 +90,7 @@ RAW_MATERIAL_OUTPUT_TO_RGO_ADVANCES = {
     "free_subjects": 0.10,
     "gra_modernized_economy": 0.20,
     "bur_rich_soil_of_burgundy": 0.20,
-    "neapolitan_industrialization": 0.10,
+    "neapolitan_industrialization": 0.20,
     "produktplakatet": 0.10,
     "tre_trapezuntine_endurance": 0.10,
 }

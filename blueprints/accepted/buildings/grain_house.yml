@@ -48,3 +48,6 @@ localization:
   entries:
     grain_house_slot_0: Maintenance
     pp_grain_house_maintenance: Grain House Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Grain houses are food-security infrastructure with upkeep inputs and no direct goods output.

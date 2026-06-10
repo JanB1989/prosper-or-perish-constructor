@@ -98,7 +98,7 @@ build_time = rural_build_time
         }
     }
 	modifier = {
-		pp_forest_capacity_used = 1
+		forest_capacity_cost = -1
 	}
 	construction_demand = basic_construction_needs
 }

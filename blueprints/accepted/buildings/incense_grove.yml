@@ -15,7 +15,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = farm_max_level
+    max_levels = farm_capacity
     pop_type = laborers
     employment_size = 3
     price = pp_incense_grove_price
@@ -34,7 +34,7 @@ building:
     }
 
     allow = {
-        farm_capacity_available > 0
+        farm_capacity > 0
     }
 
     construction_demand = basic_construction_needs
@@ -65,7 +65,6 @@ building:
     }
 
     modifier = {
-        pp_land_farm_capacity_used = 1
         local_migration_attraction = 0.01
     }
 prices:

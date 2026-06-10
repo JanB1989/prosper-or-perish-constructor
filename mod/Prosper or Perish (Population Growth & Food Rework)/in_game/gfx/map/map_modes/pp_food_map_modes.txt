@@ -305,12 +305,12 @@ pp_farming_village_capacity = {
 			value = rgb { 128 128 128 }
 		}
 		else_if = {
-			limit = { farm_capacity_available < 1 }
+			limit = { farm_capacity < 1 }
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_MIN
 				max_color = define:NMapColors|MAP_COLOR_LOW
 				factor = {
-					value = farm_capacity_available
+					value = farm_capacity
 					divide = 1
 					max = 1
 					min = 0
@@ -318,12 +318,12 @@ pp_farming_village_capacity = {
 			}
 		}
 		else_if = {
-			limit = { farm_capacity_available < 4 }
+			limit = { farm_capacity < 4 }
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_LOW
 				max_color = define:NMapColors|MAP_COLOR_MID
 				factor = {
-					value = farm_capacity_available
+					value = farm_capacity
 					subtract = 1
 					divide = 3
 					max = 1
@@ -332,12 +332,12 @@ pp_farming_village_capacity = {
 			}
 		}
 		else_if = {
-			limit = { farm_capacity_available < 12 }
+			limit = { farm_capacity < 12 }
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_MID
 				max_color = define:NMapColors|MAP_COLOR_HIGH
 				factor = {
-					value = farm_capacity_available
+					value = farm_capacity
 					subtract = 4
 					divide = 8
 					max = 1
@@ -346,12 +346,12 @@ pp_farming_village_capacity = {
 			}
 		}
 		else_if = {
-			limit = { farm_capacity_available < @pp_farming_village_capacity_map_cap }
+			limit = { farm_capacity < @pp_farming_village_capacity_map_cap }
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_HIGH
 				max_color = define:NMapColors|MAP_COLOR_MAX
 				factor = {
-					value = farm_capacity_available
+					value = farm_capacity
 					subtract = 12
 					divide = 12
 					max = 1

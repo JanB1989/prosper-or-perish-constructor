@@ -11,7 +11,6 @@ building:
     	custom_tags = { pp_food_security_priority pp_water_control_priority }
     	modifier = {
     		local_monthly_food_modifier = -0.5 # vanilla 0.5
-    		farm_max_level_modifier = 0.60
     		local_maize_output_modifier = 0.1
     		local_potato_output_modifier = 0.1
     		local_rice_output_modifier = 0.06

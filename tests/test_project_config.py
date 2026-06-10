@@ -93,6 +93,7 @@ FARMING_VILLAGE_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "farming_village.yml"
 MODEL_FARM_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "model_farm.yml"
 LAND_FARM_BUILDINGS = (
     "farming_village",
+    "farming_village_rotations",
     "model_farm",
     "fruit_orchard",
     "pomological_orchard",
@@ -334,14 +335,17 @@ def test_accepted_blueprints_validate() -> None:
         validate_blueprint_file(blueprint)
 
 
-def test_farm_gross_capacity_uses_live_rgo_population_inputs_only() -> None:
+def test_farm_capacity_is_one_visible_sum() -> None:
     parsed = parse_file(FARMING_CAPACITY)
     entries = {entry.key: entry.value for entry in parsed.entries}
-    assert "farm_gross_capacity" in entries
-    assert "farm_max_level" in entries
-    assert "farm_capacity_available" in entries
-    assert "land_farm_capacity_used" in entries
-    assert "farm_urbanization_pressure" in entries
+    assert "farm_capacity" in entries
+    assert len(entries) == 1
+    assert "farm_gross_capacity" not in entries
+    assert "farm_max_level" not in entries
+    assert "farm_capacity_available" not in entries
+    assert "farm_urbanization_pressure" not in entries
+    assert "land_farm_capacity_used" not in entries
+    assert "farm_capacity_used" not in entries
     assert "farm_capacity_from_max_rgo_workers" not in entries
     assert "fruit_orchard_max_level" not in entries
     assert "farm_capacity_remaining" not in entries
@@ -351,27 +355,57 @@ def test_farm_gross_capacity_uses_live_rgo_population_inputs_only() -> None:
     assert "farming_village_max_level" not in entries
 
     text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
-    block = _text_block_between(
-        text,
-        "farm_gross_capacity = {",
-        "\nland_farm_capacity_used = {",
-    )
+    block = _text_block_between(text + "\n__END__", "farm_capacity = {", "\n__END__")
 
     required_snippets = (
+        "Public max_levels path",
+        "Keep this flat",
+        "each row is one visible source",
         'desc = "BUILDING_LEVEL_BASE_FARM_RGO"\n\t\tif = {\n\t\t\tlimit = { has_variable = pp_farm_base_capacity }\n\t\t\tvalue = var:pp_farm_base_capacity',
         "limit = { has_variable = pp_farm_base_capacity }",
         'desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"\n\t\t\tvalue = var:pp_farm_base_capacity\n\t\t\tmultiply = max_rgo_workers\n\t\t\tmultiply = 0.125',
         'desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"\n\t\tvalue = modifier:local_population_capacity\n\t\tmultiply = 0.08',
-        'desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"\n\t\tvalue = modifier:farm_capacity_from_location_rank',
-        'desc = "BUILDING_LEVEL_FARM_CAPACITY_IMPROVEMENTS"\n\t\tvalue = modifier:farm_max_level_modifier',
+        'desc = "BUILDING_LEVEL_FARM_LOCATION_RANK"\n\t\t\tvalue = -20',
+        'desc = "BUILDING_LEVEL_FARM_LOCATION_RANK"\n\t\t\tvalue = -5',
+        'desc = "BUILDING_LEVEL_FARM_LOCATION_RANK"\n\t\t\tvalue = -1',
+        'desc = "BUILDING_LEVEL_FARM_RIVER"\n\t\tvalue = modifier:farm_capacity_from_river_size',
+        'desc = "BUILDING_LEVEL_FARM_MANORIAL_CUSTOMALS"\n\t\t\tvalue = 1',
+        'desc = "BUILDING_LEVEL_FARM_URBANIZATION"\n\t\tvalue = total_building_levels\n\t\tmultiply = 0.05',
     )
     missing = [snippet for snippet in required_snippets if snippet not in block]
     assert not missing
+    expected_water_control_rows = {
+        "irrigation_systems": "0.60",
+        "bund": "0.60",
+        "terraces": "0.60",
+        "polders": "0.60",
+        "khmer_baray": "0.60",
+        "aqueduct_system": "2",
+    }
+    for building, multiplier in expected_water_control_rows.items():
+        assert f"limit = {{ has_building = building_type:{building} }}" in block
+        assert f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"' in block
+        assert f'value = "location_building_level(building_type:{building})"' in block
+        assert f"multiply = {multiplier}" in block
+
+    for building in LAND_FARM_BUILDINGS:
+        assert f"limit = {{ has_building = building_type:{building} }}" in block
+        assert f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"' in block
+        assert f'value = "location_building_level(building_type:{building})"' in block
 
     forbidden_snippets = (
-        "total_building_levels",
         "modifier:farm_space_used",
-        "location_building_level(",
+        "modifier:farm_capacity_cost",
+        "modifier:farm_capacity_from_location_rank",
+        "farm_capacity_cost",
+        "farm_capacity_from_location_rank",
+        "BUILDING_LEVEL_FARM_CAPACITY",
+        "BUILDING_LEVEL_FARM_CAPACITY_USED",
+        "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING",
+        "BUILDING_LEVEL_FARM_CAPACITY_IMPROVEMENTS",
+        "BUILDING_LEVEL_RIVER_FARM_CAPACITY",
+        "BUILDING_LEVEL_MANORIAL_CUSTOMALS_FARMING",
+        "BUILDING_LEVEL_IRRIGATION_SYSTEMS_FARMING",
         "farm_capacity_remaining",
         "pp_farming_village_fixed_env_bonus",
         "pp_farming_village_capacity_value",
@@ -379,74 +413,11 @@ def test_farm_gross_capacity_uses_live_rgo_population_inputs_only() -> None:
         "value = development",
         "value = population",
         "value = max_rgo_workers\n\t\tmultiply = 0.75",
+        "min = 0",
     )
     offenders = [snippet for snippet in forbidden_snippets if snippet in block]
     assert not offenders
-
-
-def test_farm_max_level_tracks_urbanization_and_farm_space() -> None:
-    text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
-
-    land_farm_capacity_used_block = _text_block_between(
-        text,
-        "land_farm_capacity_used = {",
-        "\nfarm_urbanization_pressure = {",
-    )
-    urbanization_pressure_block = _text_block_between(
-        text,
-        "farm_urbanization_pressure = {",
-        "\nfarm_max_level = {",
-    )
-    max_level_block = _text_block_between(
-        text,
-        "farm_max_level = {",
-        "\nfarm_capacity_available = {",
-    )
-    available_block = _text_block_between(
-        text + "\n__END__",
-        "farm_capacity_available = {",
-        "\n__END__",
-    )
-
-    assert "Do not add a bucket" in land_farm_capacity_used_block
-    assert "value = modifier:pp_land_farm_capacity_used" in land_farm_capacity_used_block
-    required_pressure = (
-        "value = total_building_levels",
-        "subtract = modifier:pp_land_farm_capacity_used",
-        "min = 0",
-        "multiply = 0.05",
-    )
-    missing = [snippet for snippet in required_pressure if snippet not in urbanization_pressure_block]
-    assert not missing
-    assert "location_building_level(" not in text
-    assert "modifier:farm_space_used" not in text
-
-    required_max_level = (
-        "Public max_levels path",
-        "Keep this flat",
-        "unlabeled correction rows",
-        'desc = "BUILDING_LEVEL_BASE_FARM_RGO"',
-        'desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"\n\t\t\tvalue = var:pp_farm_base_capacity\n\t\t\tmultiply = max_rgo_workers\n\t\t\tmultiply = 0.125',
-        'desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"\n\t\tvalue = modifier:local_population_capacity\n\t\tmultiply = 0.08',
-        'desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"\n\t\tvalue = modifier:farm_capacity_from_location_rank',
-        'desc = "BUILDING_LEVEL_FARM_CAPACITY_IMPROVEMENTS"\n\t\tvalue = modifier:farm_max_level_modifier',
-        'desc = "BUILDING_LEVEL_FARM_SPACE_USED"\n\t\tvalue = modifier:pp_land_farm_capacity_used',
-        'desc = "BUILDING_LEVEL_AVAILABLE_SPACE"\n\t\tvalue = total_building_levels\n\t\tsubtract = modifier:pp_land_farm_capacity_used\n\t\tmultiply = 0.05',
-    )
-    missing_max_level = [snippet for snippet in required_max_level if snippet not in max_level_block]
-    assert not missing_max_level
-    assert "add = farm_gross_capacity" not in max_level_block
-    assert "farm_capacity_remaining" not in max_level_block
-    assert "value = farm_capacity_from_other_building_levels" not in max_level_block
-    assert "value = land_farm_capacity_used" not in max_level_block
-    assert "multiply = -0.95" not in max_level_block
-    assert "min = 0" not in max_level_block
-
-    assert "add = farm_max_level" in available_block
-    assert "min = 0" in available_block
-    assert "add = farm_gross_capacity" not in available_block
-
-    assert "fruit_orchard_max_level" not in text
+    assert len(re.findall(r"value\s*=\s*modifier:farm_capacity\b", text)) == 0
 
 
 def test_granary_storage_and_startup_placement_are_compatible() -> None:
@@ -554,21 +525,28 @@ def test_food_security_storage_and_market_workers_are_laborers() -> None:
         assert rendered_values["employment_size"] == employment_size
 
 
-def test_farming_capacity_uses_aggregate_shared_pool_usage() -> None:
+def test_farming_capacity_uses_flat_source_rows_without_modifier_channel() -> None:
     text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
     parsed = parse_file(FARMING_CAPACITY)
     entries = {entry.key: entry.value for entry in parsed.entries}
-    assert not any(key.endswith("_farm_max_level") for key in entries)
+    assert set(entries) == {"farm_capacity"}
 
     assert "land_farm_building_levels" not in entries
     assert "farm_capacity_remaining" not in entries
     assert "farm_capacity_from_other_building_levels" not in entries
     assert "fruit_orchard_max_level" not in entries
-    assert "location_building_level(" not in text
-    assert "value = modifier:pp_land_farm_capacity_used" in text
+    assert "location_building_level(" in text
+    assert "has_location_modifier = river_flowing_through_" not in text
+    assert "modifier:farm_capacity_from_river_size" in text
+    assert "has_town_rights = town_rights_type:manorial_customals" in text
+    assert len(re.findall(r"value\s*=\s*modifier:farm_capacity\b", text)) == 0
+    assert "farm_capacity_cost" not in text
+    assert "farm_capacity_from_location_rank" not in text
+    for building in ("irrigation_systems", "aqueduct_system", *LAND_FARM_BUILDINGS):
+        assert f'value = "location_building_level(building_type:{building})"' in text
 
 
-def test_building_capacity_level_contributors_stay_out_of_visible_tooltip_paths() -> None:
+def test_building_capacity_tooltip_paths_do_not_use_obsolete_helpers() -> None:
     farming_text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
     fishing_text = FISHING_CAPACITY.read_text(encoding="utf-8-sig")
     forest_text = FOREST_CAPACITY.read_text(encoding="utf-8-sig")
@@ -576,28 +554,31 @@ def test_building_capacity_level_contributors_stay_out_of_visible_tooltip_paths(
     localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
         encoding="utf-8-sig"
     )
-    visible_blocks = (
-        _text_block_between(farming_text, "farm_max_level = {", "\nfarm_capacity_available = {"),
-        _text_block_between(farming_text + "\n__END__", "farm_capacity_available = {", "\n__END__"),
+    farm_capacity_block = _text_block_between(
+        farming_text + "\n__END__",
+        "farm_capacity = {",
+        "\n__END__",
+    )
+    non_farming_visible_blocks = (
         _text_block_between(fishing_text, "fish_max_level = {", "\nfish_capacity_available = {"),
         _text_block_between(fishing_text + "\n__END__", "fish_capacity_available = {", "\n__END__"),
         _text_block_between(forest_text, "forest_max_level = {", "\nforest_capacity_available = {"),
         _text_block_between(forest_text + "\n__END__", "forest_capacity_available = {", "\n__END__"),
     )
 
-    assert "location_building_level(" not in "\n".join(visible_blocks)
-    assert "value = land_farm_building_levels" not in "\n".join(visible_blocks)
-    assert "value = fish_building_levels" not in "\n".join(visible_blocks)
-    assert "value = forest_building_levels" not in "\n".join(visible_blocks)
+    assert "location_building_level(" in farm_capacity_block
+    assert "location_building_level(" not in "\n".join(non_farming_visible_blocks)
+    assert "has_location_modifier = river_flowing_through_" not in farm_capacity_block
+    assert "modifier:farm_capacity_from_river_size" in farm_capacity_block
+    assert "has_town_rights = town_rights_type:manorial_customals" in farm_capacity_block
+    assert "value = land_farm_building_levels" not in farm_capacity_block
+    assert "value = fish_building_levels" not in "\n".join(non_farming_visible_blocks)
+    assert "value = forest_building_levels" not in "\n".join(non_farming_visible_blocks)
     assert "BUILDING_LEVEL_EXISTING_" not in text
     assert "BUILDING_LEVEL_EXISTING_" not in localization_text
     assert "BUILDING_LEVEL_CURRENT_FRUIT_ORCHARD_LEVELS" not in text
     assert "BUILDING_LEVEL_CURRENT_FRUIT_ORCHARD_LEVELS" not in localization_text
-    assert "min = 0" not in _text_block_between(
-        farming_text,
-        "farm_max_level = {",
-        "\nfarm_capacity_available = {",
-    )
+    assert "min = 0" not in farm_capacity_block
     assert "min = 0" not in _text_block_between(
         fishing_text,
         "fish_max_level = {",
@@ -607,11 +588,6 @@ def test_building_capacity_level_contributors_stay_out_of_visible_tooltip_paths(
         forest_text,
         "forest_max_level = {",
         "\nforest_capacity_available = {",
-    )
-    assert "min = 0" in _text_block_between(
-        farming_text + "\n__END__",
-        "farm_capacity_available = {",
-        "\n__END__",
     )
     assert "min = 0" in _text_block_between(
         fishing_text + "\n__END__",
@@ -737,20 +713,15 @@ def test_obsolete_fruit_sheep_capacity_systems_are_removed() -> None:
         / "icons"
         / "modifier_types"
         / "farming_village_max_level_modifier.dds",
-    )
-    offenders.extend(str(path.relative_to(ROOT)) for path in obsolete_icons if path.exists())
-
-    farm_icon = (
         MOD_ROOT
         / "main_menu"
         / "gfx"
         / "interface"
         / "icons"
         / "modifier_types"
-        / "farm_max_level_modifier.dds"
+        / "farm_capacity.dds"
     )
-    if not farm_icon.exists():
-        offenders.append(f"{farm_icon.relative_to(ROOT)} missing")
+    offenders.extend(str(path.relative_to(ROOT)) for path in obsolete_icons if path.exists())
 
     assert offenders == []
 
@@ -852,7 +823,7 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
         assert "limit = { has_variable = pp_fish_base_capacity }" in block
         assert "value = var:pp_fish_base_capacity" in block
         assert "value = pp_fish_base_capacity_value" in block
-        assert "add = modifier:fish_max_level_modifier" in block
+        assert "add = modifier:fish_capacity" in block
         assert 'desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"' in block
         assert block.count("multiply = max_rgo_workers") == 1
         assert block.count("multiply = 0.030") == 1
@@ -862,13 +833,13 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
     assert "has_river = yes" not in gross_block + max_level_block
     assert 'desc = "BUILDING_LEVEL_BASE_FISHING"' in gross_block
     assert "value = pp_fish_base_capacity_value" in gross_block
-    assert "value = modifier:fish_max_level_modifier" in gross_block
+    assert "value = modifier:fish_capacity" in gross_block
     assert "max = 20" not in gross_block
     assert "Public max_levels path" in max_level_block
     assert "Keep this flat" in max_level_block
     assert "add = fish_gross_capacity" not in max_level_block
-    assert "value = fish_capacity_used" not in max_level_block
-    assert 'desc = "BUILDING_LEVEL_FISH_SPACE_USED"\n\t\tvalue = modifier:pp_fish_capacity_used' in max_level_block
+    assert "value = fish_capacity_cost" not in max_level_block
+    assert 'desc = "BUILDING_LEVEL_FISH_CAPACITY_USED"\n\t\tvalue = modifier:fish_capacity_cost' in max_level_block
     assert "fish_capacity_remaining" not in max_level_block
     assert "min = 0" not in max_level_block
     assert "add = fish_max_level" in available_block
@@ -877,7 +848,7 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
     assert "fishing_village_max_level" not in available_block
     assert "_other_fish_building_levels" not in text
     assert "BUILDING_LEVEL_FISH_SPACE_USED_BY_OTHER_FISH_BUILDINGS" not in text
-    assert "value = modifier:pp_fish_capacity_used" in text
+    assert "value = modifier:fish_capacity_cost" in text
 
     forbidden = ("value = population", "value = development", "local_population_capacity", "total_building_levels", "rank_capacity")
     assert not [token for token in forbidden if token in gross_block + max_level_block]
@@ -951,8 +922,8 @@ def test_direct_fish_capacity_modifier_replaces_hidden_natural_path() -> None:
     assert obsolete_value not in checked_text
     assert obsolete_modifier not in modifier_types
     assert obsolete_modifier not in modifier_icons
-    assert "fish_max_level_modifier" in modifier_types
-    assert "fish_max_level_modifier" in modifier_icons
+    assert "fish_capacity" in modifier_types
+    assert "fish_capacity" in modifier_icons
 
 
 def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> None:
@@ -1003,18 +974,18 @@ def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> 
             'desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"\n\t\t\tvalue = var:pp_forest_base_capacity\n\t\t\tmultiply = max_rgo_workers\n\t\t\tmultiply = 0.030'
             in block
         )
-    assert "value = modifier:forest_max_level_modifier" in gross_block
+    assert "value = modifier:forest_capacity" in gross_block
     assert "max = 20" not in gross_block
     assert "Public max_levels path" in max_level_block
     assert "Keep this flat" in max_level_block
     assert "add = forest_gross_capacity" not in max_level_block
     assert "value = modifier:forest_rank_capacity_modifier" in max_level_block
     assert (
-        'desc = "BUILDING_LEVEL_FOREST_SPACE_USED"\n\t\tvalue = modifier:pp_forest_capacity_used'
+        'desc = "BUILDING_LEVEL_FOREST_CAPACITY_USED"\n\t\tvalue = modifier:forest_capacity_cost'
         in max_level_block
     )
     assert (
-        'desc = "BUILDING_LEVEL_FOREST_URBANIZATION"\n\t\tvalue = total_building_levels\n\t\tsubtract = modifier:pp_forest_capacity_used\n\t\tmultiply = 0.1'
+        'desc = "BUILDING_LEVEL_FOREST_URBANIZATION"\n\t\tvalue = total_building_levels\n\t\tadd = modifier:forest_capacity_cost\n\t\tmultiply = 0.1'
         in max_level_block
     )
     assert "forest_capacity_remaining" not in max_level_block
@@ -1023,7 +994,7 @@ def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> 
     assert "add = forest_max_level" in available_block
     assert "min = 0" in available_block
     assert "add = forest_gross_capacity" not in available_block
-    assert "value = modifier:pp_forest_capacity_used" in text
+    assert "value = modifier:forest_capacity_cost" in text
     assert not [token for token in ("value = population", "value = development", "local_population_capacity") if token in gross_block + max_level_block]
     assert "value = max_rgo_workers\n\t\tmultiply = 0.50" not in gross_block + max_level_block
     assert "multiply = 1.25" not in gross_block + max_level_block
@@ -1036,12 +1007,12 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
     for blueprint in LAND_FARM_BLUEPRINTS:
         text = blueprint.read_text(encoding="utf-8-sig")
 
-        assert "max_levels = farm_max_level" in text
+        assert "max_levels = farm_capacity" in text
         assert "fruit_orchard_max_level" not in text
-        assert "_farm_max_level" not in text
+        assert "_farm_capacity" not in text
         assert "farm_space_used" not in text
-        assert "pp_land_farm_capacity_used = 1" in text
-        assert "farm_capacity_available > 0" in text
+        assert "farm_capacity = -1" not in text
+        assert "farm_capacity > 0" in text
         assert "max_levels = farming_capacity" not in text
         assert "max_levels = farming_village_max_level" not in text
         assert "location_potential = {" in text
@@ -1058,7 +1029,7 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
 def test_broad_farm_capacity_buildings_have_static_location_potential_gates() -> None:
     horse_breeders = (BUILDING_BLUEPRINT_ROOT / "horse_breeders.yml").read_text(encoding="utf-8-sig")
     horse_potential = _text_block_between(horse_breeders, "location_potential = {", "\n\n    allow = {")
-    horse_allow = _text_block_between(horse_breeders, "allow = {", "\n\n    modifier = {")
+    horse_allow = _text_block_between(horse_breeders, "allow = {", "\n\n    unique_production_methods = {")
     compatibility = (
         MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_startup_building_compatibility.txt"
     ).read_text(encoding="utf-8-sig")
@@ -1074,7 +1045,7 @@ def test_broad_farm_capacity_buildings_have_static_location_potential_gates() ->
         "vegetation = sparse",
     ):
         assert snippet in compatibility
-    assert "farm_capacity_available > 0" in horse_allow
+    assert "farm_capacity > 0" in horse_allow
     _, horse_trigger = compatibility.split("pp_horse_breeders_location_potential = {", 1)
     assert "climate =" not in horse_trigger
     assert "climate =" not in horse_allow
@@ -1305,7 +1276,7 @@ def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
     for building, gate in gates.items():
         text = (BUILDING_BLUEPRINT_ROOT / f"{building}.yml").read_text(encoding="utf-8-sig")
         assert f"{gate} = yes" in text
-        assert "farm_capacity_available > 0" in text
+        assert "farm_capacity > 0" in text
         assert "pp_fruit_orchard_fixed_env_bonus" not in text
         assert "pp_sheep_farms_fixed_env_bonus" not in text
 
@@ -1336,7 +1307,7 @@ def test_fish_blueprints_use_shared_capacity_pool_and_keep_distinctions() -> Non
         assert "custom_tooltip = {" in text
         assert "text = PP_HAS_AVAILABLE_FISHING_CAPACITY" in text
         assert "fish_capacity_available > 0" in text
-        assert "pp_fish_capacity_used = 1" in text
+        assert "fish_capacity_cost = -1" in text
         assert "pp_fishing_village_fixed_env_bonus" not in text
 
     fishing_village = (BUILDING_BLUEPRINT_ROOT / "fishing_village.yml").read_text(encoding="utf-8-sig")
@@ -1369,7 +1340,7 @@ def test_forest_blueprints_use_shared_capacity_pool() -> None:
         text = blueprint.read_text(encoding="utf-8-sig")
         assert "max_levels = forest_max_level" in text
         assert "forest_capacity_available > 0" in text
-        assert "pp_forest_capacity_used = 1" in text
+        assert "forest_capacity_cost = -1" in text
         assert "forest_village_max_level" not in text
         assert "pp_forest_village_fixed_env_bonus" not in text
         for gate in (
@@ -1401,7 +1372,7 @@ def test_capacity_blueprints_are_tagged_for_filtered_blueprint_workflows() -> No
             assert tag in _custom_tags(values["custom_tags"]), f"{building} missing {tag}"
 
 
-def test_location_rank_farming_capacity_modifiers_are_canonical() -> None:
+def test_location_rank_capacity_modifiers_are_canonical() -> None:
     parsed = parse_file(LOCATION_RANKS)
     entries = {entry.key: entry.value for entry in parsed.entries}
     expected = {
@@ -1417,69 +1388,105 @@ def test_location_rank_farming_capacity_modifiers_are_canonical() -> None:
         rank_modifier = _entry_values(rank)["rank_modifier"]
         assert isinstance(rank_modifier, CList)
         modifiers = _entry_values(rank_modifier)
-        assert modifiers["farm_capacity_from_location_rank"] == value
+        assert "farm_capacity" not in modifiers
         assert modifiers["forest_rank_capacity_modifier"] == value
-        assert "farm_max_level_modifier" not in modifiers
+        assert "farm_capacity_from_location_rank" not in modifiers
         assert "fruit_orchard_max_level_modifier" not in modifiers
         assert "sheep_farms_max_level_modifier" not in modifiers
         assert "farming_village_max_level_modifier" not in modifiers
         assert "fishing_village_max_level_modifier" not in modifiers
         assert "forest_village_max_level_modifier" not in modifiers
-        assert "fish_max_level_modifier" not in modifiers
-        assert "forest_max_level_modifier" not in modifiers
+        assert "fish_capacity" not in modifiers
+        assert "forest_capacity" not in modifiers
+
+    farm_capacity_text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
+    for rank_key, value in expected.items():
+        rank_name = rank_key.removeprefix("TRY_INJECT:")
+        if value == 0:
+            assert f"location_rank = location_rank:{rank_name}" not in farm_capacity_text
+            continue
+        assert f"limit = {{ location_rank = location_rank:{rank_name} }}" in farm_capacity_text
+        assert f"value = {value}" in farm_capacity_text
 
 
-def test_farm_capacity_rank_and_improvement_modifiers_are_separate() -> None:
+def test_farm_capacity_uses_direct_rows_with_a_river_size_bridge_modifier() -> None:
     modifier_types = _database_keys(MODIFIER_TYPE_DEFINITIONS)
     modifier_icons = _database_keys(MODIFIER_ICONS)
     localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
         encoding="utf-8-sig"
     )
     obsolete_modifier = "fish_" "natural_capacity_modifier"
+    farm_capacity_text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
 
-    assert "farm_capacity_from_location_rank" in modifier_types
-    assert "farm_capacity_from_location_rank" in modifier_icons
-    assert "pp_land_farm_capacity_used" in modifier_types
-    assert "pp_land_farm_capacity_used" in modifier_icons
-    assert "fish_max_level_modifier" in modifier_types
-    assert "fish_max_level_modifier" in modifier_icons
-    assert "pp_fish_capacity_used" in modifier_types
-    assert "pp_fish_capacity_used" in modifier_icons
+    assert "farm_capacity" not in modifier_types
+    assert "farm_capacity" not in modifier_icons
+    assert "farm_capacity_from_river_size" in modifier_types
+    assert "farm_capacity_from_river_size" in modifier_icons
+    assert "farm_capacity_from_location_rank" not in modifier_types
+    assert "farm_capacity_from_location_rank" not in modifier_icons
+    assert "farm_capacity_cost" not in modifier_types
+    assert "farm_capacity_cost" not in modifier_icons
+    assert "fish_capacity" in modifier_types
+    assert "fish_capacity" in modifier_icons
+    assert "fish_capacity_cost" in modifier_types
+    assert "fish_capacity_cost" in modifier_icons
     assert obsolete_modifier not in modifier_types
     assert obsolete_modifier not in modifier_icons
     assert "irrigant_cap_modifier" in modifier_types
     assert "irrigant_cap_modifier" in modifier_icons
-    assert "forest_max_level_modifier" in modifier_types
-    assert "forest_max_level_modifier" in modifier_icons
+    assert "forest_capacity" in modifier_types
+    assert "forest_capacity" in modifier_icons
     assert "forest_rank_capacity_modifier" in modifier_types
     assert "forest_rank_capacity_modifier" in modifier_icons
-    assert "pp_forest_capacity_used" in modifier_types
-    assert "pp_forest_capacity_used" in modifier_icons
-    assert "MODIFIER_TYPE_NAME_farm_capacity_from_location_rank:" in localization_text
-    assert "MODIFIER_TYPE_NAME_pp_land_farm_capacity_used:" in localization_text
-    assert "MODIFIER_TYPE_NAME_fish_max_level_modifier:" in localization_text
-    assert "MODIFIER_TYPE_NAME_pp_fish_capacity_used:" in localization_text
+    assert "forest_capacity_cost" in modifier_types
+    assert "forest_capacity_cost" in modifier_icons
+    assert "MODIFIER_TYPE_NAME_farm_capacity:" not in localization_text
+    assert "MODIFIER_TYPE_DESC_farm_capacity:" not in localization_text
+    assert "MODIFIER_TYPE_NAME_farm_capacity_from_river_size:" in localization_text
+    assert "MODIFIER_TYPE_DESC_farm_capacity_from_river_size:" in localization_text
+    assert "MODIFIER_TYPE_NAME_farm_capacity_from_location_rank:" not in localization_text
+    assert "MODIFIER_TYPE_NAME_farm_capacity_cost:" not in localization_text
+    assert "MODIFIER_TYPE_NAME_fish_capacity:" in localization_text
+    assert "MODIFIER_TYPE_NAME_fish_capacity_cost:" in localization_text
     assert obsolete_modifier not in localization_text
     assert "MODIFIER_TYPE_NAME_irrigant_cap_modifier:" in localization_text
-    assert "MODIFIER_TYPE_NAME_forest_max_level_modifier:" in localization_text
+    assert "MODIFIER_TYPE_NAME_forest_capacity:" in localization_text
     assert "MODIFIER_TYPE_NAME_forest_rank_capacity_modifier:" in localization_text
-    assert "MODIFIER_TYPE_NAME_pp_forest_capacity_used:" in localization_text
-    assert "BUILDING_LEVEL_FARM_CAPACITY_IMPROVEMENTS:" in localization_text
+    assert "MODIFIER_TYPE_NAME_forest_capacity_cost:" in localization_text
+    assert "BUILDING_LEVEL_FARM_CAPACITY_IMPROVEMENTS:" not in localization_text
+    assert "BUILDING_LEVEL_FARM_CAPACITY:" not in localization_text
+    assert "BUILDING_LEVEL_RIVER_FARM_CAPACITY:" not in localization_text
+    assert "BUILDING_LEVEL_MANORIAL_CUSTOMALS_FARMING:" not in localization_text
+    assert "BUILDING_LEVEL_IRRIGATION_SYSTEMS_FARMING:" not in localization_text
+    assert "BUILDING_LEVEL_BUND_FARMING:" not in localization_text
+    assert "BUILDING_LEVEL_TERRACES_FARMING:" not in localization_text
+    assert "BUILDING_LEVEL_POLDERS_FARMING:" not in localization_text
+    assert "BUILDING_LEVEL_KHMER_BARAY_FARMING:" not in localization_text
+    assert "BUILDING_LEVEL_AQUEDUCT_SYSTEM_FARMING:" not in localization_text
     assert "BUILDING_LEVEL_FISH_CAPACITY_IMPROVEMENTS:" in localization_text
     assert "BUILDING_LEVEL_FOREST_CAPACITY_IMPROVEMENTS:" in localization_text
-    assert 'BUILDING_LEVEL_BASE_FARM_RGO: "Capacity Bonus from Local Farming RGO"' in localization_text
-    assert 'BUILDING_LEVEL_RGO_SIZE_FARMING: "Capacity Scaling from Maximum RGO Size"' in localization_text
-    assert 'BUILDING_LEVEL_FARM_CAPACITY_IMPROVEMENTS: "Farming Capacity Modifiers"' in localization_text
-    assert 'BUILDING_LEVEL_FARM_SPACE_USED: "Land-Farm Capacity Used"' in localization_text
+    assert 'BUILDING_LEVEL_BASE_FARM_RGO: "Farm Related [rgo|e]"' in localization_text
+    assert 'BUILDING_LEVEL_RGO_SIZE_FARMING: "Maximum RGO Size"' in localization_text
+    assert 'BUILDING_LEVEL_FARM_LOCATION_RANK: "Location Rank"' in localization_text
+    assert 'BUILDING_LEVEL_FARM_RIVER: "[river|e] Size"' in localization_text
+    assert 'BUILDING_LEVEL_FARM_MANORIAL_CUSTOMALS: "Manorial Customals"' in localization_text
+    assert "BUILDING_LEVEL_FARM_CAPACITY_USED:" not in localization_text
     assert (
-        'BUILDING_LEVEL_AVAILABLE_SPACE: "Urbanization Pressure from Other Buildings"'
+        'BUILDING_LEVEL_FARM_URBANIZATION: "Reduced Capacity from [pp_buildings_in_location|e]"'
         in localization_text
     )
+    assert (
+        'BUILDING_LEVEL_FARM_IRRIGATION_SYSTEMS: "[ShowBuildingTypeName(\'irrigation_systems\')|e]"'
+        in localization_text
+    )
+    for building in ("aqueduct_system", "farming_village", "model_farm", "vineyard_estate"):
+        key = f"BUILDING_LEVEL_FARM_{building.upper()}"
+        assert f"{key}: \"[ShowBuildingTypeName('{building}')|e]\"" in localization_text
     assert "BUILDING_LEVEL_FARM_TOTAL_BUILDING_PRESSURE:" not in localization_text
     assert "BUILDING_LEVEL_FARM_CAPACITY_USED_ADJUSTED:" not in localization_text
-    assert 'BUILDING_LEVEL_FISH_SPACE_USED: "Fishing Capacity Used"' in localization_text
+    assert 'BUILDING_LEVEL_FISH_CAPACITY_USED: "Fish-Producing Buildings"' in localization_text
     assert 'BUILDING_LEVEL_FOREST_CAPACITY_IMPROVEMENTS: "Forest Capacity Modifiers"' in localization_text
-    assert 'BUILDING_LEVEL_FOREST_SPACE_USED: "Forest Capacity Used"' in localization_text
+    assert 'BUILDING_LEVEL_FOREST_CAPACITY_USED: "Forest and Lumber Buildings"' in localization_text
     assert (
         'BUILDING_LEVEL_FOREST_URBANIZATION: "Urbanization Pressure from Other Buildings"'
         in localization_text
@@ -1491,21 +1498,58 @@ def test_farm_capacity_rank_and_improvement_modifiers_are_separate() -> None:
     assert '"missing key":' not in localization_text
     assert "missing_key:" not in localization_text
 
-    expected_blueprint_modifiers = {
+    expected_water_control_rows = {
         "irrigation_systems": "0.60",
         "bund": "0.60",
         "terraces": "0.60",
         "polders": "0.60",
         "khmer_baray": "0.60",
+        "aqueduct_system": "2",
     }
-    for blueprint, modifier in expected_blueprint_modifiers.items():
-        text = (BUILDING_BLUEPRINT_ROOT / f"{blueprint}.yml").read_text(encoding="utf-8-sig")
-        assert f"farm_max_level_modifier = {modifier}" in text
-        assert "farm_capacity_from_location_rank" not in text
+    for building, multiplier in expected_water_control_rows.items():
+        assert f"limit = {{ has_building = building_type:{building} }}" in farm_capacity_text
+        assert f'value = "location_building_level(building_type:{building})"' in farm_capacity_text
+        assert f"multiply = {multiplier}" in farm_capacity_text
+        source_text = (
+            AQUEDUCT_SYSTEM
+            if building == "aqueduct_system"
+            else BUILDING_BLUEPRINT_ROOT / f"{building}.yml"
+        ).read_text(encoding="utf-8-sig")
+        assert re.search(r"^\s*farm_capacity\s*=", source_text, re.MULTILINE) is None
+        assert "farm_capacity_from_location_rank" not in source_text
 
-    aqueduct_text = AQUEDUCT_SYSTEM.read_text(encoding="utf-8-sig")
-    assert "farm_max_level_modifier = 2" in aqueduct_text
-    assert "farm_capacity_from_location_rank" not in aqueduct_text
+    town_rights_text = (MOD_ROOT / "in_game" / "common" / "town_rights" / "pp_town_rights.txt").read_text(
+        encoding="utf-8-sig"
+    )
+    manorial_customals = _text_block_between(
+        town_rights_text,
+        "TRY_INJECT:manorial_customals = {",
+        "\n}",
+    )
+    assert "farm_capacity = 1" not in manorial_customals
+    assert "has_town_rights = town_rights_type:manorial_customals" in farm_capacity_text
+    assert 'desc = "BUILDING_LEVEL_FARM_MANORIAL_CUSTOMALS"' in farm_capacity_text
+
+    static_modifier_text = (MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifier_adjustments.txt").read_text(
+        encoding="utf-8-sig"
+    )
+    expected_river_capacity = {
+        "river_flowing_through_1": "1",
+        "river_flowing_through_2": "1",
+        "river_flowing_through_3": "2",
+        "river_flowing_through_4": "3",
+        "river_flowing_through_5": "4",
+    }
+    for river_modifier, value in expected_river_capacity.items():
+        block = _text_block_between(
+            static_modifier_text,
+            f"TRY_INJECT:{river_modifier} = {{",
+            "\n}",
+        )
+        assert "farm_capacity =" not in block
+        assert f"farm_capacity_from_river_size = {value}" in block
+        assert "has_location_modifier = river_flowing_through_" not in farm_capacity_text
+        assert "value = modifier:farm_capacity_from_river_size" in farm_capacity_text
 
 
 def test_water_control_capacity_buildings_use_scaled_gold_prices() -> None:
@@ -1537,35 +1581,34 @@ def test_excluded_buildings_do_not_use_land_farm_capacity_pool() -> None:
     offenders: list[str] = []
     for blueprint in excluded_blueprints:
         text = blueprint.read_text(encoding="utf-8-sig")
-        if "max_levels = farm_max_level" in text:
-            offenders.append(f"{blueprint.relative_to(ROOT)}: farm_max_level")
-        if "_farm_max_level" in text:
+        if "max_levels = farm_capacity" in text:
+            offenders.append(f"{blueprint.relative_to(ROOT)}: farm_capacity")
+        if "_farm_capacity" in text:
             offenders.append(f"{blueprint.relative_to(ROOT)}: per-building farm max level")
         if "farm_space_used" in text:
             offenders.append(f"{blueprint.relative_to(ROOT)}: farm_space_used")
-        if "farm_capacity_available > 0" in text:
-            offenders.append(f"{blueprint.relative_to(ROOT)}: farm_capacity_available")
+        if "farm_capacity > 0" in text:
+            offenders.append(f"{blueprint.relative_to(ROOT)}: farm_capacity")
 
     assert offenders == []
 
 
-def test_farming_capacity_map_uses_available_capacity_and_tooltip_shows_maximum() -> None:
+def test_farming_capacity_map_uses_current_farm_capacity_value() -> None:
     map_text = FOOD_MAP_MODES.read_text(encoding="utf-8-sig")
     localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
         encoding="utf-8-sig"
     )
 
-    assert "value = farm_capacity_available" in map_text
-    assert "value = farm_max_level" not in map_text
-    assert "ScriptValue('farm_capacity_available')" in localization_text
-    assert "ScriptValue('farm_gross_capacity')" in localization_text
-    assert "ScriptValue('land_farm_capacity_used')" in localization_text
-    assert "ScriptValue('farm_urbanization_pressure')" in localization_text
-    assert "ScriptValue('farm_max_level')" not in localization_text
-    assert (
-        "Available capacity is gross capacity after occupied land-farm capacity and urbanization pressure"
-        in localization_text
-    )
+    assert "value = farm_capacity" in map_text
+    assert "ScriptValue('farm_capacity')" in localization_text
+    assert "ScriptValue('farm_capacity_available')" not in localization_text
+    assert "ScriptValue('farm_gross_capacity')" not in localization_text
+    assert "GetModifierValue('farm_capacity_cost')" not in localization_text
+    assert "ScriptValue('land_farm_capacity_used')" not in localization_text
+    assert "farm_capacity_used" not in localization_text
+    assert "ScriptValue('farm_urbanization_pressure')" not in localization_text
+    assert "Current Capacity:" in localization_text
+    assert "same value" in localization_text
     assert "Farming Villages and Model Farms" not in localization_text
 
 
@@ -1595,7 +1638,7 @@ def test_fish_and_forest_capacity_maps_use_available_capacity_and_tooltips_show_
         in localization_text
     )
     assert "BUILDING_LEVEL_FISH_SPACE_USED_BY_OTHER_FISH_BUILDINGS" not in localization_text
-    assert 'fish_max_level_modifier: "Fishing Capacity"' in localization_text
+    assert 'fish_capacity: "Fishing Capacity"' in localization_text
     assert "Fishing Capacity modifiers, including river size and town rights" in localization_text
 
 
@@ -1705,9 +1748,11 @@ def test_building_capacity_europedia_explains_capacity_pools_and_rural_cap() -> 
         "\ngame_concept_pp_fish_capacity:",
         1,
     )[0]
+    assert 'game_concept_pp_farm_capacity: "P&P: Farming/Fishing/Forest Capacities"' in localization_text
 
     required_terms = (
-        "#T Land Farm Capacity:#!",
+        "Geography map-mode group",
+        "#T Farming Capacity:#!",
         "#T Fishing Capacity:#!",
         "#T Forest Capacity:#!",
         "#T Other Raw Material Buildings:#!",
@@ -1715,10 +1760,12 @@ def test_building_capacity_europedia_explains_capacity_pools_and_rural_cap() -> 
         "Maximum RGO Size",
         "[pp_population_capacity|e]",
         "urbanization pressure",
-        "Available Land Farm Capacity starts from Gross Capacity",
-        "land-farm capacity already used and urbanization pressure from other buildings",
-        "map mode shows available capacity, gross capacity, used land-farm capacity, and urbanization pressure",
-        "river access",
+        "Farming Capacity is one current sum",
+        "existing farming-capacity buildings",
+        "the Farming Capacity map mode show the same current value",
+        "maximum-level tooltip lists the active sources",
+        "river size",
+        "Manorial Customals",
         "development",
         "ShowBuildingTypeName('farming_village')",
         "ShowBuildingTypeName('fishing_village')",
@@ -1728,6 +1775,13 @@ def test_building_capacity_europedia_explains_capacity_pools_and_rural_cap() -> 
     missing = [term for term in required_terms if term not in capacity_desc]
 
     assert not missing
+    for forbidden in (
+        "Available Farming Capacity starts from Gross Capacity",
+        "used Farming Capacity",
+        "capacity already used by farming-capacity buildings",
+        "map mode shows available capacity, gross capacity",
+    ):
+        assert forbidden not in capacity_desc
 
 
 def test_game_loaded_text_files_are_finalized_with_utf8_bom() -> None:
@@ -1828,7 +1882,7 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
 
 def test_capacity_culling_v2_calls_helper_for_each_capacity_building() -> None:
     expected_calls = [
-        *((building, "farm_capacity_available") for building in LAND_FARM_BUILDINGS),
+        *((building, "farm_capacity") for building in LAND_FARM_BUILDINGS),
         *((building, "fish_capacity_available") for building in FISH_CAP_BUILDINGS),
         *((building, "forest_capacity_available") for building in FOREST_CAP_BUILDINGS),
     ]

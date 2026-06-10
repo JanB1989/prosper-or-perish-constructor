@@ -1,11 +1,4 @@
-﻿forest_capacity_used = {
-	# Forest and lumber buildings consume the shared forest bucket per level.
-	# Keep raw per-building level operands out of the visible max-level
-	# tooltip path; the aggregate modifier is the bucket occupancy.
-	value = modifier:pp_forest_capacity_used
-}
-
-forest_gross_capacity = {
+﻿forest_gross_capacity = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FOREST"
 		if = {
@@ -25,7 +18,7 @@ forest_gross_capacity = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FOREST_CAPACITY_IMPROVEMENTS"
-		value = modifier:forest_max_level_modifier
+		value = modifier:forest_capacity
 	}
 }
 
@@ -51,20 +44,20 @@ forest_max_level = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FOREST_CAPACITY_IMPROVEMENTS"
-		value = modifier:forest_max_level_modifier
+		value = modifier:forest_capacity
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FOREST"
 		value = modifier:forest_rank_capacity_modifier
 	}
-	subtract = {
-		desc = "BUILDING_LEVEL_FOREST_SPACE_USED"
-		value = modifier:pp_forest_capacity_used
+	add = {
+		desc = "BUILDING_LEVEL_FOREST_CAPACITY_USED"
+		value = modifier:forest_capacity_cost
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_FOREST_URBANIZATION"
 		value = total_building_levels
-		subtract = modifier:pp_forest_capacity_used
+		add = modifier:forest_capacity_cost
 		multiply = 0.1
 	}
 }

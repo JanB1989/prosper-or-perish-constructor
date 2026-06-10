@@ -478,7 +478,7 @@
                                 }
                                 button_regular = {
                                     layoutpolicy_horizontal = expanding
-                                    raw_text = "Building Capacity"
+                                    raw_text = "Rural Capacities"
                                     onclick = "[GetVariableSystem.Set('pp_filter', 'farm_capacity')]"
                                     down = "[GetVariableSystem.HasValue('pp_filter', 'farm_capacity')]"
                                     action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
@@ -915,7 +915,7 @@
                                             }
                                         }
 
-                                        # ---- Building Capacity ----
+                                        # ---- Farming/Fishing/Forest Capacities ----
                                         vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'farm_capacity'))]"
                                             set_parent_size_to_minimum = yes

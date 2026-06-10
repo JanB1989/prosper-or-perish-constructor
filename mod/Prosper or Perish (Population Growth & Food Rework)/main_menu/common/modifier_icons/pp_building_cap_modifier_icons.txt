@@ -1,19 +1,14 @@
 ﻿## Prosper or Perish - icons for building cap modifier types
 ## Uses vanilla building icons copied to modifier_types folder
-farm_max_level_modifier = {
-	positive = "gfx/interface/icons/modifier_types/farm_max_level_modifier.dds"
-}
-farm_capacity_from_location_rank = {
-	positive = "gfx/interface/icons/modifier_types/farm_max_level_modifier.dds"
-}
-pp_land_farm_capacity_used = {
-	positive = "gfx/interface/icons/modifier_types/farm_max_level_modifier.dds"
-}
-fish_max_level_modifier = {
+fish_capacity = {
 	positive = "gfx/interface/icons/map_modes/pp_fishing_village_capacity.dds"
 }
-pp_fish_capacity_used = {
+farm_capacity_from_river_size = {
+	positive = "gfx/interface/icons/map_modes/rivers.dds"
+}
+fish_capacity_cost = {
 	positive = "gfx/interface/icons/map_modes/pp_fishing_village_capacity.dds"
+	negative = "gfx/interface/icons/map_modes/pp_fishing_village_capacity.dds"
 }
 irrigant_cap_modifier = {
 	positive = "gfx/interface/icons/buildings/irrigation_systems.dds"
@@ -21,12 +16,13 @@ irrigant_cap_modifier = {
 pp_river_boatmen_yard_cap_modifier = {
 	positive = "gfx/interface/icons/buildings/river_boatmen_yard.dds"
 }
-forest_max_level_modifier = {
+forest_capacity = {
 	positive = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
 }
 forest_rank_capacity_modifier = {
 	positive = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
 }
-pp_forest_capacity_used = {
+forest_capacity_cost = {
 	positive = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
+	negative = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
 }

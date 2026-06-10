@@ -41,7 +41,6 @@ building:
       modifier = {
         local_population_capacity = 1.0
         local_monthly_food_modifier = 0.00 # vanilla 0.05
-        farm_max_level_modifier = 0.60
 
         # Extreme Sensitivity (Wet-Rice)
         local_rice_output_modifier = 0.03

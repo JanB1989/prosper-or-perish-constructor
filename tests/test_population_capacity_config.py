@@ -298,8 +298,9 @@ def test_river_flowing_through_modifiers_neutralize_capacity_and_food_bonuses() 
         assert block is not None
         assert maps["static_modifiers"][key]["local_population_capacity_modifier"] == 0
         assert not block.values(obsolete_modifier)
-        assert sum(block.values("fish_max_level_modifier")) == expected_fish_capacity[size]
-        assert sum(block.values("farm_max_level_modifier")) == expected_farm_capacity[size]
+        assert sum(block.values("fish_capacity")) == expected_fish_capacity[size]
+        assert not block.values("farm_capacity")
+        assert sum(block.values("farm_capacity_from_river_size")) == expected_farm_capacity[size]
         assert sum(block.values("irrigant_cap_modifier")) == expected_irrigation_capacity[size]
         assert sum(block.values("local_monthly_food_modifier")) == 0
         assert "local_population_capacity" not in maps["static_modifiers"][key]

@@ -212,9 +212,9 @@ def _food_capacity_samples(mod_root: Path) -> dict[str, list[float]]:
     values_text = (mod_root / BUILDING_CAPACITY_VALUES_REL).read_text(encoding="utf-8-sig")
     farm_goods = _goods_in_script_value(values_text, "pp_farm_base_capacity_value")
     forest_goods = _goods_in_script_value(values_text, "pp_forest_base_capacity_value")
-    farm_buildings = _building_types_with_modifier(mod_root, "pp_land_farm_capacity_used")
-    fish_buildings = _building_types_with_modifier(mod_root, "pp_fish_capacity_used")
-    forest_buildings = _building_types_with_modifier(mod_root, "pp_forest_capacity_used")
+    farm_buildings = _building_types_with_max_levels(mod_root, "farm_capacity")
+    fish_buildings = _building_types_with_modifier(mod_root, "fish_capacity_cost")
+    forest_buildings = _building_types_with_modifier(mod_root, "forest_capacity_cost")
     population_capacity = _population_capacity_by_slug(mod_root / LOCATION_MODIFIERS_REL)
 
     buildings = pl.read_parquet(buildings_path)
@@ -232,12 +232,11 @@ def _food_capacity_samples(mod_root: Path) -> dict[str, list[float]]:
         farm_used = farm_levels.get(location_id, 0.0)
         fish_used = fish_levels.get(location_id, 0.0)
         forest_used = forest_levels.get(location_id, 0.0)
-        non_farm = max(total - farm_used, 0.0)
         non_forest = max(total - forest_used, 0.0)
         pop_capacity = population_capacity.get(str(row.get("slug") or ""), 0.0)
 
         farm_base = 4.0 if raw_material in farm_goods else 0.0
-        farm = farm_base + (farm_base * max_rgo * 0.125) + (pop_capacity * 0.08) - (non_farm * 0.05) - farm_used
+        farm = farm_base + (farm_base * max_rgo * 0.125) + (pop_capacity * 0.08) - (total * 0.05) - farm_used
         samples["farm"].append(max(farm, 0.0))
 
         fish_base = 3.0 if raw_material == "fish" else 0.0
@@ -281,6 +280,24 @@ def _building_types_with_modifier(mod_root: Path, modifier: str) -> set[str]:
     for path in building_dir.glob("*.txt"):
         text = path.read_text(encoding="utf-8-sig")
         if modifier_pattern.search(text) is None:
+            continue
+        match = building_pattern.search(text)
+        if match is not None:
+            buildings.add(match.group(1))
+    return buildings
+
+
+def _building_types_with_max_levels(mod_root: Path, value: str) -> set[str]:
+    building_dir = mod_root / "in_game" / "common" / "building_types"
+    if not building_dir.exists():
+        return set()
+
+    buildings: set[str] = set()
+    max_levels_pattern = re.compile(rf"^\s*max_levels\s*=\s*{re.escape(value)}\s*$", flags=re.MULTILINE)
+    building_pattern = re.compile(r"^\s*(?:REPLACE:)?([a-z0-9_]+)\s*=\s*\{", flags=re.MULTILINE)
+    for path in building_dir.glob("*.txt"):
+        text = path.read_text(encoding="utf-8-sig")
+        if max_levels_pattern.search(text) is None:
             continue
         match = building_pattern.search(text)
         if match is not None:

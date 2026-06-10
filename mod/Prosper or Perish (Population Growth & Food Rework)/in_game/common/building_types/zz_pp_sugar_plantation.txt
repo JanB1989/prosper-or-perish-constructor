@@ -4,7 +4,7 @@ audio_tier = 2
 startup_ramp_target = rural_startup_ramp_target
 is_foreign = no
 pop_type = slaves
-max_levels = farm_max_level
+max_levels = farm_capacity
 employment_size = plantation_employment
 category = colonial_category
 
@@ -18,7 +18,7 @@ location_potential = {
 }
 
 allow = {
-    farm_capacity_available > 0
+    farm_capacity > 0
 }
 
 rural_settlement = yes
@@ -52,7 +52,6 @@ unique_production_methods = {
 }
 
 modifier = {
-    pp_land_farm_capacity_used = 1
     local_sugar_output_modifier = 0.1
     local_slave_pop_satisfaction = -0.005
 }

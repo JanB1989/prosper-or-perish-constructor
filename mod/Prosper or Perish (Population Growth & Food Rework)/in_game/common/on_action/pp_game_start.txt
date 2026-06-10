@@ -817,7 +817,7 @@ pp_game_start_effect = {
 						population > 20
 						development > 10
 						NOT = { has_building = building_type:fiber_crops_farm }
-						farm_capacity_available > 0
+						farm_capacity > 0
 						can_build_building = building_type:fiber_crops_farm
 					}
 					construct_building = {
@@ -834,7 +834,7 @@ pp_game_start_effect = {
 						population > 20
 						development > 10
 						NOT = { has_building = building_type:fiber_crops_farm }
-						farm_capacity_available > 0
+						farm_capacity > 0
 						can_build_building = building_type:fiber_crops_farm
 					}
 					construct_building = {
@@ -851,7 +851,7 @@ pp_game_start_effect = {
 						population > 20
 						development > 10
 						NOT = { has_building = building_type:fiber_crops_farm }
-						farm_capacity_available > 0
+						farm_capacity > 0
 						can_build_building = building_type:fiber_crops_farm
 					}
 					construct_building = {
@@ -1243,7 +1243,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { has_building = building_type:horse_breeders }
-						farm_capacity_available > 0
+						farm_capacity > 0
 						can_build_building = building_type:horse_breeders
 					}
 					construct_building = {
@@ -1264,7 +1264,7 @@ pp_game_start_effect = {
 							building_type = building_type:horse_breeders
 							value < 2
 						}
-						farm_capacity_available > 0
+						farm_capacity > 0
 						can_build_building = building_type:horse_breeders
 					}
 					change_building_level_in_location = {
@@ -1279,7 +1279,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { has_building = building_type:horse_breeders }
-						farm_capacity_available > 0
+						farm_capacity > 0
 						can_build_building = building_type:horse_breeders
 					}
 					construct_building = {
@@ -1300,7 +1300,7 @@ pp_game_start_effect = {
 							building_type = building_type:horse_breeders
 							value < 2
 						}
-						farm_capacity_available > 0
+						farm_capacity > 0
 						can_build_building = building_type:horse_breeders
 					}
 					change_building_level_in_location = {
@@ -1315,7 +1315,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { has_building = building_type:horse_breeders }
-						farm_capacity_available > 0
+						farm_capacity > 0
 						can_build_building = building_type:horse_breeders
 					}
 					construct_building = {
@@ -1336,7 +1336,7 @@ pp_game_start_effect = {
 							building_type = building_type:horse_breeders
 							value < 2
 						}
-						farm_capacity_available > 0
+						farm_capacity > 0
 						can_build_building = building_type:horse_breeders
 					}
 					change_building_level_in_location = {

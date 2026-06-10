@@ -179,12 +179,12 @@ GAME_START_DIRECT_RGO_BUILDINGS = {
     "tin_streamworks",
 }
 GAME_START_CAPACITY_BUILDING_GATES = {
-    "fiber_crops_farm": "farm",
-    "fishing_village": "fish",
-    "forest_village": "forest",
-    "horse_breeders": "farm",
-    "lumber_mill": "forest",
-    "ocean_fishery": "fish",
+    "fiber_crops_farm": "farm_capacity",
+    "fishing_village": "fish_capacity_available",
+    "forest_village": "forest_capacity_available",
+    "horse_breeders": "farm_capacity",
+    "lumber_mill": "forest_capacity_available",
+    "ocean_fishery": "fish_capacity_available",
 }
 GAME_START_DISABLED_CAPACITY_STARTUP_BUILDINGS = {"farming_village", "fruit_orchard", "sheep_farms"}
 RAW_MATERIAL_BASE_PRODUCERS = {
@@ -1041,7 +1041,7 @@ def test_game_start_capacity_construction_checks_capacity_and_existing_buildings
         line = _script_line_number(game_start, start)
         checks = {
             "can_build_building": rf"\bcan_build_building\s*=\s*building_type:{re.escape(building)}\b",
-            "capacity": rf"\b{re.escape(capacity)}_capacity_available\s*>\s*0\b",
+            "capacity": rf"\b{re.escape(capacity)}\s*>\s*0\b",
             "not existing": rf"NOT\s*=\s*\{{\s*has_building\s*=\s*building_type:{re.escape(building)}\s*\}}",
         }
         for name, pattern in checks.items():
@@ -1076,7 +1076,7 @@ def test_game_start_capacity_levelups_are_single_guarded_steps() -> None:
         line = _script_line_number(game_start, start)
         checks = {
             "can_build_building": rf"\bcan_build_building\s*=\s*building_type:{re.escape(building)}\b",
-            "capacity": rf"\b{re.escape(capacity)}_capacity_available\s*>\s*0\b",
+            "capacity": rf"\b{re.escape(capacity)}\s*>\s*0\b",
             "single step": r"\bvalue\s*=\s*1\b",
         }
         for name, pattern in checks.items():
@@ -1193,8 +1193,8 @@ def test_slave_plantation_replacements_keep_colonial_rgo_gate_and_farm_capacity(
         assert "owner ?= { is_colonial_subject = yes }" in body
         assert "pop_type = slaves" in body
         assert "slaves_goods" in body
-        assert "max_levels = farm_max_level" in body
-        assert "farm_capacity_available > 0" in body
+        assert "max_levels = farm_capacity" in body
+        assert "farm_capacity > 0" in body
 
 
 def test_non_slave_crop_farms_are_default_rgo_laborer_buildings() -> None:
@@ -1208,8 +1208,8 @@ def test_non_slave_crop_farms_are_default_rgo_laborer_buildings() -> None:
         assert blueprint["building"]["mode"] == "CREATE"
         assert blueprint["building"]["source"] == "pp_new_buildings.txt"
         assert "pop_type = laborers" in body
-        assert "max_levels = farm_max_level" in body
-        assert "farm_capacity_available > 0" in body
+        assert "max_levels = farm_capacity" in body
+        assert "farm_capacity > 0" in body
         assert re.search(
             rf"location_potential\s*=\s*\{{\s*raw_material\s*=\s*goods:{good}\s*\}}",
             body,

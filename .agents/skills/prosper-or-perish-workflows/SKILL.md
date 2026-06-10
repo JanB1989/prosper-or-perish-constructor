@@ -98,3 +98,16 @@ When reporting results, mention the exact `ppc` command used and summarize the i
 - Use plain text in situation panes and generated static-modifier descriptions unless that target UI is verified to support inline concept links; unsupported formatter tags spam `error.log`.
 - Use mod-owned plain localization keys for situation map legends rather than inherited or generic `LEGEND_KEY_*` keys; the legend UI is sensitive to formatter syntax.
 - In GUI files, do not prefix `default_format` style names with `#`; use the raw style key such as `yellow_titles` so the text formatter does not parse it as an inline tag.
+
+## Farming Capacity Memory
+
+Before changing farming capacity math, tooltip rows, map-mode copy, or the
+Farming/Fishing/Forest Capacities Europedia entry, read:
+
+```bash
+sed -n '1,220p' .agents/notes/farming_capacity.md
+```
+
+Core rule: farming capacity should be one visible `farm_capacity` sum. Building
+max-level tooltips should expose the actual active plus/minus sources directly,
+not hidden "capacity used" or "improvement bucket" abstractions.

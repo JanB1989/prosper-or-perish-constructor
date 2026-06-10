@@ -1,11 +1,4 @@
-﻿fish_capacity_used = {
-	# Fish buildings consume the shared fish bucket per level. Keep the
-	# visible capacity math on the aggregate modifier rather than raw
-	# location_building_level operands so max-level tooltips stay readable.
-	value = modifier:pp_fish_capacity_used
-}
-
-fish_gross_capacity = {
+﻿fish_gross_capacity = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FISHING"
 		if = {
@@ -21,13 +14,13 @@ fish_gross_capacity = {
 			value = var:pp_fish_base_capacity
 		}
 		else = { value = pp_fish_base_capacity_value }
-		add = modifier:fish_max_level_modifier
+		add = modifier:fish_capacity
 		multiply = max_rgo_workers
 		multiply = 0.030
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FISH_CAPACITY_IMPROVEMENTS"
-		value = modifier:fish_max_level_modifier
+		value = modifier:fish_capacity
 	}
 }
 
@@ -49,17 +42,17 @@ fish_max_level = {
 			value = var:pp_fish_base_capacity
 		}
 		else = { value = pp_fish_base_capacity_value }
-		add = modifier:fish_max_level_modifier
+		add = modifier:fish_capacity
 		multiply = max_rgo_workers
 		multiply = 0.030
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FISH_CAPACITY_IMPROVEMENTS"
-		value = modifier:fish_max_level_modifier
+		value = modifier:fish_capacity
 	}
-	subtract = {
-		desc = "BUILDING_LEVEL_FISH_SPACE_USED"
-		value = modifier:pp_fish_capacity_used
+	add = {
+		desc = "BUILDING_LEVEL_FISH_CAPACITY_USED"
+		value = modifier:fish_capacity_cost
 	}
 }
 

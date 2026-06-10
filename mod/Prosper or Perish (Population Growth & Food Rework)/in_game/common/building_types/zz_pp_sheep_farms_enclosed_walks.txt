@@ -2,7 +2,7 @@
 enclosed_sheep_walks = {
 is_foreign = no
 pop_type = laborers
-max_levels = farm_max_level
+max_levels = farm_capacity
 employment_size = 7
 price = pp_enclosed_sheep_walks_price
 category = rgo_building_category
@@ -24,7 +24,7 @@ location_potential = {
 }
 
 allow = {
-    farm_capacity_available > 0
+    farm_capacity > 0
 }
 
 unique_production_methods = {
@@ -51,7 +51,6 @@ unique_production_methods = {
 }
 
 modifier = {
-    pp_land_farm_capacity_used = 1
     local_monthly_food = 0.0
     local_wool_output_modifier = 0.02
 }

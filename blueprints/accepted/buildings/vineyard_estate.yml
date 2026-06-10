@@ -19,6 +19,7 @@ building:
     employment_size = 3
     price = pp_vineyard_estate_price
     category = rgo_building_category
+    custom_tags = { farming_capacity }
     icon = vineyard_estate
     rural_settlement = yes
     town = yes

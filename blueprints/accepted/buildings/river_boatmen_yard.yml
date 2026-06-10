@@ -14,7 +14,7 @@ building:
     employment_size = 0.25
     price = pp_river_boatmen_yard_price
     category = infrastructure_category
-    custom_tags = { pp_logistics_infrastructure_priority }
+    custom_tags = { pp_logistics_infrastructure_priority pp_logistics }
     icon = river_boatmen_yard
     rural_settlement = yes
     town = yes

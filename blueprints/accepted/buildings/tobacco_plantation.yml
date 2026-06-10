@@ -22,6 +22,7 @@ building:
     employment_size = plantation_employment
     category = colonial_category
 
+    custom_tags = { farming_capacity }
     location_potential = {
         raw_material = goods:tobacco
         OR = {

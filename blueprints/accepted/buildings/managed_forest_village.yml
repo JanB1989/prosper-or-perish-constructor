@@ -32,7 +32,7 @@ building:
     employment_size = 7
     price = pp_managed_forest_village_price
     category = village_category
-    custom_tags = { pp_food_security_priority pp_staple_food_priority }
+    custom_tags = { pp_food_security_priority pp_staple_food_priority forest_capacity }
     icon = managed_forest_village
     rural_settlement = yes
     town = yes

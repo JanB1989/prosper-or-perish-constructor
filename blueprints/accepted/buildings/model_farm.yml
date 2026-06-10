@@ -43,7 +43,7 @@ building:
     employment_size = 10
     price = pp_model_farm_price
     category = village_category
-    custom_tags = { pp_food_security_priority pp_staple_food_priority }
+    custom_tags = { pp_food_security_priority pp_staple_food_priority farming_capacity }
     icon = model_farm
     rural_settlement = yes
     town = yes

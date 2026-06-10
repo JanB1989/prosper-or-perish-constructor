@@ -14,7 +14,7 @@ building:
     employment_size = 0.25
     price = pp_coastal_shipping_office_price
     category = infrastructure_category
-    custom_tags = { pp_logistics_infrastructure_priority }
+    custom_tags = { pp_logistics_infrastructure_priority pp_logistics }
     icon = coastal_shipping_office
     town = yes
     city = yes

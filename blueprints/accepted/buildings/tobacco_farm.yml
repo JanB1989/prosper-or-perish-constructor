@@ -20,6 +20,7 @@ building:
     employment_size = 3
     price = pp_tobacco_farm_price
     category = rgo_building_category
+    custom_tags = { farming_capacity }
     icon = tobacco_farm
     rural_settlement = yes
     town = yes

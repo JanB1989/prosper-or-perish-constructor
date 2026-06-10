@@ -48,7 +48,7 @@ building:
         pop_type = peasants
 
         category = village_category
-        custom_tags = { pp_food_security_priority pp_staple_food_priority }
+        custom_tags = { pp_food_security_priority pp_staple_food_priority farming_capacity }
         employment_size = 5
 
         rural_settlement = yes

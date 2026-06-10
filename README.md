@@ -55,6 +55,7 @@ uv run ppc dashboard
 uv run ppc blueprint list
 uv run ppc blueprint parity
 uv run ppc blueprint evaluate
+uv run ppc blueprint tag farming_capacity
 uv run ppc blueprint good coal
 uv run ppc blueprint build
 ```

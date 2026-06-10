@@ -1408,6 +1408,19 @@ def test_forest_blueprints_use_shared_capacity_pool() -> None:
         assert "forest_capacity_available" not in text
 
 
+def test_capacity_blueprints_are_tagged_for_filtered_blueprint_workflows() -> None:
+    groups = {
+        "farming_capacity": LAND_FARM_BUILDINGS,
+        "fishing_capacity": FISH_CAP_BUILDINGS,
+        "forest_capacity": FOREST_CAP_BUILDINGS,
+    }
+
+    for tag, buildings in groups.items():
+        for building in buildings:
+            values = _accepted_blueprint_building_values(building)
+            assert tag in _custom_tags(values["custom_tags"]), f"{building} missing {tag}"
+
+
 def test_location_rank_farming_capacity_modifiers_are_canonical() -> None:
     parsed = parse_file(LOCATION_RANKS)
     entries = {entry.key: entry.value for entry in parsed.entries}

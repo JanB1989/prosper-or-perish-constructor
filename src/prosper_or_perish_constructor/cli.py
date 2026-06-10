@@ -565,7 +565,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     blueprint = subcommands.add_parser(
         "blueprint",
-        help="Run blueprint list, parity, evaluate, good, or build workflows.",
+        help="Run blueprint list, parity, evaluate, ratios, tag, good, or build workflows.",
         description="Blueprint workflow commands. Extra args are passed to eu5-orchestrator.",
     )
     blueprint_subcommands = blueprint.add_subparsers(dest="blueprint_command", required=True)
@@ -581,6 +581,27 @@ def _build_parser() -> argparse.ArgumentParser:
         "evaluate",
         "Evaluate accepted blueprint economics and balance rules.",
         _blueprint("evaluate"),
+    )
+    ratios = _add_command(
+        blueprint_subcommands,
+        "ratios",
+        "Show a combined modifier ratio table for accepted blueprints.",
+        _blueprint_ratios,
+    )
+    ratios.add_argument(
+        "tag",
+        nargs="?",
+        help="Optional building key, blueprint tag, custom tag, or filename stem.",
+    )
+    tag = _add_command(
+        blueprint_subcommands,
+        "tag",
+        "Evaluate accepted blueprints matching a tag.",
+        _blueprint_tag,
+    )
+    tag.add_argument(
+        "tag",
+        help="Building key, blueprint tag, custom tag, or filename stem, for example farming_capacity.",
     )
     good = _add_command(
         blueprint_subcommands,
@@ -722,6 +743,46 @@ def _blueprint_good(
         ["eu5-orchestrator", "blueprint", "good", "--project", project, "--good", args.good, *extra],
         repo,
     )
+
+
+def _blueprint_ratios(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    return _run_blueprint_ratios(args.tag, extra, repo, project)
+
+
+def _blueprint_tag(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    return _run(
+        [
+            "eu5-orchestrator",
+            "blueprint",
+            "evaluate",
+            "--project",
+            project,
+            "--building",
+            args.tag,
+            *extra,
+        ],
+        repo,
+    )
+
+
+def _run_blueprint_ratios(
+    tag: str | None, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    command: list[str | os.PathLike[str]] = [
+        "eu5-orchestrator",
+        "blueprint",
+        "ratios",
+        "--project",
+        project,
+    ]
+    if tag is not None:
+        command.append(tag)
+    command.extend(extra)
+    return _run(command, repo)
 
 
 def _setup(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:

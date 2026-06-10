@@ -1,6 +1,6 @@
 ---
 name: prosper-or-perish-workflows
-description: Use for Prosper or Perish Constructor repo workflows, including setup, tests, parser inspection, static analysis, savegame export, docs publishing, blueprint list/parity/evaluate/good/build, and guarded live sync/deploy commands.
+description: Use for Prosper or Perish Constructor repo workflows, including setup, tests, parser inspection, static analysis, savegame export, docs publishing, blueprint list/parity/evaluate/tag/good/build, and guarded live sync/deploy commands.
 ---
 
 # Prosper Or Perish Workflows
@@ -54,6 +54,7 @@ Use tracked configuration for game paths:
 - `uv run ppc blueprint list`: list accepted blueprints.
 - `uv run ppc blueprint parity`: compare accepted blueprints with generated mod output.
 - `uv run ppc blueprint evaluate`: evaluate blueprint economics and balance rules.
+- `uv run ppc blueprint tag <tag>`: evaluate accepted blueprints matching one building key, blueprint tag, custom tag, or filename stem.
 - `uv run ppc blueprint good <good>`: compare methods that produce one trade good.
 - `uv run ppc blueprint build`: build accepted blueprints into the constructor mod copy.
 - `uv run ppc build`: same build workflow as `blueprint build`.

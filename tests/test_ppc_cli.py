@@ -121,6 +121,34 @@ def test_test_command_preserves_explicit_capture_args(
     assert calls == [[cli.sys.executable, "-m", "pytest", "-s", "tests/test_project_config.py"]]
 
 
+def test_blueprint_tag_routes_to_filtered_evaluation_workflow(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "blueprint", "tag", "farming_capacity"]) == 0
+
+    assert calls == [
+        [
+            "eu5-orchestrator",
+            "blueprint",
+            "evaluate",
+            "--project",
+            str(repo / "constructor.toml"),
+            "--building",
+            "farming_capacity",
+        ]
+    ]
+
+
 def test_setup_corrections_dry_run_invokes_generator(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

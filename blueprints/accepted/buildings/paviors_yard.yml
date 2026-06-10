@@ -21,7 +21,7 @@ building:
     employment_size = 0.5
     price = pp_paviors_yard_price
     category = infrastructure_category
-    custom_tags = { pp_logistics_infrastructure_priority }
+    custom_tags = { pp_logistics_infrastructure_priority pp_road_maintenance }
     icon = paviors_yard
     rural_settlement = yes
     town = yes

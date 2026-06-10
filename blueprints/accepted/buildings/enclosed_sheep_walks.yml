@@ -27,7 +27,7 @@ building:
     employment_size = 7
     price = pp_enclosed_sheep_walks_price
     category = rgo_building_category
-    custom_tags = { pp_food_security_priority pp_staple_food_priority }
+    custom_tags = { pp_food_security_priority pp_staple_food_priority farming_capacity }
     icon = enclosed_sheep_walks
     rural_settlement = yes
     town = yes

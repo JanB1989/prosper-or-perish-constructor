@@ -14,7 +14,7 @@ building:
     employment_size = 1
     price = pp_carrier_inn_price
     category = infrastructure_category
-    custom_tags = { pp_logistics_infrastructure_priority }
+    custom_tags = { pp_logistics_infrastructure_priority pp_logistics }
     icon = carrier_inn
     rural_settlement = yes
     town = yes
@@ -36,7 +36,6 @@ building:
 
     modifier = {
       local_market_access = 0.05
-      market_access = -0.02
       free_building_levels = 10
     }
 production_methods:

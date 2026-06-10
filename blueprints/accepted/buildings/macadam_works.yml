@@ -21,7 +21,7 @@ building:
     employment_size = 0.75
     price = pp_macadam_works_price
     category = infrastructure_category
-    custom_tags = { pp_logistics_infrastructure_priority }
+    custom_tags = { pp_logistics_infrastructure_priority pp_road_maintenance }
     icon = macadam_works
     rural_settlement = yes
     town = yes

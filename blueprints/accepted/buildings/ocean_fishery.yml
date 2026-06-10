@@ -26,7 +26,7 @@ building:
     employment_size = 3
     price = pp_ocean_fishery_price
     category = rgo_building_category
-    custom_tags = { pp_food_security_priority pp_staple_food_priority }
+    custom_tags = { pp_food_security_priority pp_staple_food_priority fishing_capacity }
     icon = ocean_fishery
     rural_settlement = yes
     town = yes

@@ -21,7 +21,7 @@ building:
     employment_size = 0.25
     price = pp_road_wardens_yard_price
     category = infrastructure_category
-    custom_tags = { pp_logistics_infrastructure_priority }
+    custom_tags = { pp_logistics_infrastructure_priority pp_road_maintenance }
     icon = road_wardens_yard
     rural_settlement = yes
     town = yes

@@ -1,37 +1,8 @@
-﻿forest_building_levels = {
-	add = "location_building_level(building_type:forest_village)"
-	add = "location_building_level(building_type:managed_forest_village)"
-	add = "location_building_level(building_type:lumber_mill)"
-	add = "location_building_level(building_type:water_sawmill)"
-	add = "location_building_level(building_type:lumber_mill_improved)"
-}
-
-forest_capacity_used = {
+﻿forest_capacity_used = {
 	# Forest and lumber buildings consume the shared forest bucket per level.
 	# Keep raw per-building level operands out of the visible max-level
 	# tooltip path; the aggregate modifier is the bucket occupancy.
 	value = modifier:pp_forest_capacity_used
-}
-
-non_forest_building_levels = {
-	add = total_building_levels
-	add = {
-		value = forest_capacity_used
-		multiply = -1
-	}
-	min = 0
-}
-
-forest_rgo_capacity_bonus = {
-	if = {
-		limit = { has_variable = pp_forest_base_capacity }
-		add = {
-			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
-			value = var:pp_forest_base_capacity
-			multiply = max_rgo_workers
-			multiply = 0.030
-		}
-	}
 }
 
 forest_gross_capacity = {
@@ -43,57 +14,62 @@ forest_gross_capacity = {
 		}
 		else = { value = 0 }
 	}
-	add = forest_rgo_capacity_bonus
+	if = {
+		limit = { has_variable = pp_forest_base_capacity }
+		add = {
+			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
+			value = var:pp_forest_base_capacity
+			multiply = max_rgo_workers
+			multiply = 0.030
+		}
+	}
 	add = {
 		desc = "BUILDING_LEVEL_FOREST_CAPACITY_IMPROVEMENTS"
 		value = modifier:forest_max_level_modifier
 	}
 }
 
-forest_capacity_remaining = {
-	add = forest_gross_capacity
-	add = {
-		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FOREST"
-		value = modifier:forest_rank_capacity_modifier
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FOREST_URBANIZATION"
-		value = non_forest_building_levels
-		multiply = -0.1
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FOREST_SPACE_USED"
-		value = forest_capacity_used
-		multiply = -1
-	}
-}
-
 forest_max_level = {
-	# Public max_levels path. Keep the clamp here rather than in
-	# forest_capacity_available; nested clamps render as unlabeled tooltip rows.
-	# This is equivalent to
-	# forest_gross_capacity + rank - 0.1 * non_forest_building_levels
-	# - forest_building_levels when forest buildings are a subset of total
-	# building levels, but reads aggregate bucket occupancy instead of
-	# expanding per-building levels.
-	add = forest_gross_capacity
+	# Public max_levels path. Keep this flat: nested script values create
+	# unlabeled correction rows in GetMaxLevelInformation.
+	add = {
+		desc = "BUILDING_LEVEL_BASE_FOREST"
+		if = {
+			limit = { has_variable = pp_forest_base_capacity }
+			value = var:pp_forest_base_capacity
+		}
+		else = { value = 0 }
+	}
+	if = {
+		limit = { has_variable = pp_forest_base_capacity }
+		add = {
+			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
+			value = var:pp_forest_base_capacity
+			multiply = max_rgo_workers
+			multiply = 0.030
+		}
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FOREST_CAPACITY_IMPROVEMENTS"
+		value = modifier:forest_max_level_modifier
+	}
 	add = {
 		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FOREST"
 		value = modifier:forest_rank_capacity_modifier
 	}
-	add = {
-		desc = "BUILDING_LEVEL_FOREST_TOTAL_BUILDING_PRESSURE"
+	subtract = {
+		desc = "BUILDING_LEVEL_FOREST_SPACE_USED"
+		value = modifier:pp_forest_capacity_used
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FOREST_URBANIZATION"
 		value = total_building_levels
-		multiply = -0.1
+		subtract = modifier:pp_forest_capacity_used
+		multiply = 0.1
 	}
-	add = {
-		desc = "BUILDING_LEVEL_FOREST_CAPACITY_USED_ADJUSTED"
-		value = forest_capacity_used
-		multiply = -0.9
-	}
-	min = 0
 }
 
 forest_capacity_available = {
 	add = forest_max_level
+	min = 0
 }

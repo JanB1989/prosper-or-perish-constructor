@@ -209,13 +209,12 @@ def _food_capacity_samples(mod_root: Path) -> dict[str, list[float]]:
     if not locations_path.exists() or not buildings_path.exists():
         return {}
 
-    caps_text = (mod_root / BUILDING_CAPS_REL).read_text(encoding="utf-8-sig")
     values_text = (mod_root / BUILDING_CAPACITY_VALUES_REL).read_text(encoding="utf-8-sig")
     farm_goods = _goods_in_script_value(values_text, "pp_farm_base_capacity_value")
     forest_goods = _goods_in_script_value(values_text, "pp_forest_base_capacity_value")
-    farm_buildings = _building_types_in_script_value(caps_text, "land_farm_building_levels")
-    fish_buildings = _building_types_in_script_value(caps_text, "fish_building_levels")
-    forest_buildings = _building_types_in_script_value(caps_text, "forest_building_levels")
+    farm_buildings = _building_types_with_modifier(mod_root, "pp_land_farm_capacity_used")
+    fish_buildings = _building_types_with_modifier(mod_root, "pp_fish_capacity_used")
+    forest_buildings = _building_types_with_modifier(mod_root, "pp_forest_capacity_used")
     population_capacity = _population_capacity_by_slug(mod_root / LOCATION_MODIFIERS_REL)
 
     buildings = pl.read_parquet(buildings_path)
@@ -269,6 +268,24 @@ def _goods_in_script_value(text: str, name: str) -> set[str]:
 def _building_types_in_script_value(text: str, name: str) -> set[str]:
     body = _script_value_body(text, name)
     return set(re.findall(r"location_building_level\(building_type:([a-z0-9_]+)\)", body))
+
+
+def _building_types_with_modifier(mod_root: Path, modifier: str) -> set[str]:
+    building_dir = mod_root / "in_game" / "common" / "building_types"
+    if not building_dir.exists():
+        return set()
+
+    buildings: set[str] = set()
+    modifier_pattern = re.compile(rf"^\s*{re.escape(modifier)}\s*=", flags=re.MULTILINE)
+    building_pattern = re.compile(r"^\s*(?:REPLACE:)?([a-z0-9_]+)\s*=\s*\{", flags=re.MULTILINE)
+    for path in building_dir.glob("*.txt"):
+        text = path.read_text(encoding="utf-8-sig")
+        if modifier_pattern.search(text) is None:
+            continue
+        match = building_pattern.search(text)
+        if match is not None:
+            buildings.add(match.group(1))
+    return buildings
 
 
 def _script_value_body(text: str, name: str) -> str:

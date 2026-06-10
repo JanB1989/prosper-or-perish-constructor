@@ -24,7 +24,7 @@ building:
         startup_ramp_target = rural_startup_ramp_target
         is_foreign = no
         pop_type = peasants
-        max_levels = fruit_orchard_max_level
+        max_levels = farm_max_level
         employment_size = 5
         category = rgo_building_category
         custom_tags = { pp_food_security_priority pp_staple_food_priority farming_capacity }

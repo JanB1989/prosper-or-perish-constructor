@@ -12,7 +12,6 @@ on_game_start = {
 		pp_cull_setup_estate_buildings
 		pp_remove_invalid_fiber_and_stud_farms
 		pp_game_start_effect
-		pp_road_infrastructure_startup
 		pp_food_building_startup
 		# pp_remove_invalid_buildings # we leave this off as it somehow causes crashes?
 	}

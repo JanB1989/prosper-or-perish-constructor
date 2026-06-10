@@ -20,12 +20,7 @@ ai_forbid_shutdown = no
 build_time = infrastructure_build_time
 
 location_potential = {
-  any_neighbor_location = {
-    has_road_of_type_to = {
-      target = prev
-      type = road_type:railroad
-    }
-  }
+  num_roads > 0
 }
 
 construction_demand = pp_permanent_way_depot_construction
@@ -35,10 +30,7 @@ possible_production_methods = {
 }
 
 modifier = {
-  movement_cost = -0.53
-  local_market_access = 0.27
-  local_migration_speed_modifier = 0.40
-  local_proximity_source = 10
+  local_distance_from_capital_speed_propagation = 0.40
 }
 }
 # <<< eu5-building-pipeline:permanent_way_depot:building

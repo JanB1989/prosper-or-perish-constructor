@@ -280,9 +280,7 @@ def test_constructor_config_loads() -> None:
         "market_access",
         "local_market_access",
         "free_building_levels",
-        "movement_cost",
-        "local_migration_speed_modifier",
-        "local_proximity_source",
+        "local_distance_from_capital_speed_propagation",
     )
 
 

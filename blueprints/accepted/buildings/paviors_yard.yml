@@ -18,7 +18,7 @@ building:
     is_foreign = no
     max_levels = 1
     pop_type = laborers
-    employment_size = 0.75
+    employment_size = 0.5
     price = pp_paviors_yard_price
     category = infrastructure_category
     custom_tags = { pp_logistics_infrastructure_priority }
@@ -35,12 +35,7 @@ building:
     build_time = infrastructure_build_time
 
     location_potential = {
-      any_neighbor_location = {
-        has_road_of_type_to = {
-          target = prev
-          type = road_type:paved_road
-        }
-      }
+      num_roads > 0
     }
 
     construction_demand = pp_paviors_yard_construction
@@ -50,10 +45,7 @@ building:
     }
 
     modifier = {
-      movement_cost = -0.20
-      local_market_access = 0.13
-      local_migration_speed_modifier = 0.20
-      local_proximity_source = 3.5
+      local_distance_from_capital_speed_propagation = 0.15
     }
 production_methods:
   - key: pp_paviors_yard_maintenance

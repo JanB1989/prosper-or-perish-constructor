@@ -1172,6 +1172,23 @@ def test_general_farm_eligibility_triggers_are_conservative() -> None:
         assert f"raw_material = goods:{rejected_old_warning_good}" not in orchard_block
     assert "raw_material = goods:beeswax" in farm_base_block
 
+    orchard_goods_order = re.findall(r"raw_material = goods:(\w+)", orchard_block)
+    assert orchard_goods_order == [
+        "livestock",
+        "wheat",
+        "millet",
+        "legumes",
+        "fruit",
+        "rice",
+        "beeswax",
+        "maize",
+        "wine",
+        "silk",
+        "potato",
+        "tea",
+        "olives",
+    ]
+
 
 def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> None:
     # Snapshot of the invalid building rows from the current EU5 error.log.
@@ -1971,6 +1988,8 @@ def test_capacity_culling_helper_uses_exact_max_plus_one_threshold() -> None:
 
     limit = helper_if_values["limit"]
     assert isinstance(limit, CList)
+    limit_values = _entry_values(limit)
+    assert limit_values["has_building"] == "building_type:$building$"
     building_level = _entry_values(limit)["location_building_level"]
     assert isinstance(building_level, CList)
 

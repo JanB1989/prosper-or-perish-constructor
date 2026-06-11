@@ -3,6 +3,7 @@
 pp_cull_capacity_building_above_max = {
 	if = {
 		limit = {
+			has_building = building_type:$building$
 			location_building_level = {
 				building_type = building_type:$building$
 				value > {

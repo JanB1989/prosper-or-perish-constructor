@@ -62,6 +62,9 @@ capacity-improvement bucket or a hidden gross-capacity row.
 
 - `fish_capacity` includes natural fishing grounds, Maximum RGO Size scaling,
   river size, Manorial Customals, and direct fish-building level subtraction.
+- Fish Maximum RGO Size scaling follows farming and forest capacity: it scales
+  the baseline only. River size and Manorial Customals stay as separate visible
+  rows, and fish should not get urbanization pressure.
 - `forest_capacity` includes forest geography/RGO, Maximum RGO Size scaling,
   Manorial Customals, location-rank pressure, direct forest/lumber-building
   level subtraction, and reduced capacity from other buildings in the location.

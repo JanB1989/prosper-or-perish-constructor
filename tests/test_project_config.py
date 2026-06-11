@@ -831,9 +831,8 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
     assert "value = pp_fish_base_capacity_value" in capacity_block
     assert 'desc = "BUILDING_LEVEL_BASE_FISHING"' in capacity_block
     assert 'desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"' in capacity_block
-    assert "add = modifier:fish_capacity_from_river_size" in capacity_block
+    assert "add = modifier:fish_capacity_from_river_size" not in capacity_block
     assert "has_town_rights = town_rights_type:manorial_customals" in capacity_block
-    assert "add = 2" in capacity_block
     assert capacity_block.count("multiply = max_rgo_workers") == 1
     assert capacity_block.count("multiply = 0.030") == 1
     assert (

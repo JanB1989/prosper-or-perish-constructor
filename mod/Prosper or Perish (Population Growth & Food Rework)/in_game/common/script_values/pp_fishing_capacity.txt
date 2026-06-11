@@ -17,11 +17,6 @@
 			value = var:pp_fish_base_capacity
 		}
 		else = { value = pp_fish_base_capacity_value }
-		add = modifier:fish_capacity_from_river_size
-		if = {
-			limit = { has_town_rights = town_rights_type:manorial_customals }
-			add = 2
-		}
 		multiply = max_rgo_workers
 		multiply = 0.030
 	}

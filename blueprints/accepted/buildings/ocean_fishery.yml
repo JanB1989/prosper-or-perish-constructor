@@ -21,7 +21,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = fish_max_level
+    max_levels = fish_capacity
     pop_type = laborers
     employment_size = 3
     price = pp_ocean_fishery_price
@@ -40,8 +40,8 @@ building:
 
     allow = {
         custom_tooltip = {
-            text = PP_HAS_AVAILABLE_FISHING_CAPACITY
-            fish_capacity_available > 0
+            text = PP_HAS_FISHING_CAPACITY
+            fish_capacity > 0
         }
     }
 
@@ -73,7 +73,6 @@ building:
     }
 
     modifier = {
-        fish_capacity_cost = -1
         local_fish_output_modifier = -0.03
         local_merchant_capacity = 0.12
         local_maritime_presence = 0.015

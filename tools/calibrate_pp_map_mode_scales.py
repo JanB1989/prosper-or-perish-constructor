@@ -213,8 +213,8 @@ def _food_capacity_samples(mod_root: Path) -> dict[str, list[float]]:
     farm_goods = _goods_in_script_value(values_text, "pp_farm_base_capacity_value")
     forest_goods = _goods_in_script_value(values_text, "pp_forest_base_capacity_value")
     farm_buildings = _building_types_with_max_levels(mod_root, "farm_capacity")
-    fish_buildings = _building_types_with_modifier(mod_root, "fish_capacity_cost")
-    forest_buildings = _building_types_with_modifier(mod_root, "forest_capacity_cost")
+    fish_buildings = _building_types_with_max_levels(mod_root, "fish_capacity")
+    forest_buildings = _building_types_with_max_levels(mod_root, "forest_capacity")
     population_capacity = _population_capacity_by_slug(mod_root / LOCATION_MODIFIERS_REL)
 
     buildings = pl.read_parquet(buildings_path)
@@ -262,29 +262,6 @@ def _levels_by_location(frame) -> dict[int, float]:
 def _goods_in_script_value(text: str, name: str) -> set[str]:
     body = _script_value_body(text, name)
     return set(re.findall(r"raw_material\s*=\s*goods:([a-z0-9_]+)", body))
-
-
-def _building_types_in_script_value(text: str, name: str) -> set[str]:
-    body = _script_value_body(text, name)
-    return set(re.findall(r"location_building_level\(building_type:([a-z0-9_]+)\)", body))
-
-
-def _building_types_with_modifier(mod_root: Path, modifier: str) -> set[str]:
-    building_dir = mod_root / "in_game" / "common" / "building_types"
-    if not building_dir.exists():
-        return set()
-
-    buildings: set[str] = set()
-    modifier_pattern = re.compile(rf"^\s*{re.escape(modifier)}\s*=", flags=re.MULTILINE)
-    building_pattern = re.compile(r"^\s*(?:REPLACE:)?([a-z0-9_]+)\s*=\s*\{", flags=re.MULTILINE)
-    for path in building_dir.glob("*.txt"):
-        text = path.read_text(encoding="utf-8-sig")
-        if modifier_pattern.search(text) is None:
-            continue
-        match = building_pattern.search(text)
-        if match is not None:
-            buildings.add(match.group(1))
-    return buildings
 
 
 def _building_types_with_max_levels(mod_root: Path, value: str) -> set[str]:

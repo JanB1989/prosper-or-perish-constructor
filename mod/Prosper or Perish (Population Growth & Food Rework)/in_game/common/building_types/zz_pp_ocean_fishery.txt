@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:ocean_fishery:building
 ocean_fishery = {
 is_foreign = no
-max_levels = fish_max_level
+max_levels = fish_capacity
 pop_type = laborers
 employment_size = 3
 price = pp_ocean_fishery_price
@@ -20,8 +20,8 @@ location_potential = {
 
 allow = {
     custom_tooltip = {
-        text = PP_HAS_AVAILABLE_FISHING_CAPACITY
-        fish_capacity_available > 0
+        text = PP_HAS_FISHING_CAPACITY
+        fish_capacity > 0
     }
 }
 
@@ -53,7 +53,6 @@ unique_production_methods = {
 }
 
 modifier = {
-    fish_capacity_cost = -1
     local_fish_output_modifier = -0.03
     local_merchant_capacity = 0.12
     local_maritime_presence = 0.015

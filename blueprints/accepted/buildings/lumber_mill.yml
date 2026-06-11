@@ -31,7 +31,7 @@ building:
     audio_tier = 1
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
-    max_levels = forest_max_level
+    max_levels = forest_capacity
     pop_type = laborers
 
     employment_size = 3
@@ -52,7 +52,7 @@ building:
             }
         }
     allow = {
-        forest_capacity_available > 0
+        forest_capacity > 0
     }
     category = rgo_building_category
 
@@ -126,7 +126,6 @@ building:
             }
         }
     	modifier = {
-    		forest_capacity_cost = -1
     	}
     	construction_demand = basic_construction_needs
 advancements:

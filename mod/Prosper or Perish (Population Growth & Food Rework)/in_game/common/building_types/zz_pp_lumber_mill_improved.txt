@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:lumber_mill_improved:building
 lumber_mill_improved = {
 is_foreign = no
-max_levels = forest_max_level
+max_levels = forest_capacity
 pop_type = laborers
 employment_size = 6
 price = pp_lumber_mill_improved_price
@@ -27,7 +27,7 @@ location_potential = {
 }
 
 allow = {
-    forest_capacity_available > 0
+    forest_capacity > 0
 }
 
 construction_demand = workshop_construction
@@ -78,7 +78,6 @@ unique_production_methods = {
 }
 
 modifier = {
-    forest_capacity_cost = -1
     local_build_buildings_efficiency = 0.02
     local_migration_attraction = 0.03
     local_population_growth = -0.0001

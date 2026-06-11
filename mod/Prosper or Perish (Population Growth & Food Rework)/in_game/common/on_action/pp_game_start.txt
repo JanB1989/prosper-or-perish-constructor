@@ -869,7 +869,7 @@ pp_game_start_effect = {
 						development > 10
 						is_coastal = yes
 						NOT = { has_building = building_type:ocean_fishery }
-						fish_capacity_available > 0
+						fish_capacity > 0
 						can_build_building = building_type:ocean_fishery
 					}
 					construct_building = {
@@ -891,7 +891,7 @@ pp_game_start_effect = {
 							building_type = building_type:ocean_fishery
 							value < 2
 						}
-						fish_capacity_available > 0
+						fish_capacity > 0
 						can_build_building = building_type:ocean_fishery
 					}
 					change_building_level_in_location = {
@@ -906,7 +906,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { is_coastal = yes }
-						fish_capacity_available > 0
+						fish_capacity > 0
 						NOT = { has_building = building_type:fishing_village }
 						can_build_building = building_type:fishing_village
 					}
@@ -924,7 +924,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { is_coastal = yes }
-						fish_capacity_available > 0
+						fish_capacity > 0
 						has_building = building_type:fishing_village
 						location_building_level = {
 							building_type = building_type:fishing_village
@@ -945,7 +945,7 @@ pp_game_start_effect = {
 						development > 10
 						is_coastal = yes
 						NOT = { has_building = building_type:ocean_fishery }
-						fish_capacity_available > 0
+						fish_capacity > 0
 						can_build_building = building_type:ocean_fishery
 					}
 					construct_building = {
@@ -967,7 +967,7 @@ pp_game_start_effect = {
 							building_type = building_type:ocean_fishery
 							value < 2
 						}
-						fish_capacity_available > 0
+						fish_capacity > 0
 						can_build_building = building_type:ocean_fishery
 					}
 					change_building_level_in_location = {
@@ -982,7 +982,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { is_coastal = yes }
-						fish_capacity_available > 0
+						fish_capacity > 0
 						NOT = { has_building = building_type:fishing_village }
 						can_build_building = building_type:fishing_village
 					}
@@ -1000,7 +1000,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { is_coastal = yes }
-						fish_capacity_available > 0
+						fish_capacity > 0
 						has_building = building_type:fishing_village
 						location_building_level = {
 							building_type = building_type:fishing_village
@@ -1021,7 +1021,7 @@ pp_game_start_effect = {
 						development > 10
 						is_coastal = yes
 						NOT = { has_building = building_type:ocean_fishery }
-						fish_capacity_available > 0
+						fish_capacity > 0
 						can_build_building = building_type:ocean_fishery
 					}
 					construct_building = {
@@ -1043,7 +1043,7 @@ pp_game_start_effect = {
 							building_type = building_type:ocean_fishery
 							value < 2
 						}
-						fish_capacity_available > 0
+						fish_capacity > 0
 						can_build_building = building_type:ocean_fishery
 					}
 					change_building_level_in_location = {
@@ -1058,7 +1058,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { is_coastal = yes }
-						fish_capacity_available > 0
+						fish_capacity > 0
 						NOT = { has_building = building_type:fishing_village }
 						can_build_building = building_type:fishing_village
 					}
@@ -1076,7 +1076,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { is_coastal = yes }
-						fish_capacity_available > 0
+						fish_capacity > 0
 						has_building = building_type:fishing_village
 						location_building_level = {
 							building_type = building_type:fishing_village
@@ -1096,7 +1096,7 @@ pp_game_start_effect = {
 						population > 20
 						development > 10
 						NOT = { has_building = building_type:forest_village }
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:forest_village
 					}
 					construct_building = {
@@ -1113,7 +1113,7 @@ pp_game_start_effect = {
 						population > 20
 						development > 10
 						NOT = { has_building = building_type:forest_village }
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:forest_village
 					}
 					construct_building = {
@@ -1130,7 +1130,7 @@ pp_game_start_effect = {
 						population > 20
 						development > 10
 						NOT = { has_building = building_type:forest_village }
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:forest_village
 					}
 					construct_building = {
@@ -1516,7 +1516,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { has_building = building_type:lumber_mill }
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:lumber_mill
 					}
 					construct_building = {
@@ -1537,7 +1537,7 @@ pp_game_start_effect = {
 							building_type = building_type:lumber_mill
 							value < 2
 						}
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:lumber_mill
 					}
 					change_building_level_in_location = {
@@ -1552,7 +1552,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { has_building = building_type:lumber_mill }
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:lumber_mill
 					}
 					construct_building = {
@@ -1573,7 +1573,7 @@ pp_game_start_effect = {
 							building_type = building_type:lumber_mill
 							value < 2
 						}
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:lumber_mill
 					}
 					change_building_level_in_location = {
@@ -1588,7 +1588,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { has_building = building_type:lumber_mill }
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:lumber_mill
 					}
 					construct_building = {
@@ -1609,7 +1609,7 @@ pp_game_start_effect = {
 							building_type = building_type:lumber_mill
 							value < 2
 						}
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:lumber_mill
 					}
 					change_building_level_in_location = {
@@ -2289,7 +2289,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { has_building = building_type:forest_village }
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:forest_village
 					}
 					construct_building = {
@@ -2310,7 +2310,7 @@ pp_game_start_effect = {
 							building_type = building_type:forest_village
 							value < 2
 						}
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:forest_village
 					}
 					change_building_level_in_location = {
@@ -2325,7 +2325,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { has_building = building_type:forest_village }
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:forest_village
 					}
 					construct_building = {
@@ -2346,7 +2346,7 @@ pp_game_start_effect = {
 							building_type = building_type:forest_village
 							value < 2
 						}
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:forest_village
 					}
 					change_building_level_in_location = {
@@ -2361,7 +2361,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { has_building = building_type:forest_village }
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:forest_village
 					}
 					construct_building = {
@@ -2382,7 +2382,7 @@ pp_game_start_effect = {
 							building_type = building_type:forest_village
 							value < 2
 						}
-						forest_capacity_available > 0
+						forest_capacity > 0
 						can_build_building = building_type:forest_village
 					}
 					change_building_level_in_location = {
@@ -2593,7 +2593,7 @@ pp_game_start_effect = {
 						is_coastal = yes
 						NOT = { has_building = building_type:ocean_fishery }
 						NOT = { has_building = building_type:fishing_village }
-						fish_capacity_available > 0
+						fish_capacity > 0
 						can_build_building = building_type:ocean_fishery
 					}
 					construct_building = {
@@ -2609,7 +2609,7 @@ pp_game_start_effect = {
 						population > 74
 						raw_material = goods:fish
 						NOT = { is_coastal = yes }
-						fish_capacity_available > 0
+						fish_capacity > 0
 						NOT = { has_building = building_type:fishing_village }
 						NOT = { has_building = building_type:ocean_fishery }
 						can_build_building = building_type:fishing_village
@@ -2626,7 +2626,7 @@ pp_game_start_effect = {
 				if = {
 					limit = {
 						population > 74
-						forest_capacity_available > 0
+						forest_capacity > 0
 						OR = {
 							raw_material = goods:wild_game
 							raw_material = goods:fur

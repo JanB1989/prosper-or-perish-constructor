@@ -1,4 +1,7 @@
-﻿fish_gross_capacity = {
+﻿fish_capacity = {
+	# Public max_levels path. Keep this flat: each row is one visible source
+	# in GetMaxLevelInformation. Fish-producing buildings consume capacity by
+	# subtracting their levels directly from this same sum.
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FISHING"
 		if = {
@@ -14,49 +17,46 @@
 			value = var:pp_fish_base_capacity
 		}
 		else = { value = pp_fish_base_capacity_value }
-		add = modifier:fish_capacity
+		add = modifier:fish_capacity_from_river_size
+		if = {
+			limit = { has_town_rights = town_rights_type:manorial_customals }
+			add = 2
+		}
 		multiply = max_rgo_workers
 		multiply = 0.030
 	}
 	add = {
-		desc = "BUILDING_LEVEL_FISH_CAPACITY_IMPROVEMENTS"
-		value = modifier:fish_capacity
+		# River size is bridged through a source-specific modifier so it remains a
+		# visible row for locations whose river size is stored on static modifiers.
+		desc = "BUILDING_LEVEL_FISH_RIVER"
+		value = modifier:fish_capacity_from_river_size
 	}
-}
-
-fish_max_level = {
-	# Public max_levels path. Keep this flat: nested script values create
-	# unlabeled correction rows in GetMaxLevelInformation.
-	add = {
-		desc = "BUILDING_LEVEL_BASE_FISHING"
-		if = {
-			limit = { has_variable = pp_fish_base_capacity }
-			value = var:pp_fish_base_capacity
+	if = {
+		limit = { has_town_rights = town_rights_type:manorial_customals }
+		add = {
+			desc = "BUILDING_LEVEL_FISH_MANORIAL_CUSTOMALS"
+			value = 2
 		}
-		else = { value = pp_fish_base_capacity_value }
 	}
-	add = {
-		desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"
-		if = {
-			limit = { has_variable = pp_fish_base_capacity }
-			value = var:pp_fish_base_capacity
+	if = {
+		limit = { has_building = building_type:fishing_village }
+		subtract = {
+			desc = "BUILDING_LEVEL_FISH_FISHING_VILLAGE"
+			value = "location_building_level(building_type:fishing_village)"
 		}
-		else = { value = pp_fish_base_capacity_value }
-		add = modifier:fish_capacity
-		multiply = max_rgo_workers
-		multiply = 0.030
 	}
-	add = {
-		desc = "BUILDING_LEVEL_FISH_CAPACITY_IMPROVEMENTS"
-		value = modifier:fish_capacity
+	if = {
+		limit = { has_building = building_type:ocean_fishery }
+		subtract = {
+			desc = "BUILDING_LEVEL_FISH_OCEAN_FISHERY"
+			value = "location_building_level(building_type:ocean_fishery)"
+		}
 	}
-	add = {
-		desc = "BUILDING_LEVEL_FISH_CAPACITY_USED"
-		value = modifier:fish_capacity_cost
+	if = {
+		limit = { has_building = building_type:offshore_fishery }
+		subtract = {
+			desc = "BUILDING_LEVEL_FISH_OFFSHORE_FISHERY"
+			value = "location_building_level(building_type:offshore_fishery)"
+		}
 	}
-}
-
-fish_capacity_available = {
-	add = fish_max_level
-	min = 0
 }

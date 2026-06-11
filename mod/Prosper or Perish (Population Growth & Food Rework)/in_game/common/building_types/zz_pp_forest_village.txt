@@ -3,7 +3,7 @@ REPLACE:forest_village = {
     audio_tier = 1
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
-    max_levels = forest_max_level
+    max_levels = forest_capacity
     pop_type = peasants
     category = village_category
     custom_tags = { pp_food_security_priority pp_staple_food_priority forest_capacity }
@@ -26,7 +26,7 @@ REPLACE:forest_village = {
     }
 
     allow = {
-        forest_capacity_available > 0
+        forest_capacity > 0
     }
     build_time = village_build_time
     unique_production_methods = {
@@ -88,7 +88,6 @@ REPLACE:forest_village = {
     }
     construction_demand = village_construction
     modifier = {
-        forest_capacity_cost = -1
         # vanilla + injected (additive): 1.0-1.0=0, 0.1-0.1=0, 0.05-0.05=0
         local_monthly_food = 0.0
         local_peasants_estate_power = 0.25

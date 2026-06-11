@@ -3,7 +3,7 @@ REPLACE:fishing_village = {
     audio_tier = 1
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
-    max_levels = fish_max_level
+    max_levels = fish_capacity
     pop_type = peasants
     category = village_category
     custom_tags = { pp_food_security_priority pp_staple_food_priority fishing_capacity }
@@ -26,8 +26,8 @@ REPLACE:fishing_village = {
 
     allow = {
         custom_tooltip = {
-            text = PP_HAS_AVAILABLE_FISHING_CAPACITY
-            fish_capacity_available > 0
+            text = PP_HAS_FISHING_CAPACITY
+            fish_capacity > 0
         }
     }
     build_time = village_build_time
@@ -97,7 +97,6 @@ REPLACE:fishing_village = {
     }
     construction_demand = village_construction
     modifier = {
-        fish_capacity_cost = -1
         local_monthly_food = 0.0
         local_fish_output_modifier = -0.03
         local_merchant_capacity = 0.05

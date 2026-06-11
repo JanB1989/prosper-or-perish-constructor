@@ -180,11 +180,11 @@ GAME_START_DIRECT_RGO_BUILDINGS = {
 }
 GAME_START_CAPACITY_BUILDING_GATES = {
     "fiber_crops_farm": "farm_capacity",
-    "fishing_village": "fish_capacity_available",
-    "forest_village": "forest_capacity_available",
+    "fishing_village": "fish_capacity",
+    "forest_village": "forest_capacity",
     "horse_breeders": "farm_capacity",
-    "lumber_mill": "forest_capacity_available",
-    "ocean_fishery": "fish_capacity_available",
+    "lumber_mill": "forest_capacity",
+    "ocean_fishery": "fish_capacity",
 }
 GAME_START_DISABLED_CAPACITY_STARTUP_BUILDINGS = {"farming_village", "fruit_orchard", "sheep_farms"}
 RAW_MATERIAL_BASE_PRODUCERS = {

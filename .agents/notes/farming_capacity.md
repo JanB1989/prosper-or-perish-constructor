@@ -1,55 +1,74 @@
-# Farming Capacity Design Notes
+# Rural Capacity Design Notes
 
-These notes capture the farming-capacity cleanup decisions from the audit thread.
-Use them before changing `farm_capacity`, farm-capacity tooltip rows, or related
-map-mode/Europedia localization.
+These notes capture the farming/fishing/forest capacity cleanup decisions from
+the audit thread. Use them before changing `farm_capacity`, `fish_capacity`,
+`forest_capacity`, capacity tooltip rows, or related map-mode/Europedia
+localization.
 
 ## Design Intent
 
-- Farming Capacity is one value: a sum of sources that add or subtract capacity.
-- Farm building `max_levels` should use `farm_capacity` directly.
-- A source either affects Farming Capacity directly or it does not affect it.
-- Avoid user-facing abstractions such as "capacity used", "available land-farm
-  capacity", or separate farm-cost pools for farming buildings.
-- Existing farming buildings subtract their building levels directly from
-  `farm_capacity`. Water-control buildings, river size, population capacity,
-  rank, RGO suitability, Maximum RGO Size, Manorial Customals, and other sources
-  add or subtract as direct rows in that same value.
+- Farming, Fishing, and Forest Capacity are each one value: a sum of sources
+  that add or subtract that capacity.
+- Rural capacity building `max_levels` should use `farm_capacity`,
+  `fish_capacity`, or `forest_capacity` directly.
+- A source either affects the capacity directly or it does not affect it.
+- Avoid user-facing abstractions such as "capacity used", "available capacity",
+  "gross capacity", generic capacity-improvement buckets, or separate
+  capacity-cost pools for rural buildings.
+- Existing farming, fishing, forest, and lumber buildings subtract their
+  building levels directly from the relevant capacity. Water-control buildings,
+  river size, population capacity, rank, RGO suitability, Maximum RGO Size,
+  Manorial Customals, and other sources add or subtract as direct rows in that
+  same value where relevant.
 - Performance may be revisited later, but not at the cost of making the visible
   tooltip stop showing the actual direct sources of the sum.
 
 ## Tooltip Rule
 
 `GetMaxLevelInformation` displays the rows from the scripted value used by
-`max_levels`. For farming buildings, hovering the max level in
+`max_levels`. For rural-capacity buildings, hovering the max level in
 `[building.getlevel]/[building.getmaxlevel]` should show every active plus or
-minus to Farming Capacity as rows.
+minus to that capacity as rows.
 
 It should not show hidden helper totals, inverted "sum" rows, or missing
 localization keys. The previous complicated paths produced a tooltip with
 correct source rows plus an extra missing-key row that was the opposite sign of
 the visible source sum.
 
-The practical fix was to make `farm_capacity` the flat public path:
+The practical fix was to make `farm_capacity`, `fish_capacity`, and
+`forest_capacity` the flat public paths:
 
-- no nested farm-only helper values in the `max_levels` path;
+- no nested helper values in the `max_levels` path;
 - one `desc` per visible source row;
-- source-specific labels such as `Farm Related RGO`, `Maximum RGO Size`,
-  `[river|e] Size`, linked building names, and
+- source-specific labels such as `Farm Related RGO`, `Natural Fishing Grounds`,
+  `Forest Geography and [rgo|e]`, `Maximum RGO Size`, `[river|e] Size`,
+  `Location Rank`, linked building names, and
   `Reduced Capacity from [pp_buildings_in_location|e]`;
-- no generic "Farming Capacity Improvements" bucket for farm capacity.
+- no generic "Capacity Improvements" bucket for rural capacities.
 
 ## River Size
 
-River size needs a small bridge modifier, currently
-`farm_capacity_from_river_size`, injected into the vanilla river static
-modifiers. This is not meant as a second capacity variable. It exists because
-checking `has_location_modifier = river_flowing_through_X` directly did not
-produce the desired visible row for locations like Prague, while
-`modifier:farm_capacity_from_river_size` does.
+River size needs small bridge modifiers, currently
+`farm_capacity_from_river_size` and `fish_capacity_from_river_size`, injected
+into the vanilla river static modifiers. These are not meant as second capacity
+variables. They exist because checking `has_location_modifier =
+river_flowing_through_X` directly did not produce the desired visible row for
+locations like Prague, while reading the source-specific modifier does.
 
 Keep the tooltip row labelled as river size. Do not collapse it into a generic
-capacity-improvement bucket.
+capacity-improvement bucket or a hidden gross-capacity row.
+
+## Fishing and Forest Details
+
+- `fish_capacity` includes natural fishing grounds, Maximum RGO Size scaling,
+  river size, Manorial Customals, and direct fish-building level subtraction.
+- `forest_capacity` includes forest geography/RGO, Maximum RGO Size scaling,
+  Manorial Customals, location-rank pressure, direct forest/lumber-building
+  level subtraction, and reduced capacity from other buildings in the location.
+- Manorial Customals and forest location-rank effects should be visible rows in
+  the scripted value, not modifier buckets.
+- Fish/forest map modes should show current capacity only and direct players to
+  the building maximum-level tooltip for source breakdowns.
 
 ## Localization
 
@@ -64,12 +83,14 @@ capacity-improvement bucket.
 - Europedia should refer to the concept as
   `Farming/Fishing/Forest Capacities` and tell players the capacity map modes
   are in the Geography map-mode group.
-- The farming-capacity map mode should show current `farm_capacity` and direct
-  players to the building maximum-level tooltip for the active source breakdown.
+- Rural capacity map modes should show current capacity and direct players to
+  the building maximum-level tooltip for the active source breakdown.
 
 ## Relevant Files
 
 - `mod/Prosper or Perish (Population Growth & Food Rework)/in_game/common/script_values/pp_farming_capacity.txt`
+- `mod/Prosper or Perish (Population Growth & Food Rework)/in_game/common/script_values/pp_fishing_capacity.txt`
+- `mod/Prosper or Perish (Population Growth & Food Rework)/in_game/common/script_values/pp_forest_capacity.txt`
 - `mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt`
 - `mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/common/modifier_type_definitions/pp_building_cap_modifiers.txt`
 - `mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/common/modifier_icons/pp_building_cap_modifier_icons.txt`
@@ -84,6 +105,8 @@ Use the repo wrapper first:
 ```bash
 uv run ppc --help
 uv run ppc test tests/test_project_config.py tests/test_population_capacity_config.py tests/test_building_upgrade_chains.py tests/test_custom_map_mode_styles.py
+uv run ppc blueprint tag fishing_capacity
+uv run ppc blueprint tag forest_capacity
 uv run eu5-orchestrator validate --project constructor.toml
 ```
 

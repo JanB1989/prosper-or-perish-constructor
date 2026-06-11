@@ -34,16 +34,16 @@ pp_cull_capacity_buildings_over_max_v2 = {
 			pp_cull_capacity_building_above_max = { building = vineyard_estate max_level = farm_capacity }
 
 			# Fish capacity
-			pp_cull_capacity_building_above_max = { building = fishing_village max_level = fish_capacity_available }
-			pp_cull_capacity_building_above_max = { building = ocean_fishery max_level = fish_capacity_available }
-			pp_cull_capacity_building_above_max = { building = offshore_fishery max_level = fish_capacity_available }
+			pp_cull_capacity_building_above_max = { building = fishing_village max_level = fish_capacity }
+			pp_cull_capacity_building_above_max = { building = ocean_fishery max_level = fish_capacity }
+			pp_cull_capacity_building_above_max = { building = offshore_fishery max_level = fish_capacity }
 
 			# Forest capacity
-			pp_cull_capacity_building_above_max = { building = forest_village max_level = forest_capacity_available }
-			pp_cull_capacity_building_above_max = { building = managed_forest_village max_level = forest_capacity_available }
-			pp_cull_capacity_building_above_max = { building = lumber_mill max_level = forest_capacity_available }
-			pp_cull_capacity_building_above_max = { building = water_sawmill max_level = forest_capacity_available }
-			pp_cull_capacity_building_above_max = { building = lumber_mill_improved max_level = forest_capacity_available }
+			pp_cull_capacity_building_above_max = { building = forest_village max_level = forest_capacity }
+			pp_cull_capacity_building_above_max = { building = managed_forest_village max_level = forest_capacity }
+			pp_cull_capacity_building_above_max = { building = lumber_mill max_level = forest_capacity }
+			pp_cull_capacity_building_above_max = { building = water_sawmill max_level = forest_capacity }
+			pp_cull_capacity_building_above_max = { building = lumber_mill_improved max_level = forest_capacity }
 		}
 	}
 }

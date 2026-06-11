@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:managed_forest_village:building
 managed_forest_village = {
 is_foreign = no
-max_levels = forest_max_level
+max_levels = forest_capacity
 pop_type = laborers
 employment_size = 7
 price = pp_managed_forest_village_price
@@ -31,7 +31,7 @@ location_potential = {
 }
 
 allow = {
-    forest_capacity_available > 0
+    forest_capacity > 0
 }
 
 unique_production_methods = {
@@ -107,7 +107,6 @@ unique_production_methods = {
 }
 
 modifier = {
-    forest_capacity_cost = -1
     local_monthly_food = 0.0
     local_peasants_estate_power = 0.1
     local_laborers_desired_pop = 0.02

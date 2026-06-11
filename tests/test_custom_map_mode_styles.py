@@ -44,9 +44,9 @@ CUSTOM_MAP_MODE_FILES = (
 
 VALUE_SOURCE_MODES = {
     "pp_population_capacity": "modifier:local_population_capacity",
-    "pp_fishing_village_capacity": "fish_capacity_available",
+    "pp_fishing_village_capacity": "fish_capacity",
     "pp_farming_village_capacity": "farm_capacity",
-    "pp_forest_village_capacity": "forest_capacity_available",
+    "pp_forest_village_capacity": "forest_capacity",
     "pp_unemployed_peasants": "pp_unemployed_population",
     "pp_building_levels": "total_building_levels",
     "pp_building_efficiency": "pp_building_efficiency_map_value",
@@ -211,9 +211,9 @@ def test_static_map_modes_match_calibration_thresholds() -> None:
 
     expected = {
         "pp_population_capacity": ("modifier:local_population_capacity", calibration["population_capacity"]["thresholds"]),
-        "pp_fishing_village_capacity": ("fish_capacity_available", calibration["food_capacity"]["fish"]["thresholds"]),
+        "pp_fishing_village_capacity": ("fish_capacity", calibration["food_capacity"]["fish"]["thresholds"]),
         "pp_farming_village_capacity": ("farm_capacity", calibration["food_capacity"]["farm"]["thresholds"]),
-        "pp_forest_village_capacity": ("forest_capacity_available", calibration["food_capacity"]["forest"]["thresholds"]),
+        "pp_forest_village_capacity": ("forest_capacity", calibration["food_capacity"]["forest"]["thresholds"]),
         "pp_unemployed_peasants": ("pp_unemployed_population", calibration["unemployment"]["thresholds"]),
         "pp_building_levels": ("total_building_levels", calibration["building_levels"]["thresholds"]),
         "pp_rgo_level": ("pp_rgo_level_for_map", calibration["rgo_level"]["thresholds"]),

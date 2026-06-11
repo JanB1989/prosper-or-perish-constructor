@@ -1,18 +1,11 @@
-﻿fish_capacity = {
+﻿farm_capacity_from_river_size = {
 	decimals = 2
 	game_data = {
 		category = location
 	}
 }
 
-farm_capacity_from_river_size = {
-	decimals = 2
-	game_data = {
-		category = location
-	}
-}
-
-fish_capacity_cost = {
+fish_capacity_from_river_size = {
 	decimals = 2
 	game_data = {
 		category = location
@@ -27,27 +20,6 @@ irrigant_cap_modifier = {
 }
 
 pp_river_boatmen_yard_cap_modifier = {
-	decimals = 2
-	game_data = {
-		category = location
-	}
-}
-
-forest_capacity = {
-	decimals = 2
-	game_data = {
-		category = location
-	}
-}
-
-forest_rank_capacity_modifier = {
-	decimals = 2
-	game_data = {
-		category = location
-	}
-}
-
-forest_capacity_cost = {
 	decimals = 2
 	game_data = {
 		category = location

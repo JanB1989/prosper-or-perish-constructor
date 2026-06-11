@@ -1,28 +1,12 @@
-﻿## Prosper or Perish - icons for building cap modifier types
-## Uses vanilla building icons copied to modifier_types folder
-fish_capacity = {
-	positive = "gfx/interface/icons/map_modes/pp_fishing_village_capacity.dds"
-}
-farm_capacity_from_river_size = {
+﻿farm_capacity_from_river_size = {
 	positive = "gfx/interface/icons/map_modes/rivers.dds"
 }
-fish_capacity_cost = {
-	positive = "gfx/interface/icons/map_modes/pp_fishing_village_capacity.dds"
-	negative = "gfx/interface/icons/map_modes/pp_fishing_village_capacity.dds"
+fish_capacity_from_river_size = {
+	positive = "gfx/interface/icons/map_modes/rivers.dds"
 }
 irrigant_cap_modifier = {
 	positive = "gfx/interface/icons/buildings/irrigation_systems.dds"
 }
 pp_river_boatmen_yard_cap_modifier = {
 	positive = "gfx/interface/icons/buildings/river_boatmen_yard.dds"
-}
-forest_capacity = {
-	positive = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
-}
-forest_rank_capacity_modifier = {
-	positive = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
-}
-forest_capacity_cost = {
-	positive = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
-	negative = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
 }

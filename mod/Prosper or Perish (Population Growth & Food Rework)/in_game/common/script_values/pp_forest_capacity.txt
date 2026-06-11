@@ -1,4 +1,7 @@
-﻿forest_gross_capacity = {
+﻿forest_capacity = {
+	# Public max_levels path. Keep this flat: each row is one visible source
+	# in GetMaxLevelInformation. Forest/lumber buildings consume capacity by
+	# subtracting their levels directly from this same sum.
 	add = {
 		desc = "BUILDING_LEVEL_BASE_FOREST"
 		if = {
@@ -16,53 +19,92 @@
 			multiply = 0.030
 		}
 	}
-	add = {
-		desc = "BUILDING_LEVEL_FOREST_CAPACITY_IMPROVEMENTS"
-		value = modifier:forest_capacity
-	}
-}
-
-forest_max_level = {
-	# Public max_levels path. Keep this flat: nested script values create
-	# unlabeled correction rows in GetMaxLevelInformation.
-	add = {
-		desc = "BUILDING_LEVEL_BASE_FOREST"
-		if = {
-			limit = { has_variable = pp_forest_base_capacity }
-			value = var:pp_forest_base_capacity
+	if = {
+		limit = { has_town_rights = town_rights_type:manorial_customals }
+		add = {
+			desc = "BUILDING_LEVEL_FOREST_MANORIAL_CUSTOMALS"
+			value = 1
 		}
-		else = { value = 0 }
 	}
 	if = {
-		limit = { has_variable = pp_forest_base_capacity }
+		limit = { location_rank = location_rank:megalopolis }
 		add = {
-			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
-			value = var:pp_forest_base_capacity
-			multiply = max_rgo_workers
-			multiply = 0.030
+			desc = "BUILDING_LEVEL_FOREST_LOCATION_RANK"
+			value = -20
 		}
 	}
-	add = {
-		desc = "BUILDING_LEVEL_FOREST_CAPACITY_IMPROVEMENTS"
-		value = modifier:forest_capacity
+	if = {
+		limit = { location_rank = location_rank:city }
+		add = {
+			desc = "BUILDING_LEVEL_FOREST_LOCATION_RANK"
+			value = -5
+		}
 	}
-	add = {
-		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FOREST"
-		value = modifier:forest_rank_capacity_modifier
+	if = {
+		limit = { location_rank = location_rank:town }
+		add = {
+			desc = "BUILDING_LEVEL_FOREST_LOCATION_RANK"
+			value = -1
+		}
 	}
-	add = {
-		desc = "BUILDING_LEVEL_FOREST_CAPACITY_USED"
-		value = modifier:forest_capacity_cost
+	if = {
+		limit = { has_building = building_type:forest_village }
+		subtract = {
+			desc = "BUILDING_LEVEL_FOREST_FOREST_VILLAGE"
+			value = "location_building_level(building_type:forest_village)"
+		}
+	}
+	if = {
+		limit = { has_building = building_type:managed_forest_village }
+		subtract = {
+			desc = "BUILDING_LEVEL_FOREST_MANAGED_FOREST_VILLAGE"
+			value = "location_building_level(building_type:managed_forest_village)"
+		}
+	}
+	if = {
+		limit = { has_building = building_type:lumber_mill }
+		subtract = {
+			desc = "BUILDING_LEVEL_FOREST_LUMBER_MILL"
+			value = "location_building_level(building_type:lumber_mill)"
+		}
+	}
+	if = {
+		limit = { has_building = building_type:water_sawmill }
+		subtract = {
+			desc = "BUILDING_LEVEL_FOREST_WATER_SAWMILL"
+			value = "location_building_level(building_type:water_sawmill)"
+		}
+	}
+	if = {
+		limit = { has_building = building_type:lumber_mill_improved }
+		subtract = {
+			desc = "BUILDING_LEVEL_FOREST_LUMBER_MILL_IMPROVED"
+			value = "location_building_level(building_type:lumber_mill_improved)"
+		}
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_FOREST_URBANIZATION"
 		value = total_building_levels
-		add = modifier:forest_capacity_cost
+		if = {
+			limit = { has_building = building_type:forest_village }
+			subtract = { value = "location_building_level(building_type:forest_village)" }
+		}
+		if = {
+			limit = { has_building = building_type:managed_forest_village }
+			subtract = { value = "location_building_level(building_type:managed_forest_village)" }
+		}
+		if = {
+			limit = { has_building = building_type:lumber_mill }
+			subtract = { value = "location_building_level(building_type:lumber_mill)" }
+		}
+		if = {
+			limit = { has_building = building_type:water_sawmill }
+			subtract = { value = "location_building_level(building_type:water_sawmill)" }
+		}
+		if = {
+			limit = { has_building = building_type:lumber_mill_improved }
+			subtract = { value = "location_building_level(building_type:lumber_mill_improved)" }
+		}
 		multiply = 0.1
 	}
-}
-
-forest_capacity_available = {
-	add = forest_max_level
-	min = 0
 }

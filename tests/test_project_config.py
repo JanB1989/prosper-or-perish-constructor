@@ -1258,7 +1258,7 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
     )
     granary_text = (BUILDING_BLUEPRINT_ROOT / "granary.yml").read_text(encoding="utf-8-sig")
     fishing_text = (BUILDING_BLUEPRINT_ROOT / "fishing_village.yml").read_text(encoding="utf-8-sig")
-    fishing_potential = _text_block_between(fishing_text, "location_potential = {", "\n        allow = {")
+    fishing_potential = _text_block_between(fishing_text, "location_potential = {", "\n\n        build_time")
     fruit_trigger_text = (
         MOD_ROOT
         / "in_game"
@@ -1278,6 +1278,7 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
 
     orchard_exception_locations = set(re.findall(r"this = location:(\w+)", fruit_trigger_text))
     assert orchard_exception_locations == set(current_invalid_locations["fruit_orchard"])
+    assert "var:pp_fruit_orchard_eligible > 0" in fruit_text
     assert "pp_fruit_orchard_location_potential = yes" in fruit_text
     assert "pp_vanilla_start_fruit_orchard_location" not in fruit_text
     assert "raw_material = goods:beeswax" in farm_base_block
@@ -1325,6 +1326,10 @@ def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
         assert "pp_fruit_orchard_fixed_env_bonus" not in text
         assert "pp_sheep_farms_fixed_env_bonus" not in text
 
+    fruit_text = (BUILDING_BLUEPRINT_ROOT / "fruit_orchard.yml").read_text(encoding="utf-8-sig")
+    assert "var:pp_fruit_orchard_eligible > 0" in fruit_text
+    assert "NOT = { has_variable = pp_fruit_orchard_eligible }" in fruit_text
+
     game_start = GAME_START.read_text(encoding="utf-8-sig")
     assert "NOT = { pp_general_farmable_food_location_potential = yes }" in game_start
     assert "NOT = { pp_fruit_orchard_location_potential = yes }" in game_start
@@ -1337,6 +1342,9 @@ def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
     assert "NOT = { raw_material = goods:wool }" not in game_start
 
     rgo_effects = RGO_STATIC_BONUS_EFFECTS.read_text(encoding="utf-8-sig")
+    assert "pp_refresh_fruit_orchard_eligibility" in rgo_effects
+    assert "set_variable = { name = pp_fruit_orchard_eligible value = 0 }" in rgo_effects
+    assert "set_variable = { name = pp_fruit_orchard_eligible value = 1 }" in rgo_effects
     assert "raw_material = goods:fruit" in rgo_effects
     assert "raw_material = goods:wool" in rgo_effects
 
@@ -1350,9 +1358,8 @@ def test_fish_blueprints_use_shared_capacity_pool_and_keep_distinctions() -> Non
         assert "max_levels = fish_capacity" in text
         assert "_fishery_max_level" not in text
         assert "fishing_village_max_level" not in text
-        assert "custom_tooltip = {" in text
-        assert "text = PP_HAS_FISHING_CAPACITY" in text
-        assert "fish_capacity > 0" in text
+        assert "text = PP_HAS_FISHING_CAPACITY" not in text
+        assert "fish_capacity > 0" not in text
         assert "fish_capacity_cost = -1" not in text
         assert "pp_fishing_village_fixed_env_bonus" not in text
 
@@ -1368,7 +1375,7 @@ def test_fish_blueprints_use_shared_capacity_pool_and_keep_distinctions() -> Non
 
     for blueprint in ("ocean_fishery", "offshore_fishery"):
         text = (BUILDING_BLUEPRINT_ROOT / f"{blueprint}.yml").read_text(encoding="utf-8-sig")
-        location_potential = _text_block_between(text, "location_potential = {", "\n    allow = {")
+        location_potential = _text_block_between(text, "location_potential = {", "\n\n    construction_demand")
         assert "is_coastal = yes" in location_potential
         assert "has_river = yes" not in location_potential
         assert "is_adjacent_to_lake = yes" not in location_potential
@@ -1385,7 +1392,7 @@ def test_forest_blueprints_use_shared_capacity_pool() -> None:
     for blueprint in FOREST_CAP_BLUEPRINTS:
         text = blueprint.read_text(encoding="utf-8-sig")
         assert "max_levels = forest_capacity" in text
-        assert "forest_capacity > 0" in text
+        assert "forest_capacity > 0" not in text
         assert "forest_capacity_cost = -1" not in text
         assert "forest_village_max_level" not in text
         assert "pp_forest_village_fixed_env_bonus" not in text
@@ -2480,6 +2487,8 @@ def test_rgo_static_bonus_game_start_uses_shared_refresh_effect() -> None:
     game_start = GAME_START.read_text(encoding="utf-8-sig")
 
     assert "pp_refresh_rgo_static_bonus = yes" in game_start
+    assert "pp_refresh_fruit_orchard_eligibility = yes" in game_start
+    assert "set_variable = { name = pp_fruit_orchard_eligible value = 0 }" in game_start
     assert "modifier = pp_rgo_bonus_" not in game_start
 
 
@@ -2495,6 +2504,7 @@ def test_raw_material_change_hook_refreshes_rgo_static_bonus() -> None:
     assert isinstance(on_actions, CList)
     assert "pp_refresh_rgo_static_bonus_on_raw_material_changed" in {str(item) for item in on_actions.items}
     assert _clist_contains(refresh_on_action, "pp_refresh_rgo_static_bonus", True)
+    assert _clist_contains(refresh_on_action, "pp_refresh_fruit_orchard_eligibility", True)
 
 
 def test_rgo_static_bonus_refresh_removes_and_reapplies_all_bonus_modifiers() -> None:
@@ -2502,7 +2512,12 @@ def test_rgo_static_bonus_refresh_removes_and_reapplies_all_bonus_modifiers() ->
     effect_text = RGO_STATIC_BONUS_EFFECTS.read_text(encoding="utf-8-sig")
     effects = {entry.key: entry.value for entry in parse_file(RGO_STATIC_BONUS_EFFECTS).entries}
     refresh = effects["pp_refresh_rgo_static_bonus"]
+    orchard_refresh = effects["pp_refresh_fruit_orchard_eligibility"]
     assert isinstance(refresh, CList)
+    assert isinstance(orchard_refresh, CList)
+    assert "set_variable = { name = pp_fruit_orchard_eligible value = 0 }" in effect_text
+    assert "set_variable = { name = pp_fruit_orchard_eligible value = 1 }" in effect_text
+    assert "pp_fruit_orchard_location_potential = yes" in effect_text
 
     for good in bonuses:
         modifier = f"pp_rgo_bonus_{good}"
@@ -2523,6 +2538,7 @@ def test_columbian_exchange_actions_refresh_rgo_bonus_after_raw_material_swap() 
 
     assert action_text.count("change_raw_material = scope:target_good") == 2
     assert action_text.count("pp_refresh_rgo_static_bonus = yes") == 2
+    assert action_text.count("pp_refresh_fruit_orchard_eligibility = yes") == 2
     assert action_text.count(
         "change_raw_material = scope:target_good\n\t\t\tpp_refresh_rgo_static_bonus = yes"
     ) == 2
@@ -2538,6 +2554,7 @@ def test_columbian_exchange_debug_event_refreshes_after_raw_material_swap() -> N
     assert "change_raw_material = goods:maize" in event_text
     assert "change_raw_material = goods:potato" in event_text
     assert "pp_refresh_rgo_static_bonus = yes" in event_text
+    assert "pp_refresh_fruit_orchard_eligibility = yes" in event_text
     assert event_text.count(
         "change_raw_material = goods:maize\n\t\t\t}\n\t\t\tpp_refresh_rgo_static_bonus = yes"
     ) == 1

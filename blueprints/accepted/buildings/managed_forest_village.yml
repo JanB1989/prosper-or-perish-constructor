@@ -56,10 +56,6 @@ building:
         }
     }
 
-    allow = {
-        forest_capacity > 0
-    }
-
     unique_production_methods = {
         pp_managed_forest_village_base_leather = {
             produced = leather

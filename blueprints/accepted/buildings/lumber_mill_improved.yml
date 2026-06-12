@@ -51,10 +51,6 @@ building:
         }
     }
 
-    allow = {
-        forest_capacity > 0
-    }
-
     construction_demand = workshop_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no

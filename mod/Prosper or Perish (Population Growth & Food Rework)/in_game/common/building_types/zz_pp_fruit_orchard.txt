@@ -15,7 +15,13 @@ REPLACE:fruit_orchard = {
     forbidden_for_estates = yes
     ai_forbid_shutdown = no
     location_potential = {
-        pp_fruit_orchard_location_potential = yes
+        OR = {
+            var:pp_fruit_orchard_eligible > 0
+            AND = {
+                NOT = { has_variable = pp_fruit_orchard_eligible }
+                pp_fruit_orchard_location_potential = yes
+            }
+        }
     }
     unique_production_methods = {
         pp_fruit_orchard_base_fruit = {

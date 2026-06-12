@@ -38,13 +38,6 @@ building:
         is_coastal = yes
     }
 
-    allow = {
-        custom_tooltip = {
-            text = PP_HAS_FISHING_CAPACITY
-            fish_capacity > 0
-        }
-    }
-
     construction_demand = village_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no

@@ -48,12 +48,6 @@ building:
             }
         }
 
-        allow = {
-            custom_tooltip = {
-                text = PP_HAS_FISHING_CAPACITY
-                fish_capacity > 0
-            }
-        }
         build_time = village_build_time
         # Slot 0 â€” fishery ground / climate (temperate vs arctic)
         unique_production_methods = {

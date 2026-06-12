@@ -6,6 +6,7 @@ pp_precalculate_building_capacities = {
 		set_variable = { name = pp_farm_base_capacity value = 0 }
 		set_variable = { name = pp_fish_base_capacity value = 0 }
 		set_variable = { name = pp_forest_base_capacity value = 0 }
+		set_variable = { name = pp_fruit_orchard_eligible value = 0 }
 	}
 	every_location_in_the_world = {
 		limit = { is_ownable = yes }
@@ -21,5 +22,6 @@ pp_precalculate_building_capacities = {
 			name = pp_forest_base_capacity
 			value = pp_forest_base_capacity_value
 		}
+		pp_refresh_fruit_orchard_eligibility = yes
 	}
 }

@@ -328,6 +328,7 @@ TRY_REPLACE:move_nw_good_to_new_location = {
 			change_prosperity = prosperity_weak_penalty
 			change_raw_material = scope:target_good
 			pp_refresh_rgo_static_bonus = yes
+			pp_refresh_fruit_orchard_eligibility = yes
 		}
 	}
 
@@ -823,6 +824,7 @@ TRY_REPLACE:move_ow_good_to_new_location = {
 			change_prosperity = prosperity_weak_penalty
 			change_raw_material = scope:target_good
 			pp_refresh_rgo_static_bonus = yes
+			pp_refresh_fruit_orchard_eligibility = yes
 		}
 	}
 

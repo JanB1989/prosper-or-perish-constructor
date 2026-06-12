@@ -25,9 +25,6 @@ REPLACE:forest_village = {
         }
     }
 
-    allow = {
-        forest_capacity > 0
-    }
     build_time = village_build_time
     unique_production_methods = {
         pp_forest_village_base_leather = {

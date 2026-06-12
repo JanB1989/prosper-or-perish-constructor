@@ -19,13 +19,6 @@ location_potential = {
     is_coastal = yes
 }
 
-allow = {
-    custom_tooltip = {
-        text = PP_HAS_FISHING_CAPACITY
-        fish_capacity > 0
-    }
-}
-
 construction_demand = workshop_construction
 ai_forbid_shutdown = no
 forbidden_for_estates = no

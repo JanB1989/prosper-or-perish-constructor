@@ -51,9 +51,6 @@ building:
                 raw_material = goods:wild_game
             }
         }
-    allow = {
-        forest_capacity > 0
-    }
     category = rgo_building_category
 
     custom_tags = { forest_capacity }

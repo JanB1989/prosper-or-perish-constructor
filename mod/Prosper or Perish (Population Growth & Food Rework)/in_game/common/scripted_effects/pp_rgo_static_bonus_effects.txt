@@ -1,6 +1,14 @@
 ﻿# Prosper or Perish - shared RGO static bonus refresh helpers.
 # Root scope: location.
 
+pp_refresh_fruit_orchard_eligibility = {
+	set_variable = { name = pp_fruit_orchard_eligible value = 0 }
+	if = {
+		limit = { pp_fruit_orchard_location_potential = yes }
+		set_variable = { name = pp_fruit_orchard_eligible value = 1 }
+	}
+}
+
 pp_refresh_rgo_static_bonus = {
 	remove_location_modifier = pp_rgo_bonus_beeswax
 	remove_location_modifier = pp_rgo_bonus_chili

@@ -90,23 +90,23 @@ forest_capacity = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:forest_village }
-			subtract = { value = "location_building_level(building_type:forest_village)" }
+			subtract = "location_building_level(building_type:forest_village)"
 		}
 		if = {
 			limit = { has_building = building_type:managed_forest_village }
-			subtract = { value = "location_building_level(building_type:managed_forest_village)" }
+			subtract = "location_building_level(building_type:managed_forest_village)"
 		}
 		if = {
 			limit = { has_building = building_type:lumber_mill }
-			subtract = { value = "location_building_level(building_type:lumber_mill)" }
+			subtract = "location_building_level(building_type:lumber_mill)"
 		}
 		if = {
 			limit = { has_building = building_type:water_sawmill }
-			subtract = { value = "location_building_level(building_type:water_sawmill)" }
+			subtract = "location_building_level(building_type:water_sawmill)"
 		}
 		if = {
 			limit = { has_building = building_type:lumber_mill_improved }
-			subtract = { value = "location_building_level(building_type:lumber_mill_improved)" }
+			subtract = "location_building_level(building_type:lumber_mill_improved)"
 		}
 		multiply = 0.1
 	}
@@ -194,23 +194,23 @@ forest_capacity_max_forest_village = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:forest_village }
-			subtract = { value = "location_building_level(building_type:forest_village)" }
+			subtract = "location_building_level(building_type:forest_village)"
 		}
 		if = {
 			limit = { has_building = building_type:managed_forest_village }
-			subtract = { value = "location_building_level(building_type:managed_forest_village)" }
+			subtract = "location_building_level(building_type:managed_forest_village)"
 		}
 		if = {
 			limit = { has_building = building_type:lumber_mill }
-			subtract = { value = "location_building_level(building_type:lumber_mill)" }
+			subtract = "location_building_level(building_type:lumber_mill)"
 		}
 		if = {
 			limit = { has_building = building_type:water_sawmill }
-			subtract = { value = "location_building_level(building_type:water_sawmill)" }
+			subtract = "location_building_level(building_type:water_sawmill)"
 		}
 		if = {
 			limit = { has_building = building_type:lumber_mill_improved }
-			subtract = { value = "location_building_level(building_type:lumber_mill_improved)" }
+			subtract = "location_building_level(building_type:lumber_mill_improved)"
 		}
 		multiply = 0.1
 	}
@@ -295,23 +295,23 @@ forest_capacity_max_managed_forest_village = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:forest_village }
-			subtract = { value = "location_building_level(building_type:forest_village)" }
+			subtract = "location_building_level(building_type:forest_village)"
 		}
 		if = {
 			limit = { has_building = building_type:managed_forest_village }
-			subtract = { value = "location_building_level(building_type:managed_forest_village)" }
+			subtract = "location_building_level(building_type:managed_forest_village)"
 		}
 		if = {
 			limit = { has_building = building_type:lumber_mill }
-			subtract = { value = "location_building_level(building_type:lumber_mill)" }
+			subtract = "location_building_level(building_type:lumber_mill)"
 		}
 		if = {
 			limit = { has_building = building_type:water_sawmill }
-			subtract = { value = "location_building_level(building_type:water_sawmill)" }
+			subtract = "location_building_level(building_type:water_sawmill)"
 		}
 		if = {
 			limit = { has_building = building_type:lumber_mill_improved }
-			subtract = { value = "location_building_level(building_type:lumber_mill_improved)" }
+			subtract = "location_building_level(building_type:lumber_mill_improved)"
 		}
 		multiply = 0.1
 	}
@@ -396,23 +396,23 @@ forest_capacity_max_lumber_mill = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:forest_village }
-			subtract = { value = "location_building_level(building_type:forest_village)" }
+			subtract = "location_building_level(building_type:forest_village)"
 		}
 		if = {
 			limit = { has_building = building_type:managed_forest_village }
-			subtract = { value = "location_building_level(building_type:managed_forest_village)" }
+			subtract = "location_building_level(building_type:managed_forest_village)"
 		}
 		if = {
 			limit = { has_building = building_type:lumber_mill }
-			subtract = { value = "location_building_level(building_type:lumber_mill)" }
+			subtract = "location_building_level(building_type:lumber_mill)"
 		}
 		if = {
 			limit = { has_building = building_type:water_sawmill }
-			subtract = { value = "location_building_level(building_type:water_sawmill)" }
+			subtract = "location_building_level(building_type:water_sawmill)"
 		}
 		if = {
 			limit = { has_building = building_type:lumber_mill_improved }
-			subtract = { value = "location_building_level(building_type:lumber_mill_improved)" }
+			subtract = "location_building_level(building_type:lumber_mill_improved)"
 		}
 		multiply = 0.1
 	}
@@ -497,23 +497,23 @@ forest_capacity_max_water_sawmill = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:forest_village }
-			subtract = { value = "location_building_level(building_type:forest_village)" }
+			subtract = "location_building_level(building_type:forest_village)"
 		}
 		if = {
 			limit = { has_building = building_type:managed_forest_village }
-			subtract = { value = "location_building_level(building_type:managed_forest_village)" }
+			subtract = "location_building_level(building_type:managed_forest_village)"
 		}
 		if = {
 			limit = { has_building = building_type:lumber_mill }
-			subtract = { value = "location_building_level(building_type:lumber_mill)" }
+			subtract = "location_building_level(building_type:lumber_mill)"
 		}
 		if = {
 			limit = { has_building = building_type:water_sawmill }
-			subtract = { value = "location_building_level(building_type:water_sawmill)" }
+			subtract = "location_building_level(building_type:water_sawmill)"
 		}
 		if = {
 			limit = { has_building = building_type:lumber_mill_improved }
-			subtract = { value = "location_building_level(building_type:lumber_mill_improved)" }
+			subtract = "location_building_level(building_type:lumber_mill_improved)"
 		}
 		multiply = 0.1
 	}
@@ -598,23 +598,23 @@ forest_capacity_max_lumber_mill_improved = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:forest_village }
-			subtract = { value = "location_building_level(building_type:forest_village)" }
+			subtract = "location_building_level(building_type:forest_village)"
 		}
 		if = {
 			limit = { has_building = building_type:managed_forest_village }
-			subtract = { value = "location_building_level(building_type:managed_forest_village)" }
+			subtract = "location_building_level(building_type:managed_forest_village)"
 		}
 		if = {
 			limit = { has_building = building_type:lumber_mill }
-			subtract = { value = "location_building_level(building_type:lumber_mill)" }
+			subtract = "location_building_level(building_type:lumber_mill)"
 		}
 		if = {
 			limit = { has_building = building_type:water_sawmill }
-			subtract = { value = "location_building_level(building_type:water_sawmill)" }
+			subtract = "location_building_level(building_type:water_sawmill)"
 		}
 		if = {
 			limit = { has_building = building_type:lumber_mill_improved }
-			subtract = { value = "location_building_level(building_type:lumber_mill_improved)" }
+			subtract = "location_building_level(building_type:lumber_mill_improved)"
 		}
 		multiply = 0.1
 	}

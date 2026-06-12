@@ -395,7 +395,7 @@ def test_farm_capacity_values_are_flat_visible_sums() -> None:
         assert f"limit = {{ has_building = building_type:{building} }}" in block
         assert f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"' in block
         assert f'value = "location_building_level(building_type:{building})"' in block
-        assert f'subtract = {{ value = "location_building_level(building_type:{building})" }}' in block
+        assert f'subtract = "location_building_level(building_type:{building})"' in block
 
     for building in LAND_FARM_BUILDINGS:
         max_block = _script_value_block(text, f"farm_capacity_max_{building}")
@@ -404,7 +404,7 @@ def test_farm_capacity_values_are_flat_visible_sums() -> None:
             if other_building == building:
                 continue
             assert f'desc = "BUILDING_LEVEL_FARM_{other_building.upper()}"' in max_block
-        assert f'subtract = {{ value = "location_building_level(building_type:{building})" }}' in max_block
+        assert f'subtract = "location_building_level(building_type:{building})"' in max_block
 
     forbidden_snippets = (
         "modifier:farm_space_used",
@@ -568,6 +568,7 @@ def test_farming_capacity_uses_flat_source_rows_without_modifier_channel() -> No
     assert len(re.findall(r"value\s*=\s*modifier:farm_capacity\b", text)) == 0
     assert "farm_capacity_cost" not in text
     assert "farm_capacity_from_location_rank" not in text
+    assert 'subtract = { value = "location_building_level(' not in text
     for building in ("irrigation_systems", "aqueduct_system", *LAND_FARM_BUILDINGS):
         assert f'value = "location_building_level(building_type:{building})"' in text
     for building in LAND_FARM_BUILDINGS:
@@ -606,6 +607,7 @@ def test_building_capacity_tooltip_paths_do_not_use_obsolete_helpers() -> None:
         assert "location_building_level(" in block
         assert "has_location_modifier = river_flowing_through_" not in block
         assert "min = 0" not in block
+        assert 'subtract = { value = "location_building_level(' not in block
 
     assert "modifier:farm_capacity_from_river_size" in capacity_blocks["farm_capacity"]
     assert "modifier:fish_capacity_from_river_size" in capacity_blocks["fish_capacity"]
@@ -634,6 +636,7 @@ def test_building_capacity_tooltip_paths_do_not_use_obsolete_helpers() -> None:
         assert obsolete not in text
     assert len(re.findall(r"modifier:fish_capacity\b", text)) == 0
     assert len(re.findall(r"modifier:forest_capacity\b", text)) == 0
+    assert 'subtract = { value = "location_building_level(' not in text
 
     for max_value in FARM_CAPACITY_MAX_VALUES:
         assert "value = farm_capacity" not in _script_value_block(farming_text, max_value)

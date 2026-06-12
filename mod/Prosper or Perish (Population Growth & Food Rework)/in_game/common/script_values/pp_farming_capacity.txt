@@ -310,115 +310,115 @@ farm_capacity = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -726,115 +726,115 @@ farm_capacity_max_farming_village = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -1139,115 +1139,115 @@ farm_capacity_max_farming_village_rotations = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -1552,115 +1552,115 @@ farm_capacity_max_model_farm = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -1965,115 +1965,115 @@ farm_capacity_max_fruit_orchard = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -2378,115 +2378,115 @@ farm_capacity_max_pomological_orchard = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -2791,115 +2791,115 @@ farm_capacity_max_sheep_farms = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -3204,115 +3204,115 @@ farm_capacity_max_enclosed_sheep_walks = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -3617,115 +3617,115 @@ farm_capacity_max_horse_breeders = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -4030,115 +4030,115 @@ farm_capacity_max_elephant_kraal = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -4443,115 +4443,115 @@ farm_capacity_max_fiber_crops_farm = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -4856,115 +4856,115 @@ farm_capacity_max_cotton_plantation = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -5269,115 +5269,115 @@ farm_capacity_max_cotton_farm = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -5682,115 +5682,115 @@ farm_capacity_max_sugar_plantation = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -6095,115 +6095,115 @@ farm_capacity_max_sugarcane_farm = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -6508,115 +6508,115 @@ farm_capacity_max_tobacco_plantation = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -6921,115 +6921,115 @@ farm_capacity_max_tobacco_farm = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -7334,115 +7334,115 @@ farm_capacity_max_dye_plantation = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -7747,115 +7747,115 @@ farm_capacity_max_chili_plantation = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -8160,115 +8160,115 @@ farm_capacity_max_clove_grove = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -8573,115 +8573,115 @@ farm_capacity_max_cocoa_grove = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -8986,115 +8986,115 @@ farm_capacity_max_coffee_grove = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -9399,115 +9399,115 @@ farm_capacity_max_incense_grove = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -9812,115 +9812,115 @@ farm_capacity_max_pepper_garden = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -10225,115 +10225,115 @@ farm_capacity_max_saffron_croft = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -10638,115 +10638,115 @@ farm_capacity_max_sericulture_farm = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -11051,115 +11051,115 @@ farm_capacity_max_simplers_grove = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -11464,115 +11464,115 @@ farm_capacity_max_tea_garden = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}
@@ -11877,115 +11877,115 @@ farm_capacity_max_vineyard_estate = {
 		value = total_building_levels
 		if = {
 			limit = { has_building = building_type:farming_village }
-			subtract = { value = "location_building_level(building_type:farming_village)" }
+			subtract = "location_building_level(building_type:farming_village)"
 		}
 		if = {
 			limit = { has_building = building_type:farming_village_rotations }
-			subtract = { value = "location_building_level(building_type:farming_village_rotations)" }
+			subtract = "location_building_level(building_type:farming_village_rotations)"
 		}
 		if = {
 			limit = { has_building = building_type:model_farm }
-			subtract = { value = "location_building_level(building_type:model_farm)" }
+			subtract = "location_building_level(building_type:model_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:fruit_orchard }
-			subtract = { value = "location_building_level(building_type:fruit_orchard)" }
+			subtract = "location_building_level(building_type:fruit_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:pomological_orchard }
-			subtract = { value = "location_building_level(building_type:pomological_orchard)" }
+			subtract = "location_building_level(building_type:pomological_orchard)"
 		}
 		if = {
 			limit = { has_building = building_type:sheep_farms }
-			subtract = { value = "location_building_level(building_type:sheep_farms)" }
+			subtract = "location_building_level(building_type:sheep_farms)"
 		}
 		if = {
 			limit = { has_building = building_type:enclosed_sheep_walks }
-			subtract = { value = "location_building_level(building_type:enclosed_sheep_walks)" }
+			subtract = "location_building_level(building_type:enclosed_sheep_walks)"
 		}
 		if = {
 			limit = { has_building = building_type:horse_breeders }
-			subtract = { value = "location_building_level(building_type:horse_breeders)" }
+			subtract = "location_building_level(building_type:horse_breeders)"
 		}
 		if = {
 			limit = { has_building = building_type:elephant_kraal }
-			subtract = { value = "location_building_level(building_type:elephant_kraal)" }
+			subtract = "location_building_level(building_type:elephant_kraal)"
 		}
 		if = {
 			limit = { has_building = building_type:fiber_crops_farm }
-			subtract = { value = "location_building_level(building_type:fiber_crops_farm)" }
+			subtract = "location_building_level(building_type:fiber_crops_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_plantation }
-			subtract = { value = "location_building_level(building_type:cotton_plantation)" }
+			subtract = "location_building_level(building_type:cotton_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:cotton_farm }
-			subtract = { value = "location_building_level(building_type:cotton_farm)" }
+			subtract = "location_building_level(building_type:cotton_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:sugar_plantation }
-			subtract = { value = "location_building_level(building_type:sugar_plantation)" }
+			subtract = "location_building_level(building_type:sugar_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:sugarcane_farm }
-			subtract = { value = "location_building_level(building_type:sugarcane_farm)" }
+			subtract = "location_building_level(building_type:sugarcane_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_plantation }
-			subtract = { value = "location_building_level(building_type:tobacco_plantation)" }
+			subtract = "location_building_level(building_type:tobacco_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:tobacco_farm }
-			subtract = { value = "location_building_level(building_type:tobacco_farm)" }
+			subtract = "location_building_level(building_type:tobacco_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:dye_plantation }
-			subtract = { value = "location_building_level(building_type:dye_plantation)" }
+			subtract = "location_building_level(building_type:dye_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:chili_plantation }
-			subtract = { value = "location_building_level(building_type:chili_plantation)" }
+			subtract = "location_building_level(building_type:chili_plantation)"
 		}
 		if = {
 			limit = { has_building = building_type:clove_grove }
-			subtract = { value = "location_building_level(building_type:clove_grove)" }
+			subtract = "location_building_level(building_type:clove_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:cocoa_grove }
-			subtract = { value = "location_building_level(building_type:cocoa_grove)" }
+			subtract = "location_building_level(building_type:cocoa_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:coffee_grove }
-			subtract = { value = "location_building_level(building_type:coffee_grove)" }
+			subtract = "location_building_level(building_type:coffee_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:incense_grove }
-			subtract = { value = "location_building_level(building_type:incense_grove)" }
+			subtract = "location_building_level(building_type:incense_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:pepper_garden }
-			subtract = { value = "location_building_level(building_type:pepper_garden)" }
+			subtract = "location_building_level(building_type:pepper_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:saffron_croft }
-			subtract = { value = "location_building_level(building_type:saffron_croft)" }
+			subtract = "location_building_level(building_type:saffron_croft)"
 		}
 		if = {
 			limit = { has_building = building_type:sericulture_farm }
-			subtract = { value = "location_building_level(building_type:sericulture_farm)" }
+			subtract = "location_building_level(building_type:sericulture_farm)"
 		}
 		if = {
 			limit = { has_building = building_type:simplers_grove }
-			subtract = { value = "location_building_level(building_type:simplers_grove)" }
+			subtract = "location_building_level(building_type:simplers_grove)"
 		}
 		if = {
 			limit = { has_building = building_type:tea_garden }
-			subtract = { value = "location_building_level(building_type:tea_garden)" }
+			subtract = "location_building_level(building_type:tea_garden)"
 		}
 		if = {
 			limit = { has_building = building_type:vineyard_estate }
-			subtract = { value = "location_building_level(building_type:vineyard_estate)" }
+			subtract = "location_building_level(building_type:vineyard_estate)"
 		}
 		multiply = 0.05
 	}

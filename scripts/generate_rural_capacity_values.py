@@ -125,7 +125,7 @@ def _urbanization_subtract_rows(*, prefix: str, buildings: Iterable[str], multip
             [
                 _line("if = {", 2),
                 _line(f"limit = {{ has_building = building_type:{building} }}", 3),
-                _line(f'subtract = {{ value = "location_building_level(building_type:{building})" }}', 3),
+                _line(f'subtract = "location_building_level(building_type:{building})"', 3),
                 _line("}", 2),
             ]
         )

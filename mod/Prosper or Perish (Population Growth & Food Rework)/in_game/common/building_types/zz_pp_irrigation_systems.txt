@@ -29,7 +29,6 @@ REPLACE:irrigation_systems = {
   }
   construction_demand = village_construction
   raw_modifier = {
-    farm_capacity_from_other_buildings = -0.05
     farm_capacity_from_irrigation_systems = 0.60
   }
 

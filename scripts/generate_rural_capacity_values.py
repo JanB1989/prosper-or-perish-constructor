@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import Iterable
 
 from prosper_or_perish_constructor.rural_capacity import (
-    FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER,
     FARM_WATER_CONTROL_BUILDINGS,
     FISH_CAP_BUILDINGS,
     FOREST_CAP_BUILDINGS,
@@ -93,28 +92,14 @@ def _farm_modifier_rows(
     return rows
 
 
-def _urbanization_subtract_rows(*, prefix: str, buildings: Iterable[str], multiplier: str) -> list[str]:
-    rows = [
+def _building_level_pressure_rows(*, prefix: str) -> list[str]:
+    return [
         _line("subtract = {", 1),
         _line(f'desc = "BUILDING_LEVEL_{prefix}_URBANIZATION"', 2),
         _line("value = total_building_levels", 2),
+        _line("multiply = 0.05", 2),
+        _line("}", 1),
     ]
-    for building in buildings:
-        rows.extend(
-            [
-                _line("if = {", 2),
-                _line(f"limit = {{ has_building = building_type:{building} }}", 3),
-                _line(f'subtract = "location_building_level(building_type:{building})"', 3),
-                _line("}", 2),
-            ]
-        )
-    rows.extend(
-        [
-            _line(f"multiply = {multiplier}", 2),
-            _line("}", 1),
-        ]
-    )
-    return rows
 
 
 def _script_value(name: str, rows: Iterable[str], comments: Iterable[str] = ()) -> str:
@@ -189,14 +174,7 @@ def _farm_source_rows(omit_building: str | None = None) -> list[str]:
             ]
         )
     rows.extend(_farm_modifier_rows(prefix="FARM", buildings=LAND_FARM_BUILDINGS, omit_building=omit_building))
-    rows.extend(
-        [
-            _line("add = {", 1),
-            _line('desc = "BUILDING_LEVEL_FARM_URBANIZATION"', 2),
-            _line(f"value = modifier:{FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER}", 2),
-            _line("}", 1),
-        ]
-    )
+    rows.extend(_building_level_pressure_rows(prefix="FARM"))
     return rows
 
 
@@ -290,13 +268,7 @@ def _forest_source_rows(omit_building: str | None = None) -> list[str]:
             omit_building=omit_building,
         )
     )
-    rows.extend(
-        _urbanization_subtract_rows(
-            prefix="FOREST",
-            buildings=FOREST_CAP_BUILDINGS,
-            multiplier="0.1",
-        )
-    )
+    rows.extend(_building_level_pressure_rows(prefix="FOREST"))
     return rows
 
 

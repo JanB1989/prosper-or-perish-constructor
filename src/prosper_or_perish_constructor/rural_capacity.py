@@ -53,9 +53,5 @@ FARM_WATER_CONTROL_BUILDINGS = (
     ("khmer_baray", "0.60"),
     ("aqueduct_system", "2"),
 )
-FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER = "farm_capacity_from_other_buildings"
-
-
 def farm_capacity_modifier_for_building(building: str) -> str:
     return f"farm_capacity_from_{building}"
-

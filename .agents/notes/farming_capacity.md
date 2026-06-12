@@ -49,7 +49,11 @@ separate flat max-level path:
 - source-specific labels such as `Farm Related RGO`, `Natural Fishing Grounds`,
   `Forest Geography and [rgo|e]`, `Maximum RGO Size`, `[river|e] Size`,
   `Location Rank`, linked building names, and
-  `Reduced Capacity from [pp_buildings_in_location|e]`;
+  `Reduced Capacity from Building Levels`;
+- do not link the building-level capacity-pressure row to
+  `[pp_buildings_in_location|e]`, because that concept displays the separate
+  `building_levels` static modifier rather than the active rural-capacity
+  scripted-value row;
 - no generic "Capacity Improvements" bucket for rural capacities.
 
 ## Performance Rule
@@ -102,7 +106,8 @@ capacity-improvement bucket or a hidden gross-capacity row.
   rows, and fish should not get urbanization pressure.
 - `forest_capacity` includes forest geography/RGO, Maximum RGO Size scaling,
   Manorial Customals, location-rank pressure, direct forest/lumber-building
-  level subtraction, and reduced capacity from other buildings in the location.
+  level subtraction, and the same total building-level pressure pattern used by
+  farming capacity.
 - Manorial Customals and forest location-rank effects should be visible rows in
   the scripted value, not modifier buckets.
 - Fish/forest map modes should show current capacity only and direct players to

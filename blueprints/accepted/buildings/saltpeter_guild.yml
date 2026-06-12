@@ -42,7 +42,6 @@ building:
     custom_tags = { guild }
     construction_demand = guild_construction
     raw_modifier = {
-      farm_capacity_from_other_buildings = -0.05
     }
 localization:
   entries:

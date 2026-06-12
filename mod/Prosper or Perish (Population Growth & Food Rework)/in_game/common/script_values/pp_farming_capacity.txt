@@ -197,9 +197,10 @@ farm_capacity = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -395,9 +396,10 @@ farm_capacity_max_farming_village = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -590,9 +592,10 @@ farm_capacity_max_farming_village_rotations = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -785,9 +788,10 @@ farm_capacity_max_model_farm = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -980,9 +984,10 @@ farm_capacity_max_fruit_orchard = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -1175,9 +1180,10 @@ farm_capacity_max_pomological_orchard = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -1370,9 +1376,10 @@ farm_capacity_max_sheep_farms = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -1565,9 +1572,10 @@ farm_capacity_max_enclosed_sheep_walks = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -1760,9 +1768,10 @@ farm_capacity_max_horse_breeders = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -1955,9 +1964,10 @@ farm_capacity_max_elephant_kraal = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -2150,9 +2160,10 @@ farm_capacity_max_fiber_crops_farm = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -2345,9 +2356,10 @@ farm_capacity_max_cotton_plantation = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -2540,9 +2552,10 @@ farm_capacity_max_cotton_farm = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -2735,9 +2748,10 @@ farm_capacity_max_sugar_plantation = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -2930,9 +2944,10 @@ farm_capacity_max_sugarcane_farm = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -3125,9 +3140,10 @@ farm_capacity_max_tobacco_plantation = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -3320,9 +3336,10 @@ farm_capacity_max_tobacco_farm = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -3515,9 +3532,10 @@ farm_capacity_max_dye_plantation = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -3710,9 +3728,10 @@ farm_capacity_max_chili_plantation = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -3905,9 +3924,10 @@ farm_capacity_max_clove_grove = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -4100,9 +4120,10 @@ farm_capacity_max_cocoa_grove = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -4295,9 +4316,10 @@ farm_capacity_max_coffee_grove = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -4490,9 +4512,10 @@ farm_capacity_max_incense_grove = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -4685,9 +4708,10 @@ farm_capacity_max_pepper_garden = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -4880,9 +4904,10 @@ farm_capacity_max_saffron_croft = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -5075,9 +5100,10 @@ farm_capacity_max_sericulture_farm = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -5270,9 +5296,10 @@ farm_capacity_max_simplers_grove = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -5465,9 +5492,10 @@ farm_capacity_max_tea_garden = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"
 		value = modifier:farm_capacity_from_vineyard_estate
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }
 
@@ -5660,8 +5688,9 @@ farm_capacity_max_vineyard_estate = {
 		desc = "BUILDING_LEVEL_FARM_TEA_GARDEN"
 		value = modifier:farm_capacity_from_tea_garden
 	}
-	add = {
+	subtract = {
 		desc = "BUILDING_LEVEL_FARM_URBANIZATION"
-		value = modifier:farm_capacity_from_other_buildings
+		value = total_building_levels
+		multiply = 0.05
 	}
 }

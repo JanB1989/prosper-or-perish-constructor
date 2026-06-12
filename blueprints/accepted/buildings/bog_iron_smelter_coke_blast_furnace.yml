@@ -74,7 +74,6 @@ building:
 
     construction_demand = manufactory_construction
     raw_modifier = {
-      farm_capacity_from_other_buildings = -0.05
     }
 prices:
   - key: pp_bog_iron_smelter_coke_blast_furnace_price

@@ -10,7 +10,6 @@ building:
     	price = pp_bund_price
     	custom_tags = { pp_food_security_priority pp_water_control_priority }
     	raw_modifier = {
-    		farm_capacity_from_other_buildings = -0.05
     		farm_capacity_from_bund = 0.60
     	}
 

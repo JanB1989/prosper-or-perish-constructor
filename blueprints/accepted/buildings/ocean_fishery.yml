@@ -21,7 +21,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = fish_capacity
+    max_levels = fish_capacity_max_ocean_fishery
     pop_type = laborers
     employment_size = 3
     price = pp_ocean_fishery_price

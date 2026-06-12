@@ -7,10 +7,13 @@ localization.
 
 ## Design Intent
 
-- Farming, Fishing, and Forest Capacity are each one value: a sum of sources
-  that add or subtract that capacity.
-- Rural capacity building `max_levels` should use `farm_capacity`,
-  `fish_capacity`, or `forest_capacity` directly.
+- Farming, Fishing, and Forest Capacity are each one visible remaining/free
+  capacity value: a sum of sources that add capacity minus the buildings that
+  already consume that capacity.
+- Rural capacity building `max_levels` should use the matching flat
+  per-building max value: `farm_capacity_max_<building_key>`,
+  `fish_capacity_max_<building_key>`, or `forest_capacity_max_<building_key>`.
+  These values equal remaining capacity plus that building's current level.
 - A source either affects the capacity directly or it does not affect it.
 - Avoid user-facing abstractions such as "capacity used", "available capacity",
   "gross capacity", generic capacity-improvement buckets, or separate
@@ -18,8 +21,9 @@ localization.
 - Existing farming, fishing, forest, and lumber buildings subtract their
   building levels directly from the relevant capacity. Water-control buildings,
   river size, population capacity, rank, RGO suitability, Maximum RGO Size,
-  Manorial Customals, and other sources add or subtract as direct rows in that
-  same value where relevant.
+  Manorial Customals, and other sources add or subtract as direct rows where
+  relevant. The per-building max values copy those same rows and omit only that
+  building's own capacity-consumption row.
 - Performance may be revisited later, but not at the cost of making the visible
   tooltip stop showing the actual direct sources of the sum.
 
@@ -35,10 +39,12 @@ localization keys. The previous complicated paths produced a tooltip with
 correct source rows plus an extra missing-key row that was the opposite sign of
 the visible source sum.
 
-The practical fix was to make `farm_capacity`, `fish_capacity`, and
-`forest_capacity` the flat public paths:
+The practical fix is to keep `farm_capacity`, `fish_capacity`, and
+`forest_capacity` as flat remaining-capacity paths, and to give each building a
+separate flat max-level path:
 
 - no nested helper values in the `max_levels` path;
+- no `value = farm_capacity` plus an own-level add-back row;
 - one `desc` per visible source row;
 - source-specific labels such as `Farm Related RGO`, `Natural Fishing Grounds`,
   `Forest Geography and [rgo|e]`, `Maximum RGO Size`, `[river|e] Size`,
@@ -48,11 +54,26 @@ The practical fix was to make `farm_capacity`, `fish_capacity`, and
 
 ## Performance Rule
 
-For land-farm buildings, `max_levels = farm_capacity` is the canonical capacity
-consumer. Do not also add `allow = { farm_capacity > 0 }` to those building
-definitions unless an in-game regression proves it is required. Profiling showed
-that duplicate gate as a major repeated evaluation cost because the full flat
-capacity sum is calculated once for `allow` and again for `max_levels`.
+For land-farm buildings, `max_levels = farm_capacity_max_<building_key>` is the
+canonical capacity consumer. Do not also add `allow = { farm_capacity > 0 }` to
+those building definitions unless an in-game regression proves it is required.
+Profiling showed that duplicate gate as a major repeated evaluation cost
+because the full flat capacity sum is calculated once for `allow` and again for
+`max_levels`.
+
+The core invariant is:
+
+```text
+max_levels(building X) = remaining_capacity + current_level_of_X
+                       = total_capacity - levels_of_other_capacity_buildings
+```
+
+For example, if total farming capacity is 10 and the location has three
+farming villages plus one fruit orchard, then `farm_capacity` is 6,
+`farm_capacity_max_farming_village` is 9, and
+`farm_capacity_max_fruit_orchard` is 7. The max-level tooltip should express
+that by omitting the hovered building's own subtraction row, not by hiding an
+add-back helper behind another value.
 
 Fruit orchard is a special hotspot because it is a replaced vanilla building and
 the engine evaluates its static location potential very frequently. Keep its

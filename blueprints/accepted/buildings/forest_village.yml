@@ -29,7 +29,7 @@ building:
         audio_tier = 1
         startup_ramp_target = rural_startup_ramp_target
         is_foreign = no
-        max_levels = forest_capacity
+        max_levels = forest_capacity_max_forest_village
         pop_type = peasants
         category = village_category
         custom_tags = { pp_food_security_priority pp_staple_food_priority forest_capacity }

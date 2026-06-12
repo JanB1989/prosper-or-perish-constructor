@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:sugarcane_farm:building
 sugarcane_farm = {
 is_foreign = no
-max_levels = farm_capacity
+max_levels = farm_capacity_max_sugarcane_farm
 pop_type = laborers
 employment_size = 3
 price = pp_sugarcane_farm_price

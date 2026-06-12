@@ -1193,7 +1193,7 @@ def test_slave_plantation_replacements_keep_colonial_rgo_gate_and_farm_capacity(
         assert "owner ?= { is_colonial_subject = yes }" in body
         assert "pop_type = slaves" in body
         assert "slaves_goods" in body
-        assert "max_levels = farm_capacity" in body
+        assert f"max_levels = farm_capacity_max_{building}" in body
         assert "farm_capacity > 0" not in body
 
 
@@ -1208,7 +1208,7 @@ def test_non_slave_crop_farms_are_default_rgo_laborer_buildings() -> None:
         assert blueprint["building"]["mode"] == "CREATE"
         assert blueprint["building"]["source"] == "pp_new_buildings.txt"
         assert "pop_type = laborers" in body
-        assert "max_levels = farm_capacity" in body
+        assert f"max_levels = farm_capacity_max_{building}" in body
         assert "farm_capacity > 0" not in body
         assert re.search(
             rf"location_potential\s*=\s*\{{\s*raw_material\s*=\s*goods:{good}\s*\}}",

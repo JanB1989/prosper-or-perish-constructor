@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:managed_forest_village:building
 managed_forest_village = {
 is_foreign = no
-max_levels = forest_capacity
+max_levels = forest_capacity_max_managed_forest_village
 pop_type = laborers
 employment_size = 7
 price = pp_managed_forest_village_price

@@ -122,6 +122,7 @@ LAND_FARM_BUILDINGS = (
     "vineyard_estate",
 )
 LAND_FARM_BLUEPRINTS = tuple(BUILDING_BLUEPRINT_ROOT / f"{key}.yml" for key in LAND_FARM_BUILDINGS)
+FARM_CAPACITY_MAX_VALUES = tuple(f"farm_capacity_max_{key}" for key in LAND_FARM_BUILDINGS)
 FISH_CAP_BUILDINGS = (
     "fishing_village",
     "ocean_fishery",
@@ -134,6 +135,8 @@ FOREST_CAP_BUILDINGS = (
     "water_sawmill",
     "lumber_mill_improved",
 )
+FISH_CAPACITY_MAX_VALUES = tuple(f"fish_capacity_max_{key}" for key in FISH_CAP_BUILDINGS)
+FOREST_CAPACITY_MAX_VALUES = tuple(f"forest_capacity_max_{key}" for key in FOREST_CAP_BUILDINGS)
 FISH_CAP_BLUEPRINTS = tuple(BUILDING_BLUEPRINT_ROOT / f"{key}.yml" for key in FISH_CAP_BUILDINGS)
 FOREST_CAP_BLUEPRINTS = tuple(BUILDING_BLUEPRINT_ROOT / f"{key}.yml" for key in FOREST_CAP_BUILDINGS)
 EXCLUDED_FARM_CAP_BUILDINGS = (
@@ -335,11 +338,11 @@ def test_accepted_blueprints_validate() -> None:
         validate_blueprint_file(blueprint)
 
 
-def test_farm_capacity_is_one_visible_sum() -> None:
+def test_farm_capacity_values_are_flat_visible_sums() -> None:
     parsed = parse_file(FARMING_CAPACITY)
     entries = {entry.key: entry.value for entry in parsed.entries}
     assert "farm_capacity" in entries
-    assert len(entries) == 1
+    assert set(entries) == {"farm_capacity", *FARM_CAPACITY_MAX_VALUES}
     assert "farm_gross_capacity" not in entries
     assert "farm_max_level" not in entries
     assert "farm_capacity_available" not in entries
@@ -355,12 +358,11 @@ def test_farm_capacity_is_one_visible_sum() -> None:
     assert "farming_village_max_level" not in entries
 
     text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
-    block = _text_block_between(text + "\n__END__", "farm_capacity = {", "\n__END__")
+    block = _script_value_block(text, "farm_capacity")
 
     required_snippets = (
-        "Public max_levels path",
-        "Keep this flat",
-        "each row is one visible source",
+        "Public remaining-capacity path",
+        "Capacity buildings subtract their levels directly from this sum",
         'desc = "BUILDING_LEVEL_BASE_FARM_RGO"\n\t\tif = {\n\t\t\tlimit = { has_variable = pp_farm_base_capacity }\n\t\t\tvalue = var:pp_farm_base_capacity',
         "limit = { has_variable = pp_farm_base_capacity }",
         'desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"\n\t\t\tvalue = var:pp_farm_base_capacity\n\t\t\tmultiply = max_rgo_workers\n\t\t\tmultiply = 0.125',
@@ -370,7 +372,8 @@ def test_farm_capacity_is_one_visible_sum() -> None:
         'desc = "BUILDING_LEVEL_FARM_LOCATION_RANK"\n\t\t\tvalue = -1',
         'desc = "BUILDING_LEVEL_FARM_RIVER"\n\t\tvalue = modifier:farm_capacity_from_river_size',
         'desc = "BUILDING_LEVEL_FARM_MANORIAL_CUSTOMALS"\n\t\t\tvalue = 1',
-        'desc = "BUILDING_LEVEL_FARM_URBANIZATION"\n\t\tvalue = total_building_levels\n\t\tmultiply = 0.05',
+        'desc = "BUILDING_LEVEL_FARM_URBANIZATION"\n\t\tvalue = total_building_levels',
+        "multiply = 0.05",
     )
     missing = [snippet for snippet in required_snippets if snippet not in block]
     assert not missing
@@ -392,6 +395,16 @@ def test_farm_capacity_is_one_visible_sum() -> None:
         assert f"limit = {{ has_building = building_type:{building} }}" in block
         assert f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"' in block
         assert f'value = "location_building_level(building_type:{building})"' in block
+        assert f'subtract = {{ value = "location_building_level(building_type:{building})" }}' in block
+
+    for building in LAND_FARM_BUILDINGS:
+        max_block = _script_value_block(text, f"farm_capacity_max_{building}")
+        assert f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"' not in max_block
+        for other_building in LAND_FARM_BUILDINGS:
+            if other_building == building:
+                continue
+            assert f'desc = "BUILDING_LEVEL_FARM_{other_building.upper()}"' in max_block
+        assert f'subtract = {{ value = "location_building_level(building_type:{building})" }}' in max_block
 
     forbidden_snippets = (
         "modifier:farm_space_used",
@@ -418,6 +431,19 @@ def test_farm_capacity_is_one_visible_sum() -> None:
     offenders = [snippet for snippet in forbidden_snippets if snippet in block]
     assert not offenders
     assert len(re.findall(r"value\s*=\s*modifier:farm_capacity\b", text)) == 0
+
+
+def test_rural_capacity_max_level_invariant_example() -> None:
+    total_capacity = 10
+    levels = {"farming_village": 3, "fruit_orchard": 1}
+
+    remaining_capacity = total_capacity - sum(levels.values())
+    farming_village_max = remaining_capacity + levels["farming_village"]
+    fruit_orchard_max = remaining_capacity + levels["fruit_orchard"]
+
+    assert remaining_capacity == 6
+    assert farming_village_max == 9
+    assert fruit_orchard_max == 7
 
 
 def test_granary_storage_and_startup_placement_are_compatible() -> None:
@@ -529,7 +555,7 @@ def test_farming_capacity_uses_flat_source_rows_without_modifier_channel() -> No
     text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
     parsed = parse_file(FARMING_CAPACITY)
     entries = {entry.key: entry.value for entry in parsed.entries}
-    assert set(entries) == {"farm_capacity"}
+    assert set(entries) == {"farm_capacity", *FARM_CAPACITY_MAX_VALUES}
 
     assert "land_farm_building_levels" not in entries
     assert "farm_capacity_remaining" not in entries
@@ -544,6 +570,10 @@ def test_farming_capacity_uses_flat_source_rows_without_modifier_channel() -> No
     assert "farm_capacity_from_location_rank" not in text
     for building in ("irrigation_systems", "aqueduct_system", *LAND_FARM_BUILDINGS):
         assert f'value = "location_building_level(building_type:{building})"' in text
+    for building in LAND_FARM_BUILDINGS:
+        max_block = _script_value_block(text, f"farm_capacity_max_{building}")
+        assert f"value = farm_capacity" not in max_block
+        assert f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"' not in max_block
 
 
 def test_building_capacity_tooltip_paths_do_not_use_obsolete_helpers() -> None:
@@ -555,14 +585,23 @@ def test_building_capacity_tooltip_paths_do_not_use_obsolete_helpers() -> None:
         encoding="utf-8-sig"
     )
     capacity_blocks = {
-        "farm_capacity": _text_block_between(farming_text + "\n__END__", "farm_capacity = {", "\n__END__"),
-        "fish_capacity": _text_block_between(fishing_text + "\n__END__", "fish_capacity = {", "\n__END__"),
-        "forest_capacity": _text_block_between(forest_text + "\n__END__", "forest_capacity = {", "\n__END__"),
+        "farm_capacity": _script_value_block(farming_text, "farm_capacity"),
+        "fish_capacity": _script_value_block(fishing_text, "fish_capacity"),
+        "forest_capacity": _script_value_block(forest_text, "forest_capacity"),
     }
 
-    assert {entry.key for entry in parse_file(FARMING_CAPACITY).entries} == {"farm_capacity"}
-    assert {entry.key for entry in parse_file(FISHING_CAPACITY).entries} == {"fish_capacity"}
-    assert {entry.key for entry in parse_file(FOREST_CAPACITY).entries} == {"forest_capacity"}
+    assert {entry.key for entry in parse_file(FARMING_CAPACITY).entries} == {
+        "farm_capacity",
+        *FARM_CAPACITY_MAX_VALUES,
+    }
+    assert {entry.key for entry in parse_file(FISHING_CAPACITY).entries} == {
+        "fish_capacity",
+        *FISH_CAPACITY_MAX_VALUES,
+    }
+    assert {entry.key for entry in parse_file(FOREST_CAPACITY).entries} == {
+        "forest_capacity",
+        *FOREST_CAPACITY_MAX_VALUES,
+    }
     for block in capacity_blocks.values():
         assert "location_building_level(" in block
         assert "has_location_modifier = river_flowing_through_" not in block
@@ -595,6 +634,13 @@ def test_building_capacity_tooltip_paths_do_not_use_obsolete_helpers() -> None:
         assert obsolete not in text
     assert len(re.findall(r"modifier:fish_capacity\b", text)) == 0
     assert len(re.findall(r"modifier:forest_capacity\b", text)) == 0
+
+    for max_value in FARM_CAPACITY_MAX_VALUES:
+        assert "value = farm_capacity" not in _script_value_block(farming_text, max_value)
+    for max_value in FISH_CAPACITY_MAX_VALUES:
+        assert "value = fish_capacity" not in _script_value_block(fishing_text, max_value)
+    for max_value in FOREST_CAPACITY_MAX_VALUES:
+        assert "value = forest_capacity" not in _script_value_block(forest_text, max_value)
 
     for building in ("fishing_village", "ocean_fishery", "offshore_fishery"):
         assert f'value = "location_building_level(building_type:{building})"' in capacity_blocks[
@@ -792,7 +838,7 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
     obsolete_value = "fish_" "natural_capacity"
     obsolete_modifier = f"{obsolete_value}_modifier"
 
-    assert entries == {"fish_capacity"}
+    assert entries == {"fish_capacity", *FISH_CAPACITY_MAX_VALUES}
     assert "fish_rgo_capacity_bonus" not in entries
     assert "fish_rgo_scaling_capacity" not in entries
     assert "fish_capacity_remaining" not in entries
@@ -804,11 +850,7 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
         "pp_fish_base_capacity_value = {",
         "\npp_forest_base_capacity_value = {",
     )
-    capacity_block = _text_block_between(
-        text + "\n__END__",
-        "fish_capacity = {",
-        "\n__END__",
-    )
+    capacity_block = _script_value_block(text, "fish_capacity")
 
     for snippet in (
         "raw_material = goods:fish",
@@ -850,8 +892,7 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
     assert obsolete_value not in capacity_block
     assert obsolete_modifier not in text
     assert "max = 20" not in capacity_block
-    assert "Public max_levels path" in capacity_block
-    assert "Keep this flat" in capacity_block
+    assert "Public remaining-capacity path" in capacity_block
     for obsolete in (
         "fish_gross_capacity",
         "fish_max_level",
@@ -867,6 +908,14 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
     assert "_other_fish_building_levels" not in text
     assert "BUILDING_LEVEL_FISH_SPACE_USED_BY_OTHER_FISH_BUILDINGS" not in text
     assert len(re.findall(r"modifier:fish_capacity\b", text)) == 0
+    for building in FISH_CAP_BUILDINGS:
+        max_block = _script_value_block(text, f"fish_capacity_max_{building}")
+        assert f"value = fish_capacity" not in max_block
+        assert f'desc = "BUILDING_LEVEL_FISH_{building.upper()}"' not in max_block
+        for other_building in FISH_CAP_BUILDINGS:
+            if other_building == building:
+                continue
+            assert f'desc = "BUILDING_LEVEL_FISH_{other_building.upper()}"' in max_block
 
     forbidden = ("value = population", "value = development", "local_population_capacity", "total_building_levels", "rank_capacity")
     assert not [token for token in forbidden if token in capacity_block]
@@ -955,7 +1004,7 @@ def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> 
     text = FOREST_CAPACITY.read_text(encoding="utf-8-sig")
     cap_values = BUILDING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
     entries = {entry.key for entry in parse_file(FOREST_CAPACITY).entries}
-    assert entries == {"forest_capacity"}
+    assert entries == {"forest_capacity", *FOREST_CAPACITY_MAX_VALUES}
     assert "forest_rgo_capacity_bonus" not in entries
     assert "forest_capacity_remaining" not in entries
     assert "forest_building_levels" not in entries
@@ -965,11 +1014,7 @@ def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> 
         "pp_forest_base_capacity_value = {",
         1,
     )[1]
-    capacity_block = _text_block_between(
-        text + "\n__END__",
-        "forest_capacity = {",
-        "\n__END__",
-    )
+    capacity_block = _script_value_block(text, "forest_capacity")
 
     for snippet in (
         "raw_material = goods:lumber",
@@ -991,8 +1036,7 @@ def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> 
     )
     assert "value = modifier:forest_capacity" not in capacity_block
     assert "max = 20" not in capacity_block
-    assert "Public max_levels path" in capacity_block
-    assert "Keep this flat" in capacity_block
+    assert "Public remaining-capacity path" in capacity_block
     assert "has_town_rights = town_rights_type:manorial_customals" in capacity_block
     assert 'desc = "BUILDING_LEVEL_FOREST_MANORIAL_CUSTOMALS"\n\t\t\tvalue = 1' in capacity_block
     for rank_name, value in {"megalopolis": -20, "city": -5, "town": -1}.items():
@@ -1023,6 +1067,14 @@ def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> 
     assert "value = non_forest_building_levels" not in capacity_block
     assert "min = 0" not in capacity_block
     assert len(re.findall(r"modifier:forest_capacity\b", text)) == 0
+    for building in FOREST_CAP_BUILDINGS:
+        max_block = _script_value_block(text, f"forest_capacity_max_{building}")
+        assert f"value = forest_capacity" not in max_block
+        assert f'desc = "BUILDING_LEVEL_FOREST_{building.upper()}"' not in max_block
+        for other_building in FOREST_CAP_BUILDINGS:
+            if other_building == building:
+                continue
+            assert f'desc = "BUILDING_LEVEL_FOREST_{other_building.upper()}"' in max_block
     assert not [token for token in ("value = population", "value = development", "local_population_capacity") if token in capacity_block]
     assert "value = max_rgo_workers\n\t\tmultiply = 0.50" not in capacity_block
     assert "multiply = 1.25" not in capacity_block
@@ -1034,10 +1086,11 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
 
     for blueprint in LAND_FARM_BLUEPRINTS:
         text = blueprint.read_text(encoding="utf-8-sig")
+        expected_max = f"max_levels = farm_capacity_max_{blueprint.stem}"
 
-        assert "max_levels = farm_capacity" in text
+        assert expected_max in text
+        assert re.search(r"^\s*max_levels\s*=\s*farm_capacity\s*$", text, flags=re.M) is None
         assert "fruit_orchard_max_level" not in text
-        assert "_farm_capacity" not in text
         assert "farm_space_used" not in text
         assert "farm_capacity = -1" not in text
         assert "farm_capacity > 0" not in text
@@ -1355,7 +1408,8 @@ def test_fish_blueprints_use_shared_capacity_pool_and_keep_distinctions() -> Non
 
     for blueprint in FISH_CAP_BLUEPRINTS:
         text = blueprint.read_text(encoding="utf-8-sig")
-        assert "max_levels = fish_capacity" in text
+        assert f"max_levels = fish_capacity_max_{blueprint.stem}" in text
+        assert re.search(r"^\s*max_levels\s*=\s*fish_capacity\s*$", text, flags=re.M) is None
         assert "_fishery_max_level" not in text
         assert "fishing_village_max_level" not in text
         assert "text = PP_HAS_FISHING_CAPACITY" not in text
@@ -1391,7 +1445,8 @@ def test_forest_blueprints_use_shared_capacity_pool() -> None:
 
     for blueprint in FOREST_CAP_BLUEPRINTS:
         text = blueprint.read_text(encoding="utf-8-sig")
-        assert "max_levels = forest_capacity" in text
+        assert f"max_levels = forest_capacity_max_{blueprint.stem}" in text
+        assert re.search(r"^\s*max_levels\s*=\s*forest_capacity\s*$", text, flags=re.M) is None
         assert "forest_capacity > 0" not in text
         assert "forest_capacity_cost = -1" not in text
         assert "forest_village_max_level" not in text
@@ -1653,9 +1708,9 @@ def test_excluded_buildings_do_not_use_land_farm_capacity_pool() -> None:
     offenders: list[str] = []
     for blueprint in excluded_blueprints:
         text = blueprint.read_text(encoding="utf-8-sig")
-        if "max_levels = farm_capacity" in text:
+        if re.search(r"^\s*max_levels\s*=\s*farm_capacity\s*$", text, flags=re.M):
             offenders.append(f"{blueprint.relative_to(ROOT)}: farm_capacity")
-        if "_farm_capacity" in text:
+        if "farm_capacity_max_" in text:
             offenders.append(f"{blueprint.relative_to(ROOT)}: per-building farm max level")
         if "farm_space_used" in text:
             offenders.append(f"{blueprint.relative_to(ROOT)}: farm_space_used")
@@ -1975,9 +2030,9 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
 
 def test_capacity_culling_v2_calls_helper_for_each_capacity_building() -> None:
     expected_calls = [
-        *((building, "farm_capacity") for building in LAND_FARM_BUILDINGS),
-        *((building, "fish_capacity") for building in FISH_CAP_BUILDINGS),
-        *((building, "forest_capacity") for building in FOREST_CAP_BUILDINGS),
+        *((building, f"farm_capacity_max_{building}") for building in LAND_FARM_BUILDINGS),
+        *((building, f"fish_capacity_max_{building}") for building in FISH_CAP_BUILDINGS),
+        *((building, f"forest_capacity_max_{building}") for building in FOREST_CAP_BUILDINGS),
     ]
 
     action_entries = {entry.key: entry.value for entry in parse_file(BUILDING_CAPACITY_CULLING_V2).entries}
@@ -2769,6 +2824,22 @@ def _text_block_between(text: str, start: str, end: str) -> str:
     _, tail = text.split(start, 1)
     block, _ = tail.split(end, 1)
     return start + block
+
+
+def _script_value_block(text: str, key: str) -> str:
+    marker = f"{key} = {{"
+    start = text.index(marker)
+    brace_start = text.index("{", start)
+    depth = 0
+    for index in range(brace_start, len(text)):
+        char = text[index]
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start : index + 1]
+    raise AssertionError(f"unterminated scripted value block: {key}")
 
 
 def _farm_cap_excluded_blueprints() -> tuple[Path, ...]:

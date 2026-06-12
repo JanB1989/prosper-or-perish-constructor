@@ -4,46 +4,46 @@ pp_cull_capacity_buildings_over_max_v2 = {
 	effect = {
 		every_owned_location = {
 			# Land farm capacity
-			pp_cull_capacity_building_above_max = { building = farming_village max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = farming_village_rotations max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = model_farm max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = fruit_orchard max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = pomological_orchard max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = sheep_farms max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = enclosed_sheep_walks max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = horse_breeders max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = elephant_kraal max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = fiber_crops_farm max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = cotton_plantation max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = cotton_farm max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = sugar_plantation max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = sugarcane_farm max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = tobacco_plantation max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = tobacco_farm max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = dye_plantation max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = chili_plantation max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = clove_grove max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = cocoa_grove max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = coffee_grove max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = incense_grove max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = pepper_garden max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = saffron_croft max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = sericulture_farm max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = simplers_grove max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = tea_garden max_level = farm_capacity }
-			pp_cull_capacity_building_above_max = { building = vineyard_estate max_level = farm_capacity }
+			pp_cull_capacity_building_above_max = { building = farming_village max_level = farm_capacity_max_farming_village }
+			pp_cull_capacity_building_above_max = { building = farming_village_rotations max_level = farm_capacity_max_farming_village_rotations }
+			pp_cull_capacity_building_above_max = { building = model_farm max_level = farm_capacity_max_model_farm }
+			pp_cull_capacity_building_above_max = { building = fruit_orchard max_level = farm_capacity_max_fruit_orchard }
+			pp_cull_capacity_building_above_max = { building = pomological_orchard max_level = farm_capacity_max_pomological_orchard }
+			pp_cull_capacity_building_above_max = { building = sheep_farms max_level = farm_capacity_max_sheep_farms }
+			pp_cull_capacity_building_above_max = { building = enclosed_sheep_walks max_level = farm_capacity_max_enclosed_sheep_walks }
+			pp_cull_capacity_building_above_max = { building = horse_breeders max_level = farm_capacity_max_horse_breeders }
+			pp_cull_capacity_building_above_max = { building = elephant_kraal max_level = farm_capacity_max_elephant_kraal }
+			pp_cull_capacity_building_above_max = { building = fiber_crops_farm max_level = farm_capacity_max_fiber_crops_farm }
+			pp_cull_capacity_building_above_max = { building = cotton_plantation max_level = farm_capacity_max_cotton_plantation }
+			pp_cull_capacity_building_above_max = { building = cotton_farm max_level = farm_capacity_max_cotton_farm }
+			pp_cull_capacity_building_above_max = { building = sugar_plantation max_level = farm_capacity_max_sugar_plantation }
+			pp_cull_capacity_building_above_max = { building = sugarcane_farm max_level = farm_capacity_max_sugarcane_farm }
+			pp_cull_capacity_building_above_max = { building = tobacco_plantation max_level = farm_capacity_max_tobacco_plantation }
+			pp_cull_capacity_building_above_max = { building = tobacco_farm max_level = farm_capacity_max_tobacco_farm }
+			pp_cull_capacity_building_above_max = { building = dye_plantation max_level = farm_capacity_max_dye_plantation }
+			pp_cull_capacity_building_above_max = { building = chili_plantation max_level = farm_capacity_max_chili_plantation }
+			pp_cull_capacity_building_above_max = { building = clove_grove max_level = farm_capacity_max_clove_grove }
+			pp_cull_capacity_building_above_max = { building = cocoa_grove max_level = farm_capacity_max_cocoa_grove }
+			pp_cull_capacity_building_above_max = { building = coffee_grove max_level = farm_capacity_max_coffee_grove }
+			pp_cull_capacity_building_above_max = { building = incense_grove max_level = farm_capacity_max_incense_grove }
+			pp_cull_capacity_building_above_max = { building = pepper_garden max_level = farm_capacity_max_pepper_garden }
+			pp_cull_capacity_building_above_max = { building = saffron_croft max_level = farm_capacity_max_saffron_croft }
+			pp_cull_capacity_building_above_max = { building = sericulture_farm max_level = farm_capacity_max_sericulture_farm }
+			pp_cull_capacity_building_above_max = { building = simplers_grove max_level = farm_capacity_max_simplers_grove }
+			pp_cull_capacity_building_above_max = { building = tea_garden max_level = farm_capacity_max_tea_garden }
+			pp_cull_capacity_building_above_max = { building = vineyard_estate max_level = farm_capacity_max_vineyard_estate }
 
 			# Fish capacity
-			pp_cull_capacity_building_above_max = { building = fishing_village max_level = fish_capacity }
-			pp_cull_capacity_building_above_max = { building = ocean_fishery max_level = fish_capacity }
-			pp_cull_capacity_building_above_max = { building = offshore_fishery max_level = fish_capacity }
+			pp_cull_capacity_building_above_max = { building = fishing_village max_level = fish_capacity_max_fishing_village }
+			pp_cull_capacity_building_above_max = { building = ocean_fishery max_level = fish_capacity_max_ocean_fishery }
+			pp_cull_capacity_building_above_max = { building = offshore_fishery max_level = fish_capacity_max_offshore_fishery }
 
 			# Forest capacity
-			pp_cull_capacity_building_above_max = { building = forest_village max_level = forest_capacity }
-			pp_cull_capacity_building_above_max = { building = managed_forest_village max_level = forest_capacity }
-			pp_cull_capacity_building_above_max = { building = lumber_mill max_level = forest_capacity }
-			pp_cull_capacity_building_above_max = { building = water_sawmill max_level = forest_capacity }
-			pp_cull_capacity_building_above_max = { building = lumber_mill_improved max_level = forest_capacity }
+			pp_cull_capacity_building_above_max = { building = forest_village max_level = forest_capacity_max_forest_village }
+			pp_cull_capacity_building_above_max = { building = managed_forest_village max_level = forest_capacity_max_managed_forest_village }
+			pp_cull_capacity_building_above_max = { building = lumber_mill max_level = forest_capacity_max_lumber_mill }
+			pp_cull_capacity_building_above_max = { building = water_sawmill max_level = forest_capacity_max_water_sawmill }
+			pp_cull_capacity_building_above_max = { building = lumber_mill_improved max_level = forest_capacity_max_lumber_mill_improved }
 		}
 	}
 }

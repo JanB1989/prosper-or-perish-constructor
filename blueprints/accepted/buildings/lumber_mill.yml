@@ -31,7 +31,7 @@ building:
     audio_tier = 1
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
-    max_levels = forest_capacity
+    max_levels = forest_capacity_max_lumber_mill
     pop_type = laborers
 
     employment_size = 3

@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:dye_plantation:building
 dye_plantation = {
 is_foreign = no
-max_levels = farm_capacity
+max_levels = farm_capacity_max_dye_plantation
 pop_type = laborers
 employment_size = 3
 price = pp_dye_plantation_price

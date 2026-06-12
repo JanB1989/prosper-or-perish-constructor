@@ -15,7 +15,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = farm_capacity
+    max_levels = farm_capacity_max_tea_garden
     pop_type = laborers
     employment_size = 3
     price = pp_tea_garden_price

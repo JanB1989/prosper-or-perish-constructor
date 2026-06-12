@@ -41,7 +41,7 @@ building:
     # Age 4 represents peasant-run village intensification rather than hired estate agriculture.
     # Inputs stay capped at four goods per method and vary by crop: rotations, manure, field boundaries, storage, and water control.
     is_foreign = no
-    max_levels = farm_capacity
+    max_levels = farm_capacity_max_farming_village_rotations
     pop_type = peasants
     employment_size = 7
     price = pp_farming_village_rotations_price

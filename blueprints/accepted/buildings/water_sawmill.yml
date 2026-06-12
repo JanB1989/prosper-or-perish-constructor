@@ -29,7 +29,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = forest_capacity
+    max_levels = forest_capacity_max_water_sawmill
     pop_type = laborers
     employment_size = 4
     price = pp_water_sawmill_price

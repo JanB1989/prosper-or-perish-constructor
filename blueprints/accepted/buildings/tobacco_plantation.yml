@@ -31,9 +31,6 @@ building:
         }
     }
 
-    allow = {
-        farm_capacity > 0
-    }
 
     rural_settlement = yes
     town = yes

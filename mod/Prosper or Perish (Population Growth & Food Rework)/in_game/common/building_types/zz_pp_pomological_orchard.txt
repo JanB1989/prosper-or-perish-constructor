@@ -23,9 +23,6 @@ location_potential = {
     pp_orchard_friendly_location_potential = yes
 }
 
-allow = {
-    farm_capacity > 0
-}
 
 unique_production_methods = {
     pp_pomological_orchard_base_fruit = {

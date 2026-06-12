@@ -62,9 +62,6 @@ building:
             pp_general_farmable_food_location_potential = yes
         }
 
-        allow = {
-            farm_capacity > 0
-        }
 
         build_time = village_build_time
 

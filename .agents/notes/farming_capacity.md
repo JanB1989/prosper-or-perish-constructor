@@ -46,6 +46,20 @@ The practical fix was to make `farm_capacity`, `fish_capacity`, and
   `Reduced Capacity from [pp_buildings_in_location|e]`;
 - no generic "Capacity Improvements" bucket for rural capacities.
 
+## Performance Rule
+
+For land-farm buildings, `max_levels = farm_capacity` is the canonical capacity
+consumer. Do not also add `allow = { farm_capacity > 0 }` to those building
+definitions unless an in-game regression proves it is required. Profiling showed
+that duplicate gate as a major repeated evaluation cost because the full flat
+capacity sum is calculated once for `allow` and again for `max_levels`.
+
+Fruit orchard is a special hotspot because it is a replaced vanilla building and
+the engine evaluates its static location potential very frequently. Keep its
+startup/setup exception list inside the single
+`pp_fruit_orchard_location_potential` trigger so the live building potential and
+game-start invalid-building cleanup ask one shared static question.
+
 ## River Size
 
 River size needs small bridge modifiers, currently

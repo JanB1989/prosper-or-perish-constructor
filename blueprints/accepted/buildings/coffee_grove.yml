@@ -32,9 +32,6 @@ building:
         raw_material = goods:coffee
     }
 
-    allow = {
-        farm_capacity > 0
-    }
 
     construction_demand = basic_construction_needs
     ai_forbid_shutdown = no

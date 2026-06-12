@@ -203,19 +203,14 @@ pp_remove_invalid_buildings = {
 		every_location_in_the_world = {
 			# Avoid changing buildings on unowned locations (engine can log null-owner Market Village).
 			limit = { has_owner = yes }
-			# Fruit orchard family: allowed in orchard-friendly farm locations.
+			# Fruit orchard family: allowed in orchard-friendly farm locations and preserved vanilla starts.
 			if = {
 				limit = {
 					location_building_level = {
 						building_type = building_type:fruit_orchard
 						value > 0
 					}
-					NOT = {
-						OR = {
-							pp_orchard_friendly_location_potential = yes
-							pp_vanilla_start_fruit_orchard_location = yes
-						}
-					}
+					NOT = { pp_fruit_orchard_location_potential = yes }
 				}
 				change_building_level_in_location = {
 					building = building_type:fruit_orchard

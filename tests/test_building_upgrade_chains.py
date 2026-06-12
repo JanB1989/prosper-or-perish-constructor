@@ -1135,8 +1135,8 @@ def test_game_start_invalid_building_cleanup_matches_current_potentials() -> Non
         if "building_type:fruit_orchard" in block and "change_building_level_in_location" in block
     )
     fruit_orchard_limit = _first_script_block(fruit_orchard_block, "limit")
-    assert "pp_orchard_friendly_location_potential = yes" in fruit_orchard_limit
-    assert "pp_vanilla_start_fruit_orchard_location = yes" in fruit_orchard_limit
+    assert "pp_fruit_orchard_location_potential = yes" in fruit_orchard_limit
+    assert "pp_vanilla_start_fruit_orchard_location" not in fruit_orchard_limit
 
     fishing_village_block = next(
         block
@@ -1194,7 +1194,7 @@ def test_slave_plantation_replacements_keep_colonial_rgo_gate_and_farm_capacity(
         assert "pop_type = slaves" in body
         assert "slaves_goods" in body
         assert "max_levels = farm_capacity" in body
-        assert "farm_capacity > 0" in body
+        assert "farm_capacity > 0" not in body
 
 
 def test_non_slave_crop_farms_are_default_rgo_laborer_buildings() -> None:
@@ -1209,7 +1209,7 @@ def test_non_slave_crop_farms_are_default_rgo_laborer_buildings() -> None:
         assert blueprint["building"]["source"] == "pp_new_buildings.txt"
         assert "pop_type = laborers" in body
         assert "max_levels = farm_capacity" in body
-        assert "farm_capacity > 0" in body
+        assert "farm_capacity > 0" not in body
         assert re.search(
             rf"location_potential\s*=\s*\{{\s*raw_material\s*=\s*goods:{good}\s*\}}",
             body,

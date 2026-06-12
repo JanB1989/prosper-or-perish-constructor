@@ -32,70 +32,58 @@ pp_ai_victuals_market_on_food_crisis = {
 	effect = {
 		if = {
 			limit = { is_ai = yes }
-			every_province = {
-				if = {
-					limit = {
-						province_monthly_food_production > 100
-						any_location_in_province = {
-							is_province_capital = yes
-							owner ?= root
-							location_building_level = {
-								building_type = building_type:victuals_market
-								value > 0
-							}
-						}
-					}
-					every_location_in_province = {
+			every_owned_location = {
+				limit = { is_province_capital = yes }
+				save_scope_as = pp_food_crisis_capital
+				province = {
+					if = {
 						limit = {
-							is_province_capital = yes
-							owner ?= root
-							location_building_level = {
-								building_type = building_type:victuals_market
-								value > 0
+							province_monthly_food_production > 100
+							scope:pp_food_crisis_capital = {
+								location_building_level = {
+									building_type = building_type:victuals_market
+									value > 0
+								}
 							}
 						}
-						change_building_level_in_location = { building = building_type:victuals_market value = -1 }
+						scope:pp_food_crisis_capital = {
+							change_building_level_in_location = { building = building_type:victuals_market value = -1 }
+						}
 					}
-				}
-				else_if = {
-					limit = {
-						province_monthly_food_production < -30
-						any_location_in_province = {
-							is_province_capital = yes
-							owner ?= root
-							OR = {
-								# No victuals_market at all → build the first one
-								NOT = {
-									any_buildings_in_location = {
-										building_type = building_type:victuals_market
+					else_if = {
+						limit = {
+							province_monthly_food_production < -30
+							scope:pp_food_crisis_capital = {
+								OR = {
+									# No victuals_market at all: build the first one.
+									NOT = {
+										any_buildings_in_location = {
+											building_type = building_type:victuals_market
+										}
 									}
-								}
-								# Existing victuals_market is healthy and not at max → expand
-								AND = {
-									location_building_level = {
-										building_type = building_type:victuals_market
-										value < victuals_market_max_level
-									}
-									any_buildings_in_location = {
-										building_type = building_type:victuals_market
-										is_opened = yes
-										is_full_capacity = yes
-										is_lacking_goods = no
+									# Existing victuals_market is healthy and not at max: expand it.
+									AND = {
+										location_building_level = {
+											building_type = building_type:victuals_market
+											value < victuals_market_max_level
+										}
+										any_buildings_in_location = {
+											building_type = building_type:victuals_market
+											is_opened = yes
+											is_full_capacity = yes
+											is_lacking_goods = no
+										}
 									}
 								}
 							}
 						}
-					}
-					every_location_in_province = {
-						limit = {
-							is_province_capital = yes
-							owner ?= root
-						}
-						construct_building = {
-							building_type = building_type:victuals_market
-							instant = yes
-							cost_multiplier = 0
-							cost_multiplier_reason = "pp_ai_food_crisis"
+						scope:pp_food_crisis_capital = {
+							construct_building = {
+								building_type = building_type:victuals_market
+								instant = yes
+								cost_multiplier = 0
+								cost_multiplier_reason = "pp_ai_food_crisis"
+							}
 						}
 					}
 				}

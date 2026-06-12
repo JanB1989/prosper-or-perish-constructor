@@ -1040,7 +1040,7 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
         assert "_farm_capacity" not in text
         assert "farm_space_used" not in text
         assert "farm_capacity = -1" not in text
-        assert "farm_capacity > 0" in text
+        assert "farm_capacity > 0" not in text
         assert "max_levels = farming_capacity" not in text
         assert "max_levels = farming_village_max_level" not in text
         assert "location_potential = {" in text
@@ -1056,8 +1056,7 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
 
 def test_broad_farm_capacity_buildings_have_static_location_potential_gates() -> None:
     horse_breeders = (BUILDING_BLUEPRINT_ROOT / "horse_breeders.yml").read_text(encoding="utf-8-sig")
-    horse_potential = _text_block_between(horse_breeders, "location_potential = {", "\n\n    allow = {")
-    horse_allow = _text_block_between(horse_breeders, "allow = {", "\n\n    unique_production_methods = {")
+    horse_potential = _text_block_between(horse_breeders, "location_potential = {", "\n\n    unique_production_methods = {")
     compatibility = (
         MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_startup_building_compatibility.txt"
     ).read_text(encoding="utf-8-sig")
@@ -1073,13 +1072,13 @@ def test_broad_farm_capacity_buildings_have_static_location_potential_gates() ->
         "vegetation = sparse",
     ):
         assert snippet in compatibility
-    assert "farm_capacity > 0" in horse_allow
+    assert "farm_capacity > 0" not in horse_breeders
     _, horse_trigger = compatibility.split("pp_horse_breeders_location_potential = {", 1)
     assert "climate =" not in horse_trigger
-    assert "climate =" not in horse_allow
+    assert "climate =" not in horse_breeders
 
     fiber_crops = (BUILDING_BLUEPRINT_ROOT / "fiber_crops_farm.yml").read_text(encoding="utf-8-sig")
-    fiber_potential = _text_block_between(fiber_crops, "location_potential = {", "\n\n    allow = {")
+    fiber_potential = _text_block_between(fiber_crops, "location_potential = {", "\n\n    unique_production_methods = {")
 
     assert "pp_fiber_crops_farm_location_potential = yes" in fiber_potential
     assert "raw_material = goods:fiber_crops" in compatibility
@@ -1279,7 +1278,8 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
 
     orchard_exception_locations = set(re.findall(r"this = location:(\w+)", fruit_trigger_text))
     assert orchard_exception_locations == set(current_invalid_locations["fruit_orchard"])
-    assert "pp_vanilla_start_fruit_orchard_location = yes" in fruit_text
+    assert "pp_fruit_orchard_location_potential = yes" in fruit_text
+    assert "pp_vanilla_start_fruit_orchard_location" not in fruit_text
     assert "raw_material = goods:beeswax" in farm_base_block
     assert "raw_material = goods:beeswax" in general_farm_block
     assert "vegetation = farmland" in general_farm_block
@@ -1312,7 +1312,7 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
 
 def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
     gates = {
-        "fruit_orchard": "pp_orchard_friendly_location_potential",
+        "fruit_orchard": "pp_fruit_orchard_location_potential",
         "pomological_orchard": "pp_orchard_friendly_location_potential",
         "sheep_farms": "pp_pasture_friendly_location_potential",
         "enclosed_sheep_walks": "pp_pasture_friendly_location_potential",
@@ -1321,12 +1321,13 @@ def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
     for building, gate in gates.items():
         text = (BUILDING_BLUEPRINT_ROOT / f"{building}.yml").read_text(encoding="utf-8-sig")
         assert f"{gate} = yes" in text
-        assert "farm_capacity > 0" in text
+        assert "farm_capacity > 0" not in text
         assert "pp_fruit_orchard_fixed_env_bonus" not in text
         assert "pp_sheep_farms_fixed_env_bonus" not in text
 
     game_start = GAME_START.read_text(encoding="utf-8-sig")
     assert "NOT = { pp_general_farmable_food_location_potential = yes }" in game_start
+    assert "NOT = { pp_fruit_orchard_location_potential = yes }" in game_start
     assert "NOT = { pp_orchard_friendly_location_potential = yes }" in game_start
     assert "NOT = { pp_pasture_friendly_location_potential = yes }" in game_start
     assert "pp_general_farmable_food_location > 0" not in game_start
@@ -1933,6 +1934,23 @@ def test_legacy_capacity_culling_is_removed() -> None:
     assert "value > fruit_orchard_max_level" not in text
 
 
+def test_ai_victuals_market_crisis_scans_owned_capitals_not_all_provinces() -> None:
+    text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
+    entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
+    action_text = text.split("pp_ai_victuals_market_on_food_crisis", maxsplit=1)[1]
+
+    assert "pp_ai_victuals_market_on_food_crisis" in entries
+    assert "every_owned_location" in action_text
+    assert "limit = { is_province_capital = yes }" in action_text
+    assert "save_scope_as = pp_food_crisis_capital" in action_text
+    assert "scope:pp_food_crisis_capital" in action_text
+    assert "province_monthly_food_production > 100" in action_text
+    assert "province_monthly_food_production < -30" in action_text
+    assert "every_province" not in action_text
+    assert "every_location_in_province" not in action_text
+    assert "any_location_in_province" not in action_text
+
+
 def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -> None:
     pulse_entries = {entry.key: entry.value for entry in parse_file(COUNTRY_FOUR_YEARLY).entries}
     assert "four_yearly_country_pulse" in pulse_entries
@@ -1942,7 +1960,7 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
     on_actions = _entry_values(pulse)["on_actions"]
     assert isinstance(on_actions, CList)
 
-    assert on_actions.items == ["pp_cull_capacity_buildings_over_max_v2"]
+    assert on_actions.items == ["pp_cull_capacity_buildings_over_max_v2", "pp_ai_victuals_market_on_food_crisis"]
 
     legacy_entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
     assert "pp_cull_over_cap_buildings" not in legacy_entries

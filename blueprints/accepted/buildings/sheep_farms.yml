@@ -38,9 +38,6 @@ building:
             pp_pasture_friendly_location_potential = yes
         }
 
-        allow = {
-            farm_capacity > 0
-        }
         unique_production_methods = {
             pp_sheep_farm_base_wool = {
                 produced = wool

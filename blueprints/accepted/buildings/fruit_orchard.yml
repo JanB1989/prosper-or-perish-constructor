@@ -35,14 +35,7 @@ building:
         forbidden_for_estates = yes
         ai_forbid_shutdown = no
         location_potential = {
-            OR = {
-                pp_orchard_friendly_location_potential = yes
-                pp_vanilla_start_fruit_orchard_location = yes
-            }
-        }
-
-        allow = {
-            farm_capacity > 0
+            pp_fruit_orchard_location_potential = yes
         }
         unique_production_methods = {
             pp_fruit_orchard_base_fruit = {

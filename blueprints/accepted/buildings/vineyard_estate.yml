@@ -33,9 +33,6 @@ building:
         NOT = { has_building = building_type:winery_manufactory }
     }
 
-    allow = {
-        farm_capacity > 0
-    }
 
     construction_demand = farm_constructions
     ai_forbid_shutdown = no

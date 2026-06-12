@@ -66,6 +66,10 @@ building:
         }
     }
 
+    raw_modifier = {
+      farm_capacity_from_pomological_orchard = -1
+    }
+
     modifier = {
         local_monthly_food = 0.0
     }

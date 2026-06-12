@@ -65,6 +65,10 @@ building:
         }
     }
 
+    raw_modifier = {
+      farm_capacity_from_other_buildings = -0.05
+    }
+
     modifier = {
         local_fish_output_modifier = -0.03
         local_merchant_capacity = 0.12

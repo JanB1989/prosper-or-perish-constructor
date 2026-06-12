@@ -29,6 +29,10 @@ possible_production_methods = {
   pp_paviors_yard_maintenance
 }
 
+raw_modifier = {
+  farm_capacity_from_other_buildings = -0.05
+}
+
 modifier = {
   local_distance_from_capital_speed_propagation = 0.15
 }

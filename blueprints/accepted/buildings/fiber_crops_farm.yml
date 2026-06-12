@@ -57,6 +57,9 @@ building:
     }
 
     construction_demand = farm_constructions
+    raw_modifier = {
+      farm_capacity_from_fiber_crops_farm = -1
+    }
 localization:
   entries:
     fiber_crops_farm_slot_0: Fiber Crop Fields

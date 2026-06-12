@@ -25,6 +25,10 @@ building:
     	rural_settlement = yes
     	build_time = soldier_building
     	
+    	raw_modifier = {
+    		farm_capacity_from_other_buildings = -0.05
+    	}
+
         modifier = {
     		local_manpower = 0.02
     		can_recruit_regiment_in_this_location = yes

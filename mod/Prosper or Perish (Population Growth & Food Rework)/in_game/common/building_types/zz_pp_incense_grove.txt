@@ -47,6 +47,10 @@ unique_production_methods = {
     }
 }
 
+raw_modifier = {
+  farm_capacity_from_incense_grove = -1
+}
+
 modifier = {
     local_migration_attraction = 0.01
 }

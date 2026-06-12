@@ -54,6 +54,9 @@ building:
 
     build_time = rural_build_time
     construction_demand = horse_breeders_construction
+    raw_modifier = {
+      farm_capacity_from_horse_breeders = -1
+    }
 localization:
   entries:
     horse_breeders_slot_0: Horse Pastures

@@ -23,6 +23,10 @@ victuals_market = {
 	possible_production_methods = {
 		victuals_market_maintenance
 	}
+	raw_modifier = {
+		farm_capacity_from_other_buildings = -0.05
+	}
+
 	modifier = {
 		local_monthly_food = 60
 		local_market_access = 0.015

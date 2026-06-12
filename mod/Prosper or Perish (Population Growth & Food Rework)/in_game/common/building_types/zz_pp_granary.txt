@@ -29,6 +29,10 @@ REPLACE:granary = {
 		}
 	}
 	construction_demand = granary_construction
+	raw_modifier = {
+		farm_capacity_from_other_buildings = -0.05
+	}
+
     modifier = {
         local_food_decay_modifier = -0.0002
         local_food_capacity = 1500

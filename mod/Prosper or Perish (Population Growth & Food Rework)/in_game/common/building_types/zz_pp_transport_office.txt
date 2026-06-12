@@ -27,6 +27,10 @@ possible_production_methods = {
   pp_transport_office_maintenance
 }
 
+raw_modifier = {
+  farm_capacity_from_other_buildings = -0.05
+}
+
 modifier = {
   local_market_access = 0.015
   free_building_levels = 3

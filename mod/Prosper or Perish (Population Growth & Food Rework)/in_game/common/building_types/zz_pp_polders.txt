@@ -23,6 +23,11 @@ REPLACE:polders = {
     topography = wetlands
   }
 
+	raw_modifier = {
+		farm_capacity_from_other_buildings = -0.05
+		farm_capacity_from_polders = 0.60
+	}
+
   modifier = {
     local_population_capacity = 2.5
     local_monthly_development_modifier = 0.025

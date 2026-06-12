@@ -28,6 +28,10 @@ possible_production_methods = {
   pp_river_boatmen_yard_maintenance
 }
 
+raw_modifier = {
+  farm_capacity_from_other_buildings = -0.05
+}
+
 modifier = {
   local_market_access = 0.0075
   free_building_levels = 1.5

@@ -245,6 +245,10 @@ building:
         }
     }
 
+    raw_modifier = {
+      farm_capacity_from_other_buildings = -0.05
+    }
+
     modifier = {
         local_population_growth = -0.0002
         local_migration_attraction = 0.02

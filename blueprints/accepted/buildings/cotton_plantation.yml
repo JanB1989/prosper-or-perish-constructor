@@ -62,6 +62,10 @@ building:
         }
     }
 
+    raw_modifier = {
+      farm_capacity_from_cotton_plantation = -1
+    }
+
     modifier = {
         local_cotton_output_modifier = 0.1
         local_slave_pop_satisfaction = -0.005

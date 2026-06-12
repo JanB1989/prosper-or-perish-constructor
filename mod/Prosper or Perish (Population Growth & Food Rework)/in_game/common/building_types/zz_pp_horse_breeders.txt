@@ -40,5 +40,8 @@ unique_production_methods = {
 
 build_time = rural_build_time
 construction_demand = horse_breeders_construction
+raw_modifier = {
+  farm_capacity_from_horse_breeders = -1
+}
 }
 # <<< eu5-building-pipeline:horse_breeders:building

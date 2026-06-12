@@ -10,61 +10,19 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Iterable
 
+from prosper_or_perish_constructor.rural_capacity import (
+    FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER,
+    FARM_WATER_CONTROL_BUILDINGS,
+    FISH_CAP_BUILDINGS,
+    FOREST_CAP_BUILDINGS,
+    LAND_FARM_BUILDINGS,
+    farm_capacity_modifier_for_building,
+)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 SCRIPT_VALUES_ROOT = MOD_ROOT / "in_game" / "common" / "script_values"
-
-LAND_FARM_BUILDINGS = (
-    "farming_village",
-    "farming_village_rotations",
-    "model_farm",
-    "fruit_orchard",
-    "pomological_orchard",
-    "sheep_farms",
-    "enclosed_sheep_walks",
-    "horse_breeders",
-    "elephant_kraal",
-    "fiber_crops_farm",
-    "cotton_plantation",
-    "cotton_farm",
-    "sugar_plantation",
-    "sugarcane_farm",
-    "tobacco_plantation",
-    "tobacco_farm",
-    "dye_plantation",
-    "chili_plantation",
-    "clove_grove",
-    "cocoa_grove",
-    "coffee_grove",
-    "incense_grove",
-    "pepper_garden",
-    "saffron_croft",
-    "sericulture_farm",
-    "simplers_grove",
-    "tea_garden",
-    "vineyard_estate",
-)
-FISH_CAP_BUILDINGS = (
-    "fishing_village",
-    "ocean_fishery",
-    "offshore_fishery",
-)
-FOREST_CAP_BUILDINGS = (
-    "forest_village",
-    "managed_forest_village",
-    "lumber_mill",
-    "water_sawmill",
-    "lumber_mill_improved",
-)
-FARM_WATER_CONTROL_BUILDINGS = (
-    ("irrigation_systems", "0.60"),
-    ("bund", "0.60"),
-    ("terraces", "0.60"),
-    ("polders", "0.60"),
-    ("khmer_baray", "0.60"),
-    ("aqueduct_system", "2"),
-)
 
 
 def _line(text: str, depth: int = 0) -> str:
@@ -110,6 +68,27 @@ def _capacity_building_subtract_rows(
                     "}",
                 ),
             )
+        )
+    return rows
+
+
+def _farm_modifier_rows(
+    *,
+    prefix: str,
+    buildings: Iterable[str],
+    omit_building: str | None = None,
+) -> list[str]:
+    rows: list[str] = []
+    for building in buildings:
+        if building == omit_building:
+            continue
+        rows.extend(
+            [
+                _line("add = {", 1),
+                _line(f'desc = "BUILDING_LEVEL_{prefix}_{building.upper()}"', 2),
+                _line(f"value = modifier:{farm_capacity_modifier_for_building(building)}", 2),
+                _line("}", 1),
+            ]
         )
     return rows
 
@@ -202,25 +181,22 @@ def _farm_source_rows(omit_building: str | None = None) -> list[str]:
     )
     for building, multiplier in FARM_WATER_CONTROL_BUILDINGS:
         rows.extend(
-            _if_has_building_block(
-                building,
-                (
-                    "add = {",
-                    (1, f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"'),
-                    (1, f'value = "location_building_level(building_type:{building})"'),
-                    (1, f"multiply = {multiplier}"),
-                    "}",
-                ),
-            )
+            [
+                _line("add = {", 1),
+                _line(f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"', 2),
+                _line(f"value = modifier:{farm_capacity_modifier_for_building(building)}", 2),
+                _line("}", 1),
+            ]
         )
+    rows.extend(_farm_modifier_rows(prefix="FARM", buildings=LAND_FARM_BUILDINGS, omit_building=omit_building))
     rows.extend(
-        _capacity_building_subtract_rows(
-            prefix="FARM",
-            buildings=LAND_FARM_BUILDINGS,
-            omit_building=omit_building,
-        )
+        [
+            _line("add = {", 1),
+            _line('desc = "BUILDING_LEVEL_FARM_URBANIZATION"', 2),
+            _line(f"value = modifier:{FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER}", 2),
+            _line("}", 1),
+        ]
     )
-    rows.extend(_urbanization_subtract_rows(prefix="FARM", buildings=LAND_FARM_BUILDINGS, multiplier="0.05"))
     return rows
 
 

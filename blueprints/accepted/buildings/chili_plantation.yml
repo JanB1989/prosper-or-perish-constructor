@@ -59,6 +59,10 @@ building:
         }
     }
 
+    raw_modifier = {
+      farm_capacity_from_chili_plantation = -1
+    }
+
     modifier = {
         local_migration_attraction = 0.01
     }

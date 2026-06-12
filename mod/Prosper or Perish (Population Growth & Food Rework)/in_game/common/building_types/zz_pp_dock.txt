@@ -32,6 +32,10 @@ REPLACE:dock = {
 	}
 	construction_demand = port_building_construction
 	
+	raw_modifier = {
+		farm_capacity_from_other_buildings = -0.05
+	}
+
 	modifier = {
 		max_ships_built_at_same_time = 1
 		local_sailors = 0.016

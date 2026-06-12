@@ -1,5 +1,9 @@
 ﻿# >>> eu5-building-pipeline:pound_lock_canal_infrastructure:building
 TRY_INJECT:pound_lock_canal_infrastructure = {
+	raw_modifier = {
+		farm_capacity_from_other_buildings = -0.05
+	}
+
 	modifier = {
 		local_distance_from_capital_speed_propagation = 0.1
 		local_monthly_food_modifier = -0.05 # vanilla 0.05

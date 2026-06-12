@@ -28,6 +28,11 @@ REPLACE:irrigation_systems = {
     }
   }
   construction_demand = village_construction
+  raw_modifier = {
+    farm_capacity_from_other_buildings = -0.05
+    farm_capacity_from_irrigation_systems = 0.60
+  }
+
   modifier = {
     local_population_capacity = 1.0
     local_monthly_food_modifier = 0.00 # vanilla 0.05

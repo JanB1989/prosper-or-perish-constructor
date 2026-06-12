@@ -8,3 +8,6 @@ building:
   possible_production_methods: []
   body: |2-
         rural_settlement = yes
+        raw_modifier = {
+          farm_capacity_from_other_buildings = -0.05
+        }

@@ -44,6 +44,10 @@ REPLACE:fruit_orchard = {
     }
     build_time = rural_build_time
     construction_demand = farm_constructions
+    raw_modifier = {
+      farm_capacity_from_fruit_orchard = -1
+    }
+
     modifier = {
         local_monthly_food = 0.0
     }

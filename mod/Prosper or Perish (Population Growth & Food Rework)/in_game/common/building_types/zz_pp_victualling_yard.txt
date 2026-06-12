@@ -254,6 +254,10 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 	}
+	raw_modifier = {
+		farm_capacity_from_other_buildings = -0.05
+	}
+
 	modifier = {
 		local_victuals_output_modifier = 0.00
 	}

@@ -48,6 +48,10 @@ unique_production_methods = {
     }
 }
 
+raw_modifier = {
+  farm_capacity_from_tobacco_plantation = -1
+}
+
 modifier = {
     local_tobacco_output_modifier = 0.1
     local_slave_pop_satisfaction = -0.005

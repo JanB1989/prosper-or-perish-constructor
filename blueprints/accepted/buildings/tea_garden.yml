@@ -59,6 +59,10 @@ building:
         }
     }
 
+    raw_modifier = {
+      farm_capacity_from_tea_garden = -1
+    }
+
     modifier = {
         local_migration_attraction = 0.01
     }

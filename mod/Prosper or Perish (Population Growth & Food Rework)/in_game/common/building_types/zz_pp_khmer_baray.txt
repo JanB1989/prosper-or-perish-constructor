@@ -2,6 +2,11 @@
 TRY_INJECT:khmer_baray = {
 	price = pp_khmer_baray_price
 	custom_tags = { pp_food_security_priority pp_water_control_priority }
+	raw_modifier = {
+		farm_capacity_from_other_buildings = -0.05
+		farm_capacity_from_khmer_baray = 0.60
+	}
+
 	modifier = {
 		local_monthly_food_modifier = -0.20 # vanilla 0.20
 		local_rice_output_modifier = 0.1

@@ -46,6 +46,10 @@ unique_production_methods = {
     }
 }
 
+raw_modifier = {
+  farm_capacity_from_tobacco_farm = -1
+}
+
 modifier = {
     local_migration_attraction = 0.01
 }

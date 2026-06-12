@@ -128,6 +128,10 @@ building:
         }
     }
 
+    raw_modifier = {
+      farm_capacity_from_other_buildings = -0.05
+    }
+
     modifier = {
         local_monthly_food = 0.0
         local_peasants_estate_power = 0.1

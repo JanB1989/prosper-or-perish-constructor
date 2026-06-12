@@ -40,6 +40,9 @@ building:
 
     custom_tags = { lategame_manufactory }
     construction_demand = mill_construction
+    raw_modifier = {
+      farm_capacity_from_other_buildings = -0.05
+    }
 localization:
   entries:
     putrefaction_mill_slot_0: Putrefaction Mill Demands

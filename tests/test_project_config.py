@@ -8,12 +8,18 @@ from eu5gameparser.clausewitz.parser import parse_file, parse_text
 from eu5gameparser.clausewitz.serializer import normalized_value
 from eu5gameparser.clausewitz.syntax import CList
 from eu5gameparser.domain.availability import annotate_building_data_availability
+from eu5gameparser.domain.building_types import load_building_type_data
 from eu5gameparser.domain.eu5 import load_eu5_data
 from eu5gameparser.load_order import LoadOrderConfig, load_merged_directory
 from eu5_mod_orchestrator.blueprints import accepted_blueprint_files, validate_blueprint_file
 from eu5_mod_orchestrator.config import load_project_config
 from mod_injector.config import load_mod_injector_config
 from prosper_or_perish_constructor import cli
+from prosper_or_perish_constructor.rural_capacity import (
+    FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER,
+    FARM_WATER_CONTROL_BUILDINGS,
+    farm_capacity_modifier_for_building,
+)
 from scripts.generate_setup_building_corrections import (
     expand_town_setup,
     parse_setup_model,
@@ -47,7 +53,6 @@ BUILDING_CAP_ADJUSTMENTS = SCRIPT_VALUES_ROOT / "pp_building_cap_adjustments.txt
 BUILDING_CAPACITY_VALUES = SCRIPT_VALUES_ROOT / "pp_building_capacity_values.txt"
 BUILDING_TYPE_ROOT = MOD_ROOT / "in_game" / "common" / "building_types"
 EMPLOYMENT_SYSTEMS_ROOT = MOD_ROOT / "in_game" / "common" / "employment_systems"
-AQUEDUCT_SYSTEM = MOD_ROOT / "in_game" / "common" / "building_types" / "pp_aqueduct_system.txt"
 GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
 BUILDING_CULLING = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt"
 BUILDING_CAPACITY_CULLING_V2 = (
@@ -69,6 +74,12 @@ MODIFIER_TYPE_DEFINITIONS = MOD_ROOT / "main_menu" / "common" / "modifier_type_d
 MODIFIER_ICONS = MOD_ROOT / "main_menu" / "common" / "modifier_icons"
 GAME_CONCEPT_ROOT = MOD_ROOT / "main_menu" / "common" / "game_concepts"
 LOCALIZATION_ROOT = MOD_ROOT / "main_menu" / "localization" / "english"
+FARMING_CAPACITY_RAW_MODIFIER_BRIDGES = (
+    BUILDING_TYPE_ROOT / "zzzz_pp_farming_capacity_raw_modifier_bridges.txt"
+)
+FARMING_CAPACITY_MODIFIER_LOCALIZATION = (
+    LOCALIZATION_ROOT / "pp_farming_capacity_modifier_types_l_english.yml"
+)
 BUILDING_MAINTENANCE_RULES = (
     MOD_ROOT / "main_menu" / "common" / "game_rules" / "pp_building_maintenance_rules.txt"
 )
@@ -372,39 +383,29 @@ def test_farm_capacity_values_are_flat_visible_sums() -> None:
         'desc = "BUILDING_LEVEL_FARM_LOCATION_RANK"\n\t\t\tvalue = -1',
         'desc = "BUILDING_LEVEL_FARM_RIVER"\n\t\tvalue = modifier:farm_capacity_from_river_size',
         'desc = "BUILDING_LEVEL_FARM_MANORIAL_CUSTOMALS"\n\t\t\tvalue = 1',
-        'desc = "BUILDING_LEVEL_FARM_URBANIZATION"\n\t\tvalue = total_building_levels',
-        "multiply = 0.05",
+        (
+            'desc = "BUILDING_LEVEL_FARM_URBANIZATION"\n'
+            f"\t\tvalue = modifier:{FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER}"
+        ),
     )
     missing = [snippet for snippet in required_snippets if snippet not in block]
     assert not missing
-    expected_water_control_rows = {
-        "irrigation_systems": "0.60",
-        "bund": "0.60",
-        "terraces": "0.60",
-        "polders": "0.60",
-        "khmer_baray": "0.60",
-        "aqueduct_system": "2",
-    }
-    for building, multiplier in expected_water_control_rows.items():
-        assert f"limit = {{ has_building = building_type:{building} }}" in block
+    for building, _multiplier in FARM_WATER_CONTROL_BUILDINGS:
         assert f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"' in block
-        assert f'value = "location_building_level(building_type:{building})"' in block
-        assert f"multiply = {multiplier}" in block
+        assert f"value = modifier:{farm_capacity_modifier_for_building(building)}" in block
 
     for building in LAND_FARM_BUILDINGS:
-        assert f"limit = {{ has_building = building_type:{building} }}" in block
         assert f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"' in block
-        assert f'value = "location_building_level(building_type:{building})"' in block
-        assert f'subtract = "location_building_level(building_type:{building})"' in block
+        assert f"value = modifier:{farm_capacity_modifier_for_building(building)}" in block
 
     for building in LAND_FARM_BUILDINGS:
         max_block = _script_value_block(text, f"farm_capacity_max_{building}")
         assert f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"' not in max_block
+        assert f"\n\t\tvalue = modifier:{farm_capacity_modifier_for_building(building)}\n" not in max_block
         for other_building in LAND_FARM_BUILDINGS:
             if other_building == building:
                 continue
             assert f'desc = "BUILDING_LEVEL_FARM_{other_building.upper()}"' in max_block
-        assert f'subtract = "location_building_level(building_type:{building})"' in max_block
 
     forbidden_snippets = (
         "modifier:farm_space_used",
@@ -427,6 +428,9 @@ def test_farm_capacity_values_are_flat_visible_sums() -> None:
         "value = population",
         "value = max_rgo_workers\n\t\tmultiply = 0.75",
         "min = 0",
+        "location_building_level(",
+        "total_building_levels",
+        "has_building = building_type:",
     )
     offenders = [snippet for snippet in forbidden_snippets if snippet in block]
     assert not offenders
@@ -551,7 +555,7 @@ def test_food_security_storage_and_market_workers_are_laborers() -> None:
         assert rendered_values["employment_size"] == employment_size
 
 
-def test_farming_capacity_uses_flat_source_rows_without_modifier_channel() -> None:
+def test_farming_capacity_uses_flat_source_specific_modifier_rows() -> None:
     text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
     parsed = parse_file(FARMING_CAPACITY)
     entries = {entry.key: entry.value for entry in parsed.entries}
@@ -561,20 +565,115 @@ def test_farming_capacity_uses_flat_source_rows_without_modifier_channel() -> No
     assert "farm_capacity_remaining" not in entries
     assert "farm_capacity_from_other_building_levels" not in entries
     assert "fruit_orchard_max_level" not in entries
-    assert "location_building_level(" in text
+    assert "location_building_level(" not in text
+    assert "total_building_levels" not in text
+    assert "has_building = building_type:" not in text
     assert "has_location_modifier = river_flowing_through_" not in text
     assert "modifier:farm_capacity_from_river_size" in text
+    assert f"modifier:{FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER}" in text
     assert "has_town_rights = town_rights_type:manorial_customals" in text
     assert len(re.findall(r"value\s*=\s*modifier:farm_capacity\b", text)) == 0
     assert "farm_capacity_cost" not in text
     assert "farm_capacity_from_location_rank" not in text
     assert 'subtract = { value = "location_building_level(' not in text
-    for building in ("irrigation_systems", "aqueduct_system", *LAND_FARM_BUILDINGS):
-        assert f'value = "location_building_level(building_type:{building})"' in text
+    for building in (*[building for building, _ in FARM_WATER_CONTROL_BUILDINGS], *LAND_FARM_BUILDINGS):
+        assert f"value = modifier:{farm_capacity_modifier_for_building(building)}" in text
     for building in LAND_FARM_BUILDINGS:
         max_block = _script_value_block(text, f"farm_capacity_max_{building}")
         assert f"value = farm_capacity" not in max_block
         assert f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"' not in max_block
+        assert f"\n\t\tvalue = modifier:{farm_capacity_modifier_for_building(building)}\n" not in max_block
+
+
+def test_farming_capacity_raw_modifier_bridges_cover_resolved_buildings() -> None:
+    parsed = parse_file(FARMING_CAPACITY_RAW_MODIFIER_BRIDGES)
+    bridge_modifiers: dict[str, dict[str, object]] = {}
+    for entry in parsed.entries:
+        mode, building = _entry_mode(entry.key)
+        assert mode == "TRY_INJECT"
+        assert isinstance(entry.value, CList)
+        values = _entry_values(entry.value)
+        assert "modifier" not in values
+        raw_modifier = values["raw_modifier"]
+        assert isinstance(raw_modifier, CList)
+        bridge_modifiers[building] = _entry_values(raw_modifier)
+
+    accepted_buildings = {path.stem for path in BUILDING_BLUEPRINT_ROOT.glob("*.yml")}
+    data = load_building_type_data(
+        profile="constructor",
+        load_order_path=ROOT / "constructor.load_order.toml",
+    )
+    resolved_buildings = set(str(key) for key in data.building_types["name"].to_list())
+    land_farms = set(LAND_FARM_BUILDINGS)
+    direct_probe_buildings = {
+        "fruit_orchard",
+        "irrigation_systems",
+        "bund",
+        "terraces",
+        "polders",
+        "khmer_baray",
+        "aqueduct_system",
+    }
+
+    assert "aqueduct_system" in accepted_buildings
+    assert not (BUILDING_TYPE_ROOT / "pp_aqueduct_system.txt").exists()
+    assert set(bridge_modifiers) == resolved_buildings - accepted_buildings
+    assert bridge_modifiers.keys().isdisjoint(accepted_buildings)
+    assert direct_probe_buildings <= accepted_buildings
+    assert direct_probe_buildings <= resolved_buildings
+    assert bridge_modifiers.keys().isdisjoint(direct_probe_buildings)
+    assert land_farms <= resolved_buildings
+
+    rendered_buildings = _database_entries(BUILDING_TYPE_ROOT)
+    for building in sorted(accepted_buildings):
+        expected = _expected_farming_capacity_raw_modifiers(building)
+
+        blueprint_values = _accepted_blueprint_building_values(building)
+        blueprint_raw_modifier = blueprint_values.get("raw_modifier")
+        assert isinstance(blueprint_raw_modifier, CList), building
+        assert _entry_values(blueprint_raw_modifier) == expected
+
+    assert direct_probe_buildings <= rendered_buildings.keys()
+    for building in sorted(accepted_buildings & rendered_buildings.keys()):
+        expected = _expected_farming_capacity_raw_modifiers(building)
+        rendered = rendered_buildings[building]
+        assert isinstance(rendered, CList)
+        rendered_raw_modifier = _entry_values(rendered).get("raw_modifier")
+        assert isinstance(rendered_raw_modifier, CList), building
+        assert _entry_values(rendered_raw_modifier) == expected
+
+    for building in sorted(resolved_buildings - accepted_buildings):
+        modifiers = bridge_modifiers[building]
+        assert modifiers == _expected_farming_capacity_raw_modifiers(building)
+
+    for building in LAND_FARM_BUILDINGS:
+        modifiers = _entry_values(
+            _accepted_blueprint_building_values(building)["raw_modifier"]  # type: ignore[arg-type]
+        )
+        assert modifiers[farm_capacity_modifier_for_building(building)] == -1
+        assert FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER not in modifiers
+
+    for building, value in FARM_WATER_CONTROL_BUILDINGS:
+        modifiers = _entry_values(
+            _accepted_blueprint_building_values(building)["raw_modifier"]  # type: ignore[arg-type]
+        )
+        assert modifiers[FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER] == -0.05
+        assert modifiers[farm_capacity_modifier_for_building(building)] == float(value)
+
+    modifier_types = _database_keys(MODIFIER_TYPE_DEFINITIONS)
+    modifier_icons = _database_keys(MODIFIER_ICONS)
+    modifier_localization = FARMING_CAPACITY_MODIFIER_LOCALIZATION.read_text(encoding="utf-8-sig")
+    expected_modifier_keys = {
+        FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER,
+        *(farm_capacity_modifier_for_building(building) for building, _ in FARM_WATER_CONTROL_BUILDINGS),
+        *(farm_capacity_modifier_for_building(building) for building in LAND_FARM_BUILDINGS),
+    }
+
+    assert expected_modifier_keys <= modifier_types
+    assert expected_modifier_keys <= modifier_icons
+    for modifier_key in expected_modifier_keys:
+        assert f"MODIFIER_TYPE_NAME_{modifier_key}:" in modifier_localization
+        assert f"MODIFIER_TYPE_DESC_{modifier_key}:" in modifier_localization
 
 
 def test_building_capacity_tooltip_paths_do_not_use_obsolete_helpers() -> None:
@@ -603,11 +702,17 @@ def test_building_capacity_tooltip_paths_do_not_use_obsolete_helpers() -> None:
         "forest_capacity",
         *FOREST_CAPACITY_MAX_VALUES,
     }
-    for block in capacity_blocks.values():
+    assert "location_building_level(" not in capacity_blocks["farm_capacity"]
+    assert "total_building_levels" not in capacity_blocks["farm_capacity"]
+    assert f"modifier:{FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER}" in capacity_blocks["farm_capacity"]
+    for block in (capacity_blocks["fish_capacity"], capacity_blocks["forest_capacity"]):
         assert "location_building_level(" in block
         assert "has_location_modifier = river_flowing_through_" not in block
         assert "min = 0" not in block
         assert 'subtract = { value = "location_building_level(' not in block
+    assert "has_location_modifier = river_flowing_through_" not in capacity_blocks["farm_capacity"]
+    assert "min = 0" not in capacity_blocks["farm_capacity"]
+    assert 'subtract = { value = "location_building_level(' not in capacity_blocks["farm_capacity"]
 
     assert "modifier:farm_capacity_from_river_size" in capacity_blocks["farm_capacity"]
     assert "modifier:fish_capacity_from_river_size" in capacity_blocks["fish_capacity"]
@@ -1626,23 +1731,14 @@ def test_farm_capacity_uses_direct_rows_with_a_river_size_bridge_modifier() -> N
     assert '"missing key":' not in localization_text
     assert "missing_key:" not in localization_text
 
-    expected_water_control_rows = {
-        "irrigation_systems": "0.60",
-        "bund": "0.60",
-        "terraces": "0.60",
-        "polders": "0.60",
-        "khmer_baray": "0.60",
-        "aqueduct_system": "2",
-    }
-    for building, multiplier in expected_water_control_rows.items():
-        assert f"limit = {{ has_building = building_type:{building} }}" in farm_capacity_text
-        assert f'value = "location_building_level(building_type:{building})"' in farm_capacity_text
-        assert f"multiply = {multiplier}" in farm_capacity_text
-        source_text = (
-            AQUEDUCT_SYSTEM
-            if building == "aqueduct_system"
-            else BUILDING_BLUEPRINT_ROOT / f"{building}.yml"
-        ).read_text(encoding="utf-8-sig")
+    for building, _multiplier in FARM_WATER_CONTROL_BUILDINGS:
+        assert f"limit = {{ has_building = building_type:{building} }}" not in farm_capacity_text
+        assert (
+            f'value = "location_building_level(building_type:{building})"'
+            not in farm_capacity_text
+        )
+        assert f"value = modifier:{farm_capacity_modifier_for_building(building)}" in farm_capacity_text
+        source_text = (BUILDING_BLUEPRINT_ROOT / f"{building}.yml").read_text(encoding="utf-8-sig")
         assert re.search(r"^\s*farm_capacity\s*=", source_text, re.MULTILINE) is None
         assert "farm_capacity_from_location_rank" not in source_text
 
@@ -2774,6 +2870,19 @@ def _accepted_blueprint_building_values(building: str) -> dict[str, object]:
     return _entry_values(body)
 
 
+def _expected_farming_capacity_raw_modifiers(building: str) -> dict[str, float | int]:
+    updates: dict[str, float | int] = {}
+    if building in LAND_FARM_BUILDINGS:
+        updates[farm_capacity_modifier_for_building(building)] = -1
+    else:
+        updates[FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER] = -0.05
+    for water_control_building, value in FARM_WATER_CONTROL_BUILDINGS:
+        if building == water_control_building:
+            updates[farm_capacity_modifier_for_building(building)] = float(value)
+            break
+    return updates
+
+
 def _rgo_bonus_values() -> dict[str, dict[str, object]]:
     bonuses: dict[str, dict[str, object]] = {}
     for entry in parse_file(RGO_STATIC_BONUSES).entries:
@@ -2800,7 +2909,10 @@ def _database_entries(root: Path) -> dict[str, object]:
     for path in sorted(root.rglob("*.txt")):
         for entry in parse_file(path).entries:
             if isinstance(entry.value, CList):
-                entries[_entry_mode(entry.key)[1]] = entry.value
+                mode, key = _entry_mode(entry.key)
+                if mode in {"INJECT", "TRY_INJECT"} and key in entries:
+                    continue
+                entries[key] = entry.value
     return entries
 
 

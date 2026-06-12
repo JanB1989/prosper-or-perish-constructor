@@ -49,6 +49,9 @@ building:
     
     	construction_demand = guild_construction
 
+    	raw_modifier = {
+    		farm_capacity_from_other_buildings = -0.05
+    	}
 localization:
   entries:
     charcoal_maker: Charcoal Clamp

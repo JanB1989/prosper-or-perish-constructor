@@ -30,5 +30,8 @@ unique_production_methods = {
 obsolete = saltpeter_guild
 custom_tags = { workshop }
 construction_demand = workshop_construction
+raw_modifier = {
+  farm_capacity_from_other_buildings = -0.05
+}
 }
 # <<< eu5-building-pipeline:saltpeter_workshop:building

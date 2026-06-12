@@ -39,6 +39,9 @@ building:
 
     custom_tags = { midgame_manufactory }
     construction_demand = mill_construction
+    raw_modifier = {
+      farm_capacity_from_other_buildings = -0.05
+    }
 localization:
   entries:
     perfumery_slot_0: Blended Incense

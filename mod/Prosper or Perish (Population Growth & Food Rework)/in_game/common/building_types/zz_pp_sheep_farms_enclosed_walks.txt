@@ -47,6 +47,10 @@ unique_production_methods = {
     }
 }
 
+raw_modifier = {
+  farm_capacity_from_enclosed_sheep_walks = -1
+}
+
 modifier = {
     local_monthly_food = 0.0
     local_wool_output_modifier = 0.02

@@ -48,6 +48,10 @@ unique_production_methods = {
     }
 }
 
+raw_modifier = {
+  farm_capacity_from_other_buildings = -0.05
+}
+
 modifier = {
     local_migration_attraction = 0.01
 }

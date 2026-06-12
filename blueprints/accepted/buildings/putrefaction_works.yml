@@ -40,6 +40,9 @@ building:
 
     custom_tags = { midgame_manufactory }
     construction_demand = manufactory_construction
+    raw_modifier = {
+      farm_capacity_from_other_buildings = -0.05
+    }
 localization:
   entries:
     putrefaction_works_slot_0: Putrefaction Demands

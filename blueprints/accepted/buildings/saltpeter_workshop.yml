@@ -40,6 +40,9 @@ building:
     obsolete = saltpeter_guild
     custom_tags = { workshop }
     construction_demand = workshop_construction
+    raw_modifier = {
+      farm_capacity_from_other_buildings = -0.05
+    }
 localization:
   entries:
     saltpeter_workshop_slot_0: Saltpeter Workshop Demands

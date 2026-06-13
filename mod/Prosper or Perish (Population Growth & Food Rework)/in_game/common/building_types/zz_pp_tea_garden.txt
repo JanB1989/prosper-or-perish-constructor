@@ -3,8 +3,7 @@ tea_garden = {
 is_foreign = no
 max_levels = farm_capacity_max_tea_garden
 pop_type = laborers
-employment_size = 3
-price = pp_tea_garden_price
+employment_size = 1
 category = rgo_building_category
 custom_tags = { farming_capacity }
 icon = tea_garden
@@ -28,7 +27,7 @@ can_close = yes
 unique_production_methods = {
     pp_tea_garden_base_tea = {
         produced = tea
-        output = 0.123
+        output = 0.041
         category = building_maintenance
     }
 }
@@ -37,10 +36,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tea_garden_bamboo_withering_trays = {
-        fiber_crops = 0.294 # bamboo trays
-        clay = 0.235 # firing hearths
+        fiber_crops = 0.098 # bamboo trays
+        clay = 0.078 # firing hearths
         produced = tea
-        output = 0.261
+        output = 0.087
         category = building_maintenance
     }
 }
@@ -50,7 +49,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_migration_attraction = 0.01
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:tea_garden:building

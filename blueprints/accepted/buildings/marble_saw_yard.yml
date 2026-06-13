@@ -28,8 +28,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 4
-    price = pp_marble_saw_yard_price
+    employment_size = 1
     category = rgo_building_category
     icon = marble_saw_yard
     rural_settlement = yes
@@ -52,7 +51,7 @@ building:
     unique_production_methods = {
         pp_marble_saw_yard_base_marble = {
             produced = marble
-            output = 0.30
+            output = 0.08
             category = building_maintenance
         }
     }
@@ -61,11 +60,11 @@ building:
             category = building_maintenance
         }
         pp_marble_saw_yard_marble = {
-            lumber = 1.00
-            tools = 1.15
-            leather = 0.28
+            lumber = 0.25
+            tools = 0.29
+            leather = 0.07
             produced = marble
-            output = 1.39
+            output = 0.35
             category = building_maintenance
         }
     }
@@ -74,17 +73,17 @@ building:
             category = building_maintenance
         }
         pp_marble_saw_yard_stone = {
-            lumber = 0.16
-            tools = 0.08
+            lumber = 0.04
+            tools = 0.02
             produced = stone
-            output = 0.576
+            output = 0.144
             category = building_maintenance
         }
         pp_marble_saw_yard_sand = {
-            lumber = 0.10
-            tools = 0.06
+            lumber = 0.03
+            tools = 0.02
             produced = sand
-            output = 0.792
+            output = 0.198
             category = building_maintenance
         }
     }
@@ -93,17 +92,11 @@ building:
     }
 
     modifier = {
-        local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_population_growth = -0.0001
+        local_migration_attraction = 0.005
     }
-prices:
-  - key: pp_marble_saw_yard_price
-    body: |2-
-      {gold = 100}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_marble_saw_yard_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('marble_saw_yard')|e].
-    MODIFIER_TYPE_NAME_pp_marble_saw_yard_price_cost_modifier: Marble Saw Yard Cost
     marble_saw_yard_slot_0: Marble Deposit
     marble_saw_yard_slot_1: Sawed Blocks
     marble_saw_yard_slot_2: Quarry Waste
@@ -115,7 +108,6 @@ localization:
     pp_marble_saw_yard_no_secondary: No Secondary Output
     pp_marble_saw_yard_stone: Quarry Rubble Sorting
     pp_marble_saw_yard_sand: Marble Fines Washing
-    pp_marble_saw_yard_price: Marble Saw Yard Price
     renaissance_sculptures_desc: Sculptural patronage raises demand for selected stone and marble. Better block selection and quarry saws improve both ordinary stone and ornamental marble supply.
 icon:
   source_png: ../assets/icons/marble_saw_yard.png

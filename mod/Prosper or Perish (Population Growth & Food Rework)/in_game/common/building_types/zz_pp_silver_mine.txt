@@ -3,8 +3,7 @@ silver_mine = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 3
-price = pp_silver_mine_price
+employment_size = 1
 category = rgo_building_category
 icon = silver_mine
 rural_settlement = yes
@@ -26,7 +25,7 @@ can_close = yes
 unique_production_methods = {
     pp_silver_mine_base_silver = {
         produced = silver
-        output = 0.22
+        output = 0.07
         category = building_maintenance
     }
 }
@@ -35,11 +34,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_silver_mine_silver = {
-        lumber = 0.66
-        tools = 0.55
-        beeswax = 0.28
+        lumber = 0.22
+        tools = 0.18
+        beeswax = 0.09
         produced = silver
-        output = 0.64
+        output = 0.21
         category = building_maintenance
     }
 }
@@ -48,10 +47,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_silver_mine_lead = {
-        lumber = 0.12
-        tools = 0.107
+        lumber = 0.04
+        tools = 0.036
         produced = lead
-        output = 0.301
+        output = 0.100
         category = building_maintenance
     }
 }
@@ -60,8 +59,8 @@ raw_modifier = {
 }
 
 modifier = {
-    local_population_growth = -0.0002
-    local_migration_attraction = 0.02
+    local_population_growth = -0.0001
+    local_migration_attraction = 0.007
 }
 }
 # <<< eu5-building-pipeline:silver_mine:building

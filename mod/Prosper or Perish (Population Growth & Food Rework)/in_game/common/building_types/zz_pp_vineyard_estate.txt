@@ -3,8 +3,7 @@ vineyard_estate = {
 is_foreign = no
 max_levels = farm_capacity_max_vineyard_estate
 pop_type = laborers
-employment_size = 3
-price = pp_vineyard_estate_price
+employment_size = 1
 category = rgo_building_category
 custom_tags = { farming_capacity }
 icon = vineyard_estate
@@ -30,17 +29,17 @@ can_close = yes
 unique_production_methods = {
     pp_vineyard_estate_base_wine = {
         produced = wine
-        output = 0.300
+        output = 0.100
         category = building_maintenance
     }
 }
 unique_production_methods = {
     pp_vineyard_estate_press_houses = {
-        lumber = 0.500 # presses, stakes, and cask staves
-        pottery = 0.250 # fermentation jars and storage vessels
-        tools = 0.050 # pruning knives and press hardware
+        lumber = 0.167 # presses, stakes, and cask staves
+        pottery = 0.083 # fermentation jars and storage vessels
+        tools = 0.017 # pruning knives and press hardware
         produced = wine
-        output = 0.667
+        output = 0.222
         category = building_maintenance
     }
 }
@@ -50,7 +49,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_migration_attraction = 0.01
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:vineyard_estate:building

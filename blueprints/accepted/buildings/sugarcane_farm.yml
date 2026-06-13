@@ -17,8 +17,7 @@ building:
     is_foreign = no
     max_levels = farm_capacity_max_sugarcane_farm
     pop_type = laborers
-    employment_size = 3
-    price = pp_sugarcane_farm_price
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { farming_capacity }
     icon = sugarcane_farm
@@ -42,7 +41,7 @@ building:
     unique_production_methods = {
         pp_sugarcane_farm_base_sugar = {
             produced = sugar
-            output = 0.120
+            output = 0.040
             category = building_maintenance
         }
     }
@@ -51,11 +50,11 @@ building:
             category = building_maintenance
         }
         pp_sugarcane_farm_boiling_house = {
-            lumber = 0.250 # cane press frames
-            pottery = 0.300 # sugar molds, syrup jars
-            tools = 0.029 # rollers and knives
+            lumber = 0.083 # cane press frames
+            pottery = 0.100 # sugar molds, syrup jars
+            tools = 0.010 # rollers and knives
             produced = sugar
-            output = 0.266
+            output = 0.089
             category = building_maintenance
         }
     }
@@ -65,16 +64,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_sugarcane_farm_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_sugarcane_farm_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('sugarcane_farm')|e].
-    MODIFIER_TYPE_NAME_pp_sugarcane_farm_price_cost_modifier: Sugarcane Farm Cost
     sugarcane_farm_slot_0: Cane Fields
     sugarcane_farm_slot_1: Pressing & Boiling
     sugarcane_farm: Sugarcane Farm
@@ -82,7 +75,6 @@ localization:
     pp_sugarcane_farm_base_sugar: Cane Fields
     pp_sugarcane_farm_cane_fields: Unpressed Cane Fields
     pp_sugarcane_farm_boiling_house: Boiling House
-    pp_sugarcane_farm_price: Sugarcane Farm Price
 icon:
   source_png: ../assets/icons/sugarcane_farm.png
   output_dds: sugarcane_farm.dds

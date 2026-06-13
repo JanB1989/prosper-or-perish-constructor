@@ -3,8 +3,7 @@ coal_mine_improved = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 4
-price = pp_coal_mine_improved_price
+employment_size = 1
 category = rgo_building_category
 icon = coal_mine_improved
 rural_settlement = yes
@@ -27,7 +26,7 @@ can_close = yes
 unique_production_methods = {
     pp_coal_mine_improved_base_coal = {
         produced = coal
-        output = 0.3
+        output = 0.1
         category = building_maintenance
     }
 }
@@ -36,11 +35,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_coal_mine_improved_coal = {
-        lumber = 1.306
-        tools = 1.383
-        beeswax = 0.307
+        lumber = 0.327
+        tools = 0.346
+        beeswax = 0.077
         produced = coal
-        output = 4.033
+        output = 1.008
         category = building_maintenance
     }
 }
@@ -49,10 +48,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_coal_mine_improved_fireclay = {
-        lumber = 0.15
-        tools = 0.1
+        lumber = 0.04
+        tools = 0.0
         produced = clay
-        output = 1.26
+        output = 0.32
         category = building_maintenance
     }
 }
@@ -61,8 +60,8 @@ raw_modifier = {
 }
 
 modifier = {
-    local_population_growth = -0.0002
-    local_migration_attraction = 0.02
+    local_population_growth = -0.0001
+    local_migration_attraction = 0.005
 }
 }
 # <<< eu5-building-pipeline:coal_mine_improved:building

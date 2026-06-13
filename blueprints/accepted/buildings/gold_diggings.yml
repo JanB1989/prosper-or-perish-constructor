@@ -28,8 +28,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 3
-    price = pp_gold_diggings_price
+    employment_size = 1
     category = rgo_building_category
     icon = gold_diggings
     rural_settlement = yes
@@ -51,7 +50,7 @@ building:
     unique_production_methods = {
         pp_gold_diggings_base_gold = {
             produced = goods_gold
-            output = 0.3
+            output = 0.1
             category = building_maintenance
         }
     }
@@ -60,10 +59,10 @@ building:
             category = building_maintenance
         }
         pp_gold_diggings_gold = {
-            lumber = 1.290
-            tools = 0.69
+            lumber = 0.430
+            tools = 0.23
             produced = goods_gold
-            output = 0.601
+            output = 0.200
             category = building_maintenance
         }
     }
@@ -72,17 +71,17 @@ building:
             category = building_maintenance
         }
         pp_gold_diggings_silver = {
-            lumber = 0.16
-            tools = 0.12
+            lumber = 0.05
+            tools = 0.04
             produced = silver
-            output = 0.12
+            output = 0.04
             category = building_maintenance
         }
         pp_gold_diggings_copper = {
-            lumber = 0.12
-            tools = 0.08
+            lumber = 0.04
+            tools = 0.03
             produced = copper
-            output = 0.168
+            output = 0.056
             category = building_maintenance
         }
     }
@@ -91,17 +90,11 @@ building:
     }
 
     modifier = {
-        local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_population_growth = -0.0001
+        local_migration_attraction = 0.007
     }
-prices:
-  - key: pp_gold_diggings_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_gold_diggings_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('gold_diggings')|e].
-    MODIFIER_TYPE_NAME_pp_gold_diggings_price_cost_modifier: Gold Diggings Cost
     gold_diggings_slot_0: Gold Deposit
     gold_diggings_slot_1: Gold Workings
     gold_diggings_slot_2: Associated Ores
@@ -113,7 +106,6 @@ localization:
     pp_gold_diggings_no_secondary: No Associated Ore Sorting
     pp_gold_diggings_silver: Electrum Sorting
     pp_gold_diggings_copper: Copper Ore Picking
-    pp_gold_diggings_price: Gold Diggings Price
 icon:
   source_png: ../assets/icons/gold_diggings.png
   output_dds: gold_diggings.dds

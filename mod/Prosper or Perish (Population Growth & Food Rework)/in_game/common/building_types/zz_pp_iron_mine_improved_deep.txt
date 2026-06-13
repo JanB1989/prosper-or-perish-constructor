@@ -3,8 +3,7 @@ iron_mine_deep = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 5
-price = pp_iron_mine_deep_price
+employment_size = 1
 category = rgo_building_category
 icon = iron_mine_deep
 rural_settlement = yes
@@ -27,7 +26,7 @@ can_close = yes
 unique_production_methods = {
     pp_iron_mine_deep_base_iron = {
         produced = iron
-        output = 0.40
+        output = 0.08
         category = building_maintenance
     }
 }
@@ -36,36 +35,36 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_iron_mine_deep_drainage_workings = {
-        lumber = 1.80 # shaft timbering, headframes
-        tools = 2.00 # pumps, picks, haulage
-        beeswax = 0.42 # candles, pump seals
+        lumber = 0.36 # shaft timbering, headframes
+        tools = 0.40 # pumps, picks, haulage
+        beeswax = 0.08 # candles, pump seals
         produced = iron
-        output = 3.816
+        output = 0.763
         category = building_maintenance
     }
     pp_iron_mine_deep_slitting_ore = {
-        lumber = 1.90 # galleries, bar racks
-        tools = 2.10 # rolls, stamps, pumps
-        beeswax = 0.45 # candles, pump seals
-        coal = 0.30 # ore roasting fuel
+        lumber = 0.38 # galleries, bar racks
+        tools = 0.42 # rolls, stamps, pumps
+        beeswax = 0.09 # candles, pump seals
+        coal = 0.06 # ore roasting fuel
         produced = iron
-        output = 4.22
+        output = 0.84
         category = building_maintenance
     }
     pp_iron_mine_deep_horse_whim_haulage = {
-        horses = 1.12 # whim draft teams
-        leather = 0.52 # harness, buckets
-        beeswax = 0.30 # mine candles, seals
+        horses = 0.22 # whim draft teams
+        leather = 0.10 # harness, buckets
+        beeswax = 0.06 # mine candles, seals
         produced = iron
-        output = 2.208
+        output = 0.442
         category = building_maintenance
     }
     pp_iron_mine_deep_ore_dressing_floors = {
-        fiber_crops = 1.15 # sacks, screens
-        cloth = 0.55 # sorting cloths
-        beeswax = 0.30 # candles, seals
+        fiber_crops = 0.23 # sacks, screens
+        cloth = 0.11 # sorting cloths
+        beeswax = 0.06 # candles, seals
         produced = iron
-        output = 1.80
+        output = 0.36
         category = building_maintenance
     }
 }
@@ -74,10 +73,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_iron_mine_deep_ochre = {
-        lumber = 0.18 # washing troughs, racks
-        tools = 0.12 # sieves, shovels
+        lumber = 0.04 # washing troughs, racks
+        tools = 0.02 # sieves, shovels
         produced = dyes
-        output = 0.20
+        output = 0.04
         category = building_maintenance
     }
 }
@@ -86,8 +85,8 @@ raw_modifier = {
 }
 
 modifier = {
-    local_population_growth = -0.0002
-    local_migration_attraction = 0.02
+    local_population_growth = -0.0000
+    local_migration_attraction = 0.004
 }
 }
 # <<< eu5-building-pipeline:iron_mine_deep:building

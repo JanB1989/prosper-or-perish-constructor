@@ -17,8 +17,7 @@ building:
     is_foreign = no
     max_levels = farm_capacity_max_tea_garden
     pop_type = laborers
-    employment_size = 3
-    price = pp_tea_garden_price
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { farming_capacity }
     icon = tea_garden
@@ -42,7 +41,7 @@ building:
     unique_production_methods = {
         pp_tea_garden_base_tea = {
             produced = tea
-            output = 0.123
+            output = 0.041
             category = building_maintenance
         }
     }
@@ -51,10 +50,10 @@ building:
             category = building_maintenance
         }
         pp_tea_garden_bamboo_withering_trays = {
-            fiber_crops = 0.294 # bamboo trays
-            clay = 0.235 # firing hearths
+            fiber_crops = 0.098 # bamboo trays
+            clay = 0.078 # firing hearths
             produced = tea
-            output = 0.261
+            output = 0.087
             category = building_maintenance
         }
     }
@@ -64,16 +63,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_tea_garden_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_tea_garden_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('tea_garden')|e].
-    MODIFIER_TYPE_NAME_pp_tea_garden_price_cost_modifier: Tea Garden Cost
     tea_garden_slot_0: Tea Bushes
     tea_garden_slot_1: Withering & Firing
     tea_garden: Tea Garden
@@ -81,7 +74,6 @@ localization:
     pp_tea_garden_base_tea: Tea Bushes
     pp_tea_garden_no_withering: No Withering Trays
     pp_tea_garden_bamboo_withering_trays: Bamboo Withering Trays
-    pp_tea_garden_price: Tea Garden Price
 icon:
   source_png: ../assets/icons/tea_garden.png
   output_dds: tea_garden.dds

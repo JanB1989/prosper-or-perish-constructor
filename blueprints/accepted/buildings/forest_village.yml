@@ -33,7 +33,7 @@ building:
         pop_type = peasants
         category = village_category
         custom_tags = { pp_food_security_priority pp_staple_food_priority forest_capacity }
-        employment_size = 5
+        employment_size = 1
         rural_settlement = yes
         town = yes
         city = yes
@@ -55,22 +55,22 @@ building:
         unique_production_methods = {
             pp_forest_village_base_leather = {
                 produced = leather
-                output = 0.20
+                output = 0.04
                 category = building_maintenance
             }
             pp_forest_village_base_wild_game = {
                 produced = wild_game
-                output = 0.30
+                output = 0.06
                 category = building_maintenance
             }
             pp_forest_village_base_fur = {
                 produced = fur
-                output = 0.136
+                output = 0.027
                 category = building_maintenance
             }
             pp_forest_village_base_beeswax = {
                 produced = beeswax
-                output = 0.25
+                output = 0.05
                 category = building_maintenance
             }
         }
@@ -80,31 +80,31 @@ building:
             }
             pp_forest_tannery = {
                 produced = leather
-                output = 0.196
-                sand = 0.1
-                tar = 0.02
-                wild_game = 0.4
+                output = 0.039
+                sand = 0.0
+                tar = 0.00
+                wild_game = 0.1
                 category = building_maintenance
             }
             pp_hunting_lodges = {
                 produced = wild_game
-                output = 0.315
-                weaponry = 0.1
+                output = 0.063
+                weaponry = 0.0
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_fur_trapping = {
                 produced = fur
-                output = 0.318
-                tools = 0.067 # traps, knives
-                weaponry = 0.107 # hunting gear
+                output = 0.064
+                tools = 0.013 # traps, knives
+                weaponry = 0.021 # hunting gear
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_forest_village_forest_apiary = {
-                cloth = 0.40
+                cloth = 0.08
                 produced = beeswax
-                output = 0.63
+                output = 0.13
                 debug_max_profit = 0
                 category = building_maintenance
             }
@@ -116,10 +116,10 @@ building:
         modifier = {
             # vanilla + injected (additive): 1.0-1.0=0, 0.1-0.1=0, 0.05-0.05=0
             local_monthly_food = 0.0
-            local_peasants_estate_power = 0.25
-            local_peasant_enfranchisment = 0.01
-            local_laborers_desired_pop = 0.1
-            local_soldiers_desired_pop = 0.05
+            local_peasants_estate_power = 0.050
+            local_peasant_enfranchisment = 0.002
+            local_laborers_desired_pop = 0.020
+            local_soldiers_desired_pop = 0.010
         }
 advancements:
   - key: pp_fur_trapping_advance_native

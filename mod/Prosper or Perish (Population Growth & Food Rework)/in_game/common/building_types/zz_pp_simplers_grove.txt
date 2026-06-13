@@ -3,8 +3,7 @@ simplers_grove = {
 is_foreign = no
 max_levels = farm_capacity_max_simplers_grove
 pop_type = laborers
-employment_size = 3
-price = pp_simplers_grove_price
+employment_size = 1
 category = rgo_building_category
 custom_tags = { farming_capacity }
 icon = simplers_grove
@@ -28,7 +27,7 @@ can_close = yes
 unique_production_methods = {
     pp_simplers_grove_base_medicaments = {
         produced = medicaments
-        output = 0.3
+        output = 0.1
         category = building_maintenance
     }
 }
@@ -37,10 +36,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_simplers_grove_wicker_drying_racks = {
-        fiber_crops = 0.10 # baskets, ties, drying mats
-        lumber = 0.06 # racks, sheds, sorting boards
+        fiber_crops = 0.03 # baskets, ties, drying mats
+        lumber = 0.02 # racks, sheds, sorting boards
         produced = medicaments
-        output = 0.348
+        output = 0.116
         category = building_maintenance
     }
 }
@@ -50,7 +49,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_migration_attraction = 0.01
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:simplers_grove:building

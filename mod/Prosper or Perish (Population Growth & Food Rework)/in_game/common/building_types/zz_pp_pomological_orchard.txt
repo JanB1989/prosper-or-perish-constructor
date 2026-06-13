@@ -3,8 +3,7 @@ pomological_orchard = {
 is_foreign = no
 pop_type = laborers
 max_levels = farm_capacity_max_pomological_orchard
-employment_size = 10
-price = pp_pomological_orchard_price
+employment_size = 1
 category = rgo_building_category
 custom_tags = { pp_food_security_priority pp_staple_food_priority farming_capacity }
 icon = pomological_orchard
@@ -27,7 +26,7 @@ location_potential = {
 unique_production_methods = {
     pp_pomological_orchard_base_fruit = {
         produced = fruit
-        output = 1.00
+        output = 0.10
         category = building_maintenance
     }
 }
@@ -37,10 +36,10 @@ unique_production_methods = {
     }
     pp_pomological_orchard_grafted_rows = {
         produced = fruit
-        output = 21.00
-        tools = 3.81 # pruning tools, grafting knives
-        lumber = 3.52 # trellises, crates, stakes
-        paper = 1.61 # cultivar ledgers
+        output = 2.10
+        tools = 0.38 # pruning tools, grafting knives
+        lumber = 0.35 # trellises, crates, stakes
+        paper = 0.16 # cultivar ledgers
         debug_max_profit = 0
         category = building_maintenance
     }

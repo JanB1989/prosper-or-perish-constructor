@@ -48,8 +48,7 @@ building:
     	is_foreign = no
     	max_levels = cookery_max_level
     	pop_type = laborers
-        employment_size = 4.0
-    	price = pp_victualling_yard_price
+        employment_size = 1
     	category = consumer_goods_category
     	custom_tags = { pp_food_security_priority pp_direct_food_priority }
     	icon = victualling_yard
@@ -72,147 +71,147 @@ building:
     unique_production_methods = {
     		# --- ASIA ---
     		pp_victualling_yard_khichdi = {
-            rice = 4.538
-            legumes = 3.864
-            pepper = 0.138
+            rice = 1.135
+            legumes = 0.966
+            pepper = 0.035
     			produced = victuals
-            output = 3.161
+            output = 0.790
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_fish_congee = { # Adjusted: Swapped game for fish to match the name and Asian RGOs
-            rice = 4.538
-            fish = 3.864
-            pepper = 0.138
+            rice = 1.135
+            fish = 0.966
+            pepper = 0.035
     			produced = victuals
-            output = 3.161
+            output = 0.790
     			debug_max_profit = 0
     			category = building_maintenance
     		}
-    
+
     		# --- EUROPE ---
     		pp_victualling_yard_livestock_pottage = {
-            wheat = 4.4
-            livestock = 3.163
-            legumes = 0.894
+            wheat = 1.1
+            livestock = 0.791
+            legumes = 0.224
     			produced = victuals
-            output = 3.49
+            output = 0.873
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_mediterranean_fish = {
-            fish = 6.875
-            olives = 2.062
-            wine = 0.275
+            fish = 1.719
+            olives = 0.516
+            wine = 0.069
     			produced = victuals
-            output = 3.299
+            output = 0.825
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_mutton_and_pease = {
-            wool = 3.391
-            legumes = 1.604
-            salt = 0.191
+            wool = 0.848
+            legumes = 0.401
+            salt = 0.048
     			produced = victuals
-            output = 3.507
+            output = 0.877
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_surstromming = {
-            fish = 7.079
-            millet = 0.711
-            salt = 0.711
+            fish = 1.77
+            millet = 0.178
+            salt = 0.178
     			produced = victuals
-            output = 3.605
+            output = 0.901
     			debug_max_profit = 0
     			category = building_maintenance
     		}
-    
+
     		# --- AMERICA ---
     		pp_victualling_yard_pozole = {
-            maize = 2.833
-            wild_game = 3.575
-            chili = 0.55
+            maize = 0.708
+            wild_game = 0.894
+            chili = 0.138
     			produced = victuals
-            output = 3.185
+            output = 0.796
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_pemmican = { # Adjusted: Flipped livestock and game to match American RGO dominance
-            wild_game = 6.188
-            livestock = 1.293
-            fruit = 1.375
+            wild_game = 1.547
+            livestock = 0.323
+            fruit = 0.344
     			produced = victuals
-            output = 3.304
+            output = 0.826
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_labskaus = { # Note: Requires potato, which only exists in America in your data!
-            potato = 1.293
-            fish = 2.062
-            livestock = 4.111
+            potato = 0.323
+            fish = 0.516
+            livestock = 1.028
     			produced = victuals
-            output = 3.311
+            output = 0.828
     			debug_max_profit = 0
     			category = building_maintenance
     		}
-    
+
     		# --- AFRICA (NEW) ---
     		pp_victualling_yard_meat_tajine = { # Uses Africa's massive livestock, fruit, and saffron RGOs
-            livestock = 4.812
-            fruit = 2.2
-            saffron = 0.206
+            livestock = 1.203
+            fruit = 0.55
+            saffron = 0.052
     			produced = victuals
-            output = 3.634
+            output = 0.909
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_saltfish_porridge = { # Also fits Africa/Middle East perfectly
-            millet = 3.575
-            fish = 5.143
-            salt = 0.275
+            millet = 0.894
+            fish = 1.286
+            salt = 0.069
     			produced = victuals
-            output = 3.51
+            output = 0.878
     			debug_max_profit = 0
     			category = building_maintenance
     		}
-    
+
     		# --- OCEANIA (NEW) ---
     		pp_victualling_yard_ika_mata = { # Capitalizes on Oceania's massive 18.9 fish and 11.7 fruit RGOs
-            fish = 6.6
-            fruit = 3.438
-            salt = 0.138
+            fish = 1.65
+            fruit = 0.86
+            salt = 0.035
     			produced = victuals
-            output = 3.369
+            output = 0.842
     			debug_max_profit = 0
     			category = building_maintenance
     		}
-    
+
     		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
     		pp_victualling_yard_kheer = { # Sugar-led; primary fantasy SA / NA / ME; valid anywhere with sugar + starch + livestock
-            rice = 4.538
-            sugar = 0.413
-            livestock = 2.475
+            rice = 1.135
+            sugar = 0.103
+            livestock = 0.619
     			produced = victuals
-            output = 3.3
+            output = 0.825
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_honey_gruel = {
-            wheat = 3.3
-            fruit = 2.186
-            beeswax = 2.475
+            wheat = 0.825
+            fruit = 0.547
+            beeswax = 0.619
     			produced = victuals
-            output = 3.629
+            output = 0.907
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_boreal_hunter_stew = { # Fur belt: North Asia, North America, Eastern Europe â€” game stew; fur = trapping economy
-            fur = 3.163
-            millet = 2.75
-            salt = 0.275
+            fur = 0.791
+            millet = 0.688
+            salt = 0.069
     			produced = victuals
-            output = 3.634
+            output = 0.909
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -227,44 +226,44 @@ building:
     			category = building_maintenance
     		}
     		pp_victualling_yard_beer = {
-            beer = 2.681
+            beer = 0.670
     			produced = victuals
-            output = 1.941
+            output = 0.485
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_wine = {
-            wine = 2.888
+            wine = 0.722
     			produced = victuals
-            output = 1.991
+            output = 0.498
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_liquor = {
-            liquor = 2.496
+            liquor = 0.624
     			produced = victuals
-            output = 2.066
+            output = 0.517
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_chocolate = {
-            cocoa = 1.1
+            cocoa = 0.3
     			produced = victuals
-            output = 1.516
+            output = 0.379
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_coffee = {
-            coffee = 1.444
+            coffee = 0.361
     			produced = victuals
-            output = 1.494
+            output = 0.374
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_tea = {
-            tea = 1.856
+            tea = 0.464
     			produced = victuals
-            output = 1.921
+            output = 0.480
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -278,23 +277,23 @@ building:
     			category = building_maintenance
     		}
     		pp_victualling_yard_pottery_jars = {
-            pottery = 3.85
+            pottery = 0.96
     			produced = victuals
-            output = 1.246
+            output = 0.312
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_coopered_barrels = {
-            furniture = 1.238
+            furniture = 0.310
     			produced = victuals
-            output = 1.203
+            output = 0.301
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_victualling_yard_tin_cans = {
-            steel = 1.375
+            steel = 0.344
     			produced = victuals
-            output = 2.228
+            output = 0.557
     			debug_max_profit = 0
     			category = building_maintenance
     		}
@@ -305,16 +304,10 @@ building:
     	modifier = {
     		local_victuals_output_modifier = 0.00
     	}
-prices:
-  - key: pp_victualling_yard_price
-    body: |2-
-      {gold = 225}
 localization:
   entries:
     victualling_yard: Victualling Yard
     victualling_yard_desc: Victualling yards organize larger labor crews, stores, kettles, cooperage, and ration sheds to turn regional staples into durable [ShowGoodsName('victuals')|e] at city and army-supply scale.
-    MODIFIER_TYPE_DESC_pp_victualling_yard_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('victualling_yard')|e].
-    MODIFIER_TYPE_NAME_pp_victualling_yard_price_cost_modifier: Victualling Yard Cost
     victualling_yard_slot_0: Prepared Victuals
     victualling_yard_slot_1: Ration Drink
     victualling_yard_slot_2: Packing
@@ -344,7 +337,6 @@ localization:
     pp_victualling_yard_tin_cans: Tin Cans
     pp_victualling_yard_well_water: Well Water
     pp_victualling_yard_wine: Wine
-    pp_victualling_yard_price: Victualling Yard Price
 icon:
   source_png: ../assets/icons/victualling_yard.png
   output_dds: victualling_yard.dds

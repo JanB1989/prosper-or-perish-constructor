@@ -3,8 +3,7 @@ sand_washery = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 4
-price = pp_sand_washery_price
+employment_size = 1
 category = rgo_building_category
 icon = sand_washery
 rural_settlement = yes
@@ -32,7 +31,7 @@ can_close = yes
 unique_production_methods = {
     pp_sand_washery_base_sand = {
         produced = sand
-        output = 0.42
+        output = 0.11
         category = building_maintenance
     }
 }
@@ -41,10 +40,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_sand_washery_riddle_screens = {
-        lumber = 0.18
-        tools = 0.08
+        lumber = 0.05
+        tools = 0.02
         produced = sand
-        output = 1.15
+        output = 0.29
         category = building_maintenance
     }
 }
@@ -53,10 +52,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_sand_washery_glass_sand_washing = {
-        lumber = 0.16
-        tools = 0.12
+        lumber = 0.04
+        tools = 0.03
         produced = sand
-        output = 1.25
+        output = 0.31
         category = building_maintenance
     }
 }
@@ -65,8 +64,8 @@ raw_modifier = {
 }
 
 modifier = {
-    local_migration_attraction = 0.01
-    local_population_growth = -0.0001
+    local_migration_attraction = 0.003
+    local_population_growth = -0.0000
 }
 }
 # <<< eu5-building-pipeline:sand_washery:building

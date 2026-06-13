@@ -17,8 +17,7 @@ building:
     is_foreign = no
     max_levels = farm_capacity_max_elephant_kraal
     pop_type = laborers
-    employment_size = 3
-    price = pp_elephant_kraal_price
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { farming_capacity }
     icon = elephant_kraal
@@ -42,7 +41,7 @@ building:
     unique_production_methods = {
         pp_elephant_kraal_base_elephants = {
             produced = elephants
-            output = 0.107
+            output = 0.036
             category = building_maintenance
         }
     }
@@ -51,10 +50,10 @@ building:
             category = building_maintenance
         }
         pp_elephant_kraal_kheddah_stockades = {
-            lumber = 0.308 # stockades, gates
-            fruit = 0.513 # fodder, bait
+            lumber = 0.103 # stockades, gates
+            fruit = 0.171 # fodder, bait
             produced = elephants
-            output = 0.227
+            output = 0.076
             category = building_maintenance
         }
     }
@@ -64,16 +63,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_elephant_kraal_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_elephant_kraal_price_cost_modifier: Affects the cost of building an [ShowBuildingTypeName('elephant_kraal')|e].
-    MODIFIER_TYPE_NAME_pp_elephant_kraal_price_cost_modifier: Elephant Kraal Cost
     elephant_kraal_slot_0: Wild Herds
     elephant_kraal_slot_1: Capture Stockades
     elephant_kraal: Elephant Kraal
@@ -81,7 +74,6 @@ localization:
     pp_elephant_kraal_base_elephants: Wild Herds
     pp_elephant_kraal_no_capture: No Capture Drives
     pp_elephant_kraal_kheddah_stockades: Capture Stockades
-    pp_elephant_kraal_price: Elephant Kraal Price
 icon:
   source_png: ../assets/icons/elephant_kraal.png
   output_dds: elephant_kraal.dds

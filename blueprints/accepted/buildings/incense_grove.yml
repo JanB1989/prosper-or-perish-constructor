@@ -17,8 +17,7 @@ building:
     is_foreign = no
     max_levels = farm_capacity_max_incense_grove
     pop_type = laborers
-    employment_size = 3
-    price = pp_incense_grove_price
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { farming_capacity }
     icon = incense_grove
@@ -43,7 +42,7 @@ building:
     unique_production_methods = {
         pp_incense_grove_base_incense = {
             produced = incense
-            output = 0.300
+            output = 0.100
             category = building_maintenance
         }
     }
@@ -52,11 +51,11 @@ building:
             category = building_maintenance
         }
         pp_incense_grove_tapping_camps = {
-            fiber_crops = 0.350 # collection cloth and baskets
-            lumber = 0.350 # drying racks and shelters
-            tools = 0.070 # tapping knives
+            fiber_crops = 0.117 # collection cloth and baskets
+            lumber = 0.117 # drying racks and shelters
+            tools = 0.023 # tapping knives
             produced = incense
-            output = 0.667
+            output = 0.222
             category = building_maintenance
         }
     }
@@ -66,16 +65,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_incense_grove_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_incense_grove_price_cost_modifier: Affects the cost of building an [ShowBuildingTypeName('incense_grove')|e].
-    MODIFIER_TYPE_NAME_pp_incense_grove_price_cost_modifier: Incense Grove Cost
     incense_grove_slot_0: Resin Trees
     incense_grove_slot_1: Tapping Camps
     incense_grove: Incense Grove
@@ -83,7 +76,6 @@ localization:
     pp_incense_grove_base_incense: Resin Trees
     pp_incense_grove_wild_resins: Wild Resin Gathering
     pp_incense_grove_tapping_camps: Tapping Camps
-    pp_incense_grove_price: Incense Grove Price
 icon:
   source_png: ../assets/icons/incense_grove.png
   output_dds: incense_grove.dds

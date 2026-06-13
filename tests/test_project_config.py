@@ -3,6 +3,8 @@ import os
 import re
 from pathlib import Path
 
+import yaml
+
 from eu5_building_pipeline.template import load_template
 from eu5gameparser.clausewitz.parser import parse_file, parse_text
 from eu5gameparser.clausewitz.serializer import normalized_value
@@ -11,6 +13,7 @@ from eu5gameparser.domain.availability import annotate_building_data_availabilit
 from eu5gameparser.domain.building_types import load_building_type_data
 from eu5gameparser.domain.eu5 import load_eu5_data
 from eu5gameparser.load_order import LoadOrderConfig, load_merged_directory
+from eu5_mod_orchestrator.adapters.parser import load_raw_material_goods
 from eu5_mod_orchestrator.blueprints import accepted_blueprint_files, validate_blueprint_file
 from eu5_mod_orchestrator.config import load_project_config
 from mod_injector.config import load_mod_injector_config
@@ -244,11 +247,18 @@ EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY = (
     "capitalism_prioritising_infrastructure_trade_and_culture",
 )
 FOOD_SECURITY_LABORER_BUILDINGS = {
-    "cookery": ("laborers", 2),
-    "victualling_yard": ("laborers", 4.0),
+    "cookery": ("laborers", 1),
+    "victualling_yard": ("laborers", 1),
     "victuals_market": ("laborers", 0.25),
     "granary": ("laborers", 0.25),
 }
+NORMALIZED_PRODUCTION_SITE_CATEGORIES = {
+    "rgo_building_category",
+    "village_category",
+    "colonial_category",
+}
+NORMALIZED_DIRECT_PRODUCTION_BUILDINGS = {"cookery", "victualling_yard"}
+NORMALIZED_EXCLUDED_PRODUCTION_BUILDINGS = {"victuals_market"}
 
 
 def test_constructor_config_loads() -> None:
@@ -2449,14 +2459,48 @@ def test_constructor_building_methods_are_resolved_and_unique() -> None:
 
 def test_cookery_building_line_has_resolved_prices() -> None:
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
-    buildings = {row["name"]: row for row in data.building_data.buildings.to_dicts()}
+    annotated = annotate_building_data_availability(data.building_data, data.advancements)
+    buildings = {row["name"]: row for row in annotated.buildings.to_dicts()}
 
-    assert buildings["cookery"]["price"] == "pp_cookery_price"
-    assert buildings["cookery"]["price_gold"] == 100.0
-    assert buildings["victualling_yard"]["price"] == "pp_victualling_yard_price"
-    assert buildings["victualling_yard"]["price_gold"] == 225.0
+    assert buildings["cookery"]["price"] is None
+    assert buildings["cookery"]["effective_price"] == "p_building_age_1_traditions"
+    assert buildings["cookery"]["effective_price_gold"] == 50.0
+    assert buildings["cookery"]["price_kind"] == "baseline_age"
+
+    assert buildings["victualling_yard"]["price"] is None
+    assert buildings["victualling_yard"]["effective_price"] == "p_building_age_5_absolutism"
+    assert buildings["victualling_yard"]["effective_price_gold"] == 800.0
+    assert buildings["victualling_yard"]["price_kind"] == "baseline_age"
+
     assert buildings["victuals_market"]["price"] == "pp_victuals_market_price"
     assert buildings["victuals_market"]["price_gold"] == 100.0
+    assert buildings["victuals_market"]["effective_price"] == "pp_victuals_market_price"
+    assert buildings["victuals_market"]["effective_price_gold"] == 100.0
+    assert buildings["victuals_market"]["price_kind"] == "explicit"
+
+
+def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -> None:
+    scoped_blueprints = _normalized_production_site_blueprints()
+    assert len(scoped_blueprints) == 83
+
+    for building, blueprint in scoped_blueprints:
+        blueprint_values = _accepted_blueprint_building_values_from_path(blueprint)
+        assert blueprint_values["employment_size"] == 1, building
+
+    scoped_buildings = tuple(building for building, _blueprint in scoped_blueprints)
+    data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
+    annotated = annotate_building_data_availability(data.building_data, data.advancements)
+    buildings = {row["name"]: row for row in annotated.buildings.to_dicts()}
+
+    for building in scoped_buildings:
+        assert buildings[building]["employment_size"] == 1.0, building
+        assert buildings[building]["price"] is None, building
+        assert buildings[building]["price_kind"] == "baseline_age", building
+
+    victuals_market = buildings["victuals_market"]
+    assert victuals_market["employment_size"] == 0.25
+    assert victuals_market["price"] == "pp_victuals_market_price"
+    assert victuals_market["price_kind"] == "explicit"
 
 
 def test_victuals_pop_demand_uses_scalar_database_value() -> None:
@@ -2576,16 +2620,16 @@ def test_victuals_market_construction_and_coastal_saltern_debug_keys_are_localiz
     base = _entry_values(methods)["pp_coastal_saltern_base_salt"]
     assert isinstance(base, CList)
     base_values = _entry_values(base)
-    assert base_values["output"] == 0.24
+    assert base_values["output"] == 0.08
 
     worked_methods = body.values("unique_production_methods")[1]
     assert isinstance(worked_methods, CList)
     lined_pans = _entry_values(worked_methods)["pp_coastal_saltern_lined_evaporation_pans"]
     assert isinstance(lined_pans, CList)
     values = _entry_values(lined_pans)
-    assert values["output"] == 0.72
-    assert values["clay"] == 4.0
-    assert values["pottery"] == 1.15
+    assert values["output"] == 0.24
+    assert values["clay"] == 1.333
+    assert values["pottery"] == 0.383
 
 
 def test_salt_rgo_bonus_reduces_food_decay_without_affecting_saltpeter() -> None:
@@ -2876,7 +2920,10 @@ def _entry_values(block: CList) -> dict[str, object]:
 
 
 def _accepted_blueprint_building_values(building: str) -> dict[str, object]:
-    blueprint = BUILDING_BLUEPRINT_ROOT / f"{building}.yml"
+    return _accepted_blueprint_building_values_from_path(BUILDING_BLUEPRINT_ROOT / f"{building}.yml")
+
+
+def _accepted_blueprint_building_values_from_path(blueprint: Path) -> dict[str, object]:
     template = load_template(blueprint)
     rendered = parse_text(
         f"{template.key} = {{\n{template.building_body}\n}}\n",
@@ -2885,6 +2932,35 @@ def _accepted_blueprint_building_values(building: str) -> dict[str, object]:
     body = rendered.entries[0].value
     assert isinstance(body, CList)
     return _entry_values(body)
+
+
+def _normalized_production_site_blueprints() -> tuple[tuple[str, Path], ...]:
+    config = load_project_config(ROOT / "constructor.toml")
+    manifest = yaml.safe_load((ROOT / "blueprints" / "buildings.manifest.yml").read_text(encoding="utf-8"))
+    raw_material_goods = set(load_raw_material_goods(profile=config.profile, load_order_path=config.load_order_path))
+
+    buildings: list[tuple[str, Path]] = []
+    for entry in manifest["enabled"]:
+        blueprint = ROOT / "blueprints" / "accepted" / entry
+        data = yaml.safe_load(blueprint.read_text(encoding="utf-8-sig"))
+        building = data.get("building") or {}
+        key = building.get("key")
+        mode = building.get("mode")
+        body = building.get("body") or ""
+        if key in NORMALIZED_EXCLUDED_PRODUCTION_BUILDINGS or mode not in {"CREATE", "REPLACE"}:
+            continue
+
+        category_match = re.search(r"(?m)^\s*category\s*=\s*([A-Za-z0-9_]+)\b", body)
+        category = category_match.group(1) if category_match else None
+        produced_goods = set(re.findall(r"(?m)^\s*produced\s*=\s*([A-Za-z0-9_]+)\b", body))
+        if key in NORMALIZED_DIRECT_PRODUCTION_BUILDINGS or (
+            category in NORMALIZED_PRODUCTION_SITE_CATEGORIES
+            and bool(produced_goods & raw_material_goods)
+        ):
+            assert isinstance(key, str)
+            buildings.append((key, blueprint))
+
+    return tuple(buildings)
 
 
 def _expected_farming_capacity_raw_modifiers(building: str) -> dict[str, float | int]:

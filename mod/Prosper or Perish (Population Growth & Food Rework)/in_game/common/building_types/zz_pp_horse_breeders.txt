@@ -5,7 +5,7 @@ startup_ramp_target = rural_startup_ramp_target
 is_foreign = no
 pop_type = laborers
 max_levels = farm_capacity_max_horse_breeders
-employment_size = 3
+employment_size = 1
 category = rgo_building_category
 custom_tags = { farming_capacity }
 rural_settlement = yes
@@ -21,7 +21,7 @@ location_potential = {
 unique_production_methods = {
     pp_horse_breeders_base_horses = {
         produced = horses
-        output = 0.300
+        output = 0.100
         category = building_maintenance
     }
 }
@@ -30,10 +30,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_horse_breeders_stud_yards = {
-        wheat = 1.300 # fodder grain
-        leather = 0.140 # tack and harness
+        wheat = 0.433 # fodder grain
+        leather = 0.047 # tack and harness
         produced = horses
-        output = 0.667
+        output = 0.222
         category = building_maintenance
     }
 }

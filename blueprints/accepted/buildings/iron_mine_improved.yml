@@ -30,8 +30,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 4
-    price = pp_iron_mine_improved_price
+    employment_size = 1
     category = rgo_building_category
     icon = iron_mine_improved
     rural_settlement = yes
@@ -54,7 +53,7 @@ building:
     unique_production_methods = {
         pp_iron_mine_improved_base_iron = {
             produced = iron
-            output = 0.30
+            output = 0.08
             category = building_maintenance
         }
     }
@@ -63,35 +62,35 @@ building:
             category = building_maintenance
         }
         pp_iron_mine_improved_iron = {
-            lumber = 1.306 # timbering, dressing floors
-            tools = 1.383 # picks, pumps, stamps
-            beeswax = 0.307 # mine candles, seals
+            lumber = 0.327 # timbering, dressing floors
+            tools = 0.346 # picks, pumps, stamps
+            beeswax = 0.077 # mine candles, seals
             produced = iron
-            output = 2.689
+            output = 0.672
             category = building_maintenance
         }
         pp_iron_mine_improved_slitting_dressed_ore = {
-            lumber = 1.40 # timbering, bar racks
-            tools = 1.52 # slitting rolls, dressing tools
-            beeswax = 0.34 # candles, pump seals
+            lumber = 0.35 # timbering, bar racks
+            tools = 0.38 # slitting rolls, dressing tools
+            beeswax = 0.09 # candles, pump seals
             produced = iron
-            output = 2.936
+            output = 0.734
             category = building_maintenance
         }
         pp_iron_mine_improved_horse_whim_haulage = {
-            horses = 0.72 # whim draft teams
-            leather = 0.34 # harness, buckets
-            beeswax = 0.20 # mine candles, seals
+            horses = 0.18 # whim draft teams
+            leather = 0.09 # harness, buckets
+            beeswax = 0.05 # mine candles, seals
             produced = iron
-            output = 1.432
+            output = 0.358
             category = building_maintenance
         }
         pp_iron_mine_improved_ore_dressing_floors = {
-            fiber_crops = 0.80 # sacks, screens
-            cloth = 0.38 # sorting cloths
-            beeswax = 0.20 # candles, seals
+            fiber_crops = 0.20 # sacks, screens
+            cloth = 0.10 # sorting cloths
+            beeswax = 0.05 # candles, seals
             produced = iron
-            output = 1.256
+            output = 0.314
             category = building_maintenance
         }
     }
@@ -100,10 +99,10 @@ building:
             category = building_maintenance
         }
         pp_iron_mine_improved_ochre = {
-            lumber = 0.15 # washing troughs, racks
-            tools = 0.10 # sieves, shovels
+            lumber = 0.04 # washing troughs, racks
+            tools = 0.03 # sieves, shovels
             produced = dyes
-            output = 0.158
+            output = 0.040
             category = building_maintenance
         }
     }
@@ -112,17 +111,11 @@ building:
     }
 
     modifier = {
-        local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_population_growth = -0.0001
+        local_migration_attraction = 0.005
     }
-prices:
-  - key: pp_iron_mine_improved_price
-    body: |2-
-      {gold = 250}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_iron_mine_improved_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('iron_mine_improved')|e].
-    MODIFIER_TYPE_NAME_pp_iron_mine_improved_price_cost_modifier: Iron Mine Cost
     iron_mine_improved_slot_0: Iron Deposit
     iron_mine_improved_slot_1: Ore Workings
     iron_mine_improved_slot_2: Ochre Recovery
@@ -136,7 +129,6 @@ localization:
     pp_iron_mine_improved_ore_dressing_floors: Ore Dressing Floors
     pp_iron_mine_improved_no_secondary: No Ochre Recovery
     pp_iron_mine_improved_ochre: Ochre Washing
-    pp_iron_mine_improved_price: Iron Mine Price
     efficient_mining: Ore Dressing
     efficient_mining_desc: Better mine surveys, timbering, haulage, and dressing floors separate useful iron ore from silica-rich gangue and other waste before smelting.
     slitting_mills: Slitting Mills

@@ -27,8 +27,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 5
-    price = pp_coal_mine_revolutions_price
+    employment_size = 1
     category = rgo_building_category
     icon = coal_mine_revolutions
     rural_settlement = yes
@@ -51,7 +50,7 @@ building:
     unique_production_methods = {
         pp_coal_mine_revolutions_base_coal = {
             produced = coal
-            output = 0.38
+            output = 0.08
             category = building_maintenance
         }
     }
@@ -60,11 +59,11 @@ building:
             category = building_maintenance
         }
         pp_coal_mine_revolutions_coal = {
-            lumber = 1.70
-            tools = 2.10
-            beeswax = 0.42
+            lumber = 0.34
+            tools = 0.42
+            beeswax = 0.08
             produced = coal
-            output = 5.814
+            output = 1.163
             category = building_maintenance
         }
     }
@@ -73,10 +72,10 @@ building:
             category = building_maintenance
         }
         pp_coal_mine_revolutions_fireclay = {
-            lumber = 0.18
-            tools = 0.12
+            lumber = 0.04
+            tools = 0.02
             produced = clay
-            output = 1.512
+            output = 0.302
             category = building_maintenance
         }
     }
@@ -85,17 +84,11 @@ building:
     }
 
     modifier = {
-        local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_population_growth = -0.0000
+        local_migration_attraction = 0.004
     }
-prices:
-  - key: pp_coal_mine_revolutions_price
-    body: |2-
-      {gold = 1200}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_coal_mine_revolutions_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('coal_mine_revolutions')|e].
-    MODIFIER_TYPE_NAME_pp_coal_mine_revolutions_price_cost_modifier: Deep Colliery Cost
     coal_mine_revolutions_slot_0: Coal Seam
     coal_mine_revolutions_slot_1: Deep Colliery Workings
     coal_mine_revolutions_slot_2: Clay Recovery
@@ -106,7 +99,6 @@ localization:
     pp_coal_mine_revolutions_coal: Deep Colliery Workings
     pp_coal_mine_revolutions_no_secondary: No Clay Recovery
     pp_coal_mine_revolutions_fireclay: Deep Fireclay Sorting
-    pp_coal_mine_revolutions_price: Deep Colliery Price
     coal_improvements_revolutions: Deep Colliery Improvements
     coal_improvements_revolutions_desc: Late colliery drainage, haulage, and sorting improvements increase output from organized coal mines.
 icon:

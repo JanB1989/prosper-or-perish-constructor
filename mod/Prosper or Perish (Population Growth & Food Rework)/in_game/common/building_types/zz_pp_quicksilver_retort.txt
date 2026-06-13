@@ -3,8 +3,7 @@ quicksilver_retort = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 4
-price = pp_quicksilver_retort_price
+employment_size = 1
 category = rgo_building_category
 icon = quicksilver_retort
 rural_settlement = yes
@@ -27,7 +26,7 @@ can_close = yes
 unique_production_methods = {
     pp_quicksilver_retort_base_mercury = {
         produced = mercury
-        output = 0.34
+        output = 0.09
         category = building_maintenance
     }
 }
@@ -36,11 +35,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_quicksilver_retort_mercury = {
-        lumber = 1.17
-        tools = 1.17
-        beeswax = 0.415
+        lumber = 0.29
+        tools = 0.29
+        beeswax = 0.104
         produced = mercury
-        output = 2.438
+        output = 0.610
         category = building_maintenance
     }
 }
@@ -49,17 +48,17 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_quicksilver_retort_stone = {
-        lumber = 0.12
-        tools = 0.09
+        lumber = 0.03
+        tools = 0.02
         produced = stone
-        output = 0.54
+        output = 0.14
         category = building_maintenance
     }
     pp_quicksilver_retort_dyes = {
-        lumber = 0.10
-        tools = 0.07
+        lumber = 0.03
+        tools = 0.02
         produced = dyes
-        output = 0.108
+        output = 0.027
         category = building_maintenance
     }
 }
@@ -68,8 +67,8 @@ raw_modifier = {
 }
 
 modifier = {
-    local_population_growth = -0.0002
-    local_migration_attraction = 0.02
+    local_population_growth = -0.0001
+    local_migration_attraction = 0.005
 }
 }
 # <<< eu5-building-pipeline:quicksilver_retort:building

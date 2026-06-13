@@ -28,8 +28,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 3
-    price = pp_tin_streamworks_price
+    employment_size = 1
     category = rgo_building_category
     icon = tin_streamworks
     rural_settlement = yes
@@ -51,7 +50,7 @@ building:
     unique_production_methods = {
         pp_tin_streamworks_base_tin = {
             produced = tin
-            output = 0.3
+            output = 0.1
             category = building_maintenance
         }
     }
@@ -60,10 +59,10 @@ building:
             category = building_maintenance
         }
         pp_tin_streamworks_tin = {
-            lumber = 0.983
-            tools = 0.56
+            lumber = 0.328
+            tools = 0.19
             produced = tin
-            output = 1.893
+            output = 0.631
             category = building_maintenance
         }
     }
@@ -72,17 +71,17 @@ building:
             category = building_maintenance
         }
         pp_tin_streamworks_copper = {
-            lumber = 0.173
-            tools = 0.10
+            lumber = 0.058
+            tools = 0.03
             produced = copper
-            output = 0.224
+            output = 0.075
             category = building_maintenance
         }
         pp_tin_streamworks_lead = {
-            lumber = 0.173
-            tools = 0.08
+            lumber = 0.058
+            tools = 0.03
             produced = lead
-            output = 0.3
+            output = 0.1
             category = building_maintenance
         }
     }
@@ -91,17 +90,11 @@ building:
     }
 
     modifier = {
-        local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_population_growth = -0.0001
+        local_migration_attraction = 0.007
     }
-prices:
-  - key: pp_tin_streamworks_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_tin_streamworks_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('tin_streamworks')|e].
-    MODIFIER_TYPE_NAME_pp_tin_streamworks_price_cost_modifier: Tin Streamworks Cost
     tin_streamworks_slot_0: Tin Ground
     tin_streamworks_slot_1: Tin Streaming
     tin_streamworks_slot_2: Associated Ore Sorting
@@ -113,7 +106,6 @@ localization:
     pp_tin_streamworks_no_secondary: No Associated Ore Sorting
     pp_tin_streamworks_copper: Stannite Sorting
     pp_tin_streamworks_lead: Galena Picking
-    pp_tin_streamworks_price: Tin Streamworks Price
 icon:
   source_png: ../assets/icons/tin_streamworks.png
   output_dds: tin_streamworks.dds

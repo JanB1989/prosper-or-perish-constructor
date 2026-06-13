@@ -1,8 +1,6 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:model_farm:localization
-  MODIFIER_TYPE_DESC_pp_model_farm_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('model_farm')|e]."
-  MODIFIER_TYPE_NAME_pp_model_farm_price_cost_modifier: "Model Farm Cost"
   model_farm: "Model Farm"
   model_farm_desc: "Model farms use surveyed fields, hired hands, planned rotations, improved barns, and careful accounts to raise staple crops at larger scale."
   model_farm_slot_0: "Improved Fields"
@@ -24,7 +22,6 @@
   pp_model_farm_no_primary: "No Improved Cultivation"
   pp_model_farm_olives: "Model Olive Groves"
   pp_model_farm_potato: "Model Potato Fields"
-  pp_model_farm_price: "Model Farm Price"
   pp_model_farm_rice: "Model Rice Paddies"
   pp_model_farm_wheat: "Model Wheat Fields"
 # <<< eu5-building-pipeline:model_farm:localization

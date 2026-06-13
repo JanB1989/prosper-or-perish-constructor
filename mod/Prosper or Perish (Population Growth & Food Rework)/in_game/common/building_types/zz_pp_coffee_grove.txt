@@ -3,8 +3,7 @@ coffee_grove = {
 is_foreign = no
 max_levels = farm_capacity_max_coffee_grove
 pop_type = laborers
-employment_size = 3
-price = pp_coffee_grove_price
+employment_size = 1
 category = rgo_building_category
 custom_tags = { farming_capacity }
 icon = coffee_grove
@@ -28,7 +27,7 @@ can_close = yes
 unique_production_methods = {
     pp_coffee_grove_base_coffee = {
         produced = coffee
-        output = 0.121
+        output = 0.040
         category = building_maintenance
     }
 }
@@ -37,10 +36,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_coffee_grove_washing_stations = {
-        lumber = 0.349 # washing troughs
-        pottery = 0.174 # fermentation vats
+        lumber = 0.116 # washing troughs
+        pottery = 0.058 # fermentation vats
         produced = coffee
-        output = 0.270
+        output = 0.090
         category = building_maintenance
     }
 }
@@ -50,7 +49,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_migration_attraction = 0.01
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:coffee_grove:building

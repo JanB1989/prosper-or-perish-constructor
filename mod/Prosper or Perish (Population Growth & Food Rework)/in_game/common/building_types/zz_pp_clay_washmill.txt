@@ -3,8 +3,7 @@ clay_washmill = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 4
-price = pp_clay_washmill_price
+employment_size = 1
 category = rgo_building_category
 icon = clay_washmill
 rural_settlement = yes
@@ -32,7 +31,7 @@ can_close = yes
 unique_production_methods = {
     pp_clay_washmill_base_clay = {
         produced = clay
-        output = 0.42
+        output = 0.11
         category = building_maintenance
     }
 }
@@ -41,19 +40,19 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_clay_washmill_horse_pugging = {
-        lumber = 0.44
-        tools = 0.14
-        horses = 0.09
+        lumber = 0.11
+        tools = 0.04
+        horses = 0.02
         produced = clay
-        output = 2.76
+        output = 0.69
         category = building_maintenance
     }
     pp_clay_washmill_ox_pugging = {
-        lumber = 0.44
-        tools = 0.14
-        livestock = 0.18
+        lumber = 0.11
+        tools = 0.04
+        livestock = 0.05
         produced = clay
-        output = 2.76
+        output = 0.69
         category = building_maintenance
     }
 }
@@ -62,10 +61,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_clay_washmill_levigation_ponds = {
-        lumber = 0.12
-        tools = 0.08
+        lumber = 0.03
+        tools = 0.02
         produced = clay
-        output = 0.90
+        output = 0.23
         category = building_maintenance
     }
 }
@@ -74,8 +73,8 @@ raw_modifier = {
 }
 
 modifier = {
-    local_migration_attraction = 0.01
-    local_population_growth = -0.0001
+    local_migration_attraction = 0.003
+    local_population_growth = -0.0000
 }
 }
 # <<< eu5-building-pipeline:clay_washmill:building

@@ -3,8 +3,7 @@ saltpeter_beds = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 3
-price = pp_saltpeter_beds_price
+employment_size = 1
 category = rgo_building_category
 icon = saltpeter_beds
 rural_settlement = yes
@@ -30,7 +29,7 @@ can_close = yes
 unique_production_methods = {
     pp_saltpeter_beds_base_saltpeter = {
         produced = saltpeter
-        output = 0.300
+        output = 0.100
         category = building_maintenance
     }
 }
@@ -39,11 +38,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_saltpeter_beds_leaching_vats = {
-        livestock = 0.500 # manure beds
-        pottery = 0.250 # leaching vats
-        fiber_crops = 0.074 # straw bedding
+        livestock = 0.167 # manure beds
+        pottery = 0.083 # leaching vats
+        fiber_crops = 0.025 # straw bedding
         produced = saltpeter
-        output = 0.667
+        output = 0.222
         category = building_maintenance
     }
 }
@@ -52,7 +51,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_migration_attraction = 0.01
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:saltpeter_beds:building

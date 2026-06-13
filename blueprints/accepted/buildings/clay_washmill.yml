@@ -28,8 +28,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 4
-    price = pp_clay_washmill_price
+    employment_size = 1
     category = rgo_building_category
     icon = clay_washmill
     rural_settlement = yes
@@ -57,7 +56,7 @@ building:
     unique_production_methods = {
         pp_clay_washmill_base_clay = {
             produced = clay
-            output = 0.42
+            output = 0.11
             category = building_maintenance
         }
     }
@@ -66,19 +65,19 @@ building:
             category = building_maintenance
         }
         pp_clay_washmill_horse_pugging = {
-            lumber = 0.44
-            tools = 0.14
-            horses = 0.09
+            lumber = 0.11
+            tools = 0.04
+            horses = 0.02
             produced = clay
-            output = 2.76
+            output = 0.69
             category = building_maintenance
         }
         pp_clay_washmill_ox_pugging = {
-            lumber = 0.44
-            tools = 0.14
-            livestock = 0.18
+            lumber = 0.11
+            tools = 0.04
+            livestock = 0.05
             produced = clay
-            output = 2.76
+            output = 0.69
             category = building_maintenance
         }
     }
@@ -87,10 +86,10 @@ building:
             category = building_maintenance
         }
         pp_clay_washmill_levigation_ponds = {
-            lumber = 0.12
-            tools = 0.08
+            lumber = 0.03
+            tools = 0.02
             produced = clay
-            output = 0.90
+            output = 0.23
             category = building_maintenance
         }
     }
@@ -99,13 +98,9 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
-        local_population_growth = -0.0001
+        local_migration_attraction = 0.003
+        local_population_growth = -0.0000
     }
-prices:
-  - key: pp_clay_washmill_price
-    body: |2-
-      {gold = 100}
 advancements:
   - key: pp_clay_washmill
     body: |2-
@@ -116,8 +111,6 @@ advancements:
       ai_weight = { add = 125 }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_clay_washmill_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('clay_washmill')|e].
-    MODIFIER_TYPE_NAME_pp_clay_washmill_price_cost_modifier: Clay Washmill Cost
     clay_washmill_slot_0: Clay Beds
     clay_washmill_slot_1: Clay Preparation
     clay_washmill_slot_2: Clay Refining
@@ -129,7 +122,6 @@ localization:
     pp_clay_washmill_ox_pugging: Ox Pugmill
     pp_clay_washmill_no_refining: No Clay Refining
     pp_clay_washmill_levigation_ponds: Levigation Ponds
-    pp_clay_washmill_price: Clay Washmill Price
     pp_clay_washmill: Clay Washmills
     pp_clay_washmill_desc: Brick-lined wash pits, settling ponds, and horse- or ox-driven pugmills prepare more consistent clay for ceramic trades.
 icon:

@@ -3,8 +3,7 @@ cookery = {
 	is_foreign = no
 	max_levels = cookery_max_level
 	pop_type = laborers
-	employment_size = 2
-	price = pp_cookery_price
+	employment_size = 1
 	category = consumer_goods_category
 	custom_tags = { pp_food_security_priority pp_direct_food_priority }
 	icon = cookery
@@ -26,147 +25,147 @@ cookery = {
 unique_production_methods = {
 		# --- ASIA ---
 		pp_cookery_khichdi = {
-			rice = 2.2
-			legumes = 1.873
-			pepper = 0.067
+			rice = 1.1
+			legumes = 0.937
+			pepper = 0.034
 			produced = victuals
-			output = 1.456
+			output = 0.728
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_fish_congee = { # Adjusted: Swapped game for fish to match the name and Asian RGOs
-			rice = 2.2
-			fish = 1.873
-			pepper = 0.067
+			rice = 1.1
+			fish = 0.937
+			pepper = 0.034
 			produced = victuals
-			output = 1.456
+			output = 0.728
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 
 		# --- EUROPE ---
 		pp_cookery_livestock_pottage = {
-			wheat = 2.133
-			livestock = 1.533
-			legumes = 0.433
+			wheat = 1.067
+			livestock = 0.767
+			legumes = 0.217
 			produced = victuals
-			output = 1.607
+			output = 0.804
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_mediterranean_fish = {
-			fish = 3.333
-			olives = 1
-			wine = 0.133
+			fish = 1.667
+			olives = 0.5
+			wine = 0.067
 			produced = victuals
-			output = 1.520
+			output = 0.76
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_mutton_and_pease = {
-        wool = 1.645
-        legumes = 0.778
-        salt = 0.092
+        wool = 0.823
+        legumes = 0.389
+        salt = 0.046
 			produced = victuals
-			output = 1.607
+			output = 0.804
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_surstromming = {
-        fish = 3.432
-        millet = 0.344
-        salt = 0.344
+        fish = 1.716
+        millet = 0.172
+        salt = 0.172
 			produced = victuals
-			output = 1.651
+			output = 0.826
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 
 		# --- AMERICA ---
 		pp_cookery_pozole = {
-			maize = 1.373
-			wild_game = 1.733
-			chili = 0.267
+			maize = 0.687
+			wild_game = 0.867
+			chili = 0.134
 			produced = victuals
-			output = 1.468
+			output = 0.734
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_pemmican = { # Adjusted: Flipped livestock and game to match American RGO dominance
-			wild_game = 3
-			livestock = 0.627
-			fruit = 0.667
+			wild_game = 1.5
+			livestock = 0.314
+			fruit = 0.334
 			produced = victuals
-			output = 1.523
+			output = 0.762
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_labskaus = { # Note: Requires potato, which only exists in America in your data!
-			potato = 0.627
-			fish = 1
-			livestock = 1.993
+			potato = 0.314
+			fish = 0.5
+			livestock = 0.997
 			produced = victuals
-			output = 1.526
+			output = 0.763
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 
 		# --- AFRICA (NEW) ---
 		pp_cookery_meat_tajine = { # Uses Africa's massive livestock, fruit, and saffron RGOs
-			livestock = 2.333
-			fruit = 1.067
-			saffron = 0.1
+			livestock = 1.167
+			fruit = 0.534
+			saffron = 0.05
 			produced = victuals
-			output = 1.674
+			output = 0.837
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_saltfish_porridge = { # Also fits Africa/Middle East perfectly
-			millet = 1.733
-			fish = 2.493
-			salt = 0.133
+			millet = 0.867
+			fish = 1.247
+			salt = 0.067
 			produced = victuals
-			output = 1.616
+			output = 0.808
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 
 		# --- OCEANIA (NEW) ---
 		pp_cookery_ika_mata = { # Capitalizes on Oceania's massive 18.9 fish and 11.7 fruit RGOs
-        fish = 3.2
-			fruit = 1.667
-			salt = 0.067
+        fish = 1.6
+			fruit = 0.834
+			salt = 0.034
 			produced = victuals
-			output = 1.543
+			output = 0.772
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 
 		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
 		pp_cookery_kheer = { # Sugar-led; primary fantasy SA / NA / ME; valid anywhere with sugar + starch + livestock
-			rice = 2.2
-			sugar = 0.2
-			livestock = 1.2
+			rice = 1.1
+			sugar = 0.1
+			livestock = 0.6
 			produced = victuals
-			output = 1.520
+			output = 0.76
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_honey_gruel = {
-			wheat = 1.6
-			fruit = 1.06
-			beeswax = 1.2
+			wheat = 0.8
+			fruit = 0.53
+			beeswax = 0.6
 			produced = victuals
-			output = 1.672
+			output = 0.836
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_boreal_hunter_stew = { # Fur belt: North Asia, North America, Eastern Europe â€” game stew; fur = trapping economy
-			fur = 1.533
-			millet = 1.333
-			salt = 0.133
+			fur = 0.767
+			millet = 0.667
+			salt = 0.067
 			produced = victuals
-			output = 1.673
+			output = 0.837
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -181,44 +180,44 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_cookery_beer = {
-			beer = 1.3
+			beer = 0.7
 			produced = victuals
-			output = 0.889
+			output = 0.445
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_wine = {
-			wine = 1.4
+			wine = 0.7
 			produced = victuals
-			output = 0.912
+			output = 0.456
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_liquor = {
-        liquor = 1.21
+        liquor = 0.61
 			produced = victuals
-			output = 0.941
+			output = 0.471
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_chocolate = {
-			cocoa = 0.533
+			cocoa = 0.267
 			produced = victuals
-			output = 0.694
+			output = 0.347
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_coffee = {
-			coffee = 0.7
+			coffee = 0.4
 			produced = victuals
-			output = 0.684
+			output = 0.342
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_tea = {
-			tea = 0.9
+			tea = 0.5
 			produced = victuals
-			output = 0.880
+			output = 0.440
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -232,23 +231,23 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_cookery_pottery_jars = {
-			pottery = 1.867
+			pottery = 0.934
 			produced = victuals
-			output = 0.567
+			output = 0.284
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_coopered_barrels = {
-			furniture = 0.6
+			furniture = 0.3
 			produced = victuals
-			output = 0.547
+			output = 0.274
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_cookery_tin_cans = {
-			steel = 0.667
+			steel = 0.334
 			produced = victuals
-			output = 1.014
+			output = 0.507
 			debug_max_profit = 0
 			category = building_maintenance
 		}

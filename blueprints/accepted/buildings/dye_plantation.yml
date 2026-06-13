@@ -17,8 +17,7 @@ building:
     is_foreign = no
     max_levels = farm_capacity_max_dye_plantation
     pop_type = laborers
-    employment_size = 3
-    price = pp_dye_plantation_price
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { farming_capacity }
     icon = dye_plantation
@@ -42,7 +41,7 @@ building:
     unique_production_methods = {
         pp_dye_plantation_base_dyes = {
             produced = dyes
-            output = 0.120
+            output = 0.040
             category = building_maintenance
         }
     }
@@ -51,10 +50,10 @@ building:
             category = building_maintenance
         }
         pp_dye_plantation_vat_curing = {
-            lumber = 0.358 # drying racks, vats
-            tools = 0.119 # knives, presses
+            lumber = 0.119 # drying racks, vats
+            tools = 0.040 # knives, presses
             produced = dyes
-            output = 0.266
+            output = 0.089
             category = building_maintenance
         }
     }
@@ -64,16 +63,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_dye_plantation_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_dye_plantation_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('dye_plantation')|e].
-    MODIFIER_TYPE_NAME_pp_dye_plantation_price_cost_modifier: Dye Plantation Cost
     dye_plantation_slot_0: Dye Crops
     dye_plantation_slot_1: Dye Curing
     dye_plantation: Dye Plantation
@@ -81,7 +74,6 @@ localization:
     pp_dye_plantation_base_dyes: Dye Crops
     pp_dye_plantation_no_curing: No Vat Curing
     pp_dye_plantation_vat_curing: Vat Curing
-    pp_dye_plantation_price: Dye Plantation Price
 icon:
   source_png: ../assets/icons/dye_plantation.png
   output_dds: dye_plantation.dds

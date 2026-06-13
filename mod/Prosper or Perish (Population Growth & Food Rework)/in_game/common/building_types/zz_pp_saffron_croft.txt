@@ -3,8 +3,7 @@ saffron_croft = {
 is_foreign = no
 max_levels = farm_capacity_max_saffron_croft
 pop_type = laborers
-employment_size = 3
-price = pp_saffron_croft_price
+employment_size = 1
 category = rgo_building_category
 custom_tags = { farming_capacity }
 icon = saffron_croft
@@ -28,7 +27,7 @@ can_close = yes
 unique_production_methods = {
     pp_saffron_croft_base_saffron = {
         produced = saffron
-        output = 0.069
+        output = 0.023
         category = building_maintenance
     }
 }
@@ -37,10 +36,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_saffron_croft_toasting_braziers = {
-        pottery = 0.316 # warming pans
-        coal = 0.158 # brazier fuel
+        pottery = 0.105 # warming pans
+        coal = 0.053 # brazier fuel
         produced = saffron
-        output = 0.154
+        output = 0.051
         category = building_maintenance
     }
 }
@@ -50,7 +49,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_migration_attraction = 0.01
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:saffron_croft:building

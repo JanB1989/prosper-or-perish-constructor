@@ -3,8 +3,7 @@ dye_plantation = {
 is_foreign = no
 max_levels = farm_capacity_max_dye_plantation
 pop_type = laborers
-employment_size = 3
-price = pp_dye_plantation_price
+employment_size = 1
 category = rgo_building_category
 custom_tags = { farming_capacity }
 icon = dye_plantation
@@ -28,7 +27,7 @@ can_close = yes
 unique_production_methods = {
     pp_dye_plantation_base_dyes = {
         produced = dyes
-        output = 0.120
+        output = 0.040
         category = building_maintenance
     }
 }
@@ -37,10 +36,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_dye_plantation_vat_curing = {
-        lumber = 0.358 # drying racks, vats
-        tools = 0.119 # knives, presses
+        lumber = 0.119 # drying racks, vats
+        tools = 0.040 # knives, presses
         produced = dyes
-        output = 0.266
+        output = 0.089
         category = building_maintenance
     }
 }
@@ -50,7 +49,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_migration_attraction = 0.01
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:dye_plantation:building

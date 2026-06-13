@@ -3,8 +3,7 @@ lead_mine = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 3
-price = pp_lead_mine_price
+employment_size = 1
 category = rgo_building_category
 icon = lead_mine
 rural_settlement = yes
@@ -26,7 +25,7 @@ can_close = yes
 unique_production_methods = {
     pp_lead_mine_base_lead = {
         produced = lead
-        output = 0.27
+        output = 0.09
         category = building_maintenance
     }
 }
@@ -35,11 +34,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_lead_mine_lead = {
-        lumber = 0.42
-        tools = 0.76
-        beeswax = 0.12
+        lumber = 0.14
+        tools = 0.25
+        beeswax = 0.04
         produced = lead
-        output = 1.89
+        output = 0.63
         category = building_maintenance
     }
 }
@@ -48,11 +47,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_lead_mine_silver = {
-        lumber = 0.10
-        tools = 0.08
-        lead = 0.05
+        lumber = 0.03
+        tools = 0.03
+        lead = 0.02
         produced = silver
-        output = 0.098
+        output = 0.033
         category = building_maintenance
     }
 }
@@ -61,8 +60,8 @@ raw_modifier = {
 }
 
 modifier = {
-    local_population_growth = -0.0002
-    local_migration_attraction = 0.02
+    local_population_growth = -0.0001
+    local_migration_attraction = 0.007
 }
 }
 # <<< eu5-building-pipeline:lead_mine:building

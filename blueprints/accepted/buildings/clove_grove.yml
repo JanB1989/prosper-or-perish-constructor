@@ -17,8 +17,7 @@ building:
     is_foreign = no
     max_levels = farm_capacity_max_clove_grove
     pop_type = laborers
-    employment_size = 3
-    price = pp_clove_grove_price
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { farming_capacity }
     icon = clove_grove
@@ -42,7 +41,7 @@ building:
     unique_production_methods = {
         pp_clove_grove_base_cloves = {
             produced = cloves
-            output = 0.111
+            output = 0.037
             category = building_maintenance
         }
     }
@@ -51,10 +50,10 @@ building:
             category = building_maintenance
         }
         pp_clove_grove_curing_houses = {
-            lumber = 0.468 # curing racks
-            coal = 0.156 # drying heat
+            lumber = 0.156 # curing racks
+            coal = 0.052 # drying heat
             produced = cloves
-            output = 0.236
+            output = 0.079
             category = building_maintenance
         }
     }
@@ -64,16 +63,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_clove_grove_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_clove_grove_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('clove_grove')|e].
-    MODIFIER_TYPE_NAME_pp_clove_grove_price_cost_modifier: Clove Grove Cost
     clove_grove_slot_0: Clove Trees
     clove_grove_slot_1: Curing & Drying
     clove_grove: Clove Grove
@@ -81,7 +74,6 @@ localization:
     pp_clove_grove_base_cloves: Clove Trees
     pp_clove_grove_no_curing: No Curing Houses
     pp_clove_grove_curing_houses: Curing Houses
-    pp_clove_grove_price: Clove Grove Price
 icon:
   source_png: ../assets/icons/clove_grove.png
   output_dds: clove_grove.dds

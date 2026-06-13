@@ -28,8 +28,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 4
-    price = pp_gold_stamp_mill_price
+    employment_size = 1
     category = rgo_building_category
     icon = gold_stamp_mill
     rural_settlement = yes
@@ -52,7 +51,7 @@ building:
     unique_production_methods = {
         pp_gold_stamp_mill_base_gold = {
             produced = goods_gold
-            output = 0.3
+            output = 0.1
             category = building_maintenance
         }
     }
@@ -61,11 +60,11 @@ building:
             category = building_maintenance
         }
         pp_gold_stamp_mill_gold = {
-            lumber = 1.467
-            tools = 1.25
-            mercury = 0.35
+            lumber = 0.367
+            tools = 0.31
+            mercury = 0.09
             produced = goods_gold
-            output = 1.05
+            output = 0.26
             category = building_maintenance
         }
     }
@@ -74,19 +73,19 @@ building:
             category = building_maintenance
         }
         pp_gold_stamp_mill_silver = {
-            lumber = 0.20
-            tools = 0.16
-            mercury = 0.05
+            lumber = 0.05
+            tools = 0.04
+            mercury = 0.01
             produced = silver
-            output = 0.186
+            output = 0.047
             category = building_maintenance
         }
         pp_gold_stamp_mill_copper = {
-            lumber = 0.18
-            tools = 0.12
-            mercury = 0.04
+            lumber = 0.05
+            tools = 0.03
+            mercury = 0.01
             produced = copper
-            output = 0.3
+            output = 0.1
             category = building_maintenance
         }
     }
@@ -95,17 +94,11 @@ building:
     }
 
     modifier = {
-        local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_population_growth = -0.0001
+        local_migration_attraction = 0.005
     }
-prices:
-  - key: pp_gold_stamp_mill_price
-    body: |2-
-      {gold = 400}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_gold_stamp_mill_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('gold_stamp_mill')|e].
-    MODIFIER_TYPE_NAME_pp_gold_stamp_mill_price_cost_modifier: Gold Stamp Mill Cost
     gold_stamp_mill_slot_0: Gold Deposit
     gold_stamp_mill_slot_1: Stamp-Mill Recovery
     gold_stamp_mill_slot_2: Assay Sorting
@@ -117,7 +110,6 @@ localization:
     pp_gold_stamp_mill_no_secondary: No Assay Sorting
     pp_gold_stamp_mill_silver: Assay Silver Recovery
     pp_gold_stamp_mill_copper: Copper Sulphide Sorting
-    pp_gold_stamp_mill_price: Gold Stamp Mill Price
 icon:
   source_png: ../assets/icons/gold_stamp_mill.png
   output_dds: gold_stamp_mill.dds

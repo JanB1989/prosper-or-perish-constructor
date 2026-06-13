@@ -17,8 +17,7 @@ building:
     is_foreign = no
     max_levels = farm_capacity_max_saffron_croft
     pop_type = laborers
-    employment_size = 3
-    price = pp_saffron_croft_price
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { farming_capacity }
     icon = saffron_croft
@@ -42,7 +41,7 @@ building:
     unique_production_methods = {
         pp_saffron_croft_base_saffron = {
             produced = saffron
-            output = 0.069
+            output = 0.023
             category = building_maintenance
         }
     }
@@ -51,10 +50,10 @@ building:
             category = building_maintenance
         }
         pp_saffron_croft_toasting_braziers = {
-            pottery = 0.316 # warming pans
-            coal = 0.158 # brazier fuel
+            pottery = 0.105 # warming pans
+            coal = 0.053 # brazier fuel
             produced = saffron
-            output = 0.154
+            output = 0.051
             category = building_maintenance
         }
     }
@@ -64,16 +63,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_saffron_croft_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_saffron_croft_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('saffron_croft')|e].
-    MODIFIER_TYPE_NAME_pp_saffron_croft_price_cost_modifier: Saffron Croft Cost
     saffron_croft_slot_0: Crocus Beds
     saffron_croft_slot_1: Stigma Drying
     saffron_croft: Saffron Croft
@@ -81,7 +74,6 @@ localization:
     pp_saffron_croft_base_saffron: Crocus Beds
     pp_saffron_croft_no_drying: No Stigma Drying
     pp_saffron_croft_toasting_braziers: Toasting Braziers
-    pp_saffron_croft_price: Saffron Croft Price
 icon:
   source_png: ../assets/icons/saffron_croft.png
   output_dds: saffron_croft.dds

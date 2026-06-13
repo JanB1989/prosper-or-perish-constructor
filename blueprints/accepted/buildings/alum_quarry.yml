@@ -28,8 +28,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 3
-    price = pp_alum_quarry_price
+    employment_size = 1
     category = rgo_building_category
     icon = alum_quarry
     rural_settlement = yes
@@ -51,7 +50,7 @@ building:
     unique_production_methods = {
         pp_alum_quarry_base_alum = {
             produced = alum
-            output = 0.24
+            output = 0.08
             category = building_maintenance
         }
     }
@@ -60,10 +59,10 @@ building:
             category = building_maintenance
         }
         pp_alum_quarry_alum = {
-            lumber = 0.591
-            tools = 0.765
+            lumber = 0.197
+            tools = 0.255
             produced = alum
-            output = 1.273
+            output = 0.424
             category = building_maintenance
         }
     }
@@ -72,17 +71,17 @@ building:
             category = building_maintenance
         }
         pp_alum_quarry_stone = {
-            lumber = 0.12
-            tools = 0.08
+            lumber = 0.04
+            tools = 0.03
             produced = stone
-            output = 0.504
+            output = 0.168
             category = building_maintenance
         }
         pp_alum_quarry_clay = {
-            lumber = 0.10
-            tools = 0.06
+            lumber = 0.03
+            tools = 0.02
             produced = clay
-            output = 0.792
+            output = 0.264
             category = building_maintenance
         }
     }
@@ -91,17 +90,11 @@ building:
     }
 
     modifier = {
-        local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_population_growth = -0.0001
+        local_migration_attraction = 0.007
     }
-prices:
-  - key: pp_alum_quarry_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_alum_quarry_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('alum_quarry')|e].
-    MODIFIER_TYPE_NAME_pp_alum_quarry_price_cost_modifier: Alum Quarry Cost
     alum_quarry_slot_0: Alum Deposit
     alum_quarry_slot_1: Alum Quarrying
     alum_quarry_slot_2: Waste Sorting
@@ -113,7 +106,6 @@ localization:
     pp_alum_quarry_no_secondary: No Waste Sorting
     pp_alum_quarry_stone: Sandstone Overburden
     pp_alum_quarry_clay: Shale Clay Sorting
-    pp_alum_quarry_price: Alum Quarry Price
     advanced_mining_desc: Better mine surveys and quarry practice open saltpeter beds and alum shales to organized working.
 icon:
   source_png: ../assets/icons/alum_quarry.png

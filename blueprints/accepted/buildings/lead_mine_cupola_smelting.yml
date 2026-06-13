@@ -27,8 +27,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 5
-    price = pp_lead_mine_cupola_smelting_price
+    employment_size = 1
     category = rgo_building_category
     icon = lead_mine_cupola_smelting
     rural_settlement = yes
@@ -51,7 +50,7 @@ building:
     unique_production_methods = {
         pp_lead_mine_cupola_base_lead = {
             produced = lead
-            output = 0.38
+            output = 0.08
             category = building_maintenance
         }
     }
@@ -60,11 +59,11 @@ building:
             category = building_maintenance
         }
         pp_lead_mine_cupola_lead = {
-            lumber = 1.10
-            tools = 2.65
-            beeswax = 0.30
+            lumber = 0.22
+            tools = 0.53
+            beeswax = 0.06
             produced = lead
-            output = 6.12
+            output = 1.22
             category = building_maintenance
         }
     }
@@ -73,11 +72,11 @@ building:
             category = building_maintenance
         }
         pp_lead_mine_cupola_silver = {
-            lumber = 0.16
-            tools = 0.12
-            lead = 0.10
+            lumber = 0.03
+            tools = 0.02
+            lead = 0.02
             produced = silver
-            output = 0.16
+            output = 0.03
             category = building_maintenance
         }
     }
@@ -86,17 +85,11 @@ building:
     }
 
     modifier = {
-        local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_population_growth = -0.0000
+        local_migration_attraction = 0.004
     }
-prices:
-  - key: pp_lead_mine_cupola_smelting_price
-    body: |2-
-      {gold = 1200}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_lead_mine_cupola_smelting_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('lead_mine_cupola_smelting')|e].
-    MODIFIER_TYPE_NAME_pp_lead_mine_cupola_smelting_price_cost_modifier: Cupola Lead Mine Cost
     lead_mine_cupola_smelting_slot_0: Galena Vein
     lead_mine_cupola_smelting_slot_1: Cupola Lead Workings
     lead_mine_cupola_smelting_slot_2: Silver Recovery
@@ -107,7 +100,6 @@ localization:
     pp_lead_mine_cupola_lead: Cupola Galena Workings
     pp_lead_mine_cupola_no_secondary: No Silver Recovery
     pp_lead_mine_cupola_silver: Cupola Silver Dressing
-    pp_lead_mine_cupola_smelting_price: Cupola Lead Mine Price
     cupola_smelting: Cupola Smelting
     cupola_smelting_desc: Coal-fired cupola furnaces improve smelting at the best organized lead mines.
 icon:

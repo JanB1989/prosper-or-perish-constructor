@@ -3,8 +3,7 @@ sericulture_farm = {
 is_foreign = no
 max_levels = farm_capacity_max_sericulture_farm
 pop_type = laborers
-employment_size = 3
-price = pp_sericulture_farm_price
+employment_size = 1
 category = rgo_building_category
 custom_tags = { farming_capacity }
 icon = sericulture_farm
@@ -28,7 +27,7 @@ can_close = yes
 unique_production_methods = {
     pp_sericulture_farm_base_silk = {
         produced = silk
-        output = 0.120
+        output = 0.040
         category = building_maintenance
     }
 }
@@ -37,10 +36,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_sericulture_farm_cocoon_reeling = {
-        lumber = 0.358 # rearing trays, frames
-        tools = 0.119 # knives, reels
+        lumber = 0.119 # rearing trays, frames
+        tools = 0.040 # knives, reels
         produced = silk
-        output = 0.266
+        output = 0.089
         category = building_maintenance
     }
 }
@@ -50,7 +49,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_migration_attraction = 0.01
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:sericulture_farm:building

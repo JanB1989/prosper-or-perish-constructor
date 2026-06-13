@@ -3,8 +3,7 @@ inland_saltworks = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 3
-price = pp_inland_saltworks_price
+employment_size = 1
 category = rgo_building_category
 icon = inland_saltworks
 rural_settlement = yes
@@ -72,22 +71,22 @@ can_close = yes
 unique_production_methods = {
     pp_inland_saltworks_base_salt = {
         produced = salt
-        output = 0.240
+        output = 0.080
         category = building_maintenance
     }
 }
 unique_production_methods = {
     pp_inland_saltworks_salt_flat_scraping = {
         produced = salt
-        output = 0.225
+        output = 0.075
         category = building_maintenance
     }
     pp_inland_saltworks_open_pan_boiling = {
-        lumber = 1.400 # pan fuel
-        clay = 0.600 # hearth linings
-        pottery = 0.800 # brine vessels
+        lumber = 0.467 # pan fuel
+        clay = 0.200 # hearth linings
+        pottery = 0.267 # brine vessels
         produced = salt
-        output = 0.700
+        output = 0.233
         category = building_maintenance
     }
 }
@@ -96,8 +95,8 @@ raw_modifier = {
 }
 
 modifier = {
-    local_population_growth = -0.0001
-    local_migration_attraction = 0.01
+    local_population_growth = -0.0000
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:inland_saltworks:building

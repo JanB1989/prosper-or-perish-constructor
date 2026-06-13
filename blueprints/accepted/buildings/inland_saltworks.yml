@@ -23,8 +23,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 3
-    price = pp_inland_saltworks_price
+    employment_size = 1
     category = rgo_building_category
     icon = inland_saltworks
     rural_settlement = yes
@@ -92,22 +91,22 @@ building:
     unique_production_methods = {
         pp_inland_saltworks_base_salt = {
             produced = salt
-            output = 0.240
+            output = 0.080
             category = building_maintenance
         }
     }
     unique_production_methods = {
         pp_inland_saltworks_salt_flat_scraping = {
             produced = salt
-            output = 0.225
+            output = 0.075
             category = building_maintenance
         }
         pp_inland_saltworks_open_pan_boiling = {
-            lumber = 1.400 # pan fuel
-            clay = 0.600 # hearth linings
-            pottery = 0.800 # brine vessels
+            lumber = 0.467 # pan fuel
+            clay = 0.200 # hearth linings
+            pottery = 0.267 # brine vessels
             produced = salt
-            output = 0.700
+            output = 0.233
             category = building_maintenance
         }
     }
@@ -116,17 +115,11 @@ building:
     }
 
     modifier = {
-        local_population_growth = -0.0001
-        local_migration_attraction = 0.01
+        local_population_growth = -0.0000
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_inland_saltworks_price
-    body: |2-
-      {gold = 150}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_inland_saltworks_price_cost_modifier: Affects the cost of building [ShowBuildingTypeName('inland_saltworks')|e].
-    MODIFIER_TYPE_NAME_pp_inland_saltworks_price_cost_modifier: Inland Saltworks Cost
     inland_saltworks_slot_0: Inland Salt
     inland_saltworks_slot_1: Brine Working
     inland_saltworks: Inland Saltworks
@@ -134,7 +127,6 @@ localization:
     pp_inland_saltworks_base_salt: Surveyed Inland Brine
     pp_inland_saltworks_salt_flat_scraping: Salt-Flat Scraping
     pp_inland_saltworks_open_pan_boiling: Open-Pan Brine Boiling
-    pp_inland_saltworks_price: Inland Saltworks Price
 icon:
   source_dds: /mnt/c/Games/steamapps/common/Europa Universalis V/game/main_menu/gfx/interface/icons/buildings/coastal_settlements.dds
   output_dds: inland_saltworks.dds

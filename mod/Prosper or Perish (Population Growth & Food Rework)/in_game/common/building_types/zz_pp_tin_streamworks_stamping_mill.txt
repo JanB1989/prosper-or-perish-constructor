@@ -3,8 +3,7 @@ tin_stamping_mill = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 4
-price = pp_tin_stamping_mill_price
+employment_size = 1
 category = rgo_building_category
 icon = tin_stamping_mill
 rural_settlement = yes
@@ -27,7 +26,7 @@ can_close = yes
 unique_production_methods = {
     pp_tin_stamping_mill_base_tin = {
         produced = tin
-        output = 0.3
+        output = 0.1
         category = building_maintenance
     }
 }
@@ -36,10 +35,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tin_stamping_mill_tin = {
-        lumber = 1.700
-        tools = 1.25
+        lumber = 0.425
+        tools = 0.31
         produced = tin
-        output = 3.78
+        output = 0.95
         category = building_maintenance
     }
 }
@@ -48,17 +47,17 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tin_stamping_mill_copper = {
-        lumber = 0.213
-        tools = 0.12
+        lumber = 0.053
+        tools = 0.03
         produced = copper
-        output = 0.272
+        output = 0.068
         category = building_maintenance
     }
     pp_tin_stamping_mill_lead = {
-        lumber = 0.213
-        tools = 0.12
+        lumber = 0.053
+        tools = 0.03
         produced = lead
-        output = 0.408
+        output = 0.102
         category = building_maintenance
     }
 }
@@ -67,8 +66,8 @@ raw_modifier = {
 }
 
 modifier = {
-    local_population_growth = -0.0002
-    local_migration_attraction = 0.02
+    local_population_growth = -0.0001
+    local_migration_attraction = 0.005
 }
 }
 # <<< eu5-building-pipeline:tin_stamping_mill:building

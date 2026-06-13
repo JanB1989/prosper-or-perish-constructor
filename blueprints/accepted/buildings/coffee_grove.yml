@@ -17,8 +17,7 @@ building:
     is_foreign = no
     max_levels = farm_capacity_max_coffee_grove
     pop_type = laborers
-    employment_size = 3
-    price = pp_coffee_grove_price
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { farming_capacity }
     icon = coffee_grove
@@ -42,7 +41,7 @@ building:
     unique_production_methods = {
         pp_coffee_grove_base_coffee = {
             produced = coffee
-            output = 0.121
+            output = 0.040
             category = building_maintenance
         }
     }
@@ -51,10 +50,10 @@ building:
             category = building_maintenance
         }
         pp_coffee_grove_washing_stations = {
-            lumber = 0.349 # washing troughs
-            pottery = 0.174 # fermentation vats
+            lumber = 0.116 # washing troughs
+            pottery = 0.058 # fermentation vats
             produced = coffee
-            output = 0.270
+            output = 0.090
             category = building_maintenance
         }
     }
@@ -64,16 +63,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_coffee_grove_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_coffee_grove_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('coffee_grove')|e].
-    MODIFIER_TYPE_NAME_pp_coffee_grove_price_cost_modifier: Coffee Grove Cost
     coffee_grove_slot_0: Coffee Trees
     coffee_grove_slot_1: Washing & Drying
     coffee_grove: Coffee Grove
@@ -81,7 +74,6 @@ localization:
     pp_coffee_grove_base_coffee: Coffee Trees
     pp_coffee_grove_no_washing: No Washing Stations
     pp_coffee_grove_washing_stations: Washing Stations
-    pp_coffee_grove_price: Coffee Grove Price
 icon:
   source_png: ../assets/icons/coffee_grove.png
   output_dds: coffee_grove.dds

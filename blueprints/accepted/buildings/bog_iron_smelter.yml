@@ -21,8 +21,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = rural_peasant_produce_employment
-    price = pp_bog_iron_smelter_price
+    employment_size = 1
     category = rgo_building_category
     icon = bog_iron_smelter
     rural_settlement = yes
@@ -62,19 +61,12 @@ building:
     construction_demand = basic_construction_needs
     raw_modifier = {
     }
-prices:
-  - key: pp_bog_iron_smelter_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_bog_iron_smelter_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('bog_iron_smelter')|e].
-    MODIFIER_TYPE_NAME_pp_bog_iron_smelter_price_cost_modifier: Bog Iron Smelter Cost
     bog_iron_smelter_slot_0: Bog Iron Processing
     bog_iron_smelter: Bog Iron Smelter
     bog_iron_smelter_desc: A small wetland ironworks that gathers, roasts, and smelts bog iron where conventional ore deposits are absent.
     pp_bog_iron_maintenance: Bog Iron Smelter
-    pp_bog_iron_smelter_price: Bog Iron Smelter Price
 icon:
   source_dds: /mnt/c/Games/steamapps/common/Europa Universalis V/game/main_menu/gfx/interface/icons/buildings/bog_iron_smelter.dds
   output_dds: bog_iron_smelter.dds

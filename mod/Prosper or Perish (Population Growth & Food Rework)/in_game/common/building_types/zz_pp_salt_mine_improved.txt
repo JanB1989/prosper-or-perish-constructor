@@ -3,8 +3,7 @@ salt_mine_improved = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 4
-price = pp_salt_mine_improved_price
+employment_size = 1
 category = rgo_building_category
 icon = salt_mine_improved
 rural_settlement = yes
@@ -71,7 +70,7 @@ can_close = yes
 unique_production_methods = {
     pp_salt_mine_improved_base_salt = {
         produced = salt
-        output = 0.280
+        output = 0.070
         category = building_maintenance
     }
 }
@@ -80,13 +79,13 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_salt_mine_improved_timbered_haulage = {
-        lumber = 1.694 # timbered galleries
-        tools = 0.847 # pumps and picks
-        horses = 0.424 # hauling teams
-        leather = 0.303 # harness and buckets
-        beeswax = 0.242 # mine candles
+        lumber = 0.424 # timbered galleries
+        tools = 0.212 # pumps and picks
+        horses = 0.106 # hauling teams
+        leather = 0.076 # harness and buckets
+        beeswax = 0.061 # mine candles
         produced = salt
-        output = 1.464
+        output = 0.366
         category = building_maintenance
     }
 }
@@ -95,8 +94,8 @@ raw_modifier = {
 }
 
 modifier = {
-    local_population_growth = -0.0002
-    local_migration_attraction = 0.02
+    local_population_growth = -0.0001
+    local_migration_attraction = 0.005
 }
 }
 # <<< eu5-building-pipeline:salt_mine_improved:building

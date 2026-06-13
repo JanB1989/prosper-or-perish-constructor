@@ -17,8 +17,7 @@ building:
     is_foreign = no
     max_levels = farm_capacity_max_cotton_farm
     pop_type = laborers
-    employment_size = 3
-    price = pp_cotton_farm_price
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { farming_capacity }
     icon = cotton_farm
@@ -42,7 +41,7 @@ building:
     unique_production_methods = {
         pp_cotton_farm_base_cotton = {
             produced = cotton
-            output = 0.120
+            output = 0.040
             category = building_maintenance
         }
     }
@@ -51,11 +50,11 @@ building:
             category = building_maintenance
         }
         pp_cotton_farm_gin_house = {
-            lumber = 0.280 # drying sheds
-            fiber_crops = 0.120 # picking sacks, bale cloth
-            tools = 0.034 # ginning rollers
+            lumber = 0.093 # drying sheds
+            fiber_crops = 0.040 # picking sacks, bale cloth
+            tools = 0.011 # ginning rollers
             produced = cotton
-            output = 0.266
+            output = 0.089
             category = building_maintenance
         }
     }
@@ -65,16 +64,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_cotton_farm_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_cotton_farm_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('cotton_farm')|e].
-    MODIFIER_TYPE_NAME_pp_cotton_farm_price_cost_modifier: Cotton Farm Cost
     cotton_farm_slot_0: Cotton Fields
     cotton_farm_slot_1: Picking & Ginning
     cotton_farm: Cotton Farm
@@ -82,7 +75,6 @@ localization:
     pp_cotton_farm_base_cotton: Cotton Fields
     pp_cotton_farm_field_picking: Field Picking
     pp_cotton_farm_gin_house: Gin House
-    pp_cotton_farm_price: Cotton Farm Price
 icon:
   source_png: ../assets/icons/cotton_farm.png
   output_dds: cotton_farm.dds

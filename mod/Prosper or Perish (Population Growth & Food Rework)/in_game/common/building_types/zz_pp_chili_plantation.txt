@@ -3,8 +3,7 @@ chili_plantation = {
 is_foreign = no
 max_levels = farm_capacity_max_chili_plantation
 pop_type = laborers
-employment_size = 3
-price = pp_chili_plantation_price
+employment_size = 1
 category = rgo_building_category
 custom_tags = { farming_capacity }
 icon = chili_plantation
@@ -28,7 +27,7 @@ can_close = yes
 unique_production_methods = {
     pp_chili_plantation_base_chili = {
         produced = chili
-        output = 0.112
+        output = 0.037
         category = building_maintenance
     }
 }
@@ -37,10 +36,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_chili_plantation_sun_drying_mats = {
-        fiber_crops = 0.292 # drying mats
-        tools = 0.146 # harvest knives
+        fiber_crops = 0.097 # drying mats
+        tools = 0.049 # harvest knives
         produced = chili
-        output = 0.249
+        output = 0.083
         category = building_maintenance
     }
 }
@@ -50,7 +49,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_migration_attraction = 0.01
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:chili_plantation:building

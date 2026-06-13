@@ -43,8 +43,7 @@ building:
     is_foreign = no
     max_levels = farm_capacity_max_farming_village_rotations
     pop_type = peasants
-    employment_size = 7
-    price = pp_farming_village_rotations_price
+    employment_size = 1
     category = village_category
     custom_tags = { farming_capacity pp_food_security_priority pp_staple_food_priority }
     icon = farming_village_rotations
@@ -67,42 +66,42 @@ building:
     unique_production_methods = {
         pp_farming_village_rotations_base_livestock = {
             produced = livestock
-            output = 0.50
+            output = 0.07
             category = building_maintenance
         }
         pp_farming_village_rotations_base_millet = {
             produced = millet
-            output = 0.50
+            output = 0.07
             category = building_maintenance
         }
         pp_farming_village_rotations_base_wheat = {
             produced = wheat
-            output = 0.50
+            output = 0.07
             category = building_maintenance
         }
         pp_farming_village_rotations_base_maize = {
             produced = maize
-            output = 0.50
+            output = 0.07
             category = building_maintenance
         }
         pp_farming_village_rotations_base_rice = {
             produced = rice
-            output = 0.50
+            output = 0.07
             category = building_maintenance
         }
         pp_farming_village_rotations_base_legumes = {
             produced = legumes
-            output = 0.50
+            output = 0.07
             category = building_maintenance
         }
         pp_farming_village_rotations_base_potato = {
             produced = potato
-            output = 0.50
+            output = 0.07
             category = building_maintenance
         }
         pp_farming_village_rotations_base_olives = {
             produced = olives
-            output = 0.50
+            output = 0.07
             category = building_maintenance
         }
     }
@@ -112,81 +111,81 @@ building:
         }
         pp_farming_village_rotations_livestock = {
             produced = livestock
-            output = 6.80
-            tools = 1.20 # harness, hand tools
-            horses = 1.00 # manure and fodder carts
-            legumes = 2.00 # fodder ley rotations
-            lumber = 0.70 # pens, racks, gates
+            output = 0.97
+            tools = 0.17 # harness, hand tools
+            horses = 0.14 # manure and fodder carts
+            legumes = 0.29 # fodder ley rotations
+            lumber = 0.10 # pens, racks, gates
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_farming_village_rotations_millet = {
             produced = millet
-            output = 10.80
-            tools = 1.50 # ploughshares, hoes
-            horses = 1.20 # draught teams
-            livestock = 0.75 # manure supply
-            fiber_crops = 0.50 # binding straw, mats
+            output = 1.54
+            tools = 0.21 # ploughshares, hoes
+            horses = 0.17 # draught teams
+            livestock = 0.11 # manure supply
+            fiber_crops = 0.07 # binding straw, mats
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_farming_village_rotations_wheat = {
             produced = wheat
-            output = 10.80
-            tools = 1.50 # ploughshares, hoes
-            horses = 1.20 # draught teams
-            legumes = 1.70 # clover and pulse leys
-            lumber = 0.30 # barns, hedged closes
+            output = 1.54
+            tools = 0.21 # ploughshares, hoes
+            horses = 0.17 # draught teams
+            legumes = 0.24 # clover and pulse leys
+            lumber = 0.04 # barns, hedged closes
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_farming_village_rotations_maize = {
             produced = maize
-            output = 10.80
-            tools = 1.50 # hoes, ploughshares
-            livestock = 1.70 # manure supply
-            lumber = 0.85 # maize cribs, fences
-            fiber_crops = 1.00 # husk ties, baskets
+            output = 1.54
+            tools = 0.21 # hoes, ploughshares
+            livestock = 0.24 # manure supply
+            lumber = 0.12 # maize cribs, fences
+            fiber_crops = 0.14 # husk ties, baskets
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_farming_village_rotations_rice = {
             produced = rice
-            output = 10.80
-            tools = 1.50 # hoes, spades
-            livestock = 1.80 # manure supply
-            lumber = 0.85 # sluices, gates
-            clay = 3.00 # compacted bunds
+            output = 1.54
+            tools = 0.21 # hoes, spades
+            livestock = 0.26 # manure supply
+            lumber = 0.12 # sluices, gates
+            clay = 0.43 # compacted bunds
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_farming_village_rotations_legumes = {
             produced = legumes
-            output = 10.90
-            tools = 1.50 # hoes, light ploughs
-            horses = 1.20 # draught teams
-            livestock = 0.75 # manure supply
-            cloth = 0.35 # seed sacks
+            output = 1.56
+            tools = 0.21 # hoes, light ploughs
+            horses = 0.17 # draught teams
+            livestock = 0.11 # manure supply
+            cloth = 0.05 # seed sacks
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_farming_village_rotations_potato = {
             produced = potato
-            output = 10.90
-            tools = 1.50 # hoes, spades
-            livestock = 1.80 # manure supply
-            clay = 2.00 # earth clamps
-            cloth = 0.70 # sacks, covers
+            output = 1.56
+            tools = 0.21 # hoes, spades
+            livestock = 0.26 # manure supply
+            clay = 0.29 # earth clamps
+            cloth = 0.10 # sacks, covers
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_farming_village_rotations_olives = {
             produced = olives
-            output = 10.80
-            tools = 1.50 # pruning knives, mattocks
-            livestock = 1.80 # grove manure
-            lumber = 0.85 # press beams, bins
-            pottery = 1.00 # oil jars
+            output = 1.54
+            tools = 0.21 # pruning knives, mattocks
+            livestock = 0.26 # grove manure
+            lumber = 0.12 # press beams, bins
+            pottery = 0.14 # oil jars
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -197,11 +196,11 @@ building:
         }
         pp_farming_village_rotations_hedgerow_hives = {
             produced = beeswax
-            output = 2.15
-            tools = 0.28 # hive tools
-            lumber = 0.72 # hive stands
-            fiber_crops = 0.55 # woven skeps
-            pottery = 0.35 # wax pots
+            output = 0.31
+            tools = 0.04 # hive tools
+            lumber = 0.10 # hive stands
+            fiber_crops = 0.08 # woven skeps
+            pottery = 0.05 # wax pots
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -213,14 +212,10 @@ building:
 
     modifier = {
         local_monthly_food = 0.0
-        local_peasants_estate_power = 0.15
-        local_peasant_enfranchisment = 0.015
+        local_peasants_estate_power = 0.021
+        local_peasant_enfranchisment = 0.002
         local_laborers_desired_pop = 0
     }
-prices:
-  - key: pp_farming_village_rotations_price
-    body: |2-
-      {gold = 400}
 advancements:
   - key: pp_farming_village_rotations
     body: |2-
@@ -231,8 +226,6 @@ advancements:
       ai_weight = { add = 125 }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_farming_village_rotations_price_cost_modifier: Affects the cost of building [ShowBuildingTypeName('farming_village_rotations')|e].
-    MODIFIER_TYPE_NAME_pp_farming_village_rotations_price_cost_modifier: Rotational Farmstead Cost
     farming_village_rotations: Rotational Farmstead
     farming_village_rotations_desc: Rotational farmsteads let peasant households organize strips, fallow, legumes, manure, and livestock into a steadier mixed farming cycle.
     farming_village_rotations_slot_0: Rotated Fields
@@ -259,7 +252,6 @@ localization:
     pp_farming_village_rotations_no_primary: No Rotational Cultivation
     pp_farming_village_rotations_olives: Rotational Olive Groves
     pp_farming_village_rotations_potato: Rotational Potato Fields
-    pp_farming_village_rotations_price: Rotational Farmstead Price
     pp_farming_village_rotations_rice: Rotational Rice Paddies
     pp_farming_village_rotations_wheat: Rotational Wheat Fields
 icon:

@@ -3,8 +3,7 @@ engineered_brine_saltworks = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 4
-price = pp_engineered_brine_saltworks_price
+employment_size = 1
 category = rgo_building_category
 icon = engineered_brine_saltworks
 rural_settlement = yes
@@ -73,7 +72,7 @@ can_close = yes
 unique_production_methods = {
     pp_engineered_brine_saltworks_base_salt = {
         produced = salt
-        output = 0.280
+        output = 0.070
         category = building_maintenance
     }
 }
@@ -82,11 +81,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_engineered_brine_saltworks_pumped_brine_channels = {
-        lumber = 1.600 # brine pipes
-        tools = 1.000 # pumps and valves
-        pottery = 0.600 # storage jars
+        lumber = 0.400 # brine pipes
+        tools = 0.250 # pumps and valves
+        pottery = 0.150 # storage jars
         produced = salt
-        output = 1.320
+        output = 0.330
         category = building_maintenance
     }
 }
@@ -95,12 +94,12 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_engineered_brine_saltworks_mineral_fired_pans = {
-        coal = 1.500 # pan fuel
-        clay = 1.000 # furnace linings
-        pottery = 1.000 # brine vessels
-        tools = 0.600 # iron pans
+        coal = 0.375 # pan fuel
+        clay = 0.250 # furnace linings
+        pottery = 0.250 # brine vessels
+        tools = 0.150 # iron pans
         produced = salt
-        output = 1.450
+        output = 0.363
         category = building_maintenance
     }
 }
@@ -109,8 +108,8 @@ raw_modifier = {
 }
 
 modifier = {
-    local_population_growth = -0.0002
-    local_migration_attraction = 0.02
+    local_population_growth = -0.0001
+    local_migration_attraction = 0.005
 }
 }
 # <<< eu5-building-pipeline:engineered_brine_saltworks:building

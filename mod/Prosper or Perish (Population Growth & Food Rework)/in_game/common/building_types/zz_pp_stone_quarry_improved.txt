@@ -3,8 +3,7 @@ stone_quarry_improved = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 4
-price = pp_stone_quarry_improved_price
+employment_size = 1
 category = rgo_building_category
 icon = stone_quarry_improved
 rural_settlement = yes
@@ -39,7 +38,7 @@ can_close = yes
 unique_production_methods = {
     pp_stone_quarry_improved_base_stone = {
         produced = stone
-        output = 0.60
+        output = 0.15
         category = building_maintenance
     }
 }
@@ -48,21 +47,21 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_stone_quarry_improved_crane_winch_quarrying = {
-        lumber = 1.60 # crane frame, skids
-        tools = 0.75 # chisels, wedges, tackle
-        leather = 0.18 # slings and straps
-        horses = 0.20 # hoist and cart teams
+        lumber = 0.40 # crane frame, skids
+        tools = 0.19 # chisels, wedges, tackle
+        leather = 0.05 # slings and straps
+        horses = 0.05 # hoist and cart teams
         produced = stone
-        output = 6.62
+        output = 1.66
         category = building_maintenance
     }
     pp_stone_quarry_improved_ox_haulage = {
-        lumber = 1.50 # skids, block sledges
-        tools = 0.68 # picks, wedges, dressing tools
-        leather = 0.16 # yokes and straps
-        livestock = 0.25 # ox haulage teams
+        lumber = 0.38 # skids, block sledges
+        tools = 0.17 # picks, wedges, dressing tools
+        leather = 0.04 # yokes and straps
+        livestock = 0.06 # ox haulage teams
         produced = stone
-        output = 5.88
+        output = 1.47
         category = building_maintenance
     }
 }
@@ -71,10 +70,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_stone_quarry_improved_rubble_breaking = {
-        lumber = 0.16 # sorting screens, bins
-        tools = 0.10 # hammers and sieves
+        lumber = 0.04 # sorting screens, bins
+        tools = 0.03 # hammers and sieves
         produced = sand
-        output = 1.20
+        output = 0.30
         category = building_maintenance
     }
 }
@@ -83,8 +82,8 @@ raw_modifier = {
 }
 
 modifier = {
-    local_population_growth = -0.0001
-    local_migration_attraction = 0.01
+    local_population_growth = -0.0000
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:stone_quarry_improved:building

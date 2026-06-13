@@ -22,8 +22,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 3
-    price = pp_amber_collector_price
+    employment_size = 1
     category = rgo_building_category
     icon = amber_collector
     rural_settlement = yes
@@ -45,7 +44,7 @@ building:
     unique_production_methods = {
         pp_amber_collector_base_amber = {
             produced = amber
-            output = 0.118
+            output = 0.039
             category = building_maintenance
         }
     }
@@ -54,10 +53,10 @@ building:
             category = building_maintenance
         }
         pp_amber_collector_basket_gathering = {
-            fiber_crops = 0.252 # baskets, carrying mats
-            tools = 0.126 # sorting knives
+            fiber_crops = 0.084 # baskets, carrying mats
+            tools = 0.042 # sorting knives
             produced = amber
-            output = 0.262
+            output = 0.087
             category = building_maintenance
         }
     }
@@ -66,15 +65,15 @@ building:
             category = building_maintenance
         }
         pp_amber_collector_sand_horses = {
-            horses = 0.12
+            horses = 0.04
             produced = sand
-            output = 0.864
+            output = 0.288
             category = building_maintenance
         }
         pp_amber_collector_sand_livestock = {
-            livestock = 0.24
+            livestock = 0.08
             produced = sand
-            output = 0.864
+            output = 0.288
             category = building_maintenance
         }
     }
@@ -83,16 +82,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_amber_collector_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_amber_collector_price_cost_modifier: Affects the cost of building an [ShowBuildingTypeName('amber_collector')|e].
-    MODIFIER_TYPE_NAME_pp_amber_collector_price_cost_modifier: Amber Collector Cost
     amber_collector_slot_0: Amber Deposit
     amber_collector_slot_1: Beach Gathering
     amber_collector_slot_2: Sand Carting
@@ -104,7 +97,6 @@ localization:
     pp_amber_collector_no_sand: No Sand Carting
     pp_amber_collector_sand_horses: Horse-Drawn Sand
     pp_amber_collector_sand_livestock: Ox-Drawn Sand
-    pp_amber_collector_price: Amber Collector Price
 icon:
   source_png: ../assets/icons/amber_collector.png
   output_dds: amber_collector.dds

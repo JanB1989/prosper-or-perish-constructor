@@ -31,8 +31,7 @@ building:
     is_foreign = no
     max_levels = forest_capacity_max_water_sawmill
     pop_type = laborers
-    employment_size = 4
-    price = pp_water_sawmill_price
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { forest_capacity }
     icon = water_sawmill
@@ -63,7 +62,7 @@ building:
     unique_production_methods = {
         pp_water_sawmill_base_lumber = {
             produced = lumber
-            output = 0.315
+            output = 0.079
             category = building_maintenance
         }
     }
@@ -73,29 +72,29 @@ building:
         }
         pp_water_sawmill_sash_saw = {
             produced = lumber
-            output = 5.313
-            tools = 1.495 # saw frame, gearing
-            horses = 0.403 # log hauling
-            victuals = 0.288 # saw crews
+            output = 1.328
+            tools = 0.374 # saw frame, gearing
+            horses = 0.101 # log hauling
+            victuals = 0.072 # saw crews
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_water_sawmill_millrace_yards = {
             produced = lumber
-            output = 5.917
-            tools = 1.668 # waterwheel upkeep
-            horses = 0.518 # yard teams
-            victuals = 0.403 # mill hands
+            output = 1.479
+            tools = 0.417 # waterwheel upkeep
+            horses = 0.130 # yard teams
+            victuals = 0.101 # mill hands
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_water_sawmill_log_ponds = {
             produced = lumber
-            output = 5.980
-            tools = 1.610 # booms, saw upkeep
-            horses = 0.633 # log hauling
-            victuals = 0.518 # pond crews
-            paper = 0.058 # cutting records
+            output = 1.495
+            tools = 0.403 # booms, saw upkeep
+            horses = 0.158 # log hauling
+            victuals = 0.130 # pond crews
+            paper = 0.015 # cutting records
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -105,16 +104,16 @@ building:
             category = building_maintenance
         }
         pp_water_sawmill_extra_rations = {
-            victuals = 2.818 # crew rations
+            victuals = 0.705 # crew rations
             produced = lumber
-            output = 4.830
+            output = 1.208
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_water_sawmill_wound_salves = {
-            medicaments = 0.75 # injury treatment
+            medicaments = 0.19 # injury treatment
             produced = lumber
-            output = 0.551
+            output = 0.138
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -124,14 +123,10 @@ building:
     }
 
     modifier = {
-        local_build_buildings_efficiency = 0.01
-        local_migration_attraction = 0.02
-        local_population_growth = -0.00005
+        local_build_buildings_efficiency = 0.003
+        local_migration_attraction = 0.005
+        local_population_growth = -0.00001
     }
-prices:
-  - key: pp_water_sawmill_price
-    body: |2-
-      {gold = 600}
 advancements:
   - key: REPLACE:lumber_improvements_reformation
     body: |2-
@@ -143,8 +138,6 @@ advancements:
       ai_weight = { add = 150 }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_water_sawmill_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('water_sawmill')|e].
-    MODIFIER_TYPE_NAME_pp_water_sawmill_price_cost_modifier: Water Sawmill Cost
     lumber_improvements_reformation: Water Sawmills
     lumber_improvements_reformation_desc: Water-powered saw frames, millraces, and log landings let lumber crews saw boards more regularly while drawing logs from a wider forest hinterland.
     pp_water_sawmill_base_lumber: Woodland Cutting
@@ -153,7 +146,6 @@ localization:
     pp_water_sawmill_millrace_yards: Millrace Yards
     pp_water_sawmill_no_crew_support: No Crew Support
     pp_water_sawmill_no_primary: No Water Sawing
-    pp_water_sawmill_price: Water Sawmill Price
     pp_water_sawmill_sash_saw: Sash Saw
     pp_water_sawmill_wound_salves: Wound Salves
     water_sawmill: Water Sawmill

@@ -29,8 +29,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 3
-    price = pp_iron_mine_price
+    employment_size = 1
     category = rgo_building_category
     icon = iron_mine
     rural_settlement = yes
@@ -52,7 +51,7 @@ building:
     unique_production_methods = {
         pp_iron_mine_base_iron = {
             produced = iron
-            output = 0.24
+            output = 0.08
             category = building_maintenance
         }
     }
@@ -61,27 +60,27 @@ building:
             category = building_maintenance
         }
         pp_iron_mine_iron = {
-            lumber = 0.591 # pit props, sorting sheds
-            tools = 0.666 # picks, wedges, hammers
-            beeswax = 0.148 # candles, sealants
+            lumber = 0.197 # pit props, sorting sheds
+            tools = 0.222 # picks, wedges, hammers
+            beeswax = 0.049 # candles, sealants
             produced = iron
-            output = 1.272
+            output = 0.424
             category = building_maintenance
         }
         pp_iron_mine_horse_whim_haulage = {
-            horses = 0.38 # whim draft teams
-            leather = 0.18 # harness, buckets
-            beeswax = 0.10 # mine candles, seals
+            horses = 0.13 # whim draft teams
+            leather = 0.06 # harness, buckets
+            beeswax = 0.03 # mine candles, seals
             produced = iron
-            output = 0.752
+            output = 0.251
             category = building_maintenance
         }
         pp_iron_mine_ore_dressing_floors = {
-            fiber_crops = 0.40 # sacks, screens
-            cloth = 0.20 # sorting cloths
-            beeswax = 0.10 # candles, seals
+            fiber_crops = 0.13 # sacks, screens
+            cloth = 0.07 # sorting cloths
+            beeswax = 0.03 # candles, seals
             produced = iron
-            output = 0.64
+            output = 0.21
             category = building_maintenance
         }
     }
@@ -90,10 +89,10 @@ building:
             category = building_maintenance
         }
         pp_iron_mine_ochre = {
-            lumber = 0.12 # washing troughs, racks
-            tools = 0.08 # sieves, shovels
+            lumber = 0.04 # washing troughs, racks
+            tools = 0.03 # sieves, shovels
             produced = dyes
-            output = 0.126
+            output = 0.042
             category = building_maintenance
         }
     }
@@ -102,17 +101,11 @@ building:
     }
 
     modifier = {
-        local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_population_growth = -0.0001
+        local_migration_attraction = 0.007
     }
-prices:
-  - key: pp_iron_mine_price
-    body: |2-
-      {gold = 100}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_iron_mine_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('iron_mine')|e].
-    MODIFIER_TYPE_NAME_pp_iron_mine_price_cost_modifier: Ore Pit Cost
     iron_mine_slot_0: Iron Deposit
     iron_mine_slot_1: Ore Workings
     iron_mine_slot_2: Ochre Recovery
@@ -125,7 +118,6 @@ localization:
     pp_iron_mine_ore_dressing_floors: Ore Dressing Floors
     pp_iron_mine_no_secondary: No Ochre Recovery
     pp_iron_mine_ochre: Ochre Washing
-    pp_iron_mine_price: Ore Pit Price
 icon:
   source_png: ../assets/icons/iron_mine.png
   output_dds: iron_mine.dds

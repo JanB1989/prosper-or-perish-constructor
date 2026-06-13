@@ -19,7 +19,7 @@ building:
     is_foreign = no
     pop_type = slaves
     max_levels = farm_capacity_max_cotton_plantation
-    employment_size = plantation_employment
+    employment_size = 1
     category = colonial_category
 
     custom_tags = { farming_capacity }
@@ -37,7 +37,6 @@ building:
     city = yes
     megalopolis = yes
     always_add_demands = yes
-    price = pp_plantation_building_price
     build_time = plantation_build_time
 
     unique_production_methods = {

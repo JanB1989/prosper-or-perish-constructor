@@ -17,8 +17,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 3
-    price = pp_ivory_hunting_camp_price
+    employment_size = 1
     category = rgo_building_category
     icon = ivory_hunting_camp
     rural_settlement = yes
@@ -40,7 +39,7 @@ building:
     unique_production_methods = {
         pp_ivory_hunting_camp_base_ivory = {
             produced = ivory
-            output = 0.300
+            output = 0.100
             category = building_maintenance
         }
     }
@@ -49,11 +48,11 @@ building:
             category = building_maintenance
         }
         pp_ivory_hunting_camp_caravan_hunts = {
-            weaponry = 0.450 # hunting arms
-            livestock = 0.400 # pack animals
-            tools = 0.097 # tusk extraction gear
+            weaponry = 0.150 # hunting arms
+            livestock = 0.133 # pack animals
+            tools = 0.032 # tusk extraction gear
             produced = ivory
-            output = 0.667
+            output = 0.222
             category = building_maintenance
         }
     }
@@ -62,16 +61,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_ivory_hunting_camp_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_ivory_hunting_camp_price_cost_modifier: Affects the cost of building an [ShowBuildingTypeName('ivory_hunting_camp')|e].
-    MODIFIER_TYPE_NAME_pp_ivory_hunting_camp_price_cost_modifier: Ivory Hunting Camp Cost
     ivory_hunting_camp_slot_0: Ivory Grounds
     ivory_hunting_camp_slot_1: Hunting Parties
     ivory_hunting_camp: Ivory Hunting Camp
@@ -79,7 +72,6 @@ localization:
     pp_ivory_hunting_camp_base_ivory: Ivory Grounds
     pp_ivory_hunting_camp_scavenged_tusks: Ivory Gathering
     pp_ivory_hunting_camp_caravan_hunts: Caravan Hunts
-    pp_ivory_hunting_camp_price: Ivory Hunting Camp Price
 icon:
   source_png: ../assets/icons/ivory_hunting_camp.png
   output_dds: ivory_hunting_camp.dds

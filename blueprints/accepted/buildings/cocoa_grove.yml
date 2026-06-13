@@ -17,8 +17,7 @@ building:
     is_foreign = no
     max_levels = farm_capacity_max_cocoa_grove
     pop_type = laborers
-    employment_size = 3
-    price = pp_cocoa_grove_price
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { farming_capacity }
     icon = cocoa_grove
@@ -42,7 +41,7 @@ building:
     unique_production_methods = {
         pp_cocoa_grove_base_cocoa = {
             produced = cocoa
-            output = 0.120
+            output = 0.040
             category = building_maintenance
         }
     }
@@ -51,10 +50,10 @@ building:
             category = building_maintenance
         }
         pp_cocoa_grove_fermentation_houses = {
-            lumber = 0.358 # fermentation boxes
-            glass = 0.119 # drying covers
+            lumber = 0.119 # fermentation boxes
+            glass = 0.040 # drying covers
             produced = cocoa
-            output = 0.266
+            output = 0.089
             category = building_maintenance
         }
     }
@@ -64,16 +63,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_cocoa_grove_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_cocoa_grove_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('cocoa_grove')|e].
-    MODIFIER_TYPE_NAME_pp_cocoa_grove_price_cost_modifier: Cocoa Grove Cost
     cocoa_grove_slot_0: Cocoa Trees
     cocoa_grove_slot_1: Fermentation & Drying
     cocoa_grove: Cocoa Grove
@@ -81,7 +74,6 @@ localization:
     pp_cocoa_grove_base_cocoa: Cocoa Trees
     pp_cocoa_grove_no_fermentation: No Fermentation Houses
     pp_cocoa_grove_fermentation_houses: Fermentation Houses
-    pp_cocoa_grove_price: Cocoa Grove Price
 icon:
   source_png: ../assets/icons/cocoa_grove.png
   output_dds: cocoa_grove.dds

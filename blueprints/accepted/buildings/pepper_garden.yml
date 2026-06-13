@@ -17,8 +17,7 @@ building:
     is_foreign = no
     max_levels = farm_capacity_max_pepper_garden
     pop_type = laborers
-    employment_size = 3
-    price = pp_pepper_garden_price
+    employment_size = 1
     category = rgo_building_category
     custom_tags = { farming_capacity }
     icon = pepper_garden
@@ -42,7 +41,7 @@ building:
     unique_production_methods = {
         pp_pepper_garden_base_pepper = {
             produced = pepper
-            output = 0.103
+            output = 0.034
             category = building_maintenance
         }
     }
@@ -51,10 +50,10 @@ building:
             category = building_maintenance
         }
         pp_pepper_garden_blanched_garbling_yards = {
-            pottery = 0.468 # blanching pots
-            coal = 0.234 # boiling fuel
+            pottery = 0.156 # blanching pots
+            coal = 0.078 # boiling fuel
             produced = pepper
-            output = 0.228
+            output = 0.076
             category = building_maintenance
         }
     }
@@ -64,16 +63,10 @@ building:
     }
 
     modifier = {
-        local_migration_attraction = 0.01
+        local_migration_attraction = 0.003
     }
-prices:
-  - key: pp_pepper_garden_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_pepper_garden_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('pepper_garden')|e].
-    MODIFIER_TYPE_NAME_pp_pepper_garden_price_cost_modifier: Pepper Garden Cost
     pepper_garden_slot_0: Pepper Vines
     pepper_garden_slot_1: Sorting & Drying
     pepper_garden: Pepper Garden
@@ -81,7 +74,6 @@ localization:
     pp_pepper_garden_base_pepper: Pepper Vines
     pp_pepper_garden_no_garbling: No Sorting Yards
     pp_pepper_garden_blanched_garbling_yards: Pepper Sorting Yards
-    pp_pepper_garden_price: Pepper Garden Price
 icon:
   source_png: ../assets/icons/pepper_garden.png
   output_dds: pepper_garden.dds

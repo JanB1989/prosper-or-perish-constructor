@@ -217,9 +217,9 @@ NON_SLAVE_CROP_FARMS = {
         "base_method": "pp_cotton_farm_base_cotton",
         "worked_method": "pp_cotton_farm_gin_house",
         "inputs": {
-            "lumber": "0.280",
-            "fiber_crops": "0.120",
-            "tools": "0.034",
+            "lumber": "0.093",
+            "fiber_crops": "0.040",
+            "tools": "0.011",
         },
         "removed_inputs": {"leather", "slaves_goods"},
     },
@@ -228,9 +228,9 @@ NON_SLAVE_CROP_FARMS = {
         "base_method": "pp_sugarcane_farm_base_sugar",
         "worked_method": "pp_sugarcane_farm_boiling_house",
         "inputs": {
-            "lumber": "0.250",
-            "pottery": "0.300",
-            "tools": "0.029",
+            "lumber": "0.083",
+            "pottery": "0.100",
+            "tools": "0.010",
         },
         "removed_inputs": {"coal", "slaves_goods"},
     },
@@ -239,9 +239,9 @@ NON_SLAVE_CROP_FARMS = {
         "base_method": "pp_tobacco_farm_base_tobacco",
         "worked_method": "pp_tobacco_farm_curing_barns",
         "inputs": {
-            "lumber": "0.350",
-            "fiber_crops": "0.050",
-            "tools": "0.045",
+            "lumber": "0.117",
+            "fiber_crops": "0.017",
+            "tools": "0.015",
         },
         "removed_inputs": {"pottery", "slaves_goods"},
     },
@@ -544,9 +544,9 @@ def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> Non
     raw = _load_blueprint("offshore_fishery")
     body = raw["building"]["body"]
     expected_outputs = {
-        "pp_offshore_fishery_herring_busses": "7.934",
-        "pp_offshore_fishery_distant_water_schooners": "9.380",
-        "pp_offshore_fishery_steam_trawlers": "9.24",
+        "pp_offshore_fishery_herring_busses": "1.133",
+        "pp_offshore_fishery_distant_water_schooners": "1.340",
+        "pp_offshore_fishery_steam_trawlers": "1.32",
     }
 
     for method, output in expected_outputs.items():
@@ -1219,12 +1219,12 @@ def test_non_slave_crop_farms_are_default_rgo_laborer_buildings() -> None:
         assert "is_colonial_subject" not in body
         assert "plantation_buildings_advance" not in body
         assert re.search(
-            rf"{base_method}\s*=\s*\{{.*?\bproduced\s*=\s*{good}\b.*?\boutput\s*=\s*0\.120\b",
+            rf"{base_method}\s*=\s*\{{.*?\bproduced\s*=\s*{good}\b.*?\boutput\s*=\s*0\.040\b",
             body,
             flags=re.S,
         )
         assert re.search(
-            rf"{worked_method}\s*=\s*\{{.*?\bproduced\s*=\s*{good}\b.*?\boutput\s*=\s*0\.266\b",
+            rf"{worked_method}\s*=\s*\{{.*?\bproduced\s*=\s*{good}\b.*?\boutput\s*=\s*0\.089\b",
             body,
             flags=re.S,
         )

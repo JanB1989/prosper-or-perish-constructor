@@ -7,7 +7,7 @@ REPLACE:fishing_village = {
     pop_type = peasants
     category = village_category
     custom_tags = { pp_food_security_priority pp_staple_food_priority fishing_capacity }
-    employment_size = 5
+    employment_size = 1
     rural_settlement = yes
     town = yes
     city = yes
@@ -29,7 +29,7 @@ REPLACE:fishing_village = {
     unique_production_methods = {
         pp_fishing_village_base_fish = {
             produced = fish
-            output = 0.27
+            output = 0.05
             category = building_maintenance
         }
     }
@@ -39,17 +39,17 @@ REPLACE:fishing_village = {
         }
         pp_fishing_village_maintenance = {
             produced = fish
-            output = 1.394
-            salt = 0.077 # curing brine
-            tools = 0.317 # hooks, knives
+            output = 0.279
+            salt = 0.015 # curing brine
+            tools = 0.063 # hooks, knives
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_arctic_fishing_village_maintenance = {
             produced = fish
-            output = 0.426
-            salt = 0.027 # curing brine
-            ivory = 0.068 # bone hooks
+            output = 0.085
+            salt = 0.005 # curing brine
+            ivory = 0.014 # bone hooks
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -60,9 +60,9 @@ REPLACE:fishing_village = {
             category = building_maintenance
         }
         pp_fishing_village_clinker_craft = {
-            lumber = 0.136 # clinker hulls
+            lumber = 0.027 # clinker hulls
             produced = fish
-            output = 0.212
+            output = 0.042
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -73,18 +73,18 @@ REPLACE:fishing_village = {
             category = building_maintenance
         }
         pp_fishing_village_wattle_weirs = {
-            lumber = 0.091 # weir stakes
-            fiber_crops = 0.072 # netting
+            lumber = 0.018 # weir stakes
+            fiber_crops = 0.014 # netting
             produced = fish
-            output = 0.293
+            output = 0.059
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_fishing_village_stew_ponds = {
-            clay = 0.109 # pond lining
-            lumber = 0.072 # sluices
+            clay = 0.022 # pond lining
+            lumber = 0.014 # sluices
             produced = fish
-            output = 0.18
+            output = 0.04
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -95,12 +95,12 @@ REPLACE:fishing_village = {
 
     modifier = {
         local_monthly_food = 0.0
-        local_fish_output_modifier = -0.03
-        local_merchant_capacity = 0.05
-        local_peasants_estate_power = 0.25
-        local_peasant_enfranchisment = 0.01
-        local_laborers_desired_pop = 0.1
-        local_soldiers_desired_pop = 0.05
+        local_fish_output_modifier = -0.006
+        local_merchant_capacity = 0.010
+        local_peasants_estate_power = 0.050
+        local_peasant_enfranchisment = 0.002
+        local_laborers_desired_pop = 0.020
+        local_soldiers_desired_pop = 0.010
     }
 }
 # <<< eu5-building-pipeline:fishing_village:building

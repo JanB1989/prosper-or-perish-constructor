@@ -1,0 +1,12 @@
+version: 2
+tag: market_village_market_access
+building:
+  key: market_village
+  mode: TRY_INJECT
+  source: pp_building_adjustments.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |2-
+    modifier = {
+      local_market_access = -0.005 # offset vanilla market_village; logistics infrastructure should provide market access
+    }

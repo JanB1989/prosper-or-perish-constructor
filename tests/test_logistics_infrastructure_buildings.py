@@ -10,6 +10,8 @@ from eu5_mod_orchestrator.adapters.parser import (
     load_script_values,
 )
 from eu5_mod_orchestrator.config import load_project_config
+from eu5gameparser.clausewitz.syntax import CList
+from eu5gameparser.load_order import load_merged_directory, load_profile
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +37,16 @@ BUILDING_CAP_TYPES = (
 BUILDING_CAP_ICONS = MOD_ROOT / "main_menu" / "common" / "modifier_icons" / "pp_building_cap_modifier_icons.txt"
 BUILDING_ADJUSTMENTS_LOC = (
     MOD_ROOT / "main_menu" / "localization" / "english" / "pp_building_adjustments_l_english.yml"
+)
+MARKET_VILLAGE_MARKET_ACCESS_BLUEPRINT = (
+    ROOT / "blueprints" / "accepted" / "buildings" / "market_village_market_access.yml"
+)
+MARKET_VILLAGE_MARKET_ACCESS_RENDERED = (
+    MOD_ROOT
+    / "in_game"
+    / "common"
+    / "building_types"
+    / "zz_pp_market_village_market_access.txt"
 )
 
 
@@ -123,3 +135,29 @@ def test_logistics_infrastructure_buildings_emit_modifier_ratio_metrics() -> Non
                 assert modifier.per_building_gold is not None
                 assert modifier.per_maintenance_gold is not None
                 assert modifier.per_1k is not None
+
+
+def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> None:
+    blueprint = MARKET_VILLAGE_MARKET_ACCESS_BLUEPRINT.read_text(encoding="utf-8")
+    assert "mode: TRY_INJECT" in blueprint
+    assert "key: market_village" in blueprint
+    assert "local_market_access = -0.005" in blueprint
+
+    rendered = MARKET_VILLAGE_MARKET_ACCESS_RENDERED.read_text(encoding="utf-8-sig")
+    assert "TRY_INJECT:market_village" in rendered
+    assert "local_market_access = -0.005" in rendered
+
+    profile = load_profile("constructor", ROOT / "constructor.load_order.toml")
+    merged = load_merged_directory(profile, "building_types")
+    market_village = next(entry for entry in merged.entries if entry.key == "market_village")
+    assert isinstance(market_village.value, CList)
+
+    total = 0.0
+    for modifier in market_village.value.values("modifier"):
+        assert isinstance(modifier, CList)
+        for entry in modifier.entries:
+            if entry.key == "local_market_access":
+                assert isinstance(entry.value, int | float)
+                total += float(entry.value)
+
+    assert total == 0.0

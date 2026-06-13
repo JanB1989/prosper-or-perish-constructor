@@ -77,8 +77,8 @@ LOCATION_POTENTIAL_CONCEPT_LINES = (
 LOCATION_MODIFIER_ALIASES = {
     "pp_loc_washita": "pp_loc_washita_pp",
 }
-LOCAL_OUTPUT_MODIFIER_RE = re.compile(
-    r"^(?P<indent>\s*)local_(?P<good>[a-z0-9_]+)_output_modifier\s*=\s*(?P<value>[-+]?\d+(?:\.\d+)?)\s*$"
+LOCATION_POTENTIAL_MAP_HELPER_RE = re.compile(
+    r"^\s*pp_[a-z0-9_]+_productivity_location_potential_map_modifier\s*="
 )
 BOM_TEXT_RELATIVE_PATHS = (
     Path("main_menu/common/game_concepts/pp_location_potential.txt"),
@@ -1008,7 +1008,7 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         compile_free_building_level_modifiers(repo, mod_root)
     _ensure_location_modifier_application_on_action(mod_root)
     _apply_location_modifier_aliases(mod_root)
-    _ensure_location_potential_map_helpers(mod_root)
+    _remove_location_potential_map_helpers(mod_root)
     _ensure_farming_capacity_raw_modifier_bridges(repo, mod_root)
     _ensure_price_cost_modifier_assets(mod_root)
     _ensure_constructor_text_boms(mod_root)
@@ -1032,31 +1032,24 @@ def _resolve_repo_relative_path(repo: Path, path: Path) -> Path:
     return path if path.is_absolute() else repo / path
 
 
-def _ensure_location_potential_map_helpers(mod_root: Path) -> None:
+def _remove_location_potential_map_helpers(mod_root: Path) -> None:
     modifiers_path = mod_root / "main_menu" / "common" / "static_modifiers" / "pp_location_modifiers.txt"
     if not modifiers_path.is_file():
         return
 
     text = _read_text_preserving_newlines(modifiers_path, encoding="utf-8-sig")
-    newline = "\r\n" if "\r\n" in text else "\n"
     lines = text.splitlines(keepends=True)
     updated_lines: list[str] = []
-    inserted = 0
-    for index, line in enumerate(lines):
+    removed = 0
+    for line in lines:
+        if LOCATION_POTENTIAL_MAP_HELPER_RE.match(line.rstrip("\r\n")):
+            removed += 1
+            continue
         updated_lines.append(line)
-        match = LOCAL_OUTPUT_MODIFIER_RE.match(line.rstrip("\r\n"))
-        if match is None:
-            continue
-        helper_key = f"pp_{match.group('good')}_productivity_location_potential_map_modifier"
-        next_line = lines[index + 1].strip() if index + 1 < len(lines) else ""
-        if re.match(rf"{re.escape(helper_key)}\s*=", next_line):
-            continue
-        updated_lines.append(f"{match.group('indent')}{helper_key} = {match.group('value')}{newline}")
-        inserted += 1
 
-    if inserted:
+    if removed:
         _write_text_if_changed(modifiers_path, "".join(updated_lines), encoding="utf-8-sig", newline="")
-        print(f"Injected {inserted} Location Potential map helper modifier values.", flush=True)
+        print(f"Removed {removed} legacy Location Potential map helper modifier values.", flush=True)
 
 
 def _ensure_farming_capacity_raw_modifier_bridges(repo: Path, mod_root: Path) -> None:

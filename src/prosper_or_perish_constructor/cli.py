@@ -1310,6 +1310,7 @@ def _ensure_price_cost_modifier_assets(mod_root: Path) -> None:
         return
 
     _upsert_price_cost_modifier_types(mod_root, modifier_keys)
+    _prune_stale_price_cost_modifier_icons(mod_root, set(modifier_keys))
     _write_price_cost_modifier_icons(mod_root, modifier_keys)
     _append_missing_price_cost_modifier_localization(mod_root, modifier_keys)
 
@@ -1335,14 +1336,66 @@ def _upsert_price_cost_modifier_types(mod_root: Path, modifier_keys: Sequence[st
         text = ""
         path.parent.mkdir(parents=True, exist_ok=True)
 
+    text = _prune_stale_price_cost_modifier_blocks(text, set(modifier_keys)).rstrip()
     existing = _top_level_keys(text)
     missing = [key for key in modifier_keys if key not in existing]
-    if not missing:
-        return
-
     blocks = [_price_cost_modifier_type_block(key) for key in missing]
     updated = "\n\n".join(part for part in (text, "\n\n".join(blocks)) if part).rstrip() + "\n"
     _write_text_if_changed(path, updated, encoding="utf-8-sig")
+
+
+def _prune_stale_price_cost_modifier_blocks(text: str, allowed_keys: set[str]) -> str:
+    if not text:
+        return text
+
+    parts: list[str] = []
+    last = 0
+    pattern = re.compile(
+        r"(?m)^\ufeff?(?P<key>pp_[A-Za-z0-9_]+_price_cost_modifier)\s*=\s*\{"
+    )
+    for match in pattern.finditer(text):
+        block_end = _balanced_clausewitz_block_end(text, match.end() - 1)
+        if block_end is None:
+            continue
+        if match.group("key") in allowed_keys:
+            continue
+        parts.append(text[last : match.start()])
+        last = block_end
+
+    if last == 0:
+        return text
+
+    parts.append(text[last:])
+    return re.sub(r"\n{3,}", "\n\n", "".join(parts)).strip()
+
+
+def _balanced_clausewitz_block_end(text: str, open_brace_index: int) -> int | None:
+    depth = 0
+    in_string = False
+    index = open_brace_index
+    while index < len(text):
+        char = text[index]
+        if in_string:
+            if char == '"' and (index == 0 or text[index - 1] != "\\"):
+                in_string = False
+            index += 1
+            continue
+        if char == "#":
+            next_newline = text.find("\n", index)
+            if next_newline == -1:
+                return None
+            index = next_newline + 1
+            continue
+        if char == '"':
+            in_string = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return index + 1
+        index += 1
+    return None
 
 
 def _price_cost_modifier_type_block(modifier_key: str) -> str:
@@ -1383,6 +1436,39 @@ def _write_price_cost_modifier_icons(mod_root: Path, modifier_keys: Sequence[str
     _write_text_if_changed(path, "\n".join(lines).rstrip() + "\n", encoding="utf-8-sig")
 
 
+def _prune_stale_price_cost_modifier_icons(mod_root: Path, allowed_keys: set[str]) -> None:
+    icons_root = mod_root / "main_menu" / "common" / "modifier_icons"
+    if not icons_root.is_dir():
+        return
+
+    for path in sorted(icons_root.glob("*.txt")):
+        text = path.read_text(encoding="utf-8-sig")
+        had_price_cost_modifier_asset = _has_price_cost_modifier_reference(text)
+        updated = _prune_stale_price_cost_modifier_blocks(text, allowed_keys)
+        if (
+            had_price_cost_modifier_asset
+            and not _top_level_keys(updated)
+            and not _has_non_comment_text(updated)
+        ):
+            path.unlink()
+            continue
+        if updated != text:
+            _write_text_if_changed(path, updated.rstrip() + "\n", encoding="utf-8-sig")
+
+
+def _has_price_cost_modifier_reference(text: str) -> bool:
+    return "price cost modifier" in text.lower() or bool(
+        re.search(r"pp_[A-Za-z0-9_]+_price_cost_modifier", text)
+    )
+
+
+def _has_non_comment_text(text: str) -> bool:
+    return any(
+        stripped and not stripped.startswith("#")
+        for stripped in (line.strip() for line in text.splitlines())
+    )
+
+
 def _modifier_icon_keys(mod_root: Path, *, exclude: Path) -> set[str]:
     icons_root = mod_root / "main_menu" / "common" / "modifier_icons"
     if not icons_root.is_dir():
@@ -1411,7 +1497,10 @@ def _append_missing_price_cost_modifier_localization(
 
     target = mod_root / PRICE_MODIFIER_LOCALIZATION
     if target.is_file():
-        text = target.read_text(encoding="utf-8-sig").rstrip()
+        text = _prune_stale_price_cost_modifier_localization_lines(
+            target.read_text(encoding="utf-8-sig"),
+            set(modifier_keys),
+        ).rstrip()
     else:
         text = "l_english:"
 
@@ -1427,9 +1516,26 @@ def _append_missing_price_cost_modifier_localization(
             lines.append(f'  MODIFIER_TYPE_NAME_{modifier_key}: "{display_name} Cost"')
 
     if not lines:
+        if target.is_file():
+            _write_text_if_changed(target, text.rstrip() + "\n", encoding="utf-8-sig")
         return
     updated = text + "\n" + "\n".join(lines) + "\n"
     _write_text_if_changed(target, updated, encoding="utf-8-sig")
+
+
+def _prune_stale_price_cost_modifier_localization_lines(text: str, allowed_keys: set[str]) -> str:
+    if not text:
+        return text
+
+    pattern = re.compile(
+        r"(?m)^\s*MODIFIER_TYPE_(?:DESC|NAME)_"
+        r"(?P<key>pp_[A-Za-z0-9_]+_price_cost_modifier):.*(?:\n|$)"
+    )
+    updated = pattern.sub(
+        lambda match: match.group(0) if match.group("key") in allowed_keys else "",
+        text,
+    )
+    return re.sub(r"\n{3,}", "\n\n", updated).rstrip()
 
 
 def _title_from_key(key: str) -> str:

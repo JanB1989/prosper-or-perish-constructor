@@ -1,10 +1,9 @@
 ﻿# >>> eu5-building-pipeline:carrier_inn:building
 carrier_inn = {
 is_foreign = no
-max_levels = 5
+max_levels = 10
 pop_type = peasants
 employment_size = 1
-price = pp_carrier_inn_price
 category = infrastructure_category
 custom_tags = { pp_logistics_infrastructure_priority pp_logistics }
 icon = carrier_inn

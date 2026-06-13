@@ -9,10 +9,9 @@ building:
     - pp_transport_office_maintenance
   body: |2-
     is_foreign = no
-    max_levels = 5
+    max_levels = 100
     pop_type = laborers
-    employment_size = 2.0
-    price = pp_transport_office_price
+    employment_size = 1
     category = infrastructure_category
     custom_tags = { pp_logistics_infrastructure_priority pp_logistics }
     icon = transport_office
@@ -39,28 +38,21 @@ building:
     }
 
     modifier = {
-      local_market_access = 0.015
-      free_building_levels = 3
+      local_market_access = 0.05
+      free_building_levels = 10
     }
 production_methods:
   - key: pp_transport_office_maintenance
     body: |2-
-      victuals = 1.00
-      paper = 0.50
-      tools = 0.30
-      cloth = 0.20
+      victuals = 0.60
+      paper = 0.30
+      tools = 0.20
+      cloth = 0.10
       category = building_maintenance
-prices:
-  - key: pp_transport_office_price
-    body: |2-
-      {gold = 600}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_transport_office_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('transport_office')|e].
-    MODIFIER_TYPE_NAME_pp_transport_office_price_cost_modifier: Transport Office Cost
     pp_transport_office_construction: Transport Office Construction
     pp_transport_office_maintenance: Transport Office Maintenance
-    pp_transport_office_price: Transport Office Price
     transport_office: Transport Office
     transport_office_desc: Freight clerks, porters, haulers, and weighmen crowd the transport office. Ledgers, yard gates, and hired hands turn urban bulk into ordered dispatches for the market.
 icon:

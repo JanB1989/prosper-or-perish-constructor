@@ -2566,8 +2566,27 @@ def test_pp_building_prices_have_modifier_type_assets_and_localization() -> None
     localization_text = "\n".join(
         path.read_text(encoding="utf-8-sig") for path in sorted(LOCALIZATION_ROOT.glob("*.yml"))
     )
+    actual_price_modifier_types = {
+        key
+        for key in modifier_types
+        if key.startswith("pp_") and key.endswith("_price_cost_modifier")
+    }
+    actual_price_modifier_icons = {
+        key
+        for key in modifier_icons
+        if key.startswith("pp_") and key.endswith("_price_cost_modifier")
+    }
+    actual_price_modifier_localization = set(
+        re.findall(
+            r"(?m)^\s*MODIFIER_TYPE_(?:DESC|NAME)_(pp_[A-Za-z0-9_]+_price_cost_modifier):",
+            localization_text,
+        )
+    )
 
     assert expected
+    assert actual_price_modifier_types == expected
+    assert actual_price_modifier_icons == expected
+    assert actual_price_modifier_localization <= expected
     assert not (expected - modifier_types)
     assert not (expected - modifier_icons)
     assert not [
@@ -2577,6 +2596,57 @@ def test_pp_building_prices_have_modifier_type_assets_and_localization() -> None
         or f"MODIFIER_TYPE_NAME_{key}:" not in localization_text
     ]
     assert not [key for key in sorted(price_keys) if f"{key}:" not in localization_text]
+
+
+def test_price_cost_modifier_finalizer_prunes_stale_generated_assets(tmp_path: Path) -> None:
+    mod_root = tmp_path / "mod"
+    prices = mod_root / "in_game" / "common" / "prices"
+    prices.mkdir(parents=True)
+    (prices / "pp_current.txt").write_text("pp_current_price = { gold = 1 }\n", encoding="utf-8")
+
+    modifier_types = mod_root / cli.PRICE_MODIFIER_TYPE_DEFINITIONS
+    modifier_types.parent.mkdir(parents=True)
+    modifier_types.write_text(
+        cli._price_cost_modifier_type_block("pp_current_price_cost_modifier")
+        + "\n\n"
+        + cli._price_cost_modifier_type_block("pp_stale_price_cost_modifier")
+        + "\n",
+        encoding="utf-8-sig",
+    )
+
+    stale_icons = mod_root / "main_menu" / "common" / "modifier_icons" / "pp_stale_icons.txt"
+    stale_icons.parent.mkdir(parents=True)
+    stale_icons.write_text(
+        "# stale price icon file\n"
+        "pp_stale_price_cost_modifier = {\n"
+        '\tpositive = "gfx/interface/icons/modifier_types/_default.dds"\n'
+        "}\n",
+        encoding="utf-8-sig",
+    )
+
+    localization = mod_root / cli.PRICE_MODIFIER_LOCALIZATION
+    localization.parent.mkdir(parents=True)
+    localization.write_text(
+        'l_english:\n'
+        '  MODIFIER_TYPE_DESC_pp_stale_price_cost_modifier: "Stale desc"\n'
+        '  MODIFIER_TYPE_NAME_pp_stale_price_cost_modifier: "Stale Cost"\n',
+        encoding="utf-8-sig",
+    )
+
+    cli._ensure_price_cost_modifier_assets(mod_root)
+
+    assert _database_keys(mod_root / "main_menu" / "common" / "modifier_type_definitions") == {
+        "pp_current_price_cost_modifier"
+    }
+    assert _database_keys(mod_root / "main_menu" / "common" / "modifier_icons") == {
+        "pp_current_price_cost_modifier"
+    }
+    assert not stale_icons.exists()
+
+    localization_text = localization.read_text(encoding="utf-8-sig")
+    assert "pp_stale_price_cost_modifier" not in localization_text
+    assert "MODIFIER_TYPE_DESC_pp_current_price_cost_modifier:" in localization_text
+    assert "MODIFIER_TYPE_NAME_pp_current_price_cost_modifier:" in localization_text
 
 
 def test_victuals_pop_demand_modifier_type_is_registered() -> None:

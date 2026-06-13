@@ -11,8 +11,7 @@ building:
     is_foreign = no
     max_levels = 3
     pop_type = laborers
-    employment_size = 0.25
-    price = pp_coastal_shipping_office_price
+    employment_size = 1
     category = infrastructure_category
     custom_tags = { pp_logistics_infrastructure_priority pp_logistics }
     icon = coastal_shipping_office
@@ -39,32 +38,25 @@ building:
     }
 
     modifier = {
-      local_market_access = 0.0075
-      free_building_levels = 1.5
+      local_market_access = 0.05
+      free_building_levels = 10
     }
 production_methods:
   - key: pp_coastal_shipping_office_maintenance
     body: |2-
-      naval_supplies = 0.30
-      tar = 0.25
-      lumber = 0.25
-      tools = 0.20
-      victuals = 0.25
-      paper = 0.10
+      naval_supplies = 0.20
+      tar = 0.10
+      lumber = 0.20
+      tools = 0.10
+      victuals = 0.20
+      paper = 0.05
       category = building_maintenance
-prices:
-  - key: pp_coastal_shipping_office_price
-    body: |2-
-      {gold = 300}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_coastal_shipping_office_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('coastal_shipping_office')|e].
-    MODIFIER_TYPE_NAME_pp_coastal_shipping_office_price_cost_modifier: Coastal Shipping Office Cost
     coastal_shipping_office: Coastal Shipping Office
     coastal_shipping_office_desc: Coasting masters, freight clerks, and hired hands keep short-sea traffic moving between nearby ports. Their office turns loose cargo, small craft, and quay labor into a steadier coastal trade.
     pp_coastal_shipping_office_construction: Coastal Shipping Office Construction
     pp_coastal_shipping_office_maintenance: Coastal Shipping Office Maintenance
-    pp_coastal_shipping_office_price: Coastal Shipping Office Price
 icon:
   source_png: ../assets/icons/coastal_shipping_office.png
   output_dds: coastal_shipping_office.dds

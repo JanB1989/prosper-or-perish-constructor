@@ -26,10 +26,9 @@ victuals_market = {
 	raw_modifier = {
 	}
 
-	modifier = {
-		local_monthly_food = 60
-		local_market_access = 0.015
-		local_crown_estate_power = 0.025
-	}
+  modifier = {
+    local_monthly_food = 60
+    local_crown_estate_power = 0.025
+  }
 }
 # <<< eu5-building-pipeline:victuals_market:building

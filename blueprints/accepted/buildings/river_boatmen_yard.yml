@@ -11,8 +11,7 @@ building:
     is_foreign = no
     max_levels = pp_river_boatmen_yard_max_level
     pop_type = laborers
-    employment_size = 0.25
-    price = pp_river_boatmen_yard_price
+    employment_size = 1
     category = infrastructure_category
     custom_tags = { pp_logistics_infrastructure_priority pp_logistics }
     icon = river_boatmen_yard
@@ -40,29 +39,22 @@ building:
     }
 
     modifier = {
-      local_market_access = 0.0075
-      free_building_levels = 1.5
+      local_market_access = 0.05
+      free_building_levels = 10
     }
 production_methods:
   - key: pp_river_boatmen_yard_maintenance
     body: |2-
-      naval_supplies = 0.35
-      lumber = 0.25
-      tools = 0.20
+      naval_supplies = 0.20
+      lumber = 0.20
+      tools = 0.15
       victuals = 0.20
-      tar = 0.10
+      tar = 0.075
       category = building_maintenance
-prices:
-  - key: pp_river_boatmen_yard_price
-    body: |2-
-      {gold = 250}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_river_boatmen_yard_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('river_boatmen_yard')|e].
-    MODIFIER_TYPE_NAME_pp_river_boatmen_yard_price_cost_modifier: River Boatmen's Yard Cost
     pp_river_boatmen_yard_construction: River Boatmen's Yard Construction
     pp_river_boatmen_yard_maintenance: River Boatmen's Yard Maintenance
-    pp_river_boatmen_yard_price: River Boatmen's Yard Price
     river_boatmen_yard: River Boatmen's Yard
     river_boatmen_yard_desc: Boatmen, barges, rope stores, and timber landings turn a riverbank into a working freight yard. Goods move with the current, against it by labor, and into the market by habit.
 icon:

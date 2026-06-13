@@ -9,10 +9,9 @@ building:
     - pp_carrier_inn_maintenance
   body: |2-
     is_foreign = no
-    max_levels = 5
+    max_levels = 10
     pop_type = peasants
     employment_size = 1
-    price = pp_carrier_inn_price
     category = infrastructure_category
     custom_tags = { pp_logistics_infrastructure_priority pp_logistics }
     icon = carrier_inn
@@ -44,25 +43,18 @@ building:
 production_methods:
   - key: pp_carrier_inn_maintenance
     body: |2-
-      victuals = 0.30
-      horses = 0.25
-      livestock = 0.15
-      lumber = 0.10
-      tools = 0.05
+      victuals = 0.40
+      horses = 0.35
+      livestock = 0.25
+      lumber = 0.20
+      tools = 0.10
       category = building_maintenance
-prices:
-  - key: pp_carrier_inn_price
-    body: |2-
-      {gold = 150}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_carrier_inn_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('carrier_inn')|e].
-    MODIFIER_TYPE_NAME_pp_carrier_inn_price_cost_modifier: Carrier Inn Cost
     carrier_inn: Carrier Inn
     carrier_inn_desc: Packhorses, carts, and stable yards gather at carrier inns before setting out along the roads. Their keepers turn scattered rural loads into regular traffic for nearby markets.
     pp_carrier_inn_construction: Carrier Inn Construction
     pp_carrier_inn_maintenance: Carrier Inn Maintenance
-    pp_carrier_inn_price: Carrier Inn Price
 icon:
   source_png: ../assets/icons/carrier_inn.png
   output_dds: carrier_inn.dds

@@ -1,10 +1,9 @@
 ﻿# >>> eu5-building-pipeline:transport_office:building
 transport_office = {
 is_foreign = no
-max_levels = 5
+max_levels = 100
 pop_type = laborers
-employment_size = 2.0
-price = pp_transport_office_price
+employment_size = 1
 category = infrastructure_category
 custom_tags = { pp_logistics_infrastructure_priority pp_logistics }
 icon = transport_office
@@ -31,8 +30,8 @@ raw_modifier = {
 }
 
 modifier = {
-  local_market_access = 0.015
-  free_building_levels = 3
+  local_market_access = 0.05
+  free_building_levels = 10
 }
 }
 # <<< eu5-building-pipeline:transport_office:building

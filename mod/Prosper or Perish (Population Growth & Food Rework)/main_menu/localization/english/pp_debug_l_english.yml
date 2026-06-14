@@ -24,3 +24,6 @@
  pp_columbian_exchange_debug.1.title: "DEBUG: Columbian Exchange Raw Good"
  pp_columbian_exchange_debug.1.desc: "Starts the Columbian Exchange situation for this country and changes the capital raw material between maize and potato for RGO bonus testing."
  pp_columbian_exchange_debug.1.a: "Change capital raw good"
+ pp_market_food_debug.1.title: "DEBUG: Kaifeng Market Food"
+ pp_market_food_debug.1.desc: "Runs the monthly market food top-up for all markets. Markets below 5% food receive 5% of their maximum market food as province food in their market center province.\n\nKaifeng market food before: #Y [ROOT.GetVariable('pp_kaifeng_market_food_before').GetValue|0]#!\nKaifeng market food after: #Y [ROOT.GetVariable('pp_kaifeng_market_food_after').GetValue|0]#!\nKaifeng market food percent before: #Y [ROOT.GetVariable('pp_kaifeng_market_food_percentage_before').GetValue|2]#!\nKaifeng market food percent after: #Y [ROOT.GetVariable('pp_kaifeng_market_food_percentage_after').GetValue|2]#!"
+ pp_market_food_debug.1.a: "OK"

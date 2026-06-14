@@ -126,6 +126,7 @@ pp_ai_logistics_on_unsupported_building_levels = {
 				}
 				ordered_location_in_area = {
 					limit = {
+						has_owner = yes
 						owner = scope:pp_ai_logistics_country
 						pp_unsupported_building_levels_map_value >= 30
 						OR = {
@@ -243,6 +244,7 @@ pp_ai_logistics_on_unsupported_building_levels = {
 				}
 				ordered_location_in_area = {
 					limit = {
+						has_owner = yes
 						owner = scope:pp_ai_logistics_country
 						pp_unsupported_building_levels_map_value >= 15
 						OR = {
@@ -360,6 +362,7 @@ pp_ai_logistics_on_unsupported_building_levels = {
 				}
 				ordered_location_in_area = {
 					limit = {
+						has_owner = yes
 						owner = scope:pp_ai_logistics_country
 						pp_unsupported_building_levels_map_value >= 5
 						OR = {
@@ -477,6 +480,7 @@ pp_ai_logistics_on_unsupported_building_levels = {
 				}
 				ordered_location_in_area = {
 					limit = {
+						has_owner = yes
 						owner = scope:pp_ai_logistics_country
 						pp_unsupported_building_levels_map_value >= 1
 						OR = {

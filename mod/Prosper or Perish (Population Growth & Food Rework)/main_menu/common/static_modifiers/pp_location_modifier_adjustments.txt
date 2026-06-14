@@ -289,6 +289,8 @@ TRY_REPLACE:unemployed_peasants = {
 
 TRY_INJECT:market_center = {
 	maximum_stockpile_capacity = 250
+	# local_food_capacity = 100000
+	# local_food_decay_modifier = -1.0
 	free_building_levels = 30
 }
 

@@ -1,0 +1,44 @@
+﻿# Prosper or Perish - monthly market food stockpile top-up
+
+pp_monthly_market_food_stockpile_topup = {
+	every_market_in_world = {
+		if = {
+			limit = { market_food_percentage < 0.05 }
+			pp_add_market_center_province_food_from_market_max = yes
+		}
+	}
+}
+
+pp_add_market_center_province_food_from_market_max = {
+	save_scope_as = pp_market_food_stockpile_topup_market
+	debug_log = pp_market_food_stockpile_topup_applied
+	debug_log_scopes = no
+
+	location = {
+		province = {
+			change_province_food = {
+				value = scope:pp_market_food_stockpile_topup_market.market_max_food
+				multiply = 0.05
+			}
+		}
+	}
+}
+
+pp_debug_probe_market_food_price_extreme_lever = {
+	debug_log = pp_debug_market_food_price_probe_before
+	debug_log_scopes = no
+	save_temporary_scope_value_as = { name = pp_market_food_percentage_before value = market_food_percentage }
+	save_temporary_scope_value_as = { name = pp_food_price_before value = food_price }
+	save_temporary_scope_value_as = { name = pp_market_food_before value = market_food }
+	save_temporary_scope_value_as = { name = pp_market_max_food_before value = market_max_food }
+	if = {
+		limit = { market_food_percentage < 0.05 }
+		pp_add_market_center_province_food_from_market_max = yes
+	}
+	save_temporary_scope_value_as = { name = pp_market_food_percentage_after value = market_food_percentage }
+	save_temporary_scope_value_as = { name = pp_food_price_after value = food_price }
+	save_temporary_scope_value_as = { name = pp_market_food_after value = market_food }
+	save_temporary_scope_value_as = { name = pp_market_max_food_after value = market_max_food }
+	debug_log = pp_debug_market_food_price_probe_after
+	debug_log_scopes = no
+}

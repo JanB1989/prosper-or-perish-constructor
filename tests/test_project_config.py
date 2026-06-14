@@ -68,6 +68,14 @@ CAPACITY_CULLING_EFFECTS = (
     MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_capacity_culling_effects.txt"
 )
 COUNTRY_FOUR_YEARLY = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_country_four_yearly.txt"
+COUNTRY_YEARLY = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_country_yearly.txt"
+MARKET_FOOD_PRICE_EXTREME_ON_ACTION = (
+    MOD_ROOT / "in_game" / "common" / "on_action" / "pp_market_food_price_extremes.txt"
+)
+MARKET_FOOD_PRICE_EXTREMES = (
+    MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_market_food_price_extremes.txt"
+)
+MARKET_FOOD_DEBUG_EVENT = MOD_ROOT / "in_game" / "events" / "debug" / "pp_market_food_debug.txt"
 LOCATION_RANKS = MOD_ROOT / "in_game" / "common" / "location_ranks" / "pp_location_rank_adjustments.txt"
 FOOD_MAP_MODES = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes" / "pp_food_map_modes.txt"
 SITUATION_ROOT = MOD_ROOT / "in_game" / "common" / "situations"
@@ -2174,6 +2182,64 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
 
     legacy_entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
     assert "pp_cull_over_cap_buildings" not in legacy_entries
+
+    culling_text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
+    assert culling_text.count("has_owner = yes\n\t\t\t\t\t\towner = scope:pp_ai_logistics_country") == 4
+
+
+def test_monthly_market_food_stockpile_topup_is_global_and_debuggable() -> None:
+    pulse_entries = {entry.key: entry.value for entry in parse_file(COUNTRY_YEARLY).entries}
+    assert "yearly_country_pulse" in pulse_entries
+
+    pulse = pulse_entries["yearly_country_pulse"]
+    assert isinstance(pulse, CList)
+    on_actions = _entry_values(pulse)["on_actions"]
+    assert isinstance(on_actions, CList)
+
+    assert on_actions.items == ["pp_yearly_cull_one_closed_building"]
+
+    global_pulse_entries = {
+        entry.key: entry.value for entry in parse_file(MARKET_FOOD_PRICE_EXTREME_ON_ACTION).entries
+    }
+    assert "weather_monthly_pulse" in global_pulse_entries
+    global_pulse = global_pulse_entries["weather_monthly_pulse"]
+    assert isinstance(global_pulse, CList)
+    global_effect = _entry_values(global_pulse)["effect"]
+    assert isinstance(global_effect, CList)
+    assert _entry_values(global_effect)["pp_monthly_market_food_stockpile_topup"] is True
+
+    text = MARKET_FOOD_PRICE_EXTREMES.read_text(encoding="utf-8-sig")
+    entries = {entry.key: entry.value for entry in parse_file(MARKET_FOOD_PRICE_EXTREMES).entries}
+    debug_event_text = MARKET_FOOD_DEBUG_EVENT.read_text(encoding="utf-8-sig")
+
+    assert "pp_monthly_market_food_stockpile_topup" in entries
+    assert "pp_add_market_center_province_food_from_market_max" in entries
+    assert "pp_debug_probe_market_food_price_extreme_lever" in entries
+
+    assert "has_global_variable = pp_market_food_price_extreme_checked" not in text
+    assert "name = pp_market_food_price_extreme_checked" not in text
+    assert "years = 1" not in text
+    assert text.count("every_market_in_world") == 1
+    assert "market_food_percentage < 0.05" in text
+    assert "market_food_percentage < 0.01" not in text
+    assert "market_food_percentage > 0.99" not in text
+    assert "market_max_food" in text
+    assert "multiply = 0.05" in text
+    assert "location = {" in text
+    assert "province = {" in text
+    assert "change_province_food" in text
+    assert "pp_market_food_stockpile_topup_applied" in text
+    assert "debug_log = pp_debug_market_food_price_probe_before" in text
+    assert "debug_log = pp_debug_market_food_price_probe_after" in text
+    assert "add_goods_supply" not in text
+    assert "victuals" not in text
+    assert "target_price" not in text
+
+    assert "type = location_event" in debug_event_text
+    assert "type = country_event" not in debug_event_text
+    assert "pp_monthly_market_food_stockpile_topup = yes" in debug_event_text
+    assert "every_market_in_world" not in debug_event_text
+    assert "change_province_food = 100000" not in debug_event_text
 
 
 def test_capacity_culling_v2_calls_helper_for_each_capacity_building() -> None:

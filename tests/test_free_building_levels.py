@@ -6,6 +6,8 @@ from pathlib import Path
 import numpy as np
 import polars as pl
 import pytest
+from eu5gameparser.clausewitz.parser import parse_file
+from eu5gameparser.clausewitz.syntax import CList
 from polars.testing import assert_frame_equal
 from eu5gameparser.load_order import DataProfile, GameLayer
 from PIL import Image
@@ -40,6 +42,7 @@ from prosper_or_perish_constructor.free_building_levels import (
     load_road_locations,
     load_modifier_baseline_resolver,
     load_road_type_levels,
+    local_output_neutralizer_updates,
     LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN,
     LOCAL_CONSTRUCTION_SPEED_COLUMN,
     local_free_building_levels_sheet_csv_path,
@@ -760,6 +763,32 @@ def test_compile_free_building_level_modifiers_updates_without_clobbering(tmp_pa
     assert "TRY_INJECT:local_governor" in building_types_text
 
 
+def test_geography_local_output_neutralizers_match_vanilla_baselines() -> None:
+    repo = Path(__file__).resolve().parents[1]
+    load_order_path = repo / "constructor.load_order.toml"
+    if not load_order_path.is_file():
+        pytest.skip("constructor.load_order.toml is unavailable")
+    try:
+        baselines = load_modifier_baseline_resolver(repo)
+    except (FileNotFoundError, OSError):
+        pytest.skip("vanilla install is unavailable for geography output neutralizer test")
+
+    mod_root = repo / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    targets = {
+        "topography": COMPILE_TOPOGRAPHY_RELATIVE,
+        "vegetation": COMPILE_VEGETATION_RELATIVE,
+        "climate": COMPILE_CLIMATE_RELATIVE,
+    }
+    for factor, relative_path in targets.items():
+        expected = local_output_neutralizer_updates(
+            baselines,
+            factor=factor,
+            inner_header="location_modifier",
+        )
+        actual = _compiled_local_output_neutralizers(mod_root / relative_path)
+        assert actual == expected
+
+
 def test_audit_compile_modifier_baselines_covers_compiled_targets() -> None:
     repo = Path(__file__).resolve().parents[1]
     load_order_path = repo / "constructor.load_order.toml"
@@ -846,6 +875,27 @@ def _fixture_profile(root: Path) -> DataProfile:
         name="fixture",
         layers=(GameLayer(id="vanilla", name="Vanilla", root=root, kind="vanilla"),),
     )
+
+
+def _compiled_local_output_neutralizers(path: Path) -> dict[str, dict[str, float]]:
+    output: dict[str, dict[str, float]] = {}
+    for entry in parse_file(path).entries:
+        if not isinstance(entry.value, CList):
+            continue
+        inner = entry.value.first("location_modifier")
+        if not isinstance(inner, CList):
+            continue
+        values: dict[str, float] = {}
+        for modifier in inner.entries:
+            if (
+                modifier.key.startswith("local_")
+                and modifier.key.endswith("_output_modifier")
+                and isinstance(modifier.value, int | float)
+            ):
+                values[modifier.key] = float(modifier.value)
+        if values:
+            output[entry.key.removeprefix("TRY_INJECT:").removeprefix("TRY_REPLACE:")] = values
+    return output
 
 
 def _base_locations() -> pl.DataFrame:

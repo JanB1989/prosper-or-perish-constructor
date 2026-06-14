@@ -929,6 +929,7 @@ COMPILED_MODIFIER_KEYS = (
     EFFICIENCY_MODIFIER_KEY,
     CONSTRUCTION_SPEED_MODIFIER_KEY,
 )
+LOCAL_OUTPUT_MODIFIER_PATTERN = re.compile(r"^local_[A-Za-z0-9_]+_output_modifier$")
 COMPILE_TOPOGRAPHY_RELATIVE = Path(
     "in_game/common/topography/pp_topography_changes.txt"
 )
@@ -1170,6 +1171,24 @@ def compile_free_building_level_modifiers(repo: Path, mod_root: Path) -> None:
         factor="climate",
         inner_header="location_modifier",
     )
+    updated_files += _compile_local_output_neutralizers(
+        mod_root / COMPILE_TOPOGRAPHY_RELATIVE,
+        baselines=baselines,
+        factor="topography",
+        inner_header="location_modifier",
+    )
+    updated_files += _compile_local_output_neutralizers(
+        mod_root / COMPILE_VEGETATION_RELATIVE,
+        baselines=baselines,
+        factor="vegetation",
+        inner_header="location_modifier",
+    )
+    updated_files += _compile_local_output_neutralizers(
+        mod_root / COMPILE_CLIMATE_RELATIVE,
+        baselines=baselines,
+        factor="climate",
+        inner_header="location_modifier",
+    )
     updated_files += _compile_category_file(
         mod_root / COMPILE_LOCATION_RANKS_RELATIVE,
         weights,
@@ -1241,6 +1260,104 @@ def _compile_category_file(
     if changed and _write_compile_text_if_changed(path, text):
         return 1
     return 1 if changed else 0
+
+
+def _compile_local_output_neutralizers(
+    path: Path,
+    *,
+    baselines: ModifierBaselineResolver,
+    factor: str,
+    inner_header: str,
+) -> int:
+    if not path.is_file():
+        raise FileNotFoundError(f"Cannot compile local output neutralizers; missing file: {path}")
+    text = _read_compile_text(path)
+    changed = False
+    for block_name, updates in local_output_neutralizer_updates(
+        baselines,
+        factor=factor,
+        inner_header=inner_header,
+    ).items():
+        result = _update_clausewitz_file_text(
+            text,
+            block_name,
+            inner_header=inner_header,
+            updates=updates,
+        )
+        if result is None:
+            text = _append_try_inject_block(
+                text,
+                block_name,
+                inner_header=inner_header,
+                updates=updates,
+            )
+            changed = True
+        else:
+            new_text, block_changed = result
+            if block_changed:
+                text = new_text
+                changed = True
+    if changed and _write_compile_text_if_changed(path, text):
+        return 1
+    return 1 if changed else 0
+
+
+def local_output_neutralizer_updates(
+    baselines: ModifierBaselineResolver,
+    *,
+    factor: str,
+    inner_header: str,
+) -> dict[str, dict[str, float]]:
+    """Return TRY_INJECT values that make vanilla local goods output modifiers net zero."""
+    updates: dict[str, dict[str, float]] = {}
+    for block_name, modifiers in _local_output_baselines_by_block(
+        baselines,
+        factor=factor,
+        inner_header=inner_header,
+    ).items():
+        updates[block_name] = {
+            modifier_key: -baseline
+            for modifier_key, baseline in sorted(modifiers.items())
+            if baseline != 0
+        }
+    return {block_name: block_updates for block_name, block_updates in updates.items() if block_updates}
+
+
+def _local_output_baselines_by_block(
+    baselines: ModifierBaselineResolver,
+    *,
+    factor: str,
+    inner_header: str,
+) -> dict[str, dict[str, float]]:
+    entries: Mapping[str, Any]
+    if factor == "topography":
+        entries = baselines.topography._by_name
+    elif factor == "vegetation":
+        entries = baselines.vegetation._by_name
+    elif factor == "climate":
+        entries = baselines.climates._by_name
+    else:
+        raise ValueError(f"Unsupported local output neutralizer factor: {factor}")
+
+    result: dict[str, dict[str, float]] = {}
+    for block_name, entry in sorted(entries.items()):
+        modifiers = _entry_modifier_mapping(entry, inner_header)
+        output_modifiers = {
+            key: value
+            for key, value in modifiers.items()
+            if LOCAL_OUTPUT_MODIFIER_PATTERN.fullmatch(key)
+        }
+        if output_modifiers:
+            result[block_name] = output_modifiers
+    return result
+
+
+def _entry_modifier_mapping(entry: Any, inner_header: str | None) -> Mapping[str, float]:
+    if inner_header == "location_modifier" and hasattr(entry, "location_modifiers"):
+        return entry.location_modifiers
+    if inner_header is None:
+        return entry.modifiers
+    return entry.nested_modifiers.get(inner_header, {})
 
 
 def _compile_static_modifier_file(

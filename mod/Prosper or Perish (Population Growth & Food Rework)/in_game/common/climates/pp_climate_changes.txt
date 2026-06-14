@@ -64,6 +64,7 @@ TRY_INJECT:arid = {
 		free_building_levels = -6
 		local_build_buildings_efficiency = -0.06
 		local_construction_speed = -0.06
+		local_wheat_output_modifier = 0.1
 	}
 }
 
@@ -72,5 +73,6 @@ TRY_INJECT:cold_arid = {
 		free_building_levels = -8
 		local_build_buildings_efficiency = -0.08
 		local_construction_speed = -0.08
+		local_wheat_output_modifier = 0.05
 	}
 }

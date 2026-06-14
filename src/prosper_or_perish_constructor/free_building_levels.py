@@ -21,6 +21,7 @@ import polars as pl
 import yaml
 from eu5gameparser.clausewitz.parser import parse_file
 from eu5gameparser.clausewitz.syntax import CEntry, CList
+from eu5gameparser.domain._modifier_blocks import ModifierBlockData, load_modifier_block_data
 from eu5gameparser.domain.building_types import BuildingTypeData, load_building_type_data
 from eu5gameparser.domain.location_ranks import LocationRankData, load_location_rank_data
 from eu5gameparser.domain.static_modifiers import StaticModifierData, load_static_modifier_data
@@ -44,7 +45,7 @@ LOCAL_WEIGHTS_PARQUET_NAME = "free_building_levels_weights.parquet"
 LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN = "local_build_buildings_efficiency"
 LOCAL_CONSTRUCTION_SPEED_COLUMN = "local_construction_speed"
 LOCAL_BUILD_BUILDINGS_EFFICIENCY_FACTORS = frozenset(
-    {"topography", "vegetation", "river_level", "is_port", "location_rank"}
+    {"topography", "vegetation", "climate", "river_level", "is_port", "location_rank"}
 )
 LOCAL_CONSTRUCTION_SPEED_FACTORS = LOCAL_BUILD_BUILDINGS_EFFICIENCY_FACTORS
 NON_PORT_LOCAL_BUILD_EFFICIENCY_PENALTY = -0.15
@@ -65,7 +66,14 @@ WEIGHTS_FRAME_SCHEMA = {
     LOCAL_CONSTRUCTION_SPEED_COLUMN: pl.Float64,
 }
 
-CATEGORICAL_FACTORS = ("topography", "vegetation", "river_level", "location_rank", "road_level")
+CATEGORICAL_FACTORS = (
+    "topography",
+    "vegetation",
+    "climate",
+    "river_level",
+    "location_rank",
+    "road_level",
+)
 BOOLEAN_FACTORS = (
     "province_capital",
     "is_port",
@@ -96,6 +104,7 @@ MAX_EFFECTIVE_DEVELOPMENT = 100.0
 FACTOR_GROUPS = {
     "topography": "fixed",
     "vegetation": "fixed",
+    "climate": "fixed",
     "river_level": "fixed",
     "is_port": "fixed",
     "location_rank": "dynamic",
@@ -450,7 +459,7 @@ def _write_weights_csv(path: Path, weights: pl.DataFrame) -> None:
     path.write_text(
         "# Free building level weights — one row per factor/value pair.\n"
         f"# {LOCAL_BUILD_BUILDINGS_EFFICIENCY_COLUMN} and {LOCAL_CONSTRUCTION_SPEED_COLUMN} "
-        "apply to topography, vegetation, river_level (1-5), is_port, and location_rank.\n"
+        "apply to topography, vegetation, climate, river_level (1-5), is_port, and location_rank.\n"
         "# river_level 0 means no river in map data and carries no modifier.\n"
         + buffer.getvalue(),
         encoding="utf-8",
@@ -538,6 +547,7 @@ def validate_sheet_values_against_game_sources(
     defined_values = {
         "topography": _defined_entry_keys(profile, "topography", "00_default.txt"),
         "vegetation": _defined_entry_keys(profile, "vegetation", "00_default.txt"),
+        "climate": _defined_entry_keys(profile, "climates", "00_default.txt"),
         "location_rank": _defined_entry_keys(profile, "location_ranks", "00_default.txt"),
         "road_level": {str(level) for level in load_road_type_levels(profile).values()} | {"0"},
         "river_level": {str(level) for level in range(0, 6)},
@@ -547,6 +557,7 @@ def validate_sheet_values_against_game_sources(
     source_details = {
         "topography": "in_game/common/topography/00_default.txt",
         "vegetation": "in_game/common/vegetation/00_default.txt",
+        "climate": "in_game/common/climates/00_default.txt",
         "location_rank": "in_game/common/location_ranks/00_default.txt",
         "road_level": "in_game/common/road_types/00_generic.txt plus no-road level 0",
         "river_level": "map_data/rivers.png palette-derived levels",
@@ -924,6 +935,9 @@ COMPILE_TOPOGRAPHY_RELATIVE = Path(
 COMPILE_VEGETATION_RELATIVE = Path(
     "in_game/common/vegetation/pp_vegetation_changes.txt"
 )
+COMPILE_CLIMATE_RELATIVE = Path(
+    "in_game/common/climates/pp_climate_changes.txt"
+)
 COMPILE_LOCATION_RANKS_RELATIVE = Path(
     "in_game/common/location_ranks/pp_location_rank_adjustments.txt"
 )
@@ -961,6 +975,7 @@ class ModifierBaselineResolver:
     static_modifiers: StaticModifierData
     topography: TopographyData
     vegetation: VegetationData
+    climates: ModifierBlockData
     building_types: BuildingTypeData
     _cache: dict[tuple[str, str, str | None, str], float] = field(default_factory=dict, repr=False)
 
@@ -1015,6 +1030,8 @@ class ModifierBaselineResolver:
             return self.topography.modifier_baseline(block_name, inner_header, modifier_key)
         if source == "vegetation":
             return self.vegetation.modifier_baseline(block_name, inner_header, modifier_key)
+        if source == "climate":
+            return self.climates.modifier_baseline(block_name, inner_header, modifier_key)
         if source == "building_type":
             return self.building_types.modifier_baseline(block_name, inner_header, modifier_key)
         return 0.0
@@ -1028,6 +1045,7 @@ def load_modifier_baseline_resolver(repo: Path) -> ModifierBaselineResolver:
         static_modifiers=load_static_modifier_data(profile=profile, load_order_path=load_order_path),
         topography=load_topography_data(profile=profile, load_order_path=load_order_path),
         vegetation=load_vegetation_data(profile=profile, load_order_path=load_order_path),
+        climates=load_modifier_block_data(profile, relative_dir="climates"),
         building_types=load_building_type_data(profile=profile, load_order_path=load_order_path),
     )
 
@@ -1041,7 +1059,7 @@ def audit_compile_modifier_baselines(repo: Path) -> pl.DataFrame:
     for row in weights.to_dicts():
         factor = str(row["factor"])
         value = str(row["value"])
-        if factor in {"topography", "vegetation", "location_rank"}:
+        if factor in {"topography", "vegetation", "climate", "location_rank"}:
             inner_header = "location_modifier" if factor != "location_rank" else "rank_modifier"
             block_name = value
             baseline_source = factor
@@ -1119,6 +1137,8 @@ def _compile_target_exists(
         return block_name in baselines.topography._by_name
     if baseline_source == "vegetation":
         return block_name in baselines.vegetation._by_name
+    if baseline_source == "climate":
+        return block_name in baselines.climates._by_name
     if baseline_source == "building_type":
         return block_name in baselines.building_types._by_name
     return False
@@ -1141,6 +1161,13 @@ def compile_free_building_level_modifiers(repo: Path, mod_root: Path) -> None:
         weights,
         baselines=baselines,
         factor="vegetation",
+        inner_header="location_modifier",
+    )
+    updated_files += _compile_category_file(
+        mod_root / COMPILE_CLIMATE_RELATIVE,
+        weights,
+        baselines=baselines,
+        factor="climate",
         inner_header="location_modifier",
     )
     updated_files += _compile_category_file(

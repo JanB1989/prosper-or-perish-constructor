@@ -5,6 +5,9 @@ TRY_INJECT:tropical = {
 		local_population_capacity_modifier = -0.5
 		local_monthly_development_modifier = -0.10
 		local_food_decay = 0.004
+		free_building_levels = -5
+		local_build_buildings_efficiency = -0.06
+		local_construction_speed = -0.06
 	}
 }
 
@@ -12,12 +15,18 @@ TRY_INJECT:subtropical = {
 	location_modifier = {
 		local_population_capacity_modifier = -1
 		local_food_decay = 0.002
+		free_building_levels = 1
+		local_build_buildings_efficiency = 0
+		local_construction_speed = 0
 	}
 }
 
 TRY_INJECT:oceanic = {
 	location_modifier = {
 		local_population_capacity_modifier = -1
+		free_building_levels = 2
+		local_build_buildings_efficiency = 0.02
+		local_construction_speed = 0.02
 	}
 }
 
@@ -25,12 +34,18 @@ TRY_INJECT:mediterranean = {
 	location_modifier = {
 		local_population_capacity_modifier = -1.5
 		local_food_decay = 0.002
+		free_building_levels = 3
+		local_build_buildings_efficiency = 0.03
+		local_construction_speed = 0.03
 	}
 }
 
 TRY_INJECT:continental = {
 	location_modifier = {
 		local_population_capacity_modifier = -0.5
+		free_building_levels = 0
+		local_build_buildings_efficiency = -0.02
+		local_construction_speed = -0.02
 	}
 }
 
@@ -38,5 +53,24 @@ TRY_INJECT:arctic = {
 	location_modifier = {
 		free_capacity_attracts_pops = yes
 		local_population_capacity_modifier = 0.33
+		free_building_levels = -10
+		local_build_buildings_efficiency = -0.1
+		local_construction_speed = -0.1
+	}
+}
+
+TRY_INJECT:arid = {
+	location_modifier = {
+		free_building_levels = -6
+		local_build_buildings_efficiency = -0.06
+		local_construction_speed = -0.06
+	}
+}
+
+TRY_INJECT:cold_arid = {
+	location_modifier = {
+		free_building_levels = -8
+		local_build_buildings_efficiency = -0.08
+		local_construction_speed = -0.08
 	}
 }

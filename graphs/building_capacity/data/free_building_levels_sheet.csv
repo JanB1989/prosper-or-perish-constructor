@@ -1,5 +1,5 @@
 # Free building level weights — one row per factor/value pair.
-# local_build_buildings_efficiency and local_construction_speed apply to topography, vegetation, river_level (1-5), is_port, and location_rank.
+# local_build_buildings_efficiency and local_construction_speed apply to topography, vegetation, climate, river_level (1-5), is_port, and location_rank.
 # river_level 0 means no river in map data and carries no modifier.
 section,factor,value,free_building_levels,local_build_buildings_efficiency,local_construction_speed
 fixed,topography,flatland,0.0,,
@@ -16,6 +16,14 @@ fixed,vegetation,farmland,0.0,,
 fixed,vegetation,woods,-5.0,-0.03,-0.03
 fixed,vegetation,forest,-10.0,-0.08,-0.08
 fixed,vegetation,jungle,-25.0,-0.2,-0.2
+fixed,climate,oceanic,2.0,0.02,0.02
+fixed,climate,mediterranean,3.0,0.03,0.03
+fixed,climate,subtropical,1.0,0.0,0.0
+fixed,climate,continental,0.0,-0.02,-0.02
+fixed,climate,tropical,-5.0,-0.06,-0.06
+fixed,climate,arid,-6.0,-0.06,-0.06
+fixed,climate,cold_arid,-8.0,-0.08,-0.08
+fixed,climate,arctic,-10.0,-0.1,-0.1
 fixed,river_level,1,10.0,0.1,0.1
 fixed,river_level,2,15.0,0.15,0.15
 fixed,river_level,3,20.0,0.2,0.2
@@ -36,4 +44,4 @@ dynamic,capital,true,15.0,,
 dynamic,naval_governor,true,25.0,,
 dynamic,local_governor,true,20.0,,
 dynamic,province_capital,true,10.0,,
-dynamic,development,per_point,0.30,,
+dynamic,development,per_point,0.3,,

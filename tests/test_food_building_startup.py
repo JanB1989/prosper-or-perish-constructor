@@ -142,6 +142,7 @@ def test_food_startup_plan_uses_pop_consumption_and_dynamic_victuals_food(tmp_pa
                     good="victuals",
                     production_methods=("pm_cook",),
                     multiplier=1.0,
+                    estimated_production_efficiency=0.5,
                 ),
                 score=ScoreRule(population=1.0, development=0.0, province_capital_bonus=0.0),
             ),
@@ -198,7 +199,12 @@ def test_food_startup_plan_uses_pop_consumption_and_dynamic_victuals_food(tmp_pa
     production = {row["slug"]: row["food_production"] for row in result.location_food.to_dicts()}
     assert production == {"alpha": 80.0, "beta": 50.0}
     outputs = {row["building"]: row["food_per_level"] for row in result.building_outputs.to_dicts()}
-    assert outputs == {"cookery": 20.0, "victuals_market": 30.0}
+    assert outputs == {"cookery": 30.0, "victuals_market": 30.0}
+    efficiencies = {
+        row["building"]: row["estimated_production_efficiency"]
+        for row in result.building_outputs.to_dicts()
+    }
+    assert efficiencies == {"cookery": 0.5, "victuals_market": 0.0}
     planned = {
         row["building"]: (row["location_slug"], row["levels"])
         for row in result.building_plan.to_dicts()

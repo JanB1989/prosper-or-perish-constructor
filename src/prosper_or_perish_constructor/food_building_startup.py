@@ -28,6 +28,7 @@ class OutputRule:
     good: str | None
     production_methods: tuple[str, ...]
     multiplier: float
+    estimated_production_efficiency: float = 0.0
     fixed_food_per_level: float | None = None
     good_amount_per_level: float | None = None
 
@@ -466,6 +467,7 @@ def compute_building_food_outputs(
                 "food_per_level": food_per_level,
                 "production_methods": list(rule.output.production_methods),
                 "multiplier": rule.output.multiplier,
+                "estimated_production_efficiency": rule.output.estimated_production_efficiency,
             }
         )
     return pl.DataFrame(
@@ -478,6 +480,7 @@ def compute_building_food_outputs(
             "food_per_level": pl.Float64,
             "production_methods": pl.List(pl.String),
             "multiplier": pl.Float64,
+            "estimated_production_efficiency": pl.Float64,
         },
     )
 
@@ -746,7 +749,12 @@ def _food_per_level(
             method = _require_method(methods, name)
             if method.get("produced") == output.good:
                 good_amount += float(method.get("output") or 0.0)
-        return good_amount * good_food * output.multiplier
+        return (
+            good_amount
+            * good_food
+            * output.multiplier
+            * (1.0 + output.estimated_production_efficiency)
+        )
     if output.mode == "input_goods_as_food":
         good_amount = 0.0
         for name in output.production_methods:
@@ -1161,6 +1169,10 @@ def _output_rule(section: Mapping[str, object], key: str) -> OutputRule:
         good=_optional_string(section.get("good"), f"buildings.{key}.output.good"),
         production_methods=_string_tuple(section.get("production_methods", ()), f"buildings.{key}.output.production_methods"),
         multiplier=_float(section.get("multiplier", 1.0), f"buildings.{key}.output.multiplier"),
+        estimated_production_efficiency=_float(
+            section.get("estimated_production_efficiency", 0.0),
+            f"buildings.{key}.output.estimated_production_efficiency",
+        ),
         fixed_food_per_level=_optional_float(section.get("fixed_food_per_level"), f"buildings.{key}.output.fixed_food_per_level"),
         good_amount_per_level=_optional_float(section.get("good_amount_per_level"), f"buildings.{key}.output.good_amount_per_level"),
     )

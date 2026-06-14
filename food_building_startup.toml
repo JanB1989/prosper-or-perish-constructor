@@ -32,6 +32,7 @@ building = "cookery"
 mode = "production_methods"
 good = "victuals"
 production_methods = ["pp_cookery_livestock_pottage"]
+estimated_production_efficiency = 0.6
 multiplier = 1.0
 
 [[production_sources]]
@@ -51,7 +52,7 @@ enabled = true
 order = 10
 coverage_group = "victuals_supply"
 target_basis = "shortfall"
-target_food_ratio = 0.60
+target_food_ratio = 0.50
 max_levels_per_province = 2
 max_levels_per_location = 1
 min_province_food_consumption = 60
@@ -81,6 +82,7 @@ development_per_1000_scale_end = 0.10
 mode = "production_methods"
 good = "victuals"
 production_methods = ["pp_cookery_livestock_pottage"]
+estimated_production_efficiency = 0.6
 multiplier = 1.0
 
 [buildings.score]
@@ -94,7 +96,7 @@ enabled = true
 order = 20
 coverage_group = "local_food_distribution"
 target_basis = "shortfall"
-target_food_ratio = 0.40
+target_food_ratio = 0.50
 max_levels_per_province = 1
 max_levels_per_location = 1
 min_province_food_consumption = 60

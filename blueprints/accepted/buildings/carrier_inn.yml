@@ -37,7 +37,6 @@ building:
     }
 
     modifier = {
-      local_market_access = 0.05
       free_building_levels = 10
     }
 production_methods:
@@ -64,4 +63,4 @@ evaluation:
   allow_rules:
     profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
     input_throughput: Carrier inns intentionally use light rural staffing while maintaining costly animals, carts, and provisions.
-    output_throughput: Carrier inns provide market access and building support rather than direct goods output.
+    output_throughput: Carrier inns provide supported building levels rather than direct goods output.

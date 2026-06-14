@@ -2,3 +2,10 @@
 pp_building_efficiency_map_value = {
 	value = modifier:local_build_buildings_efficiency
 }
+
+# Script value for the unsupported building levels map mode and AI logistics construction.
+pp_unsupported_building_levels_map_value = {
+	value = total_building_levels
+	subtract = modifier:free_building_levels
+	min = 0
+}

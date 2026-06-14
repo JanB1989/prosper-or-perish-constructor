@@ -104,14 +104,14 @@ TRY_REPLACE:building_levels = {
 	}
 	local_trade_center_power = 0.0004
 	local_road_building_time = 0.01
-	local_market_access = -0.0015
-	local_build_buildings_efficiency = -0.003
+	# local_market_access = -0.0015
+	# local_build_buildings_efficiency = -0.003
 }
 TRY_REPLACE:unsupported_building_levels = {
 	game_data = {
 		category = location 
 	}
-	local_build_buildings_efficiency = -0.005
+	local_build_buildings_efficiency = -0.02
 	local_market_access = -0.01
 }
 
@@ -226,7 +226,7 @@ TRY_REPLACE:development = {
 	
 	local_food_capacity = 10
 	
-	free_building_levels = 0.5
+	free_building_levels = 0.3
 	
 	local_max_rgo_size = 0.15
 	
@@ -289,7 +289,7 @@ TRY_REPLACE:unemployed_peasants = {
 
 TRY_INJECT:market_center = {
 	maximum_stockpile_capacity = 250
-	free_building_levels = 10
+	free_building_levels = 30
 }
 TRY_INJECT:river_flowing_through_1 = {
 	local_monthly_food_modifier = -0.05 # vanilla 0.05
@@ -565,7 +565,7 @@ TRY_INJECT:is_port = {
 	local_construction_speed = 0.15
 }
 TRY_INJECT:capital = {
-	free_building_levels = 20
+	free_building_levels = 10
 }
 TRY_INJECT:province_capital = {
 	free_building_levels = 8

@@ -20,7 +20,8 @@ building:
     city = yes
     megalopolis = yes
     can_close = yes
-    forbidden_for_estates = yes
+    forbidden_for_estates = no
+    AI_ignore_available_worker_flag = yes
     important_for_AI = no
     ai_forbid_shutdown = no
     build_time = infrastructure_build_time
@@ -39,7 +40,6 @@ building:
     }
 
     modifier = {
-      local_market_access = 0.05
       free_building_levels = 10
     }
 production_methods:
@@ -66,4 +66,4 @@ evaluation:
   allow_rules:
     profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
     input_throughput: River freight yards intentionally keep modest labor but costly boat, rope, timber, tar, and naval-supply upkeep.
-    output_throughput: River boatmen's yards provide market access and building support rather than direct goods output.
+    output_throughput: River boatmen's yards provide supported building levels rather than direct goods output.

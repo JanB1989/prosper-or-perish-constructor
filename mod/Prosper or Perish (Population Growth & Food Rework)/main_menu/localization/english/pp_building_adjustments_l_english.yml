@@ -966,6 +966,20 @@
   MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] supports [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] [building|e] levels. It currently has [ROOT.GetLocation.GetNumBuildingLevels|0] total levels."
   MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"
 
+  # Unsupported building levels map mode (total building levels above free_building_levels)
+  # Game concept (map mode picker / encyclopedia); required alongside pp_unsupported_building_levels_map_mode.txt
+  game_concept_pp_unsupported_building_levels: "Unsupported Building Levels"
+  game_concept_pp_unsupported_building_levels_desc: "Colors owned [locations|e] by [building|e] levels above local support. Green marks no strain, yellow marks moderate strain, and red marks severe strain."
+  mapmode_pp_unsupported_building_levels_name: "Unsupported Building Levels"
+  MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS: "#T $mapmode_pp_unsupported_building_levels_name$#!\nColors owned [locations|e] by [building|e] levels above local support. Green marks no strain, yellow marks moderate strain, and red marks severe strain."
+  MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_SUPPORTED: "No unsupported building levels"
+  MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_LOW: "1 to 4 unsupported building levels"
+  MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_MEDIUM: "5 to 14 unsupported building levels"
+  MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_HIGH: "15 to 29 unsupported building levels"
+  MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_SEVERE: "30 or more unsupported building levels"
+  MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] has [ROOT.GetLocation.MakeScope.ScriptValue('pp_unsupported_building_levels_map_value')|0] unsupported [building|e] levels: [ROOT.GetLocation.GetNumBuildingLevels|0] total levels and [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] supported levels."
+  MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"
+
   # Building efficiency map mode (local_build_buildings_efficiency)
   # Game concept (map mode picker / encyclopedia); required alongside pp_building_efficiency_map_mode.txt
   game_concept_pp_building_efficiency: "Building Cost Modifier"

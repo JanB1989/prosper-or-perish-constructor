@@ -91,3 +91,498 @@ pp_ai_victuals_market_on_food_crisis = {
 		}
 	}
 }
+
+pp_ai_logistics_on_unsupported_building_levels = {
+	effect = {
+		if = {
+			limit = {
+				is_ai = yes
+				monthly_balance > 0
+			}
+			save_scope_as = pp_ai_logistics_country
+			clear_variable_list = pp_ai_logistics_handled_areas
+			set_variable = { name = pp_ai_logistics_build_count value = 0 }
+			set_variable = { name = pp_ai_logistics_budget value = gold }
+			change_variable = { name = pp_ai_logistics_budget multiply = 0.25 }
+			clamp_variable = {
+				name = pp_ai_logistics_budget
+				max = { value = monthly_balance multiply = 24 }
+				min = 0
+			}
+
+			# Logistics severity pass: unsupported building levels >= 30
+			every_area_with_owned_province = {
+				limit = {
+					scope:pp_ai_logistics_country = {
+						var:pp_ai_logistics_build_count < 20
+						var:pp_ai_logistics_budget >= 1
+						NOT = {
+							is_target_in_variable_list = {
+								name = pp_ai_logistics_handled_areas
+								target = prev
+							}
+						}
+					}
+				}
+				ordered_location_in_area = {
+					limit = {
+						owner = scope:pp_ai_logistics_country
+						pp_unsupported_building_levels_map_value >= 30
+						OR = {
+							AND = {
+								can_build_building = building_type:coastal_shipping_office
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+								}
+							}
+							AND = {
+								can_build_building = building_type:river_boatmen_yard
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+								}
+							}
+							AND = {
+								can_build_building = building_type:carrier_inn
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+								}
+							}
+							AND = {
+								can_build_building = building_type:transport_office
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:transport_office.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:transport_office.building_base_cost_in_gold }
+								}
+							}
+						}
+					}
+					order_by = pp_unsupported_building_levels_map_value
+					max = 1
+					check_range_bounds = no
+					area = { save_scope_as = pp_ai_logistics_current_area }
+
+					if = {
+						limit = {
+							can_build_building = building_type:coastal_shipping_office
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:coastal_shipping_office }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:coastal_shipping_office.building_base_cost_in_gold } }
+						}
+					}
+					else_if = {
+						limit = {
+							can_build_building = building_type:river_boatmen_yard
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:river_boatmen_yard }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:river_boatmen_yard.building_base_cost_in_gold } }
+						}
+					}
+					else_if = {
+						limit = {
+							can_build_building = building_type:carrier_inn
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:carrier_inn }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:carrier_inn.building_base_cost_in_gold } }
+						}
+					}
+					else_if = {
+						limit = {
+							can_build_building = building_type:transport_office
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:transport_office.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:transport_office.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:transport_office }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:transport_office.building_base_cost_in_gold } }
+						}
+					}
+				}
+			}
+
+			# Logistics severity pass: unsupported building levels >= 15
+			every_area_with_owned_province = {
+				limit = {
+					scope:pp_ai_logistics_country = {
+						var:pp_ai_logistics_build_count < 20
+						var:pp_ai_logistics_budget >= 1
+						NOT = {
+							is_target_in_variable_list = {
+								name = pp_ai_logistics_handled_areas
+								target = prev
+							}
+						}
+					}
+				}
+				ordered_location_in_area = {
+					limit = {
+						owner = scope:pp_ai_logistics_country
+						pp_unsupported_building_levels_map_value >= 15
+						OR = {
+							AND = {
+								can_build_building = building_type:coastal_shipping_office
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+								}
+							}
+							AND = {
+								can_build_building = building_type:river_boatmen_yard
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+								}
+							}
+							AND = {
+								can_build_building = building_type:carrier_inn
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+								}
+							}
+							AND = {
+								can_build_building = building_type:transport_office
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:transport_office.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:transport_office.building_base_cost_in_gold }
+								}
+							}
+						}
+					}
+					order_by = pp_unsupported_building_levels_map_value
+					max = 1
+					check_range_bounds = no
+					area = { save_scope_as = pp_ai_logistics_current_area }
+
+					if = {
+						limit = {
+							can_build_building = building_type:coastal_shipping_office
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:coastal_shipping_office }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:coastal_shipping_office.building_base_cost_in_gold } }
+						}
+					}
+					else_if = {
+						limit = {
+							can_build_building = building_type:river_boatmen_yard
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:river_boatmen_yard }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:river_boatmen_yard.building_base_cost_in_gold } }
+						}
+					}
+					else_if = {
+						limit = {
+							can_build_building = building_type:carrier_inn
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:carrier_inn }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:carrier_inn.building_base_cost_in_gold } }
+						}
+					}
+					else_if = {
+						limit = {
+							can_build_building = building_type:transport_office
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:transport_office.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:transport_office.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:transport_office }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:transport_office.building_base_cost_in_gold } }
+						}
+					}
+				}
+			}
+
+			# Logistics severity pass: unsupported building levels >= 5
+			every_area_with_owned_province = {
+				limit = {
+					scope:pp_ai_logistics_country = {
+						var:pp_ai_logistics_build_count < 20
+						var:pp_ai_logistics_budget >= 1
+						NOT = {
+							is_target_in_variable_list = {
+								name = pp_ai_logistics_handled_areas
+								target = prev
+							}
+						}
+					}
+				}
+				ordered_location_in_area = {
+					limit = {
+						owner = scope:pp_ai_logistics_country
+						pp_unsupported_building_levels_map_value >= 5
+						OR = {
+							AND = {
+								can_build_building = building_type:coastal_shipping_office
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+								}
+							}
+							AND = {
+								can_build_building = building_type:river_boatmen_yard
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+								}
+							}
+							AND = {
+								can_build_building = building_type:carrier_inn
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+								}
+							}
+							AND = {
+								can_build_building = building_type:transport_office
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:transport_office.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:transport_office.building_base_cost_in_gold }
+								}
+							}
+						}
+					}
+					order_by = pp_unsupported_building_levels_map_value
+					max = 1
+					check_range_bounds = no
+					area = { save_scope_as = pp_ai_logistics_current_area }
+
+					if = {
+						limit = {
+							can_build_building = building_type:coastal_shipping_office
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:coastal_shipping_office }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:coastal_shipping_office.building_base_cost_in_gold } }
+						}
+					}
+					else_if = {
+						limit = {
+							can_build_building = building_type:river_boatmen_yard
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:river_boatmen_yard }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:river_boatmen_yard.building_base_cost_in_gold } }
+						}
+					}
+					else_if = {
+						limit = {
+							can_build_building = building_type:carrier_inn
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:carrier_inn }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:carrier_inn.building_base_cost_in_gold } }
+						}
+					}
+					else_if = {
+						limit = {
+							can_build_building = building_type:transport_office
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:transport_office.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:transport_office.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:transport_office }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:transport_office.building_base_cost_in_gold } }
+						}
+					}
+				}
+			}
+
+			# Logistics severity pass: unsupported building levels >= 1
+			every_area_with_owned_province = {
+				limit = {
+					scope:pp_ai_logistics_country = {
+						var:pp_ai_logistics_build_count < 20
+						var:pp_ai_logistics_budget >= 1
+						NOT = {
+							is_target_in_variable_list = {
+								name = pp_ai_logistics_handled_areas
+								target = prev
+							}
+						}
+					}
+				}
+				ordered_location_in_area = {
+					limit = {
+						owner = scope:pp_ai_logistics_country
+						pp_unsupported_building_levels_map_value >= 1
+						OR = {
+							AND = {
+								can_build_building = building_type:coastal_shipping_office
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+								}
+							}
+							AND = {
+								can_build_building = building_type:river_boatmen_yard
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+								}
+							}
+							AND = {
+								can_build_building = building_type:carrier_inn
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+								}
+							}
+							AND = {
+								can_build_building = building_type:transport_office
+								scope:pp_ai_logistics_country = {
+									gold >= { value = building_type:transport_office.building_base_cost_in_gold }
+									var:pp_ai_logistics_budget >= { value = building_type:transport_office.building_base_cost_in_gold }
+								}
+							}
+						}
+					}
+					order_by = pp_unsupported_building_levels_map_value
+					max = 1
+					check_range_bounds = no
+					area = { save_scope_as = pp_ai_logistics_current_area }
+
+					if = {
+						limit = {
+							can_build_building = building_type:coastal_shipping_office
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:coastal_shipping_office.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:coastal_shipping_office }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:coastal_shipping_office.building_base_cost_in_gold } }
+						}
+					}
+					else_if = {
+						limit = {
+							can_build_building = building_type:river_boatmen_yard
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:river_boatmen_yard.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:river_boatmen_yard }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:river_boatmen_yard.building_base_cost_in_gold } }
+						}
+					}
+					else_if = {
+						limit = {
+							can_build_building = building_type:carrier_inn
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:carrier_inn.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:carrier_inn }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:carrier_inn.building_base_cost_in_gold } }
+						}
+					}
+					else_if = {
+						limit = {
+							can_build_building = building_type:transport_office
+							scope:pp_ai_logistics_country = {
+								gold >= { value = building_type:transport_office.building_base_cost_in_gold }
+								var:pp_ai_logistics_budget >= { value = building_type:transport_office.building_base_cost_in_gold }
+							}
+						}
+						construct_building = { building_type = building_type:transport_office }
+						scope:pp_ai_logistics_country = {
+							add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }
+							change_variable = { name = pp_ai_logistics_build_count add = 1 }
+							change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:transport_office.building_base_cost_in_gold } }
+						}
+					}
+				}
+			}
+
+			clear_variable_list = pp_ai_logistics_handled_areas
+			remove_variable = pp_ai_logistics_build_count
+			remove_variable = pp_ai_logistics_budget
+			clear_saved_scope = pp_ai_logistics_country
+			clear_saved_scope = pp_ai_logistics_current_area
+		}
+	}
+}

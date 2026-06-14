@@ -2148,7 +2148,11 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
     on_actions = _entry_values(pulse)["on_actions"]
     assert isinstance(on_actions, CList)
 
-    assert on_actions.items == ["pp_cull_capacity_buildings_over_max_v2", "pp_ai_victuals_market_on_food_crisis"]
+    assert on_actions.items == [
+        "pp_cull_capacity_buildings_over_max_v2",
+        "pp_ai_victuals_market_on_food_crisis",
+        "pp_ai_logistics_on_unsupported_building_levels",
+    ]
 
     legacy_entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
     assert "pp_cull_over_cap_buildings" not in legacy_entries

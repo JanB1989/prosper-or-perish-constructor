@@ -310,6 +310,7 @@ def test_local_output_map_mode_script_values_cover_every_raw_material() -> None:
 
 def test_productivity_script_values_use_location_potential_variables_and_rgo_bonus() -> None:
     script_values = SCRIPT_VALUES.read_text(encoding="utf-8-sig")
+    location_values = _location_potential_values()
 
     bad: list[str] = []
     if "modifier:local_" in script_values:
@@ -324,8 +325,10 @@ def test_productivity_script_values_use_location_potential_variables_and_rgo_bon
         bad.append("uses legacy RGO helper modifiers")
     for good, block in _script_value_blocks(script_values).items():
         variable = _productivity_location_potential_variable_name(good)
-        if f"value = var:{variable}" not in block:
+        if location_values.get(good) and f"value = var:{variable}" not in block:
             bad.append(f"{good}: total value missing location-potential variable source")
+        if not location_values.get(good) and variable in block:
+            bad.append(f"{good}: uses location-potential variable without source values")
         if f"raw_material = goods:{good}" not in block:
             bad.append(f"{good}: total value missing raw-material RGO source")
         if f"add = modifier:{_productivity_rgo_bonus_modifier_name(good)}" in block:
@@ -464,6 +467,7 @@ def test_output_map_modes_clamp_extreme_productivity_without_gradient() -> None:
 def test_productivity_script_value_components_use_location_variables_and_raw_material_rgo() -> None:
     script_values = SCRIPT_VALUES.read_text(encoding="utf-8-sig")
     rgo_values = _rgo_bonus_values()
+    location_values = _location_potential_values()
 
     bad: list[str] = []
     for good, (_modifier, value) in rgo_values.items():
@@ -471,14 +475,19 @@ def test_productivity_script_value_components_use_location_variables_and_raw_mat
         location_block = _script_block(script_values, _productivity_location_potential_value_name(good))
         rgo_block = _script_block(script_values, _productivity_rgo_bonus_value_name(good))
         variable = _productivity_location_potential_variable_name(good)
-        if f"has_variable = {variable}" not in total_block:
+        has_location_potential = bool(location_values.get(good))
+        if has_location_potential and f"has_variable = {variable}" not in total_block:
             bad.append(f"{good}: total component does not guard location-potential variable")
-        if f"value = var:{variable}" not in total_block:
+        if has_location_potential and f"value = var:{variable}" not in total_block:
             bad.append(f"{good}: total component does not use location-potential variable")
-        if f"has_variable = {variable}" not in location_block:
+        if has_location_potential and f"has_variable = {variable}" not in location_block:
             bad.append(f"{good}: location component does not guard location-potential variable")
-        if f"value = var:{variable}" not in location_block:
+        if has_location_potential and f"value = var:{variable}" not in location_block:
             bad.append(f"{good}: location component does not use location-potential variable")
+        if not has_location_potential and variable in total_block:
+            bad.append(f"{good}: total component references variable without source values")
+        if not has_location_potential and variable in location_block:
+            bad.append(f"{good}: location component references variable without source values")
         if _productivity_location_potential_modifier_name(good) in script_values:
             bad.append(f"{good}: script values still use duplicate location-potential helper")
         if "has_location_modifier = pp_loc_" in location_block:
@@ -522,6 +531,26 @@ def test_location_potential_variables_match_source_values() -> None:
             expected = f"set_variable = {{ name = {variable} value = {value} }}"
             if expected not in block:
                 bad.append(f"{good}: {location} missing {expected}")
+
+    assert not bad
+
+
+def test_location_potential_variables_are_only_emitted_for_goods_with_source_values() -> None:
+    script_values = SCRIPT_VALUES.read_text(encoding="utf-8-sig")
+    variable_text = LOCAL_OUTPUT_MAP_VALUES.read_text(encoding="utf-8-sig")
+    location_values = _location_potential_values()
+
+    bad: list[str] = []
+    for good, modifiers in location_values.items():
+        variable = _productivity_location_potential_variable_name(good)
+        if modifiers:
+            if f"set_variable = {{ name = {variable}" not in variable_text:
+                bad.append(f"{good}: missing generated set_variable rows")
+            continue
+        if variable in script_values:
+            bad.append(f"{good}: script values reference unused location-potential variable")
+        if variable in variable_text:
+            bad.append(f"{good}: on-action references unused location-potential variable")
 
     assert not bad
 

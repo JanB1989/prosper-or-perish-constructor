@@ -38,7 +38,6 @@ building:
     }
 
     modifier = {
-      local_market_access = 0.05
       free_building_levels = 10
     }
 production_methods:
@@ -64,4 +63,4 @@ evaluation:
   allow_rules:
     profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
     input_throughput: Transport offices are tuned as labor-absorbing urban infrastructure, not as a profitable production method.
-    output_throughput: Transport offices provide market access and building support rather than direct goods output.
+    output_throughput: Transport offices provide supported building levels rather than direct goods output.

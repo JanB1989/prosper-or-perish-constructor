@@ -49,6 +49,7 @@ VALUE_SOURCE_MODES = {
     "pp_forest_village_capacity": "forest_capacity",
     "pp_unemployed_peasants": "pp_unemployed_population",
     "pp_building_levels": "total_building_levels",
+    "pp_unsupported_building_levels": "pp_unsupported_building_levels_map_value",
     "pp_building_efficiency": "pp_building_efficiency_map_value",
     "pp_rgo_level": "pp_rgo_level_for_map",
 }
@@ -114,6 +115,13 @@ STRUCTURE_SNIPPETS = {
         "index = 0",
         "pp_building_efficiency_map_value",
         "MAPMODE_PP_BUILDING_EFFICIENCY_TT_LAND",
+        "color_refresh_counters = { ProductionList LocationDevelopmentChanged LocationPopulationChanged }",
+    ),
+    "pp_unsupported_building_levels": (
+        "category = economy",
+        "index = 0",
+        "pp_unsupported_building_levels_map_value",
+        "MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_TT_LAND",
         "color_refresh_counters = { ProductionList LocationDevelopmentChanged LocationPopulationChanged }",
     ),
     "pp_rgo_level": (
@@ -383,6 +391,55 @@ def test_building_efficiency_map_mode_uses_local_modifier_and_assets() -> None:
         / "game_concepts"
         / "pp_building_efficiency_map_mode.txt"
     ).is_file()
+
+
+def test_unsupported_building_levels_map_mode_uses_over_capacity_buckets() -> None:
+    block = _all_blocks()["pp_unsupported_building_levels"]
+    text = LOCALIZATION.read_text(encoding="utf-8-sig")
+    script_value = BUILDING_EFFICIENCY_SCRIPT_VALUE.read_text(encoding="utf-8-sig")
+
+    assert _thresholds(block, "pp_unsupported_building_levels_map_value") == [
+        1.0,
+        5.0,
+        15.0,
+        30.0,
+        60.0,
+    ]
+    assert "limit = { has_owner = yes }" in block
+    assert block.count("lerp = {") == 4
+    assert block.count("legend_key =") == 5
+    assert "value = define:NMapColors|MAP_COLOR_MAX" in block
+    assert "max_color = define:NMapColors|MAP_COLOR_MIN" in block
+    assert "pp_unsupported_building_levels_map_value = {" in script_value
+    assert "value = total_building_levels" in script_value
+    assert "subtract = modifier:free_building_levels" in script_value
+    assert "min = 0" in script_value
+    assert "mapmode_pp_unsupported_building_levels_name" in text
+    assert 'mapmode_pp_unsupported_building_levels_name: "Unsupported Building Levels"' in text
+    assert 'MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_SUPPORTED: "No unsupported building levels"' in text
+    assert 'MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_LOW: "1 to 4 unsupported building levels"' in text
+    assert 'MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_MEDIUM: "5 to 14 unsupported building levels"' in text
+    assert 'MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_HIGH: "15 to 29 unsupported building levels"' in text
+    assert 'MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_SEVERE: "30 or more unsupported building levels"' in text
+    assert "MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_TT_LAND" in text
+    assert "ScriptValue('pp_unsupported_building_levels_map_value')|0" in text
+    assert (
+        MOD_ROOT
+        / "main_menu"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "map_modes"
+        / "pp_unsupported_building_levels.dds"
+    ).is_file()
+    concept = (
+        MOD_ROOT
+        / "main_menu"
+        / "common"
+        / "game_concepts"
+        / "pp_unsupported_building_levels_map_mode.txt"
+    ).read_text(encoding="utf-8-sig")
+    assert 'texture = "map_modes/pp_unsupported_building_levels"' in concept
 
 
 def test_custom_map_modes_preserve_context_and_refresh_behavior() -> None:

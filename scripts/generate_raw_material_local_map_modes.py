@@ -68,7 +68,8 @@ def main() -> None:
     )
 
     _write_map_modes(mod_root / MAP_MODE_REL, raw_materials)
-    _write_script_values(mod_root / SCRIPT_VALUES_REL, rgo_bonus_values)
+    goods_with_location_potential = _goods_with_location_potential(location_potential_values)
+    _write_script_values(mod_root / SCRIPT_VALUES_REL, rgo_bonus_values, goods_with_location_potential)
     _write_location_potential_variables(
         mod_root / LOCAL_OUTPUT_MAP_VALUES_ON_ACTION_REL,
         raw_materials,
@@ -228,54 +229,92 @@ def _output_modifier_legend_keys(upper: str) -> str:
     return "\n".join(lines)
 
 
-def _write_script_values(path: Path, rgo_bonus_values: dict[str, tuple[str, str]]) -> None:
+def _write_script_values(
+    path: Path,
+    rgo_bonus_values: dict[str, tuple[str, str]],
+    goods_with_location_potential: set[str],
+) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     blocks = [
         GENERATED_FILE_MARKER,
         "# Static planning values for the raw-material output map modes.",
-        "# Total map value = generated location potential variable + active raw-material RGO bonus.",
-        "# Location potential variables avoid visible map helper modifier rows and avoid generated trigger tables.",
+        "# Total map value = available generated location potential variable + active raw-material RGO bonus.",
+        "# Location potential variables are emitted only for goods with generated source rows.",
+        "# Variables avoid visible map helper modifier rows and avoid generated trigger tables.",
         "# RGO bonus checks the raw material directly so pp_rgo_bonus_<good> stays player-facing without helper rows.",
         "",
     ]
     for good, (_modifier, value) in rgo_bonus_values.items():
-        blocks.extend(_script_value_block(good, value))
+        blocks.extend(
+            _script_value_block(
+                good,
+                value,
+                has_location_potential=good in goods_with_location_potential,
+            )
+        )
         blocks.append("")
     _write_crlf(path, "\n".join(blocks).rstrip() + "\n")
 
 
-def _script_value_block(good: str, rgo_bonus_value: str) -> list[str]:
+def _script_value_block(
+    good: str,
+    rgo_bonus_value: str,
+    *,
+    has_location_potential: bool,
+) -> list[str]:
     variable_name = _productivity_location_potential_variable_name(good)
     lines = [
         f"{_productivity_value_name(good)} = {{",
         "\tvalue = 0",
-        "\tif = {",
-        f"\t\tlimit = {{ has_variable = {variable_name} }}",
-        f"\t\tvalue = var:{variable_name}",
-        "\t}",
-        "\tif = {",
-        f"\t\tlimit = {{ raw_material = goods:{good} }}",
-        f"\t\tadd = {rgo_bonus_value}",
-        "\t}",
-        "}",
-        "",
-        f"{_productivity_location_potential_value_name(good)} = {{",
-        "\tvalue = 0",
-        "\tif = {",
-        f"\t\tlimit = {{ has_variable = {variable_name} }}",
-        f"\t\tvalue = var:{variable_name}",
-        "\t}",
-        "}",
-        "",
-        f"{_productivity_rgo_bonus_value_name(good)} = {{",
-        "\tvalue = 0",
-        "\tif = {",
-        f"\t\tlimit = {{ raw_material = goods:{good} }}",
-        f"\t\tadd = {rgo_bonus_value}",
-        "\t}",
-        "}",
     ]
+    if has_location_potential:
+        lines.extend(
+            [
+                "\tif = {",
+                f"\t\tlimit = {{ has_variable = {variable_name} }}",
+                f"\t\tvalue = var:{variable_name}",
+                "\t}",
+            ]
+        )
+    lines.extend(
+        [
+            "\tif = {",
+            f"\t\tlimit = {{ raw_material = goods:{good} }}",
+            f"\t\tadd = {rgo_bonus_value}",
+            "\t}",
+            "}",
+            "",
+            f"{_productivity_location_potential_value_name(good)} = {{",
+            "\tvalue = 0",
+        ]
+    )
+    if has_location_potential:
+        lines.extend(
+            [
+                "\tif = {",
+                f"\t\tlimit = {{ has_variable = {variable_name} }}",
+                f"\t\tvalue = var:{variable_name}",
+                "\t}",
+            ]
+        )
+    lines.extend(
+        [
+            "}",
+            "",
+            f"{_productivity_rgo_bonus_value_name(good)} = {{",
+            "\tvalue = 0",
+            "\tif = {",
+            f"\t\tlimit = {{ raw_material = goods:{good} }}",
+            f"\t\tadd = {rgo_bonus_value}",
+            "\t}",
+            "}",
+        ]
+    )
     return lines
+
+
+def _goods_with_location_potential(location_potential_values: dict[str, dict[str, str]]) -> set[str]:
+    return {good for values in location_potential_values.values() for good in values}
 
 
 def _rgo_bonus_output_values(path: Path) -> dict[str, tuple[str, str]]:
@@ -361,6 +400,7 @@ def _write_location_potential_variables(
     location_potential_values: dict[str, dict[str, str]],
 ) -> None:
     goods = list(goods)
+    goods_with_location_potential = _goods_with_location_potential(location_potential_values)
     lines = [
         GENERATED_FILE_MARKER,
         "# Hidden per-location variables for raw-material output map modes.",
@@ -377,6 +417,8 @@ def _write_location_potential_variables(
         "\t\tevery_location_in_the_world = {",
     ]
     for good in goods:
+        if good not in goods_with_location_potential:
+            continue
         lines.append(f"\t\t\tremove_variable = {_productivity_location_potential_variable_name(good)}")
     lines.append("\t\t}")
     for location in sorted(location_potential_values):

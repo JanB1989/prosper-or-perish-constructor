@@ -486,6 +486,14 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Only rebuild notebook parquet from an existing graphs/dataset.",
     )
     savegame_notebooks_build.add_argument(
+        "--no-extended",
+        action="store_true",
+        help=(
+            "Skip slower extended country/economy tables. By default notebook "
+            "datasets include country gold for stored-money charts."
+        ),
+    )
+    savegame_notebooks_build.add_argument(
         "--force",
         action="store_true",
         help="Rebuild notebook parquet even when existing output metadata is current.",
@@ -2320,6 +2328,7 @@ def _savegame_notebooks_build(
                 _repo_path(repo, args.load_order),
                 "--workers",
                 str(args.workers),
+                *([] if args.no_extended else ["--extended"]),
             ],
             repo,
         )

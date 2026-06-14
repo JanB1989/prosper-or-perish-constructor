@@ -87,6 +87,18 @@ VICTUALS_MARKET_BLUEPRINT = ROOT / "blueprints" / "accepted" / "buildings" / "vi
 VICTUALS_MARKET_RENDERED = (
     MOD_ROOT / "in_game" / "common" / "building_types" / "zz_pp_victuals_market.txt"
 )
+FOUR_YEARLY_COUNTRY_PULSE = (
+    MOD_ROOT / "in_game" / "common" / "on_action" / "pp_country_four_yearly.txt"
+)
+BUILDING_CULLING_ACTIONS = (
+    MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt"
+)
+LOGISTICS_AI_BUILD_ORDER = (
+    "coastal_shipping_office",
+    "river_boatmen_yard",
+    "carrier_inn",
+    "transport_office",
+)
 
 
 def _custom_tags(text: str) -> set[str]:
@@ -105,6 +117,40 @@ def _modifier_block(body: str) -> str:
     match = re.search(r"(?m)^\s*modifier\s*=\s*\{(?P<body>.*?)\n\s*\}", body, flags=re.S)
     assert match is not None, "missing modifier block"
     return match.group("body")
+
+
+def _named_block(text: str, name: str) -> str:
+    match = re.search(rf"(?m)^{re.escape(name)}\s*=\s*\{{", text)
+    assert match is not None, f"missing block {name}"
+    depth = 0
+    for index in range(match.end() - 1, len(text)):
+        char = text[index]
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return text[match.start() : index + 1]
+    raise AssertionError(f"unterminated block {name}")
+
+
+def _logistics_severity_blocks(block: str) -> list[tuple[str, str]]:
+    starts = list(
+        re.finditer(
+            r"# Logistics severity pass: unsupported building levels >= ([0-9]+)",
+            block,
+        )
+    )
+    assert starts, "missing logistics severity pass markers"
+    sections: list[tuple[str, str]] = []
+    for index, match in enumerate(starts):
+        end = starts[index + 1].start() if index + 1 < len(starts) else block.find(
+            "clear_variable_list = pp_ai_logistics_handled_areas",
+            match.end(),
+        )
+        assert end != -1
+        sections.append((match.group(1), block[match.start() : end]))
+    return sections
 
 
 def _goods_total(body: str) -> float:
@@ -172,7 +218,7 @@ def test_logistics_infrastructure_balance_targets_are_current() -> None:
         assert _field(body, "max_levels") == expected["max_levels"]
         assert _field(body, "pop_type") == expected["pop_type"]
         assert _field(body, "employment_size") == "1"
-        assert _field(modifier_body, "local_market_access") == "0.05"
+        assert "local_market_access" not in modifier_body
         assert _field(modifier_body, "free_building_levels") == "10"
         assert _goods_total(method_body) == pytest.approx(expected["upkeep"])
 
@@ -212,10 +258,96 @@ def test_logistics_infrastructure_buildings_emit_modifier_ratio_metrics() -> Non
         for method in evaluation.methods:
             modifier_names = {modifier.name for modifier in method.building_modifiers}
             assert method.building_category == "infrastructure_category"
-            assert modifier_names == {"local_market_access", "free_building_levels"}
+            assert modifier_names == {"free_building_levels"}
             for modifier in method.building_modifiers:
                 assert modifier.per_maintenance_gold is not None
                 assert modifier.per_1k is not None
+
+
+def test_ai_logistics_unsupported_levels_action_runs_on_four_year_pulse() -> None:
+    pulse = FOUR_YEARLY_COUNTRY_PULSE.read_text(encoding="utf-8-sig")
+
+    assert "pp_ai_logistics_on_unsupported_building_levels" in pulse
+
+
+def test_ai_logistics_unsupported_levels_action_keeps_required_guards() -> None:
+    block = _named_block(
+        BUILDING_CULLING_ACTIONS.read_text(encoding="utf-8-sig"),
+        "pp_ai_logistics_on_unsupported_building_levels",
+    )
+
+    assert "is_ai = yes" in block
+    assert "monthly_balance > 0" in block
+    assert "ordered_owned_location = {" not in block
+    assert block.count("every_area_with_owned_province = {") == 4
+    assert block.count("ordered_location_in_area = {") == 4
+    assert "order_by = pp_unsupported_building_levels_map_value" in block
+    assert "check_range_bounds = no" in block
+    assert "instant = yes" not in block
+    assert "cost_multiplier = 0" not in block
+
+    for building in LOGISTICS_AI_BUILD_ORDER:
+        assert f"can_build_building = building_type:{building}" in block
+        assert f"value = building_type:{building}.building_base_cost_in_gold" in block
+
+    assert block.count("gold >= {") >= len(LOGISTICS_AI_BUILD_ORDER)
+
+
+def test_ai_logistics_unsupported_levels_uses_area_tracking_and_budget() -> None:
+    block = _named_block(
+        BUILDING_CULLING_ACTIONS.read_text(encoding="utf-8-sig"),
+        "pp_ai_logistics_on_unsupported_building_levels",
+    )
+
+    assert "clear_variable_list = pp_ai_logistics_handled_areas" in block
+    assert "is_target_in_variable_list = {" in block
+    assert "name = pp_ai_logistics_handled_areas" in block
+    assert "target = prev" in block
+    assert "scope:pp_ai_logistics_country = {" in block
+    assert (
+        "add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }"
+        in block
+    )
+    assert "set_variable = { name = pp_ai_logistics_build_count value = 0 }" in block
+    assert "set_variable = { name = pp_ai_logistics_budget value = gold }" in block
+    assert "change_variable = { name = pp_ai_logistics_budget multiply = 0.25 }" in block
+    assert "max = { value = monthly_balance multiply = 24 }" in block
+    assert block.count("var:pp_ai_logistics_build_count < 20") == 4
+    assert "change_variable = { name = pp_ai_logistics_build_count add = 1 }" in block
+
+    for building in LOGISTICS_AI_BUILD_ORDER:
+        assert (
+            f"change_variable = {{ name = pp_ai_logistics_budget subtract = {{ value = building_type:{building}.building_base_cost_in_gold }} }}"
+            in block
+        )
+
+
+def test_ai_logistics_unsupported_levels_severity_passes_are_exact() -> None:
+    block = _named_block(
+        BUILDING_CULLING_ACTIONS.read_text(encoding="utf-8-sig"),
+        "pp_ai_logistics_on_unsupported_building_levels",
+    )
+
+    severity_blocks = _logistics_severity_blocks(block)
+    assert [threshold for threshold, _ in severity_blocks] == ["30", "15", "5", "1"]
+
+    for threshold, severity_block in severity_blocks:
+        assert f"pp_unsupported_building_levels_map_value >= {threshold}" in severity_block
+
+
+def test_ai_logistics_unsupported_levels_build_priority_is_exact() -> None:
+    block = _named_block(
+        BUILDING_CULLING_ACTIONS.read_text(encoding="utf-8-sig"),
+        "pp_ai_logistics_on_unsupported_building_levels",
+    )
+
+    for _, severity_block in _logistics_severity_blocks(block):
+        ordered_buildings = re.findall(
+            r"construct_building\s*=\s*\{\s*building_type\s*=\s*building_type:([a-z_]+)\s*\}",
+            severity_block,
+            flags=re.S,
+        )
+        assert ordered_buildings == list(LOGISTICS_AI_BUILD_ORDER)
 
 
 def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> None:

@@ -12,7 +12,8 @@ town = yes
 city = yes
 megalopolis = yes
 can_close = yes
-forbidden_for_estates = yes
+forbidden_for_estates = no
+AI_ignore_available_worker_flag = yes
 important_for_AI = no
 ai_forbid_shutdown = no
 build_time = infrastructure_build_time
@@ -31,7 +32,6 @@ raw_modifier = {
 }
 
 modifier = {
-  local_market_access = 0.05
   free_building_levels = 10
 }
 }

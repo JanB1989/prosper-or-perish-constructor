@@ -38,7 +38,6 @@ building:
     }
 
     modifier = {
-      local_market_access = 0.05
       free_building_levels = 10
     }
 production_methods:
@@ -66,4 +65,4 @@ evaluation:
   allow_rules:
     profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
     input_throughput: Coastal shipping offices intentionally keep modest labor but costly coasting, tar, timber, victual, and paper upkeep.
-    output_throughput: Coastal shipping offices provide market access and building support rather than direct goods output.
+    output_throughput: Coastal shipping offices provide supported building levels rather than direct goods output.

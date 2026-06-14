@@ -7,6 +7,11 @@
 @pp_supported_building_levels_high = 120
 @pp_supported_building_levels_very_high = 200
 @pp_supported_building_levels_cap = 300
+@pp_unsupported_building_levels_low = 1
+@pp_unsupported_building_levels_mid = 5
+@pp_unsupported_building_levels_high = 15
+@pp_unsupported_building_levels_severe = 30
+@pp_unsupported_building_levels_cap = 60
 
 @zoom_step_near = 2
 @data_gradient_alpha_inside = 1
@@ -205,6 +210,124 @@ pp_supported_building_levels = {
 	tooltip_key = {
 		if = { limit = { is_land = yes } value = MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_LAND }
 		else = { value = MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_WATER }
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = economy
+	index = 0
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+	color_refresh_counters = { ProductionList LocationDevelopmentChanged LocationPopulationChanged }
+	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }
+}
+
+# Map mode: unsupported building levels per location.
+# Buckets: 0, 1-4, 5-14, 15-29, 30+.
+
+pp_unsupported_building_levels = {
+	map_color = {
+		if = {
+			limit = { is_ownable = no }
+			value = rgb { 128 128 128 }
+		}
+		else_if = {
+			limit = { has_owner = yes }
+			if = {
+				limit = { pp_unsupported_building_levels_map_value < @pp_unsupported_building_levels_low }
+				value = define:NMapColors|MAP_COLOR_MAX
+			}
+			else_if = {
+				limit = { pp_unsupported_building_levels_map_value < @pp_unsupported_building_levels_mid }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_MAX
+					max_color = define:NMapColors|MAP_COLOR_HIGH
+					factor = {
+						value = pp_unsupported_building_levels_map_value
+						subtract = @pp_unsupported_building_levels_low
+						divide = 4
+						max = 1
+						min = 0
+					}
+				}
+			}
+			else_if = {
+				limit = { pp_unsupported_building_levels_map_value < @pp_unsupported_building_levels_high }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_HIGH
+					max_color = define:NMapColors|MAP_COLOR_MID
+					factor = {
+						value = pp_unsupported_building_levels_map_value
+						subtract = @pp_unsupported_building_levels_mid
+						divide = 10
+						max = 1
+						min = 0
+					}
+				}
+			}
+			else_if = {
+				limit = { pp_unsupported_building_levels_map_value < @pp_unsupported_building_levels_severe }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_MID
+					max_color = define:NMapColors|MAP_COLOR_LOW
+					factor = {
+						value = pp_unsupported_building_levels_map_value
+						subtract = @pp_unsupported_building_levels_high
+						divide = 15
+						max = 1
+						min = 0
+					}
+				}
+			}
+			else_if = {
+				limit = { pp_unsupported_building_levels_map_value < @pp_unsupported_building_levels_cap }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_LOW
+					max_color = define:NMapColors|MAP_COLOR_MIN
+					factor = {
+						value = pp_unsupported_building_levels_map_value
+						subtract = @pp_unsupported_building_levels_severe
+						divide = 30
+						max = 1
+						min = 0
+					}
+				}
+			}
+			else = {
+				value = define:NMapColors|MAP_COLOR_MIN
+			}
+		}
+		else = {
+			value = rgb { 128 128 128 }
+		}
+	}
+	legend_key = { desc = "MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_SUPPORTED" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_LOW" color = define:NMapColors|MAP_COLOR_HIGH }
+	legend_key = { desc = "MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_MEDIUM" color = define:NMapColors|MAP_COLOR_MID }
+	legend_key = { desc = "MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_HIGH" color = define:NMapColors|MAP_COLOR_LOW }
+	legend_key = { desc = "MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_SEVERE" color = define:NMapColors|MAP_COLOR_MIN }
+	tooltip_key = {
+		if = { limit = { is_land = yes } value = MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_TT_LAND }
+		else = { value = MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_TT_WATER }
 	}
 	small_map_names = location
 	medium_map_names = location

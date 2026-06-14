@@ -18,6 +18,10 @@ building:
       methods:
         - pp_pomological_orchard_no_primary
         - pp_pomological_orchard_grafted_rows
+    - name: slot_2
+      methods:
+        - pp_pomological_orchard_no_worker_victuals
+        - pp_pomological_orchard_worker_victuals
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -65,6 +69,17 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_pomological_orchard_no_worker_victuals = {
+            category = building_maintenance
+        }
+        pp_pomological_orchard_worker_victuals = {
+            produced = victuals
+            output = 0.058
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
       farm_capacity_from_pomological_orchard = -1
@@ -87,11 +102,14 @@ localization:
     pomological_orchard_desc: Grafted orchards use nursery stock, pruning, trellises, and cultivar records to raise more reliable fruit crops.
     pomological_orchard_slot_0: Fruit Trees
     pomological_orchard_slot_1: Grafted Rows
+    pomological_orchard_slot_2: Household Food
     pp_pomological_orchard: Grafted Orchards
     pp_pomological_orchard_base_fruit: Fruit Trees
     pp_pomological_orchard_desc: Grafting, nursery records, and planned orchard rows increase fruit harvests through better management.
     pp_pomological_orchard_grafted_rows: Grafted Rows
     pp_pomological_orchard_no_primary: No Grafted Rows
+    pp_pomological_orchard_no_worker_victuals: No Household Victuals
+    pp_pomological_orchard_worker_victuals: Household Victuals
 icon:
   source_png: ../assets/icons/pomological_orchard.png
   output_dds: pomological_orchard.dds
@@ -111,3 +129,7 @@ evaluation:
       production_efficiency: 1.00
     pp_pomological_orchard_grafted_rows:
       production_efficiency: 1.00
+    pp_pomological_orchard_worker_victuals:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

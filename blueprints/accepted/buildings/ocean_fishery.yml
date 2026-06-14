@@ -18,6 +18,10 @@ building:
       methods:
         - pp_ocean_fishery_no_coastal_gear
         - pp_ocean_fishery_coastal_boats
+    - name: slot_2
+      methods:
+        - pp_ocean_fishery_no_worker_victuals
+        - pp_ocean_fishery_worker_victuals
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -64,6 +68,17 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_ocean_fishery_no_worker_victuals = {
+            category = building_maintenance
+        }
+        pp_ocean_fishery_worker_victuals = {
+            produced = victuals
+            output = 0.058
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -79,11 +94,14 @@ localization:
   entries:
     ocean_fishery_slot_0: Coastal Waters
     ocean_fishery_slot_1: Coastal Gear
+    ocean_fishery_slot_2: Household Food
     ocean_fishery: Coastal Fishery
     ocean_fishery_desc: Coastal crews work small boats, nets, curing barrels, and shore landings. They supply nearby markets from familiar waters.
     pp_ocean_fishery_base_catch: Coastal Waters
     pp_ocean_fishery_no_coastal_gear: No Coastal Gear
     pp_ocean_fishery_coastal_boats: Coastal Boats
+    pp_ocean_fishery_no_worker_victuals: No Household Victuals
+    pp_ocean_fishery_worker_victuals: Household Victuals
 icon:
   source_png: ../assets/icons/ocean_fishery.png
   output_dds: ocean_fishery.dds
@@ -103,3 +121,7 @@ evaluation:
       allow_rules:
         input_throughput: Coastal boats keep a lower gear profile after repeated fish-output tuning, intentionally below the generic full-building input target.
         output_throughput: Coastal boats keep strong coastal output after repeated fish-output tuning, intentionally below the generic full-building output target.
+    pp_ocean_fishery_worker_victuals:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

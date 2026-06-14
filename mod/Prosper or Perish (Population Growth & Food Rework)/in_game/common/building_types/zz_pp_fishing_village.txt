@@ -90,6 +90,17 @@ REPLACE:fishing_village = {
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_fishing_village_no_worker_victuals = {
+            category = building_maintenance
+        }
+        pp_fishing_village_worker_victuals = {
+            produced = victuals
+            output = 0.033
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
     construction_demand = village_construction
     raw_modifier = {
     }

@@ -24,6 +24,10 @@ building:
         - pp_hunting_lodges
         - pp_fur_trapping
         - pp_forest_village_forest_apiary
+    - name: slot_2
+      methods:
+        - pp_forest_village_no_worker_victuals
+        - pp_forest_village_worker_victuals
   possible_production_methods: []
   body: |2-
         audio_tier = 1
@@ -110,6 +114,17 @@ building:
                 category = building_maintenance
             }
         }
+        unique_production_methods = {
+            pp_forest_village_no_worker_victuals = {
+                category = building_maintenance
+            }
+            pp_forest_village_worker_victuals = {
+                produced = victuals
+                output = 0.033
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+        }
         construction_demand = village_construction
         raw_modifier = {
         }
@@ -192,6 +207,7 @@ localization:
   entries:
     forest_village_slot_0: Forest Resources
     forest_village_slot_1: Forest Work
+    forest_village_slot_2: Household Food
     pp_forest_tannery: Forest Tannery
     pp_forest_village_base_beeswax: Forest Bloom
     pp_forest_village_base_fur: Forest Fur
@@ -199,6 +215,8 @@ localization:
     pp_forest_village_base_wild_game: Forest Game
     pp_forest_village_forest_apiary: Forest apiary
     pp_forest_village_forest_apiary_desc: Here beekeeping is the principal occupation. Families work the forest bloom, keeping and moving hives through the woods; wax and honey are the foundation of the settlementâ€™s livelihood.
+    pp_forest_village_no_worker_victuals: No Household Victuals
+    pp_forest_village_worker_victuals: Household Victuals
     pp_fur_trapping: Fur Trapping
     pp_fur_trapping_advance_colonial: Colonial Fur Trade
     pp_fur_trapping_advance_colonial_desc: Establish organized fur trapping through North American colonial trade.
@@ -241,3 +259,7 @@ evaluation:
       production_efficiency: 1.00
     pp_forest_village_forest_apiary:
       production_efficiency: 1.00
+    pp_forest_village_worker_victuals:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

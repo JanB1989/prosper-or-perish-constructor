@@ -80,7 +80,7 @@ def _field(body: str, key: str) -> str:
 
 
 def _modifier_block(body: str) -> str:
-    match = re.search(r"modifier\s*=\s*\{(?P<body>.*?)\n\s*\}", body, flags=re.S)
+    match = re.search(r"^\s*modifier\s*=\s*\{(?P<body>.*?)\n\s*\}", body, flags=re.S | re.M)
     assert match is not None, "missing modifier block"
     return match.group("body")
 
@@ -110,7 +110,9 @@ def test_road_infrastructure_blueprints_are_manifested_and_one_level_infrastruct
         assert f"pop_type = {expected['pop_type']}" in body
         assert f"employment_size = {expected['employment']}" in body
         assert "category = infrastructure_category" in body
-        assert "custom_tags = { pp_logistics_infrastructure_priority }" in body
+        tag_match = re.search(r"^\s*custom_tags\s*=\s*\{(?P<tags>[^}]*)\}", body, flags=re.M)
+        assert tag_match is not None
+        assert "pp_logistics_infrastructure_priority" in tag_match.group("tags").split()
         assert blueprint["prices"][0]["body"].strip() == "{gold = 50}"
 
         if expected["previous"] is None:

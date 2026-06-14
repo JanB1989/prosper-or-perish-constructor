@@ -75,6 +75,9 @@ throughput_tolerance = 0.30
 amortization_months_max = 360
 amortization_months_min = 120
 
+[building_scaling]
+worker_victuals_food_need_ratio = 1.0
+
 
 [blueprint_evaluation.throughput_gold_per_1k]
 peasants = 1.0

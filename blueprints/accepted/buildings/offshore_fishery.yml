@@ -20,6 +20,10 @@ building:
         - pp_offshore_fishery_herring_busses
         - pp_offshore_fishery_distant_water_schooners
         - pp_offshore_fishery_steam_trawlers
+    - name: slot_2
+      methods:
+        - pp_offshore_fishery_no_worker_victuals
+        - pp_offshore_fishery_worker_victuals
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -86,6 +90,17 @@ building:
             category = building_maintenance
         }
     }
+    unique_production_methods = {
+        pp_offshore_fishery_no_worker_victuals = {
+            category = building_maintenance
+        }
+        pp_offshore_fishery_worker_victuals = {
+            produced = victuals
+            output = 0.058
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
 
     raw_modifier = {
     }
@@ -101,6 +116,7 @@ localization:
   entries:
     offshore_fishery_slot_0: Offshore Waters
     offshore_fishery_slot_1: Offshore Fleet
+    offshore_fishery_slot_2: Household Food
     offshore_fishery: Offshore Fishery
     offshore_fishery_desc: Offshore fleets use herring busses, bank schooners, and later steam trawlers to reach richer waters. Salt, provisions, and gear keep the catch moving home.
     pp_offshore_fishery_base_catch: Offshore Waters
@@ -108,6 +124,8 @@ localization:
     pp_offshore_fishery_herring_busses: Herring Busses
     pp_offshore_fishery_distant_water_schooners: Distant-Water Schooners
     pp_offshore_fishery_steam_trawlers: Steam Trawlers
+    pp_offshore_fishery_no_worker_victuals: No Household Victuals
+    pp_offshore_fishery_worker_victuals: Household Victuals
 icon:
   source_png: ../assets/icons/offshore_fishery.png
   output_dds: offshore_fishery.dds
@@ -140,3 +158,7 @@ evaluation:
       allow_rules:
         input_throughput: Steam trawlers keep a lower post-rebalance input profile while preserving their pre-steel-tool design.
         output_throughput: Late-game offshore fish output is intentionally capped below the generic laborer throughput target.
+    pp_offshore_fishery_worker_victuals:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

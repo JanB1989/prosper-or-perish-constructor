@@ -64,6 +64,17 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+unique_production_methods = {
+    pp_offshore_fishery_no_worker_victuals = {
+        category = building_maintenance
+    }
+    pp_offshore_fishery_worker_victuals = {
+        produced = victuals
+        output = 0.058
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
 
 raw_modifier = {
 }

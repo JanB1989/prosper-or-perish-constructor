@@ -39,6 +39,10 @@ building:
       methods:
         - pp_farming_village_no_beeswax
         - pp_farming_village_minor_beeswax
+    - name: slot_3
+      methods:
+        - pp_farming_village_no_worker_victuals
+        - pp_farming_village_worker_victuals
   possible_production_methods: []
   body: |2-
         audio_tier = 1
@@ -209,6 +213,17 @@ building:
                 cloth = 0.0
                 produced = beeswax
                 output = 0.063
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+        }
+        unique_production_methods = {
+            pp_farming_village_no_worker_victuals = {
+                category = building_maintenance
+            }
+            pp_farming_village_worker_victuals = {
+                produced = victuals
+                output = 0.033
                 debug_max_profit = 0
                 category = building_maintenance
             }
@@ -401,6 +416,7 @@ localization:
     farming_village_slot_0: Fields and Pastures
     farming_village_slot_1: Cultivation
     farming_village_slot_2: Beekeeping
+    farming_village_slot_3: Household Food
     pp_farming_village_base_livestock: Livestock Pasture
     pp_farming_village_maintenance: Farming Village Maintenance
     pp_farming_village_minor_beeswax: Cottage hives
@@ -408,6 +424,8 @@ localization:
     pp_farming_village_no_beeswax: No village beekeeping
     pp_farming_village_no_beeswax_desc: Beekeeping is not organized at this farming village.
     pp_farming_village_no_primary: No Cultivation
+    pp_farming_village_no_worker_victuals: No Household Victuals
+    pp_farming_village_worker_victuals: Household Victuals
     pp_legumes_farm_base_legumes: Legume Fields
     pp_legumes_farm_livestock: Legumes Farm (Oxen)
     pp_legumes_farm_maintenance: Legumes Farm (Horses)
@@ -506,3 +524,7 @@ evaluation:
       production_efficiency: 1.05
     pp_farming_village_minor_beeswax:
       production_efficiency: 1.00
+    pp_farming_village_worker_victuals:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

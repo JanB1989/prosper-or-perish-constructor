@@ -584,7 +584,16 @@ def test_build_finalizes_location_potential_localization(
         assert cwd == repo
         return 0
 
+    def fake_farming_capacity_bridge(build_repo, bridge_mod_root):
+        assert build_repo == repo
+        assert bridge_mod_root == mod_root
+
     monkeypatch.setattr(cli, "_run", fake_run)
+    monkeypatch.setattr(
+        cli,
+        "_ensure_farming_capacity_raw_modifier_bridges",
+        fake_farming_capacity_bridge,
+    )
 
     assert cli.main(["--repo", str(repo), "build"]) == 0
 
@@ -616,6 +625,7 @@ def test_build_finalizes_location_potential_localization(
 
 def test_finalize_keeps_location_modifier_on_action_separate_and_preserves_newlines(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repo = _repo(tmp_path)
     repo.joinpath("constructor.toml").write_text(
@@ -684,6 +694,16 @@ def test_finalize_keeps_location_modifier_on_action_separate_and_preserves_newli
     )
     for path in capacity_bom_paths:
         path.write_text("# generated\n", encoding="utf-8")
+
+    def fake_farming_capacity_bridge(build_repo, bridge_mod_root):
+        assert build_repo == repo
+        assert bridge_mod_root == mod_root
+
+    monkeypatch.setattr(
+        cli,
+        "_ensure_farming_capacity_raw_modifier_bridges",
+        fake_farming_capacity_bridge,
+    )
 
     cli._finalize_constructor_mod(repo, repo / "constructor.toml")
 
@@ -1119,6 +1139,7 @@ def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
             str(repo / "constructor.load_order.toml"),
             "--workers",
             "4",
+            "--extended",
         ]
     ]
 

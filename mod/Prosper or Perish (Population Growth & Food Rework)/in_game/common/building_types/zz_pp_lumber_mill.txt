@@ -3,6 +3,7 @@ REPLACE:lumber_mill = {
 audio_tier = 1
 startup_ramp_target = rural_startup_ramp_target
 is_foreign = no
+increase_per_level_cost = 0.35
 max_levels = forest_capacity_max_lumber_mill
 pop_type = laborers
 

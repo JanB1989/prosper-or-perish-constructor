@@ -28,23 +28,27 @@ LOGISTICS_BLUEPRINTS = (
 LOGISTICS_BALANCE_TARGETS = {
     "carrier_inn": {
         "max_levels": "10",
+        "increase_per_level_cost": "0.30",
         "pop_type": "peasants",
-        "upkeep": 3.025,
+        "upkeep": 2.5,
     },
     "river_boatmen_yard": {
         "max_levels": "pp_river_boatmen_yard_max_level",
+        "increase_per_level_cost": "0.15",
         "pop_type": "laborers",
-        "upkeep": 2.0,
+        "upkeep": 1.25,
     },
     "transport_office": {
         "max_levels": "100",
+        "increase_per_level_cost": "0.30",
         "pop_type": "laborers",
         "upkeep": 3.0,
     },
     "coastal_shipping_office": {
-        "max_levels": "3",
+        "max_levels": "pp_coastal_shipping_office_max_level",
+        "increase_per_level_cost": "0.20",
         "pop_type": "laborers",
-        "upkeep": 2.0,
+        "upkeep": 1.75,
     },
 }
 GOOD_PRICES = {
@@ -182,7 +186,7 @@ def test_river_boatmen_yard_cap_scales_with_river_level() -> None:
             flags=re.S,
         )
         assert block is not None
-        assert f"pp_river_boatmen_yard_cap_modifier = {river_level * 2}" in block.group("body")
+        assert f"pp_river_boatmen_yard_cap_modifier = {river_level * 3}" in block.group("body")
 
     assert "pp_river_boatmen_yard_cap_modifier" in BUILDING_CAP_TYPES.read_text(encoding="utf-8-sig")
     assert "gfx/interface/icons/buildings/river_boatmen_yard.dds" in BUILDING_CAP_ICONS.read_text(
@@ -192,6 +196,55 @@ def test_river_boatmen_yard_cap_scales_with_river_level() -> None:
     localization = BUILDING_ADJUSTMENTS_LOC.read_text(encoding="utf-8-sig")
     assert 'BUILDING_LEVEL_RIVER_FREIGHT_CAPACITY: "From River Size"' in localization
     assert 'MODIFIER_TYPE_NAME_pp_river_boatmen_yard_cap_modifier: "River Freight Capacity"' in localization
+
+
+def test_coastal_shipping_office_cap_scales_with_natural_harbor() -> None:
+    blueprint = (ROOT / "blueprints" / "accepted" / "buildings" / "coastal_shipping_office.yml").read_text(
+        encoding="utf-8"
+    )
+    assert "max_levels = pp_coastal_shipping_office_max_level" in blueprint
+    assert "is_port = yes" in blueprint
+
+    cap_value = LOGISTICS_CAPS.read_text(encoding="utf-8")
+    assert "pp_coastal_shipping_office_max_level" in cap_value
+    assert 'desc = "BUILDING_LEVEL_BASE"' in cap_value
+    assert "value = 10" in cap_value
+    assert 'desc = "BUILDING_LEVEL_NATURAL_HARBOR_SUITABILITY"' in cap_value
+    assert "value = modifier:pp_coastal_shipping_office_cap_modifier" in cap_value
+    assert "min = 0" in cap_value
+
+    modifiers = LOCATION_MODIFIERS.read_text(encoding="utf-8-sig")
+    poor_block = re.search(
+        r"TRY_INJECT:location_template_natural_harbor_suitability_poor = \{(?P<body>.*?)\n\}",
+        modifiers,
+        flags=re.S,
+    )
+    good_block = re.search(
+        r"TRY_INJECT:location_template_natural_harbor_suitability_good = \{(?P<body>.*?)\n\}",
+        modifiers,
+        flags=re.S,
+    )
+    assert poor_block is not None
+    assert good_block is not None
+    assert "pp_coastal_shipping_office_cap_modifier = -20" in poor_block.group("body")
+    assert "pp_coastal_shipping_office_cap_modifier = 10" in good_block.group("body")
+
+    assert "pp_coastal_shipping_office_cap_modifier" in BUILDING_CAP_TYPES.read_text(
+        encoding="utf-8-sig"
+    )
+    assert "gfx/interface/icons/buildings/coastal_shipping_office.dds" in BUILDING_CAP_ICONS.read_text(
+        encoding="utf-8-sig"
+    )
+
+    localization = BUILDING_ADJUSTMENTS_LOC.read_text(encoding="utf-8-sig")
+    assert (
+        'BUILDING_LEVEL_NATURAL_HARBOR_SUITABILITY: "From Natural Harbor Suitability"'
+        in localization
+    )
+    assert (
+        'MODIFIER_TYPE_NAME_pp_coastal_shipping_office_cap_modifier: "Coastal Shipping Capacity"'
+        in localization
+    )
 
 
 def test_logistics_infrastructure_buildings_are_tagged_for_modifier_evaluation() -> None:
@@ -216,6 +269,7 @@ def test_logistics_infrastructure_balance_targets_are_current() -> None:
         assert not any(localization_key.endswith("_price") for localization_key in localization_keys)
         assert not any("price_cost_modifier" in localization_key for localization_key in localization_keys)
         assert _field(body, "max_levels") == expected["max_levels"]
+        assert _field(body, "increase_per_level_cost") == expected["increase_per_level_cost"]
         assert _field(body, "pop_type") == expected["pop_type"]
         assert _field(body, "employment_size") == "1"
         assert "local_market_access" not in modifier_body

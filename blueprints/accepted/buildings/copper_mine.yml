@@ -26,6 +26,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
+    increase_per_level_cost = 0.33
     max_levels = rural_building_cap
     pop_type = laborers
     employment_size = 1

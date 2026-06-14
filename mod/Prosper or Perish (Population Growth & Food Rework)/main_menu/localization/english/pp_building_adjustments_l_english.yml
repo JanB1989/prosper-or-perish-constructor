@@ -47,6 +47,7 @@
   BUILDING_LEVEL_HAS_RIVER: " [river|e]"
   BUILDING_LEVEL_IS_ADJACENT_TO_LAKE: " [lake|e]"
   BUILDING_LEVEL_RIVER_FREIGHT_CAPACITY: "From River Size"
+  BUILDING_LEVEL_NATURAL_HARBOR_SUITABILITY: "From Natural Harbor Suitability"
   # Total Capacity Tooltip Labels (Used in pp_building_caps.txt)
   BUILDING_LEVEL_BASE: "#T Building Capacity Breakdown#!\nBase Capacity"
   BUILDING_LEVEL_DEVELOPMENT: "From Development"
@@ -158,6 +159,9 @@
   pp_river_boatmen_yard_cap_modifier: "River Freight Capacity"
   MODIFIER_TYPE_NAME_pp_river_boatmen_yard_cap_modifier: "River Freight Capacity"
   MODIFIER_TYPE_DESC_pp_river_boatmen_yard_cap_modifier: "Adds maximum River Boatmen's Yard levels from river size."
+  pp_coastal_shipping_office_cap_modifier: "Coastal Shipping Capacity"
+  MODIFIER_TYPE_NAME_pp_coastal_shipping_office_cap_modifier: "Coastal Shipping Capacity"
+  MODIFIER_TYPE_DESC_pp_coastal_shipping_office_cap_modifier: "Changes maximum Coastal Shipping Office levels from natural harbor suitability."
   # Rice advances (geography-based)
   # Maize advances (geography-based)
   # Potato advances (geography-based)

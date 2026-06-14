@@ -3,6 +3,7 @@ REPLACE:saltpeter_workshop = {
 audio_tier = 2
 startup_ramp_target = workshop_startup_ramp_target
 is_foreign = no
+increase_per_level_cost = 0.23
 pop_type = burghers
 max_levels = workshop_max_level
 category = basic_industry_category

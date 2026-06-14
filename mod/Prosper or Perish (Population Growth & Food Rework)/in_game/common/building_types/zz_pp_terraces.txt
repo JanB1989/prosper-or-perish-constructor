@@ -1,6 +1,7 @@
 ﻿# >>> eu5-building-pipeline:terraces:building
 TRY_INJECT:terraces = {
 	price = pp_terraces_price
+	increase_per_level_cost = 0.40
 	custom_tags = { pp_food_security_priority pp_water_control_priority }
 	raw_modifier = {
 		farm_capacity_from_terraces = 0.60

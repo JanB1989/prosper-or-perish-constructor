@@ -10,6 +10,7 @@ building:
   body: |2-
     is_foreign = no
     max_levels = 10
+    increase_per_level_cost = 0.30
     pop_type = peasants
     employment_size = 1
     category = infrastructure_category
@@ -43,8 +44,8 @@ production_methods:
   - key: pp_carrier_inn_maintenance
     body: |2-
       victuals = 0.40
-      horses = 0.35
-      livestock = 0.25
+      horses = 0.20
+      livestock = 0.20
       lumber = 0.20
       tools = 0.10
       category = building_maintenance

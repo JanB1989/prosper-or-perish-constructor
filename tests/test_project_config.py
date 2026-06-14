@@ -1476,8 +1476,8 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
     assert "is_province_capital = yes" not in granary_text
     for rank in ("rural_settlement", "town", "city", "megalopolis"):
         assert f"location_rank = location_rank:{rank}" in granary_text
-    assert not winery_blueprint.exists()
-    assert not winery_manufactory_blueprint.exists()
+    _assert_absent_or_cost_only_building_inject(winery_blueprint)
+    _assert_absent_or_cost_only_building_inject(winery_manufactory_blueprint)
     assert "NOT = { raw_material = goods:wine }" not in winery_text
     assert "NOT = { raw_material = goods:wine }" not in winery_manufactory_text
 
@@ -1497,6 +1497,24 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
             unsupported.append((location, building))
 
     assert unsupported == []
+
+
+def _assert_absent_or_cost_only_building_inject(path: Path) -> None:
+    if not path.exists():
+        return
+    raw = yaml.safe_load(path.read_text(encoding="utf-8-sig"))
+    building = raw["building"]
+    body = building["body"]
+
+    assert building["mode"] == "TRY_INJECT"
+    assert "location_potential" not in body
+    assert re.fullmatch(r"\s*increase_per_level_cost\s*=\s*0\.\d{2}\s*", body)
+
+
+def test_water_control_buildings_have_manual_increase_per_level_cost() -> None:
+    for building, _multiplier in FARM_WATER_CONTROL_BUILDINGS:
+        text = (BUILDING_BLUEPRINT_ROOT / f"{building}.yml").read_text(encoding="utf-8-sig")
+        assert re.search(r"^\s*increase_per_level_cost\s*=\s*0\.40\s*$", text, flags=re.M)
 
 
 def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:

@@ -1,0 +1,10 @@
+version: 2
+tag: tannery_manufactory
+building:
+  key: tannery_manufactory
+  mode: TRY_INJECT
+  source: pp_building_cost_scaling.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |2-
+    increase_per_level_cost = 0.24

@@ -1,6 +1,7 @@
 ﻿# >>> eu5-building-pipeline:water_sawmill:building
 water_sawmill = {
 is_foreign = no
+increase_per_level_cost = 0.35
 max_levels = forest_capacity_max_water_sawmill
 pop_type = laborers
 employment_size = 1

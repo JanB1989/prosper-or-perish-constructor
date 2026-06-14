@@ -9,7 +9,8 @@ building:
     - pp_coastal_shipping_office_maintenance
   body: |2-
     is_foreign = no
-    max_levels = 3
+    max_levels = pp_coastal_shipping_office_max_level
+    increase_per_level_cost = 0.20
     pop_type = laborers
     employment_size = 1
     category = infrastructure_category
@@ -43,12 +44,12 @@ building:
 production_methods:
   - key: pp_coastal_shipping_office_maintenance
     body: |2-
-      naval_supplies = 0.20
-      tar = 0.10
-      lumber = 0.20
+      naval_supplies = 0.15
+      tar = 0.075
+      lumber = 0.15
       tools = 0.10
       victuals = 0.20
-      paper = 0.05
+      paper = 0.0625
       category = building_maintenance
 localization:
   entries:

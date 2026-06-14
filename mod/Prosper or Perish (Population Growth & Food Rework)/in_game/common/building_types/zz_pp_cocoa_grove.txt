@@ -1,6 +1,7 @@
 ﻿# >>> eu5-building-pipeline:cocoa_grove:building
 cocoa_grove = {
 is_foreign = no
+increase_per_level_cost = 0.30
 max_levels = farm_capacity_max_cocoa_grove
 pop_type = laborers
 employment_size = 1

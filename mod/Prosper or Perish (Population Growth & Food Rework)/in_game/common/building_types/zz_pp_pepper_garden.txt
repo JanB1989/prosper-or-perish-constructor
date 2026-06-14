@@ -1,6 +1,7 @@
 ﻿# >>> eu5-building-pipeline:pepper_garden:building
 pepper_garden = {
 is_foreign = no
+increase_per_level_cost = 0.37
 max_levels = farm_capacity_max_pepper_garden
 pop_type = laborers
 employment_size = 1

@@ -1,6 +1,7 @@
 ﻿# >>> eu5-building-pipeline:inland_saltworks:building
 inland_saltworks = {
 is_foreign = no
+increase_per_level_cost = 0.28
 max_levels = rural_building_cap
 pop_type = laborers
 employment_size = 1

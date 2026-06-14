@@ -13,6 +13,7 @@ building:
       audio_tier = 1
       is_foreign = no
       max_levels = irrigant_cap
+      increase_per_level_cost = 0.40
       pop_type = peasants
       price = pp_irrigation_systems_price
       category = infrastructure_category

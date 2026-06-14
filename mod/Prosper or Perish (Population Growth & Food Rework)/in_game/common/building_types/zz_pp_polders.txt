@@ -6,6 +6,7 @@ REPLACE:polders = {
   is_special = yes
   is_foreign = no
   max_levels = polders_max_level
+  increase_per_level_cost = 0.40
   pop_type = laborers
   category = infrastructure_category
   employment_size = village_employment_size # 1000 laborers

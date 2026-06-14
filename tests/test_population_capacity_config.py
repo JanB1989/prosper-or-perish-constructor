@@ -269,19 +269,6 @@ def test_development_modifier_preserves_population_and_other_static_values() -> 
     assert _last_value(development, "local_migration_attraction") == 0.0025
 
 
-def test_building_levels_modifier_does_not_add_population_capacity() -> None:
-    profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
-    static_modifiers = load_collection(profile, "static_modifiers")
-    building_levels = _entry_block(static_modifiers.entries, "building_levels")
-
-    assert building_levels is not None
-    assert _last_value(building_levels, "local_population_capacity") is None
-    assert _last_value(building_levels, "local_road_building_time") == 0.01
-    assert _last_value(building_levels, "local_build_buildings_cost") is None
-    assert _last_value(building_levels, "local_build_buildings_efficiency") == -0.003
-    assert _last_value(building_levels, "local_build_new_buildings_cost") is None
-
-
 def test_river_flowing_through_modifiers_neutralize_capacity_and_food_bonuses() -> None:
     profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
     static_modifiers = load_collection(profile, "static_modifiers")

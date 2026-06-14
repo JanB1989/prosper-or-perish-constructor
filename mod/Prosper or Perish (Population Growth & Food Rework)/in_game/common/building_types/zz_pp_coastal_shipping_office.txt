@@ -1,7 +1,8 @@
 ﻿# >>> eu5-building-pipeline:coastal_shipping_office:building
 coastal_shipping_office = {
 is_foreign = no
-max_levels = 3
+max_levels = pp_coastal_shipping_office_max_level
+increase_per_level_cost = 0.20
 pop_type = laborers
 employment_size = 1
 category = infrastructure_category

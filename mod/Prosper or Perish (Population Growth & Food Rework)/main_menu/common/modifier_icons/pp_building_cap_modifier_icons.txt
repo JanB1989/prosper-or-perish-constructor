@@ -10,3 +10,7 @@ irrigant_cap_modifier = {
 pp_river_boatmen_yard_cap_modifier = {
 	positive = "gfx/interface/icons/buildings/river_boatmen_yard.dds"
 }
+pp_coastal_shipping_office_cap_modifier = {
+	positive = "gfx/interface/icons/buildings/coastal_shipping_office.dds"
+	negative = "gfx/interface/icons/buildings/coastal_shipping_office.dds"
+}

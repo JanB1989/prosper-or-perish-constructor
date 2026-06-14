@@ -1,6 +1,7 @@
 ﻿# >>> eu5-building-pipeline:tobacco_farm:building
 tobacco_farm = {
 is_foreign = no
+increase_per_level_cost = 0.26
 max_levels = farm_capacity_max_tobacco_farm
 pop_type = laborers
 employment_size = 1

@@ -17,6 +17,7 @@ building:
     audio_tier = 1
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
+    increase_per_level_cost = 0.23
     max_levels = farm_capacity_max_fiber_crops_farm
     pop_type = laborers
     employment_size = 1

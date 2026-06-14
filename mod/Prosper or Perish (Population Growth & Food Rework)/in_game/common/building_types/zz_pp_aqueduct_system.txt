@@ -1,6 +1,7 @@
 ﻿# >>> eu5-building-pipeline:aqueduct_system:building
 TRY_INJECT:aqueduct_system = {
 price = expand_aqueduct_system
+increase_per_level_cost = 0.40
 custom_tags = { pp_food_security_priority pp_water_control_priority }
 raw_modifier = {
   farm_capacity_from_aqueduct_system = 2

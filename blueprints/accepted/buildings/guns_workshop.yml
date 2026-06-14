@@ -1,0 +1,10 @@
+version: 2
+tag: guns_workshop
+building:
+  key: guns_workshop
+  mode: TRY_INJECT
+  source: pp_building_cost_scaling.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |2-
+    increase_per_level_cost = 0.33

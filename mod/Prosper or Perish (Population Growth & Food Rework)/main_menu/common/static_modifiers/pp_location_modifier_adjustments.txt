@@ -291,6 +291,15 @@ TRY_INJECT:market_center = {
 	maximum_stockpile_capacity = 250
 	free_building_levels = 30
 }
+
+TRY_INJECT:location_template_natural_harbor_suitability_poor = {
+	# Vanilla poor harbor suitability bottoms out at -0.25, so this scales to -5.
+	pp_coastal_shipping_office_cap_modifier = -20
+}
+TRY_INJECT:location_template_natural_harbor_suitability_good = {
+	pp_coastal_shipping_office_cap_modifier = 10
+}
+
 TRY_INJECT:river_flowing_through_1 = {
 	local_monthly_food_modifier = -0.05 # vanilla 0.05
 	local_population_capacity_modifier = -0.1
@@ -299,7 +308,7 @@ TRY_INJECT:river_flowing_through_1 = {
 	farm_capacity_from_river_size = 1
 	fish_capacity_from_river_size = 1
 	irrigant_cap_modifier = 1
-	pp_river_boatmen_yard_cap_modifier = 2
+	pp_river_boatmen_yard_cap_modifier = 3
 	free_building_levels = 10
 	local_build_buildings_efficiency = 0.1
 	local_construction_speed = 0.1
@@ -310,7 +319,7 @@ TRY_INJECT:river_flowing_through_2 = {
 	farm_capacity_from_river_size = 1
 	fish_capacity_from_river_size = 1
 	irrigant_cap_modifier = 2
-	pp_river_boatmen_yard_cap_modifier = 4
+	pp_river_boatmen_yard_cap_modifier = 6
 	free_building_levels = 15
 	local_build_buildings_efficiency = 0.15
 	local_construction_speed = 0.15
@@ -321,7 +330,7 @@ TRY_INJECT:river_flowing_through_3 = {
 	farm_capacity_from_river_size = 2
 	fish_capacity_from_river_size = 2
 	irrigant_cap_modifier = 3
-	pp_river_boatmen_yard_cap_modifier = 6
+	pp_river_boatmen_yard_cap_modifier = 9
 	free_building_levels = 20
 	local_build_buildings_efficiency = 0.2
 	local_construction_speed = 0.2
@@ -332,7 +341,7 @@ TRY_INJECT:river_flowing_through_4 = {
 	farm_capacity_from_river_size = 3
 	fish_capacity_from_river_size = 3
 	irrigant_cap_modifier = 4
-	pp_river_boatmen_yard_cap_modifier = 8
+	pp_river_boatmen_yard_cap_modifier = 12
 	free_building_levels = 25
 	local_build_buildings_efficiency = 0.25
 	local_construction_speed = 0.25
@@ -343,7 +352,7 @@ TRY_INJECT:river_flowing_through_5 = {
 	farm_capacity_from_river_size = 4
 	fish_capacity_from_river_size = 4
 	irrigant_cap_modifier = 5
-	pp_river_boatmen_yard_cap_modifier = 10
+	pp_river_boatmen_yard_cap_modifier = 15
 	free_building_levels = 30
 	local_build_buildings_efficiency = 0.3
 	local_construction_speed = 0.3

@@ -528,6 +528,7 @@ dependencies = [
     { name = "ipykernel" },
     { name = "matplotlib" },
     { name = "polars" },
+    { name = "psutil" },
     { name = "seaborn" },
     { name = "typer" },
 ]
@@ -538,6 +539,7 @@ requires-dist = [
     { name = "ipykernel", specifier = ">=7.2.0" },
     { name = "matplotlib", specifier = ">=3.10.8" },
     { name = "polars", specifier = ">=1.36.1" },
+    { name = "psutil", specifier = ">=7.1.0" },
     { name = "seaborn", specifier = ">=0.13.2" },
     { name = "typer", specifier = ">=0.20.0" },
 ]
@@ -545,7 +547,6 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "jupyterlab", specifier = ">=4.5.0" },
-    { name = "psutil", specifier = ">=7.1.0" },
     { name = "pytest", specifier = ">=9.0.0" },
     { name = "ruff", specifier = ">=0.14.0" },
 ]

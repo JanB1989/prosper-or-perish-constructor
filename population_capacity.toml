@@ -4,8 +4,8 @@ managed_write_mode = "mod_root"
 
 [capacity_scale]
 # Generated per-location local_population_capacity values are scaled into this band.
-min = 3
-max = 70
+min = 6
+max = 100
 
 [calibration]
 historical_population_policy = "saturation_anchors_only"

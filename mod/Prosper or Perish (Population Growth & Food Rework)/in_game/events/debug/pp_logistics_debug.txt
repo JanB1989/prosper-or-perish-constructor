@@ -1,0 +1,200 @@
+﻿namespace = pp_logistics_debug
+
+pp_logistics_debug.1 = {
+	type = location_event
+	title = pp_logistics_debug.1.title
+	desc = {
+		first_valid = {
+			triggered_desc = { trigger = { has_variable = pp_logistics_debug_built_river } desc = pp_logistics_debug.1.desc_built_river }
+			triggered_desc = { trigger = { has_variable = pp_logistics_debug_built_coastal } desc = pp_logistics_debug.1.desc_built_coastal }
+			triggered_desc = { trigger = { has_variable = pp_logistics_debug_built_transport } desc = pp_logistics_debug.1.desc_built_transport }
+			triggered_desc = { trigger = { has_variable = pp_logistics_debug_built_carrier } desc = pp_logistics_debug.1.desc_built_carrier }
+			triggered_desc = { trigger = { has_variable = pp_logistics_debug_no_owner } desc = pp_logistics_debug.1.desc_no_owner }
+			triggered_desc = { trigger = { has_variable = pp_logistics_debug_no_unsupported } desc = pp_logistics_debug.1.desc_no_unsupported }
+			triggered_desc = { trigger = { has_variable = pp_logistics_debug_no_candidate } desc = pp_logistics_debug.1.desc_no_candidate }
+			desc = pp_debug.r_no_data
+		}
+	}
+	outcome = neutral
+	orphan = yes
+
+	immediate = {
+		remove_variable = pp_logistics_debug_built_river
+		remove_variable = pp_logistics_debug_built_coastal
+		remove_variable = pp_logistics_debug_built_transport
+		remove_variable = pp_logistics_debug_built_carrier
+		remove_variable = pp_logistics_debug_no_owner
+		remove_variable = pp_logistics_debug_no_unsupported
+		remove_variable = pp_logistics_debug_no_candidate
+		remove_variable = pp_logistics_debug_unsupported_levels
+		remove_variable = pp_logistics_debug_river_can
+		remove_variable = pp_logistics_debug_river_slot
+		remove_variable = pp_logistics_debug_coastal_can
+		remove_variable = pp_logistics_debug_coastal_slot
+		remove_variable = pp_logistics_debug_transport_can
+		remove_variable = pp_logistics_debug_transport_slot
+		remove_variable = pp_logistics_debug_carrier_can
+		remove_variable = pp_logistics_debug_carrier_slot
+
+		set_variable = { name = pp_logistics_debug_unsupported_levels value = pp_unsupported_building_levels_map_value }
+		set_variable = { name = pp_logistics_debug_river_can value = 0 }
+		set_variable = { name = pp_logistics_debug_river_slot value = 0 }
+		set_variable = { name = pp_logistics_debug_coastal_can value = 0 }
+		set_variable = { name = pp_logistics_debug_coastal_slot value = 0 }
+		set_variable = { name = pp_logistics_debug_transport_can value = 0 }
+		set_variable = { name = pp_logistics_debug_transport_slot value = 0 }
+		set_variable = { name = pp_logistics_debug_carrier_can value = 0 }
+		set_variable = { name = pp_logistics_debug_carrier_slot value = 0 }
+
+		if = {
+			limit = { can_build_building = building_type:river_boatmen_yard }
+			set_variable = { name = pp_logistics_debug_river_can value = 1 }
+		}
+		if = {
+			limit = {
+				location_building_level = {
+					building_type = building_type:river_boatmen_yard
+					value < pp_river_boatmen_yard_max_level
+				}
+			}
+			set_variable = { name = pp_logistics_debug_river_slot value = 1 }
+		}
+		if = {
+			limit = { can_build_building = building_type:coastal_shipping_office }
+			set_variable = { name = pp_logistics_debug_coastal_can value = 1 }
+		}
+		if = {
+			limit = {
+				location_building_level = {
+					building_type = building_type:coastal_shipping_office
+					value < pp_coastal_shipping_office_max_level
+				}
+			}
+			set_variable = { name = pp_logistics_debug_coastal_slot value = 1 }
+		}
+		if = {
+			limit = { can_build_building = building_type:transport_office }
+			set_variable = { name = pp_logistics_debug_transport_can value = 1 }
+		}
+		if = {
+			limit = {
+				location_building_level = {
+					building_type = building_type:transport_office
+					value < 100
+				}
+			}
+			set_variable = { name = pp_logistics_debug_transport_slot value = 1 }
+		}
+		if = {
+			limit = { can_build_building = building_type:carrier_inn }
+			set_variable = { name = pp_logistics_debug_carrier_can value = 1 }
+		}
+		if = {
+			limit = {
+				location_building_level = {
+					building_type = building_type:carrier_inn
+					value < 10
+				}
+			}
+			set_variable = { name = pp_logistics_debug_carrier_slot value = 1 }
+		}
+
+		if = {
+			limit = {
+				NOT = { has_owner = yes }
+			}
+			set_variable = pp_logistics_debug_no_owner
+			debug_log = pp_logistics_debug_no_owner
+			debug_log_scopes = no
+		}
+		else_if = {
+			limit = {
+				pp_unsupported_building_levels_map_value < 1
+			}
+			set_variable = pp_logistics_debug_no_unsupported
+			debug_log = pp_logistics_debug_no_unsupported
+			debug_log_scopes = no
+		}
+		else_if = {
+			limit = {
+				can_build_building = building_type:river_boatmen_yard
+				location_building_level = {
+					building_type = building_type:river_boatmen_yard
+					value < pp_river_boatmen_yard_max_level
+				}
+			}
+			construct_building = {
+				building_type = building_type:river_boatmen_yard
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "pp_logistics_debug"
+			}
+			set_variable = pp_logistics_debug_built_river
+			debug_log = pp_logistics_debug_built_river_boatmen_yard
+			debug_log_scopes = no
+		}
+		else_if = {
+			limit = {
+				can_build_building = building_type:coastal_shipping_office
+				location_building_level = {
+					building_type = building_type:coastal_shipping_office
+					value < pp_coastal_shipping_office_max_level
+				}
+			}
+			construct_building = {
+				building_type = building_type:coastal_shipping_office
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "pp_logistics_debug"
+			}
+			set_variable = pp_logistics_debug_built_coastal
+			debug_log = pp_logistics_debug_built_coastal_shipping_office
+			debug_log_scopes = no
+		}
+		else_if = {
+			limit = {
+				can_build_building = building_type:transport_office
+				location_building_level = {
+					building_type = building_type:transport_office
+					value < 100
+				}
+			}
+			construct_building = {
+				building_type = building_type:transport_office
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "pp_logistics_debug"
+			}
+			set_variable = pp_logistics_debug_built_transport
+			debug_log = pp_logistics_debug_built_transport_office
+			debug_log_scopes = no
+		}
+		else_if = {
+			limit = {
+				can_build_building = building_type:carrier_inn
+				location_building_level = {
+					building_type = building_type:carrier_inn
+					value < 10
+				}
+			}
+			construct_building = {
+				building_type = building_type:carrier_inn
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "pp_logistics_debug"
+			}
+			set_variable = pp_logistics_debug_built_carrier
+			debug_log = pp_logistics_debug_built_carrier_inn
+			debug_log_scopes = no
+		}
+		else = {
+			set_variable = pp_logistics_debug_no_candidate
+			debug_log = pp_logistics_debug_no_candidate
+			debug_log_scopes = no
+		}
+	}
+
+	option = {
+		name = pp_logistics_debug.1.a
+	}
+}

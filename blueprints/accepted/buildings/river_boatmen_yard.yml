@@ -14,17 +14,17 @@ building:
     pop_type = laborers
     employment_size = 1
     category = infrastructure_category
-    custom_tags = { pp_logistics_infrastructure_priority pp_logistics }
+    custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_river_logistics_priority }
     icon = river_boatmen_yard
     rural_settlement = yes
     town = yes
     city = yes
     megalopolis = yes
     can_close = yes
-    forbidden_for_estates = no
+    forbidden_for_estates = yes
     AI_ignore_available_worker_flag = yes
     important_for_AI = no
-    ai_forbid_shutdown = no
+    ai_forbid_shutdown = yes
     build_time = infrastructure_build_time
 
     location_potential = {

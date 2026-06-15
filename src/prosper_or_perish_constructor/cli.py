@@ -485,13 +485,17 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Only rebuild notebook parquet from an existing graphs/dataset.",
     )
+    savegame_notebooks_build.set_defaults(extended=False)
+    savegame_notebooks_build.add_argument(
+        "--extended",
+        action="store_true",
+        help="Include full slower legacy tables such as population, provinces, and characters.",
+    )
     savegame_notebooks_build.add_argument(
         "--no-extended",
-        action="store_true",
-        help=(
-            "Skip slower extended country/economy tables. By default notebook "
-            "datasets include country gold for stored-money charts."
-        ),
+        action="store_false",
+        dest="extended",
+        help=argparse.SUPPRESS,
     )
     savegame_notebooks_build.add_argument(
         "--force",
@@ -725,17 +729,20 @@ def _run_collecting_output(
 ) -> tuple[int, str]:
     printable = " ".join(str(part) for part in command)
     print(f"$ {printable}", flush=True)
-    completed = subprocess.run(
+    process = subprocess.Popen(
         [str(part) for part in command],
         cwd=repo,
-        check=False,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
+        bufsize=1,
     )
-    if completed.stdout:
-        print(completed.stdout, end="" if completed.stdout.endswith("\n") else "\n", flush=True)
-    return completed.returncode, completed.stdout or ""
+    output: list[str] = []
+    if process.stdout is not None:
+        for line in process.stdout:
+            output.append(line)
+            print(line, end="", flush=True)
+    return process.wait(), "".join(output)
 
 
 def _orchestrator(action: str):
@@ -2328,7 +2335,7 @@ def _savegame_notebooks_build(
                 _repo_path(repo, args.load_order),
                 "--workers",
                 str(args.workers),
-                *([] if args.no_extended else ["--extended"]),
+                *(["--extended"] if args.extended else []),
             ],
             repo,
         )

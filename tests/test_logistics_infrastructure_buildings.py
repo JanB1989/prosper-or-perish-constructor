@@ -97,11 +97,22 @@ FOUR_YEARLY_COUNTRY_PULSE = (
 BUILDING_CULLING_ACTIONS = (
     MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt"
 )
+LOGISTICS_DEBUG_EVENT = MOD_ROOT / "in_game" / "events" / "debug" / "pp_logistics_debug.txt"
+DEBUG_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_debug_l_english.yml"
+EMPLOYMENT_PRIORITIES = (
+    MOD_ROOT / "in_game" / "common" / "employment_systems" / "pp_food_security_priorities.txt"
+)
+LOGISTICS_PRIORITY_GROUPS = (
+    ("river_boatmen_yard", "pp_river_logistics_priority", 80),
+    ("coastal_shipping_office", "pp_coastal_logistics_priority", 70),
+    ("transport_office", "pp_city_logistics_priority", 60),
+    ("carrier_inn", "pp_rural_logistics_priority", 50),
+)
 LOGISTICS_AI_BUILD_ORDER = (
-    "coastal_shipping_office",
     "river_boatmen_yard",
-    "carrier_inn",
+    "coastal_shipping_office",
     "transport_office",
+    "carrier_inn",
 )
 
 
@@ -248,10 +259,16 @@ def test_coastal_shipping_office_cap_scales_with_natural_harbor() -> None:
 
 
 def test_logistics_infrastructure_buildings_are_tagged_for_modifier_evaluation() -> None:
+    priority_tags = {building: tag for building, tag, _priority in LOGISTICS_PRIORITY_GROUPS}
     for blueprint in LOGISTICS_BLUEPRINTS:
         text = blueprint.read_text(encoding="utf-8")
+        building = yaml.safe_load(text)["building"]["key"]
         assert "category = infrastructure_category" in text
-        assert _custom_tags(text) == {"pp_logistics_infrastructure_priority", "pp_logistics"}
+        assert _custom_tags(text) == {
+            "pp_logistics_infrastructure_priority",
+            "pp_logistics",
+            priority_tags[building],
+        }
 
 
 def test_logistics_infrastructure_balance_targets_are_current() -> None:
@@ -272,9 +289,29 @@ def test_logistics_infrastructure_balance_targets_are_current() -> None:
         assert _field(body, "increase_per_level_cost") == expected["increase_per_level_cost"]
         assert _field(body, "pop_type") == expected["pop_type"]
         assert _field(body, "employment_size") == "1"
+        assert _field(body, "forbidden_for_estates") == "yes"
+        assert _field(body, "ai_forbid_shutdown") == "yes"
         assert "local_market_access" not in modifier_body
         assert _field(modifier_body, "free_building_levels") == "10"
         assert _goods_total(method_body) == pytest.approx(expected["upkeep"])
+
+
+def test_logistics_infrastructure_building_priorities_are_below_food_priorities() -> None:
+    priority_text = EMPLOYMENT_PRIORITIES.read_text(encoding="utf-8-sig")
+
+    assert priority_text.count("limit = { has_tag = pp_logistics }") == 6
+    assert max(priority for _building, _tag, priority in LOGISTICS_PRIORITY_GROUPS) < 90
+    assert [building for building, _tag, _priority in LOGISTICS_PRIORITY_GROUPS] == list(
+        LOGISTICS_AI_BUILD_ORDER
+    )
+
+    for building, tag, priority in LOGISTICS_PRIORITY_GROUPS:
+        text = (ROOT / "blueprints" / "accepted" / "buildings" / f"{building}.yml").read_text(
+            encoding="utf-8"
+        )
+        assert tag in _custom_tags(text)
+        pattern = re.compile(rf"has_tag\s*=\s*{re.escape(tag)}[\s\S]*?add\s*=\s*{priority}")
+        assert pattern.search(priority_text), tag
 
 
 def test_road_maintenance_buildings_keep_separate_logistics_tag() -> None:
@@ -343,6 +380,16 @@ def test_ai_logistics_unsupported_levels_action_keeps_required_guards() -> None:
     for building in LOGISTICS_AI_BUILD_ORDER:
         assert f"can_build_building = building_type:{building}" in block
         assert f"value = building_type:{building}.building_base_cost_in_gold" in block
+        max_levels = LOGISTICS_BALANCE_TARGETS[building]["max_levels"]
+        level_guard = re.compile(
+            rf"can_build_building\s*=\s*building_type:{re.escape(building)}\s+"
+            rf"location_building_level\s*=\s*\{{\s*"
+            rf"building_type\s*=\s*building_type:{re.escape(building)}\s+"
+            rf"value\s*<\s*{re.escape(max_levels)}\s*"
+            r"\}",
+            flags=re.S,
+        )
+        assert len(level_guard.findall(block)) == 8
 
     assert block.count("gold >= {") >= len(LOGISTICS_AI_BUILD_ORDER)
 
@@ -402,6 +449,36 @@ def test_ai_logistics_unsupported_levels_build_priority_is_exact() -> None:
             flags=re.S,
         )
         assert ordered_buildings == list(LOGISTICS_AI_BUILD_ORDER)
+
+
+def test_logistics_debug_event_runs_manual_location_priority() -> None:
+    text = LOGISTICS_DEBUG_EVENT.read_text(encoding="utf-8-sig")
+    block = _named_block(text, "pp_logistics_debug.1")
+
+    assert "type = location_event" in block
+    assert "orphan = yes" in block
+    assert "pp_unsupported_building_levels_map_value < 1" in block
+    assert "instant = yes" in block
+    assert "cost_multiplier = 0" in block
+
+    ordered_buildings = re.findall(
+        r"construct_building\s*=\s*\{\s*building_type\s*=\s*building_type:([a-z_]+)",
+        block,
+        flags=re.S,
+    )
+    assert ordered_buildings == list(LOGISTICS_AI_BUILD_ORDER)
+
+    for building in LOGISTICS_AI_BUILD_ORDER:
+        max_levels = LOGISTICS_BALANCE_TARGETS[building]["max_levels"]
+        assert f"can_build_building = building_type:{building}" in block
+        assert f"building_type = building_type:{building}" in block
+        assert f"value < {max_levels}" in block
+
+    localization = DEBUG_LOCALIZATION.read_text(encoding="utf-8-sig")
+    assert "pp_logistics_debug.1.title" in localization
+    assert "pp_logistics_debug.1.desc_no_candidate" in localization
+    assert "pp_logistics_debug_river_can" in localization
+    assert "pp_logistics_debug_coastal_slot" in localization
 
 
 def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> None:

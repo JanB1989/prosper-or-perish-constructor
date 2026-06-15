@@ -6,14 +6,14 @@ increase_per_level_cost = 0.30
 pop_type = peasants
 employment_size = 1
 category = infrastructure_category
-custom_tags = { pp_logistics_infrastructure_priority pp_logistics }
+custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_rural_logistics_priority }
 icon = carrier_inn
 rural_settlement = yes
 town = yes
 can_close = yes
 forbidden_for_estates = yes
 important_for_AI = no
-ai_forbid_shutdown = no
+ai_forbid_shutdown = yes
 build_time = infrastructure_build_time
 
 location_potential = {

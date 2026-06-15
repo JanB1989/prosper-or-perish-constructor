@@ -1139,9 +1139,44 @@ def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
             str(repo / "constructor.load_order.toml"),
             "--workers",
             "4",
-            "--extended",
         ]
     ]
+
+
+def test_savegame_notebooks_build_passes_extended_only_when_requested(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    save_dir = repo / "saves"
+    save_dir.mkdir()
+    (save_dir / "autosave.eu5").write_text("SAV\nmetadata={}", encoding="utf-8")
+    calls: list[list[str]] = []
+
+    def fake_run_collecting_output(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        _write_savegame_manifest(repo, save_dir / "autosave.eu5")
+        return 0, "processed: 0\nskipped: 1\n"
+
+    monkeypatch.setattr(cli, "_run_collecting_output", fake_run_collecting_output)
+
+    assert (
+        cli.main(
+            [
+                "--repo",
+                str(repo),
+                "savegame-notebooks",
+                "build",
+                "--save-dir",
+                str(save_dir),
+                "--extended",
+            ]
+        )
+        == 0
+    )
+
+    assert calls
+    assert calls[0][-1] == "--extended"
 
 
 def test_savegame_notebooks_build_no_ingest_reports_existing_raw_dataset(

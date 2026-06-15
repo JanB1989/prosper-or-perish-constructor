@@ -6,7 +6,7 @@ increase_per_level_cost = 0.20
 pop_type = laborers
 employment_size = 1
 category = infrastructure_category
-custom_tags = { pp_logistics_infrastructure_priority pp_logistics }
+custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_coastal_logistics_priority }
 icon = coastal_shipping_office
 town = yes
 city = yes
@@ -14,7 +14,7 @@ megalopolis = yes
 can_close = yes
 forbidden_for_estates = yes
 important_for_AI = no
-ai_forbid_shutdown = no
+ai_forbid_shutdown = yes
 build_time = infrastructure_build_time
 
 location_potential = {

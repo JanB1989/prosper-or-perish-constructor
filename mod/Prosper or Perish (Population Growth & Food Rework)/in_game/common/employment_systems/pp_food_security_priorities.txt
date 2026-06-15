@@ -34,6 +34,30 @@
 				add = 90
 			}
 		}
+		if = {
+			limit = { has_tag = pp_logistics }
+
+			# Logistics support sits below all food-security priorities; river freight is the strongest support option.
+			if = {
+				limit = { has_tag = pp_river_logistics_priority }
+				add = 80
+			}
+			# Coastal logistics support follows river freight.
+			else_if = {
+				limit = { has_tag = pp_coastal_logistics_priority }
+				add = 70
+			}
+			# Urban transport offices support dense city logistics.
+			else_if = {
+				limit = { has_tag = pp_city_logistics_priority }
+				add = 60
+			}
+			# Rural carrier inns support logistics after denser freight options.
+			else_if = {
+				limit = { has_tag = pp_rural_logistics_priority }
+				add = 50
+			}
+		}
 	}
 
 	ai_will_do = {
@@ -86,6 +110,30 @@ TRY_REPLACE:first_come_first_serve = {
 				add = 90
 			}
 		}
+		if = {
+			limit = { has_tag = pp_logistics }
+
+			# Logistics support sits below all food-security priorities; river freight is the strongest support option.
+			if = {
+				limit = { has_tag = pp_river_logistics_priority }
+				add = 80
+			}
+			# Coastal logistics support follows river freight.
+			else_if = {
+				limit = { has_tag = pp_coastal_logistics_priority }
+				add = 70
+			}
+			# Urban transport offices support dense city logistics.
+			else_if = {
+				limit = { has_tag = pp_city_logistics_priority }
+				add = 60
+			}
+			# Rural carrier inns support logistics after denser freight options.
+			else_if = {
+				limit = { has_tag = pp_rural_logistics_priority }
+				add = 50
+			}
+		}
 	}
 
 	ai_will_do = {
@@ -135,6 +183,30 @@ TRY_REPLACE:capitalism = {
 			else_if = {
 				limit = { has_tag = pp_staple_food_priority }
 				add = 90
+			}
+		}
+		if = {
+			limit = { has_tag = pp_logistics }
+
+			# Logistics support sits below all food-security priorities; river freight is the strongest support option.
+			if = {
+				limit = { has_tag = pp_river_logistics_priority }
+				add = 80
+			}
+			# Coastal logistics support follows river freight.
+			else_if = {
+				limit = { has_tag = pp_coastal_logistics_priority }
+				add = 70
+			}
+			# Urban transport offices support dense city logistics.
+			else_if = {
+				limit = { has_tag = pp_city_logistics_priority }
+				add = 60
+			}
+			# Rural carrier inns support logistics after denser freight options.
+			else_if = {
+				limit = { has_tag = pp_rural_logistics_priority }
+				add = 50
 			}
 		}
 	}
@@ -197,6 +269,30 @@ TRY_REPLACE:capitalism_prioritising_infrastructure = {
 			else_if = {
 				limit = { has_tag = pp_staple_food_priority }
 				add = 90
+			}
+		}
+		if = {
+			limit = { has_tag = pp_logistics }
+
+			# Logistics support sits below all food-security priorities; river freight is the strongest support option.
+			if = {
+				limit = { has_tag = pp_river_logistics_priority }
+				add = 80
+			}
+			# Coastal logistics support follows river freight.
+			else_if = {
+				limit = { has_tag = pp_coastal_logistics_priority }
+				add = 70
+			}
+			# Urban transport offices support dense city logistics.
+			else_if = {
+				limit = { has_tag = pp_city_logistics_priority }
+				add = 60
+			}
+			# Rural carrier inns support logistics after denser freight options.
+			else_if = {
+				limit = { has_tag = pp_rural_logistics_priority }
+				add = 50
 			}
 		}
 	}
@@ -273,6 +369,30 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade = {
 			else_if = {
 				limit = { has_tag = pp_staple_food_priority }
 				add = 90
+			}
+		}
+		if = {
+			limit = { has_tag = pp_logistics }
+
+			# Logistics support sits below all food-security priorities; river freight is the strongest support option.
+			if = {
+				limit = { has_tag = pp_river_logistics_priority }
+				add = 80
+			}
+			# Coastal logistics support follows river freight.
+			else_if = {
+				limit = { has_tag = pp_coastal_logistics_priority }
+				add = 70
+			}
+			# Urban transport offices support dense city logistics.
+			else_if = {
+				limit = { has_tag = pp_city_logistics_priority }
+				add = 60
+			}
+			# Rural carrier inns support logistics after denser freight options.
+			else_if = {
+				limit = { has_tag = pp_rural_logistics_priority }
+				add = 50
 			}
 		}
 	}
@@ -357,6 +477,30 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade_and_culture = {
 			else_if = {
 				limit = { has_tag = pp_staple_food_priority }
 				add = 90
+			}
+		}
+		if = {
+			limit = { has_tag = pp_logistics }
+
+			# Logistics support sits below all food-security priorities; river freight is the strongest support option.
+			if = {
+				limit = { has_tag = pp_river_logistics_priority }
+				add = 80
+			}
+			# Coastal logistics support follows river freight.
+			else_if = {
+				limit = { has_tag = pp_coastal_logistics_priority }
+				add = 70
+			}
+			# Urban transport offices support dense city logistics.
+			else_if = {
+				limit = { has_tag = pp_city_logistics_priority }
+				add = 60
+			}
+			# Rural carrier inns support logistics after denser freight options.
+			else_if = {
+				limit = { has_tag = pp_rural_logistics_priority }
+				add = 50
 			}
 		}
 	}

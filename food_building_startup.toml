@@ -32,7 +32,7 @@ building = "cookery"
 mode = "production_methods"
 good = "victuals"
 production_methods = ["pp_cookery_livestock_pottage"]
-estimated_production_efficiency = 0.6
+estimated_production_efficiency = 0.8
 multiplier = 1.0
 
 [[production_sources]]
@@ -43,7 +43,7 @@ building = "victuals_market"
 
 [production_sources.output]
 mode = "fixed_food"
-fixed_food_per_level = 60.0
+fixed_food_per_level = 50.0
 multiplier = 1.0
 
 [[buildings]]

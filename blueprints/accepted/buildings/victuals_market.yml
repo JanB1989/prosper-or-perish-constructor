@@ -11,7 +11,7 @@ building:
     	is_foreign = no
     	max_levels = victuals_market_max_level
     	pop_type = laborers
-    	employment_size = 0.25
+    	employment_size = 0.15
     	price = pp_victuals_market_price
     	category = infrastructure_category
     	custom_tags = { pp_food_security_priority pp_food_distribution_priority }
@@ -21,9 +21,9 @@ building:
     	city = yes
     	megalopolis = yes
     	ai_forbid_shutdown = no
-    	important_for_AI = no
+    	important_for_AI = yes
     	can_close = yes
-    	forbidden_for_estates = yes
+    	forbidden_for_estates = no
     	AI_ignore_available_worker_flag = yes
     	build_time = 180
     	construction_demand = victuals_market_construction
@@ -35,7 +35,7 @@ building:
     	}
 
       modifier = {
-        local_monthly_food = 60
+        local_monthly_food = 80
         local_crown_estate_power = 0.025
       }
 production_methods:
@@ -46,7 +46,7 @@ production_methods:
 prices:
   - key: pp_victuals_market_price
     body: |2-
-      {gold = 100}
+      {gold = 25}
 localization:
   entries:
     victuals_market: Victuals Market

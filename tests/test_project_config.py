@@ -2148,6 +2148,18 @@ def test_legacy_capacity_culling_is_removed() -> None:
     assert "value > fruit_orchard_max_level" not in text
 
 
+def test_yearly_closed_building_culling_removes_one_level_not_whole_stack() -> None:
+    text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
+    action_text = text.split("pp_ai_victuals_market_on_food_crisis", maxsplit=1)[0]
+
+    assert "pp_yearly_cull_one_closed_building" in action_text
+    assert "random_buildings_in_location" in action_text
+    assert "is_opened = no" in action_text
+    assert "building_can_be_destroyed_by = root" in action_text
+    assert "change_building_level = -1" in action_text
+    assert "destroy_building = prev" not in action_text
+
+
 def test_ai_victuals_market_crisis_scans_owned_capitals_not_all_provinces() -> None:
     text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
     entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}

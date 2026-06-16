@@ -97,6 +97,13 @@ FOUR_YEARLY_COUNTRY_PULSE = (
 BUILDING_CULLING_ACTIONS = (
     MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt"
 )
+LOGISTICS_SCRIPTED_EFFECTS = (
+    MOD_ROOT
+    / "in_game"
+    / "common"
+    / "scripted_effects"
+    / "pp_ai_logistics_building_effects.txt"
+)
 LOGISTICS_DEBUG_EVENT = MOD_ROOT / "in_game" / "events" / "debug" / "pp_logistics_debug.txt"
 DEBUG_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_debug_l_english.yml"
 EMPLOYMENT_PRIORITIES = (
@@ -166,6 +173,20 @@ def _logistics_severity_blocks(block: str) -> list[tuple[str, str]]:
         assert end != -1
         sections.append((match.group(1), block[match.start() : end]))
     return sections
+
+
+def _ai_logistics_builder_block() -> str:
+    return _named_block(
+        LOGISTICS_SCRIPTED_EFFECTS.read_text(encoding="utf-8-sig"),
+        "pp_ai_logistics_build_unsupported_infrastructure",
+    )
+
+
+def _ai_logistics_record_block() -> str:
+    return _named_block(
+        LOGISTICS_SCRIPTED_EFFECTS.read_text(encoding="utf-8-sig"),
+        "pp_ai_logistics_record_infrastructure_build",
+    )
 
 
 def _goods_total(body: str) -> float:
@@ -357,15 +378,18 @@ def test_logistics_infrastructure_buildings_emit_modifier_ratio_metrics() -> Non
 
 def test_ai_logistics_unsupported_levels_action_runs_on_four_year_pulse() -> None:
     pulse = FOUR_YEARLY_COUNTRY_PULSE.read_text(encoding="utf-8-sig")
-
-    assert "pp_ai_logistics_on_unsupported_building_levels" in pulse
-
-
-def test_ai_logistics_unsupported_levels_action_keeps_required_guards() -> None:
-    block = _named_block(
+    action = _named_block(
         BUILDING_CULLING_ACTIONS.read_text(encoding="utf-8-sig"),
         "pp_ai_logistics_on_unsupported_building_levels",
     )
+
+    assert "pp_ai_logistics_on_unsupported_building_levels" in pulse
+    assert "pp_ai_logistics_build_unsupported_infrastructure = yes" in action
+    assert "every_area_with_owned_province = {" not in action
+
+
+def test_ai_logistics_unsupported_levels_action_keeps_required_guards() -> None:
+    block = _ai_logistics_builder_block()
 
     assert "is_ai = yes" in block
     assert "monthly_balance > 0" in block
@@ -376,13 +400,18 @@ def test_ai_logistics_unsupported_levels_action_keeps_required_guards() -> None:
     assert "check_range_bounds = no" in block
     assert "instant = yes" not in block
     assert "cost_multiplier = 0" not in block
+    assert block.count("construct_building = {") == 16
+    assert block.count("change_building_level_in_location = {") == 16
+    assert block.count("add_gold = {") == 16
 
     for building in LOGISTICS_AI_BUILD_ORDER:
-        assert f"can_build_building = building_type:{building}" in block
+        assert block.count(f"can_build_building = building_type:{building}") == 8
+        assert block.count(f"NOT = {{ has_building_with_at_least_one_level = {building} }}") == 8
+        assert f"has_building_with_at_least_one_level = {building}" in block
         assert f"value = building_type:{building}.building_base_cost_in_gold" in block
         max_levels = LOGISTICS_BALANCE_TARGETS[building]["max_levels"]
         level_guard = re.compile(
-            rf"can_build_building\s*=\s*building_type:{re.escape(building)}\s+"
+            rf"has_building_with_at_least_one_level\s*=\s*{re.escape(building)}\s+"
             rf"location_building_level\s*=\s*\{{\s*"
             rf"building_type\s*=\s*building_type:{re.escape(building)}\s+"
             rf"value\s*<\s*{re.escape(max_levels)}\s*"
@@ -395,10 +424,8 @@ def test_ai_logistics_unsupported_levels_action_keeps_required_guards() -> None:
 
 
 def test_ai_logistics_unsupported_levels_uses_area_tracking_and_budget() -> None:
-    block = _named_block(
-        BUILDING_CULLING_ACTIONS.read_text(encoding="utf-8-sig"),
-        "pp_ai_logistics_on_unsupported_building_levels",
-    )
+    block = _ai_logistics_builder_block()
+    record_block = _ai_logistics_record_block()
 
     assert "clear_variable_list = pp_ai_logistics_handled_areas" in block
     assert "is_target_in_variable_list = {" in block
@@ -407,27 +434,22 @@ def test_ai_logistics_unsupported_levels_uses_area_tracking_and_budget() -> None
     assert "scope:pp_ai_logistics_country = {" in block
     assert (
         "add_to_variable_list = { name = pp_ai_logistics_handled_areas target = scope:pp_ai_logistics_current_area }"
-        in block
+        in record_block
     )
     assert "set_variable = { name = pp_ai_logistics_build_count value = 0 }" in block
     assert "set_variable = { name = pp_ai_logistics_budget value = gold }" in block
     assert "change_variable = { name = pp_ai_logistics_budget multiply = 0.25 }" in block
     assert "max = { value = monthly_balance multiply = 24 }" in block
     assert block.count("var:pp_ai_logistics_build_count < 20") == 4
-    assert "change_variable = { name = pp_ai_logistics_build_count add = 1 }" in block
-
-    for building in LOGISTICS_AI_BUILD_ORDER:
-        assert (
-            f"change_variable = {{ name = pp_ai_logistics_budget subtract = {{ value = building_type:{building}.building_base_cost_in_gold }} }}"
-            in block
-        )
+    assert "change_variable = { name = pp_ai_logistics_build_count add = 1 }" in record_block
+    assert (
+        "change_variable = { name = pp_ai_logistics_budget subtract = { value = building_type:$building$.building_base_cost_in_gold } }"
+        in record_block
+    )
 
 
 def test_ai_logistics_unsupported_levels_severity_passes_are_exact() -> None:
-    block = _named_block(
-        BUILDING_CULLING_ACTIONS.read_text(encoding="utf-8-sig"),
-        "pp_ai_logistics_on_unsupported_building_levels",
-    )
+    block = _ai_logistics_builder_block()
 
     severity_blocks = _logistics_severity_blocks(block)
     assert [threshold for threshold, _ in severity_blocks] == ["30", "15", "5", "1"]
@@ -437,48 +459,45 @@ def test_ai_logistics_unsupported_levels_severity_passes_are_exact() -> None:
 
 
 def test_ai_logistics_unsupported_levels_build_priority_is_exact() -> None:
-    block = _named_block(
-        BUILDING_CULLING_ACTIONS.read_text(encoding="utf-8-sig"),
-        "pp_ai_logistics_on_unsupported_building_levels",
-    )
+    block = _ai_logistics_builder_block()
 
     for _, severity_block in _logistics_severity_blocks(block):
-        ordered_buildings = re.findall(
-            r"construct_building\s*=\s*\{\s*building_type\s*=\s*building_type:([a-z_]+)\s*\}",
+        ordered_actions = re.findall(
+            r"(construct_building|change_building_level_in_location)\s*=\s*\{\s*"
+            r"(?:building_type|building)\s*=\s*building_type:([a-z_]+)",
             severity_block,
             flags=re.S,
         )
-        assert ordered_buildings == list(LOGISTICS_AI_BUILD_ORDER)
+        assert ordered_actions == [
+            (action, building)
+            for building in LOGISTICS_AI_BUILD_ORDER
+            for action in ("construct_building", "change_building_level_in_location")
+        ]
 
 
-def test_logistics_debug_event_runs_manual_location_priority() -> None:
+def test_logistics_debug_event_mimics_global_ai_iteration() -> None:
     text = LOGISTICS_DEBUG_EVENT.read_text(encoding="utf-8-sig")
     block = _named_block(text, "pp_logistics_debug.1")
 
-    assert "type = location_event" in block
+    assert "type = country_event" in block
     assert "orphan = yes" in block
-    assert "pp_unsupported_building_levels_map_value < 1" in block
-    assert "instant = yes" in block
-    assert "cost_multiplier = 0" in block
+    assert "every_country = {" in block
+    assert "pp_ai_logistics_build_unsupported_infrastructure = yes" in block
+    assert "construct_building" not in block
+    assert "change_building_level_in_location" not in block
+    assert "every_area_with_owned_province = {" not in block
+    assert "instant = yes" not in block
+    assert "cost_multiplier = 0" not in block
 
-    ordered_buildings = re.findall(
-        r"construct_building\s*=\s*\{\s*building_type\s*=\s*building_type:([a-z_]+)",
-        block,
-        flags=re.S,
-    )
-    assert ordered_buildings == list(LOGISTICS_AI_BUILD_ORDER)
-
-    for building in LOGISTICS_AI_BUILD_ORDER:
-        max_levels = LOGISTICS_BALANCE_TARGETS[building]["max_levels"]
-        assert f"can_build_building = building_type:{building}" in block
-        assert f"building_type = building_type:{building}" in block
-        assert f"value < {max_levels}" in block
+    builder_block = _ai_logistics_builder_block()
+    assert "every_area_with_owned_province = {" in builder_block
+    assert "ordered_location_in_area = {" in builder_block
 
     localization = DEBUG_LOCALIZATION.read_text(encoding="utf-8-sig")
     assert "pp_logistics_debug.1.title" in localization
-    assert "pp_logistics_debug.1.desc_no_candidate" in localization
-    assert "pp_logistics_debug_river_can" in localization
-    assert "pp_logistics_debug_coastal_slot" in localization
+    assert "pp_logistics_debug.1.desc" in localization
+    assert "four-year country pulse" in localization
+    assert "for every country" in localization
 
 
 def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> None:

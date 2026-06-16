@@ -5,7 +5,7 @@ victuals_market = {
 	pop_type = laborers
 	employment_size = 0.15
 	price = pp_victuals_market_price
-	category = infrastructure_category
+    category = consumer_goods_category
 	custom_tags = { pp_food_security_priority pp_food_distribution_priority }
 	icon = victuals_market
 	rural_settlement = yes
@@ -27,7 +27,7 @@ victuals_market = {
 	}
 
   modifier = {
-    local_monthly_food = 80
+    local_monthly_food = 40
     local_crown_estate_power = 0.025
   }
 }

@@ -13,7 +13,7 @@ building:
     	pop_type = laborers
     	employment_size = 0.15
     	price = pp_victuals_market_price
-    	category = infrastructure_category
+        category = consumer_goods_category
     	custom_tags = { pp_food_security_priority pp_food_distribution_priority }
     	icon = victuals_market
     	rural_settlement = yes
@@ -35,14 +35,16 @@ building:
     	}
 
       modifier = {
-        local_monthly_food = 80
+        local_monthly_food = 40
         local_crown_estate_power = 0.025
       }
 production_methods:
   - key: victuals_market_maintenance
     body: |2-
       	victuals = 2.0
-      	category = building_maintenance
+        produced = dummy_food
+        output = 40
+        category = manufactory_input
 prices:
   - key: pp_victuals_market_price
     body: |2-
@@ -64,3 +66,4 @@ evaluation:
     profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    amortization_months: Temporary dummy_food output test intentionally breaks normal payback bounds.

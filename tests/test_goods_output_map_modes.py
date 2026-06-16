@@ -37,11 +37,16 @@ GOODS_OUTPUT_LEGEND_SUFFIXES = (
     "RANGE_150_300",
     "CAPPED",
 )
+DUMMY_GOODS_WITHOUT_OUTPUT_MAP_MODES = {"dummy_food"}
 
 
 def _all_goods() -> set[str]:
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
     return set(data.goods.select("name").to_series().to_list())
+
+
+def _goods_with_output_map_modes() -> set[str]:
+    return _all_goods() - DUMMY_GOODS_WITHOUT_OUTPUT_MAP_MODES
 
 
 def _host_path(path: Path) -> Path:
@@ -121,7 +126,7 @@ def _map_mode_blocks(text: str) -> dict[str, str]:
 
 
 def test_goods_output_map_modes_cover_all_goods_and_no_more() -> None:
-    expected = _all_goods()
+    expected = _goods_with_output_map_modes()
 
     map_mode_goods = re.findall(
         r"^pp_(.+?)_output\s*=\s*\{",
@@ -178,7 +183,7 @@ def test_output_modifier_types_cover_all_goods_and_use_goods_localization() -> N
 
 
 def test_goods_output_map_mode_localization_uses_game_goods_names() -> None:
-    expected = _all_goods()
+    expected = _goods_with_output_map_modes()
     localization = LOCALIZATION.read_text(encoding="utf-8-sig")
 
     bad: list[str] = []

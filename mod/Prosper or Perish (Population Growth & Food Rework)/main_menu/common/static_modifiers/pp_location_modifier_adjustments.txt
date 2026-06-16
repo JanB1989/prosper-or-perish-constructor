@@ -26,6 +26,7 @@ TRY_REPLACE:cheap_food_in_location = {
 	game_data = {
 		category = location
 	}
+	local_dummy_food_output_modifier = -2.00
 	local_nobles_food_consumption = 1.20
 	local_clergy_food_consumption = 1.20
 	local_burghers_food_consumption = 1.10
@@ -40,6 +41,7 @@ TRY_REPLACE:expensive_food_in_location = {
 	game_data = {
 		category = location
 	}
+	local_dummy_food_output_modifier = 2.00
 	# local_pop_demotion_speed = 0.25
 	local_nobles_food_consumption = -0.10
 	local_clergy_food_consumption = -0.10

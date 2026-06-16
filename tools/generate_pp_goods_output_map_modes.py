@@ -28,12 +28,13 @@ GOODS_OUTPUT_BUCKETS = (
 )
 GOODS_OUTPUT_CAP_COLOR = "rgb { 245 245 245 }"
 GOODS_OUTPUT_OVERFLOW_COLOR = "rgb { 70 210 255 }"
+GOODS_WITHOUT_OUTPUT_MAP_MODES = {"dummy_food"}
 
 
 def main() -> None:
     project = _load_project_config(PROJECT_CONFIG)
     mod_root = _project_path(project["project"]["mod_root"])
-    goods = sorted(_all_goods(project))
+    goods = sorted(good for good in _all_goods(project) if good not in GOODS_WITHOUT_OUTPUT_MAP_MODES)
 
     _write_crlf(mod_root / MAP_MODE_REL, _map_modes_file(goods))
     _write_crlf(mod_root / SCRIPT_VALUES_REL, _script_values_file(goods))

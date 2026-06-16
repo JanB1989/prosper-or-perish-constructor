@@ -28,11 +28,11 @@ increase_per_level_cost = 0.31
 	unique_production_methods = {
 		pp_char_coal_maintenance = {
 			produced = coal
-			output = 0.8
+			output = 0.62
 
-			debug_max_profit = 0.4
+			debug_max_profit = 0.1
 
-			lumber = 0.8
+			lumber = 0.85
 			category = guild_input
 		}
 

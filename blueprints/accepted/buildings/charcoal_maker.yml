@@ -38,11 +38,11 @@ building:
     	unique_production_methods = {
     		pp_char_coal_maintenance = {
     			produced = coal
-    			output = 0.8
+    			output = 0.62
 
-    			debug_max_profit = 0.4
+    			debug_max_profit = 0.1
 
-    			lumber = 0.8
+    			lumber = 0.85
     			category = guild_input
     		}
 
@@ -60,9 +60,9 @@ localization:
 
 evaluation:
   allow_rules:
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
-    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
-    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    profit_percent: Charcoal is intentionally kept to low margins so wood-fuel fallback production does not compete with true coal seams.
+    input_throughput: Charcoal is intentionally below industrial throughput as a constrained local wood-fuel fallback.
+    output_throughput: Charcoal is intentionally below industrial throughput as a constrained local wood-fuel fallback.
   production_methods:
     pp_char_coal_maintenance:
       production_efficiency: 1.05

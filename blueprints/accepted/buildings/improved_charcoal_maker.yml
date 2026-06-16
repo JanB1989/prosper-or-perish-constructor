@@ -38,11 +38,11 @@ building:
     	unique_production_methods = {
     		pp_improved_char_coal_maintenance = {
     			produced = coal
-    			output = 1.2
+    			output = 0.9
 
-    			debug_max_profit = 1
+    			debug_max_profit = 0.3
 
-    			lumber = 0.8
+    			lumber = 1.05
     			category = guild_input
     		}
 
@@ -60,9 +60,9 @@ localization:
 
 evaluation:
   allow_rules:
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
-    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
-    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    profit_percent: Retort charcoal remains profitable as a fallback, but intentionally below true coal seams after the coal-mine rebalance.
+    input_throughput: Retort charcoal is intentionally below industrial mine throughput as a constrained wood-fuel fallback.
+    output_throughput: Retort charcoal is intentionally below industrial mine throughput as a constrained wood-fuel fallback.
   production_methods:
     pp_improved_char_coal_maintenance:
       production_efficiency: 1.05

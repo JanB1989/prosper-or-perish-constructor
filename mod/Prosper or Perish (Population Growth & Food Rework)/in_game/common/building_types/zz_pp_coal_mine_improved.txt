@@ -27,7 +27,7 @@ can_close = yes
 unique_production_methods = {
     pp_coal_mine_improved_base_coal = {
         produced = coal
-        output = 0.1
+        output = 0.14
         category = building_maintenance
     }
 }
@@ -36,11 +36,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_coal_mine_improved_coal = {
-        lumber = 0.327
-        tools = 0.346
-        beeswax = 0.077
+        lumber = 0.42
+        tools = 0.48
+        beeswax = 0.105
         produced = coal
-        output = 1.008
+        output = 1.75
         category = building_maintenance
     }
 }

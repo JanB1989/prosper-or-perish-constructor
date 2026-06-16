@@ -50,7 +50,7 @@ building:
     unique_production_methods = {
         pp_coal_mine_base_coal = {
             produced = coal
-            output = 0.1
+            output = 0.12
             category = building_maintenance
         }
     }
@@ -59,12 +59,12 @@ building:
             category = building_maintenance
         }
         pp_coal_mine_coal = {
-            lumber = 0.197
-            tools = 0.222
-            beeswax = 0.049
+            lumber = 0.24
+            tools = 0.28
+            beeswax = 0.06
             produced = coal
-            output = 0.598
-            debug_max_profit = 0
+            output = 1.0
+            debug_max_profit = 1
             category = building_maintenance
         }
     }
@@ -118,6 +118,8 @@ evaluation:
     pp_coal_mine_coal:
       production_efficiency: 1.10
       allow_rules:
+        profit_percent: Coal mines intentionally exceed the generic margin band so seam-gated fuel extraction is attractive to the AI.
+        output_throughput: Coal mines intentionally exceed generic output throughput so true coal seams beat charcoal fallback production.
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_coal_mine_no_secondary:
       production_efficiency: 1.00

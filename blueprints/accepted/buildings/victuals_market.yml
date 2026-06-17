@@ -10,8 +10,8 @@ building:
   body: |2-
     	is_foreign = no
     	max_levels = victuals_market_max_level
-    	pop_type = laborers
-    	employment_size = 0.15
+    	pop_type = burghers
+    	employment_size = 0.300
     	price = pp_victuals_market_price
         category = consumer_goods_category
     	custom_tags = { pp_food_security_priority pp_food_distribution_priority }
@@ -25,7 +25,7 @@ building:
     	can_close = yes
     	forbidden_for_estates = no
     	AI_ignore_available_worker_flag = yes
-    	build_time = 180
+    	build_time = 365
     	construction_demand = victuals_market_construction
     
     	possible_production_methods = {
@@ -42,8 +42,8 @@ production_methods:
   - key: victuals_market_maintenance
     body: |2-
       	victuals = 2.0
-        produced = dummy_food
-        output = 40
+        produced = food_revenue
+        output = 5.05
         category = manufactory_input
 prices:
   - key: pp_victuals_market_price
@@ -66,4 +66,4 @@ evaluation:
     profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
-    amortization_months: Temporary dummy_food output test intentionally breaks normal payback bounds.
+    amortization_months: Food Revenue sale-value output intentionally breaks normal payback bounds.

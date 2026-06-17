@@ -37,7 +37,7 @@ GOODS_OUTPUT_LEGEND_SUFFIXES = (
     "RANGE_150_300",
     "CAPPED",
 )
-DUMMY_GOODS_WITHOUT_OUTPUT_MAP_MODES = {"dummy_food"}
+GOODS_WITHOUT_OUTPUT_MAP_MODES = {"food_revenue"}
 
 
 def _all_goods() -> set[str]:
@@ -46,7 +46,7 @@ def _all_goods() -> set[str]:
 
 
 def _goods_with_output_map_modes() -> set[str]:
-    return _all_goods() - DUMMY_GOODS_WITHOUT_OUTPUT_MAP_MODES
+    return _all_goods() - GOODS_WITHOUT_OUTPUT_MAP_MODES
 
 
 def _host_path(path: Path) -> Path:

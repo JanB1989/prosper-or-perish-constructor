@@ -2,8 +2,8 @@
 victuals_market = {
 	is_foreign = no
 	max_levels = victuals_market_max_level
-	pop_type = laborers
-	employment_size = 0.15
+	pop_type = burghers
+	employment_size = 0.300
 	price = pp_victuals_market_price
     category = consumer_goods_category
 	custom_tags = { pp_food_security_priority pp_food_distribution_priority }
@@ -17,7 +17,7 @@ victuals_market = {
 	can_close = yes
 	forbidden_for_estates = no
 	AI_ignore_available_worker_flag = yes
-	build_time = 180
+	build_time = 365
 	construction_demand = victuals_market_construction
 
 	possible_production_methods = {

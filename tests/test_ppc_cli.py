@@ -1,11 +1,15 @@
 import json
 import os
+import re
 from pathlib import Path
+from types import SimpleNamespace
 
 import polars as pl
 import pytest
 
 from prosper_or_perish_constructor import cli
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _repo(tmp_path: Path) -> Path:
@@ -884,6 +888,254 @@ def test_output_modifiers_can_include_specific_gated_modifiers(
     assert [line.split()[0] for line in lines[2:]] == ["fish", "wheat"]
     assert lines[2].split() == ["fish", "0.00", "0.20"]
     assert lines[3].split() == ["wheat", "0.10", "0.10"]
+
+
+def test_food_revenue_check_prints_parsed_price_and_rank_edges(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = _repo(tmp_path)
+
+    def fake_inputs(*, profile: str, load_order_path: Path, project: Path):
+        assert profile == "constructor"
+        assert load_order_path == repo / "constructor.load_order.toml"
+        assert project == repo / "constructor.toml"
+        return {
+            "growth_cap": 2.0,
+            "static": {
+                "cheap_food_in_location": -1.124,
+                "expensive_food_in_location": 0.310,
+                "positive_province_food_growth": -0.054,
+                "province_starving": 0.1,
+            },
+            "ranks": {
+                "rural_settlement": 0.170,
+                "town": 0.195,
+                "city": 0.220,
+                "megalopolis": 0.245,
+            },
+            "profitability_rows": [
+                {
+                    "scenario": "cheap_50",
+                    "food_price": "50%",
+                    "input_gold": 5.23,
+                    "goods_input_gold": 5.0,
+                    "worker_food_gold": 0.23,
+                    "base_output_gold": 5.05,
+                    "required_output_modifier": 5.23 / 5.05 - 1.0,
+                    "actual_output_modifier": -0.281,
+                    "modifier_margin": -0.281 - (5.23 / 5.05 - 1.0),
+                    "output_gold": 3.630,
+                    "profit_gold": -1.600,
+                    "profitable": False,
+                },
+                {
+                    "scenario": "base_100",
+                    "food_price": "100%",
+                    "input_gold": 5.36,
+                    "goods_input_gold": 5.0,
+                    "worker_food_gold": 0.36,
+                    "base_output_gold": 5.05,
+                    "required_output_modifier": 5.36 / 5.05 - 1.0,
+                    "actual_output_modifier": 0.0,
+                    "modifier_margin": -(5.36 / 5.05 - 1.0),
+                    "output_gold": 5.05,
+                    "profit_gold": -0.31,
+                    "profitable": False,
+                },
+                {
+                    "scenario": "expensive_150",
+                    "food_price": "150%",
+                    "input_gold": 5.52,
+                    "goods_input_gold": 5.0,
+                    "worker_food_gold": 0.52,
+                    "base_output_gold": 5.05,
+                    "required_output_modifier": 5.52 / 5.05 - 1.0,
+                    "actual_output_modifier": 0.077,
+                    "modifier_margin": 0.077 - (5.52 / 5.05 - 1.0),
+                    "output_gold": 5.439,
+                    "profit_gold": -0.081,
+                    "profitable": False,
+                },
+            ],
+            "warnings": [],
+        }
+
+    monkeypatch.setattr(cli, "_load_food_revenue_check_inputs", fake_inputs)
+
+    assert cli.main(["--repo", str(repo), "food-revenue-check"]) == 0
+
+    output = capsys.readouterr().out
+    assert "cheap cap effect (food price 0x)" in output
+    lines = output.splitlines()
+    cheap_50_line = next(line for line in lines if line.startswith("cheap_50"))
+    assert cheap_50_line.split() == ["cheap_50", "-0.281", "0.719"]
+    rural_summary_line = next(line for line in lines if line.startswith("rural_settlement"))
+    assert rural_summary_line.split()[:3] == ["rural_settlement", "+0.062", "-0.500"]
+    threshold_start = lines.index("victuals market base-condition profitability:")
+    threshold_rows = lines[threshold_start + 3 : threshold_start + 6]
+    assert threshold_rows[0].split() == [
+        "cheap_50",
+        "50%",
+        "5.230",
+        "5.050",
+        "+0.036",
+        "-0.281",
+        "-0.317",
+        "3.630",
+        "-1.600",
+        "loss",
+    ]
+    assert threshold_rows[1].split() == [
+        "base_100",
+        "100%",
+        "5.360",
+        "5.050",
+        "+0.061",
+        "+0.000",
+        "-0.061",
+        "5.050",
+        "-0.310",
+        "loss",
+    ]
+    rank_threshold_start = lines.index(
+        "victuals market base price + full storage profitability by rank:"
+    )
+    rank_threshold_rows = lines[rank_threshold_start + 3 : rank_threshold_start + 7]
+    assert rank_threshold_rows[0].split() == [
+        "rural_settlement",
+        "+0.062",
+        "5.363",
+        "+0.003",
+        "+0.363",
+        "profit",
+    ]
+    assert [row.split()[0] for row in rank_threshold_rows] == [
+        "rural_settlement",
+        "town",
+        "city",
+        "megalopolis",
+    ]
+    assert [row.split()[-1] for row in rank_threshold_rows] == ["profit"] * 4
+    matrix_start = lines.index("full edge matrix (48 rows):")
+    matrix_rows = lines[matrix_start + 3 : matrix_start + 51]
+    assert len(matrix_rows) == 48
+    assert all(row.endswith("ok") for row in matrix_rows)
+    assert matrix_rows[0].split() == [
+        "rural_settlement",
+        "cheap_cap_0x",
+        "empty",
+        "no",
+        "+0.170",
+        "-0.562",
+        "+0.000",
+        "+0.000",
+        "-0.392",
+        "0.608",
+        "ok",
+    ]
+    assert matrix_rows[-1].split() == [
+        "megalopolis",
+        "expensive_cap_2x",
+        "full",
+        "yes",
+        "+0.245",
+        "+0.155",
+        "-0.108",
+        "+0.100",
+        "+0.392",
+        "1.392",
+        "ok",
+    ]
+    assert "result=ok" in output
+
+
+def test_food_revenue_check_fails_when_matrix_total_leaves_band(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = _repo(tmp_path)
+
+    monkeypatch.setattr(
+        cli,
+        "_load_food_revenue_check_inputs",
+        lambda *, profile, load_order_path, project: {
+            "growth_cap": 2.0,
+            "static": {
+                "cheap_food_in_location": -1.4,
+                "expensive_food_in_location": 1.4,
+                "positive_province_food_growth": -0.15,
+                "province_starving": 0.1,
+            },
+            "ranks": {
+                "rural_settlement": 0.5,
+                "town": 0.525,
+                "city": 0.55,
+                "megalopolis": 0.6,
+            },
+            "profitability_rows": [],
+            "warnings": [],
+        },
+    )
+
+    assert cli.main(["--repo", str(repo), "food-revenue-check"]) == 1
+
+    output = capsys.readouterr().out
+    assert "matrix band failures:" in output
+    assert "megalopolis       expensive_cap_2x  empty    yes" in output
+    assert "+1.400" in output
+    assert "FAIL" in output
+    assert "result=fail" in output
+
+
+def test_food_revenue_profitability_threshold_uses_scenario_input_and_base_output() -> None:
+    method = SimpleNamespace(
+        food_cost_scenarios=[
+            SimpleNamespace(
+                scenario="cheap_50",
+                input_gold=5.23,
+                output_gold=4.14605,
+                output_multiplier=0.821,
+                output_modifier=-0.179,
+                profit_gold=-1.08395,
+                worker_food_gold=0.23,
+            )
+        ]
+    )
+
+    rows = cli._food_revenue_profitability_rows_from_method(method)
+
+    assert rows[0]["base_output_gold"] == pytest.approx(5.05)
+    assert rows[0]["required_output_modifier"] == pytest.approx(5.23 / 5.05 - 1.0)
+    assert rows[0]["modifier_margin"] == pytest.approx(-0.179 - (5.23 / 5.05 - 1.0))
+    assert rows[0]["goods_input_gold"] == pytest.approx(5.0)
+    assert rows[0]["profitable"] is False
+
+
+def test_food_revenue_output_modifier_values_use_three_decimal_precision() -> None:
+    paths = [
+        ROOT
+        / "mod"
+        / "Prosper or Perish (Population Growth & Food Rework)"
+        / "main_menu"
+        / "common"
+        / "static_modifiers"
+        / "pp_location_modifier_adjustments.txt",
+        ROOT
+        / "mod"
+        / "Prosper or Perish (Population Growth & Food Rework)"
+        / "in_game"
+        / "common"
+        / "location_ranks"
+        / "pp_location_rank_adjustments.txt",
+    ]
+    pattern = re.compile(r"\blocal_food_revenue_output_modifier\s*=\s*(-?\d+\.(\d+))\b")
+    matches = []
+
+    for path in paths:
+        for match in pattern.finditer(path.read_text(encoding="utf-8-sig")):
+            matches.append(match.group(1))
+            assert len(match.group(2)) <= 3, match.group(1)
+
+    assert matches
 
 
 def test_production_throughput_prints_best_available_building_slot_sums(

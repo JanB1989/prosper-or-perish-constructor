@@ -154,6 +154,37 @@ EXPECTED_CHAINS = {
     ],
 }
 
+ADDED_MINE_BUILDING_GOODS = {
+    "alum_quarry": "alum",
+    "coal_mine": "coal",
+    "coal_mine_improved": "coal",
+    "coal_mine_revolutions": "coal",
+    "cinnabar_pit": "mercury",
+    "quicksilver_retort": "mercury",
+    "copper_mine": "copper",
+    "copper_mine_adit": "copper",
+    "gem_gravel_pit": "gems",
+    "gem_sluice": "gems",
+    "gold_diggings": "goods_gold",
+    "gold_stamp_mill": "goods_gold",
+    "iron_mine": "iron",
+    "iron_mine_improved": "iron",
+    "iron_mine_deep": "iron",
+    "silver_mine": "silver",
+    "silver_mine_improved": "silver",
+    "lead_mine": "lead",
+    "lead_mine_bole_smelting": "lead",
+    "lead_mine_cupola_smelting": "lead",
+    "marble_quarry": "marble",
+    "marble_saw_yard": "marble",
+    "salt_mine": "salt",
+    "salt_mine_improved": "salt",
+    "tin_streamworks": "tin",
+    "tin_stamping_mill": "tin",
+    "stone_quarry_improved": "stone",
+}
+ADDED_MINE_BUILDING_TAG = "pp_mine_building"
+
 DEACTIVATED_MINING_VILLAGE_BLUEPRINTS = {
     "buildings/mining_village.yml",
     "buildings/mining_village_blast_furnace.yml",
@@ -293,6 +324,13 @@ def _load_blueprint(key: str) -> dict:
     return raw
 
 
+def _body_custom_tags(body: str) -> set[str]:
+    match = re.search(r"^\s*custom_tags\s*=\s*\{(?P<tags>[^}]*)\}", body, flags=re.M)
+    if match is None:
+        return set()
+    return set(match.group("tags").split())
+
+
 def _obsolete_entries(body: str) -> list[str]:
     return re.findall(r"^\s*obsolete\s*=\s*([A-Za-z0-9_]+)\s*$", body, flags=re.M)
 
@@ -406,6 +444,10 @@ def _base_production_method_input_offenders(path: Path) -> list[str]:
                 offenders.append(f"{relative}:{index + 1}: {method} has input {key_match.group('key')}")
 
     return offenders
+
+
+def _production_method_has_inputs_or_outputs(row: dict) -> bool:
+    return bool(row["input_goods"]) or (row["produced"] is not None and row["output"] is not None)
 
 
 def _matching_brace_index(text: str, opening_index: int) -> int:
@@ -1165,6 +1207,45 @@ def test_base_production_methods_are_output_only() -> None:
     assert not offenders
 
 
+def test_non_base_production_method_slots_have_inputs_or_outputs() -> None:
+    data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
+    groups: dict[tuple[str, int], list[dict]] = {}
+    for row in data.building_data.production_methods.select(
+        [
+            "name",
+            "building",
+            "produced",
+            "output",
+            "input_goods",
+            "source_kind",
+            "source_layer",
+            "source_file",
+            "source_line",
+            "production_method_group_index",
+        ]
+    ).to_dicts():
+        group_index = row["production_method_group_index"]
+        building = row["building"]
+        if row["source_kind"] != "inline" or row["source_layer"] != "constructor":
+            continue
+        if not isinstance(building, str) or not isinstance(group_index, int) or group_index == 0:
+            continue
+        groups.setdefault((building, group_index), []).append(row)
+
+    offenders: list[str] = []
+    for (building, group_index), rows in sorted(groups.items()):
+        if any(_production_method_has_inputs_or_outputs(row) for row in rows):
+            continue
+        methods = ", ".join(str(row["name"]) for row in rows)
+        locations = ", ".join(
+            f"{Path(str(row['source_file'])).relative_to(ROOT)}:{row['source_line']}"
+            for row in rows
+        )
+        offenders.append(f"{building} slot {group_index}: {methods} ({locations})")
+
+    assert offenders == []
+
+
 def test_target_raw_material_producers_have_no_input_base_methods() -> None:
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
     methods = {
@@ -1328,6 +1409,32 @@ def test_raw_material_output_advances_convert_to_rgo_size() -> None:
         modifiers = modifiers_by_advance[advance]
         assert abs(modifiers.get("global_raw_material_output", 0.0)) < 0.000000001
         assert modifiers.get("global_max_rgo_size_modifier") == expected_value
+
+
+def test_added_mine_buildings_are_tagged_and_have_site_modifiers() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+    tagged_buildings: set[str] = set()
+
+    for entry in enabled:
+        if not str(entry).startswith("buildings/"):
+            continue
+        key = Path(str(entry)).stem
+        body = _load_blueprint(key)["building"]["body"]
+        if ADDED_MINE_BUILDING_TAG in _body_custom_tags(body):
+            tagged_buildings.add(key)
+
+    assert tagged_buildings == set(ADDED_MINE_BUILDING_GOODS)
+
+    for building, good in ADDED_MINE_BUILDING_GOODS.items():
+        raw = _load_blueprint(building)
+        body = raw["building"]["body"]
+        assert raw["building"]["mode"] == "CREATE"
+        assert f"buildings/{building}.yml" in enabled
+        assert ADDED_MINE_BUILDING_TAG in _body_custom_tags(body)
+        assert re.search(r"^\s*local_population_growth\s*=\s*-0\.0002\s*$", body, flags=re.M)
+        assert re.search(r"^\s*local_migration_attraction\s*=\s*0\.010\s*$", body, flags=re.M)
+        assert re.search(rf"^\s*local_{good}_output_modifier\s*=\s*0\.025\s*$", body, flags=re.M)
 
 
 def test_iron_mine_tiers_are_iron_deposit_only() -> None:

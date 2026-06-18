@@ -135,9 +135,9 @@ def _field(body: str, key: str) -> str:
     return match.group(1)
 
 
-def _modifier_block(body: str) -> str:
-    match = re.search(r"(?m)^\s*modifier\s*=\s*\{(?P<body>.*?)\n\s*\}", body, flags=re.S)
-    assert match is not None, "missing modifier block"
+def _modifier_block(body: str, key: str = "modifier") -> str:
+    match = re.search(rf"(?m)^\s*{re.escape(key)}\s*=\s*\{{(?P<body>.*?)\n\s*\}}", body, flags=re.S)
+    assert match is not None, f"missing {key} block"
     return match.group("body")
 
 
@@ -298,7 +298,7 @@ def test_logistics_infrastructure_balance_targets_are_current() -> None:
         key = blueprint["building"]["key"]
         expected = LOGISTICS_BALANCE_TARGETS[key]
         body = blueprint["building"]["body"]
-        modifier_body = _modifier_block(body)
+        raw_modifier_body = _modifier_block(body, "raw_modifier")
         method_body = blueprint["production_methods"][0]["body"]
         localization_keys = set(blueprint["localization"]["entries"])
 
@@ -310,10 +310,13 @@ def test_logistics_infrastructure_balance_targets_are_current() -> None:
         assert _field(body, "increase_per_level_cost") == expected["increase_per_level_cost"]
         assert _field(body, "pop_type") == expected["pop_type"]
         assert _field(body, "employment_size") == "1"
+        assert _field(body, "can_close") == "no"
+        assert _field(body, "always_add_demands") == "yes"
         assert _field(body, "forbidden_for_estates") == "yes"
         assert _field(body, "ai_forbid_shutdown") == "yes"
-        assert "local_market_access" not in modifier_body
-        assert _field(modifier_body, "free_building_levels") == "10"
+        assert "local_market_access" not in raw_modifier_body
+        assert _field(raw_modifier_body, "free_building_levels") == "10"
+        assert re.search(r"(?m)^\s*modifier\s*=", body) is None
         assert _goods_total(method_body) == pytest.approx(expected["upkeep"])
 
 
@@ -342,7 +345,7 @@ def test_road_maintenance_buildings_keep_separate_logistics_tag() -> None:
         assert _custom_tags(text) == {"pp_logistics_infrastructure_priority", "pp_road_maintenance"}
 
 
-def test_logistics_infrastructure_buildings_emit_modifier_ratio_metrics() -> None:
+def test_logistics_infrastructure_raw_free_levels_are_not_method_scaled() -> None:
     config = load_project_config(ROOT / "constructor.toml")
     price_by_good = load_balance_prices(profile=config.profile, load_order_path=config.load_order_path)
     raw_material_goods = load_raw_material_goods(profile=config.profile, load_order_path=config.load_order_path)
@@ -368,12 +371,8 @@ def test_logistics_infrastructure_buildings_emit_modifier_ratio_metrics() -> Non
         )
         assert evaluation.methods
         for method in evaluation.methods:
-            modifier_names = {modifier.name for modifier in method.building_modifiers}
             assert method.building_category == "infrastructure_category"
-            assert modifier_names == {"free_building_levels"}
-            for modifier in method.building_modifiers:
-                assert modifier.per_maintenance_gold is not None
-                assert modifier.per_1k is not None
+            assert not method.building_modifiers
 
 
 def test_ai_logistics_unsupported_levels_action_runs_on_four_year_pulse() -> None:
@@ -529,6 +528,6 @@ def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> No
 def test_victuals_market_does_not_provide_market_access() -> None:
     for path in (VICTUALS_MARKET_BLUEPRINT, VICTUALS_MARKET_RENDERED):
         text = path.read_text(encoding="utf-8-sig")
-        assert "local_monthly_food = 60" in text
-        assert "local_crown_estate_power = 0.025" in text
+        assert "local_monthly_food = 40" in text
+        assert "local_burghers_estate_power = 0.05" in text
         assert "local_market_access" not in text

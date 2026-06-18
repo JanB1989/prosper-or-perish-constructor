@@ -77,8 +77,8 @@ def test_population_capacity_config_loads() -> None:
 
     assert config.generated_label == "Prosper or Perish"
     assert config.managed_write_mode == "mod_root"
-    assert config.capacity_scale.minimum == 3
-    assert config.capacity_scale.maximum == 70
+    assert config.capacity_scale.minimum == 6
+    assert config.capacity_scale.maximum == 100
     assert config.calibration.historical_population_policy == "saturation_anchors_only"
     assert config.calibration.saturation_anchors == "population_capacity_saturation_anchors.toml"
     assert config.calibration.land_potential_sources == ("gaez_v4", "hyde", "archaeoglobe")

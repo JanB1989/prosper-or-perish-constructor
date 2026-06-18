@@ -1,11 +1,12 @@
 ﻿# >>> eu5-building-pipeline:lead_mine_bole_smelting:building
 lead_mine_bole_smelting = {
 is_foreign = no
-increase_per_level_cost = 0.33
+increase_per_level_cost = 0.25
 max_levels = rural_building_cap
 pop_type = laborers
 employment_size = 1
 category = rgo_building_category
+custom_tags = { pp_mine_building }
 icon = lead_mine_bole_smelting
 rural_settlement = yes
 town = yes
@@ -62,8 +63,9 @@ raw_modifier = {
 }
 
 modifier = {
-    local_population_growth = -0.0001
-    local_migration_attraction = 0.005
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.010
+    local_lead_output_modifier = 0.025
 }
 }
 # <<< eu5-building-pipeline:lead_mine_bole_smelting:building

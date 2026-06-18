@@ -60,6 +60,9 @@ BUILDING_CULLING = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_
 BUILDING_CAPACITY_CULLING_V2 = (
     MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_capacity_culling_v2.txt"
 )
+AI_LOGISTICS_BUILDING_EFFECTS = (
+    MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_ai_logistics_building_effects.txt"
+)
 ESTATE_SETUP_CULLING = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_estate_setup_culling.txt"
 ESTATE_START_PRESERVATION = (
     MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_estate_start_preservation.txt"
@@ -254,10 +257,10 @@ EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY = (
     "capitalism_prioritising_infrastructure_trade",
     "capitalism_prioritising_infrastructure_trade_and_culture",
 )
-FOOD_SECURITY_LABORER_BUILDINGS = {
+FOOD_SECURITY_WORKER_BUILDINGS = {
     "cookery": ("laborers", 1),
     "victualling_yard": ("laborers", 1),
-    "victuals_market": ("laborers", 0.25),
+    "victuals_market": ("burghers", 0.3),
     "granary": ("laborers", 0.25),
 }
 NORMALIZED_PRODUCTION_SITE_CATEGORIES = {
@@ -558,10 +561,10 @@ def test_food_security_building_priorities_are_in_employment_systems() -> None:
         )
 
 
-def test_food_security_storage_and_market_workers_are_laborers() -> None:
+def test_food_security_storage_and_market_workers_match_source_blueprints() -> None:
     rendered_buildings = _database_entries(BUILDING_TYPE_ROOT)
 
-    for building, (pop_type, employment_size) in FOOD_SECURITY_LABORER_BUILDINGS.items():
+    for building, (pop_type, employment_size) in FOOD_SECURITY_WORKER_BUILDINGS.items():
         blueprint_values = _accepted_blueprint_building_values(building)
         assert blueprint_values["pop_type"] == pop_type
         assert blueprint_values["employment_size"] == employment_size
@@ -2181,8 +2184,11 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
     legacy_entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
     assert "pp_cull_over_cap_buildings" not in legacy_entries
 
-    culling_text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
-    assert culling_text.count("has_owner = yes\n\t\t\t\t\t\towner = scope:pp_ai_logistics_country") == 4
+    logistics_text = AI_LOGISTICS_BUILDING_EFFECTS.read_text(encoding="utf-8-sig")
+    assert (
+        len(re.findall(r"has_owner\s*=\s*yes\s+owner\s*=\s*scope:pp_ai_logistics_country", logistics_text))
+        == 4
+    )
 
 
 def test_monthly_market_food_stockpile_topup_is_global_and_debuggable() -> None:
@@ -2559,9 +2565,9 @@ def test_cookery_building_line_has_resolved_prices() -> None:
     assert buildings["victualling_yard"]["price_kind"] == "baseline_age"
 
     assert buildings["victuals_market"]["price"] == "pp_victuals_market_price"
-    assert buildings["victuals_market"]["price_gold"] == 100.0
+    assert buildings["victuals_market"]["price_gold"] == 25.0
     assert buildings["victuals_market"]["effective_price"] == "pp_victuals_market_price"
-    assert buildings["victuals_market"]["effective_price_gold"] == 100.0
+    assert buildings["victuals_market"]["effective_price_gold"] == 25.0
     assert buildings["victuals_market"]["price_kind"] == "explicit"
 
 
@@ -2584,7 +2590,7 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
         assert buildings[building]["price_kind"] == "baseline_age", building
 
     victuals_market = buildings["victuals_market"]
-    assert victuals_market["employment_size"] == 0.25
+    assert victuals_market["employment_size"] == 0.3
     assert victuals_market["price"] == "pp_victuals_market_price"
     assert victuals_market["price_kind"] == "explicit"
 

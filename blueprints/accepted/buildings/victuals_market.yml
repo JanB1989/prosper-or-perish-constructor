@@ -9,6 +9,7 @@ building:
     - victuals_market_maintenance
   body: |2-
     	is_foreign = no
+    increase_per_level_cost = 0.13
     	max_levels = victuals_market_max_level
     	pop_type = burghers
     	employment_size = 0.300

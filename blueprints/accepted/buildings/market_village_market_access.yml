@@ -7,7 +7,7 @@ building:
   production_method_slots: []
   possible_production_methods: []
   body: |2-
-    increase_per_level_cost = 0.28
+    increase_per_level_cost = 0.21
     modifier = {
       local_market_access = -0.005 # offset vanilla market_village; logistics infrastructure should provide market access
     }

@@ -19,7 +19,8 @@ building:
     town = yes
     city = yes
     megalopolis = yes
-    can_close = yes
+    can_close = no
+    always_add_demands = yes
     forbidden_for_estates = yes
     important_for_AI = no
     ai_forbid_shutdown = yes
@@ -36,9 +37,6 @@ building:
     }
 
     raw_modifier = {
-    }
-
-    modifier = {
       free_building_levels = 10
     }
 production_methods:

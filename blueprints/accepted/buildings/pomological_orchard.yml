@@ -25,7 +25,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    increase_per_level_cost = 0.33
+    increase_per_level_cost = 0.25
     pop_type = laborers
     max_levels = farm_capacity_max_pomological_orchard
     employment_size = 1

@@ -9,7 +9,7 @@ building:
     - pp_carrier_inn_maintenance
   body: |2-
     is_foreign = no
-    max_levels = 10
+    max_levels = 100
     increase_per_level_cost = 0.30
     pop_type = peasants
     employment_size = 1
@@ -18,7 +18,8 @@ building:
     icon = carrier_inn
     rural_settlement = yes
     town = yes
-    can_close = yes
+    can_close = no
+    always_add_demands = yes
     forbidden_for_estates = yes
     important_for_AI = no
     ai_forbid_shutdown = yes
@@ -35,9 +36,6 @@ building:
     }
 
     raw_modifier = {
-    }
-
-    modifier = {
       free_building_levels = 10
     }
 production_methods:

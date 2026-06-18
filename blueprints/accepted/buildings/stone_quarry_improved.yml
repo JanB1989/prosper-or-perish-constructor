@@ -26,11 +26,12 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    increase_per_level_cost = 0.16
+    increase_per_level_cost = 0.13
     max_levels = rural_building_cap
     pop_type = laborers
     employment_size = 1
     category = rgo_building_category
+    custom_tags = { pp_mine_building }
     icon = stone_quarry_improved
     rural_settlement = yes
     town = yes
@@ -108,8 +109,9 @@ building:
     }
 
     modifier = {
-        local_population_growth = -0.0000
-        local_migration_attraction = 0.003
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.010
+        local_stone_output_modifier = 0.025
     }
 advancements:
   - key: pp_stone_quarry_improvements

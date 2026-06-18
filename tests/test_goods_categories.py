@@ -106,10 +106,10 @@ def test_goods_categories_increase_per_level_cost_is_normalized() -> None:
 def test_goods_categories_increase_per_level_cost_scaling_config() -> None:
     band = load_increase_per_level_cost_band(GOODS_CATEGORY_SCALING)
 
-    assert band == CostScalingBand(minimum=Decimal("0.05"), maximum=Decimal("0.40"))
+    assert band == CostScalingBand(minimum=Decimal("0.05"), maximum=Decimal("0.30"))
     assert format_scaled_cost(scale_increase_per_level_cost(Decimal("0.00"), band)) == "0.05"
-    assert format_scaled_cost(scale_increase_per_level_cost(Decimal("1.00"), band)) == "0.40"
-    assert format_scaled_cost(scale_increase_per_level_cost(Decimal("0.45"), band)) == "0.21"
+    assert format_scaled_cost(scale_increase_per_level_cost(Decimal("1.00"), band)) == "0.30"
+    assert format_scaled_cost(scale_increase_per_level_cost(Decimal("0.45"), band)) == "0.16"
 
 
 def test_goods_categories_scaled_costs_stay_in_configured_band() -> None:

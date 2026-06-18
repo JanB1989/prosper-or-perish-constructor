@@ -29,13 +29,13 @@ TRY_REPLACE:cheap_food_in_location = {
 		category = location
 	}
 	local_food_revenue_output_modifier = -1.124
-	local_nobles_food_consumption = 1.20
-	local_clergy_food_consumption = 1.20
-	local_burghers_food_consumption = 1.10
-	local_laborers_food_consumption = 1.10
-	local_soldiers_food_consumption = 1.10
-	local_peasants_food_consumption = 1.00
-	local_population_growth = 0.011 # means 0.5% max
+	local_nobles_food_consumption = 0.80
+	local_clergy_food_consumption = 0.80
+	local_burghers_food_consumption = 0.80
+	local_laborers_food_consumption = 0.80
+	local_soldiers_food_consumption = 0.80
+	local_peasants_food_consumption = 0.80
+	local_population_growth = 0.011
 	local_monthly_prosperity = 0.0050
 	local_devastation_recovery = 0.0035
 }
@@ -230,7 +230,7 @@ TRY_REPLACE:development = {
 	local_institution_growth_modifier = 0.001
 	local_construction_speed = 0.01
 	
-	local_food_capacity = 10
+	local_food_capacity = 30
 	
 	free_building_levels = 0.3
 	
@@ -243,7 +243,7 @@ TRY_REPLACE:development = {
 	local_build_buildings_efficiency = 0.001
 	maximum_stockpile_capacity = 10
 	local_production_efficiency = 0.001
-	local_monthly_development = -0.00009
+	local_monthly_development = -0.00010
 	local_wheat_output_modifier = 0.0025
 	local_rice_output_modifier = 0.0025
 	local_millet_output_modifier = 0.0025
@@ -290,11 +290,12 @@ TRY_REPLACE:unemployed_peasants = {
 	local_monthly_development = -0.00001
 	local_institution_growth_modifier = -0.0050
 	local_construction_speed = 0.0001
+	local_build_buildings_efficiency = 0.001
 	local_migration_attraction = -0.001
 }
 
 TRY_INJECT:market_center = {
-	maximum_stockpile_capacity = 250
+	# maximum_stockpile_capacity = 250
 	# local_food_capacity = 100000
 	# local_food_decay_modifier = -1.0
 	free_building_levels = 30

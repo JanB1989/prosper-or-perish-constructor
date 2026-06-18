@@ -2097,7 +2097,7 @@ def test_game_loaded_text_files_are_finalized_with_utf8_bom() -> None:
     assert not invalid_utf8
 
 
-def test_situation_can_end_blocks_use_end_reasons() -> None:
+def test_situation_can_end_blocks_use_direct_trigger_conditions() -> None:
     offenders: list[str] = []
 
     for path in sorted(SITUATION_ROOT.glob("*.txt")):
@@ -2111,27 +2111,13 @@ def test_situation_can_end_blocks_use_end_reasons() -> None:
                     offenders.append(f"{path.relative_to(ROOT)}:{situation.key}: can_end is not a block")
                     continue
 
-                invalid_keys = [child.key for child in entry.value.entries if child.key != "end_reason"]
-                if invalid_keys:
-                    offenders.append(
-                        f"{path.relative_to(ROOT)}:{situation.key}: can_end has {', '.join(invalid_keys)}"
-                    )
+                if not entry.value.entries:
+                    offenders.append(f"{path.relative_to(ROOT)}:{situation.key}: can_end is empty")
 
-                for child in entry.value.entries:
-                    if child.key != "end_reason":
-                        continue
-                    if not isinstance(child.value, CList):
-                        offenders.append(
-                            f"{path.relative_to(ROOT)}:{situation.key}: end_reason is not a block"
-                        )
-                        continue
-                    reason_keys = {reason_entry.key for reason_entry in child.value.entries}
-                    missing_keys = {"trigger", "desc"} - reason_keys
-                    if missing_keys:
-                        offenders.append(
-                            f"{path.relative_to(ROOT)}:{situation.key}: end_reason missing "
-                            f"{', '.join(sorted(missing_keys))}"
-                        )
+                if any(child.key == "end_reason" for child in entry.value.entries):
+                    offenders.append(
+                        f"{path.relative_to(ROOT)}:{situation.key}: can_end contains engine-invalid end_reason"
+                    )
 
     assert not offenders
 

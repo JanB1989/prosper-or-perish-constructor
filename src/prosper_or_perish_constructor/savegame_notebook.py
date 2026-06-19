@@ -255,6 +255,7 @@ class BuildingAbsoluteResult:
 
 def open_data(
     *,
+    repo: str | Path | None = None,
     data_root: str | Path | None = None,
     load_order_path: str | Path | None = None,
     profile: str | None = "constructor",
@@ -271,12 +272,12 @@ def open_data(
 
     wb = importlib.reload(notebook_workbench) if reload_workbench else notebook_workbench
     _configure_notebook_plots(wb)
-    repo = _find_repo_root()
-    resolved_data_root = _portable_path(data_root) if data_root is not None else repo / "graphs" / "dataset"
+    resolved_repo = _find_repo_root(_portable_path(repo) if repo is not None else None)
+    resolved_data_root = _portable_path(data_root) if data_root is not None else resolved_repo / "graphs" / "dataset"
     resolved_load_order = (
         _portable_path(load_order_path)
         if load_order_path is not None
-        else repo / "constructor.load_order.toml"
+        else resolved_repo / "constructor.load_order.toml"
     )
     resolved_profile = profile if resolved_load_order.is_file() else None
     dataset = SavegameNotebookDataset(
@@ -295,8 +296,8 @@ def open_data(
     loaded_tables = _load_tables(dataset, selected_playthrough, tables)
     map_assets = (
         savegame_maps.load_map_assets(
-            repo=repo,
-            project=repo / "constructor.toml",
+            repo=resolved_repo,
+            project=resolved_repo / "constructor.toml",
             map_width=map_width,
             geometry_cache=map_geometry_cache,
         )
@@ -987,6 +988,160 @@ def save_building_levels_map_animation(
         width=width,
         overwrite=overwrite,
     )
+
+
+def export_global_map_animations(
+    *,
+    repo: str | Path | None = None,
+    data_root: str | Path | None = None,
+    load_order_path: str | Path | None = None,
+    profile: str | None = "constructor",
+    map_asset_width: int = 2400,
+    map_width: int = 2000,
+    export_width: int = 2200,
+    interval_ms: int = 400,
+    quality: int = 98,
+    lossless: bool = False,
+    comparison_export_dir: str | Path = Path("graphs/savegame_notebooks/exports/comparison"),
+    absolute_export_dir: str | Path = Path("graphs/savegame_notebooks/exports/absolute"),
+) -> tuple[savegame_maps.AnimationExportResult, ...]:
+    """Render the standard global savegame map WebP animations."""
+
+    resolved_repo = _find_repo_root(_portable_path(repo) if repo is not None else None)
+    comparison_dir = _resolve_output_path(resolved_repo, comparison_export_dir)
+    absolute_dir = _resolve_output_path(resolved_repo, absolute_export_dir)
+    data = open_data(
+        repo=resolved_repo,
+        data_root=data_root if data_root is not None else resolved_repo / "graphs" / "dataset",
+        load_order_path=load_order_path if load_order_path is not None else resolved_repo / "constructor.load_order.toml",
+        profile=profile,
+        load_map_assets=True,
+        map_width=map_asset_width,
+    )
+    common = {
+        "scope": "super_region",
+        "name": None,
+        "width": map_width,
+    }
+    exports: list[savegame_maps.AnimationExportResult] = []
+
+    population_change = population_map(
+        data,
+        metric="total_population",
+        comparison="relative_pct",
+        relative_bounds=(-100, 300),
+        **common,
+    )
+    exports.append(
+        save_population_map_animation(
+            population_change,
+            output_dir=comparison_dir,
+            filename="population_change.webp",
+            duration_ms=interval_ms,
+            quality=quality,
+            lossless=lossless,
+            width=export_width,
+        )
+    )
+
+    population_current = population_map(
+        data,
+        metric="total_population",
+        comparison="current",
+        absolute_bounds=None,
+        absolute_scale="log1p",
+        **common,
+    )
+    exports.append(
+        save_population_map_animation(
+            population_current,
+            output_dir=absolute_dir,
+            filename="population_current.webp",
+            duration_ms=interval_ms,
+            quality=quality,
+            lossless=lossless,
+            width=export_width,
+        )
+    )
+
+    development_from_gamestart = development_map(
+        data,
+        mode="from_gamestart",
+        delta_bounds=(-10, 10),
+        **common,
+    )
+    exports.append(
+        save_development_map_animation(
+            development_from_gamestart,
+            output_dir=comparison_dir,
+            filename="development_from_gamestart.webp",
+            duration_ms=interval_ms,
+            quality=quality,
+            lossless=lossless,
+            width=export_width,
+        )
+    )
+
+    development_current = development_map(
+        data,
+        mode="current",
+        absolute_bounds=None,
+        **common,
+    )
+    exports.append(
+        save_development_map_animation(
+            development_current,
+            output_dir=absolute_dir,
+            filename="development_current.webp",
+            duration_ms=interval_ms,
+            quality=quality,
+            lossless=lossless,
+            width=export_width,
+        )
+    )
+
+    building_levels_from_gamestart = building_levels_map(
+        data,
+        mode="from_gamestart",
+        delta_bounds=(-50, 50),
+        absolute_bounds=None,
+        **common,
+    )
+    exports.append(
+        save_building_levels_map_animation(
+            building_levels_from_gamestart,
+            output_dir=comparison_dir,
+            filename="building_levels_from_gamestart.webp",
+            duration_ms=interval_ms,
+            quality=quality,
+            lossless=lossless,
+            width=export_width,
+        )
+    )
+
+    building_levels_current = building_levels_map(
+        data,
+        mode="current",
+        absolute_bounds=None,
+        **common,
+    )
+    exports.append(
+        save_building_levels_map_animation(
+            building_levels_current,
+            output_dir=absolute_dir,
+            filename="building_levels_current.webp",
+            duration_ms=interval_ms,
+            quality=quality,
+            lossless=lossless,
+            width=export_width,
+        )
+    )
+    return tuple(exports)
+
+
+def _resolve_output_path(repo: Path, path: str | Path) -> Path:
+    output = Path(path)
+    return output if output.is_absolute() else repo / output
 
 
 def global_buildings(data: SavegameNotebookData, workbench: Any) -> GlobalBuildingsResult:

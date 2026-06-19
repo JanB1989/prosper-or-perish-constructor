@@ -1387,6 +1387,7 @@ def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
     save_dir.mkdir()
     (save_dir / "autosave.eu5").write_text("save\n")
     calls: list[list[str]] = []
+    exports: list[tuple[Path, Path]] = []
 
     def fake_run(command, cwd):
         calls.append([str(part) for part in command])
@@ -1401,6 +1402,11 @@ def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
 
     monkeypatch.setattr(cli, "_run", fake_run)
     monkeypatch.setattr(cli, "_run_collecting_output", fake_run_collecting_output)
+    monkeypatch.setattr(
+        cli,
+        "_export_savegame_notebook_global_webps",
+        lambda *, repo, dataset, load_order, profile: exports.append((repo, dataset)),
+    )
 
     assert (
         cli.main(
@@ -1431,6 +1437,7 @@ def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
             "4",
         ]
     ]
+    assert exports == [(repo, repo / "graphs" / "dataset")]
 
 
 def test_savegame_notebooks_build_passes_extended_only_when_requested(
@@ -1449,6 +1456,7 @@ def test_savegame_notebooks_build_passes_extended_only_when_requested(
         return 0, "processed: 0\nskipped: 1\n"
 
     monkeypatch.setattr(cli, "_run_collecting_output", fake_run_collecting_output)
+    monkeypatch.setattr(cli, "_export_savegame_notebook_global_webps", lambda **kwargs: None)
 
     assert (
         cli.main(
@@ -1475,6 +1483,7 @@ def test_savegame_notebooks_build_no_ingest_reports_existing_raw_dataset(
     repo = _repo(tmp_path)
     _write_savegame_manifest(repo)
     calls: list[list[str]] = []
+    exports: list[Path] = []
 
     def fake_run(command, cwd):
         calls.append([str(part) for part in command])
@@ -1482,6 +1491,11 @@ def test_savegame_notebooks_build_no_ingest_reports_existing_raw_dataset(
         return 0
 
     monkeypatch.setattr(cli, "_run", fake_run)
+    monkeypatch.setattr(
+        cli,
+        "_export_savegame_notebook_global_webps",
+        lambda *, repo, dataset, load_order, profile: exports.append(dataset),
+    )
 
     assert cli.main(["--repo", str(repo), "savegame-notebooks", "build", "--no-ingest"]) == 0
     output = capsys.readouterr().out
@@ -1489,6 +1503,25 @@ def test_savegame_notebooks_build_no_ingest_reports_existing_raw_dataset(
     assert "notebook rewrite: skipped (not required)" in output
 
     assert calls == []
+    assert exports == [repo / "graphs" / "dataset"]
+
+
+def test_savegame_notebooks_build_no_webp_skips_global_exports(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    _write_savegame_manifest(repo)
+    exports: list[Path] = []
+
+    monkeypatch.setattr(
+        cli,
+        "_export_savegame_notebook_global_webps",
+        lambda *, repo, dataset, load_order, profile: exports.append(dataset),
+    )
+
+    assert cli.main(["--repo", str(repo), "savegame-notebooks", "build", "--no-ingest", "--no-webp"]) == 0
+
+    assert exports == []
 
 
 def test_savegame_notebooks_build_auto_detects_save_dir(
@@ -1582,6 +1615,7 @@ def test_savegame_purge_deletes_generated_savegame_outputs(tmp_path: Path) -> No
     notebook_data_dir = repo / "graphs" / "savegame_notebooks" / "data"
     dataset_v2_dir = repo / "graphs" / "dataset_v2"
     progression_dataset_dir = repo / "graphs" / "savegame_progression_dataset"
+    notebook_exports_dir = repo / "graphs" / "savegame_notebooks" / "exports"
     explorer = repo / "graphs" / "savegame_explorer.html"
     progression_explorer = repo / "graphs" / "savegame_progression.html"
     published_explorer = repo / "docs" / "examples" / "savegame_explorer.html"
@@ -1596,6 +1630,9 @@ def test_savegame_purge_deletes_generated_savegame_outputs(tmp_path: Path) -> No
     (dataset_dir / "manifest.json").write_text("{}\n")
     notebook_data_dir.mkdir(parents=True)
     (notebook_data_dir / "metadata.json").write_text("{}\n")
+    notebook_exports_dir.mkdir(parents=True)
+    (notebook_exports_dir / "absolute" / "population_current.webp").parent.mkdir()
+    (notebook_exports_dir / "absolute" / "population_current.webp").write_text("webp\n")
     dataset_v2_dir.mkdir(parents=True)
     (dataset_v2_dir / "manifest.json").write_text("{}\n")
     progression_dataset_dir.mkdir(parents=True)
@@ -1612,6 +1649,7 @@ def test_savegame_purge_deletes_generated_savegame_outputs(tmp_path: Path) -> No
     assert not progression_dir.exists()
     assert not dataset_dir.exists()
     assert not notebook_data_dir.exists()
+    assert not notebook_exports_dir.exists()
     assert not dataset_v2_dir.exists()
     assert not progression_dataset_dir.exists()
     assert not explorer.exists()

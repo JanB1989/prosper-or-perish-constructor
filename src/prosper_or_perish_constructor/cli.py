@@ -26,6 +26,7 @@ FOCUSED_RELABEL_DEFAULT_MIN_TARGET_APPEARANCES = 5
 FOCUSED_RELABEL_DEFAULT_TARGET_SIGMA_RATIO = 1.0
 SAVEGAME_DATASET = Path("graphs/dataset")
 SAVEGAME_NOTEBOOK_DATA = Path("graphs/savegame_notebooks/data")
+SAVEGAME_NOTEBOOK_EXPORTS = Path("graphs/savegame_notebooks/exports")
 SAVEGAME_LEGACY_DATASETS = (
     Path("graphs/dataset_v2"),
     Path("graphs/savegame_progression_dataset"),
@@ -57,6 +58,7 @@ SAVEGAME_PURGE_PATHS = (
     PUBLISHED_SAVEGAME_EXPLORER,
     SAVEGAME_DATASET,
     SAVEGAME_NOTEBOOK_DATA,
+    SAVEGAME_NOTEBOOK_EXPORTS,
     *SAVEGAME_LEGACY_DATASETS,
 )
 SETUP_CORRECTION_SCRIPT = Path("scripts/generate_setup_building_corrections.py")
@@ -562,6 +564,11 @@ def _build_parser() -> argparse.ArgumentParser:
         "--force",
         action="store_true",
         help="Rebuild notebook parquet even when existing output metadata is current.",
+    )
+    savegame_notebooks_build.add_argument(
+        "--no-webp",
+        action="store_true",
+        help="Skip the standard global WebP map animation exports.",
     )
     _add_command(
         subcommands,
@@ -3156,20 +3163,58 @@ def _savegame_notebooks_build(
     elif args.save_dir is not None:
         active_save_dir = _repo_path(repo, args.save_dir).expanduser()
 
+    dataset = _repo_path(repo, args.dataset)
     _print_savegame_notebook_dataset_status(
         repo,
-        _repo_path(repo, args.dataset),
+        dataset,
         output=_repo_path(repo, args.output),
         force=args.force,
         active_save_dir=active_save_dir,
         require_manifest=args.no_ingest,
     )
+    if not args.no_webp:
+        if (dataset / "manifest.parquet").is_file():
+            _export_savegame_notebook_global_webps(
+                repo=repo,
+                dataset=dataset,
+                load_order=_repo_path(repo, args.load_order),
+                profile=args.profile,
+            )
+        else:
+            print("global webp exports: skipped (raw dataset manifest missing)", flush=True)
     return 0
 
 
 def _extract_report_count(output: str, key: str) -> int | None:
     match = re.search(rf"(?m)^{re.escape(key)}:\s*(\d+)\s*$", output)
     return int(match.group(1)) if match else None
+
+
+def _export_savegame_notebook_global_webps(
+    *,
+    repo: Path,
+    dataset: Path,
+    load_order: Path,
+    profile: str,
+) -> None:
+    from prosper_or_perish_constructor import savegame_notebook
+
+    print("global webp exports: rendering", flush=True)
+    exports = savegame_notebook.export_global_map_animations(
+        repo=repo,
+        data_root=dataset,
+        load_order_path=load_order,
+        profile=profile,
+    )
+    for export in exports:
+        print(f"global webp: {_display_path(repo, export.path)}", flush=True)
+
+
+def _display_path(repo: Path, path: Path) -> Path:
+    try:
+        return path.relative_to(repo)
+    except ValueError:
+        return path
 
 
 def _print_savegame_notebook_dataset_status(

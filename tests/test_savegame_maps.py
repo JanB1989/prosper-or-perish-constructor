@@ -10,15 +10,25 @@ from prosper_or_perish_constructor import savegame_maps
 
 
 class FakeNotebookData:
-    def __init__(self, *, locations: pl.DataFrame, location_dim: pl.DataFrame, assets: savegame_maps.SavegameMapAssets):
+    def __init__(
+        self,
+        *,
+        locations: pl.DataFrame,
+        location_dim: pl.DataFrame,
+        assets: savegame_maps.SavegameMapAssets,
+        buildings: pl.DataFrame | None = None,
+    ):
         self._locations = locations
         self._location_dim = location_dim
+        self._buildings = buildings if buildings is not None else pl.DataFrame()
         self.map_assets = assets
         self.playthrough = "run_1"
 
     def table(self, name: str) -> pl.DataFrame:
         if name == "locations":
             return self._locations
+        if name == "buildings":
+            return self._buildings
         return pl.DataFrame()
 
     def dim(self, name: str) -> pl.DataFrame:
@@ -188,6 +198,62 @@ def test_development_map_widget_and_export(tmp_path: Path) -> None:
     assert export.frames == 2
 
 
+def test_building_levels_map_from_gamestart_and_current(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+
+    changed = savegame_maps.building_levels_map(
+        data,
+        scope="super_region",
+        name="asia",
+        mode="from_gamestart",
+        delta_bounds=(-5, 5),
+        width=160,
+    )
+    current = savegame_maps.building_levels_map(
+        data,
+        scope="super_region",
+        name="asia",
+        mode="current",
+        absolute_bounds=(0, 500),
+        width=160,
+    )
+
+    assert len(changed.frames) == 2
+    assert changed.value_bounds == (-5, 5)
+    changed_values = {
+        (row["slug"], row["date_sort"]): row["building_levels_map_value"]
+        for row in changed.frame_data.select("slug", "date_sort", "building_levels_map_value").iter_rows(named=True)
+    }
+    assert changed_values[("alpha", 13420401)] == 0.0
+    assert changed_values[("alpha", 13470401)] == 3.0
+    assert changed_values[("bravo", 13470401)] == 5.0
+    assert len(current.frames) == 2
+    assert current.value_bounds == (0.0, 500.0)
+    current_values = {
+        (row["slug"], row["date_sort"]): row["building_levels_map_value"]
+        for row in current.frame_data.select("slug", "date_sort", "building_levels_map_value").iter_rows(named=True)
+    }
+    assert current_values[("alpha", 13420401)] == 2.0
+    assert current_values[("bravo", 13470401)] == 8.0
+
+
+def test_show_building_levels_map_can_skip_widget_display(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+
+    result = savegame_maps.show_building_levels_map(
+        data,
+        scope="super_region",
+        name="asia",
+        mode="current",
+        width=160,
+        display_widget=False,
+        display_diagnostics=False,
+    )
+
+    assert result.widget is None
+    assert len(result.frames) == 2
+
+
 def test_load_packed_locations_uses_nearest_neighbor(tmp_path: Path) -> None:
     path = tmp_path / "locations.png"
     Image.fromarray(
@@ -239,7 +305,17 @@ def _fake_data(tmp_path: Path, *, include_missing_geometry: bool) -> FakeNoteboo
         ]
         + ([_dim_row(4, "delta", "asia", "Asia")] if include_missing_geometry else [])
     )
-    return FakeNotebookData(locations=locations, location_dim=location_dim, assets=assets)
+    buildings = pl.DataFrame(
+        [
+            _building_row("s1", "1342.4.1", 13420401, 1342, 1, 1.0),
+            _building_row("s1", "1342.4.1", 13420401, 1342, 1, 1.0),
+            _building_row("s1", "1342.4.1", 13420401, 1342, 2, 1.0),
+            _building_row("s2", "1347.4.1", 13470401, 1347, 1, 2.0),
+            _building_row("s2", "1347.4.1", 13470401, 1347, 1, 3.0),
+            _building_row("s2", "1347.4.1", 13470401, 1347, 2, 8.0),
+        ]
+    )
+    return FakeNotebookData(locations=locations, location_dim=location_dim, assets=assets, buildings=buildings)
 
 
 def _fake_assets(tmp_path: Path) -> savegame_maps.SavegameMapAssets:
@@ -291,6 +367,18 @@ def _location_row(
         "location_code": location_code,
         "total_population": population,
         "development": development,
+    }
+
+
+def _building_row(snapshot_id: str, date: str, date_sort: int, year: int, location_code: int, level: float) -> dict[str, object]:
+    return {
+        "snapshot_id": snapshot_id,
+        "playthrough_id": "run_1",
+        "date": date,
+        "date_sort": date_sort,
+        "year": year,
+        "location_code": location_code,
+        "level": level,
     }
 
 

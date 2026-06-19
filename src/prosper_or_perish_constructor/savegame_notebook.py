@@ -748,6 +748,8 @@ def show_population_map(
     relative_bounds: tuple[float, float] = savegame_maps.DEFAULT_RELATIVE_BOUNDS,
     width: int | None = None,
     interval_ms: int = 700,
+    display_widget: bool = True,
+    display_diagnostics: bool = True,
     playthrough: str | None = None,
     start_date: int | None = None,
     end_date: int | None = None,
@@ -762,6 +764,8 @@ def show_population_map(
         relative_bounds=relative_bounds,
         width=width,
         interval_ms=interval_ms,
+        display_widget=display_widget,
+        display_diagnostics=display_diagnostics,
         playthrough=playthrough,
         start_date=start_date,
         end_date=end_date,
@@ -778,6 +782,7 @@ def save_population_map_animation(
     loop: int = 0,
     quality: int = 100,
     lossless: bool = True,
+    width: int | None = None,
     overwrite: bool = True,
 ) -> savegame_maps.AnimationExportResult:
     return savegame_maps.save_population_map_animation(
@@ -789,6 +794,7 @@ def save_population_map_animation(
         loop=loop,
         quality=quality,
         lossless=lossless,
+        width=width,
         overwrite=overwrite,
     )
 
@@ -830,6 +836,8 @@ def show_development_map(
     delta_bounds: tuple[float, float] = savegame_maps.DEFAULT_DEVELOPMENT_DELTA_BOUNDS,
     width: int | None = None,
     interval_ms: int = 700,
+    display_widget: bool = True,
+    display_diagnostics: bool = True,
     playthrough: str | None = None,
     start_date: int | None = None,
     end_date: int | None = None,
@@ -843,6 +851,8 @@ def show_development_map(
         delta_bounds=delta_bounds,
         width=width,
         interval_ms=interval_ms,
+        display_widget=display_widget,
+        display_diagnostics=display_diagnostics,
         playthrough=playthrough,
         start_date=start_date,
         end_date=end_date,
@@ -859,6 +869,7 @@ def save_development_map_animation(
     loop: int = 0,
     quality: int = 100,
     lossless: bool = True,
+    width: int | None = None,
     overwrite: bool = True,
 ) -> savegame_maps.AnimationExportResult:
     return savegame_maps.save_development_map_animation(
@@ -870,6 +881,98 @@ def save_development_map_animation(
         loop=loop,
         quality=quality,
         lossless=lossless,
+        width=width,
+        overwrite=overwrite,
+    )
+
+
+def building_levels_map(
+    data: SavegameNotebookData,
+    *,
+    scope: str = "super_region",
+    name: str,
+    mode: str = "from_gamestart",
+    baseline_date: int | str | None = None,
+    delta_bounds: tuple[float, float] = savegame_maps.DEFAULT_BUILDING_LEVEL_DELTA_BOUNDS,
+    absolute_bounds: tuple[float, float] = savegame_maps.DEFAULT_BUILDING_LEVEL_BOUNDS,
+    width: int | None = None,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> savegame_maps.BuildingLevelsMapResult:
+    return savegame_maps.building_levels_map(
+        data,
+        scope=scope,
+        name=name,
+        mode=mode,
+        baseline_date=baseline_date,
+        delta_bounds=delta_bounds,
+        absolute_bounds=absolute_bounds,
+        width=width,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+
+def show_building_levels_map(
+    data: SavegameNotebookData,
+    *,
+    scope: str = "super_region",
+    name: str,
+    mode: str = "from_gamestart",
+    baseline_date: int | str | None = None,
+    delta_bounds: tuple[float, float] = savegame_maps.DEFAULT_BUILDING_LEVEL_DELTA_BOUNDS,
+    absolute_bounds: tuple[float, float] = savegame_maps.DEFAULT_BUILDING_LEVEL_BOUNDS,
+    width: int | None = None,
+    interval_ms: int = 700,
+    display_widget: bool = True,
+    display_diagnostics: bool = True,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> savegame_maps.BuildingLevelsMapResult:
+    return savegame_maps.show_building_levels_map(
+        data,
+        scope=scope,
+        name=name,
+        mode=mode,
+        baseline_date=baseline_date,
+        delta_bounds=delta_bounds,
+        absolute_bounds=absolute_bounds,
+        width=width,
+        interval_ms=interval_ms,
+        display_widget=display_widget,
+        display_diagnostics=display_diagnostics,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+
+def save_building_levels_map_animation(
+    result: savegame_maps.BuildingLevelsMapResult,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
+    filename: str = "building_levels_change.webp",
+    duration_ms: int = 700,
+    loop: int = 0,
+    quality: int = 100,
+    lossless: bool = True,
+    width: int | None = None,
+    overwrite: bool = True,
+) -> savegame_maps.AnimationExportResult:
+    return savegame_maps.save_building_levels_map_animation(
+        result,
+        path=path,
+        output_dir=output_dir,
+        filename=filename,
+        duration_ms=duration_ms,
+        loop=loop,
+        quality=quality,
+        lossless=lossless,
+        width=width,
         overwrite=overwrite,
     )
 

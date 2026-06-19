@@ -768,6 +768,112 @@ def show_population_map(
     )
 
 
+def save_population_map_animation(
+    result: savegame_maps.PopulationMapResult,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
+    filename: str = "population_change.webp",
+    duration_ms: int = 700,
+    loop: int = 0,
+    quality: int = 100,
+    lossless: bool = True,
+    overwrite: bool = True,
+) -> savegame_maps.AnimationExportResult:
+    return savegame_maps.save_population_map_animation(
+        result,
+        path=path,
+        output_dir=output_dir,
+        filename=filename,
+        duration_ms=duration_ms,
+        loop=loop,
+        quality=quality,
+        lossless=lossless,
+        overwrite=overwrite,
+    )
+
+
+def development_map(
+    data: SavegameNotebookData,
+    *,
+    scope: str = "super_region",
+    name: str,
+    mode: str = "from_gamestart",
+    baseline_date: int | str | None = None,
+    delta_bounds: tuple[float, float] = savegame_maps.DEFAULT_DEVELOPMENT_DELTA_BOUNDS,
+    width: int | None = None,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> savegame_maps.DevelopmentMapResult:
+    return savegame_maps.development_map(
+        data,
+        scope=scope,
+        name=name,
+        mode=mode,
+        baseline_date=baseline_date,
+        delta_bounds=delta_bounds,
+        width=width,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+
+def show_development_map(
+    data: SavegameNotebookData,
+    *,
+    scope: str = "super_region",
+    name: str,
+    mode: str = "from_gamestart",
+    baseline_date: int | str | None = None,
+    delta_bounds: tuple[float, float] = savegame_maps.DEFAULT_DEVELOPMENT_DELTA_BOUNDS,
+    width: int | None = None,
+    interval_ms: int = 700,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> savegame_maps.DevelopmentMapResult:
+    return savegame_maps.show_development_map(
+        data,
+        scope=scope,
+        name=name,
+        mode=mode,
+        baseline_date=baseline_date,
+        delta_bounds=delta_bounds,
+        width=width,
+        interval_ms=interval_ms,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+
+def save_development_map_animation(
+    result: savegame_maps.DevelopmentMapResult,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
+    filename: str = "development_change.webp",
+    duration_ms: int = 700,
+    loop: int = 0,
+    quality: int = 100,
+    lossless: bool = True,
+    overwrite: bool = True,
+) -> savegame_maps.AnimationExportResult:
+    return savegame_maps.save_development_map_animation(
+        result,
+        path=path,
+        output_dir=output_dir,
+        filename=filename,
+        duration_ms=duration_ms,
+        loop=loop,
+        quality=quality,
+        lossless=lossless,
+        overwrite=overwrite,
+    )
+
+
 def global_buildings(data: SavegameNotebookData, workbench: Any) -> GlobalBuildingsResult:
     schema = {
         "snapshot_id": pl.String,

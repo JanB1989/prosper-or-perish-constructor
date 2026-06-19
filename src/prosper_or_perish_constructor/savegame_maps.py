@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import polars as pl
 from IPython.display import display
-from matplotlib.colors import TwoSlopeNorm
+from matplotlib.colors import Normalize, TwoSlopeNorm
 from PIL import Image
 
 from eu5gameparser.load_order import LoadOrderConfig
@@ -43,6 +43,8 @@ GEOGRAPHY_SCOPE_SEARCH_COLUMNS = {
 }
 
 DEFAULT_RELATIVE_BOUNDS = (-100.0, 300.0)
+DEFAULT_DEVELOPMENT_BOUNDS = (0.0, 100.0)
+DEFAULT_DEVELOPMENT_DELTA_BOUNDS = (-10.0, 10.0)
 DEFAULT_BACKGROUND = np.array([238, 238, 232], dtype=np.uint8)
 DEFAULT_UNSELECTED = np.array([184, 184, 178], dtype=np.uint8)
 
@@ -86,6 +88,34 @@ class PopulationMapResult:
     mapped_locations: int
     missing_geometry_locations: int
     widget: Any | None = None
+
+
+DevelopmentMapFrame = PopulationMapFrame
+
+
+@dataclass(frozen=True)
+class DevelopmentMapResult:
+    frames: tuple[DevelopmentMapFrame, ...]
+    frame_data: pl.DataFrame
+    baseline_snapshot_id: str
+    baseline_date: str
+    scope: str
+    name: str
+    mode: str
+    value_column: str
+    value_label: str
+    value_bounds: tuple[float, float]
+    mapped_locations: int
+    missing_geometry_locations: int
+    widget: Any | None = None
+
+
+@dataclass(frozen=True)
+class AnimationExportResult:
+    path: Path
+    format: str
+    frames: int
+    duration_ms: int
 
 
 def load_map_assets(
@@ -217,9 +247,10 @@ def population_map(
     snapshots = frame_data.select(["snapshot_id", "date", "date_sort", "year"]).unique().sort("date_sort")
     for index, snapshot in enumerate(snapshots.iter_rows(named=True)):
         snapshot_frame = frame_data.filter(pl.col("snapshot_id") == snapshot["snapshot_id"])
-        png = _render_population_frame(
+        png = _render_metric_frame(
             assets,
             snapshot_frame,
+            value_column="relative_change_pct",
             crop=crop,
             render_width=render_width,
             color_norm=color_norm,
@@ -314,15 +345,254 @@ def show_population_map(
     )
 
 
+def development_map(
+    data: Any,
+    *,
+    scope: str = "super_region",
+    name: str,
+    mode: str = "from_gamestart",
+    baseline_date: int | str | None = None,
+    delta_bounds: tuple[float, float] = DEFAULT_DEVELOPMENT_DELTA_BOUNDS,
+    width: int | None = None,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> DevelopmentMapResult:
+    """Pre-render scoped development map frames."""
+
+    assets = getattr(data, "map_assets", None)
+    if assets is None:
+        raise RuntimeError(
+            "Map assets are not loaded. Rerun the notebook loader with "
+            "`data = nb.open_data(load_map_assets=True)`."
+        )
+    normalized_mode = _normalize_development_mode(mode)
+    low, high = (
+        _normalize_development_delta_bounds(delta_bounds)
+        if normalized_mode == "from_gamestart"
+        else DEFAULT_DEVELOPMENT_BOUNDS
+    )
+    locations = _metric_locations(
+        data,
+        metric="development",
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+        metric_label="Development",
+    )
+    if locations.is_empty():
+        return DevelopmentMapResult((), pl.DataFrame(), "", "", _normalize_scope(scope), name, normalized_mode, "", "", (low, high), 0, 0)
+
+    normalized_scope = _normalize_scope(scope)
+    filtered, resolved_name = _filter_scope(locations, normalized_scope, name)
+    if filtered.is_empty():
+        return DevelopmentMapResult((), pl.DataFrame(), "", "", normalized_scope, name, normalized_mode, "", "", (low, high), 0, 0)
+
+    geometry = _prepared_geometry(assets)
+    selected = filtered.join(geometry, left_on="slug", right_on="location_tag", how="left")
+    selected = selected.with_columns(
+        pl.col("map_color_int").is_not_null().alias("has_geometry"),
+    )
+    missing_geometry_locations = selected.filter(~pl.col("has_geometry")).select("slug").n_unique()
+    mapped = selected.filter(pl.col("has_geometry")).sort(["date_sort", "slug"])
+    if mapped.is_empty():
+        return DevelopmentMapResult(
+            (),
+            selected,
+            "",
+            "",
+            normalized_scope,
+            resolved_name,
+            normalized_mode,
+            "",
+            "",
+            (low, high),
+            0,
+            int(missing_geometry_locations),
+        )
+
+    baseline_snapshot_id = ""
+    baseline_date_label = ""
+    if normalized_mode == "from_gamestart":
+        baseline = _resolve_baseline_snapshot(mapped, baseline_date)
+        baseline_snapshot_id = str(baseline["snapshot_id"])
+        baseline_date_label = str(baseline["date"])
+        baseline_values = (
+            mapped.filter(pl.col("snapshot_id") == baseline_snapshot_id)
+            .select("slug", pl.col("development").cast(pl.Float64).alias("baseline_development"))
+            .unique("slug")
+        )
+        frame_data = (
+            mapped.join(baseline_values, on="slug", how="left")
+            .with_columns(
+                (pl.col("development").cast(pl.Float64).fill_null(0.0) - pl.col("baseline_development").cast(pl.Float64).fill_null(0.0))
+                .alias("development_delta"),
+            )
+            .with_columns(pl.col("development_delta").clip(low, high).alias("development_map_value"))
+            .sort(["date_sort", "slug"])
+        )
+        value_column = "development_map_value"
+        value_label = f"development change from {baseline_date_label} (points)"
+        color_norm: Normalize | TwoSlopeNorm = TwoSlopeNorm(vmin=low, vcenter=0.0, vmax=high)
+        cmap = plt.get_cmap("BrBG")
+        title = f"{resolved_name} development change vs {baseline_date_label}"
+        subtitle_suffix = f"development point delta, clamped to {low:g}..{high:g}"
+    else:
+        frame_data = (
+            mapped.with_columns(
+                pl.col("development").cast(pl.Float64).fill_null(0.0).clip(low, high).alias("development_map_value")
+            )
+            .sort(["date_sort", "slug"])
+        )
+        value_column = "development_map_value"
+        value_label = "current development (0..100)"
+        color_norm = Normalize(vmin=low, vmax=high)
+        cmap = plt.get_cmap("cividis")
+        title = f"{resolved_name} current development"
+        subtitle_suffix = "development, fixed 0..100 scale"
+
+    crop = _scope_crop(frame_data, assets, padding=18)
+    target_width = width or assets.map_width
+    render_width = min(max(int(target_width), 200), assets.map_width)
+
+    frames: list[DevelopmentMapFrame] = []
+    snapshots = frame_data.select(["snapshot_id", "date", "date_sort", "year"]).unique().sort("date_sort")
+    for index, snapshot in enumerate(snapshots.iter_rows(named=True)):
+        snapshot_frame = frame_data.filter(pl.col("snapshot_id") == snapshot["snapshot_id"])
+        png = _render_metric_frame(
+            assets,
+            snapshot_frame,
+            value_column=value_column,
+            crop=crop,
+            render_width=render_width,
+            color_norm=color_norm,
+            cmap=cmap,
+            title=title,
+            subtitle=f"{snapshot['date']} - {subtitle_suffix}",
+        )
+        frames.append(
+            DevelopmentMapFrame(
+                index=index,
+                snapshot_id=str(snapshot["snapshot_id"]),
+                date=str(snapshot["date"]),
+                date_sort=int(snapshot["date_sort"]),
+                year=int(snapshot["year"]),
+                png=png,
+            )
+        )
+
+    mapped_locations = frame_data.select("slug").n_unique()
+    return DevelopmentMapResult(
+        frames=tuple(frames),
+        frame_data=frame_data,
+        baseline_snapshot_id=baseline_snapshot_id,
+        baseline_date=baseline_date_label,
+        scope=normalized_scope,
+        name=resolved_name,
+        mode=normalized_mode,
+        value_column=value_column,
+        value_label=value_label,
+        value_bounds=(low, high),
+        mapped_locations=int(mapped_locations),
+        missing_geometry_locations=int(missing_geometry_locations),
+    )
+
+
+def show_development_map(
+    data: Any,
+    *,
+    scope: str = "super_region",
+    name: str,
+    mode: str = "from_gamestart",
+    baseline_date: int | str | None = None,
+    delta_bounds: tuple[float, float] = DEFAULT_DEVELOPMENT_DELTA_BOUNDS,
+    width: int | None = None,
+    interval_ms: int = 700,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> DevelopmentMapResult:
+    result = development_map(
+        data,
+        scope=scope,
+        name=name,
+        mode=mode,
+        baseline_date=baseline_date,
+        delta_bounds=delta_bounds,
+        width=width,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    widget = development_map_widget(result, interval_ms=interval_ms)
+    if widget is not None:
+        display(widget)
+    diagnostics = pl.DataFrame(
+        [
+            {
+                "scope": result.scope,
+                "name": result.name,
+                "mode": result.mode,
+                "baseline_date": result.baseline_date,
+                "frames": len(result.frames),
+                "mapped_locations": result.mapped_locations,
+                "missing_geometry_locations": result.missing_geometry_locations,
+            }
+        ]
+    )
+    display(diagnostics)
+    return DevelopmentMapResult(
+        frames=result.frames,
+        frame_data=result.frame_data,
+        baseline_snapshot_id=result.baseline_snapshot_id,
+        baseline_date=result.baseline_date,
+        scope=result.scope,
+        name=result.name,
+        mode=result.mode,
+        value_column=result.value_column,
+        value_label=result.value_label,
+        value_bounds=result.value_bounds,
+        mapped_locations=result.mapped_locations,
+        missing_geometry_locations=result.missing_geometry_locations,
+        widget=widget,
+    )
+
+
+def development_map_widget(result: DevelopmentMapResult, *, interval_ms: int = 700) -> Any | None:
+    if not result.frames:
+        print("No development map frames")
+        return None
+    return _map_widget(
+        result.frames,
+        label_for_index=lambda index: _development_frame_label(result, index),
+        interval_ms=interval_ms,
+    )
+
+
 def population_map_widget(result: PopulationMapResult, *, interval_ms: int = 700) -> Any | None:
     if not result.frames:
         print("No population map frames")
         return None
+    return _map_widget(
+        result.frames,
+        label_for_index=lambda index: _population_frame_label(result, index),
+        interval_ms=interval_ms,
+    )
+
+
+def _map_widget(
+    frames: tuple[PopulationMapFrame, ...],
+    *,
+    label_for_index: Any,
+    interval_ms: int,
+) -> Any | None:
+    if not frames:
+        return None
     import ipywidgets as widgets
 
-    image = widgets.Image(value=result.frames[0].png, format="png", layout=widgets.Layout(width="100%"))
-    label = widgets.HTML(value=_frame_label(result, 0))
-    options = [(f"{frame.date} ({frame.year})", frame.index) for frame in result.frames]
+    image = widgets.Image(value=frames[0].png, format="png", layout=widgets.Layout(width="100%"))
+    label = widgets.HTML(value=label_for_index(0))
+    options = [(f"{frame.date} ({frame.year})", frame.index) for frame in frames]
     slider = widgets.SelectionSlider(
         options=options,
         value=0,
@@ -333,7 +603,7 @@ def population_map_widget(result: PopulationMapResult, *, interval_ms: int = 700
     play = widgets.Play(
         value=0,
         min=0,
-        max=len(result.frames) - 1,
+        max=len(frames) - 1,
         step=1,
         interval=max(int(interval_ms), 100),
         repeat=True,
@@ -346,11 +616,105 @@ def population_map_widget(result: PopulationMapResult, *, interval_ms: int = 700
         if change.get("name") != "index":
             return
         index = int(change["new"])
-        image.value = result.frames[index].png
-        label.value = _frame_label(result, index)
+        image.value = frames[index].png
+        label.value = label_for_index(index)
 
     slider.observe(_on_change, names="index")
     return widgets.VBox([widgets.HBox([play]), slider, label, image])
+
+
+def save_population_map_animation(
+    result: PopulationMapResult,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
+    filename: str = "population_change.webp",
+    duration_ms: int = 700,
+    loop: int = 0,
+    quality: int = 100,
+    lossless: bool = True,
+    overwrite: bool = True,
+) -> AnimationExportResult:
+    """Write pre-rendered population map frames as an animated WebP or GIF."""
+
+    return save_map_animation(
+        result,
+        path=path,
+        output_dir=output_dir,
+        filename=filename,
+        duration_ms=duration_ms,
+        loop=loop,
+        quality=quality,
+        lossless=lossless,
+        overwrite=overwrite,
+    )
+
+
+def save_development_map_animation(
+    result: DevelopmentMapResult,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
+    filename: str = "development_change.webp",
+    duration_ms: int = 700,
+    loop: int = 0,
+    quality: int = 100,
+    lossless: bool = True,
+    overwrite: bool = True,
+) -> AnimationExportResult:
+    return save_map_animation(
+        result,
+        path=path,
+        output_dir=output_dir,
+        filename=filename,
+        duration_ms=duration_ms,
+        loop=loop,
+        quality=quality,
+        lossless=lossless,
+        overwrite=overwrite,
+    )
+
+
+def save_map_animation(
+    result: Any,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
+    filename: str,
+    duration_ms: int = 700,
+    loop: int = 0,
+    quality: int = 100,
+    lossless: bool = True,
+    overwrite: bool = True,
+) -> AnimationExportResult:
+    if not result.frames:
+        raise ValueError("Cannot export an animation without map frames.")
+    output_path = _animation_output_path(path=path, output_dir=output_dir, filename=filename)
+    if output_path.exists() and not overwrite:
+        raise FileExistsError(f"Animation already exists: {output_path}")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    frames = [_image_from_png(frame.png) for frame in result.frames]
+    animation_format = _animation_format(output_path)
+    duration = max(int(duration_ms), 20)
+    if animation_format == "webp":
+        _save_webp_animation(
+            frames,
+            output_path,
+            duration_ms=duration,
+            loop=loop,
+            quality=quality,
+            lossless=lossless,
+        )
+    elif animation_format == "gif":
+        _save_gif_animation(frames, output_path, duration_ms=duration, loop=loop)
+    else:
+        raise ValueError("Animation path must end in .webp or .gif.")
+    return AnimationExportResult(
+        path=output_path,
+        format=animation_format,
+        frames=len(frames),
+        duration_ms=duration,
+    )
 
 
 def _resolve_cache_path(repo: Path, cache: str | Path | None) -> Path | None:
@@ -426,11 +790,30 @@ def _population_locations(
     start_date: int | None,
     end_date: int | None,
 ) -> pl.DataFrame:
+    return _metric_locations(
+        data,
+        metric=metric,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+        metric_label="Population metric",
+    )
+
+
+def _metric_locations(
+    data: Any,
+    *,
+    metric: str,
+    playthrough: str | None,
+    start_date: int | None,
+    end_date: int | None,
+    metric_label: str,
+) -> pl.DataFrame:
     locations = data.table("locations")
     if locations.is_empty():
         return pl.DataFrame()
     if metric not in locations.columns:
-        raise ValueError(f"Population metric {metric!r} is not available in the loaded locations table.")
+        raise ValueError(f"{metric_label} {metric!r} is not available in the loaded locations table.")
     selected_playthrough = playthrough or getattr(data, "playthrough", None)
     if selected_playthrough is not None and "playthrough_id" in locations.columns:
         locations = locations.filter(pl.col("playthrough_id") == selected_playthrough)
@@ -519,13 +902,14 @@ def _scope_crop(frame: pl.DataFrame, assets: SavegameMapAssets, *, padding: int)
     return (x0, y0, x1, y1)
 
 
-def _render_population_frame(
+def _render_metric_frame(
     assets: SavegameMapAssets,
     frame: pl.DataFrame,
     *,
+    value_column: str,
     crop: tuple[int, int, int, int],
     render_width: int,
-    color_norm: TwoSlopeNorm,
+    color_norm: Normalize | TwoSlopeNorm,
     cmap: Any,
     title: str,
     subtitle: str,
@@ -536,10 +920,10 @@ def _render_population_frame(
     rgb[:, :] = DEFAULT_BACKGROUND
     land_mask = packed != 0
     rgb[land_mask] = DEFAULT_UNSELECTED
-    color_values = frame.select("map_color_int", "relative_change_pct").unique("map_color_int").sort("map_color_int")
+    color_values = frame.select("map_color_int", value_column).unique("map_color_int").sort("map_color_int")
     if not color_values.is_empty():
         colors = np.array(color_values.get_column("map_color_int").to_list(), dtype=np.uint32)
-        values = np.array(color_values.get_column("relative_change_pct").to_list(), dtype=np.float64)
+        values = np.array(color_values.get_column(value_column).to_list(), dtype=np.float64)
         mapped_rgb = (np.asarray(cmap(color_norm(values)))[:, :3] * 255).astype(np.uint8)
         flat = packed.reshape(-1)
         indexes = np.searchsorted(colors, flat)
@@ -578,7 +962,78 @@ def _png_bytes(image: Image.Image) -> bytes:
     return buffer.getvalue()
 
 
-def _frame_label(result: PopulationMapResult, index: int) -> str:
+def _image_from_png(data: bytes) -> Image.Image:
+    image = Image.open(BytesIO(data))
+    image.load()
+    return image.convert("RGB")
+
+
+def _animation_output_path(*, path: str | Path | None, output_dir: str | Path, filename: str) -> Path:
+    output_path = Path(path) if path is not None else Path(output_dir) / filename
+    if output_path.is_absolute():
+        return output_path
+    return _repo_relative_path(output_path)
+
+
+def _repo_relative_path(path: Path) -> Path:
+    current = Path.cwd().resolve()
+    for candidate in (current, *current.parents):
+        if (candidate / "constructor.toml").is_file():
+            return candidate / path
+    return path
+
+
+def _animation_format(path: Path) -> str:
+    suffix = path.suffix.lower()
+    if suffix == ".webp":
+        return "webp"
+    if suffix == ".gif":
+        return "gif"
+    return suffix.removeprefix(".")
+
+
+def _save_webp_animation(
+    frames: list[Image.Image],
+    path: Path,
+    *,
+    duration_ms: int,
+    loop: int,
+    quality: int,
+    lossless: bool,
+) -> None:
+    try:
+        frames[0].save(
+            path,
+            format="WEBP",
+            save_all=True,
+            append_images=frames[1:],
+            duration=duration_ms,
+            loop=int(loop),
+            quality=max(1, min(int(quality), 100)),
+            lossless=bool(lossless),
+            method=6,
+        )
+    except OSError as exc:
+        raise RuntimeError(
+            "Pillow could not write an animated WebP in this environment. "
+            "Use a .gif output path as a fallback."
+        ) from exc
+
+
+def _save_gif_animation(frames: list[Image.Image], path: Path, *, duration_ms: int, loop: int) -> None:
+    frames[0].save(
+        path,
+        format="GIF",
+        save_all=True,
+        append_images=frames[1:],
+        duration=duration_ms,
+        loop=int(loop),
+        optimize=False,
+        disposal=2,
+    )
+
+
+def _population_frame_label(result: PopulationMapResult, index: int) -> str:
     frame = result.frames[index]
     low, high = result.relative_bounds
     return (
@@ -587,11 +1042,49 @@ def _frame_label(result: PopulationMapResult, index: int) -> str:
     )
 
 
+def _development_frame_label(result: DevelopmentMapResult, index: int) -> str:
+    frame = result.frames[index]
+    low, high = result.value_bounds
+    if result.mode == "from_gamestart":
+        detail = f"change from {result.baseline_date}, clamped to {low:g}..{high:g} development points"
+    else:
+        detail = f"current development, fixed {low:g}..{high:g} scale"
+    return f"<b>{result.name}</b> - {frame.date} - {detail}"
+
+
 def _normalize_relative_bounds(bounds: tuple[float, float]) -> tuple[float, float]:
     low, high = float(bounds[0]), float(bounds[1])
     if low >= 0 or high <= 0 or low >= high:
         raise ValueError("relative_bounds must span zero, for example (-100, 300).")
     return low, high
+
+
+def _normalize_development_delta_bounds(bounds: tuple[float, float]) -> tuple[float, float]:
+    low, high = float(bounds[0]), float(bounds[1])
+    if low >= 0 or high <= 0 or low >= high:
+        raise ValueError("delta_bounds must span zero, for example (-10, 10).")
+    return low, high
+
+
+def _normalize_development_mode(mode: str | None) -> str:
+    text = (mode or "from_gamestart").strip().lower().replace(" ", "_").replace("-", "_")
+    aliases = {
+        "game_start": "from_gamestart",
+        "gamestart": "from_gamestart",
+        "from_game_start": "from_gamestart",
+        "from_start": "from_gamestart",
+        "delta": "from_gamestart",
+        "delta_from_start": "from_gamestart",
+        "change": "from_gamestart",
+        "change_from_start": "from_gamestart",
+        "absolute": "current",
+        "value": "current",
+        "current_value": "current",
+    }
+    normalized = aliases.get(text, text)
+    if normalized not in {"from_gamestart", "current"}:
+        raise ValueError("development mode must be 'from_gamestart' or 'current'.")
+    return normalized
 
 
 def _normalize_population_metric(metric: str) -> str:

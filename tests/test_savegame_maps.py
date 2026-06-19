@@ -90,6 +90,104 @@ def test_population_map_widget_constructs_playback_controls(tmp_path: Path) -> N
     assert len(widget.children) == 4
 
 
+def test_save_population_map_animation_writes_webp_and_overwrites(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+    result = savegame_maps.population_map(data, scope="super_region", name="asia", width=160)
+    path = tmp_path / "population_change.webp"
+
+    first = savegame_maps.save_population_map_animation(result, path=path, duration_ms=250)
+    second = savegame_maps.save_population_map_animation(result, path=path, duration_ms=500)
+
+    assert first.path == path
+    assert first.format == "webp"
+    assert first.frames == 2
+    assert second.path == path
+    assert path.exists()
+    assert path.stat().st_size > 0
+
+
+def test_save_population_map_animation_writes_gif_fallback(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+    result = savegame_maps.population_map(data, scope="super_region", name="asia", width=160)
+    path = tmp_path / "population_change.gif"
+
+    export = savegame_maps.save_population_map_animation(result, path=path, duration_ms=250)
+
+    assert export.path == path
+    assert export.format == "gif"
+    assert export.frames == 2
+    assert path.exists()
+    assert path.stat().st_size > 0
+
+
+def test_development_map_from_gamestart_uses_point_delta(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+
+    result = savegame_maps.development_map(
+        data,
+        scope="super_region",
+        name="asia",
+        mode="from_gamestart",
+        delta_bounds=(-10, 10),
+        width=160,
+    )
+
+    assert len(result.frames) == 2
+    assert result.mode == "from_gamestart"
+    assert result.baseline_date == "1342.4.1"
+    assert result.value_bounds == (-10, 10)
+    values = {
+        (row["slug"], row["date_sort"]): (row["development_delta"], row["development_map_value"])
+        for row in result.frame_data.select("slug", "date_sort", "development_delta", "development_map_value").iter_rows(named=True)
+    }
+    assert values[("alpha", 13420401)] == (0.0, 0.0)
+    assert values[("bravo", 13420401)] == (0.0, 0.0)
+    assert values[("alpha", 13470401)] == (5.0, 5.0)
+    assert values[("bravo", 13470401)] == (20.0, 10.0)
+
+
+def test_development_map_current_uses_fixed_zero_to_hundred_scale(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+
+    result = savegame_maps.development_map(
+        data,
+        scope="super_region",
+        name="asia",
+        mode="current",
+        width=160,
+    )
+
+    assert len(result.frames) == 2
+    assert result.mode == "current"
+    assert result.baseline_date == ""
+    assert result.value_bounds == (0.0, 100.0)
+    values = {
+        (row["slug"], row["date_sort"]): row["development_map_value"]
+        for row in result.frame_data.select("slug", "date_sort", "development_map_value").iter_rows(named=True)
+    }
+    assert values[("alpha", 13420401)] == 10.0
+    assert values[("bravo", 13420401)] == 80.0
+    assert values[("alpha", 13470401)] == 15.0
+    assert values[("bravo", 13470401)] == 100.0
+
+
+def test_development_map_widget_and_export(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+    result = savegame_maps.development_map(data, scope="super_region", name="asia", mode="current", width=160)
+
+    widget = savegame_maps.development_map_widget(result, interval_ms=250)
+    export = savegame_maps.save_development_map_animation(
+        result,
+        path=tmp_path / "development_current.webp",
+        duration_ms=250,
+    )
+
+    assert widget is not None
+    assert len(widget.children) == 4
+    assert export.path.exists()
+    assert export.frames == 2
+
+
 def test_load_packed_locations_uses_nearest_neighbor(tmp_path: Path) -> None:
     path = tmp_path / "locations.png"
     Image.fromarray(
@@ -117,17 +215,17 @@ def _fake_data(tmp_path: Path, *, include_missing_geometry: bool) -> FakeNoteboo
     assets = _fake_assets(tmp_path)
     locations = pl.DataFrame(
         [
-            _location_row("s1", "1342.4.1", 13420401, 1342, 1, 0.0),
-            _location_row("s1", "1342.4.1", 13420401, 1342, 2, 10.0),
-            _location_row("s1", "1342.4.1", 13420401, 1342, 3, 20.0),
-            _location_row("s2", "1347.4.1", 13470401, 1347, 1, 5.0),
-            _location_row("s2", "1347.4.1", 13470401, 1347, 2, 0.0),
-            _location_row("s2", "1347.4.1", 13470401, 1347, 3, 30.0),
+            _location_row("s1", "1342.4.1", 13420401, 1342, 1, 0.0, development=10.0),
+            _location_row("s1", "1342.4.1", 13420401, 1342, 2, 10.0, development=80.0),
+            _location_row("s1", "1342.4.1", 13420401, 1342, 3, 20.0, development=25.0),
+            _location_row("s2", "1347.4.1", 13470401, 1347, 1, 5.0, development=15.0),
+            _location_row("s2", "1347.4.1", 13470401, 1347, 2, 0.0, development=100.0),
+            _location_row("s2", "1347.4.1", 13470401, 1347, 3, 30.0, development=40.0),
         ]
         + (
             [
-                _location_row("s1", "1342.4.1", 13420401, 1342, 4, 1.0),
-                _location_row("s2", "1347.4.1", 13470401, 1347, 4, 2.0),
+                _location_row("s1", "1342.4.1", 13420401, 1342, 4, 1.0, development=30.0),
+                _location_row("s2", "1347.4.1", 13470401, 1347, 4, 2.0, development=35.0),
             ]
             if include_missing_geometry
             else []
@@ -174,7 +272,16 @@ def _fake_assets(tmp_path: Path) -> savegame_maps.SavegameMapAssets:
     )
 
 
-def _location_row(snapshot_id: str, date: str, date_sort: int, year: int, location_code: int, population: float) -> dict[str, object]:
+def _location_row(
+    snapshot_id: str,
+    date: str,
+    date_sort: int,
+    year: int,
+    location_code: int,
+    population: float,
+    *,
+    development: float = 0.0,
+) -> dict[str, object]:
     return {
         "snapshot_id": snapshot_id,
         "playthrough_id": "run_1",
@@ -183,6 +290,7 @@ def _location_row(snapshot_id: str, date: str, date_sort: int, year: int, locati
         "year": year,
         "location_code": location_code,
         "total_population": population,
+        "development": development,
     }
 
 

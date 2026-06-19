@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from io import BytesIO
 from pathlib import Path
 
 import numpy as np
@@ -90,6 +91,197 @@ def test_population_map_reports_missing_geometry_locations(tmp_path: Path) -> No
     assert result.mapped_locations == 2
 
 
+def test_population_map_current_uses_absolute_population_scale(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+
+    result = savegame_maps.population_map(
+        data,
+        scope="super_region",
+        name="asia",
+        comparison="absolute",
+        width=160,
+    )
+
+    assert len(result.frames) == 2
+    assert result.comparison == "current"
+    assert result.baseline_date == ""
+    assert result.value_column == "population_map_value"
+    assert result.value_bounds == (0.0, 10.0)
+    values = {
+        (row["slug"], row["date_sort"]): row["population_map_value"]
+        for row in result.frame_data.select("slug", "date_sort", "population_map_value").iter_rows(named=True)
+    }
+    assert values[("alpha", 13420401)] == 0.0
+    assert values[("bravo", 13420401)] == 10.0
+    assert values[("alpha", 13470401)] == 5.0
+    assert values[("bravo", 13470401)] == 0.0
+
+
+def test_population_map_current_accepts_fixed_absolute_bounds(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+
+    result = savegame_maps.population_map(
+        data,
+        scope="super_region",
+        name="asia",
+        comparison="current",
+        absolute_bounds=(0, 2000),
+        width=160,
+    )
+
+    assert result.value_bounds == (0.0, 2000.0)
+
+
+def test_population_map_current_preserves_actual_values_above_color_bounds(tmp_path: Path) -> None:
+    base = _fake_data(tmp_path, include_missing_geometry=False)
+    locations = base._locations.with_columns(
+        pl.when((pl.col("location_code") == 1) & (pl.col("date_sort") == 13470401))
+        .then(2500.0)
+        .otherwise(pl.col("total_population"))
+        .alias("total_population")
+    )
+    data = FakeNotebookData(
+        locations=locations,
+        location_dim=base._location_dim,
+        assets=base.map_assets,
+        buildings=base._buildings,
+    )
+
+    result = savegame_maps.population_map(
+        data,
+        scope="super_region",
+        name="asia",
+        comparison="current",
+        absolute_bounds=(0, 2000),
+        width=160,
+    )
+
+    value = (
+        result.frame_data.filter((pl.col("slug") == "alpha") & (pl.col("date_sort") == 13470401))
+        .select("population_map_value")
+        .item()
+    )
+    assert value == 2500.0
+    assert result.value_bounds == (0.0, 2000.0)
+
+
+def test_building_levels_current_defaults_to_global_selected_max(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+
+    result = savegame_maps.building_levels_map(data, scope="super_region", name="asia", mode="current", width=160)
+
+    assert result.value_bounds == (0.0, 8.0)
+
+
+def test_population_absolute_log_scale_maps_low_values_visibly() -> None:
+    norm = savegame_maps.Log1pNorm(vmin=0.0, vmax=2000.0)
+
+    assert float(norm(0.0)) == 0.0
+    assert np.isclose(float(norm(2000.0)), 1.0)
+    assert float(norm(10.0)) > 10.0 / 2000.0
+    assert savegame_maps._normalize_population_absolute_scale("linear") == "linear"
+    assert savegame_maps._normalize_population_absolute_scale("log") == "log1p"
+    assert savegame_maps._colorbar_tick_values(norm, unit="population_thousands") == [2000.0, 1000.0, 100.0, 10.0, 0.0]
+
+
+def test_population_map_name_none_renders_world(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+
+    result = savegame_maps.population_map(data, scope="super_region", name=None, width=160)
+
+    assert result.name == "World"
+    assert result.mapped_locations == 3
+    assert len(result.frames) == 2
+    assert set(result.frame_data.get_column("slug").unique().to_list()) == {"alpha", "bravo", "charlie"}
+
+
+def test_world_population_legend_includes_super_region_stats(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+    result = savegame_maps.population_map(data, scope="super_region", name=None, width=160)
+    frame = result.frame_data.filter(pl.col("date_sort") == 13470401)
+
+    legend = savegame_maps._frame_legend(
+        frame,
+        value_column="relative_change_pct",
+        title="Population change",
+        date="1347.4.1",
+        context=(("Baseline", result.baseline_date),),
+        unit="%",
+        signed=True,
+        total_value_column=result.metric,
+        baseline_value_column="baseline_value",
+    )
+
+    assert ("Asia", "-50.0%", "+100.0%", "+100.0%") in legend.region_rows
+    assert ("Europe", "+50.0%", "+50.0%", "+50.0%") in legend.region_rows
+
+
+def test_world_population_absolute_legend_includes_super_region_totals(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+    result = savegame_maps.population_map(data, scope="super_region", name=None, comparison="current", width=160)
+    frame = result.frame_data.filter(pl.col("date_sort") == 13470401)
+
+    legend = savegame_maps._frame_legend(
+        frame,
+        value_column="population_map_value",
+        title="Population",
+        date="1347.4.1",
+        unit="population_thousands",
+    )
+
+    assert ("Asia", "5.0k", "2.5k", "2.5k") in legend.region_rows
+    assert ("Europe", "30k", "30k", "30k") in legend.region_rows
+
+
+def test_world_scope_excludes_ocean_super_regions() -> None:
+    frame = pl.DataFrame(
+        [
+            {"slug": "alpha", "super_region": "asia", "macro_region": "east_asia", "region": "north_china"},
+            {
+                "slug": "ocean",
+                "super_region": "atlantic_ocean_continent",
+                "macro_region": "north_atlantic_ocean_sub_continent",
+                "region": "north_atlantic_ocean_region",
+            },
+            {"slug": "island", "super_region": "oceania", "macro_region": "pacific_islands", "region": "polynesia_region"},
+        ]
+    )
+
+    filtered, label = savegame_maps._filter_scope(frame, "super_region", None)
+
+    assert label == "World"
+    assert filtered.get_column("slug").to_list() == ["alpha", "island"]
+
+
+def test_population_map_frame_includes_legend_stats_panel(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+
+    result = savegame_maps.population_map(data, scope="super_region", name="asia", width=160)
+
+    image = Image.open(BytesIO(result.frames[0].png))
+    assert image.width > 160
+    assert image.height >= 480
+
+    frame = result.frame_data.filter(pl.col("date_sort") == 13470401)
+    legend = savegame_maps._frame_legend(
+        frame,
+        value_column="relative_change_pct",
+        title="Population change",
+        date="1347.4.1",
+        context=(("Baseline", result.baseline_date),),
+        unit="%",
+        signed=True,
+    )
+    rows = dict(legend.rows)
+    assert rows["Date"] == "1347.4.1"
+    assert rows["Baseline"] == "1342.4.1"
+    assert rows["Locations"] == "2"
+    assert rows["Mean"] == "+100.0%"
+    assert rows["Median"] == "+100.0%"
+    assert rows["Min"] == "-100.0%"
+    assert rows["Max"] == "+300.0%"
+
+
 def test_population_map_widget_constructs_playback_controls(tmp_path: Path) -> None:
     data = _fake_data(tmp_path, include_missing_geometry=False)
     result = savegame_maps.population_map(data, scope="super_region", name="asia", width=160)
@@ -156,7 +348,7 @@ def test_development_map_from_gamestart_uses_point_delta(tmp_path: Path) -> None
     assert values[("bravo", 13470401)] == (20.0, 10.0)
 
 
-def test_development_map_current_uses_fixed_zero_to_hundred_scale(tmp_path: Path) -> None:
+def test_development_map_current_defaults_to_global_selected_max(tmp_path: Path) -> None:
     data = _fake_data(tmp_path, include_missing_geometry=False)
 
     result = savegame_maps.development_map(

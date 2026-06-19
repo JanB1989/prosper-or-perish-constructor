@@ -43,6 +43,8 @@ GEOGRAPHY_SCOPE_SEARCH_COLUMNS = {
 }
 
 DEFAULT_RELATIVE_BOUNDS = (-100.0, 300.0)
+DEFAULT_POPULATION_ABSOLUTE_BOUNDS = (0.0, 2000.0)
+DEFAULT_POPULATION_ABSOLUTE_SCALE = "log1p"
 DEFAULT_DEVELOPMENT_BOUNDS = (0.0, 100.0)
 DEFAULT_DEVELOPMENT_DELTA_BOUNDS = (-10.0, 10.0)
 DEFAULT_BUILDING_LEVEL_BOUNDS = (0.0, 500.0)
@@ -89,6 +91,9 @@ class PopulationMapResult:
     relative_bounds: tuple[float, float]
     mapped_locations: int
     missing_geometry_locations: int
+    value_column: str = "relative_change_pct"
+    value_label: str = "relative population change"
+    value_bounds: tuple[float, float] = DEFAULT_RELATIVE_BOUNDS
     widget: Any | None = None
 
 
@@ -121,6 +126,37 @@ class AnimationExportResult:
     format: str
     frames: int
     duration_ms: int
+
+
+@dataclass(frozen=True)
+class MapFrameLegend:
+    title: str
+    rows: tuple[tuple[str, str], ...]
+    region_rows: tuple[tuple[str, str, str, str], ...] = ()
+    unit: str = ""
+    signed: bool = False
+
+
+class Log1pNorm(Normalize):
+    scale_name = "log1p"
+
+    def __call__(self, value: Any, clip: bool | None = None) -> Any:
+        if clip is None:
+            clip = self.clip
+        result, is_scalar = self.process_value(value)
+        self.autoscale_None(result)
+        vmin, vmax = _norm_bounds(self)
+        if vmax <= vmin:
+            mapped = np.zeros_like(result.data, dtype=np.float64)
+        else:
+            data = np.clip(np.asarray(result.data, dtype=np.float64), vmin, vmax)
+            mapped = np.log1p(np.maximum(data - vmin, 0.0)) / np.log1p(vmax - vmin)
+        output = np.ma.array(mapped, mask=result.mask, copy=False)
+        return output[0] if is_scalar else output
+
+    def inverse(self, value: Any) -> Any:
+        vmin, vmax = _norm_bounds(self)
+        return np.expm1(np.asarray(value, dtype=np.float64) * np.log1p(vmax - vmin)) + vmin
 
 
 def load_map_assets(
@@ -168,11 +204,13 @@ def population_map(
     data: Any,
     *,
     scope: str = "super_region",
-    name: str,
+    name: str | None = None,
     metric: str = "total_population",
     baseline_date: int | str | None = None,
     comparison: str = "relative_pct",
     relative_bounds: tuple[float, float] = DEFAULT_RELATIVE_BOUNDS,
+    absolute_bounds: tuple[float, float] | None = None,
+    absolute_scale: str = DEFAULT_POPULATION_ABSOLUTE_SCALE,
     width: int | None = None,
     playthrough: str | None = None,
     start_date: int | None = None,
@@ -186,9 +224,14 @@ def population_map(
             "Map assets are not loaded. Rerun the notebook loader with "
             "`data = nb.open_data(load_map_assets=True)`."
         )
-    if comparison != "relative_pct":
-        raise ValueError("Only comparison='relative_pct' is currently supported.")
-    low, high = _normalize_relative_bounds(relative_bounds)
+    comparison = _normalize_population_comparison(comparison)
+    result_relative_bounds = DEFAULT_RELATIVE_BOUNDS
+    if comparison == "relative_pct":
+        low, high = _normalize_relative_bounds(relative_bounds)
+        result_relative_bounds = (low, high)
+    else:
+        low, high = 0.0, 0.0
+    absolute_scale = _normalize_population_absolute_scale(absolute_scale)
     metric = _normalize_population_metric(metric)
     locations = _population_locations(
         data,
@@ -198,12 +241,12 @@ def population_map(
         end_date=end_date,
     )
     if locations.is_empty():
-        return PopulationMapResult((), pl.DataFrame(), "", "", _normalize_scope(scope), name, metric, comparison, (low, high), 0, 0)
+        return PopulationMapResult((), pl.DataFrame(), "", "", _normalize_scope(scope), name, metric, comparison, result_relative_bounds, 0, 0)
 
     normalized_scope = _normalize_scope(scope)
     filtered, resolved_name = _filter_scope(locations, normalized_scope, name)
     if filtered.is_empty():
-        return PopulationMapResult((), pl.DataFrame(), "", "", normalized_scope, name, metric, comparison, (low, high), 0, 0)
+        return PopulationMapResult((), pl.DataFrame(), "", "", normalized_scope, name, metric, comparison, result_relative_bounds, 0, 0)
 
     geometry = _prepared_geometry(assets)
     selected = filtered.join(geometry, left_on="slug", right_on="location_tag", how="left")
@@ -222,31 +265,66 @@ def population_map(
             resolved_name,
             metric,
             comparison,
-            (low, high),
+            result_relative_bounds,
             0,
             int(missing_geometry_locations),
         )
 
-    baseline = _resolve_baseline_snapshot(mapped, baseline_date)
-    baseline_snapshot_id = str(baseline["snapshot_id"])
-    baseline_date_label = str(baseline["date"])
-    baseline_values = (
-        mapped.filter(pl.col("snapshot_id") == baseline_snapshot_id)
-        .select("slug", pl.col(metric).cast(pl.Float64).alias("baseline_value"))
-        .unique("slug")
-    )
-    frame_data = (
-        mapped.join(baseline_values, on="slug", how="left")
-        .with_columns(
-            _relative_change_expr(metric, low=low, high=high).alias("relative_change_pct"),
+    baseline_snapshot_id = ""
+    baseline_date_label = ""
+    if comparison == "relative_pct":
+        baseline = _resolve_baseline_snapshot(mapped, baseline_date)
+        baseline_snapshot_id = str(baseline["snapshot_id"])
+        baseline_date_label = str(baseline["date"])
+        baseline_values = (
+            mapped.filter(pl.col("snapshot_id") == baseline_snapshot_id)
+            .select("slug", pl.col(metric).cast(pl.Float64).alias("baseline_value"))
+            .unique("slug")
         )
-        .sort(["date_sort", "slug"])
-    )
+        frame_data = (
+            mapped.join(baseline_values, on="slug", how="left")
+            .with_columns(
+                _relative_change_expr(metric, low=low, high=high).alias("relative_change_pct"),
+            )
+            .sort(["date_sort", "slug"])
+        )
+        value_column = "relative_change_pct"
+        value_label = "relative population change"
+        color_norm: Normalize | TwoSlopeNorm = TwoSlopeNorm(vmin=low, vcenter=0.0, vmax=high)
+        cmap = plt.get_cmap("RdYlGn")
+        title = f"{resolved_name} population change vs {baseline_date_label}"
+        subtitle_suffix = comparison.replace("_", " ")
+        legend_title = "Population change"
+        legend_context = (("Baseline", baseline_date_label),)
+        legend_unit = "%"
+        legend_signed = True
+    else:
+        value_column = "population_map_value"
+        frame_data = (
+            mapped.with_columns(
+                pl.col(metric).cast(pl.Float64).fill_null(0.0).alias(value_column)
+            )
+            .sort(["date_sort", "slug"])
+        )
+        value_label = "current population"
+        low, high = _zero_to_global_max_bounds(frame_data, value_column, absolute_bounds=absolute_bounds)
+        color_norm = (
+            Log1pNorm(vmin=low, vmax=high)
+            if absolute_scale == "log1p"
+            else Normalize(vmin=low, vmax=high)
+        )
+        cmap = plt.get_cmap("YlOrRd")
+        title = f"{resolved_name} current population"
+        scale_label = "log1p color scale" if absolute_scale == "log1p" else "linear color scale"
+        bounds_label = "fixed" if absolute_bounds is not None else "selected snapshots"
+        subtitle_suffix = f"population, {bounds_label} {_format_population_thousands(low)}..{_format_population_thousands(high)}, {scale_label}"
+        legend_title = "Population"
+        legend_context = ()
+        legend_unit = "population_thousands"
+        legend_signed = False
     crop = _scope_crop(frame_data, assets, padding=18)
     target_width = width or assets.map_width
     render_width = min(max(int(target_width), 200), assets.map_width)
-    color_norm = TwoSlopeNorm(vmin=low, vcenter=0.0, vmax=high)
-    cmap = plt.get_cmap("RdYlGn")
 
     frames: list[PopulationMapFrame] = []
     snapshots = frame_data.select(["snapshot_id", "date", "date_sort", "year"]).unique().sort("date_sort")
@@ -255,13 +333,24 @@ def population_map(
         png = _render_metric_frame(
             assets,
             snapshot_frame,
-            value_column="relative_change_pct",
+            value_column=value_column,
             crop=crop,
             render_width=render_width,
             color_norm=color_norm,
             cmap=cmap,
-            title=f"{resolved_name} population change vs {baseline_date_label}",
-            subtitle=f"{snapshot['date']} - {comparison.replace('_', ' ')}",
+            title=title,
+            subtitle=f"{snapshot['date']} - {subtitle_suffix}",
+            legend=_frame_legend(
+                snapshot_frame,
+                value_column=value_column,
+                title=legend_title,
+                date=str(snapshot["date"]),
+                context=legend_context,
+                unit=legend_unit,
+                signed=legend_signed,
+                total_value_column=metric if comparison == "relative_pct" else None,
+                baseline_value_column="baseline_value" if comparison == "relative_pct" else None,
+            ),
         )
         frames.append(
             PopulationMapFrame(
@@ -284,9 +373,12 @@ def population_map(
         name=resolved_name,
         metric=metric,
         comparison=comparison,
-        relative_bounds=(low, high),
+        relative_bounds=result_relative_bounds,
         mapped_locations=int(mapped_locations),
         missing_geometry_locations=int(missing_geometry_locations),
+        value_column=value_column,
+        value_label=value_label,
+        value_bounds=(low, high),
     )
 
 
@@ -294,11 +386,13 @@ def show_population_map(
     data: Any,
     *,
     scope: str = "super_region",
-    name: str,
+    name: str | None = None,
     metric: str = "total_population",
     baseline_date: int | str | None = None,
     comparison: str = "relative_pct",
     relative_bounds: tuple[float, float] = DEFAULT_RELATIVE_BOUNDS,
+    absolute_bounds: tuple[float, float] | None = None,
+    absolute_scale: str = DEFAULT_POPULATION_ABSOLUTE_SCALE,
     width: int | None = None,
     interval_ms: int = 700,
     display_widget: bool = True,
@@ -315,6 +409,8 @@ def show_population_map(
         baseline_date=baseline_date,
         comparison=comparison,
         relative_bounds=relative_bounds,
+        absolute_bounds=absolute_bounds,
+        absolute_scale=absolute_scale,
         width=width,
         playthrough=playthrough,
         start_date=start_date,
@@ -349,6 +445,9 @@ def show_population_map(
         relative_bounds=result.relative_bounds,
         mapped_locations=result.mapped_locations,
         missing_geometry_locations=result.missing_geometry_locations,
+        value_column=result.value_column,
+        value_label=result.value_label,
+        value_bounds=result.value_bounds,
         widget=widget,
     )
 
@@ -357,10 +456,11 @@ def development_map(
     data: Any,
     *,
     scope: str = "super_region",
-    name: str,
+    name: str | None = None,
     mode: str = "from_gamestart",
     baseline_date: int | str | None = None,
     delta_bounds: tuple[float, float] = DEFAULT_DEVELOPMENT_DELTA_BOUNDS,
+    absolute_bounds: tuple[float, float] | None = None,
     width: int | None = None,
     playthrough: str | None = None,
     start_date: int | None = None,
@@ -375,11 +475,7 @@ def development_map(
             "`data = nb.open_data(load_map_assets=True)`."
         )
     normalized_mode = _normalize_development_mode(mode)
-    low, high = (
-        _normalize_development_delta_bounds(delta_bounds)
-        if normalized_mode == "from_gamestart"
-        else DEFAULT_DEVELOPMENT_BOUNDS
-    )
+    low, high = _normalize_development_delta_bounds(delta_bounds) if normalized_mode == "from_gamestart" else (0.0, 0.0)
     locations = _metric_locations(
         data,
         metric="development",
@@ -448,16 +544,18 @@ def development_map(
     else:
         frame_data = (
             mapped.with_columns(
-                pl.col("development").cast(pl.Float64).fill_null(0.0).clip(low, high).alias("development_map_value")
+                pl.col("development").cast(pl.Float64).fill_null(0.0).alias("development_map_value")
             )
             .sort(["date_sort", "slug"])
         )
+        low, high = _zero_to_global_max_bounds(frame_data, "development_map_value", absolute_bounds=absolute_bounds)
         value_column = "development_map_value"
-        value_label = "current development (0..100)"
+        value_label = "current development"
         color_norm = Normalize(vmin=low, vmax=high)
         cmap = plt.get_cmap("cividis")
         title = f"{resolved_name} current development"
-        subtitle_suffix = "development, fixed 0..100 scale"
+        bounds_label = "fixed" if absolute_bounds is not None else "selected snapshots"
+        subtitle_suffix = f"development, {bounds_label} {low:g}..{high:g} scale"
 
     crop = _scope_crop(frame_data, assets, padding=18)
     target_width = width or assets.map_width
@@ -477,6 +575,15 @@ def development_map(
             cmap=cmap,
             title=title,
             subtitle=f"{snapshot['date']} - {subtitle_suffix}",
+            legend=_frame_legend(
+                snapshot_frame,
+                value_column=value_column,
+                title="Development change" if normalized_mode == "from_gamestart" else "Development",
+                date=str(snapshot["date"]),
+                context=((("Baseline", baseline_date_label),) if normalized_mode == "from_gamestart" else ()),
+                unit="pts" if normalized_mode == "from_gamestart" else "",
+                signed=normalized_mode == "from_gamestart",
+            ),
         )
         frames.append(
             DevelopmentMapFrame(
@@ -510,10 +617,11 @@ def show_development_map(
     data: Any,
     *,
     scope: str = "super_region",
-    name: str,
+    name: str | None = None,
     mode: str = "from_gamestart",
     baseline_date: int | str | None = None,
     delta_bounds: tuple[float, float] = DEFAULT_DEVELOPMENT_DELTA_BOUNDS,
+    absolute_bounds: tuple[float, float] | None = None,
     width: int | None = None,
     interval_ms: int = 700,
     display_widget: bool = True,
@@ -529,6 +637,7 @@ def show_development_map(
         mode=mode,
         baseline_date=baseline_date,
         delta_bounds=delta_bounds,
+        absolute_bounds=absolute_bounds,
         width=width,
         playthrough=playthrough,
         start_date=start_date,
@@ -573,11 +682,11 @@ def building_levels_map(
     data: Any,
     *,
     scope: str = "super_region",
-    name: str,
+    name: str | None = None,
     mode: str = "from_gamestart",
     baseline_date: int | str | None = None,
     delta_bounds: tuple[float, float] = DEFAULT_BUILDING_LEVEL_DELTA_BOUNDS,
-    absolute_bounds: tuple[float, float] = DEFAULT_BUILDING_LEVEL_BOUNDS,
+    absolute_bounds: tuple[float, float] | None = None,
     width: int | None = None,
     playthrough: str | None = None,
     start_date: int | None = None,
@@ -614,11 +723,11 @@ def show_building_levels_map(
     data: Any,
     *,
     scope: str = "super_region",
-    name: str,
+    name: str | None = None,
     mode: str = "from_gamestart",
     baseline_date: int | str | None = None,
     delta_bounds: tuple[float, float] = DEFAULT_BUILDING_LEVEL_DELTA_BOUNDS,
-    absolute_bounds: tuple[float, float] = DEFAULT_BUILDING_LEVEL_BOUNDS,
+    absolute_bounds: tuple[float, float] | None = None,
     width: int | None = None,
     interval_ms: int = 700,
     display_widget: bool = True,
@@ -975,7 +1084,7 @@ def _scalar_location_map(
     locations: pl.DataFrame,
     *,
     scope: str,
-    name: str,
+    name: str | None,
     metric: str,
     mode: str,
     baseline_date: int | str | None,
@@ -1061,11 +1170,11 @@ def _scalar_location_map(
         value_column = f"{metric}_map_value"
         frame_data = mapped.with_columns(pl.col(metric).cast(pl.Float64).fill_null(0.0).alias(value_column)).sort(["date_sort", "slug"])
         if absolute_scale == "fixed":
-            low, high = _normalize_positive_bounds(absolute_bounds or DEFAULT_BUILDING_LEVEL_BOUNDS)
-            frame_data = frame_data.with_columns(pl.col(value_column).clip(low, high).alias(value_column))
+            low, high = _zero_to_global_max_bounds(frame_data, value_column, absolute_bounds=absolute_bounds)
             color_norm = Normalize(vmin=low, vmax=high)
             value_bounds = (low, high)
-            scale_label = f"fixed {low:g}..{high:g} scale"
+            bounds_label = "fixed" if absolute_bounds is not None else "selected snapshots"
+            scale_label = f"{bounds_label} {low:g}..{high:g} scale"
         else:
             color_norm = None
             value_bounds = _overall_bounds(frame_data, value_column)
@@ -1093,6 +1202,15 @@ def _scalar_location_map(
             title=title,
             subtitle=f"{snapshot['date']} - {subtitle_suffix}",
             center_zero=center_zero,
+            legend=_frame_legend(
+                snapshot_frame,
+                value_column=value_column,
+                title=_legend_title(value_label_prefix, normalized_mode),
+                date=str(snapshot["date"]),
+                context=((("Baseline", baseline_date_label),) if normalized_mode == "from_gamestart" else ()),
+                unit=_legend_unit(metric, normalized_mode),
+                signed=normalized_mode == "from_gamestart",
+            ),
         )
         frames.append(
             DevelopmentMapFrame(
@@ -1237,10 +1355,12 @@ def _building_level_locations(
     )
 
 
-def _filter_scope(frame: pl.DataFrame, scope: str, name: str) -> tuple[pl.DataFrame, str]:
+def _filter_scope(frame: pl.DataFrame, scope: str, name: str | None) -> tuple[pl.DataFrame, str]:
+    if _is_world_name(name):
+        return _world_land_frame(frame), "World"
     columns = [column for column in GEOGRAPHY_SCOPE_SEARCH_COLUMNS[scope] if column in frame.columns]
     if not columns:
-        return frame.head(0), name
+        return frame.head(0), str(name or "")
     query = str(name).strip().lower()
     candidates = frame.select(columns).unique()
     for row in candidates.iter_rows(named=True):
@@ -1253,7 +1373,28 @@ def _filter_scope(frame: pl.DataFrame, scope: str, name: str) -> tuple[pl.DataFr
             normalized = text.lower()
             if normalized == query or normalized.startswith(query) or query in normalized:
                 return frame.filter(pl.col(column).cast(pl.String).str.to_lowercase() == normalized), label
-    return frame.head(0), name
+    return frame.head(0), str(name or "")
+
+
+def _is_world_name(name: str | None) -> bool:
+    if name is None:
+        return True
+    return str(name).strip().lower().replace("-", "_") in {"", "world", "global", "all"}
+
+
+def _world_land_frame(frame: pl.DataFrame) -> pl.DataFrame:
+    ocean_columns = [column for column in ("super_region", "macro_region", "region") if column in frame.columns]
+    if not ocean_columns:
+        return frame
+    ocean_exprs = [
+        pl.col(column)
+        .cast(pl.String)
+        .str.to_lowercase()
+        .fill_null("")
+        .str.contains("_ocean")
+        for column in ocean_columns
+    ]
+    return frame.filter(~pl.any_horizontal(ocean_exprs))
 
 
 def _resolve_baseline_snapshot(frame: pl.DataFrame, baseline_date: int | str | None) -> dict[str, object]:
@@ -1295,6 +1436,193 @@ def _scope_crop(frame: pl.DataFrame, assets: SavegameMapAssets, *, padding: int)
     return (x0, y0, x1, y1)
 
 
+def _frame_legend(
+    frame: pl.DataFrame,
+    *,
+    value_column: str,
+    title: str,
+    date: str,
+    context: tuple[tuple[str, str], ...] = (),
+    unit: str = "",
+    signed: bool = False,
+    total_value_column: str | None = None,
+    baseline_value_column: str | None = None,
+) -> MapFrameLegend:
+    rows: list[tuple[str, str]] = [("Date", date), *context]
+    if frame.is_empty() or value_column not in frame.columns:
+        rows.append(("Locations", "0"))
+        return MapFrameLegend(title=title, rows=tuple(rows), unit=unit, signed=signed)
+
+    raw_values = frame.select(pl.col(value_column).cast(pl.Float64).alias("value")).drop_nulls().get_column("value").to_list()
+    values = np.array(raw_values, dtype=np.float64)
+    finite = values[np.isfinite(values)]
+    rows.append(("Locations", f"{finite.size:,}"))
+    if finite.size:
+        rows.extend(
+            (
+                ("Mean", _format_stat_value(float(finite.mean()), unit=unit, signed=signed)),
+                ("Median", _format_stat_value(float(np.median(finite)), unit=unit, signed=signed)),
+                ("Min", _format_stat_value(float(finite.min()), unit=unit, signed=signed)),
+                ("Max", _format_stat_value(float(finite.max()), unit=unit, signed=signed)),
+            )
+        )
+    return MapFrameLegend(
+        title=title,
+        rows=tuple(rows),
+        region_rows=_super_region_legend_rows(
+            frame,
+            value_column=value_column,
+            unit=unit,
+            signed=signed,
+            total_value_column=total_value_column,
+            baseline_value_column=baseline_value_column,
+        ),
+        unit=unit,
+        signed=signed,
+    )
+
+
+def _super_region_legend_rows(
+    frame: pl.DataFrame,
+    *,
+    value_column: str,
+    unit: str,
+    signed: bool,
+    total_value_column: str | None = None,
+    baseline_value_column: str | None = None,
+    limit: int = 6,
+) -> tuple[tuple[str, str, str, str], ...]:
+    if frame.is_empty() or value_column not in frame.columns or "super_region" not in frame.columns:
+        return ()
+    label_expr = (
+        pl.when(pl.col("super_region_label").is_not_null() & (pl.col("super_region_label").cast(pl.String) != ""))
+        .then(pl.col("super_region_label").cast(pl.String))
+        .otherwise(pl.col("super_region").cast(pl.String).map_elements(_title_from_key, return_dtype=pl.String))
+        if "super_region_label" in frame.columns
+        else pl.col("super_region").cast(pl.String).map_elements(_title_from_key, return_dtype=pl.String)
+    )
+    use_relative_total = (
+        unit == "%"
+        and total_value_column is not None
+        and baseline_value_column is not None
+        and total_value_column in frame.columns
+        and baseline_value_column in frame.columns
+    )
+    selected = frame.select(
+        label_expr.alias("region_label"),
+        pl.col(value_column).cast(pl.Float64).alias("value"),
+        *(
+            [
+                pl.col(total_value_column).cast(pl.Float64).fill_null(0.0).alias("total_value"),
+                pl.col(baseline_value_column).cast(pl.Float64).fill_null(0.0).alias("baseline_value"),
+            ]
+            if use_relative_total
+            else []
+        )
+    ).drop_nulls("value")
+    aggregations: list[pl.Expr] = [
+        pl.len().alias("locations"),
+        pl.sum("value").alias("total"),
+        pl.mean("value").alias("mean"),
+        pl.median("value").alias("median"),
+    ]
+    if use_relative_total:
+        aggregations.extend(
+            (
+                pl.sum("total_value").alias("current_total"),
+                pl.sum("baseline_value").alias("baseline_total"),
+            )
+        )
+    stats = selected.group_by("region_label").agg(aggregations)
+    if use_relative_total:
+        stats = stats.with_columns(
+            _relative_change_from_totals_expr("current_total", "baseline_total").alias("total")
+        )
+    stats = (
+        stats
+        .sort(["locations", "region_label"], descending=[True, False])
+        .head(limit)
+    )
+    return tuple(
+        (
+            _compact_region_label(str(row["region_label"])),
+            _format_stat_value(float(row["total"]), unit=unit, signed=signed),
+            _format_stat_value(float(row["mean"]), unit=unit, signed=signed),
+            _format_stat_value(float(row["median"]), unit=unit, signed=signed),
+        )
+        for row in stats.iter_rows(named=True)
+    )
+
+
+def _relative_change_from_totals_expr(current_column: str, baseline_column: str) -> pl.Expr:
+    current = pl.col(current_column).cast(pl.Float64).fill_null(0.0)
+    baseline = pl.col(baseline_column).cast(pl.Float64).fill_null(0.0)
+    return (
+        pl.when((baseline == 0.0) & (current == 0.0))
+        .then(0.0)
+        .when(baseline == 0.0)
+        .then(300.0)
+        .otherwise((current - baseline) / baseline * 100.0)
+    )
+
+
+def _title_from_key(value: object) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    return " ".join(part.capitalize() for part in text.replace("-", "_").split("_") if part)
+
+
+def _compact_region_label(label: str) -> str:
+    aliases = {
+        "America": "Americas",
+        "North America": "N. America",
+        "South America": "S. America",
+        "Atlantic Ocean": "Atlantic",
+        "Indian Ocean": "Indian",
+        "Pacific Ocean": "Pacific",
+        "Antarctic Ocean": "Antarctic",
+    }
+    text = aliases.get(label, label)
+    return text if len(text) <= 18 else f"{text[:17].rstrip()}."
+
+
+def _legend_title(value_label_prefix: str, mode: str) -> str:
+    label = value_label_prefix.strip().capitalize()
+    return f"{label} change" if mode == "from_gamestart" else label
+
+
+def _legend_unit(metric: str, mode: str) -> str:
+    if metric == "building_levels":
+        return "levels"
+    if mode == "from_gamestart":
+        return "pts"
+    return ""
+
+
+def _format_stat_value(value: float, *, unit: str, signed: bool) -> str:
+    if unit == "population_thousands":
+        return _format_population_thousands(value)
+    prefix = "+" if signed and value > 0.0 else ""
+    text = f"{prefix}{value:,.1f}"
+    if unit == "%":
+        return f"{text}%"
+    if unit:
+        return f"{text} {unit}"
+    return text
+
+
+def _format_population_thousands(value: float) -> str:
+    absolute = abs(value)
+    if absolute >= 1000.0:
+        return f"{value / 1000.0:,.1f}M"
+    if absolute >= 10.0:
+        return f"{value:,.0f}k"
+    if absolute > 0.0:
+        return f"{value:,.1f}k"
+    return "0"
+
+
 def _render_metric_frame(
     assets: SavegameMapAssets,
     frame: pl.DataFrame,
@@ -1307,6 +1635,7 @@ def _render_metric_frame(
     title: str,
     subtitle: str,
     center_zero: bool = False,
+    legend: MapFrameLegend | None = None,
 ) -> bytes:
     x0, y0, x1, y1 = crop
     packed = assets.packed_locations[y0:y1, x0:x1]
@@ -1315,6 +1644,7 @@ def _render_metric_frame(
     land_mask = packed != 0
     rgb[land_mask] = DEFAULT_UNSELECTED
     color_values = frame.select("map_color_int", value_column).unique("map_color_int").sort("map_color_int")
+    norm = color_norm or Normalize(vmin=0.0, vmax=1.0)
     if not color_values.is_empty():
         colors = np.array(color_values.get_column("map_color_int").to_list(), dtype=np.uint32)
         values = np.array(color_values.get_column(value_column).to_list(), dtype=np.float64)
@@ -1332,7 +1662,7 @@ def _render_metric_frame(
     target_height = max(1, round(image.height * render_width / image.width))
     if image.width != render_width:
         image = image.resize((render_width, target_height), Image.Resampling.NEAREST)
-    image = _add_frame_header(image, title=title, subtitle=subtitle)
+    image = _add_frame_chrome(image, title=title, subtitle=subtitle, legend=legend, norm=norm, cmap=cmap)
     return _png_bytes(image)
 
 
@@ -1357,19 +1687,201 @@ def _dynamic_norm(values: np.ndarray, *, center_zero: bool) -> Normalize | TwoSl
     return Normalize(vmin=min_value, vmax=max_value)
 
 
-def _add_frame_header(image: Image.Image, *, title: str, subtitle: str) -> Image.Image:
-    header = 72
-    out = Image.new("RGB", (image.width, image.height + header), (250, 250, 247))
+def _add_frame_chrome(
+    image: Image.Image,
+    *,
+    title: str,
+    subtitle: str,
+    legend: MapFrameLegend | None,
+    norm: Normalize | TwoSlopeNorm,
+    cmap: Any,
+) -> Image.Image:
+    header = 86
+    panel_width = _legend_panel_width(image.width) if legend is not None else 0
+    content_height = max(image.height, 480 if legend is not None else image.height)
+    out = Image.new("RGB", (image.width + panel_width, content_height + header), (250, 250, 247))
     out.paste(image, (0, header))
     try:
         from PIL import ImageDraw
 
         draw = ImageDraw.Draw(out)
-        draw.text((12, 10), title, fill=(24, 24, 24))
-        draw.text((12, 36), subtitle, fill=(70, 70, 70))
+        title_font = _image_font(18, bold=True)
+        subtitle_font = _image_font(13)
+        draw.text((14, 11), title, fill=(24, 24, 24), font=title_font)
+        draw.text((14, 42), subtitle, fill=(70, 70, 70), font=subtitle_font)
+        if legend is not None:
+            _draw_legend_panel(
+                out,
+                draw,
+                panel_x=image.width,
+                panel_y=header,
+                panel_width=panel_width,
+                panel_height=content_height,
+                legend=legend,
+                norm=norm,
+                cmap=cmap,
+            )
     except Exception:
         pass
     return out
+
+
+def _legend_panel_width(map_width: int) -> int:
+    return min(700, max(460, round(map_width * 0.34)))
+
+
+def _draw_legend_panel(
+    canvas: Image.Image,
+    draw: Any,
+    *,
+    panel_x: int,
+    panel_y: int,
+    panel_width: int,
+    panel_height: int,
+    legend: MapFrameLegend,
+    norm: Normalize | TwoSlopeNorm,
+    cmap: Any,
+) -> None:
+    if panel_width <= 0:
+        return
+    x = panel_x + 16
+    y = panel_y + 16
+    right = panel_x + panel_width - 16
+    draw.rectangle((panel_x, panel_y, panel_x + panel_width, panel_y + panel_height), fill=(250, 250, 247))
+    draw.line((panel_x, panel_y, panel_x, panel_y + panel_height), fill=(207, 207, 198), width=1)
+
+    title_font = _image_font(16, bold=True)
+    row_font = _image_font(13)
+    value_font = _image_font(13, bold=True)
+    draw.text((x, y), legend.title, fill=(24, 24, 24), font=title_font)
+    y += 30
+
+    bar_height = max(120, min(190, panel_height // 3))
+    bar_width = 22
+    bar_x = x
+    bar_y = y
+    bar = _colorbar_image(norm=norm, cmap=cmap, width=bar_width, height=bar_height)
+    canvas.paste(bar, (bar_x, bar_y))
+    draw.rectangle((bar_x, bar_y, bar_x + bar_width - 1, bar_y + bar_height - 1), outline=(95, 95, 88))
+    _draw_colorbar_ticks(
+        draw,
+        norm=norm,
+        x=bar_x + bar_width + 8,
+        y=bar_y,
+        height=bar_height,
+        unit=legend.unit,
+        signed=legend.signed,
+    )
+    y += bar_height + 22
+
+    label_x = x
+    for label, value in legend.rows:
+        draw.text((label_x, y), f"{label}:", fill=(70, 70, 70), font=row_font)
+        _draw_text_right(draw, (right, y), value, fill=(24, 24, 24), font=value_font)
+        y += 22
+        if y > panel_y + panel_height - 22:
+            break
+    if legend.region_rows and y <= panel_y + panel_height - 86:
+        y += 8
+        draw.line((x, y, right, y), fill=(218, 218, 209), width=1)
+        y += 10
+        small_header_font = _image_font(12, bold=True)
+        small_font = _image_font(10)
+        small_value_font = _image_font(10, bold=True)
+        draw.text((x, y), "Super Region", fill=(70, 70, 70), font=small_header_font)
+        value_area = max(210, min(330, round((right - x) * 0.52)))
+        column_width = max(68, value_area // 3)
+        median_x = right
+        mean_x = right - column_width
+        total_x = right - (column_width * 2)
+        _draw_text_right(draw, (total_x, y), "Total", fill=(70, 70, 70), font=small_header_font)
+        _draw_text_right(draw, (mean_x, y), "Mean", fill=(70, 70, 70), font=small_header_font)
+        _draw_text_right(draw, (median_x, y), "Median", fill=(70, 70, 70), font=small_header_font)
+        y += 19
+        for region, total, mean, median in legend.region_rows:
+            if y > panel_y + panel_height - 20:
+                break
+            draw.text((x, y), region, fill=(70, 70, 70), font=small_font)
+            _draw_text_right(draw, (total_x, y), total, fill=(24, 24, 24), font=small_value_font)
+            _draw_text_right(draw, (mean_x, y), mean, fill=(24, 24, 24), font=small_value_font)
+            _draw_text_right(draw, (median_x, y), median, fill=(24, 24, 24), font=small_value_font)
+            y += 18
+
+
+def _draw_text_right(draw: Any, xy: tuple[int, int], text: str, *, fill: tuple[int, int, int], font: Any) -> None:
+    try:
+        draw.text(xy, text, fill=fill, font=font, anchor="ra")
+    except TypeError:
+        bbox = draw.textbbox((0, 0), text, font=font)
+        width = bbox[2] - bbox[0]
+        draw.text((xy[0] - width, xy[1]), text, fill=fill, font=font)
+
+
+def _colorbar_image(*, norm: Normalize | TwoSlopeNorm, cmap: Any, width: int, height: int) -> Image.Image:
+    positions = np.linspace(1.0, 0.0, max(height, 1), dtype=np.float64)
+    colors = (np.asarray(cmap(positions))[:, :3] * 255).clip(0, 255).astype(np.uint8)
+    image = np.repeat(colors[:, np.newaxis, :], max(width, 1), axis=1)
+    return Image.fromarray(image, mode="RGB")
+
+
+def _draw_colorbar_ticks(
+    draw: Any,
+    *,
+    norm: Normalize | TwoSlopeNorm,
+    x: int,
+    y: int,
+    height: int,
+    unit: str,
+    signed: bool,
+) -> None:
+    font = _image_font(11)
+    ticks = _colorbar_tick_values(norm, unit=unit)
+    seen: set[float] = set()
+    for value in ticks:
+        key = round(float(value), 10)
+        if key in seen:
+            continue
+        seen.add(key)
+        try:
+            position = float(norm(value))
+        except Exception:
+            position = 0.0
+        position = min(max(position, 0.0), 1.0)
+        tick_y = int(round(y + (1.0 - position) * (height - 1)))
+        draw.line((x - 5, tick_y, x - 1, tick_y), fill=(72, 72, 66), width=1)
+        draw.text((x, tick_y - 7), _format_stat_value(value, unit=unit, signed=signed), fill=(58, 58, 54), font=font)
+
+
+def _colorbar_tick_values(norm: Normalize | TwoSlopeNorm, *, unit: str) -> list[float]:
+    low, high = _norm_bounds(norm)
+    if unit == "population_thousands" and getattr(norm, "scale_name", "") == "log1p":
+        candidates = [high, 1000.0, 100.0, 10.0, low]
+        return [value for value in candidates if low <= value <= high]
+    ticks = [high]
+    if low < 0.0 < high:
+        ticks.append(0.0)
+    ticks.append(low)
+    return ticks
+
+
+def _norm_bounds(norm: Normalize | TwoSlopeNorm) -> tuple[float, float]:
+    low = float(getattr(norm, "vmin", 0.0) if getattr(norm, "vmin", None) is not None else 0.0)
+    high = float(getattr(norm, "vmax", 1.0) if getattr(norm, "vmax", None) is not None else 1.0)
+    return low, high
+
+
+def _image_font(size: int, *, bold: bool = False) -> Any:
+    from PIL import ImageFont
+
+    candidates = (
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" if bold else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/liberation2/LiberationSans-Bold.ttf" if bold else "/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf",
+    )
+    for candidate in candidates:
+        path = Path(candidate)
+        if path.is_file():
+            return ImageFont.truetype(str(path), size=size)
+    return ImageFont.load_default()
 
 
 def _png_bytes(image: Image.Image) -> bytes:
@@ -1458,10 +1970,15 @@ def _save_gif_animation(frames: list[Image.Image], path: Path, *, duration_ms: i
 
 def _population_frame_label(result: PopulationMapResult, index: int) -> str:
     frame = result.frames[index]
-    low, high = result.relative_bounds
+    low, high = result.value_bounds
+    if result.comparison == "relative_pct":
+        return (
+            f"<b>{result.name}</b> - {frame.date} - baseline {result.baseline_date} "
+            f"- relative population change clamped to {low:g}%..{high:g}%"
+        )
     return (
-        f"<b>{result.name}</b> - {frame.date} - baseline {result.baseline_date} "
-        f"- relative population change clamped to {low:g}%..{high:g}%"
+        f"<b>{result.name}</b> - {frame.date} - current population "
+        f"display scale {_format_population_thousands(low)}..{_format_population_thousands(high)}"
     )
 
 
@@ -1484,6 +2001,42 @@ def _normalize_relative_bounds(bounds: tuple[float, float]) -> tuple[float, floa
     return low, high
 
 
+def _normalize_population_comparison(comparison: str | None) -> str:
+    text = (comparison or "relative_pct").strip().lower().replace(" ", "_").replace("-", "_")
+    aliases = {
+        "relative": "relative_pct",
+        "relative_percent": "relative_pct",
+        "relative_percentage": "relative_pct",
+        "pct": "relative_pct",
+        "percent": "relative_pct",
+        "percentage": "relative_pct",
+        "absolute": "current",
+        "absolute_value": "current",
+        "current_value": "current",
+        "value": "current",
+    }
+    normalized = aliases.get(text, text)
+    if normalized not in {"relative_pct", "current"}:
+        raise ValueError("population comparison must be 'relative_pct' or 'current'.")
+    return normalized
+
+
+def _normalize_population_absolute_scale(scale: str | None) -> str:
+    text = (scale or DEFAULT_POPULATION_ABSOLUTE_SCALE).strip().lower().replace(" ", "_").replace("-", "_")
+    aliases = {
+        "log": "log1p",
+        "logarithmic": "log1p",
+        "log_scale": "log1p",
+        "logarithmic_scale": "log1p",
+        "lin": "linear",
+        "fixed": "linear",
+    }
+    normalized = aliases.get(text, text)
+    if normalized not in {"log1p", "linear"}:
+        raise ValueError("population absolute_scale must be 'log1p' or 'linear'.")
+    return normalized
+
+
 def _normalize_development_delta_bounds(bounds: tuple[float, float]) -> tuple[float, float]:
     low, high = float(bounds[0]), float(bounds[1])
     if low >= 0 or high <= 0 or low >= high:
@@ -1496,6 +2049,23 @@ def _normalize_positive_bounds(bounds: tuple[float, float]) -> tuple[float, floa
     if low < 0 or high <= low:
         raise ValueError("absolute bounds must be non-negative and increasing, for example (0, 500).")
     return low, high
+
+
+def _zero_to_global_max_bounds(
+    frame: pl.DataFrame,
+    column: str,
+    *,
+    absolute_bounds: tuple[float, float] | None,
+) -> tuple[float, float]:
+    if absolute_bounds is not None:
+        return _normalize_positive_bounds(absolute_bounds)
+    if frame.is_empty() or column not in frame.columns:
+        return (0.0, 1.0)
+    max_value = frame.select(pl.col(column).cast(pl.Float64).max().alias("max")).item()
+    high = float(max_value or 0.0)
+    if not np.isfinite(high) or high <= 0.0:
+        high = 1.0
+    return (0.0, high)
 
 
 def _overall_bounds(frame: pl.DataFrame, column: str) -> tuple[float, float]:

@@ -1049,6 +1049,44 @@ def test_food_revenue_check_prints_parsed_price_and_rank_edges(
     assert "result=ok" in output
 
 
+def test_food_revenue_storage_target_solver_uses_configured_edge() -> None:
+    edge = ("rural_settlement", "cheap_cap_0x", "full", "no")
+
+    full_target = cli._food_revenue_storage_full_target_for_edge(
+        edge,
+        matrix_targets={edge: -0.5},
+        rank_targets={"rural_settlement": 0.170},
+        price_targets={"cheap_cap_0x": -0.562},
+        starving_targets={"no": 0.0},
+    )
+    raw_target = cli._food_revenue_storage_raw_target_for_edge(
+        edge,
+        growth_cap=2.0,
+        matrix_targets={edge: -0.5},
+        rank_targets={"rural_settlement": 0.170},
+        price_targets={"cheap_cap_0x": -0.562},
+        starving_targets={"no": 0.0},
+    )
+
+    assert full_target == pytest.approx(-0.108)
+    assert raw_target == pytest.approx(-0.054)
+
+
+def test_food_revenue_storage_target_solver_reacts_to_desired_floor() -> None:
+    edge = ("rural_settlement", "cheap_cap_0x", "full", "no")
+
+    raw_target = cli._food_revenue_storage_raw_target_for_edge(
+        edge,
+        growth_cap=2.0,
+        matrix_targets={edge: -0.55},
+        rank_targets={"rural_settlement": 0.170},
+        price_targets={"cheap_cap_0x": -0.562},
+        starving_targets={"no": 0.0},
+    )
+
+    assert raw_target == pytest.approx(-0.079)
+
+
 def test_food_revenue_check_fails_when_matrix_total_leaves_band(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:

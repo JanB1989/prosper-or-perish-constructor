@@ -137,7 +137,6 @@ FOOD_REVENUE_PRICE_SCENARIO_SCALE = 0.25
 FOOD_REVENUE_PRICE_CAP_SCALE = 0.5
 FOOD_REVENUE_CHEAP_CAP_TARGET = -0.562
 FOOD_REVENUE_EXPENSIVE_CAP_TARGET = 0.155
-FOOD_REVENUE_STORAGE_FULL_TARGET = -0.108
 FOOD_REVENUE_STARVING_TARGET = 0.1
 FOOD_REVENUE_TOTAL_MODIFIER_MIN = -0.5
 FOOD_REVENUE_TOTAL_MODIFIER_MAX = 0.5
@@ -150,11 +149,21 @@ FOOD_REVENUE_STATIC_TARGETS = {
     "expensive_food_in_location": 0.310,
     "province_starving": FOOD_REVENUE_STARVING_TARGET,
 }
+FOOD_REVENUE_EDGE_PRICE_TARGETS = {
+    "cheap_cap_0x": FOOD_REVENUE_CHEAP_CAP_TARGET,
+    "base_100": 0.0,
+    "expensive_cap_2x": FOOD_REVENUE_EXPENSIVE_CAP_TARGET,
+}
+FOOD_REVENUE_EDGE_STARVING_TARGETS = {
+    "no": 0.0,
+    "yes": FOOD_REVENUE_STARVING_TARGET,
+}
 FOOD_REVENUE_MATRIX_TARGETS = {
     ("rural_settlement", "cheap_cap_0x", "full", "no"): -0.5,
     ("rural_settlement", "base_100", "full", "no"): 0.062,
     ("megalopolis", "expensive_cap_2x", "empty", "yes"): 0.5,
 }
+FOOD_REVENUE_STORAGE_TARGET_EDGE = ("rural_settlement", "cheap_cap_0x", "full", "no")
 FOOD_REVENUE_RANK_TARGETS = {
     "rural_settlement": 0.170,
     "town": 0.195,
@@ -2084,6 +2093,66 @@ def _food_revenue_scenario_price_label(scenario: str) -> str:
     }.get(scenario, scenario)
 
 
+def _food_revenue_solve_component_target(
+    *,
+    total_modifier: float,
+    known_modifiers: Sequence[float],
+) -> float:
+    total = _food_revenue_float(total_modifier)
+    if not math.isfinite(total):
+        return math.nan
+
+    known_total = 0.0
+    for modifier in known_modifiers:
+        value = _food_revenue_float(modifier)
+        if not math.isfinite(value):
+            return math.nan
+        known_total += value
+    return total - known_total
+
+
+def _food_revenue_storage_full_target_for_edge(
+    edge: tuple[str, str, str, str],
+    *,
+    matrix_targets: Mapping[tuple[str, str, str, str], float],
+    rank_targets: Mapping[str, float],
+    price_targets: Mapping[str, float],
+    starving_targets: Mapping[str, float],
+) -> float:
+    rank, price, storage, starving = edge
+    if storage != "full":
+        raise ValueError("storage target edge must use full storage")
+    return _food_revenue_solve_component_target(
+        total_modifier=_food_revenue_float(matrix_targets.get(edge)),
+        known_modifiers=(
+            _food_revenue_float(rank_targets.get(rank)),
+            _food_revenue_float(price_targets.get(price)),
+            _food_revenue_float(starving_targets.get(starving)),
+        ),
+    )
+
+
+def _food_revenue_storage_raw_target_for_edge(
+    edge: tuple[str, str, str, str],
+    *,
+    growth_cap: float,
+    matrix_targets: Mapping[tuple[str, str, str, str], float],
+    rank_targets: Mapping[str, float],
+    price_targets: Mapping[str, float],
+    starving_targets: Mapping[str, float],
+) -> float:
+    cap = _food_revenue_float(growth_cap)
+    if not math.isfinite(cap) or cap == 0.0:
+        return math.nan
+    return _food_revenue_storage_full_target_for_edge(
+        edge,
+        matrix_targets=matrix_targets,
+        rank_targets=rank_targets,
+        price_targets=price_targets,
+        starving_targets=starving_targets,
+    ) / cap
+
+
 def _food_revenue_check_report(
     inputs: Mapping[str, Any],
     *,
@@ -2159,10 +2228,20 @@ def _food_revenue_check_report(
             tolerance,
         )
     )
-    storage_raw_target = (
-        FOOD_REVENUE_STORAGE_FULL_TARGET / growth_cap
-        if math.isfinite(growth_cap) and growth_cap != 0.0
-        else math.nan
+    storage_full_target = _food_revenue_storage_full_target_for_edge(
+        FOOD_REVENUE_STORAGE_TARGET_EDGE,
+        matrix_targets=FOOD_REVENUE_MATRIX_TARGETS,
+        rank_targets=FOOD_REVENUE_RANK_TARGETS,
+        price_targets=FOOD_REVENUE_EDGE_PRICE_TARGETS,
+        starving_targets=FOOD_REVENUE_EDGE_STARVING_TARGETS,
+    )
+    storage_raw_target = _food_revenue_storage_raw_target_for_edge(
+        FOOD_REVENUE_STORAGE_TARGET_EDGE,
+        growth_cap=growth_cap,
+        matrix_targets=FOOD_REVENUE_MATRIX_TARGETS,
+        rank_targets=FOOD_REVENUE_RANK_TARGETS,
+        price_targets=FOOD_REVENUE_EDGE_PRICE_TARGETS,
+        starving_targets=FOOD_REVENUE_EDGE_STARVING_TARGETS,
     )
     component_rows.append(
         _food_revenue_check_row(
@@ -2176,7 +2255,7 @@ def _food_revenue_check_report(
         _food_revenue_check_row(
             "stored-food full effect",
             storage_raw * growth_cap,
-            FOOD_REVENUE_STORAGE_FULL_TARGET,
+            storage_full_target,
             tolerance,
         )
     )

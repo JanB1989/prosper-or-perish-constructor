@@ -27,7 +27,7 @@ LOGISTICS_BLUEPRINTS = (
 )
 LOGISTICS_BALANCE_TARGETS = {
     "carrier_inn": {
-        "max_levels": "10",
+        "max_levels": "100",
         "increase_per_level_cost": "0.30",
         "pop_type": "peasants",
         "upkeep": 2.5,
@@ -121,6 +121,9 @@ LOGISTICS_AI_BUILD_ORDER = (
     "transport_office",
     "carrier_inn",
 )
+LOGISTICS_AI_LEVEL_GUARD_TARGETS = {
+    "carrier_inn": "10",
+}
 
 
 def _custom_tags(text: str) -> set[str]:
@@ -408,7 +411,9 @@ def test_ai_logistics_unsupported_levels_action_keeps_required_guards() -> None:
         assert block.count(f"NOT = {{ has_building_with_at_least_one_level = {building} }}") == 8
         assert f"has_building_with_at_least_one_level = {building}" in block
         assert f"value = building_type:{building}.building_base_cost_in_gold" in block
-        max_levels = LOGISTICS_BALANCE_TARGETS[building]["max_levels"]
+        max_levels = LOGISTICS_AI_LEVEL_GUARD_TARGETS.get(
+            building, LOGISTICS_BALANCE_TARGETS[building]["max_levels"]
+        )
         level_guard = re.compile(
             rf"has_building_with_at_least_one_level\s*=\s*{re.escape(building)}\s+"
             rf"location_building_level\s*=\s*\{{\s*"

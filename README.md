@@ -160,7 +160,8 @@ docs/examples/europedia_entries.json
 
 ```bash
 uv sync --dev
-uv run eu5-orchestrator inspect --project constructor.toml
+uv run pre-commit install
+uv run ppc inspect
 ```
 
 Check `constructor.load_order.toml` before analyzing another machine or mod. This

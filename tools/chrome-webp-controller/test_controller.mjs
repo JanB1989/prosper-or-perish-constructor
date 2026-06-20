@@ -18,6 +18,17 @@ function sleep(ms) {
   return new Promise((resolveSleep) => setTimeout(resolveSleep, ms));
 }
 
+function chromeExitPromise(chrome, isAllowedExit) {
+  return new Promise((_, reject) => {
+    chrome.once("exit", (code, signal) => {
+      if (isAllowedExit()) {
+        return;
+      }
+      reject(new Error(`Chrome exited before test completed: code=${code ?? "null"} signal=${signal ?? "null"}`));
+    });
+  });
+}
+
 function listen(server) {
   return new Promise((resolveListen) => server.listen(0, "127.0.0.1", resolveListen));
 }
@@ -197,8 +208,10 @@ async function main() {
   }
 
   let cdp = null;
+  let allowChromeExit = false;
+  const chromeExitedEarly = chromeExitPromise(chrome, () => allowChromeExit);
   try {
-    await waitForJson(`http://${debugHost}:${chromePort}/json/version`);
+    await Promise.race([waitForJson(`http://${debugHost}:${chromePort}/json/version`), chromeExitedEarly]);
     const target = await newTarget(debugHost, chromePort, url);
     const websocketUrl = target.webSocketDebuggerUrl.replace("://127.0.0.1:", `://${debugHost}:`);
     cdp = connectCdp(websocketUrl);
@@ -206,9 +219,15 @@ async function main() {
     await cdp.send("Runtime.enable");
     await cdp.send("Page.enable");
 
-    const ready = await waitFor(cdp, (item) => item.exists && item.frameCount >= expectedFrameCount, "controller canvas");
+    const ready = await Promise.race([
+      waitFor(cdp, (item) => item.exists && item.frameCount >= expectedFrameCount, "controller canvas"),
+      chromeExitedEarly,
+    ]);
     if (!ready.hud.includes("WebP")) {
       throw new Error(`HUD did not initialize: ${ready.hud}`);
+    }
+    if (ready.imageCount !== 0) {
+      throw new Error(`Native image was not removed: ${JSON.stringify(ready)}`);
     }
 
     await key(cdp, " ", "Space");
@@ -240,6 +259,7 @@ async function main() {
     if (cdp) {
       cdp.close();
     }
+    allowChromeExit = true;
     const chromeExited = new Promise((resolveExit) => {
       chrome.once("exit", resolveExit);
     });

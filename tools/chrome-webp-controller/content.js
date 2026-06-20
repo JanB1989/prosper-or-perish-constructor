@@ -16,6 +16,7 @@
   let canvas = null;
   let context = null;
   let hud = null;
+  let shellObserver = null;
 
   function directWebpImage() {
     const image = document.querySelector("img");
@@ -46,6 +47,7 @@
       return;
     }
     window.__webpPlaybackControllerActive = true;
+    const source = image.currentSrc || image.src || location.href;
 
     installShell(image);
     if (!("ImageDecoder" in window)) {
@@ -54,7 +56,6 @@
     }
 
     try {
-      const source = image.currentSrc || image.src || location.href;
       const { data, type } = await loadWebpBytes(source);
       decoder = new ImageDecoder({ data, type });
       await decoder.tracks.ready;
@@ -241,14 +242,21 @@
   }
 
   function installShell(image) {
-    image.style.display = "none";
+    const body = document.body || document.documentElement.appendChild(document.createElement("body"));
     document.documentElement.style.background = "#101010";
-    document.body.style.margin = "0";
-    document.body.style.minHeight = "100vh";
-    document.body.style.background = "#101010";
-    document.body.style.display = "grid";
-    document.body.style.placeItems = "center";
-    document.body.style.overflow = "hidden";
+    document.documentElement.style.margin = "0";
+    document.documentElement.style.width = "100%";
+    document.documentElement.style.height = "100%";
+    document.documentElement.style.overflow = "hidden";
+    body.style.margin = "0";
+    body.style.width = "100vw";
+    body.style.height = "100vh";
+    body.style.minHeight = "100vh";
+    body.style.background = "#101010";
+    body.style.display = "flex";
+    body.style.alignItems = "center";
+    body.style.justifyContent = "center";
+    body.style.overflow = "hidden";
 
     canvas = document.createElement("canvas");
     canvas.id = "webp-controller-canvas";
@@ -276,7 +284,22 @@
     hud.style.userSelect = "none";
     hud.style.pointerEvents = "none";
 
-    document.body.append(canvas, hud);
+    body.replaceChildren(canvas, hud);
+    shellObserver?.disconnect();
+    shellObserver = new MutationObserver(() => {
+      if (!canvas || !hud) {
+        return;
+      }
+      for (const child of Array.from(body.children)) {
+        if (child !== canvas && child !== hud) {
+          child.remove();
+        }
+      }
+      if (canvas.parentElement !== body || hud.parentElement !== body) {
+        body.replaceChildren(canvas, hud);
+      }
+    });
+    shellObserver.observe(body, { childList: true });
     updateHud();
   }
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from io import BytesIO
+import json
 from pathlib import Path
 from typing import Any
 
@@ -45,12 +46,16 @@ GEOGRAPHY_SCOPE_SEARCH_COLUMNS = {
 DEFAULT_RELATIVE_BOUNDS = (-100.0, 300.0)
 DEFAULT_POPULATION_ABSOLUTE_BOUNDS = (0.0, 2000.0)
 DEFAULT_POPULATION_ABSOLUTE_SCALE = "log1p"
+DEFAULT_POPULATION_DELTA_BOUNDS = (-500.0, 500.0)
 DEFAULT_DEVELOPMENT_BOUNDS = (0.0, 100.0)
 DEFAULT_DEVELOPMENT_DELTA_BOUNDS = (-10.0, 10.0)
-DEFAULT_BUILDING_LEVEL_BOUNDS = (0.0, 500.0)
+DEFAULT_BUILDING_LEVEL_BOUNDS = (0.0, 400.0)
 DEFAULT_BUILDING_LEVEL_DELTA_BOUNDS = (-50.0, 50.0)
 DEFAULT_BACKGROUND = np.array([238, 238, 232], dtype=np.uint8)
 DEFAULT_UNSELECTED = np.array([184, 184, 178], dtype=np.uint8)
+DEFAULT_NO_DATA = np.array([156, 156, 150], dtype=np.uint8)
+DEFAULT_NO_DATA_STRIPE = np.array([126, 126, 120], dtype=np.uint8)
+DEFAULT_ANIMATION_MAX_BYTES = 9_500_000
 
 
 @dataclass(frozen=True)
@@ -66,6 +71,7 @@ class SavegameMapAssets:
     source_height: int
     scale_x: float
     scale_y: float
+    prepared_geometry: pl.DataFrame | None = None
 
 
 @dataclass(frozen=True)
@@ -76,6 +82,7 @@ class PopulationMapFrame:
     date_sort: int
     year: int
     png: bytes
+    image: Any | None = None
 
 
 @dataclass(frozen=True)
@@ -91,9 +98,9 @@ class PopulationMapResult:
     relative_bounds: tuple[float, float]
     mapped_locations: int
     missing_geometry_locations: int
-    value_column: str = "relative_change_pct"
-    value_label: str = "relative population change"
-    value_bounds: tuple[float, float] = DEFAULT_RELATIVE_BOUNDS
+    value_column: str = "population_map_value"
+    value_label: str = "current population"
+    value_bounds: tuple[float, float] = DEFAULT_POPULATION_ABSOLUTE_BOUNDS
     widget: Any | None = None
 
 
@@ -129,12 +136,38 @@ class AnimationExportResult:
 
 
 @dataclass(frozen=True)
+class MapViewerExportResult:
+    path: Path
+    frame_dir: Path
+    maps: tuple[str, ...]
+    frames: int
+
+
+@dataclass(frozen=True)
 class MapFrameLegend:
     title: str
     rows: tuple[tuple[str, str], ...]
-    region_rows: tuple[tuple[str, str, str, str], ...] = ()
+    region_rows: tuple[tuple[str, str, str, str, str, str], ...] = ()
     unit: str = ""
     signed: bool = False
+
+
+@dataclass(frozen=True)
+class RenderTimeline:
+    index: int
+    count: int
+    year: int
+    start_year: int
+    end_year: int
+
+
+@dataclass(frozen=True)
+class MapRenderCache:
+    packed: np.ndarray
+    base_rgb: np.ndarray
+    flat_packed: np.ndarray
+    hatch_mask_flat: np.ndarray
+    color_to_pixels: dict[int, np.ndarray]
 
 
 class Log1pNorm(Normalize):
@@ -185,6 +218,15 @@ def load_map_assets(
     )
     packed_locations, source_width, source_height = _load_packed_locations(locations_png, map_width=map_width)
     map_height = int(packed_locations.shape[0])
+    scale_x = float(packed_locations.shape[1]) / float(source_width)
+    scale_y = float(map_height) / float(source_height)
+    prepared_geometry = _prepare_geometry_frame(
+        geometry,
+        scale_x=scale_x,
+        scale_y=scale_y,
+        map_width=int(packed_locations.shape[1]),
+        map_height=map_height,
+    )
     return SavegameMapAssets(
         locations_png_path=locations_png,
         baseline_path=baseline_path,
@@ -195,8 +237,9 @@ def load_map_assets(
         map_height=map_height,
         source_width=source_width,
         source_height=source_height,
-        scale_x=float(packed_locations.shape[1]) / float(source_width),
-        scale_y=float(map_height) / float(source_height),
+        scale_x=scale_x,
+        scale_y=scale_y,
+        prepared_geometry=prepared_geometry,
     )
 
 
@@ -207,8 +250,8 @@ def population_map(
     name: str | None = None,
     metric: str = "total_population",
     baseline_date: int | str | None = None,
-    comparison: str = "relative_pct",
-    relative_bounds: tuple[float, float] = DEFAULT_RELATIVE_BOUNDS,
+    comparison: str = "current",
+    relative_bounds: tuple[float, float] = DEFAULT_POPULATION_DELTA_BOUNDS,
     absolute_bounds: tuple[float, float] | None = None,
     absolute_scale: str = DEFAULT_POPULATION_ABSOLUTE_SCALE,
     width: int | None = None,
@@ -225,9 +268,9 @@ def population_map(
             "`data = nb.open_data(load_map_assets=True)`."
         )
     comparison = _normalize_population_comparison(comparison)
-    result_relative_bounds = DEFAULT_RELATIVE_BOUNDS
-    if comparison == "relative_pct":
-        low, high = _normalize_relative_bounds(relative_bounds)
+    result_relative_bounds = DEFAULT_POPULATION_DELTA_BOUNDS
+    if comparison == "delta":
+        low, high = _normalize_development_delta_bounds(relative_bounds)
         result_relative_bounds = (low, high)
     else:
         low, high = 0.0, 0.0
@@ -272,7 +315,7 @@ def population_map(
 
     baseline_snapshot_id = ""
     baseline_date_label = ""
-    if comparison == "relative_pct":
+    if comparison == "delta":
         baseline = _resolve_baseline_snapshot(mapped, baseline_date)
         baseline_snapshot_id = str(baseline["snapshot_id"])
         baseline_date_label = str(baseline["date"])
@@ -284,40 +327,39 @@ def population_map(
         frame_data = (
             mapped.join(baseline_values, on="slug", how="left")
             .with_columns(
-                _relative_change_expr(metric, low=low, high=high).alias("relative_change_pct"),
+                _delta_expr(metric, "baseline_value").alias("population_delta"),
             )
             .sort(["date_sort", "slug"])
         )
-        value_column = "relative_change_pct"
-        value_label = "relative population change"
+        value_column = "population_delta"
+        value_label = "population change"
         color_norm: Normalize | TwoSlopeNorm = TwoSlopeNorm(vmin=low, vcenter=0.0, vmax=high)
         cmap = plt.get_cmap("RdYlGn")
-        title = f"{resolved_name} population change vs {baseline_date_label}"
-        subtitle_suffix = comparison.replace("_", " ")
+        title = f"{resolved_name} population change vs {_year_label(baseline)}"
+        subtitle_suffix = f"population delta, displayed {_format_population_thousands(low)}..{_format_population_thousands(high)}"
         legend_title = "Population change"
-        legend_context = (("Baseline", baseline_date_label),)
-        legend_unit = "%"
+        legend_context = (("Baseline", _year_label(baseline)),)
+        legend_unit = "population_thousands"
         legend_signed = True
     else:
         value_column = "population_map_value"
         frame_data = (
             mapped.with_columns(
-                pl.col(metric).cast(pl.Float64).fill_null(0.0).alias(value_column)
+                pl.col(metric).cast(pl.Float64).alias(value_column)
             )
             .sort(["date_sort", "slug"])
         )
         value_label = "current population"
-        low, high = _zero_to_global_max_bounds(frame_data, value_column, absolute_bounds=absolute_bounds)
+        low, high = _normalize_positive_bounds(absolute_bounds or DEFAULT_POPULATION_ABSOLUTE_BOUNDS)
         color_norm = (
-            Log1pNorm(vmin=low, vmax=high)
+            Log1pNorm(vmin=low, vmax=high, clip=True)
             if absolute_scale == "log1p"
-            else Normalize(vmin=low, vmax=high)
+            else Normalize(vmin=low, vmax=high, clip=True)
         )
         cmap = plt.get_cmap("YlOrRd")
         title = f"{resolved_name} current population"
         scale_label = "log1p color scale" if absolute_scale == "log1p" else "linear color scale"
-        bounds_label = "fixed" if absolute_bounds is not None else "selected snapshots"
-        subtitle_suffix = f"population, {bounds_label} {_format_population_thousands(low)}..{_format_population_thousands(high)}, {scale_label}"
+        subtitle_suffix = f"population, fixed {_format_population_thousands(low)}..{_format_population_thousands(high)}, {scale_label}"
         legend_title = "Population"
         legend_context = ()
         legend_unit = "population_thousands"
@@ -325,31 +367,33 @@ def population_map(
     crop = _scope_crop(frame_data, assets, padding=18)
     target_width = width or assets.map_width
     render_width = min(max(int(target_width), 200), assets.map_width)
+    render_cache = _build_render_cache(assets, crop=crop, frame_data=frame_data)
 
     frames: list[PopulationMapFrame] = []
     snapshots = frame_data.select(["snapshot_id", "date", "date_sort", "year"]).unique().sort("date_sort")
+    snapshot_frames = _partition_snapshot_frames(frame_data)
     for index, snapshot in enumerate(snapshots.iter_rows(named=True)):
-        snapshot_frame = frame_data.filter(pl.col("snapshot_id") == snapshot["snapshot_id"])
-        png = _render_metric_frame(
+        snapshot_frame = snapshot_frames[str(snapshot["snapshot_id"])]
+        rendered = _render_metric_frame(
             assets,
             snapshot_frame,
             value_column=value_column,
             crop=crop,
+            render_cache=render_cache,
             render_width=render_width,
             color_norm=color_norm,
             cmap=cmap,
             title=title,
-            subtitle=f"{snapshot['date']} - {subtitle_suffix}",
+            subtitle=f"{_year_label(snapshot)} - {subtitle_suffix}",
+            timeline=_timeline_for_snapshot(snapshots, index, snapshot),
             legend=_frame_legend(
                 snapshot_frame,
                 value_column=value_column,
                 title=legend_title,
-                date=str(snapshot["date"]),
+                date=_year_label(snapshot),
                 context=legend_context,
                 unit=legend_unit,
                 signed=legend_signed,
-                total_value_column=metric if comparison == "relative_pct" else None,
-                baseline_value_column="baseline_value" if comparison == "relative_pct" else None,
             ),
         )
         frames.append(
@@ -359,7 +403,8 @@ def population_map(
                 date=str(snapshot["date"]),
                 date_sort=int(snapshot["date_sort"]),
                 year=int(snapshot["year"]),
-                png=png,
+                png=rendered["png"],
+                image=rendered["image"],
             )
         )
 
@@ -389,8 +434,8 @@ def show_population_map(
     name: str | None = None,
     metric: str = "total_population",
     baseline_date: int | str | None = None,
-    comparison: str = "relative_pct",
-    relative_bounds: tuple[float, float] = DEFAULT_RELATIVE_BOUNDS,
+    comparison: str = "current",
+    relative_bounds: tuple[float, float] = DEFAULT_POPULATION_DELTA_BOUNDS,
     absolute_bounds: tuple[float, float] | None = None,
     absolute_scale: str = DEFAULT_POPULATION_ABSOLUTE_SCALE,
     width: int | None = None,
@@ -529,58 +574,60 @@ def development_map(
         frame_data = (
             mapped.join(baseline_values, on="slug", how="left")
             .with_columns(
-                (pl.col("development").cast(pl.Float64).fill_null(0.0) - pl.col("baseline_development").cast(pl.Float64).fill_null(0.0))
-                .alias("development_delta"),
+                _delta_expr("development", "baseline_development").alias("development_delta"),
             )
             .with_columns(pl.col("development_delta").clip(low, high).alias("development_map_value"))
             .sort(["date_sort", "slug"])
         )
         value_column = "development_map_value"
-        value_label = f"development change from {baseline_date_label} (points)"
+        value_label = f"development change from {_year_label(baseline)} (points)"
         color_norm: Normalize | TwoSlopeNorm = TwoSlopeNorm(vmin=low, vcenter=0.0, vmax=high)
         cmap = plt.get_cmap("BrBG")
-        title = f"{resolved_name} development change vs {baseline_date_label}"
+        title = f"{resolved_name} development change vs {_year_label(baseline)}"
         subtitle_suffix = f"development point delta, clamped to {low:g}..{high:g}"
     else:
         frame_data = (
             mapped.with_columns(
-                pl.col("development").cast(pl.Float64).fill_null(0.0).alias("development_map_value")
+                pl.col("development").cast(pl.Float64).alias("development_map_value")
             )
             .sort(["date_sort", "slug"])
         )
-        low, high = _zero_to_global_max_bounds(frame_data, "development_map_value", absolute_bounds=absolute_bounds)
+        low, high = _normalize_positive_bounds(absolute_bounds or DEFAULT_DEVELOPMENT_BOUNDS)
         value_column = "development_map_value"
         value_label = "current development"
-        color_norm = Normalize(vmin=low, vmax=high)
+        color_norm = Normalize(vmin=low, vmax=high, clip=True)
         cmap = plt.get_cmap("cividis")
         title = f"{resolved_name} current development"
-        bounds_label = "fixed" if absolute_bounds is not None else "selected snapshots"
-        subtitle_suffix = f"development, {bounds_label} {low:g}..{high:g} scale"
+        subtitle_suffix = f"development, fixed {low:g}..{high:g} scale"
 
     crop = _scope_crop(frame_data, assets, padding=18)
     target_width = width or assets.map_width
     render_width = min(max(int(target_width), 200), assets.map_width)
+    render_cache = _build_render_cache(assets, crop=crop, frame_data=frame_data)
 
     frames: list[DevelopmentMapFrame] = []
     snapshots = frame_data.select(["snapshot_id", "date", "date_sort", "year"]).unique().sort("date_sort")
+    snapshot_frames = _partition_snapshot_frames(frame_data)
     for index, snapshot in enumerate(snapshots.iter_rows(named=True)):
-        snapshot_frame = frame_data.filter(pl.col("snapshot_id") == snapshot["snapshot_id"])
-        png = _render_metric_frame(
+        snapshot_frame = snapshot_frames[str(snapshot["snapshot_id"])]
+        rendered = _render_metric_frame(
             assets,
             snapshot_frame,
             value_column=value_column,
             crop=crop,
+            render_cache=render_cache,
             render_width=render_width,
             color_norm=color_norm,
             cmap=cmap,
             title=title,
-            subtitle=f"{snapshot['date']} - {subtitle_suffix}",
+            subtitle=f"{_year_label(snapshot)} - {subtitle_suffix}",
+            timeline=_timeline_for_snapshot(snapshots, index, snapshot),
             legend=_frame_legend(
                 snapshot_frame,
                 value_column=value_column,
                 title="Development change" if normalized_mode == "from_gamestart" else "Development",
-                date=str(snapshot["date"]),
-                context=((("Baseline", baseline_date_label),) if normalized_mode == "from_gamestart" else ()),
+                date=_year_label(snapshot),
+                context=((("Baseline", _year_from_date_label(baseline_date_label)),) if normalized_mode == "from_gamestart" else ()),
                 unit="pts" if normalized_mode == "from_gamestart" else "",
                 signed=normalized_mode == "from_gamestart",
             ),
@@ -592,7 +639,8 @@ def development_map(
                 date=str(snapshot["date"]),
                 date_sort=int(snapshot["date_sort"]),
                 year=int(snapshot["year"]),
-                png=png,
+                png=rendered["png"],
+                image=rendered["image"],
             )
         )
 
@@ -803,7 +851,7 @@ def _map_widget(
 
     image = widgets.Image(value=frames[0].png, format="png", layout=widgets.Layout(width="100%"))
     label = widgets.HTML(value=label_for_index(0))
-    options = [(f"{frame.date} ({frame.year})", frame.index) for frame in frames]
+    options = [(str(frame.year), frame.index) for frame in frames]
     slider = widgets.SelectionSlider(
         options=options,
         value=0,
@@ -845,6 +893,7 @@ def save_population_map_animation(
     quality: int = 100,
     lossless: bool = True,
     width: int | None = None,
+    max_bytes: int | None = None,
     overwrite: bool = True,
 ) -> AnimationExportResult:
     """Write pre-rendered population map frames as an animated WebP or GIF."""
@@ -859,6 +908,7 @@ def save_population_map_animation(
         quality=quality,
         lossless=lossless,
         width=width,
+        max_bytes=max_bytes,
         overwrite=overwrite,
     )
 
@@ -874,6 +924,7 @@ def save_development_map_animation(
     quality: int = 100,
     lossless: bool = True,
     width: int | None = None,
+    max_bytes: int | None = None,
     overwrite: bool = True,
 ) -> AnimationExportResult:
     return save_map_animation(
@@ -886,6 +937,7 @@ def save_development_map_animation(
         quality=quality,
         lossless=lossless,
         width=width,
+        max_bytes=max_bytes,
         overwrite=overwrite,
     )
 
@@ -901,6 +953,7 @@ def save_building_levels_map_animation(
     quality: int = 100,
     lossless: bool = True,
     width: int | None = None,
+    max_bytes: int | None = None,
     overwrite: bool = True,
 ) -> AnimationExportResult:
     return save_map_animation(
@@ -913,6 +966,7 @@ def save_building_levels_map_animation(
         quality=quality,
         lossless=lossless,
         width=width,
+        max_bytes=max_bytes,
         overwrite=overwrite,
     )
 
@@ -928,6 +982,7 @@ def save_map_animation(
     quality: int = 100,
     lossless: bool = True,
     width: int | None = None,
+    max_bytes: int | None = None,
     overwrite: bool = True,
 ) -> AnimationExportResult:
     if not result.frames:
@@ -936,19 +991,22 @@ def save_map_animation(
     if output_path.exists() and not overwrite:
         raise FileExistsError(f"Animation already exists: {output_path}")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    frames = [_resize_animation_frame(_image_from_png(frame.png), width=width) for frame in result.frames]
+    source_frames = [_frame_image(frame) for frame in result.frames]
     animation_format = _animation_format(output_path)
     duration = max(int(duration_ms), 20)
     if animation_format == "webp":
-        _save_webp_animation(
-            frames,
+        frames = _save_webp_animation_with_size_limit(
+            source_frames,
             output_path,
+            width=width,
             duration_ms=duration,
             loop=loop,
             quality=quality,
             lossless=lossless,
+            max_bytes=max_bytes,
         )
     elif animation_format == "gif":
+        frames = [_resize_animation_frame(frame, width=width) for frame in source_frames]
         _save_gif_animation(frames, output_path, duration_ms=duration, loop=loop)
     else:
         raise ValueError("Animation path must end in .webp or .gif.")
@@ -957,6 +1015,69 @@ def save_map_animation(
         format=animation_format,
         frames=len(frames),
         duration_ms=duration,
+    )
+
+
+def save_map_viewer(
+    map_results: list[tuple[str, Any]] | tuple[tuple[str, Any], ...],
+    *,
+    path: str | Path = Path("graphs/savegame_notebooks/exports/savegame_maps.html"),
+    frame_dir: str | Path = Path("viewer_frames"),
+    width: int | None = None,
+    quality: int = 94,
+    lossless: bool = False,
+    overwrite: bool = True,
+) -> MapViewerExportResult:
+    output_path = Path(path)
+    if not output_path.is_absolute():
+        output_path = _repo_relative_path(output_path)
+    if output_path.exists() and not overwrite:
+        raise FileExistsError(f"Map viewer already exists: {output_path}")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    frame_root = Path(frame_dir)
+    if not frame_root.is_absolute():
+        frame_root = output_path.parent / frame_root
+    frame_root.mkdir(parents=True, exist_ok=True)
+
+    maps: list[dict[str, Any]] = []
+    total_frames = 0
+    for label, result in map_results:
+        if not getattr(result, "frames", None):
+            continue
+        map_id = _slugify_identifier(label)
+        map_dir = frame_root / map_id
+        map_dir.mkdir(parents=True, exist_ok=True)
+        for old_frame in map_dir.glob("*.webp"):
+            old_frame.unlink()
+        frames: list[dict[str, Any]] = []
+        for frame in result.frames:
+            frame_path = map_dir / f"{frame.index:03d}_{frame.year}.webp"
+            image = _resize_animation_frame(_frame_image(frame), width=width)
+            image.save(
+                frame_path,
+            format="WEBP",
+            quality=max(1, min(int(quality), 100)),
+            lossless=bool(lossless),
+            method=4,
+        )
+            frames.append(
+                {
+                    "url": _viewer_relative_url(output_path, frame_path),
+                    "year": int(frame.year),
+                    "date": str(frame.date),
+                    "index": int(frame.index),
+                }
+            )
+        total_frames += len(frames)
+        maps.append({"id": map_id, "label": str(label), "frames": frames})
+
+    output_path.write_text(_map_viewer_html(maps), encoding="utf-8")
+    return MapViewerExportResult(
+        path=output_path,
+        frame_dir=frame_root,
+        maps=tuple(str(item["label"]) for item in maps),
+        frames=total_frames,
     )
 
 
@@ -1048,7 +1169,25 @@ def _load_packed_locations(locations_png_path: Path, *, map_width: int) -> tuple
 
 
 def _prepared_geometry(assets: SavegameMapAssets) -> pl.DataFrame:
-    geometry = assets.geometry
+    if assets.prepared_geometry is not None:
+        return assets.prepared_geometry
+    return _prepare_geometry_frame(
+        assets.geometry,
+        scale_x=assets.scale_x,
+        scale_y=assets.scale_y,
+        map_width=assets.map_width,
+        map_height=assets.map_height,
+    )
+
+
+def _prepare_geometry_frame(
+    geometry: pl.DataFrame,
+    *,
+    scale_x: float,
+    scale_y: float,
+    map_width: int,
+    map_height: int,
+) -> pl.DataFrame:
     required = {"location_tag", "map_color_rgb", "geometry_status"}
     missing = required.difference(geometry.columns)
     if missing:
@@ -1069,10 +1208,10 @@ def _prepared_geometry(assets: SavegameMapAssets) -> pl.DataFrame:
                 return_dtype=pl.UInt32,
             )
             .alias("map_color_int"),
-            (pl.col("bbox_min_x").cast(pl.Float64) * assets.scale_x).floor().cast(pl.Int64).clip(0, assets.map_width - 1).alias("map_min_x"),
-            (pl.col("bbox_max_x").cast(pl.Float64) * assets.scale_x).ceil().cast(pl.Int64).clip(0, assets.map_width - 1).alias("map_max_x"),
-            (pl.col("bbox_min_y").cast(pl.Float64) * assets.scale_y).floor().cast(pl.Int64).clip(0, assets.map_height - 1).alias("map_min_y"),
-            (pl.col("bbox_max_y").cast(pl.Float64) * assets.scale_y).ceil().cast(pl.Int64).clip(0, assets.map_height - 1).alias("map_max_y"),
+            (pl.col("bbox_min_x").cast(pl.Float64) * scale_x).floor().cast(pl.Int64).clip(0, map_width - 1).alias("map_min_x"),
+            (pl.col("bbox_max_x").cast(pl.Float64) * scale_x).ceil().cast(pl.Int64).clip(0, map_width - 1).alias("map_max_x"),
+            (pl.col("bbox_min_y").cast(pl.Float64) * scale_y).floor().cast(pl.Int64).clip(0, map_height - 1).alias("map_min_y"),
+            (pl.col("bbox_max_y").cast(pl.Float64) * scale_y).ceil().cast(pl.Int64).clip(0, map_height - 1).alias("map_max_y"),
         )
         .select("location_tag", "map_color_int", "map_min_x", "map_max_x", "map_min_y", "map_max_y")
         .unique("location_tag")
@@ -1145,8 +1284,7 @@ def _scalar_location_map(
         frame_data = (
             mapped.join(baseline_values, on="slug", how="left")
             .with_columns(
-                (pl.col(metric).cast(pl.Float64).fill_null(0.0) - pl.col(baseline_column).cast(pl.Float64).fill_null(0.0))
-                .alias(delta_column)
+                _delta_expr(metric, baseline_column).alias(delta_column)
             )
             .sort(["date_sort", "slug"])
         )
@@ -1163,18 +1301,17 @@ def _scalar_location_map(
             value_bounds = _overall_bounds(frame_data, value_column)
             scale_label = "frame min-max scale centered on zero"
         cmap = plt.get_cmap(delta_cmap)
-        value_label = f"{value_label_prefix} change from {baseline_date_label}"
-        title = f"{resolved_name} {title_metric} change vs {baseline_date_label}"
+        value_label = f"{value_label_prefix} change from {_year_label(baseline)}"
+        title = f"{resolved_name} {title_metric} change vs {_year_label(baseline)}"
         subtitle_suffix = f"{value_label}, {scale_label}"
     else:
         value_column = f"{metric}_map_value"
-        frame_data = mapped.with_columns(pl.col(metric).cast(pl.Float64).fill_null(0.0).alias(value_column)).sort(["date_sort", "slug"])
+        frame_data = mapped.with_columns(pl.col(metric).cast(pl.Float64).alias(value_column)).sort(["date_sort", "slug"])
         if absolute_scale == "fixed":
-            low, high = _zero_to_global_max_bounds(frame_data, value_column, absolute_bounds=absolute_bounds)
-            color_norm = Normalize(vmin=low, vmax=high)
+            low, high = _normalize_positive_bounds(absolute_bounds or _default_absolute_bounds(metric))
+            color_norm = Normalize(vmin=low, vmax=high, clip=True)
             value_bounds = (low, high)
-            bounds_label = "fixed" if absolute_bounds is not None else "selected snapshots"
-            scale_label = f"{bounds_label} {low:g}..{high:g} scale"
+            scale_label = f"fixed {low:g}..{high:g} scale"
         else:
             color_norm = None
             value_bounds = _overall_bounds(frame_data, value_column)
@@ -1187,27 +1324,31 @@ def _scalar_location_map(
     crop = _scope_crop(frame_data, assets, padding=18)
     target_width = width or assets.map_width
     render_width = min(max(int(target_width), 200), assets.map_width)
+    render_cache = _build_render_cache(assets, crop=crop, frame_data=frame_data)
     frames: list[DevelopmentMapFrame] = []
     snapshots = frame_data.select(["snapshot_id", "date", "date_sort", "year"]).unique().sort("date_sort")
+    snapshot_frames = _partition_snapshot_frames(frame_data)
     for index, snapshot in enumerate(snapshots.iter_rows(named=True)):
-        snapshot_frame = frame_data.filter(pl.col("snapshot_id") == snapshot["snapshot_id"])
-        png = _render_metric_frame(
+        snapshot_frame = snapshot_frames[str(snapshot["snapshot_id"])]
+        rendered = _render_metric_frame(
             assets,
             snapshot_frame,
             value_column=value_column,
             crop=crop,
+            render_cache=render_cache,
             render_width=render_width,
             color_norm=color_norm,
             cmap=cmap,
             title=title,
-            subtitle=f"{snapshot['date']} - {subtitle_suffix}",
+            subtitle=f"{_year_label(snapshot)} - {subtitle_suffix}",
             center_zero=center_zero,
+            timeline=_timeline_for_snapshot(snapshots, index, snapshot),
             legend=_frame_legend(
                 snapshot_frame,
                 value_column=value_column,
                 title=_legend_title(value_label_prefix, normalized_mode),
-                date=str(snapshot["date"]),
-                context=((("Baseline", baseline_date_label),) if normalized_mode == "from_gamestart" else ()),
+                date=_year_label(snapshot),
+                context=((("Baseline", _year_from_date_label(baseline_date_label)),) if normalized_mode == "from_gamestart" else ()),
                 unit=_legend_unit(metric, normalized_mode),
                 signed=normalized_mode == "from_gamestart",
             ),
@@ -1219,7 +1360,8 @@ def _scalar_location_map(
                 date=str(snapshot["date"]),
                 date_sort=int(snapshot["date_sort"]),
                 year=int(snapshot["year"]),
-                png=png,
+                png=rendered["png"],
+                image=rendered["image"],
             )
         )
 
@@ -1335,10 +1477,20 @@ def _building_level_locations(
         )
         if column in base.columns
     ]
-    base = base.select([*snapshot_columns, *geo_columns]).unique()
+    base = (
+        base.select([*snapshot_columns, "development", *geo_columns])
+        .unique()
+        .with_columns(pl.col("development").is_not_null().alias("has_location_data"))
+    )
     buildings = data.table("buildings")
     if buildings.is_empty() or not {"snapshot_id", "location_code", "level"}.issubset(buildings.columns):
-        return base.with_columns(pl.lit(0.0).alias("building_levels"))
+        return base.with_columns(
+            pl.when(pl.col("has_location_data"))
+            .then(pl.lit(0.0))
+            .otherwise(None)
+            .cast(pl.Float64)
+            .alias("building_levels")
+        )
     selected_playthrough = playthrough or getattr(data, "playthrough", None)
     if selected_playthrough is not None and "playthrough_id" in buildings.columns:
         buildings = buildings.filter(pl.col("playthrough_id") == selected_playthrough)
@@ -1351,7 +1503,11 @@ def _building_level_locations(
         .agg(pl.sum("level").cast(pl.Float64).alias("building_levels"))
     )
     return base.join(levels, on=["snapshot_id", "location_code"], how="left").with_columns(
-        pl.col("building_levels").fill_null(0.0)
+        pl.when(pl.col("has_location_data"))
+        .then(pl.col("building_levels").fill_null(0.0))
+        .otherwise(None)
+        .cast(pl.Float64)
+        .alias("building_levels")
     )
 
 
@@ -1424,6 +1580,12 @@ def _relative_change_expr(metric: str, *, low: float, high: float) -> pl.Expr:
     )
 
 
+def _delta_expr(current_column: str, baseline_column: str) -> pl.Expr:
+    current = pl.col(current_column).cast(pl.Float64)
+    baseline = pl.col(baseline_column).cast(pl.Float64)
+    return pl.when(current.is_null() | baseline.is_null()).then(None).otherwise(current - baseline)
+
+
 def _scope_crop(frame: pl.DataFrame, assets: SavegameMapAssets, *, padding: int) -> tuple[int, int, int, int]:
     if frame.is_empty() or not {"map_min_x", "map_max_x", "map_min_y", "map_max_y"}.issubset(frame.columns):
         return (0, 0, assets.map_width, assets.map_height)
@@ -1453,13 +1615,18 @@ def _frame_legend(
         rows.append(("Locations", "0"))
         return MapFrameLegend(title=title, rows=tuple(rows), unit=unit, signed=signed)
 
-    raw_values = frame.select(pl.col(value_column).cast(pl.Float64).alias("value")).drop_nulls().get_column("value").to_list()
+    values_frame = frame.select(pl.col(value_column).cast(pl.Float64).alias("value"))
+    no_data_count = int(values_frame.filter(pl.col("value").is_null() | pl.col("value").is_nan()).height)
+    raw_values = values_frame.drop_nulls().get_column("value").to_list()
     values = np.array(raw_values, dtype=np.float64)
     finite = values[np.isfinite(values)]
     rows.append(("Locations", f"{finite.size:,}"))
+    if no_data_count:
+        rows.append(("No data", f"{no_data_count:,}"))
     if finite.size:
         rows.extend(
             (
+                ("Total", _format_stat_value(float(finite.sum()), unit=unit, signed=signed)),
                 ("Mean", _format_stat_value(float(finite.mean()), unit=unit, signed=signed)),
                 ("Median", _format_stat_value(float(np.median(finite)), unit=unit, signed=signed)),
                 ("Min", _format_stat_value(float(finite.min()), unit=unit, signed=signed)),
@@ -1491,7 +1658,7 @@ def _super_region_legend_rows(
     total_value_column: str | None = None,
     baseline_value_column: str | None = None,
     limit: int = 6,
-) -> tuple[tuple[str, str, str, str], ...]:
+) -> tuple[tuple[str, str, str, str, str, str], ...]:
     if frame.is_empty() or value_column not in frame.columns or "super_region" not in frame.columns:
         return ()
     label_expr = (
@@ -1501,43 +1668,19 @@ def _super_region_legend_rows(
         if "super_region_label" in frame.columns
         else pl.col("super_region").cast(pl.String).map_elements(_title_from_key, return_dtype=pl.String)
     )
-    use_relative_total = (
-        unit == "%"
-        and total_value_column is not None
-        and baseline_value_column is not None
-        and total_value_column in frame.columns
-        and baseline_value_column in frame.columns
-    )
     selected = frame.select(
         label_expr.alias("region_label"),
         pl.col(value_column).cast(pl.Float64).alias("value"),
-        *(
-            [
-                pl.col(total_value_column).cast(pl.Float64).fill_null(0.0).alias("total_value"),
-                pl.col(baseline_value_column).cast(pl.Float64).fill_null(0.0).alias("baseline_value"),
-            ]
-            if use_relative_total
-            else []
-        )
     ).drop_nulls("value")
     aggregations: list[pl.Expr] = [
         pl.len().alias("locations"),
         pl.sum("value").alias("total"),
         pl.mean("value").alias("mean"),
         pl.median("value").alias("median"),
+        pl.min("value").alias("min"),
+        pl.max("value").alias("max"),
     ]
-    if use_relative_total:
-        aggregations.extend(
-            (
-                pl.sum("total_value").alias("current_total"),
-                pl.sum("baseline_value").alias("baseline_total"),
-            )
-        )
     stats = selected.group_by("region_label").agg(aggregations)
-    if use_relative_total:
-        stats = stats.with_columns(
-            _relative_change_from_totals_expr("current_total", "baseline_total").alias("total")
-        )
     stats = (
         stats
         .sort(["locations", "region_label"], descending=[True, False])
@@ -1549,6 +1692,8 @@ def _super_region_legend_rows(
             _format_stat_value(float(row["total"]), unit=unit, signed=signed),
             _format_stat_value(float(row["mean"]), unit=unit, signed=signed),
             _format_stat_value(float(row["median"]), unit=unit, signed=signed),
+            _format_stat_value(float(row["min"]), unit=unit, signed=signed),
+            _format_stat_value(float(row["max"]), unit=unit, signed=signed),
         )
         for row in stats.iter_rows(named=True)
     )
@@ -1602,7 +1747,7 @@ def _legend_unit(metric: str, mode: str) -> str:
 
 def _format_stat_value(value: float, *, unit: str, signed: bool) -> str:
     if unit == "population_thousands":
-        return _format_population_thousands(value)
+        return _format_population_thousands(value, signed=signed)
     prefix = "+" if signed and value > 0.0 else ""
     text = f"{prefix}{value:,.1f}"
     if unit == "%":
@@ -1612,15 +1757,97 @@ def _format_stat_value(value: float, *, unit: str, signed: bool) -> str:
     return text
 
 
-def _format_population_thousands(value: float) -> str:
+def _format_population_thousands(value: float, *, signed: bool = False) -> str:
     absolute = abs(value)
+    prefix = "+" if signed and value > 0.0 else ""
     if absolute >= 1000.0:
-        return f"{value / 1000.0:,.1f}M"
+        return f"{prefix}{value / 1000.0:,.1f}M"
     if absolute >= 10.0:
-        return f"{value:,.0f}k"
+        return f"{prefix}{value:,.0f}k"
     if absolute > 0.0:
-        return f"{value:,.1f}k"
+        return f"{prefix}{value:,.1f}k"
     return "0"
+
+
+def _partition_snapshot_frames(frame_data: pl.DataFrame) -> dict[str, pl.DataFrame]:
+    groups: dict[str, pl.DataFrame] = {}
+    if frame_data.is_empty() or "snapshot_id" not in frame_data.columns:
+        return groups
+    for part in frame_data.partition_by("snapshot_id", maintain_order=True):
+        if part.is_empty():
+            continue
+        groups[str(part.get_column("snapshot_id")[0])] = part
+    return groups
+
+
+def _timeline_for_snapshot(snapshots: pl.DataFrame, index: int, snapshot: dict[str, object]) -> RenderTimeline:
+    years = snapshots.get_column("year").cast(pl.Int64).to_list() if "year" in snapshots.columns else [int(index)]
+    start_year = int(min(years)) if years else int(index)
+    end_year = int(max(years)) if years else int(index)
+    return RenderTimeline(
+        index=int(index),
+        count=int(snapshots.height),
+        year=int(snapshot.get("year") or start_year),
+        start_year=start_year,
+        end_year=end_year,
+    )
+
+
+def _year_label(snapshot: dict[str, object]) -> str:
+    year = snapshot.get("year")
+    if year is not None:
+        return str(int(year))
+    return _year_from_date_label(str(snapshot.get("date") or ""))
+
+
+def _year_from_date_label(date: str) -> str:
+    text = str(date or "").strip()
+    return text.split(".", 1)[0] if "." in text else text
+
+
+def _build_render_cache(
+    assets: SavegameMapAssets,
+    *,
+    crop: tuple[int, int, int, int],
+    frame_data: pl.DataFrame,
+) -> MapRenderCache:
+    x0, y0, x1, y1 = crop
+    packed = assets.packed_locations[y0:y1, x0:x1]
+    base_rgb = np.empty((*packed.shape, 3), dtype=np.uint8)
+    base_rgb[:, :] = DEFAULT_BACKGROUND
+    land_mask = packed != 0
+    base_rgb[land_mask] = DEFAULT_UNSELECTED
+    flat = packed.reshape(-1)
+    hatch_y, hatch_x = np.indices(packed.shape)
+    hatch_mask_flat = (((hatch_x + hatch_y) // 8) % 2 == 0).reshape(-1)
+    color_to_pixels: dict[int, np.ndarray] = {}
+    if not frame_data.is_empty() and "map_color_int" in frame_data.columns:
+        color_values = (
+            frame_data.select("map_color_int")
+            .drop_nulls()
+            .unique()
+            .sort("map_color_int")
+            .get_column("map_color_int")
+            .to_list()
+        )
+        if color_values:
+            colors = np.array(color_values, dtype=np.uint32)
+            indexes = np.searchsorted(colors, flat)
+            in_range = indexes < len(colors)
+            matched = np.zeros(flat.shape, dtype=bool)
+            matched[in_range] = colors[indexes[in_range]] == flat[in_range]
+            if bool(matched.any()):
+                matched_pixels = np.flatnonzero(matched)
+                matched_indexes = indexes[matched]
+                for color_index in np.unique(matched_indexes):
+                    color_to_pixels[int(colors[int(color_index)])] = matched_pixels[matched_indexes == color_index]
+    return MapRenderCache(
+        packed=packed,
+        base_rgb=base_rgb,
+        flat_packed=flat,
+        hatch_mask_flat=hatch_mask_flat,
+        color_to_pixels=color_to_pixels,
+    )
 
 
 def _render_metric_frame(
@@ -1629,41 +1856,57 @@ def _render_metric_frame(
     *,
     value_column: str,
     crop: tuple[int, int, int, int],
+    render_cache: MapRenderCache | None = None,
     render_width: int,
     color_norm: Normalize | TwoSlopeNorm | None,
     cmap: Any,
     title: str,
     subtitle: str,
     center_zero: bool = False,
+    timeline: RenderTimeline | None = None,
     legend: MapFrameLegend | None = None,
-) -> bytes:
-    x0, y0, x1, y1 = crop
-    packed = assets.packed_locations[y0:y1, x0:x1]
-    rgb = np.empty((*packed.shape, 3), dtype=np.uint8)
-    rgb[:, :] = DEFAULT_BACKGROUND
-    land_mask = packed != 0
-    rgb[land_mask] = DEFAULT_UNSELECTED
+) -> dict[str, Any]:
+    cache = render_cache or _build_render_cache(assets, crop=crop, frame_data=frame)
+    rgb = cache.base_rgb.copy()
     color_values = frame.select("map_color_int", value_column).unique("map_color_int").sort("map_color_int")
     norm = color_norm or Normalize(vmin=0.0, vmax=1.0)
     if not color_values.is_empty():
         colors = np.array(color_values.get_column("map_color_int").to_list(), dtype=np.uint32)
-        values = np.array(color_values.get_column(value_column).to_list(), dtype=np.float64)
-        norm = color_norm or _dynamic_norm(values, center_zero=center_zero)
-        mapped_rgb = (np.asarray(cmap(norm(values)))[:, :3] * 255).astype(np.uint8)
-        flat = packed.reshape(-1)
-        indexes = np.searchsorted(colors, flat)
-        in_range = indexes < len(colors)
-        matched = np.zeros(flat.shape, dtype=bool)
-        matched[in_range] = colors[indexes[in_range]] == flat[in_range]
-        if bool(matched.any()):
-            rgb.reshape(-1, 3)[matched] = mapped_rgb[indexes[matched]]
+        raw_values = color_values.get_column(value_column).to_list()
+        values = np.array([np.nan if value is None else float(value) for value in raw_values], dtype=np.float64)
+        finite_mask = np.isfinite(values)
+        norm = color_norm or _dynamic_norm(values[finite_mask], center_zero=center_zero)
+        flat_rgb = rgb.reshape(-1, 3)
+        if finite_mask.any():
+            mapped_rgb = (np.asarray(cmap(norm(values[finite_mask])))[:, :3] * 255).clip(0, 255).astype(np.uint8)
+            finite_colors = colors[finite_mask]
+            for color, rgb_value in zip(finite_colors, mapped_rgb, strict=False):
+                pixels = cache.color_to_pixels.get(int(color))
+                if pixels is not None and pixels.size:
+                    flat_rgb[pixels] = rgb_value
+        if (~finite_mask).any():
+            for color in colors[~finite_mask]:
+                pixels = cache.color_to_pixels.get(int(color))
+                if pixels is None or not pixels.size:
+                    continue
+                flat_rgb[pixels] = DEFAULT_NO_DATA
+                stripe_pixels = pixels[cache.hatch_mask_flat[pixels]]
+                flat_rgb[stripe_pixels] = DEFAULT_NO_DATA_STRIPE
 
     image = Image.fromarray(rgb, mode="RGB")
     target_height = max(1, round(image.height * render_width / image.width))
     if image.width != render_width:
         image = image.resize((render_width, target_height), Image.Resampling.NEAREST)
-    image = _add_frame_chrome(image, title=title, subtitle=subtitle, legend=legend, norm=norm, cmap=cmap)
-    return _png_bytes(image)
+    image = _add_frame_chrome(
+        image,
+        title=title,
+        subtitle=subtitle,
+        legend=legend,
+        norm=norm,
+        cmap=cmap,
+        timeline=timeline,
+    )
+    return {"png": _png_bytes(image), "image": image}
 
 
 def _dynamic_norm(values: np.ndarray, *, center_zero: bool) -> Normalize | TwoSlopeNorm:
@@ -1695,8 +1938,9 @@ def _add_frame_chrome(
     legend: MapFrameLegend | None,
     norm: Normalize | TwoSlopeNorm,
     cmap: Any,
+    timeline: RenderTimeline | None = None,
 ) -> Image.Image:
-    header = 86
+    header = 102
     panel_width = _legend_panel_width(image.width) if legend is not None else 0
     content_height = max(image.height, 480 if legend is not None else image.height)
     out = Image.new("RGB", (image.width + panel_width, content_height + header), (250, 250, 247))
@@ -1705,10 +1949,12 @@ def _add_frame_chrome(
         from PIL import ImageDraw
 
         draw = ImageDraw.Draw(out)
-        title_font = _image_font(18, bold=True)
-        subtitle_font = _image_font(13)
-        draw.text((14, 11), title, fill=(24, 24, 24), font=title_font)
-        draw.text((14, 42), subtitle, fill=(70, 70, 70), font=subtitle_font)
+        title_font = _image_font(24, bold=True)
+        subtitle_font = _image_font(16)
+        draw.text((16, 12), title, fill=(24, 24, 24), font=title_font)
+        draw.text((16, 52), subtitle, fill=(70, 70, 70), font=subtitle_font)
+        if timeline is not None:
+            _draw_timeline(draw, image_width=image.width, timeline=timeline)
         if legend is not None:
             _draw_legend_panel(
                 out,
@@ -1726,8 +1972,35 @@ def _add_frame_chrome(
     return out
 
 
+def _draw_timeline(draw: Any, *, image_width: int, timeline: RenderTimeline) -> None:
+    if timeline.count <= 0:
+        return
+    width = min(520, max(220, image_width // 3))
+    x0 = max(16, (image_width - width) // 2)
+    x1 = x0 + width
+    y = 34
+    font = _image_font(14)
+    value_font = _image_font(19, bold=True)
+    draw.line((x0, y, x1, y), fill=(154, 154, 146), width=5)
+    if timeline.count <= 1:
+        position = 0.0
+    else:
+        position = timeline.index / float(timeline.count - 1)
+    marker_x = int(round(x0 + (x1 - x0) * min(max(position, 0.0), 1.0)))
+    draw.line((x0, y, marker_x, y), fill=(42, 90, 150), width=6)
+    draw.ellipse((marker_x - 7, y - 7, marker_x + 7, y + 7), fill=(42, 90, 150), outline=(24, 24, 24))
+    draw.text((x0, y + 12), str(timeline.start_year), fill=(70, 70, 70), font=font)
+    _draw_text_right(draw, (x1, y + 12), str(timeline.end_year), fill=(70, 70, 70), font=font)
+    year_text = str(timeline.year)
+    try:
+        draw.text((marker_x, 5), year_text, fill=(24, 24, 24), font=value_font, anchor="ma")
+    except TypeError:
+        bbox = draw.textbbox((0, 0), year_text, font=value_font)
+        draw.text((marker_x - ((bbox[2] - bbox[0]) // 2), 5), year_text, fill=(24, 24, 24), font=value_font)
+
+
 def _legend_panel_width(map_width: int) -> int:
-    return min(700, max(460, round(map_width * 0.34)))
+    return min(900, max(620, round(map_width * 0.42)))
 
 
 def _draw_legend_panel(
@@ -1750,14 +2023,14 @@ def _draw_legend_panel(
     draw.rectangle((panel_x, panel_y, panel_x + panel_width, panel_y + panel_height), fill=(250, 250, 247))
     draw.line((panel_x, panel_y, panel_x, panel_y + panel_height), fill=(207, 207, 198), width=1)
 
-    title_font = _image_font(16, bold=True)
-    row_font = _image_font(13)
-    value_font = _image_font(13, bold=True)
+    title_font = _image_font(22, bold=True)
+    row_font = _image_font(18)
+    value_font = _image_font(18, bold=True)
     draw.text((x, y), legend.title, fill=(24, 24, 24), font=title_font)
-    y += 30
+    y += 38
 
-    bar_height = max(120, min(190, panel_height // 3))
-    bar_width = 22
+    bar_height = max(140, min(210, panel_height // 3))
+    bar_width = 26
     bar_x = x
     bar_y = y
     bar = _colorbar_image(norm=norm, cmap=cmap, width=bar_width, height=bar_height)
@@ -1766,46 +2039,55 @@ def _draw_legend_panel(
     _draw_colorbar_ticks(
         draw,
         norm=norm,
-        x=bar_x + bar_width + 8,
+        x=bar_x + bar_width + 10,
         y=bar_y,
         height=bar_height,
         unit=legend.unit,
         signed=legend.signed,
     )
-    y += bar_height + 22
+    y += bar_height + 26
 
     label_x = x
+    main_value_x = min(right, x + 224)
     for label, value in legend.rows:
         draw.text((label_x, y), f"{label}:", fill=(70, 70, 70), font=row_font)
-        _draw_text_right(draw, (right, y), value, fill=(24, 24, 24), font=value_font)
-        y += 22
-        if y > panel_y + panel_height - 22:
+        draw.text((main_value_x, y), value, fill=(24, 24, 24), font=value_font)
+        y += 30
+        if y > panel_y + panel_height - 30:
             break
-    if legend.region_rows and y <= panel_y + panel_height - 86:
-        y += 8
-        draw.line((x, y, right, y), fill=(218, 218, 209), width=1)
+    if legend.region_rows and y <= panel_y + panel_height - 120:
         y += 10
-        small_header_font = _image_font(12, bold=True)
-        small_font = _image_font(10)
-        small_value_font = _image_font(10, bold=True)
+        draw.line((x, y, right, y), fill=(218, 218, 209), width=1)
+        y += 14
+        small_header_font = _image_font(15, bold=True)
+        small_font = _image_font(13)
+        small_value_font = _image_font(13, bold=True)
         draw.text((x, y), "Super Region", fill=(70, 70, 70), font=small_header_font)
-        value_area = max(210, min(330, round((right - x) * 0.52)))
-        column_width = max(68, value_area // 3)
-        median_x = right
-        mean_x = right - column_width
-        total_x = right - (column_width * 2)
-        _draw_text_right(draw, (total_x, y), "Total", fill=(70, 70, 70), font=small_header_font)
-        _draw_text_right(draw, (mean_x, y), "Mean", fill=(70, 70, 70), font=small_header_font)
-        _draw_text_right(draw, (median_x, y), "Median", fill=(70, 70, 70), font=small_header_font)
-        y += 19
-        for region, total, mean, median in legend.region_rows:
-            if y > panel_y + panel_height - 20:
+        inner_width = right - x
+        total_x = min(right, x + max(210, round(inner_width * 0.36)))
+        mean_x = min(right, total_x + 102)
+        median_x = min(right, mean_x + 102)
+        min_x = min(right, median_x + 102)
+        max_x = min(right, min_x + 102)
+        for column_x, label in (
+            (total_x, "Total"),
+            (mean_x, "Mean"),
+            (median_x, "Median"),
+            (min_x, "Min"),
+            (max_x, "Max"),
+        ):
+            _draw_text_right(draw, (column_x, y), label, fill=(70, 70, 70), font=small_header_font)
+        y += 25
+        for region, total, mean, median, minimum, maximum in legend.region_rows:
+            if y > panel_y + panel_height - 24:
                 break
             draw.text((x, y), region, fill=(70, 70, 70), font=small_font)
             _draw_text_right(draw, (total_x, y), total, fill=(24, 24, 24), font=small_value_font)
             _draw_text_right(draw, (mean_x, y), mean, fill=(24, 24, 24), font=small_value_font)
             _draw_text_right(draw, (median_x, y), median, fill=(24, 24, 24), font=small_value_font)
-            y += 18
+            _draw_text_right(draw, (min_x, y), minimum, fill=(24, 24, 24), font=small_value_font)
+            _draw_text_right(draw, (max_x, y), maximum, fill=(24, 24, 24), font=small_value_font)
+            y += 24
 
 
 def _draw_text_right(draw: Any, xy: tuple[int, int], text: str, *, fill: tuple[int, int, int], font: Any) -> None:
@@ -1834,7 +2116,7 @@ def _draw_colorbar_ticks(
     unit: str,
     signed: bool,
 ) -> None:
-    font = _image_font(11)
+    font = _image_font(14)
     ticks = _colorbar_tick_values(norm, unit=unit)
     seen: set[float] = set()
     for value in ticks:
@@ -1896,6 +2178,13 @@ def _image_from_png(data: bytes) -> Image.Image:
     return image.convert("RGB")
 
 
+def _frame_image(frame: PopulationMapFrame) -> Image.Image:
+    image = frame.image
+    if isinstance(image, Image.Image):
+        return image.copy()
+    return _image_from_png(frame.png)
+
+
 def _resize_animation_frame(image: Image.Image, *, width: int | None) -> Image.Image:
     if width is None or width <= 0 or image.width <= width:
         return image
@@ -1916,6 +2205,190 @@ def _repo_relative_path(path: Path) -> Path:
         if (candidate / "constructor.toml").is_file():
             return candidate / path
     return path
+
+
+def _slugify_identifier(value: str) -> str:
+    text = str(value).strip().lower()
+    chars = [char if char.isalnum() else "_" for char in text]
+    slug = "_".join(part for part in "".join(chars).split("_") if part)
+    return slug or "map"
+
+
+def _viewer_relative_url(html_path: Path, frame_path: Path) -> str:
+    try:
+        return frame_path.resolve().relative_to(html_path.parent.resolve()).as_posix()
+    except ValueError:
+        return frame_path.resolve().as_uri()
+
+
+def _map_viewer_html(maps: list[dict[str, Any]]) -> str:
+    payload = json.dumps({"maps": maps}, ensure_ascii=True)
+    payload = payload.replace("</", "<\\/")
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Savegame Map Playback</title>
+  <style>
+    :root {{
+      color-scheme: light;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f7f7f2;
+      color: #1f1f1d;
+    }}
+    body {{
+      margin: 0;
+      min-height: 100vh;
+      background: #f7f7f2;
+    }}
+    .toolbar {{
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(160px, 260px) auto 1fr minmax(64px, 92px);
+      gap: 12px;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(247, 247, 242, 0.96);
+      border-bottom: 1px solid #d2d2c8;
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+    }}
+    select, button, input {{
+      font: inherit;
+    }}
+    select, button {{
+      min-height: 36px;
+      border: 1px solid #9e9e94;
+      background: #fff;
+      color: #1f1f1d;
+      border-radius: 4px;
+      padding: 0 10px;
+    }}
+    button {{
+      cursor: pointer;
+      font-weight: 650;
+    }}
+    input[type="range"] {{
+      width: 100%;
+      accent-color: #2a5a96;
+    }}
+    #yearLabel {{
+      font-size: 18px;
+      font-weight: 750;
+      text-align: right;
+      white-space: nowrap;
+    }}
+    .stage {{
+      padding: 16px;
+      overflow: auto;
+    }}
+    #mapImage {{
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: none;
+      background: #ecece5;
+    }}
+    @media (max-width: 760px) {{
+      .toolbar {{
+        grid-template-columns: 1fr auto;
+      }}
+      #frameSlider {{
+        grid-column: 1 / -1;
+      }}
+      #yearLabel {{
+        text-align: left;
+      }}
+    }}
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <select id="mapSelect" aria-label="Map"></select>
+    <button id="playButton" type="button">Play</button>
+    <input id="frameSlider" type="range" min="0" max="0" value="0" step="1" aria-label="Frame">
+    <div id="yearLabel"></div>
+  </div>
+  <main class="stage">
+    <img id="mapImage" alt="Savegame map frame">
+  </main>
+  <script>
+    const DATA = {payload};
+    const mapSelect = document.getElementById("mapSelect");
+    const playButton = document.getElementById("playButton");
+    const slider = document.getElementById("frameSlider");
+    const yearLabel = document.getElementById("yearLabel");
+    const image = document.getElementById("mapImage");
+    let activeMap = 0;
+    let activeFrame = 0;
+    let timer = null;
+
+    function currentFrames() {{
+      return DATA.maps[activeMap]?.frames || [];
+    }}
+
+    function render() {{
+      const frames = currentFrames();
+      slider.max = Math.max(frames.length - 1, 0);
+      slider.value = Math.min(activeFrame, frames.length - 1);
+      const frame = frames[Math.min(activeFrame, frames.length - 1)];
+      if (!frame) {{
+        image.removeAttribute("src");
+        yearLabel.textContent = "";
+        return;
+      }}
+      image.src = frame.url;
+      yearLabel.textContent = frame.year;
+    }}
+
+    function setPlaying(playing) {{
+      if (timer) {{
+        clearInterval(timer);
+        timer = null;
+      }}
+      playButton.textContent = playing ? "Pause" : "Play";
+      if (playing) {{
+        timer = setInterval(() => {{
+          const frames = currentFrames();
+          if (!frames.length) return;
+          activeFrame = (activeFrame + 1) % frames.length;
+          render();
+        }}, 500);
+      }}
+    }}
+
+    DATA.maps.forEach((map, index) => {{
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = map.label;
+      mapSelect.appendChild(option);
+    }});
+
+    mapSelect.addEventListener("change", () => {{
+      activeMap = Number(mapSelect.value) || 0;
+      activeFrame = 0;
+      render();
+    }});
+    slider.addEventListener("input", () => {{
+      activeFrame = Number(slider.value) || 0;
+      render();
+    }});
+    playButton.addEventListener("click", () => setPlaying(timer === null));
+    document.addEventListener("keydown", (event) => {{
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      const frames = currentFrames();
+      if (!frames.length) return;
+      activeFrame += event.key === "ArrowRight" ? 1 : -1;
+      activeFrame = (activeFrame + frames.length) % frames.length;
+      render();
+    }});
+    render();
+  </script>
+</body>
+</html>
+"""
 
 
 def _animation_format(path: Path) -> str:
@@ -1946,13 +2419,81 @@ def _save_webp_animation(
             loop=int(loop),
             quality=max(1, min(int(quality), 100)),
             lossless=bool(lossless),
-            method=6,
+            method=4,
         )
     except OSError as exc:
         raise RuntimeError(
             "Pillow could not write an animated WebP in this environment. "
             "Use a .gif output path as a fallback."
         ) from exc
+
+
+def _save_webp_animation_with_size_limit(
+    source_frames: list[Image.Image],
+    path: Path,
+    *,
+    width: int | None,
+    duration_ms: int,
+    loop: int,
+    quality: int,
+    lossless: bool,
+    max_bytes: int | None,
+) -> list[Image.Image]:
+    base_width = int(width) if width is not None and width > 0 else int(source_frames[0].width)
+    quality_values = _webp_quality_attempts(quality)
+    width_values = _webp_width_attempts(base_width)
+    best: tuple[int, int, int] | None = None
+    last_frames: list[Image.Image] = []
+    for attempt_width in width_values:
+        frames = [_resize_animation_frame(frame, width=attempt_width) for frame in source_frames]
+        last_frames = frames
+        for attempt_quality in quality_values:
+            _save_webp_animation(
+                frames,
+                path,
+                duration_ms=duration_ms,
+                loop=loop,
+                quality=attempt_quality,
+                lossless=False if max_bytes is not None else lossless,
+            )
+            size = path.stat().st_size
+            if best is None or size < best[0]:
+                best = (size, attempt_width, attempt_quality)
+            if max_bytes is None or size <= max_bytes:
+                return frames
+    assert best is not None
+    raise RuntimeError(
+        f"Could not export {path.name} below {_format_byte_count(max_bytes or 0)}. "
+        f"Smallest attempt was {_format_byte_count(best[0])} at width {best[1]} and quality {best[2]}."
+    )
+
+
+def _webp_quality_attempts(quality: int) -> list[int]:
+    requested = max(1, min(int(quality), 100))
+    values = [requested, 92, 88, 84, 80, 76, 72, 66, 60, 54]
+    return sorted(set(values), reverse=True)
+
+
+def _webp_width_attempts(width: int) -> list[int]:
+    base = max(320, int(width))
+    values = [
+        base,
+        round(base * 0.92),
+        round(base * 0.84),
+        round(base * 0.76),
+        round(base * 0.68),
+        round(base * 0.60),
+    ]
+    minimum = min(900, base)
+    return [value for value in dict.fromkeys(values) if value >= minimum]
+
+
+def _format_byte_count(value: int) -> str:
+    if value >= 1_000_000:
+        return f"{value / 1_000_000:.1f} MB"
+    if value >= 1_000:
+        return f"{value / 1_000:.1f} KB"
+    return f"{value} B"
 
 
 def _save_gif_animation(frames: list[Image.Image], path: Path, *, duration_ms: int, loop: int) -> None:
@@ -1971,13 +2512,13 @@ def _save_gif_animation(frames: list[Image.Image], path: Path, *, duration_ms: i
 def _population_frame_label(result: PopulationMapResult, index: int) -> str:
     frame = result.frames[index]
     low, high = result.value_bounds
-    if result.comparison == "relative_pct":
+    if result.comparison == "delta":
         return (
-            f"<b>{result.name}</b> - {frame.date} - baseline {result.baseline_date} "
-            f"- relative population change clamped to {low:g}%..{high:g}%"
+            f"<b>{result.name}</b> - {frame.year} - baseline {_year_from_date_label(result.baseline_date)} "
+            f"- population delta displayed {_format_population_thousands(low)}..{_format_population_thousands(high)}"
         )
     return (
-        f"<b>{result.name}</b> - {frame.date} - current population "
+        f"<b>{result.name}</b> - {frame.year} - current population "
         f"display scale {_format_population_thousands(low)}..{_format_population_thousands(high)}"
     )
 
@@ -1991,7 +2532,7 @@ def _scalar_frame_label(result: DevelopmentMapResult, index: int) -> str:
         detail = f"current value, displayed range {low:g}..{high:g}"
     if result.value_label:
         detail = f"{result.value_label}, {detail}"
-    return f"<b>{result.name}</b> - {frame.date} - {detail}"
+    return f"<b>{result.name}</b> - {frame.year} - {detail}"
 
 
 def _normalize_relative_bounds(bounds: tuple[float, float]) -> tuple[float, float]:
@@ -2002,22 +2543,26 @@ def _normalize_relative_bounds(bounds: tuple[float, float]) -> tuple[float, floa
 
 
 def _normalize_population_comparison(comparison: str | None) -> str:
-    text = (comparison or "relative_pct").strip().lower().replace(" ", "_").replace("-", "_")
+    text = (comparison or "current").strip().lower().replace(" ", "_").replace("-", "_")
     aliases = {
-        "relative": "relative_pct",
-        "relative_percent": "relative_pct",
-        "relative_percentage": "relative_pct",
-        "pct": "relative_pct",
-        "percent": "relative_pct",
-        "percentage": "relative_pct",
+        "relative": "delta",
+        "relative_pct": "delta",
+        "relative_percent": "delta",
+        "relative_percentage": "delta",
+        "pct": "delta",
+        "percent": "delta",
+        "percentage": "delta",
+        "change": "delta",
+        "from_gamestart": "delta",
+        "from_game_start": "delta",
         "absolute": "current",
         "absolute_value": "current",
         "current_value": "current",
         "value": "current",
     }
     normalized = aliases.get(text, text)
-    if normalized not in {"relative_pct", "current"}:
-        raise ValueError("population comparison must be 'relative_pct' or 'current'.")
+    if normalized not in {"delta", "current"}:
+        raise ValueError("population comparison must be 'delta' or 'current'.")
     return normalized
 
 
@@ -2049,6 +2594,16 @@ def _normalize_positive_bounds(bounds: tuple[float, float]) -> tuple[float, floa
     if low < 0 or high <= low:
         raise ValueError("absolute bounds must be non-negative and increasing, for example (0, 500).")
     return low, high
+
+
+def _default_absolute_bounds(metric: str) -> tuple[float, float]:
+    if metric == "building_levels":
+        return DEFAULT_BUILDING_LEVEL_BOUNDS
+    if metric == "development":
+        return DEFAULT_DEVELOPMENT_BOUNDS
+    if metric == "total_population" or metric.startswith("population_"):
+        return DEFAULT_POPULATION_ABSOLUTE_BOUNDS
+    return (0.0, 1.0)
 
 
 def _zero_to_global_max_bounds(

@@ -3200,14 +3200,22 @@ def _export_savegame_notebook_global_webps(
     from prosper_or_perish_constructor import savegame_notebook
 
     print("global webp exports: rendering", flush=True)
-    exports = savegame_notebook.export_global_map_animations(
+    started_at = time.perf_counter()
+    output = savegame_notebook.export_global_map_outputs(
         repo=repo,
         data_root=dataset,
         load_order_path=load_order,
         profile=profile,
     )
-    for export in exports:
-        print(f"global webp: {_display_path(repo, export.path)}", flush=True)
+    elapsed = time.perf_counter() - started_at
+    for export in output.animations:
+        print(
+            f"global webp: {_display_path(repo, export.path)} "
+            f"({_format_file_size(export.path)})",
+            flush=True,
+        )
+    print(f"global viewer: {_display_path(repo, output.viewer.path)}", flush=True)
+    print(f"global webp exports: completed in {_format_elapsed_seconds(elapsed)}", flush=True)
 
 
 def _display_path(repo: Path, path: Path) -> Path:
@@ -3215,6 +3223,26 @@ def _display_path(repo: Path, path: Path) -> Path:
         return path.relative_to(repo)
     except ValueError:
         return path
+
+
+def _format_file_size(path: Path) -> str:
+    try:
+        size = path.stat().st_size
+    except OSError:
+        return "size unknown"
+    if size >= 1_000_000:
+        return f"{size / 1_000_000:.1f} MB"
+    if size >= 1_000:
+        return f"{size / 1_000:.1f} KB"
+    return f"{size} B"
+
+
+def _format_elapsed_seconds(seconds: float) -> str:
+    total = max(0, int(round(seconds)))
+    minutes, remainder = divmod(total, 60)
+    if minutes:
+        return f"{minutes}m {remainder:02d}s"
+    return f"{remainder}s"
 
 
 def _print_savegame_notebook_dataset_status(

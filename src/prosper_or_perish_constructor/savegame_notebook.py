@@ -253,6 +253,12 @@ class BuildingAbsoluteResult:
     metric: str
 
 
+@dataclass(frozen=True)
+class GlobalMapExportResult:
+    animations: tuple[savegame_maps.AnimationExportResult, ...]
+    viewer: savegame_maps.MapViewerExportResult
+
+
 def open_data(
     *,
     repo: str | Path | None = None,
@@ -716,8 +722,8 @@ def population_map(
     name: str | None = None,
     metric: str = "total_population",
     baseline_date: int | str | None = None,
-    comparison: str = "relative_pct",
-    relative_bounds: tuple[float, float] = savegame_maps.DEFAULT_RELATIVE_BOUNDS,
+    comparison: str = "current",
+    relative_bounds: tuple[float, float] = savegame_maps.DEFAULT_POPULATION_DELTA_BOUNDS,
     absolute_bounds: tuple[float, float] | None = None,
     absolute_scale: str = savegame_maps.DEFAULT_POPULATION_ABSOLUTE_SCALE,
     width: int | None = None,
@@ -749,8 +755,8 @@ def show_population_map(
     name: str | None = None,
     metric: str = "total_population",
     baseline_date: int | str | None = None,
-    comparison: str = "relative_pct",
-    relative_bounds: tuple[float, float] = savegame_maps.DEFAULT_RELATIVE_BOUNDS,
+    comparison: str = "current",
+    relative_bounds: tuple[float, float] = savegame_maps.DEFAULT_POPULATION_DELTA_BOUNDS,
     absolute_bounds: tuple[float, float] | None = None,
     absolute_scale: str = savegame_maps.DEFAULT_POPULATION_ABSOLUTE_SCALE,
     width: int | None = None,
@@ -792,6 +798,7 @@ def save_population_map_animation(
     quality: int = 100,
     lossless: bool = True,
     width: int | None = None,
+    max_bytes: int | None = None,
     overwrite: bool = True,
 ) -> savegame_maps.AnimationExportResult:
     return savegame_maps.save_population_map_animation(
@@ -804,6 +811,7 @@ def save_population_map_animation(
         quality=quality,
         lossless=lossless,
         width=width,
+        max_bytes=max_bytes,
         overwrite=overwrite,
     )
 
@@ -883,6 +891,7 @@ def save_development_map_animation(
     quality: int = 100,
     lossless: bool = True,
     width: int | None = None,
+    max_bytes: int | None = None,
     overwrite: bool = True,
 ) -> savegame_maps.AnimationExportResult:
     return savegame_maps.save_development_map_animation(
@@ -895,6 +904,7 @@ def save_development_map_animation(
         quality=quality,
         lossless=lossless,
         width=width,
+        max_bytes=max_bytes,
         overwrite=overwrite,
     )
 
@@ -974,6 +984,7 @@ def save_building_levels_map_animation(
     quality: int = 100,
     lossless: bool = True,
     width: int | None = None,
+    max_bytes: int | None = None,
     overwrite: bool = True,
 ) -> savegame_maps.AnimationExportResult:
     return savegame_maps.save_building_levels_map_animation(
@@ -986,6 +997,7 @@ def save_building_levels_map_animation(
         quality=quality,
         lossless=lossless,
         width=width,
+        max_bytes=max_bytes,
         overwrite=overwrite,
     )
 
@@ -1000,21 +1012,62 @@ def export_global_map_animations(
     map_width: int = 2000,
     export_width: int = 2200,
     interval_ms: int = 400,
-    quality: int = 98,
+    quality: int = 92,
     lossless: bool = False,
+    max_webp_bytes: int | None = savegame_maps.DEFAULT_ANIMATION_MAX_BYTES,
     comparison_export_dir: str | Path = Path("graphs/savegame_notebooks/exports/comparison"),
     absolute_export_dir: str | Path = Path("graphs/savegame_notebooks/exports/absolute"),
 ) -> tuple[savegame_maps.AnimationExportResult, ...]:
     """Render the standard global savegame map WebP animations."""
 
+    return export_global_map_outputs(
+        repo=repo,
+        data_root=data_root,
+        load_order_path=load_order_path,
+        profile=profile,
+        map_asset_width=map_asset_width,
+        map_width=map_width,
+        export_width=export_width,
+        interval_ms=interval_ms,
+        quality=quality,
+        lossless=lossless,
+        max_webp_bytes=max_webp_bytes,
+        comparison_export_dir=comparison_export_dir,
+        absolute_export_dir=absolute_export_dir,
+    ).animations
+
+
+def export_global_map_outputs(
+    *,
+    repo: str | Path | None = None,
+    data_root: str | Path | None = None,
+    load_order_path: str | Path | None = None,
+    profile: str | None = "constructor",
+    map_asset_width: int = 2400,
+    map_width: int = 2000,
+    export_width: int = 2200,
+    interval_ms: int = 400,
+    quality: int = 92,
+    lossless: bool = False,
+    max_webp_bytes: int | None = savegame_maps.DEFAULT_ANIMATION_MAX_BYTES,
+    comparison_export_dir: str | Path = Path("graphs/savegame_notebooks/exports/comparison"),
+    absolute_export_dir: str | Path = Path("graphs/savegame_notebooks/exports/absolute"),
+    viewer_path: str | Path = Path("graphs/savegame_notebooks/exports/savegame_maps.html"),
+    viewer_frame_dir: str | Path = Path("viewer_frames"),
+) -> GlobalMapExportResult:
+    """Render the standard global savegame map WebPs and HTML scrubber viewer."""
+
     resolved_repo = _find_repo_root(_portable_path(repo) if repo is not None else None)
     comparison_dir = _resolve_output_path(resolved_repo, comparison_export_dir)
     absolute_dir = _resolve_output_path(resolved_repo, absolute_export_dir)
+    viewer_output = _resolve_output_path(resolved_repo, viewer_path)
+    _remove_stale_comparison_exports(comparison_dir)
     data = open_data(
         repo=resolved_repo,
         data_root=data_root if data_root is not None else resolved_repo / "graphs" / "dataset",
         load_order_path=load_order_path if load_order_path is not None else resolved_repo / "constructor.load_order.toml",
         profile=profile,
+        tables=("locations", "buildings"),
         load_map_assets=True,
         map_width=map_asset_width,
     )
@@ -1025,30 +1078,11 @@ def export_global_map_animations(
     }
     exports: list[savegame_maps.AnimationExportResult] = []
 
-    population_change = population_map(
-        data,
-        metric="total_population",
-        comparison="relative_pct",
-        relative_bounds=(-100, 300),
-        **common,
-    )
-    exports.append(
-        save_population_map_animation(
-            population_change,
-            output_dir=comparison_dir,
-            filename="population_change.webp",
-            duration_ms=interval_ms,
-            quality=quality,
-            lossless=lossless,
-            width=export_width,
-        )
-    )
-
     population_current = population_map(
         data,
         metric="total_population",
         comparison="current",
-        absolute_bounds=None,
+        absolute_bounds=savegame_maps.DEFAULT_POPULATION_ABSOLUTE_BOUNDS,
         absolute_scale="log1p",
         **common,
     )
@@ -1061,31 +1095,14 @@ def export_global_map_animations(
             quality=quality,
             lossless=lossless,
             width=export_width,
-        )
-    )
-
-    development_from_gamestart = development_map(
-        data,
-        mode="from_gamestart",
-        delta_bounds=(-10, 10),
-        **common,
-    )
-    exports.append(
-        save_development_map_animation(
-            development_from_gamestart,
-            output_dir=comparison_dir,
-            filename="development_from_gamestart.webp",
-            duration_ms=interval_ms,
-            quality=quality,
-            lossless=lossless,
-            width=export_width,
+            max_bytes=max_webp_bytes,
         )
     )
 
     development_current = development_map(
         data,
         mode="current",
-        absolute_bounds=None,
+        absolute_bounds=savegame_maps.DEFAULT_DEVELOPMENT_BOUNDS,
         **common,
     )
     exports.append(
@@ -1097,32 +1114,14 @@ def export_global_map_animations(
             quality=quality,
             lossless=lossless,
             width=export_width,
-        )
-    )
-
-    building_levels_from_gamestart = building_levels_map(
-        data,
-        mode="from_gamestart",
-        delta_bounds=(-50, 50),
-        absolute_bounds=None,
-        **common,
-    )
-    exports.append(
-        save_building_levels_map_animation(
-            building_levels_from_gamestart,
-            output_dir=comparison_dir,
-            filename="building_levels_from_gamestart.webp",
-            duration_ms=interval_ms,
-            quality=quality,
-            lossless=lossless,
-            width=export_width,
+            max_bytes=max_webp_bytes,
         )
     )
 
     building_levels_current = building_levels_map(
         data,
         mode="current",
-        absolute_bounds=None,
+        absolute_bounds=savegame_maps.DEFAULT_BUILDING_LEVEL_BOUNDS,
         **common,
     )
     exports.append(
@@ -1134,14 +1133,38 @@ def export_global_map_animations(
             quality=quality,
             lossless=lossless,
             width=export_width,
+            max_bytes=max_webp_bytes,
         )
     )
-    return tuple(exports)
+    viewer = savegame_maps.save_map_viewer(
+        [
+            ("Population current", population_current),
+            ("Development current", development_current),
+            ("Building levels current", building_levels_current),
+        ],
+        path=viewer_output,
+        frame_dir=viewer_frame_dir,
+        width=export_width,
+        quality=quality,
+        lossless=lossless,
+    )
+    return GlobalMapExportResult(animations=tuple(exports), viewer=viewer)
 
 
 def _resolve_output_path(repo: Path, path: str | Path) -> Path:
     output = Path(path)
     return output if output.is_absolute() else repo / output
+
+
+def _remove_stale_comparison_exports(comparison_dir: Path) -> None:
+    for filename in (
+        "population_change.webp",
+        "development_from_gamestart.webp",
+        "building_levels_from_gamestart.webp",
+    ):
+        path = comparison_dir / filename
+        if path.exists():
+            path.unlink()
 
 
 def global_buildings(data: SavegameNotebookData, workbench: Any) -> GlobalBuildingsResult:

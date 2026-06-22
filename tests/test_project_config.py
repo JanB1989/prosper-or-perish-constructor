@@ -79,6 +79,9 @@ MARKET_FOOD_PRICE_EXTREMES = (
     MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_market_food_price_extremes.txt"
 )
 MARKET_FOOD_DEBUG_EVENT = MOD_ROOT / "in_game" / "events" / "debug" / "pp_market_food_debug.txt"
+CAPACITY_CULLING_DEBUG_EVENT = (
+    MOD_ROOT / "in_game" / "events" / "debug" / "pp_capacity_culling_debug.txt"
+)
 LOCATION_RANKS = MOD_ROOT / "in_game" / "common" / "location_ranks" / "pp_location_rank_adjustments.txt"
 FOOD_MAP_MODES = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes" / "pp_food_map_modes.txt"
 SITUATION_ROOT = MOD_ROOT / "in_game" / "common" / "situations"
@@ -1456,8 +1459,11 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
         "\npp_orchard_friendly_location_potential = {",
     )
     granary_text = (BUILDING_BLUEPRINT_ROOT / "granary.yml").read_text(encoding="utf-8-sig")
-    fishing_text = (BUILDING_BLUEPRINT_ROOT / "fishing_village.yml").read_text(encoding="utf-8-sig")
-    fishing_potential = _text_block_between(fishing_text, "location_potential = {", "\n\n        build_time")
+    fishing_potential_block = _accepted_blueprint_building_values("fishing_village")[
+        "location_potential"
+    ]
+    assert isinstance(fishing_potential_block, CList)
+    fishing_potential = json.dumps(normalized_value(fishing_potential_block), sort_keys=True)
     fruit_trigger_text = (
         MOD_ROOT
         / "in_game"
@@ -1483,7 +1489,7 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
     assert "raw_material = goods:beeswax" in farm_base_block
     assert "raw_material = goods:beeswax" in general_farm_block
     assert "vegetation = farmland" in general_farm_block
-    assert "is_coastal = yes" in fishing_potential
+    assert "is_coastal" in fishing_potential
     assert "is_province_capital = yes" not in granary_text
     for rank in ("rural_settlement", "town", "city", "megalopolis"):
         assert f"location_rank = location_rank:{rank}" in granary_text
@@ -1498,7 +1504,7 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
             unsupported.append((location, building))
         elif building == "fruit_orchard" and location not in orchard_exception_locations:
             unsupported.append((location, building))
-        elif building == "fishing_village" and "is_coastal = yes" not in fishing_potential:
+        elif building == "fishing_village" and "is_coastal" not in fishing_potential:
             unsupported.append((location, building))
         elif building == "granary" and "is_province_capital = yes" in granary_text:
             unsupported.append((location, building))
@@ -1531,7 +1537,7 @@ def test_water_control_buildings_have_manual_increase_per_level_cost() -> None:
 def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
     gates = {
         "fruit_orchard": "pp_fruit_orchard_location_potential",
-        "pomological_orchard": "pp_orchard_friendly_location_potential",
+        "pomological_orchard": "pp_fruit_orchard_location_potential",
         "sheep_farms": "pp_pasture_friendly_location_potential",
         "enclosed_sheep_walks": "pp_pasture_friendly_location_potential",
     }
@@ -1549,8 +1555,8 @@ def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
 
     game_start = GAME_START.read_text(encoding="utf-8-sig")
     assert "NOT = { pp_general_farmable_food_location_potential = yes }" in game_start
-    assert "NOT = { pp_fruit_orchard_location_potential = yes }" in game_start
-    assert "NOT = { pp_orchard_friendly_location_potential = yes }" in game_start
+    assert game_start.count("NOT = { pp_fruit_orchard_location_potential = yes }") == 2
+    assert "NOT = { pp_orchard_friendly_location_potential = yes }" not in game_start
     assert "NOT = { pp_pasture_friendly_location_potential = yes }" in game_start
     assert "pp_general_farmable_food_location > 0" not in game_start
     assert "pp_orchard_friendly_location > 0" not in game_start
@@ -1592,11 +1598,14 @@ def test_fish_blueprints_use_shared_capacity_pool_and_keep_distinctions() -> Non
         assert gate in fishing_village
 
     for blueprint in ("ocean_fishery", "offshore_fishery"):
-        text = (BUILDING_BLUEPRINT_ROOT / f"{blueprint}.yml").read_text(encoding="utf-8-sig")
-        location_potential = _text_block_between(text, "location_potential = {", "\n\n    construction_demand")
-        assert "is_coastal = yes" in location_potential
-        assert "has_river = yes" not in location_potential
-        assert "is_adjacent_to_lake = yes" not in location_potential
+        location_potential_block = _accepted_blueprint_building_values(blueprint)[
+            "location_potential"
+        ]
+        assert isinstance(location_potential_block, CList)
+        location_potential = json.dumps(normalized_value(location_potential_block), sort_keys=True)
+        assert "is_coastal" in location_potential
+        assert "has_river" not in location_potential
+        assert "is_adjacent_to_lake" not in location_potential
 
     pearl = (BUILDING_BLUEPRINT_ROOT / "pearl_fishery.yml").read_text(encoding="utf-8-sig")
     assert "fish_capacity" not in pearl
@@ -2181,6 +2190,15 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
         "pp_ai_logistics_on_unsupported_building_levels",
     ]
 
+    capacity_action_entries = {
+        entry.key: entry.value for entry in parse_file(BUILDING_CAPACITY_CULLING_V2).entries
+    }
+    capacity_action = capacity_action_entries["pp_cull_capacity_buildings_over_max_v2"]
+    assert isinstance(capacity_action, CList)
+    capacity_action_effect = _entry_values(capacity_action)["effect"]
+    assert isinstance(capacity_action_effect, CList)
+    assert _entry_values(capacity_action_effect)["pp_cull_capacity_buildings_over_max_v2_effect"] is True
+
     legacy_entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
     assert "pp_cull_over_cap_buildings" not in legacy_entries
 
@@ -2189,6 +2207,35 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
         len(re.findall(r"has_owner\s*=\s*yes\s+owner\s*=\s*scope:pp_ai_logistics_country", logistics_text))
         == 4
     )
+
+
+def test_capacity_culling_debug_event_runs_same_global_four_year_action() -> None:
+    event_entries = {entry.key: entry.value for entry in parse_file(CAPACITY_CULLING_DEBUG_EVENT).entries}
+    assert "pp_capacity_culling_debug.1" in event_entries
+
+    event = event_entries["pp_capacity_culling_debug.1"]
+    assert isinstance(event, CList)
+    event_values = _entry_values(event)
+    assert event_values["type"] == "country_event"
+    assert event_values["orphan"] is True
+
+    immediate = event_values["immediate"]
+    assert isinstance(immediate, CList)
+    global_scope = _entry_values(immediate)["every_country"]
+    assert isinstance(global_scope, CList)
+    assert _entry_values(global_scope)["pp_cull_capacity_buildings_over_max_v2_effect"] is True
+
+    event_text = CAPACITY_CULLING_DEBUG_EVENT.read_text(encoding="utf-8-sig")
+    assert "pp_cull_capacity_building_above_max" not in event_text
+    assert "change_building_level_in_location" not in event_text
+    assert "every_owned_location" not in event_text
+
+    localization = (LOCALIZATION_ROOT / "pp_debug_l_english.yml").read_text(encoding="utf-8-sig")
+    assert "pp_capacity_culling_debug.1.title" in localization
+    assert (
+        'pp_capacity_culling_debug.1.desc: "Runs the same capacity building culling on-action '
+        'used by the four-year country pulse for every country."'
+    ) in localization
 
 
 def test_monthly_market_food_stockpile_topup_is_global_and_debuggable() -> None:
@@ -2253,13 +2300,11 @@ def test_capacity_culling_v2_calls_helper_for_each_capacity_building() -> None:
         *((building, f"forest_capacity_max_{building}") for building in FOREST_CAP_BUILDINGS),
     ]
 
-    action_entries = {entry.key: entry.value for entry in parse_file(BUILDING_CAPACITY_CULLING_V2).entries}
-    action = action_entries["pp_cull_capacity_buildings_over_max_v2"]
+    effect_entries = {entry.key: entry.value for entry in parse_file(CAPACITY_CULLING_EFFECTS).entries}
+    action = effect_entries["pp_cull_capacity_buildings_over_max_v2_effect"]
     assert isinstance(action, CList)
 
-    effect = _entry_values(action)["effect"]
-    assert isinstance(effect, CList)
-    location_scopes = [entry.value for entry in effect.entries if entry.key == "every_owned_location"]
+    location_scopes = [entry.value for entry in action.entries if entry.key == "every_owned_location"]
     assert len(location_scopes) == 1
     location = location_scopes[0]
     assert isinstance(location, CList)
@@ -2275,7 +2320,7 @@ def test_capacity_culling_v2_calls_helper_for_each_capacity_building() -> None:
     assert calls == expected_calls
 
 
-def test_capacity_culling_helper_uses_exact_max_plus_one_threshold() -> None:
+def test_capacity_culling_helper_reduces_any_level_above_max() -> None:
     effect_entries = {entry.key: entry.value for entry in parse_file(CAPACITY_CULLING_EFFECTS).entries}
     helper = effect_entries["pp_cull_capacity_building_above_max"]
     assert isinstance(helper, CList)
@@ -2295,9 +2340,7 @@ def test_capacity_culling_helper_uses_exact_max_plus_one_threshold() -> None:
     assert building_level_entries["building_type"].value == "building_type:$building$"
     assert building_level_entries["value"].op == ">"
 
-    threshold = building_level_entries["value"].value
-    assert isinstance(threshold, CList)
-    assert _entry_values(threshold) == {"value": "$max_level$", "add": 1}
+    assert building_level_entries["value"].value == "$max_level$"
 
     change = helper_if_values["change_building_level_in_location"]
     assert isinstance(change, CList)

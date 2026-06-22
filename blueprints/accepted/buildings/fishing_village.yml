@@ -52,7 +52,6 @@ building:
                 raw_material = goods:fish
             }
         }
-
         build_time = village_build_time
         # Slot 0 â€” fishery ground / climate (temperate vs arctic)
         unique_production_methods = {

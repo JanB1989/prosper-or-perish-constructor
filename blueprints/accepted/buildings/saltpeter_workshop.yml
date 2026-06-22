@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: saltpeter_workshop
 building:
   key: saltpeter_workshop
@@ -26,7 +26,6 @@ building:
     location_potential = {
         NOT = { raw_material = goods:saltpeter }
     }
-
     unique_production_methods = {
         pp_saltpeter_workshop_demands = {
             pottery = 0.15

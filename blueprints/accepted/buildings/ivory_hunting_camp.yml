@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: ivory_hunting_camp
 building:
   key: ivory_hunting_camp
@@ -30,7 +30,6 @@ building:
     location_potential = {
         raw_material = goods:ivory
     }
-
     construction_demand = basic_construction_needs
     ai_forbid_shutdown = no
     forbidden_for_estates = no

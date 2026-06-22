@@ -18,7 +18,6 @@ location_potential = {
     raw_material = goods:salt
     is_coastal = yes
 }
-
 unique_production_methods = {
     pp_coastal_saltern_base_salt = {
         produced = salt

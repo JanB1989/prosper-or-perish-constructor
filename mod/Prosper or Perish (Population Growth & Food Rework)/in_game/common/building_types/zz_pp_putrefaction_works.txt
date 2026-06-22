@@ -17,7 +17,6 @@ obsolete = saltpeter_workshop
 location_potential = {
     NOT = { raw_material = goods:saltpeter }
 }
-
 unique_production_methods = {
     pp_putrefaction_works_demands = {
         pottery = 0.6

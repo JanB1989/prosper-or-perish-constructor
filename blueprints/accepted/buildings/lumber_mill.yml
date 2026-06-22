@@ -103,7 +103,7 @@ building:
                 debug_max_profit = 0
                 category = building_maintenance
             }
-    	}
+        }
         unique_production_methods = {
             pp_lumber_mill_no_extra_rations = {
                 category = building_maintenance
@@ -126,9 +126,9 @@ building:
     raw_modifier = {
     }
 
-    	modifier = {
-    	}
-    	construction_demand = basic_construction_needs
+        modifier = {
+        }
+        construction_demand = basic_construction_needs
 advancements:
   - key: REPLACE:lumber_improvements_discovery
     body: |2-

@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: salt_mine_improved
 upgrade_chain:
   family: salt_mine
@@ -82,7 +82,6 @@ building:
             }
         }
     }
-
     construction_demand = workshop_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no

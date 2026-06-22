@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: sand_pit
 upgrade_chain:
   family: sand_pit
@@ -40,7 +40,6 @@ building:
             }
         }
     }
-
     category = rgo_building_category
     build_time = rural_build_time
 

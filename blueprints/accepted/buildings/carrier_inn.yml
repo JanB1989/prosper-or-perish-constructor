@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: carrier_inn
 building:
   key: carrier_inn
@@ -28,7 +28,6 @@ building:
     location_potential = {
       num_roads > 0
     }
-
     construction_demand = pp_carrier_inn_construction
 
     possible_production_methods = {

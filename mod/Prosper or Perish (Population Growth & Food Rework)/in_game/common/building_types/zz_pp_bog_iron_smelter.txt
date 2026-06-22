@@ -16,6 +16,10 @@ megalopolis = yes
 build_time = rural_build_time
 
 location_potential = {
+    OR = {
+        is_adjacent_to_lake = yes
+        topography = wetlands
+    }
     NOR = {
         raw_material = goods:coal
         raw_material = goods:iron
@@ -32,7 +36,6 @@ location_potential = {
         raw_material = goods:mercury
     }
 }
-
 unique_production_methods = {
     pp_bog_iron_maintenance = {
         coal = 0.45 # charcoal, furnace fuel

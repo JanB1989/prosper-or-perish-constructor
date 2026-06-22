@@ -481,6 +481,19 @@ def _first_script_block(text: str, name: str) -> str:
     return blocks[0][2]
 
 
+def _normalized_first_script_block(text: str, name: str) -> str:
+    blocks = _iter_script_blocks(text, name)
+    if not blocks:
+        return "<none>"
+    assert len(blocks) == 1, f"expected one {name} block, found {len(blocks)}"
+    lines = []
+    for line in blocks[0][2].splitlines():
+        stripped = line.split("#", 1)[0].strip()
+        if stripped:
+            lines.append(re.sub(r"\s+", " ", stripped))
+    return "\n".join(lines)
+
+
 def _enclosing_script_block(
     blocks: list[tuple[int, int, str]], position: int, name: str
 ) -> tuple[int, int, str]:
@@ -1001,6 +1014,68 @@ def test_accepted_building_upgrade_chains_obsolete_only_direct_predecessor() -> 
         offenders.append(f"{key}: expected obsolete {expected}, found {actual}")
 
     assert not offenders
+
+
+def test_enabled_upgrade_chain_location_requirements_match_initial_building() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = {
+        (BLUEPRINT_ROOT / entry).stem
+        for entry in manifest["enabled"]
+        if str(entry).startswith("buildings/")
+    }
+    blueprints = {
+        path.stem: yaml.safe_load(path.read_text(encoding="utf-8-sig"))
+        for path in sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml"))
+        if path.stem in enabled
+    }
+    chains: dict[str, list[tuple[int, str]]] = {}
+    for key, raw in blueprints.items():
+        upgrade_chain = raw.get("upgrade_chain")
+        if upgrade_chain:
+            chains.setdefault(upgrade_chain["family"], []).append((upgrade_chain["tier"], key))
+
+    offenders: list[str] = []
+    generated_paths_by_key = _managed_building_output_paths_by_key()
+    for family, members in sorted(chains.items()):
+        members = sorted(members)
+        initial_tier, initial_key = members[0]
+        if initial_tier != 0:
+            offenders.append(f"{family}: first enabled tier is {initial_tier} ({initial_key}), expected 0")
+            continue
+        initial_body = blueprints[initial_key]["building"]["body"]
+        initial_requirement = _normalized_first_script_block(initial_body, "location_potential")
+        initial_building_key = blueprints[initial_key]["building"]["key"]
+        initial_generated_path = generated_paths_by_key.get(initial_building_key)
+        if initial_generated_path is None:
+            offenders.append(f"{family}: missing generated building output for {initial_building_key}")
+            continue
+        initial_generated_requirement = _normalized_first_script_block(
+            initial_generated_path.read_text(encoding="utf-8-sig"),
+            "location_potential",
+        )
+        for tier, key in members[1:]:
+            body = blueprints[key]["building"]["body"]
+            requirement = _normalized_first_script_block(body, "location_potential")
+            if requirement != initial_requirement:
+                offenders.append(
+                    f"{family}: {key} tier {tier} location_potential differs from initial {initial_key}"
+                )
+            building_key = blueprints[key]["building"]["key"]
+            generated_path = generated_paths_by_key.get(building_key)
+            if generated_path is None:
+                offenders.append(f"{family}: missing generated building output for {building_key}")
+                continue
+            generated_requirement = _normalized_first_script_block(
+                generated_path.read_text(encoding="utf-8-sig"),
+                "location_potential",
+            )
+            if generated_requirement != initial_generated_requirement:
+                offenders.append(
+                    f"{family}: generated {building_key} tier {tier} location_potential "
+                    f"differs from initial {initial_building_key}"
+                )
+
+    assert not offenders, "\n".join(offenders)
 
 
 def test_manpower_building_blueprints_do_not_copy_invalid_owner_culture_gate() -> None:

@@ -16,7 +16,6 @@ build_time = workshop_build_time
 location_potential = {
     NOT = { raw_material = goods:saltpeter }
 }
-
 unique_production_methods = {
     pp_saltpeter_workshop_demands = {
         pottery = 0.15

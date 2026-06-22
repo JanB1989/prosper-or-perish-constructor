@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: engineered_brine_saltworks
 output_tag: inland_saltworks_engineered_brine
 upgrade_chain:
@@ -88,7 +88,6 @@ building:
             }
         }
     }
-
     construction_demand = workshop_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no

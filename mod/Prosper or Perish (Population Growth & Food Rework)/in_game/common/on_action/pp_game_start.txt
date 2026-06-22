@@ -229,7 +229,7 @@ pp_remove_invalid_buildings = {
 						building_type = building_type:pomological_orchard
 						value > 0
 					}
-					NOT = { pp_orchard_friendly_location_potential = yes }
+					NOT = { pp_fruit_orchard_location_potential = yes }
 				}
 				change_building_level_in_location = {
 					building = building_type:pomological_orchard

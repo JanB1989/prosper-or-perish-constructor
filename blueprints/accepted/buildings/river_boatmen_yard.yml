@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: river_boatmen_yard
 building:
   key: river_boatmen_yard
@@ -31,7 +31,6 @@ building:
     location_potential = {
       has_river = yes
     }
-
     construction_demand = pp_river_boatmen_yard_construction
 
     possible_production_methods = {

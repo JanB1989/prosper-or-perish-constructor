@@ -44,9 +44,14 @@ building:
     construction_demand = workshop_construction
 
     location_potential = {
-        pp_orchard_friendly_location_potential = yes
+        OR = {
+            var:pp_fruit_orchard_eligible > 0
+            AND = {
+                NOT = { has_variable = pp_fruit_orchard_eligible }
+                pp_fruit_orchard_location_potential = yes
+            }
+        }
     }
-
 
     unique_production_methods = {
         pp_pomological_orchard_base_fruit = {

@@ -1,12 +1,12 @@
 ﻿# >>> eu5-building-pipeline:granary:building
 REPLACE:granary = {
-	audio_tier = 2
-	is_foreign = no
-	max_levels = pp_granary_cap
-	pop_type = laborers
-	employment_size = 0.25
-	category = infrastructure_category
-	custom_tags = { pp_food_security_priority pp_food_storage_priority }
+    audio_tier = 2
+    is_foreign = no
+    max_levels = pp_granary_cap
+    pop_type = laborers
+    employment_size = 0.25
+    category = infrastructure_category
+    custom_tags = { pp_food_security_priority pp_food_storage_priority }
     rural_settlement = yes
     town = yes
     city = yes
@@ -21,22 +21,22 @@ REPLACE:granary = {
     }
     important_for_AI = yes
     build_time = government_build_time
-	unique_production_methods = {
-		pp_granary_maintenance = {
-			# masonry = 0.05
-			stone = 0.02
-			category = building_maintenance
-		}
-	}
-	construction_demand = granary_construction
-	raw_modifier = {
-	}
+    unique_production_methods = {
+        pp_granary_maintenance = {
+            # masonry = 0.05
+            stone = 0.02
+            category = building_maintenance
+        }
+    }
+    construction_demand = granary_construction
+    raw_modifier = {
+    }
 
     modifier = {
         local_food_decay_modifier = -0.0002
         local_food_capacity = 1500
     }
-	ai_forbid_shutdown = yes
-	forbidden_for_estates = no
+    ai_forbid_shutdown = yes
+    forbidden_for_estates = no
 }
 # <<< eu5-building-pipeline:granary:building

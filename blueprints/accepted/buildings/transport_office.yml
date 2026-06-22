@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: transport_office
 building:
   key: transport_office
@@ -29,7 +29,6 @@ building:
     location_potential = {
       development >= 10
     }
-
     construction_demand = pp_transport_office_construction
 
     possible_production_methods = {

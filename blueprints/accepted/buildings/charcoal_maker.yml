@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: charcoal_maker
 building:
   key: charcoal_maker
@@ -10,48 +10,47 @@ building:
         - pp_char_coal_maintenance
   possible_production_methods: []
   body: |2-
-    	audio_tier = 1
-    	startup_ramp_target = rural_startup_ramp_target
-    	is_foreign = no
+        audio_tier = 1
+        startup_ramp_target = rural_startup_ramp_target
+        is_foreign = no
     increase_per_level_cost = 0.24
-    	pop_type = laborers
-    	max_levels = rural_building_cap
+        pop_type = laborers
+        max_levels = rural_building_cap
 
-    	employment_size = 1
+        employment_size = 1
 
 
-    	category = rgo_building_category
+        category = rgo_building_category
 
-    	rural_settlement = yes
-    	town = yes
-    	city = yes
-    	megalopolis = yes
+        rural_settlement = yes
+        town = yes
+        city = yes
+        megalopolis = yes
 
-    	location_potential = {
-    		NOT = {
-    			raw_material = goods:coal
-    		}
-    	}
+        location_potential = {
+            NOT = {
+                raw_material = goods:coal
+            }
+        }
+        build_time = rural_build_time
 
-    	build_time = rural_build_time
+        unique_production_methods = {
+            pp_char_coal_maintenance = {
+                produced = coal
+                output = 0.62
 
-    	unique_production_methods = {
-    		pp_char_coal_maintenance = {
-    			produced = coal
-    			output = 0.62
+                debug_max_profit = 0.1
 
-    			debug_max_profit = 0.1
+                lumber = 0.85
+                category = guild_input
+            }
 
-    			lumber = 0.85
-    			category = guild_input
-    		}
+        }
 
-    	}
+        construction_demand = guild_construction
 
-    	construction_demand = guild_construction
-
-    	raw_modifier = {
-    	}
+        raw_modifier = {
+        }
 localization:
   entries:
     charcoal_maker: Charcoal Clamp

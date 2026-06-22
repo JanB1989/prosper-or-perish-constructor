@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: road_wardens_yard
 output_tag: road_0_wardens_yard
 upgrade_chain:
@@ -36,7 +36,6 @@ building:
     location_potential = {
       num_roads > 0
     }
-
     construction_demand = pp_road_wardens_yard_construction
 
     possible_production_methods = {

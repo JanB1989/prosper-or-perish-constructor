@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: stone_quarry
 upgrade_chain:
   family: stone_quarry
@@ -47,7 +47,6 @@ building:
             }
         }
     }
-
     category = rgo_building_category
 
     unique_production_methods = {

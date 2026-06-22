@@ -118,7 +118,7 @@ TRY_REPLACE:unsupported_building_levels = {
 		category = location 
 	}
 	local_build_buildings_efficiency = -0.03
-	local_construction_speed = 0.01
+	local_construction_speed = -0.01
 	local_distance_from_capital_speed_propagation = -0.01
 	local_max_control = -0.005
 }

@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: sand_washery
 upgrade_chain:
   family: sand_pit
@@ -46,7 +46,6 @@ building:
             }
         }
     }
-
     construction_demand = workshop_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no

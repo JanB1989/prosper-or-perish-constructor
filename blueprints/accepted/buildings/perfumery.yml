@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: perfumery
 building:
   key: perfumery
@@ -25,7 +25,6 @@ building:
     location_potential = {
         NOT = { raw_material = goods:incense }
     }
-
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_perfumery_blended_incense = {

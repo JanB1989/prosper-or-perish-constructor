@@ -20,7 +20,6 @@ location_potential = {
     NOT = { has_building = building_type:winery_manufactory }
 }
 
-
 construction_demand = farm_constructions
 ai_forbid_shutdown = no
 forbidden_for_estates = no

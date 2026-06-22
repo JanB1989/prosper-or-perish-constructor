@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: putrefaction_works
 building:
   key: putrefaction_works
@@ -27,7 +27,6 @@ building:
     location_potential = {
         NOT = { raw_material = goods:saltpeter }
     }
-
     unique_production_methods = {
         pp_putrefaction_works_demands = {
             pottery = 0.6

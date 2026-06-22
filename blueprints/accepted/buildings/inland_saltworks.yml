@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: inland_saltworks
 upgrade_chain:
   family: inland_saltworks
@@ -82,7 +82,6 @@ building:
             }
         }
     }
-
     construction_demand = basic_construction_needs
     ai_forbid_shutdown = no
     forbidden_for_estates = no

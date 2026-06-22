@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: coastal_saltern
 building:
   key: salt_collector
@@ -32,7 +32,6 @@ building:
         raw_material = goods:salt
         is_coastal = yes
     }
-
     unique_production_methods = {
         pp_coastal_saltern_base_salt = {
             produced = salt

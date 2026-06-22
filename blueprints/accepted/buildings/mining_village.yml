@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: mining_village
 upgrade_chain:
   family: mining_village
@@ -74,7 +74,6 @@ building:
             raw_material = goods:mercury
         }
     }
-
     construction_demand = mercury_patio_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no

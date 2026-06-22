@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: stone_quarry_improved
 upgrade_chain:
   family: stone_quarry
@@ -55,7 +55,6 @@ building:
             }
         }
     }
-
     construction_demand = workshop_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no

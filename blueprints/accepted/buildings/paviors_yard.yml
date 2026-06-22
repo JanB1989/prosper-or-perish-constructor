@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: paviors_yard
 output_tag: road_1_paviors_yard
 upgrade_chain:
@@ -37,7 +37,6 @@ building:
     location_potential = {
       num_roads > 0
     }
-
     construction_demand = pp_paviors_yard_construction
 
     possible_production_methods = {

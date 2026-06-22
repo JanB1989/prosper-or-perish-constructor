@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: coastal_shipping_office
 building:
   key: coastal_shipping_office
@@ -29,7 +29,6 @@ building:
     location_potential = {
       is_port = yes
     }
-
     construction_demand = pp_coastal_shipping_office_construction
 
     possible_production_methods = {

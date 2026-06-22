@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: clay_washmill
 upgrade_chain:
   family: clay_pit
@@ -47,7 +47,6 @@ building:
             raw_material = goods:clay
         }
     }
-
     construction_demand = workshop_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no

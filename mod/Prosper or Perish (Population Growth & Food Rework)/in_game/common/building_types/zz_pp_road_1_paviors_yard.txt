@@ -22,7 +22,6 @@ build_time = infrastructure_build_time
 location_potential = {
   num_roads > 0
 }
-
 construction_demand = pp_paviors_yard_construction
 
 possible_production_methods = {

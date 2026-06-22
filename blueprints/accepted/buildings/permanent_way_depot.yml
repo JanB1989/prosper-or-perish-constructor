@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: permanent_way_depot
 output_tag: road_3_permanent_way_depot
 upgrade_chain:
@@ -37,7 +37,6 @@ building:
     location_potential = {
       num_roads > 0
     }
-
     construction_demand = pp_permanent_way_depot_construction
 
     possible_production_methods = {

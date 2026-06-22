@@ -20,8 +20,8 @@ def test_update_audit_reports_referenced_and_patched_vanilla_changes(tmp_path: P
         output_dir=repo / "reports" / "audit",
     )
 
-    assert summary.changed_count >= 4
-    assert summary.added_count == 2
+    assert summary.changed_count >= 5
+    assert summary.added_count == 3
     assert summary.removed_count == 2
     assert summary.missing_both_count == 1
     assert summary.index_html.is_file()
@@ -56,6 +56,17 @@ def test_update_audit_reports_referenced_and_patched_vanilla_changes(tmp_path: P
     assert "in_game/goods/localization_only_good" not in rows_by_key
     assert rows_by_key["in_game/goods/dupe_key"]["status"] == "changed"
     assert rows_by_key["main_menu/static_modifiers/dupe_key"]["status"] == "unchanged"
+    assert rows_by_key["in_game/events/DHE/flavor_TEST.txt/test_events.1"]["status"] == "changed"
+    assert (
+        rows_by_key["in_game/events/DHE/flavor_TEST.txt/test_events.1"]["reference_kinds"]
+        == "file_override"
+    )
+    assert (
+        rows_by_key["in_game/events/DHE/flavor_TEST.txt/test_events.1"]["mod_sources"]
+        == "mod/test-mod/in_game/events/DHE/flavor_TEST.txt:1 [file_override; events/DHE/flavor_TEST.txt]"
+    )
+    assert rows_by_key["in_game/events/DHE/flavor_TEST.txt/test_events.2"]["status"] == "added"
+    assert "in_game/events/DHE/unreferenced_event_file.txt/unreferenced_events.1" not in rows_by_key
 
     changed_rows = _csv_rows(summary.changed_csv)
     changed_keys = {row["qualified"] for row in changed_rows}
@@ -65,6 +76,9 @@ def test_update_audit_reports_referenced_and_patched_vanilla_changes(tmp_path: P
     assert "in_game/goods/unreferenced_added_good" in changed_keys
     assert "in_game/goods/removed_good" in changed_keys
     assert "in_game/goods/unreferenced_removed_good" in changed_keys
+    assert "in_game/events/DHE/flavor_TEST.txt/test_events.1" in changed_keys
+    assert "in_game/events/DHE/flavor_TEST.txt/test_events.2" in changed_keys
+    assert "in_game/events/DHE/unreferenced_event_file.txt/unreferenced_events.1" not in changed_keys
 
     payload = json.loads(summary.changed_json.read_text(encoding="utf-8"))
     assert payload["old_ref"] == "eu5-old"
@@ -179,6 +193,21 @@ cross_scope_static = {
 }
 """,
     )
+    _write(
+        vanilla / "game" / "in_game" / "events" / "DHE" / "flavor_TEST.txt",
+        """test_events.1 = {
+	type = country_event
+	title = test_events.1.title
+	desc = test_events.1.desc
+	trigger = {
+		rgo_workers >= 6
+	}
+	option = {
+		name = test_events.1.a
+	}
+}
+""",
+    )
     _git(vanilla, "add", "-A")
     _git(vanilla, "commit", "-m", "old")
     _git(vanilla, "tag", "eu5-old")
@@ -230,6 +259,43 @@ cross_scope_static = {
 }
 """,
     )
+    _write(
+        vanilla / "game" / "in_game" / "events" / "DHE" / "flavor_TEST.txt",
+        """test_events.1 = {
+	type = country_event
+	title = test_events.1.title
+	desc = test_events.1.desc
+	trigger = {
+		rgo_workers >= 3
+	}
+	option = {
+		name = test_events.1.a
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+test_events.2 = {
+	type = country_event
+	title = test_events.2.title
+	desc = test_events.2.desc
+	option = {
+		name = test_events.2.a
+	}
+}
+""",
+    )
+    _write(
+        vanilla / "game" / "in_game" / "events" / "DHE" / "unreferenced_event_file.txt",
+        """unreferenced_events.1 = {
+	type = country_event
+	title = unreferenced_events.1.title
+	desc = unreferenced_events.1.desc
+	option = {
+		name = unreferenced_events.1.a
+	}
+}
+""",
+    )
     _git(vanilla, "add", "-A")
     _git(vanilla, "commit", "-m", "new")
     _git(vanilla, "tag", "eu5-new")
@@ -264,6 +330,21 @@ plain_override = {
         mod_root / "in_game" / "common" / "static_modifiers" / "pp_static.txt",
         """TRY_INJECT:cross_scope_static = {
 	value = 1
+}
+""",
+    )
+    _write(
+        mod_root / "in_game" / "events" / "DHE" / "flavor_TEST.txt",
+        """test_events.1 = {
+	type = country_event
+	title = test_events.1.title
+	desc = test_events.1.desc
+	trigger = {
+		rgo_workers >= 0
+	}
+	option = {
+		name = test_events.1.a
+	}
 }
 """,
     )

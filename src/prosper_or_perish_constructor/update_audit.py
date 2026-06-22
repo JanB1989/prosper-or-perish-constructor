@@ -65,6 +65,7 @@ TEXT_LIKE_ENTRY_KEYS = {
     "text",
     "title",
 }
+EVENT_ID_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*\.[0-9]+$")
 
 
 @dataclass(frozen=True, order=True)
@@ -242,8 +243,12 @@ def _require_git_ref(vanilla_root: Path, ref: str) -> None:
 
 def _load_vanilla_catalog(vanilla_root: Path, ref: str) -> _Catalog:
     catalog = _Catalog()
-    for path, text in _git_common_text_blobs(vanilla_root, ref):
+    for path, text in _git_audit_text_blobs(vanilla_root, ref):
         scope, collection = _common_scope_and_collection(path)
+        is_event_file = False
+        if scope is None or collection is None:
+            scope, collection = _event_scope_and_collection(path)
+            is_event_file = scope is not None and collection is not None
         if scope is None or collection is None:
             continue
         try:
@@ -253,6 +258,10 @@ def _load_vanilla_catalog(vanilla_root: Path, ref: str) -> _Catalog:
             continue
         for entry in document.entries:
             mode, key = _entry_mode(entry.key)
+            if is_event_file:
+                if not _is_event_entry(entry):
+                    continue
+                mode = "CREATE"
             symbol = SymbolId(scope=scope, collection=collection, key=key)
             duplicate_count = 0
             existing = catalog.definitions.get(symbol)
@@ -268,7 +277,7 @@ def _load_vanilla_catalog(vanilla_root: Path, ref: str) -> _Catalog:
     return catalog
 
 
-def _git_common_text_blobs(vanilla_root: Path, ref: str) -> list[tuple[str, str]]:
+def _git_audit_text_blobs(vanilla_root: Path, ref: str) -> list[tuple[str, str]]:
     result = subprocess.run(
         [
             "git",
@@ -278,6 +287,7 @@ def _git_common_text_blobs(vanilla_root: Path, ref: str) -> list[tuple[str, str]
             "--format=tar",
             ref,
             "game/in_game/common",
+            "game/in_game/events",
             "game/main_menu/common",
         ],
         stdout=subprocess.PIPE,
@@ -310,6 +320,22 @@ def _common_scope_and_collection(path: str) -> tuple[str | None, str | None]:
     if scope not in COMMON_SCOPES:
         return None, None
     return scope, parts[3]
+
+
+def _event_scope_and_collection(path: str) -> tuple[str | None, str | None]:
+    parts = Path(path).parts
+    if len(parts) < 4 or parts[0] != "game" or parts[1] != "in_game" or parts[2] != "events":
+        return None, None
+    return "in_game", "/".join(parts[2:])
+
+
+def _is_event_entry(entry: CEntry) -> bool:
+    mode, key = _entry_mode(entry.key)
+    return mode == "CREATE" and EVENT_ID_RE.match(key) is not None and isinstance(entry.value, CList)
+
+
+def _is_event_symbol(symbol: SymbolId) -> bool:
+    return symbol.scope == "in_game" and symbol.collection.startswith("events/")
 
 
 def _normalized_entry(entry: CEntry, *, mode: str) -> dict[str, Any]:
@@ -383,7 +409,66 @@ def _scan_mod_dependencies(
                     new_catalog=new_catalog,
                     symbols_by_key=symbols_by_key,
                 )
+    _scan_event_file_overrides(
+        scan=scan,
+        repo=repo,
+        mod_root=mod_root,
+        old_catalog=old_catalog,
+        new_catalog=new_catalog,
+    )
     return scan
+
+
+def _scan_event_file_overrides(
+    *,
+    scan: _ModDependencyScan,
+    repo: Path,
+    mod_root: Path,
+    old_catalog: dict[SymbolId, SymbolDefinition],
+    new_catalog: dict[SymbolId, SymbolDefinition],
+) -> None:
+    root = mod_root / "in_game" / "events"
+    if not root.is_dir():
+        return
+
+    all_catalog_symbols = set(old_catalog) | set(new_catalog)
+    for path in sorted(root.rglob("*.txt")):
+        if path.name.lower() == "readme.txt":
+            continue
+        collection = "events/" + path.relative_to(root).as_posix()
+        target_symbols = sorted(
+            symbol
+            for symbol in all_catalog_symbols
+            if symbol.scope == "in_game" and symbol.collection == collection
+        )
+        if not target_symbols:
+            continue
+
+        relative_path = _display_path(path, repo)
+        event_lines: dict[str, int] = {}
+        try:
+            document = parse_file(path)
+        except ValueError as error:
+            scan.warnings.append(f"mod: skipped event override line scan for {path}: {error}")
+        else:
+            event_lines = {
+                _entry_mode(entry.key)[1]: entry.location.line
+                for entry in document.entries
+                if _is_event_entry(entry)
+            }
+
+        for symbol in target_symbols:
+            _add_reference(
+                scan.references,
+                symbol,
+                ModReference(
+                    symbol_text=symbol.key,
+                    source_path=relative_path,
+                    source_line=event_lines.get(symbol.key, 1),
+                    kind="file_override",
+                    context=collection,
+                ),
+            )
 
 
 def _scan_top_level_entry(
@@ -666,8 +751,12 @@ def _build_dependency_records(
 ) -> list[DependencyRecord]:
     records: list[DependencyRecord] = []
     symbols = set(references)
-    symbols.update(symbol for symbol in new_catalog if symbol not in old_catalog)
-    symbols.update(symbol for symbol in old_catalog if symbol not in new_catalog)
+    symbols.update(
+        symbol for symbol in new_catalog if symbol not in old_catalog and not _is_event_symbol(symbol)
+    )
+    symbols.update(
+        symbol for symbol in old_catalog if symbol not in new_catalog and not _is_event_symbol(symbol)
+    )
     for symbol in sorted(symbols):
         old = old_catalog.get(symbol)
         new = new_catalog.get(symbol)

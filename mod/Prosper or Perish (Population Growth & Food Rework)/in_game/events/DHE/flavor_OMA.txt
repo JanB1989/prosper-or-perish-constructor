@@ -1,0 +1,1322 @@
+﻿namespace = flavor_oma
+flavor_oma.1 = {
+	type = country_event
+	title = flavor_oma.1.title
+	desc = flavor_oma.1.desc
+	outcome = neutral
+	historical_info = flavor_oma.1.historical_info
+	fire_only_once = yes
+	
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1430.1.1
+		to = 1500.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+	}
+
+	trigger = {
+		has_reform = government_reform:feudal_theocracy
+		ruler ?= { dynasty = dynasty:nabhani_dynasty }
+		stability <= 10
+	}
+
+	option = {
+		name = flavor_oma.1.a
+
+		historical_option = yes
+
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_extreme_bonus }
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_move_to_left }
+		set_variable = oma_theocracy_event_flag
+	}
+	option = {
+		name = flavor_oma.1.b
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_extreme_penalty }
+		change_societal_value = { type = centralization_vs_decentralization value = societal_value_minor_move_to_left }
+	}
+}
+
+flavor_oma.2 = {
+	type = country_event
+	title = flavor_oma.2.title
+	desc = flavor_oma.2.desc
+	outcome = neutral
+
+	historical_info = flavor_oma.2.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1400.1.1
+		to = 1600.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+
+	trigger = {
+		country_exists = c:POR
+		owns = location:masqat
+		c:POR = {
+			has_discovered_area = area:oman_area
+		}
+		capital.market = {
+			any_merchant_in_market = {
+				tag = POR
+			}
+		}
+	}
+
+	option = {
+		name = flavor_oma.2.a
+
+		historical_option = yes
+
+		c:POR = {
+			add_opinion = { target = root modifier = mam_por_confronted }
+			trigger_event_silently = { id = flavor_oma.3 }
+		}
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_move_to_left }
+		}
+	}
+	option = {
+		name = flavor_oma.2.b
+		add_prestige = prestige_mild_penalty
+		add_gold = { value = root.monthly_income_trade_and_tax multiply = 2.0 }
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_minor_move_to_right }
+		}
+	}
+}
+
+flavor_oma.3 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_oma.3.title
+	desc = flavor_oma.3.desc
+	outcome = neutral
+	historical_info = flavor_oma.3.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1400.1.1
+		to = 1600.1.1
+		monthly_chance = 5
+	}
+
+	fire_only_once = yes
+
+	trigger = {
+		location:masqat.owner ?= c:OMA
+		location:masqat = {
+			is_discovered_by = ROOT
+			owner ?= {
+				within_diplomatic_range = root
+			}
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		location:masqat = {
+			save_scope_as = target_location
+			owner ?= {
+				save_scope_as = target_country
+				ruler_or_regent ?= {
+					save_scope_as = target_character
+				}
+			}
+		}
+
+		ruler_or_regent ?= {
+			save_scope_as = target_character2
+		}
+	}
+
+	option = {
+		name = flavor_oma.3.a
+
+		historical_option = yes
+
+		add_casus_belli =  { type = casus_belli:cb_conquer_province target = scope:target_country province = scope:target_location.province }
+	}
+
+	option = {
+		name = flavor_oma.3.b
+
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_move_to_right
+		}
+	}
+}
+
+flavor_oma.4 = {
+	type = country_event
+	title = flavor_oma.4.title
+	desc = flavor_oma.4.desc
+	outcome = neutral
+	historical_info = flavor_oma.4.historical_info
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1650.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		owns = location:sur
+		location:sur = {
+			is_city = yes
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		location:sur = {
+			save_scope_as = target_location
+		}
+
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_oma.4.a
+
+		historical_option = yes
+
+		location:masqat = {
+			change_development = development_mild_bonus
+			change_prosperity = prosperity_mild_bonus
+		}
+
+	}
+
+	option = {
+		name = flavor_oma.4.b
+
+		location:masqat = {
+			change_development = development_extreme_bonus
+			change_prosperity = prosperity_extreme_bonus
+		}
+
+		change_gold_effect = { scale = -4 }
+
+		add_estate_satisfaction = {
+			type = estate_type:burghers_estate
+			value = estate_satisfaction_mild_bonus
+		}
+	}
+
+	option = {
+		name = flavor_oma.4.c
+
+		change_societal_value = {
+			type = land_vs_naval
+			value = societal_value_move_to_left
+		}
+
+		add_estate_satisfaction = {
+			type = estate_type:nobles_estate
+			value = estate_satisfaction_mild_bonus
+		}
+	}
+}
+
+#Zanzibar
+flavor_oma.5 = {
+	type = country_event
+	title = flavor_oma.5.title
+	desc = flavor_oma.5.desc
+	outcome = neutral
+	fire_only_once = yes
+	
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1500.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		owns = location:kilwa_kisiwani
+		location:kilwa_kisiwani = {
+			is_city = yes
+			is_capital = no
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+		location:kilwa_kisiwani = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_oma.5.a
+		set_capital = location:kilwa_kisiwani
+		location:kilwa_kisiwani = {
+			change_development = development_mild_bonus
+			change_prosperity = prosperity_severe_bonus
+		}
+		change_societal_value = {
+			type = outward_vs_inward
+			value = societal_value_move_to_left
+		}
+	}
+
+	option = {
+		name = flavor_oma.5.b
+		change_societal_value = {
+			type = outward_vs_inward
+			value = societal_value_move_to_right
+		}
+		capital = {
+			change_development = development_mild_bonus
+			change_prosperity = prosperity_severe_bonus
+		}
+	}
+}
+
+#Bahla Fort
+flavor_oma.6 = {
+	type = country_event
+	title = flavor_oma.6.title
+	desc = flavor_oma.6.desc
+	outcome = neutral
+
+	historical_info = flavor_oma.6.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1500.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		owns = location:bahla
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		location:bahla = {
+			save_scope_as = target_location
+		}
+
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+	}
+
+	option = { #Expand the city and construct the fort
+		name = flavor_oma.6.a
+
+		scope:target_location = {
+			if = {
+				limit = {
+					location_rank = location_rank:town
+				}
+				change_location_rank_effect = { location_rank = location_rank:city }
+			}
+			else_if = {
+				limit = {
+					location_rank = location_rank:rural_settlement
+				}
+				change_location_rank_effect = { location_rank = location_rank:town }
+			}
+			else = {
+				change_development = development_mild_bonus
+			}
+			construct_building = {
+				building_type = building_type:bastion
+				cost_multiplier = 0
+				cost_multiplier_reason = "military_cheap_sponsorship"
+			}
+		}
+		change_gold_effect = { scale = -1.5 }
+
+		change_societal_value = {
+			type = offensive_vs_defensive
+			value = societal_value_move_to_right
+		}
+	}
+
+	option = { #Do not construct the fort, but expand the city
+		name = flavor_oma.6.b
+		scope:target_location = {
+			if = {
+				limit = {
+					NOT = { location_rank = location_rank:city }
+				}
+				change_location_rank_effect = { location_rank = location_rank:city }
+			}
+			else = {
+				change_development = development_mild_bonus
+			}
+		}
+		change_gold_effect = { scale = -1 }
+	}
+
+	option = { #No
+		name = flavor_oma.6.c
+
+		change_societal_value = {
+			type = offensive_vs_defensive
+			value = societal_value_move_to_left
+		}
+
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+#Frankincense Trade
+flavor_oma.7 = {
+	type = country_event
+	title = flavor_oma.7.title
+	desc = flavor_oma.7.desc
+	outcome = neutral
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_incense.dds"
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1500.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		owns = location:mirbat
+		location:mirbat = {
+			raw_material = goods:incense
+			rgo_workers >= 0
+		}
+		gold >= {
+			value = root.monthly_income_trade_and_tax
+			multiply = 2
+		}
+	}
+
+	immediate = {
+		location:mirbat = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_oma.7.a
+
+		location:mirbat = {
+			change_max_raw_material_workers = 2
+			add_location_modifier = {
+				modifier = increased_incense_production
+				years = 15
+				mode = add_and_extend
+			}
+		}
+
+		change_gold_effect = { scale = -1 }
+	}
+
+	option = {
+		name = flavor_oma.7.b
+
+	}
+}
+
+#Rise of the Omani Fleet
+flavor_oma.8 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_oma.8.title
+	desc = flavor_oma.8.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1500.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		total_effective_building_levels:dock > 0
+
+		any_cabinet_character = {
+			count > 0
+		}
+		societal_value:land_vs_naval >= 0.3
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_incense.dds"
+
+	immediate = {
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+
+		ordered_owned_location = {
+			limit = {
+				has_building = building_type:dock
+			}
+			order_by = population
+			max = 1
+			check_range_bounds = no
+			save_scope_as = target_location
+		}
+
+		ordered_cabinet_character = {
+			order_by = dip
+			max = 1
+			check_range_bounds = no
+			save_scope_as = target_character2
+		}
+	}
+
+	option = {
+		name = flavor_oma.8.a
+
+		change_gold_effect = { scale = -2 }
+
+		scope:target_location = {
+			change_development = development_mild_bonus
+		}
+
+		change_societal_value = {
+			type = land_vs_naval
+			value = societal_value_move_to_right
+		}
+		add_navy_tradition = navy_tradition_severe_bonus
+
+		unlock_cabinet_action_effect = { type = oma_bolster_omani_navy }
+	}
+
+	option = {
+		name = flavor_oma.8.b
+
+		change_societal_value = {
+			type = land_vs_naval
+			value = societal_value_move_to_left
+		}
+		add_army_tradition = army_tradition_severe_bonus
+	}
+}
+
+#Falaj
+flavor_oma.9 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_oma.9.title
+	desc = flavor_oma.9.desc
+	outcome = neutral
+
+	historical_info = flavor_oma.9.historical_info
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1500.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		owns = location:nizwa
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+
+		location:nizwa = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_oma.9.a
+
+		location:nizwa = {
+			construct_building = {
+				building_type = building_type:oma_falaj
+				cost_multiplier = 1
+			}
+		}
+
+		set_variable = oma_unlock_later_falaj_event
+	}
+
+	option = {
+		name = flavor_oma.9.b
+
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+
+#Nizwa City
+flavor_oma.10 = {
+	type = country_event
+	title = flavor_oma.10.title
+	desc = flavor_oma.10.desc
+	outcome = neutral
+
+	historical_info = flavor_oma.10.historical_info
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1500.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		owns = location:nizwa
+		gold >= {
+			value = root.monthly_income_trade_and_tax
+			multiply = 7
+		}
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+
+		location:nizwa = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_oma.10.a
+
+		location:nizwa = {
+			construct_building = {
+				building_type = building_type:oma_nizwa_fort
+				cost_multiplier = 1
+			}
+
+			change_development = development_mild_bonus
+		}
+
+		if = {
+			limit = {
+				location:nizwa = { is_capital = no }
+			}
+			set_capital = location:nizwa
+		}
+
+		change_gold_effect = { scale = -2 }
+	}
+
+	option = {
+		name = flavor_oma.10.b
+
+		location:nizwa = {
+			change_development = development_mild_bonus
+		}
+
+		if = {
+			limit = {
+				location:nizwa = { is_capital = no }
+			}
+			set_capital = location:nizwa
+		}
+
+		change_gold_effect = { scale = -1 }
+	}
+
+	option = {
+		name = flavor_oma.10.c
+
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+#Migrants in Zanzibar
+flavor_oma.11 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_oma.11.title
+	desc = flavor_oma.11.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1500.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		own_entire_area = area:oman_area
+		area:rufiji_area = {
+			any_location_in_area = {
+				percent = 1
+				OR = {
+					owner ?= root
+					has_owner = no
+					is_ownable = no
+				}
+			}
+		}
+		location:kilwa_kisiwani = {
+			is_capital = no
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+
+		location:kilwa_kisiwani = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_oma.11.a
+
+		add_migration = {
+			owner = this
+			from = root.capital.province_definition
+			to = scope:target_location.province_definition
+			culture = root.culture
+			amount = 0.05
+			months = 100
+		}
+
+		unlock_cabinet_action_effect = { type = oma_zanzibar_integration }
+
+		change_gold_effect = { scale = -0.5 }
+	}
+
+	option = {
+		name = flavor_oma.11.b
+
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+#The Pirate Coast
+flavor_oma.12 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_oma.12.title
+	desc = flavor_oma.12.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1500.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		own_entire_area = area:oman_area
+		has_policy = anti_piracy_policy
+		OR = {
+			has_advance = privateers
+			has_advance = letters_of_marque
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_oma.12.a
+
+		add_policy = policy:issue_letter_of_marque_policy
+
+		add_sailors = { value = root.monthly_sailors multiply = 1 }
+	}
+
+	option = {
+		name = flavor_oma.12.b
+
+		add_policy = policy:state_piracy_policy
+
+		change_societal_value = { type = land_vs_naval value = societal_value_tiny_move_to_right }
+	}
+
+	option = {
+		name = flavor_oma.12.c
+
+		add_stability = stability_mild_bonus
+	}
+}
+
+#Al-Hasm Castle
+flavor_oma.13 = {
+	type = country_event
+	title = flavor_oma.13.title
+	desc = flavor_oma.13.desc
+	outcome = neutral
+
+	historical_info = flavor_oma.13.historical_info
+
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1500.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		owns = location:rustaq
+		location:rustaq = {
+			any_buildings_in_location = {
+				building_category = defense_category
+			}
+		}
+
+		gold >= {
+			value = root.monthly_income_trade_and_tax
+			multiply = 2
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+
+		location:rustaq = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_oma.13.a
+
+		scope:target_location = {
+
+			if = {
+				limit = {
+					has_building = building_type:port_authority
+					any_buildings_in_location = {
+						building_type = building_type:port_authority
+						is_at_max_level = no
+					}
+				}
+				change_building_level_in_location = {
+					building = building_type:port_authority
+					value = 1
+				}
+				change_development = development_mild_bonus
+			}
+			else_if = {
+				limit = {
+					NOT = { has_building = building_type:port_authority }
+				}
+				construct_building = {
+					building_type = building_type:port_authority
+					cost_multiplier = 0.5
+					cost_multiplier_reason = "burghers_cheap_sponsorship"
+				}
+				change_development = development_mild_bonus
+			}
+			else = {
+				change_development = development_severe_bonus
+				change_prosperity = prosperity_severe_bonus
+			}
+		}
+
+		change_societal_value = { type = land_vs_naval value = societal_value_tiny_move_to_right }
+	}
+
+	option = {
+		name = flavor_oma.13.b
+
+		change_societal_value = { type = land_vs_naval value = societal_value_tiny_move_to_left }
+	}
+}
+
+#Fortifying Hormuz
+flavor_oma.14 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_oma.14.title
+	desc = flavor_oma.14.desc
+	outcome = neutral
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1500.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		owns = location:hormuz
+		capital != location:hormuz
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+
+		location:hormuz = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_oma.14.a
+
+		scope:target_location = {
+			if = {
+				limit = {
+					has_building = building_type:port_authority
+					any_buildings_in_location = {
+						building_type = building_type:port_authority
+						is_at_max_level = no
+					}
+				}
+				change_building_level_in_location = {
+					building = building_type:port_authority
+					value = 1
+				}
+				change_development = development_mild_bonus
+			}
+			else_if = {
+				limit = {
+					NOT = { has_building = building_type:port_authority }
+				}
+				construct_building = {
+					building_type = building_type:port_authority
+					cost_multiplier = 0.5
+					cost_multiplier_reason = "burghers_cheap_sponsorship"
+				}
+				change_development = development_mild_bonus
+			}
+			else = {
+				change_development = development_severe_bonus
+				change_prosperity = prosperity_severe_bonus
+			}
+
+			add_location_modifier = {
+				modifier = bolstering_hormuz_island
+				years = 20
+				mode = add_and_extend
+			}
+		}
+
+		add_estate_satisfaction = {
+			type = estate_type:burghers_estate
+			value = estate_satisfaction_mild_bonus
+		}
+	}
+
+	option = {
+		name = flavor_oma.14.b
+
+		capital = {
+			change_development = development_mild_bonus
+		}
+
+		add_estate_satisfaction = {
+			type = estate_type:nobles_estate
+			value = estate_satisfaction_mild_bonus
+		}
+	}
+}
+
+#The Fifth Imamate
+flavor_oma.15 = { #It is debated as to how this happened. There are assumptions that it was the Portuguese conquests that radicalized Oman to turn back to their elective Imamate, whilst others suggest that it happened much earlier thanks to internal instability
+	type = country_event
+	title = flavor_oma.15.title
+	desc = flavor_oma.15.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1430.1.1
+		to = 1500.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		stability < 0
+		government_type = government_type:monarchy
+		"estate_power(estate_type:clergy_estate)" > 0.15
+		custom_tooltip = {
+			text = variable_oma_theocracy_event_flag_tt
+			has_variable = oma_theocracy_event_flag
+		}
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+
+		create_character = {
+			adm = { 40 80 }
+			dip = { 30 70 }
+			mil = { 20 60 }
+			culture = root.culture
+			religion = root.religion
+			birth_date = 1410.1.1
+			birth_location = root.capital
+
+			estate = estate_type:clergy_estate
+			save_scope_as = target_character2
+		}
+	}
+
+	option = {
+		name = flavor_oma.15.a
+
+		change_government_type = government_type:theocracy
+		change_heir_selection = heir_selection:theocratic_elective
+
+		set_new_ruler = scope:target_character2
+
+		add_stability = stability_mild_bonus
+
+		add_estate_satisfaction = {
+			type = estate_type:nobles_estate
+			value = estate_satisfaction_mild_penalty
+		}
+
+		add_estate_satisfaction = {
+			type = estate_type:clergy_estate
+			value = estate_satisfaction_mild_bonus
+		}
+	}
+
+	option = {
+		name = flavor_oma.15.b
+
+		scope:target_character2 = { banish_character = yes }
+
+		add_estate_satisfaction = {
+			type = estate_type:clergy_estate
+			value = estate_satisfaction_extreme_penalty
+		}
+
+		add_stability = stability_mild_penalty
+	}
+}
+
+#Encourage Migration to the Coast
+flavor_oma.16 = {
+	type = country_event
+	title = flavor_oma.16.title
+	desc = flavor_oma.16.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1500.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		gold >= {
+			value = root.monthly_income_trade_and_tax
+			multiply = 6
+		}
+
+		owns = location:nizwa
+		location:nizwa = {
+			has_building = building_type:oma_falaj
+		}
+
+		any_owned_location = {
+			is_coastal = yes
+			NOT = { location_rank = location_rank:city }
+			count >= 1
+		}
+
+		any_owned_location = {
+			is_coastal = no
+			count >= 3
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+
+		ordered_owned_location = {
+			limit = {
+				is_coastal = no
+			}
+			order_by = population
+			position = 1
+			check_range_bounds = no
+			save_scope_as = target_location
+		}
+
+		ordered_owned_location = {
+			limit = {
+				is_coastal = no
+			}
+			order_by = population
+			position = 2
+			check_range_bounds = no
+			save_scope_as = target_location2
+		}
+
+		ordered_owned_location = {
+			limit = {
+				is_coastal = no
+			}
+			order_by = population
+			position = 3
+			check_range_bounds = no
+			save_scope_as = target_location3
+		}
+	}
+
+	option = { #Coastal
+		name = flavor_oma.16.a
+
+		unlock_building_effect = { type = coastal_settlements }
+
+		change_gold_effect = { scale = -6 }
+	}
+
+	option = { #Inward
+		name = flavor_oma.16.b
+
+		scope:target_location = {
+			change_development = development_mild_bonus
+		}
+
+		scope:target_location2 = {
+			change_development = development_mild_bonus
+		}
+
+		scope:target_location3 = {
+			change_development = development_mild_bonus
+		}
+
+		change_gold_effect = { scale = -3 }
+	}
+
+	option = { #Neither
+		name = flavor_oma.16.c
+
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+#Expanding the Falajs
+flavor_oma.17 = {
+	type = country_event
+	title = flavor_oma.17.title
+	desc = flavor_oma.17.desc
+	outcome = neutral
+
+	historical_info = flavor_oma.17.historical_info
+
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1500.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		total_effective_building_levels:oma_falaj >= 1
+		custom_tooltip = {
+			text = variable_oma_unlock_later_falaj_event_tt
+			has_variable = oma_unlock_later_falaj_event
+		}
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+	}
+
+	option = { #Expand them
+		name = flavor_oma.17.a
+
+		unlock_building_effect = { type = oma_falaj }
+	}
+
+	option = { #Do not
+		name = flavor_oma.17.b
+
+	}
+}
+
+#Rise of the Omani Empire
+flavor_oma.18 = {
+	type = country_event
+	title = flavor_oma.18.title
+	desc = flavor_oma.18.desc
+	outcome = neutral
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = OMA
+		from = 1337.1.1
+		to = 1800.1.1
+		monthly_chance = 15
+	}
+
+	trigger = {
+		is_great_power = yes
+		navy_size >= 300
+		navy_tradition >= 60
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+	}
+
+	option = { #Let our new Empire rise
+		name = flavor_oma.18.a
+
+		unlock_government_reform_effect = { type = omani_overseas_ambitions_reform }
+	}
+}

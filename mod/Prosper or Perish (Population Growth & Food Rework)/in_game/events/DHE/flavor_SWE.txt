@@ -1,0 +1,3124 @@
+﻿namespace = flavor_swe
+flavor_swe.1 = {
+	type = country_event
+	title = flavor_swe.1.title
+	desc = flavor_swe.1.desc
+	outcome = neutral
+	historical_info = flavor_swe.1.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1530.1.1
+		to = 1550.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+
+	trigger = {
+		is_subject = no
+		at_war = no
+		has_or_had_tag = SWE
+	}
+
+	option = {
+		name = flavor_swe.1.a
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_minor_move_to_right }
+		}
+		change_societal_value = { type = belligerent_vs_conciliatory value = societal_value_move_to_left }
+		change_societal_value = { type = centralization_vs_decentralization	value = societal_value_minor_move_to_left	}
+
+		if = {
+			limit = {
+				NOT = {
+					own_entire_province = province_definition:gotland_province
+				}
+			}
+			province_definition:gotland_province = {
+				ordered_location_in_province_definition = {
+					limit = {
+						owner != root
+					}
+					order_by = population
+					max = 1
+
+					root = { add_casus_belli = { target =prev.owner type = casus_belli:cb_conquer_province province = prev.province } }
+
+					owner = {	add_opinion = { target = root modifier = swe_claims_gotland } }
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				NOT = {
+					own_entire_area = area:skaneland_area
+				}
+			}
+			area:skaneland_area = {
+				ordered_location_in_area= {
+					limit = {
+						owner != root
+					}
+					order_by = population
+					max = 1
+
+					root = { add_casus_belli = { target = prev.owner type = casus_belli:cb_conquer_province province = prev.province } }
+					owner = {	add_opinion = { target = root modifier = swe_claims_skane } }
+				}
+			}
+		}
+
+	}
+	option = {
+		name = flavor_swe.1.b
+		add_prestige = prestige_weak_penalty
+	}
+}
+
+flavor_swe.2 = {
+	type = country_event
+	title = flavor_swe.2.title
+	desc = flavor_swe.2.desc
+	outcome = neutral
+	historical_info = flavor_swe.2.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1300.1.1
+		to = 1600.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+		10 = angry
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		in_union_with = c:DAN
+		ruler ?= {
+			culture = culture:danish
+		}
+		succession_law = c:DAN.succession_law
+	}
+
+	option = {
+		name = flavor_swe.2.a
+		historical_option = yes
+		add_estate_satisfaction = { type = estate_type:peasants_estate value = estate_satisfaction_radical_penalty }
+	}
+	option = {
+		name = flavor_swe.2.b
+		c:DAN = {
+			add_opinion = { target = root modifier = swe_supports_the_union }
+		}
+		add_estate_satisfaction = { type = estate_type:peasants_estate value = estate_satisfaction_extreme_penalty }
+		add_legitimacy = legitimacy_severe_penalty
+	}
+	option = {
+		name = flavor_swe.2.c
+		c:DAN = {
+			add_opinion = { target = root modifier = swe_renounced_the_union }
+		}
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+	}
+}
+
+flavor_swe.3 = {
+	type = country_event
+	title = flavor_swe.3.title
+	desc = flavor_swe.3.desc
+	outcome = neutral
+	historical_info = flavor_swe.3.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1470.1.1
+		to = 1520.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+	
+	trigger = {
+		country_exists = c:DAN
+		has_or_had_tag = SWE
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+
+	option = {
+		name = flavor_swe.3.a
+		historical_option = yes
+		add_legitimacy = legitimacy_mild_bonus
+		c:DAN = {
+			add_opinion = { target = root modifier = swe_rejected_the_kalmar_recess }
+		}
+	}
+	option = {
+		name = flavor_swe.3.b
+		add_stability = stability_mild_bonus
+		c:DAN = {
+			add_opinion = { target = root modifier = swe_honored_the_kalmar_recess }
+		}
+	}
+}
+
+flavor_swe.4 = {
+	type = country_event
+	fire_only_once = yes
+	title = flavor_swe.4.title
+	desc = flavor_swe.4.desc
+	outcome = neutral
+	historical_info = flavor_swe.4.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1450.1.1
+		to = 1600.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+	}
+
+	trigger = {
+		is_subject = no
+		at_war = no
+		has_or_had_tag = SWE
+		"religion_percentage_in_country(religion:lutheran)" > 0
+	}
+
+	option = {
+		name = flavor_swe.4.a
+		historical_option = yes
+
+		if = {
+			limit = {
+				religion != religion:lutheran
+			}
+			change_religion = religion:lutheran
+			change_religion_for_ruler_and_family = { country = ROOT religion = religion:lutheran }
+			
+			custom_tooltip = {
+				text = flavor_swe.4.a.custom
+				every_owned_location = {
+					every_pop = {
+						limit = { religion = religion:catholic }
+						split_pop = {
+							fraction = 0.20
+							religion = religion:lutheran
+						}
+					}
+				}
+
+			}
+		}
+		change_gold_effect = { scale = 2 }
+	}
+	option = {
+		name = flavor_swe.4.b
+		trigger = {
+			religion != religion:lutheran
+		}
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+flavor_swe.5 = {
+	type = country_event
+
+	title = flavor_swe.5.title
+	desc = flavor_swe.5.desc
+	outcome = neutral
+	historical_info = flavor_swe.5.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1555.1.1
+		to = 1560.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+		10 = interior
+		10 = regular
+	}
+
+	trigger = {
+		owns = location:sala
+		has_or_had_tag = SWE
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		create_character = {
+			first_name = name_george
+			last_name = Persson
+			adm = 95
+			dip = 80
+			mil = 80
+			birth_date = 1530
+			birth_location = location:sala
+			culture = culture:swedish
+			script = swe_joran_person
+			save_scope_as = swe_joran_person
+			add_trait = trait:unsuited_for_naval_command
+			add_trait = trait:unsuited_for_army_command
+		}
+	}
+
+	option = {
+		name = flavor_swe.5.a
+		historical_option = yes
+		add_government_power = government_power_extreme_bonus
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_severe_penalty }
+		change_societal_value = { type = centralization_vs_decentralization	value = societal_value_minor_move_to_left	}
+	}
+	option = {
+		name = flavor_swe.5.b
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
+	}
+}
+
+flavor_swe.6 = {
+	type = country_event
+	title = flavor_swe.6.title
+	desc = flavor_swe.6.desc
+	outcome = neutral
+	historical_info = flavor_swe.6.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1550.1.1
+		to = 1590.1.1
+		monthly_chance = 2
+	}
+
+	trigger = {
+		owns = location:nykoping
+		has_or_had_tag = SWE
+	}
+
+	illustration_tags = {
+		10 = interior
+		10 = happy
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		
+		create_character = {
+			first_name = name_peter
+			dynasty = dynasty:brahe_dynasty
+			nickname = nick_the_elder
+			adm = {80 100}
+			dip = {80 100}
+			mil = {80 100}
+			birth_date = 1520.5
+			birth_location = location:nykoping
+			culture = culture:swedish
+
+			save_scope_as = swe_per_brahe_older
+		}
+	}
+
+	option = {
+		name = flavor_swe.6.a
+		add_government_power = government_power_severe_bonus
+	}
+}
+
+flavor_swe.7 = {
+	type = country_event
+	title = flavor_swe.7.title
+	desc = flavor_swe.7.desc
+	outcome = neutral
+	historical_info = flavor_swe.7.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1600.1.1
+		to = 1630.1.1
+		monthly_chance = 2
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_iron.dds"
+
+	trigger = {
+		produced_in_country:iron > 0
+		has_or_had_tag = SWE
+		area:wallonia_area = {
+			any_location_in_area = {
+				dominant_culture = culture:walloon
+			}
+		}
+	}
+	immediate = {
+		area:wallonia_area = {
+			ordered_location_in_area = {
+				limit = {
+					dominant_culture = culture:walloon
+				}
+				order_by = population
+				max = 1
+				save_scope_as = source_location
+			}
+		}
+
+	}
+
+	option = {
+		name = flavor_swe.7.a
+		historical_option = yes
+
+		add_migration = {
+			owner = this
+			from = scope:source_location.province_definition
+			to = province_definition:ostergotland_province
+			culture = culture:walloon
+			amount = 0.1
+			months = 120
+		}
+
+		add_migration = {
+			owner = this
+			from = scope:source_location.province_definition
+			to = province_definition:uppland_province
+			culture = culture:walloon
+			amount = 0.1
+			months = 120
+		}
+	}
+	option = {
+		name = flavor_swe.7.b
+		add_stability = stability_extreme_bonus
+	}
+}
+
+flavor_swe.8 = {
+	type = country_event
+	title = flavor_swe.8.title
+	desc = flavor_swe.8.desc
+	outcome = neutral
+	historical_info = flavor_swe.8.historical_info
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+	}
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1615.1.1
+		to = 1630.1.1
+		monthly_chance = 5
+	}
+	trigger = {
+		has_or_had_tag = SWE
+	}
+
+	option = {
+		name = flavor_swe.8.a
+		historical_option = yes
+		change_societal_value = { type = offensive_vs_defensive value = societal_value_move_to_left }
+		change_societal_value = { type = quality_vs_quantity value = societal_value_move_to_left }
+		change_societal_value = { type = belligerent_vs_conciliatory value = societal_value_minor_move_to_left }
+		add_army_tradition = army_tradition_ultimate_bonus
+		add_research_progress = research_progress_severe_bonus
+	}
+	option = {
+		name = flavor_swe.8.b
+		add_army_tradition = army_tradition_mild_bonus
+		add_research_progress = research_progress_severe_bonus
+	}
+}
+
+flavor_swe.9 = {
+	type = country_event
+	title = flavor_swe.9.title
+	desc = flavor_swe.9.desc
+	outcome = neutral
+	historical_info = flavor_swe.9.historical_info
+
+
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1620.1.1
+		to = 1640.1.1
+		monthly_chance = 2
+	}
+
+	image = "gfx/interface/illustrations/units/navy_heavy_ship_4.dds"
+
+	trigger = {
+		has_or_had_tag = SWE
+		owns = location:stockholm
+		location:stockholm = {
+			num_navy_constructions > 0
+		}
+	}
+
+	option = {
+		name = flavor_swe.9.a
+		add_prestige = prestige_weak_penalty
+	}
+}
+
+flavor_swe.10 = {
+	type = country_event
+	title = flavor_swe.10.title
+	desc = flavor_swe.10.desc
+	outcome = neutral
+	historical_info = flavor_swe.10.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1632.1.1
+		to = 1670.1.1
+		monthly_chance = 2
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = interior
+    }
+	
+	trigger = {
+		has_or_had_tag = SWE
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+
+		create_character = {
+			first_name = name_peter #Per
+			dynasty = dynasty:brahe_dynasty
+			nickname = nick_the_younger
+			adm = {80 100}
+			dip = {80 100}
+			mil = {80 100}
+			birth_date = 1602.2.18
+			birth_location = location:uppsala
+			culture = culture:swedish
+
+			save_scope_as = swe_per_brahe_younger
+		}
+	}
+	
+	option = {
+		name = flavor_swe.10.a
+		ordered_owned_location = {
+			limit = {
+				area = area:finland_area
+			}
+			order_by = population
+			max = 7
+			change_development = development_severe_bonus
+		}
+	}
+}
+
+flavor_swe.11 = {
+	type = country_event
+	title = flavor_swe.11.title
+	desc = flavor_swe.11.desc
+	outcome = neutral
+	historical_info = flavor_swe.11.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1650.1.1
+		to = 1686.1.1
+		monthly_chance = 2
+	}
+
+	trigger = {
+		owns = location:tallinn
+		owns = location:lidkoping
+		has_or_had_tag = SWE
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		if = {
+			limit = {
+				NOT = { exists = dynasty:de_la_gardie_dynasty }
+			}
+			location:lidkoping = {
+				create_dynasty_from_location = de_la_gardie_dynasty
+			}
+		}
+
+		create_character = {
+			first_name = Magnus_Gabriel
+			dynasty = dynasty:de_la_gardie_dynasty
+			adm = {70 90}
+			dip = {70 90}
+			mil = {70 90}
+			birth_date = 1622.10.15
+			birth_location = location:tallinn
+			culture = culture:swedish
+			script = swe_magnus_de_la_gardie
+			save_scope_as = swe_magnus_de_la_gardie
+		}
+	}
+
+	option = {
+		name = flavor_swe.11.a
+		add_stability = stability_severe_bonus
+	}
+}
+
+flavor_swe.12 = {
+	type = country_event
+	title = flavor_swe.12.title
+	desc = flavor_swe.12.desc
+	outcome = neutral
+	historical_info = flavor_swe.12.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1620.1.1
+		to = 1640.1.1
+		monthly_chance = 2
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+	trigger = {
+		has_or_had_tag = SWE
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+	
+	option = {
+		name = flavor_swe.12.a
+		change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_move_to_left }
+	}
+	option = {
+		name = flavor_swe.12.b
+		change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_move_to_right }
+	}
+}
+
+flavor_swe.13 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_swe.13.title
+	desc = flavor_swe.13.desc
+	outcome = neutral
+	historical_info = flavor_swe.13.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1645.1.1
+		to = 1680.1.1
+		monthly_chance = 2
+	}
+
+	trigger = {
+		government_type = government_type:monarchy
+		has_or_had_tag = SWE
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_estate_privilege = {
+			limit = {
+				estate_type = estate_type:nobles_estate
+			}
+			save_scope_as = target_privilege
+		}
+		random_current_reforms = {
+			save_scope_as = target_reform
+		}
+	}
+
+	option = {
+		name = flavor_swe.13.a
+		historical_option = yes
+
+		if = {
+			limit = {
+				NOT = { has_reform = government_reform:royal_decree }
+			}
+			add_reform = government_reform:royal_decree
+		}
+
+		if = {
+			limit = {
+				exists = scope:target_privilege
+			}
+
+			revoke_estate_privilege =  scope:target_privilege
+		}
+		if = {
+			limit = {
+				exists = scope:target_reform
+			}
+			remove_reform = scope:target_reform
+		}
+		add_legitimacy = legitimacy_mild_bonus
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_extreme_penalty }
+
+	}
+	option = {
+		name = flavor_swe.13.b
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_extreme_bonus }
+		add_stability = stability_mild_bonus
+	}
+}
+
+flavor_swe.14 = {
+	type = country_event
+
+	title = flavor_swe.14.title
+	desc = flavor_swe.14.desc
+	outcome = neutral
+	historical_info = flavor_swe.14.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1613.1.1
+		to = 1654.1.1
+		monthly_chance = 2
+	}
+
+	trigger = {
+		owns = location:enkoping
+		has_or_had_tag = SWE
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		
+		create_character = {
+			first_name = name_absalon
+			dynasty = dynasty:oxenstierna_dynasty
+			adm = { 90 98 }
+			dip = { 90 98 }
+			mil = { 90 98}
+			birth_date = 1583.6.16
+			birth_location = location:enkoping
+			culture = culture:swedish
+			script = swe_axel_oxenstierna
+			save_scope_as = swe_axel_oxenstierna
+		}
+	}
+
+	option = {
+		name = flavor_swe.14.a
+
+		add_legitimacy = legitimacy_mild_bonus
+		add_stability = stability_mild_bonus
+		add_research_progress = research_progress_severe_bonus
+	}
+}
+
+flavor_swe.15 = {
+	type = country_event
+	title = flavor_swe.15.title
+	desc = flavor_swe.15.desc
+	outcome = neutral
+	historical_info = flavor_swe.15.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1610.1.1
+		to = 1630.1.1
+		monthly_chance = 2
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	trigger = {
+		has_or_had_tag = SWE
+		capital = {
+			has_building = building_type:supreme_court
+		}
+	}
+
+	option = {
+		name = flavor_swe.15.a
+		add_stability = stability_mild_bonus
+		add_research_progress = research_progress_mild_bonus
+		
+		unlock_policy_effect = { type = court_of_appeals }
+		add_policy = policy:court_of_appeals
+	}
+}
+
+flavor_swe.16 = {
+	type = country_event
+	title = flavor_swe.16.title
+	desc = flavor_swe.16.desc
+	outcome = neutral
+	historical_info = flavor_swe.16.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1610.1.1
+		to = 1650.1.1
+		monthly_chance = 50
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		has_regent = yes
+		NOT = { regency_type = regency_type:consort_regency }
+		character:swe_axel_oxenstierna ?= {
+			is_alive = yes
+		}
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_swe.16.a
+		historical_option = yes
+		if = {
+			limit = {
+				regent != character:swe_axel_oxenstierna
+			}
+			set_regent = character:swe_axel_oxenstierna
+		}
+
+		add_stability = stability_severe_bonus
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_extreme_bonus }
+		change_societal_value = { type = aristocracy_vs_plutocracy value = societal_value_move_to_left }
+
+	}
+	option = {
+		name = flavor_swe.16.b
+		add_stability = stability_mild_penalty
+	}
+}
+
+flavor_swe.17 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_swe.17.title
+	desc = flavor_swe.17.desc
+	outcome = neutral
+	historical_info = flavor_swe.17.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1656.1.1
+		to = 1661.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		num_estate_privileges:nobles_estate > 0
+		has_or_had_tag = SWE
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_estate_privilege = {
+			limit = {
+				estate_type = estate_type:nobles_estate
+			}
+			save_scope_as = target_privilege
+		}
+	}
+
+	option = {
+		name = flavor_swe.17.a
+		historical_option = yes
+		change_societal_value = { type = centralization_vs_decentralization	value = societal_value_minor_move_to_left	}
+		change_societal_value = { type = aristocracy_vs_plutocracy value = societal_value_minor_move_to_right }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+	}
+	option = {
+		name = flavor_swe.17.b
+		revoke_estate_privilege =  scope:target_privilege
+		add_gold = { value = root.estate_tax_base:nobles_estate	multiply = 10 }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_extreme_penalty }
+		add_gold_to_estate = {
+			estate_type = estate_type:nobles_estate
+			value = { value = root.estate_tax_base:nobles_estate multiply = -10 	}
+		}
+	}
+	option = {
+		name = flavor_swe.17.c
+		change_societal_value = { type = aristocracy_vs_plutocracy value = societal_value_move_to_left }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
+	}
+}
+
+flavor_swe.18 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_swe.18.title
+	desc = flavor_swe.18.desc
+	outcome = neutral
+	historical_info = flavor_swe.18.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1650.1.1
+		to = 1653.1.1
+		monthly_chance = 12
+	}
+
+	trigger = {
+		num_estate_privileges:nobles_estate > 0
+		has_or_had_tag = SWE
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_estate_privilege = {
+			limit = {
+				estate_type = estate_type:nobles_estate
+			}
+			save_scope_as = target_privilege
+		}
+	}
+
+	option = {
+		name = flavor_swe.18.a
+		historical_option = yes
+		revoke_estate_privilege =  scope:target_privilege
+		change_societal_value = { type = centralization_vs_decentralization	value = societal_value_minor_move_to_left	}
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_extreme_penalty }
+	}
+	option = {
+		name = flavor_swe.18.b
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
+	}
+}
+
+flavor_swe.19 = {
+	type = country_event
+
+	title = flavor_swe.19.title
+	desc = flavor_swe.19.desc
+	outcome = neutral
+	historical_info = flavor_swe.19.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1660.1.1
+		to = 1680.1.1
+		monthly_chance = 20
+	}
+
+	trigger = {
+		has_regent = yes
+		has_or_had_tag = SWE
+		NOT = { regency_type = regency_type:consort_regency }
+		character:swe_magnus_de_la_gardie ?= {
+			is_alive = yes
+		}
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_swe.19.a
+		historical_option = yes
+		if = {
+			limit = {
+				regent != character:swe_magnus_de_la_gardie
+			}
+			set_regent = character:swe_magnus_de_la_gardie
+		}
+
+		change_societal_value = { type = serfdom_vs_free_subjects	value = societal_value_move_to_left	}
+		change_societal_value = { type = aristocracy_vs_plutocracy value = societal_value_move_to_left }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
+	}
+	option = {
+		name = flavor_swe.19.b
+		add_stability = stability_severe_penalty
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+	}
+}
+
+flavor_swe.20 = {
+	type = country_event
+	title = flavor_swe.20.title
+	desc = flavor_swe.20.desc
+	outcome = neutral
+	historical_info = flavor_swe.20.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1680.1.1
+		to = 1682.1.1
+		monthly_chance = 20
+	}
+
+	trigger = {
+		has_ruler = yes
+		has_or_had_tag = SWE
+		"estate_power(estate_type:nobles_estate)" > 0.25
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		every_owned_location = {
+			limit = {
+				dominant_culture = culture:swedish
+			}
+			every_buildings_in_location = {
+				limit = {
+					estate_type ?= estate_type:nobles_estate
+				}
+				add_to_list = nobles_buildings
+			}
+		}
+	}
+
+	option = {
+		name = flavor_swe.20.a
+		historical_option = yes
+		change_societal_value = { type = serfdom_vs_free_subjects	value = societal_value_minor_move_to_right	}
+		change_societal_value = { type = aristocracy_vs_plutocracy value = societal_value_minor_move_to_right }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_radical_penalty }
+
+		ordered_in_list = {
+			list = nobles_buildings
+			order_by = location.population
+			max = num_of_non_rural
+			root = {
+				destroy_building = prev
+			}
+		}
+
+	}
+	option = {
+		name = flavor_swe.20.b
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
+		change_societal_value = { type = serfdom_vs_free_subjects	value = societal_value_move_to_left	}
+		change_societal_value = { type = aristocracy_vs_plutocracy value = societal_value_move_to_left }
+	}
+
+}
+
+flavor_swe.21 = {
+	type = country_event
+	title = flavor_swe.21.title
+	desc = flavor_swe.21.desc
+	outcome = neutral
+	historical_info = flavor_swe.21.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1680.1.1
+		to = 1690.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+	trigger = {
+		has_or_had_tag = SWE
+	}
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:peasants }
+	}
+	
+	option = {
+		name = flavor_swe.21.a
+		historical_option = yes
+		add_army_tradition = army_tradition_ultimate_bonus
+		change_societal_value = { type = offensive_vs_defensive value = societal_value_minor_move_to_left }
+		change_societal_value = { type = quality_vs_quantity value = societal_value_minor_move_to_left }
+	}
+	option = {
+		name = flavor_swe.21.b
+		add_stability = stability_mild_bonus
+	}
+}
+
+flavor_swe.22 = {
+	type = country_event
+	title = flavor_swe.22.title
+	desc = flavor_swe.22.desc
+	outcome = neutral
+	historical_info = flavor_swe.22.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1720.1.1
+		to = 1740.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		is_protestant = yes
+		has_or_had_tag = SWE
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:clergy background = pop_type:soldiers }
+	}
+	
+	option = {
+		name = flavor_swe.22.a
+		historical_option = yes
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_minor_move_to_left }
+		add_stability = stability_severe_bonus
+	}
+	option = {
+		name = flavor_swe.22.b
+		add_stability = stability_severe_penalty
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_minor_move_to_right }
+	}
+}
+
+flavor_swe.23 = {
+	type = country_event
+	title = flavor_swe.23.title
+	desc = flavor_swe.23.desc
+	outcome = neutral
+	historical_info = flavor_swe.23.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1720.1.1
+		to = 1740.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		country_exists = c:RUS
+		is_at_war_with = c:RUS
+		NOT = {
+			country_exists = c:FIN
+		}
+		any_owned_location = {
+			is_core_of = c:FIN
+		}
+		c:RUS = {
+			any_owned_location = {
+				is_core_of = c:SWE
+			}
+		}
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		c:RUS = { save_scope_as = target_country }
+	}
+
+	option = {
+		name = flavor_swe.23.a
+		add_legitimacy = legitimacy_severe_penalty
+	}
+	option = {
+		name = flavor_swe.23.b
+		historical_option = yes
+		custom_tooltip = {
+			text = flavor_swe.23.b.tt
+			c:RUS = {
+				trigger_event_silently = { id = flavor_rus.31 }
+			}
+		}
+	}
+}
+
+flavor_swe.24 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_swe.24.title
+	desc = flavor_swe.24.desc
+	outcome = neutral
+	historical_info = flavor_swe.24.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1800.1.1
+		to = 1810.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		ruler ?= {
+			adm < 50
+			dip < 50
+			mil < 50
+		}
+		NOT = { owns = location:geneve }
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		ruler = {
+			save_scope_as = former_ruler
+		}
+	}
+
+	option = {
+		name = flavor_swe.24.a
+		historical_option = yes
+		scope:former_ruler = {
+			hidden_effect = { add_character_modifier = { modifier = disinherited years = -1 mode = add_and_extend } }
+
+			every_ruling_countries = {
+				scope:former_ruler = { remove_ruler = prev }
+			}
+
+			move_country = location:geneve.owner
+		}
+	}
+	option = {
+		name = flavor_swe.24.b
+		add_stability = stability_severe_bonus
+	}
+}
+
+flavor_swe.25 = {
+	type = country_event
+	title = flavor_swe.25.title
+	desc = flavor_swe.25.desc
+	outcome = neutral
+	historical_info = flavor_swe.25.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1795.1.1
+		to = 1800.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+	trigger = {
+		has_or_had_tag = SWE
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_swe.25.a
+		historical_option = yes
+		change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_move_to_right }
+		change_societal_value = { type = centralization_vs_decentralization value = societal_value_move_to_left }
+
+	}
+	option = {
+		name = flavor_swe.25.b
+		add_stability = stability_mild_bonus
+	}
+}
+
+flavor_swe.26 = {
+	type = country_event
+	title = flavor_swe.26.title
+	desc = flavor_swe.26.desc
+	outcome = neutral
+	historical_info = flavor_swe.26.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1795.1.1
+		to = 1800.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+	
+	trigger = {
+		has_or_had_tag = SWE
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_swe.26.a
+		historical_option = yes
+		add_estate_satisfaction = { type = estate_type:peasants_estate value = estate_satisfaction_mild_bonus }
+		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_mild_bonus }
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_bonus }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_extreme_penalty }
+	}
+	option = {
+		name = flavor_swe.26.b
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
+		add_legitimacy = legitimacy_severe_penalty
+	}
+}
+
+flavor_swe.27 = {
+	type = country_event
+	fire_only_once = yes
+	title = flavor_swe.27.title
+	desc = flavor_swe.27.desc
+	outcome = neutral
+	historical_info = flavor_swe.27.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1798.1.1
+		to = 1805.1.1
+		monthly_chance = 5
+	}
+	trigger = {
+		has_or_had_tag = SWE
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_wheat.dds"
+
+	option = {
+		name = flavor_swe.27.a
+		historical_option = yes
+		change_societal_value = { type = centralization_vs_decentralization value = societal_value_minor_move_to_left }
+		change_societal_value = { type = serfdom_vs_free_subjects value = societal_value_minor_move_to_right }
+	}
+	option = {
+		name = flavor_swe.27.b
+		add_stability = stability_mild_bonus
+	}
+}
+
+flavor_swe.28 = {
+	type = country_event
+	title = flavor_swe.28.title
+	desc = flavor_swe.28.desc
+	outcome = neutral
+	historical_info = flavor_swe.28.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1740.1.1
+		to = 1750.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		own_entire_province = province_definition:dalarna_province
+		num_estate_privileges:nobles_estate > num_estate_privileges:peasants_estate
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
+	}
+	
+	option = {
+		name = flavor_swe.28.a
+		historical_option = yes
+		every_owned_location = {
+			limit = {
+				province_definition = province_definition:dalarna_province
+			}
+			every_pop = {
+				limit = {
+					owner = root
+					pop_type = pop_type:peasants
+				}
+				add_pop_satisfaction = pop_satisfaction_extreme_penalty
+			}
+		}
+	}
+	option = {
+		name = flavor_swe.28.b
+		change_societal_value = { type = centralization_vs_decentralization	value = societal_value_move_to_right	}
+	}
+}
+
+flavor_swe.29 = {
+	type = country_event
+
+	title = flavor_swe.29.title
+	desc = flavor_swe.29.desc
+	outcome = neutral
+	historical_info = flavor_swe.29.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1670.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+	}
+
+	image = "gfx/interface/illustrations/institutions/scientific_revolution.dds"
+	
+	option = {
+		name = flavor_swe.29.a
+		add_research_progress = research_progress_severe_bonus
+	}
+}
+
+flavor_swe.30 = {
+	type = country_event
+	title = flavor_swe.30.title
+	desc = flavor_swe.30.desc
+	outcome = neutral
+	historical_info = flavor_swe.30.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1698.1.1
+		to = 1704.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		owns = location:vasteras
+		owns = location:stockholm
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		create_character = {
+			first_name = Olof
+			last_name = Rudbeck
+			adm = { 60 80}
+			dip = { 60 80}
+			mil = { 60 80}
+			birth_date = 1630.9.13
+			birth_location = location:vasteras
+			artist_skill = 0.97
+			artist = writer
+			estate = estate_type:burghers_estate
+			save_scope_as = target_artist
+		}
+	}
+	option = {
+		name = flavor_swe.30.a
+		add_legitimacy = legitimacy_severe_bonus
+		culture = {
+			add_cultural_influence = cultural_influence_severe_bonus
+		}
+		location:stockholm = {
+			create_art = {
+				artist = scope:target_artist
+				quality = 100
+				type = work_of_art_type:chronicle
+				key = atland_eller_manheim
+			}
+		}
+	}
+}
+
+flavor_swe.31 = {
+	type = country_event
+	title = flavor_swe.31.title
+	desc = flavor_swe.31.desc
+	outcome = neutral
+	historical_info = flavor_swe.31.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1718.1.1
+		to = 1772.1.1
+		monthly_chance = 1
+	}
+	
+	trigger = {
+		has_or_had_tag = SWE
+	}
+
+	image = "gfx/interface/illustrations/institutions/scientific_revolution.dds"
+
+	option = {
+		name = flavor_swe.31.a
+		add_prestige = prestige_mild_bonus
+		add_research_progress = research_progress_severe_bonus
+	}
+}
+
+flavor_swe.32 = {
+	type = country_event
+	title = flavor_swe.32.title
+	desc = flavor_swe.32.desc
+	outcome = neutral
+	historical_info = flavor_swe.32.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1737.1.1
+		to = 1778.1.1
+		monthly_chance = 1
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+	trigger = {
+		has_or_had_tag = SWE
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_swe.32.a
+		add_prestige = prestige_mild_bonus
+		add_research_progress = research_progress_severe_bonus
+	}
+}
+
+flavor_swe.33 = {
+	type = country_event
+	title = flavor_swe.33.title
+	desc = flavor_swe.33.desc
+	outcome = neutral
+	historical_info = flavor_swe.33.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1700.1.1
+		to = 1770.1.1
+		monthly_chance = 20
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		government_type = government_type:monarchy
+		modifier:has_a_parliamentary_system = yes
+		has_regent = yes
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_swe.33.a
+		historical_option = yes
+		set_variable = { name = swe_age_of_freedom value = 1 }
+		add_stability = stability_severe_bonus
+		add_reform = government_reform:swe_age_of_freedom
+	}
+	option = {
+		name = flavor_swe.33.b
+		add_stability = stability_radical_penalty
+	}
+}
+
+flavor_swe.34 = {
+	type = country_event
+	title = flavor_swe.34.title
+	desc = flavor_swe.34.desc
+	outcome = neutral
+	historical_info = flavor_swe.34.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1735.1.1
+		to = 1740.1.1
+		monthly_chance = 20
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		has_reform = government_reform:swe_age_of_freedom
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+	
+	option = {
+		name = flavor_swe.34.a
+		historical_option = yes
+		change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_move_to_left }
+	}
+	option = {
+		name = flavor_swe.34.b
+		change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_move_to_right }
+	}
+}
+
+flavor_swe.35 = {
+	type = country_event
+	title = flavor_swe.35.title
+	desc = flavor_swe.35.desc
+	outcome = neutral
+	historical_info = flavor_swe.35.historical_info
+
+	trigger = {
+		tag = SWE
+		has_reform = government_reform:swe_age_of_freedom
+		country_exists = c:FRA
+		country_exists = c:RUS
+		NOT = { has_variable = swe_parliament_cooldown }
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		set_variable = { name = swe_parliament_cooldown value = 1 days = 365 }
+	}
+
+	option = {
+		name = flavor_swe.35.a
+		c:FRA = {
+			add_opinion = { target = root modifier = swedish_hats }
+		}
+		c:RUS = {
+			add_casus_belli = {	target = c:SWE	type = casus_belli:cb_insulted_us	}
+		}
+
+		change_societal_value = { type = belligerent_vs_conciliatory value = societal_value_tiny_move_to_left }
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_tiny_move_to_left }
+		}
+		add_army_tradition = army_tradition_mild_bonus
+	}
+	option = {
+		name = flavor_swe.35.b
+		c:RUS = {
+			add_opinion = { target = root modifier = swedish_caps }
+		}
+		c:FRA = {
+			add_casus_belli = {	target = c:SWE	type = casus_belli:cb_insulted_us	}
+		}
+		change_societal_value = { type = belligerent_vs_conciliatory value = societal_value_tiny_move_to_right }
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_tiny_move_to_right }
+		}
+
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+flavor_swe.36 = {
+	type = country_event
+	title = flavor_swe.36.title
+	desc = flavor_swe.36.desc
+	outcome = neutral
+	historical_info = flavor_swe.36.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1756.1.1
+		to = 1758.1.1
+		monthly_chance = 20
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		has_reform = government_reform:swe_age_of_freedom
+		has_ruler = yes
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_swe.36.a
+		historical_option = yes
+		add_stability = stability_mild_bonus
+	}
+	option = {
+		name = flavor_swe.36.b
+		add_legitimacy = legitimacy_mild_bonus
+	}
+}
+
+flavor_swe.37 = {
+	type = country_event
+	title = flavor_swe.37.title
+	desc = flavor_swe.37.desc
+	outcome = neutral
+	historical_info = flavor_swe.37.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1770.1.1
+		to = 1775.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		has_reform = government_reform:swe_age_of_freedom
+		has_ruler = yes
+		is_subject = no
+		government_type = government_type:monarchy
+	}
+	
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_swe.37.a
+		historical_option = yes
+		remove_reform = government_reform:swe_age_of_freedom
+		add_legitimacy = legitimacy_severe_bonus
+		add_prestige = prestige_severe_bonus
+	}
+	option = {
+		name = flavor_swe.37.b
+		add_stability = stability_mild_bonus
+	}
+}
+
+flavor_swe.38 = {
+	type = country_event
+	title = flavor_swe.38.title
+	desc = flavor_swe.38.desc
+	outcome = neutral
+	historical_info = flavor_swe.38.historical_info
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_silver.dds"
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1500.1.1
+		to = 1520.1.1
+		monthly_chance = 4
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		owns = location:sala
+	}
+
+	immediate = {
+		location:sala = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_swe.38.a
+		historical_option = yes
+		location:sala = {
+			change_raw_material = goods:silver
+			
+			if = {
+				limit = { 
+					rgo_level > 1
+				}
+				
+				change_max_raw_material_workers = {
+					value = rgo_level
+					subtract = 1
+					multiply = -1
+				}
+			}
+			
+		}
+	}
+	option = {
+		name = flavor_swe.38.b
+		add_stability = stability_mild_bonus
+	}
+}
+
+flavor_swe.39 = {
+	type = country_event
+	title = flavor_swe.39.title
+	desc = flavor_swe.39.desc
+	outcome = neutral
+	historical_info = flavor_swe.39.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1630.1.1
+		to = 1635.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		owns = location:silbojock
+		owns = location:sala
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_silver.dds"
+
+	immediate = {
+		location:silbojock = {
+			save_scope_as = target_location
+		}
+
+		capital = {
+			random_pop = {
+				limit = {
+					pop_type = pop_type:peasants
+				}
+				save_scope_as = origin_pop
+			}
+		}
+	}
+
+	option = {
+		name = flavor_swe.39.a
+		historical_option = yes
+
+		change_gold_effect = { scale = -2 }
+		location:silbojock = {
+			change_raw_material = goods:silver
+			add_pop = {
+				culture = scope:origin_pop.culture
+				religion = scope:origin_pop.religion
+				type = pop_type:peasants
+				size = 1.2
+			}
+		}
+		scope:origin_pop = {
+			add_pop_size = -1.2
+		}
+	}
+	option = {
+		name = flavor_swe.39.b
+		add_stability = stability_mild_bonus
+	}
+}
+
+flavor_swe.40 = {
+	type = country_event
+
+	title = flavor_swe.40.title
+	desc = flavor_swe.40.desc
+	outcome = neutral
+
+	historical_info = flavor_swe.40.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1650.1.1
+		to = 1680.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		character:swe_magnus_de_la_gardie ?= {
+			is_alive = yes
+		}
+		owns = location:stockholm
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_swe.40.a
+		historical_option = yes
+		location:stockholm = {
+			create_art = {
+				quality = 70
+				type = work_of_art_type:palace
+				key = swe_makalos
+
+			}
+		}
+	}
+}
+
+flavor_swe.41 = {
+	type = country_event
+
+	title = flavor_swe.41.title
+	desc = flavor_swe.41.desc
+	outcome = neutral
+
+	historical_info = flavor_swe.41.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1620.1.1
+		to = 1680.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		owns = location:utlandet
+		location:amsterdam = {
+			dominant_culture = culture:low_franconian
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+	
+	option = {
+		name = flavor_swe.41.a
+		location:utlandet = {
+			if = {
+				limit = {
+					location_rank = location_rank:rural_settlement
+				}
+				change_location_rank_effect = { location_rank = location_rank:town }
+			}
+
+			rename_location = goteborg
+			change_development = development_ultimate_bonus
+			change_prosperity = prosperity_severe_bonus
+		}
+
+		add_migration = {
+			owner = this
+			from = location:amsterdam.province_definition
+			to_location = location:utlandet
+			culture = culture:low_franconian
+			type = pop_type:burghers
+			amount = 0.05
+			months = 24
+		}
+	}
+}
+
+flavor_swe.42 = {
+	type = country_event
+
+	title = flavor_swe.42.title
+	desc = flavor_swe.42.desc
+	outcome = neutral
+
+	historical_info = flavor_swe.42.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		tag = FIN
+		from = 1530.1.1
+		to = 1600.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		religion = religion:lutheran
+
+		character:swe_mikael_agricola ?= {
+			is_alive = yes
+		}
+		own_entire_province = province_definition:sodra_osterbotten_province
+		own_entire_province = province_definition:finland_province
+		own_entire_province = province_definition:nyland_province
+		own_entire_province = province_definition:satakunta_province
+		own_entire_province = province_definition:tavastland_province
+		own_entire_province = province_definition:savolax_province
+
+		OR = {
+			"culture_percentage_in_country(culture:savonian)" > 0.0
+			"culture_percentage_in_country(culture:tavastian)" > 0.0
+			"culture_percentage_in_country(culture:kvens)" > 0.0
+		}
+		"capital.province.culture_percentage(culture:finnish)" > 0.0
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:burghers_estate }
+		character:swe_mikael_agricola = {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_swe.42.a
+		historical_option = yes
+		custom_tooltip = {
+			text = flavor_swe.42.tt
+			every_owned_location = {
+				every_pop = {
+					limit = {
+						OR = {
+							culture = culture:savonian
+							culture = culture:tavastian
+							culture = culture:kvens
+						}
+					}
+					change_pop_culture = culture:finnish
+				}
+			}
+		}
+		culture:finnish = {
+			add_cultural_tradition = cultural_tradition_radical_bonus
+		}
+	}
+	option = {
+		name = flavor_swe.42.b
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+flavor_swe.43 = {
+	type = country_event
+
+	title = flavor_swe.43.title
+	desc = flavor_swe.43.desc
+	outcome = neutral
+
+	historical_info = flavor_swe.43.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1400.1.1
+		to = 1600.1.1
+		monthly_chance = 30
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		has_embraced_institution = institution:printing_press
+		religion.group = religion_group:christian
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+	}
+	
+	option = {
+		name = flavor_swe.43.a
+		historical_option = yes
+		add_research_progress = research_progress_mild_bonus
+		change_societal_value = { type = spiritualist_vs_humanist value = societal_value_tiny_move_to_right }
+	}
+	option = {
+		name = flavor_swe.43.a
+		add_stability = stability_mild_bonus
+		change_societal_value = { type = spiritualist_vs_humanist value = societal_value_tiny_move_to_left }
+	}
+}
+
+flavor_swe.44 = {
+	type = country_event
+	title = flavor_swe.44.title
+	desc = flavor_swe.44.desc
+	outcome = neutral
+	historical_info = flavor_swe.44.historical_info
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_iron.dds"
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		tag = FIN
+		from = 1540.1.1
+		to = 1550.1.1
+		monthly_chance = 8
+	}
+
+	trigger = {
+		owns = location:lohja
+	}
+
+	immediate = {
+		location:lohja = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_swe.44.a
+		historical_option = yes
+		location:lohja = {
+			change_raw_material = goods:iron
+		}
+	}
+	option = {
+		name = flavor_swe.44.b
+		add_stability = stability_mild_bonus
+	}
+}
+
+flavor_swe.45 = {
+	type = country_event
+	title = flavor_swe.45.title
+	desc = flavor_swe.45.desc
+	outcome = neutral
+	historical_info = flavor_swe.45.historical_info
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_copper.dds"
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1680.1.1
+		to = 1700.1.1
+		monthly_chance = 2
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		owns = location:falun
+		location:falun = {
+			rgo_workers >= 0
+		}
+	}
+
+	option = {
+		name = flavor_swe.45.a
+		historical_option = yes
+		location:falun = {
+			change_max_raw_material_workers = -2
+		}
+	}
+}
+
+flavor_swe.46 = {
+	type = country_event
+
+	title = flavor_swe.46.title
+	desc = flavor_swe.46.desc
+	outcome = neutral
+
+	illustration_tags = {
+		10 = angry
+		10 = interior
+	}
+
+	historical_info = flavor_swe.46.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1330.1.1
+		to = 1340.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		owns = location:norrtalje
+		religion = religion:catholic
+		has_ruler = yes
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		create_character = {
+			first_name = name_bridget
+			last_name = Birgersdotter
+			adm = 55
+			dip = 40
+			mil = 50
+			birth_date = 1303
+			female = yes
+			birth_location = location:norrtalje
+			culture = culture:swedish
+			religion = religion:catholic
+			add_trait = trait:zealot
+			estate = estate_type:nobles_estate
+			script = swe_heliga_birgitta
+			save_scope_as = swe_heliga_birgitta
+
+		}
+		ruler = {
+			save_scope_as = king_sweden
+		}
+	}
+
+	option = {
+		name = flavor_swe.46.a
+		add_government_power = government_power_mild_penalty
+	}
+}
+
+flavor_swe.47 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_swe.47.title
+	desc = flavor_swe.47.desc
+	outcome = neutral
+	historical_info = flavor_swe.47.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1550.1.1
+		to = 1580.1.1
+		monthly_chance = 2
+	}
+
+	illustration_tags = {
+		10 = angry
+		10 = interior
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		government_type = government_type:monarchy
+
+		ruler ?= {
+			owner = root
+			is_female = no
+			age_in_years >= 25
+			father ?= {
+				any_child = {
+					this != root.ruler
+					is_female = no
+					is_adult = yes
+					is_alive = yes
+				}
+
+			}
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		capital = {
+			event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		}
+
+		ruler ?= {
+			save_scope_as = ruler_scope_for_ui
+
+
+			father ?= {
+				random_child = {
+					limit = {
+						this != root.ruler
+						is_female = no
+						is_adult = yes
+						is_alive = yes
+					}
+					save_scope_as = pretender
+				}
+
+			}
+
+		}
+	}
+
+	option = {
+		name = flavor_swe.47.a
+		historical_option = yes
+		set_new_ruler_with_union_if_senior = { character = scope:pretender }
+		add_legitimacy = legitimacy_mild_penalty
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_severe_bonus }
+	}
+
+	option = {
+		name = flavor_swe.47.b
+		add_legitimacy = legitimacy_mild_bonus
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_severe_penalty }
+	}
+
+}
+
+scripted_effect make_birgitta_saint = {
+	if = {
+		limit = {
+			character:swe_heliga_birgitta ?= {
+				NOT = { is_saint_of = religion:catholic }
+			}
+		}
+
+		character:swe_heliga_birgitta ?= {
+			make_saint = root
+		}
+	}
+}
+
+flavor_swe.48 = {
+	type = country_event
+	title = flavor_swe.48.title
+	desc = flavor_swe.48.desc
+	outcome = neutral
+	historical_info = flavor_swe.48.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1340.1.1
+		to = 1800.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+		10 = happy
+		10 = interior
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		government_type = government_type:monarchy
+		religion = religion:catholic
+		character:swe_heliga_birgitta ?= {
+			is_alive = no
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		capital = {
+			event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		}
+
+		character:swe_heliga_birgitta ?= {
+			save_scope_as = birgitta_scope_for_ui
+		}
+	}
+
+	option = {
+		name = flavor_swe.48.a
+		historical_option = yes
+		make_birgitta_saint = yes
+
+		religion:catholic = {
+			create_holy_site = {
+				name = vadstena_holy_site
+				type = christian_holy_site
+				importance = 1
+				location = location:vadstena
+				religions = { religion:catholic }
+			}
+		}
+
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_bonus }
+	}
+
+	option = {
+		name = flavor_swe.48.b
+		make_birgitta_saint = yes
+		add_prestige = prestige_severe_bonus
+	}
+
+}
+
+flavor_swe.49 = {
+	type = country_event
+	title = flavor_swe.49.title
+	desc = flavor_swe.49.desc
+	outcome = neutral
+	historical_info = flavor_swe.49.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1360.1.1
+		to = 1400.1.1
+		monthly_chance = 2
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		owns = location:tierp
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		location:tierp = {
+			event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
+		}
+	}
+
+	option = {
+		name = flavor_swe.49.a
+		culture = {
+			add_cultural_tradition = cultural_tradition_severe_bonus
+		}
+	}
+
+}
+
+flavor_swe.50 = { #University of Uppsala
+	type = country_event
+	title = flavor_swe.50.title
+	desc = flavor_swe.50.desc
+	outcome = neutral
+	historical_info = flavor_swe.50.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1474.1.1
+		to = 1480.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = happy
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		owns = location:uppsala
+		religion = religion:catholic
+		c:PAP = {
+			opinion = { target = c:SWE value >= 0 }
+			has_ruler = yes
+		}
+	}
+
+	option = {
+		name = flavor_swe.50.a
+		historical_option = yes
+		if = {
+			limit = {
+				NOT = {
+					location:uppsala = { has_building = building_type:university }
+				}
+			}
+			location:uppsala = {
+				construct_building = {
+					building_type = building_type:university
+					cost_multiplier = 0.50
+					cost_multiplier_reason = "academic_cheap_sponsorship"
+				}
+			}
+		}
+		else = {
+			location:uppsala = {
+				change_development = development_severe_bonus
+				change_prosperity = prosperity_severe_bonus
+			}
+		}
+		add_research_progress = research_progress_mild_bonus
+	}
+	option = {
+		name = flavor_swe.50.b
+		add_religious_influence = religious_influence_severe_bonus
+	}
+}
+
+flavor_swe.51 = { #Carl Michael Bellman
+	type = country_event
+	title = flavor_swe.51.title
+	desc = flavor_swe.51.desc
+	outcome = neutral
+	historical_info = flavor_swe.51.historical_info
+
+	fire_only_once = yes
+
+	image = "gfx/interface/illustrations/institutions/enlightenment.dds"
+
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1770.1.1
+		to = 1775.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		owns = location:stockholm
+		has_or_had_tag = SWE
+	}
+
+	immediate = {
+		create_character = {
+			first_name = name_charles.name_michael
+			last_name = Bellman
+			birth_date = 1740.2.4
+			birth_location = location:stockholm
+			estate = estate_type:burghers_estate
+			adm = { 20 70 }
+			dip = { 20 70 }
+			mil = { 20 70 }
+			artist_skill = 0.85
+			culture = culture:swedish
+			save_scope_as = target_artist
+			create_in_limbo = yes
+			artist = composer
+		}
+	}
+
+	option = {
+		name = flavor_swe.51.a
+		historical_option = yes
+		scope:target_artist = {
+			move_country = root
+			add_trait = trait:workaholic
+		}
+	}
+}
+
+flavor_swe.52 = { #Carl von Linne
+	type = country_event
+	title = flavor_swe.52.title
+	desc = flavor_swe.52.desc
+	outcome = neutral
+	historical_info = flavor_swe.52.historical_info
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1750.1.1
+		to = 1760.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	trigger = {
+		has_or_had_tag = SWE
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_swe.52.a
+		historical_option = yes
+		add_research_progress = research_progress_severe_bonus
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_minor_move_to_right }
+	}
+
+	option = {
+		name = flavor_swe.52.b
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_minor_move_to_left }
+		add_stability = stability_severe_bonus
+	}
+}
+
+flavor_swe.53 = { #Magnus Eriksson's Landslag
+	type = country_event
+	title = flavor_swe.53.title
+	desc = flavor_swe.53.desc
+	outcome = neutral
+	historical_info = flavor_swe.53.historical_info
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1340.1.1
+		to = 1344.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = angry
+		10 = interior
+	}
+	trigger = {
+		ruler = character:swe_magnus_eriksson
+		has_or_had_tag = SWE
+	}
+	immediate = {
+		ruler ?= {
+			save_scope_as = target_character
+		}
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+
+	option = {
+		name = flavor_swe.53.a
+		historical_option = yes
+		change_societal_value = { type = centralization_vs_decentralization	value = societal_value_minor_move_to_left	}
+		add_legitimacy = legitimacy_mild_bonus
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+	}
+
+	option = {
+		name = flavor_swe.53.b
+		change_societal_value = { type = centralization_vs_decentralization	value = societal_value_minor_move_to_right	}
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
+	}
+}
+
+flavor_swe.54 = { #Anckarström assassinates Gustav III
+	type = country_event
+	title = flavor_swe.54.title
+	desc = flavor_swe.54.desc
+	outcome = neutral
+	historical_info = flavor_swe.54.historical_info
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1790.1.1
+		to = 1795.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+		10 = armed
+		10 = interior
+	}
+
+	trigger = {
+		has_ruler = yes
+		has_or_had_tag = SWE
+		societal_value:absolutism_vs_liberalism < -50
+		estate_satisfaction:nobles_estate < 0.65
+	}
+	
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+			save_scope_as = target_character
+		}
+		create_character = {
+			first_name = name_james
+			last_name = Anckarstrom
+			adm = { 0 10 }
+			dip = { 0 10 }
+			mil = { 0 10 }
+			birth_date = 1762.5.11
+			birth_location = location:stockholm
+			culture = culture:swedish
+			save_scope_as = swe_anckarstrom
+			create_in_limbo = yes
+		}
+		kill_character = {
+			target = scope:target_character
+			reason = assassination
+			killer = scope:swe_anckarstrom
+		}
+	}
+
+	option = {
+		name = flavor_swe.54.a
+		historical_option = yes
+		kill_character = {
+			target = scope:swe_anckarstrom
+			reason = execution
+			killer = ruler_or_regent
+		}
+
+		change_societal_value = { type = absolutism_vs_liberalism	value = societal_value_move_to_left	}
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_extreme_penalty }
+
+	}
+
+	option = {
+		name = flavor_swe.54.b
+		kill_character = {
+			target = scope:swe_anckarstrom
+			reason = execution
+			killer = ruler_or_regent
+		}
+		add_estate_satisfaction = { type = estate_type:peasants_estate value = estate_satisfaction_radical_penalty }
+		change_societal_value = { type = absolutism_vs_liberalism	value = societal_value_move_to_right	}
+	}
+}
+
+flavor_swe.55 = {
+	type = country_event
+	title = flavor_swe.55.title
+	desc = flavor_swe.55.desc
+	outcome = neutral
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_copper.dds"
+
+	historical_info = flavor_swe.55.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1396.1.1
+		to = 1420.1.1
+		monthly_chance = 2
+	}
+
+	illustration_tags = {
+		10 = angry
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+
+	trigger = {
+		country_exists = c:HSA
+		has_or_had_tag = SWE
+
+		c:HSA ?= {
+			NOT = { is_allied_with = { target = ROOT } }
+		}
+
+		capital.market ?= {
+			most_powerful_merchant = c:HSA
+		}
+	}
+	option = {
+		name = flavor_swe.55.a
+		historical_option = yes
+		c:HSA = { add_opinion = { target = root modifier = swe_denies_hsa } }
+		capital.market = {
+			add_merchant_power = {
+				country = c:HSA
+				power = merchant_power_weak_penalty
+				months = 240
+				key = swe_denies_hsa
+			}
+		}
+	}
+
+	option = {
+		name = flavor_swe.55.b
+
+		c:HSA = { add_opinion = { target = root modifier = swe_allows_hsa } }
+
+		capital.market = {
+			add_merchant_power = {
+				country = c:HSA
+				power = merchant_power_ultimate_bonus
+				months = 240
+				key = swe_allows_hsa
+			}
+		}
+	}
+}
+
+flavor_swe.56 = {
+	type = country_event
+	title = flavor_swe.56.title
+	desc = flavor_swe.56.desc
+	outcome = neutral
+
+	historical_info = flavor_swe.56.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1645.1.1
+		to = 1660.1.1
+		monthly_chance = 2
+	}
+
+	illustration_tags = {
+		10 = angry
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+
+	trigger = {
+		has_or_had_tag = SWE
+		produced_in_country:copper > 5
+	}
+	option = {
+		name = flavor_swe.56.a
+		historical_option = yes
+		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_mild_bonus }
+		add_country_modifier = { modifier = silver_based_coinage years = 20 mode = extend }
+	}
+
+	option = {
+		name = flavor_swe.56.b
+		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_mild_penalty }
+		add_prestige = prestige_weak_penalty
+	}
+}
+
+flavor_swe.57 = {
+	type = country_event
+	title = flavor_swe.57.title
+	desc = flavor_swe.57.desc
+	outcome = neutral
+
+	historical_info = flavor_swe.57.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1600.1.1
+		to = 1630.1.1
+		monthly_chance = 2
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_tar.dds"
+
+	trigger = {
+		has_or_had_tag = SWE
+		"culture_percentage_in_country(culture:finnish)" > 0.0
+		own_entire_province = province_definition:satakunta_province
+		own_entire_province = province_definition:nyland_province
+		own_entire_province = province_definition:varmland_province
+		own_entire_province = province_definition:angermanland_province
+	}
+
+	option = {
+		name = flavor_swe.57.a
+		historical_option = yes
+
+		add_migration = {
+			owner = this
+			from = province_definition:satakunta_province
+			to = province_definition:varmland_province
+			culture = culture:finnish
+			amount = 0.025
+			months = 240
+		}
+
+		add_migration = {
+			owner = this
+			from = province_definition:nyland_province
+			to = province_definition:angermanland_province
+			culture = culture:finnish
+			amount = 0.025
+			months = 240
+		}
+
+		add_country_modifier = { modifier = slash_and_burn_foresting years = 20 mode = extend }
+	}
+	option = {
+		name = flavor_swe.57.b
+		add_stability = stability_mild_bonus
+	}
+}
+
+flavor_swe.58 = {
+	type = country_event
+	title = flavor_swe.58.title
+	desc = flavor_swe.58.desc
+	outcome = neutral
+
+	historical_info = flavor_swe.58.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1710.1.1
+		to = 1720.1.1
+		monthly_chance = 5
+	}
+
+	image = "gfx/interface/illustrations/situation/golden_age_of_piracy.dds"
+
+	trigger = {
+		has_or_had_tag = SWE
+		at_war = yes
+		owns = location:utlandet
+		government_type = government_type:monarchy
+	}
+
+	option = {
+		name = flavor_swe.58.a
+		historical_option = yes
+		area:inner_baltic_sea_area = {	hire_privateer = root }
+		area:western_baltic_sea = {	hire_privateer = root }
+		area:north_sea_area = {	hire_privateer = root }
+	}
+	option = {
+		name = flavor_swe.58.b
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+flavor_swe.59 = {
+	type = country_event
+	title = flavor_swe.59.title
+	desc = flavor_swe.59.desc
+	outcome = neutral
+
+	historical_info = flavor_swe.59.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1732.1.1
+		to = 1734.1.1
+		monthly_chance = 10
+	}
+
+	image = "gfx/interface/illustrations/institutions/printing_press.dds"
+
+	trigger = {
+		has_policy = free_press
+		has_or_had_tag = SWE
+	}
+
+	option = {
+		name = flavor_swe.59.a
+		historical_option = yes
+		culture = {
+			add_cultural_influence = cultural_influence_severe_bonus
+		}
+		add_research_progress = research_progress_mild_bonus
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_minor_move_to_right }
+	}
+	option = {
+		name = flavor_swe.59.b
+		add_policy = policy:censored_press
+		add_stability = stability_mild_bonus
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_minor_move_to_left }
+	}
+}
+#The Riksbank
+flavor_swe.60 = {
+	type = country_event
+	title = flavor_swe.60.title
+	desc = flavor_swe.60.desc
+	outcome = neutral
+	historical_info = flavor_swe.60.historical_info
+	fire_only_once = yes
+	trigger = {
+		has_advance = central_bank_advance
+		location:stockholm = {
+			owner ?= root
+			is_capital = yes
+		}
+	}
+	dynamic_historical_event = {
+		tag = SWE
+		from = 1650.1.1
+		to = 1700.1.1
+		monthly_chance = 1
+	}
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+	option = {
+		name = flavor_swe.60.a
+		location:stockholm = {
+			if = {
+				limit = {
+					has_building = building_type:central_bank
+				}
+				destroy_building = "building(building_type:central_bank|root)"
+			}
+			construct_building = {
+				building_type = building_type:riksbank
+			}
+		}
+		change_societal_value = { type = capital_economy_vs_traditional_economy value = societal_value_move_to_left }
+		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_weak_bonus }
+	}
+	option = {
+		name = flavor_swe.60.b
+		change_societal_value = { type = capital_economy_vs_traditional_economy value = societal_value_move_to_right }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_weak_bonus }
+		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_mild_penalty }
+	}
+}

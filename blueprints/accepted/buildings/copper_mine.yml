@@ -22,6 +22,7 @@ building:
       methods:
         - pp_copper_mine_no_secondary
         - pp_copper_mine_silver
+        - pp_copper_mine_gold
         - pp_copper_mine_tin
   possible_production_methods: []
   body: |2-
@@ -80,6 +81,14 @@ building:
             output = 0.033
             category = building_maintenance
         }
+        pp_copper_mine_gold = {
+            lumber = 0.03
+            tools = 0.03
+            lead = 0.02
+            produced = goods_gold
+            output = 0.026
+            category = building_maintenance
+        }
         pp_copper_mine_tin = {
             lumber = 0.03
             tools = 0.02
@@ -103,12 +112,13 @@ localization:
     copper_mine_slot_1: Copper Workings
     copper_mine_slot_2: Ore Sorting
     copper_mine: Copper Mine
-    copper_mine_desc: Shallow pits and short headings follow exposed copper lodes. Ore pickers separate copper stone from waste and recover small lots of silver or tin ore when present.
+    copper_mine_desc: Shallow pits and short headings follow exposed copper lodes. Ore pickers separate copper stone from waste and recover small lots of silver, gold, or tin ore when present.
     pp_copper_mine_base_copper: Copper Outcrop
     pp_copper_mine_no_primary: No Copper Workings
     pp_copper_mine_copper: Hand Copper Workings
     pp_copper_mine_no_secondary: No Secondary Output
     pp_copper_mine_silver: Argentiferous Ore Picking
+    pp_copper_mine_gold: Auriferous Ore Picking
     pp_copper_mine_tin: Cassiterite Lode Picking
 icon:
   source_png: ../assets/icons/copper_mine.png
@@ -139,6 +149,13 @@ evaluation:
         input_throughput: Argentiferous ore picking is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
         output_throughput: Argentiferous ore picking is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
         amortization_months: Argentiferous ore picking is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+    pp_copper_mine_gold:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Auriferous ore picking is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        input_throughput: Auriferous ore picking is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        output_throughput: Auriferous ore picking is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        amortization_months: Auriferous ore picking is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
     pp_copper_mine_tin:
       production_efficiency: 0.75
       allow_rules:

@@ -22,6 +22,7 @@ building:
       methods:
         - pp_lead_mine_bole_no_secondary
         - pp_lead_mine_bole_silver
+        - pp_lead_mine_bole_gold
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -80,6 +81,14 @@ building:
             output = 0.029
             category = building_maintenance
         }
+        pp_lead_mine_bole_gold = {
+            lumber = 0.03
+            tools = 0.02
+            lead = 0.02
+            produced = goods_gold
+            output = 0.026
+            category = building_maintenance
+        }
     }
 
     raw_modifier = {
@@ -94,14 +103,15 @@ localization:
   entries:
     lead_mine_bole_smelting_slot_0: Galena Vein
     lead_mine_bole_smelting_slot_1: Bole-Smelted Workings
-    lead_mine_bole_smelting_slot_2: Silver Recovery
+    lead_mine_bole_smelting_slot_2: Precious Metal Recovery
     lead_mine_bole_smelting: Bole Lead Mine
-    lead_mine_bole_smelting_desc: Wind-fed bole hearths smelt dressed galena on exposed uplands. Better ore handling lets lead works process more mine output.
+    lead_mine_bole_smelting_desc: Wind-fed bole hearths smelt dressed galena on exposed uplands. Better ore handling lets lead works process more mine output and sort minor precious-metal values.
     pp_lead_mine_bole_base_lead: Open Galena Vein
     pp_lead_mine_bole_no_primary: No Bole Smelting
     pp_lead_mine_bole_lead: Bole-Smelted Galena Workings
-    pp_lead_mine_bole_no_secondary: No Silver Recovery
+    pp_lead_mine_bole_no_secondary: No Precious Metal Recovery
     pp_lead_mine_bole_silver: Bole Silver Picking
+    pp_lead_mine_bole_gold: Bole Gold Picking
     bole_smelting: Bole Smelting
     bole_smelting_desc: Wind-fed upland hearths and better galena preparation improve lead smelting at organized lead mines.
 icon:
@@ -132,3 +142,10 @@ evaluation:
         input_throughput: Bole silver picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
         output_throughput: Bole silver picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
         amortization_months: Bole silver picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+    pp_lead_mine_bole_gold:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Bole gold picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        input_throughput: Bole gold picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        output_throughput: Bole gold picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        amortization_months: Bole gold picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.

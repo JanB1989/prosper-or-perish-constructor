@@ -22,6 +22,7 @@ building:
       methods:
         - pp_copper_mine_adit_no_secondary
         - pp_copper_mine_adit_silver
+        - pp_copper_mine_adit_gold
         - pp_copper_mine_adit_tin
   possible_production_methods: []
   body: |2-
@@ -81,6 +82,14 @@ building:
             output = 0.034
             category = building_maintenance
         }
+        pp_copper_mine_adit_gold = {
+            lumber = 0.04
+            tools = 0.03
+            lead = 0.02
+            produced = goods_gold
+            output = 0.027
+            category = building_maintenance
+        }
         pp_copper_mine_adit_tin = {
             lumber = 0.03
             tools = 0.02
@@ -104,12 +113,13 @@ localization:
     copper_mine_adit_slot_1: Adit Workings
     copper_mine_adit_slot_2: Ore Dressing
     copper_mine_adit: Adit Copper Mine
-    copper_mine_adit_desc: Drainage adits, timbered shafts, and dressing floors let miners work copper lodes more regularly. Silver-bearing and tin-bearing stones are sorted where the lode allows.
+    copper_mine_adit_desc: Drainage adits, timbered shafts, and dressing floors let miners work copper lodes more regularly. Silver-bearing, gold-bearing, and tin-bearing stones are sorted where the lode allows.
     pp_copper_mine_adit_base_copper: Surveyed Copper Lode
     pp_copper_mine_adit_no_primary: No Adit Workings
     pp_copper_mine_adit_copper: Adit and Shaft Workings
     pp_copper_mine_adit_no_secondary: No Secondary Output
     pp_copper_mine_adit_silver: Saiger Ore Sorting
+    pp_copper_mine_adit_gold: Auriferous Ore Dressing
     pp_copper_mine_adit_tin: Tin Lode Dressing
     new_currency_demands: Currency Metal Demands
     new_currency_demands_desc: Expanding coinage and artillery demands encourage better ore dressing in copper and tin lode mines.
@@ -140,6 +150,13 @@ evaluation:
         input_throughput: Saiger ore sorting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
         output_throughput: Saiger ore sorting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
         amortization_months: Saiger ore sorting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+    pp_copper_mine_adit_gold:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Auriferous ore dressing is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        input_throughput: Auriferous ore dressing is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        output_throughput: Auriferous ore dressing is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        amortization_months: Auriferous ore dressing is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
     pp_copper_mine_adit_tin:
       production_efficiency: 0.75
       allow_rules:

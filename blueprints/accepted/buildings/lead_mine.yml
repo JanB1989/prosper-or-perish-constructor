@@ -22,6 +22,7 @@ building:
       methods:
         - pp_lead_mine_no_secondary
         - pp_lead_mine_silver
+        - pp_lead_mine_gold
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -79,6 +80,14 @@ building:
             output = 0.033
             category = building_maintenance
         }
+        pp_lead_mine_gold = {
+            lumber = 0.03
+            tools = 0.03
+            lead = 0.02
+            produced = goods_gold
+            output = 0.026
+            category = building_maintenance
+        }
     }
 
     raw_modifier = {
@@ -93,14 +102,15 @@ localization:
   entries:
     lead_mine_slot_0: Galena Vein
     lead_mine_slot_1: Lead Workings
-    lead_mine_slot_2: Silver Recovery
+    lead_mine_slot_2: Precious Metal Recovery
     lead_mine: Lead Mine
-    lead_mine_desc: Shallow headings and open cuts work galena veins for lead ore. The ore is broken, washed, and sorted near the mine, with silver-bearing pieces picked out when found.
+    lead_mine_desc: Shallow headings and open cuts work galena veins for lead ore. The ore is broken, washed, and sorted near the mine, with silver- and gold-bearing pieces picked out when found.
     pp_lead_mine_base_lead: Exposed Galena Vein
     pp_lead_mine_no_primary: No Lead Mining
     pp_lead_mine_lead: Galena Vein Workings
-    pp_lead_mine_no_secondary: No Silver Recovery
+    pp_lead_mine_no_secondary: No Precious Metal Recovery
     pp_lead_mine_silver: Silver-Galena Picking
+    pp_lead_mine_gold: Auriferous Galena Picking
 icon:
   source_png: ../assets/icons/lead_mine.png
   output_dds: lead_mine.dds
@@ -131,3 +141,10 @@ evaluation:
         input_throughput: Silver-galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
         output_throughput: Silver-galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
         amortization_months: Silver-galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+    pp_lead_mine_gold:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Auriferous galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        input_throughput: Auriferous galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        output_throughput: Auriferous galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        amortization_months: Auriferous galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.

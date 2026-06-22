@@ -22,6 +22,7 @@ building:
       methods:
         - pp_silver_mine_improved_no_secondary
         - pp_silver_mine_improved_lead
+        - pp_silver_mine_improved_gold
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -79,6 +80,13 @@ building:
             output = 0.102
             category = building_maintenance
         }
+        pp_silver_mine_improved_gold = {
+            lumber = 0.04
+            tools = 0.04
+            produced = goods_gold
+            output = 0.027
+            category = building_maintenance
+        }
     }
 
     raw_modifier = {
@@ -93,14 +101,15 @@ localization:
   entries:
     silver_mine_improved_slot_0: Silver Vein
     silver_mine_improved_slot_1: Saiger Workings
-    silver_mine_improved_slot_2: Galena Recovery
+    silver_mine_improved_slot_2: Associated Ore Recovery
     silver_mine_improved: Saiger Silver Mine
-    silver_mine_improved_desc: Better timbering and ore dressing prepare silver-lead ores for saiger and cupellation work. Dressed galena remains a useful secondary recovery.
+    silver_mine_improved_desc: Better timbering and ore dressing prepare silver-lead ores for saiger and cupellation work. Dressed galena and auriferous pieces remain useful secondary recoveries.
     pp_silver_mine_improved_base_silver: Surveyed Silver Vein
     pp_silver_mine_improved_no_primary: No Saiger Workings
     pp_silver_mine_improved_silver: Saiger Ore Workings
-    pp_silver_mine_improved_no_secondary: No Galena Recovery
+    pp_silver_mine_improved_no_secondary: No Associated Recovery
     pp_silver_mine_improved_lead: Galena Ore Dressing
+    pp_silver_mine_improved_gold: Auriferous Ore Dressing
     saiger_process_discovery: Refined Saiger Process
     saiger_process_discovery_desc: Improved dressing, liquation, and cupellation separate silver from lead-rich ores more reliably.
 icon:
@@ -130,3 +139,10 @@ evaluation:
         input_throughput: Galena ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
         output_throughput: Galena ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
         amortization_months: Galena ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+    pp_silver_mine_improved_gold:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Auriferous ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+        input_throughput: Auriferous ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+        output_throughput: Auriferous ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+        amortization_months: Auriferous ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.

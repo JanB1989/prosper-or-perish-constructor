@@ -56,6 +56,14 @@ unique_production_methods = {
         output = 0.034
         category = building_maintenance
     }
+    pp_copper_mine_adit_gold = {
+        lumber = 0.04
+        tools = 0.03
+        lead = 0.02
+        produced = goods_gold
+        output = 0.027
+        category = building_maintenance
+    }
     pp_copper_mine_adit_tin = {
         lumber = 0.03
         tools = 0.02

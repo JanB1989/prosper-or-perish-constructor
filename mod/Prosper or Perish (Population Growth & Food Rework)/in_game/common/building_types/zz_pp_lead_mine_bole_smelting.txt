@@ -56,6 +56,14 @@ unique_production_methods = {
         output = 0.029
         category = building_maintenance
     }
+    pp_lead_mine_bole_gold = {
+        lumber = 0.03
+        tools = 0.02
+        lead = 0.02
+        produced = goods_gold
+        output = 0.026
+        category = building_maintenance
+    }
 }
 
 raw_modifier = {

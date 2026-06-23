@@ -1085,6 +1085,7 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         compile_free_building_level_modifiers,
         local_free_building_levels_sheet_csv_path,
     )
+    from prosper_or_perish_constructor.rgo_cost_redirects import write_rgo_cost_redirects
 
     mod_root = _project_mod_root(repo, project)
     if local_free_building_levels_sheet_csv_path(repo).is_file():
@@ -1093,6 +1094,21 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     _apply_location_modifier_aliases(mod_root)
     _remove_location_potential_map_helpers(mod_root)
     _ensure_farming_capacity_raw_modifier_bridges(repo, mod_root)
+    load_order_path = repo / CONSTRUCTOR_LOAD_ORDER
+    if load_order_path.is_file():
+        redirect_result = write_rgo_cost_redirects(
+            repo=repo,
+            mod_root=mod_root,
+            load_order_path=load_order_path,
+            profile_name=CONSTRUCTOR_PROFILE,
+        )
+        print(
+            "Generated RGO cost redirects for "
+            f"{len(redirect_result.assignments)} active expand_rgo cost entries, "
+            f"{len(redirect_result.classification.priced_targets)} priced building targets, "
+            f"and {len(redirect_result.classification.unpriced_buildings)} unpriced classified buildings.",
+            flush=True,
+        )
     _ensure_price_cost_modifier_assets(mod_root)
     _ensure_constructor_text_boms(mod_root)
     _inject_location_potential_localization(mod_root)

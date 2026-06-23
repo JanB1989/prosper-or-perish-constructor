@@ -51,6 +51,15 @@ def test_update_audit_reports_referenced_and_patched_vanilla_changes(tmp_path: P
         rows_by_key["main_menu/static_modifiers/cross_scope_static"]["mod_sources"]
         == "mod/test-mod/in_game/common/static_modifiers/pp_static.txt:1 [patch_target; TRY_INJECT]"
     )
+    assert rows_by_key["in_game/advances/rgo_cost_source"]["status"] == "changed"
+    assert "patch_target" in rows_by_key["in_game/advances/rgo_cost_source"]["reference_kinds"]
+    assert (
+        "mod/test-mod/in_game/common/advances/pp_rgo_building_cost_redirects.txt:"
+        in rows_by_key["in_game/advances/rgo_cost_source"]["mod_sources"]
+    )
+    assert "[patch_target; TRY_INJECT]" in rows_by_key["in_game/advances/rgo_cost_source"][
+        "mod_sources"
+    ]
     assert "in_game/static_modifiers/cross_scope_static" not in rows_by_key
 
     assert "in_game/goods/localization_only_good" not in rows_by_key
@@ -208,6 +217,13 @@ cross_scope_static = {
 }
 """,
     )
+    _write(
+        vanilla / "game" / "in_game" / "common" / "advances" / "00_advances.txt",
+        """rgo_cost_source = {
+	expand_rgo_farming_cost_modifier = -0.10
+}
+""",
+    )
     _git(vanilla, "add", "-A")
     _git(vanilla, "commit", "-m", "old")
     _git(vanilla, "tag", "eu5-old")
@@ -285,6 +301,13 @@ test_events.2 = {
 """,
     )
     _write(
+        vanilla / "game" / "in_game" / "common" / "advances" / "00_advances.txt",
+        """rgo_cost_source = {
+	expand_rgo_farming_cost_modifier = -0.05
+}
+""",
+    )
+    _write(
         vanilla / "game" / "in_game" / "events" / "DHE" / "unreferenced_event_file.txt",
         """unreferenced_events.1 = {
 	type = country_event
@@ -330,6 +353,15 @@ plain_override = {
         mod_root / "in_game" / "common" / "static_modifiers" / "pp_static.txt",
         """TRY_INJECT:cross_scope_static = {
 	value = 1
+}
+""",
+    )
+    _write(
+        mod_root / "in_game" / "common" / "advances" / "pp_rgo_building_cost_redirects.txt",
+        """# Objective: redirect vanilla RGO expansion cost efficiency into Prosper or Perish raw-material building construction cost efficiency while neutralizing the original RGO expansion cost modifier.
+TRY_INJECT:rgo_cost_source = {
+	expand_rgo_farming_cost_modifier = 0.10
+	pp_irrigation_systems_price_cost_modifier = -0.10
 }
 """,
     )

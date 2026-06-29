@@ -49,12 +49,12 @@ unique_production_methods = {
     }
     pp_nursery_orchard_nursery_rows = {
         produced = fruit
-        output = 0.45
-        fiber_crops = 0.085 # osier baskets, graft ties, harvest mats
-        pottery = 0.045 # earthen nursery pots and storage crocks
-        beeswax = 0.016 # grafting wax and wound dressing
-        tools = 0.024 # pruning and grafting knives
-        furniture = 0.018 # sorting racks and apple-loft boards
+        output = 0.55
+        fiber_crops = 0.095 # osier baskets, graft ties, harvest mats
+        pottery = 0.050 # earthen nursery pots and storage crocks
+        beeswax = 0.018 # grafting wax and wound dressing
+        tools = 0.030 # pruning and grafting knives
+        furniture = 0.022 # sorting racks and apple-loft boards
         debug_max_profit = 0
         category = building_maintenance
     }

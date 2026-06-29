@@ -53,20 +53,21 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_offshore_fishery_distant_water_schooners = {
-        naval_supplies = 0.236 # rigging stores
-        victuals = 0.128 # fleet provisions
-        salt = 0.043 # catch curing
+        naval_supplies = 0.270 # rigging stores
+        victuals = 0.150 # fleet provisions
+        salt = 0.050 # catch curing
+        tools = 0.020 # deck gear and repairs
         produced = fish
-        output = 1.340
+        output = 1.55
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_offshore_fishery_steam_trawlers = {
-        naval_supplies = 0.191 # trawl gear
-        coal = 0.157 # steam fuel
-        tools = 0.118 # winches, repairs
+        naval_supplies = 0.225 # trawl gear
+        coal = 0.210 # steam fuel
+        tools = 0.155 # winches, repairs
         produced = fish
-        output = 1.35
+        output = 1.80
         debug_max_profit = 0
         category = building_maintenance
     }

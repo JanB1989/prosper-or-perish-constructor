@@ -1,8 +1,8 @@
 ﻿# >>> eu5-building-pipeline:husbandry_farmstead:advancement
 pp_manuring_and_seed_stores = {
 icon = husbandry_farmstead
-age = age_2_renaissance
-requires = food_advance_renaissance
+age = age_3_discovery
+requires = rgo_size_advance_discovery
 unlock_building = husbandry_farmstead
 ai_weight = { add = 125 }
 }

@@ -80,20 +80,21 @@ building:
             category = building_maintenance
         }
         pp_offshore_fishery_distant_water_schooners = {
-            naval_supplies = 0.236 # rigging stores
-            victuals = 0.128 # fleet provisions
-            salt = 0.043 # catch curing
+            naval_supplies = 0.270 # rigging stores
+            victuals = 0.150 # fleet provisions
+            salt = 0.050 # catch curing
+            tools = 0.020 # deck gear and repairs
             produced = fish
-            output = 1.340
+            output = 1.55
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_offshore_fishery_steam_trawlers = {
-            naval_supplies = 0.191 # trawl gear
-            coal = 0.157 # steam fuel
-            tools = 0.118 # winches, repairs
+            naval_supplies = 0.225 # trawl gear
+            coal = 0.210 # steam fuel
+            tools = 0.155 # winches, repairs
             produced = fish
-            output = 1.35
+            output = 1.80
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -143,7 +144,7 @@ icon:
 evaluation:
   bands:
     output_gold_per_1k:
-      max: 1.42
+      max: 1.90
     amortization_months:
       max: 900
   production_methods:
@@ -157,15 +158,16 @@ evaluation:
       production_efficiency: 1.15
       allow_rules:
         input_throughput: Herring busses keep a lower gear profile after repeated fish-output tuning, with most salt demand shifted into hull and net inputs.
+        output_throughput: Herring busses are now the age 4 offshore entry tier and intentionally stay below later schooners and steam trawlers.
     pp_offshore_fishery_distant_water_schooners:
       production_efficiency: 1.05
       allow_rules:
-        amortization_months: Output-only offshore fish tuning intentionally allows slower schooner payback while keeping inputs and unlock timing stable.
+        amortization_months: Age 5 schooners use heavier fleet stores and may repay slowly while staying below the steam trawler tier.
     pp_offshore_fishery_steam_trawlers:
       production_efficiency: 1.05
       allow_rules:
-        input_throughput: Steam trawlers keep a lower post-rebalance input profile while preserving their pre-steel-tool design.
-        output_throughput: Late-game offshore fish output is intentionally capped below the generic laborer throughput target.
+        input_throughput: Steam trawlers keep a pre-steel-tool input profile while becoming the clear late offshore fishing tier.
+        output_throughput: Late-game offshore fish output is capped below generic laborer throughput while staying above schooners.
     pp_offshore_fishery_worker_victuals:
       production_efficiency: 1.00
       allow_rules:

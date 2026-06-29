@@ -3,8 +3,6 @@ pp_rice_farm_advance_game_start = {
     age = age_1_traditions
     unlock_production_method = pp_rice_farm_base_rice
     unlock_production_method = pp_rice_farm_maintenance
-    unlock_production_method = pp_husbandry_farmstead_base_rice
-    unlock_production_method = pp_husbandry_farmstead_rice
     requires = agriculture_advance
     ai_weight = { add = 50 }
     potential = {
@@ -33,8 +31,6 @@ pp_rice_farm_advance_general = {
     age = age_3_discovery
     unlock_production_method = pp_rice_farm_base_rice
     unlock_production_method = pp_rice_farm_maintenance
-    unlock_production_method = pp_husbandry_farmstead_base_rice
-    unlock_production_method = pp_husbandry_farmstead_rice
     requires = new_world_advance
     ai_weight = { add = 50 }
     potential = {

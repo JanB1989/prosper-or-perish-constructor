@@ -702,18 +702,22 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
     assert not re.search(r"^\s*obsolete\s*=\s*net_curing_yard\s*$", drift_body, flags=re.M)
     assert re.search(r"location_potential\s*=\s*\{\s*is_coastal\s*=\s*yes\s*\}", drift_body)
     drift_block = _advance_block("pp_coastal_drift_nets", advances)
-    assert re.search(r"^\s*age\s*=\s*age_2_renaissance\s*$", drift_block, flags=re.M)
-    assert re.search(r"^\s*requires\s*=\s*food_advance_renaissance\s*$", drift_block, flags=re.M)
+    assert re.search(r"^\s*age\s*=\s*age_3_discovery\s*$", drift_block, flags=re.M)
+    assert re.search(r"^\s*requires\s*=\s*maritime_advance_age_3\s*$", drift_block, flags=re.M)
 
     offshore_body = _load_blueprint("offshore_fishery")["building"]["body"]
     assert re.search(r"^\s*obsolete\s*=\s*drift_net_fishery\s*$", offshore_body, flags=re.M)
     assert re.search(r"location_potential\s*=\s*\{\s*is_coastal\s*=\s*yes\s*\}", offshore_body)
 
     herring_block = _advance_block("pp_herring_buss", advances)
+    assert re.search(r"^\s*age\s*=\s*age_4_reformation\s*$", herring_block, flags=re.M)
+    assert re.search(r"^\s*requires\s*=\s*maritime_advance_age_4\s*$", herring_block, flags=re.M)
     assert re.search(r"^\s*unlock_building\s*=\s*offshore_fishery\s*$", herring_block, flags=re.M)
     assert "potential =" not in herring_block
 
     distant_water_block = _advance_block("pp_distant_water_fishing", advances)
+    assert re.search(r"^\s*age\s*=\s*age_5_absolutism\s*$", distant_water_block, flags=re.M)
+    assert re.search(r"^\s*requires\s*=\s*maritime_advance_age_5\s*$", distant_water_block, flags=re.M)
     assert re.search(
         r"^\s*unlock_production_method\s*=\s*pp_offshore_fishery_distant_water_schooners\s*$",
         distant_water_block,
@@ -722,6 +726,8 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
     assert "potential =" not in distant_water_block
 
     steam_block = _advance_block("pp_steam_trawling", advances)
+    assert re.search(r"^\s*age\s*=\s*age_6_revolutions\s*$", steam_block, flags=re.M)
+    assert re.search(r"^\s*requires\s*=\s*rotherham_plough\s*$", steam_block, flags=re.M)
     assert re.search(
         r"^\s*unlock_production_method\s*=\s*pp_offshore_fishery_steam_trawlers\s*$",
         steam_block,
@@ -749,8 +755,8 @@ def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> Non
     body = raw["building"]["body"]
     expected_outputs = {
         "pp_offshore_fishery_herring_busses": "1.185",
-        "pp_offshore_fishery_distant_water_schooners": "1.340",
-        "pp_offshore_fishery_steam_trawlers": "1.35",
+        "pp_offshore_fishery_distant_water_schooners": "1.55",
+        "pp_offshore_fishery_steam_trawlers": "1.80",
     }
 
     for method, output in expected_outputs.items():
@@ -766,7 +772,7 @@ def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> Non
         flags=re.S,
     )
     assert raw["evaluation"]["bands"] == {
-        "output_gold_per_1k": {"max": 1.42},
+        "output_gold_per_1k": {"max": 1.90},
         "amortization_months": {"max": 900},
     }
 

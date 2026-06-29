@@ -36,17 +36,18 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_offshore_fishery_herring_busses = {
-        lumber = 0.325 # buss hulls
-        fiber_crops = 0.209 # drift nets
+        lumber = 0.315 # buss hulls
+        fiber_crops = 0.194 # drift nets
+        cloth = 0.015 # small sails and net patches
         salt = 0.042 # barrel curing
         produced = fish
-        output = 1.133
+        output = 1.185
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_offshore_fishery_distant_water_schooners = {
-        naval_supplies = 0.266 # rigging stores
-        victuals = 0.143 # fleet provisions
+        naval_supplies = 0.236 # rigging stores
+        victuals = 0.128 # fleet provisions
         salt = 0.043 # catch curing
         produced = fish
         output = 1.340
@@ -58,7 +59,7 @@ unique_production_methods = {
         coal = 0.157 # steam fuel
         tools = 0.118 # winches, repairs
         produced = fish
-        output = 1.32
+        output = 1.35
         debug_max_profit = 0
         category = building_maintenance
     }

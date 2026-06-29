@@ -747,9 +747,9 @@ def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> Non
     raw = _load_blueprint("offshore_fishery")
     body = raw["building"]["body"]
     expected_outputs = {
-        "pp_offshore_fishery_herring_busses": "1.133",
+        "pp_offshore_fishery_herring_busses": "1.185",
         "pp_offshore_fishery_distant_water_schooners": "1.340",
-        "pp_offshore_fishery_steam_trawlers": "1.32",
+        "pp_offshore_fishery_steam_trawlers": "1.35",
     }
 
     for method, output in expected_outputs.items():
@@ -759,6 +759,11 @@ def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> Non
             flags=re.S,
         )
 
+    assert re.search(
+        r"pp_offshore_fishery_herring_busses\s*=\s*\{.*?\bcloth\s*=\s*0\.015\b",
+        body,
+        flags=re.S,
+    )
     assert raw["evaluation"]["bands"] == {
         "output_gold_per_1k": {"max": 1.42},
         "amortization_months": {"max": 900},

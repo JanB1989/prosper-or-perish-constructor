@@ -78,7 +78,6 @@ MARKET_FOOD_PRICE_EXTREME_ON_ACTION = (
 MARKET_FOOD_PRICE_EXTREMES = (
     MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_market_food_price_extremes.txt"
 )
-MARKET_FOOD_DEBUG_EVENT = MOD_ROOT / "in_game" / "events" / "debug" / "pp_market_food_debug.txt"
 CAPACITY_CULLING_DEBUG_EVENT = (
     MOD_ROOT / "in_game" / "events" / "debug" / "pp_capacity_culling_debug.txt"
 )
@@ -121,39 +120,55 @@ FARMING_VILLAGE_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "farming_village.yml"
 MODEL_FARM_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "model_farm.yml"
 LAND_FARM_BUILDINGS = (
     "farming_village",
+    "husbandry_farmstead",
     "farming_village_rotations",
     "model_farm",
     "fruit_orchard",
+    "nursery_orchard",
     "pomological_orchard",
     "sheep_farms",
+    "hurdled_sheepcotes",
     "enclosed_sheep_walks",
     "horse_breeders",
+    "stud_farm",
     "elephant_kraal",
     "fiber_crops_farm",
+    "fiber_dressing_yard",
     "cotton_plantation",
     "cotton_farm",
+    "market_cotton_farm",
     "sugar_plantation",
     "sugarcane_farm",
+    "trapiche_sugarcane_farm",
     "tobacco_plantation",
     "tobacco_farm",
+    "market_tobacco_farm",
     "dye_plantation",
     "chili_plantation",
     "clove_grove",
     "cocoa_grove",
+    "managed_cocoa_grove",
     "coffee_grove",
+    "terraced_coffee_grove",
     "incense_grove",
     "pepper_garden",
+    "managed_pepper_garden",
     "saffron_croft",
+    "saffron_kiln_croft",
     "sericulture_farm",
+    "regulated_sericulture_farm",
     "simplers_grove",
     "tea_garden",
+    "tea_sorting_garden",
     "vineyard_estate",
 )
 LAND_FARM_BLUEPRINTS = tuple(BUILDING_BLUEPRINT_ROOT / f"{key}.yml" for key in LAND_FARM_BUILDINGS)
 FARM_CAPACITY_MAX_VALUES = tuple(f"farm_capacity_max_{key}" for key in LAND_FARM_BUILDINGS)
 FISH_CAP_BUILDINGS = (
     "fishing_village",
+    "net_curing_yard",
     "ocean_fishery",
+    "drift_net_fishery",
     "offshore_fishery",
 )
 FOREST_CAP_BUILDINGS = (
@@ -176,7 +191,9 @@ EXCLUDED_FARM_CAP_BUILDINGS = (
     "putrefaction_mill",
     "putrefaction_works",
     "fishing_village",
+    "net_curing_yard",
     "ocean_fishery",
+    "drift_net_fishery",
     "offshore_fishery",
     "pearl_fishery",
     "forest_village",
@@ -230,16 +247,21 @@ FOOD_SECURITY_PRIORITY_GROUPS = {
         ),
         (
             "farming_village",
+            "husbandry_farmstead",
             "farming_village_rotations",
             "model_farm",
             "fishing_village",
+            "net_curing_yard",
             "ocean_fishery",
+            "drift_net_fishery",
             "offshore_fishery",
             "fruit_orchard",
+            "nursery_orchard",
             "pomological_orchard",
             "forest_village",
             "managed_forest_village",
             "sheep_farms",
+            "hurdled_sheepcotes",
             "enclosed_sheep_walks",
         ),
     ),
@@ -790,7 +812,7 @@ def test_building_capacity_tooltip_paths_do_not_use_obsolete_helpers() -> None:
     for max_value in FOREST_CAPACITY_MAX_VALUES:
         assert "value = forest_capacity" not in _script_value_block(forest_text, max_value)
 
-    for building in ("fishing_village", "ocean_fishery", "offshore_fishery"):
+    for building in FISH_CAP_BUILDINGS:
         assert f'value = "location_building_level(building_type:{building})"' in capacity_blocks[
             "fish_capacity"
         ]
@@ -1259,11 +1281,14 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
 def test_broad_farm_capacity_buildings_have_static_location_potential_gates() -> None:
     horse_breeders = (BUILDING_BLUEPRINT_ROOT / "horse_breeders.yml").read_text(encoding="utf-8-sig")
     horse_potential = _text_block_between(horse_breeders, "location_potential = {", "\n\n    unique_production_methods = {")
+    stud_farm = (BUILDING_BLUEPRINT_ROOT / "stud_farm.yml").read_text(encoding="utf-8-sig")
+    stud_potential = _text_block_between(stud_farm, "location_potential = {", "\n\n    unique_production_methods = {")
     compatibility = (
         MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_startup_building_compatibility.txt"
     ).read_text(encoding="utf-8-sig")
 
     assert "pp_horse_breeders_location_potential = yes" in horse_potential
+    assert "pp_horse_breeders_location_potential = yes" in stud_potential
     assert "market = {\n\t\t\tis_produced_in_market = goods:horses" in compatibility
     for snippet in (
         "raw_material = goods:wool",
@@ -1275,6 +1300,7 @@ def test_broad_farm_capacity_buildings_have_static_location_potential_gates() ->
     ):
         assert snippet in compatibility
     assert "farm_capacity > 0" not in horse_breeders
+    assert "farm_capacity > 0" not in stud_farm
     _, horse_trigger = compatibility.split("pp_horse_breeders_location_potential = {", 1)
     assert "climate =" not in horse_trigger
     assert "climate =" not in horse_breeders
@@ -1540,6 +1566,8 @@ def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
         "pomological_orchard": "pp_fruit_orchard_location_potential",
         "sheep_farms": "pp_pasture_friendly_location_potential",
         "enclosed_sheep_walks": "pp_pasture_friendly_location_potential",
+        "horse_breeders": "pp_horse_breeders_location_potential",
+        "stud_farm": "pp_horse_breeders_location_potential",
     }
 
     for building, gate in gates.items():
@@ -2064,6 +2092,8 @@ def test_building_capacity_europedia_explains_capacity_pools_and_rural_cap() -> 
         "development",
         "ShowBuildingTypeName('farming_village')",
         "ShowBuildingTypeName('fishing_village')",
+        "ShowBuildingTypeName('net_curing_yard')",
+        "ShowBuildingTypeName('drift_net_fishery')",
         "ShowBuildingTypeName('forest_village')",
         "mines, quarries, saltworks, pearl fisheries, charcoal makers, ivory hunting camps",
     )
@@ -2238,7 +2268,7 @@ def test_capacity_culling_debug_event_runs_same_global_four_year_action() -> Non
     ) in localization
 
 
-def test_monthly_market_food_stockpile_topup_is_global_and_debuggable() -> None:
+def test_monthly_market_food_stockpile_topup_is_defined_but_weather_hook_is_disabled() -> None:
     pulse_entries = {entry.key: entry.value for entry in parse_file(COUNTRY_YEARLY).entries}
     assert "yearly_country_pulse" in pulse_entries
 
@@ -2255,17 +2285,22 @@ def test_monthly_market_food_stockpile_topup_is_global_and_debuggable() -> None:
     assert "weather_monthly_pulse" in global_pulse_entries
     global_pulse = global_pulse_entries["weather_monthly_pulse"]
     assert isinstance(global_pulse, CList)
-    global_effect = _entry_values(global_pulse)["effect"]
+    global_on_actions = _entry_values(global_pulse)["on_actions"]
+    assert isinstance(global_on_actions, CList)
+    assert global_on_actions.items == ["pp_monthly_market_food_stockpile_topup_on_weather_pulse"]
+    assert "effect" not in _entry_values(global_pulse)
+
+    global_effect_action = global_pulse_entries["pp_monthly_market_food_stockpile_topup_on_weather_pulse"]
+    assert isinstance(global_effect_action, CList)
+    global_effect = _entry_values(global_effect_action)["effect"]
     assert isinstance(global_effect, CList)
-    assert _entry_values(global_effect)["pp_monthly_market_food_stockpile_topup"] is True
+    assert "pp_monthly_market_food_stockpile_topup" not in _entry_values(global_effect)
 
     text = MARKET_FOOD_PRICE_EXTREMES.read_text(encoding="utf-8-sig")
     entries = {entry.key: entry.value for entry in parse_file(MARKET_FOOD_PRICE_EXTREMES).entries}
-    debug_event_text = MARKET_FOOD_DEBUG_EVENT.read_text(encoding="utf-8-sig")
 
     assert "pp_monthly_market_food_stockpile_topup" in entries
     assert "pp_add_market_center_province_food_from_market_max" in entries
-    assert "pp_debug_probe_market_food_price_extreme_lever" in entries
 
     assert "has_global_variable = pp_market_food_price_extreme_checked" not in text
     assert "name = pp_market_food_price_extreme_checked" not in text
@@ -2279,18 +2314,10 @@ def test_monthly_market_food_stockpile_topup_is_global_and_debuggable() -> None:
     assert "location = {" in text
     assert "province = {" in text
     assert "change_province_food" in text
-    assert "pp_market_food_stockpile_topup_applied" in text
-    assert "debug_log = pp_debug_market_food_price_probe_before" in text
-    assert "debug_log = pp_debug_market_food_price_probe_after" in text
+    assert "debug_log" not in text
     assert "add_goods_supply" not in text
     assert "victuals" not in text
     assert "target_price" not in text
-
-    assert "type = location_event" in debug_event_text
-    assert "type = country_event" not in debug_event_text
-    assert "pp_monthly_market_food_stockpile_topup = yes" in debug_event_text
-    assert "every_market_in_world" not in debug_event_text
-    assert "change_province_food = 100000" not in debug_event_text
 
 
 def test_capacity_culling_v2_calls_helper_for_each_capacity_building() -> None:
@@ -2616,7 +2643,7 @@ def test_cookery_building_line_has_resolved_prices() -> None:
 
 def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -> None:
     scoped_blueprints = _normalized_production_site_blueprints()
-    assert len(scoped_blueprints) == 83
+    assert len(scoped_blueprints) == 99
 
     for building, blueprint in scoped_blueprints:
         blueprint_values = _accepted_blueprint_building_values_from_path(blueprint)

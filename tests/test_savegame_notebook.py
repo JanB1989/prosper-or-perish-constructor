@@ -1,0 +1,207 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+import polars as pl
+import pytest
+from PIL import Image
+
+from prosper_or_perish_constructor import savegame_notebook
+
+
+class FakePriceData:
+    playthrough = "run_1"
+
+    def __init__(self) -> None:
+        self.snapshots = pl.DataFrame(
+            [
+                _snapshot("s1", 1337, 1, 1),
+                _snapshot("s2", 1338, 1, 1),
+                _snapshot("s3", 1339, 1, 1),
+            ]
+        )
+        self._market_food = pl.DataFrame(
+            [
+                _food_row("s1", 1337, 1, 1, 1, 1.0, 5.0, 10.0),
+                _food_row("s2", 1338, 1, 1, 1, 3.0, 4.0, 10.0),
+                _food_row("s3", 1339, 1, 1, 1, 5.0, 3.0, 10.0),
+                _food_row("s1", 1337, 1, 1, 2, 2.0, 9.0, 10.0),
+                _food_row("s2", 1338, 1, 1, 2, 2.0, 9.0, 10.0),
+                _food_row("s3", 1339, 1, 1, 2, 2.0, 9.0, 10.0),
+                _food_row("other", 1339, 1, 1, 1, 99.0, 1.0, 10.0, playthrough="other"),
+            ]
+        )
+        self._markets = pl.DataFrame(
+            [
+                {"market_id": 1, "market_label": "Alpha Market"},
+                {"market_id": 2, "market_label": "Beta Market"},
+            ]
+        )
+
+    def table(self, name: str) -> pl.DataFrame:
+        if name == "market_food":
+            return self._market_food
+        return pl.DataFrame()
+
+    def dim(self, name: str) -> pl.DataFrame:
+        if name == "markets":
+            return self._markets
+        return pl.DataFrame()
+
+
+class FakeMarketCodePriceData:
+    playthrough = "run_1"
+
+    def __init__(self) -> None:
+        self.snapshots = pl.DataFrame(
+            [
+                _snapshot("s1", 1337, 1, 1),
+                _snapshot("s2", 1338, 1, 1),
+                _snapshot("s3", 1339, 1, 1),
+            ]
+        )
+        self._market_food = pl.DataFrame(
+            [
+                _food_code_row("s1", 1337, 1, 1, 10, 1.0, 5.0, 10.0),
+                _food_code_row("s2", 1338, 1, 1, 10, 3.0, 4.0, 10.0),
+                _food_code_row("s3", 1339, 1, 1, 10, 5.0, 3.0, 10.0),
+                _food_code_row("s1", 1337, 1, 1, 20, 2.0, 9.0, 10.0),
+                _food_code_row("s2", 1338, 1, 1, 20, 2.0, 9.0, 10.0),
+                _food_code_row("s3", 1339, 1, 1, 20, 2.0, 9.0, 10.0),
+            ]
+        )
+        self._markets = pl.DataFrame(
+            [
+                {"market_code": 10, "market_id": 101, "market_label": "Alpha Market"},
+                {"market_code": 20, "market_id": 202, "market_label": "Beta Market"},
+            ]
+        )
+
+    def table(self, name: str) -> pl.DataFrame:
+        if name == "market_food":
+            return self._market_food
+        return pl.DataFrame()
+
+    def dim(self, name: str) -> pl.DataFrame:
+        if name == "markets":
+            return self._markets
+        return pl.DataFrame()
+
+
+def test_food_price_volatility_stats_rank_erratic_markets() -> None:
+    result = savegame_notebook.food_price_volatility(FakePriceData(), top_n=1)
+
+    assert result.top_erratic["market_label"].to_list() == ["Alpha Market"]
+    alpha = result.stats.filter(pl.col("market_label") == "Alpha Market").to_dicts()[0]
+    beta = result.stats.filter(pl.col("market_label") == "Beta Market").to_dicts()[0]
+
+    assert alpha["snapshots"] == 3
+    assert alpha["mean_food_price"] == pytest.approx(3.0)
+    assert alpha["median_food_price"] == pytest.approx(3.0)
+    assert alpha["stddev_food_price"] == pytest.approx((8.0 / 3.0) ** 0.5)
+    assert alpha["min_food_price"] == pytest.approx(1.0)
+    assert alpha["max_food_price"] == pytest.approx(5.0)
+    assert alpha["price_range"] == pytest.approx(4.0)
+    assert alpha["mean_abs_price_change"] == pytest.approx(2.0)
+    assert alpha["max_abs_price_change"] == pytest.approx(2.0)
+    assert beta["stddev_food_price"] == pytest.approx(0.0)
+
+    first_global = result.global_distribution.sort("date_sort").to_dicts()[0]
+    assert first_global["mean_food_price"] == pytest.approx(1.5)
+    assert first_global["median_food_price"] == pytest.approx(1.5)
+    assert first_global["stddev_food_price"] == pytest.approx(0.5)
+
+
+def test_food_price_volatility_preserves_market_identity_from_market_code() -> None:
+    result = savegame_notebook.food_price_volatility(FakeMarketCodePriceData(), top_n=1)
+
+    assert result.top_erratic["market_label"].to_list() == ["Alpha Market"]
+    alpha = result.stats.filter(pl.col("market_label") == "Alpha Market").to_dicts()[0]
+    beta = result.stats.filter(pl.col("market_label") == "Beta Market").to_dicts()[0]
+
+    assert alpha["market_id"] == 101
+    assert alpha["snapshots"] == 3
+    assert alpha["stddev_food_price"] == pytest.approx((8.0 / 3.0) ** 0.5)
+    assert beta["market_id"] == 202
+    assert beta["snapshots"] == 3
+    assert beta["stddev_food_price"] == pytest.approx(0.0)
+
+
+def test_food_price_volatility_can_filter_one_market() -> None:
+    result = savegame_notebook.food_price_volatility(FakePriceData(), market_search="alpha")
+
+    assert result.stats["market_label"].to_list() == ["Alpha Market"]
+    assert result.market_time_series["market_label"].unique().to_list() == ["Alpha Market"]
+
+
+def test_save_food_price_volatility_webp_writes_static_webp(tmp_path: Path) -> None:
+    result = savegame_notebook.food_price_volatility(FakePriceData(), top_n=2)
+
+    export = savegame_notebook.save_food_price_volatility_webp(
+        result,
+        path=tmp_path / "food_price_volatility.webp",
+        width=640,
+    )
+
+    assert export is not None
+    assert export.path.is_file()
+    assert export.format == "webp"
+    assert export.width == 640
+    with Image.open(export.path) as image:
+        assert image.format == "WEBP"
+        assert image.width == 640
+
+
+def _snapshot(snapshot_id: str, year: int, month: int, day: int) -> dict[str, object]:
+    return {
+        "snapshot_id": snapshot_id,
+        "playthrough_id": "run_1",
+        "date": f"{year}.{month}.{day}",
+        "year": year,
+        "month": month,
+        "day": day,
+        "date_sort": year * 10000 + month * 100 + day,
+    }
+
+
+def _food_row(
+    snapshot_id: str,
+    year: int,
+    month: int,
+    day: int,
+    market_id: int,
+    food_price: float,
+    food: float,
+    food_max: float,
+    *,
+    playthrough: str = "run_1",
+) -> dict[str, object]:
+    return {
+        "snapshot_id": snapshot_id,
+        "playthrough_id": playthrough,
+        "date": f"{year}.{month}.{day}",
+        "year": year,
+        "month": month,
+        "day": day,
+        "date_sort": year * 10000 + month * 100 + day,
+        "market_id": market_id,
+        "food_price": food_price,
+        "food": food,
+        "food_max": food_max,
+        "food_balance": food - food_max,
+    }
+
+
+def _food_code_row(
+    snapshot_id: str,
+    year: int,
+    month: int,
+    day: int,
+    market_code: int,
+    food_price: float,
+    food: float,
+    food_max: float,
+) -> dict[str, object]:
+    row = _food_row(snapshot_id, year, month, day, market_code, food_price, food, food_max)
+    row["market_code"] = row.pop("market_id")
+    return row

@@ -137,18 +137,18 @@ FARMING_CAPACITY_MODIFIER_LOCALIZATION = Path(
 FOOD_REVENUE_MODIFIER_KEY = "local_food_revenue_output_modifier"
 FOOD_REVENUE_PRICE_SCENARIO_SCALE = 0.25
 FOOD_REVENUE_PRICE_CAP_SCALE = 0.5
-FOOD_REVENUE_CHEAP_CAP_TARGET = -0.562
-FOOD_REVENUE_EXPENSIVE_CAP_TARGET = 0.155
-FOOD_REVENUE_STARVING_TARGET = 0.1
-FOOD_REVENUE_TOTAL_MODIFIER_MIN = -0.5
-FOOD_REVENUE_TOTAL_MODIFIER_MAX = 0.5
+FOOD_REVENUE_CHEAP_CAP_TARGET = -0.450
+FOOD_REVENUE_EXPENSIVE_CAP_TARGET = 0.124
+FOOD_REVENUE_STARVING_TARGET = 0.080
+FOOD_REVENUE_TOTAL_MODIFIER_MIN = -0.4
+FOOD_REVENUE_TOTAL_MODIFIER_MAX = 0.4
 FOOD_REVENUE_GROWTH_CAP_TARGET = 2.0
 FOOD_REVENUE_TOLERANCE = 0.000001
 FOOD_REVENUE_PROFITABILITY_BLUEPRINT = Path("buildings/victuals_market.yml")
 FOOD_REVENUE_PROFITABILITY_METHOD = "victuals_market_maintenance"
 FOOD_REVENUE_STATIC_TARGETS = {
-    "cheap_food_in_location": -1.124,
-    "expensive_food_in_location": 0.310,
+    "cheap_food_in_location": -0.900,
+    "expensive_food_in_location": 0.248,
     "province_starving": FOOD_REVENUE_STARVING_TARGET,
 }
 FOOD_REVENUE_EDGE_PRICE_TARGETS = {
@@ -161,16 +161,16 @@ FOOD_REVENUE_EDGE_STARVING_TARGETS = {
     "yes": FOOD_REVENUE_STARVING_TARGET,
 }
 FOOD_REVENUE_MATRIX_TARGETS = {
-    ("rural_settlement", "cheap_cap_0x", "full", "no"): -0.5,
-    ("rural_settlement", "base_100", "full", "no"): 0.062,
-    ("megalopolis", "expensive_cap_2x", "empty", "yes"): 0.5,
+    ("rural_settlement", "cheap_cap_0x", "full", "no"): -0.4,
+    ("rural_settlement", "base_100", "full", "no"): 0.050,
+    ("megalopolis", "expensive_cap_2x", "empty", "yes"): 0.4,
 }
 FOOD_REVENUE_STORAGE_TARGET_EDGE = ("rural_settlement", "cheap_cap_0x", "full", "no")
 FOOD_REVENUE_RANK_TARGETS = {
-    "rural_settlement": 0.170,
-    "town": 0.195,
-    "city": 0.220,
-    "megalopolis": 0.245,
+    "rural_settlement": 0.136,
+    "town": 0.156,
+    "city": 0.176,
+    "megalopolis": 0.196,
 }
 
 

@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:horse_breeders:advancement
+pp_selected_stallions = {
+icon = renaissance_advance
+age = age_3_discovery
+requires = rgo_size_advance_discovery
+unlock_production_method = pp_horse_breeders_selected_stallions
+ai_weight = { add = 75 }
+}
+# <<< eu5-building-pipeline:horse_breeders:advancement

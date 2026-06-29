@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from io import BytesIO
 import json
@@ -51,6 +52,7 @@ DEFAULT_DEVELOPMENT_BOUNDS = (0.0, 100.0)
 DEFAULT_DEVELOPMENT_DELTA_BOUNDS = (-10.0, 10.0)
 DEFAULT_BUILDING_LEVEL_BOUNDS = (0.0, 400.0)
 DEFAULT_BUILDING_LEVEL_DELTA_BOUNDS = (-50.0, 50.0)
+DEFAULT_FOOD_PRICE_BOUNDS = (0.0, 0.30)
 DEFAULT_BACKGROUND = np.array([238, 238, 232], dtype=np.uint8)
 DEFAULT_UNSELECTED = np.array([184, 184, 178], dtype=np.uint8)
 DEFAULT_NO_DATA = np.array([156, 156, 150], dtype=np.uint8)
@@ -125,6 +127,7 @@ class DevelopmentMapResult:
 
 
 BuildingLevelsMapResult = DevelopmentMapResult
+FoodPriceMapResult = DevelopmentMapResult
 
 
 @dataclass(frozen=True)
@@ -141,6 +144,7 @@ class MapViewerExportResult:
     frame_dir: Path
     maps: tuple[str, ...]
     frames: int
+    assets: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -148,6 +152,7 @@ class MapFrameLegend:
     title: str
     rows: tuple[tuple[str, str], ...]
     region_rows: tuple[tuple[str, str, str, str, str, str], ...] = ()
+    region_value_header: str = "Total"
     unit: str = ""
     signed: bool = False
 
@@ -767,6 +772,44 @@ def building_levels_map(
     )
 
 
+def food_price_map(
+    data: Any,
+    *,
+    scope: str = "super_region",
+    name: str | None = None,
+    absolute_bounds: tuple[float, float] | None = DEFAULT_FOOD_PRICE_BOUNDS,
+    width: int | None = None,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> FoodPriceMapResult:
+    assets = _require_map_assets(data)
+    frame = _food_price_locations(
+        data,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    return _scalar_location_map(
+        assets,
+        frame,
+        scope=scope,
+        name=name,
+        metric="food_price",
+        mode="current",
+        baseline_date=None,
+        delta_bounds=None,
+        absolute_bounds=absolute_bounds,
+        width=width,
+        title_metric="food price",
+        value_label_prefix="food price",
+        absolute_cmap="RdYlGn_r",
+        delta_cmap="RdBu_r",
+        absolute_scale="fixed",
+        delta_scale="fixed",
+    )
+
+
 def show_building_levels_map(
     data: Any,
     *,
@@ -806,9 +849,53 @@ def show_building_levels_map(
     )
 
 
+def show_food_price_map(
+    data: Any,
+    *,
+    scope: str = "super_region",
+    name: str | None = None,
+    absolute_bounds: tuple[float, float] | None = DEFAULT_FOOD_PRICE_BOUNDS,
+    width: int | None = None,
+    interval_ms: int = 700,
+    display_widget: bool = True,
+    display_diagnostics: bool = True,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> FoodPriceMapResult:
+    result = food_price_map(
+        data,
+        scope=scope,
+        name=name,
+        absolute_bounds=absolute_bounds,
+        width=width,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    return _show_scalar_map_result(
+        result,
+        widget_factory=food_price_map_widget,
+        interval_ms=interval_ms,
+        display_widget=display_widget,
+        display_diagnostics=display_diagnostics,
+    )
+
+
 def building_levels_map_widget(result: BuildingLevelsMapResult, *, interval_ms: int = 700) -> Any | None:
     if not result.frames:
         print("No building-level map frames")
+        return None
+    return _map_widget(
+        result.frames,
+        label_for_index=lambda index: _scalar_frame_label(result, index),
+        interval_ms=interval_ms,
+    )
+
+
+def food_price_map_widget(result: FoodPriceMapResult, *, interval_ms: int = 700) -> Any | None:
+    if not result.frames:
+        print("No food-price map frames")
         return None
     return _map_widget(
         result.frames,
@@ -971,6 +1058,35 @@ def save_building_levels_map_animation(
     )
 
 
+def save_food_price_map_animation(
+    result: FoodPriceMapResult,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
+    filename: str = "food_price_current.webp",
+    duration_ms: int = 700,
+    loop: int = 0,
+    quality: int = 100,
+    lossless: bool = True,
+    width: int | None = None,
+    max_bytes: int | None = None,
+    overwrite: bool = True,
+) -> AnimationExportResult:
+    return save_map_animation(
+        result,
+        path=path,
+        output_dir=output_dir,
+        filename=filename,
+        duration_ms=duration_ms,
+        loop=loop,
+        quality=quality,
+        lossless=lossless,
+        width=width,
+        max_bytes=max_bytes,
+        overwrite=overwrite,
+    )
+
+
 def save_map_animation(
     result: Any,
     *,
@@ -1027,6 +1143,7 @@ def save_map_viewer(
     quality: int = 94,
     lossless: bool = False,
     overwrite: bool = True,
+    asset_links: Sequence[tuple[str, str | Path]] = (),
 ) -> MapViewerExportResult:
     output_path = Path(path)
     if not output_path.is_absolute():
@@ -1056,11 +1173,11 @@ def save_map_viewer(
             image = _resize_animation_frame(_frame_image(frame), width=width)
             image.save(
                 frame_path,
-            format="WEBP",
-            quality=max(1, min(int(quality), 100)),
-            lossless=bool(lossless),
-            method=4,
-        )
+                format="WEBP",
+                quality=max(1, min(int(quality), 100)),
+                lossless=bool(lossless),
+                method=4,
+            )
             frames.append(
                 {
                     "url": _viewer_relative_url(output_path, frame_path),
@@ -1072,12 +1189,20 @@ def save_map_viewer(
         total_frames += len(frames)
         maps.append({"id": map_id, "label": str(label), "frames": frames})
 
-    output_path.write_text(_map_viewer_html(maps), encoding="utf-8")
+    assets: list[dict[str, str]] = []
+    for label, asset_path in asset_links:
+        path_value = Path(asset_path)
+        if not path_value.is_absolute():
+            path_value = output_path.parent / path_value
+        assets.append({"label": str(label), "url": _viewer_relative_url(output_path, path_value)})
+
+    output_path.write_text(_map_viewer_html(maps, assets), encoding="utf-8")
     return MapViewerExportResult(
         path=output_path,
         frame_dir=frame_root,
         maps=tuple(str(item["label"]) for item in maps),
         frames=total_frames,
+        assets=tuple(str(item["label"]) for item in assets),
     )
 
 
@@ -1351,6 +1476,7 @@ def _scalar_location_map(
                 context=((("Baseline", _year_from_date_label(baseline_date_label)),) if normalized_mode == "from_gamestart" else ()),
                 unit=_legend_unit(metric, normalized_mode),
                 signed=normalized_mode == "from_gamestart",
+                show_total=metric != "food_price",
             ),
         )
         frames.append(
@@ -1511,6 +1637,49 @@ def _building_level_locations(
     )
 
 
+def _food_price_locations(
+    data: Any,
+    *,
+    playthrough: str | None,
+    start_date: int | None,
+    end_date: int | None,
+) -> pl.DataFrame:
+    locations = _metric_locations(
+        data,
+        metric="development",
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+        metric_label="Development",
+    )
+    if locations.is_empty() or "market_code" not in locations.columns:
+        return pl.DataFrame()
+    prices = data.table("market_food")
+    if prices.is_empty() or not {"snapshot_id", "market_code", "food_price"}.issubset(prices.columns):
+        return locations.with_columns(pl.lit(None, dtype=pl.Float64).alias("food_price"))
+    selected_playthrough = playthrough or getattr(data, "playthrough", None)
+    if selected_playthrough is not None and "playthrough_id" in prices.columns:
+        prices = prices.filter(pl.col("playthrough_id") == selected_playthrough)
+    if start_date is not None and "date_sort" in prices.columns:
+        prices = prices.filter(pl.col("date_sort") >= int(start_date))
+    if end_date is not None and "date_sort" in prices.columns:
+        prices = prices.filter(pl.col("date_sort") <= int(end_date))
+    price_by_market = (
+        prices.filter(pl.col("food_price").is_not_null())
+        .group_by(["snapshot_id", "market_code"])
+        .agg(pl.mean("food_price").cast(pl.Float64).alias("food_price"))
+    )
+    result = locations.join(price_by_market, on=["snapshot_id", "market_code"], how="left")
+    markets = data.dim("markets")
+    if not markets.is_empty() and {"market_code", "market_label"}.issubset(markets.columns):
+        result = result.join(
+            markets.select(["market_code", "market_label"]).unique("market_code"),
+            on="market_code",
+            how="left",
+        )
+    return result
+
+
 def _filter_scope(frame: pl.DataFrame, scope: str, name: str | None) -> tuple[pl.DataFrame, str]:
     if _is_world_name(name):
         return _world_land_frame(frame), "World"
@@ -1609,6 +1778,7 @@ def _frame_legend(
     signed: bool = False,
     total_value_column: str | None = None,
     baseline_value_column: str | None = None,
+    show_total: bool = True,
 ) -> MapFrameLegend:
     rows: list[tuple[str, str]] = [("Date", date), *context]
     if frame.is_empty() or value_column not in frame.columns:
@@ -1624,26 +1794,31 @@ def _frame_legend(
     if no_data_count:
         rows.append(("No data", f"{no_data_count:,}"))
     if finite.size:
-        rows.extend(
-            (
-                ("Total", _format_stat_value(float(finite.sum()), unit=unit, signed=signed)),
-                ("Mean", _format_stat_value(float(finite.mean()), unit=unit, signed=signed)),
-                ("Median", _format_stat_value(float(np.median(finite)), unit=unit, signed=signed)),
-                ("Min", _format_stat_value(float(finite.min()), unit=unit, signed=signed)),
-                ("Max", _format_stat_value(float(finite.max()), unit=unit, signed=signed)),
-            )
-        )
+        stat_rows = [
+            ("Mean", _format_stat_value(float(finite.mean()), unit=unit, signed=signed)),
+            ("Median", _format_stat_value(float(np.median(finite)), unit=unit, signed=signed)),
+            ("Stdev", _format_stat_value(float(finite.std()), unit=unit, signed=signed)),
+            ("Min", _format_stat_value(float(finite.min()), unit=unit, signed=signed)),
+            ("Max", _format_stat_value(float(finite.max()), unit=unit, signed=signed)),
+        ]
+        if show_total:
+            stat_rows.insert(0, ("Total", _format_stat_value(float(finite.sum()), unit=unit, signed=signed)))
+        rows.extend(stat_rows)
+    region_value_header = "Total" if show_total else "Stdev"
+    region_rows = _super_region_legend_rows(
+        frame,
+        value_column=value_column,
+        unit=unit,
+        signed=signed,
+        total_value_column=total_value_column,
+        baseline_value_column=baseline_value_column,
+        show_total=show_total,
+    )
     return MapFrameLegend(
         title=title,
         rows=tuple(rows),
-        region_rows=_super_region_legend_rows(
-            frame,
-            value_column=value_column,
-            unit=unit,
-            signed=signed,
-            total_value_column=total_value_column,
-            baseline_value_column=baseline_value_column,
-        ),
+        region_rows=region_rows,
+        region_value_header=region_value_header,
         unit=unit,
         signed=signed,
     )
@@ -1657,6 +1832,7 @@ def _super_region_legend_rows(
     signed: bool,
     total_value_column: str | None = None,
     baseline_value_column: str | None = None,
+    show_total: bool = True,
     limit: int = 6,
 ) -> tuple[tuple[str, str, str, str, str, str], ...]:
     if frame.is_empty() or value_column not in frame.columns or "super_region" not in frame.columns:
@@ -1677,6 +1853,7 @@ def _super_region_legend_rows(
         pl.sum("value").alias("total"),
         pl.mean("value").alias("mean"),
         pl.median("value").alias("median"),
+        pl.col("value").std(ddof=0).fill_null(0.0).alias("stddev"),
         pl.min("value").alias("min"),
         pl.max("value").alias("max"),
     ]
@@ -1689,7 +1866,7 @@ def _super_region_legend_rows(
     return tuple(
         (
             _compact_region_label(str(row["region_label"])),
-            _format_stat_value(float(row["total"]), unit=unit, signed=signed),
+            _format_stat_value(float(row["total" if show_total else "stddev"]), unit=unit, signed=signed),
             _format_stat_value(float(row["mean"]), unit=unit, signed=signed),
             _format_stat_value(float(row["median"]), unit=unit, signed=signed),
             _format_stat_value(float(row["min"]), unit=unit, signed=signed),
@@ -1740,6 +1917,8 @@ def _legend_title(value_label_prefix: str, mode: str) -> str:
 def _legend_unit(metric: str, mode: str) -> str:
     if metric == "building_levels":
         return "levels"
+    if metric == "food_price":
+        return "price"
     if mode == "from_gamestart":
         return "pts"
     return ""
@@ -1749,6 +1928,10 @@ def _format_stat_value(value: float, *, unit: str, signed: bool) -> str:
     if unit == "population_thousands":
         return _format_population_thousands(value, signed=signed)
     prefix = "+" if signed and value > 0.0 else ""
+    if unit == "price":
+        if abs(value) < 0.001:
+            value = 0.0
+        return f"{prefix}{value:,.3f}"
     text = f"{prefix}{value:,.1f}"
     if unit == "%":
         return f"{text}%"
@@ -2070,7 +2253,7 @@ def _draw_legend_panel(
         min_x = min(right, median_x + 102)
         max_x = min(right, min_x + 102)
         for column_x, label in (
-            (total_x, "Total"),
+            (total_x, legend.region_value_header),
             (mean_x, "Mean"),
             (median_x, "Median"),
             (min_x, "Min"),
@@ -2131,7 +2314,7 @@ def _draw_colorbar_ticks(
         position = min(max(position, 0.0), 1.0)
         tick_y = int(round(y + (1.0 - position) * (height - 1)))
         draw.line((x - 5, tick_y, x - 1, tick_y), fill=(72, 72, 66), width=1)
-        draw.text((x, tick_y - 7), _format_stat_value(value, unit=unit, signed=signed), fill=(58, 58, 54), font=font)
+        draw.text((x + 7, tick_y - 7), _format_stat_value(value, unit=unit, signed=signed), fill=(58, 58, 54), font=font)
 
 
 def _colorbar_tick_values(norm: Normalize | TwoSlopeNorm, *, unit: str) -> list[float]:
@@ -2221,8 +2404,8 @@ def _viewer_relative_url(html_path: Path, frame_path: Path) -> str:
         return frame_path.resolve().as_uri()
 
 
-def _map_viewer_html(maps: list[dict[str, Any]]) -> str:
-    payload = json.dumps({"maps": maps}, ensure_ascii=True)
+def _map_viewer_html(maps: list[dict[str, Any]], assets: list[dict[str, str]]) -> str:
+    payload = json.dumps({"maps": maps, "assets": assets}, ensure_ascii=True)
     payload = payload.replace("</", "<\\/")
     return f"""<!doctype html>
 <html lang="en">
@@ -2247,7 +2430,7 @@ def _map_viewer_html(maps: list[dict[str, Any]]) -> str:
       top: 0;
       z-index: 2;
       display: grid;
-      grid-template-columns: minmax(160px, 260px) auto 1fr minmax(64px, 92px);
+      grid-template-columns: minmax(160px, 260px) auto auto 1fr minmax(64px, 92px);
       gap: 12px;
       align-items: center;
       padding: 12px 16px;
@@ -2269,6 +2452,28 @@ def _map_viewer_html(maps: list[dict[str, Any]]) -> str:
     button {{
       cursor: pointer;
       font-weight: 650;
+    }}
+    .assetLinks {{
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      min-width: 0;
+    }}
+    .assetLinks[hidden] {{
+      display: none;
+    }}
+    .assetLinks a {{
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #9e9e94;
+      border-radius: 4px;
+      padding: 0 10px;
+      background: #fff;
+      color: #1f1f1d;
+      text-decoration: none;
+      font-weight: 650;
+      white-space: nowrap;
     }}
     input[type="range"] {{
       width: 100%;
@@ -2295,6 +2500,9 @@ def _map_viewer_html(maps: list[dict[str, Any]]) -> str:
       .toolbar {{
         grid-template-columns: 1fr auto;
       }}
+      #assetLinks {{
+        grid-column: 1 / -1;
+      }}
       #frameSlider {{
         grid-column: 1 / -1;
       }}
@@ -2308,6 +2516,7 @@ def _map_viewer_html(maps: list[dict[str, Any]]) -> str:
   <div class="toolbar">
     <select id="mapSelect" aria-label="Map"></select>
     <button id="playButton" type="button">Play</button>
+    <div id="assetLinks" class="assetLinks" aria-label="Exports"></div>
     <input id="frameSlider" type="range" min="0" max="0" value="0" step="1" aria-label="Frame">
     <div id="yearLabel"></div>
   </div>
@@ -2318,6 +2527,7 @@ def _map_viewer_html(maps: list[dict[str, Any]]) -> str:
     const DATA = {payload};
     const mapSelect = document.getElementById("mapSelect");
     const playButton = document.getElementById("playButton");
+    const assetLinks = document.getElementById("assetLinks");
     const slider = document.getElementById("frameSlider");
     const yearLabel = document.getElementById("yearLabel");
     const image = document.getElementById("mapImage");
@@ -2365,6 +2575,15 @@ def _map_viewer_html(maps: list[dict[str, Any]]) -> str:
       option.textContent = map.label;
       mapSelect.appendChild(option);
     }});
+    (DATA.assets || []).forEach((asset) => {{
+      const link = document.createElement("a");
+      link.href = asset.url;
+      link.textContent = asset.label;
+      link.target = "_blank";
+      link.rel = "noopener";
+      assetLinks.appendChild(link);
+    }});
+    assetLinks.hidden = assetLinks.children.length === 0;
 
     mapSelect.addEventListener("change", () => {{
       activeMap = Number(mapSelect.value) || 0;
@@ -2599,6 +2818,8 @@ def _normalize_positive_bounds(bounds: tuple[float, float]) -> tuple[float, floa
 def _default_absolute_bounds(metric: str) -> tuple[float, float]:
     if metric == "building_levels":
         return DEFAULT_BUILDING_LEVEL_BOUNDS
+    if metric == "food_price":
+        return DEFAULT_FOOD_PRICE_BOUNDS
     if metric == "development":
         return DEFAULT_DEVELOPMENT_BOUNDS
     if metric == "total_population" or metric.startswith("population_"):

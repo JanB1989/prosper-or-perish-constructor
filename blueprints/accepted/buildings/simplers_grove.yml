@@ -50,8 +50,8 @@ building:
             category = building_maintenance
         }
         pp_simplers_grove_wicker_drying_racks = {
-            fiber_crops = 0.03 # baskets, ties, drying mats
-            lumber = 0.02 # racks, sheds, sorting boards
+            fiber_crops = 0.035 # baskets, ties, drying screens and mats
+            pottery = 0.020 # crocks and dry storage vessels
             produced = medicaments
             output = 0.116
             category = building_maintenance

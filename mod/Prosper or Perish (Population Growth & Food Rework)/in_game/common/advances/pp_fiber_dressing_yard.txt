@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:fiber_dressing_yard:advancement
+pp_fiber_dressing_yard = {
+icon = fiber_dressing_yard
+age = age_3_discovery
+requires = rgo_logistics_discovery
+unlock_building = fiber_dressing_yard
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:fiber_dressing_yard:advancement

@@ -537,6 +537,22 @@ pp_remove_invalid_fiber_and_stud_farms = {
 					}
 				}
 			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:stud_farm
+						value > 0
+					}
+					NOT = { pp_horse_breeders_location_potential = yes }
+				}
+				change_building_level_in_location = {
+					building = building_type:stud_farm
+					value = {
+						value = "location_building_level(building_type:stud_farm)"
+						multiply = -1
+					}
+				}
+			}
 		}
 	}
 }

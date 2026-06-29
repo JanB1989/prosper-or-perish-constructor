@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: sugarcane_farm
+upgrade_chain:
+  family: sugarcane_farm
+  tier: 0
+  previous: null
+  next: trapiche_sugarcane_farm
+  unlock_advance: null
 building:
   key: sugarcane_farm
   mode: CREATE

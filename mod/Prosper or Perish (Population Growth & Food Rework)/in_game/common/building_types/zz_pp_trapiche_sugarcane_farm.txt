@@ -1,0 +1,67 @@
+﻿# >>> eu5-building-pipeline:trapiche_sugarcane_farm:building
+trapiche_sugarcane_farm = {
+is_foreign = no
+increase_per_level_cost = 0.25
+max_levels = farm_capacity_max_trapiche_sugarcane_farm
+pop_type = laborers
+employment_size = 1
+category = rgo_building_category
+custom_tags = { farming_capacity }
+icon = trapiche_sugarcane_farm
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = sugarcane_farm
+build_time = workshop_build_time
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+location_potential = {
+    raw_material = goods:sugar
+}
+
+unique_production_methods = {
+    pp_trapiche_sugarcane_farm_base_sugar = {
+        produced = sugar
+        output = 0.040
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_trapiche_sugarcane_farm_no_boiling = {
+        category = building_maintenance
+    }
+    pp_trapiche_sugarcane_farm_open_kettles = {
+        pottery = 0.120 # sugar molds and boiling pans
+        tools = 0.004 # skimmers and ladles
+        produced = sugar
+        output = 0.083
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_trapiche_sugarcane_farm_hand_crushing = {
+        category = building_maintenance
+    }
+    pp_trapiche_sugarcane_farm_trapiche_pressing = {
+        furniture = 0.045 # trapiche carpentry and wooden rollers
+        tools = 0.006 # roller fittings and cane knives
+        produced = sugar
+        output = 0.064
+        category = building_maintenance
+    }
+}
+
+raw_modifier = {
+  farm_capacity_from_trapiche_sugarcane_farm = -1
+}
+
+modifier = {
+    local_migration_attraction = 0.003
+}
+}
+# <<< eu5-building-pipeline:trapiche_sugarcane_farm:building

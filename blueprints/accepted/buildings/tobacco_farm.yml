@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: tobacco_farm
+upgrade_chain:
+  family: tobacco_farm
+  tier: 0
+  previous: null
+  next: market_tobacco_farm
+  unlock_advance: null
 building:
   key: tobacco_farm
   mode: CREATE

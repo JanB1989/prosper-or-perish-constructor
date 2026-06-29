@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: cotton_farm
+upgrade_chain:
+  family: cotton_farm
+  tier: 0
+  previous: null
+  next: market_cotton_farm
+  unlock_advance: null
 building:
   key: cotton_farm
   mode: CREATE

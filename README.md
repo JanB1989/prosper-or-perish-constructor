@@ -296,6 +296,15 @@ The command parses `.eu5` saves into the raw progression dataset read by the not
 graphs/dataset/
 ```
 
+It also refreshes compact notebook WebP exports under:
+
+```text
+graphs/savegame_notebooks/exports/absolute/
+```
+
+including `food_price_current.webp`, which colors locations by their current market food price and
+appears as `Food price current` in `savegame_maps.html`.
+
 Useful options:
 
 ```bash
@@ -316,6 +325,19 @@ Open the canonical notebook after the build:
 
 ```text
 graphs/savegame_notebooks/savegame_analysis_workbench.ipynb
+```
+
+For compact run-all analysis, use:
+
+```text
+graphs/savegame_notebooks/savegame_analysis_workbench_minimal.ipynb
+```
+
+For compact food-price volatility tables in the notebook, use:
+
+```python
+prices = nb.show_food_price_volatility(data, workbench, top_n=12)
+prices.top_erratic
 ```
 
 ## Building Blueprints

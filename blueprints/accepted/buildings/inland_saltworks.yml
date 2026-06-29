@@ -128,9 +128,10 @@ localization:
     pp_inland_saltworks_salt_flat_scraping: Salt-Flat Scraping
     pp_inland_saltworks_open_pan_boiling: Open-Pan Brine Boiling
 icon:
-  source_dds: /mnt/c/Games/steamapps/common/Europa Universalis V/game/main_menu/gfx/interface/icons/buildings/coastal_settlements.dds
+  source_png: ../assets/icons/inland_saltworks.png
   output_dds: inland_saltworks.dds
   size: 512
+  prompt: EU5-inspired hand-painted strategy-game building icon for an Inland Saltworks, transparent background. Center a compact early modern dry inland brine works with timber panhouse, clay hearths, open boiling pans filled with pale salt crystals, shallow rectangular salt-flat evaporation beds, capped brine well, salt heaps, sacks, baskets, rakes, and brine buckets. Use readable painterly historical UI art matching water_sawmill and lumber_mill_improved, three-quarter view, pale salt whites, tan dry earth, weathered wood, no blue water foreground, no sea, no river, no shoreline, no pier, no text, no frame.
 evaluation:
   production_methods:
     pp_inland_saltworks_base_salt:

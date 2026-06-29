@@ -1,9 +1,10 @@
 ﻿version: 2
 tag: offshore_fishery
+output_tag: ocean_fishery_offshore
 upgrade_chain:
   family: ocean_fishery
-  tier: 1
-  previous: ocean_fishery
+  tier: 2
+  previous: drift_net_fishery
   next: null
   unlock_advance: pp_herring_buss
 building:
@@ -38,7 +39,7 @@ building:
     town = yes
     city = yes
     megalopolis = yes
-    obsolete = ocean_fishery
+    obsolete = drift_net_fishery
     build_time = workshop_build_time
 
     location_potential = {

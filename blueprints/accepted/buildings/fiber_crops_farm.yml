@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: fiber_crops_farm
+upgrade_chain:
+  family: fiber_crops_farm
+  tier: 0
+  previous: null
+  next: fiber_dressing_yard
+  unlock_advance: null
 building:
   key: fiber_crops_farm
   mode: REPLACE
@@ -47,9 +53,10 @@ building:
             category = building_maintenance
         }
         pp_fiber_crops_farm_retting_yards = {
-            livestock = 0.133 # manure and draught teams
-            lumber = 0.067 # retting racks
-            tools = 0.012 # scutching blades
+            livestock = 0.090 # manure and light draught
+            clay = 0.180 # lined retting pits
+            coal = 0.030 # controlled drying heat
+            leather = 0.017 # soft handling pads and aprons
             produced = fiber_crops
             output = 0.187
             category = building_maintenance

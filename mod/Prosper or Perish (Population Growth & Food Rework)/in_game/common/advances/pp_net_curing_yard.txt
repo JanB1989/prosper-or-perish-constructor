@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:net_curing_yard:advancement
+pp_net_curing_yards = {
+icon = net_curing_yard
+age = age_1_traditions
+requires = agriculture_advance
+unlock_building = net_curing_yard
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:net_curing_yard:advancement

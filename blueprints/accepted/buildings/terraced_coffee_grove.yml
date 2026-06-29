@@ -1,0 +1,131 @@
+version: 2
+tag: terraced_coffee_grove
+upgrade_chain:
+  family: coffee_grove
+  tier: 1
+  previous: coffee_grove
+  next: null
+  unlock_advance: pp_terraced_coffee_grove
+building:
+  key: terraced_coffee_grove
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_terraced_coffee_grove_base_coffee
+    - name: slot_1
+      methods:
+        - pp_terraced_coffee_grove_no_washing
+        - pp_terraced_coffee_grove_washing_frames
+    - name: slot_2
+      methods:
+        - pp_terraced_coffee_grove_open_grove
+        - pp_terraced_coffee_grove_terraced_shade_gardens
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    increase_per_level_cost = 0.23
+    max_levels = farm_capacity_max_terraced_coffee_grove
+    pop_type = laborers
+    employment_size = 1
+    category = rgo_building_category
+    custom_tags = { farming_capacity }
+    icon = terraced_coffee_grove
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = coffee_grove
+    build_time = workshop_build_time
+
+    location_potential = {
+        raw_material = goods:coffee
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_terraced_coffee_grove_base_coffee = {
+            produced = coffee
+            output = 0.075
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_terraced_coffee_grove_no_washing = {
+            category = building_maintenance
+        }
+        pp_terraced_coffee_grove_washing_frames = {
+            fiber_crops = 0.090 # drying mats and sacks
+            pottery = 0.075 # washing and fermentation vessels
+            furniture = 0.050 # light pulping and washing frames
+            produced = coffee
+            output = 0.120
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_terraced_coffee_grove_open_grove = {
+            category = building_maintenance
+        }
+        pp_terraced_coffee_grove_terraced_shade_gardens = {
+            fiber_crops = 0.035 # shade ties and harvest sacks
+            furniture = 0.030 # light nursery and shade frames
+            produced = coffee
+            output = 0.055
+            category = building_maintenance
+        }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_terraced_coffee_grove = -1
+    }
+
+    modifier = {
+        local_migration_attraction = 0.003
+    }
+advancements:
+  - key: pp_terraced_coffee_grove
+    body: |2-
+      icon = terraced_coffee_grove
+      age = age_3_discovery
+      unlock_building = terraced_coffee_grove
+      ai_weight = { add = 125 }
+localization:
+  entries:
+    terraced_coffee_grove_slot_0: Coffee Trees
+    terraced_coffee_grove_slot_1: Washing & Drying
+    terraced_coffee_grove_slot_2: Terraced Shade Gardens
+    terraced_coffee_grove: Terraced Coffee Grove
+    terraced_coffee_grove_desc: Terraced coffee groves step shaded trees across wet hillsides. Washing frames, pottery vessels, and woven drying mats keep cherries moving from harvest to cured beans.
+    pp_terraced_coffee_grove: Terraced Coffee Groves
+    pp_terraced_coffee_grove_base_coffee: Coffee Trees
+    pp_terraced_coffee_grove_desc: Terracing, shade gardens, and wet processing organize coffee groves for steadier upland harvests.
+    pp_terraced_coffee_grove_no_washing: No Washing Frames
+    pp_terraced_coffee_grove_open_grove: Open Groves
+    pp_terraced_coffee_grove_terraced_shade_gardens: Terraced Shade Gardens
+    pp_terraced_coffee_grove_washing_frames: Pulping & Washing Frames
+icon:
+  source_png: ../assets/icons/terraced_coffee_grove.png
+  output_dds: terraced_coffee_grove.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game building icon for a Terraced Coffee Grove on a perfectly flat RGB 255 0 255 magenta chroma-key background. Center a three-quarter-view upland coffee grove with stepped earth terraces, shaded coffee trees bearing red cherries, woven drying mats and sacks, ceramic washing and fermentation vessels, and light wooden pulping and washing frames. Use material-rich painterly historical UI art matching water_sawmill and lumber_mill_improved, readable worksite details, deep coffee greens, red cherries, earthen terrace browns, pale pottery, woven fiber tan, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  allow_rules:
+    input_throughput: Terraced coffee processing keeps the accepted coffee-grove input scale below the global employment throughput baseline.
+    output_throughput: Terraced coffee processing keeps the accepted coffee-grove output scale below the global employment throughput baseline.
+  production_methods:
+    pp_terraced_coffee_grove_base_coffee:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Passive base output intentionally carries 30% of the full worked coffee output after the high-base rebalance.
+    pp_terraced_coffee_grove_washing_frames:
+      production_efficiency: 1.05
+    pp_terraced_coffee_grove_terraced_shade_gardens:
+      production_efficiency: 1.05

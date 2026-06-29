@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: pepper_garden
+upgrade_chain:
+  family: pepper_garden
+  tier: 0
+  previous: null
+  next: managed_pepper_garden
+  unlock_advance: null
 building:
   key: pepper_garden
   mode: CREATE

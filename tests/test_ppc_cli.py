@@ -902,16 +902,16 @@ def test_food_revenue_check_prints_parsed_price_and_rank_edges(
         return {
             "growth_cap": 2.0,
             "static": {
-                "cheap_food_in_location": -1.124,
-                "expensive_food_in_location": 0.310,
-                "positive_province_food_growth": -0.054,
-                "province_starving": 0.1,
+                "cheap_food_in_location": -0.900,
+                "expensive_food_in_location": 0.248,
+                "positive_province_food_growth": -0.043,
+                "province_starving": 0.080,
             },
             "ranks": {
-                "rural_settlement": 0.170,
-                "town": 0.195,
-                "city": 0.220,
-                "megalopolis": 0.245,
+                "rural_settlement": 0.136,
+                "town": 0.156,
+                "city": 0.176,
+                "megalopolis": 0.196,
             },
             "profitability_rows": [
                 {
@@ -922,10 +922,10 @@ def test_food_revenue_check_prints_parsed_price_and_rank_edges(
                     "worker_food_gold": 0.23,
                     "base_output_gold": 5.05,
                     "required_output_modifier": 5.23 / 5.05 - 1.0,
-                    "actual_output_modifier": -0.281,
-                    "modifier_margin": -0.281 - (5.23 / 5.05 - 1.0),
-                    "output_gold": 3.630,
-                    "profit_gold": -1.600,
+                    "actual_output_modifier": -0.225,
+                    "modifier_margin": -0.225 - (5.23 / 5.05 - 1.0),
+                    "output_gold": 3.91375,
+                    "profit_gold": -1.31625,
                     "profitable": False,
                 },
                 {
@@ -950,10 +950,10 @@ def test_food_revenue_check_prints_parsed_price_and_rank_edges(
                     "worker_food_gold": 0.52,
                     "base_output_gold": 5.05,
                     "required_output_modifier": 5.52 / 5.05 - 1.0,
-                    "actual_output_modifier": 0.077,
-                    "modifier_margin": 0.077 - (5.52 / 5.05 - 1.0),
-                    "output_gold": 5.439,
-                    "profit_gold": -0.081,
+                    "actual_output_modifier": 0.062,
+                    "modifier_margin": 0.062 - (5.52 / 5.05 - 1.0),
+                    "output_gold": 5.3631,
+                    "profit_gold": -0.1569,
                     "profitable": False,
                 },
             ],
@@ -968,9 +968,9 @@ def test_food_revenue_check_prints_parsed_price_and_rank_edges(
     assert "cheap cap effect (food price 0x)" in output
     lines = output.splitlines()
     cheap_50_line = next(line for line in lines if line.startswith("cheap_50"))
-    assert cheap_50_line.split() == ["cheap_50", "-0.281", "0.719"]
+    assert cheap_50_line.split() == ["cheap_50", "-0.225", "0.775"]
     rural_summary_line = next(line for line in lines if line.startswith("rural_settlement"))
-    assert rural_summary_line.split()[:3] == ["rural_settlement", "+0.062", "-0.500"]
+    assert rural_summary_line.split()[:3] == ["rural_settlement", "+0.050", "-0.400"]
     threshold_start = lines.index("victuals market base-condition profitability:")
     threshold_rows = lines[threshold_start + 3 : threshold_start + 6]
     assert threshold_rows[0].split() == [
@@ -979,10 +979,10 @@ def test_food_revenue_check_prints_parsed_price_and_rank_edges(
         "5.230",
         "5.050",
         "+0.036",
-        "-0.281",
-        "-0.317",
-        "3.630",
-        "-1.600",
+        "-0.225",
+        "-0.261",
+        "3.914",
+        "-1.316",
         "loss",
     ]
     assert threshold_rows[1].split() == [
@@ -1003,11 +1003,11 @@ def test_food_revenue_check_prints_parsed_price_and_rank_edges(
     rank_threshold_rows = lines[rank_threshold_start + 3 : rank_threshold_start + 7]
     assert rank_threshold_rows[0].split() == [
         "rural_settlement",
-        "+0.062",
-        "5.363",
-        "+0.003",
-        "+0.363",
-        "profit",
+        "+0.050",
+        "5.303",
+        "-0.058",
+        "+0.303",
+        "loss",
     ]
     assert [row.split()[0] for row in rank_threshold_rows] == [
         "rural_settlement",
@@ -1015,7 +1015,12 @@ def test_food_revenue_check_prints_parsed_price_and_rank_edges(
         "city",
         "megalopolis",
     ]
-    assert [row.split()[-1] for row in rank_threshold_rows] == ["profit"] * 4
+    assert [row.split()[-1] for row in rank_threshold_rows] == [
+        "loss",
+        "profit",
+        "profit",
+        "profit",
+    ]
     matrix_start = lines.index("full edge matrix (48 rows):")
     matrix_rows = lines[matrix_start + 3 : matrix_start + 51]
     assert len(matrix_rows) == 48
@@ -1025,12 +1030,12 @@ def test_food_revenue_check_prints_parsed_price_and_rank_edges(
         "cheap_cap_0x",
         "empty",
         "no",
-        "+0.170",
-        "-0.562",
+        "+0.136",
+        "-0.450",
         "+0.000",
         "+0.000",
-        "-0.392",
-        "0.608",
+        "-0.314",
+        "0.686",
         "ok",
     ]
     assert matrix_rows[-1].split() == [
@@ -1038,12 +1043,12 @@ def test_food_revenue_check_prints_parsed_price_and_rank_edges(
         "expensive_cap_2x",
         "full",
         "yes",
-        "+0.245",
-        "+0.155",
-        "-0.108",
-        "+0.100",
-        "+0.392",
-        "1.392",
+        "+0.196",
+        "+0.124",
+        "-0.086",
+        "+0.080",
+        "+0.314",
+        "1.314",
         "ok",
     ]
     assert "result=ok" in output
@@ -1054,22 +1059,22 @@ def test_food_revenue_storage_target_solver_uses_configured_edge() -> None:
 
     full_target = cli._food_revenue_storage_full_target_for_edge(
         edge,
-        matrix_targets={edge: -0.5},
-        rank_targets={"rural_settlement": 0.170},
-        price_targets={"cheap_cap_0x": -0.562},
+        matrix_targets={edge: -0.4},
+        rank_targets={"rural_settlement": 0.136},
+        price_targets={"cheap_cap_0x": -0.450},
         starving_targets={"no": 0.0},
     )
     raw_target = cli._food_revenue_storage_raw_target_for_edge(
         edge,
         growth_cap=2.0,
-        matrix_targets={edge: -0.5},
-        rank_targets={"rural_settlement": 0.170},
-        price_targets={"cheap_cap_0x": -0.562},
+        matrix_targets={edge: -0.4},
+        rank_targets={"rural_settlement": 0.136},
+        price_targets={"cheap_cap_0x": -0.450},
         starving_targets={"no": 0.0},
     )
 
-    assert full_target == pytest.approx(-0.108)
-    assert raw_target == pytest.approx(-0.054)
+    assert full_target == pytest.approx(-0.086)
+    assert raw_target == pytest.approx(-0.043)
 
 
 def test_food_revenue_storage_target_solver_reacts_to_desired_floor() -> None:
@@ -1078,13 +1083,13 @@ def test_food_revenue_storage_target_solver_reacts_to_desired_floor() -> None:
     raw_target = cli._food_revenue_storage_raw_target_for_edge(
         edge,
         growth_cap=2.0,
-        matrix_targets={edge: -0.55},
-        rank_targets={"rural_settlement": 0.170},
-        price_targets={"cheap_cap_0x": -0.562},
+        matrix_targets={edge: -0.45},
+        rank_targets={"rural_settlement": 0.136},
+        price_targets={"cheap_cap_0x": -0.450},
         starving_targets={"no": 0.0},
     )
 
-    assert raw_target == pytest.approx(-0.079)
+    assert raw_target == pytest.approx(-0.068)
 
 
 def test_food_revenue_check_fails_when_matrix_total_leaves_band(

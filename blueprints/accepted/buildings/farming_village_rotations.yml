@@ -2,8 +2,8 @@
 tag: farming_village_rotations
 upgrade_chain:
   family: farming_village
-  tier: 1
-  previous: farming_village
+  tier: 2
+  previous: husbandry_farmstead
   next: model_farm
   unlock_advance: pp_farming_village_rotations
 building:
@@ -56,7 +56,7 @@ building:
     town = yes
     city = yes
     megalopolis = yes
-    obsolete = farming_village
+    obsolete = husbandry_farmstead
     forbidden_for_estates = yes
     ai_forbid_shutdown = no
     can_close = yes

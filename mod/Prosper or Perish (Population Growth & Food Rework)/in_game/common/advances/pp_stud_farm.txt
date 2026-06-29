@@ -1,0 +1,17 @@
+﻿# >>> eu5-building-pipeline:stud_farm:advancement
+pp_stud_farm = {
+icon = stud_farm
+age = age_4_reformation
+requires = food_advance_reformation
+unlock_building = stud_farm
+ai_weight = { add = 125 }
+}
+
+pp_stud_books = {
+icon = stud_farm
+age = age_5_absolutism
+requires = food_advance_absolutism
+unlock_production_method = pp_stud_farm_stud_books
+ai_weight = { add = 75 }
+}
+# <<< eu5-building-pipeline:stud_farm:advancement

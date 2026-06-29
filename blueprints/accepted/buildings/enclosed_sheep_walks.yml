@@ -1,10 +1,10 @@
 ﻿version: 2
 tag: enclosed_sheep_walks
-output_tag: sheep_farms_enclosed_walks
+output_tag: sheep_farms_hurdled_walks
 upgrade_chain:
   family: sheep_farms
-  tier: 1
-  previous: sheep_farms
+  tier: 2
+  previous: hurdled_sheepcotes
   next: null
   unlock_advance: pp_enclosed_sheep_walks
 building:
@@ -33,7 +33,7 @@ building:
     town = yes
     city = yes
     megalopolis = yes
-    obsolete = sheep_farms
+    obsolete = hurdled_sheepcotes
     forbidden_for_estates = yes
     ai_forbid_shutdown = no
     can_close = yes
@@ -107,12 +107,15 @@ evaluation:
     pp_enclosed_sheep_walks_base_wool:
       production_efficiency: 1.00
       allow_rules:
+        profit_percent: Passive pasture methods have little direct input cost; improved flocks carry the tier economy.
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_enclosed_sheep_walks_no_primary:
       production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Empty selector method intentionally produces no improved-flock output.
     pp_enclosed_sheep_walks_improved_flocks:
       production_efficiency: 1.00
       allow_rules:
-        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Age 5 enclosed sheep walks intentionally exceed the generic output band while remaining the late chain endpoint.
         profit_percent: Pre-existing support method remains outside the profit band and was not part of the pp error-log economics warnings.

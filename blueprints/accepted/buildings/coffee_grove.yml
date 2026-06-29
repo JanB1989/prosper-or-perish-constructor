@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: coffee_grove
+upgrade_chain:
+  family: coffee_grove
+  tier: 0
+  previous: null
+  next: terraced_coffee_grove
+  unlock_advance: null
 building:
   key: coffee_grove
   mode: CREATE

@@ -50,6 +50,13 @@ farm_capacity_from_farming_village = {
 	}
 }
 
+farm_capacity_from_husbandry_farmstead = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
 farm_capacity_from_farming_village_rotations = {
 	decimals = 2
 	game_data = {
@@ -71,6 +78,13 @@ farm_capacity_from_fruit_orchard = {
 	}
 }
 
+farm_capacity_from_nursery_orchard = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
 farm_capacity_from_pomological_orchard = {
 	decimals = 2
 	game_data = {
@@ -79,6 +93,13 @@ farm_capacity_from_pomological_orchard = {
 }
 
 farm_capacity_from_sheep_farms = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
+farm_capacity_from_hurdled_sheepcotes = {
 	decimals = 2
 	game_data = {
 		category = location
@@ -99,6 +120,13 @@ farm_capacity_from_horse_breeders = {
 	}
 }
 
+farm_capacity_from_stud_farm = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
 farm_capacity_from_elephant_kraal = {
 	decimals = 2
 	game_data = {
@@ -107,6 +135,13 @@ farm_capacity_from_elephant_kraal = {
 }
 
 farm_capacity_from_fiber_crops_farm = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
+farm_capacity_from_fiber_dressing_yard = {
 	decimals = 2
 	game_data = {
 		category = location
@@ -127,6 +162,13 @@ farm_capacity_from_cotton_farm = {
 	}
 }
 
+farm_capacity_from_market_cotton_farm = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
 farm_capacity_from_sugar_plantation = {
 	decimals = 2
 	game_data = {
@@ -141,6 +183,13 @@ farm_capacity_from_sugarcane_farm = {
 	}
 }
 
+farm_capacity_from_trapiche_sugarcane_farm = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
 farm_capacity_from_tobacco_plantation = {
 	decimals = 2
 	game_data = {
@@ -149,6 +198,13 @@ farm_capacity_from_tobacco_plantation = {
 }
 
 farm_capacity_from_tobacco_farm = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
+farm_capacity_from_market_tobacco_farm = {
 	decimals = 2
 	game_data = {
 		category = location
@@ -183,7 +239,21 @@ farm_capacity_from_cocoa_grove = {
 	}
 }
 
+farm_capacity_from_managed_cocoa_grove = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
 farm_capacity_from_coffee_grove = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
+farm_capacity_from_terraced_coffee_grove = {
 	decimals = 2
 	game_data = {
 		category = location
@@ -204,6 +274,13 @@ farm_capacity_from_pepper_garden = {
 	}
 }
 
+farm_capacity_from_managed_pepper_garden = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
 farm_capacity_from_saffron_croft = {
 	decimals = 2
 	game_data = {
@@ -211,7 +288,21 @@ farm_capacity_from_saffron_croft = {
 	}
 }
 
+farm_capacity_from_saffron_kiln_croft = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
 farm_capacity_from_sericulture_farm = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
+farm_capacity_from_regulated_sericulture_farm = {
 	decimals = 2
 	game_data = {
 		category = location
@@ -226,6 +317,13 @@ farm_capacity_from_simplers_grove = {
 }
 
 farm_capacity_from_tea_garden = {
+	decimals = 2
+	game_data = {
+		category = location
+	}
+}
+
+farm_capacity_from_tea_sorting_garden = {
 	decimals = 2
 	game_data = {
 		category = location

@@ -10,6 +10,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 from difflib import get_close_matches
+from io import BytesIO
 import importlib
 from pathlib import Path
 import re
@@ -257,6 +258,31 @@ class BuildingAbsoluteResult:
 class GlobalMapExportResult:
     animations: tuple[savegame_maps.AnimationExportResult, ...]
     viewer: savegame_maps.MapViewerExportResult
+
+
+@dataclass(frozen=True)
+class FoodPriceVolatilityResult:
+    global_distribution: pl.DataFrame
+    market_time_series: pl.DataFrame
+    stats: pl.DataFrame
+    top_erratic: pl.DataFrame
+    market_search: str | None
+
+    @property
+    def df(self) -> pl.DataFrame:
+        """Per-market food price summary dataframe."""
+
+        return self.stats
+
+
+@dataclass(frozen=True)
+class FoodPriceVolatilityWebPExportResult:
+    path: Path
+    format: str
+    width: int
+    height: int
+    markets: int
+    snapshots: int
 
 
 def open_data(
@@ -973,6 +999,58 @@ def show_building_levels_map(
     )
 
 
+def food_price_map(
+    data: SavegameNotebookData,
+    *,
+    scope: str = "super_region",
+    name: str | None = None,
+    absolute_bounds: tuple[float, float] | None = savegame_maps.DEFAULT_FOOD_PRICE_BOUNDS,
+    width: int | None = None,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> savegame_maps.FoodPriceMapResult:
+    return savegame_maps.food_price_map(
+        data,
+        scope=scope,
+        name=name,
+        absolute_bounds=absolute_bounds,
+        width=width,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+
+def show_food_price_map(
+    data: SavegameNotebookData,
+    *,
+    scope: str = "super_region",
+    name: str | None = None,
+    absolute_bounds: tuple[float, float] | None = savegame_maps.DEFAULT_FOOD_PRICE_BOUNDS,
+    width: int | None = None,
+    interval_ms: int = 700,
+    display_widget: bool = True,
+    display_diagnostics: bool = True,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> savegame_maps.FoodPriceMapResult:
+    return savegame_maps.show_food_price_map(
+        data,
+        scope=scope,
+        name=name,
+        absolute_bounds=absolute_bounds,
+        width=width,
+        interval_ms=interval_ms,
+        display_widget=display_widget,
+        display_diagnostics=display_diagnostics,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+
 def save_building_levels_map_animation(
     result: savegame_maps.BuildingLevelsMapResult,
     *,
@@ -999,6 +1077,282 @@ def save_building_levels_map_animation(
         width=width,
         max_bytes=max_bytes,
         overwrite=overwrite,
+    )
+
+
+def save_food_price_map_animation(
+    result: savegame_maps.FoodPriceMapResult,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
+    filename: str = "food_price_current.webp",
+    duration_ms: int = 700,
+    loop: int = 0,
+    quality: int = 100,
+    lossless: bool = True,
+    width: int | None = None,
+    max_bytes: int | None = None,
+    overwrite: bool = True,
+) -> savegame_maps.AnimationExportResult:
+    return savegame_maps.save_food_price_map_animation(
+        result,
+        path=path,
+        output_dir=output_dir,
+        filename=filename,
+        duration_ms=duration_ms,
+        loop=loop,
+        quality=quality,
+        lossless=lossless,
+        width=width,
+        max_bytes=max_bytes,
+        overwrite=overwrite,
+    )
+
+
+def food_price_volatility(
+    data: SavegameNotebookData,
+    workbench: Any | None = None,
+    *,
+    market_search: str | None = None,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+    top_n: int = 12,
+    min_snapshots: int = 2,
+) -> FoodPriceVolatilityResult:
+    """Summarize food-price volatility globally and per market."""
+
+    selected_playthrough = playthrough or getattr(workbench, "playthrough", None) or data.playthrough
+    selected_start = (
+        start_date
+        if start_date is not None
+        else getattr(getattr(workbench, "config", None), "start_date", None)
+    )
+    selected_end = (
+        end_date
+        if end_date is not None
+        else getattr(getattr(workbench, "config", None), "end_date", None)
+    )
+    selected_market_search = (
+        market_search
+        if market_search is not None
+        else getattr(workbench, "market_query", None)
+    )
+    prices = _food_price_rows(
+        data,
+        playthrough=selected_playthrough,
+        start_date=selected_start,
+        end_date=selected_end,
+        market_search=selected_market_search,
+    )
+    if prices.is_empty():
+        empty_stats = pl.DataFrame(
+            schema={
+                "market_id": pl.Int64,
+                "market_label": pl.String,
+                "snapshots": pl.UInt32,
+                "mean_food_price": pl.Float64,
+                "median_food_price": pl.Float64,
+                "stddev_food_price": pl.Float64,
+                "min_food_price": pl.Float64,
+                "max_food_price": pl.Float64,
+                "price_range": pl.Float64,
+                "mean_abs_price_change": pl.Float64,
+                "max_abs_price_change": pl.Float64,
+            }
+        )
+        return FoodPriceVolatilityResult(pl.DataFrame(), pl.DataFrame(), empty_stats, empty_stats, selected_market_search)
+
+    group_columns = [
+        column
+        for column in ("market_id", "market_label")
+        if column in prices.columns
+    ]
+    market_time_series = (
+        prices.group_by(
+            [
+                "snapshot_id",
+                "date_sort",
+                "year",
+                "month",
+                "day",
+                "date",
+                "plot_year",
+                *group_columns,
+            ]
+        )
+        .agg(
+            pl.mean("food_price").alias("food_price"),
+            pl.mean("food_fill_ratio").alias("food_fill_ratio")
+            if "food_fill_ratio" in prices.columns
+            else pl.lit(None, dtype=pl.Float64).alias("food_fill_ratio"),
+            pl.sum("food_balance").alias("food_balance")
+            if "food_balance" in prices.columns
+            else pl.lit(None, dtype=pl.Float64).alias("food_balance"),
+        )
+        .sort([*group_columns, "date_sort"] if group_columns else ["date_sort"])
+    )
+    if "market_id" not in market_time_series.columns:
+        market_time_series = market_time_series.with_row_index("market_id")
+    market_time_series = market_time_series.with_columns(
+        (
+            pl.col("food_price")
+            - pl.col("food_price").shift(1).over("market_id")
+        ).alias("price_delta")
+    ).with_columns(pl.col("price_delta").abs().alias("abs_price_delta"))
+
+    global_distribution = (
+        market_time_series.group_by(["snapshot_id", "date_sort", "year", "month", "day", "date", "plot_year"])
+        .agg(
+            pl.len().alias("markets"),
+            pl.mean("food_price").alias("mean_food_price"),
+            pl.median("food_price").alias("median_food_price"),
+            pl.col("food_price").std(ddof=0).alias("stddev_food_price"),
+            pl.min("food_price").alias("min_food_price"),
+            pl.max("food_price").alias("max_food_price"),
+            pl.col("food_price").quantile(0.10).alias("price_p10"),
+            pl.col("food_price").quantile(0.90).alias("price_p90"),
+        )
+        .sort("date_sort")
+    )
+
+    stats = (
+        market_time_series.group_by("market_id", "market_label")
+        .agg(
+            pl.len().alias("snapshots"),
+            pl.first("date").alias("first_date"),
+            pl.last("date").alias("last_date"),
+            pl.mean("food_price").alias("mean_food_price"),
+            pl.median("food_price").alias("median_food_price"),
+            pl.col("food_price").std(ddof=0).fill_null(0.0).alias("stddev_food_price"),
+            pl.min("food_price").alias("min_food_price"),
+            pl.max("food_price").alias("max_food_price"),
+            (pl.max("food_price") - pl.min("food_price")).alias("price_range"),
+            pl.mean("abs_price_delta").fill_null(0.0).alias("mean_abs_price_change"),
+            pl.max("abs_price_delta").fill_null(0.0).alias("max_abs_price_change"),
+        )
+        .filter(pl.col("snapshots") >= min_snapshots)
+        .with_columns(
+            pl.when(pl.col("mean_food_price").abs() > 0)
+            .then(pl.col("stddev_food_price") / pl.col("mean_food_price").abs())
+            .otherwise(None)
+            .alias("coefficient_of_variation")
+        )
+        .sort(
+            ["stddev_food_price", "mean_abs_price_change", "price_range", "market_label"],
+            descending=[True, True, True, False],
+        )
+    )
+    top_erratic = stats.head(top_n)
+    return FoodPriceVolatilityResult(
+        global_distribution=global_distribution,
+        market_time_series=market_time_series,
+        stats=stats,
+        top_erratic=top_erratic,
+        market_search=selected_market_search,
+    )
+
+
+def show_food_price_volatility(
+    data: SavegameNotebookData,
+    workbench: Any | None = None,
+    *,
+    market_search: str | None = None,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+    top_n: int = 12,
+    min_snapshots: int = 2,
+    display_tables: bool = True,
+) -> FoodPriceVolatilityResult:
+    """Display compact food price volatility plots and summary tables."""
+
+    result = food_price_volatility(
+        data,
+        workbench,
+        market_search=market_search,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+        top_n=top_n,
+        min_snapshots=min_snapshots,
+    )
+    fig = _food_price_volatility_figure(result, top_n=top_n)
+    if fig is None:
+        print("No food price rows")
+    else:
+        _display_figure(fig)
+    if display_tables and not result.top_erratic.is_empty():
+        display(result.top_erratic)
+    return result
+
+
+def save_food_price_volatility_webp(
+    result: FoodPriceVolatilityResult,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports/absolute"),
+    filename: str = "food_price_volatility.webp",
+    quality: int = 92,
+    lossless: bool = False,
+    width: int | None = 1800,
+    overwrite: bool = True,
+    top_n: int = 8,
+) -> FoodPriceVolatilityWebPExportResult | None:
+    """Write a static WebP summary of food-price volatility."""
+
+    output_path = Path(path) if path is not None else Path(output_dir) / filename
+    if output_path.exists() and not overwrite:
+        raise FileExistsError(output_path)
+    fig = _food_price_volatility_figure(result, top_n=top_n)
+    if fig is None:
+        return None
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    image = _figure_to_image(fig, width=width)
+    image.save(output_path, format="WEBP", quality=quality, lossless=lossless, method=6)
+    return FoodPriceVolatilityWebPExportResult(
+        path=output_path,
+        format="webp",
+        width=image.width,
+        height=image.height,
+        markets=result.stats.height,
+        snapshots=result.global_distribution.height,
+    )
+
+
+def export_food_price_volatility_webp(
+    *,
+    repo: str | Path | None = None,
+    data_root: str | Path | None = None,
+    load_order_path: str | Path | None = None,
+    profile: str | None = "constructor",
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports/absolute"),
+    filename: str = "food_price_volatility.webp",
+    quality: int = 92,
+    lossless: bool = False,
+    width: int | None = 1800,
+    top_n: int = 8,
+) -> FoodPriceVolatilityWebPExportResult | None:
+    """Open the raw savegame dataset and export the compact food-price WebP."""
+
+    resolved_repo = _find_repo_root(_portable_path(repo) if repo is not None else None)
+    data = open_data(
+        repo=resolved_repo,
+        data_root=data_root if data_root is not None else resolved_repo / "graphs" / "dataset",
+        load_order_path=load_order_path if load_order_path is not None else resolved_repo / "constructor.load_order.toml",
+        profile=profile,
+        tables=("market_food",),
+        load_map_assets=False,
+    )
+    result = food_price_volatility(data, top_n=max(top_n, 12))
+    return save_food_price_volatility_webp(
+        result,
+        output_dir=_resolve_output_path(resolved_repo, output_dir),
+        filename=filename,
+        quality=quality,
+        lossless=lossless,
+        width=width,
+        top_n=top_n,
     )
 
 
@@ -1054,6 +1408,7 @@ def export_global_map_outputs(
     absolute_export_dir: str | Path = Path("graphs/savegame_notebooks/exports/absolute"),
     viewer_path: str | Path = Path("graphs/savegame_notebooks/exports/savegame_maps.html"),
     viewer_frame_dir: str | Path = Path("viewer_frames"),
+    viewer_assets: Sequence[tuple[str, str | Path]] = (),
 ) -> GlobalMapExportResult:
     """Render the standard global savegame map WebPs and HTML scrubber viewer."""
 
@@ -1062,12 +1417,13 @@ def export_global_map_outputs(
     absolute_dir = _resolve_output_path(resolved_repo, absolute_export_dir)
     viewer_output = _resolve_output_path(resolved_repo, viewer_path)
     _remove_stale_comparison_exports(comparison_dir)
+    _remove_stale_absolute_exports(absolute_dir)
     data = open_data(
         repo=resolved_repo,
         data_root=data_root if data_root is not None else resolved_repo / "graphs" / "dataset",
         load_order_path=load_order_path if load_order_path is not None else resolved_repo / "constructor.load_order.toml",
         profile=profile,
-        tables=("locations", "buildings"),
+        tables=("locations", "buildings", "market_food"),
         load_map_assets=True,
         map_width=map_asset_width,
     )
@@ -1136,17 +1492,37 @@ def export_global_map_outputs(
             max_bytes=max_webp_bytes,
         )
     )
+
+    food_price_current = food_price_map(
+        data,
+        absolute_bounds=savegame_maps.DEFAULT_FOOD_PRICE_BOUNDS,
+        **common,
+    )
+    exports.append(
+        save_food_price_map_animation(
+            food_price_current,
+            output_dir=absolute_dir,
+            filename="food_price_current.webp",
+            duration_ms=interval_ms,
+            quality=quality,
+            lossless=lossless,
+            width=export_width,
+            max_bytes=max_webp_bytes,
+        )
+    )
     viewer = savegame_maps.save_map_viewer(
         [
             ("Population current", population_current),
             ("Development current", development_current),
             ("Building levels current", building_levels_current),
+            ("Food price current", food_price_current),
         ],
         path=viewer_output,
         frame_dir=viewer_frame_dir,
         width=export_width,
         quality=quality,
         lossless=lossless,
+        asset_links=viewer_assets,
     )
     return GlobalMapExportResult(animations=tuple(exports), viewer=viewer)
 
@@ -1165,6 +1541,12 @@ def _remove_stale_comparison_exports(comparison_dir: Path) -> None:
         path = comparison_dir / filename
         if path.exists():
             path.unlink()
+
+
+def _remove_stale_absolute_exports(absolute_dir: Path) -> None:
+    path = absolute_dir / "food_price_volatility.webp"
+    if path.exists():
+        path.unlink()
 
 
 def global_buildings(data: SavegameNotebookData, workbench: Any) -> GlobalBuildingsResult:
@@ -1808,6 +2190,204 @@ def building_types_for_custom_tag(
         return list(fallback_order)
     sort_order = {building_type: index for index, building_type in enumerate(fallback_order)}
     return sorted(tagged, key=lambda building_type: (sort_order.get(building_type, len(sort_order)), building_type))
+
+
+def _food_price_rows(
+    data: SavegameNotebookData,
+    *,
+    playthrough: str | None,
+    start_date: int | None,
+    end_date: int | None,
+    market_search: str | None,
+) -> pl.DataFrame:
+    frame = data.table("market_food")
+    if frame.is_empty() or "food_price" not in frame.columns:
+        return pl.DataFrame()
+    if playthrough is not None and "playthrough_id" in frame.columns:
+        frame = frame.filter(pl.col("playthrough_id") == playthrough)
+    if start_date is not None and "date_sort" in frame.columns:
+        frame = frame.filter(pl.col("date_sort") >= int(start_date))
+    if end_date is not None and "date_sort" in frame.columns:
+        frame = frame.filter(pl.col("date_sort") <= int(end_date))
+    frame = frame.filter(pl.col("food_price").is_not_null())
+    if frame.is_empty():
+        return frame
+    frame = _with_plot_year(_with_food_fill_ratio(frame))
+    frame = _with_market_label_columns(data, frame)
+    frame = _filter_food_price_markets(frame, market_search)
+    return frame.sort(["market_label", "date_sort"])
+
+
+def _with_food_fill_ratio(frame: pl.DataFrame) -> pl.DataFrame:
+    if "food_fill_ratio" in frame.columns:
+        return frame
+    if {"food", "food_max"}.issubset(frame.columns):
+        return frame.with_columns(
+            pl.when(pl.col("food_max") > 0)
+            .then(pl.col("food") / pl.col("food_max"))
+            .otherwise(None)
+            .alias("food_fill_ratio")
+        )
+    if "food_fill_percent" in frame.columns:
+        return frame.with_columns(
+            pl.when(pl.col("food_fill_percent") > 1)
+            .then(pl.col("food_fill_percent") / 100)
+            .otherwise(pl.col("food_fill_percent"))
+            .alias("food_fill_ratio")
+        )
+    return frame.with_columns(pl.lit(None, dtype=pl.Float64).alias("food_fill_ratio"))
+
+
+def _with_market_label_columns(data: SavegameNotebookData, frame: pl.DataFrame) -> pl.DataFrame:
+    result = frame
+    markets = data.dim("markets")
+    if not markets.is_empty() and "market_label" not in result.columns:
+        for key in ("market_code", "market_id"):
+            if key in result.columns and key in markets.columns:
+                label_columns = [
+                    key,
+                    *[
+                        column
+                        for column in ("market_id", "market_label", "market_name", "market_center_slug")
+                        if column in markets.columns and column != key
+                    ],
+                ]
+                result = result.join(markets.select(label_columns).unique(key), on=key, how="left")
+                break
+
+    if "market_id" not in result.columns:
+        id_source = next(
+            (
+                column
+                for column in ("market_code", "market_label", "market_name", "market_center_slug")
+                if column in result.columns
+            ),
+            None,
+        )
+        if id_source is None:
+            result = result.with_row_index("market_id")
+        else:
+            result = result.with_columns(pl.col(id_source).rank("dense").cast(pl.Int64).alias("market_id"))
+    label_candidates: list[pl.Expr] = []
+    for column in ("market_label", "market_name", "market_center_slug"):
+        if column in result.columns:
+            label_candidates.append(pl.col(column).cast(pl.String))
+    if "market_id" in result.columns:
+        label_candidates.append(pl.concat_str([pl.lit("Market #"), pl.col("market_id").cast(pl.String)]))
+    if label_candidates:
+        result = result.with_columns(pl.coalesce(label_candidates).alias("market_label"))
+    else:
+        result = result.with_columns(pl.lit("Market").alias("market_label"))
+    return result
+
+
+def _filter_food_price_markets(frame: pl.DataFrame, market_search: str | None) -> pl.DataFrame:
+    query = _text_or_none(market_search)
+    if query is None or frame.is_empty():
+        return frame
+    terms = []
+    for column in ("market_label", "market_name", "market_center_slug", "market_id"):
+        if column in frame.columns:
+            terms.append(pl.col(column).cast(pl.String).str.to_lowercase().str.contains(query.lower(), literal=True))
+    if not terms:
+        return frame.head(0)
+    predicate = terms[0]
+    for term in terms[1:]:
+        predicate = predicate | term
+    return frame.filter(predicate)
+
+
+def _food_price_volatility_figure(
+    result: FoodPriceVolatilityResult,
+    *,
+    top_n: int,
+) -> Any | None:
+    if result.global_distribution.is_empty() or result.top_erratic.is_empty():
+        return None
+    plot_markets = result.top_erratic.get_column("market_label").head(top_n).to_list()
+    line_frame = result.market_time_series.filter(pl.col("market_label").is_in(plot_markets)).sort(["market_label", "date_sort"])
+
+    fig, (ax_band, ax_lines) = plt.subplots(1, 2, figsize=(15, 6), gridspec_kw={"width_ratios": [1.05, 1.35]})
+    global_frame = result.global_distribution.sort("date_sort")
+    x_values = global_frame["plot_year"].to_list()
+    ax_band.fill_between(
+        x_values,
+        global_frame["price_p10"].to_list(),
+        global_frame["price_p90"].to_list(),
+        alpha=0.20,
+        label="10th-90th percentile",
+    )
+    ax_band.plot(
+        x_values,
+        global_frame["median_food_price"].to_list(),
+        linewidth=2.3,
+        label="Global median",
+    )
+    ax_band.plot(
+        x_values,
+        global_frame["mean_food_price"].to_list(),
+        linewidth=1.8,
+        linestyle="--",
+        label="Global mean",
+    )
+    ax_band.set_title("Food Price Distribution")
+    ax_band.set_xlabel("year")
+    ax_band.set_ylabel("food price")
+    ax_band.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax_band.legend(loc="best", fontsize=9)
+
+    for label in plot_markets:
+        series = line_frame.filter(pl.col("market_label") == label).sort("date_sort")
+        if series.is_empty():
+            continue
+        ax_lines.plot(
+            series["plot_year"].to_list(),
+            series["food_price"].to_list(),
+            linewidth=1.9,
+            marker="o",
+            markersize=3.5,
+            label=str(label),
+        )
+    title = "Most Erratic Food Markets"
+    if result.market_search:
+        title = f"{title}: {result.market_search}"
+    ax_lines.set_title(title)
+    ax_lines.set_xlabel("year")
+    ax_lines.set_ylabel("food price")
+    ax_lines.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax_lines.legend(bbox_to_anchor=(1.01, 1), loc="upper left", fontsize=8)
+
+    summary = result.stats.select(
+        pl.len().alias("markets"),
+        pl.mean("stddev_food_price").alias("mean_stddev"),
+        pl.median("stddev_food_price").alias("median_stddev"),
+        pl.max("stddev_food_price").alias("max_stddev"),
+        pl.mean("mean_abs_price_change").alias("mean_step_change"),
+    ).to_dicts()[0]
+    subtitle = (
+        f"{int(summary['markets'])} markets | "
+        f"stdev mean {summary['mean_stddev']:.3f}, "
+        f"median {summary['median_stddev']:.3f}, "
+        f"max {summary['max_stddev']:.3f} | "
+        f"mean step {summary['mean_step_change']:.3f}"
+    )
+    fig.suptitle(subtitle, fontsize=11, y=0.995)
+    fig.tight_layout(rect=(0, 0, 1, 0.96))
+    return fig
+
+
+def _figure_to_image(fig: Any, *, width: int | None) -> Any:
+    from PIL import Image
+
+    buffer = BytesIO()
+    fig.savefig(buffer, format="png", dpi=160, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+    buffer.seek(0)
+    image = Image.open(buffer).convert("RGB")
+    if width is not None and width > 0 and image.width != int(width):
+        height = max(1, round(image.height * int(width) / image.width))
+        image = image.resize((int(width), height), Image.Resampling.LANCZOS)
+    return image
 
 
 def _find_repo_root(start: Path | None = None) -> Path:

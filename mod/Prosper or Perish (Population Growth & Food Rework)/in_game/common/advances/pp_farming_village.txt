@@ -3,6 +3,8 @@ pp_rice_farm_advance_game_start = {
     age = age_1_traditions
     unlock_production_method = pp_rice_farm_base_rice
     unlock_production_method = pp_rice_farm_maintenance
+    unlock_production_method = pp_husbandry_farmstead_base_rice
+    unlock_production_method = pp_husbandry_farmstead_rice
     requires = agriculture_advance
     ai_weight = { add = 50 }
     potential = {
@@ -31,6 +33,8 @@ pp_rice_farm_advance_general = {
     age = age_3_discovery
     unlock_production_method = pp_rice_farm_base_rice
     unlock_production_method = pp_rice_farm_maintenance
+    unlock_production_method = pp_husbandry_farmstead_base_rice
+    unlock_production_method = pp_husbandry_farmstead_rice
     requires = new_world_advance
     ai_weight = { add = 50 }
     potential = {
@@ -61,6 +65,8 @@ pp_maize_farm_advance_game_start = {
     age = age_1_traditions
     unlock_production_method = pp_maize_farm_base_maize
     unlock_production_method = pp_maize_farm_maintenance
+    unlock_production_method = pp_husbandry_farmstead_base_maize
+    unlock_production_method = pp_husbandry_farmstead_maize
     requires = agriculture_advance
     ai_weight = { add = 50 }
     potential = {
@@ -78,6 +84,8 @@ pp_maize_farm_advance_general = {
     age = age_4_reformation
     unlock_production_method = pp_maize_farm_base_maize
     unlock_production_method = pp_maize_farm_maintenance
+    unlock_production_method = pp_husbandry_farmstead_base_maize
+    unlock_production_method = pp_husbandry_farmstead_maize
     requires = global_trade_advance
     ai_weight = { add = 50 }
     potential = {
@@ -99,6 +107,8 @@ pp_potato_farm_advance_game_start = {
     unlock_production_method = pp_potato_farm_maintenance
     unlock_production_method = pp_farming_village_rotations_base_potato
     unlock_production_method = pp_farming_village_rotations_potato
+    unlock_production_method = pp_husbandry_farmstead_base_potato
+    unlock_production_method = pp_husbandry_farmstead_potato
     requires = agriculture_advance
     ai_weight = { add = 50 }
     potential = {
@@ -118,6 +128,8 @@ pp_potato_farm_advance_general = {
     unlock_production_method = pp_potato_farm_maintenance
     unlock_production_method = pp_farming_village_rotations_base_potato
     unlock_production_method = pp_farming_village_rotations_potato
+    unlock_production_method = pp_husbandry_farmstead_base_potato
+    unlock_production_method = pp_husbandry_farmstead_potato
     requires = newspapers_advance
     ai_weight = { add = 50 }
     potential = {
@@ -137,6 +149,8 @@ pp_olives_farm_advance_game_start = {
     age = age_1_traditions
     unlock_production_method = pp_olives_farm_base_olives
     unlock_production_method = pp_olives_farm_maintenance
+    unlock_production_method = pp_husbandry_farmstead_base_olives
+    unlock_production_method = pp_husbandry_farmstead_olives
     requires = agriculture_advance
     ai_weight = { add = 50 }
     potential = {
@@ -158,6 +172,8 @@ pp_olives_farm_advance_general = {
     age = age_4_reformation
     unlock_production_method = pp_olives_farm_base_olives
     unlock_production_method = pp_olives_farm_maintenance
+    unlock_production_method = pp_husbandry_farmstead_base_olives
+    unlock_production_method = pp_husbandry_farmstead_olives
     requires = global_trade_advance
     ai_weight = { add = 50 }
     potential = {

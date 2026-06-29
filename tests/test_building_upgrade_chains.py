@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import re
+from typing import Mapping
 
 import polars as pl
 import yaml
@@ -43,6 +44,15 @@ FISHING_ADVANCES_PATH = (
     / "common"
     / "advances"
     / "pp_fishing_village.txt"
+)
+DRIFT_NET_ADVANCES_PATH = (
+    ROOT
+    / "mod"
+    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "in_game"
+    / "common"
+    / "advances"
+    / "pp_ocean_fishery_drift_net_fishery.txt"
 )
 GAME_START_PATH = (
     ROOT
@@ -224,6 +234,7 @@ RAW_MATERIAL_BASE_PRODUCERS = {
     "stone_quarry": ("stone", "pp_stone_quarry_base_stone"),
     "incense_grove": ("incense", "pp_incense_grove_base_incense"),
     "fiber_crops_farm": ("fiber_crops", "pp_fiber_crops_farm_base_fiber_crops"),
+    "fiber_dressing_yard": ("fiber_crops", "pp_fiber_dressing_yard_base_fiber_crops"),
     "ivory_hunting_camp": ("ivory", "pp_ivory_hunting_camp_base_ivory"),
     "salt_collector": ("salt", "pp_coastal_saltern_base_salt"),
     "salt_mine": ("salt", "pp_salt_mine_base_salt"),
@@ -276,6 +287,88 @@ NON_SLAVE_CROP_FARMS = {
         },
         "removed_inputs": {"pottery", "slaves_goods"},
     },
+}
+CASH_CROP_UPGRADE_CHAINS = {
+    "cotton_farm": [
+        ("cotton_farm", None, "cotton"),
+        ("market_cotton_farm", "pp_market_cotton_farm", "cotton"),
+    ],
+    "sugarcane_farm": [
+        ("sugarcane_farm", None, "sugar"),
+        ("trapiche_sugarcane_farm", "pp_trapiche_sugarcane_farm", "sugar"),
+    ],
+    "tobacco_farm": [
+        ("tobacco_farm", None, "tobacco"),
+        ("market_tobacco_farm", "pp_market_tobacco_farm", "tobacco"),
+    ],
+    "coffee_grove": [
+        ("coffee_grove", None, "coffee"),
+        ("terraced_coffee_grove", "pp_terraced_coffee_grove", "coffee"),
+    ],
+    "cocoa_grove": [
+        ("cocoa_grove", None, "cocoa"),
+        ("managed_cocoa_grove", "pp_managed_cocoa_grove", "cocoa"),
+    ],
+    "tea_garden": [
+        ("tea_garden", None, "tea"),
+        ("tea_sorting_garden", "pp_tea_sorting_garden", "tea"),
+    ],
+    "saffron_croft": [
+        ("saffron_croft", None, "saffron"),
+        ("saffron_kiln_croft", "pp_saffron_kiln_croft", "saffron"),
+    ],
+    "pepper_garden": [
+        ("pepper_garden", None, "pepper"),
+        ("managed_pepper_garden", "pp_managed_pepper_garden", "pepper"),
+    ],
+    "sericulture_farm": [
+        ("sericulture_farm", None, "silk"),
+        ("regulated_sericulture_farm", "pp_regulated_sericulture_farm", "silk"),
+    ],
+}
+CASH_CROP_UPGRADE_INPUTS = {
+    "market_cotton_farm": {
+        "allowed": {"furniture", "fiber_crops", "tools"},
+        "required": {"furniture", "fiber_crops"},
+    },
+    "trapiche_sugarcane_farm": {
+        "allowed": {"pottery", "furniture", "tools"},
+        "required": {"pottery", "furniture"},
+    },
+    "market_tobacco_farm": {
+        "allowed": {"furniture", "fiber_crops", "paper"},
+        "required": {"furniture", "fiber_crops"},
+    },
+    "terraced_coffee_grove": {
+        "allowed": {"fiber_crops", "pottery", "furniture"},
+        "required": {"fiber_crops", "pottery", "furniture"},
+    },
+    "managed_cocoa_grove": {
+        "allowed": {"fiber_crops", "furniture"},
+        "required": {"fiber_crops", "furniture"},
+    },
+    "tea_sorting_garden": {
+        "allowed": {"furniture", "fiber_crops", "pottery", "paper"},
+        "required": {"furniture", "fiber_crops", "pottery", "paper"},
+    },
+    "saffron_kiln_croft": {
+        "allowed": {"livestock", "pottery", "coal"},
+        "required": {"livestock", "pottery", "coal"},
+    },
+    "managed_pepper_garden": {
+        "allowed": {"fiber_crops", "pottery", "furniture"},
+        "required": {"fiber_crops", "pottery"},
+    },
+    "regulated_sericulture_farm": {
+        "allowed": {"furniture", "fiber_crops", "pottery", "coal"},
+        "required": {"furniture", "fiber_crops", "pottery"},
+    },
+}
+FORBIDDEN_CASH_CROP_UPGRADE_INPUT_GOODS = {"slaves_goods", "horses", "lumber"}
+FORBIDDEN_CASH_CROP_UPGRADE_TERMS = {
+    "is_overseas_for_owner",
+    "is_colonial_subject",
+    "plantation_buildings_advance",
 }
 RAW_PROCESSOR_EXCLUSIONS = {
     "perfumery": "incense",
@@ -333,6 +426,17 @@ def _body_custom_tags(body: str) -> set[str]:
 
 def _obsolete_entries(body: str) -> list[str]:
     return re.findall(r"^\s*obsolete\s*=\s*([A-Za-z0-9_]+)\s*$", body, flags=re.M)
+
+
+def _upgrade_chain_previous_keys(upgrade_chain: Mapping[str, object]) -> list[str]:
+    previous = upgrade_chain.get("previous")
+    previous_keys: list[str] = []
+    if isinstance(previous, str):
+        previous_keys.append(previous)
+    additional_previous = upgrade_chain.get("additional_previous")
+    if isinstance(additional_previous, list):
+        previous_keys.extend(item for item in additional_previous if isinstance(item, str))
+    return previous_keys
 
 
 def _managed_building_output_paths_by_key() -> dict[str, Path]:
@@ -506,6 +610,35 @@ def _script_line_number(text: str, position: int) -> int:
     return text.count("\n", 0, position) + 1
 
 
+def _inline_production_method_blocks(body: str) -> dict[str, str]:
+    blocks: dict[str, str] = {}
+    pattern = re.compile(r"(?m)^[ \t]*(pp_[A-Za-z0-9_]+)\s*=\s*\{")
+    for _, _, group_block in _iter_script_blocks(body, "unique_production_methods"):
+        position = 0
+        while match := pattern.search(group_block, position):
+            opening_index = group_block.find("{", match.start(), match.end())
+            closing_index = _matching_brace_index(group_block, opening_index)
+            blocks[match.group(1)] = group_block[opening_index + 1 : closing_index]
+            position = closing_index + 1
+    return blocks
+
+
+def _inline_production_method_inputs(body: str) -> dict[str, set[str]]:
+    non_input_keys = {"produced", "output", "category", "debug_max_profit"}
+    inputs: dict[str, set[str]] = {}
+    for method, block in _inline_production_method_blocks(body).items():
+        keys = set(re.findall(r"(?m)^\s*([A-Za-z][A-Za-z0-9_]*)\s*=", block))
+        inputs[method] = keys - non_input_keys
+    return inputs
+
+
+def _inline_production_method_input_amounts(body: str, input_good: str) -> list[float]:
+    amounts: list[float] = []
+    for block in _inline_production_method_blocks(body).values():
+        for match in re.finditer(rf"(?m)^\s*{re.escape(input_good)}\s*=\s*(-?\d+(?:\.\d+)?)\b", block):
+            amounts.append(float(match.group(1)))
+    return amounts
+
 def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])
@@ -550,10 +683,16 @@ def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
 def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])
-    advances = FISHING_ADVANCES_PATH.read_text(encoding="utf-8")
+    advances = "\n".join(
+        (
+            FISHING_ADVANCES_PATH.read_text(encoding="utf-8"),
+            DRIFT_NET_ADVANCES_PATH.read_text(encoding="utf-8"),
+        )
+    )
 
     chain = [
         ("ocean_fishery", None),
+        ("drift_net_fishery", "pp_coastal_drift_nets"),
         ("offshore_fishery", "pp_herring_buss"),
     ]
     for tier, (key, unlock_advance) in enumerate(chain):
@@ -568,10 +707,18 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
             "previous": chain[tier - 1][0] if tier > 0 else None,
             "next": chain[tier + 1][0] if tier + 1 < len(chain) else None,
             "unlock_advance": unlock_advance,
+            **({"additional_previous": ["net_curing_yard"]} if key == "drift_net_fishery" else {}),
         }
 
+    drift_body = _load_blueprint("drift_net_fishery")["building"]["body"]
+    assert re.search(r"^\s*obsolete\s*=\s*ocean_fishery\s*$", drift_body, flags=re.M)
+    assert re.search(r"^\s*obsolete\s*=\s*net_curing_yard\s*$", drift_body, flags=re.M)
+    assert re.search(r"location_potential\s*=\s*\{\s*is_coastal\s*=\s*yes\s*\}", drift_body)
+    drift_block = _advance_block("pp_coastal_drift_nets", advances)
+    assert re.search(r"^\s*requires\s*=\s*pp_net_curing_yards\s*$", drift_block, flags=re.M)
+
     offshore_body = _load_blueprint("offshore_fishery")["building"]["body"]
-    assert re.search(r"^\s*obsolete\s*=\s*ocean_fishery\s*$", offshore_body, flags=re.M)
+    assert re.search(r"^\s*obsolete\s*=\s*drift_net_fishery\s*$", offshore_body, flags=re.M)
     assert re.search(r"location_potential\s*=\s*\{\s*is_coastal\s*=\s*yes\s*\}", offshore_body)
 
     herring_block = _advance_block("pp_herring_buss", advances)
@@ -593,6 +740,20 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
         flags=re.M,
     )
     assert "potential =" not in steam_block
+
+    wattle_block = _advance_block("pp_wattle_fish_weirs", advances)
+    assert re.search(
+        r"^\s*unlock_production_method\s*=\s*pp_net_curing_yard_wattle_weirs\s*$",
+        wattle_block,
+        flags=re.M,
+    )
+
+    fishpond_block = _advance_block("pp_managed_fishponds", advances)
+    assert re.search(
+        r"^\s*unlock_production_method\s*=\s*pp_net_curing_yard_stew_ponds\s*$",
+        fishpond_block,
+        flags=re.M,
+    )
 
 
 def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> None:
@@ -891,16 +1052,29 @@ def test_lumber_mill_upgrade_chain_is_explicit_and_unlockable() -> None:
 def test_rural_food_building_upgrade_chains_are_explicit() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])
-    assert _load_blueprint("fishing_village").get("upgrade_chain") is None
     expected_chains = {
+        "horse_breeders": [
+            ("horse_breeders", None),
+            ("stud_farm", "pp_stud_farm"),
+        ],
+        "fiber_crops_farm": [
+            ("fiber_crops_farm", None),
+            ("fiber_dressing_yard", "pp_fiber_dressing_yard"),
+        ],
         "sheep_farms": [
             ("sheep_farms", None),
+            ("hurdled_sheepcotes", "pp_foldcourse_husbandry"),
             ("enclosed_sheep_walks", "pp_enclosed_sheep_walks"),
         ],
         "farming_village": [
             ("farming_village", None),
+            ("husbandry_farmstead", "pp_manuring_and_seed_stores"),
             ("farming_village_rotations", "pp_farming_village_rotations"),
             ("model_farm", "pp_model_farm"),
+        ],
+        "fishing_village": [
+            ("fishing_village", None),
+            ("net_curing_yard", "pp_net_curing_yards"),
         ],
         "forest_village": [
             ("forest_village", None),
@@ -908,6 +1082,7 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
         ],
         "fruit_orchard": [
             ("fruit_orchard", None),
+            ("nursery_orchard", "pp_orchard_nurseries"),
             ("pomological_orchard", "pp_pomological_orchard"),
         ],
     }
@@ -919,11 +1094,14 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
             assert f"buildings/{key}.yml" in enabled
             assert raw["tag"] == key
             assert raw["building"]["key"] == key
+            expected_next = chain[tier + 1][0] if tier + 1 < len(chain) else None
+            if key == "net_curing_yard":
+                expected_next = "drift_net_fishery"
             assert raw.get("upgrade_chain") == {
                 "family": family,
                 "tier": tier,
                 "previous": chain[tier - 1][0] if tier > 0 else None,
-                "next": chain[tier + 1][0] if tier + 1 < len(chain) else None,
+                "next": expected_next,
                 "unlock_advance": unlock_advance,
             }
 
@@ -973,22 +1151,25 @@ def test_blueprint_upgrade_successors_load_after_obsolete_predecessors() -> None
             offenders.append(f"{key}: stale tag-named managed output still exists: {legacy_path}")
 
         upgrade_chain = raw.get("upgrade_chain")
-        if not upgrade_chain or upgrade_chain.get("previous") is None:
+        if not isinstance(upgrade_chain, dict):
             continue
 
-        previous = upgrade_chain["previous"]
-        if previous not in blueprints:
+        previous_keys = _upgrade_chain_previous_keys(upgrade_chain)
+        if not previous_keys:
             continue
 
-        previous_building_key = blueprints[previous]["building"]["key"]
-        previous_path = actual_paths_by_building_key.get(previous_building_key)
         current_path = actual_paths_by_building_key.get(building_key)
-        if previous_path is None or current_path is None:
-            continue
-        previous_sort_key = previous_path.relative_to(mod_root).as_posix()
-        current_sort_key = current_path.relative_to(mod_root).as_posix()
-        if previous_sort_key >= current_sort_key:
-            offenders.append(f"{key}: {current_path} loads before {previous}: {previous_path}")
+        for previous in previous_keys:
+            if previous not in blueprints:
+                continue
+            previous_building_key = blueprints[previous]["building"]["key"]
+            previous_path = actual_paths_by_building_key.get(previous_building_key)
+            if previous_path is None or current_path is None:
+                continue
+            previous_sort_key = previous_path.relative_to(mod_root).as_posix()
+            current_sort_key = current_path.relative_to(mod_root).as_posix()
+            if previous_sort_key >= current_sort_key:
+                offenders.append(f"{key}: {current_path} loads before {previous}: {previous_path}")
 
     assert not offenders, "\n".join(offenders)
 
@@ -1004,8 +1185,7 @@ def test_accepted_building_upgrade_chains_obsolete_only_direct_predecessor() -> 
             continue
 
         body = raw["building"]["body"]
-        previous = upgrade_chain.get("previous")
-        expected = [] if previous is None else [previous]
+        expected = _upgrade_chain_previous_keys(upgrade_chain)
         actual = _obsolete_entries(body)
         if actual == expected:
             continue
@@ -1239,6 +1419,7 @@ def test_game_start_invalid_building_cleanup_matches_current_potentials() -> Non
     assert "pp_fiber_crops_farm_location_potential = yes" in fiber_and_stud_cleanup
     assert "building_type:horse_breeders" in fiber_and_stud_cleanup
     assert "pp_horse_breeders_location_potential = yes" in fiber_and_stud_cleanup
+    assert "building_type:stud_farm" in fiber_and_stud_cleanup
     assert "can_build_building" not in fiber_and_stud_cleanup
 
     cleanup = _first_script_block(text, "pp_remove_invalid_buildings")
@@ -1403,6 +1584,62 @@ def test_non_slave_crop_farms_are_default_rgo_laborer_buildings() -> None:
             == {"base_output_per_1k"}
         )
         assert evaluation["production_methods"][worked_method]["production_efficiency"] == 1.05
+
+
+def test_cash_crop_upgrade_chains_use_dedicated_discovery_advances_and_clean_inputs() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+
+    for family, chain in CASH_CROP_UPGRADE_CHAINS.items():
+        for tier, (key, unlock_advance, good) in enumerate(chain):
+            raw = _load_blueprint(key)
+            body = raw["building"]["body"]
+
+            assert f"buildings/{key}.yml" in enabled
+            assert raw["tag"] == key
+            assert raw["building"]["key"] == key
+            assert raw["building"]["mode"] == "CREATE"
+            assert raw["building"]["source"] == "pp_new_buildings.txt"
+            assert f"max_levels = farm_capacity_max_{key}" in body
+            assert f"farm_capacity_from_{key} = -1" in body
+            assert re.search(rf"location_potential\s*=\s*\{{\s*raw_material\s*=\s*goods:{good}\s*\}}", body)
+            assert not any(term in body for term in FORBIDDEN_CASH_CROP_UPGRADE_TERMS)
+            assert raw.get("upgrade_chain") == {
+                "family": family,
+                "tier": tier,
+                "previous": chain[tier - 1][0] if tier > 0 else None,
+                "next": chain[tier + 1][0] if tier + 1 < len(chain) else None,
+                "unlock_advance": unlock_advance,
+            }
+
+            obsolete_entries = _obsolete_entries(body)
+            if tier == 0:
+                assert obsolete_entries == []
+                continue
+
+            assert obsolete_entries == [chain[tier - 1][0]]
+            assert raw["icon"]["source_png"] == f"../assets/icons/{key}.png"
+            assert raw["icon"]["output_dds"] == f"{key}.dds"
+
+            advancements = raw.get("advancements")
+            assert isinstance(advancements, list)
+            advancement = next(item for item in advancements if item["key"] == unlock_advance)
+            advancement_body = advancement["body"]
+            assert re.search(r"^\s*age\s*=\s*age_3_discovery\s*$", advancement_body, flags=re.M)
+            assert re.search(rf"^\s*unlock_building\s*=\s*{re.escape(key)}\s*$", advancement_body, flags=re.M)
+            assert not re.search(r"^\s*requires\s*=", advancement_body, flags=re.M)
+            assert not re.search(r"^\s*focus\s*=", advancement_body, flags=re.M)
+
+            expected_inputs = CASH_CROP_UPGRADE_INPUTS[key]
+            actual_inputs = set().union(*_inline_production_method_inputs(body).values())
+            assert actual_inputs <= expected_inputs["allowed"]
+            assert expected_inputs["required"] <= actual_inputs
+            assert actual_inputs.isdisjoint(FORBIDDEN_CASH_CROP_UPGRADE_INPUT_GOODS)
+
+            tools_amounts = _inline_production_method_input_amounts(body, "tools")
+            if tools_amounts:
+                assert key in {"market_cotton_farm", "trapiche_sugarcane_farm"}
+                assert max(tools_amounts) <= 0.010
 
 
 def test_raw_processor_replacements_exclude_matching_raw_materials() -> None:

@@ -1,0 +1,130 @@
+version: 2
+tag: trapiche_sugarcane_farm
+upgrade_chain:
+  family: sugarcane_farm
+  tier: 1
+  previous: sugarcane_farm
+  next: null
+  unlock_advance: pp_trapiche_sugarcane_farm
+building:
+  key: trapiche_sugarcane_farm
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_trapiche_sugarcane_farm_base_sugar
+    - name: slot_1
+      methods:
+        - pp_trapiche_sugarcane_farm_no_boiling
+        - pp_trapiche_sugarcane_farm_open_kettles
+    - name: slot_2
+      methods:
+        - pp_trapiche_sugarcane_farm_hand_crushing
+        - pp_trapiche_sugarcane_farm_trapiche_pressing
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    increase_per_level_cost = 0.25
+    max_levels = farm_capacity_max_trapiche_sugarcane_farm
+    pop_type = laborers
+    employment_size = 1
+    category = rgo_building_category
+    custom_tags = { farming_capacity }
+    icon = trapiche_sugarcane_farm
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = sugarcane_farm
+    build_time = workshop_build_time
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    location_potential = {
+        raw_material = goods:sugar
+    }
+
+    unique_production_methods = {
+        pp_trapiche_sugarcane_farm_base_sugar = {
+            produced = sugar
+            output = 0.040
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_trapiche_sugarcane_farm_no_boiling = {
+            category = building_maintenance
+        }
+        pp_trapiche_sugarcane_farm_open_kettles = {
+            pottery = 0.120 # sugar molds and boiling pans
+            tools = 0.004 # skimmers and ladles
+            produced = sugar
+            output = 0.083
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_trapiche_sugarcane_farm_hand_crushing = {
+            category = building_maintenance
+        }
+        pp_trapiche_sugarcane_farm_trapiche_pressing = {
+            furniture = 0.045 # trapiche carpentry and wooden rollers
+            tools = 0.006 # roller fittings and cane knives
+            produced = sugar
+            output = 0.064
+            category = building_maintenance
+        }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_trapiche_sugarcane_farm = -1
+    }
+
+    modifier = {
+        local_migration_attraction = 0.003
+    }
+advancements:
+  - key: pp_trapiche_sugarcane_farm
+    body: |2-
+      icon = trapiche_sugarcane_farm
+      age = age_3_discovery
+      unlock_building = trapiche_sugarcane_farm
+      ai_weight = { add = 125 }
+localization:
+  entries:
+    trapiche_sugarcane_farm: Trapiche Sugarcane Farm
+    trapiche_sugarcane_farm_desc: Trapiche farms press fresh cane with wooden rollers, then boil the juice in pans and clay molds before it spoils.
+    trapiche_sugarcane_farm_slot_0: Cane Fields
+    trapiche_sugarcane_farm_slot_1: Boiling
+    trapiche_sugarcane_farm_slot_2: Trapiche Pressing
+    pp_trapiche_sugarcane_farm: Trapiche Sugar Pressing
+    pp_trapiche_sugarcane_farm_desc: Wooden trapiches and better boiling gear let cane farms press and finish more sugar close to the fields.
+    pp_trapiche_sugarcane_farm_base_sugar: Cane Fields
+    pp_trapiche_sugarcane_farm_hand_crushing: Hand Crushing
+    pp_trapiche_sugarcane_farm_no_boiling: No Boiling House
+    pp_trapiche_sugarcane_farm_open_kettles: Open Kettles
+    pp_trapiche_sugarcane_farm_trapiche_pressing: Trapiche Pressing
+icon:
+  source_png: ../assets/icons/trapiche_sugarcane_farm.png
+  output_dds: trapiche_sugarcane_farm.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game building icon for a trapiche sugarcane farm on a perfectly flat magenta chroma-key background (#ff00ff). Center a compact early modern cane-processing yard with tall green sugarcane rows, cut cane bundles, a wooden trapiche press with visible vertical rollers and lever arms, clay sugar molds, copper-toned boiling pans, small pottery jars, cane knives, and raw sugar cones. Use a three-quarter view, material-rich painterly historical UI art, readable machinery and worksite details, warm timber, green cane, clay pinks and browns, no text, no frame, no modern factory, no scenic landscape.
+
+evaluation:
+  allow_rules:
+    input_throughput: Specialty crop farms preserve the accepted low-input rural RGO scale below the generic laborer throughput baseline.
+    output_throughput: Specialty crop farms preserve the accepted low-output rural RGO scale below the generic laborer throughput baseline.
+    amortization_months: Specialty crop farms use a low-cost, slow-payback cadence matching the existing small crop RGO buildings.
+  production_methods:
+    pp_trapiche_sugarcane_farm_base_sugar:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Passive field output follows the accepted small specialty-crop baseline rather than the generic raw-site band.
+    pp_trapiche_sugarcane_farm_open_kettles:
+      production_efficiency: 1.05
+    pp_trapiche_sugarcane_farm_trapiche_pressing:
+      production_efficiency: 1.05

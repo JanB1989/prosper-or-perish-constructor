@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:hurdled_sheepcotes:advancement
+pp_foldcourse_husbandry = {
+icon = hurdled_sheepcotes
+age = age_1_traditions
+requires = agriculture_advance
+unlock_building = hurdled_sheepcotes
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:hurdled_sheepcotes:advancement

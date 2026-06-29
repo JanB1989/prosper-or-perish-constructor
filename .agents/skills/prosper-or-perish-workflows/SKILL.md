@@ -30,6 +30,29 @@ Do not run project tooling from the old Windows-mounted checkout. Treat that
 checkout as quarantined: read or copy specific files only when recovering data
 from it.
 
+## Mod Output Root
+
+The constructor output mod root is:
+
+```text
+mod/Prosper or Perish (Population Growth & Food Rework)
+```
+
+From Windows this is visible as:
+
+```text
+\\wsl$\Ubuntu\home\jan\development\ProsperOrPerishConstructor\mod\Prosper or Perish (Population Growth & Food Rework)
+```
+
+This repo-local `mod/...` directory is the compiled mod copy. `uv run ppc
+sync --yes` first makes sure this output root is built/current, then copies it
+to the configured live Paradox mod folder. Work either edits files directly in
+this repo-local output root, or edits source/config/blueprints that compile into
+this output root before sync copies it onward.
+
+Do not look for or use a nested `Constructor/mod/...` path in this checkout; the
+compiled mod root is `mod/...`.
+
 Use tracked configuration for game paths:
 
 - `constructor.load_order.toml` is the actual parser load-order config.

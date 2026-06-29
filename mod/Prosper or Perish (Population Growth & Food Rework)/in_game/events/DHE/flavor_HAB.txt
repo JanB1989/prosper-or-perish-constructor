@@ -3502,8 +3502,11 @@ flavor_hab.59 = { #Expanding the Hofburg
 	trigger = {
 		has_ruler = yes
 		owns = location:vienna
-		work_of_art:hofburg ?= {
-			location = location:vienna
+		custom_tooltip = {
+			text = flavor_hab.59.requirement_tt
+			work_of_art:hofburg ?= {
+				location = location:vienna
+			}
 		}
 	}
 
@@ -6930,6 +6933,7 @@ flavor_hab.1201 = { #Schwaz Silver Mine
 		owns = location:innsbruck
 		location:schwaz = {
 			raw_material = goods:silver
+			# Prosper or Perish: keep the Schwaz silver mine event reachable under our RGO setup.
 			rgo_workers >= 0
 		}
 	}
@@ -9083,7 +9087,7 @@ flavor_hab.1901 = {  #Samson Wertheimer
 	}
 
 	trigger = {
-		character:hab_samuel_oppenheimer = {
+		character:hab_samuel_oppenheimer ?= {
 			in_cabinet = yes
 		}
 		custom_tooltip = {
@@ -9130,33 +9134,34 @@ flavor_hab.1902 = { #The Court Bankers finance in wartime
 	immediate = {
 		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
 
-		character:hab_samuel_oppenheimer = {
-			if = {
-				limit = {
+		if = {
+			limit = {
+				character:hab_samuel_oppenheimer ?= {
 					in_cabinet = yes
 				}
 			}
-			save_scope_as = target_character
+			character:hab_samuel_oppenheimer = {
+				save_scope_as = target_character
+			}
 		}
-		character:hab_samson_wertheimer = {
-			if = {
-				limit = {
+		else_if = {
+			limit = {
+				character:hab_samson_wertheimer ?= {
 					in_cabinet = yes
-					character:hab_samuel_oppenheimer = {
-						in_cabinet = no
-					}
 				}
 			}
-			save_scope_as = target_character
+			character:hab_samson_wertheimer = {
+				save_scope_as = target_character
+			}
 		}
 	}
 
 	trigger = {
 		OR = {
-			character:hab_samuel_oppenheimer = {
+			character:hab_samuel_oppenheimer ?= {
 				in_cabinet = yes
 			}
-			character:hab_samson_wertheimer = {
+			character:hab_samson_wertheimer ?= {
 				in_cabinet = yes
 			}
 		}
@@ -9194,24 +9199,25 @@ flavor_hab.1903 = { #The Court Bankers finance in wartime
 	immediate = {
 		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
 
-		character:hab_samuel_oppenheimer = {
-			if = {
-				limit = {
+		if = {
+			limit = {
+				character:hab_samuel_oppenheimer ?= {
 					in_cabinet = yes
 				}
 			}
-			save_scope_as = target_character
+			character:hab_samuel_oppenheimer = {
+				save_scope_as = target_character
+			}
 		}
-		character:hab_samson_wertheimer = {
-			if = {
-				limit = {
+		else_if = {
+			limit = {
+				character:hab_samson_wertheimer ?= {
 					in_cabinet = yes
-					character:hab_samuel_oppenheimer = {
-						in_cabinet = no
-					}
 				}
 			}
-			save_scope_as = target_character
+			character:hab_samson_wertheimer = {
+				save_scope_as = target_character
+			}
 		}
 		location:vienna = {
 			save_scope_as = target_location
@@ -9220,10 +9226,10 @@ flavor_hab.1903 = { #The Court Bankers finance in wartime
 
 	trigger = {
 		OR = {
-			character:hab_samuel_oppenheimer = {
+			character:hab_samuel_oppenheimer ?= {
 				in_cabinet = yes
 			}
-			character:hab_samson_wertheimer = {
+			character:hab_samson_wertheimer ?= {
 				in_cabinet = yes
 			}
 		}

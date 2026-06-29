@@ -2,8 +2,8 @@
 tag: pomological_orchard
 upgrade_chain:
   family: fruit_orchard
-  tier: 1
-  previous: fruit_orchard
+  tier: 2
+  previous: nursery_orchard
   next: null
   unlock_advance: pp_pomological_orchard
 building:
@@ -36,7 +36,7 @@ building:
     town = yes
     city = yes
     megalopolis = yes
-    obsolete = fruit_orchard
+    obsolete = nursery_orchard
     forbidden_for_estates = yes
     ai_forbid_shutdown = no
     can_close = yes
@@ -128,13 +128,21 @@ evaluation:
     pp_pomological_orchard_base_fruit:
       production_efficiency: 1.00
       allow_rules:
+        profit_percent: Passive orchard methods have little direct input cost; grafted rows carry the tier economy.
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_pomological_orchard_no_primary:
       production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Empty selector method intentionally produces no grafted-row output.
     pp_pomological_orchard_grafted_rows:
       production_efficiency: 1.00
+    pp_pomological_orchard_no_worker_victuals:
+      production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Empty selector method intentionally produces no household victuals.
     pp_pomological_orchard_worker_victuals:
       production_efficiency: 1.00
       allow_rules:
+        profit_percent: Household victuals are auxiliary worker food, not a standalone profit method.
         base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:managed_pepper_garden:advancement
+pp_managed_pepper_garden = {
+icon = managed_pepper_garden
+age = age_3_discovery
+unlock_building = managed_pepper_garden
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:managed_pepper_garden:advancement

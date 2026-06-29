@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: fishing_village
+upgrade_chain:
+  family: fishing_village
+  tier: 0
+  previous: null
+  next: net_curing_yard
+  unlock_advance: null
 building:
   key: fishing_village
   mode: REPLACE
@@ -169,6 +175,7 @@ advancements:
           icon = food_advance_renaissance
           requires = food_advance_renaissance
           unlock_production_method = pp_fishing_village_wattle_weirs
+          unlock_production_method = pp_net_curing_yard_wattle_weirs
           ai_weight = { add = 50 }
   - key: pp_managed_fishponds
     body: |2-
@@ -176,6 +183,7 @@ advancements:
           icon = food_advance_reformation
           requires = food_advance_reformation
           unlock_production_method = pp_fishing_village_stew_ponds
+          unlock_production_method = pp_net_curing_yard_stew_ponds
           ai_weight = { add = 50 }
 localization:
   entries:

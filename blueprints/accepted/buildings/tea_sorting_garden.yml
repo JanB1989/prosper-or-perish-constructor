@@ -1,0 +1,142 @@
+version: 2
+tag: tea_sorting_garden
+upgrade_chain:
+  family: tea_garden
+  tier: 1
+  previous: tea_garden
+  next: null
+  unlock_advance: pp_tea_sorting_garden
+building:
+  key: tea_sorting_garden
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_tea_sorting_garden_base_tea
+    - name: slot_1
+      methods:
+        - pp_tea_sorting_garden_no_withering
+        - pp_tea_sorting_garden_rolling_hearths
+    - name: slot_2
+      methods:
+        - pp_tea_sorting_garden_no_sorting
+        - pp_tea_sorting_garden_paper_packing
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    increase_per_level_cost = 0.23
+    max_levels = farm_capacity_max_tea_sorting_garden
+    pop_type = laborers
+    employment_size = 1
+    category = rgo_building_category
+    custom_tags = { farming_capacity }
+    icon = tea_sorting_garden
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = tea_garden
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:tea
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_tea_sorting_garden_base_tea = {
+            produced = tea
+            output = 0.055
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_tea_sorting_garden_no_withering = {
+            category = building_maintenance
+        }
+        pp_tea_sorting_garden_rolling_hearths = {
+            furniture = 0.105 # light tray frames and rolling tables
+            fiber_crops = 0.080 # woven withering mats and baskets
+            pottery = 0.060 # firing hearth pans
+            produced = tea
+            output = 0.125
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_tea_sorting_garden_no_sorting = {
+            category = building_maintenance
+        }
+        pp_tea_sorting_garden_paper_packing = {
+            furniture = 0.045 # sorting trays
+            fiber_crops = 0.035 # packing baskets and bale mats
+            paper = 0.055 # wrappers and packing slips
+            produced = tea
+            output = 0.070
+            category = building_maintenance
+        }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_tea_sorting_garden = -1
+    }
+
+    modifier = {
+        local_migration_attraction = 0.003
+    }
+advancements:
+  - key: pp_tea_sorting_garden
+    body: |2-
+      icon = tea_sorting_garden
+      age = age_3_discovery
+      unlock_building = tea_sorting_garden
+      ai_weight = { add = 125 }
+localization:
+  entries:
+    tea_sorting_garden_slot_0: Tea Bushes
+    tea_sorting_garden_slot_1: Withering & Firing
+    tea_sorting_garden_slot_2: Sorting & Packing
+    tea_sorting_garden: Tea Sorting Garden
+    tea_sorting_garden_desc: Organized tea gardens add rolling tables, firing hearths, sorting trays, and packing sheds so finished leaves reach market in better order.
+    pp_tea_sorting_garden: Tea Sorting Gardens
+    pp_tea_sorting_garden_desc: Better tea handling combines withering, firing, sorting, and packing work around productive upland tea gardens.
+    pp_tea_sorting_garden_base_tea: Tea Bushes
+    pp_tea_sorting_garden_no_withering: No Withering Hearths
+    pp_tea_sorting_garden_rolling_hearths: Rolling Tables & Firing Hearths
+    pp_tea_sorting_garden_no_sorting: No Sorting Tables
+    pp_tea_sorting_garden_paper_packing: Sorting & Paper Packing
+icon:
+  source_png: ../assets/icons/tea_sorting_garden.png
+  output_dds: tea_sorting_garden.dds
+  size: 512
+  prompt: >-
+    EU5-inspired hand-painted strategy-game building icon for a Tea Sorting
+    Garden, isolated on a perfectly flat magenta chroma-key background. Center
+    terraced tea bushes beside an early-modern tea-processing yard with shallow
+    bamboo withering mats, light furniture rolling tables, wicker baskets of fresh
+    green tea leaves, dark curled finished tea, clay or pottery firing hearths,
+    sorting trays, and neat paper-wrapped tea packages. Painterly historical UI
+    art matching the approved detailed building-icon reference style,
+    three-quarter view, readable at low resolution, material-rich props, no
+    text, no letters, no frame, no modern machinery, not photorealistic, not
+    cartoonish.
+
+evaluation:
+  allow_rules:
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+  production_methods:
+    pp_tea_sorting_garden_base_tea:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Passive base output intentionally carries a smaller share of the full worked tea output after the high-base rebalance.
+    pp_tea_sorting_garden_rolling_hearths:
+      production_efficiency: 1.10
+    pp_tea_sorting_garden_paper_packing:
+      production_efficiency: 1.05

@@ -18,10 +18,14 @@ class FakeNotebookData:
         location_dim: pl.DataFrame,
         assets: savegame_maps.SavegameMapAssets,
         buildings: pl.DataFrame | None = None,
+        market_food: pl.DataFrame | None = None,
+        market_dim: pl.DataFrame | None = None,
     ):
         self._locations = locations
         self._location_dim = location_dim
         self._buildings = buildings if buildings is not None else pl.DataFrame()
+        self._market_food = market_food if market_food is not None else pl.DataFrame()
+        self._market_dim = market_dim if market_dim is not None else pl.DataFrame()
         self.map_assets = assets
         self.playthrough = "run_1"
 
@@ -30,11 +34,15 @@ class FakeNotebookData:
             return self._locations
         if name == "buildings":
             return self._buildings
+        if name == "market_food":
+            return self._market_food
         return pl.DataFrame()
 
     def dim(self, name: str) -> pl.DataFrame:
         if name == "locations":
             return self._location_dim
+        if name == "markets":
+            return self._market_dim
         return pl.DataFrame()
 
 
@@ -374,10 +382,11 @@ def test_save_population_map_animation_writes_gif_fallback(tmp_path: Path) -> No
 def test_save_map_viewer_writes_html_and_frame_files(tmp_path: Path) -> None:
     data = _fake_data(tmp_path, include_missing_geometry=False)
     result = savegame_maps.population_map(data, scope="super_region", name="asia", width=160)
+    food_price = savegame_maps.food_price_map(data, scope="super_region", name="asia", width=160)
     html_path = tmp_path / "savegame_maps.html"
 
     export = savegame_maps.save_map_viewer(
-        [("Population current", result)],
+        [("Population current", result), ("Food price current", food_price)],
         path=html_path,
         frame_dir="viewer_frames",
         width=220,
@@ -385,11 +394,13 @@ def test_save_map_viewer_writes_html_and_frame_files(tmp_path: Path) -> None:
 
     text = html_path.read_text(encoding="utf-8")
     assert export.path == html_path
-    assert export.frames == 2
+    assert export.frames == 4
     assert 'id="frameSlider"' in text
     assert 'id="playButton"' in text
     assert "Population current" in text
+    assert "Food price current" in text
     assert len(list((tmp_path / "viewer_frames" / "population_current").glob("*.webp"))) == 2
+    assert len(list((tmp_path / "viewer_frames" / "food_price_current").glob("*.webp"))) == 2
 
 
 def test_development_map_from_gamestart_uses_point_delta(tmp_path: Path) -> None:
@@ -499,6 +510,31 @@ def test_building_levels_map_from_gamestart_and_current(tmp_path: Path) -> None:
     assert current_values[("bravo", 13470401)] == 8.0
 
 
+def test_food_price_map_colors_locations_by_current_market_price(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+
+    result = savegame_maps.food_price_map(
+        data,
+        scope="super_region",
+        name="asia",
+        width=160,
+    )
+
+    assert len(result.frames) == 2
+    assert result.mode == "current"
+    assert result.value_column == "food_price_map_value"
+    assert result.value_label == "food price"
+    assert result.value_bounds == savegame_maps.DEFAULT_FOOD_PRICE_BOUNDS
+    values = {
+        (row["slug"], row["date_sort"]): row["food_price_map_value"]
+        for row in result.frame_data.select("slug", "date_sort", "food_price_map_value").iter_rows(named=True)
+    }
+    assert values[("alpha", 13420401)] == 0.05
+    assert values[("bravo", 13420401)] == 0.15
+    assert values[("alpha", 13470401)] == 0.10
+    assert values[("bravo", 13470401)] == 0.20
+
+
 def test_show_building_levels_map_can_skip_widget_display(tmp_path: Path) -> None:
     data = _fake_data(tmp_path, include_missing_geometry=False)
 
@@ -577,7 +613,28 @@ def _fake_data(tmp_path: Path, *, include_missing_geometry: bool) -> FakeNoteboo
             _building_row("s2", "1347.4.1", 13470401, 1347, 2, 8.0),
         ]
     )
-    return FakeNotebookData(locations=locations, location_dim=location_dim, assets=assets, buildings=buildings)
+    market_food = pl.DataFrame(
+        [
+            _market_food_row("s1", "1342.4.1", 13420401, 1342, 10, 0.05),
+            _market_food_row("s1", "1342.4.1", 13420401, 1342, 20, 0.15),
+            _market_food_row("s2", "1347.4.1", 13470401, 1347, 10, 0.10),
+            _market_food_row("s2", "1347.4.1", 13470401, 1347, 20, 0.20),
+        ]
+    )
+    market_dim = pl.DataFrame(
+        [
+            {"market_code": 10, "market_label": "Alpha Market"},
+            {"market_code": 20, "market_label": "Bravo Market"},
+        ]
+    )
+    return FakeNotebookData(
+        locations=locations,
+        location_dim=location_dim,
+        assets=assets,
+        buildings=buildings,
+        market_food=market_food,
+        market_dim=market_dim,
+    )
 
 
 def _fake_assets(tmp_path: Path) -> savegame_maps.SavegameMapAssets:
@@ -627,8 +684,28 @@ def _location_row(
         "date_sort": date_sort,
         "year": year,
         "location_code": location_code,
+        "market_code": 10 if location_code in {1, 3, 4} else 20,
         "total_population": population,
         "development": development,
+    }
+
+
+def _market_food_row(
+    snapshot_id: str,
+    date: str,
+    date_sort: int,
+    year: int,
+    market_code: int,
+    food_price: float,
+) -> dict[str, object]:
+    return {
+        "snapshot_id": snapshot_id,
+        "playthrough_id": "run_1",
+        "date": date,
+        "date_sort": date_sort,
+        "year": year,
+        "market_code": market_code,
+        "food_price": food_price,
     }
 
 

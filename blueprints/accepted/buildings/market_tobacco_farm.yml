@@ -1,0 +1,136 @@
+version: 2
+tag: market_tobacco_farm
+output_tag: tobacco_farm_market
+upgrade_chain:
+  family: tobacco_farm
+  tier: 1
+  previous: tobacco_farm
+  next: null
+  unlock_advance: pp_market_tobacco_farm
+building:
+  key: market_tobacco_farm
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_market_tobacco_farm_base_tobacco
+    - name: slot_1
+      methods:
+        - pp_market_tobacco_farm_uncured_leaves
+        - pp_market_tobacco_farm_curing_racks
+    - name: slot_2
+      methods:
+        - pp_market_tobacco_farm_loose_packing
+        - pp_market_tobacco_farm_sorting_tables
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    increase_per_level_cost = 0.20
+    max_levels = farm_capacity_max_market_tobacco_farm
+    pop_type = laborers
+    employment_size = 1
+    category = rgo_building_category
+    custom_tags = { farming_capacity }
+    icon = market_tobacco_farm
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = tobacco_farm
+    build_time = workshop_build_time
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    location_potential = {
+        raw_material = goods:tobacco
+    }
+
+    unique_production_methods = {
+        pp_market_tobacco_farm_base_tobacco = {
+            produced = tobacco
+            output = 0.060
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_market_tobacco_farm_uncured_leaves = {
+            category = building_maintenance
+        }
+        pp_market_tobacco_farm_curing_racks = {
+            furniture = 0.050 # curing racks and hogsheads
+            fiber_crops = 0.025 # leaf ties
+            produced = tobacco
+            output = 0.080
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_market_tobacco_farm_loose_packing = {
+            category = building_maintenance
+        }
+        pp_market_tobacco_farm_sorting_tables = {
+            furniture = 0.035 # sorting tables and hogsheads
+            fiber_crops = 0.015 # bundle ties
+            paper = 0.012 # packing marks and sale records
+            produced = tobacco
+            output = 0.065
+            category = building_maintenance
+        }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_market_tobacco_farm = -1
+    }
+
+    modifier = {
+        local_migration_attraction = 0.003
+    }
+advancements:
+  - key: pp_market_tobacco_farm
+    body: |2-
+      icon = market_tobacco_farm
+      age = age_3_discovery
+      unlock_building = market_tobacco_farm
+      ai_weight = { add = 125 }
+localization:
+  entries:
+    market_tobacco_farm: Market Tobacco Farm
+    market_tobacco_farm_desc: Market tobacco farms organize field rows, air-cure leaves on racks, and sort packed hogsheads for regular sale.
+    market_tobacco_farm_slot_0: Tobacco Fields
+    market_tobacco_farm_slot_1: Curing
+    market_tobacco_farm_slot_2: Sorting & Packing
+    pp_market_tobacco_farm: Market Tobacco Farms
+    pp_market_tobacco_farm_base_tobacco: Market Tobacco Fields
+    pp_market_tobacco_farm_curing_racks: Curing Racks
+    pp_market_tobacco_farm_desc: Better curing racks, tied leaf bundles, sorting tables, and marked hogsheads make tobacco farms more reliable suppliers for market trade.
+    pp_market_tobacco_farm_loose_packing: Loose Packing
+    pp_market_tobacco_farm_sorting_tables: Sorting Tables
+    pp_market_tobacco_farm_uncured_leaves: Uncured Leaves
+icon:
+  source_png: ../assets/icons/market_tobacco_farm.png
+  output_dds: market_tobacco_farm.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game building icon for a Market Tobacco Farm on a perfectly flat magenta chroma-key background. Detailed three-quarter-view early modern tobacco worksite with orderly broadleaf tobacco rows, workers' field baskets, open-sided air-curing racks hung with brown leaves, wooden hogsheads, sorting tables, tied leaf bundles, paper tally slips, and a modest farm shed; material-rich painterly bitmap cutout, readable historic UI art, open-air curing only, no smokehouse, no modern machinery, no text, no frame.
+
+evaluation:
+  allow_rules:
+    input_throughput: Specialty crop farms preserve the accepted low-input rural RGO scale below the generic laborer throughput baseline.
+    output_throughput: Specialty crop farms preserve the accepted low-output rural RGO scale below the generic laborer throughput baseline.
+    amortization_months: Specialty crop farms use a low-cost, slow-payback cadence matching the existing small crop RGO buildings.
+  production_methods:
+    pp_market_tobacco_farm_base_tobacco:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Passive field output follows the accepted small specialty-crop baseline rather than the generic raw-site band.
+    pp_market_tobacco_farm_uncured_leaves:
+      production_efficiency: 1.00
+    pp_market_tobacco_farm_curing_racks:
+      production_efficiency: 1.05
+    pp_market_tobacco_farm_loose_packing:
+      production_efficiency: 1.00
+    pp_market_tobacco_farm_sorting_tables:
+      production_efficiency: 1.05

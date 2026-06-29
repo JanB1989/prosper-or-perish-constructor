@@ -36,8 +36,8 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_cocoa_grove_fermentation_houses = {
-        lumber = 0.119 # fermentation boxes
-        glass = 0.040 # drying covers
+        furniture = 0.090 # light fermentation boxes and raised trays
+        fiber_crops = 0.035 # drying mats, sacks, and ties
         produced = cocoa
         output = 0.089
         category = building_maintenance

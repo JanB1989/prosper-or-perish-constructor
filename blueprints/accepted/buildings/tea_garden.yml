@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: tea_garden
+upgrade_chain:
+  family: tea_garden
+  tier: 0
+  previous: null
+  next: tea_sorting_garden
+  unlock_advance: null
 building:
   key: tea_garden
   mode: CREATE

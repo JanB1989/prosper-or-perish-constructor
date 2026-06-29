@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: saffron_croft
+upgrade_chain:
+  family: saffron_croft
+  tier: 0
+  previous: null
+  next: saffron_kiln_croft
+  unlock_advance: null
 building:
   key: saffron_croft
   mode: CREATE

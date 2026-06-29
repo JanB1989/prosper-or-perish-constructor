@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: sericulture_farm
+upgrade_chain:
+  family: sericulture_farm
+  tier: 0
+  previous: null
+  next: regulated_sericulture_farm
+  unlock_advance: null
 building:
   key: sericulture_farm
   mode: CREATE

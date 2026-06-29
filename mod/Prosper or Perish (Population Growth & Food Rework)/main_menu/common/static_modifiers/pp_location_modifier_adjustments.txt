@@ -13,7 +13,7 @@ TRY_REPLACE:province_starving = {
 	
 	# local_upper_class_capacity_modifier = -0.75
 	local_life_expectancy = -10
-	local_food_revenue_output_modifier = 0.100
+	local_food_revenue_output_modifier = 0.080
 	
 	local_migration_speed = 0.015
     local_monthly_prosperity = -0.05
@@ -28,7 +28,7 @@ TRY_REPLACE:cheap_food_in_location = {
 	game_data = {
 		category = location
 	}
-	local_food_revenue_output_modifier = -1.124
+	local_food_revenue_output_modifier = -0.900
 	local_nobles_food_consumption = 0.80
 	local_clergy_food_consumption = 0.80
 	local_burghers_food_consumption = 0.80
@@ -44,7 +44,7 @@ TRY_REPLACE:expensive_food_in_location = {
 	game_data = {
 		category = location
 	}
-	local_food_revenue_output_modifier = 0.310
+	local_food_revenue_output_modifier = 0.248
 	# local_pop_demotion_speed = 0.25
 	local_nobles_food_consumption = -0.10
 	local_clergy_food_consumption = -0.10
@@ -61,7 +61,7 @@ TRY_REPLACE:positive_province_food_growth = {
 		category = province
 	}
 	# these values are the values for 1 year of stored province consumption they cap at GROWTH_FROM_FOOD_MULTIPLIER_MAX which is defined in years aswell
-	local_food_revenue_output_modifier = -0.054
+	local_food_revenue_output_modifier = -0.043
 	local_population_growth = 0.00375 # with the new spoilage at 24 month consumption storage ~20% of total consumption is spoilage
 	local_devastation_recovery = 0.003
 	local_migration_attraction = 0.045

@@ -28,6 +28,7 @@ pp_wattle_fish_weirs = {
     icon = food_advance_renaissance
     requires = food_advance_renaissance
     unlock_production_method = pp_fishing_village_wattle_weirs
+    unlock_production_method = pp_net_curing_yard_wattle_weirs
     ai_weight = { add = 50 }
 }
 
@@ -36,6 +37,7 @@ pp_managed_fishponds = {
     icon = food_advance_reformation
     requires = food_advance_reformation
     unlock_production_method = pp_fishing_village_stew_ponds
+    unlock_production_method = pp_net_curing_yard_stew_ponds
     ai_weight = { add = 50 }
 }
 # <<< eu5-building-pipeline:fishing_village:advancement

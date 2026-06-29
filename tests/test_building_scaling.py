@@ -24,12 +24,16 @@ BUILDING_BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted" / "buildings"
 MANIFEST = ROOT / "blueprints" / "buildings.manifest.yml"
 PRIMARY_WORKER_VICTUAL_BUILDINGS = (
     "farming_village",
+    "husbandry_farmstead",
     "farming_village_rotations",
     "model_farm",
     "fruit_orchard",
+    "nursery_orchard",
     "pomological_orchard",
     "fishing_village",
+    "net_curing_yard",
     "ocean_fishery",
+    "drift_net_fishery",
     "offshore_fishery",
     "forest_village",
     "managed_forest_village",

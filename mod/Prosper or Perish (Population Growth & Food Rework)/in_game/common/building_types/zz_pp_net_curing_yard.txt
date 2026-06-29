@@ -1,0 +1,125 @@
+﻿# >>> eu5-building-pipeline:net_curing_yard:building
+net_curing_yard = {
+is_foreign = no
+increase_per_level_cost = 0.24
+max_levels = fish_capacity_max_net_curing_yard
+pop_type = peasants
+category = village_category
+custom_tags = { pp_food_security_priority pp_staple_food_priority fishing_capacity }
+employment_size = 1
+icon = net_curing_yard
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = fishing_village
+forbidden_for_estates = yes
+ai_forbid_shutdown = no
+can_close = yes
+build_time = workshop_build_time
+construction_demand = workshop_construction
+
+location_potential = {
+    OR = {
+        has_river = yes
+        is_adjacent_to_lake = yes
+        topography = wetlands
+        is_coastal = yes
+        raw_material = goods:fish
+    }
+}
+
+unique_production_methods = {
+    pp_net_curing_yard_base_fish = {
+        produced = fish
+        output = 0.07
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_net_curing_yard_no_primary = {
+        category = building_maintenance
+    }
+    pp_net_curing_yard_preserved_catch = {
+        produced = fish
+        output = 0.45
+        salt = 0.045 # dry salting and brine
+        fiber_crops = 0.060 # hemp and flax nets
+        pottery = 0.030 # crocks, weights, small containers
+        lumber = 0.035 # racks, tables, barrels, sheds
+        tools = 0.010 # knives, net needles, repairs
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+    pp_arctic_net_curing_yard_preserved_catch = {
+        produced = fish
+        output = 0.19
+        salt = 0.012 # limited brine and curing
+        fiber_crops = 0.026 # nets and lines
+        ivory = 0.016 # bone hooks and weights
+        pottery = 0.010 # small containers
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_net_curing_yard_strand_line = {
+        category = building_maintenance
+    }
+    pp_net_curing_yard_clinker_craft = {
+        lumber = 0.024 # clinker hull repairs
+        fiber_crops = 0.010 # lines and patched nets
+        produced = fish
+        output = 0.072
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_net_curing_yard_no_freshwater_works = {
+        category = building_maintenance
+    }
+    pp_net_curing_yard_wattle_weirs = {
+        lumber = 0.020 # weir stakes
+        fiber_crops = 0.018 # netting and wicker ties
+        produced = fish
+        output = 0.075
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+    pp_net_curing_yard_stew_ponds = {
+        clay = 0.026 # pond lining
+        lumber = 0.016 # sluices
+        pottery = 0.010 # fry pots and weights
+        produced = fish
+        output = 0.055
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_net_curing_yard_no_worker_victuals = {
+        category = building_maintenance
+    }
+    pp_net_curing_yard_worker_victuals = {
+        produced = victuals
+        output = 0.033
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+
+raw_modifier = {
+}
+
+modifier = {
+    local_monthly_food = 0.0
+    local_fish_output_modifier = -0.005
+    local_merchant_capacity = 0.014
+    local_peasants_estate_power = 0.035
+    local_peasant_enfranchisment = 0.002
+    local_laborers_desired_pop = 0.020
+    local_soldiers_desired_pop = 0.010
+}
+}
+# <<< eu5-building-pipeline:net_curing_yard:building

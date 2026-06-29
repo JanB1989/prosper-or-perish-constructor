@@ -33,9 +33,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_fiber_crops_farm_retting_yards = {
-        livestock = 0.133 # manure and draught teams
-        lumber = 0.067 # retting racks
-        tools = 0.012 # scutching blades
+        livestock = 0.090 # manure and light draught
+        clay = 0.180 # lined retting pits
+        coal = 0.030 # controlled drying heat
+        leather = 0.017 # soft handling pads and aprons
         produced = fiber_crops
         output = 0.187
         category = building_maintenance

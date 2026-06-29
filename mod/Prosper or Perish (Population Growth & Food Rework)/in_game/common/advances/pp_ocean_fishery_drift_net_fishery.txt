@@ -1,8 +1,8 @@
 ﻿# >>> eu5-building-pipeline:drift_net_fishery:advancement
 pp_coastal_drift_nets = {
 icon = drift_net_fishery
-age = age_1_traditions
-requires = agriculture_advance
+age = age_2_renaissance
+requires = food_advance_renaissance
 unlock_building = drift_net_fishery
 ai_weight = { add = 125 }
 }

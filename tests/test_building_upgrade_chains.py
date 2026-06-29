@@ -702,7 +702,8 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
     assert not re.search(r"^\s*obsolete\s*=\s*net_curing_yard\s*$", drift_body, flags=re.M)
     assert re.search(r"location_potential\s*=\s*\{\s*is_coastal\s*=\s*yes\s*\}", drift_body)
     drift_block = _advance_block("pp_coastal_drift_nets", advances)
-    assert re.search(r"^\s*requires\s*=\s*agriculture_advance\s*$", drift_block, flags=re.M)
+    assert re.search(r"^\s*age\s*=\s*age_2_renaissance\s*$", drift_block, flags=re.M)
+    assert re.search(r"^\s*requires\s*=\s*food_advance_renaissance\s*$", drift_block, flags=re.M)
 
     offshore_body = _load_blueprint("offshore_fishery")["building"]["body"]
     assert re.search(r"^\s*obsolete\s*=\s*drift_net_fishery\s*$", offshore_body, flags=re.M)

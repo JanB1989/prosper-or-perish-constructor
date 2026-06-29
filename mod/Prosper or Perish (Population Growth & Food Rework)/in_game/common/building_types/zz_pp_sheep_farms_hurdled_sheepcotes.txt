@@ -33,7 +33,7 @@ location_potential = {
 unique_production_methods = {
     pp_hurdled_sheepcotes_base_wool = {
         produced = wool
-        output = 0.08
+        output = 0.09
         category = building_maintenance
     }
 }
@@ -43,10 +43,10 @@ unique_production_methods = {
     }
     pp_hurdled_sheepcotes_foldcourse_husbandry = {
         produced = wool
-        output = 0.18
-        furniture = 0.05 # hurdles, gates, racks, troughs
-        livestock = 0.05 # replacement ewes and sires
-        victuals = 0.04 # wintering and lambing stores
+        output = 0.22
+        furniture = 0.065 # hurdles, gates, racks, troughs
+        livestock = 0.060 # replacement ewes and sires
+        victuals = 0.055 # wintering and lambing stores
         debug_max_profit = 0
         category = building_maintenance
     }

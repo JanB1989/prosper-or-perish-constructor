@@ -83,22 +83,22 @@ building:
         }
         pp_net_curing_yard_preserved_catch = {
             produced = fish
-            output = 0.36
-            salt = 0.035 # dry salting and brine
-            fiber_crops = 0.045 # hemp and flax nets
-            pottery = 0.022 # crocks, weights, small containers
-            lumber = 0.026 # racks, tables, barrels, sheds
-            tools = 0.008 # knives, net needles, repairs
+            output = 0.43
+            salt = 0.045 # dry salting and brine
+            fiber_crops = 0.055 # hemp and flax nets
+            pottery = 0.028 # crocks, weights, small containers
+            lumber = 0.032 # racks, tables, barrels, sheds
+            tools = 0.010 # knives, net needles, repairs
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_arctic_net_curing_yard_preserved_catch = {
             produced = fish
-            output = 0.14
-            salt = 0.006 # limited brine and curing
-            fiber_crops = 0.014 # nets and lines
-            ivory = 0.010 # bone hooks and weights
-            pottery = 0.004 # small containers
+            output = 0.17
+            salt = 0.008 # limited brine and curing
+            fiber_crops = 0.018 # nets and lines
+            ivory = 0.011 # bone hooks and weights
+            pottery = 0.006 # small containers
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -108,10 +108,10 @@ building:
             category = building_maintenance
         }
         pp_net_curing_yard_clinker_craft = {
-            lumber = 0.025 # clinker hull repairs
-            fiber_crops = 0.008 # lines and patched nets
+            lumber = 0.028 # clinker hull repairs
+            fiber_crops = 0.010 # lines and patched nets
             produced = fish
-            output = 0.055
+            output = 0.065
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -166,8 +166,8 @@ advancements:
   - key: pp_net_curing_yards
     body: |2-
       icon = net_curing_yard
-      age = age_1_traditions
-      requires = agriculture_advance
+      age = age_2_renaissance
+      requires = food_advance_renaissance
       unlock_building = net_curing_yard
       ai_weight = { add = 125 }
 localization:
@@ -212,8 +212,8 @@ evaluation:
     pp_net_curing_yard_preserved_catch:
       production_efficiency: 1.05
       allow_rules:
-        input_throughput: Net and curing yards are an age 1 local-fishing upgrade and intentionally stay below coastal fisheries.
-        output_throughput: Net and curing yards are an age 1 local-fishing upgrade and intentionally stay below coastal fisheries.
+        input_throughput: Net and curing yards are an age 2 local-fishing upgrade and intentionally stay below coastal fisheries.
+        output_throughput: Net and curing yards are an age 2 local-fishing upgrade and intentionally stay below coastal fisheries.
     pp_arctic_net_curing_yard_preserved_catch:
       production_efficiency: 1.10
       allow_rules:

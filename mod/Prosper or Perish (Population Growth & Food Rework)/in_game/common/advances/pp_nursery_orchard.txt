@@ -1,8 +1,8 @@
 ﻿# >>> eu5-building-pipeline:nursery_orchard:advancement
 pp_orchard_nurseries = {
 icon = nursery_orchard
-age = age_1_traditions
-requires = agriculture_advance
+age = age_2_renaissance
+requires = food_advance_renaissance
 unlock_building = nursery_orchard
 ai_weight = { add = 125 }
 }

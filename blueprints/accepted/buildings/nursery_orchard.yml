@@ -63,7 +63,7 @@ building:
     unique_production_methods = {
         pp_nursery_orchard_base_fruit = {
             produced = fruit
-            output = 0.075
+            output = 0.085
             category = building_maintenance
         }
     }
@@ -73,12 +73,12 @@ building:
         }
         pp_nursery_orchard_nursery_rows = {
             produced = fruit
-            output = 0.34
-            fiber_crops = 0.070 # osier baskets, graft ties, harvest mats
-            pottery = 0.035 # earthen nursery pots and storage crocks
-            beeswax = 0.012 # grafting wax and wound dressing
-            tools = 0.018 # pruning and grafting knives
-            furniture = 0.012 # sorting racks and apple-loft boards
+            output = 0.45
+            fiber_crops = 0.085 # osier baskets, graft ties, harvest mats
+            pottery = 0.045 # earthen nursery pots and storage crocks
+            beeswax = 0.016 # grafting wax and wound dressing
+            tools = 0.024 # pruning and grafting knives
+            furniture = 0.018 # sorting racks and apple-loft boards
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -106,8 +106,8 @@ advancements:
   - key: pp_orchard_nurseries
     body: |2-
       icon = nursery_orchard
-      age = age_1_traditions
-      requires = agriculture_advance
+      age = age_2_renaissance
+      requires = food_advance_renaissance
       unlock_building = nursery_orchard
       ai_weight = { add = 125 }
 localization:
@@ -144,8 +144,8 @@ evaluation:
     pp_nursery_orchard_nursery_rows:
       production_efficiency: 1.05
       allow_rules:
-        input_throughput: Nursery orchards are a modest age 1 bridge and intentionally stay below later grafted orchards.
-        output_throughput: Nursery orchards are a modest age 1 bridge and intentionally stay below later grafted orchards.
+        input_throughput: Nursery orchards are a modest age 2 bridge and intentionally stay below later grafted orchards.
+        output_throughput: Nursery orchards are a modest age 2 bridge and intentionally stay below later grafted orchards.
     pp_nursery_orchard_no_worker_victuals:
       production_efficiency: 1.00
       allow_rules:

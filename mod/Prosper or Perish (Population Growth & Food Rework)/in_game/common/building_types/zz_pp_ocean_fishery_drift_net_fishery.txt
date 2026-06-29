@@ -43,12 +43,12 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_drift_net_fishery_coastal_drift_nets = {
-        fiber_crops = 0.150 # hemp and flax nets and cordage
-        cloth = 0.025 # small sails and net patches
-        salt = 0.040 # brine and shore curing
-        lumber = 0.045 # floats, cask staves, light repairs
+        fiber_crops = 0.160 # hemp and flax nets and cordage
+        cloth = 0.030 # small sails and net patches
+        salt = 0.044 # brine and shore curing
+        lumber = 0.050 # floats, cask staves, light repairs
         produced = fish
-        output = 0.960
+        output = 1.05
         debug_max_profit = 0
         category = building_maintenance
     }

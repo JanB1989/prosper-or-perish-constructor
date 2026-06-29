@@ -54,7 +54,7 @@ building:
     unique_production_methods = {
         pp_hurdled_sheepcotes_base_wool = {
             produced = wool
-            output = 0.08
+            output = 0.09
             category = building_maintenance
         }
     }
@@ -64,10 +64,10 @@ building:
         }
         pp_hurdled_sheepcotes_foldcourse_husbandry = {
             produced = wool
-            output = 0.18
-            furniture = 0.05 # hurdles, gates, racks, troughs
-            livestock = 0.05 # replacement ewes and sires
-            victuals = 0.04 # wintering and lambing stores
+            output = 0.22
+            furniture = 0.065 # hurdles, gates, racks, troughs
+            livestock = 0.060 # replacement ewes and sires
+            victuals = 0.055 # wintering and lambing stores
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -85,8 +85,8 @@ advancements:
   - key: pp_foldcourse_husbandry
     body: |2-
       icon = hurdled_sheepcotes
-      age = age_1_traditions
-      requires = agriculture_advance
+      age = age_2_renaissance
+      requires = food_advance_renaissance
       unlock_building = hurdled_sheepcotes
       ai_weight = { add = 125 }
 localization:
@@ -120,5 +120,5 @@ evaluation:
     pp_hurdled_sheepcotes_foldcourse_husbandry:
       production_efficiency: 1.05
       allow_rules:
-        input_throughput: Foldcourse husbandry is a modest age 1 bridge and intentionally stays below later enclosed sheep walks.
-        output_throughput: Foldcourse husbandry is a modest age 1 bridge and intentionally stays below later enclosed sheep walks.
+        input_throughput: Foldcourse husbandry is a modest age 2 bridge and intentionally stays below later enclosed sheep walks.
+        output_throughput: Foldcourse husbandry is a modest age 2 bridge and intentionally stays below later enclosed sheep walks.

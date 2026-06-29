@@ -1,8 +1,8 @@
 ﻿# >>> eu5-building-pipeline:clay_washmill:advancement
 pp_clay_washmill = {
-icon = renaissance_advance
-age = age_2_renaissance
-requires = renaissance_advance
+icon = efficient_mining
+age = age_3_discovery
+requires = rgo_logistics_discovery
 unlock_building = clay_washmill
 ai_weight = { add = 125 }
 }

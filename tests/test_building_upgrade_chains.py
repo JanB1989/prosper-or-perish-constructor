@@ -1109,6 +1109,50 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
                 assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
 
 
+def test_husbandry_farmstead_keeps_crop_specific_worked_methods() -> None:
+    raw = _load_blueprint("husbandry_farmstead")
+    body = raw["building"]["body"]
+    blocks = _inline_production_method_blocks(body)
+    inputs = _inline_production_method_inputs(body)
+
+    worked_methods = [
+        "pp_husbandry_farmstead_livestock",
+        "pp_husbandry_farmstead_millet",
+        "pp_husbandry_farmstead_wheat",
+        "pp_husbandry_farmstead_maize",
+        "pp_husbandry_farmstead_rice",
+        "pp_husbandry_farmstead_legumes",
+        "pp_husbandry_farmstead_potato",
+        "pp_husbandry_farmstead_olives",
+    ]
+    signatures = {
+        method: tuple(
+            re.findall(
+                r"(?m)^\s*(horses|livestock|fiber_crops|clay|pottery|lumber|tools)\s*=\s*(-?\d+(?:\.\d+)?)\b",
+                blocks[method],
+            )
+        )
+        for method in worked_methods
+    }
+
+    assert len(set(signatures.values())) == len(worked_methods)
+    assert all("livestock" in inputs[method] for method in worked_methods)
+    assert {"horses", "livestock", "fiber_crops", "pottery"} <= inputs["pp_husbandry_farmstead_millet"]
+    assert {"horses", "livestock", "tools", "lumber"} <= inputs["pp_husbandry_farmstead_wheat"]
+    assert {"livestock", "fiber_crops", "lumber", "tools"} <= inputs["pp_husbandry_farmstead_maize"]
+    assert {"livestock", "clay", "lumber", "tools"} <= inputs["pp_husbandry_farmstead_rice"]
+    assert {"horses", "livestock", "fiber_crops", "pottery"} <= inputs["pp_husbandry_farmstead_legumes"]
+    assert {"livestock", "clay", "fiber_crops", "tools"} <= inputs["pp_husbandry_farmstead_potato"]
+    assert {"livestock", "tools", "lumber", "pottery"} <= inputs["pp_husbandry_farmstead_olives"]
+
+    outputs = {
+        method: float(re.search(r"(?m)^\s*output\s*=\s*(\d+(?:\.\d+)?)\b", blocks[method]).group(1))
+        for method in worked_methods
+    }
+    assert max(outputs.values()) < 0.70
+    assert min(outputs.values()) > 0.40
+
+
 def test_blueprint_upgrade_successors_load_after_obsolete_predecessors() -> None:
     config = load_project_config(ROOT / "constructor.toml")
     mod_root = BUILDING_TYPES_ROOT.parents[2]

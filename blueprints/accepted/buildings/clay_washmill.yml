@@ -104,9 +104,9 @@ building:
 advancements:
   - key: pp_clay_washmill
     body: |2-
-      icon = renaissance_advance
-      age = age_2_renaissance
-      requires = renaissance_advance
+      icon = efficient_mining
+      age = age_3_discovery
+      requires = rgo_logistics_discovery
       unlock_building = clay_washmill
       ai_weight = { add = 125 }
 localization:

@@ -19,6 +19,13 @@ can_close = yes
 build_time = workshop_build_time
 construction_demand = workshop_construction
 
+allow = {
+    OR = {
+        has_building = building_type:fishing_village
+        has_building = building_type:net_curing_yard
+    }
+}
+
 location_potential = {
     OR = {
         has_river = yes

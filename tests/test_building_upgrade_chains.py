@@ -1245,6 +1245,68 @@ def test_enabled_upgrade_chain_location_requirements_match_initial_building() ->
     assert not offenders, "\n".join(offenders)
 
 
+def test_food_upgrade_successors_require_previous_or_existing_tier() -> None:
+    affected_families = {
+        "farming_village",
+        "fishing_village",
+        "fruit_orchard",
+        "ocean_fishery",
+        "sheep_farms",
+    }
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = {
+        (BLUEPRINT_ROOT / entry).stem
+        for entry in manifest["enabled"]
+        if str(entry).startswith("buildings/")
+    }
+    blueprints = {
+        path.stem: yaml.safe_load(path.read_text(encoding="utf-8-sig"))
+        for path in sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml"))
+        if path.stem in enabled
+    }
+    generated_paths_by_key = _managed_building_output_paths_by_key()
+    offenders: list[str] = []
+
+    for key, raw in sorted(blueprints.items()):
+        upgrade_chain = raw.get("upgrade_chain")
+        if not upgrade_chain or upgrade_chain.get("family") not in affected_families:
+            continue
+        previous_key = upgrade_chain.get("previous")
+        if previous_key is None:
+            continue
+        if previous_key not in blueprints:
+            offenders.append(f"{key}: previous tier {previous_key} is not enabled")
+            continue
+
+        building_key = raw["building"]["key"]
+        previous_building_key = blueprints[previous_key]["building"]["key"]
+        expected_lines = {
+            f"has_building = building_type:{previous_building_key}",
+            f"has_building = building_type:{building_key}",
+        }
+        for source_name, body in (
+            ("blueprint", raw["building"]["body"]),
+            (
+                "generated",
+                generated_paths_by_key[building_key].read_text(encoding="utf-8-sig")
+                if building_key in generated_paths_by_key
+                else "",
+            ),
+        ):
+            if not body:
+                offenders.append(f"{key}: missing generated building output for {building_key}")
+                continue
+            allow = _normalized_first_script_block(body, "allow")
+            if "OR = {" not in allow:
+                offenders.append(f"{key}: {source_name} allow block must use OR for upgrade/expansion gates")
+                continue
+            missing = sorted(line for line in expected_lines if line not in allow)
+            if missing:
+                offenders.append(f"{key}: {source_name} allow block missing {', '.join(missing)}")
+
+    assert not offenders, "\n".join(offenders)
+
+
 def test_manpower_building_blueprints_do_not_copy_invalid_owner_culture_gate() -> None:
     for key in ("armory", "training_fields", "barracks", "regimental_camp", "conscription_center"):
         body = _load_blueprint(key)["building"]["body"]

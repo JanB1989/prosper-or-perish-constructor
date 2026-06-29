@@ -48,17 +48,6 @@ def _icon_source(raw: dict[str, Any]) -> Path | None:
     return (raw["_path"].parent / source).resolve()
 
 
-def _upgrade_chain_previous_keys(chain: dict[str, Any]) -> list[str]:
-    previous = chain.get("previous")
-    previous_keys: list[str] = []
-    if isinstance(previous, str):
-        previous_keys.append(previous)
-    additional_previous = chain.get("additional_previous")
-    if isinstance(additional_previous, list):
-        previous_keys.extend(item for item in additional_previous if isinstance(item, str))
-    return previous_keys
-
-
 def test_upgrade_buildings_use_unique_pipeline_icons() -> None:
     blueprints = _enabled_blueprints()
     outputs: dict[str, str] = {}
@@ -77,23 +66,21 @@ def test_upgrade_buildings_use_unique_pipeline_icons() -> None:
         if not isinstance(chain, dict) or chain.get("tier", 0) <= 0:
             continue
 
-        previous_keys = _upgrade_chain_previous_keys(chain)
-        assert previous_keys, f"{key} upgrade_chain.previous must be set"
+        previous_key = chain.get("previous")
+        assert isinstance(previous_key, str), f"{key} upgrade_chain.previous must be set"
+        assert previous_key in blueprints, f"{key} previous tier {previous_key} is not enabled"
 
         source = _icon_source(raw)
+        previous_source = _icon_source(blueprints[previous_key])
         assert source is not None, f"{key} must declare its own icon source"
+        if previous_source is not None:
+            assert source != previous_source, f"{key} reuses previous-tier icon source {source}"
 
         output = raw["icon"]["output_dds"]
-        for previous_key in previous_keys:
-            assert previous_key in blueprints, f"{key} previous tier {previous_key} is not enabled"
-            previous_source = _icon_source(blueprints[previous_key])
-            if previous_source is not None:
-                assert source != previous_source, f"{key} reuses previous-tier icon source {source}"
-
-            previous_icon = blueprints[previous_key].get("icon")
-            if isinstance(previous_icon, dict):
-                previous_output = previous_icon["output_dds"]
-                assert output != previous_output, f"{key} reuses previous-tier icon output {output}"
+        previous_icon = blueprints[previous_key].get("icon")
+        if isinstance(previous_icon, dict):
+            previous_output = previous_icon["output_dds"]
+            assert output != previous_output, f"{key} reuses previous-tier icon output {output}"
 
 
 def test_enabled_building_icons_do_not_render_duplicate_hashes() -> None:

@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import re
-from typing import Mapping
 
 import polars as pl
 import yaml
@@ -428,17 +427,6 @@ def _obsolete_entries(body: str) -> list[str]:
     return re.findall(r"^\s*obsolete\s*=\s*([A-Za-z0-9_]+)\s*$", body, flags=re.M)
 
 
-def _upgrade_chain_previous_keys(upgrade_chain: Mapping[str, object]) -> list[str]:
-    previous = upgrade_chain.get("previous")
-    previous_keys: list[str] = []
-    if isinstance(previous, str):
-        previous_keys.append(previous)
-    additional_previous = upgrade_chain.get("additional_previous")
-    if isinstance(additional_previous, list):
-        previous_keys.extend(item for item in additional_previous if isinstance(item, str))
-    return previous_keys
-
-
 def _managed_building_output_paths_by_key() -> dict[str, Path]:
     paths_by_key: dict[str, Path] = {}
     for path in sorted(BUILDING_TYPES_ROOT.glob("*.txt")):
@@ -707,15 +695,14 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
             "previous": chain[tier - 1][0] if tier > 0 else None,
             "next": chain[tier + 1][0] if tier + 1 < len(chain) else None,
             "unlock_advance": unlock_advance,
-            **({"additional_previous": ["net_curing_yard"]} if key == "drift_net_fishery" else {}),
         }
 
     drift_body = _load_blueprint("drift_net_fishery")["building"]["body"]
     assert re.search(r"^\s*obsolete\s*=\s*ocean_fishery\s*$", drift_body, flags=re.M)
-    assert re.search(r"^\s*obsolete\s*=\s*net_curing_yard\s*$", drift_body, flags=re.M)
+    assert not re.search(r"^\s*obsolete\s*=\s*net_curing_yard\s*$", drift_body, flags=re.M)
     assert re.search(r"location_potential\s*=\s*\{\s*is_coastal\s*=\s*yes\s*\}", drift_body)
     drift_block = _advance_block("pp_coastal_drift_nets", advances)
-    assert re.search(r"^\s*requires\s*=\s*pp_net_curing_yards\s*$", drift_block, flags=re.M)
+    assert re.search(r"^\s*requires\s*=\s*agriculture_advance\s*$", drift_block, flags=re.M)
 
     offshore_body = _load_blueprint("offshore_fishery")["building"]["body"]
     assert re.search(r"^\s*obsolete\s*=\s*drift_net_fishery\s*$", offshore_body, flags=re.M)
@@ -1094,14 +1081,11 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
             assert f"buildings/{key}.yml" in enabled
             assert raw["tag"] == key
             assert raw["building"]["key"] == key
-            expected_next = chain[tier + 1][0] if tier + 1 < len(chain) else None
-            if key == "net_curing_yard":
-                expected_next = "drift_net_fishery"
             assert raw.get("upgrade_chain") == {
                 "family": family,
                 "tier": tier,
                 "previous": chain[tier - 1][0] if tier > 0 else None,
-                "next": expected_next,
+                "next": chain[tier + 1][0] if tier + 1 < len(chain) else None,
                 "unlock_advance": unlock_advance,
             }
 
@@ -1151,25 +1135,22 @@ def test_blueprint_upgrade_successors_load_after_obsolete_predecessors() -> None
             offenders.append(f"{key}: stale tag-named managed output still exists: {legacy_path}")
 
         upgrade_chain = raw.get("upgrade_chain")
-        if not isinstance(upgrade_chain, dict):
+        if not upgrade_chain or upgrade_chain.get("previous") is None:
             continue
 
-        previous_keys = _upgrade_chain_previous_keys(upgrade_chain)
-        if not previous_keys:
+        previous = upgrade_chain["previous"]
+        if previous not in blueprints:
             continue
 
+        previous_building_key = blueprints[previous]["building"]["key"]
+        previous_path = actual_paths_by_building_key.get(previous_building_key)
         current_path = actual_paths_by_building_key.get(building_key)
-        for previous in previous_keys:
-            if previous not in blueprints:
-                continue
-            previous_building_key = blueprints[previous]["building"]["key"]
-            previous_path = actual_paths_by_building_key.get(previous_building_key)
-            if previous_path is None or current_path is None:
-                continue
-            previous_sort_key = previous_path.relative_to(mod_root).as_posix()
-            current_sort_key = current_path.relative_to(mod_root).as_posix()
-            if previous_sort_key >= current_sort_key:
-                offenders.append(f"{key}: {current_path} loads before {previous}: {previous_path}")
+        if previous_path is None or current_path is None:
+            continue
+        previous_sort_key = previous_path.relative_to(mod_root).as_posix()
+        current_sort_key = current_path.relative_to(mod_root).as_posix()
+        if previous_sort_key >= current_sort_key:
+            offenders.append(f"{key}: {current_path} loads before {previous}: {previous_path}")
 
     assert not offenders, "\n".join(offenders)
 
@@ -1185,7 +1166,8 @@ def test_accepted_building_upgrade_chains_obsolete_only_direct_predecessor() -> 
             continue
 
         body = raw["building"]["body"]
-        expected = _upgrade_chain_previous_keys(upgrade_chain)
+        previous = upgrade_chain.get("previous")
+        expected = [] if previous is None else [previous]
         actual = _obsolete_entries(body)
         if actual == expected:
             continue

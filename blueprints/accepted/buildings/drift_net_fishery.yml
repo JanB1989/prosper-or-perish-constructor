@@ -5,8 +5,6 @@ upgrade_chain:
   family: ocean_fishery
   tier: 1
   previous: ocean_fishery
-  additional_previous:
-    - net_curing_yard
   next: offshore_fishery
   unlock_advance: pp_coastal_drift_nets
 building:
@@ -40,7 +38,6 @@ building:
     city = yes
     megalopolis = yes
     obsolete = ocean_fishery
-    obsolete = net_curing_yard
     build_time = workshop_build_time
 
     location_potential = {
@@ -101,7 +98,7 @@ advancements:
     body: |2-
       icon = drift_net_fishery
       age = age_1_traditions
-      requires = pp_net_curing_yards
+      requires = agriculture_advance
       unlock_building = drift_net_fishery
       ai_weight = { add = 125 }
 localization:

@@ -42,22 +42,22 @@ unique_production_methods = {
     }
     pp_net_curing_yard_preserved_catch = {
         produced = fish
-        output = 0.45
-        salt = 0.045 # dry salting and brine
-        fiber_crops = 0.060 # hemp and flax nets
-        pottery = 0.030 # crocks, weights, small containers
-        lumber = 0.035 # racks, tables, barrels, sheds
-        tools = 0.010 # knives, net needles, repairs
+        output = 0.36
+        salt = 0.035 # dry salting and brine
+        fiber_crops = 0.045 # hemp and flax nets
+        pottery = 0.022 # crocks, weights, small containers
+        lumber = 0.026 # racks, tables, barrels, sheds
+        tools = 0.008 # knives, net needles, repairs
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_arctic_net_curing_yard_preserved_catch = {
         produced = fish
-        output = 0.19
-        salt = 0.012 # limited brine and curing
-        fiber_crops = 0.026 # nets and lines
-        ivory = 0.016 # bone hooks and weights
-        pottery = 0.010 # small containers
+        output = 0.14
+        salt = 0.006 # limited brine and curing
+        fiber_crops = 0.014 # nets and lines
+        ivory = 0.010 # bone hooks and weights
+        pottery = 0.004 # small containers
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -67,10 +67,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_net_curing_yard_clinker_craft = {
-        lumber = 0.024 # clinker hull repairs
-        fiber_crops = 0.010 # lines and patched nets
+        lumber = 0.025 # clinker hull repairs
+        fiber_crops = 0.008 # lines and patched nets
         produced = fish
-        output = 0.072
+        output = 0.055
         debug_max_profit = 0
         category = building_maintenance
     }

@@ -2,7 +2,7 @@
 pp_coastal_drift_nets = {
 icon = drift_net_fishery
 age = age_1_traditions
-requires = pp_net_curing_yards
+requires = agriculture_advance
 unlock_building = drift_net_fishery
 ai_weight = { add = 125 }
 }

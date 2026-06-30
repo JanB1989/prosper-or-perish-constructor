@@ -4,5 +4,9 @@ TRY_INJECT:possible_promotion_percentage = {
 	game_data = {
 		category = location
 	}
-	local_pop_promotion_speed_scaled = 0.0001
+	local_peasants_estate_power = -8.0
+	local_pop_promotion_speed_scaled = -0.0008
+	local_burghers_estate_power = 0.8
+	local_nobles_estate_power = 0.8
+	local_clergy_estate_power = 0.8
 }

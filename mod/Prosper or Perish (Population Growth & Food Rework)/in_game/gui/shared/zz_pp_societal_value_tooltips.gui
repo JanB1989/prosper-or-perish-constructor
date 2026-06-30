@@ -1,0 +1,138 @@
+﻿# Prosper or Perish: directional societal value tooltips can include long
+# modifier lists, especially Capital Economy, so keep their bodies scrollable.
+
+template SocietalValueLeft_tooltip {
+	ContextualTooltipType = {
+		block "extra_datacontext" {}
+		blockoverride "title_text" {
+			text = "[SocietalValue.GetLeftLabelWithNoTooltip]"
+		}
+
+		blockoverride "title_icon_texture" {
+			texture = "[SocietalValue.GetLeftIcon]"
+		}
+
+		blockoverride "concept_link" {
+			text = [societal_value|E]
+		}
+
+		blockoverride "tooltip_content" {
+			TooltipScrolledContentSection = {
+				blockoverride "block_scrollarea" { maximumsize = { -1 700 } }
+				blockoverride "section_content" {
+					icon = {
+						size = { 450 90 }
+						texture = "[SocietalValue.GetLeftIllustration]"
+					}
+
+					TooltipStringPairList = {
+						textcontext = "[SocietalValue.GetLeftTooltip]"
+					}
+
+					block "societal_value_left_tooltip_extra" {
+					}
+
+					TooltipFlavorTextBlock = {
+						blockoverride "text" {
+							text = "[SocietalValue.GetDesc]"
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+template SocietalValueRight_tooltip {
+	ContextualTooltipType = {
+		block "extra_datacontext" {}
+		blockoverride "title_text" {
+			text = "[SocietalValue.GetRightLabelWithNoTooltip]"
+		}
+
+		blockoverride "title_icon_texture" {
+			texture = "[SocietalValue.GetRightIcon]"
+		}
+
+		blockoverride "concept_link" {
+			text = [societal_value|E]
+		}
+
+		blockoverride "tooltip_content" {
+			TooltipScrolledContentSection = {
+				blockoverride "block_scrollarea" { maximumsize = { -1 700 } }
+				blockoverride "section_content" {
+					icon = {
+						size = { 450 90 }
+						texture = "[SocietalValue.GetRightIllustration]"
+					}
+
+					TooltipStringPairList = {
+						textcontext = "[SocietalValue.GetRightTooltip]"
+					}
+
+					block "societal_value_right_tooltip_extra" {
+					}
+
+					TooltipFlavorTextBlock = {
+						blockoverride "text" {
+							text = "[SocietalValue.GetDesc]"
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+template SocietalValueCountryLeft_tooltip {
+	using = SocietalValueLeft_tooltip
+	blockoverride "societal_value_left_tooltip_extra" {
+		TooltipScrolledStringPairList = {
+			blockoverride "block_scrollarea" {
+				maximumsize = { -1 160 }
+			}
+
+			blockoverride "block_title" {
+				text = "TO_MOVE_FURTHER_TO_LEFT"
+				default_format = "help"
+			}
+
+			textcontext = "[SocietalValue.GetLeftHint(Player.Self)]"
+		}
+	}
+}
+
+template SocietalValueCountryRight_tooltip {
+	using = SocietalValueRight_tooltip
+	blockoverride "societal_value_right_tooltip_extra" {
+		TooltipScrolledStringPairList = {
+			blockoverride "block_scrollarea" {
+				maximumsize = { -1 160 }
+			}
+
+			blockoverride "block_title" {
+				text = "TO_MOVE_FURTHER_TO_RIGHT"
+				default_format = "help"
+			}
+
+			textcontext = "[SocietalValue.GetRightHint(Player.Self)]"
+		}
+	}
+}
+
+template SocietalValueItemLeft_tooltip {
+	using = SocietalValueCountryLeft_tooltip
+	blockoverride "extra_datacontext" {
+		datacontext = "[SocietalValueItem.GetType]"
+		datacontext = "[SocietalValueItem.GetCountry]"
+	}
+}
+
+template SocietalValueItemRight_tooltip {
+	using = SocietalValueCountryRight_tooltip
+	blockoverride "extra_datacontext" {
+		datacontext = "[SocietalValueItem.GetType]"
+		datacontext = "[SocietalValueItem.GetCountry]"
+	}
+}

@@ -285,6 +285,21 @@ class FoodPriceVolatilityWebPExportResult:
     snapshots: int
 
 
+@dataclass(frozen=True)
+class GoodsPressureResult:
+    global_time_series: pl.DataFrame
+    summary: pl.DataFrame
+    global_shortages: pl.DataFrame
+    global_oversupply: pl.DataFrame
+    problem_goods: pl.DataFrame
+    selected_good: str | None
+    selected_good_label: str | None
+    selected_good_global: pl.DataFrame
+    selected_good_markets: pl.DataFrame
+    selected_good_market_time_series: pl.DataFrame
+    rank_mode: str
+
+
 def open_data(
     *,
     repo: str | Path | None = None,
@@ -1109,6 +1124,153 @@ def save_food_price_map_animation(
     )
 
 
+def goods_pressure(
+    data: SavegameNotebookData,
+    workbench: Any | None = None,
+    *,
+    selected_good: str | None = None,
+    rank_mode: str = "shortage",
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+    snapshot_date: int | None = None,
+    top_n: int = 12,
+    exclude_goods: Sequence[str] = ("food_revenue",),
+    min_global_flow: float = 100.0,
+    min_market_flow: float = 1.0,
+) -> GoodsPressureResult:
+    """Summarize global and market-level goods shortages or oversupply."""
+
+    normalized_rank_mode = _normalize_goods_rank_mode(rank_mode)
+    selected_playthrough = playthrough or getattr(workbench, "playthrough", None) or data.playthrough
+    selected_start = (
+        start_date
+        if start_date is not None
+        else getattr(getattr(workbench, "config", None), "start_date", None)
+    )
+    selected_end = (
+        end_date
+        if end_date is not None
+        else getattr(getattr(workbench, "config", None), "end_date", None)
+    )
+    rows = _goods_pressure_rows(
+        data,
+        playthrough=selected_playthrough,
+        start_date=selected_start,
+        end_date=selected_end,
+        exclude_goods=exclude_goods,
+    )
+    empty = _empty_goods_pressure_result(normalized_rank_mode)
+    if rows.is_empty():
+        return empty
+
+    global_time_series = _goods_pressure_global_time_series(rows)
+    if global_time_series.is_empty():
+        return empty
+    summary = _goods_pressure_summary(global_time_series, min_global_flow=min_global_flow)
+    global_shortages = _goods_pressure_shortage_rank(summary, top_n=top_n)
+    global_oversupply = _goods_pressure_oversupply_rank(summary, top_n=top_n)
+    problem_goods = _goods_pressure_problem_goods(
+        summary,
+        global_shortages=global_shortages,
+        global_oversupply=global_oversupply,
+        rank_mode=normalized_rank_mode,
+        top_n=top_n,
+    )
+    active_good = _resolve_goods_pressure_good(
+        global_time_series,
+        selected_good=selected_good,
+        problem_goods=problem_goods,
+    )
+    if active_good is None:
+        return GoodsPressureResult(
+            global_time_series=global_time_series,
+            summary=summary,
+            global_shortages=global_shortages,
+            global_oversupply=global_oversupply,
+            problem_goods=problem_goods,
+            selected_good=None,
+            selected_good_label=None,
+            selected_good_global=pl.DataFrame(),
+            selected_good_markets=pl.DataFrame(),
+            selected_good_market_time_series=pl.DataFrame(),
+            rank_mode=normalized_rank_mode,
+        )
+
+    selected_global = global_time_series.filter(pl.col("good_id") == active_good).sort("date_sort")
+    selected_label = _first_string(selected_global, "good_label") or active_good
+    market_time_series = _goods_pressure_market_time_series(rows, active_good)
+    latest_markets = _goods_pressure_latest_market_rank(
+        market_time_series,
+        snapshot_date=snapshot_date,
+        rank_mode=normalized_rank_mode,
+        min_market_flow=min_market_flow,
+        top_n=top_n,
+    )
+    selected_market_time_series = _goods_pressure_top_market_time_series(
+        market_time_series,
+        latest_markets,
+    )
+    return GoodsPressureResult(
+        global_time_series=global_time_series,
+        summary=summary,
+        global_shortages=global_shortages,
+        global_oversupply=global_oversupply,
+        problem_goods=problem_goods,
+        selected_good=active_good,
+        selected_good_label=selected_label,
+        selected_good_global=selected_global,
+        selected_good_markets=latest_markets,
+        selected_good_market_time_series=selected_market_time_series,
+        rank_mode=normalized_rank_mode,
+    )
+
+
+def show_goods_pressure(
+    data: SavegameNotebookData,
+    workbench: Any | None = None,
+    *,
+    selected_good: str | None = None,
+    rank_mode: str = "shortage",
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+    snapshot_date: int | None = None,
+    top_n: int = 12,
+    exclude_goods: Sequence[str] = ("food_revenue",),
+    min_global_flow: float = 100.0,
+    min_market_flow: float = 1.0,
+    display_tables: bool = True,
+) -> GoodsPressureResult:
+    """Display goods pressure tables and selected-good trend plots."""
+
+    result = goods_pressure(
+        data,
+        workbench,
+        selected_good=selected_good,
+        rank_mode=rank_mode,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+        snapshot_date=snapshot_date,
+        top_n=top_n,
+        exclude_goods=exclude_goods,
+        min_global_flow=min_global_flow,
+        min_market_flow=min_market_flow,
+    )
+    fig = _goods_pressure_figure(result, top_n=top_n)
+    if fig is None:
+        print("No market goods rows")
+    else:
+        _display_figure(fig)
+    if display_tables:
+        if not result.problem_goods.is_empty():
+            display(result.problem_goods)
+        if not result.selected_good_markets.is_empty():
+            display(result.selected_good_markets)
+    return result
+
+
 def food_price_volatility(
     data: SavegameNotebookData,
     workbench: Any | None = None,
@@ -1301,7 +1463,7 @@ def save_food_price_volatility_webp(
 ) -> FoodPriceVolatilityWebPExportResult | None:
     """Write a static WebP summary of food-price volatility."""
 
-    output_path = Path(path) if path is not None else Path(output_dir) / filename
+    output_path = _repo_relative_output_file(path=path, output_dir=output_dir, filename=filename)
     if output_path.exists() and not overwrite:
         raise FileExistsError(output_path)
     fig = _food_price_volatility_figure(result, top_n=top_n)
@@ -1530,6 +1692,13 @@ def export_global_map_outputs(
 def _resolve_output_path(repo: Path, path: str | Path) -> Path:
     output = Path(path)
     return output if output.is_absolute() else repo / output
+
+
+def _repo_relative_output_file(*, path: str | Path | None, output_dir: str | Path, filename: str) -> Path:
+    output_path = Path(path) if path is not None else Path(output_dir) / filename
+    if output_path.is_absolute():
+        return output_path
+    return _find_repo_root() / output_path
 
 
 def _remove_stale_comparison_exports(comparison_dir: Path) -> None:
@@ -2192,6 +2361,395 @@ def building_types_for_custom_tag(
     return sorted(tagged, key=lambda building_type: (sort_order.get(building_type, len(sort_order)), building_type))
 
 
+def _goods_pressure_rows(
+    data: SavegameNotebookData,
+    *,
+    playthrough: str | None,
+    start_date: int | None,
+    end_date: int | None,
+    exclude_goods: Sequence[str],
+) -> pl.DataFrame:
+    frame = data.table("market_goods")
+    if frame.is_empty() or not {"good_id", "good_code"}.intersection(frame.columns):
+        return pl.DataFrame()
+    if playthrough is not None and "playthrough_id" in frame.columns:
+        frame = frame.filter(pl.col("playthrough_id") == playthrough)
+    if start_date is not None and "date_sort" in frame.columns:
+        frame = frame.filter(pl.col("date_sort") >= int(start_date))
+    if end_date is not None and "date_sort" in frame.columns:
+        frame = frame.filter(pl.col("date_sort") <= int(end_date))
+    if frame.is_empty():
+        return frame
+    frame = _with_plot_year(frame)
+    frame = _with_good_label_columns(data, frame)
+    frame = _with_market_label_columns(data, frame)
+    excluded = [str(good) for good in exclude_goods]
+    if excluded:
+        excluded_lower = [good.lower() for good in excluded]
+        predicate = ~pl.col("good_id").cast(pl.String).str.to_lowercase().is_in(excluded_lower)
+        if "good_label" in frame.columns:
+            predicate = predicate & ~pl.col("good_label").cast(pl.String).str.to_lowercase().is_in(excluded_lower)
+        frame = frame.filter(predicate)
+    if frame.is_empty():
+        return frame
+    return _with_goods_pressure_numeric_columns(frame)
+
+
+def _with_goods_pressure_numeric_columns(frame: pl.DataFrame) -> pl.DataFrame:
+    result = frame
+    numeric_columns = (
+        "supply",
+        "demand",
+        "net",
+        "stockpile",
+        "price",
+        "default_price",
+    )
+    for column in numeric_columns:
+        if column not in result.columns:
+            result = result.with_columns(pl.lit(None, dtype=pl.Float64).alias(column))
+    return result.with_columns(
+        *[pl.col(column).cast(pl.Float64).alias(column) for column in numeric_columns]
+    )
+
+
+def _goods_pressure_global_time_series(frame: pl.DataFrame) -> pl.DataFrame:
+    required = {"snapshot_id", "date_sort", "year", "month", "day", "date", "plot_year", "good_id", "good_label"}
+    if frame.is_empty() or not required.issubset(frame.columns):
+        return pl.DataFrame()
+    grouped = (
+        frame.group_by(["snapshot_id", "date_sort", "year", "month", "day", "date", "plot_year", "good_id", "good_label"])
+        .agg(
+            pl.len().alias("market_rows"),
+            pl.sum("supply").alias("supply"),
+            pl.sum("demand").alias("demand"),
+            pl.sum("stockpile").alias("stockpile"),
+            pl.mean("price").alias("mean_price"),
+            pl.median("price").alias("median_price"),
+            pl.col("price").quantile(0.10).alias("price_p10"),
+            pl.col("price").quantile(0.90).alias("price_p90"),
+            pl.max("default_price").alias("default_price"),
+        )
+        .with_columns(
+            pl.col("supply").fill_null(0.0),
+            pl.col("demand").fill_null(0.0),
+            pl.col("stockpile").fill_null(0.0),
+        )
+    )
+    return _with_goods_pressure_derived_columns(grouped).sort(["good_label", "date_sort"])
+
+
+def _goods_pressure_market_time_series(frame: pl.DataFrame, good_id: str) -> pl.DataFrame:
+    if frame.is_empty():
+        return pl.DataFrame()
+    selected = frame.filter(pl.col("good_id") == good_id)
+    if selected.is_empty():
+        return selected
+    groups = [
+        column
+        for column in (
+            "snapshot_id",
+            "date_sort",
+            "year",
+            "month",
+            "day",
+            "date",
+            "plot_year",
+            "market_id",
+            "market_label",
+            "good_id",
+            "good_label",
+        )
+        if column in selected.columns
+    ]
+    grouped = (
+        selected.group_by(groups)
+        .agg(
+            pl.sum("supply").alias("supply"),
+            pl.sum("demand").alias("demand"),
+            pl.sum("stockpile").alias("stockpile"),
+            pl.mean("price").alias("mean_price"),
+            pl.median("price").alias("median_price"),
+            pl.max("default_price").alias("default_price"),
+        )
+        .with_columns(
+            pl.col("supply").fill_null(0.0),
+            pl.col("demand").fill_null(0.0),
+            pl.col("stockpile").fill_null(0.0),
+        )
+    )
+    return _with_goods_pressure_derived_columns(grouped).sort(["market_label", "date_sort"])
+
+
+def _with_goods_pressure_derived_columns(frame: pl.DataFrame) -> pl.DataFrame:
+    result = frame.with_columns((pl.col("supply") - pl.col("demand")).alias("net")).with_columns(
+        pl.col("net").alias("balance"),
+        pl.max_horizontal(-pl.col("net"), pl.lit(0.0)).alias("shortage"),
+        pl.max_horizontal(pl.col("net"), pl.lit(0.0)).alias("oversupply"),
+        (pl.col("supply").fill_null(0.0) + pl.col("demand").fill_null(0.0)).alias("flow"),
+    )
+    return result.with_columns(
+        pl.when(pl.col("flow") > 0)
+        .then(100.0 * pl.col("net") / pl.col("flow"))
+        .otherwise(None)
+        .alias("imbalance_pct_of_flow"),
+        pl.when(pl.col("default_price") > 0)
+        .then(pl.col("mean_price") / pl.col("default_price"))
+        .otherwise(None)
+        .alias("price_ratio"),
+        pl.when(pl.col("demand") > 0)
+        .then(pl.col("stockpile") / pl.col("demand"))
+        .otherwise(None)
+        .alias("stockpile_months"),
+    )
+
+
+def _goods_pressure_summary(frame: pl.DataFrame, *, min_global_flow: float) -> pl.DataFrame:
+    if frame.is_empty():
+        return pl.DataFrame()
+    grouped = (
+        frame.sort(["good_id", "date_sort"])
+        .group_by(["good_id", "good_label"])
+        .agg(
+            pl.len().alias("snapshots"),
+            pl.first("date").alias("first_date"),
+            pl.last("date").alias("last_date"),
+            pl.mean("supply").alias("mean_supply"),
+            pl.mean("demand").alias("mean_demand"),
+            pl.mean("flow").alias("mean_flow"),
+            pl.mean("net").alias("mean_net"),
+            pl.min("net").alias("min_net"),
+            pl.max("net").alias("max_net"),
+            pl.mean("shortage").alias("mean_shortage"),
+            pl.sum("shortage").alias("total_shortage"),
+            pl.max("shortage").alias("max_shortage"),
+            pl.mean("oversupply").alias("mean_oversupply"),
+            pl.sum("oversupply").alias("total_oversupply"),
+            pl.max("oversupply").alias("max_oversupply"),
+            pl.col("balance").abs().mean().alias("mean_abs_balance"),
+            pl.mean("imbalance_pct_of_flow").alias("mean_imbalance_pct_of_flow"),
+            pl.mean("price_ratio").alias("mean_price_ratio"),
+            pl.mean("stockpile_months").alias("mean_stockpile_months"),
+            pl.last("supply").alias("latest_supply"),
+            pl.last("demand").alias("latest_demand"),
+            pl.last("net").alias("latest_net"),
+            pl.last("balance").alias("latest_balance"),
+            pl.last("shortage").alias("latest_shortage"),
+            pl.last("oversupply").alias("latest_oversupply"),
+            pl.last("imbalance_pct_of_flow").alias("latest_imbalance_pct_of_flow"),
+            pl.last("mean_price").alias("latest_mean_price"),
+            pl.last("median_price").alias("latest_median_price"),
+            pl.last("price_ratio").alias("latest_price_ratio"),
+            pl.last("stockpile").alias("latest_stockpile"),
+            pl.last("stockpile_months").alias("latest_stockpile_months"),
+        )
+    )
+    return (
+        grouped.with_columns(
+            pl.when(pl.col("mean_demand") > 0)
+            .then(100.0 * pl.col("mean_shortage") / pl.col("mean_demand"))
+            .otherwise(None)
+            .alias("mean_shortage_pct_of_demand"),
+            pl.when(pl.col("latest_demand") > 0)
+            .then(100.0 * pl.col("latest_shortage") / pl.col("latest_demand"))
+            .otherwise(None)
+            .alias("latest_shortage_pct_of_demand"),
+            pl.when(pl.col("mean_supply") > 0)
+            .then(100.0 * pl.col("mean_oversupply") / pl.col("mean_supply"))
+            .otherwise(None)
+            .alias("mean_oversupply_pct_of_supply"),
+            pl.when(pl.col("latest_supply") > 0)
+            .then(100.0 * pl.col("latest_oversupply") / pl.col("latest_supply"))
+            .otherwise(None)
+            .alias("latest_oversupply_pct_of_supply"),
+            pl.col("latest_balance").abs().alias("latest_abs_balance"),
+        )
+        .filter(pl.col("mean_flow") >= float(min_global_flow))
+        .sort(["mean_abs_balance", "good_label"], descending=[True, False])
+    )
+
+
+def _goods_pressure_shortage_rank(summary: pl.DataFrame, *, top_n: int) -> pl.DataFrame:
+    if summary.is_empty() or "mean_shortage" not in summary.columns:
+        return summary
+    return (
+        summary.filter(pl.col("mean_shortage") > 0)
+        .sort(
+            ["mean_shortage", "latest_shortage", "mean_shortage_pct_of_demand", "good_label"],
+            descending=[True, True, True, False],
+        )
+        .head(top_n)
+    )
+
+
+def _goods_pressure_oversupply_rank(summary: pl.DataFrame, *, top_n: int) -> pl.DataFrame:
+    if summary.is_empty() or "mean_oversupply" not in summary.columns:
+        return summary
+    return (
+        summary.filter(pl.col("mean_oversupply") > 0)
+        .sort(
+            ["mean_oversupply", "latest_oversupply", "mean_oversupply_pct_of_supply", "good_label"],
+            descending=[True, True, True, False],
+        )
+        .head(top_n)
+    )
+
+
+def _goods_pressure_problem_goods(
+    summary: pl.DataFrame,
+    *,
+    global_shortages: pl.DataFrame,
+    global_oversupply: pl.DataFrame,
+    rank_mode: str,
+    top_n: int,
+) -> pl.DataFrame:
+    if rank_mode == "shortage":
+        return global_shortages
+    if rank_mode == "oversupply":
+        return global_oversupply
+    if summary.is_empty():
+        return summary
+    return summary.sort(
+        ["mean_abs_balance", "latest_abs_balance", "good_label"],
+        descending=[True, True, False],
+    ).head(top_n)
+
+
+def _goods_pressure_latest_market_rank(
+    frame: pl.DataFrame,
+    *,
+    snapshot_date: int | None,
+    rank_mode: str,
+    min_market_flow: float,
+    top_n: int,
+) -> pl.DataFrame:
+    latest = _latest_goods_snapshot_frame(frame, snapshot_date=snapshot_date)
+    if latest.is_empty():
+        return latest
+    ranked = latest.filter(pl.col("flow") >= float(min_market_flow))
+    if ranked.is_empty():
+        return ranked
+    if rank_mode == "shortage":
+        sort_columns = ["shortage", "price_ratio", "market_label"]
+        descending = [True, True, False]
+    elif rank_mode == "oversupply":
+        sort_columns = ["oversupply", "market_label"]
+        descending = [True, False]
+    else:
+        ranked = ranked.with_columns(pl.col("balance").abs().alias("abs_balance"))
+        sort_columns = ["abs_balance", "market_label"]
+        descending = [True, False]
+    return ranked.sort(sort_columns, descending=descending).head(top_n)
+
+
+def _goods_pressure_top_market_time_series(
+    frame: pl.DataFrame,
+    latest_markets: pl.DataFrame,
+) -> pl.DataFrame:
+    if frame.is_empty() or latest_markets.is_empty() or "market_id" not in frame.columns:
+        return pl.DataFrame()
+    market_ids = latest_markets.get_column("market_id").to_list()
+    return frame.filter(pl.col("market_id").is_in(market_ids)).sort(["market_label", "date_sort"])
+
+
+def _latest_goods_snapshot_frame(frame: pl.DataFrame, *, snapshot_date: int | None) -> pl.DataFrame:
+    if frame.is_empty() or "date_sort" not in frame.columns:
+        return frame
+    selected = frame
+    if snapshot_date is not None:
+        selected = selected.filter(pl.col("date_sort") <= int(snapshot_date))
+    if selected.is_empty():
+        return selected
+    latest_date = selected.get_column("date_sort").max()
+    return selected.filter(pl.col("date_sort") == latest_date)
+
+
+def _resolve_goods_pressure_good(
+    frame: pl.DataFrame,
+    *,
+    selected_good: str | None,
+    problem_goods: pl.DataFrame,
+) -> str | None:
+    if frame.is_empty() or "good_id" not in frame.columns:
+        return None
+    query = _text_or_none(selected_good)
+    if query is None:
+        return _first_string(problem_goods, "good_id") or _first_string(frame, "good_id")
+    options = frame.select(["good_id", "good_label"]).unique()
+    lowered = query.lower()
+    exact = options.filter(pl.col("good_id").cast(pl.String).str.to_lowercase() == lowered)
+    if exact.is_empty() and "good_label" in options.columns:
+        exact = options.filter(pl.col("good_label").cast(pl.String).str.to_lowercase() == lowered)
+    if exact.is_empty() and "good_label" in options.columns:
+        exact = options.filter(
+            pl.col("good_id").cast(pl.String).str.to_lowercase().str.contains(lowered, literal=True)
+            | pl.col("good_label").cast(pl.String).str.to_lowercase().str.contains(lowered, literal=True)
+        )
+    return _first_string(exact, "good_id")
+
+
+def _normalize_goods_rank_mode(value: str) -> str:
+    normalized = str(value or "shortage").strip().lower()
+    if normalized in {"shortage", "shortages", "scarcity", "deficit"}:
+        return "shortage"
+    if normalized in {"oversupply", "surplus", "glut", "gluts"}:
+        return "oversupply"
+    if normalized in {"absolute", "abs", "imbalance", "balance"}:
+        return "absolute"
+    raise ValueError("rank_mode must be one of: shortage, oversupply, absolute")
+
+
+def _empty_goods_pressure_result(rank_mode: str) -> GoodsPressureResult:
+    return GoodsPressureResult(
+        global_time_series=pl.DataFrame(),
+        summary=pl.DataFrame(),
+        global_shortages=pl.DataFrame(),
+        global_oversupply=pl.DataFrame(),
+        problem_goods=pl.DataFrame(),
+        selected_good=None,
+        selected_good_label=None,
+        selected_good_global=pl.DataFrame(),
+        selected_good_markets=pl.DataFrame(),
+        selected_good_market_time_series=pl.DataFrame(),
+        rank_mode=rank_mode,
+    )
+
+
+def _with_good_label_columns(data: SavegameNotebookData, frame: pl.DataFrame) -> pl.DataFrame:
+    result = frame
+    goods = data.dim("goods")
+    if not goods.is_empty() and "good_label" not in result.columns:
+        for key in ("good_code", "good_id"):
+            if key in result.columns and key in goods.columns:
+                label_columns = [
+                    key,
+                    *[
+                        column
+                        for column in ("good_id", "good_label", "good_name", "goods_category")
+                        if column in goods.columns and column != key
+                    ],
+                ]
+                result = result.join(goods.select(label_columns).unique(key), on=key, how="left")
+                break
+    if "good_label" not in result.columns:
+        label_candidates: list[pl.Expr] = []
+        for column in ("good_name", "good_id"):
+            if column in result.columns:
+                label_candidates.append(pl.col(column).cast(pl.String))
+        if label_candidates:
+            result = result.with_columns(pl.coalesce(label_candidates).alias("good_label"))
+        else:
+            result = result.with_columns(pl.lit("Good").alias("good_label"))
+    return result.with_columns(pl.col("good_label").cast(pl.String).alias("good_label"))
+
+
+def _first_string(frame: pl.DataFrame, column: str) -> str | None:
+    if frame.is_empty() or column not in frame.columns:
+        return None
+    value = frame.item(0, column)
+    return None if value is None else str(value)
+
+
 def _food_price_rows(
     data: SavegameNotebookData,
     *,
@@ -2295,6 +2853,87 @@ def _filter_food_price_markets(frame: pl.DataFrame, market_search: str | None) -
     for term in terms[1:]:
         predicate = predicate | term
     return frame.filter(predicate)
+
+
+def _goods_pressure_figure(
+    result: GoodsPressureResult,
+    *,
+    top_n: int,
+) -> Any | None:
+    if result.selected_good_global.is_empty():
+        return None
+    selected = result.selected_good_global.sort("date_sort")
+    title_good = result.selected_good_label or result.selected_good or "selected good"
+    fig, axes = plt.subplots(2, 2, figsize=(18, 10))
+    ax_flow, ax_stockpile, ax_price, ax_markets = axes.ravel()
+    x_values = selected["plot_year"].to_list() if "plot_year" in selected.columns else selected["year"].to_list()
+
+    for metric, label, linewidth in (
+        ("supply", "Supply", 2.0),
+        ("demand", "Demand", 2.0),
+        ("balance", "Balance", 1.8),
+    ):
+        if metric in selected.columns:
+            ax_flow.plot(x_values, selected[metric].to_list(), marker="o", linewidth=linewidth, label=label)
+    ax_flow.axhline(0, color="#111827", linewidth=0.9, alpha=0.45)
+    ax_flow.set_title(f"{title_good}: global supply, demand, and balance")
+    ax_flow.set_xlabel("year")
+    ax_flow.set_ylabel("goods")
+    ax_flow.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax_flow.legend(loc="best", fontsize=9)
+
+    if "stockpile" in selected.columns:
+        ax_stockpile.plot(x_values, selected["stockpile"].to_list(), marker="o", linewidth=2.0, label="Stockpile")
+    if "stockpile_months" in selected.columns:
+        ax_stockpile.plot(x_values, selected["stockpile_months"].to_list(), marker="o", linewidth=1.8, label="Stockpile / monthly demand")
+    ax_stockpile.set_title(f"{title_good}: stockpile")
+    ax_stockpile.set_xlabel("year")
+    ax_stockpile.set_ylabel("value")
+    ax_stockpile.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax_stockpile.legend(loc="best", fontsize=9)
+
+    if {"price_p10", "price_p90"}.issubset(selected.columns):
+        ax_price.fill_between(
+            x_values,
+            selected["price_p10"].to_list(),
+            selected["price_p90"].to_list(),
+            alpha=0.20,
+            label="10th-90th percentile",
+        )
+    for metric, label in (("median_price", "Median price"), ("mean_price", "Mean price"), ("price_ratio", "Mean / default")):
+        if metric in selected.columns:
+            ax_price.plot(x_values, selected[metric].to_list(), marker="o", linewidth=1.9, label=label)
+    ax_price.set_title(f"{title_good}: price")
+    ax_price.set_xlabel("year")
+    ax_price.set_ylabel("price")
+    ax_price.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax_price.legend(loc="best", fontsize=9)
+
+    market_frame = result.selected_good_market_time_series
+    if not market_frame.is_empty() and "market_label" in market_frame.columns:
+        metric = "shortage" if result.rank_mode == "shortage" else "oversupply"
+        if result.rank_mode == "absolute":
+            market_frame = market_frame.with_columns(pl.col("balance").abs().alias("abs_balance"))
+            metric = "abs_balance"
+        labels = (
+            result.selected_good_markets.get_column("market_label").head(top_n).to_list()
+            if "market_label" in result.selected_good_markets.columns
+            else market_frame.get_column("market_label").unique().head(top_n).to_list()
+        )
+        for label in labels:
+            series = market_frame.filter(pl.col("market_label") == label).sort("date_sort")
+            if series.is_empty() or metric not in series.columns:
+                continue
+            x_market = series["plot_year"].to_list() if "plot_year" in series.columns else series["year"].to_list()
+            ax_markets.plot(x_market, series[metric].to_list(), marker="o", linewidth=1.6, label=str(label))
+        ax_markets.legend(bbox_to_anchor=(1.01, 1), loc="upper left", fontsize=8)
+    ax_markets.set_title(f"{title_good}: worst markets by {result.rank_mode}")
+    ax_markets.set_xlabel("year")
+    ax_markets.set_ylabel(result.rank_mode)
+    ax_markets.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    fig.tight_layout()
+    return fig
 
 
 def _food_price_volatility_figure(

@@ -46,7 +46,6 @@ TRY_INJECT:land_vs_naval = {
 	left_modifier = {
 		global_max_rgo_size_modifier = 0.05
 		global_merchant_capacity_modifier = -0.15
-		global_lumber_output_modifier = 0.30
 		global_iron_output_modifier = 0.30
 		global_horses_output_modifier = 0.075
 		global_wheat_output_modifier = 0.30
@@ -79,6 +78,7 @@ TRY_INJECT:land_vs_naval = {
 		global_merchant_capacity_modifier = 0.30
 		global_max_rgo_size_modifier = -0.05
 		global_fish_output_modifier = 0.30
+		global_lumber_output_modifier = 0.50
 		global_naval_supplies_output_modifier = 0.30
 		global_salt_output_modifier = 0.30
 		global_pearls_output_modifier = 0.30
@@ -104,5 +104,75 @@ TRY_INJECT:serfdom_vs_free_subjects = {
 	}
 	right_modifier = {
 		global_victuals_output_modifier = 0.05
+	}
+}
+
+TRY_INJECT:centralization_vs_decentralization = {
+	left_modifier = {
+		global_urban_build_buildings_efficiency = 0.20
+	}
+	right_modifier = {
+		global_rural_build_buildings_efficiency = 0.20
+	}
+}
+
+TRY_INJECT:individualism_vs_communalism = {
+	left_modifier = {
+		global_production_efficiency = 0.05
+	}
+	right_modifier = {
+		building_upkeep_efficiency = 0.05
+		food_purchase_efficiency = 0.05
+	}
+}
+
+TRY_INJECT:quality_vs_quantity = {
+	left_modifier = {
+		global_production_efficiency = 0.075
+		global_build_buildings_efficiency = -0.25
+		global_pop_promotion_speed = -1
+	}
+	right_modifier = {
+		global_production_efficiency = -0.075
+		global_build_buildings_efficiency = 0.25
+		global_pop_promotion_speed = 0.25
+	}
+}
+
+TRY_INJECT:spiritualist_vs_humanist = {
+	left_modifier = {
+		global_incense_output_modifier = 0.075
+		global_wine_output_modifier = 0.075
+		global_beeswax_output_modifier = 0.075
+		global_books_output_modifier = -0.075
+		global_paper_output_modifier = -0.075
+		global_medicaments_output_modifier = -0.075
+	}
+	right_modifier = {
+		global_incense_output_modifier = -0.075
+		global_wine_output_modifier = -0.075
+		global_beeswax_output_modifier = -0.075
+		global_books_output_modifier = 0.075
+		global_paper_output_modifier = 0.075
+		global_medicaments_output_modifier = 0.075
+	}
+}
+
+TRY_INJECT:offensive_vs_defensive = {
+	left_modifier = {
+		global_firearms_output_modifier = 0.075
+		global_weaponry_output_modifier = 0.075
+		global_cannons_output_modifier = 0.075
+		global_masonry_output_modifier = -0.075
+		global_lumber_output_modifier = -0.075
+		global_stone_output_modifier = -0.075
+	}
+	right_modifier = {
+		global_firearms_output_modifier = -0.075
+		global_weaponry_output_modifier = -0.075
+		global_cannons_output_modifier = -0.075
+		global_masonry_output_modifier = 0.075
+		global_lumber_output_modifier = 0.075
+		global_stone_output_modifier = 0.075
 	}
 }

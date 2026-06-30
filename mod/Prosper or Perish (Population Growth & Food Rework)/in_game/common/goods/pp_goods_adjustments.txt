@@ -80,7 +80,7 @@ TRY_INJECT:salt = {
 	default_market_price = 5 # 4
 	transport_cost = 0.5 # 1
 	demand_add = {
-		burghers = -0.01
+		all = 0
 	}
 	block_rgo_upgrade = yes
 }
@@ -93,6 +93,18 @@ TRY_INJECT:dyes = {
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:lumber = {
+	default_market_price = 1.75 # 1.5
+	transport_cost = 0.75 # 1
+	demand_add = {
+		# Cancel vanilla pop demand.
+		nobles = -0.00125
+		clergy = -0.00125
+		burghers = -0.00125
+		laborers = -0.00125
+		soldiers = -0.00125
+		peasants = -0.00025
+		slaves = -0.00025
+	}
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:saltpeter = {
@@ -102,6 +114,8 @@ TRY_INJECT:coal = {
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:iron = {
+	default_market_price = 3.5 # 3.0
+	transport_cost = 0.75 # 1
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:stone = {

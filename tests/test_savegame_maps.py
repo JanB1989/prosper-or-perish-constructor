@@ -20,12 +20,14 @@ class FakeNotebookData:
         buildings: pl.DataFrame | None = None,
         market_food: pl.DataFrame | None = None,
         market_dim: pl.DataFrame | None = None,
+        country_dim: pl.DataFrame | None = None,
     ):
         self._locations = locations
         self._location_dim = location_dim
         self._buildings = buildings if buildings is not None else pl.DataFrame()
         self._market_food = market_food if market_food is not None else pl.DataFrame()
         self._market_dim = market_dim if market_dim is not None else pl.DataFrame()
+        self._country_dim = country_dim if country_dim is not None else pl.DataFrame()
         self.map_assets = assets
         self.playthrough = "run_1"
 
@@ -43,6 +45,8 @@ class FakeNotebookData:
             return self._location_dim
         if name == "markets":
             return self._market_dim
+        if name == "countries":
+            return self._country_dim
         return pl.DataFrame()
 
 
@@ -383,10 +387,17 @@ def test_save_map_viewer_writes_html_and_frame_files(tmp_path: Path) -> None:
     data = _fake_data(tmp_path, include_missing_geometry=False)
     result = savegame_maps.population_map(data, scope="super_region", name="asia", width=160)
     food_price = savegame_maps.food_price_map(data, scope="super_region", name="asia", width=160)
+    political = savegame_maps.political_map(
+        data,
+        scope="super_region",
+        name="asia",
+        width=160,
+        country_colors={"ENG": "#ff0000", "SCO": "#00ff00", "FRA": "#0000ff"},
+    )
     html_path = tmp_path / "savegame_maps.html"
 
     export = savegame_maps.save_map_viewer(
-        [("Population current", result), ("Food price current", food_price)],
+        [("Population current", result), ("Food price current", food_price), ("Political current", political)],
         path=html_path,
         frame_dir="viewer_frames",
         width=220,
@@ -394,13 +405,15 @@ def test_save_map_viewer_writes_html_and_frame_files(tmp_path: Path) -> None:
 
     text = html_path.read_text(encoding="utf-8")
     assert export.path == html_path
-    assert export.frames == 4
+    assert export.frames == 6
     assert 'id="frameSlider"' in text
     assert 'id="playButton"' in text
     assert "Population current" in text
     assert "Food price current" in text
+    assert "Political current" in text
     assert len(list((tmp_path / "viewer_frames" / "population_current").glob("*.webp"))) == 2
     assert len(list((tmp_path / "viewer_frames" / "food_price_current").glob("*.webp"))) == 2
+    assert len(list((tmp_path / "viewer_frames" / "political_current").glob("*.webp"))) == 2
 
 
 def test_development_map_from_gamestart_uses_point_delta(tmp_path: Path) -> None:
@@ -533,6 +546,77 @@ def test_food_price_map_colors_locations_by_current_market_price(tmp_path: Path)
     assert values[("bravo", 13420401)] == 0.15
     assert values[("alpha", 13470401)] == 0.10
     assert values[("bravo", 13470401)] == 0.20
+
+
+def test_political_map_colors_locations_by_owner_country(tmp_path: Path) -> None:
+    data = _fake_data(tmp_path, include_missing_geometry=False)
+
+    result = savegame_maps.political_map(
+        data,
+        scope="super_region",
+        name=None,
+        width=160,
+        country_colors={"ENG": "#ff0000", "SCO": "#00ff00", "FRA": "#0000ff"},
+    )
+
+    assert len(result.frames) == 2
+    assert result.value_column == "country_color_int"
+    assert result.value_label == "owner country"
+    values = {
+        (row["slug"], row["date_sort"]): row["country_color_int"]
+        for row in result.frame_data.select("slug", "date_sort", "country_color_int").iter_rows(named=True)
+    }
+    assert values[("alpha", 13420401)] == 0xFF0000
+    assert values[("bravo", 13420401)] == 0x00FF00
+    assert values[("bravo", 13470401)] == 0xFF0000
+
+    legend = savegame_maps._political_frame_legend(
+        result.frame_data.filter(pl.col("date_sort") == 13470401),
+        date="1347",
+    )
+    assert ("Locations", "3") in legend.rows
+    assert ("Countries", "2") in legend.rows
+    assert ("England", "2", "#ff0000") in legend.swatch_rows
+
+
+def test_political_map_resolves_encoded_country_dimension(tmp_path: Path) -> None:
+    base = _fake_data(tmp_path, include_missing_geometry=False)
+    locations = base._locations.drop("country_tag", "country_name").with_columns(
+        pl.when(pl.col("location_code") == 3)
+        .then(3)
+        .when((pl.col("location_code") == 2) & (pl.col("date_sort") == 13420401))
+        .then(2)
+        .otherwise(1)
+        .alias("country_code")
+    )
+    countries = pl.DataFrame(
+        [
+            {"country_code": 1, "country_tag": "ENG", "country_name": "England"},
+            {"country_code": 2, "country_tag": "SCO", "country_name": "Scotland"},
+            {"country_code": 3, "country_tag": "FRA", "country_name": "France"},
+        ]
+    )
+    data = FakeNotebookData(
+        locations=locations,
+        location_dim=base._location_dim,
+        assets=base.map_assets,
+        buildings=base._buildings,
+        market_food=base._market_food,
+        market_dim=base._market_dim,
+        country_dim=countries,
+    )
+
+    result = savegame_maps.political_map(
+        data,
+        scope="super_region",
+        name="asia",
+        width=160,
+        country_colors={"ENG": "#ff0000", "SCO": "#00ff00", "FRA": "#0000ff"},
+    )
+
+    rows = result.frame_data.select("slug", "date_sort", "country_tag", "country_label").to_dicts()
+    assert {"slug": "bravo", "date_sort": 13420401, "country_tag": "SCO", "country_label": "Scotland"} in rows
+    assert {"slug": "bravo", "date_sort": 13470401, "country_tag": "ENG", "country_label": "England"} in rows
 
 
 def test_show_building_levels_map_can_skip_widget_display(tmp_path: Path) -> None:
@@ -676,7 +760,9 @@ def _location_row(
     population: float,
     *,
     development: float = 0.0,
+    country_tag: str | None = None,
 ) -> dict[str, object]:
+    tag = country_tag or _owner_tag(location_code, date_sort)
     return {
         "snapshot_id": snapshot_id,
         "playthrough_id": "run_1",
@@ -685,9 +771,19 @@ def _location_row(
         "year": year,
         "location_code": location_code,
         "market_code": 10 if location_code in {1, 3, 4} else 20,
+        "country_tag": tag,
+        "country_name": {"ENG": "England", "SCO": "Scotland", "FRA": "France"}.get(tag, tag),
         "total_population": population,
         "development": development,
     }
+
+
+def _owner_tag(location_code: int, date_sort: int) -> str:
+    if location_code == 3:
+        return "FRA"
+    if location_code == 2 and date_sort == 13420401:
+        return "SCO"
+    return "ENG"
 
 
 def _market_food_row(

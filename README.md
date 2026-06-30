@@ -302,8 +302,9 @@ It also refreshes compact notebook WebP exports under:
 graphs/savegame_notebooks/exports/absolute/
 ```
 
-including `food_price_current.webp`, which colors locations by their current market food price and
-appears as `Food price current` in `savegame_maps.html`.
+including `food_price_current.webp`, which colors locations by their current market food price, and
+`political_current.webp`, which colors locations by their current owner country. Both appear in
+`savegame_maps.html`.
 
 Useful options:
 

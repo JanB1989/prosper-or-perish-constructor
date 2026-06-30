@@ -7,7 +7,7 @@ interactive inspection.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from difflib import get_close_matches
 from io import BytesIO
@@ -1066,6 +1066,58 @@ def show_food_price_map(
     )
 
 
+def political_map(
+    data: SavegameNotebookData,
+    *,
+    scope: str = "super_region",
+    name: str | None = None,
+    width: int | None = None,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+    country_colors: Mapping[str, object] | None = None,
+) -> savegame_maps.PoliticalMapResult:
+    return savegame_maps.political_map(
+        data,
+        scope=scope,
+        name=name,
+        width=width,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+        country_colors=country_colors,
+    )
+
+
+def show_political_map(
+    data: SavegameNotebookData,
+    *,
+    scope: str = "super_region",
+    name: str | None = None,
+    width: int | None = None,
+    interval_ms: int = 700,
+    display_widget: bool = True,
+    display_diagnostics: bool = True,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+    country_colors: Mapping[str, object] | None = None,
+) -> savegame_maps.PoliticalMapResult:
+    return savegame_maps.show_political_map(
+        data,
+        scope=scope,
+        name=name,
+        width=width,
+        interval_ms=interval_ms,
+        display_widget=display_widget,
+        display_diagnostics=display_diagnostics,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+        country_colors=country_colors,
+    )
+
+
 def save_building_levels_map_animation(
     result: savegame_maps.BuildingLevelsMapResult,
     *,
@@ -1110,6 +1162,35 @@ def save_food_price_map_animation(
     overwrite: bool = True,
 ) -> savegame_maps.AnimationExportResult:
     return savegame_maps.save_food_price_map_animation(
+        result,
+        path=path,
+        output_dir=output_dir,
+        filename=filename,
+        duration_ms=duration_ms,
+        loop=loop,
+        quality=quality,
+        lossless=lossless,
+        width=width,
+        max_bytes=max_bytes,
+        overwrite=overwrite,
+    )
+
+
+def save_political_map_animation(
+    result: savegame_maps.PoliticalMapResult,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
+    filename: str = "political_current.webp",
+    duration_ms: int = 700,
+    loop: int = 0,
+    quality: int = 100,
+    lossless: bool = True,
+    width: int | None = None,
+    max_bytes: int | None = None,
+    overwrite: bool = True,
+) -> savegame_maps.AnimationExportResult:
+    return savegame_maps.save_political_map_animation(
         result,
         path=path,
         output_dir=output_dir,
@@ -1672,12 +1753,29 @@ def export_global_map_outputs(
             max_bytes=max_webp_bytes,
         )
     )
+    political_current = political_map(
+        data,
+        **common,
+    )
+    exports.append(
+        save_political_map_animation(
+            political_current,
+            output_dir=absolute_dir,
+            filename="political_current.webp",
+            duration_ms=interval_ms,
+            quality=quality,
+            lossless=lossless,
+            width=export_width,
+            max_bytes=max_webp_bytes,
+        )
+    )
     viewer = savegame_maps.save_map_viewer(
         [
             ("Population current", population_current),
             ("Development current", development_current),
             ("Building levels current", building_levels_current),
             ("Food price current", food_price_current),
+            ("Political current", political_current),
         ],
         path=viewer_output,
         frame_dir=viewer_frame_dir,

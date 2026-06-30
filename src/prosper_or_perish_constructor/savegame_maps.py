@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from functools import lru_cache
 from io import BytesIO
+import colorsys
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -16,7 +19,9 @@ from IPython.display import display
 from matplotlib.colors import Normalize, TwoSlopeNorm
 from PIL import Image
 
-from eu5gameparser.load_order import LoadOrderConfig
+from eu5gameparser.clausewitz.parser import parse_file
+from eu5gameparser.clausewitz.syntax import CList
+from eu5gameparser.load_order import GameLayer, LoadOrderConfig
 from prosper_or_perish_constructor.free_building_levels import (
     resolve_labeling_baseline_path,
     resolve_map_data_file,
@@ -58,6 +63,7 @@ DEFAULT_UNSELECTED = np.array([184, 184, 178], dtype=np.uint8)
 DEFAULT_NO_DATA = np.array([156, 156, 150], dtype=np.uint8)
 DEFAULT_NO_DATA_STRIPE = np.array([126, 126, 120], dtype=np.uint8)
 DEFAULT_ANIMATION_MAX_BYTES = 9_500_000
+COLOR_CONSTRUCTORS = frozenset({"rgb", "hsv", "hsv360"})
 
 
 @dataclass(frozen=True)
@@ -131,6 +137,19 @@ FoodPriceMapResult = DevelopmentMapResult
 
 
 @dataclass(frozen=True)
+class PoliticalMapResult:
+    frames: tuple[PopulationMapFrame, ...]
+    frame_data: pl.DataFrame
+    scope: str
+    name: str
+    mapped_locations: int
+    missing_geometry_locations: int
+    value_column: str = "country_color_int"
+    value_label: str = "owner country"
+    widget: Any | None = None
+
+
+@dataclass(frozen=True)
 class AnimationExportResult:
     path: Path
     format: str
@@ -155,6 +174,8 @@ class MapFrameLegend:
     region_value_header: str = "Total"
     unit: str = ""
     signed: bool = False
+    swatch_rows: tuple[tuple[str, str, str], ...] = ()
+    swatch_title: str = "Top countries"
 
 
 @dataclass(frozen=True)
@@ -810,6 +831,153 @@ def food_price_map(
     )
 
 
+def political_map(
+    data: Any,
+    *,
+    scope: str = "super_region",
+    name: str | None = None,
+    width: int | None = None,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+    country_colors: Mapping[str, object] | None = None,
+) -> PoliticalMapResult:
+    """Pre-render current owner-country map frames."""
+
+    assets = _require_map_assets(data)
+    locations = _political_locations(
+        data,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    normalized_scope = _normalize_scope(scope)
+    if locations.is_empty():
+        return PoliticalMapResult((), pl.DataFrame(), normalized_scope, name or "", 0, 0)
+
+    filtered, resolved_name = _filter_scope(locations, normalized_scope, name)
+    if filtered.is_empty():
+        return PoliticalMapResult((), pl.DataFrame(), normalized_scope, str(name or ""), 0, 0)
+
+    geometry = _prepared_geometry(assets)
+    selected = filtered.join(geometry, left_on="slug", right_on="location_tag", how="left")
+    selected = selected.with_columns(pl.col("map_color_int").is_not_null().alias("has_geometry"))
+    missing_geometry_locations = selected.filter(~pl.col("has_geometry")).select("slug").n_unique()
+    mapped = selected.filter(pl.col("has_geometry")).sort(["date_sort", "slug"])
+    if mapped.is_empty():
+        return PoliticalMapResult(
+            (),
+            selected,
+            normalized_scope,
+            resolved_name,
+            0,
+            int(missing_geometry_locations),
+        )
+
+    color_map = _resolved_country_color_map(data, country_colors)
+    frame_data = _with_political_colors(mapped, color_map).sort(["date_sort", "slug"])
+    crop = _scope_crop(frame_data, assets, padding=18)
+    target_width = width or assets.map_width
+    render_width = min(max(int(target_width), 200), assets.map_width)
+    render_cache = _build_render_cache(assets, crop=crop, frame_data=frame_data)
+
+    frames: list[PopulationMapFrame] = []
+    snapshots = frame_data.select(["snapshot_id", "date", "date_sort", "year"]).unique().sort("date_sort")
+    snapshot_frames = _partition_snapshot_frames(frame_data)
+    title = f"{resolved_name} political map"
+    for index, snapshot in enumerate(snapshots.iter_rows(named=True)):
+        snapshot_frame = snapshot_frames[str(snapshot["snapshot_id"])]
+        rendered = _render_categorical_frame(
+            assets,
+            snapshot_frame,
+            color_column="country_color_int",
+            crop=crop,
+            render_cache=render_cache,
+            render_width=render_width,
+            title=title,
+            subtitle=f"{_year_label(snapshot)} - owner country colors",
+            timeline=_timeline_for_snapshot(snapshots, index, snapshot),
+            legend=_political_frame_legend(
+                snapshot_frame,
+                date=_year_label(snapshot),
+            ),
+        )
+        frames.append(
+            PopulationMapFrame(
+                index=index,
+                snapshot_id=str(snapshot["snapshot_id"]),
+                date=str(snapshot["date"]),
+                date_sort=int(snapshot["date_sort"]),
+                year=int(snapshot["year"]),
+                png=rendered["png"],
+                image=rendered["image"],
+            )
+        )
+
+    return PoliticalMapResult(
+        frames=tuple(frames),
+        frame_data=frame_data,
+        scope=normalized_scope,
+        name=resolved_name,
+        mapped_locations=int(frame_data.select("slug").n_unique()),
+        missing_geometry_locations=int(missing_geometry_locations),
+    )
+
+
+def show_political_map(
+    data: Any,
+    *,
+    scope: str = "super_region",
+    name: str | None = None,
+    width: int | None = None,
+    interval_ms: int = 700,
+    display_widget: bool = True,
+    display_diagnostics: bool = True,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+    country_colors: Mapping[str, object] | None = None,
+) -> PoliticalMapResult:
+    result = political_map(
+        data,
+        scope=scope,
+        name=name,
+        width=width,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+        country_colors=country_colors,
+    )
+    widget = political_map_widget(result, interval_ms=interval_ms) if display_widget else None
+    if display_widget and widget is not None:
+        display(widget)
+    diagnostics = pl.DataFrame(
+        [
+            {
+                "scope": result.scope,
+                "name": result.name,
+                "frames": len(result.frames),
+                "mapped_locations": result.mapped_locations,
+                "missing_geometry_locations": result.missing_geometry_locations,
+                "value_label": result.value_label,
+            }
+        ]
+    )
+    if display_diagnostics:
+        display(diagnostics)
+    return PoliticalMapResult(
+        frames=result.frames,
+        frame_data=result.frame_data,
+        scope=result.scope,
+        name=result.name,
+        mapped_locations=result.mapped_locations,
+        missing_geometry_locations=result.missing_geometry_locations,
+        value_column=result.value_column,
+        value_label=result.value_label,
+        widget=widget,
+    )
+
+
 def show_building_levels_map(
     data: Any,
     *,
@@ -900,6 +1068,17 @@ def food_price_map_widget(result: FoodPriceMapResult, *, interval_ms: int = 700)
     return _map_widget(
         result.frames,
         label_for_index=lambda index: _scalar_frame_label(result, index),
+        interval_ms=interval_ms,
+    )
+
+
+def political_map_widget(result: PoliticalMapResult, *, interval_ms: int = 700) -> Any | None:
+    if not result.frames:
+        print("No political map frames")
+        return None
+    return _map_widget(
+        result.frames,
+        label_for_index=lambda index: _political_frame_label(result, index),
         interval_ms=interval_ms,
     )
 
@@ -1064,6 +1243,35 @@ def save_food_price_map_animation(
     path: str | Path | None = None,
     output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
     filename: str = "food_price_current.webp",
+    duration_ms: int = 700,
+    loop: int = 0,
+    quality: int = 100,
+    lossless: bool = True,
+    width: int | None = None,
+    max_bytes: int | None = None,
+    overwrite: bool = True,
+) -> AnimationExportResult:
+    return save_map_animation(
+        result,
+        path=path,
+        output_dir=output_dir,
+        filename=filename,
+        duration_ms=duration_ms,
+        loop=loop,
+        quality=quality,
+        lossless=lossless,
+        width=width,
+        max_bytes=max_bytes,
+        overwrite=overwrite,
+    )
+
+
+def save_political_map_animation(
+    result: PoliticalMapResult,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
+    filename: str = "political_current.webp",
     duration_ms: int = 700,
     loop: int = 0,
     quality: int = 100,
@@ -1341,6 +1549,205 @@ def _prepare_geometry_frame(
         .select("location_tag", "map_color_int", "map_min_x", "map_max_x", "map_min_y", "map_max_y")
         .unique("location_tag")
     )
+
+
+def load_country_color_map(
+    *,
+    load_order_path: str | Path,
+    profile: str = "constructor",
+) -> dict[str, tuple[int, int, int]]:
+    """Load country map colors from the configured EU5 setup data."""
+
+    return dict(_load_country_color_map_cached(str(Path(load_order_path).expanduser()), profile))
+
+
+@lru_cache(maxsize=8)
+def _load_country_color_map_cached(load_order_path: str, profile: str) -> tuple[tuple[str, tuple[int, int, int]], ...]:
+    profile_config = LoadOrderConfig.load(load_order_path).profile(profile)
+    named_colors = _load_named_color_map(profile_config.layers)
+    country_colors: dict[str, tuple[int, int, int]] = {}
+    for layer in profile_config.layers:
+        root = _country_setup_dir(layer)
+        if not root.is_dir():
+            continue
+        for path in sorted(root.glob("*.txt")):
+            for entry in parse_file(path).entries:
+                if not isinstance(entry.value, CList):
+                    continue
+                tag = _normalized_setup_key(entry.key)
+                if not tag:
+                    continue
+                rgb = _block_color(entry.value, "color", named_colors)
+                if rgb is None:
+                    continue
+                country_colors[tag] = rgb
+                country_colors[tag.upper()] = rgb
+                country_colors[tag.lower()] = rgb
+    return tuple(sorted(country_colors.items()))
+
+
+def _load_named_color_map(layers: Sequence[GameLayer]) -> dict[str, tuple[int, int, int]]:
+    colors: dict[str, tuple[int, int, int]] = {}
+    for layer in layers:
+        root = layer.common_dir_for("main_menu") / "named_colors"
+        if not root.is_dir():
+            continue
+        for path in sorted(root.glob("*.txt")):
+            for entry in parse_file(path).entries:
+                if entry.key != "colors" or not isinstance(entry.value, CList):
+                    continue
+                colors.update(_colors_from_block(entry.value, colors))
+    return colors
+
+
+def _country_setup_dir(layer: GameLayer) -> Path:
+    if layer.kind == "vanilla":
+        return layer.root / "game" / "in_game" / "setup" / "countries"
+    return layer.root / "in_game" / "setup" / "countries"
+
+
+def _normalized_setup_key(key: str) -> str:
+    text = str(key or "").strip()
+    if ":" in text:
+        text = text.split(":", 1)[1]
+    return text
+
+
+def _colors_from_block(
+    block: CList,
+    named_colors: Mapping[str, tuple[int, int, int]],
+) -> dict[str, tuple[int, int, int]]:
+    colors: dict[str, tuple[int, int, int]] = {}
+    item_index = 0
+    for entry in block.entries:
+        value = entry.value
+        if isinstance(value, str) and value in COLOR_CONSTRUCTORS:
+            raw_values = _constructor_items(block, item_index)
+            item_index += 1
+            rgb = _color_constructor_rgb(value, raw_values)
+            if rgb is not None:
+                colors[entry.key] = rgb
+        elif isinstance(value, str):
+            resolved = colors.get(value) or named_colors.get(value)
+            if resolved is not None:
+                colors[entry.key] = resolved
+    return colors
+
+
+def _block_color(
+    block: CList,
+    key: str,
+    named_colors: Mapping[str, tuple[int, int, int]],
+) -> tuple[int, int, int] | None:
+    item_index = 0
+    for entry in block.entries:
+        value = entry.value
+        if isinstance(value, str) and value in COLOR_CONSTRUCTORS:
+            raw_values = _constructor_items(block, item_index)
+            item_index += 1
+            if entry.key == key:
+                return _color_constructor_rgb(value, raw_values)
+        elif entry.key == key and isinstance(value, str):
+            return named_colors.get(value) or _parse_hex_rgb(value)
+    return None
+
+
+def _constructor_items(block: CList, index: int) -> tuple[object, ...]:
+    if index >= len(block.items):
+        return ()
+    item = block.items[index]
+    if not isinstance(item, CList):
+        return ()
+    return tuple(item.items)
+
+
+def _color_constructor_rgb(kind: str, values: Sequence[object]) -> tuple[int, int, int] | None:
+    if len(values) < 3:
+        return None
+    try:
+        first, second, third = (float(values[0]), float(values[1]), float(values[2]))
+    except (TypeError, ValueError):
+        return None
+    if kind == "rgb":
+        scale = 255.0 if max(abs(first), abs(second), abs(third)) <= 1.0 else 1.0
+        return (
+            _clamp_channel(first * scale),
+            _clamp_channel(second * scale),
+            _clamp_channel(third * scale),
+        )
+    if kind == "hsv360":
+        hue = (first % 360.0) / 360.0
+        saturation = _clamp_unit(second / 100.0)
+        value = _clamp_unit(third / 100.0)
+    else:
+        hue = first % 1.0
+        saturation = _clamp_unit(second)
+        value = _clamp_unit(third)
+    red, green, blue = colorsys.hsv_to_rgb(hue, saturation, value)
+    return (_clamp_channel(red * 255.0), _clamp_channel(green * 255.0), _clamp_channel(blue * 255.0))
+
+
+def _normalize_country_color_map(colors: Mapping[str, object]) -> dict[str, tuple[int, int, int]]:
+    normalized: dict[str, tuple[int, int, int]] = {}
+    for key, value in colors.items():
+        tag = str(key or "").strip()
+        if not tag:
+            continue
+        rgb = _coerce_rgb(value)
+        if rgb is None:
+            continue
+        normalized[tag] = rgb
+        normalized[tag.upper()] = rgb
+        normalized[tag.lower()] = rgb
+    return normalized
+
+
+def _coerce_rgb(value: object) -> tuple[int, int, int] | None:
+    if isinstance(value, int):
+        return ((value >> 16) & 0xFF, (value >> 8) & 0xFF, value & 0xFF)
+    if isinstance(value, str):
+        return _parse_hex_rgb(value)
+    if isinstance(value, Sequence) and len(value) >= 3 and not isinstance(value, (bytes, bytearray, str)):
+        try:
+            red, green, blue = float(value[0]), float(value[1]), float(value[2])
+        except (TypeError, ValueError):
+            return None
+        scale = 255.0 if max(abs(red), abs(green), abs(blue)) <= 1.0 else 1.0
+        return (_clamp_channel(red * scale), _clamp_channel(green * scale), _clamp_channel(blue * scale))
+    return None
+
+
+def _parse_hex_rgb(value: str) -> tuple[int, int, int] | None:
+    text = str(value or "").strip().removeprefix("#")
+    if len(text) != 6:
+        return None
+    try:
+        packed = int(text, 16)
+    except ValueError:
+        return None
+    return ((packed >> 16) & 0xFF, (packed >> 8) & 0xFF, packed & 0xFF)
+
+
+def _fallback_country_rgb(tag: str) -> tuple[int, int, int]:
+    digest = hashlib.blake2b(str(tag).encode("utf-8"), digest_size=4).digest()
+    raw = int.from_bytes(digest, "big")
+    hue = (raw % 360) / 360.0
+    saturation = 0.48 + ((raw >> 9) % 20) / 100.0
+    value = 0.70 + ((raw >> 17) % 18) / 100.0
+    red, green, blue = colorsys.hsv_to_rgb(hue, min(saturation, 0.72), min(value, 0.88))
+    return (_clamp_channel(red * 255.0), _clamp_channel(green * 255.0), _clamp_channel(blue * 255.0))
+
+
+def _pack_rgb(rgb: tuple[int, int, int]) -> int:
+    return (_clamp_channel(rgb[0]) << 16) | (_clamp_channel(rgb[1]) << 8) | _clamp_channel(rgb[2])
+
+
+def _clamp_channel(value: float | int) -> int:
+    return max(0, min(255, int(round(float(value)))))
+
+
+def _clamp_unit(value: float) -> float:
+    return max(0.0, min(1.0, float(value)))
 
 
 def _scalar_location_map(
@@ -1680,6 +2087,129 @@ def _food_price_locations(
     return result
 
 
+def _political_locations(
+    data: Any,
+    *,
+    playthrough: str | None,
+    start_date: int | None,
+    end_date: int | None,
+) -> pl.DataFrame:
+    locations = data.table("locations")
+    if locations.is_empty():
+        return pl.DataFrame()
+    selected_playthrough = playthrough or getattr(data, "playthrough", None)
+    if selected_playthrough is not None and "playthrough_id" in locations.columns:
+        locations = locations.filter(pl.col("playthrough_id") == selected_playthrough)
+    if start_date is not None and "date_sort" in locations.columns:
+        locations = locations.filter(pl.col("date_sort") >= int(start_date))
+    if end_date is not None and "date_sort" in locations.columns:
+        locations = locations.filter(pl.col("date_sort") <= int(end_date))
+
+    dim_locations = data.dim("locations")
+    geo_columns = [
+        column
+        for column in (
+            "location_code",
+            "slug",
+            "location_label",
+            "area",
+            "area_label",
+            "region",
+            "region_label",
+            "macro_region",
+            "macro_region_label",
+            "super_region",
+            "super_region_label",
+        )
+        if column in dim_locations.columns
+    ]
+    if "location_code" in locations.columns and geo_columns:
+        locations = locations.join(dim_locations.select(geo_columns), on="location_code", how="left")
+
+    countries = data.dim("countries")
+    if not countries.is_empty():
+        country_columns = [
+            column
+            for column in ("country_code", "country_tag", "country_name", "country_label")
+            if column in countries.columns
+        ]
+        if "country_code" in locations.columns and "country_code" in country_columns:
+            locations = locations.join(countries.select(country_columns).unique("country_code"), on="country_code", how="left")
+        elif "country_tag" in locations.columns and "country_tag" in country_columns:
+            missing_labels = [column for column in ("country_name", "country_label") if column not in locations.columns and column in country_columns]
+            if missing_labels:
+                locations = locations.join(
+                    countries.select(["country_tag", *missing_labels]).unique("country_tag"),
+                    on="country_tag",
+                    how="left",
+                )
+
+    if "country_name" not in locations.columns and "owner_name" in locations.columns:
+        locations = locations.with_columns(pl.col("owner_name").alias("country_name"))
+    if "country_tag" not in locations.columns:
+        locations = locations.with_columns(pl.lit(None, dtype=pl.String).alias("country_tag"))
+    if "country_name" not in locations.columns:
+        locations = locations.with_columns(pl.col("country_tag").alias("country_name"))
+    return locations
+
+
+def _resolved_country_color_map(data: Any, country_colors: Mapping[str, object] | None) -> dict[str, tuple[int, int, int]]:
+    normalized = _normalize_country_color_map(country_colors or {})
+    if normalized:
+        return normalized
+    load_order_path = getattr(data, "load_order_path", None)
+    profile = getattr(data, "profile", None)
+    if load_order_path is None or profile is None:
+        return {}
+    try:
+        return load_country_color_map(load_order_path=Path(load_order_path), profile=str(profile))
+    except Exception:
+        return {}
+
+
+def _with_political_colors(frame: pl.DataFrame, country_colors: Mapping[str, tuple[int, int, int]]) -> pl.DataFrame:
+    if frame.is_empty():
+        return frame
+
+    def _packed_color(tag: object) -> int | None:
+        text = str(tag or "").strip()
+        if not text:
+            return None
+        rgb = country_colors.get(text) or country_colors.get(text.upper()) or country_colors.get(text.lower())
+        if rgb is None:
+            rgb = _fallback_country_rgb(text)
+        return _pack_rgb(rgb)
+
+    def _hex_color(tag: object) -> str:
+        packed = _packed_color(tag)
+        return "" if packed is None else f"#{packed:06x}"
+
+    label_column = _country_label_column(frame)
+    label_expr = (
+        pl.when(pl.col(label_column).is_not_null() & (pl.col(label_column).cast(pl.String) != ""))
+        .then(pl.col(label_column).cast(pl.String))
+        .otherwise(pl.col("country_tag").cast(pl.String))
+        if label_column is not None
+        else pl.col("country_tag").cast(pl.String)
+    )
+    return frame.with_columns(
+        label_expr.alias("country_label"),
+        pl.col("country_tag")
+        .map_elements(_packed_color, return_dtype=pl.UInt32)
+        .alias("country_color_int"),
+        pl.col("country_tag")
+        .map_elements(_hex_color, return_dtype=pl.String)
+        .alias("country_color_hex"),
+    )
+
+
+def _country_label_column(frame: pl.DataFrame) -> str | None:
+    for column in ("country_label", "country_name", "owner_name"):
+        if column in frame.columns:
+            return column
+    return None
+
+
 def _filter_scope(frame: pl.DataFrame, scope: str, name: str | None) -> tuple[pl.DataFrame, str]:
     if _is_world_name(name):
         return _world_land_frame(frame), "World"
@@ -1821,6 +2351,51 @@ def _frame_legend(
         region_value_header=region_value_header,
         unit=unit,
         signed=signed,
+    )
+
+
+def _political_frame_legend(
+    frame: pl.DataFrame,
+    *,
+    date: str,
+    limit: int = 14,
+) -> MapFrameLegend:
+    rows: list[tuple[str, str]] = [("Date", date)]
+    if frame.is_empty() or "country_tag" not in frame.columns:
+        rows.extend((("Locations", "0"), ("Countries", "0")))
+        return MapFrameLegend(title="Political ownership", rows=tuple(rows))
+
+    no_data = int(frame.filter(pl.col("country_tag").is_null() | (pl.col("country_tag").cast(pl.String) == "")).height)
+    owned = frame.filter(pl.col("country_tag").is_not_null() & (pl.col("country_tag").cast(pl.String) != ""))
+    country_count = owned.select("country_tag").n_unique() if not owned.is_empty() else 0
+    rows.append(("Locations", f"{owned.height:,}"))
+    rows.append(("Countries", f"{int(country_count):,}"))
+    if no_data:
+        rows.append(("No data", f"{no_data:,}"))
+
+    swatches: tuple[tuple[str, str, str], ...] = ()
+    required = {"country_tag", "country_label", "country_color_hex"}
+    if required.issubset(frame.columns) and not owned.is_empty():
+        swatch_frame = (
+            owned.group_by(["country_tag", "country_label", "country_color_hex"])
+            .agg(pl.len().alias("locations"))
+            .sort(["locations", "country_label"], descending=[True, False])
+            .head(limit)
+        )
+        swatches = tuple(
+            (
+                str(row["country_label"] or row["country_tag"]),
+                f"{int(row['locations']):,}",
+                str(row["country_color_hex"] or ""),
+            )
+            for row in swatch_frame.iter_rows(named=True)
+        )
+
+    return MapFrameLegend(
+        title="Political ownership",
+        rows=tuple(rows),
+        swatch_rows=swatches,
+        swatch_title="Largest countries",
     )
 
 
@@ -2092,6 +2667,55 @@ def _render_metric_frame(
     return {"png": _png_bytes(image), "image": image}
 
 
+def _render_categorical_frame(
+    assets: SavegameMapAssets,
+    frame: pl.DataFrame,
+    *,
+    color_column: str,
+    crop: tuple[int, int, int, int],
+    render_cache: MapRenderCache | None = None,
+    render_width: int,
+    title: str,
+    subtitle: str,
+    timeline: RenderTimeline | None = None,
+    legend: MapFrameLegend | None = None,
+) -> dict[str, Any]:
+    cache = render_cache or _build_render_cache(assets, crop=crop, frame_data=frame)
+    rgb = cache.base_rgb.copy()
+    if color_column in frame.columns:
+        color_values = frame.select("map_color_int", color_column).unique("map_color_int").sort("map_color_int")
+        if not color_values.is_empty():
+            flat_rgb = rgb.reshape(-1, 3)
+            for row in color_values.iter_rows(named=True):
+                pixels = cache.color_to_pixels.get(int(row["map_color_int"]))
+                if pixels is None or not pixels.size:
+                    continue
+                color_value = row.get(color_column)
+                if color_value is None:
+                    flat_rgb[pixels] = DEFAULT_NO_DATA
+                    stripe_pixels = pixels[cache.hatch_mask_flat[pixels]]
+                    flat_rgb[stripe_pixels] = DEFAULT_NO_DATA_STRIPE
+                    continue
+                packed = int(color_value)
+                flat_rgb[pixels] = np.array([(packed >> 16) & 0xFF, (packed >> 8) & 0xFF, packed & 0xFF], dtype=np.uint8)
+
+    image = Image.fromarray(rgb, mode="RGB")
+    target_height = max(1, round(image.height * render_width / image.width))
+    if image.width != render_width:
+        image = image.resize((render_width, target_height), Image.Resampling.NEAREST)
+    placeholder_norm = Normalize(vmin=0.0, vmax=1.0, clip=True)
+    image = _add_frame_chrome(
+        image,
+        title=title,
+        subtitle=subtitle,
+        legend=legend,
+        norm=placeholder_norm,
+        cmap=plt.get_cmap("viridis"),
+        timeline=timeline,
+    )
+    return {"png": _png_bytes(image), "image": image}
+
+
 def _dynamic_norm(values: np.ndarray, *, center_zero: bool) -> Normalize | TwoSlopeNorm:
     finite = values[np.isfinite(values)]
     if finite.size == 0:
@@ -2200,6 +2824,16 @@ def _draw_legend_panel(
 ) -> None:
     if panel_width <= 0:
         return
+    if legend.swatch_rows:
+        _draw_swatch_legend_panel(
+            draw,
+            panel_x=panel_x,
+            panel_y=panel_y,
+            panel_width=panel_width,
+            panel_height=panel_height,
+            legend=legend,
+        )
+        return
     x = panel_x + 16
     y = panel_y + 16
     right = panel_x + panel_width - 16
@@ -2271,6 +2905,63 @@ def _draw_legend_panel(
             _draw_text_right(draw, (min_x, y), minimum, fill=(24, 24, 24), font=small_value_font)
             _draw_text_right(draw, (max_x, y), maximum, fill=(24, 24, 24), font=small_value_font)
             y += 24
+
+
+def _draw_swatch_legend_panel(
+    draw: Any,
+    *,
+    panel_x: int,
+    panel_y: int,
+    panel_width: int,
+    panel_height: int,
+    legend: MapFrameLegend,
+) -> None:
+    x = panel_x + 16
+    y = panel_y + 16
+    right = panel_x + panel_width - 16
+    draw.rectangle((panel_x, panel_y, panel_x + panel_width, panel_y + panel_height), fill=(250, 250, 247))
+    draw.line((panel_x, panel_y, panel_x, panel_y + panel_height), fill=(207, 207, 198), width=1)
+
+    title_font = _image_font(22, bold=True)
+    row_font = _image_font(18)
+    value_font = _image_font(18, bold=True)
+    draw.text((x, y), legend.title, fill=(24, 24, 24), font=title_font)
+    y += 38
+
+    label_x = x
+    main_value_x = min(right, x + 224)
+    for label, value in legend.rows:
+        draw.text((label_x, y), f"{label}:", fill=(70, 70, 70), font=row_font)
+        draw.text((main_value_x, y), value, fill=(24, 24, 24), font=value_font)
+        y += 30
+        if y > panel_y + panel_height - 64:
+            return
+
+    y += 12
+    draw.line((x, y, right, y), fill=(218, 218, 209), width=1)
+    y += 16
+    heading_font = _image_font(15, bold=True)
+    swatch_font = _image_font(14)
+    swatch_value_font = _image_font(14, bold=True)
+    draw.text((x, y), legend.swatch_title, fill=(70, 70, 70), font=heading_font)
+    y += 28
+    value_x = right
+    label_start = x + 36
+    for label, value, hex_color in legend.swatch_rows:
+        if y > panel_y + panel_height - 26:
+            break
+        color = _parse_hex_rgb(hex_color) or (156, 156, 150)
+        draw.rectangle((x, y + 2, x + 24, y + 20), fill=color, outline=(80, 80, 74))
+        draw.text((label_start, y), _compact_swatch_label(label, max_chars=30), fill=(50, 50, 46), font=swatch_font)
+        _draw_text_right(draw, (value_x, y), value, fill=(24, 24, 24), font=swatch_value_font)
+        y += 25
+
+
+def _compact_swatch_label(label: str, *, max_chars: int) -> str:
+    text = str(label or "").strip()
+    if len(text) <= max_chars:
+        return text
+    return f"{text[: max_chars - 1].rstrip()}."
 
 
 def _draw_text_right(draw: Any, xy: tuple[int, int], text: str, *, fill: tuple[int, int, int], font: Any) -> None:
@@ -2752,6 +3443,11 @@ def _scalar_frame_label(result: DevelopmentMapResult, index: int) -> str:
     if result.value_label:
         detail = f"{result.value_label}, {detail}"
     return f"<b>{result.name}</b> - {frame.year} - {detail}"
+
+
+def _political_frame_label(result: PoliticalMapResult, index: int) -> str:
+    frame = result.frames[index]
+    return f"<b>{result.name}</b> - {frame.year} - owner country colors"
 
 
 def _normalize_relative_bounds(bounds: tuple[float, float]) -> tuple[float, float]:

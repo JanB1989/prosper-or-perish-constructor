@@ -130,12 +130,12 @@ TRY_INJECT:quality_vs_quantity = {
 	left_modifier = {
 		global_production_efficiency = 0.075
 		global_build_buildings_efficiency = -0.25
-		global_pop_promotion_speed = -1
+		global_pop_promotion_speed = -0.001
 	}
 	right_modifier = {
 		global_production_efficiency = -0.075
 		global_build_buildings_efficiency = 0.25
-		global_pop_promotion_speed = 0.25
+		global_pop_promotion_speed = 0.00025
 	}
 }
 

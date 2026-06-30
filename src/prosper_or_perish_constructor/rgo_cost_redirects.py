@@ -8,8 +8,15 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Mapping
 
+from eu5gameparser.clausewitz.parser import parse_file
 from eu5gameparser.clausewitz.syntax import CEntry, CList, Value
-from eu5gameparser.load_order import DataProfile, MergedEntry, load_merged_directory, load_profile
+from eu5gameparser.load_order import (
+    DataProfile,
+    MergedEntry,
+    SourceRecord,
+    load_merged_directory,
+    load_profile,
+)
 
 
 RGO_METHODS = ("farming", "mining", "hunting", "gathering", "forestry")
@@ -92,7 +99,7 @@ def write_rgo_cost_redirects(
     load_order_path: Path,
     profile_name: str,
 ) -> RgoCostRedirectResult:
-    """Write generated TRY_INJECT files for active RGO cost modifiers."""
+    """Write generated redirect files for active RGO cost modifiers."""
 
     profile = load_profile(profile_name, load_order_path)
     assignments = collect_active_rgo_cost_assignments(profile)
@@ -101,6 +108,7 @@ def write_rgo_cost_redirects(
         mod_root=mod_root,
         assignments=assignments,
         classification=classification,
+        profile=profile,
     )
     return RgoCostRedirectResult(
         assignments=tuple(assignments),
@@ -125,11 +133,12 @@ def collect_active_rgo_cost_assignments(
     for scope, collection in collections:
         merged = load_merged_directory(profile, collection, scope=scope)
         for entry in merged.entries:
-            if not isinstance(entry.value, CList):
+            block = _assignment_source_block(entry)
+            if block is None:
                 continue
             assignments.extend(
                 _walk_cost_assignments(
-                    entry.value,
+                    block,
                     scope=scope,
                     collection=collection,
                     path=(entry.key,),
@@ -181,26 +190,44 @@ def write_rgo_cost_redirect_files(
     mod_root: Path,
     assignments: Iterable[RgoCostAssignment],
     classification: RgoBuildingClassification,
+    profile: DataProfile | None = None,
     collections: Iterable[tuple[str, str]] = RGO_COST_REDIRECT_COLLECTIONS,
 ) -> tuple[list[Path], int]:
     modifiers_by_method = classification.modifiers_by_method()
-    grouped: dict[tuple[str, str, str], dict[tuple[str, ...], list[tuple[str, float]]]] = (
+    grouped: dict[tuple[str, str, str], dict[tuple[str, ...], list[RgoCostAssignment]]] = (
         defaultdict(lambda: defaultdict(list))
     )
     for assignment in assignments:
         patch_key = (assignment.scope, assignment.collection, assignment.path[0])
-        grouped[patch_key][assignment.path[1:-1]].append((assignment.method, assignment.value))
+        grouped[patch_key][assignment.path[1:-1]].append(assignment)
 
     collection_blocks: dict[tuple[str, str], list[str]] = defaultdict(list)
     patch_count = 0
     for (scope, collection, top_key), patches_by_path in sorted(grouped.items()):
+        if collection == "laws":
+            if profile is None:
+                raise ValueError("profile is required to generate law cost redirects")
+            collection_blocks[(scope, collection)].extend(
+                _render_law_replacement_block(
+                    profile=profile,
+                    scope=scope,
+                    collection=collection,
+                    top_key=top_key,
+                    patches_by_path=patches_by_path,
+                    modifiers_by_method=modifiers_by_method,
+                )
+            )
+            collection_blocks[(scope, collection)].append("")
+            patch_count += len(patches_by_path)
+            continue
+
         body: list[str] = []
-        for path, method_values in sorted(patches_by_path.items()):
+        for path, patch_assignments in sorted(patches_by_path.items()):
             leaf_entries: list[tuple[str, float]] = []
-            for method, value in method_values:
-                leaf_entries.append((RGO_COST_MODIFIERS[method], -value))
-                for modifier_key in modifiers_by_method.get(method, ()):
-                    leaf_entries.append((modifier_key, value))
+            for assignment in patch_assignments:
+                leaf_entries.append((RGO_COST_MODIFIERS[assignment.method], -assignment.value))
+                for modifier_key in modifiers_by_method.get(assignment.method, ()):
+                    leaf_entries.append((modifier_key, assignment.value))
             if leaf_entries:
                 _append_nested_patch(body, path, leaf_entries, indent=1)
                 patch_count += 1
@@ -231,6 +258,140 @@ def write_rgo_cost_redirect_files(
         generated_files.append(path)
 
     return generated_files, patch_count
+
+
+def _assignment_source_block(entry: MergedEntry) -> CList | None:
+    if not isinstance(entry.value, CList):
+        return None
+    if not (
+        entry.source_mode in {"REPLACE", "TRY_REPLACE"}
+        and _is_generated_redirect_path(entry.source_file)
+    ):
+        return entry.value
+
+    source = _replacement_source_record(entry)
+    if source is None:
+        return entry.value
+    parsed = _entry_from_source_record(source, entry.key)
+    if parsed is None or not isinstance(parsed.value, CList):
+        return entry.value
+    return parsed.value
+
+
+def _render_law_replacement_block(
+    *,
+    profile: DataProfile,
+    scope: str,
+    collection: str,
+    top_key: str,
+    patches_by_path: Mapping[tuple[str, ...], list[RgoCostAssignment]],
+    modifiers_by_method: Mapping[str, tuple[str, ...]],
+) -> list[str]:
+    merged_entry = _merged_entry_for_key(profile, scope, collection, top_key)
+    source = _replacement_source_record(merged_entry)
+    if source is None:
+        raise ValueError(f"Cannot find source law group for {scope}/{collection}/{top_key}")
+
+    source_path = Path(source.file)
+    source_lines = source_path.read_text(encoding="utf-8-sig").splitlines()
+    start_index = source.line - 1
+    end_index = _find_block_end(source_lines, start_index)
+    block_lines = list(source_lines[start_index : end_index + 1])
+    block_lines[0] = _replace_top_level_key(block_lines[0], top_key)
+
+    replacements: dict[int, list[str]] = {}
+    for patch_assignments in patches_by_path.values():
+        for assignment in patch_assignments:
+            if Path(assignment.source_file) != source_path:
+                raise ValueError(
+                    "Cannot rewrite law redirect across source files: "
+                    f"{top_key} is in {source_path}, assignment is in {assignment.source_file}"
+                )
+            line_index = assignment.source_line - source.line
+            try:
+                source_line = block_lines[line_index]
+            except IndexError as error:
+                raise ValueError(
+                    f"Source line {assignment.source_line} for {assignment.modifier} "
+                    f"is outside {source_path}:{source.line}"
+                ) from error
+            if assignment.modifier not in source_line:
+                raise ValueError(
+                    f"Expected {assignment.modifier} at {source_path}:{assignment.source_line}"
+                )
+            indent = re.match(r"\s*", source_line).group(0)
+            replacements[line_index] = [
+                f"{indent}{modifier_key} = {_format_number(assignment.value)}"
+                for modifier_key in modifiers_by_method.get(assignment.method, ())
+            ]
+
+    rendered: list[str] = []
+    for index, line in enumerate(block_lines):
+        if index in replacements:
+            rendered.extend(replacements[index])
+        else:
+            rendered.append(line)
+    return rendered
+
+
+def _merged_entry_for_key(
+    profile: DataProfile,
+    scope: str,
+    collection: str,
+    top_key: str,
+) -> MergedEntry:
+    for entry in load_merged_directory(profile, collection, scope=scope).entries:
+        if entry.key == top_key:
+            return entry
+    raise ValueError(f"Missing merged entry for {scope}/{collection}/{top_key}")
+
+
+def _replacement_source_record(entry: MergedEntry) -> SourceRecord | None:
+    for source in reversed(entry.source_history):
+        if _is_generated_redirect_path(source.file):
+            continue
+        if source.mode in {"CREATE", "REPLACE", "REPLACE_OR_CREATE", "TRY_REPLACE"}:
+            return source
+    return None
+
+
+def _entry_from_source_record(source: SourceRecord, top_key: str) -> CEntry | None:
+    for entry in parse_file(Path(source.file)).entries:
+        if _entry_key(entry.key) == top_key and entry.location.line == source.line:
+            return entry
+    return None
+
+
+def _entry_key(raw_key: str) -> str:
+    if ":" not in raw_key:
+        return raw_key
+    return raw_key.split(":", 1)[1]
+
+
+def _is_generated_redirect_path(path: str | Path) -> bool:
+    return Path(path).name == RGO_COST_REDIRECT_FILE
+
+
+def _find_block_end(lines: list[str], start_index: int) -> int:
+    depth = 0
+    seen_open = False
+    for index in range(start_index, len(lines)):
+        code = lines[index].split("#", 1)[0]
+        depth += code.count("{") - code.count("}")
+        if "{" in code:
+            seen_open = True
+        if seen_open and depth == 0:
+            return index
+    raise ValueError(f"Could not find block end after line {start_index + 1}")
+
+
+def _replace_top_level_key(line: str, top_key: str) -> str:
+    pattern = rf"^(\s*)(?:[A-Z_]+:)?{re.escape(top_key)}\s*=\s*\{{"
+    replacement = rf"\1TRY_REPLACE:{top_key} = {{"
+    replaced = re.sub(pattern, replacement, line, count=1)
+    if replaced == line:
+        return f"TRY_REPLACE:{top_key} = {{"
+    return replaced
 
 
 def _walk_cost_assignments(

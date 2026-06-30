@@ -115,10 +115,28 @@ def test_generated_rgo_cost_redirect_files_state_objective_and_do_not_define_fak
     for path in redirect_files:
         text = path.read_text(encoding="utf-8-sig")
         assert f"# Objective: {RGO_REDIRECT_OBJECTIVE}." in text
-        assert "TRY_INJECT:" in text
+        assert "TRY_INJECT:" in text or "TRY_REPLACE:" in text
         assert fake_group_keys.isdisjoint(set(_top_level_patch_keys(path)))
         for fake_group_key in fake_group_keys:
             assert fake_group_key not in text
+
+
+def test_generated_law_rgo_cost_redirects_replace_law_groups_instead_of_injecting_options() -> None:
+    path = MOD_ROOT / "in_game" / "common" / "laws" / RGO_COST_REDIRECT_FILE
+    text = path.read_text(encoding="utf-8-sig")
+
+    assert "TRY_INJECT:" not in text
+    assert {entry.key for entry in parse_file(path).entries} == {
+        "TRY_REPLACE:legal_code_law",
+        "TRY_REPLACE:mesta_council_law",
+        "TRY_REPLACE:mining_law",
+    }
+    assert "german_mining_law" in text
+    assert "novo_brdo_mining_law" in text
+    assert "burghers_mining_law" in text
+    assert "zimbabwe_mining_law" in text
+    assert "expand_rgo_mining_cost_modifier" not in text
+    assert "expand_rgo_farming_cost_modifier" not in text
 
 
 def _expected_patch_values(
@@ -135,7 +153,8 @@ def _expected_patch_values(
             assignment.path[0],
             assignment.path[1:-1],
         )
-        expected[patch][RGO_COST_MODIFIERS[assignment.method]] += -assignment.value
+        if assignment.collection != "laws":
+            expected[patch][RGO_COST_MODIFIERS[assignment.method]] += -assignment.value
         for modifier_key in modifiers_by_method[assignment.method]:
             expected[patch][modifier_key] += assignment.value
     return {patch: dict(values) for patch, values in expected.items()}
@@ -149,7 +168,7 @@ def _generated_redirect_blocks() -> dict[tuple[str, str], dict[str, CList]]:
             continue
         blocks: dict[str, CList] = {}
         for entry in parse_file(path).entries:
-            top_key = entry.key.removeprefix("TRY_INJECT:")
+            top_key = _top_level_key(entry.key)
             assert isinstance(entry.value, CList)
             blocks[top_key] = entry.value
         generated[(scope, collection)] = blocks
@@ -219,4 +238,10 @@ def _scalar_float(value: Value | None) -> float | None:
 
 
 def _top_level_patch_keys(path: Path) -> list[str]:
-    return [entry.key.removeprefix("TRY_INJECT:") for entry in parse_file(path).entries]
+    return [_top_level_key(entry.key) for entry in parse_file(path).entries]
+
+
+def _top_level_key(raw_key: str) -> str:
+    if ":" not in raw_key:
+        return raw_key
+    return raw_key.split(":", 1)[1]

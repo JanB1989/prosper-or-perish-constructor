@@ -19,13 +19,6 @@ can_close = yes
 build_time = workshop_build_time
 construction_demand = workshop_construction
 
-allow = {
-    OR = {
-        has_building = building_type:sheep_farms
-        has_building = building_type:hurdled_sheepcotes
-    }
-}
-
 location_potential = {
     pp_pasture_friendly_location_potential = yes
 }

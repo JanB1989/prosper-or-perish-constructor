@@ -40,13 +40,6 @@ building:
     build_time = workshop_build_time
     construction_demand = workshop_construction
 
-    allow = {
-        OR = {
-            has_building = building_type:hurdled_sheepcotes
-            has_building = building_type:enclosed_sheep_walks
-        }
-    }
-
     location_potential = {
         pp_pasture_friendly_location_potential = yes
     }

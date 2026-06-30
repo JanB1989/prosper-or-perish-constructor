@@ -49,13 +49,6 @@ building:
     important_for_AI = no
     can_close = yes
 
-    allow = {
-        OR = {
-            has_building = building_type:ocean_fishery
-            has_building = building_type:drift_net_fishery
-        }
-    }
-
     unique_production_methods = {
         pp_drift_net_fishery_base_catch = {
             produced = fish

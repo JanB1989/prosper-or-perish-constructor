@@ -416,6 +416,69 @@ def _load_blueprint(key: str) -> dict:
     return raw
 
 
+GENERIC_BUILDING_NAME_WORDS = {
+    "bed",
+    "building",
+    "camp",
+    "center",
+    "deposit",
+    "estate",
+    "farm",
+    "farmstead",
+    "field",
+    "garden",
+    "grove",
+    "hall",
+    "house",
+    "mill",
+    "mine",
+    "orchard",
+    "pasture",
+    "pit",
+    "quarry",
+    "shop",
+    "station",
+    "village",
+    "work",
+    "workshop",
+    "works",
+    "yard",
+}
+
+
+def _localized_name_tokens(value: object) -> frozenset[str]:
+    tokens: list[str] = []
+    for word in re.findall(r"[a-z]+", str(value).lower().replace("_", " ")):
+        if word.endswith("ies"):
+            word = f"{word[:-3]}y"
+        elif word.endswith("s") and len(word) > 3:
+            word = word[:-1]
+        if word not in GENERIC_BUILDING_NAME_WORDS and len(word) > 2:
+            tokens.append(word)
+    return frozenset(tokens)
+
+
+def _produced_good_name_tokens(raw: dict) -> set[str]:
+    tokens: set[str] = set()
+    for good in re.findall(r"(?m)^\s*produced\s*=\s*([A-Za-z0-9_]+)\s*$", raw["building"]["body"]):
+        tokens.update(_localized_name_tokens(good))
+    return tokens
+
+
+def _predecessor_method_label_tokens(raw: dict, predecessor_key: str) -> list[tuple[str, object, frozenset[str]]]:
+    entries = (raw.get("localization") or {}).get("entries") or {}
+    labels: list[tuple[str, object, frozenset[str]]] = []
+    for key, value in entries.items():
+        if key.endswith("_desc"):
+            continue
+        if "_slot_" not in key and not key.startswith(f"pp_{predecessor_key}_"):
+            continue
+        tokens = _localized_name_tokens(value)
+        if tokens:
+            labels.append((key, value, tokens))
+    return labels
+
+
 def _body_custom_tags(body: str) -> set[str]:
     match = re.search(r"^\s*custom_tags\s*=\s*\{(?P<tags>[^}]*)\}", body, flags=re.M)
     if match is None:
@@ -1109,6 +1172,39 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
                 assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
 
 
+def test_upgrade_building_names_do_not_reuse_predecessor_method_names() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = {
+        (BLUEPRINT_ROOT / entry).stem
+        for entry in manifest["enabled"]
+        if str(entry).startswith("buildings/")
+    }
+
+    offenders: list[str] = []
+    for key in sorted(enabled):
+        raw = _load_blueprint(key)
+        upgrade_chain = raw.get("upgrade_chain") or {}
+        previous = upgrade_chain.get("previous")
+        if not previous or previous not in enabled:
+            continue
+
+        building_key = raw["building"]["key"]
+        display_name = ((raw.get("localization") or {}).get("entries") or {}).get(building_key)
+        display_tokens = _localized_name_tokens(display_name)
+        if not display_tokens or display_tokens <= _produced_good_name_tokens(raw):
+            continue
+
+        predecessor = _load_blueprint(previous)
+        for label_key, label, label_tokens in _predecessor_method_label_tokens(predecessor, previous):
+            if display_tokens == label_tokens:
+                offenders.append(
+                    f"{key}: display name {display_name!r} reuses {previous}.{label_key} "
+                    f"label {label!r} after generic building words are removed"
+                )
+
+    assert not offenders, "\n".join(offenders)
+
+
 def test_husbandry_farmstead_keeps_crop_specific_worked_methods() -> None:
     raw = _load_blueprint("husbandry_farmstead")
     body = raw["building"]["body"]
@@ -1296,7 +1392,7 @@ def test_enabled_upgrade_chain_location_requirements_match_initial_building() ->
     assert not offenders, "\n".join(offenders)
 
 
-def test_food_upgrade_successors_require_previous_or_existing_tier() -> None:
+def test_food_upgrade_successors_use_obsolete_instead_of_manual_building_gates() -> None:
     affected_families = {
         "farming_village",
         "fishing_village",
@@ -1329,12 +1425,8 @@ def test_food_upgrade_successors_require_previous_or_existing_tier() -> None:
             offenders.append(f"{key}: previous tier {previous_key} is not enabled")
             continue
 
-        building_key = raw["building"]["key"]
         previous_building_key = blueprints[previous_key]["building"]["key"]
-        expected_lines = {
-            f"has_building = building_type:{previous_building_key}",
-            f"has_building = building_type:{building_key}",
-        }
+        building_key = raw["building"]["key"]
         for source_name, body in (
             ("blueprint", raw["building"]["body"]),
             (
@@ -1347,13 +1439,17 @@ def test_food_upgrade_successors_require_previous_or_existing_tier() -> None:
             if not body:
                 offenders.append(f"{key}: missing generated building output for {building_key}")
                 continue
-            allow = _normalized_first_script_block(body, "allow")
-            if "OR = {" not in allow:
-                offenders.append(f"{key}: {source_name} allow block must use OR for upgrade/expansion gates")
-                continue
-            missing = sorted(line for line in expected_lines if line not in allow)
-            if missing:
-                offenders.append(f"{key}: {source_name} allow block missing {', '.join(missing)}")
+            obsolete_entries = _obsolete_entries(body)
+            if obsolete_entries != [previous_building_key]:
+                offenders.append(
+                    f"{key}: {source_name} must obsolete only previous tier "
+                    f"{previous_building_key}, found {obsolete_entries}"
+                )
+            for _, _, allow in _iter_script_blocks(body, "allow"):
+                if re.search(r"(?m)^\s*has_building\s*=\s*building_type:", allow):
+                    offenders.append(
+                        f"{key}: {source_name} allow block manually gates on building ownership"
+                    )
 
     assert not offenders, "\n".join(offenders)
 

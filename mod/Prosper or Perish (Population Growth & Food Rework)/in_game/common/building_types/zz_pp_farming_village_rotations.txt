@@ -21,13 +21,6 @@ can_close = yes
 build_time = workshop_build_time
 construction_demand = workshop_construction
 
-allow = {
-    OR = {
-        has_building = building_type:husbandry_farmstead
-        has_building = building_type:farming_village_rotations
-    }
-}
-
 location_potential = {
     pp_general_farmable_food_location_potential = yes
 }

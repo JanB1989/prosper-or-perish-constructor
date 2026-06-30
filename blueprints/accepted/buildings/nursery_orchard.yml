@@ -43,13 +43,6 @@ building:
     build_time = workshop_build_time
     construction_demand = workshop_construction
 
-    allow = {
-        OR = {
-            has_building = building_type:fruit_orchard
-            has_building = building_type:nursery_orchard
-        }
-    }
-
     location_potential = {
         OR = {
             var:pp_fruit_orchard_eligible > 0

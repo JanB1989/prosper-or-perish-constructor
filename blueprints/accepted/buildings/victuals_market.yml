@@ -21,7 +21,7 @@ building:
     	town = yes
     	city = yes
     	megalopolis = yes
-    	ai_forbid_shutdown = no
+    	ai_forbid_shutdown = yes
     	important_for_AI = yes
     	can_close = yes
     	forbidden_for_estates = no
@@ -37,7 +37,6 @@ building:
 
       modifier = {
         local_monthly_food = 40
-        local_food_revenue_output_modifier = -0.03
         local_burghers_estate_power = 0.05
       }
 production_methods:
@@ -45,12 +44,12 @@ production_methods:
     body: |2-
       	victuals = 2.0
         produced = food_revenue
-        output = 5.05
+        output = 5.00
         category = manufactory_input
 prices:
   - key: pp_victuals_market_price
     body: |2-
-      {gold = 25}
+      {gold = 50}
 localization:
   entries:
     victuals_market: Victuals Market

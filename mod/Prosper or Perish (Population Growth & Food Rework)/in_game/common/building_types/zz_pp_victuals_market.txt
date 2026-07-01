@@ -13,7 +13,7 @@ increase_per_level_cost = 0.13
 	town = yes
 	city = yes
 	megalopolis = yes
-	ai_forbid_shutdown = no
+	ai_forbid_shutdown = yes
 	important_for_AI = yes
 	can_close = yes
 	forbidden_for_estates = no
@@ -29,7 +29,6 @@ increase_per_level_cost = 0.13
 
   modifier = {
     local_monthly_food = 40
-    local_food_revenue_output_modifier = -0.03
     local_burghers_estate_power = 0.05
   }
 }

@@ -2,8 +2,7 @@
 	category = produced
 	color = goods_victuals
 	default_market_price = 2.5
-	transport_cost = 1.0
-	# food = 0.0001
+	transport_cost = 3.0
 	food = 30
 	# Baseline demand so it is relevant even before special logic is added.
 	demand_add = {

@@ -924,13 +924,17 @@
 
   # Population Capacity map mode
   mapmode_pp_population_capacity_name: "Population Capacity"
-  MAPMODE_PP_POPULATION_CAPACITY: "#T $mapmode_pp_population_capacity_name$#!\nColors owned and uncolonized [locations|e] by their [population_capacity|e]. Red marks limited capacity, yellow marks middle capacity, and green marks the strongest capacity."
-  MAPMODE_PP_POPULATION_CAPACITY_VERY_LOW: "Very low capacity"
-  MAPMODE_PP_POPULATION_CAPACITY_LOW: "Low capacity"
-  MAPMODE_PP_POPULATION_CAPACITY_MEDIUM: "Moderate capacity"
-  MAPMODE_PP_POPULATION_CAPACITY_HIGH: "High capacity"
-  MAPMODE_PP_POPULATION_CAPACITY_CAPPED: "Exceptional capacity"
-  MAPMODE_PP_POPULATION_CAPACITY_TT_LAND: "[ROOT.GetLocation.GetName] has a [population_capacity|e] of [ROOT.GetLocation.GetModifierValue('local_population_capacity')|0]. Uncolonized land is included.\n\n#I See [pp_population_capacity|e] for details.#!"
+  MAPMODE_PP_POPULATION_CAPACITY: "#T $mapmode_pp_population_capacity_name$#!\nColors owned and uncolonized [locations|e] by their [population_capacity|e]. Red marks scarce capacity, yellow marks ordinary capacity, green marks strong capacity, and pale-to-cyan colors mark the highest capacity."
+  MAPMODE_PP_POPULATION_CAPACITY_RANGE_0_20: "0-20 capacity"
+  MAPMODE_PP_POPULATION_CAPACITY_RANGE_20_40: "20-40 capacity"
+  MAPMODE_PP_POPULATION_CAPACITY_RANGE_40_60: "40-60 capacity"
+  MAPMODE_PP_POPULATION_CAPACITY_RANGE_60_80: "60-80 capacity"
+  MAPMODE_PP_POPULATION_CAPACITY_RANGE_80_100: "80-100 capacity"
+  MAPMODE_PP_POPULATION_CAPACITY_RANGE_100_125: "100-125 capacity"
+  MAPMODE_PP_POPULATION_CAPACITY_RANGE_125_155: "125-155 capacity"
+  MAPMODE_PP_POPULATION_CAPACITY_RANGE_155_200: "155-200 capacity"
+  MAPMODE_PP_POPULATION_CAPACITY_CAPPED: "200+ capacity"
+  MAPMODE_PP_POPULATION_CAPACITY_TT_LAND: "[ROOT.GetLocation.GetName] has a [population_capacity|e] of [ROOT.GetLocation.GetPopulationCapacity|0]. Uncolonized land is included.\n\n#I See [pp_population_capacity|e] for details.#!"
   MAPMODE_PP_POPULATION_CAPACITY_TT_WATER: "Sea/Lake [location|e] (no [population_capacity|e])"
 
   # Population Growth map mode

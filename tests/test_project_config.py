@@ -423,7 +423,7 @@ def test_farm_capacity_values_are_flat_visible_sums() -> None:
         'desc = "BUILDING_LEVEL_BASE_FARM_RGO"\n\t\tif = {\n\t\t\tlimit = { has_variable = pp_farm_base_capacity }\n\t\t\tvalue = var:pp_farm_base_capacity',
         "limit = { has_variable = pp_farm_base_capacity }",
         'desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"\n\t\t\tvalue = var:pp_farm_base_capacity\n\t\t\tmultiply = max_rgo_workers\n\t\t\tmultiply = 0.125',
-        'desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"\n\t\tvalue = modifier:local_population_capacity\n\t\tmultiply = 0.08',
+        'desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"\n\t\tvalue = modifier:local_population_capacity\n\t\tmultiply = 0.10',
         'desc = "BUILDING_LEVEL_FARM_LOCATION_RANK"\n\t\t\tvalue = -20',
         'desc = "BUILDING_LEVEL_FARM_LOCATION_RANK"\n\t\t\tvalue = -5',
         'desc = "BUILDING_LEVEL_FARM_LOCATION_RANK"\n\t\t\tvalue = -1',

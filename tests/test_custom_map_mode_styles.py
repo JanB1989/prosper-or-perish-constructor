@@ -43,7 +43,7 @@ CUSTOM_MAP_MODE_FILES = (
 )
 
 VALUE_SOURCE_MODES = {
-    "pp_population_capacity": "modifier:local_population_capacity",
+    "pp_population_capacity": "location_max_population",
     "pp_fishing_village_capacity": "fish_capacity",
     "pp_farming_village_capacity": "farm_capacity",
     "pp_forest_village_capacity": "forest_capacity",
@@ -218,7 +218,7 @@ def test_static_map_modes_match_calibration_thresholds() -> None:
     calibration = json.loads(CALIBRATION.read_text(encoding="utf-8"))["scales"]
 
     expected = {
-        "pp_population_capacity": ("modifier:local_population_capacity", calibration["population_capacity"]["thresholds"]),
+        "pp_population_capacity": ("location_max_population", calibration["population_capacity"]["thresholds"]),
         "pp_fishing_village_capacity": ("fish_capacity", calibration["food_capacity"]["fish"]["thresholds"]),
         "pp_farming_village_capacity": ("farm_capacity", calibration["food_capacity"]["farm"]["thresholds"]),
         "pp_forest_village_capacity": ("forest_capacity", calibration["food_capacity"]["forest"]["thresholds"]),
@@ -265,6 +265,35 @@ def test_farm_capacity_scale_keeps_developed_locations_distinguishable() -> None
 
     assert thresholds[2] < 14 < 18 < thresholds[3]
     assert thresholds[3] - thresholds[2] >= 8
+
+
+def test_population_capacity_scale_keeps_high_capacity_locations_distinguishable() -> None:
+    block = _all_blocks()["pp_population_capacity"]
+    text = LOCALIZATION.read_text(encoding="utf-8-sig")
+
+    assert _thresholds(block, "location_max_population") == [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        125.0,
+        155.0,
+        200.0,
+    ]
+    assert block.count("lerp = {") == 8
+    assert block.count("legend_key =") == 9
+    assert "@pp_population_capacity_map_cap" not in block
+    assert "define:NMapColors|MAP_COLOR_TOP" in block
+    assert "rgb { 245 245 245 }" in block
+    assert "rgb { 170 235 255 }" in block
+    assert "rgb { 70 210 255 }" in block
+    assert "modifier:local_population_capacity" not in block
+    assert "MAPMODE_PP_POPULATION_CAPACITY_RANGE_125_155" in text
+    assert "MAPMODE_PP_POPULATION_CAPACITY_RANGE_155_200" in text
+    assert "200+ capacity" in text
+    assert "GetPopulationCapacity|0" in text
+    assert "GetModifierValue('local_population_capacity')" not in text
 
 
 def test_market_food_price_uses_reference_centered_buckets() -> None:
@@ -468,7 +497,6 @@ def test_custom_map_mode_localization_uses_traffic_light_copy_without_hardcoded_
         "teal marks",
         "50k unemployed",
         "0-150",
-        "0-10",
         "0-300",
         "0-70",
     )
@@ -478,4 +506,4 @@ def test_custom_map_mode_localization_uses_traffic_light_copy_without_hardcoded_
     assert "Red marks scarce capacity" in text
     assert "Green marks low unemployment" in text
     assert "yellow marks the base price" in text
-    assert "green marks the strongest capacity" in text
+    assert "pale-to-cyan colors mark the highest capacity" in text

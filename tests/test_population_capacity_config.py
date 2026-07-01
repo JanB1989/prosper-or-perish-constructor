@@ -77,8 +77,8 @@ def test_population_capacity_config_loads() -> None:
 
     assert config.generated_label == "Prosper or Perish"
     assert config.managed_write_mode == "mod_root"
-    assert config.capacity_scale.minimum == 6
-    assert config.capacity_scale.maximum == 100
+    assert config.capacity_scale.minimum == 10
+    assert config.capacity_scale.maximum == 150
     assert config.calibration.historical_population_policy == "saturation_anchors_only"
     assert config.calibration.saturation_anchors == "population_capacity_saturation_anchors.toml"
     assert config.calibration.land_potential_sources == ("gaez_v4", "hyde", "archaeoglobe")
@@ -567,9 +567,9 @@ def test_saturation_anchor_report_covers_game_scopes_without_training_on_exclusi
     by_id = {row["id"]: row for row in rows}
 
     assert not [row for row in rows if row["status"] == "missing_scope_members"]
-    assert by_id["nile_lower_egypt"]["status"] == "below_mean_floor"
-    assert by_id["lower_yangtze_jiangnan"]["status"] == "below_mean_floor"
-    assert by_id["bengal_delta_core"]["status"] == "below_mean_floor"
+    assert by_id["nile_lower_egypt"]["status"] == "pass"
+    assert by_id["lower_yangtze_jiangnan"]["status"] == "pass"
+    assert by_id["bengal_delta_core"]["status"] == "pass"
     assert by_id["trade_city_population_exclusion"]["training_constraint"] is False
     assert by_id["trade_city_population_exclusion"]["status"] == "excluded"
     assert by_id["java_core"]["locations"] > 0

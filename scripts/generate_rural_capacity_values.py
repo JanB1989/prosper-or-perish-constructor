@@ -132,7 +132,7 @@ def _farm_source_rows(omit_building: str | None = None) -> list[str]:
         _line("add = {", 1),
         _line('desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"', 2),
         _line("value = modifier:local_population_capacity", 2),
-        _line("multiply = 0.08", 2),
+        _line("multiply = 0.10", 2),
         _line("}", 1),
     ]
     for rank, value in (("megalopolis", "-20"), ("city", "-5"), ("town", "-1")):

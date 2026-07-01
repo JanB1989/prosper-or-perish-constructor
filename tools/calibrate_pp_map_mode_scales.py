@@ -68,9 +68,7 @@ def build_calibration() -> dict:
                 "farm": _sequential_scale_dict(_food_capacity_thresholds("farm", food_capacity_samples.get("farm", []))),
                 "forest": _sequential_scale_dict(_food_capacity_thresholds("forest", food_capacity_samples.get("forest", []))),
             },
-            "population_capacity": _sequential_scale_dict(
-                _positive_quantity_thresholds(_population_capacity_values(mod_root / LOCATION_MODIFIERS_REL))
-            ),
+            "population_capacity": _sequential_scale_dict(_population_capacity_thresholds()),
             "population_growth": {
                 "kind": "signed_centered",
                 "negative_thresholds": [-0.007, -0.002],
@@ -137,16 +135,6 @@ def _local_output_modifier_samples(path: Path) -> dict[str, list[float]]:
     ):
         samples.setdefault(good, []).append(float(value))
     return samples
-
-
-def _population_capacity_values(path: Path) -> list[float]:
-    if not path.exists():
-        return []
-    text = path.read_text(encoding="utf-8-sig")
-    return [
-        float(value)
-        for value in re.findall(r"^\s*local_population_capacity\s*=\s*([-+]?\d+(?:\.\d+)?)\s*$", text, flags=re.MULTILINE)
-    ]
 
 
 def _market_food_price_values() -> list[float]:
@@ -307,6 +295,13 @@ def _positive_quantity_thresholds(values: Iterable[float]) -> list[float]:
     rounded = [_round_quantity(value) for value in raw]
     candidates = sorted({_round_quantity(value) for value in positives if value > 0})
     return _strict_thresholds_from_candidates(rounded, candidates, minimum=0.01)
+
+
+def _population_capacity_thresholds() -> list[float]:
+    # The map mode reads the engine's final location_max_population value.
+    # Keep fixed player-readable buckets up to 200 so high-capacity locations
+    # do not collapse into one quantile-derived color.
+    return [20.0, 40.0, 60.0, 80.0, 100.0, 125.0, 155.0, 200.0]
 
 
 def _food_capacity_thresholds(capacity: str, values: Iterable[float]) -> list[float]:

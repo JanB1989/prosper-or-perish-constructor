@@ -25,7 +25,7 @@ farm_capacity = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -284,7 +284,7 @@ farm_capacity_max_farming_village = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -536,7 +536,7 @@ farm_capacity_max_husbandry_farmstead = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -788,7 +788,7 @@ farm_capacity_max_farming_village_rotations = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -1040,7 +1040,7 @@ farm_capacity_max_model_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -1292,7 +1292,7 @@ farm_capacity_max_fruit_orchard = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -1544,7 +1544,7 @@ farm_capacity_max_nursery_orchard = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -1796,7 +1796,7 @@ farm_capacity_max_pomological_orchard = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -2048,7 +2048,7 @@ farm_capacity_max_sheep_farms = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -2300,7 +2300,7 @@ farm_capacity_max_hurdled_sheepcotes = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -2552,7 +2552,7 @@ farm_capacity_max_enclosed_sheep_walks = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -2804,7 +2804,7 @@ farm_capacity_max_horse_breeders = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -3056,7 +3056,7 @@ farm_capacity_max_stud_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -3308,7 +3308,7 @@ farm_capacity_max_elephant_kraal = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -3560,7 +3560,7 @@ farm_capacity_max_fiber_crops_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -3812,7 +3812,7 @@ farm_capacity_max_fiber_dressing_yard = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -4064,7 +4064,7 @@ farm_capacity_max_cotton_plantation = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -4316,7 +4316,7 @@ farm_capacity_max_cotton_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -4568,7 +4568,7 @@ farm_capacity_max_market_cotton_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -4820,7 +4820,7 @@ farm_capacity_max_sugar_plantation = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -5072,7 +5072,7 @@ farm_capacity_max_sugarcane_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -5324,7 +5324,7 @@ farm_capacity_max_trapiche_sugarcane_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -5576,7 +5576,7 @@ farm_capacity_max_tobacco_plantation = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -5828,7 +5828,7 @@ farm_capacity_max_tobacco_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -6080,7 +6080,7 @@ farm_capacity_max_market_tobacco_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -6332,7 +6332,7 @@ farm_capacity_max_dye_plantation = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -6584,7 +6584,7 @@ farm_capacity_max_chili_plantation = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -6836,7 +6836,7 @@ farm_capacity_max_clove_grove = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -7088,7 +7088,7 @@ farm_capacity_max_cocoa_grove = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -7340,7 +7340,7 @@ farm_capacity_max_managed_cocoa_grove = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -7592,7 +7592,7 @@ farm_capacity_max_coffee_grove = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -7844,7 +7844,7 @@ farm_capacity_max_terraced_coffee_grove = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -8096,7 +8096,7 @@ farm_capacity_max_incense_grove = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -8348,7 +8348,7 @@ farm_capacity_max_pepper_garden = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -8600,7 +8600,7 @@ farm_capacity_max_managed_pepper_garden = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -8852,7 +8852,7 @@ farm_capacity_max_saffron_croft = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -9104,7 +9104,7 @@ farm_capacity_max_saffron_kiln_croft = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -9356,7 +9356,7 @@ farm_capacity_max_sericulture_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -9608,7 +9608,7 @@ farm_capacity_max_regulated_sericulture_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -9860,7 +9860,7 @@ farm_capacity_max_simplers_grove = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -10112,7 +10112,7 @@ farm_capacity_max_tea_garden = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -10364,7 +10364,7 @@ farm_capacity_max_tea_sorting_garden = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }
@@ -10616,7 +10616,7 @@ farm_capacity_max_vineyard_estate = {
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
 		value = modifier:local_population_capacity
-		multiply = 0.08
+		multiply = 0.10
 	}
 	if = {
 		limit = { location_rank = location_rank:megalopolis }

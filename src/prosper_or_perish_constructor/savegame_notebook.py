@@ -565,6 +565,8 @@ def location_rank_distribution(data: SavegameNotebookData, workbench: Any) -> Di
         }
     )
     locations = _selected_locations(data, workbench)
+    if "rank" not in locations.collect_schema().names():
+        return DistributionResult(pl.DataFrame())
     counts = (
         locations.filter(pl.col("rank").is_in(LOCATION_RANK_ORDER))
         .group_by(["snapshot_id", "date_sort", "year", "month", "day", "date", "plot_year", "rank"])
@@ -2142,6 +2144,9 @@ def show_building_absolute_time_series(
 
 
 def show_building_slot(workbench: Any, buildings: Any, *, slot: int | str) -> None:
+    if not hasattr(buildings, "pm_slot_time_series"):
+        print("No building slot rows")
+        return
     workbench.plot_building_slot(buildings, slot)
 
 

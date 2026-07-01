@@ -1,0 +1,15 @@
+﻿# Prosper or Perish - cultural building promotion adjustments.
+
+TRY_INJECT:library = {
+	modifier = {
+		# Vanilla is 0.001; modifier entries are additive, so this reaches 0.002.
+		local_pop_promotion_speed = 0.001
+	}
+}
+
+TRY_INJECT:university = {
+	modifier = {
+		# Vanilla is 0.001; modifier entries are additive, so this reaches 0.005.
+		local_pop_promotion_speed = 0.004
+	}
+}

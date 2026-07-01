@@ -5,7 +5,7 @@ upgrade_chain:
   tier: 1
   previous: copper_mine
   next: null
-  unlock_advance: new_currency_demands
+  unlock_advance: pp_new_currency_mine_adits
 building:
   key: copper_mine_adit
   mode: CREATE

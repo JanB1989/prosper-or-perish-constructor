@@ -32,21 +32,37 @@ class FakePriceData:
                 _food_row("other", 1339, 1, 1, 1, 99.0, 1.0, 10.0, playthrough="other"),
             ]
         )
+        self._market_goods = pl.DataFrame(
+            [
+                _market_good_row("s1", 1337, 1, 1, 1, "victuals", 10.0, 8.0, 2.0, 2.0, 20.0),
+                _market_good_row("s2", 1338, 1, 1, 1, "victuals", 10.0, 8.0, 4.0, 2.0, 18.0),
+                _market_good_row("s3", 1339, 1, 1, 1, "victuals", 10.0, 8.0, 8.0, 2.0, 16.0),
+                _market_good_row("s1", 1337, 1, 1, 2, "victuals", 9.0, 8.0, 3.0, 2.0, 15.0),
+                _market_good_row("s2", 1338, 1, 1, 2, "victuals", 9.0, 8.0, 3.0, 2.0, 15.0),
+                _market_good_row("s3", 1339, 1, 1, 2, "victuals", 9.0, 8.0, 3.0, 2.0, 15.0),
+                _market_good_row("other", 1339, 1, 1, 1, "victuals", 1.0, 0.0, 99.0, 2.0, 0.0, playthrough="other"),
+            ]
+        )
         self._markets = pl.DataFrame(
             [
                 {"market_id": 1, "market_label": "Alpha Market"},
                 {"market_id": 2, "market_label": "Beta Market"},
             ]
         )
+        self._goods = pl.DataFrame([{"good_id": "victuals", "good_label": "Victuals"}])
 
     def table(self, name: str) -> pl.DataFrame:
         if name == "market_food":
             return self._market_food
+        if name == "market_goods":
+            return self._market_goods
         return pl.DataFrame()
 
     def dim(self, name: str) -> pl.DataFrame:
         if name == "markets":
             return self._markets
+        if name == "goods":
+            return self._goods
         return pl.DataFrame()
 
 
@@ -150,12 +166,21 @@ def test_food_price_volatility_stats_rank_erratic_markets() -> None:
     assert alpha["price_range"] == pytest.approx(4.0)
     assert alpha["mean_abs_price_change"] == pytest.approx(2.0)
     assert alpha["max_abs_price_change"] == pytest.approx(2.0)
+    assert alpha["mean_victuals_price"] == pytest.approx(14.0 / 3.0)
+    assert alpha["stddev_victuals_price"] == pytest.approx((56.0 / 9.0) ** 0.5)
+    assert alpha["victuals_price_range"] == pytest.approx(6.0)
+    assert alpha["mean_abs_victuals_price_change"] == pytest.approx(3.0)
+    assert alpha["food_to_victuals_lag1_corr"] == pytest.approx(1.0)
+    assert alpha["victuals_to_food_lag1_corr"] == pytest.approx(1.0)
     assert beta["stddev_food_price"] == pytest.approx(0.0)
+    assert beta["stddev_victuals_price"] == pytest.approx(0.0)
+    assert result.top_victuals_erratic["market_label"].to_list() == ["Alpha Market"]
 
     first_global = result.global_distribution.sort("date_sort").to_dicts()[0]
     assert first_global["mean_food_price"] == pytest.approx(1.5)
     assert first_global["median_food_price"] == pytest.approx(1.5)
     assert first_global["stddev_food_price"] == pytest.approx(0.5)
+    assert first_global["mean_victuals_price"] == pytest.approx(2.5)
 
 
 def test_food_price_volatility_preserves_market_identity_from_market_code() -> None:
@@ -272,6 +297,8 @@ def test_minimal_savegame_notebook_contains_goods_pressure_cell() -> None:
     json.loads(text)
     assert "show_goods_pressure" in text
     assert "selected_good_global" in text
+    assert "food_and_victuals_prices" in text
+    assert "linked_price_stats" in text
 
 
 def _snapshot(snapshot_id: str, year: int, month: int, day: int) -> dict[str, object]:

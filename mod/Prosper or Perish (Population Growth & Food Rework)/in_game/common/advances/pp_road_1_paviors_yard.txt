@@ -1,5 +1,9 @@
 ﻿# >>> eu5-building-pipeline:paviors_yard:advancement
-TRY_INJECT:paved_road_advance = {
+pp_paviors_yard = {
+icon = paviors_yard
+age = age_3_discovery
+requires = printing_press_advance
 unlock_building = paviors_yard
+ai_weight = { add = 125 }
 }
 # <<< eu5-building-pipeline:paviors_yard:advancement

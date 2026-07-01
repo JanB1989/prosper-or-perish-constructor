@@ -5,7 +5,7 @@ upgrade_chain:
   tier: 2
   previous: coal_mine_improved
   next: null
-  unlock_advance: coal_improvements_revolutions
+  unlock_advance: pp_coal_mine_revolutions
 building:
   key: coal_mine_revolutions
   mode: CREATE

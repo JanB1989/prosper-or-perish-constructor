@@ -2,6 +2,7 @@
 pp_trapiche_sugarcane_farm = {
 icon = trapiche_sugarcane_farm
 age = age_3_discovery
+requires = plantation_buildings_advance
 unlock_building = trapiche_sugarcane_farm
 ai_weight = { add = 125 }
 }

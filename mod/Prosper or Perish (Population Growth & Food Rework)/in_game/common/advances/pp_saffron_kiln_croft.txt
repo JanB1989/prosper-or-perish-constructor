@@ -2,6 +2,7 @@
 pp_saffron_kiln_croft = {
 icon = saffron_kiln_croft
 age = age_3_discovery
+requires = trade_range_advance_age_3
 unlock_building = saffron_kiln_croft
 ai_weight = { add = 125 }
 }

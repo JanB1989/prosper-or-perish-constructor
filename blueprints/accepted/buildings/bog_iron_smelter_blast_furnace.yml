@@ -5,7 +5,7 @@ upgrade_chain:
   tier: 1
   previous: bog_iron_smelter
   next: bog_iron_smelter_coke_blast_furnace
-  unlock_advance: blast_furnace
+  unlock_advance: pp_blast_furnace
 building:
   key: bog_iron_smelter_blast_furnace
   mode: CREATE

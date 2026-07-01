@@ -78,7 +78,7 @@ def test_population_capacity_config_loads() -> None:
     assert config.generated_label == "Prosper or Perish"
     assert config.managed_write_mode == "mod_root"
     assert config.capacity_scale.minimum == 10
-    assert config.capacity_scale.maximum == 150
+    assert config.capacity_scale.maximum == 100
     assert config.calibration.historical_population_policy == "saturation_anchors_only"
     assert config.calibration.saturation_anchors == "population_capacity_saturation_anchors.toml"
     assert config.calibration.land_potential_sources == ("gaez_v4", "hyde", "archaeoglobe")
@@ -128,6 +128,25 @@ def test_free_land_effects_order_plants_before_animal_products() -> None:
         first_animal = min(positions[f"local_{good}_output_modifier"] for good in ANIMAL_PRODUCT_GOODS)
 
         assert last_plant < first_animal
+
+
+def test_free_land_effects_use_uniform_output_values() -> None:
+    expected_values = {
+        "available_free_land": 0.30,
+        "abundant_free_land": 0.40,
+    }
+
+    for effect, expected_value in expected_values.items():
+        block = _object_block(CAPACITY_PRESSURE_EFFECTS, effect)
+        assert block is not None
+        output_values = {
+            entry.key: entry.value
+            for entry in block.entries
+            if entry.key.startswith("local_") and entry.key.endswith("_output_modifier")
+        }
+
+        assert output_values
+        assert set(output_values.values()) == {expected_value}
 
 
 def test_irrigation_systems_cover_all_irrigated_plant_goods() -> None:
@@ -567,9 +586,9 @@ def test_saturation_anchor_report_covers_game_scopes_without_training_on_exclusi
     by_id = {row["id"]: row for row in rows}
 
     assert not [row for row in rows if row["status"] == "missing_scope_members"]
-    assert by_id["nile_lower_egypt"]["status"] == "pass"
-    assert by_id["lower_yangtze_jiangnan"]["status"] == "pass"
-    assert by_id["bengal_delta_core"]["status"] == "pass"
+    assert by_id["nile_lower_egypt"]["status"] == "below_mean_floor"
+    assert by_id["lower_yangtze_jiangnan"]["status"] == "below_mean_floor"
+    assert by_id["bengal_delta_core"]["status"] == "below_mean_floor"
     assert by_id["trade_city_population_exclusion"]["training_constraint"] is False
     assert by_id["trade_city_population_exclusion"]["status"] == "excluded"
     assert by_id["java_core"]["locations"] > 0

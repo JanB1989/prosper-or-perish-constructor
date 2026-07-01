@@ -5,7 +5,7 @@ upgrade_chain:
   tier: 1
   previous: cookery
   next: null
-  unlock_advance: food_advance_absolutism
+  unlock_advance: pp_victualling_yard
 building:
   key: victualling_yard
   mode: CREATE
@@ -305,6 +305,14 @@ building:
     	modifier = {
     		local_victuals_output_modifier = 0.00
     	}
+advancements:
+  - key: pp_victualling_yard
+    body: |2-
+      icon = victualling_yard
+      age = age_5_absolutism
+      requires = manufactories_advance
+      unlock_building = victualling_yard
+      ai_weight = { add = 125 }
 localization:
   entries:
     victualling_yard: Victualling Yard
@@ -312,6 +320,8 @@ localization:
     victualling_yard_slot_0: Prepared Victuals
     victualling_yard_slot_1: Ration Drink
     victualling_yard_slot_2: Packing
+    pp_victualling_yard: Victualling Yards
+    pp_victualling_yard_desc: Larger ration yards organize stores, kettles, cooperage, and labor crews for durable prepared victuals.
     pp_victualling_yard_beer: Beer
     pp_victualling_yard_boreal_hunter_stew: Boreal Hunter's Stew
     pp_victualling_yard_chocolate: Chocolate

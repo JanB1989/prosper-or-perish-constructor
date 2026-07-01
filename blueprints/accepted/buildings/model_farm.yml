@@ -216,7 +216,7 @@ advancements:
     body: |2-
       icon = model_farm
       age = age_5_absolutism
-      requires = food_advance_absolutism
+      requires = scientific_revolution_advance
       unlock_building = model_farm
       ai_weight = { add = 125 }
 localization:

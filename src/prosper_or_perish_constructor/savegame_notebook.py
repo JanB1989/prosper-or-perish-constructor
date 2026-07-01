@@ -266,7 +266,10 @@ class FoodPriceVolatilityResult:
     market_time_series: pl.DataFrame
     stats: pl.DataFrame
     top_erratic: pl.DataFrame
+    top_victuals_erratic: pl.DataFrame
     market_search: str | None
+    linked_good: str | None = "victuals"
+    linked_good_label: str | None = "Victuals"
 
     @property
     def df(self) -> pl.DataFrame:
@@ -1404,7 +1407,14 @@ def food_price_volatility(
                 "max_abs_price_change": pl.Float64,
             }
         )
-        return FoodPriceVolatilityResult(pl.DataFrame(), pl.DataFrame(), empty_stats, empty_stats, selected_market_search)
+        return FoodPriceVolatilityResult(
+            global_distribution=pl.DataFrame(),
+            market_time_series=pl.DataFrame(),
+            stats=empty_stats,
+            top_erratic=empty_stats,
+            top_victuals_erratic=empty_stats,
+            market_search=selected_market_search,
+        )
 
     group_columns = [
         column
@@ -1437,12 +1447,30 @@ def food_price_volatility(
     )
     if "market_id" not in market_time_series.columns:
         market_time_series = market_time_series.with_row_index("market_id")
+    victuals = _market_good_price_rows(
+        data,
+        good_search="victuals",
+        playthrough=selected_playthrough,
+        start_date=selected_start,
+        end_date=selected_end,
+        market_search=selected_market_search,
+    )
+    market_time_series = _with_linked_victuals_columns(market_time_series, victuals)
     market_time_series = market_time_series.with_columns(
         (
             pl.col("food_price")
             - pl.col("food_price").shift(1).over("market_id")
-        ).alias("price_delta")
-    ).with_columns(pl.col("price_delta").abs().alias("abs_price_delta"))
+        ).alias("price_delta"),
+        (
+            pl.col("victuals_price")
+            - pl.col("victuals_price").shift(1).over("market_id")
+        ).alias("victuals_price_delta"),
+        pl.col("food_price").shift(1).over("market_id").alias("lagged_food_price"),
+        pl.col("victuals_price").shift(1).over("market_id").alias("lagged_victuals_price"),
+    ).with_columns(
+        pl.col("price_delta").abs().alias("abs_price_delta"),
+        pl.col("victuals_price_delta").abs().alias("victuals_abs_price_delta"),
+    )
 
     global_distribution = (
         market_time_series.group_by(["snapshot_id", "date_sort", "year", "month", "day", "date", "plot_year"])
@@ -1455,6 +1483,14 @@ def food_price_volatility(
             pl.max("food_price").alias("max_food_price"),
             pl.col("food_price").quantile(0.10).alias("price_p10"),
             pl.col("food_price").quantile(0.90).alias("price_p90"),
+            pl.col("victuals_price").is_not_null().sum().alias("victuals_markets"),
+            pl.mean("victuals_price").alias("mean_victuals_price"),
+            pl.median("victuals_price").alias("median_victuals_price"),
+            pl.col("victuals_price").std(ddof=0).alias("stddev_victuals_price"),
+            pl.min("victuals_price").alias("min_victuals_price"),
+            pl.max("victuals_price").alias("max_victuals_price"),
+            pl.col("victuals_price").quantile(0.10).alias("victuals_price_p10"),
+            pl.col("victuals_price").quantile(0.90).alias("victuals_price_p90"),
         )
         .sort("date_sort")
     )
@@ -1473,13 +1509,41 @@ def food_price_volatility(
             (pl.max("food_price") - pl.min("food_price")).alias("price_range"),
             pl.mean("abs_price_delta").fill_null(0.0).alias("mean_abs_price_change"),
             pl.max("abs_price_delta").fill_null(0.0).alias("max_abs_price_change"),
+            pl.col("victuals_price").is_not_null().sum().alias("victuals_snapshots"),
+            pl.mean("victuals_price").alias("mean_victuals_price"),
+            pl.median("victuals_price").alias("median_victuals_price"),
+            pl.col("victuals_price").std(ddof=0).alias("stddev_victuals_price"),
+            pl.min("victuals_price").alias("min_victuals_price"),
+            pl.max("victuals_price").alias("max_victuals_price"),
+            (pl.max("victuals_price") - pl.min("victuals_price")).alias("victuals_price_range"),
+            pl.mean("victuals_abs_price_delta").alias("mean_abs_victuals_price_change"),
+            pl.max("victuals_abs_price_delta").alias("max_abs_victuals_price_change"),
+            pl.mean("victuals_price_ratio").alias("mean_victuals_price_ratio"),
+            pl.corr("lagged_food_price", "victuals_price").alias("food_to_victuals_lag1_corr"),
+            pl.corr("lagged_victuals_price", "food_price").alias("victuals_to_food_lag1_corr"),
         )
         .filter(pl.col("snapshots") >= min_snapshots)
         .with_columns(
+            pl.when(pl.col("victuals_snapshots") > 0)
+            .then(pl.col("stddev_victuals_price").fill_null(0.0))
+            .otherwise(None)
+            .alias("stddev_victuals_price"),
+            pl.when(pl.col("victuals_snapshots") > 0)
+            .then(pl.col("mean_abs_victuals_price_change").fill_null(0.0))
+            .otherwise(None)
+            .alias("mean_abs_victuals_price_change"),
+            pl.when(pl.col("victuals_snapshots") > 0)
+            .then(pl.col("max_abs_victuals_price_change").fill_null(0.0))
+            .otherwise(None)
+            .alias("max_abs_victuals_price_change"),
             pl.when(pl.col("mean_food_price").abs() > 0)
             .then(pl.col("stddev_food_price") / pl.col("mean_food_price").abs())
             .otherwise(None)
-            .alias("coefficient_of_variation")
+            .alias("coefficient_of_variation"),
+            pl.when(pl.col("mean_victuals_price").abs() > 0)
+            .then(pl.col("stddev_victuals_price") / pl.col("mean_victuals_price").abs())
+            .otherwise(None)
+            .alias("victuals_coefficient_of_variation"),
         )
         .sort(
             ["stddev_food_price", "mean_abs_price_change", "price_range", "market_label"],
@@ -1487,11 +1551,25 @@ def food_price_volatility(
         )
     )
     top_erratic = stats.head(top_n)
+    top_victuals_erratic = (
+        stats.filter(pl.col("victuals_snapshots") >= min_snapshots)
+        .sort(
+            [
+                "stddev_victuals_price",
+                "mean_abs_victuals_price_change",
+                "victuals_price_range",
+                "market_label",
+            ],
+            descending=[True, True, True, False],
+        )
+        .head(top_n)
+    )
     return FoodPriceVolatilityResult(
         global_distribution=global_distribution,
         market_time_series=market_time_series,
         stats=stats,
         top_erratic=top_erratic,
+        top_victuals_erratic=top_victuals_erratic,
         market_search=selected_market_search,
     )
 
@@ -1525,8 +1603,11 @@ def show_food_price_volatility(
         print("No food price rows")
     else:
         _display_figure(fig)
-    if display_tables and not result.top_erratic.is_empty():
-        display(result.top_erratic)
+    if display_tables:
+        if not result.top_erratic.is_empty():
+            display(result.top_erratic)
+        if not result.top_victuals_erratic.is_empty():
+            display(result.top_victuals_erratic)
     return result
 
 
@@ -1584,7 +1665,7 @@ def export_food_price_volatility_webp(
         data_root=data_root if data_root is not None else resolved_repo / "graphs" / "dataset",
         load_order_path=load_order_path if load_order_path is not None else resolved_repo / "constructor.load_order.toml",
         profile=profile,
-        tables=("market_food",),
+        tables=("market_food", "market_goods"),
         load_map_assets=False,
     )
     result = food_price_volatility(data, top_n=max(top_n, 12))
@@ -2841,6 +2922,128 @@ def _with_good_label_columns(data: SavegameNotebookData, frame: pl.DataFrame) ->
     return result.with_columns(pl.col("good_label").cast(pl.String).alias("good_label"))
 
 
+def _market_good_price_rows(
+    data: SavegameNotebookData,
+    *,
+    good_search: str,
+    playthrough: str | None,
+    start_date: int | None,
+    end_date: int | None,
+    market_search: str | None,
+) -> pl.DataFrame:
+    frame = data.table("market_goods")
+    if frame.is_empty() or "price" not in frame.columns:
+        return pl.DataFrame()
+    if not {"good_id", "good_code", "good_label", "good_name"}.intersection(frame.columns):
+        return pl.DataFrame()
+    if playthrough is not None and "playthrough_id" in frame.columns:
+        frame = frame.filter(pl.col("playthrough_id") == playthrough)
+    if start_date is not None and "date_sort" in frame.columns:
+        frame = frame.filter(pl.col("date_sort") >= int(start_date))
+    if end_date is not None and "date_sort" in frame.columns:
+        frame = frame.filter(pl.col("date_sort") <= int(end_date))
+    if frame.is_empty():
+        return frame
+    frame = _with_plot_year(frame)
+    frame = _with_good_label_columns(data, frame)
+    frame = _with_market_label_columns(data, frame)
+    frame = _filter_food_price_markets(frame, market_search)
+    frame = _filter_market_good(frame, good_search)
+    if frame.is_empty():
+        return frame
+    frame = _with_goods_pressure_numeric_columns(frame).filter(pl.col("price").is_not_null())
+    if frame.is_empty():
+        return frame
+    group_columns = [
+        column
+        for column in (
+            "snapshot_id",
+            "date_sort",
+            "year",
+            "month",
+            "day",
+            "date",
+            "plot_year",
+            "market_id",
+            "market_label",
+        )
+        if column in frame.columns
+    ]
+    if "market_id" not in group_columns or not {"snapshot_id", "date_sort"}.intersection(group_columns):
+        return pl.DataFrame()
+    return (
+        frame.group_by(group_columns)
+        .agg(
+            pl.mean("price").alias("victuals_price"),
+            pl.max("default_price").alias("victuals_default_price"),
+            pl.sum("supply").alias("victuals_supply"),
+            pl.sum("demand").alias("victuals_demand"),
+            pl.sum("stockpile").alias("victuals_stockpile"),
+        )
+        .with_columns(
+            pl.when(pl.col("victuals_default_price") > 0)
+            .then(pl.col("victuals_price") / pl.col("victuals_default_price"))
+            .otherwise(None)
+            .alias("victuals_price_ratio")
+        )
+        .sort(["market_label", "date_sort"] if "market_label" in group_columns else ["market_id", "date_sort"])
+    )
+
+
+def _filter_market_good(frame: pl.DataFrame, good_search: str) -> pl.DataFrame:
+    query = _text_or_none(good_search)
+    if query is None or frame.is_empty():
+        return frame
+    lowered = query.lower()
+    predicates: list[pl.Expr] = []
+    for column in ("good_id", "good_code"):
+        if column in frame.columns:
+            predicates.append(pl.col(column).cast(pl.String).str.to_lowercase() == lowered)
+    for column in ("good_label", "good_name"):
+        if column in frame.columns:
+            lowered_column = pl.col(column).cast(pl.String).str.to_lowercase()
+            predicates.append((lowered_column == lowered) | lowered_column.str.contains(lowered, literal=True))
+    if not predicates:
+        return frame.head(0)
+    predicate = predicates[0]
+    for term in predicates[1:]:
+        predicate = predicate | term
+    return frame.filter(predicate)
+
+
+def _with_linked_victuals_columns(market_time_series: pl.DataFrame, victuals: pl.DataFrame) -> pl.DataFrame:
+    value_columns = (
+        "victuals_price",
+        "victuals_default_price",
+        "victuals_price_ratio",
+        "victuals_supply",
+        "victuals_demand",
+        "victuals_stockpile",
+    )
+    result = market_time_series
+    if not victuals.is_empty():
+        join_columns = _price_link_join_columns(result, victuals)
+        if join_columns:
+            selected_columns = [*join_columns, *[column for column in value_columns if column in victuals.columns]]
+            result = result.join(victuals.select(selected_columns), on=join_columns, how="left")
+    for column in value_columns:
+        if column not in result.columns:
+            result = result.with_columns(pl.lit(None, dtype=pl.Float64).alias(column))
+    return result
+
+
+def _price_link_join_columns(left: pl.DataFrame, right: pl.DataFrame) -> list[str]:
+    for candidate in (
+        ("snapshot_id", "market_id"),
+        ("date_sort", "market_id"),
+        ("snapshot_id", "market_label"),
+        ("date_sort", "market_label"),
+    ):
+        if all(column in left.columns and column in right.columns for column in candidate):
+            return list(candidate)
+    return []
+
+
 def _first_string(frame: pl.DataFrame, column: str) -> str | None:
     if frame.is_empty() or column not in frame.columns:
         return None
@@ -3043,8 +3246,17 @@ def _food_price_volatility_figure(
         return None
     plot_markets = result.top_erratic.get_column("market_label").head(top_n).to_list()
     line_frame = result.market_time_series.filter(pl.col("market_label").is_in(plot_markets)).sort(["market_label", "date_sort"])
+    has_victuals = _has_non_null_values(result.market_time_series, "victuals_price")
 
-    fig, (ax_band, ax_lines) = plt.subplots(1, 2, figsize=(15, 6), gridspec_kw={"width_ratios": [1.05, 1.35]})
+    if has_victuals:
+        fig, (ax_band, ax_victuals, ax_lines) = plt.subplots(
+            1,
+            3,
+            figsize=(21, 6),
+            gridspec_kw={"width_ratios": [1.0, 1.0, 1.4]},
+        )
+    else:
+        fig, (ax_band, ax_lines) = plt.subplots(1, 2, figsize=(15, 6), gridspec_kw={"width_ratios": [1.05, 1.35]})
     global_frame = result.global_distribution.sort("date_sort")
     x_values = global_frame["plot_year"].to_list()
     ax_band.fill_between(
@@ -3073,24 +3285,78 @@ def _food_price_volatility_figure(
     ax_band.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax_band.legend(loc="best", fontsize=9)
 
+    if has_victuals:
+        victuals_global = global_frame.filter(pl.col("victuals_markets") > 0).sort("date_sort")
+        x_victuals = victuals_global["plot_year"].to_list()
+        ax_victuals.fill_between(
+            x_victuals,
+            victuals_global["victuals_price_p10"].to_list(),
+            victuals_global["victuals_price_p90"].to_list(),
+            alpha=0.20,
+            label="10th-90th percentile",
+        )
+        ax_victuals.plot(
+            x_victuals,
+            victuals_global["median_victuals_price"].to_list(),
+            linewidth=2.3,
+            label="Global median",
+        )
+        ax_victuals.plot(
+            x_victuals,
+            victuals_global["mean_victuals_price"].to_list(),
+            linewidth=1.8,
+            linestyle="--",
+            label="Global mean",
+        )
+        ax_victuals.set_title("Victuals Price Distribution")
+        ax_victuals.set_xlabel("year")
+        ax_victuals.set_ylabel("victuals price")
+        ax_victuals.xaxis.set_major_locator(MaxNLocator(integer=True))
+        ax_victuals.legend(loc="best", fontsize=9)
+
     for label in plot_markets:
         series = line_frame.filter(pl.col("market_label") == label).sort("date_sort")
         if series.is_empty():
             continue
-        ax_lines.plot(
-            series["plot_year"].to_list(),
-            series["food_price"].to_list(),
-            linewidth=1.9,
-            marker="o",
-            markersize=3.5,
-            label=str(label),
-        )
+        x_market = series["plot_year"].to_list()
+        if has_victuals:
+            food_line = ax_lines.plot(
+                x_market,
+                _indexed_price_values(series, "food_price"),
+                linewidth=1.9,
+                marker="o",
+                markersize=3.5,
+                label=str(label),
+            )[0]
+            victuals_values = _indexed_price_values(series, "victuals_price")
+            if any(value is not None for value in victuals_values):
+                ax_lines.plot(
+                    x_market,
+                    victuals_values,
+                    linewidth=1.7,
+                    linestyle="--",
+                    marker="x",
+                    markersize=3.5,
+                    color=food_line.get_color(),
+                    label="_nolegend_",
+                )
+        else:
+            ax_lines.plot(
+                x_market,
+                series["food_price"].to_list(),
+                linewidth=1.9,
+                marker="o",
+                markersize=3.5,
+                label=str(label),
+            )
     title = "Most Erratic Food Markets"
     if result.market_search:
         title = f"{title}: {result.market_search}"
+    if has_victuals:
+        title = f"{title} (solid food, dashed victuals)"
     ax_lines.set_title(title)
     ax_lines.set_xlabel("year")
-    ax_lines.set_ylabel("food price")
+    ax_lines.set_ylabel("price index (market mean = 1)" if has_victuals else "food price")
     ax_lines.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax_lines.legend(bbox_to_anchor=(1.01, 1), loc="upper left", fontsize=8)
 
@@ -3100,6 +3366,8 @@ def _food_price_volatility_figure(
         pl.median("stddev_food_price").alias("median_stddev"),
         pl.max("stddev_food_price").alias("max_stddev"),
         pl.mean("mean_abs_price_change").alias("mean_step_change"),
+        pl.mean("stddev_victuals_price").alias("mean_victuals_stddev"),
+        pl.mean("mean_abs_victuals_price_change").alias("mean_victuals_step_change"),
     ).to_dicts()[0]
     subtitle = (
         f"{int(summary['markets'])} markets | "
@@ -3108,9 +3376,31 @@ def _food_price_volatility_figure(
         f"max {summary['max_stddev']:.3f} | "
         f"mean step {summary['mean_step_change']:.3f}"
     )
+    if has_victuals and summary["mean_victuals_stddev"] is not None:
+        subtitle = (
+            f"{subtitle} | victuals stdev mean {summary['mean_victuals_stddev']:.3f}, "
+            f"mean step {summary['mean_victuals_step_change']:.3f}"
+        )
     fig.suptitle(subtitle, fontsize=11, y=0.995)
     fig.tight_layout(rect=(0, 0, 1, 0.96))
     return fig
+
+
+def _has_non_null_values(frame: pl.DataFrame, column: str) -> bool:
+    return not frame.is_empty() and column in frame.columns and frame.get_column(column).drop_nulls().len() > 0
+
+
+def _indexed_price_values(frame: pl.DataFrame, column: str) -> list[float | None]:
+    if column not in frame.columns:
+        return [None] * frame.height
+    values = frame.get_column(column).to_list()
+    numeric_values = [float(value) for value in values if value is not None]
+    if not numeric_values:
+        return [None] * len(values)
+    baseline = sum(numeric_values) / len(numeric_values)
+    if baseline == 0:
+        return [None if value is None else float(value) for value in values]
+    return [None if value is None else float(value) / baseline for value in values]
 
 
 def _figure_to_image(fig: Any, *, width: int | None) -> Any:

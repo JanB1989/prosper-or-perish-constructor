@@ -26,6 +26,7 @@ ADVANCES_PATH = (
     / "advances"
     / "pp_local_resource_productivity_advances.txt"
 )
+ADVANCE_ROOT = ADVANCES_PATH.parent
 PROSPERITY_ADVANCES_PATH = (
     ROOT
     / "mod"
@@ -112,19 +113,19 @@ EXPECTED_CHAINS = {
     "coal_mine": [
         ("coal_mine", None),
         ("coal_mine_improved", "coal_improvements_absolutism"),
-        ("coal_mine_revolutions", "coal_improvements_revolutions"),
+        ("coal_mine_revolutions", "pp_coal_mine_revolutions"),
     ],
     "mercury_mine": [
         ("cinnabar_pit", None),
-        ("quicksilver_retort", "pan_amalgamation_advance"),
+        ("quicksilver_retort", "pp_pan_amalgamation_mines"),
     ],
     "copper_mine": [
         ("copper_mine", None),
-        ("copper_mine_adit", "new_currency_demands"),
+        ("copper_mine_adit", "pp_new_currency_mine_adits"),
     ],
     "silver_mine": [
         ("silver_mine", None),
-        ("silver_mine_improved", "saiger_process_discovery"),
+        ("silver_mine_improved", "pp_saiger_process"),
     ],
     "lead_mine": [
         ("lead_mine", None),
@@ -137,11 +138,11 @@ EXPECTED_CHAINS = {
     ],
     "tin_mine": [
         ("tin_streamworks", None),
-        ("tin_stamping_mill", "new_currency_demands"),
+        ("tin_stamping_mill", "pp_new_currency_mine_adits"),
     ],
     "gold_mine": [
         ("gold_diggings", None),
-        ("gold_stamp_mill", "pan_amalgamation_advance"),
+        ("gold_stamp_mill", "pp_pan_amalgamation_mines"),
     ],
     "gem_mine": [
         ("gem_gravel_pit", None),
@@ -154,12 +155,12 @@ EXPECTED_CHAINS = {
     ],
     "bog_iron_smelter": [
         ("bog_iron_smelter", None),
-        ("bog_iron_smelter_blast_furnace", "blast_furnace"),
+        ("bog_iron_smelter_blast_furnace", "pp_blast_furnace"),
         ("bog_iron_smelter_coke_blast_furnace", "coke_blast_furnace"),
     ],
     "cookery": [
         ("cookery", None),
-        ("victualling_yard", "food_advance_absolutism"),
+        ("victualling_yard", "pp_victualling_yard"),
     ],
 }
 
@@ -367,7 +368,17 @@ FORBIDDEN_CASH_CROP_UPGRADE_INPUT_GOODS = {"slaves_goods", "horses", "lumber"}
 FORBIDDEN_CASH_CROP_UPGRADE_TERMS = {
     "is_overseas_for_owner",
     "is_colonial_subject",
-    "plantation_buildings_advance",
+}
+CASH_CROP_UPGRADE_REQUIREMENTS = {
+    "market_cotton_farm": "plantation_buildings_advance",
+    "trapiche_sugarcane_farm": "plantation_buildings_advance",
+    "market_tobacco_farm": "plantation_buildings_advance",
+    "managed_cocoa_grove": "plantation_buildings_advance",
+    "terraced_coffee_grove": "plantation_buildings_advance",
+    "tea_sorting_garden": "trade_range_advance_age_3",
+    "saffron_kiln_croft": "trade_range_advance_age_3",
+    "managed_pepper_garden": "trade_range_advance_age_3",
+    "regulated_sericulture_farm": "trade_range_advance_age_3",
 }
 RAW_PROCESSOR_EXCLUSIONS = {
     "perfumery": "incense",
@@ -694,10 +705,8 @@ def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])
     advances = "\n".join(
-        (
-            ADVANCES_PATH.read_text(encoding="utf-8"),
-            PROSPERITY_ADVANCES_PATH.read_text(encoding="utf-8"),
-        )
+        path.read_text(encoding="utf-8-sig")
+        for path in sorted(ADVANCE_ROOT.glob("*.txt"))
     )
 
     for family, chain in EXPECTED_CHAINS.items():
@@ -790,7 +799,7 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
 
     steam_block = _advance_block("pp_steam_trawling", advances)
     assert re.search(r"^\s*age\s*=\s*age_6_revolutions\s*$", steam_block, flags=re.M)
-    assert re.search(r"^\s*requires\s*=\s*rotherham_plough\s*$", steam_block, flags=re.M)
+    assert re.search(r"^\s*requires\s*=\s*industrialization_advance\s*$", steam_block, flags=re.M)
     assert re.search(
         r"^\s*unlock_production_method\s*=\s*pp_offshore_fishery_steam_trawlers\s*$",
         steam_block,
@@ -799,6 +808,7 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
     assert "potential =" not in steam_block
 
     wattle_block = _advance_block("pp_wattle_fish_weirs", advances)
+    assert re.search(r"^\s*requires\s*=\s*maritime_advance_age_2\s*$", wattle_block, flags=re.M)
     assert re.search(
         r"^\s*unlock_production_method\s*=\s*pp_net_curing_yard_wattle_weirs\s*$",
         wattle_block,
@@ -806,6 +816,7 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
     )
 
     fishpond_block = _advance_block("pp_managed_fishponds", advances)
+    assert re.search(r"^\s*requires\s*=\s*global_trade_advance\s*$", fishpond_block, flags=re.M)
     assert re.search(
         r"^\s*unlock_production_method\s*=\s*pp_net_curing_yard_stew_ponds\s*$",
         fishpond_block,
@@ -1080,7 +1091,7 @@ def test_lumber_mill_upgrade_chain_is_explicit_and_unlockable() -> None:
     enabled = set(manifest["enabled"])
     chain = [
         ("lumber_mill", None),
-        ("water_sawmill", "lumber_improvements_reformation"),
+        ("water_sawmill", "pp_water_sawmill"),
         ("lumber_mill_improved", "lumber_improvements_absolutism"),
     ]
 
@@ -1109,6 +1120,8 @@ def test_lumber_mill_upgrade_chain_is_explicit_and_unlockable() -> None:
             assert isinstance(advancements, list)
             advancement = next(item for item in advancements if item["key"].split(":")[-1] == unlock_advance)
             assert re.search(rf"^\s*unlock_building\s*=\s*{re.escape(key)}\s*$", advancement["body"], flags=re.M)
+            if key == "water_sawmill":
+                assert re.search(r"^\s*requires\s*=\s*global_trade_advance\s*$", advancement["body"], flags=re.M)
 
 
 def test_rural_food_building_upgrade_chains_are_explicit() -> None:
@@ -1822,8 +1835,12 @@ def test_cash_crop_upgrade_chains_use_dedicated_discovery_advances_and_clean_inp
             advancement = next(item for item in advancements if item["key"] == unlock_advance)
             advancement_body = advancement["body"]
             assert re.search(r"^\s*age\s*=\s*age_3_discovery\s*$", advancement_body, flags=re.M)
+            assert re.search(
+                rf"^\s*requires\s*=\s*{re.escape(CASH_CROP_UPGRADE_REQUIREMENTS[key])}\s*$",
+                advancement_body,
+                flags=re.M,
+            )
             assert re.search(rf"^\s*unlock_building\s*=\s*{re.escape(key)}\s*$", advancement_body, flags=re.M)
-            assert not re.search(r"^\s*requires\s*=", advancement_body, flags=re.M)
             assert not re.search(r"^\s*focus\s*=", advancement_body, flags=re.M)
 
             expected_inputs = CASH_CROP_UPGRADE_INPUTS[key]
@@ -1972,7 +1989,7 @@ def test_lead_and_coal_late_modifier_advances_unlock_buildings_instead_of_global
     expected_unlocks = {
         "bole_smelting": "lead_mine_bole_smelting",
         "cupola_smelting": "lead_mine_cupola_smelting",
-        "coal_improvements_revolutions": "coal_mine_revolutions",
+        "pp_coal_mine_revolutions": "coal_mine_revolutions",
     }
 
     for advance, building in expected_unlocks.items():
@@ -2051,7 +2068,7 @@ def test_bog_iron_smelters_exclude_true_metal_and_coal_deposits() -> None:
 
 def test_pan_amalgamation_unlocks_gold_and_mercury_upgrades() -> None:
     advances = ADVANCES_PATH.read_text(encoding="utf-8")
-    block = _advance_block("pan_amalgamation_advance", advances)
+    block = _advance_block("pp_pan_amalgamation_mines", advances)
     assert re.search(r"^\s*unlock_building\s*=\s*gold_stamp_mill\s*$", block, flags=re.M)
     assert re.search(r"^\s*unlock_building\s*=\s*quicksilver_retort\s*$", block, flags=re.M)
 

@@ -2,6 +2,7 @@
 pp_tea_sorting_garden = {
 icon = tea_sorting_garden
 age = age_3_discovery
+requires = trade_range_advance_age_3
 unlock_building = tea_sorting_garden
 ai_weight = { add = 125 }
 }

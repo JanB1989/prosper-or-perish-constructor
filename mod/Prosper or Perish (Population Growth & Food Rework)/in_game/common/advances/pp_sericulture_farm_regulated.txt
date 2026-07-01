@@ -2,6 +2,7 @@
 pp_regulated_sericulture_farm = {
 icon = regulated_sericulture_farm
 age = age_3_discovery
+requires = trade_range_advance_age_3
 unlock_building = regulated_sericulture_farm
 ai_weight = { add = 125 }
 }

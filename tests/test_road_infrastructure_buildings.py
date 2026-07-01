@@ -27,7 +27,8 @@ ROAD_BUILDINGS = {
         "capital_speed": "0.075",
     },
     "paviors_yard": {
-        "advance": "paved_road_advance",
+        "advance": "pp_paviors_yard",
+        "requires": "printing_press_advance",
         "previous": "road_wardens_yard",
         "next": "macadam_works",
         "pop_type": "laborers",
@@ -133,7 +134,17 @@ def test_road_infrastructure_buildings_require_any_road_and_unlocks() -> None:
         expected_body = f"unlock_building = {building}"
         if method_unlock := expected.get("method_unlock"):
             expected_body = f"{expected_body}\nunlock_production_method = {method_unlock}"
-        assert blueprint["advancements"] == [{"key": f"TRY_INJECT:{expected['advance']}", "body": expected_body}]
+        if requires := expected.get("requires"):
+            expected_body = (
+                f"icon = {building}\n"
+                f"age = age_3_discovery\n"
+                f"requires = {requires}\n"
+                f"{expected_body}\n"
+                "ai_weight = { add = 125 }"
+            )
+            assert blueprint["advancements"] == [{"key": expected["advance"], "body": expected_body}]
+        else:
+            assert blueprint["advancements"] == [{"key": f"TRY_INJECT:{expected['advance']}", "body": expected_body}]
 
 
 def test_road_infrastructure_modifiers_and_upkeep_targets_are_current() -> None:

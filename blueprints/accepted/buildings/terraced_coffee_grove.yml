@@ -94,6 +94,7 @@ advancements:
     body: |2-
       icon = terraced_coffee_grove
       age = age_3_discovery
+      requires = plantation_buildings_advance
       unlock_building = terraced_coffee_grove
       ai_weight = { add = 125 }
 localization:

@@ -89,14 +89,14 @@ advancements:
     body: |2-
       icon = stud_farm
       age = age_4_reformation
-      requires = food_advance_reformation
+      requires = artillery_institution_advance
       unlock_building = stud_farm
       ai_weight = { add = 125 }
   - key: pp_stud_books
     body: |2-
       icon = stud_farm
       age = age_5_absolutism
-      requires = food_advance_absolutism
+      requires = scientific_revolution_advance
       unlock_production_method = pp_stud_farm_stud_books
       ai_weight = { add = 75 }
 localization:

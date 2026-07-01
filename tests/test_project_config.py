@@ -1,3 +1,4 @@
+import csv
 import json
 import os
 import re
@@ -40,6 +41,11 @@ GOVERNMENT_REFORM_ADJUSTMENTS = (
 ESTATE_ADJUSTMENTS = MOD_ROOT / "in_game" / "common" / "estates" / "pp_estate_adjustments.txt"
 GOODS_DEMAND = MOD_ROOT / "in_game" / "common" / "goods_demand" / "pp_new_goods_demands.txt"
 LAW_ADJUSTMENTS = MOD_ROOT / "in_game" / "common" / "laws" / "pp_law_adjustments.txt"
+PROSPERITY_ADVANCES = MOD_ROOT / "in_game" / "common" / "advances" / "pp_prosperity_advances_adjustments.txt"
+SOCIETAL_VALUE_ADJUSTMENTS = (
+    MOD_ROOT / "in_game" / "common" / "societal_values" / "pp_societal_value_adjustments.txt"
+)
+GOODS_CATEGORIES = ROOT / "config" / "goods_categories.csv"
 SCRIPT_VALUES_ROOT = MOD_ROOT / "in_game" / "common" / "script_values"
 BUILDING_CAPS = SCRIPT_VALUES_ROOT / "pp_building_caps.txt"
 FARMING_CAPACITY = SCRIPT_VALUES_ROOT / "pp_farming_capacity.txt"
@@ -2635,9 +2641,9 @@ def test_cookery_building_line_has_resolved_prices() -> None:
     assert buildings["victualling_yard"]["price_kind"] == "baseline_age"
 
     assert buildings["victuals_market"]["price"] == "pp_victuals_market_price"
-    assert buildings["victuals_market"]["price_gold"] == 25.0
+    assert buildings["victuals_market"]["price_gold"] == 50.0
     assert buildings["victuals_market"]["effective_price"] == "pp_victuals_market_price"
-    assert buildings["victuals_market"]["effective_price_gold"] == 25.0
+    assert buildings["victuals_market"]["effective_price_gold"] == 50.0
     assert buildings["victuals_market"]["price_kind"] == "explicit"
 
 
@@ -2685,6 +2691,80 @@ def test_pp_law_adjustments_use_existing_modifier_types() -> None:
     assert "trade_sea_efficiency = small_trade_efficiency_bonus" in text
 
 
+def test_prosperity_advances_keep_capacity_without_global_goods_output() -> None:
+    entries = {entry.key: entry.value for entry in parse_file(PROSPERITY_ADVANCES).entries}
+    checked_advances = (
+        "TRY_INJECT:fertile_lands",
+        "TRY_INJECT:serfdom",
+        "TRY_INJECT:food_advance_renaissance",
+        "TRY_INJECT:new_world_crops",
+        "TRY_INJECT:food_advance_reformation",
+        "TRY_INJECT:food_advance_absolutism",
+        "TRY_INJECT:rotherham_plough",
+    )
+    expected_capacity = {
+        "TRY_INJECT:food_advance_renaissance": 0.05,
+        "TRY_INJECT:new_world_crops": 0.06,
+        "TRY_INJECT:food_advance_reformation": 0.07,
+        "TRY_INJECT:food_advance_absolutism": 0.08,
+        "TRY_INJECT:rotherham_plough": 0.09,
+    }
+
+    for advance in checked_advances:
+        block = entries[advance]
+        assert isinstance(block, CList)
+        values = _entry_values(block)
+        output_keys = [
+            key
+            for key in values
+            if key.startswith("global_") and key.endswith("_output_modifier")
+        ]
+        assert output_keys == []
+        assert "global_peasants_food_consumption" not in values
+        if advance in expected_capacity:
+            assert values["global_population_capacity_modifier"] == expected_capacity[advance]
+
+
+def test_land_vs_naval_output_modifiers_are_capped_and_targeted() -> None:
+    entries = {entry.key: entry.value for entry in parse_file(SOCIETAL_VALUE_ADJUSTMENTS).entries}
+    land_vs_naval = entries["TRY_INJECT:land_vs_naval"]
+    assert isinstance(land_vs_naval, CList)
+
+    values = _entry_values(land_vs_naval)
+    left = values["left_modifier"]
+    right = values["right_modifier"]
+    assert isinstance(left, CList)
+    assert isinstance(right, CList)
+
+    staple_output_keys = {f"global_{good}_output_modifier" for good in _goods_by_subcategory("staple_crops")}
+    expected_left = {
+        "global_iron_output_modifier",
+        "global_horses_output_modifier",
+        "global_stone_output_modifier",
+        *staple_output_keys,
+    }
+    expected_right = {
+        "global_fish_output_modifier",
+        "global_lumber_output_modifier",
+        "global_naval_supplies_output_modifier",
+        "global_salt_output_modifier",
+        "global_pearls_output_modifier",
+        "global_tar_output_modifier",
+    }
+
+    assert _global_output_values(left) == {key: 0.05 for key in expected_left}
+    assert _global_output_values(right) == {key: 0.05 for key in expected_right}
+
+    for societal_value in (
+        "TRY_INJECT:capital_economy_vs_traditional_economy",
+        "TRY_INJECT:aristocracy_vs_plutocracy",
+        "TRY_INJECT:serfdom_vs_free_subjects",
+    ):
+        block = entries[societal_value]
+        assert isinstance(block, CList)
+        assert not _clist_has_key(block, "global_peasants_food_consumption")
+
+
 def test_feudal_administration_override_tracks_vanilla_law() -> None:
     load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
     vanilla_entries = _database_entries(
@@ -2708,11 +2788,11 @@ def test_feudal_administration_override_tracks_vanilla_law() -> None:
 
     modifier_values = _entry_values(country_modifier)
     assert "global_monthly_food_modifier" not in modifier_values
-    assert modifier_values["global_wheat_output_modifier"] == 0.1
-    assert modifier_values["global_fish_output_modifier"] == 0.1
-    assert modifier_values["global_horses_output_modifier"] == 0.025
-    assert modifier_values["global_fiber_crops_output_modifier"] == 0.025
-    assert modifier_values["global_peasants_food_consumption"] == -0.01
+    assert _global_output_values(country_modifier) == {
+        f"global_{good}_output_modifier": 0.05
+        for good in _goods_by_subcategory("staple_crops")
+    }
+    assert "global_peasants_food_consumption" not in modifier_values
 
 
 def test_pp_building_prices_have_modifier_type_assets_and_localization() -> None:
@@ -3147,8 +3227,32 @@ def _clist_contains(block: CList, key: str, value: object) -> bool:
     )
 
 
+def _clist_has_key(block: CList, key: str) -> bool:
+    return any(
+        entry.key == key or (isinstance(entry.value, CList) and _clist_has_key(entry.value, key))
+        for entry in block.entries
+    )
+
+
 def _entry_values(block: CList) -> dict[str, object]:
     return {entry.key: entry.value for entry in block.entries}
+
+
+def _global_output_values(block: CList) -> dict[str, object]:
+    return {
+        entry.key: entry.value
+        for entry in block.entries
+        if entry.key.startswith("global_") and entry.key.endswith("_output_modifier")
+    }
+
+
+def _goods_by_subcategory(subcategory: str) -> set[str]:
+    with GOODS_CATEGORIES.open("r", encoding="utf-8") as stream:
+        return {
+            row["good"]
+            for row in csv.DictReader(stream)
+            if row["subcategory"] == subcategory
+        }
 
 
 def _accepted_blueprint_building_values(building: str) -> dict[str, object]:

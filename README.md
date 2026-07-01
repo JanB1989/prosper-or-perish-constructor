@@ -334,11 +334,11 @@ For compact run-all analysis, use:
 graphs/savegame_notebooks/savegame_analysis_workbench_minimal.ipynb
 ```
 
-For compact food-price volatility tables in the notebook, use:
+For compact linked food-price and victuals-price volatility tables in the notebook, use:
 
 ```python
 prices = nb.show_food_price_volatility(data, workbench, top_n=12)
-prices.top_erratic
+prices.stats
 ```
 
 ## Building Blueprints

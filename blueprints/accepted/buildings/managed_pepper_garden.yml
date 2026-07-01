@@ -94,6 +94,7 @@ advancements:
     body: |2-
       icon = managed_pepper_garden
       age = age_3_discovery
+      requires = trade_range_advance_age_3
       unlock_building = managed_pepper_garden
       ai_weight = { add = 125 }
 localization:

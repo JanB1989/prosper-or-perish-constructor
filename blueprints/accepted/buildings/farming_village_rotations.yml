@@ -236,7 +236,7 @@ advancements:
     body: |2-
       icon = farming_village_rotations
       age = age_4_reformation
-      requires = food_advance_reformation
+      requires = global_trade_advance
       unlock_building = farming_village_rotations
       ai_weight = { add = 125 }
 localization:

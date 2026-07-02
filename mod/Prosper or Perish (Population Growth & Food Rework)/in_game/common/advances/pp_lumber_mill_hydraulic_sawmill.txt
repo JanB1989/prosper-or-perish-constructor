@@ -2,13 +2,6 @@
 REPLACE:lumber_improvements_reformation = {
 icon = water_sawmill
 age = age_4_reformation
-requires = construction_speed_reformation
-ai_weight = { add = 150 }
-}
-
-pp_water_sawmill = {
-icon = water_sawmill
-age = age_4_reformation
 requires = global_trade_advance
 unlock_production_method = pp_lumber_mill_timber_drives
 unlock_building = water_sawmill

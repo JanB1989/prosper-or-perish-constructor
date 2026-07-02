@@ -60,6 +60,7 @@ BUILDING_CAPACITY_SCRIPT_VALUE_FILES = (
 BUILDING_CAP_ADJUSTMENTS = SCRIPT_VALUES_ROOT / "pp_building_cap_adjustments.txt"
 BUILDING_CAPACITY_VALUES = SCRIPT_VALUES_ROOT / "pp_building_capacity_values.txt"
 BUILDING_TYPE_ROOT = MOD_ROOT / "in_game" / "common" / "building_types"
+GOLD_TO_JEWELRY_BUILDINGS = BUILDING_TYPE_ROOT / "pp_gold_to_jewelry_buildings.txt"
 EMPLOYMENT_SYSTEMS_ROOT = MOD_ROOT / "in_game" / "common" / "employment_systems"
 GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
 BUILDING_CULLING = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt"
@@ -545,6 +546,51 @@ def test_building_types_do_not_render_unsupported_priority_fields() -> None:
     ]
 
     assert offenders == []
+
+
+def test_local_governor_replacement_keeps_vanilla_non_capital_location_gate() -> None:
+    load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
+    vanilla_capital_buildings = (
+        load_order.vanilla_root
+        / "game"
+        / "in_game"
+        / "common"
+        / "building_types"
+        / "capital_buildings.txt"
+    )
+    vanilla_entries = {
+        entry.key: entry.value for entry in parse_file(vanilla_capital_buildings).entries
+    }
+    mod_entries = {
+        entry.key: entry.value for entry in parse_file(GOLD_TO_JEWELRY_BUILDINGS).entries
+    }
+
+    vanilla_governor = vanilla_entries["local_governor"]
+    mod_governor = mod_entries["REPLACE:local_governor"]
+    assert isinstance(vanilla_governor, CList)
+    assert isinstance(mod_governor, CList)
+
+    vanilla_location_potential = _entry_values(vanilla_governor)["location_potential"]
+    mod_location_potential = _entry_values(mod_governor)["location_potential"]
+    assert isinstance(vanilla_location_potential, CList)
+    assert isinstance(mod_location_potential, CList)
+
+    vanilla_capital_gate = [
+        entry
+        for entry in vanilla_location_potential.entries
+        if entry.key == "owner.capital"
+    ]
+    mod_capital_gate = [
+        entry
+        for entry in mod_location_potential.entries
+        if entry.key == "owner.capital"
+    ]
+    assert len(vanilla_capital_gate) == 1
+    assert len(mod_capital_gate) == 1
+    assert (mod_capital_gate[0].op, mod_capital_gate[0].value) == (
+        vanilla_capital_gate[0].op,
+        vanilla_capital_gate[0].value,
+    ) == ("!=", "this")
 
 
 def test_food_security_building_priorities_are_in_employment_systems() -> None:
@@ -2703,6 +2749,7 @@ def test_prosperity_advances_keep_capacity_without_global_goods_output() -> None
         "TRY_INJECT:rotherham_plough",
     )
     expected_capacity = {
+        "TRY_INJECT:fertile_lands": 0.05,
         "TRY_INJECT:food_advance_renaissance": 0.05,
         "TRY_INJECT:new_world_crops": 0.06,
         "TRY_INJECT:food_advance_reformation": 0.07,

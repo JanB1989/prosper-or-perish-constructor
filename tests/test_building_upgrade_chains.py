@@ -113,7 +113,7 @@ EXPECTED_CHAINS = {
     "coal_mine": [
         ("coal_mine", None),
         ("coal_mine_improved", "coal_improvements_absolutism"),
-        ("coal_mine_revolutions", "pp_coal_mine_revolutions"),
+        ("coal_mine_revolutions", "coal_improvements_revolutions"),
     ],
     "mercury_mine": [
         ("cinnabar_pit", None),
@@ -121,11 +121,11 @@ EXPECTED_CHAINS = {
     ],
     "copper_mine": [
         ("copper_mine", None),
-        ("copper_mine_adit", "pp_new_currency_mine_adits"),
+        ("copper_mine_adit", "new_currency_demands"),
     ],
     "silver_mine": [
         ("silver_mine", None),
-        ("silver_mine_improved", "pp_saiger_process"),
+        ("silver_mine_improved", "saiger_process_discovery"),
     ],
     "lead_mine": [
         ("lead_mine", None),
@@ -138,7 +138,7 @@ EXPECTED_CHAINS = {
     ],
     "tin_mine": [
         ("tin_streamworks", None),
-        ("tin_stamping_mill", "pp_new_currency_mine_adits"),
+        ("tin_stamping_mill", "new_currency_demands"),
     ],
     "gold_mine": [
         ("gold_diggings", None),
@@ -155,7 +155,7 @@ EXPECTED_CHAINS = {
     ],
     "bog_iron_smelter": [
         ("bog_iron_smelter", None),
-        ("bog_iron_smelter_blast_furnace", "pp_blast_furnace"),
+        ("bog_iron_smelter_blast_furnace", "blast_furnace"),
         ("bog_iron_smelter_coke_blast_furnace", "coke_blast_furnace"),
     ],
     "cookery": [
@@ -1091,7 +1091,7 @@ def test_lumber_mill_upgrade_chain_is_explicit_and_unlockable() -> None:
     enabled = set(manifest["enabled"])
     chain = [
         ("lumber_mill", None),
-        ("water_sawmill", "pp_water_sawmill"),
+        ("water_sawmill", "lumber_improvements_reformation"),
         ("lumber_mill_improved", "lumber_improvements_absolutism"),
     ]
 
@@ -1989,7 +1989,7 @@ def test_lead_and_coal_late_modifier_advances_unlock_buildings_instead_of_global
     expected_unlocks = {
         "bole_smelting": "lead_mine_bole_smelting",
         "cupola_smelting": "lead_mine_cupola_smelting",
-        "pp_coal_mine_revolutions": "coal_mine_revolutions",
+        "coal_improvements_revolutions": "coal_mine_revolutions",
     }
 
     for advance, building in expected_unlocks.items():

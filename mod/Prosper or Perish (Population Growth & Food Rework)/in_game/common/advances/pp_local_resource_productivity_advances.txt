@@ -34,15 +34,8 @@ REPLACE:new_currency_demands = {
 	age = age_3_discovery
 	icon = debt_and_loans
 	requires = blast_furnace
-}
-
-pp_new_currency_mine_adits = {
-	age = age_3_discovery
-	icon = debt_and_loans
-	requires = pp_blast_furnace
 	unlock_building = copper_mine_adit
 	unlock_building = tin_stamping_mill
-	ai_weight = { add = 125 }
 }
 
 REPLACE:green_vitriol = {
@@ -66,15 +59,8 @@ REPLACE:renaissance_sculptures = {
 REPLACE:blast_furnace = {
 	age = age_3_discovery
 	icon = serbian_mining
-	requires = pop_promotion_speed_age_3
-}
-
-pp_blast_furnace = {
-	age = age_3_discovery
-	icon = serbian_mining
 	requires = pike_and_shot_advance
 	unlock_building = bog_iron_smelter_blast_furnace
-	ai_weight = { add = 125 }
 }
 
 REPLACE:pan_amalgamation_advance = {
@@ -134,28 +120,14 @@ REPLACE:coal_improvements_absolutism = {
 REPLACE:coal_improvements_revolutions = {
 	age = age_6_revolutions
 	requires = rgo_size_advance_revolutions
-}
-
-pp_coal_mine_revolutions = {
-	age = age_6_revolutions
-	icon = coal_mine_revolutions
-	requires = rgo_size_advance_revolutions
 	unlock_building = coal_mine_revolutions
-	ai_weight = { add = 125 }
 }
 
 REPLACE:saiger_process_discovery = {
 	age = age_3_discovery
 	icon = serbian_mining
-	requires = pp_blast_furnace
-}
-
-pp_saiger_process = {
-	age = age_3_discovery
-	icon = serbian_mining
-	requires = pp_blast_furnace
+	requires = blast_furnace
 	unlock_building = silver_mine_improved
-	ai_weight = { add = 125 }
 }
 
 REPLACE:lead_ore_dressing = {

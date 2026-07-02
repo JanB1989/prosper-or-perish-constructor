@@ -23,6 +23,7 @@ TRY_INJECT:paschal_cycle = {
 }
 TRY_INJECT:fertile_lands = {
 	global_monthly_food_modifier = -0.05
+	global_population_capacity_modifier = 0.05
 }
 # Serfdom: keep the food-pressure change without broad per-good output bonuses
 TRY_INJECT:serfdom = {

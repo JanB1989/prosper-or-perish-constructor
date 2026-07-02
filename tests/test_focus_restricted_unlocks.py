@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import defaultdict, deque
 from functools import lru_cache
+import json
 from pathlib import Path
 import re
 
@@ -14,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted"
 MANIFEST_PATH = ROOT / "blueprints" / "buildings.manifest.yml"
 FOCUS_VALUES = {"adm", "dip", "mil"}
+INTENTIONAL_ZERO_NET_ADVANCE_PATCH_FILES = {"pp_rgo_building_cost_redirects.txt"}
 
 
 def test_constructor_owned_unlocks_do_not_depend_on_age_focus_advances() -> None:
@@ -92,6 +94,23 @@ def test_constructor_owned_unlocks_after_age_one_have_institution_gated_ancestry
                 constructor_items=constructor_methods,
             )
         )
+
+    assert offenders == []
+
+
+def test_constructor_sourced_advances_are_not_empty_player_techs() -> None:
+    data = load_eu5_data(
+        profile="constructor",
+        load_order_path=ROOT / "constructor.load_order.toml",
+    )
+
+    offenders = [
+        f"{row['name']} at {_source_location(row)}"
+        for row in data.advancements.to_dicts()
+        if row.get("source_layer") == "constructor"
+        and Path(row["source_file"]).name not in INTENTIONAL_ZERO_NET_ADVANCE_PATCH_FILES
+        and not _advance_has_player_payload(row)
+    ]
 
     assert offenders == []
 
@@ -204,6 +223,35 @@ def _institution_free_unlock_offenders(
         for item in row.get(unlock_column) or []
         if item in constructor_items
     ]
+
+
+def _advance_has_player_payload(row: dict) -> bool:
+    modifiers = _json_object(row.get("modifiers"))
+    unlocks = _json_object(row.get("unlocks"))
+
+    return _has_nonzero_modifier(modifiers) or any(unlocks.values())
+
+
+def _has_nonzero_modifier(value: object) -> bool:
+    if isinstance(value, dict):
+        return any(_has_nonzero_modifier(item) for item in value.values())
+    if isinstance(value, list):
+        return any(_has_nonzero_modifier(item) for item in value)
+    if isinstance(value, bool) or value is None:
+        return False
+    if isinstance(value, (int, float)):
+        return abs(float(value)) > 1e-12
+    return True
+
+
+def _json_object(value: object) -> dict:
+    if isinstance(value, dict):
+        return value
+    if isinstance(value, str) and value:
+        parsed = json.loads(value)
+        assert isinstance(parsed, dict)
+        return parsed
+    return {}
 
 
 def _age_number(age: object) -> int:

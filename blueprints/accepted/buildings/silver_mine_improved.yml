@@ -5,7 +5,7 @@ upgrade_chain:
   tier: 1
   previous: silver_mine
   next: null
-  unlock_advance: pp_saiger_process
+  unlock_advance: saiger_process_discovery
 building:
   key: silver_mine_improved
   mode: CREATE

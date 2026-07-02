@@ -295,7 +295,7 @@ REPLACE:local_governor = {
 	}
 	location_potential = {
 		has_road_to_capital = yes
-		owner.capital = this
+		owner.capital != this
 	}
 	remove_if = {
 		location = {

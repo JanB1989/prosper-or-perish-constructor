@@ -1,10 +1,10 @@
 ﻿# >>> eu5-building-pipeline:victuals_market:building
 victuals_market = {
 	is_foreign = no
-increase_per_level_cost = 0.10
+  increase_per_level_cost = 0.10
 	max_levels = victuals_market_max_level
 	pop_type = burghers
-	employment_size = 0.300
+	employment_size = 0.100
 	price = pp_victuals_market_price
     category = consumer_goods_category
 	custom_tags = { pp_food_security_priority pp_food_distribution_priority }

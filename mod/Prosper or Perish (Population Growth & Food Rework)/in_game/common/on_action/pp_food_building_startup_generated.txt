@@ -589,6 +589,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:akkus = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:akou = {
 			if = {
 				limit = {
@@ -1708,6 +1722,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:anning = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:anping = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -2943,6 +2971,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:azeffoun = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:azemmour = {
 			if = {
 				limit = {
@@ -3299,6 +3341,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:baitan = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:bajrajinaparamitapura = {
 			if = {
 				limit = {
@@ -3624,6 +3680,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:banique = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:baniyas = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -4627,6 +4697,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:belley = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:belz = {
 			if = {
 				limit = {
@@ -5109,6 +5193,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:bhimber = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -6318,6 +6416,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:brest_litowsk = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:bridlington = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -7607,6 +7719,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:cayguani = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:cefalu = {
 			if = {
 				limit = {
@@ -8070,6 +8196,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:changle_fujian = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:changli = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -8573,6 +8713,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:cheresig = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -9831,6 +9985,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:coventry = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:cremona = {
 			if = {
 				limit = {
@@ -10964,6 +11132,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:dingxing = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:dingyuan = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -12571,6 +12753,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:eso = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:espiel = {
 			if = {
 				limit = {
@@ -12593,6 +12789,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:evian = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -12647,6 +12857,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:fallingbostel = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -12983,6 +13207,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:fengjie = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -15363,6 +15601,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:guanipa = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:guastalla = {
 			if = {
 				limit = {
@@ -16749,6 +17001,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:higashiokitama = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:hijli = {
 			if = {
 				limit = {
@@ -17009,6 +17275,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:hongxian = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:honnavara = {
 			if = {
 				limit = {
@@ -17160,6 +17440,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:hradec_kralove = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:huacheng = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -20049,6 +20343,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:kaiyuan_jurchen = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:kalahandinagara = {
 			if = {
 				limit = {
@@ -20695,6 +21003,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:karpenisi = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -24003,6 +24325,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:lang_son = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:langarud = {
 			if = {
 				limit = {
@@ -25280,6 +25616,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:linlithgow = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:linxian = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -27803,6 +28153,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:masty = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:mataram = {
 			if = {
 				limit = {
@@ -28735,6 +29099,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:miliana = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:milwat = {
 			if = {
 				limit = {
@@ -29179,6 +29557,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:mojacar = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:moksobo = {
 			if = {
 				limit = {
@@ -29301,6 +29693,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:mondovi = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:monemvasia = {
 			if = {
 				limit = {
@@ -29349,6 +29755,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:monforte_de_lemos = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -29410,6 +29830,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:mongtung = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:mongyang = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -29848,6 +30282,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:muchuan = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:mueng_rat = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -31117,6 +31565,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:neva = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:nevers = {
 			if = {
 				limit = {
@@ -31465,6 +31927,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:ningjin_zhaozhou = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -32123,6 +32599,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:ocana = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:ochi = {
 			if = {
 				limit = {
@@ -32535,6 +33025,34 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:oril = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:oristano = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -33213,6 +33731,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:panduranga = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:panemune = {
 			if = {
 				limit = {
@@ -33447,6 +33979,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:parthenay = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -34717,6 +35263,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:porvoo = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -36441,6 +37001,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:renhua = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:renhuai = {
 			if = {
 				limit = {
@@ -36606,6 +37180,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:ribnitz = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:ried = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -38129,6 +38717,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:sancerre = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:sanga = {
 			if = {
 				limit = {
@@ -38759,6 +39361,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:sbiba = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -39736,6 +40352,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:shemkhiya = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:shengeldy = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -40919,6 +41549,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:slanic = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:slany = {
 			if = {
 				limit = {
@@ -41353,6 +41997,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:sonqor = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -42033,6 +42691,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:straubing = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -42807,6 +43479,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:szarvas = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:szeged = {
 			if = {
 				limit = {
@@ -43287,6 +43973,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:tamana = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -45409,6 +46109,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:tosya = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:touba = {
 			if = {
 				limit = {
@@ -45869,6 +46583,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:tuam = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:tuban_java = {
 			if = {
 				limit = {
@@ -45929,6 +46657,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:tukums = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"
@@ -46965,6 +47707,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:valverde = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:van = {
 			if = {
 				limit = {
@@ -47344,6 +48100,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:veszprem = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:vetza = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -48897,6 +49667,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:worabe = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:worms = {
 			if = {
 				limit = {
@@ -49755,6 +50539,20 @@ pp_food_building_startup = {
 				}
 			}
 		}
+		location:xingzi = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
 		location:xinjian = {
 			if = {
 				limit = {
@@ -50110,6 +50908,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:yangdi = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:yangirabod = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -50608,6 +51420,20 @@ pp_food_building_startup = {
 			}
 		}
 		location:yilun = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:yingcheng = {
 			if = {
 				limit = {
 					has_owner = yes
@@ -51979,6 +52805,20 @@ pp_food_building_startup = {
 				}
 				construct_building = {
 					building_type = building_type:victuals_market
+					instant = yes
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_start"
+				}
+			}
+		}
+		location:ziqwala = {
+			if = {
+				limit = {
+					has_owner = yes
+					NOT = { has_building = building_type:cookery }
+				}
+				construct_building = {
+					building_type = building_type:cookery
 					instant = yes
 					cost_multiplier = 0
 					cost_multiplier_reason = "game_start"

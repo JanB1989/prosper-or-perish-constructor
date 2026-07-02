@@ -43,7 +43,7 @@ building = "victuals_market"
 
 [production_sources.output]
 mode = "fixed_food"
-fixed_food_per_level = 50.0
+fixed_food_per_level = 40.0
 multiplier = 1.0
 
 [[buildings]]
@@ -111,7 +111,7 @@ development_per_1000_scale_end = 0.10
 
 [buildings.output]
 mode = "fixed_food"
-fixed_food_per_level = 60.0
+fixed_food_per_level = 40.0
 multiplier = 1.0
 
 [buildings.score]

@@ -78,7 +78,7 @@ def build_calibration() -> dict:
                 "source": "static_growth_modifier_anchors",
             },
             "unemployment": _sequential_scale_dict(_positive_quantity_thresholds(_unemployment_values())),
-            "building_levels": _sequential_scale_dict(_positive_quantity_thresholds(_building_level_values())),
+            "building_levels": _sequential_scale_dict(_building_level_thresholds()),
             "rgo_level": _sequential_scale_dict(_rgo_level_thresholds(_rgo_level_values())),
         },
     }
@@ -302,6 +302,12 @@ def _population_capacity_thresholds() -> list[float]:
     # Keep fixed player-readable buckets up to 200 so high-capacity locations
     # do not collapse into one quantile-derived color.
     return [20.0, 40.0, 60.0, 80.0, 100.0, 125.0, 155.0, 200.0]
+
+
+def _building_level_thresholds() -> list[float]:
+    # Keep the lower savegame-derived breaks, then add fixed high-end bands so
+    # dense locations do not collapse into a single 22-93 green gradient.
+    return [3.0, 8.0, 22.0, 40.0, 60.0, 80.0, 100.0]
 
 
 def _food_capacity_thresholds(capacity: str, values: Iterable[float]) -> list[float]:

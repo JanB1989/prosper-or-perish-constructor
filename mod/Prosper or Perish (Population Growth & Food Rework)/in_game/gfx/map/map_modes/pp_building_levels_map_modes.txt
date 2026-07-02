@@ -1,7 +1,14 @@
 ﻿# Map mode: total building levels per location (traffic-light bucketed heatmap).
-# Buckets are tuned from current savegame building-level distributions.
+# Low buckets retain the current savegame distribution, with extra high-end
+# bands so dense late-game locations remain distinguishable.
 
-@pp_building_levels_cap = 93
+@pp_building_levels_very_low = 3
+@pp_building_levels_low = 8
+@pp_building_levels_medium = 22
+@pp_building_levels_high = 40
+@pp_building_levels_strong = 60
+@pp_building_levels_very_strong = 80
+@pp_building_levels_cap = 100
 @pp_supported_building_levels_low = 30
 @pp_supported_building_levels_mid = 70
 @pp_supported_building_levels_high = 120
@@ -34,38 +41,62 @@ pp_building_levels = {
 		else_if = {
 			limit = { has_owner = yes }
 			if = {
-				limit = { total_building_levels < 3 }
+				limit = { total_building_levels < @pp_building_levels_very_low }
 				lerp = {
 					min_color = define:NMapColors|MAP_COLOR_MIN
 					max_color = define:NMapColors|MAP_COLOR_LOW
-					factor = { value = total_building_levels divide = 3 max = 1 min = 0 }
+					factor = { value = total_building_levels divide = @pp_building_levels_very_low max = 1 min = 0 }
 				}
 			}
 			else_if = {
-				limit = { total_building_levels < 8 }
+				limit = { total_building_levels < @pp_building_levels_low }
 				lerp = {
 					min_color = define:NMapColors|MAP_COLOR_LOW
 					max_color = define:NMapColors|MAP_COLOR_MID
-					factor = { value = total_building_levels subtract = 3 divide = 5 max = 1 min = 0 }
+					factor = { value = total_building_levels subtract = @pp_building_levels_very_low divide = 5 max = 1 min = 0 }
 				}
 			}
 			else_if = {
-				limit = { total_building_levels < 22 }
+				limit = { total_building_levels < @pp_building_levels_medium }
 				lerp = {
 					min_color = define:NMapColors|MAP_COLOR_MID
 					max_color = define:NMapColors|MAP_COLOR_HIGH
-					factor = { value = total_building_levels subtract = 8 divide = 14 max = 1 min = 0 }
+					factor = { value = total_building_levels subtract = @pp_building_levels_low divide = 14 max = 1 min = 0 }
+				}
+			}
+			else_if = {
+				limit = { total_building_levels < @pp_building_levels_high }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_HIGH
+					max_color = define:NMapColors|MAP_COLOR_MAX
+					factor = { value = total_building_levels subtract = @pp_building_levels_medium divide = 18 max = 1 min = 0 }
+				}
+			}
+			else_if = {
+				limit = { total_building_levels < @pp_building_levels_strong }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_MAX
+					max_color = define:NMapColors|MAP_COLOR_TOP
+					factor = { value = total_building_levels subtract = @pp_building_levels_high divide = 20 max = 1 min = 0 }
+				}
+			}
+			else_if = {
+				limit = { total_building_levels < @pp_building_levels_very_strong }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_TOP
+					max_color = rgb { 245 245 245 }
+					factor = { value = total_building_levels subtract = @pp_building_levels_strong divide = 20 max = 1 min = 0 }
 				}
 			}
 			else_if = {
 				limit = { total_building_levels < @pp_building_levels_cap }
 				lerp = {
-					min_color = define:NMapColors|MAP_COLOR_HIGH
-					max_color = define:NMapColors|MAP_COLOR_MAX
-					factor = { value = total_building_levels subtract = 22 divide = 71 max = 1 min = 0 }
+					min_color = rgb { 245 245 245 }
+					max_color = rgb { 170 235 255 }
+					factor = { value = total_building_levels subtract = @pp_building_levels_very_strong divide = 20 max = 1 min = 0 }
 				}
 			}
-			else = { value = define:NMapColors|MAP_COLOR_MAX }
+			else = { value = rgb { 70 210 255 } }
 		}
 		else = {
 			value = rgb { 128 128 128 }
@@ -80,11 +111,14 @@ pp_building_levels = {
 			value = rgb { 35 35 42 }
 		}
 	}
-	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_VERY_LOW" color = define:NMapColors|MAP_COLOR_MIN }
-	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_LOW" color = define:NMapColors|MAP_COLOR_LOW }
-	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_MEDIUM" color = define:NMapColors|MAP_COLOR_MID }
-	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_HIGH" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_CAPPED" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_RANGE_0_3" color = define:NMapColors|MAP_COLOR_MIN }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_RANGE_3_8" color = define:NMapColors|MAP_COLOR_LOW }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_RANGE_8_22" color = define:NMapColors|MAP_COLOR_MID }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_RANGE_22_40" color = define:NMapColors|MAP_COLOR_HIGH }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_RANGE_40_60" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_RANGE_60_80" color = define:NMapColors|MAP_COLOR_TOP }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_RANGE_80_100" color = rgb { 245 245 245 } }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_CAPPED" color = rgb { 70 210 255 } }
 	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_OVER_SUPPORTED" color = rgb { 35 35 42 } }
 	tooltip_key = {
 		if = { limit = { is_land = yes } value = MAPMODE_PP_BUILDING_LEVELS_TT_LAND }

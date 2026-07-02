@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:bund:building
 INJECT:bund = {
 	price = pp_bund_price
-	increase_per_level_cost = 0.40
+	increase_per_level_cost = 0.30
 	custom_tags = { pp_food_security_priority pp_water_control_priority }
 	raw_modifier = {
 		farm_capacity_from_bund = 0.60

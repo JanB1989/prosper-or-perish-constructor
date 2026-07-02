@@ -12,8 +12,11 @@ from eu5gameparser.clausewitz.syntax import CList
 from eu5gameparser.domain.goods import load_goods_data
 from eu5gameparser.domain.pop_types import load_pop_type_data
 from prosper_or_perish_constructor.building_scaling import (
+    apply_increase_per_level_cost_multiplier,
+    format_increase_per_level_cost,
     format_output_amount,
     load_building_scaling_config,
+    scaled_increase_per_level_cost_text,
     worker_victuals_output_amount,
 )
 
@@ -44,6 +47,69 @@ def test_building_scaling_config_loads_worker_victuals_ratio() -> None:
     config = load_building_scaling_config(PROJECT)
 
     assert config.worker_victuals_food_need_ratio == Decimal("1.0")
+    assert config.increase_per_level_cost_multiplier == Decimal("0.75")
+
+
+def test_increase_per_level_cost_multiplier_rounds_to_two_decimals() -> None:
+    assert scaled_increase_per_level_cost_text(Decimal("0.13"), Decimal("0.75")) == "0.10"
+    assert scaled_increase_per_level_cost_text(Decimal("0.30"), Decimal("0.75")) == "0.23"
+    assert format_increase_per_level_cost(Decimal("0.225")) == "0.23"
+
+
+def test_increase_per_level_cost_compilation_is_idempotent(tmp_path: Path) -> None:
+    repo = tmp_path
+    project = repo / "constructor.toml"
+    blueprint = repo / "blueprints" / "accepted" / "buildings" / "test_market.yml"
+    manifest = repo / "blueprints" / "buildings.manifest.yml"
+    mod_root = repo / "mod" / "test"
+    building_type = mod_root / "in_game" / "common" / "building_types" / "zz_test_market.txt"
+
+    project.write_text(
+        "[building_scaling]\n"
+        "worker_victuals_food_need_ratio = 1.0\n"
+        "increase_per_level_cost_multiplier = 0.75\n",
+        encoding="utf-8",
+    )
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text("enabled:\n- buildings/test_market.yml\n", encoding="utf-8")
+    blueprint.parent.mkdir(parents=True)
+    blueprint.write_text(
+        "version: 2\n"
+        "tag: test_market\n"
+        "building:\n"
+        "  key: test_market\n"
+        "  mode: CREATE\n"
+        "  source: test.txt\n"
+        "  production_method_slots: []\n"
+        "  possible_production_methods: []\n"
+        "  body: |2-\n"
+        "    increase_per_level_cost = 0.13\n",
+        encoding="utf-8",
+    )
+    building_type.parent.mkdir(parents=True)
+    building_type.write_text(
+        "test_market = {\n"
+        "\tincrease_per_level_cost = 0.13\n"
+        "\tmodifier = {\n"
+        "\t\tlocal_monthly_food = 1\n"
+        "\t}\n"
+        "}\n",
+        encoding="utf-8-sig",
+    )
+
+    first = apply_increase_per_level_cost_multiplier(repo, mod_root, project)
+    second = apply_increase_per_level_cost_multiplier(repo, mod_root, project)
+
+    assert first.entries_scaled == 1
+    assert second.entries_scaled == 1
+    assert building_type.read_text(encoding="utf-8-sig") == (
+        "test_market = {\n"
+        "\tincrease_per_level_cost = 0.10\n"
+        "\tmodifier = {\n"
+        "\t\tlocal_monthly_food = 1\n"
+        "\t}\n"
+        "}\n"
+    )
 
 
 def test_primary_food_buildings_worker_victuals_slots_match_configured_worker_food_need() -> None:

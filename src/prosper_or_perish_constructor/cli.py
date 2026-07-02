@@ -1081,6 +1081,9 @@ def _disable_setup_corrections(repo: Path, project: Path, *, force: bool) -> int
 
 
 def _finalize_constructor_mod(repo: Path, project: Path) -> None:
+    from prosper_or_perish_constructor.building_scaling import (
+        apply_increase_per_level_cost_multiplier,
+    )
     from prosper_or_perish_constructor.free_building_levels import (
         compile_free_building_level_modifiers,
         local_free_building_levels_sheet_csv_path,
@@ -1088,6 +1091,13 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     from prosper_or_perish_constructor.rgo_cost_redirects import write_rgo_cost_redirects
 
     mod_root = _project_mod_root(repo, project)
+    increase_cost_result = apply_increase_per_level_cost_multiplier(repo, mod_root, project)
+    print(
+        "Applied increase_per_level_cost multiplier "
+        f"{increase_cost_result.multiplier} to {increase_cost_result.entries_scaled} "
+        f"building entries across {increase_cost_result.files_changed} changed files.",
+        flush=True,
+    )
     if local_free_building_levels_sheet_csv_path(repo).is_file():
         compile_free_building_level_modifiers(repo, mod_root)
     _ensure_location_modifier_application_on_action(mod_root)

@@ -1,6 +1,6 @@
 ﻿# >>> eu5-building-pipeline:market_village:building
 TRY_INJECT:market_village = {
-increase_per_level_cost = 0.21
+increase_per_level_cost = 0.16
 modifier = {
   local_market_access = -0.005 # offset vanilla market_village; logistics infrastructure should provide market access
 }

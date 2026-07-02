@@ -4,7 +4,7 @@ model_farm = {
 # horse-hoes, planned barns, accounts, and crop-specific storage or water/press works.
 # Inputs stay capped at four goods per method; paper and pottery appear here as higher-tier management/storage goods.
 is_foreign = no
-increase_per_level_cost = 0.15
+increase_per_level_cost = 0.11
 max_levels = farm_capacity_max_model_farm
 pop_type = laborers
 employment_size = 1

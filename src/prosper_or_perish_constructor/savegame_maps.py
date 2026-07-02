@@ -895,7 +895,7 @@ def political_map(
             render_cache=render_cache,
             render_width=render_width,
             title=title,
-            subtitle=f"{_year_label(snapshot)} - owner country colors",
+            subtitle=f"{_year_label(snapshot)} - owner and overlord colors",
             timeline=_timeline_for_snapshot(snapshots, index, snapshot),
             legend=_political_frame_legend(
                 snapshot_frame,
@@ -2150,7 +2150,90 @@ def _political_locations(
         locations = locations.with_columns(pl.lit(None, dtype=pl.String).alias("country_tag"))
     if "country_name" not in locations.columns:
         locations = locations.with_columns(pl.col("country_tag").alias("country_name"))
-    return locations
+    locations = _join_political_country_facts(
+        data,
+        locations,
+        playthrough=selected_playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    return _with_political_color_sources(locations)
+
+
+def _join_political_country_facts(
+    data: Any,
+    locations: pl.DataFrame,
+    *,
+    playthrough: str | None,
+    start_date: int | None,
+    end_date: int | None,
+) -> pl.DataFrame:
+    countries = data.table("countries")
+    if countries.is_empty() or locations.is_empty() or "snapshot_id" not in locations.columns:
+        return locations
+    if playthrough is not None and "playthrough_id" in countries.columns:
+        countries = countries.filter(pl.col("playthrough_id") == playthrough)
+    if start_date is not None and "date_sort" in countries.columns:
+        countries = countries.filter(pl.col("date_sort") >= int(start_date))
+    if end_date is not None and "date_sort" in countries.columns:
+        countries = countries.filter(pl.col("date_sort") <= int(end_date))
+    if countries.is_empty() or "snapshot_id" not in countries.columns:
+        return locations
+
+    join_key = None
+    for candidate in ("country_code", "country_tag"):
+        if candidate in locations.columns and candidate in countries.columns:
+            join_key = candidate
+            break
+    if join_key is None:
+        return locations
+
+    fact_columns = [
+        column
+        for column in (
+            "snapshot_id",
+            join_key,
+            "country_id",
+            "overlord_country_id",
+            "overlord_tag",
+            "overlord_name",
+            "subject_type",
+            "is_subject",
+            "is_colony",
+        )
+        if column in countries.columns
+    ]
+    relation_columns = [column for column in fact_columns if column not in {"snapshot_id", join_key}]
+    if not relation_columns:
+        return locations
+    facts = countries.select(fact_columns).unique(["snapshot_id", join_key])
+    return locations.join(facts, on=["snapshot_id", join_key], how="left")
+
+
+def _with_political_color_sources(frame: pl.DataFrame) -> pl.DataFrame:
+    if frame.is_empty():
+        return frame
+    additions: list[pl.Expr] = []
+    for column in ("overlord_tag", "overlord_name", "subject_type"):
+        if column not in frame.columns:
+            additions.append(pl.lit(None, dtype=pl.String).alias(column))
+    for column in ("is_subject", "is_colony"):
+        if column not in frame.columns:
+            additions.append(pl.lit(False, dtype=pl.Boolean).alias(column))
+    if additions:
+        frame = frame.with_columns(additions)
+
+    has_overlord = (
+        pl.col("is_subject").fill_null(False)
+        & pl.col("overlord_tag").is_not_null()
+        & (pl.col("overlord_tag").cast(pl.String) != "")
+    )
+    return frame.with_columns(
+        pl.when(has_overlord)
+        .then(pl.col("overlord_tag").cast(pl.String))
+        .otherwise(pl.col("country_tag").cast(pl.String))
+        .alias("political_color_tag")
+    )
 
 
 def _resolved_country_color_map(data: Any, country_colors: Mapping[str, object] | None) -> dict[str, tuple[int, int, int]]:
@@ -2171,18 +2254,48 @@ def _with_political_colors(frame: pl.DataFrame, country_colors: Mapping[str, tup
     if frame.is_empty():
         return frame
 
-    def _packed_color(tag: object) -> int | None:
+    def _country_rgb(tag: object) -> tuple[int, int, int] | None:
         text = str(tag or "").strip()
         if not text:
             return None
         rgb = country_colors.get(text) or country_colors.get(text.upper()) or country_colors.get(text.lower())
         if rgb is None:
             rgb = _fallback_country_rgb(text)
+        return rgb
+
+    def _packed_political_color(row: dict[str, object]) -> int | None:
+        color_tag = str(row.get("political_color_tag") or "").strip()
+        owner_tag = str(row.get("country_tag") or "").strip()
+        if not color_tag:
+            color_tag = owner_tag
+        rgb = _country_rgb(color_tag)
+        if rgb is None:
+            return None
+        if owner_tag and color_tag and owner_tag.lower() != color_tag.lower():
+            rgb = _subject_variant_rgb(rgb, owner_tag, str(row.get("subject_type") or ""))
         return _pack_rgb(rgb)
 
-    def _hex_color(tag: object) -> str:
-        packed = _packed_color(tag)
-        return "" if packed is None else f"#{packed:06x}"
+    def _hex_color(packed: object) -> str:
+        if packed is None:
+            return ""
+        try:
+            value = int(packed)
+        except (TypeError, ValueError):
+            return ""
+        if value < 0:
+            return ""
+        return f"#{value:06x}"
+
+    def _subject_type_label(value: object) -> str:
+        text = str(value or "").strip().replace("_", " ")
+        return text or "subject"
+
+    if "political_color_tag" not in frame.columns:
+        frame = _with_political_color_sources(frame)
+    for column in ("overlord_tag", "overlord_name", "subject_type", "is_subject"):
+        if column not in frame.columns:
+            frame = _with_political_color_sources(frame)
+            break
 
     label_column = _country_label_column(frame)
     label_expr = (
@@ -2192,15 +2305,53 @@ def _with_political_colors(frame: pl.DataFrame, country_colors: Mapping[str, tup
         if label_column is not None
         else pl.col("country_tag").cast(pl.String)
     )
-    return frame.with_columns(
-        label_expr.alias("country_label"),
-        pl.col("country_tag")
-        .map_elements(_packed_color, return_dtype=pl.UInt32)
-        .alias("country_color_int"),
-        pl.col("country_tag")
-        .map_elements(_hex_color, return_dtype=pl.String)
-        .alias("country_color_hex"),
+    frame = frame.with_columns(label_expr.alias("country_label"))
+
+    overlord_label_expr = (
+        pl.when(pl.col("overlord_name").is_not_null() & (pl.col("overlord_name").cast(pl.String) != ""))
+        .then(pl.col("overlord_name").cast(pl.String))
+        .otherwise(pl.col("overlord_tag").cast(pl.String))
     )
+    subject_label_expr = pl.col("subject_type").map_elements(_subject_type_label, return_dtype=pl.String)
+    subject_has_overlord = (
+        pl.col("is_subject").fill_null(False)
+        & pl.col("overlord_tag").is_not_null()
+        & (pl.col("overlord_tag").cast(pl.String) != "")
+    )
+    frame = frame.with_columns(
+        pl.when(subject_has_overlord)
+        .then(pl.format("{} ({} of {})", pl.col("country_label"), subject_label_expr, overlord_label_expr))
+        .otherwise(pl.col("country_label"))
+        .alias("political_color_label")
+    )
+    frame = frame.with_columns(
+        pl.struct(["political_color_tag", "country_tag", "subject_type"])
+        .map_elements(_packed_political_color, return_dtype=pl.UInt32)
+        .alias("country_color_int")
+    )
+    return frame.with_columns(
+        pl.col("country_color_int")
+        .map_elements(_hex_color, return_dtype=pl.String)
+        .alias("country_color_hex")
+    )
+
+
+def _subject_variant_rgb(
+    overlord_rgb: tuple[int, int, int],
+    subject_tag: str,
+    subject_type: str,
+) -> tuple[int, int, int]:
+    digest = hashlib.blake2b(
+        f"{subject_tag}:{subject_type}".encode("utf-8"),
+        digest_size=2,
+    ).digest()
+    base = np.array(overlord_rgb, dtype=np.float64)
+    colonial = subject_type == "colonial_nation"
+    lighten = bool(digest[0] & 1) or colonial
+    factor = (0.28 if colonial else 0.16) + (digest[1] % 4) * 0.035
+    target = np.array([255.0, 255.0, 255.0] if lighten else [24.0, 24.0, 24.0])
+    mixed = base * (1.0 - factor) + target * factor
+    return tuple(int(round(value)) for value in mixed.clip(0, 255))
 
 
 def _country_label_column(frame: pl.DataFrame) -> str | None:
@@ -2370,21 +2521,30 @@ def _political_frame_legend(
     country_count = owned.select("country_tag").n_unique() if not owned.is_empty() else 0
     rows.append(("Locations", f"{owned.height:,}"))
     rows.append(("Countries", f"{int(country_count):,}"))
+    if "is_subject" in owned.columns:
+        subjects = int(owned.filter(pl.col("is_subject").fill_null(False)).select("country_tag").n_unique())
+        if subjects:
+            rows.append(("Subjects", f"{subjects:,}"))
+    if "is_colony" in owned.columns:
+        colonies = int(owned.filter(pl.col("is_colony").fill_null(False)).select("country_tag").n_unique())
+        if colonies:
+            rows.append(("Colonies", f"{colonies:,}"))
     if no_data:
         rows.append(("No data", f"{no_data:,}"))
 
     swatches: tuple[tuple[str, str, str], ...] = ()
     required = {"country_tag", "country_label", "country_color_hex"}
     if required.issubset(frame.columns) and not owned.is_empty():
+        label_column = "political_color_label" if "political_color_label" in owned.columns else "country_label"
         swatch_frame = (
-            owned.group_by(["country_tag", "country_label", "country_color_hex"])
+            owned.group_by(["country_tag", label_column, "country_color_hex"])
             .agg(pl.len().alias("locations"))
-            .sort(["locations", "country_label"], descending=[True, False])
+            .sort(["locations", label_column], descending=[True, False])
             .head(limit)
         )
         swatches = tuple(
             (
-                str(row["country_label"] or row["country_tag"]),
+                str(row[label_column] or row["country_tag"]),
                 f"{int(row['locations']):,}",
                 str(row["country_color_hex"] or ""),
             )
@@ -3447,7 +3607,7 @@ def _scalar_frame_label(result: DevelopmentMapResult, index: int) -> str:
 
 def _political_frame_label(result: PoliticalMapResult, index: int) -> str:
     frame = result.frames[index]
-    return f"<b>{result.name}</b> - {frame.year} - owner country colors"
+    return f"<b>{result.name}</b> - {frame.year} - owner and overlord colors"
 
 
 def _normalize_relative_bounds(bounds: tuple[float, float]) -> tuple[float, float]:

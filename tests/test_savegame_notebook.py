@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 
 import polars as pl
 import pytest
@@ -294,11 +295,30 @@ def test_minimal_savegame_notebook_contains_goods_pressure_cell() -> None:
     if not notebook.exists():
         pytest.skip("generated minimal savegame notebook is not present")
     text = notebook.read_text(encoding="utf-8")
-    json.loads(text)
+    parsed = json.loads(text)
     assert "show_goods_pressure" in text
     assert "selected_good_global" in text
     assert "food_and_victuals_prices" in text
     assert "linked_price_stats" in text
+    assert "load_map_assets=True" in text
+    assert "show_population(" in text
+    assert "show_population_map(" in text
+    assert "show_selection" not in text
+
+    for cell in parsed["cells"]:
+        if cell.get("cell_type") != "code":
+            continue
+        lines = [
+            line.strip()
+            for line in "".join(cell.get("source", [])).splitlines()
+            if line.strip() and not line.strip().startswith("#")
+        ]
+        if not lines:
+            continue
+        last_line = lines[-1]
+        assert not re.search(r"\.tail\(", last_line), cell.get("id")
+        assert not last_line.endswith(".df"), cell.get("id")
+        assert last_line not in {"linked_price_stats", "selected_good_global"}, cell.get("id")
 
 
 def _snapshot(snapshot_id: str, year: int, month: int, day: int) -> dict[str, object]:

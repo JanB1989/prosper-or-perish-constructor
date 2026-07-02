@@ -1749,7 +1749,7 @@ def export_global_map_outputs(
         data_root=data_root if data_root is not None else resolved_repo / "graphs" / "dataset",
         load_order_path=load_order_path if load_order_path is not None else resolved_repo / "constructor.load_order.toml",
         profile=profile,
-        tables=("locations", "buildings", "market_food"),
+        tables=("locations", "countries", "buildings", "market_food"),
         load_map_assets=True,
         map_width=map_asset_width,
     )

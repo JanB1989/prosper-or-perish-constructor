@@ -18,6 +18,7 @@ class FakeNotebookData:
         location_dim: pl.DataFrame,
         assets: savegame_maps.SavegameMapAssets,
         buildings: pl.DataFrame | None = None,
+        countries: pl.DataFrame | None = None,
         market_food: pl.DataFrame | None = None,
         market_dim: pl.DataFrame | None = None,
         country_dim: pl.DataFrame | None = None,
@@ -25,6 +26,7 @@ class FakeNotebookData:
         self._locations = locations
         self._location_dim = location_dim
         self._buildings = buildings if buildings is not None else pl.DataFrame()
+        self._countries = countries if countries is not None else pl.DataFrame()
         self._market_food = market_food if market_food is not None else pl.DataFrame()
         self._market_dim = market_dim if market_dim is not None else pl.DataFrame()
         self._country_dim = country_dim if country_dim is not None else pl.DataFrame()
@@ -36,6 +38,8 @@ class FakeNotebookData:
             return self._locations
         if name == "buildings":
             return self._buildings
+        if name == "countries":
+            return self._countries
         if name == "market_food":
             return self._market_food
         return pl.DataFrame()
@@ -617,6 +621,98 @@ def test_political_map_resolves_encoded_country_dimension(tmp_path: Path) -> Non
     rows = result.frame_data.select("slug", "date_sort", "country_tag", "country_label").to_dicts()
     assert {"slug": "bravo", "date_sort": 13420401, "country_tag": "SCO", "country_label": "Scotland"} in rows
     assert {"slug": "bravo", "date_sort": 13470401, "country_tag": "ENG", "country_label": "England"} in rows
+
+
+def test_political_map_tints_subjects_from_overlord_color(tmp_path: Path) -> None:
+    base = _fake_data(tmp_path, include_missing_geometry=False)
+    countries = pl.DataFrame(
+        [
+            {
+                "snapshot_id": snapshot_id,
+                "playthrough_id": "run_1",
+                "date_sort": date_sort,
+                "country_tag": "ENG",
+                "country_name": "England",
+                "subject_type": "",
+                "overlord_tag": "",
+                "overlord_name": "",
+                "is_subject": False,
+                "is_colony": False,
+            }
+            for snapshot_id, date_sort in (("s1", 13420401), ("s2", 13470401))
+        ]
+        + [
+            {
+                "snapshot_id": "s1",
+                "playthrough_id": "run_1",
+                "date_sort": 13420401,
+                "country_tag": "SCO",
+                "country_name": "Scotland",
+                "subject_type": "vassal",
+                "overlord_tag": "ENG",
+                "overlord_name": "England",
+                "is_subject": True,
+                "is_colony": False,
+            },
+            {
+                "snapshot_id": "s1",
+                "playthrough_id": "run_1",
+                "date_sort": 13420401,
+                "country_tag": "FRA",
+                "country_name": "France",
+                "subject_type": "colonial_nation",
+                "overlord_tag": "ENG",
+                "overlord_name": "England",
+                "is_subject": True,
+                "is_colony": True,
+            },
+            {
+                "snapshot_id": "s2",
+                "playthrough_id": "run_1",
+                "date_sort": 13470401,
+                "country_tag": "FRA",
+                "country_name": "France",
+                "subject_type": "colonial_nation",
+                "overlord_tag": "ENG",
+                "overlord_name": "England",
+                "is_subject": True,
+                "is_colony": True,
+            },
+        ]
+    )
+    data = FakeNotebookData(
+        locations=base._locations,
+        location_dim=base._location_dim,
+        assets=base.map_assets,
+        buildings=base._buildings,
+        countries=countries,
+        market_food=base._market_food,
+        market_dim=base._market_dim,
+    )
+
+    result = savegame_maps.political_map(
+        data,
+        scope="super_region",
+        name=None,
+        width=160,
+        country_colors={"ENG": "#ff0000", "SCO": "#00ff00", "FRA": "#0000ff"},
+    )
+
+    bravo = result.frame_data.filter((pl.col("slug") == "bravo") & (pl.col("date_sort") == 13420401)).row(0, named=True)
+    assert bravo["country_tag"] == "SCO"
+    assert bravo["political_color_tag"] == "ENG"
+    assert bravo["subject_type"] == "vassal"
+    assert bravo["country_color_int"] != 0x00FF00
+    assert bravo["country_color_int"] != 0xFF0000
+    assert (bravo["country_color_int"] >> 16) > (bravo["country_color_int"] & 0xFF)
+
+    legend = savegame_maps._political_frame_legend(
+        result.frame_data.filter(pl.col("date_sort") == 13420401),
+        date="1342",
+    )
+    assert ("Subjects", "2") in legend.rows
+    assert ("Colonies", "1") in legend.rows
+    assert any(label == "Scotland (vassal of England)" for label, _locations, _color in legend.swatch_rows)
 
 
 def test_show_building_levels_map_can_skip_widget_display(tmp_path: Path) -> None:

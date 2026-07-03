@@ -1,5 +1,79 @@
 ﻿# >>> eu5-building-pipeline:fine_cloth_guild:building
-TRY_INJECT:fine_cloth_guild = {
+REPLACE:fine_cloth_guild = {
+is_foreign = no
+pop_type = burghers
+max_levels = fine_cloth_guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_fine_cloth_guild_fine_cloth_guild_maintenance = {
+        cloth = 0.988
+        produced = fine_cloth
+        output = 0.5
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_fine_cloth_guild_wool_weavers_maintenance = {
+        wool = 1.186
+        produced = fine_cloth
+        output = 0.5
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_fine_cloth_guild_silk_weavers_maintenance = {
+        silk = 1.041
+        produced = fine_cloth
+        output = 0.7
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_fine_cloth_guild_spanish_cloth_maintenance = {
+        allow = {
+            custom_tooltip = {
+                text = has_unlocked_spanish_cloth_industry
+                has_variable = spanish_cloth_industry
+            }
+        }
+        wool = 1.186
+        produced = fine_cloth
+        output = 0.5
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+}
+unique_production_methods = {
+    pp_fine_cloth_guild_standard_fine_cloth_guild_maintenance = {
+        produced = fine_cloth
+        dyes = 0.141
+        output = 0.1
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_fine_cloth_guild_alum_fine_cloth_guild_maintenance = {
+        alum = 0.061
+        dyes = 0.245
+        produced = fine_cloth
+        output = 0.2
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_fine_cloth_guild_fur_trim_guild_maintenance = {
+        fur = 0.582
+        produced = fine_cloth
+        output = 0.2
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+custom_tags = {
+    guild
+}
+construction_demand = guild_construction
 increase_per_level_cost = 0.14
 }
 # <<< eu5-building-pipeline:fine_cloth_guild:building

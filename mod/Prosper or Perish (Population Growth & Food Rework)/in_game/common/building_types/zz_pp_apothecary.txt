@@ -1,5 +1,35 @@
 ﻿# >>> eu5-building-pipeline:apothecary:building
-TRY_INJECT:apothecary = {
+REPLACE:apothecary = {
+audio_tier = 2
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_apothecary_natural_medicine_apotechary = {
+        wild_game = 0.047
+        fiber_crops = 0.19
+        produced = medicaments
+        output = 0.5
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_apothecary_ancient_medicine_apotechary = {
+        mercury = 0.019
+        ivory = 0.093
+        produced = medicaments
+        output = 0.5
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+construction_demand = guild_construction
 increase_per_level_cost = 0.17
 }
 # <<< eu5-building-pipeline:apothecary:building

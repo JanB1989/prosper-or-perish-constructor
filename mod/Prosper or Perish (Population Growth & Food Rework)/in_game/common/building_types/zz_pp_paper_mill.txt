@@ -1,5 +1,42 @@
 ﻿# >>> eu5-building-pipeline:paper_mill:building
-TRY_INJECT:paper_mill = {
+REPLACE:paper_mill = {
+audio_tier = 5
+is_foreign = no
+pop_type = laborers
+is_mill = yes
+max_levels = mills_max_level
+startup_ramp_target = mills_startup_ramp_target
+category = basic_industry_category
+employment_size = 1.0
+town = yes
+city = yes
+megalopolis = yes
+build_time = mills_build_time
+unique_production_methods = {
+    pp_paper_mill_paper_mill_maintenance = {
+        cloth = 0.161
+        fiber_crops = 1.612
+        produced = paper
+        output = 2.0
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_paper_mill_paper_wood_pulp_maintenance = {
+        lumber = 4.976
+        produced = paper
+        output = 4.5
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+}
+obsolete = paper_manufactory
+custom_tags = {
+    lategame_manufactory
+}
+construction_demand = mill_construction
+raw_modifier = {
+    local_burghers_desired_pop = 0.05
+}
 increase_per_level_cost = 0.16
 }
 # <<< eu5-building-pipeline:paper_mill:building

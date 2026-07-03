@@ -506,13 +506,17 @@ def test_logistics_debug_event_mimics_global_ai_iteration() -> None:
 
 def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> None:
     blueprint = MARKET_VILLAGE_MARKET_ACCESS_BLUEPRINT.read_text(encoding="utf-8")
-    assert "mode: TRY_INJECT" in blueprint
+    assert "mode: REPLACE" in blueprint
     assert "key: market_village" in blueprint
     assert "local_market_access = -0.005" in blueprint
+    assert "unique_production_methods" in blueprint
+    assert "pp_market_village_rural_blacksmith" in blueprint
 
     rendered = MARKET_VILLAGE_MARKET_ACCESS_RENDERED.read_text(encoding="utf-8-sig")
-    assert "TRY_INJECT:market_village" in rendered
+    assert "REPLACE:market_village" in rendered
     assert "local_market_access = -0.005" in rendered
+    assert "unique_production_methods" in rendered
+    assert "pp_market_village_rural_blacksmith" in rendered
 
     profile = load_profile("constructor", ROOT / "constructor.load_order.toml")
     merged = load_merged_directory(profile, "building_types")

@@ -2,9 +2,59 @@ version: 2
 tag: tannery
 building:
   key: tannery
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_tannery_leather_guild_maintenance
+    - pp_tannery_tannery_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    is_foreign = no
+    pop_type = burghers
+    max_levels = guild_max_level
+    startup_ramp_target = guild_startup_ramp_target
+    category = basic_industry_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = guild_build_time
+    unique_production_methods = {
+        pp_tannery_leather_guild_maintenance = {
+            livestock = 1.273
+            sand = 0.509
+            tar = 0.096
+            tools = 0.191
+            debug_max_profit = guild_profit_margin
+            produced = leather
+            output = 1.0
+            category = guild_input
+        }
+        pp_tannery_tannery_maintenance = {
+            wild_game = 1.91
+            sand = 0.509
+            tar = 0.096
+            tools = 0.191
+            produced = leather
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+    }
+    custom_tags = {
+        guild
+    }
+    construction_demand = guild_construction
     increase_per_level_cost = 0.19
+localization:
+  entries:
+    tannery_slot_0: Tannery Work
+    pp_tannery_leather_guild_maintenance: Tannery Leather Guild Maintenance
+    pp_tannery_tannery_maintenance: Tannery Tannery Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

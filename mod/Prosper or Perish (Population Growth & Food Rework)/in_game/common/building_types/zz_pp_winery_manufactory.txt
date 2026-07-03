@@ -1,5 +1,47 @@
 ﻿# >>> eu5-building-pipeline:winery_manufactory:building
-TRY_INJECT:winery_manufactory = {
+REPLACE:winery_manufactory = {
+audio_tier = 3
+is_foreign = no
+pop_type = burghers
+max_levels = manufactory_max_level
+startup_ramp_target = manufactory_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = manufactory_build_time
+obsolete = winery
+unique_production_methods = {
+    pp_winery_manufactory_fruit_winery_manufactory_maintenance = {
+        fruit = 2.202
+        lumber = 0.464
+        tools = 0.231
+        produced = wine
+        output = 2.0
+        category = guild_input
+        debug_max_profit = manufactory_profit_margin
+    }
+    pp_winery_manufactory_rice_winery_manufactory_maintenance = {
+        rice = 2.202
+        lumber = 0.464
+        tools = 0.231
+        produced = wine
+        output = 2.0
+        category = manufactory_input
+        debug_max_profit = manufactory_profit_margin
+    }
+    pp_winery_manufactory_honey_winery_manufactory_maintenance = {
+        beeswax = 1.123
+        lumber = 0.449
+        tools = 0.225
+        produced = wine
+        output = 2.0
+        category = manufactory_input
+        debug_max_profit = manufactory_profit_margin
+    }
+}
+construction_demand = manufactory_construction
 increase_per_level_cost = 0.19
 }
 # <<< eu5-building-pipeline:winery_manufactory:building

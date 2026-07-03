@@ -1,5 +1,38 @@
 ﻿# >>> eu5-building-pipeline:paper_workshop:building
-TRY_INJECT:paper_workshop = {
+REPLACE:paper_workshop = {
+audio_tier = 2
+is_foreign = no
+pop_type = burghers
+max_levels = workshop_max_level
+startup_ramp_target = workshop_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = workshop_build_time
+unique_production_methods = {
+    pp_paper_workshop_paper_workshop_fiber_pulp_maintenance = {
+        fiber_crops = 0.879
+        produced = paper
+        output = 1.0
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_paper_workshop_paper_workshop_cloth_maintenance = {
+        cloth = 0.578
+        lumber = 0.129
+        produced = paper
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+obsolete = paper_guild
+custom_tags = {
+    workshop
+}
+construction_demand = workshop_construction
 increase_per_level_cost = 0.16
 }
 # <<< eu5-building-pipeline:paper_workshop:building

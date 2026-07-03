@@ -2,9 +2,46 @@ version: 2
 tag: printing_press_shop
 building:
   key: printing_press_shop
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_printing_press_shop_printing_press_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    audio_tier = 2
+    is_foreign = no
+    pop_type = burghers
+    max_levels = workshop_max_level
+    startup_ramp_target = workshop_startup_ramp_target
+    category = consumer_goods_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = scriptorium
+    build_time = workshop_build_time
+    unique_production_methods = {
+        pp_printing_press_shop_printing_press_maintenance = {
+            lead = 0.239
+            paper = 0.835
+            tools = 0.03
+            lumber = 0.298
+            produced = books
+            output = 1.0
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+    }
+    construction_demand = workshop_construction
     increase_per_level_cost = 0.21
+localization:
+  entries:
+    printing_press_shop_slot_0: Printing Press Shop Work
+    pp_printing_press_shop_printing_press_maintenance: Printing Press Shop Printing Press Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

@@ -1,5 +1,28 @@
 ﻿# >>> eu5-building-pipeline:dyes_workshop:building
-TRY_INJECT:dyes_workshop = {
+REPLACE:dyes_workshop = {
+audio_tier = 2
+is_foreign = no
+pop_type = burghers
+max_levels = workshop_max_level
+startup_ramp_target = workshop_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+obsolete = dyes_guild
+town = yes
+city = yes
+megalopolis = yes
+build_time = workshop_build_time
+unique_production_methods = {
+    pp_dyes_workshop_dyes_workshop_maintenance = {
+        alum = 0.061
+        lumber = 0.731
+        produced = dyes
+        output = 0.4
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+construction_demand = workshop_construction
 increase_per_level_cost = 0.15
 }
 # <<< eu5-building-pipeline:dyes_workshop:building

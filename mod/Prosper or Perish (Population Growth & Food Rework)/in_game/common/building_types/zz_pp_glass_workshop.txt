@@ -1,5 +1,34 @@
 ﻿# >>> eu5-building-pipeline:glass_workshop:building
-TRY_INJECT:glass_workshop = {
+REPLACE:glass_workshop = {
+audio_tier = 2
+is_foreign = no
+pop_type = burghers
+max_levels = workshop_max_level
+startup_ramp_target = workshop_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = workshop_build_time
+unique_production_methods = {
+    pp_glass_workshop_metal_glass_workshop_maintenance = {
+        lumber = 0.376
+        sand = 1.174
+        tools = 0.481
+        alum = 0.047
+        lead = 0.106
+        produced = glass
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+construction_demand = workshop_construction
+custom_tags = {
+    workshop
+}
+obsolete = glass_guild
 increase_per_level_cost = 0.11
 }
 # <<< eu5-building-pipeline:glass_workshop:building

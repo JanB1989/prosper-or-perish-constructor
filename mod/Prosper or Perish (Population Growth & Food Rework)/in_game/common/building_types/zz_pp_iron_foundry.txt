@@ -1,5 +1,28 @@
 ﻿# >>> eu5-building-pipeline:iron_foundry:building
-TRY_INJECT:iron_foundry = {
+REPLACE:iron_foundry = {
+audio_tier = 3
+is_foreign = no
+pop_type = laborers
+max_levels = manufactory_max_level
+startup_ramp_target = manufactory_startup_ramp_target
+employment_size = 1.0
+category = basic_industry_category
+town = yes
+city = yes
+megalopolis = yes
+build_time = manufactory_build_time
+unique_production_methods = {
+    pp_iron_foundry_iron_foundry_maintenance = {
+        iron = 1.427
+        coal = 0.357
+        category = manufactory_input
+        produced = tools
+        output = 2.0
+        debug_max_profit = manufactory_profit_margin
+    }
+}
+obsolete = tools_workshop
+construction_demand = manufactory_construction
 increase_per_level_cost = 0.16
 }
 # <<< eu5-building-pipeline:iron_foundry:building

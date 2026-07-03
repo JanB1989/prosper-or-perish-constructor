@@ -1,5 +1,33 @@
 ﻿# >>> eu5-building-pipeline:lucca_silk_production_guild:building
-TRY_INJECT:lucca_silk_production_guild = {
+REPLACE:lucca_silk_production_guild = {
+is_special = yes
+is_foreign = no
+pop_type = burghers
+town = yes
+city = yes
+megalopolis = yes
+max_levels = guild_max_level
+category = consumer_goods_category
+employment_size = 0.3
+build_time = guild_build_time
+construction_demand = guild_construction
+country_potential = {
+    always = no
+}
+allow = {
+    has_building = building_type:lucca_silk_production_guild
+}
+custom_tags = {
+    guild
+}
+unique_production_methods = {
+    pp_lucca_silk_production_guild_fiber_crops_silk_guild_maintenance = {
+        fiber_crops = 1.164
+        produced = silk
+        output = 0.6
+        category = guild_input
+    }
+}
 increase_per_level_cost = 0.14
 }
 # <<< eu5-building-pipeline:lucca_silk_production_guild:building

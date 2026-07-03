@@ -437,6 +437,43 @@ def _build_parser() -> argparse.ArgumentParser:
         default=CONSTRUCTOR_PROFILE,
         help="Parser profile from the load-order TOML. Defaults to constructor.",
     )
+    production_profit = _add_command(
+        subcommands,
+        "production-profit",
+        "Report and optionally convert vanilla output-producing building blueprint stubs.",
+        _production_profit,
+    )
+    production_profit.add_argument(
+        "--include-specific",
+        action="store_true",
+        help="Include production methods with potential-specific gates in the profit report.",
+    )
+    production_profit.add_argument(
+        "--load-order",
+        type=Path,
+        default=CONSTRUCTOR_LOAD_ORDER,
+        help="Load-order TOML path relative to --repo. Defaults to constructor.load_order.toml.",
+    )
+    production_profit.add_argument(
+        "--profile",
+        default=CONSTRUCTOR_PROFILE,
+        help="Parser profile from the load-order TOML. Defaults to constructor.",
+    )
+    production_profit.add_argument(
+        "--vanilla-profile",
+        default="vanilla",
+        help="Parser profile used to identify vanilla production buildings. Defaults to vanilla.",
+    )
+    production_profit.add_argument(
+        "--write-blueprints",
+        action="store_true",
+        help="Convert cost-only vanilla production stubs into full REPLACE blueprints.",
+    )
+    production_profit.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="With --write-blueprints, report conversion changes without writing files.",
+    )
     _add_command(
         subcommands,
         "savegame",
@@ -2988,6 +3025,59 @@ def _format_production_throughput_table(
     rows: Sequence[dict[str, Any]], ages: Sequence[str]
 ) -> str:
     return _format_output_modifier_table(rows, ages)
+
+
+def _production_profit(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("production-profit does not accept extra arguments.")
+
+    from prosper_or_perish_constructor.production_profit import (
+        convert_vanilla_production_stubs,
+        production_profit_report,
+    )
+
+    load_order_path = _repo_path(repo, args.load_order)
+    if args.write_blueprints:
+        from prosper_or_perish_constructor.building_scaling import load_building_scaling_config
+
+        scaling = load_building_scaling_config(project)
+        results = convert_vanilla_production_stubs(
+            repo,
+            profile=args.profile,
+            vanilla_profile=args.vanilla_profile,
+            load_order_path=load_order_path,
+            dry_run=args.dry_run,
+            burgher_employment_size=float(scaling.burgher_building_employment_size),
+        )
+        changed = sum(1 for result in results if result.changed)
+        mode = "dry_run" if args.dry_run else "written"
+        print(
+            f"converted_blueprints={len(results)} changed={changed} mode={mode}",
+            flush=True,
+        )
+        for result in results:
+            relative = result.path.relative_to(repo)
+            state = "changed" if result.changed else "unchanged"
+            print(
+                f"  {result.building}: {relative} "
+                f"slots={result.slot_count} methods={result.method_count} {state}",
+                flush=True,
+            )
+        return 0
+
+    print(
+        production_profit_report(
+            repo,
+            profile=args.profile,
+            vanilla_profile=args.vanilla_profile,
+            load_order_path=load_order_path,
+            include_specific=args.include_specific,
+        ),
+        flush=True,
+    )
+    return 0
 
 
 def _savegame(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:

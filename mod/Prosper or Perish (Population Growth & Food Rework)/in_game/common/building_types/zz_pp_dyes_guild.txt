@@ -1,5 +1,33 @@
 ﻿# >>> eu5-building-pipeline:dyes_guild:building
-TRY_INJECT:dyes_guild = {
+REPLACE:dyes_guild = {
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_dyes_guild_dyes_guild_maintenance = {
+        lumber = 0.444
+        produced = dyes
+        output = 0.2
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_dyes_guild_alum_dyes_guild_maintenance = {
+        alum = 0.021
+        lumber = 0.625
+        produced = dyes
+        output = 0.3
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+construction_demand = guild_construction
 increase_per_level_cost = 0.15
 }
 # <<< eu5-building-pipeline:dyes_guild:building

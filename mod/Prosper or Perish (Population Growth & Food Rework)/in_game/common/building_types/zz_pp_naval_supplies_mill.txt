@@ -1,5 +1,37 @@
 ﻿# >>> eu5-building-pipeline:naval_supplies_mill:building
-TRY_INJECT:naval_supplies_mill = {
+REPLACE:naval_supplies_mill = {
+audio_tier = 5
+is_foreign = no
+pop_type = laborers
+is_mill = yes
+max_levels = mills_max_level
+startup_ramp_target = mills_startup_ramp_target
+category = weapons_industry_category
+employment_size = 1.0
+town = yes
+city = yes
+megalopolis = yes
+build_time = mills_build_time
+obsolete = naval_supplies_manufactory
+unique_production_methods = {
+    pp_naval_supplies_mill_naval_supplies_mill_maintenance = {
+        lumber = 2.285
+        fiber_crops = 1.713
+        tar = 1.713
+        cloth = 0.286
+        produced = naval_supplies
+        output = 4.0
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+}
+custom_tags = {
+    lategame_manufactory
+}
+construction_demand = mill_construction
+raw_modifier = {
+    local_burghers_desired_pop = 0.05
+}
 increase_per_level_cost = 0.20
 }
 # <<< eu5-building-pipeline:naval_supplies_mill:building

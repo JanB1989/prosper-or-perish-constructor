@@ -1,5 +1,42 @@
 ﻿# >>> eu5-building-pipeline:rural_clothmaker:building
-TRY_INJECT:rural_clothmaker = {
+REPLACE:rural_clothmaker = {
+audio_tier = 1
+is_foreign = no
+pop_type = laborers
+max_levels = guild_max_level
+startup_ramp_target = rural_startup_ramp_target
+forbidden_for_estates = yes
+category = consumer_goods_category
+employment_size = 1.0
+rural_settlement = yes
+town = no
+city = no
+build_time = rural_build_time
+unique_production_methods = {
+    pp_rural_clothmaker_rural_wool_clothmaker = {
+        wool = 0.571
+        produced = cloth
+        output = 0.5
+        debug_max_profit = rural_profit_margin
+        category = guild_input
+    }
+    pp_rural_clothmaker_rural_cotton_clothmaker = {
+        cotton = 0.476
+        produced = cloth
+        output = 0.5
+        debug_max_profit = rural_profit_margin
+        category = guild_input
+    }
+    pp_rural_clothmaker_rural_fiber_clothmaker = {
+        fiber_crops = 0.564
+        produced = cloth
+        output = 0.4
+        debug_max_profit = rural_profit_margin
+        category = guild_input
+    }
+}
+construction_demand = village_construction
+modifier = {}
 increase_per_level_cost = 0.14
 }
 # <<< eu5-building-pipeline:rural_clothmaker:building

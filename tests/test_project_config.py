@@ -402,6 +402,19 @@ def test_accepted_blueprints_validate() -> None:
         validate_blueprint_file(blueprint)
 
 
+def test_building_blueprints_do_not_emit_orphaned_optional_comparisons() -> None:
+    pattern = re.compile(r"^\s*\? =", re.MULTILINE)
+    offenders: list[str] = []
+    for path in accepted_blueprint_files(ROOT / "blueprints" / "accepted"):
+        if pattern.search(path.read_text(encoding="utf-8-sig")):
+            offenders.append(str(path.relative_to(ROOT)))
+    for path in BUILDING_TYPE_ROOT.glob("*.txt"):
+        if pattern.search(path.read_text(encoding="utf-8-sig")):
+            offenders.append(str(path.relative_to(ROOT)))
+
+    assert not offenders
+
+
 def test_farm_capacity_values_are_flat_visible_sums() -> None:
     parsed = parse_file(FARMING_CAPACITY)
     entries = {entry.key: entry.value for entry in parsed.entries}
@@ -1628,6 +1641,12 @@ def _assert_absent_or_cost_only_building_inject(path: Path) -> None:
     building = raw["building"]
     body = building["body"]
 
+    if building["mode"] == "REPLACE":
+        assert building.get("production_method_slots")
+        assert "unique_production_methods" in body
+        assert "possible_production_methods" not in body
+        return
+
     assert building["mode"] == "TRY_INJECT"
     assert "location_potential" not in body
     assert re.fullmatch(r"\s*increase_per_level_cost\s*=\s*0\.\d{2}\s*", body)
@@ -2722,7 +2741,7 @@ def test_cookery_building_line_has_resolved_prices() -> None:
 
 def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -> None:
     scoped_blueprints = _normalized_production_site_blueprints()
-    assert len(scoped_blueprints) == 99
+    assert len(scoped_blueprints) == 102
 
     for building, blueprint in scoped_blueprints:
         blueprint_values = _accepted_blueprint_building_values_from_path(blueprint)

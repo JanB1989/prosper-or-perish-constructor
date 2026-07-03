@@ -2,9 +2,67 @@ version: 2
 tag: weapon_guild
 building:
   key: weapon_guild
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_weapon_guild_pre_columbian_weapon_smith_maintenance
+    - pp_weapon_guild_weapon_smith_maintenance
+    - pp_weapon_guild_weapon_guild_obsidian_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    is_foreign = no
+    pop_type = burghers
+    max_levels = guild_max_level
+    startup_ramp_target = guild_startup_ramp_target
+    category = weapons_industry_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = guild_build_time
+    unique_production_methods = {
+        pp_weapon_guild_pre_columbian_weapon_smith_maintenance = {
+            lumber = 0.07
+            stone = 1.005
+            produced = weaponry
+            output = 0.4
+            category = guild_input
+            debug_max_profit = guild_profit_margin
+        }
+        pp_weapon_guild_weapon_smith_maintenance = {
+            lumber = 0.288
+            coal = 0.347
+            tools = 0.577
+            category = guild_input
+            produced = weaponry
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+        }
+        pp_weapon_guild_weapon_guild_obsidian_maintenance = {
+            lumber = 0.122
+            stone = 0.507
+            gems = 0.102
+            produced = weaponry
+            output = 0.4
+            category = guild_input
+            debug_max_profit = guild_profit_margin
+        }
+    }
+    custom_tags = {
+        guild
+    }
+    construction_demand = guild_construction
     increase_per_level_cost = 0.25
+localization:
+  entries:
+    weapon_guild_slot_0: Weapon Guild Work
+    pp_weapon_guild_pre_columbian_weapon_smith_maintenance: Weapon Guild Pre Columbian Weapon Smith Maintenance
+    pp_weapon_guild_weapon_smith_maintenance: Weapon Guild Weapon Smith Maintenance
+    pp_weapon_guild_weapon_guild_obsidian_maintenance: Weapon Guild Weapon Guild Obsidian Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

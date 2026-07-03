@@ -1620,6 +1620,23 @@ def test_game_start_rgo_reduction_cannot_zero_max_workers() -> None:
     text = GAME_START_PATH.read_text(encoding="utf-8-sig")
     assert "pp_reset_rgo_max_workers" not in text
 
+    on_game_start = _first_script_block(text, "on_game_start")
+    assert on_game_start.index("pp_raise_zero_rgo_max_workers") < on_game_start.index(
+        "pp_reduce_specific_rgo"
+    )
+
+    floor = _first_script_block(text, "pp_raise_zero_rgo_max_workers")
+    assert "exists = raw_material" in floor
+    assert re.search(r"NOT\s*=\s*\{\s*max_rgo_workers\s*>=\s*1\s*\}", floor)
+    assert re.search(
+        r"change_max_raw_material_workers\s*=\s*\{\s*"
+        r"value\s*=\s*max_rgo_workers\s*"
+        r"multiply\s*=\s*-1\s*"
+        r"add\s*=\s*1\s*"
+        r"\}",
+        floor,
+    )
+
     reducer = _first_script_block(text, "pp_reduce_specific_rgo")
     branch_blocks = _iter_script_blocks(reducer, "if") + _iter_script_blocks(reducer, "else_if")
     offenders: list[str] = []

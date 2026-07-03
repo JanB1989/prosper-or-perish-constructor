@@ -1,5 +1,73 @@
 ﻿# >>> eu5-building-pipeline:jewelry_guild:building
-TRY_INJECT:jewelry_guild = {
+REPLACE:jewelry_guild = {
+audio_tier = 1
+is_foreign = no
+pop_type = burghers
+max_levels = jewelry_guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_jewelry_guild_gold_base = {
+        goods_gold = 0.621
+        produced = jewelry
+        output = 1.0
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_jewelry_guild_silver_base = {
+        silver = 0.827
+        produced = jewelry
+        output = 1.0
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_jewelry_guild_copper_base = {
+        copper = 1.655
+        produced = jewelry
+        output = 1.0
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+}
+unique_production_methods = {
+    pp_jewelry_guild_ivory_enhancement = {
+        ivory = 0.116
+        produced = jewelry
+        output = 0.1
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_jewelry_guild_amber_enhancement = {
+        amber = 0.116
+        produced = jewelry
+        output = 0.1
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_jewelry_guild_gems_enhancement = {
+        gems = 0.116
+        produced = jewelry
+        output = 0.1
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_jewelry_guild_pearls_enhancement = {
+        pearls = 0.116
+        produced = jewelry
+        output = 0.1
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+}
+custom_tags = {
+    guild
+}
+construction_demand = guild_construction
 increase_per_level_cost = 0.19
 }
 # <<< eu5-building-pipeline:jewelry_guild:building

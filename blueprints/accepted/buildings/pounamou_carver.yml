@@ -2,9 +2,54 @@ version: 2
 tag: pounamou_carver
 building:
   key: pounamou_carver
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_pounamou_carver_pounamou_carver_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    is_special = yes
+    is_foreign = no
+    pop_type = burghers
+    max_levels = guild_max_level
+    startup_ramp_target = rural_startup_ramp_target
+    employment_size = 0.3
+    build_time = rural_build_time
+    category = consumer_goods_category
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    location_potential = {
+        dominant_culture ?= culture:maori_culture
+    }
+    country_potential = {
+        culture ?= culture:maori_culture
+    }
+    allow = {
+        market = {
+            is_produced_in_market = goods:gems
+        }
+    }
+    unique_production_methods = {
+        pp_pounamou_carver_pounamou_carver_maintenance = {
+            gems = 0.232
+            produced = jewelry
+            output = 0.2
+            debug_max_profit = rural_profit_margin
+            category = guild_input
+        }
+    }
+    construction_demand = guild_construction
     increase_per_level_cost = 0.25
+localization:
+  entries:
+    pounamou_carver_slot_0: Pounamou Carver Work
+    pp_pounamou_carver_pounamou_carver_maintenance: Pounamou Carver Pounamou Carver Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

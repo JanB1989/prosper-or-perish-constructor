@@ -1,5 +1,48 @@
 ﻿# >>> eu5-building-pipeline:tools_guild:building
-TRY_INJECT:tools_guild = {
+REPLACE:tools_guild = {
+audio_tier = 1
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_tools_guild_metalwork_guild_maintenance = {
+        iron = 0.837
+        produced = tools
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_tools_guild_stone_tools_guild_maintenance = {
+        stone = 0.678
+        produced = tools
+        output = 0.25
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_tools_guild_bronze_tools_guild_maintenance = {
+        copper = 0.547
+        tin = 0.044
+        produced = tools
+        output = 0.6
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_tools_guild_copper_tools_guild_maintenance = {
+        copper = 0.526
+        produced = tools
+        output = 0.55
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+construction_demand = guild_construction
 increase_per_level_cost = 0.16
 }
 # <<< eu5-building-pipeline:tools_guild:building

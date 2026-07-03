@@ -1,5 +1,43 @@
 ﻿# >>> eu5-building-pipeline:tannery_manufactory:building
-TRY_INJECT:tannery_manufactory = {
+REPLACE:tannery_manufactory = {
+audio_tier = 3
+is_foreign = no
+pop_type = burghers
+max_levels = manufactory_max_level
+startup_ramp_target = manufactory_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = manufactory_build_time
+unique_production_methods = {
+    pp_tannery_manufactory_leather_manufactory_maintenance = {
+        livestock = 2.554
+        sand = 1.197
+        tar = 0.16
+        tools = 0.32
+        produced = leather
+        output = 2.0
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+    pp_tannery_manufactory_tannery_manufactory_maintenance = {
+        wild_game = 3.778
+        sand = 1.232
+        tar = 0.165
+        tools = 0.328
+        produced = leather
+        output = 2.0
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+}
+obsolete = tanning_workshop
+custom_tags = {
+    midgame_manufactory
+}
+construction_demand = manufactory_construction
 increase_per_level_cost = 0.14
 }
 # <<< eu5-building-pipeline:tannery_manufactory:building

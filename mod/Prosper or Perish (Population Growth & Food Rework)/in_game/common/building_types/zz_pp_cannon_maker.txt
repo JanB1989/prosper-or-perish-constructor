@@ -1,5 +1,70 @@
 ﻿# >>> eu5-building-pipeline:cannon_maker:building
-TRY_INJECT:cannon_maker = {
+REPLACE:cannon_maker = {
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = weapons_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_cannon_maker_cannon_maker_lumber_maintenance = {
+        lumber = 0.107
+        iron = 0.04
+        tools = 0.017
+        produced = cannons
+        output = 0.1
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_cannon_maker_cannon_maker_bronze_maintenance = {
+        copper = 0.619
+        tin = 0.124
+        tools = 0.619
+        produced = cannons
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_cannon_maker_cannon_maker_iron_maintenance = {
+        iron = 0.66
+        tools = 0.55
+        produced = cannons
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+unique_production_methods = {
+    pp_cannon_maker_cannon_maker_ammunition_stone_maintenance = {
+        stone = 0.104
+        saltpeter = 0.104
+        produced = cannons
+        output = 0.087
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_cannon_maker_cannon_maker_ammunition_lead_maintenance = {
+        lead = 0.111
+        saltpeter = 0.111
+        produced = cannons
+        output = 0.12
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_cannon_maker_cannon_maker_ammunition_iron_maintenance = {
+        iron = 0.11
+        saltpeter = 0.11
+        produced = cannons
+        output = 0.16
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+construction_demand = guild_construction
 increase_per_level_cost = 0.19
 }
 # <<< eu5-building-pipeline:cannon_maker:building

@@ -1,5 +1,45 @@
 ﻿# >>> eu5-building-pipeline:cloth_workshop:building
-TRY_INJECT:cloth_workshop = {
+REPLACE:cloth_workshop = {
+audio_tier = 2
+is_foreign = no
+pop_type = burghers
+max_levels = workshop_max_level
+startup_ramp_target = workshop_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+obsolete = cloth_guild
+town = yes
+city = yes
+megalopolis = yes
+build_time = workshop_build_time
+unique_production_methods = {
+    pp_cloth_workshop_cotton_cloth_workshop_maintenance = {
+        cotton = 1.013
+        produced = cloth
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_cloth_workshop_wool_cloth_workshop_maintenance = {
+        wool = 1.216
+        produced = cloth
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance = {
+        fiber_crops = 1.22
+        produced = cloth
+        output = 0.9
+        category = workshop_input
+        debug_max_profit = workshop_profit_margin
+    }
+}
+construction_demand = workshop_construction
+custom_tags = {
+    workshop
+}
+modifier = {}
 increase_per_level_cost = 0.14
 }
 # <<< eu5-building-pipeline:cloth_workshop:building

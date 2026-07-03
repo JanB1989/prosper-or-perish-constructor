@@ -1,5 +1,45 @@
 ﻿# >>> eu5-building-pipeline:paper_guild:building
-TRY_INJECT:paper_guild = {
+REPLACE:paper_guild = {
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_paper_guild_paper_guild_leather_maintenance = {
+        leather = 0.195
+        lumber = 0.195
+        produced = paper
+        output = 0.5
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_paper_guild_paper_guild_fiber_pulp_maintenance = {
+        fiber_crops = 0.746
+        lumber = 0.249
+        produced = paper
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_paper_guild_paper_guild_cloth_maintenance = {
+        cloth = 0.576
+        lumber = 0.115
+        produced = paper
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+custom_tags = {
+    guild
+}
+construction_demand = guild_construction
 increase_per_level_cost = 0.16
 }
 # <<< eu5-building-pipeline:paper_guild:building

@@ -2,9 +2,50 @@ version: 2
 tag: glass_workshop
 building:
   key: glass_workshop
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_glass_workshop_metal_glass_workshop_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    audio_tier = 2
+    is_foreign = no
+    pop_type = burghers
+    max_levels = workshop_max_level
+    startup_ramp_target = workshop_startup_ramp_target
+    category = basic_industry_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = workshop_build_time
+    unique_production_methods = {
+        pp_glass_workshop_metal_glass_workshop_maintenance = {
+            lumber = 0.376
+            sand = 1.174
+            tools = 0.481
+            alum = 0.047
+            lead = 0.106
+            produced = glass
+            output = 1.1
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+    }
+    construction_demand = workshop_construction
+    custom_tags = {
+        workshop
+    }
+    obsolete = glass_guild
     increase_per_level_cost = 0.15
+localization:
+  entries:
+    glass_workshop_slot_0: Glass Workshop Work
+    pp_glass_workshop_metal_glass_workshop_maintenance: Glass Workshop Metal Glass Workshop Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

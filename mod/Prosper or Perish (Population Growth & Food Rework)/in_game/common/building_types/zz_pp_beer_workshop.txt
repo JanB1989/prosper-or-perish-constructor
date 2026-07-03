@@ -1,5 +1,86 @@
 ﻿# >>> eu5-building-pipeline:beer_workshop:building
-TRY_INJECT:beer_workshop = {
+REPLACE:beer_workshop = {
+audio_tier = 2
+is_foreign = no
+pop_type = burghers
+max_levels = workshop_max_level
+startup_ramp_target = workshop_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = workshop_build_time
+unique_production_methods = {
+    pp_beer_workshop_wheat_beer_workshop_maintenance = {
+        wheat = 1.117
+        lumber = 0.279
+        tools = 0.112
+        produced = beer
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_beer_workshop_millet_beer_workshop_maintenance = {
+        millet = 1.117
+        lumber = 0.279
+        tools = 0.112
+        produced = beer
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_beer_workshop_fruit_beer_workshop_maintenance = {
+        fruit = 1.175
+        lumber = 0.235
+        tools = 0.118
+        produced = beer
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_beer_workshop_maize_beer_workshop_maintenance = {
+        maize = 1.576
+        pottery = 0.364
+        produced = beer
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_beer_workshop_bavarian_beer_workshop_maintenance = {
+        wheat = 1.47
+        lumber = 0.267
+        tools = 0.134
+        produced = beer
+        output = 1.3
+        category = workshop_input
+        debug_max_profit = workshop_profit_margin
+    }
+    pp_beer_workshop_honey_beer_workshop_maintenance = {
+        beeswax = 0.294
+        millet = 0.588
+        lumber = 0.235
+        tools = 0.118
+        produced = beer
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_beer_workshop_rice_beer_workshop_maintenance = {
+        rice = 1.117
+        lumber = 0.279
+        tools = 0.112
+        produced = beer
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+obsolete = brewery
+custom_tags = {
+    workshop
+}
+construction_demand = workshop_construction
 increase_per_level_cost = 0.11
 }
 # <<< eu5-building-pipeline:beer_workshop:building

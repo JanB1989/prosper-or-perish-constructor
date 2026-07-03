@@ -1,5 +1,35 @@
 ﻿# >>> eu5-building-pipeline:glassworks:building
-TRY_INJECT:glassworks = {
+REPLACE:glassworks = {
+audio_tier = 3
+is_foreign = no
+pop_type = burghers
+max_levels = manufactory_max_level
+startup_ramp_target = manufactory_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = manufactory_build_time
+unique_production_methods = {
+    pp_glassworks_glassworks_maintenance = {
+        lumber = 0.489
+        sand = 2.574
+        stone = 0.231
+        tools = 0.733
+        coal = 0.489
+        alum = 0.052
+        produced = glass
+        output = 2.0
+        debug_max_profit = manufactory_profit_margin
+        category = workshop_input
+    }
+}
+obsolete = glass_workshop
+custom_tags = {
+    midgame_manufactory
+}
+construction_demand = manufactory_construction
 increase_per_level_cost = 0.11
 }
 # <<< eu5-building-pipeline:glassworks:building

@@ -5,6 +5,7 @@ on_game_start = {
 	on_actions = {
 		pp_mod_welcome_situation_game_start
 		pp_apply_rgo_static_modifiers
+		pp_raise_zero_rgo_max_workers
 		pp_reduce_specific_rgo
 		pp_precalculate_building_capacities
 		pp_apply_location_modifiers
@@ -13,6 +14,23 @@ on_game_start = {
 		pp_game_start_effect
 		pp_food_building_startup
 		# pp_remove_invalid_buildings # we leave this off as it somehow causes crashes?
+	}
+}
+
+# Ensure every raw-material location has at least one max RGO worker before any startup reductions.
+pp_raise_zero_rgo_max_workers = {
+	effect = {
+		every_location_in_the_world = {
+			limit = {
+				exists = raw_material
+				NOT = { max_rgo_workers >= 1 }
+			}
+			change_max_raw_material_workers = {
+				value = max_rgo_workers
+				multiply = -1
+				add = 1
+			}
+		}
 	}
 }
 

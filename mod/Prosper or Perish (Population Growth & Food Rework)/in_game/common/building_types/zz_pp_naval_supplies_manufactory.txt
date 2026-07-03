@@ -1,5 +1,33 @@
 ﻿# >>> eu5-building-pipeline:naval_supplies_manufactory:building
-TRY_INJECT:naval_supplies_manufactory = {
+REPLACE:naval_supplies_manufactory = {
+audio_tier = 3
+is_foreign = no
+pop_type = burghers
+max_levels = manufactory_max_level
+startup_ramp_target = manufactory_startup_ramp_target
+category = weapons_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = manufactory_build_time
+obsolete = naval_supplies_workshop
+unique_production_methods = {
+    pp_naval_supplies_manufactory_naval_supplies_manufactory_maintenance = {
+        lumber = 1.038
+        fiber_crops = 0.779
+        tar = 0.779
+        cloth = 0.259
+        produced = naval_supplies
+        output = 2.0
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+}
+custom_tags = {
+    midgame_manufactory
+}
+construction_demand = manufactory_construction
 increase_per_level_cost = 0.20
 }
 # <<< eu5-building-pipeline:naval_supplies_manufactory:building

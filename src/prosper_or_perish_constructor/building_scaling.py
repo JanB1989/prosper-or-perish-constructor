@@ -16,15 +16,18 @@ from eu5gameparser.clausewitz.syntax import CList
 CONFIG_SECTION = "building_scaling"
 WORKER_VICTUALS_FOOD_NEED_RATIO_FIELD = "worker_victuals_food_need_ratio"
 INCREASE_PER_LEVEL_COST_MULTIPLIER_FIELD = "increase_per_level_cost_multiplier"
+BURGHER_BUILDING_EMPLOYMENT_SIZE_FIELD = "burgher_building_employment_size"
 BUILDING_BLUEPRINT_MANIFEST_RELATIVE = Path("blueprints/buildings.manifest.yml")
 BUILDING_BLUEPRINT_ROOT_RELATIVE = Path("blueprints/accepted")
 BUILDING_TYPES_RELATIVE = Path("in_game/common/building_types")
+EMPLOYMENT_SIZE_STEP = Decimal("0.05")
 
 
 @dataclass(frozen=True)
 class BuildingScalingConfig:
     worker_victuals_food_need_ratio: Decimal
     increase_per_level_cost_multiplier: Decimal
+    burgher_building_employment_size: Decimal
 
 
 @dataclass(frozen=True)
@@ -56,9 +59,23 @@ def load_building_scaling_config(path: Path) -> BuildingScalingConfig:
         raise ValueError(
             f"{path}: {CONFIG_SECTION}.{INCREASE_PER_LEVEL_COST_MULTIPLIER_FIELD} must be non-negative"
         )
+    burgher_employment_size = _decimal_config_value(
+        section.get(BURGHER_BUILDING_EMPLOYMENT_SIZE_FIELD, "1.0"),
+        f"{CONFIG_SECTION}.{BURGHER_BUILDING_EMPLOYMENT_SIZE_FIELD}",
+    )
+    if burgher_employment_size <= 0:
+        raise ValueError(
+            f"{path}: {CONFIG_SECTION}.{BURGHER_BUILDING_EMPLOYMENT_SIZE_FIELD} must be positive"
+        )
+    if not _is_employment_step(burgher_employment_size):
+        raise ValueError(
+            f"{path}: {CONFIG_SECTION}.{BURGHER_BUILDING_EMPLOYMENT_SIZE_FIELD} "
+            f"must be a multiple of {EMPLOYMENT_SIZE_STEP}"
+        )
     return BuildingScalingConfig(
         worker_victuals_food_need_ratio=ratio,
         increase_per_level_cost_multiplier=increase_cost_multiplier,
+        burgher_building_employment_size=burgher_employment_size,
     )
 
 
@@ -139,6 +156,11 @@ def _decimal_config_value(value: Any, name: str) -> Decimal:
     if not result.is_finite():
         raise ValueError(f"{name} must be finite")
     return result
+
+
+def _is_employment_step(value: Decimal) -> bool:
+    ratio = value / EMPLOYMENT_SIZE_STEP
+    return ratio == ratio.to_integral_value()
 
 
 def _accepted_blueprint_increase_per_level_costs(repo: Path) -> dict[str, Decimal]:

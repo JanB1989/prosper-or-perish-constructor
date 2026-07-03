@@ -1,5 +1,51 @@
 ﻿# >>> eu5-building-pipeline:textile_mill:building
-TRY_INJECT:textile_mill = {
+REPLACE:textile_mill = {
+audio_tier = 5
+is_foreign = no
+pop_type = laborers
+is_mill = yes
+max_levels = mills_max_level
+startup_ramp_target = mills_startup_ramp_target
+category = consumer_goods_category
+employment_size = 1.0
+town = yes
+city = yes
+megalopolis = yes
+obsolete = cloth_manufactory
+build_time = mills_build_time
+unique_production_methods = {
+    pp_textile_mill_cotton_mill_maintenance = {
+        cotton = 2.464
+        dyes = 0.329
+        produced = cloth
+        output = 3.0
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_textile_mill_wool_mill_maintenance = {
+        wool = 2.376
+        dyes = 0.317
+        produced = cloth
+        output = 2.5
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_textile_mill_fiber_crops_mill_maintenance = {
+        fiber_crops = 3.004
+        dyes = 0.3
+        produced = cloth
+        output = 2.5
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+}
+custom_tags = {
+    lategame_manufactory
+}
+construction_demand = mill_construction
+raw_modifier = {
+    local_burghers_desired_pop = 0.05
+}
 increase_per_level_cost = 0.14
 }
 # <<< eu5-building-pipeline:textile_mill:building

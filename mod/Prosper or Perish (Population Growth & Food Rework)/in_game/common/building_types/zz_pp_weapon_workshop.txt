@@ -1,5 +1,33 @@
 ﻿# >>> eu5-building-pipeline:weapon_workshop:building
-TRY_INJECT:weapon_workshop = {
+REPLACE:weapon_workshop = {
+audio_tier = 2
+is_foreign = no
+pop_type = burghers
+max_levels = workshop_max_level
+startup_ramp_target = workshop_startup_ramp_target
+category = weapons_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = workshop_build_time
+unique_production_methods = {
+    pp_weapon_workshop_weapon_workshop_maintenance = {
+        lumber = 0.353
+        coal = 0.353
+        iron = 0.294
+        tools = 0.235
+        category = workshop_input
+        produced = weaponry
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+    }
+}
+obsolete = weapon_guild
+custom_tags = {
+    workshop
+}
+construction_demand = workshop_construction
 increase_per_level_cost = 0.19
 }
 # <<< eu5-building-pipeline:weapon_workshop:building

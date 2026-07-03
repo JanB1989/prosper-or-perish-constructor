@@ -1,5 +1,59 @@
 ﻿# >>> eu5-building-pipeline:guns_workshop:building
-TRY_INJECT:guns_workshop = {
+REPLACE:guns_workshop = {
+audio_tier = 2
+is_foreign = no
+pop_type = burghers
+max_levels = workshop_max_level
+startup_ramp_target = workshop_startup_ramp_target
+category = weapons_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = workshop_build_time
+unique_production_methods = {
+    pp_guns_workshop_guns_workshop_bronze_maintenance = {
+        copper = 0.601
+        tin = 0.12
+        tools = 0.375
+        produced = firearms
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_guns_workshop_guns_workshop_iron_maintenance = {
+        iron = 0.534
+        tools = 0.333
+        produced = firearms
+        output = 1.0
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+unique_production_methods = {
+    pp_guns_workshop_guns_workshop_ammunition_lead_maintenance = {
+        lead = 0.12
+        saltpeter = 0.12
+        produced = firearms
+        output = 0.2
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_guns_workshop_guns_workshop_ammunition_iron_maintenance = {
+        iron = 0.12
+        saltpeter = 0.12
+        produced = firearms
+        output = 0.25
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+obsolete = gun_smith
+construction_demand = workshop_construction
+modifier = {}
+custom_tags = {
+    workshop
+}
 increase_per_level_cost = 0.19
 }
 # <<< eu5-building-pipeline:guns_workshop:building

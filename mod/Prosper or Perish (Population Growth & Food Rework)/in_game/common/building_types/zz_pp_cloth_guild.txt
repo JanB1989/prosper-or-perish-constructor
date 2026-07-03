@@ -1,5 +1,43 @@
 ﻿# >>> eu5-building-pipeline:cloth_guild:building
-TRY_INJECT:cloth_guild = {
+REPLACE:cloth_guild = {
+is_foreign = no
+pop_type = burghers
+max_levels = cloth_guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_cloth_guild_cotton_cloth_guild_maintenance = {
+        cotton = 0.976
+        produced = cloth
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_cloth_guild_wool_cloth_guild_maintenance = {
+        wool = 1.171
+        produced = cloth
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_cloth_guild_fiber_crops_cloth_guild_maintenance = {
+        fiber_crops = 1.164
+        produced = cloth
+        output = 0.8
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+construction_demand = guild_construction
+custom_tags = {
+    guild
+}
+modifier = {}
 increase_per_level_cost = 0.14
 }
 # <<< eu5-building-pipeline:cloth_guild:building

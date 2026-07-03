@@ -2,9 +2,57 @@ version: 2
 tag: schwaz_mine
 building:
   key: schwaz_mine
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_schwaz_mine_schwaz_mine_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    audio_tier = 3
+    is_special = yes
+    is_foreign = no
+    pop_type = laborers
+    max_levels = 1
+    startup_ramp_target = rural_startup_ramp_target
+    category = rgo_building_category
+    employment_size = 1.0
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    country_potential = {
+        always = no
+    }
+    allow = {
+        always = no
+    }
+    build_time = infrastructure_build_time
+    unique_production_methods = {
+        pp_schwaz_mine_schwaz_mine_maintenance = {
+            tools = 0.452
+            leather = 0.544
+            lumber = 0.905
+            stone = 0.905
+            liquor = 0.181
+            produced = silver
+            output = 1.0
+            debug_max_profit = rural_profit_margin
+            category = building_maintenance
+        }
+    }
+    modifier = {
+        local_silver_output_modifier = 2.0
+    }
+    construction_demand = basic_construction_needs
     increase_per_level_cost = 0.28
+localization:
+  entries:
+    schwaz_mine_slot_0: Schwaz Mine Work
+    pp_schwaz_mine_schwaz_mine_maintenance: Schwaz Mine Schwaz Mine Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

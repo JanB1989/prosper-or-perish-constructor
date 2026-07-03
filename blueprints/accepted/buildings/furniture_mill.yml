@@ -2,9 +2,49 @@ version: 2
 tag: furniture_mill
 building:
   key: furniture_mill
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_furniture_mill_furniture_mill_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    audio_tier = 5
+    is_foreign = no
+    pop_type = laborers
+    is_mill = yes
+    max_levels = mills_max_level
+    startup_ramp_target = mills_startup_ramp_target
+    category = consumer_goods_category
+    employment_size = 1.0
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = furniture_manufactory
+    build_time = mills_build_time
+    unique_production_methods = {
+        pp_furniture_mill_furniture_mill_maintenance = {
+            lumber = 4.562
+            dyes = 0.532
+            tools = 0.532
+            produced = furniture
+            output = 4.0
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+    }
+    construction_demand = mill_construction
+    raw_modifier = {
+        local_burghers_desired_pop = 0.05
+    }
     increase_per_level_cost = 0.25
+localization:
+  entries:
+    furniture_mill_slot_0: Furniture Mill Work
+    pp_furniture_mill_furniture_mill_maintenance: Furniture Mill Furniture Mill Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

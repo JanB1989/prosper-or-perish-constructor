@@ -2,9 +2,65 @@ version: 2
 tag: slave_market
 building:
   key: slave_market
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_slave_market_slave_market_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    audio_tier = 2
+    is_foreign = no
+    max_levels = slave_market_max_level
+    startup_ramp_target = rural_startup_ramp_target
+    pop_type = burghers
+    category = government_category
+    employment_size = 0.3
+    rural_settlement = no
+    town = yes
+    city = yes
+    megalopolis = yes
+    country_potential = {
+        religion ?= {
+            group != religion_group:christian
+        }
+    }
+    allow = {
+        scope:actor = {
+            has_slavery = yes
+        }
+    }
+    remove_if = {
+        scope:actor = {
+            has_slavery = no
+        }
+    }
+    build_time = generic_town_build_time
+    unique_production_methods = {
+        pp_slave_market_slave_market_maintenance = {
+            leather = 0.624
+            tools = 0.567
+            weaponry = 0.499
+            paper = 0.43
+            produced = slaves_goods
+            output = 2.0
+            debug_max_profit = rural_profit_margin
+            category = building_maintenance
+        }
+    }
+    modifier = {
+        building_enslavement_power = 0.1
+        local_slave_pop_satisfaction = -0.025
+    }
+    construction_demand = town_building_construction
     increase_per_level_cost = 0.20
+localization:
+  entries:
+    slave_market_slot_0: Slave Market Work
+    pp_slave_market_slave_market_maintenance: Slave Market Slave Market Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

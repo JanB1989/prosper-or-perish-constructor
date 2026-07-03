@@ -1,5 +1,27 @@
 ﻿# >>> eu5-building-pipeline:tools_workshop:building
-TRY_INJECT:tools_workshop = {
+REPLACE:tools_workshop = {
+audio_tier = 2
+is_foreign = no
+pop_type = burghers
+max_levels = workshop_max_level
+startup_ramp_target = workshop_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = workshop_build_time
+unique_production_methods = {
+    pp_tools_workshop_metalwork_workshop_maintenance = {
+        iron = 0.88
+        produced = tools
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+construction_demand = workshop_construction
+obsolete = tools_guild
 increase_per_level_cost = 0.16
 }
 # <<< eu5-building-pipeline:tools_workshop:building

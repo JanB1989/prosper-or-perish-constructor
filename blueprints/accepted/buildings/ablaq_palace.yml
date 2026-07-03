@@ -2,9 +2,64 @@ version: 2
 tag: ablaq_palace
 building:
   key: ablaq_palace
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_ablaq_palace_ablaq_palace_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    audio_tier = 4
+    is_special = yes
+    is_foreign = no
+    pop_type = burghers
+    max_levels = 5
+    startup_ramp_target = rural_startup_ramp_target
+    category = government_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = generic_event_building
+    country_potential = {
+        custom_tooltip = {
+            text = unlocked_ablaq_palace_tt
+            has_variable = enable_ablaq_palace_variable
+        }
+    }
+    location_potential = {
+        is_capital = yes
+        this = location:cairo
+    }
+    construction_demand = guild_construction
+    capital_country_modifier = {
+        monthly_legitimacy = 0.02
+        global_silk_output_modifier = 0.025
+    }
+    modifier = {
+        local_cloth_output_modifier = 0.05
+    }
+    custom_tags = {
+        unique_palace
+    }
     increase_per_level_cost = 0.18
+    unique_production_methods = {
+        pp_ablaq_palace_ablaq_palace_maintenance = {
+            lumber = 0.149
+            marble = 0.213
+            produced = silk
+            output = 0.35
+            debug_max_profit = rural_profit_margin
+            category = building_maintenance
+        }
+    }
+localization:
+  entries:
+    ablaq_palace_slot_0: Ablaq Palace Work
+    pp_ablaq_palace_ablaq_palace_maintenance: Ablaq Palace Ablaq Palace Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

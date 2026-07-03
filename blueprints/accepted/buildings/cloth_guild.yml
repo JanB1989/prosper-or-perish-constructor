@@ -2,9 +2,63 @@ version: 2
 tag: cloth_guild
 building:
   key: cloth_guild
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_cloth_guild_cotton_cloth_guild_maintenance
+    - pp_cloth_guild_wool_cloth_guild_maintenance
+    - pp_cloth_guild_fiber_crops_cloth_guild_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    is_foreign = no
+    pop_type = burghers
+    max_levels = cloth_guild_max_level
+    startup_ramp_target = guild_startup_ramp_target
+    category = consumer_goods_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = guild_build_time
+    unique_production_methods = {
+        pp_cloth_guild_cotton_cloth_guild_maintenance = {
+            cotton = 0.976
+            produced = cloth
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_cloth_guild_wool_cloth_guild_maintenance = {
+            wool = 1.171
+            produced = cloth
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_cloth_guild_fiber_crops_cloth_guild_maintenance = {
+            fiber_crops = 1.164
+            produced = cloth
+            output = 0.8
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+    }
+    construction_demand = guild_construction
+    custom_tags = {
+        guild
+    }
+    modifier = {}
     increase_per_level_cost = 0.19
+localization:
+  entries:
+    cloth_guild_slot_0: Cloth Guild Work
+    pp_cloth_guild_cotton_cloth_guild_maintenance: Cloth Guild Cotton Cloth Guild Maintenance
+    pp_cloth_guild_wool_cloth_guild_maintenance: Cloth Guild Wool Cloth Guild Maintenance
+    pp_cloth_guild_fiber_crops_cloth_guild_maintenance: Cloth Guild Fiber Crops Cloth Guild Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

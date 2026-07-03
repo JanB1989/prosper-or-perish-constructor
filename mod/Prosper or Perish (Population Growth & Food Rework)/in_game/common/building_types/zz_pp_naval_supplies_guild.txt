@@ -1,5 +1,31 @@
 ﻿# >>> eu5-building-pipeline:naval_supplies_guild:building
-TRY_INJECT:naval_supplies_guild = {
+REPLACE:naval_supplies_guild = {
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = weapons_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_naval_supplies_guild_naval_supplies_guild_maintenance = {
+        lumber = 0.225
+        fiber_crops = 0.564
+        tar = 0.619
+        cloth = 0.056
+        produced = naval_supplies
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+custom_tags = {
+    guild
+}
+construction_demand = guild_construction
 increase_per_level_cost = 0.20
 }
 # <<< eu5-building-pipeline:naval_supplies_guild:building

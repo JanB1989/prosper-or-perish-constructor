@@ -1,5 +1,27 @@
 ﻿# >>> eu5-building-pipeline:pottery_guild:building
-TRY_INJECT:pottery_guild = {
+REPLACE:pottery_guild = {
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_pottery_guild_pottery_maintenance = {
+        clay = 1.079
+        lumber = 0.129
+        tools = 0.054
+        produced = pottery
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+construction_demand = guild_construction
 increase_per_level_cost = 0.11
 }
 # <<< eu5-building-pipeline:pottery_guild:building

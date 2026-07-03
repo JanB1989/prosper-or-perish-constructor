@@ -1,5 +1,28 @@
 ﻿# >>> eu5-building-pipeline:scriptorium:building
-TRY_INJECT:scriptorium = {
+REPLACE:scriptorium = {
+audio_tier = 1
+is_foreign = no
+pop_type = clergy
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = consumer_goods_category
+employment_size = 1.0
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_scriptorium_scriptorium_maintenance = {
+        dyes = 0.054
+        paper = 0.213
+        lumber = 0.107
+        produced = books
+        output = 0.3
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+construction_demand = guild_construction
 increase_per_level_cost = 0.16
 }
 # <<< eu5-building-pipeline:scriptorium:building

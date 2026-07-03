@@ -2,9 +2,61 @@ version: 2
 tag: tanning_workshop
 building:
   key: tanning_workshop
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_tanning_workshop_leather_livestock_workshop_maintenance
+    - pp_tanning_workshop_leather_wildgame_workshop_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    audio_tier = 2
+    is_foreign = no
+    pop_type = burghers
+    max_levels = workshop_max_level
+    startup_ramp_target = workshop_startup_ramp_target
+    category = basic_industry_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = workshop_build_time
+    unique_production_methods = {
+        pp_tanning_workshop_leather_livestock_workshop_maintenance = {
+            livestock = 1.319
+            sand = 0.513
+            tar = 0.074
+            tools = 0.22
+            produced = leather
+            output = 1.1
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+        pp_tanning_workshop_leather_wildgame_workshop_maintenance = {
+            wild_game = 2.001
+            sand = 0.501
+            tar = 0.072
+            tools = 0.215
+            produced = leather
+            output = 1.1
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+    }
+    obsolete = tannery
+    custom_tags = {
+        workshop
+    }
+    construction_demand = workshop_construction
     increase_per_level_cost = 0.19
+localization:
+  entries:
+    tanning_workshop_slot_0: Tanning Workshop Work
+    pp_tanning_workshop_leather_livestock_workshop_maintenance: Tanning Workshop Leather Livestock Workshop Maintenance
+    pp_tanning_workshop_leather_wildgame_workshop_maintenance: Tanning Workshop Leather Wildgame Workshop Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

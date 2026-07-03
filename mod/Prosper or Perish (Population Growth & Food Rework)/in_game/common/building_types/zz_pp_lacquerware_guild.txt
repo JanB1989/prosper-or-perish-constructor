@@ -1,5 +1,30 @@
 ﻿# >>> eu5-building-pipeline:lacquerware_guild:building
-TRY_INJECT:lacquerware_guild = {
+REPLACE:lacquerware_guild = {
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_lacquerware_guild_lacquerware_shop_maintenance = {
+        lumber = 1.326
+        dyes = 0.552
+        tools = 0.133
+        produced = lacquerware
+        output = 1.0
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+}
+custom_tags = {
+    guild
+}
+construction_demand = guild_construction
 increase_per_level_cost = 0.19
 }
 # <<< eu5-building-pipeline:lacquerware_guild:building

@@ -2,9 +2,99 @@ version: 2
 tag: cannon_maker
 building:
   key: cannon_maker
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_cannon_maker_cannon_maker_lumber_maintenance
+    - pp_cannon_maker_cannon_maker_bronze_maintenance
+    - pp_cannon_maker_cannon_maker_iron_maintenance
+  - name: slot_1
+    methods:
+    - pp_cannon_maker_cannon_maker_ammunition_stone_maintenance
+    - pp_cannon_maker_cannon_maker_ammunition_lead_maintenance
+    - pp_cannon_maker_cannon_maker_ammunition_iron_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    is_foreign = no
+    pop_type = burghers
+    max_levels = guild_max_level
+    startup_ramp_target = guild_startup_ramp_target
+    category = weapons_industry_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = guild_build_time
+    unique_production_methods = {
+        pp_cannon_maker_cannon_maker_lumber_maintenance = {
+            lumber = 0.107
+            iron = 0.04
+            tools = 0.017
+            produced = cannons
+            output = 0.1
+            category = guild_input
+            debug_max_profit = guild_profit_margin
+        }
+        pp_cannon_maker_cannon_maker_bronze_maintenance = {
+            copper = 0.619
+            tin = 0.124
+            tools = 0.619
+            produced = cannons
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_cannon_maker_cannon_maker_iron_maintenance = {
+            iron = 0.66
+            tools = 0.55
+            produced = cannons
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+    }
+    unique_production_methods = {
+        pp_cannon_maker_cannon_maker_ammunition_stone_maintenance = {
+            stone = 0.104
+            saltpeter = 0.104
+            produced = cannons
+            output = 0.087
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_cannon_maker_cannon_maker_ammunition_lead_maintenance = {
+            lead = 0.111
+            saltpeter = 0.111
+            produced = cannons
+            output = 0.12
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_cannon_maker_cannon_maker_ammunition_iron_maintenance = {
+            iron = 0.11
+            saltpeter = 0.11
+            produced = cannons
+            output = 0.16
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+    }
+    construction_demand = guild_construction
     increase_per_level_cost = 0.25
+localization:
+  entries:
+    cannon_maker_slot_0: Cannon Maker Work
+    pp_cannon_maker_cannon_maker_lumber_maintenance: Cannon Maker Cannon Maker Lumber Maintenance
+    pp_cannon_maker_cannon_maker_bronze_maintenance: Cannon Maker Cannon Maker Bronze Maintenance
+    pp_cannon_maker_cannon_maker_iron_maintenance: Cannon Maker Cannon Maker Iron Maintenance
+    cannon_maker_slot_1: Cannon Maker Work
+    pp_cannon_maker_cannon_maker_ammunition_stone_maintenance: Cannon Maker Cannon Maker Ammunition Stone Maintenance
+    pp_cannon_maker_cannon_maker_ammunition_lead_maintenance: Cannon Maker Cannon Maker Ammunition Lead Maintenance
+    pp_cannon_maker_cannon_maker_ammunition_iron_maintenance: Cannon Maker Cannon Maker Ammunition Iron Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

@@ -1,5 +1,48 @@
 ﻿# >>> eu5-building-pipeline:ablaq_palace:building
-TRY_INJECT:ablaq_palace = {
+REPLACE:ablaq_palace = {
+audio_tier = 4
+is_special = yes
+is_foreign = no
+pop_type = burghers
+max_levels = 5
+startup_ramp_target = rural_startup_ramp_target
+category = government_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = generic_event_building
+country_potential = {
+    custom_tooltip = {
+        text = unlocked_ablaq_palace_tt
+        has_variable = enable_ablaq_palace_variable
+    }
+}
+location_potential = {
+    is_capital = yes
+    this = location:cairo
+}
+construction_demand = guild_construction
+capital_country_modifier = {
+    monthly_legitimacy = 0.02
+    global_silk_output_modifier = 0.025
+}
+modifier = {
+    local_cloth_output_modifier = 0.05
+}
+custom_tags = {
+    unique_palace
+}
 increase_per_level_cost = 0.14
+unique_production_methods = {
+    pp_ablaq_palace_ablaq_palace_maintenance = {
+        lumber = 0.149
+        marble = 0.213
+        produced = silk
+        output = 0.35
+        debug_max_profit = rural_profit_margin
+        category = building_maintenance
+    }
+}
 }
 # <<< eu5-building-pipeline:ablaq_palace:building

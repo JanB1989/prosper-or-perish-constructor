@@ -2,9 +2,51 @@ version: 2
 tag: tar_kiln
 building:
   key: tar_kiln
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_tar_kiln_tar_kiln_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    audio_tier = 1
+    is_foreign = no
+    pop_type = laborers
+    max_levels = rural_building_cap
+    startup_ramp_target = rural_startup_ramp_target
+    employment_size = 1.0
+    category = basic_industry_category
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    location_potential = {
+        OR = {
+            vegetation = woods
+            vegetation = forest
+            vegetation = jungle
+            raw_material = goods:lumber
+        }
+    }
+    unique_production_methods = {
+        pp_tar_kiln_tar_kiln_maintenance = {
+            produced = tar
+            output = 1.0
+            lumber = 1.111
+            category = guild_input
+            debug_max_profit = rural_profit_margin
+        }
+    }
+    build_time = rural_build_time
+    construction_demand = guild_construction
     increase_per_level_cost = 0.23
+localization:
+  entries:
+    tar_kiln_slot_0: Tar Kiln Work
+    pp_tar_kiln_tar_kiln_maintenance: Tar Kiln Tar Kiln Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

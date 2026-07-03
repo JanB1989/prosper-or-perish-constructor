@@ -2,9 +2,101 @@ version: 2
 tag: distillers_guild
 building:
   key: distillers_guild
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_distillers_guild_sugar_liquor_guild_maintenance
+    - pp_distillers_guild_rice_liquor_guild_maintenance
+    - pp_distillers_guild_potato_liquor_guild_maintenance
+    - pp_distillers_guild_wheat_liquor_guild_maintenance
+    - pp_distillers_guild_beer_liquor_guild_maintenance
+    - pp_distillers_guild_wine_liquor_guild_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    is_foreign = no
+    pop_type = burghers
+    max_levels = guild_max_level
+    startup_ramp_target = guild_startup_ramp_target
+    category = consumer_goods_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = guild_build_time
+    construction_demand = guild_construction
+    unique_production_methods = {
+        pp_distillers_guild_sugar_liquor_guild_maintenance = {
+            sugar = 0.681
+            pottery = 0.113
+            glass = 0.091
+            produced = liquor
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_distillers_guild_rice_liquor_guild_maintenance = {
+            rice = 1.975
+            pottery = 0.113
+            glass = 0.113
+            produced = liquor
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_distillers_guild_potato_liquor_guild_maintenance = {
+            potato = 1.975
+            pottery = 0.113
+            glass = 0.113
+            produced = liquor
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_distillers_guild_wheat_liquor_guild_maintenance = {
+            wheat = 1.975
+            pottery = 0.113
+            glass = 0.113
+            produced = liquor
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_distillers_guild_beer_liquor_guild_maintenance = {
+            beer = 0.983
+            pottery = 0.115
+            glass = 0.115
+            produced = liquor
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_distillers_guild_wine_liquor_guild_maintenance = {
+            wine = 0.983
+            pottery = 0.115
+            glass = 0.115
+            produced = liquor
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+    }
+    custom_tags = {
+        guild
+    }
     increase_per_level_cost = 0.15
+localization:
+  entries:
+    distillers_guild_slot_0: Distillers Guild Work
+    pp_distillers_guild_sugar_liquor_guild_maintenance: Distillers Guild Sugar Liquor Guild Maintenance
+    pp_distillers_guild_rice_liquor_guild_maintenance: Distillers Guild Rice Liquor Guild Maintenance
+    pp_distillers_guild_potato_liquor_guild_maintenance: Distillers Guild Potato Liquor Guild Maintenance
+    pp_distillers_guild_wheat_liquor_guild_maintenance: Distillers Guild Wheat Liquor Guild Maintenance
+    pp_distillers_guild_beer_liquor_guild_maintenance: Distillers Guild Beer Liquor Guild Maintenance
+    pp_distillers_guild_wine_liquor_guild_maintenance: Distillers Guild Wine Liquor Guild Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

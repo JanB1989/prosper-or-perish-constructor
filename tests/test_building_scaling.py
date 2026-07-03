@@ -48,6 +48,31 @@ def test_building_scaling_config_loads_worker_victuals_ratio() -> None:
 
     assert config.worker_victuals_food_need_ratio == Decimal("1.0")
     assert config.increase_per_level_cost_multiplier == Decimal("0.75")
+    assert config.burgher_building_employment_size == Decimal("0.3")
+
+
+def test_burgher_buildings_do_not_exceed_configured_employment_baseline() -> None:
+    scaling = load_building_scaling_config(PROJECT)
+    offenders: list[str] = []
+    baseline_count = 0
+
+    for entry in yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))["enabled"]:
+        template = load_template(ROOT / "blueprints" / "accepted" / entry)
+        block = _building_block(template.key, template.building_body)
+        pop_type_values = block.values("pop_type")
+        if not pop_type_values or str(pop_type_values[-1]) != "burghers":
+            continue
+        employment_size = Decimal(str(_last_value(block, "employment_size")))
+        if employment_size == scaling.burgher_building_employment_size:
+            baseline_count += 1
+        if employment_size > scaling.burgher_building_employment_size:
+            offenders.append(
+                f"{template.key}: employment_size={employment_size} "
+                f"> burgher baseline {scaling.burgher_building_employment_size}"
+            )
+
+    assert baseline_count > 0
+    assert not offenders
 
 
 def test_increase_per_level_cost_multiplier_rounds_to_two_decimals() -> None:

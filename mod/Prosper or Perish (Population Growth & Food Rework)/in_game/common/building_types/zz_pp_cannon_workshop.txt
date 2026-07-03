@@ -1,5 +1,66 @@
 ﻿# >>> eu5-building-pipeline:cannon_workshop:building
-TRY_INJECT:cannon_workshop = {
+REPLACE:cannon_workshop = {
+audio_tier = 2
+is_foreign = no
+pop_type = burghers
+max_levels = workshop_max_level
+startup_ramp_target = workshop_startup_ramp_target
+category = weapons_industry_category
+employment_size = 0.3
+obsolete = cannon_maker
+town = yes
+city = yes
+megalopolis = yes
+build_time = workshop_build_time
+unique_production_methods = {
+    pp_cannon_workshop_cannon_workshop_bronze_maintenance = {
+        copper = 1.102
+        tin = 0.275
+        tools = 0.138
+        produced = cannons
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_cannon_workshop_cannon_workshop_iron_maintenance = {
+        iron = 1.114
+        tools = 0.124
+        produced = cannons
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+unique_production_methods = {
+    pp_cannon_workshop_cannon_workshop_ammunition_stone_maintenance = {
+        stone = 0.107
+        saltpeter = 0.107
+        produced = cannons
+        output = 0.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_cannon_workshop_cannon_workshop_ammunition_lead_maintenance = {
+        lead = 0.12
+        saltpeter = 0.12
+        produced = cannons
+        output = 0.15
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_cannon_workshop_cannon_workshop_ammunition_iron_maintenance = {
+        iron = 0.137
+        saltpeter = 0.114
+        produced = cannons
+        output = 0.2
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+custom_tags = {
+    workshop
+}
+construction_demand = workshop_construction
 increase_per_level_cost = 0.19
 }
 # <<< eu5-building-pipeline:cannon_workshop:building

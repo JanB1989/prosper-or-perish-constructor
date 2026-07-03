@@ -2,9 +2,67 @@ version: 2
 tag: cloth_manufactory
 building:
   key: cloth_manufactory
-  mode: TRY_INJECT
-  source: pp_building_cost_scaling.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_cloth_manufactory_wool_cloth_manufactory_maintenance
+    - pp_cloth_manufactory_cotton_cloth_manufactory_maintenance
+    - pp_cloth_manufactory_fiber_crops_cloth_manufactory_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |
+    audio_tier = 3
+    is_foreign = no
+    pop_type = burghers
+    max_levels = manufactory_max_level
+    startup_ramp_target = manufactory_startup_ramp_target
+    category = consumer_goods_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = cloth_workshop
+    build_time = manufactory_build_time
+    unique_production_methods = {
+        pp_cloth_manufactory_wool_cloth_manufactory_maintenance = {
+            wool = 1.99
+            dyes = 0.183
+            produced = cloth
+            output = 2.0
+            category = guild_input
+            debug_max_profit = manufactory_profit_margin
+        }
+        pp_cloth_manufactory_cotton_cloth_manufactory_maintenance = {
+            produced = cloth
+            output = 2.0
+            cotton = 1.659
+            dyes = 0.183
+            category = guild_input
+            debug_max_profit = manufactory_profit_margin
+        }
+        pp_cloth_manufactory_fiber_crops_cloth_manufactory_maintenance = {
+            produced = cloth
+            fiber_crops = 2.704
+            dyes = 0.075
+            output = 2.0
+            category = guild_input
+            debug_max_profit = manufactory_profit_margin
+        }
+    }
+    custom_tags = {
+        midgame_manufactory
+    }
+    construction_demand = guild_construction
     increase_per_level_cost = 0.19
+localization:
+  entries:
+    cloth_manufactory_slot_0: Cloth Manufactory Work
+    pp_cloth_manufactory_wool_cloth_manufactory_maintenance: Cloth Manufactory Wool Cloth Manufactory Maintenance
+    pp_cloth_manufactory_cotton_cloth_manufactory_maintenance: Cloth Manufactory Cotton Cloth Manufactory Maintenance
+    pp_cloth_manufactory_fiber_crops_cloth_manufactory_maintenance: Cloth Manufactory Fiber Crops Cloth Manufactory Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

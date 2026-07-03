@@ -1,5 +1,33 @@
 ﻿# >>> eu5-building-pipeline:furniture_mill:building
-TRY_INJECT:furniture_mill = {
+REPLACE:furniture_mill = {
+audio_tier = 5
+is_foreign = no
+pop_type = laborers
+is_mill = yes
+max_levels = mills_max_level
+startup_ramp_target = mills_startup_ramp_target
+category = consumer_goods_category
+employment_size = 1.0
+town = yes
+city = yes
+megalopolis = yes
+obsolete = furniture_manufactory
+build_time = mills_build_time
+unique_production_methods = {
+    pp_furniture_mill_furniture_mill_maintenance = {
+        lumber = 4.562
+        dyes = 0.532
+        tools = 0.532
+        produced = furniture
+        output = 4.0
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+}
+construction_demand = mill_construction
+raw_modifier = {
+    local_burghers_desired_pop = 0.05
+}
 increase_per_level_cost = 0.19
 }
 # <<< eu5-building-pipeline:furniture_mill:building

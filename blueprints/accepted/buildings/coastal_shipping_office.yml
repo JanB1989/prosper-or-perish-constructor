@@ -12,7 +12,7 @@ building:
     max_levels = pp_coastal_shipping_office_max_level
     increase_per_level_cost = 0.20
     pop_type = laborers
-    employment_size = 1
+    employment_size = 5
     category = infrastructure_category
     custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_coastal_logistics_priority }
     icon = coastal_shipping_office
@@ -62,5 +62,5 @@ icon:
 evaluation:
   allow_rules:
     profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
-    input_throughput: Coastal shipping offices intentionally keep modest labor but costly coasting, tar, timber, victual, and paper upkeep.
+    input_throughput: Coastal shipping offices intentionally use heavy labor alongside costly coasting, tar, timber, victual, and paper upkeep.
     output_throughput: Coastal shipping offices provide supported building levels rather than direct goods output.

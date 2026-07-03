@@ -24,6 +24,12 @@ global_food_revenue_output_modifier={
 		category=country
 	}
 }
+global_food_revenue_modifier={
+	percent=yes
+	game_data={
+		category=country
+	}
+}
 global_food_revenue_pop_demand={
 	percent=yes
 	game_data={

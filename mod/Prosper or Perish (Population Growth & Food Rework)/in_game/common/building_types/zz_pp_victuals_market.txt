@@ -3,8 +3,8 @@ victuals_market = {
 	is_foreign = no
   increase_per_level_cost = 0.10
 	max_levels = victuals_market_max_level
-	pop_type = burghers
-	employment_size = 0.100
+	pop_type = laborers
+	employment_size = 0.500
 	price = pp_victuals_market_price
     category = consumer_goods_category
 	custom_tags = { pp_food_security_priority pp_food_distribution_priority }
@@ -30,7 +30,8 @@ victuals_market = {
   modifier = {
     local_monthly_food = 40
     local_food_revenue_output_modifier = -0.012
-    local_burghers_estate_power = 0.05
+    local_nobles_estate_power = 0.05
+    local_peasant_enfranchisment = -0.01
   }
 }
 # <<< eu5-building-pipeline:victuals_market:building

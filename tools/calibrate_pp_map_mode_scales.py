@@ -305,9 +305,10 @@ def _population_capacity_thresholds() -> list[float]:
 
 
 def _building_level_thresholds() -> list[float]:
-    # Keep the lower savegame-derived breaks, then add fixed high-end bands so
-    # dense locations do not collapse into a single 22-93 green gradient.
-    return [3.0, 8.0, 22.0, 40.0, 60.0, 80.0, 100.0]
+    # Use clean manual/geometric-style breaks. Building levels can reach several
+    # hundred in late-game dense locations, so the display scale must not cap at
+    # the current savegame quantile range.
+    return [10.0, 25.0, 50.0, 75.0, 100.0, 150.0, 200.0, 250.0, 300.0, 400.0, 500.0]
 
 
 def _food_capacity_thresholds(capacity: str, values: Iterable[float]) -> list[float]:

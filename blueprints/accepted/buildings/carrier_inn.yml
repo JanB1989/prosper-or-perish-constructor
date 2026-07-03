@@ -12,7 +12,7 @@ building:
     max_levels = 100
     increase_per_level_cost = 0.30
     pop_type = peasants
-    employment_size = 1
+    employment_size = 5
     category = infrastructure_category
     custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_rural_logistics_priority }
     icon = carrier_inn
@@ -60,5 +60,5 @@ icon:
 evaluation:
   allow_rules:
     profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
-    input_throughput: Carrier inns intentionally use light rural staffing while maintaining costly animals, carts, and provisions.
+    input_throughput: Carrier inns intentionally use heavy rural staffing while maintaining costly animals, carts, and provisions.
     output_throughput: Carrier inns provide supported building levels rather than direct goods output.

@@ -1145,6 +1145,33 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
     assert "multiply = 1.12" not in capacity_block
 
 
+def test_urban_industry_cap_adjustments_double_growth_factors() -> None:
+    text = BUILDING_CAP_ADJUSTMENTS.read_text(encoding="utf-8-sig")
+    entries = {entry.key: entry.value for entry in parse_file(BUILDING_CAP_ADJUSTMENTS).entries}
+    expected = {
+        "guild_max_level": ("0.4", "0.2", "20", "40"),
+        "workshop_max_level": ("1", "0.2", "40", "80"),
+        "manufactory_max_level": ("2", "0.4", "80", "160"),
+        "mills_max_level": ("4", "1", "100", "200"),
+    }
+
+    for cap, (development, population, city, megalopolis) in expected.items():
+        assert f"REPLACE:{cap}" in entries
+        block = text.split(f"REPLACE:{cap} = {{", 1)[1].split("\n\nREPLACE:", 1)[0]
+        assert f'desc = "BUILDING_LEVEL_DEVELOPMENT"\n\t\tvalue = development\n\t\tmultiply = {development}' in block
+        assert f'desc = "BUILDING_LEVEL_POPULATION"\n\t\tvalue = population\n\t\tmultiply = {population}' in block
+        assert re.search(
+            rf'desc = "BUILDING_LEVEL_IS_CITY"\s+value = {city}\b',
+            block,
+        )
+        assert re.search(
+            rf'desc = "BUILDING_LEVEL_IS_MEGAPOLIS"\s+value = {megalopolis}\b',
+            block,
+        )
+        assert "BUILDING_LEVEL_LOW_MARKET_ACCESS_PENALTY" in block
+        assert re.search(r"^\tmin = 1$", block, flags=re.M)
+
+
 def test_irrigation_cap_scales_with_river_static_modifier_level() -> None:
     text = BUILDING_CAP_ADJUSTMENTS.read_text(encoding="utf-8-sig")
     modifier_icon_text = (MODIFIER_ICONS / "pp_building_cap_modifier_icons.txt").read_text(
@@ -2949,6 +2976,10 @@ def test_victuals_pop_demand_modifier_type_is_registered() -> None:
     assert "global_victuals_pop_demand" in modifier_icons
     assert "MODIFIER_TYPE_NAME_global_victuals_pop_demand:" in localization_text
     assert "MODIFIER_TYPE_DESC_global_victuals_pop_demand:" in localization_text
+    assert "global_food_revenue_modifier" in modifier_types
+    assert "global_food_revenue_modifier" in modifier_icons
+    assert "MODIFIER_TYPE_NAME_global_food_revenue_modifier:" in localization_text
+    assert "MODIFIER_TYPE_DESC_global_food_revenue_modifier:" in localization_text
 
 
 def test_current_megalopolis_buildings_allow_megalopolis() -> None:

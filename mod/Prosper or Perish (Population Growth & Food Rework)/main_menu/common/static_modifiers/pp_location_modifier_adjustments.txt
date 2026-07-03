@@ -121,6 +121,7 @@ TRY_REPLACE:unsupported_building_levels = {
 	local_construction_speed = -0.01
 	local_distance_from_capital_speed_propagation = -0.01
 	local_max_control = -0.005
+	local_food_revenue_output_modifier = -0.01
 }
 
 TRY_REPLACE:total_population = {
@@ -165,35 +166,8 @@ TRY_REPLACE:raised_levies = {
 	game_data = {
 		category = location
 	}
-	local_raw_material_output = -0.20
-	local_wheat_output_modifier = -0.20
-	local_rice_output_modifier = -0.20
-	local_millet_output_modifier = -0.20
-	local_maize_output_modifier = -0.20
-	local_legumes_output_modifier = -0.20
-	local_fruit_output_modifier = -0.20
-	local_olives_output_modifier = -0.20
-	local_potato_output_modifier = -0.20
-	local_livestock_output_modifier = -0.20
-	local_beeswax_output_modifier = -0.20
-	local_wool_output_modifier = -0.20
-	local_fiber_crops_output_modifier = -0.05
-	local_cotton_output_modifier = -0.20
-	local_sugar_output_modifier = -0.20
-	local_tobacco_output_modifier = -0.20
-	local_horses_output_modifier = -0.14
-	local_silk_output_modifier = -0.20
-	local_incense_output_modifier = -0.20
-	local_tea_output_modifier = -0.20
-	local_cocoa_output_modifier = -0.20
-	local_coffee_output_modifier = -0.20
-	local_saffron_output_modifier = -0.20
-	local_pepper_output_modifier = -0.20
-	local_cloves_output_modifier = -0.20
-	local_chili_output_modifier = -0.20
-	local_fish_output_modifier = -0.20
-	local_wild_game_output_modifier = -0.20
-	local_fur_output_modifier = -0.20
+	local_production_efficiency = -0.10
+	local_raw_material_output = -0.30
 }
 
 # Devastation doesn't kill people, starvation and other stuff does
@@ -214,7 +188,7 @@ TRY_REPLACE:devastation = {
 	local_life_expectancy = 10
 	local_mercenaries_modifier = -0.5
 	local_construction_speed = 0.5
-	local_upper_class_capacity_modifier = 1.00
+	local_upper_class_capacity_modifier = 0.50
 	local_peasants_food_consumption = 0.10
 	local_defensive = 0.50
 	local_unrest = -0.25
@@ -245,7 +219,7 @@ TRY_REPLACE:development = {
 	local_build_buildings_efficiency = 0.001
 	maximum_stockpile_capacity = 10
 	local_production_efficiency = 0.0015
-	local_monthly_development = -0.00012
+	local_monthly_development = -0.00011
 	local_population_capacity = 0.15
 	local_population_capacity_modifier = 0.015
 }

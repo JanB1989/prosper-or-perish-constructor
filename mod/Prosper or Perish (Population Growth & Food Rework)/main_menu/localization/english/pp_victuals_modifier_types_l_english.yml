@@ -23,6 +23,8 @@
   MODIFIER_TYPE_DESC_local_food_revenue_output_modifier: "This modifies the [output|e] of [ShowGoodsName('food_revenue')] in this [location|e]."
   MODIFIER_TYPE_NAME_global_food_revenue_output_modifier: "$food_revenue$ Output"
   MODIFIER_TYPE_DESC_global_food_revenue_output_modifier: "This modifies the [output|e] of [ShowGoodsName('food_revenue')] in the entire [country|e]."
+  MODIFIER_TYPE_NAME_global_food_revenue_modifier: "$food_revenue$"
+  MODIFIER_TYPE_DESC_global_food_revenue_modifier: "This modifies [ShowGoodsName('food_revenue')] in the entire [country|e]."
   MODIFIER_TYPE_NAME_global_food_revenue_pop_demand: "Global [ShowGoodsNameWithNoTooltip('food_revenue')] Demand"
   MODIFIER_TYPE_DESC_global_food_revenue_pop_demand: "This modifies the [pop_needs|e] of the [ShowGoodsName('food_revenue')] [produced_good|e]."
   MODIFIER_TYPE_NAME_can_extract_food_revenue: "Can extract Food Revenue"

@@ -343,16 +343,29 @@ def test_building_levels_stripes_locations_above_supported_levels() -> None:
     block = _all_blocks()["pp_building_levels"]
     text = LOCALIZATION.read_text(encoding="utf-8-sig")
 
-    assert _thresholds(block, "total_building_levels") == [3.0, 8.0, 22.0, 40.0, 60.0, 80.0, 100.0]
-    assert block.count("lerp = {") == 7
-    assert block.count("legend_key =") == 9
-    assert "define:NMapColors|MAP_COLOR_TOP" in block
-    assert "rgb { 245 245 245 }" in block
-    assert "rgb { 170 235 255 }" in block
-    assert "rgb { 70 210 255 }" in block
-    assert "MAPMODE_PP_BUILDING_LEVELS_RANGE_60_80" in text
-    assert "MAPMODE_PP_BUILDING_LEVELS_RANGE_80_100" in text
-    assert "100 or more building levels" in text
+    assert _thresholds(block, "total_building_levels") == [
+        10.0,
+        25.0,
+        50.0,
+        75.0,
+        100.0,
+        150.0,
+        200.0,
+        250.0,
+        300.0,
+        400.0,
+        500.0,
+    ]
+    assert block.count("lerp = {") == 11
+    assert block.count("legend_key =") == 13
+    assert "define:NMapColors|MAP_COLOR_TOP" not in block
+    assert "rgb { 245 245 245 }" not in block
+    assert "rgb { 170 235 255 }" not in block
+    assert "rgb { 70 210 255 }" not in block
+    assert "MAPMODE_PP_BUILDING_LEVELS_RANGE_150_200" in text
+    assert "MAPMODE_PP_BUILDING_LEVELS_RANGE_250_300" in text
+    assert "MAPMODE_PP_BUILDING_LEVELS_RANGE_400_500" in text
+    assert "500 or more building levels" in text
     assert "secondary_map_color = {" in block
     assert "has_owner = yes" in block
     assert "total_building_levels > modifier:free_building_levels" in block

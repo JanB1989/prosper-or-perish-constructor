@@ -12,7 +12,7 @@ building:
     max_levels = pp_river_boatmen_yard_max_level
     increase_per_level_cost = 0.15
     pop_type = laborers
-    employment_size = 1
+    employment_size = 5
     category = infrastructure_category
     custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_river_logistics_priority }
     icon = river_boatmen_yard
@@ -63,5 +63,5 @@ icon:
 evaluation:
   allow_rules:
     profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
-    input_throughput: River freight yards intentionally keep modest labor but costly boat, rope, timber, tar, and naval-supply upkeep.
+    input_throughput: River freight yards intentionally use heavy labor alongside costly boat, rope, timber, tar, and naval-supply upkeep.
     output_throughput: River boatmen's yards provide supported building levels rather than direct goods output.

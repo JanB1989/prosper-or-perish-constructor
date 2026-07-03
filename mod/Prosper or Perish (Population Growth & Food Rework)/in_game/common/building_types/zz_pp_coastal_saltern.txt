@@ -27,8 +27,6 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_coastal_saltern_open_salt_marshes = {
-        produced = salt
-        output = 0.075
         category = building_maintenance
     }
     pp_coastal_saltern_lined_evaporation_pans = {

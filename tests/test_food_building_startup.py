@@ -93,6 +93,7 @@ def test_food_startup_plan_uses_pop_consumption_and_dynamic_victuals_food(tmp_pa
         load_order=tmp_path / "load_order.toml",
         profile="constructor",
         unknown_pop_food_consumption=0.0,
+        food_consumption_multiplier=1.0,
         include_existing_buildings=False,
         generated_effect="pp_food_building_startup",
         production_sources=(

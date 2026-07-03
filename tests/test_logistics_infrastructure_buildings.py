@@ -538,5 +538,6 @@ def test_victuals_market_does_not_provide_market_access() -> None:
     for path in (VICTUALS_MARKET_BLUEPRINT, VICTUALS_MARKET_RENDERED):
         text = path.read_text(encoding="utf-8-sig")
         assert "local_monthly_food = 40" in text
-        assert "local_burghers_estate_power = 0.05" in text
+        assert "local_nobles_estate_power = 0.05" in text
+        assert "local_peasant_enfranchisment = -0.01" in text
         assert "local_market_access" not in text

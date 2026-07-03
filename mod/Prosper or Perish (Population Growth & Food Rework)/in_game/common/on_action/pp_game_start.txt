@@ -6,7 +6,7 @@ on_game_start = {
 		pp_mod_welcome_situation_game_start
 		pp_apply_rgo_static_modifiers
 		pp_raise_zero_rgo_max_workers
-		pp_reduce_specific_rgo
+		# pp_reduce_specific_rgo
 		pp_precalculate_building_capacities
 		pp_apply_location_modifiers
 		pp_cull_setup_estate_buildings
@@ -2406,6 +2406,663 @@ pp_game_start_effect = {
 					}
 				}
 				# END pp_rgo_startup_buildings
+
+				# Seed large staple-farm locations with farming villages.
+				if = {
+					limit = {
+						population >= 10
+						development >= 5
+						OR = {
+							raw_material = goods:beeswax
+							raw_material = goods:legumes
+							raw_material = goods:livestock
+							raw_material = goods:maize
+							raw_material = goods:millet
+							raw_material = goods:olives
+							raw_material = goods:potato
+							raw_material = goods:rice
+							raw_material = goods:wheat
+						}
+						pp_general_farmable_food_location_potential = yes
+						farm_capacity > 0
+						NOT = { has_building = building_type:farming_village }
+						can_build_building = building_type:farming_village
+					}
+					construct_building = {
+						building_type = building_type:farming_village
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 20
+						development >= 10
+						OR = {
+							raw_material = goods:beeswax
+							raw_material = goods:legumes
+							raw_material = goods:livestock
+							raw_material = goods:maize
+							raw_material = goods:millet
+							raw_material = goods:olives
+							raw_material = goods:potato
+							raw_material = goods:rice
+							raw_material = goods:wheat
+						}
+						pp_general_farmable_food_location_potential = yes
+						location_building_level = {
+							building_type = building_type:farming_village
+							value < 2
+						}
+						farm_capacity > 0
+						can_build_building = building_type:farming_village
+					}
+					change_building_level_in_location = {
+						building = building_type:farming_village
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 30
+						development >= 15
+						OR = {
+							raw_material = goods:beeswax
+							raw_material = goods:legumes
+							raw_material = goods:livestock
+							raw_material = goods:maize
+							raw_material = goods:millet
+							raw_material = goods:olives
+							raw_material = goods:potato
+							raw_material = goods:rice
+							raw_material = goods:wheat
+						}
+						pp_general_farmable_food_location_potential = yes
+						location_building_level = {
+							building_type = building_type:farming_village
+							value < 3
+						}
+						farm_capacity > 0
+						can_build_building = building_type:farming_village
+					}
+					change_building_level_in_location = {
+						building = building_type:farming_village
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 40
+						development >= 20
+						OR = {
+							raw_material = goods:beeswax
+							raw_material = goods:legumes
+							raw_material = goods:livestock
+							raw_material = goods:maize
+							raw_material = goods:millet
+							raw_material = goods:olives
+							raw_material = goods:potato
+							raw_material = goods:rice
+							raw_material = goods:wheat
+						}
+						pp_general_farmable_food_location_potential = yes
+						location_building_level = {
+							building_type = building_type:farming_village
+							value < 4
+						}
+						farm_capacity > 0
+						can_build_building = building_type:farming_village
+					}
+					change_building_level_in_location = {
+						building = building_type:farming_village
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 50
+						development >= 25
+						OR = {
+							raw_material = goods:beeswax
+							raw_material = goods:legumes
+							raw_material = goods:livestock
+							raw_material = goods:maize
+							raw_material = goods:millet
+							raw_material = goods:olives
+							raw_material = goods:potato
+							raw_material = goods:rice
+							raw_material = goods:wheat
+						}
+						pp_general_farmable_food_location_potential = yes
+						location_building_level = {
+							building_type = building_type:farming_village
+							value < 5
+						}
+						farm_capacity > 0
+						can_build_building = building_type:farming_village
+					}
+					change_building_level_in_location = {
+						building = building_type:farming_village
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 60
+						development >= 30
+						OR = {
+							raw_material = goods:beeswax
+							raw_material = goods:legumes
+							raw_material = goods:livestock
+							raw_material = goods:maize
+							raw_material = goods:millet
+							raw_material = goods:olives
+							raw_material = goods:potato
+							raw_material = goods:rice
+							raw_material = goods:wheat
+						}
+						pp_general_farmable_food_location_potential = yes
+						location_building_level = {
+							building_type = building_type:farming_village
+							value < 6
+						}
+						farm_capacity > 0
+						can_build_building = building_type:farming_village
+					}
+					change_building_level_in_location = {
+						building = building_type:farming_village
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 70
+						development >= 35
+						OR = {
+							raw_material = goods:beeswax
+							raw_material = goods:legumes
+							raw_material = goods:livestock
+							raw_material = goods:maize
+							raw_material = goods:millet
+							raw_material = goods:olives
+							raw_material = goods:potato
+							raw_material = goods:rice
+							raw_material = goods:wheat
+						}
+						pp_general_farmable_food_location_potential = yes
+						location_building_level = {
+							building_type = building_type:farming_village
+							value < 7
+						}
+						farm_capacity > 0
+						can_build_building = building_type:farming_village
+					}
+					change_building_level_in_location = {
+						building = building_type:farming_village
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 80
+						development >= 40
+						OR = {
+							raw_material = goods:beeswax
+							raw_material = goods:legumes
+							raw_material = goods:livestock
+							raw_material = goods:maize
+							raw_material = goods:millet
+							raw_material = goods:olives
+							raw_material = goods:potato
+							raw_material = goods:rice
+							raw_material = goods:wheat
+						}
+						pp_general_farmable_food_location_potential = yes
+						location_building_level = {
+							building_type = building_type:farming_village
+							value < 8
+						}
+						farm_capacity > 0
+						can_build_building = building_type:farming_village
+					}
+					change_building_level_in_location = {
+						building = building_type:farming_village
+						value = 1
+					}
+				}
+				# Seed large fruit RGOs with fruit orchards.
+				if = {
+					limit = {
+						population >= 10
+						development >= 5
+						raw_material = goods:fruit
+						pp_fruit_orchard_location_potential = yes
+						farm_capacity > 0
+						NOT = { has_building = building_type:fruit_orchard }
+						can_build_building = building_type:fruit_orchard
+					}
+					construct_building = {
+						building_type = building_type:fruit_orchard
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 20
+						development >= 10
+						raw_material = goods:fruit
+						pp_fruit_orchard_location_potential = yes
+						location_building_level = {
+							building_type = building_type:fruit_orchard
+							value < 2
+						}
+						farm_capacity > 0
+						can_build_building = building_type:fruit_orchard
+					}
+					change_building_level_in_location = {
+						building = building_type:fruit_orchard
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 30
+						development >= 15
+						raw_material = goods:fruit
+						pp_fruit_orchard_location_potential = yes
+						location_building_level = {
+							building_type = building_type:fruit_orchard
+							value < 3
+						}
+						farm_capacity > 0
+						can_build_building = building_type:fruit_orchard
+					}
+					change_building_level_in_location = {
+						building = building_type:fruit_orchard
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 40
+						development >= 20
+						raw_material = goods:fruit
+						pp_fruit_orchard_location_potential = yes
+						location_building_level = {
+							building_type = building_type:fruit_orchard
+							value < 4
+						}
+						farm_capacity > 0
+						can_build_building = building_type:fruit_orchard
+					}
+					change_building_level_in_location = {
+						building = building_type:fruit_orchard
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 50
+						development >= 25
+						raw_material = goods:fruit
+						pp_fruit_orchard_location_potential = yes
+						location_building_level = {
+							building_type = building_type:fruit_orchard
+							value < 5
+						}
+						farm_capacity > 0
+						can_build_building = building_type:fruit_orchard
+					}
+					change_building_level_in_location = {
+						building = building_type:fruit_orchard
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 60
+						development >= 30
+						raw_material = goods:fruit
+						pp_fruit_orchard_location_potential = yes
+						location_building_level = {
+							building_type = building_type:fruit_orchard
+							value < 6
+						}
+						farm_capacity > 0
+						can_build_building = building_type:fruit_orchard
+					}
+					change_building_level_in_location = {
+						building = building_type:fruit_orchard
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 70
+						development >= 35
+						raw_material = goods:fruit
+						pp_fruit_orchard_location_potential = yes
+						location_building_level = {
+							building_type = building_type:fruit_orchard
+							value < 7
+						}
+						farm_capacity > 0
+						can_build_building = building_type:fruit_orchard
+					}
+					change_building_level_in_location = {
+						building = building_type:fruit_orchard
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 80
+						development >= 40
+						raw_material = goods:fruit
+						pp_fruit_orchard_location_potential = yes
+						location_building_level = {
+							building_type = building_type:fruit_orchard
+							value < 8
+						}
+						farm_capacity > 0
+						can_build_building = building_type:fruit_orchard
+					}
+					change_building_level_in_location = {
+						building = building_type:fruit_orchard
+						value = 1
+					}
+				}
+				# Seed large wool RGOs with sheep farms.
+				if = {
+					limit = {
+						population >= 10
+						development >= 5
+						raw_material = goods:wool
+						pp_pasture_friendly_location_potential = yes
+						farm_capacity > 0
+						NOT = { has_building = building_type:sheep_farms }
+						can_build_building = building_type:sheep_farms
+					}
+					construct_building = {
+						building_type = building_type:sheep_farms
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 20
+						development >= 10
+						raw_material = goods:wool
+						pp_pasture_friendly_location_potential = yes
+						location_building_level = {
+							building_type = building_type:sheep_farms
+							value < 2
+						}
+						farm_capacity > 0
+						can_build_building = building_type:sheep_farms
+					}
+					change_building_level_in_location = {
+						building = building_type:sheep_farms
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 30
+						development >= 15
+						raw_material = goods:wool
+						pp_pasture_friendly_location_potential = yes
+						location_building_level = {
+							building_type = building_type:sheep_farms
+							value < 3
+						}
+						farm_capacity > 0
+						can_build_building = building_type:sheep_farms
+					}
+					change_building_level_in_location = {
+						building = building_type:sheep_farms
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 40
+						development >= 20
+						raw_material = goods:wool
+						pp_pasture_friendly_location_potential = yes
+						location_building_level = {
+							building_type = building_type:sheep_farms
+							value < 4
+						}
+						farm_capacity > 0
+						can_build_building = building_type:sheep_farms
+					}
+					change_building_level_in_location = {
+						building = building_type:sheep_farms
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 50
+						development >= 25
+						raw_material = goods:wool
+						pp_pasture_friendly_location_potential = yes
+						location_building_level = {
+							building_type = building_type:sheep_farms
+							value < 5
+						}
+						farm_capacity > 0
+						can_build_building = building_type:sheep_farms
+					}
+					change_building_level_in_location = {
+						building = building_type:sheep_farms
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 60
+						development >= 30
+						raw_material = goods:wool
+						pp_pasture_friendly_location_potential = yes
+						location_building_level = {
+							building_type = building_type:sheep_farms
+							value < 6
+						}
+						farm_capacity > 0
+						can_build_building = building_type:sheep_farms
+					}
+					change_building_level_in_location = {
+						building = building_type:sheep_farms
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 70
+						development >= 35
+						raw_material = goods:wool
+						pp_pasture_friendly_location_potential = yes
+						location_building_level = {
+							building_type = building_type:sheep_farms
+							value < 7
+						}
+						farm_capacity > 0
+						can_build_building = building_type:sheep_farms
+					}
+					change_building_level_in_location = {
+						building = building_type:sheep_farms
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 80
+						development >= 40
+						raw_material = goods:wool
+						pp_pasture_friendly_location_potential = yes
+						location_building_level = {
+							building_type = building_type:sheep_farms
+							value < 8
+						}
+						farm_capacity > 0
+						can_build_building = building_type:sheep_farms
+					}
+					change_building_level_in_location = {
+						building = building_type:sheep_farms
+						value = 1
+					}
+				}
+				# Seed coastal fish RGOs with fishing villages.
+				if = {
+					limit = {
+						population >= 10
+						development >= 5
+						raw_material = goods:fish
+						is_coastal = yes
+						fish_capacity > 0
+						NOT = { has_building = building_type:fishing_village }
+						can_build_building = building_type:fishing_village
+					}
+					construct_building = {
+						building_type = building_type:fishing_village
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						population >= 20
+						development >= 10
+						raw_material = goods:fish
+						is_coastal = yes
+						location_building_level = {
+							building_type = building_type:fishing_village
+							value < 2
+						}
+						fish_capacity > 0
+						can_build_building = building_type:fishing_village
+					}
+					change_building_level_in_location = {
+						building = building_type:fishing_village
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 30
+						development >= 15
+						raw_material = goods:fish
+						is_coastal = yes
+						location_building_level = {
+							building_type = building_type:fishing_village
+							value < 3
+						}
+						fish_capacity > 0
+						can_build_building = building_type:fishing_village
+					}
+					change_building_level_in_location = {
+						building = building_type:fishing_village
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 40
+						development >= 20
+						raw_material = goods:fish
+						is_coastal = yes
+						location_building_level = {
+							building_type = building_type:fishing_village
+							value < 4
+						}
+						fish_capacity > 0
+						can_build_building = building_type:fishing_village
+					}
+					change_building_level_in_location = {
+						building = building_type:fishing_village
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 50
+						development >= 25
+						raw_material = goods:fish
+						is_coastal = yes
+						location_building_level = {
+							building_type = building_type:fishing_village
+							value < 5
+						}
+						fish_capacity > 0
+						can_build_building = building_type:fishing_village
+					}
+					change_building_level_in_location = {
+						building = building_type:fishing_village
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 60
+						development >= 30
+						raw_material = goods:fish
+						is_coastal = yes
+						location_building_level = {
+							building_type = building_type:fishing_village
+							value < 6
+						}
+						fish_capacity > 0
+						can_build_building = building_type:fishing_village
+					}
+					change_building_level_in_location = {
+						building = building_type:fishing_village
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 70
+						development >= 35
+						raw_material = goods:fish
+						is_coastal = yes
+						location_building_level = {
+							building_type = building_type:fishing_village
+							value < 7
+						}
+						fish_capacity > 0
+						can_build_building = building_type:fishing_village
+					}
+					change_building_level_in_location = {
+						building = building_type:fishing_village
+						value = 1
+					}
+				}
+				if = {
+					limit = {
+						population >= 80
+						development >= 40
+						raw_material = goods:fish
+						is_coastal = yes
+						location_building_level = {
+							building_type = building_type:fishing_village
+							value < 8
+						}
+						fish_capacity > 0
+						can_build_building = building_type:fishing_village
+					}
+					change_building_level_in_location = {
+						building = building_type:fishing_village
+						value = 1
+					}
+				}
 
 				if = {
 					limit = {

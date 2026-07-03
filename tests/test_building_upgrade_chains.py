@@ -220,14 +220,41 @@ GAME_START_DIRECT_RGO_BUILDINGS = {
     "tin_streamworks",
 }
 GAME_START_CAPACITY_BUILDING_GATES = {
+    "farming_village": "farm_capacity",
     "fiber_crops_farm": "farm_capacity",
     "fishing_village": "fish_capacity",
     "forest_village": "forest_capacity",
+    "fruit_orchard": "farm_capacity",
     "horse_breeders": "farm_capacity",
     "lumber_mill": "forest_capacity",
     "ocean_fishery": "fish_capacity",
+    "sheep_farms": "farm_capacity",
 }
-GAME_START_DISABLED_CAPACITY_STARTUP_BUILDINGS = {"farming_village", "fruit_orchard", "sheep_farms"}
+GAME_START_DISABLED_CAPACITY_STARTUP_BUILDINGS: set[str] = set()
+FARMING_VILLAGE_STARTUP_RAW_MATERIALS = {
+    "beeswax",
+    "legumes",
+    "livestock",
+    "maize",
+    "millet",
+    "olives",
+    "potato",
+    "rice",
+    "wheat",
+}
+FARMING_VILLAGE_STARTUP_THRESHOLDS = (
+    (1, 10, 5),
+    (2, 20, 10),
+    (3, 30, 15),
+    (4, 40, 20),
+    (5, 50, 25),
+    (6, 60, 30),
+    (7, 70, 35),
+    (8, 80, 40),
+)
+FISHING_VILLAGE_STARTUP_THRESHOLDS = FARMING_VILLAGE_STARTUP_THRESHOLDS
+FRUIT_ORCHARD_STARTUP_THRESHOLDS = FARMING_VILLAGE_STARTUP_THRESHOLDS
+SHEEP_FARMS_STARTUP_THRESHOLDS = FARMING_VILLAGE_STARTUP_THRESHOLDS
 RAW_MATERIAL_BASE_PRODUCERS = {
     "horse_breeders": ("horses", "pp_horse_breeders_base_horses"),
     "sand_pit": ("sand", "pp_sand_pit_base_sand"),
@@ -614,6 +641,14 @@ def _base_production_method_input_offenders(path: Path) -> list[str]:
 
 def _production_method_has_inputs_or_outputs(row: dict) -> bool:
     return bool(row["input_goods"]) or (row["produced"] is not None and row["output"] is not None)
+
+
+def _production_method_outputs_without_inputs(row: dict) -> bool:
+    return not row["input_goods"] and row["produced"] is not None and row["output"] is not None
+
+
+def _is_baseline_victuals_output_method(row: dict) -> bool:
+    return row["produced"] == "victuals" and str(row["name"]).endswith("_worker_victuals")
 
 
 def _matching_brace_index(text: str, opening_index: int) -> int:
@@ -1575,7 +1610,7 @@ def test_game_start_capacity_levelups_are_single_guarded_steps() -> None:
 
         _, _, if_block = _enclosing_script_block(if_blocks, start, "if")
         limit_block = _first_script_block(if_block, "limit")
-        if "value < 2" not in limit_block:
+        if not re.search(r"\bvalue\s*<\s*\d+\b", limit_block):
             continue
 
         seen.add(building)
@@ -1596,7 +1631,281 @@ def test_game_start_capacity_levelups_are_single_guarded_steps() -> None:
     assert not offenders
 
 
-def test_game_start_does_not_add_farming_village_or_sheep_farm_levels() -> None:
+def test_game_start_places_farming_villages_in_large_staple_farm_locations() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    game_start = _first_script_block(text, "pp_game_start_effect")
+    if_blocks = _iter_script_blocks(game_start, "if")
+    farming_constructs = []
+    farming_levelups = []
+
+    for start, _, construct_block in _iter_script_blocks(game_start, "construct_building"):
+        if "building_type = building_type:farming_village" not in construct_block:
+            continue
+        _, _, if_block = _enclosing_script_block(if_blocks, start, "if")
+        farming_constructs.append(_first_script_block(if_block, "limit"))
+
+    assert len(farming_constructs) == 1
+    limit_block = farming_constructs[0]
+    _, population_threshold, development_threshold = FARMING_VILLAGE_STARTUP_THRESHOLDS[0]
+    _assert_farming_village_startup_limit(
+        limit_block,
+        population_threshold=population_threshold,
+        development_threshold=development_threshold,
+    )
+    assert "NOT = { has_building = building_type:farming_village }" in limit_block
+    assert "location_building_level" not in limit_block
+
+    for start, _, action_block in _iter_script_blocks(game_start, "change_building_level_in_location"):
+        if "building = building_type:farming_village" not in action_block:
+            continue
+        _, _, if_block = _enclosing_script_block(if_blocks, start, "if")
+        farming_levelups.append(_first_script_block(if_block, "limit"))
+
+    expected_levelup_thresholds = FARMING_VILLAGE_STARTUP_THRESHOLDS[1:]
+    assert len(farming_levelups) == len(expected_levelup_thresholds)
+    for limit_block, (expected_level, population_threshold, development_threshold) in zip(
+        farming_levelups,
+        expected_levelup_thresholds,
+        strict=True,
+    ):
+        _assert_farming_village_startup_limit(
+            limit_block,
+            population_threshold=population_threshold,
+            development_threshold=development_threshold,
+        )
+        assert f"value < {expected_level}" in limit_block
+
+
+def _assert_farming_village_startup_limit(
+    limit_block: str,
+    *,
+    population_threshold: int,
+    development_threshold: int,
+) -> None:
+    assert f"population >= {population_threshold}" in limit_block
+    assert f"development >= {development_threshold}" in limit_block
+    assert "pp_general_farmable_food_location_potential = yes" in limit_block
+    assert "farm_capacity > 0" in limit_block
+    assert "can_build_building = building_type:farming_village" in limit_block
+
+    actual_raw_materials = set(re.findall(r"raw_material\s*=\s*goods:([A-Za-z0-9_]+)", limit_block))
+    assert actual_raw_materials == FARMING_VILLAGE_STARTUP_RAW_MATERIALS
+
+
+def test_game_start_places_fishing_villages_in_large_coastal_fish_locations() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    game_start = _first_script_block(text, "pp_game_start_effect")
+    if_blocks = _iter_script_blocks(game_start, "if")
+    fishing_constructs = []
+    fishing_levelups = []
+
+    for start, _, construct_block in _iter_script_blocks(game_start, "construct_building"):
+        if "building_type = building_type:fishing_village" not in construct_block:
+            continue
+        _, _, if_block = _enclosing_script_block(if_blocks, start, "if")
+        limit_block = _first_script_block(if_block, "limit")
+        if _is_positive_coastal_fish_startup_limit(limit_block):
+            fishing_constructs.append(limit_block)
+
+    assert len(fishing_constructs) == 1
+    limit_block = fishing_constructs[0]
+    _, population_threshold, development_threshold = FISHING_VILLAGE_STARTUP_THRESHOLDS[0]
+    _assert_fishing_village_startup_limit(
+        limit_block,
+        population_threshold=population_threshold,
+        development_threshold=development_threshold,
+    )
+    assert "NOT = { has_building = building_type:fishing_village }" in limit_block
+    assert "location_building_level" not in limit_block
+
+    for start, _, action_block in _iter_script_blocks(game_start, "change_building_level_in_location"):
+        if "building = building_type:fishing_village" not in action_block:
+            continue
+        _, _, if_block = _enclosing_script_block(if_blocks, start, "if")
+        limit_block = _first_script_block(if_block, "limit")
+        if _is_positive_coastal_fish_startup_limit(limit_block):
+            fishing_levelups.append(limit_block)
+
+    expected_levelup_thresholds = FISHING_VILLAGE_STARTUP_THRESHOLDS[1:]
+    assert len(fishing_levelups) == len(expected_levelup_thresholds)
+    for limit_block, (expected_level, population_threshold, development_threshold) in zip(
+        fishing_levelups,
+        expected_levelup_thresholds,
+        strict=True,
+    ):
+        _assert_fishing_village_startup_limit(
+            limit_block,
+            population_threshold=population_threshold,
+            development_threshold=development_threshold,
+        )
+        assert f"value < {expected_level}" in limit_block
+
+
+def _assert_fishing_village_startup_limit(
+    limit_block: str,
+    *,
+    population_threshold: int,
+    development_threshold: int,
+) -> None:
+    assert f"population >= {population_threshold}" in limit_block
+    assert f"development >= {development_threshold}" in limit_block
+    assert "raw_material = goods:fish" in limit_block
+    assert "is_coastal = yes" in limit_block
+    assert "fish_capacity > 0" in limit_block
+    assert "can_build_building = building_type:fishing_village" in limit_block
+
+
+def test_game_start_places_fruit_orchards_in_large_fruit_locations() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    game_start = _first_script_block(text, "pp_game_start_effect")
+    if_blocks = _iter_script_blocks(game_start, "if")
+    orchard_constructs = []
+    orchard_levelups = []
+
+    for start, _, construct_block in _iter_script_blocks(game_start, "construct_building"):
+        if "building_type = building_type:fruit_orchard" not in construct_block:
+            continue
+        _, _, if_block = _enclosing_script_block(if_blocks, start, "if")
+        limit_block = _first_script_block(if_block, "limit")
+        if _is_fruit_orchard_startup_limit(limit_block):
+            orchard_constructs.append(limit_block)
+
+    assert len(orchard_constructs) == 1
+    limit_block = orchard_constructs[0]
+    _, population_threshold, development_threshold = FRUIT_ORCHARD_STARTUP_THRESHOLDS[0]
+    _assert_fruit_orchard_startup_limit(
+        limit_block,
+        population_threshold=population_threshold,
+        development_threshold=development_threshold,
+    )
+    assert "NOT = { has_building = building_type:fruit_orchard }" in limit_block
+    assert "location_building_level" not in limit_block
+
+    for start, _, action_block in _iter_script_blocks(game_start, "change_building_level_in_location"):
+        if "building = building_type:fruit_orchard" not in action_block:
+            continue
+        _, _, if_block = _enclosing_script_block(if_blocks, start, "if")
+        limit_block = _first_script_block(if_block, "limit")
+        if _is_fruit_orchard_startup_limit(limit_block):
+            orchard_levelups.append(limit_block)
+
+    expected_levelup_thresholds = FRUIT_ORCHARD_STARTUP_THRESHOLDS[1:]
+    assert len(orchard_levelups) == len(expected_levelup_thresholds)
+    for limit_block, (expected_level, population_threshold, development_threshold) in zip(
+        orchard_levelups,
+        expected_levelup_thresholds,
+        strict=True,
+    ):
+        _assert_fruit_orchard_startup_limit(
+            limit_block,
+            population_threshold=population_threshold,
+            development_threshold=development_threshold,
+        )
+        assert f"value < {expected_level}" in limit_block
+
+
+def _assert_fruit_orchard_startup_limit(
+    limit_block: str,
+    *,
+    population_threshold: int,
+    development_threshold: int,
+) -> None:
+    assert f"population >= {population_threshold}" in limit_block
+    assert f"development >= {development_threshold}" in limit_block
+    assert "raw_material = goods:fruit" in limit_block
+    assert "pp_fruit_orchard_location_potential = yes" in limit_block
+    assert "farm_capacity > 0" in limit_block
+    assert "can_build_building = building_type:fruit_orchard" in limit_block
+
+
+def _is_fruit_orchard_startup_limit(limit_block: str) -> bool:
+    return (
+        "raw_material = goods:fruit" in limit_block
+        and "pp_fruit_orchard_location_potential = yes" in limit_block
+        and "can_build_building = building_type:fruit_orchard" in limit_block
+    )
+
+
+def test_game_start_places_sheep_farms_in_large_wool_locations() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    game_start = _first_script_block(text, "pp_game_start_effect")
+    if_blocks = _iter_script_blocks(game_start, "if")
+    sheep_constructs = []
+    sheep_levelups = []
+
+    for start, _, construct_block in _iter_script_blocks(game_start, "construct_building"):
+        if "building_type = building_type:sheep_farms" not in construct_block:
+            continue
+        _, _, if_block = _enclosing_script_block(if_blocks, start, "if")
+        limit_block = _first_script_block(if_block, "limit")
+        if _is_sheep_farms_startup_limit(limit_block):
+            sheep_constructs.append(limit_block)
+
+    assert len(sheep_constructs) == 1
+    limit_block = sheep_constructs[0]
+    _, population_threshold, development_threshold = SHEEP_FARMS_STARTUP_THRESHOLDS[0]
+    _assert_sheep_farms_startup_limit(
+        limit_block,
+        population_threshold=population_threshold,
+        development_threshold=development_threshold,
+    )
+    assert "NOT = { has_building = building_type:sheep_farms }" in limit_block
+    assert "location_building_level" not in limit_block
+
+    for start, _, action_block in _iter_script_blocks(game_start, "change_building_level_in_location"):
+        if "building = building_type:sheep_farms" not in action_block:
+            continue
+        _, _, if_block = _enclosing_script_block(if_blocks, start, "if")
+        limit_block = _first_script_block(if_block, "limit")
+        if _is_sheep_farms_startup_limit(limit_block):
+            sheep_levelups.append(limit_block)
+
+    expected_levelup_thresholds = SHEEP_FARMS_STARTUP_THRESHOLDS[1:]
+    assert len(sheep_levelups) == len(expected_levelup_thresholds)
+    for limit_block, (expected_level, population_threshold, development_threshold) in zip(
+        sheep_levelups,
+        expected_levelup_thresholds,
+        strict=True,
+    ):
+        _assert_sheep_farms_startup_limit(
+            limit_block,
+            population_threshold=population_threshold,
+            development_threshold=development_threshold,
+        )
+        assert f"value < {expected_level}" in limit_block
+
+
+def _assert_sheep_farms_startup_limit(
+    limit_block: str,
+    *,
+    population_threshold: int,
+    development_threshold: int,
+) -> None:
+    assert f"population >= {population_threshold}" in limit_block
+    assert f"development >= {development_threshold}" in limit_block
+    assert "raw_material = goods:wool" in limit_block
+    assert "pp_pasture_friendly_location_potential = yes" in limit_block
+    assert "farm_capacity > 0" in limit_block
+    assert "can_build_building = building_type:sheep_farms" in limit_block
+
+
+def _is_sheep_farms_startup_limit(limit_block: str) -> bool:
+    return (
+        "raw_material = goods:wool" in limit_block
+        and "pp_pasture_friendly_location_potential = yes" in limit_block
+        and "can_build_building = building_type:sheep_farms" in limit_block
+    )
+
+
+def _is_positive_coastal_fish_startup_limit(limit_block: str) -> bool:
+    return (
+        "raw_material = goods:fish" in limit_block
+        and re.search(r"(?m)^\s*is_coastal\s*=\s*yes\s*$", limit_block) is not None
+        and "NOT = { is_coastal = yes }" not in limit_block
+    )
+
+
+def test_game_start_does_not_add_disabled_farm_capacity_buildings() -> None:
     text = GAME_START_PATH.read_text(encoding="utf-8-sig")
     game_start = _first_script_block(text, "pp_game_start_effect")
     offenders: list[str] = []
@@ -1621,9 +1930,8 @@ def test_game_start_rgo_reduction_cannot_zero_max_workers() -> None:
     assert "pp_reset_rgo_max_workers" not in text
 
     on_game_start = _first_script_block(text, "on_game_start")
-    assert on_game_start.index("pp_raise_zero_rgo_max_workers") < on_game_start.index(
-        "pp_reduce_specific_rgo"
-    )
+    assert re.search(r"(?m)^[ \t]*pp_reduce_specific_rgo[ \t]*$", on_game_start) is None
+    assert re.search(r"(?m)^[ \t]*#[ \t]*pp_reduce_specific_rgo[ \t]*$", on_game_start)
 
     floor = _first_script_block(text, "pp_raise_zero_rgo_max_workers")
     assert "exists = raw_material" in floor
@@ -1751,6 +2059,57 @@ def test_non_base_production_method_slots_have_inputs_or_outputs() -> None:
             for row in rows
         )
         offenders.append(f"{building} slot {group_index}: {methods} ({locations})")
+
+    assert offenders == []
+
+
+def test_buildings_have_at_most_one_free_output_slot_except_baseline_victuals() -> None:
+    data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
+    slots_by_building: dict[str, dict[int, list[str]]] = {}
+    for row in data.building_data.production_methods.select(
+        [
+            "name",
+            "building",
+            "produced",
+            "output",
+            "input_goods",
+            "source_kind",
+            "source_layer",
+            "source_file",
+            "source_line",
+            "production_method_group_index",
+        ]
+    ).to_dicts():
+        group_index = row["production_method_group_index"]
+        building = row["building"]
+        if row["source_kind"] != "inline" or row["source_layer"] != "constructor":
+            continue
+        if not isinstance(building, str) or not isinstance(group_index, int):
+            continue
+        if not _production_method_outputs_without_inputs(row):
+            continue
+        if _is_baseline_victuals_output_method(row):
+            continue
+
+        source_file = Path(str(row["source_file"]))
+        try:
+            source = source_file.relative_to(ROOT)
+        except ValueError:
+            source = source_file
+        slot_methods = slots_by_building.setdefault(building, {}).setdefault(group_index, [])
+        slot_methods.append(
+            f"{row['name']} produces {row['produced']} at {source}:{row['source_line']}"
+        )
+
+    offenders: list[str] = []
+    for building, slots in sorted(slots_by_building.items()):
+        if len(slots) <= 1:
+            continue
+        slot_details = "; ".join(
+            f"slot {group_index}: {', '.join(methods)}"
+            for group_index, methods in sorted(slots.items())
+        )
+        offenders.append(f"{building}: {slot_details}")
 
     assert offenders == []
 

@@ -97,6 +97,7 @@ class FoodStartupConfig:
     load_order: Path
     profile: str
     unknown_pop_food_consumption: float
+    food_consumption_multiplier: float
     include_existing_buildings: bool
     generated_effect: str
     production_sources: tuple[ProductionSourceRule, ...]
@@ -133,6 +134,7 @@ class FoodStartupResult:
 class ProvinceFoodBalanceModel:
     pop_food_consumption: Mapping[str, float]
     unknown_pop_food_consumption: float
+    food_consumption_multiplier: float
     production_sources: tuple[ProductionSourceRule, ...]
     goods_food: Mapping[str, float]
     production_methods: Mapping[str, Mapping[str, Any]]
@@ -146,6 +148,7 @@ class ProvinceFoodBalanceModel:
         production_sources: Sequence[ProductionSourceRule],
         *,
         unknown_pop_food_consumption: float,
+        food_consumption_multiplier: float = 1.0,
     ) -> ProvinceFoodBalanceModel:
         _require_columns(pop_types, {"name", "pop_food_consumption"})
         _require_columns(goods, {"name", "food"})
@@ -161,6 +164,7 @@ class ProvinceFoodBalanceModel:
         return cls(
             pop_food_consumption=rates,
             unknown_pop_food_consumption=unknown_pop_food_consumption,
+            food_consumption_multiplier=food_consumption_multiplier,
             production_sources=tuple(source for source in production_sources if source.enabled),
             goods_food=goods_food,
             production_methods={str(row["name"]): row for row in production_methods.to_dicts()},
@@ -193,6 +197,7 @@ class ProvinceFoodBalanceModel:
                 expr = expr + pl.col(column).fill_null(0.0) * rate
         if "population_unknown" in locations.columns and self.unknown_pop_food_consumption:
             expr = expr + pl.col("population_unknown").fill_null(0.0) * self.unknown_pop_food_consumption
+        expr = expr * self.food_consumption_multiplier
 
         frame = locations.with_columns(expr.alias("food_consumption"))
         frame = _with_province_capital(frame)
@@ -360,6 +365,10 @@ def load_food_startup_config(repo: Path, path: Path | None = None) -> FoodStartu
             demand.get("unknown_pop_food_consumption", planner.get("unknown_pop_food_consumption", 0.0)),
             "demand.unknown_pop_food_consumption",
         ),
+        food_consumption_multiplier=_float(
+            demand.get("food_consumption_multiplier", planner.get("food_consumption_multiplier", 1.0)),
+            "demand.food_consumption_multiplier",
+        ),
         include_existing_buildings=_bool(
             planner.get("include_existing_buildings", False),
             "planner.include_existing_buildings",
@@ -383,6 +392,7 @@ def build_food_startup_plan(config: FoodStartupConfig) -> FoodStartupResult:
         production_methods,
         config.production_sources,
         unknown_pop_food_consumption=config.unknown_pop_food_consumption,
+        food_consumption_multiplier=config.food_consumption_multiplier,
     )
     location_food = balance_model.compute_locations(locations, existing_levels=existing)
     province_food = balance_model.compute_provinces(location_food)
@@ -428,6 +438,7 @@ def compute_location_food_consumption(
         empty_methods,
         (),
         unknown_pop_food_consumption=unknown_pop_food_consumption,
+        food_consumption_multiplier=1.0,
     ).compute_locations(locations)
 
 
@@ -438,6 +449,7 @@ def compute_province_food_consumption(locations: pl.DataFrame) -> pl.DataFrame:
         production_sources=(),
         goods_food={},
         production_methods={},
+        food_consumption_multiplier=1.0,
     ).compute_provinces(locations)
 
 
@@ -1033,6 +1045,7 @@ def _replace_output_dir(config: FoodStartupConfig, output_dir: Path) -> FoodStar
         load_order=config.load_order,
         profile=config.profile,
         unknown_pop_food_consumption=config.unknown_pop_food_consumption,
+        food_consumption_multiplier=config.food_consumption_multiplier,
         include_existing_buildings=config.include_existing_buildings,
         generated_effect=config.generated_effect,
         production_sources=config.production_sources,

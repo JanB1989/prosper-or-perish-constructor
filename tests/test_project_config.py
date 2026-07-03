@@ -292,7 +292,7 @@ EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY = (
 FOOD_SECURITY_WORKER_BUILDINGS = {
     "cookery": ("laborers", 1),
     "victualling_yard": ("laborers", 1),
-    "victuals_market": ("burghers", 0.1),
+    "victuals_market": ("laborers", 0.5),
     "granary": ("laborers", 0.25),
 }
 NORMALIZED_PRODUCTION_SITE_CATEGORIES = {
@@ -2758,7 +2758,7 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
         assert buildings[building]["price_kind"] == "baseline_age", building
 
     victuals_market = buildings["victuals_market"]
-    assert victuals_market["employment_size"] == 0.1
+    assert victuals_market["employment_size"] == 0.5
     assert victuals_market["price"] == "pp_victuals_market_price"
     assert victuals_market["price_kind"] == "explicit"
 

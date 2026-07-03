@@ -151,6 +151,59 @@ class FakeGoodsPressureData:
         return pl.DataFrame()
 
 
+class FakePopulationData:
+    playthrough = "run_1"
+
+    def __init__(self) -> None:
+        self.snapshots = pl.DataFrame(
+            [
+                _snapshot("s1", 1337, 1, 1),
+                _snapshot("s2", 1338, 1, 1),
+            ]
+        )
+        self._locations = pl.DataFrame(
+            [
+                _population_location_row("s1", 1337, 1, 1, "north", 100.0, 10.0, 60.0, 20.0, 30.0, 0.0),
+                _population_location_row("s1", 1337, 1, 1, "south", 100.0, 0.0, 40.0, 0.0, 0.0, 60.0),
+                _population_location_row("s2", 1338, 1, 1, "north", 130.0, 10.0, 80.0, 40.0, 40.0, 0.0),
+                _population_location_row("s2", 1338, 1, 1, "south", 70.0, 0.0, 50.0, 10.0, 0.0, 20.0),
+            ]
+        )
+        self._population_pools = pl.DataFrame(
+            [
+                _population_pool_row("s1", 1337, 1, 1, 80.0, 20.0, 10.0, 30.0, 60.0),
+                _population_pool_row("s2", 1338, 1, 1, 80.0, 50.0, 10.0, 40.0, 20.0),
+            ]
+        )
+
+    def table(self, name: str) -> pl.DataFrame:
+        if name == "locations":
+            return self._locations
+        if name == "market_population_pools":
+            return self._population_pools
+        return pl.DataFrame()
+
+    def dim(self, name: str) -> pl.DataFrame:
+        return pl.DataFrame()
+
+
+def test_population_statistics_report_relative_distribution_and_split_peasants() -> None:
+    result = savegame_notebook.population_over_time(FakePopulationData(), top_n=2)
+
+    stats = {row["pop_type"]: row for row in result.stats.iter_rows(named=True)}
+
+    assert stats["peasants"]["pop_type_label"] == "Employed Peasants"
+    assert stats["peasants"]["first_population"] == pytest.approx(80.0)
+    assert stats["peasants"]["latest_population"] == pytest.approx(80.0)
+    assert stats["peasants"]["latest_share_percent"] == pytest.approx(40.0)
+    assert stats["unemployed_peasants"]["pop_type_label"] == "Unemployed Peasants"
+    assert stats["unemployed_peasants"]["first_share_percent"] == pytest.approx(10.0)
+    assert stats["unemployed_peasants"]["latest_share_percent"] == pytest.approx(25.0)
+    assert result.stats["latest_share_percent"].sum() == pytest.approx(100.0)
+    assert result.df.equals(result.stats)
+    assert result.latest["scope_label"].to_list() == ["North", "South"]
+
+
 def test_food_price_volatility_stats_rank_erratic_markets() -> None:
     result = savegame_notebook.food_price_volatility(FakePriceData(), top_n=1)
 
@@ -374,6 +427,71 @@ def _food_code_row(
     row = _food_row(snapshot_id, year, month, day, market_code, food_price, food, food_max)
     row["market_code"] = row.pop("market_id")
     return row
+
+
+def _population_location_row(
+    snapshot_id: str,
+    year: int,
+    month: int,
+    day: int,
+    region: str,
+    total_population: float,
+    nobles: float,
+    peasants: float,
+    unemployed_peasants: float,
+    laborers: float,
+    burghers: float,
+) -> dict[str, object]:
+    label = region.title()
+    return {
+        "snapshot_id": snapshot_id,
+        "playthrough_id": "run_1",
+        "date": f"{year}.{month}.{day}",
+        "year": year,
+        "month": month,
+        "day": day,
+        "date_sort": year * 10000 + month * 100 + day,
+        "super_region": region,
+        "super_region_label": label,
+        "total_population": total_population,
+        "population_nobles": nobles,
+        "population_peasants": peasants,
+        "unemployed_peasants": unemployed_peasants,
+        "population_laborers": laborers,
+        "population_burghers": burghers,
+    }
+
+
+def _population_pool_row(
+    snapshot_id: str,
+    year: int,
+    month: int,
+    day: int,
+    employed_peasants: float,
+    unemployed_peasants: float,
+    nobles: float,
+    laborers: float,
+    burghers: float,
+) -> dict[str, object]:
+    employed_total = employed_peasants + nobles + laborers + burghers
+    return {
+        "snapshot_id": snapshot_id,
+        "playthrough_id": "run_1",
+        "date": f"{year}.{month}.{day}",
+        "year": year,
+        "month": month,
+        "day": day,
+        "date_sort": year * 10000 + month * 100 + day,
+        "market_id": None,
+        "market_center_slug": "Global",
+        "employed_total": employed_total,
+        "employed_nobles": nobles,
+        "employed_burghers": burghers,
+        "employed_laborers": laborers,
+        "employed_peasants": employed_peasants,
+        "unemployed_total": unemployed_peasants,
+        "unemployed_peasants": unemployed_peasants,
+    }
 
 
 def _market_good_row(

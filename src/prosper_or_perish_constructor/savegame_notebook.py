@@ -77,7 +77,10 @@ INFRASTRUCTURE_BUILDING_ORDER = (
     "permanent_way_depot",
 )
 
-DEFAULT_NOTEBOOK_TABLES = tuple(FACT_TABLES)
+POPULATION_POOL_TABLE = "market_population_pools"
+
+DEFAULT_NOTEBOOK_TABLES = (*FACT_TABLES, POPULATION_POOL_TABLE)
+RAW_PASSTHROUGH_TABLES = frozenset({POPULATION_POOL_TABLE})
 
 GEOGRAPHY_SCOPE_ORDER = ("super_region", "macro_region", "region", "area", "location")
 GEOGRAPHY_SCOPE_ALIASES = {
@@ -225,11 +228,49 @@ class PopulationResult:
     global_df: pl.DataFrame
     breakdown_df: pl.DataFrame
     latest_breakdown_df: pl.DataFrame
+    delta_df: pl.DataFrame
+    stats: pl.DataFrame
     metric: str
     display_metric: str
     breakdown_scope: str
     filter_scope: str | None
     filter_name: str | None
+
+    @property
+    def df(self) -> pl.DataFrame:
+        """Global pop-type statistics dataframe."""
+
+        return self.stats
+
+    @property
+    def latest(self) -> pl.DataFrame:
+        """Latest scoped population breakdown dataframe."""
+
+        return self.latest_breakdown_df
+
+    @property
+    def delta(self) -> pl.DataFrame:
+        """First-to-latest scoped population delta dataframe."""
+
+        return self.delta_df
+
+    @property
+    def time_series(self) -> pl.DataFrame:
+        """Scoped population time-series dataframe."""
+
+        return self.breakdown_df
+
+    @property
+    def top_time_series(self) -> pl.DataFrame:
+        """Top scoped population time-series dataframe."""
+
+        return self.breakdown_df
+
+    @property
+    def global_time_series(self) -> pl.DataFrame:
+        """Global population time-series dataframe."""
+
+        return self.global_df
 
 
 @dataclass(frozen=True)
@@ -609,57 +650,16 @@ def show_location_rank_distribution(data: SavegameNotebookData, workbench: Any) 
 
 
 def pop_type_distribution(data: SavegameNotebookData, workbench: Any) -> DistributionResult:
+    pool_distribution = _population_pool_distribution_frame(
+        data,
+        playthrough=getattr(workbench, "playthrough", data.playthrough),
+        start_date=getattr(workbench.config, "start_date", None),
+        end_date=getattr(workbench.config, "end_date", None),
+    )
+    if not pool_distribution.is_empty():
+        return DistributionResult(pool_distribution)
     locations = _selected_locations(data, workbench)
-    columns = set(locations.collect_schema().names())
-    split_unemployed_peasants = {"population_peasants", "unemployed_peasants"}.issubset(columns)
-    aggregations = [
-        pl.sum(f"population_{pop_type}").alias(pop_type)
-        for pop_type in POP_TYPE_BASE_ORDER
-        if f"population_{pop_type}" in columns
-    ]
-    if split_unemployed_peasants:
-        aggregations.append(pl.sum("unemployed_peasants").alias("unemployed_peasants"))
-    if not aggregations:
-        return DistributionResult(pl.DataFrame())
-
-    index = ["snapshot_id", "date_sort", "year", "month", "day", "date", "plot_year"]
-    wide = locations.group_by(index).agg(aggregations).sort("date_sort").collect()
-    if split_unemployed_peasants:
-        wide = wide.with_columns(
-            pl.max_horizontal(
-                pl.col("peasants") - pl.col("unemployed_peasants"),
-                pl.lit(0.0),
-            ).alias("peasants")
-        )
-    population_columns = [pop_type for pop_type in POP_TYPE_ORDER if pop_type in wide.columns]
-    frame = (
-        wide.unpivot(
-            index=index,
-            on=population_columns,
-            variable_name="pop_type",
-            value_name="population",
-        )
-        .with_columns(
-            pl.col("pop_type")
-            .replace_strict(POP_TYPE_LABELS, default=pl.col("pop_type"))
-            .alias("pop_type_label")
-        )
-        .with_columns(pl.sum("population").over("snapshot_id").alias("total_population"))
-        .with_columns(
-            pl.when(pl.col("total_population") > 0)
-            .then(pl.col("population") / pl.col("total_population") * 100.0)
-            .otherwise(0.0)
-            .alias("percent")
-        )
-    )
-    size_order = (
-        frame.group_by("pop_type")
-        .agg(pl.sum("population").alias("sort_population"))
-        .sort(["sort_population", "pop_type"], descending=[True, False])
-        .with_row_index("pop_type_sort")
-        .select(["pop_type", "pop_type_sort"])
-    )
-    return DistributionResult(frame.join(size_order, on="pop_type", how="left").sort(["date_sort", "pop_type_sort"]))
+    return DistributionResult(_pop_type_distribution_frame(locations))
 
 
 def show_pop_type_distribution(data: SavegameNotebookData, workbench: Any) -> DistributionResult:
@@ -671,6 +671,42 @@ def show_pop_type_distribution(data: SavegameNotebookData, workbench: Any) -> Di
         title="Global pop type distribution",
     )
     return result
+
+
+def population_statistics(
+    data: SavegameNotebookData,
+    workbench: Any | None = None,
+    *,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+    scope: str = "super_region",
+    name: str | None = None,
+) -> pl.DataFrame:
+    """Compute global pop-type distribution statistics for the selected period."""
+
+    if workbench is not None:
+        locations = _selected_locations(data, workbench).collect()
+        scope = getattr(workbench.config, "group_by", scope)
+        playthrough = getattr(workbench, "playthrough", playthrough)
+        start_date = getattr(workbench.config, "start_date", start_date)
+        end_date = getattr(workbench.config, "end_date", end_date)
+    else:
+        locations = _population_locations(
+            data,
+            metric="total_population",
+            playthrough=playthrough,
+            start_date=start_date,
+            end_date=end_date,
+        )
+    return _population_statistics_from_sources(
+        data,
+        _population_scope_locations(locations, scope=scope, name=name),
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+        use_population_pools=_text_or_none(name) is None,
+    )
 
 
 def population_over_time(
@@ -709,10 +745,21 @@ def population_over_time(
         metric=metric,
         display_metric=display_metric,
     )
+    delta_df = _population_breakdown_delta(breakdown_df, metric=metric)
+    stats = _population_statistics_from_sources(
+        data,
+        _population_scope_locations(locations, scope=scope, name=name),
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+        use_population_pools=_text_or_none(name) is None,
+    )
     return PopulationResult(
         global_df=global_df,
         breakdown_df=breakdown_df,
         latest_breakdown_df=latest_breakdown_df,
+        delta_df=delta_df,
+        stats=stats,
         metric=metric,
         display_metric=display_metric,
         breakdown_scope=breakdown_scope,
@@ -744,6 +791,10 @@ def show_population(
         end_date=end_date,
         top_n=top_n,
     )
+    return show_population_result(result)
+
+
+def show_population_result(result: PopulationResult) -> PopulationResult:
     _plot_population_global(result.global_df, metric=result.metric, display_metric=result.display_metric)
     title = _population_breakdown_title(
         breakdown_scope=result.breakdown_scope,
@@ -758,6 +809,8 @@ def show_population(
         group_label="scope_label",
         title=title,
     )
+    if not result.stats.is_empty():
+        display(result.stats)
     return result
 
 
@@ -2305,6 +2358,343 @@ def _population_breakdown_time_series(
     return frame, breakdown_scope, filter_scope if filter_name else None, filter_name
 
 
+def _population_scope_locations(locations: pl.DataFrame, *, scope: str, name: str | None) -> pl.DataFrame:
+    if locations.is_empty() or _text_or_none(name) is None:
+        return locations
+    filtered, _ = _filter_population_scope(locations, _normalize_geography_scope(scope), str(name))
+    return filtered
+
+
+def _pop_type_distribution_frame(locations: pl.DataFrame | pl.LazyFrame) -> pl.DataFrame:
+    columns = (
+        set(locations.collect_schema().names())
+        if isinstance(locations, pl.LazyFrame)
+        else set(locations.columns)
+    )
+    split_unemployed_peasants = {"population_peasants", "unemployed_peasants"}.issubset(columns)
+    aggregations = [
+        pl.sum(f"population_{pop_type}").alias(pop_type)
+        for pop_type in POP_TYPE_BASE_ORDER
+        if f"population_{pop_type}" in columns
+    ]
+    if split_unemployed_peasants:
+        aggregations.append(pl.sum("unemployed_peasants").alias("unemployed_peasants"))
+    if not aggregations:
+        return pl.DataFrame()
+
+    lazy_locations = locations if isinstance(locations, pl.LazyFrame) else locations.lazy()
+    index = ["snapshot_id", "date_sort", "year", "month", "day", "date", "plot_year"]
+    wide = lazy_locations.group_by(index).agg(aggregations).sort("date_sort").collect()
+    if split_unemployed_peasants:
+        wide = wide.with_columns(
+            pl.max_horizontal(
+                pl.col("peasants") - pl.col("unemployed_peasants"),
+                pl.lit(0.0),
+            ).alias("peasants")
+        )
+    population_columns = [pop_type for pop_type in POP_TYPE_ORDER if pop_type in wide.columns]
+    labels = _pop_type_labels(split_unemployed_peasants=split_unemployed_peasants)
+    frame = (
+        wide.unpivot(
+            index=index,
+            on=population_columns,
+            variable_name="pop_type",
+            value_name="population",
+        )
+        .with_columns(
+            pl.col("pop_type")
+            .replace_strict(labels, default=pl.col("pop_type"))
+            .alias("pop_type_label")
+        )
+        .with_columns(pl.sum("population").over("snapshot_id").alias("total_population"))
+        .with_columns(
+            pl.when(pl.col("total_population") > 0)
+            .then(pl.col("population") / pl.col("total_population") * 100.0)
+            .otherwise(0.0)
+            .alias("percent")
+        )
+    )
+    size_order = (
+        frame.group_by("pop_type")
+        .agg(pl.sum("population").alias("sort_population"))
+        .sort(["sort_population", "pop_type"], descending=[True, False])
+        .with_row_index("pop_type_sort")
+        .select(["pop_type", "pop_type_sort"])
+    )
+    return frame.join(size_order, on="pop_type", how="left").sort(["date_sort", "pop_type_sort"])
+
+
+def _pop_type_labels(*, split_unemployed_peasants: bool) -> dict[str, str]:
+    labels = dict(POP_TYPE_LABELS)
+    if split_unemployed_peasants:
+        labels["peasants"] = "Employed Peasants"
+    return labels
+
+
+def _population_pool_distribution_frame(
+    data: SavegameNotebookData,
+    *,
+    playthrough: str | None,
+    start_date: int | None,
+    end_date: int | None,
+) -> pl.DataFrame:
+    pools = _selected_population_pool_table(
+        data,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    if pools.is_empty():
+        return pl.DataFrame()
+    columns = set(pools.columns)
+    if not {"employed_peasants", "unemployed_peasants"}.issubset(columns):
+        return pl.DataFrame()
+
+    if "market_id" in columns:
+        global_pools = pools.filter(pl.col("market_id").is_null())
+    elif "market_center_slug" in columns:
+        global_pools = pools.filter(pl.col("market_center_slug") == "Global")
+    else:
+        global_pools = pl.DataFrame()
+    if global_pools.is_empty():
+        return pl.DataFrame()
+
+    aggregations: list[pl.Expr] = []
+    for pop_type in POP_TYPE_BASE_ORDER:
+        if pop_type == "peasants":
+            aggregations.append(pl.sum("employed_peasants").alias("peasants"))
+            aggregations.append(pl.sum("unemployed_peasants").alias("unemployed_peasants"))
+            continue
+        parts = [
+            pl.col(column).fill_null(0)
+            for column in (f"employed_{pop_type}", f"unemployed_{pop_type}")
+            if column in columns
+        ]
+        if parts:
+            aggregations.append(sum(parts).sum().alias(pop_type))
+    if not aggregations:
+        return pl.DataFrame()
+
+    index = ["snapshot_id", "date_sort", "year", "month", "day", "date", "plot_year"]
+    wide = global_pools.lazy().group_by(index).agg(aggregations).sort("date_sort").collect()
+    population_columns = [pop_type for pop_type in POP_TYPE_ORDER if pop_type in wide.columns]
+    labels = _pop_type_labels(split_unemployed_peasants=True)
+    frame = (
+        wide.unpivot(
+            index=index,
+            on=population_columns,
+            variable_name="pop_type",
+            value_name="population",
+        )
+        .with_columns(
+            pl.col("pop_type")
+            .replace_strict(labels, default=pl.col("pop_type"))
+            .alias("pop_type_label")
+        )
+        .with_columns(pl.sum("population").over("snapshot_id").alias("total_population"))
+        .with_columns(
+            pl.when(pl.col("total_population") > 0)
+            .then(pl.col("population") / pl.col("total_population") * 100.0)
+            .otherwise(0.0)
+            .alias("percent")
+        )
+    )
+    size_order = (
+        frame.group_by("pop_type")
+        .agg(pl.sum("population").alias("sort_population"))
+        .sort(["sort_population", "pop_type"], descending=[True, False])
+        .with_row_index("pop_type_sort")
+        .select(["pop_type", "pop_type_sort"])
+    )
+    return frame.join(size_order, on="pop_type", how="left").sort(["date_sort", "pop_type_sort"])
+
+
+def _selected_population_pool_table(
+    data: SavegameNotebookData,
+    *,
+    playthrough: str | None,
+    start_date: int | None,
+    end_date: int | None,
+) -> pl.DataFrame:
+    frame = data.table(POPULATION_POOL_TABLE)
+    dataset = getattr(data, "dataset", None)
+    if (frame.is_empty() or "employed_peasants" not in frame.columns) and dataset is not None:
+        frame = _load_population_pool_table(dataset, playthrough=playthrough or data.playthrough)
+    if frame.is_empty():
+        return frame
+    if "playthrough_id" in frame.columns and (playthrough or data.playthrough) is not None:
+        frame = frame.filter(pl.col("playthrough_id") == (playthrough or data.playthrough))
+    if start_date is not None and "date_sort" in frame.columns:
+        frame = frame.filter(pl.col("date_sort") >= int(start_date))
+    if end_date is not None and "date_sort" in frame.columns:
+        frame = frame.filter(pl.col("date_sort") <= int(end_date))
+    return _with_plot_year(frame)
+
+
+def _load_population_pool_table(
+    dataset: SavegameNotebookDataset,
+    *,
+    playthrough: str | None,
+) -> pl.DataFrame:
+    if not getattr(dataset, "is_raw", False):
+        return dataset.scan_fact(POPULATION_POOL_TABLE, playthrough_id=playthrough).collect()
+    return _load_raw_passthrough_table(dataset, POPULATION_POOL_TABLE, playthrough)
+
+
+def _population_statistics_from_sources(
+    data: SavegameNotebookData,
+    locations: pl.DataFrame,
+    *,
+    playthrough: str | None,
+    start_date: int | None,
+    end_date: int | None,
+    use_population_pools: bool,
+) -> pl.DataFrame:
+    if use_population_pools:
+        pool_distribution = _population_pool_distribution_frame(
+            data,
+            playthrough=playthrough or data.playthrough,
+            start_date=start_date,
+            end_date=end_date,
+        )
+        if not pool_distribution.is_empty():
+            return _population_statistics_from_distribution(pool_distribution)
+    return _population_statistics_from_locations(locations)
+
+
+def _population_statistics_from_locations(locations: pl.DataFrame) -> pl.DataFrame:
+    if locations.is_empty():
+        return _empty_population_statistics()
+    return _population_statistics_from_distribution(_pop_type_distribution_frame(locations))
+
+
+def _population_statistics_from_distribution(frame: pl.DataFrame) -> pl.DataFrame:
+    required = {"date_sort", "pop_type", "pop_type_label", "population", "percent", "date", "pop_type_sort"}
+    if frame.is_empty() or not required.issubset(frame.columns):
+        return _empty_population_statistics()
+
+    first_date_sort = frame.get_column("date_sort").min()
+    latest_date_sort = frame.get_column("date_sort").max()
+    first = (
+        frame.filter(pl.col("date_sort") == first_date_sort)
+        .select(
+            [
+                "pop_type",
+                pl.col("date").alias("first_date"),
+                pl.col("population").alias("first_population"),
+                pl.col("percent").alias("first_share_percent"),
+            ]
+        )
+    )
+    latest = (
+        frame.filter(pl.col("date_sort") == latest_date_sort)
+        .select(
+            [
+                "pop_type",
+                "pop_type_label",
+                "pop_type_sort",
+                pl.col("date").alias("latest_date"),
+                pl.col("population").alias("latest_population"),
+                pl.col("percent").alias("latest_share_percent"),
+            ]
+        )
+    )
+    return (
+        latest.join(first, on="pop_type", how="left")
+        .with_columns(
+            [
+                (pl.col("latest_population") - pl.col("first_population")).alias("population_delta"),
+                (pl.col("latest_share_percent") - pl.col("first_share_percent")).alias("share_point_delta"),
+            ]
+        )
+        .select(
+            [
+                "pop_type",
+                "pop_type_label",
+                "first_date",
+                "latest_date",
+                "first_population",
+                "latest_population",
+                "population_delta",
+                "first_share_percent",
+                "latest_share_percent",
+                "share_point_delta",
+                "pop_type_sort",
+            ]
+        )
+        .sort("pop_type_sort")
+    )
+
+
+def _empty_population_statistics() -> pl.DataFrame:
+    return pl.DataFrame(
+        schema={
+            "pop_type": pl.String,
+            "pop_type_label": pl.String,
+            "first_date": pl.String,
+            "latest_date": pl.String,
+            "first_population": pl.Float64,
+            "latest_population": pl.Float64,
+            "population_delta": pl.Float64,
+            "first_share_percent": pl.Float64,
+            "latest_share_percent": pl.Float64,
+            "share_point_delta": pl.Float64,
+            "pop_type_sort": pl.UInt32,
+        }
+    )
+
+
+def _population_breakdown_delta(frame: pl.DataFrame, *, metric: str) -> pl.DataFrame:
+    if frame.is_empty() or not {"date_sort", "date", "scope_label", metric}.issubset(frame.columns):
+        return pl.DataFrame()
+    first_date_sort = frame.get_column("date_sort").min()
+    latest_date_sort = frame.get_column("date_sort").max()
+    first = (
+        frame.filter(pl.col("date_sort") == first_date_sort)
+        .select(
+            [
+                "scope_label",
+                pl.col("date").alias("first_date"),
+                pl.col(metric).alias(f"first_{metric}"),
+            ]
+        )
+    )
+    latest = (
+        frame.filter(pl.col("date_sort") == latest_date_sort)
+        .select(
+            [
+                "scope_label",
+                pl.col("date").alias("latest_date"),
+                pl.col(metric).alias(f"latest_{metric}"),
+            ]
+        )
+    )
+    delta_column = f"{metric}_delta"
+    percent_column = f"{metric}_delta_percent"
+    return (
+        latest.join(first, on="scope_label", how="left")
+        .with_columns((pl.col(f"latest_{metric}") - pl.col(f"first_{metric}")).alias(delta_column))
+        .with_columns(
+            pl.when(pl.col(f"first_{metric}") != 0)
+            .then(pl.col(delta_column) / pl.col(f"first_{metric}") * 100.0)
+            .otherwise(None)
+            .alias(percent_column)
+        )
+        .select(
+            [
+                "scope_label",
+                "first_date",
+                "latest_date",
+                f"first_{metric}",
+                f"latest_{metric}",
+                delta_column,
+                percent_column,
+            ]
+        )
+        .sort(delta_column, descending=True)
+    )
+
+
 def _plot_population_global(frame: pl.DataFrame, *, metric: str, display_metric: str) -> None:
     if frame.is_empty() or display_metric not in frame.columns:
         print("No population rows")
@@ -3465,7 +3855,10 @@ def _load_tables(
     table_names = _normalize_table_names(tables)
     loaded: dict[str, pl.DataFrame] = {}
     for table in table_names:
-        loaded[table] = dataset.scan_fact(table, playthrough_id=playthrough).collect()
+        if table in RAW_PASSTHROUGH_TABLES and getattr(dataset, "is_raw", False):
+            loaded[table] = _load_raw_passthrough_table(dataset, table, playthrough)
+        else:
+            loaded[table] = dataset.scan_fact(table, playthrough_id=playthrough).collect()
     return loaded
 
 
@@ -3477,6 +3870,22 @@ def _normalize_table_names(tables: Sequence[str] | str | None) -> tuple[str, ...
             return DEFAULT_NOTEBOOK_TABLES
         return (tables,)
     return tuple(dict.fromkeys(str(table) for table in tables))
+
+
+def _load_raw_passthrough_table(
+    dataset: SavegameNotebookDataset,
+    table: str,
+    playthrough: str | None,
+) -> pl.DataFrame:
+    files = dataset.fact_files(table, playthrough_id=playthrough)
+    if not files:
+        return pl.DataFrame()
+    return pl.scan_parquet(
+        [str(path) for path in files],
+        hive_partitioning=False,
+        missing_columns="insert",
+        extra_columns="ignore",
+    ).collect()
 
 
 def _configure_notebook_plots(wb: Any) -> None:

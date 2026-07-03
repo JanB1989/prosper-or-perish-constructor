@@ -97,8 +97,6 @@ building:
     }
     unique_production_methods = {
         pp_inland_saltworks_salt_flat_scraping = {
-            produced = salt
-            output = 0.075
             category = building_maintenance
         }
         pp_inland_saltworks_open_pan_boiling = {
@@ -138,5 +136,7 @@ evaluation:
       production_efficiency: 1.00
     pp_inland_saltworks_salt_flat_scraping:
       production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Empty selector method intentionally leaves base inland salt output unchanged.
     pp_inland_saltworks_open_pan_boiling:
       production_efficiency: 1.10

@@ -77,8 +77,6 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_inland_saltworks_salt_flat_scraping = {
-        produced = salt
-        output = 0.075
         category = building_maintenance
     }
     pp_inland_saltworks_open_pan_boiling = {

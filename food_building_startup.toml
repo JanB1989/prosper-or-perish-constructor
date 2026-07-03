@@ -10,6 +10,7 @@ mod_script = "mod/Prosper or Perish (Population Growth & Food Rework)/in_game/co
 
 [demand]
 unknown_pop_food_consumption = 0.0
+food_consumption_multiplier = 1.204461
 
 [planner]
 include_existing_buildings = false
@@ -51,28 +52,17 @@ key = "cookery"
 enabled = true
 order = 10
 coverage_group = "victuals_supply"
-target_basis = "shortfall"
-target_food_ratio = 0.50
-max_levels_per_province = 2
-max_levels_per_location = 1
+target_basis = "consumption"
+target_food_ratio = 1.10
+max_levels_per_province = 9
+max_levels_per_location = 6
 min_province_food_consumption = 60
 placement = "highest_population"
 allowed_ranks = ["rural_settlement", "town", "city", "megalopolis"]
-required_province_raw_materials = [
-  "wheat",
-  "livestock",
-  "legumes",
-  "fish",
-  "rice",
-  "millet",
-  "maize",
-  "potato",
-  "fruit",
-  "wild_game",
-]
-min_province_rural_population_share = 0.35
+required_province_raw_materials = []
+min_province_rural_population_share = 0.00
 max_province_urban_population_share = 0.65
-target_scale_min = 0.35
+target_scale_min = 0.75
 peasant_share_scale_start = 0.75
 peasant_share_scale_end = 0.95
 development_per_1000_scale_start = 0.50
@@ -95,15 +85,15 @@ key = "victuals_market"
 enabled = true
 order = 20
 coverage_group = "local_food_distribution"
-target_basis = "shortfall"
-target_food_ratio = 0.50
-max_levels_per_province = 1
-max_levels_per_location = 1
+target_basis = "consumption"
+target_food_ratio = 1.10
+max_levels_per_province = 9
+max_levels_per_location = 6
 min_province_food_consumption = 60
 placement = "highest_population"
 allowed_ranks = ["rural_settlement", "town", "city", "megalopolis"]
-min_province_urban_population_share = 0.20
-target_scale_min = 0.35
+min_province_urban_population_share = 0.00
+target_scale_min = 0.75
 peasant_share_scale_start = 0.75
 peasant_share_scale_end = 0.95
 development_per_1000_scale_start = 0.50

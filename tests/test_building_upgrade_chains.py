@@ -1616,6 +1616,33 @@ def test_game_start_does_not_add_farming_village_or_sheep_farm_levels() -> None:
     assert not offenders
 
 
+def test_game_start_rgo_reduction_cannot_zero_max_workers() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    assert "pp_reset_rgo_max_workers" not in text
+
+    reducer = _first_script_block(text, "pp_reduce_specific_rgo")
+    branch_blocks = _iter_script_blocks(reducer, "if") + _iter_script_blocks(reducer, "else_if")
+    offenders: list[str] = []
+
+    for match in re.finditer(r"(?m)^[ \t]*change_max_raw_material_workers\s*=\s*(-\d+)\s*$", reducer):
+        reduction = abs(int(match.group(1)))
+        _, _, branch_block = _enclosing_script_block(branch_blocks, match.start(), "if/else_if")
+        limit_block = _first_script_block(branch_block, "limit")
+        floor_match = re.search(r"\bmax_rgo_workers\s*>=\s*(\d+)\b", limit_block)
+        line = _script_line_number(reducer, match.start())
+
+        if floor_match is None:
+            offenders.append(f"line {line}: missing max_rgo_workers guard")
+            continue
+        if int(floor_match.group(1)) <= reduction:
+            offenders.append(
+                f"line {line}: max_rgo_workers guard {floor_match.group(1)} does not survive reduction {reduction}"
+            )
+
+    assert re.search(r"\brgo_workers\b", reducer) is None
+    assert not offenders
+
+
 def test_game_start_invalid_building_cleanup_matches_current_potentials() -> None:
     text = GAME_START_PATH.read_text(encoding="utf-8-sig")
     on_game_start = _first_script_block(text, "on_game_start")

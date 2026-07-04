@@ -297,6 +297,19 @@ FOOD_SECURITY_PRIORITY_TAGS_BY_GROUP = {
 EDUCATION_PRIORITY_TAG = "pp_education_priority"
 EDUCATION_PRIORITY_BONUS = 20000
 EDUCATION_PRIORITY_BUILDINGS = ("library", "university")
+EDUCATION_DESIRED_POP_MODIFIERS = {
+    "library": {
+        "local_laborers_desired_pop": 0.6,
+        "local_burghers_desired_pop": 0.3,
+        "local_clergy_desired_pop": 0.1,
+    },
+    "university": {
+        "local_laborers_desired_pop": 1.2,
+        "local_burghers_desired_pop": 0.6,
+        "local_clergy_desired_pop": 0.3,
+        "local_nobles_desired_pop": 0.2,
+    },
+}
 EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY = (
     "equality",
     "first_come_first_serve",
@@ -692,6 +705,11 @@ def test_education_building_priorities_are_in_employment_systems() -> None:
         assert isinstance(rendered, CList)
         values = _entry_values(rendered)
         assert EDUCATION_PRIORITY_TAG in _custom_tags(values["custom_tags"])
+        modifier = values["modifier"]
+        assert isinstance(modifier, CList)
+        modifier_values = _entry_values(modifier)
+        for modifier_key, expected_value in EDUCATION_DESIRED_POP_MODIFIERS[building].items():
+            assert modifier_values[modifier_key] == expected_value
 
 
 def test_food_security_storage_and_market_workers_match_source_blueprints() -> None:

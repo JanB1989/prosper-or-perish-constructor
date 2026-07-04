@@ -6,6 +6,9 @@ TRY_INJECT:library = {
 	modifier = {
 		# Vanilla is 0.001; modifier entries are additive, so this reaches 0.002.
 		local_pop_promotion_speed = 0.001
+		local_laborers_desired_pop = 0.6
+		local_burghers_desired_pop = 0.3
+		local_clergy_desired_pop = 0.1
 	}
 }
 
@@ -15,5 +18,9 @@ TRY_INJECT:university = {
 	modifier = {
 		# Vanilla is 0.001; modifier entries are additive, so this reaches 0.005.
 		local_pop_promotion_speed = 0.004
+		local_laborers_desired_pop = 1.2
+		local_burghers_desired_pop = 0.6
+		local_clergy_desired_pop = 0.3
+		local_nobles_desired_pop = 0.2
 	}
 }

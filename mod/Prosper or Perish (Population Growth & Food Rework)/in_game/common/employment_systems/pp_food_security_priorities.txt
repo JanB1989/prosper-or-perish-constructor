@@ -6,6 +6,12 @@
 	priority = {
 		value = 1 #all treated equally
 		if = {
+			limit = { has_tag = pp_education_priority }
+
+			# Libraries and universities should claim burghers and clergy before ordinary economy jobs.
+			add = 20000
+		}
+		if = {
 			limit = { has_tag = pp_food_security_priority }
 
 			# Food storage needs highest priority to stop fluctuations in food for AI.
@@ -82,6 +88,12 @@ TRY_REPLACE:first_come_first_serve = {
 		value = building_index #buildings filled in first built, first filled order
 		multiply = -1
 		if = {
+			limit = { has_tag = pp_education_priority }
+
+			# Libraries and universities should claim burghers and clergy before ordinary economy jobs.
+			add = 20000
+		}
+		if = {
 			limit = { has_tag = pp_food_security_priority }
 
 			# Food storage needs highest priority to stop fluctuations in food for AI.
@@ -156,6 +168,12 @@ TRY_REPLACE:capitalism = {
 
 	priority = {
 		value = building_potential_profit
+		if = {
+			limit = { has_tag = pp_education_priority }
+
+			# Libraries and universities should claim burghers and clergy before ordinary economy jobs.
+			add = 20000
+		}
 		if = {
 			limit = { has_tag = pp_food_security_priority }
 
@@ -241,6 +259,12 @@ TRY_REPLACE:capitalism_prioritising_infrastructure = {
 				}
 			}
 			add = 10000
+		}
+		if = {
+			limit = { has_tag = pp_education_priority }
+
+			# Libraries and universities should claim burghers and clergy before ordinary economy jobs.
+			add = 20000
 		}
 		if = {
 			limit = { has_tag = pp_food_security_priority }
@@ -341,6 +365,12 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade = {
 				}
 			}
 			add = 1000
+		}
+		if = {
+			limit = { has_tag = pp_education_priority }
+
+			# Libraries and universities should claim burghers and clergy before ordinary economy jobs.
+			add = 20000
 		}
 		if = {
 			limit = { has_tag = pp_food_security_priority }
@@ -449,6 +479,12 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade_and_culture = {
 				}
 			}
 			add = 100
+		}
+		if = {
+			limit = { has_tag = pp_education_priority }
+
+			# Libraries and universities should claim burghers and clergy before ordinary economy jobs.
+			add = 20000
 		}
 		if = {
 			limit = { has_tag = pp_food_security_priority }

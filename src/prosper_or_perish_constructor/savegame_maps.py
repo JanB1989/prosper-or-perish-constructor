@@ -65,6 +65,22 @@ DEFAULT_NO_DATA = np.array([156, 156, 150], dtype=np.uint8)
 DEFAULT_NO_DATA_STRIPE = np.array([126, 126, 120], dtype=np.uint8)
 DEFAULT_ANIMATION_MAX_BYTES = 9_500_000
 COLOR_CONSTRUCTORS = frozenset({"rgb", "hsv", "hsv360"})
+EMPLOYMENT_POPULATION_ROWS = (
+    ("nobles", "Nobles"),
+    ("clergy", "Clerics"),
+    ("burghers", "Burghers"),
+    ("soldiers", "Soldiers"),
+    ("laborers", "Laborers"),
+    ("peasants", "Peasants"),
+    ("unemployed_peasants", "Unemployed peasants"),
+    ("slaves", "Slaves"),
+    ("tribesmen", "Tribesmen"),
+)
+EMPLOYMENT_BASE_POP_TYPES = tuple(
+    pop_type
+    for pop_type, _label in EMPLOYMENT_POPULATION_ROWS
+    if pop_type != "unemployed_peasants"
+)
 
 
 @dataclass(frozen=True)
@@ -178,8 +194,9 @@ class MapFrameLegend:
     signed: bool = False
     swatch_rows: tuple[tuple[str, str, str], ...] = ()
     swatch_title: str = "Top countries"
-    employment_region_rows: tuple[tuple[str, str, str, str, str, str], ...] = ()
-    employment_region_title: str = "Super Region"
+    employment_distribution_columns: tuple[str, ...] = ()
+    employment_distribution_rows: tuple[tuple[str, tuple[str, ...]], ...] = ()
+    employment_distribution_title: str = "By Super Region"
 
 
 @dataclass(frozen=True)
@@ -2742,31 +2759,36 @@ def _population_employment_component_exprs(frame: pl.DataFrame) -> list[pl.Expr]
     peasants = _employment_population_type_expr(frame, "peasants")
     unemployed_peasants = pl.min_horizontal(
         pl.max_horizontal(_employment_column_expr(frame, "unemployed_peasants"), pl.lit(0.0)),
+        pl.max_horizontal(peasants, pl.lit(0.0)),
         total,
-    )
-    after_unemployed_peasants = pl.max_horizontal(total - unemployed_peasants, pl.lit(0.0))
-    tribesmen = pl.min_horizontal(
-        pl.max_horizontal(_employment_population_type_expr(frame, "tribesmen"), pl.lit(0.0)),
-        after_unemployed_peasants,
     )
     employed_peasants = pl.min_horizontal(
         pl.max_horizontal(peasants - unemployed_peasants, pl.lit(0.0)),
-        pl.max_horizontal(total - unemployed_peasants - tribesmen, pl.lit(0.0)),
+        pl.max_horizontal(total - unemployed_peasants, pl.lit(0.0)),
     )
     other_employed = pl.max_horizontal(
-        total - unemployed_peasants - tribesmen - employed_peasants,
+        total - unemployed_peasants - employed_peasants,
         pl.lit(0.0),
     )
-    employed_total = employed_peasants + other_employed
-    unemployed_total = unemployed_peasants + tribesmen
+    employed_total = pl.max_horizontal(total - unemployed_peasants, pl.lit(0.0))
+    population_exprs = []
+    for pop_type, _label in EMPLOYMENT_POPULATION_ROWS:
+        if pop_type == "peasants":
+            expr = employed_peasants
+        elif pop_type == "unemployed_peasants":
+            expr = unemployed_peasants
+        else:
+            expr = pl.max_horizontal(_employment_population_type_expr(frame, pop_type), pl.lit(0.0))
+        population_exprs.append(expr.alias(f"employment_population_{pop_type}"))
     return [
         total.alias("employment_total_population"),
         employed_total.alias("employment_employed_total"),
-        unemployed_total.alias("employment_unemployed_total"),
+        unemployed_peasants.alias("employment_unemployed_total"),
         unemployed_peasants.alias("employment_unemployed_peasants"),
-        tribesmen.alias("employment_unemployed_tribesmen"),
+        pl.lit(0.0).alias("employment_unemployed_tribesmen"),
         employed_peasants.alias("employment_employed_peasants"),
         other_employed.alias("employment_other_employed"),
+        *population_exprs,
     ]
 
 
@@ -2781,8 +2803,8 @@ def _employment_total_population_expr(frame: pl.DataFrame) -> pl.Expr:
         return pl.max_horizontal(pl.col("total_population").cast(pl.Float64).fill_null(0.0), pl.lit(0.0))
     population_expressions = [
         _employment_population_type_expr(frame, pop_type)
-        for pop_type in ("nobles", "clergy", "burghers", "laborers", "soldiers", "peasants", "slaves", "tribesmen")
-        if f"population_{pop_type}" in frame.columns or pop_type in frame.columns
+        for pop_type in EMPLOYMENT_BASE_POP_TYPES
+        if _employment_population_type_columns(frame, pop_type)
     ]
     if not population_expressions:
         return pl.lit(0.0)
@@ -2790,9 +2812,36 @@ def _employment_total_population_expr(frame: pl.DataFrame) -> pl.Expr:
 
 
 def _employment_population_type_expr(frame: pl.DataFrame, pop_type: str) -> pl.Expr:
-    for column in (f"population_{pop_type}", pop_type):
-        if column in frame.columns:
-            return pl.col(column).cast(pl.Float64).fill_null(0.0)
+    for column in _employment_population_type_columns(frame, pop_type):
+        return pl.col(column).cast(pl.Float64).fill_null(0.0)
+    return pl.lit(0.0)
+
+
+def _employment_population_type_columns(frame: pl.DataFrame, pop_type: str) -> tuple[str, ...]:
+    aliases = {
+        "clergy": ("clergy", "clerics"),
+        "tribesmen": ("tribesmen", "tribesman"),
+    }.get(pop_type, (pop_type,))
+    columns: list[str] = []
+    for alias in aliases:
+        for column in (f"population_{alias}", alias):
+            if column in frame.columns and column not in columns:
+                columns.append(column)
+    return tuple(columns)
+
+
+def _employment_population_component_column(pop_type: str) -> str:
+    return f"employment_population_{pop_type}"
+
+
+def _employment_population_component_columns() -> tuple[str, ...]:
+    return tuple(_employment_population_component_column(pop_type) for pop_type, _label in EMPLOYMENT_POPULATION_ROWS)
+
+
+def _employment_population_component_expr(frame: pl.DataFrame, pop_type: str) -> pl.Expr:
+    column = _employment_population_component_column(pop_type)
+    if column in frame.columns:
+        return pl.col(column).cast(pl.Float64).fill_null(0.0)
     return pl.lit(0.0)
 
 
@@ -2977,10 +3026,7 @@ def _employment_frame_legend(frame: pl.DataFrame, *, date: str) -> MapFrameLegen
         "employment_total_population",
         "employment_employed_total",
         "employment_unemployed_total",
-        "employment_unemployed_peasants",
-        "employment_unemployed_tribesmen",
-        "employment_employed_peasants",
-        "employment_other_employed",
+        *_employment_population_component_columns(),
     }
     if frame.is_empty() or not required.issubset(frame.columns):
         rows.append(("Locations", "0"))
@@ -2998,83 +3044,75 @@ def _employment_frame_legend(frame: pl.DataFrame, *, date: str) -> MapFrameLegen
         pl.col("employment_total_population").cast(pl.Float64).fill_null(0.0).sum().alias("total"),
         pl.col("employment_employed_total").cast(pl.Float64).fill_null(0.0).sum().alias("employed"),
         pl.col("employment_unemployed_total").cast(pl.Float64).fill_null(0.0).sum().alias("unemployed"),
-        pl.col("employment_unemployed_peasants").cast(pl.Float64).fill_null(0.0).sum().alias("unemployed_peasants"),
-        pl.col("employment_unemployed_tribesmen").cast(pl.Float64).fill_null(0.0).sum().alias("tribesmen"),
-        pl.col("employment_employed_peasants").cast(pl.Float64).fill_null(0.0).sum().alias("employed_peasants"),
-        pl.col("employment_other_employed").cast(pl.Float64).fill_null(0.0).sum().alias("other_employed"),
+        *[
+            _employment_population_component_expr(frame, pop_type).sum().alias(pop_type)
+            for pop_type, _label in EMPLOYMENT_POPULATION_ROWS
+        ],
     ).row(0, named=True)
     total = float(totals["total"] or 0.0)
     employed = float(totals["employed"] or 0.0)
     unemployed = float(totals["unemployed"] or 0.0)
+    rows.append(("Employment", _format_population_component_share(employed, total)))
+    rows.append(("Unemployment", _format_population_component_share(unemployed, total)))
     rows.extend(
         (
-            ("Employment", _format_population_component_share(employed, total)),
-            ("Unemployment", _format_population_component_share(unemployed, total)),
-            ("Unemp peasants", _format_population_component_share(float(totals["unemployed_peasants"] or 0.0), total)),
-            ("Unemp tribesmen", _format_population_component_share(float(totals["tribesmen"] or 0.0), total)),
-            ("Employed peasants", _format_population_component_share(float(totals["employed_peasants"] or 0.0), total)),
-            ("Other employed", _format_population_component_share(float(totals["other_employed"] or 0.0), total)),
+            label,
+            _format_population_component_share(float(totals[pop_type] or 0.0), total),
         )
+        for pop_type, label in EMPLOYMENT_POPULATION_ROWS
     )
+    distribution_columns, distribution_rows = _super_region_employment_distribution(frame)
 
     return MapFrameLegend(
         title="Employment",
         rows=tuple(rows),
         unit="%",
-        employment_region_rows=_super_region_employment_rows(frame),
+        employment_distribution_columns=distribution_columns,
+        employment_distribution_rows=distribution_rows,
     )
 
 
-def _super_region_employment_rows(frame: pl.DataFrame) -> tuple[tuple[str, str, str, str, str, str], ...]:
+def _super_region_employment_distribution(frame: pl.DataFrame) -> tuple[tuple[str, ...], tuple[tuple[str, tuple[str, ...]], ...]]:
     required = {
         "super_region",
         "employment_total_population",
-        "employment_employed_total",
-        "employment_unemployed_peasants",
-        "employment_unemployed_tribesmen",
-        "employment_employed_peasants",
-        "employment_other_employed",
+        *_employment_population_component_columns(),
     }
     if frame.is_empty() or not required.issubset(frame.columns):
-        return ()
+        return (), ()
     selected = frame.select(
         _super_region_label_expr(frame).alias("region_label"),
         pl.col("employment_total_population").cast(pl.Float64).fill_null(0.0).alias("total"),
-        pl.col("employment_employed_total").cast(pl.Float64).fill_null(0.0).alias("employed"),
-        pl.col("employment_unemployed_peasants").cast(pl.Float64).fill_null(0.0).alias("unemployed_peasants"),
-        pl.col("employment_unemployed_tribesmen").cast(pl.Float64).fill_null(0.0).alias("tribesmen"),
-        pl.col("employment_employed_peasants").cast(pl.Float64).fill_null(0.0).alias("employed_peasants"),
-        pl.col("employment_other_employed").cast(pl.Float64).fill_null(0.0).alias("other_employed"),
+        *[
+            _employment_population_component_expr(frame, pop_type).alias(pop_type)
+            for pop_type, _label in EMPLOYMENT_POPULATION_ROWS
+        ],
     )
     stats = (
         selected.group_by("region_label")
         .agg(
             [
                 pl.sum("total").alias("total"),
-                pl.sum("employed").alias("employed"),
-                pl.sum("unemployed_peasants").alias("unemployed_peasants"),
-                pl.sum("tribesmen").alias("tribesmen"),
-                pl.sum("employed_peasants").alias("employed_peasants"),
-                pl.sum("other_employed").alias("other_employed"),
+                *[
+                    pl.sum(pop_type).alias(pop_type)
+                    for pop_type, _label in EMPLOYMENT_POPULATION_ROWS
+                ],
             ]
         )
         .sort(["total", "region_label"], descending=[True, False])
     )
-    rows: list[tuple[str, str, str, str, str, str]] = []
-    for row in stats.iter_rows(named=True):
-        total = float(row["total"] or 0.0)
-        employed = float(row["employed"] or 0.0)
-        rows.append(
-            (
-                _compact_region_label(str(row["region_label"] or "Unknown")),
-                _format_population_component_share(employed, total),
-                _format_population_component_share(float(row["unemployed_peasants"] or 0.0), total),
-                _format_population_component_share(float(row["tribesmen"] or 0.0), total),
-                _format_population_component_share(float(row["employed_peasants"] or 0.0), total),
-                _format_population_component_share(float(row["other_employed"] or 0.0), total),
-            )
-        )
-    return tuple(rows)
+    if stats.is_empty():
+        return (), ()
+    stats_rows = tuple(stats.iter_rows(named=True))
+    regions = tuple(_compact_region_label(str(row["region_label"] or "Unknown")) for row in stats_rows)
+    rows: list[tuple[str, tuple[str, ...]]] = []
+    for pop_type, label in EMPLOYMENT_POPULATION_ROWS:
+        values: list[str] = []
+        for row in stats_rows:
+            total = float(row["total"] or 0.0)
+            values.append(_format_population_component_share(float(row[pop_type] or 0.0), total))
+        rows.append((label, tuple(values)))
+    return regions, tuple(rows)
 
 
 def _format_population_component_share(value: float, total: float) -> str:
@@ -3133,6 +3171,23 @@ def _compact_region_label(label: str) -> str:
     }
     text = aliases.get(label, label)
     return text if len(text) <= 18 else f"{text[:17].rstrip()}."
+
+
+def _compact_region_column_label(label: str, *, column_width: float) -> str:
+    aliases = {
+        "America": "Amer.",
+        "Americas": "Amer.",
+        "North America": "N.Am.",
+        "South America": "S.Am.",
+        "Oceania": "Ocean.",
+        "Atlantic Ocean": "Atl.",
+        "Indian Ocean": "Ind.",
+        "Pacific Ocean": "Pac.",
+        "Antarctic Ocean": "Ant.",
+    }
+    text = aliases.get(label, label)
+    max_chars = max(4, min(10, int(column_width // 9)))
+    return text if len(text) <= max_chars else f"{text[: max_chars - 1].rstrip()}."
 
 
 def _legend_title(value_label_prefix: str, mode: str) -> str:
@@ -3467,8 +3522,8 @@ def _legend_min_panel_height(legend: MapFrameLegend) -> int:
     height = 16 + 38 + 210 + 26 + len(legend.rows) * 30
     if legend.region_rows:
         height += 10 + 14 + 25 + len(legend.region_rows) * 24
-    if legend.employment_region_rows:
-        height += 12 + 14 + 25 + len(legend.employment_region_rows) * 24
+    if legend.employment_distribution_rows:
+        height += 12 + 14 + 25 + len(legend.employment_distribution_rows) * 24
     return max(480, height + 32)
 
 
@@ -3567,8 +3622,8 @@ def _draw_legend_panel(
             _draw_text_right(draw, (min_x, y), minimum, fill=(24, 24, 24), font=small_value_font)
             _draw_text_right(draw, (max_x, y), maximum, fill=(24, 24, 24), font=small_value_font)
             y += 24
-    if legend.employment_region_rows and y <= panel_y + panel_height - 72:
-        _draw_employment_region_section(
+    if legend.employment_distribution_rows and y <= panel_y + panel_height - 72:
+        _draw_employment_distribution_section(
             draw,
             x=x,
             y=y,
@@ -3577,8 +3632,7 @@ def _draw_legend_panel(
             legend=legend,
         )
 
-
-def _draw_employment_region_section(
+def _draw_employment_distribution_section(
     draw: Any,
     *,
     x: int,
@@ -3587,37 +3641,36 @@ def _draw_employment_region_section(
     bottom: int,
     legend: MapFrameLegend,
 ) -> None:
+    columns = legend.employment_distribution_columns
+    if not columns:
+        return
     y += 12
     draw.line((x, y, right, y), fill=(218, 218, 209), width=1)
     y += 14
-    heading_font = _image_font(13, bold=True)
-    row_font = _image_font(12)
-    value_font = _image_font(12, bold=True)
-    draw.text((x, y), legend.employment_region_title, fill=(70, 70, 70), font=heading_font)
-    inner_width = right - x
-    employment_x = min(right, x + max(205, round(inner_width * 0.34)))
-    unemp_peasants_x = min(right, employment_x + 124)
-    tribesmen_x = min(right, unemp_peasants_x + 104)
-    employed_peasants_x = min(right, tribesmen_x + 114)
-    other_x = right
-    for column_x, label in (
-        (employment_x, "Emp"),
-        (unemp_peasants_x, "Unemp Pea"),
-        (tribesmen_x, "Unemp Tri"),
-        (employed_peasants_x, "Emp Pea"),
-        (other_x, "Other"),
-    ):
-        _draw_text_right(draw, (column_x, y), label, fill=(70, 70, 70), font=heading_font)
+    heading_font = _image_font(12, bold=True)
+    row_font = _image_font(11)
+    value_font = _image_font(11, bold=True)
+    draw.text((x, y), legend.employment_distribution_title, fill=(70, 70, 70), font=heading_font)
+    label_width = min(170, max(128, round((right - x) * 0.22)))
+    value_left = x + label_width
+    column_width = max(42, (right - value_left) / max(len(columns), 1))
+    for index, label in enumerate(columns):
+        column_x = int(round(value_left + column_width * (index + 1))) - 2
+        _draw_text_right(
+            draw,
+            (min(right, column_x), y),
+            _compact_region_column_label(label, column_width=column_width),
+            fill=(70, 70, 70),
+            font=heading_font,
+        )
     y += 25
-    for region, employment, unemployed_peasants, tribesmen, employed_peasants, other_employed in legend.employment_region_rows:
+    for row_label, values in legend.employment_distribution_rows:
         if y > bottom - 24:
             break
-        draw.text((x, y), region, fill=(70, 70, 70), font=row_font)
-        _draw_text_right(draw, (employment_x, y), employment, fill=(24, 24, 24), font=value_font)
-        _draw_text_right(draw, (unemp_peasants_x, y), unemployed_peasants, fill=(24, 24, 24), font=value_font)
-        _draw_text_right(draw, (tribesmen_x, y), tribesmen, fill=(24, 24, 24), font=value_font)
-        _draw_text_right(draw, (employed_peasants_x, y), employed_peasants, fill=(24, 24, 24), font=value_font)
-        _draw_text_right(draw, (other_x, y), other_employed, fill=(24, 24, 24), font=value_font)
+        draw.text((x, y), row_label, fill=(70, 70, 70), font=row_font)
+        for index, value in enumerate(values):
+            column_x = int(round(value_left + column_width * (index + 1))) - 2
+            _draw_text_right(draw, (min(right, column_x), y), value, fill=(24, 24, 24), font=value_font)
         y += 24
 
 

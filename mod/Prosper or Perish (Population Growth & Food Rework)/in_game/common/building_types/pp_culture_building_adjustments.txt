@@ -1,6 +1,8 @@
 ﻿# Prosper or Perish - cultural building promotion adjustments.
 
 TRY_INJECT:library = {
+	custom_tags = { pp_education_priority }
+
 	modifier = {
 		# Vanilla is 0.001; modifier entries are additive, so this reaches 0.002.
 		local_pop_promotion_speed = 0.001
@@ -8,6 +10,8 @@ TRY_INJECT:library = {
 }
 
 TRY_INJECT:university = {
+	custom_tags = { pp_education_priority }
+
 	modifier = {
 		# Vanilla is 0.001; modifier entries are additive, so this reaches 0.005.
 		local_pop_promotion_speed = 0.004

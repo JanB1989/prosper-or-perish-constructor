@@ -294,6 +294,9 @@ FOOD_SECURITY_PRIORITY_TAGS_BY_GROUP = {
     "water_control": "pp_water_control_priority",
     "staple_food_production": "pp_staple_food_priority",
 }
+EDUCATION_PRIORITY_TAG = "pp_education_priority"
+EDUCATION_PRIORITY_BONUS = 20000
+EDUCATION_PRIORITY_BUILDINGS = ("library", "university")
 EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY = (
     "equality",
     "first_come_first_serve",
@@ -667,6 +670,28 @@ def test_food_security_building_priorities_are_in_employment_systems() -> None:
             and _clist_contains(entry.value, "has_tag", FOOD_SECURITY_GENERAL_PRIORITY_TAG)
             for entry in priority_block.entries
         )
+
+
+def test_education_building_priorities_are_in_employment_systems() -> None:
+    priority_text = (EMPLOYMENT_SYSTEMS_ROOT / "pp_food_security_priorities.txt").read_text(
+        encoding="utf-8-sig"
+    )
+    rendered_buildings = _database_entries(BUILDING_TYPE_ROOT)
+
+    assert priority_text.count(f"has_tag = {EDUCATION_PRIORITY_TAG}") == len(
+        EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY
+    )
+    pattern = re.compile(
+        rf"has_tag\s*=\s*{re.escape(EDUCATION_PRIORITY_TAG)}[\s\S]*?"
+        rf"add\s*=\s*{EDUCATION_PRIORITY_BONUS}"
+    )
+    assert len(pattern.findall(priority_text)) == len(EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY)
+
+    for building in EDUCATION_PRIORITY_BUILDINGS:
+        rendered = rendered_buildings[building]
+        assert isinstance(rendered, CList)
+        values = _entry_values(rendered)
+        assert EDUCATION_PRIORITY_TAG in _custom_tags(values["custom_tags"])
 
 
 def test_food_security_storage_and_market_workers_match_source_blueprints() -> None:

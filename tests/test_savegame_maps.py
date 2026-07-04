@@ -301,17 +301,31 @@ def test_employment_map_uses_weighted_percent_scale_and_legend(tmp_path: Path) -
     rows = dict(legend.rows)
 
     assert result.value_bounds == (0.0, 100.0)
-    assert values["alpha"] == 75.0
-    assert values["bravo"] == 87.5
+    assert values["alpha"] == 50.0 / 60.0 * 100.0
+    assert values["bravo"] == 100.0
     assert values["charlie"] == 80.0
-    assert rows["Employment"] == "80.0%"
-    assert rows["Unemployment"] == "20.0%"
-    assert rows["Unemp peasants"] == "13.3%"
-    assert rows["Unemp tribesmen"] == "6.7%"
-    assert rows["Employed peasants"] == "33.3%"
-    assert rows["Other employed"] == "46.7%"
-    assert ("Asia", "80.0%", "10.0%", "10.0%", "40.0%", "40.0%") in legend.employment_region_rows
-    assert ("Europe", "80.0%", "20.0%", "0%", "20.0%", "60.0%") in legend.employment_region_rows
+    assert rows["Employment"] == "86.7%"
+    assert rows["Unemployment"] == "13.3%"
+    assert rows["Nobles"] == "5.3%"
+    assert rows["Clerics"] == "6.7%"
+    assert rows["Burghers"] == "8.0%"
+    assert rows["Soldiers"] == "10.0%"
+    assert rows["Laborers"] == "15.3%"
+    assert rows["Peasants"] == "33.3%"
+    assert rows["Unemployed peasants"] == "13.3%"
+    assert rows["Slaves"] == "1.3%"
+    assert rows["Tribesmen"] == "6.7%"
+    assert legend.employment_distribution_columns == ("Asia", "Europe")
+    distribution = dict(legend.employment_distribution_rows)
+    assert distribution["Nobles"] == ("3.0%", "10.0%")
+    assert distribution["Clerics"] == ("5.0%", "10.0%")
+    assert distribution["Burghers"] == ("7.0%", "10.0%")
+    assert distribution["Soldiers"] == ("10.0%", "10.0%")
+    assert distribution["Laborers"] == ("13.0%", "20.0%")
+    assert distribution["Peasants"] == ("40.0%", "20.0%")
+    assert distribution["Unemployed peasants"] == ("10.0%", "20.0%")
+    assert distribution["Slaves"] == ("2.0%", "0%")
+    assert distribution["Tribesmen"] == ("10.0%", "0%")
 
 
 def test_world_scope_excludes_ocean_super_regions() -> None:
@@ -988,6 +1002,36 @@ def _locations_with_employment(locations: pl.DataFrame) -> pl.DataFrame:
             (2, 13470401): 5.0,
             (3, 13470401): 0.0,
         },
+        "population_nobles": {
+            (1, 13470401): 2.0,
+            (2, 13470401): 1.0,
+            (3, 13470401): 5.0,
+        },
+        "population_clergy": {
+            (1, 13470401): 3.0,
+            (2, 13470401): 2.0,
+            (3, 13470401): 5.0,
+        },
+        "population_burghers": {
+            (1, 13470401): 4.0,
+            (2, 13470401): 3.0,
+            (3, 13470401): 5.0,
+        },
+        "population_soldiers": {
+            (1, 13470401): 6.0,
+            (2, 13470401): 4.0,
+            (3, 13470401): 5.0,
+        },
+        "population_laborers": {
+            (1, 13470401): 8.0,
+            (2, 13470401): 5.0,
+            (3, 13470401): 10.0,
+        },
+        "population_slaves": {
+            (1, 13470401): 2.0,
+            (2, 13470401): 0.0,
+            (3, 13470401): 0.0,
+        },
     }
 
     def case_expr(column: str) -> pl.Expr:
@@ -1001,7 +1045,21 @@ def _locations_with_employment(locations: pl.DataFrame) -> pl.DataFrame:
         return expr.alias(column)
 
     return locations.with_columns(
-        [case_expr(column) for column in ("total_population", "population_peasants", "unemployed_peasants", "population_tribesmen")]
+        [
+            case_expr(column)
+            for column in (
+                "total_population",
+                "population_nobles",
+                "population_clergy",
+                "population_burghers",
+                "population_soldiers",
+                "population_laborers",
+                "population_peasants",
+                "unemployed_peasants",
+                "population_slaves",
+                "population_tribesmen",
+            )
+        ]
     )
 
 

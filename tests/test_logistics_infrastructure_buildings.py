@@ -312,7 +312,7 @@ def test_logistics_infrastructure_balance_targets_are_current() -> None:
         assert _field(body, "max_levels") == expected["max_levels"]
         assert _field(body, "increase_per_level_cost") == expected["increase_per_level_cost"]
         assert _field(body, "pop_type") == expected["pop_type"]
-        assert _field(body, "employment_size") == "1"
+        assert _field(body, "employment_size") == "3"
         assert _field(body, "can_close") == "no"
         assert _field(body, "always_add_demands") == "yes"
         assert _field(body, "forbidden_for_estates") == "yes"

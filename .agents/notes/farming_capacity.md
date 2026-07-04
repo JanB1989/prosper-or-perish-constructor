@@ -23,7 +23,8 @@ localization.
   river size, population capacity, rank, RGO suitability, Maximum RGO Size,
   Manorial Customals, and other sources add or subtract as direct rows where
   relevant. The per-building max values copy those same rows and omit only that
-  building's own capacity-consumption row.
+  building's own capacity-consumption row, except for explicitly configured
+  upgrade targets that also omit replaceable lower tiers in the same chain.
 - Performance may be revisited later, but not at the cost of making the visible
   tooltip stop showing the actual direct sources of the sum.
 
@@ -71,6 +72,21 @@ The core invariant is:
 max_levels(building X) = remaining_capacity + current_level_of_X
                        = total_capacity - levels_of_other_capacity_buildings
 ```
+
+For upgrade targets that can replace earlier tiers, the same pattern extends to
+the replaceable lower tiers:
+
+```text
+max_levels(upgrade X) = remaining_capacity
+                      + current_level_of_X
+                      + current_levels_of_replaceable_lower_tiers
+```
+
+The generator derives those replaceable lower tiers from accepted building
+blueprint `upgrade_chain` metadata for farm, fish, and forest capacity buildings.
+That lets a full-capacity location convert an existing lower tier into a later
+unlocked tier without letting unrelated capacity buildings stop counting against
+the pool.
 
 For example, if total farming capacity is 10 and the location has three
 farming villages plus one fruit orchard, then `farm_capacity` is 6,

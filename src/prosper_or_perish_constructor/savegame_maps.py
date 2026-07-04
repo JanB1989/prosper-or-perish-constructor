@@ -2972,7 +2972,16 @@ def _super_region_legend_rows(
 
 def _employment_frame_legend(frame: pl.DataFrame, *, date: str) -> MapFrameLegend:
     rows: list[tuple[str, str]] = [("Date", date)]
-    required = {"employment_map_value", "rgo_employed", "unemployed_total"}
+    required = {
+        "employment_map_value",
+        "employment_total_population",
+        "employment_employed_total",
+        "employment_unemployed_total",
+        "employment_unemployed_peasants",
+        "employment_unemployed_tribesmen",
+        "employment_employed_peasants",
+        "employment_other_employed",
+    }
     if frame.is_empty() or not required.issubset(frame.columns):
         rows.append(("Locations", "0"))
         return MapFrameLegend(title="Employment", rows=tuple(rows), unit="%")
@@ -2986,25 +2995,27 @@ def _employment_frame_legend(frame: pl.DataFrame, *, date: str) -> MapFrameLegen
     rows.append(("No data", f"{no_data_count:,}"))
 
     totals = frame.select(
-        pl.col("rgo_employed").cast(pl.Float64).fill_null(0.0).sum().alias("employed"),
-        pl.col("unemployed_total").cast(pl.Float64).fill_null(0.0).sum().alias("unemployed"),
+        pl.col("employment_total_population").cast(pl.Float64).fill_null(0.0).sum().alias("total"),
+        pl.col("employment_employed_total").cast(pl.Float64).fill_null(0.0).sum().alias("employed"),
+        pl.col("employment_unemployed_total").cast(pl.Float64).fill_null(0.0).sum().alias("unemployed"),
+        pl.col("employment_unemployed_peasants").cast(pl.Float64).fill_null(0.0).sum().alias("unemployed_peasants"),
+        pl.col("employment_unemployed_tribesmen").cast(pl.Float64).fill_null(0.0).sum().alias("tribesmen"),
+        pl.col("employment_employed_peasants").cast(pl.Float64).fill_null(0.0).sum().alias("employed_peasants"),
+        pl.col("employment_other_employed").cast(pl.Float64).fill_null(0.0).sum().alias("other_employed"),
     ).row(0, named=True)
+    total = float(totals["total"] or 0.0)
     employed = float(totals["employed"] or 0.0)
     unemployed = float(totals["unemployed"] or 0.0)
-    labor_force = employed + unemployed
-    rows.append(("Employment", _format_percent_share(employed / labor_force * 100.0) if labor_force > 0.0 else "n/a"))
-    rows.append(("Unemployment", _format_percent_share(unemployed / labor_force * 100.0) if labor_force > 0.0 else "n/a"))
-    if finite.size:
-        rows.extend(
-            (
-                ("Mean", _format_percent_share(float(finite.mean()))),
-                ("Median", _format_percent_share(float(np.median(finite)))),
-                ("Min", _format_percent_share(float(finite.min()))),
-                ("Max", _format_percent_share(float(finite.max()))),
-            )
+    rows.extend(
+        (
+            ("Employment", _format_population_component_share(employed, total)),
+            ("Unemployment", _format_population_component_share(unemployed, total)),
+            ("Unemp peasants", _format_population_component_share(float(totals["unemployed_peasants"] or 0.0), total)),
+            ("Unemp tribesmen", _format_population_component_share(float(totals["tribesmen"] or 0.0), total)),
+            ("Employed peasants", _format_population_component_share(float(totals["employed_peasants"] or 0.0), total)),
+            ("Other employed", _format_population_component_share(float(totals["other_employed"] or 0.0), total)),
         )
-    else:
-        rows.extend((("Mean", "n/a"), ("Median", "n/a"), ("Min", "n/a"), ("Max", "n/a")))
+    )
 
     return MapFrameLegend(
         title="Employment",
@@ -3014,49 +3025,60 @@ def _employment_frame_legend(frame: pl.DataFrame, *, date: str) -> MapFrameLegen
     )
 
 
-def _super_region_employment_rows(frame: pl.DataFrame) -> tuple[tuple[str, str, str], ...]:
-    required = {"super_region", "rgo_employed", "unemployed_total"}
+def _super_region_employment_rows(frame: pl.DataFrame) -> tuple[tuple[str, str, str, str, str, str], ...]:
+    required = {
+        "super_region",
+        "employment_total_population",
+        "employment_employed_total",
+        "employment_unemployed_peasants",
+        "employment_unemployed_tribesmen",
+        "employment_employed_peasants",
+        "employment_other_employed",
+    }
     if frame.is_empty() or not required.issubset(frame.columns):
         return ()
-    if "total_population" in frame.columns:
-        total_population = pl.col("total_population").cast(pl.Float64).fill_null(0.0)
-    else:
-        total_population = (
-            pl.col("rgo_employed").cast(pl.Float64).fill_null(0.0)
-            + pl.col("unemployed_total").cast(pl.Float64).fill_null(0.0)
-        )
     selected = frame.select(
         _super_region_label_expr(frame).alias("region_label"),
-        pl.col("rgo_employed").cast(pl.Float64).fill_null(0.0).alias("employed"),
-        pl.col("unemployed_total").cast(pl.Float64).fill_null(0.0).alias("unemployed"),
-        total_population.alias("total_population"),
+        pl.col("employment_total_population").cast(pl.Float64).fill_null(0.0).alias("total"),
+        pl.col("employment_employed_total").cast(pl.Float64).fill_null(0.0).alias("employed"),
+        pl.col("employment_unemployed_peasants").cast(pl.Float64).fill_null(0.0).alias("unemployed_peasants"),
+        pl.col("employment_unemployed_tribesmen").cast(pl.Float64).fill_null(0.0).alias("tribesmen"),
+        pl.col("employment_employed_peasants").cast(pl.Float64).fill_null(0.0).alias("employed_peasants"),
+        pl.col("employment_other_employed").cast(pl.Float64).fill_null(0.0).alias("other_employed"),
     )
     stats = (
         selected.group_by("region_label")
         .agg(
             [
+                pl.sum("total").alias("total"),
                 pl.sum("employed").alias("employed"),
-                pl.sum("unemployed").alias("unemployed"),
-                pl.sum("total_population").alias("total_population"),
+                pl.sum("unemployed_peasants").alias("unemployed_peasants"),
+                pl.sum("tribesmen").alias("tribesmen"),
+                pl.sum("employed_peasants").alias("employed_peasants"),
+                pl.sum("other_employed").alias("other_employed"),
             ]
         )
-        .sort(["total_population", "region_label"], descending=[True, False])
+        .sort(["total", "region_label"], descending=[True, False])
     )
-    grand_total = float(stats.select(pl.col("total_population").sum()).item() or 0.0)
-    rows: list[tuple[str, str, str]] = []
+    rows: list[tuple[str, str, str, str, str, str]] = []
     for row in stats.iter_rows(named=True):
+        total = float(row["total"] or 0.0)
         employed = float(row["employed"] or 0.0)
-        unemployed = float(row["unemployed"] or 0.0)
-        labor_force = employed + unemployed
-        total = float(row["total_population"] or 0.0)
         rows.append(
             (
                 _compact_region_label(str(row["region_label"] or "Unknown")),
-                _format_percent_share(employed / labor_force * 100.0) if labor_force > 0.0 else "n/a",
-                _format_percent_share(total / grand_total * 100.0) if grand_total > 0.0 else "n/a",
+                _format_population_component_share(employed, total),
+                _format_population_component_share(float(row["unemployed_peasants"] or 0.0), total),
+                _format_population_component_share(float(row["tribesmen"] or 0.0), total),
+                _format_population_component_share(float(row["employed_peasants"] or 0.0), total),
+                _format_population_component_share(float(row["other_employed"] or 0.0), total),
             )
         )
     return tuple(rows)
+
+
+def _format_population_component_share(value: float, total: float) -> str:
+    return _format_percent_share(value / total * 100.0) if total > 0.0 else "n/a"
 
 
 def _super_region_label_expr(frame: pl.DataFrame) -> pl.Expr:
@@ -3568,22 +3590,34 @@ def _draw_employment_region_section(
     y += 12
     draw.line((x, y, right, y), fill=(218, 218, 209), width=1)
     y += 14
-    heading_font = _image_font(15, bold=True)
-    row_font = _image_font(13)
-    value_font = _image_font(13, bold=True)
+    heading_font = _image_font(13, bold=True)
+    row_font = _image_font(12)
+    value_font = _image_font(12, bold=True)
     draw.text((x, y), legend.employment_region_title, fill=(70, 70, 70), font=heading_font)
     inner_width = right - x
-    employment_x = min(right, x + max(270, round(inner_width * 0.66)))
-    total_x = right
-    _draw_text_right(draw, (employment_x, y), "Employment", fill=(70, 70, 70), font=heading_font)
-    _draw_text_right(draw, (total_x, y), "Total", fill=(70, 70, 70), font=heading_font)
+    employment_x = min(right, x + max(205, round(inner_width * 0.34)))
+    unemp_peasants_x = min(right, employment_x + 124)
+    tribesmen_x = min(right, unemp_peasants_x + 104)
+    employed_peasants_x = min(right, tribesmen_x + 114)
+    other_x = right
+    for column_x, label in (
+        (employment_x, "Emp"),
+        (unemp_peasants_x, "Unemp Pea"),
+        (tribesmen_x, "Unemp Tri"),
+        (employed_peasants_x, "Emp Pea"),
+        (other_x, "Other"),
+    ):
+        _draw_text_right(draw, (column_x, y), label, fill=(70, 70, 70), font=heading_font)
     y += 25
-    for region, employment, total in legend.employment_region_rows:
+    for region, employment, unemployed_peasants, tribesmen, employed_peasants, other_employed in legend.employment_region_rows:
         if y > bottom - 24:
             break
         draw.text((x, y), region, fill=(70, 70, 70), font=row_font)
         _draw_text_right(draw, (employment_x, y), employment, fill=(24, 24, 24), font=value_font)
-        _draw_text_right(draw, (total_x, y), total, fill=(24, 24, 24), font=value_font)
+        _draw_text_right(draw, (unemp_peasants_x, y), unemployed_peasants, fill=(24, 24, 24), font=value_font)
+        _draw_text_right(draw, (tribesmen_x, y), tribesmen, fill=(24, 24, 24), font=value_font)
+        _draw_text_right(draw, (employed_peasants_x, y), employed_peasants, fill=(24, 24, 24), font=value_font)
+        _draw_text_right(draw, (other_x, y), other_employed, fill=(24, 24, 24), font=value_font)
         y += 24
 
 

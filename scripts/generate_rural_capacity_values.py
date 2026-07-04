@@ -15,6 +15,7 @@ from prosper_or_perish_constructor.rural_capacity import (
     FISH_CAP_BUILDINGS,
     FOREST_CAP_BUILDINGS,
     LAND_FARM_BUILDINGS,
+    capacity_max_omitted_buildings_by_building,
     farm_capacity_modifier_for_building,
 )
 
@@ -22,6 +23,7 @@ from prosper_or_perish_constructor.rural_capacity import (
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 SCRIPT_VALUES_ROOT = MOD_ROOT / "in_game" / "common" / "script_values"
+BUILDING_BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted" / "buildings"
 
 
 def _line(text: str, depth: int = 0) -> str:
@@ -52,10 +54,14 @@ def _capacity_building_subtract_rows(
     prefix: str,
     buildings: Iterable[str],
     omit_building: str | None = None,
+    omit_buildings: Iterable[str] = (),
 ) -> list[str]:
     rows: list[str] = []
+    omitted = set(omit_buildings)
+    if omit_building is not None:
+        omitted.add(omit_building)
     for building in buildings:
-        if building == omit_building:
+        if building in omitted:
             continue
         rows.extend(
             _if_has_building_block(
@@ -76,10 +82,14 @@ def _farm_modifier_rows(
     prefix: str,
     buildings: Iterable[str],
     omit_building: str | None = None,
+    omit_buildings: Iterable[str] = (),
 ) -> list[str]:
     rows: list[str] = []
+    omitted = set(omit_buildings)
+    if omit_building is not None:
+        omitted.add(omit_building)
     for building in buildings:
-        if building == omit_building:
+        if building in omitted:
             continue
         rows.extend(
             [
@@ -110,7 +120,10 @@ def _script_value(name: str, rows: Iterable[str], comments: Iterable[str] = ()) 
     return "\n".join(lines)
 
 
-def _farm_source_rows(omit_building: str | None = None) -> list[str]:
+def _farm_source_rows(
+    omit_building: str | None = None,
+    omit_buildings: Iterable[str] = (),
+) -> list[str]:
     rows = [
         _line("add = {", 1),
         _line('desc = "BUILDING_LEVEL_BASE_FARM_RGO"', 2),
@@ -173,12 +186,22 @@ def _farm_source_rows(omit_building: str | None = None) -> list[str]:
                 _line("}", 1),
             ]
         )
-    rows.extend(_farm_modifier_rows(prefix="FARM", buildings=LAND_FARM_BUILDINGS, omit_building=omit_building))
+    rows.extend(
+        _farm_modifier_rows(
+            prefix="FARM",
+            buildings=LAND_FARM_BUILDINGS,
+            omit_building=omit_building,
+            omit_buildings=omit_buildings,
+        )
+    )
     rows.extend(_building_level_pressure_rows(prefix="FARM"))
     return rows
 
 
-def _fish_source_rows(omit_building: str | None = None) -> list[str]:
+def _fish_source_rows(
+    omit_building: str | None = None,
+    omit_buildings: Iterable[str] = (),
+) -> list[str]:
     rows = [
         _line("add = {", 1),
         _line('desc = "BUILDING_LEVEL_BASE_FISHING"', 2),
@@ -217,12 +240,16 @@ def _fish_source_rows(omit_building: str | None = None) -> list[str]:
             prefix="FISH",
             buildings=FISH_CAP_BUILDINGS,
             omit_building=omit_building,
+            omit_buildings=omit_buildings,
         )
     )
     return rows
 
 
-def _forest_source_rows(omit_building: str | None = None) -> list[str]:
+def _forest_source_rows(
+    omit_building: str | None = None,
+    omit_buildings: Iterable[str] = (),
+) -> list[str]:
     rows = [
         _line("add = {", 1),
         _line('desc = "BUILDING_LEVEL_BASE_FOREST"', 2),
@@ -266,6 +293,7 @@ def _forest_source_rows(omit_building: str | None = None) -> list[str]:
             prefix="FOREST",
             buildings=FOREST_CAP_BUILDINGS,
             omit_building=omit_building,
+            omit_buildings=omit_buildings,
         )
     )
     rows.extend(_building_level_pressure_rows(prefix="FOREST"))
@@ -290,6 +318,7 @@ def _capacity_file(
     buildings: Iterable[str],
     source_rows,
     scope: str,
+    max_omitted_buildings=None,
 ) -> str:
     parts = [
         _generated_header(scope),
@@ -305,13 +334,20 @@ def _capacity_file(
         "# Per-building max-level paths. Each one is the same flat capacity sum",
         "# but omits that building's own capacity-consumption row.",
     ]
+    if max_omitted_buildings is not None:
+        parts.append("# Selected upgrade targets also omit replaceable lower-tier rows.")
     for building in buildings:
+        omitted_buildings = (
+            max_omitted_buildings(building)
+            if max_omitted_buildings is not None
+            else (building,)
+        )
         parts.extend(
             (
                 "",
                 _script_value(
                     f"{max_prefix}_{building}",
-                    source_rows(omit_building=building),
+                    source_rows(omit_buildings=omitted_buildings),
                 ),
             )
         )
@@ -319,6 +355,18 @@ def _capacity_file(
 
 
 def main() -> None:
+    farm_max_omissions = capacity_max_omitted_buildings_by_building(
+        blueprint_root=BUILDING_BLUEPRINT_ROOT,
+        capacity_buildings=LAND_FARM_BUILDINGS,
+    )
+    fish_max_omissions = capacity_max_omitted_buildings_by_building(
+        blueprint_root=BUILDING_BLUEPRINT_ROOT,
+        capacity_buildings=FISH_CAP_BUILDINGS,
+    )
+    forest_max_omissions = capacity_max_omitted_buildings_by_building(
+        blueprint_root=BUILDING_BLUEPRINT_ROOT,
+        capacity_buildings=FOREST_CAP_BUILDINGS,
+    )
     outputs = {
         "pp_farming_capacity.txt": _capacity_file(
             value_name="farm_capacity",
@@ -326,6 +374,7 @@ def main() -> None:
             buildings=LAND_FARM_BUILDINGS,
             source_rows=_farm_source_rows,
             scope="farming",
+            max_omitted_buildings=farm_max_omissions.__getitem__,
         ),
         "pp_fishing_capacity.txt": _capacity_file(
             value_name="fish_capacity",
@@ -333,6 +382,7 @@ def main() -> None:
             buildings=FISH_CAP_BUILDINGS,
             source_rows=_fish_source_rows,
             scope="fishing",
+            max_omitted_buildings=fish_max_omissions.__getitem__,
         ),
         "pp_forest_capacity.txt": _capacity_file(
             value_name="forest_capacity",
@@ -340,6 +390,7 @@ def main() -> None:
             buildings=FOREST_CAP_BUILDINGS,
             source_rows=_forest_source_rows,
             scope="forest",
+            max_omitted_buildings=forest_max_omissions.__getitem__,
         ),
     }
     for filename, text in outputs.items():

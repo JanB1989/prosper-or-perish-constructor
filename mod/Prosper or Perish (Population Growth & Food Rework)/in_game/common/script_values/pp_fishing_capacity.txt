@@ -75,6 +75,7 @@ fish_capacity = {
 
 # Per-building max-level paths. Each one is the same flat capacity sum
 # but omits that building's own capacity-consumption row.
+# Selected upgrade targets also omit replaceable lower-tier rows.
 
 fish_capacity_max_fishing_village = {
 	add = {
@@ -168,13 +169,6 @@ fish_capacity_max_net_curing_yard = {
 		add = {
 			desc = "BUILDING_LEVEL_FISH_MANORIAL_CUSTOMALS"
 			value = 2
-		}
-	}
-	if = {
-		limit = { has_building = building_type:fishing_village }
-		subtract = {
-			desc = "BUILDING_LEVEL_FISH_FISHING_VILLAGE"
-			value = "location_building_level(building_type:fishing_village)"
 		}
 	}
 	if = {
@@ -309,13 +303,6 @@ fish_capacity_max_drift_net_fishery = {
 		}
 	}
 	if = {
-		limit = { has_building = building_type:ocean_fishery }
-		subtract = {
-			desc = "BUILDING_LEVEL_FISH_OCEAN_FISHERY"
-			value = "location_building_level(building_type:ocean_fishery)"
-		}
-	}
-	if = {
 		limit = { has_building = building_type:offshore_fishery }
 		subtract = {
 			desc = "BUILDING_LEVEL_FISH_OFFSHORE_FISHERY"
@@ -368,20 +355,6 @@ fish_capacity_max_offshore_fishery = {
 		subtract = {
 			desc = "BUILDING_LEVEL_FISH_NET_CURING_YARD"
 			value = "location_building_level(building_type:net_curing_yard)"
-		}
-	}
-	if = {
-		limit = { has_building = building_type:ocean_fishery }
-		subtract = {
-			desc = "BUILDING_LEVEL_FISH_OCEAN_FISHERY"
-			value = "location_building_level(building_type:ocean_fishery)"
-		}
-	}
-	if = {
-		limit = { has_building = building_type:drift_net_fishery }
-		subtract = {
-			desc = "BUILDING_LEVEL_FISH_DRIFT_NET_FISHERY"
-			value = "location_building_level(building_type:drift_net_fishery)"
 		}
 	}
 }

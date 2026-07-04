@@ -301,13 +301,17 @@ def test_employment_map_uses_weighted_percent_scale_and_legend(tmp_path: Path) -
     rows = dict(legend.rows)
 
     assert result.value_bounds == (0.0, 100.0)
-    assert values["alpha"] == 80.0
-    assert np.isclose(values["bravo"], 100.0 * 20.0 / 30.0)
-    assert values["charlie"] == 50.0
-    assert rows["Employment"] == "65.4%"
-    assert rows["Unemployment"] == "34.6%"
-    assert ("Asia", "75.0%", "66.7%") in legend.employment_region_rows
-    assert ("Europe", "50.0%", "33.3%") in legend.employment_region_rows
+    assert values["alpha"] == 75.0
+    assert values["bravo"] == 87.5
+    assert values["charlie"] == 80.0
+    assert rows["Employment"] == "80.0%"
+    assert rows["Unemployment"] == "20.0%"
+    assert rows["Unemp peasants"] == "13.3%"
+    assert rows["Unemp tribesmen"] == "6.7%"
+    assert rows["Employed peasants"] == "33.3%"
+    assert rows["Other employed"] == "46.7%"
+    assert ("Asia", "80.0%", "10.0%", "10.0%", "40.0%", "40.0%") in legend.employment_region_rows
+    assert ("Europe", "80.0%", "20.0%", "0%", "20.0%", "60.0%") in legend.employment_region_rows
 
 
 def test_world_scope_excludes_ocean_super_regions() -> None:
@@ -969,15 +973,20 @@ def _locations_with_employment(locations: pl.DataFrame) -> pl.DataFrame:
             (2, 13470401): 40.0,
             (3, 13470401): 50.0,
         },
-        "rgo_employed": {
-            (1, 13470401): 40.0,
+        "population_peasants": {
+            (1, 13470401): 30.0,
             (2, 13470401): 20.0,
-            (3, 13470401): 25.0,
+            (3, 13470401): 20.0,
         },
-        "unemployed_total": {
+        "unemployed_peasants": {
             (1, 13470401): 10.0,
-            (2, 13470401): 10.0,
-            (3, 13470401): 25.0,
+            (2, 13470401): 0.0,
+            (3, 13470401): 10.0,
+        },
+        "population_tribesmen": {
+            (1, 13470401): 5.0,
+            (2, 13470401): 5.0,
+            (3, 13470401): 0.0,
         },
     }
 
@@ -991,7 +1000,9 @@ def _locations_with_employment(locations: pl.DataFrame) -> pl.DataFrame:
             )
         return expr.alias(column)
 
-    return locations.with_columns([case_expr(column) for column in ("total_population", "rgo_employed", "unemployed_total")])
+    return locations.with_columns(
+        [case_expr(column) for column in ("total_population", "population_peasants", "unemployed_peasants", "population_tribesmen")]
+    )
 
 
 def _fake_assets(tmp_path: Path) -> savegame_maps.SavegameMapAssets:

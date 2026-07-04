@@ -262,6 +262,7 @@ farm_capacity = {
 
 # Per-building max-level paths. Each one is the same flat capacity sum
 # but omits that building's own capacity-consumption row.
+# Selected upgrade targets also omit replaceable lower-tier rows.
 
 farm_capacity_max_farming_village = {
 	add = {
@@ -597,10 +598,6 @@ farm_capacity_max_husbandry_farmstead = {
 		value = modifier:farm_capacity_from_aqueduct_system
 	}
 	add = {
-		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE"
-		value = modifier:farm_capacity_from_farming_village
-	}
-	add = {
 		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE_ROTATIONS"
 		value = modifier:farm_capacity_from_farming_village_rotations
 	}
@@ -849,14 +846,6 @@ farm_capacity_max_farming_village_rotations = {
 		value = modifier:farm_capacity_from_aqueduct_system
 	}
 	add = {
-		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE"
-		value = modifier:farm_capacity_from_farming_village
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_HUSBANDRY_FARMSTEAD"
-		value = modifier:farm_capacity_from_husbandry_farmstead
-	}
-	add = {
 		desc = "BUILDING_LEVEL_FARM_MODEL_FARM"
 		value = modifier:farm_capacity_from_model_farm
 	}
@@ -1099,18 +1088,6 @@ farm_capacity_max_model_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_FARM_AQUEDUCT_SYSTEM"
 		value = modifier:farm_capacity_from_aqueduct_system
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE"
-		value = modifier:farm_capacity_from_farming_village
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_HUSBANDRY_FARMSTEAD"
-		value = modifier:farm_capacity_from_husbandry_farmstead
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE_ROTATIONS"
-		value = modifier:farm_capacity_from_farming_village_rotations
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_FRUIT_ORCHARD"
@@ -1621,10 +1598,6 @@ farm_capacity_max_nursery_orchard = {
 		value = modifier:farm_capacity_from_model_farm
 	}
 	add = {
-		desc = "BUILDING_LEVEL_FARM_FRUIT_ORCHARD"
-		value = modifier:farm_capacity_from_fruit_orchard
-	}
-	add = {
 		desc = "BUILDING_LEVEL_FARM_POMOLOGICAL_ORCHARD"
 		value = modifier:farm_capacity_from_pomological_orchard
 	}
@@ -1871,14 +1844,6 @@ farm_capacity_max_pomological_orchard = {
 	add = {
 		desc = "BUILDING_LEVEL_FARM_MODEL_FARM"
 		value = modifier:farm_capacity_from_model_farm
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_FRUIT_ORCHARD"
-		value = modifier:farm_capacity_from_fruit_orchard
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_NURSERY_ORCHARD"
-		value = modifier:farm_capacity_from_nursery_orchard
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_SHEEP_FARMS"
@@ -2389,10 +2354,6 @@ farm_capacity_max_hurdled_sheepcotes = {
 		value = modifier:farm_capacity_from_pomological_orchard
 	}
 	add = {
-		desc = "BUILDING_LEVEL_FARM_SHEEP_FARMS"
-		value = modifier:farm_capacity_from_sheep_farms
-	}
-	add = {
 		desc = "BUILDING_LEVEL_FARM_ENCLOSED_SHEEP_WALKS"
 		value = modifier:farm_capacity_from_enclosed_sheep_walks
 	}
@@ -2639,14 +2600,6 @@ farm_capacity_max_enclosed_sheep_walks = {
 	add = {
 		desc = "BUILDING_LEVEL_FARM_POMOLOGICAL_ORCHARD"
 		value = modifier:farm_capacity_from_pomological_orchard
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_SHEEP_FARMS"
-		value = modifier:farm_capacity_from_sheep_farms
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_HURDLED_SHEEPCOTES"
-		value = modifier:farm_capacity_from_hurdled_sheepcotes
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_HORSE_BREEDERS"
@@ -3155,10 +3108,6 @@ farm_capacity_max_stud_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_FARM_ENCLOSED_SHEEP_WALKS"
 		value = modifier:farm_capacity_from_enclosed_sheep_walks
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_HORSE_BREEDERS"
-		value = modifier:farm_capacity_from_horse_breeders
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_ELEPHANT_KRAAL"
@@ -3925,10 +3874,6 @@ farm_capacity_max_fiber_dressing_yard = {
 		value = modifier:farm_capacity_from_elephant_kraal
 	}
 	add = {
-		desc = "BUILDING_LEVEL_FARM_FIBER_CROPS_FARM"
-		value = modifier:farm_capacity_from_fiber_crops_farm
-	}
-	add = {
 		desc = "BUILDING_LEVEL_FARM_COTTON_PLANTATION"
 		value = modifier:farm_capacity_from_cotton_plantation
 	}
@@ -4691,10 +4636,6 @@ farm_capacity_max_market_cotton_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_FARM_COTTON_PLANTATION"
 		value = modifier:farm_capacity_from_cotton_plantation
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_COTTON_FARM"
-		value = modifier:farm_capacity_from_cotton_farm
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_SUGAR_PLANTATION"
@@ -5461,10 +5402,6 @@ farm_capacity_max_trapiche_sugarcane_farm = {
 		value = modifier:farm_capacity_from_sugar_plantation
 	}
 	add = {
-		desc = "BUILDING_LEVEL_FARM_SUGARCANE_FARM"
-		value = modifier:farm_capacity_from_sugarcane_farm
-	}
-	add = {
 		desc = "BUILDING_LEVEL_FARM_TOBACCO_PLANTATION"
 		value = modifier:farm_capacity_from_tobacco_plantation
 	}
@@ -6227,10 +6164,6 @@ farm_capacity_max_market_tobacco_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_FARM_TOBACCO_PLANTATION"
 		value = modifier:farm_capacity_from_tobacco_plantation
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_TOBACCO_FARM"
-		value = modifier:farm_capacity_from_tobacco_farm
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_DYE_PLANTATION"
@@ -7509,10 +7442,6 @@ farm_capacity_max_managed_cocoa_grove = {
 		value = modifier:farm_capacity_from_clove_grove
 	}
 	add = {
-		desc = "BUILDING_LEVEL_FARM_COCOA_GROVE"
-		value = modifier:farm_capacity_from_cocoa_grove
-	}
-	add = {
 		desc = "BUILDING_LEVEL_FARM_COFFEE_GROVE"
 		value = modifier:farm_capacity_from_coffee_grove
 	}
@@ -8019,10 +7948,6 @@ farm_capacity_max_terraced_coffee_grove = {
 	add = {
 		desc = "BUILDING_LEVEL_FARM_MANAGED_COCOA_GROVE"
 		value = modifier:farm_capacity_from_managed_cocoa_grove
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_COFFEE_GROVE"
-		value = modifier:farm_capacity_from_coffee_grove
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_INCENSE_GROVE"
@@ -8789,10 +8714,6 @@ farm_capacity_max_managed_pepper_garden = {
 		value = modifier:farm_capacity_from_incense_grove
 	}
 	add = {
-		desc = "BUILDING_LEVEL_FARM_PEPPER_GARDEN"
-		value = modifier:farm_capacity_from_pepper_garden
-	}
-	add = {
 		desc = "BUILDING_LEVEL_FARM_SAFFRON_CROFT"
 		value = modifier:farm_capacity_from_saffron_croft
 	}
@@ -9301,10 +9222,6 @@ farm_capacity_max_saffron_kiln_croft = {
 		value = modifier:farm_capacity_from_managed_pepper_garden
 	}
 	add = {
-		desc = "BUILDING_LEVEL_FARM_SAFFRON_CROFT"
-		value = modifier:farm_capacity_from_saffron_croft
-	}
-	add = {
 		desc = "BUILDING_LEVEL_FARM_SERICULTURE_FARM"
 		value = modifier:farm_capacity_from_sericulture_farm
 	}
@@ -9811,10 +9728,6 @@ farm_capacity_max_regulated_sericulture_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_FARM_SAFFRON_KILN_CROFT"
 		value = modifier:farm_capacity_from_saffron_kiln_croft
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_SERICULTURE_FARM"
-		value = modifier:farm_capacity_from_sericulture_farm
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_SIMPLERS_GROVE"
@@ -10579,10 +10492,6 @@ farm_capacity_max_tea_sorting_garden = {
 	add = {
 		desc = "BUILDING_LEVEL_FARM_SIMPLERS_GROVE"
 		value = modifier:farm_capacity_from_simplers_grove
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FARM_TEA_GARDEN"
-		value = modifier:farm_capacity_from_tea_garden
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_VINEYARD_ESTATE"

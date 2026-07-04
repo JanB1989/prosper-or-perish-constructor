@@ -94,6 +94,7 @@ forest_capacity = {
 
 # Per-building max-level paths. Each one is the same flat capacity sum
 # but omits that building's own capacity-consumption row.
+# Selected upgrade targets also omit replaceable lower-tier rows.
 
 forest_capacity_max_forest_village = {
 	add = {
@@ -220,13 +221,6 @@ forest_capacity_max_managed_forest_village = {
 		add = {
 			desc = "BUILDING_LEVEL_FOREST_LOCATION_RANK"
 			value = -1
-		}
-	}
-	if = {
-		limit = { has_building = building_type:forest_village }
-		subtract = {
-			desc = "BUILDING_LEVEL_FOREST_FOREST_VILLAGE"
-			value = "location_building_level(building_type:forest_village)"
 		}
 	}
 	if = {
@@ -399,13 +393,6 @@ forest_capacity_max_water_sawmill = {
 		}
 	}
 	if = {
-		limit = { has_building = building_type:lumber_mill }
-		subtract = {
-			desc = "BUILDING_LEVEL_FOREST_LUMBER_MILL"
-			value = "location_building_level(building_type:lumber_mill)"
-		}
-	}
-	if = {
 		limit = { has_building = building_type:lumber_mill_improved }
 		subtract = {
 			desc = "BUILDING_LEVEL_FOREST_LUMBER_MILL_IMPROVED"
@@ -477,20 +464,6 @@ forest_capacity_max_lumber_mill_improved = {
 		subtract = {
 			desc = "BUILDING_LEVEL_FOREST_MANAGED_FOREST_VILLAGE"
 			value = "location_building_level(building_type:managed_forest_village)"
-		}
-	}
-	if = {
-		limit = { has_building = building_type:lumber_mill }
-		subtract = {
-			desc = "BUILDING_LEVEL_FOREST_LUMBER_MILL"
-			value = "location_building_level(building_type:lumber_mill)"
-		}
-	}
-	if = {
-		limit = { has_building = building_type:water_sawmill }
-		subtract = {
-			desc = "BUILDING_LEVEL_FOREST_WATER_SAWMILL"
-			value = "location_building_level(building_type:water_sawmill)"
 		}
 	}
 	subtract = {

@@ -21,6 +21,7 @@ from mod_injector.config import load_mod_injector_config
 from prosper_or_perish_constructor import cli
 from prosper_or_perish_constructor.rural_capacity import (
     FARM_WATER_CONTROL_BUILDINGS,
+    capacity_max_omitted_buildings_by_building,
     farm_capacity_modifier_for_building,
 )
 from scripts.generate_setup_building_corrections import (
@@ -189,6 +190,18 @@ FISH_CAPACITY_MAX_VALUES = tuple(f"fish_capacity_max_{key}" for key in FISH_CAP_
 FOREST_CAPACITY_MAX_VALUES = tuple(f"forest_capacity_max_{key}" for key in FOREST_CAP_BUILDINGS)
 FISH_CAP_BLUEPRINTS = tuple(BUILDING_BLUEPRINT_ROOT / f"{key}.yml" for key in FISH_CAP_BUILDINGS)
 FOREST_CAP_BLUEPRINTS = tuple(BUILDING_BLUEPRINT_ROOT / f"{key}.yml" for key in FOREST_CAP_BUILDINGS)
+LAND_FARM_MAX_OMISSIONS = capacity_max_omitted_buildings_by_building(
+    blueprint_root=BUILDING_BLUEPRINT_ROOT,
+    capacity_buildings=LAND_FARM_BUILDINGS,
+)
+FISH_CAP_MAX_OMISSIONS = capacity_max_omitted_buildings_by_building(
+    blueprint_root=BUILDING_BLUEPRINT_ROOT,
+    capacity_buildings=FISH_CAP_BUILDINGS,
+)
+FOREST_CAP_MAX_OMISSIONS = capacity_max_omitted_buildings_by_building(
+    blueprint_root=BUILDING_BLUEPRINT_ROOT,
+    capacity_buildings=FOREST_CAP_BUILDINGS,
+)
 EXCLUDED_FARM_CAP_BUILDINGS = (
     "perfumery",
     "cookery",
@@ -467,10 +480,15 @@ def test_farm_capacity_values_are_flat_visible_sums() -> None:
 
     for building in LAND_FARM_BUILDINGS:
         max_block = _script_value_block(text, f"farm_capacity_max_{building}")
-        assert f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"' not in max_block
-        assert f"\n\t\tvalue = modifier:{farm_capacity_modifier_for_building(building)}\n" not in max_block
+        omitted_buildings = set(LAND_FARM_MAX_OMISSIONS[building])
+        for omitted_building in omitted_buildings:
+            assert f'desc = "BUILDING_LEVEL_FARM_{omitted_building.upper()}"' not in max_block
+            assert (
+                f"\n\t\tvalue = modifier:{farm_capacity_modifier_for_building(omitted_building)}\n"
+                not in max_block
+            )
         for other_building in LAND_FARM_BUILDINGS:
-            if other_building == building:
+            if other_building in omitted_buildings:
                 continue
             assert f'desc = "BUILDING_LEVEL_FARM_{other_building.upper()}"' in max_block
 
@@ -695,8 +713,104 @@ def test_farming_capacity_uses_flat_source_specific_modifier_rows() -> None:
     for building in LAND_FARM_BUILDINGS:
         max_block = _script_value_block(text, f"farm_capacity_max_{building}")
         assert f"value = farm_capacity" not in max_block
-        assert f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"' not in max_block
-        assert f"\n\t\tvalue = modifier:{farm_capacity_modifier_for_building(building)}\n" not in max_block
+        for omitted_building in LAND_FARM_MAX_OMISSIONS[building]:
+            assert f'desc = "BUILDING_LEVEL_FARM_{omitted_building.upper()}"' not in max_block
+            assert (
+                f"\n\t\tvalue = modifier:{farm_capacity_modifier_for_building(omitted_building)}\n"
+                not in max_block
+            )
+
+
+def test_capacity_upgrade_max_values_credit_lower_tiers() -> None:
+    expected_farm_omissions = {
+        "farming_village": ("farming_village",),
+        "husbandry_farmstead": ("farming_village", "husbandry_farmstead"),
+        "farming_village_rotations": (
+            "farming_village",
+            "husbandry_farmstead",
+            "farming_village_rotations",
+        ),
+        "model_farm": (
+            "farming_village",
+            "husbandry_farmstead",
+            "farming_village_rotations",
+            "model_farm",
+        ),
+        "nursery_orchard": ("fruit_orchard", "nursery_orchard"),
+        "pomological_orchard": (
+            "fruit_orchard",
+            "nursery_orchard",
+            "pomological_orchard",
+        ),
+        "enclosed_sheep_walks": (
+            "sheep_farms",
+            "hurdled_sheepcotes",
+            "enclosed_sheep_walks",
+        ),
+        "stud_farm": ("horse_breeders", "stud_farm"),
+        "market_cotton_farm": ("cotton_farm", "market_cotton_farm"),
+        "regulated_sericulture_farm": ("sericulture_farm", "regulated_sericulture_farm"),
+    }
+    assert {key: LAND_FARM_MAX_OMISSIONS[key] for key in expected_farm_omissions} == expected_farm_omissions
+    assert FISH_CAP_MAX_OMISSIONS["net_curing_yard"] == ("fishing_village", "net_curing_yard")
+    assert FISH_CAP_MAX_OMISSIONS["offshore_fishery"] == (
+        "ocean_fishery",
+        "drift_net_fishery",
+        "offshore_fishery",
+    )
+    expected_fish_omissions = {
+        "net_curing_yard": ("fishing_village", "net_curing_yard"),
+        "offshore_fishery": (
+            "ocean_fishery",
+            "drift_net_fishery",
+            "offshore_fishery",
+        ),
+    }
+    assert FOREST_CAP_MAX_OMISSIONS["managed_forest_village"] == (
+        "forest_village",
+        "managed_forest_village",
+    )
+    assert FOREST_CAP_MAX_OMISSIONS["lumber_mill_improved"] == (
+        "lumber_mill",
+        "water_sawmill",
+        "lumber_mill_improved",
+    )
+    expected_forest_omissions = {
+        "managed_forest_village": (
+            "forest_village",
+            "managed_forest_village",
+        ),
+        "lumber_mill_improved": (
+            "lumber_mill",
+            "water_sawmill",
+            "lumber_mill_improved",
+        ),
+    }
+
+    text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
+    for building, omitted_buildings in expected_farm_omissions.items():
+        max_block = _script_value_block(text, f"farm_capacity_max_{building}")
+        for omitted_building in omitted_buildings:
+            assert f'desc = "BUILDING_LEVEL_FARM_{omitted_building.upper()}"' not in max_block
+            omitted_modifier = farm_capacity_modifier_for_building(omitted_building)
+            assert f"\n\t\tvalue = modifier:{omitted_modifier}\n" not in max_block
+
+    orchard_max = _script_value_block(text, "farm_capacity_max_fruit_orchard")
+    assert LAND_FARM_MAX_OMISSIONS["fruit_orchard"] == ("fruit_orchard",)
+    assert 'desc = "BUILDING_LEVEL_FARM_FRUIT_ORCHARD"' not in orchard_max
+    assert 'desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE"' in orchard_max
+
+    generated_cases = (
+        (FISHING_CAPACITY, "fish_capacity_max", "BUILDING_LEVEL_FISH", expected_fish_omissions),
+        (FOREST_CAPACITY, "forest_capacity_max", "BUILDING_LEVEL_FOREST", expected_forest_omissions),
+    )
+    for path, max_prefix, desc_prefix, expected_omissions in generated_cases:
+        text = path.read_text(encoding="utf-8-sig")
+        for building, omitted_buildings in expected_omissions.items():
+            max_block = _script_value_block(text, f"{max_prefix}_{building}")
+            for omitted_building in omitted_buildings:
+                assert f'desc = "{desc_prefix}_{omitted_building.upper()}"' not in max_block
+                assert f'value = "location_building_level(building_type:{omitted_building})"' not in max_block
 
 
 def test_farming_capacity_raw_modifier_bridges_cover_resolved_buildings() -> None:
@@ -1146,9 +1260,12 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
     for building in FISH_CAP_BUILDINGS:
         max_block = _script_value_block(text, f"fish_capacity_max_{building}")
         assert f"value = fish_capacity" not in max_block
-        assert f'desc = "BUILDING_LEVEL_FISH_{building.upper()}"' not in max_block
+        omitted_buildings = set(FISH_CAP_MAX_OMISSIONS[building])
+        for omitted_building in omitted_buildings:
+            assert f'desc = "BUILDING_LEVEL_FISH_{omitted_building.upper()}"' not in max_block
+            assert f'value = "location_building_level(building_type:{omitted_building})"' not in max_block
         for other_building in FISH_CAP_BUILDINGS:
-            if other_building == building:
+            if other_building in omitted_buildings:
                 continue
             assert f'desc = "BUILDING_LEVEL_FISH_{other_building.upper()}"' in max_block
 
@@ -1333,9 +1450,12 @@ def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> 
     for building in FOREST_CAP_BUILDINGS:
         max_block = _script_value_block(text, f"forest_capacity_max_{building}")
         assert f"value = forest_capacity" not in max_block
-        assert f'desc = "BUILDING_LEVEL_FOREST_{building.upper()}"' not in max_block
+        omitted_buildings = set(FOREST_CAP_MAX_OMISSIONS[building])
+        for omitted_building in omitted_buildings:
+            assert f'desc = "BUILDING_LEVEL_FOREST_{omitted_building.upper()}"' not in max_block
+            assert f'value = "location_building_level(building_type:{omitted_building})"' not in max_block
         for other_building in FOREST_CAP_BUILDINGS:
-            if other_building == building:
+            if other_building in omitted_buildings:
                 continue
             assert f'desc = "BUILDING_LEVEL_FOREST_{other_building.upper()}"' in max_block
     assert not [token for token in ("value = population", "value = development", "local_population_capacity") if token in capacity_block]

@@ -41,7 +41,7 @@ unique_production_methods = {
         tools = 0.08 # tuyere, bellows upkeep
         lumber = 0.08 # racks, furnace frames
         produced = iron
-        output = 0.47
+        output = 0.41
         category = building_maintenance
     }
     pp_bog_iron_smelter_hot_blast_refining_maintenance = {
@@ -49,7 +49,7 @@ unique_production_methods = {
         tools = 0.10 # blast gear, repairs
         lumber = 0.09 # drying racks, staging
         produced = iron
-        output = 0.55
+        output = 0.46
         category = building_maintenance
     }
 }

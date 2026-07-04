@@ -63,6 +63,7 @@ BUILDING_CAPACITY_VALUES = SCRIPT_VALUES_ROOT / "pp_building_capacity_values.txt
 BUILDING_TYPE_ROOT = MOD_ROOT / "in_game" / "common" / "building_types"
 GOLD_TO_JEWELRY_BUILDINGS = BUILDING_TYPE_ROOT / "pp_gold_to_jewelry_buildings.txt"
 EMPLOYMENT_SYSTEMS_ROOT = MOD_ROOT / "in_game" / "common" / "employment_systems"
+PRODUCTION_METHODS_ROOT = MOD_ROOT / "in_game" / "common" / "production_methods"
 GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
 BUILDING_CULLING = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt"
 BUILDING_CAPACITY_CULLING_V2 = (
@@ -297,6 +298,10 @@ FOOD_SECURITY_PRIORITY_TAGS_BY_GROUP = {
 EDUCATION_PRIORITY_TAG = "pp_education_priority"
 EDUCATION_PRIORITY_BONUS = 20000
 EDUCATION_PRIORITY_BUILDINGS = ("library", "university")
+EDUCATION_PROMOTION_SPEEDS = {
+    "library": 0.002,
+    "university": 0.005,
+}
 EDUCATION_DESIRED_POP_MODIFIERS = {
     "library": {
         "local_laborers_desired_pop": 0.6,
@@ -308,6 +313,19 @@ EDUCATION_DESIRED_POP_MODIFIERS = {
         "local_burghers_desired_pop": 0.6,
         "local_clergy_desired_pop": 0.3,
         "local_nobles_desired_pop": 0.2,
+    },
+}
+EDUCATION_MAINTENANCE_INPUTS = {
+    "library": {
+        "paper": 0.2,
+        "books": 0.5,
+        "glass": 0.1,
+    },
+    "university": {
+        "paper": 1.0,
+        "books": 0.5,
+        "glass": 0.5,
+        "beeswax": 0.1,
     },
 }
 EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY = (
@@ -690,6 +708,7 @@ def test_education_building_priorities_are_in_employment_systems() -> None:
         encoding="utf-8-sig"
     )
     rendered_buildings = _database_entries(BUILDING_TYPE_ROOT)
+    production_methods = _database_entries(PRODUCTION_METHODS_ROOT)
 
     assert priority_text.count(f"has_tag = {EDUCATION_PRIORITY_TAG}") == len(
         EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY
@@ -710,6 +729,25 @@ def test_education_building_priorities_are_in_employment_systems() -> None:
         modifier_values = _entry_values(modifier)
         for modifier_key, expected_value in EDUCATION_DESIRED_POP_MODIFIERS[building].items():
             assert modifier_values[modifier_key] == expected_value
+
+        assert modifier_values["local_pop_promotion_speed"] == EDUCATION_PROMOTION_SPEEDS[building]
+
+    library_maintenance = production_methods["pp_library_maintenance"]
+    assert isinstance(library_maintenance, CList)
+    library_maintenance_values = _entry_values(library_maintenance)
+    for input_good, expected_amount in EDUCATION_MAINTENANCE_INPUTS["library"].items():
+        assert library_maintenance_values[input_good] == expected_amount
+
+    university = rendered_buildings["university"]
+    assert isinstance(university, CList)
+    university_values = _entry_values(university)
+    unique_methods = university_values["unique_production_methods"]
+    assert isinstance(unique_methods, CList)
+    university_maintenance = _entry_values(unique_methods)["pp_university_maintenance"]
+    assert isinstance(university_maintenance, CList)
+    university_maintenance_values = _entry_values(university_maintenance)
+    for input_good, expected_amount in EDUCATION_MAINTENANCE_INPUTS["university"].items():
+        assert university_maintenance_values[input_good] == expected_amount
 
 
 def test_food_security_storage_and_market_workers_match_source_blueprints() -> None:

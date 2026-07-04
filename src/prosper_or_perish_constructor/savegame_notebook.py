@@ -1124,6 +1124,58 @@ def show_food_price_map(
     )
 
 
+def employment_map(
+    data: SavegameNotebookData,
+    *,
+    scope: str = "super_region",
+    name: str | None = None,
+    absolute_bounds: tuple[float, float] | None = savegame_maps.DEFAULT_EMPLOYMENT_BOUNDS,
+    width: int | None = None,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> savegame_maps.EmploymentMapResult:
+    return savegame_maps.employment_map(
+        data,
+        scope=scope,
+        name=name,
+        absolute_bounds=absolute_bounds,
+        width=width,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+
+def show_employment_map(
+    data: SavegameNotebookData,
+    *,
+    scope: str = "super_region",
+    name: str | None = None,
+    absolute_bounds: tuple[float, float] | None = savegame_maps.DEFAULT_EMPLOYMENT_BOUNDS,
+    width: int | None = None,
+    interval_ms: int = 700,
+    display_widget: bool = True,
+    display_diagnostics: bool = True,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> savegame_maps.EmploymentMapResult:
+    return savegame_maps.show_employment_map(
+        data,
+        scope=scope,
+        name=name,
+        absolute_bounds=absolute_bounds,
+        width=width,
+        interval_ms=interval_ms,
+        display_widget=display_widget,
+        display_diagnostics=display_diagnostics,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+
 def political_map(
     data: SavegameNotebookData,
     *,
@@ -1220,6 +1272,35 @@ def save_food_price_map_animation(
     overwrite: bool = True,
 ) -> savegame_maps.AnimationExportResult:
     return savegame_maps.save_food_price_map_animation(
+        result,
+        path=path,
+        output_dir=output_dir,
+        filename=filename,
+        duration_ms=duration_ms,
+        loop=loop,
+        quality=quality,
+        lossless=lossless,
+        width=width,
+        max_bytes=max_bytes,
+        overwrite=overwrite,
+    )
+
+
+def save_employment_map_animation(
+    result: savegame_maps.EmploymentMapResult,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
+    filename: str = "employment_current.webp",
+    duration_ms: int = 700,
+    loop: int = 0,
+    quality: int = 100,
+    lossless: bool = True,
+    width: int | None = None,
+    max_bytes: int | None = None,
+    overwrite: bool = True,
+) -> savegame_maps.AnimationExportResult:
+    return savegame_maps.save_employment_map_animation(
         result,
         path=path,
         output_dir=output_dir,
@@ -1834,6 +1915,24 @@ def export_global_map_outputs(
         )
     )
 
+    employment_current = employment_map(
+        data,
+        absolute_bounds=savegame_maps.DEFAULT_EMPLOYMENT_BOUNDS,
+        **common,
+    )
+    exports.append(
+        save_employment_map_animation(
+            employment_current,
+            output_dir=absolute_dir,
+            filename="employment_current.webp",
+            duration_ms=interval_ms,
+            quality=quality,
+            lossless=lossless,
+            width=export_width,
+            max_bytes=max_webp_bytes,
+        )
+    )
+
     development_current = development_map(
         data,
         mode="current",
@@ -1908,6 +2007,7 @@ def export_global_map_outputs(
     viewer = savegame_maps.save_map_viewer(
         [
             ("Population current", population_current),
+            ("Employment current", employment_current),
             ("Development current", development_current),
             ("Building levels current", building_levels_current),
             ("Food price current", food_price_current),

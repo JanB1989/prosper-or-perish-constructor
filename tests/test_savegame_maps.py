@@ -282,42 +282,32 @@ def test_world_population_absolute_legend_includes_super_region_totals(tmp_path:
     assert ("Europe", "30k", "30k", "30k", "30k", "30k") in legend.region_rows
 
 
-def test_world_population_absolute_legend_includes_super_region_pop_distribution(tmp_path: Path) -> None:
+def test_employment_map_uses_weighted_percent_scale_and_legend(tmp_path: Path) -> None:
     base = _fake_data(tmp_path, include_missing_geometry=False)
     data = FakeNotebookData(
-        locations=_locations_with_population_distribution(base._locations),
+        locations=_locations_with_employment(base._locations),
         location_dim=base._location_dim,
         assets=base.map_assets,
         buildings=base._buildings,
     )
-    result = savegame_maps.population_map(data, scope="super_region", name=None, comparison="current", width=160)
+    result = savegame_maps.employment_map(data, scope="super_region", name=None, width=160)
     frame = result.frame_data.filter(pl.col("date_sort") == 13470401)
 
-    legend = savegame_maps._frame_legend(
-        frame,
-        value_column="population_map_value",
-        title="Population",
-        date="1347.4.1",
-        unit="population_thousands",
-        include_population_distribution=True,
-    )
+    values = {
+        row["slug"]: row["employment_map_value"]
+        for row in frame.select("slug", "employment_map_value").iter_rows(named=True)
+    }
+    legend = savegame_maps._employment_frame_legend(frame, date="1347.4.1")
+    rows = dict(legend.rows)
 
-    rows = {row.region: row for row in legend.population_distribution_rows}
-    asia = rows["Asia"]
-    assert asia.employment == "75.0%"
-    assert asia.buckets == (
-        ("Slv", "5.0%", "5.0%"),
-        ("Tri", "0%", "0%"),
-        ("Pea", "10.0%", "30.0%"),
-        ("Lab", "5.0%", "20.0%"),
-        ("Sol", "0%", "0%"),
-        ("Bur", "0%", "5.0%"),
-        ("Clg", "0%", "0%"),
-        ("Nob", "0%", "0%"),
-    )
-    assert savegame_maps._population_distribution_line("Unemp", asia.buckets, value_index=1) == (
-        "Unemp: Slv 5.0%  Tri 0%  Pea 10.0%  Lab 5.0%  Sol 0%  Bur 0%  Clg 0%  Nob 0%"
-    )
+    assert result.value_bounds == (0.0, 100.0)
+    assert values["alpha"] == 80.0
+    assert np.isclose(values["bravo"], 100.0 * 20.0 / 30.0)
+    assert values["charlie"] == 50.0
+    assert rows["Employment"] == "65.4%"
+    assert rows["Unemployment"] == "34.6%"
+    assert ("Asia", "75.0%", "66.7%") in legend.employment_region_rows
+    assert ("Europe", "50.0%", "33.3%") in legend.employment_region_rows
 
 
 def test_world_scope_excludes_ocean_super_regions() -> None:
@@ -426,8 +416,17 @@ def test_save_population_map_animation_writes_gif_fallback(tmp_path: Path) -> No
 
 
 def test_save_map_viewer_writes_html_and_frame_files(tmp_path: Path) -> None:
-    data = _fake_data(tmp_path, include_missing_geometry=False)
+    base = _fake_data(tmp_path, include_missing_geometry=False)
+    data = FakeNotebookData(
+        locations=_locations_with_employment(base._locations),
+        location_dim=base._location_dim,
+        assets=base.map_assets,
+        buildings=base._buildings,
+        market_food=base._market_food,
+        market_dim=base._market_dim,
+    )
     result = savegame_maps.population_map(data, scope="super_region", name="asia", width=160)
+    employment = savegame_maps.employment_map(data, scope="super_region", name="asia", width=160)
     food_price = savegame_maps.food_price_map(data, scope="super_region", name="asia", width=160)
     political = savegame_maps.political_map(
         data,
@@ -439,7 +438,12 @@ def test_save_map_viewer_writes_html_and_frame_files(tmp_path: Path) -> None:
     html_path = tmp_path / "savegame_maps.html"
 
     export = savegame_maps.save_map_viewer(
-        [("Population current", result), ("Food price current", food_price), ("Political current", political)],
+        [
+            ("Population current", result),
+            ("Employment current", employment),
+            ("Food price current", food_price),
+            ("Political current", political),
+        ],
         path=html_path,
         frame_dir="viewer_frames",
         width=220,
@@ -447,13 +451,15 @@ def test_save_map_viewer_writes_html_and_frame_files(tmp_path: Path) -> None:
 
     text = html_path.read_text(encoding="utf-8")
     assert export.path == html_path
-    assert export.frames == 6
+    assert export.frames == 8
     assert 'id="frameSlider"' in text
     assert 'id="playButton"' in text
     assert "Population current" in text
+    assert "Employment current" in text
     assert "Food price current" in text
     assert "Political current" in text
     assert len(list((tmp_path / "viewer_frames" / "population_current").glob("*.webp"))) == 2
+    assert len(list((tmp_path / "viewer_frames" / "employment_current").glob("*.webp"))) == 2
     assert len(list((tmp_path / "viewer_frames" / "food_price_current").glob("*.webp"))) == 2
     assert len(list((tmp_path / "viewer_frames" / "political_current").glob("*.webp"))) == 2
 
@@ -517,6 +523,29 @@ def test_development_map_widget_and_export(tmp_path: Path) -> None:
     export = savegame_maps.save_development_map_animation(
         result,
         path=tmp_path / "development_current.webp",
+        duration_ms=250,
+    )
+
+    assert widget is not None
+    assert len(widget.children) == 4
+    assert export.path.exists()
+    assert export.frames == 2
+
+
+def test_employment_map_widget_and_export(tmp_path: Path) -> None:
+    base = _fake_data(tmp_path, include_missing_geometry=False)
+    data = FakeNotebookData(
+        locations=_locations_with_employment(base._locations),
+        location_dim=base._location_dim,
+        assets=base.map_assets,
+        buildings=base._buildings,
+    )
+    result = savegame_maps.employment_map(data, scope="super_region", name="asia", width=160)
+
+    widget = savegame_maps.employment_map_widget(result, interval_ms=250)
+    export = savegame_maps.save_employment_map_animation(
+        result,
+        path=tmp_path / "employment_current.webp",
         duration_ms=250,
     )
 
@@ -933,8 +962,7 @@ def _fake_data(tmp_path: Path, *, include_missing_geometry: bool) -> FakeNoteboo
     )
 
 
-def _locations_with_population_distribution(locations: pl.DataFrame) -> pl.DataFrame:
-    pop_types = ("slaves", "tribesmen", "peasants", "laborers", "soldiers", "burghers", "clergy", "nobles")
+def _locations_with_employment(locations: pl.DataFrame) -> pl.DataFrame:
     values: dict[str, dict[tuple[int, int], float]] = {
         "total_population": {
             (1, 13470401): 60.0,
@@ -951,16 +979,7 @@ def _locations_with_population_distribution(locations: pl.DataFrame) -> pl.DataF
             (2, 13470401): 10.0,
             (3, 13470401): 25.0,
         },
-        "unemployed_slaves": {(1, 13470401): 5.0},
-        "employed_slaves": {(1, 13470401): 5.0},
-        "unemployed_peasants": {(1, 13470401): 5.0, (2, 13470401): 5.0},
-        "employed_peasants": {(1, 13470401): 20.0, (2, 13470401): 10.0},
-        "unemployed_laborers": {(2, 13470401): 5.0},
-        "employed_laborers": {(1, 13470401): 15.0, (2, 13470401): 5.0},
-        "employed_burghers": {(2, 13470401): 5.0},
     }
-    columns = ["rgo_employed", "unemployed_total"]
-    columns.extend(f"{prefix}_{pop_type}" for pop_type in pop_types for prefix in ("unemployed", "employed"))
 
     def case_expr(column: str) -> pl.Expr:
         expr = pl.col(column).cast(pl.Float64) if column in locations.columns else pl.lit(0.0)
@@ -972,7 +991,7 @@ def _locations_with_population_distribution(locations: pl.DataFrame) -> pl.DataF
             )
         return expr.alias(column)
 
-    return locations.with_columns([case_expr("total_population"), *(case_expr(column) for column in columns)])
+    return locations.with_columns([case_expr(column) for column in ("total_population", "rgo_employed", "unemployed_total")])
 
 
 def _fake_assets(tmp_path: Path) -> savegame_maps.SavegameMapAssets:

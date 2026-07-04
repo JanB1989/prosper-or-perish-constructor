@@ -58,22 +58,13 @@ DEFAULT_DEVELOPMENT_DELTA_BOUNDS = (-10.0, 10.0)
 DEFAULT_BUILDING_LEVEL_BOUNDS = (0.0, 400.0)
 DEFAULT_BUILDING_LEVEL_DELTA_BOUNDS = (-50.0, 50.0)
 DEFAULT_FOOD_PRICE_BOUNDS = (0.0, 0.30)
+DEFAULT_EMPLOYMENT_BOUNDS = (0.0, 100.0)
 DEFAULT_BACKGROUND = np.array([238, 238, 232], dtype=np.uint8)
 DEFAULT_UNSELECTED = np.array([184, 184, 178], dtype=np.uint8)
 DEFAULT_NO_DATA = np.array([156, 156, 150], dtype=np.uint8)
 DEFAULT_NO_DATA_STRIPE = np.array([126, 126, 120], dtype=np.uint8)
 DEFAULT_ANIMATION_MAX_BYTES = 9_500_000
 COLOR_CONSTRUCTORS = frozenset({"rgb", "hsv", "hsv360"})
-POP_CLASS_DISTRIBUTION_ORDER = (
-    ("slaves", "Slv"),
-    ("tribesmen", "Tri"),
-    ("peasants", "Pea"),
-    ("laborers", "Lab"),
-    ("soldiers", "Sol"),
-    ("burghers", "Bur"),
-    ("clergy", "Clg"),
-    ("nobles", "Nob"),
-)
 
 
 @dataclass(frozen=True)
@@ -144,6 +135,7 @@ class DevelopmentMapResult:
 
 BuildingLevelsMapResult = DevelopmentMapResult
 FoodPriceMapResult = DevelopmentMapResult
+EmploymentMapResult = DevelopmentMapResult
 
 
 @dataclass(frozen=True)
@@ -177,13 +169,6 @@ class MapViewerExportResult:
 
 
 @dataclass(frozen=True)
-class PopulationDistributionRow:
-    region: str
-    employment: str
-    buckets: tuple[tuple[str, str, str], ...]
-
-
-@dataclass(frozen=True)
 class MapFrameLegend:
     title: str
     rows: tuple[tuple[str, str], ...]
@@ -193,8 +178,8 @@ class MapFrameLegend:
     signed: bool = False
     swatch_rows: tuple[tuple[str, str, str], ...] = ()
     swatch_title: str = "Top countries"
-    population_distribution_rows: tuple[PopulationDistributionRow, ...] = ()
-    population_distribution_title: str = "Super Region Pop Mix"
+    employment_region_rows: tuple[tuple[str, str, str, str, str, str], ...] = ()
+    employment_region_title: str = "Super Region"
 
 
 @dataclass(frozen=True)
@@ -439,7 +424,6 @@ def population_map(
                 context=legend_context,
                 unit=legend_unit,
                 signed=legend_signed,
-                include_population_distribution=comparison == "current",
             ),
         )
         frames.append(
@@ -851,6 +835,118 @@ def food_price_map(
     )
 
 
+def employment_map(
+    data: Any,
+    *,
+    scope: str = "super_region",
+    name: str | None = None,
+    absolute_bounds: tuple[float, float] | None = DEFAULT_EMPLOYMENT_BOUNDS,
+    width: int | None = None,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> EmploymentMapResult:
+    """Pre-render current employment percentage map frames."""
+
+    assets = _require_map_assets(data)
+    locations = _employment_locations(
+        data,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    normalized_scope = _normalize_scope(scope)
+    if locations.is_empty():
+        return EmploymentMapResult((), pl.DataFrame(), "", "", normalized_scope, name, "current", "", "", DEFAULT_EMPLOYMENT_BOUNDS, 0, 0)
+
+    filtered, resolved_name = _filter_scope(locations, normalized_scope, name)
+    if filtered.is_empty():
+        return EmploymentMapResult((), pl.DataFrame(), "", "", normalized_scope, name, "current", "", "", DEFAULT_EMPLOYMENT_BOUNDS, 0, 0)
+
+    geometry = _prepared_geometry(assets)
+    selected = filtered.join(geometry, left_on="slug", right_on="location_tag", how="left")
+    selected = selected.with_columns(pl.col("map_color_int").is_not_null().alias("has_geometry"))
+    missing_geometry_locations = selected.filter(~pl.col("has_geometry")).select("slug").n_unique()
+    mapped = selected.filter(pl.col("has_geometry")).sort(["date_sort", "slug"])
+    if mapped.is_empty():
+        return EmploymentMapResult(
+            (),
+            selected,
+            "",
+            "",
+            normalized_scope,
+            resolved_name,
+            "current",
+            "",
+            "",
+            DEFAULT_EMPLOYMENT_BOUNDS,
+            0,
+            int(missing_geometry_locations),
+        )
+
+    value_column = "employment_map_value"
+    frame_data = (
+        mapped.with_columns(_population_employment_component_exprs(mapped))
+        .with_columns(_population_employment_percent_expr().alias(value_column))
+        .sort(["date_sort", "slug"])
+    )
+    low, high = _normalize_positive_bounds(absolute_bounds or DEFAULT_EMPLOYMENT_BOUNDS)
+    color_norm = Normalize(vmin=low, vmax=high, clip=True)
+    cmap = plt.get_cmap("RdYlGn")
+    crop = _scope_crop(frame_data, assets, padding=18)
+    target_width = width or assets.map_width
+    render_width = min(max(int(target_width), 200), assets.map_width)
+    render_cache = _build_render_cache(assets, crop=crop, frame_data=frame_data)
+
+    frames: list[DevelopmentMapFrame] = []
+    snapshots = frame_data.select(["snapshot_id", "date", "date_sort", "year"]).unique().sort("date_sort")
+    snapshot_frames = _partition_snapshot_frames(frame_data)
+    title = f"{resolved_name} current employment"
+    subtitle_suffix = f"employment, fixed {low:g}%..{high:g}% scale"
+    for index, snapshot in enumerate(snapshots.iter_rows(named=True)):
+        snapshot_frame = snapshot_frames[str(snapshot["snapshot_id"])]
+        rendered = _render_metric_frame(
+            assets,
+            snapshot_frame,
+            value_column=value_column,
+            crop=crop,
+            render_cache=render_cache,
+            render_width=render_width,
+            color_norm=color_norm,
+            cmap=cmap,
+            title=title,
+            subtitle=f"{_year_label(snapshot)} - {subtitle_suffix}",
+            timeline=_timeline_for_snapshot(snapshots, index, snapshot),
+            legend=_employment_frame_legend(snapshot_frame, date=_year_label(snapshot)),
+        )
+        frames.append(
+            DevelopmentMapFrame(
+                index=index,
+                snapshot_id=str(snapshot["snapshot_id"]),
+                date=str(snapshot["date"]),
+                date_sort=int(snapshot["date_sort"]),
+                year=int(snapshot["year"]),
+                png=rendered["png"],
+                image=rendered["image"],
+            )
+        )
+
+    return EmploymentMapResult(
+        frames=tuple(frames),
+        frame_data=frame_data,
+        baseline_snapshot_id="",
+        baseline_date="",
+        scope=normalized_scope,
+        name=resolved_name,
+        mode="current",
+        value_column=value_column,
+        value_label="employment",
+        value_bounds=(low, high),
+        mapped_locations=int(frame_data.select("slug").n_unique()),
+        missing_geometry_locations=int(missing_geometry_locations),
+    )
+
+
 def political_map(
     data: Any,
     *,
@@ -1070,6 +1166,39 @@ def show_food_price_map(
     )
 
 
+def show_employment_map(
+    data: Any,
+    *,
+    scope: str = "super_region",
+    name: str | None = None,
+    absolute_bounds: tuple[float, float] | None = DEFAULT_EMPLOYMENT_BOUNDS,
+    width: int | None = None,
+    interval_ms: int = 700,
+    display_widget: bool = True,
+    display_diagnostics: bool = True,
+    playthrough: str | None = None,
+    start_date: int | None = None,
+    end_date: int | None = None,
+) -> EmploymentMapResult:
+    result = employment_map(
+        data,
+        scope=scope,
+        name=name,
+        absolute_bounds=absolute_bounds,
+        width=width,
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    return _show_scalar_map_result(
+        result,
+        widget_factory=employment_map_widget,
+        interval_ms=interval_ms,
+        display_widget=display_widget,
+        display_diagnostics=display_diagnostics,
+    )
+
+
 def building_levels_map_widget(result: BuildingLevelsMapResult, *, interval_ms: int = 700) -> Any | None:
     if not result.frames:
         print("No building-level map frames")
@@ -1084,6 +1213,17 @@ def building_levels_map_widget(result: BuildingLevelsMapResult, *, interval_ms: 
 def food_price_map_widget(result: FoodPriceMapResult, *, interval_ms: int = 700) -> Any | None:
     if not result.frames:
         print("No food-price map frames")
+        return None
+    return _map_widget(
+        result.frames,
+        label_for_index=lambda index: _scalar_frame_label(result, index),
+        interval_ms=interval_ms,
+    )
+
+
+def employment_map_widget(result: EmploymentMapResult, *, interval_ms: int = 700) -> Any | None:
+    if not result.frames:
+        print("No employment map frames")
         return None
     return _map_widget(
         result.frames,
@@ -1263,6 +1403,35 @@ def save_food_price_map_animation(
     path: str | Path | None = None,
     output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
     filename: str = "food_price_current.webp",
+    duration_ms: int = 700,
+    loop: int = 0,
+    quality: int = 100,
+    lossless: bool = True,
+    width: int | None = None,
+    max_bytes: int | None = None,
+    overwrite: bool = True,
+) -> AnimationExportResult:
+    return save_map_animation(
+        result,
+        path=path,
+        output_dir=output_dir,
+        filename=filename,
+        duration_ms=duration_ms,
+        loop=loop,
+        quality=quality,
+        lossless=lossless,
+        width=width,
+        max_bytes=max_bytes,
+        overwrite=overwrite,
+    )
+
+
+def save_employment_map_animation(
+    result: EmploymentMapResult,
+    *,
+    path: str | Path | None = None,
+    output_dir: str | Path = Path("graphs/savegame_notebooks/exports"),
+    filename: str = "employment_current.webp",
     duration_ms: int = 700,
     loop: int = 0,
     quality: int = 100,
@@ -1991,6 +2160,30 @@ def _population_locations(
     )
 
 
+def _employment_locations(
+    data: Any,
+    *,
+    playthrough: str | None,
+    start_date: int | None,
+    end_date: int | None,
+) -> pl.DataFrame:
+    locations = _metric_locations(
+        data,
+        metric="total_population",
+        playthrough=playthrough,
+        start_date=start_date,
+        end_date=end_date,
+        metric_label="Employment metric",
+    )
+    if locations.is_empty():
+        return locations
+    missing = [column for column in ("population_peasants", "unemployed_peasants") if column not in locations.columns]
+    if missing:
+        joined = ", ".join(repr(column) for column in missing)
+        raise ValueError(f"Employment map requires compact population columns in the loaded locations table: {joined}.")
+    return locations
+
+
 def _metric_locations(
     data: Any,
     *,
@@ -2544,6 +2737,71 @@ def _delta_expr(current_column: str, baseline_column: str) -> pl.Expr:
     return pl.when(current.is_null() | baseline.is_null()).then(None).otherwise(current - baseline)
 
 
+def _population_employment_component_exprs(frame: pl.DataFrame) -> list[pl.Expr]:
+    total = _employment_total_population_expr(frame)
+    peasants = _employment_population_type_expr(frame, "peasants")
+    unemployed_peasants = pl.min_horizontal(
+        pl.max_horizontal(_employment_column_expr(frame, "unemployed_peasants"), pl.lit(0.0)),
+        total,
+    )
+    after_unemployed_peasants = pl.max_horizontal(total - unemployed_peasants, pl.lit(0.0))
+    tribesmen = pl.min_horizontal(
+        pl.max_horizontal(_employment_population_type_expr(frame, "tribesmen"), pl.lit(0.0)),
+        after_unemployed_peasants,
+    )
+    employed_peasants = pl.min_horizontal(
+        pl.max_horizontal(peasants - unemployed_peasants, pl.lit(0.0)),
+        pl.max_horizontal(total - unemployed_peasants - tribesmen, pl.lit(0.0)),
+    )
+    other_employed = pl.max_horizontal(
+        total - unemployed_peasants - tribesmen - employed_peasants,
+        pl.lit(0.0),
+    )
+    employed_total = employed_peasants + other_employed
+    unemployed_total = unemployed_peasants + tribesmen
+    return [
+        total.alias("employment_total_population"),
+        employed_total.alias("employment_employed_total"),
+        unemployed_total.alias("employment_unemployed_total"),
+        unemployed_peasants.alias("employment_unemployed_peasants"),
+        tribesmen.alias("employment_unemployed_tribesmen"),
+        employed_peasants.alias("employment_employed_peasants"),
+        other_employed.alias("employment_other_employed"),
+    ]
+
+
+def _population_employment_percent_expr() -> pl.Expr:
+    total = pl.col("employment_total_population").cast(pl.Float64).fill_null(0.0)
+    employed = pl.col("employment_employed_total").cast(pl.Float64).fill_null(0.0)
+    return pl.when(total > 0.0).then(employed / total * 100.0).otherwise(None)
+
+
+def _employment_total_population_expr(frame: pl.DataFrame) -> pl.Expr:
+    if "total_population" in frame.columns:
+        return pl.max_horizontal(pl.col("total_population").cast(pl.Float64).fill_null(0.0), pl.lit(0.0))
+    population_expressions = [
+        _employment_population_type_expr(frame, pop_type)
+        for pop_type in ("nobles", "clergy", "burghers", "laborers", "soldiers", "peasants", "slaves", "tribesmen")
+        if f"population_{pop_type}" in frame.columns or pop_type in frame.columns
+    ]
+    if not population_expressions:
+        return pl.lit(0.0)
+    return pl.max_horizontal(pl.sum_horizontal(population_expressions), pl.lit(0.0))
+
+
+def _employment_population_type_expr(frame: pl.DataFrame, pop_type: str) -> pl.Expr:
+    for column in (f"population_{pop_type}", pop_type):
+        if column in frame.columns:
+            return pl.col(column).cast(pl.Float64).fill_null(0.0)
+    return pl.lit(0.0)
+
+
+def _employment_column_expr(frame: pl.DataFrame, column: str) -> pl.Expr:
+    if column in frame.columns:
+        return pl.col(column).cast(pl.Float64).fill_null(0.0)
+    return pl.lit(0.0)
+
+
 def _scope_crop(frame: pl.DataFrame, assets: SavegameMapAssets, *, padding: int) -> tuple[int, int, int, int]:
     if frame.is_empty() or not {"map_min_x", "map_max_x", "map_min_y", "map_max_y"}.issubset(frame.columns):
         return (0, 0, assets.map_width, assets.map_height)
@@ -2568,7 +2826,6 @@ def _frame_legend(
     total_value_column: str | None = None,
     baseline_value_column: str | None = None,
     show_total: bool = True,
-    include_population_distribution: bool = False,
 ) -> MapFrameLegend:
     rows: list[tuple[str, str]] = [("Date", date), *context]
     if frame.is_empty() or value_column not in frame.columns:
@@ -2604,9 +2861,6 @@ def _frame_legend(
         baseline_value_column=baseline_value_column,
         show_total=show_total,
     )
-    population_distribution_rows = (
-        _super_region_population_distribution_rows(frame) if include_population_distribution else ()
-    )
     return MapFrameLegend(
         title=title,
         rows=tuple(rows),
@@ -2614,7 +2868,6 @@ def _frame_legend(
         region_value_header=region_value_header,
         unit=unit,
         signed=signed,
-        population_distribution_rows=population_distribution_rows,
     )
 
 
@@ -2717,76 +2970,90 @@ def _super_region_legend_rows(
     )
 
 
-def _super_region_population_distribution_rows(frame: pl.DataFrame) -> tuple[PopulationDistributionRow, ...]:
-    if frame.is_empty() or "super_region" not in frame.columns:
-        return ()
-    class_columns = [
-        column
-        for pop_type, _label in POP_CLASS_DISTRIBUTION_ORDER
-        for column in (f"unemployed_{pop_type}", f"employed_{pop_type}")
-    ]
-    available_class_columns = [column for column in class_columns if column in frame.columns]
-    if not available_class_columns and "rgo_employed" not in frame.columns and "unemployed_total" not in frame.columns:
-        return ()
+def _employment_frame_legend(frame: pl.DataFrame, *, date: str) -> MapFrameLegend:
+    rows: list[tuple[str, str]] = [("Date", date)]
+    required = {"employment_map_value", "rgo_employed", "unemployed_total"}
+    if frame.is_empty() or not required.issubset(frame.columns):
+        rows.append(("Locations", "0"))
+        return MapFrameLegend(title="Employment", rows=tuple(rows), unit="%")
 
-    def present_or_zero(column: str) -> pl.Expr:
-        if column in frame.columns:
-            return pl.col(column).cast(pl.Float64).fill_null(0.0).alias(column)
-        return pl.lit(0.0).alias(column)
+    values_frame = frame.select(pl.col("employment_map_value").cast(pl.Float64).alias("value"))
+    no_data_count = int(values_frame.filter(pl.col("value").is_null() | pl.col("value").is_nan()).height)
+    raw_values = values_frame.drop_nulls().get_column("value").to_list()
+    values = np.array(raw_values, dtype=np.float64)
+    finite = values[np.isfinite(values)]
+    rows.append(("Locations", f"{finite.size:,}"))
+    rows.append(("No data", f"{no_data_count:,}"))
 
-    def sum_available(columns: Sequence[str]) -> pl.Expr:
-        expressions = [pl.col(column).cast(pl.Float64).fill_null(0.0) for column in columns if column in frame.columns]
-        return pl.sum_horizontal(expressions) if expressions else pl.lit(0.0)
-
-    if "total_population" in frame.columns:
-        population_total = pl.col("total_population").cast(pl.Float64).fill_null(0.0)
+    totals = frame.select(
+        pl.col("rgo_employed").cast(pl.Float64).fill_null(0.0).sum().alias("employed"),
+        pl.col("unemployed_total").cast(pl.Float64).fill_null(0.0).sum().alias("unemployed"),
+    ).row(0, named=True)
+    employed = float(totals["employed"] or 0.0)
+    unemployed = float(totals["unemployed"] or 0.0)
+    labor_force = employed + unemployed
+    rows.append(("Employment", _format_percent_share(employed / labor_force * 100.0) if labor_force > 0.0 else "n/a"))
+    rows.append(("Unemployment", _format_percent_share(unemployed / labor_force * 100.0) if labor_force > 0.0 else "n/a"))
+    if finite.size:
+        rows.extend(
+            (
+                ("Mean", _format_percent_share(float(finite.mean()))),
+                ("Median", _format_percent_share(float(np.median(finite)))),
+                ("Min", _format_percent_share(float(finite.min()))),
+                ("Max", _format_percent_share(float(finite.max()))),
+            )
+        )
     else:
-        population_total = sum_available(available_class_columns)
-    employed_total = (
-        pl.col("rgo_employed").cast(pl.Float64).fill_null(0.0)
-        if "rgo_employed" in frame.columns
-        else sum_available([f"employed_{pop_type}" for pop_type, _label in POP_CLASS_DISTRIBUTION_ORDER])
-    )
-    unemployed_total = (
-        pl.col("unemployed_total").cast(pl.Float64).fill_null(0.0)
-        if "unemployed_total" in frame.columns
-        else sum_available([f"unemployed_{pop_type}" for pop_type, _label in POP_CLASS_DISTRIBUTION_ORDER])
+        rows.extend((("Mean", "n/a"), ("Median", "n/a"), ("Min", "n/a"), ("Max", "n/a")))
+
+    return MapFrameLegend(
+        title="Employment",
+        rows=tuple(rows),
+        unit="%",
+        employment_region_rows=_super_region_employment_rows(frame),
     )
 
+
+def _super_region_employment_rows(frame: pl.DataFrame) -> tuple[tuple[str, str, str], ...]:
+    required = {"super_region", "rgo_employed", "unemployed_total"}
+    if frame.is_empty() or not required.issubset(frame.columns):
+        return ()
+    if "total_population" in frame.columns:
+        total_population = pl.col("total_population").cast(pl.Float64).fill_null(0.0)
+    else:
+        total_population = (
+            pl.col("rgo_employed").cast(pl.Float64).fill_null(0.0)
+            + pl.col("unemployed_total").cast(pl.Float64).fill_null(0.0)
+        )
     selected = frame.select(
         _super_region_label_expr(frame).alias("region_label"),
-        population_total.alias("population_total"),
-        employed_total.alias("employment_total"),
-        unemployed_total.alias("unemployment_total"),
-        *(present_or_zero(column) for column in class_columns),
+        pl.col("rgo_employed").cast(pl.Float64).fill_null(0.0).alias("employed"),
+        pl.col("unemployed_total").cast(pl.Float64).fill_null(0.0).alias("unemployed"),
+        total_population.alias("total_population"),
     )
-    sum_columns = ["population_total", "employment_total", "unemployment_total", *class_columns]
     stats = (
         selected.group_by("region_label")
-        .agg([pl.col(column).sum().alias(column) for column in sum_columns])
-        .filter(pl.col("population_total") > 0.0)
-        .sort(["population_total", "region_label"], descending=[True, False])
-    )
-    rows: list[PopulationDistributionRow] = []
-    for row in stats.iter_rows(named=True):
-        total = float(row["population_total"] or 0.0)
-        employed = float(row["employment_total"] or 0.0)
-        unemployed = float(row["unemployment_total"] or 0.0)
-        employment_denominator = employed + unemployed
-        employment = _format_percent_share(employed / employment_denominator * 100.0) if employment_denominator > 0 else "n/a"
-        buckets = tuple(
-            (
-                label,
-                _format_percent_share(float(row[f"unemployed_{pop_type}"] or 0.0) / total * 100.0),
-                _format_percent_share(float(row[f"employed_{pop_type}"] or 0.0) / total * 100.0),
-            )
-            for pop_type, label in POP_CLASS_DISTRIBUTION_ORDER
+        .agg(
+            [
+                pl.sum("employed").alias("employed"),
+                pl.sum("unemployed").alias("unemployed"),
+                pl.sum("total_population").alias("total_population"),
+            ]
         )
+        .sort(["total_population", "region_label"], descending=[True, False])
+    )
+    grand_total = float(stats.select(pl.col("total_population").sum()).item() or 0.0)
+    rows: list[tuple[str, str, str]] = []
+    for row in stats.iter_rows(named=True):
+        employed = float(row["employed"] or 0.0)
+        unemployed = float(row["unemployed"] or 0.0)
+        labor_force = employed + unemployed
+        total = float(row["total_population"] or 0.0)
         rows.append(
-            PopulationDistributionRow(
-                region=_compact_region_label(str(row["region_label"] or "Unknown")),
-                employment=employment,
-                buckets=buckets,
+            (
+                _compact_region_label(str(row["region_label"] or "Unknown")),
+                _format_percent_share(employed / labor_force * 100.0) if labor_force > 0.0 else "n/a",
+                _format_percent_share(total / grand_total * 100.0) if grand_total > 0.0 else "n/a",
             )
         )
     return tuple(rows)
@@ -2802,14 +3069,15 @@ def _super_region_label_expr(frame: pl.DataFrame) -> pl.Expr:
     return pl.col("super_region").cast(pl.String).map_elements(_title_from_key, return_dtype=pl.String)
 
 
-def _format_percent_share(value: float) -> str:
+def _format_percent_share(value: float, *, signed: bool = False) -> str:
     if not np.isfinite(value):
         return "n/a"
+    prefix = "+" if signed and value > 0.0 else ""
     if abs(value) < 0.05:
         return "0%"
     if value >= 99.95:
-        return "100%"
-    return f"{value:.1f}%"
+        return f"{prefix}100%"
+    return f"{prefix}{value:.1f}%"
 
 
 def _relative_change_from_totals_expr(current_column: str, baseline_column: str) -> pl.Expr:
@@ -2868,9 +3136,9 @@ def _format_stat_value(value: float, *, unit: str, signed: bool) -> str:
         if abs(value) < 0.001:
             value = 0.0
         return f"{prefix}{value:,.3f}"
-    text = f"{prefix}{value:,.1f}"
     if unit == "%":
-        return f"{text}%"
+        return _format_percent_share(value, signed=signed)
+    text = f"{prefix}{value:,.1f}"
     if unit:
         return f"{text} {unit}"
     return text
@@ -3177,8 +3445,8 @@ def _legend_min_panel_height(legend: MapFrameLegend) -> int:
     height = 16 + 38 + 210 + 26 + len(legend.rows) * 30
     if legend.region_rows:
         height += 10 + 14 + 25 + len(legend.region_rows) * 24
-    if legend.population_distribution_rows:
-        height += 12 + 14 + 24 + len(legend.population_distribution_rows) * 56
+    if legend.employment_region_rows:
+        height += 12 + 14 + 25 + len(legend.employment_region_rows) * 24
     return max(480, height + 32)
 
 
@@ -3277,8 +3545,8 @@ def _draw_legend_panel(
             _draw_text_right(draw, (min_x, y), minimum, fill=(24, 24, 24), font=small_value_font)
             _draw_text_right(draw, (max_x, y), maximum, fill=(24, 24, 24), font=small_value_font)
             y += 24
-    if legend.population_distribution_rows and y <= panel_y + panel_height - 92:
-        _draw_population_distribution_section(
+    if legend.employment_region_rows and y <= panel_y + panel_height - 72:
+        _draw_employment_region_section(
             draw,
             x=x,
             y=y,
@@ -3288,7 +3556,7 @@ def _draw_legend_panel(
         )
 
 
-def _draw_population_distribution_section(
+def _draw_employment_region_section(
     draw: Any,
     *,
     x: int,
@@ -3301,41 +3569,22 @@ def _draw_population_distribution_section(
     draw.line((x, y, right, y), fill=(218, 218, 209), width=1)
     y += 14
     heading_font = _image_font(15, bold=True)
-    region_font = _image_font(13, bold=True)
+    row_font = _image_font(13)
     value_font = _image_font(13, bold=True)
-    distribution_font = _image_font(11)
-    draw.text((x, y), legend.population_distribution_title, fill=(70, 70, 70), font=heading_font)
-    _draw_text_right(draw, (right, y), "Employment", fill=(70, 70, 70), font=heading_font)
-    y += 24
-    for row in legend.population_distribution_rows:
-        if y > bottom - 52:
+    draw.text((x, y), legend.employment_region_title, fill=(70, 70, 70), font=heading_font)
+    inner_width = right - x
+    employment_x = min(right, x + max(270, round(inner_width * 0.66)))
+    total_x = right
+    _draw_text_right(draw, (employment_x, y), "Employment", fill=(70, 70, 70), font=heading_font)
+    _draw_text_right(draw, (total_x, y), "Total", fill=(70, 70, 70), font=heading_font)
+    y += 25
+    for region, employment, total in legend.employment_region_rows:
+        if y > bottom - 24:
             break
-        draw.text((x, y), row.region, fill=(50, 50, 46), font=region_font)
-        _draw_text_right(draw, (right, y), row.employment, fill=(24, 24, 24), font=value_font)
-        y += 18
-        draw.text(
-            (x + 8, y),
-            _population_distribution_line("Unemp", row.buckets, value_index=1),
-            fill=(70, 70, 70),
-            font=distribution_font,
-        )
-        y += 15
-        draw.text(
-            (x + 8, y),
-            _population_distribution_line("Emp", row.buckets, value_index=2),
-            fill=(70, 70, 70),
-            font=distribution_font,
-        )
-        y += 23
-
-
-def _population_distribution_line(
-    prefix: str,
-    buckets: tuple[tuple[str, str, str], ...],
-    *,
-    value_index: int,
-) -> str:
-    return f"{prefix}: " + "  ".join(f"{bucket[0]} {bucket[value_index]}" for bucket in buckets)
+        draw.text((x, y), region, fill=(70, 70, 70), font=row_font)
+        _draw_text_right(draw, (employment_x, y), employment, fill=(24, 24, 24), font=value_font)
+        _draw_text_right(draw, (total_x, y), total, fill=(24, 24, 24), font=value_font)
+        y += 24
 
 
 def _draw_swatch_legend_panel(
@@ -3444,6 +3693,8 @@ def _colorbar_tick_values(norm: Normalize | TwoSlopeNorm, *, unit: str) -> list[
     if unit == "population_thousands" and getattr(norm, "scale_name", "") == "log1p":
         candidates = [high, 1000.0, 100.0, 10.0, low]
         return [value for value in candidates if low <= value <= high]
+    if unit == "%":
+        return [high, (low + high) / 2.0, low]
     ticks = [high]
     if low < 0.0 < high:
         ticks.append(0.0)

@@ -2528,6 +2528,7 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
     assert isinstance(on_actions, CList)
 
     assert on_actions.items == [
+        "pp_raise_owned_zero_rgo_max_workers",
         "pp_cull_capacity_buildings_over_max_v2",
         "pp_ai_victuals_market_on_food_crisis",
         "pp_ai_logistics_on_unsupported_building_levels",
@@ -2550,6 +2551,25 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
         len(re.findall(r"has_owner\s*=\s*yes\s+owner\s*=\s*scope:pp_ai_logistics_country", logistics_text))
         == 4
     )
+
+
+def test_four_yearly_zero_rgo_floor_repairs_owned_locations_for_all_countries() -> None:
+    text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
+    entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
+    action_text = text.split("pp_raise_owned_zero_rgo_max_workers", maxsplit=1)[1].split(
+        "pp_yearly_cull_one_closed_building", maxsplit=1
+    )[0]
+
+    assert "pp_raise_owned_zero_rgo_max_workers" in entries
+    assert "every_owned_location" in action_text
+    assert "exists = raw_material" in action_text
+    assert re.search(r"\brgo_level\s*>=\s*0\b", action_text)
+    assert re.search(r"NOT\s*=\s*\{\s*rgo_level\s*>=\s*1\s*\}", action_text)
+    assert '"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" > 0' in action_text
+    assert '"unemployed_pops_of_pop_type_in_location(pop_type:slaves)" > 0' in action_text
+    assert "change_max_raw_material_workers = 1" in action_text
+    assert "is_ai" not in action_text
+    assert "every_location_in_the_world" not in action_text
 
 
 def test_capacity_culling_debug_event_runs_same_global_four_year_action() -> None:

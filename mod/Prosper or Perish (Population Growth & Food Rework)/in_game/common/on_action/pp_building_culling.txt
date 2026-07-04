@@ -1,4 +1,21 @@
-﻿# One random closed (is_opened = no) building level per owned location, yearly, AI countries only.
+﻿pp_raise_owned_zero_rgo_max_workers = {
+	effect = {
+		every_owned_location = {
+			limit = {
+				exists = raw_material
+				rgo_level >= 0
+				NOT = { rgo_level >= 1 }
+				OR = {
+					"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" > 0
+					"unemployed_pops_of_pop_type_in_location(pop_type:slaves)" > 0
+				}
+			}
+			change_max_raw_material_workers = 1
+		}
+	}
+}
+
+# One random closed (is_opened = no) building level per owned location, yearly, AI countries only.
 pp_yearly_cull_one_closed_building = {
 	effect = {
 		if = {

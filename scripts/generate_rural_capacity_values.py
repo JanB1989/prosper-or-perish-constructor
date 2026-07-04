@@ -265,7 +265,7 @@ def _forest_source_rows(
         _line('desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"', 3),
         _line("value = var:pp_forest_base_capacity", 3),
         _line("multiply = max_rgo_workers", 3),
-        _line("multiply = 0.030", 3),
+        _line("multiply = 0.040", 3),
         _line("}", 2),
         _line("}", 1),
         _line("if = {", 1),

@@ -188,6 +188,7 @@ TRY_INJECT:cotton = {
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:goods_gold = {
+	default_market_price = 9 # 8
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:horses = {

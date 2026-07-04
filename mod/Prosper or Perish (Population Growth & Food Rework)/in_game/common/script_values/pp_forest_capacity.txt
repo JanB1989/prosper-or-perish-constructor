@@ -19,7 +19,7 @@ forest_capacity = {
 			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
 			value = var:pp_forest_base_capacity
 			multiply = max_rgo_workers
-			multiply = 0.030
+			multiply = 0.040
 		}
 	}
 	if = {
@@ -111,7 +111,7 @@ forest_capacity_max_forest_village = {
 			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
 			value = var:pp_forest_base_capacity
 			multiply = max_rgo_workers
-			multiply = 0.030
+			multiply = 0.040
 		}
 	}
 	if = {
@@ -192,7 +192,7 @@ forest_capacity_max_managed_forest_village = {
 			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
 			value = var:pp_forest_base_capacity
 			multiply = max_rgo_workers
-			multiply = 0.030
+			multiply = 0.040
 		}
 	}
 	if = {
@@ -266,7 +266,7 @@ forest_capacity_max_lumber_mill = {
 			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
 			value = var:pp_forest_base_capacity
 			multiply = max_rgo_workers
-			multiply = 0.030
+			multiply = 0.040
 		}
 	}
 	if = {
@@ -347,7 +347,7 @@ forest_capacity_max_water_sawmill = {
 			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
 			value = var:pp_forest_base_capacity
 			multiply = max_rgo_workers
-			multiply = 0.030
+			multiply = 0.040
 		}
 	}
 	if = {
@@ -421,7 +421,7 @@ forest_capacity_max_lumber_mill_improved = {
 			desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
 			value = var:pp_forest_base_capacity
 			multiply = max_rgo_workers
-			multiply = 0.030
+			multiply = 0.040
 		}
 	}
 	if = {

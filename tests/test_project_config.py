@@ -1491,7 +1491,7 @@ def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> 
 
     assert "limit = { has_variable = pp_forest_base_capacity }" in capacity_block
     assert (
-        'desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"\n\t\t\tvalue = var:pp_forest_base_capacity\n\t\t\tmultiply = max_rgo_workers\n\t\t\tmultiply = 0.030'
+        'desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"\n\t\t\tvalue = var:pp_forest_base_capacity\n\t\t\tmultiply = max_rgo_workers\n\t\t\tmultiply = 0.040'
         in capacity_block
     )
     assert "value = modifier:forest_capacity" not in capacity_block

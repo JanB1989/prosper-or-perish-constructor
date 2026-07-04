@@ -232,7 +232,7 @@ def _food_capacity_samples(mod_root: Path) -> dict[str, list[float]]:
         samples["fish"].append(max(fish, 0.0))
 
         forest_base = 4.4 if raw_material in forest_goods else 0.0
-        forest = forest_base + (forest_base * max_rgo * 0.030) - (non_forest * 0.1) - forest_used
+        forest = forest_base + (forest_base * max_rgo * 0.040) - (non_forest * 0.1) - forest_used
         samples["forest"].append(max(forest, 0.0))
 
     return samples

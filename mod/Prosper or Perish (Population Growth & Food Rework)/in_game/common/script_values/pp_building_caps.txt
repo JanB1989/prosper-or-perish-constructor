@@ -26,22 +26,22 @@
 victuals_market_max_level = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE"
-		value = 2
+		value = 1.33
 	}
 	add = {
 		desc = "BUILDING_LEVEL_DEVELOPMENT"
 		value = development
-		multiply = 0.15
+		multiply = 0.10
 	}
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION"
 		value = population
-		multiply = 0.0300
+		multiply = 0.0200
 	}
 	add = {
 		desc = "BUILDING_LEVEL_RGO_MAX"
 		value = max_rgo_workers
-		multiply = 1.0
+		multiply = 0.67
 	}
 	if = {
 		limit = {
@@ -49,7 +49,7 @@ victuals_market_max_level = {
 		}
 		add = {
 			desc = "BUILDING_LEVEL_IS_CITY"
-			value = 4
+			value = 3
 		}
 	}
 }

@@ -20,7 +20,7 @@ from matplotlib.colors import Normalize, TwoSlopeNorm
 from PIL import Image
 
 from eu5gameparser.clausewitz.parser import parse_file
-from eu5gameparser.clausewitz.syntax import CList
+from eu5gameparser.clausewitz.syntax import CEntry, CList
 from eu5gameparser.load_order import GameLayer, LoadOrderConfig
 from prosper_or_perish_constructor.free_building_levels import (
     resolve_labeling_baseline_path,
@@ -64,6 +64,16 @@ DEFAULT_NO_DATA = np.array([156, 156, 150], dtype=np.uint8)
 DEFAULT_NO_DATA_STRIPE = np.array([126, 126, 120], dtype=np.uint8)
 DEFAULT_ANIMATION_MAX_BYTES = 9_500_000
 COLOR_CONSTRUCTORS = frozenset({"rgb", "hsv", "hsv360"})
+POP_CLASS_DISTRIBUTION_ORDER = (
+    ("slaves", "Slv"),
+    ("tribesmen", "Tri"),
+    ("peasants", "Pea"),
+    ("laborers", "Lab"),
+    ("soldiers", "Sol"),
+    ("burghers", "Bur"),
+    ("clergy", "Clg"),
+    ("nobles", "Nob"),
+)
 
 
 @dataclass(frozen=True)
@@ -167,6 +177,13 @@ class MapViewerExportResult:
 
 
 @dataclass(frozen=True)
+class PopulationDistributionRow:
+    region: str
+    employment: str
+    buckets: tuple[tuple[str, str, str], ...]
+
+
+@dataclass(frozen=True)
 class MapFrameLegend:
     title: str
     rows: tuple[tuple[str, str], ...]
@@ -176,6 +193,8 @@ class MapFrameLegend:
     signed: bool = False
     swatch_rows: tuple[tuple[str, str, str], ...] = ()
     swatch_title: str = "Top countries"
+    population_distribution_rows: tuple[PopulationDistributionRow, ...] = ()
+    population_distribution_title: str = "Super Region Pop Mix"
 
 
 @dataclass(frozen=True)
@@ -420,6 +439,7 @@ def population_map(
                 context=legend_context,
                 unit=legend_unit,
                 signed=legend_signed,
+                include_population_distribution=comparison == "current",
             ),
         )
         frames.append(
@@ -1568,21 +1588,30 @@ def _load_country_color_map_cached(load_order_path: str, profile: str) -> tuple[
     country_colors: dict[str, tuple[int, int, int]] = {}
     for layer in profile_config.layers:
         root = _country_setup_dir(layer)
-        if not root.is_dir():
+        if root.is_dir():
+            for path in sorted(root.glob("*.txt")):
+                for entry in parse_file(path).entries:
+                    if not isinstance(entry.value, CList):
+                        continue
+                    tag = _normalized_setup_key(entry.key)
+                    if not tag:
+                        continue
+                    rgb = _block_color(entry.value, "color", named_colors)
+                    if rgb is None:
+                        continue
+                    _add_country_color(country_colors, tag, rgb)
+        formable_root = _formable_country_dir(layer)
+        if not formable_root.is_dir():
             continue
-        for path in sorted(root.glob("*.txt")):
+        for path in sorted(formable_root.glob("*.txt")):
             for entry in parse_file(path).entries:
                 if not isinstance(entry.value, CList):
-                    continue
-                tag = _normalized_setup_key(entry.key)
-                if not tag:
                     continue
                 rgb = _block_color(entry.value, "color", named_colors)
                 if rgb is None:
                     continue
-                country_colors[tag] = rgb
-                country_colors[tag.upper()] = rgb
-                country_colors[tag.lower()] = rgb
+                for tag in _formable_country_color_tags(entry):
+                    _add_country_color(country_colors, tag, rgb)
     return tuple(sorted(country_colors.items()))
 
 
@@ -1604,6 +1633,36 @@ def _country_setup_dir(layer: GameLayer) -> Path:
     if layer.kind == "vanilla":
         return layer.root / "game" / "in_game" / "setup" / "countries"
     return layer.root / "in_game" / "setup" / "countries"
+
+
+def _formable_country_dir(layer: GameLayer) -> Path:
+    if layer.kind == "vanilla":
+        return layer.root / "game" / "in_game" / "common" / "formable_countries"
+    return layer.root / "in_game" / "common" / "formable_countries"
+
+
+def _formable_country_color_tags(entry: CEntry) -> tuple[str, ...]:
+    if not isinstance(entry.value, CList):
+        return ()
+    tags = [_normalized_setup_key(entry.key)]
+    for key in ("tag", "name", "flag"):
+        value = entry.value.first(key)
+        if isinstance(value, str):
+            tags.append(value)
+    return tuple(tag for tag in dict.fromkeys(tags) if tag)
+
+
+def _add_country_color(
+    country_colors: dict[str, tuple[int, int, int]],
+    tag: str,
+    rgb: tuple[int, int, int],
+) -> None:
+    text = str(tag or "").strip()
+    if not text:
+        return
+    country_colors[text] = rgb
+    country_colors[text.upper()] = rgb
+    country_colors[text.lower()] = rgb
 
 
 def _normalized_setup_key(key: str) -> str:
@@ -2194,6 +2253,7 @@ def _join_political_country_facts(
             "snapshot_id",
             join_key,
             "country_id",
+            "country_name",
             "overlord_country_id",
             "overlord_tag",
             "overlord_name",
@@ -2206,7 +2266,11 @@ def _join_political_country_facts(
     relation_columns = [column for column in fact_columns if column not in {"snapshot_id", join_key}]
     if not relation_columns:
         return locations
-    facts = countries.select(fact_columns).unique(["snapshot_id", join_key])
+    fact_select = [
+        pl.col(column).alias("current_country_name") if column == "country_name" else pl.col(column)
+        for column in fact_columns
+    ]
+    facts = countries.select(fact_select).unique(["snapshot_id", join_key])
     return locations.join(facts, on=["snapshot_id", join_key], how="left")
 
 
@@ -2254,14 +2318,35 @@ def _with_political_colors(frame: pl.DataFrame, country_colors: Mapping[str, tup
     if frame.is_empty():
         return frame
 
+    def _known_country_rgb(tag: object) -> tuple[int, int, int] | None:
+        text = str(tag or "").strip()
+        if not text:
+            return None
+        return country_colors.get(text) or country_colors.get(text.upper()) or country_colors.get(text.lower())
+
     def _country_rgb(tag: object) -> tuple[int, int, int] | None:
         text = str(tag or "").strip()
         if not text:
             return None
-        rgb = country_colors.get(text) or country_colors.get(text.upper()) or country_colors.get(text.lower())
+        rgb = _known_country_rgb(text)
         if rgb is None:
             rgb = _fallback_country_rgb(text)
         return rgb
+
+    def _resolved_political_color_tag(row: dict[str, object]) -> str | None:
+        color_tag = str(row.get("political_color_tag") or row.get("country_tag") or "").strip()
+        owner_tag = str(row.get("country_tag") or "").strip()
+        current_name = str(row.get("current_country_name") or "").strip()
+        owner_name = str(row.get("country_name") or "").strip()
+        overlord_name = str(row.get("overlord_name") or "").strip()
+        is_subject = bool(row.get("is_subject"))
+        if is_subject and _known_country_rgb(overlord_name) is not None:
+            return overlord_name
+        if not is_subject and _known_country_rgb(current_name) is not None:
+            return current_name
+        if not is_subject and _known_country_rgb(owner_name) is not None:
+            return owner_name
+        return color_tag or owner_tag or None
 
     def _packed_political_color(row: dict[str, object]) -> int | None:
         color_tag = str(row.get("political_color_tag") or "").strip()
@@ -2271,7 +2356,12 @@ def _with_political_colors(frame: pl.DataFrame, country_colors: Mapping[str, tup
         rgb = _country_rgb(color_tag)
         if rgb is None:
             return None
-        if owner_tag and color_tag and owner_tag.lower() != color_tag.lower():
+        if (
+            bool(row.get("is_subject"))
+            and owner_tag
+            and color_tag
+            and owner_tag.lower() != color_tag.lower()
+        ):
             rgb = _subject_variant_rgb(rgb, owner_tag, str(row.get("subject_type") or ""))
         return _pack_rgb(rgb)
 
@@ -2296,6 +2386,24 @@ def _with_political_colors(frame: pl.DataFrame, country_colors: Mapping[str, tup
         if column not in frame.columns:
             frame = _with_political_color_sources(frame)
             break
+    for column in ("current_country_name", "country_name", "overlord_name"):
+        if column not in frame.columns:
+            frame = frame.with_columns(pl.lit(None, dtype=pl.String).alias(column))
+
+    frame = frame.with_columns(
+        pl.struct(
+            [
+                "political_color_tag",
+                "country_tag",
+                "current_country_name",
+                "country_name",
+                "overlord_name",
+                "is_subject",
+            ]
+        )
+        .map_elements(_resolved_political_color_tag, return_dtype=pl.String)
+        .alias("political_color_tag")
+    )
 
     label_column = _country_label_column(frame)
     label_expr = (
@@ -2325,7 +2433,7 @@ def _with_political_colors(frame: pl.DataFrame, country_colors: Mapping[str, tup
         .alias("political_color_label")
     )
     frame = frame.with_columns(
-        pl.struct(["political_color_tag", "country_tag", "subject_type"])
+        pl.struct(["political_color_tag", "country_tag", "subject_type", "is_subject"])
         .map_elements(_packed_political_color, return_dtype=pl.UInt32)
         .alias("country_color_int")
     )
@@ -2460,6 +2568,7 @@ def _frame_legend(
     total_value_column: str | None = None,
     baseline_value_column: str | None = None,
     show_total: bool = True,
+    include_population_distribution: bool = False,
 ) -> MapFrameLegend:
     rows: list[tuple[str, str]] = [("Date", date), *context]
     if frame.is_empty() or value_column not in frame.columns:
@@ -2495,6 +2604,9 @@ def _frame_legend(
         baseline_value_column=baseline_value_column,
         show_total=show_total,
     )
+    population_distribution_rows = (
+        _super_region_population_distribution_rows(frame) if include_population_distribution else ()
+    )
     return MapFrameLegend(
         title=title,
         rows=tuple(rows),
@@ -2502,6 +2614,7 @@ def _frame_legend(
         region_value_header=region_value_header,
         unit=unit,
         signed=signed,
+        population_distribution_rows=population_distribution_rows,
     )
 
 
@@ -2572,15 +2685,8 @@ def _super_region_legend_rows(
 ) -> tuple[tuple[str, str, str, str, str, str], ...]:
     if frame.is_empty() or value_column not in frame.columns or "super_region" not in frame.columns:
         return ()
-    label_expr = (
-        pl.when(pl.col("super_region_label").is_not_null() & (pl.col("super_region_label").cast(pl.String) != ""))
-        .then(pl.col("super_region_label").cast(pl.String))
-        .otherwise(pl.col("super_region").cast(pl.String).map_elements(_title_from_key, return_dtype=pl.String))
-        if "super_region_label" in frame.columns
-        else pl.col("super_region").cast(pl.String).map_elements(_title_from_key, return_dtype=pl.String)
-    )
     selected = frame.select(
-        label_expr.alias("region_label"),
+        _super_region_label_expr(frame).alias("region_label"),
         pl.col(value_column).cast(pl.Float64).alias("value"),
     ).drop_nulls("value")
     aggregations: list[pl.Expr] = [
@@ -2609,6 +2715,101 @@ def _super_region_legend_rows(
         )
         for row in stats.iter_rows(named=True)
     )
+
+
+def _super_region_population_distribution_rows(frame: pl.DataFrame) -> tuple[PopulationDistributionRow, ...]:
+    if frame.is_empty() or "super_region" not in frame.columns:
+        return ()
+    class_columns = [
+        column
+        for pop_type, _label in POP_CLASS_DISTRIBUTION_ORDER
+        for column in (f"unemployed_{pop_type}", f"employed_{pop_type}")
+    ]
+    available_class_columns = [column for column in class_columns if column in frame.columns]
+    if not available_class_columns and "rgo_employed" not in frame.columns and "unemployed_total" not in frame.columns:
+        return ()
+
+    def present_or_zero(column: str) -> pl.Expr:
+        if column in frame.columns:
+            return pl.col(column).cast(pl.Float64).fill_null(0.0).alias(column)
+        return pl.lit(0.0).alias(column)
+
+    def sum_available(columns: Sequence[str]) -> pl.Expr:
+        expressions = [pl.col(column).cast(pl.Float64).fill_null(0.0) for column in columns if column in frame.columns]
+        return pl.sum_horizontal(expressions) if expressions else pl.lit(0.0)
+
+    if "total_population" in frame.columns:
+        population_total = pl.col("total_population").cast(pl.Float64).fill_null(0.0)
+    else:
+        population_total = sum_available(available_class_columns)
+    employed_total = (
+        pl.col("rgo_employed").cast(pl.Float64).fill_null(0.0)
+        if "rgo_employed" in frame.columns
+        else sum_available([f"employed_{pop_type}" for pop_type, _label in POP_CLASS_DISTRIBUTION_ORDER])
+    )
+    unemployed_total = (
+        pl.col("unemployed_total").cast(pl.Float64).fill_null(0.0)
+        if "unemployed_total" in frame.columns
+        else sum_available([f"unemployed_{pop_type}" for pop_type, _label in POP_CLASS_DISTRIBUTION_ORDER])
+    )
+
+    selected = frame.select(
+        _super_region_label_expr(frame).alias("region_label"),
+        population_total.alias("population_total"),
+        employed_total.alias("employment_total"),
+        unemployed_total.alias("unemployment_total"),
+        *(present_or_zero(column) for column in class_columns),
+    )
+    sum_columns = ["population_total", "employment_total", "unemployment_total", *class_columns]
+    stats = (
+        selected.group_by("region_label")
+        .agg([pl.col(column).sum().alias(column) for column in sum_columns])
+        .filter(pl.col("population_total") > 0.0)
+        .sort(["population_total", "region_label"], descending=[True, False])
+    )
+    rows: list[PopulationDistributionRow] = []
+    for row in stats.iter_rows(named=True):
+        total = float(row["population_total"] or 0.0)
+        employed = float(row["employment_total"] or 0.0)
+        unemployed = float(row["unemployment_total"] or 0.0)
+        employment_denominator = employed + unemployed
+        employment = _format_percent_share(employed / employment_denominator * 100.0) if employment_denominator > 0 else "n/a"
+        buckets = tuple(
+            (
+                label,
+                _format_percent_share(float(row[f"unemployed_{pop_type}"] or 0.0) / total * 100.0),
+                _format_percent_share(float(row[f"employed_{pop_type}"] or 0.0) / total * 100.0),
+            )
+            for pop_type, label in POP_CLASS_DISTRIBUTION_ORDER
+        )
+        rows.append(
+            PopulationDistributionRow(
+                region=_compact_region_label(str(row["region_label"] or "Unknown")),
+                employment=employment,
+                buckets=buckets,
+            )
+        )
+    return tuple(rows)
+
+
+def _super_region_label_expr(frame: pl.DataFrame) -> pl.Expr:
+    if "super_region_label" in frame.columns:
+        return (
+            pl.when(pl.col("super_region_label").is_not_null() & (pl.col("super_region_label").cast(pl.String) != ""))
+            .then(pl.col("super_region_label").cast(pl.String))
+            .otherwise(pl.col("super_region").cast(pl.String).map_elements(_title_from_key, return_dtype=pl.String))
+        )
+    return pl.col("super_region").cast(pl.String).map_elements(_title_from_key, return_dtype=pl.String)
+
+
+def _format_percent_share(value: float) -> str:
+    if not np.isfinite(value):
+        return "n/a"
+    if abs(value) < 0.05:
+        return "0%"
+    if value >= 99.95:
+        return "100%"
+    return f"{value:.1f}%"
 
 
 def _relative_change_from_totals_expr(current_column: str, baseline_column: str) -> pl.Expr:
@@ -2909,7 +3110,7 @@ def _add_frame_chrome(
 ) -> Image.Image:
     header = 102
     panel_width = _legend_panel_width(image.width) if legend is not None else 0
-    content_height = max(image.height, 480 if legend is not None else image.height)
+    content_height = max(image.height, _legend_min_panel_height(legend) if legend is not None else image.height)
     out = Image.new("RGB", (image.width + panel_width, content_height + header), (250, 250, 247))
     out.paste(image, (0, header))
     try:
@@ -2968,6 +3169,17 @@ def _draw_timeline(draw: Any, *, image_width: int, timeline: RenderTimeline) -> 
 
 def _legend_panel_width(map_width: int) -> int:
     return min(900, max(620, round(map_width * 0.42)))
+
+
+def _legend_min_panel_height(legend: MapFrameLegend) -> int:
+    if legend.swatch_rows:
+        return 480
+    height = 16 + 38 + 210 + 26 + len(legend.rows) * 30
+    if legend.region_rows:
+        height += 10 + 14 + 25 + len(legend.region_rows) * 24
+    if legend.population_distribution_rows:
+        height += 12 + 14 + 24 + len(legend.population_distribution_rows) * 56
+    return max(480, height + 32)
 
 
 def _draw_legend_panel(
@@ -3065,6 +3277,65 @@ def _draw_legend_panel(
             _draw_text_right(draw, (min_x, y), minimum, fill=(24, 24, 24), font=small_value_font)
             _draw_text_right(draw, (max_x, y), maximum, fill=(24, 24, 24), font=small_value_font)
             y += 24
+    if legend.population_distribution_rows and y <= panel_y + panel_height - 92:
+        _draw_population_distribution_section(
+            draw,
+            x=x,
+            y=y,
+            right=right,
+            bottom=panel_y + panel_height,
+            legend=legend,
+        )
+
+
+def _draw_population_distribution_section(
+    draw: Any,
+    *,
+    x: int,
+    y: int,
+    right: int,
+    bottom: int,
+    legend: MapFrameLegend,
+) -> None:
+    y += 12
+    draw.line((x, y, right, y), fill=(218, 218, 209), width=1)
+    y += 14
+    heading_font = _image_font(15, bold=True)
+    region_font = _image_font(13, bold=True)
+    value_font = _image_font(13, bold=True)
+    distribution_font = _image_font(11)
+    draw.text((x, y), legend.population_distribution_title, fill=(70, 70, 70), font=heading_font)
+    _draw_text_right(draw, (right, y), "Employment", fill=(70, 70, 70), font=heading_font)
+    y += 24
+    for row in legend.population_distribution_rows:
+        if y > bottom - 52:
+            break
+        draw.text((x, y), row.region, fill=(50, 50, 46), font=region_font)
+        _draw_text_right(draw, (right, y), row.employment, fill=(24, 24, 24), font=value_font)
+        y += 18
+        draw.text(
+            (x + 8, y),
+            _population_distribution_line("Unemp", row.buckets, value_index=1),
+            fill=(70, 70, 70),
+            font=distribution_font,
+        )
+        y += 15
+        draw.text(
+            (x + 8, y),
+            _population_distribution_line("Emp", row.buckets, value_index=2),
+            fill=(70, 70, 70),
+            font=distribution_font,
+        )
+        y += 23
+
+
+def _population_distribution_line(
+    prefix: str,
+    buckets: tuple[tuple[str, str, str], ...],
+    *,
+    value_index: int,
+) -> str:
+    return f"{prefix}: " + "  ".join(f"{bucket[0]} {bucket[value_index]}" for bucket in buckets)
 
 
 def _draw_swatch_legend_panel(

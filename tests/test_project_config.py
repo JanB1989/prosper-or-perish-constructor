@@ -1828,6 +1828,20 @@ def test_farm_capacity_uses_direct_rows_with_a_river_size_bridge_modifier() -> N
     )
     obsolete_modifier = "fish_" "natural_capacity_modifier"
     farm_capacity_text = FARMING_CAPACITY.read_text(encoding="utf-8-sig")
+    capacity_desc_keys = {
+        match.group(1)
+        for path in BUILDING_CAPACITY_SCRIPT_VALUE_FILES
+        for match in re.finditer(
+            r'desc = "(BUILDING_LEVEL_[A-Z0-9_]+)"',
+            path.read_text(encoding="utf-8-sig"),
+        )
+    }
+    missing_capacity_desc_localization = [
+        key
+        for key in sorted(capacity_desc_keys)
+        if re.search(rf"^\s+{re.escape(key)}:", localization_text, re.MULTILINE) is None
+    ]
+    assert missing_capacity_desc_localization == []
 
     assert "farm_capacity" not in modifier_types
     assert "farm_capacity" not in modifier_icons
@@ -1893,7 +1907,7 @@ def test_farm_capacity_uses_direct_rows_with_a_river_size_bridge_modifier() -> N
         'BUILDING_LEVEL_FARM_IRRIGATION_SYSTEMS: "[ShowBuildingTypeName(\'irrigation_systems\')|e]"'
         in localization_text
     )
-    for building in ("aqueduct_system", "farming_village", "model_farm", "vineyard_estate"):
+    for building in LAND_FARM_BUILDINGS:
         key = f"BUILDING_LEVEL_FARM_{building.upper()}"
         assert f"{key}: \"[ShowBuildingTypeName('{building}')|e]\"" in localization_text
     assert "BUILDING_LEVEL_FARM_TOTAL_BUILDING_PRESSURE:" not in localization_text

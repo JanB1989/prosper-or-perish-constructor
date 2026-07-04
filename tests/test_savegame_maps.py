@@ -282,6 +282,44 @@ def test_world_population_absolute_legend_includes_super_region_totals(tmp_path:
     assert ("Europe", "30k", "30k", "30k", "30k", "30k") in legend.region_rows
 
 
+def test_world_population_absolute_legend_includes_super_region_pop_distribution(tmp_path: Path) -> None:
+    base = _fake_data(tmp_path, include_missing_geometry=False)
+    data = FakeNotebookData(
+        locations=_locations_with_population_distribution(base._locations),
+        location_dim=base._location_dim,
+        assets=base.map_assets,
+        buildings=base._buildings,
+    )
+    result = savegame_maps.population_map(data, scope="super_region", name=None, comparison="current", width=160)
+    frame = result.frame_data.filter(pl.col("date_sort") == 13470401)
+
+    legend = savegame_maps._frame_legend(
+        frame,
+        value_column="population_map_value",
+        title="Population",
+        date="1347.4.1",
+        unit="population_thousands",
+        include_population_distribution=True,
+    )
+
+    rows = {row.region: row for row in legend.population_distribution_rows}
+    asia = rows["Asia"]
+    assert asia.employment == "75.0%"
+    assert asia.buckets == (
+        ("Slv", "5.0%", "5.0%"),
+        ("Tri", "0%", "0%"),
+        ("Pea", "10.0%", "30.0%"),
+        ("Lab", "5.0%", "20.0%"),
+        ("Sol", "0%", "0%"),
+        ("Bur", "0%", "5.0%"),
+        ("Clg", "0%", "0%"),
+        ("Nob", "0%", "0%"),
+    )
+    assert savegame_maps._population_distribution_line("Unemp", asia.buckets, value_index=1) == (
+        "Unemp: Slv 5.0%  Tri 0%  Pea 10.0%  Lab 5.0%  Sol 0%  Bur 0%  Clg 0%  Nob 0%"
+    )
+
+
 def test_world_scope_excludes_ocean_super_regions() -> None:
     frame = pl.DataFrame(
         [
@@ -583,6 +621,57 @@ def test_political_map_colors_locations_by_owner_country(tmp_path: Path) -> None
     assert ("England", "2", "#ff0000") in legend.swatch_rows
 
 
+def test_political_map_uses_formed_country_fixed_color(tmp_path: Path) -> None:
+    base = _fake_data(tmp_path, include_missing_geometry=False)
+    locations = base._locations.with_columns(
+        pl.when((pl.col("location_code") == 2) & (pl.col("date_sort") == 13470401))
+        .then(pl.lit("WOL"))
+        .otherwise(pl.col("country_tag"))
+        .alias("country_tag")
+    )
+    countries = pl.DataFrame(
+        [
+            {
+                "snapshot_id": "s2",
+                "playthrough_id": "run_1",
+                "date_sort": 13470401,
+                "country_tag": "WOL",
+                "country_name": "PRU",
+            }
+        ]
+    )
+    data = FakeNotebookData(
+        locations=locations,
+        location_dim=base._location_dim,
+        assets=base.map_assets,
+        buildings=base._buildings,
+        countries=countries,
+        market_food=base._market_food,
+        market_dim=base._market_dim,
+    )
+
+    result = savegame_maps.political_map(
+        data,
+        scope="super_region",
+        name=None,
+        width=160,
+        country_colors={
+            "ENG": "#ff0000",
+            "WOL": "#00ff00",
+            "PRU": "#111111",
+            "FRA": "#0000ff",
+        },
+    )
+
+    bravo = result.frame_data.filter(
+        (pl.col("slug") == "bravo") & (pl.col("date_sort") == 13470401)
+    ).row(0, named=True)
+    assert bravo["country_tag"] == "WOL"
+    assert bravo["current_country_name"] == "PRU"
+    assert bravo["political_color_tag"] == "PRU"
+    assert bravo["country_color_int"] == 0x111111
+
+
 def test_political_map_resolves_encoded_country_dimension(tmp_path: Path) -> None:
     base = _fake_data(tmp_path, include_missing_geometry=False)
     locations = base._locations.drop("country_tag", "country_name").with_columns(
@@ -715,6 +804,33 @@ def test_political_map_tints_subjects_from_overlord_color(tmp_path: Path) -> Non
     assert any(label == "Scotland (vassal of England)" for label, _locations, _color in legend.swatch_rows)
 
 
+def test_load_country_color_map_includes_formable_country_colors(tmp_path: Path) -> None:
+    vanilla = tmp_path / "vanilla"
+    named_colors = vanilla / "game" / "main_menu" / "common" / "named_colors"
+    formables = vanilla / "game" / "in_game" / "common" / "formable_countries"
+    named_colors.mkdir(parents=True)
+    formables.mkdir(parents=True)
+    (named_colors / "colors.txt").write_text(
+        "colors = { map_PRU = rgb { 1 2 3 } }\n",
+        encoding="utf-8",
+    )
+    (formables / "countries.txt").write_text(
+        "PRU_f = { tag = PRU name = PRU flag = PRU color = map_PRU }\n",
+        encoding="utf-8",
+    )
+    load_order = tmp_path / "load_order.toml"
+    load_order.write_text(
+        f'[paths]\nvanilla_root = "{vanilla.as_posix()}"\n\n[profiles]\nvanilla = ["vanilla"]\n',
+        encoding="utf-8",
+    )
+    savegame_maps._load_country_color_map_cached.cache_clear()
+
+    colors = savegame_maps.load_country_color_map(load_order_path=load_order, profile="vanilla")
+
+    assert colors["PRU"] == (1, 2, 3)
+    assert colors["pru"] == (1, 2, 3)
+
+
 def test_show_building_levels_map_can_skip_widget_display(tmp_path: Path) -> None:
     data = _fake_data(tmp_path, include_missing_geometry=False)
 
@@ -815,6 +931,48 @@ def _fake_data(tmp_path: Path, *, include_missing_geometry: bool) -> FakeNoteboo
         market_food=market_food,
         market_dim=market_dim,
     )
+
+
+def _locations_with_population_distribution(locations: pl.DataFrame) -> pl.DataFrame:
+    pop_types = ("slaves", "tribesmen", "peasants", "laborers", "soldiers", "burghers", "clergy", "nobles")
+    values: dict[str, dict[tuple[int, int], float]] = {
+        "total_population": {
+            (1, 13470401): 60.0,
+            (2, 13470401): 40.0,
+            (3, 13470401): 50.0,
+        },
+        "rgo_employed": {
+            (1, 13470401): 40.0,
+            (2, 13470401): 20.0,
+            (3, 13470401): 25.0,
+        },
+        "unemployed_total": {
+            (1, 13470401): 10.0,
+            (2, 13470401): 10.0,
+            (3, 13470401): 25.0,
+        },
+        "unemployed_slaves": {(1, 13470401): 5.0},
+        "employed_slaves": {(1, 13470401): 5.0},
+        "unemployed_peasants": {(1, 13470401): 5.0, (2, 13470401): 5.0},
+        "employed_peasants": {(1, 13470401): 20.0, (2, 13470401): 10.0},
+        "unemployed_laborers": {(2, 13470401): 5.0},
+        "employed_laborers": {(1, 13470401): 15.0, (2, 13470401): 5.0},
+        "employed_burghers": {(2, 13470401): 5.0},
+    }
+    columns = ["rgo_employed", "unemployed_total"]
+    columns.extend(f"{prefix}_{pop_type}" for pop_type in pop_types for prefix in ("unemployed", "employed"))
+
+    def case_expr(column: str) -> pl.Expr:
+        expr = pl.col(column).cast(pl.Float64) if column in locations.columns else pl.lit(0.0)
+        for (location_code, date_sort), value in values.get(column, {}).items():
+            expr = (
+                pl.when((pl.col("location_code") == location_code) & (pl.col("date_sort") == date_sort))
+                .then(value)
+                .otherwise(expr)
+            )
+        return expr.alias(column)
+
+    return locations.with_columns([case_expr("total_population"), *(case_expr(column) for column in columns)])
 
 
 def _fake_assets(tmp_path: Path) -> savegame_maps.SavegameMapAssets:

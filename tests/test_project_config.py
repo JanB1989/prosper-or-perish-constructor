@@ -738,6 +738,11 @@ def test_education_building_priorities_are_in_employment_systems() -> None:
     for input_good, expected_amount in EDUCATION_MAINTENANCE_INPUTS["library"].items():
         assert library_maintenance_values[input_good] == expected_amount
 
+    library = rendered_buildings["library"]
+    assert isinstance(library, CList)
+    library_values = _entry_values(library)
+    assert library_values["rural_settlement"] is True
+
     university = rendered_buildings["university"]
     assert isinstance(university, CList)
     university_values = _entry_values(university)

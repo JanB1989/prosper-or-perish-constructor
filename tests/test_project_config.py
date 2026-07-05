@@ -298,6 +298,10 @@ FOOD_SECURITY_PRIORITY_TAGS_BY_GROUP = {
 EDUCATION_PRIORITY_TAG = "pp_education_priority"
 EDUCATION_PRIORITY_BONUS = 20000
 EDUCATION_PRIORITY_BUILDINGS = ("library", "university")
+EDUCATION_POP_TYPES = {
+    "library": "clergy",
+    "university": "clergy",
+}
 EDUCATION_PROMOTION_SPEEDS = {
     "library": 0.002,
     "university": 0.005,
@@ -723,6 +727,7 @@ def test_education_building_priorities_are_in_employment_systems() -> None:
         rendered = rendered_buildings[building]
         assert isinstance(rendered, CList)
         values = _entry_values(rendered)
+        assert values["pop_type"] == EDUCATION_POP_TYPES[building]
         assert EDUCATION_PRIORITY_TAG in _custom_tags(values["custom_tags"])
         modifier = values["modifier"]
         assert isinstance(modifier, CList)
@@ -1588,6 +1593,8 @@ def test_broad_farm_capacity_buildings_have_static_location_potential_gates() ->
     assert "pp_horse_breeders_location_potential = yes" in horse_potential
     assert "pp_horse_breeders_location_potential = yes" in stud_potential
     assert "market = {\n\t\t\tis_produced_in_market = goods:horses" in compatibility
+    assert "sub_continent = sub_continent:north_america" in compatibility
+    assert "sub_continent = sub_continent:south_america" in compatibility
     for snippet in (
         "raw_material = goods:wool",
         "raw_material = goods:livestock",

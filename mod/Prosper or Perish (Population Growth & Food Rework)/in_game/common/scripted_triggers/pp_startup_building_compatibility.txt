@@ -115,6 +115,8 @@ pp_horse_breeders_location_potential = {
 		market = {
 			is_produced_in_market = goods:horses
 		}
+		sub_continent = sub_continent:north_america
+		sub_continent = sub_continent:south_america
 	}
 	OR = {
 		raw_material = goods:wool

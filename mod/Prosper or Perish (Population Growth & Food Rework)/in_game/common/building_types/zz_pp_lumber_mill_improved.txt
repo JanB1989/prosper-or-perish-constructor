@@ -48,6 +48,15 @@ unique_production_methods = {
         output = 0.079
         category = building_maintenance
     }
+    # Organized coppice yards provide a no-horse saw-works path for horse-poor markets.
+    pp_lumber_mill_improved_coppice_yards = {
+        produced = lumber
+        output = 1.55
+        tools = 0.50 # saw frames, axes
+        victuals = 0.30 # cutting and yard crews
+        debug_max_profit = 0
+        category = building_maintenance
+    }
     pp_lumber_mill_improved_forest_ordinances = {
         produced = lumber
         output = 1.737

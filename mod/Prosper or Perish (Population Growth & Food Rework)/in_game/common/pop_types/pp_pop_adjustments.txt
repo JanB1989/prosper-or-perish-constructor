@@ -1,11 +1,11 @@
 ﻿# Cranked up food consumption base by 50% across the board, except for peasants (10% up)
 TRY_INJECT:nobles = {
 	pop_food_consumption = 30 # 25.0 # 20.0
-	promotion_factor = 0.1
+	promotion_factor = 0.3
 }
 TRY_INJECT:clergy = {
 	pop_food_consumption = 12.5 # 6.5 # 5.0
-	promotion_factor = 0.1
+	promotion_factor = 0.3
 }
 TRY_INJECT:burghers = {
 	pop_food_consumption = 12.5 # 6.5 # 4.0

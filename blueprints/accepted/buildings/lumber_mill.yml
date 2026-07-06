@@ -132,16 +132,14 @@ advancements:
       icon = lumber_improvements_absolutism
       age = age_3_discovery
       requires = improved_book_binding
-      unlock_production_method = pp_lumber_mill_horse_victuals
-      unlock_production_method = pp_lumber_mill_livestock_victuals
       ai_weight = { add = 150 }
 localization:
   entries:
     lumber_mill_slot_0: Woodland Cutting
     lumber_mill_slot_1: Logging Method
     lumber_mill_slot_2: Crew Support
-    lumber_improvements_discovery: Provisioned Logging Crews
-    lumber_improvements_discovery_desc: Organized crew provisioning lets logging camps support larger cutting teams with either horse or ox haulage.
+    lumber_improvements_discovery: Dedicated Forestry
+    lumber_improvements_discovery_desc: Dedicated woodland management prepares larger forest districts for later sawmill improvements.
     pp_lumber_mill_base_lumber: Woodland Cutting
     pp_lumber_mill_extra_rations: Extra Rations
     pp_lumber_mill_horse_tools: Horse Logging Teams

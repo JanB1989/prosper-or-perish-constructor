@@ -119,6 +119,49 @@
       display: block;
     }
 
+    .section-intro {
+      margin-top: -4px;
+    }
+
+    .map-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .map-tile {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: inherit;
+      display: block;
+      overflow: hidden;
+      text-decoration: none;
+    }
+
+    .map-tile:hover {
+      border-color: var(--accent);
+      box-shadow: 0 12px 28px rgba(23, 32, 51, 0.11);
+    }
+
+    .map-tile img {
+      aspect-ratio: 16 / 9;
+      background: #e8edf0;
+      border-bottom: 1px solid var(--line);
+      display: block;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .map-copy {
+      padding: 16px 18px 18px;
+    }
+
+    .map-copy span {
+      color: var(--muted);
+      display: block;
+    }
+
     .panel {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -232,9 +275,64 @@
           <h3>Savegame Market Explorer</h3>
           <span>Market supply, demand, bucket, RGO, and production-method flow graph from a real save.</span>
         </a>
+        <a class="card" href="examples/savegame_maps.html">
+          <h3>Savegame Map Playback</h3>
+          <span>Frame-by-frame map viewer for population, employment, development, building levels, food prices, and politics.</span>
+        </a>
         <a class="card" href="examples/europedia.html">
           <h3>Europedia Export</h3>
           <span>Searchable web export generated from the mod's in-game Europedia sources.</span>
+        </a>
+      </div>
+    </section>
+
+    <section aria-labelledby="savegame-maps-heading">
+      <h2 id="savegame-maps-heading">Savegame Map Animations</h2>
+      <p class="section-intro">
+        Compact animated WebP exports from the current notebook map run.
+      </p>
+      <div class="map-grid">
+        <a class="map-tile" href="examples/absolute/population_current.webp">
+          <img src="examples/absolute/population_current.webp" alt="Animated population map" loading="lazy">
+          <div class="map-copy">
+            <h3>Population</h3>
+            <span>Absolute population across the save timeline.</span>
+          </div>
+        </a>
+        <a class="map-tile" href="examples/absolute/employment_current.webp">
+          <img src="examples/absolute/employment_current.webp" alt="Animated employment map" loading="lazy">
+          <div class="map-copy">
+            <h3>Employment</h3>
+            <span>Employment intensity over the same save cadence.</span>
+          </div>
+        </a>
+        <a class="map-tile" href="examples/absolute/development_current.webp">
+          <img src="examples/absolute/development_current.webp" alt="Animated development map" loading="lazy">
+          <div class="map-copy">
+            <h3>Development</h3>
+            <span>Current development by location over time.</span>
+          </div>
+        </a>
+        <a class="map-tile" href="examples/absolute/building_levels_current.webp">
+          <img src="examples/absolute/building_levels_current.webp" alt="Animated building levels map" loading="lazy">
+          <div class="map-copy">
+            <h3>Building Levels</h3>
+            <span>Built-up locations as the campaign expands.</span>
+          </div>
+        </a>
+        <a class="map-tile" href="examples/absolute/food_price_current.webp">
+          <img src="examples/absolute/food_price_current.webp" alt="Animated food price map" loading="lazy">
+          <div class="map-copy">
+            <h3>Food Prices</h3>
+            <span>Local market food-price pressure across the world.</span>
+          </div>
+        </a>
+        <a class="map-tile" href="examples/absolute/political_current.webp">
+          <img src="examples/absolute/political_current.webp" alt="Animated political map" loading="lazy">
+          <div class="map-copy">
+            <h3>Political Control</h3>
+            <span>Owner-country color shifts through the save timeline.</span>
+          </div>
         </a>
       </div>
     </section>

@@ -40,38 +40,35 @@ build_time = rural_build_time
         pp_lumber_mill_no_primary = {
             category = building_maintenance
         }
-        pp_lumber_mill_maintenance = {
+        pp_lumber_mill_horse_tools = {
             produced = lumber
-            output = 0.924
-            tools = 0.37 # axes, saw upkeep
-
-            category = building_maintenance
-        }
-        # Horse teams haul logs and power simple machinery: fewer tools, but consumes horses.
-        pp_lumber_mill_horse_teams = {
-            produced = lumber
-            output = 0.875
-            tools = 0.23 # axes, saw upkeep
-            horses = 0.17 # log hauling
+            output = 0.983
+            tools = 0.267 # axes, saw upkeep
+            horses = 0.170 # fast log hauling
             debug_max_profit = 0
             category = building_maintenance
         }
-        # Coppice rotations and marked standards give steadier cuttings, but need more crews.
-        pp_lumber_mill_coppice_standards = {
+        pp_lumber_mill_horse_victuals = {
             produced = lumber
-            output = 1.033
-            tools = 0.37 # axes, marking tools
-            victuals = 0.12 # cutting crews
+            output = 0.960
+            horses = 0.170 # fast log hauling
+            victuals = 0.308 # provisioned cutting crews
             debug_max_profit = 0
             category = building_maintenance
         }
-        # River drives extend the cutting radius through log landings and seasonal floats.
-        pp_lumber_mill_timber_drives = {
+        pp_lumber_mill_livestock_tools = {
             produced = lumber
-            output = 1.208
-            tools = 0.27 # axes, pike poles
-            horses = 0.23 # log hauling
-            victuals = 0.08 # drive crews
+            output = 0.926
+            tools = 0.250 # axes, saw upkeep
+            livestock = 0.340 # ox log hauling
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_lumber_mill_livestock_victuals = {
+            produced = lumber
+            output = 0.897
+            livestock = 0.340 # ox log hauling
+            victuals = 0.288 # provisioned cutting crews
             debug_max_profit = 0
             category = building_maintenance
         }

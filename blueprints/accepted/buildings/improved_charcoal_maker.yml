@@ -41,7 +41,8 @@ building:
 
                 debug_max_profit = 0.3
 
-                lumber = 1.05
+                lumber = 0.63 # coppice poles and cordwood
+                clay = 1.48 # sealed kiln and retort lining
                 category = guild_input
             }
 
@@ -54,8 +55,8 @@ building:
 localization:
   entries:
     improved_charcoal_maker: Charcoal Retort
-    improved_charcoal_maker_desc: Retorts and improved kilns control the charring of wood more closely, raising charcoal yields for forges and workshops without competing with coal seams reserved for mine workings.
-    pp_improved_char_coal_maintenance: Retort Charring
+    improved_charcoal_maker_desc: Sealed kilns and retorts control the charring of coppice wood more closely, using clay linings and sealed burn chambers to raise charcoal yields without competing with true coal seams.
+    pp_improved_char_coal_maintenance: Sealed Retort Charring
 
 evaluation:
   allow_rules:

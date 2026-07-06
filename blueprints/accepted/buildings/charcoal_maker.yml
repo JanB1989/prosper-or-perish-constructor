@@ -41,7 +41,8 @@ building:
 
                 debug_max_profit = 0.1
 
-                lumber = 0.85
+                lumber = 0.51 # coppice poles and cordwood
+                clay = 1.20 # earth, turf, and clay sealing
                 category = guild_input
             }
 
@@ -54,8 +55,8 @@ building:
 localization:
   entries:
     charcoal_maker: Charcoal Clamp
-    charcoal_maker_desc: Earth-covered clamps and simple kilns turn coppiced wood into charcoal for hearths and forges. These wood-fuel yards are kept separate from true coal seams, where mined coal is worked by dedicated drifts.
-    pp_char_coal_maintenance: Clamp Burning
+    charcoal_maker_desc: Earth-covered clamps turn coppice poles and cordwood into charcoal for hearths and forges. Colliers seal each burn with clay and turf while dedicated mines handle true coal seams.
+    pp_char_coal_maintenance: Earth Clamp Burning
 
 evaluation:
   allow_rules:

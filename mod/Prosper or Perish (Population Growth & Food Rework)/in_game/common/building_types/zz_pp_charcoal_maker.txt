@@ -31,7 +31,8 @@ increase_per_level_cost = 0.18
 
             debug_max_profit = 0.1
 
-            lumber = 0.85
+            lumber = 0.51 # coppice poles and cordwood
+            clay = 1.20 # earth, turf, and clay sealing
             category = guild_input
         }
 

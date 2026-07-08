@@ -831,12 +831,15 @@ def _run(command: Sequence[str | os.PathLike[str]], repo: Path) -> int:
 def _run_collecting_output(
     command: Sequence[str | os.PathLike[str]],
     repo: Path,
+    *,
+    env: Mapping[str, str] | None = None,
 ) -> tuple[int, str]:
     printable = " ".join(str(part) for part in command)
     print(f"$ {printable}", flush=True)
     process = subprocess.Popen(
         [str(part) for part in command],
         cwd=repo,
+        env=dict(env) if env is not None else None,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
@@ -3266,6 +3269,7 @@ def _savegame_notebooks_build(
                 *(["--extended"] if args.extended else []),
             ],
             repo,
+            env=_native_temp_subprocess_env(repo),
         )
         if ingest_code != 0:
             return ingest_code
@@ -3304,6 +3308,19 @@ def _savegame_notebooks_build(
 def _extract_report_count(output: str, key: str) -> int | None:
     match = re.search(rf"(?m)^{re.escape(key)}:\s*(\d+)\s*$", output)
     return int(match.group(1)) if match else None
+
+
+def _native_temp_subprocess_env(repo: Path) -> dict[str, str]:
+    """Return an env with temp files on native Linux storage for worker sockets."""
+
+    temp_dir = repo / "artifacts" / "tmp"
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    env = dict(os.environ)
+    temp_text = str(temp_dir)
+    env["TMPDIR"] = temp_text
+    env["TMP"] = temp_text
+    env["TEMP"] = temp_text
+    return env
 
 
 def _export_savegame_notebook_global_webps(

@@ -1399,9 +1399,13 @@ def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
         assert cwd == repo
         return 0
 
-    def fake_run_collecting_output(command, cwd):
+    def fake_run_collecting_output(command, cwd, *, env=None):
         calls.append([str(part) for part in command])
         assert cwd == repo
+        assert env is not None
+        assert env["TMPDIR"] == str(repo / "artifacts" / "tmp")
+        assert env["TMP"] == str(repo / "artifacts" / "tmp")
+        assert env["TEMP"] == str(repo / "artifacts" / "tmp")
         _write_savegame_manifest(repo, save_dir / "autosave.eu5")
         return 0, "processed: 0\nskipped: 1\n"
 
@@ -1454,9 +1458,11 @@ def test_savegame_notebooks_build_passes_extended_only_when_requested(
     (save_dir / "autosave.eu5").write_text("SAV\nmetadata={}", encoding="utf-8")
     calls: list[list[str]] = []
 
-    def fake_run_collecting_output(command, cwd):
+    def fake_run_collecting_output(command, cwd, *, env=None):
         calls.append([str(part) for part in command])
         assert cwd == repo
+        assert env is not None
+        assert env["TMPDIR"] == str(repo / "artifacts" / "tmp")
         _write_savegame_manifest(repo, save_dir / "autosave.eu5")
         return 0, "processed: 0\nskipped: 1\n"
 
@@ -1545,9 +1551,11 @@ def test_savegame_notebooks_build_auto_detects_save_dir(
         assert cwd == repo
         return 0
 
-    def fake_run_collecting_output(command, cwd):
+    def fake_run_collecting_output(command, cwd, *, env=None):
         calls.append([str(part) for part in command])
         assert cwd == repo
+        assert env is not None
+        assert env["TMPDIR"] == str(repo / "artifacts" / "tmp")
         return 0, "processed: 0\nskipped: 1\n"
 
     monkeypatch.setattr(cli, "_run", fake_run)

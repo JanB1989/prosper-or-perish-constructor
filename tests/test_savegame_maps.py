@@ -220,8 +220,23 @@ def test_building_levels_current_defaults_to_fixed_absolute_scale(tmp_path: Path
     data = _fake_data(tmp_path, include_missing_geometry=False)
 
     result = savegame_maps.building_levels_map(data, scope="super_region", name="asia", mode="current", width=160)
+    frame = result.frame_data.filter(pl.col("date_sort") == 13470401)
+    legend = savegame_maps._frame_legend(
+        frame,
+        value_column="building_levels_map_value",
+        title="Building",
+        date="1347",
+        unit=savegame_maps._legend_unit("building_levels", "current"),
+        show_max_location=True,
+    )
+    rows = dict(legend.rows)
 
     assert result.value_bounds == (0.0, 400.0)
+    assert result.value_label == "building"
+    assert savegame_maps._legend_unit("building_levels", "current") == ""
+    assert rows["Max"] == "8.0"
+    assert rows["Max location"] == "Bravo"
+    assert "levels" not in rows["Max"]
 
 
 def test_population_absolute_log_scale_maps_low_values_visibly() -> None:
@@ -280,6 +295,40 @@ def test_world_population_absolute_legend_includes_super_region_totals(tmp_path:
 
     assert ("Asia", "5.0k", "2.5k", "2.5k", "0", "5.0k") in legend.region_rows
     assert ("Europe", "30k", "30k", "30k", "30k", "30k") in legend.region_rows
+
+
+def test_current_metric_legend_can_include_max_location_names_with_alpha_tiebreak() -> None:
+    frame = pl.DataFrame(
+        [
+            {
+                "super_region": "asia",
+                "super_region_label": "Asia",
+                "location_label": "Bravo",
+                "population_map_value": 5.0,
+            },
+            {
+                "super_region": "asia",
+                "super_region_label": "Asia",
+                "location_label": "Alpha",
+                "population_map_value": 5.0,
+            },
+        ]
+    )
+
+    legend = savegame_maps._frame_legend(
+        frame,
+        value_column="population_map_value",
+        title="Population",
+        date="1347",
+        unit="population_thousands",
+        show_max_location=True,
+    )
+    rows = dict(legend.rows)
+
+    assert rows["Max"] == "5.0k"
+    assert rows["Max location"] == "Alpha"
+    assert legend.region_max_location is True
+    assert ("Asia", "10k", "5.0k", "5.0k", "5.0k", "5.0k", "Alpha") in legend.region_rows
 
 
 def test_employment_map_uses_weighted_percent_scale_and_legend(tmp_path: Path) -> None:

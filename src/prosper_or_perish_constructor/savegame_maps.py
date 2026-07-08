@@ -188,8 +188,9 @@ class MapViewerExportResult:
 class MapFrameLegend:
     title: str
     rows: tuple[tuple[str, str], ...]
-    region_rows: tuple[tuple[str, str, str, str, str, str], ...] = ()
+    region_rows: tuple[tuple[str, ...], ...] = ()
     region_value_header: str = "Total"
+    region_max_location: bool = False
     unit: str = ""
     signed: bool = False
     swatch_rows: tuple[tuple[str, str, str], ...] = ()
@@ -441,6 +442,7 @@ def population_map(
                 context=legend_context,
                 unit=legend_unit,
                 signed=legend_signed,
+                show_max_location=comparison == "current",
             ),
         )
         frames.append(
@@ -677,6 +679,7 @@ def development_map(
                 context=((("Baseline", _year_from_date_label(baseline_date_label)),) if normalized_mode == "from_gamestart" else ()),
                 unit="pts" if normalized_mode == "from_gamestart" else "",
                 signed=normalized_mode == "from_gamestart",
+                show_max_location=normalized_mode != "from_gamestart",
             ),
         )
         frames.append(
@@ -805,8 +808,8 @@ def building_levels_map(
         delta_bounds=delta_bounds,
         absolute_bounds=absolute_bounds,
         width=width,
-        title_metric="building levels",
-        value_label_prefix="building levels",
+        title_metric="buildings",
+        value_label_prefix="building",
         absolute_cmap="inferno",
         delta_cmap="PiYG",
         absolute_scale="fixed",
@@ -2129,6 +2132,7 @@ def _scalar_location_map(
                 unit=_legend_unit(metric, normalized_mode),
                 signed=normalized_mode == "from_gamestart",
                 show_total=metric != "food_price",
+                show_max_location=normalized_mode != "from_gamestart" and metric in {"building_levels", "development"},
             ),
         )
         frames.append(
@@ -2875,6 +2879,7 @@ def _frame_legend(
     total_value_column: str | None = None,
     baseline_value_column: str | None = None,
     show_total: bool = True,
+    show_max_location: bool = False,
 ) -> MapFrameLegend:
     rows: list[tuple[str, str]] = [("Date", date), *context]
     if frame.is_empty() or value_column not in frame.columns:
@@ -2890,13 +2895,19 @@ def _frame_legend(
     if no_data_count:
         rows.append(("No data", f"{no_data_count:,}"))
     if finite.size:
+        max_value = float(finite.max())
+        max_text = _format_stat_value(max_value, unit=unit, signed=signed)
         stat_rows = [
             ("Mean", _format_stat_value(float(finite.mean()), unit=unit, signed=signed)),
             ("Median", _format_stat_value(float(np.median(finite)), unit=unit, signed=signed)),
             ("Stdev", _format_stat_value(float(finite.std()), unit=unit, signed=signed)),
             ("Min", _format_stat_value(float(finite.min()), unit=unit, signed=signed)),
-            ("Max", _format_stat_value(float(finite.max()), unit=unit, signed=signed)),
+            ("Max", max_text),
         ]
+        if show_max_location:
+            max_location = _max_location_label(frame, value_column)
+            if max_location:
+                stat_rows.append(("Max location", _compact_location_label(max_location, max_chars=28)))
         if show_total:
             stat_rows.insert(0, ("Total", _format_stat_value(float(finite.sum()), unit=unit, signed=signed)))
         rows.extend(stat_rows)
@@ -2909,12 +2920,14 @@ def _frame_legend(
         total_value_column=total_value_column,
         baseline_value_column=baseline_value_column,
         show_total=show_total,
+        show_max_location=show_max_location,
     )
     return MapFrameLegend(
         title=title,
         rows=tuple(rows),
         region_rows=region_rows,
         region_value_header=region_value_header,
+        region_max_location=show_max_location,
         unit=unit,
         signed=signed,
     )
@@ -2983,14 +2996,16 @@ def _super_region_legend_rows(
     total_value_column: str | None = None,
     baseline_value_column: str | None = None,
     show_total: bool = True,
+    show_max_location: bool = False,
     limit: int = 6,
-) -> tuple[tuple[str, str, str, str, str, str], ...]:
+) -> tuple[tuple[str, ...], ...]:
     if frame.is_empty() or value_column not in frame.columns or "super_region" not in frame.columns:
         return ()
     selected = frame.select(
         _super_region_label_expr(frame).alias("region_label"),
+        _location_label_expr(frame).alias("location_label"),
         pl.col(value_column).cast(pl.Float64).alias("value"),
-    ).drop_nulls("value")
+    ).filter(pl.col("value").is_not_null() & pl.col("value").is_finite())
     aggregations: list[pl.Expr] = [
         pl.len().alias("locations"),
         pl.sum("value").alias("total"),
@@ -3001,13 +3016,22 @@ def _super_region_legend_rows(
         pl.max("value").alias("max"),
     ]
     stats = selected.group_by("region_label").agg(aggregations)
+    if show_max_location:
+        max_locations = (
+            selected.with_columns(pl.col("location_label").str.to_lowercase().alias("_location_sort"))
+            .sort(["region_label", "value", "_location_sort", "location_label"], descending=[False, True, False, False])
+            .group_by("region_label", maintain_order=True)
+            .agg(pl.first("location_label").alias("max_location"))
+        )
+        stats = stats.join(max_locations, on="region_label", how="left")
     stats = (
         stats
         .sort(["locations", "region_label"], descending=[True, False])
         .head(limit)
     )
-    return tuple(
-        (
+    rows: list[tuple[str, ...]] = []
+    for row in stats.iter_rows(named=True):
+        base = (
             _compact_region_label(str(row["region_label"])),
             _format_stat_value(float(row["total" if show_total else "stddev"]), unit=unit, signed=signed),
             _format_stat_value(float(row["mean"]), unit=unit, signed=signed),
@@ -3015,8 +3039,16 @@ def _super_region_legend_rows(
             _format_stat_value(float(row["min"]), unit=unit, signed=signed),
             _format_stat_value(float(row["max"]), unit=unit, signed=signed),
         )
-        for row in stats.iter_rows(named=True)
-    )
+        if show_max_location:
+            rows.append(
+                (
+                    *base,
+                    _compact_location_label(str(row.get("max_location") or ""), max_chars=18),
+                )
+            )
+        else:
+            rows.append(base)
+    return tuple(rows)
 
 
 def _employment_frame_legend(frame: pl.DataFrame, *, date: str) -> MapFrameLegend:
@@ -3129,6 +3161,52 @@ def _super_region_label_expr(frame: pl.DataFrame) -> pl.Expr:
     return pl.col("super_region").cast(pl.String).map_elements(_title_from_key, return_dtype=pl.String)
 
 
+def _location_label_expr(frame: pl.DataFrame) -> pl.Expr:
+    candidates: list[pl.Expr] = []
+    for column in ("location_label", "slug", "location_tag", "location_code"):
+        if column not in frame.columns:
+            continue
+        expr = pl.col(column).cast(pl.String)
+        if column in {"slug", "location_tag"}:
+            expr = expr.map_elements(_title_from_key, return_dtype=pl.String)
+        candidates.append(
+            pl.when(expr.is_not_null() & (expr != ""))
+            .then(expr)
+            .otherwise(None)
+        )
+    if not candidates:
+        return pl.lit("", dtype=pl.String)
+    return pl.coalesce(candidates).fill_null("")
+
+
+def _max_location_label(frame: pl.DataFrame, value_column: str) -> str | None:
+    if frame.is_empty() or value_column not in frame.columns:
+        return None
+    selected = (
+        frame.select(
+            _location_label_expr(frame).alias("location_label"),
+            pl.col(value_column).cast(pl.Float64).alias("value"),
+        )
+        .filter(
+            pl.col("value").is_not_null()
+            & pl.col("value").is_finite()
+            & (pl.col("location_label") != "")
+        )
+        .with_columns(pl.col("location_label").str.to_lowercase().alias("_location_sort"))
+        .sort(["value", "_location_sort", "location_label"], descending=[True, False, False])
+    )
+    if selected.is_empty():
+        return None
+    return str(selected.row(0, named=True)["location_label"])
+
+
+def _compact_location_label(label: str, *, max_chars: int) -> str:
+    text = str(label or "").strip()
+    if len(text) <= max_chars:
+        return text
+    return f"{text[: max_chars - 1].rstrip()}."
+
+
 def _format_percent_share(value: float, *, signed: bool = False) -> str:
     if not np.isfinite(value):
         return "n/a"
@@ -3197,7 +3275,7 @@ def _legend_title(value_label_prefix: str, mode: str) -> str:
 
 def _legend_unit(metric: str, mode: str) -> str:
     if metric == "building_levels":
-        return "levels"
+        return ""
     if metric == "food_price":
         return "price"
     if mode == "from_gamestart":
@@ -3598,29 +3676,52 @@ def _draw_legend_panel(
         small_value_font = _image_font(13, bold=True)
         draw.text((x, y), "Super Region", fill=(70, 70, 70), font=small_header_font)
         inner_width = right - x
-        total_x = min(right, x + max(210, round(inner_width * 0.36)))
-        mean_x = min(right, total_x + 102)
-        median_x = min(right, mean_x + 102)
-        min_x = min(right, median_x + 102)
-        max_x = min(right, min_x + 102)
-        for column_x, label in (
-            (total_x, legend.region_value_header),
-            (mean_x, "Mean"),
-            (median_x, "Median"),
-            (min_x, "Min"),
-            (max_x, "Max"),
-        ):
+        if legend.region_max_location:
+            total_x = min(right, x + max(190, round(inner_width * 0.28)))
+            mean_x = min(right, total_x + 82)
+            median_x = min(right, mean_x + 82)
+            min_x = median_x
+            max_x = min(right, median_x + 82)
+            location_x = min(right, max_x + 18)
+            header_columns = (
+                (total_x, legend.region_value_header),
+                (mean_x, "Mean"),
+                (median_x, "Median"),
+                (max_x, "Max"),
+            )
+        else:
+            total_x = min(right, x + max(210, round(inner_width * 0.36)))
+            mean_x = min(right, total_x + 102)
+            median_x = min(right, mean_x + 102)
+            min_x = min(right, median_x + 102)
+            max_x = min(right, min_x + 102)
+            location_x = right
+            header_columns = (
+                (total_x, legend.region_value_header),
+                (mean_x, "Mean"),
+                (median_x, "Median"),
+                (min_x, "Min"),
+                (max_x, "Max"),
+            )
+        for column_x, label in header_columns:
             _draw_text_right(draw, (column_x, y), label, fill=(70, 70, 70), font=small_header_font)
+        if legend.region_max_location and location_x < right:
+            draw.text((location_x, y), "Location", fill=(70, 70, 70), font=small_header_font)
         y += 25
-        for region, total, mean, median, minimum, maximum in legend.region_rows:
+        for row in legend.region_rows:
             if y > panel_y + panel_height - 24:
                 break
+            values = (*row, "", "", "", "", "", "", "")
+            region, total, mean, median, minimum, maximum, location = values[:7]
             draw.text((x, y), region, fill=(70, 70, 70), font=small_font)
             _draw_text_right(draw, (total_x, y), total, fill=(24, 24, 24), font=small_value_font)
             _draw_text_right(draw, (mean_x, y), mean, fill=(24, 24, 24), font=small_value_font)
             _draw_text_right(draw, (median_x, y), median, fill=(24, 24, 24), font=small_value_font)
-            _draw_text_right(draw, (min_x, y), minimum, fill=(24, 24, 24), font=small_value_font)
+            if not legend.region_max_location:
+                _draw_text_right(draw, (min_x, y), minimum, fill=(24, 24, 24), font=small_value_font)
             _draw_text_right(draw, (max_x, y), maximum, fill=(24, 24, 24), font=small_value_font)
+            if legend.region_max_location and location_x < right:
+                draw.text((location_x, y), location, fill=(24, 24, 24), font=small_value_font)
             y += 24
     if legend.employment_distribution_rows and y <= panel_y + panel_height - 72:
         _draw_employment_distribution_section(

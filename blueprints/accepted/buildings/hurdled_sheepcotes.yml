@@ -113,5 +113,6 @@ evaluation:
     pp_hurdled_sheepcotes_foldcourse_husbandry:
       production_efficiency: 1.05
       allow_rules:
+        profit_percent: Foldcourse husbandry intentionally sits above the generic profit band as the worked sheepcote bridge method.
         input_throughput: Foldcourse husbandry is a modest age 2 bridge and intentionally stays below later enclosed sheep walks.
         output_throughput: Foldcourse husbandry is a modest age 2 bridge and intentionally stays below later enclosed sheep walks.

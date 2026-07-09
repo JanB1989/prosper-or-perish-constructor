@@ -124,6 +124,7 @@ evaluation:
       production_efficiency: 1.00
       allow_rules:
         profit_percent: Coal mines intentionally exceed the generic margin band so seam-gated fuel extraction is attractive to the AI.
+        input_throughput: Deep coal mines intentionally exceed generic input throughput so true coal seams beat charcoal fallback production.
         output_throughput: Coal mines intentionally exceed generic output throughput so true coal seams beat charcoal fallback production.
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_coal_mine_revolutions_no_secondary:

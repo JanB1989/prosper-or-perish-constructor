@@ -677,10 +677,13 @@ def plan_building_placements(
                         "startup_order": 10000 + rule.order,
                         "existing_levels": float(existing_levels.get((str(location["slug"]), rule.key), 0.0)),
                         "target_level": int(float(existing_levels.get((str(location["slug"]), rule.key), 0.0)) + levels),
+                        "startup_constructible": bool(location.get("startup_constructible_owner", True)),
                     }
                 )
     schema = _startup_plan_schema()
-    return pl.DataFrame(rows, schema=schema).sort(["building", "province", "location_slug"])
+    return _filter_startup_constructible_rows(
+        pl.DataFrame(rows, schema=schema).sort(["building", "province", "location_slug"])
+    )
 
 
 def plan_compiler_startup_buildings(
@@ -797,9 +800,12 @@ def plan_compiler_startup_buildings(
                 "startup_order": rule.order,
                 "existing_levels": float(existing),
                 "target_level": int(target_level),
+                "startup_constructible": bool(location.get("startup_constructible_owner", True)),
             }
         )
-    return pl.DataFrame(rows, schema=_startup_plan_schema()).sort(["building", "province", "location_slug"])
+    return _filter_startup_constructible_rows(
+        pl.DataFrame(rows, schema=_startup_plan_schema()).sort(["building", "province", "location_slug"])
+    )
 
 
 def _startup_plan_schema() -> dict[str, pl.DataType]:
@@ -844,6 +850,7 @@ def _startup_plan_schema() -> dict[str, pl.DataType]:
         "startup_order": pl.Int64,
         "existing_levels": pl.Float64,
         "target_level": pl.Int64,
+        "startup_constructible": pl.Boolean,
     }
 
 
@@ -1037,17 +1044,7 @@ def _with_province_capital(locations: pl.DataFrame) -> pl.DataFrame:
 
 
 def _with_location_geometry(locations: pl.DataFrame, config: FoodStartupConfig) -> pl.DataFrame:
-    if all(column in locations.columns for column in ("is_coastal", "topography", "vegetation", "climate")):
-        return _normalize_location_geometry(locations)
-    path = config.output_dir.parent / "population_capacity" / "location_geometry.parquet"
-    if not path.is_file():
-        return _normalize_location_geometry(locations)
-    geometry = pl.read_parquet(path)
-    if "location_tag" not in geometry.columns:
-        return _normalize_location_geometry(locations)
-    columns = [column for column in ("location_tag", "is_coastal", "topography", "vegetation", "climate") if column in geometry.columns]
-    geometry = geometry.select(columns).rename({"location_tag": "slug"})
-    return _normalize_location_geometry(locations.join(geometry, on="slug", how="left"))
+    return _normalize_location_geometry(locations)
 
 
 def _normalize_location_geometry(locations: pl.DataFrame) -> pl.DataFrame:
@@ -1458,6 +1455,12 @@ def _concat_plans(plans: Sequence[pl.DataFrame]) -> pl.DataFrame:
     return pl.concat(non_empty, how="vertical").sort(["startup_order", "province", "location_slug", "building"])
 
 
+def _filter_startup_constructible_rows(plan: pl.DataFrame) -> pl.DataFrame:
+    if "startup_constructible" not in plan.columns:
+        return plan
+    return plan.filter(pl.col("startup_constructible").fill_null(True)).drop("startup_constructible")
+
+
 def _existing_food_for_province(
     rule: BuildingRule,
     locations: Sequence[Mapping[str, Any]],
@@ -1780,16 +1783,13 @@ def _load_start_locations(config: FoodStartupConfig) -> pl.DataFrame:
 
 
 def _load_static_location_frame(config: FoodStartupConfig) -> pl.DataFrame:
-    path = config.output_dir.parent / "population_capacity" / "location_geometry.parquet"
-    if path.is_file():
-        base = pl.read_parquet(path)
-    else:
-        try:
-            from prosper_or_perish_constructor.farming_village_unlocks import load_current_location_frame
-        except ModuleNotFoundError as exc:
-            raise FoodStartupError(f"location parser helpers are unavailable: {exc.name}") from exc
-        repo = config.load_order.parent
-        base = load_current_location_frame(repo, repo / DEFAULT_PROJECT)
+    try:
+        from prosper_or_perish_constructor.farming_village_unlocks import load_current_location_frame
+    except ModuleNotFoundError as exc:
+        raise FoodStartupError(f"location parser helpers are unavailable: {exc.name}") from exc
+
+    repo = config.load_order.parent
+    base = load_current_location_frame(repo, repo / DEFAULT_PROJECT)
     try:
         from prosper_or_perish_constructor.free_building_levels import build_game_start_location_frame
     except ModuleNotFoundError as exc:
@@ -1870,7 +1870,18 @@ def _load_start_location_owners(config: FoodStartupConfig) -> pl.DataFrame:
     from eu5gameparser.clausewitz.parser import parse_file
     from eu5gameparser.clausewitz.syntax import CList
 
-    rows_by_slug: dict[str, str] = {}
+    rows_by_slug: dict[str, dict[str, str | bool]] = {}
+
+    def mark_location(slug: str, tag: str, *, constructible: bool) -> None:
+        existing = rows_by_slug.get(slug)
+        if existing is None or constructible or not bool(existing["startup_constructible_owner"]):
+            rows_by_slug[slug] = {
+                "country_tag": tag,
+                "owner": tag,
+                "owner_country_id": tag,
+                "startup_constructible_owner": constructible,
+            }
+
     for path in _setup_start_files(config, "10_countries.txt"):
         document = parse_file(path)
         for countries in document.values("countries"):
@@ -1882,17 +1893,24 @@ def _load_start_location_owners(config: FoodStartupConfig) -> pl.DataFrame:
                     continue
                 for value in country.value.values("capital"):
                     if isinstance(value, str):
-                        rows_by_slug[value] = tag
+                        mark_location(value, tag, constructible=True)
                 for entry in country.value.entries:
-                    if not _country_location_list_owns(entry.key) or not isinstance(entry.value, CList):
+                    if not _country_location_list_marks_owner(entry.key) or not isinstance(entry.value, CList):
                         continue
+                    constructible = _country_location_list_owns(entry.key)
                     for item in entry.value.items:
                         if isinstance(item, str):
-                            rows_by_slug[item] = tag
-    schema = {"slug": pl.String, "country_tag": pl.String, "owner": pl.String, "owner_country_id": pl.String}
+                            mark_location(item, tag, constructible=constructible)
+    schema = {
+        "slug": pl.String,
+        "country_tag": pl.String,
+        "owner": pl.String,
+        "owner_country_id": pl.String,
+        "startup_constructible_owner": pl.Boolean,
+    }
     rows = [
-        {"slug": slug, "country_tag": tag, "owner": tag, "owner_country_id": tag}
-        for slug, tag in sorted(rows_by_slug.items())
+        {"slug": slug, **values}
+        for slug, values in sorted(rows_by_slug.items())
     ]
     return pl.DataFrame(rows, schema=schema)
 
@@ -1908,7 +1926,11 @@ def _country_entries(countries):
 
 
 def _country_location_list_owns(key: str) -> bool:
-    return key == "add_pops_from_locations" or key.startswith("own_")
+    return key.startswith("own_")
+
+
+def _country_location_list_marks_owner(key: str) -> bool:
+    return key == "add_pops_from_locations" or _country_location_list_owns(key)
 
 
 def _load_existing_buildings(config: FoodStartupConfig) -> dict[tuple[str, str], float]:

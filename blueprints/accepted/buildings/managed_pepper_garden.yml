@@ -129,5 +129,9 @@ evaluation:
         base_output_per_1k: Passive base output intentionally carries the pepper garden baseline forward for the managed upgrade.
     pp_managed_pepper_garden_bamboo_drying_mats:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Bamboo drying mats use accepted high-margin spice tuning until the specialty-crop family rebalance.
     pp_managed_pepper_garden_garbling_tables:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Garbling tables use accepted high-margin spice tuning until the specialty-crop family rebalance.

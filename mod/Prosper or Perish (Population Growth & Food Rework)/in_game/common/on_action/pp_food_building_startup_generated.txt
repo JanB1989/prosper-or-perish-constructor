@@ -30526,11 +30526,11 @@ pp_food_building_startup = {
 				max = 1
 				split_pop = {
 					size = 1
-					type = pop_type:peasants
+					type = pop_type:laborers
 				}
 			}
 			construct_building = {
-				building_type = building_type:forest_village
+				building_type = building_type:iron_mine
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -30542,11 +30542,11 @@ pp_food_building_startup = {
 				max = 1
 				split_pop = {
 					size = 1
-					type = pop_type:peasants
+					type = pop_type:laborers
 				}
 			}
 			construct_building = {
-				building_type = building_type:forest_village
+				building_type = building_type:iron_mine
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -33169,40 +33169,6 @@ pp_food_building_startup = {
 			}
 			construct_building = {
 				building_type = building_type:clay_pit
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-		}
-		location:bigan = {
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 1
-					type = pop_type:laborers
-				}
-			}
-			construct_building = {
-				building_type = building_type:cookery
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 0.5
-					type = pop_type:laborers
-				}
-			}
-			construct_building = {
-				building_type = building_type:victuals_market
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -41570,7 +41536,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:sheep_farms
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -42179,40 +42145,6 @@ pp_food_building_startup = {
 			}
 			construct_building = {
 				building_type = building_type:cookery
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-		}
-		location:cabo_corso = {
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 1
-					type = pop_type:laborers
-				}
-			}
-			construct_building = {
-				building_type = building_type:cookery
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 0.5
-					type = pop_type:laborers
-				}
-			}
-			construct_building = {
-				building_type = building_type:victuals_market
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -50676,11 +50608,11 @@ pp_food_building_startup = {
 				max = 1
 				split_pop = {
 					size = 1
-					type = pop_type:laborers
+					type = pop_type:peasants
 				}
 			}
 			construct_building = {
-				building_type = building_type:lumber_mill
+				building_type = building_type:farming_village
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -50692,11 +50624,27 @@ pp_food_building_startup = {
 				max = 1
 				split_pop = {
 					size = 1
-					type = pop_type:laborers
+					type = pop_type:peasants
 				}
 			}
 			construct_building = {
-				building_type = building_type:lumber_mill
+				building_type = building_type:farming_village
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "game_start"
+			}
+			ordered_pop = {
+				limit = { pop_type = pop_type:peasants }
+				order_by = pop_size
+				check_range_bounds = no
+				max = 1
+				split_pop = {
+					size = 1
+					type = pop_type:peasants
+				}
+			}
+			construct_building = {
+				building_type = building_type:farming_village
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -69722,6 +69670,24 @@ pp_food_building_startup = {
 				cost_multiplier_reason = "game_start"
 			}
 		}
+		location:dima = {
+			ordered_pop = {
+				limit = { pop_type = pop_type:peasants }
+				order_by = pop_size
+				check_range_bounds = no
+				max = 1
+				split_pop = {
+					size = 1
+					type = pop_type:peasants
+				}
+			}
+			construct_building = {
+				building_type = building_type:farming_village
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "game_start"
+			}
+		}
 		location:dimapur = {
 			ordered_pop = {
 				limit = { pop_type = pop_type:peasants }
@@ -70266,7 +70232,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:lumber_mill
+				building_type = building_type:horse_breeders
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -70282,7 +70248,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:lumber_mill
+				building_type = building_type:horse_breeders
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -72875,40 +72841,6 @@ pp_food_building_startup = {
 			}
 			construct_building = {
 				building_type = building_type:salt_collector
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-		}
-		location:dori = {
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 1
-					type = pop_type:peasants
-				}
-			}
-			construct_building = {
-				building_type = building_type:farming_village
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 1
-					type = pop_type:laborers
-				}
-			}
-			construct_building = {
-				building_type = building_type:cookery
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -76368,7 +76300,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:sheep_farms
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -76384,7 +76316,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:sheep_farms
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -87098,11 +87030,11 @@ pp_food_building_startup = {
 				max = 1
 				split_pop = {
 					size = 1
-					type = pop_type:peasants
+					type = pop_type:laborers
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:horse_breeders
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -87114,43 +87046,11 @@ pp_food_building_startup = {
 				max = 1
 				split_pop = {
 					size = 1
-					type = pop_type:peasants
+					type = pop_type:laborers
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 1
-					type = pop_type:peasants
-				}
-			}
-			construct_building = {
-				building_type = building_type:farming_village
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 1
-					type = pop_type:peasants
-				}
-			}
-			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:horse_breeders
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -93612,11 +93512,11 @@ pp_food_building_startup = {
 				max = 1
 				split_pop = {
 					size = 1
-					type = pop_type:peasants
+					type = pop_type:laborers
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:horse_breeders
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -93628,27 +93528,11 @@ pp_food_building_startup = {
 				max = 1
 				split_pop = {
 					size = 1
-					type = pop_type:peasants
+					type = pop_type:laborers
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 1
-					type = pop_type:peasants
-				}
-			}
-			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:horse_breeders
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -114836,7 +114720,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:lumber_mill
+				building_type = building_type:horse_breeders
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -114852,7 +114736,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:lumber_mill
+				building_type = building_type:horse_breeders
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -204518,7 +204402,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:sheep_farms
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -204534,7 +204418,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:sheep_farms
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -204550,7 +204434,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:sheep_farms
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -224812,11 +224696,11 @@ pp_food_building_startup = {
 				max = 1
 				split_pop = {
 					size = 1
-					type = pop_type:peasants
+					type = pop_type:laborers
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:iron_mine
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -224828,11 +224712,11 @@ pp_food_building_startup = {
 				max = 1
 				split_pop = {
 					size = 1
-					type = pop_type:peasants
+					type = pop_type:laborers
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:iron_mine
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -228354,11 +228238,11 @@ pp_food_building_startup = {
 				max = 1
 				split_pop = {
 					size = 1
-					type = pop_type:peasants
+					type = pop_type:laborers
 				}
 			}
 			construct_building = {
-				building_type = building_type:forest_village
+				building_type = building_type:horse_breeders
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -228370,11 +228254,11 @@ pp_food_building_startup = {
 				max = 1
 				split_pop = {
 					size = 1
-					type = pop_type:peasants
+					type = pop_type:laborers
 				}
 			}
 			construct_building = {
-				building_type = building_type:forest_village
+				building_type = building_type:horse_breeders
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -230204,7 +230088,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:ocean_fishery
+				building_type = building_type:salt_collector
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -230220,55 +230104,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:ocean_fishery
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 1
-					type = pop_type:peasants
-				}
-			}
-			construct_building = {
-				building_type = building_type:fishing_village
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 1
-					type = pop_type:peasants
-				}
-			}
-			construct_building = {
-				building_type = building_type:fishing_village
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 1
-					type = pop_type:peasants
-				}
-			}
-			construct_building = {
-				building_type = building_type:fishing_village
+				building_type = building_type:salt_collector
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -240013,40 +239849,6 @@ pp_food_building_startup = {
 			}
 			construct_building = {
 				building_type = building_type:fiber_crops_farm
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-		}
-		location:sampelga = {
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 1
-					type = pop_type:peasants
-				}
-			}
-			construct_building = {
-				building_type = building_type:farming_village
-				instant = yes
-				cost_multiplier = 0
-				cost_multiplier_reason = "game_start"
-			}
-			ordered_pop = {
-				limit = { pop_type = pop_type:peasants }
-				order_by = pop_size
-				check_range_bounds = no
-				max = 1
-				split_pop = {
-					size = 0.5
-					type = pop_type:laborers
-				}
-			}
-			construct_building = {
-				building_type = building_type:victuals_market
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -309086,7 +308888,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:sheep_farms
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"
@@ -309102,7 +308904,7 @@ pp_food_building_startup = {
 				}
 			}
 			construct_building = {
-				building_type = building_type:farming_village
+				building_type = building_type:sheep_farms
 				instant = yes
 				cost_multiplier = 0
 				cost_multiplier_reason = "game_start"

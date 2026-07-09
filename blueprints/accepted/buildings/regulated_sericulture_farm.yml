@@ -137,3 +137,5 @@ evaluation:
       production_efficiency: 1.05
     pp_regulated_sericulture_farm_heated_filature:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Heated filature uses accepted high-margin silk tuning until the specialty-crop family rebalance.

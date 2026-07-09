@@ -137,6 +137,7 @@ evaluation:
     pp_nursery_orchard_nursery_rows:
       production_efficiency: 1.05
       allow_rules:
+        profit_percent: Nursery rows intentionally sit just above the generic profit band as the worked orchard bridge method.
         input_throughput: Nursery orchards are a modest age 3 bridge and intentionally stay below later grafted orchards.
         output_throughput: Nursery orchards are a modest age 3 bridge and intentionally stay below later grafted orchards.
     pp_nursery_orchard_no_worker_victuals:

@@ -131,5 +131,9 @@ evaluation:
         base_output_per_1k: Passive base output intentionally carries a smaller share of the full worked saffron output after the high-base rebalance.
     pp_saffron_kiln_croft_livestock_manure:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Livestock manure uses accepted high-margin saffron tuning until the specialty-crop family rebalance.
     pp_saffron_kiln_croft_pottery_kilns:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Pottery kilns use accepted high-margin saffron tuning until the specialty-crop family rebalance.

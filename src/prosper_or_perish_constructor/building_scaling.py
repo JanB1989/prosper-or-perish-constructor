@@ -165,6 +165,8 @@ def _is_employment_step(value: Decimal) -> bool:
 
 def _accepted_blueprint_increase_per_level_costs(repo: Path) -> dict[str, Decimal]:
     manifest_path = repo / BUILDING_BLUEPRINT_MANIFEST_RELATIVE
+    if not manifest_path.is_file():
+        return {}
     raw = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     enabled = raw.get("enabled") if isinstance(raw, dict) else None
     if not isinstance(enabled, list):

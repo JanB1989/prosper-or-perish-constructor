@@ -3,6 +3,7 @@ REPLACE:lumber_improvements_discovery = {
 icon = lumber_improvements_absolutism
 age = age_3_discovery
 requires = improved_book_binding
+global_lumber_output_modifier = 0.2
 ai_weight = { add = 150 }
 }
 # <<< eu5-building-pipeline:lumber_mill:advancement

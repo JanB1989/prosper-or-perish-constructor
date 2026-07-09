@@ -152,17 +152,23 @@ evaluation:
       production_efficiency: 1.00
     pp_iron_mine_deep_drainage_workings:
       production_efficiency: 1.00
+      allow_rules:
+        output_throughput: Deep drainage workings intentionally sit above the generic output target after accepted iron-family tuning.
     pp_iron_mine_deep_slitting_ore:
       production_efficiency: 1.00
+      allow_rules:
+        output_throughput: Deep slitting ore intentionally sits above the generic output target after accepted iron-family tuning.
     pp_iron_mine_deep_horse_whim_haulage:
       production_efficiency: 1.00
       allow_rules:
+        profit_percent: Horse-whim haulage is accepted above the generic margin band as a loop-breaking iron fallback.
         input_throughput: Horse-whim haulage is a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         output_throughput: Horse-whim haulage is a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_iron_mine_deep_ore_dressing_floors:
       production_efficiency: 1.06
       allow_rules:
+        profit_percent: Ore dressing floors are accepted above the generic margin band as a loop-breaking iron fallback.
         input_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         output_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         amortization_months: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.

@@ -28,6 +28,14 @@ OLD_WORKER_GATES = (
     "rgo_workers > 1",
 )
 ACTIVE_WORKER_GATE_RE = re.compile(r"\brgo_workers\s*(?:>=|>|<=|<|=)\s*-?\d+")
+PORTUGUESE_FEITORIA_LOCATIONS = (
+    "arguin",
+    "xiangshan_xinhui",
+    "goa",
+    "hormuz",
+    "malacca",
+    "anomansah",
+)
 
 
 def test_event_rgo_adjustments_override_vanilla_files_by_exact_path() -> None:
@@ -85,14 +93,52 @@ def test_event_rgo_adjustments_keep_vanilla_good_checks() -> None:
         assert expected in combined_text
 
 
-def test_event_rgo_adjustments_only_change_worker_thresholds() -> None:
+def test_event_rgo_adjustments_only_change_worker_thresholds_and_intentional_event_fixes() -> None:
     load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
     vanilla_event_root = load_order.vanilla_root / "game" / "in_game" / "events"
 
     for relative_path in OVERRIDDEN_EVENT_FILES:
         vanilla_text = (vanilla_event_root / relative_path).read_text(encoding="utf-8-sig")
-        expected = vanilla_text
-        for old_gate in OLD_WORKER_GATES:
-            expected = expected.replace(old_gate, "rgo_workers >= 0")
+        expected = _expected_event_override_text(relative_path, vanilla_text)
 
         assert (EVENT_ROOT / relative_path).read_text(encoding="utf-8-sig") == expected
+
+
+def _expected_event_override_text(relative_path: Path, vanilla_text: str) -> str:
+    expected = vanilla_text
+    for old_gate in OLD_WORKER_GATES:
+        expected = expected.replace(old_gate, "rgo_workers >= 0")
+    return _apply_intentional_non_rgo_event_fixes(relative_path, expected)
+
+
+def _apply_intentional_non_rgo_event_fixes(relative_path: Path, text: str) -> str:
+    if relative_path == Path("DHE") / "flavor_HAB.txt":
+        text = re.sub(r"\n\t+location_rank = location_rank:megalopolis", "", text)
+        text = text.replace(
+            "\n\t\t\traw_material = goods:silver\n\t\t\trgo_workers >= 0",
+            "\n\t\t\traw_material = goods:silver\n"
+            "\t\t\t# Prosper or Perish: keep the Schwaz silver mine event reachable under our RGO setup.\n"
+            "\t\t\trgo_workers >= 0",
+        )
+    elif relative_path == Path("DHE") / "flavor_OMA.txt":
+        text = text.replace(
+            "NOT = { OR = { location_rank = location_rank:city  location_rank = location_rank:megalopolis } }",
+            "NOT = { location_rank = location_rank:city }",
+        )
+    elif relative_path == Path("DHE") / "flavor_por.txt":
+        text = text.replace("\n\t\t\t\t\t\tis_alive = yes", "", 1)
+        text = text.replace("\n\t\t\t\t\tis_alive = yes", "", 2)
+        for location in PORTUGUESE_FEITORIA_LOCATIONS:
+            text = text.replace(
+                f"\t\tlocation:{location} = {{\n"
+                "\t\t\thas_owner = yes\n"
+                "\t\t\towner != root\n"
+                "\t\t\twithin_colonial_range_of = root\n"
+                "\t\t\tis_discovered_by = root\n",
+                f"\t\tlocation:{location} = {{\n"
+                "\t\t\towner != root\n"
+                "\t\t\twithin_colonial_range_of = root\n",
+            )
+    elif relative_path == Path("missionevents") / "generic_mission_events.txt":
+        text = text.replace("\n\t\t\t\t\t\t\t\tlocation_rank ?= location_rank:megalopolis", "")
+    return text

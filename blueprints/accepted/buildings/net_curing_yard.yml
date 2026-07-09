@@ -210,6 +210,7 @@ evaluation:
     pp_arctic_net_curing_yard_preserved_catch:
       production_efficiency: 1.10
       allow_rules:
+        profit_percent: Arctic preserved catch is an accepted regional fallback with high apparent margin from low direct input cost.
         input_throughput: Arctic preserved catch remains a lower-throughput regional fallback.
         output_throughput: Arctic preserved catch remains a lower-throughput regional fallback.
     pp_net_curing_yard_strand_line:

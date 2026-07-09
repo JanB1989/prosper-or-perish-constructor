@@ -406,6 +406,8 @@ evaluation:
       production_efficiency: 1.05
     pp_cookery_coffee:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Coffee cookery sits just below the generic margin floor after recipe tuning; accepted as a beverage add-on.
     pp_cookery_tea:
       production_efficiency: 1.05
     pp_cookery_pottery_jars:

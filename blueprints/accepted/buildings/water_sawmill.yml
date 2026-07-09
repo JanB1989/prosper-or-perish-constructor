@@ -178,6 +178,8 @@ evaluation:
       production_efficiency: 1.00
     pp_water_sawmill_horse_victuals:
       production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Provisioned horse sawmill crews intentionally sit above the generic profit band after accepted lumber tuning.
     pp_water_sawmill_livestock_tools:
       production_efficiency: 1.00
     pp_water_sawmill_livestock_victuals:

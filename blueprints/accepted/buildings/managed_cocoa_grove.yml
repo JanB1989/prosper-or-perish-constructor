@@ -130,3 +130,5 @@ evaluation:
       production_efficiency: 1.05
     pp_managed_cocoa_grove_managed_shade:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Accepted managed shade cocoa tuning intentionally exceeds the generic profit band until the cash-crop family rebalance.

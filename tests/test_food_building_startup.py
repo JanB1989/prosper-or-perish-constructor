@@ -11,6 +11,7 @@ from prosper_or_perish_constructor.food_building_startup import (
     ProductionSourceRule,
     ScoreRule,
     build_food_startup_plan,
+    plan_compiler_startup_buildings,
     render_food_startup_effect,
 )
 from prosper_or_perish_constructor import food_building_startup as food_startup
@@ -182,6 +183,164 @@ def test_startup_locations_use_parser_start_data_when_load_order_exists(tmp_path
     assert row["population_peasants"] == 0.0
     assert row["population_tribesmen"] == 21.0
     assert row["unemployed_peasants"] == 0.0
+
+
+def test_static_location_frame_uses_current_data_even_when_geometry_cache_exists(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    savegame, parser = _write_food_startup_tables(tmp_path)
+    config = _food_startup_config(tmp_path, savegame, parser, include_market=False)
+    vanilla = tmp_path / "vanilla"
+    vanilla.mkdir()
+    config.load_order.write_text(
+        f"""
+[paths]
+vanilla_root = "{vanilla.as_posix()}"
+
+[profiles]
+constructor = ["vanilla"]
+""".strip(),
+        encoding="utf-8",
+    )
+    stale_geometry = config.output_dir.parent / "population_capacity" / "location_geometry.parquet"
+    stale_geometry.parent.mkdir()
+    pl.DataFrame(
+        [
+            {
+                "location_tag": "alpha",
+                "location_id": 1,
+                "province": "alpha_province",
+                "region": "r1",
+                "macro_region": "m1",
+                "super_region": "s1",
+                "development": 10.0,
+                "location_rank": "town",
+                "raw_material": "millet",
+                "is_coastal": False,
+                "topography": "flatland",
+                "vegetation": "grasslands",
+                "climate": "continental",
+            }
+        ]
+    ).write_parquet(stale_geometry)
+
+    current_locations = pl.DataFrame(
+        [
+            {
+                "location_tag": "alpha",
+                "location_id": 1,
+                "province": "alpha_province",
+                "region": "r1",
+                "macro_region": "m1",
+                "super_region": "s1",
+                "development": 10.0,
+                "location_rank": "town",
+                "raw_material": "iron",
+                "is_coastal": False,
+                "topography": "hills",
+                "vegetation": "grasslands",
+                "climate": "continental",
+            }
+        ]
+    )
+
+    monkeypatch.setattr(
+        "prosper_or_perish_constructor.farming_village_unlocks.load_current_location_frame",
+        lambda _repo, _project: current_locations,
+    )
+    monkeypatch.setattr(
+        "prosper_or_perish_constructor.free_building_levels.build_game_start_location_frame",
+        lambda locations, *, profile: locations,
+    )
+
+    locations = food_startup._load_static_location_frame(config)
+
+    row = locations.row(0, named=True)
+    assert row["raw_material"] == "iron"
+    assert row["topography"] == "hills"
+    assert "current_raw_material" not in locations.columns
+
+
+def test_compiler_startup_filters_non_constructible_locations() -> None:
+    locations = pl.DataFrame(
+        [
+            {
+                "location_id": 1,
+                "slug": "alpha",
+                "province": "alpha_province",
+                "development": 20.0,
+                "total_population": 40.0,
+                "raw_material": "wheat",
+                "population_peasants": 20.0,
+                "unemployed_peasants": 20.0,
+                "location_rank": "rural_settlement",
+                "owner": "AAA",
+                "owner_country_id": "AAA",
+                "country_tag": "AAA",
+                "startup_constructible_owner": False,
+            }
+        ]
+    )
+    buildings = pl.DataFrame(
+        [
+            {"name": "farming_village", "pop_type": "peasants", "employment_size": 1.0},
+            {"name": "iron_mine", "pop_type": "laborers", "employment_size": 1.0},
+        ]
+    )
+
+    plan = plan_compiler_startup_buildings(locations, buildings)
+
+    assert plan.is_empty()
+
+
+def test_start_owner_loader_marks_add_pops_locations_non_constructible(tmp_path: Path) -> None:
+    savegame, parser = _write_food_startup_tables(tmp_path)
+    config = _food_startup_config(tmp_path, savegame, parser, include_market=False)
+    vanilla = tmp_path / "vanilla"
+    start = vanilla / "game" / "main_menu" / "setup" / "start"
+    start.mkdir(parents=True)
+    (start / "10_countries.txt").write_text(
+        """
+countries = {
+    countries = {
+        AAA = {
+            own_control_core = { alpha }
+            add_pops_from_locations = { beta }
+            capital = alpha
+        }
+        BBB = {
+            type = pop
+            add_pops_from_locations = { gamma }
+            capital = delta
+        }
+    }
+}
+""".strip(),
+        encoding="utf-8",
+    )
+    config.load_order.write_text(
+        f"""
+[paths]
+vanilla_root = "{vanilla.as_posix()}"
+
+[profiles]
+constructor = ["vanilla"]
+""".strip(),
+        encoding="utf-8",
+    )
+
+    owners = {
+        row["slug"]: (row["country_tag"], row["startup_constructible_owner"])
+        for row in food_startup._load_start_location_owners(config).to_dicts()
+    }
+
+    assert owners == {
+        "alpha": ("AAA", True),
+        "beta": ("AAA", False),
+        "delta": ("BBB", True),
+        "gamma": ("BBB", False),
+    }
 
 
 def test_startup_plan_reserves_town_setup_worker_shortfalls_before_food_levels(

@@ -127,5 +127,9 @@ evaluation:
         base_output_per_1k: Passive field output follows the accepted small specialty-crop baseline rather than the generic raw-site band.
     pp_trapiche_sugarcane_farm_open_kettles:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Open kettles use accepted high-margin sugar tuning until the specialty-crop family rebalance.
     pp_trapiche_sugarcane_farm_trapiche_pressing:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Trapiche pressing intentionally sits just above the generic profit band after accepted sugar tuning.

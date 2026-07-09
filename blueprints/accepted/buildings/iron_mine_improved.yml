@@ -153,16 +153,22 @@ evaluation:
       production_efficiency: 1.00
     pp_iron_mine_improved_iron:
       production_efficiency: 1.00
+      allow_rules:
+        output_throughput: Improved iron extraction intentionally sits just above the generic output target after accepted iron-family tuning.
     pp_iron_mine_improved_slitting_dressed_ore:
       production_efficiency: 1.00
+      allow_rules:
+        output_throughput: Slitting dressed ore intentionally sits just above the generic output target after accepted iron-family tuning.
     pp_iron_mine_improved_horse_whim_haulage:
       production_efficiency: 1.00
       allow_rules:
+        profit_percent: Horse-whim haulage is accepted above the generic margin band as a loop-breaking iron fallback.
         input_throughput: Horse-whim haulage is a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         output_throughput: Horse-whim haulage is a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
     pp_iron_mine_improved_ore_dressing_floors:
       production_efficiency: 1.06
       allow_rules:
+        profit_percent: Ore dressing floors are accepted above the generic margin band as a loop-breaking iron fallback.
         input_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         output_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
     pp_iron_mine_improved_no_secondary:

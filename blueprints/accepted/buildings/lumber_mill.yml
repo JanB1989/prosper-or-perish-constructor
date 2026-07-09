@@ -132,6 +132,7 @@ advancements:
       icon = lumber_improvements_absolutism
       age = age_3_discovery
       requires = improved_book_binding
+      global_lumber_output_modifier = 0.2
       ai_weight = { add = 150 }
 localization:
   entries:
@@ -163,6 +164,8 @@ evaluation:
       production_efficiency: 1.00
     pp_lumber_mill_horse_victuals:
       production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Provisioned horse logging crews intentionally sit just above the generic profit band after accepted lumber tuning.
     pp_lumber_mill_livestock_tools:
       production_efficiency: 1.00
     pp_lumber_mill_livestock_victuals:

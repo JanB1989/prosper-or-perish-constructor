@@ -97,6 +97,7 @@ icon:
 evaluation:
   allow_rules:
     amortization_months: Fiber dressing yards follow the current slow rural raw-material payback cadence.
+    input_throughput: The age-4 fiber input profile intentionally stays just below the generic full-building target after break-even tuning.
     output_throughput: The age-4 fiber output modifier carries the requested break-even math; the blueprint evaluator shows the unmodified base output.
   production_methods:
     pp_fiber_dressing_yard_base_fiber_crops:

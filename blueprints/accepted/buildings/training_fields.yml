@@ -10,6 +10,7 @@ building:
         - pp_training_fields_maintenance
   possible_production_methods: []
   body: |2-
+    	audio_tier = 1
     	is_foreign = no
     	pop_type = soldiers
     	max_levels = manpower_max_level
@@ -21,6 +22,9 @@ building:
     	
     	rural_settlement = yes
     	build_time = soldier_building
+    	raw_modifier = {
+    	}
+
         modifier = {
     		local_manpower = 0.01
     		can_recruit_regiment_in_this_location = yes

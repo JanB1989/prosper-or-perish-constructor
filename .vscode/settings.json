@@ -1,0 +1,20 @@
+{
+  "python.defaultInterpreterPath": "C:\\Python313\\python.exe",
+  "python.terminal.activateEnvironment": true,
+  "jupyter.kernels.trusted": [
+    "prosper-or-perish-constructor"
+  ],
+  "notebook.kernelProviderAssociations": {
+    "*.ipynb": "jupyter"
+  },
+  "remote.WSL.fileWatcher.polling": true,
+  "remote.WSL.fileWatcher.pollingInterval": 5000,
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.venv/**": true,
+    "**/.tmp/**": true,
+    "**/graphs/dataset/**": true
+  },
+  "files.hotExit": "off",
+  "window.restoreWindows": "none"
+}

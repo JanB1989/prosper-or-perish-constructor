@@ -1,40 +1,33 @@
-﻿farm_max_level_modifier = {
-	decimals = 0
+﻿farm_capacity_from_river_size = {
+	decimals = 2
 	game_data = {
 		category = location
 	}
 }
 
-farm_rank_capacity_modifier = {
-	decimals = 0
-	game_data = {
-		category = location
-	}
-}
-
-fish_max_level_modifier = {
-	decimals = 0
+fish_capacity_from_river_size = {
+	decimals = 2
 	game_data = {
 		category = location
 	}
 }
 
 irrigant_cap_modifier = {
-	decimals = 0
+	decimals = 2
 	game_data = {
 		category = location
 	}
 }
 
-forest_max_level_modifier = {
-	decimals = 0
+pp_river_boatmen_yard_cap_modifier = {
+	decimals = 2
 	game_data = {
 		category = location
 	}
 }
 
-forest_rank_capacity_modifier = {
-	decimals = 0
+pp_coastal_shipping_office_cap_modifier = {
+	decimals = 2
 	game_data = {
 		category = location
 	}

@@ -17,45 +17,49 @@ building:
         - pp_clay_pit_maintenance
   possible_production_methods: []
   body: |2-
-    	is_foreign = no
-    	max_levels = rural_building_cap
-    	pop_type = laborers
-    	
-    	employment_size = rural_peasant_produce_employment
-    	
-    	rural_settlement = yes
-    	town = yes
-    	city = yes
-    	megalopolis = yes
-    	
-    	location_potential = {
-    		OR = {
-    			is_coastal = yes
-    			has_river = yes
-    			is_adjacent_to_lake = yes
-    			raw_material = goods:clay
-    		}
-    	}
-    
-    	category = rgo_building_category
-    
+        audio_tier = 1
+        startup_ramp_target = rural_startup_ramp_target
+        is_foreign = no
+    increase_per_level_cost = 0.13
+        max_levels = rural_building_cap
+        pop_type = laborers
+
+        employment_size = 1
+
+        rural_settlement = yes
+        town = yes
+        city = yes
+        megalopolis = yes
+
+        location_potential = {
+            OR = {
+                is_coastal = yes
+                has_river = yes
+                is_adjacent_to_lake = yes
+                raw_material = goods:clay
+            }
+        }
+        category = rgo_building_category
+
     unique_production_methods = {
-    	pp_clay_pit_base_clay = {
-    		produced = clay
-    		output = 0.3
-    			category = building_maintenance
-    		}
-    		pp_clay_pit_maintenance = {
-    			produced = clay
-    			output = 1.44
-    			lumber = 0.28
-    			livestock = 0.12
-    			category = building_maintenance
-    		}
-    	}
-    	
-    	build_time = rural_build_time
-    	construction_demand = basic_construction_needs
+        pp_clay_pit_base_clay = {
+            produced = clay
+            output = 0.3
+                category = building_maintenance
+            }
+            pp_clay_pit_maintenance = {
+                produced = clay
+                output = 1.44
+                lumber = 0.28
+                livestock = 0.12
+                category = building_maintenance
+            }
+        }
+
+        build_time = rural_build_time
+        construction_demand = basic_construction_needs
+        raw_modifier = {
+        }
 localization:
   entries:
     clay_pit_slot_0: Pit Working

@@ -1,0 +1,66 @@
+version: 2
+tag: cloth_workshop
+building:
+  key: cloth_workshop
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_cloth_workshop_cotton_cloth_workshop_maintenance
+    - pp_cloth_workshop_wool_cloth_workshop_maintenance
+    - pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance
+  possible_production_methods: []
+  body: |
+    audio_tier = 2
+    is_foreign = no
+    pop_type = burghers
+    max_levels = workshop_max_level
+    startup_ramp_target = workshop_startup_ramp_target
+    category = consumer_goods_category
+    employment_size = 0.3
+    obsolete = cloth_guild
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = workshop_build_time
+    unique_production_methods = {
+        pp_cloth_workshop_cotton_cloth_workshop_maintenance = {
+            cotton = 1.013
+            produced = cloth
+            output = 1.1
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+        pp_cloth_workshop_wool_cloth_workshop_maintenance = {
+            wool = 1.216
+            produced = cloth
+            output = 1.1
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+        pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance = {
+            fiber_crops = 1.22
+            produced = cloth
+            output = 0.9
+            category = workshop_input
+            debug_max_profit = workshop_profit_margin
+        }
+    }
+    construction_demand = workshop_construction
+    custom_tags = {
+        workshop
+    }
+    modifier = {}
+    increase_per_level_cost = 0.19
+localization:
+  entries:
+    cloth_workshop_slot_0: Cloth Workshop Work
+    pp_cloth_workshop_cotton_cloth_workshop_maintenance: Cloth Workshop Cotton Cloth Workshop Maintenance
+    pp_cloth_workshop_wool_cloth_workshop_maintenance: Cloth Workshop Wool Cloth Workshop Maintenance
+    pp_cloth_workshop_fiber_crops_cloth_workshop_maintenance: Cloth Workshop Fiber Crops Cloth Workshop Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

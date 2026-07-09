@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: bog_iron_smelter
 upgrade_chain:
   family: bog_iron_smelter
@@ -16,11 +16,13 @@ building:
         - pp_bog_iron_maintenance
   possible_production_methods: []
   body: |2-
+    audio_tier = 1
+    startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
+    increase_per_level_cost = 0.25
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = rural_peasant_produce_employment
-    price = pp_bog_iron_smelter_price
+    employment_size = 1
     category = rgo_building_category
     icon = bog_iron_smelter
     rural_settlement = yes
@@ -30,6 +32,10 @@ building:
     build_time = rural_build_time
 
     location_potential = {
+        OR = {
+            is_adjacent_to_lake = yes
+            topography = wetlands
+        }
         NOR = {
             raw_material = goods:coal
             raw_material = goods:iron
@@ -46,31 +52,25 @@ building:
             raw_material = goods:mercury
         }
     }
-
     unique_production_methods = {
         pp_bog_iron_maintenance = {
             coal = 0.45 # charcoal, furnace fuel
             produced = iron
-            output = 0.36
+            output = 0.31
             debug_max_profit = 0.2
             category = building_maintenance
         }
     }
 
     construction_demand = basic_construction_needs
-prices:
-  - key: pp_bog_iron_smelter_price
-    body: |2-
-      {gold = 50}
+    raw_modifier = {
+    }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_bog_iron_smelter_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('bog_iron_smelter')|e].
-    MODIFIER_TYPE_NAME_pp_bog_iron_smelter_price_cost_modifier: Bog Iron Smelter Cost
     bog_iron_smelter_slot_0: Bog Iron Processing
     bog_iron_smelter: Bog Iron Smelter
     bog_iron_smelter_desc: A small wetland ironworks that gathers, roasts, and smelts bog iron where conventional ore deposits are absent.
     pp_bog_iron_maintenance: Bog Iron Smelter
-    pp_bog_iron_smelter_price: Bog Iron Smelter Price
 icon:
   source_dds: /mnt/c/Games/steamapps/common/Europa Universalis V/game/main_menu/gfx/interface/icons/buildings/bog_iron_smelter.dds
   output_dds: bog_iron_smelter.dds

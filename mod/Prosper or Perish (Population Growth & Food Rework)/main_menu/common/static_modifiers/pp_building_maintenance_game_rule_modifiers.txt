@@ -1,90 +1,24 @@
-﻿pp_player_building_maintenance_025_modifier = {
+﻿pp_player_building_maintenance_050_modifier = {
 	game_data = {
 		category = country
 	}
-	building_upkeep_costs = 0.25
-}
-pp_player_building_maintenance_050_modifier = {
-	game_data = {
-		category = country
-	}
-	building_upkeep_costs = 0.50
-}
-pp_player_building_maintenance_075_modifier = {
-	game_data = {
-		category = country
-	}
-	building_upkeep_costs = 0.75
+	building_upkeep_multiplier = 0.050
 }
 pp_player_building_maintenance_100_modifier = {
 	game_data = {
 		category = country
 	}
-	building_upkeep_costs = 1.00
-}
-pp_player_building_maintenance_125_modifier = {
-	game_data = {
-		category = country
-	}
-	building_upkeep_costs = 1.25
+	building_upkeep_multiplier = 0.100
 }
 pp_player_building_maintenance_150_modifier = {
 	game_data = {
 		category = country
 	}
-	building_upkeep_costs = 1.50
-}
-pp_player_building_maintenance_175_modifier = {
-	game_data = {
-		category = country
-	}
-	building_upkeep_costs = 1.75
+	building_upkeep_multiplier = 0.150
 }
 pp_player_building_maintenance_200_modifier = {
 	game_data = {
 		category = country
 	}
-	building_upkeep_costs = 2.00
-}
-pp_player_building_maintenance_225_modifier = {
-	game_data = {
-		category = country
-	}
-	building_upkeep_costs = 2.25
-}
-pp_player_building_maintenance_250_modifier = {
-	game_data = {
-		category = country
-	}
-	building_upkeep_costs = 2.50
-}
-pp_player_building_maintenance_275_modifier = {
-	game_data = {
-		category = country
-	}
-	building_upkeep_costs = 2.75
-}
-pp_player_building_maintenance_300_modifier = {
-	game_data = {
-		category = country
-	}
-	building_upkeep_costs = 3.00
-}
-pp_ai_building_maintenance_neg_025_modifier = {
-	game_data = {
-		category = country
-	}
-	building_upkeep_costs = -0.25
-}
-pp_ai_building_maintenance_neg_050_modifier = {
-	game_data = {
-		category = country
-	}
-	building_upkeep_costs = -0.50
-}
-pp_ai_building_maintenance_neg_075_modifier = {
-	game_data = {
-		category = country
-	}
-	building_upkeep_costs = -0.75
+	building_upkeep_multiplier = 0.200
 }

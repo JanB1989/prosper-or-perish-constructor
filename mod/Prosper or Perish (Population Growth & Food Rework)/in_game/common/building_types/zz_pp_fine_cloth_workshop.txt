@@ -1,0 +1,81 @@
+﻿# >>> eu5-building-pipeline:fine_cloth_workshop:building
+REPLACE:fine_cloth_workshop = {
+audio_tier = 2
+is_foreign = no
+pop_type = burghers
+max_levels = workshop_max_level
+startup_ramp_target = workshop_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = workshop_build_time
+unique_production_methods = {
+    pp_fine_cloth_workshop_fine_cloth_workshop_maintenance = {
+        cloth = 1.157
+        produced = fine_cloth
+        output = 0.6
+        category = workshop_input
+        debug_max_profit = workshop_profit_margin
+    }
+    pp_fine_cloth_workshop_wool_weavers_workshop_maintenance = {
+        wool = 1.388
+        produced = fine_cloth
+        output = 0.6
+        category = workshop_input
+        debug_max_profit = workshop_profit_margin
+    }
+    pp_fine_cloth_workshop_silk_weavers_workshop_maintenance = {
+        silk = 1.168
+        produced = fine_cloth
+        output = 0.8
+        category = workshop_input
+        debug_max_profit = workshop_profit_margin
+    }
+    pp_fine_cloth_workshop_spanish_cloth_workshop_maintenance = {
+        allow = {
+            custom_tooltip = {
+                text = has_unlocked_spanish_cloth_industry
+                has_variable = spanish_cloth_industry
+            }
+        }
+        wool = 1.388
+        produced = fine_cloth
+        output = 0.6
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+unique_production_methods = {
+    pp_fine_cloth_workshop_standard_fine_cloth_workshop_maintenance = {
+        produced = fine_cloth
+        dyes = 0.148
+        output = 0.12
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_fine_cloth_workshop_alum_fine_cloth_workshop_maintenance = {
+        alum = 0.066
+        dyes = 0.293
+        produced = fine_cloth
+        output = 0.25
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_fine_cloth_workshop_fur_trim_workshop_maintenance = {
+        fur = 0.685
+        produced = fine_cloth
+        output = 0.25
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+obsolete = fine_cloth_guild
+custom_tags = {
+    workshop
+}
+construction_demand = workshop_construction
+increase_per_level_cost = 0.14
+}
+# <<< eu5-building-pipeline:fine_cloth_workshop:building

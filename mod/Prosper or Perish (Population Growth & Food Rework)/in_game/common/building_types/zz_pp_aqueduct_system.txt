@@ -1,0 +1,20 @@
+﻿# >>> eu5-building-pipeline:aqueduct_system:building
+TRY_INJECT:aqueduct_system = {
+price = expand_aqueduct_system
+increase_per_level_cost = 0.30
+custom_tags = { pp_food_security_priority pp_water_control_priority }
+raw_modifier = {
+  farm_capacity_from_aqueduct_system = 2
+}
+
+modifier = {
+  local_monthly_food_modifier = -0.15 # vanilla 0.15
+  local_wheat_output_modifier = 0.05
+  local_rice_output_modifier = 0.05
+  local_millet_output_modifier = 0.05
+  local_maize_output_modifier = 0.05
+  local_legumes_output_modifier = 0.05
+  local_potato_output_modifier = 0.05
+}
+}
+# <<< eu5-building-pipeline:aqueduct_system:building

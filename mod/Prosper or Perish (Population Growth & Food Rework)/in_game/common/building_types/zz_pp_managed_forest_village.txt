@@ -1,12 +1,12 @@
 ﻿# >>> eu5-building-pipeline:managed_forest_village:building
 managed_forest_village = {
 is_foreign = no
-max_levels = forest_max_level
+increase_per_level_cost = 0.14
+max_levels = forest_capacity_max_managed_forest_village
 pop_type = laborers
-employment_size = 7
-price = pp_managed_forest_village_price
+employment_size = 1
 category = village_category
-custom_tags = { pp_food_security_priority pp_staple_food_priority }
+custom_tags = { pp_food_security_priority pp_staple_food_priority forest_capacity }
 icon = managed_forest_village
 rural_settlement = yes
 town = yes
@@ -29,30 +29,25 @@ location_potential = {
         raw_material = goods:wild_game
     }
 }
-
-allow = {
-    forest_capacity_available > 0
-}
-
 unique_production_methods = {
     pp_managed_forest_village_base_leather = {
         produced = leather
-        output = 0.70
+        output = 0.10
         category = building_maintenance
     }
     pp_managed_forest_village_base_wild_game = {
         produced = wild_game
-        output = 0.70
+        output = 0.10
         category = building_maintenance
     }
     pp_managed_forest_village_base_fur = {
         produced = fur
-        output = 0.70
+        output = 0.10
         category = building_maintenance
     }
     pp_managed_forest_village_base_beeswax = {
         produced = beeswax
-        output = 0.70
+        output = 0.10
         category = building_maintenance
     }
 }
@@ -62,54 +57,68 @@ unique_production_methods = {
     }
     pp_managed_forest_village_tannery = {
         produced = leather
-        output = 3.316
-        wild_game = 3.80
-        tools = 1.00
-        horses = 0.45
-        victuals = 0.45
-        paper = 0.10
+        output = 0.474
+        wild_game = 0.54
+        tools = 0.14
+        horses = 0.06
+        victuals = 0.06
+        paper = 0.01
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_managed_forest_village_gamekeepers = {
         produced = wild_game
-        output = 9.568
-        tools = 1.215
-        horses = 0.855
-        victuals = 0.765
-        paper = 0.09
-        lumber = 0.54
+        output = 1.367
+        tools = 0.174
+        horses = 0.122
+        victuals = 0.109
+        paper = 0.01
+        lumber = 0.08
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_managed_forest_village_fur_trappers = {
         produced = fur
-        output = 4.796
-        tools = 1.215
-        horses = 0.765
-        victuals = 0.765
-        paper = 0.135
-        lumber = 0.675
+        output = 0.685
+        tools = 0.174
+        horses = 0.109
+        victuals = 0.109
+        paper = 0.019
+        lumber = 0.096
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_managed_forest_village_apiaries = {
         produced = beeswax
-        output = 4.725
-        tools = 1.125
-        cloth = 0.675
-        lumber = 0.90
-        paper = 0.225
-        victuals = 0.72
+        output = 0.675
+        tools = 0.161
+        cloth = 0.096
+        lumber = 0.13
+        paper = 0.032
+        victuals = 0.10
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_managed_forest_village_no_worker_victuals = {
+        category = building_maintenance
+    }
+    pp_managed_forest_village_worker_victuals = {
+        produced = victuals
+        output = 0.067
         debug_max_profit = 0
         category = building_maintenance
     }
 }
 
+raw_modifier = {
+}
+
 modifier = {
     local_monthly_food = 0.0
-    local_peasants_estate_power = 0.1
-    local_laborers_desired_pop = 0.02
+    local_peasants_estate_power = 0.014
+    local_laborers_desired_pop = 0.003
 }
 }
 # <<< eu5-building-pipeline:managed_forest_village:building

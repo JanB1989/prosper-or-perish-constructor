@@ -1,10 +1,13 @@
 ﻿# >>> eu5-building-pipeline:saltpeter_workshop:building
 REPLACE:saltpeter_workshop = {
+audio_tier = 2
+startup_ramp_target = workshop_startup_ramp_target
 is_foreign = no
+increase_per_level_cost = 0.14
 pop_type = burghers
 max_levels = workshop_max_level
 category = basic_industry_category
-employment_size = workshop_employment
+employment_size = 0.1
 town = yes
 city = yes
 megalopolis = yes
@@ -13,7 +16,6 @@ build_time = workshop_build_time
 location_potential = {
     NOT = { raw_material = goods:saltpeter }
 }
-
 unique_production_methods = {
     pp_saltpeter_workshop_demands = {
         pottery = 0.15
@@ -28,5 +30,7 @@ unique_production_methods = {
 obsolete = saltpeter_guild
 custom_tags = { workshop }
 construction_demand = workshop_construction
+raw_modifier = {
+}
 }
 # <<< eu5-building-pipeline:saltpeter_workshop:building

@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: putrefaction_works
 building:
   key: putrefaction_works
@@ -10,11 +10,14 @@ building:
         - pp_putrefaction_works_demands
   possible_production_methods: []
   body: |2-
+    audio_tier = 3
+    startup_ramp_target = manufactory_startup_ramp_target
     is_foreign = no
+    increase_per_level_cost = 0.18
     pop_type = burghers
     max_levels = manufactory_max_level
     category = basic_industry_category
-    employment_size = manufactory_employment
+    employment_size = 0.2
     town = yes
     city = yes
     megalopolis = yes
@@ -24,7 +27,6 @@ building:
     location_potential = {
         NOT = { raw_material = goods:saltpeter }
     }
-
     unique_production_methods = {
         pp_putrefaction_works_demands = {
             pottery = 0.6
@@ -38,6 +40,8 @@ building:
 
     custom_tags = { midgame_manufactory }
     construction_demand = manufactory_construction
+    raw_modifier = {
+    }
 localization:
   entries:
     putrefaction_works_slot_0: Putrefaction Demands

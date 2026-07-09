@@ -1,0 +1,23 @@
+[paths]
+# EU5 install root for the machine running the constructor tools.
+#
+# Windows + WSL default:
+# The parser accepts this host Windows path:
+#   C:\Games\steamapps\common\Europa Universalis V
+# and resolves it to this WSL path when running under WSL/Linux:
+#   /mnt/c/Games/steamapps/common/Europa Universalis V
+vanilla_root = "C:\\Games\\steamapps\\common\\Europa Universalis V"
+#
+# Other valid examples:
+# vanilla_root = "/mnt/d/SteamLibrary/steamapps/common/Europa Universalis V"
+# vanilla_root = "/home/<user>/.steam/steam/steamapps/common/Europa Universalis V"
+
+[[mods]]
+id = "constructor"
+name = "Prosper or Perish Constructor"
+# Relative to this repository so clones can live anywhere.
+root = "mod/Prosper or Perish (Population Growth & Food Rework)"
+
+[profiles]
+vanilla = ["vanilla"]
+constructor = ["vanilla", "constructor"]

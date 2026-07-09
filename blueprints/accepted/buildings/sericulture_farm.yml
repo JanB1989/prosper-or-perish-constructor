@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: sericulture_farm
+upgrade_chain:
+  family: sericulture_farm
+  tier: 0
+  previous: null
+  next: regulated_sericulture_farm
+  unlock_advance: null
 building:
   key: sericulture_farm
   mode: CREATE
@@ -15,11 +21,12 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = farm_max_level
+    increase_per_level_cost = 0.18
+    max_levels = farm_capacity_max_sericulture_farm
     pop_type = laborers
-    employment_size = 3
-    price = pp_sericulture_farm_price
+    employment_size = 1
     category = rgo_building_category
+    custom_tags = { farming_capacity }
     icon = sericulture_farm
     rural_settlement = yes
     town = yes
@@ -31,10 +38,6 @@ building:
         raw_material = goods:silk
     }
 
-    allow = {
-        farm_capacity_available > 0
-    }
-
     construction_demand = basic_construction_needs
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -44,7 +47,7 @@ building:
     unique_production_methods = {
         pp_sericulture_farm_base_silk = {
             produced = silk
-            output = 0.120
+            output = 0.040
             category = building_maintenance
         }
     }
@@ -53,25 +56,23 @@ building:
             category = building_maintenance
         }
         pp_sericulture_farm_cocoon_reeling = {
-            lumber = 0.358 # rearing trays, frames
-            tools = 0.119 # knives, reels
+            lumber = 0.119 # rearing trays, frames
+            tools = 0.040 # knives, reels
             produced = silk
-            output = 0.266
+            output = 0.089
             category = building_maintenance
         }
     }
 
-    modifier = {
-        local_migration_attraction = 0.01
+    raw_modifier = {
+      farm_capacity_from_sericulture_farm = -1
     }
-prices:
-  - key: pp_sericulture_farm_price
-    body: |2-
-      {gold = 50}
+
+    modifier = {
+        local_migration_attraction = 0.003
+    }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_sericulture_farm_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('sericulture_farm')|e].
-    MODIFIER_TYPE_NAME_pp_sericulture_farm_price_cost_modifier: Sericulture Farm Cost
     sericulture_farm_slot_0: Mulberry Groves
     sericulture_farm_slot_1: Rearing & Reeling
     sericulture_farm: Silk Farm
@@ -79,7 +80,6 @@ localization:
     pp_sericulture_farm_base_silk: Mulberry Groves
     pp_sericulture_farm_no_reeling: No Cocoon Reeling
     pp_sericulture_farm_cocoon_reeling: Cocoon Reeling
-    pp_sericulture_farm_price: Sericulture Farm Price
 icon:
   source_png: ../assets/icons/sericulture_farm.png
   output_dds: sericulture_farm.dds

@@ -1,0 +1,33 @@
+﻿pp_carrier_inn_construction = {
+	lumber = 0.25
+	masonry = 0.10
+	livestock = 0.15
+	horses = 0.10
+	category = building_construction
+}
+
+pp_river_boatmen_yard_construction = {
+	lumber = 0.35
+	masonry = 0.15
+	tools = 0.20
+	naval_supplies = 0.20
+	category = building_construction
+}
+
+pp_transport_office_construction = {
+	masonry = 0.75
+	lumber = 0.30
+	tools = 0.40
+	paper = 0.25
+	glass = 0.15
+	category = building_construction
+}
+
+pp_coastal_shipping_office_construction = {
+	lumber = 0.35
+	masonry = 0.20
+	tools = 0.20
+	naval_supplies = 0.25
+	tar = 0.15
+	category = building_construction
+}

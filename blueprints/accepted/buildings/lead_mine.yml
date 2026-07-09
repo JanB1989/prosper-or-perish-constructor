@@ -22,14 +22,16 @@ building:
       methods:
         - pp_lead_mine_no_secondary
         - pp_lead_mine_silver
+        - pp_lead_mine_gold
   possible_production_methods: []
   body: |2-
     is_foreign = no
+    increase_per_level_cost = 0.25
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 3
-    price = pp_lead_mine_price
+    employment_size = 1
     category = rgo_building_category
+    custom_tags = { pp_mine_building }
     icon = lead_mine
     rural_settlement = yes
     town = yes
@@ -40,7 +42,6 @@ building:
     location_potential = {
         raw_material = goods:lead
     }
-
     construction_demand = mercury_patio_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -50,7 +51,7 @@ building:
     unique_production_methods = {
         pp_lead_mine_base_lead = {
             produced = lead
-            output = 0.27
+            output = 0.09
             category = building_maintenance
         }
     }
@@ -59,11 +60,11 @@ building:
             category = building_maintenance
         }
         pp_lead_mine_lead = {
-            lumber = 0.42
-            tools = 0.76
-            beeswax = 0.12
+            lumber = 0.14
+            tools = 0.25
+            beeswax = 0.04
             produced = lead
-            output = 1.89
+            output = 0.63
             category = building_maintenance
         }
     }
@@ -72,38 +73,44 @@ building:
             category = building_maintenance
         }
         pp_lead_mine_silver = {
-            lumber = 0.10
-            tools = 0.08
-            lead = 0.05
+            lumber = 0.03
+            tools = 0.03
+            lead = 0.02
             produced = silver
-            output = 0.098
+            output = 0.033
+            category = building_maintenance
+        }
+        pp_lead_mine_gold = {
+            lumber = 0.03
+            tools = 0.03
+            lead = 0.02
+            produced = goods_gold
+            output = 0.026
             category = building_maintenance
         }
     }
 
+    raw_modifier = {
+    }
+
     modifier = {
         local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_migration_attraction = 0.010
+        local_lead_output_modifier = 0.025
     }
-prices:
-  - key: pp_lead_mine_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_lead_mine_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('lead_mine')|e].
-    MODIFIER_TYPE_NAME_pp_lead_mine_price_cost_modifier: Galena Work Cost
     lead_mine_slot_0: Galena Vein
     lead_mine_slot_1: Lead Workings
-    lead_mine_slot_2: Silver Recovery
+    lead_mine_slot_2: Precious Metal Recovery
     lead_mine: Lead Mine
-    lead_mine_desc: Shallow headings and open cuts work galena veins for lead ore. The ore is broken, washed, and sorted near the mine, with silver-bearing pieces picked out when found.
+    lead_mine_desc: Shallow headings and open cuts work galena veins for lead ore. The ore is broken, washed, and sorted near the mine, with silver- and gold-bearing pieces picked out when found.
     pp_lead_mine_base_lead: Exposed Galena Vein
     pp_lead_mine_no_primary: No Lead Mining
     pp_lead_mine_lead: Galena Vein Workings
-    pp_lead_mine_no_secondary: No Silver Recovery
+    pp_lead_mine_no_secondary: No Precious Metal Recovery
     pp_lead_mine_silver: Silver-Galena Picking
-    pp_lead_mine_price: Galena Work Price
+    pp_lead_mine_gold: Auriferous Galena Picking
 icon:
   source_png: ../assets/icons/lead_mine.png
   output_dds: lead_mine.dds
@@ -124,6 +131,7 @@ evaluation:
       production_efficiency: 1.00
       allow_rules:
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Rounded unit-employment inputs sit just below the global input-throughput floor.
     pp_lead_mine_no_secondary:
       production_efficiency: 1.00
     pp_lead_mine_silver:
@@ -133,3 +141,10 @@ evaluation:
         input_throughput: Silver-galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
         output_throughput: Silver-galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
         amortization_months: Silver-galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+    pp_lead_mine_gold:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Auriferous galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        input_throughput: Auriferous galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        output_throughput: Auriferous galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.
+        amortization_months: Auriferous galena picking is an ancillary lead-vein byproduct, intentionally less profitable than primary lead extraction.

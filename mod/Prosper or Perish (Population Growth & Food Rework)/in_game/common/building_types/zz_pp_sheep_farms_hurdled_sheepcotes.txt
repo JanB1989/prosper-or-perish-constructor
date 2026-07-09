@@ -1,0 +1,57 @@
+﻿# >>> eu5-building-pipeline:hurdled_sheepcotes:building
+hurdled_sheepcotes = {
+is_foreign = no
+increase_per_level_cost = 0.12
+pop_type = peasants
+max_levels = farm_capacity_max_hurdled_sheepcotes
+employment_size = 1
+category = rgo_building_category
+custom_tags = { pp_food_security_priority pp_staple_food_priority farming_capacity }
+icon = hurdled_sheepcotes
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = sheep_farms
+forbidden_for_estates = yes
+ai_forbid_shutdown = no
+can_close = yes
+build_time = workshop_build_time
+construction_demand = workshop_construction
+
+location_potential = {
+    pp_pasture_friendly_location_potential = yes
+}
+
+unique_production_methods = {
+    pp_hurdled_sheepcotes_base_wool = {
+        produced = wool
+        output = 0.09
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_hurdled_sheepcotes_no_primary = {
+        category = building_maintenance
+    }
+    pp_hurdled_sheepcotes_foldcourse_husbandry = {
+        produced = wool
+        output = 0.22
+        furniture = 0.065 # hurdles, gates, racks, troughs
+        livestock = 0.060 # replacement ewes and sires
+        victuals = 0.055 # wintering and lambing stores
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+
+raw_modifier = {
+  farm_capacity_from_hurdled_sheepcotes = -1
+}
+
+modifier = {
+    local_monthly_food = 0.0
+    local_wool_output_modifier = 0.001
+}
+}
+# <<< eu5-building-pipeline:hurdled_sheepcotes:building

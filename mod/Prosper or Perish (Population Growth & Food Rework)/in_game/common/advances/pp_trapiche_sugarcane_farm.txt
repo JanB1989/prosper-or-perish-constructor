@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:trapiche_sugarcane_farm:advancement
+pp_trapiche_sugarcane_farm = {
+icon = trapiche_sugarcane_farm
+age = age_3_discovery
+requires = plantation_buildings_advance
+unlock_building = trapiche_sugarcane_farm
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:trapiche_sugarcane_farm:advancement

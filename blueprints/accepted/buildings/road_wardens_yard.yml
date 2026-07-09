@@ -1,0 +1,85 @@
+﻿version: 2
+tag: road_wardens_yard
+output_tag: road_0_wardens_yard
+upgrade_chain:
+  family: road_infrastructure
+  tier: 0
+  previous: null
+  next: paviors_yard
+  unlock_advance: road_building
+building:
+  key: road_wardens_yard
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots: []
+  possible_production_methods:
+    - pp_road_wardens_yard_maintenance
+  body: |2-
+    is_foreign = no
+    max_levels = 1
+    pop_type = peasants
+    employment_size = 0.25
+    price = pp_road_wardens_yard_price
+    category = infrastructure_category
+    custom_tags = { pp_logistics_infrastructure_priority pp_road_maintenance }
+    icon = road_wardens_yard
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    can_close = yes
+    forbidden_for_estates = yes
+    important_for_AI = no
+    ai_forbid_shutdown = no
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      num_roads > 0
+    }
+    construction_demand = pp_road_wardens_yard_construction
+
+    possible_production_methods = {
+      pp_road_wardens_yard_maintenance
+    }
+
+    raw_modifier = {
+    }
+
+    modifier = {
+      local_distance_from_capital_speed_propagation = 0.075
+    }
+production_methods:
+  - key: pp_road_wardens_yard_maintenance
+    body: |2-
+      sand = 0.80
+      tools = 0.20
+      horses = 0.10
+      victuals = 0.08
+      category = building_maintenance
+prices:
+  - key: pp_road_wardens_yard_price
+    body: |2-
+      {gold = 50}
+advancements:
+  - key: TRY_INJECT:road_building
+    body: |2-
+      unlock_building = road_wardens_yard
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_road_wardens_yard_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('road_wardens_yard')|e].
+    MODIFIER_TYPE_NAME_pp_road_wardens_yard_price_cost_modifier: Road Wardens' Yard Cost
+    pp_road_wardens_yard_construction: Road Wardens' Yard Construction
+    pp_road_wardens_yard_maintenance: Road Wardens' Crews
+    pp_road_wardens_yard_price: Road Wardens' Yard Price
+    road_wardens_yard: Road Wardens' Yard
+    road_wardens_yard_desc: Road wardens, carts, tools, and hired hands gather gravel, clear drains, and keep ordinary roads passable for market traffic.
+icon:
+  source_png: ../assets/icons/road_wardens_yard.png
+  output_dds: road_wardens_yard.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game building icon for a Road Wardens' Yard, transparent background. Center a compact timber roadside yard with a small shed, gravel heap, ditching tools, handbarrow, simple cart, marker post, and a tan gravel road edge. Painterly historical UI art matching water_sawmill and lumber_mill_improved, three-quarter view, readable at low resolution, no text, no frame, not photorealistic, not cartoonish.
+evaluation:
+  allow_rules:
+    profit_percent: Maintenance-only road infrastructure consumes supplies while its payoff is carried by location modifiers.
+    input_throughput: Road wardens intentionally use light staffing while upkeep is paid through goods maintenance.
+    output_throughput: Road wardens provide road effects rather than direct goods output.

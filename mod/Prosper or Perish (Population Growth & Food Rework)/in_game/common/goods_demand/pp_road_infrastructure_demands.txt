@@ -1,0 +1,34 @@
+﻿pp_road_wardens_yard_construction = {
+	lumber = 0.20
+	sand = 0.25
+	tools = 0.10
+	category = building_construction
+}
+
+pp_paviors_yard_construction = {
+	masonry = 0.55
+	sand = 0.30
+	lumber = 0.15
+	tools = 0.20
+	category = building_construction
+}
+
+pp_macadam_works_construction = {
+	masonry = 0.85
+	sand = 0.60
+	lumber = 0.25
+	tools = 0.35
+	horses = 0.15
+	paper = 0.10
+	category = building_construction
+}
+
+pp_permanent_way_depot_construction = {
+	steel = 0.80
+	lumber = 0.60
+	masonry = 0.50
+	tools = 0.40
+	coal = 0.20
+	sand = 0.40
+	category = building_construction
+}

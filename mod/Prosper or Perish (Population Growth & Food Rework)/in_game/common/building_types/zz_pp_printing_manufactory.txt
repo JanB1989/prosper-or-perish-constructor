@@ -1,0 +1,30 @@
+﻿# >>> eu5-building-pipeline:printing_manufactory:building
+REPLACE:printing_manufactory = {
+audio_tier = 3
+is_foreign = no
+pop_type = burghers
+max_levels = manufactory_max_level
+startup_ramp_target = manufactory_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+obsolete = printing_press_shop
+build_time = manufactory_build_time
+unique_production_methods = {
+    pp_printing_manufactory_printing_manufactory_maintenance = {
+        lead = 0.387
+        paper = 1.937
+        tools = 0.052
+        lumber = 0.516
+        produced = books
+        output = 2.0
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+}
+construction_demand = manufactory_construction
+increase_per_level_cost = 0.16
+}
+# <<< eu5-building-pipeline:printing_manufactory:building

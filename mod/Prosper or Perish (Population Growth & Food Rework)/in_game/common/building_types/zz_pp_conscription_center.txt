@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:conscription_center:building
 REPLACE:conscription_center = {
+	audio_tier = 3
 	is_foreign = no
 	pop_type = soldiers
 	max_levels = manpower_max_level
@@ -18,6 +19,9 @@ REPLACE:conscription_center = {
 	
 	build_time = soldier_building
 	
+	raw_modifier = {
+	}
+
     modifier = {
 		local_manpower = 0.025
 		can_recruit_regiment_in_this_location = yes

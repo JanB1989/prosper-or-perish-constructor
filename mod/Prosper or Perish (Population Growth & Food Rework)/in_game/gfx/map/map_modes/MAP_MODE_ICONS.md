@@ -144,6 +144,8 @@ The legend key `MAPMODE_<ID>` uses the ID in uppercase with underscores.
 | `pp_unemployed_peasants` | `pp_unemployed_peasants.dds` | pp_unemployed_peasants_map_modes.txt |
 | `pp_population_capacity` | `pp_population_capacity.dds` | pp_population_capacity_map_modes.txt |
 | `pp_building_levels` | `pp_building_levels.dds` (copy of vanilla `building_based.dds`) | pp_building_levels_map_modes.txt |
+| `pp_supported_building_levels` | `pp_supported_building_levels.dds` (copy of `pp_building_levels.dds`) | pp_building_levels_map_modes.txt |
+| `pp_building_efficiency` | `pp_building_efficiency.dds` (copy of `pp_building_levels.dds`) | pp_building_levels_map_modes.txt |
 
 ---
 

@@ -1,11 +1,12 @@
 ﻿# >>> eu5-building-pipeline:tobacco_farm:building
 tobacco_farm = {
 is_foreign = no
-max_levels = farm_max_level
+increase_per_level_cost = 0.15
+max_levels = farm_capacity_max_tobacco_farm
 pop_type = laborers
-employment_size = 3
-price = pp_tobacco_farm_price
+employment_size = 1
 category = rgo_building_category
+custom_tags = { farming_capacity }
 icon = tobacco_farm
 rural_settlement = yes
 town = yes
@@ -17,10 +18,6 @@ location_potential = {
     raw_material = goods:tobacco
 }
 
-allow = {
-    farm_capacity_available > 0
-}
-
 construction_demand = basic_construction_needs
 ai_forbid_shutdown = no
 forbidden_for_estates = no
@@ -30,7 +27,7 @@ can_close = yes
 unique_production_methods = {
     pp_tobacco_farm_base_tobacco = {
         produced = tobacco
-        output = 0.120
+        output = 0.040
         category = building_maintenance
     }
 }
@@ -39,17 +36,21 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tobacco_farm_curing_barns = {
-        lumber = 0.350 # curing barns
-        fiber_crops = 0.050 # hanging cords, packing twine
-        tools = 0.045 # knives and presses
+        lumber = 0.117 # curing barns
+        fiber_crops = 0.017 # hanging cords, packing twine
+        tools = 0.015 # knives and presses
         produced = tobacco
-        output = 0.266
+        output = 0.089
         category = building_maintenance
     }
 }
 
+raw_modifier = {
+  farm_capacity_from_tobacco_farm = -1
+}
+
 modifier = {
-    local_migration_attraction = 0.01
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:tobacco_farm:building

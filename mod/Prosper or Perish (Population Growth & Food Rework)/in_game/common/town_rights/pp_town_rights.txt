@@ -1,13 +1,11 @@
 ﻿TRY_INJECT:manorial_customals = {
 	location_modifier = {
 		local_monthly_food_modifier = -0.5
-		local_victuals_output_modifier = 0.20
-		local_fish_output_modifier = 0.25
-		local_wool_output_modifier = 0.20
-		local_livestock_output_modifier = 0.20
-		local_naval_supplies_output_modifier = 0.20
-		farm_max_level_modifier = 1
-		fish_max_level_modifier = 2
-		forest_max_level_modifier = 1
+		local_food_decay = 0.0005
+		local_peasant_enfranchisment = 0.05
+		local_victuals_output_modifier = 0.10
+		local_fish_output_modifier = 0.125
+		local_wool_output_modifier = 0.10
+		local_livestock_output_modifier = 0.10
 	}
 }

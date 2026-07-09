@@ -1,0 +1,41 @@
+﻿# >>> eu5-building-pipeline:tannery:building
+REPLACE:tannery = {
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_tannery_leather_guild_maintenance = {
+        livestock = 1.273
+        sand = 0.509
+        tar = 0.096
+        tools = 0.191
+        debug_max_profit = guild_profit_margin
+        produced = leather
+        output = 1.0
+        category = guild_input
+    }
+    pp_tannery_tannery_maintenance = {
+        wild_game = 1.91
+        sand = 0.509
+        tar = 0.096
+        tools = 0.191
+        produced = leather
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+custom_tags = {
+    guild
+}
+construction_demand = guild_construction
+increase_per_level_cost = 0.14
+}
+# <<< eu5-building-pipeline:tannery:building

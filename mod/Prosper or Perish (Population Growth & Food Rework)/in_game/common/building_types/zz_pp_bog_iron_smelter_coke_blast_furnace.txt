@@ -1,10 +1,10 @@
 ﻿# >>> eu5-building-pipeline:bog_iron_smelter_coke_blast_furnace:building
 bog_iron_smelter_coke_blast_furnace = {
 is_foreign = no
+increase_per_level_cost = 0.19
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 3
-price = pp_bog_iron_smelter_coke_blast_furnace_price
+employment_size = 1
 category = rgo_building_category
 icon = bog_iron_smelter_coke_blast_furnace
 rural_settlement = yes
@@ -35,26 +35,27 @@ location_potential = {
         raw_material = goods:mercury
     }
 }
-
 unique_production_methods = {
     pp_bog_iron_smelter_coke_blast_furnace_maintenance = {
-        coal = 1.20 # coke fuel, furnace heat
-        tools = 0.24 # tuyere, bellows upkeep
-        lumber = 0.24 # racks, furnace frames
+        coal = 0.40 # coke fuel, furnace heat
+        tools = 0.08 # tuyere, bellows upkeep
+        lumber = 0.08 # racks, furnace frames
         produced = iron
-        output = 1.42
+        output = 0.41
         category = building_maintenance
     }
     pp_bog_iron_smelter_hot_blast_refining_maintenance = {
-        coal = 1.35 # coke fuel, hot blast
-        tools = 0.30 # blast gear, repairs
-        lumber = 0.28 # drying racks, staging
+        coal = 0.45 # coke fuel, hot blast
+        tools = 0.10 # blast gear, repairs
+        lumber = 0.09 # drying racks, staging
         produced = iron
-        output = 1.65
+        output = 0.46
         category = building_maintenance
     }
 }
 
 construction_demand = manufactory_construction
+raw_modifier = {
+}
 }
 # <<< eu5-building-pipeline:bog_iron_smelter_coke_blast_furnace:building

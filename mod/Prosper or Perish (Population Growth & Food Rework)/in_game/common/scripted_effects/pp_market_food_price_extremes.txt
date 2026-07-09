@@ -1,0 +1,23 @@
+﻿# Prosper or Perish - monthly market food stockpile top-up
+
+pp_monthly_market_food_stockpile_topup = {
+	every_market_in_world = {
+		if = {
+			limit = { market_food_percentage < 0.05 }
+			pp_add_market_center_province_food_from_market_max = yes
+		}
+	}
+}
+
+pp_add_market_center_province_food_from_market_max = {
+	save_scope_as = pp_market_food_stockpile_topup_market
+
+	location = {
+		province = {
+			change_province_food = {
+				value = scope:pp_market_food_stockpile_topup_market.market_max_food
+				multiply = 0.05
+			}
+		}
+	}
+}

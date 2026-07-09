@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: inland_saltworks
 upgrade_chain:
   family: inland_saltworks
@@ -21,10 +21,10 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
+    increase_per_level_cost = 0.21
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 3
-    price = pp_inland_saltworks_price
+    employment_size = 1
     category = rgo_building_category
     icon = inland_saltworks
     rural_settlement = yes
@@ -82,7 +82,6 @@ building:
             }
         }
     }
-
     construction_demand = basic_construction_needs
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -92,38 +91,33 @@ building:
     unique_production_methods = {
         pp_inland_saltworks_base_salt = {
             produced = salt
-            output = 0.240
+            output = 0.080
             category = building_maintenance
         }
     }
     unique_production_methods = {
         pp_inland_saltworks_salt_flat_scraping = {
-            produced = salt
-            output = 0.225
             category = building_maintenance
         }
         pp_inland_saltworks_open_pan_boiling = {
-            lumber = 1.400 # pan fuel
-            clay = 0.600 # hearth linings
-            pottery = 0.800 # brine vessels
+            lumber = 0.467 # pan fuel
+            clay = 0.200 # hearth linings
+            pottery = 0.267 # brine vessels
             produced = salt
-            output = 0.700
+            output = 0.233
             category = building_maintenance
         }
     }
 
-    modifier = {
-        local_population_growth = -0.0001
-        local_migration_attraction = 0.01
+    raw_modifier = {
     }
-prices:
-  - key: pp_inland_saltworks_price
-    body: |2-
-      {gold = 150}
+
+    modifier = {
+        local_population_growth = -0.0000
+        local_migration_attraction = 0.003
+    }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_inland_saltworks_price_cost_modifier: Affects the cost of building [ShowBuildingTypeName('inland_saltworks')|e].
-    MODIFIER_TYPE_NAME_pp_inland_saltworks_price_cost_modifier: Inland Saltworks Cost
     inland_saltworks_slot_0: Inland Salt
     inland_saltworks_slot_1: Brine Working
     inland_saltworks: Inland Saltworks
@@ -131,16 +125,18 @@ localization:
     pp_inland_saltworks_base_salt: Surveyed Inland Brine
     pp_inland_saltworks_salt_flat_scraping: Salt-Flat Scraping
     pp_inland_saltworks_open_pan_boiling: Open-Pan Brine Boiling
-    pp_inland_saltworks_price: Inland Saltworks Price
 icon:
-  source_dds: /mnt/c/Games/steamapps/common/Europa Universalis V/game/main_menu/gfx/interface/icons/buildings/coastal_settlements.dds
+  source_png: ../assets/icons/inland_saltworks.png
   output_dds: inland_saltworks.dds
   size: 512
+  prompt: EU5-inspired hand-painted strategy-game building icon for an Inland Saltworks, transparent background. Center a compact early modern dry inland brine works with timber panhouse, clay hearths, open boiling pans filled with pale salt crystals, shallow rectangular salt-flat evaporation beds, capped brine well, salt heaps, sacks, baskets, rakes, and brine buckets. Use readable painterly historical UI art matching water_sawmill and lumber_mill_improved, three-quarter view, pale salt whites, tan dry earth, weathered wood, no blue water foreground, no sea, no river, no shoreline, no pier, no text, no frame.
 evaluation:
   production_methods:
     pp_inland_saltworks_base_salt:
       production_efficiency: 1.00
     pp_inland_saltworks_salt_flat_scraping:
       production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Empty selector method intentionally leaves base inland salt output unchanged.
     pp_inland_saltworks_open_pan_boiling:
       production_efficiency: 1.10

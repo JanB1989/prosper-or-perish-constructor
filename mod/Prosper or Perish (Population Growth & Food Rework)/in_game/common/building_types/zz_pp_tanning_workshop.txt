@@ -1,0 +1,43 @@
+﻿# >>> eu5-building-pipeline:tanning_workshop:building
+REPLACE:tanning_workshop = {
+audio_tier = 2
+is_foreign = no
+pop_type = burghers
+max_levels = workshop_max_level
+startup_ramp_target = workshop_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = workshop_build_time
+unique_production_methods = {
+    pp_tanning_workshop_leather_livestock_workshop_maintenance = {
+        livestock = 1.319
+        sand = 0.513
+        tar = 0.074
+        tools = 0.22
+        produced = leather
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+    pp_tanning_workshop_leather_wildgame_workshop_maintenance = {
+        wild_game = 2.001
+        sand = 0.501
+        tar = 0.072
+        tools = 0.215
+        produced = leather
+        output = 1.1
+        debug_max_profit = workshop_profit_margin
+        category = workshop_input
+    }
+}
+obsolete = tannery
+custom_tags = {
+    workshop
+}
+construction_demand = workshop_construction
+increase_per_level_cost = 0.14
+}
+# <<< eu5-building-pipeline:tanning_workshop:building

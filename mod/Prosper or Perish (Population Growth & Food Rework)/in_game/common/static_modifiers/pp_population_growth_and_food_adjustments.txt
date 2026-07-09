@@ -4,6 +4,7 @@
 # This modifier is population growth impact at 100 prosperity (linearly scaled down if lower)
 TRY_INJECT:prosperity = {
 	local_population_growth = -0.002
+	local_prosperity_decay = 0.005
 	local_monthly_development = 0.001
 	local_monthly_development_modifier = 0.25
 	local_peasants_food_consumption = 0.10

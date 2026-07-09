@@ -4,7 +4,7 @@ upgrade_chain:
   family: ocean_fishery
   tier: 0
   previous: null
-  next: offshore_fishery
+  next: drift_net_fishery
   unlock_advance: null
 building:
   key: ocean_fishery
@@ -18,15 +18,19 @@ building:
       methods:
         - pp_ocean_fishery_no_coastal_gear
         - pp_ocean_fishery_coastal_boats
+    - name: slot_2
+      methods:
+        - pp_ocean_fishery_no_worker_victuals
+        - pp_ocean_fishery_worker_victuals
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = fish_max_level
+    increase_per_level_cost = 0.24
+    max_levels = fish_capacity_max_ocean_fishery
     pop_type = laborers
-    employment_size = 3
-    price = pp_ocean_fishery_price
+    employment_size = 1
     category = rgo_building_category
-    custom_tags = { pp_food_security_priority pp_staple_food_priority }
+    custom_tags = { pp_food_security_priority pp_staple_food_priority fishing_capacity }
     icon = ocean_fishery
     rural_settlement = yes
     town = yes
@@ -37,14 +41,6 @@ building:
     location_potential = {
         is_coastal = yes
     }
-
-    allow = {
-        custom_tooltip = {
-            text = PP_HAS_AVAILABLE_FISHING_CAPACITY
-            fish_capacity_available > 0
-        }
-    }
-
     construction_demand = village_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -54,7 +50,7 @@ building:
     unique_production_methods = {
         pp_ocean_fishery_base_catch = {
             produced = fish
-            output = 0.27
+            output = 0.09
             category = building_maintenance
         }
     }
@@ -63,38 +59,48 @@ building:
             category = building_maintenance
         }
         pp_ocean_fishery_coastal_boats = {
-            lumber = 1.335 # boat hulls
-            salt = 0.091 # curing barrels
+            lumber = 0.445 # boat hulls
+            salt = 0.030 # curing barrels
             produced = fish
-            output = 2.502
+            output = 0.834
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_ocean_fishery_no_worker_victuals = {
+            category = building_maintenance
+        }
+        pp_ocean_fishery_worker_victuals = {
+            produced = victuals
+            output = 0.067
             debug_max_profit = 0
             category = building_maintenance
         }
     }
 
-    modifier = {
-        local_fish_output_modifier = -0.03
-        local_merchant_capacity = 0.12
-        local_maritime_presence = 0.015
-        harbor_suitability = 0.01
-        local_sailors = 0.0015
+    raw_modifier = {
     }
-prices:
-  - key: pp_ocean_fishery_price
-    body: |2-
-      {gold = 50}
+
+    modifier = {
+        local_fish_output_modifier = -0.010
+        local_merchant_capacity = 0.040
+        local_maritime_presence = 0.005
+        harbor_suitability = 0.003
+        local_sailors = 0.0005
+    }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_ocean_fishery_price_cost_modifier: Affects the cost of building an [ShowBuildingTypeName('ocean_fishery')|e].
-    MODIFIER_TYPE_NAME_pp_ocean_fishery_price_cost_modifier: Coastal Fishery Cost
     ocean_fishery_slot_0: Coastal Waters
     ocean_fishery_slot_1: Coastal Gear
+    ocean_fishery_slot_2: Household Food
     ocean_fishery: Coastal Fishery
     ocean_fishery_desc: Coastal crews work small boats, nets, curing barrels, and shore landings. They supply nearby markets from familiar waters.
     pp_ocean_fishery_base_catch: Coastal Waters
     pp_ocean_fishery_no_coastal_gear: No Coastal Gear
     pp_ocean_fishery_coastal_boats: Coastal Boats
-    pp_ocean_fishery_price: Coastal Fishery Price
+    pp_ocean_fishery_no_worker_victuals: No Household Victuals
+    pp_ocean_fishery_worker_victuals: Household Victuals
 icon:
   source_png: ../assets/icons/ocean_fishery.png
   output_dds: ocean_fishery.dds
@@ -114,3 +120,7 @@ evaluation:
       allow_rules:
         input_throughput: Coastal boats keep a lower gear profile after repeated fish-output tuning, intentionally below the generic full-building input target.
         output_throughput: Coastal boats keep strong coastal output after repeated fish-output tuning, intentionally below the generic full-building output target.
+    pp_ocean_fishery_worker_victuals:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

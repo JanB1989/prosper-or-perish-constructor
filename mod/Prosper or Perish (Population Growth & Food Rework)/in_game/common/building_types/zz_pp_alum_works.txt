@@ -1,10 +1,10 @@
 ﻿# >>> eu5-building-pipeline:alum_works:building
 alum_works = {
 is_foreign = no
+increase_per_level_cost = 0.14
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 4
-price = pp_alum_works_price
+employment_size = 1
 category = rgo_building_category
 icon = alum_works
 rural_settlement = yes
@@ -17,7 +17,6 @@ build_time = workshop_build_time
 location_potential = {
     raw_material = goods:alum
 }
-
 construction_demand = workshop_construction
 ai_forbid_shutdown = no
 forbidden_for_estates = no
@@ -27,7 +26,7 @@ can_close = yes
 unique_production_methods = {
     pp_alum_works_base_alum = {
         produced = alum
-        output = 0.30
+        output = 0.08
         category = building_maintenance
     }
 }
@@ -36,11 +35,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_alum_works_alum = {
-        lumber = 1.306
-        tools = 1.383
-        coal = 0.307
+        lumber = 0.327
+        tools = 0.346
+        coal = 0.077
         produced = alum
-        output = 2.689
+        output = 0.672
         category = building_maintenance
     }
 }
@@ -49,24 +48,27 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_alum_works_stone = {
-        lumber = 0.15
-        tools = 0.10
+        lumber = 0.04
+        tools = 0.03
         produced = stone
-        output = 0.63
+        output = 0.16
         category = building_maintenance
     }
     pp_alum_works_clay = {
-        lumber = 0.12
-        tools = 0.08
+        lumber = 0.03
+        tools = 0.02
         produced = clay
-        output = 1.008
+        output = 0.252
         category = building_maintenance
     }
 }
 
+raw_modifier = {
+}
+
 modifier = {
-    local_population_growth = -0.0002
-    local_migration_attraction = 0.02
+    local_population_growth = -0.0001
+    local_migration_attraction = 0.005
 }
 }
 # <<< eu5-building-pipeline:alum_works:building

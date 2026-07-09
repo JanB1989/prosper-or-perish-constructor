@@ -1,0 +1,111 @@
+version: 2
+tag: fine_cloth_guild
+building:
+  key: fine_cloth_guild
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_fine_cloth_guild_fine_cloth_guild_maintenance
+    - pp_fine_cloth_guild_wool_weavers_maintenance
+    - pp_fine_cloth_guild_silk_weavers_maintenance
+    - pp_fine_cloth_guild_spanish_cloth_maintenance
+  - name: slot_1
+    methods:
+    - pp_fine_cloth_guild_standard_fine_cloth_guild_maintenance
+    - pp_fine_cloth_guild_alum_fine_cloth_guild_maintenance
+    - pp_fine_cloth_guild_fur_trim_guild_maintenance
+  possible_production_methods: []
+  body: |
+    is_foreign = no
+    pop_type = burghers
+    max_levels = fine_cloth_guild_max_level
+    startup_ramp_target = guild_startup_ramp_target
+    category = consumer_goods_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = guild_build_time
+    unique_production_methods = {
+        pp_fine_cloth_guild_fine_cloth_guild_maintenance = {
+            cloth = 0.988
+            produced = fine_cloth
+            output = 0.5
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_fine_cloth_guild_wool_weavers_maintenance = {
+            wool = 1.186
+            produced = fine_cloth
+            output = 0.5
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_fine_cloth_guild_silk_weavers_maintenance = {
+            silk = 1.041
+            produced = fine_cloth
+            output = 0.7
+            category = guild_input
+            debug_max_profit = guild_profit_margin
+        }
+        pp_fine_cloth_guild_spanish_cloth_maintenance = {
+            allow = {
+                custom_tooltip = {
+                    text = has_unlocked_spanish_cloth_industry
+                    has_variable = spanish_cloth_industry
+                }
+            }
+            wool = 1.186
+            produced = fine_cloth
+            output = 0.5
+            category = guild_input
+            debug_max_profit = guild_profit_margin
+        }
+    }
+    unique_production_methods = {
+        pp_fine_cloth_guild_standard_fine_cloth_guild_maintenance = {
+            produced = fine_cloth
+            dyes = 0.141
+            output = 0.1
+            category = guild_input
+            debug_max_profit = guild_profit_margin
+        }
+        pp_fine_cloth_guild_alum_fine_cloth_guild_maintenance = {
+            alum = 0.061
+            dyes = 0.245
+            produced = fine_cloth
+            output = 0.2
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_fine_cloth_guild_fur_trim_guild_maintenance = {
+            fur = 0.582
+            produced = fine_cloth
+            output = 0.2
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+    }
+    custom_tags = {
+        guild
+    }
+    construction_demand = guild_construction
+    increase_per_level_cost = 0.19
+localization:
+  entries:
+    fine_cloth_guild_slot_0: Fine Cloth Guild Work
+    pp_fine_cloth_guild_fine_cloth_guild_maintenance: Fine Cloth Guild Fine Cloth Guild Maintenance
+    pp_fine_cloth_guild_wool_weavers_maintenance: Fine Cloth Guild Wool Weavers Maintenance
+    pp_fine_cloth_guild_silk_weavers_maintenance: Fine Cloth Guild Silk Weavers Maintenance
+    pp_fine_cloth_guild_spanish_cloth_maintenance: Fine Cloth Guild Spanish Cloth Maintenance
+    fine_cloth_guild_slot_1: Fine Cloth Guild Work
+    pp_fine_cloth_guild_standard_fine_cloth_guild_maintenance: Fine Cloth Guild Standard Fine Cloth Guild Maintenance
+    pp_fine_cloth_guild_alum_fine_cloth_guild_maintenance: Fine Cloth Guild Alum Fine Cloth Guild Maintenance
+    pp_fine_cloth_guild_fur_trim_guild_maintenance: Fine Cloth Guild Fur Trim Guild Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: cotton_plantation
 building:
   key: cotton_plantation
@@ -14,12 +14,16 @@ building:
         - pp_cotton_plantation_gin_house
   possible_production_methods: []
   body: |2-
+    audio_tier = 2
+    startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
+    increase_per_level_cost = 0.18
     pop_type = slaves
-    max_levels = farm_max_level
-    employment_size = plantation_employment
+    max_levels = farm_capacity_max_cotton_plantation
+    employment_size = 1
     category = colonial_category
 
+    custom_tags = { farming_capacity }
     location_potential = {
         raw_material = goods:cotton
         OR = {
@@ -28,16 +32,11 @@ building:
         }
     }
 
-    allow = {
-        farm_capacity_available > 0
-    }
-
     rural_settlement = yes
     town = yes
     city = yes
     megalopolis = yes
     always_add_demands = yes
-    price = pp_plantation_building_price
     build_time = plantation_build_time
 
     unique_production_methods = {
@@ -60,6 +59,10 @@ building:
             output = 0.667
             category = building_maintenance
         }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_cotton_plantation = -1
     }
 
     modifier = {

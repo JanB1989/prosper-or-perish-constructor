@@ -1,0 +1,80 @@
+version: 2
+tag: tatara
+building:
+  key: tatara
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_tatara_tamagahane_blacksmith
+    - pp_tatara_tamagahane_bladesmith
+  possible_production_methods: []
+  body: |
+    audio_tier = 2
+    is_special = yes
+    is_foreign = yes
+    stronger_power_projection = no
+    need_good_relation = yes
+    pop_type = peasants
+    category = basic_industry_category
+    max_levels = japanese_clan_building_cap
+    startup_ramp_target = rural_startup_ramp_target
+    employment_size = 1.0
+    pop_size_created = estate_peasants_employment
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    ai_foreign_ignore_naval_range = yes
+    location_potential = {
+        dominant_culture = {
+            has_culture_group = culture_group:japanese_group
+        }
+    }
+    country_potential = {
+        OR = {
+            AND = {
+                has_reform = government_reform:japanese_imperial_family
+                country_type = building
+            }
+            has_reform = government_reform:japanese_clan
+        }
+    }
+    build_time = estate_build_time
+    allow = {
+        dominant_culture = {
+            has_culture_group = culture_group:japanese_group
+        }
+        any_foreign_building_countries_in_location = {
+            this = scope:actor
+        }
+    }
+    unique_production_methods = {
+        pp_tatara_tamagahane_blacksmith = {
+            produced = tools
+            output = 0.5
+            iron = 0.417
+            debug_max_profit = rural_profit_margin
+            category = guild_input
+        }
+        pp_tatara_tamagahane_bladesmith = {
+            produced = weaponry
+            output = 0.2
+            iron = 0.167
+            debug_max_profit = rural_profit_margin
+            category = guild_input
+        }
+    }
+    construction_demand = japanese_clan_building_construction
+    increase_per_level_cost = 0.21
+localization:
+  entries:
+    tatara_slot_0: Tatara Work
+    pp_tatara_tamagahane_blacksmith: Tatara Tamagahane Blacksmith
+    pp_tatara_tamagahane_bladesmith: Tatara Tamagahane Bladesmith
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

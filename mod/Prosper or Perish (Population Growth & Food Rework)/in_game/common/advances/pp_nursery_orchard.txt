@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:nursery_orchard:advancement
+pp_orchard_nurseries = {
+icon = nursery_orchard
+age = age_3_discovery
+requires = rgo_logistics_discovery
+unlock_building = nursery_orchard
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:nursery_orchard:advancement

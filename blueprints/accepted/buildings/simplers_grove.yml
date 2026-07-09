@@ -15,11 +15,12 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = farm_max_level
+    increase_per_level_cost = 0.23
+    max_levels = farm_capacity_max_simplers_grove
     pop_type = laborers
-    employment_size = 3
-    price = pp_simplers_grove_price
+    employment_size = 1
     category = rgo_building_category
+    custom_tags = { farming_capacity }
     icon = simplers_grove
     rural_settlement = yes
     town = yes
@@ -31,10 +32,6 @@ building:
         raw_material = goods:medicaments
     }
 
-    allow = {
-        farm_capacity_available > 0
-    }
-
     construction_demand = basic_construction_needs
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -44,7 +41,7 @@ building:
     unique_production_methods = {
         pp_simplers_grove_base_medicaments = {
             produced = medicaments
-            output = 0.3
+            output = 0.1
             category = building_maintenance
         }
     }
@@ -53,25 +50,23 @@ building:
             category = building_maintenance
         }
         pp_simplers_grove_wicker_drying_racks = {
-            fiber_crops = 0.10 # baskets, ties, drying mats
-            lumber = 0.06 # racks, sheds, sorting boards
+            fiber_crops = 0.035 # baskets, ties, drying screens and mats
+            pottery = 0.020 # crocks and dry storage vessels
             produced = medicaments
-            output = 0.348
+            output = 0.116
             category = building_maintenance
         }
     }
 
-    modifier = {
-        local_migration_attraction = 0.01
+    raw_modifier = {
+      farm_capacity_from_simplers_grove = -1
     }
-prices:
-  - key: pp_simplers_grove_price
-    body: |2-
-      {gold = 50}
+
+    modifier = {
+        local_migration_attraction = 0.003
+    }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_simplers_grove_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('simplers_grove')|e].
-    MODIFIER_TYPE_NAME_pp_simplers_grove_price_cost_modifier: Simplers' Grove Cost
     simplers_grove_slot_0: Herb Grounds
     simplers_grove_slot_1: Drying & Sorting
     simplers_grove: Herb Gatherers' Grove
@@ -79,7 +74,6 @@ localization:
     pp_simplers_grove_base_medicaments: Herb Grounds
     pp_simplers_grove_no_drying: No Drying Racks
     pp_simplers_grove_wicker_drying_racks: Drying Racks
-    pp_simplers_grove_price: Simplers' Grove Price
 icon:
   source_png: ../assets/icons/simplers_grove.png
   output_dds: simplers_grove.dds

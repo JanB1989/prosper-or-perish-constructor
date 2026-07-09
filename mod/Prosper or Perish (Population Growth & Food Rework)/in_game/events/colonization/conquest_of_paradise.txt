@@ -1,0 +1,459 @@
+﻿namespace = conquest_of_paradise
+conquest_of_paradise.1 = {
+	type = country_event
+	title = conquest_of_paradise.1.title
+	desc = conquest_of_paradise.1.desc
+	outcome = neutral
+	trigger = {
+		is_subject_type = colonial_nation
+	}
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	option = {
+		name = conquest_of_paradise.1.a
+		add_country_modifier = { modifier = construction_wages years = 5 mode = add_and_extend }  
+	}
+	option = {
+		name = conquest_of_paradise.1.b
+		add_government_power = government_power_mild_bonus
+	}
+}
+
+
+conquest_of_paradise.2 = {
+	hide_portraits = yes
+	type = country_event
+	title = conquest_of_paradise.2.title
+	desc = conquest_of_paradise.2.desc
+	outcome = neutral
+	trigger = {
+		is_subject_type = colonial_nation
+		any_neighbor_country = {
+			is_subject_type = colonial_nation
+			overlord = root.overlord
+		}
+		manpower > 0 
+		
+		overlord = {
+			has_ruler = yes
+		}
+	}
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	immediate = {
+		random_neighbor_country = {
+			limit = {
+				is_subject_type = colonial_nation
+				overlord = root.overlord
+			}
+			save_scope_as = colonial_conflict_target
+			ordered_province = {
+				order_by = population
+				max = 1
+				save_scope_as = source_province
+			}
+		}
+	}
+
+
+	option = {
+		name = conquest_of_paradise.2.a
+		custom_tooltip = conquest_of_paradise.2.a.tt
+		save_scope_as = colonial_conflict_source
+		scope:colonial_conflict_target = {
+			trigger_event_silently = { id = conquest_of_paradise.3 }
+		}
+		add_manpower = { value = root.monthly_manpower multiply = -3 }
+	}
+	option = {
+		name = conquest_of_paradise.2.b
+		add_prestige = prestige_mild_penalty
+
+		add_migration = {
+			owner = this
+			from = scope:source_province.province_definition
+			to = capital.province_definition
+			type = pop_type:peasants
+			amount = 0.025
+			months = 36
+		}
+
+	}
+}
+
+
+
+
+conquest_of_paradise.3 = {
+	type = country_event
+	title = conquest_of_paradise.3.title
+	desc = conquest_of_paradise.3.desc
+	outcome = neutral
+
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	option = {
+		name = conquest_of_paradise.3.a
+		add_manpower = { value = root.monthly_manpower multiply = -3 }
+		scope:colonial_conflict_source = {
+			trigger_event_silently = { id = conquest_of_paradise.4 days = 120}
+			overlord = {
+				trigger_event_silently = { id = conquest_of_paradise.5 days = 120 }
+			}
+		}
+	}
+	option = {
+		name = conquest_of_paradise.3.b
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+conquest_of_paradise.4 = {
+	type = country_event
+	title = conquest_of_paradise.4.title
+	desc = conquest_of_paradise.4.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	option = {
+		name = conquest_of_paradise.4.a
+		add_prestige = prestige_weak_penalty
+		add_manpower = { value = root.monthly_manpower multiply = -2 }
+	}
+}
+
+
+conquest_of_paradise.5 = {
+	hide_portraits = yes
+	type = country_event
+	title = conquest_of_paradise.5.title
+	desc = conquest_of_paradise.5.desc
+	outcome = neutral
+	
+	trigger = {
+		has_ruler = yes
+	}
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	immediate = {
+		save_scope_as = the_overlord
+	}
+	option = {
+		name = conquest_of_paradise.5.a
+		trigger = {
+			prestige > 20
+		}
+		add_prestige = prestige_extreme_penalty
+	}
+	option = {
+		name = conquest_of_paradise.5.b
+		scope:colonial_conflict_target = {
+			show_as_tooltip = {
+				add_liberty_desire = liberty_desire_weak_minus
+			}
+			trigger_event_silently = { id = conquest_of_paradise.7 }
+		}
+		scope:colonial_conflict_source = {
+			trigger_event_silently = { id = conquest_of_paradise.6 }
+			show_as_tooltip = {
+				add_liberty_desire = liberty_desire_mild_plus
+			}
+		}
+	}
+	option = {
+		name = conquest_of_paradise.5.c
+		scope:colonial_conflict_target = {
+			show_as_tooltip = {
+				add_liberty_desire = liberty_desire_mild_plus
+			}
+			trigger_event_silently = { id = conquest_of_paradise.8 }
+		}
+		scope:colonial_conflict_source = {
+			trigger_event_silently = { id = conquest_of_paradise.9 }
+			show_as_tooltip = {
+				add_liberty_desire = liberty_desire_weak_minus
+			}
+		}
+	}
+
+}
+
+conquest_of_paradise.6 = {
+	type = country_event
+	title = conquest_of_paradise.6.title
+	desc = conquest_of_paradise.6.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	option = {
+		name = conquest_of_paradise.6.a
+		add_liberty_desire = liberty_desire_mild_plus
+	}
+}
+
+conquest_of_paradise.7 = {
+	type = country_event
+	title = conquest_of_paradise.7.title
+	desc = conquest_of_paradise.7.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	option = {
+		name = conquest_of_paradise.7.a
+		add_liberty_desire = liberty_desire_weak_minus
+	}
+}
+
+conquest_of_paradise.8 = {
+	type = country_event
+	title = conquest_of_paradise.8.title
+	desc = conquest_of_paradise.8.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	option = {
+		name = conquest_of_paradise.8.a
+		add_liberty_desire = liberty_desire_mild_plus
+	}
+}
+
+conquest_of_paradise.9 = {
+	type = country_event
+	title = conquest_of_paradise.9.title
+	desc = conquest_of_paradise.9.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	option = {
+		name = conquest_of_paradise.9.a
+		add_liberty_desire = liberty_desire_weak_minus
+	}
+}
+
+conquest_of_paradise.10 = {
+	type = country_event
+	title = conquest_of_paradise.10.title
+	desc = conquest_of_paradise.10.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	trigger = {
+		is_subject_type = colonial_nation
+		has_advance = colonial_assembly
+		has_advance = colonial_militia
+		liberty_desire > 25
+	}
+
+	option = {
+		name = conquest_of_paradise.10.a
+		add_country_modifier = { modifier = enhanced_colonial_militia years = 10 mode = add_and_extend }  
+	}
+	option = {
+		name = conquest_of_paradise.10.b
+		add_government_power = government_power_extreme_bonus
+	}
+}
+
+
+conquest_of_paradise.11 = {
+	type = country_event
+	title = conquest_of_paradise.11.title
+	desc = conquest_of_paradise.11.desc
+	outcome = neutral
+	
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_fur.dds"
+	
+	trigger = {
+		is_subject_type = colonial_nation
+		produced_in_country:fur > 0
+	}
+
+	option = {
+		name = conquest_of_paradise.11.a
+		add_country_modifier = { modifier = restrict_fur_trade years = 5 mode = add_and_extend }  
+	}
+	option = {
+		name = conquest_of_paradise.11.b
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+conquest_of_paradise.12 = {
+	type = country_event
+	title = conquest_of_paradise.12.title
+	desc = conquest_of_paradise.12.desc
+	outcome = neutral
+	trigger = {
+		current_month >= 3
+		is_subject_type = colonial_nation
+		
+		capital.province = {
+			province_food_percentage < 0.55
+		}
+	}
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	option = {
+		name = conquest_of_paradise.12.a
+		capital.province = {
+			change_province_food = 100
+		}
+	}
+	option = {
+		name = conquest_of_paradise.12.b
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+conquest_of_paradise.13 = {
+	type = country_event
+	title = conquest_of_paradise.13.title
+	desc = conquest_of_paradise.13.desc
+	outcome = neutral
+	
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_iron.dds"
+	
+	trigger = {
+		is_subject_type = colonial_nation
+		any_owned_location = {
+			OR = {
+				raw_material = goods:sand
+				raw_material = goods:stone
+				raw_material = goods:clay
+			}
+		}
+		produced_in_country:iron < num_of_non_rural
+	}
+
+	immediate = {
+		random_owned_location = {
+			limit = {
+				OR = {
+					raw_material = goods:sand
+					raw_material = goods:stone
+					raw_material = goods:clay
+				}
+			}
+			save_scope_as = iron_ore_location
+		}
+	}
+
+	option = {
+		name = conquest_of_paradise.13.a
+		scope:iron_ore_location = { change_raw_material = goods:iron }
+	}
+	option = {
+		name = conquest_of_paradise.13.b
+		add_prestige = prestige_weak_bonus
+	}
+}
+
+conquest_of_paradise.14 = {
+	type = country_event
+	title = conquest_of_paradise.14.title
+	desc = conquest_of_paradise.14.desc
+	outcome = neutral
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_wool.dds"
+
+	trigger = {
+		is_subject_type = colonial_nation
+		any_owned_location = {
+			OR = {
+				raw_material = goods:sand
+				raw_material = goods:clay
+			}
+		}
+		produced_in_country:wool < num_of_non_rural
+	}
+
+	immediate = {
+		random_owned_location = {
+			limit = {
+				OR = {
+					raw_material = goods:sand
+					raw_material = goods:clay
+				}
+			}
+			save_scope_as = wool_location
+		}
+	}
+
+	option = {
+		name = conquest_of_paradise.14.a
+		scope:wool_location  = { change_raw_material = goods:wool }
+	}
+	option = {
+		name = conquest_of_paradise.14.b
+		add_prestige = prestige_weak_bonus
+	}
+}
+
+
+conquest_of_paradise.15 = {
+	type = country_event
+	title = conquest_of_paradise.15.title
+	desc = conquest_of_paradise.15.desc
+	outcome = neutral
+	trigger = {
+		is_subject_type = colonial_nation
+		OR = {
+			produced_in_country:sugar > produced_in_country:wheat
+			produced_in_country:cotton > produced_in_country:wheat
+			produced_in_country:tobacco > produced_in_country:wheat
+		}
+		any_owned_location = {
+			OR = {
+				raw_material = goods:sugar
+				raw_material = goods:cotton
+				raw_material = goods:tobacco
+			}
+			rgo_workers >= 0
+			
+		}
+	}
+
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	immediate = {
+		random_owned_location = {
+			limit = {
+				OR = {
+					raw_material = goods:sugar
+					raw_material = goods:cotton
+					raw_material = goods:tobacco
+				}
+				rgo_workers >= 0
+			}
+			save_scope_as = cash_crop_location
+		}
+	}
+
+	option = {
+		name = conquest_of_paradise.15.a
+		scope:cash_crop_location = { 
+			change_max_raw_material_workers = -2 
+		}
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+		add_estate_satisfaction = { type = estate_type:peasants_estate value = estate_satisfaction_extreme_bonus }
+	}
+	option = {
+		name = conquest_of_paradise.15.b
+		add_estate_satisfaction = { type = estate_type:peasants_estate value = estate_satisfaction_extreme_penalty }
+	}
+}
+
+conquest_of_paradise.16 = {
+	type = country_event
+	title = conquest_of_paradise.16.title
+	desc = conquest_of_paradise.16.desc
+	outcome = neutral
+	
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_tobacco.dds"
+	
+	trigger = {
+		is_subject_type = colonial_nation
+		capital.market = { "market_price(goods:tobacco)" < "default_price(goods:tobacco)" }
+		produced_in_country:tobacco > 0
+		NOT = { has_country_modifier = banned_tobacco_planting }
+	}
+
+	option = {
+		name = conquest_of_paradise.16.a
+		add_country_modifier = { modifier = banned_tobacco_planting years = 5 mode = add_and_extend }  
+	}
+	option = {
+		name = conquest_of_paradise.16.b
+		add_stability = stability_mild_penalty
+	}
+}
+
+

@@ -1,0 +1,19 @@
+﻿namespace = pp_logistics_debug
+
+pp_logistics_debug.1 = {
+	type = country_event
+	title = pp_logistics_debug.1.title
+	desc = pp_logistics_debug.1.desc
+	outcome = neutral
+	orphan = yes
+
+	immediate = {
+		every_country = {
+			pp_ai_logistics_build_unsupported_infrastructure = yes
+		}
+	}
+
+	option = {
+		name = pp_logistics_debug.1.a
+	}
+}

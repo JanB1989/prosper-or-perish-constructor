@@ -1,0 +1,66 @@
+﻿version: 2
+tag: coastal_shipping_office
+building:
+  key: coastal_shipping_office
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots: []
+  possible_production_methods:
+    - pp_coastal_shipping_office_maintenance
+  body: |2-
+    is_foreign = no
+    max_levels = pp_coastal_shipping_office_max_level
+    increase_per_level_cost = 0.20
+    pop_type = laborers
+    employment_size = 3
+    category = infrastructure_category
+    custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_coastal_logistics_priority }
+    icon = coastal_shipping_office
+    town = yes
+    city = yes
+    megalopolis = yes
+    can_close = no
+    always_add_demands = yes
+    forbidden_for_estates = yes
+    important_for_AI = no
+    ai_forbid_shutdown = yes
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      is_port = yes
+    }
+    construction_demand = pp_coastal_shipping_office_construction
+
+    possible_production_methods = {
+      pp_coastal_shipping_office_maintenance
+    }
+
+    raw_modifier = {
+      free_building_levels = 10
+    }
+production_methods:
+  - key: pp_coastal_shipping_office_maintenance
+    body: |2-
+      naval_supplies = 0.15
+      tar = 0.075
+      lumber = 0.15
+      tools = 0.10
+      victuals = 0.20
+      paper = 0.0625
+      category = building_maintenance
+localization:
+  entries:
+    coastal_shipping_office: Coastal Shipping Office
+    coastal_shipping_office_desc: Coasting masters, freight clerks, and hired hands keep short-sea traffic moving between nearby ports. Their office turns loose cargo, small craft, and quay labor into a steadier coastal trade.
+    pp_coastal_shipping_office_construction: Coastal Shipping Office Construction
+    pp_coastal_shipping_office_maintenance: Coastal Shipping Office Maintenance
+icon:
+  source_png: ../assets/icons/coastal_shipping_office.png
+  output_dds: coastal_shipping_office.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a coastal shipping office, transparent background. Center a stone-and-timber shipping office on a quay with tar barrels, sailcloth, crates, a short pier, and one simple coasting vessel with a pale sail. Make the coast unmistakable at low resolution with a large blue sea shape and curved tan shoreline in the lower half; no river, no text, no frame.
+evaluation:
+  allow_rules:
+    profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
+    input_throughput: Coastal shipping offices intentionally use heavy labor alongside costly coasting, tar, timber, victual, and paper upkeep.
+    output_throughput: Coastal shipping offices provide supported building levels rather than direct goods output.

@@ -1,16 +1,16 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:pomological_orchard:localization
-  MODIFIER_TYPE_DESC_pp_pomological_orchard_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('pomological_orchard')|e]."
-  MODIFIER_TYPE_NAME_pp_pomological_orchard_price_cost_modifier: "Pomological Orchard Cost"
   pomological_orchard: "Grafted Orchard"
   pomological_orchard_desc: "Grafted orchards use nursery stock, pruning, trellises, and cultivar records to raise more reliable fruit crops."
   pomological_orchard_slot_0: "Fruit Trees"
   pomological_orchard_slot_1: "Grafted Rows"
+  pomological_orchard_slot_2: "Household Food"
   pp_pomological_orchard: "Grafted Orchards"
   pp_pomological_orchard_base_fruit: "Fruit Trees"
   pp_pomological_orchard_desc: "Grafting, nursery records, and planned orchard rows increase fruit harvests through better management."
   pp_pomological_orchard_grafted_rows: "Grafted Rows"
   pp_pomological_orchard_no_primary: "No Grafted Rows"
-  pp_pomological_orchard_price: "Pomological Orchard Price"
+  pp_pomological_orchard_no_worker_victuals: "No Household Victuals"
+  pp_pomological_orchard_worker_victuals: "Household Victuals"
 # <<< eu5-building-pipeline:pomological_orchard:localization

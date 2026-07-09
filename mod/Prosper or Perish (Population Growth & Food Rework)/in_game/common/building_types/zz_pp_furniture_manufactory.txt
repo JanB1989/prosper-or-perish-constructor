@@ -1,0 +1,29 @@
+﻿# >>> eu5-building-pipeline:furniture_manufactory:building
+REPLACE:furniture_manufactory = {
+audio_tier = 3
+is_foreign = no
+pop_type = burghers
+max_levels = manufactory_max_level
+startup_ramp_target = manufactory_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = manufactory_build_time
+obsolete = furniture_workshop
+unique_production_methods = {
+    pp_furniture_manufactory_furniture_manufactory_maintenance = {
+        lumber = 2.259
+        dyes = 0.251
+        tools = 0.251
+        produced = furniture
+        output = 2.0
+        category = manufactory_input
+        debug_max_profit = manufactory_profit_margin
+    }
+}
+construction_demand = manufactory_construction
+increase_per_level_cost = 0.19
+}
+# <<< eu5-building-pipeline:furniture_manufactory:building

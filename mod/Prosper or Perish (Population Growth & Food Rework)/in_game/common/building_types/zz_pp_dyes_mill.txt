@@ -1,0 +1,32 @@
+﻿# >>> eu5-building-pipeline:dyes_mill:building
+REPLACE:dyes_mill = {
+audio_tier = 5
+is_foreign = no
+pop_type = laborers
+is_mill = yes
+max_levels = mills_max_level
+startup_ramp_target = mills_startup_ramp_target
+category = basic_industry_category
+employment_size = 1.0
+town = yes
+city = yes
+megalopolis = yes
+build_time = mills_build_time
+unique_production_methods = {
+    pp_dyes_mill_dyesmill_maintenance = {
+        alum = 0.413
+        lumber = 8.268
+        produced = dyes
+        output = 4.0
+        debug_max_profit = mills_profit_margin
+        category = guild_input
+    }
+}
+obsolete = dyesworks
+construction_demand = manufactory_construction
+raw_modifier = {
+    local_burghers_desired_pop = 0.05
+}
+increase_per_level_cost = 0.15
+}
+# <<< eu5-building-pipeline:dyes_mill:building

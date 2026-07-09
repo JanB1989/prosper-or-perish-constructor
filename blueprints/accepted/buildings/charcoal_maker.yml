@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: charcoal_maker
 building:
   key: charcoal_maker
@@ -10,54 +10,59 @@ building:
         - pp_char_coal_maintenance
   possible_production_methods: []
   body: |2-
-    	is_foreign = no
-    	pop_type = laborers
-    	max_levels = rural_building_cap
-    	
-    	employment_size = rural_peasant_produce_employment
-    	
-    	
-    	category = rgo_building_category
-    	
-    	rural_settlement = yes
-    	town = yes
-    	city = yes
-    	megalopolis = yes
-    	
-    	location_potential = {
-    		NOT = {
-    			raw_material = goods:coal
-    		}
-    	}
-    
-    	build_time = rural_build_time
-    	
-    	unique_production_methods = {
-    		pp_char_coal_maintenance = {
-    			produced = coal
-    			output = 0.8
-    
-    			debug_max_profit = 0.4
-    		
-    			lumber = 0.8
-    			category = guild_input
-    		}
-    
-    	}
-    
-    	construction_demand = guild_construction
+        audio_tier = 1
+        startup_ramp_target = rural_startup_ramp_target
+        is_foreign = no
+    increase_per_level_cost = 0.24
+        pop_type = laborers
+        max_levels = rural_building_cap
 
+        employment_size = 1
+
+
+        category = rgo_building_category
+
+        rural_settlement = yes
+        town = yes
+        city = yes
+        megalopolis = yes
+
+        location_potential = {
+            NOT = {
+                raw_material = goods:coal
+            }
+        }
+        build_time = rural_build_time
+
+        unique_production_methods = {
+            pp_char_coal_maintenance = {
+                produced = coal
+                output = 0.62
+
+                debug_max_profit = 0.1
+
+                lumber = 0.51 # coppice poles and cordwood
+                clay = 1.20 # earth, turf, and clay sealing
+                category = guild_input
+            }
+
+        }
+
+        construction_demand = guild_construction
+
+        raw_modifier = {
+        }
 localization:
   entries:
     charcoal_maker: Charcoal Clamp
-    charcoal_maker_desc: Earth-covered clamps and simple kilns turn coppiced wood into charcoal for hearths and forges. These wood-fuel yards are kept separate from true coal seams, where mined coal is worked by dedicated drifts.
-    pp_char_coal_maintenance: Clamp Burning
+    charcoal_maker_desc: Earth-covered clamps turn coppice poles and cordwood into charcoal for hearths and forges. Colliers seal each burn with clay and turf while dedicated mines handle true coal seams.
+    pp_char_coal_maintenance: Earth Clamp Burning
 
 evaluation:
   allow_rules:
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
-    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
-    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    profit_percent: Charcoal is intentionally kept to low margins so wood-fuel fallback production does not compete with true coal seams.
+    input_throughput: Charcoal is intentionally below industrial throughput as a constrained local wood-fuel fallback.
+    output_throughput: Charcoal is intentionally below industrial throughput as a constrained local wood-fuel fallback.
   production_methods:
     pp_char_coal_maintenance:
       production_efficiency: 1.05

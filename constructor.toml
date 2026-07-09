@@ -29,6 +29,32 @@ clean_paths = [
 profile = "constructor"
 load_order = "constructor.load_order.toml"
 
+[farming_village_rgo_unlocks]
+goods = ["rice", "maize", "potato", "olives"]
+subcontinent_region_threshold = 0.60
+
+[farming_village_rgo_unlocks.methods]
+rice = ["pp_rice_farm_base_rice", "pp_rice_farm_maintenance"]
+maize = ["pp_maize_farm_base_maize", "pp_maize_farm_maintenance"]
+potato = ["pp_potato_farm_base_potato", "pp_potato_farm_maintenance"]
+olives = ["pp_olives_farm_base_olives", "pp_olives_farm_maintenance"]
+
+[farming_village_rgo_unlocks.general_unlocks.rice]
+age = "age_3_discovery"
+requires = "new_world_advance"
+
+[farming_village_rgo_unlocks.general_unlocks.maize]
+age = "age_4_reformation"
+requires = "global_trade_advance"
+
+[farming_village_rgo_unlocks.general_unlocks.potato]
+age = "age_5_absolutism"
+requires = "newspapers_advance"
+
+[farming_village_rgo_unlocks.general_unlocks.olives]
+age = "age_4_reformation"
+requires = "global_trade_advance"
+
 [building_outputs]
 prefix = "pp_"
 building_types = "in_game/common/building_types/zz_{prefix}{tag}.txt"
@@ -49,12 +75,20 @@ throughput_tolerance = 0.30
 amortization_months_max = 360
 amortization_months_min = 120
 
+[building_scaling]
+worker_victuals_food_need_ratio = 1.0
+increase_per_level_cost_multiplier = 0.75
+burgher_building_employment_size = 0.3
+
 
 [blueprint_evaluation.throughput_gold_per_1k]
 peasants = 1.0
 laborers = 1.5
 labourers = 1.5
 burghers = 2.5
+
+[blueprint_evaluation.modifier_categories.infrastructure_category]
+modifiers = ["market_access", "local_market_access", "free_building_levels", "local_distance_from_capital_speed_propagation"]
 
 [labeling]
 enabled = true

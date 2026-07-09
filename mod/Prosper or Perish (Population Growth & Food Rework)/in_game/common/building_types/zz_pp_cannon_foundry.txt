@@ -1,0 +1,34 @@
+﻿# >>> eu5-building-pipeline:cannon_foundry:building
+REPLACE:cannon_foundry = {
+audio_tier = 3
+is_foreign = no
+pop_type = burghers
+max_levels = manufactory_max_level
+startup_ramp_target = manufactory_startup_ramp_target
+category = weapons_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = manufactory_build_time
+obsolete = cannon_workshop
+unique_production_methods = {
+    pp_cannon_foundry_cannon_foundry_maintenance = {
+        tools = 0.642
+        lead = 0.482
+        saltpeter = 0.803
+        copper = 0.803
+        tin = 0.401
+        produced = cannons
+        output = 2.0
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+}
+custom_tags = {
+    midgame_manufactory
+}
+construction_demand = mill_construction
+increase_per_level_cost = 0.19
+}
+# <<< eu5-building-pipeline:cannon_foundry:building

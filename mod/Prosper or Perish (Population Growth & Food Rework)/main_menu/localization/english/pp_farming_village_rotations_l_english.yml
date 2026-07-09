@@ -1,13 +1,12 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:farming_village_rotations:localization
-  MODIFIER_TYPE_DESC_pp_farming_village_rotations_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('farming_village_rotations')|e]."
-  MODIFIER_TYPE_NAME_pp_farming_village_rotations_price_cost_modifier: "Rotational Farmstead Cost"
   farming_village_rotations: "Rotational Farmstead"
   farming_village_rotations_desc: "Rotational farmsteads let peasant households organize strips, fallow, legumes, manure, and livestock into a steadier mixed farming cycle."
   farming_village_rotations_slot_0: "Rotated Fields"
   farming_village_rotations_slot_1: "Rotational Cultivation"
   farming_village_rotations_slot_2: "Hedgerow Hives"
+  farming_village_rotations_slot_3: "Household Food"
   pp_farming_village_rotations: "Rotational Farmsteads"
   pp_farming_village_rotations_base_legumes: "Rotated Legume Fields"
   pp_farming_village_rotations_base_livestock: "Rotated Pastures"
@@ -27,9 +26,10 @@
   pp_farming_village_rotations_no_beeswax: "No Hedgerow Hives"
   pp_farming_village_rotations_no_beeswax_desc: "These farmsteads do not organize hives along the field boundaries."
   pp_farming_village_rotations_no_primary: "No Rotational Cultivation"
+  pp_farming_village_rotations_no_worker_victuals: "No Household Victuals"
   pp_farming_village_rotations_olives: "Rotational Olive Groves"
   pp_farming_village_rotations_potato: "Rotational Potato Fields"
-  pp_farming_village_rotations_price: "Rotational Farmstead Price"
   pp_farming_village_rotations_rice: "Rotational Rice Paddies"
   pp_farming_village_rotations_wheat: "Rotational Wheat Fields"
+  pp_farming_village_rotations_worker_victuals: "Household Victuals"
 # <<< eu5-building-pipeline:farming_village_rotations:localization

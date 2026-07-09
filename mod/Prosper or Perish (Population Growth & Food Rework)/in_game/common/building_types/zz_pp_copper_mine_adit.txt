@@ -1,11 +1,12 @@
 ﻿# >>> eu5-building-pipeline:copper_mine_adit:building
 copper_mine_adit = {
 is_foreign = no
+increase_per_level_cost = 0.19
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 4
-price = pp_copper_mine_adit_price
+employment_size = 1
 category = rgo_building_category
+custom_tags = { pp_mine_building }
 icon = copper_mine_adit
 rural_settlement = yes
 town = yes
@@ -17,7 +18,6 @@ build_time = workshop_build_time
 location_potential = {
     raw_material = goods:copper
 }
-
 construction_demand = workshop_construction
 ai_forbid_shutdown = no
 forbidden_for_estates = no
@@ -27,7 +27,7 @@ can_close = yes
 unique_production_methods = {
     pp_copper_mine_adit_base_copper = {
         produced = copper
-        output = 0.3
+        output = 0.1
         category = building_maintenance
     }
 }
@@ -36,11 +36,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_copper_mine_adit_copper = {
-        lumber = 1.25
-        tools = 1.75
-        beeswax = 0.35
+        lumber = 0.31
+        tools = 0.44
+        beeswax = 0.09
         produced = copper
-        output = 3.11
+        output = 0.78
         category = building_maintenance
     }
 }
@@ -49,25 +49,37 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_copper_mine_adit_silver = {
-        lumber = 0.14
-        tools = 0.10
-        lead = 0.08
+        lumber = 0.04
+        tools = 0.03
+        lead = 0.02
         produced = silver
-        output = 0.134
+        output = 0.034
+        category = building_maintenance
+    }
+    pp_copper_mine_adit_gold = {
+        lumber = 0.04
+        tools = 0.03
+        lead = 0.02
+        produced = goods_gold
+        output = 0.027
         category = building_maintenance
     }
     pp_copper_mine_adit_tin = {
-        lumber = 0.10
-        tools = 0.08
+        lumber = 0.03
+        tools = 0.02
         produced = tin
-        output = 0.234
+        output = 0.059
         category = building_maintenance
     }
 }
 
+raw_modifier = {
+}
+
 modifier = {
     local_population_growth = -0.0002
-    local_migration_attraction = 0.02
+    local_migration_attraction = 0.010
+    local_copper_output_modifier = 0.025
 }
 }
 # <<< eu5-building-pipeline:copper_mine_adit:building

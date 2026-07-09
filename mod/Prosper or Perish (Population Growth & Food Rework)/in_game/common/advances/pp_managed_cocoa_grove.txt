@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:managed_cocoa_grove:advancement
+pp_managed_cocoa_grove = {
+icon = managed_cocoa_grove
+age = age_3_discovery
+requires = plantation_buildings_advance
+unlock_building = managed_cocoa_grove
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:managed_cocoa_grove:advancement

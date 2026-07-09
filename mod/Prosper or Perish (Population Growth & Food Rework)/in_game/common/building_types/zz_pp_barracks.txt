@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:barracks:building
 REPLACE:barracks = {
+	audio_tier = 2
 	is_foreign = no
 	pop_type = soldiers
 	max_levels = manpower_max_level
@@ -16,6 +17,9 @@ REPLACE:barracks = {
 	
 	build_time = soldier_building
 	
+	raw_modifier = {
+	}
+
     modifier = {
 		local_manpower = 0.015
 		can_recruit_regiment_in_this_location = yes

@@ -1,0 +1,34 @@
+﻿# >>> eu5-building-pipeline:coastal_shipping_office:building
+coastal_shipping_office = {
+is_foreign = no
+max_levels = pp_coastal_shipping_office_max_level
+increase_per_level_cost = 0.15
+pop_type = laborers
+employment_size = 3
+category = infrastructure_category
+custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_coastal_logistics_priority }
+icon = coastal_shipping_office
+town = yes
+city = yes
+megalopolis = yes
+can_close = no
+always_add_demands = yes
+forbidden_for_estates = yes
+important_for_AI = no
+ai_forbid_shutdown = yes
+build_time = infrastructure_build_time
+
+location_potential = {
+  is_port = yes
+}
+construction_demand = pp_coastal_shipping_office_construction
+
+possible_production_methods = {
+  pp_coastal_shipping_office_maintenance
+}
+
+raw_modifier = {
+  free_building_levels = 10
+}
+}
+# <<< eu5-building-pipeline:coastal_shipping_office:building

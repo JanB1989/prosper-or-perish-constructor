@@ -1,0 +1,32 @@
+﻿# >>> eu5-building-pipeline:paper_manufactory:building
+REPLACE:paper_manufactory = {
+audio_tier = 3
+is_foreign = no
+pop_type = burghers
+max_levels = manufactory_max_level
+startup_ramp_target = manufactory_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = manufactory_build_time
+unique_production_methods = {
+    pp_paper_manufactory_paper_manufactory_maintenance = {
+        cloth = 0.291
+        fiber_crops = 1.163
+        lumber = 0.291
+        produced = paper
+        output = 2.0
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+}
+obsolete = paper_workshop
+custom_tags = {
+    midgame_manufactory
+}
+construction_demand = manufactory_construction
+increase_per_level_cost = 0.16
+}
+# <<< eu5-building-pipeline:paper_manufactory:building

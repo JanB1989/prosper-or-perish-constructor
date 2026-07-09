@@ -1,0 +1,47 @@
+﻿# >>> eu5-building-pipeline:weapon_guild:building
+REPLACE:weapon_guild = {
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = weapons_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_weapon_guild_pre_columbian_weapon_smith_maintenance = {
+        lumber = 0.07
+        stone = 1.005
+        produced = weaponry
+        output = 0.4
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_weapon_guild_weapon_smith_maintenance = {
+        lumber = 0.288
+        coal = 0.347
+        tools = 0.577
+        category = guild_input
+        produced = weaponry
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+    }
+    pp_weapon_guild_weapon_guild_obsidian_maintenance = {
+        lumber = 0.122
+        stone = 0.507
+        gems = 0.102
+        produced = weaponry
+        output = 0.4
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+}
+custom_tags = {
+    guild
+}
+construction_demand = guild_construction
+increase_per_level_cost = 0.19
+}
+# <<< eu5-building-pipeline:weapon_guild:building

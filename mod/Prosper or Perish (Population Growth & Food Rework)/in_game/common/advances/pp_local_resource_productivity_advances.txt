@@ -33,11 +33,9 @@ REPLACE:efficient_mining = {
 REPLACE:new_currency_demands = {
 	age = age_3_discovery
 	icon = debt_and_loans
-	global_copper_output_modifier = 0.25
-    global_tin_output_modifier = 0.1
-    requires = blast_furnace
-    unlock_building = copper_mine_adit
-    unlock_building = tin_stamping_mill
+	requires = blast_furnace
+	unlock_building = copper_mine_adit
+	unlock_building = tin_stamping_mill
 }
 
 REPLACE:green_vitriol = {
@@ -61,17 +59,23 @@ REPLACE:renaissance_sculptures = {
 REPLACE:blast_furnace = {
 	age = age_3_discovery
 	icon = serbian_mining
-	requires = pop_promotion_speed_age_3
+	requires = pike_and_shot_advance
 	unlock_building = bog_iron_smelter_blast_furnace
 }
 
 REPLACE:pan_amalgamation_advance = {
 	age = age_4_reformation
 	mercury_patio_max_level = 1
-	global_mercury_output_modifier = 0.1
-	requires = pharmacology_advance
+	requires = confessional_court
+}
+
+pp_pan_amalgamation_mines = {
+	age = age_4_reformation
+	icon = pan_amalgamation_advance
+	requires = confessional_court
 	unlock_building = gold_stamp_mill
 	unlock_building = quicksilver_retort
+	ai_weight = { add = 125 }
 }
 
 REPLACE:slitting_mills = {
@@ -115,7 +119,7 @@ REPLACE:coal_improvements_absolutism = {
 
 REPLACE:coal_improvements_revolutions = {
 	age = age_6_revolutions
-	requires = construction_speed_revolutions
+	requires = rgo_size_advance_revolutions
 	unlock_building = coal_mine_revolutions
 }
 
@@ -123,8 +127,6 @@ REPLACE:saiger_process_discovery = {
 	age = age_3_discovery
 	icon = serbian_mining
 	requires = blast_furnace
-	global_silver_output_modifier = 0.2
-	global_lead_output_modifier = 0.2
 	unlock_building = silver_mine_improved
 }
 
@@ -205,8 +207,8 @@ TRY_INJECT:bur_rich_soil_of_burgundy = {
 }
 
 TRY_INJECT:neapolitan_industrialization = {
-	global_raw_material_output = -0.10
-	global_max_rgo_size_modifier = 0.10
+	global_raw_material_output = -0.20
+	global_max_rgo_size_modifier = 0.20
 }
 
 TRY_INJECT:produktplakatet = {

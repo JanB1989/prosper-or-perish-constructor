@@ -1,0 +1,744 @@
+﻿namespace = prices
+prices.1 = {
+	type = country_event
+	fire_only_once = yes
+	title = prices.1.title
+	desc = prices.1.desc
+	outcome = neutral
+	trigger = {
+		capital.market ?= {
+			location.continent = continent:europe
+			has_merchant = root
+			most_powerful_merchant = root
+		}
+		any_market_with_merchants = {
+			location.region = region:guinea_region
+			has_merchant = root
+			most_powerful_merchant = root
+		}
+		any_market_with_merchants = {
+			location.continent = continent:america
+			has_merchant = root
+			most_powerful_merchant = root
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_slaves_goods.dds"
+
+	option = {
+		name = prices.1.a
+		add_prestige = prestige_extreme_bonus
+
+		every_market_with_merchants = {
+			limit = {
+				location.continent = continent:europe
+			}
+			add_temporary_demand = { type = demand:triangle_trade_europe months = 240 }
+		}
+
+		every_market_with_merchants = {
+			limit = {
+				location.continent = continent:america
+			}
+			add_temporary_demand = { type = demand:triangle_trade_america months = 240 }
+		}
+
+		every_market_with_merchants = {
+			limit = {
+				location.region = region:guinea_region
+			}
+			add_temporary_demand = { type = demand:triangle_trade_africa months = 240 }
+		}
+
+	}
+}
+
+prices.2 = {
+	type = country_event
+	title = prices.2.title
+	desc = prices.2.desc
+	outcome = neutral
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_porcelain.dds"
+
+	fire_only_once = yes
+
+	trigger = {
+		capital = {
+			continent = continent:europe
+		}
+		any_market_with_merchants = {
+			location.region = region:south_china_region
+			most_powerful_merchant = root
+		}
+	}
+
+	option = {
+		name = prices.2.a
+
+		every_market_with_merchants = {
+			limit = {
+				location.continent = continent:europe
+			}
+			add_temporary_demand = { type = demand:porcelain_from_china months = 600 }
+		}
+
+		change_gold_effect = { scale = 3.00 }
+		add_prestige = prestige_extreme_bonus
+	}
+}
+
+prices.3 = {
+	type = country_event
+	fire_only_once = yes
+	title = prices.3.title
+	desc = prices.3.desc
+	outcome = neutral
+	trigger = {
+		owns = location:meissen
+		has_advance = porcelain_manufactor_advance
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_porcelain.dds"
+
+	option = {
+		name = prices.3.a
+		location:meissen = {
+			change_development  = development_severe_bonus
+			add_location_modifier = {
+				modifier = johan_friedrich_bottger
+				months = -1
+				mode = add_and_extend
+			}
+		}
+		add_prestige = prestige_weak_bonus
+	}
+}
+
+prices.4 = {
+	type = country_event
+	title = prices.4.title
+	desc = prices.4.desc
+	outcome = neutral
+
+	trigger = {
+		current_year < 1600
+		capital.market ?= {
+			location = {
+				dominant_religion ?= religion:lutheran
+			}
+			NOT = { has_temporary_demand = demand:lutheran_dont_eat_fish }
+		}
+
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_fish.dds"
+
+	option = {
+		name = prices.4.a
+		capital.market = {
+			add_temporary_demand = { type = demand:lutheran_dont_eat_fish months = 240 scale_with_pop = 0.005 }
+		}
+	}
+}
+
+prices.5 = {
+	type = country_event
+
+	title = prices.5.title
+	desc = prices.5.desc
+	outcome = neutral
+	trigger = {
+		current_year > 1500
+		religion.group = religion_group:christian
+		capital = {
+			continent = continent:europe
+		}
+		capital.market = {
+			NOT = { has_temporary_demand = demand:coffee_boom_happened }
+			is_traded_in_market = goods:coffee
+		}
+
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_coffee.dds"
+
+	option = {
+		name = prices.5.a
+		capital.market = {
+			add_temporary_demand = { type = demand:coffee_boom_happened months = 120 scale_with_pop = 0.01 }
+		}
+	}
+}
+
+prices.6 = {
+	type = country_event
+
+	title = prices.6.title
+	desc = prices.6.desc
+	outcome = neutral
+	trigger = {
+		current_age_or_later = { age = age_4_reformation }
+		capital = {
+			continent = continent:europe
+			market = {
+				location = root.capital
+				is_produced_in_market = goods:wool
+				is_traded_in_market = goods:cotton
+				any_import = {
+					goods = goods:cotton
+					from_market.location.sub_continent = sub_continent:south_asia
+				}
+			}
+		}
+		NOT = {
+			has_country_modifier = cotton_imports_banned
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_cotton.dds"
+
+	option = {
+		name = prices.6.a
+		change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_minor_move_to_right }
+	}
+	option = {
+		name = prices.6.b
+		add_country_modifier = { modifier = cotton_imports_banned years = 25 mode = add_and_extend }
+	}
+}
+
+prices.7 = {
+	type = country_event
+
+	title = prices.7.title
+	desc = prices.7.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = ENG
+		from = 1300.1.1
+		to = 1800.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		capital = {
+			market = {
+				is_traded_in_market = goods:tea
+				is_traded_in_market = goods:sugar
+			}
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_tea.dds"
+
+	option = {
+		name = prices.7.a
+		every_market_present_in_country = {
+			add_temporary_demand = { type = demand:tea_and_sugar_for_britain months = -1 scale_with_pop = 0.01 }
+		}
+
+	}
+}
+
+prices.8 = {
+	type = country_event
+	fire_only_once = yes
+	title = prices.8.title
+	desc = prices.8.desc
+	outcome = neutral
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_pepper.dds"
+
+	trigger = {
+
+		num_of_ports >= 10
+		capital = {
+			continent = continent:europe
+			market = {
+				any_import = {
+					goods = goods:pepper
+					from_market.location.sub_continent = sub_continent:south_east_asia
+				}
+			}
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_pepper.dds"
+
+	option = {
+		name = prices.8.a
+		every_market_with_merchants = {
+			limit = {
+				location.continent = continent:europe
+			}
+
+			add_temporary_demand = { type = demand:spice_trade months = 240 scale_with_pop = 0.01 }
+		}
+		add_prestige = prestige_extreme_bonus
+	}
+}
+
+prices.10 = {
+	type = country_event
+	fire_only_once = yes
+	title = prices.10.title
+	desc = prices.10.desc
+	outcome = neutral
+	trigger = {
+		current_year >= 1600
+		current_year < 1610
+
+		owns = location:quito
+	}
+
+	option = {
+		name = prices.10.a
+		every_other_country = {
+			trigger_event_silently = prices.9
+		}
+
+		location:quito = {
+			hidden_effect = {
+				add_vfx = {
+					name = "volcano_eruption_test"
+					duration = 0
+				}
+			}
+
+			every_pop = {
+				add_pop_size = {
+					value = pop_size
+					multiply = -0.2
+				}
+			}
+		}
+
+		add_country_modifier = { modifier = eruption_of_huaynaputina years = 2 mode = add_and_extend }
+	}
+}
+
+prices.9 = {
+	type = country_event
+	title = prices.10.title
+	desc = prices.10.desc
+	outcome = neutral
+
+	illustration_tags = {
+        10 = angry
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
+	}
+	option = {
+		name = prices.10.a
+		add_country_modifier = { modifier = eruption_of_huaynaputina years = 2 mode = add_and_extend }
+	}
+}
+
+prices.11 = {
+	type = country_event
+	fire_only_once = yes
+	title = prices.11.title
+	desc = prices.11.desc
+	outcome = neutral
+	trigger = {
+		current_year >= 1650
+		current_year <= 1660
+		owns = location:akureyri
+	}
+
+	image = "gfx/interface/illustrations/situation/little_ice_age.dds"
+
+	option = {
+		name = prices.11.a
+
+		every_other_country = {
+			trigger_event_silently = prices.110
+		}
+		add_country_modifier = { modifier = the_little_ice_age years = 10 mode = add_and_extend }
+
+	}
+}
+
+prices.110 = {
+    type = country_event
+    fire_only_once = yes
+    title = prices.11.title
+    desc = prices.11.desc
+	outcome = neutral
+    option = {
+        name = prices.11.a
+        add_country_modifier = { modifier = the_little_ice_age years = 10 mode = add_and_extend }
+    }
+}
+
+prices.15 = {
+	type = country_event
+	fire_only_once = yes
+	title = prices.15.title
+	desc = prices.15.desc
+	outcome = neutral
+
+	trigger = {
+
+		capital = {
+			continent = continent:europe
+		}
+		any_owned_location = {
+			area = area:newfoundland_area
+			integration_level = core
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_fish.dds"
+
+	option = {
+		name = prices.15.a
+		every_market_in_world = {
+			limit = {
+				location.area = area:newfoundland_area
+			}
+
+			add_temporary_demand = { type = demand:grand_bank_fisheries months = 240 scale_with_pop = 0.01 }
+		}
+	}
+}
+
+prices.16 = {
+	type = country_event
+	fire_only_once = yes
+	title = prices.16.title
+	desc = prices.16.desc
+	outcome = neutral
+	trigger = {
+		capital = {
+			continent = continent:europe
+		}
+		any_trade = {
+			goods = goods:fine_cloth
+			trade_volume > 5.0
+			from_market.location.sub_continent = sub_continent:south_asia
+			to_market.location.continent = continent:europe
+		}
+
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_fine_cloth.dds"
+
+	option = {
+		name = prices.16.a
+		every_market_in_world = {
+			limit = {
+				location.continent = continent:europe
+			}
+			add_temporary_demand = { type = demand:calicoes months = 240 scale_with_pop = 0.01 }
+		}
+	}
+}
+
+prices.18 = {
+	type = country_event
+	title = prices.18.title
+	desc = prices.18.desc
+	outcome = neutral
+	trigger = {
+		has_markets = yes
+		capital = {
+			continent = continent:europe
+			market = {
+				NOT = { has_temporary_demand = demand:felt_hats }
+			}
+		}
+		current_year > 1600
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_fur.dds"
+
+	option = {
+		name = prices.18.a
+		capital.market= {
+			add_temporary_demand = { type = demand:felt_hats months = 240 scale_with_pop = 0.01 }
+		}
+	}
+}
+
+prices.19 = {
+	type = country_event
+	title = prices.19.title
+	desc = prices.19.desc
+	outcome = neutral
+
+	trigger = {
+		has_markets = yes
+		capital = {
+			market = {
+				NOT = { has_temporary_demand = demand:professional_navies }
+			}
+		}
+		current_year > 1600
+
+		num_of_ports > 10
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_naval_supplies.dds"
+
+	option = {
+		name = prices.19.a
+		capital.market= {
+			add_temporary_demand = { type = demand:professional_navies months = 240 scale_with_pop = 0.01 }
+		}
+	}
+}
+
+prices.20 = {
+	type = country_event
+	title = prices.20.title
+	desc = prices.20.desc
+	outcome = neutral
+
+	trigger = {
+		has_markets = yes
+		has_advance = artillery_institution_advance
+		current_age = age_4_reformation
+
+		capital.market = {
+			produced_in_market:cannons > 1.5
+			NOT = { has_temporary_demand = demand:bronze_cannons }
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_copper.dds"
+
+	option = {
+		name = prices.20.a
+		capital.market= {
+			add_temporary_demand = { type = demand:bronze_cannons months = 240 scale_with_pop = 0.01 }
+		}
+
+	}
+}
+
+prices.21 = {
+	type = country_event
+	title = prices.21.title
+	desc = prices.21.desc
+	outcome = neutral
+	trigger = {
+		tag = JAP
+		current_year > 1500
+
+		has_markets = yes
+		any_market_present_in_country = {
+			NOT = { has_temporary_demand = demand:japanese_tea_ceremonies }
+			count = all
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_tea.dds"
+
+	option = {
+		name = prices.21.a
+		every_market_present_in_country = {
+			add_temporary_demand = { type = demand:japanese_tea_ceremonies months = 240 scale_with_pop = 0.01 }
+		}
+	}
+}
+
+prices.22 = {
+	type = country_event
+	title = prices.22.title
+	desc = prices.22.desc
+	outcome = neutral
+
+	trigger = {
+		has_markets = yes
+		current_year > 1600
+		capital.continent = continent:europe
+		religion.group = religion_group:christian
+
+		capital.market = {
+			is_traded_in_market = goods:pepper
+			NOT = { has_temporary_demand = demand:decline_of_spices }
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_pepper.dds"
+
+	option = {
+		name = prices.22.a
+		capital.market = {
+			add_temporary_demand = { type = demand:decline_of_spices months = 240 scale_with_pop = 0.01 }
+		}
+	}
+}
+
+prices.23 = {
+	type = country_event
+	title = prices.23.title
+	desc = prices.23.desc
+	outcome = neutral
+
+	trigger = {
+		has_markets = yes
+		current_year > 1600
+		capital.continent = continent:europe
+
+		capital.market = {
+			is_traded_in_market = goods:sugar
+			NOT = { has_temporary_demand = demand:popularization_of_sugar }
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_sugar.dds"
+
+	option = {
+		name = prices.23.a
+		capital.market = {
+			add_temporary_demand = { type = demand:popularization_of_sugar months = 240 scale_with_pop = 0.01 }
+		}
+
+	}
+}
+
+prices.24 = {
+	type = country_event
+	title = prices.24.title
+	desc = prices.24.desc
+	outcome = neutral
+	trigger = {
+		has_markets = yes
+		current_year > 1700
+		capital = {
+			continent = continent:europe
+		}
+
+		any_market_present_in_country = {
+			NOT = { has_temporary_demand = demand:popularization_of_silk }
+			count = all
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_silk.dds"
+
+	option = {
+		name = prices.24.a
+		every_market_present_in_country = {
+			add_temporary_demand = { type = demand:popularization_of_silk months = 240 scale_with_pop = 0.01 }
+		}
+	}
+}
+
+prices.27 = {
+	type = country_event
+	title = prices.27.title
+	desc = prices.27.desc
+	outcome = neutral
+	trigger = {
+		current_year > 1700
+		produced_in_country:elephants > 0
+
+		any_owned_location = {
+			raw_material = goods:elephants
+			rgo_workers >= 0
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_elephants.dds"
+
+	option = {
+		name = prices.27.a
+		random_owned_location = {
+			limit = {
+				raw_material = goods:elephants
+				rgo_workers >= 0
+			}
+			change_max_raw_material_workers = -1
+		}
+	}
+}
+
+prices.28 = {
+	type = country_event
+	title = prices.28.title
+	desc = prices.28.desc
+	outcome = neutral
+
+	trigger = {
+		has_markets = yes
+		current_age = age_5_absolutism
+
+		capital.market = {
+			produced_in_market:cannons > 5
+			NOT = { has_temporary_demand = demand:iron_cannons }
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_iron.dds"
+
+	option = {
+		name = prices.28.a
+		capital.market= {
+			add_temporary_demand = { type = demand:iron_cannons months = 240 scale_with_pop = 0.01 }
+		}
+
+	}
+}
+
+prices.29 = {
+	type = country_event
+	title = prices.29.title
+	desc = prices.29.desc
+	outcome = neutral
+
+	trigger = {
+		has_markets = yes
+		capital_in_old_world_trigger = yes
+
+		capital.market = {
+			is_traded_in_market = goods:cocoa
+			NOT = { has_temporary_demand = demand:hot_chocolate }
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_cocoa.dds"
+
+	option = {
+		name = prices.29.a
+		capital.market= {
+			add_temporary_demand = { type = demand:hot_chocolate months = 240 scale_with_pop = 0.01 }
+		}
+	}
+}
+
+prices.30 = {
+	type = country_event
+	title = prices.30.title
+	desc = prices.30.desc
+	outcome = neutral
+
+	trigger = {
+		has_markets = yes
+		capital_in_old_world_trigger = yes
+		religion.group = religion_group:christian
+		religion.group = religion_group:muslim
+
+		capital.market = {
+			is_traded_in_market = goods:tobacco
+			NOT = { has_temporary_demand = demand:popularization_of_tobacco }
+		}
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_tobacco.dds"
+
+	option = {
+		name = prices.30.a
+		capital.market= {
+			add_temporary_demand = { type = demand:popularization_of_tobacco months = 240 scale_with_pop = 0.01 }
+		}
+	}
+}

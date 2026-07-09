@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: perfumery
 building:
   key: perfumery
@@ -10,11 +10,14 @@ building:
         - pp_perfumery_blended_incense
   possible_production_methods: []
   body: |2-
+    audio_tier = 3
+    startup_ramp_target = manufactory_startup_ramp_target
     is_foreign = no
+    increase_per_level_cost = 0.20
     pop_type = burghers
     max_levels = manufactory_max_level
     category = consumer_goods_category
-    employment_size = manufactory_employment
+    employment_size = 0.2
     town = yes
     city = yes
     megalopolis = yes
@@ -22,7 +25,6 @@ building:
     location_potential = {
         NOT = { raw_material = goods:incense }
     }
-
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_perfumery_blended_incense = {
@@ -37,6 +39,8 @@ building:
 
     custom_tags = { midgame_manufactory }
     construction_demand = mill_construction
+    raw_modifier = {
+    }
 localization:
   entries:
     perfumery_slot_0: Blended Incense

@@ -1,0 +1,93 @@
+version: 2
+tag: distiller_manufactory
+building:
+  key: distiller_manufactory
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_distiller_manufactory_sugar_distillery_maintenance
+    - pp_distiller_manufactory_rice_distillery_maintenance
+    - pp_distiller_manufactory_potato_distillery_maintenance
+    - pp_distiller_manufactory_wheat_distillery_maintenance
+    - pp_distiller_manufactory_scottish_whisky_distillery_maintenance
+  possible_production_methods: []
+  body: |
+    audio_tier = 3
+    is_foreign = no
+    pop_type = burghers
+    max_levels = manufactory_max_level
+    startup_ramp_target = manufactory_startup_ramp_target
+    category = consumer_goods_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = manufactory_build_time
+    obsolete = distillers_workshop
+    unique_production_methods = {
+        pp_distiller_manufactory_sugar_distillery_maintenance = {
+            sugar = 1.303
+            pottery = 0.13
+            glass = 0.222
+            produced = liquor
+            output = 2.0
+            category = manufactory_input
+            debug_max_profit = manufactory_profit_margin
+        }
+        pp_distiller_manufactory_rice_distillery_maintenance = {
+            rice = 3.91
+            pottery = 0.13
+            glass = 0.222
+            produced = liquor
+            output = 2.0
+            category = manufactory_input
+            debug_max_profit = manufactory_profit_margin
+        }
+        pp_distiller_manufactory_potato_distillery_maintenance = {
+            potato = 3.91
+            pottery = 0.13
+            glass = 0.222
+            produced = liquor
+            output = 2.0
+            category = manufactory_input
+            debug_max_profit = manufactory_profit_margin
+        }
+        pp_distiller_manufactory_wheat_distillery_maintenance = {
+            pottery = 0.13
+            wheat = 3.91
+            glass = 0.222
+            produced = liquor
+            output = 2.0
+            category = manufactory_input
+            debug_max_profit = manufactory_profit_margin
+        }
+        pp_distiller_manufactory_scottish_whisky_distillery_maintenance = {
+            millet = 3.91
+            pottery = 0.13
+            glass = 0.222
+            produced = liquor
+            output = 2.0
+            category = manufactory_input
+            debug_max_profit = manufactory_profit_margin
+        }
+    }
+    custom_tags = {
+        midgame_manufactory
+    }
+    construction_demand = manufactory_construction
+    increase_per_level_cost = 0.15
+localization:
+  entries:
+    distiller_manufactory_slot_0: Distiller Manufactory Work
+    pp_distiller_manufactory_sugar_distillery_maintenance: Distiller Manufactory Sugar Distillery Maintenance
+    pp_distiller_manufactory_rice_distillery_maintenance: Distiller Manufactory Rice Distillery Maintenance
+    pp_distiller_manufactory_potato_distillery_maintenance: Distiller Manufactory Potato Distillery Maintenance
+    pp_distiller_manufactory_wheat_distillery_maintenance: Distiller Manufactory Wheat Distillery Maintenance
+    pp_distiller_manufactory_scottish_whisky_distillery_maintenance: Distiller Manufactory Scottish Whisky Distillery Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

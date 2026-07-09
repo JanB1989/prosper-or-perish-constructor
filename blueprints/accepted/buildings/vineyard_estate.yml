@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: vineyard_estate
 building:
   key: vineyard_estate
@@ -14,11 +14,12 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = farm_max_level
+    increase_per_level_cost = 0.25
+    max_levels = farm_capacity_max_vineyard_estate
     pop_type = laborers
-    employment_size = 3
-    price = pp_vineyard_estate_price
+    employment_size = 1
     category = rgo_building_category
+    custom_tags = { farming_capacity }
     icon = vineyard_estate
     rural_settlement = yes
     town = yes
@@ -32,10 +33,6 @@ building:
         NOT = { has_building = building_type:winery_manufactory }
     }
 
-    allow = {
-        farm_capacity_available > 0
-    }
-
     construction_demand = farm_constructions
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -45,39 +42,36 @@ building:
     unique_production_methods = {
         pp_vineyard_estate_base_wine = {
             produced = wine
-            output = 0.300
+            output = 0.100
             category = building_maintenance
         }
     }
     unique_production_methods = {
         pp_vineyard_estate_press_houses = {
-            lumber = 0.500 # presses, stakes, and cask staves
-            pottery = 0.250 # fermentation jars and storage vessels
-            tools = 0.050 # pruning knives and press hardware
+            lumber = 0.167 # presses, stakes, and cask staves
+            pottery = 0.083 # fermentation jars and storage vessels
+            tools = 0.017 # pruning knives and press hardware
             produced = wine
-            output = 0.667
+            output = 0.222
             category = building_maintenance
         }
     }
 
-    modifier = {
-        local_migration_attraction = 0.01
+    raw_modifier = {
+      farm_capacity_from_vineyard_estate = -1
     }
-prices:
-  - key: pp_vineyard_estate_price
-    body: |2-
-      {gold = 50}
+
+    modifier = {
+        local_migration_attraction = 0.003
+    }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_vineyard_estate_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('vineyard_estate')|e].
-    MODIFIER_TYPE_NAME_pp_vineyard_estate_price_cost_modifier: Vineyard Estate Cost
     vineyard_estate_slot_0: Vineyards
     vineyard_estate_slot_1: Press Houses
     vineyard_estate: Vineyard Estate
     vineyard_estate_desc: Vineyard estates grow grapes, press them on site, and store the young wine in cellar sheds. Press houses improve the harvest and first pressing.
     pp_vineyard_estate_base_wine: Vineyards
     pp_vineyard_estate_press_houses: Press Houses
-    pp_vineyard_estate_price: Vineyard Estate Price
 icon:
   source_png: ../assets/icons/vineyard_estate.png
   output_dds: vineyard_estate.dds

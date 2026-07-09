@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: mining_village_coke_blast_furnace
 output_tag: mining_village_slitting_mills_coke_blast_furnace
 upgrade_chain:
@@ -76,7 +76,6 @@ building:
             raw_material = goods:mercury
         }
     }
-
     construction_demand = manufactory_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -263,6 +262,9 @@ building:
             output = 0.3
             category = building_maintenance
         }
+    }
+
+    raw_modifier = {
     }
 
     modifier = {

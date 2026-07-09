@@ -1,0 +1,67 @@
+﻿version: 2
+tag: river_boatmen_yard
+building:
+  key: river_boatmen_yard
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots: []
+  possible_production_methods:
+    - pp_river_boatmen_yard_maintenance
+  body: |2-
+    is_foreign = no
+    max_levels = pp_river_boatmen_yard_max_level
+    increase_per_level_cost = 0.15
+    pop_type = laborers
+    employment_size = 3
+    category = infrastructure_category
+    custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_river_logistics_priority }
+    icon = river_boatmen_yard
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    can_close = no
+    always_add_demands = yes
+    forbidden_for_estates = yes
+    AI_ignore_available_worker_flag = yes
+    important_for_AI = no
+    ai_forbid_shutdown = yes
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      has_river = yes
+    }
+    construction_demand = pp_river_boatmen_yard_construction
+
+    possible_production_methods = {
+      pp_river_boatmen_yard_maintenance
+    }
+
+    raw_modifier = {
+      free_building_levels = 10
+    }
+production_methods:
+  - key: pp_river_boatmen_yard_maintenance
+    body: |2-
+      naval_supplies = 0.10
+      lumber = 0.15
+      tools = 0.10
+      victuals = 0.15
+      tar = 0.025
+      category = building_maintenance
+localization:
+  entries:
+    pp_river_boatmen_yard_construction: River Boatmen's Yard Construction
+    pp_river_boatmen_yard_maintenance: River Boatmen's Yard Maintenance
+    river_boatmen_yard: River Boatmen's Yard
+    river_boatmen_yard_desc: Boatmen, barges, rope stores, and timber landings turn a riverbank into a working freight yard. Goods move with the current, against it by labor, and into the market by habit.
+icon:
+  source_png: ../assets/icons/river_boatmen_yard.png
+  output_dds: river_boatmen_yard.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a river boatmen's yard, transparent background. Center a timber river landing with a small shed, cargo crates, rope coils, and two broad shallow cargo barges. Make the river unmistakable at low resolution with a wide bright blue river band curving through the foreground and side of the icon; use strong silhouettes, high contrast, fewer tiny props, no text, no frame.
+evaluation:
+  allow_rules:
+    profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
+    input_throughput: River freight yards intentionally use heavy labor alongside costly boat, rope, timber, tar, and naval-supply upkeep.
+    output_throughput: River boatmen's yards provide supported building levels rather than direct goods output.

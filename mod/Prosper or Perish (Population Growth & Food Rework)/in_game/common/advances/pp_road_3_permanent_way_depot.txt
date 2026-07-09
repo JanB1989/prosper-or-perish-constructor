@@ -1,0 +1,6 @@
+﻿# >>> eu5-building-pipeline:permanent_way_depot:advancement
+TRY_INJECT:railroad_advance = {
+unlock_building = permanent_way_depot
+unlock_production_method = pp_permanent_way_depot_maintenance
+}
+# <<< eu5-building-pipeline:permanent_way_depot:advancement

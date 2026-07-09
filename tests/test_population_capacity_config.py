@@ -77,8 +77,8 @@ def test_population_capacity_config_loads() -> None:
 
     assert config.generated_label == "Prosper or Perish"
     assert config.managed_write_mode == "mod_root"
-    assert config.capacity_scale.minimum == 3
-    assert config.capacity_scale.maximum == 70
+    assert config.capacity_scale.minimum == 10
+    assert config.capacity_scale.maximum == 100
     assert config.calibration.historical_population_policy == "saturation_anchors_only"
     assert config.calibration.saturation_anchors == "population_capacity_saturation_anchors.toml"
     assert config.calibration.land_potential_sources == ("gaez_v4", "hyde", "archaeoglobe")
@@ -128,6 +128,25 @@ def test_free_land_effects_order_plants_before_animal_products() -> None:
         first_animal = min(positions[f"local_{good}_output_modifier"] for good in ANIMAL_PRODUCT_GOODS)
 
         assert last_plant < first_animal
+
+
+def test_free_land_effects_use_uniform_output_values() -> None:
+    expected_values = {
+        "available_free_land": 0.30,
+        "abundant_free_land": 0.40,
+    }
+
+    for effect, expected_value in expected_values.items():
+        block = _object_block(CAPACITY_PRESSURE_EFFECTS, effect)
+        assert block is not None
+        output_values = {
+            entry.key: entry.value
+            for entry in block.entries
+            if entry.key.startswith("local_") and entry.key.endswith("_output_modifier")
+        }
+
+        assert output_values
+        assert set(output_values.values()) == {expected_value}
 
 
 def test_irrigation_systems_cover_all_irrigated_plant_goods() -> None:
@@ -269,17 +288,6 @@ def test_development_modifier_preserves_population_and_other_static_values() -> 
     assert _last_value(development, "local_migration_attraction") == 0.0025
 
 
-def test_building_levels_modifier_does_not_add_population_capacity() -> None:
-    profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
-    static_modifiers = load_collection(profile, "static_modifiers")
-    building_levels = _entry_block(static_modifiers.entries, "building_levels")
-
-    assert building_levels is not None
-    assert _last_value(building_levels, "local_population_capacity") is None
-    assert _last_value(building_levels, "local_road_building_time") == 0.01
-    assert _last_value(building_levels, "local_build_new_buildings_cost") is None
-
-
 def test_river_flowing_through_modifiers_neutralize_capacity_and_food_bonuses() -> None:
     profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
     static_modifiers = load_collection(profile, "static_modifiers")
@@ -296,8 +304,10 @@ def test_river_flowing_through_modifiers_neutralize_capacity_and_food_bonuses() 
         assert block is not None
         assert maps["static_modifiers"][key]["local_population_capacity_modifier"] == 0
         assert not block.values(obsolete_modifier)
-        assert sum(block.values("fish_max_level_modifier")) == expected_fish_capacity[size]
-        assert sum(block.values("farm_max_level_modifier")) == expected_farm_capacity[size]
+        assert not block.values("fish_capacity")
+        assert sum(block.values("fish_capacity_from_river_size")) == expected_fish_capacity[size]
+        assert not block.values("farm_capacity")
+        assert sum(block.values("farm_capacity_from_river_size")) == expected_farm_capacity[size]
         assert sum(block.values("irrigant_cap_modifier")) == expected_irrigation_capacity[size]
         assert sum(block.values("local_monthly_food_modifier")) == 0
         assert "local_population_capacity" not in maps["static_modifiers"][key]
@@ -454,6 +464,64 @@ def test_generated_location_modifiers_include_one_population_capacity_per_locati
     assert blocks
     for name, body in blocks.items():
         assert body.count("local_population_capacity =") == 1, name
+
+
+def test_generated_raw_good_output_modifiers_respect_configured_floor() -> None:
+    from goods_labeler.location_templates import (
+        apply_location_template_overlay,
+        load_current_location_templates,
+    )
+
+    floor = -0.2
+    baseline = pl.read_parquet(LABELING_BASELINE)
+    templates, _source = load_current_location_templates(
+        load_order_path=ROOT / "constructor.load_order.toml"
+    )
+    current_locations = apply_location_template_overlay(baseline, templates)
+    raw_by_location = {
+        str(row["location_tag"]): str(row["raw_material"])
+        for row in current_locations.select("location_tag", "raw_material")
+        .drop_nulls("raw_material")
+        .to_dicts()
+    }
+    blocks = _location_modifier_blocks(LOCATION_MODIFIERS.read_text(encoding="utf-8-sig"))
+
+    assert raw_by_location["rethymno"] == "saffron"
+
+    rethymno_body = blocks["rethymno"]
+    assert re.search(
+        r"^\s*local_cotton_output_modifier\s*=\s*-0\.70\s*$",
+        rethymno_body,
+        flags=re.MULTILINE,
+    )
+    rethymno_saffron = re.search(
+        r"^\s*local_saffron_output_modifier\s*=\s*([-+]?\d+(?:\.\d+)?)\s*$",
+        rethymno_body,
+        flags=re.MULTILINE,
+    )
+    assert rethymno_saffron is not None
+    assert float(rethymno_saffron.group(1)) >= floor
+
+    checked = 0
+    violations: list[str] = []
+    for location_tag, raw_material in raw_by_location.items():
+        body = blocks.get(location_tag) or blocks.get(f"{location_tag}_pp")
+        if body is None:
+            continue
+        match = re.search(
+            rf"^\s*local_{re.escape(raw_material)}_output_modifier\s*=\s*([-+]?\d+(?:\.\d+)?)\s*$",
+            body,
+            flags=re.MULTILINE,
+        )
+        if match is None:
+            continue
+        checked += 1
+        value = float(match.group(1))
+        if value < floor:
+            violations.append(f"{location_tag}:{raw_material}={value}")
+
+    assert checked > 10_000
+    assert not violations[:20]
 
 
 def test_generated_population_capacity_values_stay_in_v1_bounds() -> None:

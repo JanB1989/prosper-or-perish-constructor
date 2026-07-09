@@ -1,0 +1,71 @@
+version: 2
+tag: tools_guild
+building:
+  key: tools_guild
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_tools_guild_metalwork_guild_maintenance
+    - pp_tools_guild_stone_tools_guild_maintenance
+    - pp_tools_guild_bronze_tools_guild_maintenance
+    - pp_tools_guild_copper_tools_guild_maintenance
+  possible_production_methods: []
+  body: |
+    audio_tier = 1
+    is_foreign = no
+    pop_type = burghers
+    max_levels = guild_max_level
+    startup_ramp_target = guild_startup_ramp_target
+    category = basic_industry_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = guild_build_time
+    unique_production_methods = {
+        pp_tools_guild_metalwork_guild_maintenance = {
+            iron = 0.837
+            produced = tools
+            output = 1.0
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_tools_guild_stone_tools_guild_maintenance = {
+            stone = 0.678
+            produced = tools
+            output = 0.25
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_tools_guild_bronze_tools_guild_maintenance = {
+            copper = 0.547
+            tin = 0.044
+            produced = tools
+            output = 0.6
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+        pp_tools_guild_copper_tools_guild_maintenance = {
+            copper = 0.526
+            produced = tools
+            output = 0.55
+            debug_max_profit = guild_profit_margin
+            category = guild_input
+        }
+    }
+    construction_demand = guild_construction
+    increase_per_level_cost = 0.21
+localization:
+  entries:
+    tools_guild_slot_0: Tools Guild Work
+    pp_tools_guild_metalwork_guild_maintenance: Tools Guild Metalwork Guild Maintenance
+    pp_tools_guild_stone_tools_guild_maintenance: Tools Guild Stone Tools Guild Maintenance
+    pp_tools_guild_bronze_tools_guild_maintenance: Tools Guild Bronze Tools Guild Maintenance
+    pp_tools_guild_copper_tools_guild_maintenance: Tools Guild Copper Tools Guild Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

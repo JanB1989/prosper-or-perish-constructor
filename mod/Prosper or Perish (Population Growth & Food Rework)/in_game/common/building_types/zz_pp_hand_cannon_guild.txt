@@ -1,0 +1,30 @@
+﻿# >>> eu5-building-pipeline:hand_cannon_guild:building
+REPLACE:hand_cannon_guild = {
+is_foreign = no
+pop_type = burghers
+max_levels = 1
+category = weapons_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_hand_cannon_guild_hand_cannon_guild_maintenance = {
+        tools = 0.057
+        lead = 0.011
+        saltpeter = 0.114
+        alum = 0.006
+        copper = 0.114
+        tin = 0.023
+        produced = firearms
+        output = 0.3
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+construction_demand = guild_construction
+modifier = {}
+increase_per_level_cost = 0.19
+}
+# <<< eu5-building-pipeline:hand_cannon_guild:building

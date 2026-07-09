@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: saltpeter_guild
 building:
   key: saltpeter_guild
@@ -10,11 +10,13 @@ building:
         - pp_saltpeter_guild_demands
   possible_production_methods: []
   body: |2-
+    startup_ramp_target = guild_startup_ramp_target
     is_foreign = no
+    increase_per_level_cost = 0.18
     pop_type = burghers
     max_levels = guild_max_level
     category = basic_industry_category
-    employment_size = guild_employment
+    employment_size = 0.1
     town = yes
     city = yes
     megalopolis = yes
@@ -27,7 +29,6 @@ building:
             is_produced_in_market = goods:clay
         }
     }
-
     unique_production_methods = {
         pp_saltpeter_guild_demands = {
             pottery = 0.2
@@ -40,6 +41,8 @@ building:
 
     custom_tags = { guild }
     construction_demand = guild_construction
+    raw_modifier = {
+    }
 localization:
   entries:
     saltpeter_guild_slot_0: Saltpeter Guild Demands

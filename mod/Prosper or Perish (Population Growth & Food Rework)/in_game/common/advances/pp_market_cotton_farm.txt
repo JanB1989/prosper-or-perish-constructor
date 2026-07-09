@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:market_cotton_farm:advancement
+pp_market_cotton_farm = {
+icon = market_cotton_farm
+age = age_3_discovery
+requires = plantation_buildings_advance
+unlock_building = market_cotton_farm
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:market_cotton_farm:advancement

@@ -8,10 +8,14 @@ building:
   possible_production_methods: []
   body: |2-
     	price = pp_khmer_baray_price
+    	increase_per_level_cost = 0.40
     	custom_tags = { pp_food_security_priority pp_water_control_priority }
+    	raw_modifier = {
+    		farm_capacity_from_khmer_baray = 0.60
+    	}
+
     	modifier = {
     		local_monthly_food_modifier = -0.20 # vanilla 0.20
-    		farm_max_level_modifier = 0.60
     		local_rice_output_modifier = 0.1
     		local_fish_output_modifier = 0.05
     		local_cotton_output_modifier = 0.03

@@ -1,0 +1,53 @@
+version: 2
+tag: cannons_factory
+building:
+  key: cannons_factory
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_cannons_factory_gun_factory_maintenance
+  possible_production_methods: []
+  body: |
+    audio_tier = 6
+    is_foreign = no
+    pop_type = laborers
+    is_mill = yes
+    max_levels = mills_max_level
+    startup_ramp_target = mills_startup_ramp_target
+    category = weapons_industry_category
+    employment_size = 1.0
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = mills_build_time
+    obsolete = cannon_foundry
+    unique_production_methods = {
+        pp_cannons_factory_gun_factory_maintenance = {
+            steel = 2.589
+            lead = 0.518
+            saltpeter = 0.864
+            produced = cannons
+            output = 4.0
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+    }
+    custom_tags = {
+        lategame_manufactory
+    }
+    construction_demand = mill_construction
+    raw_modifier = {
+        local_burghers_desired_pop = 0.05
+    }
+    increase_per_level_cost = 0.25
+localization:
+  entries:
+    cannons_factory_slot_0: Cannons Factory Work
+    pp_cannons_factory_gun_factory_maintenance: Cannons Factory Gun Factory Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

@@ -1,0 +1,49 @@
+version: 2
+tag: brewery_manufactory
+building:
+  key: brewery_manufactory
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_brewery_manufactory_brewery_manufactory_maintenance
+  possible_production_methods: []
+  body: |
+    audio_tier = 3
+    is_foreign = no
+    pop_type = burghers
+    max_levels = manufactory_max_level
+    startup_ramp_target = manufactory_startup_ramp_target
+    category = consumer_goods_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = manufactory_build_time
+    obsolete = beer_workshop
+    unique_production_methods = {
+        pp_brewery_manufactory_brewery_manufactory_maintenance = {
+            lumber = 0.373
+            wheat = 2.494
+            tools = 0.187
+            produced = beer
+            output = 2.0
+            debug_max_profit = manufactory_profit_margin
+            category = manufactory_input
+        }
+    }
+    custom_tags = {
+        midgame_manufactory
+    }
+    construction_demand = manufactory_construction
+    increase_per_level_cost = 0.15
+localization:
+  entries:
+    brewery_manufactory_slot_0: Brewery Manufactory Work
+    pp_brewery_manufactory_brewery_manufactory_maintenance: Brewery Manufactory Brewery Manufactory Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

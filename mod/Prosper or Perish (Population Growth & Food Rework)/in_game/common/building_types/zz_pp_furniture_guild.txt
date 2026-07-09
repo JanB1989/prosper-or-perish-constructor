@@ -1,0 +1,28 @@
+﻿# >>> eu5-building-pipeline:furniture_guild:building
+REPLACE:furniture_guild = {
+audio_tier = 1
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_furniture_guild_furniture_maintenance = {
+        lumber = 1.047
+        dyes = 0.157
+        tools = 0.157
+        produced = furniture
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+construction_demand = guild_construction
+increase_per_level_cost = 0.19
+}
+# <<< eu5-building-pipeline:furniture_guild:building

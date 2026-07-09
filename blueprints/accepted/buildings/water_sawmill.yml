@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: water_sawmill
 output_tag: lumber_mill_hydraulic_sawmill
 upgrade_chain:
@@ -18,9 +18,10 @@ building:
     - name: slot_1
       methods:
         - pp_water_sawmill_no_primary
-        - pp_water_sawmill_sash_saw
-        - pp_water_sawmill_millrace_yards
-        - pp_water_sawmill_log_ponds
+        - pp_water_sawmill_horse_tools
+        - pp_water_sawmill_horse_victuals
+        - pp_water_sawmill_livestock_tools
+        - pp_water_sawmill_livestock_victuals
     - name: slot_2
       methods:
         - pp_water_sawmill_no_crew_support
@@ -29,11 +30,12 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = forest_max_level
+    increase_per_level_cost = 0.26
+    max_levels = forest_capacity_max_water_sawmill
     pop_type = laborers
-    employment_size = 4
-    price = pp_water_sawmill_price
+    employment_size = 1
     category = rgo_building_category
+    custom_tags = { forest_capacity }
     icon = water_sawmill
     rural_settlement = yes
     town = yes
@@ -52,11 +54,6 @@ building:
             raw_material = goods:wild_game
         }
     }
-
-    allow = {
-        forest_capacity_available > 0
-    }
-
     construction_demand = workshop_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -66,7 +63,7 @@ building:
     unique_production_methods = {
         pp_water_sawmill_base_lumber = {
             produced = lumber
-            output = 0.315
+            output = 0.079
             category = building_maintenance
         }
     }
@@ -74,31 +71,35 @@ building:
         pp_water_sawmill_no_primary = {
             category = building_maintenance
         }
-        pp_water_sawmill_sash_saw = {
+        pp_water_sawmill_horse_tools = {
             produced = lumber
-            output = 5.313
-            tools = 1.495 # saw frame, gearing
-            horses = 0.403 # log hauling
-            victuals = 0.288 # saw crews
+            output = 1.400
+            tools = 0.477 # saw frame, gearing
+            horses = 0.130 # fast log hauling
             debug_max_profit = 0
             category = building_maintenance
         }
-        pp_water_sawmill_millrace_yards = {
+        pp_water_sawmill_horse_victuals = {
             produced = lumber
-            output = 5.917
-            tools = 1.668 # waterwheel upkeep
-            horses = 0.518 # yard teams
-            victuals = 0.403 # mill hands
+            output = 1.360
+            horses = 0.130 # fast log hauling
+            victuals = 0.560 # sawyer provisions
             debug_max_profit = 0
             category = building_maintenance
         }
-        pp_water_sawmill_log_ponds = {
+        pp_water_sawmill_livestock_tools = {
             produced = lumber
-            output = 5.980
-            tools = 1.610 # booms, saw upkeep
-            horses = 0.633 # log hauling
-            victuals = 0.518 # pond crews
-            paper = 0.058 # cutting records
+            output = 1.314
+            tools = 0.460 # saw frame, gearing
+            livestock = 0.260 # ox log hauling
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_water_sawmill_livestock_victuals = {
+            produced = lumber
+            output = 1.269
+            livestock = 0.260 # ox log hauling
+            victuals = 0.540 # sawyer provisions
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -108,53 +109,49 @@ building:
             category = building_maintenance
         }
         pp_water_sawmill_extra_rations = {
-            victuals = 2.818 # crew rations
+            victuals = 0.705 # crew rations
             produced = lumber
-            output = 4.830
+            output = 1.208
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_water_sawmill_wound_salves = {
-            medicaments = 0.75 # injury treatment
+            medicaments = 0.19 # injury treatment
             produced = lumber
-            output = 0.551
+            output = 0.138
             debug_max_profit = 0
             category = building_maintenance
         }
     }
 
-    modifier = {
-        local_build_buildings_cost = -0.01
-        local_migration_attraction = 0.02
-        local_population_growth = -0.00005
+    raw_modifier = {
     }
-prices:
-  - key: pp_water_sawmill_price
-    body: |2-
-      {gold = 600}
+
+    modifier = {
+        local_build_buildings_efficiency = 0.003
+        local_migration_attraction = 0.005
+        local_population_growth = -0.00001
+    }
 advancements:
   - key: REPLACE:lumber_improvements_reformation
     body: |2-
       icon = water_sawmill
       age = age_4_reformation
-      requires = construction_speed_reformation
-      unlock_production_method = pp_lumber_mill_timber_drives
+      requires = global_trade_advance
       unlock_building = water_sawmill
       ai_weight = { add = 150 }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_water_sawmill_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('water_sawmill')|e].
-    MODIFIER_TYPE_NAME_pp_water_sawmill_price_cost_modifier: Water Sawmill Cost
     lumber_improvements_reformation: Water Sawmills
     lumber_improvements_reformation_desc: Water-powered saw frames, millraces, and log landings let lumber crews saw boards more regularly while drawing logs from a wider forest hinterland.
     pp_water_sawmill_base_lumber: Woodland Cutting
     pp_water_sawmill_extra_rations: Extra Rations
-    pp_water_sawmill_log_ponds: Log Ponds
-    pp_water_sawmill_millrace_yards: Millrace Yards
+    pp_water_sawmill_horse_tools: Horse Sawmill Teams
+    pp_water_sawmill_horse_victuals: Provisioned Horse Sawyers
+    pp_water_sawmill_livestock_tools: Ox Sawmill Teams
+    pp_water_sawmill_livestock_victuals: Provisioned Ox Sawyers
     pp_water_sawmill_no_crew_support: No Crew Support
     pp_water_sawmill_no_primary: No Water Sawing
-    pp_water_sawmill_price: Water Sawmill Price
-    pp_water_sawmill_sash_saw: Sash Saw
     pp_water_sawmill_wound_salves: Wound Salves
     water_sawmill: Water Sawmill
     water_sawmill_desc: Water sawmills use millraces and reciprocating saw frames to turn logs into boards. Log ponds and sawn-timber yards move woodland cutting toward regular lumber production.
@@ -177,11 +174,15 @@ evaluation:
         amortization_months: Passive baseline is not the payback driver for the water sawmill tier.
     pp_water_sawmill_no_primary:
       production_efficiency: 1.00
-    pp_water_sawmill_sash_saw:
+    pp_water_sawmill_horse_tools:
       production_efficiency: 1.00
-    pp_water_sawmill_millrace_yards:
+    pp_water_sawmill_horse_victuals:
       production_efficiency: 1.00
-    pp_water_sawmill_log_ponds:
+      allow_rules:
+        profit_percent: Provisioned horse sawmill crews intentionally sit above the generic profit band after accepted lumber tuning.
+    pp_water_sawmill_livestock_tools:
+      production_efficiency: 1.00
+    pp_water_sawmill_livestock_victuals:
       production_efficiency: 1.00
     pp_water_sawmill_no_crew_support:
       production_efficiency: 1.00

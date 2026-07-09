@@ -1,0 +1,68 @@
+﻿# >>> eu5-building-pipeline:managed_cocoa_grove:building
+managed_cocoa_grove = {
+is_foreign = no
+increase_per_level_cost = 0.17
+max_levels = farm_capacity_max_managed_cocoa_grove
+pop_type = laborers
+employment_size = 1
+category = rgo_building_category
+custom_tags = { farming_capacity }
+icon = managed_cocoa_grove
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = cocoa_grove
+build_time = workshop_build_time
+
+location_potential = {
+    raw_material = goods:cocoa
+}
+
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_managed_cocoa_grove_base_cocoa = {
+        produced = cocoa
+        output = 0.050
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_managed_cocoa_grove_no_fermentation = {
+        category = building_maintenance
+    }
+    pp_managed_cocoa_grove_fermentation_boxes = {
+        furniture = 0.100 # light fermentation boxes and raised trays
+        fiber_crops = 0.040 # drying mats, sacks, and ties
+        produced = cocoa
+        output = 0.114
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_managed_cocoa_grove_unmanaged_shade = {
+        category = building_maintenance
+    }
+    pp_managed_cocoa_grove_managed_shade = {
+        furniture = 0.080 # light seedling benches and shade frames
+        fiber_crops = 0.074 # nursery ties, picking sacks, and shade mats
+        produced = cocoa
+        output = 0.156
+        category = building_maintenance
+    }
+}
+
+raw_modifier = {
+  farm_capacity_from_managed_cocoa_grove = -1
+}
+
+modifier = {
+    local_migration_attraction = 0.003
+}
+}
+# <<< eu5-building-pipeline:managed_cocoa_grove:building

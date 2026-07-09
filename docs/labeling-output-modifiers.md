@@ -23,6 +23,12 @@ with the same canonical feature combination receive the same MMR. Dealbreaker
 rows are kept in the export path and can receive a fixed configured
 productivity.
 
+Before hashing/export, the constructor overlays current `location_templates.txt`
+values from `constructor.load_order.toml` onto the immutable labeling baseline.
+This keeps the LFS baseline parquet unchanged while making the export use the
+current game data for raw materials, topography, vegetation, climate, religion,
+culture, natural harbor suitability, and template modifiers.
+
 After broadcast, MMR is scaled into a `productivity` value in `[-1, 1]`. The
 scaled value is then rounded and written as a EU5 static modifier entry:
 
@@ -44,6 +50,13 @@ Important fields:
 
 - `baseline_parquet`: baseline location table used for feature hashing and raw
   material coverage checks.
+- `location_templates_load_order`: optional load-order TOML used to overlay
+  current `location_templates.txt` values onto the baseline at export/relabel
+  time. The constructor sets this to `constructor.load_order.toml`.
+- `location_templates_profile`: optional profile name for the load-order overlay.
+  Defaults to `constructor`.
+- `location_templates_path`: optional direct `location_templates.txt` path. This
+  is mainly useful for tests or one-off diagnostics.
 - `goods_evaluator_root`: folder containing `GoodsEvaluator/<good>/config.yaml`
   directories. The constructor currently uses an explicit `goods:` list; this
   root remains useful if the list is intentionally removed later to restore
@@ -61,10 +74,40 @@ Important fields:
 - `defaults.null_productivity`: optional constructor-level replacement for
   dealbreaker/fallback productivity rows that previously used each evaluator's
   `dealbreaker_productivity`, usually `-1.0`.
+- `defaults.raw_material_output_floor`: optional final export floor for a
+  location's own `raw_material` output modifier. This does not synthesize
+  missing raw-good keys or clamp other goods in the same location.
 - `defaults.round_decimals`: decimal places used when writing EU5 modifier
   values.
 - `defaults.drop_zero_productivity`: drops rounded `0.00` entries from generated
   static modifiers.
+
+## Location-Template Drift
+
+Use the constructor CLI to inspect current location-template drift against the
+labeling baseline:
+
+```bash
+uv run ppc location-changes detect --output artifacts/data/labeling/location_template_changes.csv
+```
+
+The report prints stats for all detected modeled changes before the row table:
+per-field counts, raw-material transitions, affected-good counts, labelable
+counts, and relabel-status counts. It then prints changed locations with old/new
+values, affected goods, relabel status, canonical relabel targets, and canonical
+feature hashes. Raw-material changes affect the old and new raw goods; other
+modeled field changes affect goods whose evaluator config uses the changed
+field.
+
+Focused relabeling can then be run with:
+
+```bash
+uv run ppc location-changes run --max-rounds-per-good 100 --min-target-appearances 3 --target-sigma-ratio 0.85
+```
+
+The focused runner appends to the existing good ranking-run parquet files and
+forces changed locations into prompts while filling remaining prompt slots from
+the normal OpenSkill sampler.
 
 ## Scale Modes
 
@@ -106,9 +149,11 @@ The current test baseline is:
 
 - `scale: rank_uniform`
 - `mmr_mean_center: true`
-- `scale_args.output_min: -0.6`
-- `scale_args.output_max: 0.4`
-- `null_productivity: -0.6`
+- `scale_args.output_min: -0.7`
+- `scale_args.output_max: 0.3`
+- `null_productivity: -0.7`
+- `raw_material_output_floor: -0.2`
+- `location_templates_load_order: constructor.load_order.toml`
 - `round_decimals: 2`
 - `drop_zero_productivity: true`
 - explicit `goods:` list covering the current labeler evaluator goods

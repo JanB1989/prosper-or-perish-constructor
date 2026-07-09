@@ -1,0 +1,62 @@
+version: 2
+tag: fine_cloth_mill
+building:
+  key: fine_cloth_mill
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_fine_cloth_mill_fine_cloth_mill_maintenance
+    - pp_fine_cloth_mill_silk_cloth_mill_maintenance
+  possible_production_methods: []
+  body: |
+    audio_tier = 5
+    is_foreign = no
+    pop_type = laborers
+    is_mill = yes
+    max_levels = mills_max_level
+    startup_ramp_target = mills_startup_ramp_target
+    category = consumer_goods_category
+    employment_size = 1.0
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = fine_cloth_manufactory
+    build_time = mills_build_time
+    unique_production_methods = {
+        pp_fine_cloth_mill_fine_cloth_mill_maintenance = {
+            cloth = 7.249
+            dyes = 0.49
+            produced = fine_cloth
+            output = 4.0
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+        pp_fine_cloth_mill_silk_cloth_mill_maintenance = {
+            silk = 5.441
+            dyes = 0.486
+            produced = fine_cloth
+            output = 4.0
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+    }
+    custom_tags = {
+        lategame_manufactory
+    }
+    construction_demand = mill_construction
+    raw_modifier = {
+        local_burghers_desired_pop = 0.05
+    }
+    increase_per_level_cost = 0.19
+localization:
+  entries:
+    fine_cloth_mill_slot_0: Fine Cloth Mill Work
+    pp_fine_cloth_mill_fine_cloth_mill_maintenance: Fine Cloth Mill Fine Cloth Mill Maintenance
+    pp_fine_cloth_mill_silk_cloth_mill_maintenance: Fine Cloth Mill Silk Cloth Mill Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

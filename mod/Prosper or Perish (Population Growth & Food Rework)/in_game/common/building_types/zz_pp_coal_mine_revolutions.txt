@@ -1,11 +1,12 @@
 ﻿# >>> eu5-building-pipeline:coal_mine_revolutions:building
 coal_mine_revolutions = {
 is_foreign = no
+increase_per_level_cost = 0.18
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 5
-price = pp_coal_mine_revolutions_price
+employment_size = 1
 category = rgo_building_category
+custom_tags = { pp_mine_building }
 icon = coal_mine_revolutions
 rural_settlement = yes
 town = yes
@@ -17,7 +18,6 @@ build_time = manufactory_build_time
 location_potential = {
     raw_material = goods:coal
 }
-
 construction_demand = manufactory_construction
 ai_forbid_shutdown = no
 forbidden_for_estates = no
@@ -27,7 +27,7 @@ can_close = yes
 unique_production_methods = {
     pp_coal_mine_revolutions_base_coal = {
         produced = coal
-        output = 0.38
+        output = 0.15
         category = building_maintenance
     }
 }
@@ -36,11 +36,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_coal_mine_revolutions_coal = {
-        lumber = 1.70
-        tools = 2.10
-        beeswax = 0.42
+        lumber = 0.5
+        tools = 0.62
+        beeswax = 0.13
         produced = coal
-        output = 5.814
+        output = 2.25
         category = building_maintenance
     }
 }
@@ -49,17 +49,21 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_coal_mine_revolutions_fireclay = {
-        lumber = 0.18
-        tools = 0.12
+        lumber = 0.04
+        tools = 0.02
         produced = clay
-        output = 1.512
+        output = 0.302
         category = building_maintenance
     }
 }
 
+raw_modifier = {
+}
+
 modifier = {
     local_population_growth = -0.0002
-    local_migration_attraction = 0.02
+    local_migration_attraction = 0.010
+    local_coal_output_modifier = 0.025
 }
 }
 # <<< eu5-building-pipeline:coal_mine_revolutions:building

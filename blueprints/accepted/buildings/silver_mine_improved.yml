@@ -22,14 +22,16 @@ building:
       methods:
         - pp_silver_mine_improved_no_secondary
         - pp_silver_mine_improved_lead
+        - pp_silver_mine_improved_gold
   possible_production_methods: []
   body: |2-
     is_foreign = no
+    increase_per_level_cost = 0.28
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 4
-    price = pp_silver_mine_improved_price
+    employment_size = 1
     category = rgo_building_category
+    custom_tags = { pp_mine_building }
     icon = silver_mine_improved
     rural_settlement = yes
     town = yes
@@ -41,7 +43,6 @@ building:
     location_potential = {
         raw_material = goods:silver
     }
-
     construction_demand = workshop_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -51,7 +52,7 @@ building:
     unique_production_methods = {
         pp_silver_mine_improved_base_silver = {
             produced = silver
-            output = 0.28
+            output = 0.07
             category = building_maintenance
         }
     }
@@ -60,11 +61,11 @@ building:
             category = building_maintenance
         }
         pp_silver_mine_improved_silver = {
-            lumber = 0.95
-            tools = 1.05
-            beeswax = 0.45
+            lumber = 0.24
+            tools = 0.26
+            beeswax = 0.11
             produced = silver
-            output = 1.095
+            output = 0.274
             category = building_maintenance
         }
     }
@@ -73,37 +74,42 @@ building:
             category = building_maintenance
         }
         pp_silver_mine_improved_lead = {
-            lumber = 0.16
-            tools = 0.147
+            lumber = 0.04
+            tools = 0.037
             produced = lead
-            output = 0.409
+            output = 0.102
+            category = building_maintenance
+        }
+        pp_silver_mine_improved_gold = {
+            lumber = 0.04
+            tools = 0.04
+            produced = goods_gold
+            output = 0.027
             category = building_maintenance
         }
     }
 
+    raw_modifier = {
+    }
+
     modifier = {
         local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_migration_attraction = 0.010
+        local_silver_output_modifier = 0.025
     }
-prices:
-  - key: pp_silver_mine_improved_price
-    body: |2-
-      {gold = 200}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_silver_mine_improved_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('silver_mine_improved')|e].
-    MODIFIER_TYPE_NAME_pp_silver_mine_improved_price_cost_modifier: Saiger Silver Mine Cost
     silver_mine_improved_slot_0: Silver Vein
     silver_mine_improved_slot_1: Saiger Workings
-    silver_mine_improved_slot_2: Galena Recovery
+    silver_mine_improved_slot_2: Associated Ore Recovery
     silver_mine_improved: Saiger Silver Mine
-    silver_mine_improved_desc: Better timbering and ore dressing prepare silver-lead ores for saiger and cupellation work. Dressed galena remains a useful secondary recovery.
+    silver_mine_improved_desc: Better timbering and ore dressing prepare silver-lead ores for saiger and cupellation work. Dressed galena and auriferous pieces remain useful secondary recoveries.
     pp_silver_mine_improved_base_silver: Surveyed Silver Vein
     pp_silver_mine_improved_no_primary: No Saiger Workings
     pp_silver_mine_improved_silver: Saiger Ore Workings
-    pp_silver_mine_improved_no_secondary: No Galena Recovery
+    pp_silver_mine_improved_no_secondary: No Associated Recovery
     pp_silver_mine_improved_lead: Galena Ore Dressing
-    pp_silver_mine_improved_price: Saiger Silver Mine Price
+    pp_silver_mine_improved_gold: Auriferous Ore Dressing
     saiger_process_discovery: Refined Saiger Process
     saiger_process_discovery_desc: Improved dressing, liquation, and cupellation separate silver from lead-rich ores more reliably.
 icon:
@@ -133,3 +139,10 @@ evaluation:
         input_throughput: Galena ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
         output_throughput: Galena ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
         amortization_months: Galena ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+    pp_silver_mine_improved_gold:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Auriferous ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+        input_throughput: Auriferous ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+        output_throughput: Auriferous ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.
+        amortization_months: Auriferous ore dressing is an ancillary silver-vein byproduct, intentionally less profitable than primary silver extraction.

@@ -1,0 +1,72 @@
+﻿# >>> eu5-building-pipeline:distiller_mill:building
+REPLACE:distiller_mill = {
+audio_tier = 5
+is_foreign = no
+pop_type = laborers
+is_mill = yes
+max_levels = mills_max_level
+startup_ramp_target = mills_startup_ramp_target
+category = consumer_goods_category
+employment_size = 1.0
+town = yes
+city = yes
+megalopolis = yes
+build_time = mills_build_time
+obsolete = distiller_manufactory
+unique_production_methods = {
+    pp_distiller_mill_sugar_distillery_mill_maintenance = {
+        sugar = 2.632
+        pottery = 0.146
+        glass = 0.556
+        produced = liquor
+        output = 4.0
+        category = mills_input
+        debug_max_profit = mills_profit_margin
+    }
+    pp_distiller_mill_rice_distillery_mill_maintenance = {
+        rice = 7.372
+        pottery = 0.181
+        glass = 0.719
+        produced = liquor
+        output = 4.0
+        category = mills_input
+        debug_max_profit = mills_profit_margin
+    }
+    pp_distiller_mill_potato_distillery_mill_maintenance = {
+        potato = 7.436
+        pottery = 0.175
+        glass = 0.699
+        produced = liquor
+        output = 4.0
+        category = mills_input
+        debug_max_profit = mills_profit_margin
+    }
+    pp_distiller_mill_wheat_distillery_mill_maintenance = {
+        pottery = 0.175
+        wheat = 7.436
+        glass = 0.699
+        produced = liquor
+        output = 4.0
+        category = mills_input
+        debug_max_profit = mills_profit_margin
+    }
+    pp_distiller_mill_scottish_whisky_distillery_mill_maintenance = {
+        millet = 7.328
+        pottery = 0.183
+        glass = 0.732
+        produced = liquor
+        output = 4.0
+        category = mills_input
+        debug_max_profit = mills_profit_margin
+    }
+}
+custom_tags = {
+    lategame_manufactory
+}
+construction_demand = mill_construction
+raw_modifier = {
+    local_burghers_desired_pop = 0.05
+}
+increase_per_level_cost = 0.11
+}
+# <<< eu5-building-pipeline:distiller_mill:building

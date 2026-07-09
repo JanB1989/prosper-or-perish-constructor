@@ -1,0 +1,32 @@
+﻿# >>> eu5-building-pipeline:lacquerware_manufactory:building
+REPLACE:lacquerware_manufactory = {
+audio_tier = 3
+is_foreign = no
+pop_type = burghers
+max_levels = manufactory_max_level
+startup_ramp_target = manufactory_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+obsolete = lacquerware_guild
+build_time = manufactory_build_time
+unique_production_methods = {
+    pp_lacquerware_manufactory_lacquerware_manufactory_maintenance = {
+        lumber = 2.66
+        dyes = 1.064
+        tools = 0.266
+        produced = lacquerware
+        output = 2.0
+        debug_max_profit = manufactory_profit_margin
+        category = manufactory_input
+    }
+}
+custom_tags = {
+    midgame_manufactory
+}
+construction_demand = manufactory_construction
+increase_per_level_cost = 0.19
+}
+# <<< eu5-building-pipeline:lacquerware_manufactory:building

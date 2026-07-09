@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:armory:building
 REPLACE:armory = {
+	audio_tier = 1
 	is_foreign = no
 	pop_type = soldiers
 	max_levels = manpower_max_level
@@ -18,6 +19,9 @@ REPLACE:armory = {
 	obsolete = provincial_garrison
 	obsolete = korean_barracks
 	
+	raw_modifier = {
+	}
+
     modifier = {
 		local_manpower = 0.01
 		can_recruit_regiment_in_this_location = yes

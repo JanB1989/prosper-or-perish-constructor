@@ -1,5 +1,8 @@
 ﻿# >>> eu5-building-pipeline:incamisana:building
 TRY_INJECT:incamisana = {
+	raw_modifier = {
+	}
+
 	modifier = {
 		local_monthly_food_modifier = -0.15 # vanilla 0.15
 		local_maize_output_modifier = 0.05

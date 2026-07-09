@@ -1,0 +1,106 @@
+[inputs]
+savegame_dir = "artifacts/data/savegame"
+parser_artifact_dir = "artifacts/data/buildings"
+output_dir = "artifacts/data/food_building_startup"
+load_order = "constructor.load_order.toml"
+profile = "constructor"
+
+[outputs]
+mod_script = "mod/Prosper or Perish (Population Growth & Food Rework)/in_game/common/on_action/pp_food_building_startup_generated.txt"
+
+[demand]
+unknown_pop_food_consumption = 0.0
+food_consumption_multiplier = 1.204461
+
+[planner]
+include_existing_buildings = false
+generated_effect = "pp_food_building_startup"
+
+[[production_sources]]
+key = "subsistence_agriculture"
+enabled = true
+mode = "population_per_1000"
+population_column = "population_peasants"
+food_per_1000_population = 1.0
+
+[[production_sources]]
+key = "existing_cookery_victuals"
+enabled = true
+mode = "existing_building_levels"
+building = "cookery"
+
+[production_sources.output]
+mode = "production_methods"
+good = "victuals"
+production_methods = ["pp_cookery_livestock_pottage"]
+estimated_production_efficiency = 0.8
+multiplier = 1.0
+
+[[production_sources]]
+key = "existing_victuals_market_food"
+enabled = true
+mode = "existing_building_levels"
+building = "victuals_market"
+
+[production_sources.output]
+mode = "fixed_food"
+fixed_food_per_level = 40.0
+multiplier = 1.0
+
+[[buildings]]
+key = "cookery"
+enabled = true
+order = 10
+coverage_group = "victuals_supply"
+target_basis = "shortfall"
+target_food_ratio = 1.20
+max_levels_per_province = 9
+max_levels_per_location = 6
+min_province_food_consumption = 10
+placement = "highest_population"
+allowed_ranks = ["rural_settlement", "town", "city", "megalopolis"]
+required_province_raw_materials = []
+min_location_development = -20.00
+min_province_rural_population_share = 0.00
+max_province_urban_population_share = 0.65
+min_province_development_per_1000_population = -1000.00
+target_scale_min = 1.00
+
+[buildings.output]
+mode = "production_methods"
+good = "victuals"
+production_methods = ["pp_cookery_livestock_pottage"]
+estimated_production_efficiency = 0.6
+multiplier = 1.0
+
+[buildings.score]
+population = 1.0
+development = 0.05
+province_capital_bonus = 10.0
+
+[[buildings]]
+key = "victuals_market"
+enabled = true
+order = 20
+coverage_group = "local_food_distribution"
+target_basis = "shortfall"
+target_food_ratio = 1.00
+max_levels_per_province = 9
+max_levels_per_location = 6
+min_province_food_consumption = 10
+placement = "highest_population"
+allowed_ranks = ["rural_settlement", "town", "city", "megalopolis"]
+min_location_development = -20.00
+min_province_urban_population_share = 0.00
+min_province_development_per_1000_population = -1000.00
+target_scale_min = 1.00
+
+[buildings.output]
+mode = "fixed_food"
+fixed_food_per_level = 40.0
+multiplier = 1.0
+
+[buildings.score]
+population = 1.0
+development = 0.05
+province_capital_bonus = 10000.0

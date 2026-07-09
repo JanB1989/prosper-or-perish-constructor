@@ -1,0 +1,45 @@
+version: 2
+tag: steel_mill
+building:
+  key: steel_mill
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_steel_mill_steel_mill_maintenance
+  possible_production_methods: []
+  body: |
+    audio_tier = 5
+    is_foreign = no
+    pop_type = laborers
+    is_mill = yes
+    max_levels = mills_max_level
+    startup_ramp_target = mills_startup_ramp_target
+    employment_size = 1.0
+    category = basic_industry_category
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = mills_build_time
+    unique_production_methods = {
+        pp_steel_mill_steel_mill_maintenance = {
+            iron = 3.583
+            coal = 3.583
+            produced = steel
+            output = 4.0
+            debug_max_profit = mills_profit_margin
+            category = mills_input
+        }
+    }
+    construction_demand = mill_construction
+    increase_per_level_cost = 0.21
+localization:
+  entries:
+    steel_mill_slot_0: Steel Mill Work
+    pp_steel_mill_steel_mill_maintenance: Steel Mill Steel Mill Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

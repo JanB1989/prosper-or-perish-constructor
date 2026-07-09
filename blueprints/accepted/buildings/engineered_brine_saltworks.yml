@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: engineered_brine_saltworks
 output_tag: inland_saltworks_engineered_brine
 upgrade_chain:
@@ -26,10 +26,10 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
+    increase_per_level_cost = 0.21
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 4
-    price = pp_engineered_brine_saltworks_price
+    employment_size = 1
     category = rgo_building_category
     icon = engineered_brine_saltworks
     rural_settlement = yes
@@ -88,7 +88,6 @@ building:
             }
         }
     }
-
     construction_demand = workshop_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -98,7 +97,7 @@ building:
     unique_production_methods = {
         pp_engineered_brine_saltworks_base_salt = {
             produced = salt
-            output = 0.280
+            output = 0.070
             category = building_maintenance
         }
     }
@@ -107,11 +106,11 @@ building:
             category = building_maintenance
         }
         pp_engineered_brine_saltworks_pumped_brine_channels = {
-            lumber = 1.600 # brine pipes
-            tools = 1.000 # pumps and valves
-            pottery = 0.600 # storage jars
+            lumber = 0.400 # brine pipes
+            tools = 0.250 # pumps and valves
+            pottery = 0.150 # storage jars
             produced = salt
-            output = 1.320
+            output = 0.330
             category = building_maintenance
         }
     }
@@ -120,24 +119,23 @@ building:
             category = building_maintenance
         }
         pp_engineered_brine_saltworks_mineral_fired_pans = {
-            coal = 1.500 # pan fuel
-            clay = 1.000 # furnace linings
-            pottery = 1.000 # brine vessels
-            tools = 0.600 # iron pans
+            coal = 0.375 # pan fuel
+            clay = 0.250 # furnace linings
+            pottery = 0.250 # brine vessels
+            tools = 0.150 # iron pans
             produced = salt
-            output = 1.450
+            output = 0.363
             category = building_maintenance
         }
     }
 
-    modifier = {
-        local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+    raw_modifier = {
     }
-prices:
-  - key: pp_engineered_brine_saltworks_price
-    body: |2-
-      {gold = 205}
+
+    modifier = {
+        local_population_growth = -0.0001
+        local_migration_attraction = 0.005
+    }
 advancements:
   - key: pp_engineered_brine_saltworks
     body: |2-
@@ -148,8 +146,6 @@ advancements:
       ai_weight = { add = 125 }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_engineered_brine_saltworks_price_cost_modifier: Affects the cost of building [ShowBuildingTypeName('engineered_brine_saltworks')|e].
-    MODIFIER_TYPE_NAME_pp_engineered_brine_saltworks_price_cost_modifier: Engineered Brine Saltworks Cost
     engineered_brine_saltworks_slot_0: Inland Brine
     engineered_brine_saltworks_slot_1: Brine Concentration
     engineered_brine_saltworks_slot_2: Pan Fuel
@@ -160,7 +156,6 @@ localization:
     pp_engineered_brine_saltworks_pumped_brine_channels: Pumped Brine Channels
     pp_engineered_brine_saltworks_wood_fired_pans: Wood-Fired Pans
     pp_engineered_brine_saltworks_mineral_fired_pans: Mineral-Fired Pans
-    pp_engineered_brine_saltworks_price: Engineered Brine Saltworks Price
     pp_engineered_brine_saltworks: Engineered Brine Saltworks
     pp_engineered_brine_saltworks_desc: Manufactories and Enlightenment-era works organization support pumped brine channels, concentration houses, and larger panhouses for inland salt production.
 icon:

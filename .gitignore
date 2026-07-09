@@ -1,4 +1,4 @@
-.venv/
+﻿.venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -13,8 +13,14 @@ graphs/*
 !graphs/savegame_notebooks/
 graphs/savegame_notebooks/*
 !graphs/savegame_notebooks/savegame_analysis_workbench.ipynb
+!graphs/building_capacity/
+graphs/building_capacity/*
+!graphs/building_capacity/free_building_levels_workbench.ipynb
+!graphs/building_capacity/data/
+!graphs/building_capacity/data/**
 reports/
 blueprints/generated/
+logs/
 
 # Windows deploy target accidentally rooted inside this WSL checkout.
 /C:/

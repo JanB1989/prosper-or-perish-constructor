@@ -1,19 +1,17 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:silver_mine_improved:localization
-  MODIFIER_TYPE_DESC_pp_silver_mine_improved_price_cost_modifier: "Affects the cost of building a [ShowBuildingTypeName('silver_mine_improved')|e]."
-  MODIFIER_TYPE_NAME_pp_silver_mine_improved_price_cost_modifier: "Saiger Silver Mine Cost"
   silver_mine_improved_slot_0: "Silver Vein"
   silver_mine_improved_slot_1: "Saiger Workings"
-  silver_mine_improved_slot_2: "Galena Recovery"
+  silver_mine_improved_slot_2: "Associated Ore Recovery"
   silver_mine_improved: "Saiger Silver Mine"
-  silver_mine_improved_desc: "Better timbering and ore dressing prepare silver-lead ores for saiger and cupellation work. Dressed galena remains a useful secondary recovery."
+  silver_mine_improved_desc: "Better timbering and ore dressing prepare silver-lead ores for saiger and cupellation work. Dressed galena and auriferous pieces remain useful secondary recoveries."
   pp_silver_mine_improved_base_silver: "Surveyed Silver Vein"
   pp_silver_mine_improved_no_primary: "No Saiger Workings"
   pp_silver_mine_improved_silver: "Saiger Ore Workings"
-  pp_silver_mine_improved_no_secondary: "No Galena Recovery"
+  pp_silver_mine_improved_no_secondary: "No Associated Recovery"
   pp_silver_mine_improved_lead: "Galena Ore Dressing"
-  pp_silver_mine_improved_price: "Saiger Silver Mine Price"
+  pp_silver_mine_improved_gold: "Auriferous Ore Dressing"
   saiger_process_discovery: "Refined Saiger Process"
   saiger_process_discovery_desc: "Improved dressing, liquation, and cupellation separate silver from lead-rich ores more reliably."
 # <<< eu5-building-pipeline:silver_mine_improved:localization

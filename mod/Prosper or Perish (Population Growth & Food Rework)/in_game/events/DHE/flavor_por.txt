@@ -1,0 +1,5836 @@
+﻿namespace = flavor_por
+
+flavor_por.1 = { #Christopher Columbus in Portugal
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.1.title
+	desc = flavor_por.1.desc
+	outcome = neutral
+	
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+
+	fire_only_once = yes
+	
+	dynamic_historical_event = {
+		tag = POR
+		from = 1485.1.1
+		to = 1520.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		has_advance = quest_for_the_new_world
+		NOT = {
+			discovered_any_in_americas_trigger = yes
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				country_exists = c:SPA
+			}
+			c:SPA = {
+				save_scope_as = target_country
+			}
+		}
+		else_if = {
+			limit = {
+				country_exists = c:CAS
+			}
+			c:CAS = {
+				save_scope_as = target_country
+			}
+		}
+		else = {
+			ordered_known_country = {
+				limit = {
+					has_advance = quest_for_the_new_world
+					dominant_religion = religion:catholic
+					capital.sub_continent = sub_continent:western_europe
+					not = { has_variable = turned_down_columbus }
+				}
+				order_by = country_economical_base
+				max = 1
+				save_scope_as = target_country
+			}
+		}
+
+		create_character = {
+			first_name = name_christopher
+			last_name = Columbus
+			culture = culture:ligurian
+			religion = religion:catholic
+			birth_date = 1451.8.28
+			birth_location = location:genoa
+			trait_category = explorer
+			estate = estate_type:burghers_estate
+			adm = 85
+			dip = 90
+			mil = 85
+			script = christopher_columbus
+			save_scope_as = columbus_scope
+			create_in_limbo = yes
+		}
+	}
+
+	option = {
+		name = flavor_por.1.a
+		historical_option = yes
+		save_scope_as = from
+		set_variable = { name = turned_down_columbus value = 1 }
+		add_prestige = prestige_weak_penalty
+
+		scope:target_country = {
+			trigger_event_silently = { id = flavor_cas.1 }
+		}
+	}
+	
+	option = {
+		name = flavor_por.1.b
+
+		change_gold_effect = { scale = -3 }
+		scope:columbus_scope = { move_country = root }
+	}
+	
+	historical_info = flavor_por.1.historical_info
+}
+
+flavor_por.2 = { #Atlantic Slave Trade
+	type = country_event
+	title = flavor_por.2.title
+	desc = flavor_por.2.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	
+	dynamic_historical_event = {
+		tag = POR
+		from = 1450.1.1
+		to = 1550.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		any_trade = {
+			goods = goods:slaves_goods
+			count > 2
+		}
+		government_type = government_type:monarchy
+	}
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_slaves_goods.dds"
+
+	option = {
+		name = flavor_por.2.a
+		historical_option = yes
+
+		every_market_in_world = {
+			limit = {
+				has_merchant = root
+			}
+			add_temporary_demand = { type = demand:african_slave_trade_encouraged months = 240 scale_with_pop = 0.005 }
+		}
+	}
+	
+	option = {
+		name = flavor_por.2.b
+		add_government_power = government_power_extreme_bonus
+	}
+	historical_info = flavor_por.2.historical_info
+}
+
+flavor_por.3 = { #Missionaries in the Spice Islands
+	type = country_event
+	title = flavor_por.3.title
+	desc = flavor_por.3.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1480.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		discovered_any_in_moluccas_trigger = yes
+		religion = religion:catholic
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+	}
+	
+	option = {
+		name = flavor_por.3.a
+		area:moluccas_area = {
+			ordered_location_in_area = {
+				limit = {
+					NOT = { has_building = building_type:missionary_building }
+					NOT = { dominant_religion = religion:catholic }
+				}
+
+				order_by = population
+				max = 5
+				change_building_level_in_location = {
+					value = 1
+					building = building_type:missionary_building
+					owner = root
+				}
+			}
+		}
+	}
+	historical_info = flavor_por.3.historical_info
+}
+
+flavor_por.4 = { #Founding Casa da India
+	type = country_event
+	title = flavor_por.4.title
+	desc = flavor_por.4.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1480.1.1
+		to = 1700.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		discovered_route_to_india = yes
+		any_owned_non_rural_location = {
+			sub_continent = sub_continent:south_asia
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_por.4.a
+		custom_tooltip = flavor_por.4.a.tt
+		set_variable = { name = por_casa_de_india value = 1 }
+
+	}
+}
+
+flavor_por.5 = { #Tower of Belem
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.5.title
+	desc = flavor_por.5.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1490.1.1
+		to = 1520.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		owns = location:lisbon
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		create_character = {
+			first_name = name_francis
+			last_name = de_Arruda
+			adm = 50
+			dip = 40
+			mil = 70
+			artist_skill = 0.85
+			artist = architect
+			culture = culture:portuguese
+			estate = estate_type:burghers_estate
+			birth_location = location:lisbon
+			script = por_francisco_de_arruda
+			save_scope_as = target_character
+			create_in_limbo = yes
+		}
+	}
+
+	option = {
+		name = flavor_por.5.a
+		historical_option = yes
+		location:lisbon = {
+			construct_building = {
+				building_type = building_type:tower_of_belem
+			}
+		}
+		scope:target_character = { move_country = root }
+	}
+	option = {
+		name = flavor_por.5.b
+		add_prestige = prestige_weak_penalty
+		scope:target_character = { banish_character = yes }
+	}
+	historical_info = flavor_por.5.historical_info
+}
+
+flavor_por.6 = { #Jerónimos Monastery
+	type = country_event
+	title = flavor_por.6.title
+	desc = flavor_por.6.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1490.1.1
+		to = 1520.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		owns = location:lisbon
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+	}
+	
+	option = {
+		name = flavor_por.6.a
+		historical_option = yes
+		change_gold_effect = { scale = -2 }
+		add_religious_influence = religious_influence_extreme_bonus
+	}
+	option = {
+		name = flavor_por.6.b
+		add_prestige = prestige_weak_penalty
+	}
+	historical_info = flavor_por.6.historical_info
+}
+
+flavor_por.7 = { #Discovery of Indian Sea Route
+	type = country_event
+	title = flavor_por.7.title
+	desc = flavor_por.7.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1490.1.1
+		to = 1520.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+	
+	trigger = {
+		discovered_route_to_india = yes
+		location:goa = { is_discovered_by = c:POR }
+
+	}
+	
+	option = {
+		name = flavor_por.7.a
+		add_casus_belli =  { type = casus_belli:cb_conquer_province target = location:goa.owner province = location:goa.province }
+		add_prestige = prestige_mild_bonus
+		change_gold_effect = { scale = 2 }
+	}
+	historical_info = flavor_por.7.historical_info
+}
+
+flavor_por.8 = {  #Governorate General of Brazil
+	type = country_event
+	title = flavor_por.8.title
+	desc = flavor_por.8.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1500.1.1
+		to = 1600.1.1
+		monthly_chance = 2
+	}
+
+	trigger = {
+		any_subject = {
+			is_subject_type = colonial_nation
+			capital.region = region:brazil_region
+		}
+		has_advance = colonial_policy_advance
+		has_policy = portuguese_colonial_captains
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_por.8.a
+		historical_option = yes
+		unlock_policy_effect = { type = portuguese_governorate_general }
+		add_policy = policy:portuguese_governorate_general
+		change_societal_value = { type = centralization_vs_decentralization value = societal_value_minor_move_to_left }
+		add_prestige = prestige_mild_bonus
+	}
+
+	option = {
+		name = flavor_por.8.b
+		change_societal_value = { type = centralization_vs_decentralization value = societal_value_minor_move_to_right }
+		add_legitimacy = legitimacy_mild_bonus
+	}
+	historical_info = flavor_por.8.historical_info
+}
+
+flavor_por.9 = { #Spice Trade in Indian Ocean
+	type = country_event
+	title = flavor_por.9.title
+	desc = flavor_por.9.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1300.1.1
+		to = 1500.1.1
+		monthly_chance = 2
+	}
+
+	trigger = {
+		any_market_with_merchants = {
+			location = {
+				OR = {
+					region = region:somalia_region
+					area = area:north_yemen_area
+					area = area:south_yemen_area
+				}
+			}
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		random_market_with_merchants = {
+			limit = {
+				location = {
+					OR = {
+						region = region:somalia_region
+						area = area:north_yemen_area
+						area = area:south_yemen_area
+					}
+				}
+			}
+			save_scope_as = spice_market
+		}
+	}
+
+	option = {
+		name = flavor_por.9.a
+		historical_option = yes
+		scope:spice_market = {
+			add_merchant_power = {
+				country = root
+				key = portuguese_privateers
+				months = 120
+				power = merchant_power_severe_bonus
+			}
+		}
+	}
+	option = {
+		name = flavor_por.9.b
+		scope:spice_market = {
+			every_merchant_in_market = {
+				limit = {
+					NOT = { this = root }
+				}
+				add_opinion = { target = root modifier = careful_trade_expansion }
+			}
+		}
+	}
+}
+
+flavor_por.10 = { #Afonso de Sousa Colonial Governor
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.10.title
+	desc = flavor_por.10.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1530.1.1
+		to = 1580.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		any_subject = {
+			is_subject_type = colonial_nation
+			capital.region = region:brazil_region
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ordered_subject = {
+			limit = {
+				is_subject_type = colonial_nation
+				capital.region = region:brazil_region
+			}
+			order_by = total_population
+			max = 1
+			save_scope_as = brazil
+
+
+			create_named_dynasty = afonso_de_sousa_dynasty
+
+			create_character = {
+				first_name = name_martin
+				adm = 75
+				dip = 80
+				mil = 75
+				birth_date = 1500.6.1
+				culture = culture:portuguese
+				religion = religion:catholic
+				dynasty = dynasty:afonso_de_sousa_dynasty
+				save_scope_as = martim_afonso_de_sousa
+			}
+
+		}
+	}
+
+	option = {
+		name = flavor_por.10.a
+		scope:brazil = {
+			set_new_ruler = scope:martim_afonso_de_sousa
+		}
+	}
+	historical_info = flavor_por.10.historical_info
+}
+
+flavor_por.11 = { #Crusade in Morocco
+	type = country_event
+	title = flavor_por.11.title
+	desc = flavor_por.11.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1500.1.1
+		to = 1600.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		is_subject = no
+		religion = religion:catholic
+		area:morocco_area = {
+			any_location_in_area = {
+				exists = dominant_religion
+				dominant_religion.group = religion_group:muslim
+				NOT = { owner = root }
+			}
+		}
+	}
+
+	illustration_tags = {
+        10 = armed
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		area:morocco_area = {
+			random_location_in_area = {
+				limit = {
+					exists = dominant_religion
+					dominant_religion.group = religion_group:muslim
+					NOT = { owner = root }
+				}
+				save_scope_as = target_location
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.11.a
+		historical_option = yes
+		add_religious_influence = religious_influence_mild_bonus
+		add_casus_belli =  { type = casus_belli:cb_conquer_province target = scope:target_location.owner province = scope:target_location.province }
+		scope:target_location.owner = {
+			add_opinion = { target = root modifier = prepares_crusade }
+		}
+	}
+	option = {
+		name = flavor_por.11.b
+		add_prestige = prestige_weak_penalty
+	}
+	historical_info = flavor_por.11.historical_info
+}
+
+flavor_por.12 = { #Methuen Agreement
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.12.title
+	desc = flavor_por.12.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1690.1.1
+		to = 1706.1.1
+		monthly_chance = 1
+	}
+
+	trigger = {
+		at_war = no
+		capital = location:lisbon
+		location:london = {
+			owner ?= {
+				NOT = { tag = POR }
+				culture = culture:english
+				NOT = { is_at_war_with = ROOT }
+				NOT = { is_rival_of = ROOT }
+				NOT = { is_embargoed_by = ROOT }
+				ROOT = {
+					NOT = { is_embargoed_by = prev }
+				}
+			}
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		location:london = {
+			owner = {
+				save_scope_as = target_country
+				create_character = {
+					first_name = name_john
+					last_name = Methuen
+					adm = { 25 100 }
+					dip = { 25 100 }
+					mil = { 25 100 }
+					culture = culture:english
+					estate = estate_type:nobles_estate
+					birth_date = 1650.7.22
+					birth_location = location:salisbury
+					save_scope_as = target_character
+				}
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.12.a
+		historical_option = yes
+		location:london.owner = {
+			add_opinion = { target = root modifier = accepted_meuthen_agreement }
+			trigger_event_non_silently = { id = flavor_eng.36 }
+		}
+
+		location:lisbon = {
+			change_development  = development_mild_bonus
+		}
+
+
+	}
+	option = {
+		name = flavor_por.12.b
+		add_stability = stability_mild_bonus
+		location:london.owner = {
+			add_opinion = { target = root modifier = denounced_meuthen_agreement }
+		}
+	}
+	historical_info = flavor_por.12.historical_info
+}
+
+flavor_por.13 = { #Luís de Meneses Cabinet Member
+	type = country_event
+	title = flavor_por.13.title
+	desc = flavor_por.13.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1662.1.1
+		to = 1690.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		create_character = {
+			first_name = name_louis
+			last_name = de_Meneses
+			adm = 30
+			dip = 80
+			mil = 50
+			culture = culture:portuguese
+			estate = estate_type:nobles_estate
+			birth_date = 1632.7.22
+			birth_location = location:lisbon
+			script = por_luis_de_meneses
+			save_scope_as = target_character
+			create_in_limbo = yes
+		}
+	}
+
+	option = {
+		name = flavor_por.13.a
+		historical_option = yes
+		change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_minor_move_to_left }
+		scope:target_character = { move_country = root }
+	}
+	
+	option = {
+		change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_minor_move_to_right }
+		kill_character_silently = scope:target_character
+		name = flavor_por.13.b
+	}
+	
+	historical_info = flavor_por.13.historical_info
+}
+
+# A Period of Uncertainty
+flavor_por.17 = {
+	hide_portraits = yes
+	type = country_event
+
+	title = flavor_por.17.title
+	desc = flavor_por.17.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1380.1.1
+		to = 1400.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+
+		ruler = {
+			AND = {
+				is_female = no
+				age_in_years > 30
+				NOT = {
+					any_child = {
+						is_female = no
+					}
+				}
+				any_child = {
+					is_female = yes
+				}
+			}
+		}
+
+		is_subject = no
+
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:nobles_estate }
+		ruler = {
+			random_child = {
+				limit = {
+					is_female = yes
+				}
+				save_scope_as = heir
+			}
+		}
+
+		create_character = {
+			first_name = name_john
+			dynasty = dynasty:avis_dynasty
+			estate = estate_type:nobles_estate
+			adm = 75
+			dip = 60
+			mil = 48
+			birth_date = 1357.4.11
+			father = root.ruler.father
+			birth_location = location:lisbon
+			script = eng_john_avis
+			save_scope_as = john_avis
+		}
+
+		create_rebel = {
+			category = pretender
+			name = avis_supporters
+			save_scope_as = avis_supporters
+		}
+
+		capital = { save_scope_as = target_location }
+
+		ruler = { save_scope_as = target_character }
+	}
+
+	option = {
+		historical_option = yes
+		name = flavor_por.17.a
+
+		scope:john_avis = { change_character_allegiance = scope:avis_supporters }
+
+
+		custom_tooltip = {
+			text = flavor_por.17.a.custom
+			area:north_portugal_area = {
+				every_location_in_area = {
+					limit = {
+						owner ?= root
+					}
+					every_pop = {
+						limit = {
+							owner = root
+							OR = {
+								pop_type = pop_type:nobles
+								pop_type = pop_type:burghers
+							}
+
+						}
+						add_pop_satisfaction = pop_satisfaction_ultimate_penalty
+						change_pop_allegiance = scope:avis_supporters
+					}
+				}
+			}
+			area:south_portugal_area = {
+				every_location_in_area = {
+					limit = {
+						owner ?= root
+					}
+					every_pop = {
+						limit = {
+							owner = root
+							OR = {
+								pop_type = pop_type:nobles
+								pop_type = pop_type:burghers
+							}
+
+						}
+						add_pop_satisfaction = pop_satisfaction_ultimate_penalty
+						change_pop_allegiance = scope:avis_supporters
+					}
+				}
+			}
+		}
+
+		custom_tooltip = flavor_por.17.tt1
+
+		add_government_power = government_power_mild_bonus
+
+		custom_tooltip = flavor_por.17.tt2
+
+	}
+
+	option = {
+		name = flavor_por.17.b
+
+		if = {
+			limit = {
+				NOT = { has_advance = salic_law_advance }
+			}
+			research_advance = advance_type:salic_law_advance
+		}
+
+		change_heir_selection = heir_selection:salic_law
+
+		add_estate_satisfaction = { type = estate_type:burghers_estate
+			value = estate_satisfaction_mild_bonus
+		}
+
+		add_estate_satisfaction = { type = estate_type:nobles_estate
+			value = estate_satisfaction_mild_bonus
+		}
+
+		custom_tooltip = flavor_por.17.tt3
+
+	}
+
+}
+
+# João de Bragança
+flavor_por.19 = {
+	hide_portraits = yes
+	type = country_event
+
+	fire_only_once = yes
+
+	title = flavor_por.19.title
+	desc = flavor_por.19.desc
+	outcome = neutral
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1624.1.1
+		to = 1674.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+
+		owns = location:beja
+
+		"estate_power(estate_type:nobles_estate)" <= 0.35
+
+		any_cabinet_character = {
+			count < 1
+			has_estate = estate_type:nobles_estate
+		}
+
+		has_regent = no
+
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		location:beja = {
+			create_dynasty_from_location = braganca_dynasty
+		}
+
+		root = { save_scope_as = target_root_country }
+
+		create_character = {
+			first_name = name_john
+			dynasty = dynasty:braganca_dynasty
+			estate = estate_type:nobles_estate
+			adm = 44
+			dip = 60
+			mil = 25
+			birth_date = 1604.1.1
+			birth_location = location:beja
+			script = por_john_braganza
+			save_scope_as = joao_braganca
+		}
+
+	}
+
+	option = {
+		name = flavor_por.19.a
+		historical_option = yes
+
+		trigger = {
+			OR = {
+				is_subject = no
+				is_junior_partner = no
+			}
+		}
+
+		custom_tooltip = flavor_por.19.tt1
+
+		set_new_ruler_with_union_if_senior = {
+			character = scope:joao_braganca
+		}
+
+		add_government_power = government_power_severe_penalty
+
+	}
+
+	option = {
+		name = flavor_por.19.b
+		trigger = {
+			OR = {
+				is_subject_of = c:SPA
+				AND = {
+					in_union_with = c:SPA
+					is_junior_partner = yes
+				}
+			}
+			liberty_desire > 50
+		}
+
+		add_government_power = government_power_extreme_penalty
+
+		if = {
+			limit = {
+				can_declare_legal_war_on = { target = c:SPA }
+			}
+			declare_war_with_cb = {	target = c:SPA	type = casus_belli:cb_independence_war }
+		}
+		else = {
+			add_casus_belli = {
+				target = c:SPA
+				type = casus_belli:cb_independence_war
+			}
+		}
+
+		add_opinion = {
+			target = c:SPA
+			modifier = opinion_angry
+		}
+
+		set_new_ruler = scope:joao_braganca
+
+		add_government_power = government_power_mild_penalty
+
+		custom_tooltip = flavor_por.19.tt1
+		custom_tooltip = flavor_por.19.tt2
+
+	}
+
+	option = {
+		name = flavor_por.19.c
+
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_extreme_penalty }
+
+		create_rebel = {
+			category = estate
+			estate = nobles_estate
+			name = braganca_supporters
+			save_scope_as = braganca_supporters
+		}
+
+		scope:joao_braganca = {
+			change_character_allegiance = scope:braganca_supporters
+		}
+
+		area:north_portugal_area = {
+			every_location_in_area = {
+				limit = {
+					owner ?= root
+				}
+				every_pop = {
+					limit = {
+						owner = root
+						pop_type = pop_type:nobles
+					}
+					add_pop_satisfaction = pop_satisfaction_ultimate_penalty
+					change_pop_allegiance = scope:braganca_supporters
+				}
+			}
+		}
+
+		area:south_portugal_area = {
+			every_location_in_area = {
+				limit = {
+					owner ?= root
+				}
+				every_pop = {
+					limit = {
+						owner = root
+						pop_type = pop_type:nobles
+					}
+					add_pop_satisfaction = pop_satisfaction_ultimate_penalty
+					change_pop_allegiance = scope:braganca_supporters
+				}
+			}
+		}
+
+		add_country_modifier = {
+			modifier = braganca_rebellion
+			months = 24
+			mode = add_and_extend
+		}
+
+	}
+
+	option = {
+		name = flavor_por.19.d
+		trigger = {
+			has_advance = cabinet_laws_advance
+		}
+
+		add_policy = policy:nobles_of_the_robe_policy
+
+		while = {
+			limit = {
+				any_cabinet_character = {
+					NOT = { has_estate = estate_type:nobles_estate }
+				}
+			}
+			random_cabinet_character = {
+				limit = {
+					NOT = { has_estate = estate_type:nobles_estate }
+				}
+				kill_character = this
+			}
+		}
+
+		add_government_power = government_power_severe_penalty
+
+		custom_tooltip = flavor_por.19.tt3
+
+	}
+
+	option = {
+		name = flavor_por.19.e
+		trigger = { ruler = { has_trait = intricate_web_weaver } }
+
+		character:por_john_braganza ?= {
+			kill_character = {
+				target = this
+				reason = assassination
+				killer = ruler
+			}
+		}
+
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+
+		custom_tooltip = flavor_por.19.tt4
+
+	}
+
+}
+
+flavor_por.21 = { #The Lusiads
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.21.title
+	desc = flavor_por.21.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1554.1.1
+		to = 1584.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		discovered_route_to_india = yes
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		create_character = {
+			first_name = name_louis
+			last_name = de_Camoes
+			adm = 80
+			dip = 80
+			mil = 20
+			culture = culture:portuguese
+			estate = estate_type:nobles_estate
+			birth_date = 1524.1.1
+			birth_location = location:lisbon
+			artist = writer
+			artist_skill = 0.90
+			script = por_luis_de_camoes
+			save_scope_as = target_artist
+		}
+		capital = { save_scope_as = target_capital_location }
+	}
+
+	option = {
+		name = flavor_por.21.a
+		scope:target_capital_location = {
+			create_art = {
+				artist = scope:target_artist
+				quality = 95
+				type = work_of_art_type:poem
+				key = the_lusiads
+			}
+		}
+		add_prestige = prestige_severe_bonus
+		culture = { add_cultural_influence = cultural_influence_extreme_bonus }
+		culture = { add_cultural_tradition = cultural_tradition_extreme_bonus }
+	}
+	historical_info = flavor_por.21.historical_info
+}
+
+flavor_por.22 = { #Vasco da Gama
+	type = country_event
+	title = flavor_por.22.title
+	desc = flavor_por.22.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1495.1.1
+		to = 1520.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		discovered_route_to_india = no
+		owns = location:sines
+	}
+
+	immediate = {
+		create_character = {
+			first_name = name_vasco
+			last_name = da_gama
+			adm = 85
+			dip = 90
+			mil = 90
+			culture = culture:portuguese
+			estate = estate_type:nobles_estate
+			birth_date = 1469.1.1
+			birth_location = location:sines
+			add_trait = trait:navigator
+			script = por_vasco_da_gama
+			save_scope_as = target_character
+		}
+		scope:target_character = {
+			add_character_modifier = {
+				modifier = refuses_to_serve_in_cabinet
+				days = -1
+				mode = add_and_extend
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.22.a
+		add_prestige = prestige_weak_bonus
+	}
+
+	historical_info = flavor_por.22.historical_info
+}
+
+flavor_por.23 = { #The Batalha Monastery
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.23.title
+	desc = flavor_por.23.desc
+	outcome = neutral
+
+	fire_only_once = yes
+
+	illustration_tags = {
+        10 = happy
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		ruler ?= {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.23.a
+		historical_option = yes
+
+		change_gold_effect = { scale = -2.00 }
+
+		add_prestige = prestige_extreme_bonus
+		if = {
+			limit = {
+				location:leiria = {
+					NOT = {
+						has_building = building_type:monastery
+					}
+				}
+			}
+			location:leiria = {
+				construct_building = {
+					building_type = building_type:monastery
+				}
+			}
+		}
+		location:leiria = {
+			create_art = {
+				quality = 95
+				type = work_of_art_type:monument
+				key = batalha_monastery
+			}
+		}
+	}
+	historical_info = flavor_por.23.historical_info
+}
+
+flavor_por.24 = { #The Royal Pantheon
+	type = country_event
+	title = flavor_por.24.title
+	desc = flavor_por.24.desc
+	outcome = neutral
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = POR
+		government_type = government_type:monarchy
+		religion = religion:catholic
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		previous_ruler ?= {
+			if = {
+				limit = { this != scope:old_ruler }
+				save_scope_as = old_ruler
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.24.a
+		historical_option = yes
+
+		change_gold_effect = { scale = -3.00 }
+
+		add_prestige = prestige_extreme_bonus
+		add_legitimacy = legitimacy_extreme_bonus
+	}
+
+	option = {
+		name = flavor_por.24.b
+
+		add_prestige = prestige_mild_penalty
+		add_legitimacy = legitimacy_mild_penalty
+	}
+
+	historical_info = flavor_por.24.historical_info
+}
+
+flavor_por.25 = { #The New Seat of the Order of Christ
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.25.title
+	desc = flavor_por.25.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1337.1.1
+		to = 1382.1.1
+		monthly_chance = 20
+	}
+
+	trigger = {
+		owns = location:tavira
+		owns = location:tomar
+		c:POR = {
+			is_human = no
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		c:POR = {
+			ruler ?= {
+				save_scope_as = target_character
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.25.a
+		historical_option = yes
+		location:tomar = {
+			change_building_level_in_location = {
+				building = building_type:order_stronghold
+				value = 1
+				owner = c:POR
+			}
+		}
+		location:tavira = {
+			destroy_building = "building(building_type:order_stronghold|c:POR)"
+		}
+	}
+
+	option = {
+		name = flavor_por.25.b
+		add_prestige = prestige_extreme_penalty
+		change_societal_value = { type = offensive_vs_defensive value = societal_value_minor_move_to_left }
+	}
+
+	historical_info = flavor_por.25.historical_info
+}
+
+flavor_por.26 = { #Madeira Wine
+	type = country_event
+	title = flavor_por.26.title
+	desc = flavor_por.26.desc
+	outcome = neutral
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_wine.dds"
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1530.1.1
+		to = 1630.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		owns = location:funchal
+		any_subject = {
+			is_subject_type = colonial_nation
+			capital.region = region:brazil_region
+			#Is the colony producing a good amount of sugar?
+			OR = {
+				#A location with the sugar good and a good amount of levels
+				any_owned_location = {
+					region = region:brazil_region
+					raw_material = goods:sugar
+					rgo_workers >= 0
+				}
+				#Several locations with the sugar plantation
+				any_owned_location = {
+					region = region:brazil_region
+					count >= 5
+					has_building_with_at_least_one_level = sugar_plantation
+				}
+			}
+		}
+	}
+
+	illustration_tags = {
+		10 = happy
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
+	}
+
+	option = {
+		name = flavor_por.26.a
+		historical_option = yes
+		location:funchal = {
+			change_raw_material = goods:wine
+		}
+		change_societal_value = { type = capital_economy_vs_traditional_economy value = societal_value_minor_move_to_left }
+	}
+
+	option = {
+		name = flavor_por.26.b
+		change_societal_value = { type = capital_economy_vs_traditional_economy value = societal_value_move_to_right }
+	}
+
+	historical_info = flavor_por.26.historical_info
+}
+
+flavor_por.27 = { #Saint Thomas Christians
+	type = country_event
+	title = flavor_por.27.title
+	desc = flavor_por.27.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1450.1.1
+		to = 1550.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		any_owned_location = {
+			sub_continent = sub_continent:south_asia
+			dominant_religion.group = religion_group:christian
+			NOT = { dominant_religion = religion:catholic }
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+	}
+
+	option = {
+		name = flavor_por.27.a
+		historical_option = yes
+		random_owned_location = {
+			limit = { sub_continent = sub_continent:south_asia }
+			every_pop = {
+				limit = {
+					owner = root
+					religion.group = religion_group:christian
+					NOT = { religion = religion:catholic }
+				}
+				split_pop = {
+					fraction = 0.25
+					religion = religion:catholic
+				}
+			}
+		}
+		change_societal_value = { type = spiritualist_vs_humanist value = societal_value_minor_move_to_left }
+	}
+
+	option = {
+		name = flavor_por.27.b
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_penalty }
+		change_societal_value = { type = spiritualist_vs_humanist value = societal_value_move_to_right }
+	}
+
+	historical_info = flavor_por.27.historical_info
+}
+
+flavor_por.28 = { #The Establishment of Portuguese Inquisition
+	type = country_event
+	title = flavor_por.28.title
+	desc = flavor_por.28.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1515.1.1
+		to = 1615.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		has_ruler = yes
+		has_consort = yes
+		NOT = {
+			has_policy = local_courts
+		}
+		any_royal_marriage = {
+			total_population >= root.total_population
+			religion = religion:catholic
+			has_policy = local_courts
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		ruler = {
+			save_scope_as = target_character
+		}
+		random_royal_marriage = {
+			limit = {
+				total_population >= root.total_population
+				religion = religion:catholic
+				has_policy = local_courts
+			}
+			save_scope_as = target_country
+		}
+	}
+
+	option = {
+		name = flavor_por.28.a
+		historical_option = yes
+		add_policy = policy:local_courts
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_weak_bonus }
+		scope:target_country = {
+			add_opinion = { target = root modifier = opinion_supportive_monarch }
+		}
+		change_societal_value = { type = spiritualist_vs_humanist value = societal_value_move_to_left }
+	}
+
+	option = {
+		name = flavor_por.28.b
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_penalty }
+		scope:target_country = {
+			add_opinion = { target = root modifier = opinion_backward_monarch }
+		}
+		change_societal_value = { type = spiritualist_vs_humanist value = societal_value_move_to_right }
+	}
+
+	historical_info = flavor_por.28.historical_info
+}
+
+flavor_por.29 = { #The Epistola de Victoria Contra Infideles
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.29.title
+	desc = flavor_por.29.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1490.1.1
+		to = 1540.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		has_ruler = yes
+		OR = {
+			modifier:tolerance_heathen < -3
+			has_policy = local_courts
+		}
+		location:lisbon = {
+			any_pop = {
+				culture = culture:portuguese
+				pop_size > 5
+			}
+			any_pop = {
+				culture = culture:sephardi
+				pop_size > 0.6
+			}
+		}
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		ruler = {
+			save_scope_as = target_character
+		}
+		if = {
+			limit = {
+				location:constantinople = {
+					owner = {
+						religion = religion:sunni
+					}
+				}
+			}
+			location:constantinople = {
+				save_scope_as = escape_target1
+			}
+		}
+		else = {
+			region:maghreb_region = {
+				random_location_in_region = {
+					limit = {
+						owner ?= {
+							NOT = { this = root }
+						}
+						dominant_religion = religion:sunni
+						is_coastal = yes
+						is_discovered_by = root
+					}
+					save_scope_as = escape_target1
+				}
+			}
+		}
+		if = {
+			limit = {
+				location:thessaloniki = {
+					owner = {
+						religion = religion:sunni
+					}
+				}
+			}
+			location:thessaloniki = {
+				save_scope_as = escape_target2
+			}
+		}
+		else = {
+			region:maghreb_region = {
+				random_location_in_region = {
+					limit = {
+						owner ?= {
+							NOT = { this = root }
+						}
+						dominant_religion = religion:sunni
+						is_coastal = yes
+						is_discovered_by = root
+					}
+					save_scope_as = escape_target2
+				}
+			}
+		}
+		region:maghreb_region = {
+			random_location_in_region = {
+				limit = {
+					owner ?= {
+						NOT = { this = root }
+					}
+					dominant_religion = religion:sunni
+					is_coastal = yes
+					is_discovered_by = root
+				}
+				save_scope_as = escape_target3
+			}
+		}
+		region:maghreb_region = {
+			random_location_in_region = {
+				limit = {
+					owner ?= {
+						NOT = { this = root }
+					}
+					dominant_religion = religion:sunni
+					is_coastal = yes
+					is_discovered_by = root
+				}
+				save_scope_as = escape_target4
+			}
+		}
+		sub_continent:western_europe = {
+			random_location_in_sub_continent = {
+				limit = {
+					owner ?= {
+						NOT = { this = root }
+						OR = {
+							modifier:tolerance_heathen >= 3
+							AND = {
+								religion.group = religion_group:christian
+								NOT = {
+									religion = religion:catholic
+								}
+							}
+						}
+					}
+					is_discovered_by = root
+				}
+				save_scope_as = escape_target5
+			}
+		}
+		sub_continent:western_europe = {
+			random_location_in_sub_continent = {
+				limit = {
+					owner ?= {
+						NOT = { this = root }
+						OR = {
+							modifier:tolerance_heathen >= 3
+							AND = {
+								religion.group = religion_group:christian
+								NOT = {
+									religion = religion:catholic
+								}
+							}
+						}
+					}
+					is_discovered_by = root
+				}
+				save_scope_as = escape_target6
+			}
+		}
+		if = {
+			limit = {
+				location:sao_tome = {
+					owner ?= root
+				}
+			}
+			location:sao_tome = {
+				save_scope_as = escape_target7
+			}
+		}
+		else = {
+			continent:america = {
+				random_location_in_continent = {
+					limit = {
+						is_coastal = yes
+						any_country = { has_colonial_charter_in = prev.province_definition }
+					}
+					save_scope_as = escape_target7
+				}
+			}
+		}
+		continent:america = {
+			random_location_in_continent = {
+				limit = {
+					is_coastal = yes
+					any_country = { has_colonial_charter_in = prev.province_definition }
+				}
+				save_scope_as = escape_target8
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.29.a
+		historical_option = yes
+		custom_tooltip = flavor_por.29.tt1
+		hidden_effect = {
+			area:north_portugal_area = {
+				every_location_in_area = {
+					every_pop = {
+						limit = {
+							religion = religion:judaism
+						}
+						split_pop = {
+							fraction = 0.90
+							religion = religion:catholic
+						}
+					}
+				}
+			}
+			area:south_portugal_area = {
+				every_location_in_area = {
+					every_pop = {
+						limit = {
+							religion = religion:judaism
+						}
+						split_pop = {
+							fraction = 0.90
+							religion = religion:catholic
+						}
+					}
+				}
+			}
+			every_province = {
+				limit = {
+					OR = {
+						area = area:north_portugal_area
+						area = area:south_portugal_area
+					}
+					religion_percentage = {
+						religion = religion:judaism
+						value > 0
+					}
+				}
+				add_migration = {
+					owner = prev
+					from = this.province_definition
+					to = scope:escape_target1.province_definition
+					religion = religion:judaism
+					amount = 0.200
+					months = 60
+				}
+				add_migration = {
+					owner = prev
+					from = this.province_definition
+					to = scope:escape_target2.province_definition
+					religion = religion:judaism
+					amount = 0.200
+					months = 60
+				}
+				add_migration = {
+					owner = prev
+					from = this.province_definition
+					to = scope:escape_target3.province_definition
+					religion = religion:judaism
+					amount = 0.200
+					months = 60
+				}
+				add_migration = {
+					owner = prev
+					from = this.province_definition
+					to = scope:escape_target4.province_definition
+					religion = religion:judaism
+					amount = 0.200
+					months = 60
+				}
+				add_migration = {
+					owner = prev
+					from = this.province_definition
+					to = scope:escape_target5.province_definition
+					religion = religion:judaism
+					amount = 0.100
+					months = 60
+				}
+				add_migration = {
+					owner = prev
+					from = this.province_definition
+					to = scope:escape_target6.province_definition
+					religion = religion:judaism
+					amount = 0.100
+					months = 60
+				}
+				add_migration = {
+					owner = prev
+					from = this.province_definition
+					to = scope:escape_target7.province_definition
+					religion = religion:judaism
+					amount = 0.250
+					months = 60
+				}
+				add_migration = {
+					owner = prev
+					from = this.province_definition
+					to = scope:escape_target8.province_definition
+					religion = religion:judaism
+					amount = 0.250
+					months = 60
+				}
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.29.b
+		custom_tooltip = flavor_por.29.tt2
+		hidden_effect = {
+			area:north_portugal_area = {
+				every_location_in_area = {
+					every_pop = {
+						limit = {
+							owner = root
+							religion = religion:judaism
+						}
+						add_pop_satisfaction = pop_satisfaction_severe_bonus
+					}
+				}
+			}
+			area:south_portugal_area = {
+				every_location_in_area = {
+					every_pop = {
+						limit = {
+							owner = root
+							religion = religion:judaism
+						}
+						add_pop_satisfaction = pop_satisfaction_severe_bonus
+					}
+				}
+			}
+		}
+	}
+
+	historical_info = flavor_por.29.historical_info
+}
+
+flavor_por.30 = { #The Lisbon Massacre
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.30.title
+	desc = flavor_por.30.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1506.1.1
+		to = 1556.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		has_ruler = yes
+		OR = {
+			modifier:tolerance_heathen < -3
+			has_policy = local_courts
+		}
+		location:lisbon = {
+			any_pop = {
+				culture = culture:portuguese
+				pop_size > 5
+			}
+			any_pop = {
+				culture = culture:sephardi
+				pop_size > 0.6
+			}
+		}
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
+		ruler = {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.30.a
+		historical_option = yes
+		location:lisbon = {
+			change_prosperity = prosperity_severe_penalty
+			random_list = {
+				20 = {
+					custom_tooltip = flavor_por.30.tt1
+					hidden_effect = {
+						every_pop = {
+							limit = {
+								OR = {
+									culture = culture:portuguese
+									culture = culture:sephardi
+								}
+								religion = religion:catholic
+							}
+							add_pop_size = {
+								value = pop_size
+								multiply = -0.3
+								max = -4.000
+							}
+						}
+					}
+				}
+				30 = {
+					custom_tooltip = flavor_por.30.tt2
+					hidden_effect = {
+						every_pop = {
+							limit = {
+								OR = {
+									culture = culture:portuguese
+									culture = culture:sephardi
+								}
+								religion = religion:catholic
+							}
+							add_pop_size = {
+								value = pop_size
+								multiply = -0.25
+								max = -3.000
+							}
+						}
+					}
+				}
+				30 = {
+					custom_tooltip = flavor_por.30.tt3
+					hidden_effect = {
+						every_pop = {
+							limit = {
+								OR = {
+									culture = culture:portuguese
+									culture = culture:sephardi
+								}
+								religion = religion:catholic
+							}
+							add_pop_size = {
+								value = pop_size
+								multiply = -0.2
+								max = -2.000
+							}
+						}
+					}
+				}
+				20 = {
+					custom_tooltip = flavor_por.30.tt4
+					hidden_effect = {
+						every_pop = {
+							limit = {
+								OR = {
+									culture = culture:portuguese
+									culture = culture:sephardi
+								}
+								religion = religion:catholic
+							}
+							add_pop_size = {
+								value = pop_size
+								multiply = -0.1
+								max = -1.000
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.30.b
+		change_gold_effect = { scale = -3 }
+		location:lisbon = {
+			change_prosperity = prosperity_weak_penalty
+			random_list = {
+				60 = {
+					custom_tooltip = flavor_por.30.tt3
+					hidden_effect = {
+						every_pop = {
+							limit = {
+								OR = {
+									culture = culture:portuguese
+									culture = culture:sephardi
+								}
+								religion = religion:catholic
+							}
+							add_pop_size = {
+								value = pop_size
+								multiply = -0.2
+								max = -2.000
+							}
+						}
+					}
+				}
+				40 = {
+					custom_tooltip = flavor_por.30.tt4
+					hidden_effect = {
+						every_pop = {
+							limit = {
+								OR = {
+									culture = culture:portuguese
+									culture = culture:sephardi
+								}
+								religion = religion:catholic
+							}
+							add_pop_size = {
+								value = pop_size
+								multiply = -0.10
+								max = -1.000
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	historical_info = flavor_por.30.historical_info
+}
+
+flavor_por.31 = { #The Expulsion of Muslims from Portugal
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.31.title
+	desc = flavor_por.31.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1471.1.1
+		to = 1531.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		has_ruler = yes
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler = {
+			save_scope_as = target_character
+		}
+		region:maghreb_region = {
+			random_location_in_region = {
+				limit = {
+					owner ?= {
+						NOT = { this = root }
+					}
+					dominant_religion = religion:sunni
+					is_coastal = yes
+					is_discovered_by = root
+				}
+				save_scope_as = escape_target1
+			}
+		}
+		region:maghreb_region = {
+			random_location_in_region = {
+				limit = {
+					owner ?= {
+						NOT = { this = root }
+					}
+					dominant_religion = religion:sunni
+					is_coastal = yes
+					is_discovered_by = root
+				}
+				save_scope_as = escape_target2
+			}
+		}
+		region:maghreb_region = {
+			random_location_in_region = {
+				limit = {
+					owner ?= {
+						NOT = { this = root }
+					}
+					dominant_religion = religion:sunni
+					is_coastal = yes
+					is_discovered_by = root
+				}
+				save_scope_as = escape_target3
+			}
+		}
+		region:maghreb_region = {
+			random_location_in_region = {
+				limit = {
+					owner ?= {
+						NOT = { this = root }
+					}
+					dominant_religion = religion:sunni
+					is_coastal = yes
+					is_discovered_by = root
+				}
+				save_scope_as = escape_target4
+			}
+		}
+		region:maghreb_region = {
+			random_location_in_region = {
+				limit = {
+					owner ?= {
+						NOT = { this = root }
+					}
+					dominant_religion = religion:sunni
+					is_coastal = yes
+					is_discovered_by = root
+				}
+				save_scope_as = escape_target5
+			}
+		}
+		region:maghreb_region = {
+			random_location_in_region = {
+				limit = {
+					owner ?= {
+						NOT = { this = root }
+					}
+					dominant_religion = religion:sunni
+					is_coastal = yes
+					is_discovered_by = root
+				}
+				save_scope_as = escape_target6
+			}
+		}
+		region:maghreb_region = {
+			random_location_in_region = {
+				limit = {
+					owner ?= {
+						NOT = { this = root }
+					}
+					dominant_religion = religion:sunni
+					is_coastal = yes
+					is_discovered_by = root
+				}
+				save_scope_as = escape_target7
+			}
+		}
+		region:maghreb_region = {
+			random_location_in_region = {
+				limit = {
+					owner ?= {
+						NOT = { this = root }
+					}
+					dominant_religion = religion:sunni
+					is_coastal = yes
+					is_discovered_by = root
+				}
+				save_scope_as = escape_target8
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.31.a
+		historical_option = yes
+		custom_tooltip = flavor_por.31.tt2
+		hidden_effect = {
+			every_province = {
+				limit = {
+					OR = {
+						area = area:north_portugal_area
+						area = area:south_portugal_area
+					}
+					religion_percentage = {
+						religion = religion:sunni
+						value > 0
+					}
+				}
+				add_migration = {
+					owner = prev
+					from = this.province_definition
+					to = scope:escape_target.capital.province_definition
+					religion = religion:sunni
+					amount = 2.000
+					months = 60
+				}
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.31.b
+		custom_tooltip = flavor_por.31.tt1
+		hidden_effect = {
+			random_list = {
+				60 = {
+					area:north_portugal_area = {
+						every_location_in_area = {
+							every_pop = {
+								limit = {
+									religion = religion:sunni
+								}
+								split_pop = {
+									fraction = 0.80
+									religion = religion:catholic
+								}
+							}
+						}
+					}
+					area:south_portugal_area = {
+						every_location_in_area = {
+							every_pop = {
+								limit = {
+									religion = religion:sunni
+								}
+								split_pop = {
+									fraction = 0.80
+									religion = religion:catholic
+								}
+							}
+						}
+					}
+					every_province = {
+						limit = {
+							OR = {
+								area = area:north_portugal_area
+								area = area:south_portugal_area
+							}
+							religion_percentage = {
+								religion = religion:sunni
+								value > 0
+							}
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target1.province_definition
+							religion = religion:sunni
+							amount = 0.250
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target2.province_definition
+							religion = religion:sunni
+							amount = 0.250
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target3.province_definition
+							religion = religion:sunni
+							amount = 0.250
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target4.province_definition
+							religion = religion:sunni
+							amount = 0.250
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target5.province_definition
+							religion = religion:sunni
+							amount = 0.250
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target6.province_definition
+							religion = religion:sunni
+							amount = 0.250
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target7.province_definition
+							religion = religion:sunni
+							amount = 0.250
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target8.province_definition
+							religion = religion:sunni
+							amount = 0.250
+							months = 60
+						}
+					}
+				}
+				40 = {
+					area:north_portugal_area = {
+						every_location_in_area = {
+							every_pop = {
+								limit = {
+									religion = religion:sunni
+								}
+								split_pop = {
+									fraction = 0.30
+									religion = religion:catholic
+								}
+							}
+						}
+					}
+					area:south_portugal_area = {
+						every_location_in_area = {
+							every_pop = {
+								limit = {
+									religion = religion:sunni
+								}
+								split_pop = {
+									fraction = 0.30
+									religion = religion:catholic
+								}
+							}
+						}
+					}
+					create_rebel = {
+						category = religious
+						religion = religion:sunni
+						name = portuguese_muslim_uprising
+						save_scope_as = portuguese_muslim_uprising
+					}
+					every_owned_location = {
+						limit = {
+							OR = {
+								area = area:north_portugal_area
+								area = area:south_portugal_area
+							}
+						}
+						every_pop = {
+							limit = {
+								owner = root
+								religion = religion:sunni
+							}
+							add_pop_satisfaction = pop_satisfaction_ultimate_penalty
+							change_pop_allegiance = scope:portuguese_muslim_uprising
+						}
+					}
+					every_province = {
+						limit = {
+							OR = {
+								area = area:north_portugal_area
+								area = area:south_portugal_area
+							}
+							religion_percentage = {
+								religion = religion:sunni
+								value > 0
+							}
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target1.province_definition
+							religion = religion:sunni
+							amount = 0.050
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target2.province_definition
+							religion = religion:sunni
+							amount = 0.050
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target3.province_definition
+							religion = religion:sunni
+							amount = 0.050
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target4.province_definition
+							religion = religion:sunni
+							amount = 0.050
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target5.province_definition
+							religion = religion:sunni
+							amount = 0.050
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target6.province_definition
+							religion = religion:sunni
+							amount = 0.050
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target7.province_definition
+							religion = religion:sunni
+							amount = 0.050
+							months = 60
+						}
+						add_migration = {
+							owner = prev
+							from = this.province_definition
+							to = scope:escape_target8.province_definition
+							religion = religion:sunni
+							amount = 0.050
+							months = 60
+						}
+					}
+					every_country = {
+						limit = {
+							within_diplomatic_range = root
+							num_of_ports > 0
+							religion = religion:sunni
+						}
+						trigger_event_non_silently = { id = flavor_por.32 }
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.31.c
+		custom_tooltip = flavor_por.31.tt3
+		hidden_effect = {
+			area:north_portugal_area = {
+				every_location_in_area = {
+					every_pop = {
+						limit = {
+							owner = root
+							religion = religion:sunni
+						}
+						add_pop_satisfaction = pop_satisfaction_severe_bonus
+					}
+				}
+			}
+			area:south_portugal_area = {
+				every_location_in_area = {
+					every_pop = {
+						limit = {
+							owner = root
+							religion = religion:sunni
+						}
+						add_pop_satisfaction = pop_satisfaction_severe_bonus
+					}
+				}
+			}
+		}
+	}
+
+	historical_info = flavor_por.31.historical_info
+}
+
+flavor_por.32 = { #Muslims in Portugal need our help
+	type = country_event
+	title = flavor_por.32.title
+	desc = flavor_por.32.desc
+	outcome = neutral
+
+	fire_only_once = yes
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		c:POR = {
+			ruler = {
+				save_scope_as = target_character
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.32.a
+		add_casus_belli = {
+			target = c:POR
+			type = casus_belli:cb_jihad
+			province = c:POR.capital.province
+		}
+	}
+
+	option = {
+		name = flavor_por.32.b
+		declare_war_with_cb = {
+			target = c:POR
+			type = casus_belli:cb_jihad
+			target_province = location:lisbon.province
+		}
+		change_societal_value = { type = spiritualist_vs_humanist value = societal_value_move_to_left }
+	}
+}
+
+flavor_por.33 = { #Ribeira das Naus
+	type = country_event
+	title = flavor_por.33.title
+	desc = flavor_por.33.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1490.1.1
+		to = 1540.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		owns = location:lisbon
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		ruler_or_regent = {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.33.a
+		historical_option = yes
+		location:lisbon = {
+			construct_building = {
+				building_type = building_type:ribeira_das_naus
+			}
+		}
+		change_societal_value = {
+			type = land_vs_naval
+			value = societal_value_minor_move_to_right
+		}
+	}
+
+	historical_info = flavor_por.33.historical_info
+}
+
+flavor_por.34 = { # Transferring the University of Coimbra
+	type = country_event
+	title = flavor_por.34.title
+	desc = flavor_por.34.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1338.1.1
+		to = 1340.1.1
+		monthly_chance = 20
+	}
+
+	trigger = {
+		owns = location:lisbon
+		owns = location:coimbra
+		location:coimbra = {
+			has_building = building_type:university
+		}
+		location:lisbon = {
+			is_capital = yes
+		}
+		has_ruler = yes
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		ruler = {
+			save_scope_as = target_character
+		}
+		unlock_law_effect = {
+			type = por_estudo_geral_law
+		}
+
+		location:coimbra = {
+			save_scope_as = current_location
+		}
+		building_type:university = {
+			save_scope_as = target_building_type
+		}
+		location:lisbon = {
+			save_scope_as = target_location
+		}
+
+		character:por_dinis_i_portugal = {
+			save_scope_as = founder_of_university
+		}
+	}
+
+	option = {
+		name = flavor_por.34.a
+
+		add_policy = policy:por_estudo_in_lisbon
+	}
+
+	option = {
+		name = flavor_por.34.b
+
+		add_policy = policy:por_estudo_in_coimbra
+	}
+}
+
+flavor_por.35 = { # Ericeira's policies - Mercantilist Ideals of [target_character.GetName]
+	type = country_event
+	title = flavor_por.35.title
+	desc = flavor_por.35.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1675.10.16
+		to = 1690.5.26
+		monthly_chance = 10
+	}
+
+	trigger = {
+		any_cabinet_character = {
+			count >= 1
+		}
+		owns = location:covilha
+		location:covilha.raw_material = goods:wool
+		location:covilha = {
+			any_pop = {
+				owner = root
+			}
+		}
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_cabinet_character = {
+			save_scope_as = target_character
+		}
+		location:covilha = {
+			random_pop = {
+				limit = {
+					owner = root
+					pop_type = pop_type:burghers
+				}
+				save_scope_as = target_pop
+			}
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_por.35.a
+
+		change_societal_value = {
+			type = mercantilism_vs_free_trade
+			value = societal_value_huge_move_to_left
+		}
+
+		promote_to_head_of_cabinet_effect = {
+			target = scope:target_character
+		}
+
+		scope:target_location = {
+			add_location_modifier = {
+				mode = add_and_extend
+				modifier = por_wool_town
+				years = 30
+			}
+		}
+		scope:target_pop ?= {
+			add_pop_satisfaction = pop_satisfaction_mild_bonus
+		}
+	}
+
+	option = {
+		name = flavor_por.35.b
+
+		add_estate_satisfaction = {
+			type = estate_type:burghers_estate
+			value = estate_satisfaction_mild_bonus
+		}
+
+		add_stability = stability_mild_bonus
+	}
+}
+
+flavor_por.36 = { # Pombal - Ambitions of [target_character.GetName]
+	type = country_event
+	title = flavor_por.36.title
+	desc = flavor_por.36.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1750.1.1
+		to = 1777.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = angry
+		10 = interior
+	}
+
+	trigger = {
+		any_cabinet_character = {
+			count >= 1
+		}
+		has_ruler = yes
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler = {
+			save_scope_as = ruler_scope
+		}
+		random_cabinet_character = {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.36.a
+
+		promote_to_head_of_cabinet_effect = {
+			target = scope:target_character
+		}
+
+		change_societal_value = {
+			type = absolutism_vs_liberalism
+			value = societal_value_huge_move_to_left
+		}
+
+		change_societal_value = {
+			type = mercantilism_vs_free_trade
+			value = societal_value_large_move_to_left
+		}
+
+		add_estate_satisfaction = {
+			type = estate_type:nobles_estate
+			value = estate_satisfaction_extreme_penalty
+		}
+	}
+
+	option = {
+		name = flavor_por.36.b
+
+		scope:ruler_scope = {
+			add_adm = 5
+			add_dip = 5
+			add_mil = 5
+		}
+	}
+}
+
+flavor_por.37 = { # Esmeraldo de Situ Orbis
+	type = country_event
+	title = flavor_por.37.title
+	desc = flavor_por.37.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1500.1.1
+		to = 1821.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		navy_tradition >= 50
+		any_character = {
+			is_explorer = yes
+		}
+		has_ruler = yes
+		custom_tooltip = {
+			text = variable_num_of_explorations_tt
+			has_variable = num_of_explorations
+		}
+		var:num_of_explorations >= 15
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_character = {
+			limit = {
+				is_explorer = yes
+			}
+			save_scope_as = target_character
+		}
+		ruler = {
+			save_scope_as = ruler_scope
+		}
+		capital = {
+			create_art = {
+				artist = scope:target_character
+				key = esmeraldo_do_situ_orbis
+				quality = { 80 90 }
+				type = work_of_art_type:treatise
+			}
+			work_of_art:esmeraldo_do_situ_orbis = {
+				save_scope_as = target_work_of_art
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.37.a
+
+		add_country_modifier = {
+			mode = add_and_extend
+			modifier = por_esmeraldo_do_situ_orbis_modifier
+			years = -1
+		}
+		destroy_art = scope:target_work_of_art
+	}
+
+	option = {
+		name = flavor_por.37.b
+
+		culture = {
+			add_cultural_influence = cultural_influence_extreme_bonus
+		}
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+flavor_por.38 = { # Gaspar da India
+	type = country_event
+	title = flavor_por.38.title
+	desc = flavor_por.38.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1470.1.1
+		to = 1510.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		create_character = {
+			estate = estate_type:burghers_estate
+			first_name = name_casper
+			last_name = Gama
+			birth_location = location:poznan
+			birth_date = 1444.6.1
+			culture = culture:ashkenazi
+			religion = religion:judaism
+			create_in_limbo = yes
+			save_scope_as = target_character
+		}
+		random_pop = {
+			limit = {
+				location.sub_continent = sub_continent:south_asia
+			}
+			save_scope_as = target_pop
+		}
+	}
+
+	trigger = {
+		has_presence_in = sub_continent:south_asia
+	}
+
+	option = {
+		name = flavor_por.38.a
+
+		scope:target_character = {
+			move_country = ROOT
+		}
+		change_gold_effect = { scale = -3 }
+		add_country_modifier = {
+			mode = add_and_extend
+			modifier = por_interpreters
+			years = 15
+		}
+	}
+	option = {
+		name = flavor_por.38.b
+
+		add_prestige = prestige_mild_bonus
+		hidden_effect = {
+			kill_character_silently = {
+				target = scope:target_character
+			}
+		}
+	}
+}
+
+flavor_por.39 = { # Cronica Geral de Espanha
+	type = country_event
+	title = flavor_por.39.title
+	desc = flavor_por.39.desc
+	outcome = neutral
+
+	trigger = {
+		character:por_pedro_barcelos = {
+			is_alive = yes
+			owner = ROOT
+		}
+		c:CAS ?= {
+			custom_tooltip = {
+				text = variable_won_battle_of_rio_salado_tt
+				has_variable = won_battle_of_rio_salado
+			}
+		}
+		is_allied_with = {
+			target = c:CAS
+		}
+	}
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1344.1.1
+		to = 1350.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = interior
+		10 = regular
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		character:por_pedro_barcelos = {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.39.a
+
+		capital = {
+			create_art = {
+				artist = scope:target_character
+				key = por_geral_de_espanha
+				quality = { 60 70 }
+				type = work_of_art_type:chronicle
+			}
+		}
+		culture = {
+			add_cultural_tradition = cultural_tradition_severe_bonus
+		}
+	}
+}
+
+flavor_por.40 = { # Lei Mental
+	type = country_event
+	title = flavor_por.40.title
+	desc = flavor_por.40.desc
+	outcome = neutral
+
+	trigger = {
+		has_law = nobles_rights_laws
+	}
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1430.1.1
+		to = 1500.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = angry
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler_or_regent = {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.40.a
+
+		unlock_policy_effect = {
+			type = por_lei_mental
+		}
+		add_policy = policy:por_lei_mental
+
+		change_societal_value = {
+			type = centralization_vs_decentralization
+			value = societal_value_move_to_left
+		}
+
+		add_estate_satisfaction = {
+			type = estate_type:nobles_estate
+			value = estate_satisfaction_extreme_penalty
+		}
+	}
+
+	option = {
+		name = flavor_por.40.b
+
+		unlock_policy_effect = {
+			type = por_lei_mental
+		}
+		add_prestige = prestige_severe_penalty
+	}
+}
+
+scripted_trigger por_can_be_kicked_out = {
+	is_adult = yes
+	NOR = {
+		root.ruler_or_regent ?= this
+		root.heir ?= this
+		trigger_if = {
+			limit = {
+				has_dynasty = yes
+				root.ruler_or_heir_if_regent ?= {
+					has_dynasty = yes
+				}
+			}
+			this.dynasty = root.ruler_or_heir_if_regent.dynasty
+		}
+	}
+}
+
+flavor_por.41 = {
+	type = country_event
+	title = flavor_por.41.title
+	desc = flavor_por.41.desc
+	outcome = neutral
+
+	trigger = {
+		OR = {
+			tag = POR
+			tag = CAS
+		}
+		any_character = {
+			has_estate = estate_type:nobles_estate
+			por_can_be_kicked_out = yes
+		}
+		estate_satisfaction:nobles_estate < 0.3 #if adjusting this, adjust por_reason_for_flavor_por_41
+		trigger_if = {
+			limit = {
+				tag = POR
+			}
+			c:CAS ?= {
+				is_neighbor_of = ROOT
+			}
+		}
+		trigger_else = {
+			c:POR ?= {
+				is_neighbor_of = ROOT
+			}
+		}
+	}
+
+	illustration_tags = {
+		10 = exterior
+		10 = angry
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		save_scope_as = origin_country
+		random_character = {
+			limit = {
+				has_estate = estate_type:nobles_estate
+				por_can_be_kicked_out = yes
+			}
+			weight = {
+				factor = 1
+				modifier = {
+					factor = 10
+					trigger = {
+						in_cabinet = yes
+					}
+				}
+				modifier = {
+					factor = 5
+					trigger = {
+						OR = {
+							is_general = yes
+							is_artist = yes
+							is_admiral = yes
+						}
+					}
+				}
+			}
+			save_scope_as = target_character
+		}
+		if = {
+			limit = {
+				tag = POR
+			}
+			c:CAS = {
+				save_scope_as = target_country
+			}
+		}
+		else = {
+			c:POR = {
+				save_scope_as = target_country
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.41.a
+
+		custom_tooltip = por_reason_for_flavor_por_41
+
+		show_as_tooltip = {
+			scope:target_character = {
+				move_country = scope:target_country
+			}
+		}
+		scope:target_country = {
+			trigger_event_non_silently = {
+				id = flavor_por.42
+			}
+		}
+	}
+}
+
+flavor_por.42 = {
+	type = country_event
+	title = flavor_por.42.title
+	desc = flavor_por.42.desc
+	outcome = neutral
+
+	illustration_tags = {
+		10 = exterior
+		10 = regular
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+
+	option = {
+		name = flavor_por.42.a
+
+		scope:target_character = {
+			move_country = scope:target_country
+		}
+	}
+}
+
+flavor_por.43 = { # The Last Troubadour - Livro das Cantigas
+	type = country_event
+	title = flavor_por.43.title
+	desc = flavor_por.43.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1350.1.1
+		to = 1360.1.1
+		monthly_chance = 25
+	}
+
+	trigger = {
+		character:por_pedro_barcelos = {
+			owner = ROOT
+			is_alive = yes
+		}
+		character:cas_alfonso_xi_burgundy = {
+			is_alive = yes
+			owner ?= c:CAS
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		character:por_pedro_barcelos = {
+			save_scope_as = target_character
+		}
+		character:cas_alfonso_xi_burgundy = {
+			save_scope_as = target_dedication_character
+		}
+		c:CAS = {
+			save_scope_as = target_country
+		}
+		location:lamego = {
+			save_scope_as = target_location
+			create_art = {
+				artist = scope:target_character
+				key = livro_das_cantigas
+				quality = { 70 90 }
+				type = work_of_art_type:poem
+			}
+			work_of_art:livro_das_cantigas = {
+				save_scope_as = target_work_of_art
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.43.a
+
+		show_as_tooltip = {
+			scope:target_work_of_art = {
+				move_art_and_owner = { location = scope:target_country.capital country = scope:target_country }
+			}
+		}
+		add_prestige = prestige_severe_bonus
+		scope:target_country = {
+			add_opinion = {
+				modifier = por_given_hymnal
+				target = ROOT
+			}
+			trigger_event_non_silently = {
+				id = flavor_por.44
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.43.b
+
+		culture = {
+			add_cultural_tradition = cultural_tradition_severe_bonus
+		}
+	}
+}
+
+flavor_por.44 = {
+	type = country_event
+	title = flavor_por.44.title
+	desc = flavor_por.44.desc
+	outcome = neutral
+
+	illustration_tags = {
+        10 = happy
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_por.44.a
+
+		scope:target_work_of_art = {
+			move_art_and_owner = { location = scope:target_country.capital country = scope:target_country }
+		}
+		culture = {
+			add_cultural_tradition = cultural_tradition_severe_bonus
+		}
+	}
+}
+
+flavor_por.45 = { # Ordenações Afonsinas
+	type = country_event
+	title = flavor_por.45.title
+	desc = flavor_por.45.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1420.1.1
+		to = 1500.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+	trigger = {
+		stability >= 25
+		has_ruler = yes
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+
+		unlock_government_reform_effect = {
+			type = por_ordinances
+		}
+		ruler = {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.45.a
+
+		add_reform = government_reform:por_ordinances
+	}
+
+	option = {
+		name = flavor_por.45.b
+
+		add_stability = stability_severe_bonus
+
+		add_country_modifier = {
+			mode = add_and_extend
+			modifier = por_refused_ordinances
+			years = 5
+		}
+	}
+}
+
+flavor_por.46 = { # Ordenações Manuelinas
+	type = country_event
+	title = flavor_por.46.title
+	desc = flavor_por.46.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1510.1.1
+		to = 1600.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		has_reform = government_reform:por_ordinances
+		has_embraced_institution = institution:printing_press
+	}
+
+	image = "gfx/interface/illustrations/institutions/printing_press.dds"
+
+	option = {
+		name = flavor_por.46.a
+
+		change_gold_effect = { scale = -12 }
+
+		custom_tooltip = por_upgrade_ordinances
+		set_variable = por_printing_ordinances
+		add_country_modifier = { modifier = por_printing_ordinances_modifier years = -1 }
+	}
+
+	option = {
+		name = flavor_por.46.b
+
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+flavor_por.47 = { # The Misericórdia
+	type = country_event
+	title = flavor_por.47.title
+	desc = flavor_por.47.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1498.1.1
+		to = 1525.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = happy
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		capital = {
+			save_scope_as = target_location
+			random_pop = {
+				save_scope_as = target_pop
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.47.a
+
+		change_gold_effect = { scale = -3 }
+
+		scope:target_location = {
+			change_development = development_mild_bonus
+			every_pop = {
+				limit = {
+					owner = root
+					pop_type = pop_type:peasants
+				}
+				add_pop_satisfaction = pop_satisfaction_extreme_bonus
+			}
+		}
+
+		add_country_modifier = {
+			mode = add_and_extend
+			modifier = por_misericordia
+			years = 30
+		}
+	}
+
+	option = {
+		name = flavor_por.47.b
+
+		add_prestige = prestige_mild_penalty
+		scope:target_location = {
+			every_pop = {
+				limit = {
+					owner = root
+				}
+				add_pop_satisfaction = pop_satisfaction_extreme_penalty
+			}
+		}
+	}
+}
+
+flavor_por.48 = { # Established Feitoria in Bruges
+	type = country_event
+	title = flavor_por.48.title
+	desc = flavor_por.48.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1400.1.1
+		to = 1500.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = happy
+		10 = interior
+	}
+
+	trigger = {
+		location:bruges = {
+			NOT = { owner = ROOT }
+			within_naval_range_of = ROOT
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		location:bruges = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_por.48.a
+
+		scope:target_location = {
+			add_pop = {
+				culture = ROOT
+				religion = ROOT
+				type = pop_type:burghers
+				size = { 0.1 1 }
+			}
+			construct_building = {
+				building_type = building_type:trade_office
+				owner = ROOT
+				cost_multiplier = 0.25
+				cost_multiplier_reason = "game_concept_event"
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.48.b
+
+		add_country_modifier = {
+			mode = add_and_extend
+			modifier = por_focusing_on_own_buildings
+			years = 10
+		}
+
+		add_estate_satisfaction = {
+			type = estate_type:burghers_estate
+			value = estate_satisfaction_weak_penalty
+		}
+	}
+}
+
+flavor_por.49 = { # Fernão Lopes
+	type = country_event
+	title = flavor_por.49.title
+	desc = flavor_por.49.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1415.1.1
+		to = 1450.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		create_character = {
+			first_name = name_ferdinand #Should be alternative
+			last_name = Lopes
+			estate = estate_type:burghers_estate
+			artist = writer
+			artist_skill = { 0.60 0.70 }
+			create_in_limbo = yes
+			birth_date = 1385.6.1
+			birth_location = location:portel
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.49.a
+
+		change_gold_effect = { scale = -3 }
+
+		scope:target_character = {
+			move_country = ROOT
+		}
+	}
+
+	option = {
+		name = flavor_por.49.b
+
+		add_prestige = prestige_mild_penalty
+		scope:target_character = { banish_character = yes }
+	}
+}
+
+flavor_por.50 = { # End of the Orders of Avis, Christ and Santiago in Portugal
+	type = country_event
+	title = flavor_por.50.title
+	desc = flavor_por.50.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1537.1.1
+		to = 1821.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = interior
+		10 = regular
+	}
+
+	trigger = {
+		religion = religion:catholic
+		has_ruler = yes
+		any_known_country = {
+			receiving_scripted_relation = {
+				type = relation_type:military_sponsorship
+				target = ROOT
+			}
+			any_owned_foreign_building_location = {
+				percent >= 0.75
+				owner = ROOT
+			}
+			is_ai = yes
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		religion:catholic = {
+			save_scope_as = target_religion
+		}
+
+		every_known_country = {
+			limit = {
+				receiving_scripted_relation = {
+					type = relation_type:military_sponsorship
+					target = ROOT
+				}
+				any_owned_foreign_building_location = {
+					percent >= 0.75
+					owner = ROOT
+				}
+				is_ai = yes
+			}
+			add_to_list = order_countries
+		}
+		ruler = {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.50.a
+
+		every_in_list = {
+			list = order_countries
+
+			make_subject_of = {
+				target = ROOT
+				type = subject_type:vassal
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.50.b
+
+		every_in_list = {
+			list = order_countries
+
+			ROOT = {
+				add_gold = prev.gold
+				add_manpower = prev.manpower
+				add_sailors = prev.sailors
+			}
+			every_owned_foreign_building = {
+				limit = {
+					building_type = building_type:order_commandery
+				}
+				location = {
+					destroy_building = prev
+					if = {
+						limit = {
+							owner ?= ROOT
+							NOT = {
+								has_building = building_type:castle
+							}
+						}
+						change_building_level_in_location = {
+							building = building_type:castle
+							value = 1
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+flavor_por.51 = { # São Jorge da Mina
+	type = country_event
+	title = flavor_por.51.title
+	desc = flavor_por.51.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1470.1.1
+		to = 1821.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = exterior
+		10 = happy
+	}
+
+	trigger = {
+		location:cabo_corso = {
+			is_discovered_by = ROOT
+			owner ?= {
+				this != root
+				NOT = { is_at_war_with = ROOT }
+			}
+
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		location:cabo_corso = {
+			save_scope_as = target_location
+			random_pop = {
+				save_scope_as = random_pop_2
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.51.a
+
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_move_to_right
+		}
+
+		scope:target_location = {
+			construct_building = {
+				building_type = building_type:trade_office
+				cost_multiplier = 0.25
+				cost_multiplier_reason = "game_concept_event"
+				owner = ROOT
+			}
+		}
+
+		add_navy_tradition = navy_tradition_mild_bonus
+	}
+
+	option = {
+		name = flavor_por.51.b
+
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = {
+				type = mercantilism_vs_free_trade
+				value = societal_value_move_to_left
+			}
+		}
+		else = {
+			add_prestige = prestige_weak_bonus
+		}
+	}
+}
+
+flavor_por.52 = { # Navigator Prince
+	type = country_event
+	title = flavor_por.52.title
+	desc = flavor_por.52.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1420.1.1
+		to = 1460.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = exterior
+		10 = regular
+	}
+
+	trigger = {
+		ruler_or_heir_if_regent ?= {
+			has_dynasty = yes
+		}
+		any_character = {
+			dynasty ?= root.ruler_or_heir_if_regent.dynasty
+			is_adult = yes
+			is_female = no
+			is_ruler = no
+			total_abilities >= 180
+		}
+		any_owned_location = {
+			is_connected_to = root.capital
+			NOT = { is_capital = yes }
+			is_coastal = yes
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_character = {
+			limit = {
+				dynasty ?= root.ruler_or_heir_if_regent.dynasty
+				is_adult = yes
+				is_ruler = no
+				is_female = no
+				total_abilities >= 180
+			}
+			save_scope_as = target_character
+		}
+		random_owned_location = {
+			limit = {
+				is_connected_to = root.capital
+				NOT = { is_capital = yes }
+				is_coastal = yes
+			}
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_por.52.a
+		historical_option = yes
+
+		change_gold_effect = { scale = -3 }
+
+		add_country_modifier = {
+			mode = add_and_extend
+			modifier = por_patronage_of_navigator
+			years = 25
+		}
+
+		scope:target_character = {
+			set_nickname = nick_the_navigator
+			add_trait = trait:scholar
+		}
+
+		scope:target_location = {
+			add_location_modifier = {
+				mode = add_and_extend
+				modifier = por_patronage_of_navigator_location
+				years = 25
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.52.b
+
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+flavor_por.53 = { # Bartolomeu Dias
+	type = country_event
+	title = flavor_por.53.title
+	desc = flavor_por.53.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1485.1.1
+		to = 1500.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = happy
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		create_character = {
+			estate = estate_type:burghers_estate
+			first_name = name_bartholomew
+			last_name = Dias
+			adm = { 50 60 }
+			dip = { 70 80 }
+			mil = { 50 60 }
+			birth_date = 1450.6.1
+			birth_location = location:faro
+			trait_category = explorer
+			create_in_limbo = yes
+			add_trait = trait:curious_adventurer
+			save_scope_as = target_character
+		}
+	}
+
+	trigger = {
+		var:num_of_explorations >= 5
+	}
+
+	option = {
+		name = flavor_por.53.a
+		historical_option = yes
+
+		change_gold_effect = { scale = -3 }
+		scope:target_character = {
+			move_country = ROOT
+		}
+	}
+
+	option = {
+		name = flavor_por.53.b
+
+		change_societal_value = {
+			type = land_vs_naval
+			value = societal_value_move_to_left
+		}
+		hidden_effect = {
+			kill_character_silently = {
+				target = scope:target_character
+			}
+		}
+	}
+}
+
+flavor_por.54 = { #Formation of the Terço
+	type = country_event
+	title = flavor_por.54.title
+	desc = flavor_por.54.desc
+	outcome = neutral
+	historical_info = flavor_por.54.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1520.1.1
+		to = 1650.1.1
+		monthly_chance = 3
+	}
+
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	trigger = {
+		has_advance = tercio
+		ruler_or_regent ?= {
+			mil >= 75
+		}
+	}
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.54.a
+
+		historical_option = yes
+
+		add_navy_tradition = navy_tradition_mild_bonus
+		change_societal_value = {
+			type = land_vs_naval
+			value = societal_value_move_to_right
+		}
+	}
+
+	option = {
+		name = flavor_por.54.b
+
+		add_army_tradition = army_tradition_mild_bonus
+		change_societal_value = {
+			type = land_vs_naval
+			value = societal_value_move_to_left
+		}
+	}
+}
+
+#Feitoria Events
+# arguin
+# xiangshan_xinhui (Macau)
+# goa
+# ormuz
+# malacca
+# ternate
+
+scripted_effect establish_feitoria_effect = {
+	if = {
+		limit = {
+			has_building = building_type:por_feitoria
+		}
+		change_development = development_mild_bonus
+	}
+
+	else = {
+		construct_building = {
+			building_type = building_type:por_feitoria
+			cost_multiplier = 0.5
+			cost_multiplier_reason = burghers_cheap_sponsorship
+			payer = root
+		}
+	}
+}
+
+flavor_por.55 = { #Feitoria of Arguin
+	type = country_event
+	title = flavor_por.55.title
+	desc = flavor_por.55.desc
+	outcome = neutral
+	historical_info = flavor_por.55.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1445.1.1
+		to = 1500.1.1
+		monthly_chance = 3
+	}
+
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = exterior
+		10 = regular
+	}
+
+	trigger = {
+		location:arguin = {
+			owner != root
+			within_colonial_range_of = root
+			NOT = {
+				has_building = building_type:por_feitoria
+			}
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+
+		location:arguin = {
+			save_scope_as = target_location
+		}
+
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.55.a
+		historical_option = yes
+
+		scope:target_location = {
+			establish_feitoria_effect = yes
+		}
+	}
+
+	option = {
+		name = flavor_por.55.b
+
+		add_prestige = prestige_weak_bonus
+	}
+}
+
+flavor_por.56 = { #Feitoria of Macau
+	type = country_event
+	title = flavor_por.56.title
+	desc = flavor_por.56.desc
+	outcome = neutral
+	historical_info = flavor_por.56.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1550.1.1
+		to = 1600.1.1
+		monthly_chance = 5
+	}
+
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = exterior
+		10 = regular
+	}
+
+	trigger = {
+		location:xiangshan_xinhui = {
+			owner != root
+			within_colonial_range_of = root
+			NOT = {
+				has_building = building_type:por_feitoria
+			}
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		location:xiangshan_xinhui = {
+			save_scope_as = target_location
+		}
+
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.56.a
+
+		historical_option = yes
+
+		scope:target_location = {
+			establish_feitoria_effect = yes
+		}
+
+		change_societal_value = {
+			type = mercantilism_vs_free_trade
+			value = societal_value_minor_move_to_left
+		}
+	}
+
+	option = {
+		name = flavor_por.56.b
+
+		change_societal_value = {
+			type = mercantilism_vs_free_trade
+			value = societal_value_minor_move_to_right
+		}
+	}
+}
+
+flavor_por.57 = { #Feitoria of Goa
+	type = country_event
+	title = flavor_por.57.title
+	desc = flavor_por.57.desc
+	outcome = neutral
+	historical_info = flavor_por.57.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1500.1.1
+		to = 1600.1.1
+		monthly_chance = 3
+	}
+
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = exterior
+		10 = regular
+	}
+
+	trigger = {
+		location:goa = {
+			owner != root
+			within_colonial_range_of = root
+			NOT = {
+				has_building = building_type:por_feitoria
+			}
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		location:goa = {
+			save_scope_as = target_location
+		}
+
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.57.a
+
+		historical_option = yes
+
+		scope:target_location = {
+			establish_feitoria_effect = yes
+		}
+
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = {
+				type = mercantilism_vs_free_trade
+				value = societal_value_minor_move_to_left
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.57.b
+
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = {
+				type = mercantilism_vs_free_trade
+				value = societal_value_minor_move_to_right
+			}
+		}
+		else = {
+			add_prestige = prestige_weak_bonus
+		}
+	}
+}
+
+flavor_por.58 = { #Feitoria of Hormuz
+	type = country_event
+	title = flavor_por.58.title
+	desc = flavor_por.58.desc
+	outcome = neutral
+	historical_info = flavor_por.58.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1510.1.1
+		to = 1600.1.1
+		monthly_chance = 3
+	}
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	trigger = {
+		location:hormuz = {
+			owner != root
+			within_colonial_range_of = root
+			NOT = {
+				has_building = building_type:por_feitoria
+			}
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		location:hormuz = {
+			save_scope_as = target_location
+		}
+
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.58.a
+		historical_option = yes
+
+		scope:target_location = {
+			establish_feitoria_effect = yes
+		}
+
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = {
+				type = mercantilism_vs_free_trade
+				value = societal_value_minor_move_to_left
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.58.b
+
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = {
+				type = mercantilism_vs_free_trade
+				value = societal_value_minor_move_to_right
+			}
+		}
+		else = {
+			add_prestige = prestige_weak_bonus
+		}
+	}
+}
+
+flavor_por.59 = { #Feitoria of Malacca
+	type = country_event
+	title = flavor_por.59.title
+	desc = flavor_por.59.desc
+	outcome = neutral
+	historical_info = flavor_por.59.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1505.1.1
+		to = 1600.1.1
+		monthly_chance = 2
+	}
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	trigger = {
+		location:malacca = {
+			owner != root
+			within_colonial_range_of = root
+			NOT = {
+				has_building = building_type:por_feitoria
+			}
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		location:malacca = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_por.59.a
+
+		historical_option = yes
+
+		scope:target_location = {
+			establish_feitoria_effect = yes
+		}
+
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = {
+				type = mercantilism_vs_free_trade
+				value = societal_value_minor_move_to_left
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.59.b
+
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = {
+				type = mercantilism_vs_free_trade
+				value = societal_value_minor_move_to_right
+			}
+		}
+		else = {
+			add_prestige = prestige_weak_bonus
+		}
+	}
+}
+
+flavor_por.60 = {
+	type = country_event
+	title = flavor_por.60.title
+	desc = flavor_por.60.desc
+	outcome = neutral
+	historical_info = flavor_por.60.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1445.1.1
+		to = 1821.1.1
+		monthly_chance = 10
+	}
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = exterior
+		10 = regular
+	}
+
+	trigger = {
+		location:angra.owner ?= root
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		location:angra = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_por.60.a
+
+		historical_option = yes
+
+		scope:target_location = {
+			if = {
+				limit = {
+					location_rank = location_rank:town
+				}
+				change_location_rank_effect = { location_rank = location_rank:city }
+				owner = {
+					add_gold = {
+						value = -1000
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					location_rank = location_rank:rural_settlement
+				}
+				change_location_rank_effect = { location_rank = location_rank:town }
+				owner = {
+					add_gold = {
+						value = -250
+					}
+				}
+			}
+			
+			construct_building = {
+				building_type = building_type:dock
+				cost_multiplier = 0.5
+				cost_multiplier_reason = burghers_cheap_sponsorship
+			}
+		}
+
+		add_migration = {
+			amount = 0.2
+			from = root.capital.province_definition
+			owner = root
+			to = scope:target_location.province_definition
+			months = 120
+		}
+	}
+
+	option = {
+		name = flavor_por.60.b
+
+		add_estate_satisfaction = {
+			type = estate_type:burghers_estate
+			value = estate_satisfaction_weak_penalty
+		}
+	}
+}
+
+flavor_por.61 = { #Ceuta Crusade
+	type = country_event
+	title = flavor_por.61.title
+	desc = flavor_por.61.desc
+	outcome = neutral
+	historical_info = flavor_por.61.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1415.1.1
+		to = 1500.1.1
+		monthly_chance = 3
+	}
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	trigger = {
+		location:ceuta.owner ?= {
+			this != root
+			NOT = {
+				is_subject_or_below_of = ROOT
+			}
+			NOT = {
+				has_mutual_scripted_relation = {
+					type = relation_type:alliance
+					target = root
+				}
+			}
+		}
+	}
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+
+		location:ceuta = {
+			save_scope_as = target_location
+			owner ?= {
+				save_scope_as = target_country
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.61.a
+		historical_option = yes
+
+		add_casus_belli = {
+			target = scope:target_location.owner
+			type = casus_belli:cb_conquer_province
+			province = scope:target_location.province
+		}
+	}
+
+	option = {
+		name = flavor_por.61.b
+
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_minor_move_to_right
+		}
+	}
+}
+
+flavor_por.62 = { #Magellan
+	type = country_event
+	title = flavor_por.62.title
+	desc = flavor_por.62.desc
+	outcome = neutral
+	historical_info = flavor_por.62.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1510.1.1
+		to = 1570.1.1
+		monthly_chance = 3
+	}
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		
+		create_character = {
+			estate = estate_type:nobles_estate
+			first_name = name_ferdinand
+			dynasty = dynasty:magellan_dynasty
+			adm = 65
+			dip = 90
+			mil = 80
+			birth_date = 1480.2.4
+			birth_location = location:porto
+			trait_category = explorer
+			female = no
+			save_scope_as = target_character
+			create_in_limbo = yes
+			script = por_magellan
+		}
+
+		if = {
+			limit = {
+				country_exists = c:SPA
+			}
+			c:SPA = {
+				save_scope_as = target_country
+			}
+		}
+		else_if = {
+			limit = {
+				country_exists = c:CAS
+			}
+			c:CAS = {
+				save_scope_as = target_country
+			}
+		}
+		else = {
+			ordered_known_country = {
+				order_by = prestige
+				limit = {
+					has_ports = yes
+				}
+				max = 1
+				save_scope_as = target_country
+			}
+		}
+
+		save_scope_as = prev_country
+	}
+
+	option = {
+		name = flavor_por.62.a
+
+		historical_option = yes
+
+		scope:target_character = {
+			move_country = scope:target_country
+		}
+
+		scope:target_country = { trigger_event_silently = flavor_cas.28 }
+	}
+
+	option = {
+		name = flavor_por.62.b
+
+		scope:target_character = {
+			move_country = root
+		}
+
+		change_gold_effect = { scale = -1 }
+
+		change_societal_value = {
+			type = outward_vs_inward
+			value = societal_value_move_to_left
+		}
+
+		scope:target_country = { trigger_event_silently = flavor_cas.30 }
+	}
+}
+
+flavor_por.64 = { #Feitoria in the Gold Coast
+	type = country_event
+	title = flavor_por.64.title
+	desc = flavor_por.64.desc
+	outcome = neutral
+	historical_info = flavor_por.64.historical_info
+
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1480.1.1
+		to = 1550.1.1
+		monthly_chance = 3
+	}
+	fire_only_once = yes
+
+	trigger = {
+		location:anomansah = {
+			owner != root
+			within_colonial_range_of = root
+			NOT = {
+				has_building = building_type:por_feitoria
+			}
+		}
+	}
+
+	immediate = {
+		location:anomansah = {
+			save_scope_as = target_location
+		}
+
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_por.64.a
+
+		historical_option = yes
+
+		scope:target_location = {
+			establish_feitoria_effect = yes
+		}
+
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = {
+				type = mercantilism_vs_free_trade
+				value = societal_value_minor_move_to_left
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.64.b
+
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = {
+				type = mercantilism_vs_free_trade
+				value = societal_value_minor_move_to_right
+			}
+		}
+		else = {
+			add_prestige = prestige_weak_bonus
+		}
+	}
+}
+
+flavor_por.65 = { # The House of Mendes
+	type = country_event
+	title = flavor_por.65.title
+	desc = flavor_por.65.desc
+	outcome = neutral
+	historical_info = flavor_por.65.historical_info
+	fire_only_once = yes
+
+	major = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1510.1.1
+		to = 1575.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		owns = location:lisbon
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		location:lisbon = {
+			save_scope_as = mendes_bank_hq
+			create_dynasty_from_location = Mendes
+			last_dynasty_in_location = { save_scope_as = target_dynasty }
+		}
+		create_character = {
+			dynasty = scope:target_dynasty
+			age = { 20 40 }
+			save_scope_as = target_character
+		}
+
+		scope:mendes_bank_hq = {
+			create_building_country_in_location = {
+				name = {
+					name = MENDES
+				}
+				reforms = {
+					banking_country
+				}
+				save_scope_as = mendes_bank_tag
+				set_new_ruler = scope:target_character
+
+				hidden_effect = {
+					change_country_flag = MENDES
+					define_unique_country_tag = MNDES
+					change_heir_selection = heir_selection:bank_selection
+					change_government_type = government_type:republic
+				}
+			}
+			scope:mendes_bank_hq = {
+				change_building_level_in_location = {
+					building = building_type:banking_office
+					value = 1
+					owner = scope:mendes_bank_tag
+				}
+			}
+		}
+		set_local_variable = {
+			name = amount_of_gold_for_mendes
+			value = { 250 500 }
+		}
+	}
+
+	option = {
+		name = flavor_por.65.a
+
+		historical_option = yes
+
+		show_as_tooltip = {
+			scope:mendes_bank_hq = {
+				change_building_level_in_location = {
+					building = building_type:banking_office
+					value = 1
+					owner = scope:mendes_bank_tag
+				}
+			}
+		}
+		change_gold_effect = { scale = 2 }
+	}
+
+	option = {
+		name = flavor_por.65.b
+		high_risk_option = yes
+
+		show_as_tooltip = {
+			scope:mendes_bank_hq = {
+				change_building_level_in_location = {
+					building = building_type:banking_office
+					value = 1
+					owner = scope:mendes_bank_tag
+				}
+			}
+		}
+		change_gold_effect = { scale = 2 }
+
+		change_player = scope:mendes_bank_tag
+	}
+
+	after = {
+		scope:mendes_bank_tag = {
+			trigger_event_non_silently = flavor_por.66
+		}
+	}
+}
+
+flavor_por.66 = { # Starting Event for The House of Mendes
+	type = country_event
+	title = flavor_por.66.title
+	desc = flavor_por.66.desc
+	outcome = neutral
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+
+	option = {
+		name = flavor_por.66.a
+
+		add_gold = local_var:amount_of_gold_for_mendes
+	}
+}
+
+flavor_por.1000 = { #Capture of the Santa Catarina
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.1000.title
+	desc = flavor_por.1000.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1600.1.1
+		to = 1620.1.1
+		monthly_chance = 20
+	}
+
+	trigger = {
+		num_of_ports > 0
+
+		any_market_with_merchants = {
+			location.sub_continent = sub_continent:south_east_asia
+
+			any_merchant_in_market = {
+				culture = culture:low_franconian
+				NOT = {
+					is_allied_with = { target = root }
+				}
+			}
+		}
+	}
+	
+	illustration_tags = {
+        10 = angry
+        10 = exterior
+    }
+	
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		random_market_with_merchants = {
+			limit = {
+				location.sub_continent = sub_continent:south_east_asia
+				any_merchant_in_market = {
+					culture = culture:low_franconian
+					NOT = {
+						is_allied_with = { target = root }
+					}
+				}
+			}
+
+			random_merchant_in_market = {
+				limit = {
+					culture = culture:low_franconian
+					NOT = {
+						is_allied_with = { target = root }
+					}
+				}
+				save_scope_as = dutch_enemy
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.1000.a
+		historical_option = yes
+		add_prestige = prestige_mild_bonus
+		hidden_effect = {
+			scope:dutch_enemy = {
+				trigger_event_silently = { id = flavor_por.1001 }
+			}
+		}
+	}
+	option = {
+		name = flavor_por.1000.b
+		add_prestige = prestige_mild_penalty
+	}
+	historical_info = flavor_por.1000.historical_info
+}
+
+flavor_por.1001 = {
+	type = country_event
+	title = flavor_por.1001.title
+	desc = flavor_por.1001.desc
+	outcome = neutral
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+		
+	option = {
+		name = flavor_por.1001.a
+		historical_option = yes
+		change_gold_effect = { scale = 6.00 }
+		c:POR = {	trigger_event_silently = { id = flavor_por.1002 }	}
+	}
+	option = {
+		name = flavor_por.1001.b
+		add_prestige = prestige_mild_penalty
+		c:POR = {	trigger_event_silently = { id = flavor_por.1003 } }
+	}
+}
+
+flavor_por.1002 = {
+	type = country_event
+	title = flavor_por.1002.title
+	desc = flavor_por.1002.desc
+	outcome = neutral
+
+	illustration_tags = {
+        10 = angry
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+	
+	option = {
+		name = flavor_por.1002.a
+		add_casus_belli = {	target = scope:dutch_enemy type = casus_belli:cb_trade_war_triggered	}
+	}
+}
+
+flavor_por.1003 = {
+	type = country_event
+	title = flavor_por.1003.title
+	desc = flavor_por.1003.desc
+	outcome = neutral
+
+	illustration_tags = {
+        10 = happy
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+		
+	option = {
+		name = flavor_por.1003.a
+		change_gold_effect = { scale = 6 }
+	}
+}
+
+scripted_trigger is_pedro_and_ines_in_affair = {
+	character:cas_ines_castro = {
+		is_alive = yes
+		owner ?= ROOT
+		NOT = { is_spouse_of = character:por_pedro_i_portugal }
+	}
+	character:por_pedro_i_portugal = {
+		is_alive = yes
+		owner ?= ROOT
+		is_heir = yes
+	}
+}
+
+flavor_por.2000 = { # Inês de Castro joins the court
+	type = country_event
+	title = flavor_por.2000.title
+	desc = flavor_por.2000.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1340.1.1
+		to = 1345.1.1
+		monthly_chance = 33
+	}
+
+	major = yes
+	major_trigger = {
+		this = scope:target_country
+	}
+
+	trigger = {
+		character:cas_ines_castro = {
+			is_alive = yes
+			NOT = { owner ?= ROOT }
+		}
+		character:por_pedro_i_portugal = {
+			is_alive = yes
+			owner ?= ROOT
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		character:cas_ines_castro = {
+			save_scope_as = target_character
+		}
+		character:por_pedro_i_portugal = {
+			save_scope_as = target_character2
+		}
+		scope:target_character.owner = {
+			save_scope_as = target_country
+		}
+	}
+
+	option = {
+		name = flavor_por.2000.a
+
+		scope:target_character = {
+			move_country = ROOT
+		}
+	}
+}
+
+flavor_por.2001 = { # Pedro's affair with Inês
+	type = country_event
+	title = flavor_por.2001.title
+	desc = flavor_por.2001.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = POR
+		from = 1340.1.1
+		to = 1350.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		is_pedro_and_ines_in_affair = yes
+		has_ruler = yes
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		character:cas_ines_castro = {
+			save_scope_as = target_character
+		}
+		character:por_pedro_i_portugal = {
+			save_scope_as = target_character2
+		}
+	}
+
+	option = {
+		name = flavor_por.2001.a
+
+		scope:target_character2 = {
+			impregnate = scope:target_character
+		}
+
+		add_prestige = prestige_severe_penalty
+		add_legitimacy = legitimacy_severe_penalty
+
+		trigger_event_non_silently = {
+			id = flavor_por.2002
+			months = { 6 12 }
+		}
+	}
+}
+
+flavor_por.2002 = { # Castros Influence Pedro
+	type = country_event
+	title = flavor_por.2002.title
+	desc = flavor_por.2002.desc
+	outcome = neutral
+
+	trigger = {
+		is_pedro_and_ines_in_affair = yes
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		character:cas_ines_castro = {
+			save_scope_as = target_character
+		}
+		character:por_pedro_i_portugal = {
+			save_scope_as = target_character2
+		}
+	}
+
+	option = {
+		name = flavor_por.2002.a
+		historical_option = yes
+
+		trigger_event_non_silently = {
+			id = flavor_por.2003
+			days = { 15 30 }
+		}
+	}
+
+	option = {
+		name = flavor_por.2002.b
+
+		trigger_event_non_silently = {
+			id = flavor_por.2007
+			months = { 12 24 }
+		}
+	}
+}
+
+flavor_por.2003 = { # Assassination Complete
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.2003.title
+	desc = flavor_por.2003.desc
+	outcome = neutral
+
+	trigger = {
+		is_pedro_and_ines_in_affair = yes
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_character = {
+			limit = {
+				is_female = no
+				is_adult = yes
+				NOR = {
+					is_ruler = yes
+					dynasty ?= scope:target_character.dynasty
+					this = scope:target_character
+					this = scope:target_character2
+				}
+			}
+			save_scope_as = assassin
+		}
+		set_variable = assassination_of_ines
+		if = {
+			limit = {
+				exists = scope:assassin
+			}
+			set_variable = {
+				name = assassin_of_ines
+				value = scope:assassin
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.2003.a
+
+		if = {
+			limit = {
+				exists = scope:assassin
+			}
+			kill_character = {
+				target = scope:target_character
+				reason = assassination
+				killer = scope:assassin
+			}
+		}
+		else = {
+			kill_character = {
+				target = scope:target_character
+				reason = assassination
+			}
+		}
+
+		trigger_event_non_silently = {
+			id = flavor_por.2004
+		}
+	}
+}
+
+flavor_por.2004 = { # Pedro stages a Rebellion
+	type = country_event
+	title = flavor_por.2004.title
+	desc = flavor_por.2004.desc
+	outcome = neutral
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		clear_saved_scope = target_character
+		create_rebel = {
+			category = pretender
+			save_scope_as = target_rebel
+		}
+
+		scope:target_character2 = {
+			change_character_allegiance = scope:target_rebel
+		}
+
+		ordered_province = {
+			limit = {
+				NOT = {
+					any_location_in_province = {
+						this = root.capital
+					}
+				}
+			}
+			max = {
+				value = root.num_provinces
+				divide = 4
+			}
+			order_by = population
+			check_range_bounds = no
+			add_to_list = revolt_provinces
+		}
+	}
+
+	trigger = {
+		has_ruler = yes
+		scope:target_character2 = {
+			is_child_of = root.ruler
+		}
+	}
+
+	option = {
+		name = flavor_por.2004.a
+
+		historical_option = yes
+
+		change_societal_value = {
+			type = centralization_vs_decentralization
+			value = societal_value_minor_move_to_left
+		}
+		add_legitimacy = legitimacy_mild_penalty
+
+		create_instant_rebellion = {
+			list = revolt_provinces
+			rebel = scope:target_rebel
+		}
+	}
+
+	option = {
+		name = flavor_por.2004.b
+
+		add_prestige = prestige_extreme_penalty
+
+		set_new_ruler = scope:target_character2
+		destroy_rebel = scope:target_rebel
+	}
+}
+
+flavor_por.2005 = { # Pedro on Throne - persecuting the killers of Inês
+	type = country_event
+	title = flavor_por.2005.title
+	desc = flavor_por.2005.desc
+	outcome = neutral
+
+	trigger = {
+		character:por_pedro_i_portugal ?= scope:new_ruler
+		has_variable = assassination_of_ines
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler = {
+			save_scope_as = target_character
+		}
+		character:cas_ines_castro = {
+			save_scope_as = dead_lover
+		}
+	}
+
+	option = {
+		name = flavor_por.2005.a
+
+		scope:target_character = {
+			every_child = {
+				limit = {
+					mother ?= character:cas_ines_castro
+				}
+				remove_character_modifier = bastard
+			}
+		}
+
+		add_stability = stability_mild_penalty
+
+		trigger_event_non_silently = {
+			id = flavor_por.2006
+			months = { 3 6 }
+		}
+	}
+
+	after = {
+		remove_variable = assassination_of_ines
+	}
+}
+
+flavor_por.2006 = { # The Fate of the Assassins
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.2006.title
+	desc = flavor_por.2006.desc
+	outcome = neutral
+
+	illustration_tags = {
+        10 = armed
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		if = {
+			limit = {
+				has_variable = assassin_of_ines
+			}
+			var:assassin_of_ines = {
+				save_scope_as = assassin_of_ines
+			}
+			remove_variable = assassin_of_ines
+		}
+	}
+
+	trigger = {
+		scope:target_character = {
+			is_alive = yes
+		}
+	}
+
+	option = {
+		name = flavor_por.2006.a
+
+		if = {
+			limit = {
+				scope:assassin_of_ines ?= {
+					is_alive = yes
+				}
+			}
+			kill_character = {
+				target = scope:assassin_of_ines
+				reason = execution
+			}
+		}
+
+		scope:target_character = {
+			add_trait = trait:cruel
+			set_nickname = Cruel
+		}
+	}
+}
+
+flavor_por.2007 = { # Castro's Influences
+	type = country_event
+	title = flavor_por.2007.title
+	desc = flavor_por.2007.desc
+	outcome = neutral
+
+	trigger = {
+		is_pedro_and_ines_in_affair = yes
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		c:CAS ?= {
+			save_scope_as = target_country
+		}
+	}
+
+	option = {
+		name = flavor_por.2007.a
+
+		add_country_modifier = {
+			mode = add_and_extend
+			modifier = por_castro_family_influences
+			years = 15
+		}
+
+		scope:target_country ?= {
+			add_opinion = {
+				modifier = por_castro_meddling
+				target = ROOT
+			}
+		}
+
+		add_prestige = prestige_extreme_penalty
+
+		add_legitimacy = legitimacy_extreme_penalty
+	}
+}
+
+flavor_por.2100 = { # A Letter to the Persian King
+	type = country_event
+	title = flavor_por.2100.title
+	desc = flavor_por.2100.desc
+	outcome = neutral
+	historical_info = flavor_por.2100.historical_info
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1500.1.1
+		to = 1600.1.1
+		monthly_chance = 3
+	}
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = exterior
+		10 = regular
+	}
+
+	trigger = {
+		religion.group = religion_group:christian
+		tag_exists = IRA
+		c:IRA ?= {
+			is_subject = no
+			religion.group != root.religion.group
+			ruler_or_regent ?= {
+				OR = {
+					has_trait = tolerant
+					societal_value_type:spiritualist_vs_humanist < 10
+				}
+			}
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+
+		c:IRA = {
+			event_illustration_government_estate_effect = yes
+			save_scope_as = target_country
+			ruler_or_regent = {
+				save_scope_as = target_character2
+			}
+		}
+
+		save_scope_as = prev_country
+	}
+
+	option = {
+		name = flavor_por.2100.a
+
+		historical_option = yes
+
+		custom_tooltip = por_persia_glorify_jesus_tt
+
+		scope:target_country = { trigger_event_silently = flavor_por.2101 }
+	}
+
+	option = {
+		name = flavor_por.2100.b
+
+		add_opinion_mutual_effect = {
+			modifier = por_shared_letters_with_persian_shah
+			target = scope:target_country
+		}
+	}
+}
+
+flavor_por.2101 = {
+	type = country_event
+	title = flavor_por.2101.title
+	desc = flavor_por.2101.desc
+	outcome = neutral
+	historical_info = flavor_por.2101.historical_info
+	major = yes
+	major_trigger = {
+		this = scope:prev_country
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	option = {
+		name = flavor_por.2101.a
+
+		historical_option = yes
+
+		add_opinion_mutual_effect = {
+			modifier = por_shared_letters_with_persian_shah
+			target = scope:prev_country
+		}
+	}
+
+	option = {
+		name = flavor_por.2101.b
+
+		add_opinion_mutual_effect = {
+			modifier = por_rejected_jesus
+			target = scope:prev_country
+		}
+	}
+
+	option = {
+		name = flavor_por.2101.c
+
+		change_religion = scope:prev_country.religion
+		change_religion_for_ruler_and_family = { country = ROOT religion = religion:catholic }
+		add_estate_satisfaction = {
+			type = estate_type:clergy_estate
+			value = estate_satisfaction_extreme_penalty
+		}
+
+		add_opinion_mutual_effect = {
+			modifier = por_converted_to_true_faith
+			target = scope:prev_country
+		}
+	}
+}
+
+flavor_por.2200 = { # Gaining a port in Japan
+	hide_portraits = yes
+	type = country_event
+	title = flavor_por.2200.title
+	desc = flavor_por.2200.desc
+	outcome = neutral
+
+	dynamic_historical_event = {
+		tag = POR
+		from = 1540.1.1
+		to = 1700.1.1
+		monthly_chance = 2
+	}
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = exterior
+		10 = regular
+	}
+
+	trigger = {
+		at_war = no
+		location:kumage_oosumi = {
+			is_discovered_by = root
+			within_naval_range_of = root
+			owner ?= {
+				at_war = no
+				this != root
+				within_diplomatic_range = ROOT
+			}
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		ruler_or_regent ?= {
+			save_scope_as = target_character
+		}
+
+		save_scope_as = prev_country
+
+		location:kumage_oosumi = {
+			save_scope_as = target_location
+			owner ?= {
+				event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+				save_scope_as = target_country
+				ruler_or_regent ?= {
+					save_scope_as = target_character2
+				}
+			}
+		}
+
+		save_scope_as = prev_country
+	}
+
+	option = {
+		name = flavor_por.2200.a
+		historical_option = yes
+
+		show_as_tooltip = {
+			scope:target_location = {
+				construct_building = {
+					building_type = building_type:trade_office
+					cost_multiplier = 0.5
+					cost_multiplier_reason = burghers_cheap_sponsorship
+					owner = root
+					payer = root
+				}
+
+				construct_building = {
+					building_type = building_type:missionary_building
+					cost_multiplier = 0.5
+					cost_multiplier_reason = clergy_cheap_sponsorship
+					owner = root
+					payer = root
+				}
+			}
+
+			transfer_yearly_gold = {
+				value = 0.5
+				target = scope:target_country
+			}
+		}
+
+		custom_tooltip = por_nanban_owner_must_accept_tt
+
+		scope:target_country = { trigger_event_silently = flavor_por.2201 }
+	}
+
+	option = {
+		name = flavor_por.2200.b
+
+		add_casus_belli = {
+			target = scope:target_country
+			type = casus_belli:cb_conquer_province
+			province = scope:target_location.province
+		}
+	}
+}
+
+flavor_por.2201 = {
+	type = country_event
+	title = flavor_por.2201.title
+	desc = flavor_por.2201.desc
+	outcome = neutral
+
+	major = yes
+	major_trigger = {
+		this = scope:prev_country
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+	
+	option = {
+		name = flavor_por.2201.a
+
+		scope:target_location = {
+			construct_building = {
+				building_type = building_type:trade_office
+				cost_multiplier = 0.5
+				cost_multiplier_reason = burghers_cheap_sponsorship
+				owner = scope:prev_country
+				payer = scope:prev_country
+			}
+
+			construct_building = {
+				building_type = building_type:missionary_building
+				cost_multiplier = 0.5
+				cost_multiplier_reason = clergy_cheap_sponsorship
+				owner = scope:prev_country
+				payer = scope:prev_country
+			}
+		}
+
+		scope:prev_country = {
+			transfer_yearly_gold = {
+				value = 0.5
+				target = scope:target_country
+			}
+		}
+
+		if = {
+			limit = {
+				NOR = {
+					current_age = age_1_traditions
+					current_age = age_2_renaissance
+				}
+			}
+			change_societal_value = {
+				type = outward_vs_inward
+				value = societal_value_move_to_left
+			}
+		}
+	}
+
+	option = {
+		name = flavor_por.2201.b
+
+
+		add_opinion_mutual_effect = {
+			modifier = por_rejected_nanban_trade_port
+			target = scope:prev_country
+		}
+	}
+}

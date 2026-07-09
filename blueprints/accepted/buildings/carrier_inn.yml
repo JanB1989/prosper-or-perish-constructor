@@ -1,0 +1,64 @@
+﻿version: 2
+tag: carrier_inn
+building:
+  key: carrier_inn
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots: []
+  possible_production_methods:
+    - pp_carrier_inn_maintenance
+  body: |2-
+    is_foreign = no
+    max_levels = 100
+    increase_per_level_cost = 0.30
+    pop_type = peasants
+    employment_size = 3
+    category = infrastructure_category
+    custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_rural_logistics_priority }
+    icon = carrier_inn
+    rural_settlement = yes
+    town = yes
+    can_close = no
+    always_add_demands = yes
+    forbidden_for_estates = yes
+    important_for_AI = no
+    ai_forbid_shutdown = yes
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      num_roads > 0
+    }
+    construction_demand = pp_carrier_inn_construction
+
+    possible_production_methods = {
+      pp_carrier_inn_maintenance
+    }
+
+    raw_modifier = {
+      free_building_levels = 10
+    }
+production_methods:
+  - key: pp_carrier_inn_maintenance
+    body: |2-
+      victuals = 0.40
+      horses = 0.20
+      livestock = 0.20
+      lumber = 0.20
+      tools = 0.10
+      category = building_maintenance
+localization:
+  entries:
+    carrier_inn: Carrier Inn
+    carrier_inn_desc: Packhorses, carts, and stable yards gather at carrier inns before setting out along the roads. Their keepers turn scattered rural loads into regular traffic for nearby markets.
+    pp_carrier_inn_construction: Carrier Inn Construction
+    pp_carrier_inn_maintenance: Carrier Inn Maintenance
+icon:
+  source_png: ../assets/icons/carrier_inn.png
+  output_dds: carrier_inn.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a carrier inn, transparent background. Center a bold timber-and-stone roadside inn with a dark roof, stable arch, one large packhorse, and one covered cart. Make the land route unmistakable at low resolution with a broad tan road sweeping diagonally through the foreground; use strong silhouettes, high contrast, fewer tiny props, no text, no frame.
+evaluation:
+  allow_rules:
+    profit_percent: Maintenance-only logistics infrastructure consumes supplies while its payoff is carried by location modifiers.
+    input_throughput: Carrier inns intentionally use heavy rural staffing while maintaining costly animals, carts, and provisions.
+    output_throughput: Carrier inns provide supported building levels rather than direct goods output.

@@ -1,4 +1,4 @@
-"""Command surface for the Prosper or Perish constructor workspace."""
+﻿"""Command surface for the Prosper or Perish constructor workspace."""
 
 from __future__ import annotations
 
@@ -15,14 +15,18 @@ import sys
 import time
 import tomllib
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 
 ROOT_MARKER = "constructor.toml"
 CONSTRUCTOR_PROFILE = "constructor"
 CONSTRUCTOR_LOAD_ORDER = Path("constructor.load_order.toml")
+FOCUSED_RELABEL_DEFAULT_MAX_ROUNDS_PER_GOOD = 8
+FOCUSED_RELABEL_DEFAULT_MIN_TARGET_APPEARANCES = 5
+FOCUSED_RELABEL_DEFAULT_TARGET_SIGMA_RATIO = 1.0
 SAVEGAME_DATASET = Path("graphs/dataset")
 SAVEGAME_NOTEBOOK_DATA = Path("graphs/savegame_notebooks/data")
+SAVEGAME_NOTEBOOK_EXPORTS = Path("graphs/savegame_notebooks/exports")
 SAVEGAME_LEGACY_DATASETS = (
     Path("graphs/dataset_v2"),
     Path("graphs/savegame_progression_dataset"),
@@ -54,9 +58,11 @@ SAVEGAME_PURGE_PATHS = (
     PUBLISHED_SAVEGAME_EXPLORER,
     SAVEGAME_DATASET,
     SAVEGAME_NOTEBOOK_DATA,
+    SAVEGAME_NOTEBOOK_EXPORTS,
     *SAVEGAME_LEGACY_DATASETS,
 )
 SETUP_CORRECTION_SCRIPT = Path("scripts/generate_setup_building_corrections.py")
+FOOD_STARTUP_SCRIPT = Path("scripts/generate_food_building_startup.py")
 SETUP_CORRECTION_OUTPUTS = (
     Path("main_menu/setup/start/07_cities_and_buildings.txt"),
     Path("in_game/common/town_setups/zz_pp_sanitized_start_town_setups.txt"),
@@ -73,6 +79,9 @@ LOCATION_POTENTIAL_CONCEPT_LINES = (
 LOCATION_MODIFIER_ALIASES = {
     "pp_loc_washita": "pp_loc_washita_pp",
 }
+LOCATION_POTENTIAL_MAP_HELPER_RE = re.compile(
+    r"^\s*pp_[a-z0-9_]+_productivity_location_potential_map_modifier\s*="
+)
 BOM_TEXT_RELATIVE_PATHS = (
     Path("main_menu/common/game_concepts/pp_location_potential.txt"),
     Path("main_menu/common/game_concepts/pp_fish_capacity.txt"),
@@ -97,17 +106,72 @@ BOM_TEXT_RELATIVE_PATHS = (
     Path("in_game/gfx/map/map_modes/pp_local_output_modifier_map_modes.txt"),
     Path("in_game/common/on_action/pp_apply_location_modifiers.txt"),
     Path("in_game/common/on_action/pp_building_capacity_culling_v2.txt"),
-    Path("in_game/common/building_types/pp_aqueduct_system.txt"),
 )
 GAME_LOADED_TEXT_ROOTS = ("main_menu", "in_game")
 GAME_LOADED_TEXT_SUFFIXES = {".asset", ".gfx", ".gui", ".info", ".txt", ".yml"}
 EU5_USER_DATA_SUFFIX = Path("Documents/Paradox Interactive/Europa Universalis V")
 GAME_RULE_PRESET_RELATIVE_PATH = Path("player/game_rules/presets.txt")
+OBSOLETE_MOD_GAME_RULE_SETTING_KEYS = {
+    "pp_ai_building_maintenance_normal",
+    "pp_ai_building_maintenance_neg_025",
+    "pp_ai_building_maintenance_neg_050",
+    "pp_ai_building_maintenance_neg_075",
+}
 PRICE_MODIFIER_TYPE_DEFINITIONS = Path(
     "main_menu/common/modifier_type_definitions/pp_modifier_types.txt"
 )
 PRICE_MODIFIER_ICONS = Path("main_menu/common/modifier_icons/pp_price_modifier_icons.txt")
 PRICE_MODIFIER_LOCALIZATION = Path("main_menu/localization/english/pp_modifier_types_l_english.yml")
+FARMING_CAPACITY_RAW_MODIFIER_BRIDGES = Path(
+    "in_game/common/building_types/zzzz_pp_farming_capacity_raw_modifier_bridges.txt"
+)
+FARMING_CAPACITY_MODIFIER_TYPES = Path(
+    "main_menu/common/modifier_type_definitions/pp_farming_capacity_modifier_types.txt"
+)
+FARMING_CAPACITY_MODIFIER_ICONS = Path(
+    "main_menu/common/modifier_icons/pp_farming_capacity_modifier_icons.txt"
+)
+FARMING_CAPACITY_MODIFIER_LOCALIZATION = Path(
+    "main_menu/localization/english/pp_farming_capacity_modifier_types_l_english.yml"
+)
+FOOD_REVENUE_MODIFIER_KEY = "local_food_revenue_output_modifier"
+FOOD_REVENUE_PRICE_SCENARIO_SCALE = 0.25
+FOOD_REVENUE_PRICE_CAP_SCALE = 0.5
+FOOD_REVENUE_CHEAP_CAP_TARGET = -0.450
+FOOD_REVENUE_EXPENSIVE_CAP_TARGET = 0.124
+FOOD_REVENUE_STARVING_TARGET = 0.080
+FOOD_REVENUE_TOTAL_MODIFIER_MIN = -0.4
+FOOD_REVENUE_TOTAL_MODIFIER_MAX = 0.4
+FOOD_REVENUE_GROWTH_CAP_TARGET = 2.0
+FOOD_REVENUE_TOLERANCE = 0.000001
+FOOD_REVENUE_PROFITABILITY_BLUEPRINT = Path("buildings/victuals_market.yml")
+FOOD_REVENUE_PROFITABILITY_METHOD = "victuals_market_maintenance"
+FOOD_REVENUE_STATIC_TARGETS = {
+    "cheap_food_in_location": -0.900,
+    "expensive_food_in_location": 0.248,
+    "province_starving": FOOD_REVENUE_STARVING_TARGET,
+}
+FOOD_REVENUE_EDGE_PRICE_TARGETS = {
+    "cheap_cap_0x": FOOD_REVENUE_CHEAP_CAP_TARGET,
+    "base_100": 0.0,
+    "expensive_cap_2x": FOOD_REVENUE_EXPENSIVE_CAP_TARGET,
+}
+FOOD_REVENUE_EDGE_STARVING_TARGETS = {
+    "no": 0.0,
+    "yes": FOOD_REVENUE_STARVING_TARGET,
+}
+FOOD_REVENUE_MATRIX_TARGETS = {
+    ("rural_settlement", "cheap_cap_0x", "full", "no"): -0.4,
+    ("rural_settlement", "base_100", "full", "no"): 0.050,
+    ("megalopolis", "expensive_cap_2x", "empty", "yes"): 0.4,
+}
+FOOD_REVENUE_STORAGE_TARGET_EDGE = ("rural_settlement", "cheap_cap_0x", "full", "no")
+FOOD_REVENUE_RANK_TARGETS = {
+    "rural_settlement": 0.136,
+    "town": 0.156,
+    "city": 0.176,
+    "megalopolis": 0.196,
+}
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -178,6 +242,23 @@ def _build_parser() -> argparse.ArgumentParser:
         "Inspect the configured constructor project.",
         _orchestrator("inspect"),
     )
+    farming_village_unlocks = _add_command(
+        subcommands,
+        "farming-village-unlocks",
+        "Check or regenerate data-driven farming-village RGO unlock advances.",
+        _farming_village_unlocks,
+    )
+    farming_village_unlocks_mode = farming_village_unlocks.add_mutually_exclusive_group()
+    farming_village_unlocks_mode.add_argument(
+        "--check",
+        action="store_true",
+        help="Fail if farming_village.yml unlock advances are stale. This is the default.",
+    )
+    farming_village_unlocks_mode.add_argument(
+        "--write",
+        action="store_true",
+        help="Regenerate the farming_village.yml unlock advances from current location data.",
+    )
     _add_command(
         subcommands,
         "test",
@@ -235,10 +316,104 @@ def _build_parser() -> argparse.ArgumentParser:
         default=CONSTRUCTOR_LOAD_ORDER,
         help="Load-order TOML path relative to --repo. Defaults to constructor.load_order.toml.",
     )
+    location_changes = subcommands.add_parser(
+        "location-changes",
+        help="Detect location-template baseline drift and run focused relabeling.",
+        description="Location-template drift commands for labeling-output modifiers.",
+    )
+    location_changes_subcommands = location_changes.add_subparsers(
+        dest="location_changes_command",
+        required=True,
+    )
+    location_changes_detect = _add_command(
+        location_changes_subcommands,
+        "detect",
+        "Detect current location-template changes against the labeling baseline.",
+        _location_changes_detect,
+    )
+    location_changes_detect.add_argument(
+        "--config",
+        type=Path,
+        default=None,
+        help="Labeling output modifier config. Defaults to [labeling].config.",
+    )
+    location_changes_detect.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Optional CSV report path relative to --repo.",
+    )
+    location_changes_run = _add_command(
+        location_changes_subcommands,
+        "run",
+        "Run focused relabeling for changed location-template targets.",
+        _location_changes_run,
+    )
+    location_changes_run.add_argument(
+        "--config",
+        type=Path,
+        default=None,
+        help="Labeling output modifier config. Defaults to [labeling].config.",
+    )
+    location_changes_run.add_argument(
+        "--max-rounds-per-good",
+        type=int,
+        default=FOCUSED_RELABEL_DEFAULT_MAX_ROUNDS_PER_GOOD,
+        help=(
+            "Hard cap of focused LLM rounds per affected good. "
+            f"Defaults to {FOCUSED_RELABEL_DEFAULT_MAX_ROUNDS_PER_GOOD}."
+        ),
+    )
+    location_changes_run.add_argument(
+        "--min-target-appearances",
+        type=int,
+        default=FOCUSED_RELABEL_DEFAULT_MIN_TARGET_APPEARANCES,
+        help=(
+            "Required parse-ok prompt appearances per target. "
+            f"Defaults to {FOCUSED_RELABEL_DEFAULT_MIN_TARGET_APPEARANCES}."
+        ),
+    )
+    location_changes_run.add_argument(
+        "--target-sigma-ratio",
+        type=float,
+        default=FOCUSED_RELABEL_DEFAULT_TARGET_SIGMA_RATIO,
+        help=(
+            "Required sigma as a ratio of default OpenSkill sigma. "
+            f"Defaults to {FOCUSED_RELABEL_DEFAULT_TARGET_SIGMA_RATIO:g}."
+        ),
+    )
+    location_changes_run.add_argument(
+        "--goods",
+        default=None,
+        help="Optional comma-separated affected goods filter.",
+    )
     output_modifiers.add_argument(
         "--profile",
         default=CONSTRUCTOR_PROFILE,
         help="Parser profile from the load-order TOML. Defaults to constructor.",
+    )
+    food_revenue_check = _add_command(
+        subcommands,
+        "food-revenue-check",
+        "Check parsed Food Revenue modifier edge conditions.",
+        _food_revenue_check,
+    )
+    food_revenue_check.add_argument(
+        "--load-order",
+        type=Path,
+        default=CONSTRUCTOR_LOAD_ORDER,
+        help="Load-order TOML path relative to --repo. Defaults to constructor.load_order.toml.",
+    )
+    food_revenue_check.add_argument(
+        "--profile",
+        default=CONSTRUCTOR_PROFILE,
+        help="Parser profile from the load-order TOML. Defaults to constructor.",
+    )
+    food_revenue_check.add_argument(
+        "--tolerance",
+        type=float,
+        default=FOOD_REVENUE_TOLERANCE,
+        help=f"Allowed absolute difference for checks. Defaults to {FOOD_REVENUE_TOLERANCE:g}.",
     )
     production_throughput = _add_command(
         subcommands,
@@ -262,11 +437,71 @@ def _build_parser() -> argparse.ArgumentParser:
         default=CONSTRUCTOR_PROFILE,
         help="Parser profile from the load-order TOML. Defaults to constructor.",
     )
+    production_profit = _add_command(
+        subcommands,
+        "production-profit",
+        "Report and optionally convert vanilla output-producing building blueprint stubs.",
+        _production_profit,
+    )
+    production_profit.add_argument(
+        "--include-specific",
+        action="store_true",
+        help="Include production methods with potential-specific gates in the profit report.",
+    )
+    production_profit.add_argument(
+        "--load-order",
+        type=Path,
+        default=CONSTRUCTOR_LOAD_ORDER,
+        help="Load-order TOML path relative to --repo. Defaults to constructor.load_order.toml.",
+    )
+    production_profit.add_argument(
+        "--profile",
+        default=CONSTRUCTOR_PROFILE,
+        help="Parser profile from the load-order TOML. Defaults to constructor.",
+    )
+    production_profit.add_argument(
+        "--vanilla-profile",
+        default="vanilla",
+        help="Parser profile used to identify vanilla production buildings. Defaults to vanilla.",
+    )
+    production_profit.add_argument(
+        "--write-blueprints",
+        action="store_true",
+        help="Convert cost-only vanilla production stubs into full REPLACE blueprints.",
+    )
+    production_profit.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="With --write-blueprints, report conversion changes without writing files.",
+    )
     _add_command(
         subcommands,
         "savegame",
         "Export latest savegame facts and the savegame explorer.",
         _savegame,
+    )
+    food_startup = _add_command(
+        subcommands,
+        "food-startup",
+        "Plan data-driven startup cookery and victuals-market placements.",
+        _food_startup,
+    )
+    food_startup.add_argument(
+        "--config",
+        type=Path,
+        default=Path("food_building_startup.toml"),
+        help="Food startup TOML config relative to --repo.",
+    )
+    food_startup.add_argument(
+        "--output-dir",
+        type=Path,
+        default=None,
+        help="Override artifact output directory. Defaults to [inputs].output_dir in the config.",
+    )
+    food_startup.add_argument(
+        "--compile-script",
+        action="store_true",
+        help="Also render the generated startup effect into the artifact output directory.",
     )
     _add_command(
         subcommands,
@@ -350,10 +585,27 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Only rebuild notebook parquet from an existing graphs/dataset.",
     )
+    savegame_notebooks_build.set_defaults(extended=False)
+    savegame_notebooks_build.add_argument(
+        "--extended",
+        action="store_true",
+        help="Include full slower legacy tables such as population, provinces, and characters.",
+    )
+    savegame_notebooks_build.add_argument(
+        "--no-extended",
+        action="store_false",
+        dest="extended",
+        help=argparse.SUPPRESS,
+    )
     savegame_notebooks_build.add_argument(
         "--force",
         action="store_true",
         help="Rebuild notebook parquet even when existing output metadata is current.",
+    )
+    savegame_notebooks_build.add_argument(
+        "--no-webp",
+        action="store_true",
+        help="Skip the standard global WebP map animation exports.",
     )
     _add_command(
         subcommands,
@@ -441,7 +693,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     blueprint = subcommands.add_parser(
         "blueprint",
-        help="Run blueprint list, parity, evaluate, good, or build workflows.",
+        help="Run blueprint list, parity, evaluate, ratios, tag, good, or build workflows.",
         description="Blueprint workflow commands. Extra args are passed to eu5-orchestrator.",
     )
     blueprint_subcommands = blueprint.add_subparsers(dest="blueprint_command", required=True)
@@ -457,6 +709,27 @@ def _build_parser() -> argparse.ArgumentParser:
         "evaluate",
         "Evaluate accepted blueprint economics and balance rules.",
         _blueprint("evaluate"),
+    )
+    ratios = _add_command(
+        blueprint_subcommands,
+        "ratios",
+        "Show a combined modifier ratio table for accepted blueprints.",
+        _blueprint_ratios,
+    )
+    ratios.add_argument(
+        "tag",
+        nargs="?",
+        help="Optional building key, blueprint tag, custom tag, or filename stem.",
+    )
+    tag = _add_command(
+        blueprint_subcommands,
+        "tag",
+        "Evaluate accepted blueprints matching a tag.",
+        _blueprint_tag,
+    )
+    tag.add_argument(
+        "tag",
+        help="Building key, blueprint tag, custom tag, or filename stem, for example farming_capacity.",
     )
     good = _add_command(
         blueprint_subcommands,
@@ -558,20 +831,26 @@ def _run(command: Sequence[str | os.PathLike[str]], repo: Path) -> int:
 def _run_collecting_output(
     command: Sequence[str | os.PathLike[str]],
     repo: Path,
+    *,
+    env: Mapping[str, str] | None = None,
 ) -> tuple[int, str]:
     printable = " ".join(str(part) for part in command)
     print(f"$ {printable}", flush=True)
-    completed = subprocess.run(
+    process = subprocess.Popen(
         [str(part) for part in command],
         cwd=repo,
-        check=False,
+        env=dict(env) if env is not None else None,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
+        bufsize=1,
     )
-    if completed.stdout:
-        print(completed.stdout, end="" if completed.stdout.endswith("\n") else "\n", flush=True)
-    return completed.returncode, completed.stdout or ""
+    output: list[str] = []
+    if process.stdout is not None:
+        for line in process.stdout:
+            output.append(line)
+            print(line, end="", flush=True)
+    return process.wait(), "".join(output)
 
 
 def _orchestrator(action: str):
@@ -600,6 +879,46 @@ def _blueprint_good(
     )
 
 
+def _blueprint_ratios(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    return _run_blueprint_ratios(args.tag, extra, repo, project)
+
+
+def _blueprint_tag(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    return _run(
+        [
+            "eu5-orchestrator",
+            "blueprint",
+            "evaluate",
+            "--project",
+            project,
+            "--building",
+            args.tag,
+            *extra,
+        ],
+        repo,
+    )
+
+
+def _run_blueprint_ratios(
+    tag: str | None, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    command: list[str | os.PathLike[str]] = [
+        "eu5-orchestrator",
+        "blueprint",
+        "ratios",
+        "--project",
+        project,
+    ]
+    if tag is not None:
+        command.append(tag)
+    command.extend(extra)
+    return _run(command, repo)
+
+
 def _setup(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if extra:
         raise SystemExit("setup does not accept extra arguments.")
@@ -625,7 +944,7 @@ def _clean_game_rule_presets(
         raise SystemExit("clean-game-rule-presets does not accept extra arguments.")
 
     mod_root = _project_mod_root(repo, project)
-    setting_keys = _mod_game_rule_setting_keys(mod_root)
+    setting_keys = _mod_game_rule_setting_keys(mod_root) | OBSOLETE_MOD_GAME_RULE_SETTING_KEYS
     if not setting_keys:
         print("mod_game_rule_settings=0", flush=True)
         return 0
@@ -651,12 +970,61 @@ def _test(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: P
     return _run([sys.executable, "-m", "pytest", *pytest_args], repo)
 
 
+def _farming_village_unlocks(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("farming-village-unlocks does not accept extra arguments.")
+
+    from prosper_or_perish_constructor.farming_village_unlocks import (
+        check_blueprint_advancements,
+        write_blueprint_advancements,
+    )
+
+    if args.write:
+        changed = write_blueprint_advancements(repo, project)
+        print(
+            "farming_village_unlocks=updated" if changed else "farming_village_unlocks=unchanged",
+            flush=True,
+        )
+        return 0
+
+    check = check_blueprint_advancements(repo, project)
+    if check.ok:
+        print("farming_village_unlocks=ok", flush=True)
+        return 0
+    print("farming_village_unlocks=stale", flush=True)
+    diff = check.unified_diff()
+    if diff:
+        print(diff, flush=True)
+    print("Run: uv run ppc farming-village-unlocks --write", flush=True)
+    return 1
+
+
 def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if _has_farming_village_blueprint(repo):
+        unlock_code = _farming_village_unlocks(
+            argparse.Namespace(write=False, check=True),
+            (),
+            repo,
+            project,
+        )
+        if unlock_code != 0:
+            return unlock_code
     build_code = _run(["eu5-orchestrator", "build", "--project", project, "--overwrite", *extra], repo)
     if build_code != 0:
         return build_code
     _finalize_constructor_mod(repo, project)
     return 0
+
+
+def _has_farming_village_blueprint(repo: Path) -> bool:
+    from prosper_or_perish_constructor.farming_village_unlocks import BLUEPRINT_RELATIVE_PATH
+
+    return (repo / BLUEPRINT_RELATIVE_PATH).is_file()
 
 
 def _setup_corrections(
@@ -702,6 +1070,35 @@ def _setup_corrections(
     return _run(command, repo)
 
 
+def _food_startup(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("food-startup does not accept extra arguments.")
+    script = repo / FOOD_STARTUP_SCRIPT
+    if not script.is_file():
+        raise SystemExit(f"Missing food startup generator: {script}")
+
+    command: list[str | Path] = [
+        sys.executable,
+        script,
+        "--repo",
+        repo,
+        "--project",
+        project,
+        "--config",
+        _resolve_repo_relative_path(repo, args.config),
+    ]
+    if args.output_dir is not None:
+        command.extend(["--output-dir", args.output_dir])
+    if args.compile_script:
+        command.append("--compile-script")
+    return _run(command, repo)
+
+
 def _disable_setup_corrections(repo: Path, project: Path, *, force: bool) -> int:
     mod_root = _project_mod_root(repo, project)
     removed = 0
@@ -724,9 +1121,44 @@ def _disable_setup_corrections(repo: Path, project: Path, *, force: bool) -> int
 
 
 def _finalize_constructor_mod(repo: Path, project: Path) -> None:
+    from prosper_or_perish_constructor.building_scaling import (
+        apply_increase_per_level_cost_multiplier,
+    )
+    from prosper_or_perish_constructor.free_building_levels import (
+        compile_free_building_level_modifiers,
+        local_free_building_levels_sheet_csv_path,
+    )
+    from prosper_or_perish_constructor.rgo_cost_redirects import write_rgo_cost_redirects
+
     mod_root = _project_mod_root(repo, project)
+    increase_cost_result = apply_increase_per_level_cost_multiplier(repo, mod_root, project)
+    print(
+        "Applied increase_per_level_cost multiplier "
+        f"{increase_cost_result.multiplier} to {increase_cost_result.entries_scaled} "
+        f"building entries across {increase_cost_result.files_changed} changed files.",
+        flush=True,
+    )
+    if local_free_building_levels_sheet_csv_path(repo).is_file():
+        compile_free_building_level_modifiers(repo, mod_root)
     _ensure_location_modifier_application_on_action(mod_root)
     _apply_location_modifier_aliases(mod_root)
+    _remove_location_potential_map_helpers(mod_root)
+    _ensure_farming_capacity_raw_modifier_bridges(repo, mod_root)
+    load_order_path = repo / CONSTRUCTOR_LOAD_ORDER
+    if load_order_path.is_file():
+        redirect_result = write_rgo_cost_redirects(
+            repo=repo,
+            mod_root=mod_root,
+            load_order_path=load_order_path,
+            profile_name=CONSTRUCTOR_PROFILE,
+        )
+        print(
+            "Generated RGO cost redirects for "
+            f"{len(redirect_result.assignments)} active expand_rgo cost entries, "
+            f"{len(redirect_result.classification.priced_targets)} priced building targets, "
+            f"and {len(redirect_result.classification.unpriced_buildings)} unpriced classified buildings.",
+            flush=True,
+        )
     _ensure_price_cost_modifier_assets(mod_root)
     _ensure_constructor_text_boms(mod_root)
     _inject_location_potential_localization(mod_root)
@@ -747,6 +1179,181 @@ def _project_mod_root(repo: Path, project: Path) -> Path:
 
 def _resolve_repo_relative_path(repo: Path, path: Path) -> Path:
     return path if path.is_absolute() else repo / path
+
+
+def _remove_location_potential_map_helpers(mod_root: Path) -> None:
+    modifiers_path = mod_root / "main_menu" / "common" / "static_modifiers" / "pp_location_modifiers.txt"
+    if not modifiers_path.is_file():
+        return
+
+    text = _read_text_preserving_newlines(modifiers_path, encoding="utf-8-sig")
+    lines = text.splitlines(keepends=True)
+    updated_lines: list[str] = []
+    removed = 0
+    for line in lines:
+        if LOCATION_POTENTIAL_MAP_HELPER_RE.match(line.rstrip("\r\n")):
+            removed += 1
+            continue
+        updated_lines.append(line)
+
+    if removed:
+        _write_text_if_changed(modifiers_path, "".join(updated_lines), encoding="utf-8-sig", newline="")
+        print(f"Removed {removed} legacy Location Potential map helper modifier values.", flush=True)
+
+
+def _ensure_farming_capacity_raw_modifier_bridges(repo: Path, mod_root: Path) -> None:
+    from eu5gameparser.domain.building_types import load_building_type_data
+
+    from prosper_or_perish_constructor.rural_capacity import (
+        FARM_WATER_CONTROL_BUILDINGS,
+        LAND_FARM_BUILDINGS,
+        farm_capacity_modifier_for_building,
+    )
+
+    data = load_building_type_data(
+        profile=CONSTRUCTOR_PROFILE,
+        load_order_path=repo / CONSTRUCTOR_LOAD_ORDER,
+    )
+    building_keys = sorted(str(key) for key in data.building_types["name"].to_list())
+    accepted_blueprint_keys = {
+        path.stem
+        for path in (repo / "blueprints" / "accepted" / "buildings").glob("*.yml")
+    }
+    land_farms = set(LAND_FARM_BUILDINGS)
+    water_controls = dict(FARM_WATER_CONTROL_BUILDINGS)
+    fallback_building_keys = [
+        building for building in building_keys if building not in accepted_blueprint_keys
+    ]
+
+    bridge_lines = [
+        "# Prosper or Perish - generated farming-capacity raw modifier fallbacks.",
+        "# Accepted building blueprints own their raw_modifier entries directly.",
+        "# Generated by ppc finalize; do not edit by hand.",
+        "",
+    ]
+    generated_bridge_count = 0
+    for building in fallback_building_keys:
+        updates: dict[str, str] = {}
+        if building in land_farms:
+            updates[farm_capacity_modifier_for_building(building)] = "-1"
+        if building in water_controls:
+            updates[farm_capacity_modifier_for_building(building)] = water_controls[building]
+        if not updates:
+            continue
+        generated_bridge_count += 1
+        bridge_lines.append(f"TRY_INJECT:{building} = {{")
+        bridge_lines.append("\traw_modifier = {")
+        for key, value in updates.items():
+            bridge_lines.append(f"\t\t{key} = {value}")
+        bridge_lines.append("\t}")
+        bridge_lines.append("}")
+        bridge_lines.append("")
+
+    _write_text_if_changed(
+        mod_root / FARMING_CAPACITY_RAW_MODIFIER_BRIDGES,
+        "\n".join(bridge_lines).rstrip() + "\n",
+        encoding="utf-8-sig",
+    )
+
+    capacity_modifier_keys = [
+        *(farm_capacity_modifier_for_building(building) for building, _ in FARM_WATER_CONTROL_BUILDINGS),
+        *(farm_capacity_modifier_for_building(building) for building in LAND_FARM_BUILDINGS),
+    ]
+    _write_farming_capacity_modifier_types(mod_root, capacity_modifier_keys)
+    _write_farming_capacity_modifier_icons(
+        mod_root,
+        building_modifiers={
+            **{farm_capacity_modifier_for_building(building): building for building, _ in FARM_WATER_CONTROL_BUILDINGS},
+            **{farm_capacity_modifier_for_building(building): building for building in LAND_FARM_BUILDINGS},
+        },
+    )
+    _write_farming_capacity_modifier_localization(
+        mod_root,
+        building_modifiers={
+            **{farm_capacity_modifier_for_building(building): building for building, _ in FARM_WATER_CONTROL_BUILDINGS},
+            **{farm_capacity_modifier_for_building(building): building for building in LAND_FARM_BUILDINGS},
+        },
+    )
+    print(
+        "Generated farming capacity raw modifier fallbacks for "
+        f"{generated_bridge_count} non-blueprint building types.",
+        flush=True,
+    )
+
+
+def _write_farming_capacity_modifier_types(mod_root: Path, modifier_keys: Sequence[str]) -> None:
+    lines = [
+        "# Prosper or Perish - generated farming-capacity bridge modifier types.",
+        "# Generated by ppc finalize; do not edit by hand.",
+        "",
+    ]
+    for key in modifier_keys:
+        lines.extend(
+            (
+                f"{key} = {{",
+                "\tdecimals = 2",
+                "\tgame_data = {",
+                "\t\tcategory = location",
+                "\t}",
+                "}",
+                "",
+            )
+        )
+    _write_text_if_changed(
+        mod_root / FARMING_CAPACITY_MODIFIER_TYPES,
+        "\n".join(lines).rstrip() + "\n",
+        encoding="utf-8-sig",
+    )
+
+
+def _write_farming_capacity_modifier_icons(
+    mod_root: Path,
+    *,
+    building_modifiers: Mapping[str, str],
+) -> None:
+    lines = [
+        "# Prosper or Perish - generated farming-capacity bridge modifier icons.",
+        "# Generated by ppc finalize; do not edit by hand.",
+        "",
+    ]
+    for modifier_key, building in building_modifiers.items():
+        icon = f"gfx/interface/icons/buildings/{building}.dds"
+        lines.extend(
+            (
+                f"{modifier_key} = {{",
+                f'\tpositive = "{icon}"',
+                f'\tnegative = "{icon}"',
+                "}",
+                "",
+            )
+        )
+    _write_text_if_changed(
+        mod_root / FARMING_CAPACITY_MODIFIER_ICONS,
+        "\n".join(lines).rstrip() + "\n",
+        encoding="utf-8-sig",
+    )
+
+
+def _write_farming_capacity_modifier_localization(
+    mod_root: Path,
+    *,
+    building_modifiers: Mapping[str, str],
+) -> None:
+    lines = [
+        "l_english:",
+        "  # Farming-capacity bridge modifier localization (generated by ppc finalize)",
+    ]
+    for modifier_key, building in building_modifiers.items():
+        building_link = f"[ShowBuildingTypeName('{building}')|e]"
+        lines.append(f'  MODIFIER_TYPE_NAME_{modifier_key}: "Farming Capacity from {building_link}"')
+        lines.append(
+            f'  MODIFIER_TYPE_DESC_{modifier_key}: "Shows how {building_link} changes Farming Capacity in this location."'
+        )
+    _write_text_if_changed(
+        mod_root / FARMING_CAPACITY_MODIFIER_LOCALIZATION,
+        "\n".join(lines).rstrip() + "\n",
+        encoding="utf-8-sig",
+    )
 
 
 def _inject_location_potential_localization(mod_root: Path) -> None:
@@ -852,6 +1459,7 @@ def _ensure_price_cost_modifier_assets(mod_root: Path) -> None:
         return
 
     _upsert_price_cost_modifier_types(mod_root, modifier_keys)
+    _prune_stale_price_cost_modifier_icons(mod_root, set(modifier_keys))
     _write_price_cost_modifier_icons(mod_root, modifier_keys)
     _append_missing_price_cost_modifier_localization(mod_root, modifier_keys)
 
@@ -877,14 +1485,66 @@ def _upsert_price_cost_modifier_types(mod_root: Path, modifier_keys: Sequence[st
         text = ""
         path.parent.mkdir(parents=True, exist_ok=True)
 
+    text = _prune_stale_price_cost_modifier_blocks(text, set(modifier_keys)).rstrip()
     existing = _top_level_keys(text)
     missing = [key for key in modifier_keys if key not in existing]
-    if not missing:
-        return
-
     blocks = [_price_cost_modifier_type_block(key) for key in missing]
     updated = "\n\n".join(part for part in (text, "\n\n".join(blocks)) if part).rstrip() + "\n"
     _write_text_if_changed(path, updated, encoding="utf-8-sig")
+
+
+def _prune_stale_price_cost_modifier_blocks(text: str, allowed_keys: set[str]) -> str:
+    if not text:
+        return text
+
+    parts: list[str] = []
+    last = 0
+    pattern = re.compile(
+        r"(?m)^\ufeff?(?P<key>pp_[A-Za-z0-9_]+_price_cost_modifier)\s*=\s*\{"
+    )
+    for match in pattern.finditer(text):
+        block_end = _balanced_clausewitz_block_end(text, match.end() - 1)
+        if block_end is None:
+            continue
+        if match.group("key") in allowed_keys:
+            continue
+        parts.append(text[last : match.start()])
+        last = block_end
+
+    if last == 0:
+        return text
+
+    parts.append(text[last:])
+    return re.sub(r"\n{3,}", "\n\n", "".join(parts)).strip()
+
+
+def _balanced_clausewitz_block_end(text: str, open_brace_index: int) -> int | None:
+    depth = 0
+    in_string = False
+    index = open_brace_index
+    while index < len(text):
+        char = text[index]
+        if in_string:
+            if char == '"' and (index == 0 or text[index - 1] != "\\"):
+                in_string = False
+            index += 1
+            continue
+        if char == "#":
+            next_newline = text.find("\n", index)
+            if next_newline == -1:
+                return None
+            index = next_newline + 1
+            continue
+        if char == '"':
+            in_string = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return index + 1
+        index += 1
+    return None
 
 
 def _price_cost_modifier_type_block(modifier_key: str) -> str:
@@ -925,6 +1585,39 @@ def _write_price_cost_modifier_icons(mod_root: Path, modifier_keys: Sequence[str
     _write_text_if_changed(path, "\n".join(lines).rstrip() + "\n", encoding="utf-8-sig")
 
 
+def _prune_stale_price_cost_modifier_icons(mod_root: Path, allowed_keys: set[str]) -> None:
+    icons_root = mod_root / "main_menu" / "common" / "modifier_icons"
+    if not icons_root.is_dir():
+        return
+
+    for path in sorted(icons_root.glob("*.txt")):
+        text = path.read_text(encoding="utf-8-sig")
+        had_price_cost_modifier_asset = _has_price_cost_modifier_reference(text)
+        updated = _prune_stale_price_cost_modifier_blocks(text, allowed_keys)
+        if (
+            had_price_cost_modifier_asset
+            and not _top_level_keys(updated)
+            and not _has_non_comment_text(updated)
+        ):
+            path.unlink()
+            continue
+        if updated != text:
+            _write_text_if_changed(path, updated.rstrip() + "\n", encoding="utf-8-sig")
+
+
+def _has_price_cost_modifier_reference(text: str) -> bool:
+    return "price cost modifier" in text.lower() or bool(
+        re.search(r"pp_[A-Za-z0-9_]+_price_cost_modifier", text)
+    )
+
+
+def _has_non_comment_text(text: str) -> bool:
+    return any(
+        stripped and not stripped.startswith("#")
+        for stripped in (line.strip() for line in text.splitlines())
+    )
+
+
 def _modifier_icon_keys(mod_root: Path, *, exclude: Path) -> set[str]:
     icons_root = mod_root / "main_menu" / "common" / "modifier_icons"
     if not icons_root.is_dir():
@@ -953,7 +1646,10 @@ def _append_missing_price_cost_modifier_localization(
 
     target = mod_root / PRICE_MODIFIER_LOCALIZATION
     if target.is_file():
-        text = target.read_text(encoding="utf-8-sig").rstrip()
+        text = _prune_stale_price_cost_modifier_localization_lines(
+            target.read_text(encoding="utf-8-sig"),
+            set(modifier_keys),
+        ).rstrip()
     else:
         text = "l_english:"
 
@@ -969,9 +1665,26 @@ def _append_missing_price_cost_modifier_localization(
             lines.append(f'  MODIFIER_TYPE_NAME_{modifier_key}: "{display_name} Cost"')
 
     if not lines:
+        if target.is_file():
+            _write_text_if_changed(target, text.rstrip() + "\n", encoding="utf-8-sig")
         return
     updated = text + "\n" + "\n".join(lines) + "\n"
     _write_text_if_changed(target, updated, encoding="utf-8-sig")
+
+
+def _prune_stale_price_cost_modifier_localization_lines(text: str, allowed_keys: set[str]) -> str:
+    if not text:
+        return text
+
+    pattern = re.compile(
+        r"(?m)^\s*MODIFIER_TYPE_(?:DESC|NAME)_"
+        r"(?P<key>pp_[A-Za-z0-9_]+_price_cost_modifier):.*(?:\n|$)"
+    )
+    updated = pattern.sub(
+        lambda match: match.group(0) if match.group("key") in allowed_keys else "",
+        text,
+    )
+    return re.sub(r"\n{3,}", "\n\n", updated).rstrip()
 
 
 def _title_from_key(key: str) -> str:
@@ -1241,6 +1954,810 @@ def _output_modifiers(
     )
     print(_format_output_modifier_table(rows, ages), flush=True)
     return 0
+
+
+def _food_revenue_check(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("food-revenue-check does not accept extra arguments.")
+    if args.tolerance < 0:
+        raise SystemExit("--tolerance must be >= 0.")
+
+    inputs = _load_food_revenue_check_inputs(
+        profile=args.profile,
+        load_order_path=_repo_path(repo, args.load_order),
+        project=project,
+    )
+    report = _food_revenue_check_report(inputs, tolerance=args.tolerance)
+    print(_format_food_revenue_check_report(report), flush=True)
+    return 0 if not report["failures"] else 1
+
+
+def _load_food_revenue_check_inputs(
+    *,
+    profile: str,
+    load_order_path: Path,
+    project: Path,
+) -> dict[str, Any]:
+    from eu5gameparser.domain.defines import load_define_data
+    from eu5gameparser.domain.location_ranks import load_location_rank_data
+    from eu5gameparser.domain.static_modifiers import load_static_modifier_data
+
+    static_data = load_static_modifier_data(profile=profile, load_order_path=load_order_path)
+    rank_data = load_location_rank_data(profile=profile, load_order_path=load_order_path)
+    define_data = load_define_data(profile=profile, load_order_path=load_order_path)
+    growth_cap = define_data.numeric_value("NEconomy", "GROWTH_FROM_FOOD_MULTIPLIER_MAX")
+    if growth_cap is None:
+        raise SystemExit("Missing parsed define NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX.")
+
+    static_values = {
+        name: static_data.modifier_baseline(name, None, FOOD_REVENUE_MODIFIER_KEY)
+        for name in (
+            "cheap_food_in_location",
+            "expensive_food_in_location",
+            "positive_province_food_growth",
+            "province_starving",
+        )
+    }
+    rank_values = {
+        name: rank_data.modifier_baseline(name, "rank_modifier", FOOD_REVENUE_MODIFIER_KEY)
+        for name in FOOD_REVENUE_RANK_TARGETS
+    }
+    return {
+        "growth_cap": float(growth_cap),
+        "static": static_values,
+        "ranks": rank_values,
+        "profitability_rows": _load_food_revenue_profitability_rows(
+            project=project,
+            profile=profile,
+            load_order_path=load_order_path,
+        ),
+        "warnings": [
+            *static_data.warnings,
+            *rank_data.warnings,
+            *define_data.warnings,
+        ],
+    }
+
+
+def _load_food_revenue_profitability_rows(
+    *,
+    project: Path,
+    profile: str,
+    load_order_path: Path,
+) -> list[dict[str, Any]]:
+    from eu5_mod_orchestrator.adapters.building_pipeline import evaluate_building_blueprint_data
+    from eu5_mod_orchestrator.adapters.parser import (
+        load_balance_prices,
+        load_food_cost_context,
+        load_global_building_unlock_ages,
+        load_global_unlock_ages,
+        load_raw_material_goods,
+        load_script_values,
+    )
+    from eu5_mod_orchestrator.config import load_project_config
+
+    config = load_project_config(project)
+    blueprint_path = config.accepted_blueprints_dir / FOOD_REVENUE_PROFITABILITY_BLUEPRINT
+    if not blueprint_path.is_file():
+        raise SystemExit(f"Missing Food Revenue profitability blueprint: {blueprint_path}")
+
+    evaluation = evaluate_building_blueprint_data(
+        blueprint_path,
+        config,
+        price_by_good=load_balance_prices(profile=profile, load_order_path=load_order_path),
+        raw_material_goods=load_raw_material_goods(
+            profile=profile,
+            load_order_path=load_order_path,
+        ),
+        script_values=load_script_values(profile=profile, load_order_path=load_order_path),
+        global_unlock_age_by_method=load_global_unlock_ages(
+            profile=profile,
+            load_order_path=load_order_path,
+        ),
+        global_unlock_age_by_building=load_global_building_unlock_ages(
+            profile=profile,
+            load_order_path=load_order_path,
+        ),
+        food_cost_context=load_food_cost_context(profile=profile, load_order_path=load_order_path),
+    )
+    for method in evaluation.methods:
+        if method.name == FOOD_REVENUE_PROFITABILITY_METHOD:
+            return _food_revenue_profitability_rows_from_method(method)
+    raise SystemExit(
+        f"Missing Food Revenue profitability method {FOOD_REVENUE_PROFITABILITY_METHOD} "
+        f"in {blueprint_path}"
+    )
+
+
+def _food_revenue_profitability_rows_from_method(method: object) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for scenario in getattr(method, "food_cost_scenarios", ()):
+        scenario_name = str(getattr(scenario, "scenario", ""))
+        input_gold = _food_revenue_float(getattr(scenario, "input_gold", None))
+        output_gold = _food_revenue_float(getattr(scenario, "output_gold", None))
+        output_multiplier = _food_revenue_float(getattr(scenario, "output_multiplier", None))
+        actual_output_modifier = (
+            output_multiplier - 1.0 if math.isfinite(output_multiplier) else math.nan
+        )
+        profit_gold = _food_revenue_float(getattr(scenario, "profit_gold", None))
+        worker_food_gold = _food_revenue_float(getattr(scenario, "worker_food_gold", None))
+        goods_input_gold = input_gold - worker_food_gold if math.isfinite(worker_food_gold) else math.nan
+        base_output_gold = (
+            output_gold / output_multiplier
+            if math.isfinite(output_gold)
+            and math.isfinite(output_multiplier)
+            and output_multiplier > 0.0
+            else math.nan
+        )
+        required_output_multiplier = (
+            input_gold / base_output_gold
+            if math.isfinite(input_gold)
+            and math.isfinite(base_output_gold)
+            and base_output_gold > 0.0
+            else math.nan
+        )
+        required_output_modifier = required_output_multiplier - 1.0
+        rows.append(
+            {
+                "scenario": scenario_name,
+                "food_price": _food_revenue_scenario_price_label(scenario_name),
+                "input_gold": input_gold,
+                "goods_input_gold": goods_input_gold,
+                "worker_food_gold": worker_food_gold,
+                "base_output_gold": base_output_gold,
+                "required_output_modifier": required_output_modifier,
+                "actual_output_modifier": actual_output_modifier,
+                "modifier_margin": actual_output_modifier - required_output_modifier,
+                "output_gold": output_gold,
+                "profit_gold": profit_gold,
+                "profitable": math.isfinite(profit_gold) and profit_gold >= 0.0,
+            }
+        )
+    return rows
+
+
+def _food_revenue_rank_profitability_rows(
+    rank_rows: Sequence[Mapping[str, Any]],
+    profitability_rows: Sequence[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    base_row = next(
+        (row for row in profitability_rows if row.get("scenario") == "base_100"),
+        None,
+    )
+    if base_row is None:
+        return []
+
+    input_gold = _food_revenue_float(base_row.get("input_gold"))
+    goods_input_gold = _food_revenue_float(base_row.get("goods_input_gold"))
+    base_output_gold = _food_revenue_float(base_row.get("base_output_gold"))
+    if not math.isfinite(base_output_gold):
+        return []
+
+    rows: list[dict[str, Any]] = []
+    for row in rank_rows:
+        modifier = _food_revenue_float(row.get("base_full_storage"))
+        output_gold = base_output_gold * (1.0 + modifier)
+        profit_gold = output_gold - input_gold if math.isfinite(input_gold) else math.nan
+        profit_ex_food = (
+            output_gold - goods_input_gold
+            if math.isfinite(goods_input_gold)
+            else math.nan
+        )
+        rows.append(
+            {
+                "rank": row.get("rank"),
+                "modifier": modifier,
+                "output_gold": output_gold,
+                "profit_gold": profit_gold,
+                "profit_ex_food": profit_ex_food,
+                "profitable": math.isfinite(profit_gold) and profit_gold >= 0.0,
+            }
+        )
+    return rows
+
+
+def _food_revenue_scenario_price_label(scenario: str) -> str:
+    return {
+        "cheap_50": "50%",
+        "base_100": "100%",
+        "expensive_150": "150%",
+    }.get(scenario, scenario)
+
+
+def _food_revenue_solve_component_target(
+    *,
+    total_modifier: float,
+    known_modifiers: Sequence[float],
+) -> float:
+    total = _food_revenue_float(total_modifier)
+    if not math.isfinite(total):
+        return math.nan
+
+    known_total = 0.0
+    for modifier in known_modifiers:
+        value = _food_revenue_float(modifier)
+        if not math.isfinite(value):
+            return math.nan
+        known_total += value
+    return total - known_total
+
+
+def _food_revenue_storage_full_target_for_edge(
+    edge: tuple[str, str, str, str],
+    *,
+    matrix_targets: Mapping[tuple[str, str, str, str], float],
+    rank_targets: Mapping[str, float],
+    price_targets: Mapping[str, float],
+    starving_targets: Mapping[str, float],
+) -> float:
+    rank, price, storage, starving = edge
+    if storage != "full":
+        raise ValueError("storage target edge must use full storage")
+    return _food_revenue_solve_component_target(
+        total_modifier=_food_revenue_float(matrix_targets.get(edge)),
+        known_modifiers=(
+            _food_revenue_float(rank_targets.get(rank)),
+            _food_revenue_float(price_targets.get(price)),
+            _food_revenue_float(starving_targets.get(starving)),
+        ),
+    )
+
+
+def _food_revenue_storage_raw_target_for_edge(
+    edge: tuple[str, str, str, str],
+    *,
+    growth_cap: float,
+    matrix_targets: Mapping[tuple[str, str, str, str], float],
+    rank_targets: Mapping[str, float],
+    price_targets: Mapping[str, float],
+    starving_targets: Mapping[str, float],
+) -> float:
+    cap = _food_revenue_float(growth_cap)
+    if not math.isfinite(cap) or cap == 0.0:
+        return math.nan
+    return _food_revenue_storage_full_target_for_edge(
+        edge,
+        matrix_targets=matrix_targets,
+        rank_targets=rank_targets,
+        price_targets=price_targets,
+        starving_targets=starving_targets,
+    ) / cap
+
+
+def _food_revenue_check_report(
+    inputs: Mapping[str, Any],
+    *,
+    tolerance: float,
+) -> dict[str, Any]:
+    static_values = dict(inputs.get("static") or {})
+    rank_values = dict(inputs.get("ranks") or {})
+    growth_cap = _food_revenue_float(inputs.get("growth_cap"))
+    storage_raw = _food_revenue_float(static_values.get("positive_province_food_growth"))
+    cheap_raw = _food_revenue_float(static_values.get("cheap_food_in_location"))
+    expensive_raw = _food_revenue_float(static_values.get("expensive_food_in_location"))
+    starving = _food_revenue_float(static_values.get("province_starving"))
+
+    component_rows: list[dict[str, Any]] = []
+    component_rows.append(
+        _food_revenue_check_row(
+            "growth storage cap",
+            growth_cap,
+            FOOD_REVENUE_GROWTH_CAP_TARGET,
+            tolerance,
+        )
+    )
+    component_rows.append(
+        _food_revenue_check_row(
+            "cheap raw modifier",
+            cheap_raw,
+            FOOD_REVENUE_STATIC_TARGETS["cheap_food_in_location"],
+            tolerance,
+        )
+    )
+    component_rows.append(
+        _food_revenue_check_row(
+            "cheap cap effect (food price 0x)",
+            cheap_raw * FOOD_REVENUE_PRICE_CAP_SCALE,
+            FOOD_REVENUE_CHEAP_CAP_TARGET,
+            tolerance,
+        )
+    )
+    component_rows.append(
+        _food_revenue_check_row(
+            "cheap scenario effect (food price 50%)",
+            cheap_raw * FOOD_REVENUE_PRICE_SCENARIO_SCALE,
+            FOOD_REVENUE_STATIC_TARGETS["cheap_food_in_location"]
+            * FOOD_REVENUE_PRICE_SCENARIO_SCALE,
+            tolerance,
+        )
+    )
+    component_rows.append(
+        _food_revenue_check_row("base scenario effect (food price 100%)", 0.0, 0.0, tolerance)
+    )
+    component_rows.append(
+        _food_revenue_check_row(
+            "expensive scenario effect (food price 150%)",
+            expensive_raw * FOOD_REVENUE_PRICE_SCENARIO_SCALE,
+            FOOD_REVENUE_STATIC_TARGETS["expensive_food_in_location"]
+            * FOOD_REVENUE_PRICE_SCENARIO_SCALE,
+            tolerance,
+        )
+    )
+    component_rows.append(
+        _food_revenue_check_row(
+            "expensive cap effect (food price 2x)",
+            expensive_raw * FOOD_REVENUE_PRICE_CAP_SCALE,
+            FOOD_REVENUE_EXPENSIVE_CAP_TARGET,
+            tolerance,
+        )
+    )
+    component_rows.append(
+        _food_revenue_check_row(
+            "expensive raw modifier",
+            expensive_raw,
+            FOOD_REVENUE_STATIC_TARGETS["expensive_food_in_location"],
+            tolerance,
+        )
+    )
+    storage_full_target = _food_revenue_storage_full_target_for_edge(
+        FOOD_REVENUE_STORAGE_TARGET_EDGE,
+        matrix_targets=FOOD_REVENUE_MATRIX_TARGETS,
+        rank_targets=FOOD_REVENUE_RANK_TARGETS,
+        price_targets=FOOD_REVENUE_EDGE_PRICE_TARGETS,
+        starving_targets=FOOD_REVENUE_EDGE_STARVING_TARGETS,
+    )
+    storage_raw_target = _food_revenue_storage_raw_target_for_edge(
+        FOOD_REVENUE_STORAGE_TARGET_EDGE,
+        growth_cap=growth_cap,
+        matrix_targets=FOOD_REVENUE_MATRIX_TARGETS,
+        rank_targets=FOOD_REVENUE_RANK_TARGETS,
+        price_targets=FOOD_REVENUE_EDGE_PRICE_TARGETS,
+        starving_targets=FOOD_REVENUE_EDGE_STARVING_TARGETS,
+    )
+    component_rows.append(
+        _food_revenue_check_row(
+            "stored-food raw modifier",
+            storage_raw,
+            storage_raw_target,
+            tolerance,
+        )
+    )
+    component_rows.append(
+        _food_revenue_check_row(
+            "stored-food full effect",
+            storage_raw * growth_cap,
+            storage_full_target,
+            tolerance,
+        )
+    )
+    component_rows.append(
+        _food_revenue_check_row(
+            "starving boost",
+            starving,
+            FOOD_REVENUE_STARVING_TARGET,
+            tolerance,
+        )
+    )
+    for rank, target in FOOD_REVENUE_RANK_TARGETS.items():
+        component_rows.append(
+            _food_revenue_check_row(
+                f"rank baseline {rank}",
+                _food_revenue_float(rank_values.get(rank)),
+                target,
+                tolerance,
+            )
+        )
+
+    price_rows = [
+        {
+            "scenario": "cheap_50",
+            "modifier": cheap_raw * FOOD_REVENUE_PRICE_SCENARIO_SCALE,
+        },
+        {"scenario": "base_100", "modifier": 0.0},
+        {
+            "scenario": "expensive_150",
+            "modifier": expensive_raw * FOOD_REVENUE_PRICE_SCENARIO_SCALE,
+        },
+        {"scenario": "cheap_cap_0x", "modifier": cheap_raw * FOOD_REVENUE_PRICE_CAP_SCALE},
+        {
+            "scenario": "expensive_cap_2x",
+            "modifier": expensive_raw * FOOD_REVENUE_PRICE_CAP_SCALE,
+        },
+    ]
+    for row in price_rows:
+        row["output_multiplier"] = 1.0 + row["modifier"]
+
+    storage_full = storage_raw * growth_cap
+    cheap_cap = cheap_raw * FOOD_REVENUE_PRICE_CAP_SCALE
+    expensive_cap = expensive_raw * FOOD_REVENUE_PRICE_CAP_SCALE
+    profitability_rows = list(inputs.get("profitability_rows") or [])
+    rank_rows = []
+    for rank in FOOD_REVENUE_RANK_TARGETS:
+        baseline = _food_revenue_float(rank_values.get(rank))
+        rank_rows.append(
+            {
+                "rank": rank,
+                "base_full_storage": baseline + storage_full,
+                "cheap_cap_full_storage": baseline + cheap_cap + storage_full,
+                "expensive_cap_empty": baseline + expensive_cap,
+                "expensive_cap_starving": baseline + expensive_cap + starving,
+            }
+        )
+
+    edge_price_rows = [
+        {"price": "cheap_cap_0x", "modifier": cheap_cap},
+        {"price": "base_100", "modifier": 0.0},
+        {"price": "expensive_cap_2x", "modifier": expensive_cap},
+    ]
+    edge_storage_rows = [
+        {"storage": "empty", "modifier": 0.0},
+        {"storage": "full", "modifier": storage_full},
+    ]
+    edge_starving_rows = [
+        {"starving": "no", "modifier": 0.0},
+        {"starving": "yes", "modifier": starving},
+    ]
+    matrix_rows = []
+    for rank in FOOD_REVENUE_RANK_TARGETS:
+        rank_modifier = _food_revenue_float(rank_values.get(rank))
+        for price_row in edge_price_rows:
+            for storage_row in edge_storage_rows:
+                for starving_row in edge_starving_rows:
+                    total_modifier = (
+                        rank_modifier
+                        + price_row["modifier"]
+                        + storage_row["modifier"]
+                        + starving_row["modifier"]
+                    )
+                    matrix_rows.append(
+                        {
+                            "rank": rank,
+                            "price": price_row["price"],
+                            "storage": storage_row["storage"],
+                            "starving": starving_row["starving"],
+                            "rank_modifier": rank_modifier,
+                            "price_modifier": price_row["modifier"],
+                            "storage_modifier": storage_row["modifier"],
+                            "starving_modifier": starving_row["modifier"],
+                            "total_modifier": total_modifier,
+                            "in_band": (
+                                FOOD_REVENUE_TOTAL_MODIFIER_MIN - tolerance
+                                <= total_modifier
+                                <= FOOD_REVENUE_TOTAL_MODIFIER_MAX + tolerance
+                            ),
+                            "output_multiplier": 1.0 + total_modifier,
+                        }
+                    )
+
+    matrix_by_key = {
+        (
+            str(row["rank"]),
+            str(row["price"]),
+            str(row["storage"]),
+            str(row["starving"]),
+        ): row
+        for row in matrix_rows
+    }
+    for key, target in FOOD_REVENUE_MATRIX_TARGETS.items():
+        row = matrix_by_key.get(key)
+        parsed = math.nan if row is None else _food_revenue_float(row["total_modifier"])
+        component_rows.append(
+            _food_revenue_check_row(
+                f"matrix {' '.join(key)} total",
+                parsed,
+                target,
+                tolerance,
+            )
+        )
+
+    matrix_band_failures = [row for row in matrix_rows if not row["in_band"]]
+    failures = [
+        *[row for row in component_rows if not row["ok"]],
+        *matrix_band_failures,
+    ]
+    return {
+        "growth_cap": growth_cap,
+        "component_rows": component_rows,
+        "price_rows": price_rows,
+        "rank_rows": rank_rows,
+        "matrix_rows": matrix_rows,
+        "profitability_rows": profitability_rows,
+        "rank_profitability_rows": _food_revenue_rank_profitability_rows(
+            rank_rows,
+            profitability_rows,
+        ),
+        "matrix_band_failures": matrix_band_failures,
+        "failures": failures,
+        "warnings": list(inputs.get("warnings") or []),
+    }
+
+
+def _food_revenue_check_row(
+    name: str,
+    parsed: float,
+    target: float,
+    tolerance: float,
+) -> dict[str, Any]:
+    delta = parsed - target
+    ok = math.isfinite(parsed) and math.isfinite(target) and abs(delta) <= tolerance
+    return {
+        "name": name,
+        "parsed": parsed,
+        "target": target,
+        "delta": delta,
+        "ok": ok,
+    }
+
+
+def _food_revenue_float(value: object) -> float:
+    if isinstance(value, bool) or value is None:
+        return math.nan
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return math.nan
+    return number if math.isfinite(number) else math.nan
+
+
+def _format_food_revenue_check_report(report: Mapping[str, Any]) -> str:
+    lines = ["Food Revenue parsed edge check"]
+    warnings = list(report.get("warnings") or [])
+    if warnings:
+        lines.append(f"parser_warnings={len(warnings)}")
+    lines.append("")
+    lines.append("component checks:")
+    component_rows = list(report.get("component_rows") or [])
+    name_width = max(len("check"), *(len(str(row["name"])) for row in component_rows))
+    lines.append(
+        "  ".join(
+            [
+                "check".ljust(name_width),
+                "parsed".rjust(8),
+                "target".rjust(8),
+                "delta".rjust(8),
+                "status",
+            ]
+        )
+    )
+    lines.append(
+        "  ".join(
+            [
+                "-" * name_width,
+                "-" * 8,
+                "-" * 8,
+                "-" * 8,
+                "------",
+            ]
+        )
+    )
+    for row in component_rows:
+        lines.append(
+            "  ".join(
+                [
+                    str(row["name"]).ljust(name_width),
+                    _format_food_revenue_value(row["parsed"]).rjust(8),
+                    _format_food_revenue_value(row["target"]).rjust(8),
+                    _format_food_revenue_value(row["delta"]).rjust(8),
+                    "ok" if row["ok"] else "FAIL",
+                ]
+            )
+        )
+
+    lines.append("")
+    lines.append("price scenario output modifiers and multipliers:")
+    lines.append("scenario           modifier  output_mult")
+    lines.append("-----------------  --------  -------------")
+    for row in report.get("price_rows") or []:
+        lines.append(
+            "  ".join(
+                [
+                    str(row["scenario"]).ljust(17),
+                    _format_food_revenue_value(row["modifier"]).rjust(8),
+                    f"{row['output_multiplier']:.3f}".rjust(11),
+                ]
+            )
+        )
+
+    lines.append("")
+    lines.append("rank edge totals:")
+    lines.append(
+        "rank              base+stored  cheap_cap+stored  expensive_cap  expensive_cap+starving"
+    )
+    lines.append(
+        "----------------  -----------  ----------------  -------------  ----------------------"
+    )
+    for row in report.get("rank_rows") or []:
+        lines.append(
+            "  ".join(
+                [
+                    str(row["rank"]).ljust(16),
+                    _format_food_revenue_value(row["base_full_storage"]).rjust(11),
+                    _format_food_revenue_value(row["cheap_cap_full_storage"]).rjust(16),
+                    _format_food_revenue_value(row["expensive_cap_empty"]).rjust(13),
+                    _format_food_revenue_value(row["expensive_cap_starving"]).rjust(22),
+                ]
+            )
+        )
+
+    profitability_rows = list(report.get("profitability_rows") or [])
+    if profitability_rows:
+        lines.append("")
+        lines.append("victuals market base-condition profitability:")
+        lines.append(
+            "scenario       food_price  input  base_out  req_mod  actual_mod  margin_mod  output  profit  status"
+        )
+        lines.append(
+            "-------------  ----------  -----  --------  -------  ----------  ----------  ------  ------  ------"
+        )
+        for row in profitability_rows:
+            lines.append(
+                "  ".join(
+                    [
+                        str(row["scenario"]).ljust(13),
+                        str(row["food_price"]).rjust(10),
+                        _format_food_revenue_unsigned(row["input_gold"]).rjust(5),
+                        _format_food_revenue_unsigned(row["base_output_gold"]).rjust(8),
+                        _format_food_revenue_value(row["required_output_modifier"]).rjust(7),
+                        _format_food_revenue_value(row["actual_output_modifier"]).rjust(10),
+                        _format_food_revenue_value(row["modifier_margin"]).rjust(10),
+                        _format_food_revenue_unsigned(row["output_gold"]).rjust(6),
+                        _format_food_revenue_value(row["profit_gold"]).rjust(6),
+                        "profit" if row["profitable"] else "loss",
+                    ]
+                )
+            )
+
+    rank_profitability_rows = list(report.get("rank_profitability_rows") or [])
+    if rank_profitability_rows:
+        lines.append("")
+        lines.append("victuals market base price + full storage profitability by rank:")
+        lines.append("rank              total_mod  output  profit  profit_ex_food  status")
+        lines.append("----------------  ---------  ------  ------  --------------  ------")
+        for row in rank_profitability_rows:
+            lines.append(
+                "  ".join(
+                    [
+                        str(row["rank"]).ljust(16),
+                        _format_food_revenue_value(row["modifier"]).rjust(9),
+                        _format_food_revenue_unsigned(row["output_gold"]).rjust(6),
+                        _format_food_revenue_value(row["profit_gold"]).rjust(6),
+                        _format_food_revenue_value(row["profit_ex_food"]).rjust(14),
+                        "profit" if row["profitable"] else "loss",
+                    ]
+                )
+            )
+
+    matrix_rows = list(report.get("matrix_rows") or [])
+    lines.append("")
+    lines.append(f"full edge matrix ({len(matrix_rows)} rows):")
+    lines.append(
+        "rank              price             storage  starving  rank_mod  price_mod  storage_mod  starving_mod  total_mod  output_mult  status"
+    )
+    lines.append(
+        "----------------  ----------------  -------  --------  --------  ---------  -----------  ------------  ---------  -----------  ------"
+    )
+    for row in matrix_rows:
+        lines.append(
+            "  ".join(
+                [
+                    str(row["rank"]).ljust(16),
+                    str(row["price"]).ljust(16),
+                    str(row["storage"]).ljust(7),
+                    str(row["starving"]).ljust(8),
+                    _format_food_revenue_value(row["rank_modifier"]).rjust(8),
+                    _format_food_revenue_value(row["price_modifier"]).rjust(9),
+                    _format_food_revenue_value(row["storage_modifier"]).rjust(11),
+                    _format_food_revenue_value(row["starving_modifier"]).rjust(12),
+                    _format_food_revenue_value(row["total_modifier"]).rjust(9),
+                    f"{row['output_multiplier']:.3f}".rjust(11),
+                    "ok" if row["in_band"] else "FAIL",
+                ]
+            )
+        )
+
+    matrix_band_failures = list(report.get("matrix_band_failures") or [])
+    if matrix_band_failures:
+        lines.append("")
+        lines.append(
+            "matrix band failures: "
+            f"{len(matrix_band_failures)} rows outside "
+            f"[{FOOD_REVENUE_TOTAL_MODIFIER_MIN:+.3f}, "
+            f"{FOOD_REVENUE_TOTAL_MODIFIER_MAX:+.3f}]"
+        )
+
+    failures = list(report.get("failures") or [])
+    lines.append("")
+    if failures:
+        lines.append(f"result=fail failures={len(failures)}")
+    else:
+        lines.append("result=ok")
+    return "\n".join(lines)
+
+
+def _format_food_revenue_value(value: object) -> str:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return "nan"
+    if not math.isfinite(number):
+        return "nan"
+    if abs(number) < 0.0000000001:
+        number = 0.0
+    return f"{number:+.3f}"
+
+
+def _format_food_revenue_unsigned(value: object) -> str:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return "nan"
+    if not math.isfinite(number):
+        return "nan"
+    if abs(number) < 0.0000000001:
+        number = 0.0
+    return f"{number:.3f}"
+
+
+def _location_changes_detect(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("location-changes detect does not accept extra arguments.")
+
+    from prosper_or_perish_constructor.location_changes import (
+        build_location_change_report,
+        print_location_change_report,
+        write_location_change_report,
+    )
+
+    report = build_location_change_report(repo=repo, project=project, config_path=args.config)
+    output = _repo_path(repo, args.output) if args.output is not None else None
+    if output is not None:
+        write_location_change_report(report, output)
+    print_location_change_report(report, output=output)
+    return 0
+
+
+def _location_changes_run(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("location-changes run does not accept extra arguments.")
+    if args.max_rounds_per_good < 1:
+        raise SystemExit("--max-rounds-per-good must be >= 1")
+    if args.min_target_appearances < 1:
+        raise SystemExit("--min-target-appearances must be >= 1")
+    if args.target_sigma_ratio <= 0:
+        raise SystemExit("--target-sigma-ratio must be > 0")
+
+    from prosper_or_perish_constructor.location_changes import (
+        build_location_change_report,
+        print_location_change_report,
+        run_focused_relabel,
+    )
+
+    goods_filter = (
+        {part.strip() for part in str(args.goods).split(",") if part.strip()}
+        if args.goods
+        else None
+    )
+    report = build_location_change_report(repo=repo, project=project, config_path=args.config)
+    print_location_change_report(report)
+    return run_focused_relabel(
+        report,
+        max_rounds_per_good=args.max_rounds_per_good,
+        min_target_appearances=args.min_target_appearances,
+        target_sigma_ratio=args.target_sigma_ratio,
+        goods_filter=goods_filter,
+    )
 
 
 def _load_output_modifier_inputs(
@@ -1513,6 +3030,59 @@ def _format_production_throughput_table(
     return _format_output_modifier_table(rows, ages)
 
 
+def _production_profit(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("production-profit does not accept extra arguments.")
+
+    from prosper_or_perish_constructor.production_profit import (
+        convert_vanilla_production_stubs,
+        production_profit_report,
+    )
+
+    load_order_path = _repo_path(repo, args.load_order)
+    if args.write_blueprints:
+        from prosper_or_perish_constructor.building_scaling import load_building_scaling_config
+
+        scaling = load_building_scaling_config(project)
+        results = convert_vanilla_production_stubs(
+            repo,
+            profile=args.profile,
+            vanilla_profile=args.vanilla_profile,
+            load_order_path=load_order_path,
+            dry_run=args.dry_run,
+            burgher_employment_size=float(scaling.burgher_building_employment_size),
+        )
+        changed = sum(1 for result in results if result.changed)
+        mode = "dry_run" if args.dry_run else "written"
+        print(
+            f"converted_blueprints={len(results)} changed={changed} mode={mode}",
+            flush=True,
+        )
+        for result in results:
+            relative = result.path.relative_to(repo)
+            state = "changed" if result.changed else "unchanged"
+            print(
+                f"  {result.building}: {relative} "
+                f"slots={result.slot_count} methods={result.method_count} {state}",
+                flush=True,
+            )
+        return 0
+
+    print(
+        production_profit_report(
+            repo,
+            profile=args.profile,
+            vanilla_profile=args.vanilla_profile,
+            load_order_path=load_order_path,
+            include_specific=args.include_specific,
+        ),
+        flush=True,
+    )
+    return 0
+
+
 def _savegame(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     save_args: list[str | os.PathLike[str]] = []
     if not _has_option(extra, "--save") and not _has_option(extra, "--save-dir"):
@@ -1590,7 +3160,7 @@ def _publish_graph_examples(repo: Path, examples: Sequence[str]) -> int:
         destination = examples_dir / example
         if not source.is_file():
             raise SystemExit(f"Missing generated docs output: {source}")
-        shutil.copy2(source, destination)
+        _copy_published_example(source, destination, repo)
         print(f"Updated docs/examples/{example}", flush=True)
 
     graph_assets_dir = graphs_dir / "assets"
@@ -1599,6 +3169,30 @@ def _publish_graph_examples(repo: Path, examples: Sequence[str]) -> int:
         shutil.copytree(graph_assets_dir, example_assets_dir, dirs_exist_ok=True)
         print("Updated docs/examples/assets", flush=True)
     return 0
+
+
+def _copy_published_example(source: Path, destination: Path, repo: Path) -> None:
+    if source.suffix not in {".html", ".json"}:
+        shutil.copy2(source, destination)
+        return
+
+    text = source.read_text(encoding="utf-8")
+    destination.write_text(_portable_published_text(text, repo), encoding="utf-8")
+
+
+def _portable_published_text(text: str, repo: Path) -> str:
+    resolved = repo.resolve()
+    replacements = {
+        resolved.as_posix(),
+        str(resolved),
+        str(resolved).replace("\\", "\\\\"),
+    }
+    for raw in sorted(replacements, key=len, reverse=True):
+        if not raw:
+            continue
+        text = text.replace(f"{raw}/", "<constructor-repo>/")
+        text = text.replace(raw, "<constructor-repo>")
+    return text
 
 
 def _dashboard(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
@@ -1672,8 +3266,10 @@ def _savegame_notebooks_build(
                 _repo_path(repo, args.load_order),
                 "--workers",
                 str(args.workers),
+                *(["--extended"] if args.extended else []),
             ],
             repo,
+            env=_native_temp_subprocess_env(repo),
         )
         if ingest_code != 0:
             return ingest_code
@@ -1687,20 +3283,99 @@ def _savegame_notebooks_build(
     elif args.save_dir is not None:
         active_save_dir = _repo_path(repo, args.save_dir).expanduser()
 
+    dataset = _repo_path(repo, args.dataset)
     _print_savegame_notebook_dataset_status(
         repo,
-        _repo_path(repo, args.dataset),
+        dataset,
         output=_repo_path(repo, args.output),
         force=args.force,
         active_save_dir=active_save_dir,
         require_manifest=args.no_ingest,
     )
+    if not args.no_webp:
+        if (dataset / "manifest.parquet").is_file():
+            _export_savegame_notebook_global_webps(
+                repo=repo,
+                dataset=dataset,
+                load_order=_repo_path(repo, args.load_order),
+                profile=args.profile,
+            )
+        else:
+            print("global webp exports: skipped (raw dataset manifest missing)", flush=True)
     return 0
 
 
 def _extract_report_count(output: str, key: str) -> int | None:
     match = re.search(rf"(?m)^{re.escape(key)}:\s*(\d+)\s*$", output)
     return int(match.group(1)) if match else None
+
+
+def _native_temp_subprocess_env(repo: Path) -> dict[str, str]:
+    """Return an env with temp files on native Linux storage for worker sockets."""
+
+    temp_dir = repo / "artifacts" / "tmp"
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    env = dict(os.environ)
+    temp_text = str(temp_dir)
+    env["TMPDIR"] = temp_text
+    env["TMP"] = temp_text
+    env["TEMP"] = temp_text
+    return env
+
+
+def _export_savegame_notebook_global_webps(
+    *,
+    repo: Path,
+    dataset: Path,
+    load_order: Path,
+    profile: str,
+) -> None:
+    from prosper_or_perish_constructor import savegame_notebook
+
+    print("global webp exports: rendering", flush=True)
+    started_at = time.perf_counter()
+    output = savegame_notebook.export_global_map_outputs(
+        repo=repo,
+        data_root=dataset,
+        load_order_path=load_order,
+        profile=profile,
+    )
+    elapsed = time.perf_counter() - started_at
+    for export in output.animations:
+        print(
+            f"global webp: {_display_path(repo, export.path)} "
+            f"({_format_file_size(export.path)})",
+            flush=True,
+        )
+    print(f"global viewer: {_display_path(repo, output.viewer.path)}", flush=True)
+    print(f"global webp exports: completed in {_format_elapsed_seconds(elapsed)}", flush=True)
+
+
+def _display_path(repo: Path, path: Path) -> Path:
+    try:
+        return path.relative_to(repo)
+    except ValueError:
+        return path
+
+
+def _format_file_size(path: Path) -> str:
+    try:
+        size = path.stat().st_size
+    except OSError:
+        return "size unknown"
+    if size >= 1_000_000:
+        return f"{size / 1_000_000:.1f} MB"
+    if size >= 1_000:
+        return f"{size / 1_000:.1f} KB"
+    return f"{size} B"
+
+
+def _format_elapsed_seconds(seconds: float) -> str:
+    total = max(0, int(round(seconds)))
+    minutes, remainder = divmod(total, 60)
+    if minutes:
+        return f"{minutes}m {remainder:02d}s"
+    return f"{remainder}s"
 
 
 def _print_savegame_notebook_dataset_status(

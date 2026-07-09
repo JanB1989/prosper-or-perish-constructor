@@ -8,6 +8,9 @@ dependencies = [
     "eu5-building-pipeline",
     "eu5-mod-orchestrator",
     "eu5gameparser",
+    "google-api-python-client>=2.170.0",
+    "google-auth-httplib2>=0.2.0",
+    "google-auth-oauthlib>=1.2.2",
     "prosper-or-perish-labeling-pipeline",
     "prosper-or-perish-population-capacity-pipeline",
 ]
@@ -21,7 +24,9 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.6.0",
     "pytest>=9.0.3",
+    "scikit-learn>=1.9.0",
 ]
 
 [tool.uv.sources]

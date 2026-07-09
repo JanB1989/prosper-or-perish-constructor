@@ -1,5 +1,11 @@
-version: 2
+﻿version: 2
 tag: tobacco_farm
+upgrade_chain:
+  family: tobacco_farm
+  tier: 0
+  previous: null
+  next: market_tobacco_farm
+  unlock_advance: null
 building:
   key: tobacco_farm
   mode: CREATE
@@ -15,11 +21,12 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = farm_max_level
+    increase_per_level_cost = 0.20
+    max_levels = farm_capacity_max_tobacco_farm
     pop_type = laborers
-    employment_size = 3
-    price = pp_tobacco_farm_price
+    employment_size = 1
     category = rgo_building_category
+    custom_tags = { farming_capacity }
     icon = tobacco_farm
     rural_settlement = yes
     town = yes
@@ -31,10 +38,6 @@ building:
         raw_material = goods:tobacco
     }
 
-    allow = {
-        farm_capacity_available > 0
-    }
-
     construction_demand = basic_construction_needs
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -44,7 +47,7 @@ building:
     unique_production_methods = {
         pp_tobacco_farm_base_tobacco = {
             produced = tobacco
-            output = 0.120
+            output = 0.040
             category = building_maintenance
         }
     }
@@ -53,26 +56,24 @@ building:
             category = building_maintenance
         }
         pp_tobacco_farm_curing_barns = {
-            lumber = 0.350 # curing barns
-            fiber_crops = 0.050 # hanging cords, packing twine
-            tools = 0.045 # knives and presses
+            lumber = 0.117 # curing barns
+            fiber_crops = 0.017 # hanging cords, packing twine
+            tools = 0.015 # knives and presses
             produced = tobacco
-            output = 0.266
+            output = 0.089
             category = building_maintenance
         }
     }
 
-    modifier = {
-        local_migration_attraction = 0.01
+    raw_modifier = {
+      farm_capacity_from_tobacco_farm = -1
     }
-prices:
-  - key: pp_tobacco_farm_price
-    body: |2-
-      {gold = 50}
+
+    modifier = {
+        local_migration_attraction = 0.003
+    }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_tobacco_farm_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('tobacco_farm')|e].
-    MODIFIER_TYPE_NAME_pp_tobacco_farm_price_cost_modifier: Tobacco Farm Cost
     tobacco_farm_slot_0: Tobacco Fields
     tobacco_farm_slot_1: Curing
     tobacco_farm: Tobacco Farm
@@ -80,7 +81,6 @@ localization:
     pp_tobacco_farm_base_tobacco: Tobacco Fields
     pp_tobacco_farm_field_cutting: Field Cutting
     pp_tobacco_farm_curing_barns: Curing Barns
-    pp_tobacco_farm_price: Tobacco Farm Price
 icon:
   source_png: ../assets/icons/tobacco_farm.png
   output_dds: tobacco_farm.dds

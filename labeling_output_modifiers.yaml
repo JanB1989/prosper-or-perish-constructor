@@ -2,6 +2,7 @@ mod_name: "Prosper or Perish (Population Growth & Food Rework)"
 mod_output_dir: "mod"
 template_dir: "../ProsperOrPerishLabelingPipeline/mod_templates/prosper_or_perish_farming"
 baseline_parquet: "../ProsperOrPerishLabelingPipeline/base_data/locations_with_raw_material.parquet"
+location_templates_load_order: "constructor.load_order.toml"
 goods_evaluator_root: "../ProsperOrPerishLabelingPipeline/GoodsEvaluator"
 modifier_prefix: "pp"
 generated_label: "Prosper or Perish"
@@ -14,6 +15,7 @@ defaults:
     output_min: -0.7
     output_max: 0.3
   null_productivity: -0.7
+  raw_material_output_floor: -0.2
   round_decimals: 2
   drop_zero_productivity: true
 

@@ -1,11 +1,15 @@
 ﻿# >>> eu5-building-pipeline:sugar_plantation:building
 REPLACE:sugar_plantation = {
+audio_tier = 2
+startup_ramp_target = rural_startup_ramp_target
 is_foreign = no
+increase_per_level_cost = 0.19
 pop_type = slaves
-max_levels = farm_max_level
-employment_size = plantation_employment
+max_levels = farm_capacity_max_sugar_plantation
+employment_size = 1
 category = colonial_category
 
+custom_tags = { farming_capacity }
 location_potential = {
     raw_material = goods:sugar
     OR = {
@@ -14,15 +18,10 @@ location_potential = {
     }
 }
 
-allow = {
-    farm_capacity_available > 0
-}
-
 rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
-price = pp_plantation_building_price
 always_add_demands = yes
 build_time = plantation_build_time
 
@@ -46,6 +45,10 @@ unique_production_methods = {
         output = 0.667
         category = building_maintenance
     }
+}
+
+raw_modifier = {
+  farm_capacity_from_sugar_plantation = -1
 }
 
 modifier = {

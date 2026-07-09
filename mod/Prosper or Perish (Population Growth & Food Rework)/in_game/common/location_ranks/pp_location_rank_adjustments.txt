@@ -6,14 +6,15 @@ TRY_INJECT:megalopolis = {
 		local_population_capacity = -400
 		local_population_capacity_modifier = -0.5
 		local_monthly_food_modifier = 0.67
-		farm_rank_capacity_modifier = -20
-		forest_rank_capacity_modifier = -20
+		local_food_revenue_output_modifier = 0.10
 		local_population_growth = -0.0035 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 		
+		free_building_levels = -130
+		local_build_buildings_efficiency = -0.3
+		local_construction_speed = -0.8
 	}
 }
 TRY_INJECT:city = {
-	
 	rank_modifier = {
 		local_burghers_desired_pop = -0.50
 		local_laborers_desired_pop = -0.50
@@ -23,12 +24,13 @@ TRY_INJECT:city = {
 
 		local_population_capacity = -100
 		local_population_capacity_modifier = -0.25
+		local_food_revenue_output_modifier = 0.05
 	
 		local_population_growth = -0.0035 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 		
-		free_building_levels = -60
-		farm_rank_capacity_modifier = -5 #
-		forest_rank_capacity_modifier = -5 #
+		free_building_levels = -50
+		local_build_buildings_efficiency = -0.3
+		local_construction_speed = -0.55
 	}
 }
 
@@ -36,10 +38,12 @@ TRY_INJECT:town = {
 	rank_modifier = {
 		local_population_growth = -0.0035 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 		
-		farm_rank_capacity_modifier = -1
-		forest_rank_capacity_modifier = -1
 		local_population_capacity = -20
 		local_population_capacity_modifier = -0.10
+		local_food_revenue_output_modifier = 0.025
+		free_building_levels = 15
+		local_build_buildings_efficiency = -0.3
+		local_construction_speed = -0.3
 	}
 }
 
@@ -47,9 +51,10 @@ TRY_INJECT:rural_settlement = {
 	rank_modifier = {
 		local_max_rgo_size_modifier = -0.50
 		local_monthly_food_modifier = -0.10
-		free_building_levels = 10
+		local_food_revenue_output_modifier = 0.00
+		free_building_levels = 30
 		local_population_growth = -0.0035 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
-		farm_rank_capacity_modifier = 0
-		forest_rank_capacity_modifier = 0
+		local_build_buildings_efficiency = -0.3
+		local_construction_speed = -0.3
 	}
 }

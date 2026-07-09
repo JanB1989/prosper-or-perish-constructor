@@ -1,7 +1,9 @@
 ﻿# >>> eu5-building-pipeline:irrigation_systems:building
 REPLACE:irrigation_systems = {
+  audio_tier = 1
   is_foreign = no
   max_levels = irrigant_cap
+  increase_per_level_cost = 0.30
   pop_type = peasants
   price = pp_irrigation_systems_price
   category = infrastructure_category
@@ -27,10 +29,13 @@ REPLACE:irrigation_systems = {
     }
   }
   construction_demand = village_construction
+  raw_modifier = {
+    farm_capacity_from_irrigation_systems = 0.60
+  }
+
   modifier = {
     local_population_capacity = 1.0
     local_monthly_food_modifier = 0.00 # vanilla 0.05
-    farm_max_level_modifier = 0.60
 
     # Extreme Sensitivity (Wet-Rice)
     local_rice_output_modifier = 0.03

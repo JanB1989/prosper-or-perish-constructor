@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:victualling_yard:advancement
+pp_victualling_yard = {
+icon = victualling_yard
+age = age_5_absolutism
+requires = manufactories_advance
+unlock_building = victualling_yard
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:victualling_yard:advancement

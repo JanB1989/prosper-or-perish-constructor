@@ -44,6 +44,7 @@ uv run ppc inspect
 uv run ppc test
 uv run ppc analyze
 uv run ppc output-modifiers
+uv run ppc location-changes detect --output artifacts/data/labeling/location_template_changes.csv
 uv run ppc production-throughput
 uv run ppc savegame
 uv run ppc europedia
@@ -54,6 +55,7 @@ uv run ppc dashboard
 uv run ppc blueprint list
 uv run ppc blueprint parity
 uv run ppc blueprint evaluate
+uv run ppc blueprint tag farming_capacity
 uv run ppc blueprint good coal
 uv run ppc blueprint build
 ```
@@ -61,7 +63,8 @@ uv run ppc blueprint build
 When running from another directory, point `uv` and `ppc` at this repo explicitly:
 
 ```bash
-uv run --project /mnt/c/Development/ProsperOrPerishConstructor ppc --repo /mnt/c/Development/ProsperOrPerishConstructor --help
+repo=/path/to/ProsperOrPerishConstructor
+uv run --project "$repo" ppc --repo "$repo" --help
 ```
 
 Live deploy is intentionally guarded. Only run it when you mean to mirror the constructor output
@@ -70,6 +73,34 @@ into the configured Paradox mod folder:
 ```bash
 uv run ppc sync --yes
 ```
+
+### Location-Template Drift
+
+Use this before rebuilding location output modifiers after a game update:
+
+```bash
+uv run ppc location-changes detect --output artifacts/data/labeling/location_template_changes.csv
+```
+
+The command compares the labeling baseline against the resolved current
+`location_templates.txt` from `constructor.load_order.toml`. Terminal output
+starts with a stats block:
+
+```text
+location_template_sources=...
+changed_locations=232
+field_counts=climate=2, modifier=1, natural_harbor_suitability=195, raw_material=33, topography=2, vegetation=4
+raw_material_transitions=cotton->saffron=1, ...
+affected_goods_counts=fish=201, saffron=10, ...
+labelable_counts=false=2, true=230
+relabel_status_counts=not_labelable=2, pending=230
+report_csv=artifacts/data/labeling/location_template_changes.csv
+```
+
+When changes exist it then prints one tab-separated row per changed location,
+including old/new values, affected goods, relabel status, canonical target, and
+canonical feature hash. The CSV artifact contains the same machine-readable
+rows for review or focused relabeling.
 
 ## Mod Ownership
 
@@ -129,20 +160,32 @@ docs/examples/europedia_entries.json
 
 ```bash
 uv sync --dev
-uv run eu5-orchestrator inspect --project constructor.toml
+uv run pre-commit install
+uv run ppc inspect
 ```
 
-Check `constructor.load_order.toml` before analyzing another machine or mod:
+Check `constructor.load_order.toml` before analyzing another machine or mod. This
+file is tracked because it describes the repo's parser load order; edit only the
+machine-specific install root when moving machines.
 
-- `[paths].vanilla_root` must point at the EU5 install folder.
-- `[[mods]].root` must point at the local mod copy for the project.
+- `[paths].vanilla_root` must point at the EU5 install folder containing
+  `game/`. Windows install paths such as
+  `C:\Games\steamapps\common\Europa Universalis V` are valid even when running
+  under WSL; the parser resolves them to `/mnt/c/...` on Linux/WSL.
+- `[[mods]].root` should stay relative to this repository so the checkout can
+  live under any native WSL/Linux path.
 - `[profiles].constructor` controls the load order used by the parser.
 
-Machine-local deploy targets stay in ignored `constructor.local.toml`. Example:
+Use `constructor.load_order.example.toml` as the portable template for new
+machines or new constructor repos.
+
+Machine-local deploy targets stay in ignored `constructor.local.toml`; copy
+`constructor.local.example.toml` and edit the Windows user name or drive. Example
+when running `ppc` from WSL:
 
 ```toml
 [deploy]
-target = "C:/Users/<you>/Documents/Paradox Interactive/Europa Universalis V/mod/Prosper or Perish (Population Growth & Food Rework)"
+target = "/mnt/c/Users/<you>/Documents/Paradox Interactive/Europa Universalis V/mod/Prosper or Perish (Population Growth & Food Rework)"
 ```
 
 ## Static Mod Analysis
@@ -253,6 +296,16 @@ The command parses `.eu5` saves into the raw progression dataset read by the not
 graphs/dataset/
 ```
 
+It also refreshes compact notebook WebP exports under:
+
+```text
+graphs/savegame_notebooks/exports/absolute/
+```
+
+including `food_price_current.webp`, which colors locations by their current market food price, and
+`political_current.webp`, which colors locations by their current owner country. Both appear in
+`savegame_maps.html`.
+
 Useful options:
 
 ```bash
@@ -273,6 +326,19 @@ Open the canonical notebook after the build:
 
 ```text
 graphs/savegame_notebooks/savegame_analysis_workbench.ipynb
+```
+
+For compact run-all analysis, use:
+
+```text
+graphs/savegame_notebooks/savegame_analysis_workbench_minimal.ipynb
+```
+
+For compact linked food-price and victuals-price volatility tables in the notebook, use:
+
+```python
+prices = nb.show_food_price_volatility(data, workbench, top_n=12)
+prices.stats
 ```
 
 ## Building Blueprints
@@ -309,7 +375,7 @@ Git. Commit reusable config, accepted blueprints, scripts, docs, and tests.
 For a new mod workspace, use the orchestrator scaffold command:
 
 ```bash
-uv run eu5-orchestrator init /mnt/c/Development/my-eu5-mod --name "My EU5 Mod" --mod-name "My EU5 Mod" --vanilla-root "/mnt/c/Games/steamapps/common/Europa Universalis V"
+uv run eu5-orchestrator init ~/development/my-eu5-mod --name "My EU5 Mod" --mod-name "My EU5 Mod" --vanilla-root "C:\\Games\\steamapps\\common\\Europa Universalis V"
 ```
 
 That creates the same baseline folder layout, TOML config, scripts, and README pattern used here.

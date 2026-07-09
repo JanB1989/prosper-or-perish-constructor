@@ -4,7 +4,7 @@ upgrade_chain:
   family: farming_village
   tier: 0
   previous: null
-  next: farming_village_rotations
+  next: husbandry_farmstead
   unlock_advance: null
 building:
   key: farming_village
@@ -39,16 +39,22 @@ building:
       methods:
         - pp_farming_village_no_beeswax
         - pp_farming_village_minor_beeswax
+    - name: slot_3
+      methods:
+        - pp_farming_village_no_worker_victuals
+        - pp_farming_village_worker_victuals
   possible_production_methods: []
   body: |2-
+        audio_tier = 1
+        startup_ramp_target = rural_startup_ramp_target
         is_foreign = no
-        max_levels = farm_max_level
+        increase_per_level_cost = 0.15
+        max_levels = farm_capacity_max_farming_village
         pop_type = peasants
 
         category = village_category
-        custom_tags = { pp_food_security_priority pp_staple_food_priority }
-        employment_size = 5
-
+        custom_tags = { pp_food_security_priority pp_staple_food_priority farming_capacity }
+        employment_size = 1
         rural_settlement = yes
         town = yes
         city = yes
@@ -57,53 +63,49 @@ building:
         ai_forbid_shutdown = no
 
         location_potential = {
-            pp_general_farmable_food_location > 0
-        }
-
-        allow = {
-            farm_capacity_available > 0
+            pp_general_farmable_food_location_potential = yes
         }
 
         build_time = village_build_time
 
         unique_production_methods = {
             pp_farming_village_base_livestock = {
-                output = 0.30
+                output = 0.06
                 produced = livestock
                 category = building_maintenance
             }
             pp_millet_farm_base_millet = {
-                output = 0.30
+                output = 0.06
                 produced = millet
                 category = building_maintenance
             }
             pp_wheat_farm_base_wheat = {
-                output = 0.30
+                output = 0.06
                 produced = wheat
                 category = building_maintenance
             }
             pp_maize_farm_base_maize = {
-                output = 0.30
+                output = 0.06
                 produced = maize
                 category = building_maintenance
             }
             pp_rice_farm_base_rice = {
-                output = 0.30
+                output = 0.06
                 produced = rice
                 category = building_maintenance
             }
             pp_legumes_farm_base_legumes = {
-                output = 0.30
+                output = 0.06
                 produced = legumes
                 category = building_maintenance
             }
             pp_potato_farm_base_potato = {
-                output = 0.30
+                output = 0.06
                 produced = potato
                 category = building_maintenance
             }
             pp_olives_farm_base_olives = {
-                output = 0.30
+                output = 0.06
                 produced = olives
                 category = building_maintenance
             }
@@ -113,89 +115,89 @@ building:
                 category = building_maintenance
             }
             pp_farming_village_maintenance = {
-                tools = 0.050
-                clay = 1.0
-                output = 0.455
+                tools = 0.010
+                clay = 0.2
+                output = 0.091
                 produced = livestock
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_millet_farm_maintenance = {
-                tools = 0.15
-                horses = 0.113
-                output = 0.829
+                tools = 0.03
+                horses = 0.023
+                output = 0.166
                 produced = millet
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_millet_farm_livestock = {
-                tools = 0.15
-                livestock = 0.226
-                output = 0.828
+                tools = 0.03
+                livestock = 0.045
+                output = 0.166
                 produced = millet
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_wheat_farm_maintenance = {
-                tools = 0.15
-                horses = 0.113
-                output = 0.828
+                tools = 0.03
+                horses = 0.023
+                output = 0.166
                 produced = wheat
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_wheat_farm_livestock = {
-                tools = 0.15
-                livestock = 0.226
-                output = 0.829
+                tools = 0.03
+                livestock = 0.045
+                output = 0.166
                 produced = wheat
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_maize_farm_maintenance = {
-                tools = 0.1
-                livestock = 0.15
-                output = 0.551
+                tools = 0.0
+                livestock = 0.03
+                output = 0.110
                 produced = maize
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_rice_farm_maintenance = {
-                tools = 0.1
-                livestock = 0.15
-                output = 0.551
+                tools = 0.0
+                livestock = 0.03
+                output = 0.110
                 produced = rice
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_legumes_farm_maintenance = {
-                tools = 0.15
-                horses = 0.113
-                output = 0.828
+                tools = 0.03
+                horses = 0.023
+                output = 0.166
                 produced = legumes
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_legumes_farm_livestock = {
-                tools = 0.15
-                livestock = 0.226
-                output = 0.829
+                tools = 0.03
+                livestock = 0.045
+                output = 0.166
                 produced = legumes
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_potato_farm_maintenance = {
-                tools = 0.1
-                livestock = 0.15
-                output = 0.551
+                tools = 0.0
+                livestock = 0.03
+                output = 0.110
                 produced = potato
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_olives_farm_maintenance = {
-                tools = 0.1
-                livestock = 0.15
-                output = 0.551
+                tools = 0.0
+                livestock = 0.03
+                output = 0.110
                 produced = olives
                 debug_max_profit = 0
                 category = building_maintenance
@@ -206,56 +208,62 @@ building:
                 category = building_maintenance
             }
             pp_farming_village_minor_beeswax = {
-                furniture = 0.1
-                cloth = 0.1
+                furniture = 0.0
+                cloth = 0.0
                 produced = beeswax
-                output = 0.315
+                output = 0.063
+                debug_max_profit = 0
+                category = building_maintenance
+            }
+        }
+        unique_production_methods = {
+            pp_farming_village_no_worker_victuals = {
+                category = building_maintenance
+            }
+            pp_farming_village_worker_victuals = {
+                produced = victuals
+                output = 0.033
                 debug_max_profit = 0
                 category = building_maintenance
             }
         }
         construction_demand = village_construction
+        raw_modifier = {
+          farm_capacity_from_farming_village = -1
+        }
+
         modifier = {
             local_monthly_food = 0.0
-            local_peasants_estate_power = 0.2
-            local_peasant_enfranchisment = 0.01
+            local_peasants_estate_power = 0.040
+            local_peasant_enfranchisment = 0.002
             local_laborers_desired_pop = 0
             local_soldiers_desired_pop = 0
         }
 advancements:
-  - key: pp_rice_farm_advance_asian
+  - key: pp_rice_farm_advance_game_start
     body: |2-
           age = age_1_traditions
           unlock_production_method = pp_rice_farm_base_rice
           unlock_production_method = pp_rice_farm_maintenance
           requires = agriculture_advance
-          # icon = renaissance_advance
           ai_weight = { add = 50 }
           potential = {
               exists = capital
               original_capital ?= {
                   OR = {
                       sub_continent = sub_continent:east_asia
+                      sub_continent = sub_continent:middle_east
                       sub_continent = sub_continent:south_asia
                       sub_continent = sub_continent:south_east_asia
-                      sub_continent = sub_continent:middle_east
-                  }
-              }
-          }
-  - key: pp_rice_farm_advance_mediterranean
-    body: |2-
-          age = age_2_renaissance
-          unlock_production_method = pp_rice_farm_base_rice
-          unlock_production_method = pp_rice_farm_maintenance
-          requires = renaissance_advance
-          # icon = renaissance_advance
-          ai_weight = { add = 50 }
-          potential = {
-              exists = capital
-              original_capital ?= {
-                  OR = {
+                      sub_continent = sub_continent:west_africa
+                      region = region:central_africa_region
+                      region = region:egypt_region
+                      region = region:great_lakes_region
                       region = region:iberia_region
                       region = region:italy_region
+                      region = region:madagascar_region
+                      region = region:swahili_coast_region
+                      region = region:zimbabwe_region
                   }
               }
           }
@@ -265,36 +273,37 @@ advancements:
           unlock_production_method = pp_rice_farm_base_rice
           unlock_production_method = pp_rice_farm_maintenance
           requires = new_world_advance
-          # icon = new_world_advance
           ai_weight = { add = 50 }
           potential = {
               exists = capital
               NOT = {
-                  OR = {
-                      original_capital ?= {
-                          OR = {
-                              sub_continent = sub_continent:east_asia
-                              sub_continent = sub_continent:south_asia
-                              sub_continent = sub_continent:south_east_asia
-                              sub_continent = sub_continent:middle_east
-                          }
-                      }
-                      original_capital ?= {
-                          OR = {
-                              region = region:iberia_region
-                              region = region:italy_region
-                          }
+                  original_capital ?= {
+                      OR = {
+                          sub_continent = sub_continent:east_asia
+                          sub_continent = sub_continent:middle_east
+                          sub_continent = sub_continent:south_asia
+                          sub_continent = sub_continent:south_east_asia
+                          sub_continent = sub_continent:west_africa
+                          region = region:central_africa_region
+                          region = region:egypt_region
+                          region = region:great_lakes_region
+                          region = region:iberia_region
+                          region = region:italy_region
+                          region = region:madagascar_region
+                          region = region:swahili_coast_region
+                          region = region:zimbabwe_region
                       }
                   }
               }
           }
-  - key: pp_maize_farm_advance_american
+  - key: pp_maize_farm_advance_game_start
     body: |2-
           age = age_1_traditions
           unlock_production_method = pp_maize_farm_base_maize
           unlock_production_method = pp_maize_farm_maintenance
+          unlock_production_method = pp_husbandry_farmstead_base_maize
+          unlock_production_method = pp_husbandry_farmstead_maize
           requires = agriculture_advance
-          # icon = new_world_advance
           ai_weight = { add = 50 }
           potential = {
               exists = capital
@@ -304,106 +313,86 @@ advancements:
                       sub_continent = sub_continent:south_america
                   }
               }
-          }
-  - key: pp_maize_farm_advance_iberian
-    body: |2-
-          age = age_3_discovery
-          unlock_production_method = pp_maize_farm_base_maize
-          unlock_production_method = pp_maize_farm_maintenance
-          requires = new_world_advance
-          # icon = new_world_advance
-          ai_weight = { add = 50 }
-          potential = {
-              exists = capital
-              original_capital ?= { region = region:iberia_region }
           }
   - key: pp_maize_farm_advance_general
     body: |2-
           age = age_4_reformation
           unlock_production_method = pp_maize_farm_base_maize
           unlock_production_method = pp_maize_farm_maintenance
+          unlock_production_method = pp_husbandry_farmstead_base_maize
+          unlock_production_method = pp_husbandry_farmstead_maize
           requires = global_trade_advance
-          # icon = new_world_advance
           ai_weight = { add = 50 }
           potential = {
               exists = capital
               NOT = {
-                  OR = {
-                      original_capital ?= {
-                          OR = {
-                              sub_continent = sub_continent:north_america
-                              sub_continent = sub_continent:south_america
-                          }
+                  original_capital ?= {
+                      OR = {
+                          sub_continent = sub_continent:north_america
+                          sub_continent = sub_continent:south_america
                       }
-                      original_capital ?= { region = region:iberia_region }
                   }
               }
           }
-  - key: pp_potato_farm_advance_american
+  - key: pp_potato_farm_advance_game_start
     body: |2-
           age = age_1_traditions
           unlock_production_method = pp_potato_farm_base_potato
           unlock_production_method = pp_potato_farm_maintenance
+          unlock_production_method = pp_farming_village_rotations_base_potato
+          unlock_production_method = pp_farming_village_rotations_potato
+          unlock_production_method = pp_husbandry_farmstead_base_potato
+          unlock_production_method = pp_husbandry_farmstead_potato
           requires = agriculture_advance
-          # icon = renaissance_advance
           ai_weight = { add = 50 }
           potential = {
               exists = capital
               original_capital ?= {
                   OR = {
-                      sub_continent = sub_continent:north_america
-                      sub_continent = sub_continent:south_america
+                      region = region:andes_region
+                      region = region:colombia_region
                   }
               }
-          }
-  - key: pp_potato_farm_advance_iberian
-    body: |2-
-          age = age_4_reformation
-          unlock_production_method = pp_potato_farm_base_potato
-          unlock_production_method = pp_potato_farm_maintenance
-          requires = global_trade_advance
-          # icon = renaissance_advance
-          ai_weight = { add = 50 }
-          potential = {
-              exists = capital
-              original_capital ?= { region = region:iberia_region }
           }
   - key: pp_potato_farm_advance_general
     body: |2-
           age = age_5_absolutism
           unlock_production_method = pp_potato_farm_base_potato
           unlock_production_method = pp_potato_farm_maintenance
+          unlock_production_method = pp_farming_village_rotations_base_potato
+          unlock_production_method = pp_farming_village_rotations_potato
+          unlock_production_method = pp_husbandry_farmstead_base_potato
+          unlock_production_method = pp_husbandry_farmstead_potato
           requires = newspapers_advance
-          # icon = renaissance_advance
           ai_weight = { add = 50 }
           potential = {
               exists = capital
               NOT = {
-                  OR = {
-                      original_capital ?= {
-                          OR = {
-                              sub_continent = sub_continent:north_america
-                              sub_continent = sub_continent:south_america
-                          }
+                  original_capital ?= {
+                      OR = {
+                          region = region:andes_region
+                          region = region:colombia_region
                       }
-                      original_capital ?= { region = region:iberia_region }
                   }
               }
           }
-  - key: pp_olives_farm_advance_mediterranean
+  - key: pp_olives_farm_advance_game_start
     body: |2-
           age = age_1_traditions
           unlock_production_method = pp_olives_farm_base_olives
           unlock_production_method = pp_olives_farm_maintenance
+          unlock_production_method = pp_husbandry_farmstead_base_olives
+          unlock_production_method = pp_husbandry_farmstead_olives
           requires = agriculture_advance
-          # icon = renaissance_advance
           ai_weight = { add = 50 }
           potential = {
               exists = capital
               original_capital ?= {
                   OR = {
-                      sub_continent = sub_continent:north_africa
                       sub_continent = sub_continent:middle_east
+                      sub_continent = sub_continent:north_africa
+                      region = region:balkan_region
+                      region = region:france_region
                       region = region:iberia_region
                       region = region:italy_region
                   }
@@ -414,16 +403,19 @@ advancements:
           age = age_4_reformation
           unlock_production_method = pp_olives_farm_base_olives
           unlock_production_method = pp_olives_farm_maintenance
+          unlock_production_method = pp_husbandry_farmstead_base_olives
+          unlock_production_method = pp_husbandry_farmstead_olives
           requires = global_trade_advance
-          # icon = renaissance_advance
           ai_weight = { add = 50 }
           potential = {
               exists = capital
               NOT = {
                   original_capital ?= {
                       OR = {
-                          sub_continent = sub_continent:north_africa
                           sub_continent = sub_continent:middle_east
+                          sub_continent = sub_continent:north_africa
+                          region = region:balkan_region
+                          region = region:france_region
                           region = region:iberia_region
                           region = region:italy_region
                       }
@@ -435,6 +427,7 @@ localization:
     farming_village_slot_0: Fields and Pastures
     farming_village_slot_1: Cultivation
     farming_village_slot_2: Beekeeping
+    farming_village_slot_3: Household Food
     pp_farming_village_base_livestock: Livestock Pasture
     pp_farming_village_maintenance: Farming Village Maintenance
     pp_farming_village_minor_beeswax: Cottage hives
@@ -442,40 +435,36 @@ localization:
     pp_farming_village_no_beeswax: No village beekeeping
     pp_farming_village_no_beeswax_desc: Beekeeping is not organized at this farming village.
     pp_farming_village_no_primary: No Cultivation
+    pp_farming_village_no_worker_victuals: No Household Victuals
+    pp_farming_village_worker_victuals: Household Victuals
     pp_legumes_farm_base_legumes: Legume Fields
     pp_legumes_farm_livestock: Legumes Farm (Oxen)
     pp_legumes_farm_maintenance: Legumes Farm (Horses)
-    pp_maize_farm_advance_american: American Maize Cultivation
-    pp_maize_farm_advance_american_desc: Native maize cultivation in the Americas.
     pp_maize_farm_advance_general: Maize Cultivation
-    pp_maize_farm_advance_general_desc: Adopt maize cultivation from Iberian colonies and trade networks.
-    pp_maize_farm_advance_iberian: Maize Cultivation
-    pp_maize_farm_advance_iberian_desc: Introduce maize from the Americas and establish it as a productive grain crop.
+    pp_maize_farm_advance_general_desc: Adopt maize cultivation through colonial and trade networks.
+    pp_maize_farm_advance_game_start: Established Maize Cultivation
+    pp_maize_farm_advance_game_start_desc: Traditional maize cultivation in regions where the crop is already established.
     pp_maize_farm_base_maize: Maize Fields
     pp_maize_farm_maintenance: Maize Farm (Oxen)
     pp_millet_farm_base_millet: Millet Fields
     pp_millet_farm_livestock: Millet Farm (Oxen)
     pp_millet_farm_maintenance: Millet Farm (Horses)
     pp_olives_farm_advance_general: Olive Cultivation
-    pp_olives_farm_advance_general_desc: Adopt olive cultivation via trade and colonial contact.
-    pp_olives_farm_advance_mediterranean: Mediterranean Olive Cultivation
-    pp_olives_farm_advance_mediterranean_desc: Traditional olive cultivation in the Mediterranean basin.
+    pp_olives_farm_advance_general_desc: Adopt olive cultivation through trade and regional exchange.
+    pp_olives_farm_advance_game_start: Established Olive Cultivation
+    pp_olives_farm_advance_game_start_desc: Traditional olive cultivation in regions where the crop is already established.
     pp_olives_farm_base_olives: Olive Groves
     pp_olives_farm_maintenance: Olives Farm (Oxen)
-    pp_potato_farm_advance_american: American Potato Cultivation
-    pp_potato_farm_advance_american_desc: Native potato cultivation in the Americas.
     pp_potato_farm_advance_general: Potato Cultivation
-    pp_potato_farm_advance_general_desc: Adopt the potato as a reliable staple crop, as in Prussia and Ireland.
-    pp_potato_farm_advance_iberian: Potato Cultivation
-    pp_potato_farm_advance_iberian_desc: Introduce the potato from the Americas and cultivate it as a staple crop.
+    pp_potato_farm_advance_general_desc: Adopt the potato as a reliable staple crop.
+    pp_potato_farm_advance_game_start: Established Potato Cultivation
+    pp_potato_farm_advance_game_start_desc: Traditional potato cultivation in regions where the crop is already established.
     pp_potato_farm_base_potato: Potato Fields
     pp_potato_farm_maintenance: Potato Farm (Oxen)
-    pp_rice_farm_advance_asian: Asian Rice Cultivation
-    pp_rice_farm_advance_asian_desc: Traditional rice cultivation in the Asian and Middle Eastern heartland.
     pp_rice_farm_advance_general: Rice Cultivation
     pp_rice_farm_advance_general_desc: Adopt techniques for cultivating rice as a staple crop in suitable regions.
-    pp_rice_farm_advance_mediterranean: Mediterranean Rice Cultivation
-    pp_rice_farm_advance_mediterranean_desc: Expand rice cultivation techniques in Iberia and Italy.
+    pp_rice_farm_advance_game_start: Established Rice Cultivation
+    pp_rice_farm_advance_game_start_desc: Traditional rice cultivation in regions where the crop is already established.
     pp_rice_farm_base_rice: Rice Paddies
     pp_rice_farm_maintenance: Rice Farm (Oxen)
     pp_wheat_farm_base_wheat: Wheat Fields
@@ -546,3 +535,7 @@ evaluation:
       production_efficiency: 1.05
     pp_farming_village_minor_beeswax:
       production_efficiency: 1.00
+    pp_farming_village_worker_victuals:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

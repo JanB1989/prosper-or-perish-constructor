@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: salt_mine
 upgrade_chain:
   family: salt_mine
@@ -21,11 +21,12 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
+    increase_per_level_cost = 0.21
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 3
-    price = pp_salt_mine_price
+    employment_size = 1
     category = rgo_building_category
+    custom_tags = { pp_mine_building }
     icon = salt_mine
     rural_settlement = yes
     town = yes
@@ -80,7 +81,6 @@ building:
             }
         }
     }
-
     construction_demand = basic_construction_needs
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -90,7 +90,7 @@ building:
     unique_production_methods = {
         pp_salt_mine_base_salt = {
             produced = salt
-            output = 0.270
+            output = 0.090
             category = building_maintenance
         }
     }
@@ -99,27 +99,25 @@ building:
             category = building_maintenance
         }
         pp_salt_mine_hand_cut_galleries = {
-            lumber = 0.976 # pit props
-            tools = 0.610 # picks and wedges
-            beeswax = 0.305 # mine candles
+            lumber = 0.325 # pit props
+            tools = 0.203 # picks and wedges
+            beeswax = 0.102 # mine candles
             produced = salt
-            output = 0.840
+            output = 0.280
             category = building_maintenance
         }
     }
 
-    modifier = {
-        local_population_growth = -0.0001
-        local_migration_attraction = 0.01
+    raw_modifier = {
     }
-prices:
-  - key: pp_salt_mine_price
-    body: |2-
-      {gold = 170}
+
+    modifier = {
+        local_population_growth = -0.0002
+        local_migration_attraction = 0.010
+        local_salt_output_modifier = 0.025
+    }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_salt_mine_price_cost_modifier: Affects the cost of building [ShowBuildingTypeName('salt_mine')|e].
-    MODIFIER_TYPE_NAME_pp_salt_mine_price_cost_modifier: Salt Mine Cost
     salt_mine_slot_0: Salt Deposit
     salt_mine_slot_1: Galleries
     salt_mine: Salt Mine
@@ -127,7 +125,6 @@ localization:
     pp_salt_mine_base_salt: Surveyed Salt Seam
     pp_salt_mine_no_primary: No Gallery Working
     pp_salt_mine_hand_cut_galleries: Hand-Cut Galleries
-    pp_salt_mine_price: Salt Mine Price
 icon:
   source_dds: /mnt/c/Games/steamapps/common/Europa Universalis V/game/main_menu/gfx/interface/icons/buildings/schwaz_mine.dds
   output_dds: salt_mine.dds

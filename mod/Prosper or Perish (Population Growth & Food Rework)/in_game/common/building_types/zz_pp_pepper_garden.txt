@@ -1,11 +1,12 @@
 ﻿# >>> eu5-building-pipeline:pepper_garden:building
 pepper_garden = {
 is_foreign = no
-max_levels = farm_max_level
+increase_per_level_cost = 0.21
+max_levels = farm_capacity_max_pepper_garden
 pop_type = laborers
-employment_size = 3
-price = pp_pepper_garden_price
+employment_size = 1
 category = rgo_building_category
+custom_tags = { farming_capacity }
 icon = pepper_garden
 rural_settlement = yes
 town = yes
@@ -17,10 +18,6 @@ location_potential = {
     raw_material = goods:pepper
 }
 
-allow = {
-    farm_capacity_available > 0
-}
-
 construction_demand = basic_construction_needs
 ai_forbid_shutdown = no
 forbidden_for_estates = no
@@ -30,7 +27,7 @@ can_close = yes
 unique_production_methods = {
     pp_pepper_garden_base_pepper = {
         produced = pepper
-        output = 0.103
+        output = 0.034
         category = building_maintenance
     }
 }
@@ -39,16 +36,20 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_pepper_garden_blanched_garbling_yards = {
-        pottery = 0.468 # blanching pots
-        coal = 0.234 # boiling fuel
+        pottery = 0.156 # blanching pots
+        coal = 0.078 # boiling fuel
         produced = pepper
-        output = 0.228
+        output = 0.076
         category = building_maintenance
     }
 }
 
+raw_modifier = {
+  farm_capacity_from_pepper_garden = -1
+}
+
 modifier = {
-    local_migration_attraction = 0.01
+    local_migration_attraction = 0.003
 }
 }
 # <<< eu5-building-pipeline:pepper_garden:building

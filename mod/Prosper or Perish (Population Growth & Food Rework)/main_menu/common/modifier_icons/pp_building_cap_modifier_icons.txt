@@ -1,20 +1,16 @@
-﻿## Prosper or Perish - icons for building cap modifier types
-## Uses vanilla building icons copied to modifier_types folder
-farm_max_level_modifier = {
-	positive = "gfx/interface/icons/modifier_types/farm_max_level_modifier.dds"
+﻿farm_capacity_from_river_size = {
+	positive = "gfx/interface/icons/map_modes/rivers.dds"
 }
-farm_rank_capacity_modifier = {
-	positive = "gfx/interface/icons/modifier_types/farm_max_level_modifier.dds"
-}
-fish_max_level_modifier = {
-	positive = "gfx/interface/icons/map_modes/pp_fishing_village_capacity.dds"
+fish_capacity_from_river_size = {
+	positive = "gfx/interface/icons/map_modes/rivers.dds"
 }
 irrigant_cap_modifier = {
 	positive = "gfx/interface/icons/buildings/irrigation_systems.dds"
 }
-forest_max_level_modifier = {
-	positive = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
+pp_river_boatmen_yard_cap_modifier = {
+	positive = "gfx/interface/icons/buildings/river_boatmen_yard.dds"
 }
-forest_rank_capacity_modifier = {
-	positive = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
+pp_coastal_shipping_office_cap_modifier = {
+	positive = "gfx/interface/icons/buildings/coastal_shipping_office.dds"
+	negative = "gfx/interface/icons/buildings/coastal_shipping_office.dds"
 }

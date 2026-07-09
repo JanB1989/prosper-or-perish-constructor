@@ -1,10 +1,12 @@
 ﻿# >>> eu5-building-pipeline:bog_iron_smelter:building
 REPLACE:bog_iron_smelter = {
+audio_tier = 1
+startup_ramp_target = rural_startup_ramp_target
 is_foreign = no
+increase_per_level_cost = 0.19
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = rural_peasant_produce_employment
-price = pp_bog_iron_smelter_price
+employment_size = 1
 category = rgo_building_category
 icon = bog_iron_smelter
 rural_settlement = yes
@@ -14,6 +16,10 @@ megalopolis = yes
 build_time = rural_build_time
 
 location_potential = {
+    OR = {
+        is_adjacent_to_lake = yes
+        topography = wetlands
+    }
     NOR = {
         raw_material = goods:coal
         raw_material = goods:iron
@@ -30,17 +36,18 @@ location_potential = {
         raw_material = goods:mercury
     }
 }
-
 unique_production_methods = {
     pp_bog_iron_maintenance = {
         coal = 0.45 # charcoal, furnace fuel
         produced = iron
-        output = 0.36
+        output = 0.31
         debug_max_profit = 0.2
         category = building_maintenance
     }
 }
 
 construction_demand = basic_construction_needs
+raw_modifier = {
+}
 }
 # <<< eu5-building-pipeline:bog_iron_smelter:building

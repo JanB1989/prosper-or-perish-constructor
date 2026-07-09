@@ -1,10 +1,13 @@
 ﻿# >>> eu5-building-pipeline:putrefaction_works:building
 REPLACE:putrefaction_works = {
+audio_tier = 3
+startup_ramp_target = manufactory_startup_ramp_target
 is_foreign = no
+increase_per_level_cost = 0.14
 pop_type = burghers
 max_levels = manufactory_max_level
 category = basic_industry_category
-employment_size = manufactory_employment
+employment_size = 0.2
 town = yes
 city = yes
 megalopolis = yes
@@ -14,7 +17,6 @@ obsolete = saltpeter_workshop
 location_potential = {
     NOT = { raw_material = goods:saltpeter }
 }
-
 unique_production_methods = {
     pp_putrefaction_works_demands = {
         pottery = 0.6
@@ -28,5 +30,7 @@ unique_production_methods = {
 
 custom_tags = { midgame_manufactory }
 construction_demand = manufactory_construction
+raw_modifier = {
+}
 }
 # <<< eu5-building-pipeline:putrefaction_works:building

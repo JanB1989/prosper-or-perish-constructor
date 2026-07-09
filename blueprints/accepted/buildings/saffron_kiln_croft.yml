@@ -1,0 +1,139 @@
+version: 2
+tag: saffron_kiln_croft
+upgrade_chain:
+  family: saffron_croft
+  tier: 1
+  previous: saffron_croft
+  next: null
+  unlock_advance: pp_saffron_kiln_croft
+building:
+  key: saffron_kiln_croft
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_saffron_kiln_croft_base_saffron
+    - name: slot_1
+      methods:
+        - pp_saffron_kiln_croft_unmanured_beds
+        - pp_saffron_kiln_croft_livestock_manure
+    - name: slot_2
+      methods:
+        - pp_saffron_kiln_croft_sun_drying
+        - pp_saffron_kiln_croft_pottery_kilns
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    increase_per_level_cost = 0.23
+    max_levels = farm_capacity_max_saffron_kiln_croft
+    pop_type = laborers
+    employment_size = 1
+    category = rgo_building_category
+    custom_tags = { farming_capacity }
+    icon = saffron_kiln_croft
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = saffron_croft
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:saffron
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_saffron_kiln_croft_base_saffron = {
+            produced = saffron
+            output = 0.055
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_saffron_kiln_croft_unmanured_beds = {
+            category = building_maintenance
+        }
+        pp_saffron_kiln_croft_livestock_manure = {
+            livestock = 0.045 # manure for richer crocus beds
+            produced = saffron
+            output = 0.050
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_saffron_kiln_croft_sun_drying = {
+            category = building_maintenance
+        }
+        pp_saffron_kiln_croft_pottery_kilns = {
+            pottery = 0.080 # trays and covered drying pans
+            coal = 0.035 # light brazier and kiln fuel
+            produced = saffron
+            output = 0.095
+            category = building_maintenance
+        }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_saffron_kiln_croft = -1
+    }
+
+    modifier = {
+        local_migration_attraction = 0.003
+    }
+advancements:
+  - key: pp_saffron_kiln_croft
+    body: |2-
+      icon = saffron_kiln_croft
+      age = age_3_discovery
+      requires = trade_range_advance_age_3
+      unlock_building = saffron_kiln_croft
+      ai_weight = { add = 125 }
+localization:
+  entries:
+    saffron_kiln_croft_slot_0: Crocus Beds
+    saffron_kiln_croft_slot_1: Bed Manuring
+    saffron_kiln_croft_slot_2: Kiln Drying
+    saffron_kiln_croft: Saffron Kiln Croft
+    saffron_kiln_croft_desc: Saffron kiln crofts keep crocus beds under closer care, enrich the soil with manure, and dry hand-separated stigmas on pottery trays over small braziers.
+    pp_saffron_kiln_croft: Saffron Kiln Crofts
+    pp_saffron_kiln_croft_base_saffron: Crocus Beds
+    pp_saffron_kiln_croft_desc: Better bed care and controlled drying help saffron growers bring more clean threads to market without changing where saffron can grow.
+    pp_saffron_kiln_croft_livestock_manure: Livestock Manure
+    pp_saffron_kiln_croft_pottery_kilns: Pottery Tray Kilns
+    pp_saffron_kiln_croft_sun_drying: Sun Drying
+    pp_saffron_kiln_croft_unmanured_beds: Unmanured Beds
+icon:
+  source_png: ../assets/icons/saffron_kiln_croft.png
+  output_dds: saffron_kiln_croft.dds
+  size: 512
+  prompt: >-
+    EU5-inspired hand-painted strategy-game building icon for a Saffron Kiln
+    Croft. Crocus beds, hand-separated stigmas, small kiln and braziers, pottery
+    trays. Detailed historic bitmap cutout, painterly three-quarter-view
+    production complex, perfectly flat solid #ff00ff chroma-key background, no
+    text, no frame, no flat vector style.
+
+evaluation:
+  allow_rules:
+    input_throughput: Saffron kiln crofts preserve the accepted low-input specialty RGO scale below the generic laborer throughput baseline.
+    output_throughput: Saffron kiln crofts preserve the accepted low-output specialty RGO scale below the generic laborer throughput baseline.
+  production_methods:
+    pp_saffron_kiln_croft_base_saffron:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Passive base output intentionally carries a smaller share of the full worked saffron output after the high-base rebalance.
+    pp_saffron_kiln_croft_livestock_manure:
+      production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Livestock manure uses accepted high-margin saffron tuning until the specialty-crop family rebalance.
+    pp_saffron_kiln_croft_pottery_kilns:
+      production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Pottery kilns use accepted high-margin saffron tuning until the specialty-crop family rebalance.

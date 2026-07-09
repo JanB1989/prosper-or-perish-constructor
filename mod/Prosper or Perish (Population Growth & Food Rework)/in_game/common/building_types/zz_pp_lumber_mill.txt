@@ -1,10 +1,13 @@
 ﻿# >>> eu5-building-pipeline:lumber_mill:building
 REPLACE:lumber_mill = {
+audio_tier = 1
+startup_ramp_target = rural_startup_ramp_target
 is_foreign = no
-max_levels = forest_max_level
+increase_per_level_cost = 0.20
+max_levels = forest_capacity_max_lumber_mill
 pop_type = laborers
 
-employment_size = 3
+employment_size = 1
 
 rural_settlement = yes
 town = yes
@@ -21,17 +24,15 @@ megalopolis = yes
             raw_material = goods:wild_game
         }
     }
-allow = {
-    forest_capacity_available > 0
-}
 category = rgo_building_category
 
+custom_tags = { forest_capacity }
 build_time = rural_build_time
 
     unique_production_methods = {
         pp_lumber_mill_base_lumber = {
             produced = lumber
-            output = 0.315
+            output = 0.105
             category = building_maintenance
         }
     }
@@ -39,61 +40,63 @@ build_time = rural_build_time
         pp_lumber_mill_no_primary = {
             category = building_maintenance
         }
-        pp_lumber_mill_maintenance = {
+        pp_lumber_mill_horse_tools = {
             produced = lumber
-            output = 2.772
-            tools = 1.10 # axes, saw upkeep
-
-            category = building_maintenance
-        }
-        # Horse teams haul logs and power simple machinery: fewer tools, but consumes horses.
-        pp_lumber_mill_horse_teams = {
-            produced = lumber
-            output = 2.625
-            tools = 0.70 # axes, saw upkeep
-            horses = 0.50 # log hauling
+            output = 0.983
+            tools = 0.267 # axes, saw upkeep
+            horses = 0.170 # fast log hauling
             debug_max_profit = 0
             category = building_maintenance
         }
-        # Coppice rotations and marked standards give steadier cuttings, but need more crews.
-        pp_lumber_mill_coppice_standards = {
+        pp_lumber_mill_horse_victuals = {
             produced = lumber
-            output = 3.098
-            tools = 1.10 # axes, marking tools
-            victuals = 0.35 # cutting crews
+            output = 0.960
+            horses = 0.170 # fast log hauling
+            victuals = 0.308 # provisioned cutting crews
             debug_max_profit = 0
             category = building_maintenance
         }
-        # River drives extend the cutting radius through log landings and seasonal floats.
-        pp_lumber_mill_timber_drives = {
+        pp_lumber_mill_livestock_tools = {
             produced = lumber
-            output = 3.623
-            tools = 0.80 # axes, pike poles
-            horses = 0.70 # log hauling
-            victuals = 0.25 # drive crews
+            output = 0.926
+            tools = 0.250 # axes, saw upkeep
+            livestock = 0.340 # ox log hauling
             debug_max_profit = 0
             category = building_maintenance
         }
-	}
+        pp_lumber_mill_livestock_victuals = {
+            produced = lumber
+            output = 0.897
+            livestock = 0.340 # ox log hauling
+            victuals = 0.288 # provisioned cutting crews
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
     unique_production_methods = {
         pp_lumber_mill_no_extra_rations = {
             category = building_maintenance
         }
         pp_lumber_mill_extra_rations = {
-            victuals = 1.30 # crew rations
+            victuals = 0.43 # crew rations
             produced = lumber
-            output = 2.389
+            output = 0.796
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_lumber_mill_wound_salves = {
-            medicaments = 0.50 # injury treatment
+            medicaments = 0.17 # injury treatment
             produced = lumber
-            output = 0.368
+            output = 0.123
             debug_max_profit = 0
             category = building_maintenance
         }
     }
-	construction_demand = basic_construction_needs
+raw_modifier = {
+}
+
+    modifier = {
+    }
+    construction_demand = basic_construction_needs
 }
 # <<< eu5-building-pipeline:lumber_mill:building

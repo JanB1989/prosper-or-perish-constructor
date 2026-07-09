@@ -1,8 +1,6 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:lumber_mill_improved:localization
-  MODIFIER_TYPE_DESC_pp_lumber_mill_improved_price_cost_modifier: "Affects the cost of building a [ShowBuildingTypeName('lumber_mill_improved')|e]."
-  MODIFIER_TYPE_NAME_pp_lumber_mill_improved_price_cost_modifier: "Planned Saw Works Cost"
   lumber_improvements_absolutism: "Forest Ordinances"
   lumber_improvements_absolutism_desc: "Surveyed stands, harvest registers, and forest ordinances organize woodland cutting for larger saw works."
   lumber_mill_improved: "Planned Saw Works"
@@ -11,10 +9,11 @@
   lumber_mill_improved_slot_1: "Saw Works"
   lumber_mill_improved_slot_2: "Crew Support"
   pp_lumber_mill_improved_base_lumber: "Managed Woodland Cutting"
-  pp_lumber_mill_improved_forest_ordinances: "Forest Ordinances"
-  pp_lumber_mill_improved_managed_stands: "Managed Timber Stands"
+  pp_lumber_mill_improved_horse_tools: "Horse Forest Ordinances"
+  pp_lumber_mill_improved_horse_victuals: "Provisioned Horse Ordinances"
+  pp_lumber_mill_improved_livestock_tools: "Ox Forest Ordinances"
+  pp_lumber_mill_improved_livestock_victuals: "Provisioned Ox Ordinances"
   pp_lumber_mill_improved_no_crew_support: "No Crew Support"
   pp_lumber_mill_improved_no_primary: "No Planned Saw Works"
-  pp_lumber_mill_improved_price: "Planned Saw Works Price"
   pp_lumber_mill_improved_wound_salves: "Wound Salves"
 # <<< eu5-building-pipeline:lumber_mill_improved:localization

@@ -25,11 +25,12 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
+    increase_per_level_cost = 0.24
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 3
-    price = pp_coal_mine_price
+    employment_size = 1
     category = rgo_building_category
+    custom_tags = { pp_mine_building }
     icon = coal_mine
     rural_settlement = yes
     town = yes
@@ -40,7 +41,6 @@ building:
     location_potential = {
         raw_material = goods:coal
     }
-
     construction_demand = mercury_patio_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -50,7 +50,7 @@ building:
     unique_production_methods = {
         pp_coal_mine_base_coal = {
             produced = coal
-            output = 0.3
+            output = 0.12
             category = building_maintenance
         }
     }
@@ -59,12 +59,12 @@ building:
             category = building_maintenance
         }
         pp_coal_mine_coal = {
-            lumber = 0.591
-            tools = 0.666
-            beeswax = 0.148
+            lumber = 0.24
+            tools = 0.28
+            beeswax = 0.06
             produced = coal
-            output = 1.795
-            debug_max_profit = 0
+            output = 1.0
+            debug_max_profit = 1
             category = building_maintenance
         }
     }
@@ -73,26 +73,24 @@ building:
             category = building_maintenance
         }
         pp_coal_mine_fireclay = {
-            lumber = 0.12
-            tools = 0.08
+            lumber = 0.04
+            tools = 0.03
             produced = clay
-            output = 1.008
+            output = 0.336
             category = building_maintenance
         }
     }
 
+    raw_modifier = {
+    }
+
     modifier = {
         local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_migration_attraction = 0.010
+        local_coal_output_modifier = 0.025
     }
-prices:
-  - key: pp_coal_mine_price
-    body: |2-
-      {gold = 50}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_coal_mine_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('coal_mine')|e].
-    MODIFIER_TYPE_NAME_pp_coal_mine_price_cost_modifier: Coal Drift Cost
     coal_mine_slot_0: Coal Seam
     coal_mine_slot_1: Coal Workings
     coal_mine_slot_2: Clay Recovery
@@ -103,7 +101,6 @@ localization:
     pp_coal_mine_coal: Drift Workings
     pp_coal_mine_no_secondary: No Clay Recovery
     pp_coal_mine_fireclay: Seat-Clay Sorting
-    pp_coal_mine_price: Coal Drift Price
 icon:
   source_png: ../assets/icons/coal_mine.png
   output_dds: coal_mine.dds
@@ -122,6 +119,8 @@ evaluation:
     pp_coal_mine_coal:
       production_efficiency: 1.10
       allow_rules:
+        profit_percent: Coal mines intentionally exceed the generic margin band so seam-gated fuel extraction is attractive to the AI.
+        output_throughput: Coal mines intentionally exceed generic output throughput so true coal seams beat charcoal fallback production.
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_coal_mine_no_secondary:
       production_efficiency: 1.00

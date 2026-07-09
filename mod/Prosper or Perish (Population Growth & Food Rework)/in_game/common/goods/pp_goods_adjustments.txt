@@ -1,8 +1,7 @@
 ﻿# Prosper or Perish - Goods Adjustments
 # All goods need to have 0 food value
 TRY_INJECT:wool = {
-    food = -5.0
-    block_rgo_upgrade = yes
+    block_rgo_upgrade = yes # in 1.3 game doesnt consider it a food anymore so no inject needed
 }
 TRY_INJECT:wild_game = {
     food = -3.5
@@ -58,30 +57,70 @@ TRY_INJECT:beeswax = {
     food = -2.5
 }
 
-# Adjusting transport costs for high-value low-bulk goods
+# Floor trade-good transport costs at 1.
 TRY_INJECT:pepper = {
 	block_rgo_upgrade = yes
-	transport_cost = 0.2
+	transport_cost = 1
 }
 TRY_INJECT:incense = {
 	block_rgo_upgrade = yes
-	transport_cost = 0.2
+	transport_cost = 1
 }
 TRY_INJECT:saffron = {
 	block_rgo_upgrade = yes
-	transport_cost = 0.2
+	transport_cost = 1
 }
 TRY_INJECT:chili = {
 	block_rgo_upgrade = yes
-	transport_cost = 0.2
+	transport_cost = 1
+}
+TRY_INJECT:porcelain = {
+	transport_cost = 1
+}
+TRY_INJECT:glass = {
+	transport_cost = 1
+}
+TRY_INJECT:cloth = {
+	transport_cost = 1
+}
+TRY_INJECT:fine_cloth = {
+	transport_cost = 1
+}
+TRY_INJECT:liquor = {
+	transport_cost = 1
+}
+TRY_INJECT:beer = {
+	transport_cost = 1
+}
+TRY_INJECT:paper = {
+	transport_cost = 1
+}
+TRY_INJECT:books = {
+	transport_cost = 1
+}
+TRY_INJECT:jewelry = {
+	transport_cost = 1
+}
+TRY_INJECT:tools = {
+	transport_cost = 1
+	default_market_price = 3.25 # 3
+}
+TRY_INJECT:lacquerware = {
+	transport_cost = 1
+}
+TRY_INJECT:pottery = {
+	transport_cost = 1
+}
+TRY_INJECT:furniture = {
+	transport_cost = 1
 }
 
 # Reducing burgher demand for salt, because they used salt to preserve foods, so we increase the demand for victuals instead
 TRY_INJECT:salt = {
 	default_market_price = 5 # 4
-	transport_cost = 0.5 # 1
+	transport_cost = 1
 	demand_add = {
-		burghers = -0.01
+		all = 0
 	}
 	block_rgo_upgrade = yes
 }
@@ -91,9 +130,22 @@ TRY_INJECT:wine = {
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:dyes = {
+	transport_cost = 1
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:lumber = {
+	default_market_price = 1.75 # 1.5
+	transport_cost = 1
+	demand_add = {
+		# Cancel vanilla pop demand.
+		nobles = -0.00125
+		clergy = -0.00125
+		burghers = -0.00125
+		laborers = -0.00125
+		soldiers = -0.00125
+		peasants = -0.00025
+		slaves = -0.00025
+	}
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:saltpeter = {
@@ -103,6 +155,8 @@ TRY_INJECT:coal = {
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:iron = {
+	default_market_price = 3.5 # 3.0
+	transport_cost = 1
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:stone = {
@@ -112,9 +166,11 @@ TRY_INJECT:fiber_crops = {
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:gems = {
+	transport_cost = 1
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:medicaments = {
+	transport_cost = 1
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:silver = {
@@ -133,6 +189,7 @@ TRY_INJECT:cotton = {
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:goods_gold = {
+	default_market_price = 9 # 8
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:horses = {
@@ -169,6 +226,7 @@ TRY_INJECT:amber = {
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:cloves = {
+	transport_cost = 1
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:cocoa = {

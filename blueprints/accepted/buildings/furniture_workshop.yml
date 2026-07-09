@@ -1,0 +1,46 @@
+version: 2
+tag: furniture_workshop
+building:
+  key: furniture_workshop
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_furniture_workshop_furniture_workshop_maintenance
+  possible_production_methods: []
+  body: |
+    audio_tier = 2
+    is_foreign = no
+    pop_type = burghers
+    max_levels = workshop_max_level
+    startup_ramp_target = workshop_startup_ramp_target
+    category = consumer_goods_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = workshop_build_time
+    unique_production_methods = {
+        pp_furniture_workshop_furniture_workshop_maintenance = {
+            lumber = 1.173
+            dyes = 0.141
+            tools = 0.141
+            produced = furniture
+            output = 1.1
+            debug_max_profit = workshop_profit_margin
+            category = workshop_input
+        }
+    }
+    obsolete = furniture_guild
+    construction_demand = workshop_construction
+    increase_per_level_cost = 0.25
+localization:
+  entries:
+    furniture_workshop_slot_0: Furniture Workshop Work
+    pp_furniture_workshop_furniture_workshop_maintenance: Furniture Workshop Furniture Workshop Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

@@ -18,28 +18,17 @@ pp_has_harder_ai_modifier = {
 	}
 }
 
-# Reference building maintenance game-rule modifiers (player/ai apply_modifier from main_menu game rules).
+# Reference player building maintenance game-rule modifiers (apply_modifier from main_menu game rules).
 pp_has_building_maintenance_game_rule_modifier = {
 	type = country
 	text = {
 		localization_key = PP_BUILDING_MAINTENANCE_RULE_ACTIVE
 		trigger = {
 			OR = {
-				has_country_modifier = pp_player_building_maintenance_025_modifier
 				has_country_modifier = pp_player_building_maintenance_050_modifier
-				has_country_modifier = pp_player_building_maintenance_075_modifier
 				has_country_modifier = pp_player_building_maintenance_100_modifier
-				has_country_modifier = pp_player_building_maintenance_125_modifier
 				has_country_modifier = pp_player_building_maintenance_150_modifier
-				has_country_modifier = pp_player_building_maintenance_175_modifier
 				has_country_modifier = pp_player_building_maintenance_200_modifier
-				has_country_modifier = pp_player_building_maintenance_225_modifier
-				has_country_modifier = pp_player_building_maintenance_250_modifier
-				has_country_modifier = pp_player_building_maintenance_275_modifier
-				has_country_modifier = pp_player_building_maintenance_300_modifier
-				has_country_modifier = pp_ai_building_maintenance_neg_025_modifier
-				has_country_modifier = pp_ai_building_maintenance_neg_050_modifier
-				has_country_modifier = pp_ai_building_maintenance_neg_075_modifier
 			}
 		}
 	}

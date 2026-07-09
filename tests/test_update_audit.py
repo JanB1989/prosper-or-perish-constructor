@@ -20,9 +20,9 @@ def test_update_audit_reports_referenced_and_patched_vanilla_changes(tmp_path: P
         output_dir=repo / "reports" / "audit",
     )
 
-    assert summary.changed_count >= 4
-    assert summary.added_count == 1
-    assert summary.removed_count == 1
+    assert summary.changed_count >= 5
+    assert summary.added_count == 3
+    assert summary.removed_count == 2
     assert summary.missing_both_count == 1
     assert summary.index_html.is_file()
     assert summary.changed_csv.is_file()
@@ -35,7 +35,11 @@ def test_update_audit_reports_referenced_and_patched_vanilla_changes(tmp_path: P
     assert rows_by_key["in_game/goods/wheat"]["status"] == "changed"
     assert "patch_target" in rows_by_key["in_game/goods/wheat"]["reference_kinds"]
     assert rows_by_key["in_game/goods/added_good"]["status"] == "added"
+    assert rows_by_key["in_game/goods/unreferenced_added_good"]["status"] == "added"
+    assert rows_by_key["in_game/goods/unreferenced_added_good"]["reference_kinds"] == ""
+    assert rows_by_key["in_game/goods/unreferenced_added_good"]["mod_sources"] == ""
     assert rows_by_key["in_game/goods/removed_good"]["status"] == "removed"
+    assert rows_by_key["in_game/goods/unreferenced_removed_good"]["status"] == "removed"
     assert rows_by_key["in_game/goods/unchanged_good"]["status"] == "unchanged"
     assert rows_by_key["in_game/goods/plain_override"]["status"] == "changed"
     assert rows_by_key["in_game/goods/missing_target"]["status"] == "missing_both"
@@ -47,18 +51,43 @@ def test_update_audit_reports_referenced_and_patched_vanilla_changes(tmp_path: P
         rows_by_key["main_menu/static_modifiers/cross_scope_static"]["mod_sources"]
         == "mod/test-mod/in_game/common/static_modifiers/pp_static.txt:1 [patch_target; TRY_INJECT]"
     )
+    assert rows_by_key["in_game/advances/rgo_cost_source"]["status"] == "changed"
+    assert "patch_target" in rows_by_key["in_game/advances/rgo_cost_source"]["reference_kinds"]
+    assert (
+        "mod/test-mod/in_game/common/advances/pp_rgo_building_cost_redirects.txt:"
+        in rows_by_key["in_game/advances/rgo_cost_source"]["mod_sources"]
+    )
+    assert "[patch_target; TRY_INJECT]" in rows_by_key["in_game/advances/rgo_cost_source"][
+        "mod_sources"
+    ]
     assert "in_game/static_modifiers/cross_scope_static" not in rows_by_key
 
     assert "in_game/goods/localization_only_good" not in rows_by_key
     assert rows_by_key["in_game/goods/dupe_key"]["status"] == "changed"
     assert rows_by_key["main_menu/static_modifiers/dupe_key"]["status"] == "unchanged"
+    assert rows_by_key["in_game/events/DHE/flavor_TEST.txt/test_events.1"]["status"] == "changed"
+    assert (
+        rows_by_key["in_game/events/DHE/flavor_TEST.txt/test_events.1"]["reference_kinds"]
+        == "file_override"
+    )
+    assert (
+        rows_by_key["in_game/events/DHE/flavor_TEST.txt/test_events.1"]["mod_sources"]
+        == "mod/test-mod/in_game/events/DHE/flavor_TEST.txt:1 [file_override; events/DHE/flavor_TEST.txt]"
+    )
+    assert rows_by_key["in_game/events/DHE/flavor_TEST.txt/test_events.2"]["status"] == "added"
+    assert "in_game/events/DHE/unreferenced_event_file.txt/unreferenced_events.1" not in rows_by_key
 
     changed_rows = _csv_rows(summary.changed_csv)
     changed_keys = {row["qualified"] for row in changed_rows}
     assert "in_game/goods/unchanged_good" not in changed_keys
     assert "in_game/goods/missing_target" not in changed_keys
     assert "in_game/goods/added_good" in changed_keys
+    assert "in_game/goods/unreferenced_added_good" in changed_keys
     assert "in_game/goods/removed_good" in changed_keys
+    assert "in_game/goods/unreferenced_removed_good" in changed_keys
+    assert "in_game/events/DHE/flavor_TEST.txt/test_events.1" in changed_keys
+    assert "in_game/events/DHE/flavor_TEST.txt/test_events.2" in changed_keys
+    assert "in_game/events/DHE/unreferenced_event_file.txt/unreferenced_events.1" not in changed_keys
 
     payload = json.loads(summary.changed_json.read_text(encoding="utf-8"))
     assert payload["old_ref"] == "eu5-old"
@@ -136,6 +165,9 @@ removed_good = {
 unchanged_good = {
 	value = 1
 }
+unreferenced_removed_good = {
+	value = 1
+}
 plain_override = {
 	value = 1
 }
@@ -170,6 +202,28 @@ cross_scope_static = {
 }
 """,
     )
+    _write(
+        vanilla / "game" / "in_game" / "events" / "DHE" / "flavor_TEST.txt",
+        """test_events.1 = {
+	type = country_event
+	title = test_events.1.title
+	desc = test_events.1.desc
+	trigger = {
+		rgo_workers >= 6
+	}
+	option = {
+		name = test_events.1.a
+	}
+}
+""",
+    )
+    _write(
+        vanilla / "game" / "in_game" / "common" / "advances" / "00_advances.txt",
+        """rgo_cost_source = {
+	expand_rgo_farming_cost_modifier = -0.10
+}
+""",
+    )
     _git(vanilla, "add", "-A")
     _git(vanilla, "commit", "-m", "old")
     _git(vanilla, "tag", "eu5-old")
@@ -180,6 +234,9 @@ cross_scope_static = {
 	value = 2
 }
 added_good = {
+	value = 1
+}
+unreferenced_added_good = {
 	value = 1
 }
 unchanged_good = {
@@ -218,6 +275,50 @@ cross_scope_static = {
 }
 """,
     )
+    _write(
+        vanilla / "game" / "in_game" / "events" / "DHE" / "flavor_TEST.txt",
+        """test_events.1 = {
+	type = country_event
+	title = test_events.1.title
+	desc = test_events.1.desc
+	trigger = {
+		rgo_workers >= 3
+	}
+	option = {
+		name = test_events.1.a
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+test_events.2 = {
+	type = country_event
+	title = test_events.2.title
+	desc = test_events.2.desc
+	option = {
+		name = test_events.2.a
+	}
+}
+""",
+    )
+    _write(
+        vanilla / "game" / "in_game" / "common" / "advances" / "00_advances.txt",
+        """rgo_cost_source = {
+	expand_rgo_farming_cost_modifier = -0.05
+}
+""",
+    )
+    _write(
+        vanilla / "game" / "in_game" / "events" / "DHE" / "unreferenced_event_file.txt",
+        """unreferenced_events.1 = {
+	type = country_event
+	title = unreferenced_events.1.title
+	desc = unreferenced_events.1.desc
+	option = {
+		name = unreferenced_events.1.a
+	}
+}
+""",
+    )
     _git(vanilla, "add", "-A")
     _git(vanilla, "commit", "-m", "new")
     _git(vanilla, "tag", "eu5-new")
@@ -252,6 +353,30 @@ plain_override = {
         mod_root / "in_game" / "common" / "static_modifiers" / "pp_static.txt",
         """TRY_INJECT:cross_scope_static = {
 	value = 1
+}
+""",
+    )
+    _write(
+        mod_root / "in_game" / "common" / "advances" / "pp_rgo_building_cost_redirects.txt",
+        """# Objective: redirect vanilla RGO expansion cost efficiency into Prosper or Perish raw-material building construction cost efficiency while neutralizing the original RGO expansion cost modifier.
+TRY_INJECT:rgo_cost_source = {
+	expand_rgo_farming_cost_modifier = 0.10
+	pp_irrigation_systems_price_cost_modifier = -0.10
+}
+""",
+    )
+    _write(
+        mod_root / "in_game" / "events" / "DHE" / "flavor_TEST.txt",
+        """test_events.1 = {
+	type = country_event
+	title = test_events.1.title
+	desc = test_events.1.desc
+	trigger = {
+		rgo_workers >= 0
+	}
+	option = {
+		name = test_events.1.a
+	}
 }
 """,
     )

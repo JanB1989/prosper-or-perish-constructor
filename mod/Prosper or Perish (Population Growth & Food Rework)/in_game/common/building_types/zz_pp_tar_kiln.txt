@@ -1,0 +1,35 @@
+﻿# >>> eu5-building-pipeline:tar_kiln:building
+REPLACE:tar_kiln = {
+audio_tier = 1
+is_foreign = no
+pop_type = laborers
+max_levels = rural_building_cap
+startup_ramp_target = rural_startup_ramp_target
+employment_size = 1.0
+category = basic_industry_category
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+location_potential = {
+    OR = {
+        vegetation = woods
+        vegetation = forest
+        vegetation = jungle
+        raw_material = goods:lumber
+    }
+}
+unique_production_methods = {
+    pp_tar_kiln_tar_kiln_maintenance = {
+        produced = tar
+        output = 1.0
+        lumber = 1.111
+        category = guild_input
+        debug_max_profit = rural_profit_margin
+    }
+}
+build_time = rural_build_time
+construction_demand = guild_construction
+increase_per_level_cost = 0.17
+}
+# <<< eu5-building-pipeline:tar_kiln:building

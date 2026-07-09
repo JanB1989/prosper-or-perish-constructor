@@ -2,8 +2,8 @@
 # Crown estate: food purchase cost scales with crown power (10% power = +10% buy price)
 TRY_INJECT:crown_estate = {
 	power = {
-		food_purchase_cost = 0.85
-		building_upkeep_costs = 0.50
+		# food_purchase_efficiency = -3.0
+		building_upkeep_multiplier = 0.10
 	}
 }
 

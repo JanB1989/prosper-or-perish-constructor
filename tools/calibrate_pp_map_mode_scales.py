@@ -9,7 +9,7 @@ from typing import Iterable
 
 from eu5gameparser.domain.eu5 import load_eu5_data
 
-from map_mode_styles import CALIBRATION_PATH
+from map_mode_styles import CALIBRATION_PATH, savegame_goods_output_samples
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,6 +53,7 @@ def build_calibration() -> dict:
             "Thresholds are build-time calibration data for bucketed EU5 map modes.",
         ],
         "scales": {
+            "building_efficiency": _building_efficiency_scale_dict(),
             "goods_output": {
                 good: _sequential_scale_dict(_positive_quantity_thresholds(goods_samples.get(good, [])))
                 for good in goods
@@ -67,9 +68,7 @@ def build_calibration() -> dict:
                 "farm": _sequential_scale_dict(_food_capacity_thresholds("farm", food_capacity_samples.get("farm", []))),
                 "forest": _sequential_scale_dict(_food_capacity_thresholds("forest", food_capacity_samples.get("forest", []))),
             },
-            "population_capacity": _sequential_scale_dict(
-                _positive_quantity_thresholds(_population_capacity_values(mod_root / LOCATION_MODIFIERS_REL))
-            ),
+            "population_capacity": _sequential_scale_dict(_population_capacity_thresholds()),
             "population_growth": {
                 "kind": "signed_centered",
                 "negative_thresholds": [-0.007, -0.002],
@@ -79,7 +78,7 @@ def build_calibration() -> dict:
                 "source": "static_growth_modifier_anchors",
             },
             "unemployment": _sequential_scale_dict(_positive_quantity_thresholds(_unemployment_values())),
-            "building_levels": _sequential_scale_dict(_positive_quantity_thresholds(_building_level_values())),
+            "building_levels": _sequential_scale_dict(_building_level_thresholds()),
             "rgo_level": _sequential_scale_dict(_rgo_level_thresholds(_rgo_level_values())),
         },
     }
@@ -121,41 +120,7 @@ def _load_parser_data(project: dict):
 
 
 def _goods_output_samples() -> dict[str, list[float]]:
-    try:
-        import polars as pl
-    except ImportError:
-        return {}
-
-    sample_frames = []
-    for path in (
-        ROOT / "artifacts" / "data" / "savegame" / "production_method_good_flows.parquet",
-        ROOT / "artifacts" / "data" / "savegame" / "rgo_flows.parquet",
-    ):
-        if not path.exists():
-            continue
-        flow = pl.read_parquet(path)
-        sample_frames.append(
-            flow.filter(
-                (pl.col("direction") == "output")
-                & (pl.col("save_side") == "supplied_Production")
-                & (pl.col("nominal_amount") > 0)
-            )
-            .group_by(["good_id", "location_id"])
-            .agg(pl.col("nominal_amount").sum().alias("output"))
-        )
-
-    if not sample_frames:
-        return {}
-
-    samples = pl.concat(sample_frames, how="vertical_relaxed").group_by(["good_id", "location_id"]).agg(
-        pl.col("output").sum().alias("output")
-    )
-    return {
-        row["good_id"]: row["outputs"]
-        for row in samples.group_by("good_id")
-        .agg(pl.col("output").sort().alias("outputs"))
-        .to_dicts()
-    }
+    return savegame_goods_output_samples(ROOT / "artifacts" / "data" / "savegame")
 
 
 def _local_output_modifier_samples(path: Path) -> dict[str, list[float]]:
@@ -170,16 +135,6 @@ def _local_output_modifier_samples(path: Path) -> dict[str, list[float]]:
     ):
         samples.setdefault(good, []).append(float(value))
     return samples
-
-
-def _population_capacity_values(path: Path) -> list[float]:
-    if not path.exists():
-        return []
-    text = path.read_text(encoding="utf-8-sig")
-    return [
-        float(value)
-        for value in re.findall(r"^\s*local_population_capacity\s*=\s*([-+]?\d+(?:\.\d+)?)\s*$", text, flags=re.MULTILINE)
-    ]
 
 
 def _market_food_price_values() -> list[float]:
@@ -242,13 +197,12 @@ def _food_capacity_samples(mod_root: Path) -> dict[str, list[float]]:
     if not locations_path.exists() or not buildings_path.exists():
         return {}
 
-    caps_text = (mod_root / BUILDING_CAPS_REL).read_text(encoding="utf-8-sig")
     values_text = (mod_root / BUILDING_CAPACITY_VALUES_REL).read_text(encoding="utf-8-sig")
     farm_goods = _goods_in_script_value(values_text, "pp_farm_base_capacity_value")
     forest_goods = _goods_in_script_value(values_text, "pp_forest_base_capacity_value")
-    farm_buildings = _building_types_in_script_value(caps_text, "land_farm_building_levels")
-    fish_buildings = _building_types_in_script_value(caps_text, "fish_building_levels")
-    forest_buildings = _building_types_in_script_value(caps_text, "forest_building_levels")
+    farm_buildings = _building_types_with_max_levels(mod_root, "farm_capacity")
+    fish_buildings = _building_types_with_max_levels(mod_root, "fish_capacity")
+    forest_buildings = _building_types_with_max_levels(mod_root, "forest_capacity")
     population_capacity = _population_capacity_by_slug(mod_root / LOCATION_MODIFIERS_REL)
 
     buildings = pl.read_parquet(buildings_path)
@@ -266,12 +220,11 @@ def _food_capacity_samples(mod_root: Path) -> dict[str, list[float]]:
         farm_used = farm_levels.get(location_id, 0.0)
         fish_used = fish_levels.get(location_id, 0.0)
         forest_used = forest_levels.get(location_id, 0.0)
-        non_farm = max(total - farm_used, 0.0)
         non_forest = max(total - forest_used, 0.0)
         pop_capacity = population_capacity.get(str(row.get("slug") or ""), 0.0)
 
         farm_base = 4.0 if raw_material in farm_goods else 0.0
-        farm = farm_base + (farm_base * max_rgo * 0.125) + (pop_capacity * 0.08) - (non_farm * 0.05) - farm_used
+        farm = farm_base + (farm_base * max_rgo * 0.125) + (pop_capacity * 0.08) - (total * 0.05) - farm_used
         samples["farm"].append(max(farm, 0.0))
 
         fish_base = 3.0 if raw_material == "fish" else 0.0
@@ -279,7 +232,7 @@ def _food_capacity_samples(mod_root: Path) -> dict[str, list[float]]:
         samples["fish"].append(max(fish, 0.0))
 
         forest_base = 4.4 if raw_material in forest_goods else 0.0
-        forest = forest_base + (forest_base * max_rgo * 0.030) - (non_forest * 0.1) - forest_used
+        forest = forest_base + (forest_base * max_rgo * 0.040) - (non_forest * 0.1) - forest_used
         samples["forest"].append(max(forest, 0.0))
 
     return samples
@@ -299,9 +252,22 @@ def _goods_in_script_value(text: str, name: str) -> set[str]:
     return set(re.findall(r"raw_material\s*=\s*goods:([a-z0-9_]+)", body))
 
 
-def _building_types_in_script_value(text: str, name: str) -> set[str]:
-    body = _script_value_body(text, name)
-    return set(re.findall(r"location_building_level\(building_type:([a-z0-9_]+)\)", body))
+def _building_types_with_max_levels(mod_root: Path, value: str) -> set[str]:
+    building_dir = mod_root / "in_game" / "common" / "building_types"
+    if not building_dir.exists():
+        return set()
+
+    buildings: set[str] = set()
+    max_levels_pattern = re.compile(rf"^\s*max_levels\s*=\s*{re.escape(value)}\s*$", flags=re.MULTILINE)
+    building_pattern = re.compile(r"^\s*(?:REPLACE:)?([a-z0-9_]+)\s*=\s*\{", flags=re.MULTILINE)
+    for path in building_dir.glob("*.txt"):
+        text = path.read_text(encoding="utf-8-sig")
+        if max_levels_pattern.search(text) is None:
+            continue
+        match = building_pattern.search(text)
+        if match is not None:
+            buildings.add(match.group(1))
+    return buildings
 
 
 def _script_value_body(text: str, name: str) -> str:
@@ -329,6 +295,20 @@ def _positive_quantity_thresholds(values: Iterable[float]) -> list[float]:
     rounded = [_round_quantity(value) for value in raw]
     candidates = sorted({_round_quantity(value) for value in positives if value > 0})
     return _strict_thresholds_from_candidates(rounded, candidates, minimum=0.01)
+
+
+def _population_capacity_thresholds() -> list[float]:
+    # The map mode reads the engine's final location_max_population value.
+    # Keep fixed player-readable buckets up to 200 so high-capacity locations
+    # do not collapse into one quantile-derived color.
+    return [20.0, 40.0, 60.0, 80.0, 100.0, 125.0, 155.0, 200.0]
+
+
+def _building_level_thresholds() -> list[float]:
+    # Use clean manual/geometric-style breaks. Building levels can reach several
+    # hundred in late-game dense locations, so the display scale must not cap at
+    # the current savegame quantile range.
+    return [10.0, 25.0, 50.0, 75.0, 100.0, 150.0, 200.0, 250.0, 300.0, 400.0, 500.0]
 
 
 def _food_capacity_thresholds(capacity: str, values: Iterable[float]) -> list[float]:
@@ -430,6 +410,17 @@ def _reference_scale_dict(values: list[float]) -> dict[str, object]:
         "low_thresholds": low_thresholds,
         "high_thresholds": high_thresholds,
         "source": "market_food_price_distribution" if values else "fallback_market_food_price_scale",
+    }
+
+
+def _building_efficiency_scale_dict() -> dict[str, object]:
+    return {
+        "kind": "signed_centered",
+        "negative_thresholds": [-1.0, -0.5],
+        "neutral_low": -0.1,
+        "neutral_high": 0.1,
+        "positive_thresholds": [0.5, 1.0],
+        "source": "building_efficiency_static_anchors",
     }
 
 

@@ -1,0 +1,34 @@
+﻿# >>> eu5-building-pipeline:mason:building
+REPLACE:mason = {
+audio_tier = 1
+is_foreign = no
+max_levels = guild_max_level
+startup_ramp_target = rural_startup_ramp_target
+pop_type = laborers
+category = basic_industry_category
+employment_size = 1.0
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_mason_stone_bricks = {
+        stone = 0.428
+        produced = masonry
+        output = 0.5
+        debug_max_profit = rural_profit_margin
+        category = guild_input
+    }
+    pp_mason_clay_bricks = {
+        clay = 0.856
+        produced = masonry
+        output = 0.5
+        debug_max_profit = rural_profit_margin
+        category = guild_input
+    }
+}
+construction_demand = basic_construction_needs
+increase_per_level_cost = 0.11
+}
+# <<< eu5-building-pipeline:mason:building

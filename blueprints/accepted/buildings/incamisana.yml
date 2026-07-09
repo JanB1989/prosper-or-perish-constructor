@@ -7,6 +7,9 @@ building:
   production_method_slots: []
   possible_production_methods: []
   body: |2-
+    	raw_modifier = {
+    	}
+
     	modifier = {
     		local_monthly_food_modifier = -0.15 # vanilla 0.15
     		local_maize_output_modifier = 0.05

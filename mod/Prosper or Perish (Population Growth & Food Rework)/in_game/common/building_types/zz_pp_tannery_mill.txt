@@ -1,0 +1,47 @@
+﻿# >>> eu5-building-pipeline:tannery_mill:building
+REPLACE:tannery_mill = {
+audio_tier = 5
+is_foreign = no
+pop_type = laborers
+is_mill = yes
+max_levels = mills_max_level
+startup_ramp_target = mills_startup_ramp_target
+category = basic_industry_category
+employment_size = 1.0
+town = yes
+city = yes
+megalopolis = yes
+build_time = mills_build_time
+unique_production_methods = {
+    pp_tannery_mill_leather_mill_maintenance = {
+        livestock = 5.552
+        sand = 2.314
+        tar = 0.277
+        tools = 0.556
+        produced = leather
+        output = 4.0
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+    pp_tannery_mill_tannery_mill_maintenance = {
+        wild_game = 8.576
+        sand = 2.144
+        tar = 0.257
+        tools = 0.515
+        produced = leather
+        output = 4.0
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+}
+obsolete = tannery_manufactory
+custom_tags = {
+    lategame_manufactory
+}
+construction_demand = mill_construction
+raw_modifier = {
+    local_burghers_desired_pop = 0.05
+}
+increase_per_level_cost = 0.14
+}
+# <<< eu5-building-pipeline:tannery_mill:building

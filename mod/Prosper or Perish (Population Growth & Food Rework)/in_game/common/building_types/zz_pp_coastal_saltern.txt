@@ -1,10 +1,12 @@
 ﻿# >>> eu5-building-pipeline:salt_collector:building
 REPLACE:salt_collector = {
+audio_tier = 1
+startup_ramp_target = rural_startup_ramp_target
 is_foreign = no
+increase_per_level_cost = 0.16
 pop_type = laborers
 max_levels = rural_building_cap
-employment_size = 3
-price = pp_coastal_saltern_price
+employment_size = 1
 category = rgo_building_category
 icon = salt_collector
 rural_settlement = yes
@@ -16,31 +18,31 @@ location_potential = {
     raw_material = goods:salt
     is_coastal = yes
 }
-
 unique_production_methods = {
     pp_coastal_saltern_base_salt = {
         produced = salt
-        output = 0.240
+        output = 0.080
         category = building_maintenance
     }
 }
 unique_production_methods = {
     pp_coastal_saltern_open_salt_marshes = {
-        produced = salt
-        output = 0.225
         category = building_maintenance
     }
     pp_coastal_saltern_lined_evaporation_pans = {
-        clay = 4.000 # pan linings
-        pottery = 1.150 # settling vessels
+        clay = 1.333 # pan linings
+        pottery = 0.383 # settling vessels
         produced = salt
-        output = 0.720
+        output = 0.240
         category = building_maintenance
     }
 }
 
+raw_modifier = {
+}
+
 modifier = {
-    local_migration_attraction = 0.01
+    local_migration_attraction = 0.003
 }
 build_time = rural_build_time
 construction_demand = farm_constructions

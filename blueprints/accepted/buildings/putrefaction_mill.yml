@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: putrefaction_mill
 building:
   key: putrefaction_mill
@@ -10,11 +10,14 @@ building:
         - pp_putrefaction_mill_demands
   possible_production_methods: []
   body: |2-
+    audio_tier = 5
+    startup_ramp_target = mills_startup_ramp_target
     is_foreign = no
+    increase_per_level_cost = 0.18
     pop_type = laborers
     max_levels = manufactory_max_level
     category = basic_industry_category
-    employment_size = mills_employment
+    employment_size = 0.5
     town = yes
     city = yes
     megalopolis = yes
@@ -24,7 +27,6 @@ building:
     location_potential = {
         NOT = { raw_material = goods:saltpeter }
     }
-
     unique_production_methods = {
         pp_putrefaction_mill_demands = {
             pottery = 1.1
@@ -38,6 +40,8 @@ building:
 
     custom_tags = { lategame_manufactory }
     construction_demand = mill_construction
+    raw_modifier = {
+    }
 localization:
   entries:
     putrefaction_mill_slot_0: Putrefaction Mill Demands

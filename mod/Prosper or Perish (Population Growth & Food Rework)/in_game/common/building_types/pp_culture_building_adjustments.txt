@@ -1,0 +1,152 @@
+﻿# Prosper or Perish - cultural building promotion and maintenance adjustments.
+
+REPLACE:library = {
+	audio_tier = 2
+	is_foreign = no
+	pop_type = clergy
+	max_levels = 1
+
+	category = cultural_category
+	employment_size = cultural_employment
+	custom_tags = { pp_education_priority }
+
+	AI_ignore_available_worker_flag = yes
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	forbidden_for_estates = yes
+
+	graphical_tags = { medium_religious }
+
+	build_time = cultural_building_time
+
+	modifier = {
+		local_cultural_influence = 0.1
+		local_max_literacy = 5
+		local_monthly_literacy = 0.1
+		local_pop_promotion_speed = 0.002
+		local_institution_growth_modifier = 0.25
+		local_laborers_desired_pop = 0.6
+		local_burghers_desired_pop = 0.3
+		local_clergy_desired_pop = 0.1
+	}
+
+	possible_production_methods = {
+		pp_library_maintenance
+	}
+
+	construction_demand = library_construction
+}
+
+REPLACE:university = {
+	audio_tier = 3
+	is_foreign = no
+	pop_type = clergy
+	max_levels = 1
+
+	category = cultural_category
+	employment_size = religious_building_employment
+	custom_tags = { pp_education_priority }
+
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	AI_ignore_available_worker_flag = yes
+
+	expensive = yes
+
+	build_time = large_cultural_building_time
+
+	forbidden_for_estates = yes
+
+	allow = {
+		is_core_of = owner
+		owner = { modifier:university_construction_blocked = no }
+	}
+
+	modifier = {
+		local_cultural_influence = 0.5
+		local_burghers_max_literacy = 10
+		local_nobles_max_literacy = 10
+		local_monthly_literacy = 0.1
+		local_migration_attraction = 0.05
+		local_pop_promotion_speed = 0.005
+		local_institution_growth_modifier = 0.33
+		local_laborers_desired_pop = 1.2
+		local_burghers_desired_pop = 0.6
+		local_clergy_desired_pop = 0.3
+		local_nobles_desired_pop = 0.2
+	}
+
+	unique_production_methods = {
+		pp_university_maintenance = {
+			paper = 1.0
+			books = 0.5
+			glass = 0.5
+			beeswax = 0.1
+
+			category = building_maintenance
+		}
+	}
+
+	construction_demand = university_construction
+}
+
+REPLACE:gymnasium_building = {
+	audio_tier = 3
+	is_special = yes
+	is_foreign = no
+	pop_type = clergy
+	max_levels = 1
+
+	category = cultural_category
+	employment_size = huge_religious_building_employment
+
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+
+	country_potential = {
+		has_reform = government_reform:study_of_the_classics
+	}
+
+	build_time = large_cultural_building_time
+
+	forbidden_for_estates = yes
+
+	location_potential = {
+		is_capital = yes
+	}
+
+	remove_if = {
+		location.owner ?= {
+			NOT = {
+				has_reform = government_reform:study_of_the_classics
+			}
+		}
+	}
+
+	modifier = {
+		local_cultural_tradition = 0.5
+		local_nobles_max_literacy = 10
+		local_monthly_literacy = 0.1
+		local_institution_growth_modifier = 0.33
+	}
+
+	capital_country_modifier = {
+		research_speed_modifier = 0.05
+		global_max_literacy = 5
+	}
+
+	possible_production_methods = {
+		pp_university_maintenance
+	}
+
+	construction_demand = university_construction
+}

@@ -1,0 +1,85 @@
+﻿# >>> eu5-building-pipeline:brewery:building
+REPLACE:brewery = {
+audio_tier = 1
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = consumer_goods_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = guild_build_time
+unique_production_methods = {
+    pp_brewery_wheat_brewery_maintenance = {
+        wheat = 1.109
+        lumber = 0.277
+        tools = 0.111
+        produced = beer
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_brewery_millet_brewery_maintenance = {
+        millet = 1.109
+        lumber = 0.277
+        tools = 0.111
+        produced = beer
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_brewery_fruit_brewery_maintenance = {
+        fruit = 1.168
+        lumber = 0.233
+        tools = 0.117
+        produced = beer
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_brewery_maize_brewery_maintenance = {
+        maize = 1.588
+        pottery = 0.34
+        produced = beer
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_brewery_bavarian_brewery_maintenance = {
+        wheat = 1.512
+        lumber = 0.251
+        tools = 0.126
+        produced = beer
+        output = 1.2
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_brewery_honey_brewery_maintenance = {
+        beeswax = 0.292
+        millet = 0.584
+        lumber = 0.233
+        tools = 0.117
+        produced = beer
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_brewery_rice_brewery_maintenance = {
+        rice = 1.109
+        lumber = 0.277
+        tools = 0.111
+        produced = beer
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+custom_tags = {
+    guild
+}
+construction_demand = guild_construction
+increase_per_level_cost = 0.11
+}
+# <<< eu5-building-pipeline:brewery:building

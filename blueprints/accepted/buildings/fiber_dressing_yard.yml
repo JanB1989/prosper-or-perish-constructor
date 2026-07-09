@@ -1,0 +1,106 @@
+version: 2
+tag: fiber_dressing_yard
+upgrade_chain:
+  family: fiber_crops_farm
+  tier: 1
+  previous: fiber_crops_farm
+  next: null
+  unlock_advance: pp_fiber_dressing_yard
+building:
+  key: fiber_dressing_yard
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_fiber_dressing_yard_base_fiber_crops
+    - name: slot_1
+      methods:
+        - pp_fiber_dressing_yard_no_dressing
+        - pp_fiber_dressing_yard_retting_pits
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    increase_per_level_cost = 0.18
+    max_levels = farm_capacity_max_fiber_dressing_yard
+    pop_type = laborers
+    employment_size = 1
+    category = rgo_building_category
+    custom_tags = { farming_capacity }
+    icon = fiber_dressing_yard
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = fiber_crops_farm
+    build_time = workshop_build_time
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    location_potential = {
+        pp_fiber_crops_farm_location_potential = yes
+    }
+
+    unique_production_methods = {
+        pp_fiber_dressing_yard_base_fiber_crops = {
+            produced = fiber_crops
+            output = 0.105
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_fiber_dressing_yard_no_dressing = {
+            category = building_maintenance
+        }
+        pp_fiber_dressing_yard_retting_pits = {
+            livestock = 0.24 # manure and light draught support
+            legumes = 0.24 # rotation fertility and green manure
+            clay = 0.40 # lined retting pits and daubed floors
+            coal = 0.20 # controlled drying heat
+            produced = fiber_crops
+            output = 0.57
+            category = building_maintenance
+        }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_fiber_dressing_yard = -1
+    }
+advancements:
+  - key: pp_fiber_dressing_yard
+    body: |2-
+      icon = fiber_dressing_yard
+      age = age_3_discovery
+      requires = rgo_logistics_discovery
+      unlock_building = fiber_dressing_yard
+      ai_weight = { add = 125 }
+localization:
+  entries:
+    fiber_dressing_yard: Fiber Dressing Yard
+    fiber_dressing_yard_desc: Retting pits, drying hearths, breaks, scutching boards, and hackles prepare flax and hemp fibers for market without turning the fields into a textile mill.
+    fiber_dressing_yard_slot_0: Dressed Fiber Fields
+    fiber_dressing_yard_slot_1: Retting & Dressing
+    pp_fiber_dressing_yard: Fiber Dressing Yards
+    pp_fiber_dressing_yard_desc: Retting pits, drying floors, breaks, and hackles let fiber growers prepare cleaner flax and hemp for market.
+    pp_fiber_dressing_yard_base_fiber_crops: Dressed Fiber Fields
+    pp_fiber_dressing_yard_no_dressing: No Fiber Dressing
+    pp_fiber_dressing_yard_retting_pits: Retting Pits
+icon:
+  source_png: ../assets/icons/fiber_dressing_yard.png
+  output_dds: fiber_dressing_yard.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a Fiber Dressing Yard, transparent background. Center clay-lined retting pits with bundled flax or hemp stalks, drying fiber bundles, scutching boards, hackles, ceramic crocks, and a small charcoal brazier. Use readable painterly historical UI art, straw tan, fiber cream, earthen clay browns, muted charcoal black, no text, no frame, no modern machinery, no factory.
+
+evaluation:
+  allow_rules:
+    amortization_months: Fiber dressing yards follow the current slow rural raw-material payback cadence.
+    input_throughput: The age-4 fiber input profile intentionally stays just below the generic full-building target after break-even tuning.
+    output_throughput: The age-4 fiber output modifier carries the requested break-even math; the blueprint evaluator shows the unmodified base output.
+  production_methods:
+    pp_fiber_dressing_yard_base_fiber_crops:
+      production_efficiency: 1.00
+    pp_fiber_dressing_yard_retting_pits:
+      production_efficiency: 1.00

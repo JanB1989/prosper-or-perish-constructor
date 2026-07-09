@@ -1,6 +1,7 @@
 ﻿# Map mode for population capacity per location.
-# Traffic-light sequential scale: red = low, yellow = middle, green = high. Uncolonized ownable land is included.
-# Uses modifier:local_population_capacity in the generated in-game unit.
+# Fixed full-range sequential scale: red = low, yellow = middle, green = high,
+# pale/cyan = high end. Uncolonized ownable land is included.
+# Uses the engine's final Population Capacity value for the location.
 
 @zoom_step_near = 2
 @data_gradient_alpha_inside = 1
@@ -13,7 +14,14 @@
 @data_edge_color_mult = 0
 @data_before_lighting_blend = 0.5
 @data_after_lighting_blend = 0.5
-@pp_population_capacity_map_cap = 66
+@pp_population_capacity_very_low = 20
+@pp_population_capacity_low = 40
+@pp_population_capacity_middle = 60
+@pp_population_capacity_high = 80
+@pp_population_capacity_strong = 100
+@pp_population_capacity_very_strong = 125
+@pp_population_capacity_exceptional = 155
+@pp_population_capacity_cap = 200
 @pp_population_growth_negative_cap = -0.007
 @pp_population_growth_negative_mid = -0.002
 @pp_population_growth_neutral_low = -0.0005
@@ -31,14 +39,14 @@ pp_population_capacity = {
 		}
 		else_if = {
 			limit = {
-				modifier:local_population_capacity < 13
+				location_max_population < @pp_population_capacity_very_low
 			}
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_MIN
 				max_color = define:NMapColors|MAP_COLOR_LOW
 				factor = {
-					value = modifier:local_population_capacity
-					divide = 13
+					value = location_max_population
+					divide = @pp_population_capacity_very_low
 					max = 1
 					min = 0
 				}
@@ -46,15 +54,15 @@ pp_population_capacity = {
 		}
 		else_if = {
 			limit = {
-				modifier:local_population_capacity < 36
+				location_max_population < @pp_population_capacity_low
 			}
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_LOW
 				max_color = define:NMapColors|MAP_COLOR_MID
 				factor = {
-					value = modifier:local_population_capacity
-					subtract = 13
-					divide = 23
+					value = location_max_population
+					subtract = @pp_population_capacity_very_low
+					divide = 20
 					max = 1
 					min = 0
 				}
@@ -62,15 +70,15 @@ pp_population_capacity = {
 		}
 		else_if = {
 			limit = {
-				modifier:local_population_capacity < 55
+				location_max_population < @pp_population_capacity_middle
 			}
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_MID
 				max_color = define:NMapColors|MAP_COLOR_HIGH
 				factor = {
-					value = modifier:local_population_capacity
-					subtract = 36
-					divide = 19
+					value = location_max_population
+					subtract = @pp_population_capacity_low
+					divide = 20
 					max = 1
 					min = 0
 				}
@@ -78,29 +86,97 @@ pp_population_capacity = {
 		}
 		else_if = {
 			limit = {
-				modifier:local_population_capacity < @pp_population_capacity_map_cap
+				location_max_population < @pp_population_capacity_high
 			}
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_HIGH
 				max_color = define:NMapColors|MAP_COLOR_MAX
 				factor = {
-					value = modifier:local_population_capacity
-					subtract = 55
-					divide = 11
+					value = location_max_population
+					subtract = @pp_population_capacity_middle
+					divide = 20
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				location_max_population < @pp_population_capacity_strong
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = location_max_population
+					subtract = @pp_population_capacity_high
+					divide = 20
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				location_max_population < @pp_population_capacity_very_strong
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_TOP
+				max_color = rgb { 245 245 245 }
+				factor = {
+					value = location_max_population
+					subtract = @pp_population_capacity_strong
+					divide = 25
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				location_max_population < @pp_population_capacity_exceptional
+			}
+			lerp = {
+				min_color = rgb { 245 245 245 }
+				max_color = rgb { 170 235 255 }
+				factor = {
+					value = location_max_population
+					subtract = @pp_population_capacity_very_strong
+					divide = 30
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				location_max_population < @pp_population_capacity_cap
+			}
+			lerp = {
+				min_color = rgb { 170 235 255 }
+				max_color = rgb { 70 210 255 }
+				factor = {
+					value = location_max_population
+					subtract = @pp_population_capacity_exceptional
+					divide = 45
 					max = 1
 					min = 0
 				}
 			}
 		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = rgb { 70 210 255 }
 		}
 	}
-	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_VERY_LOW" color = define:NMapColors|MAP_COLOR_MIN }
-	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_LOW" color = define:NMapColors|MAP_COLOR_LOW }
-	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_MEDIUM" color = define:NMapColors|MAP_COLOR_MID }
-	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_HIGH" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_CAPPED" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_RANGE_0_20" color = define:NMapColors|MAP_COLOR_MIN }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_RANGE_20_40" color = define:NMapColors|MAP_COLOR_LOW }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_RANGE_40_60" color = define:NMapColors|MAP_COLOR_MID }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_RANGE_60_80" color = define:NMapColors|MAP_COLOR_HIGH }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_RANGE_80_100" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_RANGE_100_125" color = define:NMapColors|MAP_COLOR_TOP }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_RANGE_125_155" color = rgb { 245 245 245 } }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_RANGE_155_200" color = rgb { 170 235 255 } }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_CAPPED" color = rgb { 70 210 255 } }
 	tooltip_key = {
 		if = { limit = { is_land = yes } value = MAPMODE_PP_POPULATION_CAPACITY_TT_LAND }
 		else = { value = MAPMODE_PP_POPULATION_CAPACITY_TT_WATER }

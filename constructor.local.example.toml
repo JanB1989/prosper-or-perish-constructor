@@ -1,0 +1,9 @@
+# Machine-local live deploy target.
+#
+# Copy this file to constructor.local.toml and edit it for the local machine.
+# constructor.local.toml is ignored by Git because it points at a real user's
+# Paradox Documents folder.
+
+[deploy]
+# When running ppc from WSL, use the WSL path to the Windows Documents folder.
+target = "/mnt/c/Users/<windows-user>/Documents/Paradox Interactive/Europa Universalis V/mod/Prosper or Perish (Population Growth & Food Rework)"

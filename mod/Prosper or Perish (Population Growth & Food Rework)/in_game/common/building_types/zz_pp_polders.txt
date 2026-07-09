@@ -1,10 +1,12 @@
 ﻿# >>> eu5-building-pipeline:polders:building
 REPLACE:polders = {
-	price = pp_polders_price
+    audio_tier = 3
+    price = pp_polders_price
   custom_tags = { pp_food_security_priority pp_water_control_priority }
   is_special = yes
   is_foreign = no
   max_levels = polders_max_level
+  increase_per_level_cost = 0.30
   pop_type = laborers
   category = infrastructure_category
   employment_size = village_employment_size # 1000 laborers
@@ -21,13 +23,15 @@ REPLACE:polders = {
     }
     topography = wetlands
   }
+    raw_modifier = {
+        farm_capacity_from_polders = 0.60
+    }
 
   modifier = {
     local_population_capacity = 2.5
     local_monthly_development_modifier = 0.025
     local_road_building_time = -0.05
 
-    farm_max_level_modifier = 0.60
     local_wheat_output_modifier = 0.025
     local_livestock_output_modifier = 0.025
     local_maize_output_modifier = 0.02

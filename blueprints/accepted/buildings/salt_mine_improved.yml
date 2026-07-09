@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: salt_mine_improved
 upgrade_chain:
   family: salt_mine
@@ -21,11 +21,12 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
+    increase_per_level_cost = 0.21
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 4
-    price = pp_salt_mine_improved_price
+    employment_size = 1
     category = rgo_building_category
+    custom_tags = { pp_mine_building }
     icon = salt_mine_improved
     rural_settlement = yes
     town = yes
@@ -81,7 +82,6 @@ building:
             }
         }
     }
-
     construction_demand = workshop_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -91,7 +91,7 @@ building:
     unique_production_methods = {
         pp_salt_mine_improved_base_salt = {
             produced = salt
-            output = 0.280
+            output = 0.070
             category = building_maintenance
         }
     }
@@ -100,29 +100,27 @@ building:
             category = building_maintenance
         }
         pp_salt_mine_improved_timbered_haulage = {
-            lumber = 1.694 # timbered galleries
-            tools = 0.847 # pumps and picks
-            horses = 0.424 # hauling teams
-            leather = 0.303 # harness and buckets
-            beeswax = 0.242 # mine candles
+            lumber = 0.424 # timbered galleries
+            tools = 0.212 # pumps and picks
+            horses = 0.106 # hauling teams
+            leather = 0.076 # harness and buckets
+            beeswax = 0.061 # mine candles
             produced = salt
-            output = 1.464
+            output = 0.366
             category = building_maintenance
         }
     }
 
+    raw_modifier = {
+    }
+
     modifier = {
         local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_migration_attraction = 0.010
+        local_salt_output_modifier = 0.025
     }
-prices:
-  - key: pp_salt_mine_improved_price
-    body: |2-
-      {gold = 180}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_salt_mine_improved_price_cost_modifier: Affects the cost of building [ShowBuildingTypeName('salt_mine_improved')|e].
-    MODIFIER_TYPE_NAME_pp_salt_mine_improved_price_cost_modifier: Improved Salt Mine Cost
     salt_mine_improved_slot_0: Salt Deposit
     salt_mine_improved_slot_1: Haulage
     salt_mine_improved: Improved Salt Mine
@@ -130,7 +128,6 @@ localization:
     pp_salt_mine_improved_base_salt: Surveyed Salt Workings
     pp_salt_mine_improved_no_primary: No Improved Haulage
     pp_salt_mine_improved_timbered_haulage: Timbered Galleries and Hoists
-    pp_salt_mine_improved_price: Improved Salt Mine Price
 icon:
   source_dds: /mnt/c/Games/steamapps/common/Europa Universalis V/game/main_menu/gfx/interface/icons/buildings/saltpeter_guild.dds
   output_dds: salt_mine_improved.dds

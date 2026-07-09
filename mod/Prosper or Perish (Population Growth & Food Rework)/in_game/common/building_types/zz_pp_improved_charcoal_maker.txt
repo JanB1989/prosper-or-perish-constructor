@@ -1,40 +1,46 @@
 ﻿# >>> eu5-building-pipeline:improved_charcoal_maker:building
 REPLACE:improved_charcoal_maker = {
-	is_foreign = no
-	pop_type = laborers
-	max_levels = rural_building_cap
-	
-	employment_size = rural_peasant_produce_employment
-	obsolete = charcoal_maker
-	
-	category = rgo_building_category
-	
-	rural_settlement = yes
-	town = yes
-	city = yes
-	megalopolis = yes
-	
-	location_potential = {
-		NOT = {
-			raw_material = goods:coal
-		}
-	}
+    audio_tier = 1
+    startup_ramp_target = rural_startup_ramp_target
+    is_foreign = no
+increase_per_level_cost = 0.18
+    pop_type = laborers
+    max_levels = rural_building_cap
 
-	build_time = rural_build_time
-	
-	unique_production_methods = {
-		pp_improved_char_coal_maintenance = {
-			produced = coal
-			output = 1.2
+    employment_size = 1
+    obsolete = charcoal_maker
 
-			debug_max_profit = 1
-		
-			lumber = 0.8
-			category = guild_input
-		}
+    category = rgo_building_category
 
-	}
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
 
-	construction_demand = guild_construction
+    location_potential = {
+        NOT = {
+            raw_material = goods:coal
+        }
+    }
+    build_time = rural_build_time
+
+    unique_production_methods = {
+        pp_improved_char_coal_maintenance = {
+            produced = coal
+            output = 0.9
+
+            debug_max_profit = 0.3
+
+            lumber = 0.63 # coppice poles and cordwood
+            clay = 1.48 # sealed kiln and retort lining
+            category = guild_input
+        }
+
+    }
+
+    construction_demand = guild_construction
+
+    raw_modifier = {
+    }
 }
 # <<< eu5-building-pipeline:improved_charcoal_maker:building

@@ -1,0 +1,68 @@
+﻿# >>> eu5-building-pipeline:managed_pepper_garden:building
+managed_pepper_garden = {
+is_foreign = no
+increase_per_level_cost = 0.21
+max_levels = farm_capacity_max_managed_pepper_garden
+pop_type = laborers
+employment_size = 1
+category = rgo_building_category
+custom_tags = { farming_capacity }
+icon = managed_pepper_garden
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = pepper_garden
+build_time = village_build_time
+
+location_potential = {
+    raw_material = goods:pepper
+}
+
+construction_demand = basic_construction_needs
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_managed_pepper_garden_base_pepper = {
+        produced = pepper
+        output = 0.046
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_managed_pepper_garden_no_drying_yard = {
+        category = building_maintenance
+    }
+    pp_managed_pepper_garden_bamboo_drying_mats = {
+        fiber_crops = 0.080 # bamboo mats, harvest baskets, and vine ties
+        pottery = 0.050 # blanching pots and storage jars
+        produced = pepper
+        output = 0.105
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_managed_pepper_garden_unsorted_harvest = {
+        category = building_maintenance
+    }
+    pp_managed_pepper_garden_garbling_tables = {
+        furniture = 0.040 # light sorting racks and tables
+        fiber_crops = 0.030 # sacks, screens, and woven trays
+        produced = pepper
+        output = 0.058
+        category = building_maintenance
+    }
+}
+
+raw_modifier = {
+  farm_capacity_from_managed_pepper_garden = -1
+}
+
+modifier = {
+    local_migration_attraction = 0.003
+}
+}
+# <<< eu5-building-pipeline:managed_pepper_garden:building

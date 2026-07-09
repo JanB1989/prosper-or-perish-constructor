@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: check-path-lengths
+        name: Check Windows path length budget
+        entry: uv run python tools/check_path_lengths.py
+        language: system
+        pass_filenames: false

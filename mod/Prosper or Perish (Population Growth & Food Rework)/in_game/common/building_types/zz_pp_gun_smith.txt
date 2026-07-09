@@ -1,0 +1,65 @@
+﻿# >>> eu5-building-pipeline:gun_smith:building
+REPLACE:gun_smith = {
+audio_tier = 1
+is_foreign = no
+pop_type = burghers
+max_levels = guild_max_level
+startup_ramp_target = guild_startup_ramp_target
+category = weapons_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+obsolete = hand_cannon_guild
+build_time = guild_build_time
+unique_production_methods = {
+    pp_gun_smith_guns_guild_lumber_maintenance = {
+        lumber = 0.134
+        iron = 0.04
+        tools = 0.018
+        produced = firearms
+        output = 0.15
+        category = guild_input
+        debug_max_profit = guild_profit_margin
+    }
+    pp_gun_smith_guns_guild_bronze_maintenance = {
+        copper = 0.569
+        tin = 0.114
+        tools = 0.342
+        produced = firearms
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_gun_smith_guns_guild_iron_maintenance = {
+        iron = 0.559
+        tools = 0.336
+        produced = firearms
+        output = 1.0
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+unique_production_methods = {
+    pp_gun_smith_guns_guild_ammunition_lead_maintenance = {
+        lead = 0.111
+        saltpeter = 0.111
+        produced = firearms
+        output = 0.16
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+    pp_gun_smith_guns_guild_ammunition_iron_maintenance = {
+        iron = 0.102
+        saltpeter = 0.102
+        produced = firearms
+        output = 0.2
+        debug_max_profit = guild_profit_margin
+        category = guild_input
+    }
+}
+construction_demand = guild_construction
+modifier = {}
+increase_per_level_cost = 0.19
+}
+# <<< eu5-building-pipeline:gun_smith:building

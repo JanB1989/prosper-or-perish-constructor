@@ -1,0 +1,89 @@
+﻿version: 2
+tag: permanent_way_depot
+output_tag: road_3_permanent_way_depot
+upgrade_chain:
+  family: road_infrastructure
+  tier: 3
+  previous: macadam_works
+  next: null
+  unlock_advance: railroad_advance
+building:
+  key: permanent_way_depot
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots: []
+  possible_production_methods:
+    - pp_permanent_way_depot_maintenance
+  body: |2-
+    is_foreign = no
+    max_levels = 1
+    pop_type = laborers
+    employment_size = 1.5
+    price = pp_permanent_way_depot_price
+    category = infrastructure_category
+    custom_tags = { pp_logistics_infrastructure_priority pp_road_maintenance }
+    icon = permanent_way_depot
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = macadam_works
+    can_close = yes
+    forbidden_for_estates = yes
+    important_for_AI = no
+    ai_forbid_shutdown = no
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      num_roads > 0
+    }
+    construction_demand = pp_permanent_way_depot_construction
+
+    possible_production_methods = {
+      pp_permanent_way_depot_maintenance
+    }
+
+    raw_modifier = {
+    }
+
+    modifier = {
+      local_distance_from_capital_speed_propagation = 0.40
+    }
+production_methods:
+  - key: pp_permanent_way_depot_maintenance
+    body: |2-
+      steel = 1.80
+      lumber = 2.00
+      masonry = 2.00
+      tools = 1.20
+      coal = 0.70
+      sand = 2.00
+      category = building_maintenance
+prices:
+  - key: pp_permanent_way_depot_price
+    body: |2-
+      {gold = 50}
+advancements:
+  - key: TRY_INJECT:railroad_advance
+    body: |2-
+      unlock_building = permanent_way_depot
+      unlock_production_method = pp_permanent_way_depot_maintenance
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_permanent_way_depot_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('permanent_way_depot')|e].
+    MODIFIER_TYPE_NAME_pp_permanent_way_depot_price_cost_modifier: Permanent Way Depot Cost
+    permanent_way_depot: Permanent Way Depot
+    permanent_way_depot_desc: Platelayers, gangers, timber sleepers, rails, ballast, and tool stores keep the permanent way fit for trains and freight.
+    pp_permanent_way_depot_construction: Permanent Way Depot Construction
+    pp_permanent_way_depot_maintenance: Permanent Way Crews
+    pp_permanent_way_depot_price: Permanent Way Depot Price
+icon:
+  source_png: ../assets/icons/permanent_way_depot.png
+  output_dds: permanent_way_depot.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game building icon for a Permanent Way Depot, transparent background. Center a railway maintenance depot with stacked rails, timber sleepers, ballast piles, tool shed, hand trolley, coal and steel stock, and a short track section. Painterly historical UI art matching water_sawmill and lumber_mill_improved, three-quarter view, readable at low resolution, no text, no frame, not photorealistic, not cartoonish.
+evaluation:
+  allow_rules:
+    profit_percent: Maintenance-only railway infrastructure consumes supplies while its payoff is carried by location modifiers.
+    input_throughput: Permanent way depots intentionally use light staffing while upkeep is paid through goods maintenance.
+    output_throughput: Permanent way depots provide road and rail effects rather than direct goods output.

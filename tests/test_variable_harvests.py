@@ -353,6 +353,7 @@ def _parser_confirmed_farmed_goods() -> set[str]:
         methods.filter(
             pl.col("building").is_in(LAND_FARM_BUILDINGS)
             & pl.col("produced").is_not_null()
+            & (pl.col("produced") != "victuals")
         )["produced"].unique()
     )
 

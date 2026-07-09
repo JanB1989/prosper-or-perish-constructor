@@ -1,0 +1,46 @@
+version: 2
+tag: pottery_manufactory
+building:
+  key: pottery_manufactory
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_pottery_manufactory_pottery_manufactory_maintenance
+  possible_production_methods: []
+  body: |
+    audio_tier = 3
+    is_foreign = no
+    pop_type = burghers
+    max_levels = manufactory_max_level
+    startup_ramp_target = manufactory_startup_ramp_target
+    category = basic_industry_category
+    employment_size = 0.3
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = manufactory_build_time
+    obsolete = pottery_workshop
+    unique_production_methods = {
+        pp_pottery_manufactory_pottery_manufactory_maintenance = {
+            clay = 1.136
+            lumber = 0.17
+            tools = 0.114
+            produced = pottery
+            output = 1.5
+            category = manufactory_input
+            debug_max_profit = manufactory_profit_margin
+        }
+    }
+    construction_demand = manufactory_construction
+    increase_per_level_cost = 0.15
+localization:
+  entries:
+    pottery_manufactory_slot_0: Pottery Manufactory Work
+    pp_pottery_manufactory_pottery_manufactory_maintenance: Pottery Manufactory Pottery Manufactory Maintenance
+evaluation:
+  allow_rules:
+    profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.
+    input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
+    output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.

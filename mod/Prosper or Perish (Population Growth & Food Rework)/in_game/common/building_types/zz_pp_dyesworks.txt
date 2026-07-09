@@ -1,0 +1,28 @@
+﻿# >>> eu5-building-pipeline:dyesworks:building
+REPLACE:dyesworks = {
+audio_tier = 3
+is_foreign = no
+pop_type = burghers
+max_levels = manufactory_max_level
+startup_ramp_target = manufactory_startup_ramp_target
+category = basic_industry_category
+employment_size = 0.3
+town = yes
+city = yes
+megalopolis = yes
+build_time = manufactory_build_time
+unique_production_methods = {
+    pp_dyesworks_dyesworks_maintenance = {
+        alum = 0.364
+        lumber = 3.781
+        produced = dyes
+        output = 2.0
+        debug_max_profit = manufactory_profit_margin
+        category = workshop_input
+    }
+}
+obsolete = dyes_workshop
+construction_demand = manufactory_construction
+increase_per_level_cost = 0.15
+}
+# <<< eu5-building-pipeline:dyesworks:building

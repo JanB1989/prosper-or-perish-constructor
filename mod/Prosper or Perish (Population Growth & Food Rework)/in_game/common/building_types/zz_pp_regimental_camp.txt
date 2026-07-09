@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:regimental_camp:building
 REPLACE:regimental_camp = {
+	audio_tier = 2
 	is_foreign = no
 	pop_type = soldiers
 	max_levels = manpower_max_level
@@ -14,6 +15,9 @@ REPLACE:regimental_camp = {
 	rural_settlement = yes
 	build_time = soldier_building
 	
+	raw_modifier = {
+	}
+
     modifier = {
 		local_manpower = 0.02
 		can_recruit_regiment_in_this_location = yes

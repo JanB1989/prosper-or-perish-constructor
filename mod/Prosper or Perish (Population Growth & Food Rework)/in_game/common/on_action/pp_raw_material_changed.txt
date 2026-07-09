@@ -1,0 +1,15 @@
+﻿# Prosper or Perish - refresh raw-good static modifiers when a location raw material changes.
+# root = location, scope:old_goods = previous raw material, scope:new_goods = new raw material.
+
+on_raw_material_changed = {
+	on_actions = {
+		pp_refresh_rgo_static_bonus_on_raw_material_changed
+	}
+}
+
+pp_refresh_rgo_static_bonus_on_raw_material_changed = {
+	effect = {
+		pp_refresh_rgo_static_bonus = yes
+		pp_refresh_fruit_orchard_eligibility = yes
+	}
+}

@@ -1,0 +1,19 @@
+﻿namespace = pp_capacity_culling_debug
+
+pp_capacity_culling_debug.1 = {
+	type = country_event
+	title = pp_capacity_culling_debug.1.title
+	desc = pp_capacity_culling_debug.1.desc
+	outcome = neutral
+	orphan = yes
+
+	immediate = {
+		every_country = {
+			pp_cull_capacity_buildings_over_max_v2_effect = yes
+		}
+	}
+
+	option = {
+		name = pp_capacity_culling_debug.1.a
+	}
+}

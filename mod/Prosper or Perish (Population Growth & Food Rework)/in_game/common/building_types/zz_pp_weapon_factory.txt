@@ -1,0 +1,36 @@
+﻿# >>> eu5-building-pipeline:weapon_factory:building
+REPLACE:weapon_factory = {
+audio_tier = 6
+is_foreign = no
+pop_type = laborers
+is_mill = yes
+max_levels = mills_max_level
+startup_ramp_target = mills_startup_ramp_target
+category = weapons_industry_category
+employment_size = 1.0
+town = yes
+city = yes
+megalopolis = yes
+obsolete = weapon_manufactory
+build_time = mills_build_time
+unique_production_methods = {
+    pp_weapon_factory_weapon_factory_maintenance = {
+        steel = 1.911
+        coal = 0.574
+        lumber = 0.574
+        category = mills_input
+        produced = weaponry
+        output = 4.0
+        debug_max_profit = mills_profit_margin
+    }
+}
+custom_tags = {
+    lategame_manufactory
+}
+construction_demand = mill_construction
+raw_modifier = {
+    local_burghers_desired_pop = 0.05
+}
+increase_per_level_cost = 0.19
+}
+# <<< eu5-building-pipeline:weapon_factory:building

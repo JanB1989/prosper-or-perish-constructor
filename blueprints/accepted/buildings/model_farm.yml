@@ -2,7 +2,7 @@
 tag: model_farm
 upgrade_chain:
   family: farming_village
-  tier: 2
+  tier: 3
   previous: farming_village_rotations
   next: null
   unlock_advance: pp_model_farm
@@ -32,18 +32,22 @@ building:
         - pp_model_farm_legumes
         - pp_model_farm_potato
         - pp_model_farm_olives
+    - name: slot_2
+      methods:
+        - pp_model_farm_no_worker_victuals
+        - pp_model_farm_worker_victuals
   possible_production_methods: []
   body: |2-
     # Age 5 is the laborer/capitalized step: surveyed fields, hired hands, drill culture,
     # horse-hoes, planned barns, accounts, and crop-specific storage or water/press works.
     # Inputs stay capped at four goods per method; paper and pottery appear here as higher-tier management/storage goods.
     is_foreign = no
-    max_levels = farm_max_level
+    increase_per_level_cost = 0.15
+    max_levels = farm_capacity_max_model_farm
     pop_type = laborers
-    employment_size = 10
-    price = pp_model_farm_price
+    employment_size = 1
     category = village_category
-    custom_tags = { pp_food_security_priority pp_staple_food_priority }
+    custom_tags = { pp_food_security_priority pp_staple_food_priority farming_capacity }
     icon = model_farm
     rural_settlement = yes
     town = yes
@@ -57,52 +61,48 @@ building:
     construction_demand = workshop_construction
 
     location_potential = {
-        pp_general_farmable_food_location > 0
-    }
-
-    allow = {
-        farm_capacity_available > 0
+        pp_general_farmable_food_location_potential = yes
     }
 
     unique_production_methods = {
         pp_model_farm_base_livestock = {
             produced = livestock
-            output = 1.00
+            output = 0.10
             category = building_maintenance
         }
         pp_model_farm_base_millet = {
             produced = millet
-            output = 1.00
+            output = 0.10
             category = building_maintenance
         }
         pp_model_farm_base_wheat = {
             produced = wheat
-            output = 1.00
+            output = 0.10
             category = building_maintenance
         }
         pp_model_farm_base_maize = {
             produced = maize
-            output = 1.00
+            output = 0.10
             category = building_maintenance
         }
         pp_model_farm_base_rice = {
             produced = rice
-            output = 1.00
+            output = 0.10
             category = building_maintenance
         }
         pp_model_farm_base_legumes = {
             produced = legumes
-            output = 1.00
+            output = 0.10
             category = building_maintenance
         }
         pp_model_farm_base_potato = {
             produced = potato
-            output = 1.00
+            output = 0.10
             category = building_maintenance
         }
         pp_model_farm_base_olives = {
             produced = olives
-            output = 1.00
+            output = 0.10
             category = building_maintenance
         }
     }
@@ -112,110 +112,120 @@ building:
         }
         pp_model_farm_livestock = {
             produced = livestock
-            output = 14.00
-            tools = 2.40 # drills, improved tools
-            horses = 2.20 # horse-hoes, carts
-            legumes = 3.80 # fodder leys
-            paper = 0.60 # surveys, accounts
+            output = 1.40
+            tools = 0.24 # drills, improved tools
+            horses = 0.22 # horse-hoes, carts
+            legumes = 0.38 # fodder leys
+            paper = 0.06 # surveys, accounts
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_millet = {
             produced = millet
-            output = 21.00
-            tools = 2.50 # drills, hoes
-            horses = 2.20 # draught teams
-            livestock = 1.60 # manure supply
-            paper = 1.50 # field accounts
+            output = 2.10
+            tools = 0.25 # drills, hoes
+            horses = 0.22 # draught teams
+            livestock = 0.16 # manure supply
+            paper = 0.15 # field accounts
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_wheat = {
             produced = wheat
-            output = 21.20
-            tools = 2.50 # seed drills, hoes
-            horses = 2.20 # drill and cart teams
-            legumes = 3.00 # clover leys
-            paper = 1.50 # surveys, crop books
+            output = 2.12
+            tools = 0.25 # seed drills, hoes
+            horses = 0.22 # drill and cart teams
+            legumes = 0.30 # clover leys
+            paper = 0.15 # surveys, crop books
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_maize = {
             produced = maize
-            output = 21.00
-            tools = 2.40 # horse-hoes, cultivators
-            livestock = 3.20 # manure supply
-            lumber = 2.00 # ventilated cribs
-            paper = 1.50 # estate records
+            output = 2.10
+            tools = 0.24 # horse-hoes, cultivators
+            livestock = 0.32 # manure supply
+            lumber = 0.20 # ventilated cribs
+            paper = 0.15 # estate records
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_rice = {
             produced = rice
-            output = 21.30
-            tools = 2.40 # spades, hoes
-            livestock = 3.00 # manure supply
-            lumber = 1.80 # sluices, gates
-            clay = 7.00 # compacted bunds
+            output = 2.13
+            tools = 0.24 # spades, hoes
+            livestock = 0.30 # manure supply
+            lumber = 0.18 # sluices, gates
+            clay = 0.70 # compacted bunds
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_legumes = {
             produced = legumes
-            output = 20.80
-            tools = 2.30 # drills, hoes
-            horses = 2.10 # draught teams
-            livestock = 1.20 # manure supply
-            paper = 2.50 # seed ledgers
+            output = 2.08
+            tools = 0.23 # drills, hoes
+            horses = 0.21 # draught teams
+            livestock = 0.12 # manure supply
+            paper = 0.25 # seed ledgers
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_potato = {
             produced = potato
-            output = 21.40
-            tools = 2.40 # spades, drills
-            livestock = 3.10 # manure supply
-            clay = 4.00 # earth clamps
-            paper = 3.00 # field accounts
+            output = 2.14
+            tools = 0.24 # spades, drills
+            livestock = 0.31 # manure supply
+            clay = 0.40 # earth clamps
+            paper = 0.30 # field accounts
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_model_farm_olives = {
             produced = olives
-            output = 20.90
-            tools = 2.30 # pruning knives, mattocks
-            livestock = 2.80 # grove manure
-            lumber = 2.00 # beam presses, bins
-            pottery = 3.00 # oil jars
+            output = 2.09
+            tools = 0.23 # pruning knives, mattocks
+            livestock = 0.28 # grove manure
+            lumber = 0.20 # beam presses, bins
+            pottery = 0.30 # oil jars
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_model_farm_no_worker_victuals = {
+            category = building_maintenance
+        }
+        pp_model_farm_worker_victuals = {
+            produced = victuals
+            output = 0.067
             debug_max_profit = 0
             category = building_maintenance
         }
     }
 
+    raw_modifier = {
+      farm_capacity_from_model_farm = -1
+    }
+
     modifier = {
         local_monthly_food = 0.0
-        local_laborers_desired_pop = 0.02
+        local_laborers_desired_pop = 0.002
     }
-prices:
-  - key: pp_model_farm_price
-    body: |2-
-      {gold = 800}
 advancements:
   - key: pp_model_farm
     body: |2-
       icon = model_farm
       age = age_5_absolutism
-      requires = food_advance_absolutism
+      requires = scientific_revolution_advance
       unlock_building = model_farm
       ai_weight = { add = 125 }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_model_farm_price_cost_modifier: Affects the cost of building [ShowBuildingTypeName('model_farm')|e].
-    MODIFIER_TYPE_NAME_pp_model_farm_price_cost_modifier: Model Farm Cost
     model_farm: Model Farm
     model_farm_desc: Model farms use surveyed fields, hired hands, planned rotations, improved barns, and careful accounts to raise staple crops at larger scale.
     model_farm_slot_0: Improved Fields
     model_farm_slot_1: Improved Cultivation
+    model_farm_slot_2: Household Food
     pp_model_farm: Model Farms
     pp_model_farm_base_legumes: Improved Legume Fields
     pp_model_farm_base_livestock: Improved Livestock Pasture
@@ -231,11 +241,12 @@ localization:
     pp_model_farm_maize: Model Maize Fields
     pp_model_farm_millet: Model Millet Fields
     pp_model_farm_no_primary: No Improved Cultivation
+    pp_model_farm_no_worker_victuals: No Household Victuals
     pp_model_farm_olives: Model Olive Groves
     pp_model_farm_potato: Model Potato Fields
-    pp_model_farm_price: Model Farm Price
     pp_model_farm_rice: Model Rice Paddies
     pp_model_farm_wheat: Model Wheat Fields
+    pp_model_farm_worker_victuals: Household Victuals
 icon:
   source_png: ../assets/icons/model_farm.png
   output_dds: model_farm.dds
@@ -304,3 +315,7 @@ evaluation:
       production_efficiency: 1.00
     pp_model_farm_olives:
       production_efficiency: 1.00
+    pp_model_farm_worker_victuals:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

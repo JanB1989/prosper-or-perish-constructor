@@ -1,0 +1,11 @@
+﻿weather_monthly_pulse = {
+	on_actions = {
+		pp_monthly_market_food_stockpile_topup_on_weather_pulse
+	}
+}
+
+pp_monthly_market_food_stockpile_topup_on_weather_pulse = {
+	effect = {
+		# pp_monthly_market_food_stockpile_topup = yes
+	}
+}

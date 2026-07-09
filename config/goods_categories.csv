@@ -1,0 +1,77 @@
+good,category,subcategory,increase_per_level_cost,increase_per_level_cost_explanation
+elephants,farming,animal_husbandry,0.45,Slow herds need vast habitat and skilled handling
+horses,farming,animal_husbandry,0.45,Pasture and breeding stock limit rapid expansion
+livestock,farming,animal_husbandry,0.45,Herd growth depends on grazing land and water
+wool,farming,animal_husbandry,0.45,Flock expansion is limited by pasture and climate
+beeswax,farming,apiary,0.30,Apiaries scale where flowering forage is steady
+dyes,farming,industrial_crops,0.60,Specialized soils and processing constrain acreage
+incense,farming,industrial_crops,0.60,Resin trees need arid groves and years to mature
+tobacco,farming,industrial_crops,0.60,Soil exhaustion and curing needs slow expansion
+cotton,farming,plant_fibers,0.50,Warm fields and heavy labor shape growth
+fiber_crops,farming,plant_fibers,0.50,Suitable soils and retting capacity limit scale
+silk,farming,plant_fibers,0.50,Mulberry groves and skilled rearing slow expansion
+chili,farming,spices,0.90,Warm plots are easy but spice quality narrows sites
+cloves,farming,spices,0.90,Island tree crops mature slowly in narrow climates
+pepper,farming,spices,0.90,Vine support and humid climates restrict growth
+saffron,farming,spices,0.90,Hand harvest and tiny yields make expansion hard
+legumes,farming,staple_crops,0.40,Adaptable fields and seed saving ease expansion
+maize,farming,staple_crops,0.40,Broad climates and high yields ease expansion
+millet,farming,staple_crops,0.40,Hardy dryland fields expand with modest inputs
+potato,farming,staple_crops,0.40,Flexible soils and seed tubers support fast growth
+rice,farming,staple_crops,0.40,Water control and paddies limit expansion
+wheat,farming,staple_crops,0.40,Open fields and simple storage ease expansion
+cocoa,farming,stimulants,0.70,Humid shade groves mature slowly
+coffee,farming,stimulants,0.70,Highland shrubs and processing slow expansion
+tea,farming,stimulants,0.70,Acid soils and skilled picking constrain growth
+sugar,farming,sweeteners,0.80,Warm estates and mills make expansion costly
+fruit,farming,tree_crops,0.80,Orchards take years before full yields
+olives,farming,tree_crops,0.80,Dry groves mature slowly and need suitable slopes
+wine,farming,tree_crops,0.80,Vineyards require years and skilled care
+lumber,forestry,timber,0.85,Forests regrow slowly and transport is bulky
+fish,gathering,aquatic_resources,0.75,Catches depend on local waters and boats
+pearls,gathering,aquatic_resources,0.75,Beds are rare and harvests are uncertain
+clay,gathering,earth_materials,0.30,Common deposits and simple pits ease expansion
+sand,gathering,earth_materials,0.30,Abundant surface deposits make expansion simple
+medicaments,gathering,medicinals,0.70,Wild stands and specialized knowledge limit scale
+salt,gathering,surface_minerals,0.65,Brine flats and pans require specific terrain
+amber,gathering,wild_luxuries,0.80,Rare deposits and coastal finds limit expansion
+fur,hunting,animal_products,0.85,Wild animal ranges cannot be enlarged quickly
+ivory,hunting,animal_products,0.85,Large animals grow slowly and ranges are limited
+wild_game,hunting,wild_food,0.70,Hunting yields depend on habitat and animal stocks
+beer,manufactured,beverages,0.40,Breweries scale from local grain and modest vats
+liquor,manufactured,beverages,0.40,Distilleries scale from surplus crops and compact stills
+books,manufactured,books_and_paper,0.65,Printing expands with presses literate labor and steady paper
+paper,manufactured,books_and_paper,0.65,Paper mills need water power fiber supply and trained crews
+slaves_goods,manufactured,coerced_labor,0.60,Constrained by coercive capture networks and guarded transport
+glass,manufactured,construction_materials,0.40,Glassworks need fuel pure sand and furnace skill
+masonry,manufactured,construction_materials,0.40,Masonry scales where stone clay kilns and trained crews align
+pottery,manufactured,construction_materials,0.40,Pottery workshops expand with clay kilns and steady craft labor
+tar,manufactured,industrial_inputs,0.70,Tar production needs resinous wood slow kilns and forest access
+furniture,manufactured,luxury_crafts,0.80,Fine furniture needs seasoned timber artisans and urban buyers
+jewelry,manufactured,luxury_crafts,0.80,Jewelry workshops depend on gems metals skilled cutters and elite demand
+lacquerware,manufactured,luxury_crafts,0.80,Lacquerware needs rare resins layered curing and specialist artisans
+porcelain,manufactured,luxury_crafts,0.80,Porcelain requires kaolin high heat kilns and closely guarded skill
+steel,manufactured,metal_goods,0.65,Steelmaking needs ore fuel furnaces and disciplined process control
+tools,manufactured,metal_goods,0.65,Tool output depends on quality steel smiths and distributed workshops
+cannons,manufactured,military_goods,0.80,Cannon foundries need large furnaces precision casting and proofing grounds
+firearms,manufactured,military_goods,0.80,Firearms need precision barrels locks skilled armorers and steady powder
+weaponry,manufactured,military_goods,0.80,Armories need metal supply skilled smiths and coordinated finishing
+naval_supplies,manufactured,naval_goods,0.85,Naval stores need mature timber rope pitch yards and dock demand
+food_revenue,manufactured,prepared_food,0.30,Sale value follows local food distribution and market capacity
+victuals,manufactured,prepared_food,0.30,Prepared food scales through simple processing and broad local inputs
+cloth,manufactured,textiles_and_leather,0.55,Cloth expands with fiber spinning weaving and fulling capacity
+fine_cloth,manufactured,textiles_and_leather,0.55,Fine cloth needs select fibers skilled finishing and demanding buyers
+leather,manufactured,textiles_and_leather,0.55,Leather depends on hides bark tanning pits and curing time
+marble,mining,construction_stone,0.30,Quarry faces are exposed and cutting methods scale predictably
+stone,mining,construction_stone,0.30,Common deposits and simple quarrying keep expansion relatively easy
+coal,mining,fuel,0.75,Deep seams need drainage ventilation and heavy haulage
+alum,mining,industrial_minerals,0.50,Useful beds are scattered and processing needs specialized works
+mercury,mining,industrial_minerals,0.50,Toxic ores and careful retorting slow expansion
+saltpeter,mining,industrial_minerals,0.50,Deposits are uneven and refining limits quick growth
+copper,mining,metal_ores,0.80,Deeper lodes need stronger shafts and fuel hungry smelting
+iron,mining,metal_ores,0.80,Large output needs deep pits heavy hauling and smelting capacity
+lead,mining,metal_ores,0.80,Veins are irregular and drainage becomes costly at depth
+tin,mining,metal_ores,0.80,Alluvial sources thin out and hard rock lodes are harder to scale
+gems,mining,precious_minerals,0.90,Rare pockets and uncertain yields make expansion highly difficult
+goods_gold,mining,precious_minerals,0.90,Scarce veins and low yields make each new mine hard to justify
+silver,mining,precious_minerals,0.90,Deep narrow veins and costly refining make expansion difficult

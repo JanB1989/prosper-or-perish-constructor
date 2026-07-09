@@ -1,0 +1,57 @@
+﻿# Prosper or Perish - targeted replacements for gold-heavy building construction.
+# Values preserve 25% of the old gold value at base prices: gold 8, jewelry 5.
+
+pp_capital_jewelry_construction = {
+	lumber = 2
+	tools = 2
+	glass = 2
+	fine_cloth = 2
+	jewelry = 0.8
+	marble = 2
+	category = building_construction
+}
+
+pp_early_capital_jewelry_construction = {
+	lumber = 2
+	tools = 2
+	glass = 2
+	fine_cloth = 2
+	jewelry = 0.8
+	category = building_construction
+}
+
+pp_prestige_jewelry_construction = {
+	masonry = 3
+	tools = 2
+	glass = 2
+	copper = 2
+	tin = 2
+	jewelry = 0.8
+	marble = 5
+	category = building_construction
+}
+
+pp_local_governor_jewelry_construction = {
+	masonry = 5
+	tools = 5
+	glass = 5
+	fine_cloth = 2
+	jewelry = 0.8
+	category = building_construction
+}
+
+pp_funduq_jewelry_construction = {
+	lumber = 0.3
+	masonry = 0.1
+	jewelry = 0.02
+	tools = 0.2
+	paper = 0.1
+	category = building_construction
+}
+
+pp_caravan_stop_jewelry_construction = {
+	salt = 0.1
+	jewelry = 0.02
+	livestock = 0.3
+	category = building_construction
+}

@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:drift_net_fishery:advancement
+pp_coastal_drift_nets = {
+icon = drift_net_fishery
+age = age_3_discovery
+requires = maritime_advance_age_3
+unlock_building = drift_net_fishery
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:drift_net_fishery:advancement

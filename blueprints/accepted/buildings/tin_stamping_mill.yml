@@ -27,11 +27,12 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
+    increase_per_level_cost = 0.25
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 4
-    price = pp_tin_stamping_mill_price
+    employment_size = 1
     category = rgo_building_category
+    custom_tags = { pp_mine_building }
     icon = tin_stamping_mill
     rural_settlement = yes
     town = yes
@@ -43,7 +44,6 @@ building:
     location_potential = {
         raw_material = goods:tin
     }
-
     construction_demand = workshop_construction
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -53,7 +53,7 @@ building:
     unique_production_methods = {
         pp_tin_stamping_mill_base_tin = {
             produced = tin
-            output = 0.3
+            output = 0.1
             category = building_maintenance
         }
     }
@@ -62,10 +62,10 @@ building:
             category = building_maintenance
         }
         pp_tin_stamping_mill_tin = {
-            lumber = 1.700
-            tools = 1.25
+            lumber = 0.425
+            tools = 0.31
             produced = tin
-            output = 3.78
+            output = 0.95
             category = building_maintenance
         }
     }
@@ -74,33 +74,31 @@ building:
             category = building_maintenance
         }
         pp_tin_stamping_mill_copper = {
-            lumber = 0.213
-            tools = 0.12
+            lumber = 0.053
+            tools = 0.03
             produced = copper
-            output = 0.272
+            output = 0.068
             category = building_maintenance
         }
         pp_tin_stamping_mill_lead = {
-            lumber = 0.213
-            tools = 0.12
+            lumber = 0.053
+            tools = 0.03
             produced = lead
-            output = 0.408
+            output = 0.102
             category = building_maintenance
         }
     }
 
+    raw_modifier = {
+    }
+
     modifier = {
         local_population_growth = -0.0002
-        local_migration_attraction = 0.02
+        local_migration_attraction = 0.010
+        local_tin_output_modifier = 0.025
     }
-prices:
-  - key: pp_tin_stamping_mill_price
-    body: |2-
-      {gold = 200}
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_tin_stamping_mill_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('tin_stamping_mill')|e].
-    MODIFIER_TYPE_NAME_pp_tin_stamping_mill_price_cost_modifier: Tin Stamping Mill Cost
     tin_stamping_mill_slot_0: Tin Lode
     tin_stamping_mill_slot_1: Stamped Tin Dressing
     tin_stamping_mill_slot_2: Sulphide Ore Sorting
@@ -112,7 +110,6 @@ localization:
     pp_tin_stamping_mill_no_secondary: No Sulphide Sorting
     pp_tin_stamping_mill_copper: Copper Sulphide Sorting
     pp_tin_stamping_mill_lead: Lead Ore Picking
-    pp_tin_stamping_mill_price: Tin Stamping Mill Price
 icon:
   source_png: ../assets/icons/tin_stamping_mill.png
   output_dds: tin_stamping_mill.dds

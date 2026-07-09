@@ -1,0 +1,34 @@
+﻿# >>> eu5-building-pipeline:printing_mill:building
+REPLACE:printing_mill = {
+audio_tier = 5
+is_foreign = no
+pop_type = laborers
+is_mill = yes
+max_levels = mills_max_level
+startup_ramp_target = mills_startup_ramp_target
+category = consumer_goods_category
+employment_size = 1.0
+town = yes
+city = yes
+megalopolis = yes
+obsolete = printing_manufactory
+build_time = mills_build_time
+unique_production_methods = {
+    pp_printing_mill_printing_mill_maintenance = {
+        lead = 0.727
+        paper = 4.001
+        tools = 0.072
+        lumber = 1.163
+        produced = books
+        output = 4.0
+        debug_max_profit = mills_profit_margin
+        category = mills_input
+    }
+}
+construction_demand = mill_construction
+raw_modifier = {
+    local_burghers_desired_pop = 0.05
+}
+increase_per_level_cost = 0.16
+}
+# <<< eu5-building-pipeline:printing_mill:building

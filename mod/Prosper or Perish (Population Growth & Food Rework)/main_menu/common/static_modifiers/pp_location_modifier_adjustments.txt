@@ -13,6 +13,7 @@ TRY_REPLACE:province_starving = {
 	
 	# local_upper_class_capacity_modifier = -0.75
 	local_life_expectancy = -10
+	local_food_revenue_output_modifier = 0.080
 	
 	local_migration_speed = 0.015
     local_monthly_prosperity = -0.05
@@ -22,40 +23,45 @@ TRY_REPLACE:province_starving = {
 	local_laborers_migration_allowed = yes
 	local_peasants_migration_allowed = yes
 }
+# cheap_food_in_location scales from food_price to 0x food_price BUT the values here are divided by 2. So at 0x food_price only half of them apply and cap. Above food_price this modifier does nothing
 TRY_REPLACE:cheap_food_in_location = {
 	game_data = {
 		category = location
 	}
-	local_nobles_food_consumption = 1.20
-	local_clergy_food_consumption = 1.20
-	local_burghers_food_consumption = 1.10
-	local_laborers_food_consumption = 1.10
-	local_soldiers_food_consumption = 1.10
-	local_peasants_food_consumption = 1.00
-	local_population_growth = 0.011 # means 0.5% max
+	local_food_revenue_output_modifier = -0.30
+	local_nobles_food_consumption = 0.50
+	local_clergy_food_consumption = 0.50
+	local_burghers_food_consumption = 0.50
+	local_laborers_food_consumption = 0.50
+	local_soldiers_food_consumption = 0.50
+	local_peasants_food_consumption = 0.50
+	local_population_growth = 0.011
 	local_monthly_prosperity = 0.0050
 	local_devastation_recovery = 0.0035
 }
+# expensive_food_in_location scales from food_price to 2x food_price BUT the values here are divided by 2. So at 2x food_price only half of them apply and cap. Below food_price this modifier does nothing
 TRY_REPLACE:expensive_food_in_location = {
 	game_data = {
 		category = location
 	}
+	local_food_revenue_output_modifier = 0.50
 	# local_pop_demotion_speed = 0.25
-	local_nobles_food_consumption = -0.10
-	local_clergy_food_consumption = -0.10
-	local_burghers_food_consumption = -0.15
-	local_laborers_food_consumption = -0.15
-	local_soldiers_food_consumption = -0.15
-	local_upper_class_capacity_modifier = -0.20
-	local_peasants_food_consumption = -0.25
-	local_monthly_prosperity = -0.0080
+	local_nobles_food_consumption = -0.05
+	local_clergy_food_consumption = -0.05
+	local_burghers_food_consumption = -0.10
+	local_laborers_food_consumption = -0.10
+	local_soldiers_food_consumption = -0.10
+	# local_upper_class_capacity_modifier = -0.20
+	local_peasants_food_consumption = -0.40
+	local_monthly_prosperity = -0.010
 	local_population_growth = -0.007
 }
 TRY_REPLACE:positive_province_food_growth = {
 	game_data = {
 		category = province
 	}
-	# these values are the values for 12 months of stored province consumption
+	# these values are the values for 1 year of stored province consumption they cap at GROWTH_FROM_FOOD_MULTIPLIER_MAX which is defined in years aswell
+	local_food_revenue_output_modifier = -0.043
 	local_population_growth = 0.00375 # with the new spoilage at 24 month consumption storage ~20% of total consumption is spoilage
 	local_devastation_recovery = 0.003
 	local_migration_attraction = 0.045
@@ -66,7 +72,7 @@ TRY_INJECT:surplus_jobs = {
 	game_data = {
 		category = location
 	}
-	local_migration_attraction = 0.2
+	local_migration_attraction = 0.6
 }
 
 # I want to in general move more towards satisfaction mattering more and being more dependent on demand
@@ -77,6 +83,7 @@ TRY_REPLACE:average_satisfaction_inverted = {
 	local_monthly_prosperity = -0.0030
 	local_max_control = -0.05
 	local_levy_size_modifier = -0.30
+	local_mercenaries_modifier = 0.5
 }
 # Idea is that if there is lots of free land, people can pick good food production spots
 # Gameplay, this also adds a little insurance that horrifically devastated empty provinces can actually recover easier
@@ -103,15 +110,20 @@ TRY_REPLACE:building_levels = {
 	}
 	local_trade_center_power = 0.0004
 	local_road_building_time = 0.01
-	local_build_buildings_cost = 0.10
+	# local_market_access = -0.0015
+	# local_build_buildings_efficiency = -0.003
 }
 TRY_REPLACE:unsupported_building_levels = {
 	game_data = {
 		category = location 
 	}
-	# local_build_new_buildings_cost = 0.05
-	local_build_buildings_cost = 0.15
+	local_build_buildings_efficiency = -0.03
+	local_construction_speed = -0.01
+	local_distance_from_capital_speed_propagation = -0.01
+	local_max_control = -0.005
+	local_food_revenue_output_modifier = -0.01
 }
+
 TRY_REPLACE:total_population = {
 	game_data = {
 		category = location
@@ -121,7 +133,6 @@ TRY_REPLACE:total_population = {
 	
 	local_max_rgo_size = 0.0020
 	
-	free_building_levels = 0.075
 	local_food_capacity = 2.5
 }
 # capped at max 100 this value
@@ -155,35 +166,8 @@ TRY_REPLACE:raised_levies = {
 	game_data = {
 		category = location
 	}
-	local_raw_material_output = -0.20
-	local_wheat_output_modifier = -0.20
-	local_rice_output_modifier = -0.20
-	local_millet_output_modifier = -0.20
-	local_maize_output_modifier = -0.20
-	local_legumes_output_modifier = -0.20
-	local_fruit_output_modifier = -0.20
-	local_olives_output_modifier = -0.20
-	local_potato_output_modifier = -0.20
-	local_livestock_output_modifier = -0.20
-	local_beeswax_output_modifier = -0.20
-	local_wool_output_modifier = -0.20
-	local_fiber_crops_output_modifier = -0.05
-	local_cotton_output_modifier = -0.20
-	local_sugar_output_modifier = -0.20
-	local_tobacco_output_modifier = -0.20
-	local_horses_output_modifier = -0.14
-	local_silk_output_modifier = -0.20
-	local_incense_output_modifier = -0.20
-	local_tea_output_modifier = -0.20
-	local_cocoa_output_modifier = -0.20
-	local_coffee_output_modifier = -0.20
-	local_saffron_output_modifier = -0.20
-	local_pepper_output_modifier = -0.20
-	local_cloves_output_modifier = -0.20
-	local_chili_output_modifier = -0.20
-	local_fish_output_modifier = -0.20
-	local_wild_game_output_modifier = -0.20
-	local_fur_output_modifier = -0.20
+	local_production_efficiency = -0.10
+	local_raw_material_output = -0.30
 }
 
 # Devastation doesn't kill people, starvation and other stuff does
@@ -203,8 +187,8 @@ TRY_REPLACE:devastation = {
 	local_migration_attraction = 1
 	local_life_expectancy = 10
 	local_mercenaries_modifier = -0.5
-	local_construction_speed = -0.5
-	local_upper_class_capacity_modifier = 1.00
+	local_construction_speed = 0.5
+	local_upper_class_capacity_modifier = 0.50
 	local_peasants_food_consumption = 0.10
 	local_defensive = 0.50
 	local_unrest = -0.25
@@ -222,9 +206,9 @@ TRY_REPLACE:development = {
 	local_institution_growth_modifier = 0.001
 	local_construction_speed = 0.01
 	
-	local_food_capacity = 10
+	local_food_capacity = 30
 	
-	free_building_levels = 2
+	free_building_levels = 0.3
 	
 	local_max_rgo_size = 0.15
 	
@@ -232,38 +216,10 @@ TRY_REPLACE:development = {
 	
 	occupation_time = 0.01
 	
-	local_build_buildings_cost = -0.001
+	local_build_buildings_efficiency = 0.001
 	maximum_stockpile_capacity = 10
-	local_production_efficiency = 0.001
-	local_monthly_development = -0.00009
-	local_wheat_output_modifier = 0.0025
-	local_rice_output_modifier = 0.0025
-	local_millet_output_modifier = 0.0025
-	local_maize_output_modifier = 0.0025
-	local_legumes_output_modifier = 0.0025
-	local_fruit_output_modifier = 0.0025
-	local_olives_output_modifier = 0.0025
-	local_potato_output_modifier = 0.0025
-	local_livestock_output_modifier = 0.0025
-	local_beeswax_output_modifier = 0.0025
-	local_wool_output_modifier = 0.0025
-	local_fiber_crops_output_modifier = 0.0006
-	local_cotton_output_modifier = 0.0025
-	local_sugar_output_modifier = 0.0025
-	local_tobacco_output_modifier = 0.0025
-	local_horses_output_modifier = 0.0010
-	local_silk_output_modifier = 0.0025
-	local_incense_output_modifier = 0.0025
-	local_tea_output_modifier = 0.0025
-	local_cocoa_output_modifier = 0.0025
-	local_coffee_output_modifier = 0.0025
-	local_saffron_output_modifier = 0.0025
-	local_pepper_output_modifier = 0.0025
-	local_cloves_output_modifier = 0.0025
-	local_chili_output_modifier = 0.0025
-	local_fish_output_modifier = 0.0025
-	local_wild_game_output_modifier = 0.0025
-	local_fur_output_modifier = 0.0025
+	local_production_efficiency = 0.0015
+	local_monthly_development = -0.00011
 	local_population_capacity = 0.15
 	local_population_capacity_modifier = 0.015
 }
@@ -279,49 +235,84 @@ TRY_REPLACE:unemployed_peasants = {
 	game_data = {
 		category = location
 	}
-	local_monthly_development = -0.00001
+	local_monthly_development = -0.00002
 	local_institution_growth_modifier = -0.0050
 	local_construction_speed = 0.0001
+	local_build_buildings_efficiency = 0.001
 	local_migration_attraction = -0.001
 }
 
 TRY_INJECT:market_center = {
-	maximum_stockpile_capacity = 250
+	# maximum_stockpile_capacity = 250
+	# local_food_capacity = 100000
+	# local_food_decay_modifier = -1.0
+	free_building_levels = 30
 }
+
+TRY_INJECT:location_template_natural_harbor_suitability_poor = {
+	# Vanilla poor harbor suitability bottoms out at -0.25, so this scales to -5.
+	pp_coastal_shipping_office_cap_modifier = -20
+}
+TRY_INJECT:location_template_natural_harbor_suitability_good = {
+	pp_coastal_shipping_office_cap_modifier = 10
+}
+
 TRY_INJECT:river_flowing_through_1 = {
 	local_monthly_food_modifier = -0.05 # vanilla 0.05
 	local_population_capacity_modifier = -0.1
-	fish_max_level_modifier = 1
-	farm_max_level_modifier = 1
+	# Bridge river size into the flat farm_capacity tooltip path. Keep the
+	# player-facing row labelled as river size, not as a generic improvement.
+	farm_capacity_from_river_size = 1
+	fish_capacity_from_river_size = 1
 	irrigant_cap_modifier = 1
+	pp_river_boatmen_yard_cap_modifier = 3
+	free_building_levels = 10
+	local_build_buildings_efficiency = 0.1
+	local_construction_speed = 0.1
 }
 TRY_INJECT:river_flowing_through_2 = {
 	local_monthly_food_modifier = -0.10 # vanilla 0.10
 	local_population_capacity_modifier = -0.2
-	fish_max_level_modifier = 1
-	farm_max_level_modifier = 1
+	farm_capacity_from_river_size = 1
+	fish_capacity_from_river_size = 1
 	irrigant_cap_modifier = 2
+	pp_river_boatmen_yard_cap_modifier = 6
+	free_building_levels = 15
+	local_build_buildings_efficiency = 0.15
+	local_construction_speed = 0.15
 }
 TRY_INJECT:river_flowing_through_3 = {
 	local_monthly_food_modifier = -0.15 # vanilla 0.15
 	local_population_capacity_modifier = -0.3
-	fish_max_level_modifier = 2
-	farm_max_level_modifier = 2
+	farm_capacity_from_river_size = 2
+	fish_capacity_from_river_size = 2
 	irrigant_cap_modifier = 3
+	pp_river_boatmen_yard_cap_modifier = 9
+	free_building_levels = 20
+	local_build_buildings_efficiency = 0.2
+	local_construction_speed = 0.2
 }
 TRY_INJECT:river_flowing_through_4 = {
 	local_monthly_food_modifier = -0.20 # vanilla 0.20
 	local_population_capacity_modifier = -0.4
-	fish_max_level_modifier = 3
-	farm_max_level_modifier = 3
+	farm_capacity_from_river_size = 3
+	fish_capacity_from_river_size = 3
 	irrigant_cap_modifier = 4
+	pp_river_boatmen_yard_cap_modifier = 12
+	free_building_levels = 25
+	local_build_buildings_efficiency = 0.25
+	local_construction_speed = 0.25
 }
 TRY_INJECT:river_flowing_through_5 = {
 	local_monthly_food_modifier = -0.25 # vanilla 0.25
 	local_population_capacity_modifier = -0.5
-	fish_max_level_modifier = 4
-	farm_max_level_modifier = 4
+	farm_capacity_from_river_size = 4
+	fish_capacity_from_river_size = 4
 	irrigant_cap_modifier = 5
+	pp_river_boatmen_yard_cap_modifier = 15
+	free_building_levels = 30
+	local_build_buildings_efficiency = 0.3
+	local_construction_speed = 0.3
 }
 
 TRY_INJECT:local_abuses_modifier = {
@@ -530,4 +521,30 @@ TRY_INJECT:jap_osaka_castle = {
 	local_monthly_food_modifier = -0.1 # vanilla 0.1
 	local_rice_output_modifier = 0.05
 	local_tea_output_modifier = 0.03
+}
+TRY_INJECT:has_road = {
+	free_building_levels = 10
+}
+TRY_INJECT:is_port = {
+	free_building_levels = 15
+	local_build_buildings_efficiency = 0.15
+	local_construction_speed = 0.15
+}
+TRY_INJECT:capital = {
+	free_building_levels = 10
+}
+TRY_INJECT:province_capital = {
+	free_building_levels = 8
+}
+
+# Vanilla defines this static modifier in main_menu/common/static_modifiers/location.txt.
+TRY_INJECT:possible_promotion_percentage = {
+	game_data = {
+		category = location
+	}
+	local_peasants_estate_power = -10.0
+	local_pop_promotion_speed_scaled = -0.00095
+	local_burghers_estate_power = 1
+	local_nobles_estate_power = 1
+	local_clergy_estate_power = 1
 }

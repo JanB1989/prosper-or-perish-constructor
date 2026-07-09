@@ -1,4 +1,21 @@
-﻿# One random closed (is_opened = no) building per owned location, yearly, AI countries only.
+﻿pp_raise_owned_zero_rgo_max_workers = {
+	effect = {
+		every_owned_location = {
+			limit = {
+				exists = raw_material
+				rgo_level >= 0
+				NOT = { rgo_level >= 1 }
+				OR = {
+					"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" > 0
+					"unemployed_pops_of_pop_type_in_location(pop_type:slaves)" > 0
+				}
+			}
+			change_max_raw_material_workers = 1
+		}
+	}
+}
+
+# One random closed (is_opened = no) building level per owned location, yearly, AI countries only.
 pp_yearly_cull_one_closed_building = {
 	effect = {
 		if = {
@@ -19,8 +36,70 @@ pp_yearly_cull_one_closed_building = {
 						owner = root
 						building_can_be_destroyed_by = root
 					}
-					location = {
-						destroy_building = prev
+					change_building_level = -1
+				}
+			}
+		}
+	}
+}
+
+pp_ai_victuals_market_on_food_crisis = {
+	effect = {
+		if = {
+			limit = { is_ai = yes }
+			every_owned_location = {
+				limit = { is_province_capital = yes }
+				save_scope_as = pp_food_crisis_capital
+				province = {
+					if = {
+						limit = {
+							province_monthly_food_production > 100
+							scope:pp_food_crisis_capital = {
+								location_building_level = {
+									building_type = building_type:victuals_market
+									value > 0
+								}
+							}
+						}
+						scope:pp_food_crisis_capital = {
+							change_building_level_in_location = { building = building_type:victuals_market value = -1 }
+						}
+					}
+					else_if = {
+						limit = {
+							province_monthly_food_production < -30
+							scope:pp_food_crisis_capital = {
+								OR = {
+									# No victuals_market at all: build the first one.
+									NOT = {
+										any_buildings_in_location = {
+											building_type = building_type:victuals_market
+										}
+									}
+									# Existing victuals_market is healthy and not at max: expand it.
+									AND = {
+										location_building_level = {
+											building_type = building_type:victuals_market
+											value < victuals_market_max_level
+										}
+										any_buildings_in_location = {
+											building_type = building_type:victuals_market
+											is_opened = yes
+											is_full_capacity = yes
+											is_lacking_goods = no
+										}
+									}
+								}
+							}
+						}
+						scope:pp_food_crisis_capital = {
+							construct_building = {
+								building_type = building_type:victuals_market
+								instant = yes
+								cost_multiplier = 0
+								cost_multiplier_reason = "pp_ai_food_crisis"
+							}
+						}
 					}
 				}
 			}
@@ -28,470 +107,8 @@ pp_yearly_cull_one_closed_building = {
 	}
 }
 
-pp_cull_over_cap_buildings = {
+pp_ai_logistics_on_unsupported_building_levels = {
 	effect = {
-		every_owned_location = {
-			# Land Farm Capacity
-			# Farming Village
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:farming_village
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:farming_village value = -1 }
-			}
-			# Model Farm
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:model_farm
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:model_farm value = -1 }
-			}
-			# Fruit Orchard
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:fruit_orchard
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:fruit_orchard value = -1 }
-			}
-			# Pomological Orchard
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:pomological_orchard
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:pomological_orchard value = -1 }
-			}
-			# Sheep Farms
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:sheep_farms
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:sheep_farms value = -1 }
-			}
-			# Enclosed Sheep Walks
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:enclosed_sheep_walks
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:enclosed_sheep_walks value = -1 }
-			}
-			# Horse Breeders
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:horse_breeders
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:horse_breeders value = -1 }
-			}
-			# Elephant Kraal
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:elephant_kraal
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:elephant_kraal value = -1 }
-			}
-			# Fiber Crops Farm
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:fiber_crops_farm
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:fiber_crops_farm value = -1 }
-			}
-			# Cotton Plantation
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:cotton_plantation
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:cotton_plantation value = -1 }
-			}
-			# Cotton Farm
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:cotton_farm
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:cotton_farm value = -1 }
-			}
-			# Sugar Plantation
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:sugar_plantation
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:sugar_plantation value = -1 }
-			}
-			# Sugarcane Farm
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:sugarcane_farm
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:sugarcane_farm value = -1 }
-			}
-			# Tobacco Plantation
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:tobacco_plantation
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:tobacco_plantation value = -1 }
-			}
-			# Tobacco Farm
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:tobacco_farm
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:tobacco_farm value = -1 }
-			}
-			# Dye Plantation
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:dye_plantation
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:dye_plantation value = -1 }
-			}
-			# Chili Plantation
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:chili_plantation
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:chili_plantation value = -1 }
-			}
-			# Clove Grove
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:clove_grove
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:clove_grove value = -1 }
-			}
-			# Cocoa Grove
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:cocoa_grove
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:cocoa_grove value = -1 }
-			}
-			# Coffee Grove
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:coffee_grove
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:coffee_grove value = -1 }
-			}
-			# Incense Grove
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:incense_grove
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:incense_grove value = -1 }
-			}
-			# Pepper Garden
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:pepper_garden
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:pepper_garden value = -1 }
-			}
-			# Saffron Croft
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:saffron_croft
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:saffron_croft value = -1 }
-			}
-			# Sericulture Farm
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:sericulture_farm
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:sericulture_farm value = -1 }
-			}
-			# Simplers Grove
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:simplers_grove
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:simplers_grove value = -1 }
-			}
-			# Tea Garden
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:tea_garden
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:tea_garden value = -1 }
-			}
-			# Vineyard Estate
-			if = {
-				limit = {
-					farm_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:vineyard_estate
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:vineyard_estate value = -1 }
-			}
-			# Fishing Village
-			if = {
-				limit = {
-					fish_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:fishing_village
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:fishing_village value = -1 }
-			}
-			# Ocean Fishery
-			if = {
-				limit = {
-					fish_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:ocean_fishery
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:ocean_fishery value = -1 }
-			}
-			# Offshore Fishery
-			if = {
-				limit = {
-					fish_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:offshore_fishery
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:offshore_fishery value = -1 }
-			}
-			# Forest Village
-			if = {
-				limit = {
-					forest_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:forest_village
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:forest_village value = -1 }
-			}
-			# Managed Forest Village
-			if = {
-				limit = {
-					forest_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:managed_forest_village
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:managed_forest_village value = -1 }
-			}
-			# Lumber Mill
-			if = {
-				limit = {
-					forest_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:lumber_mill
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:lumber_mill value = -1 }
-			}
-			# Water Sawmill
-			if = {
-				limit = {
-					forest_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:water_sawmill
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:water_sawmill value = -1 }
-			}
-			# Improved Lumber Mill
-			if = {
-				limit = {
-					forest_capacity_remaining < 0
-					location_building_level = {
-						building_type = building_type:lumber_mill_improved
-						value > 0
-					}
-				}
-				change_building_level_in_location = { building = building_type:lumber_mill_improved value = -1 }
-			}
-		}
-	}
-}
-pp_ai_victuals_market_on_food_crisis = {
-	effect = {
-		if = {
-			limit = { is_ai = yes }
-			every_province = {
-				if = {
-					limit = {
-						province_monthly_food_production > 100
-						any_location_in_province = {
-							is_province_capital = yes
-							owner ?= root
-							location_building_level = {
-								building_type = building_type:victuals_market
-								value > 0
-							}
-						}
-					}
-					every_location_in_province = {
-						limit = {
-							is_province_capital = yes
-							owner ?= root
-							location_building_level = {
-								building_type = building_type:victuals_market
-								value > 0
-							}
-						}
-						change_building_level_in_location = { building = building_type:victuals_market value = -1 }
-					}
-				}
-				else_if = {
-					limit = {
-						province_monthly_food_production < -30
-						any_location_in_province = {
-							is_province_capital = yes
-							owner ?= root
-							OR = {
-								# No victuals_market at all → build the first one
-								NOT = {
-									any_buildings_in_location = {
-										building_type = building_type:victuals_market
-									}
-								}
-								# Existing victuals_market is healthy and not at max → expand
-								AND = {
-									location_building_level = {
-										building_type = building_type:victuals_market
-										value < victuals_market_max_level
-									}
-									any_buildings_in_location = {
-										building_type = building_type:victuals_market
-										is_opened = yes
-										is_full_capacity = yes
-										is_lacking_goods = no
-									}
-								}
-							}
-						}
-					}
-					every_location_in_province = {
-						limit = {
-							is_province_capital = yes
-							owner ?= root
-						}
-						construct_building = {
-							building_type = building_type:victuals_market
-							instant = yes
-							cost_multiplier = 0
-							cost_multiplier_reason = "pp_ai_food_crisis"
-						}
-					}
-				}
-			}
-		}
+		pp_ai_logistics_build_unsupported_infrastructure = yes
 	}
 }

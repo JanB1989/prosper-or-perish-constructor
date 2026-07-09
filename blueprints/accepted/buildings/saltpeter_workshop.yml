@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: saltpeter_workshop
 building:
   key: saltpeter_workshop
@@ -10,11 +10,14 @@ building:
         - pp_saltpeter_workshop_demands
   possible_production_methods: []
   body: |2-
+    audio_tier = 2
+    startup_ramp_target = workshop_startup_ramp_target
     is_foreign = no
+    increase_per_level_cost = 0.18
     pop_type = burghers
     max_levels = workshop_max_level
     category = basic_industry_category
-    employment_size = workshop_employment
+    employment_size = 0.1
     town = yes
     city = yes
     megalopolis = yes
@@ -23,7 +26,6 @@ building:
     location_potential = {
         NOT = { raw_material = goods:saltpeter }
     }
-
     unique_production_methods = {
         pp_saltpeter_workshop_demands = {
             pottery = 0.15
@@ -38,6 +40,8 @@ building:
     obsolete = saltpeter_guild
     custom_tags = { workshop }
     construction_demand = workshop_construction
+    raw_modifier = {
+    }
 localization:
   entries:
     saltpeter_workshop_slot_0: Saltpeter Workshop Demands

@@ -2,3 +2,7 @@
   pp_granary_maintenance: "Granaries"
   victuals: "Victuals"
   victuals_desc: "The lifeblood of any campaign or settlement. Crafted from basic food resources in the [ShowBuildingTypeName('cookery')|e], victuals encompass everything from fresh regional dishes to carefully preserved, travel-ready rations. They are essential for sustaining professional armies and navies on long voyages, and are actively traded and distributed to the populace through the [ShowBuildingTypeName('victuals_market')|e]."
+  food_revenue: "Food Revenue"
+  food_revenue_desc: "Gross sale value from food distributed through local markets."
+  game_concept_pp_food_revenue: "Food Revenue"
+  game_concept_pp_food_revenue_desc: "Food Revenue is the market value generated when food reaches local distribution. It is an internal trade good used by Prosper or Perish's food economy."

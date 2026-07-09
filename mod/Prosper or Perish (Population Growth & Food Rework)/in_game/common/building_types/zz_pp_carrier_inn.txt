@@ -1,0 +1,33 @@
+﻿# >>> eu5-building-pipeline:carrier_inn:building
+carrier_inn = {
+is_foreign = no
+max_levels = 100
+increase_per_level_cost = 0.23
+pop_type = peasants
+employment_size = 3
+category = infrastructure_category
+custom_tags = { pp_logistics_infrastructure_priority pp_logistics pp_rural_logistics_priority }
+icon = carrier_inn
+rural_settlement = yes
+town = yes
+can_close = no
+always_add_demands = yes
+forbidden_for_estates = yes
+important_for_AI = no
+ai_forbid_shutdown = yes
+build_time = infrastructure_build_time
+
+location_potential = {
+  num_roads > 0
+}
+construction_demand = pp_carrier_inn_construction
+
+possible_production_methods = {
+  pp_carrier_inn_maintenance
+}
+
+raw_modifier = {
+  free_building_levels = 10
+}
+}
+# <<< eu5-building-pipeline:carrier_inn:building

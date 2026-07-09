@@ -1,6 +1,6 @@
 ---
 name: prosper-or-perish-workflows
-description: Use for Prosper or Perish Constructor repo workflows, including setup, tests, parser inspection, static analysis, savegame export, docs publishing, blueprint list/parity/evaluate/good/build, and guarded live sync/deploy commands.
+description: Use for Prosper or Perish Constructor repo workflows, including setup, tests, parser inspection, static analysis, savegame export, docs publishing, blueprint list/parity/evaluate/tag/good/build, and guarded live sync/deploy commands.
 ---
 
 # Prosper Or Perish Workflows
@@ -11,17 +11,55 @@ Use the repo command surface before reaching for raw commands:
 uv run ppc --help
 ```
 
-Default to the constructor workspace:
+Resolve the repository dynamically instead of hardcoding a user's checkout path:
 
 ```bash
-cd /mnt/c/Development/ProsperOrPerishConstructor
+repo="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+test -f "$repo/constructor.toml"
+cd "$repo"
 ```
 
 When running from another folder, pass the repo explicitly:
 
 ```bash
-uv run --project /mnt/c/Development/ProsperOrPerishConstructor ppc --repo /mnt/c/Development/ProsperOrPerishConstructor --help
+repo=/path/to/ProsperOrPerishConstructor
+uv run --project "$repo" ppc --repo "$repo" --help
 ```
+
+Do not run project tooling from the old Windows-mounted checkout. Treat that
+checkout as quarantined: read or copy specific files only when recovering data
+from it.
+
+## Mod Output Root
+
+The constructor output mod root is:
+
+```text
+mod/Prosper or Perish (Population Growth & Food Rework)
+```
+
+From Windows this is visible as:
+
+```text
+\\wsl$\Ubuntu\home\jan\development\ProsperOrPerishConstructor\mod\Prosper or Perish (Population Growth & Food Rework)
+```
+
+This repo-local `mod/...` directory is the compiled mod copy. `uv run ppc
+sync --yes` first makes sure this output root is built/current, then copies it
+to the configured live Paradox mod folder. Work either edits files directly in
+this repo-local output root, or edits source/config/blueprints that compile into
+this output root before sync copies it onward.
+
+Do not look for or use a nested `Constructor/mod/...` path in this checkout; the
+compiled mod root is `mod/...`.
+
+Use tracked configuration for game paths:
+
+- `constructor.load_order.toml` is the actual parser load-order config.
+- `constructor.load_order.example.toml` is the portable template for other PCs.
+- `[paths].vanilla_root` may be a Windows path such as `C:\Games\steamapps\common\Europa Universalis V`; parser tooling resolves it to `/mnt/c/...` on WSL/Linux.
+- Keep `[[mods]].root` relative to the repo so clones can live anywhere.
+- Machine-local live deploy targets belong in ignored `constructor.local.toml`; start from `constructor.local.example.toml`.
 
 ## Command Index
 
@@ -39,6 +77,7 @@ uv run --project /mnt/c/Development/ProsperOrPerishConstructor ppc --repo /mnt/c
 - `uv run ppc blueprint list`: list accepted blueprints.
 - `uv run ppc blueprint parity`: compare accepted blueprints with generated mod output.
 - `uv run ppc blueprint evaluate`: evaluate blueprint economics and balance rules.
+- `uv run ppc blueprint tag <tag>`: evaluate accepted blueprints matching one building key, blueprint tag, custom tag, or filename stem.
 - `uv run ppc blueprint good <good>`: compare methods that produce one trade good.
 - `uv run ppc blueprint build`: build accepted blueprints into the constructor mod copy.
 - `uv run ppc build`: same build workflow as `blueprint build`.
@@ -82,3 +121,17 @@ When reporting results, mention the exact `ppc` command used and summarize the i
 - Use plain text in situation panes and generated static-modifier descriptions unless that target UI is verified to support inline concept links; unsupported formatter tags spam `error.log`.
 - Use mod-owned plain localization keys for situation map legends rather than inherited or generic `LEGEND_KEY_*` keys; the legend UI is sensitive to formatter syntax.
 - In GUI files, do not prefix `default_format` style names with `#`; use the raw style key such as `yellow_titles` so the text formatter does not parse it as an inline tag.
+
+## Rural Capacity Memory
+
+Before changing farming, fishing, or forest capacity math, tooltip rows,
+map-mode copy, or the Farming/Fishing/Forest Capacities Europedia entry, read:
+
+```bash
+sed -n '1,220p' .agents/notes/farming_capacity.md
+```
+
+Core rule: rural capacities should be one visible sum each: `farm_capacity`,
+`fish_capacity`, and `forest_capacity`. Building max-level tooltips should
+expose the actual active plus/minus sources directly, not hidden "capacity used"
+or "improvement bucket" abstractions.

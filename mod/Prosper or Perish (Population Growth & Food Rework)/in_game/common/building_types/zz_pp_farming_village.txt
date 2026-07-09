@@ -1,13 +1,15 @@
 ﻿# >>> eu5-building-pipeline:farming_village:building
 REPLACE:farming_village = {
+    audio_tier = 1
+    startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
-    max_levels = farm_max_level
+    increase_per_level_cost = 0.11
+    max_levels = farm_capacity_max_farming_village
     pop_type = peasants
 
     category = village_category
-    custom_tags = { pp_food_security_priority pp_staple_food_priority }
-    employment_size = 5
-
+    custom_tags = { pp_food_security_priority pp_staple_food_priority farming_capacity }
+    employment_size = 1
     rural_settlement = yes
     town = yes
     city = yes
@@ -16,53 +18,49 @@ REPLACE:farming_village = {
     ai_forbid_shutdown = no
 
     location_potential = {
-        pp_general_farmable_food_location > 0
-    }
-
-    allow = {
-        farm_capacity_available > 0
+        pp_general_farmable_food_location_potential = yes
     }
 
     build_time = village_build_time
 
     unique_production_methods = {
         pp_farming_village_base_livestock = {
-            output = 0.30
+            output = 0.06
             produced = livestock
             category = building_maintenance
         }
         pp_millet_farm_base_millet = {
-            output = 0.30
+            output = 0.06
             produced = millet
             category = building_maintenance
         }
         pp_wheat_farm_base_wheat = {
-            output = 0.30
+            output = 0.06
             produced = wheat
             category = building_maintenance
         }
         pp_maize_farm_base_maize = {
-            output = 0.30
+            output = 0.06
             produced = maize
             category = building_maintenance
         }
         pp_rice_farm_base_rice = {
-            output = 0.30
+            output = 0.06
             produced = rice
             category = building_maintenance
         }
         pp_legumes_farm_base_legumes = {
-            output = 0.30
+            output = 0.06
             produced = legumes
             category = building_maintenance
         }
         pp_potato_farm_base_potato = {
-            output = 0.30
+            output = 0.06
             produced = potato
             category = building_maintenance
         }
         pp_olives_farm_base_olives = {
-            output = 0.30
+            output = 0.06
             produced = olives
             category = building_maintenance
         }
@@ -72,89 +70,89 @@ REPLACE:farming_village = {
             category = building_maintenance
         }
         pp_farming_village_maintenance = {
-            tools = 0.050
-            clay = 1.0
-            output = 0.455
+            tools = 0.010
+            clay = 0.2
+            output = 0.091
             produced = livestock
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_millet_farm_maintenance = {
-            tools = 0.15
-            horses = 0.113
-            output = 0.829
+            tools = 0.03
+            horses = 0.023
+            output = 0.166
             produced = millet
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_millet_farm_livestock = {
-            tools = 0.15
-            livestock = 0.226
-            output = 0.828
+            tools = 0.03
+            livestock = 0.045
+            output = 0.166
             produced = millet
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_wheat_farm_maintenance = {
-            tools = 0.15
-            horses = 0.113
-            output = 0.828
+            tools = 0.03
+            horses = 0.023
+            output = 0.166
             produced = wheat
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_wheat_farm_livestock = {
-            tools = 0.15
-            livestock = 0.226
-            output = 0.829
+            tools = 0.03
+            livestock = 0.045
+            output = 0.166
             produced = wheat
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_maize_farm_maintenance = {
-            tools = 0.1
-            livestock = 0.15
-            output = 0.551
+            tools = 0.0
+            livestock = 0.03
+            output = 0.110
             produced = maize
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_rice_farm_maintenance = {
-            tools = 0.1
-            livestock = 0.15
-            output = 0.551
+            tools = 0.0
+            livestock = 0.03
+            output = 0.110
             produced = rice
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_legumes_farm_maintenance = {
-            tools = 0.15
-            horses = 0.113
-            output = 0.828
+            tools = 0.03
+            horses = 0.023
+            output = 0.166
             produced = legumes
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_legumes_farm_livestock = {
-            tools = 0.15
-            livestock = 0.226
-            output = 0.829
+            tools = 0.03
+            livestock = 0.045
+            output = 0.166
             produced = legumes
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_potato_farm_maintenance = {
-            tools = 0.1
-            livestock = 0.15
-            output = 0.551
+            tools = 0.0
+            livestock = 0.03
+            output = 0.110
             produced = potato
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_olives_farm_maintenance = {
-            tools = 0.1
-            livestock = 0.15
-            output = 0.551
+            tools = 0.0
+            livestock = 0.03
+            output = 0.110
             produced = olives
             debug_max_profit = 0
             category = building_maintenance
@@ -165,19 +163,34 @@ REPLACE:farming_village = {
             category = building_maintenance
         }
         pp_farming_village_minor_beeswax = {
-            furniture = 0.1
-            cloth = 0.1
+            furniture = 0.0
+            cloth = 0.0
             produced = beeswax
-            output = 0.315
+            output = 0.063
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_farming_village_no_worker_victuals = {
+            category = building_maintenance
+        }
+        pp_farming_village_worker_victuals = {
+            produced = victuals
+            output = 0.033
             debug_max_profit = 0
             category = building_maintenance
         }
     }
     construction_demand = village_construction
+    raw_modifier = {
+      farm_capacity_from_farming_village = -1
+    }
+
     modifier = {
         local_monthly_food = 0.0
-        local_peasants_estate_power = 0.2
-        local_peasant_enfranchisment = 0.01
+        local_peasants_estate_power = 0.040
+        local_peasant_enfranchisment = 0.002
         local_laborers_desired_pop = 0
         local_soldiers_desired_pop = 0
     }

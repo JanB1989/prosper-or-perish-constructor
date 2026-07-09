@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: saltpeter_beds
 building:
   key: saltpeter_beds
@@ -15,10 +15,10 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
+    increase_per_level_cost = 0.18
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 3
-    price = pp_saltpeter_beds_price
+    employment_size = 1
     category = rgo_building_category
     icon = saltpeter_beds
     rural_settlement = yes
@@ -34,7 +34,6 @@ building:
         NOT = { has_building = building_type:putrefaction_works }
         NOT = { has_building = building_type:putrefaction_mill }
     }
-
     construction_demand = basic_construction_needs
     ai_forbid_shutdown = no
     forbidden_for_estates = no
@@ -44,7 +43,7 @@ building:
     unique_production_methods = {
         pp_saltpeter_beds_base_saltpeter = {
             produced = saltpeter
-            output = 0.300
+            output = 0.100
             category = building_maintenance
         }
     }
@@ -53,26 +52,23 @@ building:
             category = building_maintenance
         }
         pp_saltpeter_beds_leaching_vats = {
-            livestock = 0.500 # manure beds
-            pottery = 0.250 # leaching vats
-            fiber_crops = 0.074 # straw bedding
+            livestock = 0.167 # manure beds
+            pottery = 0.083 # leaching vats
+            fiber_crops = 0.025 # straw bedding
             produced = saltpeter
-            output = 0.667
+            output = 0.222
             category = building_maintenance
         }
     }
 
-    modifier = {
-        local_migration_attraction = 0.01
+    raw_modifier = {
     }
-prices:
-  - key: pp_saltpeter_beds_price
-    body: |2-
-      {gold = 50}
+
+    modifier = {
+        local_migration_attraction = 0.003
+    }
 localization:
   entries:
-    MODIFIER_TYPE_DESC_pp_saltpeter_beds_price_cost_modifier: Affects the cost of building [ShowBuildingTypeName('saltpeter_beds')|e].
-    MODIFIER_TYPE_NAME_pp_saltpeter_beds_price_cost_modifier: Niter Beds Cost
     saltpeter_beds_slot_0: Niter Beds
     saltpeter_beds_slot_1: Leaching
     saltpeter_beds: Niter Beds
@@ -80,7 +76,6 @@ localization:
     pp_saltpeter_beds_base_saltpeter: Niter Beds
     pp_saltpeter_beds_natural_crusts: Natural Crusts
     pp_saltpeter_beds_leaching_vats: Leaching Vats
-    pp_saltpeter_beds_price: Niter Beds Price
 icon:
   source_png: ../assets/icons/saltpeter_beds.png
   output_dds: saltpeter_beds.dds

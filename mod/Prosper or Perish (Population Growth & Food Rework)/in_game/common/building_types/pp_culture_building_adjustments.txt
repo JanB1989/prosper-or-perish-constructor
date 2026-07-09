@@ -1,6 +1,6 @@
 ﻿# Prosper or Perish - cultural building promotion and maintenance adjustments.
 
-TRY_REPLACE:library = {
+REPLACE:library = {
 	audio_tier = 2
 	is_foreign = no
 	pop_type = clergy
@@ -41,7 +41,7 @@ TRY_REPLACE:library = {
 	construction_demand = library_construction
 }
 
-TRY_REPLACE:university = {
+REPLACE:university = {
 	audio_tier = 3
 	is_foreign = no
 	pop_type = clergy
@@ -96,7 +96,7 @@ TRY_REPLACE:university = {
 	construction_demand = university_construction
 }
 
-TRY_REPLACE:gymnasium_building = {
+REPLACE:gymnasium_building = {
 	audio_tier = 3
 	is_special = yes
 	is_foreign = no

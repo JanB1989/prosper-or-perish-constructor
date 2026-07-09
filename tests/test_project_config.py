@@ -2830,6 +2830,18 @@ def test_replaced_buildings_do_not_reuse_vanilla_unique_method_names() -> None:
     assert not offenders
 
 
+def test_mod_production_methods_do_not_shadow_vanilla_unique_method_names() -> None:
+    mod_methods = _database_keys(PRODUCTION_METHODS_ROOT)
+    offenders = []
+
+    for building, vanilla_methods in _vanilla_unique_methods_by_building().items():
+        reused = sorted(mod_methods & vanilla_methods)
+        if reused:
+            offenders.append(f"{building}: {', '.join(reused)}")
+
+    assert not offenders
+
+
 def test_replaced_buildings_preserve_vanilla_audio_and_startup_fields() -> None:
     load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
     vanilla_profile = load_order.profile("vanilla")

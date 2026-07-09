@@ -95,3 +95,58 @@ TRY_REPLACE:university = {
 
 	construction_demand = university_construction
 }
+
+TRY_REPLACE:gymnasium_building = {
+	audio_tier = 3
+	is_special = yes
+	is_foreign = no
+	pop_type = clergy
+	max_levels = 1
+
+	category = cultural_category
+	employment_size = huge_religious_building_employment
+
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+
+	country_potential = {
+		has_reform = government_reform:study_of_the_classics
+	}
+
+	build_time = large_cultural_building_time
+
+	forbidden_for_estates = yes
+
+	location_potential = {
+		is_capital = yes
+	}
+
+	remove_if = {
+		location.owner ?= {
+			NOT = {
+				has_reform = government_reform:study_of_the_classics
+			}
+		}
+	}
+
+	modifier = {
+		local_cultural_tradition = 0.5
+		local_nobles_max_literacy = 10
+		local_monthly_literacy = 0.1
+		local_institution_growth_modifier = 0.33
+	}
+
+	capital_country_modifier = {
+		research_speed_modifier = 0.05
+		global_max_literacy = 5
+	}
+
+	possible_production_methods = {
+		pp_university_maintenance
+	}
+
+	construction_demand = university_construction
+}

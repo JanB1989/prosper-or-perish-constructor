@@ -16,7 +16,7 @@ TRY_INJECT:burghers = {
 }
 TRY_INJECT:laborers = {
 	pop_food_consumption = 2.00
-	promotion_factor = 1.50
+	promotion_factor = 2.50
 	upper = yes
 	pop_percentage_impact = {
 		local_monthly_development = 0.003

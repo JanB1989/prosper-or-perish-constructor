@@ -170,9 +170,10 @@ def test_road_wardens_startup_is_deactivated_and_food_startup_is_untouched() -> 
 
     assert "pp_road_infrastructure_startup" not in game_start
     assert "pp_road_infrastructure_startup = {" in startup
-    assert "num_roads > 0" in startup
-    assert "NOT = { has_building = building_type:road_wardens_yard }" in startup
-    assert "building_type = building_type:road_wardens_yard" in startup
-    assert "cost_multiplier = 0" in startup
+    assert "construct_building" not in startup
+    assert "num_roads > 0" not in startup
+    assert "NOT = { has_building = building_type:road_wardens_yard }" not in startup
+    assert "building_type = building_type:road_wardens_yard" not in startup
+    assert "cost_multiplier = 0" not in startup
     assert "can_build_building = building_type:road_wardens_yard" not in startup
     assert "road_wardens_yard" not in FOOD_STARTUP.read_text(encoding="utf-8-sig")

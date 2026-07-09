@@ -1,20 +1,5 @@
 ﻿pp_road_infrastructure_startup = {
 	effect = {
-		every_country = {
-			limit = { exists = capital }
-			every_owned_location = {
-				limit = {
-					has_owner = yes
-					num_roads > 0
-					NOT = { has_building = building_type:road_wardens_yard }
-				}
-				construct_building = {
-					building_type = building_type:road_wardens_yard
-					instant = yes
-					cost_multiplier = 0
-					cost_multiplier_reason = "game_start"
-				}
-			}
-		}
+		# Deactivated: startup construction is compiler-owned by pp_food_building_startup.
 	}
 }

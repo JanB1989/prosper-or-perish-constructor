@@ -13,16 +13,16 @@ Instructions for Cursor when editing game concept definitions or the Europedia.
 When editing the Europedia GUI or concept definitions, preserve this order:
 
 1. All (done)
-2. F.A.Q.
-3. Update 0.8: Foundations
-4. Update 0.8.1
+2. Getting Started
+3. F.A.Q.
+4. Update 0.9
 5. Overview (done)
-6. Urbanisation (done)
-7. Food in EU5
-8. Food Production (done)
-9. Food Consumption
-10. New Trade Goods (done)
-11. New Buildings (done)
+6. Food in EU5
+7. Food Production (done)
+8. Food Consumption
+9. New Trade Goods (done)
+10. New Buildings (done)
+11. Building Limits
 12. Building Capacity (done)
 13. Building Output (done)
 14. Variable Harvests (done)
@@ -40,16 +40,16 @@ Each Europedia card has exactly one game concept file. Filename = card name (sna
 | # | Card | File |
 |---|------|------|
 | 1 | All | (filter only) |
-| 2 | F.A.Q. | pp_faq.txt |
-| 3 | Update 0.8: Foundations | pp_update_0_8_foundations.txt |
-| 4 | Update 0.8.1 | pp_update_0_8_1.txt |
+| 2 | Getting Started | pp_getting_started.txt |
+| 3 | F.A.Q. | pp_faq.txt |
+| 4 | Update 0.9 | pp_update_0_9.txt |
 | 5 | Overview | pp_overview.txt |
-| 6 | Urbanisation | pp_urbanisation.txt |
-| 7 | Food in EU5 | pp_food_in_eu5.txt |
-| 8 | Food Production | pp_food_production.txt |
-| 9 | Food Consumption | pp_food_consumption.txt |
-| 10 | New Trade Goods | pp_new_trade_goods.txt |
-| 11 | New Buildings | pp_new_buildings.txt |
+| 6 | Food in EU5 | pp_food_in_eu5.txt |
+| 7 | Food Production | pp_food_production.txt |
+| 8 | Food Consumption | pp_food_consumption.txt |
+| 9 | New Trade Goods | pp_new_trade_goods.txt |
+| 10 | New Buildings | pp_new_buildings.txt |
+| 11 | Building Limits | pp_building_limits.txt |
 | 12 | Building Capacity | pp_farm_capacity.txt |
 | 13 | Building Output | pp_farm_output.txt |
 | 14 | Variable Harvests | pp_variable_harvests.txt |

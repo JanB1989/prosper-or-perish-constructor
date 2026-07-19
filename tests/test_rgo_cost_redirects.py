@@ -11,6 +11,7 @@ from prosper_or_perish_constructor.rgo_cost_redirects import (
     RGO_COST_MODIFIERS,
     RGO_COST_REDIRECT_COLLECTIONS,
     RGO_COST_REDIRECT_FILE,
+    RGO_REDIRECT_COMPENSATIONS,
     RGO_METHODS,
     RGO_REDIRECT_OBJECTIVE,
     classify_pop_rgo_building_cost_targets,
@@ -21,6 +22,7 @@ from prosper_or_perish_constructor.rgo_cost_redirects import (
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 LOAD_ORDER = ROOT / "constructor.load_order.toml"
+EXPECTED_NO_EFFECT_RGO_REDIRECT_ADVANCES: set[str] = set()
 
 
 def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> None:
@@ -107,6 +109,50 @@ def test_generated_rgo_cost_redirects_net_vanilla_rgo_expansion_cost_to_zero() -
         )
 
 
+def test_rgo_redirect_compensations_remain_effective_in_merged_data() -> None:
+    profile = load_profile("constructor", LOAD_ORDER)
+
+    for (scope, collection, top_key, nested_path), expected_modifiers in RGO_REDIRECT_COMPENSATIONS.items():
+        merged_entry = _merged_entry(profile, scope, collection, top_key)
+        assert isinstance(merged_entry.value, CList)
+        leaf = _nested_block(merged_entry.value, nested_path)
+        assert leaf is not None, f"missing merged path {scope}/{collection}/{top_key}/{nested_path}"
+        actual_values = _numeric_values(leaf)
+        for modifier, expected_value in expected_modifiers:
+            assert abs(actual_values[modifier] - expected_value) < 1e-9, (
+                f"{scope}/{collection}/{top_key}/{'/'.join(nested_path)} {modifier}"
+            )
+
+
+def test_no_effect_rgo_redirect_advances_are_explicitly_catalogued() -> None:
+    profile = load_profile("constructor", LOAD_ORDER)
+    assignments = collect_active_rgo_cost_assignments(profile)
+    redirected_advances = {
+        assignment.path[0]
+        for assignment in assignments
+        if assignment.scope == "in_game" and assignment.collection == "advances"
+    }
+    merged_advances = {
+        entry.key: entry
+        for entry in load_merged_directory(profile, "advances", scope="in_game").entries
+    }
+    cost_modifiers = set(RGO_COST_MODIFIERS.values())
+    no_effect_advances = set()
+
+    for key in redirected_advances:
+        entry = merged_advances[key]
+        assert isinstance(entry.value, CList)
+        active_non_cost_effects = {
+            modifier: value
+            for modifier, value in _numeric_values(entry.value).items()
+            if modifier not in cost_modifiers and abs(value) > 1e-9
+        }
+        if not active_non_cost_effects:
+            no_effect_advances.add(key)
+
+    assert no_effect_advances == EXPECTED_NO_EFFECT_RGO_REDIRECT_ADVANCES
+
+
 def test_generated_rgo_cost_redirect_files_state_objective_and_do_not_define_fake_groups() -> None:
     redirect_files = _generated_redirect_files()
     assert redirect_files
@@ -157,6 +203,9 @@ def _expected_patch_values(
             expected[patch][RGO_COST_MODIFIERS[assignment.method]] += -assignment.value
         for modifier_key in modifiers_by_method[assignment.method]:
             expected[patch][modifier_key] += assignment.value
+    for patch, compensations in RGO_REDIRECT_COMPENSATIONS.items():
+        for modifier_key, value in compensations:
+            expected[patch][modifier_key] += value
     return {patch: dict(values) for patch, values in expected.items()}
 
 

@@ -5,6 +5,7 @@ import hashlib
 from pathlib import Path
 from typing import Any
 
+from eu5_building_pipeline import render_template, write_icon_asset
 import yaml
 
 
@@ -83,6 +84,29 @@ def test_upgrade_buildings_use_unique_pipeline_icons() -> None:
             assert output != previous_output, f"{key} reuses previous-tier icon output {output}"
 
 
+def test_created_buildings_use_repo_owned_icon_sources() -> None:
+    external_sources: list[str] = []
+
+    for key, raw in _enabled_blueprints().items():
+        building = raw.get("building")
+        if not isinstance(building, dict) or building.get("mode") != "CREATE":
+            continue
+
+        icon = raw.get("icon")
+        if not isinstance(icon, dict):
+            continue
+
+        source = _icon_source(raw)
+        assert source is not None, f"{key} must declare its own icon source"
+        if not source.is_relative_to(ROOT):
+            external_sources.append(f"{key}: {source}")
+
+    assert external_sources == [], (
+        "New buildings must use repo-owned icon sources, not external or vanilla art: "
+        f"{external_sources}"
+    )
+
+
 def test_enabled_building_icons_do_not_render_duplicate_hashes() -> None:
     by_hash: dict[str, list[str]] = defaultdict(list)
 
@@ -101,3 +125,31 @@ def test_enabled_building_icons_do_not_render_duplicate_hashes() -> None:
 
     duplicates = {digest: names for digest, names in by_hash.items() if len(names) > 1}
     assert not duplicates, f"Duplicate rendered building icons: {duplicates}"
+
+
+def test_enabled_building_icons_match_declared_sources(tmp_path: Path) -> None:
+    stale_outputs: list[str] = []
+
+    for key, raw in _enabled_blueprints().items():
+        icon = raw.get("icon")
+        if not isinstance(icon, dict):
+            continue
+
+        bundle = render_template(raw["_path"])
+        assert bundle.icon is not None
+
+        output = icon.get("output_dds")
+        assert isinstance(output, str)
+        expected_path = tmp_path / output
+        assert write_icon_asset(bundle.icon, expected_path, overwrite=True)
+
+        actual_path = MOD_ICON_ROOT / output
+        assert actual_path.exists(), f"{key} generated icon is missing: {actual_path}"
+        if actual_path.read_bytes() != expected_path.read_bytes():
+            stale_outputs.append(f"{key}:{output}")
+
+    assert stale_outputs == [], (
+        "Generated building icons do not match their declared blueprint sources; "
+        "rebuild with --refresh-assets: "
+        f"{stale_outputs}"
+    )

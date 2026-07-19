@@ -129,9 +129,10 @@ localization:
     pp_salt_mine_improved_no_primary: No Improved Haulage
     pp_salt_mine_improved_timbered_haulage: Timbered Galleries and Hoists
 icon:
-  source_dds: /mnt/c/Games/steamapps/common/Europa Universalis V/game/main_menu/gfx/interface/icons/buildings/saltpeter_guild.dds
+  source_png: ../assets/icons/salt_mine_improved.png
   output_dds: salt_mine_improved.dds
   size: 512
+  prompt: EU5-inspired hand-painted strategy-game building icon for an Improved Salt Mine on a perfectly flat RGB 255 0 255 magenta chroma-key background. Center a compact three-quarter-view timbered salt-mining complex with a framed gallery, roofed manual windlass and block hoist, short wooden haulage rails, a salt cart, drainage trough, dressed salt blocks, work platform, and organized tools. Material-rich painterly historical UI art matching water_sawmill and lumber_mill_improved, readable at low resolution, no people, no text, no frame, no modern machinery, not photorealistic, not cartoonish.
 evaluation:
   production_methods:
     pp_salt_mine_improved_base_salt:

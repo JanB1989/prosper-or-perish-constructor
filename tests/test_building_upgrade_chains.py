@@ -859,6 +859,18 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
     )
 
 
+def test_coastal_fishery_chain_adds_at_least_one_sailor_per_month() -> None:
+    expected_monthly_sailors = {
+        "ocean_fishery": "0.0015",
+        "drift_net_fishery": "0.0017",
+        "offshore_fishery": "0.002",
+    }
+
+    for key, value in expected_monthly_sailors.items():
+        body = _load_blueprint(key)["building"]["body"]
+        assert re.search(rf"^\s*local_sailors\s*=\s*{re.escape(value)}\s*$", body, flags=re.M)
+
+
 def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> None:
     raw = _load_blueprint("offshore_fishery")
     body = raw["building"]["body"]

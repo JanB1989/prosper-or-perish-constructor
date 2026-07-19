@@ -44,6 +44,52 @@ RGO_COST_REDIRECT_COLLECTIONS: tuple[tuple[str, str], ...] = (
     ("in_game", "town_rights"),
     ("main_menu", "static_modifiers"),
 )
+# The RGO expansion-cost modifier is intentionally neutralized by the generated
+# redirect.  These advances need a replacement effect so they do not become
+# empty unlocks when no PoP building-cost target exists for the RGO method.
+RGO_REDIRECT_COMPENSATIONS: dict[
+    tuple[str, str, str, tuple[str, ...]], tuple[tuple[str, float], ...]
+] = {
+    ("in_game", "advances", "dal_dalmatian_olive_pacts", ()): (
+        ("global_olives_output_modifier", 0.2),
+    ),
+    ("in_game", "advances", "mining_tradition", ()): (
+        ("global_iron_output_modifier", 0.1),
+    ),
+    ("in_game", "advances", "romagnol_the_agricultural_academies", ()): (
+        ("global_wheat_output_modifier", 0.1),
+        ("global_wine_output_modifier", 0.1),
+    ),
+    ("in_game", "advances", "sao_the_parnassus_mines_advance", ()): (
+        ("global_iron_output_modifier", 0.1),
+    ),
+    ("in_game", "advances", "sardinian_the_industrial_transition", ()): (
+        ("global_lead_output_modifier", 0.15),
+    ),
+    ("in_game", "advances", "serbian_mining", ()): (
+        ("global_silver_output_modifier", 0.1),
+        ("global_goods_gold_output_modifier", 0.1),
+    ),
+    ("in_game", "advances", "svn_the_alluvial_grant_lands", ()): (
+        ("global_wheat_output_modifier", 0.15),
+    ),
+    ("in_game", "advances", "tra_the_national_mining_academy", ()): (
+        ("global_goods_gold_output_modifier", 0.1),
+        ("global_silver_output_modifier", 0.1),
+        ("global_salt_output_modifier", 0.1),
+    ),
+    ("in_game", "advances", "tro_the_aqueducts_of_popovo_polje", ()): (
+        ("global_wheat_output_modifier", 0.15),
+    ),
+    ("in_game", "advances", "vid_the_mining_grants", ()): (
+        ("global_silver_output_modifier", 0.1),
+        ("global_lead_output_modifier", 0.1),
+        ("global_copper_output_modifier", 0.1),
+    ),
+    ("in_game", "advances", "zmw_experienced_cattle_herder", ()): (
+        ("global_livestock_output_modifier", 0.1),
+    ),
+}
 
 @dataclass(frozen=True)
 class RgoCostAssignment:
@@ -228,6 +274,9 @@ def write_rgo_cost_redirect_files(
                 leaf_entries.append((RGO_COST_MODIFIERS[assignment.method], -assignment.value))
                 for modifier_key in modifiers_by_method.get(assignment.method, ()):
                     leaf_entries.append((modifier_key, assignment.value))
+            leaf_entries.extend(
+                RGO_REDIRECT_COMPENSATIONS.get((scope, collection, top_key, path), ())
+            )
             if leaf_entries:
                 _append_nested_patch(body, path, leaf_entries, indent=1)
                 patch_count += 1

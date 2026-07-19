@@ -20,10 +20,15 @@ def test_estate_tooltip_body_is_scrollable() -> None:
     assert 'blockoverride "section_content"' in text
     assert "ESTATE_BREAKDOWN" in text
     assert "[Estate.GetEconomyInfo]" in text
+    assert "[Estate.GetDebugText]" in text
+    assert "[Estate.GetCultureDisplayText]" in text
+    assert "[Estate.GetReligionDisplayText]" in text
     assert "[Estate.GetType.GetFlavorText]" in text
     estate_start = text.index("template Estate_tooltip")
     estate_scroll = text.index("TooltipScrolledContentSection", estate_start)
     assert estate_scroll < text.index("[Estate.GetEconomyInfo]", estate_start)
+    assert estate_scroll < text.index("[Estate.GetCultureDisplayText]", estate_start)
+    assert estate_scroll < text.index("[Estate.GetReligionDisplayText]", estate_start)
 
 
 def test_estate_type_tooltip_body_is_scrollable() -> None:

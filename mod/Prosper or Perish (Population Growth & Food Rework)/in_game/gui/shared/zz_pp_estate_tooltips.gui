@@ -83,6 +83,12 @@ template Estate_tooltip {
 						spacing = 10
 						ignoreinvisible = yes
 
+						TooltipDebugTextBlock = {
+							blockoverride "text" {
+								debug_text = "[Estate.GetDebugText]"
+							}
+						}
+
 						block "extra_estates_info" {}
 
 						TooltipStringPairList = {
@@ -140,6 +146,46 @@ template Estate_tooltip {
 								expand = {}
 								text_single = {
 									raw_text = "[Estate.GetWealthImpactString]"
+								}
+							}
+						}
+
+						TooltipListBase = {
+							visible = "[Not(Estate.GetType.IsAlwaysLoyal)]"
+
+							TooltipManualTableField = {
+								text_single = {
+									text = "[estate_culture|e]"
+								}
+								expand = {}
+								hbox = {
+									spacing = 4
+									icon = {
+										size = { 18 18 }
+										texture = "[Estate.GetCultureStatusIcon]"
+									}
+									text_single = {
+										autoresize = yes
+										text = "[Estate.GetCultureDisplayText]"
+									}
+								}
+							}
+
+							TooltipManualTableField = {
+								text_single = {
+									text = "[estate_religion|e]"
+								}
+								expand = {}
+								hbox = {
+									spacing = 4
+									icon = {
+										size = { 18 18 }
+										texture = "[GetReligionIcon(Estate.GetReligion)]"
+									}
+									text_single = {
+										autoresize = yes
+										text = "[Estate.GetReligionDisplayText]"
+									}
 								}
 							}
 						}

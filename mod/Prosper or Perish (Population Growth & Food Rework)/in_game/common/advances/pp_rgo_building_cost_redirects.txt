@@ -5,6 +5,7 @@
 
 TRY_INJECT:dal_dalmatian_olive_pacts = {
 	expand_rgo_farming_cost_modifier = 0.2
+	global_olives_output_modifier = 0.2
 }
 
 TRY_INJECT:efficient_mining = {
@@ -29,22 +30,29 @@ TRY_INJECT:mfa_the_monferrato_agricoltura = {
 
 TRY_INJECT:mining_tradition = {
 	expand_rgo_mining_cost_modifier = 0.1
+	global_iron_output_modifier = 0.1
 }
 
 TRY_INJECT:romagnol_the_agricultural_academies = {
 	expand_rgo_farming_cost_modifier = 0.2
+	global_wheat_output_modifier = 0.1
+	global_wine_output_modifier = 0.1
 }
 
 TRY_INJECT:sao_the_parnassus_mines_advance = {
 	expand_rgo_mining_cost_modifier = 0.2
+	global_iron_output_modifier = 0.1
 }
 
 TRY_INJECT:sardinian_the_industrial_transition = {
 	expand_rgo_mining_cost_modifier = 0.2
+	global_lead_output_modifier = 0.15
 }
 
 TRY_INJECT:serbian_mining = {
 	expand_rgo_mining_cost_modifier = 0.2
+	global_silver_output_modifier = 0.1
+	global_goods_gold_output_modifier = 0.1
 }
 
 TRY_INJECT:slo_the_law_of_the_seven_towns = {
@@ -57,14 +65,19 @@ TRY_INJECT:spl_vale_of_spoleto = {
 
 TRY_INJECT:svn_the_alluvial_grant_lands = {
 	expand_rgo_farming_cost_modifier = 0.2
+	global_wheat_output_modifier = 0.15
 }
 
 TRY_INJECT:tra_the_national_mining_academy = {
 	expand_rgo_mining_cost_modifier = 0.2
+	global_goods_gold_output_modifier = 0.1
+	global_silver_output_modifier = 0.1
+	global_salt_output_modifier = 0.1
 }
 
 TRY_INJECT:tro_the_aqueducts_of_popovo_polje = {
 	expand_rgo_farming_cost_modifier = 0.2
+	global_wheat_output_modifier = 0.15
 }
 
 TRY_INJECT:ven_ship_mounted_gunpowder_weapons = {
@@ -73,8 +86,12 @@ TRY_INJECT:ven_ship_mounted_gunpowder_weapons = {
 
 TRY_INJECT:vid_the_mining_grants = {
 	expand_rgo_mining_cost_modifier = 0.2
+	global_silver_output_modifier = 0.1
+	global_lead_output_modifier = 0.1
+	global_copper_output_modifier = 0.1
 }
 
 TRY_INJECT:zmw_experienced_cattle_herder = {
 	expand_rgo_farming_cost_modifier = 0.1
+	global_livestock_output_modifier = 0.1
 }

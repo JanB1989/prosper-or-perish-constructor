@@ -126,9 +126,10 @@ localization:
     pp_salt_mine_no_primary: No Gallery Working
     pp_salt_mine_hand_cut_galleries: Hand-Cut Galleries
 icon:
-  source_dds: /mnt/c/Games/steamapps/common/Europa Universalis V/game/main_menu/gfx/interface/icons/buildings/schwaz_mine.dds
+  source_png: ../assets/icons/salt_mine.png
   output_dds: salt_mine.dds
   size: 512
+  prompt: EU5-inspired hand-painted strategy-game building icon for a medieval Salt Mine on a perfectly flat RGB 255 0 255 magenta chroma-key background. Center a compact three-quarter-view hand-cut rock-salt adit in a pale salt outcrop with rough timber braces, white crystals, squared salt blocks, picks, wedges, baskets, and a simple hand sledge. Material-rich painterly historical UI art matching water_sawmill and lumber_mill_improved, readable at low resolution, no advanced hoist or rails, no people, no text, no frame, not photorealistic, not cartoonish.
 evaluation:
   production_methods:
     pp_salt_mine_base_salt:

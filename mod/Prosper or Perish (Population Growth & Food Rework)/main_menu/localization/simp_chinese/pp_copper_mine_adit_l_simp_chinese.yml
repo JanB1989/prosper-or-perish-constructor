@@ -1,0 +1,20 @@
+﻿l_simp_chinese:
+
+# >>> eu5-building-pipeline:copper_mine_adit:localization
+  MODIFIER_TYPE_DESC_pp_copper_mine_adit_price_cost_modifier: "影响建造[ShowBuildingTypeName('copper_mine_adit')|e]的花费。"
+  MODIFIER_TYPE_NAME_pp_copper_mine_adit_price_cost_modifier: "平硐铜矿花费"
+  copper_mine_adit_slot_0: "铜矿脉"
+  copper_mine_adit_slot_1: "平硐开采"
+  copper_mine_adit_slot_2: "选矿"
+  copper_mine_adit: "平硐铜矿"
+  copper_mine_adit_desc: "排水平硐、木结构竖井和选矿场使矿工能够更规律地开采铜矿脉。在矿脉允许的地方，会分拣出含银和含锡的矿石。"
+  pp_copper_mine_adit_base_copper: "已勘测铜矿脉"
+  pp_copper_mine_adit_no_primary: "无平硐开采"
+  pp_copper_mine_adit_copper: "平硐与竖井开采"
+  pp_copper_mine_adit_no_secondary: "无次级产出"
+  pp_copper_mine_adit_silver: "熔析矿石分拣"
+  pp_copper_mine_adit_tin: "锡矿脉选矿"
+  pp_copper_mine_adit_price: "平硐铜矿价格"
+  new_currency_demands: "货币金属需求"
+  new_currency_demands_desc: "不断扩大的铸币和火炮需求鼓励在铜和锡矿脉中进行更好的选矿。"
+# <<< eu5-building-pipeline:copper_mine_adit:localization

@@ -1,0 +1,18 @@
+﻿l_simp_chinese:
+
+# >>> eu5-building-pipeline:tin_stamping_mill:localization
+  MODIFIER_TYPE_DESC_pp_tin_stamping_mill_price_cost_modifier: "影响建造[ShowBuildingTypeName('tin_stamping_mill')|e]的成本。"
+  MODIFIER_TYPE_NAME_pp_tin_stamping_mill_price_cost_modifier: "锡矿捣碎厂成本"
+  tin_stamping_mill_slot_0: "锡矿脉"
+  tin_stamping_mill_slot_1: "捣碎锡矿选矿"
+  tin_stamping_mill_slot_2: "硫化矿分拣"
+  tin_stamping_mill: "锡矿捣碎厂"
+  tin_stamping_mill_desc: "水力捣碎机粉碎脉锡，供选矿场和沉淀槽使用。该厂富集锡石，并从废料中分拣出铜矿和铅矿。"
+  pp_tin_stamping_mill_base_tin: "已勘探锡矿脉"
+  pp_tin_stamping_mill_no_primary: "无锡矿选矿"
+  pp_tin_stamping_mill_tin: "捣碎锡矿选矿"
+  pp_tin_stamping_mill_no_secondary: "无硫化物分拣"
+  pp_tin_stamping_mill_copper: "硫化铜分拣"
+  pp_tin_stamping_mill_lead: "铅矿挑选"
+  pp_tin_stamping_mill_price: "锡矿捣碎厂价格"
+# <<< eu5-building-pipeline:tin_stamping_mill:localization

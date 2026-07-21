@@ -1,0 +1,20 @@
+﻿l_simp_chinese:
+
+# >>> eu5-building-pipeline:alum_works:localization
+  MODIFIER_TYPE_DESC_pp_alum_works_price_cost_modifier: "影响建造[ShowBuildingTypeName('alum_works')|e]的成本。"
+  MODIFIER_TYPE_NAME_pp_alum_works_price_cost_modifier: "明矾厂成本"
+  alum_works_slot_0: "明矾矿床"
+  alum_works_slot_1: "明矾厂"
+  alum_works_slot_2: "废料分拣"
+  alum_works: "明矾厂"
+  alum_works_desc: "明矾厂在窑中燃烧页岩，浸泡灰烬，并将溶液煮沸成明矾晶体。同样的场地也会分拣采石场产生的石头和粘土废料。"
+  pp_alum_works_base_alum: "已勘测明矾页岩"
+  pp_alum_works_no_primary: "无明矾提取"
+  pp_alum_works_alum: "煅烧与浸出"
+  pp_alum_works_no_secondary: "无废料分拣"
+  pp_alum_works_stone: "砂岩覆盖层"
+  pp_alum_works_clay: "页岩粘土分拣"
+  pp_alum_works_price: "明矾厂价格"
+  green_vitriol: "矾与明矾浸出"
+  green_vitriol_desc: "含矾页岩被焙烧并与明矾液一起浸出，从而提高明矾厂的产量。"
+# <<< eu5-building-pipeline:alum_works:localization

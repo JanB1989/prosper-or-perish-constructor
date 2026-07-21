@@ -1,0 +1,17 @@
+﻿l_simp_chinese:
+
+# >>> eu5-building-pipeline:coal_mine:localization
+  MODIFIER_TYPE_DESC_pp_coal_mine_price_cost_modifier: "影响建造[ShowBuildingTypeName('coal_mine')|e]的花费。"
+  MODIFIER_TYPE_NAME_pp_coal_mine_price_cost_modifier: "浅层煤矿花费"
+  coal_mine_slot_0: "煤层"
+  coal_mine_slot_1: "煤炭开采"
+  coal_mine_slot_2: "黏土回收"
+  coal_mine: "浅层煤矿"
+  coal_mine_desc: "浅层平巷从地表沿着裸露的煤层开采。木结构、人工运输和简单的分拣场也能从煤系中回收底黏土。"
+  pp_coal_mine_base_coal: "露头煤层"
+  pp_coal_mine_no_primary: "无煤炭开采"
+  pp_coal_mine_coal: "平巷开采"
+  pp_coal_mine_no_secondary: "无黏土回收"
+  pp_coal_mine_fireclay: "底黏土分拣"
+  pp_coal_mine_price: "浅层煤矿价格"
+# <<< eu5-building-pipeline:coal_mine:localization

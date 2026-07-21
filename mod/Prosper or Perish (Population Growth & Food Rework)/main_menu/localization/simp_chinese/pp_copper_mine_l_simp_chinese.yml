@@ -1,0 +1,18 @@
+﻿l_simp_chinese:
+
+# >>> eu5-building-pipeline:copper_mine:localization
+  MODIFIER_TYPE_DESC_pp_copper_mine_price_cost_modifier: "影响建造[ShowBuildingTypeName('copper_mine')|e]的花费。"
+  MODIFIER_TYPE_NAME_pp_copper_mine_price_cost_modifier: "铜矿场花费"
+  copper_mine_slot_0: "铜矿脉"
+  copper_mine_slot_1: "铜矿开采"
+  copper_mine_slot_2: "矿石分拣"
+  copper_mine: "铜矿"
+  copper_mine_desc: "浅坑和短巷道沿着裸露的铜矿脉开采。拣矿工将铜矿石与废石分离，并在有银或锡矿石时回收小批量矿石。"
+  pp_copper_mine_base_copper: "铜矿露头"
+  pp_copper_mine_no_primary: "无铜矿开采"
+  pp_copper_mine_copper: "手工铜矿开采"
+  pp_copper_mine_no_secondary: "无次级产出"
+  pp_copper_mine_silver: "含银矿石分拣"
+  pp_copper_mine_tin: "锡石矿脉分拣"
+  pp_copper_mine_price: "铜矿场价格"
+# <<< eu5-building-pipeline:copper_mine:localization

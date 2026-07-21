@@ -1,0 +1,52 @@
+﻿l_simp_chinese:
+ # ─── Shared ───
+ pp_debug.1.a: "确定"
+ pp_debug.r_no_data: "无法对值进行分类。变量可能未设置。"
+
+ # ─── Event 1: Show province_monthly_food_production ───
+ pp_debug.1.t: "调试 1：province_monthly_food_production"
+ pp_debug.1.desc: "乌普兰（斯德哥尔摩）
+
+province_monthly_food_production = #Y [ROOT.GetVariable('pp_v').GetValue|2]#!"
+
+ # ─── Event 2: construct_building test ───
+ pp_debug.2.t: "调试 2：construct_building 测试"
+ pp_debug.2.desc: "尝试在斯德哥尔摩首府建造 victuals_market。
+
+如果建筑出现 → construct_building 正常工作。
+如果什么都没有 → construct_building 或地点已损坏。"
+
+ # ─── Event 3: Build/Remove victuals_market ───
+ pp_debug.3.t: "调试 3：建造/移除 victuals_market"
+ pp_debug.3.desc_built: "乌普兰（斯德哥尔摩）
+食物：#Y [ROOT.GetVariable('pp_v').GetValue|2]#!（低于 -20）
+
+在行省首府#G 建造了 +1 victuals_market#!。"
+ pp_debug.3.desc_removed: "乌普兰（斯德哥尔摩）
+食物：#Y [ROOT.GetVariable('pp_v').GetValue|2]#!（高于 80）
+
+从行省首府#R 移除了 -1 victuals_market#!。"
+ pp_debug.3.desc_at_max: "乌普兰（斯德哥尔摩）
+食物：#Y [ROOT.GetVariable('pp_v').GetValue|2]#!（低于 -20）
+
+已达到#Y 最大等级#! — 无需建造。"
+ pp_debug.3.desc_no_building: "乌普兰（斯德哥尔摩）
+食物：#Y [ROOT.GetVariable('pp_v').GetValue|2]#!（低于 -20）
+
+不存在 victuals_market — #G 正在建造第一个#!。"
+ pp_debug.3.desc_skip_closed: "乌普兰（斯德哥尔摩）
+食物：#Y [ROOT.GetVariable('pp_v').GetValue|2]#!（低于 -20）
+
+Victuals market 已#R 关闭#! — 跳过建造。"
+ pp_debug.3.desc_skip_capacity: "乌普兰（斯德哥尔摩）
+食物：#Y [ROOT.GetVariable('pp_v').GetValue|2]#!（低于 -20）
+
+Victuals market #R 未满员雇佣#! — 跳过建造。"
+ pp_debug.3.desc_skip_goods: "乌普兰（斯德哥尔摩）
+食物：#Y [ROOT.GetVariable('pp_v').GetValue|2]#!（低于 -20）
+
+Victuals market #R 缺乏输入商品#! — 跳过建造。"
+ pp_debug.3.desc_in_range: "乌普兰（斯德哥尔摩）
+食物：#Y [ROOT.GetVariable('pp_v').GetValue|2]#!
+
+在 -20 和 80 之间 — 无需操作。"

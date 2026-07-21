@@ -1,0 +1,14 @@
+﻿l_simp_chinese:
+
+# >>> eu5-building-pipeline:inland_saltworks:localization
+  MODIFIER_TYPE_DESC_pp_inland_saltworks_price_cost_modifier: "影响建造[ShowBuildingTypeName('inland_saltworks')|e]的成本。"
+  MODIFIER_TYPE_NAME_pp_inland_saltworks_price_cost_modifier: "内陆盐场成本"
+  inland_saltworks_slot_0: "内陆盐"
+  inland_saltworks_slot_1: "卤水加工"
+  inland_saltworks: "内陆盐场"
+  inland_saltworks_desc: "内陆盐场刮取干燥的盐滩，并从泉水、水井和盐湖中煮沸浓度更高的卤水，这些地方的盐源不是硬岩矿。"
+  pp_inland_saltworks_base_salt: "勘测内陆卤水"
+  pp_inland_saltworks_salt_flat_scraping: "盐滩刮盐"
+  pp_inland_saltworks_open_pan_boiling: "敞锅煮盐"
+  pp_inland_saltworks_price: "内陆盐场价格"
+# <<< eu5-building-pipeline:inland_saltworks:localization

@@ -1,0 +1,148 @@
+﻿l_simp_chinese:
+  # Start generated location potential concept
+  game_concept_pp_location_potential: "地点潜力"
+  game_concept_pp_location_potential_desc: "地点潜力是“繁荣或毁灭（Prosper or Perish）”中每个地点人口容量和本地产出修正背后的共享计算。
+
+这些值结合了游戏内地理环境和外部地图衍生的证据。它们旨在表示每个地点在支持人口和生产本地原材料方面的适宜程度。
+
+#T 游戏内因素：#!
+$BULLET$ 地形
+$BULLET$ 气候
+$BULLET$ 植被
+$BULLET$ 河流连通性
+$BULLET$ 湖泊连通性
+$BULLET$ 沿海连通性
+$BULLET$ 地点RGO
+
+#T 游戏外地图和证据：#!
+$BULLET$ 土壤数据
+$BULLET$ GAEZ作物潜力和适宜性地图
+$BULLET$ HYDE历史人口覆盖率
+$BULLET$ 淡水食物支持地图
+$BULLET$ 海洋食物支持地图
+$BULLET$ 牲畜食物支持地图
+$BULLET$ 植物食物支持地图
+$BULLET$ 野生生存支持地图
+$BULLET$ 土地使用置信度地图
+$BULLET$ 水资源置信度地图
+
+相关的建模和管道位于GitHub仓库中，但可能会发生变化。最终数字由构造器管道生成，然后注入到模组使用的共享每地点静态修正中。"
+  # End generated location potential concept
+# Override vanilla River concept to document PP's river size scaling
+game_concept_river_desc: "河流是归属于[location|e]的流动水体。\n\n河流无法容纳[navies|e]通航，跨河进入相邻[location]作战的[armies|e]会产生[crossing|e]战斗惩罚。另一方面，河流也能稍微提升该地点的[population_capacity|e]。\n\n此修正会乘以河流的规模。"
+# Europedia mod overview - appears under Game Concepts, searchable for "prosper", "perish", "harvest"
+ENCYCLOPEDIA_PAGE_PROSPER_OR_PERISH: "兴衰存亡"
+game_concept_prosper_perish_mod: "兴衰存亡（模组）"
+game_concept_prosper_perish_mod_desc: "#T 模组介绍：#!\n本模组彻底革新了食物系统，使其与游戏原版截然不同。经过数百项修正与数值调整以及长时间的平衡工作，食物现已成为人口增长与迁移的主要驱动力——取代了以往与[pp_prosperity|e]、发展度等因素的关联，这些因素现在转而影响食物容量与增长潜力。\n\n你将看到乡村农业区与富裕城市间的显著分化，各省本地制造业将获得激励以缓解首都中心的“人口聚集”现象，同时基础设施成本提高使得道路建设成为战略选择而非盲目堆砌。\n\n核心循环很简单：充足的省份储备与低廉粮价意味着强劲增长与诸多增益；空置的粮仓与高昂粮价则会导致大规模移民、人口阶层下滑、死亡等负面后果。\n\n本模组新增了建筑类型、生产模式及贸易商品。创建新游戏时，请查看『兴衰存亡』游戏规则：若希望获得更稳定的食物经济体系（避免年度收成波动），可禁用[pp_variable_harvests|e]。你也可提升游戏难度——增加玩家建筑维护费、强化AI食物利用效率或降低AI建筑维护费——或保持默认设置体验标准模组内容。\n\n请至少阅读[pp_food|e]与[pp_food_consumption|e]说明，这足以帮助您开始游戏。\n\n#T 反馈渠道：#!\n请通过Steam私信或模组评论区提交。若某些区域设置显得异常或严重违背史实，请指明具体位置以便修正。烹饪配方同样如此：某些地区可能需要补充代表性食谱。提交截图前请确认问题非其他模组导致。\n\n此外还存在大量未在此说明的改动。如有任何困惑之处或我遗漏的文档内容，请告知以便未来补充至本欧洲百科中。\n\n#T 功能设计准则：#!\n我遵循以下核查清单：\n\n$BULLET$ 该机制是否能为玩家带来管理乐趣？\n$BULLET$ 该机制是否具备符合历史逻辑的概念基础？\n$BULLET$ AI能否妥善处理该机制？\n\n#T 致谢：#!\n衷心感谢所有提交错误报告、协助平衡调整、抽空分享反馈的玩家。同时感谢为『兴衰存亡』制作兼容补丁与合集的所有创作者，以及EU5模组合作Discord频道的讨论、帮助与支持，本模组由『凯撒汉化』的牛奶进行翻译。"
+game_concept_pp_update_0_8_1: "更新 0.8.1"
+game_concept_pp_update_0_8_1_desc: "#T 更新 0.8.1 繁荣或毁灭#!
+这是一个小型的平衡性更新，可能不兼容旧存档，因此我建议重新开始或继续在旧版本的模组上游玩。
+
+#T 补丁说明：#!
+$BULLET$ 将行省中储存食物带来的一系列增长转移到了[pp_cheap_food|e]和[pp_positive_province_food_growth|e]。这样做是因为这些修正是更有趣的，而且它们不再有漏洞了。
+$BULLET$ 根据反馈，许多与食物相关的建筑需要过多的微操来保持运转，因此更改了它们的就业类型和数量。全员就业系统也进行了更改，现在它们按以下顺序优先填补建筑：粮仓 > 烹饪所 > 饮食市场 > 灌溉类建筑 > 主食生产建筑。这提高了AI的性能，并应减少保持人员配备所需的微操。预计在1.3版本发布时会有更多更改。我还要在这里再次感谢Noslon；我认为他主导的解决方案是一个很好的权宜之计，直到我们希望在1.3测试版中获得更好的解决方案。
+$BULLET$ 修复了一系列与1.2相关的疏忽，包括拜占庭现在可以正常工作了。
+$BULLET$ 提升了性能。游戏现在应该运行得快大约10%。
+$BULLET$ 重做了所有地图模式。它们现在应该清晰多了。我不是做UI的。
+$BULLET$ 修复了一系列创新被锁定在时代焦点之后的问题。
+$BULLET$ 为异常的起始区域（尤其是匈牙利和英格兰）添加了轻微的平衡调整。
+
+#T 下一步更改：#!
+$BULLET$ 我正在寻找将地点中的建筑花费更改为其他内容的解决方案，但选项非常有限。我希望1.3测试版能给我们提供更多工具；即使没有，它也会改变。
+$BULLET$ 打磨和减少繁琐将是下一个补丁的重要部分。0.8做了很多基础工作，这非常耗时，所以我几乎没有时间真正玩游戏。现在是时候修复一些奇怪的问题，并希望让一切变得更有趣了。
+$BULLET$ 随着达到历史基准的改进，较小范围的区域将得到更多微调。
+
+这将是0.9之前的最后一个Steam补丁。下周当1.3 EU5测试版发布时，我将开始制作0.9，并转而致力于此。"
+game_concept_pp_update_0_8_foundations: "更新 0.8：基础"
+game_concept_pp_update_0_8_foundations_desc: "#T 更新 0.8：基础#!
+欢迎来到“基础”。这无疑是迄今为止最大的“繁荣或毁灭”更新。希望它足够平衡且没有漏洞，但请期待随着反馈的到来，调整和打磨将继续进行。
+
+本页面仅为简短概述。请使用链接的Europedia页面查看实际详细信息。
+
+#T RGO重做：#!
+地点保留其历史原材料特征和游戏开始时的RGO等级，但RGO等级升级被禁用。原材料增长现在通过建筑、升级、生产方式和创新来实现。
+
+有关此系统的建筑方面，请参见[pp_cookery|e]。有关可以在何处建造以及建造多少乡村建筑，请参见[pp_farm_capacity|e]。有关本地生产力，请参见[pp_farm_output|e]。
+
+#T 农业与乡村生产：#!
+农业、畜牧业、渔业、林业和其他原材料生产现在分为几个独立的问题：
+
+$BULLET$ #Y 能否建造？#! 检查建筑提示框以及本地RGO或地理环境。
+$BULLET$ #Y 能建造多少？#! 参见[pp_farm_capacity|e]、[pp_fish_capacity|e]和[pp_forest_capacity|e]。
+$BULLET$ #Y 效率如何？#! 参见[pp_farm_output|e]和本地产出地图模式。
+
+#T 人口容量：#!
+[pp_population_capacity|e]也已重做。它现在关乎食物支持潜力，而不仅仅是住房。详细信息在链接的页面上。"
+game_concept_prosper_or_perish: "兴衰存亡"
+game_concept_harvest_situation: "『兴衰存亡』：丰歉无常"
+game_concept_harvest_situation_desc: "变量收成模拟每年农业产出的波动。每年九月，各地区会随机获得一次收成结果，从而影响粮食商品的价格。可在游戏开始时通过游戏规则选项将其关闭。"
+game_concept_pp_variable_harvests: "『兴衰存亡』：丰歉无常"
+game_concept_pp_variable_harvests_desc: "「丰歉无常」系统模拟了历史上农业收成的波动性。收成的影响在游戏前期最为显著，此时[rgo|e]产出和粮食盈余都较为紧张。随着革新与[buildings|e]扩展了生产能力，个别年份收成的影响会逐渐减弱。\n\n每年九月，每个[region|e]都会获得一个随机的收成结果。收成不会直接影响粮食生产；它影响的是那些容易出现年度波动的耕种产品。歉收会抬高这些产品的价格，使得[ShowGoodsName('victuals')|e]以及后续的粮食更加昂贵；丰收则会缓解这种压力。关于粮食价格如何影响[population_growth|e]、[pp_prosperity|e]和[starving|e]，请参阅[pp_food|e]。\n\n#T 可选设置：#!\n「丰歉无常」功能可以关闭。如果你偏好更稳定的粮食经济，在创建新游戏时，请禁用游戏规则“『兴衰存亡』：丰歉无常”。\n\n#T 收成等级：#!\n该系统使用多个收成等级。每个等级会对区域内各地点应用不同的修正。点击任一收成类型可查看完整的修正详情：\n\n$BULLET$[abysmal_harvest|e]：灾难性的收成，严重降低受影响耕种产品的产出。\n$BULLET$[very_poor_harvest|e]：歉收，显著降低受影响耕种产品的产出。\n$BULLET$[poor_harvest|e]：低于平均水平的收成，降低受影响耕种产品的产出。\n$BULLET$[good_harvest|e]：高于平均水平的收成，提升受影响耕种产品的产出。\n$BULLET$[very_good_harvest|e]：极佳的收成，显著提升受影响耕种产品的产出。\n$BULLET$[bountiful_harvest|e]：异常丰饶的收成，极大提升受影响耕种产品的产出。\n\n#T 按商品的影响：#!\n收成对不同粮食商品的影响程度不同。像[ShowGoodsName('fish')]这样的主食受年度波动的影响较小，而像[ShowGoodsName('wheat')]这样的作物则更易受到区域收成结果的严重影响。\n\n#T 地图模式：#!\n当查看「丰歉无常」[situation|e]时，地图会显示每个地点当前的收成状态。颜色从深色（收成失败）到亮色（收成极佳）不等。人口[starving|e]或市场粮食平衡为负的地点会得到特殊高亮，以引起对粮食危机的注意。"
+harvest_situation: "『兴衰存亡』：丰歉无常"
+harvest_situation_desc: "「丰歉无常」系统模拟了历史上农业收成的波动性。收成的影响在游戏前期最为显著，此时[rgo|e]产出和粮食盈余都较为紧张。随着革新与[buildings|e]扩展了生产能力，个别年份收成的影响会逐渐减弱。\n\n每年九月，每个[region|e]都会获得一个随机的收成结果。收成不会直接影响粮食生产；它影响的是那些容易出现年度波动的耕种产品。歉收会抬高这些产品的价格，使得[ShowGoodsName('victuals')|e]以及后续的粮食更加昂贵；丰收则会缓解这种压力。关于粮食价格如何影响[population_growth|e]、[pp_prosperity|e]和[starving|e]，请参阅[pp_food|e]。\n\n#T 可选设置：#!\n「丰歉无常」功能可以关闭。如果你偏好更稳定的粮食经济，在创建新游戏时，请禁用游戏规则“『兴衰存亡』：丰歉无常”。\n\n#T 收成等级：#!\n该系统使用多个收成等级。每个等级会对区域内各地点应用不同的修正。点击任一收成类型可查看完整的修正详情：\n\n$BULLET$[abysmal_harvest|e]：灾难性的收成，严重降低受影响耕种产品的产出。\n$BULLET$[very_poor_harvest|e]：歉收，显著降低受影响耕种产品的产出。\n$BULLET$[poor_harvest|e]：低于平均水平的收成，降低受影响耕种产品的产出。\n$BULLET$[good_harvest|e]：高于平均水平的收成，提升受影响耕种产品的产出。\n$BULLET$[very_good_harvest|e]：极佳的收成，显著提升受影响耕种产品的产出。\n$BULLET$[bountiful_harvest|e]：异常丰饶的收成，极大提升受影响耕种产品的产出。\n\n#T 按商品的影响：#!\n收成对不同粮食商品的影响程度不同。像[ShowGoodsName('fish')]这样的主食受年度波动的影响较小，而像[ShowGoodsName('wheat')]这样的作物则更易受到区域收成结果的严重影响。\n\n#T 地图模式：#!\n当查看「丰歉无常」[situation|e]时，地图会显示每个地点当前的收成状态。颜色从深色（收成失败）到亮色（收成极佳）不等。人口[starving|e]或市场粮食平衡为负的地点会得到特殊高亮，以引起对粮食危机的注意。"
+harvest_situation_monthly: "※每年九月，每个[region|e]都会进行一次收成判定\n※修正持续一年；影响受年度波动影响的农业商品，而非直接影响粮食产量\n※影响因商品而异：鱼类等主食影响较小，小麦等作物影响较大\n※在创建新游戏时，可通过游戏规则关闭此功能"
+game_concept_abysmal_harvest: "大歉收"
+game_concept_abysmal_harvest_desc: "一场灾难性的歉收，严重降低了受影响农作物的产出。\n\n[ShowModifierEffect('abysmal_harvest_modifier')]"
+game_concept_very_poor_harvest: "普通歉收"
+game_concept_very_poor_harvest_desc: "一场歉收，降低了受影响农作物的产出。\n\n[ShowModifierEffect('very_poor_harvest_modifier')]"
+game_concept_poor_harvest: "小歉收"
+game_concept_poor_harvest_desc: "一场歉收，收成低于平均水平，略微降低产出\n\n[ShowModifierEffect('poor_harvest_modifier')]"
+game_concept_good_harvest: "丰收"
+game_concept_good_harvest_desc: "一次高于平均水平的丰收，提升了受影响农产品的产出。\n\n[ShowModifierEffect('good_harvest_modifier')]"
+game_concept_very_good_harvest: "大丰收"
+game_concept_very_good_harvest_desc: "一次极佳的丰收，显著提升了受影响农作物的产出。\n\n[ShowModifierEffect('very_good_harvest_modifier')]"
+game_concept_bountiful_harvest: "极佳丰收"
+game_concept_bountiful_harvest_desc: "一场罕见的丰收，显著提升了受影响农产品的产出。\n\n[ShowModifierEffect('bountiful_harvest_modifier')]"
+# Game concepts for P&P feature landing page
+game_concept_pp_faq: "常见问题解答"
+game_concept_pp_faq_desc: "#T Q：这太复杂了，我到底该做什么？:#!\nA：先玩一个小国，在省份里建造烹饪坊来生产粮食。然后在那里建一个粮食市场。注意别过度建设，像鹰一样盯紧你的省份粮食。基本上就是这样。\n\n#T Q：为什么搞这个有点游戏化的粮食市场系统？:#!\nA：主要原因之一是，在原版游戏中，没有办法直接将食物商品转化为粮食市场上的实际食物，它们是两个完全独立的系统。\n\n#T Q: 为什么劳工和士兵现在算作“上层阶级”人口了？:#!\nA：这样他们才能在饥荒期间降级。如果他们不能降级，你就会陷入无休止的死亡循环：农民不断晋升去填补空缺的采矿工作，结果立刻饿死。\n\n#T Q：我的经济第一天就崩溃，所有人都挨饿。是模组有问题吗？:#!\nA：如果你负担不起，尽量不要一直把食物条拉到最大。让全球经济在前几年稳定下来会有所帮助。另外，请确保在你的游戏模组组中最后加载这个模组，以防止其他模组破坏它。\n\n#T Q：收成波动太严苛了，你会削弱它吗？:#!\nA：我倾向于不削弱，因为它就是设计来产生重大影响，让你提前规划的。不过，如果你觉得它对你的游戏风格来说太苛刻，游戏设置里有关闭它的选项。\n\n#T Q：老兄，我收成极差，经济崩溃，现在我的人民在挨饿？？:#!\nA：有时候确实会发生这种情况。根据你的玩法和国家的富裕程度，你或许能够避免。但别指望每个国家都能一直避免。就像游戏里所有事情一样，这是一种权衡：只养活你的核心省份，还是让自己破产来避免饥荒——这是你的选择。\n\n#T Q：为什么同一个地点建筑越多，建筑就越贵？:#!\nA：在拥挤的城市里，房地产会变得昂贵。这是为了鼓励你分散布局，专业化你的生产中心，而不是在一个地方堆500个建筑。\n\n#T Q：为什么建设我的城市会降低我的农场容量？:#!\nA：因为城市占据了物理空间。这代表了扩张的大都市和开阔农田之间的权衡。如果你想最大化一个地点的农场产出，最好保持它的乡村风貌。\n\n#T Q：为什么贸易商品不再直接提供食物了？:#!\nA：原版的市场系统会导致奇怪的情况：食物商品大量过剩，但市场上却一点实际食物都没有，反之亦然。而且原版的食物生产修正目前也有点问题，数学上也不合理，所以这个改动让系统可靠得多。\n\n#T Q：食物价格和它的修正到底是怎么回事？:#!\nA：长话短说，在原版中出售食物有极其严重的减益。当市场食物达到最大值或0时，食物价格会完全出BUG。我不得不费很大功夫来绕过这些BUG。因此数值可能看起来有点怪，但这是有意为之，而且效果很好。\n\n#T Q：省份粮食储存没有显示正确的修正，怎么回事？:#!\nA：这是另一个EU5测试版的UIBUG。修正实际上在后台正确应用并生效，只是UI没有正确显示。这个BUG我也已经报告了。\n\n#T Q：我另外xx个模组和你的模组兼容吗？:#!\nA：我建议是把『兴衰存亡』放在最后加载，然后测试一下看看运行情况。\n\n#T Q：我开了新游戏，看到有500万建筑正在建造，这是什么BUG？:#!\n这不是BUG，这是一个脚本，它试图建造新的建筑和农场，以便游戏起始条件能与模组的所有改动相匹配。目的是减少疯狂的饥荒和其他问题。我们会根据你们的反馈进一步优化它。\n\n#T Q：好的我明白了，有什么建议吗？:#!\nA：有，你在城市里获得的额外贵族和教士可能会非常棘手，因为他们的数量会随你的人口增长。另外，时不时检查一下阶层建筑。例如，如果你的阶层建造了收费城堡，它会使贵族的食物消耗翻倍。\n\n#T Q：你的更新毁了我的存档。#!\nA：别担心。所有之前的版本都可以在这里找到：https://github.com/JanB1989/ProsperOrPerish/releases 。\n\n#T Q：为什么我只能建粮仓在省份首府？:#!\nA：因为在游戏机制里，这里是计算食物损耗以及你省份的粮食进入市场的地方。粮仓现在可以减少食物损耗，所以应该建在省份首府。\n\n#T Q：大大，阶层到处乱建粮食市场：#!\nA：这是为了让AI表现更好所必需的，记住你可以直接关闭它们而无需维护花费（不要拆掉，它们会重建）。\n\n#T Q：为什么粮食只加0.001食物之类的？:#!\nA：这是为了让游戏把粮食识别为食物，这意味着如果市场上食物价格高，粮食的价格也能上涨。你可以忽略它，因为它太微不足道了。"
+game_concept_pp_food_consumption: "『兴衰存亡』：粮食消耗"
+game_concept_pp_food_consumption_desc: "有多种方式可以减少农民的食物消耗（他们更关注生存所需），这直接增加了他们向市场贡献的食物量。对于人口稠密的农业国家而言，利用这些修正来获取优势可能是值得的。但对于已经高度城市化的国家来说，这些修正作用不大，它们更应该建立自己的食品工业或直接从市场购买。\n\n食物消耗受多种因素影响。当食物价格低廉时，人们会消费更多——减少配给，饮食选择更挑剔。当食物价格昂贵时，他们则减少消费：更加节俭，更专注于生存。由于这种与福祉的关联，食物消耗修正效果显著且影响广泛。\n\n#T 影响食物消耗的因素：#!\n以下几个因素会改变人口的食物消耗量：\n\n$BULLET$市场上的本地食物价格\n$BULLET$[pp_province_current_food_storage|e]（增长vs减少）\n$BULLET$地点的[pp_prosperity|e]\n$BULLET$冬季严酷程度\n$BULLET$[pp_devastation|e]及恢复状况\n$BULLET$人口类型（贵族、教士、市民、劳工、农民、士兵各有不同的基础消耗量）\n\n关于存储机制，请参阅[pp_food_storage|e]。\n\n#T 市场食物低廉与省份高食物储备：#!\n当市场上食物价格低廉且省份储备充足时，地点会获得[pp_cheap_food|e]，而储备增长的省份会获得[pp_province_current_food_storage|e]。效果根据食物价格低于基础价格的程度而定。\n\n[ShowModifierEffect('cheap_food_in_location')]\n\n#T 市场食物昂贵与省份低食物储备：#!\n当市场上食物价格昂贵且省份储备较低或耗尽时，地点会获得[pp_expensive_food|e]。人们会减少消耗——他们更充分利用食物，不再挑剔，心思集中在养家糊口上。其他优先事项则被搁置一旁。效果根据食物价格高于基础价格的程度而定。\n\n[ShowModifierEffect('expensive_food_in_location')]\n\n食物消耗修正被刻意设计得效果显著，因为消耗与生活水平、劳动质量和社会稳定紧密相关。[pp_prosperity|e]会强化这一循环：高食物供应促进繁荣，而繁荣反过来支持更高的消耗和[population_growth|e]。\n\n#T 当食物耗尽时：#!\n当储备耗尽时，省份会获得[ShowModifier('province_starving')]。人们会不惜一切代价设法养活自己。[pp_devastation|e]往往会上升，人口降级至消耗更低的阶层，并出现饥荒。补给上限下降，移民吸引力骤降，预期寿命缩短，人口外逃。[pp_prosperity|e]崩溃。士兵更不愿意保卫[starving|e]的城市。详情请参阅[pp_food_storage|e]和[pp_starvation|e]。\n\n[ShowModifierEffect('province_starving')]\n\n#T 荒废度：#!\n最好避免[pp_devastation|e]，它由饥荒或其他恶劣条件（封锁、围城等）引起。关于完整修正详情及反转说明（荒废度范围为0%至-100%）。\n\n[ShowModifierEffect('devastation')]"
+game_concept_pp_other_changes: "其他改动"
+game_concept_pp_other_changes_desc: "本mod盖地点建筑、繁荣度、破坏程度、廉价食物、昂贵食物、省份当前粮食储备以及饥荒。请使用下方卡片查看各类型的详细信息。"
+game_concept_pp_victuals: "『兴衰存亡』：新贸易商品"
+game_concept_pp_victuals_desc: "[ShowGoodsName('victuals')|e]是军民两用的口粮：包括新鲜的地方餐食或保存的给养。它们在[ShowBuildingTypeName('cookery')|e]中生产（参见新建筑），用于供养陆军和海军，并通过[ShowBuildingTypeName('victuals_market')|e]分配给当地人口。\n\n#T 转换规则：#!\n一个单位的[ShowGoodsName('victuals')|e]可转换为固定数量的食物。转换率恒定且不受修正影响，确保省份获得可预测的供应。\n\n#T 使用方法：#!\n你可以直接在市场上购买食物，当价格低廉时这可能是一种可行的策略，但你仍需依赖其他生产者。通过[ShowBuildingTypeName('victuals_market')|e]分配购买的[ShowGoodsName('victuals')|e]提供了更可靠的替代方案。为了获得最大程度的安全保障，在[ShowBuildingTypeName('cookery')|e]中生产自己的[ShowGoodsName('victuals')|e]并在本地分配，能进一步使人口免受波动的市场食品价格影响。\n\n[ShowGoodsName('victuals')|e]也更容易运输到其他市场或殖民地以支持其发展。"
+game_concept_pp_cookery: "『兴衰存亡』：新建筑"
+game_concept_pp_cookery_desc: "#T 烹饪坊：#!\n[ShowBuildingTypeName('cookery')|e]代表着为军队、舰队和定居点提供补给的区域厨房。它通过膳食、饮品和包装生产方式生产出[ShowGoodsName('victuals')|e]。\n\n烹饪坊旨在利用本地市场提供的原料，生产出符合当地实际情况的口粮。随着农业生产效率提高和不同主食的出现，你会看到生产配方的变化。其理念在于，某些配方并非十分高效，它们运行成本可能很高（如果投入品价格昂贵），但能让你在口粮生产方面保持独立。\n\n#T 粮食市场：#!\n[ShowBuildingTypeName('victuals_market')|e]是将[ShowGoodsName('victuals')|e]作为食品向当地居民分销/交易的场所。\n\n每个市场等级都会消耗粮食并产出本地食品，为民众提供集中买卖所需给养的地点。\n\n实际上这意味着你可以将粮食运往需求市场，或在必要时通过特定省份的粮食市场进行食品分配。你也可以依赖他人为你生产食品或粮食。但需注意，你可能在市场上被出价更高者挤占份额。"
+game_concept_pp_population_distribution: "人口分布"
+game_concept_pp_population_distribution_desc: "你的人口分布（包括本地与全国范围）及其识字率（所属阶层）为国家带来不同效益。\n\n#T 本地影响：#!\n这些效果按地点生效，取决于该地点的人口类型及其识字率：\n\n$BULLET$#Y 识字率影响：#!特定类型的识字人口提供本地增益。\n$BULLET$[ShowPopTypeName('laborers')]：最大原产等级、原材料产出\n$BULLET$[ShowPopTypeName('peasants')]：小麦、稻米、小麦、玉米、豆类、水果、橄榄、马铃薯、牲畜、蜂蜡、羊毛、鱼类、野味、毛皮及军需品产出修正\n$BULLET$#Y 人口比例影响：#!各人口类型在地点中的占比具有影响。\n$BULLET$[ShowPopTypeName('laborers')]：月度发展度\n$BULLET$[ShowPopTypeName('soldiers')]：最大控制力\n$BULLET$[ShowPopTypeName('peasants')]：荒废度恢复、建造速度、建造花费\n$BULLET$#Y 失业农民：#!存在失业农民的地点将承受月度发展度与思潮增长的负面修正。\n\n#T 全国影响：#!\n这些效果基于全国人口整体分布，在全国范围内生效：\n\n$BULLET$全国[ShowPopTypeName('burghers')]占比：月度发展度、月度繁荣度、商人容量修正\n$BULLET$全国[ShowPopTypeName('peasants')]占比：思潮增长修正（负面）\n$BULLET$全国[ShowPopTypeName('soldiers')]占比：最大控制力"
+game_concept_pp_food_in_eu5: "EU5中的食物"
+game_concept_pp_food_in_eu5_desc: "#T 原版EU5中的食物：#!\n《欧陆风云5》中的食物很难理解，因为食物商品和实际的食物被分成了不同的系统。\n\n原版食物有三个主要来源：\n\n$BULLET$ #Y 食物商品#!，如水稻、牲畜、小麦和鱼类。生产的数量乘以该商品的食物价值。\n$BULLET$ #Y 自给农业#!，来自失业的农民。这直接创造食物，且不与贸易商品挂钩。\n$BULLET$ #Y 固定食物来源#!，来自建筑。这些直接创造食物，且不与食物贸易商品挂钩。\n\n这些来源在所在地进行汇总，然后乘以当地的食物生产率。之后，贸易商品和食物就分开了。商品通过市场接入度进入商品市场。食物进入省份食物储备，由该省份的所有所在地共享。\n\n所在地可能会有食物盈余或赤字。它们首先通过省份储备来解决这个问题。如果储备足够高，省份可以将食物卖入省份首府所属的食物市场。如果国家购买食物，省份可以从该市场中提取食物。\n\n最大的问题是：\n\n$BULLET$ 一个市场可能有巨大的食物商品盈余，而食物市场却空空如也，人们在挨饿，反之亦然。随着游戏的进行，这种分离会变得越来越奇怪。\n$BULLET$ 食物生产率会乘以每一个当地的食物来源。一个拥有极佳农田的所在地，最终可能会以同样的方式使鱼类、自给食物或固定建筑食物成倍增加。\n$BULLET$ 食物资源产地（RGO）随食物生产率的缩放太强，因此堆叠食物RGO和生产率成为了主流。\n$BULLET$ 一些理应算作食物或饮料的商品，如啤酒和葡萄酒，却没有食物价值。\n\n#T 繁荣或灭亡：#!\n“繁荣或灭亡”保留了相同的宏观食物储备系统，但改变了其来源。\n\n“繁荣或灭亡”中的食物来源有：\n\n$BULLET$ #Y [ShowGoodsName('victuals')|e]#!，主要的食物商品。它代表膳食、口粮和保存的给养。\n$BULLET$ #Y 自给农业#!，来自失业的农民，与原版相同。\n$BULLET$ #Y 绝对食物来源#!，来自诸如[ShowBuildingTypeName('victuals_market')|e]等建筑。\n\n“繁荣或灭亡”系统是如何运作的：\n\n$BULLET$ 移除了食物生产率。目标是保持商品市场中的[ShowGoodsName('victuals')|e]与实际的食物可用性相关联。\n$BULLET$ 多余的[ShowGoodsName('victuals')|e]可以通过[ShowBuildingTypeName('victuals_market')|e]转化为当地食物，或者被码头和军械库等建筑用作口粮和补给。\n$BULLET$ [ShowBuildingTypeName('cookery')|e]将许多地区性食物商品转化为[ShowGoodsName('victuals')|e]，因此多余的谷物、肉类、鱼类、盐和类似商品可以通过商品市场进入食物链。\n$BULLET$ 所在地现在不再拥有单一的食物生产率修正，而是拥有基于历史和地理数据的原材料产出修正。一个所在地可以擅长产鱼，而不会让那里的所有其他食物来源都爆炸式增长。\n\n有关实际的“繁荣或灭亡”生产链，请参见[pp_food|e]。有关当地原材料生产率，请参见[pp_farm_output|e]。"
+game_concept_pp_food: "『兴衰存亡』：粮食产量"
+game_concept_pp_food_desc: "#T 原版问题：#!\n原版《欧陆风云5》的食物系统存在诸多问题：\n\n$BULLET$食物几乎从不成为问题。\n$BULLET$食物商品始终是原材料；单个单位的价值可能因地点食物生产力修正而异——这导致食物商品大量过剩，而市场上却没有食物。\n$BULLET$食物生产过于不依赖劳动力且过于容易。\n$BULLET$生产不同食物商品之间除了食物价格外，没有本质区别。\n$BULLET$食物修正与实际商品修正的叠加方式，往好了说不够直观，往坏了说存在严重漏洞。\n\n\n#T 『兴衰存亡』模组做了什么：#!\n基于这些限制和漏洞，本模组引入了一种不同的方法：\n\n$BULLET$#Y 没有任何贸易商品本身具有食物价值。#!\n$BULLET$几乎所有食物生产力修正（除了用于增加风味的）都已重制，改为针对农产品或[ShowGoodsName('victuals')|e]的特定修正。参见[pp_farm_output|e]。\n\n\n#T 食物生产：#!\n现在食物只能通过两种方式生产：\n\n$BULLET$#Y 农民#!通过#Y 自给农业#!直接生产食物来养活自己。减少农民的食物消耗会增加他们通过自给农业（失业农民）向市场贡献的食物量。\n$BULLET$[ShowBuildingTypeName('victuals_market')|e]（参见新建筑）使用新的贸易商品[ShowGoodsName('victuals')|e]（参见新贸易商品），比例为#Y 1单位军需品对应60食物#!。\n\n\n可以将这些市场视为你的人口买卖不同形式的地区性食物和保存口粮的地方，你的阶层部分支付其维护费用。\n\n\n#T 运作方式：#!\n\n$BULLET$像[ShowGoodsName('wheat')]、[ShowGoodsName('wine')]、[ShowGoodsName('fish')]等贸易商品是地区性生产的，并取决于革新、天气等因素。参见[pp_farm_output|e]，这造成了价格波动。\n$BULLET$这些商品在#Y 烹饪坊#!（参见新建筑）中用于生产[ShowGoodsName('victuals')|e]。烹饪坊使用食物配方（每个配方三种商品投入）、一个饮品槽位（默认是井水，或可通过升级饮品服务使用三种投入）和一个包装槽位（无包装，或通过锡罐每级使用一种包装商品）。军需品的价格根据投入成本和市场需求而涨跌。\n$BULLET$[ShowGoodsName('victuals')|e]用于通过[ShowBuildingTypeName('victuals_market')|e]供养当地人口、在区域间进出口，以及供养你的常备陆军和海军，水手和人力[buildings|e]在战役和航行中需要大量军需品。\n\n\n#T [ShowGoodsName('victuals')|e]的基础价格相当于60食物的价格，这也正是一个粮食市场生产60食物所需的确切数量。AI能很好地处理这些变化，并明白需要建造[ShowBuildingTypeName('victuals_market')|e]来避免[starving|e]。"
+game_concept_pp_population_growth: "人口增长"
+game_concept_pp_population_growth_desc: "总体而言，食物充裕会促进[population_growth|e]。正向的[population_growth|e]主要来自两个来源：[pp_cheap_food|e]和[pp_province_current_food_storage|e]。\n\n负向的[population_growth|e]则源于[pp_starvation|e]、[pp_expensive_food|e]或省份的粮食储备不足。\n\n#T 平衡性修正：#!\n例如城市、城镇和乡村地区的负向[population_growth|e]，纯粹是为了平衡正向修正并形成满意度平衡点而存在，并无其他含义。\n\n#T 住房容量：#!\n当某地点的住房容量可通过建造更多建筑、提升发展度或修建灌溉系统来增加时，若人口超过住房容量，[population_growth|e]会依据超出程度逐渐下降。"
+game_concept_pp_buildings_in_location: "『兴衰存亡』：地点中的建筑"
+game_concept_pp_buildings_in_location_desc: "地点会根据其总[building|e]等级获得[ShowModifier('building_levels')]。建筑会增加人口容量，但会占用农场空间——建造更多建筑会限制农场容量，详见[pp_urbanization|e]和[pp_farm_capacity|e]。\n\n[ShowModifierEffect('building_levels')]"
+game_concept_pp_available_free_land: "繁荣或灭亡：可用空闲土地"
+game_concept_pp_available_free_land_desc: "低于[pp_population_capacity|e]的所在地可以获得[ShowModifier('available_free_land')]。当较少的人竞争同一块土地时，他们可以选择更好的田地、牧场、捕鱼点和林业工作地点，而不是被迫进入边缘土地。\n\n当所在地有剩余的食物支持潜力时，这会提高农业和其他乡村原材料商品的产出。随着人口接近容量，该加成会减弱，并在达到满容量时消失。这是使所在地在人口填满时变得更擅长或更不擅长农业的主要系统之一。\n\n[ShowModifierEffect('available_free_land')]"
+game_concept_pp_abundant_free_land: "繁荣或灭亡：充裕空闲土地"
+game_concept_pp_abundant_free_land_desc: "远低于[pp_population_capacity|e]的所在地可以获得[ShowModifier('abundant_free_land')]，即更强的空闲土地状态。逻辑是一样的：由于有大量未使用的容量，人们有更多的选择，可以优先在当地最好的农业地点工作。\n\n随着人口的增长，这种优势会下降，并最终在达到满容量时消失。具体效果显示在下方和修正提示框中。\n\n[ShowModifierEffect('abundant_free_land')]"
+game_concept_pp_food_storage: "『兴衰存亡』：粮食储备"
+game_concept_pp_food_storage_desc: "粮食储备机制决定了围城与饥荒的走向。粮仓空虚将导致人口外流、降级和大量死亡。"
+game_concept_pp_prosperity: "『兴衰存亡』：繁荣度"
+game_concept_pp_prosperity_desc: "从长远来看，繁荣度对地点发展极为有利。在本模组中，繁荣度与粮食供应紧密相关：低廉的粮价和充足的仓储会提升繁荣度，而繁荣度又能支持更高的粮食消耗和[population_growth|e]。关于粮价如何影响繁荣度，请参阅[pp_food_consumption|e]。\n\n#T 注意：#!\n繁荣度范围从0%到100%。\n\n[ShowModifierEffect('prosperity')]"
+game_concept_pp_devastation: "『兴衰存亡』：荒废度"
+game_concept_pp_devastation_desc: "荒废对地点有着可怕的后果。查看[pp_food_consumption|e]以获取完整背景。\n\n#T 注意：#!\n荒废程度从0%到‑100%不等，因此下方显示的值实际上在‑100%荒废时是反转的。\n\n[ShowModifierEffect('devastation')]"
+game_concept_pp_province_current_food_storage: "『兴衰存亡』：省份当前粮食储备"
+game_concept_pp_province_current_food_storage_desc: "拥有粮食储备增长的地点会获得[ShowModifier('positive_province_food_growth')]。此修正取决于该省份储存了多少年的粮食消耗量。当储存量达到3年消耗量时达到最大值，若当前储存量相当于3年消耗量，则以下数值将乘以3，相关请参阅[pp_food_consumption|e]。\n\n[ShowModifierEffect('positive_province_food_growth')]"
+game_concept_pp_positive_province_food_growth: "繁荣或灭亡：来自储备的省份食物增长"
+game_concept_pp_positive_province_food_growth_desc: "食物储备正在增长的省份会获得[ShowModifier('positive_province_food_growth')]。此修正随省份食物储备量缩放。相关背景请参见[pp_food_consumption|e]。\n\n[ShowModifierEffect('positive_province_food_growth')]"
+game_concept_pp_cheap_food: "『兴衰存亡』：地点的廉价食物"
+game_concept_pp_cheap_food_desc: "当市场上粮食价格低廉且省份储备充足时，地点会获得[ShowModifier('cheap_food_in_location')]。人们会消费更多，减少配给，选择更挑剔的饮食。这些效果会根据粮食价格低于基础价格的程度而变化：价格越低，修正效果越强。完整内容请参阅[pp_food_consumption|e]。\n\n[ShowModifierEffect('cheap_food_in_location')]"
+game_concept_pp_expensive_food: "『兴衰存亡』：地点的昂贵食物"
+game_concept_pp_expensive_food_desc: "当市场上粮食价格昂贵且省份储备不足或耗尽时，地点将获得[ShowModifier('expensive_food_in_location')]。人们会减少消耗，他们更充分地利用食物，变得不那么挑剔，并将心思集中在供养家庭上。这些效果会根据粮食价格超出基准价格的程度而变化：价格越昂贵，修正效果越强。完整内容请参阅[pp_food_consumption|e]。\n\n[ShowModifierEffect('expensive_food_in_location')]"
+game_concept_pp_starvation: "『兴衰存亡』：饥荒"
+game_concept_pp_starvation_desc: "当省份的粮食储备降至零时，人口将因饥饿而死亡。\n\n这会带来以下效果：\n[ShowModifierEffect('province_starving')]"
+game_concept_pp_urbanization: "『兴衰存亡』：城市化"
+game_concept_pp_urbanization_desc: "在《欧陆风云5》的时间跨度内，大量农村人口迁往城市。这一现象主要由农业生产力提升所驱动：随着农场以更少的人力产出更多粮食，乡村地区养活全民所需的人口随之减少。随着革新与投资提高农场产出，你的国家自然会随时间推移实现更高程度的城市化。\n\n每个地点代表一片广阔区域——包含众多村庄、若干城镇，且常伴有城市。在同一地点兴建更多建筑将提升城市化水平，从而降低该区域的[pp_farm_capacity|e]。这不会影响现有农场的产出，仅会限制可新建农场的数量。其中的权衡显而易见：推动地点城市化以提升制造业与人口容量，或保持其乡村属性以实现农场产出最大化。关于容量计算方式、受影响建筑类型及建造顺序规则，详见[pp_farm_capacity|e]。\n\n#T 受影响建筑：#!\n以下乡村建筑会随城市化进程损失容量：\n\n$BULLET$耕种村落\n$BULLET$森林村落\n$BULLET$果园\n$BULLET$绵羊牧场"
+game_concept_pp_farm_capacity: "『兴衰存亡』：农业容量"
+game_concept_pp_farm_capacity_desc: "在《欧陆风云5》原版中，你可以在任何地方建造大致相同数量的农业建筑，但这并不符合历史事实。在北极地区，真的能和西班牙拥有河流的农田省份建造同样多的果园吗？  \n农业容量关乎的是你能建造的农场数量，而非其生产力。详见[pp_farm_output|e]。  \n\n#T 受影响的建筑：#!  \n耕种村落、捕鱼村落、森林村落、果园和绵羊牧场的最大建筑容量，由固定的地理因素和动态因素共同决定。  \n\n#T 增加容量的因素：#!  \n$BULLET$发展度与人口两者均增加容量  \n$BULLET$乡村地区，城镇和城市会降低大多数建筑类型的容量；渔村不受聚落等级影响  \n$BULLET$[ShowBuildingTypeName('irrigation_systems')|e]增加果园和农业村庄的容量  \n\n#T 减少容量的因素：#!  \n$BULLET$[pp_urbanization|e]——每个已启用的建筑等级都会降低容量；果园受影响最大  \n$BULLET$城镇与城市等级——降低果园、绵羊牧场、耕种村落和森林村落的容量  \n\n#T 各类建筑的地理适应性：#!  \n#H 果园：#!受益于地中海和亚热带气候、丘陵与平原、农田和草原，以及河流、湖泊或沿海通道。匹配的水果资源产出会增加容量。  \n\n#H 捕鱼村落：#!首要受益于沿海通道，其次是湖泊与河流。海洋性和北极气候有利于渔业。匹配的鱼类、盐或珍珠原产会增加容量。聚落等级（城镇、城市）不会降低渔村容量。  \n\n#H 绵羊牧场：#!受益于丘陵、高原和山脉；草原和稀疏植被；干旱和寒冷干旱气候。匹配的羊毛原产会增加容量。  \n\n#H 农业村庄：#!受益于平原、农田和草原；大陆性和亚热带气候；以及河流通道。匹配的农业原产（小麦、玉米、水稻、牲畜、水果、羊毛等）会增加容量。  \n\n#H 森林村落：#!受益于森林、林地和丛林；山脉和丘陵；北极和大陆性气候。匹配的林业原产（野味、毛皮、木材）会增加容量。  \n\n#T 地图模式：#!  \n地理类别下的地图模式会显示每个建筑类型在任何地区的自然潜力。将鼠标悬停于地区上方可查看其具体数值及本条目链接。  \n\n#T 建造顺序：#!  \n如果你试图通过先建造农场再发展[pp_urbanization|e]来规避系统限制——希望保留超出容量允许的农场数量——游戏会定期移除多余的农场，直到该地区恢复至最大容量以内。这种做法没有持久收益；平衡每隔几年就会自动调整。"
+game_concept_pp_fish_capacity: "繁荣或灭亡：捕鱼容量"
+game_concept_pp_fish_capacity_desc: "捕鱼容量是产鱼建筑的共享上限：[ShowBuildingTypeName('fishing_village')|e]、[ShowBuildingTypeName('ocean_fishery')|e]和[ShowBuildingTypeName('offshore_fishery')|e]。它不限制[ShowBuildingTypeName('pearl_fishery')|e]。\n\n天然渔场来自海岸、湖泊、湿地、鱼类RGO和河流大小。捕鱼容量修正（包括河流大小和城镇权利）会添加到同一个池中，并随最大RGO规模缩放。具体数值显示在相关建筑和地图模式提示框中。有关完整的容量概览，请参见[pp_farm_capacity|e]。"
+game_concept_pp_forest_capacity: "繁荣或灭亡：森林容量"
+game_concept_pp_forest_capacity_desc: "森林容量是森林和木材建筑的共享上限：[ShowBuildingTypeName('forest_village')|e]、[ShowBuildingTypeName('managed_forest_village')|e]、[ShowBuildingTypeName('lumber_mill')|e]、[ShowBuildingTypeName('water_sawmill')|e]和[ShowBuildingTypeName('lumber_mill_improved')|e]。它不限制烧炭工、象牙狩猎营地、矿山、采石场或加工建筑。\n\n容量来自森林地理、相关RGO、最大RGO规模、等级、城市化压力和森林容量修正。具体数值显示在相关建筑和地图模式提示框中。有关完整的容量概览，请参见[pp_farm_capacity|e]。"
+game_concept_pp_farm_output: "『兴衰存亡』：农业产出"
+game_concept_pp_farm_output_desc: "本条目讨论的是每座农场的产量而非可建造数量。关于农场数量，请参阅农场容量。在《欧陆风云5》的时间跨度内，农场生产力急剧提升。模组通过将原版统一的粮食修正替换为按商品类型区分的产出修正来体现这一点。现在每种粮食类商品均可独立获得产出增益或减益。\n\n农场产出受静态与动态双重因素影响，其中任一因素都可能产生正面或负面影响。\n\n#T 第一类因素：#!\n随时间变化的动态因素。某些地区或国家可能比其他地区更早或更晚获得生产力提升途径：\n$BULLET$科技进步\n$BULLET$社会政策选择\n$BULLET$发展度\n$BULLET$政府改革\n$BULLET$[ShowBuildingTypeName('irrigation_systems')|e]\n\n#T 第二类因素：#!\n与地理及区位绑定的静态因素。这些因素会根据具体位置提升或降低产出：\n$BULLET$植被类型\n$BULLET$地形特征\n$BULLET$气候条件\n$BULLET$淡水获取便利度\n$BULLET$沿海状态\n$BULLET$所在地的资源产出类型\n\n#T 收成波动：#!\n年度收成结果因地区而异，可在上述因素基础上进一步增益或减损农场产出。关于收成等级及其对粮食生产影响的完整说明，请参阅可变收成系统。"
+game_concept_pp_population_capacity: "繁荣或灭亡：人口容量"
+game_concept_pp_population_capacity_desc: "#T 人口容量#!\n人口容量现在大致代表一个所在地通过当地食物生产（尤其是农业）能够养活多少人。它不再仅仅是住房。\n\n低于其容量的所在地拥有剩余的食物支持潜力。这为它们提供了农业产出优势，因为人们可以优先在更好的土地上工作。随着人口接近容量，该优势会减弱。\n\n#T 静态基线：#!\n每个所在地一开始都有自己的基线。这使用了与[pp_farm_output|e]相同类型的证据：历史人口数据、作物适宜性、降雨量、水源获取、土壤、气候、地形、植被、当地RGO和其他地图数据。\n\n#T 改变它的因素：#!\n人口容量可以通过发展度、建筑、科技、社会价值观、法律、所在地等级和其他修正来改变。\n\n#T 在哪里查看：#!\n使用人口容量地图模式和所在地提示框来查看当前数值。有关人口容量如何影响农业容量的信息，请参见[pp_farm_capacity|e]；有关容量和当地产出背后的共享静态模型，请参见[pp_location_potential|e]。"

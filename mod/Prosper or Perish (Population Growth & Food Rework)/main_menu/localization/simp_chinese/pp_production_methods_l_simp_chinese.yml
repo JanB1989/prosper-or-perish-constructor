@@ -1,0 +1,20 @@
+﻿l_simp_chinese:
+  # Mining village — only defined here (avoid duplicate keys with other PP English files)
+  pp_mining_coal: "煤矿开采"
+  pp_mining_iron: "铁矿开采"
+  pp_mining_copper: "铜矿开采"
+  pp_mining_goods_gold: "金矿开采"
+  pp_mining_goods_silver: "银矿开采"
+  pp_mining_goods_tin: "锡矿开采"
+  pp_mining_goods_lead: "铅矿开采"
+  pp_mining_goods_gems: "宝石开采"
+  pp_mining_goods_saltpeter: "硝石开采"
+  pp_mining_goods_alum: "明矾开采"
+  pp_mining_goods_mercury: "汞矿开采"
+  pp_mining_goods_marble: "大理石开采"
+
+  # REPLACE buildings — unique pp_* PM ids (no collision with vanilla after merge)
+  pp_sand_pit_maintenance: "采砂坑"
+  pp_fiber_crops_farm_maintenance: "纤维作物农场"
+  pp_stone_quarry_maintenance: "采石场"
+  pp_crude_quarry_maintenance: "粗石采石场"

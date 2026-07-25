@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from collections import defaultdict
 from dataclasses import dataclass
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 from typing import Iterable, Mapping
 
@@ -27,11 +28,17 @@ RGO_BUILDING_COST_GROUPS = {
     method: f"pp_rgo_{method}_building_cost_group" for method in RGO_METHODS
 }
 RGO_REDIRECT_OBJECTIVE = (
-    "redirect vanilla RGO expansion cost efficiency into Prosper or Perish "
-    "raw-material building construction cost efficiency while neutralizing the "
-    "original RGO expansion cost modifier"
+    "redirect vanilla RGO expansion cost efficiency into rural building "
+    "construction efficiency (or priced PoP raw-material building cost "
+    "modifiers when available) while neutralizing the original RGO expansion "
+    "cost modifier"
 )
 RGO_COST_REDIRECT_FILE = "pp_rgo_building_cost_redirects.txt"
+# Until priced PoP raw-material building cost modifiers exist, substitute with
+# rural build efficiency at half the original cost-modifier magnitude. Cost
+# modifiers are color=bad and efficiency is color=good, so the sign flips.
+RGO_COST_REDIRECT_FALLBACK_MODIFIER = "global_rural_build_buildings_efficiency"
+RGO_COST_REDIRECT_FALLBACK_SCALE = Decimal("0.5")
 RGO_COST_REDIRECT_COLLECTIONS: tuple[tuple[str, str], ...] = (
     ("in_game", "advances"),
     ("in_game", "estate_privileges"),
@@ -43,6 +50,11 @@ RGO_COST_REDIRECT_COLLECTIONS: tuple[tuple[str, str], ...] = (
     ("in_game", "religious_aspects"),
     ("in_game", "town_rights"),
     ("main_menu", "static_modifiers"),
+)
+# These collections do not accept nested TRY_INJECT into modifier blocks, so
+# redirects rewrite the full source entry via TRY_REPLACE instead.
+RGO_COST_REDIRECT_REPLACE_COLLECTIONS: frozenset[str] = frozenset(
+    {"estate_privileges", "laws"}
 )
 # The RGO expansion-cost modifier is intentionally neutralized by the generated
 # redirect.  These advances need a replacement effect so they do not become
@@ -250,11 +262,13 @@ def write_rgo_cost_redirect_files(
     collection_blocks: dict[tuple[str, str], list[str]] = defaultdict(list)
     patch_count = 0
     for (scope, collection, top_key), patches_by_path in sorted(grouped.items()):
-        if collection == "laws":
+        if collection in RGO_COST_REDIRECT_REPLACE_COLLECTIONS:
             if profile is None:
-                raise ValueError("profile is required to generate law cost redirects")
+                raise ValueError(
+                    f"profile is required to generate {collection} cost redirects"
+                )
             collection_blocks[(scope, collection)].extend(
-                _render_law_replacement_block(
+                _render_source_replacement_block(
                     profile=profile,
                     scope=scope,
                     collection=collection,
@@ -272,8 +286,13 @@ def write_rgo_cost_redirect_files(
             leaf_entries: list[tuple[str, float]] = []
             for assignment in patch_assignments:
                 leaf_entries.append((RGO_COST_MODIFIERS[assignment.method], -assignment.value))
-                for modifier_key in modifiers_by_method.get(assignment.method, ()):
-                    leaf_entries.append((modifier_key, assignment.value))
+                leaf_entries.extend(
+                    _substitute_modifier_entries(
+                        method=assignment.method,
+                        value=assignment.value,
+                        modifiers_by_method=modifiers_by_method,
+                    )
+                )
             leaf_entries.extend(
                 RGO_REDIRECT_COMPENSATIONS.get((scope, collection, top_key, path), ())
             )
@@ -327,7 +346,7 @@ def _assignment_source_block(entry: MergedEntry) -> CList | None:
     return parsed.value
 
 
-def _render_law_replacement_block(
+def _render_source_replacement_block(
     *,
     profile: DataProfile,
     scope: str,
@@ -339,7 +358,7 @@ def _render_law_replacement_block(
     merged_entry = _merged_entry_for_key(profile, scope, collection, top_key)
     source = _replacement_source_record(merged_entry)
     if source is None:
-        raise ValueError(f"Cannot find source law group for {scope}/{collection}/{top_key}")
+        raise ValueError(f"Cannot find source entry for {scope}/{collection}/{top_key}")
 
     source_path = Path(source.file)
     source_lines = source_path.read_text(encoding="utf-8-sig").splitlines()
@@ -353,7 +372,7 @@ def _render_law_replacement_block(
         for assignment in patch_assignments:
             if Path(assignment.source_file) != source_path:
                 raise ValueError(
-                    "Cannot rewrite law redirect across source files: "
+                    "Cannot rewrite redirect across source files: "
                     f"{top_key} is in {source_path}, assignment is in {assignment.source_file}"
                 )
             line_index = assignment.source_line - source.line
@@ -370,8 +389,12 @@ def _render_law_replacement_block(
                 )
             indent = re.match(r"\s*", source_line).group(0)
             replacements[line_index] = [
-                f"{indent}{modifier_key} = {_format_number(assignment.value)}"
-                for modifier_key in modifiers_by_method.get(assignment.method, ())
+                f"{indent}{modifier_key} = {_format_number(modifier_value)}"
+                for modifier_key, modifier_value in _substitute_modifier_entries(
+                    method=assignment.method,
+                    value=assignment.value,
+                    modifiers_by_method=modifiers_by_method,
+                )
             ]
 
     rendered: list[str] = []
@@ -626,9 +649,38 @@ def _pp_price_keys(mod_root: Path) -> set[str]:
     return keys
 
 
+def _substitute_modifier_entries(
+    *,
+    method: str,
+    value: float,
+    modifiers_by_method: Mapping[str, tuple[str, ...]],
+) -> list[tuple[str, float]]:
+    priced = modifiers_by_method.get(method, ())
+    if priced:
+        return [(modifier_key, value) for modifier_key in priced]
+    return [
+        (
+            RGO_COST_REDIRECT_FALLBACK_MODIFIER,
+            _fallback_rural_efficiency_value(value),
+        )
+    ]
+
+
+def _fallback_rural_efficiency_value(cost_modifier_value: float) -> float:
+    """Convert an RGO cost modifier into half-magnitude rural build efficiency."""
+
+    scaled = Decimal(str(cost_modifier_value)) * (-RGO_COST_REDIRECT_FALLBACK_SCALE)
+    return float(scaled.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+
+
 def _format_number(value: float) -> str:
     if abs(value) < 1e-12:
         return "0"
+    quantized = Decimal(str(value))
+    if quantized == quantized.to_integral():
+        return f"{int(quantized)}"
+    if abs(quantized.as_tuple().exponent) <= 2:
+        return format(quantized, "f")
     return f"{value:.12g}"
 
 

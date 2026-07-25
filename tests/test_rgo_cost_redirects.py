@@ -10,12 +10,15 @@ from prosper_or_perish_constructor.rgo_cost_redirects import (
     RGO_BUILDING_COST_GROUPS,
     RGO_COST_MODIFIERS,
     RGO_COST_REDIRECT_COLLECTIONS,
+    RGO_COST_REDIRECT_FALLBACK_MODIFIER,
     RGO_COST_REDIRECT_FILE,
+    RGO_COST_REDIRECT_REPLACE_COLLECTIONS,
     RGO_REDIRECT_COMPENSATIONS,
     RGO_METHODS,
     RGO_REDIRECT_OBJECTIVE,
     classify_pop_rgo_building_cost_targets,
     collect_active_rgo_cost_assignments,
+    _fallback_rural_efficiency_value,
 )
 
 
@@ -183,6 +186,33 @@ def test_generated_law_rgo_cost_redirects_replace_law_groups_instead_of_injectin
     assert "zimbabwe_mining_law" in text
     assert "expand_rgo_mining_cost_modifier" not in text
     assert "expand_rgo_farming_cost_modifier" not in text
+    assert RGO_COST_REDIRECT_FALLBACK_MODIFIER in text
+
+
+def test_generated_estate_privilege_rgo_cost_redirects_replace_instead_of_injecting() -> None:
+    path = MOD_ROOT / "in_game" / "common" / "estate_privileges" / RGO_COST_REDIRECT_FILE
+    text = path.read_text(encoding="utf-8-sig")
+
+    assert "TRY_INJECT:" not in text
+    assert {entry.key for entry in parse_file(path).entries} == {
+        "TRY_REPLACE:hab_tractatus_incorporalibus",
+        "TRY_REPLACE:tribes_pasture_access",
+    }
+    assert "estate = peasants_estate" in text
+    assert "estate = tribes_estate" in text
+    assert "global_peasants_estate_power" in text
+    assert "global_tribes_estate_power" in text
+    assert "expand_rgo_farming_cost_modifier" not in text
+    assert "global_rural_build_buildings_efficiency = -0.1" in text
+    assert "global_rural_build_buildings_efficiency = 0.01" in text
+    assert RGO_COST_REDIRECT_REPLACE_COLLECTIONS == frozenset({"estate_privileges", "laws"})
+
+
+def test_rural_efficiency_fallback_is_half_magnitude_rounded_to_two_decimals() -> None:
+    assert _fallback_rural_efficiency_value(-0.025) == 0.01
+    assert _fallback_rural_efficiency_value(0.2) == -0.1
+    assert _fallback_rural_efficiency_value(0.15) == -0.08
+    assert _fallback_rural_efficiency_value(0.33) == -0.17
 
 
 def _expected_patch_values(
@@ -199,10 +229,16 @@ def _expected_patch_values(
             assignment.path[0],
             assignment.path[1:-1],
         )
-        if assignment.collection != "laws":
+        if assignment.collection not in RGO_COST_REDIRECT_REPLACE_COLLECTIONS:
             expected[patch][RGO_COST_MODIFIERS[assignment.method]] += -assignment.value
-        for modifier_key in modifiers_by_method[assignment.method]:
-            expected[patch][modifier_key] += assignment.value
+        priced = modifiers_by_method[assignment.method]
+        if priced:
+            for modifier_key in priced:
+                expected[patch][modifier_key] += assignment.value
+        else:
+            expected[patch][RGO_COST_REDIRECT_FALLBACK_MODIFIER] += (
+                _fallback_rural_efficiency_value(assignment.value)
+            )
     for patch, compensations in RGO_REDIRECT_COMPENSATIONS.items():
         for modifier_key, value in compensations:
             expected[patch][modifier_key] += value

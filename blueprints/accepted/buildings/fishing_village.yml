@@ -139,7 +139,7 @@ building:
         }
 
         modifier = {
-            local_monthly_food = 0.0
+            local_monthly_food = 1.5
             local_fish_output_modifier = -0.006
             local_merchant_capacity = 0.010
             local_peasants_estate_power = 0.050

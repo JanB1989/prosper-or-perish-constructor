@@ -37,6 +37,7 @@ unique_production_methods = {
 }
 construction_demand = village_construction
 modifier = {
+    local_monthly_food = 1.5
     local_crown_estate_power = 0.5
     local_max_control = 0.05
     local_monthly_development_modifier = -0.1

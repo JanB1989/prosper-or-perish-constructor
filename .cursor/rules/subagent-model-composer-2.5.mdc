@@ -1,6 +1,11 @@
-﻿---
-description: Use Composer 2.5 (not Fast) for all subagents
+---
+description: Force non-fast Composer 2.5 for subagents
 alwaysApply: true
 ---
 
-Use composer-2.5 for subagents, never use composer-2.5-fast for subagents.
+# Subagent model: Composer 2.5 (never fast)
+
+- NEVER pass `model: composer-2.5-fast` (or any `*-fast` Composer slug) to Task/subagents.
+- When spawning a Composer-backed Task subagent, prefer the custom user subagent `composer-standard` (defined in `~/.cursor/agents/composer-standard.md` with `model: composer-2.5[fast=false]`).
+- If the Task tool rejects `composer-2.5` / bracket syntax as an inline model, do NOT fall back to `composer-2.5-fast`. Omit `model` (inherit parent) or dispatch `composer-standard` by name instead.
+- Bare `composer-2.5` without brackets can silently resolve to fast on some paths; rely on `composer-standard` or omit model.

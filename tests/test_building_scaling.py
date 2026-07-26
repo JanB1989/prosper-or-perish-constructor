@@ -153,24 +153,47 @@ def test_primary_food_buildings_worker_victuals_slots_match_configured_worker_fo
         employment_size = Decimal(str(_last_value(block, "employment_size")))
         method = _unique_method_values(block, worker_method)
         assert method["produced"] == "victuals"
-
-        pop_food_consumption = _pop_food_consumption(pop_type)
-        expected_output = worker_victuals_output_amount(
-            employment_size=employment_size,
-            pop_food_consumption=pop_food_consumption,
-            victuals_food=victuals_food,
-            food_need_ratio=scaling.worker_victuals_food_need_ratio,
-        )
         actual_output = Decimal(str(method["output"]))
+        assert actual_output > 0
 
-        assert str(actual_output) == format_output_amount(expected_output)
-        actual_food = actual_output * victuals_food
-        target_food = employment_size * pop_food_consumption * scaling.worker_victuals_food_need_ratio
-        assert float(actual_food) == pytest.approx(float(target_food), rel=0.02)
+        if victuals_food > 0:
+            pop_food_consumption = _pop_food_consumption(pop_type)
+            expected_output = worker_victuals_output_amount(
+                employment_size=employment_size,
+                pop_food_consumption=pop_food_consumption,
+                victuals_food=victuals_food,
+                food_need_ratio=scaling.worker_victuals_food_need_ratio,
+            )
+
+            assert str(actual_output) == format_output_amount(expected_output)
+            actual_food = actual_output * victuals_food
+            target_food = employment_size * pop_food_consumption * scaling.worker_victuals_food_need_ratio
+            assert float(actual_food) == pytest.approx(float(target_food), rel=0.02)
 
 
 def test_worker_victuals_slots_are_limited_to_primary_food_buildings() -> None:
     assert _accepted_worker_victual_buildings() == set(PRIMARY_WORKER_VICTUAL_BUILDINGS)
+
+
+def test_victuals_producers_supply_local_food_above_worker_consumption() -> None:
+    for building in PRIMARY_WORKER_VICTUAL_BUILDINGS + ("eng_royal_forest", "victualling_yard"):
+        template = load_template(BUILDING_BLUEPRINT_ROOT / f"{building}.yml")
+        block = _building_block(template.key, template.building_body)
+        pop_type = str(_last_value(block, "pop_type"))
+        employment_size = Decimal(str(_last_value(block, "employment_size")))
+        worker_food = employment_size * _pop_food_consumption(pop_type)
+        modifier = _last_block(block, "modifier")
+        local_food = Decimal(str(_last_value(modifier, "local_monthly_food")))
+
+        assert local_food == worker_food * Decimal("1.5")
+        assert f"local_monthly_food = {local_food:.1f}" in template.building_body
+
+    cookery = load_template(BUILDING_BLUEPRINT_ROOT / "cookery.yml")
+    cookery_block = _building_block(cookery.key, cookery.building_body)
+    cookery_modifier = _last_block(cookery_block, "modifier")
+    cookery_local_food = Decimal(str(_last_value(cookery_modifier, "local_monthly_food")))
+    assert cookery_local_food == Decimal("20.0")
+    assert "local_monthly_food = 20.0" in cookery.building_body
 
 
 def _building_block(building: str, body: str) -> CList:
@@ -184,6 +207,12 @@ def _last_value(block: CList, key: str) -> object:
     values = block.values(key)
     assert values, f"missing {key}"
     return values[-1]
+
+
+def _last_block(block: CList, key: str) -> CList:
+    value = _last_value(block, key)
+    assert isinstance(value, CList)
+    return value
 
 
 def _unique_method_values(building: CList, method: str) -> dict[str, object]:

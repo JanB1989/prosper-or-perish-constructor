@@ -1,0 +1,956 @@
+﻿types ProvinceColumns
+{
+
+	type province_create_colonial_charter = create_colonial_charter_card {
+		size = { 150 32 }
+
+		datacontext = "[InteractionTarget.GetProvince]"
+
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "name"
+		}
+
+		text_single = {
+			size = { 100% 100% }
+			margin = { 10 0 }
+			autoresize = no
+			align = nobaseline
+			default_format = "#yellow_titles"
+			raw_text = "@province! [InteractionTarget.GetProvince.GetNameWithNoTooltip]"
+		}		
+	}
+	
+	type province_name = select_cell_default {
+		size = { 150 32 }
+		blockoverride "interaction_target_action_provider_tooltip" {
+			tooltipwidget = {
+				using = action_tooltip_pop_out
+				blockoverride "title_icon_texture" {
+					texture = "gfx/interface/icons/map_modes/provinces.dds"
+				}
+				blockoverride "concept_link" {
+					text = "[province|e]"
+				}
+			}
+		}
+
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "name"
+		}
+
+		text_single = {
+			size = { 100% 100% }
+			margin = { 10 0 }
+			autoresize = no
+			align = nobaseline
+			default_format = "#yellow_titles"
+			raw_text = "@province! [InteractionTarget.GetProvince.GetNameWithNoTooltip]"
+		}
+	}
+
+	type province_owner_flag = select_cell_default {
+		size = { 40 32 }
+		# flag
+		country_flag_small = {
+			layoutpolicy_vertical = fixed
+			layoutpolicy_horizontal = fixed
+			size = { 40 32 }
+			datacontext = "[InteractionTarget.GetProvince.GetCountry]"
+
+			blockoverride "hover_leave" {
+				onmousehierarchyleave = "[SelectInteractionTargetGlue.OnMouseLeave(PdxGuiWidget.AccessSelf)]"
+			}
+		}
+	}
+
+	type province_population = select_cell_default {
+		size = { 100 32 }
+		datacontext = "[InteractionTarget.GetProvince]"
+
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "population"
+		}
+
+		hbox = {
+			margin = { 5 0 }
+			margin_right = 10
+			spacing = 5
+			
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = right|nobaseline
+				text = "[InteractionTarget.GetProvince.GetTotalPopulation]"
+			}
+
+			icon = {
+				size = { 25 25 }
+				texture = "gfx/interface/icons/location_icons/new/population.dds"
+			}			
+			
+		}
+		tooltipwidget = {
+			using = province_population_tooltip
+		}
+	}
+
+	type province_army_levies = select_cell_default {
+		size = { 40 32 }
+		tooltip = "[InteractionTarget.GetProvince.GetTotalArmyLevySizeInfo]"
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 24 24 }
+				texture = "gfx/interface/icons/unit_category/army_levies.dds"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				text = "[InteractionTarget.GetProvince.GetTotalArmyLevySize]"
+			}
+		}
+	}
+
+	type province_navy_levies = select_cell_default {
+		size = { 40 32 }
+		tooltip = "[InteractionTarget.GetProvince.GetTotalNavyLevySizeInfo]"
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 24 24 }
+				texture = "gfx/interface/icons/unit_category/navy_levies.dds"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				text = "[InteractionTarget.GetProvince.GetTotalNavyLevySize]"
+			}
+		}
+	}
+
+	type province_prosperity = select_cell_default {
+		size = { 100 32 }
+
+		sort_by_highlight = {
+			blockoverride "sort_by_highlight_size" {
+				size = { 100% 100% }
+			}
+			name = "prosperity"
+		}
+
+		tooltipwidget = {
+			SimpleContextualStringPairTooltipType = {				
+				blockoverride "title_icon" {
+					icon = {
+						using = tooltip_title_icon_size
+						texture = "gfx/interface/icons/location_icons/prosperity.dds"
+					}
+				}
+	
+				blockoverride "concept_link" {
+					text = [prosperity|e]
+				}	
+				textcontext = "[InteractionTarget.GetProvince.GetAverageProsperityInfo]"
+			}
+		}
+
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = right|nobaseline
+				text = "[InteractionTarget.GetProvince.GetAverageProsperity|%]"
+			}
+
+			icon = {
+				size = { 24 24 }
+				texture = "[GetConceptTexture('prosperity')]"
+			}
+		}
+	}
+
+	type province_satisfaction = select_cell_default {
+		size = { 100 32 }
+		tooltipwidget = {
+			SimpleContextualStringPairTooltipType = {
+				blockoverride "concept_link" {
+					text = "[average_satisfaction|e]"
+				}
+				blockoverride "title_icon" {
+					icon = {
+						using = tooltip_title_icon_size
+						texture = "gfx/interface/icons/text_icons/satisfaction.dds"
+					}
+				}
+				blockoverride "tooltip_title_text" {
+					text = "AVERAGE_SATISFACTION_TITLE"
+				}
+				textcontext = "[InteractionTarget.GetProvince.GetAverageSatisfactionInfo]"
+			}
+		}		
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 28 28 }
+				texture = "gfx/interface/icons/location_icons/new/population.dds"
+			}
+
+			text_single = {
+				sort_by_highlight = {
+					name = "satisfaction"
+				}
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				text = "[InteractionTarget.GetProvince.GetAverageSatisfaction|%]"
+			}
+		}
+	}
+
+	type province_tax_base = select_cell_default {
+		size = { 100 32 }
+		datacontext = "[InteractionTarget.GetProvince]"
+		hbox = {
+			spacing = 5
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = center
+				raw_text = "[InteractionTarget.GetProvince.GetTotalTaxBase|2+=]@tax_base!"
+			}
+		}
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "province_tax_base"
+		}
+		
+		tooltipwidget = {
+			using = province_tax_base_tooltip					
+		}
+	}
+
+	type province_location_wealth = select_cell_default {
+		size = { 100 32 }
+		datacontext = "[InteractionTarget.GetProvince]"
+		hbox = {
+			spacing = 5
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = center
+				raw_text = "[InteractionTarget.GetProvince.GetTotalTaxPossibleBase|2+=]@wealth!"
+			}
+		}
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "province_location_wealth"
+		}
+
+		tooltipwidget = {
+			using = province_location_wealth_tooltip
+		}
+	}
+
+	type province_food = select_cell_default {
+		size = { -1 32 }
+		datacontext = "[InteractionTarget.GetProvince]"
+		hbox = {
+			layoutpolicy_vertical = expanding
+			spacing = 5
+				tooltipwidget = {
+					using = province_food_tooltip
+				}
+				expand = {}
+				text_single = { ### STOCKPILE BALANCE
+					layoutpolicy_horizontal = expanding
+					raw_text = "[Add_float(FixedPointToFloat(InteractionTarget.GetProvince.GetFoodFromMarket), FixedPointToFloat(InteractionTarget.GetProvince.GetMonthlyFood))|+=2]"
+					align = right|nobaseline
+					fontsize = 13
+					minimumsize = { -1 20 }
+					maximumsize = { 120 -1 }
+
+					sort_by_small_highlight = {
+						name = "province_food"
+						position = { 7 0 }
+					}
+				}
+
+				piechart = {
+					size = { 30 30 }
+					using = bg_circle
+					using = bg_circle_piechart
+					using = piechart_angles
+					datacontext = "[InteractionTarget.GetProvince]"
+
+					pieslice_no_highlight = {
+						texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+						value = "[FixedPointToFloat(Divide_CFixedPoint(InteractionTarget.GetProvince.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
+						color = { 1 1 1 1 }
+					}
+
+					pieslice_no_highlight = {
+						texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+						value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(InteractionTarget.GetProvince.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
+						color = { 1 1 1 1 }
+					}
+
+					icon = {
+						size = { 61% 61% }
+						parentanchor = center
+						texture = "gfx/interface/icons/location_icons/food.dds"
+
+						modify_texture = {
+							visible = "[InteractionTarget.GetProvince.IsRiskOfStarving]"	
+							using = color_black_texture
+							alpha = 0.5
+							blend_mode = multiply
+						}
+
+						modify_texture = {
+							visible = "[InteractionTarget.GetProvince.IsRiskOfStarving]"	
+							using = color_yellow_texture
+							alpha = 0.6
+						}
+
+						modify_texture = {
+							visible = "[InteractionTarget.GetProvince.IsStarving]"															using = color_black_texture
+							alpha = 0.5
+							blend_mode = multiply
+						}
+
+						modify_texture = {
+							visible = "[InteractionTarget.GetProvince.IsStarving]"															using = color_black_texture
+							using = color_mid_red_texture
+						}
+					}
+					
+
+					sort_by_small_highlight = {
+						size = { 120% 120% }
+						name = "food_stockpile_percent"
+					}
+				}
+				expand = {}
+		}
+	}
+
+	type province_food_percentage = select_cell_default {
+		size = { 100 32 }
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			
+			widget = {
+				layoutpolicy_vertical = expanding
+				size = { 80 -1 }
+
+				text_single = {
+					maximumsize = {80 -1}
+					parentanchor = right|vcenter
+					align = nobaseline
+					raw_text = "[Divide_CFixedPoint(InteractionTarget.GetProvince.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')|2%]"
+					datacontext = "[InteractionTarget.GetProvince]"
+					tooltipwidget = {
+						using = province_food_production
+					}
+
+					sort_by_small_highlight = {
+						size = { 70 100% }
+						name = "province_food_percentage"
+					}
+				}
+			}
+		}
+	}
+
+	type province_is_starving = select_cell_default {
+		size = { 150 32 }
+		datacontext = "[InteractionTarget.GetProvince]"
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "name"
+		}
+		text_single = {
+			size = { 100% 100% }
+			margin = { 10 0 }
+			autoresize = no
+			align = nobaseline
+			default_format = "#yellow_titles"
+			text = "PROVINCE_FOOD_TT_RED"
+			
+			tooltipwidget = {
+				using = province_food_tooltip
+			}
+		}
+	}
+
+	type province_control = select_cell_default {
+		size = { 100 32 }
+		datacontext = "[InteractionTarget.GetProvince]"
+		
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "control"
+		}
+		tooltipwidget = {
+			using = province_control_tooltip
+		}
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 28 28 }
+				texture = "gfx/interface/icons/location_icons/new/population.dds"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				raw_text = "[InteractionTarget.GetProvince.GetAverageControl|%]@control!"
+			}
+		}
+	}
+
+	type province_max_control = select_cell_default {
+		size = { 100 32 }
+		datacontext = "[InteractionTarget.GetProvince]"
+
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "game_concept_max_control"
+		}
+		tooltipwidget = {
+			using = province_max_control_tooltip
+		}
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 28 28 }
+				texture = "gfx/interface/icons/location_icons/new/population.dds"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				raw_text = "[InteractionTarget.GetProvince.GetAverageMaxControl|%]@control!"
+			}
+		}
+	}
+	
+	type province_tribesmen = select_cell_default {
+		size = { 100 32 }
+		
+		
+		tooltipwidget = {
+			SimpleContextualStringPairTooltipType = {
+				
+				blockoverride "title_icon" {
+					icon = {
+						using = tooltip_title_icon_size
+						texture = "gfx/interface/icons/pops/tribesmen.dds"
+					}
+				}
+				
+				blockoverride "concept_link" {
+					text = [pop_type|e]
+				}	
+				textcontext = "[InteractionTarget.GetProvince.GetPopTypeInfo('tribesmen')]"
+			}
+		}
+	
+
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "tribesmen"
+		}
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 28 28 }
+				texture = "gfx/interface/icons/pops/tribesmen.dds"
+			}
+
+			sort_by_highlight = {
+				size = { 100% 100% }
+				name = "province_tribesmen"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				text = "[InteractionTarget.GetProvince.GetPopTypeSize('tribesmen')]"
+			}
+		}
+	}
+
+	type province_development = widget {
+		size = { 100 32 }
+
+
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "development"
+		}
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 28 28 }
+				texture = "gfx/interface/icons/location_icons/new/population.dds"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				raw_text = "[InteractionTarget.GetProvince.GetAverageDevelopment|2/%][development_icon]"
+			}
+			
+			tooltipwidget = {
+				SimpleContextualStringPairTooltipType = {
+					
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "gfx/interface/icons/location_icons/development.dds"
+						}
+					}
+		
+					blockoverride "concept_link" {
+						text = [development|e]
+					}	
+					textcontext = "[InteractionTarget.GetProvince.GetAverageDevelopmentInfo]"
+				}
+			}
+		}
+	}
+
+	type province_integration = widget {
+		size = { 100 32 }
+		
+		
+		tooltipwidget = {
+			SimpleContextualStringPairTooltipType = {
+				
+				blockoverride "title_icon" {
+					icon = {
+						using = tooltip_title_icon_size
+						texture = "gfx/interface/icons/integration_levels/conquered.dds"
+					}
+				}
+	
+				blockoverride "concept_link" {
+					text = [integration|e]
+				}	
+				textcontext = "[InteractionTarget.GetProvince.GetAverageIntegrationInfo]"
+			}
+		}
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 28 28 }
+				texture = "gfx/interface/icons/integration_levels/conquered.dds"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				text = "[InteractionTarget.GetProvince.GetAverageIntegration|%]"
+			}
+		}
+	}
+
+	type province_institutions = widget {
+		size = { 100 32 }
+		tooltipwidget = {
+			ContextualTooltipType = {
+				blockoverride "title_text" {
+					text = "EMBRACED_CABINET_INSTITITIONS_HEADER"
+				}
+				blockoverride "title_icon" {
+					icon = {
+						using = tooltip_title_icon_size
+						texture = "gfx/interface/icons/location_icons/institutions.dds"
+					}
+				}
+				blockoverride "concept_link" {
+					text = "[institutions|E]"
+				}
+				blockoverride "tooltip_content" {
+					TooltipTextBlock = {
+						blockoverride "text" {
+							text = "[InteractionTarget.GetProvince.GetInstitutionDetails]"
+						}
+					}
+				}
+			}
+		}
+		hbox = {
+			sort_by_highlight = {
+				name = "institutions"
+			}
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 28 28 }
+				texture = "gfx/interface/icons/location_icons/new/population.dds"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				text = "[InteractionTarget.GetProvince.GetInstitutionProgress]"
+			}
+		}
+	}
+
+	type province_culture_percentage = widget {
+		size = { 100 32 }
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 28 28 }
+				texture = "gfx/interface/icons/location_icons/new/population.dds"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				text = "[InteractionTarget.GetProvince.GetCulturePercentage(SelectInteractionTargetView.GetCurrentParams.GetFirstObjectOfType('culture').GetCulture)|%]"
+			}
+			
+			tooltipwidget = {
+				SimpleContextualStringPairTooltipType = {
+					
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							using = culture_icon
+						}
+					}
+		
+					blockoverride "concept_link" {
+						text = [culture|e]
+					}	
+					textcontext = "[InteractionTarget.GetProvince.GetCulturePercentageInfo(SelectInteractionTargetView.GetCurrentParams.GetFirstObjectOfType('culture').GetCulture)]"
+				}
+			}
+		}
+	}
+
+	type province_our_primary_culture_percentage = widget {
+		size = { 100 32 }
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 28 28 }
+				texture = "gfx/interface/icons/location_icons/new/population.dds"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				text = "[InteractionTarget.GetProvince.GetCulturePercentage(Player.GetCulture.Self)|%]"
+			}
+			
+			tooltipwidget = {
+				SimpleContextualStringPairTooltipType = {
+					
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							using = culture_icon
+						}
+					}
+		
+					blockoverride "concept_link" {
+						text = [culture|e]
+					}	
+					textcontext = "[InteractionTarget.GetProvince.GetOurPrimaryCulturePercentageInfo(Player.GetCulture.Self)]"
+				}
+			}
+		}
+	}
+
+	type province_primary_culture_percentage = widget {
+		size = { 100 32 }
+		
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 28 28 }
+				texture = "gfx/interface/icons/location_icons/new/population.dds"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				text = "[InteractionTarget.GetProvince.GetPrimaryCulturePercentage|%]"
+
+
+				tooltipwidget = {
+					SimpleContextualTooltipType = {
+						textcontext = "[InteractionTarget.GetProvince.GetPrimaryCulturePercentageInfo]"
+					}
+				}
+			}
+		}
+	}
+
+	type province_religion_percentage = widget {
+		size = { 100 32 }
+		tooltipwidget = {
+			SimpleContextualStringPairTooltipType = {
+				
+				blockoverride "title_icon" {
+					icon = {
+						using = tooltip_title_icon_size
+						texture = "[GetReligionIcon(SelectInteractionTargetView.GetCurrentParams.GetFirstObjectOfType('religion').GetReligion)]"
+					}
+				}
+	
+				blockoverride "concept_link" {
+					text = [religion|e]
+				}	
+				textcontext = "[InteractionTarget.GetProvince.GetReligionPercentageInfo(SelectInteractionTargetView.GetCurrentParams.GetFirstObjectOfType('religion').GetReligion)]"
+			}
+		}		
+
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "province_religion_percentage"
+		}
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 28 28 }
+				texture = "gfx/interface/icons/location_icons/new/population.dds"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				text = "[InteractionTarget.GetProvince.GetReligionPercentage(SelectInteractionTargetView.GetCurrentParams.GetFirstObjectOfType('religion').GetReligion)|%]"
+			}
+		}
+	}
+
+	type catholic_religion_percentage = widget {
+		size = { 100 32 }
+		tooltip = "[InteractionTarget.GetProvince.GetPrimaryReligionPercentageInfo]"
+
+		hbox = {
+			margin = { 5 0 }
+			spacing = 5
+			icon = {
+				visible = no
+				size = { 28 28 }
+				texture = "gfx/interface/icons/location_icons/new/population.dds"
+			}
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = nobaseline
+				text = "[InteractionTarget.GetProvince.GetPrimaryReligionPercentage|%]"
+			}
+		}
+	}
+
+	type province_rebels = widget {
+		size = { 115 32 }
+
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "rebels"
+		}
+
+		hbox = {
+			spacing = 5
+			
+			text_single = {
+				sort_by_highlight = {
+					name = "current_progress"
+				}
+				size = { 40 -1 }
+				align = right|nobaseline
+				default_format = "#color_red"
+				text = "[InteractionTarget.GetProvince.GetLargestRebelProgress|-=%]"
+			}
+
+			icon = {
+				size = { 25 25 }
+				texture = "gfx/interface/icons/rebels/fist.dds"
+			}
+
+			tooltipwidget = {				
+				datacontext = "[InteractionTarget.GetProvince]"
+				SimpleContextualTooltipType = {
+					blockoverride "concept_link" {
+						text = "[rebels|e]"
+					}
+					
+					blockoverride "title_icon_texture" {
+						texture = "gfx/interface/icons/rebels/fist.dds"
+						using = tooltip_title_icon_size
+					}
+					lowpriotextcontext = "REBEL_PROGRESS_PROVINCE_REBELS_TOOLTIP"
+				}
+			}
+
+			expand = {}
+		}
+	}
+
+	type unfilled_jobs_in_province = widget {
+		size = { 115 32 }
+
+		datacontext = "[InteractionTarget.GetProvince]"
+
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "workers_employment"
+		}
+
+		hbox = {
+			spacing = 5
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = right|nobaseline
+				text = "[InteractionTarget.GetProvince.GetMissingWorkers]"
+			}
+
+			icon = {
+				size = { 20 20 }
+				texture = "gfx/interface/icons/flat_icons/building_panel/employees.dds"
+			}
+
+			tooltipwidget = {
+				using = province_missing_workers_tooltip
+			}
+
+			expand = {}
+		}
+	}
+
+	type province_peasants_unemployment = widget {
+		size = { 115 32 }
+
+		datacontext = "[InteractionTarget.GetProvince]"
+
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "peasants_unemployment"
+		}
+
+		hbox = {
+			spacing = 5
+
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = right|nobaseline
+				text = "[InteractionTarget.GetProvince.GetMissingPops('peasants')]"
+			}
+
+			icon = {
+				size = { 20 20 }
+				texture = "gfx/interface/icons/pops/peasants.dds"
+			}
+
+			tooltipwidget = {
+				using = province_available_peasants_tooltip
+			}
+
+			expand = {}
+		}
+	}
+
+	type province_peasant_population = widget {
+		size = { 115 32 }
+
+		datacontext = "[InteractionTarget.GetProvince]"
+		sort_by_highlight = {
+			size = { 100% 100% }
+			name = "peasant_population"
+		}
+
+		hbox = {
+			spacing = 5
+			
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = no
+				align = right|nobaseline
+				text = "[InteractionTarget.GetProvince.GetPopTypeSizeColored('peasants')]"
+			}
+
+			icon = {
+				size = { 25 25 }
+				texture = "gfx/interface/icons/pops/peasants.dds"
+			}
+
+			expand = {}
+		}
+
+		tooltipwidget = {
+			using = province_peasants_tooltip
+		}
+	}
+}

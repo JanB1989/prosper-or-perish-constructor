@@ -304,6 +304,7 @@ building:
     	modifier = {
     		local_monthly_food = 20.0
     		local_victuals_output_modifier = 0.00
+        local_food_capacity = 400
     	}
 advancements:
   - key: cookery_tin_cans_advance

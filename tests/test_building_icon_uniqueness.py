@@ -123,7 +123,15 @@ def test_enabled_building_icons_do_not_render_duplicate_hashes() -> None:
         digest = hashlib.sha256(icon_path.read_bytes()).hexdigest()
         by_hash[digest].append(f"{key}:{output}")
 
-    duplicates = {digest: names for digest, names in by_hash.items() if len(names) > 1}
+    allowed_duplicate_sets = {
+        frozenset({"victuals_market", "victuals_market_import"}),
+    }
+    duplicates = {
+        digest: names
+        for digest, names in by_hash.items()
+        if len(names) > 1
+        and frozenset(name.partition(":")[0] for name in names) not in allowed_duplicate_sets
+    }
     assert not duplicates, f"Duplicate rendered building icons: {duplicates}"
 
 

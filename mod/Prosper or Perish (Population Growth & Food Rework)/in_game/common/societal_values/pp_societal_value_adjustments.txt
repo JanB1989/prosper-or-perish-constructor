@@ -92,7 +92,9 @@ TRY_INJECT:centralization_vs_decentralization = {
 		global_rural_build_buildings_efficiency = 0.20
 		raw_material_in_province_impact = 0.075
 		global_production_efficiency = -0.05
-		global_food_revenue_output_modifier = 0.05
+		global_province_food_sales_output_modifier = 0.05
+		global_offset_output_modifier = 0.05
+		global_province_food_purchase_output_modifier = 0.05
 	}
 }
 
@@ -103,7 +105,9 @@ TRY_INJECT:individualism_vs_communalism = {
 	right_modifier = {
 		building_upkeep_efficiency = 0.05
 		food_purchase_efficiency = 0.10
-		global_food_revenue_output_modifier = -0.05
+		global_province_food_sales_output_modifier = -0.05
+		global_offset_output_modifier = -0.05
+		global_province_food_purchase_output_modifier = -0.05
 		global_food_capacity_modifier = 0.20
 	}
 }

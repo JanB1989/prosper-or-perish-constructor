@@ -12,6 +12,20 @@ from pathlib import Path
 
 MAX_RELATIVE_PATH = 140
 MAX_COMPONENT = 100
+ENGINE_REQUIRED_PATH_LIMITS = {
+    (
+        "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/"
+        "icons/trade_goods/illustrations/icon_goods_manual_labor_cost.dds"
+    ): 150,
+    (
+        "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/"
+        "icons/trade_goods/illustrations/icon_goods_province_food_purchase.dds"
+    ): 150,
+    (
+        "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/"
+        "icons/trade_goods/illustrations/icon_goods_province_food_sales.dds"
+    ): 150,
+}
 
 
 @dataclass(frozen=True)
@@ -47,8 +61,9 @@ def check_paths(
 ) -> list[PathLengthIssue]:
     issues: list[PathLengthIssue] = []
     for path in paths:
-        if len(path) > max_relative_path:
-            issues.append(PathLengthIssue(path, "path", len(path), max_relative_path))
+        path_limit = ENGINE_REQUIRED_PATH_LIMITS.get(path, max_relative_path)
+        if len(path) > path_limit:
+            issues.append(PathLengthIssue(path, "path", len(path), path_limit))
         longest_component = max((len(part) for part in path.split("/")), default=0)
         if longest_component > max_component:
             issues.append(PathLengthIssue(path, "component", longest_component, max_component))

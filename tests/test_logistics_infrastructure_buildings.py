@@ -87,9 +87,29 @@ MARKET_VILLAGE_MARKET_ACCESS_RENDERED = (
     / "building_types"
     / "zz_pp_market_village_market_access.txt"
 )
-VICTUALS_MARKET_BLUEPRINT = ROOT / "blueprints" / "accepted" / "buildings" / "victuals_market.yml"
+VICTUALS_MARKET_BLUEPRINT = (
+    ROOT / "blueprints" / "accepted" / "buildings" / "victuals_market_export.yml"
+)
+VICTUALS_MARKET_IMPORT_BLUEPRINT = (
+    ROOT / "blueprints" / "accepted" / "buildings" / "victuals_market_import.yml"
+)
 VICTUALS_MARKET_RENDERED = (
     MOD_ROOT / "in_game" / "common" / "building_types" / "zz_pp_victuals_market.txt"
+)
+VICTUALS_MARKET_IMPORT_RENDERED = (
+    MOD_ROOT / "in_game" / "common" / "building_types" / "zz_pp_victuals_market_import.txt"
+)
+VICTUALS_MARKET_ICON = (
+    MOD_ROOT / "in_game" / "gfx" / "interface" / "icons" / "buildings" / "victuals_market.dds"
+)
+VICTUALS_MARKET_IMPORT_ICON = (
+    MOD_ROOT
+    / "in_game"
+    / "gfx"
+    / "interface"
+    / "icons"
+    / "buildings"
+    / "victuals_market_import.dds"
 )
 FOUR_YEARLY_COUNTRY_PULSE = (
     MOD_ROOT / "in_game" / "common" / "on_action" / "pp_country_four_yearly.txt"
@@ -534,10 +554,31 @@ def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> No
     assert total == 0.0
 
 
-def test_victuals_market_does_not_provide_market_access() -> None:
-    for path in (VICTUALS_MARKET_BLUEPRINT, VICTUALS_MARKET_RENDERED):
-        text = path.read_text(encoding="utf-8-sig")
-        assert "local_monthly_food = 60.0" in text
+def test_victuals_market_templates_split_export_and_import_flows() -> None:
+    export_texts = tuple(
+        path.read_text(encoding="utf-8-sig")
+        for path in (VICTUALS_MARKET_BLUEPRINT, VICTUALS_MARKET_RENDERED)
+    )
+    import_texts = tuple(
+        path.read_text(encoding="utf-8-sig")
+        for path in (VICTUALS_MARKET_IMPORT_BLUEPRINT, VICTUALS_MARKET_IMPORT_RENDERED)
+    )
+
+    assert "victuals_market: Victuals Market (Export)" in export_texts[0]
+    for text in export_texts:
+        assert "pp_province_food_to_market" in text
+        assert "produced = province_food_sales" in text
+        assert "pp_province_food_from_market" not in text
+
+    assert "victuals_market_import: Victuals Market (Import)" in import_texts[0]
+    for text in import_texts:
+        assert "pp_province_food_from_market" in text
+        assert "produced = province_food_purchase" in text
+        assert "pp_province_food_to_market" not in text
+
+    for text in (*export_texts, *import_texts):
         assert "local_nobles_estate_power = 0.05" in text
         assert "local_peasant_enfranchisment = -0.01" in text
         assert "local_market_access" not in text
+
+    assert VICTUALS_MARKET_IMPORT_ICON.read_bytes() == VICTUALS_MARKET_ICON.read_bytes()

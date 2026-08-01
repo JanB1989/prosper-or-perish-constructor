@@ -7,7 +7,12 @@ TRY_INJECT:prosperity = {
 	local_prosperity_decay = 0.005
 	local_monthly_development = 0.001
 	local_monthly_development_modifier = 0.25
-	local_peasants_food_consumption = 0.10
+	local_nobles_food_consumption = 0.50
+	local_clergy_food_consumption = 0.50
+	local_burghers_food_consumption = 0.50
+	local_laborers_food_consumption = 0.50
+	local_soldiers_food_consumption = 0.50
+	local_peasants_food_consumption = 0.50
 	local_unrest = -0.03
 }
 # I think it makes some sense for people to die when looting
@@ -173,7 +178,7 @@ TRY_INJECT:winter_severe = {
 }
 TRY_INJECT:location_base_values = {
 	local_devastation_recovery = -0.004
-	local_max_rgo_size = -1
+	local_monthly_prosperity = -0.0024
 }
 
 # Little ice age

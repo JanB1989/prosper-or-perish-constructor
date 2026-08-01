@@ -4,7 +4,17 @@ pp_victuals = {
 	texture = "flat_icons/trade_market/food_stockpile"
 }
 
-pp_food_revenue = {
+pp_province_food_sales = {
 	family = food
 	texture = "flat_icons/trade_market/food_stockpile"
+}
+
+pp_province_food_purchase = {
+	family = food
+	texture = "flat_icons/trade_market/food_stockpile"
+}
+
+pp_offset = {
+	family = food
+	texture = "flat_icons/trade_market/goods_balance"
 }

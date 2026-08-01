@@ -65,6 +65,7 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
         "road_wardens_yard": "pp_road_wardens_yard_price",
         "terraces": "pp_terraces_price",
         "victuals_market": "pp_victuals_market_price",
+        "victuals_market_import": "pp_victuals_market_import_price",
     }
 
 

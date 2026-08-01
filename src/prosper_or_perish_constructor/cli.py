@@ -134,39 +134,39 @@ FARMING_CAPACITY_MODIFIER_ICONS = Path(
 FARMING_CAPACITY_MODIFIER_LOCALIZATION = Path(
     "main_menu/localization/english/pp_farming_capacity_modifier_types_l_english.yml"
 )
-FOOD_REVENUE_MODIFIER_KEY = "local_food_revenue_output_modifier"
-FOOD_REVENUE_PRICE_SCENARIO_SCALE = 0.25
-FOOD_REVENUE_PRICE_CAP_SCALE = 0.5
-FOOD_REVENUE_CHEAP_CAP_TARGET = -0.450
-FOOD_REVENUE_EXPENSIVE_CAP_TARGET = 0.124
-FOOD_REVENUE_STARVING_TARGET = 0.080
-FOOD_REVENUE_TOTAL_MODIFIER_MIN = -0.4
-FOOD_REVENUE_TOTAL_MODIFIER_MAX = 0.4
-FOOD_REVENUE_GROWTH_CAP_TARGET = 2.0
-FOOD_REVENUE_TOLERANCE = 0.000001
-FOOD_REVENUE_PROFITABILITY_BLUEPRINT = Path("buildings/victuals_market.yml")
-FOOD_REVENUE_PROFITABILITY_METHOD = "victuals_market_maintenance"
-FOOD_REVENUE_STATIC_TARGETS = {
+PROVINCE_FOOD_SALES_MODIFIER_KEY = "local_province_food_sales_output_modifier"
+PROVINCE_FOOD_SALES_PRICE_SCENARIO_SCALE = 0.25
+PROVINCE_FOOD_SALES_PRICE_CAP_SCALE = 0.5
+PROVINCE_FOOD_SALES_CHEAP_CAP_TARGET = -0.450
+PROVINCE_FOOD_SALES_EXPENSIVE_CAP_TARGET = 0.124
+PROVINCE_FOOD_SALES_STARVING_TARGET = 0.080
+PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MIN = -0.4
+PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MAX = 0.4
+PROVINCE_FOOD_SALES_GROWTH_CAP_TARGET = 2.0
+PROVINCE_FOOD_SALES_TOLERANCE = 0.000001
+PROVINCE_FOOD_SALES_PROFITABILITY_BLUEPRINT = Path("buildings/victuals_market_export.yml")
+PROVINCE_FOOD_SALES_PROFITABILITY_METHOD = "pp_province_food_to_market"
+PROVINCE_FOOD_SALES_STATIC_TARGETS = {
     "cheap_food_in_location": -0.900,
     "expensive_food_in_location": 0.248,
-    "province_starving": FOOD_REVENUE_STARVING_TARGET,
+    "province_starving": PROVINCE_FOOD_SALES_STARVING_TARGET,
 }
-FOOD_REVENUE_EDGE_PRICE_TARGETS = {
-    "cheap_cap_0x": FOOD_REVENUE_CHEAP_CAP_TARGET,
+PROVINCE_FOOD_SALES_EDGE_PRICE_TARGETS = {
+    "cheap_cap_0x": PROVINCE_FOOD_SALES_CHEAP_CAP_TARGET,
     "base_100": 0.0,
-    "expensive_cap_2x": FOOD_REVENUE_EXPENSIVE_CAP_TARGET,
+    "expensive_cap_2x": PROVINCE_FOOD_SALES_EXPENSIVE_CAP_TARGET,
 }
-FOOD_REVENUE_EDGE_STARVING_TARGETS = {
+PROVINCE_FOOD_SALES_EDGE_STARVING_TARGETS = {
     "no": 0.0,
-    "yes": FOOD_REVENUE_STARVING_TARGET,
+    "yes": PROVINCE_FOOD_SALES_STARVING_TARGET,
 }
-FOOD_REVENUE_MATRIX_TARGETS = {
+PROVINCE_FOOD_SALES_MATRIX_TARGETS = {
     ("rural_settlement", "cheap_cap_0x", "full", "no"): -0.4,
     ("rural_settlement", "base_100", "full", "no"): 0.050,
     ("megalopolis", "expensive_cap_2x", "empty", "yes"): 0.4,
 }
-FOOD_REVENUE_STORAGE_TARGET_EDGE = ("rural_settlement", "cheap_cap_0x", "full", "no")
-FOOD_REVENUE_RANK_TARGETS = {
+PROVINCE_FOOD_SALES_STORAGE_TARGET_EDGE = ("rural_settlement", "cheap_cap_0x", "full", "no")
+PROVINCE_FOOD_SALES_RANK_TARGETS = {
     "rural_settlement": 0.136,
     "town": 0.156,
     "city": 0.176,
@@ -392,28 +392,28 @@ def _build_parser() -> argparse.ArgumentParser:
         default=CONSTRUCTOR_PROFILE,
         help="Parser profile from the load-order TOML. Defaults to constructor.",
     )
-    food_revenue_check = _add_command(
+    province_food_sales_check = _add_command(
         subcommands,
-        "food-revenue-check",
-        "Check parsed Food Revenue modifier edge conditions.",
-        _food_revenue_check,
+        "province-food-sales-check",
+        "Check parsed Province Food Sales modifier edge conditions.",
+        _province_food_sales_check,
     )
-    food_revenue_check.add_argument(
+    province_food_sales_check.add_argument(
         "--load-order",
         type=Path,
         default=CONSTRUCTOR_LOAD_ORDER,
         help="Load-order TOML path relative to --repo. Defaults to constructor.load_order.toml.",
     )
-    food_revenue_check.add_argument(
+    province_food_sales_check.add_argument(
         "--profile",
         default=CONSTRUCTOR_PROFILE,
         help="Parser profile from the load-order TOML. Defaults to constructor.",
     )
-    food_revenue_check.add_argument(
+    province_food_sales_check.add_argument(
         "--tolerance",
         type=float,
-        default=FOOD_REVENUE_TOLERANCE,
-        help=f"Allowed absolute difference for checks. Defaults to {FOOD_REVENUE_TOLERANCE:g}.",
+        default=PROVINCE_FOOD_SALES_TOLERANCE,
+        help=f"Allowed absolute difference for checks. Defaults to {PROVINCE_FOOD_SALES_TOLERANCE:g}.",
     )
     production_throughput = _add_command(
         subcommands,
@@ -1128,6 +1128,10 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         compile_free_building_level_modifiers,
         local_free_building_levels_sheet_csv_path,
     )
+    from prosper_or_perish_constructor.food_storage_gui import (
+        FOOD_STORAGE_GUI_DIVISOR_COUNTS,
+        compile_food_storage_gui,
+    )
     from prosper_or_perish_constructor.rgo_cost_redirects import write_rgo_cost_redirects
 
     mod_root = _project_mod_root(repo, project)
@@ -1160,6 +1164,30 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
             flush=True,
         )
     _ensure_price_cost_modifier_assets(mod_root)
+    food_storage_gui_result = compile_food_storage_gui(
+        repo=repo,
+        mod_root=mod_root,
+        profile=CONSTRUCTOR_PROFILE,
+        load_order_path=repo / CONSTRUCTOR_LOAD_ORDER,
+    )
+    if not food_storage_gui_result.skipped:
+        localization_status = (
+            "updated" if food_storage_gui_result.localization_changed else "unchanged"
+        )
+        print(
+            "Compiled "
+            f"{food_storage_gui_result.replacements} province-food GUI divisors "
+            f"across {len(FOOD_STORAGE_GUI_DIVISOR_COUNTS)} files to "
+            f"{food_storage_gui_result.divisor_literal} months from "
+            f"{food_storage_gui_result.max_years:g} configured years; "
+            f"{food_storage_gui_result.files_changed} GUI files changed and "
+            "the food-storage map scale was "
+            f"{'updated' if food_storage_gui_result.map_mode_changed else 'unchanged'}, "
+            "while "
+            "the food-storage localization was "
+            f"{localization_status}.",
+            flush=True,
+        )
     _ensure_constructor_text_boms(mod_root)
     _inject_location_potential_localization(mod_root)
 
@@ -1956,25 +1984,25 @@ def _output_modifiers(
     return 0
 
 
-def _food_revenue_check(
+def _province_food_sales_check(
     args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
 ) -> int:
     if extra:
-        raise SystemExit("food-revenue-check does not accept extra arguments.")
+        raise SystemExit("province-food-sales-check does not accept extra arguments.")
     if args.tolerance < 0:
         raise SystemExit("--tolerance must be >= 0.")
 
-    inputs = _load_food_revenue_check_inputs(
+    inputs = _load_province_food_sales_check_inputs(
         profile=args.profile,
         load_order_path=_repo_path(repo, args.load_order),
         project=project,
     )
-    report = _food_revenue_check_report(inputs, tolerance=args.tolerance)
-    print(_format_food_revenue_check_report(report), flush=True)
+    report = _province_food_sales_check_report(inputs, tolerance=args.tolerance)
+    print(_format_province_food_sales_check_report(report), flush=True)
     return 0 if not report["failures"] else 1
 
 
-def _load_food_revenue_check_inputs(
+def _load_province_food_sales_check_inputs(
     *,
     profile: str,
     load_order_path: Path,
@@ -1992,7 +2020,7 @@ def _load_food_revenue_check_inputs(
         raise SystemExit("Missing parsed define NEconomy.GROWTH_FROM_FOOD_MULTIPLIER_MAX.")
 
     static_values = {
-        name: static_data.modifier_baseline(name, None, FOOD_REVENUE_MODIFIER_KEY)
+        name: static_data.modifier_baseline(name, None, PROVINCE_FOOD_SALES_MODIFIER_KEY)
         for name in (
             "cheap_food_in_location",
             "expensive_food_in_location",
@@ -2001,14 +2029,14 @@ def _load_food_revenue_check_inputs(
         )
     }
     rank_values = {
-        name: rank_data.modifier_baseline(name, "rank_modifier", FOOD_REVENUE_MODIFIER_KEY)
-        for name in FOOD_REVENUE_RANK_TARGETS
+        name: rank_data.modifier_baseline(name, "rank_modifier", PROVINCE_FOOD_SALES_MODIFIER_KEY)
+        for name in PROVINCE_FOOD_SALES_RANK_TARGETS
     }
     return {
         "growth_cap": float(growth_cap),
         "static": static_values,
         "ranks": rank_values,
-        "profitability_rows": _load_food_revenue_profitability_rows(
+        "profitability_rows": _load_province_food_sales_profitability_rows(
             project=project,
             profile=profile,
             load_order_path=load_order_path,
@@ -2021,7 +2049,7 @@ def _load_food_revenue_check_inputs(
     }
 
 
-def _load_food_revenue_profitability_rows(
+def _load_province_food_sales_profitability_rows(
     *,
     project: Path,
     profile: str,
@@ -2039,9 +2067,9 @@ def _load_food_revenue_profitability_rows(
     from eu5_mod_orchestrator.config import load_project_config
 
     config = load_project_config(project)
-    blueprint_path = config.accepted_blueprints_dir / FOOD_REVENUE_PROFITABILITY_BLUEPRINT
+    blueprint_path = config.accepted_blueprints_dir / PROVINCE_FOOD_SALES_PROFITABILITY_BLUEPRINT
     if not blueprint_path.is_file():
-        raise SystemExit(f"Missing Food Revenue profitability blueprint: {blueprint_path}")
+        raise SystemExit(f"Missing Province Food Sales profitability blueprint: {blueprint_path}")
 
     evaluation = evaluate_building_blueprint_data(
         blueprint_path,
@@ -2063,26 +2091,26 @@ def _load_food_revenue_profitability_rows(
         food_cost_context=load_food_cost_context(profile=profile, load_order_path=load_order_path),
     )
     for method in evaluation.methods:
-        if method.name == FOOD_REVENUE_PROFITABILITY_METHOD:
-            return _food_revenue_profitability_rows_from_method(method)
+        if method.name == PROVINCE_FOOD_SALES_PROFITABILITY_METHOD:
+            return _province_food_sales_profitability_rows_from_method(method)
     raise SystemExit(
-        f"Missing Food Revenue profitability method {FOOD_REVENUE_PROFITABILITY_METHOD} "
+        f"Missing Province Food Sales profitability method {PROVINCE_FOOD_SALES_PROFITABILITY_METHOD} "
         f"in {blueprint_path}"
     )
 
 
-def _food_revenue_profitability_rows_from_method(method: object) -> list[dict[str, Any]]:
+def _province_food_sales_profitability_rows_from_method(method: object) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for scenario in getattr(method, "food_cost_scenarios", ()):
         scenario_name = str(getattr(scenario, "scenario", ""))
-        input_gold = _food_revenue_float(getattr(scenario, "input_gold", None))
-        output_gold = _food_revenue_float(getattr(scenario, "output_gold", None))
-        output_multiplier = _food_revenue_float(getattr(scenario, "output_multiplier", None))
+        input_gold = _province_food_sales_float(getattr(scenario, "input_gold", None))
+        output_gold = _province_food_sales_float(getattr(scenario, "output_gold", None))
+        output_multiplier = _province_food_sales_float(getattr(scenario, "output_multiplier", None))
         actual_output_modifier = (
             output_multiplier - 1.0 if math.isfinite(output_multiplier) else math.nan
         )
-        profit_gold = _food_revenue_float(getattr(scenario, "profit_gold", None))
-        worker_food_gold = _food_revenue_float(getattr(scenario, "worker_food_gold", None))
+        profit_gold = _province_food_sales_float(getattr(scenario, "profit_gold", None))
+        worker_food_gold = _province_food_sales_float(getattr(scenario, "worker_food_gold", None))
         goods_input_gold = input_gold - worker_food_gold if math.isfinite(worker_food_gold) else math.nan
         base_output_gold = (
             output_gold / output_multiplier
@@ -2102,7 +2130,7 @@ def _food_revenue_profitability_rows_from_method(method: object) -> list[dict[st
         rows.append(
             {
                 "scenario": scenario_name,
-                "food_price": _food_revenue_scenario_price_label(scenario_name),
+                "food_price": _province_food_sales_scenario_price_label(scenario_name),
                 "input_gold": input_gold,
                 "goods_input_gold": goods_input_gold,
                 "worker_food_gold": worker_food_gold,
@@ -2118,7 +2146,7 @@ def _food_revenue_profitability_rows_from_method(method: object) -> list[dict[st
     return rows
 
 
-def _food_revenue_rank_profitability_rows(
+def _province_food_sales_rank_profitability_rows(
     rank_rows: Sequence[Mapping[str, Any]],
     profitability_rows: Sequence[Mapping[str, Any]],
 ) -> list[dict[str, Any]]:
@@ -2129,15 +2157,15 @@ def _food_revenue_rank_profitability_rows(
     if base_row is None:
         return []
 
-    input_gold = _food_revenue_float(base_row.get("input_gold"))
-    goods_input_gold = _food_revenue_float(base_row.get("goods_input_gold"))
-    base_output_gold = _food_revenue_float(base_row.get("base_output_gold"))
+    input_gold = _province_food_sales_float(base_row.get("input_gold"))
+    goods_input_gold = _province_food_sales_float(base_row.get("goods_input_gold"))
+    base_output_gold = _province_food_sales_float(base_row.get("base_output_gold"))
     if not math.isfinite(base_output_gold):
         return []
 
     rows: list[dict[str, Any]] = []
     for row in rank_rows:
-        modifier = _food_revenue_float(row.get("base_full_storage"))
+        modifier = _province_food_sales_float(row.get("base_full_storage"))
         output_gold = base_output_gold * (1.0 + modifier)
         profit_gold = output_gold - input_gold if math.isfinite(input_gold) else math.nan
         profit_ex_food = (
@@ -2158,7 +2186,7 @@ def _food_revenue_rank_profitability_rows(
     return rows
 
 
-def _food_revenue_scenario_price_label(scenario: str) -> str:
+def _province_food_sales_scenario_price_label(scenario: str) -> str:
     return {
         "cheap_50": "50%",
         "base_100": "100%",
@@ -2166,25 +2194,25 @@ def _food_revenue_scenario_price_label(scenario: str) -> str:
     }.get(scenario, scenario)
 
 
-def _food_revenue_solve_component_target(
+def _province_food_sales_solve_component_target(
     *,
     total_modifier: float,
     known_modifiers: Sequence[float],
 ) -> float:
-    total = _food_revenue_float(total_modifier)
+    total = _province_food_sales_float(total_modifier)
     if not math.isfinite(total):
         return math.nan
 
     known_total = 0.0
     for modifier in known_modifiers:
-        value = _food_revenue_float(modifier)
+        value = _province_food_sales_float(modifier)
         if not math.isfinite(value):
             return math.nan
         known_total += value
     return total - known_total
 
 
-def _food_revenue_storage_full_target_for_edge(
+def _province_food_sales_storage_full_target_for_edge(
     edge: tuple[str, str, str, str],
     *,
     matrix_targets: Mapping[tuple[str, str, str, str], float],
@@ -2195,17 +2223,17 @@ def _food_revenue_storage_full_target_for_edge(
     rank, price, storage, starving = edge
     if storage != "full":
         raise ValueError("storage target edge must use full storage")
-    return _food_revenue_solve_component_target(
-        total_modifier=_food_revenue_float(matrix_targets.get(edge)),
+    return _province_food_sales_solve_component_target(
+        total_modifier=_province_food_sales_float(matrix_targets.get(edge)),
         known_modifiers=(
-            _food_revenue_float(rank_targets.get(rank)),
-            _food_revenue_float(price_targets.get(price)),
-            _food_revenue_float(starving_targets.get(starving)),
+            _province_food_sales_float(rank_targets.get(rank)),
+            _province_food_sales_float(price_targets.get(price)),
+            _province_food_sales_float(starving_targets.get(starving)),
         ),
     )
 
 
-def _food_revenue_storage_raw_target_for_edge(
+def _province_food_sales_storage_raw_target_for_edge(
     edge: tuple[str, str, str, str],
     *,
     growth_cap: float,
@@ -2214,10 +2242,10 @@ def _food_revenue_storage_raw_target_for_edge(
     price_targets: Mapping[str, float],
     starving_targets: Mapping[str, float],
 ) -> float:
-    cap = _food_revenue_float(growth_cap)
+    cap = _province_food_sales_float(growth_cap)
     if not math.isfinite(cap) or cap == 0.0:
         return math.nan
-    return _food_revenue_storage_full_target_for_edge(
+    return _province_food_sales_storage_full_target_for_edge(
         edge,
         matrix_targets=matrix_targets,
         rank_targets=rank_targets,
@@ -2226,98 +2254,98 @@ def _food_revenue_storage_raw_target_for_edge(
     ) / cap
 
 
-def _food_revenue_check_report(
+def _province_food_sales_check_report(
     inputs: Mapping[str, Any],
     *,
     tolerance: float,
 ) -> dict[str, Any]:
     static_values = dict(inputs.get("static") or {})
     rank_values = dict(inputs.get("ranks") or {})
-    growth_cap = _food_revenue_float(inputs.get("growth_cap"))
-    storage_raw = _food_revenue_float(static_values.get("positive_province_food_growth"))
-    cheap_raw = _food_revenue_float(static_values.get("cheap_food_in_location"))
-    expensive_raw = _food_revenue_float(static_values.get("expensive_food_in_location"))
-    starving = _food_revenue_float(static_values.get("province_starving"))
+    growth_cap = _province_food_sales_float(inputs.get("growth_cap"))
+    storage_raw = _province_food_sales_float(static_values.get("positive_province_food_growth"))
+    cheap_raw = _province_food_sales_float(static_values.get("cheap_food_in_location"))
+    expensive_raw = _province_food_sales_float(static_values.get("expensive_food_in_location"))
+    starving = _province_food_sales_float(static_values.get("province_starving"))
 
     component_rows: list[dict[str, Any]] = []
     component_rows.append(
-        _food_revenue_check_row(
+        _province_food_sales_check_row(
             "growth storage cap",
             growth_cap,
-            FOOD_REVENUE_GROWTH_CAP_TARGET,
+            PROVINCE_FOOD_SALES_GROWTH_CAP_TARGET,
             tolerance,
         )
     )
     component_rows.append(
-        _food_revenue_check_row(
+        _province_food_sales_check_row(
             "cheap raw modifier",
             cheap_raw,
-            FOOD_REVENUE_STATIC_TARGETS["cheap_food_in_location"],
+            PROVINCE_FOOD_SALES_STATIC_TARGETS["cheap_food_in_location"],
             tolerance,
         )
     )
     component_rows.append(
-        _food_revenue_check_row(
+        _province_food_sales_check_row(
             "cheap cap effect (food price 0x)",
-            cheap_raw * FOOD_REVENUE_PRICE_CAP_SCALE,
-            FOOD_REVENUE_CHEAP_CAP_TARGET,
+            cheap_raw * PROVINCE_FOOD_SALES_PRICE_CAP_SCALE,
+            PROVINCE_FOOD_SALES_CHEAP_CAP_TARGET,
             tolerance,
         )
     )
     component_rows.append(
-        _food_revenue_check_row(
+        _province_food_sales_check_row(
             "cheap scenario effect (food price 50%)",
-            cheap_raw * FOOD_REVENUE_PRICE_SCENARIO_SCALE,
-            FOOD_REVENUE_STATIC_TARGETS["cheap_food_in_location"]
-            * FOOD_REVENUE_PRICE_SCENARIO_SCALE,
+            cheap_raw * PROVINCE_FOOD_SALES_PRICE_SCENARIO_SCALE,
+            PROVINCE_FOOD_SALES_STATIC_TARGETS["cheap_food_in_location"]
+            * PROVINCE_FOOD_SALES_PRICE_SCENARIO_SCALE,
             tolerance,
         )
     )
     component_rows.append(
-        _food_revenue_check_row("base scenario effect (food price 100%)", 0.0, 0.0, tolerance)
+        _province_food_sales_check_row("base scenario effect (food price 100%)", 0.0, 0.0, tolerance)
     )
     component_rows.append(
-        _food_revenue_check_row(
+        _province_food_sales_check_row(
             "expensive scenario effect (food price 150%)",
-            expensive_raw * FOOD_REVENUE_PRICE_SCENARIO_SCALE,
-            FOOD_REVENUE_STATIC_TARGETS["expensive_food_in_location"]
-            * FOOD_REVENUE_PRICE_SCENARIO_SCALE,
+            expensive_raw * PROVINCE_FOOD_SALES_PRICE_SCENARIO_SCALE,
+            PROVINCE_FOOD_SALES_STATIC_TARGETS["expensive_food_in_location"]
+            * PROVINCE_FOOD_SALES_PRICE_SCENARIO_SCALE,
             tolerance,
         )
     )
     component_rows.append(
-        _food_revenue_check_row(
+        _province_food_sales_check_row(
             "expensive cap effect (food price 2x)",
-            expensive_raw * FOOD_REVENUE_PRICE_CAP_SCALE,
-            FOOD_REVENUE_EXPENSIVE_CAP_TARGET,
+            expensive_raw * PROVINCE_FOOD_SALES_PRICE_CAP_SCALE,
+            PROVINCE_FOOD_SALES_EXPENSIVE_CAP_TARGET,
             tolerance,
         )
     )
     component_rows.append(
-        _food_revenue_check_row(
+        _province_food_sales_check_row(
             "expensive raw modifier",
             expensive_raw,
-            FOOD_REVENUE_STATIC_TARGETS["expensive_food_in_location"],
+            PROVINCE_FOOD_SALES_STATIC_TARGETS["expensive_food_in_location"],
             tolerance,
         )
     )
-    storage_full_target = _food_revenue_storage_full_target_for_edge(
-        FOOD_REVENUE_STORAGE_TARGET_EDGE,
-        matrix_targets=FOOD_REVENUE_MATRIX_TARGETS,
-        rank_targets=FOOD_REVENUE_RANK_TARGETS,
-        price_targets=FOOD_REVENUE_EDGE_PRICE_TARGETS,
-        starving_targets=FOOD_REVENUE_EDGE_STARVING_TARGETS,
+    storage_full_target = _province_food_sales_storage_full_target_for_edge(
+        PROVINCE_FOOD_SALES_STORAGE_TARGET_EDGE,
+        matrix_targets=PROVINCE_FOOD_SALES_MATRIX_TARGETS,
+        rank_targets=PROVINCE_FOOD_SALES_RANK_TARGETS,
+        price_targets=PROVINCE_FOOD_SALES_EDGE_PRICE_TARGETS,
+        starving_targets=PROVINCE_FOOD_SALES_EDGE_STARVING_TARGETS,
     )
-    storage_raw_target = _food_revenue_storage_raw_target_for_edge(
-        FOOD_REVENUE_STORAGE_TARGET_EDGE,
+    storage_raw_target = _province_food_sales_storage_raw_target_for_edge(
+        PROVINCE_FOOD_SALES_STORAGE_TARGET_EDGE,
         growth_cap=growth_cap,
-        matrix_targets=FOOD_REVENUE_MATRIX_TARGETS,
-        rank_targets=FOOD_REVENUE_RANK_TARGETS,
-        price_targets=FOOD_REVENUE_EDGE_PRICE_TARGETS,
-        starving_targets=FOOD_REVENUE_EDGE_STARVING_TARGETS,
+        matrix_targets=PROVINCE_FOOD_SALES_MATRIX_TARGETS,
+        rank_targets=PROVINCE_FOOD_SALES_RANK_TARGETS,
+        price_targets=PROVINCE_FOOD_SALES_EDGE_PRICE_TARGETS,
+        starving_targets=PROVINCE_FOOD_SALES_EDGE_STARVING_TARGETS,
     )
     component_rows.append(
-        _food_revenue_check_row(
+        _province_food_sales_check_row(
             "stored-food raw modifier",
             storage_raw,
             storage_raw_target,
@@ -2325,7 +2353,7 @@ def _food_revenue_check_report(
         )
     )
     component_rows.append(
-        _food_revenue_check_row(
+        _province_food_sales_check_row(
             "stored-food full effect",
             storage_raw * growth_cap,
             storage_full_target,
@@ -2333,18 +2361,18 @@ def _food_revenue_check_report(
         )
     )
     component_rows.append(
-        _food_revenue_check_row(
+        _province_food_sales_check_row(
             "starving boost",
             starving,
-            FOOD_REVENUE_STARVING_TARGET,
+            PROVINCE_FOOD_SALES_STARVING_TARGET,
             tolerance,
         )
     )
-    for rank, target in FOOD_REVENUE_RANK_TARGETS.items():
+    for rank, target in PROVINCE_FOOD_SALES_RANK_TARGETS.items():
         component_rows.append(
-            _food_revenue_check_row(
+            _province_food_sales_check_row(
                 f"rank baseline {rank}",
-                _food_revenue_float(rank_values.get(rank)),
+                _province_food_sales_float(rank_values.get(rank)),
                 target,
                 tolerance,
             )
@@ -2353,29 +2381,29 @@ def _food_revenue_check_report(
     price_rows = [
         {
             "scenario": "cheap_50",
-            "modifier": cheap_raw * FOOD_REVENUE_PRICE_SCENARIO_SCALE,
+            "modifier": cheap_raw * PROVINCE_FOOD_SALES_PRICE_SCENARIO_SCALE,
         },
         {"scenario": "base_100", "modifier": 0.0},
         {
             "scenario": "expensive_150",
-            "modifier": expensive_raw * FOOD_REVENUE_PRICE_SCENARIO_SCALE,
+            "modifier": expensive_raw * PROVINCE_FOOD_SALES_PRICE_SCENARIO_SCALE,
         },
-        {"scenario": "cheap_cap_0x", "modifier": cheap_raw * FOOD_REVENUE_PRICE_CAP_SCALE},
+        {"scenario": "cheap_cap_0x", "modifier": cheap_raw * PROVINCE_FOOD_SALES_PRICE_CAP_SCALE},
         {
             "scenario": "expensive_cap_2x",
-            "modifier": expensive_raw * FOOD_REVENUE_PRICE_CAP_SCALE,
+            "modifier": expensive_raw * PROVINCE_FOOD_SALES_PRICE_CAP_SCALE,
         },
     ]
     for row in price_rows:
         row["output_multiplier"] = 1.0 + row["modifier"]
 
     storage_full = storage_raw * growth_cap
-    cheap_cap = cheap_raw * FOOD_REVENUE_PRICE_CAP_SCALE
-    expensive_cap = expensive_raw * FOOD_REVENUE_PRICE_CAP_SCALE
+    cheap_cap = cheap_raw * PROVINCE_FOOD_SALES_PRICE_CAP_SCALE
+    expensive_cap = expensive_raw * PROVINCE_FOOD_SALES_PRICE_CAP_SCALE
     profitability_rows = list(inputs.get("profitability_rows") or [])
     rank_rows = []
-    for rank in FOOD_REVENUE_RANK_TARGETS:
-        baseline = _food_revenue_float(rank_values.get(rank))
+    for rank in PROVINCE_FOOD_SALES_RANK_TARGETS:
+        baseline = _province_food_sales_float(rank_values.get(rank))
         rank_rows.append(
             {
                 "rank": rank,
@@ -2400,8 +2428,8 @@ def _food_revenue_check_report(
         {"starving": "yes", "modifier": starving},
     ]
     matrix_rows = []
-    for rank in FOOD_REVENUE_RANK_TARGETS:
-        rank_modifier = _food_revenue_float(rank_values.get(rank))
+    for rank in PROVINCE_FOOD_SALES_RANK_TARGETS:
+        rank_modifier = _province_food_sales_float(rank_values.get(rank))
         for price_row in edge_price_rows:
             for storage_row in edge_storage_rows:
                 for starving_row in edge_starving_rows:
@@ -2423,9 +2451,9 @@ def _food_revenue_check_report(
                             "starving_modifier": starving_row["modifier"],
                             "total_modifier": total_modifier,
                             "in_band": (
-                                FOOD_REVENUE_TOTAL_MODIFIER_MIN - tolerance
+                                PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MIN - tolerance
                                 <= total_modifier
-                                <= FOOD_REVENUE_TOTAL_MODIFIER_MAX + tolerance
+                                <= PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MAX + tolerance
                             ),
                             "output_multiplier": 1.0 + total_modifier,
                         }
@@ -2440,11 +2468,11 @@ def _food_revenue_check_report(
         ): row
         for row in matrix_rows
     }
-    for key, target in FOOD_REVENUE_MATRIX_TARGETS.items():
+    for key, target in PROVINCE_FOOD_SALES_MATRIX_TARGETS.items():
         row = matrix_by_key.get(key)
-        parsed = math.nan if row is None else _food_revenue_float(row["total_modifier"])
+        parsed = math.nan if row is None else _province_food_sales_float(row["total_modifier"])
         component_rows.append(
-            _food_revenue_check_row(
+            _province_food_sales_check_row(
                 f"matrix {' '.join(key)} total",
                 parsed,
                 target,
@@ -2464,7 +2492,7 @@ def _food_revenue_check_report(
         "rank_rows": rank_rows,
         "matrix_rows": matrix_rows,
         "profitability_rows": profitability_rows,
-        "rank_profitability_rows": _food_revenue_rank_profitability_rows(
+        "rank_profitability_rows": _province_food_sales_rank_profitability_rows(
             rank_rows,
             profitability_rows,
         ),
@@ -2474,7 +2502,7 @@ def _food_revenue_check_report(
     }
 
 
-def _food_revenue_check_row(
+def _province_food_sales_check_row(
     name: str,
     parsed: float,
     target: float,
@@ -2491,7 +2519,7 @@ def _food_revenue_check_row(
     }
 
 
-def _food_revenue_float(value: object) -> float:
+def _province_food_sales_float(value: object) -> float:
     if isinstance(value, bool) or value is None:
         return math.nan
     try:
@@ -2501,8 +2529,8 @@ def _food_revenue_float(value: object) -> float:
     return number if math.isfinite(number) else math.nan
 
 
-def _format_food_revenue_check_report(report: Mapping[str, Any]) -> str:
-    lines = ["Food Revenue parsed edge check"]
+def _format_province_food_sales_check_report(report: Mapping[str, Any]) -> str:
+    lines = ["Province Food Sales parsed edge check"]
     warnings = list(report.get("warnings") or [])
     if warnings:
         lines.append(f"parser_warnings={len(warnings)}")
@@ -2537,9 +2565,9 @@ def _format_food_revenue_check_report(report: Mapping[str, Any]) -> str:
             "  ".join(
                 [
                     str(row["name"]).ljust(name_width),
-                    _format_food_revenue_value(row["parsed"]).rjust(8),
-                    _format_food_revenue_value(row["target"]).rjust(8),
-                    _format_food_revenue_value(row["delta"]).rjust(8),
+                    _format_province_food_sales_value(row["parsed"]).rjust(8),
+                    _format_province_food_sales_value(row["target"]).rjust(8),
+                    _format_province_food_sales_value(row["delta"]).rjust(8),
                     "ok" if row["ok"] else "FAIL",
                 ]
             )
@@ -2554,7 +2582,7 @@ def _format_food_revenue_check_report(report: Mapping[str, Any]) -> str:
             "  ".join(
                 [
                     str(row["scenario"]).ljust(17),
-                    _format_food_revenue_value(row["modifier"]).rjust(8),
+                    _format_province_food_sales_value(row["modifier"]).rjust(8),
                     f"{row['output_multiplier']:.3f}".rjust(11),
                 ]
             )
@@ -2573,10 +2601,10 @@ def _format_food_revenue_check_report(report: Mapping[str, Any]) -> str:
             "  ".join(
                 [
                     str(row["rank"]).ljust(16),
-                    _format_food_revenue_value(row["base_full_storage"]).rjust(11),
-                    _format_food_revenue_value(row["cheap_cap_full_storage"]).rjust(16),
-                    _format_food_revenue_value(row["expensive_cap_empty"]).rjust(13),
-                    _format_food_revenue_value(row["expensive_cap_starving"]).rjust(22),
+                    _format_province_food_sales_value(row["base_full_storage"]).rjust(11),
+                    _format_province_food_sales_value(row["cheap_cap_full_storage"]).rjust(16),
+                    _format_province_food_sales_value(row["expensive_cap_empty"]).rjust(13),
+                    _format_province_food_sales_value(row["expensive_cap_starving"]).rjust(22),
                 ]
             )
         )
@@ -2597,13 +2625,13 @@ def _format_food_revenue_check_report(report: Mapping[str, Any]) -> str:
                     [
                         str(row["scenario"]).ljust(13),
                         str(row["food_price"]).rjust(10),
-                        _format_food_revenue_unsigned(row["input_gold"]).rjust(5),
-                        _format_food_revenue_unsigned(row["base_output_gold"]).rjust(8),
-                        _format_food_revenue_value(row["required_output_modifier"]).rjust(7),
-                        _format_food_revenue_value(row["actual_output_modifier"]).rjust(10),
-                        _format_food_revenue_value(row["modifier_margin"]).rjust(10),
-                        _format_food_revenue_unsigned(row["output_gold"]).rjust(6),
-                        _format_food_revenue_value(row["profit_gold"]).rjust(6),
+                        _format_province_food_sales_unsigned(row["input_gold"]).rjust(5),
+                        _format_province_food_sales_unsigned(row["base_output_gold"]).rjust(8),
+                        _format_province_food_sales_value(row["required_output_modifier"]).rjust(7),
+                        _format_province_food_sales_value(row["actual_output_modifier"]).rjust(10),
+                        _format_province_food_sales_value(row["modifier_margin"]).rjust(10),
+                        _format_province_food_sales_unsigned(row["output_gold"]).rjust(6),
+                        _format_province_food_sales_value(row["profit_gold"]).rjust(6),
                         "profit" if row["profitable"] else "loss",
                     ]
                 )
@@ -2620,10 +2648,10 @@ def _format_food_revenue_check_report(report: Mapping[str, Any]) -> str:
                 "  ".join(
                     [
                         str(row["rank"]).ljust(16),
-                        _format_food_revenue_value(row["modifier"]).rjust(9),
-                        _format_food_revenue_unsigned(row["output_gold"]).rjust(6),
-                        _format_food_revenue_value(row["profit_gold"]).rjust(6),
-                        _format_food_revenue_value(row["profit_ex_food"]).rjust(14),
+                        _format_province_food_sales_value(row["modifier"]).rjust(9),
+                        _format_province_food_sales_unsigned(row["output_gold"]).rjust(6),
+                        _format_province_food_sales_value(row["profit_gold"]).rjust(6),
+                        _format_province_food_sales_value(row["profit_ex_food"]).rjust(14),
                         "profit" if row["profitable"] else "loss",
                     ]
                 )
@@ -2646,11 +2674,11 @@ def _format_food_revenue_check_report(report: Mapping[str, Any]) -> str:
                     str(row["price"]).ljust(16),
                     str(row["storage"]).ljust(7),
                     str(row["starving"]).ljust(8),
-                    _format_food_revenue_value(row["rank_modifier"]).rjust(8),
-                    _format_food_revenue_value(row["price_modifier"]).rjust(9),
-                    _format_food_revenue_value(row["storage_modifier"]).rjust(11),
-                    _format_food_revenue_value(row["starving_modifier"]).rjust(12),
-                    _format_food_revenue_value(row["total_modifier"]).rjust(9),
+                    _format_province_food_sales_value(row["rank_modifier"]).rjust(8),
+                    _format_province_food_sales_value(row["price_modifier"]).rjust(9),
+                    _format_province_food_sales_value(row["storage_modifier"]).rjust(11),
+                    _format_province_food_sales_value(row["starving_modifier"]).rjust(12),
+                    _format_province_food_sales_value(row["total_modifier"]).rjust(9),
                     f"{row['output_multiplier']:.3f}".rjust(11),
                     "ok" if row["in_band"] else "FAIL",
                 ]
@@ -2663,8 +2691,8 @@ def _format_food_revenue_check_report(report: Mapping[str, Any]) -> str:
         lines.append(
             "matrix band failures: "
             f"{len(matrix_band_failures)} rows outside "
-            f"[{FOOD_REVENUE_TOTAL_MODIFIER_MIN:+.3f}, "
-            f"{FOOD_REVENUE_TOTAL_MODIFIER_MAX:+.3f}]"
+            f"[{PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MIN:+.3f}, "
+            f"{PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MAX:+.3f}]"
         )
 
     failures = list(report.get("failures") or [])
@@ -2676,7 +2704,7 @@ def _format_food_revenue_check_report(report: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def _format_food_revenue_value(value: object) -> str:
+def _format_province_food_sales_value(value: object) -> str:
     try:
         number = float(value)
     except (TypeError, ValueError):
@@ -2688,7 +2716,7 @@ def _format_food_revenue_value(value: object) -> str:
     return f"{number:+.3f}"
 
 
-def _format_food_revenue_unsigned(value: object) -> str:
+def _format_province_food_sales_unsigned(value: object) -> str:
     try:
         number = float(value)
     except (TypeError, ValueError):

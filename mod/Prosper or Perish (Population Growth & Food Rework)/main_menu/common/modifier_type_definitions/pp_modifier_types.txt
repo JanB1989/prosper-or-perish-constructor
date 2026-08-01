@@ -77,3 +77,19 @@ pp_road_wardens_yard_price_cost_modifier={
 		category=country
 	}
 }
+
+pp_province_food_storage_months={
+	color=good
+	decimals=0
+	game_data={
+		category=location
+	}
+}
+
+pp_victuals_market_import_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}

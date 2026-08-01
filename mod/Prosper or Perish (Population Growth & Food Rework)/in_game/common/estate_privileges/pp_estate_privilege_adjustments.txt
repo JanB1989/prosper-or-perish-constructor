@@ -24,3 +24,16 @@ TRY_REPLACE:land_owning_farmers = {
 		monthly_towards_free_subjects = societal_value_monthly_move
 	}
 }
+
+# Full replacement keeps the privilege tooltip to one prosperity row.
+TRY_REPLACE:market_fairs = {
+	estate = burghers_estate
+
+	country_modifier = {
+		monthly_towards_decentralization = societal_value_monthly_move
+		global_monthly_prosperity = 0.00075
+		global_building_establishment_speed = -0.1
+		burghers_estate_target_satisfaction = medium_privilege_target_satisfaction
+		global_burghers_estate_power = 0.25
+	}
+}

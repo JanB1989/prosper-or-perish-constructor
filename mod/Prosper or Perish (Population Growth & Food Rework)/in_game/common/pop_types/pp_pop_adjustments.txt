@@ -1,22 +1,22 @@
 ﻿# Cranked up food consumption base by 50% across the board, except for peasants (10% up)
 TRY_INJECT:nobles = {
-	pop_food_consumption = 30 # 25.0 # 20.0
+	pop_food_consumption = 25 # 25.0 # 20.0
 	promotion_factor = 0.3
 }
 TRY_INJECT:clergy = {
-	pop_food_consumption = 12.5 # 6.5 # 5.0
+	pop_food_consumption = 10 # 6.5 # 5.0
 	promotion_factor = 0.3
 }
 TRY_INJECT:burghers = {
-	pop_food_consumption = 12.5 # 6.5 # 4.0
+	pop_food_consumption = 10 # 6.5 # 4.0
 	promotion_factor = 0.25
 	pop_percentage_impact = {
 		local_pop_promotion_speed = 0.001
 	}
 }
 TRY_INJECT:laborers = {
-	pop_food_consumption = 2.00
-	promotion_factor = 2.50
+	pop_food_consumption = 1.5
+	promotion_factor = 4
 	upper = yes
 	pop_percentage_impact = {
 		local_monthly_development = 0.003
@@ -27,8 +27,8 @@ TRY_INJECT:laborers = {
 	}
 }
 TRY_INJECT:soldiers = {
-	pop_food_consumption = 5.0
-	promotion_factor = 0.5
+	pop_food_consumption = 4.0
+	promotion_factor = 1
 	upper = yes
 	pop_percentage_impact = {
 		local_max_control = 1.0
@@ -36,7 +36,7 @@ TRY_INJECT:soldiers = {
 }
 TRY_INJECT:peasants = {
 	pop_food_consumption = 1.0 # 1.0
-	promotion_factor = 0.25
+	promotion_factor = 0.5
 	pop_percentage_impact = {
 		local_devastation_recovery = 0.002
 		local_construction_speed = 0.50

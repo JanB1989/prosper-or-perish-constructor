@@ -1,54 +1,48 @@
-﻿## Prosper or Perish - required modifier types for the food_revenue good.
+﻿## Prosper or Perish - required modifier types for the manual_labor_cost good.
 ## The engine expects these to exist for every good key.
-ban_exports_of_food_revenue={
+ban_exports_of_manual_labor_cost={
 	boolean=yes
 	game_data={
 		category=country
 	}
 }
-ban_imports_of_food_revenue={
+ban_imports_of_manual_labor_cost={
 	boolean=yes
 	game_data={
 		category=country
 	}
 }
-local_food_revenue_output_modifier={
+local_manual_labor_cost_output_modifier={
 	percent=yes
 	game_data={
 		category=location
 	}
 }
-global_food_revenue_output_modifier={
+global_manual_labor_cost_output_modifier={
 	percent=yes
 	game_data={
 		category=country
 	}
 }
-global_food_revenue_modifier={
+global_manual_labor_cost_pop_demand={
 	percent=yes
 	game_data={
 		category=country
 	}
 }
-global_food_revenue_pop_demand={
-	percent=yes
-	game_data={
-		category=country
-	}
-}
-can_extract_food_revenue={
+can_extract_manual_labor_cost={
 	boolean=yes
 	game_data={
 		category=country
 	}
 }
-food_revenue_impacts_inflation={
+manual_labor_cost_impacts_inflation={
 	percent=yes
 	game_data={
 		category=country
 	}
 }
-food_revenue_used_for_minting={
+manual_labor_cost_used_for_minting={
 	boolean=yes
 	game_data={
 		category=country

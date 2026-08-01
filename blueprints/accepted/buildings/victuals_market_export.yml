@@ -1,0 +1,78 @@
+version: 2
+tag: victuals_market_export
+output_tag: victuals_market
+building:
+  key: victuals_market
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_province_food_to_market
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    increase_per_level_cost = 0.13
+    max_levels = victuals_market_max_level
+    pop_type = nobles
+    employment_size = 0.050
+    price = pp_victuals_market_price
+    category = consumer_goods_category
+    custom_tags = { pp_food_security_priority pp_food_distribution_priority }
+    icon = victuals_market
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    ai_forbid_shutdown = yes
+    important_for_AI = yes
+    can_close = yes
+    forbidden_for_estates = no
+    AI_ignore_available_worker_flag = yes
+    build_time = 365
+    construction_demand = victuals_market_construction
+
+    unique_production_methods = {
+      pp_province_food_to_market = {
+        produced = province_food_sales
+        victuals = -1.0
+        offset = 5
+        manual_labor_cost = 0.5
+        output = 3.0
+        category = building_maintenance
+      }
+    }
+
+    raw_modifier = {
+    }
+
+    modifier = {
+      local_province_food_sales_output_modifier = -0.012
+      local_monthly_food = -30.0
+      local_nobles_estate_power = 0.05
+      local_peasant_enfranchisment = -0.01
+      local_food_capacity = 1200
+    }
+prices:
+  - key: pp_victuals_market_price
+    body: |2-
+      {gold = 50}
+localization:
+  entries:
+    victuals_market: Victuals Market (Export)
+    victuals_market_desc: Collects food from the province and sells it into the goods market as [ShowGoodsName('victuals')|e].
+    victuals_market_slot_0: Victuals Export
+    victuals_market_construction: Victuals Market Construction
+    pp_province_food_to_market: Export Province Food
+    pp_victuals_market_price: Victuals Market Price
+icon:
+  source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/victuals_market.dds
+  output_dds: victuals_market.dds
+  size: 512
+
+evaluation:
+  allow_rules:
+    profit_percent: Province food market transfers intentionally use internal balancing goods.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline.
+    amortization_months: Province Food Sales output intentionally breaks normal payback bounds.

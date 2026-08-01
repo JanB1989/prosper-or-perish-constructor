@@ -1,0 +1,80 @@
+version: 2
+tag: dummy_victuals_producer
+building:
+  key: dummy_victuals_producer
+  mode: CREATE
+  source: pp_dummy_victuals_producer.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_dummy_victuals_export
+        - pp_dummy_victuals_import
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    increase_per_level_cost = 0.13
+    max_levels = 100
+    pop_type = laborers
+    employment_size = 1
+    category = consumer_goods_category
+    icon = victuals_market
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = workshop_build_time
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+      pp_dummy_victuals_export = {
+        produced = province_food_sales
+        victuals = -1.0
+        offset = 5
+        manual_labor_cost = 0.5
+        output = 3.0
+        category = building_maintenance
+      }
+      pp_dummy_victuals_import = {
+        produced = province_food_purchase
+        victuals = 1.0
+        manual_labor_cost = 0.5
+        local_food = -60
+        output = 3.0
+        category = building_maintenance
+      }
+    }
+
+    raw_modifier = {
+    }
+
+    modifier = {
+      local_province_food_sales_output_modifier = -0.012
+      local_province_food_purchase_output_modifier = -0.012
+      local_monthly_food = -30.0
+      local_nobles_estate_power = 0.05
+      local_peasant_enfranchisment = -0.01
+      local_food_capacity = 1200
+    }
+localization:
+  entries:
+    dummy_victuals_producer: Dummy Victuals Producer
+    dummy_victuals_producer_desc: A simple local enterprise that provides [ShowGoodsName('victuals')|e] without drawing on traded inputs.
+    dummy_victuals_producer_slot_0: Victuals Trade
+    pp_dummy_victuals_export: Sell Victuals to Trade Good Market
+    pp_dummy_victuals_import: Buy Victuals from Trade Good Market
+evaluation:
+  allow_rules:
+    profit_percent: The input-free dummy method deliberately has no material cost.
+    input_throughput: The input-free dummy method deliberately has no input throughput.
+    output_throughput: The dummy market-transfer outputs are intentionally not scaled to worker throughput.
+    base_output_per_1k: The dummy output is intentionally conspicuous and is not a balance target.
+    amortization_months: The input-free dummy method is a template rather than a balanced production chain.
+  production_methods:
+    pp_dummy_victuals_export:
+      production_efficiency: 1.00
+    pp_dummy_victuals_import:
+      production_efficiency: 1.00

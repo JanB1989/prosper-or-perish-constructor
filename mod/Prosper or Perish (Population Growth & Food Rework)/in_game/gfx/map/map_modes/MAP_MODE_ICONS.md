@@ -1,4 +1,4 @@
-# Map Mode Icons — How They Work
+﻿# Map Mode Icons — How They Work
 
 ## ⚠️ ICON PATH — READ FIRST
 
@@ -113,6 +113,9 @@ The legend key `MAPMODE_<ID>` uses the ID in uppercase with underscores.
 | `pp_farming_village_capacity` | `pp_farming_village_capacity.dds` | pp_food_map_modes.txt |
 | `pp_fishing_village_capacity` | `pp_fishing_village_capacity.dds` | pp_food_map_modes.txt |
 | `pp_forest_village_capacity` | `pp_forest_village_capacity.dds` | pp_food_map_modes.txt |
+| `pp_market_food_price` | `pp_market_food_price.dds` | pp_food_map_modes.txt |
+| `pp_victuals_market_price` | `pp_victuals_market_price.dds` (copy of `icon_goods_victuals.dds`) | pp_food_map_modes.txt |
+| `pp_positive_province_food_growth` | `pp_positive_province_food_growth.dds` | pp_food_map_modes.txt |
 | `pp_local_fruit_output_modifier` | `pp_local_fruit_output_modifier.dds` | pp_local_output_modifier_map_modes.txt |
 | `pp_local_fish_output_modifier` | `pp_local_fish_output_modifier.dds` | pp_local_output_modifier_map_modes.txt |
 | `pp_local_wool_output_modifier` | `pp_local_wool_output_modifier.dds` | pp_local_output_modifier_map_modes.txt |

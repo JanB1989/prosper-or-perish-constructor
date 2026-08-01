@@ -1,0 +1,2540 @@
+﻿types ExpansionWindowTypes {
+	# type colony_item_card_at_province_select = widget {
+	# 	layoutpolicy_horizontal = expanding
+	# 	datacontext = "[SelectInteractionTargetView.GetCurrentParams.GetTargetObjectFromFlag('target').GetProvinceDefinition]"
+
+	# 	size = { -1 40 }
+
+	# 	hbox = {
+	# 		margin_top = 5
+	# 		card_header_button_01 = {
+	# 			overframe = 1
+	# 			size = { 540 40 }
+
+	# 			block "card_bg" {
+	# 				using = bg_card_header_01
+	# 			}
+
+	# 			tooltipwidget = {
+	# 				ContextualTooltipType = {
+	# 					blockoverride "title_icon" {
+	# 						icon = {
+	# 							using = tooltip_title_icon_size
+	# 							texture = "gfx/interface/icons/flat_icons/geopolitics/current_explorers.dds"
+				
+	# 							glow = {
+	# 								name = "drop_shadow"
+	# 								glow_radius = 3
+	# 								color = {0.0 0.0 0.0 1.0}
+	# 								alpha = 0.3
+	# 							}
+	# 						}
+	# 					}
+
+	# 					blockoverride "title_text" {
+	# 						text = "CREATE_COLONIAL_CHARTER_LOC"
+	# 					}
+				
+	# 					blockoverride "concept_link" {
+	# 						text = "[colonial_charter|e]"
+	# 					}
+
+	# 					blockoverride "tooltip_content"	{
+	# 						TooltipTextBlock = {
+	# 							blockoverride "text" {
+	# 								text = "create_colonial_charter_desc_t"
+	# 							}
+	# 						}
+	# 						datacontext = "[ProvinceDefinition]"
+	# 						TooltipStringPairList = {
+	# 							blockoverride "field_background" {
+	# 								background = {
+	# 									visible = "[Not(IsOdd_int32(PdxGuiWidget.GetIndexInDataModel))]"
+	# 									using = tooltip_table_field_texture
+	# 								}
+	# 							}
+	# 							textcontext = "[GetMonthlyMaintenanceInfoForCountry(Player.Self, ProvinceDefinition.Self, Player.GetCapital)]"
+	# 						}
+	# 					}
+	# 				}
+	# 			}
+
+	# 			hbox = {
+	# 				size = { -1 45 }
+	# 				margin = { 15 0 }
+	# 				spacing = 10
+
+	# 				icon = {
+	# 					size = { 35 35 }
+	# 					texture = "gfx/interface/icons/flat_icons/geopolitics/current_explorers.dds"
+	# 				}
+
+	# 				vbox = {
+	# 					text_single = {
+	# 						text = "CREATE_COLONIAL_CHARTER_LOC"
+	# 						using = layoutpolicy_expanding
+	# 						autoresize = yes
+	# 						default_format = "#yellow_titles"
+	# 					}
+	# 				}
+
+	# 				expand = {}
+	# 			}
+	# 		}
+	# 	}
+	# }
+
+	type possible_colony_item = card_list_button {
+		block "colony_item_size" {
+			using = layoutpolicy_expanding
+		}
+		action_button = {
+			size = { 100% 100% }
+			
+			name = "create colonial charter button"
+			title = "create_colonial_charter"
+			actor = "[Player]"
+			enabled = "[UIAction.IsEnabled]"
+			left_action = {
+				action_name = "create_colonial_charter"
+				parameter = {
+					parameter_name = "target"
+					parameter_value = "[ColonialCharterItem.GetProvinceDefinition]"
+				}
+			}
+
+			tooltipwidget = {
+				ContextualTooltipType = {
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "gfx/interface/icons/flat_icons/geopolitics/current_explorers.dds"
+			
+							glow = {
+								name = "drop_shadow"
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.3
+							}
+						}
+					}
+
+					datacontext = "[ColonialCharterItem.GetProvinceDefinition]"
+					blockoverride "title_text" {
+						text = "CREATE_COLONIAL_CHARTER_TT_LOC"
+					}
+			
+					blockoverride "concept_link" {
+						text = "[colonial_charter|e]"
+					}
+
+					blockoverride "tooltip_content"	{
+						TooltipStringPairList = {
+							textcontext = "[ColonialCharterItem.GetProvinceDefinition.GetUITooltip]"
+						}
+
+						TooltipScrolledStringPairList = {
+							blockoverride "block_scrollarea" { maximumsize = { -1 120 }}
+							textcontext = "[ColonialCharterItem.GetProvinceDefinition.GetMembersInfo]"
+						}
+
+						TooltipStringPairList = {
+							tooltipmeta = {
+								texture = "gfx/interface/icons/modifier_types/colonial_maintenance_cost.dds"
+								game_concept = "[cost|e]"
+								title = "COLONIAL_MAINT_FROM_GOODS_TITLE"
+							}
+							textcontext = "create_colonial_charter_desc_content"
+						}
+
+						TooltipConditionList = {
+							blockoverride "block_title" {
+								text = "game_concept_conditions"
+							}
+							visible = "[ConditionList.HasItems]"
+							datacontext = "[StringToConditionListOnlyPassedAndNeutralIfNot(UIAction.IsLeftClickAndConfirmVisible, UIAction.GetConditions)]"
+						}
+
+						TooltipFlavorTextBlock = {
+							blockoverride "text" {
+								text = "create_colonial_charter_desc_t"
+							}
+						}
+					}
+				}
+			}
+		}
+		hbox = {
+			margin = { 10 0 }
+			spacing = 10
+			datacontext = "[ColonialCharterItem.GetProvinceDefinition]"
+
+			icon = {
+				size = { 35 35 }
+				texture = "gfx/interface/icons/flat_icons/geopolitics/current_explorers.dds"
+			}
+			vbox = {
+				text_single = {
+					maximumsize = { 380 -1 }
+					datacontext = "[ColonialCharterItem.GetProvinceDefinition]"
+					default_format = "#yellow_titles"
+					block "charter_name" {
+						text = "CREATE_COLONIAL_CHARTER"
+					}
+				}
+
+				hbox = {
+					using = layoutpolicy_expanding
+					text_single = {
+						autoresize = yes
+						raw_text = "[ColonialCharterItem.GetMaintenanceCost|2]@gold!"
+					}
+					expand = {}
+				}
+			}
+			
+			expand = {}
+			
+			vbox = {
+				icon = {
+					size = { 24 24 }
+					texture = "gfx/interface/icons/flat_icons/geopolitics/colonial_range.dds"
+				}
+				text_single = {
+					text = "[ColonialCharterItem.GetRangeInfo]"
+				}
+			}
+		}
+		
+		onmousehierarchyenter = "[PdxGuiWidget.SetHighlightProvinceDefinition(ColonialCharterItem.GetProvinceDefinition)]"
+		tooltip_enabled = no
+	}
+
+	type colonial_charter_item = card_list_button {
+		block "colony_item_size" {
+			using = layoutpolicy_expanding
+		}
+		button = {
+			default_format = "#color_white"
+			size = { 100% 100% }
+			name = "abandon charter button"
+
+			button_tooltip_override = {
+				title = "ABANDON_BUTTON"
+			}
+
+			scripted_action_tooltip = {
+				click_type = right
+				click_mode = confirm
+				action_name = "abandon_colonial_charter"
+				actor = "[Player]"
+				parameter = {
+					parameter_name = "target"
+					parameter_value = "[ColonialCharterItem.GetColonialCharter]"
+				}
+			}
+
+			action_tooltip = {
+				click_type = left
+				click_mode = single
+				title = "GO_TO_COLONY"
+				on_action = "[ShowProvinceDefinition(ColonialCharterItem.GetProvinceDefinition)]"
+			}
+
+			datacontext = "[ColonialCharterItem.GetColonialCharter]"
+			tooltipwidget = {
+				using = ColonialCharter_tooltip
+			}
+		}
+		hbox = {
+			margin = { 15 0 }
+			spacing = 5
+			datacontext = "[ColonialCharterItem.GetColonialCharter]"
+			# tooltipwidget = {
+			# 	using = ColonialCharter_tooltip
+			# }
+
+			country_flag_small = {
+				datacontext = "[ColonialCharterItem.GetColonialCharter.GetOwner]"
+			}
+	
+			text_single = {
+				using = layoutpolicy_expanding
+				autoresize = yes
+				maximumsize = { 170 -1}
+				align = left|nobaseline
+				fontsize_min = 6
+				text = "[ColonialCharterItem.GetColonialCharter.GetNameWithNoTooltip]"
+				default_format = "#yellow_titles"
+				block "highlight_name" {	
+					sort_by_left_fade_highlight = {
+						name = "name"
+					}
+				}
+			}
+
+			text_single = {
+				size = { 50 20 }
+				autoresize = no
+				align = center|nobaseline
+				raw_text = "[ColonialCharterItem.GetColonialCharter.GetMonthlyMaintenance|2]@gold!"
+				
+				tooltipwidget = {
+					using = colonial_charter_maintenance_tooltip
+				}
+				block "highlight_cost" {
+					sort_by_highlight = {
+						blockoverride "sort_by_highlight_size" {
+							size = { 100% 300% }
+						}
+						name = "cost"
+					}
+				}
+			}
+	
+			hbox = {
+				tooltipwidget = {
+					using = colonial_charter_migration_tooltip
+				}
+			
+				text_single = {
+					layoutpolicy_vertical = expanding
+					size = { 40 -1 }
+					autoresize = no
+					align = center|nobaseline
+					text = "[ColonialCharterItem.GetColonialCharter.GetMonthlyMigration]"
+					block "highlight_migration" {
+						sort_by_highlight = {
+							blockoverride "sort_by_highlight_size" {
+								size = { 100% 380% }
+							}
+							name = "monthly_migration"
+						}
+					}
+				}
+				icon = {
+					texture_density = 2
+					size = { 20 20 }
+					block "icon_texture" {
+						texture = "gfx/interface/icons/resources/total_population.dds"
+					}
+				}
+			}
+
+			hbox = {
+				tooltipwidget = {
+					using = colonial_charter_progress_tooltip
+				}
+				spacing = 5
+			
+				text_single = {
+					block "highlight_progress" {	
+						sort_by_small_highlight = {
+							size = { 100% 300% }
+							name = "charter_progress"
+						}
+					}
+					size = { 50 20 }
+					autoresize = no
+					align = right|nobaseline
+					raw_text = "[ColonialCharterItem.GetProgress|2]%"
+				}
+
+				piechart = {
+					size = { 30 30 }
+					using = piechart_angles
+
+		
+					pieslice = {
+						texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+						value = "[ColonialCharterItem.GetProgress]"
+						color = { 1 1 1 1 }
+					}
+		
+					pieslice = {
+						texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+						value = "[Subtract_float('(float)100.0', ColonialCharterItem.GetProgress)]"
+						color = { 1 1 1 1 }
+					}
+
+					icon = {
+						size = { 60% 60% }
+						parentanchor = center
+						texture = "gfx/interface/icons/flat_icons/geopolitics/available_colonies.dds"
+					}
+					using = bg_circle_piechart
+				}
+			}
+		}
+
+		onmousehierarchyenter = "[PdxGuiWidget.SetHighlightProvinceDefinition(ColonialCharterItem.GetProvinceDefinition)]"
+		tooltip_enabled = no
+	}
+
+	# type exploration_item_card_at_location_select = widget {
+	# 	layoutpolicy_horizontal = expanding
+	# 	datacontext = "[SelectInteractionTargetView.GetCurrentParams.GetTargetObjectFromFlag('target').GetArea]"
+
+	# 	size = { -1 85 }
+
+	# 	hbox = {
+	# 		margin_top = 5
+	# 		clickable_header_card = {
+	# 			size = { 540 80 }
+
+	# 			tooltipwidget = {
+	# 				ContextualTooltipType = {
+	# 					blockoverride "title_icon"
+	# 					{
+	# 						icon = {
+	# 							size = { 30 30 }
+	# 							visible = "[Area.IsNaval]"
+	# 							texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_sea.dds"
+	# 						}
+
+	# 						icon = {
+	# 							size = { 30 30 }
+	# 							visible = "[Not(Area.IsNaval)]"
+	# 							texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_land.dds"
+	# 						}
+	# 					}
+
+	# 					blockoverride "title_text" {
+	# 						text = "game_concept_exploration"
+	# 					}
+	# 					blockoverride "concept_link" {
+	# 						text = "[exploration|e]"
+	# 					}
+	# 					blockoverride "tooltip_content" {
+	# 						TooltipTextBlock = {
+	# 							blockoverride "text" {
+	# 								text = "start_exploration_desc_tooltip"
+	# 							}
+	# 						}
+	# 					}
+	# 				}
+	# 			}
+
+	# 			#visible = "[Not(PossibleExplorationItem.GetArea.IsNaval)]"
+	# 			#visible = "[Not(PossibleExplorationItem.HasExploration)]"
+	# 			blockoverride "header_bg" {
+
+	# 				background = {
+	# 					texture = "gfx/interface/colors/black.dds"
+	# 					margin = { 1 1 }
+	# 					margin_bottom = 2
+	# 					texture_density = 2
+	# 					alpha = 0.4
+	# 				}
+
+
+	# 				background = {
+	# 					using = color_black_texture
+	# 					modify_texture = {
+	# 						using = color_geopolitics_texture
+	# 					}
+	# 					modify_texture = {
+	# 						texture = "[GetGraphicalCultureTexture('header_pattern')]"
+	# 						texture_density = 2
+	# 						spriteType = corneredtiled
+	# 						blend_mode = overlay
+	# 						alpha = 0.5
+	# 					}
+	# 					modify_texture = {
+	# 						texture = "gfx/interface/component_overlay/cloth_texture.dds"
+	# 						texture_density = 2
+	# 						spriteType = Corneredtiled
+	# 						spriteborder = { 0 0 }
+	# 						blend_mode = overlay
+	# 						alpha = 0.2
+	# 					}
+	# 				}
+	# 			}
+
+	# 			blockoverride "header_button" {
+	# 				card_header_button_01  = {
+	# 					size = { 100% 100% }
+	# 					overframe = 1
+
+	# 					hbox = {
+	# 						margin_left = 5
+	# 						margin_right = 5
+	# 						spacing = 10
+
+	# 						icon = {
+	# 							size = { 30 30 }
+	# 							visible = "[Area.IsNaval]"
+	# 							texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_sea.dds"
+	# 						}
+
+	# 						icon = {
+	# 							size = { 30 30 }
+	# 							visible = "[Not(Area.IsNaval)]"
+	# 							texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_land.dds"
+
+	# 						}
+
+	# 						text_single = {
+	# 							maximumsize = {310 35}
+	# 							text = "[Area.GetNameWithNoTooltip]"
+	# 							default_format = "#yellow_titles"
+	# 						}
+
+	# 						expand = {}
+	# 					}
+	# 				}
+	# 			}
+
+	# 			blockoverride "bottom_content" {
+	# 				icon = {
+	# 					size = { 100% 100% }
+	# 					visible = "[Area.IsNaval]"
+	# 					texture = "gfx/interface/illustrations/geopolitics/coastline.dds"
+	# 					alpha = 0.5
+
+	# 					modify_texture = {
+	# 						texture = "gfx/interface/component_overlay/geo_card_illustration_mask.dds"
+	# 						texture_density = 2
+	# 						spriteType = Corneredstretched
+	# 						blend_mode = alphamultiply
+	# 						alpha = 1
+	# 					}
+
+	# 					modify_texture = {
+	# 						using = overlay_paper_03
+	# 						blend_mode = overlay
+	# 						alpha = 0.5
+	# 					}
+	# 				}
+
+	# 				icon = {
+	# 					size = { 100% 100% }
+	# 					visible = "[And(Not(Area.IsNaval), Area.IsSea)]"
+	# 					texture = "gfx/interface/illustrations/geopolitics/sea.dds"
+	# 					alpha = 0.8
+
+	# 					modify_texture = {
+	# 						texture = "gfx/interface/component_overlay/geo_card_illustration_mask.dds"
+	# 						texture_density = 2
+	# 						spriteType = Corneredstretched
+	# 						blend_mode = alphamultiply
+	# 						alpha = 1
+	# 					}
+
+	# 					modify_texture = {
+	# 						using = overlay_paper_03
+	# 						blend_mode = overlay
+	# 						alpha = 0.5
+	# 					}
+	# 				}
+
+	# 				icon = {
+	# 					size = { 100% 100% }
+	# 					visible = "[And(Not(Area.IsNaval), Not(Area.IsSea))]"
+	# 					texture = "gfx/interface/illustrations/geopolitics/inland.dds" #inland
+	# 					alpha = 0.5
+
+
+	# 					modify_texture = {
+	# 						texture = "gfx/interface/component_overlay/geo_card_illustration_mask.dds"
+	# 						texture_density = 2
+	# 						spriteType = Corneredstretched
+	# 						blend_mode = alphamultiply
+	# 						alpha = 1
+	# 					}
+
+
+	# 					modify_texture = {
+	# 						using = overlay_paper_03
+	# 						blend_mode = overlay
+
+	# 					}
+
+	# 				}
+
+	# 				hbox = {
+	# 					using = layoutpolicy_expanding
+	# 					margin = { 20 0 }
+
+	# 					hbox = {
+	# 						using = layoutpolicy_expanding
+	# 						spacing = 10
+	# 						datacontext = "[Area]"
+
+
+	# 						#time estimate
+	# 						widget = {
+	# 							size = { 50 -1 }
+	# 							using = layoutpolicy_expanding
+
+	# 							text_single = {
+	# 								parentanchor = center
+	# 								align = center|nobaseline
+	# 								size = { 120 20 }
+	# 								margin = {5 5}
+	# 								using = bg_text_mask_container_brown
+
+	# 								text = "EXPLORATION_TIME_ESTIMATE"
+	# 								tooltipwidget = {
+	# 									using = exploration_time_estimate_tt
+	# 								}
+	# 							}
+	# 						}
+
+	# 						#cost estimate per month
+	# 						widget = {
+	# 							using = layoutpolicy_expanding
+	# 							size = { 60 -1 }
+
+	# 							text_single = {
+	# 								parentanchor = center
+	# 								align = center|nobaseline
+	# 								size = { 120 20 }
+	# 								margin = {5 5}
+	# 								using = bg_text_mask_container_brown
+	# 								text = "EXPLORATION_COST_ESTIMATE"
+
+	# 								datacontext = "[Area]"
+	# 								tooltipwidget = {
+	# 									using = exploration_cost_estimate_tt
+	# 								}
+	# 							}
+	# 						}
+	# 					}
+	# 				}
+	# 			}
+	# 		}
+	# 	}
+	# }
+
+	# type conquistador_character_top = widget {
+	# 	datacontext = "[SelectInteractionTargetView.GetCurrentParams.GetTargetObjectFromFlag('target').GetCharacter]"
+	# 	size = { 540 72 }
+	# 	vbox = {
+	# 		margin_top = 5
+	# 		header_paper_card = {
+	# 			size = { 540 72 }
+	# 			using = character_entry
+
+	# 			blockoverride "header_color" {
+	# 				alpha = 0.3
+	# 				using = color_mid_red_texture
+	# 			}
+	# 			blockoverride "name_highlight" {}
+	# 			blockoverride "firstname_highlight" {}
+	# 			blockoverride "regnal_name_highlight" {}
+	# 			blockoverride "nickname_highlight" {}
+	# 			blockoverride "lastname_highlight" {}
+	# 			blockoverride "suffixname_highlight" {}
+	# 			blockoverride "agename_highlight" {}
+	# 			blockoverride "prefixname_highlight" {}
+	# 		}
+	# 	}
+	# }
+
+	type create_colonial_charter_card = select_cell_default {
+		tooltipwidget = { 
+			ContextualTooltipType = {
+				blockoverride "title_text" {
+					text = "create_colonial_charter_select_province"
+				}
+
+				blockoverride "title_icon" {
+					icon = {
+						using = tooltip_title_icon_size
+						texture = "gfx/interface/icons/flat_icons/geopolitics/current_explorers.dds"
+		
+						glow = {
+							name = "drop_shadow"
+							glow_radius = 3
+							color = {0.0 0.0 0.0 1.0}
+							alpha = 0.3
+						}
+					}
+				}
+				blockoverride "concept_link" {
+					text = "[colonial_charter|e]"
+				}
+
+				blockoverride "tooltip_content" {
+					TooltipStringPairList = {
+						visible = "[Not(StringIsEmpty(UIAction.GetDescription))]"
+						textcontext = "[UIAction.GetDescription]" 
+					}
+
+					TooltipConditionList = {
+						blockoverride "block_title" {
+							text = "game_concept_effects"
+						}
+						name = "Effects"
+						visible = "[ConditionList.HasItems]"
+						datacontext = "[StringToConditionListOnlyPassedAndNeutral(UIAction.GetEffects)]"
+					}
+
+					block "conditions_list" {
+						TooltipRequirementsList = {
+							blockoverride "block_title" {
+								text = "game_concept_conditions"
+							}
+							name = "Conditions"
+							visible = "[Not(StringIsEmpty(UIAction.GetConditions))]"
+							textcontext = "[UIAction.GetConditions]"
+						}
+					}
+				}
+
+			}
+		}
+	}
+}
+
+template exploration_item {
+	widget = {
+		size = { 100% 90 }
+
+		onmousehierarchyenter = "[PossibleExplorationItem.OnMouseEnter(PdxGuiWidget.AccessSelf)]"
+		onmousehierarchyleave = "[PossibleExplorationItem.OnMouseLeave(PdxGuiWidget.AccessSelf)]"
+
+		widget = {
+			visible = "[PossibleExplorationItem.HasExploration]"
+			size = { 98% 90 }
+			parentanchor = center
+
+			background = {
+				texture = "gfx/interface/component_tiles/geopolitics/geo_card_gold_bg.dds"
+
+				modify_texture = {
+					using = color_new_gold_texture
+					alpha = 1
+
+				}
+
+				texture_density = 2
+				alpha = 1
+			}
+		}
+
+		clickable_header_card = {
+			size = { 98% 90 }
+			parentanchor = center
+
+			# background
+			blockoverride "header_bg" { 
+
+				background = {
+					texture = "gfx/interface/colors/black.dds"
+					margin = { 1 1 }
+					margin_bottom = 2
+					texture_density = 2
+					alpha = 0.4
+				}
+			
+				# # # # #  Navy Card In Progress
+				background = {					
+					using = color_black_texture
+					modify_texture = {
+						using = color_geopolitics_texture
+					}
+					modify_texture = {
+						texture = "[GetGraphicalCultureTexture('header_pattern')]"
+						texture_density = 1.75
+						spriteType = corneredtiled
+						blend_mode = overlay
+						alpha = 0.5
+					}
+					modify_texture = {
+						texture = "gfx/interface/component_overlay/cloth_texture.dds"
+						texture_density = 2
+						spriteType = Corneredtiled
+						spriteborder = { 0 0 }
+						blend_mode = overlay
+						alpha = 0.2
+					}
+				}
+			
+				# 	visible = "[Not(PossibleExplorationItem.GetArea.IsNaval)]"
+				# 	visible = "[Not(PossibleExplorationItem.HasExploration)]"
+		
+				# # # # #  In Progress Card Detail
+				background = {
+					visible = "[PossibleExplorationItem.HasExploration]"
+					texture = "gfx/interface/component_tiles/geopolitics/geo_inprogress_detail_button.dds"
+					texture_density = 2
+					spriteType = corneredstretched
+					spriteBorder = {0 10}
+					mirror = horizontal
+					alpha = 1
+					modify_texture = {
+						using = color_new_gold_texture
+						alpha = 1
+					}
+				}
+			}
+
+			blockoverride "header_button" {
+				card_header_action_button_01  = {
+					visible = "[Not(PossibleExplorationItem.HasExploration)]"
+					size = { 100% 100% }
+					title = "game_concept_exploration"
+					actor = "[Player]"
+					left_action = {
+						action_name = "start_exploration"
+						parameter = {
+							parameter_name = "target"
+							parameter_value = "[PossibleExplorationItem.GetArea]"
+						}
+					}
+
+					datacontext = "[PossibleExplorationItem.GetArea]"
+
+					tooltipwidget = {
+						ContextualTooltipType = {									
+							blockoverride "title_icon" {
+								icon = {
+									size = { 30 30 }
+									visible = "[Or(PossibleExplorationItem.GetArea.IsNaval, PossibleExplorationItem.GetArea.IsSea)]"					
+									texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_sea.dds"
+								}
+		
+								icon = {
+									size = { 30 30 }
+									visible = "[And(Not(PossibleExplorationItem.GetArea.IsNaval), Not(PossibleExplorationItem.GetArea.IsSea))]"					
+									texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_land.dds"
+									
+								}
+							}
+		
+							blockoverride "title_text" {
+								text = "explore_area_title"
+							}
+							blockoverride "concept_link" {
+								text = "[exploration|e]"
+							}
+							blockoverride "tooltip_content" {
+								TooltipTextBlock = {
+									blockoverride "text" {
+										text = "start_exploration_desc_tooltip"
+									}
+								}
+
+								TooltipStringPairList = {
+									textcontext = "[Area.GetUITooltip]"
+								}
+
+								TooltipStringPairList = {
+									textcontext = "[Area.GetMembersInfo]"
+								}
+							}
+						}
+					}
+
+					hbox = {
+						
+						margin_left = 5
+						margin_right = 5
+						spacing = 10
+						
+						icon = {
+							size = { 30 30 }
+							visible = "[Or(PossibleExplorationItem.GetArea.IsNaval, PossibleExplorationItem.GetArea.IsSea)]"					
+							texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_sea.dds"
+						}
+
+						icon = {
+							size = { 30 30 }
+							visible = "[And(Not(PossibleExplorationItem.GetArea.IsNaval), Not(PossibleExplorationItem.GetArea.IsSea))]"					
+							texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_land.dds"
+							
+						}
+
+						text_single = {
+							maximumsize = {500 35}
+							text = "explore_area_card_name"
+							default_format = "#yellow_titles"
+
+							sort_by_left_fade_highlight = {
+								parentanchor = left|vcenter
+								position = { -45 0 }
+								size = { 300 180% }
+								name = "name"
+							}
+						}	
+
+						expand = {}
+					}
+				}
+
+				card_header_action_button_01  = {
+					visible = "[PossibleExplorationItem.HasExploration]"
+					enabled = yes
+					size = { 100% 100% }
+					
+					title = "game_concept_exploration"
+					actor = "[Player]"
+					right_click_and_hold_action = {
+						action_name = "cancel_exploration"
+						parameter = {
+							parameter_name = "target"
+							parameter_value = "[PossibleExplorationItem.GetArea]"
+						}
+					}
+	
+					tooltipwidget = {
+						ContextualTooltipType = {									
+							blockoverride "title_icon" {
+								icon = {
+									size = { 30 30 }
+									visible = "[PossibleExplorationItem.GetArea.IsNaval]"					
+									texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_sea.dds"
+								}
+		
+								icon = {
+									size = { 30 30 }
+									visible = "[Not(PossibleExplorationItem.GetArea.IsNaval)]"					
+									texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_land.dds"
+									
+								}
+							}
+		
+							blockoverride "title_text" {
+								text = "cancel_exploration"
+							}
+							blockoverride "concept_link" {
+								text = "[exploration|e]"
+							}
+							blockoverride "tooltip_content" {
+								TooltipTextBlock = {
+									blockoverride "text" {
+										text = "cancel_exploration_desc"
+									}
+								}
+							}
+						}
+					}
+
+					hbox = {
+						margin_left = 5
+						margin_right = 5
+						spacing = 10
+
+						icon = {
+							
+							size = { 30 30 }
+							visible = "[PossibleExplorationItem.GetArea.IsNaval]"					
+							texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_sea.dds"
+						}
+
+						icon = {
+							size = { 30 30 }
+							visible = "[Not(PossibleExplorationItem.GetArea.IsNaval)]"					
+							texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_land.dds"
+						}
+
+						text_single = {
+							visible = "[PossibleExplorationItem.HasLiveExploration]"
+							maximumsize = {360 35}
+							text = "exploring_area_card_name"
+							default_format = "#yellow_titles"
+						}	
+
+						text_single = {
+							visible = "[Not(PossibleExplorationItem.HasLiveExploration)]"
+							maximumsize = {360 35}
+							datacontext = "[PossibleExplorationItem.GetExplorationConstruction]"
+							text = "EXPLORATION_CONSTRUCTION_HEADER"
+							default_format = "#yellow_titles"
+						}	
+
+						expand = {}
+					}	
+					
+
+					hbox = {
+						visible = "[PossibleExplorationItem.HasLiveExploration]"
+
+						margin_left = 72
+						margin_right = 5
+						datacontext = "[PossibleExplorationItem.GetExploration]"
+						spacing = 10
+					
+						expand = {}
+
+						hbox = {
+							spacing = 5
+
+							text_single = {
+								layoutpolicy_vertical = expanding
+								autoresize = no
+								size = { 50 -1 }
+								align = center|nobaseline
+
+								raw_text = "[PossibleExplorationItem.GetExploration.GetCurrentProgress|2G]/[PossibleExplorationItem.GetExploration.GetExplorationTime|2V]"
+							}
+
+							piechart = {
+								size = { 29 29 }
+
+								tooltipwidget = {
+									using = exploration_total_progress_tt
+								}
+				
+								using = piechart_angles
+								using = bg_circle_piechart
+				
+								icon = {
+									texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+									size = { 97% 97% }
+									parentanchor = center
+									using = color_value_progress_gray
+								}
+				
+								pieslice_no_highlight = {
+									texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+									value = "[FixedPointToFloat(PossibleExplorationItem.GetExploration.GetCurrentProgress)]"
+									using = color_value_progress_blue
+									alpha = 0.9
+								}
+				
+								pieslice_no_highlight = {
+									texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+									value = "[Subtract_float(FixedPointToFloat(PossibleExplorationItem.GetExploration.GetExplorationTime), FixedPointToFloat(PossibleExplorationItem.GetExploration.GetCurrentProgress))]"
+									using = color_value_progress_gray
+									alpha = 0.9
+								}
+				
+								icon = {
+									size = { 80% 80% }
+									texture = "gfx/interface/icons/flat_icons/geopolitics/current_explorers.dds"
+									parentanchor = center
+								}
+							}
+						}
+					}
+				}
+			}
+
+			blockoverride "bottom_content" {
+				background = {
+					visible = "[PossibleExplorationItem.GetArea.IsNaval]"
+					texture = "gfx/interface/illustrations/geopolitics/coastline.dds"
+					alpha = 1
+
+					modify_texture = {
+						using = overlay_paper_03
+						blend_mode = overlay
+						alpha = 0.5
+					}
+					modify_texture = {
+						texture = "gfx/interface/component_masks/geopolitics_territory_mask.dds"
+						blend_mode = alphamultiply
+					}
+				}
+
+				background = {
+					visible = "[And(Not(PossibleExplorationItem.GetArea.IsNaval), PossibleExplorationItem.GetArea.IsSea)]"
+					texture = "gfx/interface/illustrations/geopolitics/sea.dds"
+					alpha = 1
+					mirror = horizontal
+
+					modify_texture = {
+						using = overlay_paper_03
+						blend_mode = overlay
+						alpha = 0.5
+					}
+					modify_texture = {
+						texture = "gfx/interface/component_masks/geopolitics_territory_mask.dds"
+						blend_mode = alphamultiply
+						mirror = horizontal
+					}
+				}
+
+				background = {
+					visible = "[And(Not(PossibleExplorationItem.GetArea.IsNaval), Not(PossibleExplorationItem.GetArea.IsSea))]"
+					texture = "gfx/interface/illustrations/geopolitics/inland.dds" #inland
+					alpha = 1
+					mirror = horizontal
+
+					modify_texture = {
+						using = overlay_paper_03
+						blend_mode = overlay
+					}
+					modify_texture = {
+						texture = "gfx/interface/component_masks/geopolitics_territory_mask.dds"
+						blend_mode = alphamultiply
+						mirror = horizontal
+					}
+				}
+
+				hbox = {
+					using = layoutpolicy_expanding
+					margin = { 8 0 }
+
+					# no exploration yet
+					hbox = {
+						visible = "[Not(PossibleExplorationItem.HasExploration)]"
+						using = layoutpolicy_expanding
+
+						expand = {}
+
+						# time estimate
+						widget = { 
+							size = { 128 -1 }
+							layoutpolicy_vertical = expanding
+
+							text_single = {
+								visible = "[Not(PossibleExplorationItem.HasExploration)]"
+								parentanchor = center
+								align = center|nobaseline
+								size = { 120 20 }
+								margin = {5 5}
+								using = bg_text_mask_container_brown
+		
+								text = "EXPLORATION_TIME_ESTIMATE"
+								tooltipwidget = {
+									using = exploration_time_estimate_tt
+								}
+									
+								sort_by_highlight = {
+									size = { 110 200%}
+									name = "time"
+								}
+							}
+						}
+
+						# cost estimate per month
+						widget = {
+							size = { 128 -1 }
+							layoutpolicy_vertical = expanding
+							text_single = {
+								parentanchor = center
+								align = center|nobaseline
+								size = { 120 20 }
+								margin = {5 5}
+								using = bg_text_mask_container_brown
+								text = "EXPLORATION_COST_ESTIMATE"
+								
+								tooltipwidget = {
+									using = exploration_cost_estimate_tt
+								}
+									
+								sort_by_highlight = {
+									size = { 130 200%}
+									name = "cost"
+								}
+							}
+
+						}
+					}
+
+					# exploration ongoing
+					hbox = {
+						using = layoutpolicy_expanding
+						visible = "[PossibleExplorationItem.HasExploration]"
+						spacing = 10
+
+						# character widget
+						widget = {
+							size = { 70 50 }
+							allow_outside = yes
+
+							portrait_standard_head_button = {
+								using = character_portrait_bg
+								visible = "[PossibleExplorationItem.HasCharacter]"
+								parentanchor = left|vcenter
+								datacontext = "[PossibleExplorationItem.GetCharacter]"
+								size = { 50 50 }
+
+								icon = {
+									block "character_frame_texture" {
+										texture = "gfx/interface/component_decoration/character_frames/character_frame_1.dds"
+									}
+									texture_density = 2
+									size = {100% 100%}
+								}
+							}
+							
+							widget = {
+								size = { 50 50 }
+								visible = "[Not(PossibleExplorationItem.HasCharacter)]"
+								portrait_standard_head_button = {
+									# enabled = no
+									parentanchor = hcenter|bottom
+									size = { 43 50 }
+									position = { 0 0 }
+									datacontext = "[PossibleExplorationItem.GetCharacter]"
+	
+									blockoverride "character_tooltip" {
+										tooltipwidget = {
+											ContextualTooltipType = {
+												blockoverride "title_text" {
+													text = "change_explorer"
+												}
+											
+												blockoverride "title_icon" {
+													icon = {
+														using = tooltip_title_icon_size
+														texture = "gfx/interface/icons/character_roles/explorer.dds"
+													}
+												}
+
+												blockoverride "concept_link" {
+													text = "[exploration|e]"
+												}
+
+												blockoverride "tooltip_content" {}
+											}
+										}
+									}
+				
+									blockoverride "portrait_click" {}
+									
+									blockoverride "character_contextmenu"{}
+									blockoverride "rightclick"{}
+									blockoverride "hover"{}
+								}
+								icon = {
+									alwaystransparent = no
+									block "character_frame_texture" {
+										texture = "gfx/interface/component_decoration/character_frames/character_frame_1.dds"
+									}
+									texture_density = 2
+									size = {100% 100%}
+								}
+								background = {
+									texture = "gfx/interface/colors/black.dds"
+									margin = { -1 -1 }
+									texture_density = 2
+									alpha = 0.4
+								}
+							}
+
+							header_action_button_left = {
+								size = { 30 30 }
+								parentanchor = vcenter|right
+								position = { 10 0 }
+								title = "game_concept_exploration"
+								actor = "[Player]"
+								blockoverride "button_icon_stretch_sprite" {}
+								blockoverride "header_button_frame_inner" {visible = no}
+								blockoverride "header_button_icon_size" {size = { 30 30 } }
+								blockoverride "header_button_text_layout" {}
+								blockoverride "icon_texture" {
+									texture = "gfx/interface/icons/sort/change.dds"
+									modify_texture = {
+										using = color_new_gold_texture
+									}
+									modify_texture = {
+										using = color_black_texture
+										blend_mode = overlay
+										alpha = 0.3
+									}
+									modify_texture = {
+										using = overlay_stone_texture
+										blend_mode = overlay
+										alpha = 0.5
+									}
+									texture_density = 2
+								}
+								left_action = {
+									action_name = "change_explorer"
+									parameter = {
+										parameter_name = "target"
+										parameter_value = "[PossibleExplorationItem.GetArea]"
+									}
+								}
+								tooltipwidget = {
+									ContextualTooltipType = {
+										blockoverride "title_text" {
+											text = "change_explorer"
+										}
+									
+										blockoverride "title_icon" {
+											icon = {
+												using = tooltip_title_icon_size
+												texture = "gfx/interface/icons/character_roles/explorer.dds"
+											}
+										}
+
+										blockoverride "concept_link" {
+											text = "[exploration|e]"
+										}
+
+										blockoverride "tooltip_content" {
+											TooltipTextBlock = {
+												blockoverride "text" {
+													text = "[UIAction.GetDescription]"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+
+						expand = {}	
+
+						# constructing
+						text_single = {
+							visible = "[And(Not(PossibleExplorationItem.HasLiveExploration), Not(PossibleExplorationItem.IsStalled))]"
+							fontsize = 14
+							default_format = "#subtle_name"
+							align = center|nobaseline
+							size = { 50 20 }
+							margin = {5 5}
+							using = bg_text_mask_container_brown
+
+							datacontext = "[PossibleExplorationItem.GetExplorationConstruction]"
+							text = "EXPLORATION_CONSTRUCTION_DURATION"
+						}
+
+						# monthly progress
+						text_single = {
+							visible = "[PossibleExplorationItem.HasLiveExploration]"
+							fontsize = 14
+							default_format = "#subtle_name"
+							size = { 50 20 }
+							margin = {5 5}
+							align = center|nobaseline
+
+							using = bg_text_mask_container_brown
+
+							datacontext = "[PossibleExplorationItem.GetExploration]"
+							text = "[PossibleExplorationItem.GetExploration.GetMonthlyProgress|2+=]"
+							tooltipwidget = {
+								using = exploration_progress_tt
+							}
+
+							sort_by_small_highlight = {
+								name = "exploration_progress"
+							}
+						}
+
+						# monthly cost
+						text_single = {
+							fontsize = 14
+							size = { 50 20 }
+							margin = {5 5}
+							using = bg_text_mask_container_brown
+							align = center|nobaseline
+
+							datacontext = "[PossibleExplorationItem]"
+							text = "EXPLORATION_COST_ACTUAL"
+							tooltipwidget = {
+								using = exploration_cost_tt
+							}
+
+							sort_by_small_highlight = {
+								name = "cost"
+							}
+						}
+
+						# finish date
+						text_single = {
+							visible = "[And(Not(PossibleExplorationItem.HasLiveExploration), Not(PossibleExplorationItem.IsStalled))]"
+							fontsize = 14
+							size = { 80 20 }
+							margin = {5 5}
+							using = bg_text_mask_container_brown
+							align = center|nobaseline
+
+							tooltipwidget = {
+								SimpleContextualTooltipType = {
+									lowpriotextcontext = "EXPLORATION_CONSTRUCTION_FINISHED_WHEN"
+								}
+							}
+
+							text = "[PossibleExplorationItem.GetExplorationConstruction.GetFinishedDateIncludingQueue]"
+
+							sort_by_small_highlight = {
+								name = "time"
+							}
+						}
+						
+						text_single = {
+							visible = "[PossibleExplorationItem.HasLiveExploration]"
+							fontsize = 14
+							size = { 80 20 }
+							margin = {5 5}
+							using = bg_text_mask_container_brown
+							align = center|nobaseline
+
+							datacontext = "[PossibleExplorationItem.GetExploration]"
+
+							tooltipwidget = {
+								SimpleContextualTooltipType = {
+									lowpriotextcontext = "EXPLO_FINISHED_WHEN"
+								}
+							}
+
+							text = "[PossibleExplorationItem.GetExploration.GetEstimatedFinishDateString]"
+
+							sort_by_small_highlight = {
+								name = "time"
+							}
+						}
+
+						text_single = {
+							visible = "[And(Not(PossibleExplorationItem.HasLiveExploration), PossibleExplorationItem.IsStalled)]"
+							fontsize = 14
+							size = { 80 20 }
+							margin = {5 5}
+							using = bg_text_mask_container_brown
+							align = center|nobaseline
+
+							#datacontext = "[PossibleExplorationItem.GetExploration]"
+
+							#tooltipwidget = {
+								#SimpleContextualTooltipType = {
+									#lowpriotextcontext = "EXPLO_FINISHED_WHEN"
+								#}
+							#}
+
+							text = "CONSTRUCTION_INFO_STALLED"
+
+							sort_by_small_highlight = {
+								name = "time"
+							}
+						}	
+										
+					}
+				}
+			}
+
+			
+		}
+	}
+}
+
+lateralview = {
+	name = "expansion_lateralview"
+	widgetid = "expansion_lateralview"
+
+	blockoverride "lateralview_topbuttons_extra" {
+		widget = {
+			parentanchor = vcenter
+			size = { 40 40 }
+			position = { 30 0 }
+
+			button_automation_shortcut = {
+				parentanchor = vcenter
+				size = { 25 25 }
+
+
+				action_tooltip = {
+					title = "OPEN_AUTOMATION_PANEL_FILTER"
+					on_action = "[OpenLateralViewWithFilter('automation', 'automation_filter_expansion')]"
+				}
+
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+			}
+		}
+	}
+
+	blockoverride "panel_header" {
+		using = geopolitics_header
+	}
+
+	blockoverride "panel_content" {
+		using = geopolitics_tabs
+		
+		vbox = {
+			using = layoutpolicy_expanding
+			using = bg_main_inner_alt
+			using = window_main_tabs_margin_alt
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { -1 45 }
+				hbox = {
+					subheader_unified_icon = {
+						datacontext = "[Player]"
+						tooltipwidget = {
+							using = known_world_tooltip
+						}
+						blockoverride "subheader_unified_icon_texture" {
+							texture = "gfx/interface/icons/flat_icons/geopolitics/known_world.dds"
+						}
+						blockoverride "subheader_unified_top_text" {
+							text = "game_concept_known_world"
+							align = nobaseline
+						}
+						blockoverride "subheader_unified_bottom_text" {
+							text = "[ExpansionLateralView.GetKnownWorldPercentage|0%]"
+							align = nobaseline
+						}
+					}
+		
+					expand = {}
+					
+					subheader_unified_icon = {
+						blockoverride "mirror_layout" { righttoleft = yes }
+						datacontext = "[Player]"
+						tooltipwidget = {
+							using = colonial_range_tooltip
+						}
+						blockoverride "subheader_unified_icon_texture" {
+							texture = "[GetConceptTexture('colonial_range')]"
+						}
+						blockoverride "subheader_unified_top_text" {
+							text = "game_concept_colonial_range"
+							align = right|nobaseline
+						}
+						blockoverride "subheader_unified_bottom_text" {
+							text = "[Country.GetDoubleModifierValueNoFormatTruncated('colonial_range','colonial_range_modifier')]"
+							align = right|nobaseline				
+						}
+					}
+				}
+			}
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { -1 220 }
+
+				using = bg_age_event_frame
+
+				hbox = {
+					ecs_scene_viewer_widget =  {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						name = "balance_overview_scene"
+						scene = "[Player.GenerateSceneDesc('expansion')]"
+						alpha = 1
+
+						using = scene_fade_horizontal
+					}
+				}
+
+				hbox = {
+					margin = { 8 0 }
+
+					vbox = {
+						using = layoutpolicy_expanding
+
+						icon_text_2rows = {
+							# blockoverride "background_animation"{
+							# 	using = icon_text_2rows_bg_animation_left
+							# }
+							# blockoverride "top_text_animation"{
+							# 	using = icon_text_2rows_top_animation_left
+							# }
+							blockoverride "icon_setup" {
+								texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_cost.dds"
+								glow = {
+									name = "drop_shadow"
+									glow_radius = 3
+									color = {0.0 0.0 0.0 1.0}
+									alpha = 0.3
+								}
+							}
+							blockoverride "top_text_setup" {
+								text = "game_concept_exploration_expense"
+								default_format = "#explanation_link_overview"
+							}
+							blockoverride "bottom_text_setup" {
+								text = "[Player.GetModifierValueNoFormat('exploration_maintenance_efficiency')]"
+							}
+							datacontext = "[Player]"
+							tooltipwidget = {
+								using = exploration_expense_tooltip
+							}
+						}
+
+						icon_text_2rows = {
+							# blockoverride "background_animation"{
+							# 	using = icon_text_2rows_bg_animation_left
+							# }
+							# blockoverride "top_text_animation"{
+							# 	using = icon_text_2rows_top_animation_left
+							# }
+							blockoverride "icon_setup" {
+								texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_mission_speed.dds"
+								glow = {
+									name = "drop_shadow"
+									glow_radius = 3
+									color = {0.0 0.0 0.0 1.0}
+									alpha = 0.3
+								}
+							}
+							blockoverride "top_text_setup" {
+								text = "game_concept_exploration_progress"
+								default_format = "#explanation_link_overview"
+							}
+							blockoverride "bottom_text_setup" {
+								text = "[Player.GetModifierValueNoFormat('exploration_mission_speed')]"
+							}
+							datacontext = "[Player]"
+							tooltipwidget = {
+								using = exploration_progress_tooltip
+							}
+						}
+					}
+
+					vbox = {
+						using = layoutpolicy_expanding
+
+						icon_text_2rows = {
+							# blockoverride "background_animation"{
+							# 	using = icon_text_2rows_bg_animation_left
+							# }
+							# blockoverride "background_position"{
+							# 	using = overview_bg_right
+							# }
+							# blockoverride "top_text_animation"{
+							# 	using = icon_text_2rows_top_animation_left
+							# }
+							blockoverride "base_setup" {
+								righttoleft = yes
+							}
+							blockoverride "icon_setup" {
+								texture = "gfx/interface/icons/flat_icons/geopolitics/available_colonies.dds"
+								glow = {
+									name = "drop_shadow"
+									glow_radius = 3
+									color = {0.0 0.0 0.0 1.0}
+									alpha = 0.3
+								}
+							}
+							blockoverride "top_text_setup" {
+								align = right|nobaseline
+								text = "game_concept_colonial_charters"
+								default_format = "#explanation_link_overview"
+							}
+							blockoverride "bottom_text_setup" {
+								align = right|nobaseline
+								text = "[ExpansionLateralView.GetNumberOfOngoingColonies]"
+							}
+							datacontext = "[Player]"
+							tooltipwidget = {
+								using = colonial_charters_tooltip
+							}
+						}
+
+						icon_text_2rows = {
+							# blockoverride "background_animation"{
+							# 	using = icon_text_2rows_bg_animation_left
+							# }
+							# blockoverride "background_position"{
+							# 	using = overview_bg_right
+							# }
+							# blockoverride "top_text_animation"{
+							# 	using = icon_text_2rows_top_animation_left
+							# }
+							blockoverride "base_setup" {
+								righttoleft = yes
+							}
+							blockoverride "icon_setup" {
+								texture = "gfx/interface/icons/flat_icons/geopolitics/colonial_migration.dds"
+								glow = {
+									name = "drop_shadow"
+									glow_radius = 3
+									color = {0.0 0.0 0.0 1.0}
+									alpha = 0.3
+								}
+							}
+							blockoverride "top_text_setup" {
+								align = right|nobaseline
+								text = "game_concept_colonial_migration"
+								default_format = "#explanation_link_overview"
+							}
+							blockoverride "bottom_text_setup" {
+								align = right|nobaseline
+								text = "[Player.GetDoubleModifierValueNoFormat('colonial_migration_size','colonial_migration_size_modifier')]"
+							}
+							datacontext = "[Player]"
+							tooltipwidget = {
+								using = global_colonial_migration_tooltip
+							}
+						}
+
+						icon_text_2rows = {
+							# blockoverride "background_animation"{
+							# 	using = icon_text_2rows_bg_animation_left
+							# }
+							# blockoverride "background_position"{
+							# 	using = overview_bg_right
+							# }
+							# blockoverride "top_text_animation"{
+							# 	using = icon_text_2rows_top_animation_left
+							# }
+							blockoverride "base_setup" {
+								righttoleft = yes
+							}
+							blockoverride "icon_setup" {
+								texture = "gfx/interface/icons/flat_icons/geopolitics/colonial_maintenance.dds"
+								glow = {
+									name = "drop_shadow"
+									glow_radius = 3
+									color = {0.0 0.0 0.0 1.0}
+									alpha = 0.3
+								}
+							}
+							blockoverride "top_text_setup" {
+								align = right|nobaseline
+								text = "game_concept_colonial_maintenance"
+								default_format = "#explanation_link_overview"
+							}
+							blockoverride "bottom_text_setup" {
+								align = right|nobaseline
+								text = "[Player.GetModifierValueNoFormat('colonial_maintenance_efficiency')]"
+							}
+							datacontext = "[Player]"
+							tooltipwidget = {
+								using = colonial_maintenance_tooltip
+							}
+						}
+					}
+				}
+			}
+
+			header_secondary_tabs = {
+				blockoverride "content" {
+					button_secondary_tab_alt = {
+						using = layoutpolicy_expanding
+						tooltipwidget = {
+							using = SubTabExplorationTooltip
+						}
+
+						down = "[ExpansionLateralView.Vars.NotExistOrHasValue( 'low_tab', 'exploration' )]"
+						datacontext = "[GetAutomatedSystemItem('exploration')]"
+						using = automated_tab
+
+						blockoverride "on_action_left" { on_action = "[ExpansionLateralView.Vars.Set( 'low_tab', 'exploration' )]" }
+						blockoverride "text" { text = "EXPLORATION_TAB" }
+					}
+
+					button_secondary_tab_alt = {
+						using = layoutpolicy_expanding
+						tooltipwidget = {
+							using = SubTabColoniesTooltip
+						}
+
+						down = "[ExpansionLateralView.Vars.HasValue( 'low_tab', 'colonisation' )]"
+						datacontext = "[GetAutomatedSystemItem('colonies')]"
+						using = automated_tab
+
+						blockoverride "on_action_left" { on_action = "[ExpansionLateralView.Vars.Set( 'low_tab', 'colonisation' )]" }
+						blockoverride "text" { text = "COLONIAL_TAB" }
+					}
+
+					button_secondary_tab_alt = {
+						using = layoutpolicy_expanding
+						tooltipwidget = {
+							using = TabProvincesTooltip
+						}
+
+						action_tooltip = {
+							enabled = "[Not(EqualTo_string(Player.GetCountryTypeString, 'building'))]"
+							title = "OPEN_TAB"
+							on_action = "[ExpansionLateralView.Vars.Set( 'low_tab', 'provinces' )]"		
+						}
+
+						enabled = "[Not(EqualTo_string(Player.GetCountryTypeString, 'building'))]"
+						down = "[ExpansionLateralView.Vars.HasValue( 'low_tab', 'provinces' )]"
+						blockoverride "tab_text"{
+							text = "PROVINCES_TAB"
+						}
+					}
+				}
+			}
+
+			vbox = {
+				using = layoutpolicy_expanding
+				using = bg_secondary_inner_alt
+				using = bg_secondary_inner_image_alt
+
+				widget = {
+					visible = "[ExpansionLateralView.Vars.NotExistOrHasValue( 'low_tab', 'exploration' )]"	
+					using = layoutpolicy_expanding
+
+					vbox = {
+						widget = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 40 }
+
+							hbox = {
+								margin = { 8 0 }
+								spacing = 8
+								
+
+								expand = {}
+
+								header_button_right = {
+									size = { 220 40 }
+
+									enabled = "[ExpansionLateralView.CanRecruit]"
+									tooltipwidget = {
+										using = CreateExplorerTooltip
+									}
+
+									action_tooltip = {
+										title = "RECRUIT_EXPLORER"
+										enabled = "[ExpansionLateralView.CanRecruit]"
+										conditions = "[ExpansionLateralView.GetRecruitInfo]"
+										cost = "[ExpansionLateralView.GetRecruitCost]"
+										on_action = "[ExpansionLateralView.Recruit]"
+									}
+									
+									# using = snd_UI_forward
+
+									blockoverride "text_top" {
+										text = "RECRUIT_EXPLORER"
+										fontsize = 13
+									}
+
+									blockoverride "header_button_icon_obj" {
+										
+										icon = {
+											parentanchor = center
+											
+											texture = "gfx/interface/icons/character_roles/explorer.dds"
+											
+											size = { 28 28 }
+											texture_density = 2
+											alpha = 1
+											
+										}
+									}
+								}
+							}
+						}
+
+						filtered_sorted_list = {
+							datacontext = "[ExpansionLateralView.GetExplorationsSortSearch]"
+
+							using = bg_secondary_inner_image_alt
+							blockoverride "image" {
+								texture = "gfx/interface/illustrations/bg/bg_geopolitics.dds"
+							}
+
+							blockoverride "scroll_list_is_empty" {
+								visible = no
+							}
+
+							blockoverride "sort_buttons_filtered_list" {
+								sort_by_key_button = {
+									name = "name"
+									using = layoutpolicy_expanding
+								}
+
+								sort_by_key_button = {
+									name = "exploration_progress"
+									using = layoutpolicy_expanding
+								}
+
+								sort_by_key_button = {
+									name = "cost"
+									using = layoutpolicy_expanding
+								}
+
+								sort_by_key_button = {
+									name = "time"
+									using = layoutpolicy_expanding
+								}
+							}
+
+							blockoverride "scroll_list_layout" {
+								dynamicgridbox = {
+									layoutpolicy_horizontal = expanding
+									datamodel_reuse_widgets = yes
+									datamodel = "[ExpansionLateralView.GetExplorationCategories]"
+									item = {
+										flowcontainer = {
+											ignoreinvisible = yes
+											direction = vertical
+											layoutpolicy_horizontal = expanding
+											margin_bottom = 10
+
+											fixedgridbox = {
+												resizetofit = yes
+												addcolumn = 530
+												addrow = 95
+												datamodel = "[ExplorationCategoryGlue.GetExplorationItems]"
+												item = {
+													using = exploration_item
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					AutomatedSection = {
+						datacontext = "[GetAutomatedSystemItem('exploration')]"
+						
+						blockoverride "glow_anim_automation_visible" {
+							visible = "[AutomatedSystemsItem.IsEnabled]"
+						}
+					}
+				}
+
+				widget = {
+					visible = "[ExpansionLateralView.Vars.HasValue( 'low_tab', 'colonisation' )]"
+					using = layoutpolicy_expanding
+
+					vbox = {
+						widget = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 45 }
+
+							hbox = {
+								margin = {5 5}
+								spacing = 8
+
+								header_button_left = {
+									scripted_action_tooltip = {
+										click_type = left
+										click_mode = single
+										action_name = "create_conquistador"
+										actor = "[ExpansionLateralView.GetPlayer]"
+									}
+									action_tooltip = {
+										click_type = right
+										click_mode = confirm
+										click_modifier = default
+										enabled = "[ExpansionLateralView.CanCancelQueuedConquistador]"
+										title = "CANCEL_CONQUISTADOR_COMMISSION"
+										description = "[ExpansionLateralView.GetCancelQueuedConquistadorInfo]"
+										on_action = "[ExpansionLateralView.CancelQueuedConquistador]"
+									}
+									action_tooltip = {
+										click_type = right
+										click_mode = confirm
+										click_modifier = shift
+										enabled = "[ExpansionLateralView.CanCancelQueuedConquistador]"
+										title = "CANCEL_ALL_CONQUISTADOR_COMMISSIONS"
+										description = "CANCEL_ALL_CONQUISTADOR_COMMISSIONS_DESC"
+										on_action = "[ExpansionLateralView.CancelAllQueuedConquistadors]"
+									}
+									tooltipwidget = {
+										using = CreateConquistadorTooltip
+									}
+					
+									blockoverride "icon_overlay" {
+										texture = "gfx/interface/icons/unit_actions/conquistador.dds"
+											
+										size = { 28 28 }
+										texture_density = 2
+										
+									}
+					
+									blockoverride "adjust_to_content" {
+										minimumsize = { 150 40 }
+										set_parent_size_to_minimum = yes
+									}
+					
+									blockoverride "text_top" {
+										maximumsize = { 220 -1 }
+										text = "conquistator_t"
+									}
+									blockoverride "text_bottom" {
+										align = left
+										margin_right = 170
+										maximumsize = { 220 -1 }
+										text = "[ExpansionLateralView.GetNumberOfOngoingConquistadors|+=]"
+									}
+								}
+								expand = {}
+
+								header_button_right = {
+									enabled = "[GreaterThan_int32(ExpansionLateralView.GetNumberOfCurrentConquistadors, '(int32)0')]"
+
+									tooltipwidget = { BasicFunctionalTooltip = {} }
+									action_tooltip = {
+										enabled = "[GreaterThan_int32(ExpansionLateralView.GetNumberOfCurrentConquistadors, '(int32)0')]"
+										click_type = left
+										title = "manage_conquistadors"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[ShowManageSubjectsWithFilter('conquistador')]"
+									}
+					
+									blockoverride "icon_overlay" {
+										texture = "gfx/interface/icons/diplomatic_status/vassalized.dds"
+											
+										size = { 28 28 }
+										texture_density = 2
+										
+									}
+					
+									blockoverride "adjust_to_content" {
+										minimumsize = { 150 40 }
+										set_parent_size_to_minimum = yes
+									}
+					
+									blockoverride "text_top" {
+										maximumsize = { 220 -1 }
+										text = "manage_conquistadors"
+									}
+									blockoverride "text_bottom" {
+										margin_left = 150
+										maximumsize = { 220 -1 }
+										text = "[ExpansionLateralView.GetNumberOfCurrentConquistadors]"
+									}
+								}
+							}
+						}
+
+						filtered_sorted_list = {
+							datacontext = "[ExpansionLateralView.GetColonialChartersSortSearch]"
+
+							using = bg_secondary_inner_image_alt
+							blockoverride "image" {
+								texture = "gfx/interface/illustrations/bg/bg_geopolitics.dds"
+							}
+
+							blockoverride "scroll_list_is_empty" {
+								visible = no
+							}
+
+							blockoverride "sort_buttons_filtered_list" {
+								sort_by_key_button = {
+									name = "name"
+									using = layoutpolicy_expanding
+								}
+
+								sort_by_key_button = {
+									name = "cost"
+									using = layoutpolicy_expanding
+								}
+
+								sort_by_key_button = {
+									name = "monthly_migration"
+									using = layoutpolicy_expanding
+								}
+
+								sort_by_key_button = {
+									name = "charter_progress"
+									using = layoutpolicy_expanding
+								}
+							}
+
+							blockoverride "scroll_list_layout" {
+								dynamicgridbox = {
+									layoutpolicy_horizontal = expanding
+									datamodel_reuse_widgets = yes
+									datamodel = "[ExpansionLateralView.GetColonyCategories]"
+
+									item = {
+										flowcontainer = {
+											ignoreinvisible = yes
+											direction = vertical
+											layoutpolicy_horizontal = expanding
+											margin_top = 3		# needs to be offset via position or spacing will be uneven
+											margin_bottom = 7	# needs to be offset via position or spacing will be uneven
+
+											fixedgridbox = {
+												layoutpolicy_horizontal = expanding
+												resizetofit = no
+												addcolumn = 535
+												addrow = 65
+												datamodel = "[ColonyCategoryGlue.GetColonyItems]"
+												item = {
+													widget = {
+														size = { 100% 60 }
+														widget = {
+															size = { 98% 60 }
+															parentanchor = center
+															visible = "[ColonialCharterItem.IsOngoing]"
+															colonial_charter_item = {
+																position = { 0 3 } # offset to fix spacing
+																blockoverride "colony_item_size"{
+																	size = { 100% 100% }
+																}
+															}
+														}
+														widget = {
+															size = { 98% 60 }
+															parentanchor = center
+															visible = "[Not(ColonialCharterItem.IsOngoing)]"
+															possible_colony_item = {
+																position = { 0 -7 } # offset to fix spacing
+																blockoverride "colony_item_size"{
+																	size = { 100% 100% }
+																}
+																blockoverride "charter_name" {
+																	text = "CREATE_COLONIAL_CHARTER_LOC"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					AutomatedSection = {
+						datacontext = "[GetAutomatedSystemItem('colonies')]"
+						
+						blockoverride "glow_anim_automation_visible" {
+							visible = "[AutomatedSystemsItem.IsEnabled]"
+						}
+					}
+				}
+
+				widget = {
+					visible = "[ExpansionLateralView.Vars.HasValue( 'low_tab', 'provinces' )]"
+					using = layoutpolicy_expanding
+
+					vbox = {
+						filtered_sorted_list = {
+							margin_top = 10
+							datacontext = "[ExpansionLateralView.GetProvincesSortSearch]"
+			
+							blockoverride "scroll_list_is_empty" {
+								visible = "[IsDataModelEmpty(ExpansionLateralView.GetProvinces)]"
+							}
+			
+							blockoverride "scroll_list_is_empty_text" {
+								text = "PROVINCES_SCROLL_LIST_EMPTY"
+							}
+						
+							blockoverride "scroll_list_layout" {
+								fixedgridbox = {
+									addcolumn = 100%
+									addrow = 76
+									datamodel_reuse_widgets = yes
+									datamodel = "[ExpansionLateralView.GetProvinces]"
+									item = {
+										widget = {
+											size = { 100% 72 }
+											widget = {
+												size = { 98% 72 }
+												parentanchor = center
+												card_common = {
+													blockoverride "header_size" {
+														size = {-1 35}
+													}
+													blockoverride "header_pattern_texture_density" {texture_density = 1.6}
+													blockoverride "card_common_bottom_margin" {
+														margin = {7 4}
+														margin_bottom = 7
+													}
+
+													blockoverride "header_decor_templates" {
+														using = bg_card_header_01_geopolitics
+														using = bg_cabinet_card_frame
+													}
+
+													blockoverride "common_header" {
+														icon = {
+															size = {20 20}
+															using = province_texture
+									
+															glow = {
+																name = "drop_shadow"
+																glow_radius = 3
+																color = {0.0 0.0 0.0 1.0}
+																alpha = 0.6
+															}
+														}
+
+														# NAME AND MARKET
+														hbox = {
+															layoutpolicy_horizontal = expanding
+															text_single = {
+																layoutpolicy_horizontal = expanding
+																size = {-1 20}
+																autoresize = no
+																align = left|nobaseline
+																raw_text = "[Province.GetName]  ([GetDataModelSize(Province.GetLocations)|L]@location!)"
+																tooltipwidget = {
+																	using = province_amount_locations_tooltip
+																}
+
+																sort_by_left_fade_highlight = {
+																	position = { -5 0 }
+																	name = "name"
+																}
+															}
+	
+															text_single = {
+																layoutpolicy_horizontal = expanding
+																size = {-1 20}
+																autoresize = no
+																align = right|nobaseline
+																raw_text = "[Province.GetCapital.GetMarket.GetName] @market!"
+
+																sort_by_left_fade_highlight = {
+																	position = { -5 0 }
+																	name = "market"
+																}
+															}
+														}
+													}
+
+													blockoverride "common_bottom_content" {
+														tooltip = "[Province.GetName]"
+														tagtooltip_enabled = yes
+
+														# POPULATION
+														button_regular = {
+															layoutpolicy_horizontal = expanding
+															size = { -1 25 }
+
+															action_tooltip = {
+																click_type = left
+																click_mode = single
+																title = "SHOW_POPULATION_LEDGER"
+																on_action = "[ShowPopsForProvince(Province.Self)]"
+															}
+
+															tooltipwidget = {
+																using = province_population_tooltip
+															}
+
+															hbox = {
+																hbox = {
+																	layoutpolicy_horizontal = expanding
+																	margin = { 5 0 }
+																	spacing = 3
+
+																	text_single = {
+																		align = center
+																		layoutpolicy_horizontal = expanding
+																		autoresize = no
+																		fontsize = 14
+																		raw_text = "[Province.GetTotalOwnerPopulation]@population!"
+																	}
+																}
+															}
+
+															sort_by_small_highlight = {
+																size = { 90% 70% }
+																name = "population"
+															}
+														}
+
+														# TAXBASE
+														button_regular = {
+															layoutpolicy_horizontal = expanding
+															size = { -1 25 }
+
+															action_tooltip = {
+																click_type = left
+																click_mode = single
+																title = "SHOW_LOCATION_LEDGER"
+																on_action = "[OpenLateralView('locations_list')]"
+															}
+
+															tooltipwidget = {
+																using = province_tax_base_tooltip
+															}
+
+															hbox = {
+																hbox = {
+																	layoutpolicy_horizontal = expanding
+																	margin = { 5 0 }
+																	spacing = 3
+
+																	text_single = {
+																		align = center
+																		layoutpolicy_horizontal = expanding
+																		autoresize = no
+																		fontsize = 14
+																		raw_text = "[Province.GetTotalTaxBase|+=2]@tax_base!"
+																	}
+																}
+															}
+
+															sort_by_small_highlight = {
+																size = { 90% 70% }
+																name = "taxation"
+															}
+														}
+
+														# CONTROL
+														button_regular = {
+															size = { 80 25 }
+
+															action_tooltip = {
+																click_type = left
+																click_mode = single
+																title = "increase_control_province"
+																on_action = "[ShowSelectCabinetToIncreaseControl(Province.Self)]"
+																enabled = "[And(IsCabinetActionAllowed('increase_control_province'), Province.GetCountry.IsPlayer)]"
+																conditions = "[GetCabinetActionTooltip('increase_control_province')]"
+															}
+															action_tooltip = {
+																visible = "[And(IsCabinetActionAllowed('increase_control_province'), Province.GetCountry.IsPlayer)]"
+																click_modifier = shift
+																click_type = left
+																title = "OPEN_HINT"
+																click_modifier_description = "OPEN_HINT_TEXT"
+																on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_control')]"
+															}
+															enabled = "[And(IsCabinetActionAllowed('increase_control_province'), Province.GetCountry.IsPlayer)]"
+
+															tooltipwidget = {
+																using = province_control_tooltip
+															}
+
+															hbox = {
+																hbox = {
+																	layoutpolicy_horizontal = expanding
+																	margin = { 5 0 }
+																	spacing = 3
+																	text_single = {
+																		align = left|nobaseline
+																		layoutpolicy_horizontal = expanding
+																		autoresize = no
+																		fontsize = 14
+																		raw_text = "[Province.GetAverageControl|V%2]"
+																	}
+
+																	widget = {
+																		size = {24 24 }
+																		piechart = {
+																			parentanchor = center
+																			size = { 20 20 }
+																			alwaystransparent = yes
+																			using = piechart_angles
+
+																			pieslice_no_highlight = {
+																				texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+																				value = "[FixedPointToFloat(Province.GetAverageControl)]"
+																				color = { 1 1 1 1 }
+																				alwaystransparent = yes
+																			}
+
+																			pieslice_no_highlight = {
+																				texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+																				value = "[Subtract_float('(float)1.0', FixedPointToFloat(Province.GetAverageControl))]"
+																				color = { 1 1 1 1 }
+																				alwaystransparent = yes
+																			}
+
+																			icon = {
+																				size = { 61% 61% }
+																				parentanchor = center
+																				texture = "gfx/interface/icons/location_icons/control.dds"
+																			}
+
+																			using = bg_circle_piechart
+																		}
+																	}
+																}
+															}
+
+															sort_by_small_highlight = {
+																size = { 90% 70% }
+																name = "control"
+															}
+														}
+
+														# ARMY LEVY
+														button_regular = {
+															layoutpolicy_horizontal = expanding
+															size = { -1 25 }
+
+															enabled = "[CanRaiseProvinceArmyLevies(Province.Self)]"
+
+															action_tooltip = {
+																title = "RAISE_ARMY_LEVIES_TT"
+																enabled = "[CanRaiseProvinceArmyLevies(Province.Self)]"
+																on_action = "[RaiseProvinceArmyLevies(Province.Self)]"
+															}
+
+															tooltipwidget = {
+																using = province_army_levy_tt
+															}
+
+															hbox = {
+																hbox = {
+																	layoutpolicy_horizontal = expanding
+																	margin = { 5 0 }
+																	spacing = 3
+																	text_single = {
+																		align = right|nobaseline
+																		layoutpolicy_horizontal = expanding
+																		autoresize = no
+																		fontsize = 14
+																		text = "[GetTotalProvinceArmyLevySize(Province.Self)]"
+																	}
+																	widget = {
+																		size = {24 24 }
+																		icon = {
+																			parentanchor = center
+																			size = { 20 20 }
+																			texture = "gfx/interface/icons/unit_category/army_levies.dds"
+																		}
+																	}
+																}
+															}
+
+															sort_by_small_highlight = {
+																size = { 90% 70% }
+																name = "strength"
+															}
+														}
+
+														# NAVY LEVY
+														button_regular = {
+															layoutpolicy_horizontal = expanding
+															size = { -1 25 }
+
+															enabled = "[CanRaiseProvinceNavyLevies(Province.Self)]"
+
+															action_tooltip = {
+																title = "RAISE_ARMY_LEVIES_TT"
+																enabled = "[CanRaiseProvinceNavyLevies(Province.Self)]"
+																on_action = "[RaiseProvinceNavyLevies(Province.Self)]"
+															}
+
+															tooltipwidget = {
+																using = province_navy_levy_tt
+															}
+
+															hbox = {
+																hbox = {
+																	layoutpolicy_horizontal = expanding
+																	margin = { 5 0 }
+																	spacing = 3
+																	text_single = {
+																		align = right|nobaseline
+																		layoutpolicy_horizontal = expanding
+																		autoresize = no
+																		fontsize = 14
+																		text = "[GetTotalProvinceNavyLevySize(Province.Self)]"
+																	}
+
+																	widget = {
+																		size = {24 24 }
+																		icon = {
+																			parentanchor = center
+																			size = { 20 20 }
+																			texture = "gfx/interface/icons/unit_category/navy_levies.dds"
+																		}
+																	}
+																}
+															}
+
+															sort_by_small_highlight = {
+																size = { 90% 70% }
+																name = "ships"
+															}
+														}
+
+														# PROVINCE FOOD
+														button_regular = {
+															size = { 100 25 }
+
+															action_tooltip = {
+																click_type = left
+																click_mode = single
+																title = "OPEN_GOODS_PRODUCTION_TT"
+																on_action = "[OpenLateralView('food_production')]"
+															}
+
+															tooltipwidget = {
+																using = province_food_tooltip
+															}
+
+															hbox = {
+																hbox = {
+																	layoutpolicy_horizontal = expanding
+																	margin = { 5 0 }
+																	margin_left = 7
+																	spacing = 1
+																	text_single = {
+																		align = left|nobaseline
+																		layoutpolicy_horizontal = expanding
+																		autoresize = no
+																		fontsize = 12
+																		raw_text = "[Province.GetMonthlyFoodChange|+=]"
+																		sort_by_small_highlight = {
+																			size = { 100% 80% }
+																			name = "food_balance"
+																		}
+																	}
+
+																	text_single = {
+																		align = right|nobaseline
+																		layoutpolicy_horizontal = expanding
+																		autoresize = no
+																		fontsize = 14
+																		raw_text = "[Add_float(FixedPointToFloat(Province.GetFoodFromMarket), FixedPointToFloat(Province.GetMonthlyFood))|+=2]"
+																	}
+
+																	widget = {
+																		size = {24 24 }
+																		piechart = {
+																			parentanchor = center
+																			size = { 19 19 }
+																			alwaystransparent = yes
+																			using = piechart_angles
+
+																			pieslice_no_highlight = {
+																				texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+																				value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
+																				color = { 1 1 1 1 }
+																			}
+														
+																			pieslice_no_highlight = {
+																				texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+																				value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
+																				color = { 1 1 1 1 }
+																			}
+														
+																			icon = {
+																				size = { 61% 61% }
+																				parentanchor = center
+																				texture = "gfx/interface/icons/location_icons/food.dds"
+						
+																				modify_texture = {
+																					visible = "[Province.IsRiskOfStarving]"	
+																					using = color_black_texture
+																					alpha = 0.5
+																					blend_mode = multiply
+																				}
+												
+																				modify_texture = {
+																					visible = "[Province.IsRiskOfStarving]"	
+																					using = color_yellow_texture
+																					alpha = 0.6
+																				}
+												
+																				modify_texture = {
+																					visible = "[Province.IsStarving]"
+																					using = color_black_texture
+																					alpha = 0.5
+																					blend_mode = multiply
+																				}
+												
+																				modify_texture = {
+																					visible = "[Province.IsStarving]"
+																					using = color_black_texture
+																					using = color_mid_red_texture
+																				}
+																			}
+
+																			using = bg_circle_piechart
+																		}
+																	}
+																}
+															}
+
+															sort_by_small_highlight = {
+																size = { 90% 70% }
+																name = "food_stockpile_balance"
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

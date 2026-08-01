@@ -191,6 +191,11 @@ pp_livestock_output_raw = {
 	multiply = market_access
 }
 
+pp_local_food_output_raw = {
+	value = "goods_output(goods:local_food)"
+	multiply = market_access
+}
+
 pp_lumber_output_raw = {
 	value = "goods_output(goods:lumber)"
 	multiply = market_access

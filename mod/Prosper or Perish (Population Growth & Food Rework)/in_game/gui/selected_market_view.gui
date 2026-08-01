@@ -1,0 +1,1607 @@
+﻿template trade_order_trades_tooltip {
+	SimpleContextualTooltipType = {
+		blockoverride "title_icon" {
+			icon = {
+				size = { 50 50 }
+				visible = "[Not(TradeOrderItem.GetIsImport)]"
+				texture = "gfx/interface/icons/flat_icons/trade_market/export.dds"
+			}
+			icon = {
+				size = { 50 50 }
+				visible = "[TradeOrderItem.GetIsImport]"
+				texture = "gfx/interface/icons/flat_icons/trade_market/import.dds"
+			}
+		}
+
+		blockoverride "title_text" {
+			text = "[SelectLocalization( TradeOrderItem.GetIsImport, 'TRADE_ORDER_IMPORT', 'TRADE_ORDER_EXPORT' )]"
+		}
+
+		blockoverride "concept_link" {
+			text = "[trade_order|E]"
+		}
+
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "TRADE_ORDER_TRADES_TOOLTIP_SUMMARY"
+				}
+			}
+
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "TRADE_ORDER_PRIORITY_INFO"
+				}
+			}
+
+			TooltipScrolledStringPairList = {
+				tooltipmeta = {
+					game_concept = "[trade_profit|e]"
+					title = "[trade_profit]"
+				}
+				blockoverride "block_scrollarea" { maximumsize = { -1 200 } }
+				textcontext = "[TradeOrderItem.GetTradeOrderTooltip]"
+			}
+		}
+	}
+}
+
+types SelectedMarketView {
+	type TradeOrderCard = widget {
+		size = { 100% 100% }
+		layoutpolicy_horizontal = expanding
+
+		card_list_button = {
+			size = { 100% 100% }
+
+			tooltipwidget = {
+				using = trade_order_trades_tooltip
+			}
+
+			block "trade_order_card_actions" {
+				action_tooltip = {
+					click_type = left
+					click_mode = single
+					title = "[SelectLocalization( TradeOrderItem.GetIsImport, 'TRADE_ORDER_OPEN_TRADES_TAB_TITLE_IMPORT', 'TRADE_ORDER_OPEN_TRADES_TAB_TITLE_EXPORT')]"
+					description = "TRADE_ORDER_OPEN_TRADES_TAB_DESC"
+					on_action = "[OpenMarketTradesTabWithImportExportFilter( TradeOrderItem.GetIsImport, TradeOrderItem.GetMarket )]"
+				}
+
+				action_tooltip = {
+					click_type = right
+					click_mode = single
+					title = "TRADE_ORDER_CANCEL_TT"
+					on_action = "[TradeOrderItem.Cancel]"
+				}
+			}
+		}
+
+		hbox = {
+			using = layoutpolicy_expanding
+			block "trade_order_card_inner_margin" {
+				margin = { 5 5 }
+			}
+			spacing = 8
+
+			icon = {
+				size = { 28 28 }
+				texture = "[GetGoodsIcon(TradeOrderItem.GetGoods)]"
+				icon = {
+					visible = "[TradeOrderItem.GetIsImport]"
+					parentanchor = bottom|right
+					size = { 12 12 }
+					texture = "gfx/interface/icons/flat_icons/trade_market/import.dds"
+				}
+				icon = {
+					visible = "[Not(TradeOrderItem.GetIsImport)]"
+					parentanchor = bottom|right
+					size = { 12 12 }
+					texture = "gfx/interface/icons/flat_icons/trade_market/export.dds"
+				}
+			}
+
+			hbox = {
+				spacing = 3
+				text_single = {
+					size = { 110 -1 }
+					align = right|nobaseline
+					raw_text = "[TradeOrderItem.GetGoods.GetNameWithNoTooltip]"
+				}
+	
+				text_single = {
+					size = { 70 -1 }
+					align = left|nobaseline
+					text = "[SelectLocalization( TradeOrderItem.GetIsImport, 'TRADE_ORDER_IMPORT_LABEL', 'TRADE_ORDER_EXPORT_LABEL' )]"
+				}
+			}
+
+			expand = {}
+
+			text_single = {
+				size = { 50 -1 }
+				autoresize = no
+				align = right|nobaseline
+				using = Font_Size_Small
+				raw_text = "[TradeOrderItem.GetTradeCount]@trade!"
+			}
+
+			text_single = {
+				size = { 70 -1 }
+				autoresize = no
+				align = right|nobaseline
+				using = Font_Size_Small
+				raw_text = "[TradeOrderItem.GetProfitPerCapacity|+=2]@profit_trade!"
+			}
+
+			hbox = {
+				spacing = 4
+				using = bg_number_container_bckg
+				blockoverride "number_container_extra" {
+					alpha = 0.4
+					margin = {2 4}
+				}
+
+				button_square_minus = {
+					size = { 18 18 }
+					enabled = "[TradeOrderItem.CanDecrease]"
+					tooltipwidget = { BasicFunctionalTooltip = {} }
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						title = "POSSIBLE_TRADE_CAPACITY_DECREASE"
+						enabled = "[TradeOrderItem.CanDecrease]"
+						on_action = "[TradeOrderItem.Decrease('(float)1')]"
+					}
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						click_modifier = alt
+						title = "POSSIBLE_TRADE_CAPACITY_DECREASE_SLOW"
+						enabled = "[TradeOrderItem.CanDecrease]"
+						on_action = "[TradeOrderItem.Decrease('(float)0.1')]"
+					}
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						click_modifier = shift
+						title = "POSSIBLE_TRADE_CAPACITY_DECREASE_10"
+						enabled = "[TradeOrderItem.CanDecrease]"
+						on_action = "[TradeOrderItem.Decrease('(float)10')]"
+					}
+				}
+
+				text_single = {
+					minimumsize = { 70 -1 }
+					maximumsize = { 70 -1 }
+					align = center|nobaseline
+					using = Font_Size_Small
+					raw_text = "[TradeOrderItem.GetUsedCapacity|<2]/[TradeOrderItem.GetAllocatedCapacity|<2]@trade_capacity!"
+					tooltipwidget = {
+						SimpleContextualTooltipType = {
+							blockoverride "title_icon" {
+								icon = {
+									using = tooltip_title_icon_size
+									texture = "gfx/interface/icons/flat_icons/trade_capacity.dds"
+								}
+							}
+
+							blockoverride "title_text" {
+								text = "TRADE_ORDER_CAPACITY_TOOLTIP_TITLE"
+							}
+
+							blockoverride "concept_link" {
+								text = "[merchant_capacity|e]"
+							}
+
+							blockoverride "tooltip_content" {
+								TooltipTextBlock = {
+									blockoverride "text" {
+										text = "TRADE_ORDER_CAPACITY_TOOLTIP_SUMMARY"
+									}
+								}
+								TooltipScrolledStringPairList = {
+									tooltipmeta = {
+										game_concept = "[trade_profit|e]"
+										title = "[trade_profit]"
+									}
+									blockoverride "block_scrollarea" {
+										maximumsize = { -1 200 }
+									}
+									textcontext = "[TradeOrderItem.GetTradeOrderTooltip]"
+								}
+							}
+						}
+					}
+				}
+
+				button_square_plus = {
+					size = { 18 18 }
+					enabled = "[TradeOrderItem.CanIncrease]"
+					tooltipwidget = { BasicFunctionalTooltip = {} }
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						title = "POSSIBLE_TRADE_CAPACITY_INCREASE"
+						enabled = "[TradeOrderItem.CanIncrease]"
+						conditions = "[TradeOrderItem.CanIncreaseTT]"
+						on_action = "[TradeOrderItem.Increase('(float)1')]"
+					}
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						click_modifier = alt
+						title = "POSSIBLE_TRADE_CAPACITY_INCREASE_SLOW"
+						enabled = "[TradeOrderItem.CanIncrease]"
+						conditions = "[TradeOrderItem.CanIncreaseTT]"
+						on_action = "[TradeOrderItem.Increase('(float)0.1')]"
+					}
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						click_modifier = shift
+						title = "POSSIBLE_TRADE_CAPACITY_INCREASE_10"
+						enabled = "[TradeOrderItem.CanIncrease]"
+						conditions = "[TradeOrderItem.CanIncreaseTT]"
+						on_action = "[TradeOrderItem.Increase('(float)10')]"
+					}
+				}
+			}
+
+			block "trade_order_card_reorder_column" {
+				vbox = {
+					spacing = 1
+					button_square_plus = {
+						size = { 16 16 }
+						enabled = "[TradeOrderItem.CanMoveUp]"
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+						blockoverride "plusminus_icon" {
+							texture = "gfx/interface/icons/outliner/arrow_down.dds"
+							mirror = vertical
+						}
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							title = "TRADE_ORDER_MOVE_UP_TT"
+							enabled = "[TradeOrderItem.CanMoveUp]"
+							on_action = "[TradeOrderItem.MoveUp]"
+						}
+					}
+					button_square_plus = {
+						size = { 16 16 }
+						enabled = "[TradeOrderItem.CanMoveDown]"
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+						blockoverride "plusminus_icon" {
+							texture = "gfx/interface/icons/outliner/arrow_down.dds"
+						}
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							title = "TRADE_ORDER_MOVE_DOWN_TT"
+							enabled = "[TradeOrderItem.CanMoveDown]"
+							on_action = "[TradeOrderItem.MoveDown]"
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+lateralview = {
+	name = "selected_market_view"
+
+	blockoverride "panel_header" {
+		
+		window_header_alt = {
+			using = bg_main_inner_alt
+			blockoverride "window_header_alt_color_texture"{
+				using = color_default_brown_texture
+			}
+			
+			blockoverride "header_text_object" {
+
+				datacontext = "[SelectedMarketLateralView.GetMarket]"
+				hbox = {
+					button = {
+						using = button_common_textobj_template
+						using = layoutpolicy_expanding
+
+						action_tooltip = {
+							click_type = right
+							click_mode = single
+
+							cursor = "market_menu"
+							title = "CLICK_ACTION_MARKET_CONTEXT_MENU"
+							on_action = "[PdxGuiWidget.ToggleContextMenu]"
+						}
+						
+						tooltipwidget = { 
+							BasicFunctionalTooltip = {}
+						}
+
+						contextmenu_widget = {
+							MarketContextMenu = {}
+						}
+					}
+				}
+
+				hbox = {
+					hbox = {
+						spacing = 5
+						header_title = {
+							layoutpolicy_horizontal = fixed
+							autoresize = yes
+							maximumsize = { 380 -1 }
+							text = "[SelectedMarketLateralView.GetMarket.GetNameWithNoTooltip]"
+						}
+	
+						button_pin = {
+							size = { 23 23 }
+							visible = "[IsPlayerValid]"
+							action_tooltip = {
+								title = "[SelectLocalization(IsMarketFaved(Market.Self), 'UNPIN_OUTLINER', 'PIN_OUTLINER')]"
+								on_action = "[ToggleMarketFav(Market.Self)]"
+							}
+							tooltipwidget = { BasicFunctionalTooltip = {} }
+							down = "[IsMarketFaved(Market.Self)]"
+						}
+					}
+				}
+			}
+		}
+	}
+
+	blockoverride "panel_content" {
+		datacontext = "[SelectedMarketLateralView.GetMarket]"
+		vbox = {
+			using = layoutpolicy_expanding
+			using = bg_main_inner_notabs_alt
+			using = window_main_tabs_margin_alt
+
+			hbox = {
+				using = layoutpolicy_expanding
+				maximumsize = { -1 80 }
+				margin = { 2 10}
+
+				widget = {
+					layoutpolicy_horizontal = expanding
+					size = {-1 65}
+					name = "selected_market"
+
+					hbox = {
+						using = layoutpolicy_expanding
+						using = bg_market_card
+						using = bg_cabinet_card_frame
+	
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						market_card = {
+							blockoverride "market_card_margins" {
+								margin = {5 5}
+								margin_right = 0
+							}
+						}
+
+						hbox = {
+							layoutpolicy_vertical = expanding
+							margin = {10 5}
+							spacing = 3
+							using = bg_cabinet_card_frame
+							vbox = {
+								layoutpolicy_vertical = expanding
+								spacing = 3
+								visible = "[IsFocusMarketSelected]"
+					
+								# PREV MARKET
+								button = {
+									size = { 23 23 }
+									texture = "gfx/interface/buttons/up_button_alt.dds"
+									texture_density = 2
+									enabled = "[CanSelectPrevMarket(Market.Self)]"
+					
+									modify_texture = {
+										using = color_new_gold_texture
+										blend_mode = add
+										alpha = 1
+									}
+									modify_texture = {
+										using = overlay_stone_texture
+										blend_mode = overlay
+										alpha = 1
+									}
+									background = {
+										texture = "gfx/interface/buttons/bg_button_light.dds"
+										texture_density = 2
+										modify_texture = {
+											using = color_intense_brown_texture
+											blend_mode = add
+										}
+										modify_texture = {
+											using = color_dark_brown_texture
+											blend_mode = multiply
+											alpha = 0.8
+										}
+									}
+									tooltipwidget = { BasicFunctionalTooltip = {} }
+					
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										enabled = "[CanSelectPrevMarket(Market.Self)]"
+										conditions = "[MakeItFailIfLoc(Not(CanSelectPrevMarket(Market.Self)), 'CANNOT_SCROLL_UP_MARKET_FILTER')]"
+										title = "SCROLL_UP_MARKET_FILTER"
+										on_action = "[SelectPrevMarket(Market.Self)]"
+									}
+								}
+					
+								# NEXT MARKET
+								button = {
+									size = { 23 23 }
+									texture = "gfx/interface/buttons/up_button_alt.dds"
+									mirror = vertical
+									texture_density = 2
+									enabled = "[CanSelectNextMarket(Market.Self)]"
+					
+									modify_texture = {
+										using = color_new_gold_texture
+										blend_mode = add
+										alpha = 1
+									}
+									modify_texture = {
+										using = overlay_stone_texture
+										blend_mode = overlay
+										alpha = 1
+									}
+									background = {
+										texture = "gfx/interface/buttons/bg_button_light.dds"
+										texture_density = 2
+										modify_texture = {
+											using = color_intense_brown_texture
+											blend_mode = add
+										}
+										modify_texture = {
+											using = color_dark_brown_texture
+											blend_mode = multiply
+											alpha = 0.8
+										}
+									}
+									tooltipwidget = { BasicFunctionalTooltip = {} }
+					
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										conditions = "[MakeItFailIfLoc(Not(CanSelectNextMarket(Market.Self)), 'CANNOT_SCROLL_DOWN_MARKET_FILTER')]"
+										enabled = "[CanSelectNextMarket(Market.Self)]"
+										title = "SCROLL_DOWN_MARKET_FILTER"
+										on_action = "[SelectNextMarket(Market.Self)]"
+									}
+								}
+							}
+					
+							vbox = {
+								layoutpolicy_vertical = expanding
+								spacing = 3
+				
+								filter_button_alt = {
+									size = { 23 23 }
+									blockoverride "filter_button_action" {
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											title = "TOGGLE_MARKET_SELECTION"
+											on_action = "[SelectedMarketLateralView.ToggleMarketViewSelectMarket(PdxGuiWidget.FindParent('selected_market').Self)]"
+										}
+									}
+									tooltipwidget = { BasicFunctionalTooltip = {} }
+									
+									blockoverride "glow_visible" {
+										visible = "[SelectedMarketLateralView.IsMarketViewSelectMarketOpened(PdxGuiWidget.FindParent('selected_market').Self)]"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			market_summary = {}
+
+			header_secondary_tabs = {
+				blockoverride "content" {
+					button_secondary_tab_alt = {
+						using = layoutpolicy_expanding
+						blockoverride "tab_text"{
+							text = "SUBTAB_MARKET_TRADE_GOODS"
+						}
+						tooltipwidget = {
+							using = SubTabMarketTradeGoodsTooltip
+						}
+						action_tooltip = {
+							title = "OPEN_TAB"
+							on_action = "[SelectedMarketLateralView.Vars.Set( 'low_tab', 'goods' )]"
+						}
+						down = "[SelectedMarketLateralView.Vars.NotExistOrHasValue( 'low_tab', 'goods' )]"
+						margin_top = 3
+					}
+					
+					button_secondary_tab_alt = {
+						using = layoutpolicy_expanding
+						blockoverride "tab_text"{
+							text = "game_concept_trades"
+						}
+						tooltipwidget = {
+							using = SubTabMarketTradesTooltip
+						}
+						action_tooltip = {
+							title = "OPEN_TAB"
+							on_action = "[SelectedMarketLateralView.Vars.Set( 'low_tab', 'trades' )]"
+						}
+						down = "[SelectedMarketLateralView.Vars.HasValue( 'low_tab', 'trades' )]"
+						margin_top = 3
+					}
+
+					button_secondary_tab_alt = {
+						using = layoutpolicy_expanding
+						blockoverride "tab_text"{
+							text = "SUBTAB_MARKET_TRADE_ORDERS"
+						}
+						tooltipwidget = {
+							using = SubTabMarketTradeOrdersTooltip
+						}
+						action_tooltip = {
+							title = "OPEN_TAB"
+							on_action = "[SelectedMarketLateralView.Vars.Set( 'low_tab', 'orders' )]"
+						}
+						down = "[SelectedMarketLateralView.Vars.HasValue( 'low_tab', 'orders' )]"
+						margin_top = 3
+					}
+
+					button_secondary_tab_alt = {
+						using = layoutpolicy_expanding
+						blockoverride "tab_text"{
+							text = "game_concept_countries"
+						}
+						tooltipwidget = {
+							using = SubTabMarketCountriesTooltip
+						}
+						action_tooltip = {
+							title = "OPEN_TAB"
+							on_action = "[SelectedMarketLateralView.Vars.Set( 'low_tab', 'merchants' )]"
+						}
+						down = "[SelectedMarketLateralView.Vars.HasValue( 'low_tab', 'merchants' )]"
+						margin_top = 3
+					}
+					
+					button_secondary_tab_alt = {
+						using = layoutpolicy_expanding
+						blockoverride "tab_text"{
+							text = "game_concept_food"
+						}
+						tooltipwidget = {
+							using = SubTabMarketFoodTooltip
+						}
+						action_tooltip = {
+							title = "OPEN_TAB"
+							on_action = "[SelectedMarketLateralView.Vars.Set( 'low_tab', 'food' )]"
+						}
+						down = "[SelectedMarketLateralView.Vars.HasValue( 'low_tab', 'food' )]"
+						margin_top = 3
+					}
+
+					button_secondary_tab_alt = {
+						using = layoutpolicy_expanding
+						blockoverride "tab_text"{
+							text = "SUBTAB_MARKETS_IN_RANGE"
+						}
+						tooltipwidget = {
+							using = SubTabMarketRegionTooltip
+						}
+						action_tooltip = {
+							title = "OPEN_TAB"
+							on_action = "[SelectedMarketLateralView.Vars.Set( 'low_tab', 'region' )]"
+						}
+						down = "[SelectedMarketLateralView.Vars.HasValue( 'low_tab', 'region' )]"
+						margin_top = 3
+					}
+				}
+			}
+
+			vbox = {
+				using = layoutpolicy_expanding
+				visible = "[Not(SelectedMarketLateralView.Vars.HasValue( 'low_tab', 'orders' ))]"
+				using = bg_secondary_inner_alt
+				
+				market_overview_goods = {
+					visible = "[SelectedMarketLateralView.Vars.NotExistOrHasValue( 'low_tab', 'goods' )]"
+				}
+
+				markets_in_range_overview_goods = {
+					visible = "[SelectedMarketLateralView.Vars.HasValue( 'low_tab', 'region' )]"
+				}
+					
+				vbox = {
+					using = layoutpolicy_expanding
+					visible = "[SelectedMarketLateralView.Vars.HasValue( 'low_tab', 'trades' )]"
+
+					AutomatedTradeSlider = { 
+						margin_top = 4
+					}
+
+					filtered_sorted_list = {
+						name = "trade_filtered_sorted_list"
+						# todo, need our own for trades
+						datacontext = "[SelectedMarketLateralView.GetTradeMarketEntriesSortSearch]"
+						blockoverride "sort_buttons_filtered_list" {
+							sort_by_key_button = {
+								name = "country_name"
+								layoutpolicy_vertical = expanding
+								size = { 45 -1 }
+							}
+
+							sort_by_key_button = {
+								name = "name"
+								layoutpolicy_vertical = expanding
+								size = { 45 -1 }
+							}
+							
+							sort_by_key_button = {
+								name = "import_export"
+								layoutpolicy_vertical = expanding
+								size = { 85 -1 }
+							}
+
+							sort_by_key_button = {
+								name = "target_market_name"
+								layoutpolicy_vertical = expanding
+								size = { 85 -1 }
+							}
+
+							sort_by_key_button = {
+								name = "trade_profit"
+								layoutpolicy_vertical = expanding
+								size = { 70 -1 }
+							}
+
+							sort_by_key_button = {
+								name = "volume_goods"								
+								using = layoutpolicy_expanding
+								# size = { 185 -1 }
+							}
+						}
+
+						blockoverride "scroll_list_layout" {
+							fixedgridbox = {
+								addcolumn = 100%
+								addrow = 42
+								datamodel = "[SelectedMarketLateralView.GetTradeMarketEntries]"
+
+								item = {
+									widget = {
+										size = { 99% 40 }
+										parentanchor = hcenter
+										ExistingTradeCard = {
+											datacontext = "[Trade]"
+
+											blockoverride "trade_ui_actions" {
+												action_tooltip = {
+													click_type = left
+													click_mode = single
+													title = "OPEN_TRADE_DETAILS"
+													on_action = "[ShowTradeDetails(Trade.Self)]"
+												}
+												action_tooltip = {
+													enabled = "[ObjectsEqual(Trade.GetOwner, Player.Self)]"
+													click_type = right
+													click_mode = confirm
+													conditions = "CANCEL_TRADE_DISABLED"
+													title = "CANCEL_TRADE"
+													on_action = "[CancelTrade(Trade.Self)]"
+												}
+											}
+
+											blockoverride "sort_by_highlight_country_name" {
+												sort_by_small_highlight = {
+													name = "country_name"
+													size = { 120% 150% }
+												}
+											}
+
+											blockoverride "sort_by_highlight_stockpile" {
+												sort_by_small_highlight = {
+													name = "stockpile"
+												}
+											}
+											
+											blockoverride "sort_by_highlight_trade_good" {
+												sort_by_small_highlight = {
+													name = "name"
+													size = { 120% 30 }
+												}
+											}
+
+											blockoverride "sort_by_highlight_markets" {
+												sort_by_small_highlight = {
+													name = "target_market_name"
+													size = { 105% 30 }
+												}
+												sort_by_small_highlight = {
+													name = "import_export"
+													size = { 105% 30 }
+												}
+											}
+											
+											blockoverride "sort_by_highlight_profit" {
+												sort_by_highlight = {
+													name = "trade_profit"
+													size = { 70 30 }
+												}
+											}
+											
+											blockoverride "sort_by_highlight_quantity_goods" {
+												sort_by_highlight = {
+													name = "volume_goods"
+													size = { 105% 30 }
+												}
+											}
+											blockoverride "sort_by_highlight_quantity_goods_bigger" {
+												sort_by_highlight = {
+													name = "volume_goods"
+													size = { 105% 30 }
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				
+				vbox = {
+					using = layoutpolicy_expanding
+					visible = "[SelectedMarketLateralView.Vars.HasValue( 'low_tab', 'food' )]"
+				
+					filtered_sorted_list = {
+						datacontext = "[SelectedMarketLateralView.GetFoodSourcesSortSearch]"
+						blockoverride "scroll_list_layout" {
+							fixedgridbox = {
+								addcolumn = 100%
+								addrow = 53
+								datamodel = "[SelectedMarketLateralView.GetFoodSources]"
+
+								item = {
+									widget = {
+										size = { 100% 53 }
+										
+										widget = {
+											size = { 98% 49 }
+											parentanchor = center
+											using = bg_paper_card
+											using = bg_cabinet_card_frame
+											visible = "[ObjectsEqual(Province.GetCountry, GetPlayer)]"
+
+											hbox = {
+												using = layoutpolicy_expanding
+												margin = {3 0}
+
+												card_header_button_04 = {
+													size = { -1 42 }
+													layoutpolicy_horizontal = expanding
+													
+													action_tooltip = {
+														click_type = left
+														click_mode = single
+														title = "SHOW_PROVINCE_FOOD"
+														on_action = "[ShowFoodProductionViewWithProvince(Province.Self, '(bool)yes')]"
+													}
+													tooltipwidget = { BasicFunctionalTooltip = {} }
+													using = market_food_scroll
+												}
+											}
+										}
+										
+										widget = {
+											size = { 98% 49 }
+											parentanchor = center
+											using = bg_paper_card
+											using = bg_cabinet_card_frame
+											visible = "[Not(ObjectsEqual(Province.GetCountry, GetPlayer))]"
+											hbox = {
+												using = layoutpolicy_expanding
+												margin = {3 0}
+
+												card_header_button_04 = {
+													size = { -1 42 }
+													layoutpolicy_horizontal = expanding
+													enabled = no
+
+													action_tooltip = {
+														click_type = left
+														click_mode = single
+														title = "SHOW_PROVINCE_FOOD_DISABLED"
+														enabled = no
+													}
+													tooltipwidget = { BasicFunctionalTooltip = {} }
+												}
+											}
+										}
+										
+										widget = {
+											parentanchor = center
+											visible = "[Not(ObjectsEqual(Province.GetCountry, GetPlayer))]"
+											size = { 98% 45 }
+
+											using = market_food_scroll
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				vbox = {
+					using = layoutpolicy_expanding
+					visible = "[SelectedMarketLateralView.Vars.HasValue( 'low_tab', 'merchants' )]"
+					
+					filtered_sorted_list = {
+						
+						datacontext = "[SelectedMarketLateralView.GetMerchantsSortSearch]"
+						
+						blockoverride "scroll_list_layout" {
+							fixedgridbox = {
+								addcolumn = 100%
+								addrow = 40
+								datamodel = "[SelectedMarketLateralView.GetMerchants]"	
+								item = {
+									widget = {
+										size = { 100% 40 }
+										scroll_card = {
+											using = bg_paper_card
+											parentanchor = center
+											size = { 98% 35 }
+											hbox = {
+												margin = { 4 0 }
+												spacing = 5
+												
+												widget = {
+													layoutpolicy_horizontal = expanding
+													hbox = {
+														spacing = 4
+														layoutpolicy_horizontal = expanding
+
+														country_flag_small = {
+															datacontext = "[Merchant.GetCountry]"
+														}
+														text_single = {
+															layoutpolicy_horizontal = expanding
+															align = left|nobaseline
+															text = "[Merchant.GetCountry.GetLongNameWithNoTooltip]"
+															default_format = "#L"
+															datacontext = "[Merchant.GetCountry]"
+															tooltipwidget = {
+																using = CountryTooltip
+															}
+	
+														}
+													}
+													sort_by_small_highlight = {
+														size = { 100% 35 }
+														name = "name"
+													}
+													expand = {}
+												}
+
+												# TRADE CAPACITY
+												button_regular = {
+													visible = "[Merchant.GetCountry.IsPlayer]"
+													size = { 95 28 }
+													datacontext = "[Player]"
+													datacontext = "[SelectedMarketLateralView.GetMarket]"
+
+													tooltipwidget = {
+														using = merchant_capacity_tooltip
+													}
+													action_tooltip = {
+														click_type = left
+														click_mode = single
+														title = "EXPAND_MERCHANT_CAPACITY"
+														on_action = "[ShowProductionViewWithMarketAndFilter(Market.Self, 'merchant_capacity_from_building', '(bool)yes')]"
+													}
+													
+													action_tooltip = {
+														click_modifier = shift
+														click_type = left
+														title = "ALERT_HINT"
+														click_modifier_description = "OPEN_HINT_TEXT"
+														using = snd_UI_alert_openAndCycle
+														on_action = "[ShowProductionViewWithMarketAndFilter(Market.Self, 'merchant_capacity_from_building', '(bool)yes')]"
+														on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_increasing_trade_capacity')]"
+														on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+													}
+
+													text_single = {
+														margin = { 5 5 }
+														parentanchor = right|vcenter
+														visible = "[GreaterThan_CFixedPoint(Market.GetTotalMerchantCapacity(Player.Self),'(CFixedPoint)0')]"
+														maximumsize = {85 20}
+														layoutpolicy_horizontal = expanding
+														align = right|nobaseline
+														raw_text = "[Market.GetMerchantAvailableCapacity(Player.Self)|2G]/[Market.GetMerchantTotalCapacity(Player.Self)|2]@trade_capacity!"															
+													}
+													text_single = {
+														margin = { 5 5 }
+														parentanchor = right|vcenter
+														visible = "[Not(GreaterThan_CFixedPoint(Market.GetTotalMerchantCapacity(Player.Self),'(CFixedPoint)0'))]"
+														maximumsize = {85 20}
+														layoutpolicy_horizontal = expanding
+														align = right|nobaseline
+														raw_text = "0 @trade_capacity!"
+													}
+													
+													sort_by_small_highlight = {
+														size = { 100 35 }
+														name = "merchant_capacity"
+													}
+												}
+
+												widget = {
+													visible = "[Not(Merchant.GetCountry.IsPlayer)]"
+													size = {95 20}
+													text_single = {
+														margin = { 5 0}
+														visible = "[GreaterThan_CFixedPoint(Merchant.GetTotalCapacity, '(CFixedPoint)0')]"
+														parentanchor = right|vcenter
+														maximumsize = {85 20}
+														align = nobaseline
+														raw_text = "[Merchant.GetTotalCapacity|2]@trade_capacity!"
+														tooltip = "[Merchant.GetCapacityWithLabel]"
+														tagtooltip_enabled = yes
+													}
+													text_single = {
+														margin = { 5 0 }
+														visible = "[LessThanOrEqualTo_CFixedPoint(Merchant.GetTotalCapacity, '(CFixedPoint)0')]"
+														parentanchor = center|vcenter
+														size = {55 20}
+														align = right|nobaseline
+														raw_text = "         -"
+														datacontext = "[Merchant]"
+														tooltipwidget = {
+															SimpleContextualTooltipType = {
+																lowpriotextcontext = "NO_MERCHANT_CAPACITY"
+																blockoverride "title_icon" {
+																	icon = {
+																		using = tooltip_title_icon_size
+																		texture = "gfx/interface/icons/flat_icons/trade_capacity.dds"
+																	}
+																}
+								
+																blockoverride "concept_link" {
+																	raw_text = "[merchant_capacity|e]"
+																}
+															}
+														}															
+													}
+													sort_by_small_highlight = {
+														name = "merchant_capacity"
+														size = { 100 35 }
+													}
+												}
+
+												# TOTAL TRADE PROFIT
+												widget = {
+													size = { 75 28 }
+													visible = "[Not(GreaterThan_CFixedPoint(Merchant.GetTotalCapacity, '(CFixedPoint)0'))]"
+												}
+												button_regular = {
+													visible = "[GreaterThan_CFixedPoint(Merchant.GetTotalCapacity, '(CFixedPoint)0')]"
+													size = { 75 28 }
+													text_single = {
+														margin = { 5 5 }
+														visible = "[GreaterThan_CFixedPoint(Merchant.GetTotalCapacity, '(CFixedPoint)0')]"
+														parentanchor = right|vcenter
+														maximumsize = {65 20}
+														align = nobaseline
+														raw_text = "[Merchant.GetTotalTradeProfit|+=2]@gold!"
+													}
+
+													text_single = {
+														margin = { 5 5 }
+														visible = "[LessThanOrEqualTo_CFixedPoint(Merchant.GetTotalCapacity, '(CFixedPoint)0')]"
+														parentanchor = right|vcenter
+														maximumsize = {65 20}
+														align = nobaseline
+														raw_text = "   -"
+
+													}
+													
+													sort_by_small_highlight = {
+														size = { 75 35 }
+														name = "trade_profit"
+													}
+
+													tooltipwidget = {
+														datacontext = "[Merchant]"
+														ContextualTooltipType = {
+															blockoverride "title_icon" {
+																icon = {
+																	using = tooltip_title_icon_size
+																	size = { 48 48 }
+																	texture = "gfx/interface/icons/resources/gold.dds"
+																}
+															}
+															blockoverride "title_text" {
+																text = "[trade_profit]"
+															}
+															blockoverride "concept_link" {
+																text = "[trade_profit|e]"
+															}
+															blockoverride "tooltip_content" {
+																TooltipScrolledStringPairList = {
+																	blockoverride "block_title" {
+																		text = "TRADE_PROFIT_GROUPED_BY_GOOD_TT_TTILE"
+																	}
+																	blockoverride "block_scrollarea" { maximumsize = { -1 300 }}
+																	textcontext = "[Merchant.GetCountry.GetTradeByGoodForCountryInfo(Merchant.GetMarket)]"
+																}
+															}
+														}													
+													}													
+													action_tooltip = {
+														datacontext = "[Merchant]"
+														click_type = left
+														click_mode = single														
+														title = "OPEN_TRADES_SUBTAB"
+														on_action = "[SelectedMarketLateralView.OpenTradesSubtabFilteredByCountry(Merchant.GetCountry)]"
+													}	
+												}
+												
+
+												# TRADE POWER
+												widget = {
+													size = {65 20}
+													text_single = {
+														parentanchor = right|vcenter
+														maximumsize = {65 20}
+														align = nobaseline
+														raw_text = "[Merchant.GetPowerWithLabel]@trade_advantage!"
+
+													}
+
+													sort_by_small_highlight = {
+														size = { 65 35 }
+														name = "merchant_power"
+													}
+												}
+
+												# EMBARGO ACTION
+												widget = {
+													size = { 30 30 }
+													action_button_regular = {
+														size = { 100% 100% }
+														actor = "[Player]"
+														icon = {
+															parentanchor = center
+															size = {23 23}
+															texture = "gfx/interface/icons/diplomatic_status/giving_embargo_nation.dds"
+														}
+														parameter = {
+															parameter_name = "recipient"
+															parameter_value = "[Merchant.GetCountry]"
+														}
+														left_click_and_hold_action = {
+															action_name = "scripted_relation"
+															parameter = {
+																parameter_name = "scripted_relation_type"
+																parameter_value = "[GetScriptedRelationType('embargo_nation')]"
+															}
+															action_direction = "offer"
+														}
+														blockoverride "tooltip" {
+															tooltipwidget = {
+																ContextualTooltipType = {
+																	blockoverride "title_icon" {
+																		icon = {
+																			texture = "gfx/interface/icons/diplomatic_status/giving_embargo_nation.dds"
+																			using = tooltip_title_icon_size
+																		}
+																	}
+																	blockoverride "title_text" {
+																		text = "offer_embargo_nation_tt"
+																	}
+																	blockoverride "concept_link_obj" {}
+																	blockoverride "tooltip_content" {
+																		using = action_tooltip_inner_content
+																	}
+									
+																}
+															}
+														}
+													}
+													
+													action_button_regular = {
+														size = { 100% 100% }
+														actor = "[Player]"
+														icon = {
+															parentanchor = center
+															size = {23 23}
+															texture = "[GetConceptTexture('market')]"
+														}
+														parameter = {
+															parameter_name = "recipient"
+															parameter_value = "[Merchant.GetCountry]"
+														}
+														left_click_and_hold_action = {
+															action_name = "scripted_relation"
+															parameter = {
+																parameter_name = "scripted_relation_type"
+																parameter_value = "[GetScriptedRelationType('embargo_nation')]"
+															}
+															action_direction = "cancellation"
+														}
+														blockoverride "tooltip" {
+															tooltipwidget = {
+																ContextualTooltipType = {
+																	blockoverride "title_icon" {
+																		icon = {
+																			texture = "gfx/interface/icons/diplomatic_status/giving_embargo_nation.dds"
+																			using = tooltip_title_icon_size
+																		}
+																	}
+																	blockoverride "title_text" {
+																		text = "cancel_embargo_nation"
+																	}
+																	blockoverride "concept_link_obj" {}
+																	blockoverride "tooltip_content" {
+																		using = action_tooltip_inner_content
+																	}
+									
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+
+						blockoverride "sort_buttons_filtered_list" {
+							sort_by_key_button = {
+								name = "name"
+								using = layoutpolicy_expanding
+							}
+
+							sort_by_key_button = {
+								name = "merchant_capacity"
+								layoutpolicy_vertical = expanding
+								size = { 105 30 }
+							}
+
+							sort_by_key_button = {
+								name = "trade_profit"
+								layoutpolicy_vertical = expanding
+								size = { 78 30 }
+							}
+
+							sort_by_key_button = {
+								name = "merchant_power"
+								size = { 120 30 }
+								layoutpolicy_vertical = expanding
+								# using = layoutpolicy_expanding
+							}
+						}
+					}
+				}
+			}
+
+			vbox = {
+				using = layoutpolicy_expanding
+				visible = "[SelectedMarketLateralView.Vars.HasValue( 'low_tab', 'orders' )]"
+				using = bg_secondary_inner_alt
+
+				AutomatedTradeSlider = {
+					margin_top = 4
+				}
+
+				vbox = {
+					using = layoutpolicy_expanding
+					margin = { 4 4 }
+					spacing = 2
+					datacontext = "[GetQuickTradeOrders(SelectedMarketLateralView.GetMarket.Self)]"
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						margin_bottom = 2
+						spacing = 2
+						visible = "[Or( Not( EqualTo_int32( GetDataModelSize( QuickTradeOrders.GetQuickImportSuggestions ), '(int32)0' ) ), Not( EqualTo_int32( GetDataModelSize( QuickTradeOrders.GetQuickExportSuggestions ), '(int32)0' ) ) )]"
+
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							using = bg_paper_card
+							using = bg_cabinet_card_frame
+							spacing = 15
+							margin = { 7 3 }
+							margin_top = 7
+
+							# IMPORT PROFIT
+							button_regular = {
+								size = { 30 30 }
+								visible = "[Not( EqualTo_int32( GetDataModelSize( QuickTradeOrders.GetQuickImportSuggestions ), '(int32)0' ) )]"
+								icon = {
+									parentanchor = center
+									size = { 70% 70% }
+									texture = "gfx/interface/icons/flat_icons/trade_market/import.dds"
+								}
+								tooltipwidget = { BasicFunctionalTooltip = {} }
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "TRADE_ORDER_QUICK_IMPORT_OPEN"
+									on_action = "[PdxGuiWidget.ToggleContextMenu]"
+								}
+								contextmenu_widget = {
+									QuickImportOrderContextMenu = {}
+								}
+							}
+
+							expand = {}
+
+							# GOV NEEDS
+							button_regular = {
+								size = { 30 30 }
+								enabled = "[GetMarketCountryNeeds(Player.Self, QuickTradeOrders.GetMarket.Self).HasGovernmentMissingGoods]"
+								icon = {
+									parentanchor = center
+									size = { 70% 70% }
+									texture = "gfx/interface/icons/alerts_icons/constructions_missing_input.dds"
+								}
+								tooltipwidget = { BasicFunctionalTooltip = {} }
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "TRADE_ORDER_QUICK_GOV_NEEDS_OPEN"
+									on_action = "[PdxGuiWidget.ToggleContextMenu]"
+									enabled = "[GetMarketCountryNeeds(Player.Self, QuickTradeOrders.GetMarket.Self).HasGovernmentMissingGoods]"
+								}
+								contextmenu_widget = {
+									QuickGovNeedsImportContextMenu = {}
+								}
+							}
+
+							# BUILDING NEEDS
+							button_regular = {
+								size = { 30 30 }
+								enabled = "[GetMarketCountryNeeds(Player.Self, QuickTradeOrders.GetMarket.Self).HasBuildingsMissingGoods]"
+								icon = {
+									parentanchor = center
+									size = { 70% 70% }
+									texture = "gfx/interface/icons/alerts_icons/buildings_missing_input.dds"
+								}
+								tooltipwidget = { BasicFunctionalTooltip = {} }
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "TRADE_ORDER_QUICK_BUILDING_NEEDS_OPEN"
+									on_action = "[PdxGuiWidget.ToggleContextMenu]"
+									enabled = "[GetMarketCountryNeeds(Player.Self, QuickTradeOrders.GetMarket.Self).HasBuildingsMissingGoods]"
+								}
+								contextmenu_widget = {
+									QuickBuildingNeedsImportContextMenu = {}
+								}
+							}
+
+							# POP NEEDS
+							button_regular = {
+								size = { 30 30 }
+								enabled = "[GetMarketCountryNeeds(Player.Self, QuickTradeOrders.GetMarket.Self).HasPopsMissingGoods]"
+								icon = {
+									parentanchor = center
+									size = { 70% 70% }
+									texture = "gfx/interface/icons/alerts_icons/pops_wanting_stuff.dds"
+								}
+								tooltipwidget = { BasicFunctionalTooltip = {} }
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "TRADE_ORDER_QUICK_POP_NEEDS_OPEN"
+									on_action = "[PdxGuiWidget.ToggleContextMenu]"
+									enabled = "[GetMarketCountryNeeds(Player.Self, QuickTradeOrders.GetMarket.Self).HasPopsMissingGoods]"
+								}
+								contextmenu_widget = {
+									QuickPopNeedsImportContextMenu = {}
+								}
+							}
+
+							# FOOD GOODS
+							button_regular = {
+								size = { 30 30 }
+								visible = "[Not( EqualTo_int32( GetDataModelSize( QuickTradeOrders.GetQuickImportSuggestions ), '(int32)0' ) )]"
+								icon = {
+									parentanchor = center
+									size = { 70% 70% }
+									texture = "gfx/interface/icons/flat_icons/trade_market/trade_categories/profitable_food_trades.dds"
+								}
+								tooltipwidget = { BasicFunctionalTooltip = {} }
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "TRADE_ORDER_QUICK_FOOD_NEEDS_OPEN"
+									on_action = "[PdxGuiWidget.ToggleContextMenu]"
+								}
+								contextmenu_widget = {
+									QuickFoodNeedsImportContextMenu = {}
+								}
+							}
+
+							expand = {}
+
+							# EXPORT PROFIT
+							button_regular = {
+								size = { 30 30 }
+								visible = "[Not( EqualTo_int32( GetDataModelSize( QuickTradeOrders.GetQuickExportSuggestions ), '(int32)0' ) )]"
+								icon = {
+									parentanchor = center
+									size = { 70% 70% }
+									texture = "gfx/interface/icons/flat_icons/trade_market/export.dds"
+								}
+								tooltipwidget = { BasicFunctionalTooltip = {} }
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "TRADE_ORDER_QUICK_EXPORT_OPEN"
+									on_action = "[PdxGuiWidget.ToggleContextMenu]"
+								}
+								contextmenu_widget = {
+									QuickExportOrderContextMenu = {}
+								}
+							}
+						}
+					}
+
+					scroll_list = {
+						blockoverride "scroll_list_layout" {
+							fixedgridbox = {
+								addcolumn = 100%
+								addrow = 45
+								datamodel = "[QuickTradeOrders.GetTradeOrders]"
+
+								item = {
+									widget = {
+										size = { 99% 43 }
+										parentanchor = hcenter
+										TradeOrderCard = {}
+									}
+								}
+							}
+						}
+						blockoverride "scroll_list_is_empty" {
+							visible = "[IsDataModelEmpty(QuickTradeOrders.GetTradeOrders)]"
+						}
+
+						blockoverride "scroll_list_is_empty_text" {
+							text = "TRADE_ORDERS_SCROLL_LIST_EMPTY"
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+template market_food_scroll {
+	hbox = {
+		margin = { 10 0}
+		spacing = 10
+
+		widget = {
+			size = { 36 40 }
+
+			country_flag_small = {
+				parentanchor = center
+				datacontext = "[Province.GetCountry]"
+				blockoverride "click" {}
+				blockoverride "double_click" {}
+			}
+
+			icon = {
+				parentanchor = bottom|right
+				size = {20 20}
+				using = province_texture
+	
+				glow = {
+					name = "drop_shadow"
+					glow_radius = 3
+					color = {0.0 0.0 0.0 1.0}
+					alpha = 0.6
+				}
+			}
+		}
+
+		text_single = {
+			sort_by_highlight = {
+				size = { 110% 220% }
+				name = "name"
+			}
+			layoutpolicy_horizontal = expanding
+			maximumsize = {135 -1}
+			text = "[Province.GetName]"
+			align = nobaseline
+		}
+
+		widget = {
+			size = {80 30}
+			text_single = {
+				parentanchor = right|vcenter
+				sort_by_highlight = {
+					name = "balance"
+				}
+				maximumsize = {80 30}
+				raw_text = "[Province.GetMonthlyFoodChange|+=2G]@food!"
+				align = nobaseline
+				tooltipwidget = {
+					using = province_food_production
+				}
+			}
+		}
+
+		expand = {}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			tooltipwidget = {
+				using = province_food_tooltip
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				expand = {}
+				text_single = {
+					text = "game_concept_food_stockpile"
+					default_format = "#explanation_link"
+				}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				expand = {}
+				text_single = { ### STOCKPILE BALANCE
+					raw_text = "[Add_float(FixedPointToFloat(Province.GetFoodFromMarket), FixedPointToFloat(Province.GetMonthlyFood))|+=2]"
+					fontsize = 13
+				}
+			}
+		}
+		
+		piechart = {
+			using = bg_circle
+			size = { 35 35 }
+			using = piechart_angles
+			using = bg_circle_piechart
+
+			tooltipwidget = {
+				using = province_food_tooltip
+			}
+
+			pieslice_no_highlight = {
+				texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+				value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
+				color = { 1 1 1 1 }
+			}
+
+			pieslice_no_highlight = {
+				texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+				value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
+				color = { 1 1 1 1 }
+			}
+
+			icon = {
+				size = { 61% 61% }
+				parentanchor = center
+				texture = "gfx/interface/icons/location_icons/food.dds"
+
+				modify_texture = {
+					visible = "[And(GreaterThan_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)0'), And(LessThan_float(FixedPointToFloat(Province.GetMonthlyFoodChange), '(float)0'), GreaterThan_float(Abs_float(FixedPointToFloat(Province.GetMonthlyFoodChange)), FixedPointToFloat(Province.GetFoodFromMarket))))]"
+					using = color_black_texture
+					alpha = 0.5
+					blend_mode = multiply
+				}
+
+				modify_texture = {
+					visible = "[And(GreaterThan_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)0'), And(LessThan_float(FixedPointToFloat(Province.GetMonthlyFoodChange), '(float)0'), GreaterThan_float(Abs_float(FixedPointToFloat(Province.GetMonthlyFoodChange)), FixedPointToFloat(Province.GetFoodFromMarket))))]"
+					using = color_yellow_texture
+					alpha = 0.6
+				}
+
+				modify_texture = {
+					visible = "[Not(GreaterThan_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)0'))]"
+					using = color_black_texture
+					alpha = 0.5
+					blend_mode = multiply
+				}
+
+				modify_texture = {
+					visible = "[Not(GreaterThan_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)0'))]"
+					using = color_mid_red_texture
+				}
+			}
+
+			sort_by_small_highlight = {
+				size = { 120% 120% }
+				name = "stockpile"
+			}
+		}
+	}
+}
+
+select_menu_left = {
+	datacontext = "[GetQuickVisibleMarkets(Player.Self)]"
+	blockoverride "menu_setup" {
+		name = "market_view_select_market"
+	}
+
+	blockoverride "close_on_action" { on_action = "[MarketViewSelectMarket.OnClose]" }
+	blockoverride "select_content" {
+		select_menu_header = {
+			blockoverride "select_menu_header_extra" {
+				button_checkbox_visibility = {
+					size = { 32 32 }
+					action_tooltip = {
+						title = "TOGGLE_INRANGE_MARKETS"
+						on_action = "[MarketViewSelectMarket.Parent.Vars.Toggle( 'inrange_markets')]"
+					}
+					tooltipwidget = { BasicFunctionalTooltip = {} }
+					down = "[MarketViewSelectMarket.Parent.Vars.Exists( 'inrange_markets')]"
+				}
+
+				text_single = {
+					using = Font_Type_Headers
+					using = Font_Size_Small
+					align = nobaseline
+					text = "INRANGE_MARKETS"
+				}
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+
+			datamodel = "[QuickVisibleMarkets.GetVisibleMarkets]"
+			item = {
+				widget = {
+					size = { 485 70 }
+					visible = "[Or3(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'), GreaterThan_CFixedPoint(Market.GetTotalMerchantCapacity(Player.Self),'(CFixedPoint)0'), And(MarketViewSelectMarket.Parent.Vars.Exists( 'inrange_markets'), IsMarketInRange(Market.Self)))]"
+					
+					hbox = {
+						using = bg_market_card
+						using = bg_cabinet_card_frame
+
+						market_card = {
+							blockoverride "market_card_title_action"{
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "OPEN_MARKET"
+									on_action = "[ShowMarket(Market.Self)]"
+								}
+			
+								action_tooltip = {
+									click_type = right
+									click_mode = single
+			
+									cursor = "market_menu"
+									title = "CLICK_ACTION_MARKET_CONTEXT_MENU"
+									on_action = "[PdxGuiWidget.ToggleContextMenu]"
+								}
+			
+								onmousehierarchyenter = "[PdxGuiWidget.SetHighlightMarket(Market.Self)]"
+								ondoubleclick = "[PanToLocation(Market.GetCenterLocation)]"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

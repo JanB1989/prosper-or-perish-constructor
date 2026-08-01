@@ -1,0 +1,1696 @@
+﻿template province_tooltip {
+    ContextualTooltipType = {
+        block "province_tooltip_visible" {}
+        blockoverride "title_text" {
+            text = "[Province.GetNameWithNoTooltip]"
+        }
+
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "gfx/interface/icons/map_modes/provinces.dds"
+            }
+        }
+
+        blockoverride "concept_link" {
+            text = [province|E]
+        }
+
+        blockoverride "title_button" {
+            mapmode_tooltip_button = {
+                datacontext = "[GetMapMode('provinces')]"
+            }
+        }
+
+        blockoverride "tooltip_content" {
+            TooltipDebugTextBlock = {
+                blockoverride "text" {
+                    debug_text = "[Province.GetDebugText]"
+                }
+            }
+            TooltipDebugStringPairList = {
+                textcontext = "[Province.GetDebugText]"
+            }
+            TooltipStringPairList = {
+                textcontext = "PROVINCE_GEOGRAPHY_INFO"
+            }
+            # TooltipStringPairList = {
+            #     textcontext = "PROVINCE_ECONOMY_INFO"
+            # }
+            TooltipListBase = { ### ECONOMY INFO
+                TooltipListRowContent = {
+                    TooltipManualTableField = {
+                        blockoverride "field_content" {
+                            text_single = {
+                                layoutpolicy_horizontal = expanding
+                                autoresize = no
+                                text = "[population|e]"
+                            }
+                            text_single = {
+                                autoresize = yes
+                                raw_text = "[Province.GetTotalPopulation|L]@population!"
+                                tooltipwidget = {
+                                    using = province_control_tooltip
+                                }
+                            }
+                        }
+                    }
+
+                    TooltipManualTableField = {
+                        blockoverride "field_content" {
+                            text_single = {
+                                layoutpolicy_horizontal = expanding
+                                autoresize = no
+                                text = "AVERAGE_CONTROL"
+                            }
+                            text_single = {
+                                autoresize = yes
+                                raw_text = "[Province.GetAverageControl|L%2]@control!"
+                                tooltipwidget = {
+                                    using = province_control_tooltip
+                                }
+                            }
+                        }
+                    }
+
+                    TooltipManualTableField = {
+                        blockoverride "field_content" {
+                            text_single = {
+                                layoutpolicy_horizontal = expanding
+                                autoresize = no
+                                text = "[tax_base|e]"
+                            }
+                            text_single = {
+                                autoresize = yes
+                                raw_text = "[Province.GetTotalTaxBase|L2]@tax_base!"
+                                tooltipwidget = {
+                                    using = province_tax_base_tooltip
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            TooltipStringPairList = {
+				textcontext = "PROVINCE_LEVY_INFO"
+			}
+
+            TooltipListBase = {
+                visible = "[DataModelHasItems(Province.GetTimedModifiers)]"
+                hbox = {
+                    layoutpolicy_horizontal = expanding
+                    hbox = {
+                        margin = { 5 5 }
+                        margin_right = 10
+                        spacing = 5
+
+                        background = {
+                            using = tooltip_table_field_texture
+                        }
+
+                        name = "modifiers"
+                        datamodel = "[Province.GetTimedModifiers]"
+                        item = {
+                            timed_modifier_icon = {
+                                size = { 30 30 }
+
+                                datacontext = "[TimedModifier]"
+                                tooltipwidget = {
+                                    using = timed_modifier_tooltip
+                                    blockoverride "concept_link" {
+                                        text = "[province_modifier|e]"
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    expand = {}
+                }
+            }
+
+            TooltipListBase = { ### LOCATIONS BREAKDOWN
+                hbox = {
+                    layoutpolicy_horizontal = expanding
+                    margin = { 5 5 }
+                    margin_right = 10
+                    spacing = 5
+
+                    background = {
+                        using = tooltip_table_field_texture
+                    }
+
+                    country_flag_small = {
+                        datacontext = "[Province.GetCapital.GetOwner]"
+
+                        blockoverride "click" {}
+                        blockoverride "double_click" {}
+                    }
+
+                    vbox = {
+                        layoutpolicy_horizontal = expanding
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = left|nobaseline
+                            text = "[owner|e]"
+                        }
+
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = left|nobaseline
+                            raw_text = "[Province.GetCapital.GetOwner.GetLongName]"
+                        }
+                    }
+
+                    expand = {}
+
+                    vbox = {
+                        layoutpolicy_horizontal = expanding
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = right|nobaseline
+                            text = "[province_capital|e]"
+                        }
+
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = right|nobaseline
+                            raw_text = "@location! [Province.GetCapital.GetName]"
+                        }
+                    }
+                }
+
+                TooltipListColumnContent = {
+                    TooltipTableColumn = {
+                        blockoverride "column_title" {
+                            visible = no
+                        }
+                        blockoverride "column_title_text" { }
+                        blockoverride "column_title_right" { }
+
+                        blockoverride "field_left" {
+                            widget = {
+                                size = { 20 20 }
+                                icon = {
+                                    size = { 100% 100% }
+                                    texture = "[Location.GetRankIcon]"
+                                }
+                                tooltipwidget = {
+                                    using = location_rank_tooltip
+                                }
+                            }
+							
+                        }
+
+                        blockoverride "field_text" {
+                            default_format = "#subtle_name"
+                            align = left|nobaseline
+                            raw_text = "[Location.GetName]"
+                        }
+
+                        blockoverride "field_right" { expand = {} }
+                    }
+
+                    TooltipTableColumn = {
+                        blockoverride "column_title" {
+                            visible = no
+                        }
+                        blockoverride "column_title_left" { }
+                        blockoverride "column_title_text" { }
+
+                        blockoverride "field_left" { expand = {} }
+                        blockoverride "field_text" {
+                            raw_text = " "
+                        }
+
+                        blockoverride "field_right" {
+                            hbox = {
+                                visible = "[GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0')]"
+                                datamodel = "[Location.GetTownRights]"
+                                item = {
+                                    icon = {
+                                        size = { 20 20 }
+                                        texture = "[TownRights.GetIcon]"
+                                        tooltipwidget = { using = TownRights_tooltip }
+                                    }
+                                }
+                            }
+							icon = {
+								size = { 20 20 }
+								texture = "[GetGoodsIcon(Location.GetRawMaterial)]"
+								datacontext = "[Location.GetRawMaterial]"
+								tooltipwidget = {
+									using = Goods_tooltip
+								}
+							}
+
+							icon = {
+								size = { 16 16 }
+								texture = "[GetIntegrationLevelIcon(Location.GetIntegrationLevel)]"
+								tooltipwidget = {
+									using = location_core_tooltip
+								}
+							}
+                        }
+                    }
+
+                    # TooltipTableColumn = {
+                    # 	blockoverride "column_title" {}
+                    # 	blockoverride "column_title_left" { expand = {} }
+                    # 	blockoverride "column_title_text" { text = "[local_food|e]" }
+
+                    # 	blockoverride "field_left" { expand = {} }
+
+                    # 	blockoverride "field_text" { text = "[Location.GetFoodsOutputWithLabel]" }
+                    # }
+
+                    blockoverride "column_datamodel"  {  datamodel = "[Province.GetLocations]" }
+                }
+            }
+
+            TooltipListBase = { ### FOOD HEADER
+                hbox = {
+                    layoutpolicy_horizontal = expanding
+                    margin = { 10 10 }
+                    spacing = 5
+
+                    background = {
+                        using = tooltip_table_field_texture
+                    }
+
+                    subheader_unified_icon = {
+                        expand = {}
+                        margin = { 0 0 }
+                        maximumsize = {165 -1}
+                        layoutpolicy_horizontal = expanding
+
+                        tooltipwidget = {
+                            using = province_food_tooltip
+                        }
+
+                        blockoverride "subheader_unified_icon_texture" {
+                            piechart = {
+                                using = bg_circle
+                                size = { 30 30 }
+                                using = piechart_angles
+                                using = bg_circle_piechart
+
+                                pieslice_no_highlight = {
+                                    texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+                                    value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
+                                    color = { 1 1 1 1 }
+                                }
+
+                                pieslice_no_highlight = {
+                                    texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+                                    value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
+                                    color = { 1 1 1 1 }
+                                }
+
+                                icon = {
+                                    size = {  71% 71% }
+                                    texture = "gfx/interface/icons/unit_view/food.dds"
+                                    parentanchor = center
+
+                                    modify_texture = {
+                                        visible = "[Province.IsRiskOfStarving]"
+                                        using = color_black_texture
+                                        alpha = 0.5
+                                        blend_mode = multiply
+                                    }
+
+                                    modify_texture = {
+                                        visible = "[Province.IsRiskOfStarving]"
+                                        using = color_yellow_texture
+                                        alpha = 0.6
+                                    }
+
+                                    modify_texture = {
+                                        visible = "[Province.IsStarving]"
+                                        using = color_black_texture
+                                        alpha = 0.5
+                                        blend_mode = multiply
+                                    }
+
+                                    modify_texture = {
+                                        visible = "[Province.IsStarving]"
+                                        using = color_mid_red_texture
+                                    }
+                                }
+                            }
+                        }
+                        blockoverride "subheader_unified_text_maxsize" { maximumsize = { 125 20 } }
+                        blockoverride "subheader_unified_top_text" {
+                            text = "game_concept_provincial_food"
+                            align = right|nobaseline
+                        }
+
+                        blockoverride "unified_icon_bottom_content" { #@ WIP
+                            spacing = 5
+                            text_single = { ### STOCKPILE BALANCE
+                                raw_text = "[Add_float(FixedPointToFloat(Province.GetFoodFromMarket), FixedPointToFloat(Province.GetMonthlyFood))|+=2]"
+                                align = right|nobaseline
+                                minimumsize = { -1 20 }
+                                maximumsize = { 170 20 }
+                                fontsize = 13
+                                autoresize = yes
+                            }
+                        }
+                    }
+
+                    expand = {}
+
+                    vbox = {
+                        layoutpolicy_horizontal = expanding
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = right|nobaseline
+                            fontsize = 14
+                            text = "[market|e]"
+                        }
+
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = right|nobaseline
+                            fontsize = 13
+                            text = "[Province.GetCapital.GetMarket.GetName]"
+                        }
+                    }
+
+                    icon = {
+                        size = { 32 32 }
+                        texture = "gfx/interface/icons/location_icons/market.dds"
+                    }
+                }
+            }
+        }
+    }
+}
+
+template province_amount_locations_tooltip {
+    ContextualTooltipType = {
+        block "province_tooltip_visible" {}
+        blockoverride "title_text" {
+            text = "[Province.GetNameWithNoTooltip]"
+        }
+
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "gfx/interface/icons/map_modes/provinces.dds"
+            }
+        }
+
+        blockoverride "concept_link" {
+            text = [province|E]
+        }
+
+        blockoverride "title_button" {
+            mapmode_tooltip_button = {
+                datacontext = "[GetMapMode('provinces')]"
+            }
+        }
+        blockoverride "tooltip_content" {
+            TooltipListBase = { ### LOCATIONS BREAKDOWN
+                hbox = {
+                    layoutpolicy_horizontal = expanding
+                    margin = { 5 5 }
+                    margin_right = 10
+                    spacing = 5
+
+                    background = {
+                        using = tooltip_table_field_texture
+                    }
+
+                    country_flag_small = {
+                        datacontext = "[Province.GetCapital.GetOwner]"
+
+                        blockoverride "click" {}
+                        blockoverride "double_click" {}
+                    }
+
+                    vbox = {
+                        layoutpolicy_horizontal = expanding
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = left|nobaseline
+                            text = "[owner|e]"
+                        }
+
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = left|nobaseline
+                            raw_text = "[Province.GetCapital.GetOwner.GetLongName]"
+                        }
+                    }
+
+                    expand = {}
+
+                    vbox = {
+                        layoutpolicy_horizontal = expanding
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = right|nobaseline
+                            text = "[province_capital|e]"
+                        }
+
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = right|nobaseline
+                            raw_text = "@location! [Province.GetCapital.GetName]"
+                        }
+                    }
+                }
+
+                TooltipListColumnContent = {
+                    TooltipTableColumn = {
+                        blockoverride "column_title" {
+                            visible = no
+                        }
+                        blockoverride "column_title_text" { }
+                        blockoverride "column_title_right" { }
+
+                        blockoverride "field_left" {
+                            icon = {
+                                size = { 25 25 }
+                                texture = "[Location.GetRankIcon]"
+                            }
+                        }
+
+                        blockoverride "field_text" {
+                            default_format = "#subtle_name"
+                            align = left|nobaseline
+                            raw_text = "[Location.GetName]"
+                        }
+
+                        blockoverride "field_right" { expand = {} }
+                    }
+
+                    TooltipTableColumn = {
+                        blockoverride "column_title" {
+                            visible = no
+                        }
+                        blockoverride "column_title_left" { }
+                        blockoverride "column_title_text" { }
+
+                        blockoverride "field_left" { expand = {} }
+                        blockoverride "field_text" {
+                            raw_text = " "
+                        }
+
+                        blockoverride "field_right" {
+                            icon = {
+                                size = { 16 16 }
+                                texture = "[GetIntegrationLevelIcon(Location.GetIntegrationLevel)]"
+                            }
+                            tooltipwidget = {
+                                using = location_core_tooltip
+                            }
+                        }
+                    }
+
+                    # TooltipTableColumn = {
+                    # 	blockoverride "column_title" {}
+                    # 	blockoverride "column_title_left" { expand = {} }
+                    # 	blockoverride "column_title_text" { text = "[local_food|e]" }
+
+                    # 	blockoverride "field_left" { expand = {} }
+
+                    # 	blockoverride "field_text" { text = "[Location.GetFoodsOutputWithLabel]" }
+                    # }
+
+                    blockoverride "column_datamodel"  {  datamodel = "[Province.GetLocations]" }
+                }
+            }
+        } 
+    }
+}
+
+template ProvinceModifier_tooltip {
+    ContextualTooltipType = {
+
+        blockoverride "title_icon" {
+            icon = {
+                size = { 48 48 }
+                texture = "[ProvinceModifierWrap.GetIcon]"
+            }
+        }
+
+        blockoverride "title_text" {
+            text = "[ProvinceModifierWrap.GetName]"
+        }
+
+        blockoverride "concept_link" {
+            text = "[location_modifier|e]"
+        }
+
+        blockoverride "tooltip_content" {
+            TooltipStringPairList = {
+                textcontext = "[ProvinceModifierWrap.GetTooltip]"
+            }
+        }
+    }
+}
+
+template province_food_tooltip {
+    ContextualTooltipType = {
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "gfx/interface/icons/location_icons/food.dds"
+                glow = {
+                    name = "drop_shadow"
+                    glow_radius = 3
+                    color = {0.0 0.0 0.0 1.0}
+                    alpha = 0.6
+                }
+            }
+        }
+        blockoverride "title_text" {
+            text = "PROVINCE_FOOD_TT_TITLE"
+        }
+
+        blockoverride "concept_link" {
+            text = [provincial_food|e]
+        }
+
+        blockoverride "title_button" {
+            mapmode_tooltip_button = {
+                datacontext = "[GetMapMode('food')]"
+            }
+            hint_button = {
+                action_tooltip = {
+                    title = "OPEN_HINT"
+                    on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_food')]"
+                }
+            }
+        }
+
+        blockoverride "tooltip_content" {
+            TooltipTextBlock = {
+                visible = "[Not(Province.CanGetToFoodMarket)]"
+                blockoverride "text" {
+                    text = "[Province.CanGetToFoodMarketInfo]"
+                }
+            }
+
+            TooltipTextBlock = {
+                visible = "[Province.IsStarving]"
+                blockoverride "text" {
+                    text = "PROVINCE_FOOD_TT_RED"
+                }
+
+                blockoverride "textblock_background_tint"  {
+                    modify_texture = {
+                        using = color_red_texture
+                    }
+                }
+            }
+
+            TooltipTextBlock = {
+                visible = "[Province.IsRiskOfStarving]"
+
+                blockoverride "text" {
+                    text = "PROVINCE_FOOD_TT_YELLOW"
+                }
+
+                blockoverride "textblock_background_tint"  {
+                    modify_texture = {
+                        using = color_yellow_texture
+                    }
+                }
+            }
+
+            TooltipTextBlock = {
+               visible = "[GreaterThan_CFixedPoint(Province.GetFoodUsedByUnits, '(CFixedPoint)0')]"
+
+                blockoverride "text" {
+                    text = "PROVINCE_FOOD_TT_UNIT"
+                }
+            }
+
+            hbox = {
+                layoutpolicy_horizontal = expanding
+                spacing = 8
+                widget = { ### FOOD PIECHART
+                    tooltipwidget = {
+                        using = province_food_capacity
+                    }
+                    size = { 90 90 }
+                    using = marker_bg_circle
+
+                    piechart = {
+                        parentanchor = center
+                        block "piechart_size" {
+                            size = { 90% 90% }
+                        }
+                        using = piechart_angles
+
+                        pieslice = {
+                            texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+                            value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
+                            color = { 1 1 1 1 }
+                            modify_texture = {
+                                using = color_white_texture
+                                blend_mode = add
+                                alpha = 0.2
+                            }
+                        }
+
+                        pieslice = {
+                            texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+                            value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
+                            color = { 1 1 1 1 }
+                        }
+                    }
+
+                    icon = {
+                        size = {  55% 55% }
+                        texture = "gfx/interface/icons/unit_view/food.dds"
+                        parentanchor = vcenter|hcenter
+
+                        modify_texture = {
+                            visible = "[Province.IsRiskOfStarving]"
+                            using = color_black_texture
+                            alpha = 0.5
+                            blend_mode = multiply
+                        }
+
+                        modify_texture = {
+                            visible = "[Province.IsRiskOfStarving]"
+                            using = color_yellow_texture
+                            alpha = 0.6
+                        }
+
+                        modify_texture = {
+                            visible = "[Province.IsStarving]"
+                            using = color_black_texture
+                            alpha = 0.5
+                            blend_mode = multiply
+                        }
+
+                        modify_texture = {
+                            visible = "[Province.IsStarving]"
+                            using = color_mid_red_texture
+                        }
+                    }
+                }
+
+                TooltipListBase = { ### SIDE TABLE
+                    TooltipListRowContent = {
+                        TooltipTableField = {
+                            blockoverride "field_background" {
+                                background = {
+                                    using = tile_background_squared_texture
+                                    modify_texture = {
+                                        using = color_turquoise_texture
+                                    }
+                                    alpha = 0.5
+                                }
+                            }
+
+                            tooltipwidget = {
+                                using = province_food_capacity
+                            }
+                            blockoverride "field_content" {
+                                text_single = {
+                                    layoutpolicy_horizontal = expanding
+                                    autoresize = no
+                                    text = "STOCKPILE_CHANGE"
+                                    default_format = "#explanation_link"
+                                }
+                                text_single = {
+                                    autoresize = yes
+                                    raw_text = "[Province.GetFood|0L] / [Province.GetFoodCapacity|0L]"
+                                }
+                            }
+                        }
+                        TooltipManualTableField = {
+                            blockoverride "field_content" {
+                                text_single = {
+                                    layoutpolicy_horizontal = expanding
+                                    autoresize = no
+                                    text = "PROVINCE_FOOD_FROM_PROVINCE_TT"
+                                }
+                                text_single = {
+                                    autoresize = yes
+                                    raw_text = "[Province.GetMonthlyFood|2+=]@food!"
+                                }
+                            }
+                        }
+
+                        TooltipManualTableField = {
+                            blockoverride "field_content" {
+                                text_single = {
+                                    layoutpolicy_horizontal = expanding
+                                    autoresize = no
+                                    text = "PROVINCE_FOOD_FROM_MARKET_TT"
+                                }
+                                text_single = {
+                                    autoresize = yes
+                                    raw_text = "[Province.GetFoodFromMarket|+=2W]@food!"
+                                }
+                            }
+                        }
+
+                        TooltipManualTableField = {
+                            blockoverride "field_content" {
+                                text_single = {
+                                    layoutpolicy_horizontal = expanding
+                                    autoresize = no
+                                    text = "PROVINCE_FOOD_CHANGE_TT"
+                                }
+                                text_single = {
+                                    autoresize = yes
+                                    raw_text = "[Add_float(FixedPointToFloat(Province.GetFoodFromMarket), FixedPointToFloat(Province.GetMonthlyFood))|+=2]@food!"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            block "unit_food_tooltip_extra" {}
+
+            vbox = { ### MARKET INFO
+                layoutpolicy_horizontal = expanding
+                background = {
+                    using = tile_background_squared_texture
+                    alpha = 0.3
+                    modify_texture = {
+                        using = color_turquoise_texture
+                    }
+                }
+
+                hbox = { ### MARKET HEADER
+                    datacontext = "[Province.GetCapital.GetMarket]"
+                    layoutpolicy_horizontal = expanding
+                    margin = { 10 10 }
+                    spacing = 5
+                    background = {
+                        using = tile_background_squared_texture
+                        alpha = 0.5
+                        modify_texture = {
+                            using = color_turquoise_texture
+                        }
+                    }
+
+                    icon = {
+                        size = { 32 32 }
+                        texture = "gfx/interface/icons/location_icons/market.dds"
+                    }
+
+                    vbox = {
+                        layoutpolicy_horizontal = expanding
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = left|nobaseline
+                            text = "[Market.GetName]"
+                        }
+
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = left|nobaseline
+                            fontsize = 13
+                            text = "PROVINCE_FOOD_MARKET_TT"
+                            tooltipwidget = {
+                                using = food_price_tooltip
+                            }
+                        }
+                    }
+
+                    expand = {}
+
+                    vbox = {
+                        layoutpolicy_horizontal = expanding
+                        tooltipwidget = {
+                            using = Market_food_change_tooltip
+                        }
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = right|nobaseline
+                            fontsize = 14
+                            text = "game_concept_market_food"
+                            default_format = "#explanation_link"
+
+                        }
+
+                        text_single = {
+                            layoutpolicy_horizontal = expanding
+                            size = {-1 20}
+                            autoresize = no
+                            align = right|nobaseline
+                            fontsize = 13
+                            raw_text = "[Market.GetFoodStockpile|0]/[Market.GetMaxFoodStockpile|0] ([Market.GetMonthlyFoodBalance|0+=])"
+                        }
+                    }
+
+                    icon = {
+                        size = { 32 32 }
+                        texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds"
+                    }
+                }
+
+                vbox = {
+                    layoutpolicy_horizontal = expanding
+                    margin = { 0 2 }
+
+                    hbox = { ### IS SELLING FOOD
+                        visible = "[LessThan_CFixedPoint(Province.GetFoodFromMarket, '(CFixedPoint)0')]"
+                        layoutpolicy_horizontal = expanding
+                        spacing = 5
+                        margin = { 2 0 }
+
+                        widget = {
+
+                            layoutpolicy_horizontal = expanding
+                            size = { -1 32 }
+                            text_single = {
+                                size = { 100% 100% }
+                                margin = { 10 0 }
+                                background = {
+                                    using = color_light_green_texture
+                                    alpha = 0.1
+                                }
+
+                                autoresize = no
+                                align = nobaseline|left
+                                text = "PROVINCE_FOOD_TT_SELL_FOOD"
+                            }
+                        }
+                    }
+
+                    hbox = { ### IS BUYING FOOD
+                        visible = "[GreaterThan_CFixedPoint(Province.GetFoodFromMarket, '(CFixedPoint)0')]"
+                        layoutpolicy_horizontal = expanding
+                        spacing = 5
+                        margin = { 2 0 }
+
+                        widget = {
+                            layoutpolicy_horizontal = expanding
+                            size = { -1 32 }
+                            text_single = {
+                                size = { 100% 100% }
+                                margin = { 10 0 }
+
+                                autoresize = no
+                                align = nobaseline|left
+                                text = "PROVINCE_FOOD_TT_BUY_FOOD"
+                            }
+                        }
+                    }
+
+                    hbox = { ### COULDN'T BUY ENOUGH FOOD
+                        visible = "[LessThan_float(Add_float(FixedPointToFloat(Province.GetFoodFromMarket), FixedPointToFloat(Province.GetMonthlyFood)), '(float)0')]"
+
+                        layoutpolicy_horizontal = expanding
+                        spacing = 5
+                        margin = { 2 0 }
+
+                        widget = {
+                            layoutpolicy_horizontal = expanding
+                            size = { -1 32 }
+                            text_single = {
+                                size = { 100% 100% }
+                                margin = { 10 0 }
+                                background = {
+                                    using = color_light_red_texture
+                                    alpha = 0.4
+                                }
+
+                                autoresize = no
+                                align = nobaseline|left
+                                text = "PROVINCE_FOOD_TT_NOT_BUY_FOOD"
+                            }
+                        }
+                    }
+                }
+            }
+
+            TooltipListBase = { ### PROVINCE PRODUCTION BREAKDOWN
+                blockoverride "block_title" {
+                    text = "PROVINCE_FOOD_PRODUCTION_TT"
+                }
+
+                TooltipListColumnContent = {
+                    TooltipTableColumn = {
+                        blockoverride "column_title" {}
+                        blockoverride "column_title_text" { text = "[location|e]" }
+                        blockoverride "column_title_right" { expand = {} }
+
+                        blockoverride "field_left" {
+                            icon = {
+                                size = { 25 25 }
+                                texture = "[Location.GetRankIcon]"
+                            }
+                        }
+
+                        blockoverride "field_text" {
+                            default_format = "#subtle_name"
+                            align = left|nobaseline
+                            raw_text = "[Location.GetName]"
+                        }
+
+                        blockoverride "field_right" { expand = {} }
+                    }
+
+                    TooltipTableColumn = {
+                        blockoverride "column_title" {}
+                        blockoverride "column_title_left" { expand = {} }
+                        blockoverride "column_title_text" { text = "[food_productivity|e]" }
+
+                        blockoverride "field_left" { expand = {} }
+                        blockoverride "field_text" {
+                            text = "[Location.GetFoodsOutputModifiers|+=%]"
+                            tooltipwidget = { using = food_productivity_tooltip }
+                        }
+                    }
+
+                    TooltipTableColumn = {
+                        blockoverride "column_title" {}
+                        blockoverride "column_title_left" { expand = {} }
+                        blockoverride "column_title_text" { text = "[local_food|e]" }
+
+                        blockoverride "field_left" { expand = {} }
+
+                        blockoverride "field_text" { raw_text = "[Location.GetFoodsOutputWithLabel]@food!" }
+                    }
+
+                    blockoverride "column_datamodel"  {  datamodel = "[Province.GetLocations]" }
+                }
+            }
+        }
+    }
+}
+
+template province_food_capacity {
+    ContextualTooltipType = {
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds"
+                glow = {
+                    name = "drop_shadow"
+                    glow_radius = 3
+                    color = {0.0 0.0 0.0 1.0}
+                    alpha = 0.6
+                }
+            }
+        }
+        blockoverride "title_text" {
+            text = "PROVINCE_FOOD_STOCKPILE_TT_TITLE"
+        }
+
+        blockoverride "concept_link" {
+            text = [food_stockpile|e]
+        }
+
+        blockoverride "tooltip_content" {
+            TooltipStringPairList = {
+                textcontext = "PROVINCE_FOOD_STOCKPILE_TT_LIST"
+            }
+
+            TooltipStringPairList = {
+                textcontext = "[Province.GetFoodCapacityTooltip]"
+            }
+
+            TooltipTextBlock = {
+                blockoverride "text" {
+                    text = "[Province.GetFoodModifierEffect]"
+                }
+            }
+        }
+    }
+}
+
+template province_food_production {
+    ContextualTooltipType = {
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "gfx/interface/icons/location_icons/food.dds"
+                glow = {
+                    name = "drop_shadow"
+                    glow_radius = 3
+                    color = {0.0 0.0 0.0 1.0}
+                    alpha = 0.6
+                }
+            }
+        }
+        blockoverride "title_text" {
+            text = "PROVINCE_FOOD_PRODUCTION_TT_TITLE"
+        }
+
+        blockoverride "concept_link" {
+            text = [provincial_food|e]
+        }
+
+        blockoverride "tooltip_content" {
+            TooltipListBase = {
+                blockoverride "block_title" {
+                    text = "PROVINCE_FOOD_PRODUCTION_TT"
+                }
+
+                TooltipListColumnContent = {
+                    TooltipTableColumn = {
+                        blockoverride "column_title" {}
+                        blockoverride "column_title_text" { text = "[location|e]" }
+                        blockoverride "column_title_right" { expand = {} }
+
+                        blockoverride "field_left" {}
+
+                        blockoverride "field_text" {
+                            default_format = "#subtle_name"
+                            align = left|nobaseline
+                            raw_text = "@location![Location.GetName]"
+                        }
+
+                        blockoverride "field_right" { expand = {} }
+                    }
+
+                    TooltipTableColumn = {
+                        blockoverride "column_title" {}
+                        blockoverride "column_title_left" { expand = {} }
+                        blockoverride "column_title_text" { text = "[food_productivity|e]" }
+
+                        blockoverride "field_left" { expand = {} }
+                        blockoverride "field_text" {
+                            text = "[Location.GetFoodsOutputModifiers|+=%]"
+                            tooltipwidget = { using = food_productivity_tooltip }
+                        }
+                    }
+
+                    TooltipTableColumn = {
+                        blockoverride "column_title" {}
+                        blockoverride "column_title_left" { expand = {} }
+                        blockoverride "column_title_text" { text = "[local_food|e]" }
+
+                        blockoverride "field_left" { expand = {} }
+
+                        blockoverride "field_text" { text = "[Location.GetFoodsOutputWithLabel]@food!" }
+                    }
+
+                    blockoverride "column_datamodel"  {  datamodel = "[Province.GetLocations]" }
+                }
+            }
+        }
+    }
+}
+
+template province_control_tooltip {
+    ContextualTooltipType = {
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "gfx/interface/icons/location_icons/control.dds"
+            }
+        }
+        blockoverride "title_text" {
+            text = "PROVINCE_CONTROL_TT_TITLE"
+        }
+
+        blockoverride "concept_link" {
+            text = "[control|e]"
+        }
+
+        blockoverride "title_button" {
+            mapmode_tooltip_button = {
+                name = "control_tooltip_button"
+                datacontext = "[GetMapMode('control')]"
+            }
+            hint_button = {
+                action_tooltip = {
+                    title = "OPEN_HINT"
+                    on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_control')]"
+                }
+            }
+        }
+
+        blockoverride "tooltip_content" {			
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "PROVINCE_CONTROL_TT_TEXT"
+				}
+			}
+
+			TooltipContentSection = {
+				using = ProvinceInfoTable
+			}
+        }
+    }
+}
+
+template province_max_control_tooltip {
+    ContextualTooltipType = {
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "gfx/interface/icons/location_icons/control.dds"
+            }
+        }
+        blockoverride "title_text" {
+            text = "PROVINCE_MAX_CONTROL_TT_TITLE"
+        }
+
+        blockoverride "concept_link" {
+            text = "[control|e]"
+        }
+
+        blockoverride "title_button" {
+            mapmode_tooltip_button = {
+                name = "max_control_tooltip_button"
+                datacontext = "[GetMapMode('control')]"
+            }
+            hint_button = {
+                action_tooltip = {
+                    title = "OPEN_HINT"
+                    on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_control')]"
+                }
+            }
+        }
+
+        blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "PROVINCE_MAX_CONTROL_TT_TEXT"
+				}
+			}
+
+			TooltipContentSection = {
+				using = ProvinceMaxControlInfoTable
+			}
+        }
+    }
+}
+
+template province_tax_base_tooltip {
+    ContextualTooltipType = {
+        blockoverride "title_text" {
+            text = "PROVINCE_TAXBASE_TT_TITLE"
+        }
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "gfx/interface/icons/location_icons/tax_base.dds"
+            }
+        }
+        blockoverride "title_button" {
+            mapmode_tooltip_button = {
+                datacontext = "[GetMapMode('tax_base')]"
+            }
+        }		
+        blockoverride "concept_link" {
+            text = [tax_base|e]
+        }	
+        blockoverride "tooltip_content" {
+            TooltipTextBlock = {
+				blockoverride "text" {
+					text = "PROVINCE_TAXBASE_TT_TEXT"
+				}
+			}
+
+			TooltipContentSection = {
+				using = ProvinceInfoTable
+			}
+        }
+    }
+}
+
+template province_location_wealth_tooltip {
+    ContextualTooltipType = {
+        blockoverride "title_text" {
+            text = "PROVINCE_LOCATION_WEALTH_TT_TITLE"
+        }
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "[GetConceptTexture('wealth')]"
+            }
+        }
+        blockoverride "title_button" {
+            mapmode_tooltip_button = {
+                datacontext = "[GetMapMode('potential_tax_base')]"
+            }
+        }
+        blockoverride "concept_link" {
+            text = [wealth|e]
+        }
+        blockoverride "tooltip_content" {
+            TooltipTextBlock = {
+                blockoverride "text" {
+                    text = "PROVINCE_LOCATION_WEALTH_TT_TEXT"
+                }
+            }
+
+            TooltipContentSection = {
+                using = ProvinceInfoTable
+            }
+        }
+    }
+}
+
+template province_population_tooltip {
+    ContextualTooltipType = {
+        blockoverride "title_text" {
+            text = "PROVINCE_POPULATION_TT_TITLE"
+        }
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "[GetConceptTexture('population')]"
+            }
+        }
+        blockoverride "title_button" {
+            mapmode_tooltip_button = {
+                datacontext = "[GetMapMode('population')]"
+            }
+        }		
+        blockoverride "concept_link" {
+            text = [population|e]
+        }	
+        blockoverride "tooltip_content" {
+            TooltipTextBlock = {
+				blockoverride "text" {
+					text = "PROVINCE_POPULATION_TT_TEXT"
+				}
+			}
+
+			TooltipContentSection = {
+				using = ProvinceInfoTable
+			}
+        }
+    }
+}
+
+template ProvinceInfoTable {
+	TooltipListBase = {
+		TooltipListColumnContent = {
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_text" { text = "[location|e]" }
+				blockoverride "column_title_right" { expand = {} }
+
+				blockoverride "field_left" {
+					icon = {
+						size = { 25 25 }
+						texture = "[Location.GetRankIcon]"
+					}
+				}
+
+				blockoverride "field_text" {
+					default_format = "#subtle_name"
+					align = left|nobaseline
+					raw_text = "[Location.GetName]"
+				}
+
+				blockoverride "field_right" { expand = {} }
+			}
+
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_left" { expand = {} }
+				blockoverride "column_title_text" { text = "[control|e]" }
+
+				blockoverride "field_left" { expand = {} }
+				blockoverride "field_text" {
+					raw_text = "[Location.GetControl|%0L]@control!"
+					tooltipwidget = { using = location_control_tooltip }
+				}
+			}
+
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_left" { expand = {} }
+				blockoverride "column_title_text" { text = "[tax_base|e]" }
+
+				blockoverride "field_left" { expand = {} }
+				blockoverride "field_text" {
+					raw_text = "[Location.GetTotalTaxBase|W2]@tax_base!"
+					tooltipwidget = { using = location_tax_base_tooltip }
+				}
+			}
+
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_left" { expand = {} }
+				blockoverride "column_title_text" { text = "[population|e]" }
+
+				blockoverride "field_left" { expand = {} }
+
+				blockoverride "field_text" { 
+					raw_text = "[Location.GetTotalPopulation|L]@population!" 
+					tooltipwidget = { using = population_location_tooltip }
+				}
+			}
+
+			blockoverride "column_datamodel"  {  datamodel = "[Province.GetLocations]" }
+		}
+	}
+}
+
+template ProvinceMaxControlInfoTable {
+	TooltipListBase = {
+		TooltipListColumnContent = {
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_text" { text = "[location|e]" }
+				blockoverride "column_title_right" { expand = {} }
+
+				blockoverride "field_left" {
+					icon = {
+						size = { 25 25 }
+						texture = "[Location.GetRankIcon]"
+					}
+				}
+
+				blockoverride "field_text" {
+					default_format = "#subtle_name"
+					align = left|nobaseline
+					raw_text = "[Location.GetName]"
+				}
+
+                blockoverride "field_right" { expand = {} }
+			}
+
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_left" { expand = {} }
+				blockoverride "column_title_text" { text = "MAX_CONTROL_TT_HEADER" }
+
+				blockoverride "field_left" { expand = {} }
+				blockoverride "field_text" {
+					raw_text = "[Location.GetMaxControl|%0L]@control!"
+					tooltipwidget = { using = MaxControl_tooltip }
+				}
+			}
+
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_left" { expand = {} }
+				blockoverride "column_title_text" { text = "[tax_base|e]" }
+
+				blockoverride "field_left" { expand = {} }
+				blockoverride "field_text" {
+					raw_text = "[Location.GetTotalTaxBase|W2]@tax_base!"
+					tooltipwidget = { using = location_tax_base_tooltip }
+				}
+			}
+
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_left" { expand = {} }
+				blockoverride "column_title_text" { text = "[population|e]" }
+
+				blockoverride "field_left" { expand = {} }
+
+				blockoverride "field_text" {
+					raw_text = "[Location.GetTotalPopulation|L]@population!"
+					tooltipwidget = { using = population_location_tooltip }
+				}
+			}
+
+			blockoverride "column_datamodel"  {  datamodel = "[Province.GetLocations]" }
+		}
+	}
+}
+
+template province_missing_workers_tooltip {
+    ContextualTooltipType = {
+        blockoverride "title_text" {
+            text = "PROVINCE_MISSING_WORKERS_TT_TITLE"
+        }
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "[GetConceptTexture('employ')]"
+            }
+        }
+#        blockoverride "title_button" {
+#            mapmode_tooltip_button = {
+#                datacontext = "[GetMapMode('employment')]"
+#            }
+#        }		
+        blockoverride "concept_link" {
+            text = [employ|e]
+        }	
+        blockoverride "tooltip_content" {
+            TooltipTextBlock = {
+				blockoverride "text" {
+					text = "PROVINCE_MISSING_WORKERS_TT_TEXT"
+				}
+			}
+
+			TooltipContentSection = {
+				using = ProvinceMissingWorkersInfoTable
+			}
+        }
+    }
+}
+
+template ProvinceMissingWorkersInfoTable {
+	TooltipListBase = {
+		TooltipListColumnContent = {
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_text" { text = "[location|e]" }
+				blockoverride "column_title_right" { expand = {} }
+
+				blockoverride "field_left" {
+					icon = {
+						size = { 25 25 }
+						texture = "[Location.GetRankIcon]"
+					}
+				}
+
+				blockoverride "field_text" {
+					default_format = "#subtle_name"
+					align = left|nobaseline
+					raw_text = "[Location.GetName]"
+				}
+
+				blockoverride "field_right" { expand = {} }
+			}
+
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_left" { expand = {} }
+				blockoverride "column_title_text" { text = "MISSING_WORKERS" }
+
+				blockoverride "field_left" { expand = {} }
+
+				blockoverride "field_text" { 
+					raw_text = "[Location.GetMissingWorkers]@employees!" 
+				}
+			}
+
+			blockoverride "column_datamodel"  {  datamodel = "[Province.GetLocations]" }
+		}
+	}
+}
+
+template province_available_peasants_tooltip {
+    ContextualTooltipType = {
+        blockoverride "title_text" {
+            text = "PROVINCE_AVAILABLE_PEASANTS_TT_TITLE"
+        }
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "gfx/interface/icons/pops/peasants.dds"
+            }
+        }
+        blockoverride "title_button" {
+            mapmode_tooltip_button = {
+                datacontext = "[GetMapMode('peasants')]"
+            }
+        }
+        blockoverride "concept_link" {
+            text = [employ|e]
+        }
+        blockoverride "tooltip_content" {
+            TooltipTextBlock = {
+				blockoverride "text" {
+					text = "PROVINCE_AVAILABLE_PEASANTS_TT_TEXT"
+				}
+			}
+
+			TooltipContentSection = {
+				using = ProvinceAvailablePeasantsInfoTable
+			}
+        }
+    }
+}
+
+template ProvinceAvailablePeasantsInfoTable {
+	TooltipListBase = {
+		TooltipListColumnContent = {
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_text" { text = "[location|e]" }
+				blockoverride "column_title_right" { expand = {} }
+
+				blockoverride "field_left" {
+					icon = {
+						size = { 25 25 }
+						texture = "[Location.GetRankIcon]"
+					}
+				}
+
+				blockoverride "field_text" {
+					default_format = "#subtle_name"
+					align = left|nobaseline
+					raw_text = "[Location.GetName]"
+				}
+
+				blockoverride "field_right" { expand = {} }
+			}
+
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_left" { expand = {} }
+				blockoverride "column_title_text" { text = "AVAILABLE_PEASANTS" }
+
+				blockoverride "field_left" { expand = {} }
+
+				blockoverride "field_text" {
+					raw_text = "[Location.GetMissingLocationPops('peasants')] @peasants!"
+				}
+			}
+
+			blockoverride "column_datamodel"  {  datamodel = "[Province.GetLocations]" }
+		}
+	}
+}
+
+template province_peasants_tooltip {
+    ContextualTooltipType = {
+        blockoverride "title_text" {
+            text = "PROVINCE_PEASANT_POPULATION_TT_TITLE"
+        }
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "gfx/interface/icons/pops/peasants.dds"
+            }
+        }
+        blockoverride "title_button" {
+            mapmode_tooltip_button = {
+                datacontext = "[GetMapMode('peasants')]"
+            }
+        }
+        blockoverride "concept_link" {
+            text = [pop_type|e]
+        }	
+        blockoverride "tooltip_content" {
+            TooltipTextBlock = {
+				blockoverride "text" {
+					text = "PROVINCE_PEASANT_POPULATION_TT_TEXT"
+				}
+			}
+
+			TooltipContentSection = {
+				using = ProvincePeasantsInfoTable
+			}
+        }
+    }
+}
+
+template ProvincePeasantsInfoTable {
+	TooltipListBase = {
+		TooltipListColumnContent = {
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_text" { text = "[location|e]" }
+				blockoverride "column_title_right" { expand = {} }
+
+				blockoverride "field_left" {
+					icon = {
+						size = { 25 25 }
+						texture = "[Location.GetRankIcon]"
+					}
+				}
+
+				blockoverride "field_text" {
+					default_format = "#subtle_name"
+					align = left|nobaseline
+					raw_text = "[Location.GetName]"
+				}
+
+				blockoverride "field_right" { expand = {} }
+			}
+
+			TooltipTableColumn = {
+				blockoverride "column_title" {}
+				blockoverride "column_title_left" { expand = {} }
+				blockoverride "column_title_text" { text = "[population|e]" }
+
+				blockoverride "field_left" { expand = {} }
+
+				blockoverride "field_text" { 
+					raw_text = "[Location.GetPopTypeInfo('peasants')]@peasants!" 
+				}
+			}
+
+			blockoverride "column_datamodel"  {  datamodel = "[Province.GetLocations]" }
+		}
+	}
+}
+
+template ReleaseProvinceTooltip {
+	ContextualTooltipType = {
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "gfx/interface/icons/diplomatic_status/vassalized.dds"
+            }
+        }
+
+		blockoverride "title_text" {
+			text = "[Province.GetNameWithNoTooltip]"
+		}
+
+		blockoverride "concept_link" {
+			text = "[settled_country|e]"
+		}
+
+		blockoverride "tooltip_content" {
+			TooltipDebugTextBlock = {
+				blockoverride "text" {
+					debug_text = "[Province.GetDebugText]"
+				}
+			}
+
+			TooltipRowList = {
+				block "general_text_area" {
+					textcontext = "[Province.GetProvinceReleaseInfo]"
+				}
+			}
+		}
+	}
+}

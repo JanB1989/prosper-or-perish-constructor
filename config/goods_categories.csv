@@ -57,7 +57,11 @@ cannons,manufactured,military_goods,0.80,Cannon foundries need large furnaces pr
 firearms,manufactured,military_goods,0.80,Firearms need precision barrels locks skilled armorers and steady powder
 weaponry,manufactured,military_goods,0.80,Armories need metal supply skilled smiths and coordinated finishing
 naval_supplies,manufactured,naval_goods,0.85,Naval stores need mature timber rope pitch yards and dock demand
-food_revenue,manufactured,prepared_food,0.30,Sale value follows local food distribution and market capacity
+local_food,manufactured,prepared_food,0.30,Local food scales through nearby preparation and distribution
+manual_labor_cost,manufactured,prepared_food,0.30,Internal labor-cost value used to balance production-method economics
+offset,manufactured,prepared_food,0.30,Internal balancing value used to adjust production-method economics
+province_food_purchase,manufactured,prepared_food,0.30,Purchase value follows goods-market food access and local demand
+province_food_sales,manufactured,prepared_food,0.30,Sale value follows local food distribution and market capacity
 victuals,manufactured,prepared_food,0.30,Prepared food scales through simple processing and broad local inputs
 cloth,manufactured,textiles_and_leather,0.55,Cloth expands with fiber spinning weaving and fulling capacity
 fine_cloth,manufactured,textiles_and_leather,0.55,Fine cloth needs select fibers skilled finishing and demanding buyers

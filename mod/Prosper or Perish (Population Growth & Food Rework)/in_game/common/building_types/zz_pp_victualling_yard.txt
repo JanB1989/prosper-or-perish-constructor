@@ -258,7 +258,8 @@ unique_production_methods = {
 	}
 
 	modifier = {
-		local_monthly_food = 3.0
+		local_monthly_food = 40
+    local_food_capacity = 800
 		local_victuals_output_modifier = 0.00
 	}
 }

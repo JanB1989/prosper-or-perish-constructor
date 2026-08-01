@@ -1,0 +1,45 @@
+﻿# >>> eu5-building-pipeline:victuals_market_import:building
+victuals_market_import = {
+is_foreign = no
+increase_per_level_cost = 0.10
+max_levels = victuals_market_max_level
+pop_type = nobles
+employment_size = 0.050
+price = pp_victuals_market_import_price
+category = consumer_goods_category
+custom_tags = { pp_food_security_priority pp_food_distribution_priority }
+icon = victuals_market_import
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+ai_forbid_shutdown = yes
+important_for_AI = yes
+can_close = yes
+forbidden_for_estates = no
+AI_ignore_available_worker_flag = yes
+build_time = 365
+construction_demand = victuals_market_construction
+
+unique_production_methods = {
+  pp_province_food_from_market = {
+    produced = province_food_purchase
+    victuals = 1.0
+    manual_labor_cost = 0.5
+    output = 3.0
+    category = building_maintenance
+  }
+}
+
+raw_modifier = {
+}
+
+modifier = {
+  local_province_food_purchase_output_modifier = -0.012
+  local_monthly_food = 30.0
+  local_nobles_estate_power = 0.05
+  local_peasant_enfranchisment = -0.01
+  local_food_capacity = 1200
+}
+}
+# <<< eu5-building-pipeline:victuals_market_import:building

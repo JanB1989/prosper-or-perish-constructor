@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import re
 import tomllib
@@ -37,7 +37,12 @@ GOODS_OUTPUT_LEGEND_SUFFIXES = (
     "RANGE_150_300",
     "CAPPED",
 )
-GOODS_WITHOUT_OUTPUT_MAP_MODES = {"food_revenue"}
+GOODS_WITHOUT_OUTPUT_MAP_MODES = {
+    "province_food_sales",
+    "province_food_purchase",
+    "offset",
+    "manual_labor_cost",
+}
 
 
 def _all_goods() -> set[str]:

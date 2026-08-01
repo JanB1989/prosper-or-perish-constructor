@@ -1,0 +1,5 @@
+﻿# Market-scope scripted value for the Victuals market price map mode.
+# Call as market.pp_victuals_market_price_map_value from location scope.
+pp_victuals_market_price_map_value = {
+	value = "market_price(goods:victuals)"
+}

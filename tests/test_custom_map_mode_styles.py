@@ -1,19 +1,21 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 import re
 from pathlib import Path
+
+from prosper_or_perish_constructor import food_storage_gui
 
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 MAP_MODE_ROOT = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes"
 LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_building_adjustments_l_english.yml"
+FOOD_STORAGE_LOCALIZATION = MOD_ROOT / food_storage_gui.FOOD_STORAGE_LOCALIZATION
 CALIBRATION = ROOT / "tools" / "map_mode_scale_calibration.json"
 BUILDING_EFFICIENCY_SCRIPT_VALUE = (
     MOD_ROOT / "in_game" / "common" / "script_values" / "pp_building_efficiency_map_mode.txt"
 )
-
 VANILLA_TRAFFIC_COLORS = (
     "define:NMapColors|MAP_COLOR_MIN",
     "define:NMapColors|MAP_COLOR_LOW",
@@ -44,6 +46,7 @@ CUSTOM_MAP_MODE_FILES = (
 
 VALUE_SOURCE_MODES = {
     "pp_population_capacity": "location_max_population",
+    "pp_positive_province_food_growth": "modifier:pp_province_food_storage_months",
     "pp_fishing_village_capacity": "fish_capacity",
     "pp_farming_village_capacity": "farm_capacity",
     "pp_forest_village_capacity": "forest_capacity",
@@ -80,6 +83,30 @@ STRUCTURE_SNIPPETS = {
         "toll_marker = yes",
         "map_lines_mode = ToMarketCenter",
         "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
+    ),
+    "pp_victuals_market_price": (
+        "category = economy",
+        "index = 3",
+        "small_map_names = market",
+        "small_tooltip_context = market",
+        "market_marker = yes",
+        "toll_marker = yes",
+        "map_lines_mode = ToMarketCenter",
+        "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
+        "market.pp_victuals_market_price_map_value",
+    ),
+    "pp_positive_province_food_growth": (
+        "category = economy",
+        "index = 3",
+        "small_map_names = province",
+        "small_tooltip_context = location",
+        "modifier:pp_province_food_storage_months",
+        "secondary_map_color = {",
+        "modifier:pp_province_food_storage_months >= @pp_province_food_storage_months_max",
+        "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STRIPED",
+        "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_TT_LAND",
+        "color_refresh_counters = { Month }",
+        "color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }",
     ),
     "pp_fishing_village_capacity": (
         "category = geography",
@@ -318,6 +345,28 @@ def test_market_food_price_uses_reference_centered_buckets() -> None:
     assert "max_color = define:NMapColors|MAP_COLOR_MIN" in block
 
 
+def test_victuals_market_price_uses_default_price_centered_buckets() -> None:
+    block = _all_blocks()["pp_victuals_market_price"]
+
+    assert _thresholds(block, "market.pp_victuals_market_price_map_value") == [
+        1.5,
+        2.25,
+        3.0,
+        4.5,
+        6.0,
+    ]
+    assert block.count("lerp = {") == 4
+    assert "MAPMODE_PP_VICTUALS_MARKET_PRICE_VERY_CHEAP" in block
+    assert "MAPMODE_PP_VICTUALS_MARKET_PRICE_CHEAP" in block
+    assert "MAPMODE_PP_VICTUALS_MARKET_PRICE_NEUTRAL" in block
+    assert "MAPMODE_PP_VICTUALS_MARKET_PRICE_EXPENSIVE" in block
+    assert "MAPMODE_PP_VICTUALS_MARKET_PRICE_SEVERE" in block
+    assert "min_color = define:NMapColors|MAP_COLOR_MAX" in block
+    assert "max_color = define:NMapColors|MAP_COLOR_MIN" in block
+    assert "market_marker = yes" in block
+    assert "map_lines_mode = ToMarketCenter" in block
+
+
 def test_population_growth_preserves_working_gradient_and_stripes() -> None:
     block = _all_blocks()["pp_population_growth"]
 
@@ -337,6 +386,91 @@ def test_population_growth_preserves_working_gradient_and_stripes() -> None:
     )
     assert "MAPMODE_PP_POPULATION_GROWTH_STARVING" in block
     assert "MAPMODE_PP_POPULATION_GROWTH_STRIPE" in block
+
+
+def test_positive_province_food_growth_map_mode_reads_months_from_modifier() -> None:
+    block = _all_blocks()["pp_positive_province_food_growth"]
+    localization = LOCALIZATION.read_text(encoding="utf-8-sig")
+    food_storage_localization = FOOD_STORAGE_LOCALIZATION.read_text(encoding="utf-8-sig")
+    static_modifiers = (
+        MOD_ROOT
+        / "main_menu"
+        / "common"
+        / "static_modifiers"
+        / "pp_location_modifier_adjustments.txt"
+    ).read_text(encoding="utf-8-sig")
+    modifier_types = (
+        MOD_ROOT
+        / "main_menu"
+        / "common"
+        / "modifier_type_definitions"
+        / "pp_modifier_types.txt"
+    ).read_text(encoding="utf-8-sig")
+    icon = (
+        MOD_ROOT
+        / "main_menu"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "map_modes"
+        / "pp_positive_province_food_growth.dds"
+    )
+
+    max_months = food_storage_gui.load_food_storage_max_months(
+        profile="constructor",
+        load_order_path=ROOT / "constructor.load_order.toml",
+    )
+    step = max_months / 4
+    assert _thresholds(block, "modifier:pp_province_food_storage_months") == [
+        step,
+        step * 2,
+        step * 3,
+        max_months,
+    ]
+    assert block.count("lerp = {") == 4
+    assert block.count("legend_key =") == 6
+    assert block.count("map_names = province") == 3
+    assert block.count("tooltip_context = location") == 3
+    assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_HIGH" in block
+    assert block.count("modifier:pp_province_food_storage_months") == 9
+    assert block.count("divide = @pp_province_food_storage_months_step") == 4
+    assert "secondary_map_color = {" in block
+    assert (
+        "modifier:pp_province_food_storage_months "
+        ">= @pp_province_food_storage_months_max"
+    ) in block
+    assert "value = rgb { 35 35 42 }" in block
+    assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STRIPED" in block
+    growth_modifier = static_modifiers.split(
+        "TRY_REPLACE:positive_province_food_growth = {", 1
+    )[1].split(
+        "\nTRY_", 1
+    )[0]
+    assert "pp_province_food_storage_months = 12" in growth_modifier
+    assert re.search(
+        r"pp_province_food_storage_months\s*=\s*\{"
+        r"[\s\S]*?decimals\s*=\s*0"
+        r"[\s\S]*?category\s*=\s*location",
+        modifier_types,
+    )
+    assert not (
+        MOD_ROOT
+        / "in_game"
+        / "common"
+        / "script_values"
+        / "pp_positive_province_food_growth_map_mode.txt"
+    ).exists()
+    assert "GetModifierValueFixed('pp_province_food_storage_months')|0" in localization
+    assert "ScriptValue('pp_province_food_storage_months')" not in localization
+    assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_NONE" not in localization
+    assert (
+        f'MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_MAX: '
+        f'"{food_storage_gui.format_gui_fixed_point(max_months)}+ months"'
+    ) in food_storage_localization
+    assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STRIPED" in food_storage_localization
+    assert "ROOT.GetLocation.GetProvince.GetFoodModifierEffect" in localization
+    assert "ROOT.GetLocation.GetProvince.GetFoodCapacity" in localization
+    assert icon.is_file()
 
 
 def test_building_levels_stripes_locations_above_supported_levels() -> None:

@@ -1,4 +1,4 @@
-import csv
+﻿import csv
 import json
 import os
 import re
@@ -47,6 +47,9 @@ SOCIETAL_VALUE_ADJUSTMENTS = (
     MOD_ROOT / "in_game" / "common" / "societal_values" / "pp_societal_value_adjustments.txt"
 )
 GOODS_CATEGORIES = ROOT / "config" / "goods_categories.csv"
+PROVINCE_FOOD_SALES_GOOD = MOD_ROOT / "in_game" / "common" / "goods" / "pp_goods_province_food_sales.txt"
+PROVINCE_FOOD_PURCHASE_GOOD = MOD_ROOT / "in_game" / "common" / "goods" / "pp_goods_province_food_purchase.txt"
+OFFSET_GOOD = MOD_ROOT / "in_game" / "common" / "goods" / "pp_goods_offset.txt"
 SCRIPT_VALUES_ROOT = MOD_ROOT / "in_game" / "common" / "script_values"
 BUILDING_CAPS = SCRIPT_VALUES_ROOT / "pp_building_caps.txt"
 FARMING_CAPACITY = SCRIPT_VALUES_ROOT / "pp_farming_capacity.txt"
@@ -238,8 +241,8 @@ EXCLUDED_FARM_CAP_BUILDINGS = (
 
 FOOD_SECURITY_PRIORITY_GROUPS = {
     "food_storage": (
-        120,
-        "Food storage needs highest priority to stop fluctuations in food for AI.",
+        85,
+        "Food storage remains a high priority to limit food fluctuations for AI.",
         ("granary",),
     ),
     "direct_food_production": (
@@ -248,9 +251,9 @@ FOOD_SECURITY_PRIORITY_GROUPS = {
         ("cookery", "victualling_yard"),
     ),
     "food_distribution": (
-        100,
-        "Victuals markets need priority below cookeries so prepared food is distributed after direct food production.",
-        ("victuals_market",),
+        120,
+        "Victuals markets receive the highest food-security priority so prepared food is distributed reliably.",
+        ("victuals_market", "victuals_market_import"),
     ),
     "water_control": (
         95,
@@ -343,7 +346,8 @@ EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY = (
 FOOD_SECURITY_WORKER_BUILDINGS = {
     "cookery": ("laborers", 1),
     "victualling_yard": ("laborers", 1),
-    "victuals_market": ("laborers", 0.5),
+    "victuals_market": ("nobles", 0.05),
+    "victuals_market_import": ("nobles", 0.05),
     "granary": ("laborers", 0.25),
 }
 NORMALIZED_PRODUCTION_SITE_CATEGORIES = {
@@ -352,7 +356,7 @@ NORMALIZED_PRODUCTION_SITE_CATEGORIES = {
     "colonial_category",
 }
 NORMALIZED_DIRECT_PRODUCTION_BUILDINGS = {"cookery", "victualling_yard"}
-NORMALIZED_EXCLUDED_PRODUCTION_BUILDINGS = {"victuals_market"}
+NORMALIZED_EXCLUDED_PRODUCTION_BUILDINGS = {"victuals_market", "victuals_market_import"}
 
 
 def test_constructor_config_loads() -> None:
@@ -2298,7 +2302,7 @@ def test_market_food_price_map_mode_uses_market_price_scale_and_assets() -> None
     block = _text_block_between(
         map_text,
         "pp_market_food_price = {",
-        "\npp_fishing_village_capacity = {",
+        "\npp_victuals_market_price = {",
     )
 
     assert "@pp_market_food_price_neutral = 0.12" in map_text
@@ -2364,6 +2368,92 @@ def test_market_food_price_map_mode_uses_market_price_scale_and_assets() -> None
         / "icons"
         / "map_modes"
         / "pp_market_food_price.dds"
+    ).exists()
+
+
+def test_victuals_market_price_map_mode_uses_default_relative_scale_and_assets() -> None:
+    map_text = FOOD_MAP_MODES.read_text(encoding="utf-8-sig")
+    localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
+        encoding="utf-8-sig"
+    )
+    script_value_text = (
+        MOD_ROOT
+        / "in_game"
+        / "common"
+        / "script_values"
+        / "pp_victuals_market_price_map_mode.txt"
+    ).read_text(encoding="utf-8-sig")
+    block = _text_block_between(
+        map_text,
+        "pp_victuals_market_price = {",
+        "\npp_positive_province_food_growth = {",
+    )
+
+    assert "@pp_victuals_market_price_neutral = 3.0" in map_text
+    assert "@pp_victuals_market_price_very_cheap = 1.5" in map_text
+    assert "@pp_victuals_market_price_severe = 6.0" in map_text
+    assert 'value = "market_price(goods:victuals)"' in script_value_text
+    required_map_snippets = (
+        "value = market.pp_victuals_market_price_map_value",
+        "limit = { has_owner = yes }",
+        "min_color = define:NMapColors|MAP_COLOR_MAX",
+        "max_color = define:NMapColors|MAP_COLOR_MIN",
+        "market.pp_victuals_market_price_map_value < @pp_victuals_market_price_cheap",
+        "market.pp_victuals_market_price_map_value < @pp_victuals_market_price_neutral",
+        "market.pp_victuals_market_price_map_value < @pp_victuals_market_price_expensive",
+        "max = 1",
+        "min = 0",
+        "category = economy",
+        "small_map_names = market",
+        "market_marker = yes",
+        "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
+        "map_lines_mode = ToMarketCenter",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE_VERY_CHEAP",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE_CHEAP",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE_NEUTRAL",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE_EXPENSIVE",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE_SEVERE",
+    )
+    missing_map_snippets = [snippet for snippet in required_map_snippets if snippet not in block]
+    assert not missing_map_snippets
+    assert block.count("lerp = {") == 4
+
+    required_localization = (
+        "mapmode_pp_victuals_market_price_name",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE_VERY_CHEAP",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE_CHEAP",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE_NEUTRAL",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE_EXPENSIVE",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE_SEVERE",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE_TT_LAND",
+        "MAPMODE_PP_VICTUALS_MARKET_PRICE_TT_WATER",
+        "[Market.GetName]",
+        "ScriptValue('pp_victuals_market_price_map_value')",
+        "ShowGoodsName('victuals')",
+    )
+    missing_localization = [
+        snippet for snippet in required_localization if snippet not in localization_text
+    ]
+    assert not missing_localization
+
+    assert (
+        MOD_ROOT
+        / "main_menu"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "map_modes"
+        / "pp_victuals_market_price.dds"
+    ).is_file()
+    assert not (
+        MOD_ROOT
+        / "in_game"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "map_modes"
+        / "pp_victuals_market_price.dds"
     ).exists()
 
 
@@ -3016,10 +3106,14 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
         assert buildings[building]["price"] is None, building
         assert buildings[building]["price_kind"] == "baseline_age", building
 
-    victuals_market = buildings["victuals_market"]
-    assert victuals_market["employment_size"] == 0.5
-    assert victuals_market["price"] == "pp_victuals_market_price"
-    assert victuals_market["price_kind"] == "explicit"
+    for building, price in (
+        ("victuals_market", "pp_victuals_market_price"),
+        ("victuals_market_import", "pp_victuals_market_import_price"),
+    ):
+        victuals_market = buildings[building]
+        assert victuals_market["employment_size"] == 0.05
+        assert victuals_market["price"] == price
+        assert victuals_market["price_kind"] == "explicit"
 
 
 def test_victuals_pop_demand_uses_scalar_database_value() -> None:
@@ -3254,10 +3348,118 @@ def test_victuals_pop_demand_modifier_type_is_registered() -> None:
     assert "global_victuals_pop_demand" in modifier_icons
     assert "MODIFIER_TYPE_NAME_global_victuals_pop_demand:" in localization_text
     assert "MODIFIER_TYPE_DESC_global_victuals_pop_demand:" in localization_text
-    assert "global_food_revenue_modifier" in modifier_types
-    assert "global_food_revenue_modifier" in modifier_icons
-    assert "MODIFIER_TYPE_NAME_global_food_revenue_modifier:" in localization_text
-    assert "MODIFIER_TYPE_DESC_global_food_revenue_modifier:" in localization_text
+    assert "global_province_food_sales_modifier" in modifier_types
+    assert "global_province_food_sales_modifier" in modifier_icons
+    assert "MODIFIER_TYPE_NAME_global_province_food_sales_modifier:" in localization_text
+    assert "MODIFIER_TYPE_DESC_global_province_food_sales_modifier:" in localization_text
+    assert "global_province_food_purchase_modifier" in modifier_types
+    assert "global_province_food_purchase_modifier" in modifier_icons
+    assert "MODIFIER_TYPE_NAME_global_province_food_purchase_modifier:" in localization_text
+    assert "MODIFIER_TYPE_DESC_global_province_food_purchase_modifier:" in localization_text
+    assert "global_offset_modifier" in modifier_types
+    assert "global_offset_modifier" in modifier_icons
+    assert "MODIFIER_TYPE_NAME_global_offset_modifier:" in localization_text
+    assert "MODIFIER_TYPE_DESC_global_offset_modifier:" in localization_text
+    assert "pp_province_food_storage_months" in modifier_types
+    assert "pp_province_food_storage_months" in modifier_icons
+    assert "MODIFIER_TYPE_NAME_pp_province_food_storage_months:" in localization_text
+    assert "MODIFIER_TYPE_DESC_pp_province_food_storage_months:" in localization_text
+
+
+def test_province_food_market_goods_share_balance_values() -> None:
+    goods = {}
+    for path in (PROVINCE_FOOD_SALES_GOOD, PROVINCE_FOOD_PURCHASE_GOOD, OFFSET_GOOD):
+        goods.update(
+            {
+                entry.key: _entry_values(entry.value)
+                for entry in parse_file(path).entries
+                if isinstance(entry.value, CList)
+            }
+        )
+
+    sales = dict(goods["province_food_sales"])
+    purchase = dict(goods["province_food_purchase"])
+    offset = dict(goods["offset"])
+    assert sales.pop("color") == "goods_province_food_sales"
+    assert purchase.pop("color") == "goods_province_food_purchase"
+    assert offset.pop("color") == "goods_offset"
+    assert offset["category"] == sales["category"]
+    assert offset["transport_cost"] == sales["transport_cost"]
+    for key in ("category", "transport_cost", "base_production"):
+        assert purchase[key] == sales[key]
+
+
+def test_offset_clones_active_province_food_sales_output_modifiers() -> None:
+    modifier_sources = (
+        (MOD_ROOT / "in_game" / "common" / "auto_modifiers" / "pp_country_base_values.txt", "global"),
+        (MOD_ROOT / "in_game" / "common" / "location_ranks" / "pp_location_rank_adjustments.txt", "local"),
+        (MOD_ROOT / "in_game" / "common" / "societal_values" / "pp_societal_value_adjustments.txt", "global"),
+        (
+            MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifier_adjustments.txt",
+            "local",
+        ),
+    )
+
+    for path, scope in modifier_sources:
+        text = path.read_text(encoding="utf-8-sig")
+        sales = re.findall(
+            rf"^[\t ]*{scope}_province_food_sales_output_modifier[\t ]*=[\t ]*([^\s#]+)",
+            text,
+            flags=re.MULTILINE,
+        )
+        offset = re.findall(
+            rf"^[\t ]*{scope}_offset_output_modifier[\t ]*=[\t ]*([^\s#]+)",
+            text,
+            flags=re.MULTILINE,
+        )
+        assert offset == sales, path
+
+
+def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
+    icon_root = MOD_ROOT / "main_menu" / "gfx" / "interface" / "icons"
+    paths = (
+        icon_root / "trade_goods" / "icon_goods_province_food_sales.dds",
+        icon_root / "trade_goods" / "icon_goods_province_food_purchase.dds",
+        icon_root / "modifier_types" / "province_food_sales_positive.dds",
+        icon_root / "modifier_types" / "province_food_purchase_positive.dds",
+        icon_root / "trade_goods" / "icon_goods_local_food.dds",
+        icon_root / "modifier_types" / "local_food_positive.dds",
+        icon_root / "trade_goods" / "icon_goods_manual_labor_cost.dds",
+        icon_root / "modifier_types" / "manual_labor_cost_positive.dds",
+        icon_root / "trade_goods" / "icon_goods_offset.dds",
+        icon_root / "modifier_types" / "offset_positive.dds",
+        icon_root / "modifier_types" / "pp_province_food_storage_months.dds",
+        icon_root / "trade_goods" / "illustrations" / "icon_goods_province_food_sales.dds",
+        icon_root / "trade_goods" / "illustrations" / "icon_goods_province_food_purchase.dds",
+        icon_root / "trade_goods" / "illustrations" / "icon_goods_local_food.dds",
+        icon_root / "trade_goods" / "illustrations" / "icon_goods_manual_labor_cost.dds",
+        icon_root / "trade_goods" / "illustrations" / "icon_goods_offset.dds",
+    )
+
+    for path in paths:
+        data = path.read_bytes()
+        assert data[:4] == b"DDS ", path
+        assert data[84:88] == b"DXT5", path
+        dimensions = (
+            int.from_bytes(data[16:20], "little"),
+            int.from_bytes(data[12:16], "little"),
+        )
+        mip_count = int.from_bytes(data[28:32], "little")
+        if "illustrations" in path.parts:
+            assert dimensions == (1080, 440), path
+            assert mip_count == 11, path
+        else:
+            assert dimensions == (128, 128), path
+            assert mip_count == 8, path
+
+
+def test_dummy_victuals_producer_blueprint_uses_offset_good_key() -> None:
+    blueprint = (ROOT / "blueprints" / "accepted" / "buildings" / "dummy_victuals_producer.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert re.search(r"^[\t ]+offset[\t ]*=[\t ]*5(?:\.0)?$", blueprint, flags=re.MULTILINE)
+    assert not re.search(r"^[\t ]+goods_offset[\t ]*=", blueprint, flags=re.MULTILINE)
 
 
 def test_current_megalopolis_buildings_allow_megalopolis() -> None:
@@ -3272,7 +3474,9 @@ def test_current_megalopolis_buildings_allow_megalopolis() -> None:
 
 
 def test_victuals_market_construction_and_coastal_saltern_debug_keys_are_localized() -> None:
-    victuals_market = load_template(ROOT / "blueprints" / "accepted" / "buildings" / "victuals_market.yml")
+    victuals_market = load_template(
+        ROOT / "blueprints" / "accepted" / "buildings" / "victuals_market_export.yml"
+    )
     coastal_saltern = load_template(ROOT / "blueprints" / "accepted" / "buildings" / "coastal_saltern.yml")
 
     assert victuals_market.localization["victuals_market_construction"] == "Victuals Market Construction"
@@ -3612,7 +3816,8 @@ def _goods_by_subcategory(subcategory: str) -> set[str]:
 
 
 def _accepted_blueprint_building_values(building: str) -> dict[str, object]:
-    return _accepted_blueprint_building_values_from_path(BUILDING_BLUEPRINT_ROOT / f"{building}.yml")
+    filename = "victuals_market_export.yml" if building == "victuals_market" else f"{building}.yml"
+    return _accepted_blueprint_building_values_from_path(BUILDING_BLUEPRINT_ROOT / filename)
 
 
 def _accepted_blueprint_building_values_from_path(blueprint: Path) -> dict[str, object]:

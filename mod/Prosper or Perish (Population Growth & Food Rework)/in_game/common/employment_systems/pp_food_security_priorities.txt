@@ -14,20 +14,20 @@
 		if = {
 			limit = { has_tag = pp_food_security_priority }
 
-			# Food storage needs highest priority to stop fluctuations in food for AI.
+			# Food storage remains a high priority to limit food fluctuations for AI.
 			if = {
 				limit = { has_tag = pp_food_storage_priority }
-				add = 120
+				add = 85
 			}
 			# Direct food production needs second highest priority so we do not enter starvation loops.
 			else_if = {
 				limit = { has_tag = pp_direct_food_priority }
 				add = 110
 			}
-			# Victuals markets need priority below cookeries so prepared food is distributed after direct food production.
+			# Victuals markets receive the highest food-security priority so prepared food is distributed reliably.
 			else_if = {
 				limit = { has_tag = pp_food_distribution_priority }
-				add = 100
+				add = 120
 			}
 			# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
 			else_if = {
@@ -96,20 +96,20 @@ TRY_REPLACE:first_come_first_serve = {
 		if = {
 			limit = { has_tag = pp_food_security_priority }
 
-			# Food storage needs highest priority to stop fluctuations in food for AI.
+			# Food storage remains a high priority to limit food fluctuations for AI.
 			if = {
 				limit = { has_tag = pp_food_storage_priority }
-				add = 120
+				add = 85
 			}
 			# Direct food production needs second highest priority so we do not enter starvation loops.
 			else_if = {
 				limit = { has_tag = pp_direct_food_priority }
 				add = 110
 			}
-			# Victuals markets need priority below cookeries so prepared food is distributed after direct food production.
+			# Victuals markets receive the highest food-security priority so prepared food is distributed reliably.
 			else_if = {
 				limit = { has_tag = pp_food_distribution_priority }
-				add = 100
+				add = 120
 			}
 			# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
 			else_if = {
@@ -177,20 +177,20 @@ TRY_REPLACE:capitalism = {
 		if = {
 			limit = { has_tag = pp_food_security_priority }
 
-			# Food storage needs highest priority to stop fluctuations in food for AI.
+			# Food storage remains a high priority to limit food fluctuations for AI.
 			if = {
 				limit = { has_tag = pp_food_storage_priority }
-				add = 120
+				add = 85
 			}
 			# Direct food production needs second highest priority so we do not enter starvation loops.
 			else_if = {
 				limit = { has_tag = pp_direct_food_priority }
 				add = 110
 			}
-			# Victuals markets need priority below cookeries so prepared food is distributed after direct food production.
+			# Victuals markets receive the highest food-security priority so prepared food is distributed reliably.
 			else_if = {
 				limit = { has_tag = pp_food_distribution_priority }
-				add = 100
+				add = 120
 			}
 			# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
 			else_if = {
@@ -269,20 +269,20 @@ TRY_REPLACE:capitalism_prioritising_infrastructure = {
 		if = {
 			limit = { has_tag = pp_food_security_priority }
 
-			# Food storage needs highest priority to stop fluctuations in food for AI.
+			# Food storage remains a high priority to limit food fluctuations for AI.
 			if = {
 				limit = { has_tag = pp_food_storage_priority }
-				add = 120
+				add = 85
 			}
 			# Direct food production needs second highest priority so we do not enter starvation loops.
 			else_if = {
 				limit = { has_tag = pp_direct_food_priority }
 				add = 110
 			}
-			# Victuals markets need priority below cookeries so prepared food is distributed after direct food production.
+			# Victuals markets receive the highest food-security priority so prepared food is distributed reliably.
 			else_if = {
 				limit = { has_tag = pp_food_distribution_priority }
-				add = 100
+				add = 120
 			}
 			# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
 			else_if = {
@@ -375,20 +375,20 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade = {
 		if = {
 			limit = { has_tag = pp_food_security_priority }
 
-			# Food storage needs highest priority to stop fluctuations in food for AI.
+			# Food storage remains a high priority to limit food fluctuations for AI.
 			if = {
 				limit = { has_tag = pp_food_storage_priority }
-				add = 120
+				add = 85
 			}
 			# Direct food production needs second highest priority so we do not enter starvation loops.
 			else_if = {
 				limit = { has_tag = pp_direct_food_priority }
 				add = 110
 			}
-			# Victuals markets need priority below cookeries so prepared food is distributed after direct food production.
+			# Victuals markets receive the highest food-security priority so prepared food is distributed reliably.
 			else_if = {
 				limit = { has_tag = pp_food_distribution_priority }
-				add = 100
+				add = 120
 			}
 			# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
 			else_if = {
@@ -489,20 +489,20 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade_and_culture = {
 		if = {
 			limit = { has_tag = pp_food_security_priority }
 
-			# Food storage needs highest priority to stop fluctuations in food for AI.
+			# Food storage remains a high priority to limit food fluctuations for AI.
 			if = {
 				limit = { has_tag = pp_food_storage_priority }
-				add = 120
+				add = 85
 			}
 			# Direct food production needs second highest priority so we do not enter starvation loops.
 			else_if = {
 				limit = { has_tag = pp_direct_food_priority }
 				add = 110
 			}
-			# Victuals markets need priority below cookeries so prepared food is distributed after direct food production.
+			# Victuals markets receive the highest food-security priority so prepared food is distributed reliably.
 			else_if = {
 				limit = { has_tag = pp_food_distribution_priority }
-				add = 100
+				add = 120
 			}
 			# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
 			else_if = {

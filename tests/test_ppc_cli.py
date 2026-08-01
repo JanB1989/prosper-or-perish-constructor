@@ -890,7 +890,7 @@ def test_output_modifiers_can_include_specific_gated_modifiers(
     assert lines[3].split() == ["wheat", "0.10", "0.10"]
 
 
-def test_food_revenue_check_prints_parsed_price_and_rank_edges(
+def test_province_food_sales_check_prints_parsed_price_and_rank_edges(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     repo = _repo(tmp_path)
@@ -960,9 +960,9 @@ def test_food_revenue_check_prints_parsed_price_and_rank_edges(
             "warnings": [],
         }
 
-    monkeypatch.setattr(cli, "_load_food_revenue_check_inputs", fake_inputs)
+    monkeypatch.setattr(cli, "_load_province_food_sales_check_inputs", fake_inputs)
 
-    assert cli.main(["--repo", str(repo), "food-revenue-check"]) == 0
+    assert cli.main(["--repo", str(repo), "province-food-sales-check"]) == 0
 
     output = capsys.readouterr().out
     assert "cheap cap effect (food price 0x)" in output
@@ -1054,17 +1054,17 @@ def test_food_revenue_check_prints_parsed_price_and_rank_edges(
     assert "result=ok" in output
 
 
-def test_food_revenue_storage_target_solver_uses_configured_edge() -> None:
+def test_province_food_sales_storage_target_solver_uses_configured_edge() -> None:
     edge = ("rural_settlement", "cheap_cap_0x", "full", "no")
 
-    full_target = cli._food_revenue_storage_full_target_for_edge(
+    full_target = cli._province_food_sales_storage_full_target_for_edge(
         edge,
         matrix_targets={edge: -0.4},
         rank_targets={"rural_settlement": 0.136},
         price_targets={"cheap_cap_0x": -0.450},
         starving_targets={"no": 0.0},
     )
-    raw_target = cli._food_revenue_storage_raw_target_for_edge(
+    raw_target = cli._province_food_sales_storage_raw_target_for_edge(
         edge,
         growth_cap=2.0,
         matrix_targets={edge: -0.4},
@@ -1077,10 +1077,10 @@ def test_food_revenue_storage_target_solver_uses_configured_edge() -> None:
     assert raw_target == pytest.approx(-0.043)
 
 
-def test_food_revenue_storage_target_solver_reacts_to_desired_floor() -> None:
+def test_province_food_sales_storage_target_solver_reacts_to_desired_floor() -> None:
     edge = ("rural_settlement", "cheap_cap_0x", "full", "no")
 
-    raw_target = cli._food_revenue_storage_raw_target_for_edge(
+    raw_target = cli._province_food_sales_storage_raw_target_for_edge(
         edge,
         growth_cap=2.0,
         matrix_targets={edge: -0.45},
@@ -1092,14 +1092,14 @@ def test_food_revenue_storage_target_solver_reacts_to_desired_floor() -> None:
     assert raw_target == pytest.approx(-0.068)
 
 
-def test_food_revenue_check_fails_when_matrix_total_leaves_band(
+def test_province_food_sales_check_fails_when_matrix_total_leaves_band(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     repo = _repo(tmp_path)
 
     monkeypatch.setattr(
         cli,
-        "_load_food_revenue_check_inputs",
+        "_load_province_food_sales_check_inputs",
         lambda *, profile, load_order_path, project: {
             "growth_cap": 2.0,
             "static": {
@@ -1119,7 +1119,7 @@ def test_food_revenue_check_fails_when_matrix_total_leaves_band(
         },
     )
 
-    assert cli.main(["--repo", str(repo), "food-revenue-check"]) == 1
+    assert cli.main(["--repo", str(repo), "province-food-sales-check"]) == 1
 
     output = capsys.readouterr().out
     assert "matrix band failures:" in output
@@ -1129,7 +1129,7 @@ def test_food_revenue_check_fails_when_matrix_total_leaves_band(
     assert "result=fail" in output
 
 
-def test_food_revenue_profitability_threshold_uses_scenario_input_and_base_output() -> None:
+def test_province_food_sales_profitability_threshold_uses_scenario_input_and_base_output() -> None:
     method = SimpleNamespace(
         food_cost_scenarios=[
             SimpleNamespace(
@@ -1144,7 +1144,7 @@ def test_food_revenue_profitability_threshold_uses_scenario_input_and_base_outpu
         ]
     )
 
-    rows = cli._food_revenue_profitability_rows_from_method(method)
+    rows = cli._province_food_sales_profitability_rows_from_method(method)
 
     assert rows[0]["base_output_gold"] == pytest.approx(5.05)
     assert rows[0]["required_output_modifier"] == pytest.approx(5.23 / 5.05 - 1.0)
@@ -1153,7 +1153,7 @@ def test_food_revenue_profitability_threshold_uses_scenario_input_and_base_outpu
     assert rows[0]["profitable"] is False
 
 
-def test_food_revenue_output_modifier_values_use_three_decimal_precision() -> None:
+def test_province_food_sales_output_modifier_values_use_three_decimal_precision() -> None:
     paths = [
         ROOT
         / "mod"
@@ -1170,15 +1170,24 @@ def test_food_revenue_output_modifier_values_use_three_decimal_precision() -> No
         / "location_ranks"
         / "pp_location_rank_adjustments.txt",
     ]
-    pattern = re.compile(r"\blocal_food_revenue_output_modifier\s*=\s*(-?\d+\.(\d+))\b")
-    matches = []
+    patterns = {
+        good: re.compile(rf"\blocal_{good}_output_modifier\s*=\s*(-?\d+\.(\d+))\b")
+        for good in ("province_food_sales", "province_food_purchase")
+    }
+    values_by_good: dict[str, list[str]] = {}
 
-    for path in paths:
-        for match in pattern.finditer(path.read_text(encoding="utf-8-sig")):
-            matches.append(match.group(1))
-            assert len(match.group(2)) <= 3, match.group(1)
+    for good, pattern in patterns.items():
+        matches = []
+        for path in paths:
+            for match in pattern.finditer(path.read_text(encoding="utf-8-sig")):
+                matches.append(match.group(1))
+                assert len(match.group(2)) <= 3, match.group(1)
+        values_by_good[good] = matches
 
-    assert matches
+    assert values_by_good["province_food_sales"]
+    assert [abs(float(value)) for value in values_by_good["province_food_purchase"]] == [
+        abs(float(value)) for value in values_by_good["province_food_sales"]
+    ]
 
 
 def test_production_throughput_prints_best_available_building_slot_sums(

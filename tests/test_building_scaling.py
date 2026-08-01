@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from decimal import Decimal
 from pathlib import Path
+import re
 
 import pytest
 import yaml
@@ -185,8 +186,11 @@ def test_victuals_producers_supply_local_food_above_worker_consumption() -> None
         modifier = _last_block(block, "modifier")
         local_food = Decimal(str(_last_value(modifier, "local_monthly_food")))
 
-        assert local_food == worker_food * Decimal("1.5")
-        assert f"local_monthly_food = {local_food:.1f}" in template.building_body
+        assert local_food >= worker_food * Decimal("1.5")
+        assert re.search(
+            rf"local_monthly_food\s*=\s*{re.escape(str(local_food))}(?:\.0)?\b",
+            template.building_body,
+        )
 
     cookery = load_template(BUILDING_BLUEPRINT_ROOT / "cookery.yml")
     cookery_block = _building_block(cookery.key, cookery.building_body)

@@ -102,8 +102,11 @@ STRUCTURE_SNIPPETS = {
         "small_tooltip_context = location",
         "modifier:pp_province_food_storage_months",
         "secondary_map_color = {",
+        "province = { is_starving = yes }",
+        "define:NMapColors|POPULATION_STARVING_COLOR_STRIPE",
         "modifier:pp_province_food_storage_months >= @pp_province_food_storage_months_max",
         "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STRIPED",
+        "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STARVING",
         "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_TT_LAND",
         "color_refresh_counters = { Month }",
         "color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }",
@@ -428,7 +431,7 @@ def test_positive_province_food_growth_map_mode_reads_months_from_modifier() -> 
         max_months,
     ]
     assert block.count("lerp = {") == 4
-    assert block.count("legend_key =") == 6
+    assert block.count("legend_key =") == 7
     assert block.count("map_names = province") == 3
     assert block.count("tooltip_context = location") == 3
     assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_HIGH" in block
@@ -441,6 +444,13 @@ def test_positive_province_food_growth_map_mode_reads_months_from_modifier() -> 
     ) in block
     assert "value = rgb { 35 35 42 }" in block
     assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STRIPED" in block
+    assert "province = { is_starving = yes }" in block
+    assert "define:NMapColors|POPULATION_STARVING_COLOR_STRIPE" in block
+    assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STARVING" in block
+    assert block.index("province = { is_starving = yes }") < block.index(
+        "modifier:pp_province_food_storage_months "
+        ">= @pp_province_food_storage_months_max"
+    )
     growth_modifier = static_modifiers.split(
         "TRY_REPLACE:positive_province_food_growth = {", 1
     )[1].split(
@@ -468,6 +478,7 @@ def test_positive_province_food_growth_map_mode_reads_months_from_modifier() -> 
         f'"{food_storage_gui.format_gui_fixed_point(max_months)}+ months"'
     ) in food_storage_localization
     assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STRIPED" in food_storage_localization
+    assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STARVING" in food_storage_localization
     assert "ROOT.GetLocation.GetProvince.GetFoodModifierEffect" in localization
     assert "ROOT.GetLocation.GetProvince.GetFoodCapacity" in localization
     assert icon.is_file()

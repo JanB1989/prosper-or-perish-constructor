@@ -264,4 +264,6 @@ def render_food_storage_localization(map_scale: dict[str, str]) -> str:
         f'"{map_scale["max"]}+ months"\n'
         "  MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STRIPED: "
         '"Maximum food-growth bonus reached"\n'
+        "  MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STARVING: "
+        '"Province is starving"\n'
     )

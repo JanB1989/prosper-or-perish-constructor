@@ -96,6 +96,7 @@ def test_food_storage_gui_compiler_tracks_growth_cap_define(
     assert 'MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_HIGH: "31.5 months"' in localization
     assert 'MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_MAX: "42+ months"' in localization
     assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STRIPED" in localization
+    assert "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STARVING" in localization
 
     unchanged = food_storage_gui.compile_food_storage_gui(
         repo=repo,

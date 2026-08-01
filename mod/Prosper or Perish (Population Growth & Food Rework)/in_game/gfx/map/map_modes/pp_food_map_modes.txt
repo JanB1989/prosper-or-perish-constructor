@@ -433,6 +433,13 @@ pp_positive_province_food_growth = {
 		if = {
 			limit = {
 				has_owner = yes
+				province = { is_starving = yes }
+			}
+			value = define:NMapColors|POPULATION_STARVING_COLOR_STRIPE
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
 				modifier:pp_province_food_storage_months >= @pp_province_food_storage_months_max
 			}
 			value = rgb { 35 35 42 }
@@ -462,6 +469,10 @@ pp_positive_province_food_growth = {
 	legend_key = {
 		desc = "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STRIPED"
 		color = rgb { 35 35 42 }
+	}
+	legend_key = {
+		desc = "MAPMODE_PP_POSITIVE_PROVINCE_FOOD_GROWTH_STARVING"
+		color = define:NMapColors|POPULATION_STARVING_COLOR_STRIPE
 	}
 
 	tooltip_key = {

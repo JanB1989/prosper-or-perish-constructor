@@ -68,6 +68,10 @@ GOLD_TO_JEWELRY_BUILDINGS = BUILDING_TYPE_ROOT / "pp_gold_to_jewelry_buildings.t
 EMPLOYMENT_SYSTEMS_ROOT = MOD_ROOT / "in_game" / "common" / "employment_systems"
 PRODUCTION_METHODS_ROOT = MOD_ROOT / "in_game" / "common" / "production_methods"
 GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
+STARTING_PROVINCE_FOOD_ACTION = (
+    MOD_ROOT / "in_game" / "common" / "on_action" / "pp_starting_province_food.txt"
+)
+STARTING_PROVINCE_FOOD_VALUE = SCRIPT_VALUES_ROOT / "pp_starting_province_food.txt"
 BUILDING_CULLING = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt"
 BUILDING_CAPACITY_CULLING_V2 = (
     MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_capacity_culling_v2.txt"
@@ -110,6 +114,9 @@ FARMING_CAPACITY_MODIFIER_LOCALIZATION = (
 REMOVED_FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER = "farm_capacity_from_other_buildings"
 BUILDING_MAINTENANCE_RULES = (
     MOD_ROOT / "main_menu" / "common" / "game_rules" / "pp_building_maintenance_rules.txt"
+)
+STARTING_PROVINCE_FOOD_RULES = (
+    MOD_ROOT / "main_menu" / "common" / "game_rules" / "pp_starting_province_food_rules.txt"
 )
 CAPACITY_PRECALC = MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_capacity_precalc.txt"
 RGO_STATIC_BONUSES = MOD_ROOT / "in_game" / "common" / "static_modifiers" / "pp_rgo_static_bonuses.txt"
@@ -2851,6 +2858,87 @@ def test_setup_estate_building_culling_is_registered_and_internal() -> None:
 
     localization = (LOCALIZATION_ROOT / "pp_game_rules_l_english.yml").read_text(encoding="utf-8-sig")
     assert "estate_setup_culling" not in localization
+
+
+def test_starting_province_food_is_configurable_and_registered() -> None:
+    game_start_entries = {entry.key: entry.value for entry in parse_file(GAME_START).entries}
+    game_start = game_start_entries["on_game_start"]
+    assert isinstance(game_start, CList)
+    on_actions = _entry_values(game_start)["on_actions"]
+    assert isinstance(on_actions, CList)
+    assert "pp_set_starting_province_food" in on_actions.items
+    assert on_actions.items.index("pp_food_building_startup") < on_actions.items.index(
+        "pp_set_starting_province_food"
+    )
+
+    action_entries = {
+        entry.key: entry.value for entry in parse_file(STARTING_PROVINCE_FOOD_ACTION).entries
+    }
+    assert "pp_set_starting_province_food" in action_entries
+    action_text = STARTING_PROVINCE_FOOD_ACTION.read_text(encoding="utf-8-sig")
+    assert action_text.count("every_location_in_the_world") == 1
+    assert "limit = { is_province_capital = yes }" in action_text
+    assert "every_province" not in action_text
+    assert "has_game_rule = pp_starting_province_food_disabled" in action_text
+    assert re.search(
+        r"change_province_food_percentage\s*=\s*\{"
+        r".*?value\s*=\s*province_food_percentage"
+        r".*?multiply\s*=\s*-1"
+        r".*?add\s*=\s*pp_starting_province_food_percentage",
+        action_text,
+        flags=re.S,
+    )
+
+    value_entries = {
+        entry.key: entry.value for entry in parse_file(STARTING_PROVINCE_FOOD_VALUE).entries
+    }
+    assert "pp_starting_province_food_percentage" in value_entries
+    value_text = STARTING_PROVINCE_FOOD_VALUE.read_text(encoding="utf-8-sig")
+    assert re.search(r"(?m)^\s*value\s*=\s*0\s*$", value_text)
+    for suffix, target in {
+        "005": "0.05",
+        "010": "0.10",
+        "025": "0.25",
+        "050": "0.50",
+        "075": "0.75",
+        "100": "1.00",
+    }.items():
+        assert re.search(
+            rf"has_game_rule\s*=\s*pp_starting_province_food_{suffix}.*?add\s*=\s*{target}",
+            value_text,
+            flags=re.S,
+        )
+
+    rule_entries = {
+        entry.key: entry.value for entry in parse_file(STARTING_PROVINCE_FOOD_RULES).entries
+    }
+    rule = rule_entries["pp_starting_province_food_rule"]
+    assert isinstance(rule, CList)
+    rule_values = _entry_values(rule)
+    assert rule_values["default"] == "pp_starting_province_food_010"
+    settings = {
+        "pp_starting_province_food_disabled",
+        "pp_starting_province_food_000",
+        "pp_starting_province_food_005",
+        "pp_starting_province_food_010",
+        "pp_starting_province_food_025",
+        "pp_starting_province_food_050",
+        "pp_starting_province_food_075",
+        "pp_starting_province_food_100",
+    }
+    assert settings <= rule_values.keys()
+    for setting in settings:
+        setting_block = rule_values[setting]
+        assert isinstance(setting_block, CList)
+        assert _entry_values(setting_block)["flag"] == "general_rule"
+
+    localization = (LOCALIZATION_ROOT / "pp_game_rules_l_english.yml").read_text(
+        encoding="utf-8-sig"
+    )
+    assert "rule_pp_starting_province_food_rule:" in localization
+    for setting in settings:
+        assert f"setting_{setting}:" in localization
+        assert f"setting_{setting}_desc:" in localization
 
 
 def test_setup_estate_building_culling_covers_vanilla_estate_buildings() -> None:

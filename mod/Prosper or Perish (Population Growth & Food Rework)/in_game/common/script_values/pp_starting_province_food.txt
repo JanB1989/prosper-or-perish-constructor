@@ -1,0 +1,28 @@
+﻿# Target share of maximum province food selected by the campaign game rule.
+pp_starting_province_food_percentage = {
+	value = 0
+	if = {
+		limit = { has_game_rule = pp_starting_province_food_005 }
+		add = 0.05
+	}
+	if = {
+		limit = { has_game_rule = pp_starting_province_food_010 }
+		add = 0.10
+	}
+	if = {
+		limit = { has_game_rule = pp_starting_province_food_025 }
+		add = 0.25
+	}
+	if = {
+		limit = { has_game_rule = pp_starting_province_food_050 }
+		add = 0.50
+	}
+	if = {
+		limit = { has_game_rule = pp_starting_province_food_075 }
+		add = 0.75
+	}
+	if = {
+		limit = { has_game_rule = pp_starting_province_food_100 }
+		add = 1.00
+	}
+}

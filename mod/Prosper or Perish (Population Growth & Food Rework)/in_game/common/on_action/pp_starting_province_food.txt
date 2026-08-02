@@ -1,0 +1,25 @@
+﻿# Prosper or Perish - configurable starting province food
+
+pp_set_starting_province_food = {
+	effect = {
+		if = {
+			limit = {
+				NOT = { has_game_rule = pp_starting_province_food_disabled }
+			}
+			every_location_in_the_world = {
+				# Every province has exactly one province-capital location, so this visits
+				# each province once without depending on country ownership.
+				limit = { is_province_capital = yes }
+				province = {
+					# change_province_food_percentage is additive. Subtracting the
+					# current percentage first makes this set the configured target.
+					change_province_food_percentage = {
+						value = province_food_percentage
+						multiply = -1
+						add = pp_starting_province_food_percentage
+					}
+				}
+			}
+		}
+	}
+}

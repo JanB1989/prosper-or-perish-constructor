@@ -13,6 +13,7 @@ on_game_start = {
 		pp_remove_invalid_fiber_and_stud_farms
 		pp_game_start_effect
 		pp_food_building_startup
+		pp_set_starting_province_food
 		# pp_remove_invalid_buildings # we leave this off as it somehow causes crashes?
 	}
 }

@@ -2,10 +2,7 @@
 TRY_INJECT:country_base_values = {
 	raw_material_in_province_impact = 0.075 # 0.1
 	global_food_decay = 0.01 # 0.005
-	# food_purchase_efficiency = 3.0 # 0.875
-	# global_monthly_food_modifier = 1.0
 	global_province_food_sales_output_modifier = -0.5
-	global_offset_output_modifier = -0.5
 	global_province_food_purchase_output_modifier = 0.5
-	# global_local_food_output_modifier = 0
+	global_food_capacity_modifier = 10
 }

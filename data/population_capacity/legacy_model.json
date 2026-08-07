@@ -1,0 +1,56 @@
+{
+  "accepted_candidate": "mechanistic",
+  "accepted_table": "accepted_capacity.csv",
+  "accepted_table_sha256": "3c4372efea6c1acca8de7cd0022b15835492623dec81226f7d088ea1c90302ec",
+  "area_benchmark_median_absolute_relative_error": 0.0,
+  "area_calibration_case_count": 8,
+  "area_validation_case_count": 4,
+  "area_validation_median_absolute_relative_error": 0.266382,
+  "candidates": [
+    {
+      "candidate": "area_only",
+      "eligible": false,
+      "reason": "diagnostic baseline only",
+      "scale_factor": 1.0
+    },
+    {
+      "candidate": "mechanistic",
+      "eligible": true,
+      "reason": "mechanistic candidate is the default deployable model",
+      "scale_factor": 1.0
+    },
+    {
+      "candidate": "hierarchical_additive",
+      "eligible": false,
+      "reason": "requires at least three vetted scale anchors from three independent source families",
+      "scale_factor": 1.0
+    },
+    {
+      "candidate": "monotone_nam",
+      "eligible": false,
+      "reason": "requires at least three vetted scale anchors from three independent source families",
+      "scale_factor": 1.0
+    }
+  ],
+  "capacity_people_median": 69598,
+  "capacity_people_total": 3922758505,
+  "deployment_status": "provisional",
+  "heldout_anchor_evidence_adequate": false,
+  "heldout_anchor_interval_count": 1,
+  "heldout_anchor_interval_coverage": 1.0,
+  "heldout_anchor_source_family_count": 1,
+  "image_formula_median_absolute_relative_error": 0.210914,
+  "location_rows": 20929,
+  "model_version": "carrying_capacity_1337_v2",
+  "normalization_max": 100,
+  "normalization_min": 10,
+  "normalization_quantile": 0.995,
+  "normalized_max": 100,
+  "normalized_min": 10,
+  "physical_invariant_failures": [],
+  "scientific_acceptance_complete": false,
+  "selected_candidate": "mechanistic",
+  "selection_reason": "Mechanistic default selected. Learned candidates are ineligible until at least three independent vetted scale-anchor families permit grouped holdout validation.",
+  "source_manifest_hash": "ec0aa784663185f3409d36fe709a6dc9d03ebb445376e9f43702eca88a1f2238",
+  "vetted_scale_anchor_count": 0
+}

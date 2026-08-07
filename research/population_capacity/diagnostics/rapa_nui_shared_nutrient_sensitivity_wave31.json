@@ -1,0 +1,342 @@
+{
+  "diagnostic_id": "rapa_nui_shared_nutrient_sensitivity_wave31",
+  "feature_proposal": {
+    "mechanism": "Reduce only the sustainable crop contribution when nutrient stocks, leaching, erosion or effective fallow requirements limit long-run yield. Preserve livestock, fisheries and wild-food contributions unless their own ecological caps are affected.",
+    "name": "nutrient_limited_sustainable_crop_fraction",
+    "non_goals": [
+      "no Rapa Nui-specific multiplier",
+      "no starting-population or HYDE predictor",
+      "no observed rock-garden area as a global target",
+      "no global/region median yield imputation"
+    ],
+    "predictors": [
+      "soil_quality_class",
+      "CHELSA annual precipitation as a leaching-risk proxy",
+      "crop-family nutrient demand and root-crop perennial/rotation class",
+      "physical rock-garden/mulch suitability where independently mapped"
+    ],
+    "production_implementation": "Dynamic N/P/K stock balance with deposition/fixation, manure/mulch return, crop uptake, leaching and erosion; separate intensive root-crop area from generic land suitability. No observed historical cropland share is used.",
+    "root_crop_area_rule": "Treat root-crop/rock-garden area as a separately mapped physical suitability with explicit fallow/rotation; do not assign every physically suitable pixel continuous annual production.",
+    "status": "diagnostic_proposal_only"
+  },
+  "frame_path": "/home/jan/development/ProsperOrPerishConstructor/artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "frame_rows": 20929,
+  "frame_sha256": "e7c6df00f2659670a9cc59f21c3e0d03e20383493172ce53e3fe0326a0a15cc6",
+  "generated_on": "2026-08-04",
+  "interpretation": {
+    "acceptance_effect": "The sensitivity demonstrates a plausible shared physical resolution without breaking England or Iceland, but it does not clear scientific acceptance. Rapa Nui remains held out; acceptance requires global physical validation, grouped holdouts and uncertainty coverage after a real nutrient stock implementation.",
+    "production_readiness": "Not ready. The numerical retention values are a transparent sensitivity, not fitted global parameters. Independent soil nutrient, leaching, fallow and root-crop observations are required across tropical, temperate and arctic systems before enabling the feature.",
+    "root_area_cap_result": "A separate physical-suitability/fallow sensitivity that halves crop contribution only on high-leaching nutrient-limited land moves Rapa Nui to 17,119, England to 5,643,752 and leaves Iceland at 76,567; all three remain inside their stated intervals. Combining both mechanisms is intentionally shown as an upper-stress scenario (Rapa Nui 7,705), not a production setting.",
+    "shared_combined_result": "The combined soil-quality \u00d7 high-leaching sensitivity moves Rapa Nui from 34,236 to 15,407 people, inside the independent 3,500-17,500 holdout interval. England moves from 5,674,862 to 5,111,633, remaining inside its 4.25-6.20 million formal interval. Iceland is unchanged at 76,567 because its crop contribution is zero in the current physical table; it remains inside the 40,000-80,000 interval."
+  },
+  "mapped_physical_features": [
+    {
+      "coverage_fraction": 1.0,
+      "field": "soil_quality",
+      "resolution": "existing EU5 location physical feature; no population or historical-cropland input",
+      "role": "physical_soil_class"
+    },
+    {
+      "coverage_fraction": 1.0,
+      "field": "chelsa_annual_precipitation",
+      "resolution": "same-location climate sample",
+      "role": "physical_leaching_risk_proxy"
+    },
+    {
+      "coverage_fraction": 0.999713,
+      "field": "chelsa_precipitation_seasonality",
+      "resolution": "same-location climate sample; not used in this first sensitivity",
+      "role": "physical_water-seasonality_context"
+    }
+  ],
+  "next_tests": [
+    "soil-quality monotonicity: lower nutrient stock cannot increase sustainable crop output",
+    "leaching monotonicity: greater leaching cannot increase long-run yield without compensating nutrient return",
+    "fallow conservation: effective crop area plus fallow/rotation area cannot exceed usable land",
+    "root-crop nitrogen scenarios reproduce the published Rapa Nui low/high-N envelope",
+    "England and Iceland interval coverage remains nominal under the shared feature"
+  ],
+  "scenario_summaries": {
+    "england": {
+      "baseline": {
+        "baseline_capacity_people_p50": 5674862,
+        "capacity_people_p10": 5028923,
+        "capacity_people_p50": 5674862,
+        "capacity_people_p90": 5953555,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 149,
+        "scenario": "baseline",
+        "weighted_crop_retention_p50": 1.0
+      },
+      "leaching_only": {
+        "baseline_capacity_people_p50": 5674862,
+        "capacity_people_p10": 5008278,
+        "capacity_people_p50": 5649974,
+        "capacity_people_p90": 5925583,
+        "factor_max": 1.0,
+        "factor_min": 0.6,
+        "location_count": 149,
+        "scenario": "leaching_only",
+        "weighted_crop_retention_p50": 0.995542
+      },
+      "root_area_cap": {
+        "baseline_capacity_people_p50": 5674862,
+        "capacity_people_p10": 5003116,
+        "capacity_people_p50": 5643752,
+        "capacity_people_p90": 5918590,
+        "factor_max": 1.0,
+        "factor_min": 0.5,
+        "location_count": 149,
+        "scenario": "root_area_cap",
+        "weighted_crop_retention_p50": 0.994427
+      },
+      "shared_combined": {
+        "baseline_capacity_people_p50": 5674862,
+        "capacity_people_p10": 4531811,
+        "capacity_people_p50": 5111633,
+        "capacity_people_p90": 5377463,
+        "factor_max": 1.0,
+        "factor_min": 0.36,
+        "location_count": 149,
+        "scenario": "shared_combined",
+        "weighted_crop_retention_p50": 0.899104
+      },
+      "shared_combined_area": {
+        "baseline_capacity_people_p50": 5674862,
+        "capacity_people_p10": 4521347,
+        "capacity_people_p50": 5098963,
+        "capacity_people_p90": 5363235,
+        "factor_max": 1.0,
+        "factor_min": 0.18,
+        "location_count": 149,
+        "scenario": "shared_combined_area",
+        "weighted_crop_retention_p50": 0.896835
+      },
+      "shared_combined_strict": {
+        "baseline_capacity_people_p50": 5674862,
+        "capacity_people_p10": 4098088,
+        "capacity_people_p50": 4621284,
+        "capacity_people_p90": 4878143,
+        "factor_max": 1.0,
+        "factor_min": 0.3,
+        "location_count": 149,
+        "scenario": "shared_combined_strict",
+        "weighted_crop_retention_p50": 0.811264
+      },
+      "soil_only": {
+        "baseline_capacity_people_p50": 5674862,
+        "capacity_people_p10": 4545764,
+        "capacity_people_p50": 5128526,
+        "capacity_people_p90": 5396434,
+        "factor_max": 1.0,
+        "factor_min": 0.6,
+        "location_count": 149,
+        "scenario": "soil_only",
+        "weighted_crop_retention_p50": 0.90213
+      }
+    },
+    "iceland": {
+      "baseline": {
+        "baseline_capacity_people_p50": 76567,
+        "capacity_people_p10": 18621,
+        "capacity_people_p50": 76567,
+        "capacity_people_p90": 2521439,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 21,
+        "scenario": "baseline",
+        "weighted_crop_retention_p50": 0.0
+      },
+      "leaching_only": {
+        "baseline_capacity_people_p50": 76567,
+        "capacity_people_p10": 18621,
+        "capacity_people_p50": 76567,
+        "capacity_people_p90": 2521439,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 21,
+        "scenario": "leaching_only",
+        "weighted_crop_retention_p50": 0.0
+      },
+      "root_area_cap": {
+        "baseline_capacity_people_p50": 76567,
+        "capacity_people_p10": 18621,
+        "capacity_people_p50": 76567,
+        "capacity_people_p90": 2521439,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 21,
+        "scenario": "root_area_cap",
+        "weighted_crop_retention_p50": 0.0
+      },
+      "shared_combined": {
+        "baseline_capacity_people_p50": 76567,
+        "capacity_people_p10": 18621,
+        "capacity_people_p50": 76567,
+        "capacity_people_p90": 2521439,
+        "factor_max": 1.0,
+        "factor_min": 0.45,
+        "location_count": 21,
+        "scenario": "shared_combined",
+        "weighted_crop_retention_p50": 0.0
+      },
+      "shared_combined_area": {
+        "baseline_capacity_people_p50": 76567,
+        "capacity_people_p10": 18621,
+        "capacity_people_p50": 76567,
+        "capacity_people_p90": 2521439,
+        "factor_max": 1.0,
+        "factor_min": 0.45,
+        "location_count": 21,
+        "scenario": "shared_combined_area",
+        "weighted_crop_retention_p50": 0.0
+      },
+      "shared_combined_strict": {
+        "baseline_capacity_people_p50": 76567,
+        "capacity_people_p10": 18621,
+        "capacity_people_p50": 76567,
+        "capacity_people_p90": 2521439,
+        "factor_max": 1.0,
+        "factor_min": 0.4,
+        "location_count": 21,
+        "scenario": "shared_combined_strict",
+        "weighted_crop_retention_p50": 0.0
+      },
+      "soil_only": {
+        "baseline_capacity_people_p50": 76567,
+        "capacity_people_p10": 18621,
+        "capacity_people_p50": 76567,
+        "capacity_people_p90": 2521439,
+        "factor_max": 1.0,
+        "factor_min": 0.45,
+        "location_count": 21,
+        "scenario": "soil_only",
+        "weighted_crop_retention_p50": 0.0
+      }
+    },
+    "rapa_nui": {
+      "baseline": {
+        "baseline_capacity_people_p50": 34236,
+        "capacity_people_p10": 28632,
+        "capacity_people_p50": 34236,
+        "capacity_people_p90": 34723,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 1,
+        "scenario": "baseline",
+        "weighted_crop_retention_p50": 1.0
+      },
+      "leaching_only": {
+        "baseline_capacity_people_p50": 34236,
+        "capacity_people_p10": 17187,
+        "capacity_people_p50": 20542,
+        "capacity_people_p90": 20898,
+        "factor_max": 0.6,
+        "factor_min": 0.6,
+        "location_count": 1,
+        "scenario": "leaching_only",
+        "weighted_crop_retention_p50": 0.6
+      },
+      "root_area_cap": {
+        "baseline_capacity_people_p50": 34236,
+        "capacity_people_p10": 14326,
+        "capacity_people_p50": 17119,
+        "capacity_people_p90": 17442,
+        "factor_max": 0.5,
+        "factor_min": 0.5,
+        "location_count": 1,
+        "scenario": "root_area_cap",
+        "weighted_crop_retention_p50": 0.5
+      },
+      "shared_combined": {
+        "baseline_capacity_people_p50": 34236,
+        "capacity_people_p10": 12895,
+        "capacity_people_p50": 15407,
+        "capacity_people_p90": 15713,
+        "factor_max": 0.45,
+        "factor_min": 0.45,
+        "location_count": 1,
+        "scenario": "shared_combined",
+        "weighted_crop_retention_p50": 0.45
+      },
+      "shared_combined_area": {
+        "baseline_capacity_people_p50": 34236,
+        "capacity_people_p10": 6458,
+        "capacity_people_p50": 7705,
+        "capacity_people_p90": 7937,
+        "factor_max": 0.225,
+        "factor_min": 0.225,
+        "location_count": 1,
+        "scenario": "shared_combined_area",
+        "weighted_crop_retention_p50": 0.225
+      },
+      "shared_combined_strict": {
+        "baseline_capacity_people_p50": 34236,
+        "capacity_people_p10": 8604,
+        "capacity_people_p50": 10272,
+        "capacity_people_p90": 10529,
+        "factor_max": 0.3,
+        "factor_min": 0.3,
+        "location_count": 1,
+        "scenario": "shared_combined_strict",
+        "weighted_crop_retention_p50": 0.3
+      },
+      "soil_only": {
+        "baseline_capacity_people_p50": 34236,
+        "capacity_people_p10": 21479,
+        "capacity_people_p50": 25678,
+        "capacity_people_p90": 26082,
+        "factor_max": 0.75,
+        "factor_min": 0.75,
+        "location_count": 1,
+        "scenario": "soil_only",
+        "weighted_crop_retention_p50": 0.75
+      }
+    }
+  },
+  "schema_version": "population_capacity_shared_nutrient_sensitivity_v1",
+  "shared_combined_benchmark": {
+    "england": {
+      "capacity_high": 6200000,
+      "capacity_low": 4250000,
+      "inside_interval": true,
+      "predicted_capacity_p50": 5111633,
+      "ratio_to_interval_midpoint": 0.978303,
+      "role": "formal_interval_anchor"
+    },
+    "iceland": {
+      "capacity_high": 80000,
+      "capacity_low": 40000,
+      "inside_interval": true,
+      "predicted_capacity_p50": 76567,
+      "ratio_to_interval_midpoint": 1.276117,
+      "role": "held_out_validation_only"
+    },
+    "rapa_nui": {
+      "capacity_high": 17500,
+      "capacity_low": 3500,
+      "inside_interval": true,
+      "predicted_capacity_p50": 15407,
+      "ratio_to_interval_midpoint": 1.467333,
+      "role": "held_out_validation_only"
+    }
+  },
+  "source_evidence": [
+    {
+      "details": "Abstract and Table 1/Table 2: 3,133.9 effective ha of suitable sweet-potato land; low-N continuous yield 1.46 t/ha/year versus high-N 5.09, with 5/5 and 15/3 fallow scenarios increasing average yields; food-limited population averages approximately 3,500 versus 17,500 across N regimes.",
+      "source": "Puleston et al. 2017, Frontiers in Ecology and Evolution 5, article 69",
+      "url": "https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2017.00069/full"
+    },
+    {
+      "details": "Soil analyses report rainfall leaching altered island nutrients and rock gardens had elevated nutrient levels relative to non-garden settings; mechanisms include organic mulching, nutrient-rich microsites and basalt weathering.",
+      "source": "Ladefoged et al. 2010, Soil nutrient analysis of Rapa Nui gardening, Archaeology in Oceania",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/j.1834-4453.2010.tb00082.x"
+    },
+    {
+      "details": "Island-wide SWIR classification revises rock-garden prevalence downward and shows rock gardening improves nutrient-poor soils and moisture retention; the physical intensive-area feature must be mapped rather than assumed from generic crop suitability.",
+      "source": "Davis et al. 2024, Science Advances 10, eado1459",
+      "url": "https://doi.org/10.1126/sciadv.ado1459"
+    }
+  ]
+}

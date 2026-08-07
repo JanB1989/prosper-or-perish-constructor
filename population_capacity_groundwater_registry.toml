@@ -1,0 +1,39 @@
+schema_version = 1
+target_year = 1337
+
+# Renewable groundwater is a required physical input for oasis and qanat
+# systems.  The current production irrigation contract is surface-water-only;
+# this registry prevents that limitation from being mistaken for a structural
+# zero.  The 0.5-degree source is diagnostic until aquifer/technology
+# alignment is resolved at the game-authoritative footprint.
+
+[[sources]]
+source_id = "gleeson_wada_bierkens_van_beek_2012"
+label = "Global groundwater recharge, abstraction and environmental-flow grids"
+url = "https://doi.org/10.1038/nature11295"
+download_url = "https://static-content.springer.com/esm/art%3A10.1038%2Fnature11295/MediaObjects/41586_2012_BFnature11295_MOESM287_ESM.zip"
+resolution = "0.5 degree"
+temporal_semantics = "long-term global groundwater balance; modern-era model inputs"
+units = "million cubic metres per grid cell per year"
+role = "diagnostic_recharge_upper_bound"
+production_status = "not_yet_aligned"
+limitations = [
+  "coarser than a game location and not a 1337 reconstruction",
+  "recharge is not equivalent to accessible qanat or well discharge",
+  "aquifer storage, depth, salinity, lift and environmental-flow requirements need local treatment",
+  "historical groundwater technology must be mapped separately from physical recharge",
+]
+
+[alignment_contract]
+required_fields = [
+  "aquifer_or_recharge_cell",
+  "renewable_recharge_m3_year_p10",
+  "environmental_flow_m3_year",
+  "accessible_discharge_m3_year_p50",
+  "lift_and_conveyance_cap",
+  "technology_registry_id",
+  "boundary_confidence",
+  "source_hash",
+]
+unresolved_state = "missing"
+zero_semantics = "observed_structural_zero_only_after_recharge_and_access_are resolved"

@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "region": "asia_mideast",
+  "target_year": 1337,
+  "records": [
+    {
+      "anchor_id": "japan_hinenosho_land_development_1234_1316",
+      "label": "Hinenosho manor land-clearance and irrigation sequence",
+      "year_start": 1234,
+      "year_end": 1316,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "interval_semantics": "Physical land-use sequence only; no population or equilibrium interval is reported.",
+      "pressure_evidence": [
+        "Farris (2006, p. 134) reports only 12 cho of cropland after the 1234 famine, rising to nearly 33 cho by 1316 and almost 54 cho by 1417.",
+        "The Japan Heritage Hinenosho archive describes the 1309 land survey and detailed village/pond/paddy maps, and a 2.75 km Yukawa watercourse built for slope and paddy irrigation.",
+        "The sequence is evidence of land development and water investment after subsistence stress, not proof that the 1316 population was at a Malthusian ceiling."
+      ],
+      "shock_flags": [
+        "1234 famine and post-famine land-clearance phase",
+        "1316 map/survey date is not a census",
+        "Estate boundary is a manor, not an EU5 province polygon"
+      ],
+      "trade_dependence": "low_to_mixed",
+      "food_regime": "wet rice, wheat/dry fields, ponds, forest products, and local irrigation",
+      "boundary_description": "Hinenosho manor (present-day Izumisano area), including Hineno and Iriyamada villages; no verified EU5 boundary selector.",
+      "boundary_source": "https://hinenosho.jp/english/story/",
+      "eu5_selector": {"include": ["location_tag=__unmapped_japan_hinenosho__"], "exclude": []},
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "status": "blocked",
+      "role": "validation_only",
+      "source_family": "hinenosho_estate_archives_and_farris_2006",
+      "source_bundle": "hinenosho_land_clearance_bundle",
+      "source_family_independence": "independent",
+      "sources": [
+        "https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf",
+        "https://hinenosho.jp/english/story/",
+        "https://hinenosho.jp/english/bunkazai/hinenosho_iseki.html"
+      ],
+      "notes": "Useful rural pressure/technology validation case. No defensible population interval, saturation fraction, or exact EU5 crosswalk; never use as a fitted target."
+    },
+    {
+      "anchor_id": "fayyum_dilya_canal_cluster_1245",
+      "label": "Fayyum Dilya canal village cluster in al-Nabulusi's 1245 survey",
+      "year_start": 1245,
+      "year_end": 1245,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "interval_semantics": "Canal-cluster hydraulic and settlement evidence only; fiscal records do not enumerate total people or an equilibrium capacity.",
+      "observed_metrics": {
+        "dilya_canal_villages": 16,
+        "dilya_canal_banu_ghusayn_villages": 8,
+        "tanabtawayh_canal_villages": 9,
+        "tanabtawayh_banu_hatim_villages": 5
+      },
+      "metric_semantics": "Village counts and clan/canal overlap from Rapoport & Shahar (2012, pp. 25-26; Map 1/Map 3), not population counts.",
+      "pressure_evidence": [
+        "Rapoport & Shahar (2012, pp. 25-26, Maps 1 and 3) find near-complete overlap between some clans and branch canals, indicating locally organized water rights and food production.",
+        "The Dilya and Tanabṭawayh clusters were multi-village irrigation units; water and maintenance were coordinated across villages rather than supplied by a distant food market.",
+        "The evidence identifies local hydraulic constraints and collective maintenance, but gives no population interval or saturation fraction."
+      ],
+      "shock_flags": [
+        "1245 water shortage and conveyance-loss problems",
+        "Canal-cluster fiscal values can aggregate multiple villages",
+        "Fayyum GIS-to-EU5 boundary has not been digitized"
+      ],
+      "trade_dependence": "mixed",
+      "food_regime": "gravity-irrigated cereals, legumes, sugar, livestock, and local canal agriculture",
+      "boundary_description": "Dilya/Tanabṭawayh canal village clusters in the Fayyum depression; historical village polygons are not available in the EU5 geometry inventory.",
+      "boundary_source": "https://www.researchgate.net/publication/261975539_Irrigation_in_the_Medieval_Islamic_Fayyum_Local_Control_in_a_Large-Scale_Hydraulic_System",
+      "eu5_selector": {"include": ["location_tag=__unmapped_fayyum_dilya_tanabtawayh__"], "exclude": []},
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "status": "blocked",
+      "role": "validation_only",
+      "source_family": "rapoport_shahar_fayyum_irrigation_2012",
+      "source_bundle": "fayyum_canal_cluster_bundle",
+      "source_family_independence": "independent",
+      "sources": [
+        "https://www.researchgate.net/publication/261975539_Irrigation_in_the_Medieval_Islamic_Fayyum_Local_Control_in_a_Large-Scale_Hydraulic_System",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/database/i-1-the-village/"
+      ],
+      "notes": "Strong local-food and water-rights diagnostic, but no demographic label. Keep blocked until a village population source and GIS crosswalk are independently established."
+    },
+    {
+      "anchor_id": "fayyum_water_shortage_local_maintenance_1245",
+      "label": "Fayyum Nile-flow shortage and village maintenance pressure",
+      "year_start": 1245,
+      "year_end": 1245,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "interval_semantics": "Hydraulic stress and maintenance evidence only; no population or saturation interval is available.",
+      "observed_metrics": {
+        "historical_bahr_yusuf_flow_months": 8,
+        "1245_bahr_yusuf_flow_months": 4,
+        "historical_bahr_yusuf_dry_months": 4,
+        "1245_bahr_yusuf_dry_months": 8,
+        "fayyum_dredging_units_expected": 104,
+        "fayyum_dredging_units_provided": 95
+      },
+      "metric_semantics": "Hydraulic-flow and dredging-tool figures from al-Nabulusi as analyzed by Rapoport & Shahar (2012, pp. 10 and 25-26); these are not population counts.",
+      "pressure_evidence": [
+        "Rapoport & Shahar (2012, p. 10) report that the Bahr Yusuf historically flowed eight months and was dry four, while in al-Nabulusi's time this was reversed, directly documenting water scarcity.",
+        "The same study (pp. 25-26) reports 104 dredging-tool units assessed against Fayyum villages and 95 actually supplied; local peasants gathered to clear the canal mouth before inundation.",
+        "This is a concrete local production constraint and collective response, but it cannot be converted to a population ceiling without demographic evidence."
+      ],
+      "shock_flags": [
+        "Nile-flow decline and conveyance loss",
+        "Neglect and silting of dams/canals",
+        "Fayyum-wide physical system is not an exact EU5 settlement boundary"
+      ],
+      "trade_dependence": "mixed",
+      "food_regime": "Nile basin irrigation, wheat, barley, legumes, sugar, livestock, and fisheries",
+      "boundary_description": "Fayyum depression hydraulic system and its villages; no audited EU5 polygon crosswalk.",
+      "boundary_source": "https://www.researchgate.net/publication/261975539_Irrigation_in_the_Medieval_Islamic_Fayyum_Local_Control_in_a_Large-Scale_Hydraulic_System",
+      "eu5_selector": {"include": ["location_tag=__unmapped_fayyum_water_system__"], "exclude": []},
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "status": "blocked",
+      "role": "validation_only",
+      "source_family": "rapoport_shahar_fayyum_irrigation_2012",
+      "source_bundle": "fayyum_water_shortage_bundle",
+      "source_family_independence": "shared",
+      "sources": [
+        "https://www.researchgate.net/publication/261975539_Irrigation_in_the_Medieval_Islamic_Fayyum_Local_Control_in_a_Large-Scale_Hydraulic_System",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/"
+      ],
+      "notes": "Use as a physical water-stress regression case only. It must not become a population label or regional multiplier."
+    }
+  ]
+}

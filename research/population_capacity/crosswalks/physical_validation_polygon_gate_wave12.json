@@ -1,0 +1,181 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "packet_id": "physical_validation_polygon_gate_wave12",
+  "reviewed_on": "2026-08-03",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "scope": "Exact-crosswalk gate review for the Peten milpa and Roman Palmyra three-day hinterland validation cases.",
+  "policy": {
+    "historical_polygon_or_boundary_intersection_required_for_geometric_coverage": true,
+    "published_area_ratio_is_not_coverage": true,
+    "centroid_or_name_selectors_cannot_be_called_exact": true,
+    "unmeasurable_boundary_blocks_quantitative_training": true,
+    "validation_only_records_never_set_global_scale": true,
+    "starting_population_and_rgo_fields_are_not_used": true
+  },
+  "geometry_and_table_manifest": {
+    "eu5_area_source": "data/population_capacity/accepted_capacity.csv",
+    "eu5_area_source_sha256": "3c4372efea6c1acca8de7cd0022b15835492623dec81226f7d088ea1c90302ec",
+    "eu5_geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+    "eu5_geometry_source_sha256": "ca259be6df661b822bfa14f4fa94b6ff0e688cb8fa7434f9a92e4ed2995194ba",
+    "area_measurement": "Current frozen accepted table area_km2 values, summed over explicitly selected location_tag rows; no historical polygon intersection was available.",
+    "source_hash_scope": "Hashes identify the exact local EU5 area/geometry inputs used for the measured selector totals. Remote article and Zenodo checksums are recorded per crosswalk.",
+    "reproducible": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "peten_lowland_milpa_capacity",
+      "historical_boundary": "Central Peten study region reported as 35,854 km2 in Schwartz and Corzo (2015); the article describes a 60%-managed milpa system but does not distribute a GIS polygon or machine-readable boundary.",
+      "target_interval": {
+        "date_start": 600,
+        "date_end": 900,
+        "capacity_people_low": 3000000,
+        "capacity_people_central": 3500000,
+        "capacity_people_high": 4000000
+      },
+      "eu5_selector": {
+        "include": [
+          "location_tag=namaan",
+          "location_tag=pachan",
+          "location_tag=wak_kabnal",
+          "location_tag=pusilha",
+          "location_tag=noh_peten",
+          "location_tag=uxwitza",
+          "location_tag=yax_mutal",
+          "location_tag=tzunuun",
+          "location_tag=ixtutz",
+          "location_tag=ceibal"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 10,
+      "measured_area": {
+        "historical_published_area_km2": 35854.0,
+        "eu5_selector_area_km2": 33312.73842,
+        "area_difference_km2": 2541.26158,
+        "selector_to_published_area_ratio": 0.9291219507,
+        "unmapped_area_estimate_km2": 2541.26158,
+        "area_ratio_interpretation": "Sanity-check only. This is not a geometric coverage fraction because the published study boundary is not available as a polygon."
+      },
+      "coverage_fraction": null,
+      "coverage_status": "unmeasurable_no_published_polygon",
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "rejected_for_exact_crosswalk",
+      "boundary_confidence": "low",
+      "status": "validation_only",
+      "proposed_role": "held_out_physical_validation",
+      "local_food_and_pressure": {
+        "local_food_support": "The source explicitly evaluates traditional local milpa production rather than an imported urban food supply.",
+        "pressure_evidence": "The authors frame 3-4 million as a conservative provisionable population under a 60%-managed Peten system; this is a physical carrying-capacity assessment, not an independent dated population census.",
+        "trade_or_urban_caveat": "No urban import adjustment is used, but the record remains a modelled capacity analogue and is not a scale anchor."
+      },
+      "sources": [
+        {
+          "citation": "Schwartz and Corzo (2015), Swidden Counts: A Peten, Guatemala, Milpa System Production, Carrying Capacity, and Sustainability in the Southern Maya Lowlands, Journal of Archaeological Research.",
+          "url": "https://www.journals.uchicago.edu/doi/pdf/10.3998/jar.0521004.0071.104",
+          "doi": "10.3998/jar.0521004.0071.104",
+          "locator": "Abstract: 35,854 km2 Peten study region; no downloadable polygon located.",
+          "remote_sha256": null,
+          "hash_status": "article PDF endpoint returned access denial during audit; URL/DOI retained as citation, no local binary hash claimed"
+        }
+      ],
+      "resolution_method": "Deterministically summed the ten explicit location_tag rows in the frozen accepted table. Because no historical Peten polygon or boundary vertices are distributed by the cited source, a polygon intersection and >=95% coverage calculation cannot be performed.",
+      "rejection_reasons": [
+        "The 7.09% area discrepancy is already greater than the 5% maximum allowed for an exact quantitative crosswalk.",
+        "More importantly, area agreement alone cannot establish overlap, containment, or which parts of the study region are represented by the ten centroids.",
+        "Do not promote this record to a training target or call the selector exact without obtaining the authors' geospatial boundary."
+      ],
+      "notes": "The existing benchmark TOML's 33,631 km2 figure is stale relative to the frozen accepted table (33,312.73842 km2); this artifact uses the latter and records the discrepancy explicitly. No Peten-, Maya- or Africa-specific multiplier is permitted."
+    },
+    {
+      "anchor_id": "roman_palmyra_hinterland_capacity",
+      "historical_boundary": "Three-day camel-travel Palmyra catchment reconstructed by travel-cost contours around Palmyra. The paper's 3-day envelope is shown in Fig. 2; Zenodo supplements provide QGIS reproduction instructions but not the resulting contour/polygon files.",
+      "target_interval": {
+        "date_start": 1,
+        "date_end": 300,
+        "capacity_people_low": 30000,
+        "capacity_people_central": 37500,
+        "capacity_people_high": 45000
+      },
+      "eu5_selector": {
+        "include": [
+          "location_tag=tadmur",
+          "location_tag=huwwarin",
+          "location_tag=arak",
+          "location_tag=qaryatayn",
+          "location_tag=sukhnah",
+          "location_tag=ithriya",
+          "location_tag=qastal",
+          "location_tag=taybah"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 8,
+      "measured_area": {
+        "historical_published_three_day_area_km2": 25447.0,
+        "eu5_selector_area_km2": 24430.37628,
+        "area_difference_km2": 1016.62372,
+        "selector_to_published_area_ratio": 0.9600493685,
+        "unmapped_area_estimate_km2": 1016.62372,
+        "area_ratio_interpretation": "Sanity-check only. The ratio is close to 1 but is not a geometric coverage fraction without the source contour polygon."
+      },
+      "coverage_fraction": null,
+      "coverage_status": "unmeasurable_original_polygon_not_distributed",
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "rejected_for_exact_crosswalk",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "proposed_role": "held_out_physical_validation",
+      "local_food_and_pressure": {
+        "local_food_support": "The PLOS ONE model explicitly reconstructs local Palmyra hinterland agriculture and food security; imported caravan food is not treated as intrinsic capacity.",
+        "pressure_evidence": "The paper models nine-in-ten-year food security under deteriorating climate and storage/transport losses, with an optimal-year ceiling; this supports physical validation but is not a dated rural Malthusian equilibrium census.",
+        "trade_or_urban_caveat": "Palmyra was a caravan city. The catchment is intended as local food support, but the urban/trade context and model-derived interval prevent scale-anchor promotion."
+      },
+      "sources": [
+        {
+          "citation": "Food security in Roman Palmyra (Syria) in light of paleoclimatological evidence and its historical implications, PLOS ONE 17(8):e0273241.",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0273241",
+          "doi": "10.1371/journal.pone.0273241",
+          "locator": "Methods: three travel-time catchments; Fig. 2: 1-, 3- and 5-day catchment envelopes; Data Availability points to Zenodo supplementary files.",
+          "remote_sha256": null,
+          "hash_status": "URL/DOI citation retained; no local article PDF hash claimed"
+        },
+        {
+          "citation": "Supplementary Materials for Food security in Roman Palmyra, Zenodo record 7009590.",
+          "url": "https://doi.org/10.5281/zenodo.7009590",
+          "doi": "10.5281/zenodo.7009590",
+          "locator": "S2/S3: reproduce Water_Cost_3 raster, contour 18 and manual Area_Far polygon; no original Area_Far.shp/GeoJSON distributed.",
+          "record_id": 7009590,
+          "files": [
+            {"key": "S1_File.docx", "size": 14832, "md5": "fb19884b4c2141300deb2426bde5bc04", "sha256": "5d27e55943f4680b9412d2ec1c35c6f3a4dd79f891e6caaaadbe037ed25bb168"},
+            {"key": "S2_File.docx", "size": 8770617, "md5": "6d9ae76bd31b1d26ef4d474d3f18309e", "sha256": "11e81b5fec33da653b876fa13335d352de55e019b32be147af6ea7c149901dc2"},
+            {"key": "S3_File.docx", "size": 14156905, "md5": "7d61ebd26c2e2a184ee8f1419aec2ec4", "sha256": "4eef2c74cfa3adecba512aff21c23079ba4fd9b9cfdf5c921fba7ecf71aa9cb9"},
+            {"key": "source_code.zip", "size": 140341, "md5": "67d3a1e1ee25298ce520c290314c2593", "sha256": "9bdb191d60defdb6e4d06d03cb5aa96e70515feb619c9a8eeabc868590fe3539"}
+          ]
+        },
+        {
+          "citation": "Syrian Desert Water Sources, Seland DataverseNO.",
+          "url": "https://doi.org/10.18710/CEY9QR",
+          "doi": "10.18710/CEY9QR",
+          "locator": "Input water-source dataset referenced by Zenodo S1/S2; original water-source vector was not included in the Zenodo record downloaded for this audit.",
+          "remote_sha256": null,
+          "hash_status": "external input citation only"
+        }
+      ],
+      "resolution_method": "Deterministically summed the eight explicit location_tag rows in the frozen accepted table. The Zenodo package was downloaded and hash-verified, then inspected: it contains documents, spreadsheets and notebook/source code, while S2/S3 instruct the user to manually recreate contours and polygons from local rasters. No original three-day polygon is available for EU5 intersection.",
+      "rejection_reasons": [
+        "A near-equal area ratio (96.00%) is not proof of >=95% geometric coverage; the selector could omit or include different land than the historical travel-cost contour.",
+        "The original Area_Far/three-day catchment polygon is not distributed in the cited Zenodo record, so mapped and unmapped boundary area cannot be measured.",
+        "Keep as held-out physical validation only; do not train or promote to a scale anchor without an archived source contour polygon or a deterministic reconstruction from all original input rasters."
+      ],
+      "notes": "The existing benchmark TOML's 25,674 km2 figure is stale relative to the frozen accepted table (24,430.37628 km2); this artifact uses the latter and retains the 25,447 km2 published three-day sanity-check area."
+    }
+  ],
+  "disposition": {
+    "records_reviewed": 2,
+    "exact_geometric_crosswalks_added": 0,
+    "training_targets_added": 0,
+    "validation_only_records_retained": 2,
+    "rejected_for_exact_crosswalk": ["peten_lowland_milpa_capacity", "roman_palmyra_hinterland_capacity"],
+    "required_follow_up": "Obtain an author-archived Peten study polygon and Palmyra Area_Far/three-day travel-cost polygon plus all input rasters, then rerun polygon intersection against the frozen EU5 geometry. Until then, coverage_fraction remains null and neither record can supervise training."
+  }
+}

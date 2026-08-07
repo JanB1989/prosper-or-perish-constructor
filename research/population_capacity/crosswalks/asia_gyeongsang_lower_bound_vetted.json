@@ -1,0 +1,31 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Asia",
+  "region": "korea",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/location_geometry_calibrated.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "gyeongsang_1432_registered_population_lower_bound",
+      "historical_boundary": "Gyeongsang province as the union of Gyeongju-do, Andong-do, Sangju-do and Jinju-do in the 1432 Gyeongsangdojiriji",
+      "eu5_selector": {
+        "include": [
+          "province=gyeongju_province|andong_province|seongju_province|jinju_province|dongnae_province"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 27,
+      "coverage_fraction": 0.96,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 30777.167,
+        "mapped_location_count": 27
+      },
+      "resolution_method": "The source's four subdivision centers and county map (Kim 2022, pp. 231-237, Tables 2-4 and Figure 1) are aligned to the four homonymous EU5 province groups; dongnae_province is included to cover the southeast coastal counties assigned to Gyeongju-do in the register. Together they form a contiguous southeast-Korea polygon and exclude Jeolla, Chungcheong, Gangwon and the capital region.",
+      "notes": "The conservative 0.96 coverage reflects the coarse EU5 coastline and county generalization. Because this is a one-sided registered-population lower bound, any small selector overcoverage cannot make the inequality too demanding: the larger containing land area must still support at least the recorded provincial population."
+    }
+  ]
+}

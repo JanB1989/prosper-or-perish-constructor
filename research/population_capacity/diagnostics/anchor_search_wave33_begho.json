@@ -1,0 +1,56 @@
+{
+  "schema_version": "population_capacity_anchor_search_audit_v1",
+  "audit_id": "anchor_search_wave33_begho",
+  "reviewed_on": "2026-08-04",
+  "search_scope": "Africa: West African forest-fringe and Sahel trade-linked archaeological systems with 1100-1500 occupation evidence",
+  "candidate": "Begho/Hani, Ghana",
+  "source_bundle": [
+    "https://deepblue.lib.umich.edu/bitstream/2027.42/107218/1/acomp_1.pdf",
+    "https://ugspace.ug.edu.gh/items/720482de-d2b0-440f-a862-fd1444a7194b",
+    "https://www.si.edu/object/archaeology-and-origins-akan-society%3Asiris_sil_755609",
+    "https://ehrafarchaeology.yale.edu/traditions/fa77/documents/010"
+  ],
+  "evidence": {
+    "date_compatibility": {
+      "status": "fail_for_1337_scale",
+      "details": "Occupation is documented from the 11th century onward, but the archaeological synthesis places peak occupation in the 1400s-1700s; the 5,000-10,000 estimate is not a dated 1337 observation."
+    },
+    "population_semantics": {
+      "status": "urban_peak_estimate_only",
+      "interval_people": [5000, 7500, 10000],
+      "details": "Posnansky's estimate is based on 1,000-1,500 house mounds and alternative town estimates, not a complete enumeration or equilibrium capacity interval."
+    },
+    "local_food_support": {
+      "status": "unquantified",
+      "details": "Farming settlements and local lifeways are plausible, but Begho is explicitly a gold/caravan entrepôt with heterogeneous Brong, Dyula/Mande and artisan quarters; imported-food share cannot be bounded."
+    },
+    "pressure_or_saturation": {
+      "status": "insufficient",
+      "details": "The sources document trade, craft specialization and changing participation in exchange networks, but no independent land-scarcity, famine, wage or marginal-land pressure interval for the same boundary."
+    },
+    "boundary": {
+      "status": "unresolved",
+      "eu5_selector": "location_tag=begho",
+      "eu5_area_km2": 7728.677992,
+      "historical_area_km2": null,
+      "coverage_fraction": 0.0,
+      "details": "The term Begho likely denotes a region/area rather than a discrete locus; 18 excavation units were within a 6 km radius of Hani, not a closed historical rural polygon."
+    }
+  },
+  "decision": {
+    "status": "rejected",
+    "role": "validation_only",
+    "promote_to_two_sided_target": false,
+    "promote_to_lower_bound": false,
+    "promote_to_scale_anchor": false,
+    "retain_as": "Africa urban/trade negative control",
+    "reason": "Begho fails the date, boundary, local-food and saturation requirements simultaneously. A named EU5 location and a house-mound estimate cannot close those gaps."
+  },
+  "required_future_evidence_for_reconsideration": [
+    "dated 1100-1400 settlement phase with a same-boundary population estimate",
+    "digitized archaeological town/rural catchment polygon and EU5 intersection",
+    "independent local-food share and trade/import accounting",
+    "pressure or saturation evidence for the same boundary and period"
+  ],
+  "forbidden_fields_consulted": []
+}

@@ -11,8 +11,10 @@ dependencies = [
     "google-api-python-client>=2.170.0",
     "google-auth-httplib2>=0.2.0",
     "google-auth-oauthlib>=1.2.2",
+    "numpy>=2.0.0",
     "prosper-or-perish-labeling-pipeline",
     "prosper-or-perish-population-capacity-pipeline",
+    "tqdm>=4.67.0",
 ]
 
 [project.scripts]
@@ -38,3 +40,4 @@ prosper-or-perish-population-capacity-pipeline = { path = "../ProsperOrPerishPop
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]

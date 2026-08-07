@@ -1,0 +1,127 @@
+{
+  "schema_version": "population_capacity_historical_climate_risk_wave29",
+  "record_id": "noaa_drought_atlas_risk_wave29",
+  "reviewed_on": "2026-08-04",
+  "target_year": 1337,
+  "requested_window": [1100, 1500],
+  "purpose": "Map independent NOAA tree-ring drought reconstructions to EU5 locations as an explicit p10/p50/p90 climate-risk diagnostic for the mechanistic reserve model.",
+  "sources": [
+    {
+      "source_id": "noaa_nada_v2",
+      "source_family": "NOAA_North_American_Drought_Atlas",
+      "citation": "Cook et al. (2004), North American Drought Atlas v2",
+      "url": "https://www.ncei.noaa.gov/products/paleoclimatology/drought-variability",
+      "download_url": "https://www.ncei.noaa.gov/pub/data/paleo/drought/NAmericanDroughtAtlas.v2/NADAv2-2008.nc",
+      "download_sha256": "514e7ac761e1d586a9fbcb230205d2767c493f37b5714882f19eaac023d26cb4",
+      "native_period": [0, 2006],
+      "target_overlap": [1100, 1500],
+      "season": "JJA",
+      "variable": "PDSI",
+      "mapping": {
+        "method": "nearest native grid point to calibrated EU5 centroid",
+        "mapped_location_count": 2692,
+        "resolved_location_count": 2301,
+        "location_count": 20929,
+        "grid_resolution_deg": 2.5
+      },
+      "role": "historical_climate_risk_validation_only",
+      "training_target_allowed": false,
+      "population_target": false
+    },
+    {
+      "source_id": "noaa_sada",
+      "source_family": "NOAA_South_American_Drought_Atlas",
+      "citation": "Morales et al. (2020), South American Drought Atlas",
+      "url": "https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=noaa-recon-30612",
+      "download_url": "https://www.ncei.noaa.gov/pub/data/paleo/drought/SADA/SADA_t.nc",
+      "download_sha256": "4806580f937c7cb16f20ba6a643468231a7b19b71d610f52f461cd2cc8b14da9",
+      "native_period": [1400, 2000],
+      "target_overlap": [1400, 1500],
+      "season": "DJF (December assigned year)",
+      "variable": "scPDSI",
+      "mapping": {
+        "method": "nearest native grid point to calibrated EU5 centroid; source longitudes retained as degrees-west negative",
+        "mapped_location_count": 603,
+        "resolved_location_count": 583,
+        "location_count": 20929,
+        "grid_resolution_deg": 0.5
+      },
+      "role": "historical_climate_risk_validation_only",
+      "training_target_allowed": false,
+      "population_target": false
+    },
+    {
+      "source_id": "noaa_mada",
+      "source_family": "NOAA_Monsoon_Asia_Drought_Atlas",
+      "citation": "Cook et al. (2010), Monsoon Asia Drought Atlas",
+      "url": "https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=noaa-recon-10435",
+      "download_url": "https://www.ncei.noaa.gov/pub/data/paleo/treering/reconstructions/asia/cook2010pdsi/MADApdsi.nc",
+      "download_sha256": "0ecc48c751be6b2a041a5250ab995373aa2596446dadc8facf5c026c7dbfbbbc",
+      "native_period": [1300, 2005],
+      "target_overlap": [1300, 1500],
+      "season": "JJA",
+      "variable": "PDSI",
+      "mapping": {
+        "method": "nearest native grid point to calibrated EU5 centroid",
+        "mapped_location_count": 6006,
+        "resolved_location_count": 5561,
+        "location_count": 20929,
+        "grid_resolution_deg": 2.5
+      },
+      "role": "historical_climate_risk_validation_only",
+      "training_target_allowed": false,
+      "population_target": false
+    },
+    {
+      "source_id": "noaa_owda",
+      "source_family": "NOAA_Old_World_Drought_Atlas",
+      "citation": "Cook et al. (2015), Old World megadroughts and pluvials during the Common Era",
+      "url": "https://repository.library.noaa.gov/view/noaa/28655",
+      "download_url": "https://www.ncei.noaa.gov/pub/data/paleo/treering/reconstructions/europe/owda.nc",
+      "download_sha256": "c044aa52e9e81932841b642b6977fa6f84beb9fe73c3db502b90f4295b1d65bd",
+      "native_period": [0, 2012],
+      "target_overlap": [1100, 1500],
+      "season": "JJA",
+      "variable": "PDSI",
+      "mapping": {
+        "method": "nearest native grid point to calibrated EU5 centroid",
+        "mapped_location_count": 5607,
+        "resolved_location_count": 5047,
+        "location_count": 20929,
+        "grid_resolution_deg": 0.5
+      },
+      "role": "historical_climate_risk_validation_only",
+      "training_target_allowed": false,
+      "population_target": false
+    }
+  ],
+  "artifacts": {
+    "manifest": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave29/drought_atlas_risk_manifest_wave29.json",
+    "manifest_sha256": "1ad21ab8a8deaacd4f41eabd7d7590d9c851e76cc632b3c9feb1f912f6492eb3",
+    "location_risk": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave29/drought_atlas_location_risk_wave29.csv",
+    "location_risk_sha256": "cf0293631d0ce674a79b1907682f45869f8a32d3e16939a432423cd3332eb6ae",
+    "superregion_risk": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave29/drought_atlas_superregion_risk_wave29.csv",
+    "superregion_risk_sha256": "6f98a73c92223d5a3d3c4e97efe67d1f6a81bb8d4b939136d25e72153590dda5"
+  },
+  "semantics": {
+    "negative_index_is_drier": true,
+    "historical_1337_absolute_yield": false,
+    "crop_yield_label": false,
+    "population_target": false,
+    "physical_uncertainty_input_candidate": true,
+    "no_cross_source_or_regional_imputation": true,
+    "source_family_independence": true
+  },
+  "acceptance": {
+    "all_required_locations_have_climate_record": false,
+    "historical_global_crop_yield_risk_closed": false,
+    "parameter_uncertainty_closed": false,
+    "training_unblocked": false,
+    "blocking_gaps": [
+      "Drought indices are climate proxies and do not provide absolute historical crop yields.",
+      "Each atlas has a finite geographic footprint; out-of-domain locations remain explicit rather than imputed.",
+      "A crop-specific yield-response bridge and correlated parameter/management uncertainty are still required for p10/p90 capacity.",
+      "The 1400-1500 SADA overlap is validation-only because it is shorter than the requested 1100-1500 window."
+    ]
+  }
+}

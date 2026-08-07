@@ -1,0 +1,31 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Africa",
+  "region": "southern_africa",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "k2_bambandyanalo_capital_1200_population_validation_wave13",
+      "historical_boundary": "K2/Bambandyanalo archaeological settlement (approximately five hectares) and the separately reported South African K2-phase settlement distribution in the Shashe-Limpopo Valley",
+      "eu5_selector": {
+        "include": ["location_tag=mapungubwe"],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high_site_containment_low_landscape_equivalence",
+      "crosswalk_status": "high_containment",
+      "boundary_confidence": "high for K2 site locator; low for complete phase landscape",
+      "status": "validation_only_site_containment",
+      "area_comparison": {
+        "k2_site_km2": 0.05,
+        "eu5_containing_location_area_km2": 8154.749192,
+        "historical_site_share_of_selector": 0.000006131,
+        "interpretation": "The archaeological site lies inside the selected EU5 location, but the selector is more than five orders of magnitude larger. No area-weighting or extrapolation from the capital to the full location is permitted."
+      },
+      "resolution_method": "SANParks identifies K2/Bambandyanalo as a site near Mapungubwe Hill within the Mapungubwe Cultural Landscape; Huffman 2015 Fig. 3a maps the K2 settlement distribution in the Shashe-Limpopo Valley. The game location is used only as a containing selector for validation. The 1.0 value is containment coverage of the 0.05 km2 site, not equivalence of the historical settlement footprint and the EU5 location.",
+      "notes": "This crosswalk intentionally does not assign the 3,763-person phase estimate to all of mapungubwe. Use only for site/landscape diagnostics and held-out settlement checks."
+    }
+  ]
+}

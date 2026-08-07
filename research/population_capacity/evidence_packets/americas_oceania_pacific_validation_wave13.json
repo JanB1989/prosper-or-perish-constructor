@@ -1,0 +1,176 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "region": "americas_oceania",
+  "super_region": "Oceania",
+  "target_year": 1337,
+  "packet_id": "americas_oceania_pacific_validation_wave13",
+  "scope": "Quantitative island population and local-food pressure cases from Hawai'i, Samoa and Tahiti. These are validation-only: the records are contact-era or model/reconstruction estimates and do not provide an independently observed 1337 saturation fraction.",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "promoted_training_target_ids": [],
+    "decision": "Do not promote. The cases are bounded islands with predominantly local food and useful density/pressure evidence, but the dated estimates are outside the 1337 window, use demographic or archaeological reconstruction, or have boundary/date uncertainty. Retain them as held-out global validation fixtures.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "tahiti_precontact_population_density_1600_1777_validation_wave13",
+      "label": "Tahiti pre-contact population and local-food pressure interval",
+      "year_start": 1600,
+      "year_end": 1777,
+      "population_low": 170000,
+      "population_central": 198550,
+      "population_high": 221000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "local_food_low": 0.95,
+      "local_food_central": 0.99,
+      "local_food_high": 1.0,
+      "pressure_evidence": [
+        "Rallu's review of early navigator observations and demographic retrodictions places Tahiti at approximately 170,000-200,000 people in 1774 and 183,000-221,000 at 1767 contact; the 198,550 midpoint is the published reconstruction summarized by Sear et al. (2026), not a synthetic target.",
+        "Rallu documents a pre-contact high-density equilibrium in which fertility limitation/infanticide was used to stabilize population after centuries of growth. This is evidence of demographic pressure, not proof that the upper estimate equals biophysical carrying capacity.",
+        "The island is bounded and food production was overwhelmingly local: taro, breadfruit, banana, coconut, other Polynesian cultigens, pigs and near-shore fishing. Inter-island exchange is retained as a caveat rather than treated as imported staple calories.",
+        "The cited island area is approximately 1,045 km2, giving roughly 163-212 people per km2 across the retained interval; this is a useful density stress test for a high-productivity volcanic island."
+      ],
+      "shock_flags": [
+        "post_1337_contact_era_validation_only",
+        "population_reconstruction_not_enumeration",
+        "introduced_epidemic_shocks_begin_after_1767_and_are_excluded_from_interval",
+        "no_independent_saturation_fraction"
+      ],
+      "trade_dependence": "low_to_mixed; staple production was local, with inter-island exchange and chiefly redistribution",
+      "food_regime": "intensive_taro_breadfruit_banana_coconut_horticulture_and_nearshore_fishing",
+      "boundary_description": "Entire Tahiti island in the Society Islands, French Polynesia; source area approximately 1,045 km2.",
+      "boundary_source": "Rallu (2024), Tahiti Population (Re)Estimates and Ideologies, Population and Economics 8(2), pp. 231-262; Sear et al. (2026), Journal of Pacific Archaeology 16(2), Table A1.",
+      "eu5_selector": "location_tag=tahiti",
+      "coverage_fraction": 0.996296,
+      "boundary_overlap_status": "coextensive_named_island_high_area",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "tahiti_demography_local_food_pressure_reconstruction",
+      "source_bundle": "rallu_2024_sear_2026_tahiti_bundle",
+      "source_family_independence": "Published demographic reconstruction and independent Pacific-island synthesis; retained as one validation family and never used to set 1337 global scale.",
+      "sources": [
+        "https://doi.org/10.3897/popecon.8.e116822",
+        "https://archined.ined.fr/download/publication/z0Qd1JMBGHEcdMY06hsh/84cee3dbd720abce9de6c978743b09b61734437480182.pdf",
+        "https://ueaeprints.uea.ac.uk/id/eprint/102930/1/399_Sear_et_al.pdf"
+      ],
+      "notes": "Rallu's upper contact estimates are historically plausible but debated. They are included to expose whether the physical model can represent a densely settled volcanic island, not as a two-sided Malthusian label. The EU5 Tahiti row has 1,041.129505 km2 versus the cited 1,045 km2; the 99.63% area coverage is explicitly recorded in the crosswalk.",
+      "supersedes_anchor_ids": []
+    },
+    {
+      "anchor_id": "upolu_precontact_population_density_1400_1778_validation_wave13",
+      "label": "Upolu, Samoa: pre-contact population reconstruction and drought-pressure interval",
+      "year_start": 1400,
+      "year_end": 1778,
+      "population_low": 70000,
+      "population_central": 75400,
+      "population_high": 109000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "local_food_low": 0.9,
+      "local_food_central": 0.97,
+      "local_food_high": 1.0,
+      "pressure_evidence": [
+        "Sear et al. (2026), Table A1, reports a 109,000 genetic reconstruction for Samoa and 75,400 assigned to Upolu, with an Upolu area of 1,125 km2; Green's independent demographic estimate for the archipelago is 70,000.",
+        "The archaeological and palaeoclimate review describes permanent settlement, intensive horticulture and sensitivity of makatea/high-island food systems to drought. Population density and climate thresholds are retained as validation pressure evidence, not converted into a saturation fraction.",
+        "The island food regime was locally supplied by taro, breadfruit, banana, coconut, yam, pigs and fishing. The genetic estimate may describe effective or reconstructed population rather than a direct census, so the broad interval is retained.",
+        "Upolu is a bounded volcanic island and the EU5 named island row covers the cited area to within approximately one percent, allowing a useful held-out density comparison without redistributing an archipelago total."
+      ],
+      "shock_flags": [
+        "post_1337_contact_era_validation_only",
+        "genetic_reconstruction_may_not_equal_census_population",
+        "archipelago_to_island_assignment_uncertainty",
+        "no_independent_saturation_fraction"
+      ],
+      "trade_dependence": "low_to_mixed; local horticulture and fishing supplied staples, with inter-island movement and chiefly redistribution",
+      "food_regime": "volcanic_island_horticulture_taro_breadfruit_banana_coconut_pigs_and_fishing",
+      "boundary_description": "Entire Upolu island, Samoa; Sear et al. (2026) reports approximately 1,125 km2 and assigns a 75,400-person component of the Samoa reconstruction to Upolu.",
+      "boundary_source": "Sear et al. (2026), Journal of Pacific Archaeology 16(2), Table A1 and pp. 17-19; Harris et al. (2020), PNAS 117, 31929-31935; Green (2002) demographic estimate as cited by Sear et al.",
+      "eu5_selector": "location_tag=upolu",
+      "coverage_fraction": 0.9913,
+      "boundary_overlap_status": "coextensive_named_island_high_area",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "samoa_upolu_population_genetics_archaeology_pressure",
+      "source_bundle": "harris_2020_green_2002_sear_2026_upolu_bundle",
+      "source_family_independence": "Genetic reconstruction, demographic estimate and archaeological/climate synthesis are retained as one island validation family; they do not establish a 1337 target.",
+      "sources": [
+        "https://doi.org/10.1073/pnas.1913157117",
+        "https://ueaeprints.uea.ac.uk/id/eprint/102930/1/399_Sear_et_al.pdf"
+      ],
+      "notes": "The lower and central values are not interchangeable observations: 70,000 is an archipelago demographic estimate, 75,400 is the Upolu component of the genetic reconstruction, and 109,000 is the whole-Samoa genetic total. They are kept in one broad validation interval only to test sensitivity to reconstruction method. No value trains the model.",
+      "supersedes_anchor_ids": []
+    },
+    {
+      "anchor_id": "hawaii_island_intensification_population_1400_1500_validation_wave13",
+      "label": "Hawai'i Island: pre-contact intensive agriculture and reconstructed population peak",
+      "year_start": 1400,
+      "year_end": 1500,
+      "population_low": 100000,
+      "population_central": 150000,
+      "population_high": 200000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "local_food_low": 0.95,
+      "local_food_central": 0.99,
+      "local_food_high": 1.0,
+      "pressure_evidence": [
+        "Ladefoged et al. (2009) model 572 km2 of feasible intensive agriculture on Hawai'i Island, approximately 97% rain-fed dryland, with about 97,000 metric tons of potential crop production and 165,000 agricultural workers under the modeled system. These are independent agricultural-physics diagnostics, not a population target.",
+        "The same paper describes Hawai'i as isolated and bounded, with intensive pondfield and dryland systems built from locally available taro, sweet potato and other Polynesian cultigens. It reports a pre-contact archipelago population range of 200,000-800,000 and discusses land-base limits and ecosystem transformation.",
+        "Kirch's archaeological population synthesis, as reviewed in the Hawai'i archaeology literature, places a conservative island peak near 150,000 around the fifteenth century; the broad 100,000-200,000 interval is retained because island-level reconstruction is not a census and estimates vary materially.",
+        "The archaeological record of field-system expansion and later stabilization is a useful intensive/pressure case, but no independent saturation fraction is asserted."
+      ],
+      "shock_flags": [
+        "population_peak_is_reconstructed_not_enumerated",
+        "archipelago_estimate_disaggregated_to_one_island",
+        "date_and_population_curve_model_uncertainty",
+        "no_independent_saturation_fraction"
+      ],
+      "trade_dependence": "low_to_mixed; staple calories were local, with inter-island exchange and chiefly redistribution",
+      "food_regime": "intensive_rainfed_dryland_and_irrigated_taro_sweet_potato_breadfruit_horticulture_with_fishing",
+      "boundary_description": "Entire Hawai'i (Big Island) in the Hawaiian archipelago; published land area approximately 10,430 km2. The EU5 map has four named locations (Hilo, Kohala, Kona and Ka'u) covering a quantified partial footprint.",
+      "boundary_source": "Ladefoged et al. (2009), Opportunities and Constraints for Intensive Agriculture in the Hawaiian Archipelago Prior to European Contact, Journal of Archaeological Science 36:2374-2383; Kirch (2007), Like Shoals of Fish: Archaeology and Population in Pre-Contact Hawai'i.",
+      "eu5_selector": {
+        "include": [
+          "location_tag=hilo",
+          "location_tag=kohala",
+          "location_tag=kona",
+          "location_tag=ka_u"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.81658,
+      "boundary_overlap_status": "partial_named_island_quantified",
+      "crosswalk_status": "partial",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "hawaii_island_archaeology_intensive_agriculture_population",
+      "source_bundle": "ladefoged_2009_kirch_2007_hawaii_island_bundle",
+      "source_family_independence": "GIS agricultural model and archaeological population synthesis are retained as one validation family; no scale or regional correction is inferred.",
+      "sources": [
+        "https://doi.org/10.1016/j.jas.2009.06.030",
+        "https://oceaniron.org/wp-content/uploads/sites/14/2018/10/Ladefoged_et_al_2009_179984.pdf",
+        "https://www.degruyterbrill.com/document/doi/10.1515/9780824864767-007/html"
+      ],
+      "notes": "The EU5 selector covers 8,521.049440 km2 against the published approximately 10,430 km2 island area (81.66%). It is deliberately not a training aggregate: population is reconstructed, the crosswalk is partial, and the agricultural production numbers are a separate physical validation of crop/land allocation.",
+      "supersedes_anchor_ids": []
+    }
+  ]
+}

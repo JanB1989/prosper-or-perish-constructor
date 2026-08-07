@@ -1,0 +1,226 @@
+{
+  "schema_version": "population_capacity_feature_review_v1",
+  "review_id": "soil_farm_efficiency_wave22",
+  "reviewed_on": "2026-08-03",
+  "status": "diagnostic_only",
+  "append_only": true,
+  "active_model_mutation": false,
+  "purpose": "Assess whether source-backed soil and farm-management effects can explain the England-Artois contrast without a regional multiplier or a second calibration target.",
+  "artifact_inputs": {
+    "historical_yield_validation": {
+      "path": "research/population_capacity/physical_evidence/medieval_yield_absolute_validation_wave16.json",
+      "role": "absolute-yield plausibility validation; not a population target"
+    },
+    "artois_conflict_review": {
+      "path": "research/population_capacity/model_reviews/artois_england_conflict_wave21.json",
+      "role": "current mechanistic contrast and anchor diagnostic"
+    },
+    "current_snapshot": {
+      "artois_unscaled_density_people_per_km2": 239.02364415164143,
+      "england_unscaled_density_people_per_km2": 117.03628825396275,
+      "artois_to_england_unscaled_density_ratio": 2.042,
+      "england_scale_factor_current": 0.3403333811576089,
+      "interpretation": "The raw physical contrast is plausible; the universal England scalar is what creates the Artois shortfall.",
+      "farm_system_provenance_warning": "The wave21 conflict artifact reports all eight Artois locations as rainfed_open_field_cereal, but the current location_candidates table after the farm-system rebuild has six intensive_northern_europe_cereal rows (Arras, Lens, Saint-Pol, Saint-Omer, Bethune, Bapaume) and two rainfed_open_field_cereal fallbacks (Cambrai grasslands, Hesdin woods). Recompute conflict diagnostics before interpreting this selector as a current all-eight failure."
+    }
+  },
+  "evidence": [
+    {
+      "evidence_id": "pretty_1990_winchester_yields_and_variation",
+      "source_family": "British Agricultural History Society / Pretty",
+      "date_interval": [1283, 1349],
+      "boundary": "fourteen Bishop of Winchester manors",
+      "measure": "gross and net cereal yield in kg dry matter per hectare",
+      "observations": {
+        "gross_kg_per_ha": {"wheat": 515.0, "oats": 530.0, "barley": 755.0},
+        "net_kg_per_ha": {"wheat": 385.0, "oats": 300.0, "barley": 540.0},
+        "coefficient_of_variation_percent": {"wheat": 38.8, "oats": 31.3, "barley": 39.9},
+        "best_single_harvest_kg_per_ha": {"wheat": 1800.0, "oats": 1200.0, "barley": 3000.0}
+      },
+      "regional_comparison": "Pretty reports mean gross yields over 1000 kg/ha for the most productive north-east Norfolk region, while Sussex, Oxfordshire, Hertfordshire, Kent, Essex, south-east Norfolk and the Isle of Wight rarely exceeded 800-900 kg/ha.",
+      "model_implication": "A physically heterogeneous low-input yield field must be retained. A broad regional ratio of roughly 1.1-1.3 is visible in the English realized records, but the very high year-to-year CV makes a fixed regional multiplier indefensible.",
+      "confidence": "high_for_realized_yield_validation",
+      "citation": {
+        "title": "Sustainable Agriculture in the Middle Ages: The English Manor",
+        "url": "https://julespretty.com/content/uploads/2024/06/1-Agric-Hist-Rev-1990.pdf",
+        "pages_or_lines": "PDF pp. 2-3; table 2 and regional comparison"
+      }
+    },
+    {
+      "evidence_id": "pretty_1990_rotation_and_manure",
+      "source_family": "British Agricultural History Society / Pretty",
+      "date_interval": [1200, 1349],
+      "boundary": "English manorial farming, with Sussex, Norfolk and Kent examples",
+      "observations": {
+        "rotation": "Best Sussex soils were cropped continuously; Norfolk arable was fallowed about once every ten years; marginal Kent marshland required at least two fallow years after each wheat crop.",
+        "legume_share_percent": "15-30% of arable in Sussex and Norfolk in the first half of the fourteenth century, versus 8% on Winchester manors by 1345.",
+        "manured_arable_ceiling": "Probably no more than 30% of arable was manured by animals; later-fourteenth-century Norfolk examples averaged 15% folded annually plus 13% receiving off-farm manure, and Kent about 10% plus 15%.",
+        "marl_effect": "At Ebony in Kent, oats rose from 1230 kg/ha on non-marled land to over 1900 kg/ha after marling."
+      },
+      "model_implication": "Fallow, legume rotation and manure are interacting management states, not independent global yield multipliers. Nutrient input should be capped by livestock/manure and transport budgets; arable-share priors should vary continuously or by cited farm-system class with soil and climate predicates.",
+      "confidence": "medium_to_high",
+      "citation": {
+        "title": "Sustainable Agriculture in the Middle Ages: The English Manor",
+        "url": "https://julespretty.com/content/uploads/2024/06/1-Agric-Hist-Rev-1990.pdf",
+        "pages_or_lines": "PDF pp. 5 and 7-10; rotation, crop-livestock and marling sections"
+      }
+    },
+    {
+      "evidence_id": "lapoutre_2017_manure_model",
+      "source_family": "Agricultural History Review / la Poutré",
+      "date_interval": [1270, 1349],
+      "boundary": "hypothetical Midland and East Anglian English manors",
+      "measure": "modelled output per arable acre relative to demesne baseline",
+      "observations": {
+        "peasant_vs_demesne_mean_output_factor": 1.5,
+        "virgate_output_factor": 1.4,
+        "half_virgate_output_factor": 1.7,
+        "inferred_extra_manure_per_peasant_acre": 1.5
+      },
+      "model_implication": "A management-efficiency prior can be justified only conditionally: a smallholder/high-manure regime may have a 1.4-1.7 output factor relative to demesne records. This is an English production-function extrapolation, not a globally observed factor and must be represented as uncertainty or a latent management state, never as a region coefficient.",
+      "caveat": "The paper explicitly estimates peasant productivity from a Cobb-Douglas production function because direct non-seigniorial yield observations are scarce. It therefore cannot be treated as an independent population label or as a universal multiplier.",
+      "confidence": "medium_for_conditional_prior",
+      "citation": {
+        "title": "Fertilization by manure: a manor model comparing English demesne and peasant land, c.1300",
+        "url": "https://research.rug.nl/en/publications/fertilization-by-manure-a-manor-model-comparing-english-demesne-a/",
+        "full_text_url": "https://posthumusconference.org/wp-content/uploads/sites/816/2022/06/La-Poutre_full-paper.pdf",
+        "pages_or_lines": "abstract; PDF pp. 1, 21-23"
+      }
+    },
+    {
+      "evidence_id": "derville_1999_artois_fertile_loam_potential",
+      "source_family": "Alain Derville, L'agriculture du Nord au Moyen Âge",
+      "date_interval": [1288, 1347],
+      "boundary": "Artois, approximately 553,509 ha",
+      "measure": "historical agrarian potential and regional density, not a starting-population target",
+      "observations": {
+        "potential_density_people_per_km2": [169.5, 254.2],
+        "cultivated_land_share_assumption": 0.75,
+        "sown_share_assumption": 0.25,
+        "yield_assumption_hl_per_ha": [20.0, 30.0],
+        "grain_to_population_ratio": 15.0,
+        "reported_artois_density_people_per_km2": 187.633,
+        "land_description": "rich loam country; normally exported wheat toward Lower Flanders",
+        "independent_tithe_series_context": "Derville's 1987 Annales article estimates about 30 hl/ha of wheat around Saint-Omer, Béthune, Lille and Douai in 1300 from tithe leases. It attributes the result partly to Flemish demand and canalized rivers, so this is evidence for a fertile/intensive market-linked system, not a pure soil-only effect."
+      },
+      "model_implication": "A fertile-loam/intensive-rainfed system can produce a density around 169.5-254.2 people/km2 under the cited allocation assumptions. This supports a generic soil × arable-allocation interaction and rejects forcing the same English aggregate scale onto all locations.",
+      "caveat": "Derville also describes commercial exchange and exports, and warns that yields vary by record and method. The population and yield statements belong to one source family and must be one grouped anchor, not independent observations.",
+      "confidence": "medium_for_aggregate_potential",
+      "citation": {
+        "title": "L'agriculture du Nord au Moyen Âge, chapters IV and VIII",
+        "url": "https://books.openedition.org/septentrion/122250?lang=en",
+        "supplementary_url": "https://books.openedition.org/septentrion/122270?lang=en",
+        "additional_exchange_context_url": "https://books.openedition.org/septentrion/168200",
+        "tithe_series_article_url": "https://www.cambridge.org/core/journals/annales-histoire-sciences-sociales/article/abs/dimes-rendements-du-ble-et-revolution-agricole-dans-le-nord-de-la-france-au-moyen-age/E63C780ADD95B7F087B280EC72D79D6F",
+        "tithe_series_doi": "https://doi.org/10.3406/ahess.1987.283462"
+      }
+    },
+    {
+      "evidence_id": "oxford_feeding_medieval_england_rotation_soil",
+      "source_family": "Oxford University Press / Feeding Medieval England project",
+      "date_interval": [700, 1300],
+      "boundary": "England; archaeobotanical and written evidence synthesis",
+      "observations": {
+        "rotation": "Systematic crop rotation and seasonal sowing became widespread from approximately the tenth century.",
+        "soil_management": "Written and archaeological evidence supports manuring, marling, sheep folding, hand weeding and legume sowing as responses to expanding arable and soil-fertility pressure.",
+        "interpretation": "The evidence does not establish one national yield multiplier; it establishes feasible management mechanisms and spatially variable intensity."
+      },
+      "model_implication": "Farm-system technology compatibility and nutrient recycling should be explicit physical features. Their effects belong in land allocation, manure budgets and crop-risk scenarios, not in geography-name or trade regressors.",
+      "confidence": "medium_to_high_for_mechanism",
+      "citation": {
+        "title": "Crop Rotation and Seasonal Sowing; The Intensity of Cultivation: Soil Fertility and the Expansion of Arable",
+        "url": "https://www.history.ox.ac.uk/publication/2308334/dimensions",
+        "soil_intensity_url": "https://academic.oup.com/book/61548/chapter/537294899",
+        "pages_or_lines": "project abstracts and lines 196-213"
+      }
+    },
+    {
+      "evidence_id": "fao_gaez_v5_soil_suitability_contract",
+      "source_family": "FAO/IIASA GAEZ v5 methodology",
+      "date_interval": [2025, 2026],
+      "boundary": "global crop-potential raster methodology",
+      "observations": {
+        "soil_integration": "GAEZ combines soil profile, texture, drainage, soil phases and slope constraints into crop-specific soil suitability by input/management level and water supply.",
+        "fallow_integration": "GAEZ applies crop fallow requirements when estimating sustainable average annual potential production.",
+        "water_management": "LILM and LRLM are distinct irrigated and rain-fed low-input attainable-yield modes."
+      },
+      "model_implication": "The primary crop labels already carry soil, terrain, fallow and water-management physics. A second universal soil multiplier is not physically identifiable and risks double counting. Additional learned terms should be restricted to unresolved dated management mechanisms such as manure/livestock feedback or technology-bounded allocation.",
+      "confidence": "high_for_source_semantics",
+      "citation": {
+        "title": "GAEZ v5 Module IV (Agro-edaphic suitability)",
+        "url": "https://github-wiki-see.page/m/un-fao/gaezv5/wiki/06.-Module-IV-%28Agro%E2%80%90edaphic-suitability%29",
+        "platform_guide_url": "https://github-wiki-see.page/m/un-fao/gaezv5/wiki/21.-GAEZ-v5-Platform-User-Guide",
+        "fao_overview_url": "https://www.fao.org/gaez/en"
+      }
+    }
+  ],
+  "comparability_and_leakage_controls": [
+    "Pretty's fourteen Winchester manors are realized demesne yields, while GAEZ/PyAEZ are attainable low-input potentials; use them for absolute-yield plausibility and uncertainty, not direct location labels.",
+    "la Poutré's 40-70% peasant-over-demesne output is a model-based English estimate and shares the English context; it is a conditional prior only and must remain in one source-family holdout.",
+    "Derville's Artois density, yield and land-allocation statements are not independent labels; keep all Artois evidence in one grouped source/geography fold.",
+    "Trade/export statements are diagnostics for realized distribution and cannot supply imported calories to intrinsic local capacity.",
+    "A source-backed soil category may alter feasible land and crop suitability, but a free multiplicative correction to GAEZ yields would double-count soil physics already present in the crop engine."
+  ],
+  "proposed_feature_design": {
+    "feature_family": "conditional_soil_management_response",
+    "status": "recommended_for_model_audit_and_physical_fit; not yet implemented",
+    "principle": "Represent the interaction of continuous soil/crop suitability, attainable arable share, fallow/rotation, nutrient recycling and management evidence. Do not encode Artois, England, or any geographic name.",
+    "candidate_inputs": [
+      "area-weighted GAEZ/PyAEZ crop-specific low-input yield and suitability distributions",
+      "rootable depth, water-holding capacity, drainage, pH/texture and soil constraints",
+      "climate seasonality, frost and growing-season length",
+      "farm-system technology compatibility by 1337",
+      "livestock/manure availability, pasture support and feasible manure transport",
+      "irrigation/terrace feasibility and dated multiple-cropping capability",
+      "crop/fallow/legume allocation with interannual-risk reserve"
+    ],
+    "equations": {
+      "conditional_crop_output": "Y_net = Y_GAEZ_or_PyAEZ × retention × availability × rotation_factor × nutrient_factor; nutrient_factor is bounded by livestock/manure budget and is not a regional constant.",
+      "land_allocation": "A_crop + A_fallow + A_pasture + A_woodland + A_settlement + A_wild = A_total; A_crop + A_fallow is capped by feasible arable share and technology-compatible system bounds.",
+      "management_prior": "m ~ evidence-conditioned distribution; demesne-like fallback m≈1.0, high-manure smallholder scenario m≈1.4-1.7 relative to demesne realized output, but this prior must be propagated as uncertainty and cannot be copied into all locations."
+    },
+    "source_backed_ranges": {
+      "regional_realized_yield_ratio_high_vs_ordinary_english_examples": [1.1, 1.3],
+      "high_manure_smallholder_vs_demesne_output_ratio": [1.4, 1.7],
+      "arable_manured_fraction_observed_examples": [0.25, 0.30],
+      "high_intensity_english_fallow_fraction_examples": [0.0, 0.10],
+      "marginal_land_fallow_fraction_example": [0.50, 0.67],
+      "artois_cultivated_share_assumption": 0.75,
+      "artois_sown_share_assumption": 0.25
+    }
+  },
+  "decision": {
+    "global_soil_quality_multiplier_defensible": false,
+    "global_farm_efficiency_multiplier_defensible": false,
+    "conditional_soil_yield_and_arable_interaction_defensible": true,
+    "conditional_farm_system_efficiency_prior_defensible": true,
+    "recommended_action": "Fit shared physical parameters jointly against England, Artois and other aggregate intervals after verifying farm-system selection. Use soil quality through the crop engine and feasible arable fraction; use management efficiency only through cited nutrient/rotation/labour mechanisms and uncertainty.",
+    "highest_priority_audit": "Recompute the England-Artois comparison from the current location_candidates artifact. Six of eight Artois rows now select the cited intensive northern-European system; the two fallbacks are physically grassland/woodland rows and should be checked for land-use semantics. Ensure the cited intensive system is selected where its generic predicates are actually present. This is a generic selector/data issue, not an Artois multiplier.",
+    "do_not_do": [
+      "Do not multiply all Artois locations by an anchor-specific factor.",
+      "Do not apply the 1.4-1.7 English peasant estimate globally.",
+      "Do not replace GAEZ/PyAEZ crop physics with observed historical yield medians.",
+      "Do not use starting population, HYDE, RGO identity, or trade as predictors or targets.",
+      "Do not force the England scalar before aggregate likelihood fitting."
+    ]
+  },
+  "focused_tests": [
+    "Selector regression: construct rows with soil_good, oceanic climate and each canonical cultivated vegetation label; verify the reviewed intensive cereal system is selected only when all cited predicates match, and otherwise report the reason rather than silently falling back.",
+    "Monotonic soil test: at fixed climate, water and crop system, increasing continuous soil suitability or rootable depth cannot reduce attainable crop calories or capacity.",
+    "Manure conservation test: nutrient uplift cannot exceed manure produced by livestock plus cited external manure sources and cannot create calories without land/feed accounting.",
+    "Rotation test: high-intensity systems can reduce fallow only within their dated technology bounds; marginal/poor-soil systems must not inherit the high-intensity bound solely from geography.",
+    "Source-family holdout: hold all Pretty/la Poutré English records together and all Derville Artois records together; report interval coverage without treating shared source statements as independent.",
+    "Ablation report: compare current model, crop-physics-only soil response, and nutrient/rotation-constrained management response. Report England and Artois raw densities before any normalization."
+  ],
+  "conclusion": "A universal soil or farm-efficiency scalar is not defensible. The evidence does support a generic, source-backed conditional response: soil and climate determine attainable yield/suitable area; dated farm systems determine arable/fallow/rotation bounds; livestock and manure budgets determine nutrient feedback; and management uncertainty may span roughly 1.4-1.7 only for an explicitly high-manure smallholder regime relative to demesne realized records. The England-Artois conflict should therefore be resolved by correcting generic farm-system predicate coverage and fitting shared physical parameters, not by rejecting Artois or adding a regional correction.",
+  "citations": [
+    "https://julespretty.com/content/uploads/2024/06/1-Agric-Hist-Rev-1990.pdf",
+    "https://research.rug.nl/en/publications/fertilization-by-manure-a-manor-model-comparing-english-demesne-a/",
+    "https://posthumusconference.org/wp-content/uploads/sites/816/2022/06/La-Poutre_full-paper.pdf",
+    "https://books.openedition.org/septentrion/122250?lang=en",
+    "https://books.openedition.org/septentrion/122270?lang=en",
+    "https://books.openedition.org/septentrion/168200",
+    "https://www.history.ox.ac.uk/publication/2308334/dimensions",
+    "https://academic.oup.com/book/61548/chapter/537294899"
+  ]
+}

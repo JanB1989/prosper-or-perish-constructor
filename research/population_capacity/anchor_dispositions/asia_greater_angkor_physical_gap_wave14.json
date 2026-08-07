@@ -1,0 +1,178 @@
+{
+  "schema_version": "population_capacity_anchor_disposition_v1",
+  "packet_id": "asia_greater_angkor_physical_gap_wave14",
+  "reviewed_on": "2026-08-03",
+  "scope": "Independent physical-input audit of the in-period Greater Angkor lower-bound anchor and its current EU5 score.",
+  "policy": {
+    "retain_historical_lower_bound_without_turning_it_into_a_capacity_interval": true,
+    "no_anchor_specific_multiplier": true,
+    "no_starting_population_or_hyde_predictors": true,
+    "archaeological_population_is_not_a_two_sided_capacity_target": true,
+    "historical_hydraulic_infrastructure_must_be_represented_as_a_1337_physical_feature": true
+  },
+  "anchor_id": "greater_angkor_1181_1300_population_lower_bound_wave5",
+  "evidence_verdict": {
+    "decision": "retain_vetted_lower_bound",
+    "training_role": "one_sided_lower_bound",
+    "population_floor_people": 700000,
+    "published_population_interval_people": {
+      "low": 700000,
+      "central": 800000,
+      "high": 900000
+    },
+    "why_not_two_sided": [
+      "Klassen et al. derive the interval from mapped settlement features and occupation-density assumptions, not an observed equilibrium ceiling.",
+      "The economic catchment and provincial provisioning links are explicitly unresolved, so the 800,000 and 900,000 values cannot be treated as local capacity bounds.",
+      "The independent rice-support calculation is corroborating local-food evidence, not a separately measured saturation fraction."
+    ]
+  },
+  "boundary_audit": {
+    "historical_boundary": "approximately 3,000 km2 Greater Angkor watershed catchment, including CCCs, AMA rice fields, temple communities and hydraulic embankments",
+    "eu5_selector": "location_tag=angkor",
+    "selected_location_count": 1,
+    "eu5_candidate_footprint_area_km2": 3172.963249292525,
+    "historical_area_km2": 3000.0,
+    "mapped_area_km2": 3000.0,
+    "coverage_fraction": 1.0,
+    "area_weight": 0.945488417071616,
+    "boundary_overlap_status": "high",
+    "boundary_confidence": "medium",
+    "crosswalk_status": "high",
+    "calibrated_centroid": {
+      "lon": 103.83261180201004,
+      "lat": 13.449992466122925
+    },
+    "crosswalk_artifact": "research/population_capacity/crosswalks/asia_greater_angkor_lower_bound_wave5.json"
+  },
+  "current_model_gap": {
+    "model_table": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+    "current_mechanistic_capacity_people_p50": 205976,
+    "current_mechanistic_capacity_people_p10": 205880,
+    "current_mechanistic_capacity_people_p90": 206220,
+    "current_mechanistic_people_per_km2": 64.915877,
+    "current_raw_mechanistic_capacity_people_before_global_scale": 603144.083145664,
+    "crosswalk_weighted_raw_mechanistic_capacity_people": 570265.744439505,
+    "crosswalk_weighted_raw_ratio_to_lower_bound": 1.2275,
+    "lower_bound_ratio_required_to_pass": 3.398,
+    "interpretation": "The failure is not a bad boundary match and is not evidence for a Cairo/Angkor correction. Before the England global scale, the exact-boundary-weighted score is about 570,000, only 23% below the 700,000 floor; the deployed score is 3.4x low because the global scale is about 0.3415. This separates a shared physical shortfall from a scale-anchor conflict. Both must be resolved globally, never with a local multiplier."
+  },
+  "same_geography_physical_audit": {
+    "gaez_crop_inputs": {
+      "source_coverage": 1.0,
+      "wet_rice_low_input_yield_sample_mean_kg_dm_ha": 1272.5625,
+      "wet_rice_low_input_yield_sample_median_kg_dm_ha": 1150.0,
+      "wet_rice_low_input_yield_sample_p75_kg_dm_ha": 1308.0,
+      "wet_rice_low_input_yield_sample_max_kg_dm_ha": 2275.0,
+      "wet_rice_low_input_yield_resolved_kg_dm_ha": 1308.0,
+      "wet_rice_irrigated_low_input_yield_resolved_kg_dm_ha": 978.1464960579705,
+      "dry_rice_low_input_yield_resolved_kg_dm_ha": 1002.0,
+      "dry_rice_irrigated_low_input_yield_resolved_kg_dm_ha": 513.9595717550328,
+      "source_semantics": "GAEZ v5 low-input attainable yield samples; complete at this footprint but not a dated Angkorian rice-calendar or hydraulic-infrastructure observation"
+    },
+    "hydrology_land_cells": {
+      "sample_cell_count": 32,
+      "sample_coverage_fraction": 1.0,
+      "terrain_resolution": "resolved",
+      "floodplain_resolution": "resolved",
+      "mean_floodplain_fraction": 0.15625,
+      "median_floodplain_fraction": 0.0,
+      "mean_crop_suitable_fraction": 0.879894,
+      "interpretation": "GFPLAIN and DEM resolve present geomorphic suitability, but they do not encode the historically engineered 1,000 km2 rice-field/bund network or seasonal Tonle Sap flood-recession system."
+    },
+    "irrigation_cell_crop_table": {
+      "table": "artifacts/data/population_capacity/hydrology_alignment/irrigation_cell_crop_feasibility.parquet",
+      "angkor_rows": 32,
+      "resolved_rows": 0,
+      "unresolved_rows": 32,
+      "observed_state": "missing",
+      "reason_code": "crop_water_demand_unresolved",
+      "interpretation": "This cell-level diagnostic is stale/incomplete even though the location aggregate currently reports a resolved fallback-based fraction. It must not be presented as crop-specific hydraulic closure. The aggregate irrigable fraction is therefore usable only as a provisional physical fallback until the cell-level crop-water table is rebuilt and hash-linked."
+    },
+    "location_source_access": {
+      "source_access_rows": 37,
+      "reachable_or_fallback_rows": 18,
+      "not_reachable_rows": 19,
+      "reachable_reason": "generic_gravity_physical_fallback",
+      "fallback_conveyance_efficiency_p50": 0.4,
+      "fallback_reachable_area_fraction_p50": 1.0,
+      "riveratlas_q_mean_m3_s_range_observed_in_rows": [0.159, 26.266],
+      "interpretation": "Current access rows use generic gravity fallback and RiverATLAS reach/discharge; they do not identify Angkorian canals, reservoirs, bunds, managed inundation, or their date-compatible operating rules."
+    },
+    "model_features": {
+      "irrigable_fraction_p10": 0.43765660189956274,
+      "irrigable_fraction_p50": 0.5001713157822061,
+      "irrigable_fraction_p90": 0.5001713157822061,
+      "wet_rice_capacity_people": 132423,
+      "rainfed_crop_capacity_people": 187249,
+      "irrigation_increment_capacity_people": 18575,
+      "freshwater_capacity_people": 61,
+      "marine_capacity_people": 0,
+      "crop_scenario_contract_complete": false,
+      "joint_uncertainty_complete": false,
+      "interpretation": "The present score is dominated by sampled GAEZ crop output and a generic irrigation increment; it has no explicit archaeological rice-field area, multi-season rice calendar, or hydraulic-technology production effect."
+    }
+  },
+  "research_findings": {
+    "in_period_local_food_support": [
+      {
+        "finding": "Klassen et al. report 700,000-900,000 people in the approximately 3,000 km2 Greater Angkor Region at its 12th-13th-century height, with the lower edge tied to occupation-density uncertainty on hydraulic embankments.",
+        "locator": "abstract, Table 1 and discussion",
+        "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8104873/"
+      },
+      {
+        "finding": "The lower edge is explicitly said to agree with an earlier estimate of approximately 750,000 supported by rice producible inside the region without irrigation; this is local-food corroboration, not a two-sided capacity label.",
+        "locator": "discussion following Table 1",
+        "source": "https://doi.org/10.1126/sciadv.abf8441"
+      },
+      {
+        "finding": "The agricultural-economy study documents over 1,000 km2 of rice fields, temple-centered farming communities, and hydraulic infrastructure managing water around the Greater Angkor Region.",
+        "locator": "Greater Angkor Region section, lines 111-120",
+        "source": "https://link.springer.com/article/10.1007/s10816-021-09535-5"
+      },
+      {
+        "finding": "The archaeological rice-field mapping reports approximately 1,000 km2 of fields and 22,000 km of bunds, with both centrally organized and local systems.",
+        "locator": "abstract, pp. 348-349",
+        "source": "https://angkordatabase.asia/libs/docs/publications/designs-of-kings-and-farmers-landscape-systems-of-the-greater-angkor-urban-complex/Designs_of_Kings_and_Farmers_Landscape_S.pdf"
+      }
+    ]
+  },
+  "required_shared_physics_closure": [
+    {
+      "field": "archaeological_rice_field_area_by_period",
+      "required_resolution": "Map the approximately 1,000 km2 Angkorian rice-field/bund footprint and date confidence to the 32 EU5 sample cells; preserve uncertainty rather than copy modern cropland.",
+      "blocking": true
+    },
+    {
+      "field": "seasonal_flood_recession_and_deepwater_rice_fraction",
+      "required_resolution": "Add locally evidenced Tonle Sap/lowland flood regime and rice-calendar features; current GFPLAIN mean 0.15625 is not a historical cultivated fraction.",
+      "blocking": true
+    },
+    {
+      "field": "crop_specific_water_demand_and_cell_level_irrigation",
+      "required_resolution": "Rebuild irrigation_cell_crop_feasibility for Angkor from resolved crop_water_demand partitions and reject stale __unresolved__ rows; retain source and output hashes.",
+      "blocking": true
+    },
+    {
+      "field": "pre_1337_hydraulic_technology_registry",
+      "required_resolution": "Represent barays, canals, bunds, ponds, gravity conveyance and seasonal water-level management with date-compatible efficiencies and uncertainty; do not use a local multiplier.",
+      "blocking": true
+    },
+    {
+      "field": "rice_yield_and_rotation_uncertainty",
+      "required_resolution": "Separate rainfed, flood-recession, irrigated and possible multi-season rice systems; propagate yield, storage, seed, fallow and interannual-risk uncertainty through the mechanistic allocation.",
+      "blocking": true
+    },
+    {
+      "field": "freshwater_food_cap",
+      "required_resolution": "Keep fisheries ecological caps separate from cropland, but replace the current tiny generic freshwater contribution only with cited Tonle Sap/pond evidence.",
+      "blocking": false
+    }
+  ],
+  "acceptance_effect": {
+    "retain_lower_bound_in_registry": true,
+    "allow_current_model_to_pass_anchor_gate": false,
+    "training_status": "blocked_until_shared_physics_closure",
+    "prohibited_response": "Do not lower the Angkor floor, add an Angkor/Cambodia/Africa multiplier, or use starting population to force the match.",
+    "next_audit": "After rebuilding cell-level crop-water feasibility and adding dated rice-field/hydraulic features, rerun closure-audit, compare, evidence-merge and generalization-audit."
+  }
+}

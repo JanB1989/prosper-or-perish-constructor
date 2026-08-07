@@ -1,0 +1,125 @@
+{
+  "schema_version": "population_capacity_anchor_physical_followup_v1",
+  "packet_id": "asia_greater_angkor_physical_followup_wave16",
+  "reviewed_on": "2026-08-03",
+  "scope": "Re-audit of Greater Angkor's exact sampled crop/water labels after the cell-by-crop hydrology closure, keeping dated archaeological features separate from observed-cropland predictors.",
+  "anchor_id": "greater_angkor_1181_1300_population_lower_bound_wave5",
+  "policy": {
+    "starting_population_or_hyde_predictors": false,
+    "rgo_output_modifiers_as_predictors": false,
+    "observed_historical_cropland_share_as_intrinsic_capacity_predictor": false,
+    "regional_or_continental_multiplier": false,
+    "local_food_imports_are_excluded": true,
+    "historical_hydraulic_evidence_may_inform_date_compatible_technology": true,
+    "archaeological_population_remains_one_sided_lower_bound": true
+  },
+  "boundary_and_sample_audit": {
+    "historical_boundary_km2": 3000.0,
+    "eu5_selector": "location_tag=angkor",
+    "eu5_location_count": 1,
+    "eu5_footprint_km2": 3172.963249292525,
+    "coverage_fraction": 1.0,
+    "area_weight": 0.945488417071616,
+    "sample_cells": 32,
+    "sample_coverage_fraction": 1.0,
+    "geometry_source": "polynomial_coordinate_jacobian_v2+bounded_exact_crosswalks"
+  },
+  "crop_water_label_audit": {
+    "table": "artifacts/data/population_capacity/hydrology_alignment/irrigation_cell_crop_feasibility.parquet",
+    "rows": 736,
+    "cells": 32,
+    "registered_crop_count": 23,
+    "rows_per_cell": 23,
+    "resolved_rows": 368,
+    "structural_not_reachable_rows": 368,
+    "unresolved_rows": 0,
+    "semantic_mismatch_rows": 0,
+    "suspect_zero_rows": 0,
+    "required_row_contract_closed": true,
+    "resolution_states": {
+      "resolved": "resolved_crop_specific_water_allocation",
+      "not_reachable": "no_physically_reachable_surface_water"
+    },
+    "source_semantics": "Each crop/mode label is sourced from paired low-input rain-fed/irrigated GAEZ semantics or the same-geography physical fallback; a no-reachable-water zero is retained as structural rather than copied from rain-fed data.",
+    "audit_note": "The earlier wave14 diagnostic referenced a stale 32-row aggregate table. The canonical cell-by-crop artifact now contains all 736 required rows and is hash-linked by the physical closure audit."
+  },
+  "current_mechanistic_diagnostic": {
+    "capacity_people_p10": 205880.0,
+    "capacity_people_p50": 205976.0,
+    "capacity_people_p90": 206220.0,
+    "wet_rice_capacity_people": 132423.0,
+    "rainfed_crop_capacity_people": 187249.0,
+    "irrigation_increment_capacity_people": 18575.0,
+    "freshwater_capacity_people": 61.0,
+    "irrigable_fraction_p50": 0.5001713157822061,
+    "interpretation": "The physical label contract is closed, but the score still lacks a dated Angkor-specific rice calendar, flood-recession/deepwater-rice treatment, and a source-backed hydraulic technology efficiency. Those are model feature/uncertainty questions, not missing crop labels and not reasons to alter the 700,000-person historical floor."
+  },
+  "historical_feature_evidence": [
+    {
+      "feature": "rice_field_and_bund_network",
+      "value": "approximately 1000 km2 of Angkor-period rice fields and approximately 22000 km of bunds",
+      "date_compatibility": "Angkor-period; compatible with 1337",
+      "use": "technology/context validation and dated irrigation-system parameter research; do not copy observed historical field share into all feasible 1337 land",
+      "sources": [
+        "https://doi.org/10.1007/s10816-021-09535-5",
+        "https://angkordatabase.asia/libs/docs/publications/designs-of-kings-and-farmers-landscape-systems-of-the-greater-angkor-urban-complex/Designs_of_Kings_and_Farmers_Landscape_S.pdf"
+      ]
+    },
+    {
+      "feature": "local_rice_support_consistency",
+      "value": "independent study cited by Klassen et al. estimates approximately 750000 people could be supported by rice produced within the Greater Angkor Region without irrigation",
+      "date_compatibility": "12th-13th-century Angkorian landscape",
+      "use": "corroboration of the one-sided 700000-person lower bound; not a new capacity target or multiplier",
+      "sources": [
+        "https://doi.org/10.1126/sciadv.abf8441"
+      ]
+    },
+    {
+      "feature": "hydraulic_network",
+      "value": "barays, canals, bunds, reservoirs and community ponds managed water across the agricultural metropolitan area",
+      "date_compatibility": "Angkor-period and demonstrably pre-1337",
+      "use": "dated technology registry and uncertainty scenarios; no direct population fitting",
+      "sources": [
+        "https://doi.org/10.1126/sciadv.abf8441",
+        "https://doi.org/10.1007/s10816-021-09535-5"
+      ]
+    }
+  ],
+  "remaining_scientific_work": [
+    {
+      "field": "seasonal_flood_recession_and_deepwater_rice",
+      "state": "research_required",
+      "blocking_for_label_closure": false,
+      "blocking_for_final_uncertainty_acceptance": true,
+      "required_resolution": "Represent Tonle Sap/lowland seasonal water and rice-calendar scenarios with cited pre-1337 evidence, without treating modern cropland as historical truth."
+    },
+    {
+      "field": "date_compatible_hydraulic_efficiency",
+      "state": "research_required",
+      "blocking_for_label_closure": false,
+      "blocking_for_final_uncertainty_acceptance": true,
+      "required_resolution": "Estimate shared, uncertainty-bounded effects of gravity conveyance, barays, bunds, ponds and water-level management; no Angkor-specific multiplier."
+    },
+    {
+      "field": "freshwater_food_ecological_cap",
+      "state": "validation_enrichment_required",
+      "blocking_for_label_closure": false,
+      "blocking_for_final_uncertainty_acceptance": false,
+      "required_resolution": "Use cited Tonle Sap/pond fisheries evidence only as a separate ecological cap, never double-counting cropland calories."
+    }
+  ],
+  "acceptance_effect": {
+    "retain_historical_lower_bound": true,
+    "allow_anchor_specific_multiplier": false,
+    "allow_training_before_label_closure": true,
+    "allow_final_deployment": false,
+    "reason_final_deployment_blocked": "Grouped lower-bound coverage and correlated physical uncertainty gates still fail; this follow-up closes the stale Angkor cell-label contract but does not claim that the current generic physical model has explained the historical lower bound."
+  },
+  "sources": [
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC8104873/",
+    "https://doi.org/10.1126/sciadv.abf8441",
+    "https://doi.org/10.1007/s10816-021-09535-5",
+    "https://angkordatabase.asia/libs/docs/publications/designs-of-kings-and-farmers-landscape-systems-of-the-greater-angkor-urban-complex/Designs_of_Kings_and_Farmers_Landscape_S.pdf"
+  ],
+  "notes": "This is an append-only physical follow-up, not a replacement for the vetted lower-bound evidence packet. It distinguishes closed crop/water labels from unresolved dated feature and uncertainty work and prevents the obsolete 32-row '__unresolved__' diagnostic from being used as evidence that Cairo/Angkor data are missing."
+}

@@ -1,0 +1,164 @@
+{
+  "schema_version": "population_capacity_interannual_source_acquisition_v1",
+  "registry_id": "interannual_yield_risk_and_spatial_uncertainty_wave24",
+  "target_year": 1337,
+  "policy": {
+    "direct_annual_yield_labels_are_distinct_from_drought_proxies": true,
+    "drought_atlases_are_hydroclimate_validation_only": true,
+    "no_statistical_or_regional_yield_imputation": true,
+    "coverage_is_area_weighted_over_location_sample_points": true,
+    "nearest_grid_mapping_is_used_only_for_coverage_and_missingness": true,
+    "raw_binary_artifacts_are_not_committed": true
+  },
+  "location_sample_source": "artifacts/data/population_capacity/location_sample_points.parquet",
+  "coverage_artifact": {
+    "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/atlas_coverage.parquet",
+    "schema_version": "pyaez-interannual-source-coverage-v1",
+    "location_count": 20929,
+    "sample_count": 669728,
+    "row_count": 62787,
+    "source": "prosper_or_perish_population_capacity.interannual_source_coverage.build_atlas_coverage",
+    "proxy_policy": "No PDSI value is used as an annual crop-yield label."
+  },
+  "sources": [
+    {
+      "source_id": "mcydb_england_1211_1491",
+      "kind": "direct_annual_historical_yield",
+      "state": "downloaded_verified",
+      "role": "validation_only",
+      "boundary": "English demesne farms and county chronologies",
+      "date_range": [1211, 1491],
+      "files": [
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/BAHS-All-Crops-1270-1450.xls",
+          "url": "https://www.bahs.org.uk/wp-content/uploads/2025/01/All-Crops-1270-1450.xls",
+          "bytes": 100352,
+          "sha256": "ddbebbabab13af27ea271675db1979a7607254f8218793c7e4efbe607b27fda5",
+          "semantics": "annual regional/indexed grain-yield chronology; not kg/ha"
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/BAHS-Wheat.xls",
+          "url": "https://www.bahs.org.uk/wp-content/uploads/2025/01/Wheat.xls",
+          "bytes": 580096,
+          "sha256": "4415ddc48bd45ee6a0d12df2dbe562c759d45555170a97d851cd0d30fa72cf68",
+          "semantics": "annual farm/county wheat yield-per-seed observations"
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/BAHS-Barley.xls",
+          "url": "https://www.bahs.org.uk/wp-content/uploads/2025/01/Barley.xls",
+          "bytes": 2484224,
+          "sha256": "22f9cb2ccff2a38d240a369b97c825acabf530fe90174e257a7f5d2c62081d60",
+          "semantics": "annual farm/county barley yield-per-seed observations"
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/BAHS-Oats.xls",
+          "url": "https://www.bahs.org.uk/wp-content/uploads/2025/01/Oats.xls",
+          "bytes": 205824,
+          "sha256": "85128a3b96e887d1b938ca6edb278917c6774743b0390a3bce9c4b22a871eacf",
+          "semantics": "annual farm/county oats yield-per-seed observations"
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/BAHS-Peas.xls",
+          "url": "https://www.bahs.org.uk/wp-content/uploads/2025/01/Peas.xls",
+          "bytes": 121344,
+          "sha256": "524d885be1e0cedd8a562491cb23ebf004bf4d3e5aceb37aae4195700913dd7a",
+          "semantics": "annual farm/county peas yield-per-seed observations"
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/BAHS-Rye.xls",
+          "url": "https://www.bahs.org.uk/wp-content/uploads/2025/01/Rye.xls",
+          "bytes": 107520,
+          "sha256": "d5afa0f6c2dc8cba7b364dcf02046a8acafa89a6830c18ca9d7402a2a27a2a4d",
+          "semantics": "annual farm/county rye yield-per-seed observations"
+        }
+      ],
+      "evidence": "BAHS download page states annual yield chronologies are regional or manorial, gross of tithe and net of seed, indexed on 1270-1429; QUB describes the underlying data as annually dated individual field crops from manorial accounts.",
+      "source_urls": [
+        "https://www.bahs.org.uk/crop-yields-database/download-data/",
+        "https://www.bahs.org.uk/crop-yields-database/chronologies/",
+        "https://pure.qub.ac.uk/en/datasets/three-centuries-of-english-crop-yields-1211-1491/"
+      ],
+      "mapping_status": "county_selector_available_for_validation; farm polygons_not_published",
+      "blockers": [
+        "yield units are source-specific yield-per-seed/indexed ratios, so no direct kg/ha calorie target is created",
+        "farm-level coordinates and complete historical field polygons are not included in the public workbook"
+      ]
+    },
+    {
+      "source_id": "mada_asia_1300_2005",
+      "kind": "drought_atlas_hydroclimate_proxy",
+      "state": "downloaded_verified",
+      "role": "pre_1337_hydroclimate_validation_only",
+      "url": "https://www.ncei.noaa.gov/pub/data/paleo/treering/reconstructions/asia/cook2010pdsi/MADApdsi.nc",
+      "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/MADApdsi.nc",
+      "bytes": 2596944,
+      "sha256": "0ecc48c751be6b2a041a5250ab995373aa2596446dadc8facf5c026c7dbfbbbc",
+      "variable": "PDSI",
+      "dimensions": [706, 27, 34],
+      "years": [1300, 2005],
+      "target_window": [1287, 1387],
+      "coverage_artifact": "atlas_coverage.parquet",
+      "skill_layer_available": false,
+      "blockers": ["source starts in 1300, so a full 101-year window centered on 1337 is unavailable"]
+    },
+    {
+      "source_id": "nada_north_america_0_2006",
+      "kind": "drought_atlas_hydroclimate_proxy",
+      "state": "downloaded_verified",
+      "role": "pre_1337_hydroclimate_validation_only",
+      "url": "https://www.ncei.noaa.gov/pub/data/paleo/drought/NAmericanDroughtAtlas.v2/NADAv2-2008.nc",
+      "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/NADAv2-2008.nc",
+      "bytes": 5043112,
+      "sha256": "514e7ac761e1d586a9fbcb230205d2767c493f37b5714882f19eaac023d26cb4",
+      "variable": "PDSI",
+      "dimensions": [2007, 19, 33],
+      "years": [0, 2006],
+      "target_window": [1287, 1387],
+      "coverage_artifact": "atlas_coverage.parquet",
+      "skill_layer_available": false
+    },
+    {
+      "source_id": "sada_south_america_1400_2000",
+      "kind": "drought_atlas_hydroclimate_proxy",
+      "state": "downloaded_verified",
+      "role": "post_1337_validation_only",
+      "url": "https://www.ncei.noaa.gov/pub/data/paleo/drought/SADA/SADA_t.nc",
+      "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/SADA_t.nc",
+      "bytes": 11428084,
+      "sha256": "4806580f937c7cb16f20ba6a643468231a7b19b71d610f52f461cd2cc8b14da9",
+      "variable": "scpdsi",
+      "dimensions": [601, 88, 54],
+      "years": [1400, 2000],
+      "target_window": [1400, 1500],
+      "coverage_artifact": "atlas_coverage.parquet",
+      "skill_layer_available": false,
+      "blockers": ["post-1337 source; validation only"]
+    },
+    {
+      "source_id": "owda_europe_mediterranean_0_2000",
+      "kind": "drought_atlas_hydroclimate_proxy",
+      "state": "partial_download_blocked",
+      "role": "pre_1337_hydroclimate_validation_only",
+      "url": "https://www.ncei.noaa.gov/pub/data/paleo/treering/reconstructions/europe/owda.nc",
+      "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/owda.nc.partial",
+      "partial_bytes": 86887155,
+      "readme_path": "artifacts/data/population_capacity/physical_validation/interannual_sources/owda-readme.txt",
+      "xy_path": "artifacts/data/population_capacity/physical_validation/interannual_sources/owda-xy.txt",
+      "readme_sha256": "1f6f77c0e39ba80ae95ff7aa7cec7002dcead545f3d1697ec48b0628e171763e",
+      "xy_sha256": "5ebc08e8326e3edba69deab175f94ec7b910e3fcbce2c1b8369b07542552de89",
+      "blockers": [
+        "full 228226363-byte NetCDF did not complete within 240-second transport window; partial file is intentionally unusable",
+        "no coverage rows are emitted for OWDA until the checksum of the complete file is known"
+      ]
+    }
+  ],
+  "acceptance": {
+    "direct_annual_yield_source_acquired": true,
+    "pre_1337_drought_proxy_sources_acquired": ["mada_asia_1300_2005", "nada_north_america_0_2006"],
+    "post_1337_validation_source_acquired": true,
+    "owda_acquired": false,
+    "annual_yield_risk_gate_unblocked": false,
+    "mechanistic_training_blocked": false,
+    "reason": "Crop/physical labels are closed independently. This registry blocks only empirical interannual-risk validation and associated uncertainty acceptance."
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "super_region": "Africa",
+  "region": "zimbabwe",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "packet_id": "africa_great_zimbabwe_lower_bound_wave16",
+  "crosswalks": [
+    {
+      "anchor_id": "great_zimbabwe_1300_1450_population_lower_bound_wave16",
+      "historical_boundary": "UNESCO Great Zimbabwe National Monument archaeological property, approximately 800 ha, with the fourteenth-century Great Enclosure and continuously occupied Hill Ruins; this is the site boundary and not the surrounding Victoria District or the wider Zimbabwe state.",
+      "eu5_selector": "location_tag=great_zimbabwe",
+      "selector_type": "location_tag_containing_archaeological_site",
+      "selected_location_count": 1,
+      "matched_location_count": 1,
+      "location_weights": {
+        "great_zimbabwe": 1.0
+      },
+      "selector_coverage_fraction": 1.0,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "contained_site_in_coarse_eu5_location",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "mapped",
+      "candidate_role": "lower_bound",
+      "area_comparison": {
+        "historical_site_area_km2": 8.0,
+        "eu5_candidate_footprint_area_km2": 5509.973914348677,
+        "historical_site_is_contained": true,
+        "area_ratio_historical_to_eu5": 0.001452,
+        "calibrated_eu5_centroid_lon": 30.908821,
+        "calibrated_eu5_centroid_lat": -20.002415,
+        "geometry_source": "polynomial_coordinate_jacobian_v2+location_tag_containment"
+      },
+      "resolution_method": "Use the dedicated EU5 great_zimbabwe location whose historical name and calibrated geography identify the containing location. Because the evidence is a one-sided floor for an archaeological site, the full containing location is constrained to support at least 10,000 people; no fraction of the coarse EU5 capacity is assigned to the site and no surrounding rural population is added.",
+      "sources": [
+        "https://whc.unesco.org/en/list/364",
+        "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0178335"
+      ],
+      "notes": "The coarse EU5 footprint is much larger than the approximately 800 ha archaeological property. This is intentionally conservative for a lower-bound inequality, but the area ratio is preserved so it cannot be mistaken for an area-complete regional target."
+    }
+  ]
+}

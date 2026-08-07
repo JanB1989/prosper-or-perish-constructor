@@ -1,0 +1,222 @@
+{
+  "schema_version": "population_capacity_physical_evidence_v1",
+  "record_id": "america_upper_mantaro_crop_crosswalk_wave21",
+  "reviewed_on": "2026-08-03",
+  "target_year": 1337,
+  "scope": "High-altitude crop, irrigation and boundary evidence for the Wanka II Upper Mantaro/Yanamarca benchmark. This packet separates source-backed physical features from the broad EU5 containment selector and does not manufacture location-level labels.",
+  "policy": {
+    "starting_population_or_hyde_predictors": false,
+    "rgo_output_modifiers_as_predictors": false,
+    "modern_crop_yields_as_1337_labels": false,
+    "historical_population_as_location_target": false,
+    "structural_zero_may_be_overridden_without_exact_source_review": false,
+    "city_population_sets_surrounding_land_capacity": false,
+    "historical_feature_evidence_may_define_shared_technology_masks": true
+  },
+  "historical_boundary": {
+    "published_research_system": "UMARP northern Upper Mantaro and Yanamarca landscape; JASP umbrella survey region",
+    "published_jasp_survey_area_km2": 1900.0,
+    "current_eu5_selector": "province=hatun_xauxa_province",
+    "current_eu5_selector_area_km2": 11046.637763,
+    "published_area_share_of_selector": 0.172002,
+    "current_selector_location_count": 6,
+    "coverage_fraction_semantics": "The existing 1.0 value means the broad selector contains the named research landscape; it does not mean 100 percent of the EU5 selector belongs to the archaeological boundary.",
+    "mapping_status": "high_containment_but_not_exact_boundary",
+    "training_implication": "Do not use the broad six-location sum as a precise location-level target. Retain the 61,000-person observation as a one-sided lower bound only, or construct an exact polygon/area-weighted selector before using it for a two-sided aggregate fit."
+  },
+  "feature_records": [
+    {
+      "feature_id": "wanka_highland_crop_zones",
+      "date_start": 1200,
+      "date_end": 1450,
+      "geography": "Tunanmarca, Hatunmarca and Llamap Shillón territories in the Yanamarca and Upper Mantaro highlands",
+      "observation": "Polity territories span approximately 3,500 m to above 4,200 m and include zones productive for potato and quinoa, some maize, and upland puna for herds.",
+      "quantitative_value": {
+        "elevation_m_low": 3500.0,
+        "elevation_m_high": 4200.0,
+        "potato_available": true,
+        "quinoa_available": true,
+        "maize_available": "some_zones",
+        "upland_puna_herding": true
+      },
+      "model_use": "Add a dated high-altitude crop-family and camelid-technology mask. Do not infer positive yield for every location in the broad selector; exact footprint and soil/terrain still govern production.",
+      "evidence_strength": "high",
+      "source_ids": ["earle_tunanmarca_chiefdom_2001"]
+    },
+    {
+      "feature_id": "wanka_ii_irrigation_and_drainage",
+      "date_start": 1200,
+      "date_end": 1450,
+      "geography": "Tunanmarca chiefdom core and Yanamarca Valley",
+      "observation": "The Wanka II irrigation system uses simple clay-lined ditches and three rudimentary aqueducts. Its total ditch length is just over 24 km and it waters at least 100–200 ha of productive high land above 3,800 m. Drained fields, earth-walled terraces/lynchets and a small ridged-field complex reduce frost and excess-water risks.",
+      "quantitative_value": {
+        "ditch_length_km_low": 24.0,
+        "irrigated_area_ha_low": 100.0,
+        "irrigated_area_ha_high": 200.0,
+        "irrigated_elevation_m_min": 3800.0,
+        "aqueduct_count": 3,
+        "drained_field_example_ha": 6.6
+      },
+      "model_use": "Shared pre-1337 highland irrigation/terrace technology scenario with explicit area cap. Irrigated area cannot exceed mapped terrain, conveyance or water budgets and cannot be copied to the whole EU5 province.",
+      "evidence_strength": "high",
+      "source_ids": ["earle_tunanmarca_chiefdom_2001", "hastorf_earle_1985_upper_mantaro_fields"]
+    },
+    {
+      "feature_id": "wanka_local_food_system",
+      "date_start": 1200,
+      "date_end": 1450,
+      "geography": "Tunanmarca chiefdom",
+      "observation": "The main subsistence crops were maize, quinoa, potatoes and legumes; consumed animals were mainly camelids, with lesser wild deer, dogs and guinea pigs. Communities largely supplied their own subsistence needs, with only some specialized crops such as maize restricted to particular communities.",
+      "quantitative_value": {
+        "crop_families": ["maize", "quinoa", "potato", "legume"],
+        "camelid_channel": true,
+        "local_staple_support": "predominantly_local",
+        "commercial_market_dependence": "low"
+      },
+      "model_use": "Use as food-family availability and local-support validation. The packet does not convert settlement counts or archaeobotanical frequencies into yields.",
+      "evidence_strength": "high",
+      "source_ids": ["earle_tunanmarca_chiefdom_2001", "hastorf_deniro_1985_upper_mantaro_isotopes"]
+    },
+    {
+      "feature_id": "wanka_ii_population_floor_context",
+      "date_start": 1350,
+      "date_end": 1450,
+      "geography": "Tunanmarca chiefdom core",
+      "observation": "The Tunanmarca polity core is approximately 150 km² and is estimated at about 20,000 people; the broader Wanka II Upper Mantaro observation used by the existing packet is 61,000 people. These are settlement-derived observations and are lower bounds, not demonstrated Malthusian ceilings.",
+      "quantitative_value": {
+        "tunanmarca_core_area_km2": 150.0,
+        "tunanmarca_polity_population_estimate": 20000,
+        "broader_wanka_ii_floor": 61000
+      },
+      "model_use": "Hold as one-sided archaeological validation. Never spread a city or polity population across the 11,046.6 km² selector without an exact boundary.",
+      "evidence_strength": "moderate_to_high",
+      "role": "lower_bound_and_validation_only",
+      "source_ids": ["earle_tunanmarca_chiefdom_2001", "earle_how_chiefs_come_to_power"]
+    }
+  ],
+  "eu5_location_diagnostic": {
+    "source_manifest": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+    "source_sha256": "a1ad4d4c9fdbe73b5cb368ee64a7b52e3b1e270987cdf533be758265aec385ac",
+    "rows": [
+      {
+        "location_tag": "tunanmarca",
+        "calibrated_lat": -11.582624,
+        "calibrated_lon": -75.778047,
+        "area_km2": 1652.42943,
+        "historical_feature_alignment": "direct_named_settlement",
+        "potato_yield_p50_kg_dm_ha": 68.629889,
+        "feasible_cultivated_fraction": 0.038697,
+        "crop_capacity_people_p50": 9578,
+        "mechanistic_capacity_people": 9933,
+        "crop_label_interpretation": "positive but lower than a generic highland system could be; test the dated irrigation/terrace mask"
+      },
+      {
+        "location_tag": "hatun_xauxa",
+        "calibrated_lat": -11.656406,
+        "calibrated_lon": -75.375123,
+        "area_km2": 3035.508712,
+        "historical_feature_alignment": "broad_containment; named polity territory not reconstructed",
+        "potato_yield_p50_kg_dm_ha": 130.288256,
+        "feasible_cultivated_fraction": 0.074462,
+        "crop_capacity_people_p50": 33453,
+        "mechanistic_capacity_people": 34090,
+        "crop_label_interpretation": "positive; do not treat the province row as exact archaeological area"
+      },
+      {
+        "location_tag": "pumaruri",
+        "calibrated_lat": -12.091852,
+        "calibrated_lon": -76.02759,
+        "area_km2": 1012.750803,
+        "historical_feature_alignment": "broad_containment_only",
+        "potato_yield_p50_kg_dm_ha": 1.046502,
+        "feasible_cultivated_fraction": 0.00363,
+        "crop_capacity_people_p50": 121,
+        "mechanistic_capacity_people": 282,
+        "crop_label_interpretation": "no direct Wanka II feature evidence; retain physical result pending exact crosswalk"
+      },
+      {
+        "location_tag": "tarmatambo",
+        "calibrated_lat": -11.322859,
+        "calibrated_lon": -75.624009,
+        "area_km2": 2043.025989,
+        "historical_feature_alignment": "broad_containment_only",
+        "potato_yield_p50_kg_dm_ha": 1.924922,
+        "feasible_cultivated_fraction": 0.006572,
+        "crop_capacity_people_p50": 332,
+        "mechanistic_capacity_people": 786,
+        "crop_label_interpretation": "no direct Wanka II feature evidence; retain physical result pending exact crosswalk"
+      },
+      {
+        "location_tag": "ingapirca",
+        "calibrated_lat": -11.068084,
+        "calibrated_lon": -76.002615,
+        "area_km2": 1584.583467,
+        "historical_feature_alignment": "broad_containment_only",
+        "potato_yield_p50_kg_dm_ha": 0.0,
+        "feasible_cultivated_fraction": 0.0,
+        "crop_capacity_people_p50": 0,
+        "mechanistic_capacity_people": 293,
+        "crop_label_interpretation": "valid source structural zero, but cannot be interpreted as historical crop absence without exact boundary overlap"
+      },
+      {
+        "location_tag": "llampqui",
+        "calibrated_lat": -11.15192,
+        "calibrated_lon": -76.269197,
+        "area_km2": 1718.339363,
+        "historical_feature_alignment": "broad_containment_only",
+        "potato_yield_p50_kg_dm_ha": 0.0,
+        "feasible_cultivated_fraction": 0.0,
+        "crop_capacity_people_p50": 0,
+        "mechanistic_capacity_people": 393,
+        "crop_label_interpretation": "valid source structural zero, but cannot be interpreted as historical crop absence without exact boundary overlap"
+      }
+    ],
+    "aggregate_area_km2": 11046.637763,
+    "aggregate_crop_capacity_people_p50": 43484,
+    "aggregate_mechanistic_capacity_people": 45777,
+    "zero_crop_location_count": 2,
+    "interpretation": "The two zero-crop rows are finite, reproducible physical outputs, not unresolved labels. Their historical relevance is unresolved because the current selector is six times the published JASP survey area and does not identify the Wanka II territory at location resolution."
+  },
+  "crosswalk_closure_contract": {
+    "required_artifact": "exact_or_area_weighted_wanka_ii_polygon_to_eu5_locations",
+    "minimum_coverage_for_two_sided_training": 0.95,
+    "current_status": "not_met",
+    "safe_current_role": "one_sided_lower_bound_and_validation_only",
+    "next_resolution_steps": [
+      "Digitize the Earle/UMARP Figure 1 territory or obtain a JASP/UMARP GIS boundary.",
+      "Intersect the historical 1,900 km² survey and 150 km² Tunanmarca core with calibrated EU5 polygons.",
+      "Retain unobserved high-puna area explicitly instead of assigning its crop labels from a named settlement.",
+      "Run a high-altitude crop-engine audit at the exact mapped cells; do not replace structural zeros with regional or global medians.",
+      "Add the 24 km ditch and 100–200 ha irrigated-area cap as shared technology scenarios only after exact mapping."
+    ],
+    "no_anchor_specific_multiplier": true
+  },
+  "sources": [
+    {
+      "source_id": "earle_tunanmarca_chiefdom_2001",
+      "citation": "Earle, T. K. (2001), The Tunanmarca Polity of Highland Peru and Its Settlement, in Empire and Domestic Economy / UMARP synthesis.",
+      "url": "https://wiki.santafe.edu/images/7/70/Earle_TunanMarcaChiefdom.pdf",
+      "page_refs": ["pp. 1–2, 8–12"],
+      "source_role": "primary UMARP regional settlement, crop, irrigation and boundary evidence"
+    },
+    {
+      "source_id": "umarp_jasp_survey_2013",
+      "citation": "Parsons, Hastings and Matos (2013), Prehispanic Settlement Patterns in the Upper Mantaro and Tarma Drainages, Junín, Peru: Volume 2, The Wanka Region.",
+      "url": "https://sites.lsa.umich.edu/archaeology-books/2013/01/07/prehispanic-settlement-patterns-in-the-upper-mantaro-and-tarma-drainages-junin-peru-volume-2-the-wanka-region/",
+      "page_refs": ["publisher description; survey area and elevation scope"],
+      "source_role": "systematic JASP survey boundary/elevation evidence"
+    },
+    {
+      "source_id": "hastorf_earle_1985_upper_mantaro_fields",
+      "citation": "Hastorf and Earle (1985), Reconstruction of prehistoric plant production and cooking practices / Upper Mantaro field systems.",
+      "url": "https://doi.org/10.1038/315489a0",
+      "source_role": "archaeobotanical and field-system evidence"
+    },
+    {
+      "source_id": "earle_how_chiefs_come_to_power",
+      "citation": "Earle, T. K. (2002), How Chiefs Come to Power: The Political Economy in Prehistory, Table 2.2 and pp. 54–57.",
+      "url": "https://doi.org/10.1515/9781503616349",
+      "source_role": "regional Wanka II settlement population floor; lower-bound only"
+    }
+  ]
+}

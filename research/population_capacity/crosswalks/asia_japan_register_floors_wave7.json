@@ -1,0 +1,67 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "super_region": "Asia",
+  "region": "japan",
+  "target_year": 1337,
+  "geometry_source": "Harvard CHGIS Japan Tokugawa GIS 2004, jp_toku_kuni_pgn.shp (DOI 10.7910/DVN/2CVTR0) compared to artifacts/data/population_capacity/location_geometry_calibrated.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "japan_buzen_1280_local_food_floor_wave7",
+      "historical_boundary": "Buzen no kuni polygon from the Harvard CHGIS Tokugawa Japan GIS 2004 dataset; used as a documented approximation to the medieval Buzen province in Farris Table 1.3.",
+      "eu5_selector": {
+        "include": [
+          "province=buzen_province"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 3,
+      "selected_location_count": 3,
+      "coverage_fraction": 0.96,
+      "selector_coverage_fraction": 0.96,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "vetted",
+      "candidate_role": "lower_bound",
+      "area_comparison": {
+        "historical_polygon_area_km2": 2103.8468,
+        "eu5_calibrated_area_km2": 2195.3680,
+        "eu5_to_historical_area_ratio": 1.0435,
+        "eu5_centroid_area_inside_historical_polygon_fraction": 1.0,
+        "historical_polygon_source": "Harvard CHGIS jp_toku_kuni_pgn.shp, Buzen no kuni",
+        "eu5_geometry_source": "location_geometry_calibrated.parquet area_jacobian_km2 and calibrated_lon/calibrated_lat"
+      },
+      "resolution_method": "Downloaded the Harvard CHGIS historical-province polygon and checked all three EU5 Buzen calibrated centroids against it. All three centroids are inside the historical polygon; the EU5 union area exceeds the historical polygon by 4.35%. The declared 0.96 coverage is a conservative contract accounting for the coarse EU5 location footprint and the 1828-versus-1280 boundary date gap. No name-only mapping is used.",
+      "notes": "Lower-bound use tolerates a small containing-area overhang: the model must support at least the recorded Buzen floor over the selected EU5 footprint. This crosswalk must not be interpreted as a two-sided province-capacity label."
+    },
+    {
+      "anchor_id": "japan_noto_1280_local_food_floor_wave7",
+      "historical_boundary": "Noto no kuni polygon from the Harvard CHGIS Tokugawa Japan GIS 2004 dataset; used as a documented approximation to the medieval Noto province in Farris Table 1.3.",
+      "eu5_selector": {
+        "include": [
+          "province=noto_japan_province"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 3,
+      "selected_location_count": 3,
+      "coverage_fraction": 0.95,
+      "selector_coverage_fraction": 0.95,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "vetted",
+      "candidate_role": "lower_bound",
+      "area_comparison": {
+        "historical_polygon_area_km2": 2063.9576,
+        "eu5_calibrated_area_km2": 2171.8380,
+        "eu5_to_historical_area_ratio": 1.0523,
+        "eu5_centroid_area_inside_historical_polygon_fraction": 1.0,
+        "historical_polygon_source": "Harvard CHGIS jp_toku_kuni_pgn.shp, Noto no kuni",
+        "eu5_geometry_source": "location_geometry_calibrated.parquet area_jacobian_km2 and calibrated_lon/calibrated_lat"
+      },
+      "resolution_method": "Downloaded the Harvard CHGIS historical-province polygon and checked all three EU5 Noto centroids against it. All three centroids are inside the historical polygon; the EU5 union area exceeds the historical polygon by 5.23%. The declared 0.95 coverage is deliberately conservative and accounts for the coarse EU5 footprint and the 1828-versus-1280 boundary date gap.",
+      "notes": "Farris's possible omitted-paddy problem makes the retained value a conservative floor. The crosswalk is not a claim that the low observed Noto population was the intrinsic capacity."
+    }
+  ]
+}

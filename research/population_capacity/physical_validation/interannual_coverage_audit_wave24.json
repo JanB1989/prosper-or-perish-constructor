@@ -1,0 +1,67 @@
+{
+  "schema_version": "pyaez-interannual-source-coverage-audit-v1",
+  "location_sample_source": "artifacts/data/population_capacity/location_sample_points.parquet",
+  "location_count": 20929,
+  "sample_count": 669728,
+  "coverage_rows": 62787,
+  "artifact": "artifacts/data/population_capacity/physical_validation/interannual_sources/atlas_coverage.parquet",
+  "method": {
+    "sampling": "all 32 calibrated area-weighted samples per location",
+    "grid_mapping": "nearest atlas grid cell with haversine distance",
+    "acceptance_distance_km": {
+      "mada_asia_1300_2005": 225.0,
+      "nada_north_america_0_2006": 225.0,
+      "sada_south_america_1400_2000": 70.0
+    },
+    "value_policy": "PDSI/scPDSI values are not yield labels; finite-year coverage is a missingness/validation diagnostic only.",
+    "skill_policy": "No atlas skill layer is inferred; all rows declare skill_layer_available=false."
+  },
+  "sources": [
+    {
+      "source_id": "mada_asia_1300_2005",
+      "state": "resolved",
+      "shape": [706, 27, 34],
+      "source_years": [1300, 2005],
+      "target_window": [1287, 1387],
+      "target_window_year_count": 88,
+      "mapped_sample_count": 198336,
+      "mapped_sample_fraction": 0.29614410626403553,
+      "blockers": ["source begins at 1300, so target window has only 88 years"]
+    },
+    {
+      "source_id": "nada_north_america_0_2006",
+      "state": "resolved",
+      "shape": [2007, 19, 33],
+      "source_years": [0, 2006],
+      "target_window": [1287, 1387],
+      "target_window_year_count": 101,
+      "mapped_sample_count": 90134,
+      "mapped_sample_fraction": 0.13458299488747671
+    },
+    {
+      "source_id": "sada_south_america_1400_2000",
+      "state": "resolved",
+      "shape": [601, 88, 54],
+      "source_years": [1400, 2000],
+      "target_window": [1400, 1500],
+      "target_window_year_count": 101,
+      "mapped_sample_count": 19266,
+      "mapped_sample_fraction": 0.028766902384251516,
+      "role": "post_1337_validation_only"
+    },
+    {
+      "source_id": "owda_europe_mediterranean_0_2000",
+      "state": "blocked_partial_download",
+      "target_window": [1287, 1387],
+      "mapped_sample_count": 0,
+      "blockers": ["complete 228226363-byte NetCDF not acquired; partial file is not parsed"]
+    }
+  ],
+  "acceptance": {
+    "coverage_artifact_reproducible": true,
+    "all_locations_have_rows_for_acquired_atlases": true,
+    "all_sources_have_skill_layers": false,
+    "annual_yield_risk_gate_unblocked": false,
+    "mechanistic_training_blocked": false
+  }
+}

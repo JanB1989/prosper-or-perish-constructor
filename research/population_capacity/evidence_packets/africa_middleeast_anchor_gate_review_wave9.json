@@ -1,0 +1,217 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Africa_and_Middle_East",
+  "region": "africa_middleeast",
+  "target_year": 1337,
+  "packet_id": "africa_middleeast_anchor_gate_review_wave9",
+  "scope": "Focused anchor-gate review of three Africa/Middle East rural systems. The review searched for a mappable 1100-1500 boundary, a defensible two-sided people/capacity interval, local-food support and independent pressure evidence. No record passes the two-sided training-anchor standard; all are retained as explicit validation or rejection packets rather than being converted into synthetic targets.",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "promoted_lower_bound_ids": [],
+    "decision": "No new training target is admitted. Fayyum has unusually rich village, crop, water and fiscal evidence but the accessible record does not expose a complete total-population interval or an independently demonstrated saturation fraction. Tulkarm has local-food and pressure language plus later Ottoman household counts, but the numerical count is from 1535 rather than the 1354 waqf boundary. Hubras/Saham has archaeological evidence of late-fourteenth-century agricultural and settlement pressure but no population interval. None satisfies the two-sided aggregate-anchor gate.",
+    "reviewed_on": "2026-08-03",
+    "review_method": "Each source was checked for date and technology compatibility, population semantics, local-food dependence, independent pressure/saturation evidence, shock and trade confounding, historical-boundary definition, source-family independence and EU5 crosswalk closure. Population numbers are not inferred from poll tax, households, taxes, settlement size or density language.",
+    "new_independent_scale_families": 0,
+    "new_validation_or_rejection_cases": 3
+  },
+  "records": [
+    {
+      "anchor_id": "fayyum_nabulusi_1245_anchor_gate_review_wave9",
+      "label": "Fayyum al-Nabulusi 1245 village survey - anchor gate review",
+      "year_start": 1245,
+      "year_end": 1245,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Rejected as a two-sided target pending direct access to the population tables behind Rapoport's Chapter 3 reconstruction. The 1245 al-Nabulusi material is a detailed fiscal/agricultural village survey, not a complete population census. Poll-tax heads are partial taxable non-Muslim/adult counts and cannot be multiplied into total inhabitants or treated as a lower bound on all residents.",
+      "quantitative_evidence": [
+        "Keenan, 'Fayyum Agriculture at the End of the Ayyubid Period' (Proceedings of the British Academy 96, 1999), PDF pp. 287-292, describes al-Nabulusi's Chapter 10 gazetteer of about 100 taxed villages and the village as the basic unit of economic reproduction, administration and taxation.",
+        "Keenan 1999, PDF pp. 292-294, records village size qualifiers, hamlets/out-villages, canal and water-right allocations and crop assessments; pp. 297-298 give the Talit example with wheat, barley and sesame crop quantities and an explicit statement that it was a small village in population.",
+        "Rapoport and Shahar, 'Rural Society in Medieval Islam' project abstract (QMUL/IAST, 2021), pp. 4-5, states that the 1245 audit covers more than 100 villages and records location, size, tribe, religious composition, water source, fiscal revenue, crop taxes, seed advances, poll tax and sugar; most village locations can be reconstructed for GIS.",
+        "The QMUL Minyat al-Usquf translation (entry for the 1245 register) records a small irrigated village with orchards and 56 poll-tax individuals (47 resident and 9 absent). The entry is a partial tax category, not a total population interval: https://projects.history.qmul.ac.uk/ruralsocietyislam/translations/minyat-al-usquf/.",
+        "Rapoport, Rural Economy and Tribal Society in Islamic Egypt (2018), Chapter 3, is cited by the EH.Net review as estimating cultivated land and local population from al-Nabulusi, but the exact population table/interval is not openly available in the reviewed sources: https://eh.net/book_reviews/rural-economy-and-tribal-society-in-islamic-egypt-a-study-of-al-nabulusis-villages-of-the-fayyum/.",
+        "The Sehepunkte review of Rapoport (2021) describes the 1245 fiscal survey, map and downloadable Excel database, and explicitly notes that it is not a complete reconstruction because untaxed activities are invisible: https://www.sehepunkte.de/2021/02/druckfassung/35574.html."
+      ],
+      "pressure_evidence": [
+        "Keenan 1999, PDF pp. 288-289, discusses abandonment/desertion and resettlement in the Fayyum during the eleventh-century price and water crisis; this is historical pressure context, not a 1245 saturation interval.",
+        "The source records irrigation quotas, canal maintenance and crop levies, so it supplies local production-pressure features. It does not independently establish what fraction of long-run local carrying capacity was occupied in 1245."
+      ],
+      "shock_flags": [
+        "partial poll tax excludes Muslims and non-taxable demographic groups",
+        "fiscal levies are assessments, not net edible calories",
+        "village/grid map is not yet a closed 124-village aggregate polygon",
+        "Cairo/Nile redistribution and trade dependence are not quantified",
+        "exact population reconstruction cited by Rapoport is not available for audit"
+      ],
+      "trade_dependence": "Local Nile agriculture is documented, including cereals, legumes, rice, sugar, gardens and livestock, but the net import/export share of the surveyed villages is unresolved.",
+      "food_regime": "Nile irrigation, cereals, legumes, rice, sugar cane, livestock and village orchards/gardens",
+      "boundary_description": "The more-than-100 (and project database 124-row) villages and hamlets in al-Nabulusi's Fayyum survey, linked by canal and water-right entries. The QMUL map and database identify points/grid cells but do not provide a fully audited aggregate polygon equivalent to an EU5 province.",
+      "boundary_source": "Queen Mary Rural Society in Medieval Islam database and Fayyum map; Keenan 1999, pp. 287-298",
+      "eu5_selector": {
+        "include": ["location_tag=faiyum"],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for named village/grid points; low for complete historical aggregate",
+      "status": "rejected",
+      "role": "validation_only",
+      "source_family": "qmul_fayyum_nabulusi_anchor_gate",
+      "source_bundle": "qmul_rapoport_shahar_keenan_fayyum_1245_bundle",
+      "source_family_independence": "Independent primary-register/database and historical study family; the same broad Fayyum source family as the existing fiscal holdout, so it adds no independent population scale anchor.",
+      "sources": [
+        "https://www.thebritishacademy.ac.uk/documents/3883/96p287.pdf",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/database/i-1-the-village/",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/translations/minyat-al-usquf/",
+        "https://eh.net/book_reviews/rural-economy-and-tribal-society-in-islamic-egypt-a-study-of-al-nabulusis-villages-of-the-fayyum/",
+        "https://www.sehepunkte.de/2021/02/druckfassung/35574.html",
+        "https://www.brepols.net/products/IS-9782503575186-1"
+      ],
+      "missing_criteria": [
+        "auditable two-sided population interval for the same 124-village boundary",
+        "literature-supported saturation fraction or capacity interval independent of the fiscal source",
+        "complete historical polygon and >=95% EU5 area crosswalk",
+        "local-food share and import/export balance",
+        "direct page/table extraction of Rapoport Chapter 3 estimates"
+      ],
+      "notes": "This packet is intentionally strict: the rich Fayyum records should improve physical feature lineage and become a target only after the population table and boundary are directly audited. No poll-tax, village-size adjective or crop levy is converted into people."
+    },
+    {
+      "anchor_id": "tulkarm_waqf_village_1354_population_date_mismatch_wave9",
+      "label": "Tulkarm waqf village - 1354 boundary with 1535 household count",
+      "year_start": 1354,
+      "year_end": 1354,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Rejected as a 1354 two-sided target because the numerical population evidence belongs to a later Ottoman defter. The article describes a 1354 waqf order assigning two-thirds of Tulkarm's agricultural land, but its 95-household/approximately-522-person figure is explicitly from the 940H/1535 Ottoman Defterler-i Mufassal; 1548 gives 189 households/approximately 1,040 people. Those later counts cannot label the 1354 boundary without a demonstrated demographic bridge.",
+      "quantitative_evidence": [
+        "Palestine Studies, 'Tulkarm: A Palestinian Village in the Late Ottoman Period,' discussion of the 1354 waqf order and later population: the waqf assigned two-thirds of Tulkarm's agricultural land; the 1535 defter records 95 households and an estimate of 522 people using 5.5 people per household; 1548 records 189 households and about 1,040 people: https://www.palestine-studies.org/ar/node/78442, article pp. 70-82 and 139-144.",
+        "The same article's endnote 33 identifies the household/522-person source as Defterler-i Mufassal, Sham Sharif, 940H/1535 AD (Palestine Studies article endnotes, pp. 260-263). This is the decisive date mismatch.",
+        "The article describes Tulkarm as a waqf village on Wadi al-Sha'ir in the foothills/coastal plain and reports difficult long-distance communications and local self-sufficiency, but it does not give a total 1354 population or a complete rural boundary polygon."
+      ],
+      "pressure_evidence": [
+        "Palestine Studies, pp. 84-99 and 191-194, characterizes Tulkarm as densely populated relative to available resources, agriculturally productive and largely self-sufficient; the statements are qualitative and are not an independent 1354 saturation interval.",
+        "The waqf land allocation and later grain-tax figures are evidence of land/resource administration, not proof that the 1354 settlement was at a long-run Malthusian equilibrium."
+      ],
+      "shock_flags": [
+        "population count is 1535, not 1354",
+        "later Ottoman household-to-person multiplier is model-dependent",
+        "waqf land allocation and grain taxes do not enumerate all residents",
+        "village/hamula boundary is not an audited EU5 polygon",
+        "later Ottoman security, migration and administrative changes may alter the comparison"
+      ],
+      "trade_dependence": "The article reports self-sufficiency and difficult long-distance communication, supporting local-food relevance qualitatively; no quantitative local-food share is available.",
+      "food_regime": "Foothill/coastal-plain grain agriculture, orchards and mixed village farming",
+      "boundary_description": "The historic Tulkarm waqf village on Wadi al-Sha'ir and its agricultural lands. The 1354 waqf boundary is described textually but not supplied as a georeferenced polygon in the reviewed source.",
+      "boundary_source": "Palestine Studies article, pp. 70-82, 139-144 and endnotes pp. 260-263",
+      "eu5_selector": {
+        "include": ["location_tag=tulkarm"],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "rejected",
+      "role": "validation_only",
+      "source_family": "palestine_tulkarm_waqf_ottoman_defter",
+      "source_bundle": "tulkarm_waqf_1354_defter_1535_1548_bundle",
+      "source_family_independence": "Independent village-history/defter family, but the population observations are later than the 1354 land boundary and are not a 1337-compatible target.",
+      "sources": [
+        "https://www.palestine-studies.org/ar/node/78442"
+      ],
+      "missing_criteria": [
+        "1354 population interval for the same boundary",
+        "demographic bridge from 1354 to 1535 and shock audit",
+        "independent saturation/pressure interval",
+        "georeferenced waqf boundary and >=95% EU5 crosswalk",
+        "quantified local-food share"
+      ],
+      "notes": "The 1535 and 1548 household counts remain useful out-of-date validation evidence only. Do not back-cast 522 people to 1354 or use the article's qualitative density language as a target."
+    },
+    {
+      "anchor_id": "hubras_saham_late_mamluk_rural_pressure_validation_wave9",
+      "label": "Northern Jordan Hubras and Saham villages - late Mamluk agricultural-pressure validation",
+      "year_start": 1300,
+      "year_end": 1450,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Validation-only archaeological and environmental case. The Northern Jordan Survey treats village plus agricultural/pastoral hinterland as the unit and documents late-fourteenth-century settlement/agricultural productivity reduction, but the reviewed report provides no defensible people interval, household count or saturation fraction for Hubras or Saham.",
+      "quantitative_evidence": [
+        "Walker, 'The Northern Jordan Survey 2003 - Agriculture in Late Islamic Malka and Hubras Villages,' BASOR 339 (2005), DOI 10.1086/BASOR25066903, abstract: surface survey, architecture, agricultural installations and pollen were used to study Mamluk/Ottoman settlement; some reduction in settlement and agricultural productivity occurred in the late fourteenth century, but not a complete rural-decline scale estimate: https://www.journals.uchicago.edu/doi/abs/10.1086/BASOR25066903.",
+        "Department of Antiquities of Jordan, Annual of the Department of Antiquities of Jordan 51 (2007), 'The Northern Jordan Survey 2003 - Agriculture in Late Islamic Malka and Hubras Villages,' pp. 429-470, describes the multidisciplinary village/hinterland, agricultural installations, pollen/environment and settlement fluctuations. The scanned report contains no auditable population interval: https://publication.doa.gov.jo/uploads/publications/68/ADAJ_2007_51-429-470.pdf."
+      ],
+      "pressure_evidence": [
+        "The survey's late-fourteenth-century reduction in settlement and agricultural productivity is an independent environmental/archaeological pressure signal, but it does not establish a Malthusian equilibrium or the fraction of capacity occupied before the reduction.",
+        "The village-plus-hinterland framing and agricultural/pastoral market evidence are useful for local-food and land-use feature validation; no total food balance is published."
+      ],
+      "shock_flags": [
+        "archaeological survey documents change but not population magnitude",
+        "late-fourteenth-century decline may include political, market and environmental causes",
+        "village and agricultural-hinterland boundary is not a closed polygon",
+        "no independently measured saturation interval",
+        "EU5 location selectors are candidate names pending map crosswalk"
+      ],
+      "trade_dependence": "Local agricultural and pastoral production is documented, with village-market activity; the local-food share and external supply are unresolved.",
+      "food_regime": "Northern Jordan rain-fed/seasonal agriculture, pastoralism and village-market production",
+      "boundary_description": "Archaeological villages of Hubras and Saham with their surveyed agricultural/pastoral hinterlands in northern Jordan. The report's survey polygons and site extents have not yet been digitized into EU5 geometry.",
+      "boundary_source": "Walker BASOR 339 (2005); ADAJ 51 (2007), pp. 429-470",
+      "eu5_selector": {
+        "include": ["location_tag=hubras", "location_tag=saham"],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "rejected",
+      "role": "validation_only",
+      "source_family": "northern_jordan_late_islamic_village_archaeology",
+      "source_bundle": "walker_northern_jordan_survey_hubras_saham_bundle",
+      "source_family_independence": "Independent archaeological/environmental survey family; no population label is available and the evidence cannot set the global scale.",
+      "sources": [
+        "https://www.journals.uchicago.edu/doi/abs/10.1086/BASOR25066903",
+        "https://publication.doa.gov.jo/uploads/publications/68/ADAJ_2007_51-429-470.pdf"
+      ],
+      "missing_criteria": [
+        "population or capacity interval for either village and the same hinterland",
+        "closed historical survey boundary and >=95% EU5 crosswalk",
+        "independent saturation fraction",
+        "quantified local-food share and trade dependence",
+        "separation of environmental decline from political/market shocks"
+      ],
+      "notes": "Use as a pressure/land-use validation case after mapping the archaeological survey extents. Do not create a people target from settlement decline or infer capacity from modern village locations."
+    }
+  ]
+}

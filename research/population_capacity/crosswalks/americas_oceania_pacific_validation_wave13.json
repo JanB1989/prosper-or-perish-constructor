@@ -1,0 +1,167 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "crosswalk_packet_id": "americas_oceania_pacific_validation_wave13",
+  "reviewed_on": "2026-08-03",
+  "region": "americas_oceania",
+  "super_region": "Oceania",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "scope": "Explicit EU5 selectors and area checks for three bounded Pacific validation cases. These proposals do not promote any record into training.",
+  "policy": {
+    "validation_only": true,
+    "out_of_period_or_reconstructed_population_is_not_a_1337_target": true,
+    "partial_hawaii_crosswalk_is_not_eligible_for_training": true,
+    "starting_population_hyde_rgo_and_trade_fields_are_not_used": true,
+    "raw_jacobian_and_calibrated_land_area_are_retained": true
+  },
+  "geometry_and_table_manifest": {
+    "accepted_table": "data/population_capacity/accepted_capacity.csv",
+    "accepted_table_sha256": "3c4372efea6c1acca8de7cd0022b15835492623dec81226f7d088ea1c90302ec",
+    "geometry_table": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+    "geometry_table_sha256": "ef77ab81982eca8cf628b169e4226ed9493c2867a6a934c88e18db0788a59b4f",
+    "area_method": "frozen accepted land-area field with explicit named-island area comparisons",
+    "model_version_in_accepted_table": "carrying_capacity_1337_v2"
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "tahiti_precontact_population_density_1600_1777_validation_wave13",
+      "historical_boundary": "Entire Tahiti island, approximately 1,045 km2.",
+      "eu5_selector": "location_tag=tahiti",
+      "matched_location_count": 1,
+      "boundary_overlap_status": "coextensive_named_island_high_area",
+      "crosswalk_status": "high",
+      "coverage_fraction": 0.996296,
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "candidate_role": "exact_named_island_validation",
+      "eligibility": {
+        "two_sided_training_target": false,
+        "reason": "Contact-era reconstruction outside 1337 and disputed demographic estimates; no independent saturation fraction."
+      },
+      "area_comparison": {
+        "published_historical_island_area_km2": 1045.0,
+        "accepted_eu5_land_area_km2": 1041.129505,
+        "mapped_area_km2": 1041.129505,
+        "unmapped_historical_area_km2": 3.870495,
+        "area_coverage_fraction": 0.996296,
+        "interpretation": "The named EU5 Tahiti row is area-coextensive within 0.37%; no population redistribution or area multiplier is applied."
+      },
+      "historical_evidence": {
+        "date_interval": {"start": 1600, "end": 1777},
+        "population_interval_people": {"low": 170000, "central": 198550, "high": 221000},
+        "local_food_share_interval": {"low": 0.95, "central": 0.99, "high": 1.0},
+        "pressure_and_uncertainty": "Rallu (2024) reconciles early-navigator density observations and post-contact retrodictions, while Sear et al. (2026) tabulates the 198,550 peak reconstruction. The interval is held out because it is post-1337 and demographic rather than an independent capacity measurement."
+      },
+      "current_model_diagnostic": {
+        "capacity_people_p10": 12445,
+        "capacity_people_p50": 12453,
+        "capacity_people_p90": 12477,
+        "people_per_km2_p50": 11.961294,
+        "contributions_people_p50": {"crop": 12443, "livestock": 0, "marine": 10, "freshwater": 0, "wild": 0},
+        "comparison": "The mechanistic p50 is far below the reconstructed contact population; this is an actionable high-density tropical-island diagnostic, not a training error label."
+      },
+      "sources": [
+        {"citation": "Rallu (2024), Tahiti Population (Re)Estimates and Ideologies", "url": "https://doi.org/10.3897/popecon.8.e116822", "locator": "pp. 231-262; conclusion and contact-era estimates."},
+        {"citation": "Sear et al. (2026), Journal of Pacific Archaeology 16(2), Table A1", "url": "https://ueaeprints.uea.ac.uk/id/eprint/102930/1/399_Sear_et_al.pdf", "locator": "Table A1, Tahiti row (198,550; 1,045 km2; 190 people/km2)."}
+      ],
+      "resolution_method": "Direct one-row EU5 selector with frozen area comparison and hash-pinned accepted-table diagnostic."
+    },
+    {
+      "anchor_id": "upolu_precontact_population_density_1400_1778_validation_wave13",
+      "historical_boundary": "Entire Upolu island, Samoa, approximately 1,125 km2.",
+      "eu5_selector": "location_tag=upolu",
+      "matched_location_count": 1,
+      "boundary_overlap_status": "coextensive_named_island_high_area",
+      "crosswalk_status": "high",
+      "coverage_fraction": 0.9913,
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "candidate_role": "high_coverage_island_validation",
+      "eligibility": {
+        "two_sided_training_target": false,
+        "reason": "Genetic/demographic reconstruction outside 1337 with unresolved census-versus-effective-population semantics and no independent saturation fraction."
+      },
+      "area_comparison": {
+        "published_historical_island_area_km2": 1125.0,
+        "accepted_eu5_land_area_km2": 1134.831722,
+        "mapped_area_km2": 1134.831722,
+        "unmapped_historical_area_km2": 0.0,
+        "area_coverage_fraction": 0.9913,
+        "area_ratio_eu5_to_published": 1.008739,
+        "interpretation": "The 0.87% area discrepancy is treated as measurement uncertainty; the selector is retained for validation and never rescales the population interval."
+      },
+      "historical_evidence": {
+        "date_interval": {"start": 1400, "end": 1778},
+        "population_interval_people": {"low": 70000, "central": 75400, "high": 109000},
+        "local_food_share_interval": {"low": 0.9, "central": 0.97, "high": 1.0},
+        "pressure_and_uncertainty": "Sear et al. (2026) reports 75,400 for Upolu as part of a 109,000 Samoa genetic reconstruction and cites a separate 70,000 demographic estimate. These are held-out reconstruction values; drought sensitivity and local horticulture provide pressure context but not a saturation label."
+      },
+      "current_model_diagnostic": {
+        "capacity_people_p10": 64019,
+        "capacity_people_p50": 64101,
+        "capacity_people_p90": 64302,
+        "people_per_km2_p50": 56.484988,
+        "contributions_people_p50": {"crop": 63980, "livestock": 0, "marine": 120, "freshwater": 0, "wild": 0},
+        "comparison": "The model p50 is close to the 70,000-75,400 lower reconstruction but below the 109,000 genetic archipelago total; this is a useful held-out island-density check."
+      },
+      "sources": [
+        {"citation": "Sear et al. (2026), Journal of Pacific Archaeology 16(2), Table A1", "url": "https://ueaeprints.uea.ac.uk/id/eprint/102930/1/399_Sear_et_al.pdf", "locator": "Table A1, Samoa row (109,000 total; 75,400 Upolu; 1,125 km2) and pp. 17-19."},
+        {"citation": "Harris et al. (2020), PNAS 117:31929-31935", "url": "https://doi.org/10.1073/pnas.1913157117", "locator": "Genetic reconstruction cited by Sear et al."}
+      ],
+      "resolution_method": "Direct one-row EU5 selector with conservative area-ratio coverage and frozen accepted-table diagnostic."
+    },
+    {
+      "anchor_id": "hawaii_island_intensification_population_1400_1500_validation_wave13",
+      "historical_boundary": "Entire Hawai'i (Big Island), approximately 10,430 km2; four EU5 locations provide a quantified partial selector.",
+      "eu5_selector": {"include": ["location_tag=hilo", "location_tag=kohala", "location_tag=kona", "location_tag=ka_u"], "exclude": []},
+      "matched_location_count": 4,
+      "boundary_overlap_status": "partial_named_island_quantified",
+      "crosswalk_status": "partial",
+      "coverage_fraction": 0.81658,
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "candidate_role": "partial_island_agriculture_validation",
+      "eligibility": {
+        "two_sided_training_target": false,
+        "reason": "Only 81.66% of the published island area is represented; population is reconstructed and agricultural production is model-derived."
+      },
+      "area_comparison": {
+        "published_historical_island_area_km2": 10430.0,
+        "accepted_eu5_land_area_km2": 8521.049440,
+        "mapped_area_km2": 8521.049440,
+        "unmapped_historical_area_km2": 1908.950560,
+        "area_coverage_fraction": 0.81658,
+        "interpretation": "The partial crosswalk is explicit and remains below the 95% training threshold; no unobserved island population is imputed."
+      },
+      "historical_evidence": {
+        "date_interval": {"start": 1400, "end": 1500},
+        "population_interval_people": {"low": 100000, "central": 150000, "high": 200000},
+        "local_food_share_interval": {"low": 0.95, "central": 0.99, "high": 1.0},
+        "pressure_and_uncertainty": "Ladefoged et al. quantify 572 km2 of feasible intensive agriculture, approximately 97,000 tonnes of potential crop production and 165,000 agricultural workers; archaeological syntheses place a broad fifteenth-century island population peak around 150,000. Neither is treated as an observed carrying-capacity label."
+      },
+      "current_model_diagnostic": {
+        "capacity_people_p10": 633078,
+        "capacity_people_p50": 633324,
+        "capacity_people_p90": 633832,
+        "contributions_people_p50": {"crop": 632963, "livestock": 0, "marine": 78, "freshwater": 0, "wild": 282},
+        "diagnostic_status": "not_scored_in_current_aggregate_report_due_partial_crosswalk",
+        "comparison": "The mapped 81.66% footprint already produces a p50 above the reconstructed 100,000-200,000 island interval; because 18.34% of the island is unmapped, this is retained as a qualitative overprediction diagnostic only, never converted into an error label or area-scaled target."
+      },
+      "sources": [
+        {"citation": "Ladefoged et al. (2009), Journal of Archaeological Science 36:2374-2383", "url": "https://doi.org/10.1016/j.jas.2009.06.030", "locator": "Abstract and pp. 2374-2383: Hawai'i 572 km2 intensive agriculture, 97,000 tonnes and 165,000 workers."},
+        {"citation": "Ladefoged et al. (2009) open PDF", "url": "https://oceaniron.org/wp-content/uploads/sites/14/2018/10/Ladefoged_et_al_2009_179984.pdf", "locator": "Abstract/Introduction and agricultural model results."},
+        {"citation": "Kirch (2007), Like Shoals of Fish: Archaeology and Population in Pre-Contact Hawai'i", "url": "https://www.degruyterbrill.com/document/doi/10.1515/9780824864767-007/html", "locator": "Chapter on archaeological population reconstruction."}
+      ],
+      "resolution_method": "Four explicit named EU5 selectors with calibrated area sum and declared unmapped area; no area or population imputation."
+    }
+  ],
+  "summary": {
+    "cases_reviewed": 3,
+    "exact_or_high_area_crosswalks": 2,
+    "partial_crosswalks": 1,
+    "training_targets_added": 0,
+    "validation_cases_added": 3,
+    "key_result": "Tahiti and Upolu provide high-coverage named-island validation checks; Hawai'i Island provides a partial but physically rich intensive-agriculture fixture. All remain out of training.",
+    "required_follow_up": "Score Tahiti and Upolu in held-out generalization reports, use Hawai'i for physical crop/land diagnostics, and preserve all reconstruction conflicts rather than collapsing them into a target."
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Africa",
+  "region": "great_lakes",
+  "target_year": 1337,
+  "packet_id": "africa_engaruka_capacity_validation",
+  "scope": "Best bounded East African irrigation-capacity case found, retained outside training because the maximum system postdates 1500",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "decision": "Engaruka is a high-quality physical validation case but not a training anchor. The irrigation system began in the early 1400s and was in use by 1500, yet its most extensive occupation was 1620-1720. The 8,000-10,000 support estimate refers to the completed ancient field system, so assigning it to 1337 would silently import later landscape development.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "engaruka_irrigated_capacity_1400_1720_validation",
+      "label": "Engaruka irrigated landscape, northern Tanzania",
+      "year_start": 1400,
+      "year_end": 1720,
+      "population_low": 7000,
+      "population_central": 9500,
+      "population_high": 12000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.85,
+      "local_food_central": 0.95,
+      "local_food_high": 1.0,
+      "capacity_low": 8000,
+      "capacity_central": 9000,
+      "capacity_high": 10000,
+      "interval_semantics": "Westerberg et al. report an archaeological platform-based population of 7,000-12,000 and separately calculate that 1,000 ha could support about 8,000 people, with as many as 10,000 supported when the whole system was used while retaining a trade surplus (p. 307). These quantities are retained separately and are not treated as a 1337 observation.",
+      "pressure_evidence": [
+        "Westerberg et al. (2010), pp. 306-307: the land-use system covered about 2,000 ha, may have been one continuous settlement, and platform counts imply 7,000-12,000 people.",
+        "Westerberg et al. (2010), p. 307: a transparent cereal-yield and consumption calculation supports about 8,000 people on 1,000 ha and up to 10,000 on the whole usable system with surplus for trade.",
+        "Westerberg et al. (2010), pp. 307-309: the irrigation system was in use by 1500 and probably several decades earlier; the authors date initiation to the early 1400s.",
+        "Westerberg et al. (2010), pp. 310-314: the system persisted through prolonged dry conditions and trade breakdown, with local soil and water management identified as crucial to maintaining production."
+      ],
+      "shock_flags": [
+        "maximum_extent_1620_1720",
+        "long_distance_and_local_trade",
+        "climate_transition_and_drought",
+        "later_abandonment_and_nineteenth_century_crises"
+      ],
+      "trade_dependence": "mixed, but the cited agricultural calculation explicitly supports the resident population locally and allows a surplus for neighboring pastoralists and caravans",
+      "food_regime": "irrigated_cereals_terraces_manure_local_livestock_and_exchange_with_pastoralists",
+      "boundary_description": "The approximately 2,000 ha ancient Engaruka field, canal and terraced settlement system between the Olemelepo and Engaruka river fans; not the entire Tanzanian Rift Valley.",
+      "boundary_source": "Westerberg et al. (2010), Figure 3 and pp. 306-309",
+      "eu5_selector": {
+        "include": [
+          "location_tag=engeruka"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "engaruka_irrigation_archaeology",
+      "source_bundle": "westerberg_holmgren_borjeson_hakansson_laulumaa_bundle",
+      "source_family_independence": "archaeological survey, radiocarbon chronology and transparent agricultural support calculation in one integrated source family",
+      "sources": [
+        "https://www.researchgate.net/publication/249377320_The_development_of_the_ancient_irrigation_system_at_Engaruka_northern_Tanzania_Physical_and_societal_factors",
+        "https://doi.org/10.1111/j.1475-4959.2010.00372.x",
+        "https://doi.org/10.1080/00672700609480436"
+      ],
+      "notes": "Strong holdout for whether the model can represent a small, high-output African irrigation system without a regional correction. It remains validation-only because the published maximum population and completed-system capacity are not demonstrated for 1100-1500, even though the technology began inside that window."
+    }
+  ]
+}

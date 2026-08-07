@@ -1,0 +1,32 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "crosswalk_packet_id": "europe_iceland_capacity_interval_wave18",
+  "region": "europe_iceland_capacity_interval_wave18",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/location_geometry.parquet",
+  "policy": {
+    "no_population_or_rgo_fields_used": true,
+    "island_boundary_is_exact": true,
+    "historical_and_eu5_boundaries_are_whole_island": true,
+    "city_or_trade_hub_exclusion_not_applicable": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "iceland_1290_1330_natural_capacity_interval_wave18",
+      "historical_boundary": "Whole Iceland island",
+      "eu5_selector": {
+        "include": ["area=iceland_area"],
+        "exclude": []
+      },
+      "matched_location_count": 21,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "mapping_method": "Deterministic EU5 area selector over calibrated location geometry; all 21 Iceland locations are included and no outside location is selected.",
+      "unmapped_area_km2": 0.0,
+      "notes": "The historical environmental simulation and demographic series are both whole-Iceland aggregates, so no district-level disaggregation is claimed. The crosswalk carries the aggregate interval to the complete island only."
+    }
+  ]
+}

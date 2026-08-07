@@ -1,0 +1,89 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "region": "england",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "packet_id": "europe_england_food_security_interval_wave8",
+  "scope": "Independent food-security and arable-capacity interval for England around the 1290-1300 agrarian peak. This packet strengthens, but does not replace, the England demographic scale anchor.",
+  "policy": {
+    "append_only": true,
+    "no_starting_population_hyde_rgo_or_trade_predictors": true,
+    "capacity_interval_is_published_model_disagreement": true,
+    "same_boundary_records_must_be_grouped_during_holdout": true,
+    "do_not_count_shared_campbell_inputs_as_independent_source_families": true,
+    "local_food_share_is_an_interval_not_a_point_assumption": true
+  },
+  "records": [
+    {
+      "anchor_id": "england_1290_food_security_capacity_interval_wave8",
+      "label": "England c.1290-1300: published agrarian food-security capacity interval",
+      "year_start": 1290,
+      "year_end": 1300,
+      "population_low": 4000000,
+      "population_central": 5500000,
+      "population_high": 6200000,
+      "saturation_low": 0.65,
+      "saturation_central": 0.85,
+      "saturation_high": 1.0,
+      "local_food_low": 0.80,
+      "local_food_central": 0.90,
+      "local_food_high": 1.0,
+      "capacity_low": 4250000,
+      "capacity_central": 5500000,
+      "capacity_high": 6200000,
+      "interval_semantics": "The capacity interval is not a fitted EU5 output. Schofield (2023, pp. 588-606) reports Campbell's food-availability estimate that England could sustain no more than 4.25 million people around 1300, Stone's independent productivity revision of about 5.5 million, and Poutré's recent food-production model of about 6.2 million. The lower endpoint is therefore a published capacity estimate, the central endpoint is the competing productivity estimate, and the upper endpoint is the high published model. The saturation interval is an explicit uncertainty envelope for the population/capacity relationship, not an observed label; estimates above one are not allowed. Cereal calories dominate the rural diet, while livestock, gardens, dairy, ale and local fisheries supply the remainder.",
+      "pressure_evidence": [
+        "Schofield (2023), Journal of Medieval History 49(5), pp. 588-606, states that cereals accounted for over 80% of peasant food allowances; Campbell's 10.7 million acres and 7.4 million quarters of grain, after extraction losses, imply only about 2.5-3.4 million processed-grain kilocalories (with Stone's revision to about 5.1 million). The article concludes that historians generally regard food availability as insufficient for the c.1300 population and documents extreme cereal-price volatility and shortages.",
+        "Schofield (2023), population section, identifies the competing sustainable-population estimates directly: Campbell's maximum 4.25 million, Stone's approximately 5.5 million, and Poutré's approximately 6.2 million. This is a capacity-model disagreement that is retained as uncertainty rather than silently averaged.",
+        "Slavin (2025), Rural History 36, pp. 240-242, reports that population-driven conversion of pasture and woodland to arable reached a late-thirteenth-century peak, followed by a stable arable acreage before the Black Death; the same review records 15-20% starvation-related mortality during the 1315-1317 Great Famine and severe livestock loss in 1319-1320.",
+        "Campbell (2008), Economic History Review 61(4), pp. 937-939, identifies the eastern core's 1290 land hunger, 12 congested counties containing roughly 1.6 million people, and population densities in Norfolk reaching about 140-200 per square mile. This provides independent pressure evidence rather than treating the population estimate itself as saturation proof.",
+        "Campbell and Overton's county-yield work and Schofield's diet synthesis show that the observed system was primarily locally produced cereals, legumes, livestock, dairy and ale, with regional trade and wool specialization treated as uncertainty rather than imported calories in the capacity label."
+      ],
+      "shock_flags": [
+        "The Great Famine begins after the central 1290-1300 observation window; it is used as corroborating pressure evidence, not as a direct capacity reduction.",
+        "The 1319-1320 bovine pestilence is outside the target window and is not folded into the 1290 capacity interval.",
+        "The three published capacity estimates share some Campbell arable/yield inputs; they are a model-disagreement envelope, not three independent source families.",
+        "Population totals vary from 4.0 to 6.2 million because household, food-availability and peasant-productivity assumptions differ; no single point is asserted.",
+        "England's wool trade and coastal/continental grain movements are not resolved at county level; local-food share is intentionally broad (0.80-1.00)."
+      ],
+      "trade_dependence": "low_to_mixed_at_national_bulk_calorie_scale",
+      "food_regime": "rainfed wheat, barley, rye, oats, legumes, livestock, dairy, garden produce, ale and coastal/freshwater fisheries",
+      "boundary_description": "England within the Great Britain game region, excluding Wales and all Scottish areas; the national boundary is the same exact aggregate used by the England 1290-1315 scale anchor.",
+      "boundary_source": "1290 Great Britain reconstruction spatial population layer: https://www.arcgis.com/home/item.html?id=23e944697e0d433cb8622649577fa720",
+      "eu5_selector": {
+        "include": [
+          "region=great_britain_region"
+        ],
+        "exclude": [
+          "area=hebrides_area|scottish_highlands_area|scottish_lowlands_area|wales_area"
+        ]
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "role": "interval_anchor",
+      "training_eligible": true,
+      "validation_test": "two_sided_interval",
+      "source_family": "english_arable_output_and_food_security_models",
+      "source_bundle": "campbell_2000_schofield_2023_stone_2005_poutre_food_model_slavin_2025",
+      "source_family_independence": "The food-security interval is a distinct synthesis from the existing England demographic scale packet, but Campbell's arable/yield baseline is shared by the Campbell, Schofield and Stone estimates. Poutré's food-production model and Slavin's manorial/palaeoecological review provide partially independent checks. Hold out all England records together by geographic family and do not count this packet as a fully independent source family from the existing England reconstruction.",
+      "sources": [
+        "Schofield (2023), Peasants and food security in England and Wales c.1300, Journal of Medieval History 49(5), pp. 588-606: https://research.aber.ac.uk/en/publications/peasants-and-food-security-in-england-and-wales-c1300/",
+        "Open-access full text (Schofield 2023): https://pure.aber.ac.uk/ws/portalfiles/portal/97733014/Peasants_and_food_security_in_England_and_Wales_c.1300.pdf",
+        "Campbell (2008), Benchmarking medieval economic development, Economic History Review 61(4), Table 14 and pp. 937-939: https://pureadmin.qub.ac.uk/ws/files/1641214/Benchmarking_paper.pdf",
+        "Slavin (2025), Releasing the genie: English manorial records and their potential, Rural History 36, DOI 10.1017/S0956793325100071: https://www.cambridge.org/core/services/aop-cambridge-core/content/view/F942A70ADFA3495ED44E64FC227AE1E9/S0956793325100071a.pdf/releasing_the_genie_english_manorial_records_and_their_huge_potential_in_english.pdf",
+        "1290 Great Britain reconstruction spatial layer: https://www.arcgis.com/home/item.html?id=23e944697e0d433cb8622649577fa720"
+      ],
+      "citation_details": [
+        "Schofield 2023, pp. 588-592: cereal share, Campbell acreage/yield/extraction calculation, Stone revision and food-price/shortage evidence.",
+        "Schofield 2023, population section: Campbell 4.25m maximum sustainable population, Stone approximately 5.5m, Poutré approximately 6.2m.",
+        "Slavin 2025, pp. 240-242: late-thirteenth-century arable-capacity peak, post-1350 contraction, Great Famine starvation mortality and bovine pestilence.",
+        "Campbell 2008, pp. 937-939 and Table 14: county density/land-hunger distribution and eastern-core pressure.",
+        "Campbell 2008, Table 14: national and county population reconstruction used only as the population interval, never as a predictor."
+      ],
+      "notes": "This record is intentionally wide and should be used as a grouped England interval likelihood or held-out sensitivity case. It is not a second geographic group: the national boundary is identical to the existing England scale anchor. If source-family leakage rules reject shared Campbell inputs, retain it as validation-only rather than deleting the evidence. Never fit an England-specific multiplier."
+    }
+  ]
+}

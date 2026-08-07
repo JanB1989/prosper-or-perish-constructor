@@ -1,0 +1,62 @@
+{
+  "schema_version": "population_capacity_europe_anchor_research_v1",
+  "diagnostic_id": "europe_anchor_research_wave23",
+  "reviewed_on": "2026-08-04",
+  "scope": "Focused review of independent two-sided scale-anchor candidates in Europe/North Atlantic for the 1337 model.",
+  "selection_rule": "A candidate can supervise global scale only with a same-boundary population interval, independent local-food pressure evidence, a defensible saturation/capacity upper bound, >=95% EU5 crosswalk coverage, and no dominant imported-food or city/trade-hub semantics.",
+  "candidate_dispositions": [
+    {
+      "candidate": "Faroes",
+      "artifact": "evidence_packets/europe_faroe_population_validation_wave23.json",
+      "role": "validation_only",
+      "population_evidence": "3,000-4,000 observed/reconstructed range for 1300-1600",
+      "capacity_evidence": "none",
+      "reason": "Stable population and Sheep Letter pasture rules do not establish an upper human equilibrium; staple grain imports break the local-food requirement."
+    },
+    {
+      "candidate": "Flanders",
+      "artifact": "evidence_packets/europe_flanders_population_validation_wave23.json",
+      "role": "validation_only",
+      "population_evidence": "Nicholas' approximately 550,000 early-fourteenth-century point reconstruction",
+      "capacity_evidence": "none",
+      "reason": "Partial 1469 hearth extrapolation, 20% loss assumption, urban population share and commercial/regional grain dependence prevent a two-sided intrinsic-capacity interval."
+    },
+    {
+      "candidate": "Norfolk and Lincolnshire",
+      "artifact": "evidence_packets/europe_england_counties_validation_wave23.json",
+      "role": "validation_only",
+      "population_evidence": "Campbell 1290 two-method ranges: Norfolk 282,950-409,910; Lincolnshire 275,145-325,121",
+      "capacity_evidence": "No county-specific upper bound",
+      "reason": "Both county estimates are conditional on England's assumed 4.0m total and share the existing England source family; they cannot add independent scale information."
+    },
+    {
+      "candidate": "Tuscany",
+      "artifact": "evidence_packets/europe_tuscany_food_trade_rejection_wave23.json",
+      "role": "excluded",
+      "population_evidence": "No same-boundary 1337 interval admitted",
+      "capacity_evidence": "none",
+      "reason": "Florence and other city-states imported grain from long distances; city/country population and contado boundaries are not intrinsic local-food observations."
+    },
+    {
+      "candidate": "Artois",
+      "artifact": "evidence_packets/europe_artois_interval_anchor_wave17.json",
+      "role": "interval_anchor",
+      "population_evidence": "Existing vetted regional interval",
+      "capacity_evidence": "Existing published density-potential interval",
+      "reason": "Already promoted; this wave did not count it as a new independent family."
+    },
+    {
+      "candidate": "Iceland",
+      "artifact": "evidence_packets/europe_iceland_capacity_interval_wave18.json",
+      "role": "interval_anchor",
+      "population_evidence": "Existing vetted whole-island interval",
+      "capacity_evidence": "Existing 40,000-80,000 environmental model interval",
+      "reason": "Already promoted; this wave did not count a duplicate Iceland model as a new independent family."
+    }
+  ],
+  "new_training_eligible_anchor_count": 0,
+  "new_validation_case_count": 3,
+  "new_rejected_case_count": 1,
+  "new_independent_source_family_count": 3,
+  "conclusion": "No new independent two-sided scale anchor met the strict gate. The wave adds auditable European validation groups and explicit rejection reasons while preserving the existing Artois and Iceland anchors. Training must not treat the new packets as scale targets."
+}

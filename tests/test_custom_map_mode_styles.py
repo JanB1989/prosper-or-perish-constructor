@@ -38,6 +38,7 @@ CUSTOM_MAP_MODE_FILES = (
     MAP_MODE_ROOT / "pp_goods_output_map_modes_generated.txt",
     MAP_MODE_ROOT / "pp_local_output_modifier_map_modes.txt",
     MAP_MODE_ROOT / "pp_population_capacity_map_modes.txt",
+    MAP_MODE_ROOT / "pp_population_delta_map_modes.txt",
     MAP_MODE_ROOT / "pp_food_map_modes.txt",
     MAP_MODE_ROOT / "pp_unemployed_peasants_map_modes.txt",
     MAP_MODE_ROOT / "pp_building_levels_map_modes.txt",
@@ -46,6 +47,13 @@ CUSTOM_MAP_MODE_FILES = (
 
 VALUE_SOURCE_MODES = {
     "pp_population_capacity": "location_max_population",
+    "pp_population_capacity_density": "modifier:pp_population_capacity_density",
+    "pp_pop_delta_location": "pp_pop_delta_location_pct",
+    "pp_pop_delta_province": "pp_pop_delta_province_pct",
+    "pp_pop_delta_area": "pp_pop_delta_area_pct",
+    "pp_pop_delta_region": "pp_pop_delta_region_pct",
+    "pp_pop_delta_macro_region": "pp_pop_delta_macro_region_pct",
+    "pp_pop_delta_super_region": "pp_pop_delta_super_region_pct",
     "pp_positive_province_food_growth": "modifier:pp_province_food_storage_months",
     "pp_fishing_village_capacity": "fish_capacity",
     "pp_farming_village_capacity": "farm_capacity",
@@ -63,6 +71,90 @@ STRUCTURE_SNIPPETS = {
         "index = 1",
         "color_refresh_counters = { LocationDevelopmentChanged LocationPopulationChanged }",
         "color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }",
+    ),
+    "pp_population_capacity_density": (
+        "category = debug",
+        "index = 2",
+        "allow_allocate_hotkey = no",
+        "modifier:pp_population_capacity_density",
+        "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_TT_LAND",
+        "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_RANGE_0_10",
+        "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_CAPPED",
+        "color_refresh_counters = { LocationDevelopmentChanged LocationPopulationChanged }",
+    ),
+    "pp_pop_delta_location": (
+        "category = debug",
+        "index = 0",
+        "allow_allocate_hotkey = no",
+        "pp_pop_delta_location_pct",
+        "has_variable = pp_pop_baseline",
+        "small_map_names = location",
+        "small_tooltip_context = location",
+        "MAPMODE_PP_POP_DELTA_LOCATION_TT_LAND",
+        "MAPMODE_PP_POP_DELTA_MINUS_100",
+        "MAPMODE_PP_POP_DELTA_PLUS_10",
+        "MAPMODE_PP_POP_DELTA_PLUS_200",
+        "color_refresh_counters = { LocationPopulationChanged }",
+    ),
+    "pp_pop_delta_province": (
+        "category = debug",
+        "index = 0",
+        "allow_allocate_hotkey = no",
+        "pp_pop_delta_province_pct",
+        "has_variable = pp_province_pop_baseline",
+        "small_map_names = province",
+        "small_tooltip_context = location",
+        "MAPMODE_PP_POP_DELTA_PROVINCE_TT_LAND",
+        "MAPMODE_PP_POP_DELTA_MINUS_100",
+        "color_refresh_counters = { LocationPopulationChanged }",
+    ),
+    "pp_pop_delta_area": (
+        "category = debug",
+        "index = 0",
+        "allow_allocate_hotkey = no",
+        "pp_pop_delta_area_pct",
+        "has_variable = pp_area_pop_baseline",
+        "small_map_names = area",
+        "small_tooltip_context = location",
+        "MAPMODE_PP_POP_DELTA_AREA_TT_LAND",
+        "MAPMODE_PP_POP_DELTA_MINUS_100",
+        "color_refresh_counters = { LocationPopulationChanged }",
+    ),
+    "pp_pop_delta_region": (
+        "category = debug",
+        "index = 0",
+        "allow_allocate_hotkey = no",
+        "pp_pop_delta_region_pct",
+        "has_variable = pp_region_pop_baseline",
+        "small_map_names = region",
+        "small_tooltip_context = location",
+        "MAPMODE_PP_POP_DELTA_REGION_TT_LAND",
+        "MAPMODE_PP_POP_DELTA_MINUS_100",
+        "color_refresh_counters = { LocationPopulationChanged }",
+    ),
+    "pp_pop_delta_macro_region": (
+        "category = debug",
+        "index = 0",
+        "allow_allocate_hotkey = no",
+        "pp_pop_delta_macro_region_pct",
+        "has_variable = pp_macro_region_pop_baseline",
+        "small_map_names = sub_continent",
+        "small_tooltip_context = location",
+        "MAPMODE_PP_POP_DELTA_MACRO_REGION_TT_LAND",
+        "MAPMODE_PP_POP_DELTA_MINUS_100",
+        "color_refresh_counters = { LocationPopulationChanged }",
+    ),
+    "pp_pop_delta_super_region": (
+        "category = debug",
+        "index = 0",
+        "allow_allocate_hotkey = no",
+        "pp_pop_delta_super_region_pct",
+        "has_variable = pp_super_region_pop_baseline",
+        "small_map_names = continent",
+        "small_tooltip_context = location",
+        "MAPMODE_PP_POP_DELTA_SUPER_REGION_TT_LAND",
+        "MAPMODE_PP_POP_DELTA_MINUS_100",
+        "color_refresh_counters = { LocationPopulationChanged }",
     ),
     "pp_population_growth": (
         "category = population",
@@ -300,17 +392,20 @@ def test_farm_capacity_scale_keeps_developed_locations_distinguishable() -> None
 def test_population_capacity_scale_keeps_high_capacity_locations_distinguishable() -> None:
     block = _all_blocks()["pp_population_capacity"]
     text = LOCALIZATION.read_text(encoding="utf-8-sig")
+    calibration = json.loads(CALIBRATION.read_text(encoding="utf-8"))["scales"][
+        "population_capacity"
+    ]
+    thresholds = [float(value) for value in calibration["thresholds"]]
 
     assert _thresholds(block, "location_max_population") == [
-        20.0,
-        40.0,
-        60.0,
-        80.0,
-        100.0,
-        125.0,
-        155.0,
-        200.0,
+        *thresholds,
     ]
+    assert thresholds[-1] == 2 * max(
+        float(row.split(",", 1)[1])
+        for row in (ROOT / "data/population_capacity/population_capacity.csv")
+        .read_text(encoding="utf-8")
+        .splitlines()[1:]
+    )
     assert block.count("lerp = {") == 8
     assert block.count("legend_key =") == 9
     assert "@pp_population_capacity_map_cap" not in block
@@ -321,9 +416,90 @@ def test_population_capacity_scale_keeps_high_capacity_locations_distinguishable
     assert "modifier:local_population_capacity" not in block
     assert "MAPMODE_PP_POPULATION_CAPACITY_RANGE_125_155" in text
     assert "MAPMODE_PP_POPULATION_CAPACITY_RANGE_155_200" in text
-    assert "200+ capacity" in text
+    assert f"{int(thresholds[-1])}+ capacity" in text
     assert "GetPopulationCapacity|0" in text
     assert "GetModifierValue('local_population_capacity')" not in text
+
+
+def test_population_capacity_density_debug_mode_uses_fixed_density_buckets() -> None:
+    block = _all_blocks()["pp_population_capacity_density"]
+    text = LOCALIZATION.read_text(encoding="utf-8-sig")
+
+    assert _thresholds(block, "modifier:pp_population_capacity_density") == [
+        10.0,
+        25.0,
+        50.0,
+        100.0,
+        150.0,
+        250.0,
+        400.0,
+        600.0,
+    ]
+    assert block.count("lerp = {") == 8
+    assert block.count("legend_key =") == 9
+    assert "category = debug" in block
+    assert "index = 2" in block
+    assert "MAPMODE_PP_POPULATION_CAPACITY_DENSITY" in text
+    assert "people/km²" in text
+
+
+def test_population_delta_debug_modes_use_shared_percent_change_scale() -> None:
+    blocks = _all_blocks()
+    text = LOCALIZATION.read_text(encoding="utf-8-sig")
+    modes = (
+        ("pp_pop_delta_location", "pp_pop_delta_location_pct", "location", "pp_pop_baseline"),
+        ("pp_pop_delta_province", "pp_pop_delta_province_pct", "province", "pp_province_pop_baseline"),
+        ("pp_pop_delta_area", "pp_pop_delta_area_pct", "area", "pp_area_pop_baseline"),
+        ("pp_pop_delta_region", "pp_pop_delta_region_pct", "region", "pp_region_pop_baseline"),
+        (
+            "pp_pop_delta_macro_region",
+            "pp_pop_delta_macro_region_pct",
+            "sub_continent",
+            "pp_macro_region_pop_baseline",
+        ),
+        (
+            "pp_pop_delta_super_region",
+            "pp_pop_delta_super_region_pct",
+            "continent",
+            "pp_super_region_pop_baseline",
+        ),
+    )
+
+    for mode, value_source, scope_name, baseline_var in modes:
+        block = blocks[mode]
+        assert _thresholds(block, value_source) == [
+            -1.0,
+            -0.5,
+            0.0,
+            0.1,
+            0.5,
+            2.0,
+        ]
+        assert block.count("lerp = {") >= 4
+        assert block.count("legend_key =") == 11
+        assert "category = debug" in block
+        assert "index = 0" in block
+        assert f"small_map_names = {scope_name}" in block
+        assert "small_tooltip_context = location" in block
+        assert f"has_variable = {baseline_var}" in block
+        assert f"mapmode_{mode}_name" in text
+        assert f"MAPMODE_{mode.upper()}" in text
+        assert f"MAPMODE_{mode.upper()}_TT_LAND" in text
+        assert "Saved:" in text
+        assert "Current:" in text
+        assert "Change:" in text
+        # -50%..0% must lerp so mid-range losses (e.g. -17%) are not solid MID.
+        assert f"{value_source} < @pp_pop_delta_zero" in block
+        assert "add = 0.5" in block
+        assert "divide = 0.5" in block
+
+    assert "event pp_population_baseline_debug.1" in text
+    assert "MAPMODE_PP_POP_DELTA_MINUS_100" in text
+    assert "MAPMODE_PP_POP_DELTA_MINUS_25" in text
+    assert "MAPMODE_PP_POP_DELTA_PLUS_10" in text
+    assert "MAPMODE_PP_POP_DELTA_PLUS_50" in text
+    assert "MAPMODE_PP_POP_DELTA_PLUS_200" in text
+    assert "MAPMODE_PP_POP_DELTA_NO_BASELINE" in text
 
 
 def test_market_food_price_uses_reference_centered_buckets() -> None:

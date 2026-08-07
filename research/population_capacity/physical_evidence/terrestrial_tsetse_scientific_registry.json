@@ -1,0 +1,172 @@
+{
+  "schema_version": "terrestrial-tsetse-scientific-registry-v2",
+  "target_date": 1337,
+  "policy": {
+    "modern_proxy_is_historical_truth": false,
+    "unresolved_effect_is_applied": false,
+    "starting_population_is_predictor_or_target": false,
+    "regional_multiplier_is_allowed": false
+  },
+  "resolved_components": [
+    {
+      "component_id": "terrestrial_npp_period_alignment",
+      "state": "source_contract_and_sample_alignment_built",
+      "method": "For each of four CMIP6 Earth-system models, divide mean 1322-1352 past1000 NPP by the same model's 2001-2010 and 1860-1899 historical NPP, sample both ratios at the exact EU5 sample geography, and retain the model min/median/max as structural sensitivity bounds.",
+      "allowed_use": "dated physical scaling of FORGE and Zhu features only",
+      "forbidden_use": "population target, calibrated probability interval, observed 1337 vegetation map",
+      "sources": [
+        {
+          "source_id": "pmip4_past1000_design",
+          "citation": "Jungclaus et al. 2017, The PMIP4 contribution to CMIP6 Part 3",
+          "url": "https://doi.org/10.5194/gmd-10-4005-2017",
+          "locator": "Table 1, past1000 850-1849 and linked historical 1850-2014 experiment; sections 2-3 forcing design",
+          "role": "defines the dated transient experiment and its continuity with historical runs"
+        },
+        {
+          "source_id": "cmip6_npp_variable",
+          "citation": "CMIP6 controlled vocabulary / data request",
+          "url": "https://cmip-publications.llnl.gov/view/CMIP6/?option=va+-+Northward+Wind&type=variable",
+          "locator": "Npp variable entry",
+          "role": "defines NPP as land net-primary-production carbon flux in kg C m-2 s-1"
+        },
+        {
+          "source_id": "esgf_cmip6_archive",
+          "citation": "Earth System Grid Federation CMIP6 archive",
+          "url": "https://esgf-node.llnl.gov/search/cmip6/",
+          "locator": "PMIP past1000 and CMIP historical, Lmon/npp",
+          "role": "checksum-pinned model files"
+        }
+      ],
+      "models": [
+        "ACCESS-ESM1-5",
+        "EC-Earth3-Veg-LR",
+        "INM-CM4-8",
+        "MIROC-ES2L"
+      ],
+      "implementation": "/home/jan/development/ProsperOrPerishPopulationCapacityPipeline/src/prosper_or_perish_population_capacity/historical_ecology.py",
+      "built_artifact": {
+        "path": "artifacts/data/population_capacity/terrestrial_subsistence/historical_npp_alignment.parquet",
+        "sha256": "12c4bcf5748b4d00008ed136dbc59319319fa266d012601a473fc3e5bfcd65b9",
+        "source_manifest_sha256": "e552fb994e011aec74326e52b79b7954aac9561395a6c723580b8af55826a5bb",
+        "rows": 1339456,
+        "locations": 20929,
+        "unresolved_land_samples": 0,
+        "minimum_valid_models_per_land_sample": 2,
+        "maximum_used_fallback_distance_km": 249.9986298814644,
+        "uncertainty_semantics": "structural model envelope, not calibrated probability bounds"
+      }
+    },
+    {
+      "component_id": "wild_food_process_feature",
+      "state": "resolved_as_physical_feature_not_historical_label",
+      "method": "FORGE hunting-plus-gathering equilibrium is retained as a process feature and independently checked against 340 ethnographic records. Its scale is not an anchor and its modern NPP is corrected only through the dated PMIP ratio above.",
+      "source": {
+        "citation": "Tallavaara et al. 2021, Productivity and biodiversity govern population size in hunter-gatherer societies",
+        "url": "https://doi.org/10.1038/s41559-021-01548-3",
+        "locator": "Methods; Supplementary Table and S0/S1/S2 global outputs"
+      }
+    },
+    {
+      "component_id": "potential_grazer_biomass_ceiling",
+      "state": "resolved_as_ecological_ceiling_not_domestic_herd_label",
+      "method": "Zhu pre-industrial large-grazer biomass is a pasture-support ceiling. The carrying-capacity optimizer must fit globally shared utilization and product-conversion parameters; it may not treat the ceiling as an observed domestic herd.",
+      "source": {
+        "citation": "Zhu et al. 2018, The large mean body size of mammalian herbivores explains the productivity paradox during the Last Glacial Maximum",
+        "url": "https://doi.org/10.1038/s41559-018-0481-y",
+        "locator": "Methods and PANGAEA dataset 10.1594/PANGAEA.884853, Pre_industrial.nc"
+      }
+    },
+    {
+      "component_id": "tsetse_600bp_physiological_potential",
+      "state": "closed_as_lineage_clean_physical_fallback",
+      "method": "Evaluate the three published Alsan temperature-response perturbations at every exact EU5 footprint sample using hash-pinned CHELSA-TraCE21k 600 BP monthly air temperature and relative humidity. Restrict evaluation to the largest connected African landmass derived from Natural Earth without retaining country or EU5 region attributes. Aggregate the structural min/median/max envelope to all 20,929 locations.",
+      "allowed_use": "physical potential-suitability feature and uncertainty sensitivity; modern atlas may validate direction only",
+      "forbidden_use": "observed 1337 fly occurrence or abundance, direct human mortality, calibrated probability interval, or a production penalty",
+      "sources": [
+        {
+          "source_id": "alsan_tsetse_physiology_model_2015",
+          "citation": "Alsan 2015, The Effect of the Tsetse Fly on African Development",
+          "url": "https://economics.nd.edu/assets/148388/",
+          "locator": "Appendix C, Table C.I and equations C.1-C.4",
+          "role": "laboratory-derived temperature, humidity, birth and mortality response equations plus cool/baseline/warm perturbations",
+          "sha256": "f48f0e7bfb6194cad97ce85cfcbd3617ee99ffffbcf68977c3f8e805e51be56f"
+        },
+        {
+          "source_id": "natural_earth_admin0_v5_1_2",
+          "citation": "Natural Earth v5.1.2 Admin 0 countries",
+          "url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_50m_admin_0_countries.geojson",
+          "locator": "largest connected African landmass derived from the hash-pinned polygons; country attributes discarded",
+          "role": "structural biogeographic domain only",
+          "sha256": "3e458fc036ad0a66411f2c1e6cac49c5d7bfb81cb1123bc513b22511a2b7fdeb"
+        },
+        {
+          "source_id": "fao_continental_tsetse_atlas_2024",
+          "citation": "FAO continental atlas of tsetse flies in Africa",
+          "url": "https://www.fao.org/3/cd2022en/cd2022en.pdf",
+          "locator": "1990-2020 detections and explicit non-detections",
+          "role": "out-of-period directional validation only"
+        }
+      ],
+      "built_artifact": {
+        "path": "artifacts/data/population_capacity/terrestrial_subsistence/tsetse_production_location_labels.parquet",
+        "sha256": "896f41ccf883235118f10093ac8a6d2299a8e9b74357ea93ef1dbd56be17c66f",
+        "audit_sha256": "b7d3c450540c1127363a43f1d21ac28eae2650e306dee6db20f0c72f63cba3c2",
+        "source_manifest_sha256": "026a5b745fc5c0abe962b7884a028a0d11171f014567a2009a3dd3c90d7577b6",
+        "rows": 20929,
+        "locations": 20929,
+        "sample_rows": 1339456,
+        "unresolved_numeric_rows": 0,
+        "potentially_exposed_locations": 2185,
+        "modern_validation_roc_auc": 0.6253091911811103,
+        "modern_detection_mean_exposure": 0.5872388175133173,
+        "modern_explicit_non_detection_mean_exposure": 0.5318546900217722,
+        "uncertainty_semantics": "min/median/max structural physiology envelope, not calibrated probability bounds"
+      },
+      "effect_policy": "all applied livestock, draft and manure factors remain exactly 1.0; direct human mortality is excluded"
+    }
+  ],
+  "deferred_components": [
+    {
+      "component_id": "tsetse_applied_1337_production_factor",
+      "state": "not_required_for_training_noop",
+      "reason": "No defensible 1337 fly abundance, infection prevalence, host biomass, breed-mixture and crop-dependency surface exists. The closed physiological potential remains a physical feature, while production effects stay neutral to avoid fabricating labels.",
+      "future_evidence_needed": "An independently dated 1100-1500 African abundance, infection, host and breed-mixture reconstruction validated against evidence outside its construction sources."
+    },
+    {
+      "component_id": "crop_specific_draft_and_manure_feedback",
+      "state": "not_required_for_training_no_credit",
+      "reason": "Modern studies establish direction but not 1337 crop-system dependency fractions. Applying an increment would also risk double-counting attainable-yield layers.",
+      "future_evidence_needed": "Crop-, water-mode- and technology-specific 1100-1500 dependency fractions with complete mapped domains."
+    },
+    {
+      "component_id": "historical_600bp_landcover_class",
+      "state": "optional_future_refinement_not_training_blocker",
+      "reason": "The accepted tsetse fallback is driven by dated climate physiology and a structural African domain, so a categorical habitat map is not required to close the feature."
+    }
+  ],
+  "rejected_predictors": [
+    {
+      "source_family": "PMIP4 past1000 treeFrac/grassFrac/shrubFrac",
+      "state": "rejected_forbidden_population_lineage",
+      "reason": "Jungclaus et al. 2017 sections 4.5 and Appendix A5 specify LUH2 forcing partly built from HYDE3.2 population and land use."
+    },
+    {
+      "source_family": "EU5 vegetation and macro-region names",
+      "state": "rejected_game_authored_or_geographic_predictor",
+      "reason": "Neither is an independently reconstructed 600 BP ecological label."
+    },
+    {
+      "source_family": "FAO 1990-2020 tsetse atlas",
+      "state": "validation_only",
+      "reason": "Modern occurrence cannot be promoted to 1337 spatial truth."
+    }
+  ],
+  "training_gate": {
+    "terrestrial_npp_alignment_is_closed": true,
+    "tsetse_physical_feature_training_ready": true,
+    "tsetse_can_close_as_applied_effect_now": false,
+    "draft_manure_can_close_as_applied_feedback_now": false,
+    "training_ready_under_noop_policy": true,
+    "required_behavior_until_resolved": "tsetse potential suitability may enter as a physical feature; all tsetse, draft and manure applied factors remain exactly 1.0 and direct human mortality remains excluded"
+  }
+}

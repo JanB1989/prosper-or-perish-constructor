@@ -1,0 +1,129 @@
+{
+  "schema_version": "population_capacity_anchor_conflict_review_v1",
+  "review_id": "artois_england_conflict_wave21",
+  "reviewed_on": "2026-08-03",
+  "status": "diagnostic_only",
+  "append_only": true,
+  "active_model_mutation": false,
+  "purpose": "Determine whether the Artois interval should remain a two-sided aggregate anchor after the current England-derived scale creates a large shortfall.",
+  "question": "The mechanistic candidate fits Artois before the England scale but misses it after applying one global factor. Is that evidence that Artois is a bad anchor, or that the calibration model is too rigid?",
+  "artifact_inputs": {
+    "location_frame": {
+      "path": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+      "sha256": "a1ad4d4c9fdbe73b5cb368ee64a7b52e3b1e270987cdf533be758265aec385ac"
+    },
+    "evidence_registry": {
+      "path": "artifacts/data/population_capacity/current_capacity_map/evidence_registry.json",
+      "sha256": "a0e69abbddc6b1c01fef67a780ca3e46b8618f105b0f13dd4a6ffeed4280a97b"
+    },
+    "current_mechanistic_scale": 0.3403333811576089
+  },
+  "model_snapshot": {
+    "artois": {
+      "selector": "province=lower_artois_province|upper_artois_province",
+      "location_count": 8,
+      "area_km2": 5545.5845668455495,
+      "mechanistic_unscaled_people": 1325525.8321185252,
+      "mechanistic_unscaled_density_people_per_km2": 239.02364415164143,
+      "current_english_scale_people": 451121.0,
+      "published_capacity_interval_people": [1100000, 1410000],
+      "scale_interval_to_cover_published_capacity": [0.8297, 1.0637],
+      "soil_quality_counts": {"soil_good": 8},
+      "farm_system_counts": {"rainfed_open_field_cereal": 8},
+      "interpretation": "The unscaled physical output is inside the published Artois capacity interval and has a density close to Derville's published 169.5-254.2 people/km2 potential range. The failure is introduced by the England-derived global scale, not by a zero crop label or an unmapped footprint."
+    },
+    "england": {
+      "selector": "region=great_britain_region excluding Hebrides, Scottish Highlands, Scottish Lowlands and Wales",
+      "location_count": 149,
+      "area_km2": 130279.0,
+      "mechanistic_unscaled_people": 15247370.597438015,
+      "mechanistic_unscaled_density_people_per_km2": 117.03628825396275,
+      "published_capacity_interval_people": [4250000, 6200000],
+      "demographic_scale_anchor_interval_people": [4400000, 5200000],
+      "scale_interval_to_cover_food_security_capacity": [0.2787, 0.4066],
+      "scale_interval_to_cover_demographic_anchor": [0.2886, 0.3410],
+      "soil_quality_counts": {"soil_good": 27, "soil_average": 50, "soil_poor": 68, "soil_verypoor": 4},
+      "farm_system_counts": {"rainfed_open_field_cereal": 149},
+      "interpretation": "The England aggregate includes a large share of average, poor and very poor soil locations, while Artois is entirely soil_good. A single pre-fit scalar therefore suppresses a genuinely high-productivity agrarian region relative to a heterogeneous national aggregate."
+    },
+    "relative_density_check": {
+      "raw_artois_to_england_density_ratio": 2.042,
+      "historical_artois_density_people_per_km2": 187.633,
+      "historical_england_capacity_density_range_people_per_km2": [32.6, 47.6],
+      "historical_artois_to_england_capacity_density_ratio_range": [3.94, 5.75],
+      "interpretation": "The raw model understates, rather than exaggerates, the historical Artois-vs-England productivity contrast. The England scale reduces Artois still further and cannot be treated as evidence that Artois is an implausible anchor."
+    }
+  },
+  "historical_evidence": [
+    {
+      "evidence_id": "derville_1999_artois_boundary_and_exports",
+      "date": "1288-1347",
+      "claim": "Derville defines Artois as approximately 553,509 ha, rich loam country, and reports that it normally exported wheat toward Lower Flanders through Douai, La Bassee, Bethune, Lillers, Aire and Saint-Omer. He explicitly characterizes the agriculture as deeply commercial.",
+      "model_implication": "Exports demonstrate surplus production and market integration; they do not show that imported calories were required to sustain the Artois population. Use a broad local-food interval and keep trade as a diagnostic, but do not discard the region's intrinsic capacity evidence.",
+      "citation": "Alain Derville, L'agriculture du Nord au Moyen-Age, chapter VIII, section 1, lines 117-119 of the OpenEdition text.",
+      "url": "https://books.openedition.org/septentrion/122270?lang=en"
+    },
+    {
+      "evidence_id": "derville_1999_density_potential",
+      "date": "around 1300",
+      "claim": "Derville's demographic chapter gives a potential density of 169.5-254.2 people/km2 under 75% cultivated land, 25% sown share, 20-30 hl/ha yields and a 15:1 ratio; he estimates Artois at 187.633 people/km2 and notes that some wheat was exported.",
+      "model_implication": "The current unscaled Artois density of 239.0 people/km2 lies inside the published agrarian potential band. This is direct independent physical validation of the raw model magnitude, not a starting-population target.",
+      "citation": "Alain Derville, L'agriculture du Nord au Moyen-Age, chapter IV, section on demographic and social aspects, OpenEdition search result and chapter text.",
+      "url": "https://books.openedition.org/septentrion/122250?lang=en"
+    },
+    {
+      "evidence_id": "derville_1999_rural_density_and_local_exchange",
+      "date": "around 1300",
+      "claim": "Derville reports that 84.57% of Artois's population was rural, rural density was about 165.87 people/km2, and an average holding of 1.58 ha could produce enough wheat for about 5.39 people at 30 hl/ha while a household contained 3.5 people. He describes local buying and selling of grain, fish, salt and wine.",
+      "model_implication": "The evidence supports local agrarian surplus and local market redistribution, with some households buying grain. It is compatible with a capacity anchor that excludes long-distance imports, but it cautions against treating observed population as a pure autarkic label or setting local_food_share to exactly 1.0.",
+      "citation": "Alain Derville, L'agriculture du Nord au Moyen-Age, chapter IV, paragraph 10, OpenEdition chapter text.",
+      "url": "https://books.openedition.org/septentrion/168200"
+    },
+    {
+      "evidence_id": "derville_1999_yield_variance_and_series",
+      "date": "1297-1343",
+      "claim": "Derville warns that methods and yields varied widely and that isolated examples are not sufficient; for the Bethunois, thirteen observations from 1297-1343 average 31.38 hl/ha, while administrative accounts elsewhere were much poorer. He concludes that Artois was probably among Europe's most advanced agricultural regions around 1300-1350.",
+      "model_implication": "The anchor should retain medium boundary/representativeness confidence and be held out as one geographic/source family. The evidence favors a generic fertile-soil/intensive-rainfed farm-system interaction, not an Artois-specific correction.",
+      "citation": "Alain Derville, L'agriculture du Nord au Moyen-Age, chapter VIII, conclusions 229-232, lines 1015-1021.",
+      "url": "https://books.openedition.org/septentrion/122270?lang=en"
+    },
+    {
+      "evidence_id": "schofield_2023_england_food_security",
+      "date": "around 1300",
+      "claim": "Schofield reports competing England capacity estimates of 4.25 million (Campbell), approximately 5.5 million (Stone) and approximately 6.2 million (Poutre), while describing cereal shortages, price volatility and pressure on scarce agricultural resources.",
+      "model_implication": "England is a valid scale investigation but its published capacity interval is broad and model-dependent. Calibrating one scalar to a single England central value should not be treated as a physical law for all soil and food-system classes.",
+      "citation": "Phillipp R. Schofield, Peasants and food security in England and Wales c.1300, Journal of Medieval History 49(5), pp. 588-592 and 592-593.",
+      "url": "https://pure.aber.ac.uk/ws/portalfiles/portal/97733014/Peasants_and_food_security_in_England_and_Wales_c.1300.pdf"
+    }
+  ],
+  "food_dependence_assessment": {
+    "artois_observed_population": "not a strict autarky label; local households bought and sold grain and the region exported surplus",
+    "long_distance_imported_calories_required": "not demonstrated by the cited sources",
+    "recommended_local_food_interval_for_sensitivity": [0.75, 0.95],
+    "why_not_a_downgrade": "The source describes exports from a surplus region, not imported food sustaining a deficit. Commercial exchange changes realized distribution, but the capacity target is local production potential and should retain the region.",
+    "why_not_a_scale_anchor": "Artois is an intensive regional case with medium boundary/representativeness confidence, not a global calibration reference. It should supervise a grouped interval and test the model's response to fertile soils and intensive rainfed systems."
+  },
+  "decision": {
+    "retain_as_two_sided_interval_anchor": true,
+    "downgrade_to_validation_only": false,
+    "use_as_global_scale_anchor": false,
+    "use_as_generic_feature_signal": true,
+    "generic_features_to_audit": [
+      "soil_quality interaction with attainable low-input yield",
+      "fertile-loam feasible cultivated fraction",
+      "rainfed cereal/legume rotation and fallow allocation",
+      "manure/livestock support for intensive arable systems",
+      "market access only as a diagnostic, never as imported calories"
+    ],
+    "required_model_change": "Replace pre-fit universal England scaling with globally shared physical parameter fitting and aggregate interval likelihoods. Preserve environmental heterogeneity; never add an Artois-specific multiplier.",
+    "holdout_policy": "Keep all Artois records in one geographic and source-family holdout. Do not count Derville's population and yield statements as independent labels if they share the same source bundle."
+  },
+  "next_tests": [
+    "Fit loss, seed/storage, reserve and crop-allocation parameters against England and Artois jointly without applying the England scalar before scoring.",
+    "Run a leave-Artois-out fit and score both the Artois interval and England interval; report raw and calibrated densities.",
+    "Run a fertile-soil ablation replacing soil_good with soil_average only for a diagnostic; verify the density change is monotone and no location-specific multiplier is introduced.",
+    "Run local_food sensitivity 0.75, 0.85 and 0.95 for the Artois interval without changing predictor lineage.",
+    "Audit GAEZ low-input semantics and crop allocation against Derville's 20-30 hl/ha and 75% cultivated assumptions before changing retention parameters."
+  ],
+  "conclusion": "The conflict is a calibration-design failure, not sufficient evidence to reject Artois. Derville independently documents a fertile, intensive, locally productive region whose published potential density overlaps the unscaled mechanistic output. Retain Artois as a two-sided grouped anchor, keep it out of global-scale anchoring, and resolve the mismatch by fitting globally shared physical parameters while preserving soil and farm-system heterogeneity."
+}

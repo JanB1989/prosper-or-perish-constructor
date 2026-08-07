@@ -1,0 +1,80 @@
+{
+  "schema_version": "population_capacity_crop_water_gap_wave31",
+  "record_id": "banana_cassava_taro_water_response_wave31",
+  "reviewed_on": "2026-08-04",
+  "target_year": 1337,
+  "purpose": "Close crop-specific rain-fed/irrigated water response where official same-geography records exist, while preserving an explicit annual-risk gap for banana and taro.",
+  "gaez_static_source": {
+    "engine": "GAEZ_v5",
+    "map_variable": "RES05-YXX",
+    "input_level": "low",
+    "rainfed_management_code": "LRLM",
+    "irrigated_management_code": "LILM",
+    "period": "1981-2000",
+    "climate_source": "AgERA5 HIST",
+    "unit": "kg dry matter/ha",
+    "crops": ["banana", "cassava", "taro"],
+    "location_rows": 125574,
+    "expected_location_rows": 125574,
+    "paired_location_rows": 62787,
+    "mapping_method": "existing deterministic 64-sample EU5 footprint parquet; sample weights sum to one per location; no regional/global filling",
+    "source_count": 8
+  },
+  "cassava_interannual_source": {
+    "engine": "ISIMIP2a",
+    "dataset_doi": "https://doi.org/10.48364/ISIMIP.729341",
+    "models": ["LPJ-GUESS", "LPJmL"],
+    "crop_code": "cas",
+    "period": [1971, 2010],
+    "water_modes": ["rainfed", "full_irrigation"],
+    "location_rows": 83716,
+    "expected_location_rows": 83716,
+    "superregion_rows": 24,
+    "model_spread_rows": 41858,
+    "semantics": "modern model annual yields; lower tails and model disagreement only, not absolute 1337 yields"
+  },
+  "banana_taro_interannual_search": {
+    "engine": "ISIMIP2a",
+    "models_tested": ["LPJ-GUESS", "LPJmL"],
+    "candidate_crop_codes": {"banana": ["ban", "banana"], "taro": ["tar", "taro"]},
+    "water_modes": ["rainfed", "full_irrigation"],
+    "all_tested_files_http_404": true,
+    "audit": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave31/isimip_banana_taro_availability_audit_wave31.json",
+    "interpretation": "No official global annual banana/taro ISIMIP2a files were found under the tested model/crop naming patterns; no synthetic annual tails are created."
+  },
+  "pyaez_status": {
+    "bridge_audit": "artifacts/data/population_capacity/pyaez_1337/exact_engine_wave30/crop_risk_bridge_coverage.parquet",
+    "all_three_crops_both_modes": "blocked_missing_published_water_row",
+    "interpretation": "GAEZ Appendix 4.2 lacks published annual water-response rows for these families; the static GAEZ map outputs remain valid paired water-mode diagnostics, but do not create PyAEZ annual simulations."
+  },
+  "artifacts": {
+    "manifest": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave31/crop_water_gap_manifest_wave31.json",
+    "manifest_sha256": "ed8bd9765feb5691f1a07d14879d0032c6fa2db4bf47dc554b73ff65dcecd188",
+    "gaez_static_location": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave31/gaez_tropical_static_water_response_location_wave31.csv",
+    "gaez_static_location_sha256": "92d8a8cb770b06aa5a9f84fe4f1198b267a37cef73f647f4625f4306de1f2d03",
+    "gaez_static_pair": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave31/gaez_tropical_static_water_response_pair_wave31.csv",
+    "gaez_static_pair_sha256": "f87e5d41ee700d88c226ee1ea136d23be2466d7d7647fa5196c7c931562bd2bf",
+    "cassava_location_risk": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave31/isimip_cassava_location_risk_wave31.csv",
+    "cassava_location_risk_sha256": "5f4bc7c65658b1ee4aa8faac063314abf59088cc0ed3c29f1830551887eb40b3",
+    "cassava_superregion_risk": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave31/isimip_cassava_superregion_risk_wave31.csv",
+    "cassava_superregion_risk_sha256": "1cd219d4e48ae2ad5757a8e56365212684a89808ef9ceb051bccdf68c66be636",
+    "cassava_model_spread": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave31/isimip_cassava_model_spread_wave31.csv",
+    "cassava_model_spread_sha256": "83365ae0d6b10011f078fa93054e1fd10ee5748cd61b3600e59ccf09da5dcdef",
+    "availability_audit": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave31/isimip_banana_taro_availability_audit_wave31.json",
+    "availability_audit_sha256": "3df159627e841cbca4bd6d9daee5ccf9cb74abee4637fcfb18d0b13aee250f75"
+  },
+  "acceptance": {
+    "banana_static_water_response_closed": true,
+    "cassava_static_water_response_closed": true,
+    "taro_static_water_response_closed": true,
+    "cassava_modern_interannual_risk_bridge_closed": true,
+    "banana_modern_interannual_risk_bridge_closed": false,
+    "taro_modern_interannual_risk_bridge_closed": false,
+    "training_unblocked": false,
+    "blocking_gaps": [
+      "Banana and taro have no verified official global annual crop-model files in the tested ISIMIP2a sources.",
+      "GAEZ static 1981-2000 yields cannot establish 1337 interannual p10/p90 tails.",
+      "Exact PyAEZ annual water-response parameters remain unpublished/unresolved for all three families."
+    ]
+  }
+}

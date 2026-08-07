@@ -1,0 +1,110 @@
+{
+  "schema_version": "population_capacity_anchor_registry_review_v1",
+  "diagnostic_id": "anchor_registry_scale_review_wave25",
+  "reviewed_on": "2026-08-04",
+  "purpose": "Append-only audit of the evidence registry after a systematic global review. It separates scale-setting intervals from one-sided floors and validation analogues without lowering the promotion threshold.",
+  "source_manifest": {
+    "evidence_packet_count": 174,
+    "active_packet_count": 170,
+    "training_eligible_aggregate_count": 28,
+    "two_sided_interval_count": 5,
+    "one_sided_lower_bound_count": 23,
+    "validation_only_count": 118,
+    "rejected_count": 24,
+    "independent_source_family_count": 18,
+    "super_region_count": 5,
+    "required_crosswalks_unresolved": 0,
+    "packet_schema_issues": 0
+  },
+  "active_two_sided_intervals": [
+    {
+      "anchor_id": "england_1290_1315",
+      "super_region": "Europe",
+      "boundary": "England national aggregate",
+      "date": "1290-1315",
+      "population_interval": [4400000, 5200000],
+      "source_family": "english_demographic_and_manorial_reconstructions",
+      "role": "primary_scale_anchor"
+    },
+    {
+      "anchor_id": "england_1290_food_security_capacity_interval_wave8",
+      "super_region": "Europe",
+      "boundary": "England national aggregate",
+      "date": "1290-1300",
+      "population_interval": [4000000, 6200000],
+      "source_family": "english_arable_output_and_food_security_models",
+      "role": "interval_anchor",
+      "independence_note": "Independent agrarian-output model but geographically shares the England boundary with the scale anchor; grouped holdouts must keep both together."
+    },
+    {
+      "anchor_id": "artois_1290_1300_agrarian_capacity_interval_wave17",
+      "super_region": "Europe",
+      "boundary": "Artois regional agrarian envelope",
+      "date": "1290-1300",
+      "population_interval": [1000000, 1100000],
+      "source_family": "artois_agrarian_yield_and_crisis_1100_1350",
+      "role": "interval_anchor"
+    },
+    {
+      "anchor_id": "iceland_1290_1330_natural_capacity_interval_wave18",
+      "super_region": "Europe",
+      "boundary": "Iceland island aggregate",
+      "date": "1290-1330",
+      "population_interval": [50000, 70000],
+      "source_family": "iceland_preindustrial_environmental_carrying_capacity",
+      "role": "interval_anchor"
+    },
+    {
+      "anchor_id": "france_continental_1300_1328_interval_revalidation_wave25",
+      "super_region": "Europe",
+      "boundary": "Continental France / complete EU5 france_region selector",
+      "date": "1300-1328",
+      "population_interval": [18000000, 20000000],
+      "implied_capacity_interval": [18000000, 23529411.76470588],
+      "source_family": "france_early_fourteenth_century_demographic_upper_limit",
+      "role": "interval_anchor",
+      "independence_note": "Restored by append-only supersession; not a new source family."
+    }
+  ],
+  "global_review_conclusions": [
+    {
+      "candidate": "Fayyum 1245 village register",
+      "disposition": "validation_only",
+      "reason": "The source gives village taxes, water rights and crop conditions but no closed population total, no complete cadastral polygon, and no saturation interval. The ~75,000 estimate includes an unresolved urban component."
+    },
+    {
+      "candidate": "Nile Egypt 1298-1315 cadastre",
+      "disposition": "validation_only",
+      "reason": "A demographic reconstruction exists, but the Nile corridor is not equivalent to the EU5 Egypt region and urban redistribution, fiscal under-registration and post-famine timing prevent a defensible saturation interval."
+    },
+    {
+      "candidate": "Japan 1280 provincial Great Land Registers",
+      "disposition": "lower_bound",
+      "reason": "Mapped provincial rice-field/population floors with local food support; no independently measured upper resource limit or saturation fraction. Shared Farris source family."
+    },
+    {
+      "candidate": "Gyeongsang 1432 register",
+      "disposition": "lower_bound",
+      "reason": "Closed provincial register and agrarian tax context, but date is outside the target window and the observation is not a demonstrated saturation equilibrium."
+    },
+    {
+      "candidate": "Greater Angkor, Chimor, Hohokam, Upper Mantaro, Lake Titicaca, Tongatapu and Pacific island systems",
+      "disposition": "lower_bound_or_validation_only",
+      "reason": "Archaeological or ecological population envelopes are useful one-sided/held-out tests, but city/tribute concentration, broad dating, model-derived upper bounds, or unresolved saturation prevent two-sided scale promotion."
+    },
+    {
+      "candidate": "Broad African, Yuan Chinese, medieval Indian and Nile continental estimates",
+      "disposition": "rejected_or_validation_only",
+      "reason": "No record simultaneously resolves a mapped rural boundary, local-food dependence, census completeness, shock/migration effects and an independent saturation interval. No continental correction is justified."
+    }
+  ],
+  "promotion_threshold_result": {
+    "new_independent_two_sided_anchors_found": 0,
+    "new_interval_restored_by_registry_repair": 1,
+    "threshold_lowered": false,
+    "training_can_begin": true,
+    "deployment_can_be_accepted": false,
+    "remaining_reason": "Anchor fit and uncertainty/generalization gates are post-fit decisions; direct frozen-anchor audit still must pass."
+  },
+  "method": "Reviewed every active packet's boundary, date, population semantics, local-food evidence, pressure evidence, shock/trade caveats and source-family independence. Candidate records remain append-only and rejected records retain explicit reasons. No EU5 starting population, HYDE, RGO identity/modifier or trade-import field was used."
+}

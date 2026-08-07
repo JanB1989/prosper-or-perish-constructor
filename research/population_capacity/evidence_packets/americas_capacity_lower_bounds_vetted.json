@@ -1,0 +1,129 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "America/Oceania",
+  "region": "america",
+  "target_year": 1337,
+  "packet_id": "americas_capacity_lower_bounds_vetted",
+  "scope": "In-period, bounded archaeological food systems retained as one-sided EU5 carrying-capacity constraints",
+  "promotion_audit": {
+    "promoted_lower_bound_ids": [
+      "mesa_verde_vep_1225_1260_capacity_lower_bound",
+      "hohokam_lower_salt_1150_1450_capacity_lower_bound"
+    ],
+    "decision": "Both records have bounded archaeological study areas, locally supplied food systems and quantitative population/capacity evidence. They are deliberately one-sided: the study footprints are contained inside coarser EU5 locations, so the defensible statement is that the containing EU5 capacity cannot be below the published study-area capacity. Neither record is used as a two-sided global scale anchor.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "mesa_verde_vep_1225_1260_capacity_lower_bound",
+      "label": "Village Ecodynamics Project southwest Colorado study area, AD 1225-1260",
+      "year_start": 1225,
+      "year_end": 1260,
+      "population_low": 19404,
+      "population_central": 19404,
+      "population_high": 19404,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.9,
+      "local_food_central": 0.97,
+      "local_food_high": 1.0,
+      "capacity_low": 19404,
+      "capacity_central": 19404,
+      "capacity_high": 19404,
+      "interval_semantics": "Kohler, Cole and Ciupe report 3,234 momentary households and K=3,234 households for AD 1225-1260 in Table 19.1. Their demographic procedure converts households to persons with a factor of six, yielding 19,404 people. The point estimate is encoded unchanged; the constraint is one-sided because the 1,800 km2 research polygon is wholly contained inside a larger EU5 location.",
+      "pressure_evidence": [
+        "Kohler, Cole and Ciupe, Population and Warfare, Figure 19.2 and pp. 279-281: the project reconstructs population and carrying capacity for a fixed 1,800 km2 southwest-Colorado study area from archaeological site forms, survey, ceramics, tree rings, architecture and site size.",
+        "Kohler, Cole and Ciupe, Table 19.1, p. 281: for AD 1225-1260 the preferred archaeological reconstruction gives 3,234 momentary households and the authors' carrying-capacity estimate is also 3,234 households.",
+        "Kohler, Cole and Ciupe, p. 283: for periods 15-18 the authors use the highest actual archaeological population as K because there is abundant evidence that these populations were under considerable stress; the same page documents deer depletion and probable protein limitation at the larger eleventh- to thirteenth-century populations.",
+        "Varien et al., Historical Ecology in the Mesa Verde Region, pp. 280-281: an independent presentation of the archaeological reconstruction reports approximately 19,500 persons, nearly 11 persons/km2 below 2,400 m, in AD 1225-1260."
+      ],
+      "shock_flags": [
+        "population_decline_after_1260",
+        "complete_farmer_departure_in_1280s",
+        "warfare_and_social_push_pull",
+        "cold_and_drought_variability"
+      ],
+      "trade_dependence": "low; the carrying-capacity simulation is a closed landscape using maize, water, fuel, local hunting and within-landscape exchange, while the archaeological population may have participated in limited regional exchange",
+      "food_regime": "dry_farmed_maize_with_turkey_local_game_wild_foods_water_and_fuel_constraints",
+      "boundary_description": "The 1,800 km2 Village Ecodynamics Project phase-I study polygon west of Dolores and Cortez in southwest Colorado, shown in Figure 19.2; it is not Mesa Verde National Park or the entire Four Corners region.",
+      "boundary_source": "Kohler, Cole and Ciupe, Population and Warfare, Figure 19.2, p. 280; Crow Canyon Village Ecodynamics Project phase-I area description",
+      "eu5_selector": {
+        "include": [
+          "location_tag=winimuc"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "source_family": "mesa_verde_village_ecodynamics_archaeology",
+      "source_bundle": "kohler_cole_ciupe_varien_ortman_vep_bundle",
+      "source_family_independence": "independent archaeological survey/demographic reconstruction and resource-constrained agent model; shared VEP data are treated as one source family",
+      "sources": [
+        "https://sites.santafe.edu/~bowles/Population.pdf",
+        "https://rex.libraries.wsu.edu/esploro/outputs/journalArticle/Historical-Ecology-in-the-Mesa-Verde/99900501020001842",
+        "https://crowcanyon.org/projects/the-village-ecodynamics-project/"
+      ],
+      "notes": "This is not promoted to a two-sided target. Varien et al. also report unused potential maize production before final departure, while Kohler et al. identify protein/resource stress and assign actual population as K. A one-sided 19,404-person constraint preserves what both findings establish: this locally fed study area was able to sustain at least that many people under in-period technology. Selecting the containing winimuc EU5 location makes the inequality conservative."
+    },
+    {
+      "anchor_id": "hohokam_lower_salt_1150_1450_capacity_lower_bound",
+      "label": "Hohokam Phoenix Basin / Lower Salt River irrigated communities",
+      "year_start": 1150,
+      "year_end": 1450,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.95,
+      "local_food_central": 0.99,
+      "local_food_high": 1.0,
+      "capacity_low": 53000,
+      "capacity_central": 93000,
+      "capacity_high": 133000,
+      "interval_semantics": "Fish and Fish, Table 9.1 and p. 100, give an explicit supportable-population range of 53,000-133,000 people for 21,000 irrigated hectares in the Phoenix Basin, derived from 2,300-5,800 persons per 1,000 irrigated hectares under a historical Piman analogy. The full published range is preserved, but only its 53,000-person lower edge supervises training because the EU5 selector contains land beyond the canal footprint.",
+      "pressure_evidence": [
+        "Fish and Fish, The Marana Community in Comparative Context, Figure 9.1, pp. 98-100: the Lower Salt River/Phoenix canal communities are mapped separately from the Middle Gila and Tucson systems.",
+        "Fish and Fish, Table 9.1, p. 99: 21,000 irrigated hectares are assigned to 23 Lower Salt River communities, and the published supportable-population range for that acreage is 53,000-133,000 persons.",
+        "Fish and Fish, pp. 99-100: non-irrigated community land supplied wild food, raw materials, fuel and semi-cultivated desert species; the population estimate assumes cultivated local land rather than imported urban food.",
+        "Fish and Fish, p. 100: canal networks reached maximum areal extent in the Classic period and settlement numbers, aggregation and agricultural intensification increased, establishing that this was an intensively exploited local production system rather than an unoccupied potential landscape."
+      ],
+      "shock_flags": [
+        "archaeological_visibility_and_site_boundary_uncertainty",
+        "classic_period_reorganization",
+        "late_fourteenth_century_demographic_decline",
+        "streamflow_variability"
+      ],
+      "trade_dependence": "low for staple calories; high-value ceramics, axes and turquoise circulated, but the support estimate is explicitly based on local irrigated acreage and local wild resources",
+      "food_regime": "canal_irrigated_maize_beans_squash_cotton_and_local_desert_wild_foods",
+      "boundary_description": "The Lower Salt River/Phoenix Basin canal-community system shown in Fish and Fish Figure 9.1, excluding the Middle Gila/Casa Grande and Tucson Basin systems.",
+      "boundary_source": "Fish and Fish, The Marana Community in the Hohokam World, Figure 9.1 and Table 9.1, pp. 98-100",
+      "eu5_selector": {
+        "include": [
+          "location_tag=guwevkabaya|yavpe"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "source_family": "hohokam_lower_salt_irrigation_archaeology",
+      "source_bundle": "fish_fish_nials_gregory_crown_lower_salt_bundle",
+      "source_family_independence": "archaeological canal-acreage reconstruction plus historical Piman subsistence analogy; treated as one independent source family",
+      "sources": [
+        "https://open.uapress.arizona.edu/system/actioncallout/7/f/b/7fbf596c-9988-4365-8019-0d2e1f3fb063/attachment/982edddfd2a3532080f00a9fda367142.pdf",
+        "https://open.uapress.arizona.edu/read/the-marana-community-in-the-hohokam-world/section/b2cb8a4f-1278-42c1-8712-efbe256a8d76"
+      ],
+      "notes": "The estimate is a published carrying-capacity reconstruction rather than a census. It is suitable as a one-sided physical/historical constraint, not as a two-sided global scale anchor. The selected EU5 locations contain the mapped Lower Salt canal corridor; summing their full capacities and requiring at least 53,000 is conservative and avoids treating a uniform area fraction as if it captured concentrated river irrigation."
+    }
+  ]
+}

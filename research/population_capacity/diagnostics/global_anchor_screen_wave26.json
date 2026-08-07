@@ -1,0 +1,52 @@
+{
+  "diagnostic_id": "global_anchor_screen_wave26",
+  "generated_on": "2026-08-04",
+  "purpose": "Record additional globally diverse anchor candidates reviewed after the prior evidence wave, with explicit promotion/rejection reasons and exact missing evidence. This is an append-only research diagnostic, not a training target table.",
+  "method": {
+    "research_window": "1100-1500, with technology compatibility checked against 1337",
+    "forbidden_inputs": ["starting_population", "HYDE population/cropland", "RGO identity", "RGO output modifiers", "trade imports as intrinsic capacity"],
+    "promotion_threshold": "mappable same-boundary aggregate, defensible population interval, independent local-food pressure evidence, resolved shocks/trade/urbanization, and a literature-supported saturation interval",
+    "result": "No candidate in this wave meets all promotion conditions. Rejections are retained so future work has a precise evidence queue rather than silently dropping plausible regions."
+  },
+  "candidate_summary": [
+    {
+      "anchor_id": "catalonia_1290_1329_demography_pressure_screen_wave26",
+      "role": "excluded",
+      "status": "rejected",
+      "why_not_training": ["broad reconstructed population includes urban/market populations", "no rural-only historical boundary", "local-food share unresolved", "no upper saturation interval", "famine and migration shocks overlap"],
+      "next_evidence": "A county/comarca-level rural polygon with enumeration or archaeological interval and independent land-scarcity/real-wage pressure evidence."
+    },
+    {
+      "anchor_id": "mallorca_1301_1329_wheat_deficit_screen_wave26",
+      "role": "excluded",
+      "status": "rejected",
+      "why_not_training": ["morabeti is a taxable-household count", "1329 point estimate has no uncertainty or saturation interval", "Palma/port population is mixed with rural island", "Atlantic wheat imports are documented 1230-1350"],
+      "next_evidence": "Import-adjusted rural population series and an island-wide or comarca-level pressure/saturation interval; otherwise retain as a negative control."
+    },
+    {
+      "anchor_id": "bali_subak_1100_1500_physical_validation_wave26",
+      "role": "validation_only",
+      "status": "validation_only",
+      "why_not_training": ["irrigation institutions are documented but no medieval population interval", "no saturation fraction", "distributed subak catchments have no single mapped aggregate boundary"],
+      "next_evidence": "Dated subak/watershed polygon, 1100-1500 local population or capacity interval, and independent pressure evidence."
+    },
+    {
+      "anchor_id": "sri_lanka_dry_zone_1100_1302_tank_system_validation_wave26",
+      "role": "validation_only",
+      "status": "validation_only",
+      "why_not_training": ["tank infrastructure supports physical feasibility only", "no closed population interval", "abandonment/war/maintenance shocks confound saturation", "no audited EU5 crosswalk"],
+      "next_evidence": "Tank-cascade polygon and a dated population/pressure series that separates equilibrium capacity from political abandonment and urban population."
+    }
+  ],
+  "source_families_added": 4,
+  "training_anchor_groups_added": 0,
+  "validation_cases_added": 2,
+  "rejected_cases_added": 2,
+  "quality_gate": {
+    "new_two_sided_anchor": false,
+    "new_lower_bound_anchor": false,
+    "new_records_are_append_only": true,
+    "missing_evidence_is_explicit": true,
+    "starting_population_or_forbidden_fields_used": false
+  }
+}

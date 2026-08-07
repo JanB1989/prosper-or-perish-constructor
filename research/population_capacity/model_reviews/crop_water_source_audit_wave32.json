@@ -1,0 +1,201 @@
+{
+  "aquacrop_release": {
+    "banana_member": null,
+    "cassava_member": "GUI_AC7.3/DATA/cassava.CRO",
+    "crop_members": [
+      "GUI_AC7.3/DATA/AlfalfaGDD.CRO",
+      "GUI_AC7.3/DATA/Barley.CRO",
+      "GUI_AC7.3/DATA/BarleyGDD.CRO",
+      "GUI_AC7.3/DATA/Cotton.CRO",
+      "GUI_AC7.3/DATA/CottonGDD.CRO",
+      "GUI_AC7.3/DATA/DryBean.CRO",
+      "GUI_AC7.3/DATA/DryBeanGDD.CRO",
+      "GUI_AC7.3/DATA/Maize.CRO",
+      "GUI_AC7.3/DATA/MaizeGDD.CRO",
+      "GUI_AC7.3/DATA/PaddyRice.CRO",
+      "GUI_AC7.3/DATA/PaddyRiceGDD.CRO",
+      "GUI_AC7.3/DATA/Potato.CRO",
+      "GUI_AC7.3/DATA/PotatoGDD.CRO",
+      "GUI_AC7.3/DATA/Quinoa.CRO",
+      "GUI_AC7.3/DATA/Sorghum.CRO",
+      "GUI_AC7.3/DATA/SorghumGDD.CRO",
+      "GUI_AC7.3/DATA/Soybean.CRO",
+      "GUI_AC7.3/DATA/SoybeanGDD.CRO",
+      "GUI_AC7.3/DATA/SugarBeet.CRO",
+      "GUI_AC7.3/DATA/SugarBeetGDD.CRO",
+      "GUI_AC7.3/DATA/SugarCane.CRO",
+      "GUI_AC7.3/DATA/Sunflower.CRO",
+      "GUI_AC7.3/DATA/SunflowerGDD.CRO",
+      "GUI_AC7.3/DATA/Tef.CRO",
+      "GUI_AC7.3/DATA/Tomato.CRO",
+      "GUI_AC7.3/DATA/TomatoGDD.CRO",
+      "GUI_AC7.3/DATA/Wheat.CRO",
+      "GUI_AC7.3/DATA/WheatGDD.CRO",
+      "GUI_AC7.3/DATA/cassava.CRO",
+      "GUI_AC7.3/SIMUL/DEFAULT.CRO"
+    ],
+    "exists": true,
+    "member_count": 189,
+    "path": "/home/jan/development/ProsperOrPerishConstructor/artifacts/data/population_capacity/physical_validation/interannual_sources/wave32/aquacrop/GUI_AC7.3.zip",
+    "sha256": "e0b3dd2eae730b088588fdaf172d0ae0af6318b7d309a7d1be442f647bd2c5ce",
+    "taro_member": null,
+    "url": "https://github.com/KUL-RSDA/AquaCrop/releases/download/v7.3_typofix/GUI_AC7.3.zip"
+  },
+  "audit_sha256": "5ac68f930fd67419ad99db77765d46db76b26c5ffc2eac4be4ecafcb619fed87",
+  "banana_thesis": {
+    "exists": true,
+    "independent_validation": false,
+    "modern_calibration": true,
+    "parameter_rows_detected": 8,
+    "parameter_tables": [
+      "Table 7-1",
+      "Table 7-2"
+    ],
+    "path": "/home/jan/development/ProsperOrPerishConstructor/artifacts/data/population_capacity/physical_validation/interannual_sources/wave32/aquacrop/stevens_banana_thesis.pdf",
+    "public_parameter_tables": true,
+    "sample_geography": "Arusha, Tanzania",
+    "sha256": "f562b7af2aa57a180a15ea161dc34e08d6b0d73c23cb0d2c450a5a7edbb78a87",
+    "url": "https://lirias.kuleuven.be/retrieve/942d0be9-5e2c-4324-94fa-8b46f8763e53",
+    "young_two_cycle_plantation": true
+  },
+  "cassava_file": {
+    "calendar_days": 360,
+    "crop_type": "root/tuber",
+    "exists": true,
+    "matches_zip_member_name": true,
+    "path": "/home/jan/development/ProsperOrPerishConstructor/artifacts/data/population_capacity/physical_validation/interannual_sources/wave32/aquacrop/cassava.CRO",
+    "semantics_valid": true,
+    "sha256": "70b9086407e4b1e1de71300f9edcfa72bb0daa62d69a85e3fe5e9a408230600f",
+    "water_response_tokens": [
+      "stress",
+      "transpiration",
+      "water"
+    ]
+  },
+  "exact_1337_semantics_required_for_target": true,
+  "issues": [
+    "banana:required_label_not_closed",
+    "banana_modern_two_cycle_parameter_source_requires_validation",
+    "taro:required_label_not_closed",
+    "taro_parameter_file_not_public"
+  ],
+  "notes": [
+    "Modern crop files and static water guidelines are evidence for bounded physics, not historical population labels.",
+    "The audit intentionally fails closed until public, reproducible taro and dynamic banana parameter sources are acquired or implemented from cited primary equations."
+  ],
+  "physical_fallback_policy": "same_geography_source_backed_simulation_only",
+  "required_crops": [
+    "banana",
+    "cassava",
+    "taro"
+  ],
+  "required_label_rows": 3,
+  "resolved_required_label_rows": 1,
+  "schema_version": "population-capacity-crop-water-source-audit-wave32-v1",
+  "source_registry": [
+    {
+      "absolute_1337_yield_supported": false,
+      "crop": "cassava",
+      "crop_file_sha256": "70b9086407e4b1e1de71300f9edcfa72bb0daa62d69a85e3fe5e9a408230600f",
+      "engine": "AquaCrop",
+      "exact_1337_semantics": false,
+      "label_state": "physical_fallback",
+      "notes": [
+        "AquaCrop v7.3 contains an official cassava.CRO file with 360-day root/tuber phenology.",
+        "The file is a modern calibration and does not observe 1337 yields.",
+        "Use only for same-location mechanistic water response, never as a target or regional fill."
+      ],
+      "physical_fallback_allowed": true,
+      "sample_geography": "Colombia, Nigeria, Togo (modern calibration scope)",
+      "semantic_mismatch_reason": "modern_calibration_scope_no_1337_climate_or_management",
+      "source_role": "same_geography_physical_fallback",
+      "source_sha256": "e0b3dd2eae730b088588fdaf172d0ae0af6318b7d309a7d1be442f647bd2c5ce",
+      "source_status": "official_aquacrop_crop_file",
+      "source_url": "https://github.com/KUL-RSDA/AquaCrop/releases/download/v7.3_typofix/GUI_AC7.3.zip",
+      "training_target_allowed": false,
+      "uncertainty_widening_required": true
+    },
+    {
+      "absolute_1337_yield_supported": false,
+      "crop": "taro",
+      "engine": "AquaCrop",
+      "exact_1337_semantics": false,
+      "fallback_runtime_required": true,
+      "label_state": "missing",
+      "notes": [
+        "Mabhaudhi et al. (2014) calibrated and validated AquaCrop for a taro landrace.",
+        "The official WRC report says the crop parameter file was used, but the file is stored on a UKZN server and is not attached to the public report.",
+        "WRC Report 3124/1/24 publicly reproduces Table 16-6 (taro crop parameters) and is the strongest source-backed fallback candidate.",
+        "The table still requires a versioned runtime reconstruction and unit/semantic tests; it is not silently treated as a complete .CRO file."
+      ],
+      "parameter_table_sha256": "90ce734b34410046fda9c894131db94b9360d842ea84c0b0737b3bdbf1ceb492",
+      "parameter_table_url": "https://www.wrc.org.za/wp-content/uploads/mdocs/31241.pdf",
+      "physical_fallback_allowed": false,
+      "physical_fallback_candidate": true,
+      "sample_geography": "Pretoria/Pietermaritzburg, South Africa (modern trials)",
+      "secondary_source_url": "https://wrcwebsite.azurewebsites.net/wp-content/uploads/mdocs/2717%20Volume%202_web.pdf",
+      "semantic_mismatch_reason": "modern_South_Africa_trials_and_unpublished_versioned_crop_file",
+      "source_role": "validation_only_model_parameterisation",
+      "source_sha256": "c0aab9566aa2bbe59f84b41bc0ac8409a0b7e7914e9f5174fe076988ecc73928",
+      "source_status": "public_parameter_table_parameter_file_not_public",
+      "source_url": "https://doi.org/10.1016/j.agrformet.2014.03.013",
+      "training_target_allowed": false,
+      "uncertainty_widening_required": true
+    },
+    {
+      "absolute_1337_yield_supported": false,
+      "annual_water_requirement_mm": {
+        "high": 2200.0,
+        "low": 1200.0
+      },
+      "crop": "banana",
+      "depletion_fraction_p": 0.35,
+      "engine": "FAO crop-water guideline",
+      "exact_1337_semantics": false,
+      "fallback_runtime_required": true,
+      "label_state": "missing",
+      "notes": [
+        "FAO documents banana ET and seasonal water requirements, but banana is perennial/long-duration.",
+        "KU Leuven thesis Stevens (2021) publicly reproduces C1/C2 AquaCrop parameter tables and field fit metrics for Arusha Tanzania.",
+        "The thesis covers young two-cycle plantations, modern calibration, and no independent validation; it is a fallback candidate, not a 1337 target."
+      ],
+      "parameter_source_sha256": "f562b7af2aa57a180a15ea161dc34e08d6b0d73c23cb0d2c450a5a7edbb78a87",
+      "physical_fallback_allowed": false,
+      "physical_fallback_candidate": true,
+      "root_depth_m": {
+        "high": 0.8,
+        "low": 0.5
+      },
+      "secondary_source_url": "https://www.fao.org/4/s2022e/s2022e02.htm",
+      "semantic_mismatch_reason": "perennial_guideline_not_dynamic_annual_crop_simulation",
+      "source_role": "bounded_guideline_validation",
+      "source_status": "public_aquacrop_parameter_tables_modern_two_cycle",
+      "source_url": "https://www.fao.org/land-water/databases-and-software/crop-information/banana/",
+      "training_target_allowed": false,
+      "uncertainty_widening_required": true,
+      "yield_response_factor_ky": {
+        "high": 1.35,
+        "low": 1.2
+      }
+    }
+  ],
+  "starting_population_target_allowed": false,
+  "state": "blocked",
+  "statistical_imputation_allowed": false,
+  "taro_report": {
+    "exists": true,
+    "parameter_file_status": "not_public_in_report",
+    "parameter_table_id": "Table 16-6",
+    "parameter_table_path": "/home/jan/development/ProsperOrPerishConstructor/artifacts/data/population_capacity/physical_validation/interannual_sources/wave32/aquacrop/wrc_31241.pdf",
+    "parameter_table_rows_detected": 12,
+    "parameter_table_sha256": "90ce734b34410046fda9c894131db94b9360d842ea84c0b0737b3bdbf1ceb492",
+    "parameter_table_url": "https://www.wrc.org.za/wp-content/uploads/mdocs/31241.pdf",
+    "path": "/home/jan/development/ProsperOrPerishConstructor/artifacts/data/population_capacity/physical_validation/interannual_sources/wave32/aquacrop/wrc_taro.pdf",
+    "public_parameter_file": false,
+    "public_parameter_table": true,
+    "sha256": "c0aab9566aa2bbe59f84b41bc0ac8409a0b7e7914e9f5174fe076988ecc73928",
+    "url": "https://wrcwebsite.azurewebsites.net/wp-content/uploads/mdocs/2717%20Volume%202_web.pdf"
+  },
+  "training_target_rows": 0,
+  "unresolved_required_label_rows": 2
+}

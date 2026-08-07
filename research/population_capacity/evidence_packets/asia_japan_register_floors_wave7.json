@@ -1,0 +1,132 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Asia",
+  "region": "japan",
+  "target_year": 1337,
+  "packet_id": "asia_japan_register_floors_wave7",
+  "scope": "Two conservative one-sided local-food floors from Kamakura Great Land Registers, with historical-province geometry checks. These records are not saturation or global-scale anchors.",
+  "promotion_audit": {
+    "promoted_lower_bound_ids": [
+      "japan_buzen_1280_local_food_floor_wave7",
+      "japan_noto_1280_local_food_floor_wave7"
+    ],
+    "decision": "Promote only the Buzen and Noto rice-register values as one-sided floors. Farris's Table 1.3 gives an explicit rice-acreage conversion and a separate +40% dry-field/non-rice sensitivity. The lower endpoint is retained as the minimum locally supported population; the upper method sensitivity is not a capacity interval. The historical-province geometry was checked against the Harvard CHGIS polygon and EU5 calibrated location centroids/areas. Noto is retained despite Farris's warning that its register may omit paddies because omission can only make the observed floor conservative. No record is used as a two-sided target or scale anchor.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "japan_buzen_1280_local_food_floor_wave7",
+      "label": "Buzen province, Kamakura Great Land Register local-food population floor",
+      "year_start": 1280,
+      "year_end": 1280,
+      "population_low": 85238,
+      "population_central": 85238,
+      "population_high": 119333,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.75,
+      "local_food_central": 0.9,
+      "local_food_high": 1.0,
+      "capacity_low": 85238,
+      "capacity_central": 85238,
+      "capacity_high": 85238,
+      "interval_semantics": "Farris (2006), Table 1.3, p. 32 and note c, converts 13,300 chō of registered rice fields using 0.181 chō per adult, adds 16% for children, and obtains 85,238 people. The bracketed 119,333 value is a separate +40% adjustment for non-rice rural residents; it is a method sensitivity, not an uncertainty or capacity upper endpoint. Only 85,238 enters the one-sided likelihood.",
+      "pressure_evidence": [
+        "Farris (2006), pp. 22-24 and Table 1.1 (p. 23), identifies the Great Land Registers as the only defensible late-thirteenth-century province-scale basis: Buzen's 1190-1199 register is marked partial but records 13,221/13,300 chō of arable rice fields.",
+        "Farris (2006), pp. 24-26 and Table 1.2 (p. 25), compares Buzen register field totals with independent estate surveys; most listed properties match or exceed the survey measurement, providing local corroboration of the cultivated-food base.",
+        "Farris (2006), pp. 29-31 and pp. 37-38, identifies food supply as the principal demographic constraint in late Heian/Kamakura Japan and documents the Yōwa, Kangi and Shōga famines, grain shortages and migration under food stress. This is pressure evidence, not a saturation fraction.",
+        "The register-to-population conversion is explicitly based on local rice acreage plus a documented dry-field/non-rice adjustment, so the floor is a locally supplied agricultural population rather than a city or imported-food total."
+      ],
+      "shock_flags": [
+        "The register date is 1190-1199 and the population conversion is labelled circa 1280, not a single census year",
+        "Buzen was in the Kyushu military and provisioning zone during the 1274 and 1281 Mongol invasions",
+        "The register is marked partial; the omitted non-rice population is represented only by the bracketed sensitivity",
+        "No independent saturation fraction exists; this record is one-sided only"
+      ],
+      "trade_dependence": "low_to_mixed",
+      "food_regime": "locally cultivated wet rice and dry fields, pulses, livestock, river/coastal fisheries, with regional exchange not quantified",
+      "boundary_description": "Medieval Buzen province (Buzen no kuni), represented by the historical province polygon in the Harvard CHGIS Tokugawa Japan GIS 2004 dataset. The province name and broad outline are stable across the medieval and Tokugawa province maps; the 1828 polygon is used as a documented geographic approximation, not as an invented 1280 cadastral boundary.",
+      "boundary_source": "Harvard CHGIS Japan Historical GIS, Tokugawa Japan GIS 2004, jp_toku_kuni_pgn.shp (Buzen no kuni polygon), https://doi.org/10.7910/DVN/2CVTR0; the site links the medieval-province reference map to Hall, Nagahara & Yamamura (1981): https://chgis.fas.harvard.edu/data/japan/",
+      "eu5_selector": {
+        "include": [
+          "province=buzen_province"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.96,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "vetted",
+      "role": "lower_bound",
+      "source_family": "farris_2006_great_land_registers",
+      "source_bundle": "farris_table_1_1_1_2_1_3_chgis_buzen_geometry",
+      "source_family_independence": "The population floor and famine interpretation are synthesized by Farris from Kamakura registers and chronicles; estate-survey corroboration is separately cited in Farris Table 1.2 but remains one documentary source family. This is deliberately retained as one lower-bound group, not counted as an independent scale family.",
+      "sources": [
+        "Farris, Japan's Medieval Population (2006), pp. 22-26, Tables 1.1-1.2: https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=23",
+        "Farris, Japan's Medieval Population (2006), pp. 29-32, Table 1.3 and note c: https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "Harvard CHGIS Japan Tokugawa GIS 2004 dataset (jp_toku_kuni_pgn.shp), DOI 10.7910/DVN/2CVTR0",
+        "Harvard CHGIS Japan data page, links to medieval and premodern province maps: https://chgis.fas.harvard.edu/data/japan/"
+      ],
+      "notes": "The 0.75-0.90-1.00 local-food interval is deliberately broad metadata: Farris's conversion is tied to local rice acreage and a local dry-field/non-rice adjustment, while staple imports are not quantified. It is not used to turn the observed population into a two-sided capacity target. EU5 Buzen contains three locations (mike, usa and nakatsu); all calibrated centroids fall inside the CHGIS Buzen polygon, and the EU5 union area is 2,195.37 km2 versus 2,103.85 km2 for the historical polygon (area ratio 1.0435). The 0.96 declared coverage is a conservative centroid/area contract, not a claim of sub-location polygon precision."
+    },
+    {
+      "anchor_id": "japan_noto_1280_local_food_floor_wave7",
+      "label": "Noto province, Kamakura Great Land Register local-food population floor",
+      "year_start": 1280,
+      "year_end": 1280,
+      "population_low": 15734,
+      "population_central": 15734,
+      "population_high": 22028,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.75,
+      "local_food_central": 0.9,
+      "local_food_high": 1.0,
+      "capacity_low": 15734,
+      "capacity_central": 15734,
+      "capacity_high": 15734,
+      "interval_semantics": "Farris (2006), Table 1.3, p. 32 and note c, converts 2,455 chō in Noto's complete 1221 register to 15,734 people using the rice-only method. The bracketed 22,028 value is the +40% non-rice sensitivity, not an uncertainty or capacity upper endpoint. Only the rice-based 15,734 is retained as a floor.",
+      "pressure_evidence": [
+        "Farris (2006), pp. 22-24 and Table 1.1 (p. 23), marks Noto's 1221 Great Land Register complete and records 8,479/2,455 chō of arable/registered rice area.",
+        "Farris (2006), pp. 29-31 and Table 1.3, reports a long-term Noto population decline from 52,291 in 1150 to 15,734 in the circa-1280 rice-based conversion and identifies Japan Sea peripheral conditions and demographic collapse. The decline is not treated as a saturation fraction, but it makes the recorded locally supported population a conservative lower floor.",
+        "Farris (2006), pp. 24-26, notes that register values were generally corroborated by estate surveys and that omitted/abandoned fields could make a rice-only reconstruction underestimate total residents. That omission risk cannot invalidate a one-sided minimum.",
+        "The population estimate is derived from local rice acreage; dry fields, coastal fisheries and forest foods are acknowledged but not converted into the lower-bound number."
+      ],
+      "shock_flags": [
+        "The complete register dates to 1221 and the conversion is labelled circa 1280",
+        "Farris explicitly warns that Noto may have omitted rice land and records long-term demographic decline; this is why the record is a floor only",
+        "Japan Sea climate and peripheral trade conditions are not resolved as an equilibrium saturation label",
+        "No independent saturation fraction exists; this record is one-sided only"
+      ],
+      "trade_dependence": "low_to_mixed",
+      "food_regime": "locally cultivated wet rice and dry fields, coastal fisheries, forest foods and limited Japan Sea exchange",
+      "boundary_description": "Medieval Noto province (Noto no kuni), represented by the historical province polygon in the Harvard CHGIS Tokugawa Japan GIS 2004 dataset. The 1828 polygon is a documented geographic approximation to the stable province name/outline, not an invented 1280 cadastral boundary.",
+      "boundary_source": "Harvard CHGIS Japan Historical GIS, Tokugawa Japan GIS 2004, jp_toku_kuni_pgn.shp (Noto no kuni polygon), https://doi.org/10.7910/DVN/2CVTR0; medieval-province references are linked at https://chgis.fas.harvard.edu/data/japan/",
+      "eu5_selector": {
+        "include": [
+          "province=noto_japan_province"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.95,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "vetted",
+      "role": "lower_bound",
+      "source_family": "farris_2006_great_land_registers",
+      "source_bundle": "farris_table_1_1_1_3_chgis_noto_geometry",
+      "source_family_independence": "The population floor and demographic-pressure interpretation come from Farris's synthesis of the Noto register and historical surveys. They remain one documentary source family; the record cannot establish a global scale or two-sided capacity interval.",
+      "sources": [
+        "Farris, Japan's Medieval Population (2006), pp. 22-26, Tables 1.1-1.2: https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=23",
+        "Farris, Japan's Medieval Population (2006), pp. 29-33, Table 1.3 and note c: https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "Harvard CHGIS Japan Tokugawa GIS 2004 dataset (jp_toku_kuni_pgn.shp), DOI 10.7910/DVN/2CVTR0",
+        "Harvard CHGIS Japan data page, links to medieval and premodern province maps: https://chgis.fas.harvard.edu/data/japan/"
+      ],
+      "notes": "The broad local-food interval is metadata only: the lower population value is tied to local registered rice acreage, but the share of calories obtained through regional exchange is not measured. EU5 Noto contains three locations (noto_jap, suzu and fugeshi); all calibrated centroids fall inside the CHGIS Noto polygon, and the EU5 union area is 2,171.84 km2 versus 2,063.96 km2 for the historical polygon (area ratio 1.0523). The 0.95 declared coverage is deliberately conservative. Farris's warning about omitted paddies makes the floor conservative rather than a reason to invent an upper capacity."
+    }
+  ]
+}

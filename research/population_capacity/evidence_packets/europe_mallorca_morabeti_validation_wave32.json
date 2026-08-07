@@ -1,0 +1,82 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "europe_mallorca_morabeti_validation_wave32",
+  "region": "europe_mallorca_morabeti_validation_wave32",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "scope": "Christian Mallorca, 1301-1420, with periodic morabetí household-tax records, tithes and documented grain-import dependence.",
+  "promotion_audit": {
+    "decision": "Retain as a hostile-island validation/rejection case; do not promote as a training anchor.",
+    "reviewed_on": "2026-08-04",
+    "review_method": "Verified the periodic morabetí tax semantics, the 1380-1420 tithe series, the 1230-1350 wheat-import study and the exact EU5 Mallorca location selector.",
+    "reason_not_promoted": "The morabetí is a taxable-household count, not a complete enumeration; it excludes households below the wealth threshold and requires an uncertain household multiplier. Mallorca had chronic wheat deficits and documented Atlantic/Maghreb imports, so observed households cannot label intrinsic local capacity. The 1374-1376 famine and post-conquest institutional change further prevent a clean equilibrium interval.",
+    "population_semantics": "Taxable heads of household/fires only; no population interval is emitted.",
+    "capacity_semantics": "No capacity endpoint is inferred. The case tests whether the intrinsic model excludes imported grain and flags the island's local-food shortfall."
+  },
+  "records": [
+    {
+      "anchor_id": "mallorca_1301_1420_morabeti_validation_wave32",
+      "label": "Mallorca 1301-1420: morabetí, tithes and chronic wheat deficit",
+      "year_start": 1301,
+      "year_end": 1420,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "No population or capacity interval is emitted. The morabetí counts taxable heads of family with goods above a threshold and is not a complete census; the tithe series identifies crops and livestock but not a local-food saturation fraction.",
+      "pressure_evidence": [
+        "The morabetí, instituted in 1266 and revised in 1301, was collected periodically from heads of household and can reconstruct taxable fires but not untaxed or poor households without an unsupported multiplier.",
+        "The 1380-1420 royal and capitular tithe series records spatial specialization in cereals, wine, oil, horticulture and livestock, providing an agricultural-boundary and local-food process check.",
+        "The 1230-1350 grain-trade study documents a secular wheat deficit after Christian conquest and imports from Barbary and Atlantic ports; municipal grain supply was a core governance function.",
+        "The 1374-1376 famine and later shortages show vulnerability, but shock mortality and imported grain prevent treating the observed population as a Malthusian equilibrium."
+      ],
+      "shock_flags": [
+        "Christian conquest and post-conquest colonization",
+        "1374-1376 major famine",
+        "recurrent grain-import and maritime blockade risk",
+        "tax-threshold under-registration",
+        "Mallorca EU5 selector excludes Menorca and Ibiza but remains an approximate historical administrative crosswalk"
+      ],
+      "trade_dependence": "high_wheat_import_dependence",
+      "food_regime": "Mediterranean cereals, vines, olives, horticulture, livestock and fisheries with chronic imported wheat",
+      "boundary_description": "Island of Mallorca, represented by EU5 locations manacor, palma and pollensa in balearics_area; Menorca and Ibiza are excluded.",
+      "boundary_source": "https://doi.org/10.1017/S0212610900010004",
+      "eu5_selector": {
+        "include": ["location_tag=manacor|palma|pollensa"],
+        "exclude": ["location_tag=ibiza|ciudadela_de_menorca"]
+      },
+      "coverage_fraction": 0.99,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "validation_only",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "mallorca_morabeti_tithe_grain_trade_1301_1420",
+      "source_bundle": "mallorca_fiscal_agrarian_and_wheat_import_bundle",
+      "source_family_independence": "Independent fiscal, tithe and grain-trade studies. No EU5 starting population, HYDE, RGO or trade-import field is used; trade dependence is evidence for exclusion, not a predictor.",
+      "sources": [
+        "https://doi.org/10.3989/aem.2008.v38.i1.64",
+        "https://revistas.usal.es/uno/index.php/Studia_Historica/article/view/4609",
+        "https://doi.org/10.1344/Svmma2014.3.17",
+        "https://revistes.ub.edu/index.php/SVMMA/article/download/7/13304/17842",
+        "https://diari.uib.es/w/el-delme-medieval-revela-la-especialitzacio-agraria-en-el-regne-de-mallorca",
+        "https://doi.org/10.1017/S0212610900010004"
+      ],
+      "citation_details": [
+        "Jover and Soto, Revista de Historia Económica 20 (2002), DOI 10.1017/S0212610900010004: socioenvironmental and institutional organization of Mallorca 1230-1350.",
+        "Mallorca fiscal-history study, Anuario de Estudios Medievales 38 (2008), DOI 10.3989/aem.2008.v38.i1.64: morabetí tax and household-fire semantics.",
+        "Ortega Villoslada, SVMMA 3 (2014), DOI 10.1344/Svmma2014.3.17: chronic wheat deficit and Atlantic/Maghreb import routes, 1230-1350.",
+        "Dols Martorell tithe research (UIB): royal/capitular tithes and agricultural specialization in Mallorca and Menorca, 1380-1420."
+      ],
+      "notes": "Use as a hostile-island validation case. The appropriate model response is to retain only physically local food potential and not fit the tax count or imported urban grain into intrinsic capacity."
+    }
+  ]
+}

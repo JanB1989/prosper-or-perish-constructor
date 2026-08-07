@@ -673,6 +673,7 @@ def enrich_locations_with_game_start_data(
             pl.col("location_tag")
             .map_elements(lambda value: ranks.get(str(value), "rural_settlement"), return_dtype=pl.String)
             .alias("location_rank"),
+            pl.lit(0.0).alias("prosperity"),
             pl.col("location_tag").cast(pl.String).is_in(sorted(market_set)).alias("market_center"),
             pl.col("location_tag").cast(pl.String).is_in(sorted(capital_set)).alias("capital"),
             pl.col("location_tag").cast(pl.String).is_in(sorted(port_set)).alias("is_port"),

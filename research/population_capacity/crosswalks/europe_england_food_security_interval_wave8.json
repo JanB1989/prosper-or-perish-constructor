@@ -1,0 +1,39 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "england",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_england_food_security_interval_wave8",
+  "geometry_source": "artifacts/data/population_capacity/location_geometry_calibrated.parquet; same national selector and exclusions as the vetted England 1290-1315 scale anchor",
+  "policy": {
+    "append_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "same_boundary_records_are_grouped_for_holdout": true,
+    "exact_selector_reuse_is_allowed_when_the_historical_boundary_is_identical": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "england_1290_food_security_capacity_interval_wave8",
+      "historical_boundary": "England within the Great Britain reconstruction, excluding Wales and all Scottish areas",
+      "eu5_selector": {
+        "include": [
+          "region=great_britain_region"
+        ],
+        "exclude": [
+          "area=hebrides_area|scottish_highlands_area|scottish_lowlands_area|wales_area"
+        ]
+      },
+      "matched_location_count": 149,
+      "selected_location_count": 149,
+      "coverage_fraction": 1.0,
+      "selector_coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "candidate_role": "interval_anchor",
+      "resolution_method": "Reused the audited national England selector from the existing england_1290_1315 scale anchor because both records explicitly refer to the same England boundary. No location-level population or starting-population field is used in the crosswalk.",
+      "notes": "This is not an independent geographic group. Source-family and geographic-family holdouts must keep this record with the existing England scale anchor. The capacity interval comes from independent food-security/model literature, not from the EU5 starting population map."
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "asia_japan_register_revalidation_wave29",
+  "region": "asia_japan_register_revalidation_wave29",
+  "super_region": "Asia",
+  "target_year": 1337,
+  "scope": "Append-only revalidation of the two remaining Farris Great Land Register provinces that have not yet been admitted to the EU5 lower-bound set. Awaji is now mappable through the explicit EU5 location tag; Wakasa remains a useful documentary floor but has no verified EU5 province selector.",
+  "promotion_audit": {
+    "decision": "Promote Awaji as a conservative one-sided local-food lower bound. Retain Wakasa as validation-only because the EU5 geometry inventory has no distinct Wakasa selector. Neither record is a two-sided capacity anchor or an independent scale family.",
+    "reviewed_on": "2026-08-04",
+    "review_method": "Re-read Farris (2006) Table 1.3 and surrounding methodology, including the register dates, rice-acreage conversion, omitted non-rice sensitivity and famine/shortage discussion. Checked current EU5 geometry tags rather than assuming the older review's selector inventory.",
+    "reason_awaji_is_lower_bound_only": "Farris's unbracketed 1280 value is a rice-supported minimum derived from registered acreage. The bracketed value adds an assumed 40 percent non-rice population and is not an uncertainty interval. No saturation fraction or upper endpoint is inferred.",
+    "required_followup": [
+      "Keep Awaji grouped with the other Farris provinces in source-family holdouts; it is not independent evidence for global scale.",
+      "Add a historically matched Wakasa EU5 province or location polygon before using the Wakasa floor quantitatively.",
+      "Do not promote any Great Land Register value to a two-sided target without non-rice, fisheries, trade and upper-pressure evidence."
+    ]
+  },
+  "records": [
+    {
+      "anchor_id": "japan_awaji_1280_local_food_floor_revalidation_wave29",
+      "label": "Awaji province, Kamakura Great Land Register local-food population floor",
+      "year_start": 1223,
+      "year_end": 1280,
+      "population_low": 14631,
+      "population_central": 14631,
+      "population_high": 14631,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.75,
+      "local_food_central": 0.90,
+      "local_food_high": 1.0,
+      "capacity_low": 14631,
+      "capacity_central": 14631,
+      "capacity_high": 14631,
+      "interval_semantics": "Farris (2006) Table 1.3 gives an unbracketed 14,631-person 1280 value from Awaji's registered rice acreage using 0.181 chō per adult and a 16 percent child allowance. This is a conservative local rice-supported floor, not a complete population estimate or an intrinsic capacity ceiling. The bracketed 20,483 value assumes an additional 40 percent non-rice population and is excluded from the label.",
+      "pressure_evidence": [
+        "Farris (2006), Table 1.3 and pp. 22-26, documents Awaji's Great Land Register and the rice-acreage-to-person conversion used for the 1280 estimate.",
+        "Farris (2006), pp. 29-32, frames late Kamakura demographic constraints through food supply, grain shortages and recurrent famine; the lower endpoint therefore represents food that registered local rice land could support, not a comfortable surplus.",
+        "The 1287 Awaji estate complaint records excessive demands on laborers and packhorses and seizure of wheat harvests and paddy/dry fields, a local pressure and extraction signal independent of the EU5 starting population.",
+        "Awaji is a bounded island province with wet rice, dry fields, fisheries and forest foods; omitted non-rice production is intentionally not filled into the floor."
+      ],
+      "shock_flags": [
+        "Great Land Register is dated 1223; Farris labels the converted comparison year circa 1280",
+        "partial historical register and omitted non-rice fields",
+        "1287 estate extraction and farmer flight are pressure evidence, not a capacity endpoint",
+        "no independent saturation fraction or upper bound"
+      ],
+      "trade_dependence": "low_to_mixed; island rice and dry-field production with coastal exchange, but imports are not counted in the floor",
+      "food_regime": "wet rice, dry fields, pulses, livestock, forest foods and Inland Sea fisheries",
+      "boundary_description": "Medieval Awaji province (Awaji no kuni), represented by the current EU5 location tag awaji; the historical province is bounded but the selector is a geometry crosswalk, not a claim that all medieval cadastral edges are exact.",
+      "boundary_source": "Harvard CHGIS Japan Historical GIS, Tokugawa Japan GIS 2004, jp_toku_kuni_pgn.shp, DOI 10.7910/DVN/2CVTR0",
+      "eu5_selector": {"include": ["location_tag=awaji"], "exclude": []},
+      "coverage_fraction": 0.95,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "vetted",
+      "role": "lower_bound",
+      "training_eligible": true,
+      "validation_test": "one_sided_lower_bound",
+      "source_family": "farris_2006_great_land_registers",
+      "source_bundle": "farris_table_1_1_1_3_chgis_awaji_geometry_revalidation_wave29",
+      "source_family_independence": "Same Farris Great Land Register source family as the existing Japan province floors; Awaji expands mapped coverage but is not an independent scale replication.",
+      "sources": [
+        "https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=23",
+        "https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=34",
+        "https://doi.org/10.7910/DVN/2CVTR0",
+        "https://chgis.fas.harvard.edu/data/japan/"
+      ],
+      "citation_details": [
+        "Farris, Japan's Medieval Population (2006), Table 1.3, printed pp. 22-24 / PDF p. 34: Awaji 1280 rice-based value 14,631; bracketed non-rice sensitivity 20,483 is not used.",
+        "Farris (2006), Table 1.1, printed p. 14 / PDF p. 24: Awaji Great Land Register dated 1223, marked complete.",
+        "Farris (2006), pp. 29-32 / PDF pp. 39-42: rice acreage conversion, food supply, grain shortages and famine constraints.",
+        "Farris (2006), pp. 118-119 / PDF pp. 128-129, and note 57: 1287 Awaji estate abuse, wheat/paddy seizure and farmer flight."
+      ],
+      "notes": "The current EU5 data contain an explicit awaji location tag, resolving the older review's mapping blocker. The floor remains conservative and source-family grouped; it cannot set global scale."
+    },
+    {
+      "anchor_id": "japan_wakasa_1280_local_food_floor_revalidation_wave29",
+      "label": "Wakasa province, Kamakura Great Land Register documentary floor",
+      "year_start": 1265,
+      "year_end": 1280,
+      "population_low": 14215,
+      "population_central": 14215,
+      "population_high": 14215,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.75,
+      "local_food_central": 0.90,
+      "local_food_high": 1.0,
+      "capacity_low": 14215,
+      "capacity_central": 14215,
+      "capacity_high": 14215,
+      "interval_semantics": "Farris (2006) Table 1.3 gives a rice-based 14,215-person 1280 value from Wakasa's 1265 register. It is retained as a documentary local-food floor only; the bracketed 19,901 non-rice sensitivity, any saturation fraction and any capacity ceiling are excluded.",
+      "pressure_evidence": [
+        "Farris (2006), Table 1.1, records the 1265 Wakasa Great Land Register and its 2,218 chō rice acreage; Table 1.3 applies the documented rice conversion to 14,215 people.",
+        "Farris (2006), pp. 14-17, compares the Wakasa register to Tara Estate surveys in 1254 and 1256, supporting the physical reality of the registered local paddy base.",
+        "The 1287 Tara Estate complaint records a land steward taking rice and dry-field crops and farmers absconding, showing extraction and food pressure without claiming saturation.",
+        "The Japan Sea coastal food system included dry fields, fisheries and forest foods omitted from the rice-only floor rather than statistically filled."
+      ],
+      "shock_flags": [
+        "1265 register is converted to the circa-1280 comparison year",
+        "EU5 has no distinct verified Wakasa province selector",
+        "partial non-rice coverage and no saturation fraction",
+        "1287 estate abuse and farmer flight are local pressure evidence"
+      ],
+      "trade_dependence": "low_to_mixed; local rice and coastal foods with regional exchange, but imports are not counted",
+      "food_regime": "wet rice, dry fields, pulses, livestock, forest foods and Japan Sea fisheries",
+      "boundary_description": "Medieval Wakasa province (Wakasa no kuni); the historical boundary is documented, but no distinct EU5 wakasa location/province selector is currently verified.",
+      "boundary_source": "Harvard CHGIS Japan Historical GIS, Tokugawa Japan GIS 2004, jp_toku_kuni_pgn.shp, DOI 10.7910/DVN/2CVTR0",
+      "eu5_selector": {"include": ["location_tag=__unmapped_wakasa_revalidation_wave29__"], "exclude": []},
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "high_for_history_low_for_eu5",
+      "status": "validation_only",
+      "role": "validation_only",
+      "training_eligible": false,
+      "validation_test": "unmapped_documentary_lower_bound",
+      "source_family": "farris_2006_great_land_registers",
+      "source_bundle": "farris_table_1_1_1_3_chgis_wakasa_geometry_revalidation_wave29",
+      "source_family_independence": "Same Farris Great Land Register source family as all Japan province floors; retained to prevent the known 14,215 value from being silently lost while its EU5 mapping is unresolved.",
+      "sources": [
+        "https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=23",
+        "https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=34",
+        "https://doi.org/10.7910/DVN/2CVTR0",
+        "https://chgis.fas.harvard.edu/data/japan/"
+      ],
+      "citation_details": [
+        "Farris (2006), Table 1.3, printed pp. 22-24 / PDF p. 34: Wakasa 1280 rice-based value 14,215; bracketed non-rice sensitivity 19,901 is not used.",
+        "Farris (2006), Table 1.1, printed p. 14 / PDF p. 24: Wakasa Great Land Register dated 1265, marked complete.",
+        "Farris (2006), pp. 14-17 / PDF pp. 24-27: Tara Estate surveys provide an independent acreage check for the registered paddy base.",
+        "Farris (2006), pp. 118-119 / PDF pp. 128-129, and note 56: 1287 Tara Estate abuse, crop seizure and farmer flight."
+      ],
+      "notes": "Validation-only until a Wakasa EU5 geometry selector is added and audited. Do not substitute all Echizen or another province."
+    }
+  ]
+}

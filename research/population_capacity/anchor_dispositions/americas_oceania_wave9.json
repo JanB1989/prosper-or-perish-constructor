@@ -1,0 +1,375 @@
+{
+  "schema_version": "population_capacity_anchor_disposition_v1",
+  "packet_id": "americas_oceania_wave9_targeted_followup",
+  "reviewed_on": "2026-08-03",
+  "scope": "Targeted search for mappable, locally supported, two-sided Malthusian anchors in the Americas and Oceania (1100-1500 or technology-comparable intervals).",
+  "policy": {
+    "rejected_records_are_not_training_targets": true,
+    "city_or_trade_hub_is_not_surrounding_land_capacity": true,
+    "unmapped_or_partial_boundaries_block_quantitative_scoring": true,
+    "starting_population_and_hyde_are_not_used": true,
+    "point_estimates_are_not_silently_promoted_to_intervals": true,
+    "model_derived_capacity_is_not_an_independent_historical_target": true
+  },
+  "review_summary": {
+    "candidate_count": 7,
+    "qualified_two_sided_anchor_count": 0,
+    "training_records_added": 0,
+    "validation_or_lower_bound_records_added": 0,
+    "disposition": "No candidate in this focused wave satisfies all boundary, population-interval, independent-pressure, local-food, and saturation requirements. Existing lower-bound/validation records remain unchanged."
+  },
+  "records": [
+    {
+      "anchor_id": "central_panama_tonosi_la_villa_1100_1500_rejected_wave9",
+      "label": "Central Panama rural survey valleys: Río Tonosí and Río La Villa",
+      "date_interval": {
+        "start": 1100,
+        "end": 1500
+      },
+      "reported_population_points": {
+        "rio_tonosi": {
+          "period": "1000-1520",
+          "population": 2998,
+          "density_persons_per_km2": 60.0,
+          "survey_zone_area_km2": 50.0,
+          "cultivable_area_km2": 55.0
+        },
+        "rio_la_villa": {
+          "period": "1150-1400",
+          "population": 1435,
+          "density_persons_per_km2": 35.9,
+          "survey_zone_area_km2": 40.0,
+          "cultivable_area_km2": 70.0
+        }
+      },
+      "population_interval_status": "point_estimates_only; Río La Villa is explicitly a minimum estimate",
+      "capacity_evidence": {
+        "method": "Carneiro swidden carrying-capacity equation with GAM maize yields, evolutionary yield curve, fallow-to-crop scenarios, and maize consumption scenarios",
+        "reported_yield_inputs": {
+          "rio_tonosi_modern_single_season_kg_per_ha": 998,
+          "rio_la_villa_modern_single_season_kg_per_ha": 554,
+          "rio_tonosi_modern_annual_kg_per_ha": 1846,
+          "rio_la_villa_modern_annual_kg_per_ha": 1025
+        },
+        "scenario_result": "The paper reports that Río Tonosí populations exceed carrying-capacity estimates under every tested scenario except a 1:1 fallow-to-crop ratio; a 2:1 ratio remains sustainable only until approximately 700 CE. Río La Villa requires a 1:1 ratio and the lowest maize-consumption scenario across the full sequence, with later population decline.",
+        "independent_saturation_interval": null
+      },
+      "local_food_evidence": {
+        "maize_share_percent_range": [45, 83],
+        "maize_share_median_percent": 65,
+        "central_panama_median_percent": 67,
+        "interpretation": "Maize is a locally produced dominant staple, with manioc, squash, sweet potato, beans and other local foods supplying the remainder; this supports a local-food test but not a complete independent capacity interval."
+      },
+      "pressure_evidence": [
+        "Systematic regional surveys provide population trajectories from settlement proxies rather than a census.",
+        "Río Tonosí population growth continues into the 1000-1520 period while modeled long-fallow systems become unsustainable; Río La Villa grows rapidly and then drops by almost half after 1000 CE.",
+        "The authors explicitly describe population pressure as a serious and arguably most likely possibility, not a resolved observation of equilibrium saturation."
+      ],
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "The published values are archaeological settlement-proxy point estimates, not defensible two-sided population intervals; Río La Villa is intentionally a minimum estimate.",
+        "Carrying capacities are scenario outputs of the same paper's maize-yield and consumption assumptions. They are useful pressure diagnostics but cannot serve as an independent historical target or saturation interval.",
+        "The survey zones are approximately 40-50 km2, while EU5 has no Tonosí or La Villa boundary. The closest selector, parita_province, spans 19,030.21 km2 and would cover less than 0.27% of that footprint if forced; selecting the parita location alone would still cover only about 1.52% of its 6,846.58 km2 footprint.",
+        "The article's conclusion is deliberately probabilistic (pressure is a serious possibility), so promoting it to a two-sided Malthusian equilibrium label would overstate the evidence."
+      ],
+      "boundary_status": "survey_zone_not_mappable_to_eu5_at_geometric_threshold",
+      "candidate_crosswalk": {
+        "eu5_selector": "province=parita_province",
+        "eu5_location_count": 6,
+        "eu5_footprint_area_km2": 19030.212907347923,
+        "reported_survey_zone_area_km2": [40.0, 50.0],
+        "forced_coverage_fraction_range": [0.002102, 0.002628]
+      },
+      "source_family": "central_panama_regional_survey_and_maize_capacity",
+      "source_bundle": [
+        "berrey_2025_central_panama_maize_capacity",
+        "berrey_2014_tonosi_regional_survey",
+        "isaza_aizpurua_2007_la_villa_regional_survey"
+      ],
+      "sources": [
+        "https://doi.org/10.1016/j.jas.2025.106208",
+        "https://www.researchgate.net/publication/390695682_Modeling_maize-based_carrying_capacities_and_population_pressure_in_prehispanic_central_Panama",
+        "https://repository.si.edu/bitstreams/db095698-a88d-4d38-b6a3-d429160179f4/download",
+        "https://antharky.ucalgary.ca/caadb/sites/antharky.ucalgary.ca.caadb/files/Isaza_2007__The_Ancestors_of_Parita_.pdf"
+      ],
+      "notes": "Retain as a valuable validation and physical-model reference: it supplies local maize dietary shares, cultivation area, yield uncertainty and explicit pressure diagnostics. Do not create an aggregate training target until valley polygons and independent population/saturation intervals are recovered."
+    },
+    {
+      "anchor_id": "central_panama_rio_parita_lower_survey_1150_1520_rejected_wave9",
+      "label": "Río Parita Lower Survey Zone rural carrying-capacity estimate",
+      "date_interval": {
+        "start": 1150,
+        "end": 1520
+      },
+      "reported_population_points": {
+        "period_1150_1400": 728,
+        "density_persons_per_km2": 7.0,
+        "lower_survey_zone_area_km2": 90.0,
+        "reported_capacity_people": 1750
+      },
+      "capacity_interval_status": "single model-derived upper estimate; no independent two-sided interval",
+      "local_food_evidence": {
+        "food_regime": "local maize swidden with manioc, squash, sweet potato, beans and other local foods",
+        "trade_dependence": "low for rural survey zone"
+      },
+      "pressure_evidence": [
+        "Haller concludes regional Río Parita populations never reached or closely approached his modeled capacity; population stayed below half of the Lower Survey Zone potential.",
+        "The 1750 figure is a model-derived potential based on Ngäbe agricultural parameters, not an observed equilibrium or enumerated carrying-capacity interval."
+      ],
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "The 90 km2 Lower Survey Zone is far smaller than any available EU5 location polygon. The closest parita location is 6,846.58 km2, giving only 1.31% geometric coverage; the six-location parita province footprint is 19,030.21 km2, giving 0.47% coverage.",
+        "The population value and 1750 capacity are not independent two-sided observations; Haller's capacity is an agricultural scenario extrapolated from ethnographic parameters.",
+        "The evidence is explicitly a lower-density negative control, not a Malthusian saturation case."
+      ],
+      "boundary_status": "exact_archaeological_survey_zone_but_unmapped_to_eu5",
+      "candidate_crosswalk": {
+        "eu5_selector": "location_tag=parita",
+        "eu5_location_count": 1,
+        "eu5_footprint_area_km2": 6846.579120,
+        "reported_boundary_area_km2": 90.0,
+        "forced_coverage_fraction": 0.013146
+      },
+      "source_family": "rio_parita_regional_survey_lower_capacity",
+      "source_bundle": [
+        "haller_2008_asiento_viejo",
+        "berrey_2025_panama_synthesis"
+      ],
+      "sources": [
+        "https://www.isas.illinois.edu/research_2/cahokia",
+        "https://www.sciencedirect.com/science/article/pii/S0305440325000573",
+        "https://sites.pitt.edu/~ccapubs/pdfdownloads/PITTmem19-Haller_2008.pdf"
+      ],
+      "notes": "Keep as a negative control for a low-pressure rural system and for area/capacity accounting. It cannot supervise a whole EU5 location."
+    },
+    {
+      "anchor_id": "tongatapu_green_capacity_promotion_1100_1500_rejected_wave9",
+      "label": "Tongatapu Green/Ussher population and capacity envelope",
+      "date_interval": {
+        "start": 1100,
+        "end": 1500
+      },
+      "reported_population_interval": {
+        "low": 15000,
+        "central": 16500,
+        "high": 18467
+      },
+      "reported_model_capacity_envelope": {
+        "low": 18000,
+        "high": 24000
+      },
+      "local_food_evidence": {
+        "low": 0.9,
+        "central": 0.97,
+        "high": 1.0,
+        "food_regime": "yam, taro, sweet potato, banana, breadfruit, coconut, fishing and livestock"
+      },
+      "pressure_evidence": [
+        "Archaeobotanical reconstruction documents near-complete primary-forest removal, intensive multicropping, bush-fallow pressure and expansion after local intensification limits.",
+        "Independent archaeological synthesis reports growth until available arable land was in use."
+      ],
+      "proposed_role": "lower_bound",
+      "decision": "rejected_for_two_sided_training",
+      "rejection_reasons": [
+        "The 18,000-24,000 upper envelope is Green's model-derived capacity, summarized through Ussher, not an independent saturation interval; using it as the target would make the observed population and target share a source family.",
+        "Parton and Clark's independent LiDAR/Bayesian reconstruction reports approximately 50,000-60,000 people for Tongatapu, an unresolved conflict that is too large to hide inside a narrow two-sided interval.",
+        "Existing Tongatapu evidence therefore remains a high-coverage local-food lower bound. No new two-sided packet is created in this wave."
+      ],
+      "boundary_status": "mappable_island_but_evidence_conflict_unresolved",
+      "candidate_crosswalk": {
+        "eu5_selector": "location_tag=tongatapu",
+        "coverage_fraction": 0.9763941725489561,
+        "mapped_land_area_km2": 253.8624848627286,
+        "historical_island_area_km2": 260.0
+      },
+      "source_family": "tonga_archaeology_and_population_reconstruction",
+      "source_bundle": [
+        "ussher_2015_green_kirch_burley",
+        "parton_clark_2022_lidar_population"
+      ],
+      "sources": [
+        "https://openresearch-repository.anu.edu.au/bitstreams/e4751661-3b6f-44c8-828b-4d93dc954ce3/download",
+        "https://www.sciencedirect.com/science/article/pii/S2352409X22002735"
+      ],
+      "notes": "This disposition documents why the existing lower-bound packet must not be promoted to a two-sided scale anchor."
+    },
+    {
+      "anchor_id": "rekohu_moriori_1400_1835_rejected_wave9",
+      "label": "Rēkohu/Chatham Islands Moriori population",
+      "date_interval": {
+        "start": 1400,
+        "end": 1835
+      },
+      "reported_population_floor": 2000,
+      "population_interval_status": "one-sided historical floor only",
+      "local_food_evidence": {
+        "food_regime": "predominantly marine foods (shore-netting, fish, seals and seabirds), with limited horticulture",
+        "trade_dependence": "isolated; no regular external food supply documented"
+      },
+      "pressure_evidence": [
+        "The Moriori lived for centuries without contact with other peoples, but the sources do not establish a dated 1337-1500 equilibrium or an ecological saturation fraction.",
+        "Documented seal depletion and demographic collapse are nineteenth-century/contact-era events, outside the requested anchor interval."
+      ],
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "The cited pre-contact population is a lower bound, not an enumerated two-sided interval, and the settlement date itself is debated within the 1400-1500 range.",
+        "No independent capacity or saturation interval is available; marine-resource pressure evidence concerns the nineteenth century after sealing and contact.",
+        "Although the EU5 Rēkohu location is an exact island proxy, exact geometry cannot compensate for absent saturation evidence."
+      ],
+      "boundary_status": "exact_island_proxy_but_no_saturation_label",
+      "candidate_crosswalk": {
+        "eu5_selector": "location_tag=rekohu",
+        "coverage_fraction": 1.0,
+        "eu5_area_km2": 835.8732200369099
+      },
+      "source_family": "chatham_islands_moriori_history_and_ecology",
+      "source_bundle": [
+        "moriori_treaty_settlement_history",
+        "te_ara_chatham_islands_history",
+        "chatham_quaternary_ecology"
+      ],
+      "sources": [
+        "https://whakatau.govt.nz/te-tira-kurapounamu-treaty-settlements/find-a-treaty-settlement/moriori",
+        "https://teara.govt.nz/en/chatham-islands/page-3",
+        "https://mro.massey.ac.nz/server/api/core/bitstreams/f4885f4a-db3a-4323-867e-f616a76fb9b1/content"
+      ],
+      "notes": "Retain as a hostile-island local-food validation/lower-bound case only."
+    },
+    {
+      "anchor_id": "aotearoa_north_island_1280_1500_rejected_wave9",
+      "label": "Aotearoa/New Zealand early Māori regional expansion",
+      "date_interval": {
+        "start": 1280,
+        "end": 1500
+      },
+      "population_interval_status": "no defensible mappable regional interval found",
+      "local_food_evidence": {
+        "food_regime": "kumara horticulture, forest birds, coastal fishing and marine foods",
+        "trade_dependence": "mostly local at regional scale"
+      },
+      "pressure_evidence": [
+        "Archaeological and radiocarbon studies document rapid colonisation, northward population growth and resource pressure around moa depletion and changing settlement patterns.",
+        "The evidence concerns growth and ecological transformation, not a measured Malthusian equilibrium."
+      ],
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "Published estimates are regional trajectories or demographic-model outputs without a single bounded 1337 population interval for a rural EU5-mappable area.",
+        "North and South Island archaeological systems are heterogeneous; assigning an island-wide total to the 20 EU5 locations would merge distinct environments and migration phases.",
+        "Moa depletion and later climate/settlement changes provide pressure evidence but no independent saturation fraction suitable for a two-sided target."
+      ],
+      "boundary_status": "heterogeneous_island_evidence_not_single_rural_boundary",
+      "candidate_crosswalk": {
+        "eu5_selector": "area=north_island_area",
+        "eu5_location_count": 20,
+        "coverage_fraction": 1.0,
+        "crosswalk_status": "geographically broad but not evidence-matched"
+      },
+      "source_family": "aotearoa_archaeology_and_radiocarbon_demography",
+      "source_bundle": [
+        "aotearoa_population_growth_2019",
+        "new_zealand_moa_demography_2014",
+        "aotearoa_settlement_dynamics_2022"
+      ],
+      "sources": [
+        "https://doi.org/10.1080/15564894.2019.1605429",
+        "https://www.nature.com/articles/ncomms6436",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9674228/"
+      ],
+      "notes": "The existing Aotearoa validation record remains unresolved by design; this wave finds no evidence that meets the training contract."
+    },
+    {
+      "anchor_id": "rarotonga_1200_1800_two_sided_promotion_rejected_wave9",
+      "label": "Rarotonga island population reconstruction",
+      "date_interval": {
+        "start": 1200,
+        "end": 1800
+      },
+      "reported_population_interval": {
+        "low": 9000,
+        "central": 12998,
+        "high": 18000
+      },
+      "population_interval_status": "demographic synthesis interval with no dated saturation fraction",
+      "local_food_evidence": {
+        "low": 0.85,
+        "central": 0.95,
+        "high": 1.0,
+        "food_regime": "valley taro, breadfruit, coconut, pigs and fishing"
+      },
+      "pressure_evidence": [
+        "The island's traditional food system is locally based and the EU5 island selector is exact for validation.",
+        "No independent archaeological or ecological study in the cited bundle demonstrates that the reported population interval was at long-run food saturation."
+      ],
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "The Sear et al. demographic synthesis is a broad/out-of-period estimate, not a local 1337 enumeration, and it supplies no pressure-backed saturation interval.",
+        "Exact geometry (location_tag=rarotonga_atoll) resolves mapping but cannot convert a population estimate into a Malthusian target without independent saturation evidence.",
+        "The record remains a useful island food-system validation case only."
+      ],
+      "boundary_status": "exact_island_proxy_but_no_saturation_label",
+      "candidate_crosswalk": {
+        "eu5_selector": "location_tag=rarotonga_atoll",
+        "coverage_fraction": 1.0,
+        "crosswalk_status": "exact"
+      },
+      "source_family": "polynesia_demography_archaeology",
+      "source_bundle": [
+        "sear_pacific_population_2026"
+      ],
+      "sources": [
+        "https://ueaeprints.uea.ac.uk/id/eprint/102930/1/399_Sear_et_al.pdf"
+      ],
+      "notes": "Mapping is already present in the existing validation crosswalk; no training promotion is warranted."
+    },
+    {
+      "anchor_id": "upolu_samoa_1250_1800_two_sided_promotion_rejected_wave9",
+      "label": "Upolu, Samoa population reconstruction",
+      "date_interval": {
+        "start": 1250,
+        "end": 1800
+      },
+      "reported_population_interval": {
+        "low": 50000,
+        "central": 75400,
+        "high": 110000
+      },
+      "population_interval_status": "effective-population/demographic synthesis, not a dated census interval",
+      "local_food_evidence": {
+        "low": 0.85,
+        "central": 0.95,
+        "high": 1.0,
+        "food_regime": "taro, breadfruit, bananas, coconuts, pigs and marine foods"
+      },
+      "pressure_evidence": [
+        "The cited synthesis supports a large island population and local food system but does not document independent land scarcity, famine sensitivity or a saturation fraction for 1250-1500.",
+        "Cyclones and migration introduce unresolved demographic shocks."
+      ],
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "The interval is an effective-population/demographic reconstruction rather than an enumerated local-food population interval tied to a demonstrated equilibrium.",
+        "No independent pressure/saturation evidence supports a two-sided target, and the existing broad date range crosses later contact-era conditions.",
+        "The exact Upolu selector is suitable for validation, but geometry alone does not satisfy the anchor contract."
+      ],
+      "boundary_status": "mappable_island_but_no_saturation_label",
+      "candidate_crosswalk": {
+        "eu5_selector": "location_tag=upolu",
+        "coverage_fraction": 1.0,
+        "crosswalk_status": "exact"
+      },
+      "source_family": "polynesia_demography_genetics",
+      "source_bundle": [
+        "sear_pacific_population_2026"
+      ],
+      "sources": [
+        "https://ueaeprints.uea.ac.uk/id/eprint/102930/1/399_Sear_et_al.pdf"
+      ],
+      "notes": "Keep as validation-only. Do not use effective population as a capacity target."
+    }
+  ]
+}

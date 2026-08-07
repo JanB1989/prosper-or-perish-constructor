@@ -1,0 +1,128 @@
+{
+  "created_on": "2026-08-04",
+  "deployment": {
+    "acceptance_allowed": false,
+    "legacy_modifiers_unchanged": true,
+    "normalization_applied": false,
+    "rendered_static_modifier": false
+  },
+  "evidence_and_mapping": {
+    "lower_bound_groups": 25,
+    "packet_count": 193,
+    "source_families": 18,
+    "super_regions": 5,
+    "training_blockers": [],
+    "training_eligible_groups": 29,
+    "two_sided_interval_groups": 4
+  },
+  "evidence_wave32": {
+    "crosswalk": {
+      "all_mappings_resolved": false,
+      "audit_sha256": "50ecade6b19ba90c90c2dd46f1f2d4872586a470ba5cf5cc5e7130301bfe4b5a",
+      "crosswalk_complete": true,
+      "path": "artifacts/data/population_capacity/current_capacity_map/crosswalk_audit.json",
+      "training_required_unresolved_records": 0,
+      "unresolved_validation_records": 117
+    },
+    "euromed2k": {
+      "audit_sha256": "ca6ea2ac755b4659ce77eca4f0193b494180ff1cd0bb1de14dbca2697eb24cbf",
+      "path": "research/population_capacity/model_reviews/euromed2k_uncertainty_audit_wave32.json",
+      "valid_cells_at_1337": 61,
+      "validation_only": true,
+      "years_1100_1500": 401
+    },
+    "lower_bound_audit_sha256": "04c94b4095cf064b393c78f25488ea4b09a43133ab7ea466a65d8fb120b9d302",
+    "new_scale_anchors": 0,
+    "new_vetted_lower_bounds": 2,
+    "pages2k": {
+      "active_1337_records": 291,
+      "audit_sha256": "a67e680265200404ee6f7bafe267ce1cee94a6c85b5a6ed2b6985587cad06981",
+      "path": "research/population_capacity/model_reviews/pages2k_uncertainty_audit_wave32.json",
+      "records_spanning_1100_1500": 204,
+      "validation_only": true
+    },
+    "shared_soil_fallow": {
+      "audit_sha256": "11441d2d4ccb8651d191336836564beaa861b84d2df4a0c18600c056c1be90d9",
+      "path": "research/population_capacity/diagnostics/shared_soil_fallow_cross_system_audit_wave32.json",
+      "production_ready": false,
+      "rapa_baseline_p50": 34236,
+      "rapa_shared_physics_p50": 7705,
+      "systems": [
+        "england",
+        "hawaii",
+        "iceland",
+        "peten",
+        "rapa_nui",
+        "zarma_sahel"
+      ]
+    }
+  },
+  "fit_and_generalization": {
+    "generalization_complete": true,
+    "grouped_holdout_scored_rows": 56,
+    "grouped_interval_pass_rate": 1.0,
+    "grouped_lower_bound_pass_rate": 1.0,
+    "learned_challenger_status": "trained",
+    "mechanistic_global_capacity_people_p50": 9614476537,
+    "selected_candidate": "mechanistic"
+  },
+  "independent_physical_validation": {
+    "crop_water_gap": {
+      "banana_taro_annual_risk_closed": false,
+      "cassava_modern_interannual_risk_bridge_closed": true,
+      "gaez_static_water_response_closed": true,
+      "path": "research/population_capacity/physical_validation/crop_water_gap_wave31.json"
+    },
+    "rapa_nui_validation": {
+      "interval": {
+        "p10": 3500,
+        "p50": 10000,
+        "p90": 17500
+      },
+      "predicted_p50": 34236,
+      "role": "held_out_validation_only",
+      "shared_nutrient_sensitivity_p50": 15407,
+      "status": "fail"
+    },
+    "uncertainty_evidence": {
+      "absolute_1337_training_sources": 0,
+      "independent_risk_validation_complete": false,
+      "p10_p50_p90_capacity_propagation_ready": false,
+      "path": "research/population_capacity/model_reviews/uncertainty_evidence_audit_wave31.json",
+      "source_rows": 14
+    }
+  },
+  "input_artifacts": {
+    "closure_manifest_sha256": "d68655bf3136925f88c92887ad8b0679ca5d411c17a58b534f65c34fa1c2b238",
+    "generalization_audit_sha256": "06f73cf28ac48f47d565febe53547bc3b3048f6b810da3fccae12fd28222e5de",
+    "label_audit_sha256": "9295f3f752a04a623c0eef61ee890278703cda811408777fee36062154083a4a",
+    "model_selection_sha256": "92bfbd2b65cc974a9c3ca78a7ee66b07c931a565aea42b16c169c299f9f20d1d"
+  },
+  "physical_closure": {
+    "challenger_unresolved_required_labels": 0,
+    "exact_pyaez_rows": 0,
+    "label_audit_hash": "88d90e758566c8204589046510513d659a817ef381994cb73ec4426c55285495",
+    "label_hash_matches_closure": true,
+    "locations": 20929,
+    "physical_closure_manifest_hash": "ebd213e81c3156e68079342323568abb284777732ec042e1c5672b315345ace6",
+    "primary_source_fraction": 0.814884,
+    "primary_unresolved_required_labels": 0,
+    "productive_mode_coverage": 0.560726,
+    "required_crop_mode_engine_rows": 1925468,
+    "same_geography_physical_fallback_rows": 962734,
+    "source_completeness": 1.0
+  },
+  "remaining_acceptance_blockers": [
+    "Banana and taro have no verified official global annual crop-model files in the tested ISIMIP2a sources.",
+    "Exact PyAEZ annual water-response parameters remain unpublished/unresolved for all three families.",
+    "GAEZ static 1981-2000 yields cannot establish 1337 interannual p10/p90 tails.",
+    "held_out_rapa_nui_food_limit_requires_shared_physical_explanation",
+    "historical_global_1100_1500_absolute_tail_not_closed",
+    "wave32 climate reconstructions validate covariance only and do not provide absolute 1337 yields",
+    "wave32 nutrient/fallow cross-system evidence is diagnostic until a global nutrient-stock implementation is validated"
+  ],
+  "report_id": "training_readiness_wave32",
+  "schema_version": "population_capacity_training_readiness_v4",
+  "status": "trained_but_not_acceptance_ready",
+  "training_allowed": true
+}

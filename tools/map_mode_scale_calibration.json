@@ -1537,15 +1537,16 @@
     },
     "population_capacity": {
       "kind": "sequential",
+      "source": "accepted_start_capacity_max_times_two",
       "thresholds": [
-        20.0,
-        40.0,
-        60.0,
-        80.0,
-        100.0,
-        125.0,
-        155.0,
-        200.0
+        3387.0,
+        6775.0,
+        10162.0,
+        13550.0,
+        16937.0,
+        21171.0,
+        26252.0,
+        33874.0
       ]
     },
     "population_growth": {

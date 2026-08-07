@@ -1,0 +1,89 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "europe_iceland_capacity_interval_wave18",
+  "region": "europe_iceland_capacity_interval_wave18",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "scope": "Independent two-sided aggregate natural-capacity interval for Iceland around the 1290-1330 benchmark. The capacity endpoints come from a peer-reviewed pre-industrial environmental simulation; the contemporaneous population interval and pressure evidence are kept separate from the capacity estimate.",
+  "promotion_audit": {
+    "decision": "Promote as a two-sided interval anchor for a hostile North Atlantic island, with a broad uncertainty interval. The capacity is not inferred from EU5 starting population: Haraldsson and Olafsdottir's dynamic biological-production model independently estimates 40,000-80,000 sustainable inhabitants during the pre-industrial period. A separate demographic source places Iceland at approximately 55,000-60,000 people around 1300, and independent evidence describes centuries near subsistence and low productivity.",
+    "reviewed_on": "2026-08-03",
+    "review_method": "Verified the peer-reviewed article metadata and abstract, date/technology compatibility, same-island boundary, local subsistence and trade caveats, and the exact Iceland EU5 area selector. The historic population series is used as an observed comparison interval, never as a capacity target or predictor.",
+    "population_semantics": "Reconstructed whole-island population around 1290-1330 from Gunnarsson's historical series as quoted by Bjornsson and Zoega; it is an observed demographic interval with substantial uncertainty, not a game-start label.",
+    "capacity_semantics": "The capacity interval is the 40,000-80,000 pre-industrial natural-sustainability range reported by Haraldsson and Olafsdottir's dynamic model. It represents local biological production available to livestock and people under pre-industrial conditions, not imported fish or grain and not an observed-population fit.",
+    "independent_pressure_check": "Bjornsson and Zoega describe Iceland as living near subsistence for centuries, with low productivity and famine risk; their fertility seasonality result links conception to seasonal net-energy availability in agricultural households. Haraldsson and Olafsdottir report repeated pre-historical overshoots of modeled sustainability. These are pressure checks independent of EU5 data."
+  },
+  "records": [
+    {
+      "anchor_id": "iceland_1290_1330_natural_capacity_interval_wave18",
+      "label": "Iceland c.1290-1330: pre-industrial natural carrying-capacity interval",
+      "year_start": 1290,
+      "year_end": 1330,
+      "population_low": 50000,
+      "population_central": 57500,
+      "population_high": 70000,
+      "saturation_low": 0.625,
+      "saturation_central": 0.82,
+      "saturation_high": 1.0,
+      "local_food_low": 0.75,
+      "local_food_central": 0.9,
+      "local_food_high": 1.0,
+      "capacity_low": 40000,
+      "capacity_central": 60000,
+      "capacity_high": 80000,
+      "interval_semantics": "Haraldsson and Olafsdottir (2006), Science of the Total Environment 372(1), pp.109-119, report simulated pre-industrial environmental support fluctuating between 40,000 and 80,000. Bjornsson and Zoega (2016), p.2 n.1, quote Gunnarsson's historical series as approximately 55,000 from 1000-1300 and 60,000 from 1300-1500; the population interval broadens those values to 50,000-70,000 for the 1290-1330 window. The saturation band is an explicit uncertainty envelope: the model reports overshoots, so observed population may temporarily exceed modeled sustainability; no endpoint is forced to equality.",
+      "derivation": {
+        "historical_population_source": "Bjornsson and Zoega 2016, p.2 n.1, quoting Gunnarsson 2000",
+        "population_interval_rule": "50,000-70,000 around the quoted 55,000/60,000 1000-1500 series, retaining demographic reconstruction uncertainty",
+        "capacity_source": "Haraldsson and Olafsdottir 2006, pp.109-119, abstract/model result",
+        "capacity_interval_rule": "40,000-80,000 modeled pre-industrial natural sustainability range",
+        "mapped_area_rule": "All locations in the Iceland island boundary; no urban or imported-food sub-boundary is substituted",
+        "rounding_policy": "nearest 2,500 people for population central estimate; published endpoints retained for capacity"
+      },
+      "pressure_evidence": [
+        "Bjornsson and Zoega (2016), pp.2-3, state that Iceland's population did not grow from the Age of Settlement to the late nineteenth century, that the nation lived close to subsistence, and that low productivity and famine risk constrained households.",
+        "Bjornsson and Zoega (2016), pp.14-16, link the agricultural birth-season pattern to net-energy availability after hay harvest and sheep slaughter, documenting tight seasonal food and labor constraints rather than a comfortable surplus regime.",
+        "Haraldsson and Olafsdottir (2006), pp.109-119, report that simulated pre-industrial carrying capacity fluctuated with climate-driven vegetation and livestock production and that pre-historical population overshot natural sustainability on several occasions.",
+        "The Icelandic system was overwhelmingly local pastoral/hay production with marine supplements; the foreign trade monopoly and limited capital are documented as constraints, not as permission to count imported calories in intrinsic capacity."
+      ],
+      "shock_flags": [
+        "The 1290-1330 window overlaps the transition toward cooler and more variable North Atlantic conditions; the environmental model's 40,000-80,000 range is intentionally broad.",
+        "Volcanic, sea-ice, and hay-shortage years can produce temporary overshoot and famine; these are uncertainty drivers, not a permanent capacity multiplier.",
+        "The population interval is reconstructed rather than enumerated; it is not used as a location-level target.",
+        "Later fifteenth- and eighteenth-century epidemics and famines are outside the anchor window and are not folded into the capacity endpoints."
+      ],
+      "trade_dependence": "low_to_mixed; local hay-fed livestock, dairy, eggs, marine fish and seal products dominate, but imported grain and external trade constraints prevent an autarky point assumption",
+      "food_regime": "pastoral hay and livestock, dairy, eggs, limited barley, marine fish, seabirds and seal supplements",
+      "boundary_description": "The complete Iceland island polygon, excluding no districts. The anchor is an island-level aggregate because the published environmental model and demographic series are whole-island estimates.",
+      "boundary_source": "EU5 location geometry area selector area=iceland_area; historical demographic and environmental sources are whole-Iceland studies",
+      "eu5_selector": {
+        "include": ["area=iceland_area"],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "role": "interval_anchor",
+      "training_eligible": true,
+      "validation_test": "two_sided_interval",
+      "source_family": "iceland_preindustrial_environmental_carrying_capacity",
+      "source_bundle": "haraldsson_olafsdottir_2006_bjornsson_zoega_2016_gunnarsson_2000",
+      "source_family_independence": "The capacity interval comes from an environmental dynamic model (Haraldsson and Olafsdottir 2006), while the observed population and subsistence-pressure evidence comes from Bjornsson and Zoega's demographic/energy analysis (2016) quoting Gunnarsson (2000). It is independent of the EU5 starting-population map, HYDE, RGO modifiers, and the England/Artois agrarian estimates, but it shares Haraldsson's model with an existing Iceland validation-only record; all Iceland records must therefore be held out together and this packet must not be counted as an independent replication of that model.",
+      "sources": [
+        "https://portal.research.lu.se/en/publications/a-novel-modelling-approach-for-evaluating-the-preindustrial-natur/",
+        "https://doi.org/10.1016/j.scitotenv.2006.08.013",
+        "https://ioes.hi.is/files/2021-05/nature-to-the-rescue.pdf",
+        "https://doi.org/10.1080/03585522.2017.1340333"
+      ],
+      "citation_details": [
+        "Haraldsson and Olafsdottir 2006, Science of the Total Environment 372(1), pp.109-119, abstract and model result: potential pre-industrial population fluctuated between 40,000 and 80,000; model links biological production to potential vegetation and livestock.",
+        "Bjornsson and Zoega 2016, University of Iceland working paper, p.2 and n.1: Iceland lived near subsistence and the quoted historical series is approximately 55,000 from 1000-1300 and 60,000 from 1300-1500.",
+        "Bjornsson and Zoega 2016, pp.14-16: seasonal hay, sheep and net-energy constraints in agricultural households.",
+        "Gunnarsson 2000 is used only through the explicitly cited series in Bjornsson and Zoega; no EU5 population field is imported into this packet."
+      ],
+      "notes": "This is a broad two-sided hostile-island interval anchor, not a global scale anchor. Its value is testing whether the model produces a low-density, livestock/marine capacity on a climatically marginal island without a regional correction. Do not narrow the 40,000-80,000 environmental interval using the reconstructed population; retain the demographic interval separately and preserve the reported possibility of temporary overshoot."
+    }
+  ]
+}

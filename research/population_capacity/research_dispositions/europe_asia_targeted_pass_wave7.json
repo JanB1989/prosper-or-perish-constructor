@@ -1,0 +1,159 @@
+{
+  "schema_version": "population_capacity_research_disposition_v1",
+  "packet_id": "europe_asia_targeted_pass_wave7",
+  "region": "europe_asia_north_atlantic",
+  "super_region": "Europe_and_Asia",
+  "target_year": 1337,
+  "source_bundle": "wave7_targeted_evidence_review",
+  "policy": {
+    "append_only": true,
+    "no_starting_population_or_rgo_predictors": true,
+    "no_name_only_crosswalks": true,
+    "two_sided_training_requires_saturation_evidence": true,
+    "lower_bounds_are_not_global_scale_anchors": true,
+    "validation_records_are_held_out": true
+  },
+  "method": "Reviewed existing Europe/North Atlantic and Asia/Middle East packets, checked their boundary and evidence dispositions, and recorded only the training role justified by the cited sources. Existing accepted packets are referenced rather than duplicated. A numerical population estimate is not promoted to a capacity target when it is a fiscal register, city/market estimate, trade-dependent urban total, or lacks an exact EU5 boundary.",
+  "records": [
+    {
+      "anchor_id": "faroe_1300_local_support_floor_wave3",
+      "status": "already_vetted",
+      "role": "lower_bound_and_holdout",
+      "existing_packet": "europe_nile_training_floors_wave3.json",
+      "eu5_selector": "location_tag=torshavn",
+      "coverage_fraction": 0.986,
+      "population_interval": {"low": 2471, "central": 2471, "high": 2700},
+      "capacity_interval": {"low": 2224, "central": 2397, "high": 5000},
+      "local_food_interval": {"low": 0.90, "central": 0.97, "high": 1.0},
+      "reason": "Existing wave3 packet has a real EU5 crosswalk and a conservative 2,224-person local-support floor. Mortensen's tax-land reconstruction supplies the population estimate; the 1298 Sheep Letter and modern historical synthesis document ecological carrying-capacity pressure and a predominantly sheep/barley/marine food regime. It is not promoted to a global saturation anchor because the sources do not identify a human-equilibrium ceiling.",
+      "sources": [
+        "https://www.pure.fo/en/publications/kongsumsiting-skattur-l%C3%ADkningareindir-og-f%C3%B3lk-%C3%AD-t%C3%AD-f%C3%B3royska-skatt/",
+        "https://www.frontiersin.org/journals/sustainable-food-systems/articles/10.3389/fsufs.2021.599476/full",
+        "https://ojs.setur.fo/index.php/frit/article/view/576"
+      ]
+    },
+    {
+      "anchor_id": "iceland_preindustrial_capacity_model_1290_1315",
+      "status": "already_vetted",
+      "role": "validation_only",
+      "existing_packet": "europe_north_atlantic_followup.json",
+      "eu5_selector": "area=iceland_area",
+      "coverage_fraction": 1.0,
+      "population_interval": {"low": 40000, "central": 55000, "high": 60000},
+      "capacity_interval": {"low": 40000, "central": 60000, "high": 80000},
+      "local_food_interval": {"low": 0.85, "central": 0.93, "high": 1.0},
+      "reason": "The environmental carrying-capacity simulation and demographic reconstruction are useful hostile-island checks with a complete island crosswalk, but the reconstructed population and modeled envelope are not an independently documented Malthusian saturation interval. Keep fully held out.",
+      "sources": [
+        "https://www.tandfonline.com/doi/abs/10.1080/03585522.2017.1340333",
+        "https://pubmed.ncbi.nlm.nih.gov/16979224/"
+      ]
+    },
+    {
+      "anchor_id": "greenland_norse_peak_1290_1300_wave7",
+      "status": "rejected_for_two_sided_training",
+      "role": "validation_only",
+      "existing_packet": "europe_north_atlantic.json",
+      "population_interval": {"low": 1400, "central": 1800, "high": 2200},
+      "capacity_interval": null,
+      "local_food_interval": {"low": 0.75, "central": 0.90, "high": 1.0},
+      "reason": "The Human Ecology synthesis reports sustainable-population-model estimates of a small peak around AD 1300 (1,400–2,200 people), and independently documents livestock, hay, seal, caribou, seabird, and fish subsistence plus farm abandonment and increasing marine reliance. It does not provide a mappable human-equilibrium ceiling, and the Eastern/Western Settlement footprint is not yet an audited >=95% EU5 crosswalk. Use as a hostile local-food validation case, never as a two-sided target.",
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC6182579/",
+        "https://tidsskrift.dk/meddrgroenland_man_soc/article/view/146787"
+      ]
+    },
+    {
+      "anchor_id": "england_county_pressure_wave7",
+      "status": "rejected_for_training",
+      "role": "validation_only",
+      "existing_packet": "europe_north_atlantic_closure.json",
+      "candidates": [
+        "england_norfolk_1290_pressure_closure",
+        "england_suffolk_1290_pressure_closure",
+        "england_lincolnshire_1290_pressure_closure",
+        "england_cambridgeshire_1290_pressure_closure"
+      ],
+      "reason": "County population totals are mappable and document marginal cultivation/pressure, but no independent county-level saturation interval is established. England's national 1290–1315 packet remains the only scale anchor; using county totals as labels would turn observed population into a hidden target.",
+      "sources": [
+        "https://www.arcgis.com/home/item.html?id=23e944697e0d433cb8622649577fa720",
+        "https://warwick.ac.uk/fac/soc/economics/seminars/seminars/conferences/venice3/programme/english_medieval_population.pdf"
+      ]
+    },
+    {
+      "anchor_id": "france_flanders_tuscany_c1300_market_regions_wave7",
+      "status": "rejected_for_training",
+      "role": "validation_only_or_excluded",
+      "existing_packets": [
+        "europe_france_interval_anchor_wave6.json",
+        "europe_north_atlantic_closure.json"
+      ],
+      "candidates": [
+        "rural_flanders_c1300_trade_rejection_closure",
+        "tuscany_c1300_market_boundary_rejection_closure"
+      ],
+      "reason": "The French hearth assessment can support a cautious aggregate interval only after its local-food and boundary semantics are audited. Rural Flanders and Tuscany records are market-integrated and their proposed boundaries mix towns, ports, and hinterlands; they cannot identify intrinsic local capacity without a quantified import share and pressure interval. They remain excluded/held out.",
+      "sources": [
+        "https://www.persee.fr/doc/bec_0373-6237_1929_num_90_1_448861",
+        "https://www.openicpsr.org/openicpsr/project/120551/version/V1/view"
+      ]
+    },
+    {
+      "anchor_id": "japan_buzen_noto_1280_register_floors_wave7",
+      "status": "already_vetted",
+      "role": "lower_bound_and_holdout",
+      "existing_packet": "asia_japan_register_floors_wave7.json",
+      "eu5_selectors": ["province=buzen_province", "province=noto_japan_province"],
+      "coverage_fraction": {"buzen": 0.96, "noto": 0.95},
+      "reason": "Farris Table 1.3 provides area-weighted 1280 rice-kokudaka floors and a documented dry-field sensitivity; CHGIS polygons provide audited EU5 crosswalks. These are productive-land lower bounds, not direct population counts or saturation estimates, so they remain one-sided validation constraints.",
+      "sources": [
+        "https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "https://chgis.fas.harvard.edu/data/japan/",
+        "https://doi.org/10.7910/DVN/2CVTR0"
+      ]
+    },
+    {
+      "anchor_id": "japan_other_kamakura_registers_wave7",
+      "status": "rejected_for_training",
+      "role": "validation_only",
+      "candidates": [
+        "japan_bungo_1280_register_rejected_crosswalk_wave7",
+        "japan_hyuuga_1280_register_rejected_crosswalk_wave7",
+        "japan_satsuma_1280_register_rejected_area_wave7",
+        "japan_oosumi_1280_register_rejected_crosswalk_wave7",
+        "japan_hizen_1280_register_rejected_area_wave7",
+        "japan_wakasa_1280_register_rejected_unmapped_wave7"
+      ],
+      "reason": "The same Farris/CHGIS register is useful evidence, but the measured centroid or area coverage is below the >=95% contract for Bungo, Hyuga, Satsuma, Oosumi, and Hizen, while Wakasa has no dedicated EU5 boundary. The detailed rejection reasons and measured ratios are in asia_japan_register_dispositions_wave7.json; no name-only replacement is permitted.",
+      "sources": [
+        "https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "https://doi.org/10.7910/DVN/2CVTR0"
+      ]
+    },
+    {
+      "anchor_id": "otrar_suzhou_tibet_fayyum_1337_candidates_wave7",
+      "status": "not_promoted",
+      "role": "validation_only_or_blocked",
+      "existing_packets": [
+        "asia_mideast.json",
+        "asia_mideast_followup.json",
+        "africa_middleeast_anchor_disposition_wave7.json"
+      ],
+      "candidates": [
+        "otrar_oasis_1200_1350",
+        "suzhou_pingjiang_1290_register",
+        "tibet_1260_1287_enumerations",
+        "fayyum_1245_nabulusi_cadastre",
+        "japan_hinenosho_land_development_1234_1316",
+        "fayyum_dilya_canal_cluster_1245"
+      ],
+      "reason": "The reviewed records provide settlement, fiscal, or irrigation-history evidence but lack at least one of: a mappable EU5 boundary with >=95% coverage, a local-food population interval for that same boundary, or independent saturation/pressure evidence. They remain blocked or validation-only; no national/regional extrapolation is allowed.",
+      "sources": [
+        "https://www.lgakz.org/Texts/LiveTexts/4-OtrarReconstr.pdf",
+        "https://rdr.ucl.ac.uk/articles/dataset/Otrar_archaeological_site_digital_geospatial_dataset_2016/11690835",
+        "https://dfzb.suzhou.gov.cn/dfzb/szdq/201507/8d3b864be8d247b991dd1524605f7e9b.shtml",
+        "https://pubmed.ncbi.nlm.nih.gov/12321528/",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/"
+      ]
+    }
+  ]
+}

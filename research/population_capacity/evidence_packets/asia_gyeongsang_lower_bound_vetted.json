@@ -1,0 +1,73 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Asia",
+  "region": "korea",
+  "target_year": 1337,
+  "packet_id": "asia_gyeongsang_lower_bound_vetted",
+  "scope": "A mapped provincial population-register lower bound from the 1432 Gyeongsangdojiriji",
+  "promotion_audit": {
+    "promoted_lower_bound_ids": [
+      "gyeongsang_1432_registered_population_lower_bound"
+    ],
+    "decision": "The Gyeongsangdojiriji aggregate is promoted only as a one-sided lower bound. It has a mappable provincial boundary and an administrative population count, while under-registration and the absence of an independently quantified saturation fraction prevent two-sided use.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "gyeongsang_1432_registered_population_lower_bound",
+      "label": "Gyeongsang province registered population, 1432",
+      "year_start": 1432,
+      "year_end": 1432,
+      "population_low": 355069,
+      "population_central": 355069,
+      "population_high": 355069,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.85,
+      "local_food_central": 0.95,
+      "local_food_high": 1.0,
+      "capacity_low": 355069,
+      "capacity_central": 355069,
+      "capacity_high": 355069,
+      "interval_semantics": "Kim's reconstruction of the Gyeongsangdojiriji register totals 42,221 households, 172,174 men and an estimated 182,895 women, or 355,069 people (Table 4, p. 233). The number is retained unchanged as a minimum supported population. It is not interpreted as a census-complete total or as equilibrium capacity.",
+      "pressure_evidence": [
+        "Kim (2022), pp. 231-233, Tables 2-4: the surviving 114 county/prefecture entries are reconstructed into four complete Gyeongsang subdivisions - Gyeongju-do, Andong-do, Sangju-do and Jinju-do - and a provincial total of 355,069 people.",
+        "Kim (2022), Figure 1, p. 237: the county observations form a contiguous, explicitly mapped Gyeongsang provincial boundary rather than a national extrapolation or a city count.",
+        "Kim, Development of Rice Farming and Gyeongsang Province's Role During the 15th-16th Century (2007), pp. 127-171: permanent-field cultivation spread from the late thirteenth century, Gyeongsang led agricultural development, and early-fifteenth-century policy expanded reservoirs, irrigation and cultivation of unused land.",
+        "Korean National Drought Information Center chronology: the province experienced repeated crop failure and subsistence pressure, including catastrophic Gyeongsang/Jeolla famine in 1359-1360 and named Gyeongsang crop failures in 1402-1403. These demonstrate food sensitivity but are not converted into a saturation fraction."
+      ],
+      "shock_flags": [
+        "administrative_underregistration",
+        "female_population_partly_reconstructed_from_recorded_sex_ratio",
+        "1359_1360_famine_precedes_register",
+        "1432_is_95_years_after_target"
+      ],
+      "trade_dependence": "low at provincial scale for staple food; Gyeongsang was an agrarian tax- and tribute-producing province, while interprovincial relief and coastal exchange remain possible and are why the observation is only a lower bound",
+      "food_regime": "rice_barley_millet_legumes_local_fisheries_and_early_fifteenth_century_irrigation",
+      "boundary_description": "The complete 1432 Gyeongsang provincial boundary formed by the four source subdivisions Gyeongju-do, Andong-do, Sangju-do and Jinju-do, including the southeast coast; not modern South Gyeongsang alone and not all Korea.",
+      "boundary_source": "Kim (2022), administrative description pp. 231-233 and county distribution map Figure 1 p. 237",
+      "eu5_selector": {
+        "include": [
+          "province=gyeongju_province|andong_province|seongju_province|jinju_province|dongnae_province"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.96,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "source_family": "gyeongsangdojiriji_1432_register",
+      "source_bundle": "kim_2022_register_kim_2007_agriculture_ndic_pressure_bundle",
+      "source_family_independence": "population register reconstruction, agricultural-history study and official famine chronology are distinct evidentiary components; the population record is one source family",
+      "sources": [
+        "https://pncc.pusan.ac.kr/bbs/pncc/11985/778439/download.do",
+        "https://www.kci.go.kr/kciportal/landing/article.kci?arti_id=ART001201428",
+        "https://www.drought.go.kr/english/menu/m30/m32.do"
+      ],
+      "notes": "This record replaces neither the earlier validation packet nor its caveats; it adds the defensible inference the earlier packet omitted. A predominantly locally fed province demonstrably contained at least its registered population, and under-registration only makes that inequality more conservative. No saturation fraction is supplied, so this cannot set global scale or impose an upper bound."
+    }
+  ]
+}

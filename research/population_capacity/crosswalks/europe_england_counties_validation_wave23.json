@@ -1,0 +1,76 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "europe_england_counties_validation_wave23",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_england_counties_validation_wave23",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet with calibrated area_km2",
+  "policy": {
+    "append_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "historical_boundary_coverage_is_declared": true,
+    "residual_boundary_uncertainty_is_not_rescaled": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "england_norfolk_1290_population_validation_wave23",
+      "historical_boundary": "Historic county of Norfolk c.1290",
+      "eu5_selector": {
+        "include": ["province=norfolk_province"],
+        "exclude": []
+      },
+      "matched_location_count": 5,
+      "selected_location_count": 5,
+      "coverage_fraction": 0.978,
+      "selector_coverage_fraction": 0.978,
+      "mapped_area_km2": 5459.988033624244,
+      "historical_area_km2": 5340.77131585536,
+      "unmapped_area_km2": 0.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "candidate_role": "validation_only",
+      "resolution_method": "Selected the five EU5 locations with province=norfolk_province. The historical area is reconstructed from Campbell's mean 1290 population and 168 people per square mile; the declared 0.978 coverage absorbs the county-envelope discrepancy without rescaling the target.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 5459.988033624244,
+        "declared_historical_boundary_area_km2": 5340.77131585536,
+        "coverage_fraction": 0.978,
+        "unmapped_area_km2": 0.0,
+        "area_method": "Campbell 2008 table 14 density-derived historical area versus calibrated EU5 area",
+        "area_difference_policy": "Retain the declared 0.978 crosswalk confidence; do not inflate or deflate population."
+      },
+      "notes": "County selector is exact in EU5 administrative metadata, but this remains validation-only because the population methods are conditional and no capacity interval is published."
+    },
+    {
+      "anchor_id": "england_lincolnshire_1290_population_validation_wave23",
+      "historical_boundary": "Historic county of Lincolnshire c.1290",
+      "eu5_selector": {
+        "include": ["province=lincolnshire_province"],
+        "exclude": []
+      },
+      "matched_location_count": 6,
+      "selected_location_count": 6,
+      "coverage_fraction": 0.994,
+      "selector_coverage_fraction": 0.994,
+      "mapped_area_km2": 6895.88506941591,
+      "historical_area_km2": 6940.543763566738,
+      "unmapped_area_km2": 0.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "candidate_role": "validation_only",
+      "resolution_method": "Selected the six EU5 locations with province=lincolnshire_province. The historical area is reconstructed from Campbell's mean 1290 population and 112 people per square mile; the 0.994 coverage records the small county-envelope difference and no target rescaling is applied.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 6895.88506941591,
+        "declared_historical_boundary_area_km2": 6940.543763566738,
+        "coverage_fraction": 0.994,
+        "unmapped_area_km2": 0.0,
+        "area_method": "Campbell 2008 table 14 density-derived historical area versus calibrated EU5 area",
+        "area_difference_policy": "Retain the declared 0.994 crosswalk confidence; do not inflate or deflate population."
+      },
+      "notes": "County selector is exact in EU5 administrative metadata, but this remains validation-only because the population methods are conditional and no capacity interval is published."
+    }
+  ]
+}

@@ -1,0 +1,351 @@
+{
+  "schema_version": "population_capacity_interannual_harvest_evidence_v1",
+  "record_id": "interannual_harvest_evidence_global_wave26",
+  "reviewed_on": "2026-08-04",
+  "target_window": {
+    "start_year": 1100,
+    "end_year": 1500,
+    "target_technology_year": 1337,
+    "policy": "Relative harvest observations may validate interannual risk and climate response. They are not absolute kg_per_ha labels unless an independently documented sowing-rate and footprint bridge exists."
+  },
+  "decision_summary": {
+    "new_open_in_period_relative_source": "Hao et al. eastern China harvest grades, 801-1910; article and grading supplement acquired and hashed, but the annual machine-readable series is available only from the authors on request.",
+    "new_open_in_period_absolute_source": false,
+    "new_open_in_period_absolute_source_reason": "No non-English 1100-1500 source with both a mappable footprint and absolute annual yield units was found in the reviewed repositories. This is a research blocker, not permission to impute labels.",
+    "training_population_targets_added": 0,
+    "validation_sources_added": 4,
+    "validation_sources_out_of_period": 1,
+    "no_starting_population_or_rgo_used": true
+  },
+  "sources": [
+    {
+      "source_id": "hao_eastern_china_harvest_grades_801_1910",
+      "title": "Patterns in data of extreme droughts/floods and harvest grades derived from historical documents in eastern China during 801-1910",
+      "citation": "Hao, Z., Wu, M., Zheng, J., Chen, J., Zhang, X., and Luo, S. (2020), Climate of the Past 16, 101-116",
+      "doi": "https://doi.org/10.5194/cp-16-101-2020",
+      "article_url": "https://cp.copernicus.org/articles/16/101/2020/index.html",
+      "article_pdf_url": "https://cp.copernicus.org/articles/16/101/2020/cp-16-101-2020.pdf",
+      "supplement_url": "https://cp.copernicus.org/articles/16/101/2020/cp-16-101-2020-supplement.pdf",
+      "local_files": [
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/historical_harvest/hao_cp16_101_2020_article.pdf",
+          "sha256": "1881858ceadc05ff6228f4770ebd6c703758370413db4928501b0797391fb5cd",
+          "size_bytes": 3290980
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/historical_harvest/hao_cp16_101_2020_supplement.pdf",
+          "sha256": "af1dfd95ade5569401b418faac9696105b8297e905c81c7d58723ef4b32dc802",
+          "size_bytes": 301640
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/historical_harvest/hao_article.txt",
+          "sha256": "5cbb3ddabcc15093b26d008729cc232a25fac661ec24126adee7e9573854b18b",
+          "size_bytes": 76082,
+          "derivation": "deterministic pypdf text extraction from the article PDF"
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/historical_harvest/hao_cp16_101_2020.xml",
+          "sha256": "9f30fe6e151665e0e6cd6b380b34deb0ed4ba5179404b7575c003b8c20fed616",
+          "size_bytes": 167195,
+          "derivation": "publisher full-text XML; confirms data-availability statement and contains no annual series"
+        }
+      ],
+      "historical_semantics": {
+        "observation_type": "documentary regional harvest grade",
+        "period": [801, 1910],
+        "target_overlap": [1100, 1500],
+        "spatial_units": ["North China Plain", "Jianghuai", "Jiangnan", "whole eastern China"],
+        "spatial_resolution": "station chronologies each covering approximately 20 counties; subregions are broad envelopes, not EU5-equivalent historical polygons",
+        "grade_scale": {
+          "1": "very poor, below 40 percent of normal harvest",
+          "2": "poor, 40-50 percent",
+          "3": "slightly poor, 50-60 percent",
+          "4": "average, 60-70 percent",
+          "5": "near-bumper, 70-80 percent",
+          "6": "bumper, above 80 percent"
+        },
+        "absolute_yield_kg_per_ha": false,
+        "relative_to_local_normal": true,
+        "food_security_text_used": true,
+        "import_dependence_resolved": false,
+        "urbanization_or_trade_hub": "regional documentary series; not a city or port target"
+      },
+      "extracted_checks": {
+        "table_2_year_counts_801_1910": {
+          "grade_1": 54,
+          "grade_2": 178,
+          "grade_3": 204,
+          "grade_4": 160,
+          "grade_5": 77,
+          "grade_6": 47,
+          "missing": 390
+        },
+        "table_2_percent_all_years": {
+          "grade_1": 4.9,
+          "grade_2": 16.0,
+          "grade_3": 18.4,
+          "grade_4": 14.4,
+          "grade_5": 6.9,
+          "grade_6": 4.2,
+          "missing": 35.1
+        },
+        "table_2_percent_excluding_grade_4_and_missing": {
+          "grade_1": 9.6,
+          "grade_2": 31.8,
+          "grade_3": 36.4,
+          "grade_5": 13.8,
+          "grade_6": 8.4
+        },
+        "table_3_mean_grade_nonextreme_vs_extreme_drought": {
+          "north_china_plain": [3.31, 2.84],
+          "jianghuai": [3.27, 2.99],
+          "jiangnan": [3.28, 2.89],
+          "whole_eastern_china": [3.30, 2.95],
+          "co_reporting_drought_and_flood_whole_eastern_china": 2.53
+        },
+        "period_direction_check": {
+          "generally_poor": [[801, 940], [1251, 1650], [1841, 1910]],
+          "generally_bumper": [[951, 1250], [1651, 1840]],
+          "target_window_relevant_note": "The 1100-1250 interval is summarized as generally bumper; 1251-1500 includes the transition to a generally poor regime. This is a climate/harvest-risk validation signal only."
+        }
+      },
+      "availability_and_limitations": {
+        "annual_machine_readable_series": false,
+        "availability_statement": "The article states that all data are available from the corresponding authors on request; the open supplement contains grading criteria but not the annual series.",
+        "missing_data_fraction": 0.351,
+        "selection_bias": "Historical sources preferentially record abnormal years; the paper explicitly documents missing/normal-year bias.",
+        "shared_source_family": "official histories, chronicles, gazetteers and related documentary compilations; not independent from other Chinese documentary chronologies",
+        "mapping_confidence": "low_for_exact_footprint",
+        "cannot_be_used_for": ["absolute crop-yield calibration", "location-level population targets", "global scale anchoring"],
+        "can_be_used_for": ["held-out relative harvest-risk validation", "checking drought-to-harvest direction", "uncertainty scenario stress tests after raw annual data are obtained"]
+      },
+      "model_role": "validation_only_pending_raw_annual_series",
+      "training_eligible": false,
+      "validation_eligible": true,
+      "source_request_blocker": true
+    },
+    {
+      "source_id": "yin_china_decadal_harvest_grade_210bce_1910",
+      "title": "Relationships between temperature change and grain harvest fluctuations in China from 210 BC to 1910 AD",
+      "citation": "Yin, J., Su, Y., and Fang, X. (2015), Quaternary International 355, 153-163",
+      "doi": "https://doi.org/10.1016/j.quaint.2014.09.037",
+      "url": "https://www.sciencedirect.com/science/article/pii/S1040618214006892",
+      "historical_semantics": {
+        "observation_type": "decadal reconstructed grain harvest grade",
+        "period": [210, 1910],
+        "target_overlap": [1100, 1500],
+        "spatial_unit": "broad eastern/whole China envelope",
+        "resolution_years": 10,
+        "absolute_yield_kg_per_ha": false,
+        "relative_to_normal": true,
+        "method": "textual descriptions converted to ordinal harvest levels and aggregated at decadal resolution"
+      },
+      "availability_and_limitations": {
+        "machine_readable_data_acquired": false,
+        "reason": "The reviewed public landing page exposes the publication but not a downloadable series; values shown in figures are not digitized here.",
+        "boundary": "broad national/eastern China envelope; insufficient for EU5 footprint targets",
+        "technology_and_crop_system_drift": "Long period includes changing borders, crop varieties, agricultural area and management; not a stationary 1337 target",
+        "can_be_used_for": ["qualitative or digitized decadal harvest-risk validation after independent digitization"],
+        "cannot_be_used_for": ["absolute yield labels", "aggregate population targets", "source-independent scale anchor"]
+      },
+      "model_role": "validation_candidate_not_acquired",
+      "training_eligible": false,
+      "validation_eligible": false,
+      "acquisition_blocker": true
+    },
+    {
+      "source_id": "shenyang_liaoning_drought_grain_reduction_352_1948",
+      "title": "Reassessing long-term drought risk and societal impacts in Shenyang, Liaoning Province, north-east China (1200-2015)",
+      "citation": "Tang, L., Macdonald, N., Sangster, H., Chiverrell, R., and Gaulton, R. (2020), Climate of the Past 16, 1917-1935",
+      "doi": "https://doi.org/10.5194/cp-16-1917-2020",
+      "article_url": "https://cp.copernicus.org/articles/16/1917/2020/index.html",
+      "supplement_url": "https://cp.copernicus.org/articles/16/1917/2020/cp-16-1917-2020-supplement.pdf",
+      "table_url": "https://cp.copernicus.org/articles/16/1917/2020/cp-16-1917-2020-t01.xlsx",
+      "local_files": [
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/historical_harvest/shenyang_cp16_1917_2020_article.pdf",
+          "sha256": "75e37cf30c6d528be510a6f04936609da8e0fb3c475b562812915c938683b546",
+          "size_bytes": 2931216
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/historical_harvest/shenyang_cp16_1917_2020_supplement.pdf",
+          "sha256": "53f4898debb2641e18454c425eb2b96230bc38b1f06f6ee47b6fd4456171afdb",
+          "size_bytes": 94223
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/historical_harvest/shenyang_cp16_1917_2020_t01.xlsx",
+          "sha256": "dc4be9a56f94513812d484d64930179eafe36eb5a2b60419da7a2b50271bce23",
+          "size_bytes": 10400
+        }
+      ],
+      "historical_semantics": {
+        "observation_type": "historical drought severity and agricultural impact chronology",
+        "period": [1200, 2015],
+        "target_overlap": [1200, 1500],
+        "location": "Shenyang/Liaoning, north-east China",
+        "relative_harvest_signal": "The source inventory states that Liaoning drought ratings for 12 key cities (including Shenyang) from 352-1948 were based on grain-yield reduction rates.",
+        "annual_yield_series_open": false,
+        "absolute_yield_kg_per_ha": false,
+        "documented_food_shock": true,
+        "city_or_trade_hub": "Shenyang is a city selector; not a surrounding rural capacity target"
+      },
+      "availability_and_limitations": {
+        "machine_readable_grain_reduction_series_acquired": false,
+        "available_material": "The open article, supplement and Table 1 inventory identify the archival source and its semantics; the annual 352-1948 drought-rating table is not included in the downloaded assets.",
+        "boundary": "The source discusses Shenyang and Liaoning administrative areas; the EU5 crosswalk uses the named Shenyang location only as a local climate/harvest-risk validation point.",
+        "shared_source_family": "Chinese documentary and local-record compilations; do not count as independent from Hao/Yin documentary harvest sources.",
+        "can_be_used_for": ["event timing and duration validation", "relative drought-to-yield-reduction direction after raw rating data are obtained", "local Asian holdout diagnostics"],
+        "cannot_be_used_for": ["absolute yield calibration", "population-capacity target", "global scale anchor"]
+      },
+      "model_role": "local_relative_risk_validation_pending_raw_rating_table",
+      "training_eligible": false,
+      "validation_eligible": true,
+      "acquisition_blocker": true
+    },
+    {
+      "source_id": "cruz_intersalar_quinoa_rainfed_1200_1450",
+      "title": "Rain-fed agriculture thrived despite climate degradation in the pre-Hispanic arid Andes",
+      "citation": "Cruz, P., Winkel, T., Ledru, M.-P., Bernard, C., Egan, N., Swingedouw, D., and Joffre, R. (2017), Science Advances 3, e1701740",
+      "doi": "https://doi.org/10.1126/sciadv.1701740",
+      "article_url": "https://www.science.org/doi/10.1126/sciadv.1701740",
+      "repository_url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers18-03/010072442.pdf",
+      "supplement_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5738230/supplementaryFiles",
+      "local_files": [
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/historical_harvest/cruz_sciadv_2017_article.pdf",
+          "sha256": "32f8003341bcd8c2992716498342b04c9df30d33c68a7bbef681c5fddae530d0",
+          "size_bytes": 573580
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/historical_harvest/cruz_sciadv_2017_supplement.pdf",
+          "sha256": "60b3f72c9c4439c0f3e9513dc8bfe94a228243cda8bd2bd546691b8d62e1632a",
+          "size_bytes": 2195210
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/historical_harvest/cruz_sciadv_2017_supplement_files.zip",
+          "sha256": "b6db9a4744d82ed30287c32ccb4ab4b659f73e42125527e76c2257ae42efa73e",
+          "size_bytes": 2262763
+        }
+      ],
+      "historical_semantics": {
+        "observation_type": "archaeological cropland plus crop-physics/yield benchmark",
+        "period": [1200, 1450],
+        "target_overlap": [1200, 1450],
+        "geography": "Intersalar region, southern Bolivian Altiplano; study sites and croplands around the Uyuni/Lipez area",
+        "crop": "quinoa",
+        "absolute_yield_kg_per_ha_range": [1000, 1500],
+        "yield_semantics": "The range is measured in present-day carefully hand-farmed mountain-slope fields; the paper argues practices remained broadly unchanged and uses it as a framework for inferring ancient production, not as direct archaeological annual yield.",
+        "archaeological_cropland_area_ha": 1537,
+        "archaeological_cropland_irrigation_fraction_upper_bound": 0.05,
+        "archaeological_date_evidence": "16 radiocarbon dates 1200-1450 CE; quinoa grains in Jirira Vinto granaries dated 1324-1440 CE",
+        "rotation": "two-year rain-fed crop/fallow rotation; effective annualized cropped fraction is approximately one half",
+        "climate_constraints": "annual rainfall below 350 mm, high-altitude frost and wind; quinoa survives lower temperatures than potato",
+        "population_or_capacity_interval": false
+      },
+      "availability_and_limitations": {
+        "direct_annual_yield_series": false,
+        "modern_analogue_bridge": "The authors explicitly rely on continuity of Andean agricultural practices to infer ancient techniques; this is a physical plausibility range, not an observed medieval harvest panel.",
+        "boundary": "No machine-readable study polygon is supplied in the downloaded paper; the crosswalk retains a broad transparent coordinate selector only.",
+        "can_be_used_for": ["absolute low-input quinoa yield plausibility", "rain-fed high-altitude crop/fallow and storage-risk validation", "testing that cold arid locations are not forced to zero when a historically documented staple is feasible"],
+        "cannot_be_used_for": ["population-capacity target", "global scale anchor", "annual risk calibration without additional time series"]
+      },
+      "model_role": "in_period_physical_yield_validation_only",
+      "training_eligible": false,
+      "validation_eligible": true,
+      "acquisition_blocker": false
+    },
+    {
+      "source_id": "ljungqvist_european_grain_harvest_yields_1500_1800",
+      "title": "Climatic signatures in early modern European grain harvest yields",
+      "citation": "Ljungqvist et al. (2023), Climate of the Past 19, 2463-2481",
+      "url": "https://cp.copernicus.org/articles/19/2463/2023/index.html",
+      "table_urls": [
+        "https://cp.copernicus.org/articles/19/2463/2023/cp-19-2463-2023-t01.xlsx",
+        "https://cp.copernicus.org/articles/19/2463/2023/cp-19-2463-2023-t02.xlsx"
+      ],
+      "local_files": [
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/historical_harvest/ljungqvist_cp19_2463_2023_t01.xlsx",
+          "sha256": "ef87f30a4698e72a942f54b2cb4fd00941cc60ecd92b08d090834323a6a58072",
+          "size_bytes": 9324
+        },
+        {
+          "path": "artifacts/data/population_capacity/physical_validation/historical_harvest/ljungqvist_cp19_2463_2023_t02.xlsx",
+          "sha256": "18e579ef389d73abbe935a5c8c8292ee0183674820734dcbf813fe403c2179a7",
+          "size_bytes": 8046
+        }
+      ],
+      "historical_semantics": {
+        "observation_type": "tithe, yield-ratio and total-yield chronologies",
+        "periods_in_tables": {
+          "sweden": [1572, 1740],
+          "switzerland": [1500, 1825],
+          "spain": [1695, 1799]
+        },
+        "absolute_yield_status": "mixed; source-specific and not a uniform kg_per_ha panel",
+        "target_overlap": "none before 1500 except endpoint; not a 1337 training source"
+      },
+      "model_role": "out_of_period_validation_and_source_inventory",
+      "training_eligible": false,
+      "validation_eligible": true,
+      "reason_not_1337": "The earliest tabulated series begins in 1500, while most begin after 1570; land use, technology and institutions are not 1337-equivalent without a separate bridge."
+    },
+    {
+      "source_id": "japan_early_modern_tsubokari_nokoridaka_records",
+      "title": "Early-modern Japanese annual harvest records (Tsubokari/Nokoridaka) discussed by NIES/RIHN projects",
+      "nies_url": "https://www.nies.go.jp/research/subjects/2021/25871_fy2021.html",
+      "rihn_url": "https://www.chikyu.ac.jp/rihn/activities/cr/rihnAnnualReport/105en.html",
+      "historical_semantics": {
+        "observation_type": "annual early-modern rice harvest records",
+        "period": "approximately 1600-1850 in the reviewed project descriptions",
+        "target_overlap": "none for 1100-1500",
+        "absolute_yield_status": "not established from reviewed landing pages"
+      },
+      "model_role": "out_of_period_research_lead_only",
+      "training_eligible": false,
+      "validation_eligible": false,
+      "reason_not_acquired": "The reviewed public descriptions establish existence and date range but did not expose a downloadable 1100-1500 series or a defensible EU5-mappable medieval footprint."
+    },
+    {
+      "source_id": "hohokam_lower_salt_river_agricultural_production_1200_1400",
+      "title": "Inequality in agricultural production and health of Hohokam era irrigation farmers, CE 1200 to 1400",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S2352409X23005291",
+      "historical_semantics": {
+        "observation_type": "archaeological irrigation and bioarchaeological production/health comparison",
+        "period": [1200, 1400],
+        "target_overlap": [1200, 1400],
+        "annual_yield_series": false,
+        "absolute_yield_status": "not an annual crop-yield panel"
+      },
+      "model_role": "physical_validation_only",
+      "training_eligible": false,
+      "validation_eligible": true,
+      "reason": "Six Lower Salt River irrigation villages provide a relevant pre-1337 hydraulic/agricultural contrast, but the publication does not provide annual yield labels or a population-capacity interval for the surrounding EU5-equivalent footprint."
+    }
+  ],
+  "acceptance": {
+    "absolute_annual_yield_sources_1100_1500": 0,
+    "relative_in_period_sources": 1,
+    "relative_in_period_source_raw_annual_series_open": 0,
+    "out_of_period_validation_sources": 2,
+    "source_hashes_verified_for_acquired_files": true,
+    "no_ordinal_to_absolute_conversion": true,
+    "no_statistical_or_regional_yield_imputation": true,
+    "annual_yield_training_gate": false,
+    "remaining_blockers": [
+      "Obtain Hao annual grade series from the authors or a licensed archive if annual risk scoring is required.",
+      "Digitize or obtain the Yin decadal series only for relative held-out validation; do not use it as an absolute target.",
+      "Find or document the absence of a non-English 1100-1500 source with absolute yield units and an exact mappable footprint."
+    ]
+  },
+  "citations": [
+    "https://doi.org/10.5194/cp-16-101-2020",
+    "https://doi.org/10.1016/j.quaint.2014.09.037",
+    "https://cp.copernicus.org/articles/19/2463/2023/index.html",
+    "https://www.nies.go.jp/research/subjects/2021/25871_fy2021.html",
+    "https://www.chikyu.ac.jp/rihn/activities/cr/rihnAnnualReport/105en.html",
+    "https://www.sciencedirect.com/science/article/abs/pii/S2352409X23005291",
+    "https://doi.org/10.1126/sciadv.1701740",
+    "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers18-03/010072442.pdf"
+  ]
+}

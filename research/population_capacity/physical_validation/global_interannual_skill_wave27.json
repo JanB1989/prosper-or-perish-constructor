@@ -1,0 +1,159 @@
+{
+  "schema_version": "population_capacity_global_interannual_skill_v1",
+  "record_id": "global_modern_yield_skill_and_water_mode_wave27",
+  "reviewed_on": "2026-08-04",
+  "target_year": 1337,
+  "target_window": [1100, 1500],
+  "decision": {
+    "in_period_global_machine_readable_annual_absolute_yield_source": false,
+    "best_valid_partial_closure": "Public global annual yield observations (GDHY, 1981-2016) plus paired historical-climate crop-model simulations (ISIMIP2a/GGCMI, 1980-2012) provide out-of-period skill and interannual/water-mode diagnostics across EU5 super-regions.",
+    "training_population_targets_added": 0,
+    "modern_source_as_1337_target": false,
+    "statistical_or_regional_imputation": false,
+    "starting_population_or_rgo_used": false
+  },
+  "sources": [
+    {
+      "source_id": "gdhy_v1_2_v1_3_global_1981_2016",
+      "title": "Global dataset of historical yields v1.2 and v1.3 aligned version",
+      "creator": "Iizumi, Toshichika; Sakai, T",
+      "publication": "Iizumi and Sakai (2020), Scientific Data 7, 97",
+      "doi": "https://doi.org/10.1594/PANGAEA.909132",
+      "publication_doi": "https://doi.org/10.1038/s41597-020-0433-7",
+      "download_url": "https://store.pangaea.de/Publications/IizumiT_2019/gdhy_v1.2_v1.3_20190128.zip",
+      "license": "CC-BY-4.0",
+      "local_source": {
+        "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave27/gdhy_v1.2_v1.3_20190128.zip",
+        "sha256": "731d03171ff9a5afb4837f51d6941fb58085ee69c62e767810e9395756648c76",
+        "size_bytes": 15989683
+      },
+      "coverage": {
+        "years": [1981, 2016],
+        "grid_resolution_deg": 0.5,
+        "crops": ["maize", "rice", "wheat", "soybean"],
+        "seasons_used": ["major maize", "major rice", "winter wheat", "major soybean"],
+        "units": "t ha-1",
+        "super_regions_mapped": ["africa", "america", "asia", "europe", "oceania"],
+        "locations_mapped": 20929
+      },
+      "source_semantics": {
+        "estimate_type": "0.5-degree grid-cell yield estimates using satellite crop-specific vegetation indices aligned to FAO country yield statistics",
+        "historical_observed_yield": true,
+        "1337_technology": false,
+        "area_definition": "time-constant harvested-area distribution from 2000 used by source authors",
+        "missingness": "many missing values in first/last years and grid cells without estimated harvested crop",
+        "absolute_unit_conversion": "t ha-1 x 1000 = kg ha-1 is a unit conversion only; no 1337 yield conversion or technology adjustment is applied"
+      },
+      "mapping": {
+        "crosswalk_path": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave27/gdhy_location_grid_crosswalk_wave27.parquet",
+        "crosswalk_sha256": "7c3d97a83544ef5368cd0e50986898ab694bf22a940a775c800a0635302def50",
+        "report_path": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave27/gdhy_superregion_annual_wave27.csv",
+        "report_sha256": "9d16a3e40e2b52f0e40b12ae9ee2970f6e0f8497f55a6e753522710d1c3eedb8",
+        "manifest_path": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave27/gdhy_mapping_manifest_wave27.json",
+        "manifest_sha256": "bfa0cd5a0ce7bf826daf586434985bfdedeceb8e160abe2c48023d77a084a11d",
+        "method": "nearest GDHY 0.5-degree grid center from calibrated EU5 location centroid; summaries weighted by calibrated area_km2",
+        "location_rows": 20929,
+        "superregion_report_rows": 864,
+        "positive_coverage_rows": 645,
+        "zero_coverage_rows": 219,
+        "coverage_warning": "GDHY cells without crop-estimated yield remain missing and are never filled; coverage fractions are explicitly reported. Ocean super-region has no valid crop rows."
+      },
+      "skill_and_uncertainty_conversion": {
+        "relative_anomaly_definition": "For each crop, super-region and year with valid area, r = area_weighted_yield_year / median(area_weighted_yield over valid years).",
+        "uncertainty_inputs": ["area-weighted annual p10/p50/p90", "area-weighted annual standard deviation", "valid area fraction", "missing-cell mask"],
+        "parameter_use": "Use relative anomaly and variance only to test interannual-risk tails and spatial covariance; retain the mechanistic 1337 yield level as the sole capacity source.",
+        "minimum_coverage_policy": "A diagnostic row with low valid_area_fraction is reported but cannot calibrate a global parameter or be imputed from another region.",
+        "source_independence": "Independent of historical manorial/documentary sources, but not an independent 1337 population observation.",
+        "cross_source_skill_audit": {
+          "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave27/gdhy_isimip_rice_skill_wave27.csv",
+          "sha256": "e8dab5427c5daa1b7cda11b647ae0c1197121f227f858c331144f479b8735c59",
+          "manifest_path": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave27/gdhy_isimip_skill_manifest_wave27.json",
+          "manifest_sha256": "c7fb3ac829b0f7ef15e7464ab0ec7210978bc73dd8d22c1b8c4f7969f81fd4b6",
+          "rows": 12,
+          "comparison": "Paired modern rice anomaly correlations and standardized RMSE by five land super-regions plus the explicit zero-coverage Atlantic group, for rain-fed and full-irrigation ISIMIP modes.",
+          "interpretation": "Modern skill diagnostic only. It does not calibrate 1337 absolute yields, replace missing historical labels, or supply population targets."
+        }
+      },
+      "model_role": "modern_global_relative_yield_skill_validation",
+      "training_target_allowed": false,
+      "validation_allowed": true
+    },
+    {
+      "source_id": "isimip2a_clm_crop_watch_wfdei_rice_1980_2012",
+      "title": "ISIMIP2a Simulation Data from the Agriculture Sector: CLM-Crop WATCH WFDEI historical rice",
+      "citation": "Müller et al. (2023), ISIMIP2a Simulation Data from the Agriculture Sector (v2.0)",
+      "doi": "https://doi.org/10.48364/ISIMIP.729341",
+      "dataset_url": "https://data.isimip.org/datasets/6b022471-1616-482c-b5c7-f078b032bb1f/",
+      "protocol_url": "https://www.isimip.org/documents/648/ISIMIP2a_protocol_230302_agriculture.pdf",
+      "download_urls": {
+        "rainfed": "https://files.isimip.org/ISIMIP2a/OutputData/agriculture/CLM-Crop/watch-wfdei/historical/clm-crop_watch-wfdei_nobc_hist_co2_yield-ric-noirr-fullharm_global_annual_1980_2012.nc4",
+        "full_irrigation": "https://files.isimip.org/ISIMIP2a/OutputData/agriculture/CLM-Crop/watch-wfdei/historical/clm-crop_watch-wfdei_nobc_hist_co2_yield-ric-firr-fullharm_global_annual_1980_2012.nc4"
+      },
+      "local_sources": {
+        "rainfed": {
+          "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave27/isimip_clm_crop_watch_rice_rainfed_1980_2012.nc4",
+          "sha256": "baeb65a7536b639ab1160ca2a7914252f59febad51f7aa730a9e6ff65cf3debe",
+          "size_bytes": 5534660
+        },
+        "full_irrigation": {
+          "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave27/isimip_clm_crop_watch_rice_fullirr_1980_2012.nc4",
+          "sha256": "1b83b433f2c23a891dd0719103dbce59c43cf142f58245e2d8578aa67487f6fa",
+          "size_bytes": 5526893
+        }
+      },
+      "coverage": {
+        "years": [1980, 2012],
+        "grid_resolution_deg": 0.5,
+        "crop": "rice",
+        "water_modes": ["rainfed", "full_irrigation"],
+        "units": "t ha-1 yr-1",
+        "locations_mapped": 20929,
+        "super_regions_mapped": ["africa", "america", "asia", "europe", "oceania"]
+      },
+      "source_semantics": {
+        "estimate_type": "CLM-Crop model output driven by WFDEI historical climate under GGCMI/ISIMIP2a protocol",
+        "historical_observation": false,
+        "1337_technology": false,
+        "water_mode_semantics": "separate no-irrigation and full-irrigation model runs; never treated as observed irrigation fractions",
+        "time_coordinate_note": "NetCDF time is encoded as years since 1980 with a proleptic Gregorian calendar; values are indexed deterministically as 1980-2012 without converting to dates"
+      },
+      "mapping": {
+        "report_path": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave27/isimip_rice_superregion_annual_wave27.csv",
+        "report_sha256": "64589cc83f5046cb952fb3262d7410a2953694e61dd4f82b755074002353f8dd",
+        "irrigation_contrast_path": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave27/isimip_rice_irrigation_contrast_wave27.csv",
+        "irrigation_contrast_sha256": "1cf0cc666b809c73350c700fdf26c512da71a9791cd231ae85532e877c5881eb",
+        "manifest_path": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave27/isimip_mapping_manifest_wave27.json",
+        "manifest_sha256": "9f889b14f6f07c7d9df872f6ec3da39fb70f78040a3fb91058776f7b336604e2",
+        "method": "nearest CLM-Crop 0.5-degree grid center from calibrated EU5 location centroid; summaries weighted by calibrated area_km2",
+        "positive_coverage_rows": 330,
+        "zero_coverage_rows": 66,
+        "paired_contrast_rows": 165,
+        "coverage_warning": "Model output is available across nearly all land cells but does not represent historical cultivated area or 1337 management; it is not a capacity label."
+      },
+      "skill_and_uncertainty_conversion": {
+        "water_mode_contrast": "delta_rice = full_irrigation_yield - rainfed_yield at the same grid cell and year; only paired finite cells are included.",
+        "uncertainty_inputs": ["annual rainfed/full-irrigation spread", "paired irrigation increment", "valid paired area fraction", "super-region covariance diagnostics"],
+        "model_disagreement_policy": "ISIMIP model output is not averaged with GDHY; disagreement is retained as an uncertainty/skill diagnostic.",
+        "forbidden_conversion": "Do not convert modeled modern rice yields into 1337 yields, population targets or irrigation acreage."
+      },
+      "model_role": "independent_modern_climate_response_and_water_mode_skill_validation",
+      "training_target_allowed": false,
+      "validation_allowed": true
+    }
+  ],
+  "global_closure": {
+    "machine_readable_annual_yield_coverage_for_additional_super_regions": true,
+    "1337_compatible_historical_annual_observation_coverage": false,
+    "modern_relative_skill_layer_closed": true,
+    "absolute_1337_yield_parameter_calibration_closed": false,
+    "unresolved_gap": "No public, machine-readable global annual yield observation series covering 1100-1500 and mappable historical boundaries was found. GDHY/ISIMIP close modern model-skill diagnostics only; they must not be promoted to 1337 labels.",
+    "accepted_use": "Use these artifacts in grouped super-region risk validation and uncertainty ablations after the mechanistic 1337 model is fit from physical sources and vetted historical aggregate anchors."
+  },
+  "citations": [
+    "https://doi.org/10.1594/PANGAEA.909132",
+    "https://doi.org/10.1038/s41597-020-0433-7",
+    "https://doi.org/10.48364/ISIMIP.729341",
+    "https://data.isimip.org/datasets/6b022471-1616-482c-b5c7-f078b032bb1f/",
+    "https://www.isimip.org/documents/648/ISIMIP2a_protocol_230302_agriculture.pdf"
+  ]
+}

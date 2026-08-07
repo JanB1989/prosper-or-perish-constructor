@@ -1,0 +1,173 @@
+{
+  "schema_version": "population_capacity_pyaez_feasibility_review_v1",
+  "review_id": "pyaez_1337_feasibility_wave23",
+  "reviewed_on": "2026-08-04",
+  "status": "diagnostic_only",
+  "active_model_mutation": false,
+  "conclusion": "feasible_in_principle_but_not_runnable_or_closed_in_current_environment",
+  "question": "Can an exact same-geography PyAEZ challenger be run for circa-1337 crop, soil, temperature, precipitation, terrain and water constraints, rather than relabeling GAEZ fallbacks as PyAEZ?",
+  "target_definition": {
+    "engine": "PyAEZ",
+    "target_period": "1337 CE",
+    "available_climate_step": "CHELSA-TraCE21k 600 BP file id -006",
+    "temporal_interpretation": "nearest centennial step (approximately 1350 CE when BP is referenced to 1950); not exact 1337 climate",
+    "temporal_uncertainty_years": 50,
+    "required_geography": "same sampled EU5 location footprint",
+    "water_modes": ["rainfed", "irrigated"],
+    "required_locations": 20929,
+    "registered_crops": 23,
+    "required_rows_per_engine": 962734
+  },
+  "current_fallback_artifact": {
+    "path": "artifacts/data/population_capacity/pyaez_1337_yields.parquet",
+    "sha256": "faccdfca965dd2b434ea5d41930f9beb35f9a13aaf2da6767469043d20e80ec6",
+    "closure_manifest": "artifacts/data/population_capacity/pyaez_1337_yields.closure.json",
+    "closure_sha256": "8b65d33af0746b9f4b71def1ff9014588cf5135c5e63d0a3a349cb7b2ed3e5e2",
+    "rows": 962734,
+    "locations": 20929,
+    "crops": 23,
+    "water_modes": 2,
+    "resolution_policy": "same_geography_gaez_v5_low_input_footprint_only; no statistical imputation",
+    "source_engine_semantics": "all rows are GAEZ v5-derived physical fallbacks, not PyAEZ executions",
+    "physical_fallback_rows": 539830,
+    "structural_zero_rows": 422904,
+    "exact_pyaez_rows_present": 0,
+    "required_two_engine_matrix_rows": 1925468,
+    "training_status": "must_not_be_labeled_as_exact_pyaez_or_used_as_challenger_output"
+  },
+  "runtime_probe": {
+    "package": "PyAEZ 2.2",
+    "official_repository": "https://github.com/gicait/PyAEZ",
+    "installed_project_python": "3.14.2",
+    "project_python_constraint": ">=3.13",
+    "contract_declared_python": "3.11",
+    "import_pyaez_package": "passed",
+    "import_pyaez_climate_regime": "blocked",
+    "import_error": "ModuleNotFoundError: No module named 'osgeo'",
+    "gdal_distribution": "missing",
+    "numba_distribution": "missing",
+    "gdal_config_executable": "missing",
+    "interpretation": "The package is installed, but its GDAL/osgeo-backed simulation modules cannot execute in the current locked environment; the contract Python version also does not match the project runtime."
+  },
+  "source_readiness": {
+    "climate": {
+      "state": "partially_available",
+      "direct_variables": ["monthly precipitation", "monthly tasmin", "monthly tasmax"],
+      "period": "CHELSA-TraCE21k 600 BP / file id -006",
+      "coverage": "global centennial climatology; nearest-step approximation to 1337",
+      "direct_source": "https://www.chelsa-climate.org/datasets/chelsa-trace21k-centennial",
+      "reference_paper": "https://doi.org/10.5194/cp-19-439-2023",
+      "missing_or_method_dependent": ["shortwave radiation", "relative humidity", "wind", "vertical-level/time decoding validation", "interannual-risk scenario construction"],
+      "current_policy": "ancillary fields may be constructed from pinned TraCE21ka anomalies plus modern CHELSA reference, but this requires a resolved, tested method registry and is not direct 1337 observation"
+    },
+    "soil": {
+      "state": "source_acquired_but_method_unresolved",
+      "source": "HWSD v2 database/raster and FAO technical report",
+      "source_url": "https://s3.eu-west-1.amazonaws.com/data.gaezdev.aws.fao.org/HWSD/HWSD2_DB.zip",
+      "documentation_url": "https://www.fao.org/3/cc3823en/cc3823en.pdf",
+      "required_resolution": ["component-share weighting", "rootable depth", "available water capacity", "soil-to-PyAEZ parameter mapping"],
+      "current_policy": "no median or regional soil fill; unresolved soil method blocks exact run"
+    },
+    "crop_parameters": {
+      "state": "incomplete",
+      "official_pyaez_example_scope": ["maize", "sugarcane"],
+      "registered_crop_count": 23,
+      "resolved_crop_count": 0,
+      "official_examples_url": "https://github.com/gicait/PyAEZ/tree/master",
+      "gaez_v5_parameter_docs": [
+        "https://github-wiki-see.page/m/un-fao/gaezv5/wiki/21.-GAEZ-v5-Platform-User-Guide",
+        "https://github-wiki-see.page/m/un-fao/gaezv5/wiki/06.-Module-IV-%28Agro%E2%80%90edaphic-suitability%29",
+        "https://www.fao.org/gaez/en"
+      ],
+      "interpretation": "GAEZ v5 appendices can inform a reviewed crop-parameter adaptation, but they are not interchangeable with official PyAEZ crop LUTs. Every crop and both water modes require an explicit cited mapping and hash before promotion."
+    },
+    "terrain_and_water": {
+      "state": "partially_available",
+      "inputs": ["CHELSA orography", "terrain slope derivation", "HydroRIVERS/RiverATLAS candidates", "lake/coast access"],
+      "unresolved": ["terrain constraint LUTs", "conveyance reachability", "water-budget cap", "pre-1337 irrigation/terrace/lifting technology registry"],
+      "interpretation": "River presence or modern irrigated acreage must not be substituted for a PyAEZ irrigated simulation or a 1337-feasible water budget."
+    }
+  },
+  "contract_probe": {
+    "crop_registry": {
+      "state": "blocked",
+      "resolved_crops": 0,
+      "expected_crops": 23,
+      "blocking_reason": "all 23 template crop records remain parameter_state_not_resolved"
+    },
+    "method_registry": {
+      "state": "blocked",
+      "direct_climate_methods_resolved": ["tasmin", "tasmax", "pr"],
+      "unresolved_methods": ["rsds", "hurs", "wind", "trace_vertical_level", "trace_time_decode", "soil_components", "soil_depth", "terrain_slope", "lgp", "thermal_climate", "permafrost", "lut_selection"],
+      "lock_hash": "unresolved",
+      "blocking_reason": "required method choices and reproducible environment lock are not complete"
+    }
+  },
+  "hard_blockers_before_exact_challenger": [
+    "Provide an isolated reproducible PyAEZ runtime with GDAL/osgeo and numba, or a validated equivalent container; reconcile contract Python 3.11 with the project runtime policy.",
+    "Run and archive a maize rain-fed and irrigated smoke test at one known footprint before scaling.",
+    "Resolve and hash PyAEZ-compatible crop parameters and constraint LUTs for all 23 registered crops; any GAEZ-to-PyAEZ adaptation must be cited and labeled as adaptation, never as an official PyAEZ table.",
+    "Resolve all method-registry fields, including ancillary climate derivation, no-leap/vertical/time decoding, HWSD component/depth mapping, slope, LGP, thermal climate, permafrost and LUT selection.",
+    "Resolve pre-1337 irrigation, terrace and lifting technology and water-budget rules; do not use a has-river shortcut.",
+    "Execute exact same-footprint PyAEZ outputs for every crop and water mode and verify one classified row per location × crop × mode × engine.",
+    "Compare exact PyAEZ output against the current GAEZ fallback, retain disagreement as uncertainty, and only then permit challenger training."
+  ],
+  "prohibited_shortcuts": [
+    "Relabeling the current GAEZ fallback parquet as PyAEZ.",
+    "Copying rain-fed yields into irrigated fields.",
+    "Filling missing crop parameters with regional or global medians.",
+    "Calling 600 BP climate an exact 1337 climate record.",
+    "Treating zeros in a fallback matrix as evidence that an exact PyAEZ source was run."
+  ],
+  "recommended_execution_order": [
+    "Build the locked runtime and run the one-crop PyAEZ smoke test.",
+    "Resolve the crop and method registries with hashes and citations.",
+    "Run exact location-footprint labels for both water modes.",
+    "Audit row closure, source semantics, and engine disagreement.",
+    "Only after closure, fit and compare the mechanistic model and challengers."
+  ],
+  "citations": [
+    {
+      "id": "pyaez_fao",
+      "title": "FAO PyAEZ software page",
+      "url": "https://www.fao.org/land-water/resources/tools/software/pyaez/en",
+      "supports": "FAO-backed open-source PyAEZ tool and intended agro-ecological simulation use"
+    },
+    {
+      "id": "pyaez_github",
+      "title": "PyAEZ source repository",
+      "url": "https://github.com/gicait/PyAEZ",
+      "supports": "package source, module structure and example input scope"
+    },
+    {
+      "id": "pyaez_pypi",
+      "title": "PyAEZ 2.2 on PyPI",
+      "url": "https://pypi.org/project/PyAEZ/",
+      "supports": "release metadata and GDAL/numba runtime dependencies"
+    },
+    {
+      "id": "chelsa_trace",
+      "title": "CHELSA-TraCE21k centennial dataset",
+      "url": "https://www.chelsa-climate.org/datasets/chelsa-trace21k-centennial",
+      "supports": "global centennial paleoclimate coverage and variables"
+    },
+    {
+      "id": "chelsa_paper",
+      "title": "Karger et al. 2023, CHELSA-TraCE21k",
+      "url": "https://doi.org/10.5194/cp-19-439-2023",
+      "supports": "method and uncertainty context for downscaled transient paleoclimate"
+    },
+    {
+      "id": "hwsd_fao",
+      "title": "FAO HWSD v2 technical report",
+      "url": "https://www.fao.org/3/cc3823en/cc3823en.pdf",
+      "supports": "soil database definitions and limitations"
+    },
+    {
+      "id": "gaez",
+      "title": "FAO GAEZ v5",
+      "url": "https://www.fao.org/gaez/en",
+      "supports": "crop, water, agroclimatic and soil parameter documentation used as a separate fallback source"
+    }
+  ]
+}

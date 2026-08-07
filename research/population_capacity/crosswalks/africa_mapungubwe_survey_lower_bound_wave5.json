@@ -1,0 +1,34 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Africa",
+  "region": "southern_africa",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "mapungubwe_south_african_survey_1270_1320_capacity_lower_bound_wave5",
+      "historical_boundary": "Mapungubwe UNESCO property plus South African buffer-zone survey footprint at the Limpopo-Shashe confluence",
+      "eu5_selector": {
+        "include": [
+          "location_tag=mapungubwe"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted_containment_lower_bound",
+      "area_comparison": {
+        "unesco_property_km2": 281.686602,
+        "unesco_buffer_km2": 1048.0,
+        "bounded_survey_footprint_km2": 1329.686602,
+        "eu5_containing_area_km2": 8154.749192,
+        "historical_area_share_of_selector": 0.163057
+      },
+      "resolution_method": "UNESCO dossier 1099bis provides the official South African property and buffer boundary at the Limpopo-Shashe confluence, and Huffman and Woodborne identify the National Park plus surrounding buffer as the systematic survey domain. The full 1,329.686602 km2 protected-and-buffer footprint lies inside the calibrated EU5 mapungubwe location. The selector is deliberately unweighted and used only for a one-sided lower bound: capacity of the whole containing game location must be at least the reconstructed population of the smaller surveyed landscape.",
+      "notes": "Coverage is the fraction of the bounded South African archaeological survey footprint contained by the selected EU5 geography. It does not claim that the EU5 location and archaeological footprint have identical boundaries, and it does not map the wider 30,000 km2 Mapungubwe polity."
+    }
+  ]
+}

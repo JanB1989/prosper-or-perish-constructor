@@ -1,0 +1,42 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "super_region": "Africa",
+  "region": "sahel",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "jenne_jeno_750_1100_inland_delta_validation_wave22",
+      "historical_boundary": "Approximately 1,100 km2 traditional Jenne hinterland survey region; population interval applies only to Jenne-jeno and satellites within approximately 1 km, not to all 1,100 km2.",
+      "eu5_selector": "location_tag=djenne",
+      "selector_type": "location_tag_containment_weighted",
+      "selected_location_count": 1,
+      "matched_location_count": 1,
+      "location_weights": {
+        "djenne": 0.112123
+      },
+      "selector_coverage_fraction": 1.0,
+      "coverage_fraction": 0.112123,
+      "boundary_overlap_status": "contained_archaeological_region_in_coarse_eu5_location",
+      "crosswalk_status": "partial",
+      "boundary_confidence": "medium for 1,100 km2 survey; low for urban cluster to rural capacity equivalence",
+      "status": "validation_only",
+      "candidate_role": "validation_only",
+      "area_comparison": {
+        "historical_area_km2": 1100.0,
+        "eu5_candidate_footprint_area_km2": 9810.723041510353,
+        "mapped_area_km2": 1100.0,
+        "area_coverage_fraction": 0.112123,
+        "eu5_calibrated_centroid_lon": -4.227855752902087,
+        "eu5_calibrated_centroid_lat": 13.799119304061206,
+        "geometry_source": "polynomial_coordinate_jacobian_v2+bounded_exact_crosswalks"
+      },
+      "resolution_method": "Use the dedicated djenne location as an explicit containing selector and cap the mapped area at the published 1,100 km2 survey region. Do not assign the urban 1-km population interval to the entire EU5 footprint and do not use it in training aggregates.",
+      "sources": [
+        "https://doi.org/10.1017/S0021853700018983",
+        "https://www.cambridge.org/core/journals/journal-of-african-history/article/abs/inland-niger-delta-before-the-empire-of-mali-evidence-from-jennejeno/111CBA0644CA0D9EE7B3210C7A8F50F6"
+      ],
+      "notes": "The 88.8% unmapped area is intentional and blocks any interpretation as an exact EU5 aggregate. This crosswalk is a held-out physical/archaeological validation case only."
+    }
+  ]
+}

@@ -1,0 +1,358 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "global_anchor_revalidation_wave27",
+  "region": "global_anchor_revalidation_wave27",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "scope": "Append-only revalidation of high-priority aggregate candidates. The Faroe lower bound is corrected for documented imported-grain dependence; Fayyum/Nile, Japan, China, Andes and Oceania records remain validation-only because they lack a defensible same-boundary local-food saturation interval or fail the EU5 coverage gate.",
+  "promotion_audit": {
+    "decision": "One corrected Faroe one-sided lower bound is admitted. No new two-sided global scale anchor is promoted. All other records remain validation-only with exact missing evidence retained.",
+    "reviewed_on": "2026-08-04",
+    "review_method": "Reviewed primary or scholarly sources for date, population semantics, local-food dependence, pressure/saturation evidence, shocks and historical boundary. Starting population, HYDE, RGO and modern population fields are excluded.",
+    "reason_faroe_is_one_sided": "The 1298 land-management system and stable 3000-4000 population support a local-food floor, but the 2020 metabolic review documents imported grain at about 25 percent of the traditional diet. Therefore an observed 1327 population cannot be treated as an intrinsic local-food upper capacity without an independent food-balance model.",
+    "required_followup": [
+      "Fayyum/Nile: reconstruct a closed village or rural-catchment polygon and obtain a population interval and saturation/pressure evidence independent of fiscal output and Cairo provisioning.",
+      "Japan: obtain province-level non-rice fields, household/population intervals and an upper land-scarcity or famine-pressure endpoint; register acreage alone remains a floor.",
+      "China: map the six-county Pingjiang Lu boundary and separate local rural food production from canal redistribution, then find a source-supported saturation interval.",
+      "Andes: map the raised-field/terrace production footprint and find a date-matched population interval with local pressure; city or basin reconstructions alone are not sufficient.",
+      "Tongatapu: repair the 52 percent EU5 area mismatch and resolve the conflict between Green/Burley capacity estimates and later LiDAR population estimates before quantitative use."
+    ]
+  },
+  "records": [
+    {
+      "anchor_id": "faroe_1298_1327_local_support_floor_revalidation_wave27",
+      "label": "Faroe Islands c.1298-1327: corrected local-support floor under imported-grain uncertainty",
+      "year_start": 1298,
+      "year_end": 1327,
+      "population_low": 2700,
+      "population_central": 3350,
+      "population_high": 4000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.7,
+      "local_food_central": 0.75,
+      "local_food_high": 0.9,
+      "capacity_low": 1890,
+      "capacity_central": 2513,
+      "capacity_high": 3600,
+      "interval_semantics": "The 1327 population endpoints are the two official historical estimates (approximately 2,700 and 4,000); 3,350 is their transparent midpoint for diagnostics. The lower-bound capacity values are population multiplied by a conservative 0.70-0.90 local-food share, not a two-sided natural-capacity ceiling. This supersedes the earlier 0.90 local-food floor because the traditional diet review documents imported grain near 25 percent.",
+      "derivation": {
+        "population_source": "Statistics Faroe Islands IB08010, 1327 footnote: approximately 4,000 (Degn) and 2,700 (Guttesen)",
+        "population_interval_rule": "Published estimates are retained as low/high; arithmetic midpoint is diagnostic only",
+        "local_food_rule": "0.70 lower bound and 0.75 central follow the documented approximately 25 percent imported-grain share, with 0.90 as an upper sensitivity for geographic/temporal variation",
+        "capacity_rule": "One-sided local-support floor equals population endpoint times local-food endpoint; no saturation fraction is inferred",
+        "supersession_rule": "Replaces faroe_1300_local_support_floor_wave3 and removes its unsupported 0.90 minimum local-food assumption"
+      },
+      "pressure_evidence": [
+        "The 1298 Seyðabrævið (Sheep Letter) codified local pasture and livestock limits: stock should remain at the previous level unless the land can accommodate more, linking land management to an explicit ecological cap.",
+        "The Faroese social-metabolism synthesis reports that population rose to roughly 3,000-4,000 and remained stable for five centuries, and that traditional land units were a culturally negotiated carrying-capacity system.",
+        "The Norse Faroe rangeland model computes maximum ewe/lamb pairs for geographically representative areas and documents local population pressure, pasture regulation and soil/vegetation constraints.",
+        "The historical ecology review finds local resilience from livestock, barley, fish, seabirds and marine mammals, while also reporting that imported grain was an integral staple."
+      ],
+      "shock_flags": [
+        "the 1327 population values are retrospective household estimates, not an enumeration",
+        "imported grain and maritime exchange are required for part of the traditional diet",
+        "pasture caps limit livestock but do not by themselves bound marine or crop calories",
+        "severe winters and failed fish/grain years can produce temporary starvation"
+      ],
+      "trade_dependence": "mixed; traditional local production was substantial but imported grain supplied approximately one quarter of calories in the reviewed balance",
+      "food_regime": "dairy and hay-fed cattle, sheep, barley, swedes, inshore fish, seabirds, pilot whale and seal products with imported grain",
+      "boundary_description": "Complete Faroe archipelago, represented by the EU5 Torshavn location; the declared 0.986 coverage retains unresolved islet/coast clipping.",
+      "boundary_source": "https://statbank.hagstova.fo/pxweb/en/H2/H2__IB__IB08/fo_sogtol.px/",
+      "eu5_selector": {
+        "include": ["location_tag=torshavn"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.986,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "training_eligible": true,
+      "validation_test": "one_sided_lower_bound",
+      "supersedes_anchor_ids": ["faroe_1300_local_support_floor_wave3"],
+      "source_family": "faroe_tax_land_sheep_carrying_capacity",
+      "source_bundle": "statbank_1327_sheep_letter_rangeland_model_social_metabolism_2020",
+      "source_family_independence": "This is a semantic revalidation of the prior Faroe floor, not an independent source-family replication. It adds the official 1327 estimates and an explicit imported-grain balance; it does not use EU5 starting population.",
+      "sources": [
+        "https://statbank.hagstova.fo/pxweb/en/H2/H2__IB__IB08/fo_sogtol.px/",
+        "https://www.wisdomlib.org/science/journal/sustainability-journal-mdpi/d/doc1778313.html",
+        "https://www.researchgate.net/publication/37244414_Sustainable_Rangeland_Grazing_in_Norse_Faroe",
+        "https://abdn.elsevierpure.com/en/publications/historical-human-ecology-of-the-faroe-islands/",
+        "https://danmarkshistorien.lex.dk/F%C3%A6r%C3%B8ernes_historie"
+      ],
+      "citation_details": [
+        "Statistics Faroe Islands IB08010, year 1327 footnote: approximately 4,000 from Anton Degn and approximately 2,700 from Rolf Guttesen.",
+        "Social Metabolism of Quiet Sustainability (Sustainability 2020), pp. 6-7: population stable around 3,000-4,000 for five centuries; imported grain close to 25 percent of the traditional diet; one mørk could sustain 40-48 sheep and half a mørk was a minimum family holding.",
+        "Sustainable Rangeland Grazing in Norse Faroe, pp. 4-8 and 16-20: 1298 Sheep Letter and modeled local pasture stocking limits/pressure.",
+        "Lex Danmarkshistorien: approximately 4,000 around 1300 and economically sustainable until the late eighteenth century; used as qualitative corroboration, not as a narrow capacity endpoint."
+      ],
+      "notes": "The corrected one-sided lower bound is the only Faroe quantity admitted to training. It avoids converting a mixed local/imported diet into an intrinsic two-sided capacity target. The old floor is superseded rather than silently retained."
+    },
+    {
+      "anchor_id": "fayyum_nile_1245_local_capacity_recheck_wave27",
+      "label": "Fayyum/Nile c.1245: cadastral and population reconstruction recheck",
+      "year_start": 1245,
+      "year_end": 1245,
+      "population_low": 75000,
+      "population_central": 75000,
+      "population_high": 75000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Rapoport's approximately 75,000 Fayyum estimate is retained as a point observation from fiscal reconstruction; no uncertainty interval is invented and it is not a carrying-capacity interval.",
+      "pressure_evidence": [
+        "Al-Nabulusi's 1245 survey records village land, water rights, irrigation and taxes, exposing a local agricultural system but not total population.",
+        "Rapoport's reconstruction separates cultivated area, irrigation, subsistence and commercial crops, but the available review does not publish a saturation interval or complete local-calorie share.",
+        "Nile irrigation, crop taxation and Cairo/royal transfers make fiscal output an unreliable upper-capacity label without a closed rural boundary."
+      ],
+      "shock_flags": [
+        "poll-tax entries cover only non-Muslims",
+        "fiscal values are not headcounts or production totals",
+        "Madinat al-Fayyum urban population is embedded in the estimate",
+        "iqta/endowment and Nile redistribution flows are not separated"
+      ],
+      "trade_dependence": "mixed; local Nile production is documented but fiscal and urban redistribution are unresolved",
+      "food_regime": "Nile-irrigated wheat, barley, fava beans, rice in suitable pockets, livestock, pasture and fisheries",
+      "boundary_description": "Fayyum depression and surveyed village system; no audited EU5 rural-catchment polygon.",
+      "boundary_source": "https://projects.history.qmul.ac.uk/ruralsocietyislam/",
+      "eu5_selector": {
+        "include": ["location_tag=__unmapped_fayyum_nile_recheck_wave27__"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium_for_fayyum_low_for_eu5",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "fayyum_rural_cadastre_and_rapoport_reconstruction_recheck",
+      "source_bundle": "nabulusi_1245_rapoport_75k_screen_wave27",
+      "source_family_independence": "Independent fiscal and scholarly reconstruction sources, but no target is admitted without boundary and saturation closure.",
+      "sources": [
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/",
+        "https://eh.net/book_reviews/rural-economy-and-tribal-society-in-islamic-egypt/",
+        "https://www.ifao.egnet.net/bcai/34/21/",
+        "https://search.worldcat.org/title/1027116407"
+      ],
+      "notes": "Validation-only. Exact missing evidence: same-boundary rural population interval, local-food share, saturation/pressure upper endpoint and EU5 polygon crosswalk."
+    },
+    {
+      "anchor_id": "japan_kamakura_province_register_recheck_wave27",
+      "label": "Japan provinces c.1280: registered rice-field floors without upper capacity",
+      "year_start": 1280,
+      "year_end": 1280,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Farris Great Land Register acreage can establish province-level cultivated-food floors after crop and non-rice sensitivities, but the registers are not complete population counts and do not provide upper saturation endpoints.",
+      "pressure_evidence": [
+        "Farris Tables 1.1-1.3 compare registered rice acreage with estate surveys and document a local cultivated-food base.",
+        "Late Heian/Kamakura famine and grain-shortage context supports pressure, but no independent province-specific saturation fraction is resolved.",
+        "The register is rice-centered and omits non-rice fields, fisheries and forest foods that are essential to a full Malthusian capacity estimate."
+      ],
+      "shock_flags": [
+        "partial registers and omitted non-rice fields",
+        "Mongol invasion/provisioning exposure for Kyushu",
+        "no province-level upper endpoint or population enumeration"
+      ],
+      "trade_dependence": "low_to_mixed; local rice and dry fields are documented but regional exchange is not quantified",
+      "food_regime": "wet rice, dry fields, pulses, coastal/river fisheries, livestock and forest foods",
+      "boundary_description": "Multiple historical Japanese provinces; a single EU5 national selector cannot replace province-specific boundary mapping.",
+      "boundary_source": "https://chgis.fas.harvard.edu/data/japan/",
+      "eu5_selector": {
+        "include": ["location_tag=__unmapped_japan_register_recheck_wave27__"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "high_for_register_provinces_low_for_recheck_aggregate",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "farris_2006_great_land_registers_recheck",
+      "source_bundle": "farris_tables_1_1_to_1_3_chgis_wave27",
+      "source_family_independence": "Same documentary family as existing Japan lower-bound packets; this recheck prevents rice acreage from being promoted to a two-sided population label.",
+      "sources": [
+        "https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=23",
+        "https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "https://chgis.fas.harvard.edu/data/japan/"
+      ],
+      "notes": "Validation-only. Existing province lower bounds remain the only training use; exact missing evidence is an upper population/saturation endpoint and complete province crosswalk."
+    },
+    {
+      "anchor_id": "suzhou_pingjiang_1290_local_intensive_recheck_wave27",
+      "label": "Pingjiang Lu/Suzhou c.1290: dense irrigated register and canal redistribution",
+      "year_start": 1290,
+      "year_end": 1290,
+      "population_low": 2433700,
+      "population_central": 2433700,
+      "population_high": 2433700,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Pingjiang Lu's 1290 register gives 466,158 households and 2,433,700 people for six counties. The value is retained as a point administrative observation, not a published uncertainty or carrying-capacity interval.",
+      "pressure_evidence": [
+        "The six-county aggregate is a dense irrigated rice/canal landscape and a useful thriving local-intensive validation case.",
+        "Taihu freshwater fisheries, canal transport and administrative redistribution are integral to the system but their imported/local shares are not quantified.",
+        "No boundary-matched land-scarcity, real-wage, famine-sensitivity or marginal-land evidence establishes saturation."
+      ],
+      "shock_flags": [
+        "Yuan register is administrative and may omit unregistered groups",
+        "six-county boundary is not matched to EU5 locations",
+        "canal and market redistribution confounds intrinsic local capacity"
+      ],
+      "trade_dependence": "high; canal and administrative redistribution are central",
+      "food_regime": "irrigated rice, wheat, legumes, pigs, Taihu fisheries and canal markets",
+      "boundary_description": "Pingjiang Lu six counties around Suzhou; not the modern city polygon and not a closed rural-food catchment.",
+      "boundary_source": "https://dfzb.suzhou.gov.cn/dfzb/szdq/201507/8d3b864be8d247b991dd1524605f7e9b.shtml",
+      "eu5_selector": {
+        "include": ["location_tag=__unmapped_pingjiang_recheck_wave27__"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium_for_six_county_register_low_for_eu5",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "suzhou_yuan_register_recheck",
+      "source_bundle": "pingjiang_lu_1290_six_county_register_wave27",
+      "source_family_independence": "Independent administrative-register source family, but no carrying-capacity label is inferred from the register.",
+      "sources": [
+        "https://dfzb.suzhou.gov.cn/dfzb/szdq/201507/8d3b864be8d247b991dd1524605f7e9b.shtml",
+        "https://szzy.7lue.cn/read/b8f1737d5285e7014ed3c229289951e7/e8bf9266f4bbf5de9198fd18aca9514b.md"
+      ],
+      "notes": "Validation-only thriving system. Exact missing evidence: mappable six-county crosswalk, local-food share and an independent saturation interval that excludes canal redistribution."
+    },
+    {
+      "anchor_id": "lake_titicaca_raised_fields_1000_1400_recheck_wave27",
+      "label": "Lake Titicaca raised-field basin c.1000-1400: local intensification without a boundary-matched capacity target",
+      "year_start": 1000,
+      "year_end": 1400,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Raised-field and frost-mitigation archaeology establishes feasible local intensification, but the reviewed basin studies do not provide a single date-matched rural population interval and saturation fraction for a closed EU5 boundary.",
+      "pressure_evidence": [
+        "Archaeological syntheses document raised fields, frost-risk management, wetland agriculture and dense settlement in the Lake Titicaca basin.",
+        "The basin includes Tiwanaku and later regional polities with labor mobilization and exchange; city/ritual centers cannot supervise surrounding land capacity.",
+        "No independent local-food pressure series resolves whether the 1000-1400 footprint was at equilibrium or below its technical potential."
+      ],
+      "shock_flags": [
+        "broad basin boundary spans multiple ecological zones",
+        "Tiwanaku political collapse and later Inca expansion alter land use",
+        "population estimates are archaeological extrapolations with no saturation interval"
+      ],
+      "trade_dependence": "mixed; local tubers, quinoa, raised-field crops and camelids with regional exchange",
+      "food_regime": "raised-field potatoes/tubers, quinoa, chenopods, camelids, fish and wetland foods",
+      "boundary_description": "Lake Titicaca basin raised-field and wetland agricultural complexes; no closed historical rural polygon reconstructed.",
+      "boundary_source": "https://www.researchgate.net/publication/248748911_Pre-Hispanic_agricultural_fields_in_the_Lake_Titicaca_basin",
+      "eu5_selector": {
+        "include": ["location_tag=__unmapped_titicaca_raised_fields_recheck_wave27__"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium_for_physical_system_low_for_eu5",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "titicaca_raised_field_archaeology_recheck",
+      "source_bundle": "titicaca_wetland_agriculture_1000_1400_wave27",
+      "source_family_independence": "Independent Andean archaeology and agronomy sources; no population label is inferred.",
+      "sources": [
+        "https://www.researchgate.net/publication/248748911_Pre-Hispanic_agricultural_fields_in_the_Lake_Titicaca_basin",
+        "https://www.cambridge.org/core/books/abs/agriculture-and-the-development-of-the-state-in-andean-south-america/raised-fields-and-agricultural-intensification/",
+        "https://www.science.org/doi/10.1126/science.289.5483.1243"
+      ],
+      "notes": "Validation-only physical case. Exact missing evidence: one mappable rural aggregate, date-matched population interval and independent saturation/pressure endpoint."
+    },
+    {
+      "anchor_id": "tongatapu_1100_1500_capacity_crosswalk_recheck_wave27",
+      "label": "Tongatapu c.1100-1500: explicit capacity envelope but unresolved area and chronology",
+      "year_start": 1100,
+      "year_end": 1500,
+      "population_low": 15000,
+      "population_central": 16500,
+      "population_high": 18467,
+      "saturation_low": 0.6,
+      "saturation_central": 0.8,
+      "saturation_high": 1.0,
+      "local_food_low": 0.9,
+      "local_food_central": 0.97,
+      "local_food_high": 1.0,
+      "capacity_low": 18000,
+      "capacity_central": 21000,
+      "capacity_high": 24000,
+      "interval_semantics": "Green/Kirch/Burley reconstruct an explicit 18,000-24,000 agricultural capacity envelope and late-prehistoric population estimates, but the chronology, source-family dependence and EU5 area mismatch prevent training use.",
+      "pressure_evidence": [
+        "Green's reconstruction uses 1.8-2.0 acres per person and an 8-10 year bush-fallow cycle, with pressure/reduction mechanisms beginning around 60-80 percent of capacity.",
+        "Archaeobotanical work documents near-complete primary-forest removal, intensive multi-cropping, fallow pressure and political expansion after local intensification limits.",
+        "The later LiDAR/Bayesian estimate of 50,000-60,000 is a different chronology/quantity and is retained as a conflict diagnostic rather than averaged into the envelope."
+      ],
+      "shock_flags": [
+        "warfare and demographic reduction mechanisms",
+        "deforestation and fallow pressure",
+        "chiefdom tribute/inter-island expansion",
+        "EU5 calibrated footprint is approximately 52 percent of the cited island area in the closure audit",
+        "Green/Kirch/Burley capacity family is shared and model-derived"
+      ],
+      "trade_dependence": "low_to_mixed",
+      "food_regime": "yam, taro, sweet potato, banana, breadfruit, coconut, pigs, fisheries and local horticulture",
+      "boundary_description": "Entire Tongatapu island; historical arable area is approximately 224 km2 and the EU5 selector is location_tag=tongatapu.",
+      "boundary_source": "https://openresearch-repository.anu.edu.au/bitstreams/e4751661-3b6f-44c8-828b-4d93dc954ce3/download",
+      "eu5_selector": {
+        "include": ["location_tag=tongatapu"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.52,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "tonga_archaeology_agricultural_capacity",
+      "source_bundle": "green_kirch_burley_lidar_conflict_recheck_wave27",
+      "source_family_independence": "Same shared capacity family as the existing Tongatapu validation packet; this recheck is not independent replication.",
+      "sources": [
+        "https://openresearch-repository.anu.edu.au/bitstreams/e4751661-3b6f-44c8-828b-4d93dc954ce3/download",
+        "https://www.sciencedirect.com/science/article/pii/S2352409X22002735",
+        "https://research.usc.edu.au/esploro/outputs/journalArticle/Environmental-Catastrophe-in-the-Pacific-Islands/99450692302621"
+      ],
+      "notes": "Validation-only. Repair the area crosswalk and resolve the LiDAR chronology/quantity conflict before any quantitative scoring; do not silently rescale the 52 percent footprint."
+    }
+  ]
+}

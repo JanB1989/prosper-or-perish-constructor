@@ -1,0 +1,82 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "europe_tuscany_catasto_validation_wave32",
+  "region": "europe_tuscany_catasto_validation_wave32",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "scope": "Florentine dominions and rural Tuscany documented by the 1427-29 Catasto; an ordinary agrarian validation case in the broad 1100-1500 compatibility window.",
+  "promotion_audit": {
+    "decision": "Retain as validation-only; do not promote as a Malthusian scale anchor.",
+    "reviewed_on": "2026-08-04",
+    "review_method": "Read the archival catalogue and Catasto codebook, checked the complete online database scope, and compared the post-Black-Death demographic and agrarian context against the saturation criteria.",
+    "reason_not_promoted": "The Catasto is an exceptional population/property enumeration, but the 1427 observation follows the Black Death and later epidemics, war and depopulation. Rural land abandonment, rising labour scarcity and an unresolved Florentine contado boundary make the observation a poor equilibrium-scale target. City households are also tied to long-distance grain markets. No independent saturation interval is defensible.",
+    "population_semantics": "The source records households, mouths, property and animals; city and contado totals must not be conflated. The archival record is a demographic/property observation, not a natural-capacity label.",
+    "capacity_semantics": "No intrinsic capacity endpoint is emitted. The record is a holdout check for the model's mapped physical footprint and for avoiding city/import leakage."
+  },
+  "records": [
+    {
+      "anchor_id": "tuscany_florentine_dominions_1427_catasto_validation_wave32",
+      "label": "Florentine dominions and rural Tuscany, Catasto 1427-1429",
+      "year_start": 1427,
+      "year_end": 1429,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "No population interval is emitted. The Catasto is an enumeration/property dataset and the commonly quoted ~260,000 contado population is a secondary reconstruction with unresolved territorial and household-multiplier uncertainty.",
+      "pressure_evidence": [
+        "The Catasto declarations record mouths, households, animals, land and debts for the city and Florentine territory, allowing direct tests of whether the mapped physical footprint could support an ordinary rural mixed-food system.",
+        "Post-plague rural Tuscany shows land abandonment, rising labour scarcity and the development of sharecropping institutions; these are demographic disequilibrium signals rather than evidence that 1427 was at a Malthusian ceiling.",
+        "The rural Catasto and the two-community study of Castelnuovo di Val di Cecina and Montecatini di Val Cecina provide a local-food/agricultural-holding context, but do not establish a saturation fraction."
+      ],
+      "shock_flags": [
+        "Black Death and recurrent epidemics before and around the observation",
+        "Florentine-Milanese wars and fiscal pressure",
+        "land abandonment and labour scarcity after population collapse",
+        "city grain markets and imported food blur an autarkic boundary",
+        "countado and modern EU5 Tuscany boundaries are not identical"
+      ],
+      "trade_dependence": "mixed_to_high_for_city; unresolved_for_rural_contado",
+      "food_regime": "Mediterranean cereals, legumes, vines, olives, livestock and gardens; city grain markets and rural sharecropping",
+      "boundary_description": "Florentine Republic's 1427 fiscal territory, approximated only for physical validation by the 24 EU5 locations with area=tuscany_area; the Florence city location is excluded from the rural selector and retained as a separate urban/trade diagnostic.",
+      "boundary_source": "https://archiviodistatofirenze.cultura.gov.it/asfi/archivio-notizie/notizia?cHash=e17bc36d7f093656e0bcb68bbc379495&tx_news_pi1%5Baction%5D=detail&tx_news_pi1%5Bcontroller%5D=News&tx_news_pi1%5Bnews%5D=405",
+      "eu5_selector": {
+        "include": ["area=tuscany_area"],
+        "exclude": ["location_tag=florence"]
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "validation_only",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "florentine_catasto_archival_enumeration_1427_1429",
+      "source_bundle": "catasto_archival_codebook_florentine_rural_tuscany_postplague_context",
+      "source_family_independence": "Independent Florentine archival enumeration and rural household/property research. No EU5 starting population, HYDE, RGO or trade-import field is used; the record is excluded from training because saturation and boundary semantics fail, not because an archival count is unavailable.",
+      "sources": [
+        "https://cds.lib.brown.edu/cds-project/florentine-renaissance-resources-online-catasto-1427-database",
+        "https://cds.library.brown.edu/projects/catasto/newsearch/catasto_codebook.html",
+        "https://archiviodistatofirenze.cultura.gov.it/asfi/archivio-notizie/notizia?cHash=e17bc36d7f093656e0bcb68bbc379495&tx_news_pi1%5Baction%5D=detail&tx_news_pi1%5Bcontroller%5D=News&tx_news_pi1%5Bnews%5D=405",
+        "https://www.persee.fr/doc/pop_0032-4663_1979_num_34_1_18049",
+        "https://www.sciencedirect.com/science/article/pii/S1081602X01000847",
+        "https://books.fupress.com/chapter/i-nostri-contadini-solevano-istare-molto-meglio-per-lo-addrietto-ora-mezzadria-propriet%C3%A0-cittadina-e-disuguaglianza-economica-in-toscana-sec.-XV-XVI/4325"
+      ],
+      "citation_details": [
+        "Archivio di Stato di Firenze catalogue (2024): the 1427 Catasto covers citizens, contado, district and property owners; declarations include household composition and movable/immovable property.",
+        "Brown University Catasto codebook (Herlihy and Klapisch-Zuber): the database records heads of household, mouths, property, animals, debts, occupation and fiscal declarations; the online dataset is complete for the published city series and includes rural additions.",
+        "Herlihy and Klapisch-Zuber, Les Toscans et leurs familles (1979): the Catasto is a demographic/fiscal source in a region recovering from severe fourteenth-century population losses; it does not itself supply a saturation fraction.",
+        "Litchfield, Theorizing strategies (2001): 144 households in Castelnuovo di Val di Cecina and Montecatini di Val Cecina have detailed agricultural holdings and population, but the study is micro-scale and does not identify a regional natural-capacity bound.",
+        "Cristoferi, mezzadria and inequality (2023): post-Black-Death labour scarcity, land abandonment and sharecropping institutions altered rural incentives and therefore make 1427 a disequilibrium validation case rather than a Malthusian ceiling."
+      ],
+      "notes": "Use only as a held-out ordinary agrarian/property check. Do not backcast the 1427 count to 1337 or convert the city/contado observations into a capacity target."
+    }
+  ]
+}

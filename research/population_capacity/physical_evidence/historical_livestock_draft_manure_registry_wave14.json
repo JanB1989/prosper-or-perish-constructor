@@ -1,0 +1,185 @@
+{
+  "schema_version": "historical-livestock-draft-manure-registry-v1",
+  "target_date": 1337,
+  "scope": "Cited pre-1337/near-1337 evidence for whether livestock, draft power and manure were technologically available. These records close technology-presence lineage only; they do not estimate herd abundance, breed mixture, crop dependency or tsetse production effects.",
+  "policy": {
+    "technology_presence_is_not_quantitative_dependency": true,
+    "modern_proxy_is_not_historical_truth": true,
+    "tax_or_crop_register_is_not_population_or_herd_count": true,
+    "unresolved_effect_is_applied": false,
+    "regional_multiplier_is_allowed": false,
+    "direct_human_mortality_is_excluded": true,
+    "starting_population_is_predictor_or_target": false
+  },
+  "records": [
+    {
+      "record_id": "egypt_ayyubid_mamluk_draft_manure_presence_1100_1337",
+      "mapped_scope": "Egyptian Nile/Delta production system; candidate EU5 selector area=lower_egypt_area|upper_egypt_area",
+      "date_interval": {
+        "start": 1100,
+        "end": 1337,
+        "compatibility": "technology-compatible evidence window; source synthesis spans Pharaonic-to-modern continuity and explicitly discusses Ayyubid/Mamluk tracts"
+      },
+      "evidence_state": "observed_technology_presence",
+      "observed_components": [
+        "Ayyubid/Mamluk agricultural tracts specify bird droppings, animal dung, human waste and composted grasses/leaves as crop fertilizers",
+        "oxen, mules and donkeys are documented as conspicuous beasts of burden; ploughs, levellers and animal-powered water-raising devices are listed",
+        "medieval sources cited by Borsch document oxen levies, dike/canal labour and the recurring maintenance of village and sultani irrigation systems"
+      ],
+      "quantitative_labels": {
+        "herd_abundance": null,
+        "trypanotolerant_breed_fraction": null,
+        "draft_power_dependency_fraction": null,
+        "manure_yield_increment": null,
+        "tsetse_infection_prevalence": null
+      },
+      "allowed_use": [
+        "historical technology compatibility for draft and manure processes by 1337",
+        "feature-lineage documentation for Nile irrigation and livestock submodels",
+        "qualitative regression that applied tsetse/draft/manure factors remain neutral until quantitative evidence exists"
+      ],
+      "forbidden_use": [
+        "herd-size or breed-mixture labels",
+        "crop-specific yield multiplier",
+        "regional correction factor",
+        "population or carrying-capacity target",
+        "tsetse abundance or infection probability"
+      ],
+      "sources": [
+        {
+          "citation": "Alan K. Bowman and Eugene Rogan, 'Agriculture in Egypt: Pharaonic to Modern Times', Proceedings of the British Academy 96 (1999), pp. 4-5",
+          "url": "https://www.thebritishacademy.ac.uk/documents/3871/96p001.pdf",
+          "locator": "printed pp. 4-5; lines discussing Ayyubid/Mamluk fertilizers, oxen/mules/donkeys, ploughs, levellers and animal-powered water raising",
+          "source_role": "secondary synthesis citing medieval Egyptian agricultural tracts and Rabie 1981"
+        },
+        {
+          "citation": "Hasanayn Muhammad Rabie, 'Some Technical Aspects of Agriculture in Medieval Egypt', in The Islamic Middle East, 700-1900 (1981), pp. 59-90",
+          "url": "https://mamluk.lib.uchicago.edu/fullview2.php?id=63861",
+          "locator": "bibliographic record; cited by Bowman and Rogan for medieval Egyptian tools and techniques",
+          "source_role": "specialist secondary synthesis of medieval Arabic agricultural sources"
+        },
+        {
+          "citation": "Stuart Borsch, 'Plague Depopulation and Irrigation Decay in Medieval Egypt', The Medieval Globe 1 (2014), pp. 136-142 and 157-158",
+          "url": "https://www.environmentandsociety.org/sites/default/files/key_docs/9781942401018.pdf",
+          "locator": "printed pp. 136-142 for basin irrigation; pp. 157-158 for medieval irrigation labour, oxen levy and plough/dike work",
+          "source_role": "historical irrigation and labour evidence"
+        }
+      ],
+      "confidence": "high for technology presence; low for quantitative dependence",
+      "promotion": "feature_lineage_only",
+      "notes": "This closes the statement that draft animals and organic fertilization were feasible in the Nile system by 1337. It does not show how many animals existed, what share of fields depended on them, or how tsetse altered production."
+    },
+    {
+      "record_id": "rasulid_yemen_agronomic_texts_draft_manure_presence_1271_1321",
+      "mapped_scope": "Rasulid Yemen Tihama/highlands; candidate EU5 selectors province=zabid_province|taizz_province|sana_province",
+      "date_interval": {
+        "start": 1271,
+        "end": 1321,
+        "compatibility": "directly within the target technology window"
+      },
+      "evidence_state": "observed_agronomic_text_and_register_presence",
+      "observed_components": [
+        "al-Malik al-Ashraf Umar ibn Yusuf's Rasulid agronomic text (d. 1296) covers cultivation timing, grains, legumes, fruit, vegetables and pests",
+        "the Rasulid Bughyat al-fallahīn text covers land quality, fertilizer, water, clearing and cultivation; the exact composition date is not secure, so it is technology evidence rather than a dated quantitative label",
+        "the Nūr al-maʿārif register uses field reports from 1292-1294 for production, customs and state finance; Irtifāʿ al-dawla al-Muʾayyadīya (compiled for the sultan who died in 1321) records yields and irrigation maps, but neither enumerates herds nor gives draft/manure dependency fractions"
+      ],
+      "quantitative_labels": {
+        "herd_abundance": null,
+        "trypanotolerant_breed_fraction": null,
+        "draft_power_dependency_fraction": null,
+        "manure_yield_increment": null,
+        "tsetse_infection_prevalence": null
+      },
+      "allowed_use": [
+        "technology-availability feature for sorghum/legume irrigated systems by 1337",
+        "source lineage for crop, irrigation and livestock feature review"
+      ],
+      "forbidden_use": [
+        "tax-to-herd or tax-to-people conversion",
+        "modern ethnographic draft-power fractions applied to 1337",
+        "tsetse production penalty or regional multiplier"
+      ],
+      "sources": [
+        {
+          "citation": "The Filāḥa Texts Project, Medieval Agricultural Texts from Rasulid Yemen",
+          "url": "https://www.filaha.org/medieval_agricultural.html",
+          "locator": "entries I.A (al-Malik al-Ashraf, died 1296), I.C (Bughyat al-fallāḥīn fertilizer/water chapters), III.A (Nūr al-maʿārif field reports 1292-1294), III.D (Irtifāʿ register and Wadi Zabid irrigation maps), and IV.A (veterinary text/fodder crops)",
+          "source_role": "catalogue and source-critical guide to primary/near-primary Rasulid manuscripts"
+        },
+        {
+          "citation": "Daniel Martin Varisco, 'The State of Agriculture in Late 13th Century Rasulid Yemen', Proceedings of Storia e Cultura dello Yemen in Età Islamica (2006), pp. 161-174",
+          "url": "https://www.filaha.org/medieval_agricultural.html",
+          "locator": "reference listed by the Filāḥa Texts Project",
+          "source_role": "historical analysis of the Rasulid agricultural register"
+        }
+      ],
+      "confidence": "high for dated agronomic/irrigation text presence; low for herd and dependency quantities",
+      "promotion": "feature_lineage_only",
+      "notes": "This is useful for technology compatibility in Yemen but does not resolve the tsetse host-breed or draft/manure-effect blocker."
+    },
+    {
+      "record_id": "shashe_limpopo_k2_cattle_food_system_1000_1220",
+      "mapped_scope": "K2/Bambandyanalo and Shashe-Limpopo archaeological settlement system; EU5 validation selector location_tag=mapungubwe",
+      "date_interval": {
+        "start": 1000,
+        "end": 1220,
+        "compatibility": "directly within the target technology window"
+      },
+      "evidence_state": "archaeological_livestock_presence",
+      "observed_components": [
+        "K2 settlement evidence includes cattle kraals/redistribution and sorghum/millet floodplain agriculture",
+        "the published settlement estimate and local-food context do not quantify draft use, manure application, herd abundance by species or trypanotolerant breed composition"
+      ],
+      "quantitative_labels": {
+        "herd_abundance": null,
+        "trypanotolerant_breed_fraction": null,
+        "draft_power_dependency_fraction": null,
+        "manure_yield_increment": null,
+        "tsetse_infection_prevalence": null
+      },
+      "allowed_use": [
+        "held-out validation that cattle-based food systems existed in a tsetse-relevant African region"
+      ],
+      "forbidden_use": [
+        "inference that cattle were draft animals",
+        "inference of manure yield increment",
+        "inference of historical tsetse prevalence"
+      ],
+      "sources": [
+        {
+          "citation": "Thomas N. Huffman, 'Mapela, Mapungubwe and the origins of states in Southern Africa', South African Archaeological Bulletin 70 (2015), Table 3 and pp. 20-23",
+          "url": "https://www.researchgate.net/publication/284738406_Mapela_mapungubwe_and_the_origins_of_states_in_Southern_Africa",
+          "locator": "K2 phase settlement/population reconstruction, cattle and floodplain food-system discussion",
+          "source_role": "archaeological settlement and food-system evidence"
+        }
+      ],
+      "confidence": "high for cattle/agropastoral presence; low for draft/manure/tsetse effects",
+      "promotion": "validation_only",
+      "notes": "The K2 record is deliberately not used to infer a quantitative livestock or draft-power feature."
+    }
+  ],
+  "unresolved_required_components": [
+    {
+      "component_id": "tsetse_host_breed_mix_1337",
+      "status": "unresolved",
+      "reason": "No independently reconstructed 1100-1500 location-level abundance and mixture of trypanotolerant cattle, sheep and goats was found. Archaeological cattle presence is not breed composition, and modern N'Dama/trypanotolerance distributions cannot be back-projected.",
+      "required_evidence": "Dated host-bone/genomic or textual livestock assemblages with mapped geography and explicit breed/tolerance semantics."
+    },
+    {
+      "component_id": "crop_water_mode_draft_dependency_1337",
+      "status": "unresolved",
+      "reason": "The sources establish that draft animals and organic fertilizers were available, but do not quantify crop-, water-mode- or region-specific dependence. Applying modern or ethnographic fractions would be a geographic and temporal extrapolation and risks double-counting GAEZ attainable-yield inputs.",
+      "required_evidence": "Mapped 1100-1500 field accounts, experimental analogues with explicit technology equivalence, or archaeological production budgets that quantify draft/manure contributions by crop and water mode."
+    }
+  ],
+  "acceptance": {
+    "technology_presence_rows": 3,
+    "quantitative_effect_rows": 0,
+    "unresolved_required_components": 2,
+    "applied_tsetse_livestock_food_factor": 1.0,
+    "applied_tsetse_draft_power_factor": 1.0,
+    "applied_tsetse_manure_factor": 1.0,
+    "direct_human_mortality_factor": 1.0,
+    "scientific_decision": "physical_tsetse_potential_and_technology_presence_are_accepted_as diagnostics; all quantitative livestock/draft/manure effects remain neutral"
+  }
+}

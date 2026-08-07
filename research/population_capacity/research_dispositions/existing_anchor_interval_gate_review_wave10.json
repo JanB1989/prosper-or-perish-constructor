@@ -1,0 +1,152 @@
+{
+  "schema_version": "population_capacity_research_disposition_v1",
+  "packet_id": "existing_anchor_interval_gate_review_wave10",
+  "region": "cross_region_existing_anchor_review",
+  "super_region": "Europe_Asia_Oceania",
+  "target_year": 1337,
+  "source_bundle": "existing_island_japan_sicily_egypt_tongatapu_gate_review",
+  "policy": {
+    "append_only": true,
+    "no_observed_population_as_upper_bound": true,
+    "no_city_or_trade_hub_targets": true,
+    "two_sided_training_requires_independent_capacity_and_pressure": true,
+    "exact_or_high_boundary_crosswalk_required": true,
+    "out_of_period_analogues_are_validation_only": true
+  },
+  "method": "Reviewed the existing packets and their mapped boundaries against the two-sided anchor gate. A numerical population interval is retained only as a lower bound or validation case unless the same boundary has an independently supported human-capacity interval, a defensible local-food share, and pressure/saturation evidence. Ecological sub-capacity evidence (for example sheep pasture) is not converted to people without a cited calorie conversion.",
+  "promotion_audit": {
+    "promoted_training_anchor_ids": [],
+    "promoted_two_sided_validation_ids": [],
+    "decision": "No reviewed record passes the strict two-sided training-anchor gate. Iceland has an explicit environmental model but no independent 1290-1315 saturation interval; Faroe has a sheep-pasture cap but no human-food conversion or equilibrium ceiling; Sicily and Mamluk Egypt are surplus/irrigation economies whose observed populations do not establish an upper bound; Buzen and Noto are fiscal land-register floors without saturation evidence; Tongatapu has a model-derived 18,000-24,000 envelope and archaeological pressure discussion but is an out-of-period analogue with conflicting population estimates and no independently audited saturation fraction. All remain lower-bound or held-out validation evidence.",
+    "reviewed_on": "2026-08-03",
+    "new_independent_scale_families": 0,
+    "new_training_records": 0
+  },
+  "records": [
+    {
+      "anchor_id": "iceland_preindustrial_capacity_model_1290_1315",
+      "status": "confirmed_validation_only",
+      "role": "validation_only",
+      "existing_packet": "europe_north_atlantic_followup.json",
+      "eu5_selector": "area=iceland_area",
+      "coverage_fraction": 1.0,
+      "population_interval": {"low": 40000, "central": 50000, "high": 60000},
+      "capacity_interval": {"low": 40000, "central": 60000, "high": 80000},
+      "boundary_status": "exact_island",
+      "capacity_status": "independent ecological simulation, but livestock/vegetation-only and not independently verified as a 1290-1315 human equilibrium",
+      "pressure_status": "insufficient for promotion; the model reports historical overshoots but does not provide a dated saturation fraction for the benchmark population",
+      "local_food_status": "qualitatively high but no cited numeric local-calorie share",
+      "reason": "Haraldsson and Olafsdottir simulate 40,000-80,000 pre-industrial environmental support and note several historical overshoots. That is a useful hostile-island capacity check, but the model is not a contemporaneous population/resource-pressure observation, and the packet lacks an auditable 1290-1315 local-calorie balance. Do not turn the 50,000-60,000 observed reconstruction into an upper bound.",
+      "sources": [
+        "https://portal.research.lu.se/en/publications/a-novel-modelling-approach-for-evaluating-the-preindustrial-natur/",
+        "https://doi.org/10.1016/j.scitotenv.2006.08.013",
+        "https://pubmed.ncbi.nlm.nih.gov/16979224/"
+      ]
+    },
+    {
+      "anchor_id": "faroe_1300_local_support_floor_wave3",
+      "status": "confirmed_lower_bound",
+      "role": "lower_bound_and_validation",
+      "existing_packet": "europe_nile_training_floors_wave3.json",
+      "eu5_selector": "location_tag=torshavn",
+      "coverage_fraction": 0.986,
+      "population_interval": {"low": 2471, "central": 2471, "high": 2700},
+      "capacity_interval": {"low": 2224, "central": 2397, "high": 5000},
+      "boundary_status": "high_coverage_archipelago_selector",
+      "capacity_status": "sheep-pasture carrying-capacity rule only; no human-capacity interval",
+      "pressure_status": "pasture overgrazing/erosion risk documented, but no dated human saturation fraction",
+      "local_food_status": "strong qualitative evidence of sheep, barley, fish, seabird and marine-food reliance; calorie share not quantified",
+      "reason": "The 1298 Sheep Letter fixes a local optimum for adult sheep and later ecological analysis links higher stocking to overgrazing and erosion. The 70,000-sheep cap cannot be converted to people without a dated herd structure, slaughter/feed balance, fisheries cap and food-allocation model. Mortensen's 2,471-person reconstruction therefore remains a local-support floor, not a human-equilibrium upper bound.",
+      "sources": [
+        "https://www.pure.fo/en/publications/kongsumsiting-skattur-l%C3%ADkningareindir-og-f%C3%B3lk-%C3%AD-t%C3%AD-f%C3%B3royska-skatt/",
+        "https://ojs.setur.fo/index.php/frit/article/view/576",
+        "https://www.frontiersin.org/journals/sustainable-food-systems/articles/10.3389/fsufs.2021.599476/full",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10239674/"
+      ]
+    },
+    {
+      "anchor_id": "sicily_1277_local_support_export_floor_wave3",
+      "status": "confirmed_lower_bound",
+      "role": "lower_bound_and_validation",
+      "existing_packet": "europe_nile_training_floors_wave3.json",
+      "eu5_selector": "region=sicily_region",
+      "coverage_fraction": 0.959,
+      "population_interval": {"low": 400000, "central": 608000, "high": 850000},
+      "capacity_interval": {"low": 340000, "central": 577600, "high": 850000},
+      "boundary_status": "high_coverage_island_region",
+      "capacity_status": "no independent human-capacity ceiling; grain exports establish surplus potential rather than saturation",
+      "pressure_status": "trade/urban provisioning and grain-storage evidence, but no local equilibrium interval",
+      "local_food_status": "mixed; local cereal production is documented but export and coastal/internal trade shares are material and unresolved",
+      "reason": "The 1276-1280 population range and cereal-export record demonstrate that Sicily could locally support at least the conservative floor. Exportable surplus means observed population is not an upper capacity bound; fiscal estimates also mix urban provisioning, internal trade and shocks. Without an independent island-wide food/land capacity model and saturation evidence, retain only the lower bound.",
+      "sources": [
+        "https://api.pageplace.de/preview/DT0400.9781139368797_A23867373/preview-9781139368797_A23867373.pdf",
+        "https://books.openedition.org/efr/60775",
+        "https://books.openedition.org/psorbonne/118430",
+        "https://www.persee.fr/doc/mefr_1123-9883_2008_num_120_1_9468"
+      ]
+    },
+    {
+      "anchor_id": "mamluk_egypt_1315_irrigated_local_support_floor_wave3",
+      "status": "confirmed_lower_bound",
+      "role": "lower_bound_and_validation",
+      "existing_packet": "europe_nile_training_floors_wave3.json",
+      "eu5_selector": "region=mamluk_egypt_region",
+      "coverage_fraction": 1.0,
+      "population_interval": {"low": 4000000, "central": 5000000, "high": 6000000},
+      "capacity_interval": {"low": 3400000, "central": 4750000, "high": 6000000},
+      "boundary_status": "high_coverage_nile_region_selector",
+      "capacity_status": "no date-matched, independently audited human-capacity interval",
+      "pressure_status": "irrigation/flood and later plague/famine pressure are documented, but 1315 population is not a saturation fraction",
+      "local_food_status": "high for bulk Nile calories but internal river redistribution and urban demand remain unresolved",
+      "reason": "The 1315 cadastral/agrarian peak supports a conservative local-support floor. Borsch's irrigation work shows that Nile-flood level and canal maintenance constrain output, while later plague and irrigation decay demonstrate shocks; neither supplies a date-matched upper equilibrium for the same mapped Nile boundary. The disputed 4-6 million population range cannot be used as capacity bounds.",
+      "sources": [
+        "https://knowledge.uchicago.edu/records/6gbs3-fah93",
+        "https://knowledge.uchicago.edu/nanna/record/1009/files/MSR_IV_2000-Borsch.pdf?registerDownload=1&version=1&withMetadata=0&withWatermark=0",
+        "https://scholarworks.wmich.edu/tmg/vol1/iss1/7/",
+        "https://www.environmentandsociety.org/sites/default/files/key_docs/9781942401018.pdf"
+      ]
+    },
+    {
+      "anchor_id": "japan_buzen_noto_1280_register_floors_wave7",
+      "status": "confirmed_lower_bound",
+      "role": "lower_bound_and_validation",
+      "existing_packet": "asia_japan_register_floors_wave7.json",
+      "eu5_selectors": ["province=buzen_province", "province=noto_japan_province"],
+      "coverage_fraction": {"buzen": 0.96, "noto": 0.95},
+      "population_intervals": {
+        "buzen": {"low": 85238, "central": 85238, "high": 119333},
+        "noto": {"low": 15734, "central": 15734, "high": 22028}
+      },
+      "capacity_status": "fiscal rice-land conversion and dry-field sensitivity, not a human-capacity interval",
+      "pressure_status": "no independent province-specific saturation/land-pressure interval",
+      "local_food_status": "rice and dry-field production are locally evidenced; exchange share is unmeasured",
+      "reason": "Farris's Great Land Register conversions and CHGIS polygons provide strong same-boundary production floors. The register is a fiscal/land assessment and does not say that Buzen or Noto had reached a Malthusian ceiling. A dry-field sensitivity is not an independent upper bound, and no province-specific pressure series resolves saturation. Keep both as one-sided floors and held-out checks.",
+      "sources": [
+        "https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "https://chgis.fas.harvard.edu/data/japan/",
+        "https://doi.org/10.7910/DVN/2CVTR0",
+        "https://www.degruyterbrill.com/document/doi/10.1515/9780824841591/html?lang=en"
+      ]
+    },
+    {
+      "anchor_id": "tongatapu_capacity_pressure_1100_1500_closure",
+      "status": "confirmed_validation_only",
+      "role": "two_sided_validation_only",
+      "existing_packet": "americas_oceania_closure_round3.json",
+      "eu5_selector": "location_tag=tongatapu",
+      "coverage_fraction": 0.976,
+      "population_interval": {"low": 15000, "central": 16500, "high": 18467},
+      "capacity_interval": {"low": 18000, "central": 21000, "high": 24000},
+      "boundary_status": "high_coverage_island_crosswalk_available_in_lower_bound_packet; closure_packet_is_approximate",
+      "capacity_status": "explicit Green model envelope, but model-derived and contested by later population reconstructions",
+      "pressure_status": "land pressure/warfare and intensification are discussed, but no independent dated saturation fraction",
+      "local_food_status": "predominantly local dryland crops; exact 1337 calorie balance is not audited",
+      "reason": "Green's published framework links 1.8-2.0 acres per person, land pressure and 60-80% of capacity to an 18,000-24,000 upper envelope; Burley's later archaeological model gives a late-prehistoric peak of about 18,467. This is useful as a two-sided held-out analogue, but it is not a 1337 training target: the record is out-of-period, the upper envelope is model-derived rather than an independently observed equilibrium, later reconstructions disagree, and the closure packet's historical boundary is only approximate. Use the high-coverage island crosswalk for validation, never for global scale fitting.",
+      "sources": [
+        "https://openresearch-repository.anu.edu.au/bitstreams/e4751661-3b6f-44c8-828b-4d93dc954ce3/download",
+        "https://doi.org/10.1016/j.jasrep.2022.103610",
+        "https://research.usc.edu.au/esploro/outputs/journalArticle/Environmental-Catastrophe-in-the-Pacific-Islands/99450692302621"
+      ]
+    }
+  ]
+}

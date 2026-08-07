@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 from pathlib import Path
@@ -1579,7 +1579,14 @@ def test_generated_startup_script_contains_only_direct_compiler_actions() -> Non
     assert "pp_food_building_startup = {" in text
     assert "split_pop = {" in text
     assert "construct_building = {" in text
-    for building in ("farming_village", "iron_mine", "granary", "cookery", "victuals_market"):
+    for building in (
+        "farming_village",
+        "iron_mine",
+        "granary",
+        "cookery",
+        "victuals_market",
+        "victuals_market_import",
+    ):
         assert f"building_type = building_type:{building}" in text
 
     assert re.search(r"(?m)^[ \t]*if\s*=\s*\{", text) is None

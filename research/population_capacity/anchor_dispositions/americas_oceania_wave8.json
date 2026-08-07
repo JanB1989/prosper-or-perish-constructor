@@ -1,0 +1,132 @@
+{
+  "schema_version": "population_capacity_anchor_disposition_v1",
+  "packet_id": "americas_oceania_wave8_dispositions",
+  "reviewed_on": "2026-08-03",
+  "policy": {
+    "rejected_records_are_not_training_targets": true,
+    "city_or_trade_hub_is_not_surrounding_land_capacity": true,
+    "unmapped_or_partial_boundaries_block_quantitative_scoring": true,
+    "starting_population_and_hyde_are_not_used": true,
+    "point_estimates_are_not_silently_promoted_to_intervals": true
+  },
+  "records": [
+    {
+      "anchor_id": "chimor_chan_chan_urban_core_1000_1470_rejected_wave8",
+      "label": "Chan Chan urban core and urban population estimate",
+      "date_interval": {"start": 1000, "end": 1470},
+      "population_interval": {"low": 70000, "central": 87500, "high": 105000},
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "Schaedel's 70,000-105,000 estimate is explicitly the urban population of the Chimor state, including approximately 50,000-75,000 in Chan Chan; it is not a rural local-food boundary.",
+        "Chan Chan's capital primacy, specialization and state tribute make it precisely the kind of city/trade hub that cannot supervise surrounding intrinsic land capacity.",
+        "The same source gives a separate 500,000-750,000 demographic hinterland envelope; the urban interval must not be added to or substituted for that regional boundary."
+      ],
+      "boundary_status": "urban_core_only",
+      "source_family": "chimor_urban_capital_archaeology",
+      "sources": [
+        "https://repositorio.iep.org.pe/bitstreams/9ca4e838-5699-4f4d-9111-ce134da75577/download"
+      ],
+      "notes": "Retain for a diagnostic of how much an urban capital can exceed local cell food capacity, never as a training target."
+    },
+    {
+      "anchor_id": "quebrada_del_oso_chicama_1045_1415_rejected_wave8",
+      "label": "Quebrada del Oso Chimú agricultural production centre",
+      "date_interval": {"start": 1045, "end": 1415},
+      "population_interval": null,
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "Tavera-Medina et al. identify an approximately 60 ha site with fields, an administrative compound and evidence of maize/beans, canal water and fourteenth-century field expansion, but publish no defensible population or carrying-capacity interval for the site.",
+        "The study describes a workforce and relocated populations associated with a state canal project; that is an agricultural-production test, not an equilibrium population label.",
+        "A 60 ha archaeological centre cannot be expanded to the entire Chicama or Chan Chan province without an independently reconstructed rural boundary."
+      ],
+      "boundary_status": "exact_site_but_not_regional_capacity",
+      "source_family": "chimu_quebrada_del_oso_archaeology",
+      "sources": [
+        "https://www.cambridge.org/core/journals/antiquity/article/quebrada-del-oso-a-chimu-agricultural-production-centre-in-the-chicama-valley-north-coast-of-peru/0DAF29460D2A79475CBE3C38CB767FFA",
+        "https://doi.org/10.15184/aqy.2025.10261"
+      ],
+      "notes": "Keep as a qualitative/physical irrigation validation case. The new Chimor eleven-valley packet is the only regional mapping candidate from this evidence family."
+    },
+    {
+      "anchor_id": "pacbitun_belize_700_900_rejected_wave8",
+      "label": "Pacbitun Late Classic Maya regional centre",
+      "date_interval": {"start": 700, "end": 900},
+      "population_interval": {"low": 5000, "central": 5900, "high": 6850},
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "Healy et al. estimate approximately 5,000-6,000 people in the 9 km2 Pacbitun site (with a table total near 6,850), and density of 550-950 persons/km2 across core and periphery; this is a medium-sized civic centre, not a regional rural boundary.",
+        "The settlement's terraces and population growth provide pressure evidence, but no independent saturation fraction or local-food accounting separates residents from exchange and political support networks.",
+        "The Late Classic date is far outside the 1337 target and the EU5 map has no Pacbitun-specific polygon."
+      ],
+      "boundary_status": "site_core_periphery_unmapped",
+      "source_family": "pacbitun_maya_settlement_archaeology",
+      "sources": [
+        "https://doi.org/10.1179/009346907791071737",
+        "https://library-archives.canada.ca/eng/services/services-libraries/theses/Pages/item.aspx?idNumber=30509396"
+      ],
+      "notes": "Retain as a negative control for the city-versus-hinterland distinction and for terrace/soil pressure features."
+    },
+    {
+      "anchor_id": "pajarito_jemez_plateau_1200_1400_rejected_wave8",
+      "label": "Ancestral Pueblo Pajarito/Jemez Plateau drought-population sequence",
+      "date_interval": {"start": 1200, "end": 1400},
+      "population_interval": {"low": 2000, "central": 4000, "high": 6000},
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "The Jemez/Pajarito study combines two small plateau study areas (8.47 and 8.31 km2) and momentary-mean site estimates; it reports a Pajarito decline from approximately 6,000 to 2,000, plus a 32% decline during AD 1350-1400 drought, rather than a stable regional population interval.",
+        "Water-cost and drought evidence is excellent for physical stress testing, but migration, dual residence and later aggregation prevent a clean Malthusian saturation interpretation.",
+        "The published study polygons do not have a verified one-to-one EU5 selector, so no aggregate score is allowed."
+      ],
+      "boundary_status": "small_plateau_study_areas_unresolved",
+      "source_family": "ancestral_pueblo_jemez_pajarito_hydrology_archaeology",
+      "sources": [
+        "https://www.cambridge.org/core/journals/american-antiquity/article/combining-paleohydrology-and-leastcost-analyses-to-assess-the-vulnerabilities-of-ancestral-pueblo-communities-to-water-insecurity-in-the-jemez-mountains-new-mexico/53C38C588F1E64B93E71F951EB8D1269"
+      ],
+      "notes": "Use the drought/water-cost relationships as a physical validation fixture once the study polygons are mapped; do not fit a population scale to this sequence."
+    },
+    {
+      "anchor_id": "rurutu_taro_capacity_1200_1800_rejected_wave8",
+      "label": "Rurutu wetland-taro landscape carrying-capacity study",
+      "date_interval": {"start": 1200, "end": 1800},
+      "population_interval": null,
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "Escue and Kahn identify 20 dormant taro systems covering 138.3 ha and model probable yield/carrying-capacity distributions, but explicitly state that precise pre-contact population estimates are lacking and that their results are preliminary.",
+        "The island has a strong local-food and warfare/land-pressure signal, but the current EU5 geometry has no verified Rurutu tag or crosswalk, so the boundary cannot be scored.",
+        "Post-contact depopulation and later imported-food exchange make the surviving modern terraces an unsafe direct proxy for 1337 saturation."
+      ],
+      "boundary_status": "island_exact_but_eu5_unmapped",
+      "source_family": "rurutu_taro_gis_capacity_model",
+      "sources": [
+        "https://www.sciencedirect.com/science/article/pii/S027841652300003X",
+        "https://doi.org/10.1016/j.jaa.2023.101487"
+      ],
+      "notes": "Retain the 38.2 km2 island, terrace, fallow and warfare evidence in the research queue; no population interval is invented."
+    },
+    {
+      "anchor_id": "caribbean_genetic_effective_population_1000_1500_rejected_wave8",
+      "label": "Pre-contact Caribbean genetic effective-population estimates",
+      "date_interval": {"start": 1000, "end": 1500},
+      "population_interval": {"low": 500, "central": 4000, "high": 8150},
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "Fernandes et al. estimate effective population size (Ne), not census population: minimum approximately 500-1,500 and maximum approximately 1,530-8,150 for combined Puerto Rico and Hispaniola genetic lineages.",
+        "Ne cannot be converted to people supported by local food without a demographic model, and the combined-island genetic boundary is not a mappable historical food region.",
+        "No independent archaeological saturation or pressure interval is attached; using the genetic number as a population target would create a false low label."
+      ],
+      "boundary_status": "combined_island_genetic_lineage_not_food_boundary",
+      "source_family": "caribbean_genetic_demography",
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC7864882/",
+        "https://doi.org/10.1038/s41586-020-03053-2"
+      ],
+      "notes": "Keep only as a cautionary demographic-genetics comparison; never use Ne as a census or carrying-capacity label."
+    }
+  ]
+}

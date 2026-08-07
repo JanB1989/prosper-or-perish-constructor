@@ -1,0 +1,90 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "region": "europe_france_lower_bound_wave13",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "packet_id": "europe_france_lower_bound_wave13",
+  "scope": "Evidence-gated downgrade of the early-fourteenth-century France interval to a conservative local-food lower bound",
+  "policy": {
+    "append_only_supersession": true,
+    "no_starting_population_hyde_rgo_or_trade_predictors": true,
+    "population_reconstruction_is_not_capacity": true,
+    "saturation_upper_bound_requires_independent_resource_limit": true,
+    "disputed_hearth_extrapolations_are_validation_only": true
+  },
+  "records": [
+    {
+      "anchor_id": "france_continental_1300_1328_local_food_floor_wave13",
+      "supersedes_anchor_ids": [
+        "france_continental_1300_1328_interval_anchor_wave6"
+      ],
+      "label": "Continental France, early-fourteenth-century local-food population floor",
+      "year_start": 1300,
+      "year_end": 1328,
+      "population_low": 18000000,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.75,
+      "local_food_central": 0.9,
+      "local_food_high": 1.0,
+      "capacity_low": 18000000,
+      "capacity_central": 18000000,
+      "capacity_high": 18000000,
+      "interval_semantics": "Only a one-sided floor is asserted. Goldstone's 18-20 million is a reconstructed population at the pre-Black-Death peak, not a measured carrying-capacity interval. Davis independently describes northern-European growth stopping around 1300 in a resource/disease/strife equilibrium, which supports pressure but supplies no numerical saturation fraction. Lot's 20-24 million hearth extrapolations and Goldstone's later 23-24 million brief peak are retained as validation context, not as an upper capacity endpoint. The 18 million floor is deliberately conservative and is the only value passed to the lower-bound likelihood.",
+      "pressure_evidence": [
+        "Goldstone, 'Demography,' pp. 202-205, identifies soil fertility, climate and human/animal labour as agrarian limits and describes population growth slowing or halting around 1300; his 18-20 million estimate is explicitly a population reconstruction, not a capacity measurement.",
+        "Davis, 'Regulation of human population in northern France and adjacent lands in the Middle Ages,' Human Ecology 14 (1986), abstract and pp. 247-249, reports that population trebled after 1000 and then ceased increasing about 1300, with resources, disease and strife compatible with the observed demographic regulation. This is independent pressure evidence but does not establish an upper saturation fraction.",
+        "Pounds, Journal of Social History 3:3 (1970), pp. 225-247, independently discusses overpopulation and land/resource pressure in later-medieval France and the Low Countries.",
+        "Jordan, The Great Famine (1996), pp. 8-12, describes northern France within a precarious late-thirteenth-century subsistence equilibrium and documents the 1315-1322 crisis.",
+        "McNeill, 'Frontier Foods for Late Medieval Consumers' (1998), concludes that bulk medieval grain was sourced locally or regionally; the broad local-food interval records uncertainty about cross-border movement without claiming autarky."
+      ],
+      "shock_flags": [
+        "The 1328 fiscal observation follows the 1315-1322 Great Famine.",
+        "Hearth-to-person multipliers and extrapolation outside directly assessed royal lands are uncertain.",
+        "Pressure evidence is strongest in northern France and does not resolve every southern region.",
+        "The Hundred Years War and Black Death occur after the observation interval.",
+        "The 23-24 million later peak is not used as a 1337 observation or capacity ceiling."
+      ],
+      "trade_dependence": "low_at_continental_bulk_calorie_scale_with_internal_regional_redistribution",
+      "food_regime": "rainfed wheat, rye, oats, legumes, livestock, wine, woodland foods, riverine fish and coastal fish",
+      "boundary_description": "The continental-France envelope represented by modern French borders and the 528,400 km2 departmental reconstruction used by Lot; approximated by the complete EU5 france_region.",
+      "boundary_source": "https://www.persee.fr/doc/bec_0373-6237_1929_num_90_1_448861",
+      "eu5_selector": {
+        "include": [
+          "region=france_region"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.96205703141,
+      "boundary_confidence": "high",
+      "crosswalk_status": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "super_region": "Europe",
+      "source_family": "france_early_fourteenth_century_demographic_upper_limit",
+      "source_bundle": "goldstone_2012_davis_1986_lot_1929_pounds_1970_jordan_1996_mcneill_1998_lower_bound_gate",
+      "source_family_independence": "The packet preserves distinct demographic, famine-pressure, overpopulation and food-sourcing studies, but they do not provide an independently measured capacity upper endpoint. They therefore support a lower bound only and do not add a second scale family.",
+      "sources": [
+        "https://academic.oup.com/edited-volume/34328/chapter-abstract/291348631",
+        "https://pubmed.ncbi.nlm.nih.gov/12268179/",
+        "https://www.persee.fr/doc/bec_0373-6237_1929_num_90_1_448861",
+        "https://academic.oup.com/jsh/article-pdf/3/3/225/2698471/3-3-225.pdf",
+        "https://doi.org/10.1353/jsh/3.3.225",
+        "https://api.pageplace.de/preview/DT0400.9781400822133_A25080777/preview-9781400822133_A25080777.pdf",
+        "https://www.researchgate.net/publication/233503438_Frontier_Foods_for_Late_Medieval_Consumers_Culture_Economy_Ecology"
+      ],
+      "citation_details": [
+        "Jack A. Goldstone, 'Demography,' in The Oxford Handbook of the Ancien Regime (2012), pp. 202-205, especially p. 203.",
+        "D. E. Davis, 'Regulation of human population in northern France and adjacent lands in the Middle Ages,' Human Ecology 14 (1986), DOI 10.1007/BF00889240, abstract and pp. 247-249.",
+        "Ferdinand Lot, 'L'etat des paroisses et des feux de 1328,' Bibliotheque de l'Ecole des chartes 90 (1929), pp. 104-107.",
+        "Norman J. G. Pounds, 'Overpopulation in France and the Low Countries in the Later Middle Ages,' Journal of Social History 3:3 (1970), pp. 225-247.",
+        "William Chester Jordan, The Great Famine (1996), pp. 8-12.",
+        "J. R. McNeill, 'Frontier Foods for Late Medieval Consumers: Culture, Economy, Ecology,' Environment and History 4:2 (1998)."
+      ],
+      "notes": "This append-only record supersedes the France two-sided interval because its 0.85-1.00 saturation range was an unsupported assumption. It also supersedes the older France floor indirectly through the interval record. The original interval remains in the registry as superseded validation context; no new independent European two-sided anchor was found in this review. France remains useful for a conservative one-sided test and cannot set the global upper scale."
+    }
+  ]
+}

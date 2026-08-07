@@ -1,0 +1,68 @@
+{
+  "schema_version": "population_capacity_interannual_skill_layer_audit_v1",
+  "target_year": 1337,
+  "policy": {
+    "skill_is_reconstruction_quality_not_crop_yield": true,
+    "sentinel_values_remain_missing": true,
+    "no_skill_value_is_imputed": true,
+    "skill_is_carried_as_uncertainty_metadata_only": true
+  },
+  "acquired_layers": [
+    {
+      "source_id": "mada_asia_1300_2005",
+      "source_url": "https://www.ncei.noaa.gov/pub/data/paleo/treering/reconstructions/asia/cook2010pdsi/jja-mada-calver.txt",
+      "path": "artifacts/data/population_capacity/physical_validation/interannual_sources/jja-mada-calver.txt",
+      "source_sha256": "b8406d7dd9c5b37c2c373d30e6fab3a09c7dcbc06d98c3cafd09823a6f6c47bc",
+      "rows": 534,
+      "fields": ["CRSQ", "CVRE", "VRSQ", "RCE", "RMSE"],
+      "semantics": {
+        "CRSQ": "calibration R2",
+        "CVRE": "leave-one-out cross-validation reduction of error",
+        "VRSQ": "verification-period Pearson correlation squared",
+        "RCE": "verification reduction of error",
+        "RMSE": "verification-period root mean square error",
+        "periods": "calibration 1951-1989; verification 1920-1950"
+      },
+      "sentinel_counts": {"CRSQ": 0, "CVRE": 3, "VRSQ": 264, "RCE": 374, "RMSE": 0},
+      "coverage_artifact": "artifacts/data/population_capacity/physical_validation/interannual_sources/mada_skill_coverage_wave25.parquet",
+      "coverage_artifact_sha256": "d806140e1d19251423567db201b26f9779f1dcc69afee4ab172ffbdcd3b631b4",
+      "mapped_location_count": 6076,
+      "location_count": 20929,
+      "mean_sample_coverage_fraction": 0.287634,
+      "mean_vrsq_coverage_fraction": 0.159206,
+      "mean_rce_coverage_fraction": 0.095692,
+      "state": "resolved_partial_spatial_coverage"
+    }
+  ],
+  "not_acquired_layers": [
+    {
+      "source_id": "owda_europe_mediterranean_0_2000",
+      "status": "not_machine_readable_in_NOAA_directory",
+      "evidence": "OWDA primary paper Supplementary Fig. S11 publishes calibration/validation maps, but NOAA directory exposes owda.nc, owda.txt and coordinate/readme files only; no skill raster/table was found.",
+      "citation": "https://repository.library.noaa.gov/view/noaa/28655/noaa_28655_DS1.pdf",
+      "required_action": "obtain author-supplied numeric S11 skill grid or implement a documented digitization with quantified raster error; do not infer skill from PDSI coverage"
+    },
+    {
+      "source_id": "nada_north_america_0_2006",
+      "status": "not_machine_readable_in_NOAA_directory",
+      "evidence": "NOAA directory exposes NADAv2-2008.nc, text and map archives but no calibration/verification skill field.",
+      "citation": "https://www.ncei.noaa.gov/pub/data/paleo/drought/NAmericanDroughtAtlas.v2/",
+      "required_action": "obtain numeric skill grid from Cook et al. supplementary material or retain regional-only uncertainty"
+    },
+    {
+      "source_id": "sada_south_america_1400_2000",
+      "status": "not_machine_readable_in_NOAA_directory",
+      "evidence": "NOAA SADA directory exposes SADA_t.nc, SADA_tplus1.nc and metadata only; no skill raster/table.",
+      "citation": "https://www.ncei.noaa.gov/pub/data/paleo/drought/SADA/",
+      "required_action": "obtain numeric validation fields from Morales et al. supplementary material; post-1337 source remains validation-only"
+    }
+  ],
+  "acceptance": {
+    "at_least_one_skill_layer_acquired": true,
+    "all_required_atlas_skill_layers_acquired": false,
+    "all_locations_skill_weighted": false,
+    "annual_yield_risk_gate_unblocked": false,
+    "crop_physical_uncertainty_complete": false,
+    "reason": "MADA skill data now exist as a source-backed partial layer. It cannot close global spatial uncertainty because OWDA, NADA and SADA numeric skill layers remain unavailable, and skill statistics do not convert hydroclimate proxies into crop yields."
+  }
+}

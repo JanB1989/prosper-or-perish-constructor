@@ -1,0 +1,40 @@
+{
+  "diagnostic_id": "asia_japan_register_revalidation_wave29",
+  "generated_on": "2026-08-04",
+  "purpose": "Revalidate the two unmapped Awaji/Wakasa Great Land Register values and promote only the newly mappable conservative floor.",
+  "research_window": "1100-1500 with 1337 technology compatibility",
+  "forbidden_inputs": ["starting_population", "HYDE population/cropland", "RGO identity", "RGO output modifiers", "modern population or irrigated area", "trade imports as intrinsic capacity"],
+  "disposition_summary": [
+    {
+      "candidate": "Awaji c.1223-1280",
+      "disposition": "promote_one_sided_lower_bound",
+      "training_role": "lower_bound",
+      "reason": "Farris Table 1.3 provides a cited rice-supported 14,631-person floor; the current EU5 awaji tag supplies the missing high-coverage mapping. The bracketed non-rice sensitivity is excluded, and no saturation or upper endpoint is inferred.",
+      "mapping": "1 EU5 location, declared coverage 0.95, high crosswalk",
+      "source_families": ["farris_2006_great_land_registers"]
+    },
+    {
+      "candidate": "Wakasa c.1265-1280",
+      "disposition": "validation_only_unmapped",
+      "training_role": null,
+      "reason": "Farris Table 1.3 provides a cited 14,215-person rice floor and Tara Estate acreage checks, but no distinct EU5 wakasa selector exists. Substituting Echizen would corrupt the boundary.",
+      "mapping": "0 EU5 locations; placeholder selector; coverage 0.0",
+      "source_families": ["farris_2006_great_land_registers"]
+    }
+  ],
+  "quality_gate": {
+    "new_two_sided_anchor_groups": 0,
+    "new_vetted_one_sided_anchor_groups": 1,
+    "new_validation_cases": 1,
+    "new_rejected_cases": 0,
+    "forbidden_fields_used": false,
+    "unresolved_required_training_rows": 0,
+    "promoted": ["japan_awaji_1280_local_food_floor_revalidation_wave29"],
+    "reason": "Awaji passes the existing one-sided floor contract after resolving the explicit EU5 location tag. Wakasa remains held out until a distinct historical crosswalk is added."
+  },
+  "next_research_queue": [
+    "Find or construct a CHGIS-to-EU5 Wakasa polygon without substituting Echizen.",
+    "Keep Awaji and all other Farris provinces in source-family grouped holdouts; do not count them as independent scale evidence.",
+    "Search for a non-Farris Japan aggregate with an independent upper pressure endpoint before expanding Japan's role beyond lower-bound validation."
+  ]
+}

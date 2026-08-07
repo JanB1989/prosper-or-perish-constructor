@@ -1,0 +1,271 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Africa_and_Middle_East",
+  "region": "africa_middleeast",
+  "target_year": 1337,
+  "packet_id": "africa_middleeast_upper_capacity_gate_review_wave10",
+  "scope": "Narrow review of existing Mamluk Egypt/Nile and Africa lower-bound or capacity-validation records for an independently documented upper capacity interval on the same mapped rural boundary. City and trade-hub populations are not used. No record is promoted.",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "promoted_lower_bound_ids": [],
+    "decision": "No existing Africa/Middle East lower-bound record has both a 1337-compatible mapped rural boundary and an independently documented upper capacity interval with explicit saturation evidence. Mamluk Egypt has a cadastral output peak and disputed population reconstructions, but no rural-only ceiling; Mapungubwe and Tenerife are one-sided archaeological floors; Engaruka has the clearest transparent 8,000-10,000 support calculation but its completed system is post-1500 and therefore remains out-of-period validation.",
+    "reviewed_on": "2026-08-03",
+    "review_method": "Re-read the existing packet and benchmark entries, then checked the cited demographic and agrarian sources for whether an upper quantity was independently derived from food/land constraints rather than copied from the observed population. A capacity interval was not promoted when the source supplied only output, a lower bound, a site population, a later system, or a disputed population reconstruction.",
+    "new_independent_scale_families": 0,
+    "new_validation_or_rejection_cases": 4
+  },
+  "records": [
+    {
+      "anchor_id": "mamluk_egypt_1315_upper_capacity_gate_review_wave10",
+      "label": "Mamluk Egypt/Nile 1315 upper-capacity gate review",
+      "year_start": 1298,
+      "year_end": 1315,
+      "population_low": 3800000,
+      "population_central": 5000000,
+      "population_high": 6000000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The 3.8-6.0 million values are contested demographic reconstructions/assumptions for Mamluk Egypt and are retained only as diagnostics. They are not an independently measured upper capacity interval. The 1315 rawk is a cultivated-land/fiscal survey, and its agrarian-output peak is an output index, not a people-support ceiling.",
+      "quantitative_evidence": [
+        "Borsch, 'Plague Depopulation and Irrigation Decay in Medieval Egypt,' The Medieval Globe 1 (2014), Table 6 and Graph 4, pp. 147-149, normalizes estimated agrarian output to 1315 = 1.00 and reports later declines (1400 = 0.50, 1410 = 0.45, 1517 = 0.42, 1528 = 0.36, 1597 = 0.45). This establishes a dated production peak, not a maximum population or saturation fraction.",
+        "The UN Population Bulletin 31-32, Egypt discussion, pp. 84-85, reports that the 1298 and 1315 cadastres share 3,637,000 feddans and that Russell's approximately 4.0-4.2 million inference assumes about one person per feddan plus 10%; the text explicitly says the support-capacity estimate depends on conjectural per-feddan capacity and that historical Egyptian population estimates remain conjectural.",
+        "EH.net's review of Borsch, paragraphs discussing Egypt's 1315 survey, states that the often-repeated 6.0 million figure is suspect, that Borsch admits there are no exact figures for Egypt's population, and that reliable medieval demographic statistics are lacking: https://eh.net/book_reviews/the-black-death-in-egypt-and-england-a-comparative-study/.",
+        "Borsch 2014, pp. 136-142, documents basin irrigation, canals and recurring labour requirements, but neither the cadastral output index nor irrigation labour count is converted into a rural food-balance ceiling. Cairo and Alexandria are urban redistribution/trade nodes and are not separable in the broad region selector used by the existing record."
+      ],
+      "pressure_evidence": [
+        "The 1315 cadastral/output peak and later irrigation decay are independent resource-production evidence, but a peak year can represent realized output under fiscal institutions without showing that the rural population was at a long-run Malthusian limit.",
+        "The same sources document later plague, labour and canal-maintenance shocks; these explain output decline and cannot be used to infer the pre-plague upper capacity."
+      ],
+      "shock_flags": [
+        "contested_cadastre_to_person_conversion",
+        "Cairo_and_Alexandria_trade_and_urban_redistribution_not_separated",
+        "Mamluk_fiscal_landholding_and_import_flows",
+        "Black_Death_after_1337_and_later_irrigation_decay",
+        "no_independent_saturation_fraction_or_rural_food_balance"
+      ],
+      "trade_dependence": "Bulk calories were locally produced at Nile scale, but the existing Egypt-wide boundary includes urban and river redistribution; the staple import share for the rural component is unresolved.",
+      "food_regime": "Nile basin irrigation, wheat, barley, legumes, summer crops, livestock, dates and freshwater/coastal fish",
+      "boundary_description": "Existing lower-bound record: Mamluk Egypt's Nile Delta, Nile Valley, western oases and Red Sea dependencies, represented by lower_egypt_area and upper_egypt_area. The high-coverage EU5 crosswalk does not separate Cairo/Alexandria from the rural production boundary.",
+      "boundary_source": "Borsch 2014 Map 1 and pp. 136-149; existing Mamluk Egypt lower-bound packet",
+      "eu5_selector": {
+        "include": ["area=lower_egypt_area|upper_egypt_area"],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high_but_urban_rural_split_unresolved",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high for the EU5 Egypt envelope; low for the rural-only capacity unit",
+      "status": "rejected",
+      "role": "validation_only",
+      "source_family": "mamluk_egypt_1315_upper_capacity_gate",
+      "source_bundle": "borsch_2014_un_population_bulletin_russell_egypt_demography_bundle",
+      "source_family_independence": "Independent cadastral/output, demographic synthesis and methodological critique; all concern the same Egypt source family and do not create a new scale anchor.",
+      "sources": [
+        "https://www.environmentandsociety.org/sites/default/files/key_docs/9781942401018.pdf",
+        "https://digitallibrary.un.org/record/146942/files/un_1991_population_bulletin_31-32.pdf",
+        "https://eh.net/book_reviews/the-black-death-in-egypt-and-england-a-comparative-study/"
+      ],
+      "missing_criteria": [
+        "independently derived upper capacity interval for the same rural boundary",
+        "explicit saturation fraction or Malthusian-pressure interval",
+        "rural boundary excluding Cairo/Alexandria and urban food redistribution",
+        "defensible local-food balance and import share for that rural boundary"
+      ],
+      "notes": "Do not turn 6.0 million into capacity_high: it is a debated population assumption. Do not turn the 1315 = 1.00 output index into a people ceiling. This record remains a high-value irrigated production diagnostic and a hard negative for the upper-capacity gate."
+    },
+    {
+      "anchor_id": "mapungubwe_1270_1320_upper_capacity_gate_review_wave10",
+      "label": "Mapungubwe South African survey landscape upper-capacity gate review",
+      "year_start": 1270,
+      "year_end": 1320,
+      "population_low": 10700,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.8,
+      "local_food_central": 0.95,
+      "local_food_high": 1.0,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The existing 10,700-person reconstruction covers 114 ordinary homesteads plus the capital in the bounded South African survey landscape and is admissible only as a one-sided support floor. It is not a capacity interval: the source gives no independent upper land/food ceiling and the terminal drought/abandonment prevents treating the observed peak as a stable saturation equilibrium.",
+      "quantitative_evidence": [
+        "Huffman and Woodborne (2021), South African Journal of Science, Table 2 and pp. 3-4, reconstruct 5,700 people in 114 ordinary homesteads plus 5,000 at the capital, for 10,700 in the AD 1270-1320 Mapungubwe phase. The method is relative archaeological reconstruction rather than an absolute census.",
+        "Huffman and Woodborne (2021), pp. 2-5 and Table 3, document sorghum/millet fields, grainbins, cattle kraals and severe drought around AD 1310 +/- 5 followed by abandonment by about AD 1320; no upper food-support number is calculated.",
+        "UNESCO World Heritage dossier 1099bis bounds the protected property and buffer used for the survey comparison, but does not provide an upper population/capacity interval."
+      ],
+      "pressure_evidence": [
+        "The archaeological drought and abandonment provide resource-pressure evidence, but a terminal shock is not evidence of a long-run saturation fraction.",
+        "Long-distance gold/ivory trade and capital concentration are present; staple-food imports are not quantified, so the observation cannot provide an intrinsic upper ceiling."
+      ],
+      "shock_flags": [
+        "AD_1310_drought",
+        "abandonment_by_about_1320",
+        "capital_and_trade_concentration",
+        "relative_archaeological_population_method",
+        "no_independent_upper_capacity_or_saturation_interval"
+      ],
+      "trade_dependence": "Local sorghum, millet, pulses, livestock, game and river fish are evidenced, but the capital/trade system and staple import fraction are not resolved.",
+      "food_regime": "flood-margin sorghum and millet, beans/cowpeas, cattle/sheep/goats, game and Limpopo fish",
+      "boundary_description": "Mapungubwe National Park/UNESCO property plus buffer used by the South African Origins of Mapungubwe survey, represented by the containing EU5 mapungubwe location; not the wider transfrontier polity.",
+      "boundary_source": "Huffman and Woodborne 2021 Figure 1; UNESCO dossier 1099bis",
+      "eu5_selector": {
+        "include": ["location_tag=mapungubwe"],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "rejected",
+      "role": "validation_only",
+      "source_family": "mapungubwe_upper_capacity_gate",
+      "source_bundle": "huffman_woodborne_sanparks_unesco_mapungubwe_survey_bundle",
+      "source_family_independence": "Same archaeological survey/food-system family as the existing Mapungubwe lower bound; no independent upper estimate was found.",
+      "sources": [
+        "https://doi.org/10.17159/sajs.2021/8980",
+        "https://scielo.org.za/scielo.php?pid=S0038-23532021000200026&script=sci_arttext",
+        "https://whc.unesco.org/en/list/1099"
+      ],
+      "missing_criteria": [
+        "independent upper capacity interval for the same survey landscape",
+        "saturation fraction not driven by the drought/abandonment endpoint",
+        "quantified staple-food import share and capital-hinterland separation"
+      ],
+      "notes": "Retain the existing >=10,700 lower-bound test. Do not use an arbitrary multiplier above 10,700 or the wider political territory to manufacture an upper bound."
+    },
+    {
+      "anchor_id": "engaruka_1400_1720_upper_capacity_gate_review_wave10",
+      "label": "Engaruka irrigated landscape out-of-period upper-capacity validation",
+      "year_start": 1400,
+      "year_end": 1720,
+      "population_low": 7000,
+      "population_central": 9500,
+      "population_high": 12000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.85,
+      "local_food_central": 0.95,
+      "local_food_high": 1.0,
+      "capacity_low": 8000,
+      "capacity_central": 9000,
+      "capacity_high": 10000,
+      "interval_semantics": "Westerberg et al. provide an independently calculated 8,000-10,000-person food-support interval for the approximately 2,000 ha completed irrigation system, alongside a 7,000-12,000 archaeological platform population estimate. This is the strongest upper-capacity evidence in the reviewed African records, but the completed system's maximum occupation is 1620-1720 and its initiation/use begins only in the early 1400s; it cannot supervise the 1337 model.",
+      "quantitative_evidence": [
+        "Westerberg et al. (2010), pp. 306-307, describe approximately 2,000 ha of fields, canals and settlement platforms; platform counts imply 7,000-12,000 residents.",
+        "Westerberg et al. (2010), p. 307, transparently calculates that 1,000 ha could support about 8,000 people and the whole system up to 10,000 while retaining a trade surplus. This is a physical support calculation, not a guessed multiplier.",
+        "Westerberg et al. (2010), pp. 307-309, dates initiation to the early 1400s and use by 1500, with maximum extent/occupation in 1620-1720; those dates are outside the fixed 1337 technology/landscape target."
+      ],
+      "pressure_evidence": [
+        "The paper documents water/soil management, drought persistence and the relationship between system extent and support, which supports a physical capacity interpretation.",
+        "No 1337 saturation fraction exists, and the completed system is later than the target; no promotion is possible even though the upper calculation is independently documented."
+      ],
+      "shock_flags": [
+        "completed_system_postdates_1500",
+        "irrigation_initiation_early_1400s",
+        "drought_and_climate_transition",
+        "mixed_local_and_regional_trade",
+        "out_of_period_technology_and_landscape"
+      ],
+      "trade_dependence": "The cited agricultural calculation supports residents locally and allows a surplus for neighboring pastoralists/caravans; staple import dependence is not the limiting issue, but date compatibility is.",
+      "food_regime": "irrigated cereals, terraces, manure, local livestock and exchange with pastoralists",
+      "boundary_description": "Approximately 2,000 ha of the ancient Engaruka field/canal/terraced settlement system between the Olemelepo and Engaruka river fans, represented by location_tag=engeruka; not the whole Rift Valley.",
+      "boundary_source": "Westerberg et al. 2010, Figure 3 and pp. 306-309",
+      "eu5_selector": {
+        "include": ["location_tag=engeruka"],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "rejected",
+      "role": "validation_only",
+      "source_family": "engaruka_upper_capacity_gate",
+      "source_bundle": "westerberg_holmgren_borjeson_hakansson_laulumaa_bundle",
+      "source_family_independence": "Independent archaeological chronology plus transparent agricultural support calculation, but it is an out-of-period analogue and cannot add a 1337 scale family.",
+      "sources": [
+        "https://doi.org/10.1111/j.1475-4959.2010.00372.x",
+        "https://doi.org/10.1080/00672700609480436"
+      ],
+      "missing_criteria": [
+        "1337-compatible irrigation system and technology",
+        "1337 saturation interval for the same footprint",
+        "date-specific boundary state before the completed 1620-1720 system"
+      ],
+      "notes": "Use as a high-value out-of-period challenger/physical validation case. It is not evidence that the 1337 EU5 location could support 8,000-10,000 people."
+    },
+    {
+      "anchor_id": "tenerife_guanche_1496_upper_capacity_gate_review_wave10",
+      "label": "Pre-Hispanic Tenerife lower-bound record upper-capacity gate review",
+      "year_start": 1490,
+      "year_end": 1496,
+      "population_low": 15000,
+      "population_central": 15500,
+      "population_high": 20000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.97,
+      "local_food_central": 0.99,
+      "local_food_high": 1.0,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The existing archaeological interval of 15,000-20,000 Guanche inhabitants at conquest is an observed/reconstructed population interval and the existing record correctly uses only 15,000 as a one-sided support floor. Despite strong local-food and pressure evidence, no independent island-wide upper capacity or saturation interval is published; conquest and the 1494-1495 epidemic also disturb the endpoint.",
+      "quantitative_evidence": [
+        "Rodriguez-Martin et al. (2000), population table and pp. 118-119, reconstruct approximately 15,500 inhabitants across all nine menceyatos and give a defensible island interval of 15,000-20,000.",
+        "Rodriguez-Martin et al. (2000), pp. 121-130 and 135-143, describe north-south density differences, agricultural intensification, physiological stress and rejection of a 35,000-person estimate; they do not publish an independent maximum food-support calculation.",
+        "Atoche-Pena and del-Arco-Aguilar (European Journal of Archaeology, 2024), discussion of demographic stress/carrying-capacity adaptations, supports isolation and pressure context but does not supply an audited upper interval for the 1490-1496 island boundary."
+      ],
+      "pressure_evidence": [
+        "Agricultural intensification, skeletal stress and near-extinction of the most isolated Anaga population indicate resource pressure.",
+        "The conquest endpoint and epidemic make the observed interval unsuitable as a clean equilibrium ceiling; the pressure evidence supports only a lower-bound validation."
+      ],
+      "shock_flags": [
+        "Spanish_conquest_endpoint",
+        "1494_1495_epidemic",
+        "archaeological_site_count_reconstruction",
+        "no_independent_upper_capacity_or_saturation_interval"
+      ],
+      "trade_dependence": "Very low for staple calories; island cereals, pulses, gathered plants, goats/sheep and dairy were locally produced, with a minor local marine share.",
+      "food_regime": "dry-farmed wheat/barley/broad beans, gathering, island goat/sheep, meat/dairy and minor local marine food",
+      "boundary_description": "The complete 2,034 km2 island of Tenerife, partitioned into nine menceyatos and communal mountain pasture, represented by the exact EU5 aguere location.",
+      "boundary_source": "Rodriguez-Martin et al. 2000 island/menceyato area table",
+      "eu5_selector": {
+        "include": ["location_tag=aguere"],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact_island",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "rejected",
+      "role": "validation_only",
+      "source_family": "tenerife_guanche_upper_capacity_gate",
+      "source_bundle": "rodriguez_martin_guanche_demography_atoche_arco_archaeometry_bundle",
+      "source_family_independence": "Same Guanche palaeodemographic/bioarchaeological family as the existing lower bound; no independently documented upper capacity was found.",
+      "sources": [
+        "https://www.scielo.cl/scielo.php?pid=S0717-73562000000100006&script=sci_arttext",
+        "https://doi.org/10.4067/S0717-73562000000100006",
+        "https://www.cambridge.org/core/journals/european-journal-of-archaeology/article/who-why-when-and-where-from-the-peopling-of-the-canary-islands-and-the-challenges-of-archaeometry/67A9730ED05773C952339DD196E0BB2E"
+      ],
+      "missing_criteria": [
+        "independent island-wide upper capacity interval",
+        "saturation fraction separated from conquest/epidemic endpoint",
+        "food-balance calculation matching the complete 1490-1496 boundary"
+      ],
+      "notes": "Keep the existing 15,000 lower-bound test. Do not promote 20,000 as capacity_high: it is the upper edge of an observed archaeological population interval, not a documented Malthusian ceiling."
+    }
+  ]
+}

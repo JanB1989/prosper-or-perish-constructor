@@ -1,0 +1,81 @@
+{
+  "schema_version": "population_capacity_anchor_boundary_role_review_v1",
+  "review_id": "angkor_boundary_role_review_wave22",
+  "reviewed_on": "2026-08-04",
+  "append_only": true,
+  "central_registry_mutated": false,
+  "anchor_id": "greater_angkor_1181_1300_population_lower_bound_wave5",
+  "question": "Whether the Greater Angkor lower-bound observation violates the rule that cities/trade hubs cannot supervise surrounding land capacity.",
+  "current_registry_role": "lower_bound",
+  "verdict": "retain_as_one_sided_lower_bound",
+  "should_downgrade_to_validation_only": false,
+  "verdict_scope": "This is a conditional role decision for the current evidence packet. It does not promote the record to a two-sided capacity interval, does not establish a saturation fraction, and does not set global scale.",
+  "evidence_packet": {
+    "path": "research/population_capacity/evidence_packets/asia_greater_angkor_lower_bound_wave5.json",
+    "date_interval": [1181, 1300],
+    "population_interval_people": [700000, 900000],
+    "training_floor_people": 700000,
+    "local_food_interval": [0.75, 1.0],
+    "trade_dependence": "low_to_mixed for staple calories at the full 3,000 km2 agro-urban scale",
+    "boundary_confidence": "medium",
+    "source_family": "greater_angkor_lidar_and_archaeology",
+    "source_family_independence": "Population and local-food studies share Greater Angkor Project spatial data and are one source family."
+  },
+  "boundary_test": {
+    "historical_boundary": "Approximately 3,000 km2 Greater Angkor Region watershed catchment, including CCCs, the dispersed Angkor Metropolitan Area, occupied hydraulic embankments, temple/reservoir communities and rural rice-producing landscape.",
+    "explicit_exclusions": ["Khmer Empire", "modern Siem Reap Province", "temple core as a proxy for the whole region"],
+    "eu5_selector": "location_tag=angkor",
+    "eu5_location_count": 1,
+    "eu5_footprint_area_km2": 3172.963249292525,
+    "historical_area_km2": 3000.0,
+    "mapped_area_km2": 3000.0,
+    "area_weight": 0.945488417071616,
+    "coverage_fraction": 1.0,
+    "boundary_overlap_status": "high",
+    "crosswalk_status": "high",
+    "crosswalk_path": "research/population_capacity/crosswalks/asia_greater_angkor_lower_bound_wave5.json",
+    "rural_boundary_interpretation_defensible": true,
+    "rural_boundary_reason": "The cited study's 3,000 km2 region is a watershed-based agro-urban landscape with mapped hinterland features and agricultural communities. The population interval is explicitly for the whole region, not merely the civic-ceremonial core."
+  },
+  "rule_analysis": {
+    "city_or_trade_hub_only": false,
+    "local_food_support_evidence": [
+      "Klassen et al. 2021 maps tens of thousands of features in the extensive hinterland/metropolitan area and identifies agricultural communities as primarily farmers.",
+      "The same study cites an independent estimate that approximately 750,000 people could be supported by rice produced within the region without irrigation.",
+      "Klassen et al. 2022 documents more than 1,000 km2 of rice fields in the Angkor Metropolitan Area and temple-centered agricultural production across the settled landscape."
+    ],
+    "why_city_rule_does_not_trigger": "The observation is not a city population assigned to an arbitrary hinterland. Its historical boundary is itself the local agro-urban production landscape, and the floor is used only to test whether that mapped region can support at least the observed population.",
+    "remaining_caveats": [
+      "Provincial provisioning and the full economic catchment are not quantified.",
+      "The 700,000–900,000 interval is archaeological and density-assumption dependent; it is not an equilibrium ceiling.",
+      "Urban non-food producers are included in the regional population, so local-food share remains uncertain rather than 1.0 by assertion.",
+      "The anchor period ends 37 years before the game start; use broad date compatibility, not exact 1337 equivalence."
+    ]
+  },
+  "allowed_use": {
+    "one_sided_lower_bound_training": true,
+    "validation_holdout": true,
+    "two_sided_capacity_interval": false,
+    "saturation_fraction_target": false,
+    "global_scale_anchor": false,
+    "regional_or_cambodian_multiplier": false,
+    "city_core_as_surrounding_land_target": false
+  },
+  "conditional_fallback": {
+    "if_policy_requires_strictly_rural_population_labels": "Mark validation_only rather than deleting the evidence; retain the full 3,000 km2 crosswalk and reason code.",
+    "why_not_preferred": "That stricter policy would discard a published regional agro-urban aggregate whose population and rice-support evidence explicitly cover rural production space; it is not required by the city/trade-hub exclusion as written."
+  },
+  "sources": [
+    {
+      "citation": "Klassen et al. (2021), Diachronic modeling of the population within the medieval Greater Angkor Region settlement complex, Science Advances 7(19), eabf8441.",
+      "url": "https://doi.org/10.1126/sciadv.abf8441",
+      "use": "Primary population and boundary evidence; 700,000–900,000 for the whole 3,000 km2 Greater Angkor Region; rural/hinterland and agricultural features are part of the mapped study area."
+    },
+    {
+      "citation": "Klassen, Ortman, Lobo and Evans (2022), Provisioning an Early City: Spatial Equilibrium in the Agricultural Economy at Angkor, Journal of Archaeological Method and Theory 29, 763–794.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9402775/",
+      "use": "Independent local-food/landscape corroboration; the region is a 3,000 km2 watershed with >1,000 km2 ricefields and temple-centered agricultural communities."
+    }
+  ],
+  "final_recommendation": "Retain as a grouped, one-sided lower-bound anchor for the mapped 3,000 km2 agro-urban watershed. Do not downgrade solely because Angkor is commonly called a city; downgrade only if the project changes the policy to exclude all mixed agro-urban population aggregates, in which case preserve it as validation-only rather than treating it as missing or invalid evidence."
+}

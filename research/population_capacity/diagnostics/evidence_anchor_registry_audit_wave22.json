@@ -1,0 +1,241 @@
+{
+  "schema_version": "population_capacity_evidence_anchor_audit_v1",
+  "review_id": "evidence_anchor_registry_audit_wave22",
+  "reviewed_on": "2026-08-04",
+  "append_only": true,
+  "central_registry_mutated": false,
+  "purpose": "Independent current-state audit of the evidence registry, crosswalks, and post-fit gates. This artifact is diagnostic and does not promote, demote, or overwrite a registry packet.",
+  "artifacts": {
+    "evidence_registry": {
+      "path": "artifacts/data/population_capacity/current_capacity_map/evidence_registry.json",
+      "sha256": "b3195db90b7fe6846d8028987e779705702edefa4e6113a9e38f128b75a193cf"
+    },
+    "crosswalk_audit": {
+      "path": "artifacts/data/population_capacity/current_capacity_map/crosswalk_audit.json",
+      "sha256": "6aa4365de54363cc668967fb6a0685f9e46cce2317e10711fa54491d304cdebd"
+    },
+    "research_audit": {
+      "path": "artifacts/data/population_capacity/current_capacity_map/research_audit.json",
+      "sha256": "32521b1b7314903352d5e61f876315c122ba0bc37219d9bcc64b236ae416a3ac"
+    },
+    "grouped_evidence_holdouts": {
+      "path": "artifacts/data/population_capacity/current_capacity_map/grouped_evidence_holdouts.json",
+      "sha256": "fc70a37cb6428e1ba67fbb458448dd9a9ee0e5646469ca0fe2c59e69557f1606"
+    },
+    "generalization_audit": {
+      "path": "artifacts/data/population_capacity/current_capacity_map/generalization_audit.json",
+      "sha256": "24d112052622981d0008a47d1b25912afbc3642d5aafbce6d56ee814f18825b2"
+    },
+    "model_selection": {
+      "path": "artifacts/data/population_capacity/current_capacity_map/model_selection.json",
+      "sha256": "9b9b052c3f0d5849e271a5f509052e5c427d5e4b26d70fff84d470e33ec50555"
+    }
+  },
+  "registry_counts": {
+    "packet_count": 145,
+    "active_packet_count": 142,
+    "training_eligible_count": 28,
+    "interval_anchor_roles": 3,
+    "scale_anchor_roles": 1,
+    "lower_bound_roles": 24,
+    "declared_source_family_count": 18,
+    "holdout_source_family_groups": 18,
+    "holdout_source_family_groups_excluding_scale_anchor": 17,
+    "super_region_count": 5,
+    "crosswalk_rows": 145,
+    "required_crosswalk_rows": 28,
+    "unresolved_required_crosswalk_rows": 0,
+    "crosswalk_rows_unresolved_because_validation_or_rejected": 88,
+    "crosswalk_rows_mapped": 122,
+    "crosswalk_rows_validation_only": 95,
+    "crosswalk_rows_rejected": 19,
+    "packet_schema_issues": 0
+  },
+  "pre_fit_status": {
+    "research_contract_complete": true,
+    "mechanistic_training_ready": true,
+    "training_ready_scope": "pre_fit_evidence_and_mapping_contract",
+    "crosswalk_complete": true,
+    "crosswalk_resolution_contract_complete": true,
+    "all_required_labels_resolved": true,
+    "all_required_crosswalks_resolved": true,
+    "interpretation": "The evidence and mapping contracts are closed sufficiently to run mechanistic and aggregate-supervised training. The 88 unresolved mappings are validation-only or rejected packets, not required training rows; they must not be silently promoted."
+  },
+  "post_fit_status": {
+    "generalization_complete": true,
+    "selected_candidate": "mechanistic",
+    "grouped_holdout_interval_rows": 8,
+    "grouped_holdout_lower_bound_rows": 48,
+    "mechanistic_interval_coverage": 1.0,
+    "mechanistic_lower_bound_pass_rate": 1.0,
+    "hierarchical_additive_interval_coverage": 0.375,
+    "monotone_nam_interval_coverage": 0.25,
+    "training_or_deployment_allowed_flag": true,
+    "scientific_acceptance_complete": false,
+    "deployment_status": "provisional",
+    "interpretation": "The reported 1.0 mechanistic coverage is an aggregate interval/one-sided inequality gate, not location-level historical accuracy. The residual challengers fail the interval gate and do not replace the mechanistic baseline."
+  },
+  "two_sided_groups": [
+    {
+      "group_id": "artois_1290_1300_agrarian_capacity_interval_wave17",
+      "role": "interval_anchor",
+      "super_region": "Europe",
+      "source_family": "artois_agrarian_yield_and_crisis_1100_1350",
+      "capacity_interval_people": [1095000, 1415000],
+      "mapped_locations": 8,
+      "mapped_area_km2": 5545.58,
+      "coverage_fraction": 0.96,
+      "local_food_interval": [0.8, 1.0],
+      "saturation_interval": [0.78, 1.0],
+      "current_mechanistic_prediction_people": 1097626.7091192813,
+      "assessment": "Retain as the strongest fertile, locally provisioned agrarian interval. Rich-loam and crisis/pressure evidence is substantive, but the Derville/Fossier bundle is one source family and should not be treated as an independent global replication."
+    },
+    {
+      "group_id": "england_1290_food_security_capacity_interval_wave8",
+      "role": "interval_anchor",
+      "super_region": "Europe",
+      "source_family": "english_arable_output_and_food_security_models",
+      "capacity_interval_people": [4250000, 6200000],
+      "mapped_locations": 149,
+      "mapped_area_km2": 130279.0,
+      "coverage_fraction": 1.0,
+      "local_food_interval": [0.8, 1.0],
+      "saturation_interval": [0.65, 1.0],
+      "current_mechanistic_prediction_people": 5729912.0,
+      "assessment": "Retain as the primary scale-calibration context and an interval anchor. It shares geography and some Campbell/manorial inputs with the England scale record; those records must be grouped for holdouts and not counted as independent evidence."
+    },
+    {
+      "group_id": "iceland_1290_1330_natural_capacity_interval_wave18",
+      "role": "interval_anchor",
+      "super_region": "Europe",
+      "source_family": "iceland_preindustrial_environmental_carrying_capacity",
+      "capacity_interval_people": [40000, 80000],
+      "mapped_locations": 21,
+      "mapped_area_km2": 100830.0,
+      "coverage_fraction": 1.0,
+      "local_food_interval": [0.75, 1.0],
+      "saturation_interval": [0.625, 1.0],
+      "current_mechanistic_prediction_people": 76565.0,
+      "assessment": "Retain as a hostile-island interval. The companion Iceland biomass floor uses the same Haraldsson/Ice-CC model family and is a corroborating lower bound, not an independent replication."
+    },
+    {
+      "group_id": "england_1290_1315",
+      "role": "scale_anchor",
+      "super_region": "Europe",
+      "source_family": "english_demographic_and_manorial_reconstructions",
+      "population_interval_people": [4400000, 5200000],
+      "mapped_locations": 149,
+      "mapped_area_km2": 130279.0,
+      "coverage_fraction": 1.0,
+      "assessment": "Scale anchor only; it has no independent capacity interval in the registry. Its source_family_independence metadata is missing and it overlaps the England food interval. Do not use it as a second two-sided training target."
+    }
+  ],
+  "strong_lower_bound_groups": [
+    {"group_id": "greater_angkor_1181_1300_population_lower_bound_wave5", "super_region": "Asia", "lower_bound_people": 700000, "mapped_locations": 1, "coverage_fraction": 1.0, "assessment": "Strong hydraulic/rice local-food lower bound; exact ~3000 km2 boundary and current mechanistic prediction passes, but the archaeological city/landscape estimate remains one-sided."},
+    {"group_id": "gyeongsang_1432_registered_population_lower_bound", "super_region": "Asia", "lower_bound_people": 355069, "mapped_locations": 27, "coverage_fraction": 0.96, "assessment": "Contiguous register lower bound; 95 years late, with under-registration and famine caveats."},
+    {"group_id": "japan_register_floors_farris_2006_group", "super_region": "Asia", "record_count": 11, "source_family": "farris_2006_great_land_registers", "assessment": "Retain as one grouped lower-bound family, not eleven independent anchors; rice-only/partial-register semantics prevent a ceiling."},
+    {"group_id": "tenerife_guanche_1496_capacity_lower_bound_wave5", "super_region": "Africa", "lower_bound_people": 15000, "mapped_locations": 1, "coverage_fraction": 1.0, "assessment": "Strong local-food island lower bound; late date and conquest/modorra shocks prevent two-sided use."},
+    {"group_id": "sicily_1277_local_support_export_floor_wave3", "super_region": "Europe", "lower_bound_people": 340000, "mapped_locations": 22, "coverage_fraction": 0.959, "assessment": "Useful pressure floor, but grain exports/internal trade mean no autarkic ceiling."},
+    {"group_id": "faroe_1300_local_support_floor_wave3", "super_region": "Europe", "lower_bound_people": 2224, "mapped_locations": 1, "coverage_fraction": 0.986, "assessment": "Good local land/pasture floor; marine foods prevent a closed upper interval."},
+    {"group_id": "hohokam_lower_salt_1150_1450_capacity_lower_bound_wave5", "super_region": "America/Oceania", "lower_bound_people": 53000, "mapped_locations": 2, "coverage_fraction": 1.0, "assessment": "Published irrigation/canal carrying-capacity floor; source corridor is narrower than the containing EU5 selector."},
+    {"group_id": "tongatapu_local_food_population_floor_1100_1500_wave4", "super_region": "Oceania", "lower_bound_people": 15000, "mapped_locations": 1, "coverage_fraction": 0.976394, "assessment": "Strong intensive local food and fishing floor; no saturation ceiling."}
+  ],
+  "remaining_lower_bound_ids": [
+    "great_zimbabwe_1300_1450_population_lower_bound_wave16",
+    "mapungubwe_south_african_survey_1270_1320_capacity_lower_bound_wave5",
+    "upper_mantaro_wanka_ii_1350_1450_population_lower_bound",
+    "mesa_verde_vep_1225_1260_capacity_lower_bound",
+    "greater_angkor_1181_1300_population_lower_bound_wave5",
+    "gyeongsang_1432_registered_population_lower_bound",
+    "japan_satsuma_1280_local_food_floor_wave13",
+    "japan_oosumi_1280_local_food_floor_wave13",
+    "japan_hyuuga_1280_local_food_floor_wave13",
+    "japan_bungo_1280_local_food_floor_wave13",
+    "japan_hizen_1280_local_food_floor_wave13",
+    "japan_tango_1280_local_food_floor_wave13",
+    "japan_tajima_1280_local_food_floor_wave13",
+    "japan_iwami_1280_local_food_floor_wave13",
+    "japan_hitachi_1280_local_food_floor_wave13",
+    "japan_buzen_1280_local_food_floor_wave7",
+    "japan_noto_1280_local_food_floor_wave7",
+    "france_continental_1300_1328_local_food_floor_wave13",
+    "iceland_preindustrial_biomass_capacity_floor_wave3",
+    "faroe_1300_local_support_floor_wave3",
+    "sicily_1277_local_support_export_floor_wave3",
+    "tenerife_guanche_1496_capacity_lower_bound_wave5",
+    "hohokam_lower_salt_1150_1450_capacity_lower_bound_wave5",
+    "tongatapu_local_food_population_floor_1100_1500_wave4"
+  ],
+  "independence_audit": {
+    "declared_source_families": 18,
+    "effective_holdout_source_family_groups": 17,
+    "documented_shared_bundles": [
+      {"group": "Japan Farris registers", "records": 11, "rule": "one source-family group, not eleven independent anchors"},
+      {"group": "England scale and England food interval", "records": 2, "rule": "same geography and shared Campbell/manorial inputs; hold together"},
+      {"group": "Iceland interval and Iceland Ice-CC floor", "records": 2, "rule": "same Haraldsson/Ice-CC model family; hold together"}
+    ],
+    "conservative_effective_independent_bundle_floor": 16,
+    "interpretation": "The 18 declared family names satisfy the registry minimum, but the scientific independence count is lower once documented shared geography/model bundles are collapsed. Holdout grouping must preserve those bundles."
+  },
+  "coverage_audit": {
+    "required_rows_are_resolved": true,
+    "broad_containment_or_site_mismatch": [
+      {"group_id": "upper_mantaro_wanka_ii_1350_1450_population_lower_bound", "source_area_km2": 1900.0, "eu5_selector_area_km2": 11046.64, "coverage_ratio_source_to_selector": 0.172, "action": "validation-only until exact UMARP/JASP polygon; one-sided containment may remain diagnostic"},
+      {"group_id": "mesa_verde_vep_1225_1260_capacity_lower_bound", "source_area_km2": 1800.0, "eu5_selector_area_km2": 9158.81, "coverage_ratio_source_to_selector": 0.197, "action": "retain only as conservative containment lower bound"},
+      {"group_id": "mapungubwe_south_african_survey_1270_1320_capacity_lower_bound_wave5", "source_area_km2": 1329.7, "eu5_selector_area_km2": 8154.75, "coverage_ratio_source_to_selector": 0.163, "action": "retain only as conservative containment lower bound"},
+      {"group_id": "great_zimbabwe_1300_1450_population_lower_bound_wave16", "source_area_km2": 0.8, "eu5_selector_area_km2": 5509.97, "coverage_ratio_source_to_selector": 0.000145, "action": "urban-site diagnostic/one-sided containment only; not surrounding land capacity"},
+      {"group_id": "hohokam_lower_salt_1150_1450_capacity_lower_bound_wave5", "source_area_km2": null, "eu5_selector_area_km2": 19001.88, "coverage_ratio_source_to_selector": null, "action": "one-sided lower-bound diagnostic until canal-corridor polygon is quantified"}
+    ],
+    "exact_or_high_coverage_training_rows": 28,
+    "interpretation": "The machine crosswalk contract is closed, but a high coverage fraction on a containing EU5 location is not the same as exact historical-boundary equivalence. The five records above require conservative one-sided semantics."
+  },
+  "recommendations": {
+    "promote": [],
+    "retain_as_two_sided_or_scale": [
+      "artois_1290_1300_agrarian_capacity_interval_wave17",
+      "england_1290_food_security_capacity_interval_wave8",
+      "iceland_1290_1330_natural_capacity_interval_wave18",
+      "england_1290_1315"
+    ],
+    "retain_as_lower_bound_only": [
+      "greater_angkor_1181_1300_population_lower_bound_wave5",
+      "gyeongsang_1432_registered_population_lower_bound",
+      "tenerife_guanche_1496_capacity_lower_bound_wave5",
+      "sicily_1277_local_support_export_floor_wave3",
+      "faroe_1300_local_support_floor_wave3",
+      "hohokam_lower_salt_1150_1450_capacity_lower_bound_wave5",
+      "tongatapu_local_food_population_floor_1100_1500_wave4",
+      "france_continental_1300_1328_local_food_floor_wave13",
+      "iceland_preindustrial_biomass_capacity_floor_wave3",
+      "japan_register_floors_farris_2006_group"
+    ],
+    "downgrade_to_validation_or_containment_only": [
+      "upper_mantaro_wanka_ii_1350_1450_population_lower_bound",
+      "great_zimbabwe_1300_1450_population_lower_bound_wave16",
+      "mapungubwe_south_african_survey_1270_1320_capacity_lower_bound_wave5",
+      "mesa_verde_vep_1225_1260_capacity_lower_bound"
+    ],
+    "do_not_use_as_global_scale": [
+      "all lower_bound records",
+      "england_1290_1315 without its explicit scale-anchor role and overlap grouping",
+      "validation-only or rejected packets"
+    ]
+  },
+  "remaining_acceptance_blockers": [
+    "crop_capacity_scenario_propagation_complete=false",
+    "crop_physical_uncertainty_complete=false",
+    "joint_capacity_uncertainty_complete=false",
+    "pyaez_challenger_evaluated=false (GAEZ remains the default; PyAEZ is not eligible for selection)",
+    "accepted p10/p50/p90 headcounts cannot be frozen until correlated climate/yield/parameter scenarios are re-optimized through land, calorie, protein, water, livestock, fisheries, and wild-food constraints",
+    "broad containment/site crosswalks require conservative semantics or exact polygon follow-up before being treated as aggregate two-sided evidence",
+    "source-family/geographic overlap controls must remain enforced; nominal family counts must not be interpreted as independent replications",
+    "England scale-anchor source_family_independence metadata is absent and should be repaired before final acceptance",
+    "model_selection.scientific_acceptance_complete=false and deployment_status=provisional"
+  ],
+  "conclusion": {
+    "can_start_training": true,
+    "why": "All 28 required evidence/crosswalk rows are resolved, the mechanistic pre-fit contract is complete, and grouped holdout artifacts exist. Training is no longer blocked by missing required anchor mappings.",
+    "what_is_not_done": "The model is not scientifically accepted or deployable: the mechanistic run still lacks full correlated scenario uncertainty and joint p10/p50/p90 propagation, the PyAEZ challenger has not been evaluated, and several lower-bound records are containment diagnostics rather than exact surrounding-land targets.",
+    "next_gate": "Complete scenario and joint uncertainty propagation, rerun physical and grouped holdout audits with shared-bundle grouping, repair scale-anchor metadata, then freeze only if all interval/lower-bound and invariant gates remain valid."
+  }
+}

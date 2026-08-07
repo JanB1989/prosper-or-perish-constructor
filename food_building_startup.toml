@@ -24,16 +24,15 @@ population_column = "population_peasants"
 food_per_1000_population = 1.0
 
 [[production_sources]]
-key = "existing_cookery_victuals"
+key = "existing_cookery_food"
 enabled = true
 mode = "existing_building_levels"
 building = "cookery"
 
 [production_sources.output]
-mode = "production_methods"
-good = "victuals"
-production_methods = ["pp_cookery_livestock_pottage"]
-estimated_production_efficiency = 0.8
+# Victuals no longer carry food value; cookery food is the building's local_monthly_food.
+mode = "fixed_food"
+fixed_food_per_level = 20.0
 multiplier = 1.0
 
 [[production_sources]]
@@ -67,10 +66,9 @@ min_province_development_per_1000_population = -1000.00
 target_scale_min = 1.00
 
 [buildings.output]
-mode = "production_methods"
-good = "victuals"
-production_methods = ["pp_cookery_livestock_pottage"]
-estimated_production_efficiency = 0.6
+# Victuals no longer carry food value; plan against cookery local_monthly_food instead.
+mode = "fixed_food"
+fixed_food_per_level = 20.0
 multiplier = 1.0
 
 [buildings.score]
@@ -85,8 +83,8 @@ order = 20
 coverage_group = "local_food_distribution"
 target_basis = "shortfall"
 target_food_ratio = 1.00
-max_levels_per_province = 9
-max_levels_per_location = 6
+max_levels_per_province = 10
+max_levels_per_location = 10
 min_province_food_consumption = 10
 placement = "highest_population"
 allowed_ranks = ["rural_settlement", "town", "city", "megalopolis"]

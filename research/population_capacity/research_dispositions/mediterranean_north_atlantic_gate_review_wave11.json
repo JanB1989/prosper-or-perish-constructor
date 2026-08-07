@@ -1,0 +1,120 @@
+{
+  "schema_version": "population_capacity_research_disposition_v1",
+  "packet_id": "mediterranean_north_atlantic_gate_review_wave11",
+  "region": "europe_island_and_north_atlantic_followup",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "source_bundle": "mallorca_crete_sardinia_orkney_shetland_followup",
+  "policy": {
+    "append_only": true,
+    "no_observed_population_as_upper_bound": true,
+    "no_city_or_trade_hub_targets": true,
+    "two_sided_training_requires_independent_capacity_and_pressure": true,
+    "exact_or_high_boundary_crosswalk_required": true,
+    "out_of_period_analogues_are_validation_only": true
+  },
+  "method": "Screened quantitative medieval island and North Atlantic records for the evidence contract. Fiscal enumerations and market records are not treated as intrinsic carrying-capacity labels unless the same boundary has an independently measured local-food ceiling and dated pressure evidence. Candidates that fail remain explicit rejections or validation-only observations.",
+  "promotion_audit": {
+    "promoted_training_anchor_ids": [],
+    "promoted_two_sided_validation_ids": [],
+    "decision": "No new training anchor passes. Mallorca has a valuable 1329 fiscal population reconstruction but documented wheat-import dependence and a wealth-biased morabeti assessment; it is not an upper local-food capacity. Crete has grain-market and purchase records but no same-boundary population/capacity interval and strong Venetian market dependence. Sardinia has qualitative late-medieval underpopulation and subsistence-crisis evidence without an auditable dated population/capacity interval. North Orkney, Shetland, and the Faroes document settlement, pasture and marine-food systems but not a 1290-1337 human equilibrium interval. Keep these as rejected or held-out validation candidates; do not lower the promotion threshold.",
+    "reviewed_on": "2026-08-03",
+    "new_independent_scale_families": 0,
+    "new_training_records": 0
+  },
+  "records": [
+    {
+      "anchor_id": "mallorca_morabeti_1329_local_food_gate_wave11",
+      "status": "confirmed_rejected_training",
+      "role": "validation_only",
+      "eu5_selector": "candidate island=mallorca",
+      "coverage_fraction": null,
+      "population_interval": {"low": 59620, "central": 63000, "high": 70000},
+      "capacity_interval": null,
+      "boundary_status": "historical_island_boundary described; EU5 selector/crosswalk not yet audited",
+      "capacity_status": "no intrinsic upper capacity; morabeti is a fiscal wealth/eligibility record",
+      "pressure_status": "fertile districts and intensive agriculture documented; famine/epidemic shocks and post-1329 decline documented, but no dated saturation fraction",
+      "local_food_status": "fails local-food criterion for an upper target: medieval Mallorca had recurrent wheat deficits and documented imports",
+      "reason": "The 1329 morabeti reconstruction gives approximately 59,620 taxable persons, with estimates around 63,000 to 70,000 after accounting for non-payers. The assessment began in 1266 and was collected from heads of households above a wealth threshold, so it is not a complete headcount. Mallorca also imported wheat and used regulated grain shipping to cover shortages; observed population therefore cannot cap locally supportable people. Retain only as a validation population floor after a boundary crosswalk is built.",
+      "sources": [
+        "https://publicacions.iec.cat/repository/pdf/00000158/00000049.pdf (Santamaria, Demografia de Mallorca, 1329 morabeti discussion, pp. 155-222)",
+        "https://revistas.usal.es/uno/index.php/Studia_Historica/article/view/4609 (morabeti chronology and eligibility)",
+        "https://www.mdpi.com/2071-1050/11/1/168 (Mallorca agrarian intensity and demographic decline after 1329)",
+        "https://books.openedition.org/cvz/45602 (grain-import privilege and shortage management)",
+        "https://researchgate.net/publication/307749456_Mallorca_y_la_importacion_de_trigo_Atlantico_1230-1350 (wheat-deficit/import evidence)"
+      ]
+    },
+    {
+      "anchor_id": "crete_grain_market_1300_1330_gate_wave11",
+      "status": "confirmed_rejected_training",
+      "role": "validation_only",
+      "eu5_selector": "candidate island=crete",
+      "coverage_fraction": null,
+      "population_interval": null,
+      "capacity_interval": null,
+      "boundary_status": "historical island boundary described; EU5 selector/crosswalk not audited",
+      "capacity_status": "no aggregate population or local-food capacity interval",
+      "pressure_status": "grain-price volatility and market procurement are documented; they do not identify a local equilibrium ceiling",
+      "local_food_status": "mixed and unresolved; Venetian procurement and inter-territorial grain circulation are material",
+      "reason": "The 1300-1330 records provide grain prices and a Venetian purchase contract for roughly 100,000 mouzouria from Chania producers, but no contemporaneous aggregate population or land/calorie ceiling for the island. Market procurement, port redistribution and price observations cannot supervise surrounding intrinsic capacity. Retain as a qualitative irrigation/grain-market validation case only.",
+      "sources": [
+        "https://www.mdpi.com/1911-8074/14/4/151 (Crete grain prices and 1330 Chania purchase)",
+        "https://www.mdpi.com/2071-1050/11/1/168 (comparative Mediterranean agrarian stress context)"
+      ]
+    },
+    {
+      "anchor_id": "sardinia_late_medieval_underpopulation_gate_wave11",
+      "status": "confirmed_rejected_training",
+      "role": "validation_only",
+      "eu5_selector": "area=sardinia_area",
+      "coverage_fraction": 1.0,
+      "population_interval": null,
+      "capacity_interval": null,
+      "boundary_status": "exact island area benchmark available; historical sub-boundary and population crosswalk absent",
+      "capacity_status": "no auditable dated population/capacity interval",
+      "pressure_status": "qualitative evidence of exhausted holdings, abandoned land, debt, high grain prices and recurrent subsistence crises",
+      "local_food_status": "rural pastoral, hunting, fishing and gathering systems documented; aggregate local-calorie share is not quantified",
+      "reason": "Day's Annales study directly discusses late-medieval Sardinian underpopulation and subsistence calamities, but the accessible record does not provide a mappable 1290-1337 population interval or an independently estimated carrying-capacity ceiling for the same boundary. The exact island area benchmark is therefore useful for model stress testing only; no numeric target is fabricated.",
+      "sources": [
+        "https://doi.org/10.3406/ahess.1975.293640 (John Day, Malthus démenti? Sous-peuplement chronique et calamités démographiques en Sardaigne au bas Moyen Âge)",
+        "https://www.istar.oristano.it/it/medioevo/la-societa-giudicale/la-macchina-amministrativa-del-giudicato/index.html (rural Judicate settlement context)",
+        "https://virtualarchaeology.sardegnacultura.it/index.php/en/archaeological-sites/eta-medievale/castello-della-fava/detailed-sheets/2168-le-abitudini-alimentari (medieval Sardinian pastoral, hunting, fishing and gathering foods)"
+      ]
+    },
+    {
+      "anchor_id": "north_orkney_norse_settlement_gate_wave11",
+      "status": "confirmed_rejected_training",
+      "role": "validation_only",
+      "eu5_selector": "candidate islands=westray,sanday,papa_westray,eday,north_ronaldsay,faray",
+      "coverage_fraction": null,
+      "population_interval": null,
+      "capacity_interval": null,
+      "boundary_status": "six-island study boundary is explicit but EU5 crosswalk not audited",
+      "capacity_status": "no medieval aggregate human-capacity interval",
+      "pressure_status": "archaeological settlement and farm/fishing continuity; no dated saturation interval",
+      "local_food_status": "mixed farming, fishing and fish processing documented, but calories are not aggregated",
+      "reason": "The North Orkney Population History Project documents continuous Norse-era settlement and archaeological farms/fishing, while modern population peaked at 6,062 in 1861. It supplies no defensible 1290-1337 population interval or local-food capacity ceiling. Keep as a future hostile-island validation candidate, not a target.",
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC7186771/ (North Orkney Population History Project)",
+        "https://portal.historicenvironment.scot/apex/f?p=1505:300 (Quoygrew/Westray Norse farm and fishing evidence)"
+      ]
+    },
+    {
+      "anchor_id": "shetland_iron_age_carrying_capacity_gate_wave11",
+      "status": "confirmed_rejected_training",
+      "role": "validation_only",
+      "eu5_selector": "candidate islands=shetland",
+      "coverage_fraction": null,
+      "population_interval": null,
+      "capacity_interval": null,
+      "boundary_status": "island geography described; EU5 crosswalk not audited",
+      "capacity_status": "carrying-capacity dissertation is Iron Age and out of target period",
+      "pressure_status": "pasture and marine productivity modeled, but not 1290-1337",
+      "local_food_status": "ecological potential only; no medieval calorie balance",
+      "reason": "The available quantitative Shetland carrying-capacity work is an Iron Age ecological study. Its date and technology do not match 1337, so it cannot train the 1337 model. Retain only as an out-of-period physical validation analogue pending a medieval boundary-specific record.",
+      "sources": [
+        "https://theses.gla.ac.uk/77232/1/10984310.pdf (Shetland carrying-capacity dissertation; Iron Age scope)"
+      ]
+    }
+  ]
+}

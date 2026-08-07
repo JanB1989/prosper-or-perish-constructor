@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "region": "europe_north_atlantic",
+  "target_year": 1337,
+  "packet_id": "europe_north_atlantic_followup",
+  "records": [
+    {
+      "anchor_id": "iceland_preindustrial_capacity_model_1290_1315",
+      "label": "Iceland pre-industrial natural carrying capacity and population near 1300",
+      "year_start": 1290,
+      "year_end": 1315,
+      "population_low": 40000,
+      "population_central": 50000,
+      "population_high": 60000,
+      "capacity_low": 40000,
+      "capacity_central": 60000,
+      "capacity_high": 80000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.85,
+      "local_food_central": 0.95,
+      "local_food_high": 1.0,
+      "pressure_evidence": [
+        "Haraldsson and Olafsdottir construct a pre-industrial biological-production model and estimate sustainable Icelandic population at 40,000-80,000.",
+        "The Cambridge historical synthesis reports indirect population estimates of 40,000-60,000, a pre-modern maximum around 50,000-60,000, and repeated climate, famine, eruption, and animal-loss checks.",
+        "Iceland remained predominantly agricultural and animal-husbandry based; the carrying-capacity model is explicitly tied to local vegetation and livestock production rather than imported food."
+      ],
+      "shock_flags": [
+        "AD 1300 volcanic eruption falls inside the interval",
+        "cool climate and episodic harvest/livestock failures",
+        "historical population estimates are indirect rather than an enumeration"
+      ],
+      "trade_dependence": "low_to_mixed",
+      "food_regime": "local pastoral agriculture, hay, dairy, meat, fishing, and limited trade",
+      "boundary_description": "The Iceland island boundary, matching the complete EU5 Iceland area.",
+      "boundary_source": "EU5 calibrated island geometry; historical island-wide population and capacity studies",
+      "eu5_selector": {"include": ["area=iceland_area"], "exclude": []},
+      "coverage_fraction": 1.0,
+      "boundary_confidence": "high",
+      "crosswalk_status": "exact",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "iceland_carrying_capacity_model_and_historical_synthesis",
+      "source_bundle": "haraldsson_olafsdottir_2006_cambridge_polar_record_2025",
+      "source_family_independence": "independent dynamic carrying-capacity model plus historical demographic synthesis",
+      "sources": [
+        "https://portal.research.lu.se/en/publications/a-novel-modelling-approach-for-evaluating-the-preindustrial-natur/",
+        "https://doi.org/10.1016/j.scitotenv.2006.08.013",
+        "https://www.cambridge.org/core/journals/polar-record/article/icelands-demographic-transition-from-turf-houses-to-too-many-tourists/A462425B0071EB7BB8686ACB1816EB6A5"
+      ],
+      "notes": "The capacity interval is taken from the independent 2006 pre-industrial model, while the population interval comes from the historical synthesis. The record remains validation-only because no cited numeric local-calorie share is available and the literature contains a labor-scarcity interpretation that conflicts with a simple fixed Malthusian ceiling; the 1300 eruption is retained as uncertainty rather than silently removed."
+    }
+  ]
+}

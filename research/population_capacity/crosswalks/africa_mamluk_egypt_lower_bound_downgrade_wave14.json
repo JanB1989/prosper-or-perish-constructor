@@ -1,0 +1,80 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Africa",
+  "region": "nile_egypt",
+  "target_year": 1337,
+  "packet_id": "africa_mamluk_egypt_lower_bound_downgrade_wave14",
+  "geometry_source": "EU5 calibrated location geometry plus the Rawk Nasiri cultivated-land total summarized by the UN Population Bulletin and the EGYLandscape cadastral GIS description.",
+  "crosswalks": [
+    {
+      "anchor_id": "mamluk_egypt_1315_local_support_floor_downgrade_wave14",
+      "supersedes_anchor_ids": [
+        "mamluk_egypt_1315_irrigated_local_support_floor_wave3"
+      ],
+      "historical_boundary": "Rawk Nasiri 1298/1315 cultivated/fiscal land units in Egypt; the published total is 3,637,000 feddans (approximately 15,278 km2 using 4,200.833 m2 per feddan). This is not a closed polygon and is not equivalent to every desert, oasis, port and city footprint in the broad EU5 Egypt selector.",
+      "eu5_selector": {
+        "include": [
+          "area=lower_egypt_area|upper_egypt_area"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 60,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "full_broad_envelope_selector_but_cadastral_rural_semantics_unresolved",
+      "crosswalk_status": "downgraded_semantic_mismatch",
+      "boundary_confidence": "high for 60 EU5 selector members; low for equivalence to the 1315 cultivated/fiscal boundary",
+      "status": "validation_only",
+      "candidate_role": "validation_only",
+      "area_comparison": {
+        "mapped_eu5_lower_egypt_jacobian_area_km2": 49978.69887835014,
+        "mapped_eu5_upper_egypt_jacobian_area_km2": 59375.455932707875,
+        "mapped_broad_eu5_area_km2": 109354.15481105802,
+        "rawk_cultivated_land_feddans": 3637000,
+        "feddan_area_assumption_m2": 4200.833333333333,
+        "rawk_cultivated_land_area_km2": 15278.430833333334,
+        "rawk_cultivated_area_as_fraction_of_broad_eu5_selector": 0.13971513802773555,
+        "interpretation": "The 13.97% ratio is a cultivated-land-to-broad-envelope diagnostic, not a claim that only 13.97% of the historical population belonged to Egypt. The Rawk total measures surveyed cultivated land while the EU5 selector measures modern map-location footprints containing extensive desert and urban areas. No area-weighted population allocation is permitted from this ratio."
+      },
+      "selector_content_diagnostic": {
+        "broad_selector_locations": 60,
+        "obvious_non_nile_core_or_port_locations": [
+          "el_alamein",
+          "matruh",
+          "sallum",
+          "suez",
+          "wadi_el_natrun",
+          "bahariyya_oasis",
+          "baris",
+          "el_qasr",
+          "kharga",
+          "qasr_farafra",
+          "siwa",
+          "el_qoseir",
+          "ras_gharib",
+          "safaga",
+          "saint_anthony",
+          "saint_paul_anchorite"
+        ],
+        "diagnostic_exclusion_count": 16,
+        "diagnostic_exclusion_area_km2": 44257.63788543175,
+        "remaining_nile_delta_valley_candidate_area_km2": 65096.51692562627,
+        "remaining_candidate_fraction_of_broad_selector": 0.5952816062462369,
+        "caveat": "This 16-location exclusion is a reproducible map diagnostic, not a historical Rawk boundary reconstruction. It must not be used as a replacement training selector. It demonstrates why the existing 1.0 crosswalk coverage is only selector completeness, not source-boundary coverage."
+      },
+      "resolution_method": "Enumerate all 60 locations selected by the existing lower_egypt_area|upper_egypt_area selector from location_geometry_calibrated.parquet; compare the summed calibrated footprint with the published 3,637,000-feddan cultivated-land total; retain a separate diagnostic list of obvious oasis, desert, Red Sea port and Sinai-adjacent locations. Do not infer population or capacity from the area ratio and do not promote the floor.",
+      "required_actions": [
+        "digitize the Rawk Nasiri village/province cadastral units and intersect them with EU5 geometry",
+        "separate cultivated rural land from Cairo, Alexandria, Fayyum city and other urban redistribution hubs",
+        "verify whether oases and Red Sea ports are in the population source's boundary rather than assuming broad Egypt membership",
+        "find an independent population/capacity interval and documented local-food share",
+        "require >=95% historical-boundary equivalence before any future target use"
+      ],
+      "source_map_urls": [
+        "https://digitallibrary.un.org/record/146942/files/un_1991_population_bulletin_31-32.pdf",
+        "https://www.environmentandsociety.org/sites/default/files/key_docs/9781942401018.pdf",
+        "https://egylandscape.huma-num.fr/about.html"
+      ],
+      "notes": "The old 3.4 million floor is not applied to the 60-location selector after this downgrade. The selector is retained only for physical diagnostics and validation; broad membership coverage must not be reported as a closed Rawk rural crosswalk."
+    }
+  ]
+}

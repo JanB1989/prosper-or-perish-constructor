@@ -1,0 +1,126 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "europe_england_counties_validation_wave23",
+  "region": "europe_england_counties_validation_wave23",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "scope": "County-level 1290 demographic validation from the Campbell lay-subsidy and poll-tax reconstruction. Norfolk and Lincolnshire are retained as pressure/scale diagnostics but cannot become independent anchors because both estimates are conditional on a national 4.0 million assumption and share the England source family.",
+  "promotion_audit": {
+    "decision": "Retain as validation-only county groups; do not promote as independent two-sided scale anchors.",
+    "reviewed_on": "2026-08-04",
+    "review_method": "Read Campbell (2008) table 14 and surrounding methodological notes, verified county selectors and calibrated EU5 area, and checked the county pressure evidence against the national food-output caveat.",
+    "reason_not_promoted": "The county values are not independently observed capacities: both estimate A and B are normalized to an assumed 4.0 million national population, and the source provides no county-specific upper carrying-capacity interval or saturation fraction. They are also not independent of the existing England scale anchor."
+  },
+  "records": [
+    {
+      "anchor_id": "england_norfolk_1290_population_validation_wave23",
+      "label": "Norfolk c.1290: county population reconstruction",
+      "year_start": 1290,
+      "year_end": 1290,
+      "population_low": 282950,
+      "population_central": 346430,
+      "population_high": 409910,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Campbell's table 14 estimate B (1377 poll-tax distribution normalized to 4.0 million) is 282,950, estimate A (1290/1327-32 subsidies) is 409,910, and their mean estimate C is 346,430. The interval retains the two source-method endpoints; it is not a capacity interval.",
+      "pressure_evidence": [
+        "Campbell's table 14 places Norfolk at 168 people per square mile in 1290, the highest non-Middlesex county density in the reconstruction.",
+        "Campbell's discussion of 1290 notes that high-density eastern counties, including Norfolk, had reached or exceeded their later 1756 population and had very high cultivated-land pressure.",
+        "Campbell's national output comparison states that the 4.0 million estimate is consistent with known arable area, crop rotations and grain output in an economy with no significant net food imports; this is a national diagnostic, not a county capacity label."
+      ],
+      "shock_flags": [
+        "Both county estimates are conditional on a 4.0 million national total and 1377 distribution assumptions.",
+        "The 1315-1317 Great Famine follows the central 1290 observation window.",
+        "Norfolk's county aggregate contains towns and market networks; local-food share is not independently separated."
+      ],
+      "trade_dependence": "low_to_mixed_local_grain_markets",
+      "food_regime": "intensive eastern English cereal, legumes, livestock and coastal/wetland food systems",
+      "boundary_description": "The historic county of Norfolk, represented by all EU5 locations with province=norfolk_province.",
+      "boundary_source": "https://pureadmin.qub.ac.uk/ws/files/1641214/Benchmarking_paper.pdf",
+      "eu5_selector": {
+        "include": ["province=norfolk_province"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.978,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "campbell_english_county_reconstruction_2008",
+      "source_bundle": "campbell_2008_table14_norfolk_1290",
+      "source_family_independence": "Same Campbell reconstruction family as the existing England scale anchor; this row must be held out with England and cannot add an independent source family.",
+      "sources": [
+        "https://pureadmin.qub.ac.uk/ws/files/1641214/Benchmarking_paper.pdf",
+        "https://www.cambridge.org/core/journals/journal-of-british-studies/article/abs/preplague-population-of-england/63F78F3D48A10CC8AE33EFB1A2CF183EFB"
+      ],
+      "citation_details": [
+        "Campbell, Economic History Review 61 (2008), table 14, pp. 925-926: Norfolk estimate A 409,910, B 282,950, mean C 346,430 and 168 people per square mile.",
+        "Campbell 2008, pp. 925-927: county estimates are normalized to a 4.0 million national population and the 4.0 million total is tied to arable area and grain-output constraints."
+      ],
+      "notes": "A useful high-density county stress test, not an independent capacity anchor."
+    },
+    {
+      "anchor_id": "england_lincolnshire_1290_population_validation_wave23",
+      "label": "Lincolnshire c.1290: county population reconstruction",
+      "year_start": 1290,
+      "year_end": 1290,
+      "population_low": 275145,
+      "population_central": 300133,
+      "population_high": 325121,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Campbell's table 14 estimate B is 275,145, estimate A is 325,121 and mean estimate C is 300,133. These are two demographic methods conditional on a 4.0 million national total, not intrinsic capacity endpoints.",
+      "pressure_evidence": [
+        "Campbell reports Lincolnshire at 112 people per square mile in 1290 and identifies it as almost twice as populous in 1290 as in 1756, a strong land-pressure diagnostic.",
+        "The county was part of the high-density eastern agrarian belt where population growth had expanded cultivation and reduced per-capita land availability before the Great Famine.",
+        "The national grain-output comparison supports using the county as a food-system stress check, while not establishing a county-specific upper capacity."
+      ],
+      "shock_flags": [
+        "Both estimates are conditional on a 4.0 million national total and a fixed county distribution.",
+        "The 1315-1317 Great Famine is after the 1290 observation.",
+        "Lincolnshire's ports and markets mean local food and interregional exchange are not separately resolved."
+      ],
+      "trade_dependence": "low_to_mixed_local_grain_markets",
+      "food_regime": "eastern English cereal, legumes, livestock, fen and coastal food systems",
+      "boundary_description": "The historic county of Lincolnshire, represented by all EU5 locations with province=lincolnshire_province.",
+      "boundary_source": "https://pureadmin.qub.ac.uk/ws/files/1641214/Benchmarking_paper.pdf",
+      "eu5_selector": {
+        "include": ["province=lincolnshire_province"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.994,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "campbell_english_county_reconstruction_2008",
+      "source_bundle": "campbell_2008_table14_lincolnshire_1290",
+      "source_family_independence": "Same Campbell reconstruction family as the existing England scale anchor; this row must be held out with England and cannot add an independent source family.",
+      "sources": [
+        "https://pureadmin.qub.ac.uk/ws/files/1641214/Benchmarking_paper.pdf",
+        "https://www.cambridge.org/core/journals/journal-of-british-studies/article/abs/preplague-population-of-england/63F78F3D48A10CC8AE33EFB1A2CF183EFB"
+      ],
+      "citation_details": [
+        "Campbell, Economic History Review 61 (2008), table 14, pp. 925-926: Lincolnshire estimate A 325,121, B 275,145, mean C 300,133 and 112 people per square mile.",
+        "Campbell 2008, pp. 937-938: Lincolnshire was almost twice as populous in 1290 as in 1756, indicating unusually high pre-plague land pressure."
+      ],
+      "notes": "A useful high-density eastern-county stress test, not an independent capacity anchor."
+    }
+  ]
+}

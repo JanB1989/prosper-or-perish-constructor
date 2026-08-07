@@ -1,0 +1,77 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Africa",
+  "region": "southern_africa",
+  "target_year": 1337,
+  "packet_id": "africa_mapungubwe_survey_lower_bound_wave5",
+  "scope": "One-sided capacity floor for the intensively surveyed South African Mapungubwe landscape, not the wider 30,000 km2 polity",
+  "promotion_audit": {
+    "promoted_lower_bound_ids": [
+      "mapungubwe_south_african_survey_1270_1320_capacity_lower_bound_wave5"
+    ],
+    "decision": "The 2021 archaeological reconstruction is an aggregate of the capital and 114 ordinary homesteads in the South African survey landscape. It reports 10,700 contemporaneous people for the AD 1270-1320 Mapungubwe phase. The surveyed National Park plus buffer footprint is wholly contained by the EU5 mapungubwe location, and archaeobotanical, archaeozoological and land-use evidence identifies local grain, pulses, livestock, game and river fish. The record is therefore used only to require the containing EU5 geography to support at least 10,700 people; it is not a two-sided scale anchor.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "mapungubwe_south_african_survey_1270_1320_capacity_lower_bound_wave5",
+      "label": "Mapungubwe National Park and buffer-zone settlement survey, AD 1270-1320",
+      "year_start": 1270,
+      "year_end": 1320,
+      "population_low": 10700,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.8,
+      "local_food_central": 0.95,
+      "local_food_high": 1.0,
+      "capacity_low": 10700,
+      "capacity_central": 10700,
+      "capacity_high": 10700,
+      "interval_semantics": "Huffman and Woodborne (2021), Table 2 and pp. 3-4, reconstruct 5,700 people in 114 ordinary homesteads plus 5,000 at the capital, totalling 10,700 people in the South African portion of the Shashe-Limpopo valley during the AD 1270-1320 Mapungubwe phase. The authors stress that the method is relative rather than an absolute census, so 10,700 is retained only as a one-sided observed-support floor. The local-food interval is deliberately broad: staple crops, pulses, livestock, game and fish are evidenced locally, while long-distance trade is evidenced for prestige/export goods rather than staple food; no precise calorie share is published.",
+      "pressure_evidence": [
+        "Huffman and Woodborne (2021), pp. 2-4 and Table 2: systematic foot surveys in Mapungubwe National Park and its buffer recorded about 1,150 Iron Age sites; 114 contemporaneous ordinary homesteads plus the capital yield a reconstructed Mapungubwe-phase total of 10,700 people.",
+        "Huffman and Woodborne (2021), pp. 2-3: intensive agriculture was a critical agent of change; the surveyed land-use system cultivated sorghum on rich wet vlei margins and millet on sandy fluvial terraces, with grainbins, cattle kraals, cattle posts and field camps distributed through the landscape.",
+        "SANParks, Natural and Cultural History, Middle Iron Age sections: excavated settlements preserve sorghum, millet, beans and cowpeas and bones of cattle, sheep and goats, supplemented by local game and river fish; farmers cleared fields and used seasonally flooded Limpopo land.",
+        "Huffman and Woodborne (2021), pp. 4-5 and Table 3: repeated severe droughts affected agricultural production, ritual grainbin burning and political stability; the AD 1310 +/- 5 drought contributed to abandonment by about AD 1320. This is independent resource-pressure evidence, but the climatic shock prevents a two-sided saturation interpretation.",
+        "UNESCO dossier 1099bis: the protected 28,168.6602-ha property contains the capital sites and the settlement area dependent on them and is enclosed by a 104,800-ha buffer, providing a bounded South African comparison footprint rather than the wider transfrontier kingdom."
+      ],
+      "shock_flags": [
+        "severe_drought_around_1310",
+        "abandonment_by_1320",
+        "capital_and_export_trade_role",
+        "archaeological_homestead_duration_assumptions",
+        "no_published_staple_calorie_import_fraction"
+      ],
+      "trade_dependence": "Long-distance Indian Ocean trade supplied wealth and prestige goods and exported gold and ivory. No cited source demonstrates imported staple calories; local crops, pulses, livestock, game and river fish are directly evidenced. The 0.80-1.00 local-food interval preserves uncertainty and the observation is used only as a lower bound.",
+      "food_regime": "flood_margin_sorghum_and_millet_with_beans_cowpeas_cattle_sheep_goats_game_and_limpopo_fish",
+      "boundary_description": "The South African Origins of Mapungubwe survey footprint: Mapungubwe National Park / UNESCO property (281.686602 km2) and its surrounding 1,048 km2 buffer zone at the Limpopo-Shashe confluence. This is the bounded survey landscape used for the 2021 South African population reconstruction, not the roughly 30,000 km2 transfrontier political territory.",
+      "boundary_source": "UNESCO World Heritage dossier 1099bis map and area table; Huffman and Woodborne (2021), Figure 1 and Origins of Mapungubwe Project survey description",
+      "eu5_selector": {
+        "include": [
+          "location_tag=mapungubwe"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "source_family": "mapungubwe_south_african_settlement_survey_archaeology",
+      "source_bundle": "huffman_woodborne_sanparks_unesco_mapungubwe_survey_bundle",
+      "source_family_independence": "The population reconstruction derives from the Origins of Mapungubwe systematic settlement survey and ceramic chronology. SANParks archaeobotanical/archaeozoological synthesis supplies food-regime evidence and UNESCO supplies the protected-property boundary; all are treated as one source family for holdout purposes.",
+      "sources": [
+        "https://doi.org/10.17159/sajs.2021/8980",
+        "https://scielo.org.za/scielo.php?pid=S0038-23532021000200026&script=sci_arttext",
+        "https://www.sanparks.org/parks/mapungubwe/explore/natural-cultural-history",
+        "https://whc.unesco.org/en/list/1099",
+        "https://whc.unesco.org/en/list/01099/maps/"
+      ],
+      "notes": "This packet supersedes neither the rejected 30,000 km2 polity proxy nor the older 9,000-person heritage summary. It changes the comparison unit: the quantified 2021 South African survey aggregate is tested against its bounded containing EU5 geography. Because the population method is an archaeological reconstruction, the system suffered a severe terminal drought, and food imports cannot be quantified exactly, the only admissible training statement is capacity(mapungubwe EU5 location) >= 10,700."
+    }
+  ]
+}

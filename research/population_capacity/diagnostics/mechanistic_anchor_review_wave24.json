@@ -1,0 +1,218 @@
+{
+  "status": "superseded",
+  "superseded_by": "mechanistic_anchor_review_wave25.json",
+  "supersession_reason": "The grouped holdout runner previously scored mechanistic_unscaled values instead of the frozen capacity_people_p50 base. Wave25 reruns the comparison after fixing that unit mismatch and applies the direct frozen p50 gate.",
+  "schema_version": "population_capacity_mechanistic_anchor_review_v1",
+  "diagnostic_id": "mechanistic_anchor_review_wave24",
+  "generated_on": "2026-08-04",
+  "scope": "Recompute current mechanistic capacity aggregates over every active vetted interval/lower-bound crosswalk and compare them with the evidence registry. This is a diagnostic only; no parameters, regional multipliers or anchor labels are changed.",
+  "method": {
+    "capacity_source": "artifacts/data/population_capacity/current_capacity_map/mechanistic_locations.csv",
+    "crosswalk_source": "research/population_capacity/crosswalks plus active evidence_registry supersession map",
+    "aggregation": "sum capacity_people_p10/p50/p90 over mapped EU5 locations using declared location_weights; no starting population, HYDE, RGO or trade fields",
+    "lower_bound_rule": "p50 >= capacity_low is a one-sided pass; ratios are reported because a one-sided pass does not detect severe overprediction",
+    "strict_interval_rule": "p50 must lie within [capacity_low, capacity_high]; full uncertainty containment additionally requires p10 >= capacity_low and p90 <= capacity_high",
+    "holdout_comparison": "grouped_evidence_holdouts.json is reported separately because its aggregate p50 is not reproducible from the frozen mechanistic location table for several anchors"
+  },
+  "input_hashes": {
+    "mechanistic_locations_csv": "7182787a0e315457cdc640fad170460cc15e117d02cca6a8ca40a0c80cc25b8a",
+    "grouped_evidence_holdouts_json": "1efb66204a6fcd30d4e8a86dc8974f74aaaae8674a1adec460e60081668e675f",
+    "lower_bound_failure_diagnostics_json": "9b085d6e9b3b51a3dcdce6096f1317d55a4f66fe7c479b7e0c43d60a5c05c8c0",
+    "evidence_registry_json": "80247be0188f8e07ef88ee7ce291ffa44d1451a9ceb148b711e698790f5087be"
+  },
+  "summary": {
+    "vetted_interval_anchor_count": 3,
+    "vetted_lower_bound_count": 24,
+    "direct_interval_p50_pass_count": 2,
+    "direct_interval_p50_fail_count": 1,
+    "direct_interval_full_uncertainty_containment_count": 1,
+    "direct_interval_full_uncertainty_failure_count": 2,
+    "direct_lower_bound_failure_count": 1,
+    "pipeline_reported_lower_bound_failure_count": 0,
+    "lower_bound_severe_overprediction_count": 9,
+    "lower_bound_overprediction_count": 9,
+    "lower_bound_near_floor_count": 6,
+    "grouped_holdout_mechanistic_interval_pass_rate": 1.0,
+    "grouped_holdout_mechanistic_lower_bound_pass_rate": 1.0,
+    "frozen_table_vs_grouped_holdout_reproducible": false,
+    "max_direct_vs_grouped_p50_relative_difference": 0.1702,
+    "max_direct_vs_grouped_p50_anchor_id": "hohokam_lower_salt_1150_1450_capacity_lower_bound",
+    "interpretation": "The mechanistic candidate passes the existing one-sided grouped holdout gates, but the frozen-location recomputation exposes one lower-bound failure (Greater Angkor by 0.2%) and broad overprediction on many archaeological floors. The grouped artifact and frozen table also disagree materially, so this is not an acceptance-ready validation result."
+  },
+  "strict_promotion_review": [
+    {
+      "anchor_id": "artois_1290_1300_agrarian_capacity_interval_wave17",
+      "current_role": "interval_anchor",
+      "proposed_role": "scale_anchor",
+      "decision": "retain_interval_anchor",
+      "predicted_frozen_p10_p50_p90": [958602, 1090913, 1098909],
+      "evidence_capacity_interval": [1095000, 1250000, 1415000],
+      "p50_in_interval": false,
+      "full_uncertainty_inside_interval": false,
+      "crosswalk": "high, 0.96 coverage, 8 locations",
+      "blockers": [
+        "direct frozen-table p50 is 0.4% below the evidence lower endpoint",
+        "p10 is below the evidence lower endpoint and p90 does not approach the published upper endpoint",
+        "the upper endpoint is a Derville agronomic potential calculation on the same regional system rather than a second independent saturation observation",
+        "the grouped holdout p50 (1,097,627) differs from the frozen table sum (1,090,913), so reproducibility is unresolved"
+      ]
+    },
+    {
+      "anchor_id": "england_1290_food_security_capacity_interval_wave8",
+      "current_role": "interval_anchor",
+      "proposed_role": "scale_anchor",
+      "decision": "retain_interval_anchor",
+      "predicted_frozen_p10_p50_p90": [5028923, 5674862, 5953555],
+      "evidence_capacity_interval": [4250000, 5500000, 6200000],
+      "p50_in_interval": true,
+      "full_uncertainty_inside_interval": true,
+      "crosswalk": "exact, 1.0 coverage, 149 locations",
+      "blockers": [
+        "the capacity interval is an English food-security/agrarian model, not an independently enumerated local equilibrium ceiling",
+        "it shares the same geographic/source family ecosystem as the existing England scale anchor and cannot supply independent global replication",
+        "the grouped holdout p50 (5,729,912) differs from the frozen table sum (5,674,862) by 1.0%"
+      ]
+    },
+    {
+      "anchor_id": "iceland_1290_1330_natural_capacity_interval_wave18",
+      "current_role": "interval_anchor",
+      "proposed_role": "scale_anchor",
+      "decision": "retain_interval_anchor",
+      "predicted_frozen_p10_p50_p90": [18621, 76567, 2521439],
+      "evidence_capacity_interval": [40000, 60000, 80000],
+      "p50_in_interval": true,
+      "full_uncertainty_inside_interval": false,
+      "crosswalk": "exact, 1.0 coverage, 21 locations",
+      "blockers": [
+        "p10 is below 40,000 and p90 is 2,521,439, far above the 80,000 upper endpoint",
+        "the broad uncertainty is not a calibrated two-sided interval even though the median passes",
+        "the source's environmental model and fisheries/food-system omissions make it a hostile-island audit, not a robust global scale anchor",
+        "the grouped holdout p50 (same 76,565-76,567 range) does not repair the failed uncertainty containment"
+      ]
+    },
+    {
+      "anchor_id": "tongatapu_capacity_pressure_1100_1500_closure",
+      "current_role": "validation_only",
+      "proposed_role": "scale_anchor",
+      "decision": "do_not_promote",
+      "predicted_frozen_p10_p50_p90": [89140, 115099, 120532],
+      "evidence_capacity_interval": [18000, 21000, 24000],
+      "blockers": [
+        "out-of-period analogue and approximate 0.52 crosswalk",
+        "capacity envelope is model-derived and lacks an independent 1337 saturation observation",
+        "current prediction is 5.5x the envelope central value"
+      ]
+    }
+  ],
+  "vetted_interval_rows": [
+    {
+      "anchor_id": "artois_1290_1300_agrarian_capacity_interval_wave17",
+      "source_family": "artois_agrarian_yield_and_crisis_1100_1350",
+      "role": "interval_anchor",
+      "crosswalk_status": "high",
+      "coverage_fraction": 0.96,
+      "evidence_capacity": [1095000, 1250000, 1415000],
+      "predicted_p10_p50_p90": [958602, 1090913, 1098909],
+      "p50_pass": false,
+      "full_uncertainty_pass": false,
+      "grouped_holdout_p50": 1097627
+    },
+    {
+      "anchor_id": "england_1290_food_security_capacity_interval_wave8",
+      "source_family": "english_arable_output_and_food_security_models",
+      "role": "interval_anchor",
+      "crosswalk_status": "exact",
+      "coverage_fraction": 1.0,
+      "evidence_capacity": [4250000, 5500000, 6200000],
+      "predicted_p10_p50_p90": [5028923, 5674862, 5953555],
+      "p50_pass": true,
+      "full_uncertainty_pass": true,
+      "grouped_holdout_p50": 5729912
+    },
+    {
+      "anchor_id": "iceland_1290_1330_natural_capacity_interval_wave18",
+      "source_family": "iceland_preindustrial_environmental_carrying_capacity",
+      "role": "interval_anchor",
+      "crosswalk_status": "exact",
+      "coverage_fraction": 1.0,
+      "evidence_capacity": [40000, 60000, 80000],
+      "predicted_p10_p50_p90": [18621, 76567, 2521439],
+      "p50_pass": true,
+      "full_uncertainty_pass": false,
+      "grouped_holdout_p50": 76565
+    }
+  ],
+  "vetted_lower_bound_rows": [
+    {"anchor_id":"great_zimbabwe_1300_1450_population_lower_bound_wave16","source_family":"great_zimbabwe_unesco_archaeology_ecology","crosswalk":"high/1.0","lower_bound_people":10000,"predicted_p10_p50_p90":[757325,849127,892993],"p50_ratio":84.913,"pass":true,"quality":"severe_overprediction"},
+    {"anchor_id":"mapungubwe_south_african_survey_1270_1320_capacity_lower_bound_wave5","source_family":"mapungubwe_south_african_settlement_survey_archaeology","crosswalk":"high/1.0","lower_bound_people":10700,"predicted_p10_p50_p90":[653485,698021,737424],"p50_ratio":65.236,"pass":true,"quality":"severe_overprediction"},
+    {"anchor_id":"tenerife_guanche_1496_capacity_lower_bound_wave5","source_family":"tenerife_guanche_palaeodemography_and_bioarchaeology","crosswalk":"exact/1.0","lower_bound_people":15000,"predicted_p10_p50_p90":[96776,138810,155466],"p50_ratio":9.254,"pass":true,"quality":"overprediction"},
+    {"anchor_id":"upper_mantaro_wanka_ii_1350_1450_population_lower_bound","source_family":"upper_mantaro_umarp_jasp_archaeology","crosswalk":"high/1.0","lower_bound_people":61000,"predicted_p10_p50_p90":[85274,127358,144494],"p50_ratio":2.088,"pass":true,"quality":"near_floor"},
+    {"anchor_id":"mesa_verde_vep_1225_1260_capacity_lower_bound","source_family":"mesa_verde_village_ecodynamics_archaeology","crosswalk":"high/1.0","lower_bound_people":19404,"predicted_p10_p50_p90":[617315,831864,889314],"p50_ratio":42.871,"pass":true,"quality":"severe_overprediction"},
+    {"anchor_id":"hohokam_lower_salt_1150_1450_capacity_lower_bound","source_family":"hohokam_lower_salt_irrigation_archaeology","crosswalk":"high/1.0","lower_bound_people":53000,"predicted_p10_p50_p90":[2183414,2852236,3413574],"p50_ratio":53.816,"pass":true,"quality":"severe_overprediction","wave23_note":"The wave23 packet said an earlier accepted p50 was below 53,000; the current frozen table is 2,852,236, so that note is stale and must not be used as the current audit result."},
+    {"anchor_id":"greater_angkor_1181_1300_population_lower_bound_wave5","source_family":"greater_angkor_lidar_and_archaeology","crosswalk":"high/1.0","lower_bound_people":700000,"predicted_p10_p50_p90":[616336,698478,705041],"p50_ratio":0.998,"pass":false,"quality":"direct_table_failure","grouped_holdout_p50":703446},
+    {"anchor_id":"gyeongsang_1432_registered_population_lower_bound","source_family":"gyeongsangdojiriji_1432_register","crosswalk":"high/0.96","lower_bound_people":355069,"predicted_p10_p50_p90":[2329559,2728782,2778480],"p50_ratio":7.685,"pass":true,"quality":"overprediction"},
+    {"anchor_id":"japan_satsuma_1280_local_food_floor_wave13","source_family":"farris_2006_great_land_registers","crosswalk":"high/0.95","lower_bound_people":25700,"predicted_p10_p50_p90":[202789,227582,241091],"p50_ratio":8.855,"pass":true,"quality":"overprediction"},
+    {"anchor_id":"japan_oosumi_1280_local_food_floor_wave13","source_family":"farris_2006_great_land_registers","crosswalk":"high/0.95","lower_bound_people":19336,"predicted_p10_p50_p90":[247011,283930,301783],"p50_ratio":14.684,"pass":true,"quality":"severe_overprediction"},
+    {"anchor_id":"japan_hyuuga_1280_local_food_floor_wave13","source_family":"farris_2006_great_land_registers","crosswalk":"high/0.95","lower_bound_people":51681,"predicted_p10_p50_p90":[388305,437531,453294],"p50_ratio":8.466,"pass":true,"quality":"overprediction"},
+    {"anchor_id":"japan_bungo_1280_local_food_floor_wave13","source_family":"farris_2006_great_land_registers","crosswalk":"high/0.95","lower_bound_people":44631,"predicted_p10_p50_p90":[484287,552822,560052],"p50_ratio":12.387,"pass":true,"quality":"severe_overprediction"},
+    {"anchor_id":"japan_hizen_1280_local_food_floor_wave13","source_family":"farris_2006_great_land_registers","crosswalk":"high/0.95","lower_bound_people":87929,"predicted_p10_p50_p90":[435285,480799,523460],"p50_ratio":5.468,"pass":true,"quality":"overprediction"},
+    {"anchor_id":"japan_tango_1280_local_food_floor_wave13","source_family":"farris_2006_great_land_registers","crosswalk":"high/0.95","lower_bound_people":29910,"predicted_p10_p50_p90":[105200,116328,121116],"p50_ratio":3.889,"pass":true,"quality":"overprediction"},
+    {"anchor_id":"japan_tajima_1280_local_food_floor_wave13","source_family":"farris_2006_great_land_registers","crosswalk":"high/0.95","lower_bound_people":35800,"predicted_p10_p50_p90":[71058,79365,82555],"p50_ratio":2.217,"pass":true,"quality":"near_floor"},
+    {"anchor_id":"japan_iwami_1280_local_food_floor_wave13","source_family":"farris_2006_great_land_registers","crosswalk":"high/0.95","lower_bound_people":9459,"predicted_p10_p50_p90":[295750,330145,336294],"p50_ratio":34.903,"pass":true,"quality":"severe_overprediction"},
+    {"anchor_id":"japan_hitachi_1280_local_food_floor_wave13","source_family":"farris_2006_great_land_registers","crosswalk":"high/0.95","lower_bound_people":57712,"predicted_p10_p50_p90":[886503,966466,979963],"p50_ratio":16.746,"pass":true,"quality":"severe_overprediction"},
+    {"anchor_id":"japan_buzen_1280_local_food_floor_wave7","source_family":"farris_2006_great_land_registers","crosswalk":"high/0.96","lower_bound_people":85238,"predicted_p10_p50_p90":[183219,198926,201812],"p50_ratio":2.334,"pass":true,"quality":"near_floor"},
+    {"anchor_id":"japan_noto_1280_local_food_floor_wave7","source_family":"farris_2006_great_land_registers","crosswalk":"high/0.95","lower_bound_people":15734,"predicted_p10_p50_p90":[176415,190033,202503],"p50_ratio":12.078,"pass":true,"quality":"severe_overprediction"},
+    {"anchor_id":"france_continental_1300_1328_local_food_floor_wave13","source_family":"france_early_fourteenth_century_demographic_upper_limit","crosswalk":"high/0.962","lower_bound_people":18000000,"predicted_p10_p50_p90":[38844742,44660290,45699435],"p50_ratio":2.481,"pass":true,"quality":"near_floor"},
+    {"anchor_id":"iceland_preindustrial_biomass_capacity_floor_wave3","source_family":"iceland_ice_cc_biomass_simulation","crosswalk":"exact/1.0","lower_bound_people":40000,"predicted_p10_p50_p90":[18621,76567,2521439],"p50_ratio":1.914,"pass":true,"quality":"near_floor_but_uncertainty_failure"},
+    {"anchor_id":"faroe_1300_local_support_floor_wave3","source_family":"faroe_tax_land_sheep_carrying_capacity","crosswalk":"high/0.986","lower_bound_people":2224,"predicted_p10_p50_p90":[1924,9496,45521],"p50_ratio":4.27,"pass":true,"quality":"overprediction"},
+    {"anchor_id":"sicily_1277_local_support_export_floor_wave3","source_family":"sicily_1277_fiscal_demography_and_grain_exports","crosswalk":"high/0.959","lower_bound_people":340000,"predicted_p10_p50_p90":[1630773,1978365,2124781],"p50_ratio":5.819,"pass":true,"quality":"overprediction"},
+    {"anchor_id":"tongatapu_local_food_population_floor_1100_1500_wave4","source_family":"tonga_archaeology_local_food_population_floor","crosswalk":"high/0.976","lower_bound_people":15000,"predicted_p10_p50_p90":[89140,115099,120532],"p50_ratio":7.673,"pass":true,"quality":"overprediction"}
+  ],
+  "held_out_new_case_checks": [
+    {
+      "anchor_id": "hohokam_wave23_research_disposition",
+      "role": "validation_only",
+      "evidence_floor": 53000,
+      "predicted_p50": 2852236,
+      "ratio": 53.816,
+      "result": "severe_overprediction",
+      "reason_not_training": "The packet is a one-sided floor for a canal corridor, not a two-sided population/capacity interval."
+    },
+    {
+      "anchor_id": "tiwanaku_raised_field_sustaining_area_1000_1450_validation_wave7",
+      "role": "validation_only",
+      "evidence_interval": [285000, 570000, 1111500],
+      "predicted_p10_p50_p90": [59719, 70663, 92325],
+      "result": "underprediction_against_potential_envelope",
+      "reason_not_training": "The interval is an experimental agricultural potential, not a dated observed Malthusian equilibrium; it remains an out-of-period physical validation."
+    },
+    {
+      "anchor_id": "engaruka_irrigated_capacity_1400_1720_validation",
+      "role": "validation_only",
+      "evidence_interval": [8000, 9000, 10000],
+      "predicted_p10_p50_p90": [1777269, 2083419, 2235837],
+      "result": "severe_overprediction_against_site_envelope",
+      "reason_not_training": "The evidence is an approximately 2,000-ha archaeological irrigation system and not a whole EU5 location capacity; it is also out of period."
+    },
+    {
+      "anchor_id": "mangareva_precontact_food_capacity_1200_1500_validation_wave8",
+      "role": "validation_only",
+      "evidence_interval": [2954, 3537, 5139],
+      "predicted_p10_p50_p90": [29, 139, 422],
+      "result": "underprediction",
+      "reason_not_training": "Out-of-period island analogue with an independently modeled food envelope; no 1337 target or capacity scale role."
+    }
+  ],
+  "acceptance_conclusion": {
+    "promote_any_interval_to_scale_anchor": false,
+    "promotions_blocked_by": [
+      "Artois direct p50/full-uncertainty mismatch and frozen-vs-holdout discrepancy",
+      "England interval lacks independent non-modelled saturation evidence and is not an independent geography/source family",
+      "Iceland uncertainty envelope fails the published 40,000-80,000 interval by a very large margin",
+      "out-of-period validation envelopes cannot establish 1337 global scale",
+      "one-sided lower-bound pass rate is not a calibration metric and masks severe overprediction"
+    ],
+    "deployment_allowed": false,
+    "required_next_action": "Resolve frozen-table versus grouped-holdout aggregation mismatch, then recalibrate/expand physical constraints using independent evidence. Do not hand-tune anchors or add regional correction multipliers."
+  }
+}

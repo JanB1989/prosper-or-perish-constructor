@@ -1,0 +1,1560 @@
+schema_version = 3
+target_year = 1337
+
+# This is an evidence registry, not a list of regional population targets.
+# Only role="scale_anchor" with review_status="vetted" may calibrate global
+# scale. Candidate, validation-only, lower-bound and excluded observations
+# remain visible so failed investigations are not silently forgotten.
+
+[[benchmarks]]
+anchor_id = "england_1290_1315"
+label = "England before the Great Famine"
+year_start = 1290
+year_end = 1315
+population_low = 4400000
+population_central = 4800000
+population_high = 5200000
+saturation_low = 0.85
+saturation_central = 0.925
+saturation_high = 1.0
+pressure_evidence = [
+  "cultivation extended onto marginal land",
+  "soil exhaustion and low yields",
+  "exceptionally low early-fourteenth-century real wages",
+  "subsistence pressure before the Great Famine",
+]
+shock_flags = ["Great Famine begins after the observation window"]
+trade_dependence = "low"
+food_regime = "rainfed cool cereals, legumes, livestock, and coastal fisheries"
+role = "scale_anchor"
+source_family = "english_demographic_and_manorial_reconstructions"
+source_population_type = "observed_interval"
+estimate_method = "spatial_demographic_reconstruction_with_manorial_pressure_evidence"
+evidence_role = "scale_candidate"
+boundary_confidence = "high"
+boundary_overlap_status = "exact"
+crosswalk_status = "exact"
+benchmark_group = "england_national"
+source_family_independence = "independent"
+review_status = "vetted"
+mapped_boundary = "England within great_britain_region, excluding Wales and all Scottish areas"
+local_food_share_low = 0.80
+local_food_share_central = 0.90
+local_food_share_high = 1.00
+local_food_evidence = [
+  "cereals supplied about 80 percent of ordinary household calories around 1300",
+  "London's exceptional urban cereal demand was supplied by a reconstructable southern-English grain hinterland",
+  "the lower bound counts only that domestically supplied cereal calorie share and does not assume that meat, dairy, fish, or ale were imported",
+]
+local_food_confidence = "medium"
+starting_population_test = true
+include = ["region=great_britain_region"]
+exclude = ["area=hebrides_area|scottish_highlands_area|scottish_lowlands_area|wales_area"]
+sources = [
+  "https://www.arcgis.com/home/item.html?id=23e944697e0d433cb8622649577fa720",
+  "https://warwick.ac.uk/fac/soc/economics/seminars/seminars/conferences/venice3/programme/english_medieval_population.pdf",
+  "https://www.cambridge.org/core/journals/continuity-and-change/article/regulation-of-the-rural-market-in-waged-labour-in-fourteenthcentury-england/C7726EC8A2D0C628ACFF49428FDA95A7",
+  "https://www.tandfonline.com/doi/full/10.1080/03044181.2023.2250952",
+  "https://research.aber.ac.uk/files/70709027/Peasants_and_food_security_in_England_and_Wales_c_1300_1_.pdf",
+  "https://archives.history.ac.uk/ihrcms/cmh/projects/research/feeding-the-city2.html",
+  "https://wrap.warwick.ac.uk/id/eprint/57581/1/WRAP_35.2010_broadberry.pdf",
+]
+notes = "Vetted national-scale anchor. The 4.4-5.2m population interval brackets the reconstructed 4.69-4.75m series; the 0.85-1.0 saturation interval reflects convergent marginal-land, wage, underemployment, and food-pressure evidence. Counties remain validation groups until pressure evidence is localized."
+
+[[benchmarks]]
+anchor_id = "france_1328_hearths"
+label = "French royal domain and kingdom hearth assessment"
+year_start = 1328
+year_end = 1328
+pressure_evidence = []
+shock_flags = ["hearth-to-person multiplier uncertainty", "territorial coverage differs from the EU5 region"]
+trade_dependence = "mixed"
+food_regime = "mixed cereals, vines, livestock, and regional specialization"
+role = "validation_only"
+source_family = "french_hearth_assessment_1328"
+source_population_type = "fiscal_hearth_observation"
+estimate_method = "hearth_to_person_conversion_pending"
+evidence_role = "candidate_regional_validation"
+boundary_confidence = "high"
+boundary_overlap_status = "exact"
+crosswalk_status = "exact"
+benchmark_group = "france_1328"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "1328 assessed continental France envelope crosswalked to region=france_region at 96.2057% calibrated-area coverage; 20,049.06 km2 residual is explicit and unrescaled"
+include = ["region=france_region"]
+exclude = []
+sources = [
+  "https://www.persee.fr/doc/bec_0373-6237_1929_num_90_1_448861",
+  "https://70-ans.site.ined.fr/fr/bonus/chrono/14-15e-siecles",
+]
+notes = "The 446-location France selector now clears the 95% aggregate mapping gate (528,400 km2 historical envelope versus 508,350.94 km2 calibrated EU5 area; 20,049.06 km2 remains unmapped). This resolves geometry only; the hearth-to-person multiplier, local pressure evidence and city/urban food transfers remain unresolved, so this stays validation-only and cannot train scale."
+
+[[benchmarks]]
+anchor_id = "flanders_rural_c1300"
+label = "Rural Flanders around 1300"
+year_start = 1275
+year_end = 1325
+pressure_evidence = ["dense settlement and intensive agriculture are reported in the regional literature"]
+shock_flags = ["urban food imports", "highly commercialized agriculture"]
+trade_dependence = "high"
+food_regime = "intensive mixed farming with strong urban and maritime trade"
+role = "validation_only"
+source_family = "low_countries_regional_studies"
+source_population_type = "qualitative_regional_evidence"
+estimate_method = "agrarian_history_synthesis"
+evidence_role = "commercialized_region_validation"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "flanders_rural_1300"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "flanders_area, pending rural/urban and coastal/inland subdivision"
+include = ["area=flanders_area"]
+exclude = []
+sources = [
+  "https://www.cambridge.org/core/journals/annales-histoire-sciences-sociales/article/abs/les-campagnes-flamandes-du-xiiie-siecle-au-xviiie-siecle-ou-les-succes-dune-agriculture-traditionnelle/15A2A299629F9C8BC5877BDFAB733E5C",
+  "https://www.uantwerpen.be/en/projects/shock-cities/",
+  "https://biblio.ugent.be/publication/01J6HP1N6ATZ5Z9AH86AH2WNFC",
+]
+notes = "High and spatially uneven grain-import dependence prevents intrinsic-capacity scale training. The import literature is used to block a naive local-food assumption, not to invent a numeric imported share; rural subareas may later provide held-out validation."
+
+[[benchmarks]]
+anchor_id = "tuscany_c1300"
+label = "Tuscany around 1300"
+year_start = 1275
+year_end = 1325
+pressure_evidence = []
+shock_flags = ["city-country food transfers", "pre-plague demographic interval uncertainty"]
+trade_dependence = "high"
+food_regime = "Mediterranean cereals, vines, olives, livestock, and urban markets"
+role = "validation_only"
+source_family = "italian_communal_records"
+source_population_type = "communal_record_candidate"
+estimate_method = "communal_record_and_hinterland_review"
+evidence_role = "commercialized_region_validation"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "tuscany_1300"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "tuscany_area, pending city-hinterland food-flow subdivision"
+include = ["area=tuscany_area"]
+exclude = []
+sources = ["https://www.sciencedirect.com/science/article/pii/S0304418102000027"]
+notes = "Retained for regional validation; cities cannot set the surrounding land capacity and local pressure evidence is not yet registry-complete."
+
+[[benchmarks]]
+anchor_id = "medieval_europe_173_cities"
+label = "173-city medieval European archaeological dataset"
+year_start = 1100
+year_end = 1500
+pressure_evidence = []
+shock_flags = ["urban imports", "heterogeneous dates", "settlement footprint uncertainty"]
+trade_dependence = "high"
+food_regime = "urban consumers supported by regional hinterlands and trade"
+role = "validation_only"
+source_family = "medieval_city_archaeology"
+source_population_type = "city_population_dataset"
+estimate_method = "archaeological_city_population_compilation"
+evidence_role = "urban_lower_bound_only"
+boundary_confidence = "low"
+boundary_overlap_status = "city_only"
+crosswalk_status = "unresolved"
+benchmark_group = "medieval_europe_cities"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "173 published city observations; EU5 city crosswalk not yet built"
+include = ["location_tag=__unmapped_173_city_crosswalk__"]
+exclude = []
+sources = ["https://doi.org/10.1371/journal.pone.0162678"]
+notes = "One-sided urban plausibility evidence only. City populations never supervise the capacity of their containing locations."
+
+[[benchmarks]]
+anchor_id = "european_famine_database_screen"
+label = "European famine database screening layer"
+year_start = 1250
+year_end = 1400
+pressure_evidence = ["famine observations screen for possible subsistence pressure"]
+shock_flags = ["famine may reflect war, distribution failure, or weather rather than saturation"]
+trade_dependence = "mixed"
+food_regime = "multiple European food regimes"
+role = "validation_only"
+source_family = "european_famine_database"
+source_population_type = "event_screen"
+estimate_method = "famine_event_screening"
+evidence_role = "pressure_screen_only"
+boundary_confidence = "low"
+boundary_overlap_status = "unresolved"
+crosswalk_status = "unresolved"
+benchmark_group = "european_famine_events"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "European event observations; event-boundary crosswalk not yet built"
+include = ["super_region=europe"]
+exclude = []
+sources = ["https://www.openicpsr.org/openicpsr/project/120551/version/V1/view"]
+notes = "A screening source only; famine incidence is not sufficient evidence of Malthusian saturation."
+
+[[benchmarks]]
+anchor_id = "tikopia_food_area_capacity"
+label = "Tikopia food-area carrying-capacity assessment"
+year_start = 1929
+year_end = 1952
+pressure_evidence = ["explicit comparison of food-producing area and supported population"]
+shock_flags = ["out of target period", "small-island social controls", "crop-system differences"]
+trade_dependence = "low"
+food_regime = "tropical tree crops, roots, fishing, and managed agroforestry"
+role = "validation_only"
+source_family = "tikopia_geographic_field_assessment"
+source_population_type = "physical_capacity_assessment"
+estimate_method = "food_area_carrying_capacity_assessment"
+evidence_role = "out_of_period_island_validation"
+boundary_confidence = "high"
+boundary_overlap_status = "unresolved"
+crosswalk_status = "unresolved"
+benchmark_group = "tikopia_island"
+source_family_independence = "independent"
+review_status = "vetted"
+mapped_boundary = "Tikopia island food-producing area; island is absent as an independent EU5 location"
+include = ["location_tag=__tikopia_not_represented_as_eu5_location__"]
+exclude = []
+sources = ["https://tidsskrift.dk/geografisktidsskrift/article/download/45927/56312?inline=1"]
+notes = "Held out as an out-of-period analogue. It cannot set the 1337 global scale."
+
+[[benchmarks]]
+anchor_id = "precontact_hawaii"
+label = "Pre-contact Hawaiian food-system carrying-capacity lower bound"
+year_start = 1400
+year_end = 1778
+direct_capacity_low = 800000
+pressure_evidence = ["spatial food-system model explicitly estimates a supportable population above 800,000"]
+shock_flags = ["out of target period", "technology and land-use reconstruction uncertainty"]
+trade_dependence = "low"
+food_regime = "taro irrigation, rainfed sweet potato, agroforestry, and marine food"
+role = "validation_only"
+validation_test = "lower_bound"
+source_family = "hawaiian_archaeology"
+source_population_type = "physical_lower_bound"
+estimate_method = "spatial_food_system_model"
+evidence_role = "out_of_period_validation"
+boundary_confidence = "high"
+boundary_overlap_status = "approximate"
+crosswalk_status = "approximate"
+benchmark_group = "hawaii_archipelago"
+source_family_independence = "independent"
+review_status = "vetted"
+mapped_boundary = "Hawaiian archipelago approximated by hawaii_area"
+include = ["area=hawaii_area"]
+exclude = []
+sources = ["https://www.nature.com/articles/s41893-019-0226-1"]
+notes = "The source models indigenous agricultural systems as supporting more than 800,000 people. This is a one-sided, out-of-period physical validation only and cannot set the 1337 scale."
+
+[[benchmarks]]
+anchor_id = "classic_maya_lidar"
+label = "Classic Maya LiDAR settlement-density regions"
+year_start = 600
+year_end = 900
+pressure_evidence = []
+shock_flags = ["centuries before target", "settlement-to-population conversion uncertainty"]
+trade_dependence = "mixed"
+food_regime = "maize-based tropical farming, wetlands, gardens, and forest products"
+role = "validation_only"
+source_family = "maya_lidar_archaeology"
+source_population_type = "archaeological_density_evidence"
+estimate_method = "lidar_settlement_density_synthesis"
+evidence_role = "tropical_validation"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "classic_maya_lowlands"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "published Maya LiDAR survey polygons approximated by mayaab_area"
+include = ["area=mayaab_area"]
+exclude = []
+sources = ["https://doi.org/10.1126/science.aau0137"]
+notes = "Held out for tropical cultivation and settlement-density plausibility, not scale fitting."
+
+[[benchmarks]]
+anchor_id = "valley_of_mexico_precontact"
+label = "Pre-contact Valley of Mexico settlement surveys"
+year_start = 1200
+year_end = 1519
+pressure_evidence = []
+shock_flags = ["urban imports", "date aggregation", "irrigation and chinampa boundary mismatch"]
+trade_dependence = "high"
+food_regime = "maize, beans, squash, irrigation, chinampas, and market redistribution"
+role = "validation_only"
+source_family = "basin_of_mexico_settlement_archaeology"
+source_population_type = "archaeological_regional_estimate"
+estimate_method = "settlement_archaeology_and_land_use_synthesis"
+evidence_role = "high_density_basin_validation"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "valley_of_mexico"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Basin/Valley of Mexico survey zones approximated by Anahuac and Tetzcoco provinces"
+include = ["province=anahuac_province|tetzcoco_province"]
+exclude = []
+sources = ["https://press.umich.edu/Books/P/Prehispanic-Settlement-Patterns-in-the-Southern-Valley-of-Mexico"]
+notes = "Regional and urban observations are kept separate; imported food prevents urban scale anchoring."
+
+[[benchmarks]]
+anchor_id = "andean_terrace_systems"
+label = "Pre-contact Andean terrace and irrigation systems"
+year_start = 1200
+year_end = 1532
+pressure_evidence = []
+shock_flags = ["archaeological chronology", "terrace abandonment", "vertical exchange between ecological zones"]
+trade_dependence = "mixed"
+food_regime = "terraced tubers and cereals, camelid pastoralism, irrigation, and vertical exchange"
+role = "validation_only"
+source_family = "andean_landscape_archaeology"
+source_population_type = "qualitative_landscape_evidence"
+estimate_method = "terrace_and_settlement_archaeology"
+evidence_role = "highland_terrace_validation"
+boundary_confidence = "low"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "andean_terrace_systems"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "published local terrace systems; current Andes region selector is intentionally too broad"
+include = ["region=andes_region"]
+exclude = []
+sources = ["https://pmc.ncbi.nlm.nih.gov/articles/PMC5738230/"]
+notes = "Used only to test terrace and highland-pastoral mechanisms until mappable local population intervals are registered."
+
+[[benchmarks]]
+anchor_id = "yuan_china_1337"
+label = "Yuan China near game start"
+year_start = 1320
+year_end = 1350
+pressure_evidence = []
+shock_flags = ["conquest mortality", "under-registration", "migration", "epidemic and rebellion timing"]
+trade_dependence = "mixed"
+food_regime = "rice and wheat systems with large hydraulic and regional variation"
+role = "excluded"
+source_family = "yuan_household_registers"
+source_population_type = "broad_register_extrapolation"
+estimate_method = "national_register_extrapolation"
+evidence_role = "excluded_broad_demography"
+boundary_confidence = "low"
+boundary_overlap_status = "unresolved"
+crosswalk_status = "unresolved"
+benchmark_group = "yuan_china_broad"
+source_family_independence = "independent"
+review_status = "rejected"
+mapped_boundary = "Yuan registration territories cannot be reconciled to a stable 1337 demographic boundary"
+rejection_reason = "conquest mortality, under-registration, migration, epidemic timing, and boundary change prevent a saturation inference"
+include = ["macro_region=east_asia"]
+exclude = []
+sources = ["https://www1.ihp.sinica.edu.tw/en/Publications/Bulletin/979/Article/428"]
+notes = "Explicitly excluded from training because recorded population is not a defensible saturation observation."
+
+[[benchmarks]]
+anchor_id = "greater_angkor_diachronic"
+label = "Greater Angkor archaeological population model"
+year_start = 800
+year_end = 1400
+population_low = 750000
+population_central = 825000
+population_high = 900000
+pressure_evidence = [
+  "dense hydraulic rice landscape and urban-hinterland settlement model",
+  "large population estimate from LiDAR and archaeological spatial modeling",
+]
+shock_flags = ["diachronic aggregation", "urban and hydraulic hinterland boundary", "population is model-derived"]
+trade_dependence = "mixed"
+food_regime = "rainfed and irrigated rice, fisheries, gardens, and hydraulic landscape management"
+role = "validation_only"
+source_family = "greater_angkor_lidar_and_archaeology"
+source_population_type = "archaeological_regional_estimate"
+estimate_method = "lidar_settlement_and_water_management_synthesis"
+evidence_role = "tropical_water_management_validation"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "greater_angkor"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Greater Angkor archaeological/hydraulic survey zone approximated by angkor_province"
+include = ["province=angkor_province"]
+exclude = []
+sources = [
+  "https://www.science.org/doi/10.1126/sciadv.abf8441",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC3732978/",
+]
+notes = "Published Greater Angkor estimates commonly place the 12th-13th century urban-hinterland population around 750,000-900,000. The value is a model-derived interval for a hydraulic/urban system, not an observed Malthusian saturation and cannot calibrate intrinsic 1337 scale."
+
+[[benchmarks]]
+anchor_id = "rapa_nui_food_limits"
+label = "Pre-contact Rapa Nui food-limited population models"
+year_start = 1200
+year_end = 1722
+direct_capacity_low = 3500
+direct_capacity_central = 10000
+direct_capacity_high = 17500
+pressure_evidence = ["island-wide land-use constraints and food-limited demographic models"]
+shock_flags = ["partly out of target period", "disputed rock-garden extent", "marine-food uncertainty"]
+trade_dependence = "low"
+food_regime = "sweet potato, rock gardens, mulch, and marine foods"
+role = "validation_only"
+validation_test = "interval"
+source_family = "rapa_nui_land_use_and_carrying_capacity_models"
+source_population_type = "archaeological_model_interval"
+estimate_method = "island_land_use_and_food_limit_model"
+evidence_role = "island_validation"
+boundary_confidence = "high"
+boundary_overlap_status = "exact"
+crosswalk_status = "exact"
+benchmark_group = "rapa_nui_island"
+source_family_independence = "independent"
+review_status = "vetted"
+mapped_boundary = "Rapa Nui island, exact EU5 location_tag=rapa_nui"
+include = ["location_tag=rapa_nui"]
+exclude = []
+sources = [
+  "https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2017.00069/full",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC4313829/",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC11192071/",
+]
+notes = "A directly mappable, out-of-period validation case with competing food-area estimates. It never trains the 1337 scale."
+
+[[benchmarks]]
+anchor_id = "iceland_preindustrial_capacity_model_1290_1315"
+label = "Iceland pre-industrial local-food capacity near 1300"
+year_start = 1290
+year_end = 1315
+direct_capacity_low = 40000
+direct_capacity_central = 60000
+direct_capacity_high = 80000
+pressure_evidence = [
+  "independent pre-industrial biological-production model estimates sustainable population at 40,000-80,000",
+  "historical synthesis places indirect population estimates at 40,000-60,000 and documents repeated climate and livestock-loss pressure",
+  "the island food regime is predominantly local pastoral agriculture, hay, dairy, meat, fishing, and limited trade",
+]
+shock_flags = ["AD 1300 volcanic eruption", "cool-climate harvest and livestock failures", "indirect demographic estimates"]
+trade_dependence = "low_to_mixed"
+food_regime = "local pastoral agriculture, hay, dairy, meat, fishing, and limited trade"
+role = "validation_only"
+validation_test = "interval"
+source_family = "iceland_carrying_capacity_model_and_historical_synthesis"
+source_population_type = "independent_capacity_and_historical_interval"
+estimate_method = "preindustrial_biophysical_model_with_historical_synthesis"
+evidence_role = "near_period_island_validation"
+boundary_confidence = "high"
+boundary_overlap_status = "exact"
+crosswalk_status = "exact"
+benchmark_group = "iceland_biophysical_capacity"
+source_family_independence = "independent"
+review_status = "vetted"
+mapped_boundary = "entire Iceland island, matching the complete EU5 Iceland area"
+include = ["area=iceland_area"]
+exclude = []
+sources = [
+  "https://portal.research.lu.se/en/publications/a-novel-modelling-approach-for-evaluating-the-preindustrial-natur/",
+  "https://doi.org/10.1016/j.scitotenv.2006.08.013",
+  "https://www.cambridge.org/core/journals/polar-record/article/icelands-demographic-transition-from-turf-houses-to-too-many-tourists/A462425B0071EB7BB8686ACB1816EB6A5",
+]
+notes = "Validation-only. The capacity interval is independently modelled, not a 1337 census; the 1300 eruption and labour-scarcity interpretation remain explicit uncertainty. It must not calibrate global scale."
+
+[[benchmarks]]
+anchor_id = "engaruka_irrigated_capacity_1400_1720_validation"
+label = "Engaruka irrigated landscape local support"
+year_start = 1400
+year_end = 1720
+direct_capacity_low = 8000
+direct_capacity_central = 9000
+direct_capacity_high = 10000
+pressure_evidence = [
+  "archaeological platform counts imply about 7,000-12,000 residents",
+  "transparent cereal-yield and consumption calculation supports about 8,000-10,000 people on the bounded irrigation system",
+  "local water, soil management, and drought persistence are documented as production constraints",
+]
+shock_flags = ["completed system extends beyond 1500", "drought and climate transition", "mixed local and regional trade"]
+trade_dependence = "mixed_local_surplus"
+food_regime = "irrigated cereals, terraces, manure, local livestock, and exchange with pastoralists"
+role = "validation_only"
+validation_test = "interval"
+source_family = "engaruka_irrigation_archaeology"
+source_population_type = "archaeological_population_and_capacity_interval"
+estimate_method = "archaeological_platform_count_and_transparent_agricultural_support_calculation"
+evidence_role = "out_of_period_irrigation_validation"
+boundary_confidence = "high"
+boundary_overlap_status = "approximate"
+crosswalk_status = "approximate"
+benchmark_group = "engaruka_irrigated_system"
+source_family_independence = "independent"
+review_status = "vetted"
+mapped_boundary = "approximately 2,000 ha ancient Engaruka field, canal, and terraced settlement system"
+include = ["location_tag=engeruka"]
+exclude = []
+sources = [
+  "https://doi.org/10.1111/j.1475-4959.2010.00372.x",
+  "https://doi.org/10.1080/00672700609480436",
+]
+notes = "Validation-only. The largest documented system postdates 1337, so this tests irrigation physics and African regional behaviour without setting the 1337 scale."
+
+[[benchmarks]]
+anchor_id = "peten_lowland_milpa_capacity"
+label = "Central Peten lowland milpa carrying-capacity assessment"
+year_start = 600
+year_end = 900
+direct_capacity_low = 3000000
+direct_capacity_central = 3500000
+direct_capacity_high = 4000000
+pressure_evidence = ["explicit food-area and crop-cycle carrying-capacity calculation"]
+shock_flags = ["centuries before target", "EU5 selector covers approximately but not exactly the published 35,854 square kilometre study boundary"]
+trade_dependence = "low"
+food_regime = "maize milpa with long fallow, gardens, wetlands, and forest products"
+role = "validation_only"
+validation_test = "interval"
+source_family = "peten_milpa_carrying_capacity"
+source_population_type = "land_use_model_interval"
+estimate_method = "milpa_rotation_and_settlement_model"
+evidence_role = "tropical_validation"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "approximate"
+benchmark_group = "peten_lowlands"
+source_family_independence = "independent"
+review_status = "vetted"
+mapped_boundary = "published 35,854 km2 central Peten study region approximated by ten explicitly listed EU5 locations"
+include = ["location_tag=namaan|pachan|wak_kabnal|pusilha|noh_peten|uxwitza|yax_mutal|tzunuun|ixtutz|ceibal"]
+exclude = []
+sources = ["https://www.journals.uchicago.edu/doi/pdfplus/10.3998/jar.0521004.0071.104"]
+notes = "Held-out physical validation only, never a scale target. The selected ten EU5 locations total 33,631 km2 under the calibrated Jacobian area model, 6.2% below the published 35,854 km2 study region; the published 3.0-4.0 million interval is retained without narrowing, so the known boundary mismatch is smaller than the registered capacity envelope."
+
+[[benchmarks]]
+anchor_id = "roman_palmyra_hinterland_capacity"
+label = "Palmyra three-day hinterland food-security capacity"
+year_start = 1
+year_end = 300
+direct_capacity_low = 30000
+direct_capacity_central = 37500
+direct_capacity_high = 45000
+pressure_evidence = ["spatial AquaCrop, soils, water-infrastructure, travel-cost, and paleoclimate model gives an explicit locally supportable population"]
+shock_flags = ["more than a millennium before target", "EU5 province is only an approximate crosswalk to the published three-day catchment"]
+trade_dependence = "low_bulk_food"
+food_regime = "irrigated barley, oasis horticulture, and surrounding pastoralism"
+role = "validation_only"
+validation_test = "interval"
+source_family = "palmyra_spatial_crop_water_model"
+source_population_type = "archaeological_model_interval"
+estimate_method = "spatial_crop_water_and_settlement_model"
+evidence_role = "arid_oasis_validation"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "approximate"
+benchmark_group = "palmyra_hinterland"
+source_family_independence = "independent"
+review_status = "vetted"
+mapped_boundary = "published three-day Palmyra catchment approximated by eight explicitly listed EU5 locations"
+include = ["location_tag=tadmur|huwwarin|arak|qaryatayn|sukhnah|ithriya|qastal|taybah"]
+exclude = []
+sources = [
+  "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0273241",
+  "https://doi.org/10.5281/zenodo.7009590",
+]
+notes = "Held-out physical validation only, never a scale target. The eight-location centroid crosswalk covers 25,674 km2 around Palmyra, closely approximating a 90 km three-day camel catchment (25,447 km2 before terrain deformation). The 30,000-45,000 interval follows the paper's nine-in-ten-year food-security result and 30% storage/transport-loss case, rather than its 65,000-90,000 optimal-year ceiling."
+
+[[benchmarks]]
+anchor_id = "cahokia_regional_archaeology"
+label = "Greater Cahokia settlement and palaeodemographic evidence"
+year_start = 1050
+year_end = 1400
+pressure_evidence = []
+shock_flags = ["rapid immigration", "regional abandonment by 1400", "urban-hinterland boundary mismatch"]
+trade_dependence = "mixed"
+food_regime = "maize agriculture, floodplain resources, hunting, and regional exchange"
+role = "validation_only"
+source_family = "cahokia_settlement_and_fecal_stanol_reconstructions"
+source_population_type = "archaeological_regional_interval"
+estimate_method = "settlement_and_biomarker_reconstruction"
+evidence_role = "maize_floodplain_validation"
+boundary_confidence = "low"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "cahokia_american_bottom"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Greater Cahokia archaeological region; current single location is intentionally incomplete"
+include = ["location_tag=cahokia"]
+exclude = []
+sources = [
+  "https://www.isas.illinois.edu/research_2/cahokia",
+  "https://www.cambridge.org/core/journals/american-antiquity/article/after-cahokia-indigenous-repopulation-and-depopulation-of-the-horseshoe-lake-watershed-ad-14001900/C678D62BE9FAB07C9283D62BE9757685",
+]
+notes = "The site is a useful maize/floodplain plausibility check, but its 1337 population was depressed during abandonment and its imported urban food prevents scale anchoring."
+
+[[benchmarks]]
+anchor_id = "djenne_jeno_settlement_system"
+label = "Jenne-jeno and Middle Niger settlement system"
+year_start = 250
+year_end = 1400
+pressure_evidence = []
+shock_flags = ["population size incomplete", "site abandonment by 1400", "urban-cluster food exchange"]
+trade_dependence = "mixed"
+food_regime = "millet, sorghum, rice, livestock, fishing, and floodplain specialization"
+role = "validation_only"
+source_family = "middle_niger_archaeology"
+source_population_type = "archaeological_settlement_evidence"
+estimate_method = "settlement_system_archaeology"
+evidence_role = "west_africa_floodplain_validation"
+boundary_confidence = "low"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "djenne_jeno"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Middle Niger settlement cluster; current single-location crosswalk is intentionally incomplete"
+include = ["location_tag=djenne"]
+exclude = []
+sources = ["https://www.sciencedirect.com/science/article/abs/pii/S1040618217300691"]
+notes = "Retained because it documents a diversified West African food system, but incomplete demographic evidence and abandonment make it unsuitable as a saturation target."
+
+[[benchmarks]]
+anchor_id = "medieval_india_broad_estimates"
+label = "Broad medieval Indian population estimates"
+year_start = 1200
+year_end = 1400
+pressure_evidence = []
+shock_flags = ["broad retrospective extrapolation", "conquest", "regional boundary mismatch"]
+trade_dependence = "mixed"
+food_regime = "highly varied monsoon, irrigated, pastoral, rice, millet, and pulse systems"
+role = "excluded"
+source_family = "south_asian_broad_demographic_estimates"
+source_population_type = "broad_retrospective_estimate"
+estimate_method = "subcontinental_extrapolation"
+evidence_role = "excluded_broad_demography"
+boundary_confidence = "low"
+boundary_overlap_status = "unresolved"
+crosswalk_status = "unresolved"
+benchmark_group = "medieval_india_broad"
+source_family_independence = "independent"
+review_status = "rejected"
+mapped_boundary = "no stable subcontinental estimate-to-EU5 boundary crosswalk"
+rejection_reason = "broad retrospective estimates, conquest effects, and regional boundary mismatch cannot establish local saturation"
+include = ["macro_region=south_asia"]
+exclude = []
+sources = ["https://academic.oup.com/book/3581"]
+notes = "Excluded from scale training until local enumeration or archaeological surveys also document resource pressure."
+
+[[benchmarks]]
+anchor_id = "nile_egypt_1337"
+label = "Nile Egypt near game start"
+year_start = 1300
+year_end = 1375
+pressure_evidence = []
+shock_flags = ["plague", "political disruption", "irrigation maintenance change", "settlement concentration along the Nile"]
+trade_dependence = "high"
+food_regime = "basin irrigation, cereals, legumes, livestock, and urban redistribution"
+role = "excluded"
+source_family = "mamluk_fiscal_and_narrative_sources"
+source_population_type = "shock_confounded_fiscal_observation"
+estimate_method = "fiscal_and_narrative_reconstruction"
+evidence_role = "excluded_shock_confounded"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "nile_egypt_rejected"
+source_family_independence = "independent"
+review_status = "rejected"
+mapped_boundary = "Nile settlement corridor and Mamluk fiscal boundary are not equivalent to egypt_region"
+rejection_reason = "plague, disruption, irrigation-maintenance change, urban redistribution, and corridor boundary mismatch confound saturation"
+include = ["region=egypt_region"]
+exclude = []
+sources = ["https://scholarworks.wmich.edu/tmg/vol1/iss1/7/"]
+notes = "Excluded because the observed population is confounded by shocks and does not establish saturation."
+
+[[benchmarks]]
+anchor_id = "broad_africa_estimates"
+label = "Broad premodern African population estimates"
+year_start = 1200
+year_end = 1400
+pressure_evidence = []
+shock_flags = ["continental extrapolation", "sparse local enumeration", "strong ecological heterogeneity"]
+trade_dependence = "mixed"
+food_regime = "multiple cereal, root-crop, pastoral, fishing, and forest food systems"
+role = "excluded"
+source_family = "african_continental_demographic_estimates"
+source_population_type = "continental_extrapolation"
+estimate_method = "continental_demographic_extrapolation"
+evidence_role = "excluded_broad_demography"
+boundary_confidence = "low"
+boundary_overlap_status = "unresolved"
+crosswalk_status = "unresolved"
+benchmark_group = "africa_broad"
+source_family_independence = "independent"
+review_status = "rejected"
+mapped_boundary = "continental aggregate deliberately has no capacity-test boundary"
+rejection_reason = "continental extrapolation and ecological heterogeneity cannot provide a local saturation or food-support observation"
+include = ["super_region=africa"]
+exclude = []
+sources = ["https://www.ifo.de/en/cesifo/publications/2021/working-paper/we-do-not-know-population-every-country-world-past-two-thousand"]
+notes = "Continental population totals cannot train this model. Africa is assessed only through physical inputs, local future evidence, and an explicit decomposition diagnostic."
+
+[[benchmarks]]
+anchor_id = "amazon_late_holocene_logistic_pressure"
+label = "Late-Holocene Amazonian logistic-growth carrying-capacity signal"
+year_start = 1000
+year_end = 1500
+pressure_evidence = [
+  "radiocarbon-derived population proxies favor logistic rather than unconstrained exponential growth at biome scale",
+]
+shock_flags = [
+  "no absolute population interval",
+  "strong spatial variation and archaeological sampling gaps",
+  "Amazon biome boundary does not equal a game administrative region",
+]
+trade_dependence = "mixed_local_riverine"
+food_regime = "manioc, maize, managed forest foods, fishing, floodplain cultivation, and regional exchange"
+role = "validation_only"
+source_family = "amazonian_radiocarbon_palaeodemography"
+source_population_type = "qualitative_logistic_signal"
+estimate_method = "radiocarbon_logistic_growth_model"
+evidence_role = "tropical_qualitative_validation"
+boundary_confidence = "low"
+boundary_overlap_status = "unresolved"
+crosswalk_status = "unresolved"
+benchmark_group = "amazon_biome"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "published Amazon-Orinoco-Guianas biome; game crosswalk intentionally unresolved"
+include = ["location_tag=__unmapped_amazon_biome_crosswalk__"]
+exclude = []
+sources = [
+  "https://discovery.ucl.ac.uk/id/eprint/10098102/",
+  "https://doi.org/10.1098/rstb.2019.0715",
+]
+notes = "The paper supplies unusually direct evidence for a possible carrying-capacity approach, but explicitly says the absolute level is unknown and spatial variation is substantial. It is therefore a qualitative held-out test, never a scale or population target."
+
+[[benchmarks]]
+anchor_id = "casarabe_llanos_de_mojos_capacity"
+label = "Casarabe Culture population and environmental-capacity models"
+year_start = 500
+year_end = 1400
+pressure_evidence = [
+  "study compares architectural energetics, environmental carrying capacity, and agent-based population growth",
+]
+shock_flags = [
+  "model-derived rather than enumerated population",
+  "published Llanos de Mojos study polygons are not yet crosswalked",
+  "agroforestry and aquatic resources simplify the agricultural ceiling",
+]
+trade_dependence = "low_to_mixed"
+food_regime = "raised-field and forest-edge cultivation, agroforestry, aquatic foods, and earthwork settlements"
+role = "validation_only"
+source_family = "casarabe_architectural_energetics_and_capacity_model"
+source_population_type = "qualitative_capacity_model"
+estimate_method = "architectural_energetics_and_environmental_capacity_model"
+evidence_role = "tropical_earthwork_validation"
+boundary_confidence = "low"
+boundary_overlap_status = "unresolved"
+crosswalk_status = "unresolved"
+benchmark_group = "casarabe_moxos"
+source_family_independence = "derived"
+review_status = "candidate"
+mapped_boundary = "published Bolivian Llanos de Mojos survey/model polygons; game crosswalk unresolved"
+include = ["location_tag=__unmapped_casarabe_crosswalk__"]
+exclude = []
+sources = [
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC12124758/",
+  "https://doi.org/10.1371/journal.pone.0322441",
+]
+notes = "Retained as a target-period tropical challenger. The study's environmental ceiling is not treated as an observed population, and no numerical interval is promoted until its exact scenario and boundary definitions are extracted into the registry."
+
+[[benchmarks]]
+anchor_id = "maui_kahikinui_dryland_density"
+label = "Kahikinui, Maui dryland agricultural settlement density"
+year_start = 1400
+year_end = 1800
+pressure_evidence = [
+  "peak archaeological settlement density is measured within an environmentally bounded dryland cultivation zone",
+]
+shock_flags = [
+  "mostly after target date",
+  "density is a settlement estimate rather than a saturation fraction",
+  "Kahikinui zone is much smaller than the game Hawaii area",
+]
+trade_dependence = "low"
+food_regime = "rainfed sweet potato dryland fields with marine and agroforestry supplements"
+role = "validation_only"
+source_family = "hawaiian_dryland_settlement_archaeology"
+source_population_type = "archaeological_density_interval"
+estimate_method = "dryland_settlement_density_reconstruction"
+evidence_role = "dryland_tropical_validation"
+boundary_confidence = "low"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "maui_kahikinui"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "published arid southern Haleakala study zone; no exact game-polygon crosswalk yet"
+include = ["area=hawaii_area"]
+exclude = []
+sources = [
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC470777/",
+  "https://doi.org/10.1073/pnas.2331263100",
+]
+notes = "The reported peak density of 43-57 persons/km2 is a useful dryland-system plausibility check. It cannot be applied to all of hawaii_area or used as a 1337 scale anchor."
+
+[[benchmarks]]
+anchor_id = "iceland_1290_1330"
+label = "Icelandic subsistence population around the 1300 benchmark"
+year_start = 1290
+year_end = 1330
+population_low = 50000
+population_central = 60000
+population_high = 70000
+pressure_evidence = [
+  "contemporary and retrospective estimates place Iceland near 55,000-60,000 people around 1300",
+  "farm abandonment and woodland loss indicate pressure on marginal pasture and fuel resources",
+  "overgrazing and hay dependence constrained winter carrying capacity",
+]
+shock_flags = ["Little Ice Age onset", "volcanic and maritime variability", "population interval is reconstructed"]
+trade_dependence = "low"
+food_regime = "pastoral hay and livestock, marine fish, eggs, and seal supplements"
+role = "validation_only"
+validation_test = "interval"
+source_family = "icelandic_environmental_and_demographic_reconstructions"
+source_population_type = "reconstructed_interval"
+estimate_method = "environmental_demography_and_sustainable_population_reconstruction"
+evidence_role = "cold_hostile_validation"
+boundary_confidence = "high"
+boundary_overlap_status = "exact"
+crosswalk_status = "exact"
+benchmark_group = "iceland_island"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Iceland island, approximated by area=iceland_area"
+include = ["area=iceland_area"]
+exclude = []
+sources = [
+  "https://ioes.hi.is/files/2021-05/nature-to-the-rescue.pdf",
+  "https://academic.oup.com/edited-volume/43506/chapter/364131791",
+  "https://www.sciencedirect.com/science/article/pii/S0278416520302002",
+]
+notes = "A geographically clean, mostly local-food validation interval near the target date. It is not promoted to scale training because the population series and saturation fraction remain reconstructed rather than enumerated."
+
+[[benchmarks]]
+anchor_id = "otrar_oasis_1200_1350"
+label = "Otrar oasis irrigated population"
+year_start = 1200
+year_end = 1350
+population_low = 18000
+population_central = 21570
+population_high = 25000
+pressure_evidence = [
+  "archaeological and irrigation reconstruction gives approximately 21,570 people for the 1200-1350 interval",
+  "oasis settlement depended on maintained canals and cultivable floodplain",
+]
+shock_flags = ["Mongol conquest in 1219-1220", "irrigation maintenance and political disruption", "oasis boundary uncertainty"]
+trade_dependence = "high"
+food_regime = "irrigated cereals, oasis horticulture, livestock, and riverine foods"
+role = "validation_only"
+validation_test = "interval"
+source_family = "otrar_oasis_archaeology_and_irrigation"
+source_population_type = "archaeological_reconstruction_interval"
+estimate_method = "oasis_settlement_and_irrigation_reconstruction"
+evidence_role = "irrigated_oasis_validation"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "approximate"
+benchmark_group = "otrar_oasis"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Otrar oasis archaeological province approximated by province=otrar_province"
+include = ["province=otrar_province"]
+exclude = []
+sources = [
+  "https://www.researchgate.net/publication/230209680_Reconstructing_irrigation_at_Otrar_Oasis_Kazakhstan_AD_800-1700",
+  "https://rdr.ucl.ac.uk/articles/dataset/Otrar_archaeological_site_digital_geospatial_dataset_2016/11690835",
+]
+notes = "Useful irrigated-oasis validation, but caravan trade and conquest shocks prevent scale-anchor use. The interval is retained as an archaeological reconstruction, not a direct census."
+
+[[benchmarks]]
+anchor_id = "suzhou_pingjiang_1290_register"
+label = "Pingjiang (Suzhou) Yuan register around 1290"
+year_start = 1290
+year_end = 1290
+population_low = 2000000
+population_central = 2433700
+population_high = 2800000
+pressure_evidence = [
+  "Yuan Zhiyuan 27 register reports 466,158 households and 2,433,700 people for Pingjiang Lu",
+  "dense irrigated rice, canal transport, and Taihu fisheries supported an unusually populous landscape",
+]
+shock_flags = ["administrative boundary and household-to-person conversion", "commercial and canal food transfers", "register undercount risk"]
+trade_dependence = "high"
+food_regime = "irrigated rice, wheat and legumes, Taihu fisheries, pigs, and Grand Canal redistribution"
+role = "validation_only"
+validation_test = "interval"
+source_family = "yuan_pingjiang_household_registers"
+source_population_type = "enumerated_register_interval"
+estimate_method = "household_register_with_multiplier_interval"
+evidence_role = "thriving_irrigated_validation"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "approximate"
+benchmark_group = "pingjiang_lu"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Pingjiang Lu six-county administrative unit approximated by province=suzhou_province"
+include = ["province=suzhou_province"]
+exclude = []
+sources = [
+  "https://dfzb.suzhou.gov.cn/dfzb/szdq/201507/8d3b864be8d247b991dd1524605f7e9b.shtml",
+  "https://ctext.org/wiki.pl?chapter=864870&if=gb&remap=gb",
+]
+notes = "Strong administrative observation of a thriving rice system, but not a Malthusian saturation label: commercial redistribution, urban concentration, and register semantics require a one-sided validation interpretation."
+
+[[benchmarks]]
+anchor_id = "tibet_1260_1287_enumerations"
+label = "Tibetan enumerations in the 1260-1287 period"
+year_start = 1260
+year_end = 1287
+population_low = 500000
+population_central = 559962
+population_high = 780000
+pressure_evidence = [
+  "three historical enumerations are summarized at approximately 559,962 lay Tibetans plus 70,000 lamas",
+  "high-altitude barley and pastoral systems impose strong ecological constraints",
+]
+shock_flags = ["Mongol administrative context", "monastic and peripheral-area undercount", "enumeration coverage uncertainty"]
+trade_dependence = "mixed"
+food_regime = "high-altitude barley, yak and sheep pastoralism, pulses, and localized trade"
+role = "validation_only"
+validation_test = "interval"
+source_family = "tibetan_historical_enumerations"
+source_population_type = "historical_enumeration_interval"
+estimate_method = "enumeration_with_coverage_interval"
+evidence_role = "highland_validation"
+boundary_confidence = "low"
+boundary_overlap_status = "approximate"
+crosswalk_status = "approximate"
+benchmark_group = "historical_tibet"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "historical Tibet, broad approximation by region=tibet_region"
+include = ["region=tibet_region"]
+exclude = []
+sources = [
+  "https://pubmed.ncbi.nlm.nih.gov/12321528/",
+  "https://www.mdpi.com/2073-445X/14/10/1989",
+]
+notes = "Retained as a broad highland validation interval only. Enumerations omit or treat monks, borderlands, and some valleys inconsistently, so no saturation fraction is inferred."
+
+[[benchmarks]]
+anchor_id = "nile_egypt_cadastre_1298_1315"
+label = "Nile Valley and Delta cadastre population estimate"
+year_start = 1298
+year_end = 1315
+population_low = 3800000
+population_central = 4100000
+population_high = 4500000
+pressure_evidence = [
+  "1298 and 1315 cadastres report approximately 3,637,000 feddans of assessed land",
+  "fiscal land measurement and flood-irrigation dependence provide a bounded agricultural denominator",
+]
+shock_flags = ["Mamluk fiscal and urban redistribution", "plague onset near the end of the interval", "cadastre-to-person conversion uncertainty"]
+trade_dependence = "mixed_to_high"
+food_regime = "Nile flood irrigation, cereals, legumes, livestock, fish, and urban redistribution"
+role = "validation_only"
+validation_test = "interval"
+source_family = "egyptian_cadastres_and_demographic_reconstructions"
+source_population_type = "fiscal_reconstruction_interval"
+estimate_method = "cadastre_to_population_conversion_interval"
+evidence_role = "irrigated_corridor_validation"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "approximate"
+benchmark_group = "nile_egypt_cadastre"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Egyptian Nile corridor approximated by region=egypt_region; distinct from the rejected broad Nile anchor"
+include = ["region=egypt_region"]
+exclude = []
+sources = [
+  "https://digitallibrary.un.org/record/146942/files/un_1991_population_bulletin_31-32.pdf",
+]
+notes = "A documentary population check, not a vetted capacity anchor. Urban food redistribution, fiscal under-registration, and flood/war/plague shocks mean the interval cannot be used to set intrinsic local capacity."
+
+[[benchmarks]]
+anchor_id = "hohokam_phoenix_basin_1100_1400"
+label = "Classic Hohokam Phoenix Basin population"
+year_start = 1100
+year_end = 1400
+population_low = 40000
+population_central = 70000
+population_high = 100000
+pressure_evidence = [
+  "archaeological syntheses place peak Phoenix Basin population in the tens of thousands and possibly up to 100,000",
+  "large canal networks and dense villages demonstrate intensive premodern irrigation",
+]
+shock_flags = ["drought and flood variability", "canal maintenance burden", "post-1350 settlement decline and disease hypotheses", "archaeological estimate uncertainty"]
+trade_dependence = "low_to_mixed"
+food_regime = "canal-irrigated maize, beans, squash, floodplain foods, wild foods, and exchange"
+role = "validation_only"
+validation_test = "interval"
+source_family = "hohokam_archaeology_and_irrigation"
+source_population_type = "archaeological_interval"
+estimate_method = "canal_settlement_archaeological_synthesis"
+evidence_role = "desert_irrigation_validation"
+boundary_confidence = "low"
+boundary_overlap_status = "approximate"
+crosswalk_status = "approximate"
+benchmark_group = "phoenix_basin_hohokam"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Phoenix Basin Hohokam core approximated by province=akimel_oodham_province"
+include = ["province=akimel_oodham_province"]
+exclude = []
+sources = [
+  "https://ehrafarchaeology.yale.edu/traditions/nt76/summary",
+  "https://www.nps.gov/articles/hohokam-culture.htm",
+  "https://www.sciencedirect.com/science/article/abs/pii/S0278416506000286",
+]
+notes = "A hostile-to-thriving desert irrigation stress test. Published figures are archaeological regional estimates, not a measured equilibrium, and the game crosswalk is approximate."
+
+[[benchmarks]]
+anchor_id = "tonga_tongatapu_1200_1500"
+label = "Tongatapu archaeological population estimate"
+year_start = 1200
+year_end = 1500
+population_low = 50000
+population_central = 55000
+population_high = 60000
+pressure_evidence = ["LiDAR and Bayesian archaeological settlement model estimates 50,000-60,000 people on Tongatapu"]
+shock_flags = ["out-of-period overlap", "settlement-to-population model uncertainty", "island boundary is clear but food exchange exists"]
+trade_dependence = "low_to_mixed"
+food_regime = "root crops, breadfruit, arboriculture, pigs, and marine foods"
+role = "validation_only"
+validation_test = "interval"
+source_family = "tonga_lidar_and_bayesian_demography"
+source_population_type = "archaeological_model_interval"
+estimate_method = "lidar_settlement_and_bayesian_demography"
+evidence_role = "island_validation"
+boundary_confidence = "high"
+boundary_overlap_status = "exact"
+crosswalk_status = "exact"
+benchmark_group = "tongatapu_island"
+source_family_independence = "derived"
+review_status = "candidate"
+mapped_boundary = "Tongatapu island, location_tag=tongatapu"
+include = ["location_tag=tongatapu"]
+exclude = []
+sources = ["https://www.sciencedirect.com/science/article/pii/S2352409X22002735"]
+notes = "Out-of-period island analogue with an explicit population interval. It tests tropical agroforestry and marine-food contributions, never the 1337 scale."
+
+[[benchmarks]]
+anchor_id = "tonga_archipelago_1200_1500"
+label = "Tonga archipelago archaeological population estimate"
+year_start = 1200
+year_end = 1500
+population_low = 100000
+population_central = 110000
+population_high = 120000
+pressure_evidence = ["LiDAR and Bayesian archaeological synthesis estimates roughly 100,000-120,000 people across the Tonga archipelago"]
+shock_flags = ["out-of-period overlap", "island-to-island exchange", "settlement-to-population model uncertainty"]
+trade_dependence = "low_to_mixed"
+food_regime = "root crops, breadfruit, arboriculture, pigs, and marine foods"
+role = "validation_only"
+validation_test = "interval"
+source_family = "tonga_lidar_and_bayesian_demography"
+source_population_type = "archaeological_model_interval"
+estimate_method = "lidar_settlement_and_bayesian_demography"
+evidence_role = "archipelago_validation"
+boundary_confidence = "high"
+boundary_overlap_status = "approximate"
+crosswalk_status = "approximate"
+benchmark_group = "tonga_archipelago"
+source_family_independence = "derived"
+review_status = "candidate"
+mapped_boundary = "Tonga archipelago approximated by area=tonga_area"
+include = ["area=tonga_area"]
+exclude = []
+sources = ["https://www.sciencedirect.com/science/article/pii/S2352409X22002735"]
+notes = "Archipelago aggregate is kept separate from Tongatapu to avoid applying a single island estimate to all islands."
+
+[[benchmarks]]
+anchor_id = "upolu_samoa_archaeological_validation"
+label = "Upolu Samoa archaeological settlement and food-system validation"
+year_start = 1200
+year_end = 1800
+pressure_evidence = ["archaeological work documents extensive inland and coastal settlement, horticulture, and land-use change on Upolu"]
+shock_flags = ["no defensible 1337 population interval", "later contact and disease effects", "archaeological coverage remains incomplete"]
+trade_dependence = "low_to_mixed"
+food_regime = "root crops, breadfruit, arboriculture, pigs, and marine foods"
+role = "validation_only"
+validation_test = "qualitative"
+source_family = "samoa_archaeological_land_use"
+source_population_type = "qualitative_land_use_evidence"
+estimate_method = "archaeological_land_use_synthesis"
+evidence_role = "polynesian_qualitative_validation"
+boundary_confidence = "high"
+boundary_overlap_status = "exact"
+crosswalk_status = "exact"
+benchmark_group = "upolu_island"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Upolu island, location_tag=upolu"
+include = ["location_tag=upolu"]
+exclude = []
+sources = ["https://nus.edu.ws/ACH/Publications.html"]
+notes = "Kept as a qualitative Polynesian land-use check until a target-period population interval with an explicit boundary and pressure evidence is found."
+
+[[benchmarks]]
+anchor_id = "tahiti_contact_1767_population"
+label = "Tahiti contact-era population estimate"
+year_start = 1767
+year_end = 1774
+population_low = 110000
+population_central = 145000
+population_high = 180000
+pressure_evidence = ["contact-era demographic reconstructions report approximately 110,000-180,000 Tahitians before the full epidemic collapse"]
+shock_flags = ["far outside target period", "post-contact epidemic and warfare", "contact-era reconstruction uncertainty"]
+trade_dependence = "low"
+food_regime = "taro and other root crops, breadfruit, banana, agroforestry, pigs, and marine foods"
+role = "validation_only"
+validation_test = "interval"
+source_family = "tahiti_contact_demography"
+source_population_type = "contact_reconstruction_interval"
+estimate_method = "contact_demographic_reconstruction"
+evidence_role = "out_of_period_tropical_validation"
+boundary_confidence = "high"
+boundary_overlap_status = "exact"
+crosswalk_status = "exact"
+benchmark_group = "tahiti_island"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Tahiti island, location_tag=tahiti"
+include = ["location_tag=tahiti"]
+exclude = []
+sources = [
+  "https://populationandeconomics.pensoft.net/article_preview.php?id=81900",
+  "https://doi.org/10.3897/popecon.6.e81900",
+  "https://www.persee.fr/doc/pop_0032-4663_1972_num_27_4_15221",
+]
+notes = "Held out as a tropical island food-system check only. The current date is far beyond 1337 and contact estimates include demographic conditions not transferable to the target technology."
+
+[[benchmarks]]
+anchor_id = "mapungubwe_1220_1300"
+label = "Mapungubwe Cultural Landscape lower-bound population"
+year_start = 1220
+year_end = 1300
+population_low = 9000
+pressure_evidence = [
+  "SANParks and UNESCO describe at least 9,000 inhabitants in the cultural landscape at its height",
+  "confluence landscape supported sorghum and millet, beans/cowpeas, livestock, game, and fish",
+]
+shock_flags = ["state and trade concentration", "cultural-landscape boundary differs from game polygon", "lower-bound statement rather than saturation estimate"]
+trade_dependence = "high"
+food_regime = "sorghum and millet, beans/cowpeas, livestock, game, river fisheries, and long-distance trade"
+role = "validation_only"
+validation_test = "lower_bound"
+source_family = "mapungubwe_archaeology_and_heritage"
+source_population_type = "archaeological_lower_bound"
+estimate_method = "heritage_landscape_population_lower_bound"
+evidence_role = "southern_africa_lower_bound"
+boundary_confidence = "low"
+boundary_overlap_status = "approximate"
+crosswalk_status = "approximate"
+benchmark_group = "mapungubwe_cultural_landscape"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Mapungubwe Cultural Landscape approximated by location_tag=mapungubwe"
+include = ["location_tag=mapungubwe"]
+exclude = []
+sources = [
+  "https://www.sanparks.org/parks/mapungubwe/explore/natural-cultural-history",
+  "https://whc.unesco.org/en/list/1099",
+]
+notes = "One-sided lower bound for a trade-linked state landscape. It must not be treated as an intrinsic carrying-capacity target for the much broader game location."
+
+[[benchmarks]]
+anchor_id = "great_zimbabwe_site_population"
+label = "Great Zimbabwe archaeological site population constraint"
+year_start = 1000
+year_end = 1450
+population_low = 500
+population_central = 2500
+population_high = 10000
+pressure_evidence = ["archaeological spatial models estimate a few thousand coeval residents and reject an unqualified 20,000-person peak for the site"]
+shock_flags = ["site population is not surrounding-land capacity", "long date aggregation", "trade/state concentration", "model and phase uncertainty"]
+trade_dependence = "high"
+food_regime = "sorghum and millet cultivation, livestock, wild foods, and regional trade"
+role = "validation_only"
+validation_test = "interval"
+source_family = "great_zimbabwe_archaeology"
+source_population_type = "archaeological_site_interval"
+estimate_method = "site_phase_population_model"
+evidence_role = "urban_negative_control"
+boundary_confidence = "low"
+boundary_overlap_status = "city_only"
+crosswalk_status = "mismatch"
+benchmark_group = "great_zimbabwe_site"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Great Zimbabwe archaeological site approximated by location_tag=great_zimbabwe; game polygon is much broader"
+include = ["location_tag=great_zimbabwe"]
+exclude = []
+sources = ["https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0178335"]
+notes = "This is deliberately a negative/urban-site control: it constrains site-population plausibility but cannot supervise capacity of the surrounding location."
+
+[[benchmarks]]
+anchor_id = "great_zimbabwe_1300_1450_population_lower_bound_wave32"
+label = "Great Zimbabwe fourteenth-century locally supported urban lower bound"
+year_start = 1300
+year_end = 1450
+population_low = 10000
+direct_capacity_low = 10000
+pressure_evidence = [
+  "UNESCO World Heritage Centre, Great Zimbabwe National Monument, paragraphs 52-61: the fourteenth-century principal city had more than 10,000 inhabitants, with farming and pastoral activity recorded archaeologically and food-hinterland failure near the 1450 abandonment",
+  "Chirikure et al. (2017), PLOS ONE 12(6), abstract, pp. 1-2 and 9-11: the unqualified 18,000-20,000 estimate is ecologically inconsistent; a 20,000 scenario requires about 20,000 ha arable land and 11,500-20,000 cattle",
+]
+shock_flags = [
+  "urban_site_is_a_contained_floor_not_surrounding_land_capacity",
+  "long_distance_prestige_trade_and_tribute_present",
+  "archaeological_population_estimate_disputed",
+  "capital_abandonment_and_hinterland_food_failure_near_1450",
+]
+trade_dependence = "mixed"
+food_regime = "local sorghum/millet/pumpkin farming, cattle pastoralism, hunting and limited fish; imported prestige goods are not counted as food support"
+role = "lower_bound"
+validation_test = "lower_bound"
+source_family = "great_zimbabwe_unesco_archaeology_ecology"
+source_population_type = "archaeological_contained_site_lower_bound"
+estimate_method = "conservative_intersection_of_UNESCO_floor_and_ecological_reassessment"
+evidence_role = "southern_africa_in_period_containment_lower_bound"
+boundary_confidence = "high"
+boundary_overlap_status = "exact"
+crosswalk_status = "exact"
+benchmark_group = "great_zimbabwe_contained_site_lower_bound_wave32"
+source_family_independence = "shared"
+review_status = "vetted"
+mapped_boundary = "UNESCO Great Zimbabwe archaeological site (approximately 800 ha), contained by the dedicated EU5 location_tag=great_zimbabwe; this is not a state or rural-catchment boundary"
+local_food_share_low = 0.70
+local_food_share_central = 0.85
+local_food_share_high = 1.0
+local_food_evidence = [
+  "UNESCO paragraphs 59-61 document farming and pastoral activity; Chirikure et al. pp. 9-11 test local arable land, pasture, cattle and water requirements",
+]
+local_food_confidence = "medium"
+starting_population_test = false
+include = ["location_tag=great_zimbabwe"]
+exclude = []
+sources = [
+  "https://whc.unesco.org/en/list/364",
+  "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0178335",
+]
+notes = "This is an exact containment inequality: the EU5 location containing the archaeological site must support at least 10,000 locally provisioned residents. It is not a two-sided capacity interval and does not set global scale. The older TOML urban-site interval remains a separate negative control; the duplicated source family is intentionally marked shared rather than counted as independent evidence. No African or Great Zimbabwe multiplier is permitted."
+
+[[benchmarks]]
+anchor_id = "upper_mantaro_wanka_ii_1350_1450_population_lower_bound_wave32"
+label = "Wanka II Upper Mantaro and Yanamarca local-food settlement-system lower bound"
+year_start = 1350
+year_end = 1450
+population_low = 61000
+direct_capacity_low = 61000
+pressure_evidence = [
+  "Earle, How Chiefs Come to Power, Table 2.2 and pp. 54-57: systematic settlement and architectural evidence yields an estimated 61,000 Wanka II residents in the northern Upper Mantaro research region",
+  "Earle pp. 56-57 and chapter 4: fortified polities competed over land, herds and other resources, supporting a resource-pressure caveat without asserting saturation",
+  "D'Altroy p. 153; Ortman et al. pp. 2-5 and 14-15; Costin and Earle pp. 695-701: local highland potato, quinoa, oca/olluco, camelid/deer and rain-fed/terraced production dominate staples; commercial markets were not the support mechanism",
+]
+shock_flags = [
+  "chronic_interpolity_warfare_and_defensive_settlement_costs",
+  "population_estimate_derived_from_settlement_architecture",
+  "some_maize_and_lowland_specialty_exchange",
+  "Inka_conquest_after_observation_interval",
+  "EU5_selector_contains_adjacent_land_beyond_the_1900_km2_research_survey",
+]
+trade_dependence = "low_to_moderate"
+food_regime = "rain-fed highland potato/quinoa/oca/olluco with camelid pastoralism, local game and some maize access"
+role = "lower_bound"
+validation_test = "lower_bound"
+source_family = "upper_mantaro_umarp_jasp_archaeology"
+source_population_type = "archaeological_regional_settlement_lower_bound"
+estimate_method = "UMARP_JASP_settlement_area_occupational_density_and_local_food_crosscheck"
+evidence_role = "central_andes_in_period_local_food_lower_bound"
+boundary_confidence = "high"
+boundary_overlap_status = "exact"
+crosswalk_status = "exact"
+benchmark_group = "upper_mantaro_wanka_ii_lower_bound_wave32"
+source_family_independence = "independent"
+review_status = "vetted"
+mapped_boundary = "UMARP northern Upper Mantaro/Yanamarca research landscape, conservatively contained by the six-location EU5 selector province=hatun_xauxa_province"
+local_food_share_low = 0.80
+local_food_share_central = 0.90
+local_food_share_high = 0.98
+local_food_evidence = [
+  "D'Altroy p. 153, Ortman et al. pp. 2-5 and 14-15, and Costin/Earle pp. 695-701 document locally produced highland staples, pastoral foods and limited non-staple exchange",
+]
+local_food_confidence = "high"
+starting_population_test = false
+include = ["province=hatun_xauxa_province"]
+exclude = []
+sources = [
+  "https://doi.org/10.1515/9781503616349",
+  "https://www.bcrp.gob.pe/docs/Publicaciones/libros/2022/poder-provincial.pdf",
+  "https://sfi-edu.s3.amazonaws.com/sfi-edu/production/uploads/sfi-com/dev/uploads/filer/6e/c3/6ec30f73-931e-4ea5-a703-31c377a56fe5/16-04-008.pdf",
+  "https://doi.org/10.2307/280677",
+]
+notes = "A one-sided floor only: 61,000 demonstrably occupied the settlement system, but warfare, post-conquest change and incomplete boundary equivalence prevent a saturation claim. The exact selector denotes exact containment for an inequality, not an assertion that the six EU5 locations equal the 1,900 km2 UMARP/JASP research polygon. The crosswalk retains published 1,900 km2 versus 11,046.64 km2 selector area in the Wave32 audit."
+
+[[benchmarks]]
+anchor_id = "casarabe_moxos_mapped_validation"
+label = "Casarabe Culture Llanos de Mojos mapped validation cell"
+year_start = 500
+year_end = 1400
+pressure_evidence = ["archaeological and agent-based studies compare raised fields, agroforestry, aquatic foods, and environmental carrying capacity"]
+shock_flags = ["mapped cell is only a partial crosswalk", "model-derived rather than enumerated population", "long date interval"]
+trade_dependence = "low_to_mixed"
+food_regime = "raised-field and forest-edge cultivation, agroforestry, aquatic foods, and earthwork settlements"
+role = "validation_only"
+validation_test = "qualitative"
+source_family = "casarabe_architectural_energetics_and_capacity_model"
+source_population_type = "qualitative_capacity_model"
+estimate_method = "architectural_energetics_and_environmental_model"
+evidence_role = "tropical_earthwork_qualitative_validation"
+boundary_confidence = "low"
+boundary_overlap_status = "partial"
+crosswalk_status = "unresolved"
+benchmark_group = "casarabe_moxos"
+source_family_independence = "derived"
+review_status = "candidate"
+mapped_boundary = "single mapped Moxos game location used as an incomplete proxy for published Llanos de Mojos study polygons"
+include = ["location_tag=moxos"]
+exclude = []
+sources = [
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC12124758/",
+  "https://doi.org/10.1371/journal.pone.0322441",
+]
+notes = "The mapped cell is a qualitative coverage check only. No absolute interval is entered until the published scenario polygons and population semantics are reconciled."
+
+[[benchmarks]]
+anchor_id = "greenland_norse_1290_1340"
+label = "Norse Greenland settlement system near 1300"
+year_start = 1290
+year_end = 1340
+population_low = 1400
+population_central = 1800
+population_high = 2200
+pressure_evidence = [
+  "sustainable-population modelling and archaeological settlement evidence place the Norse peak near 1,400-2,200 people",
+  "outer-fjord abandonment and a late shift toward marine diets indicate pasture and winter-fodder pressure",
+]
+shock_flags = ["cooling and sea-ice variability", "settlement abandonment after the interval", "boundary crosswalk is not yet exact"]
+trade_dependence = "low_to_mixed"
+food_regime = "hay-fed livestock, marine fish and seal, limited barley, and local hunting"
+role = "validation_only"
+validation_test = "interval"
+source_family = "greenland_norse_disequilibrium_and_archaeology"
+source_population_type = "archaeological_model_interval"
+estimate_method = "sustainable_population_model_and_settlement_archaeology"
+evidence_role = "hostile_validation"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "approximate"
+benchmark_group = "greenland_norse_settlements"
+source_family_independence = "independent"
+review_status = "candidate"
+mapped_boundary = "Eastern and Western Norse settlement zones approximated by province=gardr_province|herjolfnes_province within area=greenland_area"
+include = ["province=gardr_province|herjolfnes_province"]
+exclude = []
+sources = [
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC6182579/",
+]
+notes = "A cold-hostile validation interval, not a scale anchor. The selector is deliberately non-scoring until an independently reviewed settlement-boundary crosswalk separates Norse farm zones from the full Greenland polygon."
+
+[[benchmarks]]
+anchor_id = "japan_kamakura_kyushu_registers_1280"
+label = "Kamakura Great Land Register Kyushu sample around 1280"
+year_start = 1280
+year_end = 1280
+population_low = 314515
+population_central = 314515
+population_high = 440321
+saturation_high = 1.0
+pressure_evidence = [
+  "Farris reports at least 21 widespread and 6 local famine years in 1150-1280, with food supply the critical life-or-death constraint",
+  "the Great Land Register acreage is converted from rice fields, preserving a local cultivated-food lower bound",
+]
+shock_flags = [
+  "population is reconstructed from registers dated 1197-1292 rather than enumerated in 1280",
+  "Mongol invasions of 1274 and 1281 affected Kyushu provisioning and migration",
+  "the +40% bracket is a non-rice method sensitivity, not a confidence interval",
+]
+trade_dependence = "mixed"
+food_regime = "wet rice, dry fields and pulses, livestock, coastal fisheries, and forest foods"
+role = "validation_only"
+validation_test = "lower_bound"
+source_family = "farris_2006_great_land_registers"
+source_population_type = "reconstructed_agricultural_register_interval"
+estimate_method = "rice-acreage_conversion_with_nonrice_sensitivity"
+evidence_role = "validation_only_local_food_lower_bound"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "japan_great_land_registers"
+source_family_independence = "shared"
+review_status = "candidate"
+mapped_boundary = "Six Kyushu provinces in Farris Table 1.3: Satsuma, Osumi, Hyuga, Buzen, Bungo, and Hizen; EU5 province selectors are not yet polygon-audited against the historical boundaries."
+include = ["province=satsuma_province|oosumi_province|hyuuga_province|buzen_province|bungo_province|hizen_province"]
+exclude = []
+sources = ["https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf"]
+notes = "Farris Table 1.3 reports 314,515 as the primary rice-only conversion and 440,321 when adding 40% for dry-field and other non-rice residents. The repeated famine evidence makes this a useful one-sided observed-population lower-bound diagnostic, but the unresolved historical-to-EU5 boundary crosswalk and shared source family prohibit scale training."
+
+[[benchmarks]]
+anchor_id = "japan_hizen_register_1280"
+label = "Hizen Great Land Register reconstruction around 1280"
+year_start = 1280
+year_end = 1280
+population_low = 87929
+population_central = 87929
+population_high = 123101
+saturation_high = 1.0
+pressure_evidence = [
+  "Hizen had repeated medieval famine exposure in the Farris chronology",
+  "the estimate is based on locally cultivated rice acreage with a documented non-rice sensitivity",
+]
+shock_flags = [
+  "1292 register date is used to represent the 1280 table year",
+  "the +40% bracket is a non-rice method sensitivity, not a confidence interval",
+]
+trade_dependence = "mixed"
+food_regime = "wet rice, Champa rice, legumes, livestock, and coastal fisheries"
+role = "validation_only"
+validation_test = "lower_bound"
+source_family = "farris_2006_great_land_registers"
+source_population_type = "reconstructed_agricultural_register_interval"
+estimate_method = "rice-acreage_conversion_with_nonrice_sensitivity"
+evidence_role = "validation_only_local_food_lower_bound"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "japan_great_land_registers"
+source_family_independence = "shared"
+review_status = "candidate"
+mapped_boundary = "Historical Hizen province approximated by EU5 province=hizen_province; polygon crosswalk is not yet audited."
+include = ["province=hizen_province"]
+exclude = []
+sources = ["https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf"]
+notes = "Farris Table 1.3 gives 87,929 primary rice-only residents and 123,101 with the explicit +40% non-rice sensitivity. This is a validation-only lower-bound diagnostic, not a fitted label or scale anchor."
+
+[[benchmarks]]
+anchor_id = "japan_bungo_register_1280"
+label = "Bungo Great Land Register reconstruction around 1280"
+year_start = 1280
+year_end = 1280
+population_low = 44631
+population_central = 44631
+population_high = 62483
+saturation_high = 1.0
+pressure_evidence = [
+  "Bungo is part of the Kyushu local-food register sample exposed to the repeated 1150-1280 famine regime",
+  "the estimate is based on locally cultivated rice acreage with a documented non-rice sensitivity",
+]
+shock_flags = [
+  "1285 register date is used to represent the 1280 table year",
+  "the +40% bracket is a non-rice method sensitivity, not a confidence interval",
+]
+trade_dependence = "mixed"
+food_regime = "wet rice, dry fields and pulses, livestock, and coastal fisheries"
+role = "validation_only"
+validation_test = "lower_bound"
+source_family = "farris_2006_great_land_registers"
+source_population_type = "reconstructed_agricultural_register_interval"
+estimate_method = "rice-acreage_conversion_with_nonrice_sensitivity"
+evidence_role = "validation_only_local_food_lower_bound"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "japan_great_land_registers"
+source_family_independence = "shared"
+review_status = "candidate"
+mapped_boundary = "Historical Bungo province approximated by EU5 province=bungo_province; polygon crosswalk is not yet audited."
+include = ["province=bungo_province"]
+exclude = []
+sources = ["https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf"]
+notes = "Farris Table 1.3 gives 44,631 primary rice-only residents and 62,483 with the explicit +40% non-rice sensitivity. This is a validation-only lower-bound diagnostic, not a fitted label or scale anchor."
+
+[[benchmarks]]
+anchor_id = "japan_noto_register_1280"
+label = "Noto Great Land Register demographic-collapse control"
+year_start = 1280
+year_end = 1280
+population_low = 15734
+population_central = 15734
+population_high = 22028
+saturation_high = 1.0
+pressure_evidence = [
+  "Farris documents long-term population shrinkage in Noto and repeated famine exposure across medieval Japan",
+  "the register-derived value is tied to local rice acreage rather than a national allocation",
+]
+shock_flags = [
+  "Farris warns that Noto may have omitted cultivated land and records a long-term demographic collapse",
+  "the +40% bracket is a non-rice method sensitivity, not a confidence interval",
+]
+trade_dependence = "low_to_mixed"
+food_regime = "wet rice, dry fields, coastal fisheries, and forest foods"
+role = "validation_only"
+validation_test = "lower_bound"
+source_family = "farris_2006_great_land_registers"
+source_population_type = "reconstructed_agricultural_register_interval"
+estimate_method = "rice-acreage_conversion_with_nonrice_sensitivity"
+evidence_role = "hostile_validation_only_lower_bound"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "japan_great_land_registers"
+source_family_independence = "shared"
+review_status = "candidate"
+mapped_boundary = "Historical Noto province approximated by EU5 province=noto_japan_province; polygon crosswalk is not yet audited."
+include = ["province=noto_japan_province"]
+exclude = []
+sources = ["https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf"]
+notes = "Farris Table 1.3 gives 15,734 primary rice-only residents and 22,028 with the explicit +40% non-rice sensitivity. Noto is retained as a hostile/declining validation control because the author flags possible omissions and long-term collapse; it cannot calibrate global scale."
+
+[[benchmarks]]
+anchor_id = "japan_hitachi_register_1280"
+label = "Hitachi Great Land Register demographic-collapse control"
+year_start = 1280
+year_end = 1280
+population_low = 57712
+population_central = 57712
+population_high = 80797
+saturation_high = 1.0
+pressure_evidence = [
+  "Farris documents a sharp 1150-1300 demographic decline in Hitachi and repeated famine exposure across medieval Japan",
+  "the register-derived value is tied to local rice acreage rather than a national allocation",
+]
+shock_flags = [
+  "Farris warns that the Hitachi register may omit non-contributing paddies and records northern Hitachi depopulation",
+  "the +40% bracket is a non-rice method sensitivity, not a confidence interval",
+]
+trade_dependence = "low_to_mixed"
+food_regime = "wet rice, dry fields, inland fisheries, and forest foods"
+role = "validation_only"
+validation_test = "lower_bound"
+source_family = "farris_2006_great_land_registers"
+source_population_type = "reconstructed_agricultural_register_interval"
+estimate_method = "rice-acreage_conversion_with_nonrice_sensitivity"
+evidence_role = "hostile_validation_only_lower_bound"
+boundary_confidence = "medium"
+boundary_overlap_status = "approximate"
+crosswalk_status = "unresolved"
+benchmark_group = "japan_great_land_registers"
+source_family_independence = "shared"
+review_status = "candidate"
+mapped_boundary = "Historical Hitachi province approximated by EU5 province=hitachi_province; polygon crosswalk is not yet audited."
+include = ["province=hitachi_province"]
+exclude = []
+sources = ["https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf"]
+notes = "Farris Table 1.3 gives 57,712 primary rice-only residents and 80,797 with the explicit +40% non-rice sensitivity. Hitachi is retained as a hostile/declining validation control because the author flags possible omissions and dramatic depopulation; it cannot calibrate global scale."

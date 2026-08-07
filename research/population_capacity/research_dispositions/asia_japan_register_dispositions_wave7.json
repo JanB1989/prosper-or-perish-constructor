@@ -1,0 +1,135 @@
+{
+  "schema_version": "population_capacity_research_disposition_v1",
+  "packet_id": "asia_japan_register_dispositions_wave7",
+  "region": "japan",
+  "super_region": "Asia",
+  "target_year": 1337,
+  "source_family": "farris_2006_great_land_registers",
+  "source_bundle": "farris_table_1_1_1_2_1_3_chgis_geometry_audit",
+  "policy": {
+    "append_only": true,
+    "no_starting_population_or_rgo_predictors": true,
+    "lower_bounds_do_not_establish_saturation": true,
+    "coverage_below_0_95_blocks_training": true,
+    "name_only_crosswalks_are_rejected": true
+  },
+  "method": "Historical-province polygons were downloaded from Harvard CHGIS Japan Tokugawa GIS 2004 (jp_toku_kuni_pgn.shp, DOI 10.7910/DVN/2CVTR0), compared to EU5 calibrated location centroids and area_jacobian_km2, and checked against Farris (2006) Table 1.3. A province was not promoted when centroid inclusion or conservative area coverage failed the >=95% contract.",
+  "records": [
+    {
+      "anchor_id": "japan_bungo_1280_register_rejected_crosswalk_wave7",
+      "source_anchor_id": "japan_bungo_register_1280",
+      "role": "validation_only",
+      "status": "rejected",
+      "population_floor_candidate": 44631,
+      "population_method_sensitivity": 62483,
+      "reason_code": "crosswalk_centroid_coverage_below_95",
+      "historical_boundary": "Bungo no kuni polygon, Harvard CHGIS",
+      "eu5_selector_tested": "province=bungo_province",
+      "historical_polygon_area_km2": 5400.0483,
+      "eu5_area_km2": 5661.6408,
+      "eu5_centroid_area_inside_fraction": 0.8994,
+      "coverage_fraction_used": 0.8994,
+      "reason": "Seven of eight EU5 Bungo centroids fall inside the CHGIS polygon, but the Hayami location lies outside; centroid-area coverage is only 89.94%. The area ratio alone (1.0484) cannot prove polygon overlap, so this population floor remains validation-only until exact EU5 polygon intersections or a period-correct crosswalk are supplied.",
+      "sources": [
+        "Farris (2006), Table 1.3, pp. 32-33: https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "Harvard CHGIS Japan Tokugawa GIS 2004, DOI 10.7910/DVN/2CVTR0"
+      ]
+    },
+    {
+      "anchor_id": "japan_hyuuga_1280_register_rejected_crosswalk_wave7",
+      "source_anchor_id": "japan_kamakura_kyushu_registers_1280",
+      "role": "validation_only",
+      "status": "rejected",
+      "population_floor_candidate": 51681,
+      "population_method_sensitivity": 72353,
+      "reason_code": "crosswalk_centroid_coverage_below_95",
+      "historical_boundary": "Hyūga no kuni polygon, Harvard CHGIS",
+      "eu5_selector_tested": "province=hyuuga_province",
+      "historical_polygon_area_km2": 8226.0385,
+      "eu5_area_km2": 8425.0798,
+      "eu5_centroid_area_inside_fraction": 0.8296,
+      "coverage_fraction_used": 0.8296,
+      "reason": "Only six of eight EU5 Hyūga centroids fall inside the CHGIS polygon; the Naka-Hyūga and Miyazaki locations are outside, leaving 82.96% centroid-area coverage. The 2.42% area-ratio difference is insufficient to establish overlap. Retain the Farris floor for diagnostics but do not train on it.",
+      "sources": [
+        "Farris (2006), Table 1.3, pp. 32-33: https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "Harvard CHGIS Japan Tokugawa GIS 2004, DOI 10.7910/DVN/2CVTR0"
+      ]
+    },
+    {
+      "anchor_id": "japan_satsuma_1280_register_rejected_area_wave7",
+      "source_anchor_id": "japan_kamakura_kyushu_registers_1280",
+      "role": "validation_only",
+      "status": "rejected",
+      "population_floor_candidate": 25700,
+      "population_method_sensitivity": 35980,
+      "reason_code": "historical_area_undercoverage_below_95",
+      "historical_boundary": "Satsuma no kuni polygon, Harvard CHGIS",
+      "eu5_selector_tested": "province=satsuma_province",
+      "historical_polygon_area_km2": 3541.4712,
+      "eu5_area_km2": 3336.5446,
+      "eu5_to_historical_area_ratio": 0.9421,
+      "coverage_fraction_used": 0.9421,
+      "reason": "All four EU5 Satsuma centroids fall inside the historical polygon, but the calibrated EU5 union covers only 94.21% of the historical polygon area. The missing area is too large for the >=95% training contract, so no lower-bound label is promoted without a sub-location area-weighted intersection.",
+      "sources": [
+        "Farris (2006), Table 1.3, pp. 32-33: https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "Harvard CHGIS Japan Tokugawa GIS 2004, DOI 10.7910/DVN/2CVTR0"
+      ]
+    },
+    {
+      "anchor_id": "japan_oosumi_1280_register_rejected_crosswalk_wave7",
+      "source_anchor_id": "japan_kamakura_kyushu_registers_1280",
+      "role": "validation_only",
+      "status": "rejected",
+      "population_floor_candidate": 19336,
+      "population_method_sensitivity": 27070,
+      "reason_code": "crosswalk_centroid_coverage_below_95",
+      "historical_boundary": "Ōsumi no kuni polygon, Harvard CHGIS",
+      "eu5_selector_tested": "province=oosumi_province",
+      "historical_polygon_area_km2": 3835.2923,
+      "eu5_area_km2": 4466.0450,
+      "eu5_centroid_area_inside_fraction": 0.7538,
+      "coverage_fraction_used": 0.7538,
+      "reason": "Only five of seven EU5 Ōsumi centroids fall inside the CHGIS polygon; two island/peninsular locations lie outside and centroid-area coverage is 75.38%. The 16.45% area overhang is not acceptable for a training floor.",
+      "sources": [
+        "Farris (2006), Table 1.3, pp. 32-33: https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "Harvard CHGIS Japan Tokugawa GIS 2004, DOI 10.7910/DVN/2CVTR0"
+      ]
+    },
+    {
+      "anchor_id": "japan_hizen_1280_register_rejected_area_wave7",
+      "source_anchor_id": "japan_hizen_register_1280",
+      "role": "validation_only",
+      "status": "rejected",
+      "population_floor_candidate": 87929,
+      "population_method_sensitivity": 123101,
+      "reason_code": "historical_area_overcoverage_and_boundary_mismatch",
+      "historical_boundary": "Hizen no kuni polygon, Harvard CHGIS",
+      "eu5_selector_tested": "province=hizen_province",
+      "historical_polygon_area_km2": 4764.0721,
+      "eu5_area_km2": 6548.2152,
+      "eu5_to_historical_area_ratio": 1.3744,
+      "reason": "The EU5 Hizen union is 37.44% larger than the historical Hizen polygon, and the CHGIS polygon includes a complex island/coastal outline not represented by the coarse EU5 selector. A name match cannot support a >=95% historical-boundary crosswalk.",
+      "sources": [
+        "Farris (2006), Table 1.3, pp. 32-33: https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "Harvard CHGIS Japan Tokugawa GIS 2004, DOI 10.7910/DVN/2CVTR0"
+      ]
+    },
+    {
+      "anchor_id": "japan_wakasa_1280_register_rejected_unmapped_wave7",
+      "source_anchor_id": "japan_wakasa_register_1280",
+      "role": "validation_only",
+      "status": "rejected",
+      "population_floor_candidate": 14215,
+      "population_method_sensitivity": 19901,
+      "reason_code": "no_dedicated_eu5_boundary",
+      "historical_boundary": "Wakasa no kuni polygon, Harvard CHGIS",
+      "eu5_selector_tested": "none; EU5 has no wakasa_japan_province",
+      "coverage_fraction_used": 0.0,
+      "reason": "The EU5 geometry inventory has no dedicated Wakasa province. Assigning the historical province to Echizen would silently replace a 905 km2 historical polygon with a much larger modern/game grouping, so the record remains unmapped.",
+      "sources": [
+        "Farris (2006), Table 1.3, pp. 32-33: https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "Harvard CHGIS Japan Tokugawa GIS 2004, DOI 10.7910/DVN/2CVTR0"
+      ]
+    }
+  ]
+}

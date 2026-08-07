@@ -1,0 +1,284 @@
+{
+  "schema_version": "population_capacity_anchor_disposition_v1",
+  "packet_id": "americas_oceania_wave10_two_sided_gate_review",
+  "reviewed_on": "2026-08-03",
+  "scope": "Final gate review of existing Americas and Oceania local-food, irrigation, raised-field and island records for promotion to two-sided Malthusian capacity anchors.",
+  "policy": {
+    "rejected_records_are_not_training_targets": true,
+    "city_or_trade_hub_is_not_surrounding_land_capacity": true,
+    "unmapped_or_partial_boundaries_block_quantitative_scoring": true,
+    "starting_population_and_hyde_are_not_used": true,
+    "point_estimates_are_not_silently_promoted_to_intervals": true,
+    "model_derived_capacity_is_not_an_independent_historical_target": true,
+    "population_alone_never_supplies_an_upper_capacity_bound": true,
+    "shared_source_population_and_capacity_do_not_form_an_independent_anchor": true
+  },
+  "review_summary": {
+    "candidate_count": 9,
+    "qualified_two_sided_anchor_count": 0,
+    "training_records_added": 0,
+    "validation_or_lower_bound_records_added": 0,
+    "existing_lower_bounds_preserved": [
+      "hohokam_lower_salt_1150_1450_capacity_lower_bound",
+      "mesa_verde_vep_1225_1260_capacity_lower_bound",
+      "upper_mantaro_wanka_ii_1350_1450_population_lower_bound",
+      "tongatapu_local_food_population_floor_1100_1500_wave4"
+    ],
+    "disposition": "No reviewed record has all of a defensible two-sided population or capacity interval, independent saturation/pressure evidence, predominantly local food, and an EU5-mappable boundary with at least 95 percent coverage. Existing one-sided and validation records remain available for diagnostics only."
+  },
+  "records": [
+    {
+      "anchor_id": "hohokam_lower_salt_two_sided_promotion_rejected_wave10",
+      "label": "Hohokam Lower Salt River/Phoenix Basin irrigated communities",
+      "date_interval": {"start": 1100, "end": 1450},
+      "reported_population_interval": {"low": 40000, "central": 70000, "high": 100000},
+      "reported_capacity_interval": {"low": 53000, "central": 93000, "high": 133000},
+      "population_interval_status": "broad archaeological settlement-proxy interval; not a census and not coextensive with the capacity footprint",
+      "capacity_interval_status": "Piman-analogy and agricultural scenario reconstruction; one-sided physical constraint only",
+      "local_food_evidence": {"low": 0.85, "central": 0.95, "high": 1.0, "food_regime": "canal-irrigated maize, beans, squash and local riverine foods"},
+      "pressure_evidence": [
+        "Lower Salt canals and fields were exposed to low-flow drought, floods and salt-laden water.",
+        "Archaeological evidence records agricultural intensification and later depopulation around the fifteenth century.",
+        "The Marana/Piman comparison estimates about 2,300-5,800 people per 1,000 irrigated hectares and extrapolates 53,000-133,000 for the Phoenix system; this is an analogy-derived potential, not observed equilibrium."
+      ],
+      "proposed_role": "lower_bound_and_validation_only",
+      "decision": "rejected_for_two_sided_training",
+      "rejection_reasons": [
+        "The population packet uses a broad regional archaeological range, while the 53,000-133,000 capacity envelope is a model/ethnographic analogy; they are not an independent two-sided observation.",
+        "The population crosswalk is an approximate akimel_oodham province selector with about 0.60 coverage, whereas the capacity lower-bound crosswalk contains only two broad EU5 locations (guwevkabaya and yavpe) and compares 210 km2 of reconstructed irrigated corridor with an 18,731 km2 EU5 footprint.",
+        "Salinity, drought, flood and abandonment establish production pressure but do not identify a dated saturation fraction. Preserve the vetted 53,000-person one-sided constraint; do not promote it to a global scale anchor."
+      ],
+      "boundary_status": "historical irrigated corridor is not coextensive with whole EU5 cells",
+      "candidate_crosswalk": {
+        "population_selector": "province=akimel_oodham_province",
+        "capacity_selector": "location_tag=guwevkabaya|yavpe",
+        "population_coverage_fraction": 0.6,
+        "capacity_containment": "high but broad-cell",
+        "capacity_reconstructed_area_km2": 210.0,
+        "capacity_eu5_footprint_area_km2": 18731.448
+      },
+      "source_family": "hohokam_lower_salt_irrigation_archaeology",
+      "sources": [
+        "https://open.uapress.arizona.edu/system/actioncallout/7/f/b/7fbf596c-9988-4365-8019-0d2e1f3fb063/attachment/982edddfd2a3532080f00a9fda367142.pdf",
+        "https://open.uapress.arizona.edu/read/the-marana-community-in-the-hohokam-world/section/b2cb8a4f-1278-42c1-8712-efbe256a8d76",
+        "https://doi.org/10.1017/S0003598X00089979",
+        "https://www.nps.gov/articles/hohokam-canal-system.htm"
+      ],
+      "notes": "Independent salinity and hydrology studies make this a valuable physical stress case, but not an independent upper label."
+    },
+    {
+      "anchor_id": "upper_mantaro_wanka_ii_two_sided_promotion_rejected_wave10",
+      "label": "Upper Mantaro Wanka II settlement system",
+      "date_interval": {"start": 1350, "end": 1450},
+      "reported_population_lower_bound": 61000,
+      "population_interval_status": "lower bound only; no defensible upper interval or saturation fraction",
+      "local_food_evidence": {"low": 0.8, "central": 0.9, "high": 0.98, "food_regime": "highland potatoes, maize, tubers, camelids and local agricultural production"},
+      "pressure_evidence": [
+        "UMARP/JASP settlement survey documents dense provincial settlement and agricultural intensification.",
+        "Defensive settlement, warfare and post-conquest reorganization create unresolved migration and shock effects.",
+        "The 61,000 figure is a conservative lower bound for the northern Upper Mantaro system, not a saturation observation."
+      ],
+      "proposed_role": "lower_bound_only",
+      "decision": "rejected_for_two_sided_training",
+      "rejection_reasons": [
+        "No independent capacity interval or literature-supported saturation fraction is supplied; a lower bound cannot establish the model scale.",
+        "The 1,900 km2 research umbrella is represented by a six-location Hatun Xauxa selector covering about 11,046.6 km2, so a whole-cell target would silently add unobserved land.",
+        "Warfare, Inca conquest and settlement relocation prevent interpreting the observed lower bound as a stable Malthusian equilibrium."
+      ],
+      "boundary_status": "high-containment broad selector; only one-sided scoring allowed",
+      "candidate_crosswalk": {"eu5_selector": "province=hatun_xauxa_province", "coverage_fraction": 1.0, "research_area_km2": 1900.0, "eu5_footprint_area_km2": 11046.637763, "historical_area_share": 0.172},
+      "source_family": "upper_mantaro_umarp_jasp_archaeology",
+      "sources": [
+        "https://doi.org/10.1515/9781503616349",
+        "https://www.bcrp.gob.pe/docs/Publicaciones/libros/2022/poder-provincial.pdf",
+        "https://sfi-edu.s3.amazonaws.com/sfi-edu/production/uploads/sfi-com/dev/uploads/filer/6e/c3/6ec30f73-931e-4ea5-a703-31c377a56fe5/16-04-008.pdf",
+        "https://doi.org/10.2307/280677"
+      ],
+      "notes": "Retain the 61,000-person lower bound for one-sided validation; do not invent an upper interval."
+    },
+    {
+      "anchor_id": "mesa_verde_vep_two_sided_promotion_rejected_wave10",
+      "label": "Mesa Verde Village Ecodynamics Project phase-I landscape",
+      "date_interval": {"start": 1225, "end": 1260},
+      "reported_population_interval": {"low": 19404, "central": 19404, "high": 19404},
+      "population_interval_status": "modelled settlement population point used as a one-sided constraint",
+      "capacity_interval_status": "not an independently observed capacity interval",
+      "local_food_evidence": {"low": 0.9, "central": 0.97, "high": 1.0, "food_regime": "predominantly local dry-farmed maize, beans, squash and gathered foods"},
+      "pressure_evidence": [
+        "Village Ecodynamics work identifies drought, soil/resource stress and unused maize potential before regional abandonment.",
+        "The 19,404 estimate is a reconstructed settlement total, not a census with a dated equilibrium interval."
+      ],
+      "proposed_role": "lower_bound_and_validation_only",
+      "decision": "rejected_for_two_sided_training",
+      "rejection_reasons": [
+        "The 1,800 km2 study polygon is contained by one EU5 location of about 9,104.1 km2; the historical footprint is only about 19.8 percent of the cell. Whole-cell extrapolation is not permitted.",
+        "The observed population and environmental stress do not define a saturation fraction; departure and migration are unresolved.",
+        "The VEP estimate can test drought, soil and protein constraints and remains a one-sided lower bound, but cannot supervise a two-sided scale."
+      ],
+      "boundary_status": "high containment but non-coextensive study polygon",
+      "candidate_crosswalk": {"eu5_selector": "location_tag=winimuc", "coverage_fraction": 1.0, "study_area_km2": 1800.0, "eu5_footprint_area_km2": 9104.102, "historical_area_share": 0.1977},
+      "source_family": "mesa_verde_village_ecodynamics_archaeology",
+      "sources": [
+        "https://sites.santafe.edu/~bowles/Population.pdf",
+        "https://rex.libraries.wsu.edu/esploro/outputs/journalArticle/Historical-Ecology-in-the-Mesa-Verde/99900501020001842",
+        "https://crowcanyon.org/projects/the-village-ecodynamics-project/"
+      ],
+      "notes": "Use as a hostile/drought validation case and lower bound only."
+    },
+    {
+      "anchor_id": "tongatapu_capacity_two_sided_promotion_rejected_wave10",
+      "label": "Tongatapu local-food population and capacity reconstructions",
+      "date_interval": {"start": 1100, "end": 1500},
+      "reported_population_interval": {"low": 15000, "central": 16500, "high": 18467},
+      "reported_capacity_interval": {"low": 18000, "central": 21000, "high": 24000},
+      "independent_population_interval": {"low": 50000, "central": 55000, "high": 60000, "source": "Parton and Clark 2022 LiDAR/Bayesian reconstruction"},
+      "population_interval_status": "two incompatible reconstructions; no reconciled interval",
+      "capacity_interval_status": "Green/Ussher scenario envelope, not independent saturation evidence",
+      "local_food_evidence": {"low": 0.9, "central": 0.97, "high": 1.0, "food_regime": "yam, taro, sweet potato, banana, breadfruit, coconut, fishing and livestock"},
+      "pressure_evidence": [
+        "Archaeobotanical work documents primary-forest removal, intensive multicropping and bush-fallow pressure.",
+        "Independent LiDAR study reports a substantially larger population range than the Green/Ussher reconstruction."
+      ],
+      "proposed_role": "lower_bound_and_validation_only",
+      "decision": "rejected_for_two_sided_training",
+      "rejection_reasons": [
+        "The 18,000-24,000 envelope is derived from the same Green/Ussher modelling family as the lower-bound packet and cannot serve as an independent upper label.",
+        "The independent 50,000-60,000 estimate conflicts by roughly a factor of three; the conflict is unresolved and cannot be hidden in a narrow uncertainty interval.",
+        "The exact island crosswalk is excellent (0.976 area coverage), but mapping quality cannot repair unresolved source semantics and saturation evidence."
+      ],
+      "boundary_status": "near-exact island mapping; evidence conflict unresolved",
+      "candidate_crosswalk": {"eu5_selector": "location_tag=tongatapu", "coverage_fraction": 0.9763941725, "mapped_land_area_km2": 253.862485, "historical_island_area_km2": 260.0},
+      "source_family": "tonga_archaeology_and_population_reconstruction",
+      "sources": [
+        "https://openresearch-repository.anu.edu.au/bitstreams/e4751661-3b6f-44c8-828b-4d93dc954ce3/download",
+        "https://www.sciencedirect.com/science/article/pii/S2352409X22002735"
+      ],
+      "notes": "Preserve the existing local-food lower bound and use the disagreement as a validation/uncertainty diagnostic."
+    },
+    {
+      "anchor_id": "mangareva_food_capacity_two_sided_promotion_rejected_wave10",
+      "label": "Mangareva pre-contact food-system capacity scenarios",
+      "date_interval": {"start": 1200, "end": 1500},
+      "reported_capacity_interval": {"low": 2954, "central": 3537, "high": 5139},
+      "population_interval_status": "no independent historical population interval for the same boundary",
+      "capacity_interval_status": "food-budget scenario envelope",
+      "local_food_evidence": {"low": 0.95, "central": 0.98, "high": 1.0, "food_regime": "terraced/horticultural island foods, arboriculture, marine and lagoon resources"},
+      "pressure_evidence": [
+        "Puleston et al. model resource and labour constraints under alternative pre-contact food-system scenarios.",
+        "No independent dated land-scarcity or famine evidence establishes that the upper scenario was approached."
+      ],
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_two_sided_training",
+      "rejection_reasons": [
+        "There is no independent population or saturation interval; the only quantitative interval is a modelled food-capacity scenario.",
+        "The semantic EU5 tag is exact, but the tag footprint is about 525.6 km2 while the published Mangareva land area is 16.58 km2 (roughly 31.7 times smaller).",
+        "A coarse-cell capacity cannot be treated as an island target without resolving the area mismatch."
+      ],
+      "boundary_status": "semantic island tag but non-coextensive EU5 footprint",
+      "candidate_crosswalk": {"eu5_selector": "location_tag=mangareva", "coverage_fraction": 1.0, "historical_area_km2": 16.58, "eu5_footprint_area_km2": 525.584, "area_ratio": 31.698},
+      "source_family": "polynesia_food_capacity_gis_puleston_2024",
+      "sources": ["https://link.springer.com/article/10.1007/s10745-024-00530-4"],
+      "notes": "Keep as an out-of-period/food-system validation envelope, not a scale anchor."
+    },
+    {
+      "anchor_id": "tiwanaku_raised_fields_two_sided_promotion_rejected_wave10",
+      "label": "Tiwanaku Lake Titicaca raised-field sustaining-area reconstruction",
+      "date_interval": {"start": 1000, "end": 1450},
+      "reported_capacity_interval": {"low": 285000, "central": 570000, "high": 1111500},
+      "population_interval_status": "no independent population interval for the mapped raised-field area",
+      "capacity_interval_status": "experimental/ethnohistoric sustaining-area envelope",
+      "local_food_evidence": {"low": 0.95, "central": 0.98, "high": 1.0, "food_regime": "raised-field potatoes, quinoa, tubers, camelids and lake resources"},
+      "pressure_evidence": [
+        "Raised-field experiments and palaeoecology provide strong physical evidence for frost-buffered agricultural productivity.",
+        "Kolata explicitly notes that historical Tiwanaku population did not approach the calculated ecological ceiling."
+      ],
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_two_sided_training",
+      "rejection_reasons": [
+        "The 285,000-1,111,500 range is a physical potential, not an observed Malthusian equilibrium or independent saturation interval.",
+        "The raised-field evidence covers about 190 km2 while the seven-location EU5 province selector covers about 15,410 km2; whole-cell extrapolation would add unobserved land.",
+        "No two-sided target can be formed from population estimates and a model-derived ceiling alone."
+      ],
+      "boundary_status": "high-containment broad province; raised-field footprint is a small subset",
+      "candidate_crosswalk": {"eu5_selector": "province=tiwanaku_province", "coverage_fraction": 1.0, "raised_field_area_km2": 190.0, "eu5_footprint_area_km2": 15410.0},
+      "source_family": "tiwanaku_raised_field_experimental_capacity",
+      "sources": [
+        "https://d3qi0qp55mx5f5.cloudfront.net/anthrolpology/docs/Technology_Organization1.pdf",
+        "https://anthropology.sas.upenn.edu/sites/default/files/page/EricksonRaisedFieldsAsMonumentalFarmedLandscapesTiticaca2013.pdf"
+      ],
+      "notes": "Use for crop-water, frost and raised-field physical validation only."
+    },
+    {
+      "anchor_id": "maya_lowlands_two_sided_promotion_rejected_wave10",
+      "label": "Classic Maya lowlands LiDAR settlement system",
+      "date_interval": {"start": 600, "end": 900},
+      "reported_population_interval": {"low": 11000000, "central": 15500000, "high": 20000000},
+      "population_interval_status": "regional demographic reconstruction outside the target date; no saturation interval",
+      "local_food_evidence": {"low": 0.8, "central": 0.9, "high": 1.0, "food_regime": "maize, beans, squash, manioc and managed wetlands/forest foods"},
+      "pressure_evidence": [
+        "LiDAR settlement density and land-use studies document intensive agriculture and late Classic stress.",
+        "Political collapse, warfare and migration confound any interpretation as a stable Malthusian ceiling."
+      ],
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_two_sided_training",
+      "rejection_reasons": [
+        "The date is substantially earlier than 1337 and the source provides no independent saturation fraction.",
+        "The mapped study region has only about 0.86 EU5 coverage and contains heterogeneous karst, wetland and upland systems.",
+        "The broad population interval cannot supervise intrinsic capacity without resolving urban, political and migration components."
+      ],
+      "boundary_status": "partial heterogeneous regional coverage",
+      "candidate_crosswalk": {"coverage_fraction": 0.86, "crosswalk_status": "validation only"},
+      "source_family": "maya_lowlands_lidar_demography",
+      "sources": ["https://www.nature.com/articles/s41586-019-1160-3"],
+      "notes": "Retain as a held-out intensive-landscape validation analogue."
+    },
+    {
+      "anchor_id": "casarabe_managed_landscape_two_sided_promotion_rejected_wave10",
+      "label": "Casarabe Llanos de Mojos managed-landscape settlement system",
+      "date_interval": {"start": 500, "end": 1400},
+      "reported_population_interval": {"low": 10000, "central": 30000, "high": 100000},
+      "population_interval_status": "broad archaeological scenario range; no independent saturation interval",
+      "local_food_evidence": {"low": 0.8, "central": 0.92, "high": 1.0, "food_regime": "raised fields, forest management, fish and seasonally wetland agriculture"},
+      "pressure_evidence": [
+        "Earthworks, causeways and raised fields demonstrate durable local food investment.",
+        "The evidence does not establish that any dated population interval was at a long-run ceiling."
+      ],
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_two_sided_training",
+      "rejection_reasons": [
+        "The current EU5 crosswalk covers only about 0.20 of the proposed Moxos selector, below the 95 percent quantitative threshold.",
+        "The population range is broad and scenario-based, with no independent pressure-to-saturation interval.",
+        "The date range crosses multiple settlement phases and cannot be treated as a single equilibrium target."
+      ],
+      "boundary_status": "unresolved partial mapping",
+      "candidate_crosswalk": {"eu5_selector": "region=moxos", "coverage_fraction": 0.2, "crosswalk_status": "validation only"},
+      "source_family": "casarabe_moxos_earthworks_archaeology",
+      "sources": ["https://www.nature.com/articles/s41586-022-04780-4"],
+      "notes": "Use as a managed-landscape physical validation case; no training label."
+    },
+    {
+      "anchor_id": "upper_xingu_managed_landscape_two_sided_promotion_rejected_wave10",
+      "label": "Upper Xingu pre-contact managed landscape",
+      "date_interval": {"start": 1250, "end": 1500},
+      "reported_population_interval": {"low": 50000, "central": 100000, "high": 500000},
+      "population_interval_status": "broad scenario estimate; no dated local-food saturation interval",
+      "local_food_evidence": {"low": 0.8, "central": 0.9, "high": 1.0, "food_regime": "manioc, maize, fish, agroforestry and managed soil/forest systems"},
+      "pressure_evidence": [
+        "Archaeological and ethnohistoric work documents dense villages, roads, fish management and anthropogenic soils.",
+        "The cited range does not demonstrate that the system reached a Malthusian equilibrium, and later contact shocks are substantial."
+      ],
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_two_sided_training",
+      "rejection_reasons": [
+        "No independent capacity or saturation interval is available for a mappable rural boundary.",
+        "The population estimate spans an order of magnitude and is not tied to a single dated settlement footprint.",
+        "The region is not currently crosswalked to EU5 with the required 95 percent coverage."
+      ],
+      "boundary_status": "historical managed-landscape boundary unresolved",
+      "candidate_crosswalk": {"crosswalk_status": "unmapped", "coverage_fraction": 0.0},
+      "source_family": "upper_xingu_managed_landscape_archaeology",
+      "sources": ["https://doi.org/10.1073/pnas.1212241110"],
+      "notes": "Retain for held-out managed-forest and fisheries validation, not scale fitting."
+    }
+  ]
+}

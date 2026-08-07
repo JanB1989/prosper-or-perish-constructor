@@ -1,0 +1,60 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "super_region": "Oceania",
+  "region": "new_zealand",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "maori_north_island_1450_1500_horticultural_pressure_validation_wave22",
+      "historical_boundary": "North Island (Te Ika-a-Māui), 113729 km2 published island area; used as a proxy for the warmer northern horticultural zone, not a claim that all North Island land had equal Māori population density.",
+      "eu5_selector": "area=north_island_area",
+      "selector_type": "area_tag_exact",
+      "selected_location_count": 20,
+      "matched_location_count": 20,
+      "location_tags": ["ahurei", "aupouri", "hauraki", "heretaunga", "manawatu", "manukau", "ngamotu", "patea", "tamaki", "tararua", "tauranga", "te_tairawhiti", "urewera", "wairarapa", "wairoa", "waitangi", "wellington", "whakatane", "whanganui", "whangarei"],
+      "location_weights": {
+        "ahurei": 0.042302662993,
+        "aupouri": 0.028616957123,
+        "hauraki": 0.045282374431,
+        "heretaunga": 0.05484598555,
+        "manawatu": 0.04968081997,
+        "manukau": 0.058268330966,
+        "ngamotu": 0.029860555984,
+        "patea": 0.06056451696,
+        "tamaki": 0.065251262658,
+        "tararua": 0.046960073589,
+        "tauranga": 0.035464592971,
+        "te_tairawhiti": 0.074175701976,
+        "urewera": 0.063528629513,
+        "wairarapa": 0.052631770638,
+        "wairoa": 0.05398418137,
+        "waitangi": 0.037370213931,
+        "wellington": 0.034421984162,
+        "whakatane": 0.070754576841,
+        "whanganui": 0.057224685174,
+        "whangarei": 0.038810123201
+      },
+      "selector_coverage_fraction": 1.0,
+      "coverage_fraction": 0.944273,
+      "boundary_overlap_status": "high_island_containment_with_northern_zone_proxy",
+      "crosswalk_status": "partial",
+      "boundary_confidence": "high for island; medium for archaeological northern-zone equivalence",
+      "status": "validation_only",
+      "candidate_role": "validation_only",
+      "area_comparison": {
+        "historical_area_km2": 113729.0,
+        "eu5_candidate_footprint_area_km2": 107391.36382789598,
+        "mapped_area_km2": 107391.36382789598,
+        "area_coverage_fraction": 0.944273,
+        "geometry_source": "polynomial_coordinate_jacobian_v2+bounded_exact_crosswalks"
+      },
+      "resolution_method": "Select every EU5 location tagged with area=north_island_area and preserve the 5.57% unmapped island area explicitly. The crosswalk is for validation diagnostics only because the Brown-Crema archaeological regional bins do not exactly equal the island polygon.",
+      "sources": [
+        "https://doi.org/10.1080/15564894.2019.1605429",
+        "https://www3.stats.govt.nz/new_zealand_official_yearbooks/1995/NZOYB_1995.html"
+      ],
+      "notes": "No partial area is silently dropped. This crosswalk must not be fed into the training aggregate likelihood while population and northern-zone boundaries remain unresolved."
+    }
+  ]
+}

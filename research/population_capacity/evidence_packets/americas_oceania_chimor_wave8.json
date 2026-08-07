@@ -1,0 +1,70 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "America/Oceania",
+  "region": "americas_oceania",
+  "target_year": 1337,
+  "packet_id": "americas_oceania_chimor_wave8",
+  "scope": "Mappable northern-coast Peru regional demographic envelope and irrigation evidence; validation-only because the historical synthesis is old and does not establish a saturated equilibrium.",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "promoted_training_target_ids": [],
+    "decision": "The eleven-valley Chimor/North Coast selector aligns unusually well with the EU5 Chan Chan province location set, but the published population envelope mixes urban capital concentration, state-level redistribution and older agricultural extrapolation. Retain only as a broad validation case.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "chimor_north_coast_eleven_valleys_1000_1470_validation_wave8",
+      "label": "Chimor/North Coast Peru eleven-valley irrigated hinterland",
+      "year_start": 1000,
+      "year_end": 1470,
+      "population_low": 500000,
+      "population_central": 625000,
+      "population_high": 750000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "local_food_low": 0.8,
+      "local_food_central": 0.9,
+      "local_food_high": 0.98,
+      "pressure_evidence": [
+        "Schaedel's North Coast synthesis (Urbanizacion, pp. 26-28) places the Chimor demographic hinterland at approximately 500,000 people with a reasonable but not absolute maximum of 750,000, while the urban population is estimated at 70,000-105,000 (50,000-75,000 in Chan Chan). The explicit urban share and capital concentration are preserved as a caveat rather than treated as rural capacity.",
+        "The same source enumerates the eleven valley systems from Motupe/Leche through Casma and gives irrigated-area and population calculations, including a total of approximately 216,000 ha of currently irrigated land and an extrapolated prehistoric potential reaching approximately 750,000 people.",
+        "Kus's Chimu Heartland irrigation study documents intervalley canals, fields and the dependence of Chan Chan on surrounding valley production, but explicitly warns that no accurate ancient population estimate can be given for the rural/urban system. This makes the regional envelope a validation comparison, not a training target.",
+        "The regime was predominantly local coastal irrigation, dryland and fish-supported food production; elite goods and inter-valley tribute/trade mean that local-food share is deliberately broad rather than asserted as autarky."
+      ],
+      "shock_flags": [
+        "urban_capital_and_tribute_concentration",
+        "older_agricultural_extrapolation",
+        "intervalley_canal_failure_or_inca_conquest",
+        "no_observed_saturation_fraction"
+      ],
+      "trade_dependence": "low_to_mixed; staple calories were valley-local but Chan Chan and state redistribution linked the valleys",
+      "food_regime": "coastal_intervalley_irrigation_maize_cotton_roots_legumes_fishing_and_dryland_fields",
+      "boundary_description": "The eleven North Coast valley systems listed in Schaedel's table: Motupe, Leche, Lambayeque, Zana, Jequetepeque, Chicama, Moche, Viru-Chao, Santa, Nepeña and Casma. The boundary is the regional agricultural hinterland, not the Chan Chan urban core.",
+      "boundary_source": "Schaedel, Urbanizacion (1967), pp. 26-28, demographic hinterland discussion and valley table; Kus, Selected Aspects of Irrigated Agriculture in the Chimu Heartland (1972), study-area and canal analysis.",
+      "eu5_selector": {
+        "include": [
+          "province=chan_chan_province"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "eleven_valley_set_high_containment_coarse_area",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "chimor_north_coast_archaeology_irrigation_synthesis",
+      "source_bundle": "schaedel_urbanizacion_kus_chimu_heartland_bundle",
+      "source_family_independence": "Older archaeological/irrigation synthesis and independent Chimu canal fieldwork; both are retained as one regional source family and are not used to set global scale.",
+      "sources": [
+        "https://repositorio.iep.org.pe/bitstreams/9ca4e838-5699-4f4d-9111-ce134da75577/download",
+        "https://dokumen.pub/dissertation-selected-aspects-of-irrigated-agriculture-in-the-chimu-heartland-peru.html"
+      ],
+      "notes": "The 500,000-750,000 interval is a historical demographic envelope, not a published Malthusian capacity interval; the midpoint 625,000 is bookkeeping only. The EU5 province contains eleven matching location tags but covers about 32,388 km2, much more than the irrigated fields, so this row can test only regional rank and the interaction of irrigation, desert constraints and local fisheries. Never fit it as a two-sided scale anchor."
+    }
+  ]
+}

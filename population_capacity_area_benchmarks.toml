@@ -1,0 +1,103 @@
+schema_version = 1
+
+# Bounded islands are geometry QA cases, never demographic observations.  Land
+# area is used because lake and sea pixels are not RGO locations.  These values
+# do not rescale particular regions; they expose projection/map-design error in
+# both the calibrated pixel/Jacobian estimate and the legacy image formula.
+
+[[area_benchmarks]]
+benchmark_id = "iceland_land"
+label = "Iceland"
+actual_area_km2 = 100830
+role = "calibration"
+include = ["area=iceland_area"]
+source = "https://data.worldbank.org/indicator/AG.LND.TOTL.K2?locations=IS"
+
+[[area_benchmarks]]
+benchmark_id = "cuba_land"
+label = "Cuba"
+actual_area_km2 = 103800
+role = "validation"
+include = ["area=cuba_area"]
+source = "https://data.worldbank.org/indicator/AG.LND.TOTL.K2?locations=CU"
+
+[[area_benchmarks]]
+benchmark_id = "sri_lanka_land"
+label = "Sri Lanka"
+actual_area_km2 = 61860
+role = "calibration"
+include = ["area=sailan_area"]
+source = "https://data.worldbank.org/indicator/AG.LND.TOTL.K2?locations=LK"
+
+[[area_benchmarks]]
+benchmark_id = "madagascar_land"
+label = "Madagascar"
+actual_area_km2 = 581800
+role = "calibration"
+include = ["region=madagascar_region"]
+source = "https://data.worldbank.org/indicator/AG.LND.TOTL.K2?locations=MG"
+
+[[area_benchmarks]]
+benchmark_id = "new_zealand_land"
+label = "New Zealand"
+actual_area_km2 = 263310
+role = "validation"
+include = ["region=new_zealand_region"]
+source = "https://data.worldbank.org/indicator/AG.LND.TOTL.K2?locations=NZ"
+
+[[area_benchmarks]]
+benchmark_id = "java_island"
+label = "Java"
+actual_area_km2 = 126700
+role = "calibration"
+include = ["area=java_area"]
+source = "https://www.britannica.com/place/Java-island-Indonesia"
+
+[[area_benchmarks]]
+benchmark_id = "hispaniola_island"
+label = "Hispaniola"
+actual_area_km2 = 76192
+role = "calibration"
+include = ["area=hispaniola_area"]
+source = "https://www.britannica.com/place/Hispaniola"
+
+[[area_benchmarks]]
+benchmark_id = "sicily_island"
+label = "Sicily"
+actual_area_km2 = 25711
+role = "calibration"
+include = ["area=sicily_area"]
+source = "https://www.britannica.com/place/Sicily-island-Italy"
+
+[[area_benchmarks]]
+benchmark_id = "sardinia_island"
+label = "Sardinia"
+actual_area_km2 = 24090
+role = "validation"
+include = ["area=sardinia_area"]
+source = "https://www.britannica.com/place/Sardinia-island-Italy"
+
+[[area_benchmarks]]
+benchmark_id = "taiwan_main_island"
+label = "Taiwan main island"
+actual_area_km2 = 35808
+role = "validation"
+include = ["area=taiwan_area"]
+source = "https://www.britannica.com/place/Taiwan"
+
+[[area_benchmarks]]
+benchmark_id = "england_land"
+label = "England"
+actual_area_km2 = 130279
+role = "calibration"
+include = ["region=great_britain_region"]
+exclude = ["area=hebrides_area|scottish_highlands_area|scottish_lowlands_area|wales_area"]
+source = "https://www.ons.gov.uk/methodology/geography/ukgeographies/administrativegeography/england"
+
+[[area_benchmarks]]
+benchmark_id = "rapa_nui_land"
+label = "Rapa Nui"
+actual_area_km2 = 164
+role = "calibration"
+include = ["location_tag=rapa_nui"]
+source = "https://www.britannica.com/place/Easter-Island"

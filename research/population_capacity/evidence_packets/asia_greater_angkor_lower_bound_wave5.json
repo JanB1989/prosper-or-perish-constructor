@@ -1,0 +1,77 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Asia",
+  "region": "indochina",
+  "target_year": 1337,
+  "packet_id": "asia_greater_angkor_lower_bound_wave5",
+  "scope": "A one-sided, in-period population floor for the archaeologically mapped Greater Angkor agro-urban landscape",
+  "promotion_audit": {
+    "promoted_lower_bound_ids": [
+      "greater_angkor_1181_1300_population_lower_bound_wave5"
+    ],
+    "decision": "Promote only the 700,000-person lower edge of Klassen et al.'s lidar-, excavation-, and settlement-feature-based paleodemographic interval. The separate rice-capacity estimate discussed by Klassen et al. is retained solely as local-food corroboration and is not used as a target. Unknown provincial provisioning and the absence of a defensible saturation fraction prohibit two-sided use.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "greater_angkor_1181_1300_population_lower_bound_wave5",
+      "label": "Greater Angkor archaeological population floor, AD 1181-1300",
+      "year_start": 1181,
+      "year_end": 1300,
+      "population_low": 700000,
+      "population_central": 800000,
+      "population_high": 900000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.75,
+      "local_food_central": 0.9,
+      "local_food_high": 1.0,
+      "capacity_low": 700000,
+      "capacity_central": 700000,
+      "capacity_high": 700000,
+      "interval_semantics": "Klassen et al. (2021), abstract and Table 1, pp. 1 and 4, estimate approximately 700,000-900,000 inhabitants in the 3,000 km2 Greater Angkor Region at its 12th-13th-century apogee. Their lower edge varies occupation on hydraulic embankments and is retained unchanged as a minimum supported population. Only capacity_low enters the one-sided likelihood; the 800,000 and 900,000 population fields preserve the published archaeological interval and are not treated as capacity bounds.",
+      "pressure_evidence": [
+        "Klassen et al. (2021), abstract and pp. 1, 3-4, Figure 2 and Table 1: lidar, excavations, radiocarbon dates, mapped mounds, temples and hydraulic features produce a 700,000-900,000 archaeological population interval for the fixed 3,000 km2 Greater Angkor Region at its 12th-13th-century apogee.",
+        "Klassen et al. (2021), Table 1, p. 4: growth in the agricultural metropolitan area had slowed to zero in period 5 (AD 1181-1300), while the paper describes logistic growth and a gradual decline shortly after the apogee. This is pressure evidence, not a quantified saturation fraction.",
+        "Klassen et al. (2021), pp. 4-5: more than 1,100 temple-reservoir communities were mapped; their inhabitants were primarily farmers, and embankment communities had access to adjacent rice fields. The paper notes an earlier estimate that about 750,000 people could be supported by rice produced inside the region without irrigation and finds no inscriptional evidence that provinces provisioned the capital as population grew.",
+        "Klassen et al. (2022), pp. 763-794, especially the Greater Angkor Region and conclusions: more than 1,000 km2 of Angkor-period rice fields are mapped within the metropolitan landscape, and the large-scale organization of agricultural production inside the urban infrastructure is identified as the primary mechanism by which Angkor sustained itself.",
+        "Klassen et al. (2022), results and discussion: rising population was associated with agricultural intensification, increasing returns to farming labor, extensive hydraulic investment and transport-sensitive land use, independently supporting a predominantly local agro-urban food system."
+      ],
+      "shock_flags": [
+        "population_interval_is_archaeological_reconstruction",
+        "occupation_on_embankments_is_the_largest_demographic_uncertainty",
+        "economic_catchment_and_provincial_provisioning_are_not_quantified",
+        "hydroclimatic_instability_and_gradual_decline_follow_the_population_apogee",
+        "anchor_period_ends_37_years_before_game_start"
+      ],
+      "trade_dependence": "low_to_mixed for staple calories at the full 3,000 km2 agro-urban scale; provincial food transfers are possible but unquantified, while mapped rice fields, farming communities and an independent regional rice-support calculation make predominantly local support defensible",
+      "food_regime": "locally_organized_rice_fields_household_gardens_hydraulic_water_management_tonle_sap_aquatic_foods_and_regional_exchange",
+      "boundary_description": "The approximately 3,000 km2 Greater Angkor Region watershed catchment shown in Klassen et al. (2021), Figure 1, including the civic-ceremonial centers, Angkor Metropolitan Area and occupied hydraulic embankments; not the Khmer Empire or modern Siem Reap Province.",
+      "boundary_source": "Klassen et al. (2021), Figure 1 and pp. 1, 5: the fixed Greater Angkor Region study area is approximately 3,000 km2 and follows the watershed catchment boundaries of Angkor's rivers.",
+      "eu5_selector": {
+        "include": [
+          "location_tag=angkor"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "vetted",
+      "role": "lower_bound",
+      "source_family": "greater_angkor_lidar_and_archaeology",
+      "source_bundle": "klassen_2021_archaeodemography_klassen_ortman_2022_agricultural_provisioning",
+      "source_family_independence": "The population floor comes from mapped archaeological settlement and occupation features; local-food support comes from a separate analysis of mapped rice fields, temple communities and agricultural organization. They share Greater Angkor Project spatial data and are therefore retained as one source family.",
+      "sources": [
+        "https://doi.org/10.1126/sciadv.abf8441",
+        "https://scholarsbank.uoregon.edu/server/api/core/bitstreams/a1be8e1b-6d8b-490a-a74c-432c957c77a7/content",
+        "https://doi.org/10.1007/s10816-021-09535-5",
+        "https://link.springer.com/article/10.1007/s10816-021-09535-5",
+        "https://doi.org/10.1073/pnas.0910827107"
+      ],
+      "notes": "This record does not promote the older rice carrying-capacity calculation, any modeled saturation fraction, or the 900,000 upper archaeological estimate into training. It asserts only that a predominantly locally provisioned, archaeologically mapped landscape demonstrably contained at least the lower edge of the peer-reviewed population interval. The local-food interval is deliberately broad because provincial transfers are not quantified; it is evidence metadata and does not rescale the 700,000-person one-sided floor."
+    }
+  ]
+}

@@ -1,0 +1,228 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "crosswalk_packet_id": "americas_oceania_high_coverage_validation_wave12",
+  "reviewed_on": "2026-08-03",
+  "super_region": "America/Oceania",
+  "region": "americas_oceania",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "scope": "Current-table area and exact-tag audit for island food-system validation cases with explicit population or food-capacity intervals.",
+  "policy": {
+    "exact_or_high_coverage_is_not_training_eligibility": true,
+    "out_of_period_analogues_are_validation_only": true,
+    "model_derived_capacity_intervals_are_not_independent_targets": true,
+    "area_ratio_is_coverage_only_when_boundary_is_coextensive": true,
+    "raw_jacobian_and_calibrated_land_area_are_both_retained": true,
+    "starting_population_hyde_rgo_and_trade_fields_are_not_used": true
+  },
+  "geometry_and_table_manifest": {
+    "accepted_table": "data/population_capacity/accepted_capacity.csv",
+    "accepted_table_sha256": "3c4372efea6c1acca8de7cd0022b15835492623dec81226f7d088ea1c90302ec",
+    "geometry_table": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+    "geometry_table_sha256": "ca259be6df661b822bfa14f4fa94b6ff0e688cb8fa7434f9a92e4ed2995194ba",
+    "coastal_land_contract_sha256": "a030666f7e1d2b4a4533c6526683150f95a336d23b5a1914f13923712b7680e3",
+    "area_method": "accepted-table land-area value derived from polynomial_coordinate_jacobian_v2+bounded_exact_crosswalks and the frozen coastal land contract; raw Jacobian area is retained for calibration diagnostics.",
+    "model_version_in_accepted_table": "carrying_capacity_1337_v2",
+    "reproducible": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "rapa_nui_resilient_food_limit_1200_1722_validation_wave12",
+      "historical_boundary": "Entire Rapa Nui (Easter Island), a single 164 km2 island.",
+      "eu5_selector": {
+        "include": ["location_tag=rapa_nui"],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "boundary_overlap_status": "coextensive_exact_tag",
+      "crosswalk_status": "exact",
+      "coverage_fraction": 1.0,
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "candidate_role": "exact_island_validation_and_monotonicity_fixture",
+      "eligibility": {
+        "two_sided_training_target": false,
+        "reason": "Out-of-period/contact-era evidence and model-derived food scenarios do not establish an independently observed 1337 saturation fraction."
+      },
+      "area_comparison": {
+        "published_historical_island_area_km2": 164.0,
+        "raw_eu5_jacobian_area_km2": 418.13401170689065,
+        "accepted_eu5_land_area_km2": 164.0,
+        "area_boundary_calibration_factor": 0.39221875142499285,
+        "mapped_area_km2": 164.0,
+        "unmapped_historical_area_km2": 0.0,
+        "area_coverage_fraction": 1.0,
+        "interpretation": "Exact area agreement is an explicit frozen boundary calibration for this named island, not an uncalibrated polygon-intersection result. The raw Jacobian area is retained to prevent hiding the calibration."
+      },
+      "historical_evidence": {
+        "date_interval": {"start": 1200, "end": 1722},
+        "population_interval_people": {"low": 2000, "central": 3000, "high": 4000},
+        "food_capacity_scenarios_people": {"low": 3000, "central": 3500, "high": 17500},
+        "local_food_share_interval": {"low": 0.95, "central": 0.98, "high": 1.0},
+        "pressure_and_uncertainty": "DiNapoli et al. fit radiocarbon demographic models and compare contact-era low-thousands populations with low- and high-bioavailable-nitrogen food scenarios. The 3,500 and 17,500 values are food-model scenarios, not independent saturation observations; Lima et al. revise rock-garden area and caution against treating the high scenario as a census."
+      },
+      "current_model_diagnostic": {
+        "capacity_people_p10": 8922,
+        "capacity_people_p50": 16223,
+        "capacity_people_p90": 25145,
+        "people_per_km2_p50": 98.918692,
+        "contributions_people_p50": {
+          "crop": 11015,
+          "livestock": 738,
+          "marine": 4470,
+          "freshwater": 0,
+          "wild": 0
+        },
+        "scenario_comparison": "The p50 is inside the wide 3,000-17,500 food-scenario envelope but above the independent contact-era population interval; retain this as a validation/uncertainty result, never as a training fit."
+      },
+      "sources": [
+        {
+          "citation": "DiNapoli et al. (2021), Rapa Nui population history, Nature Communications 12:3939.",
+          "url": "https://www.nature.com/articles/s41467-021-24252-z",
+          "locator": "Abstract/Fig. 1 for 164 km2 island; Results/Table 1/Fig. 3 for demographic models and food-limited scenarios."
+        },
+        {
+          "citation": "Lima et al. (2024), island-wide SWIR assessment of Rapa Nui rock gardens, Science Advances.",
+          "url": "https://www.science.org/doi/10.1126/sciadv.ado1459",
+          "locator": "Island-wide rock-garden area and revised population-support interpretation."
+        }
+      ],
+      "resolution_method": "The EU5 location_tag=rapa_nui is a single named island cell. The accepted table explicitly calibrates its land area to the published 164 km2 island boundary; model contributions and uncertainty were read from the same hash-pinned accepted row.",
+      "notes": "This is the strongest exact-boundary validation fixture in the current Americas/Oceania set. It is not a 1337 scale anchor."
+    },
+    {
+      "anchor_id": "tongatapu_capacity_pressure_1100_1500_validation_wave12",
+      "historical_boundary": "Entire Tongatapu island, Kingdom of Tonga, published at approximately 260 km2.",
+      "eu5_selector": {
+        "include": ["location_tag=tongatapu"],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "boundary_overlap_status": "high_area_coextensive_island_tag",
+      "crosswalk_status": "high",
+      "coverage_fraction": 0.9686065885,
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "candidate_role": "high_coverage_island_pressure_validation",
+      "eligibility": {
+        "two_sided_training_target": false,
+        "reason": "The 18,000-24,000 capacity envelope is model-derived and conflicts with an independent 50,000-60,000 LiDAR reconstruction; dates and saturation semantics are not resolved for 1337 training."
+      },
+      "area_comparison": {
+        "published_historical_island_area_km2": 260.0,
+        "raw_eu5_jacobian_area_km2": 451.3658438931194,
+        "accepted_eu5_land_area_km2": 251.837713,
+        "area_boundary_calibration_factor": 1.0,
+        "mapped_area_km2": 251.837713,
+        "unmapped_historical_area_km2": 8.162287,
+        "area_coverage_fraction": 0.9686065885,
+        "historical_area_excess_or_gap_percent": -3.13934115,
+        "interpretation": "The selected island tag covers at least 96.86% of the published island land area under the frozen land mask. The raw Jacobian includes coastal/ocean footprint and is not used for population density."
+      },
+      "historical_evidence": {
+        "date_interval": {"start": 1100, "end": 1500},
+        "capacity_interval_people": {"low": 18000, "central": 21000, "high": 24000},
+        "population_reconstruction_a_people": {"low": 15000, "central": 16500, "high": 18467},
+        "population_reconstruction_b_people": {"low": 50000, "central": 55000, "high": 60000},
+        "local_food_share_interval": {"low": 0.9, "central": 0.97, "high": 1.0},
+        "pressure_and_uncertainty": "Archaeobotany/LiDAR documents forest removal, multicropping and local food investment. Green/Ussher-style capacity scenarios and the independent Parton/Clark LiDAR population reconstruction disagree by roughly a factor of three; preserve both and do not collapse them into one label."
+      },
+      "current_model_diagnostic": {
+        "capacity_people_p10": 8665,
+        "capacity_people_p50": 15754,
+        "capacity_people_p90": 24418,
+        "people_per_km2_p50": 62.555078,
+        "contributions_people_p50": {
+          "crop": 10057,
+          "livestock": 175,
+          "marine": 5420,
+          "freshwater": 0,
+          "wild": 98
+        },
+        "scenario_comparison": "The p50 is below the 18,000-24,000 capacity scenario but the p90 is near its upper bound; it is far below the independent 50,000-60,000 reconstruction. This is a useful uncertainty and island-area diagnostic, not a target."
+      },
+      "sources": [
+        {
+          "citation": "Green and Ussher, Tongatapu local-food population/capacity reconstruction and island area.",
+          "url": "https://openresearch-repository.anu.edu.au/bitstreams/e4751661-3b6f-44c8-828b-4d93dc954ce3/download",
+          "locator": "Land-area, agricultural capacity and local-food reconstruction tables."
+        },
+        {
+          "citation": "Parton and Clark (2022), LiDAR/Bayesian reconstruction of Tongan population, Journal of Archaeological Science: Reports.",
+          "url": "https://www.sciencedirect.com/science/article/pii/S2352409X22002735",
+          "locator": "Independent population reconstruction with materially higher interval; retained as a conflict diagnostic."
+        }
+      ],
+      "resolution_method": "The EU5 location_tag=tongatapu is a single named island cell. The accepted land-area row is compared directly with the cited 260 km2 island area; no population is redistributed and no area multiplier is applied.",
+      "notes": "High-coverage mapping qualifies this case for held-out validation, but not training because the independent historical intervals conflict and no defensible dated saturation fraction is available."
+    },
+    {
+      "anchor_id": "mangareva_precontact_food_capacity_1200_1500_validation_wave12",
+      "historical_boundary": "Entire Mangareva island, with local food-system model area of 16.58 km2; the EU5 location tag is a much coarser Tuamotu footprint.",
+      "eu5_selector": {
+        "include": ["location_tag=mangareva"],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "boundary_overlap_status": "semantic_tag_non_coextensive_area",
+      "crosswalk_status": "blocked_for_quantitative_area",
+      "coverage_fraction": null,
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "candidate_role": "food-system_diagnostic_only",
+      "eligibility": {
+        "two_sided_training_target": false,
+        "reason": "The coarse EU5 footprint is over eighteen times the published island area; no raw density or aggregate comparison is valid."
+      },
+      "area_comparison": {
+        "published_historical_island_area_km2": 16.58,
+        "raw_eu5_jacobian_area_km2": 525.5840324086932,
+        "accepted_eu5_land_area_km2": 303.880715,
+        "area_boundary_calibration_factor": 1.0,
+        "mapped_area_km2": null,
+        "unmapped_historical_area_km2": null,
+        "eu5_to_historical_area_ratio": 18.3281492762,
+        "interpretation": "The name tag is semantically useful but not area-coextensive. Coverage is intentionally null rather than falsely reported as 1.0."
+      },
+      "historical_evidence": {
+        "date_interval": {"start": 1200, "end": 1500},
+        "food_capacity_scenarios_people": {"low": 2954, "central": 3537, "high": 5139},
+        "local_food_share_interval": {"low": 0.95, "central": 0.98, "high": 1.0},
+        "pressure_and_uncertainty": "Puleston et al. provide GIS food-budget scenarios for terraced horticulture, arboriculture, marine/lagoon resources and labour constraints, but no independent dated saturation interval."
+      },
+      "current_model_diagnostic": {
+        "capacity_people_p10": 8823,
+        "capacity_people_p50": 16041,
+        "capacity_people_p90": 24864,
+        "people_per_km2_p50": 52.787212,
+        "contributions_people_p50": {
+          "crop": 2632,
+          "livestock": 211,
+          "marine": 12989,
+          "freshwater": 0,
+          "wild": 202
+        },
+        "scenario_comparison": "Because the EU5 footprint is non-coextensive, the 16,041-person p50 is not compared to the 2,954-5,139 island scenario as a quantitative error. The mismatch is retained as a mapping failure."
+      },
+      "sources": [
+        {
+          "citation": "Puleston et al. (2024), GIS reconstruction of Mangareva food-system capacity.",
+          "url": "https://link.springer.com/article/10.1007/s10745-024-00530-4",
+          "locator": "GIS area and food-budget scenario tables."
+        }
+      ],
+      "resolution_method": "The exact EU5 name tag was matched, but current calibrated land area was compared against the source island area and failed coextensive-area validation. No population or capacity is redistributed to the coarse footprint.",
+      "notes": "Retain as a negative control for area handling and marine/crop decomposition; it must not train or set scale."
+    }
+  ],
+  "summary": {
+    "cases_reviewed": 3,
+    "exact_area_crosswalks": 1,
+    "high_coverage_area_crosswalks": 1,
+    "blocked_noncoextensive_cases": 1,
+    "training_targets_added": 0,
+    "validation_cases_added": 3,
+    "key_result": "Rapa Nui is an exact named-island validation fixture after explicit area calibration; Tongatapu is a 96.86% high-coverage island fixture with unresolved historical interval conflict; Mangareva remains a deliberate non-coextensive negative control.",
+    "required_follow_up": "Keep all three out of training. Use them in generalization and physical-invariant reports, and only reconsider Tongatapu if the conflicting population reconstructions and saturation semantics are independently reconciled."
+  }
+}

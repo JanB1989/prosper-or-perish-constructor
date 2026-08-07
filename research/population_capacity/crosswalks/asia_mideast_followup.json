@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "region": "asia_mideast",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/location_geometry.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "japan_hinenosho_land_development_1234_1316",
+      "historical_boundary": "Hinenosho manor, including Hineno and Iriyamada villages; present-day Izumisano area",
+      "eu5_selector": {"include": ["location_tag=__unmapped_japan_hinenosho__"], "exclude": []},
+      "matched_location_count": 0,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "unmapped",
+      "notes": "The current geometry inventory has no Hinenosho/Izumi manor polygon. The generic `izumi` location is in Settsu and cannot be substituted."
+    },
+    {
+      "anchor_id": "fayyum_dilya_canal_cluster_1245",
+      "historical_boundary": "Dilya and Tanabṭawayh canal village clusters in the Fayyum depression",
+      "eu5_selector": {"include": ["location_tag=__unmapped_fayyum_dilya_tanabtawayh__"], "exclude": []},
+      "matched_location_count": 0,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "unmapped",
+      "notes": "The published maps identify canal and village relationships but do not provide a GIS polygon that can be overlaid on the EU5 location geometry."
+    },
+    {
+      "anchor_id": "fayyum_water_shortage_local_maintenance_1245",
+      "historical_boundary": "Fayyum depression hydraulic system and associated villages",
+      "eu5_selector": {"include": ["location_tag=__unmapped_fayyum_water_system__"], "exclude": []},
+      "matched_location_count": 0,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "unmapped",
+      "notes": "Physical-system evidence does not define an exact settlement boundary; no broad Egypt selector is allowed."
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "europe_france_interval_revalidation_wave25",
+  "target_year": 1337,
+  "region": "europe_france_interval_revalidation_wave25",
+  "super_region": "Europe",
+  "scope": "Append-only revalidation of the continental-France early-fourteenth-century aggregate interval. This packet restores the independently supported two-sided interval after a later one-sided floor packet incorrectly superseded it in the active registry.",
+  "records": [
+    {
+      "anchor_id": "france_continental_1300_1328_interval_revalidation_wave25",
+      "supersedes_anchor_ids": [
+        "france_continental_1300_1328_local_food_floor_wave13"
+      ],
+      "label": "Continental France c.1300-1328: revalidated agrarian-demographic upper-limit interval",
+      "year_start": 1300,
+      "year_end": 1328,
+      "population_low": 18000000,
+      "population_central": 19000000,
+      "population_high": 20000000,
+      "saturation_low": 0.85,
+      "saturation_central": 0.925,
+      "saturation_high": 1.0,
+      "local_food_low": 0.85,
+      "local_food_central": 0.95,
+      "local_food_high": 1.0,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The 18-20 million pre-Black-Death population interval is divided by the 0.85-1.00 saturation interval, giving an implied capacity interval of approximately 18.0-23.53 million. The population and saturation endpoints are intentionally retained as intervals rather than converted into a point target.",
+      "pressure_evidence": [
+        "Goldstone, Demography, Oxford Handbook of the Ancien Regime, pp. 202-205, identifies 18-20 million within modern French borders at the early-fourteenth-century peak and describes a long-run upper population limit that remained broadly unchanged for centuries.",
+        "Pounds, Overpopulation in France and the Low Countries in the Later Middle Ages, Journal of Social History 3 (1970), pp. 225-247, independently documents late-medieval land and subsistence pressure.",
+        "Jordan, The Great Famine, pp. 8-12, documents the precarious late-thirteenth/early-fourteenth-century subsistence equilibrium and the 1315-1322 famine shock.",
+        "Lot, L'etat des paroisses et des feux de 1328, Bibliotheque de l'Ecole des chartes 90 (1929), pp. 104-107, supplies the 1328 hearth and 528,400 km2 continental envelope used for boundary calibration.",
+        "McNeill, Frontier Foods for Late Medieval Consumers, Environment and History 4 (1998), supports predominantly local or regional staple sourcing at this aggregate scale; the 0.85-1.00 local-food interval preserves cross-border and urban-redistribution uncertainty."
+      ],
+      "shock_flags": [
+        "The 1328 fiscal observation follows the 1315-1322 Great Famine, so saturation is not forced to exactly one.",
+        "Hearth-to-person conversion and extrapolation outside directly assessed royal lands remain uncertain.",
+        "Northern France has stronger famine-pressure evidence than southern regions.",
+        "The Hundred Years War and Black Death occur after the observation interval."
+      ],
+      "trade_dependence": "low_at_continental_bulk_calorie_scale_with_internal_regional_redistribution",
+      "food_regime": "rainfed wheat, rye, oats, legumes, livestock, wine, woodland foods, riverine fish, and coastal fish",
+      "boundary_description": "Continental-France envelope represented by modern French borders and Lot's 528,400 km2 departmental reconstruction; mapped to the complete EU5 france_region selector.",
+      "boundary_source": "https://www.persee.fr/doc/bec_0373-6237_1929_num_90_1_448861",
+      "eu5_selector": {"include": ["region=france_region"], "exclude": []},
+      "coverage_fraction": 0.96205703141,
+      "boundary_overlap_status": "high_coverage",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "role": "interval_anchor",
+      "source_family": "france_early_fourteenth_century_demographic_upper_limit",
+      "source_bundle": "goldstone_2012_lot_1929_pounds_1970_jordan_1996_mcneill_1998_revalidation",
+      "source_family_independence": "The demographic, fiscal, overpopulation, famine, and food-sourcing components are independent source families within one aggregate France evidence bundle; no EU5 population, HYDE, RGO, or model-output field is used.",
+      "sources": [
+        "https://academic.oup.com/edited-volume/34328/chapter-abstract/291348631",
+        "https://www.persee.fr/doc/bec_0373-6237_1929_num_90_1_448861",
+        "https://academic.oup.com/jsh/article-pdf/3/3/225/2698471/3-3-225.pdf",
+        "https://api.pageplace.de/preview/DT0400.9781400822133_A25080777/preview-9781400822133_A25080777.pdf",
+        "https://www.researchgate.net/publication/233503438_Frontier_Foods_for_Late_Medieval_Consumers_Culture_Economy_Ecology"
+      ],
+      "citation_details": [
+        "Goldstone 2012, pp. 202-205, especially p. 203 under Histoire immobile?",
+        "Lot 1929, pp. 104-107.",
+        "Pounds 1970, pp. 225-247, DOI 10.1353/jsh/3.3.225.",
+        "Jordan 1996, pp. 8-12.",
+        "McNeill 1998, Environment and History 4:2."
+      ],
+      "notes": "This is an append-only registry repair. It supersedes both the original interval and the later one-sided floor so the same evidence cannot enter twice. It does not add an independent source family; its purpose is to restore the correct two-sided semantics and make the active supersession chain auditable."
+    }
+  ]
+}

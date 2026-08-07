@@ -1,0 +1,76 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "europe_flanders_population_validation_wave23",
+  "region": "europe_flanders_population_validation_wave23",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "scope": "Flanders county demographic and agrarian-pressure validation around the early fourteenth century. The published 550,000 figure is retained as a point reconstruction; no artificial interval or capacity ceiling is created.",
+  "promotion_audit": {
+    "decision": "Retain as validation-only; do not promote as a two-sided scale anchor.",
+    "reviewed_on": "2026-08-04",
+    "review_method": "Verified the 1469 hearth-survey extrapolation, the early-fourteenth-century demographic reconstruction, the county-wide boundary ambiguity and the evidence for intensive land use and food shocks.",
+    "reason_not_promoted": "The 550,000 estimate is a retrospective extrapolation from a partial 1469 hearth survey and assumes a 20 percent loss since 1300. Flanders was highly urbanized and commercially integrated; city grain markets and regional imports make observed population unsuitable as intrinsic local capacity without a closed rural catchment and independent upper bound."
+  },
+  "records": [
+    {
+      "anchor_id": "flanders_1300_population_validation_wave23",
+      "label": "County of Flanders c.1300: retrospective population reconstruction",
+      "year_start": 1290,
+      "year_end": 1315,
+      "population_low": 550000,
+      "population_central": 550000,
+      "population_high": 550000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Point reconstruction only. Nicholas' demographic discussion extrapolates a partial 1469 hearth survey to just under 450,000 people and, assuming roughly 20 percent population loss since 1300, gives approximately 550,000 for the early fourteenth century, of whom approximately 150,000 lived in cities. The source does not provide a defensible two-sided capacity interval.",
+      "pressure_evidence": [
+        "Thoen and Soens document that the Low Countries were already densely settled and urbanized by 1300, with intensive smallholding, drainage and reclamation systems established before 1250.",
+        "The same synthesis records extensive deforestation, shrinking woodland resources and rising environmental risk from permanent embankment and drainage.",
+        "The University of Antwerp Shock Cities project and Geens (2018) document the 1315-1317 famine, food-price shocks, war and property-rights effects in Flanders; these establish pressure sensitivity but not a capacity ceiling."
+      ],
+      "shock_flags": [
+        "Population is extrapolated from an incomplete 1469 hearth survey that omits large cities, two castellanies, many private seigneuries and villages.",
+        "The 20 percent loss assumption from 1300 to 1469 is not an enumeration and is not independently identified by local food balance.",
+        "The 1315-1317 Great Famine, Franco-Flemish conflict and later plague are shocks around or after the target window.",
+        "Approximately 150,000 of the reconstructed 550,000 lived in cities, and the county's urban markets and grain trade blur the rural local-food boundary."
+      ],
+      "trade_dependence": "mixed_to_high_commercial_grain_and_urban_market_dependence",
+      "food_regime": "intensive cereal and mixed smallholding, livestock, fisheries and reclaimed coastal agriculture with regional grain exchange",
+      "boundary_description": "The medieval County of Flanders, approximated by the EU5 flanders_area aggregate (East/West/Roman Flanders and coastal locations). Exact 1300 county and castellany boundaries do not coincide with the EU5 area envelope.",
+      "boundary_source": "https://backoffice.biblio.ugent.be/download/3104675/7041326",
+      "eu5_selector": {
+        "include": ["area=flanders_area"],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "flanders_partial_hearth_and_agrarian_pressure_1300_1469",
+      "source_bundle": "nicholas_fourteenth_century_flanders_thoen_soens_corn_shock_cities_geens",
+      "source_family_independence": "The population reconstruction (Nicholas) is independent of the English and Artois source families. Agrarian and food-shock evidence comes from separate Low Countries syntheses and the Geens famine study. No EU5 starting-population, HYDE or RGO field is used.",
+      "sources": [
+        "https://s3-euw1-ap-pe-df-pch-content-store-p.s3.eu-west-1.amazonaws.com/9781003555544/3e6e6a8b-11a5-4454-b0f5-46d2276391f4/preview.pdf",
+        "https://backoffice.biblio.ugent.be/download/3104675/7041326",
+        "https://www.uantwerpen.be/en/projects/shock-cities/",
+        "https://onlinelibrary.wiley.com/doi/10.1111/ehr.12605"
+      ],
+      "citation_details": [
+        "Nicholas, 'Fourteenth-Century Flanders' in Trade, Urbanisation and the Family: the partial 1469 hearth survey, reconstructed just under 450,000, and the approximately 550,000 early-fourteenth-century estimate with approximately 150,000 urban residents.",
+        "Thoen and Soens, CORN vol. 1, chapter 7, pp. 1-10: around-1300 demographic context, intensive reclamation, smallholding, environmental risk and urban demand.",
+        "Geens, Economic History Review (2018), DOI 10.1111/ehr.12605: 1315-1317 famine interaction of weather, warfare and property rights.",
+        "University of Antwerp Shock Cities project: Flanders food-price/access shocks from 1300-1400."
+      ],
+      "notes": "Retain the 550,000 point only as a held-out demographic check. Do not convert it into a population interval, saturation fraction or capacity target."
+    }
+  ]
+}

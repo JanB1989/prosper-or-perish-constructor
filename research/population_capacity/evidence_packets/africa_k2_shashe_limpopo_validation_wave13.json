@@ -1,0 +1,98 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Africa",
+  "region": "southern_africa",
+  "target_year": 1337,
+  "packet_id": "africa_k2_shashe_limpopo_validation_wave13",
+  "scope": "Append-only archaeological validation record for the K2/Bambandyanalo settlement and its surveyed Shashe-Limpopo landscape. The record is deliberately not promoted to a capacity anchor: it is a capital/settlement estimate, shares a source family with Mapungubwe, and is embedded in Indian Ocean exchange networks.",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "promoted_lower_bound_ids": [],
+    "decision": "K2 supplies a dated, quantitative archaeological population estimate and unusually clear local agropastoral evidence. It remains validation-only because the estimate is a capital/settlement reconstruction rather than an independently bounded carrying capacity, the wider survey boundary is not a closed EU5 polygon, and gold/ivory trade and cattle redistribution confound local-food attribution.",
+    "reviewed_on": "2026-08-03",
+    "review_method": "Reviewed the South African Archaeological Bulletin settlement table, radiocarbon/ceramic chronology, food remains and local floodplain evidence; checked whether the population quantity referred to the site or a complete rural catchment and whether a defensible Malthusian saturation fraction existed. No household or area multiplier was added.",
+    "new_independent_scale_families": 0,
+    "new_quantitative_validation_cases": 1
+  },
+  "records": [
+    {
+      "anchor_id": "k2_bambandyanalo_capital_1200_population_validation_wave13",
+      "label": "K2/Bambandyanalo capital and Shashe-Limpopo settlement estimate",
+      "year_start": 1000,
+      "year_end": 1220,
+      "population_low": 1000,
+      "population_central": 1500,
+      "population_high": 2000,
+      "population_estimate_status": "archaeological_capital_interval",
+      "regional_estimate": {
+        "boundary": "South African portion of the Shashe-Limpopo Valley represented in Huffman's settlement table",
+        "year_interval": [1000, 1220],
+        "population_low": 2263,
+        "population_central": 3763,
+        "population_high": 3763,
+        "semantics": "Huffman-derived table assigns 2,263 general population plus 1,500 capital population to the K2 phase, for 3,763 in the South African survey portion. This is a phase reconstruction from settlement counts, not a census or carrying-capacity ceiling."
+      },
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The capital interval preserves Huffman's level-4 capital range of approximately 1,000-2,000 and the circa-1200 estimate of about 1,500. The wider phase value is retained separately. These quantities describe people resident in archaeological settlement units and cannot label the surrounding EU5 location's intrinsic food capacity.",
+      "quantitative_evidence": [
+        "Huffman, 'Mapela, Mapungubwe and the origins of states in Southern Africa', South African Archaeological Bulletin 70 (2015), pp. 20-23 and Table 3, gives the K2 phase as 181 recorded settlements/homesteads, 2,263 general population, 1,500 capital population, and 3,763 total for the South African portion of the Shashe-Limpopo Valley. The table states that 50 people per homestead and 50-year contemporaneity windows were used, with field camps and cattle posts excluded.",
+        "The same paper (p. 22) states that by the early thirteenth century the K2 court midden had grown to nearly six metres and that approximately 1,500 people probably lived in the capital; it records the abrupt relocation of K2 people to Mapungubwe around AD 1220.",
+        "Meyer, 'Architectural traditions of Mapungubwe and Bambandyanalo (K2)', Journal for Transdisciplinary Research in Southern Africa 6 (2010), identifies K2/Bambandyanalo as an 11th-13th-century capital within the Mapungubwe Cultural Landscape and documents its excavated architectural footprint."
+      ],
+      "pressure_evidence": [
+        "Huffman 2015, pp. 21-23, links the thirteenth-century population increase to access to alluvial floodplain cultivation along the Shashe and Limpopo and to the movement of cattle to outlying settlements; these are local production and land-allocation constraints, not a measured saturation fraction.",
+        "The circa-1220 abandonment/relocation from K2 to Mapungubwe occurred during a drought-sensitive climatic transition and a major social reorganization. It is a stress/trajectory diagnostic, not evidence that the K2 population was at the long-run Malthusian limit."
+      ],
+      "shock_flags": [
+        "capital/settlement estimate reconstructed from archaeological homestead counts",
+        "capital and general settlement phases are not a complete cross-border census",
+        "circa-1220 relocation and drought-sensitive transition",
+        "gold/ivory and Indian Ocean exchange networks",
+        "cattle were redistributed to outlying communities, so the capital is not a self-contained food catchment"
+      ],
+      "trade_dependence": "mixed_to_high; local staples are documented, but prestige-goods and cattle/ivory redistribution connected the settlement to a wide regional and Indian Ocean network",
+      "food_regime": "sorghum, pearl millet, finger millet, ground beans/cowpeas, floodplain agriculture, cattle, riverine resources and gathered foods",
+      "boundary_description": "K2/Bambandyanalo archaeological settlement (approximately five hectares) and the K2 phase settlement distribution in the South African portion of the Shashe-Limpopo Valley. This is not the full cross-border polity or all outlying settlements in Botswana and Zimbabwe.",
+      "boundary_source": "Huffman 2015, Fig. 3a and Table 3; SANParks Mapungubwe K2 heritage page; Meyer 2010",
+      "eu5_selector": {
+        "include": ["location_tag=mapungubwe"],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high_site_containment_low_landscape_equivalence",
+      "crosswalk_status": "high_containment",
+      "boundary_confidence": "high for K2 site locator; low for complete phase landscape",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "k2_mapungubwe_archaeological_settlement_demography",
+      "source_bundle": "huffman_2015_meyer_2010_sanparks_k2_bundle",
+      "source_family_independence": "Independent archaeological settlement/architecture sources, but same Shashe-Limpopo cultural landscape and broad evidence bundle as the existing Mapungubwe records; this packet adds no independent global scale family.",
+      "sources": [
+        "https://www.researchgate.net/publication/284738406_Mapela_mapungubwe_and_the_origins_of_states_in_Southern_Africa",
+        "https://td-sa.net/index.php/td/article/view/115",
+        "https://www.sanparks.org/parks/mapungubwe/explore/heritage/k2-leopards-kopje",
+        "https://www.sanparks.org/parks/mapungubwe/explore/heritage/bambandyanalo"
+      ],
+      "citation_details": [
+        "Thomas N. Huffman, South African Archaeological Bulletin 70 (2015), pp. 20-23, Fig. 3a and Table 3; the population table and circa-1200 capital estimate are printed on pp. 21-22.",
+        "Marlize Meyer, Journal for Transdisciplinary Research in Southern Africa 6 (2010), architectural and site context for Mapungubwe and Bambandyanalo/K2.",
+        "SANParks, Mapungubwe National Park heritage pages for K2/Bambandyanalo chronology and site identity."
+      ],
+      "missing_criteria": [
+        "independent saturation/carrying-capacity interval",
+        "quantified local-food share after trade and cattle redistribution",
+        "complete cross-border K2 phase boundary and >=95% EU5 area-equivalent crosswalk",
+        "independent source-family separation from the existing Mapungubwe landscape records"
+      ],
+      "notes": "Use as a held-out archaeological settlement check: the accepted model should not imply that the broad mapungubwe EU5 location had only the tiny capital population, but the K2 figure must never be converted into a surrounding-land target or a regional correction multiplier."
+    }
+  ]
+}

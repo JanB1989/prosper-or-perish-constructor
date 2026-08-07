@@ -1,0 +1,183 @@
+{
+  "schema_version": "population_capacity_physical_evidence_v1",
+  "record_id": "asia_greater_angkor_hydraulic_calendar_wave21",
+  "reviewed_on": "2026-08-03",
+  "target_year": 1337,
+  "scope": "Dated, source-backed hydraulic and crop-calendar evidence for the Greater Angkor footprint. This is a physical-feature packet, not a population target and not an Angkor-specific correction.",
+  "policy": {
+    "starting_population_or_hyde_predictors": false,
+    "rgo_output_modifiers_as_predictors": false,
+    "observed_historical_cropland_share_as_intrinsic_capacity_predictor": false,
+    "anchor_specific_multiplier": false,
+    "regional_or_continental_multiplier": false,
+    "food_imports_in_intrinsic_capacity": false,
+    "historical_technology_evidence_may_define_shared_date_mask": true,
+    "historical_population_estimates_as_training_target": false
+  },
+  "mapped_boundary": {
+    "eu5_selector": "location_tag=angkor",
+    "eu5_location_count": 1,
+    "eu5_footprint_km2": 3172.963249292525,
+    "coverage_fraction": 1.0,
+    "mapping_role": "feature_context_and_validation_only",
+    "geometry_source": "polynomial_coordinate_jacobian_v2+bounded_exact_crosswalks"
+  },
+  "feature_records": [
+    {
+      "feature_id": "lower_mekong_deepwater_floating_rice",
+      "feature_family": "crop_calendar_and_flood_regime",
+      "date_start": 800,
+      "date_end": 1337,
+      "geography": "Tonle Sap and Lower Mekong floodplain; applicable to Angkor only through the mapped flood-recession/deepwater setting",
+      "observation": "Traditional deepwater rice is grown in wet-season flood depths and uses varieties elongating approximately 2–3 m; floating-rice varieties can elongate approximately 5–6 m.",
+      "quantitative_value": {
+        "deepwater_plant_height_m_low": 2.0,
+        "deepwater_plant_height_m_high": 3.0,
+        "floating_plant_height_m_low": 5.0,
+        "floating_plant_height_m_high": 6.0
+      },
+      "model_use": "Create a shared, date-compatible flood-depth/crop-calendar mask and uncertainty scenario. Plant height is not converted directly to yield or population.",
+      "evidence_strength": "moderate_to_high",
+      "source_ids": ["fox_ledgerwood_1999_lower_mekong_rice_synthesis"]
+    },
+    {
+      "feature_id": "lower_mekong_flood_recession_rice",
+      "feature_family": "water_management_and_crop_calendar",
+      "date_start": 50,
+      "date_end": 1337,
+      "geography": "Tonle Sap River/Lake and Mekong-Bassac branches; includes the Angkor-region ecological regime",
+      "observation": "Flood-recession rice uses receding wet-season water trapped by embankments, ponds and dams to irrigate dry-season crops through canals and/or pumps; conventional rain-fed or irrigated rice is not the correct representation for continuously flooded sites.",
+      "quantitative_value": {
+        "water_regime": "seasonally_flooded_then_receding",
+        "dry_season_crop": true,
+        "requires_embankment_or_pond_storage": true,
+        "requires_canals_or_pumps": true
+      },
+      "model_use": "Add a generic flood-recession production pathway competing for land and water with ordinary rain-fed and irrigated rice. Apply only where sampled flood-seasonality, elevation and conveyance features satisfy the mask.",
+      "evidence_strength": "high",
+      "source_ids": ["fox_ledgerwood_1999_lower_mekong_rice_synthesis"]
+    },
+    {
+      "feature_id": "angkor_state_hydraulic_surplus",
+      "feature_family": "date_compatible_hydraulic_technology",
+      "date_start": 800,
+      "date_end": 1337,
+      "geography": "Greater Angkor",
+      "observation": "Large barays, canals and bunded paddy fields made managed wet-rice production possible; Angkor depended in part on deepwater/floating and flood-recession rice around Tonle Sap.",
+      "quantitative_value": {
+        "technology_mask": "baray_canal_bund_pond",
+        "durable_by_1337": true,
+        "observed_area_is_not_model_area": true
+      },
+      "model_use": "Supply a cited technology-compatibility mask and a shared hydraulic-efficiency prior. Do not copy the mapped Angkor field area into all feasible land.",
+      "evidence_strength": "high",
+      "source_ids": ["fox_ledgerwood_1999_lower_mekong_rice_synthesis", "klassen_et_al_2021_greater_angkor_population", "klassen_ortman_lobo_evans_2022_provisioning"]
+    },
+    {
+      "feature_id": "angkor_crop_cycle_historical_report",
+      "feature_family": "crop_calendar",
+      "date_start": 1296,
+      "date_end": 1297,
+      "geography": "Angkor as described by Zhou Daguan",
+      "observation": "A Chinese visitor reported cultivation of three to four rice crops per year. The report does not identify the land share, crop types, or whether the count combines irrigated and flood-recession environments.",
+      "quantitative_value": {
+        "reported_crop_cycles_per_year_low": 3.0,
+        "reported_crop_cycles_per_year_high": 4.0
+      },
+      "model_use": "Upper crop-calendar scenario for the relevant flood/irrigation mask only; never apply 3–4 cycles to all Angkor land and never treat the travel account as a population label.",
+      "evidence_strength": "moderate",
+      "caveats": ["translation and terminology uncertainty", "no documented area share", "possible mixing of ecological production systems"] ,
+      "source_ids": ["fox_ledgerwood_1999_lower_mekong_rice_synthesis"]
+    },
+    {
+      "feature_id": "angkor_archaeobotanical_rice_pulses",
+      "feature_family": "historical_food_system",
+      "date_start": 1350,
+      "date_end": 1500,
+      "geography": "Angkor Thom",
+      "observation": "Archaeobotanical macroremains document rice processing/consumption and pulses, including mung bean, pigeon pea and yardlong bean, during continued fourteenth- and fifteenth-century occupation.",
+      "quantitative_value": {
+        "rice_present": true,
+        "pulse_families_present": true,
+        "target_1337_relation": "near-period_validation"
+      },
+      "model_use": "Validate the crop-family availability mask and protein-diversity pathway. Do not infer yield or population from sample counts.",
+      "evidence_strength": "high_for_food_presence",
+      "source_ids": ["cobo_castillo_et_al_2018_angkor_archaeobotany"]
+    },
+    {
+      "feature_id": "angkor_borei_flood_recession_productivity_analogue",
+      "feature_family": "quantitative_flood_recession_validation",
+      "date_start": 1,
+      "date_end": 550,
+      "geography": "Angkor Borei, approximately 10 km radius; not Greater Angkor",
+      "observation": "Fox and Ledgerwood estimate that 80,000 farm workers using flood-recession cultivation could support an additional 40,000 people within a 10 km radius.",
+      "quantitative_value": {
+        "farm_workforce": 80000,
+        "additional_supported_people": 40000,
+        "support_per_worker": 0.5,
+        "radius_km": 10.0
+      },
+      "model_use": "Held-out physical validation of a generic flood-recession pathway after land, calorie, protein and labor accounting. It is out of period for 1337 Angkor and cannot set global scale.",
+      "evidence_strength": "moderate",
+      "role": "validation_only",
+      "source_ids": ["fox_ledgerwood_1999_lower_mekong_rice_synthesis"]
+    }
+  ],
+  "current_eu5_diagnostic": {
+    "source_manifest": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+    "source_sha256": "a1ad4d4c9fdbe73b5cb368ee64a7b52e3b1e270987cdf533be758265aec385ac",
+    "capacity_people_p10": 205880,
+    "capacity_people_p50": 205976,
+    "capacity_people_p90": 206220,
+    "wet_rice_capacity_people": 132423,
+    "rainfed_crop_capacity_people": 187249,
+    "irrigation_increment_capacity_people": 18575,
+    "freshwater_capacity_people": 61,
+    "irrigable_fraction_p50": 0.5001713157822061,
+    "interpretation": "The crop/water label matrix is closed, but the current score has no generic dated flood-recession/deepwater-rice pathway or shared hydraulic-efficiency scenarios. This is a missing physical feature implementation, not a missing label and not permission for a named Angkor multiplier."
+  },
+  "implementation_contract": {
+    "new_predictors": [
+      "flood_seasonality_and_recession_mask",
+      "deepwater_rice_calendar_mask",
+      "dated_hydraulic_conveyance_efficiency_scenario",
+      "generic_multiple_cropping_calendar_scenario"
+    ],
+    "required_invariants": [
+      "flood_recession_land_is_not_double_counted_as_irrigated_or_rainfed_crop_land",
+      "crop_cycles_are_bounded_by_months_and_labor",
+      "hydraulic_efficiency_is_shared_across_mapped_hydraulic_systems",
+      "observed_angkor_field_area_is_validation_only",
+      "no_angkor_specific_multiplier"
+    ],
+    "training_status": "feature_research_closed_for_candidate_definition; implementation_and_grouped_validation_required",
+    "final_acceptance_status": "blocked_until_generic_feature_is_implemented_and_held_out_tests_pass"
+  },
+  "sources": [
+    {
+      "source_id": "fox_ledgerwood_1999_lower_mekong_rice_synthesis",
+      "citation": "Fox, J. and Ledgerwood, J. (1999), 'Dry-season flood-recession rice around the Mekong and Angkor Borei'; summarized in The Evolution of Rice Farming in the Lower Mekong Basin.",
+      "url": "https://link.springer.com/chapter/10.1007/978-981-15-0998-8_1",
+      "source_role": "primary physical/crop-system synthesis"
+    },
+    {
+      "source_id": "klassen_et_al_2021_greater_angkor_population",
+      "citation": "Klassen et al. (2021), Diachronic Modeling of the Population within the Medieval Greater Angkor Region Settlement Complex, Science Advances 7(19), eabf8441.",
+      "url": "https://doi.org/10.1126/sciadv.abf8441",
+      "source_role": "independent archaeological settlement and population context; not a local-food target"
+    },
+    {
+      "source_id": "cobo_castillo_et_al_2018_angkor_archaeobotany",
+      "citation": "Cobo Castillo et al. (2018), Life goes on: Archaeobotanical investigations of diet and ritual at Angkor Thom, The Holocene 28(8), 1267–1278.",
+      "url": "https://doi.org/10.1177/0959683617752841",
+      "source_role": "dated food-presence validation"
+    },
+    {
+      "source_id": "klassen_ortman_lobo_evans_2022_provisioning",
+      "citation": "Klassen, Ortman, Lobo and Evans (2022), Provisioning an Early City: Spatial Equilibrium in the Agricultural Economy at Angkor, Journal of Archaeological Method and Theory 29, 763–794.",
+      "url": "https://doi.org/10.1007/s10816-021-09535-5",
+      "source_role": "dated hydraulic/landscape evidence"
+    }
+  ]
+}

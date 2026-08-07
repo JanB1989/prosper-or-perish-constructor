@@ -116,6 +116,12 @@ The legend key `MAPMODE_<ID>` uses the ID in uppercase with underscores.
 | `pp_market_food_price` | `pp_market_food_price.dds` | pp_food_map_modes.txt |
 | `pp_victuals_market_price` | `pp_victuals_market_price.dds` (copy of `icon_goods_victuals.dds`) | pp_food_map_modes.txt |
 | `pp_positive_province_food_growth` | `pp_positive_province_food_growth.dds` | pp_food_map_modes.txt |
+| `pp_pop_delta_location` | `pp_pop_delta_location.dds` | pp_population_delta_map_modes.txt |
+| `pp_pop_delta_province` | `pp_pop_delta_province.dds` | pp_population_delta_map_modes.txt |
+| `pp_pop_delta_area` | `pp_pop_delta_area.dds` | pp_population_delta_map_modes.txt |
+| `pp_pop_delta_region` | `pp_pop_delta_region.dds` | pp_population_delta_map_modes.txt |
+| `pp_pop_delta_macro_region` | `pp_pop_delta_macro_region.dds` | pp_population_delta_map_modes.txt |
+| `pp_pop_delta_super_region` | `pp_pop_delta_super_region.dds` | pp_population_delta_map_modes.txt |
 | `pp_local_fruit_output_modifier` | `pp_local_fruit_output_modifier.dds` | pp_local_output_modifier_map_modes.txt |
 | `pp_local_fish_output_modifier` | `pp_local_fish_output_modifier.dds` | pp_local_output_modifier_map_modes.txt |
 | `pp_local_wool_output_modifier` | `pp_local_wool_output_modifier.dds` | pp_local_output_modifier_map_modes.txt |

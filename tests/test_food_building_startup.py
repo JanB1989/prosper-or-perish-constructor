@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from pathlib import Path
 
@@ -57,9 +57,14 @@ def test_food_startup_plan_uses_pop_consumption_and_dynamic_victuals_food(tmp_pa
     }
     assert (planned["cookery"]["location_slug"], planned["cookery"]["levels"]) == ("alpha", 2)
     assert (planned["victuals_market"]["location_slug"], planned["victuals_market"]["levels"]) == ("alpha", 1)
+    assert (
+        planned["victuals_market_import"]["location_slug"],
+        planned["victuals_market_import"]["levels"],
+    ) == ("alpha", 1)
     assert planned["cookery"]["worker_peasant_requirement"] == 2.5
     assert planned["victuals_market"]["worker_peasant_requirement"] == 0.75
-    assert result.summary["planned_worker_peasant_requirement"] == 3.25
+    assert planned["victuals_market_import"]["worker_peasant_requirement"] == 0.75
+    assert result.summary["planned_worker_peasant_requirement"] == 4.0
 
 
 def test_food_startup_plan_omits_unstaffable_levels(tmp_path: Path) -> None:

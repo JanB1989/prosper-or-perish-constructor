@@ -1,0 +1,198 @@
+{
+  "schema_version": "terrestrial-food-training-registry-v1",
+  "target_year": 1337,
+  "scope": "wild terrestrial foods and direct food from grazing domesticates",
+  "policy": {
+    "observed_1337_herd_is_required_for_carrying_capacity": false,
+    "potential_grazer_biomass_is_observed_domestic_herd": false,
+    "ethnographic_population_is_training_target": false,
+    "structural_model_envelope_is_probability_interval": false,
+    "raw_region_names_are_predictors": false,
+    "unmodeled_feed_or_crop_residue_is_credited": false
+  },
+  "model_semantics": {
+    "target": "maximum locally supportable long-run population under technologies feasible by 1337",
+    "herd_interpretation": "the land allocator may optimize a feasible grazing herd inside the ecological ceiling; it does not reconstruct observed herd abundance or species shares",
+    "uncertainty_before_training": "ordered conservative, central and permissive physical scenarios",
+    "uncertainty_after_training": "probability intervals may be claimed only after aggregate fitting and grouped held-out coverage validation"
+  },
+  "wild_food_contract": {
+    "source_id": "forge_hunting_gathering_process_model",
+    "citation": "Tallavaara et al. 2021, Productivity and biodiversity govern population size in hunter-gatherer societies",
+    "url": "https://doi.org/10.1038/s41559-021-01548-3",
+    "physical_role": "terrestrial hunting-plus-gathering equilibrium covariate",
+    "date_transfer": "FORGE reference productivity is multiplied at exact EU5 sample points by the four-model PMIP past1000 1322-1352/reference-period NPP ratio",
+    "independent_validation": {
+      "records": 340,
+      "terrestrial_diet_subset_records": 245,
+      "terrestrial_diet_subset_definition": "reported fish share below 50 percent",
+      "role": "validation only; never a 1337 anchor or population target",
+      "required_checks": [
+        "Pearson log-density correlation at least 0.5",
+        "at least 80 percent of records within a factor of 10",
+        "all source files checksum pinned"
+      ]
+    },
+    "apiary_accounting": "zero separate credit because FORGE gathering already includes wild plant foods and sugars"
+  },
+  "grazer_ceiling_contract": {
+    "source_id": "zhu2018_preindustrial_grazer_biomass",
+    "citation": "Zhu et al. 2018, The large mean body size of mammalian herbivores explains the productivity paradox during the Last Glacial Maximum",
+    "dataset_url": "https://doi.org/10.1594/PANGAEA.884853",
+    "paper_url": "https://doi.org/10.1038/s41559-018-0481-y",
+    "physical_role": "potential large-grazer live-biomass ceiling, not observed domestic herd",
+    "date_transfer": "1860-1899 reference productivity is multiplied at exact EU5 sample points by the four-model PMIP 1322-1352/1860-1899 NPP ratio",
+    "conversion_role": "traditional low-input product-conversion scenarios applied only after a dated technology mask",
+    "forbidden_uses": [
+      "observed 1337 livestock density",
+      "regional livestock multiplier",
+      "modern species abundance label"
+    ]
+  },
+  "herd_composition_evidence_search": [
+    {
+      "source_id": "zooarchnet",
+      "citation": "LeFebvre et al. 2019, ZooArchNet: Connecting zooarchaeological specimens to biodiversity and archaeology data networks",
+      "url": "https://doi.org/10.1371/journal.pone.0215369",
+      "disposition": "case-level validation only",
+      "reason": "specimen occurrences can establish dated presence and use, but uneven excavation, preservation, recovery and publication prevent a complete 1337 herd-composition surface"
+    },
+    {
+      "source_id": "dplace_ethnographic_atlas",
+      "citation": "Kirby et al. 2016, D-PLACE: A Global Database of Cultural, Linguistic and Environmental Diversity",
+      "url": "https://doi.org/10.1371/journal.pone.0158391",
+      "disposition": "out-of-period validation only",
+      "reason": "most cultural observations were collected in 1901-1950 and cannot label 1337 herd shares or productivity"
+    },
+    {
+      "source_id": "glw3_2010",
+      "citation": "Gilbert et al. 2018, Global distribution data for cattle, buffaloes, horses, sheep, goats, pigs, chickens and ducks in 2010",
+      "url": "https://doi.org/10.1038/sdata.2018.227",
+      "disposition": "rejected as historical label",
+      "reason": "the rasters model 2010 livestock censuses and would leak modern settlement, markets, breeds, veterinary systems and feed infrastructure"
+    },
+    {
+      "source_id": "hyde_or_population_backcast_livestock",
+      "citation": "population-driven historical land-use or livestock backcasts",
+      "url": "https://doi.org/10.5194/essd-9-927-2017",
+      "disposition": "denylisted",
+      "reason": "population and modern agricultural backcasts would make population both an input and the carrying-capacity quantity being estimated"
+    }
+  ],
+  "technology_domains": [
+    {
+      "domain_id": "old_world_grazing_domesticates",
+      "selector": "super_region in africa, asia, europe",
+      "available_by": 1337,
+      "species_scope": "locally available cattle, sheep, goats, buffalo, yak, camels, or reindeer",
+      "conversion": "FAO traditional-ruminant meat-and-milk scenario",
+      "sources": [
+        {
+          "citation": "FAO 2007, The State of the World's Animal Genetic Resources for Food and Agriculture",
+          "url": "https://www.fao.org/4/a1250e/a1250e.pdf",
+          "role": "global domestication and diffusion synthesis"
+        },
+        {
+          "citation": "Prendergast et al. 2019, Ancient DNA reveals a multistep spread of the first herders into sub-Saharan Africa",
+          "url": "https://doi.org/10.1126/science.aaw6275",
+          "role": "dated cattle, sheep and goat diffusion in eastern and southern Africa"
+        },
+        {
+          "citation": "Kim et al. 2020, The mosaic genome of indigenous African cattle",
+          "url": "https://doi.org/10.1038/s41588-020-0694-2",
+          "role": "target-era cattle ancestry and adaptation sensitivity"
+        }
+      ]
+    },
+    {
+      "domain_id": "andean_grazing_camelids",
+      "selector": "region equals andes_region",
+      "available_by": 1337,
+      "species_scope": "llama and alpaca",
+      "conversion": "conservative meat-only traditional-ruminant transfer; no milk credit",
+      "sources": [
+        {
+          "citation": "Lopez and Restifo 2012, Middle Holocene intensification and domestication of camelids in north Argentina",
+          "url": "https://doi.org/10.1017/S0003598X00048237",
+          "role": "dated zooarchaeological domestication evidence"
+        },
+        {
+          "citation": "Miller and Burger 1995, Our Father the Cayman, Our Dinner the Llama",
+          "url": "https://doi.org/10.2307/282258",
+          "role": "direct pre-1337 llama herding and food evidence"
+        },
+        {
+          "citation": "FAO, The role of camelids in transport and exchange in the Bolivian Andes",
+          "url": "https://www.fao.org/4/W0613T/w0613T07.htm",
+          "role": "traditional low-input liveweight, carcass and fertility transfer check; not a medieval label"
+        }
+      ]
+    },
+    {
+      "domain_id": "no_compatible_grazing_domesticate_by_1337",
+      "selector": "all remaining EU5 locations",
+      "available_by": null,
+      "species_scope": "no large grazing domesticate in this physical channel",
+      "conversion": "structural zero",
+      "notes": "Pigs, poultry, dogs, turkeys and guinea pigs are not asserted absent; they receive no credit in a pasture-grazer model without a feed and residue mass balance.",
+      "sources": [
+        {
+          "citation": "Mathwich 2022, Range Limits: Semiferal Animal Husbandry in Spanish Colonial Arizona",
+          "url": "https://doi.org/10.1017/aaq.2022.28",
+          "role": "North American Old World livestock introduction is post-contact"
+        },
+        {
+          "citation": "FAO 2007, The State of the World's Animal Genetic Resources for Food and Agriculture",
+          "url": "https://www.fao.org/4/a1250e/a1250e.pdf",
+          "role": "Oceanic domesticates do not establish a pre-1337 compatible large-grazer channel"
+        }
+      ]
+    }
+  ],
+  "external_effects": {
+    "tsetse": "separate scientific gate; no penalty is applied inside terrestrial direct-food labels",
+    "draft_power": "separate crop-system gate; no yield credit here",
+    "manure": "separate crop-system gate; no yield credit here",
+    "crop_residues": "excluded from livestock feed until an explicit mass balance exists",
+    "pigs_and_poultry": "zero applied calorie credit until an explicit feed and waste-recycling mass balance exists"
+  },
+  "built_artifacts": {
+    "terrestrial_labels": {
+      "path": "artifacts/data/population_capacity/terrestrial_subsistence/terrestrial_food_location_labels.parquet",
+      "sha256": "8ef821ab2de2e114fed0d3a99b20eca358110f7273b5a0e795a88c3006021767",
+      "rows": 20929,
+      "unresolved_rows": 0
+    },
+    "livestock_technology_labels": {
+      "path": "artifacts/data/population_capacity/terrestrial_subsistence/livestock_technology_labels.parquet",
+      "sha256": "1f622505db894b725806e74e3a99ee65484b26ad5f83e1bfca62fc03e1642c38",
+      "rows": 20929,
+      "domain_counts": {
+        "old_world_grazing_domesticates": 15696,
+        "andean_grazing_camelids": 375,
+        "no_compatible_grazing_domesticate_by_1337": 4858
+      }
+    },
+    "training_contract": {
+      "path": "artifacts/data/population_capacity/terrestrial_subsistence/terrestrial_food_training_contract.json",
+      "sha256": "0f2dd30e42f451ec95f146932c9914dd8e992c3e9c7b5e6f95a25224c1e87c13",
+      "training_feature_acceptance_ready": true,
+      "final_model_acceptance_ready": false
+    },
+    "scientific_audit": {
+      "path": "artifacts/data/population_capacity/terrestrial_subsistence/terrestrial_food_physics_audit.json",
+      "sha256": "c418c5b045077b85a65617fe0eda7f3d5709bc238eae7c7fbbedee906ce5ae6a",
+      "scientific_acceptance_ready": true,
+      "scientific_blockers": []
+    }
+  },
+  "training_gate": {
+    "historical_npp_alignment_required": true,
+    "wild_food_independent_validation_required": true,
+    "technology_mapping_coverage_required": 1.0,
+    "structural_zero_required_outside_compatible_grazer_domains": true,
+    "pretraining_probability_interval_required": false,
+    "reason_probability_interval_is_deferred": "the vetted aggregate anchor likelihood and grouped holdouts are the first admissible calibration data",
+    "final_interval_coverage_required_before_acceptance": true
+  }
+}

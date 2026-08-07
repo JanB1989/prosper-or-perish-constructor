@@ -17,6 +17,175 @@ def _repo(tmp_path: Path) -> Path:
     return tmp_path
 
 
+def test_population_capacity_fisheries_audit_command_is_registered() -> None:
+    args, extra = cli._build_parser().parse_known_args(
+        ["population-capacity", "fisheries-audit"]
+    )
+    assert extra == []
+    assert args.population_capacity_command == "fisheries-audit"
+    assert args.handler is cli._population_capacity_fisheries_audit
+
+
+def test_population_capacity_build_fisheries_command_is_registered() -> None:
+    args, extra = cli._build_parser().parse_known_args(
+        ["population-capacity", "build-fisheries"]
+    )
+    assert extra == []
+    assert args.population_capacity_command == "build-fisheries"
+    assert args.handler is cli._population_capacity_build_fisheries
+
+
+@pytest.mark.parametrize(
+    ("command", "handler"),
+    (
+        ("fetch-tsetse-sources", cli._population_capacity_fetch_tsetse_sources),
+        ("build-tsetse", cli._population_capacity_build_tsetse),
+        ("tsetse-audit", cli._population_capacity_tsetse_audit),
+    ),
+)
+def test_population_capacity_tsetse_commands_are_registered(command: str, handler) -> None:
+    args, extra = cli._build_parser().parse_known_args(["population-capacity", command])
+
+    assert extra == []
+    assert args.population_capacity_command == command
+    assert args.handler is handler
+
+
+def test_population_capacity_fetch_tsetse_sources_delegates(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import prosper_or_perish_population_capacity as pipeline
+
+    captured: dict[str, object] = {}
+
+    def fake_fetch_tsetse_sources(**kwargs):
+        captured.update(kwargs)
+        return {"scientific_acceptance_ready": False}
+
+    monkeypatch.setattr(pipeline, "fetch_tsetse_sources", fake_fetch_tsetse_sources)
+    result = cli._population_capacity_fetch_tsetse_sources(
+        SimpleNamespace(config=None),
+        [],
+        ROOT,
+        ROOT / "constructor.toml",
+    )
+
+    assert result == 0
+    assert Path(captured["output_dir"]).name == "tsetse"
+
+
+def test_population_capacity_build_tsetse_uses_configured_inputs(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import prosper_or_perish_population_capacity as pipeline
+
+    captured: dict[str, object] = {}
+    monkeypatch.setattr(cli, "_require_population_capacity_inputs", lambda *_args: None)
+    monkeypatch.setattr(
+        cli,
+        "_verified_population_sample_points",
+        lambda paths: paths["sample_points"],
+    )
+
+    def fake_build_tsetse_production(**kwargs):
+        captured.update(kwargs)
+        return {"effect_application_enabled": False}
+
+    monkeypatch.setattr(
+        pipeline,
+        "build_tsetse_production",
+        fake_build_tsetse_production,
+    )
+    result = cli._population_capacity_build_tsetse(
+        SimpleNamespace(config=None),
+        [],
+        ROOT,
+        ROOT / "constructor.toml",
+    )
+
+    assert result == 0
+    assert Path(captured["climate_inputs_path"]).name == "climate_inputs_600bp.parquet"
+    assert Path(captured["location_features_path"]).name == "location_land_potential.parquet"
+    assert Path(captured["output_path"]).name == "tsetse_production_location_labels.parquet"
+
+
+def test_population_capacity_tsetse_audit_uses_configured_inputs(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import prosper_or_perish_population_capacity as pipeline
+
+    captured: dict[str, object] = {}
+    monkeypatch.setattr(cli, "_require_population_capacity_inputs", lambda *_args: None)
+    monkeypatch.setattr(
+        cli,
+        "_verified_population_sample_points",
+        lambda paths: paths["sample_points"],
+    )
+
+    def fake_audit_tsetse_production(**kwargs):
+        captured.update(kwargs)
+        return {"audit_verified": True}
+
+    monkeypatch.setattr(
+        pipeline,
+        "audit_tsetse_production",
+        fake_audit_tsetse_production,
+    )
+    result = cli._population_capacity_tsetse_audit(
+        SimpleNamespace(config=None),
+        [],
+        ROOT,
+        ROOT / "constructor.toml",
+    )
+
+    assert result == 0
+    assert Path(captured["labels_path"]).name == "tsetse_production_location_labels.parquet"
+    assert Path(captured["audit_path"]).name == "tsetse_production_audit.json"
+
+
+def test_population_geometry_contract_verifies_frozen_artifact_hashes(
+    tmp_path: Path,
+) -> None:
+    geometry = tmp_path / "geometry.parquet"
+    transform = tmp_path / "transform.json"
+    samples = tmp_path / "samples.parquet"
+    sample_audit = tmp_path / "sample_audit.json"
+    resolution_audit = tmp_path / "resolution_audit.json"
+    geometry.write_bytes(b"geometry")
+    transform.write_bytes(b"transform")
+    samples.write_bytes(b"samples")
+    sample_audit.write_text(
+        json.dumps(
+            {
+                "accepted": True,
+                "unresolved_sample_count": 0,
+                "source_values": {"gshhg_resolution_code": "f"},
+                "sample_points_sha256": cli._sha256_path(samples),
+                "calibrated_geometry_sha256": cli._sha256_path(geometry),
+                "geometry_transform_file_sha256": cli._sha256_path(transform),
+            }
+        ),
+        encoding="utf-8",
+    )
+    resolution_audit.write_text(
+        json.dumps({"accepted": True, "unresolved_samples": 0}),
+        encoding="utf-8",
+    )
+    paths = {
+        "calibrated_geometry": geometry,
+        "geometry_transform": transform,
+        "sample_points": samples,
+        "sample_points_audit": sample_audit,
+        "geometry_resolution_audit": resolution_audit,
+    }
+
+    cli._verify_population_geometry_contract(paths)
+    samples.write_bytes(b"changed")
+
+    with pytest.raises(SystemExit, match="stale geometry contract hash"):
+        cli._verify_population_geometry_contract(paths)
+
+
 def _write_minimal_europedia_sources(repo: Path) -> None:
     repo.joinpath("constructor.toml").write_text(
         '[project]\nmod_root = "mod/test-mod"\n',
@@ -455,7 +624,15 @@ def test_sync_smart_runs_changed_stages_and_validation(
 
     assert calls == [
         ["eu5-orchestrator", "label", "--project", str(repo / "constructor.toml")],
-        ["eu5-orchestrator", "population-capacity", "render", "--project", str(repo / "constructor.toml")],
+        [
+            "uv",
+            "run",
+            "--frozen",
+            "ppc",
+            "population-capacity",
+            "render",
+            "--verify-only",
+        ],
         ["eu5-orchestrator", "validate", "--project", str(repo / "constructor.toml")],
         ["eu5-orchestrator", "deploy", "--project", str(repo / "constructor.toml"), "--clean"],
     ]
@@ -512,7 +689,15 @@ def test_sync_force_build_runs_all_smart_stages(
     assert calls == [
         ["eu5-orchestrator", "label", "--project", str(repo / "constructor.toml")],
         ["eu5-orchestrator", "render", "--project", str(repo / "constructor.toml"), "--overwrite"],
-        ["eu5-orchestrator", "population-capacity", "render", "--project", str(repo / "constructor.toml")],
+        [
+            "uv",
+            "run",
+            "--frozen",
+            "ppc",
+            "population-capacity",
+            "render",
+            "--verify-only",
+        ],
         ["eu5-orchestrator", "validate", "--project", str(repo / "constructor.toml")],
         ["eu5-orchestrator", "deploy", "--project", str(repo / "constructor.toml"), "--clean"],
     ]
@@ -616,7 +801,8 @@ def test_build_finalizes_location_potential_localization(
     assert 'STATIC_MODIFIER_DESC_pp_loc_washita: "$pp_location_potential_modifier_desc$"' not in modifier_text
     assert "pp_location_modifiers_title:" not in modifier_text
     assert 'game_concept_pp_location_potential: "Location Potential"' in europedia_text
-    assert "\\n\\nThe values combine" in europedia_text
+    assert "\\n\\n#T Physical factors:#!" in europedia_text
+    assert "Starting population, historical population maps, the location RGO, and RGO output modifiers do not determine the value" in europedia_text
     fixed_time = 1_700_000_000_000_000_000
     os.utime(modifier_localization_path, ns=(fixed_time, fixed_time))
     os.utime(europedia_localization_path, ns=(fixed_time, fixed_time))

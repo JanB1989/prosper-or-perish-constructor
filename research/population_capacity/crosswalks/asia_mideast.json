@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "region": "asia_mideast",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/location_geometry.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "japan_kamakura_kyushu_registers_1280",
+      "historical_boundary": "Satsuma, Osumi, Hyuga, Buzen, Bungo, and Hizen provinces in Farris Table 1.3",
+      "eu5_selector": {"include": ["province=satsuma_province|oosumi_province|hyuuga_province|buzen_province|bungo_province|hizen_province"], "exclude": []},
+      "matched_location_count": 38,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium",
+      "status": "candidate_non_scoring",
+      "notes": "Province names are not proof of identical historical boundaries. Obtain period province polygons and quantify overlap before any score."
+    },
+    {
+      "anchor_id": "japan_hizen_register_1280",
+      "historical_boundary": "Hizen province",
+      "eu5_selector": {"include": ["province=hizen_province"], "exclude": []},
+      "matched_location_count": 8,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium",
+      "status": "candidate_non_scoring",
+      "notes": "Compare the historical Hizen outline with eight EU5 polygons; no audited equivalence yet."
+    },
+    {
+      "anchor_id": "japan_bungo_register_1280",
+      "historical_boundary": "Bungo province",
+      "eu5_selector": {"include": ["province=bungo_province"], "exclude": []},
+      "matched_location_count": 8,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium",
+      "status": "candidate_non_scoring",
+      "notes": "Compare the historical Bungo outline with eight EU5 polygons; no audited equivalence yet."
+    },
+    {
+      "anchor_id": "japan_noto_register_1280",
+      "historical_boundary": "Noto province",
+      "eu5_selector": {"include": ["province=noto_japan_province"], "exclude": []},
+      "matched_location_count": 3,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium",
+      "status": "candidate_non_scoring",
+      "notes": "Compare the Noto peninsula outline and island treatment; retain the register-omission and demographic-collapse caveats."
+    },
+    {
+      "anchor_id": "japan_hitachi_register_1280",
+      "historical_boundary": "Hitachi province",
+      "eu5_selector": {"include": ["province=hitachi_province"], "exclude": []},
+      "matched_location_count": 7,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium",
+      "status": "candidate_non_scoring",
+      "notes": "Compare Hitachi outline with seven EU5 polygons; separate northern depopulation if evidence permits."
+    },
+    {
+      "anchor_id": "japan_wakasa_register_1280",
+      "historical_boundary": "Wakasa province",
+      "eu5_selector": {"include": ["location_tag=__unmapped_japan_wakasa__"], "exclude": []},
+      "matched_location_count": 0,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "unmapped",
+      "notes": "No wakasa_province selector exists. Do not substitute all Echizen; the published West-central aggregate cannot be scored without Wakasa."
+    },
+    {
+      "anchor_id": "otrar_oasis_1200_1350",
+      "historical_boundary": "Otrar oasis archaeological province, approximately 200 km2 former irrigated region",
+      "eu5_selector": {"include": ["province=otrar_province"], "exclude": []},
+      "matched_location_count": 7,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium",
+      "status": "candidate_non_scoring",
+      "notes": "Digitize oasis/canal boundary and compare with seven EU5 polygons. Oasis boundary is not equivalent to province boundary; conquest and trade are shocks."
+    },
+    {
+      "anchor_id": "suzhou_pingjiang_1290_register",
+      "historical_boundary": "Pingjiang Lu six-county administrative unit",
+      "eu5_selector": {"include": ["province=suzhou_province"], "exclude": []},
+      "matched_location_count": 6,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium",
+      "status": "candidate_non_scoring",
+      "notes": "Map each county-to-location overlap and separate urban Suzhou from rural catchment. Canal redistribution and imported-food risk remain unresolved."
+    },
+    {
+      "anchor_id": "tibet_1260_1287_enumerations",
+      "historical_boundary": "Historical Tibet as used by the Yuan enumerations",
+      "eu5_selector": {"include": ["region=tibet_region"], "exclude": []},
+      "matched_location_count": 223,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "candidate_non_scoring",
+      "notes": "Reconstruct enumeration coverage and separate monastic, borderland, and peripheral undercount before any quantitative use."
+    },
+    {
+      "anchor_id": "fayyum_1245_nabulusi_cadastre",
+      "historical_boundary": "Triangular Fayyum depression and approximately 100 villages surveyed in 1245",
+      "eu5_selector": {"include": ["location_tag=__unmapped_fayyum_cadastre__"], "exclude": []},
+      "matched_location_count": 0,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "high",
+      "status": "unmapped",
+      "notes": "Digitize the project's Fayyum GIS map and overlay calibrated EU5 geometry. Do not infer total population from partial poll-tax heads."
+    },
+    {
+      "anchor_id": "nile_basin_irrigation_1337",
+      "historical_boundary": "Lower and Upper Egypt Nile corridor and basin-irrigation system",
+      "eu5_selector": {"include": ["area=lower_egypt_area|upper_egypt_area"], "exclude": []},
+      "matched_location_count": null,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium",
+      "status": "candidate_non_scoring",
+      "notes": "Use river-corridor and floodplain geometry rather than all Egypt area. No equilibrium population interval is supplied."
+    },
+    {
+      "anchor_id": "southern_mesopotamian_canal_landscape_1337",
+      "historical_boundary": "Lower Tigris-Euphrates alluvial canal and drainage landscape",
+      "eu5_selector": {"include": ["area=iraq_arabi_area"], "exclude": []},
+      "matched_location_count": null,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium",
+      "status": "candidate_non_scoring",
+      "notes": "Overlay ancient canals on calibrated EU5 terrain/hydrology; separate irrigable alluvium from desert, saline, and abandoned tracts. No population label is supplied."
+    }
+  ]
+}

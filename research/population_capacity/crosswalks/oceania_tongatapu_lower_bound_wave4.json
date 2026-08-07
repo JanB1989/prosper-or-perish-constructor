@@ -1,0 +1,36 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "oceania",
+  "super_region": "Oceania",
+  "crosswalks": [
+    {
+      "anchor_id": "tongatapu_local_food_population_floor_1100_1500_wave4",
+      "historical_boundary": "Entire Tongatapu island, Kingdom of Tonga",
+      "eu5_selector": "location_tag=tongatapu",
+      "selector_type": "location_tag_area_weighted",
+      "selected_location_count": 1,
+      "matched_location_count": 1,
+      "location_weights": {"tongatapu": 0.5624317575142918},
+      "selector_coverage_fraction": 1.0,
+      "coverage_fraction": 0.9763941725489561,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "mapped",
+      "candidate_role": "lower_bound",
+      "area_comparison": {
+        "historical_area_km2": 260.0,
+        "eu5_candidate_footprint_area_km2": 451.3658438931194,
+        "land_fraction": 0.5624317575142918,
+        "mapped_land_area_km2": 253.8624848627286,
+        "area_coverage_fraction": 0.9763941725489561,
+        "geometry_source": "geometry_land_contract_candidate_v1 + GSHHG full-resolution land mask"
+      },
+      "resolution_method": "verified island-specific EU5 location tag with explicit GSHHG land-fraction area weight",
+      "sources": [
+        "https://openresearch-repository.anu.edu.au/bitstreams/e4751661-3b6f-44c8-828b-4d93dc954ce3/download"
+      ],
+      "notes": "Only the population floor is used; no city or trade-hub capacity is inferred."
+    }
+  ]
+}

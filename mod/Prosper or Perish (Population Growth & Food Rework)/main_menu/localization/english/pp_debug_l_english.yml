@@ -30,3 +30,6 @@
  pp_capacity_culling_debug.1.title: "DEBUG: Run Capacity Building Culling"
  pp_capacity_culling_debug.1.desc: "Runs the same capacity building culling on-action used by the four-year country pulse for every country."
  pp_capacity_culling_debug.1.a: "OK"
+ pp_population_baseline_debug.1.title: "DEBUG: Snapshot Population Baselines"
+ pp_population_baseline_debug.1.desc: "Saves current population for every ownable location and each parent geographic scope. Use the Population Delta debug map modes to compare later population against this baseline."
+ pp_population_baseline_debug.1.a: "OK"

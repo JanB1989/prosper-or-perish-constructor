@@ -1,0 +1,168 @@
+{
+  "schema_version": "population_capacity_physical_evidence_v1",
+  "record_id": "europe_iceland_fisheries_local_food_wave21",
+  "reviewed_on": "2026-08-03",
+  "target_year": 1337,
+  "scope": "Archaeological and isotope evidence for Icelandic marine-food access around the 1290-1330 interval. This packet closes food-system semantics, not annual sustainable catch estimation.",
+  "policy": {
+    "starting_population_or_hyde_predictors": false,
+    "rgo_output_modifiers_as_predictors": false,
+    "modern_catch_as_historical_label": false,
+    "archaeological_nisp_as_annual_yield": false,
+    "imported_or_exported_fish_as_intrinsic_capacity": false,
+    "local_fishing_technology_may_define_access_mask": true,
+    "fish_and_livestock_channels_remain_separate": true
+  },
+  "mapped_boundary": {
+    "eu5_selector": "area=iceland_area",
+    "eu5_location_count": 21,
+    "coastal_location_count": 18,
+    "coverage_fraction": 1.0,
+    "mapping_role": "whole_island_physical_diagnostic",
+    "geometry_source": "calibrated EU5 location geometry"
+  },
+  "evidence_records": [
+    {
+      "evidence_id": "iceland_high_medieval_cod_production_sites",
+      "date_start": 1250,
+      "date_end": 1450,
+      "geography": "Iceland coastal and inland archaeological sites",
+      "observation": "The thirteenth- to sixteenth-century coastal sites are dominated by cod production signatures. Gjögur is a fishing farm and Akurvík is a seasonal fishing station; cranial-element patterns distinguish local processing/export from household consumption.",
+      "quantitative_values": {
+        "marine_fish_nisp_gjogur_13th_to_15th": 16296,
+        "marine_fish_nisp_akurvik_13th_to_15th": 101549,
+        "marine_fish_nisp_gasir_13th_to_14th": 9748,
+        "coastal_sites_in_source_table": 8
+      },
+      "model_use": "Confirms a date-compatible local marine-fishing access and preservation channel for coastal Iceland. NISP is an archaeological abundance/provenance measure, not a catch tonnage or population target.",
+      "evidence_strength": "high_for_access; low_for_annual_yield",
+      "trade_caveats": ["cod became an export commodity in the high medieval period", "seasonal stations and trading posts are not residential populations", "body-part representation must separate production from consumption"],
+      "source_ids": ["hambrecht_et_al_2019_iceland_archaeological_fish_data"]
+    },
+    {
+      "evidence_id": "iceland_local_preserved_fish_transfer",
+      "date_start": 900,
+      "date_end": 1300,
+      "geography": "Iceland coastal producer sites and inland farms",
+      "observation": "Preserved gadids were transferred from coastal producer sites to inland consumers. Early assemblages contain several gadids; by the thirteenth century cod becomes dominant as dried-fish markets intensify.",
+      "quantitative_values": {
+        "transfer_state": "coast_to_interior_preserved_fish",
+        "target_date_compatible": true
+      },
+      "model_use": "Use a local-food accessibility mask that permits preserved marine protein to reach inland locations without treating European imports or exported stockfish as Icelandic intrinsic capacity.",
+      "evidence_strength": "high_for_local_exchange; moderate_for_food_share",
+      "source_ids": ["hambrecht_et_al_2019_iceland_archaeological_fish_data", "walser_et_al_2020_iceland_isotopes"]
+    },
+    {
+      "evidence_id": "iceland_isotope_marine_terrestrial_contrast",
+      "date_start": 1000,
+      "date_end": 1554,
+      "geography": "Skeljastaðir inland farm and Skriðuklaustur monastery",
+      "observation": "Stable-isotope results distinguish an inland terrestrial dietary pattern at Skeljastaðir (1000–1104) from high marine-protein consumption at Skriðuklaustur (1493–1554). The later monastery sample is out of the 1337 target window but validates that marine and terrestrial diets vary within Iceland and should not be collapsed into one island-wide food fraction.",
+      "quantitative_values": {
+        "skeljastadir_n": 14,
+        "skeljastadir_delta13c_mean_permil": -20.5,
+        "skeljastadir_delta15n_mean_permil": 7.8,
+        "skriduklaustur_n": 36,
+        "skriduklaustur_delta13c_mean_permil": -18.7,
+        "skriduklaustur_delta15n_mean_permil": 12.8
+      },
+      "model_use": "Validation of spatially varying marine access and uncertainty. It cannot set a 1337 harvest rate because one comparison group is later and the monastery was a care/travel institution.",
+      "evidence_strength": "high_for_dietary_separation; validation_only_for_1337",
+      "source_ids": ["walser_et_al_2020_iceland_isotopes"]
+    },
+    {
+      "evidence_id": "iceland_marine_climate_social_mediation",
+      "date_start": 900,
+      "date_end": 1900,
+      "geography": "Iceland and surrounding marine shelf",
+      "observation": "A millennium synthesis finds no direct medieval correlation between zooarchaeological fish patterns and sea ice or storminess; social, political, economic and technological variables mediated climate effects. This prevents direct use of sea-ice alone as an annual catch label.",
+      "quantitative_values": {
+        "medieval_direct_climate_correlation": false,
+        "marine_climate_role": "risk_modifier_not_yield_label"
+      },
+      "model_use": "Use sea-ice/storminess as correlated yield-risk uncertainty, not as a deterministic fisheries multiplier.",
+      "evidence_strength": "high",
+      "source_ids": ["hambrecht_et_al_2019_iceland_archaeological_fish_data"]
+    }
+  ],
+  "current_eu5_diagnostic": {
+    "source_manifest": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+    "source_sha256": "a1ad4d4c9fdbe73b5cb368ee64a7b52e3b1e270987cdf533be758265aec385ac",
+    "fisheries_labels_source": "artifacts/data/population_capacity/fisheries/fisheries_location_labels.parquet",
+    "fisheries_labels_sha256": "4eaafd2d92dd46b2d1791caebd0696481584427c6dfb3df9d7b3464184834fcc8",
+    "locations": 21,
+    "coastal_locations": 18,
+    "marine_label_state_counts": {
+      "observed_positive": 18,
+      "not_historically_available": 3
+    },
+    "marine_capacity_people": {
+      "p10": 2515,
+      "p50": 11129,
+      "p90": 45925
+    },
+    "freshwater_capacity_people": {
+      "p10": 150,
+      "p50": 994,
+      "p90": 4077
+    },
+    "combined_fisheries_capacity_people": {
+      "p10": 2668,
+      "p50": 12126,
+      "p90": 50004
+    },
+    "mechanistic_components_people_p50": {
+      "terrestrial_capacity": 13931,
+      "marine_capacity": 11129,
+      "freshwater_capacity": 994,
+      "total_mechanistic": 26059
+    },
+    "comparison_to_haraldsson_olafsdottir_interval": {
+      "published_capacity_low": 40000,
+      "published_capacity_high": 80000,
+      "terrestrial_only_ratio_to_low": 0.348275,
+      "terrestrial_only_ratio_to_high": 0.1741375,
+      "terrestrial_plus_fisheries_ratio_to_low": 0.651475,
+      "terrestrial_plus_fisheries_ratio_to_high": 0.3257375,
+      "interpretation": "The implementation already includes positive marine and freshwater rows; fisheries are not omitted from the current mechanistic total. The remaining Iceland shortfall is primarily the terrestrial/livestock comparison and the fact that the published 40,000–80,000 interval has different scope (livestock biological production, not a fish-inclusive model)."
+    }
+  },
+  "implementation_contract": {
+    "required_changes": [
+      "Keep marine labels positive on the 18 coastal Iceland locations; do not replace them with a structural zero.",
+      "Expose terrestrial-only and fish-inclusive capacity separately when comparing with the Haraldsson–Ólafsdóttir interval.",
+      "Represent preserved-fish access as a spatially varying local-food channel, with coast-to-interior distance and dated preservation technology.",
+      "Propagate marine climate and human-access uncertainty jointly; do not turn NISP into annual catch.",
+      "Re-audit the Iceland interval likelihood after the scope comparison is explicit; no Iceland-specific multiplier."
+    ],
+    "training_status": "food-access_semantics_closed; annual_yield_and_scope_comparison_required",
+    "final_acceptance_status": "blocked_until_joint_scope_and_uncertainty_audit_passes"
+  },
+  "sources": [
+    {
+      "source_id": "hambrecht_et_al_2019_iceland_archaeological_fish_data",
+      "citation": "Hambrecht, Feeley, Smiarowski, Hicks, Harrison, Brewington, Cesario and Gibbons (2019), A millennium of Icelandic archaeological fish data examined against marine climate records, Quaternary Research 108, 1–17.",
+      "url": "https://doi.org/10.1017/qua.2019.35",
+      "source_role": "peer-reviewed medieval marine archaeological synthesis"
+    },
+    {
+      "source_id": "smiarowski_et_al_2005_akurvik",
+      "citation": "Smiarowski et al. (2005), Fishing Booths and Fishing Strategies in Medieval Iceland: an Archaeofauna from Akurvík, North-West Iceland, Environmental Archaeology 10(2), 127–134.",
+      "url": "https://doi.org/10.1179/env.2005.10.2.127",
+      "source_role": "dated fishing-station archaeology"
+    },
+    {
+      "source_id": "walser_et_al_2020_iceland_isotopes",
+      "citation": "Walser et al. (2020), At the world's edge: Reconstructing diet and geographic origins in medieval Iceland using isotope and trace element analyses, American Journal of Physical Anthropology 171(1), 142–163.",
+      "url": "https://doi.org/10.1002/ajpa.23973",
+      "source_role": "independent isotope dietary separation and local-origin evidence"
+    },
+    {
+      "source_id": "haraldsson_olafsdottir_2006_iceland_capacity",
+      "citation": "Haraldsson and Ólafsdóttir (2006), A novel modelling approach for evaluating the preindustrial natural carrying capacity of human population in Iceland, Science of the Total Environment 372(1), 109–119.",
+      "url": "https://doi.org/10.1016/j.scitotenv.2006.08.013",
+      "source_role": "two-sided environmental capacity interval; model scope excludes marine catch"
+    }
+  ]
+}

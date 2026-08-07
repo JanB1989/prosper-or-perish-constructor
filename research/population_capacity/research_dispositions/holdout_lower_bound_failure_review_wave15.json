@@ -1,0 +1,174 @@
+{
+  "schema_version": "population_capacity_holdout_failure_review_v1",
+  "reviewed_on": "2026-08-03",
+  "review_id": "holdout_lower_bound_failure_review_wave15",
+  "scope": "Scientific review of the current grouped lower-bound holdout failures",
+  "holdout_snapshot": {
+    "path": "artifacts/data/population_capacity/current_capacity_map/grouped_evidence_holdouts.json",
+    "sha256": "3660391e9dd2692a00c53443322fab2e429f293dbcd8145b2dfd087eaa059292",
+    "mechanistic_failed_rows": 9,
+    "mechanistic_unique_failed_anchors": 5,
+    "interpretation": "The 42 lower-bound rows in the summary are repeated candidate/fold rows. They are not 42 independent historical failures: the mechanistic failures collapse to five unique anchors, with source-family and super-region folds duplicating some anchors."
+  },
+  "policy": {
+    "do_not_weaken_lower_bound_gate": true,
+    "do_not_add_anchor_specific_multiplier": true,
+    "population_is_not_capacity_target": true,
+    "retain_valid_lower_bounds_when_model_is_low": true,
+    "downgrade_only_for_evidence_contract_failure": true
+  },
+  "records": [
+    {
+      "anchor_id": "greater_angkor_1181_1300_population_lower_bound_wave5",
+      "failed_fold_groups": [
+        "greater_angkor_lidar_and_archaeology",
+        "Asia"
+      ],
+      "mechanistic_predicted_capacity_people": 194748,
+      "lower_bound_people": 700000,
+      "predicted_to_floor_ratio": 0.2782,
+      "boundary": {
+        "eu5_selector": "location_tag=angkor",
+        "mapped_location_count": 1,
+        "coverage_fraction": 1.0,
+        "crosswalk_status": "high",
+        "mapped_area_km2": 3000.0
+      },
+      "primary_sources": [
+        "https://doi.org/10.1126/sciadv.abf8441",
+        "https://doi.org/10.1007/s10816-021-09535-5"
+      ],
+      "evidence_check": [
+        "Klassen et al. combine LiDAR, excavation, radiocarbon and mapped settlement features to estimate 700,000-900,000 people in the fixed approximately 3,000 km2 Greater Angkor Region at its 12th-13th-century apogee.",
+        "The same primary study reports that agricultural-metropolitan growth slowed to zero in AD 1181-1300 and that the lower population estimate is consistent with approximately 750,000 people supportable from rice produced inside the region without irrigation.",
+        "The mapped boundary is the agro-urban watershed, not the temple core; the crosswalk removes the 5.77% EU5 location overhang with an explicit area weight.",
+        "Provincial provisioning is unresolved, so the record remains one-sided. That uncertainty does not invalidate a conservative lower bound for a mapped region whose rural rice landscape is included."
+      ],
+      "disposition": "retain_lower_bound",
+      "reason": "The historical evidence is a defensible local-food regional lower bound. The failure is a model underprediction, not a boundary, source-semantic or saturation-contract failure."
+    },
+    {
+      "anchor_id": "iceland_preindustrial_biomass_capacity_floor_wave3",
+      "failed_fold_groups": [
+        "iceland_ice_cc_biomass_simulation"
+      ],
+      "mechanistic_predicted_capacity_people": 26147,
+      "lower_bound_people": 40000,
+      "predicted_to_floor_ratio": 0.6537,
+      "boundary": {
+        "eu5_selector": "area=iceland_area",
+        "mapped_location_count": 21,
+        "coverage_fraction": 1.0,
+        "crosswalk_status": "exact"
+      },
+      "primary_sources": [
+        "https://doi.org/10.1016/j.scitotenv.2006.08.013",
+        "https://portal.research.lu.se/en/publications/a-novel-modelling-approach-for-evaluating-the-preindustrial-natur/"
+      ],
+      "evidence_check": [
+        "Haraldsson and Olafsdottir's primary dynamic vegetation-livestock model estimates 40,000-80,000 people as the pre-industrial natural carrying-capacity range when Icelandic cultivable land and sustainable highland grazing are used.",
+        "The model deliberately excludes fisheries and catastrophic events; therefore the 40,000 endpoint is a conservative production floor for the all-food system, not an inflated upper target.",
+        "The island selector is topologically exact, but the current calibrated Jacobian area is only about 65.5% of Iceland's real area. That geometry defect is a physical-input blocker and explains why this holdout must not be used to justify lowering the historical floor.",
+        "The 1300 volcanic/climate shock remains an uncertainty flag; it does not erase the published sustainable-production lower endpoint."
+      ],
+      "disposition": "retain_lower_bound_and_block_on_area_repair",
+      "reason": "The lower-bound evidence is an explicit primary carrying-capacity simulation with an exact island boundary. The current failure is consistent with the known area-calibration defect and requires repairing area/land inputs, not downgrading the anchor."
+    },
+    {
+      "anchor_id": "upper_mantaro_wanka_ii_1350_1450_population_lower_bound",
+      "failed_fold_groups": [
+        "upper_mantaro_umarp_jasp_archaeology",
+        "America/Oceania"
+      ],
+      "mechanistic_predicted_capacity_people": 45884,
+      "lower_bound_people": 61000,
+      "predicted_to_floor_ratio": 0.7522,
+      "boundary": {
+        "eu5_selector": "province=hatun_xauxa_province",
+        "mapped_location_count": 6,
+        "coverage_fraction": 1.0,
+        "crosswalk_status": "high",
+        "published_research_area_km2": 1900.0,
+        "containing_eu5_area_km2": 11046.637763
+      },
+      "primary_sources": [
+        "https://doi.org/10.1515/9781503616349",
+        "https://doi.org/10.2307/280677",
+        "https://www.sciencedirect.com/science/article/pii/S0305440316300991"
+      ],
+      "evidence_check": [
+        "Earle's primary UMARP settlement reconstruction estimates 61,000 people for the northern Upper Mantaro Wanka II study region from occupied settlement area, occupational density and contemporaneous occupation.",
+        "The UMARP/JASP evidence documents rain-fed highland potatoes, quinoa, oca, olluco, camelids and local game as the staple base; maize and lowland goods are explicitly treated as partial exchange rather than assumed autarky.",
+        "The EU5 Hatun Xauxa selector intentionally contains the published research landscape and extra highland cells, making the inequality capacity(selector) >= 61,000 conservative rather than a false precise boundary claim.",
+        "The 1350-1450 interval is within the accepted 1100-1500 comparability window and predates Inka conquest for its early phase; it remains a lower bound, not a 1337 saturation label."
+      ],
+      "disposition": "retain_lower_bound",
+      "reason": "The evidence is a systematic regional settlement study with local staple and boundary documentation. The model underprediction should be diagnosed through highland crop/pastoral features and area allocation, not fixed by downgrading the anchor."
+    },
+    {
+      "anchor_id": "japan_tajima_1280_local_food_floor_wave13",
+      "failed_fold_groups": [
+        "farris_2006_great_land_registers",
+        "Asia"
+      ],
+      "mechanistic_predicted_capacity_people": 27404,
+      "lower_bound_people": 35800,
+      "predicted_to_floor_ratio": 0.7655,
+      "boundary": {
+        "eu5_selector": "province=tajima_province",
+        "coverage_fraction": 0.95,
+        "crosswalk_status": "high"
+      },
+      "primary_sources": [
+        "https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "https://doi.org/10.7910/DVN/2CVTR0"
+      ],
+      "evidence_check": [
+        "Farris's Table 1.3 gives a rice-register conversion of 35,800 people for Tajima; only this conservative rice-based value is encoded as the floor, while the +40% non-rice sensitivity is excluded from the target.",
+        "The CHGIS province polygon supplies the mapped historical boundary and the crosswalk meets the 95% coverage threshold.",
+        "This is a lower-bound register observation, not a saturation interval; the mechanistic shortfall is therefore evidence for checking Japanese paddy-area/yield mapping rather than downgrading the source."
+      ],
+      "disposition": "retain_lower_bound",
+      "reason": "The register floor and crosswalk meet the one-sided evidence contract. It is a modest mechanistic underprediction within the same Farris source family, not evidence of a misclassified anchor."
+    },
+    {
+      "anchor_id": "japan_buzen_1280_local_food_floor_wave7",
+      "failed_fold_groups": [
+        "farris_2006_great_land_registers",
+        "Asia"
+      ],
+      "mechanistic_predicted_capacity_people": 69866,
+      "lower_bound_people": 85238,
+      "predicted_to_floor_ratio": 0.8197,
+      "boundary": {
+        "eu5_selector": "province=buzen_province",
+        "coverage_fraction": 0.96,
+        "crosswalk_status": "high"
+      },
+      "primary_sources": [
+        "https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "https://doi.org/10.7910/DVN/2CVTR0"
+      ],
+      "evidence_check": [
+        "Farris's Table 1.3 converts the registered rice acreage to 85,238 people; the bracketed +40% non-rice value is not used as a capacity endpoint.",
+        "The CHGIS Buzen polygon and EU5 province selector cover the historical province at 96% declared coverage.",
+        "The floor is local rice-supported population evidence and does not require a saturation assumption."
+      ],
+      "disposition": "retain_lower_bound",
+      "reason": "The evidence contract is satisfied; the mechanistic shortfall is a calibration diagnostic, not a reason to remove or weaken the floor."
+    }
+  ],
+  "aggregate_decision": {
+    "scientifically_defensible_unique_anchors": 5,
+    "misclassified_unique_anchors": 0,
+    "downgraded_unique_anchors": 0,
+    "new_anchor_specific_corrections": 0,
+    "required_followups": [
+      "Repair Iceland calibrated area before using Iceland as a physical calibration case.",
+      "Audit Angkor rice-field and aquatic-food contributions and the 0.945488 crosswalk weight.",
+      "Audit Upper Mantaro highland crop, pastoral and selector-area features.",
+      "Audit Tajima/Buzen paddy-area and yield sampling without importing starting population or RGO fields."
+    ],
+    "conclusion": "The current lower-bound failures are model diagnostics, not evidence that these five anchors are mislabeled. Removing them would hide genuine underprediction. The lower-bound gate remains unchanged."
+  }
+}

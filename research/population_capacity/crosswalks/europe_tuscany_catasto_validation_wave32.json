@@ -1,0 +1,58 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "europe_tuscany_catasto_validation_wave32",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_tuscany_catasto_validation_wave32",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet with calibrated area_km2",
+  "policy": {
+    "append_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "historical_boundary_coverage_is_declared": true,
+    "city_trade_hubs_are_excluded_from_rural_capacity_scoring": true,
+    "no_population_or_capacity_rescaling": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "tuscany_florentine_dominions_1427_catasto_validation_wave32",
+      "historical_boundary": "Florentine Republic fiscal territory documented by the 1427-1429 Catasto; used only as an approximate ordinary rural validation footprint",
+      "eu5_selector": {
+        "include": ["area=tuscany_area"],
+        "exclude": ["location_tag=florence"]
+      },
+      "matched_location_count": 23,
+      "selected_location_count": 23,
+      "coverage_fraction": null,
+      "selector_coverage_fraction": null,
+      "mapped_area_km2": 21647.82154,
+      "historical_area_km2": null,
+      "unmapped_area_km2": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "validation_only",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "candidate_role": "validation_only",
+      "resolution_method": "Mapped the 23 non-city EU5 locations with area=tuscany_area and excluded the Florence city location. The Florentine contado and district boundaries are not recoverable as an exact polygon from the cited archival catalogue; no population or capacity aggregate is rescaled.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 21647.82154,
+        "declared_historical_boundary_area_km2": null,
+        "coverage_fraction": null,
+        "unmapped_area_km2": null,
+        "area_method": "calibrated polygon/Jacobian area from location_candidates.parquet",
+        "area_difference_policy": "No population or capacity aggregate is area-rescaled; this crosswalk is validation-only."
+      },
+      "current_frame_diagnostic": {
+        "frame_path": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+        "location_count": 23,
+        "area_km2": 21647.82154,
+        "capacity_people_p50": 1620975,
+        "crop_capacity_people_p50": 1615538,
+        "livestock_capacity_people_p50": 379,
+        "marine_capacity_people_p50": 2211,
+        "wild_capacity_people_p50": 2750,
+        "use": "diagnostic only; no historical population or capacity target is emitted"
+      },
+      "notes": "The Florence city location is explicitly excluded because the Catasto city record represents a trade hub with imported food and cannot supervise surrounding intrinsic land capacity."
+    }
+  ]
+}

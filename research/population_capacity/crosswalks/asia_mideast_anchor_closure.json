@@ -1,0 +1,45 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Asia",
+  "region": "asia_mideast",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/location_geometry_calibrated.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "korea_gyeongsangdojiriji_1432_aggregate",
+      "historical_boundary": "Gyeongsangdo's 114 counties/prefectures in the 1432 Gyeongsangdojiriji",
+      "eu5_selector": {"include": ["region=korea_region"], "exclude": []},
+      "matched_location_count": 150,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "notes": "The EU5 Korea region is a game geography, not a verified overlay of the historical 114-county Gyeongsangdo boundary. It is retained only as a diagnostic selector and cannot train or set scale."
+    },
+    {
+      "anchor_id": "korea_jinju_mok_1432_population",
+      "historical_boundary": "Jinju-mok in the 1432 Gyeongsangdojiriji",
+      "eu5_selector": {"include": ["location_tag=jinju"], "exclude": []},
+      "matched_location_count": 1,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "notes": "Name match only. Historical Jinju-mok extent and the EU5 location polygon have not been independently overlaid."
+    },
+    {
+      "anchor_id": "korea_gyeongju_bu_1432_population",
+      "historical_boundary": "Gyeongju-bu in the 1432 Gyeongsangdojiriji",
+      "eu5_selector": {"include": ["location_tag=gyeongju"], "exclude": []},
+      "matched_location_count": 1,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "notes": "Name match only. Historical Gyeongju-bu extent and the EU5 location polygon have not been independently overlaid."
+    }
+  ]
+}

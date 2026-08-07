@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "region": "europe_africa",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_africa_closure_wave2",
+  "geometry_source": "artifacts/data/population_capacity/location_geometry.parquet",
+  "policy": {
+    "append_only": true,
+    "unresolved_crosswalks_must_not_score": true,
+    "site_boundaries_cannot_be_expanded_to_surrounding_capacity": true,
+    "no_population_or_rgo_fields_used": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "wales_1291_taxatio_1300_rejected_wave2",
+      "historical_boundary": "Whole Wales/former principality; internal Taxatio deanery units unresolved",
+      "eu5_selector": {"include": ["area=wales_area"], "exclude": []},
+      "matched_location_count": 25,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact_national_approximate_internal",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "rejected",
+      "resolution_method": "Exact EU5 national area selector; no internal deanery overlay available.",
+      "notes": "Boundary passes the spatial gate, but the evidence packet fails saturation and local-food gates."
+    },
+    {
+      "anchor_id": "scotland_1290_resource_deficit_rejected_wave2",
+      "historical_boundary": "Whole Scotland; historical lowland/upland population split unresolved",
+      "eu5_selector": {"include": ["area=scottish_highlands_area|scottish_lowlands_area"], "exclude": []},
+      "matched_location_count": 52,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact_national_approximate_internal",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "rejected",
+      "resolution_method": "Union of the two EU5 Scotland areas.",
+      "notes": "Boundary passes, but the source explicitly finds no national land-scarcity problem and supplies no saturation/local-food label."
+    },
+    {
+      "anchor_id": "ireland_1290_population_trade_rejected_wave2",
+      "historical_boundary": "Whole Ireland island; Lordship of Ireland subset not substituted",
+      "eu5_selector": {"include": ["region=ireland_region"], "exclude": []},
+      "matched_location_count": 95,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact_island_approximate_historical_scope",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "rejected",
+      "resolution_method": "Exact EU5 Ireland region selector covering Connaught, Munster, Ulster and Leinster.",
+      "notes": "Boundary passes; demographic range and pressure/saturation evidence do not."
+    },
+    {
+      "anchor_id": "mapungubwe_1220_1300_lower_bound_rejected_wave2",
+      "historical_boundary": "Mapungubwe cultural landscape across the Limpopo/Shashe region (about 30,000 km2), not the single EU5 location proxy",
+      "eu5_selector": {"include": ["location_tag=mapungubwe"], "exclude": []},
+      "matched_location_count": 1,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "rejected",
+      "resolution_method": "Site tag retained only as a negative-control locator; no archaeological landscape polygon in the geometry inventory.",
+      "notes": "Lower-bound validation only; do not compare 9,000 people to the single game location as a capacity target."
+    },
+    {
+      "anchor_id": "great_zimbabwe_1200_1450_ecological_rejected_wave2",
+      "historical_boundary": "Great Zimbabwe 720-ha archaeological site plus its wider agricultural/pastoral catchment",
+      "eu5_selector": {"include": ["location_tag=great_zimbabwe"], "exclude": []},
+      "matched_location_count": 1,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "rejected",
+      "resolution_method": "Broad EU5 location tag; archaeological site and resource catchment are not represented as polygons.",
+      "notes": "Site population/ecological consistency evidence is held out as a validation negative control."
+    }
+  ]
+}

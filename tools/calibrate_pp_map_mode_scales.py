@@ -10,6 +10,10 @@ from typing import Iterable
 from eu5gameparser.domain.eu5 import load_eu5_data
 
 from map_mode_styles import CALIBRATION_PATH, savegame_goods_output_samples
+from prosper_or_perish_constructor.population_capacity_map_mode import (
+    load_start_capacity_values,
+    population_capacity_map_mode_thresholds,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -299,9 +303,17 @@ def _positive_quantity_thresholds(values: Iterable[float]) -> list[float]:
 
 def _population_capacity_thresholds() -> list[float]:
     # The map mode reads the engine's final location_max_population value.
-    # Keep fixed player-readable buckets up to 200 so high-capacity locations
-    # do not collapse into one quantile-derived color.
-    return [20.0, 40.0, 60.0, 80.0, 100.0, 125.0, 155.0, 200.0]
+    # Calibrate the display cap from the accepted starting table so the top
+    # bucket is approximately twice the largest starting location capacity.
+    table = ROOT / "data" / "population_capacity" / "population_capacity.csv"
+    if not table.is_file():
+        return [20.0, 40.0, 60.0, 80.0, 100.0, 125.0, 155.0, 200.0]
+    return [
+        float(value)
+        for value in population_capacity_map_mode_thresholds(
+            load_start_capacity_values(table)
+        )
+    ]
 
 
 def _building_level_thresholds() -> list[float]:

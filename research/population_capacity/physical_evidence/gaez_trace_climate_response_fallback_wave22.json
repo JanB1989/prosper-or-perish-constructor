@@ -1,0 +1,888 @@
+{
+  "annual_forcing": {
+    "center_bp": 613,
+    "same_geography_requirement": true,
+    "source": "CHELSA-TraCE21k official transient monthly PRECC/PRECL/TS",
+    "years": 101
+  },
+  "artifact_type": "gaez_trace_climate_response_fallback_registry",
+  "generated_at_utc": "2026-08-03T22:53:08.092849+00:00",
+  "no_statistical_imputation": true,
+  "not_training_labels": true,
+  "registry": {
+    "blocked_crop_count": 3,
+    "columns": [
+      "d1",
+      "d2a",
+      "d2b",
+      "d3a",
+      "d3b",
+      "d4",
+      "kc_1",
+      "kc_3",
+      "kc_5",
+      "kc_all",
+      "ky_1",
+      "ky_2a",
+      "ky_2b",
+      "ky_3a",
+      "ky_3b",
+      "ky_4",
+      "ky_all"
+    ],
+    "crops": {
+      "banana": {
+        "reason": "gaez_appendix_4_2_is_annual_only_and_contains_no_banana_row",
+        "rows": [],
+        "state": "blocked"
+      },
+      "barley": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "barley",
+            "parameters": {
+              "d1": 15.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 12.0,
+              "d3b": 23.0,
+              "d4": 20.0,
+              "kc_1": 0.4,
+              "kc_3": 1.15,
+              "kc_5": 0.25,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.6,
+              "ky_3b": 0.5,
+              "ky_4": 0.2,
+              "ky_all": 1.05
+            },
+            "row_name": "barley (winter)",
+            "source_line_end": 19,
+            "source_line_start": 19
+          },
+          {
+            "crop": "barley",
+            "parameters": {
+              "d1": 15.0,
+              "d2a": 25.0,
+              "d2b": 0.0,
+              "d3a": 13.0,
+              "d3b": 27.0,
+              "d4": 20.0,
+              "kc_1": 0.3,
+              "kc_3": 1.15,
+              "kc_5": 0.25,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.65,
+              "ky_3b": 0.55,
+              "ky_4": 0.2,
+              "ky_all": 1.15
+            },
+            "row_name": "barley (spring)",
+            "source_line_end": 20,
+            "source_line_start": 20
+          }
+        ],
+        "state": "resolved"
+      },
+      "cassava": {
+        "reason": "gaez_appendix_4_2_is_annual_only_and_contains_no_cassava_row",
+        "rows": [],
+        "state": "blocked"
+      },
+      "chickpea": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "chickpea",
+            "parameters": {
+              "d1": 20.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 10.0,
+              "d3b": 15.0,
+              "d4": 20.0,
+              "kc_1": 0.4,
+              "kc_3": 1.0,
+              "kc_5": 0.35,
+              "kc_all": 0.7,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 1.1,
+              "ky_3b": 0.75,
+              "ky_4": 0.2,
+              "ky_all": 1.15
+            },
+            "row_name": "chickpea",
+            "source_line_end": 53,
+            "source_line_start": 53
+          }
+        ],
+        "state": "resolved"
+      },
+      "cowpea": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "cowpea",
+            "parameters": {
+              "d1": 20.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 12.0,
+              "d3b": 18.0,
+              "d4": 20.0,
+              "kc_1": 0.4,
+              "kc_3": 1.05,
+              "kc_5": 0.35,
+              "kc_all": 0.75,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 1.1,
+              "ky_3b": 0.75,
+              "ky_4": 0.2,
+              "ky_all": 1.15
+            },
+            "row_name": "cowpea",
+            "source_line_end": 54,
+            "source_line_start": 54
+          }
+        ],
+        "state": "resolved"
+      },
+      "dry_pea": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "dry_pea",
+            "parameters": {
+              "d1": 20.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 15.0,
+              "d3b": 20.0,
+              "d4": 15.0,
+              "kc_1": 0.4,
+              "kc_3": 1.15,
+              "kc_5": 0.3,
+              "kc_all": 0.8,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.9,
+              "ky_3b": 0.7,
+              "ky_4": 0.2,
+              "ky_all": 1.1
+            },
+            "row_name": "dry pea",
+            "source_line_end": 56,
+            "source_line_start": 56
+          }
+        ],
+        "state": "resolved"
+      },
+      "foxtail_millet": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "foxtail_millet",
+            "parameters": {
+              "d1": 15.0,
+              "d2a": 25.0,
+              "d2b": 0.0,
+              "d3a": 13.0,
+              "d3b": 27.0,
+              "d4": 20.0,
+              "kc_1": 0.3,
+              "kc_3": 1.2,
+              "kc_5": 0.35,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.6,
+              "ky_3b": 0.8,
+              "ky_4": 0.2,
+              "ky_all": 1.0
+            },
+            "row_name": "foxtail millet",
+            "source_line_end": 33,
+            "source_line_start": 33
+          }
+        ],
+        "state": "resolved"
+      },
+      "maize": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "maize",
+            "parameters": {
+              "d1": 15.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 13.0,
+              "d3b": 27.0,
+              "d4": 15.0,
+              "kc_1": 0.3,
+              "kc_3": 1.2,
+              "kc_5": 0.35,
+              "kc_all": 0.85,
+              "ky_1": 0.4,
+              "ky_2a": 0.4,
+              "ky_2b": 0.4,
+              "ky_3a": 1.5,
+              "ky_3b": 0.5,
+              "ky_4": 0.2,
+              "ky_all": 1.25
+            },
+            "row_name": "maize, tropical (grain)",
+            "source_line_end": 16,
+            "source_line_start": 15
+          },
+          {
+            "crop": "maize",
+            "parameters": {
+              "d1": 20.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 12.0,
+              "d3b": 23.0,
+              "d4": 15.0,
+              "kc_1": 0.3,
+              "kc_3": 1.2,
+              "kc_5": 0.35,
+              "kc_all": 0.85,
+              "ky_1": 0.4,
+              "ky_2a": 0.4,
+              "ky_2b": 0.4,
+              "ky_3a": 1.5,
+              "ky_3b": 0.5,
+              "ky_4": 0.2,
+              "ky_all": 1.25
+            },
+            "row_name": "maize, other (grain)",
+            "source_line_end": 17,
+            "source_line_start": 17
+          }
+        ],
+        "state": "resolved"
+      },
+      "mung_bean": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "mung_bean",
+            "parameters": {
+              "d1": 20.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 12.0,
+              "d3b": 18.0,
+              "d4": 20.0,
+              "kc_1": 0.4,
+              "kc_3": 1.05,
+              "kc_5": 0.35,
+              "kc_all": 0.75,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 1.1,
+              "ky_3b": 0.75,
+              "ky_4": 0.2,
+              "ky_all": 1.15
+            },
+            "row_name": "green gram",
+            "source_line_end": 55,
+            "source_line_start": 55
+          }
+        ],
+        "state": "resolved"
+      },
+      "oats": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "oats",
+            "parameters": {
+              "d1": 15.0,
+              "d2a": 25.0,
+              "d2b": 0.0,
+              "d3a": 13.0,
+              "d3b": 27.0,
+              "d4": 20.0,
+              "kc_1": 0.3,
+              "kc_3": 1.15,
+              "kc_5": 0.25,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.65,
+              "ky_3b": 0.55,
+              "ky_4": 0.2,
+              "ky_all": 1.15
+            },
+            "row_name": "spring oat",
+            "source_line_end": 34,
+            "source_line_start": 34
+          }
+        ],
+        "state": "resolved"
+      },
+      "pearl_millet": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "pearl_millet",
+            "parameters": {
+              "d1": 10.0,
+              "d2a": 25.0,
+              "d2b": 0.0,
+              "d3a": 13.0,
+              "d3b": 27.0,
+              "d4": 25.0,
+              "kc_1": 0.3,
+              "kc_3": 1.0,
+              "kc_5": 0.3,
+              "kc_all": 0.8,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.6,
+              "ky_3b": 0.8,
+              "ky_4": 0.2,
+              "ky_all": 0.9
+            },
+            "row_name": "pearl millet",
+            "source_line_end": 32,
+            "source_line_start": 32
+          }
+        ],
+        "state": "resolved"
+      },
+      "phaseolus_bean": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "phaseolus_bean",
+            "parameters": {
+              "d1": 20.0,
+              "d2a": 25.0,
+              "d2b": 0.0,
+              "d3a": 15.0,
+              "d3b": 20.0,
+              "d4": 20.0,
+              "kc_1": 0.4,
+              "kc_3": 1.15,
+              "kc_5": 0.35,
+              "kc_all": 0.75,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 1.1,
+              "ky_3b": 0.75,
+              "ky_4": 0.2,
+              "ky_all": 1.15
+            },
+            "row_name": "phaseolous bean",
+            "source_line_end": 52,
+            "source_line_start": 52
+          }
+        ],
+        "state": "resolved"
+      },
+      "pigeonpea": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "pigeonpea",
+            "parameters": {
+              "d1": 20.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 12.0,
+              "d3b": 18.0,
+              "d4": 20.0,
+              "kc_1": 0.4,
+              "kc_3": 1.05,
+              "kc_5": 0.35,
+              "kc_all": 0.75,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 1.1,
+              "ky_3b": 0.75,
+              "ky_4": 0.2,
+              "ky_all": 1.15
+            },
+            "row_name": "pigeonpea",
+            "source_line_end": 57,
+            "source_line_start": 57
+          }
+        ],
+        "state": "resolved"
+      },
+      "rice_dry": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "rice_dry",
+            "parameters": {
+              "d1": 15.0,
+              "d2a": 10.0,
+              "d2b": 10.0,
+              "d3a": 15.0,
+              "d3b": 30.0,
+              "d4": 20.0,
+              "kc_1": 0.5,
+              "kc_3": 1.2,
+              "kc_5": 0.6,
+              "kc_all": 0.9,
+              "ky_1": 0.4,
+              "ky_2a": 0.5,
+              "ky_2b": 1.2,
+              "ky_3a": 2.5,
+              "ky_3b": 0.4,
+              "ky_4": 0.2,
+              "ky_all": 1.25
+            },
+            "row_name": "rice (dryland)",
+            "source_line_end": 14,
+            "source_line_start": 14
+          }
+        ],
+        "state": "resolved"
+      },
+      "rice_wet": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "rice_wet",
+            "parameters": {
+              "d1": 20.0,
+              "d2a": 10.0,
+              "d2b": 10.0,
+              "d3a": 13.0,
+              "d3b": 27.0,
+              "d4": 20.0,
+              "kc_1": 1.05,
+              "kc_3": 1.2,
+              "kc_5": 0.9,
+              "kc_all": 1.1,
+              "ky_1": 1.0,
+              "ky_2a": 1.0,
+              "ky_2b": 1.2,
+              "ky_3a": 2.5,
+              "ky_3b": 0.4,
+              "ky_4": 0.2,
+              "ky_all": 2.0
+            },
+            "row_name": "rice (japonica)",
+            "source_line_end": 12,
+            "source_line_start": 12
+          },
+          {
+            "crop": "rice_wet",
+            "parameters": {
+              "d1": 15.0,
+              "d2a": 10.0,
+              "d2b": 10.0,
+              "d3a": 15.0,
+              "d3b": 30.0,
+              "d4": 20.0,
+              "kc_1": 1.05,
+              "kc_3": 1.2,
+              "kc_5": 0.9,
+              "kc_all": 1.1,
+              "ky_1": 1.0,
+              "ky_2a": 1.0,
+              "ky_2b": 1.2,
+              "ky_3a": 2.5,
+              "ky_3b": 0.4,
+              "ky_4": 0.2,
+              "ky_all": 2.0
+            },
+            "row_name": "rice (indica)",
+            "source_line_end": 13,
+            "source_line_start": 13
+          }
+        ],
+        "state": "resolved"
+      },
+      "rye": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "rye",
+            "parameters": {
+              "d1": 15.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 12.0,
+              "d3b": 23.0,
+              "d4": 20.0,
+              "kc_1": 0.3,
+              "kc_3": 1.15,
+              "kc_5": 0.3,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.6,
+              "ky_3b": 0.5,
+              "ky_4": 0.2,
+              "ky_all": 1.05
+            },
+            "row_name": "winter rye",
+            "source_line_end": 24,
+            "source_line_start": 24
+          },
+          {
+            "crop": "rye",
+            "parameters": {
+              "d1": 15.0,
+              "d2a": 25.0,
+              "d2b": 0.0,
+              "d3a": 13.0,
+              "d3b": 27.0,
+              "d4": 20.0,
+              "kc_1": 0.3,
+              "kc_3": 1.15,
+              "kc_5": 0.3,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.65,
+              "ky_3b": 0.55,
+              "ky_4": 0.2,
+              "ky_all": 1.15
+            },
+            "row_name": "spring rye",
+            "source_line_end": 31,
+            "source_line_start": 31
+          }
+        ],
+        "state": "resolved"
+      },
+      "sorghum": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "sorghum",
+            "parameters": {
+              "d1": 10.0,
+              "d2a": 25.0,
+              "d2b": 0.0,
+              "d3a": 40.0,
+              "d3b": 0.0,
+              "d4": 25.0,
+              "kc_1": 0.3,
+              "kc_3": 1.05,
+              "kc_5": 0.55,
+              "kc_all": 0.8,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.55,
+              "ky_3b": 0.45,
+              "ky_4": 0.2,
+              "ky_all": 0.9
+            },
+            "row_name": "sorghum, tropical",
+            "source_line_end": 21,
+            "source_line_start": 21
+          },
+          {
+            "crop": "sorghum",
+            "parameters": {
+              "d1": 20.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 12.0,
+              "d3b": 23.0,
+              "d4": 15.0,
+              "kc_1": 0.3,
+              "kc_3": 1.05,
+              "kc_5": 0.55,
+              "kc_all": 0.8,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.55,
+              "ky_3b": 0.45,
+              "ky_4": 0.2,
+              "ky_all": 0.9
+            },
+            "row_name": "sorghum, other",
+            "source_line_end": 22,
+            "source_line_start": 22
+          }
+        ],
+        "state": "resolved"
+      },
+      "soybean": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "soybean",
+            "parameters": {
+              "d1": 10.0,
+              "d2a": 25.0,
+              "d2b": 0.0,
+              "d3a": 23.0,
+              "d3b": 27.0,
+              "d4": 15.0,
+              "kc_1": 0.4,
+              "kc_3": 1.15,
+              "kc_5": 0.5,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.8,
+              "ky_3b": 1.0,
+              "ky_4": 0.2,
+              "ky_all": 0.85
+            },
+            "row_name": "soybean, tropical",
+            "source_line_end": 59,
+            "source_line_start": 59
+          },
+          {
+            "crop": "soybean",
+            "parameters": {
+              "d1": 10.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 23.0,
+              "d3b": 27.0,
+              "d4": 10.0,
+              "kc_1": 0.4,
+              "kc_3": 1.15,
+              "kc_5": 0.5,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.8,
+              "ky_3b": 1.0,
+              "ky_4": 0.2,
+              "ky_all": 0.85
+            },
+            "row_name": "soybean, other",
+            "source_line_end": 60,
+            "source_line_start": 60
+          }
+        ],
+        "state": "resolved"
+      },
+      "sweet_potato": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "sweet_potato",
+            "parameters": {
+              "d1": 15.0,
+              "d2a": 10.0,
+              "d2b": 10.0,
+              "d3a": 0.0,
+              "d3b": 40.0,
+              "d4": 25.0,
+              "kc_1": 0.5,
+              "kc_3": 1.15,
+              "kc_5": 0.65,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.45,
+              "ky_2b": 0.8,
+              "ky_3a": 0.7,
+              "ky_3b": 0.7,
+              "ky_4": 0.2,
+              "ky_all": 1.1
+            },
+            "row_name": "sweet potato",
+            "source_line_end": 48,
+            "source_line_start": 48
+          }
+        ],
+        "state": "resolved"
+      },
+      "taro": {
+        "reason": "gaez_appendix_4_2_is_annual_only_and_contains_no_taro_or_cocoyam_row",
+        "rows": [],
+        "state": "blocked"
+      },
+      "wheat": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "wheat",
+            "parameters": {
+              "d1": 15.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 12.0,
+              "d3b": 23.0,
+              "d4": 20.0,
+              "kc_1": 0.4,
+              "kc_3": 1.15,
+              "kc_5": 0.3,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.6,
+              "ky_3b": 0.5,
+              "ky_4": 0.2,
+              "ky_all": 1.05
+            },
+            "row_name": "wheat (winter)",
+            "source_line_end": 10,
+            "source_line_start": 10
+          },
+          {
+            "crop": "wheat",
+            "parameters": {
+              "d1": 15.0,
+              "d2a": 25.0,
+              "d2b": 0.0,
+              "d3a": 13.0,
+              "d3b": 27.0,
+              "d4": 20.0,
+              "kc_1": 0.3,
+              "kc_3": 1.1,
+              "kc_5": 0.3,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.2,
+              "ky_2b": 0.2,
+              "ky_3a": 0.65,
+              "ky_3b": 0.55,
+              "ky_4": 0.2,
+              "ky_all": 1.15
+            },
+            "row_name": "wheat (spring)",
+            "source_line_end": 11,
+            "source_line_start": 11
+          }
+        ],
+        "state": "resolved"
+      },
+      "white_potato": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "white_potato",
+            "parameters": {
+              "d1": 20.0,
+              "d2a": 12.0,
+              "d2b": 13.0,
+              "d3a": 0.0,
+              "d3b": 35.0,
+              "d4": 20.0,
+              "kc_1": 0.5,
+              "kc_3": 1.15,
+              "kc_5": 0.75,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.45,
+              "ky_2b": 0.8,
+              "ky_3a": 0.7,
+              "ky_3b": 0.7,
+              "ky_4": 0.2,
+              "ky_all": 1.1
+            },
+            "row_name": "white potato",
+            "source_line_end": 47,
+            "source_line_start": 47
+          }
+        ],
+        "state": "resolved"
+      },
+      "yam": {
+        "reason": "published_gaez_appendix_4_2_rows",
+        "rows": [
+          {
+            "crop": "yam",
+            "parameters": {
+              "d1": 20.0,
+              "d2a": 25.0,
+              "d2b": 0.0,
+              "d3a": 0.0,
+              "d3b": 35.0,
+              "d4": 20.0,
+              "kc_1": 0.5,
+              "kc_3": 1.1,
+              "kc_5": 0.95,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.45,
+              "ky_2b": 0.8,
+              "ky_3a": 0.7,
+              "ky_3b": 0.7,
+              "ky_4": 0.2,
+              "ky_all": 1.1
+            },
+            "row_name": "white yam",
+            "source_line_end": 49,
+            "source_line_start": 49
+          },
+          {
+            "crop": "yam",
+            "parameters": {
+              "d1": 20.0,
+              "d2a": 30.0,
+              "d2b": 0.0,
+              "d3a": 0.0,
+              "d3b": 30.0,
+              "d4": 20.0,
+              "kc_1": 0.5,
+              "kc_3": 1.1,
+              "kc_5": 0.95,
+              "kc_all": 0.85,
+              "ky_1": 0.2,
+              "ky_2a": 0.45,
+              "ky_2b": 0.8,
+              "ky_3a": 0.7,
+              "ky_3b": 0.7,
+              "ky_4": 0.2,
+              "ky_all": 1.1
+            },
+            "row_name": "greater yam",
+            "source_line_end": 50,
+            "source_line_start": 50
+          }
+        ],
+        "state": "resolved"
+      }
+    },
+    "parsed_row_count": 28,
+    "registry_sha256": "28579112a4a8cb215025c4071a143fad88c0563678ef786658b0e3a3a876c796",
+    "resolved_crop_count": 20,
+    "schema_version": "gaez-traCE-climate-response-fallback-v1",
+    "source": {
+      "path": "/home/jan/development/ProsperOrPerishConstructor/artifacts/data/population_capacity/sources/pyaez_1337/crop_parameters/Appendix.4.2.Parameters.for.calculation.of.water.limited.yields.of.annual.crops.pdf",
+      "sha256": "8e26477f8b033e17171282c0cb14e7edce2230d44237f7097e46dae0691d30fb",
+      "url": "https://github.com/user-attachments/files/19708998/Appendix.4.2.Parameters.for.calculation.of.water.limited.yields.of.annual.crops.pdf"
+    }
+  },
+  "response_definition": {
+    "irrigated_water_stress": "none in this fallback; irrigability remains a separate capped physical input",
+    "thermal": "GAEZ Appendix 4-6 heat-sum bounds",
+    "water": "GAEZ Appendix 4-2 stage/Kc/Ky response with zero soil storage unless measured store supplied",
+    "yield": "baseline GAEZ low-input yield multiplied by annual water and thermal factors"
+  },
+  "schema_version": "gaez-traCE-climate-response-fallback-v1",
+  "semantic_role": "diagnostic_and_lower_bound_validation_only"
+}

@@ -1,0 +1,49 @@
+{
+  "artifact_id": "fayyum_1245_qmul_map_manifest_wave24",
+  "source_family": "qmul_rural_society_medieval_islam_fayyum_cadastre",
+  "target_year": 1245,
+  "source_urls": {
+    "project_map": "https://projects.history.qmul.ac.uk/ruralsocietyislam/map/",
+    "map_pdf": "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/FayyumMap1.pdf",
+    "settlement_table_docx": "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/Settlementtable.docx",
+    "database": "https://projects.history.qmul.ac.uk/ruralsocietyislam/database/"
+  },
+  "extraction": {
+    "settlement_table_format": "docx",
+    "identified_settlement_ids": 110,
+    "identified_settlement_rows": 110,
+    "grid_reference_fields": ["settlement", "id", "grid"],
+    "unlocated_settlements_warning": true,
+    "source_sha256_at_extraction": "ef2d07a272656d34d587f738027fd6aae0212b02291c214d9718737fc6a0d1af"
+  },
+  "map_provenance": {
+    "cartography": [
+      "geo-rectified US Army Map Service 1:100,000 scans",
+      "Jacotin 1788-89 survey published 1826",
+      "satellite elevation data",
+      "Shafei Bey Fayoum Irrigation map",
+      "modern map cross-reference"
+    ],
+    "lake_level_assumption_m_below_sea_level": -30,
+    "historical_boundary_status": "reconstructed_village_locations_not_full_cadastral_polygons",
+    "source_statement": "The project explicitly warns that not all settlements have been located; unidentified hamlets and smaller villages are listed separately."
+  },
+  "eu5_alignment": {
+    "status": "unresolved",
+    "eu5_selector": "location_tag=__unmapped_fayyum_cadastre_wave24__",
+    "mapped_area_km2": null,
+    "coverage_fraction": 0.0,
+    "resolution_blockers": [
+      "Settlement table supplies grid references, not georeferenced polygons.",
+      "The PDF map is a reconstructed historical landscape and has no audited EU5 crosswalk.",
+      "Rapoport's ~75,000 estimate includes an urban Madinat al-Fayyum component that must be partitioned.",
+      "No source supplies a formal saturation interval or local-food calorie share."
+    ]
+  },
+  "citation_details": [
+    "QMU map page states the map represents the mid-thirteenth-century landscape and describes its cartographic sources and lake-level assumption.",
+    "QMU map page states that not all settlements have been located and that unidentified hamlets/smaller villages are listed separately."
+  ],
+  "review_status": "research_complete_mapping_blocked",
+  "reviewed_on": "2026-08-04"
+}

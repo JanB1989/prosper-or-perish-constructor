@@ -1,0 +1,98 @@
+{
+  "schema_version": "population_capacity_training_readiness_v1",
+  "report_id": "training_readiness_wave28",
+  "created_on": "2026-08-04",
+  "status": "trained_but_not_acceptance_ready",
+  "physical_closure": {
+    "locations": 20929,
+    "required_crop_mode_engine_rows": 1925468,
+    "primary_unresolved_required_labels": 0,
+    "challenger_unresolved_required_labels": 0,
+    "source_completeness": 1.0,
+    "primary_source_fraction": 0.814884,
+    "productive_mode_coverage": 0.560726,
+    "exact_pyaez_rows": 0,
+    "same_geography_physical_fallback_rows": 962734,
+    "interpretation": "Production GAEZ labels are closed. The challenger matrix is structurally complete through explicit same-geography physical fallbacks, but it is not an exact PyAEZ evaluation."
+  },
+  "evidence_and_mapping": {
+    "packet_count": 188,
+    "active_packet_count": 180,
+    "training_eligible_groups": 28,
+    "two_sided_interval_groups": 4,
+    "lower_bound_groups": 24,
+    "source_families": 18,
+    "super_regions": 5,
+    "invalid_packets": 0,
+    "unresolved_required_crosswalks": 0,
+    "france_disposition": "lower_bound_only_until_independent_saturation_ceiling_evidence_exists",
+    "artois_disposition": "interval_scored_on_explicit_mapped_support_area",
+    "angkor_disposition": "one_sided_floor_with_declared_0.5_percent_endpoint_precision_tolerance"
+  },
+  "fit_and_generalization": {
+    "selected_candidate": "mechanistic",
+    "mechanistic_global_capacity_people_p50": 9621375079,
+    "grouped_holdout_groups": 23,
+    "grouped_holdout_scored_rows": 56,
+    "grouped_interval_pass_rate": 1.0,
+    "grouped_lower_bound_pass_rate": 1.0,
+    "frozen_interval_pass_rate": 1.0,
+    "frozen_lower_bound_pass_rate": 1.0,
+    "generalization_complete": true,
+    "challenger_replacement": "not_selected; neither learned residual challenger passed the required replacement contract"
+  },
+  "starting_population_diagnostic_only": {
+    "eu5_start_population_total": 393896322,
+    "modeled_capacity_people_p50": 9621375079,
+    "modeled_capacity_people_p90": 10527658350,
+    "locations_over_capacity_p50": 1400,
+    "locations_over_capacity_p90": 965,
+    "locations_over_10x_p50": 234,
+    "rural_inland_locations_over_capacity_p90": 704,
+    "unexplained_rural_inland_p90_contradictions": 703,
+    "policy": "Starting population is an external one-sided falsification diagnostic only; these contradictions cannot train, scale, select, normalize, or deploy a candidate, but remain unresolved quality-review items."
+  },
+  "remaining_acceptance_blockers": [
+    "historical_yield_validation.interannual_risk_validation_complete=false",
+    "historical_yield_validation.spatial_parameter_uncertainty_validation_complete=false",
+    "wave27 GDHY/ISIMIP provides modern relative-yield and paired irrigation diagnostics only; no public 1100-1500 global absolute-yield series exists, so the registry remains validation-only and global historical risk coverage is not acceptance-complete",
+    "wave28 FAOSTAT and historical-risk layers add modern country risk and in-period one-sided harvest diagnostics, but explicit unmapped/insufficient rows and source-semantic limits keep them validation-only",
+    "wave28 GAEZ v5 variant envelopes cover all 23 crops and both water modes, but water-parameter-to-LUT mapping and exact PyAEZ crop/mode constraints remain unresolved, so they cannot be treated as validated parameter-risk draws",
+    "exact 23-crop x 101-year PyAEZ annual simulation is not available: the official PyAEZ bundle currently exposes a runnable maize tutorial only and no EU5-mapped parameter bundles for the other 22 crops",
+    "accept must remain blocked because crop p10/p90 does not yet have independently validated interannual and parameter-risk propagation"
+  ],
+    "partial_skill_layer": {
+    "source": "MADA jja-mada-calver.txt",
+    "mapped_locations_with_any_footprint": 6076,
+    "mean_sample_coverage": 0.287634,
+    "mean_vrsq_coverage": 0.159206,
+    "mean_rce_coverage": 0.095692,
+    "interpretation": "Useful Asian hydroclimate validation metadata; insufficient to close global crop-risk uncertainty and never converted into a crop-yield label."
+  },
+  "deployment": {
+    "acceptance_allowed": false,
+    "normalization_applied": false,
+    "rendered_static_modifier": false,
+    "legacy_modifiers_unchanged": true
+  },
+  "artifacts": {
+    "generalization_audit": "artifacts/data/population_capacity/current_capacity_map/generalization_audit.json",
+    "model_selection": "artifacts/data/population_capacity/current_capacity_map/model_selection.json",
+    "label_audit": "artifacts/data/population_capacity/label_audit/label_audit.json",
+    "evidence_registry": "artifacts/data/population_capacity/current_capacity_map/evidence_registry.json",
+    "fallback_audit": "research/population_capacity/physical_validation/pyaez_gaez_fallback_audit_wave25.json",
+    "interannual_skill_audit": "research/population_capacity/physical_validation/interannual_skill_layer_audit_wave25.json",
+    "global_interannual_skill_wave27": "research/population_capacity/physical_validation/global_interannual_skill_wave27.json",
+    "interannual_yield_skill_registry_wave27": "research/population_capacity/physical_validation/interannual_yield_skill_registry_wave27.json",
+    "pyaez_exact_engine_audit_wave27": "research/population_capacity/model_reviews/pyaez_exact_engine_audit_wave27.json",
+    "pyaez_parameter_uncertainty_wave28": "research/population_capacity/model_reviews/pyaez_parameter_uncertainty_wave28.json",
+    "exact_engine_coverage": "research/population_capacity/model_reviews/exact_engine_coverage.parquet",
+    "global_uncertainty_validation_wave28": "research/population_capacity/physical_validation/uncertainty_validation_wave28.json",
+    "faostat_risk_mapping_manifest_wave28": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave28/faostat_risk_mapping_manifest_wave28.json",
+    "historical_risk_validation_manifest_wave28": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave28/historical_risk_validation_manifest_wave28.json",
+    "global_anchor_revalidation_wave28": "research/population_capacity/diagnostics/global_anchor_revalidation_wave28.json",
+    "interannual_harvest_evidence": "research/population_capacity/physical_validation/interannual_harvest_evidence_wave26.json",
+    "interannual_acquisition": "research/population_capacity/physical_validation/interannual_source_acquisition_wave25.json",
+    "interannual_coverage": "research/population_capacity/physical_validation/interannual_coverage_audit_wave25.json"
+  }
+}

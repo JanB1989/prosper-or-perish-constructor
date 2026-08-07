@@ -1,0 +1,109 @@
+{
+  "diagnostic_id": "anchor_generalization_contradiction_audit_wave30",
+  "generated_on": "2026-08-04",
+  "purpose": "Audit current mechanistic/generalization output against independent aggregate evidence, with special attention to high-capacity contradictions. Validation-only analogues remain held out and never become predictors or training targets.",
+  "model_version": "carrying_capacity_1337_v11_aggregate_torch_residual_gate",
+  "frame_rows": 20929,
+  "forbidden_inputs": ["starting_population", "HYDE population/cropland", "RGO identity", "RGO output modifiers", "trade/import calories", "regional correction multipliers"],
+  "source_artifacts": {
+    "benchmark_audit": "artifacts/data/population_capacity/benchmark_audit/benchmark_audit.csv",
+    "model_selection": "artifacts/data/population_capacity/current_capacity_map/model_selection.json",
+    "benchmark_source_manifest": "population_capacity_benchmarks.toml"
+  },
+  "hard_exact_boundary_contradictions": [
+    {
+      "anchor_id": "rapa_nui_food_limits",
+      "role": "validation_only",
+      "date_interval": [1200, 1722],
+      "mapped_boundary": "Entire Rapa Nui island; exact EU5 location_tag=rapa_nui",
+      "boundary_status": "exact",
+      "capacity_interval_people": {"p10": 3500, "p50": 10000, "p90": 17500},
+      "current_predicted_capacity_people": 34236,
+      "ratio_to_interval_central": 3.4236,
+      "log_distance_to_interval": 0.6710768410898948,
+      "aggregate_interval_status": "fail",
+      "severity": "high",
+      "evidence_role": "held_out_out_of_period_food_limit_validation",
+      "local_food_and_pressure": "low-trade isolated island; traditional sweet-potato dryland agriculture, rock gardens/mulch and marine foods; island-wide land, freshwater, nutrient and drought constraints",
+      "shock_and_semantic_caveats": [
+        "partly outside the 1337 target window",
+        "rock-garden extent and nitrogen-fixation regime are disputed/sensitivity drivers",
+        "marine-food contribution is uncertain",
+        "post-contact decline is not used as a target"
+      ],
+      "sources": [
+        "https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2017.00069/full",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4313829/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC11192071/"
+      ],
+      "citation_details": [
+        "Puleston et al., Frontiers in Ecology and Evolution 5 (2017), abstract and Table 2: 3,134 ha suitable for traditional dryland sweet potato; low-N average approximately 3,500 and high-N approximately 17,500 sustainable people, with higher values possible under selected assumptions.",
+        "Puleston et al. (2017), Results/Discussion: modeled yields are highly sensitive to nitrogen inputs, fallow/continuous cultivation and social assumptions; the interval is retained as a validation envelope rather than a 1337 training label."
+      ],
+      "interpretation": "This is a real model contradiction, not a boundary artifact. The current output is above the cited high endpoint by 1.96x. The result blocks a claim of globally generalized capacity until island area, crop nitrogen/fallow treatment, marine-food caps and uncertainty propagation are audited. It does not authorize a Rapa Nui-specific multiplier or a global downscale."
+    }
+  ],
+  "soft_or_unresolved_high_capacity_contradictions": [
+    {
+      "anchor_id": "engaruka_irrigated_capacity_1400_1720_validation",
+      "current_predicted_capacity_people": 2083419,
+      "reference_capacity_interval_people": {"p10": 8000, "p50": 9000, "p90": 10000},
+      "ratio_to_interval_central": 231.490,
+      "boundary_status": "approximate",
+      "disposition": "do_not_score_until_archaeological_boundary_and_hinterland_semantics_are_closed",
+      "reason": "One EU5 location is a broad proxy for an archaeological settlement system; the published interval is not a complete province-scale boundary."
+    },
+    {
+      "anchor_id": "roman_palmyra_hinterland_capacity",
+      "current_predicted_capacity_people": 1958034,
+      "reference_capacity_interval_people": {"p10": 30000, "p50": 37500, "p90": 45000},
+      "ratio_to_interval_central": 52.214,
+      "boundary_status": "approximate",
+      "disposition": "do_not_score_until_city_hinterland_and_irrigated-oasis boundary are separated",
+      "reason": "The archaeological/city hinterland envelope is not equivalent to the broad EU5 selector; city provisioning and oasis trade are unresolved."
+    },
+    {
+      "anchor_id": "peten_lowland_milpa_capacity",
+      "current_predicted_capacity_people": 8005546,
+      "reference_capacity_interval_people": {"p10": 3000000, "p50": 3500000, "p90": 4000000},
+      "ratio_to_interval_central": 2.287,
+      "boundary_status": "approximate",
+      "disposition": "validation_only",
+      "reason": "The mapped EU5 footprint and Classic Maya settlement/forest-management boundary are not yet equivalent; the interval is not a same-boundary 1337 target."
+    }
+  ],
+  "passes_and_controls": [
+    {
+      "anchor_id": "iceland_preindustrial_capacity_model_1290_1315",
+      "current_predicted_capacity_people": 76567,
+      "reference_capacity_interval_people": {"p10": 40000, "p50": 60000, "p90": 80000},
+      "ratio_to_interval_central": 1.2761166667,
+      "boundary_status": "exact",
+      "aggregate_interval_status": "pass",
+      "role": "validation_only_out_of_scale_anchor"
+    },
+    {
+      "anchor_id": "england_1290_food_security_capacity_interval_wave8",
+      "current_predicted_capacity_people": 5674862,
+      "reference_capacity_interval_people": {"p10": 4250000, "p50": null, "p90": 6200000},
+      "boundary_status": "exact",
+      "aggregate_interval_status": "pass",
+      "role": "two_sided_interval_anchor"
+    }
+  ],
+  "gate_effect": {
+    "new_training_targets": 0,
+    "new_scale_anchors": 0,
+    "validation_failures_exact_boundary": 1,
+    "validation_cases_with_approximate_boundaries": 3,
+    "scientific_acceptance_blocked": true,
+    "deployment_allowed": false,
+    "reason": "An exact-boundary independent food-limit interval fails by 3.42x. The failure must be explained through shared physical features, land allocation, nutrient/fallow assumptions, marine-food caps and uncertainty—not hidden by a regional multiplier or excluded from the report."
+  },
+  "required_followup": [
+    "Recompute the Rapa Nui island case with the same area, soil/nutrient, fallow/rotation, marine-food and uncertainty conventions used by the global model; preserve the published low/high nitrogen scenarios as an external holdout.",
+    "Run leave-one-source-family and leave-one-island-out generalization with Rapa Nui held out; report whether any challenger reduces the 3.42x contradiction without worsening Iceland/England interval coverage.",
+    "Keep Engaruka, Palmyra and Petén as boundary-repair queues; their large ratios are not admissible evidence until the archaeological/hinterland polygons are closed.",
+    "Do not alter global normalization or introduce island/region correction factors while this gate is failing."
+  ]
+}

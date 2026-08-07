@@ -1,0 +1,212 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Africa_and_Middle_East",
+  "region": "africa_middleeast",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/location_geometry_calibrated.parquet",
+  "crosswalk_policy": "Selectors below are screening candidates only. A null/zero coverage value means that no historical polygon overlay has been audited; it is not permission to score the record. Partial site containment is never promoted to surrounding-land capacity.",
+  "crosswalks": [
+    {
+      "anchor_id": "rasulid_yemen_1292_1321_tax_crop_register_wave7",
+      "historical_boundary": "Rasulid tax and irrigation districts in Wadi Zabid/Tihama and selected highland districts, as listed in the 1292-1296 daftar and the Irtifa register under al-Mu'ayyad Da'ud",
+      "eu5_selector": {
+        "include": [
+          "province=zabid_province",
+          "province=taizz_province",
+          "province=sana_province"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": {
+        "province=zabid_province": 5,
+        "province=taizz_province": 5,
+        "province=sana_province": 10
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "resolution_method": "Digitize the Wadi Zabid map and district descriptions from Jāzim (ed. 2008), register each source district separately, then intersect with calibrated EU5 polygons. The province selectors currently overinclude unrelated land and cannot be used for a target.",
+      "required_actions": [
+        "obtain a georeferenced scan/vector of the Wadi Zabid map",
+        "resolve each district's historical extent and date",
+        "compute matched and unmapped area against calibrated EU5 geometry",
+        "keep Aden/customs/port areas separate from local food-supporting districts"
+      ],
+      "notes": "This crosswalk exists to align the physical crop/irrigation evidence. No population target is attached, so the unresolved boundary does not block the existing training set."
+    },
+    {
+      "anchor_id": "fayyum_nabulusi_gis_fiscal_followup_wave7",
+      "historical_boundary": "The approximately one hundred Fayyum villages and canal clusters in al-Nābulusī's 1245 survey",
+      "eu5_selector": {
+        "include": [
+          "location_tag=faiyum"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for the location point, low for the aggregate village/canal boundary",
+      "status": "blocked",
+      "resolution_method": "Download the project's geo-rectified Fayyum map and settlement table, georeference village/canal points, reconstruct a closed depression/canal footprint and overlay it with calibrated EU5 geometry. Do not use the single Fayyum selector as exact coverage.",
+      "required_actions": [
+        "digitize the Fayyum GIS village/canal map",
+        "associate each village with a historical polygon or documented catchment",
+        "report unmapped village/canal area and overlap with the EU5 Fayyum location",
+        "keep partial poll-tax observations separate from total population"
+      ],
+      "source_map_urls": [
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/map/",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/FayyumMap1.pdf",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/Settlementtable.docx"
+      ],
+      "notes": "The map and table are now identified for future digitization, but no aggregate target is admitted until the boundary and population semantics are closed."
+    },
+    {
+      "anchor_id": "southern_mesopotamia_canal_landscape_1200_1337_disposition_wave7",
+      "historical_boundary": "Late Abbasid/Ilkhanid southern Mesopotamian canal and settlement study areas",
+      "eu5_selector": {
+        "include": [
+          "area=iraq_arabi_area"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 54,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "resolution_method": "Reconstruct study-area canal polygons from the archaeological/remote-sensing papers, then intersect the polygons with the 54-location Iraq Arabi screening selector. The current selector is broader than each study area and cannot be treated as a covered aggregate.",
+      "required_actions": [
+        "obtain study-area GIS layers or digitize published maps",
+        "separate urban Basra/Baghdad and trade corridors",
+        "date each canal/settlement polygon and annotate Mongol/salinity shocks",
+        "report historical-to-EU5 area overlap"
+      ],
+      "notes": "Physical irrigation evidence can be mapped as features before a population target exists."
+    },
+    {
+      "anchor_id": "old_dongola_1100_1400_local_food_validation_wave7",
+      "historical_boundary": "Old Dongola archaeological site (approximately 200 ha at urban maximum) and its unresolved Letti Basin/Nile agricultural hinterland",
+      "eu5_selector": {
+        "include": [
+          "location_tag=dongola"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "historical_site_area_km2": 2.0,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for urban site, low for hinterland",
+      "status": "blocked",
+      "resolution_method": "Use the PCMA/archaeological site plan for the urban point, then locate and digitize the Nile/Letti Basin agricultural catchment before any aggregate scoring. A site-point selector is not a capacity boundary.",
+      "required_actions": [
+        "separate urban site from local food hinterland",
+        "map the Nile-bank agricultural catchment",
+        "resolve 1100-1400 chronology and political shocks",
+        "obtain a population/capacity interval if this is ever to become more than validation"
+      ],
+      "notes": "Exact site location is available, but the only quantitative spatial figure (200 ha) is an urban archaeological area and cannot be used as surrounding-land coverage."
+    },
+    {
+      "anchor_id": "banganarti_1100_1300_pilgrimage_food_validation_wave7",
+      "historical_boundary": "Banganarti church/pilgrimage settlement and excavated residential quarters",
+      "eu5_selector": {
+        "include": [
+          "location_tag=__unmapped_banganarti__"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 0,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "resolution_method": "Locate the Banganarti excavation coordinate in the EU5 geometry and preserve the church/pilgrimage settlement as a city/trade negative control. No rural catchment is published for an aggregate crosswalk.",
+      "required_actions": [
+        "add a point crosswalk only if the EU5 location is verified",
+        "do not infer population from pilgrimage faunal remains",
+        "retain as validation-only unless a resident population and hinterland boundary are found"
+      ],
+      "notes": "No EU5 location selector currently matches the historical site; this is an explicit unresolved mapping, not a silently dropped record."
+    },
+    {
+      "anchor_id": "ethiopia_lalibela_lasta_1150_1350_disposition_wave7",
+      "historical_boundary": "Lalibela/Lasta archaeological and agricultural landscape",
+      "eu5_selector": {
+        "include": [
+          "location_tag=lalibela"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "resolution_method": "Digitize archaeological landscape/terrace survey extents and distinguish the royal/monastic site from rural production before intersecting the Lasta EU5 location.",
+      "required_actions": [
+        "obtain a closed Lasta landscape polygon",
+        "separate pilgrimage/royal provisioning",
+        "map any rural food-supporting area and quantify overlap",
+        "find an independent population or capacity interval"
+      ],
+      "notes": "The EU5 location is a screening proxy only. Existing qualitative packet remains authoritative."
+    },
+    {
+      "anchor_id": "djenne_jeno_750_1100_disposition_wave7",
+      "historical_boundary": "Jenné-jeno tell and associated Inland Niger Delta settlement cluster",
+      "eu5_selector": {
+        "include": [
+          "location_tag=djenne"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 5,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "resolution_method": "Use published settlement-survey maps to reconstruct the floodplain settlement cluster and intersect it with the five-location EU5 Djenne province selector. Tell area alone is not a rural capacity boundary.",
+      "required_actions": [
+        "digitize the settlement cluster and rural floodplain",
+        "resolve 750-1100 versus 1337 date compatibility",
+        "find an absolute aggregate population/capacity interval",
+        "separate trade/urban food exchange from local support"
+      ],
+      "notes": "Current mapping remains qualitative and intentionally cannot score the model."
+    },
+    {
+      "anchor_id": "tichitt_walata_1000_500_bce_theoretical_capacity_validation_wave7",
+      "historical_boundary": "Tichitt-Walata archaeological region in southeastern Mauritania and adjoining Sahel",
+      "eu5_selector": {
+        "include": [
+          "location_tag=__unmapped_tichitt_walata__"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 0,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "not_applicable",
+      "crosswalk_status": "not_applicable",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "resolution_method": "No 1337-compatible historical boundary exists in the reviewed sources; keep Holl's theoretical/actual ratio as a held-out qualitative analogue only.",
+      "required_actions": [
+        "do not map a prehistoric region onto a modern EU5 selector",
+        "do not use the 2-3x ratio as a global scale target",
+        "retain only as an out-of-period model stress test"
+      ],
+      "notes": "Not applicable to target-year training or EU5 aggregate supervision."
+    }
+  ]
+}

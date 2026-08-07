@@ -1,0 +1,54 @@
+{
+  "schema_version": "population_capacity_model_shortfall_review_v1",
+  "reviewed_on": "2026-08-03",
+  "purpose": "Document the strict post-fit failures after adding the Iceland two-sided anchor; this is a diagnostic, not a training target or correction factor.",
+  "registry": {
+    "training_eligible_records": 28,
+    "two_sided_interval_records": 4,
+    "lower_bound_records": 24,
+    "source_families": 18,
+    "super_regions": 5,
+    "physical_locations": 20929
+  },
+  "grouped_holdout_150_epoch": {
+    "mechanistic": {
+      "interval_pass_rate": 0.3333333333333333,
+      "lower_bound_pass_rate": 0.7954545454545454,
+      "mean_log_distance": 0.12412824359106983,
+      "scored_rows": 47
+    },
+    "hierarchical_additive": {
+      "interval_pass_rate": 0.3333333333333333,
+      "lower_bound_pass_rate": 0.9090909090909091,
+      "mean_log_distance": 0.07759779455646734,
+      "scored_rows": 47
+    },
+    "monotone_nam": {
+      "interval_pass_rate": 0.3333333333333333,
+      "lower_bound_pass_rate": 0.9090909090909091,
+      "mean_log_distance": 0.044686938152150274,
+      "scored_rows": 47
+    }
+  },
+  "interpretation": [
+    "The mechanistic raw Angkor estimate is approximately 603000 people before the England-derived global scale and approximately 205000 after it; the 700000 lower bound therefore exposes a calibration/anchor conflict rather than a missing label.",
+    "The Upper Mantaro mapping contains high-altitude locations with many valid structural-zero crop modes; potato/barley/wheat-positive locations remain present. This is a representativeness and historical-crop mapping review item, not permission for a regional multiplier.",
+    "The Iceland two-sided interval is failed in opposite directions by the mechanistic and NAM candidates: the mechanistic p50 is below 40000 while the NAM is above 80000. A generic loss-weight change did not resolve both bounds.",
+    "Japan Buzen/Tajima are one-sided register floors with partial/non-rice and date-conversion caveats; they should not be converted into point labels.",
+    "The Tonga lower-bound failure appears only in some held-out NAM refits; this is challenger instability, not a reason to weaken the lower-bound gate."
+  ],
+  "tested_generic_variants": [
+    "600 and 2500 epochs",
+    "residual scale 2.0",
+    "lower residual penalty 0.005",
+    "lower-bound loss weight 3",
+    "combined residual scale and lower-bound weight",
+    "nonnegative NAM residual"
+  ],
+  "decision": "Do not implement a loss tweak or anchor-specific/regional multiplier. Keep acceptance blocked until the physical/calibration conflicts are resolved by better evidence or a globally justified model change.",
+  "artifacts": [
+    "artifacts/data/population_capacity/current_capacity_map/grouped_evidence_holdouts.json",
+    "artifacts/data/population_capacity/current_capacity_map/generalization_audit.json",
+    "artifacts/data/population_capacity/current_capacity_map/lower_bound_failure_diagnostics.json"
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": "population_capacity_lower_bound_audit_v1",
+  "audit_id": "global_in_period_lower_bound_registry_wave32",
+  "target_year": 1337,
+  "purpose": "Promote only already-vetted, in-period, locally supported one-sided evidence into the canonical benchmark registry; do not manufacture two-sided labels or use observed starting population as a target.",
+  "selection_rules": [
+    "The observation must describe a bounded settlement system or site with a defensible population floor.",
+    "Staple food support must be predominantly local and independently documented.",
+    "Trade, war, conquest, migration, epidemics and boundary mismatch remain explicit caveats.",
+    "Containment is sufficient for a one-sided inequality, but it is not treated as an exact historical boundary for a two-sided scale anchor.",
+    "A lower bound is never promoted to the global scale anchor and never becomes a location-level training label."
+  ],
+  "records": [
+    {
+      "anchor_id": "great_zimbabwe_1300_1450_population_lower_bound_wave32",
+      "existing_evidence_packet": "research/population_capacity/evidence_packets/africa_great_zimbabwe_lower_bound_wave16.json",
+      "existing_crosswalk": "research/population_capacity/crosswalks/africa_great_zimbabwe_lower_bound_wave16.json",
+      "super_region": "Africa",
+      "date_interval": [1300, 1450],
+      "population_floor_people": 10000,
+      "capacity_floor_people": 10000,
+      "local_food_share_interval": [0.7, 0.85, 1.0],
+      "role": "lower_bound",
+      "review_status": "vetted",
+      "source_family": "great_zimbabwe_unesco_archaeology_ecology",
+      "source_bundle": "unesco_great_zimbabwe_chirikure_2017_ecological_consistency_bundle",
+      "independence_disposition": "shared_with_existing_great_zimbabwe_urban_control; not counted as a new independent source family",
+      "pressure_and_food_evidence": [
+        "UNESCO World Heritage Centre, Great Zimbabwe National Monument, Outstanding Universal Value, paragraphs 52-61: fourteenth-century principal city exceeded 10,000 people; farming and pastoral activity are archaeologically documented; abandonment followed food-hinterland failure near 1450.",
+        "Chirikure et al. (2017), PLOS ONE 12(6):e0178335, abstract and pp. 1-2, 9-11: the repeated 18,000-20,000 estimate is ecologically inconsistent; a 20,000 scenario requires approximately 20,000 ha arable land and 11,500-20,000 cattle, while the credible site total is unlikely to exceed 10,000."
+      ],
+      "trade_and_shock_review": "Mixed local staple production and pastoralism with Indian Ocean prestige trade and tribute; the city boundary cannot stand for the surrounding rural catchment, so the record is a containment floor only.",
+      "mapping": {
+        "historical_boundary": "UNESCO Great Zimbabwe archaeological property/site, approximately 800 ha",
+        "eu5_selector": ["location_tag=great_zimbabwe"],
+        "matched_location_count": 1,
+        "containment_coverage_fraction": 1.0,
+        "mapping_semantics": "exact containment for a one-sided inequality; not an area-equivalent historical boundary",
+        "area_ratio_historical_to_eu5": 0.000145
+      },
+      "sources": [
+        "https://whc.unesco.org/en/list/364",
+        "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0178335"
+      ],
+      "decision": "retain_vetted_lower_bound; no scale-anchor promotion; no regional correction factor"
+    },
+    {
+      "anchor_id": "upper_mantaro_wanka_ii_1350_1450_population_lower_bound_wave32",
+      "existing_evidence_packet": "research/population_capacity/evidence_packets/america_upper_mantaro_lower_bound_wave5.json",
+      "existing_crosswalk": "research/population_capacity/crosswalks/america_upper_mantaro_lower_bound_wave5.json",
+      "super_region": "America/Oceania",
+      "date_interval": [1350, 1450],
+      "population_floor_people": 61000,
+      "capacity_floor_people": 61000,
+      "local_food_share_interval": [0.8, 0.9, 0.98],
+      "role": "lower_bound",
+      "review_status": "vetted",
+      "source_family": "upper_mantaro_umarp_jasp_archaeology",
+      "source_bundle": "daltroy_earle_hastorf_costin_ortman_umarp_jasp_bundle",
+      "independence_disposition": "independent_source family; retained as one archaeological landscape group despite multiple analyses of the same UMARP/JASP record",
+      "pressure_and_food_evidence": [
+        "Earle, How Chiefs Come to Power, Table 2.2 and pp. 54-57: settlement area, occupational density and contemporaneous occupation imply approximately 61,000 Wanka II residents.",
+        "Earle pp. 56-57 and chapter 4: fortified polities competed over land, herds and resources, indicating pressure but not proving a fully saturated Malthusian ceiling.",
+        "D'Altroy, El poder provincial en el imperio inka, p. 153; Ortman et al., Settlement Scaling and Economic Change in the Central Andes, pp. 2-5 and 14-15; Costin and Earle, American Antiquity 54(4), pp. 695-701: local potato, quinoa, oca/olluco, camelid/deer, rain-fed and terraced production dominate staples; commercial markets are not the support mechanism."
+      ],
+      "trade_and_shock_review": "Low-to-moderate staple trade; some maize and lowland specialties were exchanged. Chronic warfare and later Inka conquest are caveats; neither is converted into an anchor-specific correction.",
+      "mapping": {
+        "historical_boundary": "UMARP northern Upper Mantaro/Yanamarca landscape inside the approximately 1,900 km2 JASP survey region",
+        "eu5_selector": ["province=hatun_xauxa_province"],
+        "matched_location_count": 6,
+        "containment_coverage_fraction": 1.0,
+        "mapping_semantics": "exact containment for a one-sided inequality; selector area 11,046.64 km2 intentionally exceeds the published 1,900 km2 research landscape",
+        "published_area_km2": 1900.0,
+        "selector_area_km2": 11046.637763,
+        "published_area_share_of_selector": 0.172002
+      },
+      "sources": [
+        "https://doi.org/10.1515/9781503616349",
+        "https://www.bcrp.gob.pe/docs/Publicaciones/libros/2022/poder-provincial.pdf",
+        "https://sfi-edu.s3.amazonaws.com/sfi-edu/production/uploads/sfi-com/dev/uploads/filer/6e/c3/6ec30f73-931e-4ea5-a703-31c377a56fe5/16-04-008.pdf",
+        "https://doi.org/10.2307/280677"
+      ],
+      "decision": "retain_vetted_lower_bound; no scale-anchor promotion; retain broad containment caveat in held-out diagnostics"
+    }
+  ],
+  "summary": {
+    "records": 2,
+    "vetted_lower_bounds": 2,
+    "new_independent_source_families": 1,
+    "new_scale_anchors": 0,
+    "starting_population_or_hyde_or_rgo_predictors": 0,
+    "unresolved_mapping_records": 0,
+    "remaining_action": "Use both only as one-sided aggregate tests; exact historical polygon reconstruction is still required before either can become a two-sided scale anchor."
+  }
+}

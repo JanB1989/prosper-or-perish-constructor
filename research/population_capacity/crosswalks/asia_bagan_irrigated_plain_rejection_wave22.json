@@ -1,0 +1,42 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "super_region": "Asia",
+  "region": "indochina",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "bagan_1050_1300_irrigated_plain_physical_validation_wave22",
+      "historical_boundary": "Bagan Archaeological Zone / classical Bagan plain, approximately 104 km2, centered on the walled capital and monument landscape.",
+      "eu5_selector": "location_tag=pagan",
+      "selector_type": "location_tag_containment_weighted",
+      "selected_location_count": 1,
+      "matched_location_count": 1,
+      "location_weights": {
+        "pagan": 0.061624
+      },
+      "selector_coverage_fraction": 1.0,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "contained_archaeological_zone_in_coarse_eu5_location",
+      "crosswalk_status": "validation_only",
+      "boundary_confidence": "high for property boundary; low for rural food catchment",
+      "status": "rejected",
+      "candidate_role": "validation_only",
+      "area_comparison": {
+        "historical_area_km2": 104.0,
+        "eu5_candidate_footprint_area_km2": 1687.609014614823,
+        "mapped_area_km2": 104.0,
+        "area_coverage_fraction": 1.0,
+        "eu5_calibrated_centroid_lon": 95.01756867152517,
+        "eu5_calibrated_centroid_lat": 21.049136173073766,
+        "geometry_source": "polynomial_coordinate_jacobian_v2+bounded_exact_crosswalks"
+      },
+      "resolution_method": "Use the pagan location only as a containing selector and cap the mapped footprint at the UNESCO archaeological property area. The city/property boundary is deliberately not expanded to Kyaukse, Mu valley, or the Pagan Kingdom.",
+      "sources": [
+        "https://whc.unesco.org/en/list/1588/",
+        "https://www.burmalibrary.org/en/the-origins-of-bagan-the-archaeological-landscape-of-upper-burma-to-ad-1300"
+      ],
+      "notes": "The crosswalk is suitable for physical feature validation, but the city/trade-hub boundary rule blocks demographic training use. No population value is inferred from monument density."
+    }
+  ]
+}

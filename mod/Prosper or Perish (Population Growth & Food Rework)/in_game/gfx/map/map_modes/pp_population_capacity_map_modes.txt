@@ -14,14 +14,14 @@
 @data_edge_color_mult = 0
 @data_before_lighting_blend = 0.5
 @data_after_lighting_blend = 0.5
-@pp_population_capacity_very_low = 20
-@pp_population_capacity_low = 40
-@pp_population_capacity_middle = 60
-@pp_population_capacity_high = 80
-@pp_population_capacity_strong = 100
-@pp_population_capacity_very_strong = 125
-@pp_population_capacity_exceptional = 155
-@pp_population_capacity_cap = 200
+@pp_population_capacity_very_low = 3387
+@pp_population_capacity_low = 6775
+@pp_population_capacity_middle = 10162
+@pp_population_capacity_high = 13550
+@pp_population_capacity_strong = 16937
+@pp_population_capacity_very_strong = 21171
+@pp_population_capacity_exceptional = 26252
+@pp_population_capacity_cap = 33874
 @pp_population_growth_negative_cap = -0.007
 @pp_population_growth_negative_mid = -0.002
 @pp_population_growth_neutral_low = -0.0005
@@ -62,7 +62,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_very_low
-					divide = 20
+					divide = 3388
 					max = 1
 					min = 0
 				}
@@ -78,7 +78,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_low
-					divide = 20
+					divide = 3387
 					max = 1
 					min = 0
 				}
@@ -94,7 +94,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_middle
-					divide = 20
+					divide = 3388
 					max = 1
 					min = 0
 				}
@@ -110,7 +110,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_high
-					divide = 20
+					divide = 3387
 					max = 1
 					min = 0
 				}
@@ -126,7 +126,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_strong
-					divide = 25
+					divide = 4234
 					max = 1
 					min = 0
 				}
@@ -142,7 +142,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_very_strong
-					divide = 30
+					divide = 5081
 					max = 1
 					min = 0
 				}
@@ -158,7 +158,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_exceptional
-					divide = 45
+					divide = 7622
 					max = 1
 					min = 0
 				}
@@ -193,6 +193,136 @@ pp_population_capacity = {
 	use_fow = no
 	category = population
 	index = 1
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+	color_refresh_counters = { LocationDevelopmentChanged LocationPopulationChanged }
+	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }
+}
+
+# DEBUG map mode for raw population-capacity density (people per km²).
+# This reads the diagnostic-only pp_population_capacity_density modifier. It
+# does not change local_population_capacity or any other gameplay value.
+@pp_population_capacity_density_very_low = 10
+@pp_population_capacity_density_low = 25
+@pp_population_capacity_density_middle = 50
+@pp_population_capacity_density_high = 100
+@pp_population_capacity_density_strong = 150
+@pp_population_capacity_density_very_strong = 250
+@pp_population_capacity_density_exceptional = 400
+@pp_population_capacity_density_cap = 600
+
+pp_population_capacity_density = {
+	map_color = {
+		if = {
+			limit = { is_ownable = no }
+			value = rgb { 128 128 128 }
+		}
+		else_if = {
+			limit = { modifier:pp_population_capacity_density < @pp_population_capacity_density_very_low }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MIN
+				max_color = define:NMapColors|MAP_COLOR_LOW
+				factor = { value = modifier:pp_population_capacity_density divide = @pp_population_capacity_density_very_low max = 1 min = 0 }
+			}
+		}
+		else_if = {
+			limit = { modifier:pp_population_capacity_density < @pp_population_capacity_density_low }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_MID
+				factor = { value = modifier:pp_population_capacity_density subtract = @pp_population_capacity_density_very_low divide = 15 max = 1 min = 0 }
+			}
+		}
+		else_if = {
+			limit = { modifier:pp_population_capacity_density < @pp_population_capacity_density_middle }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MID
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = { value = modifier:pp_population_capacity_density subtract = @pp_population_capacity_density_low divide = 25 max = 1 min = 0 }
+			}
+		}
+		else_if = {
+			limit = { modifier:pp_population_capacity_density < @pp_population_capacity_density_high }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_HIGH
+				max_color = define:NMapColors|MAP_COLOR_MAX
+				factor = { value = modifier:pp_population_capacity_density subtract = @pp_population_capacity_density_middle divide = 50 max = 1 min = 0 }
+			}
+		}
+		else_if = {
+			limit = { modifier:pp_population_capacity_density < @pp_population_capacity_density_strong }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = { value = modifier:pp_population_capacity_density subtract = @pp_population_capacity_density_high divide = 50 max = 1 min = 0 }
+			}
+		}
+		else_if = {
+			limit = { modifier:pp_population_capacity_density < @pp_population_capacity_density_very_strong }
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_TOP
+				max_color = rgb { 245 245 245 }
+				factor = { value = modifier:pp_population_capacity_density subtract = @pp_population_capacity_density_strong divide = 100 max = 1 min = 0 }
+			}
+		}
+		else_if = {
+			limit = { modifier:pp_population_capacity_density < @pp_population_capacity_density_exceptional }
+			lerp = {
+				min_color = rgb { 245 245 245 }
+				max_color = rgb { 170 235 255 }
+				factor = { value = modifier:pp_population_capacity_density subtract = @pp_population_capacity_density_very_strong divide = 150 max = 1 min = 0 }
+			}
+		}
+		else_if = {
+			limit = { modifier:pp_population_capacity_density < @pp_population_capacity_density_cap }
+			lerp = {
+				min_color = rgb { 170 235 255 }
+				max_color = rgb { 70 210 255 }
+				factor = { value = modifier:pp_population_capacity_density subtract = @pp_population_capacity_density_exceptional divide = 200 max = 1 min = 0 }
+			}
+		}
+		else = { value = rgb { 70 210 255 } }
+	}
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_RANGE_0_10" color = define:NMapColors|MAP_COLOR_MIN }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_RANGE_10_25" color = define:NMapColors|MAP_COLOR_LOW }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_RANGE_25_50" color = define:NMapColors|MAP_COLOR_MID }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_RANGE_50_100" color = define:NMapColors|MAP_COLOR_HIGH }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_RANGE_100_150" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_RANGE_150_250" color = define:NMapColors|MAP_COLOR_TOP }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_RANGE_250_400" color = rgb { 245 245 245 } }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_RANGE_400_600" color = rgb { 170 235 255 } }
+	legend_key = { desc = "MAPMODE_PP_POPULATION_CAPACITY_DENSITY_CAPPED" color = rgb { 70 210 255 } }
+	tooltip_key = {
+		if = { limit = { is_land = yes } value = MAPMODE_PP_POPULATION_CAPACITY_DENSITY_TT_LAND }
+		else = { value = MAPMODE_PP_POPULATION_CAPACITY_DENSITY_TT_WATER }
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = debug
+	# The vanilla debug picker exposes groups 0, 1, and 2 only.  Sharing group 2
+	# keeps this diagnostic mode visible without replacing the vanilla picker.
+	index = 2
+	allow_allocate_hotkey = no
 	map_markers = { all = no }
 	gradient_parameters = {
 		zoom_step = @zoom_step_near

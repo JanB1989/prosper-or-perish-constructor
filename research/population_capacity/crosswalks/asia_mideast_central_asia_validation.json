@@ -1,0 +1,45 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Asia",
+  "region": "asia_mideast",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/location_geometry_calibrated.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "bactra_oasis_early_medieval_capacity",
+      "historical_boundary": "Early-medieval Bactra/Balkh oasis, approximately 3000 km2 inside archaeological walls and site distribution",
+      "eu5_selector": {"include": ["province=balkh_province"], "exclude": []},
+      "matched_location_count": 8,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "notes": "The province selector contains eight EU5 locations and is much broader/different from the reconstructed oasis wall. No historical polygon overlay is available."
+    },
+    {
+      "anchor_id": "bukhara_oasis_samanid_capacity",
+      "historical_boundary": "Bukhara oasis inside an approximately 12×12 farsakh wall, with uncertain Paykent/Qaraqul fringe",
+      "eu5_selector": {"include": ["province=bukhara_province"], "exclude": []},
+      "matched_location_count": 8,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "notes": "The EU5 Bukhara province is a game administrative grouping, not the archaeological oasis wall. The Paykent/Qaraqul boundary is explicitly hypothetical in the source."
+    },
+    {
+      "anchor_id": "zarafshan_middle_valley_samanid_capacity",
+      "historical_boundary": "Middle Zarafshan valley from Waraghsar to the Bukhara-fan entrance, approximately 3500 km2 irrigated plus rainfed lateral zones",
+      "eu5_selector": {"include": ["province=samarkand_province"], "exclude": []},
+      "matched_location_count": 5,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "notes": "The historical valley crosses multiple EU5 units and cannot be represented by the five-location Samarkand selector without an audited polygon overlay."
+    }
+  ]
+}

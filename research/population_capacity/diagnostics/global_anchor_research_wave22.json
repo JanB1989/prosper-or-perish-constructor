@@ -1,0 +1,94 @@
+{
+  "schema_version": "population_capacity_global_anchor_research_audit_v1",
+  "review_id": "global_anchor_research_wave22",
+  "reviewed_on": "2026-08-04",
+  "append_only": true,
+  "central_registry_mutated": false,
+  "scope": "Independent search for additional Asia/Middle East, Africa and Americas/Oceania Malthusian/local-food aggregate evidence. Weak city/trade and broad national estimates were retained only as validation or rejection records.",
+  "selection_rule": {
+    "training_requires": [
+      "mappable historical boundary with quantified coverage",
+      "population or capacity interval for that same boundary",
+      "independent local-food and resource-pressure evidence",
+      "resolved trade, shock and urbanization caveats",
+      "date/technology compatibility with 1337 or the declared 1100-1500 window"
+    ],
+    "out_of_period_or_city_trade_cases": "validation_only_or_rejected",
+    "weak_population_claims": "never converted into synthetic intervals"
+  },
+  "additions": [
+    {
+      "anchor_id": "maori_north_island_1450_1500_horticultural_pressure_validation_wave22",
+      "packet_path": "research/population_capacity/evidence_packets/oceania_maori_north_island_validation_wave22.json",
+      "crosswalk_path": "research/population_capacity/crosswalks/oceania_maori_north_island_validation_wave22.json",
+      "region": "Oceania",
+      "role": "validation_only",
+      "boundary": "North Island, 20 EU5 locations; 107391.36/113729.0 km2 = 0.944273 mapped coverage",
+      "population_interval": null,
+      "evidence": "Brown-Crema radiocarbon/site-frequency trajectories support logistic leveling in the northern horticultural zone around AD1500; local kumara, fishing, storage and environmental pressure are documented.",
+      "why_not_training": "No absolute 1450-1500 North Island count; late-contact 90-150k literature range is out of period and cannot be projected backward."
+    },
+    {
+      "anchor_id": "jenne_jeno_750_1100_inland_delta_validation_wave22",
+      "packet_path": "research/population_capacity/evidence_packets/africa_jenne_jeno_regional_validation_wave22.json",
+      "crosswalk_path": "research/population_capacity/crosswalks/africa_jenne_jeno_regional_validation_wave22.json",
+      "region": "Africa",
+      "role": "validation_only",
+      "boundary": "1100 km2 survey region contained in djenne EU5 location; mapped coverage 0.112123",
+      "population_interval": [10000, 26000],
+      "evidence": "McIntosh-McIntosh archaeological population range for Jenne-jeno/satellites around AD800; African rice, fish/fish oil and cattle support local floodplain food.",
+      "why_not_training": "Out of period, urban/trade cluster, population applies to a 1-km settlement cluster rather than the 1100-km2 area, and rural catchment is unresolved."
+    },
+    {
+      "anchor_id": "bagan_1050_1300_irrigated_plain_physical_validation_wave22",
+      "packet_path": "research/population_capacity/evidence_packets/asia_bagan_irrigated_plain_rejection_wave22.json",
+      "crosswalk_path": "research/population_capacity/crosswalks/asia_bagan_irrigated_plain_rejection_wave22.json",
+      "region": "Asia",
+      "role": "validation_only",
+      "boundary": "104 km2 Bagan archaeological property contained in pagan EU5 location; mapped coverage 1.0 for the property only",
+      "population_interval": null,
+      "evidence": "Hudson/UNESCO document 11th-13th c. dry-zone irrigation, water management and climate stress.",
+      "why_not_training": "Capital and regional trade/administrative hub; city estimates have no closed rural food catchment and regional transfers are unresolved."
+    }
+  ],
+  "rejections_and_non_promotions": [
+    {
+      "candidate": "Māori North Island absolute target",
+      "disposition": "not_promoted",
+      "reason": "SPDRD gives relative population dynamics, not absolute counts; 1769 references are out of period."
+    },
+    {
+      "candidate": "Jenne-jeno 10-26k as 1337 lower bound",
+      "disposition": "rejected_for_training",
+      "reason": "AD800 urban/trade cluster and 1-km population estimate cannot supervise surrounding land at 1337; only validation retained."
+    },
+    {
+      "candidate": "Bagan city population or monument density",
+      "disposition": "rejected_for_training",
+      "reason": "City/capital and regional transfer dependence violate the city/trade-hub rule; only physical irrigation validation retained."
+    },
+    {
+      "candidate": "Fayyum 1245 75,000 point estimate",
+      "disposition": "retained_existing_validation_only",
+      "reason": "Rapoport/Gaubert point estimate has no defensible uncertainty interval or audited rural-only boundary; existing registry rejection remains correct."
+    },
+    {
+      "candidate": "Titicaca/Tiwanaku raised-field capacity envelopes",
+      "disposition": "retained_existing_validation_only",
+      "reason": "Physical capacity models demonstrate technology but explicitly do not show observed saturation or an in-period census."
+    }
+  ],
+  "conclusion": {
+    "new_training_eligible_anchor_count": 0,
+    "new_validation_cases": 3,
+    "interpretation": "No additional record met the strict two-sided or one-sided 1337 training standard in this wave. This is a substantive result: the global evidence gap is evidence-limited, not closed by manufacturing labels. The three append-only records expand held-out physical/pressure validation across Oceania, Africa and Asia while preserving explicit rejection reasons."
+  },
+  "sources": [
+    "https://doi.org/10.1080/15564894.2019.1605429",
+    "https://eprints.bournemouth.ac.uk/32132/10/15564894.2019.pdf",
+    "https://doi.org/10.1017/S0021853700018983",
+    "https://www.cambridge.org/core/journals/journal-of-african-history/article/abs/inland-niger-delta-before-the-empire-of-mali-evidence-from-jennejeno/111CBA0644CA0D9EE7B3210C7A8F50F6",
+    "https://whc.unesco.org/en/list/1588/",
+    "https://www.burmalibrary.org/en/the-origins-of-bagan-the-archaeological-landscape-of-upper-burma-to-ad-1300"
+  ]
+}

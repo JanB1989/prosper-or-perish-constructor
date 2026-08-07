@@ -1,0 +1,87 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Africa_and_Middle_East",
+  "region": "africa_middleeast",
+  "target_year": 1337,
+  "packet_id": "africa_middleeast_anchor_gate_review_wave9",
+  "geometry_source": "EU5 calibrated location geometry plus cited historical maps, village descriptions and archaeological survey reports. All three records remain unresolved/validation-only; no partial selector is treated as an accepted aggregate target.",
+  "crosswalks": [
+    {
+      "anchor_id": "fayyum_nabulusi_1245_anchor_gate_review_wave9",
+      "historical_boundary": "The more-than-100 (project database: 124) villages and hamlets in the 1245 al-Nabulusi survey, connected by canal and water-right entries. QMUL's Fayyum map/database is a point/grid reconstruction, not a closed aggregate polygon.",
+      "eu5_selector": {
+        "include": ["location_tag=faiyum"],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for the named Fayyum point; low for the complete 124-village aggregate",
+      "status": "validation_only",
+      "resolution_method": "Retain the Fayyum tag only as a candidate physical-feature join. Georeference the QMUL FayyumMap1 and Settlementtable grid, then intersect each village/canal record with calibrated EU5 polygons. Do not assign the eventual aggregate to the single candidate location before the area overlap is measured.",
+      "required_actions": [
+        "georeference FayyumMap1.pdf and Settlementtable.docx",
+        "map all village/canal records and explicitly account for unmapped area",
+        "obtain and audit the exact Rapoport Chapter 3 population table or interval",
+        "keep partial poll-tax heads and fiscal levies out of population targets"
+      ],
+      "source_map_urls": [
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/FayyumMap1.pdf",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/Settlementtable.docx"
+      ],
+      "notes": "The location selector is a candidate only. A named Fayyum location is not evidence that its EU5 polygon covers the historic 124-village boundary."
+    },
+    {
+      "anchor_id": "tulkarm_waqf_village_1354_population_date_mismatch_wave9",
+      "historical_boundary": "Tulkarm waqf village and its agricultural lands on Wadi al-Sha'ir described in the 1354 waqf order. The reviewed article does not provide a georeferenced waqf polygon; its household/population numbers are from the 1535 and 1548 Ottoman administrative records.",
+      "eu5_selector": {
+        "include": ["location_tag=tulkarm"],
+        "exclude": []
+      },
+      "matched_location_count": null,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "validation_only",
+      "resolution_method": "Candidate name selector only. Reconstruct the 1354 waqf land boundary from the source's land description or an independent cadastral map, geocode Tulkarm/Wadi al-Sha'ir, and intersect with EU5 polygons. Keep the 1535/1548 household counts in a dated validation table, never as a 1354 target.",
+      "required_actions": [
+        "locate or digitize the 1354 waqf boundary",
+        "verify the EU5 map tag for Tulkarm and report exact matched locations",
+        "separate 1354 land evidence from 1535/1548 Ottoman population evidence",
+        "find an independent 1354-compatible saturation/pressure interval before promotion"
+      ],
+      "source_map_urls": [
+        "https://www.palestine-studies.org/ar/node/78442"
+      ],
+      "notes": "The 95-household/approximately-522-person value is explicitly sourced to 940H/1535 AD in endnote 33. This crosswalk cannot make it a 1354 population label."
+    },
+    {
+      "anchor_id": "hubras_saham_late_mamluk_rural_pressure_validation_wave9",
+      "historical_boundary": "Archaeological villages of Hubras and Saham and the agricultural/pastoral hinterlands surveyed in northern Jordan. Walker and the ADAJ report describe the survey unit but the scanned report does not supply a closed boundary polygon or a population count.",
+      "eu5_selector": {
+        "include": ["location_tag=hubras", "location_tag=saham"],
+        "exclude": []
+      },
+      "matched_location_count": null,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "validation_only",
+      "resolution_method": "Candidate site-name selectors only. Obtain the survey site polygons/coordinates from Walker BASOR 339 and ADAJ 51, digitize the village-plus-hinterland extents, and calculate area-weighted overlap with calibrated EU5 locations. Preserve the late-fourteenth-century decline as a pressure diagnostic, not a population target.",
+      "required_actions": [
+        "extract or digitize Hubras and Saham survey extents",
+        "resolve EU5 location aliases and exact matched count",
+        "retain the late-fourteenth-century productivity decline with political/market caveats",
+        "find a defensible two-sided people or capacity interval before any promotion"
+      ],
+      "source_map_urls": [
+        "https://www.journals.uchicago.edu/doi/abs/10.1086/BASOR25066903",
+        "https://publication.doa.gov.jo/uploads/publications/68/ADAJ_2007_51-429-470.pdf"
+      ],
+      "notes": "No population interval is fabricated from the archaeological decline. The selectors are unresolved until the survey extents are mapped."
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "biomass_source_sha256": "b69a4441f3ed4a10d2f995960438266c698c0972151161c9a7cf07ce7f6e087d",
+  "exact_pyaez_ready": false,
+  "expected_crop_count": 23,
+  "expected_location_count": 20929,
+  "expected_water_mode_count": 2,
+  "issues": [
+    "physical_challenger_blocked_by_unresolved_source_contracts"
+  ],
+  "label_rows_total": 962734,
+  "labels": {
+    "duplicate_keys": 0,
+    "exact_pyaez_rows": 0,
+    "expected_key_count": 46,
+    "expected_rows": 962734,
+    "fallback_rows": 962734,
+    "missing_keys": [],
+    "resolution_methods": {
+      "physical_fallback": 962734
+    },
+    "rows": 962734,
+    "source_engine_counts": {
+      "GAEZ v5": 962734
+    },
+    "unexpected_keys": [],
+    "unique_keys": 962734,
+    "unique_locations": 20929
+  },
+  "labels_path": "artifacts/data/population_capacity/pyaez_1337_yields.parquet",
+  "official_pyaez_source": {
+    "exact_eu5_rows": 0,
+    "expected_source_commit": "b314640710a3ec398482b0065f4f26f45494eefa",
+    "official_data_input_file_count": 23,
+    "official_data_input_files": [
+      {
+        "bytes": 2405,
+        "path": "data_input/LAO_Admin.tif",
+        "sha256": "c2ad4e63da0591e95765eecc5d9ac0b4d34d4e9f2d35365403c5ddd72fce2883"
+      },
+      {
+        "bytes": 54249,
+        "path": "data_input/LAO_Elevation.tif",
+        "sha256": "6c4e54bfe2bb2d142a297ac40942487e8e31229b232d60f0f250e125db4d5792"
+      },
+      {
+        "bytes": 230958,
+        "path": "data_input/LAO_Maize_CropSuitability_rain.tiff",
+        "sha256": "b4379e784349572747d3311bc8f09d815c7f8a3ef681a263feea80a69968515e"
+      },
+      {
+        "bytes": 263387,
+        "path": "data_input/LAO_Slope.tif",
+        "sha256": "323a7b00894a0908335c108923d59962dcf73bed40bdc8311150e301e7535e3d"
+      },
+      {
+        "bytes": 66422,
+        "path": "data_input/LAO_Soil.tif",
+        "sha256": "eb28ab3006c4cff663d19ebbcbee46e059721047060a7a7371ae65dccf3a8497"
+      },
+      {
+        "bytes": 33582,
+        "path": "data_input/LAO_soil_terrain_lulc.tif",
+        "sha256": "466b7274e8e0eac0758f21729ed173ce65c0fb3da643825d85335ea2138458db"
+      },
+      {
+        "bytes": 249,
+        "path": "data_input/climate/Metadata.txt",
+        "sha256": "6098adf88a437c1b98ad6eb03725fc599f8073775388d8e74cbeec38a014011a"
+      },
+      {
+        "bytes": 3147584,
+        "path": "data_input/climate/max_temp.npy",
+        "sha256": "b05e72983afd3b5753c7ed21d15a5f1261a6691e10114d728fd5895517c9f8fe"
+      },
+      {
+        "bytes": 3147584,
+        "path": "data_input/climate/min_temp.npy",
+        "sha256": "728000640bb4dffdbb6aae5a8baf610db7355a67d6ac065f2eef2c38728d66a6"
+      },
+      {
+        "bytes": 3147584,
+        "path": "data_input/climate/precipitation.npy",
+        "sha256": "39cbf6c181d11e49d908b8421f588a571197faf4799d6dcfc8ee14f6d996f7ce"
+      },
+      {
+        "bytes": 3147584,
+        "path": "data_input/climate/relative_humidity.npy",
+        "sha256": "6a9f344c433fa3d4ec0e160b1c36972a6e1c35ae6f70f7a7021217c79185f0a6"
+      },
+      {
+        "bytes": 3147584,
+        "path": "data_input/climate/short_rad.npy",
+        "sha256": "a6a70bca112f9ef5990448d759263e4ba846f3ce6474530dcdeff606d43c8c1c"
+      },
+      {
+        "bytes": 3147584,
+        "path": "data_input/climate/wind_speed.npy",
+        "sha256": "ed5f5bfefba03cb5fb2b0479d89063cbbf6fed8c2896e52f0b6a97e32f5f75bc"
+      },
+      {
+        "bytes": 16981,
+        "path": "data_input/crop-specific_rule_maiz_sugar.xlsx",
+        "sha256": "ab53b41bba170793ae041321bf9ee3cae455329eddb013e51875d8dee6aeffd4"
+      },
+      {
+        "bytes": 16640,
+        "path": "data_input/input_crop_TSUM_parameters_maiz_sugar.xlsx",
+        "sha256": "83994a9ca86307ac89c46aaf8fcac22dc8d9d5bc5ab3e5c0c397a942b8edd17e"
+      },
+      {
+        "bytes": 11096,
+        "path": "data_input/maiz_fc3_irr_lst.xlsx",
+        "sha256": "e6d7b0a96881b3e478adf3bf1a6dc2371e59c13804ba4c89c40950c725d7134c"
+      },
+      {
+        "bytes": 11012,
+        "path": "data_input/maiz_fc3_rain_lst.xlsx",
+        "sha256": "de3721873a05459ae99cc502595dbeb15714cc0543940706a748d14f53568cf2"
+      },
+      {
+        "bytes": 31447,
+        "path": "data_input/maiz_soil_characteristics_subsoil.xlsx",
+        "sha256": "01476e7ddb3c250a6589e3fac370f929371786fdb6c3806b362764b8afc6a8a9"
+      },
+      {
+        "bytes": 31667,
+        "path": "data_input/maiz_soil_characteristics_topsoil.xlsx",
+        "sha256": "2ea799d4d232f138b00b2b9a3feb7047ce065cc3a60adc9fe419ab5d2829dce5"
+      },
+      {
+        "bytes": 20923,
+        "path": "data_input/maiz_soil_params_irr.xlsx",
+        "sha256": "f2a30ac3afda181b28ddb1b88031f40ccebdeb81eb9565c6ed01c84cadd1e85f"
+      },
+      {
+        "bytes": 20893,
+        "path": "data_input/maiz_soil_params_rain.xlsx",
+        "sha256": "2fa2ba46f45df007aeb18c30831d7e05a6b8a5871dfc021201a6fab34add21aa"
+      },
+      {
+        "bytes": 9110,
+        "path": "data_input/maiz_terrain_constraints_irr.xlsx",
+        "sha256": "e34b3cccba0b897326b6cc07ff150c5713241ee4fe8ae3af734389ad5fc42be4"
+      },
+      {
+        "bytes": 9108,
+        "path": "data_input/maiz_terrain_constraints_rain.xlsx",
+        "sha256": "c18d2804eaa3149cee3cfa6214cf5a7f5901283d95919b55a2e297c9a96ba0bd"
+      }
+    ],
+    "official_parameter_crops": [
+      "maize"
+    ],
+    "source_commit": "b314640710a3ec398482b0065f4f26f45494eefa",
+    "source_commit_verified": true,
+    "source_root": "artifacts/data/population_capacity/pyaez_1337/exact_engine_wave27/PyAEZ"
+  },
+  "official_source_audit_path": "research/population_capacity/model_reviews/pyaez_exact_engine_audit_wave27.json",
+  "reason": "This artifact is a source-backed GAEZ v5 parameter envelope for uncertainty analysis. It is not an exact PyAEZ EU5 run; official PyAEZ crop/mode water mappings and constraint tables remain unresolved, so it cannot unlock training acceptance.",
+  "registry_path": "artifacts/data/population_capacity/pyaez_contract/gaez_v5_lut_inventory_wave25.json",
+  "registry_sha256": "eb3ba371c3c0e1db6f7f2030947455e0211ff8615818f7b030c6b1c09dc06b97",
+  "required_label_rows": 962734,
+  "required_matrix_rows": 46,
+  "sample_file_count": 46,
+  "sample_file_sha256": {
+    "banana:irrigated": "aa71688f3caa85f8bb862caee5c8369e8533eb9afa730052337b0d2321c8ff12",
+    "banana:rainfed": "d0ce4ee249dca05ea5066c9b5ca46240aeb6fd2ef34ae279e15abc3ac54483df",
+    "barley:irrigated": "4b9e3b232422b060ad76b0c33ac9944d66692e196237f3dba759940d2e12e371",
+    "barley:rainfed": "f7aa51f3a73166c3cea3f4b23bd1f810625c825b6ec992948c7d920c85a7c9d2",
+    "cassava:irrigated": "0bf2db391ce6868848774ee79f477092293ce8d7cce64a8fc583dce2f480d076",
+    "cassava:rainfed": "9277a199145b2b64890072bc6eb2d7c3d871cf8d1939f4a95c1f8efee48c99cf",
+    "chickpea:irrigated": "4c1b531abf2661dbccf0f58dcd30ab0edd33cbf1ec75ecd2dfe81ee7963494fe",
+    "chickpea:rainfed": "a6795614f16e60728083dab182ef326ea952978a48b17e2beb117950ce7b323a",
+    "cowpea:irrigated": "d84828e3029eee3f6d961854dae34753ef0875483ae490fb2252d6754f67d914",
+    "cowpea:rainfed": "7cc8b35f697eee7b236d2b49c6d20346e8d156a2642f7b0144abd87fa75040f7",
+    "dry_pea:irrigated": "22bd9fff8e794f1df879765b16c8261803bd8c33521dad328c0cb469b39ad731",
+    "dry_pea:rainfed": "68fb0b9154778a3e02cca47fd9e4546d60ffedca91aa0853d307296f2206b307",
+    "foxtail_millet:irrigated": "854dcacbc4f3c8e0e585e9262250dc95552b87221176fef9b062f77c1fc114ff",
+    "foxtail_millet:rainfed": "e18023f2f6938baa6d675e060843270992cf3a359e60306fbcbf399ebe8ba8eb",
+    "maize:irrigated": "1031ed4a031fc865fa0fe9aa9313c47f71100c2b69505922307728ad49284f85",
+    "maize:rainfed": "827d60fbea0eae988230fc3cb51d88e0a52e9af18c3a1bc2a1e65ee482ef337e",
+    "mung_bean:irrigated": "a92d46ee5db5020a5d66bd2d55fe39987fe0d62c5204d6758db8ee8ee378f8c3",
+    "mung_bean:rainfed": "ea4ea19a82f7aa48e8c65e0fc3d9738c5c4f851b2be3b35c8f3ae3bddb319bbe",
+    "oats:irrigated": "0d5f3e2e81e821b4c481cc2d25746e551dc412cc50ec180633651dc18fd1b805",
+    "oats:rainfed": "41f1c44be892f6f0f09f0200f8203f9bb0f82dc77123aff0b92eaf81c80d58e5",
+    "pearl_millet:irrigated": "52790172eff0cb857d0277981b9561ca0e4e7bf986297b52f98630922ddc694f",
+    "pearl_millet:rainfed": "2ff8d0ec2119e1f040586b70dce35cd32b85792179c593cf97068f2191d723dd",
+    "phaseolus_bean:irrigated": "d52b27fb8922fe6bbc255c2242a035e30987a9e1978613c70df1ecb57b28cecf",
+    "phaseolus_bean:rainfed": "379f23b15a8b268ba07a6fff538a7d911de36a2c4c1f42499baafa1d4231f456",
+    "pigeonpea:irrigated": "ba7695e831f570bdda34564ba6ffc22bc60ccf7f4cf553f4fed3008b285c736c",
+    "pigeonpea:rainfed": "b8fc7eba086ad466fa0442099f749e2525f69b7ad9e71f7c7284aadb82536a8e",
+    "rice_dry:irrigated": "c10b629a782c61511c5cdc9d0cf34253d3fbd4445a78329f8054dd41c8b0ae8e",
+    "rice_dry:rainfed": "033351341f5a3aa6ca7455e53cbc414f49eaef2e39436035c7f44f96d5ed64df",
+    "rice_wet:irrigated": "1518cc822a008069090e98a6ca661281a66cfb8b216500b0b9b1d037ea6300bc",
+    "rice_wet:rainfed": "a2dd6ec91721c82c5810d4629c8a44d4342366615e27171b137db5ebd8ab2e0c",
+    "rye:irrigated": "184243c372c44ae1e6fb0cac8bd3b8e4902f34f92c1ec6525b62a02c552f3dc3",
+    "rye:rainfed": "0cbb1ee584144f48e665049bb5edca3097136ca7740cd71e8bd922f5173bb32e",
+    "sorghum:irrigated": "afdc65c384c6c1acd8a6416fbd9c9adf14002f9c41af4f2d235c209ecdf60cec",
+    "sorghum:rainfed": "5223760a0f4b9ced29e105080bb59ed8ad825569b260586fa7fcf154ed405537",
+    "soybean:irrigated": "11322b08594abba500376e6688fd4fdcb1704582c7280f378259cd44e0fc4ccd",
+    "soybean:rainfed": "7040503e00e6d4455c5a57346bb3e65c6bd8ff019c5ad1430dd2f09006d2197e",
+    "sweet_potato:irrigated": "c3aec48185e9c85df373e82e1da038397f996171610db8280c3e0031c6cf0fd3",
+    "sweet_potato:rainfed": "f8a813b9b6e63fd0cffc139bbc78cd7bb6726625810eab785aeb3086b957a602",
+    "taro:irrigated": "bdea292236599f0a9c891f58441713d82ae1e10239b12ecfe9f432795d75d5b3",
+    "taro:rainfed": "6b2889190bab624a8975f54761d5e0df3d32a39309a018af8c36a4f793ac44de",
+    "wheat:irrigated": "496d1262f5cd9feafdc2a9acd5fbfc805339ad1657557350ad96de011b4a1888",
+    "wheat:rainfed": "5e9ff5c6d2615206aa398918c4104e630e3398ce89fa7712c35abd9fa98007e7",
+    "white_potato:irrigated": "045044de71eb2b04c1eaa2009f55fa2dc4557eb1f6fb39a537dbedf87d004c7f",
+    "white_potato:rainfed": "5e07bb89453422573b7f901124502a5ce8d78e2dff5dcaeac67b879f1a25def8",
+    "yam:irrigated": "f148dcf5e6a0e9d9e4fe9d9e7f046c72744e08f9e48b07a2d1daccd33c42151e",
+    "yam:rainfed": "8a1ffc057177f621c0210a34b1dd246234e86303e7c82a5fb4adb8e9fd523cc8"
+  },
+  "sample_rows_total": 61614976,
+  "samples_root": "artifacts/data/population_capacity/crop_mode_samples/gaez_v5",
+  "schema_version": "pyaez-gaez-parameter-uncertainty-wave28-v1",
+  "source_manifest_sha256": "606ca6f0c772d88e69c92f49bda51218001c79aef76a9626b4530ace2dc25804",
+  "state": "blocked",
+  "training_challenger_eligible": false,
+  "water_source_sha256": "8e26477f8b033e17171282c0cb14e7edce2230d44237f7097e46dae0691d30fb"
+}

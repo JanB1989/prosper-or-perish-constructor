@@ -1,0 +1,43 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "super_region": "Asia",
+  "region": "indochina",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "greater_angkor_1181_1300_population_lower_bound_wave5",
+      "historical_boundary": "The approximately 3,000 km2 Greater Angkor Region watershed catchment in Klassen et al. (2021), Figure 1",
+      "eu5_selector": "location_tag=angkor",
+      "selector_type": "location_tag_area_weighted",
+      "selected_location_count": 1,
+      "matched_location_count": 1,
+      "location_weights": {
+        "angkor": 0.945488417071616
+      },
+      "selector_coverage_fraction": 1.0,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "mapped",
+      "candidate_role": "lower_bound",
+      "area_comparison": {
+        "historical_area_km2": 3000.0,
+        "eu5_candidate_footprint_area_km2": 3172.963249292525,
+        "location_weight": 0.945488417071616,
+        "mapped_area_km2": 3000.0,
+        "area_coverage_fraction": 1.0,
+        "eu5_calibrated_centroid_lon": 103.83261180201004,
+        "eu5_calibrated_centroid_lat": 13.449992466122925,
+        "geometry_source": "polynomial_coordinate_jacobian_v2+bounded_exact_crosswalks"
+      },
+      "resolution_method": "The dedicated EU5 angkor location is centered at the archaeological core (calibrated 103.833 E, 13.450 N) and its calibrated 3,172.96 km2 footprint contains the approximately 3,000 km2 watershed study area. An explicit 0.945488 area weight removes the 5.77% coarse-location overhang instead of assigning that extra land to the historical boundary.",
+      "sources": [
+        "https://doi.org/10.1126/sciadv.abf8441",
+        "https://scholarsbank.uoregon.edu/server/api/core/bitstreams/a1be8e1b-6d8b-490a-a74c-432c957c77a7/content"
+      ],
+      "notes": "The crosswalk maps the full agro-urban watershed, including its rural rice-producing landscape, rather than treating the temple core as a city-only observation. Because the training role is one-sided, the small remaining boundary generalization is conservative."
+    }
+  ]
+}

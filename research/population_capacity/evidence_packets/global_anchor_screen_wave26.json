@@ -1,0 +1,258 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "global_anchor_screen_wave26",
+  "region": "global_anchor_screen_wave26",
+  "super_region": "Global",
+  "target_year": 1337,
+  "scope": "Append-only screen of additional 1100-1500 candidates. The records preserve useful population, pressure, food-system and technology evidence while refusing to create a training target when a closed local-food boundary, saturation interval or independent upper endpoint is missing.",
+  "promotion_audit": {
+    "decision": "No new global scale anchor is promoted in this wave. Catalonia and Mallorca are explicitly rejected because their observations are urban/fiscal or import-dependent; Bali and Sri Lanka are retained as physical validation cases because no defensible medieval population interval and saturation fraction were found.",
+    "reviewed_on": "2026-08-04",
+    "review_method": "Checked date compatibility, population semantics, local-food dependence, pressure evidence, shock/trade confounds, historical boundary definition and EU5 crosswalkability. No starting population, HYDE, RGO or modern population field is used.",
+    "required_followup": [
+      "Catalonia: reconstruct a medieval rural boundary and obtain an enumerated or archaeological population interval with independent marginal-land/real-wage pressure evidence; resolve urban and migration shares.",
+      "Mallorca: find a same-boundary rural population series and saturation evidence; quantify or remove imported Atlantic wheat before any local-food capacity use.",
+      "Bali: locate a dated 1100-1500 population or carrying-capacity interval for the mapped subak/rice landscape and a historical boundary polygon.",
+      "Sri Lanka dry zone: map the tank-system footprint and obtain a dated population interval plus evidence separating irrigation abandonment, warfare and climate shocks from equilibrium capacity."
+    ]
+  },
+  "records": [
+    {
+      "anchor_id": "catalonia_1290_1329_demography_pressure_screen_wave26",
+      "label": "Catalonia c.1290-1329: demographic pressure and famine, but no closed local-food capacity interval",
+      "year_start": 1290,
+      "year_end": 1329,
+      "population_low": 450000,
+      "population_central": 500000,
+      "population_high": 550000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The approximately 500,000 figure around 1300 is a broad historical reconstruction, not an enumeration and not a carrying-capacity interval. It includes urban and market-town populations and cannot be assigned to an autarkic rural boundary.",
+      "pressure_evidence": [
+        "Enciclopedia Catalana places Catalonia near approximately 500,000 inhabitants around 1300 and describes the subsequent demographic crisis; the same discussion warns that fiscal fogatges are not direct population enumerations.",
+        "The Crown of Aragon literature documents grain-market intervention and recurrent dearth/famine in the early fourteenth century, consistent with pressure but not with a measured saturation fraction.",
+        "A modern famine synthesis treats population pressure as a possible remote driver of famine; it does not provide a Catalonia boundary-matched equilibrium estimate."
+      ],
+      "shock_flags": [
+        "1315-1317 famine and subsequent 1320s-1330s dearth",
+        "broad fiscal reconstructions and fogatges may undercount or change taxable units",
+        "Barcelona and other market towns redistribute grain from outside the immediate rural footprint",
+        "migration and urbanization are not separable at the available aggregate boundary"
+      ],
+      "trade_dependence": "mixed_to_high; Crown of Aragon grain markets and coastal redistribution are documented but local share is not quantified",
+      "food_regime": "Mediterranean cereals, legumes, vines, olives, livestock and coastal fisheries with market redistribution",
+      "boundary_description": "Catalonia as a broad medieval principality/modern-region envelope; no audited rural-only 1290-1329 polygon is available and the political boundary changed over the interval.",
+      "boundary_source": "https://www.enciclopedia.cat/lart-gotic-a-catalunya/catalunya-segles-xiii-xv-de-l'expansio-a-la-crisi",
+      "eu5_selector": {
+        "include": ["region=catalonia_region"],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "rejected",
+      "role": "excluded",
+      "source_family": "catalonia_medieval_demography_and_famine_screen",
+      "source_bundle": "enciclopedia_catalana_1300_population_crown_aragon_grain_crisis",
+      "source_family_independence": "Independent regional-history and famine literature; the record is excluded for unresolved boundary/population semantics rather than treated as a synthetic label.",
+      "sources": [
+        "https://www.enciclopedia.cat/lart-gotic-a-catalunya/catalunya-segles-xiii-xv-de-l'expansio-a-la-crisi",
+        "https://revistes.ub.edu/index.php/HistoriaIndustrial/article/view/30490",
+        "https://www.persee.fr/doc/efr_0223-5099_2011_act_450_1_10201",
+        "https://www.jstor.org/stable/10.5325/j.ctv264f97n",
+        "https://www.nature.com/articles/s41893-018-0078-0"
+      ],
+      "citation_details": [
+        "Enciclopedia Catalana: approximately 500,000 around 1300 and a later crisis; fiscal fogatges are treated as an imperfect demographic proxy.",
+        "Crown of Aragon grain-market and famine studies: market intervention and dearth are pressure context, not a saturation endpoint.",
+        "Nature Sustainability famine synthesis: population pressure is a general risk mechanism, not a Catalonia-specific capacity measurement."
+      ],
+      "notes": "Rejected from training. Promotion requires a mappable rural boundary, independently bounded population, quantified local-food share and upper saturation evidence. Keep as a test that imported or urban food is not assigned to surrounding intrinsic capacity."
+    },
+    {
+      "anchor_id": "mallorca_1301_1329_wheat_deficit_screen_wave26",
+      "label": "Mallorca c.1301-1329: exact island and fiscal observations, but chronic Atlantic wheat imports invalidate a local-food target",
+      "year_start": 1301,
+      "year_end": 1329,
+      "population_low": 50000,
+      "population_central": 56000,
+      "population_high": 62000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The 1329 estimate of approximately 56,000 is a historical population point with a broad review range, while the 1301 morabeti is a taxable-household count. Neither supplies a saturation interval or a rural-only local-food population.",
+      "pressure_evidence": [
+        "The 1301 morabeti tax was a fiscal assessment of taxable households, not a complete headcount; scholarly discussion warns against treating it as a direct population enumeration.",
+        "A historical Mallorca food-system study identifies a persistent wheat deficit and Atlantic wheat imports between 1230 and 1350, directly violating the local-food requirement for an intrinsic capacity label.",
+        "The 1329 population estimate and later decline are useful for a shock-sensitive island validation case, but do not identify equilibrium saturation."
+      ],
+      "shock_flags": [
+        "1329-1421 famine/epidemic decline overlaps the source series and extends beyond 1337",
+        "morabeti taxable-household semantics and possible under-registration",
+        "Palma urban and port population is embedded in the island estimate",
+        "documented Atlantic wheat imports and maritime redistribution"
+      ],
+      "trade_dependence": "high_import_dependence; Atlantic wheat imports are documented for 1230-1350",
+      "food_regime": "Mediterranean cereals, legumes, vines, olives, livestock, fisheries and imported wheat",
+      "boundary_description": "Mallorca island boundary is geographically exact, but the population sources do not separate Palma/ports from rural hinterland and no saturation fraction is published.",
+      "boundary_source": "https://www.mdpi.com/2071-1050/11/1/168",
+      "eu5_selector": {
+        "include": ["location_tag=mallorca"],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "high_for_island_low_for_rural_population_semantics",
+      "status": "rejected",
+      "role": "excluded",
+      "source_family": "mallorca_medieval_population_and_grain_imports_screen",
+      "source_bundle": "morabeti_1301_population_1329_atlantic_wheat_1230_1350",
+      "source_family_independence": "Independent island demographic, fiscal and food-trade sources; the record is rejected because imported calories and fiscal semantics prevent a local-food target.",
+      "sources": [
+        "https://revistas.usal.es/uno/index.php/Studia_Historica/article/view/4609",
+        "https://www.mdpi.com/2071-1050/11/1/168",
+        "https://www.researchgate.net/publication/307749456_Mallorca_y_la_importacion_de_trigo_Atlantico_1230-1350",
+        "https://e-archivo.uc3m.es/entities/publication/86f71257-c436-4af4-9088-41cd2f206217"
+      ],
+      "citation_details": [
+        "Morabeti study: the 1301 assessment is a fiscal taxable-household instrument, not a complete population census.",
+        "Sustainability (2019): approximately 56,000 people in 1329 and island-wide famine/epidemic decline after 1329.",
+        "Mallorca and Atlantic wheat (1230-1350): persistent wheat deficit and import dependence."
+      ],
+      "notes": "Rejected from training. Keep as a negative control for islands: the physical model may estimate intrinsic land capacity, but observed Mallorca population cannot calibrate it without removing imported wheat and separating urban/port food flows."
+    },
+    {
+      "anchor_id": "bali_subak_1100_1500_physical_validation_wave26",
+      "label": "Bali subak rice terraces c.1100-1500: durable irrigation evidence without a medieval population/saturation interval",
+      "year_start": 1100,
+      "year_end": 1500,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Subak inscriptions and archaeological terrace evidence establish a long-lived local irrigation institution, but the reviewed sources provide no dated 1100-1500 population interval or saturation fraction for a closed mapped landscape.",
+      "pressure_evidence": [
+        "UNESCO describes the subak cooperative irrigation system and rice terraces as a centuries-old landscape, with institutional origins in the ninth century and later royal management.",
+        "Archaeological and historical studies identify subak by eleventh-century royal inscriptions and link water-sharing institutions to intensive rice production.",
+        "The evidence supports technology feasibility and local-food production effects, not an equilibrium population target."
+      ],
+      "shock_flags": [
+        "modern terrace area and population density cannot be back-projected to 1337",
+        "subak catchments are distributed temple/watershed units rather than one documented medieval aggregate boundary",
+        "no independent famine, marginal-land, wage or abandonment evidence resolves saturation",
+        "later colonial and modern irrigation expansion confounds observed extent"
+      ],
+      "trade_dependence": "unresolved; local rice is documented but regional exchange share is not",
+      "food_regime": "irrigated rice, dry-field crops, tubers, livestock, freshwater foods and forest products",
+      "boundary_description": "Multiple Bali subak and watershed catchments; no single 1100-1500 population-bearing polygon was reconstructed from the reviewed sources.",
+      "boundary_source": "https://whc.unesco.org/en/list/1194/",
+      "eu5_selector": {
+        "include": ["location_tag=__unmapped_bali_subak_wave26__"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium_for_irrigation_institution_low_for_aggregate_boundary",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "bali_subak_archaeology_and_irrigation_history",
+      "source_bundle": "unesco_subak_ninth_century_pmc_inscriptions_and_landscape",
+      "source_family_independence": "Independent archaeological, inscriptional and landscape sources; no modern population value is used as a medieval label.",
+      "sources": [
+        "https://whc.unesco.org/en/list/1194/",
+        "https://www.jstage.jst.go.jp/article/jgeography1889/102/7/102_7_806/_article/-char/en",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC3048997/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC3056004/"
+      ],
+      "citation_details": [
+        "UNESCO World Heritage: subak water temples and rice terraces; institutional origins are traced to at least the ninth century.",
+        "Niche-construction and geography studies: eleventh-century inscriptions and water-sharing institutions support pre-1337 irrigated rice feasibility.",
+        "No source supplies a closed-boundary medieval population or saturation interval."
+      ],
+      "notes": "Validation-only physical case. It can test irrigation reach, crop-date masks and land-allocation behavior once a Bali crosswalk exists, but it cannot supervise global scale without a dated population and pressure interval."
+    },
+    {
+      "anchor_id": "sri_lanka_dry_zone_1100_1302_tank_system_validation_wave26",
+      "label": "Sri Lanka dry-zone tank systems c.1100-1302: strong irrigation technology evidence, but no closed population/saturation anchor",
+      "year_start": 1100,
+      "year_end": 1302,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The Polonnaruwa-era tank cascade and irrigation governance are documented, including abandonment and later restoration, but no same-boundary population interval or equilibrium saturation fraction is available in the reviewed sources.",
+      "pressure_evidence": [
+        "The Tank Systems of the Dry Zone project documents village tanks, cascade governance, paddy fields and water allocation as a durable local-food system.",
+        "Archaeological and historical work records cycles of urbanization/de-urbanization and tank abandonment, showing that maintenance and political shocks affected production.",
+        "The physical evidence is suitable for irrigation and water-budget validation, not for inventing a population target from tank counts or modern densities."
+      ],
+      "shock_flags": [
+        "mid-thirteenth-century abandonment and restoration cycles",
+        "war, political fragmentation and tank-maintenance failure are not separable from ecological carrying capacity",
+        "Polonnaruwa urban and administrative population is not a rural catchment label",
+        "no audited historical tank-cascade polygon matched to EU5 geometry"
+      ],
+      "trade_dependence": "unresolved; paddy local-food production is documented but state redistribution is not quantified",
+      "food_regime": "irrigated paddy, dry-field grains, pulses, livestock, fisheries and tank/wetland foods",
+      "boundary_description": "Dry-zone tank cascades around Polonnaruwa and adjacent village systems; the reviewed sources do not provide one closed 1100-1302 rural aggregate polygon.",
+      "boundary_source": "https://www.geo.fu-berlin.de/en/v/tanks-in-the-dryzone-of-sri-lanka/exploring-tank-systems/cultural-system/governance/index.html",
+      "eu5_selector": {
+        "include": ["location_tag=__unmapped_polonnaruwa_tanks_wave26__"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium_for_tank_system_low_for_aggregate_boundary",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "sri_lanka_dry_zone_tank_archaeology_and_governance",
+      "source_bundle": "polonnaruwa_tank_cascades_1100_1302_freie_universitaet_review",
+      "source_family_independence": "Independent irrigation archaeology and governance sources; no population or modern land-use statistic is promoted to a medieval target.",
+      "sources": [
+        "https://www.geo.fu-berlin.de/en/v/tanks-in-the-dryzone-of-sri-lanka/exploring-tank-systems/cultural-system/governance/index.html",
+        "https://doi.org/10.1080/00438243.2026.2664414",
+        "https://ir.lib.pdn.ac.lk/items/def648ce-eea8-494a-945e-05a8b80ce8a2",
+        "https://www.ird.gov.lk/en/about%20ird/sitepages/polonnaruwa%20kingdom.aspx"
+      ],
+      "citation_details": [
+        "Tank Systems of the Dry Zone project: village tanks, cascades, water allocation and abandonment/maintenance history.",
+        "Archaeological review: cycles of de-urbanization and adaptation; irrigation infrastructure is evidence of capability, not an equilibrium headcount.",
+        "No source supplies a closed rural population interval or saturation fraction for 1100-1302."
+      ],
+      "notes": "Validation-only physical case. Promote only after a historical tank-system polygon, dated population interval and independent pressure/saturation evidence are resolved."
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "audit_sha256": "145b825fe90836e75ce31e75f80ebc87c0ef4bf4fe5103eed0ef255d77e3adf9",
+  "blocked_bridge_rows": 6,
+  "blocked_family_water_crops": 3,
+  "exact_pyaez_ready": false,
+  "expected_crop_count": 23,
+  "expected_location_count": 20929,
+  "expected_water_mode_count": 2,
+  "independent_risk_validation_complete": false,
+  "issues": [
+    "crop_specific_bridge_incomplete_for_registered_matrix"
+  ],
+  "label_rows": 962734,
+  "labels_path": "artifacts/data/population_capacity/pyaez_1337_yields.parquet",
+  "lut_registry_path": "artifacts/data/population_capacity/pyaez_contract/gaez_v5_lut_inventory_wave25.json",
+  "lut_registry_sha256": "eb3ba371c3c0e1db6f7f2030947455e0211ff8615818f7b030c6b1c09dc06b97",
+  "physical_uncertainty_gate_eligible": false,
+  "reason": "GAEZ Appendix 4.2 coefficients provide a crop-specific family-level interannual water-response bridge for resolved annual crops. Three registered perennial/root crops lack published rows, and all rows still require LUT-specific constraints for exact PyAEZ.",
+  "required_matrix_rows": 46,
+  "resolved_bridge_rows": 40,
+  "resolved_family_water_crops": 20,
+  "schema_version": "pyaez-crop-risk-bridge-wave30-v1",
+  "state": "blocked",
+  "training_challenger_eligible": false,
+  "water_parser_registry_sha256": "11a69d935400c0356ce997fb39acd7d4d135d10c93659e050bbc26af5df6fa20",
+  "water_source_path": "artifacts/data/population_capacity/sources/pyaez_1337/crop_parameters/Appendix.4.2.Parameters.for.calculation.of.water.limited.yields.of.annual.crops.pdf",
+  "water_source_sha256": "8e26477f8b033e17171282c0cb14e7edce2230d44237f7097e46dae0691d30fb"
+}

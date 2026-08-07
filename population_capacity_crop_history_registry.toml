@@ -1,0 +1,275 @@
+schema_version = "crop_history_registry_v2"
+reviewed_at = "2026-08-03"
+method = "dated point evidence is inverse-mapped to the original EU5 raster: exact containing pixels are accepted directly and non-location pixels may use only the nearest footprint within frozen transform-p95 plus source-record coordinate uncertainty; cited domain/time polygons are applied only within documented scope; no location-centroid, origin-centroid, game-region, coordinate-box, or crop-spread radius expansion"
+
+[policy]
+target_year = 1337
+# Availability is a Bernoulli feasibility probability.  Dated evidence still
+# resolves to 0/1; the central value for an unresolved crop is the explicit
+# maximum-entropy prior rather than silently treating every unobserved crop as
+# present.  The lower/upper scenarios remain hard 0/1 bounds.
+uncertain_p10 = 0
+uncertain_p50 = 0.5
+uncertain_p90 = 1
+
+[evidence]
+path = "population_capacity_crop_history_evidence.csv"
+sha256 = "afaad3478ca20023dc4b44d7216244606a7dffc9395e7f060d8819063df988ee"
+compiler = "scripts/build_population_capacity_crop_history_registry.py"
+
+[domains]
+path = "population_capacity_crop_history_domains.geojson"
+sha256 = "43e17288f7b5b437d135e48e17a5cfc9287e3887bdce689a2805722f58010bc4"
+boundary_object_sha256 = "5fed433373581fa648920435f937d95f2d3c0200e067409c6478dcdf1b853139"
+
+[mapping]
+path = "population_capacity_crop_history_location_mapping.csv"
+sha256 = "5b6cc79a7da10e1defd2f56652d81a1a5a46444c29791c7d2cc33b1970bfc96f"
+audit_path = "population_capacity_crop_history_mapping_audit.json"
+audit_sha256 = "d748363f94c7e3ada2be072a2a723f375cadd5a12ccf1e9da27fb7b114cd37ef"
+coordinate_transform_sha256 = "891cd9e31a4b3324b33b5bb13e66998e117ca55685cc05e34d0a52ad3738eb63"
+baseline_source_sha256 = "a12e4dac83addffbfa3e7cb340cfb2520720e67a7f5e2311648cdfd7c348d2b9"
+locations_png_sha256 = "bfbb8840343560367240f2b29e1e0621292aaa81616c06827c7fe566e2ec2b83"
+transform_p95_error_km = 60.68585597165764
+transform_error_basis = "p95 error across 162 held-out city controls in geometry_land_contract_candidate_v1; source-coordinate uncertainty is added per evidence record; this is map-alignment uncertainty, not a crop-spread radius"
+
+[[source]]
+source_id = "fuller_owcad_2026"
+title = "Old World Crops Archaeobotanical Database v1"
+citation_url = "https://doi.org/10.1007/s00334-026-01114-6"
+object_url = "https://discovery.ucl.ac.uk/id/eprint/10225612/2/OWCAD%201_334_2026_1114_MOESM1_ESM.xlsx"
+object_sha256 = "6af22e9b817491590d31d35d76eebb282292f2c35ef6e0e657d264eb082ee46c"
+role = "dated and georeferenced archaeobotanical occurrence evidence with explicit identification, sampling, dating, and georeference quality"
+
+[[source]]
+source_id = "milla_crop_origins_v1_2020"
+title = "Crop Origins v1.0"
+citation_url = "https://doi.org/10.1111/geb.13057"
+object_url = "https://raw.githubusercontent.com/rubenmilla/Crop_Origins_Phylo/master/old_versions_Crop_Origins_Phylo/Crop_Origins_Phylo_v1_0_13jan2020/crop_origins_v1_0/crop_origins_1_0_db.csv"
+object_sha256 = "3ec26347cbea737f9c101aec85bce3f43b129b022c8c6cac81667e7e9120e0fe"
+role = "diagnostic crop-origin metadata only; wild-progenitor ecoregion centroids are explicitly forbidden from creating availability labels"
+
+[[source]]
+source_id = "van_etten_hijmans_maize_2010"
+title = "Maize archaeobotanical database (PLOS ONE File S3)"
+citation_url = "https://doi.org/10.1371/journal.pone.0012060"
+object_url = "https://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0012060.s003"
+object_sha256 = "66c2a75696b1909a9851afd27edd5ab3254d21898ad17f41c8e84ec6999fbc8c"
+role = "dated and georeferenced maize archaeobotanical occurrences in the Americas; direct macrobotanical dates close positive labels while indirect and microbotanical rows remain uncertain"
+
+[[source]]
+source_id = "nunn_qian_columbian_exchange_2010"
+title = "The Columbian Exchange: A History of Disease, Food, and Ideas"
+citation_url = "https://doi.org/10.1257/jep.24.2.163"
+object_url = "https://www.kellogg.northwestern.edu/faculty/qian/resources/NunnQianJEP.pdf"
+object_sha256 = "d4521e5ec7da33dfea99affe2749b76a54a95bd425f188d71c0160c2cd834f1e"
+role = "cited post-1492 Old World exclusion for American maize, cassava, potato and sweet potato; Oceania is excluded from the sweet-potato domain because of separate pre-contact evidence"
+
+[[source]]
+source_id = "piergiovanni_phaseolus_exchange_2022"
+title = "Iconography of Beans and Related Legumes Following the Columbian Exchange"
+citation_url = "https://doi.org/10.3389/fpls.2022.851029"
+object_url = "https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2022.851029/pdf"
+object_sha256 = "849510d4e7de691d604037d5d5c678e35e620a8bc217c53f1f8c80c1b7654586"
+role = "cited post-1493 Old World exclusion for Phaseolus beans"
+
+[[source]]
+source_id = "natural_earth_admin0_50m_2025"
+title = "Natural Earth 1:50m Admin 0 Countries"
+citation_url = "https://www.naturalearthdata.com/downloads/50m-cultural-vectors/50m-admin-0-countries-2/"
+object_url = "https://naciscdn.org/naturalearth/50m/cultural/ne_50m_admin_0_countries.zip"
+object_sha256 = "5fed433373581fa648920435f937d95f2d3c0200e067409c6478dcdf1b853139"
+role = "boundary geometry only for cited domain/time evidence; it supplies no crop-history semantics"
+
+[[source]]
+source_id = "aguirre_merino_puruha_2025"
+title = "First Record of the Puruha Paleodiet through Archaeological Botanical Microremains"
+citation_url = "https://doi.org/10.5281/zenodo.14961467"
+object_url = "https://zenodo.org/records/14961467/files/AI5510.pdf?download=1"
+object_sha256 = "ca005027665e75c617d81b4cde07f65507603dee411deab86ae543acdad3d7e4"
+role = "dated archaeological starch and phytolith identifications from two UTM-located Ecuadorian sites"
+
+[[source]]
+source_id = "unesco_kuk_nomination_2007"
+title = "Kuk Early Agricultural Site World Heritage Nomination"
+citation_url = "https://whc.unesco.org/en/list/887"
+object_url = "https://whc.unesco.org/uploads/nominations/887.pdf"
+object_sha256 = "53ba1c0a355f8e4b8ff8706d4b0b36fbbbe26527ede0ab7ef6e8dea5d9252cd2"
+role = "official mapped property coordinate and archaeological sequence for pre-1337 banana, taro and yam cultivation at Kuk; evidence is applied only to the containing EU5 footprint"
+
+[[source]]
+source_id = "crowther_2019_tropical_crop_dispersal"
+title = "Asian Crop Dispersal in Africa and Late Holocene Human Adaptation to Tropical Environments"
+citation_url = "https://doi.org/10.1007/s10963-019-09136-x"
+object_url = "https://pure.mpg.de/rest/items/item_3178160_4/component/file_3178164/content"
+object_sha256 = "3d2fc7b25d7629978c6799a02f683119c8b9d087a9c33237a0dea6a91911500d"
+role = "review of archaeobotanical, historical, genetic, linguistic, and ecological evidence for pre-1337 banana, taro, and yam dispersal; explicitly documents evidence gaps"
+
+[[source]]
+source_id = "berenguer_rapa_nui_starch_2024"
+title = "Identification of crops in early settlement of Rapa Nui revealed through starch analysis"
+citation_url = "https://doi.org/10.1371/journal.pone.0298896"
+object_url = "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0298896&type=printable"
+object_sha256 = "40498524d3a36f1f6b73550e36e9913dd695118be50b0a7aae9054fec9e8ba31"
+role = "direct starch identifications from the earliest dated Anakena settlement context; positive evidence for sweet potato and taro, with cautious treatment of disputed manioc"
+
+[[crop]]
+crop = "banana"
+scientific_taxa = ["Musa acuminata"]
+default_state = "uncertain"
+source_ids = ["crowther_2019_tropical_crop_dispersal", "unesco_kuk_nomination_2007", "nunn_qian_columbian_exchange_2010"]
+review_status = "Kuk is closed available from directly mapped cultivation evidence; the Americas are closed unavailable before the Columbian exchange; other dispersal outside directly evidenced locations remains uncertain"
+
+[[crop]]
+crop = "barley"
+scientific_taxa = ["Hordeum vulgare"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "direct archaeobotanical site evidence compiled"
+
+[[crop]]
+crop = "cassava"
+scientific_taxa = ["Manihot esculenta"]
+default_state = "uncertain"
+source_ids = ["nunn_qian_columbian_exchange_2010", "aguirre_merino_puruha_2025", "berenguer_rapa_nui_starch_2024"]
+review_status = "Old World is closed unavailable before 1492; early Rapa Nui manioc evidence is explicitly retained as uncertain; dated American location-scale distribution remains incomplete"
+
+[[crop]]
+crop = "chickpea"
+scientific_taxa = ["Cicer arietinum"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "direct archaeobotanical site evidence compiled"
+
+[[crop]]
+crop = "cowpea"
+scientific_taxa = ["Vigna unguiculata"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "direct archaeobotanical site evidence compiled"
+
+[[crop]]
+crop = "dry_pea"
+scientific_taxa = ["Pisum sativum"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "direct archaeobotanical site evidence compiled"
+
+[[crop]]
+crop = "phaseolus_bean"
+scientific_taxa = ["Phaseolus vulgaris"]
+default_state = "uncertain"
+source_ids = ["piergiovanni_phaseolus_exchange_2022", "aguirre_merino_puruha_2025"]
+review_status = "Old World is closed unavailable before 1493; dated American location-scale distribution remains incomplete"
+
+[[crop]]
+crop = "mung_bean"
+scientific_taxa = ["Vigna radiata", "Vigna mungo"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "direct archaeobotanical site evidence compiled"
+
+[[crop]]
+crop = "pigeonpea"
+scientific_taxa = ["Cajanus cajan"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "direct archaeobotanical site evidence compiled"
+
+[[crop]]
+crop = "soybean"
+scientific_taxa = ["Glycine max"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026", "nunn_qian_columbian_exchange_2010"]
+review_status = "direct archaeobotanical site evidence compiled; the Americas are closed unavailable before the Columbian exchange"
+
+[[crop]]
+crop = "taro"
+scientific_taxa = ["Colocasia esculenta"]
+default_state = "uncertain"
+source_ids = ["crowther_2019_tropical_crop_dispersal", "unesco_kuk_nomination_2007", "berenguer_rapa_nui_starch_2024"]
+review_status = "Kuk and early Rapa Nui are closed available from directly mapped cultivation evidence; broader dispersal remains uncertain"
+
+[[crop]]
+crop = "foxtail_millet"
+scientific_taxa = ["Setaria italica"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "direct archaeobotanical site evidence compiled"
+
+[[crop]]
+crop = "maize"
+scientific_taxa = ["Zea mays"]
+default_state = "uncertain"
+source_ids = ["van_etten_hijmans_maize_2010", "nunn_qian_columbian_exchange_2010", "aguirre_merino_puruha_2025"]
+review_status = "100 direct dated American macrobotanical records compiled; Old World is closed unavailable before 1492; anomalous OWCAD Zea entries remain uncertain"
+
+[[crop]]
+crop = "oats"
+scientific_taxa = ["Avena sativa"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "only clean OWCAD A. sativa code Avs is positive; genus-level, A. fatua, wild, questioned and bracketed records remain uncertain"
+
+[[crop]]
+crop = "pearl_millet"
+scientific_taxa = ["Pennisetum glaucum", "Cenchrus americanus"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "direct archaeobotanical site evidence compiled"
+
+[[crop]]
+crop = "rice_dry"
+scientific_taxa = ["Oryza sativa", "Oryza glaberrima"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "species presence is resolved at sites; dryland versus wetland management is crop-physics uncertainty, not inferred from archaeology"
+
+[[crop]]
+crop = "rice_wet"
+scientific_taxa = ["Oryza sativa", "Oryza glaberrima"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "species presence is resolved at sites; dryland versus wetland management is crop-physics uncertainty, not inferred from archaeology"
+
+[[crop]]
+crop = "rye"
+scientific_taxa = ["Secale cereale"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "clean OWCAD Sec crop codes are positive; wSec, ?Sec and bracketed records remain uncertain"
+
+[[crop]]
+crop = "sweet_potato"
+scientific_taxa = ["Ipomoea batatas"]
+default_state = "uncertain"
+source_ids = ["nunn_qian_columbian_exchange_2010", "aguirre_merino_puruha_2025", "berenguer_rapa_nui_starch_2024"]
+review_status = "Europe, Asia and Africa are closed unavailable before 1492; early Rapa Nui is closed available from dated starch evidence; broader pre-contact Oceania remains uncertain"
+
+[[crop]]
+crop = "sorghum"
+scientific_taxa = ["Sorghum bicolor"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "direct archaeobotanical site evidence compiled"
+
+[[crop]]
+crop = "wheat"
+scientific_taxa = ["Triticum aestivum", "Triticum dicoccum", "Triticum durum", "Triticum monococcum", "Triticum spelta"]
+default_state = "uncertain"
+source_ids = ["fuller_owcad_2026"]
+review_status = "direct archaeobotanical site evidence compiled across modeled wheat taxa"
+
+[[crop]]
+crop = "white_potato"
+scientific_taxa = ["Solanum tuberosum"]
+default_state = "uncertain"
+source_ids = ["nunn_qian_columbian_exchange_2010", "aguirre_merino_puruha_2025"]
+review_status = "Old World is closed unavailable before 1492; dated Andean location-scale distribution remains incomplete"
+
+[[crop]]
+crop = "yam"
+scientific_taxa = ["Dioscorea alata", "Dioscorea cayenensis", "Dioscorea dumetorum", "Dioscorea esculenta", "Dioscorea japonica", "Dioscorea nummularia", "Dioscorea opposita", "Dioscorea pentaphylla", "Dioscorea rotundata", "Dioscorea trifida"]
+default_state = "uncertain"
+source_ids = ["crowther_2019_tropical_crop_dispersal", "unesco_kuk_nomination_2007"]
+review_status = "Kuk is closed available from directly mapped cultivation evidence; multiple other domestication systems remain uncertain where preservation or taxonomic resolution is weak"

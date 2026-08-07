@@ -1,4 +1,8 @@
 import re
+import tomllib
+import csv
+import hashlib
+import json
 from pathlib import Path
 
 import polars as pl
@@ -9,10 +13,9 @@ from prosper_or_perish_population_capacity.analysis import (
     capacity_effect_inventory,
     current_modifier_maps,
 )
-from prosper_or_perish_population_capacity.calibration import (
-    evaluate_saturation_anchors,
-    load_generated_capacity_frame,
-    load_saturation_anchors,
+from prosper_or_perish_population_capacity.benchmarks import (
+    audit_population_benchmarks,
+    load_population_benchmarks,
 )
 from prosper_or_perish_population_capacity.config import load_pipeline_config
 from prosper_or_perish_population_capacity.extraction import STATIC_MODIFIER_BLOCK
@@ -38,7 +41,8 @@ EUROPEDIA_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "
 LOCATION_POTENTIAL_CONCEPT = (
     MOD_ROOT / "main_menu" / "common" / "game_concepts" / "pp_location_potential.txt"
 )
-SATURATION_ANCHORS = ROOT / "population_capacity_saturation_anchors.toml"
+POPULATION_BENCHMARKS = ROOT / "population_capacity_benchmarks.toml"
+ACCEPTED_CAPACITY = ROOT / "data" / "population_capacity" / "accepted_capacity.csv"
 CONTROL_POINTS = ROOT / "population_capacity_control_points.csv"
 CAPACITY_EFFECT_BLOCKS = (
     "TRY_REPLACE:available_free_land",
@@ -79,9 +83,65 @@ def test_population_capacity_config_loads() -> None:
     assert config.managed_write_mode == "mod_root"
     assert config.capacity_scale.minimum == 10
     assert config.capacity_scale.maximum == 100
-    assert config.calibration.historical_population_policy == "saturation_anchors_only"
-    assert config.calibration.saturation_anchors == "population_capacity_saturation_anchors.toml"
-    assert config.calibration.land_potential_sources == ("gaez_v4", "hyde", "archaeoglobe")
+    assert config.capacity_scale.deployment_mode == "raw"
+    assert config.capacity_scale.people_per_game_population_unit == 1000
+    assert config.calibration.historical_population_policy == "evidence_registry_only"
+    assert config.calibration.saturation_anchors is None
+    assert config.calibration.land_potential_sources == (
+        "gaez_v5",
+        "gaez_v4",
+        "chelsa_trace21k",
+        "archaeoglobe_technology_only",
+    )
+    assert config.carrying_capacity.benchmarks == "population_capacity_benchmarks.toml"
+    assert config.carrying_capacity.area_benchmarks == "population_capacity_area_benchmarks.toml"
+    assert config.carrying_capacity.calibrated_geometry.endswith(
+        "geometry_land_contract_candidate_v1/location_geometry_candidate.parquet"
+    )
+    assert config.carrying_capacity.sample_points.endswith(
+        "geometry_land_contract_candidate_v1/full/game_authoritative_physical_samples.parquet"
+    )
+    assert config.carrying_capacity.sample_points_audit.endswith(
+        "game_authoritative_sample_acceptance_audit.json"
+    )
+    assert config.carrying_capacity.geometry_resolution_audit.endswith(
+        "game_authoritative_coordinate_resolution.json"
+    )
+    assert config.carrying_capacity.crop_mode_labels.endswith("crop_mode_labels.parquet")
+    assert config.carrying_capacity.crop_history_registry == (
+        "population_capacity_crop_history_registry.toml"
+    )
+    assert config.carrying_capacity.crop_history_evidence == (
+        "population_capacity_crop_history_evidence.csv"
+    )
+    assert config.carrying_capacity.pyaez_climate_inputs.endswith(
+        "pyaez_1337/all_samples/climate_inputs_600bp.parquet"
+    )
+    assert config.carrying_capacity.irrigation_feasibility.endswith(
+        "groundwater_whymap_wave29/irrigation_feasibility_with_groundwater.parquet"
+    )
+    assert config.carrying_capacity.fisheries_labels.endswith("fisheries_location_labels.parquet")
+    assert config.carrying_capacity.terrestrial_labels.endswith(
+        "terrestrial_food_location_labels.parquet"
+    )
+    assert config.carrying_capacity.terrestrial_audit.endswith(
+        "terrestrial_food_physics_audit.json"
+    )
+    assert config.carrying_capacity.tsetse_labels.endswith(
+        "tsetse_production_location_labels.parquet"
+    )
+    assert config.carrying_capacity.tsetse_audit.endswith(
+        "tsetse_production_audit.json"
+    )
+    assert config.carrying_capacity.tsetse_source_root.endswith(
+        "terrestrial_subsistence_sources/tsetse"
+    )
+    assert config.carrying_capacity.fisheries_audit.endswith("fisheries_label_audit.json")
+    assert config.carrying_capacity.fisheries_source_root.endswith("fisheries_sources")
+    assert config.carrying_capacity.hydrology_source_root.endswith("hydrology_sources/hydrology")
+    assert config.carrying_capacity.technology_registry == "population_capacity_technology_registry.toml"
+    assert config.carrying_capacity.accepted_table == "data/population_capacity/accepted_capacity.csv"
+    assert config.carrying_capacity.population_capacity_table == "data/population_capacity/population_capacity.csv"
     assert config.set_values == {}
     assert config.whole_blocks == {}
     assert config.feature_capacity_adjustments.enabled is False
@@ -96,6 +156,88 @@ def test_population_capacity_config_loads() -> None:
     assert "[replace_static_modifiers." not in config_text
 
 
+def test_crop_history_registry_is_checksum_pinned_and_covers_every_modeled_crop() -> None:
+    registry_path = ROOT / "population_capacity_crop_history_registry.toml"
+    evidence_path = ROOT / "population_capacity_crop_history_evidence.csv"
+    domains_path = ROOT / "population_capacity_crop_history_domains.geojson"
+    mapping_path = ROOT / "population_capacity_crop_history_location_mapping.csv"
+    mapping_audit_path = ROOT / "population_capacity_crop_history_mapping_audit.json"
+    with registry_path.open("rb") as handle:
+        registry = tomllib.load(handle)
+    assert registry["schema_version"] == "crop_history_registry_v2"
+    assert registry["evidence"]["sha256"] == hashlib.sha256(
+        evidence_path.read_bytes()
+    ).hexdigest()
+    assert registry["domains"]["sha256"] == hashlib.sha256(
+        domains_path.read_bytes()
+    ).hexdigest()
+    assert registry["mapping"]["sha256"] == hashlib.sha256(
+        mapping_path.read_bytes()
+    ).hexdigest()
+    assert registry["mapping"]["audit_sha256"] == hashlib.sha256(
+        mapping_audit_path.read_bytes()
+    ).hexdigest()
+    crops = {row["crop"] for row in registry["crop"]}
+    assert len(crops) == 23
+    with evidence_path.open("r", encoding="utf-8", newline="") as handle:
+        evidence = list(csv.DictReader(handle))
+    assert {row["crop"] for row in evidence}.issubset(crops)
+    assert not any(
+        row["source_id"] == "milla_crop_origins_v1_2020" for row in evidence
+    )
+    direct_maize = [
+        row
+        for row in evidence
+        if row["source_id"] == "van_etten_hijmans_maize_2010"
+        and row["evidence_state"] == "known_available"
+    ]
+    assert len(direct_maize) == 100
+    puruha = [row for row in evidence if row["source_id"] == "aguirre_merino_puruha_2025"]
+    assert len(puruha) == 6
+    kuk = [row for row in evidence if row["source_id"] == "unesco_kuk_nomination_2007"]
+    assert len(kuk) == 3
+    assert {row["crop"] for row in kuk} == {"banana", "taro", "yam"}
+    assert {row["evidence_state"] for row in kuk} == {"known_available"}
+    assert all(float(row["coordinate_uncertainty_km"]) >= 0.0 for row in evidence)
+    with mapping_path.open("r", encoding="utf-8", newline="") as handle:
+        mapping = list(csv.DictReader(handle))
+    assert len(mapping) == len(evidence)
+    assert {row["evidence_id"] for row in mapping} == {
+        row["evidence_id"] for row in evidence
+    }
+    assert {row["coordinate_transform_sha256"] for row in mapping} == {
+        registry["mapping"]["coordinate_transform_sha256"]
+    }
+    excluded_mapping = [row for row in mapping if not row["location_tag"]]
+    assert len(excluded_mapping) == 17
+    assert {row["mapping_state"] for row in excluded_mapping} == {
+        "excluded_non_location_evidence"
+    }
+    assert all(row["exclusion_reason_code"] for row in excluded_mapping)
+    domains = json.loads(domains_path.read_text(encoding="utf-8"))
+    assert domains["boundary_source_sha256"] == registry["domains"][
+        "boundary_object_sha256"
+    ]
+    domain_crops = {
+        feature["properties"]["domain_id"]: set(feature["properties"]["crops"])
+        for feature in domains["features"]
+    }
+    assert domain_crops["post_1492_old_world_staples"] == {
+        "cassava",
+        "maize",
+        "white_potato",
+    }
+    assert domain_crops["post_1493_old_world_phaseolus"] == {"phaseolus_bean"}
+    assert domain_crops["post_1492_eurasia_africa_sweet_potato"] == {
+        "sweet_potato"
+    }
+    assert domain_crops["post_1492_new_world_soybean_banana"] == {
+        "banana",
+        "soybean",
+    }
+    assert {row["evidence_state"] for row in evidence}.issubset(
+        {"known_available", "known_unavailable", "uncertain", "unresolved"}
+    )
 def test_free_land_effects_cover_all_labeled_goods() -> None:
     labeled_goods = _labeler_goods()
 
@@ -249,25 +391,15 @@ def test_location_potential_help_localization_is_shared() -> None:
     assert europedia_text.count("game_concept_pp_location_potential_desc:") == 1
 
     required_terms = (
+        "long-run local equilibrium",
         "Topography",
-        "Climate",
         "Vegetation",
-        "River access",
-        "Lake access",
-        "Coastal access",
-        "Location RGO",
-        "#T Out-of-game maps and evidence:#!",
-        "$BULLET$ Soil data",
-        "GAEZ crop potential and suitability maps",
-        "HYDE historical population coverage",
-        "Freshwater food support maps",
-        "Marine food support maps",
-        "Livestock food support maps",
-        "Plant food support maps",
-        "Wild subsistence support maps",
-        "Land-use confidence maps",
-        "Water confidence maps",
-        "The modelling and pipeline for this are in the GitHub repo",
+        "Calibrated land area and latitude",
+        "Low-input crop yields",
+        "Fallow, seed, storage, processing, and harvest-risk reserves",
+        "Pasture, livestock, fisheries, wild foods, and apiary products",
+        "Food imports are not counted",
+        "Starting population, historical population maps, the location RGO, and RGO output modifiers do not determine the value",
     )
     missing = [term for term in required_terms if term not in europedia_text]
 
@@ -529,10 +661,17 @@ def test_generated_population_capacity_values_stay_in_v1_bounds() -> None:
     capacities = _generated_location_capacities()
 
     assert len(capacities) > 20_000
-    assert min(capacities.values()) >= config.capacity_scale.minimum
-    assert max(capacities.values()) <= config.capacity_scale.maximum
-    assert any(value >= config.capacity_scale.maximum for value in capacities.values())
-    assert any(value <= 10 for value in capacities.values())
+    if config.capacity_scale.deployment_mode == "normalized":
+        assert min(capacities.values()) >= config.capacity_scale.minimum
+        assert max(capacities.values()) <= config.capacity_scale.maximum
+        assert any(value >= config.capacity_scale.maximum for value in capacities.values())
+        assert any(value <= config.capacity_scale.minimum for value in capacities.values())
+    else:
+        # Raw mode intentionally bypasses the gameplay band and emits the
+        # accepted absolute p50 headcount for inspection.
+        assert min(capacities.values()) >= 0
+        assert max(capacities.values()) > config.capacity_scale.maximum
+        assert any(value > config.capacity_scale.maximum for value in capacities.values())
 
 
 def test_generated_population_capacity_benchmark_rollups_are_available() -> None:
@@ -563,35 +702,92 @@ def test_generated_population_capacity_benchmark_rollups_are_available() -> None
         assert grouped["locations"].sum() > 0, group_key
 
 
-def test_saturation_anchor_dataset_loads_and_documents_initial_training_constraints() -> None:
+def test_benchmark_registry_documents_training_constraints_and_rejections() -> None:
+    benchmarks = load_population_benchmarks(POPULATION_BENCHMARKS)
+    by_id = {benchmark.anchor_id: benchmark for benchmark in benchmarks}
+
+    assert len(benchmarks) >= 12
+    assert POPULATION_BENCHMARKS.exists()
+    assert by_id["england_1290_1315"].role == "scale_anchor"
+    assert by_id["england_1290_1315"].review_status == "vetted"
+    assert by_id["england_1290_1315"].trains_scale
+    assert by_id["england_1290_1315"].capacity_low == 4_400_000
+    assert by_id["england_1290_1315"].capacity_high > 6_000_000
+    assert by_id["tikopia_food_area_capacity"].role == "validation_only"
+    assert by_id["yuan_china_1337"].role == "excluded"
+    assert by_id["nile_egypt_1337"].review_status == "rejected"
+    assert all(benchmark.sources for benchmark in benchmarks)
+    assert [
+        benchmark.anchor_id for benchmark in benchmarks if benchmark.trains_scale
+    ] == ["england_1290_1315"]
+
+
+def test_benchmark_registry_maps_every_entry_and_never_trains_exclusions() -> None:
+    benchmarks = load_population_benchmarks(POPULATION_BENCHMARKS)
+    baseline = pl.read_parquet(LABELING_BASELINE)
+    rows = audit_population_benchmarks(benchmarks, baseline)
+    by_id = {row["anchor_id"]: row for row in rows}
+
+    unmapped = {row["anchor_id"] for row in rows if row["issues"] == "selector maps no locations"}
+    assert unmapped == {
+        "medieval_europe_173_cities",
+        "tikopia_food_area_capacity",
+        "amazon_late_holocene_logistic_pressure",
+        "casarabe_llanos_de_mojos_capacity",
+    }
+    assert by_id["england_1290_1315"]["status"] == "pass"
+    assert by_id["yuan_china_1337"]["status"] == "excluded"
+    assert by_id["broad_africa_estimates"]["status"] == "excluded"
+    assert by_id["tikopia_food_area_capacity"]["status"] == "blocked"
+
+
+def test_irrigation_technology_registry_is_cited_and_never_encodes_multipliers() -> None:
+    path = ROOT / "population_capacity_technology_registry.toml"
+    registry = tomllib.loads(path.read_text(encoding="utf-8"))
+    systems = registry["systems"]
+    by_id = {system["system_id"]: system for system in systems}
+
+    assert registry["target_year"] == 1337
+    assert not [key for system in systems for key in system if "multiplier" in key.casefold()]
+    assert by_id["nile_basin_gravity_and_basin_irrigation"]["sources"]
+    assert by_id["southern_mesopotamian_canal_landscape"]["sources"]
+    assert by_id["persian_qanat"]["review_status"] == "vetted_technology"
+    assert by_id["indus_and_south_asian_irrigation"]["review_status"] == "vetted_technology"
+    assert by_id["indus_and_south_asian_irrigation"]["sources"]
+    assert by_id["central_asian_oasis_and_mountain_irrigation"]["review_status"] == "vetted_technology"
+    assert by_id["central_asian_oasis_and_mountain_irrigation"]["sources"]
+    assert by_id["east_asian_wet_rice_systems"]["review_status"] == "vetted_technology"
+    assert by_id["east_asian_wet_rice_systems"]["sources"]
+    assert all(system["available_by"] <= 1337 for system in systems)
+
+
+def test_accepted_capacity_table_matches_deployed_values() -> None:
     config = load_pipeline_config(ROOT / "population_capacity.toml")
-    anchors = load_saturation_anchors(ROOT / config.calibration.saturation_anchors)
-    by_id = {anchor.id: anchor for anchor in anchors}
+    with ACCEPTED_CAPACITY.open("r", encoding="utf-8-sig", newline="") as handle:
+        accepted_rows = list(csv.DictReader(handle))
+    deployed = _generated_location_capacities()
 
-    assert len(anchors) >= 10
-    assert SATURATION_ANCHORS.exists()
-    assert by_id["nile_lower_egypt"].scope == "area"
-    assert by_id["nile_lower_egypt"].key == "lower_egypt_area"
-    assert by_id["bengal_delta_core"].use_role == "scale_anchor"
-    assert by_id["java_core"].capacity_mean_floor == 75
-    assert by_id["trade_city_population_exclusion"].confidence == "excluded"
-    assert all(anchor.population_or_density_estimate for anchor in anchors)
-    assert all(anchor.sources for anchor in anchors)
+    assert len(accepted_rows) == 20_929
+    normalize = lambda tag: (tag[:-3] if tag.endswith("_pp") else tag).casefold()
+    value_column = (
+        "capacity_people_p50"
+        if config.capacity_scale.deployment_mode == "raw"
+        else "normalized_capacity"
+    )
+    def expected_deployed_value(row: dict[str, str]) -> int:
+        value = int(row[value_column])
+        if config.capacity_scale.deployment_mode == "raw":
+            unit = config.capacity_scale.people_per_game_population_unit
+            return (value + unit // 2) // unit
+        return value
 
-
-def test_saturation_anchor_report_covers_game_scopes_without_training_on_exclusions() -> None:
-    anchors = load_saturation_anchors(SATURATION_ANCHORS)
-    capacity_frame = load_generated_capacity_frame(LOCATION_MODIFIERS, baseline_path=LABELING_BASELINE)
-    rows = evaluate_saturation_anchors(anchors, capacity_frame)
-    by_id = {row["id"]: row for row in rows}
-
-    assert not [row for row in rows if row["status"] == "missing_scope_members"]
-    assert by_id["nile_lower_egypt"]["status"] == "below_mean_floor"
-    assert by_id["lower_yangtze_jiangnan"]["status"] == "below_mean_floor"
-    assert by_id["bengal_delta_core"]["status"] == "below_mean_floor"
-    assert by_id["trade_city_population_exclusion"]["training_constraint"] is False
-    assert by_id["trade_city_population_exclusion"]["status"] == "excluded"
-    assert by_id["java_core"]["locations"] > 0
+    accepted_normalized = {
+        normalize(str(row["location_tag"])): expected_deployed_value(row)
+        for row in accepted_rows
+    }
+    deployed_normalized = {normalize(tag): value for tag, value in deployed.items()}
+    assert set(accepted_normalized) == set(deployed_normalized)
+    assert accepted_normalized == deployed_normalized
 
 
 def test_location_geometry_inputs_are_available_for_external_target_mapping() -> None:

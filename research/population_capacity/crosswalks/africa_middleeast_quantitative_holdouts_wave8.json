@@ -1,0 +1,82 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Africa_and_Middle_East",
+  "region": "africa_middleeast",
+  "target_year": 1337,
+  "packet_id": "africa_middleeast_quantitative_holdouts_wave8",
+  "geometry_source": "EU5 calibrated location geometry plus cited historical source maps/archaeological locators; no unresolved boundary is treated as an accepted aggregate target",
+  "crosswalks": [
+    {
+      "anchor_id": "rasulid_taizz_cereal_yield_1293_physical_holdout_wave8",
+      "historical_boundary": "Ta'izz fiscal/crop district represented by the 692/1293 entries; no closed polygon is supplied by the accessible register sources.",
+      "eu5_selector": {
+        "include": ["province=taizz_province"],
+        "exclude": []
+      },
+      "matched_location_count": 5,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "validation_only",
+      "resolution_method": "Deterministic EU5 selector for the Ta'izz province is retained as a candidate sampling footprint only. No area-weighted historical overlap is asserted until the Rasulid district map is georeferenced.",
+      "required_actions": [
+        "obtain or digitize the Rasulid Ta'izz district boundary",
+        "intersect the historical district polygon with calibrated EU5 location geometry",
+        "retain this record as a physical yield holdout even if the population-anchor gate remains closed"
+      ],
+      "notes": "The selector is not a population target and does not claim that all five EU5 locations share the register's land-quality classes. Sample-level yield ratios must remain attached to their original land-quality strata."
+    },
+    {
+      "anchor_id": "fayyum_1245_village_tax_yield_matrix_holdout_wave8",
+      "historical_boundary": "The 124 villages/hamlets and canal/water-right entries listed in the al-Nabulusi register and settlement table; the source map uses a historical grid and points, not a closed aggregate polygon.",
+      "eu5_selector": {
+        "include": ["location_tag=faiyum"],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for the named Fayyum point; low for the complete 124-village aggregate",
+      "status": "validation_only",
+      "resolution_method": "Retain the Fayyum EU5 tag as a candidate location-level feature join. Village and canal records remain a separate table until the project map grid is georeferenced and a complete historical-to-EU5 overlap is calculated.",
+      "required_actions": [
+        "georeference FayyumMap1.pdf and Settlementtable.docx grid cells",
+        "map each village/canal record to calibrated EU5 polygons",
+        "keep poll-tax counts and fiscal levies in a physical/fiscal holdout table, never as total population"
+      ],
+      "source_map_urls": [
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/FayyumMap1.pdf",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/Settlementtable.docx"
+      ],
+      "notes": "A one-location selector is deliberately not a claim that the location covers the 124-village register. Coverage remains null until the historical map is digitized."
+    },
+    {
+      "anchor_id": "jenne_jeno_constellation_800_1100_population_validation_wave8",
+      "historical_boundary": "Archaeological Jenné-jeno and satellite-tell constellation within approximately 1 km of 13.88977 N, -4.54072 W; this is a validation locator, not a surrounding regional boundary.",
+      "eu5_selector": {
+        "include": ["location_tag=djenne"],
+        "exclude": []
+      },
+      "matched_location_count": 5,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for the archaeological coordinate/constellation; low for EU5 footprint coverage",
+      "status": "validation_only",
+      "resolution_method": "Store the archaeological coordinate and a 1-km diagnostic geometry separately. Use the five-location selector only to identify candidate EU5 footprints for a later exact intersection; do not assign the 7,000-27,000 people to all five locations.",
+      "coordinates": {
+        "latitude": 13.88977,
+        "longitude": -4.54072,
+        "radius_km": 1.0
+      },
+      "required_actions": [
+        "obtain a digitized tell/settlement constellation polygon or archaeological site-area raster",
+        "intersect it with calibrated EU5 geometry",
+        "evaluate the wide population interval only as validation, preserving the 800-1100 out-of-period flag"
+      ],
+      "notes": "The site locator is useful for a local diagnostic, but an archaeological settlement population cannot supervise the carrying capacity of its modern EU5 province."
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "europe_artois_interval_anchor_wave17",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_artois_interval_anchor_wave17",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet with calibrated area_km2",
+  "policy": {
+    "append_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "historical_boundary_coverage_is_declared": true,
+    "residual_boundary_uncertainty_is_not_rescaled": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "artois_1290_1300_agrarian_capacity_interval_wave17",
+      "historical_boundary": "Medieval Artois agricultural core represented by the contiguous EU5 Lower Artois and Upper Artois historical provinces",
+      "eu5_selector": {
+        "include": [
+          "province=lower_artois_province|upper_artois_province"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 8,
+      "selected_location_count": 8,
+      "coverage_fraction": 0.96,
+      "selector_coverage_fraction": 0.96,
+      "mapped_area_km2": 5545.58456684555,
+      "historical_area_km2": 5776.65,
+      "unmapped_area_km2": 231.06543315445,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "vetted",
+      "candidate_role": "interval_anchor",
+      "resolution_method": "Selected the full set of EU5 locations whose historical province field is lower_artois_province or upper_artois_province. The declared 0.96 overlap is retained as an uncertainty bound from historical county-core versus province-envelope differences; no location-level population, HYDE, RGO or starting-population field is used.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 5545.58456684555,
+        "declared_historical_boundary_area_km2": 5776.65,
+        "coverage_fraction": 0.96,
+        "unmapped_area_km2": 231.06543315445,
+        "area_method": "calibrated polygon/Jacobian area from location_candidates.parquet; historical area is the declared Artois core envelope used for this crosswalk",
+        "area_difference_policy": "retain the difference in the anchor uncertainty; never inflate the mapped aggregate to match it"
+      },
+      "notes": "The source's region is explicitly Artois, while the game has named Lower/Upper Artois historical provinces. This is a high-coverage regional crosswalk, not a claim that every medieval parish boundary is identical to an EU5 province boundary. Keep the record grouped by its source family and geography in all holdouts."
+    }
+  ]
+}

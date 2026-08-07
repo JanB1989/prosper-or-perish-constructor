@@ -1,0 +1,70 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "America/Oceania",
+  "region": "americas_oceania",
+  "target_year": 1337,
+  "packet_id": "americas_oceania_capacity_wave8",
+  "scope": "Additional mappable food-system capacity validation from a geospatial pre-contact Polynesian model; not a scale anchor.",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "promoted_training_target_ids": [],
+    "decision": "Mangareva provides an exact EU5 island tag and an explicit published capacity envelope, but the interval is a scenario model rather than an observed Malthusian saturation record and the study is an out-of-period analogue. Retain for validation-only scoring.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "mangareva_precontact_food_capacity_1200_1500_validation_wave8",
+      "label": "Mangareva, Gambier Islands: pre-contact terrestrial and reef food capacity",
+      "year_start": 1200,
+      "year_end": 1500,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": 2954,
+      "capacity_central": 3537,
+      "capacity_high": 5139,
+      "local_food_low": 0.95,
+      "local_food_central": 0.98,
+      "local_food_high": 1.0,
+      "pressure_evidence": [
+        "Puleston et al. (Human Ecology 52, 2024) construct island-specific GIS food budgets from terrain, slope, substrate and soil classes, assigning pre-contact breadfruit, coconut, yam, sweet potato, taro, shifting cultivation and upland foods rather than using modern cropland share.",
+        "The same study maps near-shore reef and lagoon area and evaluates three sustainable fishing-yield scenarios. Mangareva's modeled maximum population spans 2,954 to 5,139 across those scenarios, with 3,537 under the middle scenario.",
+        "The paper explicitly checks protein: Mangareva's modeled marine supply supports 6,632 people at the 10% protein threshold while its calorie ceiling is 3,537, so protein is not the binding constraint in the preferred scenario.",
+        "The result is a physical food-capacity envelope, not a census or observed saturation fraction; no historical population is used as a target."
+      ],
+      "shock_flags": [
+        "reef_yield_scenario_uncertainty",
+        "out_of_period_analogue",
+        "contact_and_later_demographic_change",
+        "coarse_eu5_area_footprint"
+      ],
+      "trade_dependence": "none in the modeled food budget; land and nearby reef resources only",
+      "food_regime": "breadfruit_coconut_yam_sweet_potato_taro_shifting_cultivation_reef_fishing",
+      "boundary_description": "Entire Mangareva island in the Gambier Islands; the study reports approximately 16.58 km2 of island land and allocates the shared lagoon proportionally between Mangareva and Taravai.",
+      "boundary_source": "Puleston, Kahn, Chadwick, Belluzzo and Kirch, People of the Sea, or of the Soil? (Human Ecology 52, 2024), methods, Tables 1-7 and 15-19.",
+      "eu5_selector": {
+        "include": [
+          "location_tag=mangareva"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact_tag_coarse_area",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "polynesia_food_capacity_gis_puleston_2024",
+      "source_bundle": "puleston_kahn_chadwick_belluzzo_kirch_2024_mangareva_food_budget",
+      "source_family_independence": "A geospatial food-budget model with published crop, reef and protein scenarios; it is independent of the Sear demographic synthesis but is model-derived and cannot establish observed saturation.",
+      "sources": [
+        "https://link.springer.com/article/10.1007/s10745-024-00530-4",
+        "https://doi.org/10.1007/s10745-024-00530-4"
+      ],
+      "notes": "Capacity bounds are the published scenario envelope (2,954-5,139 people), with 3,537 as the article's middle-scenario calorie maximum. The EU5 tag is semantically the island but its calibrated game footprint is much coarser than the 16.58 km2 historical land boundary; retain as a rank, food-contribution and uncertainty validation case only."
+    }
+  ]
+}

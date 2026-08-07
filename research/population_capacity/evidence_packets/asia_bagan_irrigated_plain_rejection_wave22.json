@@ -1,0 +1,77 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Asia",
+  "region": "indochina",
+  "target_year": 1337,
+  "packet_id": "asia_bagan_irrigated_plain_rejection_wave22",
+  "scope": "Physical and historical validation packet for the Bagan archaeological zone and Upper Burma irrigated landscape; explicitly rejected as a population-capacity training anchor.",
+  "promotion_audit": {
+    "promoted_lower_bound_ids": [],
+    "decision": "Reject as a training target. Bagan is a capital and regional trade/administrative hub; reported population values are city estimates without a closed rural catchment. Retain the dated irrigation, climate-stress and peri-urban agriculture evidence as physical validation only.",
+    "reviewed_on": "2026-08-04"
+  },
+  "records": [
+    {
+      "anchor_id": "bagan_1050_1300_irrigated_plain_physical_validation_wave22",
+      "label": "Bagan dry-zone irrigation and peri-urban agriculture validation",
+      "year_start": 1050,
+      "year_end": 1300,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "No population or capacity interval is admitted. Published city-size claims range from tens of thousands to much larger unsourced estimates and do not define a rural, locally fed boundary.",
+      "pressure_evidence": [
+        "Hudson (2005) documents a continuous Upper Burma archaeological landscape in which Bagan's 11th-13th-century expansion absorbed earlier agricultural lands and irrigation management systems.",
+        "UNESCO identifies Bagan as the capital of a regional empire at its 11th-13th-century peak; the archaeological property is a monumental urban/civic landscape, not a rural catchment.",
+        "Bagan's central dry-zone climate, water-management works and 13th-century climate variability provide a useful irrigation and drought-stress physical case.",
+        "Peri-urban village and water-management studies show local cultivation around the monuments, but they do not enumerate all rural food producers or distinguish imported grain from local production."
+      ],
+      "shock_flags": [
+        "capital_and_regional_administrative_hub",
+        "Mongol invasions and post-13th-century political disruption",
+        "dry-zone rainfall variability and irrigation-maintenance uncertainty",
+        "population claims are city estimates without a closed rural boundary",
+        "religious land donations and labor extraction distort observed settlement",
+        "rice and other food transfers from Kyaukse/Mu and other granaries are unresolved"
+      ],
+      "trade_dependence": "mixed_to_high; Bagan's capital and monument economy depended on regional transfers and trade, even though local dry-zone agriculture was important",
+      "food_regime": "dry_zone_irrigated_rice_millet_pulses_livestock_and_riverine_foods",
+      "boundary_description": "Bagan Archaeological Zone / classical Bagan plain, approximately 104 km2 property around the walled capital; not the Pagan Kingdom, Kyaukse granary, Mu valley or a modern Myanmar administrative region.",
+      "boundary_source": "UNESCO World Heritage Centre Bagan property and Hudson (2005) Upper Burma archaeological landscape",
+      "eu5_selector": {
+        "include": [
+          "location_tag=pagan"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "contained_archaeological_zone_in_coarse_eu5_location",
+      "crosswalk_status": "validation_only",
+      "boundary_confidence": "high for the archaeological property; low for local-food catchment equivalence",
+      "status": "rejected",
+      "role": "validation_only",
+      "source_family": "hudson_bagan_archaeology_and_unesco_landscape",
+      "source_bundle": "hudson_2005_unesco_bagan_water_management_bundle",
+      "source_family_independence": "The Bagan archaeology, UNESCO property and water-management evidence concern the same urban landscape and are one source family.",
+      "sources": [
+        "https://www.burmalibrary.org/en/the-origins-of-bagan-the-archaeological-landscape-of-upper-burma-to-ad-1300",
+        "https://core.ac.uk/download/pdf/41229722.pdf",
+        "https://whc.unesco.org/en/list/1588/",
+        "https://doi.org/10.1007/s41826-022-00061-1",
+        "https://www.spafajournal.org/index.php/spafajournal/article/view/600"
+      ],
+      "citation_details": [
+        "Hudson (2005), The Origins of Bagan: archaeological landscape and agricultural/management continuity through AD 1300.",
+        "UNESCO World Heritage Centre, Bagan: the property is the capital's monumental landscape at the peak of a regional empire in the 11th-13th centuries.",
+        "Ancient Inscriptions and Climate Change (2022) and IRAW@Bagan work: water management and climate variability are physical validation inputs, not population labels."
+      ],
+      "notes": "Retain as an Asia physical validation case for dry-zone irrigation, local crop calendars, water maintenance and climate stress. Do not promote any Bagan city estimate to surrounding land capacity, and do not use modern Myanmar population or regional balancing targets."
+    }
+  ]
+}

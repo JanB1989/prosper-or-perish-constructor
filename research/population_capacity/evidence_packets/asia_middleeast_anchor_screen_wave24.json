@@ -1,0 +1,412 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Asia",
+  "region": "asia_middle_east",
+  "target_year": 1337,
+  "packet_id": "asia_middleeast_anchor_screen_wave24",
+  "scope": "Focused evidence screen for Japan, Fayyum/Nile, Suzhou/Pingjiang, Otrar/Transoxiana, Mesopotamia and the Indus. The packet records what can and cannot supervise a 1337 local-food carrying-capacity fit; it does not turn administrative or city observations into synthetic labels.",
+  "promotion_audit": {
+    "promoted_lower_bound_ids": [],
+    "decision": "No new two-sided scale anchor is admitted. The Japan Great Land Register floors remain in the earlier Farris packets as one-sided evidence. Fayyum, Pingjiang, Otrar, Mesopotamia and Indus records provide high-value physical or validation evidence but fail at least one of the local-food, saturation, boundary, trade or shock requirements. All failures are explicit and retained for audit.",
+    "reviewed_on": "2026-08-04"
+  },
+  "records": [
+    {
+      "anchor_id": "japan_kamakura_great_land_register_screen_wave24",
+      "label": "Japan Kamakura Great Land Registers: provincial rice-field floors, not two-sided capacity labels",
+      "year_start": 1190,
+      "year_end": 1280,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Farris (2006), Tables 1.1-1.3, converts registered rice acreage into provincial population floors. The resulting Buzen, Noto and other province records are already preserved as one-sided lower-bound packets; the rice-only conversion and a bracketed non-rice sensitivity do not provide a defensible upper endpoint or saturation fraction.",
+      "pressure_evidence": [
+        "Farris (2006), pp. 22-26 and Tables 1.1-1.2, compares Great Land Register field totals with independent estate surveys, establishing a documented local cultivated-food base.",
+        "Farris (2006), pp. 29-32, places late Heian/Kamakura demography in a food-limited setting with grain shortages and famines; this is pressure context, not a measured equilibrium fraction.",
+        "The register conversion is tied to local rice acreage and a documented dry-field/non-rice sensitivity, so the retained floors are local-food evidence rather than city population or an imported-food total."
+      ],
+      "shock_flags": [
+        "registers are 1190-1199 or 1221 while converted values are labelled circa 1280",
+        "partial registers and omitted non-rice fields",
+        "Mongol invasion/provisioning-zone exposure for Kyushu provinces",
+        "no independent province-level saturation fraction"
+      ],
+      "trade_dependence": "low_to_mixed; local rice and dry fields are documented, but regional exchange is not quantified",
+      "food_regime": "wet rice, dry fields, pulses, livestock, coastal and river fisheries, forest foods",
+      "boundary_description": "Multiple historical Japanese provinces, not one new aggregate boundary. Buzen, Noto and the other province polygons are mapped in the earlier Japan floor packets with CHGIS/EU5 crosswalks.",
+      "boundary_source": "Harvard CHGIS Japan Tokugawa GIS 2004, DOI 10.7910/DVN/2CVTR0",
+      "eu5_selector": {
+        "include": [
+          "region=japan_region"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "not_applicable_to_multi_province_screen",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "high for the individual earlier province packets; not applicable to this screen aggregate",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "farris_2006_great_land_registers",
+      "source_bundle": "farris_tables_1_1_to_1_3_chgis_japan_screen_wave24",
+      "source_family_independence": "Shared documentary source family with the earlier Buzen/Noto and nine-province lower-bound packets; not an independent global scale family.",
+      "sources": [
+        "Farris, Japan's Medieval Population (2006), pp. 22-32, Tables 1.1-1.3: https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=23",
+        "Farris, Japan's Medieval Population (2006), Table 1.3 and note c: https://religion-in-japan.univie.ac.at/k/img_auth.php/4/47/Farris_2006.pdf#page=32",
+        "Harvard CHGIS Japan data page and Tokugawa Japan GIS 2004: https://chgis.fas.harvard.edu/data/japan/"
+      ],
+      "citation_details": [
+        "Farris (2006), pp. 22-26: register/estate-survey comparison.",
+        "Farris (2006), pp. 29-32, Table 1.3 note c: rice-acreage conversion and bracketed non-rice sensitivity."
+      ],
+      "notes": "This screen deliberately avoids creating a duplicate location-level label. The earlier province floors remain valid one-sided tests but cannot establish global scale or train a two-sided residual target."
+    },
+    {
+      "anchor_id": "fayyum_nabulusi_1245_rural_cadastre_screen_wave24",
+      "label": "Fayyum village cadastral survey of 1245: unusually strong physical evidence, no total population interval",
+      "year_start": 1245,
+      "year_end": 1245,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "observed_metrics": {
+        "surveyed_villages": 100,
+        "village_unit": "nahiya",
+        "observed_fields": ["land_tax", "trade_tax", "water_rights", "pasture_fees", "poll_tax_non_muslims", "livestock_alms_tax", "crop_and_fiscal_values"]
+      },
+      "interval_semantics": "Al-Nabulusi's source is a village-by-village fiscal and irrigation survey, not a headcount. Poll-tax entries cover non-Muslims only, and fiscal revenue combines land and trade taxes; no total population, local-food calorie share or equilibrium saturation interval is available.",
+      "pressure_evidence": [
+        "The Rural Society in Medieval Islam project dates the inspection to spring 1245 and describes a first-hand survey of approximately one hundred villages using local tax and irrigation officials.",
+        "The project identifies the nahiya as the agricultural unit for allocating land and water and for paying taxes; hamlets share water quotas with mother villages.",
+        "The database records land tax, trade taxes, pasture fees, poll tax and livestock-related payments, exposing water and resource allocation but not a population ceiling."
+      ],
+      "shock_flags": [
+        "poll-tax values do not count converted Muslims",
+        "fiscal quantities are assessed dues, not production or people",
+        "village/hamlet boundary reconstruction is not yet an audited EU5 crosswalk",
+        "military iqta and Cairo/royal endowment transfers complicate local-food dependence"
+      ],
+      "trade_dependence": "mixed; the source explicitly combines land-tax and trade-tax revenue",
+      "food_regime": "Nile basin wheat, barley, beans, rice in suitable pockets, livestock, pasture and fisheries under managed irrigation",
+      "boundary_description": "The roughly triangular Fayyum depression and its approximately one hundred surveyed villages; village and hamlet polygons are not equivalent to the coarse EU5 Egypt locations.",
+      "boundary_source": "Rural Society in Medieval Islam, The Villages of the Fayyum project: https://projects.history.qmul.ac.uk/ruralsocietyislam/",
+      "eu5_selector": {
+        "include": [
+          "location_tag=__unmapped_fayyum_cadastre_wave24__"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "high for the survey's village concept; low for EU5 equivalence",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "qmul_rural_society_medieval_islam_fayyum_cadastre",
+      "source_bundle": "nabulusi_1245_village_water_tax_database_wave24",
+      "source_family_independence": "Independent fiscal/irrigation source family; no population label is inferred from its tax amounts.",
+      "sources": [
+        "Rural Society in Medieval Islam, project overview and source description: https://projects.history.qmul.ac.uk/ruralsocietyislam/",
+        "Rural Society in Medieval Islam, digital database: https://projects.history.qmul.ac.uk/ruralsocietyislam/database/",
+        "Rural Society in Medieval Islam, village and water-rights unit: https://projects.history.qmul.ac.uk/ruralsocietyislam/database/i-1-the-village/",
+        "Rapoport and Shahar (eds.), The Villages of the Fayyum (2018), Brepols: https://www.brepols.net/products/IS-9782503578332-1",
+        "Saleh and Tirole, Taxing Unwanted Populations (AEA preliminary paper), pp. 37-38: https://www.aeaweb.org/conference/2018/preliminary/paper/r6TnkDEA"
+      ],
+      "citation_details": [
+        "Project overview: spring 1245 inspection, village-by-village agricultural and irrigation observations, approximately one hundred villages.",
+        "Database, The Village: nahiya is the agricultural and water-allocation unit; taxes include land/trade, pasture, poll and livestock categories.",
+        "Saleh and Tirole (AEA preliminary paper), pp. 37-38: the earliest extant Mamluk cadastres with local-level kharaj per land unit are 1375 and 1477; al-Nabulusi's 1245 data lack total landholding area needed for the same measure."
+      ],
+      "notes": "Retain as a high-priority physical feature source and potential future village-level target if a population series and polygon reconstruction are found. Do not convert tax ardabbs or non-Muslim poll heads into a population interval."
+    },
+    {
+      "anchor_id": "fayyum_1245_rapoport_population_estimate_screen_wave24",
+      "label": "Fayyum 1245 population estimate in Rapoport's quantitative reconstruction",
+      "year_start": 1243,
+      "year_end": 1245,
+      "population_low": 75000,
+      "population_central": 75000,
+      "population_high": 75000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "A scholarly review of Rapoport's pp. 71-74 reconstruction reports an extrapolated total of approximately 75,000 people, including approximately 5,000 in Madinat al-Fayyum. This is a model-derived point estimate from tax-register evidence, not an enumerated interval; no uncertainty bounds are invented.",
+      "pressure_evidence": [
+        "Rapoport's reconstruction compares the medieval total with Roman-era figures and argues that the similarity suggests a higher tax burden was not tenable for the local population; this is qualitative pressure evidence, not an independently measured saturation fraction.",
+        "The same review describes Chapter 3 as reconstructing cultivated area, irrigation and population size and Chapters 4-5 as estimating subsistence versus commercial agriculture from the tax figures.",
+        "The subsistence regime is explicitly wheat-led with barley and fava beans; rice, cotton, flax and sugarcane are treated as commercial crops, so the source contains a route to local-food decomposition but not a completed calorie share."
+      ],
+      "shock_flags": [
+        "75,000 is an extrapolation from fiscal data, not an enumeration",
+        "Madinat al-Fayyum urban component is embedded in the total and must be separated from rural catchment capacity",
+        "Ayyubid iqta and military obligations may shift food/tax flows",
+        "no formal saturation interval or local-food fraction is published in the accessible review"
+      ],
+      "trade_dependence": "mixed; Rapoport separates subsistence and commercial agriculture, but inter-regional food flows and urban provisioning remain unresolved",
+      "food_regime": "subsistence wheat, barley and fava beans with commercial rice, cotton, flax and sugarcane under Nile irrigation",
+      "boundary_description": "Fayyum province/depression as reconstructed from al-Nabulusi's village register; the approximately 5,000 Madinat al-Fayyum urban estimate must not be treated as surrounding rural capacity.",
+      "boundary_source": "Rapoport, Rural Economy and Tribal Society in Islamic Egypt (2018), pp. 71-74 (population reconstruction), reviewed by EH.Net and IFAO BCAI",
+      "eu5_selector": {
+        "include": [
+          "location_tag=__unmapped_fayyum_cadastre_wave24__"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for province reconstruction; low for EU5 equivalence",
+      "status": "candidate",
+      "role": "validation_only",
+      "source_family": "rapoport_2018_fayyum_quantitative_reconstruction",
+      "source_bundle": "rapoport_pp71_74_nabulusi_population_estimate_wave24",
+      "source_family_independence": "Independent scholarly reconstruction from the al-Nabulusi fiscal source; it is not independent of the Fayyum cadastral packet and is therefore not counted as a separate source family for scale.",
+      "sources": [
+        "Rapoport, Rural Economy and Tribal Society in Islamic Egypt (2018), pp. 71-74 (book record): https://search.worldcat.org/title/1027116407",
+        "EH.Net review, Chapters 3-5 and subsistence/commercial crop interpretation: https://eh.net/book_reviews/rural-economy-and-tribal-society-in-islamic-egypt/",
+        "IFAO BCAI review, pp. 59-60 and quantitative discussion: https://www.ifao.egnet.net/bcai/34/21/",
+        "Saleh and Tirole, Taxing Identity (TSE working paper), pp. 24-26 and 63-68: https://www.tse-fr.eu/sites/default/files/TSE/documents/doc/by/tirole/taxing_identity_010321.pdf"
+      ],
+      "citation_details": [
+        "IFAO BCAI/secondary review reports Rapoport's extrapolation (pp. 71-74) to approximately 75,000 total, including approximately 5,000 for Madinat al-Fayyum, and notes equivalence to Roman-era values as evidence that a higher tax burden was not tenable.",
+        "EH.Net review identifies Chapter 3 as cultivated-area/irrigation/population reconstruction and Chapters 4-5 as subsistence versus commercial agriculture estimates.",
+        "Saleh and Tirole (TSE), pp. 24-26, 63-68: Mamluk 1315/1375 cadastral tax transfers are local village data but are fiscal outcomes, not population or capacity labels."
+      ],
+      "notes": "This is the strongest newly located numerical Fayyum evidence, but it remains validation-only until the book's exact assumptions, uncertainty, urban exclusion and historical-to-EU5 village crosswalk are independently audited. It should not be promoted from a point estimate to a two-sided Malthusian target merely because the estimate is plausible."
+    },
+    {
+      "anchor_id": "suzhou_pingjiang_1290_register_screen_wave24",
+      "label": "Pingjiang Lu (Suzhou) 1290 Yuan register: dense irrigated landscape, administrative point only",
+      "year_start": 1290,
+      "year_end": 1290,
+      "population_low": 2433700,
+      "population_central": 2433700,
+      "population_high": 2433700,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The Suzhou local-gazetteer history reports 466,158 households and 2,433,700 people for Pingjiang Lu's six counties in Yuan Zhiyuan 27 (1290). This is a single administrative register point, not an uncertainty interval or a Malthusian equilibrium; no defensible lower/upper population bounds are substituted.",
+      "pressure_evidence": [
+        "The six-county Pingjiang Lu aggregate is a large, densely settled rice-and-canal landscape, making it useful as a thriving local-intensive validation case.",
+        "Taihu fisheries, canal transport and administrative food transfers are part of the food regime, but their shares and import dependence are not quantified.",
+        "No independent land-scarcity, marginal-land, real-wage or famine-sensitivity evidence is resolved to the same six-county boundary, so the observed point cannot establish saturation."
+      ],
+      "shock_flags": [
+        "Yuan register is a tax/administrative count and can omit non-registered categories",
+        "six-county Pingjiang Lu boundary is not yet matched to EU5 location polygons",
+        "Suzhou/Pingjiang is a commercial canal hub with potentially substantial inter-county food redistribution",
+        "no local-food share or saturation fraction"
+      ],
+      "trade_dependence": "high; canal and market redistribution are central to the record and not separable from local production",
+      "food_regime": "irrigated rice, wheat and legumes, Taihu/freshwater fisheries, pigs and canal redistribution",
+      "boundary_description": "Pingjiang Lu, six Yuan counties around Suzhou; not the modern city polygon and not a closed rural-food catchment for EU5.",
+      "boundary_source": "Suzhou Local Gazetteer Office, Suzhou historical population (Yuan Zhiyuan 27): https://dfzb.suzhou.gov.cn/dfzb/szdq/201507/8d3b864be8d247b991dd1524605f7e9b.shtml",
+      "eu5_selector": {
+        "include": [
+          "province=suzhou_province"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for six-county administrative unit; low for EU5 equivalence",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "suzhou_local_gazetteer_yuan_register",
+      "source_bundle": "pingjiang_lu_1290_six_county_register_wave24",
+      "source_family_independence": "Independent administrative-register source family; the population point is not treated as a capacity label.",
+      "sources": [
+        "Suzhou Local Gazetteer Office, Suzhou historical population: https://dfzb.suzhou.gov.cn/dfzb/szdq/201507/8d3b864be8d247b991dd1524605f7e9b.shtml",
+        "Yuan administrative population caveats and source transcription context: https://szzy.7lue.cn/read/b8f1737d5285e7014ed3c229289951e7/e8bf9266f4bbf5de9198fd18aca9514b.md"
+      ],
+      "citation_details": [
+        "Suzhou Local Gazetteer Office: Yuan Zhiyuan 27 (1290), Pingjiang Lu six counties, 466,158 households and 2,433,700 people.",
+        "The register is an administrative/tax count; no source supplies a saturation interval at the same boundary."
+      ],
+      "notes": "Retain as a thriving/local-intensive validation point. Do not use it to set surrounding land capacity or to fit a regional multiplier; trade and canal redistribution make it unsuitable for the local-food scale anchor contract."
+    },
+    {
+      "anchor_id": "otrar_oasis_1200_1350_population_screen_wave24",
+      "label": "Otrar oasis 1200-1350 archaeological population estimate and irrigated landscape",
+      "year_start": 1200,
+      "year_end": 1350,
+      "population_low": 21570,
+      "population_central": 21570,
+      "population_high": 21570,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Clarke, Sala, Deom and Meseth report an estimated 21,570 people for phase 4 (1200-1350) in Table 2 (p. 263), based on oasis settlement/irrigation reconstruction and a comparison to UNESCO's approximately 20,000 estimate. It is a point estimate for an oasis that includes the major Silk Road town, not a bounded carrying-capacity interval.",
+      "pressure_evidence": [
+        "The study maps a former oasis of approximately 200 km2 with ten large walled towns and fifty small villages, canals, fields and settlement spacing.",
+        "The 1200-1350 phase is explicitly reconstructed from irrigation-channel, field, settlement, pottery, radiocarbon and palaeobotanical evidence; the physical water network is useful for the mechanistic allocator.",
+        "The authors state that the population values are estimates and that field work was ongoing; no independent evidence shows the 21,570 population was at a Malthusian equilibrium."
+      ],
+      "shock_flags": [
+        "Otrar was a powerful Silk Road urban centre and trade hub",
+        "Mongol conquest in 1219-1220 and subsequent irrigation-maintenance disruption",
+        "oasis boundary and city-to-rural food flows are not resolved",
+        "no saturation fraction or local-food share"
+      ],
+      "trade_dependence": "high; the study itself identifies Otrar as a key Silk Road route settlement bridging trading, farming and pastoralist cultures",
+      "food_regime": "irrigated cereals and horticulture, livestock/pastoralism, riverine floodplain foods and Silk Road exchange",
+      "boundary_description": "Archaeological Otrar oasis near the Syr Darya/Arys confluence; approximately 200 km2 containing the 170 ha Otrar city platform, ten walled towns and fifty small villages.",
+      "boundary_source": "Clarke, Sala, Deom and Meseth, Reconstructing irrigation at Otrar Oasis, Kazakhstan 800-1700AD, pp. 253-263: https://www.researchgate.net/publication/242240137_Reconstructing_irrigation_at_Otrar_Oasis_Kazakhstan_800-1700AD",
+      "eu5_selector": {
+        "include": [
+          "province=otrar_province"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "high for archaeological oasis footprint; low for EU5 province equivalence",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "otrar_oasis_archaeology_irrigation_reconstruction",
+      "source_bundle": "otrar_phase4_1200_1350_table2_wave24",
+      "source_family_independence": "Independent archaeological/hydrological source family; population estimate and physical irrigation reconstruction are retained together but not treated as an equilibrium target.",
+      "sources": [
+        "Clarke, Sala, Deom and Meseth, Reconstructing irrigation at Otrar Oasis, Kazakhstan 800-1700AD, pp. 253-263 and Table 2: https://www.researchgate.net/publication/242240137_Reconstructing_irrigation_at_Otrar_Oasis_Kazakhstan_800-1700AD",
+        "Otrar archaeological geospatial dataset: https://rdr.ucl.ac.uk/articles/dataset/Otrar_archaeological_site_digital_geospatial_dataset_2016/11690835"
+      ],
+      "citation_details": [
+        "pp. 253-254: 200 km2 oasis, ten large walled towns, fifty small villages, 170 ha Otrar city platform and canal-fed satellite settlements.",
+        "p. 263, Table 2: phase 4 (1200-1350) population estimate 21,570; authors note estimate/UNESCO comparison and ongoing field work."
+      ],
+      "notes": "Use as a dated irrigation-and-settlement validation case. The crosswalk must remain unresolved until the archaeological oasis polygon is intersected with calibrated EU5 geometry; the city/trade-hub rule independently blocks scale training."
+    },
+    {
+      "anchor_id": "southern_mesopotamia_canal_landscape_screen_wave24",
+      "label": "Lower Tigris-Euphrates canal landscape: physical system evidence without a 1337 population interval",
+      "year_start": 1100,
+      "year_end": 1337,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Canal/drainage and settlement studies document a productive but maintenance-sensitive alluvial system; they do not provide a mappable, local-food, two-sided 1337 population or carrying-capacity interval.",
+      "pressure_evidence": [
+        "Remote-sensing and archaeological canal studies document water-control infrastructure and settlement change in southern Mesopotamia.",
+        "Salinity, drainage and canal-maintenance constraints are directly relevant to physical production effects, but their population consequences are not independently enumerated at a closed boundary."
+      ],
+      "shock_flags": [
+        "Mongol conquest and irrigation-maintenance disruption",
+        "salinity and drainage uncertainty",
+        "broad alluvial/basin boundary does not match an EU5 local catchment",
+        "no population interval and no saturation fraction"
+      ],
+      "trade_dependence": "mixed_to_high",
+      "food_regime": "gravity-irrigated cereals, dates, legumes, livestock and riverine foods",
+      "boundary_description": "Lower Tigris-Euphrates alluvial canal landscape; no audited historical village boundary is available for EU5 mapping.",
+      "boundary_source": "ETH/archaeological canal landscape collection and Remote Sensing canal studies",
+      "eu5_selector": {
+        "include": [
+          "area=iraq_arabi_area"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low for EU5 equivalence",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "mesopotamian_canal_archaeology_and_remote_sensing",
+      "source_bundle": "lower_tigris_euphrates_physical_system_wave24",
+      "source_family_independence": "Independent physical/archaeological source family; no population value is inferred.",
+      "sources": [
+        "ETH Research Collection, historical southern Mesopotamia irrigation material: https://www.research-collection.ethz.ch/items/a40b0dba-cc4a-490a-8cc3-d82295dca412",
+        "Remote Sensing canal-landscape study: https://www.mdpi.com/2072-4292/10/12/2042"
+      ],
+      "citation_details": [
+        "The sources establish canals, drainage, settlement and salinity/maintenance relevance, but no closed 1337 population or saturation interval."
+      ],
+      "notes": "Use to constrain irrigation reach, water budgets and salinity risk in the mechanistic model only. Do not extrapolate broad Iraq population estimates or city populations to local capacity."
+    },
+    {
+      "anchor_id": "indus_basin_1200_1350_population_screen_wave24",
+      "label": "Indus basin 1200-1350: irrigation capability evidence, no defensible local aggregate anchor",
+      "year_start": 1200,
+      "year_end": 1350,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The available historical irrigation and agrarian sources describe village agriculture and later Sultanate canal works, but no independent 1200-1350 population interval is tied to a closed rural boundary with saturation evidence. Basin or national population estimates are excluded.",
+      "pressure_evidence": [
+        "The Cambridge Economic History of India agrarian chapter describes 1200-1500 village-based peasant agriculture and the input requirements of seed, oxen and tools, useful for technology compatibility.",
+        "Historical irrigation summaries document Sultanate canal development, but much of the large-scale Doab expansion is fourteenth-century and cannot be silently treated as 1337 infrastructure everywhere.",
+        "No mappable rural aggregate with independent land-scarcity, wage, famine-sensitivity or local-food evidence was found for the 1337 Indus basin boundary."
+      ],
+      "shock_flags": [
+        "broad Indus basin spans multiple political and ecological systems",
+        "Sultanate conquest and post-1337 canal construction alter the technology/date match",
+        "modern basin population and irrigation statistics are not historical labels",
+        "no saturation fraction or closed historical boundary"
+      ],
+      "trade_dependence": "unresolved",
+      "food_regime": "river/floodplain and rainfed cereals, pulses, pastoralism and locally varying irrigation",
+      "boundary_description": "Indus basin and adjacent Punjab/Sindh plains; basin-scale geography is not a historical village or EU5 local-food catchment.",
+      "boundary_source": "Cambridge Economic History of India, Agrarian Economy (1200-1500): https://www.cambridge.org/core/books/abs/cambridge-economic-history-of-india/agrarian-economy/985CB65E8DCD0DD2E5167EF599C0550C",
+      "eu5_selector": {
+        "include": [
+          "region=indus_basin_region"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low for EU5 equivalence",
+      "status": "rejected",
+      "role": "validation_only",
+      "source_family": "south_asia_agrarian_and_irrigation_history",
+      "source_bundle": "indus_basin_1200_1350_screen_wave24",
+      "source_family_independence": "Independent agrarian/irrigation literature; no population target is admitted.",
+      "sources": [
+        "Cambridge Economic History of India, Agrarian Economy (1200-1500): https://www.cambridge.org/core/books/abs/cambridge-economic-history-of-india/agrarian-economy/985CB65E8DCD0DD2E5167EF599C0550C",
+        "International Commission on Irrigation and Drainage, The Indus Basin: History of Irrigation, Drainage and Flood Management: https://icid-ciid.org/publication/publication_details/18",
+        "India Water Portal, historical irrigation summary: https://prod-qt-images.s3.amazonaws.com/indiawaterportal/import/sites/default/files/iwp2/report_jan2812.pdf"
+      ],
+      "citation_details": [
+        "Cambridge chapter scope is 1200-1500 agrarian economy, not a population census or carrying-capacity interval.",
+        "The irrigation sources are technology/physical inputs only; post-1337 canal works are not back-projected to 1337."
+      ],
+      "notes": "Do not use broad Indus or India population reconstructions as training labels. Keep the candidate as a physical-system research queue until a closed rural boundary and independently vetted saturation evidence are found."
+    }
+  ]
+}

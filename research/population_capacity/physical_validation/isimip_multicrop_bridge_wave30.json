@@ -1,0 +1,58 @@
+{
+  "schema_version": "population_capacity_isimip_multicrop_bridge_wave30",
+  "record_id": "isimip2a_multicrop_interannual_risk_bridge",
+  "reviewed_on": "2026-08-04",
+  "target_year": 1337,
+  "source_window": [1971, 2010],
+  "purpose": "Provide a crop-specific modern interannual yield-risk and model-disagreement bridge for mechanistic p10/p90 uncertainty without treating simulated absolute yields as 1337 observations.",
+  "source_family": "ISIMIP2a_agriculture_global_crop_model_ensemble",
+  "dataset_doi": "https://doi.org/10.48364/ISIMIP.729341",
+  "repository": "https://data.isimip.org/10.48364/ISIMIP.729341",
+  "protocol": "https://www.isimip.org/documents/329/ISIMIP2a__Agriculture_crop_modelling.pdf",
+  "caveat": "https://www.isimip.org/outputdata/caveats-fast-track/",
+  "models": ["LPJ-GUESS", "LPJmL"],
+  "crops": ["maize", "wheat", "rice", "soy"],
+  "water_modes": ["rainfed", "full_irrigation"],
+  "coverage": {
+    "location_count": 20929,
+    "location_model_crop_mode_rows": 334864,
+    "expected_location_model_crop_mode_rows": 334864,
+    "paired_model_rows": 167432,
+    "superregion_rows": 96,
+    "mapping_method": "nearest native 0.5-degree grid point to calibrated EU5 centroid; no cross-source, regional, or global imputation"
+  },
+  "artifacts": {
+    "manifest": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave30/isimip_multicrop_bridge_manifest_wave30.json",
+    "manifest_sha256": "48b6bed15eed41b7efc41cf4889158143a9fb34341ca8e2cdc290897ea6e0b6b",
+    "location_risk": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave30/isimip_multicrop_location_risk_wave30.csv",
+    "location_risk_sha256": "6e3a21eb22aff49e510fe05f66e1e43854f1f8fa14012c695f16292eb196b336",
+    "superregion_risk": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave30/isimip_multicrop_superregion_risk_wave30.csv",
+    "superregion_risk_sha256": "f8ab0a339145a6396d42788d247d1d3c4607326f618e601e9f31fa6ed2b29ba2",
+    "model_spread": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave30/isimip_multicrop_model_spread_wave30.csv",
+    "model_spread_sha256": "8b9a137a447e6eec2fe404cf31300a5672e17ee0801f62c393d45fba27113507"
+  },
+  "semantics": {
+    "unit": "dry matter t ha-1 per growing season",
+    "modern_historical_weather_runs": true,
+    "zero_yield_is_preserved": true,
+    "absolute_1337_yield": false,
+    "historical_crop_yield_label": false,
+    "population_target": false,
+    "model_spread_is_uncertainty_metadata": true,
+    "no_statistical_imputation": true,
+    "interpretation": "Use lower-tail ratios and paired LPJ-GUESS/LPJmL disagreement to calibrate scenario width or test crop-response assumptions. Do not use model absolute yield as a 1337 target; ISIMIP documents that absolute model yields are not calibrated observations."
+  },
+  "acceptance": {
+    "crop_specific_interannual_risk_bridge_available": true,
+    "all_location_model_crop_mode_rows_present": true,
+    "global_absolute_1337_yield_closed": false,
+    "parameter_uncertainty_closed": false,
+    "training_unblocked": false,
+    "blocking_gaps": [
+      "Modern simulations span 1971-2010, not 1100-1500 observations.",
+      "Absolute yields are model outputs, not calibrated historical observations.",
+      "Historical management, cultivars, soil depletion, and 1337 technology compatibility require separate evidence.",
+      "Model coverage is broad but still has explicit insufficient-year rows and does not establish Malthusian saturation."
+    ]
+  }
+}

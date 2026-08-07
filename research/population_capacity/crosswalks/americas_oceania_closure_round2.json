@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "region": "americas_oceania",
+  "target_year": 1337,
+  "crosswalk_packet_id": "americas_oceania_closure_round2",
+  "geometry_source": "artifacts/data/population_capacity/location_geometry_calibrated.parquet",
+  "policy": {
+    "proposed_selectors_are_not_boundary_proof": true,
+    "unresolved_crosswalks_must_not_score": true,
+    "no_population_or_rgo_fields_used": true,
+    "independent_saturation_required_for_promotion": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "aneityum_precontact_1830_closure",
+      "historical_boundary": "Entire Aneityum island, southern Vanuatu",
+      "eu5_selector": "location_tag=aneityum",
+      "selector_type": "location_tag",
+      "selected_location_count": 1,
+      "matched_location_count": 1,
+      "selector_coverage_fraction": 1.0,
+      "coverage_fraction": 0.32,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "blocked_area_audit",
+      "candidate_role": "validation_only",
+      "area_comparison": {"historical_area_km2": 159.2, "eu5_area_km2": 501.93549683471633, "ratio": 3.152861161022088, "area_coverage_fraction": 0.316},
+      "resolution_method": "verified island-specific EU5 location tag; calibrated polygon area comparison is required because the current polygon is about 3.15 times the cited island area",
+      "required_actions": ["repair or review calibrated polygon area", "separate contact-era reconstruction from pre-1337 saturation evidence", "re-score only after area ratio is within the 95% boundary tolerance"],
+      "blocking_reasons": ["selector is exact but area coverage is only about 32%", "population interval is contact-era reconstruction", "no independent saturation fraction", "date outside 1337 target"],
+      "notes": "The location identity is exact, but the calibrated geometry fails the >=95% area-coverage gate; no promotion or quantitative scoring."
+    },
+    {
+      "anchor_id": "tikopia_food_capacity_1929_1952_closure",
+      "historical_boundary": "Entire Tikopia island",
+      "eu5_selector": "__unmapped_tikopia",
+      "selector_type": "unmapped",
+      "selected_location_count": 0,
+      "matched_location_count": 0,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unmapped",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "high",
+      "status": "blocked",
+      "candidate_role": "validation_only",
+      "area_comparison": {"historical_area_km2": 4.42, "eu5_area_km2": null, "ratio": null},
+      "resolution_method": "no exact EU5 tag or polygon found in the 20,929-location geometry inventory",
+      "required_actions": ["add or verify a Tikopia island polygon/tag", "compare calibrated area to 4.42 km2"],
+      "blocking_reasons": ["zero mapped EU5 locations", "1929/1952 observations outside 1337 target"],
+      "notes": "Do not substitute a Solomon Islands or broad Melanesia region; that would destroy the food-area boundary."
+    },
+    {
+      "anchor_id": "sikaiana_food_capacity_1900_1930_closure",
+      "historical_boundary": "Entire Sikaiana (Stewart Islands) atoll",
+      "eu5_selector": "__unmapped_sikaiana",
+      "selector_type": "unmapped",
+      "selected_location_count": 0,
+      "matched_location_count": 0,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unmapped",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "high",
+      "status": "blocked",
+      "candidate_role": "validation_only",
+      "area_comparison": {"historical_area_km2": 1.81, "eu5_area_km2": null, "ratio": null},
+      "resolution_method": "no Sikaiana/Stewart Islands tag found in the EU5 geometry inventory",
+      "required_actions": ["add or verify a Sikaiana atoll polygon/tag", "audit land area and lagoon treatment"],
+      "blocking_reasons": ["zero mapped EU5 locations", "resident population affected by documented emigration", "evidence is post-1337"],
+      "notes": "The explicit 215–430 carrying-capacity range is retained as research evidence only."
+    }
+  ]
+}

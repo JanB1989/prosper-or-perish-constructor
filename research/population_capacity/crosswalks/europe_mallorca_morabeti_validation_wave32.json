@@ -1,0 +1,57 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "europe_mallorca_morabeti_validation_wave32",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_mallorca_morabeti_validation_wave32",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet with calibrated area_km2",
+  "policy": {
+    "append_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "historical_boundary_coverage_is_declared": true,
+    "no_tax-household_to_population_multiplier": true,
+    "no_capacity_target_or_imported_food_credit": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "mallorca_1301_1420_morabeti_validation_wave32",
+      "historical_boundary": "Island of Mallorca; EU5 locations manacor, palma and pollensa",
+      "eu5_selector": {
+        "include": ["location_tag=manacor|palma|pollensa"],
+        "exclude": ["location_tag=ibiza|ciudadela_de_menorca"]
+      },
+      "matched_location_count": 3,
+      "selected_location_count": 3,
+      "coverage_fraction": 0.99,
+      "selector_coverage_fraction": 0.99,
+      "mapped_area_km2": 3689.696154,
+      "historical_area_km2": 3640.0,
+      "unmapped_area_km2": 0.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "validation_only",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "candidate_role": "validation_only",
+      "resolution_method": "Selected the three Mallorca-tagged EU5 locations and excluded the Ibiza and Menorca locations in the shared balearics_area. Calibrated area is within approximately 1.4 percent of the island's modern land area; no population or capacity value is rescaled.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 3689.696154,
+        "declared_historical_boundary_area_km2": 3640.0,
+        "coverage_fraction": 0.99,
+        "unmapped_area_km2": 0.0,
+        "area_method": "calibrated polygon/Jacobian area from location_candidates.parquet",
+        "area_difference_policy": "Retain the 1.4 percent area discrepancy as crosswalk uncertainty; do not rescale a tax count or capacity."
+      },
+      "current_frame_diagnostic": {
+        "frame_path": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+        "location_count": 3,
+        "area_km2": 3689.696154,
+        "capacity_people_p50": 126847,
+        "crop_capacity_people_p50": 119315,
+        "marine_capacity_people_p50": 5914,
+        "wild_capacity_people_p50": 1608,
+        "use": "diagnostic only; no morabetí household or imported-grain target is emitted"
+      },
+      "notes": "This is a clean physical island selector, but the historical record is explicitly validation-only because local-food saturation cannot be separated from grain imports and tax-threshold under-registration."
+    }
+  ]
+}

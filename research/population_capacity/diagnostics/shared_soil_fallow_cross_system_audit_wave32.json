@@ -1,0 +1,606 @@
+{
+  "diagnostic_id": "shared_soil_fallow_cross_system_audit_wave32",
+  "frame_path": "/home/jan/development/ProsperOrPerishConstructor/artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "frame_rows": 20929,
+  "frame_sha256": "5a763b4fc25212e008482c47d9f46e618d768f399a6dd51ef235c5efb0caf0ad",
+  "generated_on": "2026-08-04",
+  "interpretation": {
+    "cross_system_result": "The shared rule is directionally consistent with Rapa Nui, Pet\u00e9n, Sahel dryland and Hawaiian soil-process evidence, while England and Iceland remain controls. This does not establish a universal coefficient: all process factors remain uncertainty envelopes until dynamic N/P/K, crop-family demand, fallow duration, erosion and manure/mulch return are implemented.",
+    "production_blockers": [
+      "no globally gridded pre-1337 nutrient stock or weathering/deposition balance",
+      "no globally mapped pre-1337 rock-garden/terrace/fallow suitability",
+      "crop-family-specific nutrient withdrawal and residue/manure return are absent",
+      "Pet\u00e9n EU5 boundary is not exact and remains validation-only",
+      "Tikopia is out-of-period and has no EU5 crosswalk"
+    ],
+    "status": "diagnostic_only_not_production_ready"
+  },
+  "interval_results": {
+    "england": {
+      "inside_interval": true,
+      "interval": [
+        4250000,
+        6200000
+      ],
+      "predicted_capacity_people_p50": 4740763,
+      "role": "formal_interval_anchor",
+      "training_eligible": true
+    },
+    "iceland": {
+      "inside_interval": true,
+      "interval": [
+        40000,
+        80000
+      ],
+      "predicted_capacity_people_p50": 76567,
+      "role": "held_out_validation_only",
+      "training_eligible": false
+    },
+    "peten": {
+      "inside_interval": true,
+      "interval": [
+        3893115,
+        5190820
+      ],
+      "predicted_capacity_people_p50": 4098452,
+      "role": "validation_only_boundary_review",
+      "training_eligible": false
+    },
+    "rapa_nui": {
+      "inside_interval": true,
+      "interval": [
+        3500,
+        17500
+      ],
+      "predicted_capacity_people_p50": 7705,
+      "role": "held_out_validation_only",
+      "training_eligible": false
+    }
+  },
+  "mapped_physical_features": [
+    {
+      "coverage_fraction": 1.0,
+      "field": "soil_quality",
+      "forbidden_training_fields": false,
+      "role": "physical soil class"
+    },
+    {
+      "coverage_fraction": 1.0,
+      "field": "chelsa_annual_precipitation",
+      "forbidden_training_fields": false,
+      "role": "same-location precipitation/leaching proxy"
+    },
+    {
+      "coverage_fraction": 1.0,
+      "field": "allocated_crop_fraction",
+      "forbidden_training_fields": false,
+      "role": "mechanistic land-allocation output"
+    },
+    {
+      "coverage_fraction": 1.0,
+      "field": "allocated_fallow_fraction",
+      "forbidden_training_fields": false,
+      "role": "mechanistic rotation/fallow output"
+    },
+    {
+      "coverage_fraction": 1.0,
+      "field": "area_km2",
+      "forbidden_training_fields": false,
+      "role": "calibrated physical area"
+    }
+  ],
+  "peten_mapping": {
+    "area_ratio": 1.297705,
+    "coverage_status": "boundary_not_exact; scaled interval is validation-only",
+    "mapped_area_km2": 46527.913092,
+    "scaled_interval": [
+      3893115,
+      5190820
+    ],
+    "source_area_km2": 35854.0
+  },
+  "scenario_definition": {
+    "dryland_ratio": "125/300 from De Rouw & Rajot (2004), short versus long fallow millet yield",
+    "hard_non_goals": [
+      "no anchor-specific multiplier",
+      "no starting-population/HYDE/RGO/trade predictor",
+      "no observed historical cropland share",
+      "no regional or global median imputation"
+    ],
+    "humid_root_fallow_envelope": "0.50 is a broad 5/5 rotation sensitivity from Puleston et al. (2017), not a production parameter",
+    "mechanism": "Crop contribution is retained only to the extent supported by soil class, rainfall-driven leaching, and an independently documented fallow/yield process. Livestock, fisheries, wild foods and settlement are not scaled by this crop-only diagnostic.",
+    "name": "shared_nutrient_fallow",
+    "strict_stress_envelope": "0.40 active intensive rotation under humid nutrient-limited conditions; an uncertainty stress case, not a fitted coefficient"
+  },
+  "scenario_results": {
+    "england": {
+      "baseline": {
+        "baseline_capacity_people_p50": 5674862,
+        "capacity_people_p10": 5028923,
+        "capacity_people_p50": 5674862,
+        "capacity_people_p90": 5953555,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 149,
+        "mean_allocated_crop_fraction": 0.190892,
+        "mean_allocated_fallow_fraction": 0.110633,
+        "scenario": "baseline",
+        "weighted_crop_retention_p50": 1.0
+      },
+      "fallow_only": {
+        "baseline_capacity_people_p50": 5674862,
+        "capacity_people_p10": 4214508,
+        "capacity_people_p50": 4759204,
+        "capacity_people_p90": 5027735,
+        "factor_max": 1.0,
+        "factor_min": 0.416667,
+        "location_count": 149,
+        "mean_allocated_crop_fraction": 0.190892,
+        "mean_allocated_fallow_fraction": 0.110633,
+        "scenario": "fallow_only",
+        "weighted_crop_retention_p50": 0.835971
+      },
+      "leaching_only": {
+        "baseline_capacity_people_p50": 5674862,
+        "capacity_people_p10": 5008278,
+        "capacity_people_p50": 5649974,
+        "capacity_people_p90": 5925583,
+        "factor_max": 1.0,
+        "factor_min": 0.6,
+        "location_count": 149,
+        "mean_allocated_crop_fraction": 0.190892,
+        "mean_allocated_fallow_fraction": 0.110633,
+        "scenario": "leaching_only",
+        "weighted_crop_retention_p50": 0.995542
+      },
+      "shared_nutrient_fallow": {
+        "baseline_capacity_people_p50": 5674862,
+        "capacity_people_p10": 4199166,
+        "capacity_people_p50": 4740763,
+        "capacity_people_p90": 5006998,
+        "factor_max": 1.0,
+        "factor_min": 0.18,
+        "location_count": 149,
+        "mean_allocated_crop_fraction": 0.190892,
+        "mean_allocated_fallow_fraction": 0.110633,
+        "scenario": "shared_nutrient_fallow",
+        "weighted_crop_retention_p50": 0.832667
+      },
+      "shared_nutrient_fallow_strict": {
+        "baseline_capacity_people_p50": 5674862,
+        "capacity_people_p10": 4197073,
+        "capacity_people_p50": 4738229,
+        "capacity_people_p90": 5004153,
+        "factor_max": 1.0,
+        "factor_min": 0.144,
+        "location_count": 149,
+        "mean_allocated_crop_fraction": 0.190892,
+        "mean_allocated_fallow_fraction": 0.110633,
+        "scenario": "shared_nutrient_fallow_strict",
+        "weighted_crop_retention_p50": 0.832213
+      }
+    },
+    "hawaii": {
+      "baseline": {
+        "baseline_capacity_people_p50": 3089962,
+        "capacity_people_p10": 2390873,
+        "capacity_people_p50": 3089962,
+        "capacity_people_p90": 3180425,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 9,
+        "mean_allocated_crop_fraction": 0.127854,
+        "mean_allocated_fallow_fraction": 0.39,
+        "scenario": "baseline",
+        "weighted_crop_retention_p50": 1.0
+      },
+      "fallow_only": {
+        "baseline_capacity_people_p50": 3089962,
+        "capacity_people_p10": 1891245,
+        "capacity_people_p50": 2442364,
+        "capacity_people_p90": 2516793,
+        "factor_max": 1.0,
+        "factor_min": 0.416667,
+        "location_count": 9,
+        "mean_allocated_crop_fraction": 0.127854,
+        "mean_allocated_fallow_fraction": 0.39,
+        "scenario": "fallow_only",
+        "weighted_crop_retention_p50": 0.790268
+      },
+      "leaching_only": {
+        "baseline_capacity_people_p50": 3089962,
+        "capacity_people_p10": 2152477,
+        "capacity_people_p50": 2785684,
+        "capacity_people_p90": 2869189,
+        "factor_max": 1.0,
+        "factor_min": 0.6,
+        "location_count": 9,
+        "mean_allocated_crop_fraction": 0.127854,
+        "mean_allocated_fallow_fraction": 0.39,
+        "scenario": "leaching_only",
+        "weighted_crop_retention_p50": 0.901456
+      },
+      "shared_nutrient_fallow": {
+        "baseline_capacity_people_p50": 3089962,
+        "capacity_people_p10": 1727347,
+        "capacity_people_p50": 2233173,
+        "capacity_people_p90": 2302818,
+        "factor_max": 1.0,
+        "factor_min": 0.225,
+        "location_count": 9,
+        "mean_allocated_crop_fraction": 0.127854,
+        "mean_allocated_fallow_fraction": 0.39,
+        "scenario": "shared_nutrient_fallow",
+        "weighted_crop_retention_p50": 0.722519
+      },
+      "shared_nutrient_fallow_strict": {
+        "baseline_capacity_people_p50": 3089962,
+        "capacity_people_p10": 1700528,
+        "capacity_people_p50": 2198941,
+        "capacity_people_p90": 2267804,
+        "factor_max": 1.0,
+        "factor_min": 0.18,
+        "location_count": 9,
+        "mean_allocated_crop_fraction": 0.127854,
+        "mean_allocated_fallow_fraction": 0.39,
+        "scenario": "shared_nutrient_fallow_strict",
+        "weighted_crop_retention_p50": 0.711433
+      }
+    },
+    "iceland": {
+      "baseline": {
+        "baseline_capacity_people_p50": 76567,
+        "capacity_people_p10": 18621,
+        "capacity_people_p50": 76567,
+        "capacity_people_p90": 2521439,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 21,
+        "mean_allocated_crop_fraction": 0.0,
+        "mean_allocated_fallow_fraction": 0.0,
+        "scenario": "baseline",
+        "weighted_crop_retention_p50": 0.0
+      },
+      "fallow_only": {
+        "baseline_capacity_people_p50": 76567,
+        "capacity_people_p10": 18621,
+        "capacity_people_p50": 76567,
+        "capacity_people_p90": 2521439,
+        "factor_max": 1.0,
+        "factor_min": 0.416667,
+        "location_count": 21,
+        "mean_allocated_crop_fraction": 0.0,
+        "mean_allocated_fallow_fraction": 0.0,
+        "scenario": "fallow_only",
+        "weighted_crop_retention_p50": 0.0
+      },
+      "leaching_only": {
+        "baseline_capacity_people_p50": 76567,
+        "capacity_people_p10": 18621,
+        "capacity_people_p50": 76567,
+        "capacity_people_p90": 2521439,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 21,
+        "mean_allocated_crop_fraction": 0.0,
+        "mean_allocated_fallow_fraction": 0.0,
+        "scenario": "leaching_only",
+        "weighted_crop_retention_p50": 0.0
+      },
+      "shared_nutrient_fallow": {
+        "baseline_capacity_people_p50": 76567,
+        "capacity_people_p10": 18621,
+        "capacity_people_p50": 76567,
+        "capacity_people_p90": 2521439,
+        "factor_max": 1.0,
+        "factor_min": 0.416667,
+        "location_count": 21,
+        "mean_allocated_crop_fraction": 0.0,
+        "mean_allocated_fallow_fraction": 0.0,
+        "scenario": "shared_nutrient_fallow",
+        "weighted_crop_retention_p50": 0.0
+      },
+      "shared_nutrient_fallow_strict": {
+        "baseline_capacity_people_p50": 76567,
+        "capacity_people_p10": 18621,
+        "capacity_people_p50": 76567,
+        "capacity_people_p90": 2521439,
+        "factor_max": 1.0,
+        "factor_min": 0.416667,
+        "location_count": 21,
+        "mean_allocated_crop_fraction": 0.0,
+        "mean_allocated_fallow_fraction": 0.0,
+        "scenario": "shared_nutrient_fallow_strict",
+        "weighted_crop_retention_p50": 0.0
+      }
+    },
+    "peten": {
+      "baseline": {
+        "baseline_capacity_people_p50": 10721665,
+        "capacity_people_p10": 7624223,
+        "capacity_people_p50": 10721665,
+        "capacity_people_p90": 11421091,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 16,
+        "mean_allocated_crop_fraction": 0.198495,
+        "mean_allocated_fallow_fraction": 0.455104,
+        "scenario": "baseline",
+        "weighted_crop_retention_p50": 1.0
+      },
+      "fallow_only": {
+        "baseline_capacity_people_p50": 10721665,
+        "capacity_people_p10": 4615020,
+        "capacity_people_p50": 6499645,
+        "capacity_people_p90": 6923686,
+        "factor_max": 1.0,
+        "factor_min": 0.5,
+        "location_count": 16,
+        "mean_allocated_crop_fraction": 0.198495,
+        "mean_allocated_fallow_fraction": 0.455104,
+        "scenario": "fallow_only",
+        "weighted_crop_retention_p50": 0.605972
+      },
+      "leaching_only": {
+        "baseline_capacity_people_p50": 10721665,
+        "capacity_people_p10": 5216860,
+        "capacity_people_p50": 7344049,
+        "capacity_people_p90": 7823167,
+        "factor_max": 1.0,
+        "factor_min": 0.6,
+        "location_count": 16,
+        "mean_allocated_crop_fraction": 0.198495,
+        "mean_allocated_fallow_fraction": 0.455104,
+        "scenario": "leaching_only",
+        "weighted_crop_retention_p50": 0.684778
+      },
+      "shared_nutrient_fallow": {
+        "baseline_capacity_people_p50": 10721665,
+        "capacity_people_p10": 2905866,
+        "capacity_people_p50": 4098452,
+        "capacity_people_p90": 4365690,
+        "factor_max": 1.0,
+        "factor_min": 0.18,
+        "location_count": 16,
+        "mean_allocated_crop_fraction": 0.198495,
+        "mean_allocated_fallow_fraction": 0.455104,
+        "scenario": "shared_nutrient_fallow",
+        "weighted_crop_retention_p50": 0.381877
+      },
+      "shared_nutrient_fallow_strict": {
+        "baseline_capacity_people_p50": 10721665,
+        "capacity_people_p10": 2645856,
+        "capacity_people_p50": 3734287,
+        "capacity_people_p90": 3977808,
+        "factor_max": 1.0,
+        "factor_min": 0.144,
+        "location_count": 16,
+        "mean_allocated_crop_fraction": 0.198495,
+        "mean_allocated_fallow_fraction": 0.455104,
+        "scenario": "shared_nutrient_fallow_strict",
+        "weighted_crop_retention_p50": 0.34789
+      }
+    },
+    "rapa_nui": {
+      "baseline": {
+        "baseline_capacity_people_p50": 34236,
+        "capacity_people_p10": 28632,
+        "capacity_people_p50": 34236,
+        "capacity_people_p90": 34723,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 1,
+        "mean_allocated_crop_fraction": 0.19146,
+        "mean_allocated_fallow_fraction": 0.19146,
+        "scenario": "baseline",
+        "weighted_crop_retention_p50": 1.0
+      },
+      "fallow_only": {
+        "baseline_capacity_people_p50": 34236,
+        "capacity_people_p10": 14326,
+        "capacity_people_p50": 17119,
+        "capacity_people_p90": 17442,
+        "factor_max": 0.5,
+        "factor_min": 0.5,
+        "location_count": 1,
+        "mean_allocated_crop_fraction": 0.19146,
+        "mean_allocated_fallow_fraction": 0.19146,
+        "scenario": "fallow_only",
+        "weighted_crop_retention_p50": 0.5
+      },
+      "leaching_only": {
+        "baseline_capacity_people_p50": 34236,
+        "capacity_people_p10": 17187,
+        "capacity_people_p50": 20542,
+        "capacity_people_p90": 20898,
+        "factor_max": 0.6,
+        "factor_min": 0.6,
+        "location_count": 1,
+        "mean_allocated_crop_fraction": 0.19146,
+        "mean_allocated_fallow_fraction": 0.19146,
+        "scenario": "leaching_only",
+        "weighted_crop_retention_p50": 0.6
+      },
+      "shared_nutrient_fallow": {
+        "baseline_capacity_people_p50": 34236,
+        "capacity_people_p10": 6458,
+        "capacity_people_p50": 7705,
+        "capacity_people_p90": 7937,
+        "factor_max": 0.225,
+        "factor_min": 0.225,
+        "location_count": 1,
+        "mean_allocated_crop_fraction": 0.19146,
+        "mean_allocated_fallow_fraction": 0.19146,
+        "scenario": "shared_nutrient_fallow",
+        "weighted_crop_retention_p50": 0.225
+      },
+      "shared_nutrient_fallow_strict": {
+        "baseline_capacity_people_p50": 34236,
+        "capacity_people_p10": 5170,
+        "capacity_people_p50": 6164,
+        "capacity_people_p90": 6381,
+        "factor_max": 0.18,
+        "factor_min": 0.18,
+        "location_count": 1,
+        "mean_allocated_crop_fraction": 0.19146,
+        "mean_allocated_fallow_fraction": 0.19146,
+        "scenario": "shared_nutrient_fallow_strict",
+        "weighted_crop_retention_p50": 0.18
+      }
+    },
+    "zarma_sahel": {
+      "baseline": {
+        "baseline_capacity_people_p50": 8631576,
+        "capacity_people_p10": 7766948,
+        "capacity_people_p50": 8631576,
+        "capacity_people_p90": 8849362,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 19,
+        "mean_allocated_crop_fraction": 0.2,
+        "mean_allocated_fallow_fraction": 0.2,
+        "scenario": "baseline",
+        "weighted_crop_retention_p50": 1.0
+      },
+      "fallow_only": {
+        "baseline_capacity_people_p50": 8631576,
+        "capacity_people_p10": 4842748,
+        "capacity_people_p50": 5369322,
+        "capacity_people_p90": 5529704,
+        "factor_max": 1.0,
+        "factor_min": 0.416667,
+        "location_count": 19,
+        "mean_allocated_crop_fraction": 0.2,
+        "mean_allocated_fallow_fraction": 0.2,
+        "scenario": "fallow_only",
+        "weighted_crop_retention_p50": 0.619037
+      },
+      "leaching_only": {
+        "baseline_capacity_people_p50": 8631576,
+        "capacity_people_p10": 7766948,
+        "capacity_people_p50": 8631576,
+        "capacity_people_p90": 8849362,
+        "factor_max": 1.0,
+        "factor_min": 1.0,
+        "location_count": 19,
+        "mean_allocated_crop_fraction": 0.2,
+        "mean_allocated_fallow_fraction": 0.2,
+        "scenario": "leaching_only",
+        "weighted_crop_retention_p50": 1.0
+      },
+      "shared_nutrient_fallow": {
+        "baseline_capacity_people_p50": 8631576,
+        "capacity_people_p10": 4842748,
+        "capacity_people_p50": 5369322,
+        "capacity_people_p90": 5529704,
+        "factor_max": 1.0,
+        "factor_min": 0.416667,
+        "location_count": 19,
+        "mean_allocated_crop_fraction": 0.2,
+        "mean_allocated_fallow_fraction": 0.2,
+        "scenario": "shared_nutrient_fallow",
+        "weighted_crop_retention_p50": 0.619037
+      },
+      "shared_nutrient_fallow_strict": {
+        "baseline_capacity_people_p50": 8631576,
+        "capacity_people_p10": 4842748,
+        "capacity_people_p50": 5369322,
+        "capacity_people_p90": 5529704,
+        "factor_max": 1.0,
+        "factor_min": 0.416667,
+        "location_count": 19,
+        "mean_allocated_crop_fraction": 0.2,
+        "mean_allocated_fallow_fraction": 0.2,
+        "scenario": "shared_nutrient_fallow_strict",
+        "weighted_crop_retention_p50": 0.619037
+      }
+    }
+  },
+  "schema_version": "population_capacity_shared_soil_fallow_cross_system_audit_v1",
+  "source_evidence": [
+    {
+      "citation": "Puleston et al. 2017, Frontiers in Ecology and Evolution 5:69",
+      "quantitative_constraint": "3,133.9 effective ha; low-N continuous sweet-potato yield 1.46 t/ha/year versus high-N 5.09; 5/5 and 15/3 fallow scenarios; approximately 3,500\u201317,500 people in the published N envelope.",
+      "source_family": "rapa_nui_soil_yield",
+      "url": "https://doi.org/10.3389/fevo.2017.00069",
+      "use": "held-out validation only; no target fitting"
+    },
+    {
+      "citation": "Schwartz & Corzo 2015, Journal of Anthropological Research 71(1)",
+      "quantitative_constraint": "Traditional Petenero milpa uses a 1:6 crop:fallow cycle and two harvests per plot/year; authors estimate 3\u20134 million provisioned people on no more than 60% of 35,854 km2.",
+      "source_family": "peten_milpa_fallow",
+      "url": "https://doi.org/10.3998/jar.0521004.0071.104",
+      "use": "validation-only; EU5 boundary mismatch is explicit"
+    },
+    {
+      "citation": "De Rouw & Rajot 2004, Agriculture, Ecosystems & Environment 104:249\u2013262",
+      "quantitative_constraint": "32 field-years in Banizoumbou; long fallow >15 years gives about 300 kg/ha millet, short 3\u20135 year fallow about 125 kg/ha; 0.5\u20131 Mg/ha/year manure can stabilize about 350 kg/ha under 10\u201317 years cropping.",
+      "source_family": "sahel_nutrient_fallow",
+      "url": "https://doi.org/10.1016/j.agee.2003.12.019",
+      "use": "mapped Zarma process validation; source ratio 125/300 is a sensitivity, not a fitted multiplier"
+    },
+    {
+      "citation": "Hartshorn et al. 2006, PNAS 103:11092\u201311097",
+      "quantitative_constraint": "After centuries of indigenous dryland agriculture, cultivated profiles show approximately 49% Ca, 28% Mg, 75% Na, 37% K and 32% P lower volumetric totals than controls; P losses averaged about 4 kg/ha/year and K estimates 10\u201334 kg/ha/year.",
+      "source_family": "hawaii_prehistoric_nutrient_depletion",
+      "url": "https://doi.org/10.1073/pnas.0604594103",
+      "use": "mapped Hawaii process validation; supports dynamic P/K balance, not a population target"
+    },
+    {
+      "citation": "Hervad-J\u00f8rgensen 1977, Geografisk Tidsskrift 76:88\u201395",
+      "quantitative_constraint": "442 ha island, 390 ha cultivable; 1,278 people in 1929 used about 0.27 ha/person including fallow and were near the calculated maximum; 1,753 in 1952 required about 475 ha and exceeded stable local capacity.",
+      "source_family": "tikopia_carrying_capacity",
+      "url": "https://tidsskrift.dk/geografisktidsskrift/article/download/45927/56312?inline=1",
+      "use": "out-of-period external validation only; no EU5 selector and no training use"
+    }
+  ],
+  "systems": {
+    "england": {
+      "interval": [
+        4250000,
+        6200000
+      ],
+      "mapping": "EU5 Great Britain region with Wales and northern Scottish areas excluded",
+      "role": "formal_interval_anchor",
+      "source": "1290 Great Britain reconstruction plus independent pressure evidence"
+    },
+    "hawaii": {
+      "mapping": "EU5 hawaii_area selector, used only for soil-fertility process comparison",
+      "role": "physical_process_validation_only",
+      "source": "Hartshorn et al. 2006; Ladefoged et al. 2009"
+    },
+    "iceland": {
+      "interval": [
+        40000,
+        80000
+      ],
+      "mapping": "exact EU5 iceland_area selector",
+      "role": "held_out_validation_only",
+      "source": "Iceland historical carrying-capacity interval packet"
+    },
+    "peten": {
+      "interval": [
+        3000000,
+        4000000
+      ],
+      "mapping": "EU5 peten_area selector; area mismatch prevents training use",
+      "role": "validation_only_boundary_review",
+      "source": "Schwartz & Corzo 2015",
+      "source_area_km2": 35854
+    },
+    "rapa_nui": {
+      "interval": [
+        3500,
+        17500
+      ],
+      "mapping": "exact EU5 rapa_nui_area selector",
+      "role": "held_out_validation_only",
+      "source": "Puleston et al. 2017"
+    },
+    "zarma_sahel": {
+      "mapping": "EU5 zarma_area selector, used only for dryland process comparison",
+      "role": "physical_process_validation_only",
+      "source": "De Rouw & Rajot 2004"
+    }
+  }
+}

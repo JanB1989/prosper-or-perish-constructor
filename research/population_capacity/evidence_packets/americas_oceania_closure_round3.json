@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "region": "americas_oceania",
+  "target_year": 1337,
+  "packet_id": "americas_oceania_closure_round3",
+  "scope": "In-period Tongatapu land-pressure and carrying-capacity case with explicit agricultural boundary and bounded carrying-capacity envelope",
+  "policy": {
+    "population_values_are_diagnostics": true,
+    "starting_population_is_a_predictor": false,
+    "rgo_output_modifiers_are_predictors": false,
+    "unresolved_boundaries_block_quantitative_scoring": true,
+    "independent_saturation_required_for_promotion": true,
+    "cities_are_not_surrounding_land_capacity": true,
+    "shared_model_sources_are_validation_only": true
+  },
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "decision": "Tongatapu is retained as an in-period validation case, not a scale anchor. Its sources provide an explicit 18,000–24,000 carrying-capacity envelope and document pressure at roughly 60–80% of that envelope, but the EU5 calibrated polygon currently covers only about 52% of the cited island area and the capacity interval is model-derived from a shared Green/Kirch/Burley literature family. The later 50,000–60,000 LiDAR population reconstruction is a different quantity and is retained only as a conflict diagnostic.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "tongatapu_capacity_pressure_1100_1500_closure",
+      "label": "Tongatapu, Tonga: late-prehistoric agricultural pressure and carrying-capacity envelope",
+      "year_start": 1100,
+      "year_end": 1500,
+      "population_low": 15000,
+      "population_central": 16500,
+      "population_high": 18467,
+      "capacity_low": 18000,
+      "capacity_central": 21000,
+      "capacity_high": 24000,
+      "saturation_low": 0.6,
+      "saturation_central": 0.8,
+      "saturation_high": 1.0,
+      "local_food_low": 0.9,
+      "local_food_central": 0.97,
+      "local_food_high": 1.0,
+      "pressure_evidence": [
+        "Green's carrying-capacity reconstruction uses approximately 1.8–2.0 acres per person and an 8–10 year bush-fallow cycle, with a best 18th-century Tongatapu population estimate of 15,000–17,000.",
+        "The same reconstruction states that pressure/reduction mechanisms could begin at approximately 60–80% of capacity and gives an upper Tongatapu population limit of 18,000–24,000.",
+        "Archaeobotanical synthesis reports Tongatapu close to carrying capacity by the late prehistoric period, near-complete primary-forest removal, extensive multi-cropping and bush fallow, demographic pressure, and a need for political expansion after local intensification limits were reached.",
+        "The island boundary is explicit: about 224.14 km2 of arable land on Tongatapu, with no permanent streams, porous limestone soils, and locally documented yam, taro, sweet potato, banana, breadfruit and coconut systems supplemented by fishing and livestock."
+      ],
+      "shock_flags": [
+        "warfare_or_demographic_reduction_mechanisms",
+        "deforestation_and_fallow_pressure",
+        "chiefdom_tribute_and_interisland_expansion",
+        "source_quantity_conflict_with_lidar_population_reconstruction"
+      ],
+      "trade_dependence": "low_to_mixed",
+      "food_regime": "intensive_dryland_multicropping_yam_taro_sweet_potato_banana_breadfruit_coconut_fishing_and_pigs",
+      "boundary_description": "Entire Tongatapu island, Kingdom of Tonga; the source's arable-land accounting is island-specific and not a city or archipelago average.",
+      "boundary_source": "Ussher 2015 archaeobotanical dissertation, summarising Green 1973, Kirch 1984/1988 and Burley 2007 capacity/population reconstructions",
+      "eu5_selector": {"include": ["location_tag=tongatapu"], "exclude": []},
+      "coverage_fraction": 0.52,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "candidate",
+      "role": "validation_only",
+      "source_family": "tonga_archaeology_agricultural_capacity",
+      "source_bundle": "ussher_green_kirch_burley_lidar_conflict_bundle",
+      "source_family_independence": "archaeobotany_and_shared_historical_capacity_models; later_lidar_population_is_independent_but_not_capacity",
+      "sources": [
+        "https://openresearch-repository.anu.edu.au/bitstreams/e4751661-3b6f-44c8-828b-4d93dc954ce3/download",
+        "https://www.sciencedirect.com/science/article/pii/S2352409X22002735",
+        "https://research.usc.edu.au/esploro/outputs/journalArticle/Environmental-Catastrophe-in-the-Pacific-Islands/99450692302621"
+      ],
+      "notes": "Population fields preserve Green's best late-prehistoric/contact-era estimate (15,000–17,000) and Burley's late-prehistoric peak (approximately 18,467); capacity_* fields separately preserve Green's explicit 18,000–24,000 upper-limit envelope. The 0.60–1.00 saturation interval is an explicit pressure-to-upper-limit envelope from Green's model, not an observed census fraction; it must not be promoted without an independent local pressure series. The later LiDAR/Bayesian estimate of approximately 50,000–60,000 people on Tongatapu is retained as a conflict diagnostic because it estimates a different quantity and may include a different chronology/settlement definition. Current EU5 calibrated area is approximately 499.65 km2 versus the approximately 260 km2 island boundary, so the >=95% area gate fails."
+    }
+  ]
+}

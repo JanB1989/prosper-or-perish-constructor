@@ -1,0 +1,110 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Africa_and_Middle_East",
+  "region": "africa_middleeast",
+  "target_year": 1337,
+  "packet_id": "africa_middleeast_upper_capacity_gate_review_wave10",
+  "geometry_source": "Existing EU5 calibrated geometry and already reviewed historical selectors. These rows preserve the existing mapped footprints but explicitly record where a rural-only capacity boundary or date-compatible upper estimate is missing.",
+  "crosswalks": [
+    {
+      "anchor_id": "mamluk_egypt_1315_upper_capacity_gate_review_wave10",
+      "historical_boundary": "Mamluk Egypt's Nile Delta, Nile Valley, western oases and Red Sea dependencies used by the existing lower-bound record. The selector covers the EU5 lower_egypt_area and upper_egypt_area, but it does not separate Cairo/Alexandria or other redistribution hubs from rural production.",
+      "eu5_selector": {
+        "include": ["area=lower_egypt_area|upper_egypt_area"],
+        "exclude": []
+      },
+      "matched_location_count": null,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high_but_urban_rural_split_unresolved",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high for the broad EU5 envelope; low for a rural-only capacity boundary",
+      "status": "validation_only",
+      "resolution_method": "Reuse the existing high-coverage selector only for a negative gate. Before any upper anchor promotion, construct an area-weighted rural boundary from the 1298/1315 cadastre that excludes Cairo/Alexandria and quantify imported/redistributed staple calories.",
+      "required_actions": [
+        "separate rural Nile/Delta production from Cairo/Alexandria and other urban redistribution",
+        "find an independently derived food-balance upper interval, not a population reconstruction",
+        "document a saturation fraction or pressure interval for the same rural boundary"
+      ],
+      "source_map_urls": [
+        "https://www.environmentandsociety.org/sites/default/files/key_docs/9781942401018.pdf",
+        "https://digitallibrary.un.org/record/146942/files/un_1991_population_bulletin_31-32.pdf"
+      ],
+      "notes": "Full polygon coverage does not close the semantic gap: the accepted lower-bound footprint is not yet a rural-only capacity footprint."
+    },
+    {
+      "anchor_id": "mapungubwe_1270_1320_upper_capacity_gate_review_wave10",
+      "historical_boundary": "Mapungubwe National Park/UNESCO property plus buffer used by the 2021 South African settlement survey, not the wider transfrontier polity.",
+      "eu5_selector": {
+        "include": ["location_tag=mapungubwe"],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "resolution_method": "Retain exact containing-location crosswalk for the one-sided >=10,700 test. No upper capacity is assigned until an independent food/land ceiling is published for this same survey footprint and the drought/abandonment endpoint is separated.",
+      "required_actions": [
+        "keep the existing 10,700 observation as lower-bound only",
+        "do not multiply the floor or use the wider political territory",
+        "seek an independent upper food-balance interval for the surveyed footprint"
+      ],
+      "source_map_urls": [
+        "https://doi.org/10.17159/sajs.2021/8980",
+        "https://whc.unesco.org/en/list/1099"
+      ],
+      "notes": "The high crosswalk is sufficient for validation, not for promotion: the evidence is one-sided and terminally drought-shocked."
+    },
+    {
+      "anchor_id": "engaruka_1400_1720_upper_capacity_gate_review_wave10",
+      "historical_boundary": "Approximately 2,000 ha ancient Engaruka field, canal and terraced settlement system between the Olemelepo and Engaruka river fans.",
+      "eu5_selector": {
+        "include": ["location_tag=engeruka"],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "resolution_method": "Use the existing exact candidate footprint for out-of-period physical validation. Do not project the completed 1620-1720 system capacity backward to 1337; a date-specific pre-1400 boundary/capacity record would be required for promotion.",
+      "required_actions": [
+        "retain 8,000-10,000 as out-of-period validation only",
+        "map any early-1400s construction phase separately from the later maximum system",
+        "find a 1337-compatible saturation interval before training use"
+      ],
+      "source_map_urls": [
+        "https://doi.org/10.1111/j.1475-4959.2010.00372.x",
+        "https://doi.org/10.1080/00672700609480436"
+      ],
+      "notes": "This is the strongest independent upper-capacity calculation found in the African review, but it fails the fixed date gate."
+    },
+    {
+      "anchor_id": "tenerife_guanche_1496_upper_capacity_gate_review_wave10",
+      "historical_boundary": "Entire 2,034 km2 island of Tenerife, partitioned into nine menceyatos and communal middle/high-mountain pasture.",
+      "eu5_selector": {
+        "include": ["location_tag=aguere"],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact_island",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "resolution_method": "Retain exact island crosswalk for the existing >=15,000 lower-bound test. Do not treat the 20,000 upper edge of the archaeological population interval as capacity_high without an independent food-balance ceiling and a shock-free saturation interval.",
+      "required_actions": [
+        "keep the existing observation one-sided",
+        "separate conquest/epidemic endpoint effects",
+        "seek an island-wide upper capacity calculation for the same pre-conquest boundary"
+      ],
+      "source_map_urls": [
+        "https://www.scielo.cl/scielo.php?pid=S0717-73562000000100006&script=sci_arttext",
+        "https://doi.org/10.4067/S0717-73562000000100006"
+      ],
+      "notes": "Exact geometry does not change population semantics: 20,000 is an observed interval high, not a Malthusian ceiling."
+    }
+  ]
+}

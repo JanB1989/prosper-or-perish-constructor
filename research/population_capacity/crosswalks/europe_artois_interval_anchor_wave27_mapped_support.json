@@ -1,0 +1,37 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "europe_artois_interval_anchor_wave27_mapped_support",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_artois_interval_anchor_wave27_mapped_support",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet with calibrated area_km2",
+  "policy": {
+    "append_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "historical_boundary_coverage_is_declared": true,
+    "support_area_matching_is_explicit": true,
+    "residual_boundary_uncertainty_is_not_silently_dropped": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "artois_1290_1300_agrarian_capacity_interval_wave27_mapped_support",
+      "historical_boundary": "Medieval Artois agricultural core represented by the contiguous EU5 Lower Artois and Upper Artois historical provinces",
+      "eu5_selector": {"include": ["province=lower_artois_province|upper_artois_province"], "exclude": []},
+      "matched_location_count": 8,
+      "selected_location_count": 8,
+      "coverage_fraction": 0.96,
+      "selector_coverage_fraction": 0.96,
+      "mapped_area_km2": 5545.58456684555,
+      "historical_area_km2": 5776.65,
+      "target_support_area_km2": 5545.58456684555,
+      "unmapped_area_km2": 231.06543315445,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "vetted",
+      "candidate_role": "interval_anchor",
+      "resolution_method": "Area-weighted aggregate is scored over the calibrated EU5 support. Historical population and potential-density bounds were transformed to that same support before publication; the four percent residual remains declared crosswalk uncertainty.",
+      "notes": "General support-area contract; no regional multiplier and no location-level historical label."
+    }
+  ]
+}

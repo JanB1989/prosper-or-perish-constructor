@@ -1,0 +1,76 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Africa",
+  "region": "north_africa_macaronesia",
+  "target_year": 1337,
+  "packet_id": "africa_tenerife_guanche_lower_bound_wave5",
+  "scope": "Exact-island lower bound from the locally supported, resource-pressured Guanche population of Tenerife at the end of the pre-Hispanic period",
+  "promotion_audit": {
+    "promoted_lower_bound_ids": [
+      "tenerife_guanche_1496_capacity_lower_bound_wave5"
+    ],
+    "decision": "Tenerife is an exact bounded island and maps one-to-one to the EU5 aguere location. A peer-reviewed archaeological and palaeodemographic study reconstructs 15,000-20,000 Guanche inhabitants at conquest, documents the island's complete territorial allocation, and independently links northern agricultural intensification, physiological stress and mortality to population pressure. Pre-Hispanic subsistence was locally produced and late-period isolation prevents a far-away staple-import explanation. Because conquest and the 1494-1495 epidemic affect the endpoint and no formal saturation fraction is published, only the conservative 15,000-person lower edge is used for training.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "tenerife_guanche_1496_capacity_lower_bound_wave5",
+      "label": "Pre-Hispanic Tenerife / Guanche island population at conquest",
+      "year_start": 1490,
+      "year_end": 1496,
+      "population_low": 15000,
+      "population_central": 15500,
+      "population_high": 20000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.97,
+      "local_food_central": 0.99,
+      "local_food_high": 1.0,
+      "capacity_low": 15000,
+      "capacity_central": 15000,
+      "capacity_high": 15000,
+      "interval_semantics": "Rodriguez-Martin et al. (2000), Tables and conclusions, reconstruct approximately 15,500 inhabitants from archaeological sites dated around the 1496 conquest and conclude that the defensible island total is 15,000-20,000. The study also records 1,380 km2 divided among nine menceyatos plus 654 km2 of communal mid/high-mountain pasture, together accounting for Tenerife's full 2,034 km2. The 15,000 lower edge is used unchanged as a one-sided capacity floor. The local-food interval reflects an internally differentiated but island-based diet; marine food was under 5%, and agriculture, gathering, herding, meat and dairy were all local. It does not claim that the 15,000-20,000 population interval is itself a carrying-capacity interval.",
+      "pressure_evidence": [
+        "Rodriguez-Martin et al. (2000), population table and pp. 118-119: archaeological sites near conquest yield about 15,500 inhabitants distributed across all nine menceyatos; the conclusion gives a 15,000-20,000 island interval.",
+        "Rodriguez-Martin et al. (2000), pp. 121-130: northern Tenerife had roughly double the southern density; agriculture and plant gathering intensified there, and the authors explicitly infer that differentiated resource exploitation was driven by northern population pressure.",
+        "Rodriguez-Martin et al. (2000), pp. 95, 123-130: Tacoronte obtained about three quarters of diet from plant resources, northern children aged 6-10 show 50% more Harris lines, and the authors connect greater plant dependence to metabolic/physiological stress, morbidity and higher mortality.",
+        "Rodriguez-Martin et al. (2000), pp. 124-128: local dry farming produced wheat, barley and broad beans, smaller-scale irrigation existed, southern subsistence emphasized goat/sheep herding, meat and dairy, and chemical/dental evidence independently reconstructs the north-south dietary contrast; marine resources were below 5%.",
+        "Rodriguez-Martin et al. (2000), pp. 135-143: the authors reject a 35,000-person estimate because Tenerife lacked capacity to support it and describe the most isolated Anaga mountain population as near extinction, supporting a resource-constrained rather than import-supported island system.",
+        "Atoche-Pena and del-Arco-Aguilar (European Journal of Archaeology, 2024), section on demographic stress and carrying capacity: intensive Canarian settlement is associated with demographic stress, surplus storage, crop diversification and mixed subsistence; palaeogenetics indicates an isolation phase from the ninth through fourteenth centuries."
+      ],
+      "shock_flags": [
+        "spanish_conquest_endpoint",
+        "modorra_epidemic_1494_1495",
+        "archaeological_site_count_reconstruction",
+        "intra_island_density_and_diet_heterogeneity",
+        "date_late_in_1100_1500_technology_window"
+      ],
+      "trade_dependence": "Very low for staple calories. The pre-Hispanic island economy described by bioarchaeology used Tenerife-grown cereals and pulses, local gathered plants, local goats/sheep and dairy, with a small local marine share. Archaeometric synthesis indicates long isolation before European conquest. The 0.97 lower edge allows minor exchange/contact without treating it as material food import dependence.",
+      "food_regime": "north_dry_farmed_wheat_barley_broad_beans_and_gathering_with_islandwide_goat_sheep_meat_dairy_and_minor_local_marine_food",
+      "boundary_description": "The entire island of Tenerife, 2,034 km2 in the cited palaeodemographic study, partitioned into nine menceyatos occupying about 1,380 km2 and about 654 km2 of communal middle/high-mountain pasture.",
+      "boundary_source": "Rodriguez-Martin et al. (2000), island and menceyato area table; exact modern Tenerife coastline",
+      "eu5_selector": {
+        "include": [
+          "location_tag=aguere"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact_island",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "source_family": "tenerife_guanche_palaeodemography_and_bioarchaeology",
+      "source_bundle": "rodriguez_martin_guanche_demography_atoche_arco_archaeometry_bundle",
+      "source_family_independence": "The population reconstruction, skeletal mortality and dietary-stress evidence belong to the Tenerife Guanche bioarchaeological literature and are treated as one source family. The 2024 archaeometric synthesis is used for independent review of isolation and carrying-capacity adaptations, not as a separate anchor.",
+      "sources": [
+        "https://www.scielo.cl/scielo.php?pid=S0717-73562000000100006&script=sci_arttext",
+        "https://doi.org/10.4067/S0717-73562000000100006",
+        "https://www.cambridge.org/core/journals/european-journal-of-archaeology/article/who-why-when-and-where-from-the-peopling-of-the-canary-islands-and-the-challenges-of-archaeometry/67A9730ED05773C952339DD196E0BB2E"
+      ],
+      "notes": "This is an unusually strong lower-bound case because boundary, locally supported diet and independent pressure evidence all align. It remains one-sided: the 1494-1495 epidemic, conquest disruption and absence of a literature-supported saturation fraction prevent using the 15,000-20,000 population interval as a two-sided Malthusian capacity target. Technology is accepted as comparable to 1337 because the observation remains within the fixed 1100-1500 window and describes the indigenous pre-conquest food system, not colonial agriculture."
+    }
+  ]
+}

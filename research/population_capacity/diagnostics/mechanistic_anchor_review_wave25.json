@@ -1,0 +1,59 @@
+{
+  "schema_version": "population_capacity_mechanistic_anchor_review_v2",
+  "diagnostic_id": "mechanistic_anchor_review_wave25",
+  "status": "active",
+  "generated_on": "2026-08-04",
+  "supersedes": "mechanistic_anchor_review_wave24.json",
+  "scope": "Canonical post-fix audit of the frozen mechanistic table and grouped refits. Direct aggregate acceptance is evaluated from frozen capacity_people_p50 values; grouped folds are held-out refits and cannot override direct failures.",
+  "method": {
+    "capacity_source": "artifacts/data/population_capacity/current_capacity_map/mechanistic_locations.csv",
+    "direct_gate_source": "artifacts/data/population_capacity/current_capacity_map/evidence_anchor_stats.csv",
+    "grouped_source": "artifacts/data/population_capacity/current_capacity_map/grouped_evidence_holdouts.json",
+    "lower_bound_rule": "frozen p50 >= capacity_low",
+    "grouped_base_rule": "capacity_people_p50 when available; mechanistic_unscaled only as a compatibility fallback",
+    "uncertainty_rule": "p90 lower-bound clearance and p10/p90 interval containment remain diagnostics, never substitutes for the central p50 gate"
+  },
+  "input_hashes": {
+    "mechanistic_locations_csv": "eb75924e14c5afe9b395168884890396349fb639371824a3f26462c8cc279e2d",
+    "evidence_anchor_stats_csv": "33c91ef953f06b60b59518173c6eaaf3d0edc087d44e702362d9998ebefe59b8",
+    "grouped_evidence_holdouts_json": "f6cb65dca86b759cb6e0d9e0e977b7dd7782233d971d5630bde0e442741f910e",
+    "generalization_audit_json": "3d8429894bbc837223fc8add34161c60d9f192cf1d8926c84fdad5ba429e2dfc",
+    "lower_bound_failure_diagnostics_json": "27c149c6fbd86bbea33ce8a2af3c7849528ebd237a676d376d597a4fd356045b"
+  },
+  "direct_frozen_gate": {
+    "candidate": "mechanistic",
+    "passed": false,
+    "interval_rows": 4,
+    "interval_p50_pass_rate": 0.75,
+    "failed_interval_anchor_ids": ["artois_1290_1300_agrarian_capacity_interval_wave17"],
+    "lower_bound_rows": 24,
+    "lower_bound_p50_pass_rate": 0.958333,
+    "failed_lower_bound_anchor_ids": ["greater_angkor_1181_1300_population_lower_bound_wave5"],
+    "blocking_reasons": [
+      "frozen_interval_p50_constraint_failed",
+      "frozen_lower_bound_p50_constraint_failed"
+    ]
+  },
+  "grouped_holdout": {
+    "mechanistic_interval_pass_rate": 0.75,
+    "mechanistic_lower_bound_pass_rate": 0.9583333333333334,
+    "scored_rows": 56,
+    "group_count": 23,
+    "frozen_vs_grouped_compared_rows": 56,
+    "frozen_vs_grouped_mismatch_rows": 0,
+    "interpretation": "Grouped mechanistic scores now use the same frozen p50 base. Any future residual-fold differences are refit diagnostics and do not replace direct frozen acceptance."
+  },
+  "failure_diagnostics": {
+    "unique_failed_anchor_count": 2,
+    "unique_failed_anchor_ids": [
+      "artois_1290_1300_agrarian_capacity_interval_wave17",
+      "greater_angkor_1181_1300_population_lower_bound_wave5"
+    ],
+    "failure_count": 5
+  },
+  "acceptance_conclusion": {
+    "promote_any_interval_to_scale_anchor": false,
+    "deployment_allowed": false,
+    "required_next_action": "Resolve the direct Artois and Greater Angkor p50 constraint failures through source, mapping, technology, or shared physical-model audits. Do not use grouped refit passes, p90 clearance, or regional multipliers to mask a frozen-table miss."
+  }
+}

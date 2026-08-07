@@ -1,0 +1,75 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "asia_japan_register_revalidation_wave29",
+  "super_region": "Asia",
+  "target_year": 1337,
+  "crosswalk_packet_id": "asia_japan_register_revalidation_wave29",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet with calibrated area_km2",
+  "policy": {
+    "append_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "historical_boundary_coverage_is_declared": true,
+    "residual_boundary_uncertainty_is_not_rescaled": true,
+    "unresolved_candidates_are_not_training_rows": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "japan_awaji_1280_local_food_floor_revalidation_wave29",
+      "historical_boundary": "Medieval Awaji province; current EU5 location tag awaji is used as the explicit high-coverage crosswalk.",
+      "eu5_selector": {"include": ["location_tag=awaji"], "exclude": []},
+      "matched_location_count": 1,
+      "selected_location_count": 1,
+      "coverage_fraction": 0.95,
+      "selector_coverage_fraction": 0.95,
+      "mapped_area_km2": null,
+      "historical_area_km2": null,
+      "unmapped_area_km2": null,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "vetted",
+      "candidate_role": "lower_bound",
+      "resolution_class": "mapped",
+      "resolution_reason_code": "explicit_awaji_location_tag_and_high_declared_coverage",
+      "resolution_method": "Use the explicit current EU5 awaji location tag. The 0.95 declaration preserves residual historical cadastral uncertainty; no population or floor rescaling is applied.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": null,
+        "declared_historical_boundary_area_km2": null,
+        "coverage_fraction": 0.95,
+        "unmapped_area_km2": null,
+        "area_method": "Current calibrated EU5 location geometry with CHGIS historical-province correspondence.",
+        "area_difference_policy": "Residual cadastral uncertainty remains explicit; do not inflate the lower bound."
+      },
+      "notes": "Awaji is now mappable; it remains grouped with the Farris source family and is one-sided only."
+    },
+    {
+      "anchor_id": "japan_wakasa_1280_local_food_floor_revalidation_wave29",
+      "historical_boundary": "Medieval Wakasa province; no distinct EU5 wakasa selector is currently verified.",
+      "eu5_selector": {"include": ["location_tag=__unmapped_wakasa_revalidation_wave29__"], "exclude": []},
+      "matched_location_count": 0,
+      "selected_location_count": 0,
+      "coverage_fraction": 0.0,
+      "selector_coverage_fraction": 0.0,
+      "mapped_area_km2": 0.0,
+      "historical_area_km2": null,
+      "unmapped_area_km2": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "high_for_history_low_for_eu5",
+      "status": "validation_only",
+      "candidate_role": "validation_only",
+      "resolution_class": "validation_only",
+      "resolution_reason_code": "no_distinct_wakasa_eu5_selector",
+      "resolution_method": "Placeholder selector intentionally yields no EU5 rows. Do not substitute Echizen or another province.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 0.0,
+        "declared_historical_boundary_area_km2": null,
+        "coverage_fraction": 0.0,
+        "unmapped_area_km2": null,
+        "area_method": "No distinct EU5 historical Wakasa polygon supplied.",
+        "area_difference_policy": "No quantitative target is generated until mapping is resolved."
+      },
+      "notes": "The Farris value remains a documentary validation floor only."
+    }
+  ]
+}

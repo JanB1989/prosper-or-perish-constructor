@@ -1,0 +1,32 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "America/Oceania",
+  "region": "america",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "upper_mantaro_wanka_ii_1350_1450_population_lower_bound",
+      "historical_boundary": "UMARP northern Upper Mantaro and Yanamarca research landscape, within the approximately 1,900 km2 JASP Upper Tarma-Mantaro full-coverage survey region shown by Ortman et al. Figure 1",
+      "eu5_selector": {
+        "include": [
+          "province=hatun_xauxa_province"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 6,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted_containment_lower_bound",
+      "area_comparison": {
+        "published_jasp_umbrella_survey_area_km2": 1900.0,
+        "eu5_containing_area_km2": 11046.637763,
+        "published_survey_share_of_selector": 0.172002
+      },
+      "resolution_method": "The calibrated Hatun Xauxa province contains the named Jauja, Yanamarca, Tunanmarca and Hatunmarca study landscape and also includes the adjacent Tarma and western highland cells. The explicit matched tags are pumaruri, hatun_xauxa, tunanmarca, tarmatambo, llampqui and ingapirca. The selector is intentionally broader than the archaeological region and is used only for a one-sided lower bound; no population or capacity is spread uniformly by area.",
+      "notes": "Coverage is the fraction of the published research landscape contained by the EU5 selector, not the fraction of the EU5 province occupied by the survey. The broad containing selector makes the 61,000-person inequality conservative and avoids a false claim of precise sub-cell boundary reconstruction."
+    }
+  ]
+}

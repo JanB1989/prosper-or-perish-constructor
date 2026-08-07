@@ -1,0 +1,162 @@
+{
+  "schema_version": "population_capacity_anchor_disposition_v1",
+  "packet_id": "americas_oceania_wave11_high_value_review",
+  "reviewed_on": "2026-08-03",
+  "scope": "Bounded follow-up on the strongest island and aggregate local-food records: Rapa Nui, Tikopia, and Cahokia/American Bottom.",
+  "policy": {
+    "rejected_records_are_not_training_targets": true,
+    "out_of_period_analogues_are_validation_only": true,
+    "population_alone_never_supplies_an_upper_capacity_bound": true,
+    "city_or_trade_hub_is_not_surrounding_land_capacity": true,
+    "model_derived_capacity_is_not_an_independent_historical_target": true,
+    "unmapped_or_non_coextensive_boundaries_block_quantitative_scoring": true,
+    "starting_population_and_hyde_are_not_used": true
+  },
+  "review_summary": {
+    "candidate_count": 3,
+    "qualified_two_sided_anchor_count": 0,
+    "rigorous_lower_bound_count": 0,
+    "training_records_added": 0,
+    "validation_records_added": 2,
+    "rejected_records_added": 1,
+    "disposition": "Rapa Nui is an unusually strong exact-island validation case, and Tikopia has unusually explicit calorie, protein, land-area and rotation accounting. Neither can train the 1337 global scale: Rapa Nui has no independently measured saturation fraction and is an out-of-period analogue; Tikopia is unmapped in EU5 and post-period. Cahokia remains a city/trade-hub and flood-shock case rather than a rural capacity target."
+  },
+  "records": [
+    {
+      "anchor_id": "rapa_nui_resilient_food_limit_1200_1722_validation_wave11",
+      "label": "Rapa Nui resilient pre-contact food system",
+      "date_interval": {"start": 1200, "end": 1722},
+      "reported_population_interval": {"low": 2000, "central": 3000, "high": 4000},
+      "reported_capacity_interval": {"low": 3000, "central": 3500, "high": 17500},
+      "population_interval_status": "contact-era low-thousands estimate plus recent archaeological/genetic bounds; not a dated 1337 census",
+      "capacity_interval_status": "two food-model regimes (low bioavailable nitrogen approximately 3,500; high nitrogen approximately 17,500), not an observed saturation interval",
+      "local_food_evidence": {"low": 0.95, "central": 0.98, "high": 1.0, "food_regime": "sweet-potato and lithic-mulch horticulture, coastal groundwater, marine foods and local wild foods"},
+      "pressure_evidence": [
+        "The island is only 164 km2 and all food and freshwater constraints are geographically local.",
+        "DiNapoli et al. fit four demographic models to 201 radiocarbon dates from 47 residential/subsistence deposits; all show steady growth and no pre-contact collapse (Nature Communications 12, 3939, Results/Table 1 and Fig. 3).",
+        "The same paper reports that the low-N 3,500-person food-limited scenario is most consistent with the low-thousands contact estimate, while explicitly treating the 17,500 high-N result as assumption-dependent.",
+        "Lima et al. 2024 island-wide SWIR analysis substantially reduces the area of rock gardens and argues against using a 17,000-person population as an automatic capacity label."
+      ],
+      "proposed_role": "exact_boundary_validation_and_lower_bound_diagnostic",
+      "decision": "rejected_for_two_sided_training",
+      "rejection_reasons": [
+        "The 3,500/17,500 alternatives are outputs of a food-budget model, not independent historical upper and lower observations; a model-versus-model interval would leak assumptions into training.",
+        "The ABC study supports resilience and no observed collapse, but does not establish what fraction of intrinsic 1337 capacity the population occupied. Lack of collapse is not proof of saturation.",
+        "The date extends to European contact in 1722 and the strongest direct population evidence is post-1337; fixed policy therefore restricts this record to held-out validation.",
+        "Exact semantic mapping is available and calibrated area is 164 km2 (matching the published island area), so this is a high-value validation fixture even though it is not a training anchor."
+      ],
+      "boundary_status": "exact and area-coextensive",
+      "candidate_crosswalk": {
+        "eu5_selector": "location_tag=rapa_nui",
+        "coverage_fraction": 1.0,
+        "historical_area_km2": 164.0,
+        "calibrated_eu5_area_km2": 164.0,
+        "boundary_confidence": "high",
+        "crosswalk_status": "exact"
+      },
+      "citation_locators": [
+        "DiNapoli et al. 2021, Nature Communications 12:3939, abstract and Fig. 1 (164 km2 island), Results/Table 1/Fig. 3 (four logistic models), Discussion paragraphs on the 3,500 versus 17,500 food-limited scenarios.",
+        "DiNapoli et al. 2021, Methods: 201 radiocarbon determinations from 47 residential or subsistence locations.",
+        "Lima et al. 2024, Science Advances, doi:10.1126/sciadv.ado1459, island-wide SWIR rock-garden area and revised population-support range."
+      ],
+      "source_family": "rapa_nui_demography_food_limits_and_remote_sensing",
+      "source_bundle": ["dinapoli_crema_abc_2021", "puleston_food_model_2017", "lima_swir_2024"],
+      "sources": [
+        "https://www.nature.com/articles/s41467-021-24252-z",
+        "https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2017.00069/full",
+        "https://www.science.org/doi/10.1126/sciadv.ado1459"
+      ],
+      "notes": "Use as an exact-island monotonicity, uncertainty and small-area benchmark. Do not fit the global scale or turn model capacity into a target."
+    },
+    {
+      "anchor_id": "tikopia_food_area_near_max_1929_1952_validation_wave11",
+      "label": "Tikopia stable 1929 system and 1952 population-pressure case",
+      "date_interval": {"start": 1929, "end": 1952},
+      "reported_population_interval": {"low": 1278, "central": 1500, "high": 1753},
+      "reported_capacity_interval": {"low": 1100, "central": 1278, "high": 1400},
+      "population_interval_status": "enumerated 1929 and 1952 populations; 1952 includes documented hurricane and pressure effects",
+      "capacity_interval_status": "multi-formula land/food ceiling: 1929 near maximum; 1,753 exceeds stable agricultural capacity; not a 1337 observation",
+      "local_food_evidence": {"low": 0.95, "central": 1.0, "high": 1.0, "food_regime": "taro, yam, manioc, breadfruit, bananas, coconuts, fish and wild fruits"},
+      "pressure_evidence": [
+        "Hervad-Jorgensen measured 4.42 km2 total island area and 3.90 km2 cultivable area; 0.27 ha per person including fallow and 0.075 ha per person per year of active production.",
+        "The 1929 population was 1,278 and was described as a stable agricultural system; independent Conklin, Gourou, Beguin and Carneiro checks converge on being near the possible maximum (pp. 92-94, especially the conclusion on p. 95).",
+        "The 1952 population of 1,753 required a three-year rotation, caused severe resource pressure, and required approximately 475 ha to feed at the earlier standard—more than the island's 442 ha (pp. 93-95).",
+        "The article separates calorie and high-quality protein accounting and reports a 1929 diet of roughly 2,260 kcal/person/day and 31 g high-quality protein/person/day (p. 90, Table 1)."
+      ],
+      "proposed_role": "validation_only_and_future_exact_island_lower_bound",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "This is post-1337 ethnographic/modern evidence and therefore validation-only under the fixed analogue policy.",
+        "No Tikopia location tag or polygon exists in the current 20,929-location EU5 geometry inventory, so the exact island boundary cannot yet be scored.",
+        "The 1,100-1,400 capacity interval is a reconstruction from the same 1929/1952 food-area accounting, not an independent historical target; retain it as a diagnostic until a separate population/pressure source and EU5 crosswalk are available."
+      ],
+      "boundary_status": "exact historical island boundary, currently unmapped",
+      "candidate_crosswalk": {
+        "eu5_selector": "__unmapped_tikopia",
+        "coverage_fraction": 0.0,
+        "historical_area_km2": 4.42,
+        "calibrated_eu5_area_km2": null,
+        "boundary_confidence": "high",
+        "crosswalk_status": "unresolved",
+        "required_action": "add or verify a Tikopia island polygon/tag, then compare calibrated area to 4.42 km2"
+      },
+      "citation_locators": [
+        "Hervad-Jorgensen 1977, Geografisk Tidsskrift 76, pp. 90-91: energy/protein requirements, local diet and fish contribution.",
+        "Hervad-Jorgensen 1977, pp. 91-92: 442 ha total, 390 ha cultivable, 345 ha needed for 1,278 people, and rotation requirements.",
+        "Hervad-Jorgensen 1977, pp. 93-95: Conklin/Gourou/Beguin/Carneiro checks, 1929 near maximum, 1,753 too numerous for a stable system, and approximately 475 ha needed in 1952.",
+        "Firth, Borrie and Spillius 1957, Population Studies 10(3): enumerated population and demographic-pressure context."
+      ],
+      "source_family": "tikopia_food_area_capacity_and_demography",
+      "source_bundle": ["hervad_jorgensen_1977", "firth_borrie_spillius_1957"],
+      "sources": [
+        "https://tidsskrift.dk/geografisktidsskrift/article/download/45927/56312?inline=1",
+        "https://www.tandfonline.com/doi/abs/10.1080/00324728.1957.10413222",
+        "https://agris.fao.org/search/en/providers/122514/records/647121bc9dd8810bf64cbee3"
+      ],
+      "notes": "This is the strongest explicit local-food pressure/area benchmark found in this pass, but its lack of EU5 mapping and out-of-period date block training."
+    },
+    {
+      "anchor_id": "cahokia_american_bottom_flood_pressure_two_sided_rejected_wave11",
+      "label": "Cahokia/American Bottom floodplain population and food-pressure sequence",
+      "date_interval": {"start": 1050, "end": 1350},
+      "reported_population_interval": {"low": 20000, "central": 35000, "high": 50000},
+      "population_interval_status": "urban-core and broad regional archaeological estimates with incompatible boundaries",
+      "capacity_interval_status": "none; no independent saturation interval",
+      "local_food_evidence": {"low": 0.55, "central": 0.7, "high": 0.9, "food_regime": "maize, beans, squash, floodplain fish/waterfowl and managed woodland foods"},
+      "pressure_evidence": [
+        "Munoz et al. identify a major Mississippi flood around AD 1200 that could inundate croplands, food caches and settlements, followed by relocation and decline by AD 1350 (PNAS 2015, Figs. 2-4).",
+        "Fecal-stanol and sediment-core work compares regional population proxies with flood and precipitation series, but explicitly leaves political and urban reorganization as confounders.",
+        "The American Bottom was a mixed urban, rural, wetland and upland system with exchange; local maize and floodplain foods do not prove intrinsic local equilibrium for the urban population."
+      ],
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_two_sided_training",
+      "rejection_reasons": [
+        "Cahokia's strongest numerical estimate is an urban core or a broad polity total; the core is a trade/political hub and cannot supervise surrounding land capacity.",
+        "The existing EU5 cahokia location tag is a city-cell proxy, while the American Bottom research boundary is a heterogeneous regional floodplain. Substituting the city cell or whole cahokia province would violate the boundary contract.",
+        "Flood and drought are strong physical stress evidence but do not establish a two-sided Malthusian saturation fraction, and the AD 1200-1350 collapse sequence includes relocation and political shocks."
+      ],
+      "boundary_status": "city tag exists but rural American Bottom boundary unresolved",
+      "candidate_crosswalk": {
+        "city_selector": "location_tag=cahokia",
+        "regional_selector": "__unmapped_cahokia_american_bottom",
+        "coverage_fraction": 0.0,
+        "boundary_confidence": "high for historical description; zero for EU5 aggregate mapping",
+        "crosswalk_status": "unresolved",
+        "required_action": "reconstruct a non-urban American Bottom research polygon before any quantitative scoring"
+      },
+      "citation_locators": [
+        "Munoz et al. 2015, PNAS 112(20):6185-6190, Figs. 2-4 and discussion of the AD 1200 flood and AD 1350 dissolution.",
+        "White et al. 2019, PNAS, fecal stanols and sediment cores from Horseshoe Lake (Methods/Figs. 1-4), with explicit population-proxy and hydroclimate comparison.",
+        "Illinois State Archaeological Survey Cahokia synthesis: distinction between roughly 20,000 urban-core estimate and larger regional population."
+      ],
+      "source_family": "mississippian_cahokia_floodplain_archaeology",
+      "source_bundle": ["munoz_flood_2015", "white_fecal_stanols_2019", "isas_cahokia_synthesis"],
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4443319/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC6431169/",
+        "https://www.isas.illinois.edu/research_2/cahokia"
+      ],
+      "notes": "Retain as a held-out floodplain/urban-versus-rural diagnostic. No city estimate is used as a capacity label."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "America/Oceania",
+  "region": "america",
+  "target_year": 1337,
+  "packet_id": "america_upper_mantaro_lower_bound_wave5",
+  "scope": "In-period archaeological population floor for the locally supplied Wanka II Upper Mantaro and Yanamarca settlement system",
+  "promotion_audit": {
+    "promoted_lower_bound_ids": [
+      "upper_mantaro_wanka_ii_1350_1450_population_lower_bound"
+    ],
+    "decision": "The Wanka II estimate is retained as a one-sided carrying-capacity floor. It is based on systematic settlement and architectural evidence for a bounded rural settlement system and a predominantly local agrarian-pastoral staple base. Neither the demographic reconstruction nor the independent economic evidence establishes that 61,000 was the Malthusian ceiling, so this record cannot calibrate global scale or supervise a two-sided interval.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "upper_mantaro_wanka_ii_1350_1450_population_lower_bound",
+      "label": "Wanka II Upper Mantaro and Yanamarca settlement system, AD 1350-1450",
+      "year_start": 1350,
+      "year_end": 1450,
+      "population_low": 61000,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.8,
+      "local_food_central": 0.9,
+      "local_food_high": 0.98,
+      "capacity_low": 61000,
+      "capacity_central": 61000,
+      "capacity_high": 61000,
+      "interval_semantics": "Earle, How Chiefs Come to Power, Table 2.2 and pp. 54-57, reports an estimated Wanka II population of 61,000 for the northern Upper Mantaro study region. The estimate was derived from occupied settlement area, occupational density and the estimated share occupied contemporaneously, ultimately drawing on the UMARP full-coverage settlement evidence. Only 61,000 is encoded, and only as a one-sided floor: the archaeological settlement system demonstrably supported at least that population, but the evidence does not show that it exhausted intrinsic carrying capacity.",
+      "pressure_evidence": [
+        "Earle, How Chiefs Come to Power, Table 2.2 and pp. 54-57: Wanka II population in the northern Upper Mantaro study region is estimated at 61,000 from settlement area, occupational density and contemporaneous occupation; the three main fortified chiefly centers and their associated settlements form a regional rather than city-only observation.",
+        "Earle, How Chiefs Come to Power, pp. 56-57 and chapter 4: the Wanka II landscape contained competing fortified polities and chronic conflict over land, herds and other resources. This supports resource pressure but is retained as a shock caveat, not converted into a saturation fraction.",
+        "D'Altroy, El poder provincial en el imperio inka, p. 153: the Wanka II plant diet was based mainly on cultivars produced on rain-fed land immediately accessible to the studied communities; Tunanmarca and Umpamalca archaeobotanical assemblages match locally available high-altitude quinoa, potato, oca and olluco production.",
+        "Ortman et al., Settlement Scaling and Economic Change in the Central Andes, pp. 2-5 and 14-15: systematic survey covered about 1,900 km2 of the Upper Tarma and Mantaro region; farming settlements adjoined arable land and terraces, herding settlements used high pastures, and the pre-Hispanic regional economy lacked commercial markets. The authors find no appreciable expansion of inter-regional trade or technological progress behind the later Inka-period material improvement.",
+        "Costin and Earle, American Antiquity 54(4), pp. 695-701: household archaeobotanical, isotope and faunal evidence documents local potatoes, quinoa and camelid/deer consumption; maize and lowland specialty goods were more unevenly obtained, particularly by elites. This supports a predominantly local staple regime while preventing an unsupported claim of complete dietary autarky."
+      ],
+      "shock_flags": [
+        "chronic_interpolity_warfare",
+        "defensive_upland_settlement_costs",
+        "population_estimate_from_settlement_architecture",
+        "some_maize_and_lowland_specialty_exchange",
+        "inka_conquest_after_observation_interval"
+      ],
+      "trade_dependence": "low to moderate for staple calories; potatoes, quinoa, other highland tubers and much livestock food were locally produced, while some maize and non-staple lowland products reached upland communities through nearby fields, exchange or vertical access",
+      "food_regime": "rainfed_highland_potato_quinoa_oca_olluco_with_camelid_pastoralism_some_maize_and_local_game",
+      "boundary_description": "The northern Upper Mantaro and Yanamarca research landscape around Jauja, Tunanmarca, Hatunmarca, Umpamalca and Pancan mapped by UMARP, contained within the broader 1,900 km2 JASP Upper Tarma-Mantaro survey geography; it is a regional settlement system, not the population of one center.",
+      "boundary_source": "D'Altroy, Provincial Power in the Inka Empire, chapter 4, pp. 47-70; Earle, How Chiefs Come to Power, Figure 2.12 and pp. 54-57; Ortman et al., Settlement Scaling and Economic Change in the Central Andes, Figure 1 and pp. 2-3",
+      "eu5_selector": {
+        "include": [
+          "province=hatun_xauxa_province"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "source_family": "upper_mantaro_umarp_jasp_archaeology",
+      "source_bundle": "daltroy_earle_hastorf_costin_ortman_umarp_jasp_bundle",
+      "source_family_independence": "Settlement demography, household archaeobotany/fauna and later settlement-scaling analysis share the UMARP/JASP archaeological record and are therefore counted as one source family, independent of the other benchmark groups.",
+      "sources": [
+        "https://doi.org/10.1515/9781503616349",
+        "https://www.bcrp.gob.pe/docs/Publicaciones/libros/2022/poder-provincial.pdf",
+        "https://sfi-edu.s3.amazonaws.com/sfi-edu/production/uploads/sfi-com/dev/uploads/filer/6e/c3/6ec30f73-931e-4ea5-a703-31c377a56fe5/16-04-008.pdf",
+        "https://doi.org/10.2307/280677"
+      ],
+      "notes": "Technology is close to the 1337 target: Wanka II begins only thirteen years later and predates Inka pacification, state resettlement and the associated economic reorganization. Selecting the whole calibrated Hatun Xauxa EU5 province deliberately contains land beyond the archaeological footprint; requiring that larger game geography to support at least 61,000 people is conservative. Warfare and post-conquest improvement are reasons not to infer saturation, not reasons to discard the observed lower bound."
+    }
+  ]
+}

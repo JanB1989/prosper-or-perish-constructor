@@ -24,6 +24,28 @@ logs/
 
 # Windows deploy target accidentally rooted inside this WSL checkout.
 /C:/
+# Windows UNC path (\\wsl$\...) accidentally written as a relative folder.
+/wsl$/
+
+# Local scratch and binary junk.
+*.pdf
+*.xlsx
+*.xls
+*.doc
+*.docx
+*.pptx
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+/tmp/pdfs/
+.DS_Store
+Thumbs.db
+*.bak
+*.swp
+*~
 
 # Local machine overrides.
 *.local.toml

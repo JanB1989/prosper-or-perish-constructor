@@ -1,0 +1,309 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Africa_and_Middle_East",
+  "region": "africa_middleeast",
+  "target_year": 1337,
+  "packet_id": "africa_middleeast_quantitative_holdouts_wave8",
+  "scope": "Append-only quantitative holdouts found in the final Africa/Middle East evidence pass. These records improve physical-yield and archaeological-demography validation, but none is promoted to a global scale anchor: each lacks a complete, independently demonstrated Malthusian saturation interval and/or a closed EU5 boundary.",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "promoted_lower_bound_ids": [],
+    "decision": "No new training target is admitted. Rasulid Ta'izz supplies a dated, source-backed cereal-yield test; the Fayyum register supplies village-level fiscal/water/yield fields but only a partial poll-tax count; Jenné-jeno supplies a quantitative archaeological settlement-population interval, but it is out of period and is a validation-only analogue. None may be converted into a population-capacity target by an assumed tax, household or density multiplier.",
+    "reviewed_on": "2026-08-03",
+    "review_method": "Independent source review checked the date, population semantics, local-food evidence, pressure/saturation evidence, shock and trade confounding, source-family independence, boundary definition and EU5 crosswalk status. Quantities are retained only with their original semantics and uncertainty.",
+    "new_independent_scale_families": 0,
+    "new_quantitative_validation_cases": 3
+  },
+  "records": [
+    {
+      "anchor_id": "rasulid_taizz_cereal_yield_1293_physical_holdout_wave8",
+      "label": "Rasulid Ta'izz cereal yields in the 692/1293 crop register",
+      "year_start": 1293,
+      "year_end": 1293,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "This is a physical crop-yield holdout, not a population observation. The register gives gross grain harvested per seed measure on best, medium and poor land. Seed, processing, storage, feed, fallow, dietary and risk deductions have not been applied; those remain model calculations.",
+      "yield_evidence": [
+        {
+          "crop": "wheat",
+          "land_quality": "best",
+          "seed_measure": "10 Ta'izz azbud",
+          "harvest_measure": "150 azbud",
+          "gross_yield_to_seed_ratio": 15.0,
+          "ratio_interval": [15.0, 15.0]
+        },
+        {
+          "crop": "wheat",
+          "land_quality": "medium",
+          "seed_measure": "10 Ta'izz azbud",
+          "harvest_measure": "100 azbud",
+          "gross_yield_to_seed_ratio": 10.0,
+          "ratio_interval": [10.0, 10.0]
+        },
+        {
+          "crop": "wheat",
+          "land_quality": "poor",
+          "seed_measure": "10 Ta'izz azbud",
+          "harvest_measure": "30 azbud",
+          "gross_yield_to_seed_ratio": 3.0,
+          "ratio_interval": [3.0, 3.0]
+        },
+        {
+          "crop": "emmer",
+          "land_quality": "best",
+          "seed_measure": "10 Ta'izz azbud",
+          "harvest_measure": "100 azbud",
+          "gross_yield_to_seed_ratio": 10.0,
+          "ratio_interval": [10.0, 10.0]
+        },
+        {
+          "crop": "emmer",
+          "land_quality": "medium",
+          "seed_measure": "10 Ta'izz azbud",
+          "harvest_measure": "40 azbud",
+          "gross_yield_to_seed_ratio": 4.0,
+          "ratio_interval": [4.0, 4.0]
+        },
+        {
+          "crop": "emmer",
+          "land_quality": "poor",
+          "seed_measure": "10 Ta'izz azbud",
+          "harvest_measure": "20 azbud",
+          "gross_yield_to_seed_ratio": 2.0,
+          "ratio_interval": [2.0, 2.0]
+        },
+        {
+          "crop": "barley",
+          "land_quality": "unspecified",
+          "seed_measure": "10 Ta'izz azbud",
+          "harvest_measure": "100 azbud",
+          "gross_yield_to_seed_ratio": 10.0,
+          "ratio_interval": [10.0, 10.0]
+        }
+      ],
+      "quantitative_evidence": [
+        "Varisco, 'Pars Pro Toto Observation: Historical Anthropology in the Textual Field of Rasulid Yemen' (2006), pp. 161-174, reports the royal register and identifies the 692/1293 Ta'izz cereal entries.",
+        "The Ta'izz zabad/azbud is a capacity measure rather than a mass unit. Varisco's discussion gives approximately 8.9 Egyptian ratl and about 450 g per ratl, or roughly 4 kg per Ta'izz measure; the unit conversion is uncertain and is therefore kept separate from the ratio test.",
+        "The ratios are gross harvest-to-seed ratios. They are used to test crop-date, water-mode and yield-unit semantics only; no people-support estimate is derived from them."
+      ],
+      "pressure_evidence": [
+        "The register distinguishes best, medium and poor land and records production assessment across the Ta'izz district, providing a dated test of heterogeneous low-input cereal productivity.",
+        "It does not establish that Ta'izz was at a long-run Malthusian equilibrium, nor does it give a complete population, food-balance or saturation interval."
+      ],
+      "shock_flags": [
+        "fiscal register rather than census",
+        "gross yield rather than edible net calories",
+        "uncertain local measure conversion",
+        "no population or saturation interval",
+        "historical district polygon not yet closed to EU5"
+      ],
+      "trade_dependence": "unresolved for the Ta'izz district; do not use port/customs evidence as local food support",
+      "food_regime": "low-input wheat, emmer and barley with highland/irrigated Yemen agriculture",
+      "boundary_description": "Ta'izz fiscal/crop district represented by the 692/1293 entries; the register's district extent is not a closed geospatial polygon equivalent to an EU5 location or province.",
+      "boundary_source": "Varisco (2006), pp. 161-174; Varisco (1991), Journal of the Economic and Social History of the Orient 34:1-22",
+      "eu5_selector": {
+        "include": ["province=taizz_province"],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "rasulid_yemen_crop_register_physical",
+      "source_bundle": "varisco_rasulid_taizz_1293_yield_bundle",
+      "source_family_independence": "independent dated agricultural-register evidence; same broader Rasulid bundle as the existing Yemen tax record, so it does not add an independent population anchor family",
+      "sources": [
+        "https://www.researchgate.net/publication/271021004_Pars_Pro_TotoObservation_Historical_Anthropology_in_the_Textual_Field_of_Rasulid_Yemen",
+        "https://doi.org/10.1163/156852091X00148",
+        "https://tabsir.net/?p=4043",
+        "https://www.filaha.org/medieval_agricultural.html"
+      ],
+      "missing_criteria": [
+        "population or capacity interval for the same Ta'izz boundary",
+        "independent saturation/pressure evidence",
+        "closed historical district polygon and >=95% EU5 crosswalk",
+        "validated unit conversion and net-calorie accounting"
+      ],
+      "notes": "Use as a crop-physics regression fixture. A valid implementation must preserve the land-quality ordering and must not infer irrigated yield by copying the rain-fed value or infer population from the tax register."
+    },
+    {
+      "anchor_id": "fayyum_1245_village_tax_yield_matrix_holdout_wave8",
+      "label": "Fayyum al-Nabulusi 1245 village tax, crop and water-right matrix",
+      "year_start": 1245,
+      "year_end": 1245,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "This is a village-level fiscal and food-system holdout. The database contains 124 settlement rows with crop/tax, water-right and village-institution fields. Poll-tax heads are partial taxable non-Muslim adult counts, not total population, and tax in kind is an assessment rather than a calorie total.",
+      "quantitative_evidence": [
+        {
+          "measure": "settlement_rows",
+          "value": 124,
+          "unit": "villages/hamlets",
+          "coverage_note": "all rows in the downloadable village register"
+        },
+        {
+          "measure": "land_tax_in_kind_munajaza",
+          "value": 92132.4581,
+          "unit": "ardabbs as recorded in 44 rows",
+          "coverage_note": "fiscal entries only; not a complete regional production total"
+        },
+        {
+          "measure": "land_tax_in_kind_mushatara",
+          "value": 6111.7498,
+          "unit": "ardabbs as recorded in 18 rows",
+          "coverage_note": "fiscal entries only"
+        },
+        {
+          "measure": "land_tax_in_kind_unspecified",
+          "value": 34444.0782,
+          "unit": "ardabbs as recorded in 40 rows",
+          "coverage_note": "fiscal entries only"
+        },
+        {
+          "measure": "poll_tax_total_heads",
+          "value": 1142,
+          "unit": "taxable heads across 21 rows",
+          "coverage_note": "partial non-Muslim/adult head counts; explicitly not total population or a lower bound on all inhabitants"
+        },
+        {
+          "measure": "foodstuff_levy",
+          "value": 71.9374,
+          "unit": "ardabbs as recorded in 19 rows",
+          "coverage_note": "fiscal food levy only"
+        }
+      ],
+      "pressure_evidence": [
+        "The register records crop levies, canal/water rights, village maintenance and agricultural institutions, supplying local production and water-management features.",
+        "Water stress and canal maintenance are production-pressure indicators, but no independent saturation fraction or complete household/population total is established for the same 124-village boundary."
+      ],
+      "shock_flags": [
+        "poll tax excludes Muslims and non-taxable demographic groups",
+        "tax/levy quantities are fiscal assessments, not net edible calories",
+        "settlement and canal map is a point/grid reconstruction rather than a closed aggregate polygon",
+        "Fayyum/Cairo redistribution and trade dependence unresolved"
+      ],
+      "trade_dependence": "local Nile agriculture is documented, but the Fayyum food-budget import/export share is unresolved",
+      "food_regime": "Nile irrigation with cereals, legumes, rice, sugar cane, livestock and village gardens",
+      "boundary_description": "The 124 villages/hamlets in the al-Nabulusi register and their canal/water-right entries; the project map identifies settlements by a historical grid, but a complete polygon and EU5 intersection remain unresolved.",
+      "boundary_source": "Queen Mary Rural Society in Medieval Islam database, village register, settlement table and Fayyum map",
+      "eu5_selector": {
+        "include": ["location_tag=faiyum"],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for village/grid points; low for complete aggregate polygon",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "qmul_fayyum_nabulusi_village_fiscal",
+      "source_bundle": "qmul_rapoport_shahar_fayyum_1245_database_bundle",
+      "source_family_independence": "independent edited primary-register/database family; not a complete population census",
+      "sources": [
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/database/taxes-and-fees/",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/database/i-1-the-village/",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/database/glossary-of-measures-weights-and-monetary-units/",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/II_1_Land_tax_in_kind.csv",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/II_9_Poll-tax-1.csv",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/II_11_Foodstuff_levy.csv",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2019/05/1.-The-Village-Rural-Society-in-Medieval-Islam.csv",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/FayyumMap1.pdf",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/Settlementtable.docx"
+      ],
+      "missing_criteria": [
+        "complete population interval for the 124-village boundary",
+        "independent saturation/pressure interval",
+        "closed historical polygon and >=95% EU5 crosswalk",
+        "conversion from fiscal levies to net local-food calories"
+      ],
+      "notes": "This matrix should be used to test water-access, crop-family and fiscal-yield feature lineage. The 1,142 poll-tax heads must remain explicitly partial and must never be multiplied into a total population label."
+    },
+    {
+      "anchor_id": "jenne_jeno_constellation_800_1100_population_validation_wave8",
+      "label": "Jenné-jeno and satellite-tell constellation, Inland Niger Delta",
+      "year_start": 800,
+      "year_end": 1100,
+      "population_low": 7000,
+      "population_central": 17500,
+      "population_high": 27000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Validation-only archaeological settlement-population interval, not a 1337 capacity target. McIntosh and McIntosh report approximately 7,000-13,000 for a core/satellite interpretation; Monroe reports approximately 10,000-27,000 for the wider constellation of tell sites. The deliberately wide 7,000-27,000 interval preserves the published definition and method disagreement. No saturation fraction is inferred.",
+      "quantitative_evidence": [
+        "McIntosh and McIntosh (1981), Journal of African History 22:1-22, report a >33 ha Jenne-Jeno site, a survey of about 1,100 km2 and a high-density rural settlement system; their settlement estimates include approximately 7,000-13,000 people for the core/satellite interpretation.",
+        "Monroe (2018), Journal of Archaeological Research 26:337-377, DOI 10.1007/s10814-017-9114-2, describes systematic survey of about 1,100 km2, more than 400 tell sites and approximately 10,000-27,000 people in the mid/late first-millennium constellation.",
+        "The site and satellite settlements were sustained by local rice, fish/fish oil, cattle and wild foods, with craft and interregional exchange; the local-food share is not numerically resolved, so it is not used as a saturation target."
+      ],
+      "pressure_evidence": [
+        "Settlement density peaked around AD 700-1100, with a documented decline after roughly AD 1150 and substantial abandonment/relocation by AD 1200-1400.",
+        "The density peak and later abandonment are useful stress/trajectory diagnostics, but they do not prove a Malthusian equilibrium: political reorganization, trade shifts and relocation are unresolved confounders."
+      ],
+      "shock_flags": [
+        "out of target period (800-1100 versus 1337)",
+        "archaeological population estimates depend on settlement definition and chronology",
+        "relocation/abandonment after AD 1150",
+        "mixed local subsistence and interregional trade",
+        "historical tell-concentration polygon not yet intersected with EU5 geometry"
+      ],
+      "trade_dependence": "mixed; local rice/fish/cattle/wild foods documented, but craft and interregional exchange are also documented",
+      "food_regime": "Inland Niger Delta floodplain rice, fish/fish oil, cattle and wild foods",
+      "boundary_description": "The Jenné-jeno tell and satellite-tell constellation within approximately 1 km of the archaeological site at 13.88977 N, -4.54072 W; the circle is a locator geometry for validation and is not a claim that the surrounding EU5 province had the same population.",
+      "boundary_source": "McIntosh & McIntosh (1981); Monroe (2018); archaeological site coordinates from the site locator",
+      "eu5_selector": {
+        "include": ["location_tag=djenne"],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for archaeological site/constellation locator; low for EU5 area coverage",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "jenne_jeno_archaeological_settlement_demography",
+      "source_bundle": "mcintosh_monroe_inland_niger_delta_bundle",
+      "source_family_independence": "independent archaeological survey/demographic-reconstruction family; out-of-period and not a capacity anchor",
+      "sources": [
+        "https://doi.org/10.1017/S0021853700018983",
+        "https://doi.org/10.1007/s10814-017-9114-2",
+        "https://ehrafarchaeology.yale.edu/traditions/fa75/documents/003",
+        "https://mapcarta.com/W870261168"
+      ],
+      "missing_criteria": [
+        "1337-compatible date and technology for scale supervision",
+        "independent saturation fraction or carrying-capacity interval",
+        "quantified local-food share",
+        "closed historical constellation polygon and audited >=95% EU5 crosswalk"
+      ],
+      "notes": "This is the strongest newly found quantitative African validation case, not a training target. A model that predicts an implausibly low capacity for the local floodplain should fail a diagnostic, but the archaeological population interval cannot be used to force a global scale or a surrounding-land multiplier."
+    }
+  ]
+}

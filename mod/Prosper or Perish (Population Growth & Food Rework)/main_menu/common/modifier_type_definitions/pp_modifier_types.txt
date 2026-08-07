@@ -93,3 +93,14 @@ pp_victuals_market_import_price_cost_modifier={
 		category=country
 	}
 }
+
+# Diagnostic-only value used by the population-capacity density debug map mode.
+# It is deliberately not a gameplay modifier; it only exposes people/km² to
+# map-mode color and tooltip evaluation.
+pp_population_capacity_density={
+	color=good
+	decimals=1
+	game_data={
+		category=location
+	}
+}

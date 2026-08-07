@@ -1,0 +1,415 @@
+{
+  "schema_version": 1,
+  "target_year": 1337,
+  "packet_id": "africa",
+  "scope": "Africa; circa 1100-1400 rural systems, irrigation landscapes, archaeological settlement controls, and explicitly rejected broad demography",
+  "policy": {
+    "population_values_are_diagnostics": true,
+    "starting_population_is_a_predictor": false,
+    "rgo_output_modifiers_are_predictors": false,
+    "unresolved_boundaries_block_quantitative_scoring": true,
+    "cities_are_not_surrounding_land_capacity": true,
+    "no_continental_balancing_target": true,
+    "no_population_interval_is_invented": true
+  },
+  "records": [
+    {
+      "anchor_id": "nile_fayyum_villages_1245",
+      "label": "Fayyum villages cadastral and irrigation register",
+      "date_interval": {"start": 1245, "end": 1245},
+      "population_interval": null,
+      "saturation_fraction_interval": null,
+      "local_food_share_interval": null,
+      "pressure_evidence": [
+        "al-Nabulusi surveyed village-by-village agricultural conditions, taxes, water rights, and irrigation officials in 1245",
+        "the register treats the village as the basic unit of agricultural and social reproduction",
+        "Fayyum arable area depended on canal allocations and Lake Qarun water level"
+      ],
+      "shock_flags": ["fiscal record is not a population census", "water-level reconstruction uncertainty", "military-land and tax administration effects"],
+      "trade_dependence": "low_to_mixed",
+      "food_regime": "basin irrigation, cereals, legumes, livestock, pasture fees, and fish",
+      "role": "validation_only",
+      "validation_test": "qualitative",
+      "source_population_type": "cadastral_agricultural_observation_without_population_total",
+      "estimate_method": "village_tax_and_irrigation_register",
+      "evidence_role": "nile_rural_food_system_validation",
+      "boundary_confidence": "medium",
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "mapped_boundary": "Mid-thirteenth-century Fayyum province and its villages; the single EU5 Fayyum location is only a screening proxy",
+      "source_family": "rapoport_shahar_fayyum_register",
+      "source_family_independence": "independent",
+      "review_status": "candidate",
+      "eu5_selector": "location_tag=faiyum",
+      "sources": [
+        {
+          "url": "https://projects.history.qmul.ac.uk/ruralsocietyislam/",
+          "title": "Rural Society in Medieval Islam: The Villages of the Fayyum",
+          "source_kind": "edited_cadastral_register_and_GIS_database",
+          "supports": "1245 village-level taxes, land, water rights, irrigation and agricultural conditions"
+        },
+        {
+          "url": "https://projects.history.qmul.ac.uk/ruralsocietyislam/map/",
+          "title": "Fayyum 1243 GIS map",
+          "source_kind": "historical_GIS",
+          "supports": "reconstructed village and canal geography"
+        },
+        {
+          "url": "https://nes.princeton.edu/publications/rural-economy-and-tribal-society-islamic-egypt-study-al-nabulusis-villages-fayyum",
+          "title": "Rural Economy and Tribal Society in Islamic Egypt",
+          "source_kind": "scholarly_monograph",
+          "supports": "quantitative and spatial interpretation of the register"
+        }
+      ],
+      "notes": "This is a high-value rural source but has no defensible headcount in the packet. It should test irrigation, local food, and land-allocation mechanisms only."
+    },
+    {
+      "anchor_id": "nile_egypt_cadastre_1298_1315",
+      "label": "Nile Valley and Delta cadastre population reconstruction",
+      "date_interval": {"start": 1298, "end": 1315},
+      "population_interval": {
+        "low": 3800000,
+        "central": 4100000,
+        "high": 4500000,
+        "unit": "people",
+        "semantics": "fiscal cadastre-to-population reconstruction; not a saturation interval"
+      },
+      "saturation_fraction_interval": null,
+      "local_food_share_interval": null,
+      "pressure_evidence": [
+        "1298 and 1315 cadastres report approximately 3,637,000 feddans of assessed land",
+        "Nile flood irrigation creates a measurable agricultural denominator",
+        "Fayyum and rural Nile registers show local crop and water administration"
+      ],
+      "shock_flags": ["Mamluk fiscal and urban redistribution", "plague onset near the end of the interval", "cadastre-to-person conversion uncertainty", "Nile corridor/region mismatch"],
+      "trade_dependence": "mixed_to_high",
+      "food_regime": "Nile flood irrigation, cereals, legumes, livestock, fish, and urban redistribution",
+      "role": "validation_only",
+      "validation_test": "interval",
+      "source_population_type": "fiscal_reconstruction_interval",
+      "estimate_method": "cadastre_to_population_conversion_interval",
+      "evidence_role": "irrigated_corridor_validation",
+      "boundary_confidence": "medium",
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "mapped_boundary": "Historical Nile settlement corridor and assessed land; `region=egypt_region` is an approximate EU5 envelope",
+      "source_family": "egyptian_cadastres_and_demographic_reconstructions",
+      "source_family_independence": "independent",
+      "review_status": "candidate",
+      "eu5_selector": "region=egypt_region",
+      "sources": [
+        {
+          "url": "https://digitallibrary.un.org/record/146942/files/un_1991_population_bulletin_31-32.pdf",
+          "title": "UN Population Bulletin 31-32",
+          "source_kind": "historical_demographic_synthesis",
+          "supports": "1298/1315 cadastre land totals and population reconstruction"
+        },
+        {
+          "url": "https://projects.history.qmul.ac.uk/ruralsocietyislam/",
+          "title": "The Villages of the Fayyum",
+          "source_kind": "rural_cadastral_register",
+          "supports": "local irrigation and crop-system context"
+        }
+      ],
+      "notes": "This is a documentary validation interval, not a scale anchor. Urban redistribution, fiscal under-registration, and shock timing prevent a saturation inference."
+    },
+    {
+      "anchor_id": "nile_egypt_1337_rejected",
+      "label": "Broad Mamluk Nile population observation (rejected)",
+      "date_interval": {"start": 1300, "end": 1375},
+      "population_interval": null,
+      "saturation_fraction_interval": null,
+      "local_food_share_interval": null,
+      "pressure_evidence": [],
+      "shock_flags": ["plague", "political disruption", "irrigation-maintenance change", "settlement concentration along the Nile"],
+      "trade_dependence": "high",
+      "food_regime": "basin irrigation, cereals, legumes, livestock, fish, and urban redistribution",
+      "role": "excluded",
+      "validation_test": "rejected",
+      "source_population_type": "shock_confounded_fiscal_observation",
+      "estimate_method": "fiscal_and_narrative_reconstruction",
+      "evidence_role": "excluded_shock_confounded",
+      "boundary_confidence": "medium",
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "mapped_boundary": "Nile settlement corridor is not equivalent to the EU5 Egypt region",
+      "source_family": "mamluk_fiscal_and_narrative_sources",
+      "source_family_independence": "independent",
+      "review_status": "rejected",
+      "eu5_selector": "region=egypt_region",
+      "sources": [
+        {
+          "url": "https://scholarworks.wmich.edu/tmg/vol1/iss1/7/",
+          "title": "Mamluk Egypt fiscal and demographic source discussion",
+          "source_kind": "historical_fiscal_and_narrative_synthesis",
+          "supports": "shock and boundary confounding reasons for exclusion"
+        }
+      ],
+      "notes": "Kept as an explicit rejected candidate so a broad Egypt number cannot silently re-enter training."
+    },
+    {
+      "anchor_id": "mapungubwe_1220_1300",
+      "label": "Mapungubwe Cultural Landscape lower-bound population",
+      "date_interval": {"start": 1220, "end": 1300},
+      "population_interval": {
+        "low": 9000,
+        "central": null,
+        "high": null,
+        "unit": "people",
+        "semantics": "explicit one-sided lower bound; no central estimate is asserted"
+      },
+      "saturation_fraction_interval": null,
+      "local_food_share_interval": null,
+      "pressure_evidence": [
+        "SANParks states that the cultural landscape sustained at least 9,000 people at its AD 1220-1300 height",
+        "settlements used sorghum, millet, beans, cowpeas, livestock, game, and river fish",
+        "river confluence and cultivated floodplain supported a dense state landscape"
+      ],
+      "shock_flags": ["state and trade concentration", "cultural-landscape boundary differs from game polygon", "lower-bound statement rather than saturation estimate", "landscape abandoned after the fourteenth century"],
+      "trade_dependence": "high",
+      "food_regime": "sorghum and millet, beans/cowpeas, livestock, game, river fisheries, and long-distance trade",
+      "role": "validation_only",
+      "validation_test": "lower_bound",
+      "source_population_type": "archaeological_lower_bound",
+      "estimate_method": "heritage_landscape_population_lower_bound",
+      "evidence_role": "southern_africa_lower_bound",
+      "boundary_confidence": "low",
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "mapped_boundary": "Mapungubwe Cultural Landscape, approximated by one EU5 Mapungubwe location",
+      "source_family": "mapungubwe_archaeology_and_heritage",
+      "source_family_independence": "independent",
+      "review_status": "candidate",
+      "eu5_selector": "location_tag=mapungubwe",
+      "sources": [
+        {
+          "url": "https://www.sanparks.org/parks/mapungubwe/explore/natural-cultural-history",
+          "title": "SANParks Mapungubwe Natural and Cultural History",
+          "source_kind": "heritage_and_archaeological_summary",
+          "supports": "at least 9,000 people, dates, crops, livestock, game, and fish"
+        },
+        {
+          "url": "https://whc.unesco.org/en/list/1099",
+          "title": "Mapungubwe Cultural Landscape UNESCO World Heritage Centre",
+          "source_kind": "heritage_boundary_and_history",
+          "supports": "dependent settlement landscape, state/trade context, and abandonment"
+        }
+      ],
+      "notes": "A strong one-sided historical check but not an intrinsic capacity label: the cultural landscape and game location do not share a verified polygon, and the kingdom was trade-linked."
+    },
+    {
+      "anchor_id": "djenne_jeno_settlement_system",
+      "label": "Jenné-jeno and Middle Niger settlement system",
+      "date_interval": {"start": 750, "end": 1400},
+      "population_interval": null,
+      "saturation_fraction_interval": null,
+      "local_food_share_interval": null,
+      "pressure_evidence": [
+        "Jenné-jeno exceeded 33 hectares at its apogee and nearby settlements formed a dense cluster",
+        "regional surveys report rural settlement density far above modern hinterland density",
+        "wetland African rice, millet, sorghum, fishing, livestock, and floodplain specialization supported settlement growth"
+      ],
+      "shock_flags": ["no secure absolute population interval", "urban-cluster food exchange", "settlement abandonment by about 1400", "trade-route and political change"],
+      "trade_dependence": "mixed_to_high",
+      "food_regime": "African rice, millet, sorghum, livestock, fishing, and floodplain foods",
+      "role": "validation_only",
+      "validation_test": "qualitative",
+      "source_population_type": "archaeological_settlement_evidence_without_absolute_interval",
+      "estimate_method": "settlement_system_archaeology",
+      "evidence_role": "west_africa_floodplain_validation",
+      "boundary_confidence": "low",
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "mapped_boundary": "Middle Niger settlement cluster and rural hinterland; the one-location EU5 proxy is incomplete",
+      "source_family": "middle_niger_archaeology",
+      "source_family_independence": "independent",
+      "review_status": "candidate",
+      "eu5_selector": "location_tag=djenne",
+      "sources": [
+        {
+          "url": "https://www.cambridge.org/core/journals/journal-of-african-history/article/abs/inland-niger-delta-before-the-empire-of-mali-evidence-from-jennejeno/111CBA0644CA0D9EE7B3210C7A8F50F6",
+          "title": "The Inland Niger Delta before the Empire of Mali",
+          "source_kind": "archaeological_regional_study",
+          "supports": "settlement size and dense rural settlement evidence"
+        },
+        {
+          "url": "https://ehrafarchaeology.yale.edu/traditions/fa75/documents/003",
+          "title": "Excavations at Jenné-jeno, Hambarketolo, and Kaniana",
+          "source_kind": "archaeological_site_report",
+          "supports": "long chronology and settlement-density evidence"
+        },
+        {
+          "url": "https://www.metmuseum.org/fr/essays/inland-niger-delta",
+          "title": "Inland Niger Delta",
+          "source_kind": "museum_regional_history",
+          "supports": "fourteenth-century trade and food-exchange context"
+        }
+      ],
+      "notes": "Do not create a population interval from site hectares. Retain as a qualitative physical-system and settlement-density validation case only."
+    },
+    {
+      "anchor_id": "great_zimbabwe_site_population",
+      "label": "Great Zimbabwe archaeological site population constraint",
+      "date_interval": {"start": 1000, "end": 1450},
+      "population_interval": {
+        "low": 500,
+        "central": 2500,
+        "high": 10000,
+        "unit": "site residents",
+        "semantics": "archaeological site-phase interval; explicitly not surrounding-land capacity"
+      },
+      "saturation_fraction_interval": null,
+      "local_food_share_interval": null,
+      "pressure_evidence": ["archaeological spatial models estimate a few thousand coeval residents and reject an unqualified 20,000-person site peak"],
+      "shock_flags": ["site population is not surrounding-land capacity", "long date aggregation", "trade/state concentration", "model and phase uncertainty"],
+      "trade_dependence": "high",
+      "food_regime": "sorghum and millet, livestock, wild foods, and regional trade",
+      "role": "validation_only",
+      "validation_test": "interval",
+      "source_population_type": "archaeological_site_interval",
+      "estimate_method": "site_phase_population_model",
+      "evidence_role": "urban_negative_control",
+      "boundary_confidence": "low",
+      "boundary_overlap_status": "city_only",
+      "crosswalk_status": "mismatch",
+      "mapped_boundary": "Great Zimbabwe archaeological site; the game location is much broader",
+      "source_family": "great_zimbabwe_archaeology",
+      "source_family_independence": "independent",
+      "review_status": "candidate",
+      "eu5_selector": "location_tag=great_zimbabwe",
+      "sources": [
+        {
+          "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0178335",
+          "title": "The population of Great Zimbabwe",
+          "source_kind": "archaeological_population_model",
+          "supports": "phase-specific site population estimates and rejection of an unqualified 20,000 peak"
+        }
+      ],
+      "notes": "Keep as a negative control for urban/site overinterpretation. Never use this interval to supervise the surrounding EU5 location capacity."
+    },
+    {
+      "anchor_id": "ethiopia_lalibela_medieval_agriculture",
+      "label": "Lalibela and Lasta medieval agricultural landscape",
+      "date_interval": {"start": 1150, "end": 1350},
+      "population_interval": null,
+      "saturation_fraction_interval": null,
+      "local_food_share_interval": null,
+      "pressure_evidence": [
+        "archaeological and archaeobotanical work documents medieval farming communities around Lalibela and Lasta",
+        "highland crop and livestock systems used terracing and local water management",
+        "landscape surveys show a capital and surrounding rural production, but not a population total"
+      ],
+      "shock_flags": ["no defensible population interval", "royal/monastic labor concentration", "small site-to-hinterland crosswalk", "poorly documented medieval demography"],
+      "trade_dependence": "low_to_mixed",
+      "food_regime": "highland cereals, pulses, livestock, terracing, and localized water management",
+      "role": "validation_only",
+      "validation_test": "qualitative",
+      "source_population_type": "archaeological_food_system_evidence_without_population_total",
+      "estimate_method": "archaeological_and_archaeobotanical_landscape_synthesis",
+      "evidence_role": "ethiopian_highland_food_system_validation",
+      "boundary_confidence": "low",
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "mapped_boundary": "Lalibela/Lasta archaeological landscape approximated by location_tag=lalibela",
+      "source_family": "lalibela_medieval_archaeology_and_agriculture",
+      "source_family_independence": "independent",
+      "review_status": "candidate",
+      "eu5_selector": "location_tag=lalibela",
+      "sources": [
+        {
+          "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6734319",
+          "title": "On the Agricultural Economy of the Medieval Inhabitants of Lalibela and Environs",
+          "source_kind": "archaeobotanical_and_ethnoarchaeological_study",
+          "supports": "medieval crops, livestock, and agricultural economy"
+        },
+        {
+          "url": "https://tandfonline.com/doi/abs/10.1080/0067270x.2011.647949",
+          "title": "Lalibela in its landscape",
+          "source_kind": "archaeological_landscape_survey",
+          "supports": "settlement and landscape boundary caveats"
+        },
+        {
+          "url": "https://brill.com/view/journals/jaa/12/2/article-p141_2.xml",
+          "title": "The Lalibela Rock Hewn Site and its Landscape",
+          "source_kind": "archaeological_landscape_analysis",
+          "supports": "late twelfth/early thirteenth-century site context"
+        }
+      ],
+      "notes": "Do not infer a population interval from church construction or site importance. Use only to test highland crop, terrace, and water-management mechanisms."
+    },
+    {
+      "anchor_id": "west_african_trade_centers_1200_1400",
+      "label": "Medieval West African trade-center screening set",
+      "date_interval": {"start": 1200, "end": 1400},
+      "population_interval": null,
+      "saturation_fraction_interval": null,
+      "local_food_share_interval": null,
+      "pressure_evidence": [],
+      "shock_flags": ["urban/trade dependence", "no defensible local population interval", "administrative and archaeological boundary mismatch", "regional food exchange"],
+      "trade_dependence": "high",
+      "food_regime": "Sahelian millet, sorghum, rice, livestock, fish, and imported trade goods",
+      "role": "excluded",
+      "validation_test": "rejected",
+      "source_population_type": "urban_trade_screen_without_local_capacity_interval",
+      "estimate_method": "historical_and_archaeological_screening",
+      "evidence_role": "excluded_trade_linked_demography",
+      "boundary_confidence": "low",
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "mapped_boundary": "Timbuktu, Gao, and Kano urban/trade nodes; no stable rural hinterland boundary",
+      "source_family": "west_african_trade_and_urban_history",
+      "source_family_independence": "independent",
+      "review_status": "rejected",
+      "eu5_selector": "location_tag=timbuktu|gao|kano",
+      "sources": [
+        {
+          "url": "https://www.metmuseum.org/fr/essays/inland-niger-delta",
+          "title": "Inland Niger Delta",
+          "source_kind": "museum_regional_history",
+          "supports": "trade-linked urban and food-exchange context"
+        },
+        {
+          "url": "https://ehrafarchaeology.yale.edu/traditions/fa77/summary",
+          "title": "West African Regional Development",
+          "source_kind": "archaeological_regional_summary",
+          "supports": "varied regional adaptations and absence of absolute population data"
+        }
+      ],
+      "notes": "Explicitly rejected for training. Wealth, market reach, or city size cannot label local Malthusian capacity without a rural boundary and pressure evidence."
+    },
+    {
+      "anchor_id": "broad_africa_estimates_rejected",
+      "label": "Broad premodern African population estimates",
+      "date_interval": {"start": 1200, "end": 1400},
+      "population_interval": null,
+      "saturation_fraction_interval": null,
+      "local_food_share_interval": null,
+      "pressure_evidence": [],
+      "shock_flags": ["continental extrapolation", "sparse local enumeration", "strong ecological heterogeneity", "boundary mismatch"],
+      "trade_dependence": "mixed",
+      "food_regime": "multiple cereal, root-crop, pastoral, fishing, and forest food systems",
+      "role": "excluded",
+      "validation_test": "rejected",
+      "source_population_type": "continental_extrapolation",
+      "estimate_method": "continental_demographic_extrapolation",
+      "evidence_role": "excluded_broad_demography",
+      "boundary_confidence": "low",
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "mapped_boundary": "Continental aggregate has no capacity-test boundary",
+      "source_family": "african_continental_demographic_estimates",
+      "source_family_independence": "independent",
+      "review_status": "rejected",
+      "eu5_selector": "super_region=africa",
+      "sources": [
+        {
+          "url": "https://www.ifo.de/en/cesifo/publications/2021/working-paper/we-do-not-know-population-every-country-world-past-two-thousand",
+          "title": "We do not know the population of every country in the world for the past two thousand years",
+          "source_kind": "historical_demography_methodological_review",
+          "supports": "uncertainty and limitations of broad African totals"
+        }
+      ],
+      "notes": "Continental estimates must remain outside model training and capacity scaling. Africa should instead be evaluated through local physical inputs and vetted local cases."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "diagnostic_id": "anchor_generalization_contradiction_audit_wave31",
+  "generated_on": "2026-08-04",
+  "purpose": "Re-audit the held-out independent Rapa Nui food-limit validation after adding mapped early-settlement crop evidence and replacing the unresolved-crop median assumption with an explicit 0.5 feasibility prior.",
+  "model_version": "carrying_capacity_1337_v11_aggregate_torch_residual_gate",
+  "input_hashes": {
+    "crop_mode_labels_sha256": "88d90e758566c8204589046510513d659a817ef381994cb73ec4426c55285495",
+    "location_candidates_sha256": "e7c6df00f2659670a9cc59f21c3e0d03e20383493172ce53e3fe0326a0a15cc6",
+    "berenguer_rapa_nui_starch_2024_sha256": "40498524d3a36f1f6b73550e36e9913dd695118be50b0a7aae9054fec9e8ba31"
+  },
+  "changes_since_wave30": [
+    "mapped AD 1200-1337 Anakena starch evidence closes sweet potato and taro as known available",
+    "disputed manioc evidence remains uncertain rather than positive",
+    "unresolved crop feasibility p50 is 0.5, with p10=0 and p90=1"
+  ],
+  "rapa_nui_food_limits": {
+    "role": "validation_only",
+    "mapped_boundary": "Entire Rapa Nui island; exact EU5 location_tag=rapa_nui",
+    "capacity_interval_people": {"p10": 3500, "p50": 10000, "p90": 17500},
+    "current_predicted_capacity_people_p50": 34236,
+    "ratio_to_interval_central": 3.4236,
+    "ratio_to_interval_high": 1.9563428571,
+    "status": "fail",
+    "interpretation": "The independent held-out limit remains a real physical contradiction. The new crop evidence and explicit uncertainty prior do not resolve the overestimate; no anchor-specific multiplier or training target is permitted. The next model change must address globally shared soil-nutrient, rock-garden/fallow, and sustainable-yield physics and must be tested against England, Iceland, and all grouped anchors."
+  },
+  "formal_training_status": {
+    "training_ran": true,
+    "selected_candidate": "mechanistic",
+    "grouped_holdout_interval_coverage": 1.0,
+    "grouped_holdout_lower_bound_pass_rate": 1.0,
+    "acceptance_allowed": false,
+    "normalization_applied": false,
+    "rendered_static_modifier": false
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Africa",
+  "region": "north_africa_macaronesia",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "tenerife_guanche_1496_capacity_lower_bound_wave5",
+      "historical_boundary": "Entire island of Tenerife, comprising all nine Guanche menceyatos and communal upland pasture",
+      "eu5_selector": {
+        "include": [
+          "location_tag=aguere"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact_island",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "vetted_exact_island_lower_bound",
+      "area_comparison": {
+        "historical_tenerife_area_km2": 2034.0,
+        "eu5_calibrated_aguere_area_km2": 2070.198395,
+        "absolute_area_error_km2": 36.198395,
+        "absolute_area_error_fraction": 0.0177967
+      },
+      "resolution_method": "EU5 represents Tenerife as the single island location aguere. Its bounded calibrated area is 2,070.198395 km2 versus 2,034 km2 in the palaeodemographic study (1.78% high), so the complete historical island population maps one-to-one with no partial-coverage weight.",
+      "notes": "This exact-island mapping includes every menceyato and communal pasture zone cited in the source. No city/hinterland inference, coastline clipping or inter-island aggregation is involved."
+    }
+  ]
+}

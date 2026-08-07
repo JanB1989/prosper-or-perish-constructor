@@ -1,0 +1,549 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Africa_and_Middle_East",
+  "region": "africa_middleeast",
+  "target_year": 1337,
+  "packet_id": "africa_middleeast_anchor_disposition_wave7",
+  "scope": "Append-only research disposition for the remaining African and Middle-Eastern candidates. It records what the sources actually establish and keeps unresolved candidates out of training rather than converting tax, urban-area or qualitative archaeology into invented population labels.",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "promoted_lower_bound_ids": [],
+    "decision": "No new two-sided scale anchor was found in this research wave. Mamluk Egypt, Mapungubwe and Engaruka are already represented by dedicated packets. The Rasulid Yemen register is the strongest new in-period physical source, but it records taxes, crops and irrigation rather than a population or saturation interval. Fayyum, southern Mesopotamia, Nubia, Ethiopia, Jenné-jeno and Tichitt/Walata remain valuable validation or feature-lineage evidence but fail at least one anchor-contract requirement.",
+    "reviewed_on": "2026-08-03",
+    "review_method": "Independent source review checked date compatibility, boundary semantics, population/capacity interval provenance, local-food dependence, pressure evidence, shock/trade confounding and EU5 crosswalkability. No tax-to-person or urban-density multiplier was introduced."
+  },
+  "already_represented": [
+    {
+      "anchor_id": "mamluk_egypt_1315_irrigated_local_support_floor_wave3",
+      "packet": "europe_nile_training_floors_wave3.json",
+      "role": "lower_bound",
+      "reason": "The existing Borsch/Russell 1315-1315 Mamluk Egypt local-support floor is the appropriate aggregate Nile observation. The new Fayyum material adds spatial and fiscal features but no independent total population."
+    },
+    {
+      "anchor_id": "mapungubwe_south_african_survey_1270_1320_capacity_lower_bound_wave5",
+      "packet": "africa_mapungubwe_survey_lower_bound_wave5.json",
+      "role": "lower_bound",
+      "reason": "The surveyed South African Mapungubwe footprint and its 10,700-person one-sided floor are already mapped and must not be duplicated with the wider 30,000 km2 polity proxy."
+    },
+    {
+      "anchor_id": "engaruka_irrigated_capacity_1400_1720_validation",
+      "packet": "africa_engaruka_capacity_validation.json",
+      "role": "validation_only",
+      "reason": "The published 8,000-10,000 support calculation refers to a completed system whose maximum extent is later than the 1337 target; it is already retained as a high-value African irrigation validation case."
+    }
+  ],
+  "records": [
+    {
+      "anchor_id": "rasulid_yemen_1292_1321_tax_crop_register_wave7",
+      "label": "Rasulid Yemen crop, tax and irrigation registers (Wadi Zabid/Tihama and highlands)",
+      "year_start": 1292,
+      "year_end": 1321,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The 1292-1296 daftar and the Rasulid Irtifāʿ register compiled under al-Muʾayyad Dāwūd (d. 1321) report crop quantities, taxes, customs, irrigation works and local products. They do not enumerate inhabitants or establish a carrying-capacity interval. Tax receipts cannot be converted to calories or people without an independently demonstrated assessment rule.",
+      "quantitative_evidence": [
+        "Varisco (2006), pp. 161-174, describes a court daftar based on field reports from 1292-1296 and gives production, taxes, customs and commercial flows for Rasulid Yemen.",
+        "Varisco (1991), Journal of the Economic and Social History of the Orient 34:1-22, translates and annotates the royal crop register; the entries are crop/tax records rather than a census.",
+        "Jāzim (ed. 2008), Irtifāʿ al-dawla al-Muʾayyadīya, is a 207-folio tax register for Yemen under the sultan who died in 1321 and includes a map of the Wādī Zabīd irrigation/tax landscape. No defensible total population is reported in the accessible description."
+      ],
+      "pressure_evidence": [
+        "The registers document state assessment of sorghum and other grains, sugar, honey, bananas, livestock and irrigation districts, establishing a historically available food-system feature set.",
+        "The source describes water allocation and production administration in Wadi Zabid and the highlands, but does not demonstrate that the tax base was at a long-run Malthusian equilibrium.",
+        "Aden and other ports are explicitly commercial nodes; their trade flows cannot be treated as local food support for the surrounding land."
+      ],
+      "shock_flags": [
+        "Rasulid court and port fiscal perspective",
+        "trade and customs flows mixed with local production",
+        "no population enumeration",
+        "no saturation/pressure interval",
+        "historical district boundaries not yet georeferenced to EU5"
+      ],
+      "trade_dependence": "mixed and unresolved; the source explicitly includes customs and Aden commerce",
+      "food_regime": "sorghum and other cereals, sugar cane, bananas, honey, livestock and irrigated Wadi Zabid/highland agriculture",
+      "boundary_description": "Rasulid tax/irrigation districts in Wadi Zabid and the Tihama, with additional highland entries; the published map and daftar districts are not yet a closed polygon equivalent to an EU5 location or province.",
+      "boundary_source": "Jāzim (ed. 2008), Irtifāʿ al-dawla al-Muʾayyadīya, map of Wādī Zabīd; Varisco (2006), pp. 161-174",
+      "eu5_selector": {
+        "include": [
+          "province=zabid_province",
+          "province=taizz_province",
+          "province=sana_province"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "role": "validation_only",
+      "source_family": "rasulid_yemen_tax_register_agriculture",
+      "source_bundle": "varisco_jazim_rasulid_register_bundle",
+      "source_family_independence": "independent primary/near-primary fiscal and agricultural register family; not a population source",
+      "sources": [
+        "https://www.filaha.org/medieval_agricultural.html",
+        "https://tabsir.net/?p=4043",
+        "https://www.filaha.org/authors_works.html",
+        "https://ci.nii.ac.jp/ncid/BB19509015",
+        "https://austriaca.at/0xc1aa5576_0x003ad145.pdf",
+        "https://www.degruyterbrill.com/document/isbn/9783111594620/html?lang=en"
+      ],
+      "missing_criteria": [
+        "population or independently derived people-support interval for the same district",
+        "saturation/pressure evidence independent of the fiscal register",
+        "local-food share excluding Aden/Red Sea imports",
+        "historical district polygon and >=95% EU5 crosswalk"
+      ],
+      "notes": "High-priority physical-feature source for crop availability, irrigation and technology. It must not be turned into a target by multiplying taxes, yields or customs by an assumed household size."
+    },
+    {
+      "anchor_id": "fayyum_nabulusi_gis_fiscal_followup_wave7",
+      "label": "Fayyum al-Nābulusī 1245 cadastral/GIS register: village-level fiscal and water data",
+      "year_start": 1245,
+      "year_end": 1245,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The Queen Mary project provides a digital register for over one hundred villages with crop taxes, fiscal values, water rights, poll tax on non-Muslims and GIS reconstruction. The poll-tax field is not a total population count because it excludes Muslims, women and children; tax amounts are assessments rather than calories. No defensible total population or saturation interval was found.",
+      "quantitative_evidence": [
+        "The project database states that each village entry includes fiscal value, water rights, agricultural/commercial taxes and, in most entries, poll tax on non-Muslims.",
+        "The project GIS map reconstructs village locations from geo-rectified 1:100,000 maps, SRTM and Jacotin maps; it does not supply an EU5-ready polygon boundary for all village/canal units.",
+        "The IAST 2021 abstract (Rapoport) confirms that the register includes crop taxes, seed advances, poll-tax records and horse levies, while the study's quantitative result is about fiscal/social correlations, not total population."
+      ],
+      "pressure_evidence": [
+        "The register records canal water rights, gravity-fed canal clusters, village maintenance and agricultural productivity, providing local physical and technology evidence.",
+        "Fayyum-wide canal maintenance and water-shortage evidence indicates production pressure, but no literature-supported saturation fraction for the same boundary was located.",
+        "Partial poll-tax heads cannot be used as a lower bound on all inhabitants without a documented completeness and demographic conversion rule."
+      ],
+      "shock_flags": [
+        "poll-tax excludes Muslim population and non-taxable demographic groups",
+        "fiscal assessment is not an independent population census",
+        "cadastral village/canal boundary digitization incomplete",
+        "regional Cairo/Nile redistribution and trade caveats"
+      ],
+      "trade_dependence": "local agricultural production is strongly documented, but the import/export share of the Fayyum food budget is unresolved",
+      "food_regime": "Nile basin irrigation with cereals, legumes, sugar cane, livestock and village gardens",
+      "boundary_description": "The roughly triangular Fayyum depression and its approximately one hundred villages and canal clusters surveyed in 1245; individual modern locations can often be reconstructed, but a complete historical polygon remains to be digitized and intersected with calibrated EU5 geometry.",
+      "boundary_source": "https://projects.history.qmul.ac.uk/ruralsocietyislam/; Fayyum GIS map and settlement table linked from the project map page",
+      "eu5_selector": {
+        "include": [
+          "location_tag=faiyum"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for village points, low for complete aggregate polygon",
+      "status": "blocked",
+      "role": "validation_only",
+      "source_family": "qmul_fayyum_nabulusi_cadastre_gis",
+      "source_bundle": "rapoport_shahar_qmul_fayyum_1245_bundle",
+      "source_family_independence": "independent primary register edition/database and GIS reconstruction; fiscal/demographic semantics remain incomplete",
+      "sources": [
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/database/",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/database/i-1-the-village/",
+        "https://www.iast.fr/sites/default/files/liens/documents/abst_booklet_bigdata_052021.pdf",
+        "https://www.britishacademy.ac.uk/documents/3883/96p287.pdf",
+        "https://www.persee.fr/doc/bec_0373-6237_1929_num_90_1_448861"
+      ],
+      "missing_criteria": [
+        "complete population interval for the same village aggregate",
+        "independent saturation/pressure interval rather than fiscal water stress alone",
+        "local-food calorie share",
+        "closed historical polygon and audited >=95% EU5 crosswalk"
+      ],
+      "notes": "Retained as a high-value feature and physical validation source. Existing registry records remain authoritative for the no-target disposition; this follow-up records the newly checked GIS and database evidence without converting taxes to people."
+    },
+    {
+      "anchor_id": "southern_mesopotamia_canal_landscape_1200_1337_disposition_wave7",
+      "label": "Southern Mesopotamian canal and settlement landscape, late Abbasid/Ilkhanid period",
+      "year_start": 1200,
+      "year_end": 1337,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Remote sensing, canal archaeology and historical descriptions establish irrigation, drainage and settlement infrastructure but do not provide a defensible 1200-1337 population or carrying-capacity interval for a mappable aggregate.",
+      "pressure_evidence": [
+        "Canal abandonment, salinization and changing river courses are documented as production constraints.",
+        "The Mongol conquest and later political/demographic shocks overlap the target interval, so observed settlement density cannot be interpreted as equilibrium without a resolved shock model.",
+        "Urban Basra/Baghdad evidence is trade-linked and cannot supervise surrounding land capacity."
+      ],
+      "shock_flags": [
+        "Mongol conquest and post-conquest demographic disruption",
+        "salinization and canal abandonment",
+        "urban/trade hub contamination",
+        "no population interval",
+        "no closed historical-to-EU5 boundary"
+      ],
+      "trade_dependence": "unresolved and likely mixed around Basra/Baghdad",
+      "food_regime": "irrigated cereals, dates, livestock and marsh/freshwater resources",
+      "boundary_description": "Southern Mesopotamian alluvial canal landscapes; the archaeological/remote-sensing study areas do not coincide with one closed EU5 administrative selector.",
+      "boundary_source": "Existing physical sources in asia_mideast.json: southern Mesopotamian canal archaeology and remote-sensing studies",
+      "eu5_selector": {
+        "include": [
+          "area=iraq_arabi_area"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "role": "validation_only",
+      "source_family": "mesopotamian_canal_archaeology_remote_sensing",
+      "source_bundle": "southern_mesopotamia_canal_physical_bundle",
+      "source_family_independence": "independent archaeological and remote-sensing physical evidence; no population source",
+      "sources": [
+        "https://www.mdpi.com/2072-4292/10/12/2042",
+        "https://doi.org/10.1016/j.quaint.2017.06.018"
+      ],
+      "missing_criteria": [
+        "aggregate population or capacity interval",
+        "independent local-food saturation evidence",
+        "shock-resolved date/boundary matched to EU5",
+        ">=95% historical-to-EU5 crosswalk"
+      ],
+      "notes": "Use the physical canal/water variables in the feature lineage and hold out any future quantitative settlement reconstruction. Do not use broad Iraq population estimates."
+    },
+    {
+      "anchor_id": "old_dongola_1100_1400_local_food_validation_wave7",
+      "label": "Old Dongola/Letti Basin, medieval Nubia",
+      "year_start": 1100,
+      "year_end": 1400,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Archaeology establishes a roughly 200 ha urban site at its tenth- to twelfth-century heyday and local sorghum, wheat, barley, cowpea and grass-pea food storage in later contexts. No reliable population or capacity interval for the city and its agricultural hinterland was found; a city area cannot be converted to people without a settlement-density and hinterland boundary study.",
+      "pressure_evidence": [
+        "The site lies beside the Nile and Letti Basin paleochannel with substantial agricultural potential.",
+        "Archaeobotanical samples identify locally stored staple crops and household-scale processing, supporting a local-food feature record.",
+        "Political deterioration after the Mamluk takeover of Egypt and the fall of Makuria make 13th-14th-century population observations shock-sensitive."
+      ],
+      "shock_flags": [
+        "city-only archaeological footprint",
+        "political collapse and migration after 1300",
+        "food-storage evidence mostly 15th-18th century",
+        "no population/capacity interval",
+        "no city-hinterland boundary"
+      ],
+      "trade_dependence": "Old Dongola was on a trans-Saharan route; the imported food share is unresolved",
+      "food_regime": "Nile-bank agriculture with sorghum, wheat, barley, cowpea, grass pea, livestock and fish/game",
+      "boundary_description": "Old Dongola archaeological site (approximately 200 ha) and the Letti Basin/Nile agricultural hinterland; only the urban site is currently mapped, not the food-supporting hinterland.",
+      "boundary_source": "Obłuski et al. (2022) and Nasreldein et al. (2025), Old Dongola archaeological and archaeobotanical reports",
+      "eu5_selector": {
+        "include": [
+          "location_tag=dongola"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for site point, low for hinterland",
+      "status": "blocked",
+      "role": "validation_only",
+      "source_family": "old_dongola_archaeology_archaeobotany",
+      "source_bundle": "nubia_dongola_local_food_bundle",
+      "source_family_independence": "independent archaeological excavation and archaeobotanical evidence; no population estimate",
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC12204933/",
+        "https://doi.org/10.1007/s10437-025-09622-y",
+        "https://pcma.uw.edu.pl/en/2019/04/02/dongola-2/",
+        "https://doi.org/10.1002/arp.1850"
+      ],
+      "missing_criteria": [
+        "population or carrying-capacity interval",
+        "independent pressure/saturation evidence",
+        "food-supporting hinterland polygon",
+        ">=95% EU5 crosswalk for that hinterland"
+      ],
+      "notes": "Useful Nubian crop/fisheries/livestock validation case. The 200 ha urban area is not a population target and later food-storage contexts are not silently backdated to 1337."
+    },
+    {
+      "anchor_id": "banganarti_1100_1300_pilgrimage_food_validation_wave7",
+      "label": "Banganarti pilgrimage settlement, Middle Nile Valley",
+      "year_start": 1100,
+      "year_end": 1300,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Archaeozoology documents extensive local pig breeding and meat consumption at an important pilgrimage centre, but the publication provides no population interval and the settlement served transient pilgrims. It cannot supervise surrounding land capacity.",
+      "pressure_evidence": [
+        "Osypińska and Żurawski document large-scale pig breeding and a diverse food economy in the eleventh-thirteenth centuries.",
+        "Pilgrimage traffic creates a direct transient-demand/trade confound, so food remains cannot be read as resident equilibrium pressure.",
+        "No rural hinterland or production catchment polygon is published in the source used here."
+      ],
+      "shock_flags": [
+        "pilgrimage and transient population",
+        "city/settlement footprint only",
+        "no population interval",
+        "no carrying-capacity or saturation evidence",
+        "no EU5 hinterland crosswalk"
+      ],
+      "trade_dependence": "highly unresolved because the site is a pilgrimage centre",
+      "food_regime": "local livestock/pig production and Nile-valley food exchange",
+      "boundary_description": "Banganarti settlement and church complex in the Middle Nile Valley; no closed food-supporting rural boundary.",
+      "boundary_source": "Osypińska and Żurawski, Antiquity (2020), site excavation context",
+      "eu5_selector": {
+        "include": [
+          "location_tag=__unmapped_banganarti__"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "role": "validation_only",
+      "source_family": "banganarti_archaeozoology_pilgrimage",
+      "source_bundle": "middle_nile_banganarti_food_bundle",
+      "source_family_independence": "independent archaeological/archaeozoological excavation; no population source",
+      "sources": [
+        "https://www.cambridge.org/core/journals/antiquity/article/abs/pork-for-pilgrims-and-meat-consumption-at-medieval-banganarti-nubia/A4A732A7C8D9E56CE9B9DA25562F3116",
+        "https://doi.org/10.15184/aqy.2019.154"
+      ],
+      "missing_criteria": [
+        "resident population or capacity interval",
+        "local-food share net of pilgrimage provisioning",
+        "rural support boundary",
+        ">=95% EU5 crosswalk"
+      ],
+      "notes": "Retain as a negative control against treating city/pilgrimage food remains as a resident Malthusian target."
+    },
+    {
+      "anchor_id": "ethiopia_lalibela_lasta_1150_1350_disposition_wave7",
+      "label": "Lalibela/Lasta medieval agricultural landscape",
+      "year_start": 1150,
+      "year_end": 1350,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Archaeological and historical studies document terracing, farming and the Zagwe/Lasta political centre, but no defensible aggregate population or capacity interval and no independent saturation fraction for the Lasta landscape.",
+      "pressure_evidence": [
+        "The landscape has documented agricultural terraces, local cereals and livestock-compatible highland production.",
+        "Lalibela was a royal/monastic and pilgrimage centre, so site-level settlement evidence is not a rural equilibrium label.",
+        "No source reviewed provides a boundary and population interval that can be overlaid on EU5."
+      ],
+      "shock_flags": [
+        "royal/monastic and pilgrimage concentration",
+        "no population interval",
+        "no saturation evidence",
+        "archaeological landscape boundary unresolved"
+      ],
+      "trade_dependence": "unresolved; pilgrimage and royal provisioning may be nonlocal",
+      "food_regime": "Ethiopian highland cereals, pulses, livestock and terraces",
+      "boundary_description": "Lalibela/Lasta archaeological and agricultural landscape; existing EU5 location_tag=lalibela is only a screening proxy.",
+      "boundary_source": "Existing Ethiopia/Lalibela packet sources; no closed historical polygon located in this wave",
+      "eu5_selector": {
+        "include": [
+          "location_tag=lalibela"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "role": "validation_only",
+      "source_family": "lalibela_lasta_medieval_archaeology",
+      "source_bundle": "ethiopia_lalibela_agriculture_bundle",
+      "source_family_independence": "independent archaeological and historical landscape studies; no population source",
+      "sources": [
+        "https://whc.unesco.org/en/list/18/",
+        "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6734319",
+        "https://tandfonline.com/doi/abs/10.1080/0067270x.2011.647949",
+        "https://brill.com/view/journals/jaa/12/2/article-p141_2.xml"
+      ],
+      "missing_criteria": [
+        "population/capacity interval",
+        "independent pressure/saturation evidence",
+        "closed Lasta boundary",
+        ">=95% EU5 crosswalk"
+      ],
+      "notes": "The existing Africa packet remains the primary Lalibela qualitative record; this disposition makes the no-target decision explicit for the 1337 training gate."
+    },
+    {
+      "anchor_id": "djenne_jeno_750_1100_disposition_wave7",
+      "label": "Jenné-jeno/Inland Niger Delta settlement system",
+      "year_start": 750,
+      "year_end": 1100,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Archaeology documents a settlement apogee, an approximately 33-34 ha tell and integrated African-rice, fish, cattle and floodplain subsistence, but the reviewed sources do not provide an absolute population interval or a saturation estimate for a mapped rural aggregate.",
+      "pressure_evidence": [
+        "Settlement density and long occupation indicate intensive floodplain production, but density is not a population count.",
+        "African rice, fish and cattle are direct local-food system evidence; the site also participated in regional trade networks.",
+        "The 750-1100 peak is mostly earlier than 1337, and no 12th-14th-century mappable rural boundary was found."
+      ],
+      "shock_flags": [
+        "out-of-period relative to 1337 peak",
+        "urban/tell site and regional trade",
+        "no absolute population",
+        "no saturation fraction",
+        "no closed rural boundary"
+      ],
+      "trade_dependence": "mixed; local floodplain foods are documented but regional trade is also central",
+      "food_regime": "floodplain African rice, fish, cattle, wild foods and seasonal cultivation",
+      "boundary_description": "Jenné-jeno tell and surrounding Inland Niger Delta settlement system; the EU5 djenne location is a broad screening proxy, not an audited archaeological boundary.",
+      "boundary_source": "McIntosh settlement surveys and UNESCO/General History of Africa syntheses",
+      "eu5_selector": {
+        "include": [
+          "location_tag=djenne"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "role": "validation_only",
+      "source_family": "jenne_jeno_inland_niger_delta_archaeology",
+      "source_bundle": "mcintosh_jenne_jeno_food_system_bundle",
+      "source_family_independence": "independent archaeological survey and archaeobotanical/archaeozoological synthesis; no absolute population source",
+      "sources": [
+        "https://www.cambridge.org/core/journals/journal-of-african-history/article/abs/inland-niger-delta-before-the-empire-of-mali-evidence-from-jennejeno/111CBA0644CA0D9EE7B3210C7A8F50F6",
+        "https://ehrafarchaeology.yale.edu/traditions/fa75/documents/003",
+        "https://www.penn.museum/sites/expedition/the-forgotten-tells-of-mali/"
+      ],
+      "missing_criteria": [
+        "absolute population or capacity interval",
+        "1337-compatible date and pressure evidence",
+        "rural aggregate boundary",
+        ">=95% EU5 crosswalk"
+      ],
+      "notes": "The existing Africa packet remains the qualitative Jenné-jeno record. No absolute number was invented from tell area or modern settlement density."
+    },
+    {
+      "anchor_id": "tichitt_walata_1000_500_bce_theoretical_capacity_validation_wave7",
+      "label": "Tichitt-Walata stone-walled settlement tradition",
+      "year_start": -1000,
+      "year_end": -500,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "A review of Holl's work reports a theoretical-capacity to actual-population ratio of approximately 2:1 to 3:1 for Tichitt-Walata clusters, but neither an absolute population interval nor an independently dated 1337-compatible equilibrium observation is available. The ratio is a validation-only land-use potential diagnostic.",
+      "quantitative_evidence": [
+        "Camara and Darboe (2026 review), discussing Holl (1985b), report theoretical capacity exceeding actual population by roughly 2:1 to 3:1 and interpret all clusters as low pressure.",
+        "The same review describes late Neolithic/early Iron Age settlements of roughly 12-20 ha and more than 1,000 stone-walled settlements over a broad region, but no reliable total population."
+      ],
+      "pressure_evidence": [
+        "Holl's theoretical/actual comparison is explicitly a land-use potential measure, not proof of a Malthusian ceiling.",
+        "The date is approximately 1000-500 BCE, far outside the target technology and climate window."
+      ],
+      "shock_flags": [
+        "out-of-period by more than 1800 years",
+        "theoretical capacity ratio rather than population interval",
+        "broad 600,000 km2 region",
+        "no EU5 boundary"
+      ],
+      "trade_dependence": "unresolved",
+      "food_regime": "Sahelian agropastoral stone-walled settlements",
+      "boundary_description": "Tichitt-Walata archaeological region in southeastern Mauritania and adjoining Sahel; no EU5-equivalent historical polygon.",
+      "boundary_source": "Camara and Darboe (2026), review of Tichitt-Walata archaeology and Holl (1985b)",
+      "eu5_selector": {
+        "include": [
+          "location_tag=__unmapped_tichitt_walata__"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "not_applicable",
+      "crosswalk_status": "not_applicable",
+      "boundary_confidence": "low",
+      "status": "blocked",
+      "role": "validation_only",
+      "source_family": "tichitt_walata_archaeology_holl_capacity",
+      "source_bundle": "camara_darboe_holl_tichitt_bundle",
+      "source_family_independence": "secondary review of archaeological capacity analysis; not an independent 1337 population source",
+      "sources": [
+        "https://doi.org/10.21203/rs.3.rs-9043363/v1"
+      ],
+      "missing_criteria": [
+        "absolute population/capacity interval",
+        "1337 technology-compatible date",
+        "independent saturation evidence",
+        "EU5 historical boundary"
+      ],
+      "notes": "Keep the 2-3x theoretical/actual ratio as a held-out qualitative check against unrealistically tight mechanistic capacity, not as a scale target."
+    }
+  ]
+}

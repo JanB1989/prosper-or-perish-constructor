@@ -1,0 +1,433 @@
+schema_version = 2
+target_year = 1337
+policy = "Technology evidence can establish whether a premodern technique existed; it cannot supply a regional capacity multiplier or observed cropland share."
+
+# Numeric fields are physical/engineering uncertainty envelopes, not fitted
+# regional multipliers.  P10/P50/P90 denote conservative/central/permissive
+# scenarios because the cited engineering sources do not provide a historical
+# probability distribution.  The model never narrows these envelopes using EU5
+# population or modern irrigated-area observations.
+[surface_water_policy]
+unmapped_resolution = "physical_fallback"
+physical_fallback_parameter_set = "generic_gravity_surface_irrigation"
+source_search_ceiling_km = 100.0
+
+[[technology_parameter_sets]]
+parameter_set_id = "generic_gravity_surface_irrigation"
+water_modes = ["river", "lake"]
+availability = "generic_physical_fallback"
+max_conveyance_km_p10 = 2.0
+max_conveyance_km_p50 = 9.487
+max_conveyance_km_p90 = 45.0
+max_lift_m_p10 = 0.0
+max_lift_m_p50 = 0.0
+max_lift_m_p90 = 0.0
+max_slope_degrees_p10 = 0.573
+max_slope_degrees_p50 = 1.718
+max_slope_degrees_p90 = 6.843
+conveyance_efficiency_p10 = 0.30
+conveyance_efficiency_p50 = 0.40
+conveyance_efficiency_p90 = 0.57
+parameter_role = "universal 1337-toolkit physical fallback; no pumping, no mapped historical infrastructure"
+derivation = "Reach P10 is FAO's >2 km long-canal boundary; P90 is the documented 45 km Roman Al-Arrub gravity aqueduct and P50 is their geometric midpoint. Slopes are atan(1%), atan(3%), and atan(12%), using FAO basin/bench-terrace guidance and the reported upper rarity threshold for gravity irrigation. Efficiency spans FAO poor schemes (30%), reasonable schemes (40%), and 95% lined conveyance times 60% surface application (57%)."
+sources = [
+  "https://www.fao.org/4/t7202e/t7202e08.htm",
+  "https://www.fao.org/4/x5648e/x5648e07.htm",
+  "https://www.fao.org/4/x5648e/x5648e0g.htm",
+  "https://whc.unesco.org/en/tentativelists/6958/",
+]
+
+[[technology_parameter_sets]]
+parameter_set_id = "maintained_earthen_gravity_surface"
+water_modes = ["river", "lake"]
+availability = "vetted_system_only"
+max_conveyance_km_p10 = 2.0
+max_conveyance_km_p50 = 9.487
+max_conveyance_km_p90 = 45.0
+max_lift_m_p10 = 0.0
+max_lift_m_p50 = 0.0
+max_lift_m_p90 = 0.0
+max_slope_degrees_p10 = 0.573
+max_slope_degrees_p50 = 1.718
+max_slope_degrees_p90 = 6.843
+conveyance_efficiency_p10 = 0.36
+conveyance_efficiency_p50 = 0.48
+conveyance_efficiency_p90 = 0.57
+parameter_role = "vetted large gravity/canal tradition with no water lifting"
+derivation = "FAO long earthen-canal conveyance values of 60-80% multiplied by 60% surface application give 36-48%; 95% lined conveyance times 60% gives 57%. Reach and slope bounds match the generic gravity envelope."
+sources = [
+  "https://www.fao.org/4/t7202e/t7202e08.htm",
+  "https://www.fao.org/4/x5648e/x5648e07.htm",
+  "https://whc.unesco.org/en/tentativelists/6958/",
+]
+
+[[technology_parameter_sets]]
+parameter_set_id = "nile_gravity_basin_with_traditional_low_lift"
+water_modes = ["river", "lake"]
+availability = "vetted_system_only"
+max_conveyance_km_p10 = 2.0
+max_conveyance_km_p50 = 9.487
+max_conveyance_km_p90 = 45.0
+max_lift_m_p10 = 0.3
+max_lift_m_p50 = 0.9
+max_lift_m_p90 = 1.8
+max_slope_degrees_p10 = 0.573
+max_slope_degrees_p50 = 1.718
+max_slope_degrees_p90 = 6.843
+conveyance_efficiency_p10 = 0.30
+conveyance_efficiency_p50 = 0.48
+conveyance_efficiency_p90 = 0.57
+parameter_role = "vetted Nile gravity/basin system plus traditional low-lift device"
+derivation = "Traditional sakia measurements give 0.3, 0.9, and 1.8 m lifts for 2, 3, and 5 m wheels. The Metropolitan Museum documents the shaduf in Egypt around 1250 BCE; these bounds do not assume modern pumps. Efficiency, reach, and slope follow the surface-gravity evidence envelope."
+sources = [
+  "https://www.fao.org/4/ah810e/ah810e05.htm",
+  "https://resources.metmuseum.org/resources/metpublications/pdf/The_Daily_Life_of_the_Ancient_Egyptians_The_Metropolitan_Museum_of_Art_Bulletin_v_31_no_3_Spring_1973.pdf",
+  "https://www.fao.org/4/t7202e/t7202e08.htm",
+]
+
+[[technology_parameter_sets]]
+parameter_set_id = "nile_basin_flood_basin_and_low_lift"
+water_modes = ["river", "lake"]
+availability = "vetted_system_only"
+max_conveyance_km_p10 = 2.0
+max_conveyance_km_p50 = 9.487
+max_conveyance_km_p90 = 45.0
+max_lift_m_p10 = 1.8
+max_lift_m_p50 = 6.4
+max_lift_m_p90 = 8.0
+max_slope_degrees_p10 = 0.573
+max_slope_degrees_p50 = 1.718
+max_slope_degrees_p90 = 6.843
+conveyance_efficiency_p10 = 0.30
+conveyance_efficiency_p50 = 0.48
+conveyance_efficiency_p90 = 0.57
+parameter_role = "Nile flood-basin head plus pre-1337 low-lift access; not a modern pump assumption"
+derivation = "Borsch documents an average Nile rise of 6.4 m and canal-fed basin irrigation in the Mamluk-era system; the historical Egyptian agriculture text reports a 7-8 m high/low Nile difference in Upper Egypt and about 1 m in Lower Egypt. The envelope therefore uses 1.8 m as a conservative manual-lift floor, 6.4 m as the observed mean flood head, and 8.0 m as the Upper-Egypt high-side case. It is used only for the explicitly mapped Nile basin system."
+sources = [
+  "https://knowledge.uchicago.edu/nanna/record/1009/files/MSR_IV_2000-Borsch.pdf?registerDownload=1&version=1&withMetadata=0&withWatermark=0",
+  "https://upload.wikimedia.org/wikipedia/commons/4/44/Text-book_of_Egyptian_agriculture_%28IA_textbookofegypti00foadrich%29.pdf",
+  "https://www.fao.org/4/ah810e/ah810e05.htm",
+]
+
+[[technology_parameter_sets]]
+parameter_set_id = "qanat_gravity_groundwater"
+water_modes = ["groundwater", "spring"]
+availability = "vetted_system_only"
+max_conveyance_km_p10 = 2.0
+max_conveyance_km_p50 = 5.099
+max_conveyance_km_p90 = 13.0
+max_lift_m_p10 = 0.0
+max_lift_m_p50 = 0.0
+max_lift_m_p90 = 0.0
+max_slope_degrees_p10 = 0.573
+max_slope_degrees_p50 = 1.718
+max_slope_degrees_p90 = 6.843
+conveyance_efficiency_p10 = 0.36
+conveyance_efficiency_p50 = 0.48
+conveyance_efficiency_p90 = 0.57
+parameter_role = "groundwater/spring source only; deliberately ineligible for RiverATLAS/LakeATLAS labels"
+derivation = "A still-operating approximately 800-year-old qanat is 2 km long and the UNESCO Persian Qanat nomination documents a fourth-century-BCE example over 13 km; P50 is their geometric midpoint. No groundwater source is currently aligned, so these parameters cannot create surface-water access."
+sources = [
+  "https://whc.unesco.org/en/list/1506/",
+  "https://whc.unesco.org/archive/2016/whc16-40com-inf8B1-en.pdf",
+  "https://icid-ciid.org/award/his_details/135",
+]
+
+[[systems]]
+system_id = "nile_basin_gravity_and_basin_irrigation"
+parameter_set_id = "nile_basin_flood_basin_and_low_lift"
+boundary = "lower_nile_and_delta"
+available_by = 1337
+technologies = ["gravity_diversion", "basin_irrigation", "canals", "low_lift_water_raising"]
+role = "qualitative_regression"
+review_status = "vetted_technology"
+include = ["area=lower_egypt_area|upper_egypt_area"]
+sources = [
+  "https://www.fao.org/4/ac799e/ac799e03.htm",
+]
+
+[[systems]]
+system_id = "southern_mesopotamian_canal_landscape"
+parameter_set_id = "maintained_earthen_gravity_surface"
+boundary = "lower_tigris_euphrates"
+available_by = 1337
+technologies = ["gravity_diversion", "canals", "drainage_management"]
+role = "qualitative_regression"
+review_status = "vetted_technology"
+include = ["area=iraq_arabi_area"]
+sources = [
+  "https://www.research-collection.ethz.ch/items/a40b0dba-cc4a-490a-8cc3-d82295dca412",
+  "https://www.mdpi.com/2072-4292/10/12/2042",
+]
+
+[[systems]]
+system_id = "persian_qanat"
+parameter_set_id = "qanat_gravity_groundwater"
+boundary = "iranian_plateau_and_documented_diffusion_areas"
+available_by = 1337
+technologies = ["qanat", "gravity_conveyance", "reservoirs"]
+role = "qualitative_regression"
+review_status = "vetted_technology"
+include = ["area=iraq_ajam_area|khuzestan_area|kerman_area|farsistan_area"]
+sources = [
+  "https://whc.unesco.org/en/list/1506/",
+  "https://www.unesco.org/archives/multimedia/document-255",
+]
+
+[[systems]]
+system_id = "oman_aflaj"
+parameter_set_id = "qanat_gravity_groundwater"
+boundary = "oman_documented_aflaj"
+available_by = 1337
+technologies = ["aflaj", "gravity_conveyance", "spring_and_groundwater_capture"]
+role = "qualitative_regression"
+review_status = "vetted_technology"
+include = ["location_tag=nizwa|bahla|rustaq|ibri|izki"]
+sources = [
+  "https://whc.unesco.org/en/list/1207/",
+]
+
+[[systems]]
+system_id = "hejaz_oasis_springs_and_wells"
+parameter_set_id = "qanat_gravity_groundwater"
+boundary = "documented_medina_and_khaybar_oases"
+available_by = 1337
+technologies = ["spring_capture", "communal_wells", "gravity_conveyance", "oasis_gardens"]
+role = "physical_groundwater_fallback"
+review_status = "vetted_technology"
+include = ["location_tag=medina|khaybar|al_ayn_khaybar"]
+sources = [
+  "https://agris.fao.org/search/ar/records/65de4e1eb766d82b18fd0b4a",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC11524520/",
+]
+notes = "The FAO AGRIS record documents groundwater as the main irrigation source south of Medina and reports an aquifer recharge estimate; the Khaybar archaeological study documents springs, aquifers, wells, farms and a stable agricultural oasis. WHYMAP supplies only a physical aquifer/recharge class; no modern irrigated area or population is imported."
+
+[[systems]]
+system_id = "shushtar_hydraulic_system"
+parameter_set_id = "maintained_earthen_gravity_surface"
+boundary = "shushtar_and_karun_system"
+available_by = 1337
+technologies = ["river_diversion", "canals", "gravity_irrigation", "water_mills"]
+role = "qualitative_regression"
+review_status = "vetted_technology"
+include = ["location_tag=shushtar"]
+sources = [
+  "https://whc.unesco.org/en/list/1315",
+]
+
+[[systems]]
+system_id = "precontact_andean_terraces"
+boundary = "documented_precontact_andean_terrace_systems"
+available_by = 1337
+technologies = ["terracing", "erosion_control", "selective_gravity_irrigation"]
+role = "validation_only"
+review_status = "candidate"
+include = ["macro_region=andes"]
+sources = [
+  "https://onlinelibrary.wiley.com/doi/10.1002/gea.70002",
+]
+
+[[systems]]
+system_id = "indus_and_south_asian_irrigation"
+parameter_set_id = "maintained_earthen_gravity_surface"
+boundary = "upper_gangetic_and_indus_canals"
+available_by = 1337
+technologies = ["river_diversion", "inundation_canals", "earthen_canals", "tanks", "communal_wells"]
+role = "qualitative_regression"
+review_status = "vetted_technology"
+include = ["area=doab_area|punjab_area|sindh_area"]
+sources = [
+  "https://www.cambridge.org/core/books/cambridge-economic-history-of-india/FAE3A6C0264445BBCEB02B5CD0CC2A2F",
+  "https://whc.unesco.org/en/list/922",
+]
+notes = "The Cambridge economic history documents artificial irrigation before the late-twelfth-century Ghorian conquests and river canals in the Upper Gangetic and Indus basins. Rani-ki-Vav independently demonstrates eleventh-century communal groundwater/storage engineering. The registry grants only gravity/tank/well capability; the physical water allocator still limits acreage."
+
+[[systems]]
+system_id = "central_asian_oasis_and_mountain_irrigation"
+parameter_set_id = "maintained_earthen_gravity_surface"
+boundary = "documented_central_asian_oases"
+available_by = 1337
+technologies = ["river_diversion", "earthen_canals", "spring_capture", "qanat_gravity_conveyance"]
+role = "qualitative_regression"
+review_status = "vetted_technology"
+include = ["area=transoxiana_area|khwarazm_area|eastern_khorasan_area|zhetysu_area|tarim_area"]
+sources = [
+  "https://whc.unesco.org/en/list/1675/",
+  "https://whc.unesco.org/en/list/1442/",
+  "https://en.unesco.org/silkroad/content/did-you-know-exchange-technical-knowledge-used-craft-silk-roads-goods",
+]
+notes = "UNESCO maps advanced irrigation and water-management systems along the Zarafshan-Karakum and Chang'an-Tianshan corridors and documents pre-1337 qanat diffusion. The selector is restricted to the corresponding oasis belts. No groundwater volume is invented: qanat-only acreage remains unavailable until a recharge source is present."
+
+[[systems]]
+system_id = "east_asian_wet_rice_systems"
+parameter_set_id = "maintained_earthen_gravity_surface"
+boundary = "documented_east_asian_rice_regions"
+available_by = 1337
+technologies = ["paddy_leveling", "irrigation_ditches", "dikes", "sluices", "water_control", "multiple_cropping"]
+role = "qualitative_regression"
+review_status = "vetted_technology"
+include = ["macro_region=east_asia"]
+sources = [
+  "https://afe.easia.columbia.edu/ps/china/farming_chenpu.pdf",
+  "https://www.ricesci.cn/EN/abstract/abstract1410.shtml",
+  "https://link.springer.com/article/10.1007/s12284-011-9079-6",
+]
+notes = "Chen Pu's 1149 farming treatise and the cited Song-rice studies document irrigated paddies, improved water control, Champa rice and regionally feasible double/triple cropping before 1337. This is a capability mask only: crop dates, climate, hydrology, terrain and farm-system intensity still constrain production."
+
+# Whole-farm land budgets. These are physical land claims, not regional output
+# multipliers. GAEZ suitability remains an upper bound; the fractions below
+# reserve the complementary land needed for fallow, draft animals/manure,
+# pasture, woodland/fuel and settlement. P10/P90 are propagated as model
+# uncertainty and may not be narrowed from EU5 starting population.
+
+[[farm_systems]]
+system_id = "rainfed_open_field_cereal"
+crop_families = ["cool_cereals"]
+climates = []
+vegetations = []
+crop_fraction_p10 = 0.18
+crop_fraction_p50 = 0.24
+crop_fraction_p90 = 0.33
+cropping_intensity_p10 = 1.0
+cropping_intensity_p50 = 1.0
+cropping_intensity_p90 = 1.0
+fallow_fraction_p50 = 0.13
+pasture_fraction_p50 = 0.25
+woodland_fraction_p50 = 0.15
+settlement_fraction_p50 = 0.03
+evidence_role = "england_1300_scale_system"
+sources = [
+  "https://wrap.warwick.ac.uk/id/eprint/57581/1/WRAP_35.2010_broadberry.pdf",
+  "https://academic.oup.com/book/61548/chapter/537298429",
+]
+
+[[farm_systems]]
+system_id = "hydraulic_flood_recession_wet_rice"
+crop_families = ["wet_rice"]
+climates = ["tropical", "subtropical"]
+vegetations = ["farmland", "grasslands", "wetland"]
+crop_fraction_p10 = 0.48
+crop_fraction_p50 = 0.70
+crop_fraction_p90 = 0.84
+cropping_intensity_p10 = 1.00
+cropping_intensity_p50 = 1.40
+cropping_intensity_p90 = 3.00
+fallow_fraction_p50 = 0.03
+pasture_fraction_p50 = 0.10
+woodland_fraction_p50 = 0.05
+settlement_fraction_p50 = 0.04
+evidence_role = "dated_lower_mekong_flood_recession_calendar"
+requires_surface_water = true
+minimum_water_support = 0.60
+sources = [
+  "https://link.springer.com/chapter/10.1007/978-981-15-0998-8_1",
+  "https://doi.org/10.1126/sciadv.abf8441",
+  "https://doi.org/10.1007/s10816-021-09535-5",
+]
+
+[[farm_systems]]
+system_id = "intensive_northern_europe_cereal"
+crop_families = ["cool_cereals"]
+climates = ["oceanic", "continental"]
+vegetations = ["farmland"]
+soils = ["soil_good"]
+crop_fraction_p10 = 0.45
+crop_fraction_p50 = 0.60
+crop_fraction_p90 = 0.75
+cropping_intensity_p10 = 0.90
+cropping_intensity_p50 = 1.00
+cropping_intensity_p90 = 1.20
+fallow_fraction_p50 = 0.15
+pasture_fraction_p50 = 0.10
+woodland_fraction_p50 = 0.05
+settlement_fraction_p50 = 0.03
+evidence_role = "northern_france_intensive_cereal_mechanism"
+sources = [
+  "https://books.openedition.org/septentrion/122250?lang=en",
+  "https://books.openedition.org/septentrion/168200",
+  "https://doi.org/10.3406/ahess.1987.283462",
+]
+
+[[farm_systems]]
+system_id = "marginal_open_field_cereal"
+crop_families = ["cool_cereals"]
+climates = ["oceanic", "continental"]
+vegetations = []
+soils = ["soil_poor", "soil_average"]
+crop_fraction_p10 = 0.12
+crop_fraction_p50 = 0.18
+crop_fraction_p90 = 0.25
+cropping_intensity_p10 = 0.80
+cropping_intensity_p50 = 0.90
+cropping_intensity_p90 = 1.00
+fallow_fraction_p50 = 0.11
+pasture_fraction_p50 = 0.28
+woodland_fraction_p50 = 0.18
+settlement_fraction_p50 = 0.03
+evidence_role = "marginal_soil_rotation_mechanism"
+sources = [
+  "https://pure.aber.ac.uk/ws/portalfiles/portal/97733014/Peasants_and_food_security_in_England_and_Wales_c.1300.pdf",
+  "https://wrap.warwick.ac.uk/id/eprint/57581/1/WRAP_35.2010_broadberry.pdf",
+]
+
+[[farm_systems]]
+system_id = "irrigated_wet_rice"
+crop_families = ["wet_rice"]
+climates = ["tropical", "subtropical", "oceanic", "continental"]
+vegetations = []
+crop_fraction_p10 = 0.30
+crop_fraction_p50 = 0.48
+crop_fraction_p90 = 0.65
+cropping_intensity_p10 = 0.85
+cropping_intensity_p50 = 1.0
+cropping_intensity_p90 = 1.35
+fallow_fraction_p50 = 0.03
+pasture_fraction_p50 = 0.15
+woodland_fraction_p50 = 0.10
+settlement_fraction_p50 = 0.04
+evidence_role = "song_china_and_preindustrial_paddy_range"
+sources = [
+  "https://afe.easia.columbia.edu/ps/china/farming_chenpu.pdf",
+  "https://www.oecd.org/content/dam/oecd/en/publications/reports/2007/09/chinese-economic-performance-in-the-long-run-960-2030-ad-second-edition-revised-and-updated_g1gh8357/9789264037632-en.pdf",
+]
+
+[[farm_systems]]
+system_id = "humid_tropical_swidden_agroforest"
+crop_families = ["maize", "roots_tubers", "tropical_perennials"]
+climates = ["tropical"]
+vegetations = ["jungle", "forest", "woods"]
+crop_fraction_p10 = 0.07
+crop_fraction_p50 = 0.14
+crop_fraction_p90 = 0.28
+cropping_intensity_p10 = 0.8
+cropping_intensity_p50 = 1.25
+cropping_intensity_p90 = 2.0
+fallow_fraction_p50 = 0.58
+pasture_fraction_p50 = 0.04
+woodland_fraction_p50 = 0.18
+settlement_fraction_p50 = 0.02
+evidence_role = "mechanism_range_not_scale_anchor"
+sources = [
+  "https://www.journals.uchicago.edu/doi/10.3998/jar.0521004.0071.104",
+  "https://www.nationalacademies.org/read/1985/chapter/5",
+]
+
+[[farm_systems]]
+system_id = "rainfed_dryland_mixed_farming"
+crop_families = ["warm_cereals", "maize", "roots_tubers", "tropical_perennials"]
+climates = []
+vegetations = []
+crop_fraction_p10 = 0.10
+crop_fraction_p50 = 0.20
+crop_fraction_p90 = 0.34
+cropping_intensity_p10 = 0.85
+cropping_intensity_p50 = 1.0
+cropping_intensity_p90 = 1.15
+fallow_fraction_p50 = 0.20
+pasture_fraction_p50 = 0.30
+woodland_fraction_p50 = 0.10
+settlement_fraction_p50 = 0.03
+evidence_role = "broad_low_input_uncertain"
+sources = [
+  "https://www.fao.org/4/a1075e/a1075e.pdf",
+]

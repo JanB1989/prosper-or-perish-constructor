@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "region": "europe_north_atlantic",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_north_atlantic_closure",
+  "geometry_source": "artifacts/data/population_capacity/location_geometry.parquet",
+  "policy": {
+    "append_only": true,
+    "proposed_selectors_are_not_boundary_proof": true,
+    "unresolved_crosswalks_must_not_score": true,
+    "no_population_or_rgo_fields_used": true,
+    "rejected_records_are_negative_controls_only": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "iceland_1300_capacity_envelope_closure",
+      "historical_boundary": "Iceland island polygon",
+      "eu5_selector": {"include": ["area=iceland_area"], "exclude": []},
+      "matched_location_count": 21,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "resolution_method": "Exact EU5 area selector; capacity and population sources are island-wide.",
+      "notes": "Exact spatial mapping does not resolve the model-versus-history saturation disagreement; retain as validation only."
+    },
+    {
+      "anchor_id": "england_norfolk_1290_pressure_closure",
+      "historical_boundary": "Medieval Norfolk county",
+      "eu5_selector": {"include": ["province=norfolk_province"], "exclude": []},
+      "matched_location_count": 5,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "resolution_method": "Province proxy; no formal historic-county polygon overlap audit.",
+      "notes": "Use only as a grouped pressure holdout, never as a county scale anchor."
+    },
+    {
+      "anchor_id": "england_suffolk_1290_pressure_closure",
+      "historical_boundary": "Medieval Suffolk county",
+      "eu5_selector": {"include": ["province=suffolk_province"], "exclude": []},
+      "matched_location_count": 4,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "resolution_method": "Province proxy; no formal historic-county polygon overlap audit.",
+      "notes": "Market integration and absent saturation interval keep this outside fitting."
+    },
+    {
+      "anchor_id": "england_lincolnshire_1290_pressure_closure",
+      "historical_boundary": "Medieval Lincolnshire county",
+      "eu5_selector": {"include": ["province=lincolnshire_province"], "exclude": []},
+      "matched_location_count": 6,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "resolution_method": "Province proxy; fen and coastal boundary differences remain.",
+      "notes": "Relative-density holdout only."
+    },
+    {
+      "anchor_id": "england_cambridgeshire_1290_pressure_closure",
+      "historical_boundary": "Medieval Cambridgeshire county",
+      "eu5_selector": {"include": ["province=cambridgeshire_province"], "exclude": []},
+      "matched_location_count": 4,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "resolution_method": "Province proxy; fen-edge and Cambridge-town boundary effects unresolved.",
+      "notes": "Relative-density holdout only."
+    },
+    {
+      "anchor_id": "rural_flanders_c1300_trade_rejection_closure",
+      "historical_boundary": "Rural Flanders excluding urban and imported-grain nodes",
+      "eu5_selector": {"include": ["area=flanders_area"], "exclude": []},
+      "matched_location_count": 15,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "rejected",
+      "resolution_method": "Screening area only; rural/urban and trade-dependent boundaries not separable in current geometry.",
+      "notes": "No scoring or training."
+    },
+    {
+      "anchor_id": "tuscany_c1300_market_boundary_rejection_closure",
+      "historical_boundary": "Tuscany rural hinterlands excluding city market consumers",
+      "eu5_selector": {"include": ["area=tuscany_area"], "exclude": []},
+      "matched_location_count": 24,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "rejected",
+      "resolution_method": "Screening area only; urban/rural market boundaries unavailable.",
+      "notes": "No scoring or training."
+    },
+    {
+      "anchor_id": "england_devon_cumberland_low_pressure_negative_controls_closure",
+      "historical_boundary": "Medieval Devon and Cumberland county proxies",
+      "eu5_selector": {"include": ["province=devon_province|cumberland_province"], "exclude": []},
+      "matched_location_count": 10,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "rejected",
+      "resolution_method": "Province proxies; retained only as a low-pressure negative-control grouping.",
+      "notes": "No scoring or training."
+    }
+  ]
+}

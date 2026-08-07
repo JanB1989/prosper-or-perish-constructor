@@ -1,0 +1,17 @@
+﻿namespace = pp_population_baseline_debug
+
+pp_population_baseline_debug.1 = {
+	type = country_event
+	title = pp_population_baseline_debug.1.title
+	desc = pp_population_baseline_debug.1.desc
+	outcome = neutral
+	orphan = yes
+
+	immediate = {
+		pp_snapshot_population_baselines = yes
+	}
+
+	option = {
+		name = pp_population_baseline_debug.1.a
+	}
+}

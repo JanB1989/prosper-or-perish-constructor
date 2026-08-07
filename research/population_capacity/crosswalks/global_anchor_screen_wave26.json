@@ -1,0 +1,137 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "global_anchor_screen_wave26",
+  "super_region": "Global",
+  "target_year": 1337,
+  "crosswalk_packet_id": "global_anchor_screen_wave26",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet with calibrated area_km2",
+  "policy": {
+    "append_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "historical_boundary_coverage_is_declared": true,
+    "residual_boundary_uncertainty_is_not_rescaled": true,
+    "unresolved_candidates_are_not_training_rows": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "catalonia_1290_1329_demography_pressure_screen_wave26",
+      "historical_boundary": "Broad Catalonia principality/modern-region envelope; no audited rural-only polygon for the 1290-1329 population estimate.",
+      "eu5_selector": {
+        "include": ["region=catalonia_region"],
+        "exclude": []
+      },
+      "matched_location_count": 0,
+      "selected_location_count": 0,
+      "coverage_fraction": null,
+      "selector_coverage_fraction": null,
+      "mapped_area_km2": 0.0,
+      "historical_area_km2": null,
+      "unmapped_area_km2": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "rejected",
+      "candidate_role": "excluded",
+      "resolution_method": "No region selector is treated as an audited medieval rural boundary. The record remains explicitly rejected until a historical boundary and urban/rural decomposition are mapped.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 0.0,
+        "declared_historical_boundary_area_km2": null,
+        "coverage_fraction": null,
+        "unmapped_area_km2": null,
+        "area_method": "No geometry match; no area substitution.",
+        "area_difference_policy": "No target, capacity or population is area-rescaled."
+      },
+      "notes": "Exact missing evidence: historical rural polygon, quantified boundary coverage, and boundary-matched population/pressure interval."
+    },
+    {
+      "anchor_id": "mallorca_1301_1329_wheat_deficit_screen_wave26",
+      "historical_boundary": "Mallorca island; exact geographic outline is known, but the available population estimate does not separate Palma/port from the rural food system.",
+      "eu5_selector": {
+        "include": ["location_tag=mallorca"],
+        "exclude": []
+      },
+      "matched_location_count": 0,
+      "selected_location_count": 0,
+      "coverage_fraction": null,
+      "selector_coverage_fraction": null,
+      "mapped_area_km2": 0.0,
+      "historical_area_km2": 3640.0,
+      "unmapped_area_km2": 3640.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "high_for_island_low_for_population_semantics",
+      "status": "rejected",
+      "candidate_role": "excluded",
+      "resolution_method": "No EU5 location tag is currently accepted as the island's audited 1301-1329 rural footprint. Even with an island match, imported Atlantic wheat and urban/port population would block training.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 0.0,
+        "declared_historical_boundary_area_km2": 3640.0,
+        "coverage_fraction": null,
+        "unmapped_area_km2": 3640.0,
+        "area_method": "Historical island area recorded for audit; no EU5 geometry match.",
+        "area_difference_policy": "No target, capacity or population is area-rescaled."
+      },
+      "notes": "Exact missing evidence: closed rural/urban decomposition, import-adjusted local-food share, and saturation interval."
+    },
+    {
+      "anchor_id": "bali_subak_1100_1500_physical_validation_wave26",
+      "historical_boundary": "Distributed Bali subak/watershed catchments; no single 1100-1500 aggregate polygon reconstructed.",
+      "eu5_selector": {
+        "include": ["location_tag=__unmapped_bali_subak_wave26__"],
+        "exclude": []
+      },
+      "matched_location_count": 0,
+      "selected_location_count": 0,
+      "coverage_fraction": 0.0,
+      "selector_coverage_fraction": 0.0,
+      "mapped_area_km2": 0.0,
+      "historical_area_km2": null,
+      "unmapped_area_km2": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium_for_irrigation_institution_low_for_aggregate_boundary",
+      "status": "validation_only",
+      "candidate_role": "validation_only",
+      "resolution_method": "Placeholder selector intentionally yields no EU5 rows. A watershed/subak polygon and historical population interval must be reconstructed before mapping.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 0.0,
+        "declared_historical_boundary_area_km2": null,
+        "coverage_fraction": 0.0,
+        "unmapped_area_km2": null,
+        "area_method": "No historical polygon supplied.",
+        "area_difference_policy": "Physical validation cannot be converted to an aggregate target."
+      },
+      "notes": "Exact missing evidence: dated population/capacity interval, saturation/pressure evidence and historical boundary polygon."
+    },
+    {
+      "anchor_id": "sri_lanka_dry_zone_1100_1302_tank_system_validation_wave26",
+      "historical_boundary": "Polonnaruwa and adjacent Sri Lankan dry-zone tank cascades; no closed rural aggregate polygon reconstructed.",
+      "eu5_selector": {
+        "include": ["location_tag=__unmapped_polonnaruwa_tanks_wave26__"],
+        "exclude": []
+      },
+      "matched_location_count": 0,
+      "selected_location_count": 0,
+      "coverage_fraction": 0.0,
+      "selector_coverage_fraction": 0.0,
+      "mapped_area_km2": 0.0,
+      "historical_area_km2": null,
+      "unmapped_area_km2": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium_for_tank_system_low_for_aggregate_boundary",
+      "status": "validation_only",
+      "candidate_role": "validation_only",
+      "resolution_method": "Placeholder selector intentionally yields no EU5 rows. Tank-system polygons, dated population and shock-separated pressure evidence are required.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 0.0,
+        "declared_historical_boundary_area_km2": null,
+        "coverage_fraction": 0.0,
+        "unmapped_area_km2": null,
+        "area_method": "No historical polygon supplied.",
+        "area_difference_policy": "Physical validation cannot be converted to an aggregate target."
+      },
+      "notes": "Exact missing evidence: closed tank-cascade boundary, population interval, local-food share and saturation interval independent of abandonment/war."
+    }
+  ]
+}

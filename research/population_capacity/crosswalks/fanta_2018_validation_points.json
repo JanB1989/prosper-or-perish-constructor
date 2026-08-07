@@ -1,0 +1,12 @@
+{
+  "mapping": "nearest calibrated EU5 centroid, point diagnostic only",
+  "output_csv": "/home/jan/development/ProsperOrPerishConstructor/research/population_capacity/crosswalks/fanta_2018_validation_points.csv",
+  "reason": "The sample is 17th-century post-war/regeneration village farmer counts, not a 1337 capacity interval, and the workbook does not provide mappable aggregate village cadastre polygons.",
+  "record_count": 88,
+  "role": "validation_only",
+  "schema_version": "fanta_2018_validation_crosswalk_v1",
+  "source_citation": "Fanta et al. (2018), Proc. R. Soc. B 285:20172500, DOI 10.1098/rspb.2017.2500",
+  "supplementary_dataset": "10.6084/m9.figshare.5802615.v2",
+  "training_eligible": false,
+  "workbook_sha256": "3a0ba49a7870e5a63ff8b3939ccc151b6631d189f31824d767d474723c9f8554"
+}

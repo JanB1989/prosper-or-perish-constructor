@@ -1,0 +1,61 @@
+{
+  "schema_version": "population_capacity_physical_evidence_v1",
+  "record_id": "medieval_english_yield_per_acre_openicpsr_wave14",
+  "reviewed_on": "2026-08-03",
+  "role": "attainable_yield_validation_candidate",
+  "target_window": {
+    "start_year": 1211,
+    "end_year": 1349,
+    "technology_relation_to_1337": "in_period English demesne agriculture"
+  },
+  "source": {
+    "title": "Empirical Materials for The Persistence of the Harvest in Medieval England",
+    "creator": "Cliff T. Bekar",
+    "repository": "openICPSR",
+    "project_doi": "https://doi.org/10.3886/E110461V2",
+    "file": "yieldsperacre.dta",
+    "file_type": "Stata",
+    "reported_size": "1.1 MB",
+    "source_url": "https://www.openicpsr.org/openicpsr/project/110461/version/V2/view?path=%2Fopenicpsr%2F110461%2Ffcr%3Aversions%2FV2.1%2Fyieldsperacre.dta&type=file",
+    "scope": "Great Britain",
+    "case_count": 38,
+    "variable_count": 1345,
+    "source_metadata_reviewed": true,
+    "source_checksum": null,
+    "source_checksum_status": "not_yet_downloaded_openicpsr_login_required"
+  },
+  "semantics": {
+    "unit": "yield per acre",
+    "crops": ["wheat", "oats", "barley"],
+    "period_fields": ["yldw", "yldo", "yldb"],
+    "related_fields": ["sow", "sowo", "sowb", "acres", "soiltype", "hustype", "farmtype", "precip", "temp"],
+    "direct_model_unit_conversion": "requires the dataset's documented yield-unit definition and crop-specific mass conversion; no seed-rate imputation is allowed",
+    "model_target_relation": "realized historical demesne yield, not intrinsic 1337 attainable potential"
+  },
+  "why_this_is_relevant": [
+    "Unlike the BAHS public workbook used in the current pipeline, the replication file explicitly contains yields per acre rather than yield per seed.",
+    "The study covers 1211-1349, overlapping the game-start technology window and the existing England anchor.",
+    "The metadata exposes soil, husbandry, farm strategy, precipitation and temperature fields that can be used for a source-family holdout or a realized-to-attainable gap diagnostic rather than a location population target."
+  ],
+  "current_status": {
+    "ingested_into_pipeline": false,
+    "mapped_to_eu5": false,
+    "quantitative_gaez_pyaez_bias_valid": false,
+    "absolute_benchmark_direct_bias_valid": false,
+    "training_allowed_change": false,
+    "reason": "The file is independently identified but not yet downloaded, checksum-pinned, parsed, and crosswalked. It cannot close the attainable-yield gate by metadata alone."
+  },
+  "required_ingestion_steps": [
+    "Obtain the file under the repository's source-download policy and record its SHA-256.",
+    "Parse the Stata period columns without imputing missing values; preserve crop, period, manor and source identifiers.",
+    "Resolve the study's yield-per-acre unit definition and convert to kg dry matter per hectare using cited crop mass/acre conversions only.",
+    "Map the 38 manors to EU5 locations or quantified province footprints; report unmapped and mixed-boundary observations.",
+    "Compare GAEZ/PyAEZ attainable labels to realized yields as an explicitly one-sided attainable-to-realized diagnostic, not as a direct population target.",
+    "Add independent crop-risk and parameter uncertainty scenarios before promoting any uncertainty flag."
+  ],
+  "citations": [
+    "https://www.openicpsr.org/openicpsr/project/110461/version/V2/view?path=%2Fopenicpsr%2F110461%2Ffcr%3Aversions%2FV2.1%2Fyieldsperacre.dta&type=file",
+    "https://doi.org/10.3886/E110461V2",
+    "https://faculty.econ.ucdavis.edu/faculty/gclark/210a/readings/market99.pdf"
+  ]
+}

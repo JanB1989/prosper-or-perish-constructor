@@ -1,0 +1,84 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Oceania",
+  "region": "new_zealand",
+  "target_year": 1337,
+  "packet_id": "oceania_maori_north_island_validation_wave22",
+  "scope": "Out-of-period validation case for a bounded, predominantly local-food horticultural island system; not a 1337 training target.",
+  "promotion_audit": {
+    "promoted_lower_bound_ids": [],
+    "decision": "Retain as validation-only. Brown and Crema provide relative archaeological population trajectories and support logistic leveling in the northern horticultural zone around AD 1500, but do not provide a defensible absolute population interval for the North Island at 1337. Late-contact whole-New-Zealand estimates are retained only as a clearly separated reference range.",
+    "reviewed_on": "2026-08-04"
+  },
+  "records": [
+    {
+      "anchor_id": "maori_north_island_1450_1500_horticultural_pressure_validation_wave22",
+      "label": "Northern Aotearoa Māori horticultural-zone population-pressure validation",
+      "year_start": 1450,
+      "year_end": 1500,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "reference_population_interval_late_contact": [90000, 150000],
+      "reference_population_interval_date": "late pre-contact/1769 literature synthesis; not assigned to 1450-1500",
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "No absolute 1450-1500 North Island population interval is admitted. The 90,000-150,000 reference range comes from late-contact/late pre-contact syntheses and cannot be projected backward into the target year without an audited demographic model.",
+      "pressure_evidence": [
+        "Brown and Crema (2021), pp. 580-586, use summed radiocarbon-date probabilities and archaeological site frequencies to show strong spatially heterogeneous population growth, with the northern horticultural zone following a logistic pattern and leveling around AD 1500.",
+        "Brown and Crema (2021), pp. 584-586, identify the northern half of the North Island as the optimal horticultural environment, with growth hotspots in Western Bay of Plenty, Waikato and Auckland and a reduction of growth as carrying capacity was approached.",
+        "Te Ara's environmental synthesis records rapid Māori deforestation, fire-driven land conversion and depletion of large fauna after settlement; these are independent local resource-pressure signals, not population labels.",
+        "Kumara horticulture, storage pits, fishing and shellfish exploitation are documented in the archaeological literature; crops were concentrated in warmer North Island environments."
+      ],
+      "shock_flags": [
+        "absolute_population_estimates_are_late_contact_or_model_based",
+        "population_proxy_is_radiocarbon_site_frequency_not_a_census",
+        "arrival_and_growth chronology remains uncertain",
+        "southern_moa_and_marine_resource_depletion_changes_food_regime",
+        "inter-tribal movement and warfare are not resolved at island scale",
+        "reference_population_range_is_out_of_period"
+      ],
+      "trade_dependence": "low_to_mixed for staple calories; horticulture, fishing and foraging were local, with inter-island exchange and chiefly redistribution not quantified",
+      "food_regime": "kumara_and_other_horticulture_storage_pits_fishing_shellfish_foraging",
+      "boundary_description": "North Island (Te Ika-a-Māui), excluding South Island, Stewart Island and the Chatham Islands. This is a mappable island boundary used as a proxy for the warmer northern horticultural zone; the archaeological study's regional bins are not identical to the island polygon.",
+      "boundary_source": "Stats NZ/official island geography; Brown and Crema (2021), Figure 2 regional sampling; Te Ara environmental history",
+      "eu5_selector": {
+        "include": [
+          "area=north_island_area"
+        ],
+        "exclude": [
+          "area=south_island_area",
+          "area=motu_maha_area",
+          "area=rekohu_area"
+        ]
+      },
+      "coverage_fraction": 0.944273,
+      "boundary_overlap_status": "high_island_containment_with_northern_zone_proxy",
+      "crosswalk_status": "partial",
+      "boundary_confidence": "high for island polygon; medium for equivalence to archaeological northern zone",
+      "status": "reviewed_validation",
+      "role": "validation_only",
+      "source_family": "brown_crema_maori_spd_and_environmental_archaeology",
+      "source_bundle": "brown_crema_2021_wilmshurst_te_ara_precontact_maori_bundle",
+      "source_family_independence": "Brown and Crema's radiocarbon/site-frequency model and the environmental/settlement syntheses are related archaeological evidence but are treated as one New Zealand validation family.",
+      "sources": [
+        "https://doi.org/10.1080/15564894.2019.1605429",
+        "https://eprints.bournemouth.ac.uk/32132/10/15564894.2019.pdf",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9674228/",
+        "https://teara.govt.nz/en/human-effects-on-the-environment/page-1",
+        "https://teara.govt.nz/en/taupori-maori-maori-population-change/print",
+        "https://www3.stats.govt.nz/new_zealand_official_yearbooks/1995/NZOYB_1995.html"
+      ],
+      "citation_details": [
+        "Brown and Crema (2021), pp. 580-586: Northern New Zealand logistic population trajectory and leveling around AD 1500; pp. 584-585 explicitly caution that absolute density is difficult because population projections have weak empirical bases.",
+        "Te Ara, Human effects on the environment: rapid post-settlement deforestation, fire and loss of large fauna.",
+        "Te Ara, Taupori Māori: Cook's 1769 estimate of 100,000 and feasible-growth context; retained only as late-contact reference, not a 1337 target."
+      ],
+      "notes": "Useful hostile/ordinary island food-system stress test with strong local-food and pressure evidence. It must not be promoted to training until an absolute population series and exact archaeological northern-zone boundary are independently reconstructed. No starting-population field, HYDE field, RGO output modifier or regional correction is used."
+    }
+  ]
+}

@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "region": "europe_north_atlantic",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_north_atlantic",
+  "geometry_source": "artifacts/data/population_capacity/location_geometry.parquet",
+  "policy": {
+    "proposed_selectors_are_not_boundary_proof": true,
+    "unresolved_crosswalks_must_not_score": true,
+    "no_population_or_rgo_fields_used": true,
+    "city_only_or_trade_linked_boundaries_cannot_train_intrinsic_capacity": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "england_1290_1315",
+      "historical_boundary": "England, excluding Wales and Scotland",
+      "eu5_selector": {
+        "include": ["region=great_britain_region"],
+        "exclude": ["area=hebrides_area|scottish_highlands_area|scottish_lowlands_area|wales_area"]
+      },
+      "matched_location_count": 149,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "notes": "The source reconstruction and EU5 selector are both national-scale England boundaries after explicit Scotland/Wales exclusions."
+    },
+    {
+      "anchor_id": "iceland_1290_1330",
+      "historical_boundary": "Iceland island",
+      "eu5_selector": {"include": ["area=iceland_area"], "exclude": []},
+      "matched_location_count": 21,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "candidate",
+      "notes": "All 21 EU5 Iceland locations are within the island-level benchmark boundary. This says nothing about the unquantified saturation fraction."
+    },
+    {
+      "anchor_id": "greenland_norse_1290_1340",
+      "historical_boundary": "Norse Eastern and Western settlement zones in southwest Greenland",
+      "eu5_selector": {"include": ["province=gardr_province|herjolfnes_province"], "exclude": []},
+      "matched_location_count": 13,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "candidate_non_scoring",
+      "notes": "The selector is a proposed game crosswalk, not a verified archaeological polygon. Do not compare the whole-colony 1,400-2,200 interval to gardr_province alone."
+    },
+    {
+      "anchor_id": "faroe_1300_tax_land_reconstruction",
+      "historical_boundary": "Faroe archipelago",
+      "eu5_selector": {"include": [], "exclude": []},
+      "matched_location_count": 0,
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unmapped",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "high",
+      "status": "unmapped",
+      "notes": "No Faroe-specific EU5 area or location selector was found in the current geometry inventory."
+    },
+    {
+      "anchor_id": "france_1328_hearths",
+      "historical_boundary": "1328 assessed French kingdom/domain",
+      "eu5_selector": {"include": ["region=france_region"], "exclude": []},
+      "matched_location_count": 446,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium",
+      "status": "candidate",
+      "notes": "The EU5 region is a screening envelope only; a fiscal/parish boundary crosswalk and hearth multiplier are still missing."
+    },
+    {
+      "anchor_id": "flanders_rural_c1300",
+      "historical_boundary": "Rural Flanders, excluding urban and imported-grain nodes where possible",
+      "eu5_selector": {"include": ["area=flanders_area"], "exclude": []},
+      "matched_location_count": 15,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium",
+      "status": "candidate",
+      "notes": "The game area includes mixed rural, urban, and coastal trade systems, so a rural-only historical crosswalk is not yet available."
+    },
+    {
+      "anchor_id": "tuscany_c1300",
+      "historical_boundary": "Tuscany rural hinterlands",
+      "eu5_selector": {"include": ["area=tuscany_area"], "exclude": []},
+      "matched_location_count": 24,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium",
+      "status": "candidate",
+      "notes": "City-country food transfers and market boundaries require a rural-hinterland crosswalk before any numeric record is possible."
+    },
+    {
+      "anchor_id": "england_norfolk_1290",
+      "historical_boundary": "Medieval Norfolk county",
+      "eu5_selector": {"include": ["province=norfolk_province"], "exclude": []},
+      "matched_location_count": 5,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "candidate",
+      "notes": "The province selector is a practical county proxy, but the historical county and EU5 province boundaries are not formally identical."
+    },
+    {
+      "anchor_id": "england_suffolk_1290",
+      "historical_boundary": "Medieval Suffolk county",
+      "eu5_selector": {"include": ["province=suffolk_province"], "exclude": []},
+      "matched_location_count": 4,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "candidate"
+    },
+    {
+      "anchor_id": "england_lincolnshire_1290",
+      "historical_boundary": "Medieval Lincolnshire county",
+      "eu5_selector": {"include": ["province=lincolnshire_province"], "exclude": []},
+      "matched_location_count": 6,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "candidate"
+    },
+    {
+      "anchor_id": "england_essex_1290",
+      "historical_boundary": "Medieval Essex county",
+      "eu5_selector": {"include": ["province=essex_province"], "exclude": []},
+      "matched_location_count": 6,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "candidate"
+    },
+    {
+      "anchor_id": "england_kent_1290",
+      "historical_boundary": "Medieval Kent county",
+      "eu5_selector": {"include": ["province=kent_province"], "exclude": []},
+      "matched_location_count": 5,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "candidate"
+    },
+    {
+      "anchor_id": "england_devon_1290",
+      "historical_boundary": "Medieval Devon county",
+      "eu5_selector": {"include": ["province=devon_province"], "exclude": []},
+      "matched_location_count": 6,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "candidate"
+    },
+    {
+      "anchor_id": "england_cornwall_1290",
+      "historical_boundary": "Medieval Cornwall county",
+      "eu5_selector": {"include": ["province=cornwall_province"], "exclude": []},
+      "matched_location_count": 3,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "candidate"
+    },
+    {
+      "anchor_id": "england_cumberland_1290",
+      "historical_boundary": "Medieval Cumberland county",
+      "eu5_selector": {"include": ["province=cumberland_province"], "exclude": []},
+      "matched_location_count": 4,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "candidate"
+    },
+    {
+      "anchor_id": "england_cambridgeshire_1290",
+      "historical_boundary": "Medieval Cambridgeshire county",
+      "eu5_selector": {"include": ["province=cambridgeshire_province"], "exclude": []},
+      "matched_location_count": 4,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "candidate"
+    },
+    {
+      "anchor_id": "england_somerset_1290",
+      "historical_boundary": "Medieval Somerset county",
+      "eu5_selector": {"include": ["province=somerset_province"], "exclude": []},
+      "matched_location_count": 5,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "candidate"
+    }
+  ]
+}

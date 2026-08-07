@@ -1,4 +1,4 @@
-"""Data-driven farming-village RGO production-method unlocks."""
+﻿"""Data-driven farming-village RGO production-method unlocks."""
 
 from __future__ import annotations
 
@@ -27,6 +27,18 @@ GAME_START_AGE = "age_1_traditions"
 GAME_START_REQUIRES = "agriculture_advance"
 AI_WEIGHT = 50
 AGE_INDEX = {age: index for index, age in enumerate(AGE_ORDER)}
+LOCATION_POTENTIAL_MODIFIER_PREFIX = "pp_loc_"
+LOCATION_POTENTIAL_MODIFIER_RELATIVE = Path(
+    "main_menu/common/static_modifiers/pp_location_modifiers.txt"
+)
+# Final deployed modifier keys for tags that collide with other tokens.
+LOCATION_POTENTIAL_MODIFIER_ALIASES = {
+    "pp_loc_washita": "pp_loc_washita_pp",
+}
+# Precomputed game-start demographics + development (food-building startup output).
+DERIVED_START_LOCATIONS_RELATIVE = Path(
+    "artifacts/data/food_building_startup/derived_food_balance_by_location.parquet"
+)
 
 
 @dataclass(frozen=True)
@@ -117,6 +129,170 @@ def load_current_location_frame(repo: Path, project: Path) -> pl.DataFrame:
     frame = pl.read_parquet(baseline)
     templates, _source = load_current_location_templates(load_order_path=load_order)
     return apply_location_template_overlay(frame, templates)
+
+
+def load_start_location_frame(repo: Path, project: Path | None = None) -> pl.DataFrame:
+    """Overlaid location geography plus game-start population and Location Potential.
+
+    Joins:
+    - ``population_*``, ``total_population``, ``unemployed_peasants``, ``location_rank``,
+      and ``development`` from the food-startup artifact
+      (``artifacts/data/food_building_startup/derived_food_balance_by_location.parquet``);
+      falls back to a live ``_load_start_locations`` parse only if that file is missing
+    - ``prosperity`` fixed at ``0.0`` for now
+    - per-location ``pp_loc_*`` Location Potential static modifiers
+      (``local_population_capacity``, ``local_*_output_modifier``, …)
+    - ``food`` stocked at the growth-cap limit
+      (``food_consumption * GROWTH_FROM_FOOD_MULTIPLIER_MAX * 12``; consumption itself
+      is derived and not kept on the returned frame)
+
+    Tick-derived modifiers (food growth / rank sums) are not persisted.
+    """
+    project_path = project or repo / "constructor.toml"
+    from prosper_or_perish_constructor.simulation.food import (
+        attach_peasant_employment_state,
+        compute_location_food_consumption,
+        initialize_location_food_at_cap,
+    )
+    from prosper_or_perish_constructor.simulation.modifiers import (
+        load_growth_cap_years,
+        load_pop_food_rates,
+    )
+    from prosper_or_perish_constructor.simulation.tick import finalize_location_state
+
+    geography = load_current_location_frame(repo, project_path)
+    start = _load_start_demographics_frame(repo)
+    pop_columns = [
+        column
+        for column in start.columns
+        if column.startswith("population_") or column in {"total_population", "unemployed_peasants"}
+    ]
+    start_select = [pl.col("location_tag"), *pop_columns]
+    if "development" in start.columns:
+        start_select.append(pl.col("development"))
+    if "location_rank" in start.columns:
+        start_select.append(pl.col("location_rank"))
+    joined = geography.join(
+        start.select(start_select),
+        on="location_tag",
+        how="left",
+    ).with_columns(
+        [pl.col(column).fill_null(0.0).cast(pl.Float64).alias(column) for column in pop_columns]
+    )
+    if "development" in joined.columns:
+        joined = joined.with_columns(pl.col("development").fill_null(0.0).cast(pl.Float64))
+    else:
+        joined = joined.with_columns(pl.lit(0.0).alias("development"))
+    # Game-start prosperity is flat 0 for now (setup overrides ignored).
+    joined = joined.with_columns(pl.lit(0.0).alias("prosperity"))
+
+    potential = load_location_potential_frame(repo, project_path)
+    joined = joined.join(potential, on="location_tag", how="left")
+
+    load_order_path = repo / "constructor.load_order.toml"
+    pop_food_rates = load_pop_food_rates(profile="constructor", load_order_path=load_order_path)
+    growth_cap_years = load_growth_cap_years(profile="constructor", load_order_path=load_order_path)
+    with_consumption = compute_location_food_consumption(joined, pop_food_rates)
+    with_food = initialize_location_food_at_cap(with_consumption, growth_cap_years=growth_cap_years)
+    with_employment = attach_peasant_employment_state(with_food)
+    return finalize_location_state(with_employment)
+
+
+def _load_start_demographics_frame(repo: Path) -> pl.DataFrame:
+    """Load start pops / rank / development from the food-startup artifact when present."""
+    artifact = repo / DERIVED_START_LOCATIONS_RELATIVE
+    if artifact.is_file():
+        frame = pl.read_parquet(artifact)
+        if "slug" not in frame.columns:
+            raise ValueError(f"{artifact}: missing slug column")
+        if "development" not in frame.columns:
+            raise ValueError(f"{artifact}: missing development column")
+        if "location_rank" in frame.columns:
+            rank_expr = pl.col("location_rank")
+        elif "rank" in frame.columns:
+            rank_expr = pl.col("rank")
+        else:
+            rank_expr = pl.lit(None).cast(pl.String)
+        pop_columns = [
+            column
+            for column in frame.columns
+            if column.startswith("population_") or column in {"total_population", "unemployed_peasants"}
+        ]
+        return frame.select(
+            pl.col("slug").alias("location_tag"),
+            pl.col("development").cast(pl.Float64),
+            rank_expr.cast(pl.String).alias("location_rank"),
+            *[pl.col(column).cast(pl.Float64) for column in pop_columns],
+        )
+
+    # Fallback for checkouts without the generated artifact.
+    from prosper_or_perish_constructor.food_building_startup import load_food_startup_config
+    from prosper_or_perish_constructor import food_building_startup as food_startup
+
+    start = food_startup._load_start_locations(load_food_startup_config(repo))
+    pop_columns = [
+        column
+        for column in start.columns
+        if column.startswith("population_") or column in {"total_population", "unemployed_peasants"}
+    ]
+    if "rank" in start.columns:
+        rank_expr = pl.col("rank").alias("location_rank")
+    elif "location_rank" in start.columns:
+        rank_expr = pl.col("location_rank")
+    else:
+        rank_expr = pl.lit(None).cast(pl.String).alias("location_rank")
+    select_cols: list[pl.Expr | str] = [pl.col("slug").alias("location_tag"), *pop_columns, rank_expr]
+    if "development" in start.columns:
+        select_cols.append(pl.col("development").cast(pl.Float64))
+    return start.select(select_cols)
+
+
+def load_location_potential_frame(repo: Path, project: Path | None = None) -> pl.DataFrame:
+    """Wide frame of Location Potential ``pp_loc_*`` modifiers keyed by ``location_tag``."""
+    from eu5gameparser.clausewitz.parser import parse_file
+    from eu5gameparser.clausewitz.syntax import CList
+
+    project_path = project or repo / "constructor.toml"
+    path = _location_potential_modifiers_path(repo, project_path)
+    document = parse_file(path)
+    alias_to_canonical = {
+        alias: canonical for canonical, alias in LOCATION_POTENTIAL_MODIFIER_ALIASES.items()
+    }
+    rows: list[dict[str, Any]] = []
+    for entry in document.entries:
+        key = str(entry.key)
+        if not key.startswith(LOCATION_POTENTIAL_MODIFIER_PREFIX):
+            continue
+        if not isinstance(entry.value, CList):
+            continue
+        canonical_key = alias_to_canonical.get(key, key)
+        location_tag = canonical_key.removeprefix(LOCATION_POTENTIAL_MODIFIER_PREFIX)
+        row: dict[str, Any] = {
+            "location_tag": location_tag,
+            "location_potential_modifier": key,
+        }
+        for child in entry.value.entries:
+            if isinstance(child.value, bool) or not isinstance(child.value, int | float):
+                continue
+            row[str(child.key)] = float(child.value)
+        rows.append(row)
+    if not rows:
+        return pl.DataFrame({"location_tag": pl.Series([], dtype=pl.String)})
+    return pl.DataFrame(rows)
+
+
+def _location_potential_modifiers_path(repo: Path, project: Path) -> Path:
+    project_config = _load_project_config(project)
+    mod_root = _resolve_repo_path(
+        repo,
+        _mapping(project_config.get("project"), "project").get("mod_root"),
+    )
+    if mod_root is None:
+        raise ValueError(f"{project}: missing [project].mod_root")
+    path = mod_root / LOCATION_POTENTIAL_MODIFIER_RELATIVE
+    if not path.is_file():
+        raise FileNotFoundError(f"Location Potential modifiers not found: {path}")
+    return path
 
 
 def derive_rgo_unlock_gates(

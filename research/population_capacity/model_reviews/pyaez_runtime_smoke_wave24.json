@@ -1,0 +1,163 @@
+{
+  "schema_version": "population_capacity_pyaez_runtime_smoke_review_v1",
+  "review_id": "pyaez_runtime_smoke_wave24",
+  "reviewed_on": "2026-08-04",
+  "status": "diagnostic_only_runtime_smoke_passed",
+  "append_only": true,
+  "active_model_mutation": false,
+  "conclusion": "The exact PyAEZ v2.2 runtime can execute a one-cell maize simulation in an isolated Python 3.11 environment with GDAL, numba and openpyxl. This is an engine smoke test only: it does not close the 23-crop matrix, the ancillary method registry, or the 20,929-location same-geography output contract.",
+  "source_revision": {
+    "repository": "https://github.com/gicait/PyAEZ",
+    "tag": "v2.2",
+    "commit": "b314640710a3ec398482b0065f4f26f45494eefa",
+    "contract_expected_commit": "b314640710a3ec398482b0065f4f26f45494eefa",
+    "tag_commit_verified_with_git_ls_remote": true,
+    "package": "PyAEZ==2.2"
+  },
+  "isolated_runtime": {
+    "prefix": "/tmp/ppc_pyaez_mamba_wave24",
+    "creation_command": "micromamba create --yes --prefix /tmp/ppc_pyaez_mamba_wave24 --channel conda-forge --override-channels python=3.11 gdal numba pip",
+    "additional_dependency_command": "micromamba install --yes --prefix /tmp/ppc_pyaez_mamba_wave24 --channel conda-forge --override-channels openpyxl",
+    "install_command": "micromamba run --prefix /tmp/ppc_pyaez_mamba_wave24 python -m pip install PyAEZ==2.2",
+    "python": "3.11.15",
+    "gdal": "3.13.2",
+    "numba": "0.66.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "scipy": "1.17.1",
+    "openpyxl": "3.1.5",
+    "gdal_config": "/tmp/ppc_pyaez_mamba_wave24/bin/gdal-config",
+    "package_manifest_sha256": "911b1025423559c56b3a0a2cd7ad1df763160a85fc70bc457cd3597570be5a5e  /tmp/pyaez_env_wave24.json",
+    "interpretation": "A reproducible temporary runtime is available, but it is not yet a locked project dependency or a production label source. The normal project environment remains unchanged."
+  },
+  "failed_alternative_runtime": {
+    "attempt": "uv pip install PyAEZ==2.2 gdal numba in a fresh Python 3.11 environment",
+    "result": "blocked",
+    "error": "GDAL wheel build failed because gdal-config and native GDAL headers were absent",
+    "meaning": "The failure was an environment/dependency issue, not evidence that PyAEZ cannot run."
+  },
+  "import_probe": {
+    "passed_modules": [
+      "pyaez.ClimateRegime",
+      "pyaez.CropSimulation",
+      "pyaez.SoilConstraints",
+      "pyaez.TerrainConstraints",
+      "pyaez.CropWatCalc"
+    ],
+    "osgeo_import": true,
+    "numba_import": true
+  },
+  "smoke_test": {
+    "status": "passed",
+    "purpose": "Verify that both water-management methods execute and return finite, non-negative crop yields without treating a failed method as a zero.",
+    "geography": "One valid 1x1 cell from the official PyAEZ v2.2 Laos tutorial inputs at array index (100,100); this is not an EU5 label.",
+    "climate": "Official PyAEZ v2.2 monthly min/max temperature, precipitation, shortwave radiation, wind and relative-humidity arrays; monthly values interpolated by PyAEZ to 365 days.",
+    "terrain": "Elevation 500 m; one-cell mask; latitude bounds 13.87 to 22.59 degrees as in the official tutorial.",
+    "crop": "maize using input_crop_TSUM_parameters_maiz_sugar.xlsx",
+    "required_steps": [
+      "setStudyAreaMask",
+      "setLocationTerrainData",
+      "setMonthlyClimateData",
+      "readCropandCropCycleParameters",
+      "setSoilWaterParameters",
+      "getThermalLGP5",
+      "getThermalLGP10",
+      "getLGP",
+      "ImportLGPandLGPT",
+      "simulateCropCycle"
+    ],
+    "results": {
+      "lgp_days": 283.0,
+      "lgpt5_days": 365.0,
+      "lgpt10_days": 365.0,
+      "rainfed_yield_kg_dm_ha": 6317.0,
+      "irrigated_yield_kg_dm_ha": 6424.0,
+      "rainfed_finite_nonnegative": true,
+      "irrigated_finite_nonnegative": true,
+      "irrigated_gt_rainfed": true
+    },
+    "interpretation": "The paired LRLM/LILM analogue is operational for maize in the isolated runtime. The higher irrigated result is an execution check, not a calibrated historical irrigation fraction or a population target."
+  },
+  "official_lut_inventory": {
+    "source_path": "https://github.com/gicait/PyAEZ/tree/v2.2/data_input",
+    "source_input_file_count": 23,
+    "source_input_manifest_sha256": "57547debca8272d2d70a55d8b3d848db95340f2cb142b3f8e9c3b1b2c8a1a391",
+    "crop_parameter_workbooks": [
+      {
+        "file": "input_crop_TSUM_parameters_maiz_sugar.xlsx",
+        "sha256": "83994a9ca86307ac89c46aaf8fcac22dc8d9d5bc5ab3e5c0c397a942b8edd17e",
+        "crop_rows": ["maize", "sugarcane", "maiz49"],
+        "scope": "crop cycle, biomass/yield and thermal-sum parameters"
+      },
+      {
+        "file": "crop-specific_rule_maiz_sugar.xlsx",
+        "sha256": "ab53b41bba170793ae041321bf9ee3cae455329eddb013e51875d8dee6aeffd4",
+        "crop_rows": ["maize", "sugarcane"],
+        "scope": "temperature profile screening rules"
+      }
+    ],
+    "water_mode_and_soil_workbooks": [
+      "maiz_fc3_irr_lst.xlsx",
+      "maiz_fc3_rain_lst.xlsx",
+      "maiz_soil_params_irr.xlsx",
+      "maiz_soil_params_rain.xlsx",
+      "maiz_terrain_constraints_irr.xlsx",
+      "maiz_terrain_constraints_rain.xlsx"
+    ],
+    "soil_characteristic_workbooks": [
+      "maiz_soil_characteristics_topsoil.xlsx",
+      "maiz_soil_characteristics_subsoil.xlsx"
+    ],
+    "official_crop_scope_observed": ["maize", "sugarcane", "maiz49"],
+    "registered_crop_count": 23,
+    "registered_crop_parameter_rows_available": 0,
+    "unresolved_registered_crops": [
+      "banana", "barley", "cassava", "chickpea", "cowpea", "dry_pea", "phaseolus_bean", "mung_bean", "pigeonpea", "soybean", "taro", "foxtail_millet", "maize", "oats", "pearl_millet", "rice_dry", "rice_wet", "rye", "sweet_potato", "sorghum", "wheat", "white_potato", "yam"
+    ],
+    "decision": "Do not infer or copy maize/sugarcane parameters into the other 20 registered crops. The inventory confirms the exact reason the crop registry remains unresolved."
+  },
+  "current_contract_status": {
+    "required_locations": 20929,
+    "registered_crops": 23,
+    "water_modes": 2,
+    "engines": 2,
+    "required_two_engine_rows": 1925468,
+    "exact_pyaez_rows_in_current_label_artifact": 0,
+    "gaez_fallback_rows_in_current_label_artifact": 962734,
+    "physical_label_unresolved": true,
+    "method_registry_unresolved": [
+      "rsds",
+      "hurs",
+      "wind",
+      "trace_vertical_level",
+      "trace_time_decode",
+      "soil_components",
+      "soil_depth",
+      "terrain_slope",
+      "lgp",
+      "thermal_climate",
+      "permafrost",
+      "lut_selection"
+    ],
+    "training_or_acceptance_allowed": false
+  },
+  "sources": [
+    {
+      "title": "PyAEZ v2.2 source and official example inputs",
+      "url": "https://github.com/gicait/PyAEZ/tree/v2.2"
+    },
+    {
+      "title": "FAO PyAEZ software page",
+      "url": "https://www.fao.org/land-water/resources/tools/software/pyaez/en"
+    },
+    {
+      "title": "CHELSA-TraCE21k centennial climate dataset",
+      "url": "https://www.chelsa-climate.org/datasets/chelsa-trace21k-centennial"
+    },
+    {
+      "title": "PyAEZ package on PyPI",
+      "url": "https://pypi.org/project/PyAEZ/"
+    }
+  ],
+  "next_gate": "Promote this runtime only after locking the environment, resolving the ancillary method registry, supplying source-backed parameters for every registered crop, and executing the same footprint sampler for all 20,929 locations. Until then the existing all-GAEZ fallback artifact must remain explicitly a physical_fallback artifact and cannot be relabeled as PyAEZ."
+}

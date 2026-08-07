@@ -1,0 +1,131 @@
+{
+  "schema_version": "population_capacity_physical_evidence_v2",
+  "record_id": "medieval_english_absolute_yield_bahs_pretty_wave16",
+  "reviewed_on": "2026-08-03",
+  "role": "absolute_yield_validation",
+  "target_window": {
+    "start_year": 1283,
+    "end_year": 1349,
+    "technology_relation_to_1337": "in-period English demesne agriculture"
+  },
+  "primary_bekar_status": {
+    "source_url": "https://www.openicpsr.org/openicpsr/project/110461/version/V2/view?path=%2Fopenicpsr%2F110461%2Ffcr%3Aversions%2FV2.1%2Fyieldsperacre.dta&type=file",
+    "project_doi": "https://doi.org/10.3886/E110461V2",
+    "access_attempted": true,
+    "downloaded": false,
+    "reason": "openICPSR exposes the file metadata publicly but requires an authenticated account before downloading. Direct HTTP requests are Cloudflare-challenged; the authenticated browser flow stops at the ICPSR sign-in page. No account was created and no credentials were supplied.",
+    "no_fabricated_values_used": true
+  },
+  "equivalent_direct_source": {
+    "title": "Sustainable Agriculture in the Middle Ages: The English Manor",
+    "creator": "Jules N. Pretty",
+    "citation": "Pretty, Jules N. (1990), Agricultural History Review 38(1), 1-19, Table 2",
+    "repository": "British Agricultural History Society",
+    "url": "https://www.bahs.org.uk/AGHR/ARTICLES/38n1a1.pdf",
+    "filename": "pretty_1990_sustainable_agriculture_english_manor.pdf",
+    "sha256": "52911e8be5523490e91d65ad0b436a874c9761a62e70c5ab5ad83179d0974cfe",
+    "size_bytes": 1481638,
+    "source_page": 2,
+    "access": "direct_download_verified",
+    "source_file_local_path": "artifacts/data/population_capacity/historical_yields/raw/bahs/pretty_1990_sustainable_agriculture_english_manor.pdf"
+  },
+  "parsed_table": {
+    "boundary": "fourteen Bishop of Winchester manors",
+    "start_year": 1283,
+    "end_year": 1349,
+    "historical_unit": "gross yield in kg per hectare on the standard acre",
+    "gross_yield_kg_ha": {
+      "wheat": 515.0,
+      "oats": 530.0,
+      "barley": 755.0
+    },
+    "net_yield_kg_ha": {
+      "wheat": 385.0,
+      "oats": 300.0,
+      "barley": 540.0
+    },
+    "yield_cv_percent": {
+      "wheat": 38.8,
+      "oats": 31.3,
+      "barley": 39.9
+    },
+    "mass_per_land_observation_count": {
+      "wheat": 704,
+      "oats": 699,
+      "barley": 637
+    },
+    "reported_best_single_harvest_kg_ha": {
+      "wheat": 1800.0,
+      "oats": 1200.0,
+      "barley": 3000.0
+    },
+    "parser_contract": "fitz_or_pypdf_extraction_then_strict_table_token_parse; OCR glyph corrections only; no missing-value or seed-rate imputation",
+    "parser_audit": "historical_yields.verify_pretty_1990_absolute_source"
+  },
+  "eu5_mapping": {
+    "named_manors": [
+      "Alresford",
+      "Beauworth",
+      "Bentley",
+      "Cheriton",
+      "Downton",
+      "Farnham",
+      "Hambledon",
+      "Ivinghoe",
+      "Rimpton",
+      "Sutton",
+      "Taunton",
+      "Wargrave",
+      "West Wycombe",
+      "Wield"
+    ],
+    "named_manor_mapping_coverage_fraction": 1.0,
+    "mapped_containing_eu5_provinces": [
+      "berkshire_province",
+      "buckinghamshire_province",
+      "hampshire_province",
+      "somerset_province",
+      "surrey_province",
+      "wiltshire_province"
+    ],
+    "mapping_method": "named historical manors mapped to containing EU5 province selectors",
+    "exact_location_mapping": false,
+    "exact_eu5_location_known_manor_count": 1,
+    "exact_eu5_location_mapping_fraction": 0.07142857142857142,
+    "unmapped_area_fraction": null,
+    "coverage_warning": "The downloaded article gives no defensible manor polygons. One named manor (Taunton) has a stable EU5 location tag; the remaining thirteen are province-only. Province-level comparison is valid as a broad containing-boundary diagnostic only; no province-wide population or yield label is inferred."
+  },
+  "model_use": {
+    "same_physical_unit_as_gaez_pyaez": true,
+    "quantitative_direct_bias_score_valid": false,
+    "comparison_role": "attainable_potential_to_realized_historical_gap",
+    "reason_direct_bias_invalid": "The table is a realized long-run demesne mean over fourteen manors, while GAEZ/PyAEZ labels are conditional attainable potentials over broader EU5 footprints. It is a strict absolute-yield plausibility and one-sided attainable-to-realized diagnostic, not a location-level target.",
+    "training_population_target": false,
+    "starting_population_or_rgo_used": false
+  },
+  "related_equivalent_archive": {
+    "title": "Medieval Crop Yields Database",
+    "landing_page": "https://jordanclaridge.com/datasets",
+    "download_url": "https://jordanclaridge.com/s/Crop-Yield-Data.zip",
+    "resolved_download_url": "https://static1.squarespace.com/static/5a4d52ff7131a5845cdd5162/t/6274556f7b43732c0b92aca3/1651791218286/Crop+Yield+Data.zip",
+    "sha256": "9a487ddf1700edb86dcf43d2ad256a92d2d7fedb3c93df26ee91a42953b6d397",
+    "size_bytes": 1502889,
+    "archive_role": "independent direct-download provenance for the BAHS yield-per-seed workbooks; not substituted for Pretty's absolute kg/ha table"
+  },
+  "status": {
+    "source_checksum_verified": true,
+    "source_semantics_verified": true,
+    "absolute_yield_source_acquired": true,
+    "absolute_yield_table_parsed": true,
+    "all_named_manors_accounted_for": true,
+    "direct_gaez_pyaez_bias_gate": false,
+    "training_allowed_change": false,
+    "remaining_limitation": "A direct model-bias score still requires an exact historical footprint and a conditional attainable-vs-realized comparison. This artifact closes source acquisition, unit verification, and reproducible absolute-yield validation; it does not pretend the broad province crosswalk supplies that missing footprint."
+  },
+  "citations": [
+    "https://www.bahs.org.uk/AGHR/ARTICLES/38n1a1.pdf",
+    "https://jordanclaridge.com/datasets",
+    "https://doi.org/10.3886/E110461V2",
+    "https://www.openicpsr.org/openicpsr/project/110461/version/V2/view?path=%2Fopenicpsr%2F110461%2Ffcr%3Aversions%2FV2.1%2Fyieldsperacre.dta&type=file"
+  ]
+}

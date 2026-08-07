@@ -1,0 +1,82 @@
+{
+  "schema_version": "pyaez-interannual-source-coverage-audit-v2",
+  "location_sample_source": "artifacts/data/population_capacity/location_sample_points.parquet",
+  "location_count": 20929,
+  "sample_count": 669728,
+  "coverage_rows": 83716,
+  "artifact": "artifacts/data/population_capacity/physical_validation/interannual_sources/atlas_coverage_wave25.parquet",
+  "artifact_sha256": "cac7530e3b9da3a7a66e8e0a68674a0c3713aa40797781ab7d4d46e17ca1b714",
+  "method": {
+    "sampling": "all 32 calibrated area-weighted samples per location",
+    "grid_mapping": "nearest atlas grid cell with haversine distance",
+    "value_policy": "PDSI/scPDSI values are finite/missing hydroclimate diagnostics only; no atlas value is a crop-yield label",
+    "zero_policy": "finite zero is retained as observed; nodata remains missing",
+    "skill_policy": "no skill layer is inferred when the source does not publish one"
+  },
+  "sources": [
+    {
+      "source_id": "owda_europe_mediterranean_0_2000",
+      "state": "resolved",
+      "source_sha256": "c044aa52e9e81932841b642b6977fa6f84beb9fe73c3db502b90f4295b1d65bd",
+      "shape_time_lat_lon": [2013, 88, 114],
+      "source_years": [0, 2012],
+      "target_window": [1287, 1387],
+      "target_window_year_count": 101,
+      "mapped_sample_count": 182676,
+      "mapped_sample_fraction": 0.2727614792871136,
+      "skill_layer_available": false
+    },
+    {
+      "source_id": "mada_asia_1300_2005",
+      "state": "resolved",
+      "source_sha256": "0ecc48c751be6b2a041a5250ab995373aa2596446dadc8facf5c026c7dbfbbbc",
+      "shape_time_lat_lon": [706, 27, 34],
+      "source_years": [1300, 2005],
+      "target_window": [1287, 1387],
+      "target_window_year_count": 88,
+      "mapped_sample_count": 198336,
+      "mapped_sample_fraction": 0.29614410626403553,
+      "skill_layer_available": false,
+      "limitations": ["source starts in 1300"]
+    },
+    {
+      "source_id": "nada_north_america_0_2006",
+      "state": "resolved",
+      "source_sha256": "514e7ac761e1d586a9fbcb230205d2767c493f37b5714882f19eaac023d26cb4",
+      "shape_time_lat_lon": [2007, 19, 33],
+      "source_years": [0, 2006],
+      "target_window": [1287, 1387],
+      "target_window_year_count": 101,
+      "mapped_sample_count": 90134,
+      "mapped_sample_fraction": 0.13458299488747671,
+      "skill_layer_available": false
+    },
+    {
+      "source_id": "sada_south_america_1400_2000",
+      "state": "resolved",
+      "source_sha256": "4806580f937c7cb16f20ba6a643468231a7b19b71d610f52f461cd2cc8b14da9",
+      "shape_time_lat_lon": [601, 88, 54],
+      "source_years": [1400, 2000],
+      "target_window": [1400, 1500],
+      "target_window_year_count": 101,
+      "mapped_sample_count": 19266,
+      "mapped_sample_fraction": 0.028766902384251516,
+      "skill_layer_available": false,
+      "role": "post_1337_validation_only"
+    }
+  ],
+  "acceptance": {
+    "coverage_artifact_reproducible": true,
+    "all_locations_have_rows_for_acquired_atlases": true,
+    "all_sources_downloaded_and_checksum_verified": true,
+    "all_sources_have_skill_layers": false,
+    "annual_yield_risk_gate_unblocked": false,
+    "mechanistic_training_blocked": false,
+    "remaining_blockers": [
+      "hydroclimate atlases are proxies, not annual crop-yield labels",
+      "no exact PyAEZ annual crop run exists for the 23-crop matrix",
+      "MADA supplies only 88 years in the requested 1287-1387 window",
+      "no source-published skill surfaces are available for uncertainty weighting"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "region": "oceania",
+  "super_region": "Oceania",
+  "packet_id": "oceania_tongatapu_lower_bound_wave4",
+  "records": [
+    {
+      "anchor_id": "tongatapu_local_food_population_floor_1100_1500_wave4",
+      "label": "Tongatapu, Tonga: observed locally supported population floor",
+      "year_start": 1100,
+      "year_end": 1500,
+      "population_low": 15000,
+      "population_central": 16500,
+      "population_high": 18467,
+      "saturation_low": 0.6,
+      "saturation_central": 0.8,
+      "saturation_high": 1.0,
+      "local_food_low": 0.9,
+      "local_food_central": 0.97,
+      "local_food_high": 1.0,
+      "capacity_low": 15000,
+      "capacity_central": 15000,
+      "capacity_high": 15000,
+      "pressure_evidence": [
+        "Green's Tongatapu reconstruction gives a late-prehistoric/contact-era population floor of approximately 15,000–17,000 and an upper envelope of 18,000–24,000.",
+        "Archaeobotanical evidence documents near-complete primary-forest removal, intensive multi-cropping, bush-fallow pressure, and expansion after local intensification limits.",
+        "The boundary is the whole Tongatapu island; the food regime is locally produced yam, taro, sweet potato, banana, breadfruit, coconut, fishing, and livestock."
+      ],
+      "shock_flags": [
+        "warfare_or_demographic_reduction_mechanisms",
+        "source_quantity_conflict_with_lidar_population_reconstruction"
+      ],
+      "trade_dependence": "low_to_mixed",
+      "food_regime": "intensive_local_multicropping_and_fishing",
+      "boundary_description": "Entire Tongatapu island, Kingdom of Tonga",
+      "boundary_source": "Ussher 2015 archaeobotanical dissertation, summarising Green 1973, Kirch 1984/1988 and Burley 2007",
+      "eu5_selector": "location_tag=tongatapu",
+      "coverage_fraction": 0.9763941725489561,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "vetted",
+      "role": "lower_bound",
+      "source_family": "tonga_archaeology_local_food_population_floor",
+      "source_bundle": "ussher_green_kirch_burley_local_food_bundle",
+      "source_family_independence": "archaeobotany_and_historical_population_reconstruction; capacity upper envelope is not used as a two-sided target",
+      "sources": [
+        "https://openresearch-repository.anu.edu.au/bitstreams/e4751661-3b6f-44c8-828b-4d93dc954ce3/download",
+        "https://www.sciencedirect.com/science/article/pii/S2352409X22002735"
+      ],
+      "notes": "This is a one-sided floor only: capacity_low is set to the independently documented locally supported population floor, while central/high are placeholders ignored by lower-bound likelihoods. It does not promote Green's model-derived upper envelope to a scale target. The EU5 crosswalk applies the cited GSHHG land fraction to the coarse Tongatapu footprint: 253.86 km2 versus approximately 260 km2 historical island area (97.64% coverage)."
+    }
+  ]
+}

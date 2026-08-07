@@ -1,4 +1,4 @@
-"""Province-level food startup building planning."""
+﻿"""Province-level food startup building planning."""
 
 from __future__ import annotations
 
@@ -33,6 +33,9 @@ STAPLE_FARM_RAW_MATERIALS = (
     "wheat",
 )
 STARTUP_LOCAL_PEASANT_RESERVE = 2.0
+# Temporary: always place matching import levels next to export markets.
+VICTUALS_MARKET_EXPORT = "victuals_market"
+VICTUALS_MARKET_IMPORT = "victuals_market_import"
 
 
 @dataclass(frozen=True)
@@ -596,6 +599,10 @@ def plan_building_placements(
 
     existing_levels = existing_levels or {}
     coverage: dict[tuple[str, str], float] = defaultdict(float)
+    enabled_keys = {rule.key for rule in rules if rule.enabled}
+    mirror_victuals_import = (
+        VICTUALS_MARKET_EXPORT in enabled_keys and VICTUALS_MARKET_IMPORT not in enabled_keys
+    )
     rows: list[dict[str, object]] = []
     for rule in sorted((rule for rule in rules if rule.enabled), key=lambda item: (item.order, item.key)):
         food_per_level = output_by_building.get(rule.key, 0.0)
@@ -604,6 +611,8 @@ def plan_building_placements(
         worker_pop_type, employment_size = worker_metadata_by_building.get(rule.key, ("", 0.0))
         if not worker_pop_type or employment_size <= 0.0:
             continue
+        pair_with_import = mirror_victuals_import and rule.key == VICTUALS_MARKET_EXPORT
+        allocation_employment = employment_size * (2.0 if pair_with_import else 1.0)
         for province in provinces.to_dicts():
             province_id = _province_key(province["province"])
             province_food = float(province["food_consumption"] or 0.0)
@@ -629,57 +638,76 @@ def plan_building_placements(
                 rule,
                 levels_needed,
                 remaining_peasants_by_location,
-                employment_size,
+                allocation_employment,
                 existing_levels,
             ):
                 worker_peasant_requirement = levels * employment_size
+                remaining_after_source = available_peasants_before - worker_peasant_requirement
                 added_food = levels * food_per_level
                 coverage[(province_id, rule.coverage_group)] += added_food
-                rows.append(
-                    {
-                        "building": rule.key,
-                        "coverage_group": rule.coverage_group,
-                        "province": province_id,
-                        "location_id": int(location["location_id"]),
-                        "location_slug": str(location["slug"]),
-                        "levels": int(levels),
-                        "worker_pop_type": worker_pop_type,
-                        "employment_size": employment_size,
-                        "worker_peasant_requirement": worker_peasant_requirement,
-                        "available_peasants_before": available_peasants_before,
-                        "remaining_peasants_after": remaining_peasants_by_location[str(location["slug"])],
-                        "food_per_level": food_per_level,
-                        "estimated_food_added": added_food,
-                        "province_food_consumption": province_food,
-                        "province_food_production": float(province.get("food_production") or 0.0),
-                        "province_food_balance": float(province.get("food_balance") or 0.0),
-                        "province_food_shortfall": float(province.get("food_shortfall") or 0.0),
-                        "target_basis": rule.target_basis,
-                        "target_base": target_base,
-                        "target_scale": target_scale,
-                        "target_food": target,
-                        "needed_food_before": needed_food,
-                        "placement": rule.placement,
-                        "province_capital": bool(location.get("province_capital")),
-                        "location_rank": str(location.get("location_rank") or location.get("rank") or ""),
-                        "total_population": float(location.get("total_population") or 0.0),
-                        "development": float(location.get("development") or 0.0),
-                        "region": str(location.get("region") or ""),
-                        "macro_region": str(location.get("macro_region") or ""),
-                        "super_region": str(location.get("super_region") or ""),
-                        "country_tag": str(location.get("country_tag") or ""),
-                        "raw_material": str(location.get("raw_material") or ""),
-                        "province_rural_population_share": float(province.get("rural_population_share") or 0.0),
-                        "province_urban_population_share": float(province.get("urban_population_share") or 0.0),
-                        "province_peasant_population_share": float(province.get("peasant_population_share") or 0.0),
-                        "province_development_per_1000_population": float(province.get("development_per_1000_population") or 0.0),
-                        "startup_source": "food",
-                        "startup_order": 10000 + rule.order,
-                        "existing_levels": float(existing_levels.get((str(location["slug"]), rule.key), 0.0)),
-                        "target_level": int(float(existing_levels.get((str(location["slug"]), rule.key), 0.0)) + levels),
-                        "startup_constructible": bool(location.get("startup_constructible_owner", True)),
-                    }
-                )
+                location_slug = str(location["slug"])
+                base_row = {
+                    "building": rule.key,
+                    "coverage_group": rule.coverage_group,
+                    "province": province_id,
+                    "location_id": int(location["location_id"]),
+                    "location_slug": location_slug,
+                    "levels": int(levels),
+                    "worker_pop_type": worker_pop_type,
+                    "employment_size": employment_size,
+                    "worker_peasant_requirement": worker_peasant_requirement,
+                    "available_peasants_before": available_peasants_before,
+                    "remaining_peasants_after": (
+                        remaining_peasants_by_location[location_slug]
+                        if not pair_with_import
+                        else remaining_after_source
+                    ),
+                    "food_per_level": food_per_level,
+                    "estimated_food_added": added_food,
+                    "province_food_consumption": province_food,
+                    "province_food_production": float(province.get("food_production") or 0.0),
+                    "province_food_balance": float(province.get("food_balance") or 0.0),
+                    "province_food_shortfall": float(province.get("food_shortfall") or 0.0),
+                    "target_basis": rule.target_basis,
+                    "target_base": target_base,
+                    "target_scale": target_scale,
+                    "target_food": target,
+                    "needed_food_before": needed_food,
+                    "placement": rule.placement,
+                    "province_capital": bool(location.get("province_capital")),
+                    "location_rank": str(location.get("location_rank") or location.get("rank") or ""),
+                    "total_population": float(location.get("total_population") or 0.0),
+                    "development": float(location.get("development") or 0.0),
+                    "region": str(location.get("region") or ""),
+                    "macro_region": str(location.get("macro_region") or ""),
+                    "super_region": str(location.get("super_region") or ""),
+                    "country_tag": str(location.get("country_tag") or ""),
+                    "raw_material": str(location.get("raw_material") or ""),
+                    "province_rural_population_share": float(province.get("rural_population_share") or 0.0),
+                    "province_urban_population_share": float(province.get("urban_population_share") or 0.0),
+                    "province_peasant_population_share": float(province.get("peasant_population_share") or 0.0),
+                    "province_development_per_1000_population": float(province.get("development_per_1000_population") or 0.0),
+                    "startup_source": "food",
+                    "startup_order": 10000 + rule.order,
+                    "existing_levels": float(existing_levels.get((location_slug, rule.key), 0.0)),
+                    "target_level": int(float(existing_levels.get((location_slug, rule.key), 0.0)) + levels),
+                    "startup_constructible": bool(location.get("startup_constructible_owner", True)),
+                }
+                rows.append(base_row)
+                if pair_with_import:
+                    import_existing = float(existing_levels.get((location_slug, VICTUALS_MARKET_IMPORT), 0.0))
+                    rows.append(
+                        {
+                            **base_row,
+                            "building": VICTUALS_MARKET_IMPORT,
+                            "available_peasants_before": remaining_after_source,
+                            "remaining_peasants_after": remaining_peasants_by_location[location_slug],
+                            "estimated_food_added": 0.0,
+                            "startup_order": 10000 + rule.order + 1,
+                            "existing_levels": import_existing,
+                            "target_level": int(import_existing + levels),
+                        }
+                    )
     schema = _startup_plan_schema()
     return _filter_startup_constructible_rows(
         pl.DataFrame(rows, schema=schema).sort(["building", "province", "location_slug"])
@@ -1805,6 +1833,7 @@ def _load_static_location_frame(config: FoodStartupConfig) -> pl.DataFrame:
             "macro_region",
             "super_region",
             "development",
+            "prosperity",
             "location_rank",
             "raw_material",
         },
@@ -1818,6 +1847,7 @@ def _load_static_location_frame(config: FoodStartupConfig) -> pl.DataFrame:
             pl.col("macro_region").cast(pl.String),
             pl.col("super_region").cast(pl.String),
             pl.col("development").cast(pl.Float64),
+            pl.col("prosperity").cast(pl.Float64),
             pl.col("location_rank").cast(pl.String).alias("rank"),
             pl.col("raw_material").cast(pl.String),
             *[

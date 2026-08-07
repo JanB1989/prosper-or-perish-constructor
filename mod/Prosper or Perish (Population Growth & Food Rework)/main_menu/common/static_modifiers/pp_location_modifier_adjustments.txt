@@ -67,11 +67,8 @@ TRY_REPLACE:positive_province_food_growth = {
 	# these values are the values for 1 year of stored province consumption they cap at GROWTH_FROM_FOOD_MULTIPLIER_MAX which is defined in years aswell
 	pp_province_food_storage_months = 12
 	local_province_food_sales_output_modifier = 0.50
-	local_offset_output_modifier = 0.50
 	local_province_food_purchase_output_modifier = -0.50
-	# local_monthly_food_modifier = -1.0
-	local_population_growth = 0.0075 # with the new spoilage at 24 month consumption storage ~20% of total consumption is spoilage
-	# local_food_capacity_modifier = 2.0
+	local_population_growth = 0.0075
 	local_devastation_recovery = 0.003
 	local_migration_attraction = 0.045
 	local_monthly_prosperity = 0.0025

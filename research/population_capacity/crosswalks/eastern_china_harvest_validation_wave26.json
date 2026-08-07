@@ -1,0 +1,123 @@
+{
+  "schema_version": "population_capacity_historical_harvest_crosswalk_v1",
+  "crosswalk_id": "historical_harvest_validation_to_eu5_wave26",
+  "reviewed_on": "2026-08-04",
+  "source_record": "interannual_harvest_evidence_global_wave26:hao_eastern_china_harvest_grades_801_1910",
+  "eu5_location_source": {
+    "path": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+    "location_count": 20929,
+    "selection_geometry": "calibrated centroid longitude/latitude rectangles",
+    "area_field": "area_km2",
+    "not_footprint_exact": true
+  },
+  "sample_source": {
+    "path": "artifacts/data/population_capacity/location_sample_points.parquet",
+    "sample_count": 669728,
+    "columns_used": ["location_tag", "calibrated_lon", "calibrated_lat", "sample_weight"],
+    "sample_mapping_performed": false,
+    "reason": "The published Chinese chronologies describe broad county/station envelopes; centroid rectangles are retained only as transparent validation selectors until historical station polygons are obtained."
+  },
+  "selectors": [
+    {
+      "selector_id": "hao_north_china_plain_approx",
+      "historical_region": "North China Plain",
+      "source_description": "approximately 34-40 N; source study east of 105 E; longitude envelope operationalized as 105-123 E",
+      "longitude_deg": [105.0, 123.0],
+      "latitude_deg": [34.0, 40.0],
+      "selection_rule": "105 <= calibrated_lon <= 123 and 34 <= calibrated_lat <= 40",
+      "selected_location_count": 504,
+      "selected_area_km2": 818462.97865,
+      "region_breakdown": {
+        "north_china_region": 387,
+        "west_china_region": 101,
+        "east_china_region": 12,
+        "manchuria_region": 3,
+        "mongolia_region": 1
+      },
+      "coverage_status": "approximate_validation_only",
+      "unmapped_area_status": "not_estimable from broad published envelope"
+    },
+    {
+      "selector_id": "hao_jianghuai_approx",
+      "historical_region": "Jianghuai",
+      "source_description": "approximately 31-34 N; operationalized as 110-123 E to exclude most western China",
+      "longitude_deg": [110.0, 123.0],
+      "latitude_deg": [31.0, 34.0],
+      "selection_rule": "110 <= calibrated_lon <= 123 and 31 <= calibrated_lat <= 34",
+      "selected_location_count": 180,
+      "selected_area_km2": 328822.027208,
+      "region_breakdown": {
+        "east_china_region": 124,
+        "north_china_region": 54,
+        "west_china_region": 2
+      },
+      "coverage_status": "approximate_validation_only",
+      "unmapped_area_status": "not_estimable from broad published envelope"
+    },
+    {
+      "selector_id": "hao_jiangnan_approx",
+      "historical_region": "Jiangnan",
+      "source_description": "approximately 25-31 N; operationalized as 108-123 E",
+      "longitude_deg": [108.0, 123.0],
+      "latitude_deg": [25.0, 31.0],
+      "selection_rule": "108 <= calibrated_lon <= 123 and 25 <= calibrated_lat <= 31",
+      "selected_location_count": 392,
+      "selected_area_km2": 807070.120617,
+      "region_breakdown": {
+        "east_china_region": 350,
+        "south_china_region": 35,
+        "west_china_region": 7
+      },
+      "coverage_status": "approximate_validation_only",
+      "unmapped_area_status": "not_estimable from broad published envelope"
+    },
+    {
+      "selector_id": "tang_shenyang_named_location",
+      "historical_region": "Shenyang/Liaoning local drought chronology",
+      "source_description": "Named Shenyang location in the EU5 map; historical source covers a changing administrative area and is not assumed to equal the EU5 polygon.",
+      "historical_centroid_deg": [123.4, 41.8],
+      "selection_rule": "location_tag == shenyang",
+      "selected_location_count": 1,
+      "selected_location_tags": ["shenyang"],
+      "selected_area_km2": 4738.741364,
+      "selected_calibrated_centroid_deg": [123.261194, 41.783589],
+      "centroid_distance_degrees_euclidean": 0.019536,
+      "coverage_status": "named_location_validation_only",
+      "unmapped_area_status": "historical Shenyang/Liaoning administrative footprint is not supplied; no surrounding-area population target is created"
+    },
+    {
+      "selector_id": "cruz_intersalar_quinoa_approx",
+      "historical_region": "Intersalar, southern Bolivian Altiplano",
+      "source_description": "Broad transparent selector around the Uyuni/Lipez study area; the paper does not publish a machine-readable boundary for its 1537 ha archaeological cropland inventory.",
+      "longitude_deg": [-69.0, -65.0],
+      "latitude_deg": [-22.0, -19.0],
+      "selection_rule": "-69 <= calibrated_lon <= -65 and -22 <= calibrated_lat <= -19",
+      "selected_location_count": 13,
+      "selected_area_km2": 79862.0376722484,
+      "selected_location_tags": ["loa", "tupiza", "lipi", "chake", "hatun_killaka", "llica", "uyuni", "oronckota", "isluga", "thumilki", "ccantumarcani", "aullagas", "carangas"],
+      "coverage_status": "approximate_physical_validation_only",
+      "unmapped_area_status": "The archaeological cropland inventory covers 1537 ha, far less than the EU5 selector area; no location-wide population or cultivated-area target is inferred."
+    }
+  ],
+  "mapping_contract": {
+    "exact_historical_boundary": false,
+    "historical_population_target_created": false,
+    "aggregate_training_target_created": false,
+    "used_for": ["transparent location selection for relative harvest-risk validation"],
+    "forbidden_uses": ["absolute yield calibration", "capacity scale anchoring", "filling missing crop labels", "regional correction multipliers"],
+    "upgrade_path": "Replace centroid rectangles with the 63-station/county polygons or an author-supplied station-to-county table before any quantitative training use."
+  },
+  "audit": {
+    "selector_counts_recomputed_from_current_parquet": true,
+    "area_sums_recomputed_from_area_km2": true,
+    "overlap_policy": "Selectors are intentionally allowed to overlap only where the source envelopes overlap; they must be treated as separate validation groups and never summed into a population target.",
+    "crosswalk_acceptance_for_training": false,
+    "reason": "Broad latitude/longitude envelopes do not meet the exact or >=95 percent mapped-boundary requirement for aggregate supervision."
+  },
+  "citations": [
+    "https://cp.copernicus.org/articles/16/101/2020/index.html",
+    "https://cp.copernicus.org/articles/16/101/2020/cp-16-101-2020-supplement.pdf",
+    "https://doi.org/10.1126/sciadv.1701740",
+    "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers18-03/010072442.pdf"
+  ]
+}

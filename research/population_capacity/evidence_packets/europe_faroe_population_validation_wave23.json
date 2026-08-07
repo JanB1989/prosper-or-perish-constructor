@@ -1,0 +1,73 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "europe_faroe_population_validation_wave23",
+  "region": "europe_faroe_population_validation_wave23",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "scope": "Independent demographic and environmental validation for the Faroes around 1300-1337. This packet deliberately does not infer a human carrying-capacity ceiling from a stable population or from sheep-pasture rules.",
+  "promotion_audit": {
+    "decision": "Retain as validation-only; do not promote as a two-sided scale anchor.",
+    "reviewed_on": "2026-08-04",
+    "review_method": "Checked the published demographic range, the whole-archipelago settlement boundary, local subsistence and trade semantics, and the EU5 Torshavn crosswalk. The demographic range is not treated as a capacity interval.",
+    "reason_not_promoted": "The 3,000-4,000 population range is a reconstructed/stable historical population series, while no independent upper human equilibrium estimate exists. Faroese grain imports were a staple, so the observed population cannot label intrinsic local capacity without an auditable import-free food balance."
+  },
+  "records": [
+    {
+      "anchor_id": "faroe_1300_population_validation_wave23",
+      "label": "Faroe Islands c.1300-1337: independent demographic validation range",
+      "year_start": 1300,
+      "year_end": 1337,
+      "population_low": 3000,
+      "population_central": 3500,
+      "population_high": 4000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The 3,000-4,000 interval is the published historical-demography range for the Faroes during 1300-1600 (Strøm 2017, summarized in a peer-reviewed population-genetics study). It is retained as an observed population range; no saturation fraction or capacity endpoint is assigned.",
+      "pressure_evidence": [
+        "Arge et al. (2005) reconstruct a settlement system constrained by meagre cultivable land concentrated on coasts, with inland areas primarily used as shielings and outfield grazing.",
+        "The long-run social-metabolism review reports that population stabilized around 3,000-4,000 while the traditional system imported grain, timber and other staples; stability therefore cannot be interpreted as an autarkic upper capacity.",
+        "The same review describes the 1298 Sheep Letter as a land-management institution that regulated pasture, but it does not provide a closed human calorie ceiling."
+      ],
+      "shock_flags": [
+        "The population series is retrospective and stable over a broad 1300-1600 interval rather than a contemporaneous enumeration for 1337.",
+        "The Faroe system imported grain as a staple and timber was chronically scarce; trade dependence is material to observed population.",
+        "Marine and seabird resources add a separate capacity channel that is not bounded by the sheep-pasture rule."
+      ],
+      "trade_dependence": "mixed_to_high_staple_grain_imports",
+      "food_regime": "sheep and cattle, hay, barley, inshore fish, seabirds and marine mammals with imported grain and timber",
+      "boundary_description": "The complete Faroe archipelago, represented in the EU5 geometry by the northern_isles_area Torshavn location.",
+      "boundary_source": "https://abdn.elsevierpure.com/en/publications/viking-and-medieval-settlement-in-the-faroes-people-place-and-env/",
+      "eu5_selector": {
+        "include": ["location_tag=torshavn"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.986,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "faroe_population_demography_genetics_2025",
+      "source_bundle": "faroe_strom_2017_genetic_demography_arge_2005_social_metabolism_2020",
+      "source_family_independence": "The demographic range comes from the population-genetics synthesis of Strøm's historical series, while environmental and trade semantics come from independent settlement archaeology and social-metabolism studies. This is independent of the existing Faroe tax-land lower-bound packet, but both must remain validation groups rather than separate scale anchors.",
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC11625576/",
+        "https://doi.org/10.1007/s10745-005-4745-1",
+        "https://www.mdpi.com/2071-1050/12/2/735"
+      ],
+      "citation_details": [
+        "Population-genetics synthesis (2025), discussion of historical demography: Faroese population remained around 3,000-4,000 during 1300-1600, citing Strøm 2017.",
+        "Arge, Sveinbjarnardottir, Edwards and Buckland, Human Ecology 33 (2005), pp. 597-620: meagre cultivable land, coastal settlement concentration and outfield grazing.",
+        "Social Metabolism of Quiet Sustainability in the Faroe Islands (Sustainability 12, 735, 2020): grain and timber imports and the 1298 Sheep Letter land-management context."
+      ],
+      "notes": "Useful hostile-island demographic and trade validation, but no two-sided capacity label. Do not use the historical 3,000-4,000 range to force the mechanistic model's upper endpoint."
+    }
+  ]
+}

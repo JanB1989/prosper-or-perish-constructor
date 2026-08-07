@@ -1,0 +1,97 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Europe",
+  "region": "europe_artois_interval_anchor_wave17",
+  "target_year": 1337,
+  "packet_id": "europe_artois_interval_anchor_wave17",
+  "scope": "A two-sided aggregate population/capacity interval for the intensively cultivated Artois agricultural region around 1290-1300, derived from an explicitly published density potential and local cereal-output evidence.",
+  "promotion_audit": {
+    "decision": "Promote as an interval anchor. Derville reports both an observed Artois density and a resource-derived potential density range, while independent famine/yield studies document land pressure and subsistence sensitivity. The interval is bounded by those published quantities rather than by a starting-population value or an assumed regional multiplier.",
+    "reviewed_on": "2026-08-03",
+    "review_method": "Checked the source's boundary semantics, date and technology compatibility, observed-versus-potential density distinction, local-food dependence, trade, famine and war timing, and EU5 Lower/Upper Artois province crosswalk. Cities are not used as the target; the source's 84.57 percent rural share is retained as a diagnostic.",
+    "population_semantics": "The population interval is an aggregate density reconstruction for the same Artois agricultural boundary, not a city estimate and not an EU5 starting-population target.",
+    "capacity_semantics": "The capacity interval uses the higher of the observed aggregate density and Derville's published potential-density lower endpoint for the low bound, and the published potential-density upper endpoint for the high bound. This preserves the requirement that an observed population cannot exceed the intrinsic capacity.",
+    "independent_pressure_check": "Fossier's Artois/Flandre gallicante famine study and Derville's 1285-1345 tithe-yield series independently document food-crisis exposure and stable pre-plague yields; neither uses EU5 population or the model output."
+  },
+  "records": [
+    {
+      "anchor_id": "artois_1290_1300_agrarian_capacity_interval_wave17",
+      "label": "Artois c.1290-1300: observed density and published agrarian potential interval",
+      "year_start": 1290,
+      "year_end": 1300,
+      "population_low": 1000000,
+      "population_central": 1060000,
+      "population_high": 1100000,
+      "saturation_low": 0.78,
+      "saturation_central": 0.86,
+      "saturation_high": 1.0,
+      "local_food_low": 0.8,
+      "local_food_central": 0.9,
+      "local_food_high": 1.0,
+      "capacity_low": 1095000,
+      "capacity_central": 1250000,
+      "capacity_high": 1415000,
+      "interval_semantics": "Derville, L'agriculture du Nord au Moyen-Âge, ch. IV, reports an observed total Artois density of 187.633 people/km² around 1300 and a potential density of 169.5-254.2 people/km² under 75 percent cultivated land, 20-30 hl/ha yields and a 15:1 yield ratio. The EU5 Lower+Upper Artois footprint is 5,545.5846 calibrated km², giving an observed-density check near 1.04 million and a potential-density ceiling near 1.41 million. The population interval rounds that same-boundary density evidence to 1.0-1.1 million; the capacity interval is 1.1-1.41 million. No EU5 starting population, HYDE field or RGO value enters any endpoint.",
+      "derivation": {
+        "mapped_area_km2": 5545.58456684555,
+        "observed_total_density_people_per_km2": 187.633,
+        "rural_density_people_per_km2": 165.87,
+        "rural_population_share": 0.8457,
+        "published_potential_density_low_people_per_km2": 169.5,
+        "published_potential_density_high_people_per_km2": 254.2,
+        "observed_population_check_people": 1040535,
+        "potential_population_low_check_people": 939977,
+        "potential_population_high_check_people": 1409688,
+        "capacity_low_rule": "max(observed_population_high, potential_population_low)",
+        "capacity_high_rule": "potential_population_high",
+      "rounding_policy": "nearest 10,000 people for the evidence interval; interval endpoints retain a half-rounding-unit uncertainty, so the machine-readable bounds are 1.095-1.415 million"
+      },
+      "pressure_evidence": [
+        "Derville, L'agriculture du Nord au Moyen-Âge (Presses universitaires du Septentrion, 1999), chapter IV, pp. 65-77, especially the discussion of c.1300: villages were overpopulated, rural density was about 165.87/km², average holdings were only about 1.58 ha, and population growth was running ahead of agricultural expansion.",
+        "Derville, 'Dîmes, rendements du blé et Révolution agricole dans le Nord de la France au Moyen Âge', Annales. Histoire, Sciences Sociales 42 (1987), pp. 1411-1432, DOI 10.3406/ahess.1987.283462: tithe accounts give roughly 30 hl/ha around Saint-Omer, Béthune, Lille and Douai around 1300 and a 1285-1345 mean of 21.46 hl/ha, providing an independent production check rather than a population label.",
+        "Fossier and Fossier, 'Aspects de la crise frumentaire du XIVe siècle en Artois et dans la Flandre gallicante', Mélanges Clovis Brunel (1955), pp. 436-447: the regional grain-crisis study documents subsistence stress in the same Artois/Flandre gallicante food system. Its famine chronology is used as pressure/shock evidence, not as a direct population target.",
+        "Derville's account notes that 84.57 percent of the population was rural and that some grain was exported to the Low Countries while land-poor households bought grain locally; this is evidence of a dense, locally productive rural system, not permission to count imported calories."
+      ],
+      "shock_flags": [
+        "The 1315-1317 Great Famine is after the central 1290-1300 observation window and is used only as corroborating sensitivity evidence.",
+        "The 1329-1349 and later warfare/epidemic shocks are outside the central observation window.",
+        "Regional grain exports and local market purchases mean the local-food interval is broad (0.80-1.00), not autarky.",
+        "The published density and potential-density estimates are aggregate historical reconstructions; the model must hold this geographic family out as one group."
+      ],
+      "trade_dependence": "low_to_mixed_at_rural_aggregate_scale; regional grain exchange and exports are documented, but the target excludes long-distance imported calories",
+      "food_regime": "intensive rainfed wheat and other cereals, legumes, livestock, dairy, fish, gardens and manure-supported rotations",
+      "boundary_description": "The medieval Artois agricultural core represented by the contiguous EU5 Lower Artois and Upper Artois provinces (Arras, Lens, Cambrai, Bapaume, Hesdin, Saint-Pol, Saint-Omer and Béthune locations). The source explicitly treats Artois as the regional unit; the crosswalk retains the full named province footprint and reports its residual boundary uncertainty.",
+      "boundary_source": "Derville 1999, chapter IV and chapter VIII (Artois 1263-1349), with the EU5 historical province names used for the crosswalk",
+      "eu5_selector": {
+        "include": [
+          "province=lower_artois_province|upper_artois_province"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.96,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "vetted",
+      "role": "interval_anchor",
+      "super_region": "Europe",
+      "source_family": "artois_agrarian_yield_and_crisis_1100_1350",
+      "source_bundle": "derville_1999_derville_1987_fossier_1955_artois_bundle",
+      "source_family_independence": "This is an independent northern-France agrarian source family, separate from the national France hearth/demographic syntheses. Derville's yield-account series and Fossier's crisis study provide production and pressure evidence; no component uses EU5 starting population, HYDE, RGO modifiers or the capacity model.",
+      "sources": [
+        "https://books.openedition.org/septentrion/168200",
+        "https://books.openedition.org/septentrion/122270?lang=en",
+        "https://www.cambridge.org/core/journals/annales-histoire-sciences-sociales/article/abs/dimes-rendements-du-ble-et-revolution-agricole-dans-le-nord-de-la-france-au-moyen-age/E63C780ADD95B7F087B280EC72D79D6F",
+        "https://doi.org/10.3406/ahess.1987.283462",
+        "https://www.persee.fr/doc/adh_0066-2063_1971_num_1970_1_1112"
+      ],
+      "citation_details": [
+        "Derville 1999, chapter IV, pp. 65-77: c.1300 density, 75 percent cultivated land, 20-30 hl/ha, 15:1 ratio, and the 169.5-254.2 people/km² potential range.",
+        "Derville 1987, Annales 42(6), pp. 1411-1432, extract and notes 43-45: local tithe yields and 1285-1345 yield series.",
+        "Fossier and Fossier 1955, pp. 436-447: Artois/Flandre gallicante grain-crisis evidence.",
+        "Bocquet 1970/1971, Recherches sur la population rurale de l'Artois et du Boulonnais pendant la période bourguignonne (1384-1477): later-period famine, war and plague chronology retained as out-of-window shock validation, not used to set the interval."
+      ],
+      "notes": "This is a two-sided interval anchor, not a lower-bound conversion. Its high endpoint is explicitly the published agrarian potential density multiplied by the mapped area; its low endpoint is constrained by the observed population interval. The 0.96 boundary coverage is a declared historical-to-EU5 crosswalk confidence, with the remaining four percent retained as uncertainty rather than silently dropped. Do not use this packet as a second national-France anchor; group it separately by source family and geography."
+    }
+  ]
+}

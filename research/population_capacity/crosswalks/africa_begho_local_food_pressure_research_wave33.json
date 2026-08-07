@@ -1,0 +1,52 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "super_region": "Africa",
+  "region": "guinea",
+  "target_year": 1337,
+  "crosswalk_packet_id": "africa_begho_local_food_pressure_research_wave33",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet with calibrated area_km2",
+  "policy": {
+    "no_population_or_rgo_fields_used": true,
+    "named_location_is_not_treated_as_historical_catchment": true,
+    "unresolved_crosswalks_cannot_score": true,
+    "trade_hub_city_boundaries_cannot_train_intrinsic_capacity": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "begho_1400_1500_urban_population_rejection_wave33",
+      "historical_boundary": "Begho archaeological area around modern Hani; no closed medieval rural boundary was supplied. Posnansky's excavation units were distributed within a 6 km radius, while Allan notes that Begho likely denotes a region/area rather than a discrete market locus.",
+      "eu5_selector": {
+        "include": ["location_tag=begho"],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "selected_location_count": 1,
+      "mapped_eu5_locations": ["begho"],
+      "mapped_area_km2": 7728.677992,
+      "historical_boundary_area_km2": null,
+      "excavation_sample_envelope_km2": 113.097336,
+      "excavation_sample_radius_km": 6.0,
+      "coverage_fraction": 0.0,
+      "unmapped_area_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "rejected",
+      "candidate_role": "validation_only",
+      "resolution_class": "site_region_boundary_missing",
+      "resolution_method": "The explicit EU5 begho location is retained as a named-site diagnostic only. Its 7,728.68 km2 footprint is not substituted for the undefined Begho archaeological area and the 6 km excavation radius is not promoted to a historical boundary.",
+      "blocking_reasons": [
+        "no closed historical rural or town polygon",
+        "historical population peak is 1400s-1700s rather than a 1337 observation",
+        "population range is house-mound extrapolation",
+        "trade-entrepot and heterogeneous urban quarters make local-food share unresolved"
+      ],
+      "sources": [
+        "https://deepblue.lib.umich.edu/bitstream/2027.42/107218/1/acomp_1.pdf",
+        "https://ugspace.ug.edu.gh/items/720482de-d2b0-440f-a862-fd1444a7194b",
+        "https://www.si.edu/object/archaeology-and-origins-akan-society%3Asiris_sil_755609"
+      ],
+      "notes": "This is an explicit rejection, not a missing row: 0% aggregate boundary coverage is recorded, and the model must not learn from the 5,000-10,000 town estimate. A future promotion would require a dated, mapped rural catchment and independent local-food/pressure evidence."
+    }
+  ]
+}

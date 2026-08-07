@@ -1,0 +1,85 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "America/Oceania",
+  "region": "americas_oceania",
+  "target_year": 1337,
+  "crosswalk_packet_id": "americas_oceania_anchor_wave7",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "policy": {
+    "selectors_are_containment_or_explicit_validation_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "coarse_containing_selectors_cannot_be_two_sided_targets": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "maya_lowlands_lidar_600_900_validation_wave7",
+      "historical_boundary": "Estrada-Belli et al. 2025 LiDAR study polygons across Peten, western Belize, Campeche and Quintana Roo, approximately 95,000 km2.",
+      "eu5_selector": {
+        "include": [
+          "area=peten_area|mayaab_area"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 42,
+      "coverage_fraction": 0.86,
+      "boundary_overlap_status": "partial_containment",
+      "crosswalk_status": "partial",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "area_comparison": {
+        "published_lidar_footprint_km2": 95000.0,
+        "eu5_containing_selector_area_km2": 81695.1702,
+        "unmapped_lidar_fraction_estimate": 0.14
+      },
+      "resolution_method": "The EU5 Peten and Mayaab tags intersect the named LiDAR polygons, but their calibrated footprint covers only about 86% of the published 95,000 km2 study area. The missing 14% is retained as explicit unmapped area; no historical population is distributed across cells.",
+      "notes": "The selector is a partial validation geography, not an exact polygon crosswalk. It remains validation-only because the Maya dates precede the 1337 target and the regional estimate includes urban/elite exchange networks."
+    },
+    {
+      "anchor_id": "tiwanaku_raised_field_sustaining_area_1000_1450_validation_wave7",
+      "historical_boundary": "Tiwanaku Valley, Pampa Koani and Machaca/Desaguadero three-valley sustaining area with approximately 19,000 ha of mapped raised fields.",
+      "eu5_selector": {
+        "include": [
+          "province=tiwanaku_province"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 7,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high_containment",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "area_comparison": {
+        "published_mapped_raised_field_area_km2": 190.0,
+        "eu5_containing_selector_area_km2": 15410.0,
+        "unmapped_boundary_fraction": 0.0
+      },
+      "resolution_method": "The seven calibrated EU5 cells in tiwanaku_province contain the three valleys named by Kolata. Because the selector is substantially broader than the mapped raised fields, the record is a physical validation envelope only; it never treats all selector land as raised field.",
+      "notes": "The capacity interval comes from source Tables 5-6, not from observed EU5 starting population. Keep it out of scale fitting because Kolata explicitly states the historical population did not approach the calculated ceiling."
+    },
+    {
+      "anchor_id": "nukunonu_tokelau_atoll_1900_1970_validation_wave7",
+      "historical_boundary": "Nukunonu/Tokelau atoll land and nearshore food system used in the Bayliss-Smith demographic analogue.",
+      "eu5_selector": {
+        "include": [
+          "location_tag=nukunonu_atoll"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact_tag_coarse_area",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "area_comparison": {
+        "published_atoll_land_area_km2": 10.1,
+        "eu5_location_area_km2": 513.1602648,
+        "unmapped_boundary_fraction": 0.0,
+        "area_scale_warning": "The EU5 location is a coarse map footprint; use only as a low-capacity analogue and do not compare raw density without area reconciliation."
+      },
+      "resolution_method": "Nukunonu has an explicit EU5 location tag. The island boundary is semantically exact, but the map footprint is coarser than the published atoll land area, so the crosswalk is not eligible for training.",
+      "notes": "This is a hostile-island validation case only; modern demographic data and imports are not model predictors."
+    }
+  ]
+}

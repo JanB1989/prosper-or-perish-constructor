@@ -1,0 +1,28 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "europe_france_lower_bound_revalidation_wave28",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "france_continental_1300_1328_lower_bound_revalidation_wave28",
+      "historical_boundary": "Continental France within the modern-border demographic envelope used by Goldstone and Lot's 528,400 km2 reconstruction",
+      "eu5_selector": {"include": ["region=france_region"], "exclude": []},
+      "matched_location_count": 446,
+      "coverage_fraction": 0.96205703141,
+      "boundary_overlap_status": "high_coverage",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "candidate_role": "lower_bound",
+      "area_comparison": {
+        "historical_area_km2": 528400.0,
+        "eu5_bounded_calibrated_area_km2": 508350.935397,
+        "area_coverage_fraction": 0.96205703141,
+        "unmapped_area_km2": 20049.064603
+      },
+      "resolution_method": "Complete france_region selector intersected through calibrated EU5 geometry; the mapped lower-bound population is not inflated to cover the declared residual boundary area.",
+      "notes": "Lower-bound aggregate validation only; cities and ports are not separate training labels."
+    }
+  ]
+}

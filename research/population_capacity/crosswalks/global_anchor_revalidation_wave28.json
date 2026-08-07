@@ -1,0 +1,46 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "global_anchor_revalidation_wave28",
+  "super_region": "Global",
+  "target_year": 1337,
+  "crosswalk_packet_id": "global_anchor_revalidation_wave28",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet with calibrated area_km2",
+  "policy": {
+    "append_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "historical_boundary_coverage_is_declared": true,
+    "residual_boundary_uncertainty_is_not_rescaled": true,
+    "unresolved_candidates_are_not_training_rows": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "greenland_norse_1290_1340_revalidation_wave28",
+      "historical_boundary": "Eastern and Western Norse settlement archaeological zones in southwest Greenland; the full Greenland island and gardr/herjolfnes game provinces are not substitutes.",
+      "eu5_selector": {"include": ["location_tag=__unmapped_greenland_norse_revalidation_wave28__"], "exclude": []},
+      "matched_location_count": 0,
+      "selected_location_count": 0,
+      "coverage_fraction": 0.0,
+      "selector_coverage_fraction": 0.0,
+      "mapped_area_km2": 0.0,
+      "historical_area_km2": null,
+      "unmapped_area_km2": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium_for_archaeological_settlements_low_for_eu5",
+      "status": "validation_only",
+      "candidate_role": "validation_only",
+      "resolution_class": "validation_only",
+      "resolution_reason_code": "historical_settlement_polygon_and_eu5_intersection_missing",
+      "resolution_method": "Placeholder selector intentionally yields no EU5 rows. The two game provinces previously proposed for Greenland are not accepted as a proxy for the dispersed Eastern and Western Settlement boundary.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 0.0,
+        "declared_historical_boundary_area_km2": null,
+        "coverage_fraction": 0.0,
+        "unmapped_area_km2": null,
+        "area_method": "No audited archaeological settlement polygon supplied.",
+        "area_difference_policy": "No target or capacity is generated; no area rescaling is allowed."
+      },
+      "notes": "Exact missing evidence: Eastern/Western Settlement polygons, location intersection and a boundary-matched local-food capacity interval."
+    }
+  ]
+}

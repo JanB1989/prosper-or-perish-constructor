@@ -1,0 +1,95 @@
+{
+  "schema_version": "population_capacity_anchor_disposition_v1",
+  "packet_id": "americas_oceania_wave7_dispositions",
+  "reviewed_on": "2026-08-03",
+  "policy": {
+    "rejected_records_are_not_training_targets": true,
+    "city_or_trade_hub_is_not_surrounding_land_capacity": true,
+    "unmapped_or_partial_boundaries_block_quantitative_scoring": true,
+    "starting_population_and_hyde_are_not_used": true
+  },
+  "records": [
+    {
+      "anchor_id": "cahokia_american_bottom_1050_1350_rejected_wave7",
+      "label": "Cahokia and American Bottom regional population estimate",
+      "date_interval": {"start": 1050, "end": 1350},
+      "population_interval": {"low": 20000, "central": 50000, "high": 80000},
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "Illinois State Archaeological Survey distinguishes a roughly 20,000-person six-square-mile urban core from a regional population greater than 50,000; the source does not provide a single rural boundary whose local-food population and saturation can be separated from the city and exchange network.",
+        "The American Bottom floodplain is a heterogeneous set of oxbows, wetlands, uplands and rural settlements; assigning the core estimate to all EU5 Cahokia-province cells would silently turn a city/trade observation into surrounding-land capacity.",
+        "The 2024 climate-population paper documents flood and drought sensitivity but does not establish a two-sided Malthusian saturation interval."
+      ],
+      "boundary_status": "unresolved",
+      "source_family": "mississippian_cahokia_regional_archaeology",
+      "sources": [
+        "https://www.isas.illinois.edu/research_2/cahokia",
+        "https://journals.sagepub.com/doi/10.1177/09596836241254488",
+        "https://www.frontiersin.org/journals/sustainable-cities/articles/10.3389/frsc.2019.00006/full"
+      ],
+      "notes": "Retain as a research queue item and qualitative floodplain/agriculture test. A future packet may promote a bounded rural survey only after the boundary is reconstructed independently of the Cahokia urban core."
+    },
+    {
+      "anchor_id": "kahikinui_haleakala_1400_1800_rejected_wave7",
+      "label": "Kahikinui/Haleakala marginal dryland farming system, Maui",
+      "date_interval": {"start": 1400, "end": 1800},
+      "population_interval": null,
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "Kirch et al. (PNAS 101, 2004, pp. 9936-9941) report peak density of 43-57 persons/km2 only for an incompletely bounded productive zone, with more than 3,000 archaeological features; no total population interval for a mappable EU5 footprint is supplied.",
+        "Kirch et al. (2005, pp. 248-254) estimate sustainable sweet-potato output of about 3.2 Mg/ha/year for the sampled complex and document nutrient depletion, but a yield is not itself a population target without a defensible area, diet and non-farm food budget.",
+        "The density peak is AD 1700-1800, outside the 1337 technology/date target and affected by contact-era demographic change."
+      ],
+      "boundary_status": "partial",
+      "source_family": "hawaii_kahikinui_dryland_archaeology",
+      "sources": [
+        "https://pubs.usgs.gov/publication/70026984",
+        "https://www.hawaii.edu/climate-data-portal/wp-content/uploads/2025/06/Intensive-dryland-farming-on-the-leeward-slopes-of-Haleakala-Maui-Hawaiian-Islands-archaeological-archaeobotanical-and-geochemical-perspectives.pdf"
+      ],
+      "notes": "Keep the yield and soil-depletion evidence for physical-feature validation, but do not invent a population interval or train on a density copied into the whole Maui location."
+    },
+    {
+      "anchor_id": "casarabe_llanos_mojos_500_1400_rejected_wave7",
+      "label": "Casarabe managed landscape, Llanos de Mojos",
+      "date_interval": {"start": 500, "end": 1400},
+      "population_interval": {"low": 10000, "central": 30000, "high": 100000},
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "The LiDAR study area is approximately 5,020 km2, but the population envelope is extrapolated from settlement visibility and is not an enumeration or saturation interval.",
+        "The current EU5 Moxos location contains only a coarse fraction of the study landscape; coverage is approximately 0.2 and cannot supervise an aggregate target.",
+        "Seasonally flooded forest islands, canals and managed fisheries establish a valuable physical analogue, not a defensible 1337 Malthusian equilibrium label."
+      ],
+      "boundary_status": "partial",
+      "source_family": "amazonian_casarabe_lidar_landscape",
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9177426/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC12124758/",
+        "https://doi.org/10.1371/journal.pone.0322441"
+      ],
+      "notes": "Retain for model stress tests of wetland fisheries, raised fields, forest management and seasonal flooding after a precise archaeological-to-EU5 polygon is built."
+    },
+    {
+      "anchor_id": "upper_xingu_1250_1500_rejected_wave7",
+      "label": "Upper Xingu managed landscape",
+      "date_interval": {"start": 1250, "end": 1500},
+      "population_interval": {"low": 50000, "central": 100000, "high": 500000},
+      "proposed_role": "validation_only",
+      "decision": "rejected_for_training",
+      "rejection_reasons": [
+        "The archaeological evidence is distributed across geoglyph, road, ring-village and anthropogenic-soil polygons rather than one historical administrative or ecological boundary.",
+        "Regional population values depend on settlement visibility and broad extrapolation and cannot be separated from post-contact epidemic and migration effects.",
+        "No EU5 selector currently reaches 95% of the named study polygons without substituting an entire Amazonian macro-region."
+      ],
+      "boundary_status": "unresolved",
+      "source_family": "upper_xingu_archaeology_managed_landscape",
+      "sources": [
+        "https://www.nature.com/articles/s41467-018-03510-7",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4528512/"
+      ],
+      "notes": "Keep as a qualitative land-management and human-footprint validation case. Do not train until the distributed polygons are mapped and the local-food interval is independently bounded."
+    }
+  ]
+}

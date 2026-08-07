@@ -1,0 +1,41 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "America/Oceania",
+  "region": "americas_oceania",
+  "target_year": 1337,
+  "crosswalk_packet_id": "americas_oceania_capacity_wave8",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "policy": {
+    "selectors_are_containment_or_explicit_validation_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "coarse_containing_selectors_cannot_be_two_sided_targets": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "mangareva_precontact_food_capacity_1200_1500_validation_wave8",
+      "historical_boundary": "Entire Mangareva island, with its share of the Gambier fringing reef and lagoon used by the Puleston et al. food-budget model.",
+      "boundary_source": "Puleston et al. 2024, GIS methods and Tables 1-7.",
+      "eu5_selector": {
+        "include": [
+          "location_tag=mangareva"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact_tag_coarse_area",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "area_comparison": {
+        "published_island_land_area_km2": 16.58,
+        "eu5_location_area_km2": 525.5840324,
+        "unmapped_boundary_fraction": 0.0,
+        "area_scale_warning": "The EU5 location is a coarse map footprint that contains the island tag but is about 31.7 times the published island land area. Do not compare raw people per km2 or use this row for training.",
+        "coarse_area_ratio": 31.698
+      },
+      "resolution_method": "The EU5 geometry exposes a single mangareva location tag, so semantic containment is unambiguous. The historical island and the game footprint are not area-coextensive; the discrepancy is retained explicitly and the row is validation-only.",
+      "notes": "Use the capacity envelope to test the food-system decomposition, protein constraint and uncertainty propagation. Never distribute the island model across the coarse selector as a two-sided aggregate target."
+    }
+  ]
+}

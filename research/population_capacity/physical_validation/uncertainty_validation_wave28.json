@@ -1,0 +1,191 @@
+{
+  "schema_version": "population_capacity_uncertainty_validation_wave28",
+  "record_id": "global_uncertainty_validation_wave28",
+  "reviewed_on": "2026-08-04",
+  "target_year": 1337,
+  "target_window": [1100, 1500],
+  "purpose": "Add independent modern spatial/parameter-risk diagnostics and preserve historical one-sided harvest/price/famine tests without turning them into capacity targets.",
+  "sources": [
+    {
+      "source_id": "faostat_qcl_global_1961_2024",
+      "source_family": "FAO_official_modern_country_yield_statistics",
+      "citation": "FAO FAOSTAT Production: Crops and livestock products",
+      "url": "https://bulks-faostat.fao.org/production/Production_Crops_Livestock_E_All_Data_(Normalized).zip",
+      "download_sha256": "c5835418c18f9322e7decbd6800f93a216eaae3cdfa31acb08f0518c0c6d6853",
+      "semantics": {
+        "years": [1961, 2024],
+        "unit": "kg/ha",
+        "items": 18,
+        "risk_statistics": ["p10", "p50", "p90", "coefficient_of_variation", "p10/p50 lower-tail ratio"],
+        "modern_technology": true,
+        "historical_1337_absolute_yield": false,
+        "population_target": false,
+        "trade_or_starting_population_used": false
+      },
+      "mapping": {
+        "crosswalk_method": "Calibrated EU5 centroid within Natural Earth 110m country polygon, joined by FAOSTAT M49 numeric code.",
+        "natural_earth_download_sha256": "0f243aeac8ac6cf26f0417285b0bd33ac47f1b5bdb719fd3e0df37d03ea37110",
+        "location_count": 20929,
+        "country_mapped_location_count": 19668,
+        "country_mapped_fraction": 0.9397486741,
+        "resolved_location_count_for_at_least_one_staple": 19054,
+        "resolved_location_fraction_for_at_least_one_staple": 0.9104113909,
+        "per_item_resolved_fraction_min": 0.082852,
+        "per_item_resolved_fraction_max": 0.89407,
+        "unmapped_policy": "Null country/series rows remain explicit; no regional or global yield filling."
+      },
+      "artifacts": {
+        "manifest": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave28/faostat_risk_mapping_manifest_wave28.json",
+        "manifest_sha256": "80c1ecfc66008aec24067162c001db8480a8f0791a5e90dbc4e97e6b35b34a20",
+        "location_crosswalk": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave28/faostat_location_country_crosswalk_wave28.csv",
+        "location_crosswalk_sha256": "c1f3d7adb9f4e88719ce7bdf0c59b2f6b0982faf05509c628f57e1a9863a8ba5",
+        "location_risk": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave28/faostat_location_crop_risk_wave28.csv",
+        "location_risk_sha256": "3f3cdc2aaa0f776fc551024e8e63be212f6a2cf67bd82fa299ad50ef8a519ee4",
+        "coverage_by_item": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave28/faostat_location_crop_risk_coverage_wave28.csv",
+        "coverage_by_item_sha256": "6bf67b2a5b6bc8dac0d423f4f55b10cfc48a8b85c7fd382f156a3003e312534d"
+      },
+      "role": "modern_relative_interannual_risk_validation_only",
+      "training_target_allowed": false,
+      "validation_allowed": true
+    },
+    {
+      "source_id": "isimip2a_lpjguess_princeton_rice_1971_2012",
+      "source_family": "ISIMIP2a_LPJ_GUESS_global_crop_model",
+      "citation": "Müller et al. (2023), ISIMIP2a Simulation Data from the Agriculture Sector; LPJ-GUESS Princeton forcing files",
+      "dataset_doi": "https://doi.org/10.48364/ISIMIP.729341",
+      "model_url": "https://www.isimip.org/impactmodels/details/79/",
+      "protocol_url": "https://www.isimip.org/documents/648/ISIMIP2a_protocol_230302_agriculture.pdf",
+      "semantics": {
+        "years": [1971, 2012],
+        "grid_resolution_deg": 0.5,
+        "crop": "rice",
+        "water_modes": ["rainfed", "full_irrigation"],
+        "unit": "dry matter t ha-1 per growing season",
+        "climate_forcing": "Princeton PGMFD v2.1",
+        "modern_default_management": true,
+        "parameter_uncertainty": "LPJ-GUESS versus CLM-Crop spread combines model, forcing, and management differences; it is uncertainty metadata, not a pure posterior.",
+        "population_target": false,
+        "1337_absolute_yield": false
+      },
+      "mapping": {
+        "location_count": 20929,
+        "super_regions": 6,
+        "annual_report_rows": 504,
+        "paired_contrast_rows": 252,
+        "model_skill_rows": 12,
+        "method": "Nearest 0.5-degree grid center from calibrated EU5 centroid; calibrated area_km2-weighted summaries."
+      },
+      "artifacts": {
+        "manifest": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave28/isimip_lpjguess_uncertainty_manifest_wave28.json",
+        "manifest_sha256": "548bf847fa75c7e93f9af4de6669068bde5010757f1cc8bda82e22c62ee440b0",
+        "rainfed_sha256": "4b0100715de34134e40d33ffd5237241a0c3d1472adf35af09e41e9e01cf416f",
+        "full_irrigation_sha256": "b75b61ba10a6a5b4bb90a752e08142e08cd4be97ed6c3e3acd5d707f43f2f4a2",
+        "model_skill": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave28/isimip_lpjguess_clm_rice_skill_wave28.csv",
+        "model_skill_sha256": "97e7f40cfd41ac4dc433e8adf36a7b9742b1fb6dec55a5f352b1918799b99826"
+      },
+      "role": "independent_modern_model_spread_and_water_mode_validation",
+      "training_target_allowed": false,
+      "validation_allowed": true
+    },
+    {
+      "source_id": "bahs_english_manorial_yields_1211_1491",
+      "source_family": "English_manorial_documentary_yields",
+      "citation": "Campbell et al., Three centuries of English crop yields, 1211-1491",
+      "url": "https://www.cropyields.ac.uk/",
+      "semantics": {
+        "years": [1211, 1491],
+        "unit": "gross yield per seed ratio, source-specific",
+        "target_overlap": [1211, 1491],
+        "one_sided_test": "Historical p10/p50 can reject a mechanistic p10 that is narrower than the observed local series after crop and boundary compatibility review.",
+        "mapped_raw_location_count": 1,
+        "population_target": false,
+        "absolute_global_scale": false
+      },
+      "artifacts": {
+        "source_table": "artifacts/data/population_capacity/historical_yields/bahs_medieval_yield_observations.parquet",
+        "source_table_sha256": "328f314a95a4fb461b382c3dd667834a558b6881d3c3565cb88ff17d6a81d505",
+        "summary_manifest": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave28/historical_risk_validation_manifest_wave28.json",
+        "summary_manifest_sha256": "cd3af9bfe5fa43c0433c31993b8290f925eeff45af7f6b1d0fa151da5914d27d"
+      },
+      "role": "in_period_one_sided_harvest_risk_validation",
+      "training_target_allowed": false,
+      "validation_allowed": true
+    },
+    {
+      "source_id": "clark_english_grain_yield_price_1208_1453",
+      "source_family": "English_medieval_grain_market_econometric_reconstruction",
+      "citation": "Gregory Clark, Markets and Economic Growth: The Grain Market of Medieval England",
+      "url": "https://www.econ.ucdavis.edu/faculty/gclark/210a/readings/market99.pdf",
+      "semantics": {
+        "years": [1208, 1453],
+        "coverage": "227 English manors",
+        "published_risk_statistics": {
+          "yield_autocorrelation_1208_1349": 0.19,
+          "price_autocorrelation_1208_1349": 0.51,
+          "yield_autocorrelation_1350_1499": 0.12,
+          "price_autocorrelation_1350_1499": 0.38,
+          "low_price_implied_inventory_fraction": 0.4
+        },
+        "interpretation": "Prices are smoothed/persistent relative to local yields; use this for reserve and temporal-risk tests, never as a local yield or population target.",
+        "population_target": false
+      },
+      "artifacts": {
+        "paper_pdf": "artifacts/data/population_capacity/physical_validation/interannual_sources/wave28/clark_market99_medieval_grain_market.pdf",
+        "paper_pdf_sha256": "3ca84b5fd34bb6e1011571e0836abc62614340021a03deb07af4661795c3ecaa"
+      },
+      "role": "in_period_reserve_storage_and_temporal_risk_validation",
+      "training_target_allowed": false,
+      "validation_allowed": true
+    },
+    {
+      "source_id": "hao_eastern_china_harvest_grades_801_1910",
+      "source_family": "Chinese_documentary_harvest_grades",
+      "citation": "Hao et al. (2020), Climate of the Past 16, 101-116",
+      "url": "https://doi.org/10.5194/cp-16-101-2020",
+      "semantics": {
+        "years": [801, 1910],
+        "target_overlap": [1100, 1500],
+        "unit": "ordinal grade relative to local normal",
+        "raw_annual_series_open": false,
+        "one_sided_test": "Severe-grade event frequencies can reject an overly narrow risk tail after the author series is obtained; no kg/ha or population target.",
+        "population_target": false
+      },
+      "role": "validation_only_pending_author_series",
+      "training_target_allowed": false,
+      "validation_allowed": false
+    },
+    {
+      "source_id": "european_famine_database_screen",
+      "source_family": "European_documentary_famine_events",
+      "citation": "European Famine Database screening project",
+      "url": "https://www.openicpsr.org/openicpsr/project/120551/version/V1/view",
+      "semantics": {
+        "target_overlap": [1100, 1500],
+        "event_presence_only": true,
+        "one_sided_test": "Mapped famine event presence may require a low-output stress scenario, but event lists do not identify local yield magnitude, saturation, or capacity.",
+        "population_target": false
+      },
+      "role": "screening_and_validation_only",
+      "training_target_allowed": false,
+      "validation_allowed": true
+    }
+  ],
+  "acceptance": {
+    "modern_global_relative_risk_layer_acquired": true,
+    "historical_one_sided_risk_layer_acquired": true,
+    "historical_global_1100_1500_annual_absolute_yield_closed": false,
+    "historical_global_risk_mapping_closed": false,
+    "parameter_uncertainty_closed": false,
+    "mechanistic_p10_p90_gate_unblocked": false,
+    "training_target_added": false,
+    "validation_allowed": true,
+    "blocking_gaps": [
+      "FAOSTAT is modern country-level data; crop-system and technology changes prevent direct 1337 calibration.",
+      "FAOSTAT coverage is 93.97% of locations by country and 8.29%-89.41% by staple item; missing item/country rows are explicit.",
+      "BAHS is English/manorial and only one raw EU5 location is mapped, so it cannot establish global spatial risk.",
+      "Clark's medieval price series demonstrates storage/market smoothing but cannot be interpreted as local yield loss.",
+      "Hao annual grades and the European famine database are not open continuous local absolute-yield panels.",
+      "No source found closes correlated climate, yield, parameter, and management uncertainty for every EU5 location in 1100-1500."
+    ]
+  }
+}

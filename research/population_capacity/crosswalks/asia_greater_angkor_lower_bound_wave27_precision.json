@@ -1,0 +1,33 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "asia_greater_angkor_lower_bound_wave27_precision",
+  "super_region": "Asia",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "greater_angkor_1181_1300_population_lower_bound_wave27_precision",
+      "historical_boundary": "Approximately 3,000 km2 Greater Angkor Region watershed catchment",
+      "eu5_selector": "location_tag=angkor",
+      "selector_type": "location_tag_area_weighted",
+      "selected_location_count": 1,
+      "matched_location_count": 1,
+      "location_weights": {"angkor": 0.945488417071616},
+      "selector_coverage_fraction": 1.0,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "vetted",
+      "candidate_role": "lower_bound",
+      "area_comparison": {
+        "historical_area_km2": 3000.0,
+        "eu5_candidate_footprint_area_km2": 3172.963249292525,
+        "mapped_area_km2": 3000.0,
+        "area_weight": 0.945488417071616
+      },
+      "resolution_method": "The dedicated EU5 Angkor location is weighted to the published 3,000 km2 watershed support; the lower-bound endpoint precision tolerance is carried by the evidence packet.",
+      "notes": "One-sided validation/floor only; no Angkor-specific capacity adjustment."
+    }
+  ]
+}

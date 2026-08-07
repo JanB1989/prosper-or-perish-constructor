@@ -1,0 +1,42 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "America/Oceania",
+  "region": "americas_oceania",
+  "target_year": 1337,
+  "crosswalk_packet_id": "americas_oceania_chimor_wave8",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "policy": {
+    "selectors_are_containment_or_explicit_validation_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "coarse_containing_selectors_cannot_be_two_sided_targets": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "chimor_north_coast_eleven_valleys_1000_1470_validation_wave8",
+      "historical_boundary": "Motupe, Leche, Lambayeque, Zana, Jequetepeque, Chicama, Moche, Viru-Chao, Santa, Nepeña and Casma valleys listed in the Chimor North Coast demographic table.",
+      "boundary_source": "Schaedel, Urbanizacion (1967), pp. 26-28; Kus 1972 Chimu Heartland irrigation study.",
+      "eu5_selector": {
+        "include": [
+          "province=chan_chan_province"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 11,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "eleven_valley_set_high_containment_coarse_area",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "area_comparison": {
+        "published_current_irrigated_area_km2": 2160.0,
+        "published_projected_irrigated_area_km2": 3240.0,
+        "eu5_selector_area_km2": 32388.2251,
+        "unmapped_boundary_fraction": 0.0,
+        "area_scale_warning": "The EU5 selector matches the eleven named valley tags but is a coarse province footprint far larger than irrigated fields. The published population envelope must not be divided by the full selector area or treated as a cell-level target.",
+        "coarse_area_ratio_to_current_irrigated_area": 14.994
+      },
+      "resolution_method": "The Chan Chan province contains exactly eleven EU5 locations whose names and latitude order align with the valley list in the historical table. This is a semantic regional crosswalk with explicit coarse-area accounting, not a claim that every province pixel was irrigated.",
+      "notes": "Use for validation-only regional sums and for testing whether desert-coast irrigation, intervalley water access and fishing produce a high but not globally dominant capacity. Do not include in scale fitting or learned residual training."
+    }
+  ]
+}

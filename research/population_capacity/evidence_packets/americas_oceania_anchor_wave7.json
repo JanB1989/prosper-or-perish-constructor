@@ -1,0 +1,176 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "America/Oceania",
+  "region": "americas_oceania",
+  "target_year": 1337,
+  "packet_id": "americas_oceania_anchor_wave7",
+  "scope": "Additional quantitative archaeological and food-system evidence; out-of-period analogues remain validation-only.",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "promoted_training_target_ids": [],
+    "decision": "These records add bounded quantitative tests but are not global scale anchors. The Maya record is out of period; Tiwanaku is a modeled agricultural potential without saturation evidence; Nukunonu is an ethnographic analogue. They must remain validation-only.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "maya_lowlands_lidar_600_900_validation_wave7",
+      "label": "Classic Maya central lowlands, regional LiDAR settlement reconstruction",
+      "year_start": 600,
+      "year_end": 900,
+      "population_low": 11000000,
+      "population_central": 16000000,
+      "population_high": 20000000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "local_food_low": 0.8,
+      "local_food_central": 0.9,
+      "local_food_high": 0.98,
+      "pressure_evidence": [
+        "Estrada-Belli et al. (Journal of Archaeological Science: Reports, 2025) combine airborne LiDAR and archaeological settlement models over approximately 95,000 km2 in Peten, western Belize, Campeche and Quintana Roo; the revised regional estimate reaches about 16 million people at Late Classic peak.",
+        "The same study identifies repeated rural residential units, plazas and agricultural infrastructure across the surveyed landscape rather than treating a single city as the population boundary.",
+        "Johnston (Journal of Anthropological Archaeology 22, 2003, pp. 126-161) documents intensive dryfield cultivation and forest-fallow constraints as the lowland Maya food-production base, with density varying by local ecology."
+      ],
+      "shock_flags": [
+        "late_classic_drought_and_regional_decline",
+        "elite_control_and_interregional_exchange",
+        "archaeological_extrapolation_uncertainty",
+        "date_outside_1337_window"
+      ],
+      "trade_dependence": "low_to_mixed; maize, beans, squash, manioc and managed forest foods were locally produced, while elite and inter-site exchange connected centers",
+      "food_regime": "milpa_maize_beans_squash_manioc_managed_forest_wetland_foods",
+      "boundary_description": "The 95,000 km2 LiDAR and archaeological survey footprint spanning Guatemala's Peten, western Belize, Campeche and Quintana Roo; it is a regional rural-and-urban landscape, not the catchment of one city.",
+      "boundary_source": "Estrada-Belli et al., New regional-scale Classic Maya population density estimates and settlement distribution models through airborne lidar scanning (Journal of Archaeological Science: Reports, 2025), study-area map and methods; Oxford Handbook of Historical Ecology and Applied Archaeology chapter by Isendahl/Smith (2013).",
+      "eu5_selector": {
+        "include": [
+          "area=peten_area|mayaab_area"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.86,
+      "boundary_overlap_status": "partial_containment",
+      "crosswalk_status": "partial",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "classic_maya_lidar_regional_demography",
+      "source_bundle": "estrada_belli_2025_jasr_johnston_2003_oxford_handbook_bundle",
+      "source_family_independence": "LiDAR settlement reconstruction and independent agricultural-land-use synthesis are treated as one regional Maya source family; this group is held out because the dates precede the 1337 target.",
+      "sources": [
+        "https://www.sciencedirect.com/science/article/pii/S2352409X25003219",
+        "https://doi.org/10.1016/S0278-4165(03)00013-8",
+        "https://academic.oup.com/edited-volume/38575/chapter-abstract/334570920"
+      ],
+      "notes": "The population interval is a published LiDAR-based regional reconstruction, not a saturated equilibrium. The available EU5 Peten and Mayaab tags cover only about 86% of the published study footprint by calibrated area; the remainder is explicitly unmapped rather than silently filled. Keep entirely validation-only and never use the estimate as a 1337 target."
+    },
+    {
+      "anchor_id": "tiwanaku_raised_field_sustaining_area_1000_1450_validation_wave7",
+      "label": "Tiwanaku three-valley raised-field sustaining area",
+      "year_start": 1000,
+      "year_end": 1450,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": 285000,
+      "capacity_central": 570000,
+      "capacity_high": 1111500,
+      "local_food_low": 0.95,
+      "local_food_central": 0.98,
+      "local_food_high": 1.0,
+      "pressure_evidence": [
+        "Kolata, The Technology and Organization of Agricultural Production in the Tiwanaku State, Latin American Antiquity 2(2), 1991, pp. 109-112, maps approximately 19,000 ha of fossil raised fields in the Tiwanaku Valley, Pampa Koani and Machaca/Desaguadero and reports experimental potato yields.",
+        "Kolata Table 6, p. 112, gives 285,000-555,750 people for one crop with 75% field utilization and 570,000-1,111,500 for double cropping with 75% utilization; Table 5 gives the corresponding 100%-utilization bounds.",
+        "Kolata pp. 112-113 explicitly treats these as agricultural potential and states that estimated Tiwanaku population did not exhaust the ceiling; this is why the record is not a saturation target.",
+        "Erickson, Raised Fields as Monumental Farmed Landscapes, Sourcebook for Garden Archaeology (2013), pp. 724-728, documents mapped field extent, frost mitigation, canal fertility, experiments and a conservative estimate of one hectare supporting about 30 people for a year."
+      ],
+      "shock_flags": [
+        "post_1000_drought_variability",
+        "frost_hail_pest_and_spoilage_losses",
+        "inca_conquest_after_1450",
+        "capacity_model_not_observed_saturation"
+      ],
+      "trade_dependence": "low for staple calories; raised-field potatoes, highland tubers, camelid herding and lake fisheries were local, with exchange of non-staples",
+      "food_regime": "raised_field_potato_tubers_camelid_pastoralism_lake_fisheries",
+      "boundary_description": "The three-valley Tiwanaku sustaining area (Tiwanaku Valley, Pampa Koani and Machaca/Desaguadero) containing approximately 19,000 ha of documented raised fields, as mapped in Kolata Figure 1 and Tables 5-6.",
+      "boundary_source": "Kolata 1991, Figure 1 and Tables 5-6, pp. 103-113; Erickson 2013, pp. 724-728.",
+      "eu5_selector": {
+        "include": [
+          "province=tiwanaku_province"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high_containment",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "tiwanaku_raised_field_experimental_capacity",
+      "source_bundle": "kolata_1991_erickson_2013_raised_field_bundle",
+      "source_family_independence": "Experimental raised-field production and archaeological mapping from the Tiwanaku sustaining area are one source family; no observed population is converted into a target.",
+      "sources": [
+        "https://d3qi0qp55mx5f5.cloudfront.net/anthrolpology/docs/Technology_Organization1.pdf",
+        "https://anthropology.sas.upenn.edu/sites/default/files/page/EricksonRaisedFieldsAsMonumentalFarmedLandscapesTiticaca2013.pdf"
+      ],
+      "notes": "This is a technology-compatible physical-capacity validation envelope, not evidence that the region was at the Malthusian ceiling. Its explicit bounds test whether the mechanistic model can represent frost-buffered raised fields, rotations and high-altitude local food without importing starting population or historical cropland shares."
+    },
+    {
+      "anchor_id": "nukunonu_tokelau_atoll_1900_1970_validation_wave7",
+      "label": "Nukunonu/Tokelau atoll local-food demographic analogue",
+      "year_start": 1900,
+      "year_end": 1970,
+      "population_low": 1400,
+      "population_central": 1640,
+      "population_high": 1900,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "local_food_low": 0.8,
+      "local_food_central": 0.9,
+      "local_food_high": 1.0,
+      "pressure_evidence": [
+        "Bayliss-Smith's Tokelau atoll study, as reproduced in Sear et al. Journal of Pacific Archaeology 16(2), 2026, Table A1 (p. 30), gives 1,640 people for Tokelau on 10.1 km2 (162 people/km2) using demographic reconstruction.",
+        "The source treats small atolls as drought-sensitive systems whose food supply depends on coconut, pulaka/taro pits, breadfruit, reef and lagoon fisheries, with severe freshwater and storm constraints.",
+        "The observed interval is an analogue for a hostile, resource-bounded island and not a 1337 census or saturation estimate."
+      ],
+      "shock_flags": [
+        "twentieth_century_demographic_and_trade_change",
+        "cyclone_drought_and_freshwater_risk",
+        "out_of_period_analogue",
+        "small_atoll_boundary_area_uncertainty"
+      ],
+      "trade_dependence": "mixed; local staples and fishing dominate subsistence but modern transport and imported foods affect the observation",
+      "food_regime": "atoll_coconut_pulaka_taro_breadfruit_reef_lagoon_fishing",
+      "boundary_description": "Nukunonu island/atoll in Tokelau; the EU5 geometry has one Nukunonu atoll location tag, but its calibrated game footprint is coarser than the 10.1 km2 land area in Bayliss-Smith's demographic table.",
+      "boundary_source": "Sear et al. 2026, Table A1, p. 30, reproducing Bayliss-Smith's Tokelau demographic reconstruction; island area and food-system caveats are retained.",
+      "eu5_selector": {
+        "include": [
+          "location_tag=nukunonu_atoll"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact_tag_coarse_area",
+      "crosswalk_status": "high",
+      "boundary_confidence": "medium",
+      "status": "validation_only",
+      "role": "validation_only",
+      "source_family": "tokelau_atoll_demography_carrying_capacity",
+      "source_bundle": "bayliss_smith_1974_sear_2026_pacific_table_bundle",
+      "source_family_independence": "Ethnographic/demographic atoll reconstruction; retained only as an out-of-period hostile-island analogue.",
+      "sources": [
+        "https://ueaeprints.uea.ac.uk/id/eprint/102930/1/399_Sear_et_al.pdf"
+      ],
+      "notes": "Use only to test whether the model produces sensible uncertainty and low absolute capacity for freshwater-limited atolls. Do not train, scale or treat modern trade-supported population as a 1337 equilibrium."
+    }
+  ]
+}

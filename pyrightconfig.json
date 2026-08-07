@@ -1,0 +1,13 @@
+﻿{
+  "venvPath": ".",
+  "venv": ".venv",
+  "pythonVersion": "3.13",
+  "extraPaths": [
+    "src",
+    "../eu5-game-parser/src",
+    "../eu5-building-pipeline/src",
+    "../eu5-mod-orchestrator/src",
+    "../ProsperOrPerishLabelingPipeline",
+    "../ProsperOrPerishPopulationCapacityPipeline/src"
+  ]
+}

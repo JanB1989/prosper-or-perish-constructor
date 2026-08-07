@@ -1,0 +1,82 @@
+{
+  "diagnostic_id": "global_anchor_revalidation_wave27",
+  "generated_on": "2026-08-04",
+  "purpose": "Audit high-priority aggregate candidates before fitting. Distinguish genuine local-food capacity evidence from demographic floors, imported-food populations, administrative counts and unresolved boundaries.",
+  "research_window": "1100-1500 with 1337 technology compatibility",
+  "forbidden_inputs": ["starting_population", "HYDE population/cropland", "RGO identity", "RGO output modifiers", "modern population or irrigated area", "trade imports as intrinsic capacity"],
+  "disposition_summary": [
+    {
+      "candidate": "Faroe Islands c.1298-1327",
+      "disposition": "promote_corrected_lower_bound",
+      "training_role": "lower_bound",
+      "reason": "Official 1327 population estimates, 1298 land-management cap and independent rangeland/ecology studies support a local-support floor. The 2020 food-balance source documents approximately 25% imported grain, so the old 90% local-food floor is replaced by a conservative 70-90% interval and no upper endpoint is created.",
+      "mapping": "1 EU5 location (Torshavn), declared coverage 0.986, high crosswalk",
+      "source_families": ["faroe_tax_land_sheep_carrying_capacity", "faroe_social_metabolism_2020", "faroe_rangeland_model"]
+    },
+    {
+      "candidate": "England counties (Norfolk, Lincolnshire, Suffolk, Cambridgeshire)",
+      "disposition": "validation_only",
+      "training_role": null,
+      "reason": "Campbell county values are conditional on a 4.0 million national assumption and share the England source family; no county-specific upper capacity or saturation interval is independent of the national scale anchor.",
+      "mapping": "Existing province selectors have high geometry matches but are not formal historic county boundary proofs",
+      "source_families": ["campbell_english_county_reconstruction_2008"]
+    },
+    {
+      "candidate": "Fayyum/Nile c.1245",
+      "disposition": "validation_only",
+      "training_role": null,
+      "reason": "Al-Nabulusi supplies local irrigation/tax fields and Rapoport supplies an approximately 75,000 fiscal reconstruction, but no closed rural boundary, total population interval, local-food share or saturation endpoint; Cairo/iqta redistribution is unresolved.",
+      "mapping": "0 EU5 locations; placeholder selector, coverage 0.0",
+      "source_families": ["qmul_fayyum_cadastre", "rapoport_fayyum_reconstruction"]
+    },
+    {
+      "candidate": "Japan Kamakura provinces c.1280",
+      "disposition": "validation_only_plus_existing_lower_bounds",
+      "training_role": "existing province lower_bound packets only",
+      "reason": "Great Land Registers establish rice-acreage floors but omit non-rice fields, population totals and upper saturation. No new aggregate target is created.",
+      "mapping": "Recheck aggregate intentionally unmapped; existing province-specific crosswalks remain separate",
+      "source_families": ["farris_2006_great_land_registers"]
+    },
+    {
+      "candidate": "Pingjiang Lu/Suzhou c.1290",
+      "disposition": "validation_only",
+      "training_role": null,
+      "reason": "The 2.4337 million Yuan register is an administrative point in a canal and market redistribution system; no rural six-county crosswalk, local-food share or saturation endpoint is available.",
+      "mapping": "0 EU5 locations; placeholder selector, coverage 0.0",
+      "source_families": ["suzhou_yuan_register"]
+    },
+    {
+      "candidate": "Lake Titicaca raised fields c.1000-1400",
+      "disposition": "validation_only",
+      "training_role": null,
+      "reason": "Raised fields and wetland intensification are strong physical evidence, but basin/polity boundaries, political shocks and date-matched population/saturation intervals are unresolved.",
+      "mapping": "0 EU5 locations; placeholder selector, coverage 0.0",
+      "source_families": ["titicaca_raised_field_archaeology"]
+    },
+    {
+      "candidate": "Tongatapu c.1100-1500",
+      "disposition": "validation_only",
+      "training_role": null,
+      "reason": "Green/Kirch/Burley provide an explicit 18,000-24,000 capacity envelope and pressure evidence, but the closure audit finds a 0.52 area match, shared model family and chronology conflict with 50,000-60,000 LiDAR estimates.",
+      "mapping": "1 EU5 location, 499.65 km2 versus 260 km2 source boundary, declared coverage 0.52; no rescaling",
+      "source_families": ["tonga_archaeology_agricultural_capacity"]
+    }
+  ],
+  "quality_gate": {
+    "new_two_sided_anchor_groups": 0,
+    "new_vetted_one_sided_anchor_groups": 1,
+    "new_validation_cases": 5,
+    "new_rejected_cases": 0,
+    "faroe_old_floor_superseded": true,
+    "forbidden_fields_used": false,
+    "unresolved_required_training_rows": 0,
+    "policy_result": "Training can proceed with the corrected Faroe lower bound and existing vetted aggregate anchors; no weak two-sided candidate is admitted merely to increase geographic quota."
+  },
+  "next_research_queue": [
+    "Find a Fayyum village polygon plus an independent enumeration or archaeological population series before any Nile upper constraint.",
+    "Reconstruct Japan province non-rice acreage and a famine/land-scarcity upper endpoint, keeping every province as a grouped holdout by Farris source family.",
+    "Obtain a CHGIS-compatible Pingjiang six-county boundary and evidence separating local rice production from canal redistribution.",
+    "Resolve Tongatapu's EU5 polygon/area conflict before scoring its explicit capacity envelope.",
+    "Search Andean regional settlement surveys for a closed raised-field boundary with independent pressure evidence; basin-wide or city totals remain validation-only."
+  ]
+}

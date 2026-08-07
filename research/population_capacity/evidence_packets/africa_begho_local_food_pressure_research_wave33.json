@@ -1,0 +1,79 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "africa_begho_local_food_pressure_research_wave33",
+  "super_region": "Africa",
+  "region": "guinea",
+  "target_year": 1337,
+  "scope": "Independent West African candidate search for Begho/Hani, Ghana. The record is retained as an explicit rejection because its only numerical population estimate is a peak urban-town estimate concentrated in the 1400s-1700s, while the archaeological boundary is an area/region rather than a closed rural catchment.",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "promoted_training_target_ids": [],
+    "decision": "Reject for 1337 capacity training. Retain as an Africa urban/trade negative control and as evidence that a named location with a population estimate is not automatically a local-food aggregate.",
+    "reviewed_on": "2026-08-04",
+    "review_method": "Independent source pass over the University of Michigan archaeological synthesis (pp. 114-117), University of Ghana bioarchaeology record, Smithsonian Posnansky project record, and the cited Posnansky/Posnansky-McIntosh excavation chronology. No starting-population, HYDE or RGO field was consulted."
+  },
+  "records": [
+    {
+      "anchor_id": "begho_1400_1500_urban_population_rejection_wave33",
+      "label": "Begho/Hani Ghana archaeological town peak, rejected as a 1337 carrying-capacity anchor",
+      "year_start": 1100,
+      "year_end": 1500,
+      "population_low": 5000,
+      "population_central": 7500,
+      "population_high": 10000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Posnansky's 5,000-10,000 figures are alternative estimates for the largest population of the Begho town, not a dated 1337 census and not an intrinsic capacity interval. The independent archaeological synthesis places peak occupation in the 1400s-1700s (pp. 114-116) and records radiocarbon evidence spanning earlier and later quarters. The numerical range is therefore retained as a rejected urban diagnostic, not converted into a lower-bound label.",
+      "pressure_evidence": [
+        "Allan (2013), A Companion to Archaeology of Africa, pp. 114-117: Begho is described as a large, nucleated, ethnically heterogeneous trading town; the term likely refers to a region or area rather than a discrete market locus; Posnansky's 1,000-1,500 mound count and conservative 5,000-10,000 population estimates are explicitly reported.",
+        "Allan pp. 114-116: peak occupation is placed in the 1400s-1700s, with radiocarbon dates from the Nyarko quarter around 1045-1120 and later quarters into the sixteenth/seventeenth centuries; this does not identify an equilibrium population at 1337.",
+        "Allan pp. 114-117: Begho was a caravan and gold-collection center trading gold, kola, slaves, textiles, ivory, shea butter and other goods; its mixed Brong, Dyula/Mande and artisan quarters make imported-food and migration dependence unresolved.",
+        "University of Ghana Hani-Begho bioarchaeology record (2019), abstract: eight excavated individuals are dated broadly to the 11th-15th centuries, confirming occupation but not a population denominator or carrying-capacity interval."
+      ],
+      "shock_flags": [
+        "peak_population_date_is_1400s_to_1700s_not_1337",
+        "population_estimate_is_house_mound_extrapolation",
+        "trade_entrepot_and_gold_collection_center",
+        "term_begho_refers_to_region_or_area_not_closed_locus",
+        "excavation_and_radiocarbon_coverage_is_heterochronous",
+        "no_independent_saturation_or_local_food_share_interval"
+      ],
+      "trade_dependence": "high_and_unresolved",
+      "food_regime": "local forest-fringe farming and wild foods are plausible, but the town's trade, craft, gold and caravan economy prevents a quantified local-food share",
+      "boundary_description": "Begho archaeological area around modern Hani, Ghana. The reviewed synthesis explicitly says Begho likely denotes a region/area rather than a discrete market locus; Posnansky's excavations were 18 units within a 6 km radius of Hani, not a closed historical rural boundary.",
+      "boundary_source": "https://deepblue.lib.umich.edu/bitstream/2027.42/107218/1/acomp_1.pdf",
+      "eu5_selector": {
+        "include": ["location_tag=begho"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "rejected",
+      "role": "validation_only",
+      "source_family": "begho_west_african_trade_archaeology",
+      "source_bundle": "posnansky_west_african_trade_project_allan_2013_ghana_bioarchaeology_bundle",
+      "source_family_independence": "Independent archaeological synthesis and University of Ghana repository record; numerical population remains inherited from Posnansky's mound extrapolations and is not promoted.",
+      "sources": [
+        "https://deepblue.lib.umich.edu/bitstream/2027.42/107218/1/acomp_1.pdf",
+        "https://ugspace.ug.edu.gh/items/720482de-d2b0-440f-a862-fd1444a7194b",
+        "https://www.si.edu/object/archaeology-and-origins-akan-society%3Asiris_sil_755609",
+        "https://ehrafarchaeology.yale.edu/traditions/fa77/documents/010"
+      ],
+      "citation_details": [
+        "Allan, A Companion to Archaeology of Africa (2013), pp. 114-117 (PDF pp. 114-117): Begho boundary semantics, 1,000-1,500 mounds, 5,000-10,000 estimates, trade role, radiocarbon span and peak occupation in the 1400s-1700s.",
+        "Lamptey, Contributions of Bioarchaeology to Understanding the Past: A Study of Excavated Human Skeletons from Hani-Begho, Ghana (University of Ghana, 2019), repository abstract: eight individuals, broadly 11th-15th centuries.",
+        "Smithsonian Libraries record for Posnansky, Archaeology and the Origins of Akan Society (1977): primary West African Trade Project report metadata and Begho site context."
+      ],
+      "notes": "Begho is useful precisely as a rejected control: a plausible local farming hinterland surrounds a dense town, but trade, craft specialization, uncertain peak date, incomplete excavation and a non-closed boundary make its 5,000-10,000 estimate unusable for an intrinsic 1337 Malthusian capacity target. Do not apply a Ghana, Guinea, or Begho correction."
+    }
+  ]
+}

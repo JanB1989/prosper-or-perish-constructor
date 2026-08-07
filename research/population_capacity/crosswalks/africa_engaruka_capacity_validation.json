@@ -1,0 +1,31 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Africa",
+  "region": "great_lakes",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/location_geometry_calibrated.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "engaruka_irrigated_capacity_1400_1720_validation",
+      "historical_boundary": "Ancient Engaruka 2,000 ha irrigation and settlement system shown in Westerberg et al. Figure 3",
+      "eu5_selector": {
+        "include": [
+          "location_tag=engeruka"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "area_comparison": {
+        "historical_system_area_km2": 20.0,
+        "eu5_containing_area_km2": 16244.540808
+      },
+      "resolution_method": "The named EU5 engeruka location is centered at 36.109 E, 3.049 S and its calibrated sample footprint fully contains the archaeological site at approximately 35.96 E, 2.99 S. No area weight is applied because this is validation-only.",
+      "notes": "Exact named-site containment is resolved. Chronology, not mapping, is the reason this record cannot train."
+    }
+  ]
+}

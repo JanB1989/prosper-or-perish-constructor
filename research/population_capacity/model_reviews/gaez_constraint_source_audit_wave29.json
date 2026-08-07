@@ -1,0 +1,227 @@
+{
+  "crop_rows": [
+    {
+      "crop": "banana",
+      "matched_tokens": [],
+      "search_tokens": [
+        "banana"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "barley",
+      "matched_tokens": [],
+      "search_tokens": [
+        "barley"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "cassava",
+      "matched_tokens": [],
+      "search_tokens": [
+        "cassava"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "chickpea",
+      "matched_tokens": [],
+      "search_tokens": [
+        "chickpea"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "cowpea",
+      "matched_tokens": [],
+      "search_tokens": [
+        "cowpea"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "dry_pea",
+      "matched_tokens": [],
+      "search_tokens": [
+        "pea"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "phaseolus_bean",
+      "matched_tokens": [],
+      "search_tokens": [
+        "bean",
+        "phaseol"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "mung_bean",
+      "matched_tokens": [],
+      "search_tokens": [
+        "green gram",
+        "mung"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "pigeonpea",
+      "matched_tokens": [],
+      "search_tokens": [
+        "pigeon"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "soybean",
+      "matched_tokens": [],
+      "search_tokens": [
+        "soybean"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "taro",
+      "matched_tokens": [],
+      "search_tokens": [
+        "taro",
+        "cocoyam"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "foxtail_millet",
+      "matched_tokens": [],
+      "search_tokens": [
+        "foxtail"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "maize",
+      "matched_tokens": [],
+      "search_tokens": [
+        "maize"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "oats",
+      "matched_tokens": [],
+      "search_tokens": [
+        "oats"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "pearl_millet",
+      "matched_tokens": [],
+      "search_tokens": [
+        "pearl millet"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "rice_dry",
+      "matched_tokens": [],
+      "search_tokens": [
+        "rice",
+        "dryland"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "rice_wet",
+      "matched_tokens": [],
+      "search_tokens": [
+        "rice",
+        "japonica",
+        "indica"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "rye",
+      "matched_tokens": [],
+      "search_tokens": [
+        "rye"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "sweet_potato",
+      "matched_tokens": [],
+      "search_tokens": [
+        "sweet potato"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "sorghum",
+      "matched_tokens": [],
+      "search_tokens": [
+        "sorghum"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "wheat",
+      "matched_tokens": [
+        "wheat"
+      ],
+      "search_tokens": [
+        "wheat"
+      ],
+      "source_text_match": true,
+      "state": "text_match_requires_row_mapping"
+    },
+    {
+      "crop": "white_potato",
+      "matched_tokens": [],
+      "search_tokens": [
+        "potato"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    },
+    {
+      "crop": "yam",
+      "matched_tokens": [],
+      "search_tokens": [
+        "yam"
+      ],
+      "source_text_match": false,
+      "state": "no_text_match"
+    }
+  ],
+  "exact_runtime_mapping_ready": false,
+  "extracted_character_count": 7202,
+  "matched_crop_count": 1,
+  "page_count": 6,
+  "reason": "PDF text presence is not a validated crop/LUT/thermal-zone runtime mapping; every row still requires table extraction, unit validation, and PyAEZ semantics tests.",
+  "schema_version": "gaez-constraint-source-audit-wave29-v1",
+  "source_path": "artifacts/data/population_capacity/sources/pyaez_1337/crop_parameters/Appendix.5.1.Agro.climatic.constraints.pdf",
+  "source_sha256": "f4f2c99c3434ed0f7080786c3e709511a16928d94d1686803bd6c0c4cb2041ac"
+}

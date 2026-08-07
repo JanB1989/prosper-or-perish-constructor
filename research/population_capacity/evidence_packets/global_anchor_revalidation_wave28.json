@@ -1,0 +1,88 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "global_anchor_revalidation_wave28",
+  "region": "global_anchor_revalidation_wave28",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "scope": "Bounded non-England revalidation of Norse Greenland. The archaeological and demographic evidence is useful as a hostile-island validation case, but it does not provide a closed same-boundary local-food capacity interval or an EU5 polygon.",
+  "promotion_audit": {
+    "decision": "No new quantitative anchor is promoted. Greenland remains validation-only and explicitly rejected for training until its settlement polygon, local-food fraction and independent capacity endpoint are resolved.",
+    "reviewed_on": "2026-08-04",
+    "review_method": "Triangulated the peer-reviewed human-ecology synthesis, Greenland biological-anthropological study, Vatnahverfi archaeological survey and diet/subsistence review. Population is retained only as an observed historical interval; no capacity is inferred from it.",
+    "reason_not_promoted": "The 1,400-2,200 peak estimate is a whole-colony demographic reconstruction, while the EU5 selectors represent game provinces rather than the Eastern and Western Norse settlement polygons. Marine-food substitution, overseas walrus/ivory trade, cooling and settlement abandonment make local-food share and saturation unresolved. A larger 4,000-6,000 model envelope exists in the literature, so treating the low demographic estimate as a ceiling would be false precision.",
+    "required_followup": [
+      "Reconstruct the Eastern and Western Settlement archaeological polygons and intersect them with calibrated EU5 geometry; do not score gardr or herjolfnes province as a colony proxy.",
+      "Recover a dated food-balance or sustainable-population interval for the same settlement boundary, separating imported/traded goods from locally produced pastoral and marine foods.",
+      "Resolve the competing population model envelopes (approximately 1,400-2,200, 2,000-3,000 and 4,000-6,000) before any upper-capacity claim.",
+      "Keep cooling, sea-ice, Thule interaction, walrus trade and abandonment as explicit validation shocks rather than fitting a regional correction."
+    ]
+  },
+  "records": [
+    {
+      "anchor_id": "greenland_norse_1290_1340_revalidation_wave28",
+      "label": "Norse Greenland c.1290-1340: hostile settlement validation recheck",
+      "year_start": 1290,
+      "year_end": 1340,
+      "population_low": 1400,
+      "population_central": 1800,
+      "population_high": 2200,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "Lynnerup's demographic reconstruction, as summarized by Jackson, Dugmore and McGovern, places the whole Norse colony near 1,400-2,200 at its AD 1300 peak. This is an observed population interval, not a local-food capacity interval. No saturation fraction is assigned because marine-food dependence, overseas exchange and the competing higher population models are unresolved.",
+      "pressure_evidence": [
+        "The human-ecology synthesis describes an exceptionally labor-intensive socialized agricultural niche, limited standing timber and scheduling pressure on farms and hunting resources.",
+        "Zooarchaeological evidence records increased reliance on migratory harp seals from about AD 1300, consistent with pastoral and winter-fodder constraints but not a quantified saturation fraction.",
+        "Vatnahverfi survey work documents extensive Norse farm settlement and later abandonment, providing a physical pressure/feasibility check rather than a colony-wide carrying-capacity estimate.",
+        "Diet/subsistence synthesis identifies pastoral livestock, marine mammals and fish, limited barley and local hunting; the mix changed through time and is not a closed calorie balance."
+      ],
+      "shock_flags": [
+        "cooling and sea-ice variability in and after the benchmark window",
+        "increasing harp-seal dependence and uncertain marine access",
+        "walrus ivory and other overseas trade links",
+        "Thule interaction and post-1400 settlement abandonment",
+        "whole-colony demographic reconstruction rather than an enumeration"
+      ],
+      "trade_dependence": "mixed; local pastoral and marine foods were substantial, but overseas walrus/ivory exchange and imported materials/food exposure are unresolved",
+      "food_regime": "hay-fed cattle, sheep, goats and horses; limited barley; seals, fish and other marine foods; local hunting",
+      "boundary_description": "Eastern and Western Norse settlements in southwest Greenland, including the archaeological farm zones rather than the full Greenland island or a modern EU5 province",
+      "boundary_source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6182579/",
+      "eu5_selector": {
+        "include": ["location_tag=__unmapped_greenland_norse_revalidation_wave28__"],
+        "exclude": []
+      },
+      "coverage_fraction": 0.0,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium_for_archaeological_settlements_low_for_eu5",
+      "status": "validation_only",
+      "role": "validation_only",
+      "training_eligible": false,
+      "validation_test": "hostile_island_observed_population_only",
+      "source_family": "greenland_norse_disequilibrium_and_archaeology",
+      "source_bundle": "greenland_norse_1300_revalidation_bundle_wave28",
+      "source_family_independence": "Not independent of the existing Greenland packet: this is an explicit source-and-boundary revalidation that prevents the demographic interval from being misused as a capacity target.",
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC6182579/",
+        "https://tidsskrift.dk/meddrgroenland_man_soc/article/view/146787",
+        "https://tidsskrift.dk/meddrgroenland_man_soc/article/view/146759",
+        "https://pure.au.dk/portal/da/publications/human-diet-and-subsistence-patterns-in-norse-greenland-ad-c980-ad/",
+        "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/5754E2BB6BBC2054AE223893EFB5822E/S0033589400009273a.pdf"
+      ],
+      "citation_details": [
+        "Jackson, Dugmore and McGovern, Disequilibrium, Adaptation, and the Norse Settlement of Greenland (Human Ecology 2018), abstract and discussion: the Lynnerup 2014 model peaks near 1,400-2,200 around AD 1300; the paper describes labor demand, resource diversification and increased harp-seal reliance.",
+        "Lynnerup, The Greenland Norse: A Biological-Anthropological Study, Meddelelser om Grønland 1998, population-model discussion: approximately 26,000 person-years over 500 years and an average of about 1,400; model envelopes are not a carrying-capacity ceiling.",
+        "Krogh/Vatnahverfi archaeological survey record, Meddelelser om Grønland: inland Eastern Settlement farms, site survey and abandonment evidence; no colony-wide population or saturation endpoint.",
+        "Arneborg, Lynnerup and Heinemeier, Human Diet and Subsistence Patterns in Norse Greenland AD c.980-c.1450: local pastoral and marine foods plus changing diet, with unresolved trade and climate effects.",
+        "Buckland et al., A multiple profile approach to the palynological reconstruction of Norse landscapes in Greenland (Quaternary Research 2014), Eastern Settlement environmental evidence; supports ecological pressure context but not a population-capacity label."
+      ],
+      "notes": "This packet closes a recurrent misuse: Greenland's 1,400-2,200 observed population is not silently converted into a capacity floor or ceiling. It remains a held-out hostile-island diagnostic until the same-boundary food balance and EU5 crosswalk are closed."
+    }
+  ]
+}

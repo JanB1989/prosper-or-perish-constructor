@@ -1,0 +1,55 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "America/Oceania",
+  "region": "america",
+  "target_year": 1337,
+  "geometry_source": "artifacts/data/population_capacity/location_geometry_calibrated.parquet",
+  "crosswalks": [
+    {
+      "anchor_id": "mesa_verde_vep_1225_1260_capacity_lower_bound",
+      "historical_boundary": "Village Ecodynamics Project phase-I 1,800 km2 study polygon shown in Kohler, Cole and Ciupe Figure 19.2",
+      "eu5_selector": {
+        "include": [
+          "location_tag=winimuc"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted_containment_lower_bound",
+      "area_comparison": {
+        "historical_study_area_km2": 1800.0,
+        "eu5_containing_area_km2": 9104.102066,
+        "historical_area_share_of_selector": 0.197715
+      },
+      "resolution_method": "Figure 19.2 places the complete VEP study polygon west of Dolores/Cortez and north of Ute Mountain inside the calibrated winimuc footprint. The crosswalk deliberately selects the whole containing EU5 location and uses a one-sided capacity constraint; it does not scale capacity by area.",
+      "notes": "Coverage is the fraction of the historical study polygon contained by the selected EU5 geography, not the fraction of the EU5 location occupied by the study. Full containment makes the lower-bound inequality valid despite the coarse game cell."
+    },
+    {
+      "anchor_id": "hohokam_lower_salt_1150_1450_capacity_lower_bound",
+      "historical_boundary": "Lower Salt River/Phoenix Basin canal-community system in Fish and Fish Figure 9.1",
+      "eu5_selector": {
+        "include": [
+          "location_tag=guwevkabaya|yavpe"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 2,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted_containment_lower_bound",
+      "area_comparison": {
+        "historical_irrigated_area_km2": 210.0,
+        "eu5_containing_area_km2": 18731.448141,
+        "historical_irrigated_share_of_selector": 0.011211
+      },
+      "resolution_method": "Fish and Fish Figure 9.1 maps the Lower Salt canal communities around Phoenix and separately identifies the Middle Gila and Tucson systems. Calibrated samples place the Phoenix corridor in guwevkabaya with its western continuation covered by yavpe. The selector is used only for a one-sided lower bound and is not area-weighted.",
+      "notes": "The containing EU5 cells are much larger than the 21,000 irrigated hectares. Requiring their combined capacity to exceed the published 53,000-person minimum is logically conservative; applying the study interval as a two-sided whole-cell target would not be valid."
+    }
+  ]
+}

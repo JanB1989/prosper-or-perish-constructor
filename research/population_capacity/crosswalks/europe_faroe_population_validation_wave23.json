@@ -1,0 +1,46 @@
+{
+  "schema_version": "population_capacity_crosswalk_v1",
+  "region": "europe_faroe_population_validation_wave23",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_faroe_population_validation_wave23",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet with calibrated area_km2",
+  "policy": {
+    "append_only": true,
+    "no_population_or_rgo_fields_used": true,
+    "historical_boundary_coverage_is_declared": true,
+    "residual_boundary_uncertainty_is_not_rescaled": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "faroe_1300_population_validation_wave23",
+      "historical_boundary": "Complete Faroe archipelago",
+      "eu5_selector": {
+        "include": ["location_tag=torshavn"],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "selected_location_count": 1,
+      "coverage_fraction": 0.986,
+      "selector_coverage_fraction": 0.986,
+      "mapped_area_km2": 1212.103533,
+      "historical_area_km2": null,
+      "unmapped_area_km2": null,
+      "boundary_overlap_status": "high",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "validation_only",
+      "candidate_role": "validation_only",
+      "resolution_method": "Use the verified EU5 Torshavn location for the complete archipelago. The 0.986 declared coverage is retained from the existing Faroe geometry audit; exact historical islet/coast clipping is not re-estimated here.",
+      "area_comparison": {
+        "eu5_calibrated_area_km2": 1212.103533,
+        "declared_historical_boundary_area_km2": null,
+        "coverage_fraction": 0.986,
+        "unmapped_area_km2": null,
+        "area_method": "calibrated area from location_candidates.parquet",
+        "area_difference_policy": "Do not inflate the validation aggregate to compensate for unresolved islet/coast clipping."
+      },
+      "notes": "The boundary is suitable for a held-out hostile-island check, but this packet has no capacity endpoint and cannot supervise global scale."
+    }
+  ]
+}

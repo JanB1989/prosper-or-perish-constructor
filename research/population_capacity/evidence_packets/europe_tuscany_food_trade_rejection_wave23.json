@@ -1,0 +1,75 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "packet_id": "europe_tuscany_food_trade_rejection_wave23",
+  "region": "europe_tuscany_food_trade_rejection_wave23",
+  "super_region": "Europe",
+  "target_year": 1337,
+  "scope": "Tuscany food-system and demographic-candidate review around 1270-1337.",
+  "promotion_audit": {
+    "decision": "Reject as a training anchor; retain as a food-trade and urbanization validation case.",
+    "reviewed_on": "2026-08-04",
+    "review_method": "Reviewed contemporary grain-market evidence, the communal import system, contado boundary semantics and the absence of a same-boundary 1290-1337 population/capacity interval.",
+    "reason_not_promoted": "Florence and other Tuscan city-states imported grain over long distances because local soil/productivity and rapidly growing urban populations could not be supported by the immediate countryside alone. Existing city and regional population figures therefore mix imported food, urban catchments and unresolved contado boundaries. No defensible two-sided capacity interval is available.",
+    "population_semantics": "No numeric population label is emitted. Florence city counts and later 1427 Catasto data are not interchangeable with a 1337 Tuscany local-food aggregate.",
+    "capacity_semantics": "No capacity endpoint is inferred from the grain-import system; imports are explicitly excluded from intrinsic capacity."
+  },
+  "records": [
+    {
+      "anchor_id": "tuscany_1300_food_trade_validation_wave23",
+      "label": "Tuscany c.1270-1337: urban grain-import and agrarian-pressure validation",
+      "year_start": 1270,
+      "year_end": 1337,
+      "population_low": null,
+      "population_central": null,
+      "population_high": null,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "pressure_evidence": [
+        "Contemporary accounts summarized by the London Review of Books report that Florence's population nearly doubled between 1240 and 1300 while Tuscan soils were poor, leading the commune to import grain from southern Italy from the 1270s.",
+        "A 2025 climate/grain-trade synthesis states that late-medieval Italian city-states, including Florence and Siena, established long-distance grain-import systems because rapid urban growth exceeded the productivity of their agricultural hinterlands.",
+        "Research on the Florentine contado documents continued market orientation and dependence of rural production on city-centered exchange, so a city or contado population cannot be treated as an autarkic local-food capacity."
+      ],
+      "shock_flags": [
+        "The 1315-1317 famine and later 1345-1347 climate shocks overlap the broad comparison period.",
+        "Florence, Siena, Pisa and Lucca are urban trade hubs whose grain catchments extend beyond their immediate EU5 location areas.",
+        "The 1427 Florentine Catasto is outside the target window and cannot supply a 1337 population interval without an unsupported backcast."
+      ],
+      "trade_dependence": "high_long_distance_grain_imports_for_urban_centres",
+      "food_regime": "Mediterranean mixed farming, cereals, legumes, vines, olives and livestock with city-state grain imports",
+      "boundary_description": "The EU5 Tuscany area aggregate (24 locations) is used only as a physical validation footprint; its area/province envelope is not asserted to equal the medieval Tuscan polity or each city's contado.",
+      "boundary_source": "https://www.nature.com/articles/s43247-025-02964-0",
+      "eu5_selector": {
+        "include": ["area=tuscany_area"],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "low",
+      "status": "rejected",
+      "role": "excluded",
+      "source_family": "tuscany_medieval_grain_trade_and_contado_review_2025",
+      "source_bundle": "florence_grain_imports_1270_late_medieval_italy_trade_climate_contado",
+      "source_family_independence": "Independent Mediterranean food-trade and contado literature; no EU5 population or RGO fields are used. The record is excluded because its semantics fail the local-food and same-boundary requirements, not because the sources are absent.",
+      "sources": [
+        "https://www.lrb.co.uk/the-paper/v47/n13/anna-mcgee/in-florence",
+        "https://www.nature.com/articles/s43247-025-02964-0",
+        "https://books.openedition.org/efr/44584?lang=en",
+        "https://archiviodistatofirenze.cultura.gov.it/asfi/archivio-notizie/notizia?cHash=e17bc36d7f093656e0bcb68bbc379495&tx_news_pi1%5Baction%5D=detail&tx_news_pi1%5Bcontroller%5D=News&tx_news_pi1%5Bid%5D=405"
+      ],
+      "citation_details": [
+        "McGee, London Review of Books (2025), summary of Orsanmichele and Florence grain imports: population nearly doubled to almost 100,000 by 1300; grain imported from southern Italy from the 1270s because Tuscan soil was poor.",
+        "Climate-driven changes in Mediterranean grain trade (Communications Earth & Environment, 2025): city-states including Florence and Siena relied on long-distance grain imports to secure urban food supply.",
+        "Notables et notabilité dans le contado florentin des XIIe-XIIIe siècles: rural populations and production were embedded in city-centered markets and the contado boundary was a political/urban catchment, not an autarkic ecological unit."
+      ],
+      "notes": "Rejected from training. Keep the case for testing whether the model avoids assigning Florence's imported urban food to surrounding intrinsic capacity."
+    }
+  ]
+}

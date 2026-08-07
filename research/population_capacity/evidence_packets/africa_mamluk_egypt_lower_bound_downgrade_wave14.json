@@ -1,0 +1,103 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Africa",
+  "region": "nile_egypt",
+  "target_year": 1337,
+  "packet_id": "africa_mamluk_egypt_lower_bound_downgrade_wave14",
+  "scope": "Append-only audit and downgrade of the Mamluk Egypt 1315 local-support floor. The underlying cadastral and agrarian evidence remains valuable, but the 3.4 million people floor is not retained as a training lower bound because its population and local-food terms are assumptions and its current EU5 selector is not the same as the cultivated rural boundary.",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "promoted_lower_bound_ids": [],
+    "decision": "Retire the existing mamluk_egypt_1315_irrigated_local_support_floor_wave3 from training. Preserve the 1298/1315 land totals, 1315 agrarian-output peak, irrigation labour evidence and 4.0-6.0 million diagnostic range, but do not treat 3.4 million as a local-food capacity floor. Russell's 4.0 million is calculated by assuming one person per feddan plus ten percent; the UN Population Bulletin explicitly says the resulting population depends on a conjectural per-feddan capacity. The 0.85 local-food share was not sourced. The broad EU5 lower_egypt_area|upper_egypt_area selector also includes urban redistribution hubs, oases, Red Sea ports and desert locations outside the mapped cultivated cadastral units.",
+    "reviewed_on": "2026-08-03",
+    "review_method": "Re-read Borsch's 1315 output and irrigation discussion, checked the UN Population Bulletin summary of Russell's calculation, checked the EGYLandscape description of Rawk cadastral units, enumerated the 60 EU5 locations and calibrated areas in the active selector, and tested whether an independent saturation interval or rural food-balance lower bound was present. No tax-to-person, feddan-to-person or urban-to-rural multiplier was introduced.",
+    "new_independent_scale_families": 0,
+    "new_validation_or_rejection_cases": 1
+  },
+  "records": [
+    {
+      "anchor_id": "mamluk_egypt_1315_local_support_floor_downgrade_wave14",
+      "supersedes_anchor_ids": [
+        "mamluk_egypt_1315_irrigated_local_support_floor_wave3"
+      ],
+      "label": "Mamluk Egypt 1298/1315 Rawk population-floor downgrade",
+      "year_start": 1298,
+      "year_end": 1315,
+      "population_low": 4000000,
+      "population_central": 5000000,
+      "population_high": 6000000,
+      "population_estimate_status": "diagnostic_land_support_inference_not_enumeration",
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The 4.0-6.0 million figures are retained only as a contested diagnostic range. Russell's approximately 4.0 million estimate starts from the identical 3,637,000-feddan land total in the 1298 and 1315 cadastres, assumes about one person per feddan, and adds ten percent; Russell says prosperity might raise the total to 4.2 million because of urban concentration. The UN Population Bulletin states that the validity of this estimate is totally dependent on the conjectural capacity assigned to a medieval feddan. Borsch's 6.0 million comparison value is an assumption used for economic comparison, not an enumeration. None is an independently measured Malthusian capacity interval or a defensible one-sided local-food floor.",
+      "quantitative_evidence": [
+        "UN Population Bulletin 31-32, Egypt discussion (pp. 84-85), reports that the 1298 and 1315 cadastres have the same cultivated-land total of 3,637,000 feddans. It summarizes Russell (1966, p. 76): assuming about one person per feddan and adding 10%, pre-plague Egypt was about 4.0 million; this could be raised to about 4.2 million if prosperity increased the urban share. The same discussion explicitly says the estimate depends totally on a conjectural per-feddan capacity and that historical Egyptian population estimates are highly conjectural: https://digitallibrary.un.org/record/146942/files/un_1991_population_bulletin_31-32.pdf.",
+        "Borsch, 'Plague Depopulation and Irrigation Decay in Medieval Egypt', The Medieval Globe 1 (2014), Table 6 and Graph 4 (pp. 147-149), normalizes estimated agrarian output to 1315 = 1.00 and reports subsequent output decline. This is a dated production peak, not a people-support ceiling: https://www.environmentandsociety.org/sites/default/files/key_docs/9781942401018.pdf.",
+        "Borsch 2014 (pp. 136-142, 157-158) describes basin and sultani irrigation, 50,000 labourers in Upper Egypt and 70,000 in Lower Egypt, and recurring canal/dike work. The 120,000 figure applies to the interconnecting sultani system and explicitly excludes thousands of village systems; it cannot be converted to a total population or capacity label.",
+        "EGYLandscape WebGIS describes the Rawk Nasiri (1315) toponyms and cadastral areas as fiscal land units, while noting missing manuscript pages and blank fields. It supplies no complete rural population or Malthusian saturation interval: https://egylandscape.huma-num.fr/about.html."
+      ],
+      "pressure_evidence": [
+        "Borsch 2014 documents that the Nile basin irrigation system required recurring coordinated labour and that 1315 was the Mamluk agrarian-output peak. This establishes a high-functioning production system and maintenance burden, not that the observed population was at a long-run Malthusian equilibrium.",
+        "Borsch 2014 describes later canal neglect, plague depopulation and output decline, but those post-1347 shocks cannot establish a pre-plague saturation fraction.",
+        "The UN Population Bulletin's wording is a direct warning that the feddan-to-person conversion is conjectural; it is not independent pressure evidence."
+      ],
+      "shock_flags": [
+        "population_inferred_from_assumed_feddan_support_not_enumerated",
+        "0.85_local_food_share_in_previous_floor_unsourced",
+        "1315_output_peak_is_not_a_capacity_ceiling",
+        "Cairo_and_Alexandria_urban_redistribution_not_separated",
+        "EU5_selector_includes_oases_red_sea_ports_and_desert_locations",
+        "trade_and_bulk_staple_import_share_for_rural_boundary_unresolved",
+        "Black_Death_after_1337_and_later_irrigation_decay"
+      ],
+      "trade_dependence": "Bulk calories were produced locally at Nile scale, but the national diagnostic includes urban and river redistribution; rural import/export share is unresolved.",
+      "food_regime": "Nile basin flood and perennial irrigation, wheat, barley, legumes, summer crops, flax, livestock, dates, freshwater fish and Delta/coastal foods",
+      "boundary_description": "The source's 1298/1315 Rawk cultivated/fiscal units in Egypt. The published 3,637,000-feddan total is an aggregate of surveyed land units, not a georeferenced polygon equivalent to the current 60-location EU5 lower_egypt_area|upper_egypt_area selector.",
+      "boundary_source": "UN Population Bulletin 31-32, pp. 84-85; Borsch 2014, Map 1 and pp. 136-149; EGYLandscape WebGIS",
+      "eu5_selector": {
+        "include": [
+          "area=lower_egypt_area|upper_egypt_area"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "full_broad_envelope_selector_but_cadastral_rural_semantics_unresolved",
+      "crosswalk_status": "downgraded_semantic_mismatch",
+      "boundary_confidence": "high for selector membership; low for equivalence to the 1315 cultivated rural boundary",
+      "status": "vetted",
+      "role": "validation_only",
+      "source_family": "mamluk_egypt_rawk_demography_lower_bound_downgrade",
+      "source_bundle": "russell_1966_un_population_bulletin_borsch_2014_egylandscape",
+      "source_family_independence": "Independent demographic-method critique, agrarian-output/irrigation study and cadastral GIS description; all concern the same Rawk evidence family and create no new scale anchor.",
+      "sources": [
+        "https://digitallibrary.un.org/record/146942/files/un_1991_population_bulletin_31-32.pdf",
+        "https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/files/documents/2020/Jan/un_1991_population_bulletin_31-32.pdf",
+        "https://www.environmentandsociety.org/sites/default/files/key_docs/9781942401018.pdf",
+        "https://egylandscape.huma-num.fr/about.html",
+        "https://doi.org/10.7560/706170"
+      ],
+      "citation_details": [
+        "UN Population Bulletin 31-32, Egypt section, printed pp. 84-85: same 3,637,000-feddan total in the 1298 and 1315 cadastres; Russell's 4.0-4.2 million is obtained from assumed persons per feddan and is explicitly described as conjectural.",
+        "Stuart Borsch, The Medieval Globe 1 (2014), 'Plague Depopulation and Irrigation Decay in Medieval Egypt', pp. 136-142 and 147-149; basin irrigation, labour requirements and 1315 output index.",
+        "EGYLandscape WebGIS, project description: Rawk Nasiri cadastral toponyms/areas, missing pages and incomplete fields.",
+        "Stuart Borsch, The Black Death in Egypt and England (2005), population/agrarian comparison; the 6.0 million value is a comparison assumption, not an enumerated population."
+      ],
+      "missing_criteria": [
+        "independent enumerated or archaeological population interval for the same 1298/1315 boundary",
+        "independent saturation or Malthusian-pressure interval",
+        "sourced local-food share and net staple import/export balance",
+        "georeferenced Rawk cultivated/fiscal polygon and >=95% EU5 boundary-equivalence coverage",
+        "rural boundary excluding Cairo, Alexandria and other redistribution hubs",
+        "separate treatment of oasis and Red Sea port populations"
+      ],
+      "notes": "This downgrade is intentionally conservative. Keep the 3,637,000-feddan land total, 1315 output peak and irrigation-maintenance evidence as physical-feature and validation inputs. Do not train on the former 3.4 million floor, do not use 4.0 million as an observed lower bound, and do not repair the gap with a regional multiplier. A future Rawk GIS reconstruction could reopen the case only with an independently evidenced population/capacity interval and a rural-food boundary."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "region": "europe_north_atlantic",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_north_atlantic_followup",
+  "crosswalks": [
+    {
+      "anchor_id": "iceland_preindustrial_capacity_model_1290_1315",
+      "historical_boundary": "Iceland island",
+      "eu5_selector": {"include": ["area=iceland_area"], "exclude": []},
+      "matched_location_count": 21,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "notes": "The entire named historical island boundary is represented by the 21 calibrated EU5 Iceland locations."
+    }
+  ]
+}

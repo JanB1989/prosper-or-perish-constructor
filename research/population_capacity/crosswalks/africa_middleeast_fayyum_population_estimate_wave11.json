@@ -1,0 +1,42 @@
+{
+  "schema_version": "population_capacity_crosswalk_proposal_v1",
+  "super_region": "Africa_and_Middle_East",
+  "region": "africa_middleeast",
+  "target_year": 1337,
+  "packet_id": "africa_middleeast_fayyum_population_estimate_wave11",
+  "geometry_source": "EU5 calibrated location geometry plus the Queen Mary FayyumMap1/Settlementtable materials and published descriptions in Keenan 1999. The Fayyum selector is retained only as a candidate physical-feature join; the aggregate crosswalk is explicitly unresolved.",
+  "crosswalks": [
+    {
+      "anchor_id": "fayyum_nabulusi_1245_population_estimate_wave11",
+      "supersedes_anchor_ids": [
+        "fayyum_nabulusi_1245_anchor_gate_review_wave9"
+      ],
+      "historical_boundary": "More than 100 al-Nabulusi villages, out-villages and hamlets in the Fayyum around 1245, linked by named canals and water quotas. The published demographic estimate includes approximately 5,000 inhabitants in Madinat al-Fayyum; the rural boundary needed for capacity supervision is not yet separated.",
+      "eu5_selector": {
+        "include": ["location_tag=faiyum"],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for candidate location and named villages; low for complete aggregate and rural-only footprint",
+      "status": "validation_only",
+      "resolution_method": "Use the location_tag=faiyum selector only to queue physical-feature mapping. Georeference FayyumMap1.pdf and Settlementtable.docx, recover the coordinates/modern identifications of all villages and canal-connected cultivated areas, intersect them with calibrated EU5 polygons, and calculate both historical-area coverage and the urban Madinat al-Fayyum share. Preserve the 75,000 point estimate as validation-only until the aggregate overlap reaches >=95% and a dated rural boundary is explicit.",
+      "required_actions": [
+        "georeference FayyumMap1.pdf and Settlementtable.docx",
+        "map every surveyed village, out-village and cultivated/canal unit; report unmapped area",
+        "separate Madinat al-Fayyum and any other urban/commercial food redistribution from rural villages",
+        "calculate area-weighted EU5 overlap and require >=95% before any target use",
+        "retain the 75,000 value as a point-estimate validation record; do not fabricate low/high bounds",
+        "find an independent saturation or upper capacity interval before promotion"
+      ],
+      "source_map_urls": [
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/FayyumMap1.pdf",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/Settlementtable.docx",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/"
+      ],
+      "notes": "A named EU5 Fayyum location is not evidence that the one location polygon contains all 1245 surveyed villages. The crosswalk stays unresolved until the historical map is digitized and overlap is measured; no partial selector is admitted to training."
+    }
+  ]
+}

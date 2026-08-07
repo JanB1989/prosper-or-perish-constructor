@@ -1,0 +1,110 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Africa_and_Middle_East",
+  "region": "africa_middleeast",
+  "target_year": 1337,
+  "packet_id": "africa_middleeast_fayyum_population_estimate_wave11",
+  "scope": "Focused follow-up on the Ayyubid Fayyum: verify whether al-Nabulusi's 1245 fiscal/agricultural survey supplies a usable population observation and whether its boundary and pressure evidence meet the aggregate-anchor gate. The newly located 75,000 value is retained as a published point-estimate validation record, not converted into a synthetic interval or capacity target.",
+  "promotion_audit": {
+    "promoted_scale_anchor_ids": [],
+    "promoted_lower_bound_ids": [],
+    "decision": "Fayyum now has an auditable published point estimate of approximately 75,000 inhabitants in 1245, probably including approximately 5,000 in Madinat al-Fayyum. It still cannot supervise training: the source supplies no uncertainty interval or independently calculated Malthusian capacity/saturation fraction, the point estimate includes an urban/commercial node, and the complete 100-plus-village historical boundary has not yet been georeferenced to EU5 at >=95% coverage. Retain as validation-only and as a high-value physical-feature research target.",
+    "reviewed_on": "2026-08-03",
+    "review_method": "Triangulated the IFAO review of Rapoport's Chapter 3 reconstruction with Keenan's independent review of the 1245 register and Rapoport-Shahar's irrigation study. Checked date/technology compatibility, population semantics, local production, pressure/shock evidence, urban and trade confounding, source-family dependence, and EU5 boundary closure. No uncertainty range was invented around the published point estimate.",
+    "new_independent_scale_families": 0,
+    "new_validation_or_rejection_cases": 1
+  },
+  "records": [
+    {
+      "anchor_id": "fayyum_nabulusi_1245_population_estimate_wave11",
+      "supersedes_anchor_ids": [
+        "fayyum_nabulusi_1245_anchor_gate_review_wave9"
+      ],
+      "label": "Fayyum al-Nabulusi 1245 published population point estimate",
+      "year_start": 1245,
+      "year_end": 1245,
+      "population_low": null,
+      "population_central": 75000,
+      "population_high": null,
+      "population_estimate_status": "published_point_estimate_without_audited_uncertainty_interval",
+      "urban_component": {
+        "city": "Madinat al-Fayyum",
+        "population_central": 5000,
+        "status": "probable_component_reported_by_review",
+        "capacity_use": "exclude_from rural capacity supervision unless a rural boundary and city-food-flow treatment are separately resolved"
+      },
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": null,
+      "local_food_central": null,
+      "local_food_high": null,
+      "capacity_low": null,
+      "capacity_central": null,
+      "capacity_high": null,
+      "interval_semantics": "The only population quantity admitted is Rapoport's published point estimate of approximately 75,000 total inhabitants, probably 5,000 in Madinat al-Fayyum, as summarized by Gaubert (BCAI 34, 2020, p. 60, citing Rapoport 2018, pp. 71-74). It is not an interval, not a capacity ceiling, and not a saturation fraction. The missing low/high bounds are intentional; a training likelihood must not treat a point estimate as exact or silently manufacture uncertainty.",
+      "quantitative_evidence": [
+        "Gaubert, review of Yossef Rapoport, Rural Economy and Tribal Society in Islamic Egypt, BCAI 34 (2020), pp. 59-60, states that Rapoport's Chapter 3 uses the Giza-dam corvee levy and the poll tax on non-Muslims over age 13, then obtains by extrapolations (Rapoport 2018, pp. 71-74) a total of 75,000 inhabitants, probably 5,000 in Madinat al-Fayyum: https://www.ifao.egnet.net/bcai/34/21/.",
+        "Keenan, 'Fayyum Agriculture at the End of the Ayyubid Period,' Proceedings of the British Academy 96 (1999), PDF pp. 287-294, describes al-Nabulusi's near-official 1245 survey, its more than 100 villages, canal/water quotas, crops and taxes. PDF pp. 294-298 reports 140,631 annual gross cereal/legume artabas, with 72,403 artabas of wheat (51.5%) and 63,362 artabas of barley/fava and other ghalla (45%), and documents mixed agriculture, pastoralism and local processing: https://www.thebritishacademy.ac.uk/documents/3883/96p287.pdf.",
+        "Rapoport and Shahar, 'Irrigation in the Medieval Islamic Fayyum: Local Control in a Large-Scale Hydraulic System,' JESHO 55 (2012), pp. 1-31, dates the survey to 1243/44-1245 and documents village-level canal control, water quotas, gravity irrigation and deteriorating agricultural conditions. The article is an independent physical/irrigation study but shares the al-Nabulusi register source family: https://www.researchgate.net/publication/261975539_Irrigation_in_the_Medieval_Islamic_Fayyum_Local_Control_in_a_Large-Scale_Hydraulic_System.",
+        "Rapoport, '1068 in the Fayyum: A Micro-History of an Environmental Crisis,' in Living with Nature and Things (2019), printed pp. 193-197, documents more than 40 abandoned settlements along the Fayyum's peripheral canals, the 1068-1073 crisis, and the contraction of cultivated area before the 1245 recovery. It is pressure and boundary evidence, not a population or capacity label: https://dokumen.pub/living-with-nature-and-things-contributions-to-a-new-social-history-of-the-middle-islamic-periods-1nbsped-9783737011037-9783847111030.html.",
+        "Queen Mary University of London, Rural Society in Medieval Islam project, describes the 1245 survey as covering more than 100 villages with fiscal, demographic, geographic and irrigation data and supplies the village database, map and GIS materials: https://projects.history.qmul.ac.uk/ruralsocietyislam/."
+      ],
+      "pressure_evidence": [
+        "Gaubert BCAI 34 (2020), pp. 59-60, reports the 1068-1074 famine/abandonment and Bedouin occupation crisis, prolonged Fayyum decline, and fiscal revenues in 1186 below half their value two centuries earlier. These establish prior resource and institutional pressure, not a 1245 saturation fraction.",
+        "Rapoport, '1068 in the Fayyum: A Micro-History of an Environmental Crisis' (2019), pp. 193-197, identifies more than 40 abandoned settlements along the Tanabtawayh and Waradan canals and notes that cultivation only began to resemble the pre-crisis extent by the middle of the 13th century. The evidence confirms severe historical pressure and incomplete recovery, but does not establish the 1245 population's fraction of intrinsic capacity.",
+        "Gaubert, p. 60, reports an estimated 30% grain tax on a 10 ardab/feddan harvest and about 2.5 ardab annual adult consumption; the review notes that equivalence with Roman-period figures suggests a higher tax was not tenable for the population (Rapoport 2018, p. 87). This is pressure/feasibility evidence, not an independently bounded carrying capacity.",
+        "Keenan 1999, PDF pp. 297-298, translates Talit as once large and inhabited but later reduced after the al-Mustansir price crisis and sand advance; the case demonstrates historical shock and village abandonment and is not used as a population label."
+      ],
+      "shock_flags": [
+        "1068_1074_famine_and_village_abandonment_precedes_observation",
+        "bedouin_occupation_and_tribal_reorganization",
+        "point_estimate_uses_extrapolation_from_corvee_and_partial_poll_tax",
+        "Madinat_al_Fayyum_urban_and_commercial_component_included",
+        "fiscal_and_trade_flows_not_equivalent_to_local_food_balance",
+        "no_independent_saturation_or_upper_capacity_interval"
+      ],
+      "trade_dependence": "Staple cereals and legumes are locally produced and dominate the surveyed grain assessments, but the Fayyum also has sugar, flax, orchards, fish and merchant processing/export links. Net import/export calories for the village aggregate are unresolved; the city component increases redistribution risk.",
+      "food_regime": "permanent Nile-linked irrigation; wheat, barley, fava beans, rice, sesame and other ghalla; sugar, flax, orchards, dates, livestock, pasture, poultry and fish",
+      "boundary_description": "The 1245 al-Nabulusi Fayyum survey of more than 100 villages plus out-villages and hamlets, connected by canals and water-right entries. The QMUL map/database provides village points/grid and GIS materials, but the complete historical aggregate polygon and its rural-only exclusion of Madinat al-Fayyum have not been audited.",
+      "boundary_source": "Keenan 1999, PDF pp. 287-298; Queen Mary Rural Society in Medieval Islam map/database; Rapoport 2018 maps and tables",
+      "eu5_selector": {
+        "include": ["location_tag=faiyum"],
+        "exclude": []
+      },
+      "coverage_fraction": null,
+      "boundary_overlap_status": "unresolved",
+      "crosswalk_status": "unresolved",
+      "boundary_confidence": "medium for named Fayyum candidate point and village identities; low for complete historical aggregate and rural-only footprint",
+      "status": "rejected",
+      "role": "validation_only",
+      "source_family": "qmul_rapoport_shahar_keenan_fayyum_1245_demography_production",
+      "source_bundle": "rapoport_2018_gaubert_2020_keenan_1999_rapoport_shahar_2012_qmul_1245_bundle",
+      "source_family_independence": "Keenan's agricultural study and Rapoport-Shahar's irrigation study are distinct scholarly analyses, but all numerical population evidence ultimately derives from the same al-Nabulusi register and Rapoport reconstruction. This packet therefore adds no independent global scale family.",
+      "sources": [
+        "https://www.ifao.egnet.net/bcai/34/21/",
+        "https://www.thebritishacademy.ac.uk/documents/3883/96p287.pdf",
+        "https://www.researchgate.net/publication/261975539_Irrigation_in_the_Medieval_Islamic_Fayyum_Local_Control_in_a_Large-Scale_Hydraulic_System",
+        "https://dokumen.pub/living-with-nature-and-things-contributions-to-a-new-social-history-of-the-middle-islamic-periods-1nbsped-9783737011037-9783847111030.html",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/FayyumMap1.pdf",
+        "https://projects.history.qmul.ac.uk/ruralsocietyislam/wp-content/uploads/sites/29/2018/10/Settlementtable.docx"
+      ],
+      "citation_details": [
+        "Christian Gaubert, review of Yossef Rapoport, Rural Economy and Tribal Society in Islamic Egypt, BCAI 34 (2020), printed pp. 59-60; the 75,000 total and probable 5,000 city component appear on printed p. 60.",
+        "James G. Keenan, 'Fayyum Agriculture at the End of the Ayyubid Period,' Proceedings of the British Academy 96 (1999), PDF pp. 287-298; village/canal and crop-output evidence on printed pp. 289-298, especially pp. 294-298.",
+        "Yossef Rapoport and Ido Shahar, 'Irrigation in the Medieval Islamic Fayyum: Local Control in a Large-Scale Hydraulic System,' Journal of the Economic and Social History of the Orient 55 (2012), pp. 1-31; survey date, canal management and deterioration evidence.",
+        "Yossef Rapoport, '1068 in the Fayyum: A Micro-History of an Environmental Crisis,' in Living with Nature and Things (2019), printed pp. 193-197; abandoned canal-edge settlements and mid-thirteenth-century cultivation recovery.",
+        "Queen Mary University of London, Rural Society in Medieval Islam project, 1245 Fayyum database/map and GIS materials."
+      ],
+      "missing_criteria": [
+        "audited low/high uncertainty bounds around the 75,000 point estimate",
+        "independently documented saturation fraction or upper carrying-capacity interval",
+        "georeferenced complete historical village/canal boundary and >=95% EU5 crosswalk",
+        "rural-only boundary that excludes Madinat al-Fayyum and quantifies urban food redistribution",
+        "quantified net local-food/import/export calorie balance"
+      ],
+      "notes": "This is a material improvement over the earlier Fayyum gate review because the published 75,000 population point estimate is now directly cited. It remains validation-only: do not set population_low/high to the point, do not turn it into capacity, and do not assign it to the single EU5 Fayyum location until the QMUL village/canal map is georeferenced and unmapped area is measured. The crop and irrigation quantities are valuable physical-feature validation inputs even while the demographic label is held out."
+    }
+  ]
+}

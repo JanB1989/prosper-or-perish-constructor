@@ -1,0 +1,75 @@
+{
+  "schema_version": "population_capacity_training_readiness_v2",
+  "report_id": "training_readiness_wave30",
+  "created_on": "2026-08-04",
+  "status": "trained_but_not_acceptance_ready",
+  "physical_closure": {
+    "locations": 20929,
+    "required_crop_mode_engine_rows": 1925468,
+    "primary_unresolved_required_labels": 0,
+    "challenger_unresolved_required_labels": 0,
+    "source_completeness": 1.0,
+    "primary_source_fraction": 0.814884,
+    "productive_mode_coverage": 0.560726,
+    "exact_pyaez_rows": 0,
+    "same_geography_physical_fallback_rows": 962734,
+    "groundwater_fallback_locations": 160,
+    "label_audit_hash": "9295f3f752a04a623c0eef61ee890278703cda811408777fee36062154083a4a",
+    "physical_closure_manifest_hash": "ebd213e81c3156e68079342323568abb284777732ec042e1c5672b315345ace6",
+    "crop_history_uncertain_median_prior": 0.5,
+    "interpretation": "GAEZ production labels and irrigation semantics are closed. Dated crop evidence is applied where mapped; unresolved crop feasibility uses an explicit maximum-entropy median prior with p10=0 and p90=1, never a silent positive label. PyAEZ remains a same-geography fallback, not an exact independent EU5 engine."
+  },
+  "independent_physical_validation": {
+    "gaez_water_response_bridge": {
+      "path": "research/population_capacity/model_reviews/pyaez_crop_risk_bridge_wave30.json",
+      "resolved_crop_mode_rows": 40,
+      "required_crop_mode_rows": 46,
+      "status": "blocked_for_exact_pyaez_claim"
+    },
+    "isimip_multicrop_interannual_bridge": {
+      "path": "research/population_capacity/physical_validation/isimip_multicrop_bridge_wave30.json",
+      "location_model_crop_mode_rows": 334864,
+      "paired_model_rows": 167432,
+      "status": "validation_only_modern_risk_bridge"
+    },
+    "exact_pyaez_matrix": false,
+    "global_1100_1500_absolute_risk_panel": false,
+    "parameter_uncertainty_independent_validation": false
+  },
+  "evidence_and_mapping": {
+    "packet_count": 190,
+    "active_packet_count": 182,
+    "training_eligible_groups": 29,
+    "two_sided_interval_groups": 4,
+    "lower_bound_groups": 25,
+    "source_families": 18,
+    "super_regions": 5,
+    "invalid_packets": 0,
+    "unresolved_required_crosswalks": 0,
+    "rapa_nui_food_evidence_source": "berenguer_rapa_nui_starch_2024",
+    "rapa_nui_evidence_role": "held_out_validation_only"
+  },
+  "fit_and_generalization": {
+    "selected_candidate": "mechanistic",
+    "mechanistic_global_capacity_people_p50": 9614476537,
+    "grouped_holdout_scored_rows": 56,
+    "grouped_interval_pass_rate": 1.0,
+    "grouped_lower_bound_pass_rate": 1.0,
+    "generalization_complete": true,
+    "learned_challenger_replacement": "not_selected"
+  },
+  "remaining_acceptance_blockers": [
+    "exact PyAEZ EU5 crop-mode matrix remains unavailable",
+    "six of forty-six GAEZ/PyAEZ water-response bridge rows remain without an official annual parameter row",
+    "global 1100-1500 independently observed interannual absolute-yield panel remains unavailable",
+    "spatial crop-parameter uncertainty is not independently validated",
+    "comparison p10/p90 still cannot be promoted to an accepted uncertainty interval",
+    "held-out Rapa Nui food-limit validation remains above its cited high interval and must be explained physically, not fit with an anchor multiplier"
+  ],
+  "deployment": {
+    "acceptance_allowed": false,
+    "normalization_applied": false,
+    "rendered_static_modifier": false,
+    "legacy_modifiers_unchanged": true
+  }
+}

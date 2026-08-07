@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "region": "europe_nile_training_floors_wave3",
+  "target_year": 1337,
+  "packet_id": "europe_nile_training_floors_wave3",
+  "scope": "Conservative, aggregate, in-period carrying-capacity lower bounds for Europe, the North Atlantic, Sicily, and Mamluk Egypt",
+  "policy": {
+    "observed_population_is_never_a_two_sided_capacity_target": true,
+    "lower_bounds_use_only_independently_supported_local_food": true,
+    "capacity_high_is_a_documented_audit_envelope_and_is_not_used_by_the_one_sided_loss": true,
+    "no_starting_population_hyde_rgo_or_trade_predictors": true,
+    "city_population_never_labels_hinterland_capacity": true
+  },
+  "records": [
+    {
+      "anchor_id": "france_continental_1328_local_support_floor_wave3",
+      "label": "Continental France after the Great Famine: aggregate local-support floor",
+      "year_start": 1328,
+      "year_end": 1328,
+      "population_low": 20000000,
+      "population_central": 21000000,
+      "population_high": 22000000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.85,
+      "local_food_central": 0.95,
+      "local_food_high": 1.0,
+      "capacity_low": 17000000,
+      "capacity_central": 19950000,
+      "capacity_high": 22000000,
+      "pressure_evidence": [
+        "Lot, pp. 104-107, reconstructs 20-22 million people over 528,400 km2 in the continental French boundary represented by the departments corresponding to the 1328 assessment and notes that roughly nine tenths of the population was rural.",
+        "Jordan, The Great Famine, pp. 11-12, describes northern France as part of a late-thirteenth-century precarious equilibrium in which demographic growth had slowed to zero; pp. 8-9 identify devastating famine severity in northern France in 1315-1322.",
+        "McNeill, Frontier Foods for Late Medieval Consumers, states that most grain eaten in medieval Europe came from local or regional sources; the deliberately wide 0.85-1.00 local-food interval allows internal French redistribution and uncertain external inflows."
+      ],
+      "shock_flags": [
+        "the 1328 observation follows the 1315-1322 Great Famine",
+        "the hearth-to-person multiplier and geographical extrapolation remain uncertain",
+        "the Hundred Years War had not yet begun in 1328"
+      ],
+      "trade_dependence": "low_at_continental_aggregate_with_internal_regional_trade",
+      "food_regime": "rainfed wheat, rye, oats, legumes, livestock, wine, woodland products, riverine and coastal fish",
+      "boundary_description": "The 528,400 km2 continental-French departmental envelope used by Lot for his 20-22 million reconstruction; represented by the complete EU5 france_region.",
+      "boundary_source": "https://www.persee.fr/doc/bec_0373-6237_1929_num_90_1_448861",
+      "eu5_selector": {
+        "include": [
+          "region=france_region"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.987,
+      "boundary_confidence": "high",
+      "crosswalk_status": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "super_region": "Europe",
+      "source_family": "france_1328_hearths_great_famine_pressure",
+      "source_bundle": "lot_1929_jordan_1996_mcneill_1998",
+      "source_family_independence": "The fiscal-hearth reconstruction, famine/pressure synthesis, and food-sourcing study are separate source families; none uses EU5 data.",
+      "sources": [
+        "https://www.persee.fr/doc/bec_0373-6237_1929_num_90_1_448861",
+        "https://api.pageplace.de/preview/DT0400.9781400822133_A25080777/preview-9781400822133_A25080777.pdf",
+        "https://www.researchgate.net/publication/233503438_Frontier_Foods_for_Late_Medieval_Consumers_Culture_Economy_Ecology"
+      ],
+      "citation_details": [
+        "Ferdinand Lot, 'L'état des paroisses et des feux de 1328,' Bibliothèque de l'École des chartes 90 (1929), pp. 104-107.",
+        "William Chester Jordan, The Great Famine (1996), chapter 1, pp. 8-12.",
+        "J. R. McNeill, 'Frontier Foods for Late Medieval Consumers,' quoted conclusion on local/regional grain sourcing."
+      ],
+      "notes": "This is intentionally one-sided. It proves that the mapped continental landscape supported at least 17.0 million locally after applying the lower local-food share; it does not assert that 22 million was the natural ceiling."
+    },
+    {
+      "anchor_id": "iceland_preindustrial_biomass_capacity_floor_wave3",
+      "label": "Iceland Ice-CC locally produced biomass carrying-capacity floor",
+      "year_start": 1290,
+      "year_end": 1350,
+      "population_low": 50000,
+      "population_central": 55000,
+      "population_high": 60000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.8,
+      "local_food_central": 0.95,
+      "local_food_high": 1.0,
+      "capacity_low": 40000,
+      "capacity_central": 60000,
+      "capacity_high": 80000,
+      "pressure_evidence": [
+        "Haraldsson and Olafsdóttir, pp. 115-118 and Figure 10, simulate a dynamic sustainable population of 40,000-80,000 from local lowland winter-feed biomass and sustainable highland grazing.",
+        "The Ice-CC model explicitly excludes fisheries (p. 115), so 40,000 is a conservative lower bound for the all-food capacity required here rather than a complete two-sided ceiling.",
+        "The authors report 50,000-60,000 as the generally believed pre-industrial population and describe occasional overshoot of simulated natural carrying capacity (pp. 116-117)."
+      ],
+      "shock_flags": [
+        "the model reports a dynamic pre-industrial range rather than a point estimate for 1337",
+        "AD 1300 volcanism and cooling increase uncertainty",
+        "the model excludes fisheries and catastrophic events",
+        "the accepted EU5 Jacobian area underestimates Iceland's physical land area and must be repaired before final model fitting"
+      ],
+      "trade_dependence": "low_for_bulk_calories_with_nonfood_and_luxury_imports",
+      "food_regime": "hay-supported cattle and sheep, dairy, meat, sustainable grazing, marine fish and other coastal foods",
+      "boundary_description": "The entire Iceland island boundary, represented by all twenty-one EU5 locations in iceland_area.",
+      "boundary_source": "https://doi.org/10.1016/j.scitotenv.2006.08.013",
+      "eu5_selector": {
+        "include": [
+          "area=iceland_area"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_confidence": "high",
+      "crosswalk_status": "exact",
+      "status": "vetted",
+      "role": "lower_bound",
+      "super_region": "Europe",
+      "source_family": "iceland_ice_cc_biomass_simulation",
+      "source_bundle": "haraldsson_olafsdottir_2006",
+      "source_family_independence": "A physical vegetation-livestock simulation independent of the French and English demographic reconstructions and independent of EU5 population.",
+      "sources": [
+        "https://doi.org/10.1016/j.scitotenv.2006.08.013",
+        "https://www.researchgate.net/publication/6815452_A_novel_modelling_approach_for_evaluating_the_preindustrial_natural_carrying_capacity_of_human_population_in_Iceland",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC6973133/"
+      ],
+      "citation_details": [
+        "H. V. Haraldsson and R. Olafsdóttir, Science of the Total Environment 372 (2006), pp. 115-118, especially Figure 10 and sections 7.2 and 8.1.",
+        "Walser et al., 'At the world's edge,' American Journal of Physical Anthropology 171 (2020), subsistence and nonlocal-food discussion."
+      ],
+      "notes": "Only the published 40,000 lower endpoint supervises training. The 80,000 endpoint remains an audit envelope because fisheries are omitted and the simulation is intentionally simple."
+    },
+    {
+      "anchor_id": "faroe_1300_local_support_floor_wave3",
+      "label": "Faroe Islands c.1300 locally supported population floor under the Sheep Letter pasture cap",
+      "year_start": 1298,
+      "year_end": 1327,
+      "population_low": 2471,
+      "population_central": 2471,
+      "population_high": 2700,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.9,
+      "local_food_central": 0.97,
+      "local_food_high": 1.0,
+      "capacity_low": 2224,
+      "capacity_central": 2397,
+      "capacity_high": 5000,
+      "pressure_evidence": [
+        "Mortensen, pp. 36-37 and abstract, reconstructs approximately 2,471 inhabitants around 1300 from a retrospective farm/taxpayer count; the independent Trap reconstruction gives about 2,440 in 1300 and 2,700 in 1327.",
+        "Brandt's carrying-capacity study quotes the 1298 Sheep Letter rule that pasture sheep numbers must remain at the previous level unless the land can accommodate more, identifying the seyðaskipan as each locality's optimum carrying capacity.",
+        "Gaini et al. document a 70,000-adult-sheep allowance essentially unchanged since 1298, explicitly because a larger stock would produce overgrazing and erosion; they describe the traditional islands as isolated and self-sustained, with local sheep, cattle, fish, seabirds, and marine mammals."
+      ],
+      "shock_flags": [
+        "the 2,471 estimate is reconstructed retrospectively from the 1584 land register",
+        "the human floor is not a two-sided ceiling because marine foods add capacity beyond the capped sheep system",
+        "the later traditional-system statement of at most 5,000 people is retained only as the unused audit high"
+      ],
+      "trade_dependence": "low",
+      "food_regime": "sheep and cattle husbandry, barley, inshore fish, seabirds, whale and seal products",
+      "boundary_description": "The complete Faroe archipelago, represented by the single EU5 torshavn location.",
+      "boundary_source": "https://ojs.setur.fo/index.php/frit/article/download/127/pdf",
+      "eu5_selector": {
+        "include": [
+          "location_tag=torshavn"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 0.986,
+      "boundary_confidence": "high",
+      "crosswalk_status": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "super_region": "Europe",
+      "source_family": "faroe_tax_land_sheep_carrying_capacity",
+      "source_bundle": "mortensen_2021_brandt_1985_gaini_2021",
+      "source_family_independence": "The population reconstruction, medieval pasture-law/carrying-capacity analysis, and food-system study are mutually independent and do not share a demographic model.",
+      "sources": [
+        "https://ojs.setur.fo/index.php/frit/article/download/127/pdf",
+        "https://ojs.setur.fo/index.php/frit/article/view/576",
+        "https://www.frontiersin.org/journals/sustainable-food-systems/articles/10.3389/fsufs.2021.599476/full",
+        "https://hagstova.fo/en/environment/geography/islands-mountains-islets-og-lakes"
+      ],
+      "citation_details": [
+        "Andras Mortensen, Fróðskaparrit 67 (2021), pp. 36-37, abstract and reconstructed population result.",
+        "Jesper Brandt, Fróðskaparrit 33 (1985), abstract and discussion of the 1298 Sheep Letter carrying-capacity rule.",
+        "Firouz Gaini et al., Frontiers in Sustainable Food Systems 5 (2021), section 'Traditional Faroese Food and Local Knowledge.'"
+      ],
+      "notes": "The loss uses only 2,224 people, equal to the conservative 2,471 reconstruction times the 0.90 lower local-food share. It does not treat 2,471 or 5,000 as a demonstrated Malthusian ceiling."
+    },
+    {
+      "anchor_id": "sicily_1277_local_support_export_floor_wave3",
+      "label": "Sicily 1276-1280 population supported alongside a cereal export surplus",
+      "year_start": 1276,
+      "year_end": 1280,
+      "population_low": 400000,
+      "population_central": 608000,
+      "population_high": 850000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.85,
+      "local_food_central": 0.95,
+      "local_food_high": 1.0,
+      "capacity_low": 340000,
+      "capacity_central": 577600,
+      "capacity_high": 850000,
+      "pressure_evidence": [
+        "Titone, pp. 32-33, reviews the 1277 fiscal declaration and the full published range: Bresc about 400,000, Peri 567,567-650,000 (described as the most convincing study), and Epstein 850,000.",
+        "The same chapter, pp. 32-33, reports that foreign grain trade was no more than 15% of internal production and that late-thirteenth-century population levels were high enough to require more appropriate farming methods.",
+        "Sicilian royal export records around the 1282 Vespers explicitly administered grain export licences and export levies; an exporter observation establishes local support as a one-sided floor, not a saturation target."
+      ],
+      "shock_flags": [
+        "the 1277 fiscal declaration supports widely differing hearth-tax multipliers",
+        "the War of the Sicilian Vespers begins in 1282, after this observation",
+        "the record is an exporter-based floor and provides no saturation fraction"
+      ],
+      "trade_dependence": "net_staple_exporter_with_internal_coastal_trade",
+      "food_regime": "durum wheat and other cereals, legumes, olives, wine, livestock, coastal fish, and orchard crops",
+      "boundary_description": "The main island of Sicily, excluding Malta; represented by all EU5 sicily_area locations except the malta location.",
+      "boundary_source": "https://api.pageplace.de/preview/DT0400.9781139368797_A23867373/preview-9781139368797_A23867373.pdf",
+      "eu5_selector": {
+        "include": [
+          "area=sicily_area"
+        ],
+        "exclude": [
+          "location_tag=malta"
+        ]
+      },
+      "coverage_fraction": 0.959,
+      "boundary_confidence": "high",
+      "crosswalk_status": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "super_region": "Europe",
+      "source_family": "sicily_1277_fiscal_demography_and_grain_exports",
+      "source_bundle": "titone_peri_bresc_epstein_grain_trade",
+      "source_family_independence": "Fiscal-demographic reconstructions and export/production studies are independent of the North Atlantic and French source bundles and independent of EU5 population.",
+      "sources": [
+        "https://api.pageplace.de/preview/DT0400.9781139368797_A23867373/preview-9781139368797_A23867373.pdf",
+        "https://books.openedition.org/efr/60775",
+        "https://books.openedition.org/psorbonne/118430"
+      ],
+      "citation_details": [
+        "Fabrizio Titone, 'The Kingdom of Sicily,' in The Italian Renaissance State, pp. 32-33, population estimates and grain-production share.",
+        "Henri Bresc et al., 'Entrepôts céréaliers en Sicile,' section on licences and export administration around 1282."
+      ],
+      "notes": "The one-sided training value is 340,000, the lowest published population estimate times the lower local-food share. The large scholarly demographic range is preserved rather than resolved by arbitrary averaging."
+    },
+    {
+      "anchor_id": "mamluk_egypt_1315_irrigated_local_support_floor_wave3",
+      "label": "Mamluk Egypt at the 1315 cadastral and agrarian-output peak: local-support floor",
+      "year_start": 1315,
+      "year_end": 1315,
+      "population_low": 4000000,
+      "population_central": 5000000,
+      "population_high": 6000000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.85,
+      "local_food_central": 0.95,
+      "local_food_high": 1.0,
+      "capacity_low": 3400000,
+      "capacity_central": 4750000,
+      "capacity_high": 6000000,
+      "pressure_evidence": [
+        "The 1315 Rawk al-Nasiri is a cadastral survey of cultivated land; Borsch, Table 6 and Graph 4 (pp. 148-149), sets 1315 agrarian output to 1.00 and identifies it as the Mamluk Sultanate's economic peak.",
+        "Borsch, pp. 136-142, documents the basin-irrigation system, local and interconnecting canals, and the very large recurring labour requirement that sustained Egyptian agrarian production before plague depopulation.",
+        "Published population reconstructions span roughly 4.0-4.2 million from cultivated area/revenue (Russell) to the 6.0 million assumption used by Borsch; the full disagreement is retained and only the local-support-adjusted 3.4 million floor trains."
+      ],
+      "shock_flags": [
+        "population estimates are indirect and contested",
+        "the 1315 survey measures land and fiscal output rather than enumerating individuals",
+        "Egypt was below some ancient-period population estimates and is not asserted to be saturated",
+        "the Black Death begins in Egypt in 1347, after the observation"
+      ],
+      "trade_dependence": "low_for_bulk_calories_at_national_nile_scale_with_internal_river_trade",
+      "food_regime": "Nile basin-irrigated wheat, barley, legumes, flax and summer crops, livestock, dates, freshwater fish, and Delta/coastal food",
+      "boundary_description": "Mamluk Egypt's Nile Delta, Nile Valley, western oases and Red Sea dependencies, excluding Sinai and Cyrenaica; represented by the EU5 lower_egypt_area and upper_egypt_area.",
+      "boundary_source": "https://www.environmentandsociety.org/sites/default/files/key_docs/9781942401018.pdf",
+      "eu5_selector": {
+        "include": [
+          "area=lower_egypt_area|upper_egypt_area"
+        ],
+        "exclude": []
+      },
+      "coverage_fraction": 1.0,
+      "boundary_confidence": "high",
+      "crosswalk_status": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "super_region": "Africa",
+      "source_family": "mamluk_egypt_1315_cadastre_population_reconstructions",
+      "source_bundle": "borsch_2005_2014_russell_1969",
+      "source_family_independence": "The cadastral/agrarian-output reconstruction and Egypt population literature are independent of all European fiscal and environmental source bundles and independent of EU5 population.",
+      "sources": [
+        "https://www.environmentandsociety.org/sites/default/files/key_docs/9781942401018.pdf",
+        "https://utpress.utexas.edu/9780292722132/",
+        "https://eh.net/book_reviews/the-black-death-in-egypt-and-england-a-comparative-study/",
+        "https://dokumen.pub/studies-on-the-history-and-culture-of-the-mamluk-sultanate-12501517-1nbsped-9783737010313-9783847110316.html"
+      ],
+      "citation_details": [
+        "Stuart Borsch, 'Plague Depopulation and Irrigation Decay in Medieval Egypt,' The Medieval Globe 1 (2014), pp. 136-142 and Table 6/Graph 4, pp. 148-149.",
+        "Stuart Borsch, The Black Death in Egypt and England (2005), p. 77 for 1315 agrarian production and the 6 million comparison assumption.",
+        "Josiah C. Russell population estimate of 4.0-4.2 million as summarized in Studies on the History and Culture of the Mamluk Sultanate, population discussion."
+      ],
+      "notes": "This is an empirical lower bound for a functioning, locally supported irrigation economy, not a claim that Mamluk Egypt had reached its Malthusian ceiling. The disputed 4-6 million range is not collapsed into a pseudo-precise target."
+    }
+  ]
+}

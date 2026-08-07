@@ -1,0 +1,43 @@
+{
+  "schema_version": "population_capacity_research_disposition_v1",
+  "disposition_id": "asia_japan_register_wave13_review",
+  "reviewed_on": "2026-08-03",
+  "scope": "Farris (2006) Table 1.3 thirteen-province Kamakura register sample",
+  "source_family": "farris_2006_great_land_registers",
+  "source_bundle": "farris_table_1_3_wave13_review",
+  "included_as_lower_bound": [
+    "japan_satsuma_1280_local_food_floor_wave13",
+    "japan_oosumi_1280_local_food_floor_wave13",
+    "japan_hyuuga_1280_local_food_floor_wave13",
+    "japan_bungo_1280_local_food_floor_wave13",
+    "japan_hizen_1280_local_food_floor_wave13",
+    "japan_tango_1280_local_food_floor_wave13",
+    "japan_tajima_1280_local_food_floor_wave13",
+    "japan_iwami_1280_local_food_floor_wave13",
+    "japan_hitachi_1280_local_food_floor_wave13"
+  ],
+  "already_in_registry": [
+    "japan_buzen_1280_local_food_floor_wave7",
+    "japan_noto_1280_local_food_floor_wave7"
+  ],
+  "retained_validation_or_rejected": [
+    {
+      "province": "Awaji",
+      "value_1280": 14631,
+      "reason": "Farris Table 1.3 supplies a rice-based value, but the current EU5 geometry has no verified Awaji province selector distinct from Awa. The value is retained in the source review, not copied to an unrelated EU5 area."
+    },
+    {
+      "province": "Wakasa",
+      "value_1280": 14215,
+      "reason": "Farris Table 1.3 supplies a rice-based value, but the current EU5 geometry has no verified Wakasa province selector. It remains a mapping queue item rather than an implicit label."
+    }
+  ],
+  "method_review": {
+    "population_semantics": "The unbracketed values are documented rice-acreage conversions and therefore one-sided local-food floors. Bracketed values add 40% for non-rice rural residents and are method sensitivities, not uncertainty bounds.",
+    "saturation_semantics": "No saturation fraction is asserted. Farris documents famine and food limitation, but the register values do not establish an equilibrium upper endpoint.",
+    "independence": "All records share one Farris documentary source family. They increase spatial coverage and lower-bound supervision but do not increase the independent-source-family count.",
+    "forbidden_fields_check": "No starting population, HYDE population/cropland, RGO identity/modifiers, or trade-import field is used as a predictor or target.",
+    "mapping_rule": "Only stable historical-province selectors with a CHGIS polygon reference and conservative >=0.95 coverage declarations are promoted to vetted lower-bound crosswalks. Missing province selectors are retained as unresolved research work, never silently dropped."
+  },
+  "review_status": "accepted_lower_bound_packet_with_explicit_mapping_queue"
+}

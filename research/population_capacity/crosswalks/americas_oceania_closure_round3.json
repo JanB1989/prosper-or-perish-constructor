@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "region": "americas_oceania",
+  "target_year": 1337,
+  "crosswalk_packet_id": "americas_oceania_closure_round3",
+  "geometry_source": "artifacts/data/population_capacity/location_geometry_calibrated.parquet",
+  "policy": {
+    "proposed_selectors_are_not_boundary_proof": true,
+    "unresolved_crosswalks_must_not_score": true,
+    "no_population_or_rgo_fields_used": true,
+    "independent_saturation_required_for_promotion": true,
+    "area_coverage_gate": 0.95
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "tongatapu_capacity_pressure_1100_1500_closure",
+      "historical_boundary": "Entire Tongatapu island, Kingdom of Tonga",
+      "eu5_selector": "location_tag=tongatapu",
+      "selector_type": "location_tag",
+      "selected_location_count": 1,
+      "matched_location_count": 1,
+      "selector_coverage_fraction": 1.0,
+      "coverage_fraction": 0.52,
+      "location_weights": {
+        "tongatapu": 0.5624317575142918
+      },
+      "boundary_overlap_status": "approximate",
+      "crosswalk_status": "approximate",
+      "boundary_confidence": "medium",
+      "status": "blocked_area_audit",
+      "candidate_role": "validation_only",
+      "area_comparison": {
+        "historical_area_km2": 260.0,
+        "eu5_area_km2": 499.6486644560208,
+        "ratio": 1.9217256325231569,
+        "area_coverage_fraction": 0.5203639878999434,
+        "candidate_geometry_source": "artifacts/data/population_capacity/geometry_land_contract_candidate_v1/location_geometry_candidate.parquet",
+        "candidate_footprint_area_km2": 451.3658438931194,
+        "candidate_land_fraction": 0.5624317575142918,
+        "candidate_land_area_km2": 253.8624848627286,
+        "candidate_area_coverage_fraction": 0.9763941725489561,
+        "candidate_area_gate_status": "passes_provisionally_pending_rebuild"
+      },
+      "resolution_method": "verified island-specific EU5 location tag; legacy full-footprint area fails, but the current cylindrical candidate geometry plus GSHHG land-mask weighting gives approximately 253.9 km2 and should pass the area gate after a reproducible rebuild",
+      "required_actions": [
+        "rebuild accepted geometry from the cylindrical candidate transform and land-mask-weighted footprint area",
+        "separate Green/Kirch/Burley model envelope from independent population observations",
+        "retain LiDAR 50,000–60,000 estimate as a conflict diagnostic only",
+        "re-score only after area ratio is within the 95% boundary tolerance"
+      ],
+      "blocking_reasons": [
+        "legacy accepted table counts the full 499.65 km2 footprint and area coverage is only about 52%",
+        "saturation interval is model-derived rather than independently observed",
+        "capacity sources share a Green/Kirch/Burley model family",
+        "later LiDAR population estimate is not an intrinsic-capacity label"
+      ],
+      "notes": "This is a high-value in-period pressure test for the mechanistic model, but it is intentionally blocked from scale fitting until geometry and source-independence gates are resolved."
+    }
+  ]
+}

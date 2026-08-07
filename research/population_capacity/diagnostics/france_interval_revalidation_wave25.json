@@ -1,0 +1,22 @@
+{
+  "schema_version": "population_capacity_anchor_revalidation_v1",
+  "diagnostic_id": "france_interval_revalidation_wave25",
+  "reviewed_on": "2026-08-04",
+  "anchor_id": "france_continental_1300_1328_interval_revalidation_wave25",
+  "decision": "promote_as_interval_anchor_after_append_only_supersession",
+  "purpose": "Document the registry defect that left the France two-sided interval inactive after a later one-sided floor packet superseded it, and prove the corrected chain.",
+  "supersession_repair": {
+    "old_interval": "france_continental_1300_1328_interval_anchor_wave6",
+    "intermediate_floor": "france_continental_1300_1328_local_food_floor_wave13",
+    "new_interval": "france_continental_1300_1328_interval_revalidation_wave25",
+    "old_interval_and_floor_both_superseded": true,
+    "duplicate_evidence_prevented": true
+  },
+  "population_interval": {"low": 18000000, "central": 19000000, "high": 20000000, "unit": "people"},
+  "saturation_interval": {"low": 0.85, "central": 0.925, "high": 1.0},
+  "implied_capacity_interval": {"low": 18000000.0, "central": 20540540.54054054, "high": 23529411.76470588, "unit": "people"},
+  "coverage_fraction": 0.96205703141,
+  "source_family": "france_early_fourteenth_century_demographic_upper_limit",
+  "independent_source_components": ["Goldstone 2012 demographic upper limit", "Lot 1929 hearth reconstruction", "Pounds 1970 overpopulation analysis", "Jordan 1996 famine-pressure synthesis", "McNeill 1998 food-sourcing synthesis"],
+  "training_policy": "Eligible as a two-sided aggregate interval, but must be held out by source family from any France-derived diagnostic and must not be counted as a new independent source family."
+}

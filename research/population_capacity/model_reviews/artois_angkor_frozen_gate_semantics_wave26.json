@@ -1,0 +1,144 @@
+{
+  "schema_version": "population_capacity_anchor_semantics_review_v1",
+  "review_id": "artois_angkor_frozen_gate_semantics_wave26",
+  "reviewed_on": "2026-08-04",
+  "status": "diagnostic_only",
+  "append_only": true,
+  "active_model_mutation": false,
+  "purpose": "Independent source, support-area, and uncertainty audit of the two direct frozen mechanistic gate failures. This record recommends evidence/crosswalk semantics; it does not alter the active evidence registry or model.",
+  "artifact_inputs": {
+    "frozen_capacity_table": "artifacts/data/population_capacity/current_capacity_map/mechanistic_locations.csv",
+    "direct_anchor_stats": "artifacts/data/population_capacity/current_capacity_map/evidence_anchor_stats.csv",
+    "anchor_review": "research/population_capacity/diagnostics/mechanistic_anchor_review_wave25.json",
+    "artois_packet": "research/population_capacity/evidence_packets/europe_artois_interval_anchor_wave17.json",
+    "artois_crosswalk": "research/population_capacity/crosswalks/europe_artois_interval_anchor_wave17.json",
+    "angkor_packet": "research/population_capacity/evidence_packets/asia_greater_angkor_lower_bound_wave5.json",
+    "angkor_crosswalk": "research/population_capacity/crosswalks/asia_greater_angkor_lower_bound_wave5.json"
+  },
+  "findings": {
+    "artois": {
+      "anchor_id": "artois_1290_1300_agrarian_capacity_interval_wave17",
+      "source_semantics": {
+        "date_compatibility": "compatible_with_1337",
+        "reason": "Derville's c.1300 density and 1285-1345 tithe/yield series are within the target technology window; the 1315-17 famine is corroborating pressure evidence and is not used as the population target.",
+        "population_is_observed_equilibrium_proxy": "partly",
+        "capacity_is_direct_malthusian_measure": false,
+        "reason_capacity_caveat": "The 169.5-254.2 people/km2 range is a published agrarian potential calculation under stated cultivated-share, yield, and seed-ratio assumptions, not a direct enumeration of an equilibrium ceiling. It is nevertheless an appropriate two-sided physical validation interval when kept grouped by source family and geography.",
+        "local_food_semantics": "predominantly_local_with_regional_exchange",
+        "pressure_semantics": "strong",
+        "pressure_evidence": "Derville describes c.1300 as a full/overpopulated rural world, high rents, small holdings, and unusually high local cereal yields; the independent Artois/Flandre famine literature documents subsistence sensitivity.",
+        "trade_caveat": "Artois exported grain and used regional markets. Long-distance imported calories are not required by the evidence, but local-food share must not be set to 1.0."
+      },
+      "support_area_audit": {
+        "historical_boundary_area_km2": 5776.65,
+        "mapped_area_km2": 5545.58456684555,
+        "coverage_fraction": 0.96,
+        "observed_density_people_per_km2": 187.633,
+        "observed_population_full_boundary_people": 1083890.16945,
+        "observed_population_mapped_support_people": 1040534.6690309312,
+        "existing_packet_population_interval_people": [1000000, 1100000],
+        "existing_capacity_interval_people": [1095000, 1250000, 1415000],
+        "existing_direct_model_p50_people": 1090913,
+        "existing_direct_model_vs_capacity_low_ratio": 0.9962675799086758,
+        "diagnosis": "support_area_mismatch",
+        "explanation": "The model aggregate is scored over 5,545.58 km2 of EU5 locations, while the packet does not state whether its 1.00-1.10m observed-population interval is for the full 5,776.65 km2 historical boundary or the 5,545.58 km2 mapped support. The observed-density check is 1.0839m on the full boundary versus 1.0405m on mapped support; under the stated nearest-10,000 policy, the 1.10m endpoint is not reproducible from mapped support alone. The potential endpoints were separately recomputed over mapped area. This is an auditable support-area ambiguity, not evidence that the historical source is wrong.",
+        "mapped_support_sensitivity": {
+          "population_interval_scaled_to_mapped_support_people": [960000, 1056000],
+          "potential_low_people": 939976.5840803208,
+          "potential_high_people": 1409687.596892139,
+          "capacity_low_people": 1056000,
+          "capacity_central_people": 1200000,
+          "capacity_high_people": 1409688,
+          "model_p50_margin_over_low": 0.03306155303030303,
+          "interpretation": "This is a support-matching sensitivity, not a regional multiplier or a model fit. It compares the frozen output and evidence on the same mapped footprint while retaining the 4% unmapped area as declared crosswalk uncertainty."
+        }
+      },
+      "recommendation": {
+        "disposition": "retain_interval_anchor",
+        "required_change": "Add an explicit target_support_area field and score aggregate evidence on the same support. If the model sum uses mapped EU5 area, transform density/population bounds to mapped area before likelihood evaluation; alternatively expand the model aggregate to the historical area and carry that expansion as crosswalk uncertainty. Do not silently drop or inflate the 4% residual.",
+        "why_not_reject": "The source and pressure evidence are strong and date-compatible; the direct miss is introduced by inconsistent support semantics and the global scale, not by a source or geometry zero.",
+        "why_not_hand_tune": "No Artois-specific multiplier is permitted. The correction is a general aggregate crosswalk contract applicable to every partial-boundary anchor."
+      },
+      "sources": [
+        {
+          "citation": "Derville, L'agriculture du Nord au Moyen-Âge, chapter VIII (1263-1349).",
+          "url": "https://books.openedition.org/septentrion/122270?lang=en",
+          "use": "Date-compatible Artois agrarian yield and regional production context."
+        },
+        {
+          "citation": "Derville, Dîmes, rendements du blé et Révolution agricole dans le Nord de la France au Moyen Âge, Annales 42 (1987), pp. 1411-1432.",
+          "url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/E63C780ADD95B7F087B280EC72D79D6F/S0395264900067123a.pdf/dimes_rendements_du_ble_et_revolution_agricole_dans_le_nord_de_la_france_au_moyen_age.pdf",
+          "use": "Independent tithe-yield evidence; reports approximately 30 hl/ha around Saint-Omer, Béthune, Lille and Douai c.1300."
+        },
+        {
+          "citation": "Derville, Villes de Flandre et d'Artois, chapter I (1200-1350).",
+          "url": "https://books.openedition.org/septentrion/52293?lang=en",
+          "use": "Directly reports c.1300 rural pressure, high rents and the 'full/overpopulated' agrarian world."
+        }
+      ]
+    },
+    "greater_angkor": {
+      "anchor_id": "greater_angkor_1181_1300_population_lower_bound_wave5",
+      "source_semantics": {
+        "date_compatibility": "near_period_but_ends_37_years_before_1337",
+        "population_is_observed_equilibrium_proxy": "yes_as_a_regional_population_lower_edge",
+        "capacity_is_direct_malthusian_measure": false,
+        "reason_capacity_caveat": "Klassen et al. estimate 700,000-900,000 inhabitants from archaeological features and modelled occupation density. The lower endpoint reflects uncertainty over occupation on embankments; it is not a measured carrying-capacity ceiling.",
+        "local_food_semantics": "predominantly_local_but_not_closed",
+        "pressure_semantics": "moderate",
+        "trade_caveat": "The study states that the economic catchment is unclear and provincial provisioning is not quantified. A separate rice-support calculation (~750,000 without irrigation) corroborates local production, but does not prove the entire population was at a Malthusian limit.",
+        "boundary_semantics": "mixed_agro_urban_watershed_not_city_core",
+        "boundary_reason": "The published 3,000 km2 watershed includes agricultural communities, hydraulic infrastructure, and the civic-ceremonial center; it is not a city-only label."
+      },
+      "support_area_audit": {
+        "historical_boundary_area_km2": 3000.0,
+        "eu5_location_footprint_area_km2": 3172.963249292525,
+        "mapped_area_km2": 3000.0,
+        "area_weight": 0.945488417071616,
+        "frozen_location_p50_people": 738748,
+        "direct_scored_p50_people": 698477.7,
+        "published_lower_edge_people": 700000,
+        "absolute_gap_people": 1522.3,
+        "relative_gap_to_floor": 0.0021747142857142857,
+        "diagnosis": "numerically_within_published_estimate_precision_but_strict_gate_fails",
+        "explanation": "The direct scored value is the frozen location p50 multiplied by the explicit 3,000/3,172.96 support-area weight. The 0.22% shortfall is smaller than the archaeological model's stated occupation-density and boundary uncertainty, but the current one-sided rule correctly flags it because the packet encodes 700,000 as a hard floor.",
+        "independent_sensitivity": {
+          "low_density_zone_plus_civic_core_range_people": [650000, 850000],
+          "source": "PLOS ONE 2025 summary reports approximately 500,000-700,000 in the low-density agricultural zone plus approximately 150,000 in the civic-ceremonial center.",
+          "interpretation": "This is a near-period corroborating sensitivity, not an independent source family: it overlaps the Greater Angkor archaeological evidence and must not be promoted as a separate training anchor."
+        }
+      },
+      "recommendation": {
+        "disposition": "retain_as_low_confidence_one_sided_validation_or_floor",
+        "preferred_training_status": "one_sided_lower_bound_with_explicit_evidence_uncertainty",
+        "required_change": "Do not treat the rounded 700,000 archaeological lower edge as a mathematically exact floor. Store an evidence precision/uncertainty field and either (a) use a predeclared lower-bound tolerance derived from the published occupation-density uncertainty, or (b) keep 700,000 as validation-only until that tolerance contract is implemented. Do not lower the floor by an Angkor-specific multiplier.",
+        "physical_model_followup": "The frozen Angkor p50 before support weighting is 738,748 and already clears 700,000. The remaining gap is support-area scoring plus missing generic flood-recession/deepwater-rice uncertainty, not evidence of a zero crop source. Implement and validate the generic hydraulic pathway before changing any global physical parameter.",
+        "why_not_promote_interval": "The population interval is not a saturation interval, and local/provincial provisioning is unresolved. It cannot set global scale or become a two-sided target.",
+        "why_not_reject_entirely": "The mapped agro-urban boundary, archaeological evidence, >1,000 km2 ricefield mapping, and local rice-support estimate provide useful one-sided validation information."
+      },
+      "sources": [
+        {
+          "citation": "Klassen et al. (2021), Diachronic modeling of the population within the medieval Greater Angkor Region settlement complex, Science Advances 7(19), eabf8441.",
+          "url": "https://doi.org/10.1126/sciadv.abf8441",
+          "use": "Primary 3,000 km2 boundary and 700,000-900,000 archaeological population interval; explicitly attributes range to embankment occupation uncertainty."
+        },
+        {
+          "citation": "Klassen, Ortman, Lobo and Evans (2022), Provisioning an Early City: Spatial Equilibrium in the Agricultural Economy at Angkor, Journal of Archaeological Method and Theory 29, 763-794.",
+          "url": "https://doi.org/10.1007/s10816-021-09535-5",
+          "use": "Agricultural organization, >1,000 km2 Angkor-period ricefields and hydraulic infrastructure; supports local production but not a saturation ceiling."
+        },
+        {
+          "citation": "Beyond the Greater Angkor Region: Automatic large-scale mapping of Angkorian-period reservoirs in satellite imagery, PLOS ONE (2025), 10.1371/journal.pone.0320452.",
+          "url": "https://doi.org/10.1371/journal.pone.0320452",
+          "use": "Near-period corroborating sensitivity for approximately 500,000-700,000 in the agricultural zone plus about 150,000 in the civic-ceremonial center; same broad archaeological source family, validation-only."
+        }
+      ]
+    }
+  },
+  "overall_conclusion": {
+    "artois": "Evidence retained; direct failure is a general partial-boundary support mismatch and should be fixed in crosswalk scoring, not with a regional parameter.",
+    "greater_angkor": "Evidence retained only as low-confidence one-sided validation/floor; strict 700,000 floor remains scientifically uncertain and should not be treated as exact until an explicit uncertainty/tolerance contract is implemented.",
+    "deployment": "blocked",
+    "no_active_registry_change": true
+  }
+}

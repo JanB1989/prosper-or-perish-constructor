@@ -1,0 +1,422 @@
+{
+  "schema": "fisheries_scientific_validation_registry_v1",
+  "registry_date": "2026-08-03",
+  "target_date": 1337,
+  "scope": "Evidence that can validate fisheries production physics, pre-1337 access technology, and uncertainty. No record in this registry is a population-capacity training target.",
+  "forbidden_uses": [
+    "EU5 starting population or RGO fields",
+    "HYDE population or cropland",
+    "modern reported catch as a location label",
+    "archaeological population estimates as fisheries-production truth when catch was derived from those same population estimates"
+  ],
+  "sources": [
+    {
+      "source_id": "esgf_cmip6_pmip_past1000_intpp_inventory_2026_08_03",
+      "source_family_id": "esgf_cmip6_catalogue",
+      "title": "ESGF CMIP6 PMIP past1000 intpp catalogue query",
+      "citation_url": "https://esgf-node.llnl.gov/esg-search/search/?project=CMIP6&activity_id=PMIP&experiment_id=past1000&variable_id=intpp&format=application%2Fsolr%2Bjson&limit=0&facets=source_id",
+      "page_table_figure_refs": [
+        "facet_counts.facet_fields.source_id: MIROC-ES2L only; query run 2026-08-03"
+      ],
+      "use_role": "data_availability_audit",
+      "supports": [
+        "The public CMIP6 PMIP past1000 catalogue does not currently supply a three-model ocean intpp ensemble."
+      ],
+      "limitations": [
+        "Catalogue availability can change and must be re-queried before acquisition."
+      ]
+    },
+    {
+      "source_id": "ohgaito_et_al_2021_miroc_es2l_pmip4",
+      "source_family_id": "miroc_pmip4_model",
+      "title": "PMIP4 experiments using MIROC-ES2L Earth system model",
+      "citation_url": "https://doi.org/10.5194/gmd-14-1195-2021",
+      "page_table_figure_refs": [
+        "Sections 2 and 3; PMIP4 experiment and Earth-system-model description"
+      ],
+      "use_role": "physical_source_semantics",
+      "supports": [
+        "MIROC-ES2L is a coupled Earth-system simulation suitable as one physical medieval-ocean trajectory."
+      ],
+      "limitations": [
+        "One model cannot measure structural disagreement among ocean-biogeochemistry models."
+      ]
+    },
+    {
+      "source_id": "ryan_keogh_et_al_2023_ocean_npp_ensemble",
+      "source_family_id": "satellite_npp_algorithm_ensemble",
+      "title": "A new global oceanic multi-model net primary productivity data product",
+      "citation_url": "https://doi.org/10.5194/essd-15-4829-2023",
+      "page_table_figure_refs": [
+        "Section 2 and Figures 3-7; five satellite NPP algorithms and ensemble variance"
+      ],
+      "use_role": "physical_parameter_prior",
+      "supports": [
+        "Algorithm choice creates material spatial and temporal NPP disagreement and should be propagated."
+      ],
+      "limitations": [
+        "The product is satellite-era and cannot by itself supply a circa-1337 climate anomaly."
+      ]
+    },
+    {
+      "source_id": "pauly_christensen_1995_primary_production",
+      "source_family_id": "aquatic_trophic_models",
+      "title": "Primary production required to sustain global fisheries",
+      "citation_url": "https://doi.org/10.1038/374255a0",
+      "page_table_figure_refs": [
+        "Pages 255-257; abstract and 48-model trophic-transfer calculation"
+      ],
+      "use_role": "physical_parameter_prior",
+      "supports": [
+        "Mean trophic transfer efficiency near 10 percent was re-estimated across 48 published trophic models."
+      ],
+      "limitations": [
+        "Reported modern catches enter the paper's primary-production-required calculation and therefore cannot be used as historical labels here."
+      ]
+    },
+    {
+      "source_id": "randall_minns_kelso_1995_freshwater_production",
+      "source_family_id": "freshwater_community_production_meta_analysis",
+      "title": "Fish production in freshwaters: Are rivers more productive than lakes?",
+      "citation_url": "https://doi.org/10.1139/f95-063",
+      "page_table_figure_refs": [
+        "Pages 631-643; abstract and river/lake community-production synthesis"
+      ],
+      "use_role": "physical_parameter_prior",
+      "supports": [
+        "The study reports 55 river and 22 lake sites and large between-system differences in community production."
+      ],
+      "limitations": [
+        "Cross-site means are not location-specific medieval distributions."
+      ]
+    },
+    {
+      "source_id": "richter_jones_jackson_2023_river_production",
+      "source_family_id": "freshwater_empirical_transfer_models",
+      "title": "Predicting riverine fish production using empirical models and the metabolic theory of ecology",
+      "citation_url": "https://doi.org/10.1111/eff.12708",
+      "page_table_figure_refs": [
+        "Abstract; Sections 2-4; independent 78-site validation and reported RMSE"
+      ],
+      "use_role": "freshwater_transfer_method",
+      "supports": [
+        "Environment- and assemblage-conditioned transfer models can be validated against held-out fish-production observations."
+      ],
+      "limitations": [
+        "Most sites are North American; the authors characterize estimates as rough and call for tests in new regions."
+      ]
+    },
+    {
+      "source_id": "barrett_et_al_2011_medieval_cod",
+      "source_family_id": "medieval_cod_isotopes",
+      "title": "Interpreting the expansion of sea fishing in medieval Europe using stable isotope analysis of archaeological cod bones",
+      "citation_url": "https://doi.org/10.1016/j.jas.2011.02.017",
+      "page_table_figure_refs": [
+        "Figures 1-4 and Appendix 1; 300 archaeological cod bones"
+      ],
+      "use_role": "qualitative_validation",
+      "supports": [
+        "Medieval fishing and preserved-fish trade reached beyond immediate urban waters."
+      ],
+      "limitations": [
+        "Distant traded fish cannot validate intrinsic food capacity of the importing location."
+      ]
+    },
+    {
+      "source_id": "orton_et_al_2011_baltic_cod",
+      "source_family_id": "eastern_baltic_cod_isotopes",
+      "title": "Stable isotope evidence for late medieval origins of the eastern Baltic cod fishery",
+      "citation_url": "https://doi.org/10.1371/journal.pone.0027568",
+      "page_table_figure_refs": [
+        "Figures 1-4 and supporting archaeological specimen table"
+      ],
+      "use_role": "qualitative_validation",
+      "supports": [
+        "A spatially distinct eastern Baltic cod fishery is directly evidenced in the fourteenth and fifteenth centuries."
+      ],
+      "limitations": [
+        "Bone provenance identifies exploitation geography, not annual sustainable yield."
+      ]
+    },
+    {
+      "source_id": "gustas_2024_barkley_sound_midden_biomass",
+      "source_family_id": "barkley_sound_midden_reconstruction",
+      "title": "Midden volume, harvested fish biomass, and pre-contact minimum population estimates for Nuu-chah-nulth Territories in Barkley Sound",
+      "citation_url": "https://hdl.handle.net/1828/20908",
+      "page_table_figure_refs": [
+        "Abstract and dissertation biomass-model chapters; 241,253 cubic metres of midden and approximately 1.2 billion fish over three millennia"
+      ],
+      "use_role": "quantitative_validation",
+      "supports": [
+        "A conservative archaeological workflow links midden volume to harvested biomass and food-energy support."
+      ],
+      "limitations": [
+        "The estimate averages three millennia and is validation-only, not a 1337 training target."
+      ]
+    },
+    {
+      "source_id": "fossile_et_al_2019_babitonga_catch",
+      "source_family_id": "babitonga_shellmound_reconstruction",
+      "title": "Pre-Columbian fisheries catch reconstruction for a subtropical estuary in South America",
+      "citation_url": "https://doi.org/10.1111/faf.12401",
+      "page_table_figure_refs": [
+        "Methods and Results catch-reconstruction tables; accepted manuscript repository record"
+      ],
+      "use_role": "quantitative_validation",
+      "supports": [
+        "Archaeological assemblages can provide a long-run check on plausible fish extraction."
+      ],
+      "limitations": [
+        "The 73,117.49-tonne estimate is averaged over roughly 5,850 years and is therefore retained only as a conservative held-out lower bound, never a 1337 annual target."
+      ]
+    },
+    {
+      "source_id": "fao_china_freshwater_aquaculture_history",
+      "source_family_id": "fao_chinese_aquaculture_history",
+      "title": "Freshwater aquaculture development in China",
+      "citation_url": "https://www.fao.org/4/ad016e/AD016E02.htm",
+      "page_table_figure_refs": [
+        "Section 2.6 and Table 10; Song Dynasty fry capture, transport and sales"
+      ],
+      "use_role": "technology_evidence",
+      "supports": [
+        "Freshwater aquaculture and organized fry transport were historically available before 1337 in China."
+      ],
+      "limitations": [
+        "Modern production tables on the same page cannot be used as medieval output rates."
+      ]
+    },
+    {
+      "source_id": "nps_huilua_hawaiian_fishpond",
+      "source_family_id": "hawaiian_fishpond_heritage",
+      "title": "Huilua Fishpond",
+      "citation_url": "https://www.nps.gov/places/huilua-fishpond.htm",
+      "page_table_figure_refs": [
+        "Construction-date and fishpond-engineering sections; many Hawaiian ponds dated 1200-1600"
+      ],
+      "use_role": "technology_evidence",
+      "supports": [
+        "Brackish fishpond engineering was feasible within the target historical window in Hawaii."
+      ],
+      "limitations": [
+        "The page does not provide a defensible annual yield distribution."
+      ]
+    },
+    {
+      "source_id": "schlesinger_regier_1982_lake_yield",
+      "source_family_id": "freshwater_climate_yield_models",
+      "title": "Climatic and morphoedaphic indices of fish yields from natural lakes",
+      "citation_url": "https://doi.org/10.1139/f82-153",
+      "page_table_figure_refs": [
+        "Abstract and 43-natural-lake regression tables; mean annual temperature explains 74 percent of yield variance"
+      ],
+      "use_role": "freshwater_transfer_method",
+      "supports": [
+        "Lake yield varies systematically with climate and morphoedaphic conditions; a single cross-site mean is not a location label."
+      ],
+      "limitations": [
+        "The regression sample is modern and geographically incomplete; it is used only to validate the width of the physical envelope."
+      ]
+    },
+    {
+      "source_id": "fao_mrag_1995_tropical_lake_yields",
+      "source_family_id": "fao_tropical_freshwater_synthesis",
+      "title": "Review of tropical reservoirs and their fisheries",
+      "citation_url": "https://www.fao.org/4/v4110e/V4110E00.htm",
+      "page_table_figure_refs": [
+        "Yield-model and comparative lake/reservoir tables in the FAO Fisheries Technical Paper synthesis"
+      ],
+      "use_role": "freshwater_transfer_method",
+      "supports": [
+        "Tropical lake and reservoir production supplies a geographic family independent of temperate North American studies."
+      ],
+      "limitations": [
+        "Modern managed reservoirs are not medieval labels and remain transfer-validation evidence only."
+      ]
+    },
+    {
+      "source_id": "fao_hawaiian_fishpond_yield",
+      "source_family_id": "fao_hawaiian_fishpond_history",
+      "title": "Historical review of Hawaiian coastal fishponds",
+      "citation_url": "https://www.fao.org/4/ac282e/AC282E02.htm",
+      "page_table_figure_refs": [
+        "Historical section: first pond before 1300; 340-360 ponds, 2,655 ha, estimated 396 kg/ha/year and about 1,050 tonnes/year"
+      ],
+      "use_role": "quantitative_validation",
+      "supports": [
+        "Brackish fishpond technology existed by the target period and supplies a held-out one-sided production check."
+      ],
+      "limitations": [
+        "The archipelago aggregate is mapped to the Hawaiian EU5 island set and is never assigned to one port or used for training."
+      ]
+    },
+    {
+      "source_id": "cambridge_great_yarmouth_herring_1336",
+      "source_family_id": "medieval_english_port_accounts",
+      "title": "The English herring fishery in the fourteenth century",
+      "citation_url": "https://doi.org/10.1017/9781846150685.003",
+      "page_table_figure_refs": [
+        "Great Yarmouth landing series: more than 5,000 tonnes in 1336-37 and more than 2,000 tonnes in seven years, 1331-1368"
+      ],
+      "use_role": "quantitative_validation",
+      "supports": [
+        "Contemporary accounts provide an in-period minimum extraction check for the southern North Sea fishery."
+      ],
+      "limitations": [
+        "Landings include nonlocal vessels and validate a broad fishery ground, not urban intrinsic capacity."
+      ]
+    },
+    {
+      "source_id": "english_heritage_scarborough_herring_1304",
+      "source_family_id": "medieval_scarborough_customs_accounts",
+      "title": "Scarborough medieval fisheries documentary evidence",
+      "citation_url": "https://archaeologydataservice.ac.uk/archives/view/ehsscarborough_eh_2007/fisheries.cfm",
+      "page_table_figure_refs": [
+        "1304-05 customs account: 355 lasts, approximately 810 tonnes or 3.55 million herring"
+      ],
+      "use_role": "quantitative_validation",
+      "supports": [
+        "An in-period customs account supplies a one-sided fishery lower bound."
+      ],
+      "limitations": [
+        "Foreign landings and uncertain grounds preclude use as a local capacity target."
+      ]
+    },
+    {
+      "source_id": "hoffmann_north_norway_stockfish_exports",
+      "source_family_id": "medieval_norwegian_stockfish_history",
+      "title": "A brief history of aquatic resource use in medieval Europe",
+      "citation_url": "https://www.environmentandsociety.org/sites/default/files/key_docs/hoffmann-7-2.pdf",
+      "page_table_figure_refs": [
+        "North Norwegian stockfish export discussion: approximately 2,000-4,000 tonnes annually around 1300"
+      ],
+      "use_role": "quantitative_validation",
+      "supports": [
+        "Exports provide a conservative lower bound on northern Norwegian production in the target period."
+      ],
+      "limitations": [
+        "Catch grounds span a broad coast and the export series omits local consumption."
+      ]
+    },
+    {
+      "source_id": "parakrama_samudra_ancient_lake_fishery",
+      "source_family_id": "sri_lankan_ancient_reservoir_fisheries",
+      "title": "Assessment of fishing effort in Parakrama Samudra, an ancient man-made lake in Sri Lanka",
+      "citation_url": "https://doi.org/10.1016/0044-8486(86)90378-6",
+      "page_table_figure_refs": [
+        "Study-site history and annual-yield estimate near 120 kg/ha/year"
+      ],
+      "use_role": "quantitative_validation",
+      "supports": [
+        "A pre-1337 reservoir footprint has a separately measured out-of-period production analogue."
+      ],
+      "limitations": [
+        "Modern ecological production is validation-only; it does not establish a medieval harvest rate."
+      ]
+    },
+    {
+      "source_id": "zeheter_lake_constance_fishery",
+      "source_family_id": "lake_constance_environmental_history",
+      "title": "The Continuum of Long-Term Lake Fisheries Management",
+      "citation_url": "https://doi.org/10.1515/9781789206937-009",
+      "page_table_figure_refs": [
+        "Medieval Lake Constance fishery and regulation chronology, thirteenth-fifteenth centuries"
+      ],
+      "use_role": "qualitative_validation",
+      "supports": [
+        "Lake Constance had a persistent managed freshwater fishery in the target period."
+      ],
+      "limitations": [
+        "No independent annual catch interval is promoted; the case tests positive capacity only."
+      ]
+    }
+  ],
+  "validation_cases": [
+    {
+      "case_id": "medieval_north_atlantic_cod_provenance",
+      "water_system": "marine",
+      "date_interval": [900, 1500],
+      "role": "qualitative_validation",
+      "source_ids": ["barrett_et_al_2011_medieval_cod"],
+      "calibration_status": "excluded_trade_and_no_annual_yield"
+    },
+    {
+      "case_id": "eastern_baltic_cod_14th_15th_century",
+      "water_system": "marine",
+      "date_interval": [1300, 1500],
+      "role": "qualitative_validation",
+      "source_ids": ["orton_et_al_2011_baltic_cod"],
+      "calibration_status": "technology_presence_only"
+    },
+    {
+      "case_id": "barkley_sound_midden_biomass",
+      "water_system": "marine",
+      "date_interval": [-1000, 1800],
+      "role": "quantitative_validation",
+      "source_ids": ["gustas_2024_barkley_sound_midden_biomass"],
+      "calibration_status": "held_out_long_period_analogue"
+    },
+    {
+      "case_id": "babitonga_pre_columbian_catch_reconstruction",
+      "water_system": "marine_estuarine",
+      "date_interval": [-4000, 1500],
+      "role": "rejected_for_calibration",
+      "source_ids": ["fossile_et_al_2019_babitonga_catch"],
+      "calibration_status": "demography_and_diet_derived"
+    },
+    {
+      "case_id": "song_china_freshwater_aquaculture",
+      "water_system": "freshwater_aquaculture",
+      "date_interval": [960, 1279],
+      "role": "technology_evidence",
+      "source_ids": ["fao_china_freshwater_aquaculture_history"],
+      "calibration_status": "technology_mapping_required"
+    },
+    {
+      "case_id": "hawaiian_brackish_fishponds",
+      "water_system": "marine_aquaculture",
+      "date_interval": [1200, 1600],
+      "role": "technology_evidence",
+      "source_ids": ["nps_huilua_hawaiian_fishpond"],
+      "calibration_status": "technology_mapping_required"
+    },
+    {
+      "case_id": "global_cross_site_freshwater_production",
+      "water_system": "freshwater",
+      "date_interval": [1900, 2023],
+      "role": "qualitative_validation",
+      "source_ids": [
+        "randall_minns_kelso_1995_freshwater_production",
+        "richter_jones_jackson_2023_river_production"
+      ],
+      "calibration_status": "physical_transfer_source_not_historical_label"
+    }
+  ],
+  "required_artifacts": [
+    {
+      "requirement_id": "marine_medieval_structural_ensemble",
+      "artifact_filename": "marine_medieval_structural_ensemble.json",
+      "reason": "The current 90 scenarios share one MIROC-ES2L medieval anomaly; three satellite algorithms do not replace medieval climate-model structural uncertainty."
+    },
+    {
+      "requirement_id": "joint_human_use_uncertainty",
+      "artifact_filename": "fisheries_joint_uncertainty_contract.json",
+      "reason": "Independent p10/p50/p90 knob combinations are sensitivity bounds, not probabilistic uncertainty."
+    },
+    {
+      "requirement_id": "freshwater_location_transfer",
+      "artifact_filename": "freshwater_location_transfer_validation.json",
+      "reason": "Cross-site river and lake means must be transferred with same-geography physical predictors and grouped validation."
+    },
+    {
+      "requirement_id": "preindustrial_case_validation",
+      "artifact_filename": "preindustrial_fisheries_case_validation.json",
+      "reason": "Human access and sustainable extraction require held-out quantitative preindustrial checks, not only archaeological presence."
+    },
+    {
+      "requirement_id": "pre1337_technology_mapping",
+      "artifact_filename": "fisheries_technology_mapping_audit.json",
+      "reason": "The current labels omit geographically restricted pre-1337 aquaculture such as Song Chinese pond culture and Hawaiian fishpond engineering."
+    }
+  ]
+}

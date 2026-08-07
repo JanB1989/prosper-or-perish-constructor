@@ -1,0 +1,86 @@
+{
+  "schema_version": "population_capacity_research_disposition_v1",
+  "packet_id": "asia_yangtze_song_yuan_gate_review_wave10",
+  "region": "lower_yangtze_song_yuan",
+  "super_region": "East_Asia",
+  "target_year": 1337,
+  "source_bundle": "song_yuan_yangtze_register_cropland_gate_review",
+  "policy": {
+    "append_only": true,
+    "no_observed_population_as_upper_bound": true,
+    "no_city_or_trade_hub_targets": true,
+    "two_sided_training_requires_independent_capacity_and_pressure": true,
+    "exact_or_high_boundary_crosswalk_required": true,
+    "reconstructed_cropland_is_not_a_population_label": true
+  },
+  "method": "Reviewed the strongest accessible Song-Yuan lower-Yangtze records for a same-boundary population and capacity interval. Register counts and cropland reconstructions are retained as physical/validation evidence only unless the record supplies an aggregate boundary, local-food balance, and independent saturation or upper-capacity evidence.",
+  "promotion_audit": {
+    "promoted_training_anchor_ids": [],
+    "decision": "No Song-Yuan lower-Yangtze record passes the two-sided anchor gate. Pingjiang/Suzhou has a large 1290 register estimate but the provisional EU5 province boundary is unresolved and canal/urban transfers are explicitly material. The eastern-China cropland reconstruction provides useful 10th-13th-century cropland and per-capita-area diagnostics, but its reconstruction uses population/household and per-capita grain-demand assumptions and does not establish a human saturation interval. Huzhou household documents are a detailed 900-household/approximately-3,000-person sample, not a complete circuit population or capacity target.",
+    "reviewed_on": "2026-08-03",
+    "new_independent_scale_families": 0,
+    "new_training_records": 0
+  },
+  "records": [
+    {
+      "anchor_id": "suzhou_pingjiang_1290_register",
+      "status": "confirmed_validation_only",
+      "role": "validation_only",
+      "existing_packet": "asia_mideast.json",
+      "eu5_selector": "province=suzhou_province",
+      "coverage_fraction": null,
+      "population_interval": {"low": 2000000, "central": 2433700, "high": 2800000},
+      "capacity_interval": null,
+      "boundary_status": "provisional six-county Pingjiang Lu; no audited EU5 crosswalk",
+      "capacity_status": "none; registered population is not an upper capacity",
+      "pressure_status": "dense irrigated rice/fisheries and land intensity are documented, but no independent saturation fraction",
+      "local_food_status": "mixed/high production with high canal and commercial redistribution; external food share unresolved",
+      "reason": "The 1290 Pingjiang/Suzhou figure is a fiscal/administrative register estimate for a wealthy, highly urbanized and canal-connected landscape. It includes city and market consumers and cannot be interpreted as locally supported equilibrium. The EU5 selector is provisional with no quantified boundary overlap. Keep it as a thriving-system validation case and a test for irrigation/fisheries features, not a training target.",
+      "sources": [
+        "https://dfzb.suzhou.gov.cn/dfzb/szdq/201507/8d3b864be8d247b991dd1524605f7e9b.shtml",
+        "https://www.nature.com/articles/s41598-018-31807-6",
+        "https://doi.org/10.1038/s41598-018-31807-6"
+      ],
+      "citation_details": [
+        "Suzhou local-history population chronology: the candidate packet's Pingjiang six-county estimate is retained as a register observation, not a capacity bound.",
+        "Li et al. 2018, Scientific Reports 8:13552: eastern-China provincial cropland reconstruction for AD 1000, 1066, 1078, 1162 and 1215; methods estimate missing cropland from households/population and per-capita grain demand, so it cannot independently supervise saturation.",
+        "Li et al. 2018, Results/Discussion: lower-Yangtze cropland expanded and contracted with wars and dynasty shifts; this is land-use validation, not an equilibrium ceiling for 1290/1337."
+      ],
+      "missing_criteria": [
+        "audited Pingjiang historical polygon and >=95% EU5 area crosswalk",
+        "rural-only boundary excluding Suzhou urban and canal-market consumers",
+        "quantified local-food/import balance",
+        "independent saturation or human-capacity interval"
+      ]
+    },
+    {
+      "anchor_id": "huzhou_anji_song_yuan_household_documents_wave10",
+      "status": "rejected_for_training",
+      "role": "validation_only",
+      "existing_packet": null,
+      "eu5_selector": "candidate historical Huzhou/Anji circuit; no selector admitted",
+      "coverage_fraction": null,
+      "population_interval": {"low": 3000, "central": 3000, "high": 3000},
+      "capacity_interval": null,
+      "boundary_status": "household-document sample; no aggregate historical polygon",
+      "capacity_status": "none; sample landholdings cannot define circuit capacity",
+      "pressure_status": "landholding and livelihood statistics show production conditions but no population-pressure/saturation fraction",
+      "local_food_status": "rice-based rural livelihoods are described, but trade and sample selection are unresolved",
+      "reason": "Yuan's 2023 study collates original household documents covering about 900 households and nearly 3,000 people, with land and housing records. The documents are a detailed micro-level sample whose households' businesses were already formed in the Song period; they are not an enumeration of Huzhou/Anji or a mappable rural aggregate. The 3,000-person count must not become a location target or an upper bound. Retain only as a validation source for household land, rice production and livelihood-feature plausibility.",
+      "sources": [
+        "https://journal.hep.com.cn/fhc/EN/10.3868/s020-012-023-0005-7",
+        "https://doi.org/10.3868/s020-012-023-0005-7"
+      ],
+      "citation_details": [
+        "Yuan 2023, Frontiers of History in China 18(1), pp. 79-97, abstract: the collated documents include 900 households and nearly 3,000 people with complete individual property records.",
+        "Yuan 2023, abstract: the study analyzes rural construction in Anji Prefecture using micro-level measurement and statistical induction; it does not claim a complete Huzhou circuit census or a carrying-capacity interval."
+      ],
+      "missing_criteria": [
+        "complete aggregate population interval for the same boundary",
+        "historical boundary polygon and EU5 crosswalk",
+        "independent local-food saturation evidence",
+        "upper human-capacity interval"
+      ]
+    }
+  ]
+}

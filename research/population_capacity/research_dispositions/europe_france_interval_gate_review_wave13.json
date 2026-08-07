@@ -1,0 +1,49 @@
+{
+  "schema_version": "population_capacity_research_disposition_v1",
+  "packet_id": "europe_france_interval_gate_review_wave13",
+  "reviewed_on": "2026-08-03",
+  "scope": "Independent gate review of the 1300-1328 France two-sided interval anchor",
+  "decision": "demote_interval_to_lower_bound",
+  "supersedes_disposition_ids": [
+    "existing_anchor_interval_gate_review_wave10"
+  ],
+  "review": {
+    "original_anchor_id": "france_continental_1300_1328_interval_anchor_wave6",
+    "replacement_anchor_id": "france_continental_1300_1328_local_food_floor_wave13",
+    "original_interval": {
+      "population_millions": [18.0, 19.0, 20.0],
+      "saturation_fraction": [0.85, 0.925, 1.0],
+      "derived_capacity_millions": [18.0, 20.54, 23.53]
+    },
+    "evidence_findings": [
+      "Goldstone's 18-20 million is an observed/reconstructed pre-Black-Death population range, not an independently measured carrying-capacity interval.",
+      "Davis supports demographic regulation and resource pressure around 1300, but supplies no numerical saturation fraction.",
+      "Lot's 20-24 million values depend on disputed hearth-to-person extrapolation and cannot establish an ecological upper endpoint.",
+      "The previous 0.85-1.00 saturation interval was a modeling assumption rather than a literature-supported interval.",
+      "The France boundary crosswalk is defensible at 96.21% coverage, so mapping is not the reason for the downgrade."
+    ],
+    "retained_use": [
+      "Use 18,000,000 as a conservative one-sided local-food lower-bound test.",
+      "Retain the historical 18-20 million population reconstruction and 20-24 million extrapolations as held-out validation context, never as a two-sided capacity target.",
+      "Do not add a regional multiplier or adjust the physical model specifically for France."
+    ],
+    "replacement_search": [
+      {
+        "candidate": "England around 1290-1315",
+        "decision": "retain_primary_scale_anchor",
+        "reason": "The existing packet has stronger marginal-land, wage and local-pressure evidence and remains the primary European scale anchor."
+      },
+      {
+        "candidate": "Iceland, Faroes, Wales, Scotland, Ireland",
+        "decision": "validation_or_rejected",
+        "reason": "Population or ecological limits are available, but a dated, independently supported saturation fraction for the mapped boundary is not."
+      },
+      {
+        "candidate": "Navarre and Catalonia tax/fogatge records",
+        "decision": "validation_only_pending_pressure_review",
+        "reason": "The records provide population observations, but local-food saturation and boundary-specific pressure evidence are not yet independent enough for a two-sided capacity target."
+      }
+    ],
+    "final_status": "No independent European replacement two-sided anchor was found in this review. The evidence gate is tightened rather than satisfied by an invented upper endpoint."
+  }
+}

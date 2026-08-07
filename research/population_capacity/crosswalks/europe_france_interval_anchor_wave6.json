@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "region": "europe_france_interval_anchor_wave6",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_france_interval_anchor_wave6",
+  "geometry_source": "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet",
+  "policy": {
+    "minimum_boundary_coverage": 0.95,
+    "no_population_or_rgo_fields_used_for_mapping": true,
+    "append_only_supersession": true,
+    "area_difference_is_explicit": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "france_continental_1300_1328_interval_anchor_wave6",
+      "historical_boundary": "Continental France within the modern-border demographic envelope used by Goldstone and the 528,400 km2 departmental envelope reconstructed by Lot",
+      "eu5_selector": {
+        "include": [
+          "region=france_region"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 446,
+      "coverage_fraction": 0.96205703141,
+      "boundary_overlap_status": "high_coverage",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "candidate_role": "interval_anchor",
+      "area_comparison": {
+        "historical_area_km2": 528400.0,
+        "eu5_bounded_calibrated_area_km2": 508350.935397,
+        "area_coverage_fraction": 0.96205703141,
+        "historical_area_source": "Lot 1929, pp. 104-107",
+        "eu5_area_source": "location_candidates.parquet with polynomial_coordinate_jacobian_v2+bounded_exact_crosswalks"
+      },
+      "resolution_method": "Complete france_region selector intersected through the accepted bounded-calibrated EU5 location geometry. The mapped footprint covers 96.21% of Lot's stated continental envelope, clearing the 95% aggregate-boundary gate; the remaining 3.79% is retained as explicit unmapped area rather than silently rescaled.",
+      "notes": "The selector matches the earlier France floor because the new record supersedes its evidence semantics, not its historical boundary. Cities and ports remain inside the national aggregate; internal food redistribution is therefore internal to the mapped target."
+    }
+  ]
+}

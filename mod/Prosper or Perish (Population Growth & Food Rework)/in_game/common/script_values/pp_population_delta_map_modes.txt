@@ -1,0 +1,214 @@
+﻿# Population delta vs snapshotted baselines for debug map modes.
+# Metric: (current / baseline) - 1  →  0 = unchanged, -1 = -100%, +2 = +200%.
+# Population is stored in thousands; display helpers multiply by 1000 for headcounts.
+# Baselines are set by pp_snapshot_population_baselines (event pp_population_baseline_debug.1).
+
+# --- Percent-change values used for map coloring (clamped externally) ---
+
+pp_pop_delta_location_pct = {
+	if = {
+		limit = {
+			has_variable = pp_pop_baseline
+			var:pp_pop_baseline > 0
+		}
+		value = population
+		divide = var:pp_pop_baseline
+		subtract = 1
+	}
+	else = {
+		value = 0
+	}
+}
+
+pp_pop_delta_province_pct = {
+	if = {
+		limit = {
+			has_variable = pp_province_pop_baseline
+			var:pp_province_pop_baseline > 0
+		}
+		value = province.population
+		divide = var:pp_province_pop_baseline
+		subtract = 1
+	}
+	else = {
+		value = 0
+	}
+}
+
+pp_pop_delta_area_pct = {
+	if = {
+		limit = {
+			has_variable = pp_area_pop_baseline
+			var:pp_area_pop_baseline > 0
+		}
+		value = area.population
+		divide = var:pp_area_pop_baseline
+		subtract = 1
+	}
+	else = {
+		value = 0
+	}
+}
+
+pp_pop_delta_region_pct = {
+	if = {
+		limit = {
+			has_variable = pp_region_pop_baseline
+			var:pp_region_pop_baseline > 0
+		}
+		value = region.population
+		divide = var:pp_region_pop_baseline
+		subtract = 1
+	}
+	else = {
+		value = 0
+	}
+}
+
+pp_pop_delta_macro_region_pct = {
+	if = {
+		limit = {
+			has_variable = pp_macro_region_pop_baseline
+			var:pp_macro_region_pop_baseline > 0
+		}
+		value = sub_continent.population
+		divide = var:pp_macro_region_pop_baseline
+		subtract = 1
+	}
+	else = {
+		value = 0
+	}
+}
+
+pp_pop_delta_super_region_pct = {
+	if = {
+		limit = {
+			has_variable = pp_super_region_pop_baseline
+			var:pp_super_region_pop_baseline > 0
+		}
+		value = continent.population
+		divide = var:pp_super_region_pop_baseline
+		subtract = 1
+	}
+	else = {
+		value = 0
+	}
+}
+
+# --- Absolute saved baselines in headcounts (for tooltips) ---
+
+pp_pop_baseline_display = {
+	if = {
+		limit = { has_variable = pp_pop_baseline }
+		value = var:pp_pop_baseline
+		multiply = 1000
+		floor = yes
+	}
+	else = {
+		value = 0
+	}
+}
+
+pp_province_pop_baseline_display = {
+	if = {
+		limit = { has_variable = pp_province_pop_baseline }
+		value = var:pp_province_pop_baseline
+		multiply = 1000
+		floor = yes
+	}
+	else = {
+		value = 0
+	}
+}
+
+pp_area_pop_baseline_display = {
+	if = {
+		limit = { has_variable = pp_area_pop_baseline }
+		value = var:pp_area_pop_baseline
+		multiply = 1000
+		floor = yes
+	}
+	else = {
+		value = 0
+	}
+}
+
+pp_region_pop_baseline_display = {
+	if = {
+		limit = { has_variable = pp_region_pop_baseline }
+		value = var:pp_region_pop_baseline
+		multiply = 1000
+		floor = yes
+	}
+	else = {
+		value = 0
+	}
+}
+
+pp_macro_region_pop_baseline_display = {
+	if = {
+		limit = { has_variable = pp_macro_region_pop_baseline }
+		value = var:pp_macro_region_pop_baseline
+		multiply = 1000
+		floor = yes
+	}
+	else = {
+		value = 0
+	}
+}
+
+pp_super_region_pop_baseline_display = {
+	if = {
+		limit = { has_variable = pp_super_region_pop_baseline }
+		value = var:pp_super_region_pop_baseline
+		multiply = 1000
+		floor = yes
+	}
+	else = {
+		value = 0
+	}
+}
+
+# --- Absolute current populations in headcounts (for tooltips) ---
+
+pp_pop_current_display = {
+	value = population
+	multiply = 1000
+	floor = yes
+	min = 0
+}
+
+pp_province_pop_current_display = {
+	value = province.population
+	multiply = 1000
+	floor = yes
+	min = 0
+}
+
+pp_area_pop_current_display = {
+	value = area.population
+	multiply = 1000
+	floor = yes
+	min = 0
+}
+
+pp_region_pop_current_display = {
+	value = region.population
+	multiply = 1000
+	floor = yes
+	min = 0
+}
+
+pp_macro_region_pop_current_display = {
+	value = sub_continent.population
+	multiply = 1000
+	floor = yes
+	min = 0
+}
+
+pp_super_region_pop_current_display = {
+	value = continent.population
+	multiply = 1000
+	floor = yes
+	min = 0
+}

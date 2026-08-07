@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "region": "europe_nile_training_floors_wave3",
+  "target_year": 1337,
+  "crosswalk_packet_id": "europe_nile_training_floors_wave3",
+  "geometry_source": "artifacts/data/population_capacity/location_geometry_calibrated.parquet",
+  "policy": {
+    "minimum_boundary_coverage": 0.95,
+    "area_coverage_is_reported_separately_from_selector_completeness": true,
+    "no_population_or_rgo_fields_used_for_mapping": true,
+    "lower_bound_role_does_not_relax_boundary_gate": true
+  },
+  "crosswalks": [
+    {
+      "anchor_id": "france_continental_1328_local_support_floor_wave3",
+      "historical_boundary": "Lot's 528,400 km2 continental-French departmental envelope",
+      "eu5_selector": {
+        "include": [
+          "region=france_region"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 446,
+      "coverage_fraction": 0.987,
+      "boundary_overlap_status": "high_coverage",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "candidate_role": "lower_bound",
+      "area_comparison": {
+        "historical_area_km2": 528400.0,
+        "eu5_jacobian_area_km2": 521538.4079128964,
+        "area_coverage_fraction": 0.987,
+        "historical_area_source": "Lot 1929, pp. 104-107"
+      },
+      "resolution_method": "Complete France-region selector checked against the same continental departmental envelope used for the source estimate; calibrated area differs by about 1.3%.",
+      "notes": "The population and boundary refer to continental geographical France, not merely the narrower 1328 royal fiscal domain."
+    },
+    {
+      "anchor_id": "iceland_preindustrial_biomass_capacity_floor_wave3",
+      "historical_boundary": "Entire Iceland island",
+      "eu5_selector": {
+        "include": [
+          "area=iceland_area"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 21,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "exact_topological_selector",
+      "crosswalk_status": "exact",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "candidate_role": "lower_bound",
+      "area_comparison": {
+        "historical_area_km2": 103000.0,
+        "eu5_jacobian_area_km2": 67483.45894327956,
+        "area_ratio": 0.6551792130415489,
+        "area_gate_status": "physical_geometry_defect_separate_from_complete_boundary_selection",
+        "historical_area_source": "Statistics Iceland / National Land Survey, Iceland in Figures"
+      },
+      "resolution_method": "All twenty-one Iceland-area locations are selected; no Iceland location is omitted or mixed with another country.",
+      "required_actions": [
+        "repair the accepted Jacobian/polygon area calibration before final physical-model fitting",
+        "do not reinterpret the area error as partial historical-boundary coverage"
+      ],
+      "notes": "Boundary membership is exact, but the numerical area feature is materially low and remains a separate physical-input blocker."
+    },
+    {
+      "anchor_id": "faroe_1300_local_support_floor_wave3",
+      "historical_boundary": "Entire Faroe archipelago",
+      "eu5_selector": {
+        "include": [
+          "location_tag=torshavn"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 1,
+      "coverage_fraction": 0.986,
+      "boundary_overlap_status": "high_coverage",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "candidate_role": "lower_bound",
+      "area_comparison": {
+        "historical_area_km2": 1396.0,
+        "eu5_jacobian_area_km2": 1377.1413714511273,
+        "area_coverage_fraction": 0.986,
+        "historical_area_source": "Statistics Faroe Islands, Islands, mountains, islets and lakes"
+      },
+      "resolution_method": "The EU5 torshavn location is the complete archipelago footprint; calibrated area is within 1.4% of the official 1,396 km2.",
+      "notes": "The former zero-location crosswalk was caused by searching for 'Faroe' rather than the actual EU5 tag torshavn."
+    },
+    {
+      "anchor_id": "sicily_1277_local_support_export_floor_wave3",
+      "historical_boundary": "Main island of Sicily, excluding Malta",
+      "eu5_selector": {
+        "include": [
+          "area=sicily_area"
+        ],
+        "exclude": [
+          "location_tag=malta"
+        ]
+      },
+      "matched_location_count": 22,
+      "coverage_fraction": 0.959,
+      "boundary_overlap_status": "high_coverage",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "candidate_role": "lower_bound",
+      "area_comparison": {
+        "historical_area_km2": 25711.0,
+        "eu5_jacobian_area_km2": 24677.201876663603,
+        "area_coverage_fraction": 0.959,
+        "historical_area_source": "Sicilian Region island-area figure"
+      },
+      "resolution_method": "All twenty-two main-island locations in sicily_area are selected and the malta location is explicitly removed; the calibrated footprint is within 4.1% of the island area.",
+      "notes": "The source population is island Sicily, so Malta must not share the aggregate label despite being placed in EU5's sicily_area."
+    },
+    {
+      "anchor_id": "mamluk_egypt_1315_irrigated_local_support_floor_wave3",
+      "historical_boundary": "Mamluk Egypt proper: Nile Delta, Nile Valley, western oases and Red Sea dependencies, excluding Sinai and Cyrenaica",
+      "eu5_selector": {
+        "include": [
+          "area=lower_egypt_area|upper_egypt_area"
+        ],
+        "exclude": []
+      },
+      "matched_location_count": 60,
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "complete_named_area_crosswalk",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "candidate_role": "lower_bound",
+      "area_comparison": {
+        "eu5_lower_egypt_jacobian_area_km2": 49978.69887835014,
+        "eu5_upper_egypt_jacobian_area_km2": 59375.455932707875,
+        "mapped_total_jacobian_area_km2": 109354.15481105802,
+        "area_interpretation": "The source is a national agrarian aggregate; mapped area includes desert inside Egyptian administrative footprints, while the mechanistic model separately constrains productive land."
+      },
+      "resolution_method": "All lower- and upper-Egypt locations are selected; Sinai and Cyrenaica are separate EU5 areas and are excluded by construction.",
+      "notes": "This maps the national aggregate without pretending the Fayyum tax register supplies an independent population total."
+    }
+  ]
+}

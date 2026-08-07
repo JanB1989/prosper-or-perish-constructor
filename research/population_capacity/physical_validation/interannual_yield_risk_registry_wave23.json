@@ -1,0 +1,361 @@
+{
+  "schema_version": "population-capacity-physical-validation-v1",
+  "registry_id": "interannual_yield_risk_and_spatial_uncertainty_wave23",
+  "created_utc": "2026-08-04",
+  "target": {
+    "game_start_year": 1337,
+    "technology_cutoff_year": 1337,
+    "historical_compatibility_window": [1100, 1500],
+    "meaning": "Validate interannual crop-risk and spatial uncertainty inputs for a 1337 low-input physical model. These records do not define absolute population capacity or replace exact-location crop physics."
+  },
+  "status": "blocked",
+  "acceptance_rule": {
+    "annual_yield_labels_required": true,
+    "direct_yield_source_required_for_parameter_calibration": true,
+    "hydroclimate_proxies_may_validate_risk_but_not_absolute_yield": true,
+    "modern_or_post_1337_sources_are_holdout_only": true,
+    "source_skill_and_missingness_must_be_carried_into_uncertainty": true
+  },
+  "sources": [
+    {
+      "source_id": "mcydb_england_1211_1491",
+      "title": "Three centuries of English crop yields, 1211-1491 / Medieval Crop Yields Database",
+      "provider": "Bruce Campbell, Queen's University Belfast; British Agricultural History Society",
+      "source_kind": "direct_historical_yield",
+      "citation": "Campbell, B.; Livingstone, M.; Drewery, A.; Whittick, C.; Yeates, E. (2007), Three centuries of English crop yields, 1211 1491, Queen's University Belfast.",
+      "urls": {
+        "dataset_record": "https://pure.qub.ac.uk/en/datasets/three-centuries-of-english-crop-yields-1211-1491/",
+        "database_data": "https://www.cropyields.ac.uk/",
+        "methodology": "https://www.bahs.org.uk/crop-yields-database/chronologies/",
+        "data_discussion": "https://www.bahs.org.uk/crop-yields-database/the-data/"
+      },
+      "coverage": {
+        "years": [1211, 1491],
+        "best_continuous_interval": [1270, 1430],
+        "geography": "England, named demesne farms and regional/manorial chronologies",
+        "crops": ["wheat", "rye and winter grains", "barley", "oats", "spring grains"]
+      },
+      "evidence": [
+        "The dataset contains annually dated yields for individual field crops on individual English demesne farms derived from manorial accounts.",
+        "The BAHS regional chronologies weight changing regional coverage; manorial chronologies are unweighted and are explicitly preferred for annual variation.",
+        "Chronologies are annual, net of seed, gross of tithe, indexed to the 1270-1429 mean, and publish the number of observations available in each year.",
+        "The database is strongest for validating year-to-year yield risk and spatial sampling variance in medieval England, not peasant-wide absolute output."
+      ],
+      "model_role": "primary_direct_yield_risk_calibration_and_England_holdout",
+      "allowed_uses": [
+        "Estimate empirical annual yield anomaly distributions by crop family.",
+        "Compare regional versus farm-level variance and observation-count weighting.",
+        "Validate the sign and relative magnitude of climate-risk responses when joined to OWDA or documentary climate records.",
+        "Hold out named regional chronologies to test spatial generalization."
+      ],
+      "forbidden_uses": [
+        "Do not treat demesne yields as a global peasant yield target.",
+        "Do not use the indexed series as an absolute kg/ha label without preserving its seed/tithe semantics and a separate absolute-yield bridge.",
+        "Do not use starting population or food prices as yield labels."
+      ],
+      "independence": {
+        "source_family": "medieval_manorial_accounts",
+        "independent_of_trace_and_gaez": true,
+        "shared_source_risk": "Regional and manorial chronologies derive from the same underlying account database; split them by source family, not as independent observations."
+      },
+      "acquisition": {
+        "metadata_verified": true,
+        "raw_data_downloaded_into_constructor": false,
+        "required_next_step": "Download the raw observations and chronology tables, record checksum, map farm/region names to EU5 geometry, and preserve observation counts."
+      }
+    },
+    {
+      "source_id": "owda_europe_mediterranean_0_2000",
+      "title": "Old World Drought Atlas",
+      "provider": "Cook et al.; NOAA World Data Service for Paleoclimatology",
+      "source_kind": "tree_ring_hydroclimate_reconstruction",
+      "citation": "Cook, E. R. et al. (2015), Old World megadroughts and pluvials during the Common Era, Science Advances 1, e1500561.",
+      "urls": {
+        "metadata": "https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=noaa-recon-19419",
+        "drought_atlas_guidance": "https://climatedataguide.ucar.edu/climate-data/drought-atlases-tree-rings",
+        "data_portal": "https://www.ncei.noaa.gov/products/paleoclimatology/drought-variability"
+      },
+      "coverage": {
+        "years": [1, 2000],
+        "target_window_coverage": [1100, 1500],
+        "geography": "Europe and the Mediterranean Basin",
+        "resolution": "0.5 x 0.5 degree gridded summer PDSI"
+      },
+      "evidence": [
+        "NOAA describes year-to-year tree-ring reconstructed summer wetness and dryness with spatially complete maps over Europe and the Mediterranean.",
+        "The reconstruction includes medieval megadroughts and pluvials and is explicitly intended to place hydroclimatic variability in historical perspective.",
+        "The Climate Data Guide warns that grid-point reconstruction skill varies and recommends using calibration/validation statistics; regional patterns can be more reliable than individual grid cells."
+      ],
+      "model_role": "primary_1337_compatible_hydroclimate_risk_and_spatial_covariance_source",
+      "allowed_uses": [
+        "Derive spatially correlated drought-risk scenarios for EU5 footprints.",
+        "Validate whether simulated crop-risk tails co-occur in historically documented European drought years.",
+        "Use grid-point calibration/validation skill as an uncertainty weight, never as an unrecorded fill."
+      ],
+      "forbidden_uses": [
+        "Do not convert PDSI directly into kg/ha without an independently fitted crop response.",
+        "Do not treat every 0.5-degree cell as equally observed or equally skilled."
+      ],
+      "independence": {
+        "source_family": "tree_ring_drought_atlas_owda",
+        "independent_of_mcydb": true,
+        "shared_proxy_risk": "Tree-ring reconstructions may share chronologies or climate teleconnections with other drought atlases; do not count atlas families as independent yield observations."
+      },
+      "acquisition": {
+        "metadata_verified": true,
+        "raw_data_downloaded_into_constructor": false,
+        "required_next_step": "Fetch PDSI, reconstruction skill, and missing-value layers; sample them at calibrated EU5 footprints and retain skill/missingness columns."
+      }
+    },
+    {
+      "source_id": "mada_asia_1300_2005",
+      "title": "Monsoon Asia Drought Atlas",
+      "provider": "Cook, Anchukaitis, Buckley, D'Arrigo, Jacoby and Wright; NOAA WDS",
+      "source_kind": "tree_ring_hydroclimate_reconstruction",
+      "citation": "Cook, E. R. et al. (2010), Asian monsoon variability over the past millennium, Science 328, 486-489; NOAA DOI 10.25921/b8gk-7h90.",
+      "urls": {
+        "metadata": "https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/noaa-recon-10435/html",
+        "doi": "https://doi.org/10.25921/b8gk-7h90",
+        "data_folder": "https://www.ncei.noaa.gov/pub/data/paleo/treering/reconstructions/asia/cook2010pdsi/"
+      },
+      "coverage": {
+        "years": [1300, 2005],
+        "target_window_coverage": [1300, 1500],
+        "geography": "Asian monsoon region",
+        "resolution": "534 grid-point reconstructions on a 2.5 x 2.5 degree grid; JJA PDSI"
+      },
+      "evidence": [
+        "NOAA reports an annual/seasonal gridded reconstruction back to 1300 CE, based on Asian tree-ring data.",
+        "The archived product is an ensemble of reconstructions using multiple search radii and correlation weightings; weak verification areas are explicitly documented."
+      ],
+      "model_role": "1337_compatible_asian_hydroclimate_holdout_and_spatial_covariance_source",
+      "allowed_uses": [
+        "Validate monsoon-season drought tail frequency and spatial correlation in East and South Asia.",
+        "Use only grid points with documented skill or aggregate to regional scales where the atlas guidance supports it."
+      ],
+      "forbidden_uses": [
+        "Do not use MADA as an absolute harvest or population target.",
+        "Do not silently extrapolate MADA beyond its monsoon-domain footprint."
+      ],
+      "independence": {
+        "source_family": "tree_ring_drought_atlas_mada",
+        "independent_of_owda": true,
+        "shared_proxy_risk": "Both are PDSI reconstructions and should be treated as climate evidence, not independent crop labels."
+      },
+      "acquisition": {
+        "metadata_verified": true,
+        "raw_data_downloaded_into_constructor": false,
+        "required_next_step": "Fetch JJA PDSI and reconstruction skill metadata; map the 2.5-degree cells to EU5 locations and identify gaps in South/Southeast Asia."
+      }
+    },
+    {
+      "source_id": "hao_eastern_china_801_1910",
+      "title": "Patterns in extreme droughts/floods and harvest grades in eastern China, 801-1910",
+      "provider": "Hao, Wu, Zheng, Chen, Zhang and Luo; Climate of the Past",
+      "source_kind": "documentary_harvest_and_drought_reconstruction",
+      "citation": "Hao, Z. et al. (2020), Climate of the Past 16, 101-116, https://doi.org/10.5194/cp-16-101-2020.",
+      "urls": {
+        "article": "https://cp.copernicus.org/articles/16/101/2020/cp-16-101-2020.html",
+        "supplement": "https://cp.copernicus.org/articles/16/101/2020/cp-16-101-2020-supplement.zip",
+        "doi": "https://doi.org/10.5194/cp-16-101-2020"
+      },
+      "coverage": {
+        "years": [801, 1910],
+        "target_window_coverage": [1100, 1500],
+        "geography": "Eastern China, 63 historical stations grouped into North China Plain, Jianghuai and Jiangnan",
+        "spatial_resolution": "Station areas represent approximately 20 counties; three regional aggregates"
+      },
+      "evidence": [
+        "The study reconstructs annual drought/flood grades at 63 stations from official histories, chronicles and local gazettes.",
+        "It also reconstructs grain harvest grades and food-security responses; harvest grades are relative to an expected maximum rather than absolute kg/ha.",
+        "The study evaluates confidence from the fraction of years with data in 50-year windows and reports significantly poorer harvest grades in extreme drought years.",
+        "The source itself warns that documentary compilation and reconstruction steps create independence and consistency limitations."
+      ],
+      "model_role": "1337_compatible_relative_harvest_risk_and_spatial_holdout",
+      "allowed_uses": [
+        "Test whether crop-risk scenarios produce lower relative harvests during documented drought years.",
+        "Validate spatial aggregation at North China Plain/Jianghuai/Jiangnan scale.",
+        "Use the published confidence/missingness assessment to widen uncertainty."
+      ],
+      "forbidden_uses": [
+        "Do not use harvest grades as absolute yield or population-capacity labels.",
+        "Do not treat the 63 stations as independent observations when derived from shared documentary compilations."
+      ],
+      "independence": {
+        "source_family": "chinese_documentary_harvest_grades",
+        "independent_of_mada": true,
+        "shared_source_risk": "The drought and harvest series share historical-document sources; use them for paired event validation, not independent likelihood factors."
+      },
+      "acquisition": {
+        "metadata_verified": true,
+        "raw_data_downloaded_into_constructor": false,
+        "required_next_step": "Download the supplement, preserve ordinal grades and confidence, and build an exact eastern-China EU5 crosswalk before using it in validation."
+      }
+    },
+    {
+      "source_id": "shenyang_drought_1200_2015",
+      "title": "Reassessing long-term drought risk and societal impacts in Shenyang, 1200-2015",
+      "provider": "Tang, Macdonald, Sangster, Chiverrell and Gaulton; Climate of the Past",
+      "source_kind": "documentary_and_instrumental_hydroclimate_series",
+      "citation": "Tang, L. et al. (2020), Climate of the Past 16, 1917-1935, https://doi.org/10.5194/cp-16-1917-2020.",
+      "urls": {
+        "article": "https://cp.copernicus.org/articles/16/1917/2020/index.html",
+        "doi": "https://doi.org/10.5194/cp-16-1917-2020"
+      },
+      "coverage": {
+        "years": [1200, 2015],
+        "target_window_coverage": [1200, 1500],
+        "geography": "Shenyang, Liaoning, northeast China",
+        "resolution": "Single-location long drought series"
+      },
+      "evidence": [
+        "The paper combines a reconstructed precipitation series with historical documentary accounts to extend drought analysis back to 1200 CE.",
+        "It is a useful local severity/duration case but not an annual yield series and not a regional population target."
+      ],
+      "model_role": "local_hydroclimate_validation_only",
+      "allowed_uses": ["Validate event timing, drought duration and local downscaling behavior."],
+      "forbidden_uses": ["Do not use as a China-wide or crop-yield target."],
+      "independence": {"source_family": "chinese_local_documentary_drought", "independent_of_mcydb": true},
+      "acquisition": {"metadata_verified": true, "raw_data_downloaded_into_constructor": false, "required_next_step": "Acquire article supplement and map the Shenyang selector to EU5."}
+    },
+    {
+      "source_id": "nada_north_america_0_2006",
+      "title": "North American Drought Atlas v2a",
+      "provider": "Cook et al.; NOAA NCEI",
+      "source_kind": "tree_ring_hydroclimate_reconstruction",
+      "citation": "Cook et al. North American Drought Atlas v2a, NOAA NCEI drought variability archive.",
+      "urls": {
+        "metadata_and_download": "https://www.ncei.noaa.gov/products/paleoclimatology/drought-variability",
+        "atlas_guidance": "https://climatedataguide.ucar.edu/climate-data/drought-atlases-tree-rings"
+      },
+      "coverage": {
+        "years": [0, 2006],
+        "target_window_coverage": [1100, 1500],
+        "geography": "Most of North America",
+        "resolution": "2.5 x 2.5 degree summer PDSI grid"
+      },
+      "evidence": ["NOAA reports annual summer PDSI reconstructions over 0-2006 CE; atlas guidance documents calibration/validation skill requirements."],
+      "model_role": "1337_compatible_americas_hydroclimate_holdout_and_spatial_covariance_source",
+      "allowed_uses": ["Validate drought-frequency tails and spatial correlation in North American EU5 locations."],
+      "forbidden_uses": ["Do not infer crop yield or absolute capacity directly from PDSI."],
+      "independence": {"source_family": "tree_ring_drought_atlas_nada", "independent_of_mcydb": true},
+      "acquisition": {"metadata_verified": true, "raw_data_downloaded_into_constructor": false, "required_next_step": "Fetch PDSI and skill layers and perform EU5 crosswalk."}
+    },
+    {
+      "source_id": "sada_south_america_1400_2000",
+      "title": "South American Drought Atlas",
+      "provider": "Morales et al.; NOAA WDS",
+      "source_kind": "tree_ring_hydroclimate_reconstruction",
+      "citation": "Morales, M. S. et al. (2020), Six hundred years of South American tree rings reveal an increase in severe hydroclimatic events since mid-20th century, NOAA DOI 10.25921/b1ps-rw37.",
+      "urls": {
+        "metadata": "https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=noaa-recon-30612",
+        "doi": "https://doi.org/10.25921/b1ps-rw37"
+      },
+      "coverage": {
+        "years": [1400, 2000],
+        "target_window_coverage": [1400, 1500],
+        "geography": "South America south of 12 degrees south",
+        "resolution": "2715-point 0.5 degree grid; austral summer scPDSI"
+      },
+      "evidence": ["NOAA describes a 286-record tree-ring network and annual summer soil-moisture reconstruction from 1400 CE."],
+      "model_role": "post_1337_validation_only",
+      "allowed_uses": ["Hold out South American drought-risk tails and spatial covariance for the 1400-1500 overlap."],
+      "forbidden_uses": ["Do not use to set 1337 global scale; the record starts 63 years after game start."],
+      "independence": {"source_family": "tree_ring_drought_atlas_sada", "independent_of_mcydb": true},
+      "acquisition": {"metadata_verified": true, "raw_data_downloaded_into_constructor": false, "required_next_step": "Acquire scPDSI and skill fields and map only 1400-1500 validation years."}
+    },
+    {
+      "source_id": "anzda_australia_new_zealand_1500_2012",
+      "title": "Eastern Australia and New Zealand Drought Atlas",
+      "provider": "Palmer et al.; NOAA WDS",
+      "source_kind": "tree_ring_hydroclimate_reconstruction",
+      "citation": "Palmer, J. G. et al. (2015/2016), Eastern Australia and New Zealand Drought Atlas, NOAA DOI 10.25921/7qpw-x384.",
+      "urls": {
+        "metadata": "https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/noaa-recon-20245/html",
+        "doi": "https://doi.org/10.25921/7qpw-x384"
+      },
+      "coverage": {
+        "years": [1500, 2012],
+        "target_window_coverage": [1500, 1500],
+        "geography": "Eastern Australia and New Zealand",
+        "resolution": "0.5 x 0.5 degree austral-summer PDSI; 176 tree-ring chronologies and one coral series"
+      },
+      "evidence": ["NOAA reports a gridded drought reconstruction beginning in 1500 CE, with documented historical-event validation."],
+      "model_role": "post_1337_validation_only",
+      "allowed_uses": ["Use only as a boundary-year/late-window holdout; it cannot calibrate 1337 uncertainty."],
+      "forbidden_uses": ["Do not treat 1500 as evidence for the 1337 state or global scale."],
+      "independence": {"source_family": "tree_ring_drought_atlas_anzda", "independent_of_mcydb": true},
+      "acquisition": {"metadata_verified": true, "raw_data_downloaded_into_constructor": false, "required_next_step": "Acquire data and keep it in a validation-only fold."}
+    },
+    {
+      "source_id": "gdhy_modern_1981_2011",
+      "title": "Global Dataset of Historical Yield of Major Crops v1.2",
+      "provider": "Iizumi; DIAS",
+      "source_kind": "modern_observed_yield_grid",
+      "citation": "Iizumi, T. (2017), Global dataset of historical yield of major crops v1.2, DIAS DOI 10.20783/DIAS.528.",
+      "urls": {
+        "metadata": "https://search.diasjp.net/en/dataset/GDHY_v1_2",
+        "doi": "https://doi.org/10.20783/DIAS.528"
+      },
+      "coverage": {
+        "years": [1981, 2011],
+        "geography": "Global 0.5 degree grid",
+        "crops": ["maize", "rice", "wheat", "soybean"],
+        "resolution": "0.5 degree; t/ha"
+      },
+      "evidence": ["The dataset is a satellite vegetation-index and FAO country-statistics hybrid, with time-constant 2000 harvested-area weights; it is not a medieval observation."],
+      "model_role": "modern_parameter_transfer_diagnostic_only",
+      "allowed_uses": ["Check whether the crop-water response implementation produces plausible relative yield variability under observed climate."],
+      "forbidden_uses": ["Do not train 1337 absolute yields, land shares or population capacity with this source."],
+      "independence": {"source_family": "modern_satellite_fao_yield_grid", "independent_of_mcydb": true, "modernity": "out_of_period"},
+      "acquisition": {"metadata_verified": true, "raw_data_downloaded_into_constructor": false, "required_next_step": "Only use in an explicitly modern diagnostic fold if needed; keep out of 1337 acceptance metrics."}
+    }
+  ],
+  "regional_coverage": [
+    {"super_region": "europe", "direct_yield": "england_1211_1491", "hydroclimate": ["owda"], "state": "partial", "blockers": ["No comparable direct annual yield database has been located for continental Europe in 1100-1500; English demesne records are not globally representative."]},
+    {"super_region": "asia", "direct_yield": "relative_documentary_harvest_grades_eastern_china", "hydroclimate": ["mada", "shenyang_local_series"], "state": "partial", "blockers": ["Chinese harvest grades are ordinal/relative rather than kg per hectare; South Asia, Southeast Asia and Central Asia remain under-covered."]},
+    {"super_region": "america", "direct_yield": "none_in_1100_1500_registry", "hydroclimate": ["nada", "sada_1400_plus"], "state": "partial", "blockers": ["SADA begins in 1400 and NADA is hydroclimate only; no direct 1100-1337 annual yield series is verified here."]},
+    {"super_region": "africa", "direct_yield": "none_in_1100_1500_registry", "hydroclimate": [], "state": "blocked", "blockers": ["No annually resolved, spatially mappable 1100-1500 crop-yield or drought atlas covering African EU5 locations was verified. Do not use modern African yield statistics as medieval risk labels."]},
+    {"super_region": "oceania", "direct_yield": "none_in_1100_1500_registry", "hydroclimate": ["anzda_1500_plus"], "state": "blocked_for_1337", "blockers": ["ANZDA starts in 1500 and is validation-only; no 1100-1337 annual yield-risk source was verified."]}
+  ],
+  "validation_design": {
+    "direct_yield_risk": [
+      "Use MCYDB annual anomalies and observation counts for England; separate regional weighted chronologies from unweighted manorial variance.",
+      "Use Hao et al. relative harvest grades as one-sided/event validation in eastern China, preserving ordinal semantics.",
+      "Never create location-level historical capacity targets from either source."
+    ],
+    "climate_to_yield": [
+      "Join independent historical yield records to OWDA/MADA or documentary drought years only after matching calendars and mapped boundaries.",
+      "Fit/validate only a bounded relative response or tail-frequency diagnostic; keep GAEZ/PyAEZ absolute yield as the physical baseline.",
+      "Use source-family holdouts: England manorial accounts, Chinese documentary harvests, and each drought-atlas family are not exchangeable observations."
+    ],
+    "spatial_uncertainty": [
+      "Sample atlas grid-cell skill, missingness and reconstruction covariance at EU5 footprint points.",
+      "Use MCYDB farm-vs-regional variance to test aggregation error; do not substitute a global variance multiplier.",
+      "Aggregate to regional holdouts where grid-point reconstruction skill is weak."
+    ],
+    "parameter_uncertainty": [
+      "Propagate empirical English yield anomaly quantiles and crop-specific source uncertainty separately from climate uncertainty.",
+      "Treat Chinese harvest grades as ordinal likelihood constraints, not continuous yield parameters.",
+      "Do not infer Africa, South Asia, or tropical crop parameter distributions from European cereals."
+    ]
+  },
+  "blocking_gaps": [
+    "No raw direct-yield table has yet been downloaded, hashed and mapped to EU5; metadata verification alone cannot satisfy the annual-risk gate.",
+    "The existing annual simulation audit remains blocked because resolved crop parameter mappings and exact 101-year annual labels are absent.",
+    "Africa and much of South/Southeast/Central Asia lack independent 1100-1500 annual yield observations; no statistical or regional imputation is permitted.",
+    "Drought-atlas skill/missingness layers have not yet been acquired and must be carried into uncertainty.",
+    "The current fallback's climate response is not a substitute for a completed PyAEZ crop parameter registry."
+  ],
+  "acceptance": {
+    "independent_source_families_listed": 9,
+    "direct_1337_compatible_yield_families": 2,
+    "hydroclimate_source_families_listed": 5,
+    "direct_1337_compatible_hydroclimate_families": 4,
+    "post_1337_validation_only_families": 3,
+    "global_annual_yield_validation_complete": false,
+    "spatial_skill_layers_acquired": false,
+    "annual_risk_gate_unblocked": false,
+    "reason": "The registry establishes the best available evidence and exact next acquisition steps, but it does not pretend that metadata or climate proxies close the missing direct-yield and crop-parameter labels."
+  }
+}

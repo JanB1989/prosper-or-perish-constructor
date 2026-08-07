@@ -1,0 +1,81 @@
+{
+  "schema_version": "population_capacity_evidence_packet_v1",
+  "super_region": "Africa",
+  "region": "zimbabwe",
+  "target_year": 1337,
+  "packet_id": "africa_great_zimbabwe_lower_bound_wave16",
+  "scope": "Conservative one-sided in-period floor for the Great Zimbabwe settlement, with explicit archaeological disagreement and urban-boundary containment.",
+  "promotion_audit": {
+    "promoted_lower_bound_ids": [
+      "great_zimbabwe_1300_1450_population_lower_bound_wave16"
+    ],
+    "decision": "Promote only the conservative 10,000-person floor stated by the UNESCO World Heritage record for the fourteenth-century city. Do not use the older 18,000-20,000 estimate, the PLOS <10,000 revised estimate, or the urban population as a two-sided carrying-capacity interval. The lower bound is a containment constraint on the EU5 location that contains the archaeological site; it is not a regional or continental target.",
+    "reviewed_on": "2026-08-03"
+  },
+  "records": [
+    {
+      "anchor_id": "great_zimbabwe_1300_1450_population_lower_bound_wave16",
+      "label": "Great Zimbabwe fourteenth-century archaeological urban population floor",
+      "year_start": 1300,
+      "year_end": 1450,
+      "population_low": 10000,
+      "population_central": 10000,
+      "population_high": 10000,
+      "saturation_low": null,
+      "saturation_central": null,
+      "saturation_high": null,
+      "local_food_low": 0.7,
+      "local_food_central": 0.85,
+      "local_food_high": 1.0,
+      "capacity_low": 10000,
+      "capacity_central": 10000,
+      "capacity_high": 10000,
+      "interval_semantics": "This is a one-sided locally supported population floor, not a complete population interval or capacity ceiling. UNESCO's World Heritage record says that Great Zimbabwe was the principal city of a major state in the fourteenth century and that its population exceeded 10,000. The floor is kept at 10,000 exactly because Chirikure et al. (2017) find that the commonly repeated 18,000-20,000 figure is not supported and conclude that the total site population was unlikely to have exceeded 10,000. The disagreement is retained rather than converted into artificial uncertainty.",
+      "pressure_evidence": [
+        "UNESCO World Heritage Centre, Great Zimbabwe National Monument, Outstanding Universal Value, paragraphs 52-61: the property was built and occupied from approximately 1100 to 1450; in the fourteenth century it was the principal city of a major state, its population exceeded 10,000, and the hinterland could no longer furnish food for the overpopulated city when the capital was abandoned around 1450.",
+        "UNESCO, paragraphs 59-61: farming and pastoral activities are documented by the archaeological record, while imported glass, porcelain, beads and coins show long-distance prestige/trade connections. Staple local production is therefore plausible but not treated as autarky.",
+        "Chirikure et al. (2017), PLOS ONE 12(6):e0178335, abstract and pp. 1-2: archaeological chronology, phosphate/geophysical settlement evidence, demographic back-projection and ecological consistency checks reject the unqualified 20,000-person assumption and place the credible total below 10,000. Their analysis explicitly evaluates agricultural land, cattle pasture, water and environmental sustainability.",
+        "Chirikure et al. (2017), pp. 9-11: a 20,000-person scenario would require approximately 20,000 hectares of arable land and 11,500-20,000 cattle, while local stocking rates and the absence of the expected environmental degradation make that scenario ecologically implausible. This is independent pressure/resource evidence, not a regional multiplier."
+      ],
+      "shock_flags": [
+        "urban_site_not_equivalent_to_surrounding_rural_catchment",
+        "long_distance_trade_and_tribute_links_present",
+        "population_estimate_is_archaeological_and_disputed",
+        "capital_abandonment_and_food_hinterland_failure_near_1450",
+        "UNESCO_exceeds_10000_statement_conflicts_with_PLOS_upper_estimate"
+      ],
+      "trade_dependence": "mixed: staple calories were supplied by nearby farming and pastoral systems, while Great Zimbabwe was an exchange hub connected to Indian Ocean trade and tribute networks; imported prestige goods are not counted as food imports.",
+      "food_regime": "local_sorghum_millet_pumpkin_agriculture_cattle_pastoralism_hunting_and_limited_fish_with_long_distance_prestige_trade",
+      "boundary_description": "The UNESCO Great Zimbabwe National Monument property and its associated settlement, approximately 800 ha, at about 30 km from modern Masvingo. This is the archaeological city/site boundary, not the full Zimbabwe state, Victoria District, or a modern administrative province.",
+      "boundary_source": "UNESCO World Heritage Centre, Great Zimbabwe National Monument, Outstanding Universal Value, paragraphs 52-69; Chirikure et al. (2017), Fig. 1-2 and pp. 1-2.",
+      "eu5_selector": {
+        "include": [
+          "location_tag=great_zimbabwe"
+        ],
+        "exclude": []
+      },
+      "location_weights": {
+        "great_zimbabwe": 1.0
+      },
+      "coverage_fraction": 1.0,
+      "boundary_overlap_status": "contained_site_in_coarse_eu5_location",
+      "crosswalk_status": "high",
+      "boundary_confidence": "high",
+      "status": "vetted",
+      "role": "lower_bound",
+      "source_family": "great_zimbabwe_unesco_archaeology_ecology",
+      "source_bundle": "unesco_great_zimbabwe_chirikure_2017_ecological_consistency_bundle",
+      "source_family_independence": "UNESCO's World Heritage synthesis and the open-access PLOS archaeological/ecological study are independent institutional assessments of the site, but both concern the same archaeological settlement and are treated as one source family. No starting-population or HYDE field is used.",
+      "sources": [
+        "https://whc.unesco.org/en/list/364",
+        "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0178335",
+        "https://doi.org/10.1371/journal.pone.0178335"
+      ],
+      "citation_details": [
+        "UNESCO World Heritage Centre, Great Zimbabwe National Monument, Outstanding Universal Value, paragraphs 52-61: date, >10,000 population statement, farming/pastoral evidence, trade evidence and food-hinterland failure.",
+        "Chirikure, Moultrie, Bandama, Dandara and Manyanga (2017), PLOS ONE 12(6):e0178335, abstract, pp. 1-2 and 9-11: archaeological population controversy, <10,000 revised conclusion, chronology, land/pasture/water checks and sustainability interpretation."
+      ],
+      "notes": "The floor is deliberately conservative at the intersection of UNESCO's >10,000 statement and Chirikure et al.'s revised <10,000 conclusion. It is useful as a one-sided test of whether the containing EU5 location can support a locally provisioned medieval urban site. It must not be treated as a two-sided Malthusian capacity interval, and no Great Zimbabwe, Zimbabwe, or Africa-specific correction is permitted."
+    }
+  ]
+}

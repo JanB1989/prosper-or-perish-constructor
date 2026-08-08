@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from dataclasses import dataclass
 from decimal import Decimal, ROUND_HALF_UP
@@ -9,6 +9,7 @@ from typing import Any
 
 import yaml
 from eu5_building_pipeline.template import load_template
+from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
 
@@ -168,12 +169,11 @@ def _accepted_blueprint_increase_per_level_costs(repo: Path) -> dict[str, Decima
     if not manifest_path.is_file():
         return {}
     raw = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-    enabled = raw.get("enabled") if isinstance(raw, dict) else None
-    if not isinstance(enabled, list):
-        raise ValueError(f"{manifest_path}: expected enabled list")
+    if not isinstance(raw, dict):
+        raise ValueError(f"{manifest_path}: expected mapping")
 
     costs: dict[str, Decimal] = {}
-    for entry in enabled:
+    for entry in enabled_manifest_entries(raw.get("enabled", []), source=manifest_path):
         path = repo / BUILDING_BLUEPRINT_ROOT_RELATIVE / Path(str(entry))
         template = load_template(path)
         cost = _template_increase_per_level_cost(template.key, template.building_body)

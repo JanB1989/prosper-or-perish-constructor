@@ -1,9 +1,10 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import re
 from pathlib import Path
 
 import yaml
+from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5gameparser.domain.eu5 import load_eu5_data
 
 
@@ -51,7 +52,7 @@ def _raw_material_goods() -> list[str]:
 def _base_production_methods() -> dict[str, list[tuple[str, str]]]:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     methods_by_good: dict[str, list[tuple[str, str]]] = {}
-    for entry in manifest["enabled"]:
+    for entry in enabled_manifest_entries(manifest.get("enabled", []), source=MANIFEST_PATH):
         blueprint_path = BLUEPRINT_ROOT / entry
         raw = yaml.safe_load(blueprint_path.read_text(encoding="utf-8-sig"))
         body = raw.get("building", {}).get("body", "")

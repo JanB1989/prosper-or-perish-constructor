@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from collections import defaultdict, deque
 from functools import lru_cache
@@ -8,6 +8,7 @@ import re
 
 import yaml
 
+from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5gameparser.domain.eu5 import load_eu5_data
 
 
@@ -177,7 +178,7 @@ def _accepted_constructor_blueprint_unlocks() -> tuple[set[str], set[str]]:
     buildings: set[str] = set()
     production_methods: set[str] = set()
 
-    for entry in manifest["enabled"]:
+    for entry in enabled_manifest_entries(manifest.get("enabled", []), source=MANIFEST_PATH):
         if not str(entry).startswith("buildings/"):
             continue
         raw = yaml.safe_load((BLUEPRINT_ROOT / entry).read_text(encoding="utf-8-sig"))

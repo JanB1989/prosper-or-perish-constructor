@@ -1,10 +1,12 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from pathlib import Path
 import re
 
 import pytest
 import yaml
+
+from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -96,7 +98,8 @@ def _goods_total(body: str) -> float:
 
 
 def test_road_infrastructure_blueprints_are_manifested_and_one_level_infrastructure() -> None:
-    enabled = set(yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))["enabled"])
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(enabled_manifest_entries(manifest.get("enabled", []), source=MANIFEST_PATH))
 
     for building, expected in ROAD_BUILDINGS.items():
         assert f"buildings/{building}.yml" in enabled

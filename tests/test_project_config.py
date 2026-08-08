@@ -15,7 +15,7 @@ from eu5gameparser.domain.building_types import load_building_type_data
 from eu5gameparser.domain.eu5 import load_eu5_data
 from eu5gameparser.load_order import LoadOrderConfig, load_merged_directory
 from eu5_mod_orchestrator.adapters.parser import load_raw_material_goods
-from eu5_mod_orchestrator.blueprints import accepted_blueprint_files, validate_blueprint_file
+from eu5_mod_orchestrator.blueprints import accepted_blueprint_files, enabled_manifest_entries, validate_blueprint_file
 from eu5_mod_orchestrator.config import load_project_config
 from mod_injector.config import load_mod_injector_config
 from prosper_or_perish_constructor import cli
@@ -3925,7 +3925,7 @@ def _normalized_production_site_blueprints() -> tuple[tuple[str, Path], ...]:
     raw_material_goods = set(load_raw_material_goods(profile=config.profile, load_order_path=config.load_order_path))
 
     buildings: list[tuple[str, Path]] = []
-    for entry in manifest["enabled"]:
+    for entry in enabled_manifest_entries(manifest.get("enabled", []), source=ROOT / "blueprints" / "buildings.manifest.yml"):
         blueprint = ROOT / "blueprints" / "accepted" / entry
         data = yaml.safe_load(blueprint.read_text(encoding="utf-8-sig"))
         building = data.get("building") or {}

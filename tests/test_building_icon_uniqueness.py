@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from collections import defaultdict
 import hashlib
@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from eu5_building_pipeline import render_template, write_icon_asset
+from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 import yaml
 
 
@@ -26,8 +27,7 @@ MOD_ICON_ROOT = (
 
 def _enabled_blueprints() -> dict[str, dict[str, Any]]:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
-    raw_enabled = manifest["enabled"]
-    assert isinstance(raw_enabled, list)
+    raw_enabled = enabled_manifest_entries(manifest.get("enabled", []), source=MANIFEST_PATH)
 
     blueprints: dict[str, dict[str, Any]] = {}
     for relative in raw_enabled:

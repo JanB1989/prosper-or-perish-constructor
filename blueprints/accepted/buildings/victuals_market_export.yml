@@ -35,10 +35,10 @@ building:
     unique_production_methods = {
       pp_province_food_to_market = {
         produced = province_food_sales
-        victuals = -1.0
-        offset = 5
+        victuals = -2.0
+        offset = 10
         manual_labor_cost = 0.5
-        output = 3.0
+        output = 6.0
         category = building_maintenance
       }
     }
@@ -48,7 +48,7 @@ building:
 
     modifier = {
       local_province_food_sales_output_modifier = -0.012
-      local_monthly_food = -30.0
+      local_monthly_food = -60.0
       local_nobles_estate_power = 0.05
       local_peasant_enfranchisment = -0.01
       local_food_capacity = 1200

@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from decimal import Decimal
 from pathlib import Path
@@ -7,6 +7,7 @@ import re
 import pytest
 import yaml
 from eu5_building_pipeline.template import load_template
+from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5_mod_orchestrator.config import load_project_config
 from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
@@ -57,7 +58,10 @@ def test_burgher_buildings_do_not_exceed_configured_employment_baseline() -> Non
     offenders: list[str] = []
     baseline_count = 0
 
-    for entry in yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))["enabled"]:
+    for entry in enabled_manifest_entries(
+        yaml.safe_load(MANIFEST.read_text(encoding="utf-8")).get("enabled", []),
+        source=MANIFEST,
+    ):
         template = load_template(ROOT / "blueprints" / "accepted" / entry)
         block = _building_block(template.key, template.building_body)
         pop_type_values = block.values("pop_type")
@@ -248,7 +252,7 @@ def _good_food(good: str) -> Decimal:
 def _accepted_worker_victual_buildings() -> set[str]:
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
     result: set[str] = set()
-    for entry in manifest["enabled"]:
+    for entry in enabled_manifest_entries(manifest.get("enabled", []), source=MANIFEST):
         template = load_template(ROOT / "blueprints" / "accepted" / entry)
         methods = {
             method

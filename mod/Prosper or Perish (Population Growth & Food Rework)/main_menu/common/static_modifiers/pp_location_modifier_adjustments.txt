@@ -13,9 +13,9 @@ TRY_REPLACE:province_starving = {
 	
 	# local_upper_class_capacity_modifier = -0.75
 	local_life_expectancy = -10
-	local_province_food_sales_output_modifier = 0.080
+	# local_province_food_sales_output_modifier = 0.080
 	local_offset_output_modifier = 0.080
-	local_province_food_purchase_output_modifier = 0.080
+	local_province_food_purchase_output_modifier = 2.00
 	
 	local_migration_speed = 0.015
     local_monthly_prosperity = -0.05
@@ -192,7 +192,7 @@ TRY_REPLACE:devastation = {
 	local_pop_promotion_speed = 0.5
 	local_pop_demotion_speed = -0.5
 	local_raw_material_output = 0.25
-	local_production_efficiency = 0.15
+	# local_production_efficiency = 0.15
 	local_monthly_literacy = 0.05
 	local_migration_attraction = 1
 	local_life_expectancy = 10
@@ -230,8 +230,8 @@ TRY_REPLACE:development = {
 	maximum_stockpile_capacity = 10
 	local_production_efficiency = 0.0015
 	local_monthly_development = -0.00011
-	local_population_capacity = 0.15
-	local_population_capacity_modifier = 0.015
+	local_population_capacity = 0.1
+	local_population_capacity_modifier = 0.06
 }
 TRY_REPLACE:minor_rebel_uprising = {
 	game_data = {

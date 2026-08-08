@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import csv
 from dataclasses import dataclass
@@ -11,6 +11,7 @@ from typing import Any
 import polars as pl
 import yaml
 from eu5_building_pipeline.template import load_template
+from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5gameparser.domain.buildings import load_building_data
 
 
@@ -142,12 +143,11 @@ def building_increase_cost_assignments(
 def accepted_blueprint_paths_by_building(repo: Path) -> dict[str, Path]:
     manifest_path = repo / BUILDING_BLUEPRINT_MANIFEST_RELATIVE
     raw = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-    enabled = raw.get("enabled") if isinstance(raw, dict) else None
-    if not isinstance(enabled, list):
-        raise ValueError(f"{manifest_path}: expected enabled list")
+    if not isinstance(raw, dict):
+        raise ValueError(f"{manifest_path}: expected mapping")
 
     paths_by_building: dict[str, Path] = {}
-    for entry in enabled:
+    for entry in enabled_manifest_entries(raw.get("enabled", []), source=manifest_path):
         relative = Path(str(entry))
         path = repo / BUILDING_BLUEPRINT_ROOT_RELATIVE / relative
         template = load_template(path)
@@ -393,9 +393,33 @@ def _top_level_indent(lines: list[str]) -> str:
 
 def _append_manifest_entries(manifest_path: Path, entries: list[str]) -> None:
     existing = _read_text_preserving_newlines(manifest_path, encoding="utf-8")
-    suffix = "" if existing.endswith("\n") else "\n"
-    addition = "".join(f"- {entry}\n" for entry in sorted(entries))
-    _write_text_if_changed(manifest_path, existing + suffix + addition, encoding="utf-8")
+    raw = yaml.safe_load(existing) if existing.strip() else {}
+    if not isinstance(raw, dict):
+        raise ValueError(f"{manifest_path}: expected mapping")
+    enabled = raw.get("enabled", {})
+    if isinstance(enabled, dict):
+        known = {str(path) for path in enabled}
+        missing = [entry for entry in sorted(entries) if entry not in known]
+        if not missing:
+            return
+        suffix = "" if existing.endswith("\n") else "\n"
+        addition = "".join(f"  {entry}: true\n" for entry in missing)
+        _write_text_if_changed(manifest_path, existing + suffix + addition, encoding="utf-8")
+        return
+    if isinstance(enabled, list):
+        known = {
+            str(item) if isinstance(item, str) else next(iter(item))
+            for item in enabled
+            if isinstance(item, str) or (isinstance(item, dict) and len(item) == 1)
+        }
+        missing = [entry for entry in sorted(entries) if entry not in known]
+        if not missing:
+            return
+        suffix = "" if existing.endswith("\n") else "\n"
+        addition = "".join(f"- {entry}\n" for entry in missing)
+        _write_text_if_changed(manifest_path, existing + suffix + addition, encoding="utf-8")
+        return
+    raise ValueError(f"{manifest_path}: enabled must be a list or mapping")
 
 
 def _write_text_if_changed(path: Path, text: str, *, encoding: str) -> None:

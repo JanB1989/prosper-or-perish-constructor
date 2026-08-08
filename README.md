@@ -1,4 +1,4 @@
-# Prosper or Perish Constructor
+﻿# Prosper or Perish Constructor
 
 Concrete EU5 mod workspace for the Prosper or Perish population growth and food rework mod.
 
@@ -412,7 +412,7 @@ prices.stats
 ## Building Blueprints
 
 Accepted building blueprints live under `blueprints/accepted/buildings` and are enabled by
-`blueprints/buildings.manifest.yml`.
+`blueprints/buildings.manifest.yml` (`path: true` / `path: false` toggles; legacy path lists still work).
 
 ```bash
 uv run eu5-orchestrator blueprint list --project constructor.toml

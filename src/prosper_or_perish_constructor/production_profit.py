@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from dataclasses import dataclass
 from decimal import Decimal, ROUND_HALF_UP
@@ -11,6 +11,7 @@ from typing import Any, Iterable, Mapping, Sequence
 import yaml
 
 from eu5_building_pipeline.template import load_template
+from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5gameparser.clausewitz.serializer import render_list
 from eu5gameparser.clausewitz.syntax import CEntry, CList, SourceLocation, Value
 from eu5gameparser.domain.availability import AGE_INDEX, AGE_ORDER, annotate_building_data_availability
@@ -396,8 +397,12 @@ def validate_employment_size_step(value: float | int | str | None) -> bool:
 
 
 def _manifest_blueprint_paths(repo: Path) -> list[Path]:
-    manifest = _load_yaml(repo / BUILDING_BLUEPRINT_MANIFEST_RELATIVE)
-    return [repo / BUILDING_BLUEPRINT_ROOT_RELATIVE / str(entry) for entry in manifest["enabled"]]
+    manifest_path = repo / BUILDING_BLUEPRINT_MANIFEST_RELATIVE
+    manifest = _load_yaml(manifest_path)
+    return [
+        repo / BUILDING_BLUEPRINT_ROOT_RELATIVE / entry
+        for entry in enabled_manifest_entries(manifest.get("enabled", []), source=manifest_path)
+    ]
 
 
 def _load_yaml(path: Path) -> dict[str, Any]:

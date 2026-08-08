@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from pathlib import Path
 
@@ -12,6 +12,7 @@ from eu5_mod_orchestrator.adapters.parser import (
     load_raw_material_goods,
     load_script_values,
 )
+from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5_mod_orchestrator.config import load_project_config
 
 
@@ -35,7 +36,7 @@ def test_accepted_blueprints_have_no_unallowed_evaluation_rule_violations() -> N
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled_blueprints = [
         config.accepted_blueprints_dir / entry
-        for entry in manifest["enabled"]
+        for entry in enabled_manifest_entries(manifest.get("enabled", []), source=MANIFEST_PATH)
     ]
 
     violations: list[str] = []

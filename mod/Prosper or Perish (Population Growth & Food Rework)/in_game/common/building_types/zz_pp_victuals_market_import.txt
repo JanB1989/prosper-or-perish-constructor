@@ -1,10 +1,10 @@
 ﻿# >>> eu5-building-pipeline:victuals_market_import:building
 victuals_market_import = {
 is_foreign = no
-increase_per_level_cost = 0.10
+increase_per_level_cost = 0.00
 max_levels = victuals_market_max_level
 pop_type = nobles
-employment_size = 0.050
+employment_size = 0.001
 price = pp_victuals_market_import_price
 category = consumer_goods_category
 custom_tags = { pp_food_security_priority pp_food_distribution_priority }
@@ -24,9 +24,9 @@ construction_demand = victuals_market_construction
 unique_production_methods = {
   pp_province_food_from_market = {
     produced = province_food_purchase
-    victuals = 1.0
+    victuals = 3.0
     manual_labor_cost = 0.5
-    output = 3.0
+    output = 9.0
     category = building_maintenance
   }
 }
@@ -35,11 +35,7 @@ raw_modifier = {
 }
 
 modifier = {
-  local_province_food_purchase_output_modifier = -0.012
-  local_monthly_food = 30.0
-  local_nobles_estate_power = 0.05
-  local_peasant_enfranchisment = -0.01
-  local_food_capacity = 1200
+  local_monthly_food = 90.0
 }
 }
 # <<< eu5-building-pipeline:victuals_market_import:building

@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import re
 from pathlib import Path
@@ -15,6 +15,17 @@ ROOT = Path(__file__).resolve().parents[1]
 def _repo(tmp_path: Path) -> Path:
     (tmp_path / "constructor.toml").write_text('name = "test"\n')
     return tmp_path
+
+
+def test_production_profit_import_missing_command_is_registered() -> None:
+    args, extra = cli._build_parser().parse_known_args(
+        ["production-profit", "--import-missing", "--dry-run"]
+    )
+
+    assert extra == []
+    assert args.handler is cli._production_profit
+    assert args.import_missing is True
+    assert args.dry_run is True
 
 
 def test_population_capacity_fisheries_audit_command_is_registered() -> None:

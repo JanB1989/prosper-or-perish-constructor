@@ -472,9 +472,14 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Convert cost-only vanilla production stubs into full REPLACE blueprints.",
     )
     production_profit.add_argument(
+        "--import-missing",
+        action="store_true",
+        help="Create faithful REPLACE/CREATE blueprints for production buildings missing from the manifest.",
+    )
+    production_profit.add_argument(
         "--dry-run",
         action="store_true",
-        help="With --write-blueprints, report conversion changes without writing files.",
+        help="With --write-blueprints or --import-missing, report changes without writing files.",
     )
     _add_command(
         subcommands,
@@ -3328,21 +3333,50 @@ def _production_profit(
 
     from prosper_or_perish_constructor.production_profit import (
         convert_vanilla_production_stubs,
+        import_missing_production_buildings,
         production_profit_report,
     )
 
     load_order_path = _repo_path(repo, args.load_order)
-    if args.write_blueprints:
+    if args.write_blueprints or getattr(args, "import_missing", False):
         from prosper_or_perish_constructor.building_scaling import load_building_scaling_config
 
         scaling = load_building_scaling_config(project)
+        burgher_employment_size = float(scaling.burgher_building_employment_size)
+        if getattr(args, "import_missing", False):
+            results = import_missing_production_buildings(
+                repo,
+                profile=args.profile,
+                vanilla_profile=args.vanilla_profile,
+                load_order_path=load_order_path,
+                dry_run=args.dry_run,
+                burgher_employment_size=burgher_employment_size,
+            )
+            changed = sum(1 for result in results if result.changed)
+            mode = "dry_run" if args.dry_run else "written"
+            print(
+                f"imported_blueprints={len(results)} changed={changed} mode={mode}",
+                flush=True,
+            )
+            if not results:
+                print("  none", flush=True)
+            for result in results:
+                relative = result.path.relative_to(repo)
+                state = "changed" if result.changed else "unchanged"
+                print(
+                    f"  {result.building}: {relative} "
+                    f"slots={result.slot_count} methods={result.method_count} {state}",
+                    flush=True,
+                )
+            if not args.write_blueprints:
+                return 0
         results = convert_vanilla_production_stubs(
             repo,
             profile=args.profile,
             vanilla_profile=args.vanilla_profile,
             load_order_path=load_order_path,
             dry_run=args.dry_run,
-            burgher_employment_size=float(scaling.burgher_building_employment_size),
+            burgher_employment_size=burgher_employment_size,
         )
         changed = sum(1 for result in results if result.changed)
         mode = "dry_run" if args.dry_run else "written"

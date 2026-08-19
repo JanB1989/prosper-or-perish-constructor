@@ -7,7 +7,6 @@ from dataclasses import dataclass
 import numpy as np
 
 BASE_POPULATION_CAPACITY_COLUMN = "base_population_capacity"
-STARTING_POPULATION_FLOOR_COLUMN = "starting_population_capacity_floor"
 IRRIGATION_LEVELS_COLUMN = "irrigation_systems_levels"
 IRRIGATION_LEGAL_CAP_COLUMN = "irrigation_systems_legal_cap"
 
@@ -57,7 +56,6 @@ class PopulationCapacityFormula:
         base_capacity: np.ndarray,
         development: np.ndarray,
         irrigation_levels: np.ndarray,
-        starting_floor: np.ndarray,
     ) -> np.ndarray:
         """Return the location-sized capacity array for the current state."""
 
@@ -68,8 +66,7 @@ class PopulationCapacityFormula:
             float(self.development_max),
         )
         irrigation = np.maximum(np.asarray(irrigation_levels, dtype=np.float64), 0.0)
-        floor = np.maximum(np.asarray(starting_floor, dtype=np.float64), 0.0)
-        if not (base.shape == dev.shape == irrigation.shape == floor.shape):
+        if not (base.shape == dev.shape == irrigation.shape):
             raise ValueError("population-capacity inputs must have matching shapes")
 
         absolute = (
@@ -83,10 +80,7 @@ class PopulationCapacityFormula:
             + irrigation * float(self.irrigation_relative)
         )
         modeled = np.maximum(absolute * np.maximum(relative, 0.0), 0.0)
-        return np.maximum.reduce(
-            [
-                modeled,
-                floor,
-                np.full(modeled.shape, float(self.minimum_capacity), dtype=np.float64),
-            ]
+        return np.maximum(
+            modeled,
+            np.full(modeled.shape, float(self.minimum_capacity), dtype=np.float64),
         )

@@ -21,7 +21,6 @@ from prosper_or_perish_constructor.simulation.capacity_pressure import (
 from prosper_or_perish_constructor.simulation.capacity_model import (
     BASE_POPULATION_CAPACITY_COLUMN,
     IRRIGATION_LEVELS_COLUMN,
-    STARTING_POPULATION_FLOOR_COLUMN,
     PopulationCapacityFormula,
 )
 from prosper_or_perish_constructor.simulation.food import (
@@ -87,9 +86,6 @@ class NumPyLocationState:
     employed_peasants: np.ndarray = field(repr=False, default_factory=lambda: np.zeros(0))
     population_capacity: np.ndarray = field(repr=False, default_factory=lambda: np.zeros(0))
     base_population_capacity: np.ndarray = field(
-        repr=False, default_factory=lambda: np.zeros(0)
-    )
-    starting_population_capacity_floor: np.ndarray = field(
         repr=False, default_factory=lambda: np.zeros(0)
     )
     irrigation_levels: np.ndarray = field(repr=False, default_factory=lambda: np.zeros(0))
@@ -235,7 +231,6 @@ class NumPyLocationState:
             base_capacity=self.base_population_capacity,
             development=self.development,
             irrigation_levels=self.irrigation_levels,
-            starting_floor=self.starting_population_capacity_floor,
         )
 
     def _apply_prosperity_development(self, prosperity_scale: np.ndarray) -> None:
@@ -370,7 +365,6 @@ class NumPyLocationState:
             UNEMPLOYED_PEASANTS_COLUMN: self.unemployed_peasants,
             POPULATION_CAPACITY_COLUMN: self.population_capacity,
             BASE_POPULATION_CAPACITY_COLUMN: self.base_population_capacity,
-            STARTING_POPULATION_FLOOR_COLUMN: self.starting_population_capacity_floor,
             IRRIGATION_LEVELS_COLUMN: self.irrigation_levels,
             PROSPERITY_COLUMN: self.prosperity,
             DEVELOPMENT_COLUMN: self.development,
@@ -445,11 +439,6 @@ def numpy_state_from_polars(
         if BASE_POPULATION_CAPACITY_COLUMN in frame.columns
         else frame[POPULATION_CAPACITY_COLUMN]
     ).fill_null(0.0).cast(pl.Float64).to_numpy().astype(np.float64, copy=True)
-    starting_population_capacity_floor = (
-        frame[STARTING_POPULATION_FLOOR_COLUMN]
-        if STARTING_POPULATION_FLOOR_COLUMN in frame.columns
-        else pl.Series(STARTING_POPULATION_FLOOR_COLUMN, [0.0] * frame.height)
-    ).fill_null(0.0).cast(pl.Float64).to_numpy().astype(np.float64, copy=True)
     irrigation_levels = (
         frame[IRRIGATION_LEVELS_COLUMN]
         if IRRIGATION_LEVELS_COLUMN in frame.columns
@@ -480,7 +469,6 @@ def numpy_state_from_polars(
         TOTAL_POPULATION_COLUMN,
         POPULATION_CAPACITY_COLUMN,
         BASE_POPULATION_CAPACITY_COLUMN,
-        STARTING_POPULATION_FLOOR_COLUMN,
         IRRIGATION_LEVELS_COLUMN,
         PROSPERITY_COLUMN,
         DEVELOPMENT_COLUMN,
@@ -591,7 +579,6 @@ def numpy_state_from_polars(
         unemployed_peasants=unemployed_peasants,
         population_capacity=population_capacity,
         base_population_capacity=base_population_capacity,
-        starting_population_capacity_floor=starting_population_capacity_floor,
         irrigation_levels=irrigation_levels,
         capacity_model=context.capacity_model,
         prosperity=prosperity,

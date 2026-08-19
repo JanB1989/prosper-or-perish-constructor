@@ -30,19 +30,23 @@ def test_committed_population_simulation_profile_loads() -> None:
     assert profile.primary_scored_through_year == 200
     assert profile.rank_degrowth_exempt_pop_types == frozenset({"tribesmen"})
     assert profile.food_storage_growth_exempt_pop_types == frozenset({"tribesmen"})
-    assert profile.development_region_start_offsets == {
-        "central_asia": -4.0,
-        "south_asia": 4.0,
-        "east_asia": -3.0,
-        "southeast_asia": -3.0,
-    }
+    assert profile.development_region_start_offsets["south_asia"] == pytest.approx(15.0)
+    assert "rainfed_crop_capacity_people_p50" in profile.physical_capacity_columns
     assert len(profile.regions) == 18
     assert profile.regions[0].key == "europe"
     assert profile.regions[-1].key == "southern_cone"
     assert profile.abundant_monthly_food == pytest.approx(8.0)
     assert profile.available_monthly_food == pytest.approx(4.0)
-    assert profile.min_location_capacity == pytest.approx(0.001)
+    assert profile.min_location_capacity == pytest.approx(11.0)
     assert profile.min_irrigation_river_or_lake_fraction == pytest.approx(0.85)
+
+
+def test_committed_profile_has_no_starting_population_capacity_floor() -> None:
+    profile_text = (ROOT / "population_capacity_simulation.toml").read_text(
+        encoding="utf-8"
+    )
+
+    assert "starting_population_floor" not in profile_text
 
 
 def test_population_capacity_formula_combines_all_adjustable_terms() -> None:
@@ -54,18 +58,18 @@ def test_population_capacity_formula_combines_all_adjustable_terms() -> None:
         irrigation_relative=0.0,
         development_min=0.0,
         development_max=100.0,
+        minimum_capacity=0.001,
     )
 
     capacity = formula.evaluate(
         base_capacity=np.array([100.0, 100.0, 0.0]),
         development=np.array([10.0, 20.0, -5.0]),
         irrigation_levels=np.array([2.0, 2.0, 0.0]),
-        starting_floor=np.array([50.0, 50.0, 12.5]),
     )
 
     # (10 physical + 10 dev + 20 irrigation) * (1 + .3) = 52
     # (10 physical + 20 dev + 20 irrigation) * (1 + .6) = 80
-    assert capacity.tolist() == pytest.approx([52.0, 80.0, 12.5])
+    assert capacity.tolist() == pytest.approx([52.0, 80.0, 0.001])
 
 
 def test_simulation_checkpoint_does_not_share_mutable_numpy_memory() -> None:
@@ -121,7 +125,12 @@ def test_population_simulation_report_contains_targets_and_location_sanity() -> 
                 "profile_start_population": [100.0],
                 "profile_start_development": [10.0],
                 "base_population_capacity": [100.0],
-                "starting_population_capacity_floor": [125.0],
+                "area_km2": [100.0],
+                "hyde_population_people": [110_000.0],
+                "hyde_cropland_area_km2": [10.0],
+                "hyde_rainfed_area_km2": [9.0],
+                "hyde_pasture_area_km2": [5.0],
+                "hyde_urban_population_people": [10_000.0],
                 "irrigation_systems_levels": [1.0],
                 "irrigation_systems_legal_cap": [2.0],
                 "hyde_irrigated_area_km2": [10.0],

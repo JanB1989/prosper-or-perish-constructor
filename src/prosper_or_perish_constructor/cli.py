@@ -560,6 +560,21 @@ def _build_parser() -> argparse.ArgumentParser:
         default=Path("artifacts/data/population_capacity/current_capacity_map"),
         help="Dashboard directory relative to --repo. Defaults to the current capacity map dashboard.",
     )
+    population_simulation = _add_command(
+        subcommands,
+        "population-simulation",
+        "Run the adjustable long-run population-capacity profile and write one report.",
+        _population_simulation,
+    )
+    population_simulation.add_argument(
+        "--profile",
+        type=Path,
+        default=Path("population_capacity_simulation.toml"),
+        help=(
+            "Simulation profile TOML relative to --repo. Defaults to "
+            "population_capacity_simulation.toml."
+        ),
+    )
     population_capacity = subcommands.add_parser(
         "population-capacity",
         help="Build, audit, compare, accept, or render the 1337 carrying-capacity model.",
@@ -3578,6 +3593,33 @@ def _population_capacity_inventory(
             tsetse_labels_path=_existing_optional(paths["tsetse_labels"]),
             area_benchmarks_path=_existing_optional(paths["area_benchmarks"]),
         ),
+        flush=True,
+    )
+    return 0
+
+
+def _population_simulation(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("population-simulation does not accept extra arguments.")
+    from prosper_or_perish_constructor.simulation.profile import (
+        run_population_simulation_profile,
+    )
+
+    profile_path = args.profile if args.profile.is_absolute() else repo / args.profile
+    result = run_population_simulation_profile(
+        repo=repo,
+        project=project,
+        profile_path=profile_path,
+    )
+    status = "PASS" if result.passed else "FAIL"
+    print(
+        f"population simulation {status} in {result.elapsed_seconds:.1f}s; "
+        f"report: {result.report_path}",
         flush=True,
     )
     return 0

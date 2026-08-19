@@ -28,6 +28,14 @@ def test_production_profit_import_missing_command_is_registered() -> None:
     assert args.dry_run is True
 
 
+def test_population_simulation_command_is_registered() -> None:
+    args, extra = cli._build_parser().parse_known_args(["population-simulation"])
+
+    assert extra == []
+    assert args.handler is cli._population_simulation
+    assert args.profile == Path("population_capacity_simulation.toml")
+
+
 def test_population_capacity_fisheries_audit_command_is_registered() -> None:
     args, extra = cli._build_parser().parse_known_args(
         ["population-capacity", "fisheries-audit"]

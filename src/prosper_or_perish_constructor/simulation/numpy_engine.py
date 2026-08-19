@@ -18,6 +18,12 @@ from prosper_or_perish_constructor.simulation.capacity_pressure import (
     CapacityPressureBand,
     capacity_pressure_strength_arrays,
 )
+from prosper_or_perish_constructor.simulation.capacity_model import (
+    BASE_POPULATION_CAPACITY_COLUMN,
+    IRRIGATION_LEVELS_COLUMN,
+    STARTING_POPULATION_FLOOR_COLUMN,
+    PopulationCapacityFormula,
+)
 from prosper_or_perish_constructor.simulation.food import (
     FOOD_COLUMN,
     attach_peasant_employment_state,
@@ -70,6 +76,8 @@ class NumPyLocationState:
     province_codes: np.ndarray = field(repr=False, default_factory=lambda: np.array([], dtype=np.int32))
     province_labels: np.ndarray = field(repr=False, default_factory=lambda: np.array([], dtype=object))
     rank_population_growth: np.ndarray = field(repr=False, default_factory=lambda: np.zeros(0))
+    rank_degrowth_exempt_pop_types: frozenset[str] = frozenset()
+    food_storage_growth_exempt_pop_types: frozenset[str] = frozenset()
     # (pop_array, base_rate, static_food_consumption_mod or None, pop_type)
     pop_terms: list[tuple[np.ndarray, float, np.ndarray | None, str]] = field(
         repr=False, default_factory=list
@@ -78,6 +86,14 @@ class NumPyLocationState:
     unemployed_peasants: np.ndarray = field(repr=False, default_factory=lambda: np.zeros(0))
     employed_peasants: np.ndarray = field(repr=False, default_factory=lambda: np.zeros(0))
     population_capacity: np.ndarray = field(repr=False, default_factory=lambda: np.zeros(0))
+    base_population_capacity: np.ndarray = field(
+        repr=False, default_factory=lambda: np.zeros(0)
+    )
+    starting_population_capacity_floor: np.ndarray = field(
+        repr=False, default_factory=lambda: np.zeros(0)
+    )
+    irrigation_levels: np.ndarray = field(repr=False, default_factory=lambda: np.zeros(0))
+    capacity_model: PopulationCapacityFormula | None = None
     capacity_pressure: Mapping[str, CapacityPressureBand] = field(default_factory=dict)
     # pop_type -> band_name -> baseline local_<type>_food_consumption
     capacity_food_consumption: dict[str, dict[str, float]] = field(default_factory=dict)
@@ -97,6 +113,9 @@ class NumPyLocationState:
     def n(self) -> int:
         return int(self.location_tag.shape[0])
 
+    def __post_init__(self) -> None:
+        self._recompute_population_capacity()
+
     def tick_months(self, months: int = 1) -> None:
         if months < 0:
             raise ValueError(f"months must be non-negative: {months}")
@@ -110,6 +129,7 @@ class NumPyLocationState:
             return
 
         self._rebalance_peasant_employment()
+        self._recompute_population_capacity()
 
         # Prosperity scale from current state (0..100 → 0..1). Devastation ignored.
         prosperity_scale = np.clip(self.prosperity / PROSPERITY_FULL_SCALE, 0.0, 1.0)
@@ -172,23 +192,51 @@ class NumPyLocationState:
         if baselines is not None:
             prosperity_pop_growth = prosperity_scale * baselines.get_effect(PROSPERITY_POP_GROWTH_KEY)
 
-        yearly = (
-            self.rank_population_growth
-            + self.food_growth_population_baseline * scale_at_loc
-            + capacity_growth
-            + prosperity_pop_growth
-        )
-        mult = np.power(1.0 + yearly, 1.0 / MONTHS_PER_YEAR)
-        for pop in self.population.values():
-            pop *= mult
-        self.total_population *= mult
+        food_storage_growth = self.food_growth_population_baseline * scale_at_loc
+        shared_yearly = food_storage_growth + capacity_growth + prosperity_pop_growth
+        if (
+            self.rank_degrowth_exempt_pop_types
+            or self.food_storage_growth_exempt_pop_types
+        ):
+            total_population = np.zeros(n, dtype=np.float64)
+            for column, pop in self.population.items():
+                pop_type = column.removeprefix(POPULATION_PREFIX)
+                rank_growth = self.rank_population_growth
+                if pop_type in self.rank_degrowth_exempt_pop_types:
+                    rank_growth = np.maximum(rank_growth, 0.0)
+                pop_shared_yearly = shared_yearly
+                if pop_type in self.food_storage_growth_exempt_pop_types:
+                    pop_shared_yearly = shared_yearly - food_storage_growth
+                pop *= np.power(
+                    1.0 + rank_growth + pop_shared_yearly,
+                    1.0 / MONTHS_PER_YEAR,
+                )
+                total_population += pop
+            self.total_population = total_population
+        else:
+            yearly = self.rank_population_growth + shared_yearly
+            mult = np.power(1.0 + yearly, 1.0 / MONTHS_PER_YEAR)
+            for pop in self.population.values():
+                pop *= mult
+            self.total_population *= mult
         self._rebalance_peasant_employment()
 
         self._apply_prosperity_development(prosperity_scale)
+        self._recompute_population_capacity()
         self._update_prosperity_state(scale_at_loc=scale_at_loc, prosperity_scale=prosperity_scale)
 
         # Spoilage after the buff read: reduces stock, does not count as consumption.
         self._apply_food_decay()
+
+    def _recompute_population_capacity(self) -> None:
+        if self.capacity_model is None:
+            return
+        self.population_capacity = self.capacity_model.evaluate(
+            base_capacity=self.base_population_capacity,
+            development=self.development,
+            irrigation_levels=self.irrigation_levels,
+            starting_floor=self.starting_population_capacity_floor,
+        )
 
     def _apply_prosperity_development(self, prosperity_scale: np.ndarray) -> None:
         """Apply prosperity-scaled monthly development: add * (1 + modifier)."""
@@ -321,6 +369,9 @@ class NumPyLocationState:
             EMPLOYED_PEASANTS_COLUMN: self.employed_peasants,
             UNEMPLOYED_PEASANTS_COLUMN: self.unemployed_peasants,
             POPULATION_CAPACITY_COLUMN: self.population_capacity,
+            BASE_POPULATION_CAPACITY_COLUMN: self.base_population_capacity,
+            STARTING_POPULATION_FLOOR_COLUMN: self.starting_population_capacity_floor,
+            IRRIGATION_LEVELS_COLUMN: self.irrigation_levels,
             PROSPERITY_COLUMN: self.prosperity,
             DEVELOPMENT_COLUMN: self.development,
         }
@@ -389,6 +440,21 @@ def numpy_state_from_polars(
         .to_numpy()
         .astype(np.float64, copy=True)
     )
+    base_population_capacity = (
+        frame[BASE_POPULATION_CAPACITY_COLUMN]
+        if BASE_POPULATION_CAPACITY_COLUMN in frame.columns
+        else frame[POPULATION_CAPACITY_COLUMN]
+    ).fill_null(0.0).cast(pl.Float64).to_numpy().astype(np.float64, copy=True)
+    starting_population_capacity_floor = (
+        frame[STARTING_POPULATION_FLOOR_COLUMN]
+        if STARTING_POPULATION_FLOOR_COLUMN in frame.columns
+        else pl.Series(STARTING_POPULATION_FLOOR_COLUMN, [0.0] * frame.height)
+    ).fill_null(0.0).cast(pl.Float64).to_numpy().astype(np.float64, copy=True)
+    irrigation_levels = (
+        frame[IRRIGATION_LEVELS_COLUMN]
+        if IRRIGATION_LEVELS_COLUMN in frame.columns
+        else pl.Series(IRRIGATION_LEVELS_COLUMN, [0.0] * frame.height)
+    ).fill_null(0.0).cast(pl.Float64).to_numpy().astype(np.float64, copy=True)
     prosperity = (
         frame[PROSPERITY_COLUMN].fill_null(0.0).cast(pl.Float64).to_numpy().astype(np.float64, copy=True)
     )
@@ -413,6 +479,9 @@ def numpy_state_from_polars(
         FOOD_COLUMN,
         TOTAL_POPULATION_COLUMN,
         POPULATION_CAPACITY_COLUMN,
+        BASE_POPULATION_CAPACITY_COLUMN,
+        STARTING_POPULATION_FLOOR_COLUMN,
+        IRRIGATION_LEVELS_COLUMN,
         PROSPERITY_COLUMN,
         DEVELOPMENT_COLUMN,
         *population,
@@ -512,11 +581,19 @@ def numpy_state_from_polars(
         province_codes=province_codes,
         province_labels=province_labels,
         rank_population_growth=rank_population_growth,
+        rank_degrowth_exempt_pop_types=context.rank_degrowth_exempt_pop_types,
+        food_storage_growth_exempt_pop_types=(
+            context.food_storage_growth_exempt_pop_types
+        ),
         pop_terms=pop_terms,
         peasant_employment=peasant_employment,
         employed_peasants=employed_peasants,
         unemployed_peasants=unemployed_peasants,
         population_capacity=population_capacity,
+        base_population_capacity=base_population_capacity,
+        starting_population_capacity_floor=starting_population_capacity_floor,
+        irrigation_levels=irrigation_levels,
+        capacity_model=context.capacity_model,
         prosperity=prosperity,
         development=development,
         prosperity_baselines=context.prosperity,

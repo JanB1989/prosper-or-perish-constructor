@@ -17,6 +17,7 @@ from prosper_or_perish_constructor.simulation.capacity_pressure import (
     CapacityPressureBand,
     load_capacity_pressure_baselines,
 )
+from prosper_or_perish_constructor.simulation.capacity_model import PopulationCapacityFormula
 from prosper_or_perish_constructor.simulation.food import (
     DEFAULT_FOOD_DECAY_RATE,
     FOOD_CONSUMPTION_COLUMN,
@@ -61,6 +62,9 @@ class SimulationModifierContext:
     capacity_pressure: Mapping[str, CapacityPressureBand]
     prosperity: ProsperityBaselines
     food_decay_rate: float = DEFAULT_FOOD_DECAY_RATE
+    capacity_model: PopulationCapacityFormula | None = None
+    rank_degrowth_exempt_pop_types: frozenset[str] = frozenset()
+    food_storage_growth_exempt_pop_types: frozenset[str] = frozenset()
 
 
 def load_pop_food_rates(

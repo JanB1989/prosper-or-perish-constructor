@@ -1,0 +1,232 @@
+# Adjustable 1337-1837 population-capacity simulation profile.
+# Run only: uv run ppc population-simulation
+# The command replaces one Markdown report; it does not write monthly history files.
+
+[simulation]
+start_year = 1337
+checkpoint_years = [0, 25, 100, 200, 300, 400, 500]
+people_per_game_unit = 1000
+parser_profile = "constructor"
+load_order = "constructor.load_order.toml"
+output = "artifacts/data/population_simulation/report.md"
+
+[paths]
+location_candidates = "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet"
+location_sample_points = "artifacts/data/population_capacity/location_sample_points.parquet"
+hyde_root = "../ProsperOrPerishStaticModifiersV2"
+hyde_region_mask = "config/availability/regions.tif"
+hyde_irrigated = "data/output_data/hyde_3_5/total_irrigated_1337.tif"
+
+[capacity]
+# Raw physical P50 capacity is deliberately scaled before durable improvements.
+physical_scale = 0.001
+starting_population_floor = 1.25
+exclude_physical_irrigation_increment = true
+
+# EU5 capacity units per point/level, then relative modifier per point/level.
+development_absolute = 0.5
+development_relative = 0.20
+irrigation_absolute = 10.0
+irrigation_relative = 0.0
+development_min = 0.0
+development_max = 100.0
+minimum_capacity = 0.001
+
+[development]
+# These transform only the starting values. Development then evolves every month,
+# and the capacity formula is recomputed from its current value.
+start_scale = 1.0
+start_offset = 0.0
+# Regional calibration stays explicit and independently adjustable. It changes
+# only game-start development, before normal monthly development evolution.
+region_start_offsets = { central_asia = -4.0, south_asia = 4.0, east_asia = -3.0, southeast_asia = -3.0 }
+start_min = -20.0
+start_max = 60.0
+
+[irrigation]
+enabled = true
+# Estimated HYDE 1300 irrigated km² required for levels 1..5.
+level_thresholds_km2 = [1.0, 5.0, 15.0, 40.0, 100.0]
+
+# Existing irrigant_cap structure: base + 0.1 development + lake + river size + owner.
+base_legal_levels = 1.0
+development_legal_levels_per_point = 0.10
+lake_legal_levels = 1.0
+owner_legal_levels = 0.0
+require_river_or_lake = true
+
+# Explicitly documented qanat/well/oasis exceptions may be added by location tag.
+exceptions = []
+
+[food_pressure]
+# Keep the absolute small-location food mechanism. These values may be reduced
+# modestly during tuning, but zero is not the default experiment.
+abundant_monthly_food = 8.0
+available_monthly_food = 4.0
+abundant_peasant_food_consumption = -0.60
+available_peasant_food_consumption = -0.47
+overpopulation_peasant_food_consumption = 1.00
+
+[population_growth]
+# Tribesmen have zero parsed food consumption, so they cannot acquire the food-
+# storage growth that normally offsets negative location-rank growth. Exempt only
+# that negative rank term; all other growth effects still apply normally.
+rank_degrowth_exempt_pop_types = ["tribesmen"]
+# Tribesmen consume no simulated food, so province food storage should not grant
+# them the consumption-derived population-growth buff.
+food_storage_growth_exempt_pop_types = ["tribesmen"]
+
+[targets]
+# Ratios use HYDE 3.5 population totals normalized to the 1300 slice. The
+# checkpoint comparison uses the nearest available slices: 1400, 1500, 1600,
+# 1740, and 1840 for simulation years 100, 200, 300, 400, and 500.
+global_tolerance = 0.15
+regional_tolerance = 0.25
+required_regional_pass_fraction = 0.75
+# Game-start calibration is primary. Later HYDE rows remain in the report but do
+# not make the profile fail while technology, migration, and transitions are absent.
+primary_scored_through_year = 200
+# The 1400 global contraction is retained as a reference but is not scored in
+# capacity-only mode because the simulator does not currently model plague shocks.
+global_excluded_years = [100]
+global_ratios = { "0" = 1.0, "100" = 0.9698, "200" = 1.1037, "300" = 1.1329, "400" = 1.5446, "500" = 2.6632 }
+
+[[targets.hyde_region]]
+id = 1
+key = "europe"
+label = "Europe"
+excluded_years = [100, 200]
+ratios = { "100" = 0.7305, "200" = 0.9459, "300" = 1.2213, "400" = 1.7454, "500" = 3.0761 }
+
+[[targets.hyde_region]]
+id = 2
+key = "north_africa"
+label = "North Africa"
+ratios = { "100" = 0.9211, "200" = 0.9198, "300" = 1.1574, "400" = 0.9931, "500" = 1.2351 }
+
+[[targets.hyde_region]]
+id = 3
+key = "west_africa"
+label = "West Africa"
+ratios = { "100" = 1.1192, "200" = 1.2442, "300" = 1.4859, "400" = 1.7829, "500" = 1.7567 }
+
+[[targets.hyde_region]]
+id = 4
+key = "central_africa"
+label = "Central Africa"
+ratios = { "100" = 1.1544, "200" = 1.3090, "300" = 1.4184, "400" = 1.6686, "500" = 2.0296 }
+
+[[targets.hyde_region]]
+id = 5
+key = "east_africa"
+label = "East Africa"
+ratios = { "100" = 1.1466, "200" = 1.1870, "300" = 1.3685, "400" = 2.1320, "500" = 3.6237 }
+
+[[targets.hyde_region]]
+id = 6
+key = "southern_africa"
+label = "Southern Africa"
+ratios = { "100" = 1.1128, "200" = 1.2289, "300" = 1.4027, "400" = 1.7768, "500" = 1.6339 }
+
+[[targets.hyde_region]]
+id = 7
+key = "near_east"
+label = "Near East"
+ratios = { "100" = 0.8452, "200" = 0.9152, "300" = 1.0985, "400" = 1.1242, "500" = 1.4137 }
+
+[[targets.hyde_region]]
+id = 8
+key = "central_asia"
+label = "Central Asia"
+ratios = { "100" = 1.0851, "200" = 1.1806, "300" = 1.3501, "400" = 1.7272, "500" = 2.5086 }
+
+[[targets.hyde_region]]
+id = 9
+key = "south_asia"
+label = "South Asia"
+ratios = { "100" = 1.0420, "200" = 1.0786, "300" = 1.1562, "400" = 1.5255, "500" = 1.8238 }
+
+[[targets.hyde_region]]
+id = 10
+key = "east_asia"
+label = "East Asia"
+ratios = { "100" = 0.9266, "200" = 1.1834, "300" = 1.3165, "400" = 1.9826, "500" = 5.0338 }
+
+[[targets.hyde_region]]
+id = 11
+key = "southeast_asia"
+label = "Southeast Asia"
+ratios = { "100" = 1.1954, "200" = 1.3913, "300" = 1.5911, "400" = 2.0178, "500" = 3.1360 }
+
+[[targets.hyde_region]]
+id = 12
+key = "oceania"
+label = "Oceania"
+ratios = { "100" = 1.0409, "200" = 1.1267, "300" = 1.2168, "400" = 1.3236, "500" = 1.5240 }
+
+[[targets.hyde_region]]
+id = 13
+key = "north_america"
+label = "North America"
+excluded_years = [300, 400, 500]
+ratios = { "100" = 1.1081, "200" = 1.2047, "300" = 0.5638, "400" = 1.7650, "500" = 11.4949 }
+
+[[targets.hyde_region]]
+id = 14
+key = "mesoamerica"
+label = "Mesoamerica"
+excluded_years = [300, 400, 500]
+ratios = { "100" = 1.0976, "200" = 1.1977, "300" = 0.0997, "400" = 0.2810, "500" = 0.4612 }
+
+[[targets.hyde_region]]
+id = 15
+key = "caribbean"
+label = "Caribbean"
+excluded_years = [300, 400, 500]
+ratios = { "100" = 1.4438, "200" = 2.1797, "300" = 1.2019, "400" = 2.0741, "500" = 8.6508 }
+
+[[targets.hyde_region]]
+id = 16
+key = "andes"
+label = "Andes"
+excluded_years = [300, 400, 500]
+ratios = { "100" = 1.0629, "200" = 1.1258, "300" = 0.5892, "400" = 0.6380, "500" = 0.9090 }
+
+[[targets.hyde_region]]
+id = 17
+key = "tropical_south_america"
+label = "Tropical South America"
+excluded_years = [300, 400, 500]
+ratios = { "100" = 1.0839, "200" = 1.2341, "300" = 0.1407, "400" = 0.1423, "500" = 0.5214 }
+
+[[targets.hyde_region]]
+id = 18
+key = "southern_cone"
+label = "Southern Cone"
+ratios = { "100" = 1.0957, "200" = 1.1929, "300" = 1.1874, "400" = 1.2979, "500" = 3.2038 }
+
+[sanity]
+max_report_locations = 8
+min_location_capacity = 0.001
+max_location_capacity = 20000.0
+# Game population units: 10,000 = ten million people in one location.
+max_location_population = 10000.0
+# Small locations deliberately retain the dominant absolute-food behavior; keep
+# the extreme visible, but only fail on truly unbounded early overshoot.
+max_location_capacity_fill = 8.0
+min_location_25y_growth_factor = 0.80
+max_location_25y_growth_factor = 2.0
+min_location_100y_growth_factor = 0.50
+max_location_100y_growth_factor = 4.5
+max_development = 100.0
+# Explicit game-start stability gates. Regional bounds are intentionally wider
+# because HYDE, plague timing, and small-region denominators are approximate.
+max_global_25y_deviation = 0.05
+max_global_100y_deviation = 0.10
+min_region_25y_ratio = 0.80
+max_region_25y_ratio = 1.25
+min_region_100y_ratio = 0.60
+max_region_100y_ratio = 1.50
+min_irrigation_river_or_lake_fraction = 0.85
+min_irrigation_river_supported_level_fraction = 0.50
+max_irrigation_cap_violations = 0

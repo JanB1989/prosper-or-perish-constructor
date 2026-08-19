@@ -1,0 +1,1548 @@
+"""One-command, report-first long-run population-capacity simulation profile."""
+
+from __future__ import annotations
+
+import math
+import tomllib
+from dataclasses import dataclass, replace
+from pathlib import Path
+from time import perf_counter
+from typing import Any, Mapping, Sequence
+
+import numpy as np
+import polars as pl
+import rasterio
+from eu5gameparser.load_order import load_profile
+
+from prosper_or_perish_constructor.farming_village_unlocks import load_start_location_frame
+from prosper_or_perish_constructor.free_building_levels import (
+    extract_river_levels_from_maps,
+    resolve_map_data_file,
+)
+from prosper_or_perish_constructor.simulation.capacity_model import (
+    BASE_POPULATION_CAPACITY_COLUMN,
+    IRRIGATION_LEGAL_CAP_COLUMN,
+    IRRIGATION_LEVELS_COLUMN,
+    STARTING_POPULATION_FLOOR_COLUMN,
+    PopulationCapacityFormula,
+)
+from prosper_or_perish_constructor.simulation.capacity_pressure import (
+    ABUNDANT_FREE_LAND,
+    AVAILABLE_FREE_LAND,
+    LOCAL_MONTHLY_FOOD_KEY,
+    OVERPOPULATION,
+    CapacityPressureBand,
+)
+from prosper_or_perish_constructor.simulation.modifiers import (
+    SimulationModifierContext,
+    load_simulation_modifier_context,
+)
+from prosper_or_perish_constructor.simulation.run import Simulation
+
+PEASANT_FOOD_CONSUMPTION_KEY = "local_peasants_food_consumption"
+HYDE_REGION_COLUMN = "hyde_region"
+HYDE_IRRIGATED_AREA_COLUMN = "hyde_irrigated_area_km2"
+START_POPULATION_COLUMN = "profile_start_population"
+START_DEVELOPMENT_COLUMN = "profile_start_development"
+PEOPLE_PER_GAME_UNIT_DEFAULT = 1_000.0
+
+
+@dataclass(frozen=True)
+class HydeRegionTarget:
+    region_id: int
+    key: str
+    label: str
+    ratios: Mapping[int, float]
+    excluded_years: frozenset[int]
+
+
+@dataclass(frozen=True)
+class SimulationProfile:
+    path: Path
+    start_year: int
+    checkpoint_years: tuple[int, ...]
+    people_per_game_unit: float
+    output_path: Path
+    parser_profile: str
+    load_order_path: Path
+    candidates_path: Path
+    sample_points_path: Path
+    hyde_root: Path
+    hyde_region_mask_path: Path
+    hyde_irrigated_path: Path
+    capacity_formula: PopulationCapacityFormula
+    starting_population_floor: float
+    exclude_physical_irrigation_increment: bool
+    development_start_scale: float
+    development_start_offset: float
+    development_region_start_offsets: Mapping[str, float]
+    development_start_min: float
+    development_start_max: float
+    irrigation_enabled: bool
+    irrigation_thresholds_km2: tuple[float, ...]
+    irrigation_base_legal_levels: float
+    irrigation_development_levels_per_point: float
+    irrigation_lake_legal_levels: float
+    irrigation_owner_legal_levels: float
+    irrigation_require_river_or_lake: bool
+    irrigation_exceptions: frozenset[str]
+    abundant_peasant_food_consumption: float
+    available_peasant_food_consumption: float
+    overpopulation_peasant_food_consumption: float
+    abundant_monthly_food: float
+    available_monthly_food: float
+    rank_degrowth_exempt_pop_types: frozenset[str]
+    food_storage_growth_exempt_pop_types: frozenset[str]
+    global_ratios: Mapping[int, float]
+    global_excluded_years: frozenset[int]
+    global_tolerance: float
+    regional_tolerance: float
+    required_regional_pass_fraction: float
+    primary_scored_through_year: int
+    regions: tuple[HydeRegionTarget, ...]
+    max_report_locations: int
+    min_location_capacity: float
+    max_location_capacity: float
+    max_location_population: float
+    max_location_capacity_fill: float
+    min_location_25y_growth_factor: float
+    max_location_25y_growth_factor: float
+    min_location_100y_growth_factor: float
+    max_location_100y_growth_factor: float
+    max_development: float
+    max_global_25y_deviation: float
+    max_global_100y_deviation: float
+    min_region_25y_ratio: float
+    max_region_25y_ratio: float
+    min_region_100y_ratio: float
+    max_region_100y_ratio: float
+    min_irrigation_river_or_lake_fraction: float
+    min_irrigation_river_supported_level_fraction: float
+    max_irrigation_cap_violations: int
+
+
+@dataclass(frozen=True)
+class ProfileRunResult:
+    report_path: Path
+    passed: bool
+    elapsed_seconds: float
+    checkpoints: tuple[int, ...]
+
+
+def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationProfile:
+    """Load and validate the adjustable TOML profile."""
+
+    resolved = _resolve(repo, path)
+    raw = tomllib.loads(resolved.read_text(encoding="utf-8-sig"))
+    simulation = _mapping(raw, "simulation")
+    paths = _mapping(raw, "paths")
+    capacity = _mapping(raw, "capacity")
+    development = _mapping(raw, "development")
+    irrigation = _mapping(raw, "irrigation")
+    food = _mapping(raw, "food_pressure")
+    population_growth = _mapping(raw, "population_growth")
+    targets = _mapping(raw, "targets")
+    sanity = _mapping(raw, "sanity")
+
+    start_year = _integer(simulation, "start_year")
+    checkpoints = tuple(sorted(set(_integer_list(simulation, "checkpoint_years"))))
+    if not checkpoints or checkpoints[0] != 0:
+        raise ValueError("simulation.checkpoint_years must include 0")
+    if any(year < 0 for year in checkpoints):
+        raise ValueError("simulation.checkpoint_years must be non-negative")
+
+    hyde_root = _resolve(repo, Path(_string(paths, "hyde_root")))
+    region_rows = targets.get("hyde_region") or []
+    if not isinstance(region_rows, list) or not region_rows:
+        raise ValueError("targets must contain at least one [[targets.hyde_region]]")
+    regions: list[HydeRegionTarget] = []
+    for index, item in enumerate(region_rows):
+        if not isinstance(item, dict):
+            raise ValueError(f"targets.hyde_region[{index}] must be a table")
+        ratios = _year_mapping(item.get("ratios"), f"targets.hyde_region[{index}].ratios")
+        regions.append(
+            HydeRegionTarget(
+                region_id=int(item["id"]),
+                key=str(item["key"]),
+                label=str(item.get("label") or item["key"]),
+                ratios=ratios,
+                excluded_years=frozenset(int(value) for value in item.get("excluded_years") or []),
+            )
+        )
+    ids = [region.region_id for region in regions]
+    keys = [region.key for region in regions]
+    if len(set(ids)) != len(ids) or len(set(keys)) != len(keys):
+        raise ValueError("HYDE target region ids and keys must be unique")
+
+    thresholds = tuple(float(value) for value in irrigation.get("level_thresholds_km2") or [])
+    if any(not math.isfinite(value) or value < 0.0 for value in thresholds):
+        raise ValueError("irrigation.level_thresholds_km2 must be finite and non-negative")
+    if tuple(sorted(thresholds)) != thresholds:
+        raise ValueError("irrigation.level_thresholds_km2 must be sorted")
+
+    profile = SimulationProfile(
+        path=resolved,
+        start_year=start_year,
+        checkpoint_years=checkpoints,
+        people_per_game_unit=_positive_float(simulation, "people_per_game_unit"),
+        output_path=_resolve(repo, Path(_string(simulation, "output"))),
+        parser_profile=str(simulation.get("parser_profile") or "constructor"),
+        load_order_path=_resolve(repo, Path(str(simulation.get("load_order") or "constructor.load_order.toml"))),
+        candidates_path=_resolve(repo, Path(_string(paths, "location_candidates"))),
+        sample_points_path=_resolve(repo, Path(_string(paths, "location_sample_points"))),
+        hyde_root=hyde_root,
+        hyde_region_mask_path=_resolve(hyde_root, Path(_string(paths, "hyde_region_mask"))),
+        hyde_irrigated_path=_resolve(hyde_root, Path(_string(paths, "hyde_irrigated"))),
+        capacity_formula=PopulationCapacityFormula(
+            physical_scale=_nonnegative_float(capacity, "physical_scale"),
+            development_absolute=_float(capacity, "development_absolute"),
+            development_relative=_float(capacity, "development_relative"),
+            irrigation_absolute=_float(capacity, "irrigation_absolute"),
+            irrigation_relative=_float(capacity, "irrigation_relative"),
+            development_min=_float(capacity, "development_min"),
+            development_max=_float(capacity, "development_max"),
+            minimum_capacity=_nonnegative_float(capacity, "minimum_capacity"),
+        ),
+        starting_population_floor=_positive_float(capacity, "starting_population_floor"),
+        exclude_physical_irrigation_increment=bool(
+            capacity.get("exclude_physical_irrigation_increment", True)
+        ),
+        development_start_scale=_float(development, "start_scale"),
+        development_start_offset=_float(development, "start_offset"),
+        development_region_start_offsets=_string_float_mapping(
+            development.get("region_start_offsets"),
+            "development.region_start_offsets",
+        ),
+        development_start_min=_float(development, "start_min"),
+        development_start_max=_float(development, "start_max"),
+        irrigation_enabled=bool(irrigation.get("enabled", True)),
+        irrigation_thresholds_km2=thresholds,
+        irrigation_base_legal_levels=_nonnegative_float(irrigation, "base_legal_levels"),
+        irrigation_development_levels_per_point=_nonnegative_float(
+            irrigation, "development_legal_levels_per_point"
+        ),
+        irrigation_lake_legal_levels=_nonnegative_float(irrigation, "lake_legal_levels"),
+        irrigation_owner_legal_levels=_nonnegative_float(irrigation, "owner_legal_levels"),
+        irrigation_require_river_or_lake=bool(irrigation.get("require_river_or_lake", True)),
+        irrigation_exceptions=frozenset(str(value) for value in irrigation.get("exceptions") or []),
+        abundant_peasant_food_consumption=_float(food, "abundant_peasant_food_consumption"),
+        available_peasant_food_consumption=_float(food, "available_peasant_food_consumption"),
+        overpopulation_peasant_food_consumption=_float(
+            food, "overpopulation_peasant_food_consumption"
+        ),
+        abundant_monthly_food=_nonnegative_float(food, "abundant_monthly_food"),
+        available_monthly_food=_nonnegative_float(food, "available_monthly_food"),
+        rank_degrowth_exempt_pop_types=frozenset(
+            str(value)
+            for value in population_growth.get("rank_degrowth_exempt_pop_types") or []
+        ),
+        food_storage_growth_exempt_pop_types=frozenset(
+            str(value)
+            for value in population_growth.get("food_storage_growth_exempt_pop_types") or []
+        ),
+        global_ratios=_year_mapping(targets.get("global_ratios"), "targets.global_ratios"),
+        global_excluded_years=frozenset(
+            int(value) for value in targets.get("global_excluded_years") or []
+        ),
+        global_tolerance=_fraction(targets, "global_tolerance"),
+        regional_tolerance=_fraction(targets, "regional_tolerance"),
+        required_regional_pass_fraction=_fraction(targets, "required_regional_pass_fraction"),
+        primary_scored_through_year=_positive_integer(
+            targets, "primary_scored_through_year"
+        ),
+        regions=tuple(regions),
+        max_report_locations=_positive_integer(sanity, "max_report_locations"),
+        min_location_capacity=_nonnegative_float(sanity, "min_location_capacity"),
+        max_location_capacity=_positive_float(sanity, "max_location_capacity"),
+        max_location_population=_positive_float(sanity, "max_location_population"),
+        max_location_capacity_fill=_positive_float(sanity, "max_location_capacity_fill"),
+        min_location_25y_growth_factor=_positive_float(
+            sanity, "min_location_25y_growth_factor"
+        ),
+        max_location_25y_growth_factor=_positive_float(
+            sanity, "max_location_25y_growth_factor"
+        ),
+        min_location_100y_growth_factor=_positive_float(
+            sanity, "min_location_100y_growth_factor"
+        ),
+        max_location_100y_growth_factor=_positive_float(
+            sanity, "max_location_100y_growth_factor"
+        ),
+        max_development=_positive_float(sanity, "max_development"),
+        max_global_25y_deviation=_fraction(sanity, "max_global_25y_deviation"),
+        max_global_100y_deviation=_fraction(sanity, "max_global_100y_deviation"),
+        min_region_25y_ratio=_positive_float(sanity, "min_region_25y_ratio"),
+        max_region_25y_ratio=_positive_float(sanity, "max_region_25y_ratio"),
+        min_region_100y_ratio=_positive_float(sanity, "min_region_100y_ratio"),
+        max_region_100y_ratio=_positive_float(sanity, "max_region_100y_ratio"),
+        min_irrigation_river_or_lake_fraction=_fraction(
+            sanity, "min_irrigation_river_or_lake_fraction"
+        ),
+        min_irrigation_river_supported_level_fraction=_fraction(
+            sanity, "min_irrigation_river_supported_level_fraction"
+        ),
+        max_irrigation_cap_violations=_nonnegative_integer(
+            sanity, "max_irrigation_cap_violations"
+        ),
+    )
+    if profile.development_start_max < profile.development_start_min:
+        raise ValueError("development.start_max must be at least development.start_min")
+    unknown_development_regions = sorted(
+        set(profile.development_region_start_offsets) - set(keys)
+    )
+    if unknown_development_regions:
+        raise ValueError(
+            "development.region_start_offsets references unknown HYDE regions: "
+            f"{unknown_development_regions}"
+        )
+    if profile.max_region_25y_ratio < profile.min_region_25y_ratio:
+        raise ValueError("sanity max_region_25y_ratio must be at least the minimum")
+    if profile.max_region_100y_ratio < profile.min_region_100y_ratio:
+        raise ValueError("sanity max_region_100y_ratio must be at least the minimum")
+    missing_global = sorted(set(profile.global_ratios) - set(profile.checkpoint_years))
+    if missing_global:
+        raise ValueError(f"global targets reference unconfigured checkpoints: {missing_global}")
+    return profile
+
+
+def run_population_simulation_profile(
+    *,
+    repo: Path,
+    project: Path,
+    profile_path: Path,
+) -> ProfileRunResult:
+    """Run configured checkpoints and write exactly one consolidated Markdown report."""
+
+    started = perf_counter()
+    profile = load_population_simulation_profile(profile_path, repo=repo)
+    state, context, preparation = _prepare_state(repo, project, profile)
+    simulation = Simulation(state, context)
+
+    snapshots: dict[int, pl.DataFrame] = {}
+    previous_year = 0
+    for year in profile.checkpoint_years:
+        if year > previous_year:
+            simulation.run(months=(year - previous_year) * 12, progress=False)
+        snapshots[year] = _snapshot(simulation.state)
+        previous_year = year
+
+    report, passed = build_population_simulation_report(
+        profile=profile,
+        snapshots=snapshots,
+        preparation=preparation,
+        elapsed_seconds=perf_counter() - started,
+    )
+    profile.output_path.parent.mkdir(parents=True, exist_ok=True)
+    profile.output_path.write_text(report, encoding="utf-8")
+    return ProfileRunResult(
+        report_path=profile.output_path,
+        passed=passed,
+        elapsed_seconds=perf_counter() - started,
+        checkpoints=profile.checkpoint_years,
+    )
+
+
+def _prepare_state(
+    repo: Path,
+    project: Path,
+    profile: SimulationProfile,
+) -> tuple[pl.DataFrame, SimulationModifierContext, dict[str, Any]]:
+    state = load_start_location_frame(repo, project)
+    candidates = pl.read_parquet(profile.candidates_path)
+    candidate_columns = [
+        "location_tag",
+        "calibrated_lon",
+        "calibrated_lat",
+        "area_km2",
+        "irrigation_increment_capacity_people_p50",
+        "irrigation_increment_capacity_people",
+    ]
+    selected = [column for column in candidate_columns if column in candidates.columns]
+    state = state.join(candidates.select(selected), on="location_tag", how="left")
+    state = state.with_columns(
+        pl.col("total_population").fill_null(0.0).cast(pl.Float64).alias(START_POPULATION_COLUMN),
+        pl.col("development").fill_null(0.0).cast(pl.Float64).alias(START_DEVELOPMENT_COLUMN),
+    )
+    state = _attach_hyde_regions(state, profile)
+    region_start_offset = pl.lit(0.0)
+    for region_key, offset in profile.development_region_start_offsets.items():
+        region_start_offset = pl.when(pl.col(HYDE_REGION_COLUMN) == region_key).then(
+            pl.lit(offset)
+        ).otherwise(region_start_offset)
+    state = state.with_columns(
+        (
+            pl.col(START_DEVELOPMENT_COLUMN)
+            * profile.development_start_scale
+            + profile.development_start_offset
+            + region_start_offset
+        )
+        .clip(profile.development_start_min, profile.development_start_max)
+        .alias("development"),
+    )
+
+    irrigation_increment_column = next(
+        (
+            column
+            for column in (
+                "irrigation_increment_capacity_people_p50",
+                "irrigation_increment_capacity_people",
+            )
+            if column in state.columns
+        ),
+        None,
+    )
+    base = pl.col("local_population_capacity").fill_null(0.0).cast(pl.Float64)
+    if profile.exclude_physical_irrigation_increment and irrigation_increment_column is not None:
+        base = base - (
+            pl.col(irrigation_increment_column).fill_null(0.0).cast(pl.Float64)
+            / profile.people_per_game_unit
+        )
+    state = state.with_columns(
+        base.clip(lower_bound=0.0).alias(BASE_POPULATION_CAPACITY_COLUMN),
+        (
+            pl.col(START_POPULATION_COLUMN).fill_null(0.0)
+            * profile.starting_population_floor
+        ).alias(STARTING_POPULATION_FLOOR_COLUMN),
+    )
+
+    if profile.irrigation_enabled:
+        state, irrigation_summary = _attach_irrigation_levels(state, repo, profile)
+    else:
+        state = state.with_columns(
+            pl.lit(0.0).alias(IRRIGATION_LEVELS_COLUMN),
+            pl.lit(0.0).alias(IRRIGATION_LEGAL_CAP_COLUMN),
+            pl.lit(0.0).alias(HYDE_IRRIGATED_AREA_COLUMN),
+            pl.lit(0).alias("river_level"),
+        )
+        irrigation_summary = {"enabled": False}
+
+    context = load_simulation_modifier_context(
+        profile=profile.parser_profile,
+        load_order_path=profile.load_order_path,
+    )
+    context = replace(
+        context,
+        capacity_pressure=_capacity_pressure_overrides(context, profile),
+        capacity_model=profile.capacity_formula,
+        rank_degrowth_exempt_pop_types=profile.rank_degrowth_exempt_pop_types,
+        food_storage_growth_exempt_pop_types=(
+            profile.food_storage_growth_exempt_pop_types
+        ),
+    )
+    preparation = {
+        "locations": state.height,
+        "irrigation": irrigation_summary,
+        "starting_development_raw": _numeric_summary(state[START_DEVELOPMENT_COLUMN]),
+        "starting_development_profile": _numeric_summary(state["development"]),
+    }
+    return state, context, preparation
+
+
+def _capacity_pressure_overrides(
+    context: SimulationModifierContext,
+    profile: SimulationProfile,
+) -> dict[str, CapacityPressureBand]:
+    settings = {
+        ABUNDANT_FREE_LAND: (
+            profile.abundant_peasant_food_consumption,
+            profile.abundant_monthly_food,
+        ),
+        AVAILABLE_FREE_LAND: (
+            profile.available_peasant_food_consumption,
+            profile.available_monthly_food,
+        ),
+        OVERPOPULATION: (profile.overpopulation_peasant_food_consumption, 0.0),
+    }
+    out: dict[str, CapacityPressureBand] = {}
+    for name, band in context.capacity_pressure.items():
+        effects = dict(band.effects)
+        consumption, monthly_food = settings[name]
+        effects[PEASANT_FOOD_CONSUMPTION_KEY] = consumption
+        effects[LOCAL_MONTHLY_FOOD_KEY] = monthly_food
+        out[name] = CapacityPressureBand(name=name, effects=effects)
+    return out
+
+
+def _attach_hyde_regions(state: pl.DataFrame, profile: SimulationProfile) -> pl.DataFrame:
+    _require_file(profile.hyde_region_mask_path, "HYDE region mask")
+    coords = state.select("calibrated_lon", "calibrated_lat").to_dicts()
+    points = [
+        (float(row["calibrated_lon"] or 0.0), float(row["calibrated_lat"] or 0.0))
+        for row in coords
+    ]
+    with rasterio.open(profile.hyde_region_mask_path) as src:
+        ids = [int(sample[0]) for sample in src.sample(points)]
+    labels = {region.region_id: region.key for region in profile.regions}
+    return state.with_columns(
+        pl.Series(
+            HYDE_REGION_COLUMN,
+            [labels.get(region_id, "unassigned") for region_id in ids],
+            dtype=pl.String,
+        )
+    )
+
+
+def _attach_irrigation_levels(
+    state: pl.DataFrame,
+    repo: Path,
+    profile: SimulationProfile,
+) -> tuple[pl.DataFrame, dict[str, Any]]:
+    _require_file(profile.hyde_irrigated_path, "HYDE irrigated-area raster")
+    _require_file(profile.sample_points_path, "location sample points")
+    evidence = _hyde_irrigated_area_by_location(profile)
+    state = state.join(evidence, on="location_tag", how="left")
+
+    data_profile = load_profile(profile.parser_profile, profile.load_order_path)
+    river_levels = extract_river_levels_from_maps(
+        state,
+        locations_png_path=resolve_map_data_file(data_profile, "locations.png"),
+        rivers_png_path=resolve_map_data_file(data_profile, "rivers.png"),
+    )
+    state = state.join(river_levels, on="location_tag", how="left").with_columns(
+        pl.col("river_level").fill_null(0).cast(pl.Int64),
+        pl.col(HYDE_IRRIGATED_AREA_COLUMN).fill_null(0.0),
+    )
+
+    proposed = pl.sum_horizontal(
+        [
+            (pl.col(HYDE_IRRIGATED_AREA_COLUMN) >= threshold).cast(pl.Int64)
+            for threshold in profile.irrigation_thresholds_km2
+        ]
+    )
+    legal = (
+        pl.lit(profile.irrigation_base_legal_levels)
+        + pl.col("development").clip(lower_bound=0.0)
+        * profile.irrigation_development_levels_per_point
+        + pl.col("river_level").cast(pl.Float64)
+        + pl.col("is_adjacent_to_lake").fill_null(False).cast(pl.Float64)
+        * profile.irrigation_lake_legal_levels
+        + profile.irrigation_owner_legal_levels
+    ).floor()
+    exception = pl.col("location_tag").is_in(sorted(profile.irrigation_exceptions))
+    supported = (
+        pl.col("has_river").fill_null(False)
+        | pl.col("is_adjacent_to_lake").fill_null(False)
+        | exception
+    )
+    if profile.irrigation_require_river_or_lake:
+        proposed = pl.when(supported).then(proposed).otherwise(0)
+    state = state.with_columns(
+        legal.clip(lower_bound=0.0).alias(IRRIGATION_LEGAL_CAP_COLUMN),
+        proposed.alias("profile_irrigation_proposed_levels"),
+    ).with_columns(
+        pl.min_horizontal(
+            pl.col("profile_irrigation_proposed_levels").cast(pl.Float64),
+            pl.col(IRRIGATION_LEGAL_CAP_COLUMN).cast(pl.Float64),
+        ).alias(IRRIGATION_LEVELS_COLUMN)
+    )
+
+    irrigated = state.filter(pl.col(IRRIGATION_LEVELS_COLUMN) > 0)
+    levels = float(irrigated[IRRIGATION_LEVELS_COLUMN].sum() or 0.0)
+    river_or_lake = irrigated.filter(
+        pl.col("has_river").fill_null(False) | pl.col("is_adjacent_to_lake").fill_null(False)
+    )
+    river_levels_supported = float(
+        irrigated.select(
+            pl.min_horizontal(
+                pl.col(IRRIGATION_LEVELS_COLUMN),
+                pl.col("river_level").cast(pl.Float64),
+            ).sum()
+        ).item()
+        or 0.0
+    )
+    summary = {
+        "enabled": True,
+        "locations": irrigated.height,
+        "levels": levels,
+        "river_or_lake_location_fraction": river_or_lake.height / irrigated.height
+        if irrigated.height
+        else 1.0,
+        "river_supported_level_fraction": river_levels_supported / levels if levels else 1.0,
+        "cap_violations": state.filter(
+            pl.col(IRRIGATION_LEVELS_COLUMN) > pl.col(IRRIGATION_LEGAL_CAP_COLUMN)
+        ).height,
+        "nonriver_locations": irrigated.height - river_or_lake.height,
+        "proposed_locations": state.filter(pl.col("profile_irrigation_proposed_levels") > 0).height,
+        "evidence_locations": state.filter(pl.col(HYDE_IRRIGATED_AREA_COLUMN) > 0).height,
+    }
+    return state, summary
+
+
+def _hyde_irrigated_area_by_location(profile: SimulationProfile) -> pl.DataFrame:
+    samples = pl.read_parquet(profile.sample_points_path).select(
+        "location_tag",
+        "calibrated_lon",
+        "calibrated_lat",
+        "sample_weight",
+    )
+    lon = samples["calibrated_lon"].to_numpy()
+    lat = samples["calibrated_lat"].to_numpy()
+    with rasterio.open(profile.hyde_irrigated_path) as src:
+        band = src.read(1).astype(np.float64, copy=False)
+        nodata = src.nodata
+        rows, cols = rasterio.transform.rowcol(src.transform, lon, lat)
+        rows = np.asarray(rows, dtype=np.int64)
+        cols = np.asarray(cols, dtype=np.int64)
+        valid = (
+            (rows >= 0)
+            & (rows < src.height)
+            & (cols >= 0)
+            & (cols < src.width)
+        )
+        values = np.zeros(samples.height, dtype=np.float64)
+        values[valid] = band[rows[valid], cols[valid]]
+        if nodata is not None and np.isfinite(nodata):
+            values[values == float(nodata)] = 0.0
+        values[~np.isfinite(values)] = 0.0
+        cell_lat = src.transform.f + (rows.astype(np.float64) + 0.5) * src.transform.e
+        cell_area = _spherical_cell_area_km2(
+            cell_lat,
+            abs(float(src.transform.a)),
+            abs(float(src.transform.e)),
+        )
+    fraction = np.divide(
+        values,
+        cell_area,
+        out=np.zeros_like(values),
+        where=cell_area > 0.0,
+    )
+    fraction = np.clip(fraction, 0.0, 1.0)
+    weighted = samples.with_columns(
+        pl.Series("irrigated_fraction", fraction),
+    ).with_columns(
+        (pl.col("irrigated_fraction") * pl.col("sample_weight")).alias("weighted_fraction")
+    )
+    mean_fraction = weighted.group_by("location_tag").agg(
+        (
+            pl.col("weighted_fraction").sum()
+            / pl.col("sample_weight").sum().clip(lower_bound=1e-12)
+        ).alias("hyde_irrigated_fraction")
+    )
+    candidates = pl.read_parquet(profile.candidates_path).select("location_tag", "area_km2")
+    return mean_fraction.join(candidates, on="location_tag", how="left").select(
+        "location_tag",
+        (pl.col("hyde_irrigated_fraction") * pl.col("area_km2").fill_null(0.0)).alias(
+            HYDE_IRRIGATED_AREA_COLUMN
+        ),
+    )
+
+
+def _spherical_cell_area_km2(
+    latitude_degrees: np.ndarray,
+    width_degrees: float,
+    height_degrees: float,
+) -> np.ndarray:
+    radius_km = 6_371.0088
+    latitude = np.asarray(latitude_degrees, dtype=np.float64)
+    lower = np.deg2rad(latitude - height_degrees / 2.0)
+    upper = np.deg2rad(latitude + height_degrees / 2.0)
+    return (
+        radius_km**2
+        * math.radians(width_degrees)
+        * np.abs(np.sin(upper) - np.sin(lower))
+    )
+
+
+def _snapshot(state: pl.DataFrame) -> pl.DataFrame:
+    columns = [
+        "location_tag",
+        "province",
+        "macro_region",
+        HYDE_REGION_COLUMN,
+        "location_rank",
+        "total_population",
+        "local_population_capacity",
+        "development",
+        "prosperity",
+        START_POPULATION_COLUMN,
+        START_DEVELOPMENT_COLUMN,
+        BASE_POPULATION_CAPACITY_COLUMN,
+        STARTING_POPULATION_FLOOR_COLUMN,
+        IRRIGATION_LEVELS_COLUMN,
+        IRRIGATION_LEGAL_CAP_COLUMN,
+        HYDE_IRRIGATED_AREA_COLUMN,
+        "river_level",
+        "has_river",
+        "is_adjacent_to_lake",
+        "population_peasants",
+        "population_tribesmen",
+    ]
+    # NumPy-backed Polars columns may share memory with the running engine. Convert
+    # each selected column to a list so later in-place ticks cannot mutate an older
+    # checkpoint through a zero-copy view.
+    selected = [column for column in columns if column in state.columns]
+    return pl.DataFrame({column: state[column].to_list() for column in selected})
+
+
+def build_population_simulation_report(
+    *,
+    profile: SimulationProfile,
+    snapshots: Mapping[int, pl.DataFrame],
+    preparation: Mapping[str, Any],
+    elapsed_seconds: float,
+) -> tuple[str, bool]:
+    """Build the single human-readable report and return its overall status."""
+
+    initial = snapshots[0]
+    initial_population = float(initial["total_population"].sum())
+    global_rows = _global_rows(profile, snapshots, initial_population)
+    region_rows = _region_rows(profile, snapshots)
+    sanity_rows = _sanity_rows(profile, snapshots, preparation)
+
+    global_scored = [row for row in global_rows if row["scored"]]
+    global_pass = all(bool(row["pass"]) for row in global_scored)
+    regional_scored = [row for row in region_rows if row["scored"]]
+    regional_pass_fraction = (
+        sum(bool(row["pass"]) for row in regional_scored) / len(regional_scored)
+        if regional_scored
+        else 0.0
+    )
+    regional_pass = regional_pass_fraction >= profile.required_regional_pass_fraction
+    sanity_pass = all(bool(row["pass"]) for row in sanity_rows)
+    passed = global_pass and regional_pass and sanity_pass
+
+    lines = [
+        "# Population Capacity Simulation Report",
+        "",
+        f"**Overall: {'PASS' if passed else 'FAIL'}**",
+        "",
+        f"- Profile: `{profile.path}`",
+        f"- Runtime: {elapsed_seconds:.1f} seconds",
+        f"- Locations: {int(preparation.get('locations') or initial.height):,}",
+        f"- Checkpoints: {', '.join(str(year) for year in profile.checkpoint_years)} years",
+        (
+            f"- Primary target window: 0–{profile.primary_scored_through_year} years; "
+            "later checkpoints are advisory"
+        ),
+        f"- Global primary target result: {'PASS' if global_pass else 'FAIL'}",
+        (
+            f"- Scored HYDE region checkpoints: {regional_pass_fraction:.1%} pass "
+            f"(required {profile.required_regional_pass_fraction:.1%})"
+        ),
+        f"- Location sanity result: {'PASS' if sanity_pass else 'FAIL'}",
+        "",
+        "## Global checkpoints",
+        "",
+        "| Years | Calendar | Population | Growth | HYDE target | Error | Capacity | Fill | Development | Result |",
+        "|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---:|",
+    ]
+    for row in global_rows:
+        lines.append(
+            "| {year} | {calendar} | {population} | {ratio:.2f}× | {target} | {error} | "
+            "{capacity} | {fill:.1%} | {development:.1f} | {result} |".format(
+                year=row["year"],
+                calendar=profile.start_year + int(row["year"]),
+                population=_people(float(row["population"]), profile),
+                ratio=float(row["ratio"]),
+                target="—" if row["target_ratio"] is None else f"{float(row['target_ratio']):.2f}×",
+                error="—" if row["error"] is None else f"{float(row['error']):+.1%}",
+                capacity=_people(float(row["capacity"]), profile),
+                fill=float(row["fill"]),
+                development=float(row["development"]),
+                result=(
+                    "—"
+                    if row["target_ratio"] is None
+                    else (
+                        str(row["unscored_label"])
+                        if not row["scored"]
+                        else ("PASS" if row["pass"] else "FAIL")
+                    )
+                ),
+            )
+        )
+
+    lines.extend(
+        [
+            "",
+            "## HYDE regional benchmarks",
+            "",
+            (
+                f"Targets are normalized to each region's simulated year-0 population. "
+                f"The ordinary tolerance is ±{profile.regional_tolerance:.0%}. "
+                "Rows marked reference are plague/contact-shock observations; rows after the primary window are advisory. Neither is scored against the capacity-only model."
+            ),
+            (
+                "HYDE source slices are 1300 (baseline), 1400, 1500, 1600, 1740, and 1840; "
+                f"the report compares them with simulation years 0, 100, 200, 300, 400, and 500 from {profile.start_year}."
+            ),
+            "",
+            "| Region | Years | Population | Growth | HYDE target | Error | Fill | Development | Result |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|:---:|",
+        ]
+    )
+    for row in region_rows:
+        result = (
+            str(row["unscored_label"])
+            if not row["scored"]
+            else ("PASS" if row["pass"] else "FAIL")
+        )
+        lines.append(
+            "| {region} | {year} | {population} | {ratio:.2f}× | {target:.2f}× | "
+            "{error:+.1%} | {fill:.1%} | {development:.1f} | {result} |".format(
+                region=row["label"],
+                year=row["year"],
+                population=_people(float(row["population"]), profile),
+                ratio=float(row["ratio"]),
+                target=float(row["target_ratio"]),
+                error=float(row["error"]),
+                fill=float(row["fill"]),
+                development=float(row["development"]),
+                result=result,
+            )
+        )
+
+    lines.extend(
+        [
+            "",
+            "## HYDE region starting composition",
+            "",
+            "The current simulator has no migration or pop-type promotion/demotion. Tribesmen have a parsed zero food-consumption baseline, so this profile exempts them from negative location-rank growth. That keeps tribesmen-heavy regions stable, but it does not manufacture the later transitions needed to follow every HYDE growth target.",
+            "",
+            "| Region | Start population | Peasants | Tribesmen | Capacity fill | Development | Irrigation levels |",
+            "|---|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for row in _region_start_composition_rows(profile, snapshots[0]):
+        lines.append(
+            "| {label} | {population} | {peasant_share:.1%} | {tribesmen_share:.1%} | "
+            "{fill:.1%} | {development:.1f} | {irrigation_levels:,.0f} |".format(
+                label=row["label"],
+                population=_people(float(row["population"]), profile),
+                peasant_share=float(row["peasant_share"]),
+                tribesmen_share=float(row["tribesmen_share"]),
+                fill=float(row["fill"]),
+                development=float(row["development"]),
+                irrigation_levels=float(row["irrigation_levels"]),
+            )
+        )
+
+    irrigation = dict(preparation.get("irrigation") or {})
+    lines.extend(
+        [
+            "",
+            "## Development and capacity settings",
+            "",
+            f"- Physical capacity scale: {profile.capacity_formula.physical_scale:g}",
+            f"- Starting-population floor: {profile.starting_population_floor:g}×",
+            (
+                "- Development capacity: "
+                f"+{profile.capacity_formula.development_absolute:g} absolute and "
+                f"{profile.capacity_formula.development_relative:+g} relative per point"
+            ),
+            (
+                "- Irrigation capacity: "
+                f"+{profile.capacity_formula.irrigation_absolute:g} absolute and "
+                f"{profile.capacity_formula.irrigation_relative:+g} relative per level"
+            ),
+            (
+                "- HYDE-region starting-development offsets: "
+                + (
+                    ", ".join(
+                        f"{key} {value:+g}"
+                        for key, value in sorted(
+                            profile.development_region_start_offsets.items()
+                        )
+                    )
+                    if profile.development_region_start_offsets
+                    else "none"
+                )
+            ),
+            "",
+            "| Development | Minimum | Median | Mean | P90 | Maximum |",
+            "|---|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for label, summary in (
+        ("Raw game start", preparation.get("starting_development_raw") or {}),
+        ("Profile game start", preparation.get("starting_development_profile") or {}),
+        ("Final", _numeric_summary(snapshots[max(snapshots)]["development"])),
+    ):
+        lines.append(
+            f"| {label} | {float(summary.get('min', 0.0)):.1f} | "
+            f"{float(summary.get('median', 0.0)):.1f} | {float(summary.get('mean', 0.0)):.1f} | "
+            f"{float(summary.get('p90', 0.0)):.1f} | {float(summary.get('max', 0.0)):.1f} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Irrigation placement",
+            "",
+            f"- Enabled: {bool(irrigation.get('enabled'))}",
+            f"- HYDE evidence locations: {int(irrigation.get('evidence_locations') or 0):,}",
+            f"- Starting irrigation locations: {int(irrigation.get('locations') or 0):,}",
+            f"- Starting irrigation levels: {float(irrigation.get('levels') or 0.0):,.0f}",
+            (
+                "- River/lake-supported placements: "
+                f"{float(irrigation.get('river_or_lake_location_fraction') or 0.0):.1%}"
+            ),
+            (
+                "- Levels directly backed by river size: "
+                f"{float(irrigation.get('river_supported_level_fraction') or 0.0):.1%}"
+            ),
+            f"- Non-river/lake placements: {int(irrigation.get('nonriver_locations') or 0):,}",
+            f"- Legal-cap violations: {int(irrigation.get('cap_violations') or 0):,}",
+            "",
+            "## Capacity-pressure food settings",
+            "",
+            "| Band | Peasant consumption modifier | Absolute monthly food |",
+            "|---|---:|---:|",
+            (
+                f"| Abundant | {profile.abundant_peasant_food_consumption:+.2f} | "
+                f"{profile.abundant_monthly_food:g} |"
+            ),
+            (
+                f"| Available | {profile.available_peasant_food_consumption:+.2f} | "
+                f"{profile.available_monthly_food:g} |"
+            ),
+            f"| Overpopulation | {profile.overpopulation_peasant_food_consumption:+.2f} | 0 |",
+            "",
+            (
+                "- Pop types exempt from negative location-rank growth: "
+                + (
+                    ", ".join(sorted(profile.rank_degrowth_exempt_pop_types))
+                    if profile.rank_degrowth_exempt_pop_types
+                    else "none"
+                )
+            ),
+            (
+                "- Pop types exempt from food-storage population growth: "
+                + (
+                    ", ".join(
+                        sorted(profile.food_storage_growth_exempt_pop_types)
+                    )
+                    if profile.food_storage_growth_exempt_pop_types
+                    else "none"
+                )
+            ),
+            "",
+            "## Capacity-pressure coverage",
+            "",
+            "Population share reports how much of the world is actually receiving each band. The neutral gap is the intentional below-10%-fill, 10k-or-more population case.",
+            "",
+            "| Years | Abundant pop | Available pop | Neutral-gap pop | Over-capacity pop | Abundant locations | Available locations | Neutral-gap locations | Over-capacity locations |",
+            "|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for row in _capacity_pressure_rows(snapshots):
+        lines.append(
+            "| {year} | {abundant_population:.1%} | {available_population:.1%} | "
+            "{neutral_population:.1%} | {over_population:.1%} | "
+            "{abundant_locations:,} | {available_locations:,} | "
+            "{neutral_locations:,} | {over_locations:,} |".format(**row)
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Location ranges by checkpoint",
+            "",
+            "| Years | Population min | Population max | Capacity min | Capacity max | Fill min | Fill max | Development min | Development max | Over capacity |",
+            "|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for row in _location_range_rows(snapshots):
+        lines.append(
+            "| {year} | {population_min:.3f} | {population_max:,.1f} | "
+            "{capacity_min:.3f} | {capacity_max:,.1f} | {fill_min:.3f}× | "
+            "{fill_max:.3f}× | {development_min:.1f} | {development_max:.1f} | "
+            "{over_capacity:,} |".format(**row)
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Location sanity checks",
+            "",
+            "| Check | Observed | Limit | Result |",
+            "|---|---:|---:|:---:|",
+        ]
+    )
+    for row in sanity_rows:
+        lines.append(
+            f"| {row['name']} | {row['observed']} | {row['limit']} | "
+            f"{'PASS' if row['pass'] else 'FAIL'} |"
+        )
+
+    lines.extend(["", "## Location extremes", ""])
+    lines.extend(_location_extreme_report(profile, snapshots))
+    lines.extend(
+        [
+            "",
+            "## Iteration notes",
+            "",
+            "Edit the profile TOML and rerun the same command. This report is replaced in place; no monthly history files are produced.",
+            "",
+        ]
+    )
+    return "\n".join(lines), passed
+
+
+def _global_rows(
+    profile: SimulationProfile,
+    snapshots: Mapping[int, pl.DataFrame],
+    initial_population: float,
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for year, frame in snapshots.items():
+        population = float(frame["total_population"].sum())
+        capacity = float(frame["local_population_capacity"].sum())
+        ratio = population / initial_population if initial_population else 0.0
+        target = profile.global_ratios.get(year)
+        error = ratio / target - 1.0 if target else None
+        scored = (
+            target is not None
+            and year not in profile.global_excluded_years
+            and year <= profile.primary_scored_through_year
+        )
+        rows.append(
+            {
+                "year": year,
+                "population": population,
+                "capacity": capacity,
+                "ratio": ratio,
+                "target_ratio": target,
+                "error": error,
+                "scored": scored,
+                "unscored_label": (
+                    "advisory"
+                    if year > profile.primary_scored_through_year
+                    else "reference"
+                ),
+                "pass": abs(error) <= profile.global_tolerance if scored and error is not None else None,
+                "fill": population / capacity if capacity else math.inf,
+                "development": float(frame["development"].mean()),
+            }
+        )
+    return rows
+
+
+def _region_rows(
+    profile: SimulationProfile,
+    snapshots: Mapping[int, pl.DataFrame],
+) -> list[dict[str, Any]]:
+    aggregates: dict[int, dict[str, dict[str, float]]] = {}
+    for year, frame in snapshots.items():
+        grouped = frame.group_by(HYDE_REGION_COLUMN).agg(
+            pl.col("total_population").sum().alias("population"),
+            pl.col("local_population_capacity").sum().alias("capacity"),
+            pl.col("development").mean().alias("development"),
+        )
+        aggregates[year] = {str(row[HYDE_REGION_COLUMN]): row for row in grouped.to_dicts()}
+    rows: list[dict[str, Any]] = []
+    for region in profile.regions:
+        start = float(aggregates[0].get(region.key, {}).get("population") or 0.0)
+        if start <= 0.0:
+            continue
+        for year, target in sorted(region.ratios.items()):
+            current = aggregates.get(year, {}).get(region.key)
+            if current is None:
+                continue
+            population = float(current["population"] or 0.0)
+            capacity = float(current["capacity"] or 0.0)
+            ratio = population / start
+            error = ratio / target - 1.0
+            scored = (
+                year not in region.excluded_years
+                and year <= profile.primary_scored_through_year
+            )
+            rows.append(
+                {
+                    "region": region.key,
+                    "label": region.label,
+                    "year": year,
+                    "population": population,
+                    "ratio": ratio,
+                    "target_ratio": target,
+                    "error": error,
+                    "fill": population / capacity if capacity else math.inf,
+                    "development": float(current["development"] or 0.0),
+                    "scored": scored,
+                    "unscored_label": (
+                        "advisory"
+                        if year > profile.primary_scored_through_year
+                        else "reference"
+                    ),
+                    "pass": abs(error) <= profile.regional_tolerance if scored else None,
+                }
+            )
+    return rows
+
+
+def _region_start_composition_rows(
+    profile: SimulationProfile,
+    initial: pl.DataFrame,
+) -> list[dict[str, Any]]:
+    peasants = (
+        pl.col("population_peasants")
+        if "population_peasants" in initial.columns
+        else pl.lit(0.0)
+    )
+    tribesmen = (
+        pl.col("population_tribesmen")
+        if "population_tribesmen" in initial.columns
+        else pl.lit(0.0)
+    )
+    grouped = initial.group_by(HYDE_REGION_COLUMN).agg(
+        pl.col("total_population").sum().alias("population"),
+        peasants.sum().alias("peasants"),
+        tribesmen.sum().alias("tribesmen"),
+        pl.col("local_population_capacity").sum().alias("capacity"),
+        pl.col("development").mean().alias("development"),
+        pl.col(IRRIGATION_LEVELS_COLUMN).sum().alias("irrigation_levels"),
+    )
+    by_region = {str(row[HYDE_REGION_COLUMN]): row for row in grouped.to_dicts()}
+    rows: list[dict[str, Any]] = []
+    for region in profile.regions:
+        current = by_region.get(region.key)
+        if current is None:
+            continue
+        population = float(current["population"] or 0.0)
+        capacity = float(current["capacity"] or 0.0)
+        rows.append(
+            {
+                "label": region.label,
+                "population": population,
+                "peasant_share": float(current["peasants"] or 0.0) / population
+                if population
+                else 0.0,
+                "tribesmen_share": float(current["tribesmen"] or 0.0) / population
+                if population
+                else 0.0,
+                "fill": population / capacity if capacity else math.inf,
+                "development": float(current["development"] or 0.0),
+                "irrigation_levels": float(current["irrigation_levels"] or 0.0),
+            }
+        )
+    return rows
+
+
+def _sanity_rows(
+    profile: SimulationProfile,
+    snapshots: Mapping[int, pl.DataFrame],
+    preparation: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    initial = snapshots[0].select("location_tag", pl.col("total_population").alias("start_population"))
+    primary_snapshots = {
+        year: frame
+        for year, frame in snapshots.items()
+        if year <= profile.primary_scored_through_year
+    }
+    all_capacities = np.concatenate(
+        [frame["local_population_capacity"].to_numpy() for frame in primary_snapshots.values()]
+    )
+    all_populations = np.concatenate(
+        [frame["total_population"].to_numpy() for frame in primary_snapshots.values()]
+    )
+    all_fill = all_populations / np.maximum(all_capacities, 1e-12)
+    populated_start = snapshots[0].filter(pl.col("total_population") > 0)
+    start_floor_ratio = (
+        populated_start["local_population_capacity"].to_numpy()
+        / populated_start["total_population"].to_numpy()
+    )
+    finite = all(
+        np.isfinite(frame[column].to_numpy()).all()
+        for frame in primary_snapshots.values()
+        for column in ("total_population", "local_population_capacity", "development")
+    )
+    nonnegative = all(
+        (frame[column].to_numpy() >= 0.0).all()
+        for frame in primary_snapshots.values()
+        for column in ("total_population", "local_population_capacity")
+    )
+    rows = [
+        _check("Finite population/capacity/development", int(finite), "1", finite),
+        _check("Non-negative population and capacity", int(nonnegative), "1", nonnegative),
+        _check(
+            "Minimum start capacity/population",
+            f"{float(start_floor_ratio.min(initial=math.inf)):.3f}×",
+            ">= 1.000×",
+            bool((start_floor_ratio >= 1.0 - 1e-9).all()),
+        ),
+        _check(
+            "Minimum location capacity",
+            f"{float(np.min(all_capacities)):.3f}",
+            f">= {profile.min_location_capacity:.3f}",
+            float(np.min(all_capacities)) >= profile.min_location_capacity,
+        ),
+        _check(
+            "Maximum location capacity",
+            f"{float(np.max(all_capacities)):,.1f}",
+            f"<= {profile.max_location_capacity:,.1f}",
+            float(np.max(all_capacities)) <= profile.max_location_capacity,
+        ),
+        _check(
+            "Maximum location population",
+            f"{float(np.max(all_populations)):,.1f}",
+            f"<= {profile.max_location_population:,.1f}",
+            float(np.max(all_populations)) <= profile.max_location_population,
+        ),
+        _check(
+            "Maximum capacity fill",
+            f"{float(np.max(all_fill)):.3f}×",
+            f"<= {profile.max_location_capacity_fill:.3f}×",
+            float(np.max(all_fill)) <= profile.max_location_capacity_fill,
+        ),
+        _check(
+            "Maximum development",
+            f"{max(float(frame['development'].max()) for frame in primary_snapshots.values()):.2f}",
+            f"<= {profile.max_development:.2f}",
+            max(float(frame["development"].max()) for frame in primary_snapshots.values())
+            <= profile.max_development,
+        ),
+    ]
+    initial_total = float(snapshots[0]["total_population"].sum())
+    for year, tolerance in (
+        (25, profile.max_global_25y_deviation),
+        (100, profile.max_global_100y_deviation),
+    ):
+        if year not in snapshots:
+            continue
+        ratio = float(snapshots[year]["total_population"].sum()) / initial_total
+        rows.append(
+            _check(
+                f"Global {year}y stability",
+                f"{ratio:.3f}×",
+                f"within {tolerance:.1%} of start",
+                abs(ratio - 1.0) <= tolerance + 1e-12,
+            )
+        )
+
+    start_regions = snapshots[0].group_by(HYDE_REGION_COLUMN).agg(
+        pl.col("total_population").sum().alias("start_population")
+    )
+    for year, lower, upper in (
+        (25, profile.min_region_25y_ratio, profile.max_region_25y_ratio),
+        (100, profile.min_region_100y_ratio, profile.max_region_100y_ratio),
+    ):
+        if year not in snapshots:
+            continue
+        region_growth = snapshots[year].group_by(HYDE_REGION_COLUMN).agg(
+            pl.col("total_population").sum().alias("population")
+        ).join(start_regions, on=HYDE_REGION_COLUMN, how="inner").filter(
+            pl.col("start_population") > 0.0
+        ).with_columns(
+            (pl.col("population") / pl.col("start_population")).alias("growth_ratio")
+        )
+        observed_min = float(region_growth["growth_ratio"].min())
+        observed_max = float(region_growth["growth_ratio"].max())
+        rows.append(
+            _check(
+                f"HYDE-region {year}y stability range",
+                f"{observed_min:.3f}×–{observed_max:.3f}×",
+                f"{lower:.3f}×–{upper:.3f}×",
+                observed_min >= lower and observed_max <= upper,
+            )
+        )
+    irrigation = dict(preparation.get("irrigation") or {})
+    if bool(irrigation.get("enabled")):
+        river_or_lake_fraction = float(
+            irrigation.get("river_or_lake_location_fraction") or 0.0
+        )
+        river_level_fraction = float(
+            irrigation.get("river_supported_level_fraction") or 0.0
+        )
+        cap_violations = int(irrigation.get("cap_violations") or 0)
+        rows.extend(
+            [
+                _check(
+                    "Irrigation locations with river/lake support",
+                    f"{river_or_lake_fraction:.1%}",
+                    f">= {profile.min_irrigation_river_or_lake_fraction:.1%}",
+                    river_or_lake_fraction
+                    >= profile.min_irrigation_river_or_lake_fraction,
+                ),
+                _check(
+                    "Irrigation levels directly supported by river size",
+                    f"{river_level_fraction:.1%}",
+                    f">= {profile.min_irrigation_river_supported_level_fraction:.1%}",
+                    river_level_fraction
+                    >= profile.min_irrigation_river_supported_level_fraction,
+                ),
+                _check(
+                    "Irrigation legal-cap violations",
+                    cap_violations,
+                    f"<= {profile.max_irrigation_cap_violations}",
+                    cap_violations <= profile.max_irrigation_cap_violations,
+                ),
+            ]
+        )
+    for year, lower, upper in (
+        (
+            25,
+            profile.min_location_25y_growth_factor,
+            profile.max_location_25y_growth_factor,
+        ),
+        (
+            100,
+            profile.min_location_100y_growth_factor,
+            profile.max_location_100y_growth_factor,
+        ),
+    ):
+        if year not in snapshots:
+            continue
+        growth = snapshots[year].join(initial, on="location_tag", how="left").filter(
+            pl.col("start_population") >= 10.0
+        ).with_columns(
+            (pl.col("total_population") / pl.col("start_population")).alias("growth_factor")
+        )
+        minimum = float(growth["growth_factor"].min()) if growth.height else 0.0
+        maximum = float(growth["growth_factor"].max()) if growth.height else 0.0
+        rows.extend(
+            [
+                _check(
+                    f"Minimum established-location {year}y growth",
+                    f"{minimum:.3f}×",
+                    f">= {lower:.3f}×",
+                    minimum >= lower,
+                ),
+                _check(
+                    f"Maximum established-location {year}y growth",
+                    f"{maximum:.3f}×",
+                    f"<= {upper:.3f}×",
+                    maximum <= upper,
+                ),
+            ]
+        )
+    return rows
+
+
+def _capacity_pressure_rows(
+    snapshots: Mapping[int, pl.DataFrame],
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for year, frame in snapshots.items():
+        population = frame["total_population"].to_numpy()
+        capacity = frame["local_population_capacity"].to_numpy()
+        fill = population / np.maximum(capacity, 1e-12)
+        abundant = (fill < 0.10) & (population < 10.0)
+        available = (fill >= 0.10) & (fill <= 1.0)
+        neutral = (fill < 0.10) & (population >= 10.0)
+        over = fill > 1.0
+        total = max(float(np.sum(population)), 1e-12)
+        rows.append(
+            {
+                "year": year,
+                "abundant_population": float(np.sum(population[abundant])) / total,
+                "available_population": float(np.sum(population[available])) / total,
+                "neutral_population": float(np.sum(population[neutral])) / total,
+                "over_population": float(np.sum(population[over])) / total,
+                "abundant_locations": int(np.count_nonzero(abundant)),
+                "available_locations": int(np.count_nonzero(available)),
+                "neutral_locations": int(np.count_nonzero(neutral)),
+                "over_locations": int(np.count_nonzero(over)),
+            }
+        )
+    return rows
+
+
+def _location_range_rows(
+    snapshots: Mapping[int, pl.DataFrame],
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for year, frame in snapshots.items():
+        population = frame["total_population"].to_numpy()
+        capacity = frame["local_population_capacity"].to_numpy()
+        development = frame["development"].to_numpy()
+        fill = population / np.maximum(capacity, 1e-12)
+        rows.append(
+            {
+                "year": year,
+                "population_min": float(np.min(population)),
+                "population_max": float(np.max(population)),
+                "capacity_min": float(np.min(capacity)),
+                "capacity_max": float(np.max(capacity)),
+                "fill_min": float(np.min(fill)),
+                "fill_max": float(np.max(fill)),
+                "development_min": float(np.min(development)),
+                "development_max": float(np.max(development)),
+                "over_capacity": int(np.count_nonzero(fill > 1.0)),
+            }
+        )
+    return rows
+
+
+def _location_extreme_report(
+    profile: SimulationProfile,
+    snapshots: Mapping[int, pl.DataFrame],
+) -> list[str]:
+    observation_year = max(
+        year for year in snapshots if year <= profile.primary_scored_through_year
+    )
+    initial = snapshots[0].select(
+        "location_tag",
+        pl.col("total_population").alias("start_population"),
+    )
+    frame = snapshots[observation_year].join(initial, on="location_tag", how="left").with_columns(
+        (
+            pl.col("total_population")
+            / pl.col("local_population_capacity").clip(lower_bound=1e-12)
+        ).alias("capacity_fill"),
+        (
+            pl.col("total_population")
+            / pl.col("start_population").clip(lower_bound=1e-12)
+        ).alias("growth_factor"),
+    )
+    lines: list[str] = []
+    metrics = (
+        ("Largest populations", "total_population", True),
+        ("Highest capacity fill", "capacity_fill", True),
+        ("Fastest growth", "growth_factor", True),
+        ("Largest capacities", "local_population_capacity", True),
+        ("Lowest positive capacities", "local_population_capacity", False),
+    )
+    for title, metric, descending in metrics:
+        selected = frame
+        if title == "Lowest positive capacities":
+            selected = selected.filter(pl.col(metric) > 0.0)
+        selected = selected.sort(metric, descending=descending).head(profile.max_report_locations)
+        lines.extend(
+            [
+                f"### {title} at {observation_year} years",
+                "",
+                "| Location | HYDE region | Population | Capacity | Fill | Growth | Development | Irrigation |",
+                "|---|---|---:|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for row in selected.to_dicts():
+            lines.append(
+                f"| {row['location_tag']} | {row.get(HYDE_REGION_COLUMN) or 'unassigned'} | "
+                f"{float(row['total_population']):,.2f} | "
+                f"{float(row['local_population_capacity']):,.2f} | "
+                f"{float(row['capacity_fill']):.2f}× | {float(row['growth_factor']):.2f}× | "
+                f"{float(row['development']):.1f} | "
+                f"{float(row.get(IRRIGATION_LEVELS_COLUMN) or 0.0):.0f} |"
+            )
+        lines.append("")
+    return lines
+
+
+def _numeric_summary(series: pl.Series) -> dict[str, float]:
+    values = series.fill_null(0.0).cast(pl.Float64)
+    return {
+        "min": float(values.min() or 0.0),
+        "median": float(values.median() or 0.0),
+        "mean": float(values.mean() or 0.0),
+        "p90": float(values.quantile(0.9, interpolation="linear") or 0.0),
+        "max": float(values.max() or 0.0),
+    }
+
+
+def _people(game_units: float, profile: SimulationProfile) -> str:
+    people = game_units * profile.people_per_game_unit
+    if abs(people) >= 1_000_000_000:
+        return f"{people / 1_000_000_000:.3f}b"
+    return f"{people / 1_000_000:.1f}m"
+
+
+def _check(name: str, observed: Any, limit: str, passed: bool) -> dict[str, Any]:
+    return {"name": name, "observed": observed, "limit": limit, "pass": bool(passed)}
+
+
+def _mapping(raw: Mapping[str, Any], key: str) -> Mapping[str, Any]:
+    value = raw.get(key)
+    if not isinstance(value, dict):
+        raise ValueError(f"missing [{key}] table")
+    return value
+
+
+def _string(raw: Mapping[str, Any], key: str) -> str:
+    value = str(raw.get(key) or "").strip()
+    if not value:
+        raise ValueError(f"missing {key}")
+    return value
+
+
+def _float(raw: Mapping[str, Any], key: str) -> float:
+    try:
+        value = float(raw[key])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError(f"missing or invalid numeric value {key}") from exc
+    if not math.isfinite(value):
+        raise ValueError(f"{key} must be finite")
+    return value
+
+
+def _nonnegative_float(raw: Mapping[str, Any], key: str) -> float:
+    value = _float(raw, key)
+    if value < 0.0:
+        raise ValueError(f"{key} must be non-negative")
+    return value
+
+
+def _positive_float(raw: Mapping[str, Any], key: str) -> float:
+    value = _float(raw, key)
+    if value <= 0.0:
+        raise ValueError(f"{key} must be positive")
+    return value
+
+
+def _integer(raw: Mapping[str, Any], key: str) -> int:
+    try:
+        return int(raw[key])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError(f"missing or invalid integer {key}") from exc
+
+
+def _positive_integer(raw: Mapping[str, Any], key: str) -> int:
+    value = _integer(raw, key)
+    if value <= 0:
+        raise ValueError(f"{key} must be positive")
+    return value
+
+
+def _nonnegative_integer(raw: Mapping[str, Any], key: str) -> int:
+    value = _integer(raw, key)
+    if value < 0:
+        raise ValueError(f"{key} must be non-negative")
+    return value
+
+
+def _integer_list(raw: Mapping[str, Any], key: str) -> list[int]:
+    value = raw.get(key)
+    if not isinstance(value, list):
+        raise ValueError(f"{key} must be a list")
+    return [int(item) for item in value]
+
+
+def _fraction(raw: Mapping[str, Any], key: str) -> float:
+    value = _float(raw, key)
+    if not 0.0 <= value <= 1.0:
+        raise ValueError(f"{key} must be between 0 and 1")
+    return value
+
+
+def _year_mapping(raw: Any, label: str) -> dict[int, float]:
+    if not isinstance(raw, dict):
+        raise ValueError(f"{label} must be a table")
+    out: dict[int, float] = {}
+    for key, value in raw.items():
+        year = int(key)
+        ratio = float(value)
+        if year < 0 or not math.isfinite(ratio) or ratio <= 0.0:
+            raise ValueError(f"{label}.{key} must be a positive finite ratio")
+        out[year] = ratio
+    return out
+
+
+def _string_float_mapping(raw: Any, label: str) -> dict[str, float]:
+    if raw is None:
+        return {}
+    if not isinstance(raw, dict):
+        raise ValueError(f"{label} must be a table")
+    out: dict[str, float] = {}
+    for key, value in raw.items():
+        number = float(value)
+        if not math.isfinite(number):
+            raise ValueError(f"{label}.{key} must be finite")
+        out[str(key)] = number
+    return out
+
+
+def _resolve(root: Path, path: Path) -> Path:
+    return path.expanduser().resolve() if path.is_absolute() else (root / path).resolve()
+
+
+def _require_file(path: Path, label: str) -> None:
+    if not path.is_file():
+        raise FileNotFoundError(f"{label} not found: {path}")

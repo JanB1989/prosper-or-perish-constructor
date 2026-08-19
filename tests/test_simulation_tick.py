@@ -1,5 +1,6 @@
 ﻿from __future__ import annotations
 
+from dataclasses import replace
 import math
 
 import polars as pl
@@ -365,6 +366,59 @@ def test_advance_tick_applies_prosperity_food_consumption_and_development() -> N
     # cons = 10 * 1.0 * (1+0.5) = 15 → food 100-15=85; prosperity decays 0 in this fixture.
     assert updated["food"].item() == pytest.approx(85.0)
     assert updated["development"].item() == pytest.approx(10.0 + 0.005 * 1.25)
+
+
+def test_negative_rank_growth_can_exempt_tribesmen_only() -> None:
+    context = replace(
+        _test_context(subsistence_agriculture=0.0, food_decay_rate=0.0),
+        pop_food_rates={"peasants": 1.0, "tribesmen": 0.0},
+        rank_degrowth_exempt_pop_types=frozenset({"tribesmen"}),
+    )
+    locations = pl.DataFrame(
+        {
+            "location_tag": ["a"],
+            "province": ["prov"],
+            "location_rank": ["rural_settlement"],
+            "food": [0.0],
+            "population_peasants": [100.0],
+            "population_tribesmen": [100.0],
+            "total_population": [200.0],
+        }
+    )
+
+    updated = advance_tick(locations, context, months=12)
+
+    assert updated["population_peasants"].item() == pytest.approx(99.5)
+    assert updated["population_tribesmen"].item() == pytest.approx(100.0)
+    assert updated["total_population"].item() == pytest.approx(199.5)
+
+
+def test_zero_consumption_tribesmen_can_skip_food_storage_growth() -> None:
+    context = replace(
+        _test_context(subsistence_agriculture=0.0, food_decay_rate=0.0),
+        pop_food_rates={"peasants": 1.0, "tribesmen": 0.0},
+        rank_degrowth_exempt_pop_types=frozenset({"tribesmen"}),
+        food_storage_growth_exempt_pop_types=frozenset({"tribesmen"}),
+    )
+    locations = pl.DataFrame(
+        {
+            "location_tag": ["a"],
+            "province": ["prov"],
+            "location_rank": ["rural_settlement"],
+            # After peasant consumption, 2,400 food is exactly 24 months stored.
+            "food": [2_500.0],
+            "population_peasants": [100.0],
+            "population_tribesmen": [100.0],
+            "total_population": [200.0],
+        }
+    )
+
+    updated = advance_tick(locations, context, months=1)
+
+    expected_peasants = 100.0 * (1.0 + RANK_GROWTH + 0.02) ** (1.0 / 12.0)
+    assert updated["population_peasants"].item() == pytest.approx(expected_peasants)
+    assert updated["population_tribesmen"].item() == pytest.approx(100.0)
+    assert updated["total_population"].item() == pytest.approx(expected_peasants + 100.0)
 
 
 def test_prepare_start_locations_fills_food_at_define_cap() -> None:

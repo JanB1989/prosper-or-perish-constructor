@@ -770,7 +770,7 @@ def _build_parser() -> argparse.ArgumentParser:
     population_render = _add_command(
         population_capacity_subcommands,
         "render",
-        "Render the frozen accepted table into shared per-location static modifiers.",
+        "Render the configured profile into capacity and starting-setup game data.",
         _population_capacity_render,
     )
     population_generalization_audit = _add_command(
@@ -4508,6 +4508,52 @@ def _population_capacity_render(
     _reject_extra_population_capacity_args("render", extra)
     config = _population_capacity_pipeline_config(args, repo, project)
     paths = _population_capacity_model_paths(repo, config)
+    simulation_profile = _configured_population_simulation_profile(repo, project)
+    if simulation_profile is not None:
+        from prosper_or_perish_constructor.simulation.deployment import (
+            build_population_simulation_deployment,
+            verify_population_simulation_deployment,
+        )
+
+        if args.dry_run:
+            raise SystemExit(
+                "The profile deployment render is deterministic; use "
+                "`uv run ppc population-simulation` for a no-deploy model run."
+            )
+        if not args.verify_only:
+            result = build_population_simulation_deployment(
+                repo=repo,
+                project=project,
+                profile_path=simulation_profile,
+            )
+            _require_matching_population_capacity_targets(
+                result.capacity_table_path,
+                paths["population_capacity_table"],
+            )
+            _compile_population_capacity_map_mode_values(
+                repo,
+                project,
+                result.starting_capacity_values,
+            )
+            label_result = _run(["eu5-orchestrator", "label", "--project", project], repo)
+            if label_result != 0:
+                return label_result
+            rendered_mod_root = _project_mod_root(repo, project)
+            _ensure_location_modifier_application_on_action(rendered_mod_root)
+            _apply_location_modifier_aliases(rendered_mod_root)
+            # Labeling owns the generated per-location localization file. Restore
+            # the constructor's shared Location Potential name/description in
+            # the same render transaction so a standalone profile render is as
+            # complete as finalize/sync.
+            _inject_location_potential_localization(rendered_mod_root)
+        verification = verify_population_simulation_deployment(
+            repo=repo,
+            project=project,
+            profile_path=simulation_profile,
+            location_modifiers_path=paths["location_modifiers"],
+        )
+        print(json.dumps(verification, indent=2, sort_keys=True), flush=True)
+        return 0
     from prosper_or_perish_population_capacity import render_accepted_carrying_capacity
 
     accepted_path = paths["accepted_table"]
@@ -4699,7 +4745,7 @@ def _write_population_capacity_ingest_table(
 
 
 def _prepare_population_capacity_compiler_input(repo: Path, project: Path) -> None:
-    """Refresh the canonical two-column table before the label compiler runs."""
+    """Refresh canonical capacity and starting setup before compilers run."""
 
     population = _mapping(_project_config(project).get("population_capacity", {}))
     if population.get("enabled", True) is False:
@@ -4711,6 +4757,34 @@ def _prepare_population_capacity_compiler_input(repo: Path, project: Path) -> No
         argparse.Namespace(config=None), repo, project
     )
     paths = _population_capacity_model_paths(repo, config)
+    simulation_profile = _configured_population_simulation_profile(repo, project)
+    if simulation_profile is not None:
+        from prosper_or_perish_constructor.simulation.deployment import (
+            build_population_simulation_deployment,
+        )
+
+        result = build_population_simulation_deployment(
+            repo=repo,
+            project=project,
+            profile_path=simulation_profile,
+        )
+        _require_matching_population_capacity_targets(
+            result.capacity_table_path,
+            paths["population_capacity_table"],
+        )
+        _compile_population_capacity_map_mode_values(
+            repo,
+            project,
+            result.starting_capacity_values,
+        )
+        print(
+            "Population profile deployment compiled: "
+            f"locations={result.location_count}, "
+            f"generated irrigation={result.irrigation_locations} locations/"
+            f"{result.irrigation_levels} levels, changed={len(result.changed_paths)}",
+            flush=True,
+        )
+        return
     accepted = paths["accepted_table"]
     if accepted.is_file():
         _write_population_capacity_ingest_table(
@@ -4724,6 +4798,31 @@ def _prepare_population_capacity_compiler_input(repo: Path, project: Path) -> No
             repo,
             project,
             paths["population_capacity_table"],
+        )
+
+
+def _configured_population_simulation_profile(
+    repo: Path,
+    project: Path,
+) -> Path | None:
+    population = _mapping(_project_config(project).get("population_capacity", {}))
+    value = population.get("simulation_profile")
+    if value in (None, ""):
+        return None
+    path = _resolve_config_path(repo, value)
+    if not path.is_file():
+        raise SystemExit(f"Population simulation profile not found: {path}")
+    return path
+
+
+def _require_matching_population_capacity_targets(
+    profile_target: Path,
+    compiler_target: Path,
+) -> None:
+    if profile_target.resolve() != compiler_target.resolve():
+        raise SystemExit(
+            "Population simulation and compiler capacity-table paths differ: "
+            f"{profile_target} != {compiler_target}"
         )
 
 
@@ -4749,6 +4848,37 @@ def _compile_population_capacity_map_mode(
     )
     print(
         "Population-capacity map-mode scale compiled: "
+        f"start max={result['start_max_capacity']}, "
+        f"display cap={result['display_cap']}, "
+        f"thresholds={result['thresholds']}",
+        flush=True,
+    )
+
+
+def _compile_population_capacity_map_mode_values(
+    repo: Path,
+    project: Path,
+    values: tuple[int, ...],
+) -> None:
+    from prosper_or_perish_constructor.population_capacity_map_mode import (
+        compile_population_capacity_map_mode_values,
+    )
+
+    mod_root = _project_mod_root(repo, project)
+    result = compile_population_capacity_map_mode_values(
+        values=values,
+        map_mode_path=(
+            mod_root
+            / "in_game/gfx/map/map_modes/pp_population_capacity_map_modes.txt"
+        ),
+        localization_path=(
+            mod_root
+            / "main_menu/localization/english/pp_building_adjustments_l_english.yml"
+        ),
+        calibration_path=repo / "tools/map_mode_scale_calibration.json",
+    )
+    print(
+        "Population-capacity map-mode scale compiled from full starting capacity: "
         f"start max={result['start_max_capacity']}, "
         f"display cap={result['display_cap']}, "
         f"thresholds={result['thresholds']}",
@@ -5362,6 +5492,7 @@ def _labeling_fingerprint_paths(repo: Path, project: Path, config: dict[str, Any
         population_config = _config_path(repo, population.get("config"))
         if population_config is not None:
             paths.append(population_config)
+        paths.extend(_population_simulation_fingerprint_paths(repo, project, config))
     if not label_config.is_file():
         return paths
     raw = _load_yaml_mapping(label_config)
@@ -5425,6 +5556,7 @@ def _population_capacity_fingerprint_paths(repo: Path, project: Path, config: di
     ]
     if population.get("enabled", True) is False:
         return paths
+    paths.extend(_population_simulation_fingerprint_paths(repo, project, config))
     population_config = _config_path(repo, population.get("config")) or repo / "population_capacity.toml"
     paths.append(population_config)
     if population_config.is_file():
@@ -5489,6 +5621,64 @@ def _population_capacity_fingerprint_paths(repo: Path, project: Path, config: di
                         if value not in (None, ""):
                             paths.append(_resolve_config_path(registry_path.parent, value))
     return list(dict.fromkeys(paths))
+
+
+def _population_simulation_fingerprint_paths(
+    repo: Path,
+    project: Path,
+    config: dict[str, Any],
+) -> list[Path]:
+    population = _mapping(config.get("population_capacity", {}))
+    value = population.get("simulation_profile")
+    if value in (None, ""):
+        return []
+    profile_path = _resolve_config_path(repo, value)
+    paths = [
+        profile_path,
+        repo / CONSTRUCTOR_LOAD_ORDER,
+        repo / "artifacts/data/food_building_startup/derived_food_balance_by_location.parquet",
+        repo
+        / "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt",
+        repo / "blueprints/accepted/buildings/irrigation_systems.yml",
+    ]
+    if not profile_path.is_file():
+        return paths
+    with profile_path.open("rb") as handle:
+        raw = tomllib.load(handle)
+    profile_paths = _mapping(raw.get("paths", {}))
+    hyde_root_value = profile_paths.get("hyde_root")
+    hyde_root = (
+        _resolve_config_path(profile_path.parent, hyde_root_value)
+        if hyde_root_value not in (None, "")
+        else profile_path.parent
+    )
+    for key in ("location_candidates", "location_sample_points"):
+        path_value = profile_paths.get(key)
+        if path_value not in (None, ""):
+            paths.append(_resolve_config_path(profile_path.parent, path_value))
+    for key in (
+        "hyde_region_mask",
+        "hyde_population_locations",
+        "hyde_cropland",
+        "hyde_rainfed",
+        "hyde_irrigated",
+        "hyde_pasture",
+        "hyde_urban_population",
+    ):
+        path_value = profile_paths.get(key)
+        if path_value not in (None, ""):
+            paths.append(_resolve_config_path(hyde_root, path_value))
+    deployment = _mapping(raw.get("deployment", {}))
+    for key in (
+        "population_capacity_table",
+        "development_setup",
+        "irrigation_setup",
+        "manifest",
+    ):
+        path_value = deployment.get(key)
+        if path_value not in (None, ""):
+            paths.append(_resolve_config_path(profile_path.parent, path_value))
+    return paths
 
 
 def _validation_fingerprint(repo: Path, project: Path) -> str:

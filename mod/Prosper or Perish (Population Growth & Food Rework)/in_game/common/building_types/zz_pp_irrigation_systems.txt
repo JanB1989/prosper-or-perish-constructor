@@ -31,47 +31,10 @@ REPLACE:irrigation_systems = {
   construction_demand = village_construction
   raw_modifier = {
     farm_capacity_from_irrigation_systems = 0.60
+    local_population_capacity = 50
   }
 
   modifier = {
-    local_population_capacity = 1.0
-    local_monthly_food_modifier = 0.00 # vanilla 0.05
-
-    # Extreme Sensitivity (Wet-Rice)
-    local_rice_output_modifier = 0.03
-
-    # High Sensitivity (Grains & High-Value Trees)
-    local_wheat_output_modifier = 0.02
-    local_millet_output_modifier = 0.02
-    local_maize_output_modifier = 0.02
-    local_fruit_output_modifier = 0.02
-    local_olives_output_modifier = 0.02
-
-    # Medium Sensitivity (Legumes, vineyards, dyes & medicinal crops)
-    local_legumes_output_modifier = 0.01
-    local_wine_output_modifier = 0.01
-    local_dyes_output_modifier = 0.01
-    local_medicaments_output_modifier = 0.01
-
-    # Low Sensitivity (Tubers & Animal Products)
-    local_potato_output_modifier = 0.01
-    local_livestock_output_modifier = 0.00
-    local_beeswax_output_modifier = 0.00
-    local_wool_output_modifier = 0.00
-    local_fiber_crops_output_modifier = 0.00
-    local_cotton_output_modifier = 0.01
-    local_sugar_output_modifier = 0.01
-    local_tobacco_output_modifier = 0.01
-    local_cocoa_output_modifier = 0.01
-    local_tea_output_modifier = 0.02
-    local_coffee_output_modifier = 0.02
-    local_silk_output_modifier = 0.02
-    local_incense_output_modifier = 0.01
-    local_saffron_output_modifier = 0.01
-    local_pepper_output_modifier = 0.01
-    local_cloves_output_modifier = 0.01
-    local_chili_output_modifier = 0.01
-    local_horses_output_modifier = 0.00
   }
   forbidden_for_estates = no
   ai_forbid_shutdown = yes

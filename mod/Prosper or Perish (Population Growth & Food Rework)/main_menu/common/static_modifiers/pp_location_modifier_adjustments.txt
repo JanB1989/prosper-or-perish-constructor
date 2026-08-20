@@ -230,8 +230,8 @@ TRY_REPLACE:development = {
 	maximum_stockpile_capacity = 10
 	local_production_efficiency = 0.0015
 	local_monthly_development = -0.00011
-	local_population_capacity = 0.1
-	local_population_capacity_modifier = 0.06
+	local_population_capacity = 1.0
+	local_population_capacity_modifier = 0.05
 }
 TRY_REPLACE:minor_rebel_uprising = {
 	game_data = {

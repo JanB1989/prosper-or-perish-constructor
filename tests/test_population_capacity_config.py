@@ -43,6 +43,7 @@ LOCATION_POTENTIAL_CONCEPT = (
 )
 POPULATION_BENCHMARKS = ROOT / "population_capacity_benchmarks.toml"
 ACCEPTED_CAPACITY = ROOT / "data" / "population_capacity" / "accepted_capacity.csv"
+PROFILE_CAPACITY = ROOT / "data" / "population_capacity" / "population_capacity.csv"
 CONTROL_POINTS = ROOT / "population_capacity_control_points.csv"
 CAPACITY_EFFECT_BLOCKS = (
     "TRY_REPLACE:available_free_land",
@@ -291,7 +292,7 @@ def test_free_land_effects_use_uniform_output_values() -> None:
         assert set(output_values.values()) == {expected_value}
 
 
-def test_irrigation_systems_cover_all_irrigated_plant_goods() -> None:
+def test_irrigation_systems_use_capacity_instead_of_crop_output_bonuses() -> None:
     blueprint_text = (ROOT / "blueprints" / "accepted" / "buildings" / "irrigation_systems.yml").read_text(
         encoding="utf-8"
     )
@@ -300,13 +301,14 @@ def test_irrigation_systems_cover_all_irrigated_plant_goods() -> None:
         for good in _labeler_goods()
         if good not in ANIMAL_PRODUCT_GOODS and good not in NON_IRRIGATED_PLANT_GOODS
     )
-    missing = [
+    present = [
         good
         for good in irrigated_plant_goods
-        if f"local_{good}_output_modifier" not in blueprint_text
+        if f"local_{good}_output_modifier" in blueprint_text
     ]
 
-    assert not missing
+    assert not present
+    assert "local_population_capacity = 50" in blueprint_text
 
 
 def test_irrigation_maintenance_is_not_tool_focused() -> None:
@@ -412,8 +414,8 @@ def test_development_modifier_preserves_population_and_other_static_values() -> 
     development = _entry_block(static_modifiers.entries, "development")
 
     assert development is not None
-    assert _last_value(development, "local_population_capacity") == 0.15
-    assert _last_value(development, "local_population_capacity_modifier") == 0.015
+    assert _last_value(development, "local_population_capacity") == 1.0
+    assert _last_value(development, "local_population_capacity_modifier") == 0.05
     assert _last_value(development, "local_distance_from_capital_speed_propagation") == 0.005
     assert _last_value(development, "local_supply_limit_modifier") == 0.02
     assert _last_value(development, "blockade_force_required") == 0.01
@@ -761,33 +763,20 @@ def test_irrigation_technology_registry_is_cited_and_never_encodes_multipliers()
     assert all(system["available_by"] <= 1337 for system in systems)
 
 
-def test_accepted_capacity_table_matches_deployed_values() -> None:
-    config = load_pipeline_config(ROOT / "population_capacity.toml")
-    with ACCEPTED_CAPACITY.open("r", encoding="utf-8-sig", newline="") as handle:
-        accepted_rows = list(csv.DictReader(handle))
+def test_profile_capacity_table_matches_deployed_values() -> None:
+    with PROFILE_CAPACITY.open("r", encoding="utf-8-sig", newline="") as handle:
+        profile_rows = list(csv.DictReader(handle))
     deployed = _generated_location_capacities()
 
-    assert len(accepted_rows) == 20_929
+    assert len(profile_rows) == 20_929
     normalize = lambda tag: (tag[:-3] if tag.endswith("_pp") else tag).casefold()
-    value_column = (
-        "capacity_people_p50"
-        if config.capacity_scale.deployment_mode == "raw"
-        else "normalized_capacity"
-    )
-    def expected_deployed_value(row: dict[str, str]) -> int:
-        value = int(row[value_column])
-        if config.capacity_scale.deployment_mode == "raw":
-            unit = config.capacity_scale.people_per_game_population_unit
-            return (value + unit // 2) // unit
-        return value
-
-    accepted_normalized = {
-        normalize(str(row["location_tag"])): expected_deployed_value(row)
-        for row in accepted_rows
+    profile_normalized = {
+        normalize(str(row["location_tag"])): int(row["population_capacity"])
+        for row in profile_rows
     }
     deployed_normalized = {normalize(tag): value for tag, value in deployed.items()}
-    assert set(accepted_normalized) == set(deployed_normalized)
-    assert accepted_normalized == deployed_normalized
+    assert set(profile_normalized) == set(deployed_normalized)
+    assert profile_normalized == deployed_normalized
 
 
 def test_location_geometry_inputs_are_available_for_external_target_mapping() -> None:

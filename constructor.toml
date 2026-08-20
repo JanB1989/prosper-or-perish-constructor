@@ -100,6 +100,7 @@ managed_write_mode = "mod_root"
 [population_capacity]
 enabled = true
 config = "population_capacity.toml"
+simulation_profile = "population_capacity_simulation.toml"
 generated_label = "Prosper or Perish"
 managed_write_mode = "mod_root"
 

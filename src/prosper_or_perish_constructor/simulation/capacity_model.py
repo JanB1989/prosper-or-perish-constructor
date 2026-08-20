@@ -7,6 +7,10 @@ from dataclasses import dataclass
 import numpy as np
 
 BASE_POPULATION_CAPACITY_COLUMN = "base_population_capacity"
+PHYSICAL_POPULATION_CAPACITY_COLUMN = "physical_population_capacity"
+GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN = "gaez_zero_development_capacity"
+HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN = "hyde_rainfed_capacity_evidence"
+ZERO_DEVELOPMENT_CAPACITY_COLUMN = "zero_development_population_capacity"
 IRRIGATION_LEVELS_COLUMN = "irrigation_systems_levels"
 IRRIGATION_LEGAL_CAP_COLUMN = "irrigation_systems_legal_cap"
 

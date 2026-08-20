@@ -2550,8 +2550,11 @@ def test_game_loaded_text_files_are_finalized_with_utf8_bom() -> None:
     invalid_utf8: list[str] = []
     for path in sorted(game_loaded_paths):
         raw = path.read_bytes()
-        if not raw.startswith(b"\xef\xbb\xbf"):
+        expects_bom = not cli._is_setup_start_file(MOD_ROOT, path)
+        if expects_bom and not raw.startswith(b"\xef\xbb\xbf"):
             missing_bom.append(str(path.relative_to(MOD_ROOT)))
+        if not expects_bom and raw.startswith(b"\xef\xbb\xbf"):
+            missing_bom.append(f"unexpected setup BOM: {path.relative_to(MOD_ROOT)}")
         try:
             raw.decode("utf-8-sig")
         except UnicodeDecodeError as error:

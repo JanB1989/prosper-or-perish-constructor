@@ -95,6 +95,25 @@ def compile_population_capacity_map_mode(
     max_multiplier: float = 2.0,
 ) -> dict[str, object]:
     values = load_start_capacity_values(capacity_table)
+    return compile_population_capacity_map_mode_values(
+        values=values,
+        map_mode_path=map_mode_path,
+        localization_path=localization_path,
+        calibration_path=calibration_path,
+        max_multiplier=max_multiplier,
+    )
+
+
+def compile_population_capacity_map_mode_values(
+    *,
+    values: list[int] | tuple[int, ...],
+    map_mode_path: Path,
+    localization_path: Path,
+    calibration_path: Path | None = None,
+    max_multiplier: float = 2.0,
+) -> dict[str, object]:
+    """Compile the map scale from full game-visible starting capacities."""
+
     thresholds = population_capacity_map_mode_thresholds(values, max_multiplier=max_multiplier)
     map_mode_text = _replace_map_mode_thresholds(
         _read_text_preserving_newlines(map_mode_path), thresholds

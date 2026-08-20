@@ -12,18 +12,27 @@ from typing import Any, Mapping, Sequence
 import numpy as np
 import polars as pl
 import rasterio
-from eu5gameparser.load_order import load_profile
+from eu5gameparser.clausewitz.parser import parse_file
+from eu5gameparser.clausewitz.syntax import CList
+from eu5gameparser.load_order import LoadOrderConfig, load_profile
 
-from prosper_or_perish_constructor.farming_village_unlocks import load_start_location_frame
+from prosper_or_perish_constructor.farming_village_unlocks import (
+    DERIVED_START_LOCATIONS_RELATIVE,
+    load_start_location_frame,
+)
 from prosper_or_perish_constructor.free_building_levels import (
     extract_river_levels_from_maps,
     resolve_map_data_file,
 )
 from prosper_or_perish_constructor.simulation.capacity_model import (
     BASE_POPULATION_CAPACITY_COLUMN,
+    GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN,
+    HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN,
     IRRIGATION_LEGAL_CAP_COLUMN,
     IRRIGATION_LEVELS_COLUMN,
     PopulationCapacityFormula,
+    PHYSICAL_POPULATION_CAPACITY_COLUMN,
+    ZERO_DEVELOPMENT_CAPACITY_COLUMN,
 )
 from prosper_or_perish_constructor.simulation.capacity_pressure import (
     ABUNDANT_FREE_LAND,
@@ -48,6 +57,10 @@ HYDE_PASTURE_AREA_COLUMN = "hyde_pasture_area_km2"
 HYDE_URBAN_POPULATION_COLUMN = "hyde_urban_population_people"
 START_POPULATION_COLUMN = "profile_start_population"
 START_DEVELOPMENT_COLUMN = "profile_start_development"
+START_COUNTRY_TAG_COLUMN = "profile_start_country_tag"
+START_CONSTRUCTIBLE_OWNER_COLUMN = "profile_start_constructible_owner"
+VANILLA_IRRIGATION_LEVELS_COLUMN = "vanilla_irrigation_systems_levels"
+GENERATED_IRRIGATION_LEVELS_COLUMN = "generated_irrigation_systems_levels"
 PEOPLE_PER_GAME_UNIT_DEFAULT = 1_000.0
 
 
@@ -79,18 +92,21 @@ class SimulationProfile:
     hyde_irrigated_path: Path
     hyde_pasture_path: Path
     hyde_urban_population_path: Path
+    deployment_population_capacity_table_path: Path
+    deployment_development_setup_path: Path
+    deployment_irrigation_setup_path: Path
+    deployment_manifest_path: Path
+    deployment_development_decimals: int
     physical_capacity_columns: tuple[str, ...]
+    gaez_zero_development_fraction: float
+    gaez_zero_development_density_cap: float
+    hyde_rainfed_capacity_multiplier: float
     capacity_formula: PopulationCapacityFormula
     development_base: float
-    development_cropland_full_share_points: float
+    development_manageable_cropland_column: str
+    development_minimum_manageable_cropland_fraction: float
+    development_cropland_utilization_points: float
     development_pasture_full_share_points: float
-    development_population_density_points: float
-    development_population_density_reference: float
-    development_population_total_points: float
-    development_population_total_reference: float
-    development_urban_density_points: float
-    development_urban_density_reference: float
-    development_region_start_offsets: Mapping[str, float]
     development_start_min: float
     development_start_max: float
     irrigation_enabled: bool
@@ -116,12 +132,17 @@ class SimulationProfile:
     primary_scored_through_year: int
     regions: tuple[HydeRegionTarget, ...]
     max_report_locations: int
+    spot_check_locations: tuple[str, ...]
     min_location_capacity: float
     max_location_capacity: float
     max_location_population: float
     max_location_capacity_fill: float
     min_global_start_capacity_ratio: float
     min_start_population_within_capacity_fraction: float
+    start_capacity_scored_regions: frozenset[str]
+    min_region_start_population_within_capacity_fraction: float
+    established_population_threshold: float
+    max_established_start_capacity_fill: float
     min_location_25y_growth_factor: float
     max_location_25y_growth_factor: float
     min_location_100y_growth_factor: float
@@ -153,6 +174,7 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
     raw = tomllib.loads(resolved.read_text(encoding="utf-8-sig"))
     simulation = _mapping(raw, "simulation")
     paths = _mapping(raw, "paths")
+    deployment = _mapping(raw, "deployment")
     capacity = _mapping(raw, "capacity")
     development = _mapping(raw, "development")
     irrigation = _mapping(raw, "irrigation")
@@ -221,11 +243,39 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
             hyde_root,
             Path(_string(paths, "hyde_urban_population")),
         ),
+        deployment_population_capacity_table_path=_resolve(
+            repo,
+            Path(_string(deployment, "population_capacity_table")),
+        ),
+        deployment_development_setup_path=_resolve(
+            repo,
+            Path(_string(deployment, "development_setup")),
+        ),
+        deployment_irrigation_setup_path=_resolve(
+            repo,
+            Path(_string(deployment, "irrigation_setup")),
+        ),
+        deployment_manifest_path=_resolve(
+            repo,
+            Path(_string(deployment, "manifest")),
+        ),
+        deployment_development_decimals=_nonnegative_integer(
+            deployment, "development_decimals"
+        ),
         physical_capacity_columns=tuple(
             str(value) for value in capacity.get("physical_capacity_columns") or []
         ),
+        gaez_zero_development_fraction=_nonnegative_float(
+            capacity, "gaez_zero_development_fraction"
+        ),
+        gaez_zero_development_density_cap=_positive_float(
+            capacity, "gaez_zero_development_density_cap"
+        ),
+        hyde_rainfed_capacity_multiplier=_nonnegative_float(
+            capacity, "hyde_rainfed_capacity_multiplier"
+        ),
         capacity_formula=PopulationCapacityFormula(
-            physical_scale=_nonnegative_float(capacity, "physical_scale"),
+            physical_scale=1.0,
             development_absolute=_float(capacity, "development_absolute"),
             development_relative=_float(capacity, "development_relative"),
             irrigation_absolute=_float(capacity, "irrigation_absolute"),
@@ -235,33 +285,17 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
             minimum_capacity=_nonnegative_float(capacity, "minimum_capacity"),
         ),
         development_base=_float(development, "base"),
-        development_cropland_full_share_points=_float(
-            development, "cropland_full_share_points"
+        development_manageable_cropland_column=_string(
+            development, "manageable_cropland_column"
+        ),
+        development_minimum_manageable_cropland_fraction=_positive_float(
+            development, "minimum_manageable_cropland_fraction"
+        ),
+        development_cropland_utilization_points=_float(
+            development, "cropland_utilization_points"
         ),
         development_pasture_full_share_points=_float(
             development, "pasture_full_share_points"
-        ),
-        development_population_density_points=_float(
-            development, "population_density_points"
-        ),
-        development_population_density_reference=_positive_float(
-            development, "population_density_reference"
-        ),
-        development_population_total_points=_float(
-            development, "population_total_points"
-        ),
-        development_population_total_reference=_positive_float(
-            development, "population_total_reference"
-        ),
-        development_urban_density_points=_float(
-            development, "urban_density_points"
-        ),
-        development_urban_density_reference=_positive_float(
-            development, "urban_density_reference"
-        ),
-        development_region_start_offsets=_string_float_mapping(
-            development.get("region_start_offsets"),
-            "development.region_start_offsets",
         ),
         development_start_min=_float(development, "start_min"),
         development_start_max=_float(development, "start_max"),
@@ -302,6 +336,9 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
         ),
         regions=tuple(regions),
         max_report_locations=_positive_integer(sanity, "max_report_locations"),
+        spot_check_locations=tuple(
+            str(value) for value in sanity.get("spot_check_locations") or []
+        ),
         min_location_capacity=_nonnegative_float(sanity, "min_location_capacity"),
         max_location_capacity=_positive_float(sanity, "max_location_capacity"),
         max_location_population=_positive_float(sanity, "max_location_population"),
@@ -311,6 +348,18 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
         ),
         min_start_population_within_capacity_fraction=_fraction(
             sanity, "min_start_population_within_capacity_fraction"
+        ),
+        start_capacity_scored_regions=frozenset(
+            str(value) for value in sanity.get("start_capacity_scored_regions") or []
+        ),
+        min_region_start_population_within_capacity_fraction=_fraction(
+            sanity, "min_region_start_population_within_capacity_fraction"
+        ),
+        established_population_threshold=_positive_float(
+            sanity, "established_population_threshold"
+        ),
+        max_established_start_capacity_fill=_positive_float(
+            sanity, "max_established_start_capacity_fill"
         ),
         min_location_25y_growth_factor=_positive_float(
             sanity, "min_location_25y_growth_factor"
@@ -343,15 +392,15 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
     )
     if profile.development_start_max < profile.development_start_min:
         raise ValueError("development.start_max must be at least development.start_min")
+    if profile.deployment_development_decimals > 6:
+        raise ValueError("deployment.development_decimals must be at most 6")
     if not profile.physical_capacity_columns:
         raise ValueError("capacity.physical_capacity_columns must not be empty")
-    unknown_development_regions = sorted(
-        set(profile.development_region_start_offsets) - set(keys)
-    )
-    if unknown_development_regions:
+    unknown_scored_regions = sorted(set(profile.start_capacity_scored_regions) - set(keys))
+    if unknown_scored_regions:
         raise ValueError(
-            "development.region_start_offsets references unknown HYDE regions: "
-            f"{unknown_development_regions}"
+            "sanity.start_capacity_scored_regions references unknown HYDE regions: "
+            f"{unknown_scored_regions}"
         )
     if profile.max_region_25y_ratio < profile.min_region_25y_ratio:
         raise ValueError("sanity max_region_25y_ratio must be at least the minimum")
@@ -414,6 +463,7 @@ def _prepare_state(
         "centroid_x",
         "centroid_y",
         "area_km2",
+        profile.development_manageable_cropland_column,
         *profile.physical_capacity_columns,
     ]
     missing_candidate_columns = sorted(set(candidate_columns) - set(candidates.columns))
@@ -429,10 +479,14 @@ def _prepare_state(
     )
     state = _attach_hyde_regions(state, profile)
     state = _attach_hyde_inputs(state, profile)
-    development = _hyde_starting_development(state, profile)
+    development = np.round(
+        _hyde_starting_development(state, profile),
+        decimals=profile.deployment_development_decimals,
+    )
     state = state.with_columns(
         pl.Series("development", development),
     )
+    state = _attach_start_owners(state, repo)
 
     physical_people = pl.sum_horizontal(
         [
@@ -444,7 +498,7 @@ def _prepare_state(
         (
             physical_people.clip(lower_bound=0.0)
             / profile.people_per_game_unit
-        ).alias(BASE_POPULATION_CAPACITY_COLUMN),
+        ).alias(PHYSICAL_POPULATION_CAPACITY_COLUMN),
     )
 
     if profile.irrigation_enabled:
@@ -457,6 +511,9 @@ def _prepare_state(
             pl.lit(0).alias("river_level"),
         )
         irrigation_summary = {"enabled": False}
+
+    state = _attach_zero_development_capacity(state, profile)
+    state = _attach_deployed_base_capacity(state, profile)
 
     context = load_simulation_modifier_context(
         profile=profile.parser_profile,
@@ -476,8 +533,185 @@ def _prepare_state(
         "irrigation": irrigation_summary,
         "starting_development_raw": _numeric_summary(state[START_DEVELOPMENT_COLUMN]),
         "starting_development_profile": _numeric_summary(state["development"]),
+        "gaez_zero_development_capacity": _numeric_summary(
+            state[GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN]
+        ),
+        "hyde_rainfed_capacity_evidence": _numeric_summary(
+            state[HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN]
+        ),
+        "zero_development_capacity": _numeric_summary(
+            state[ZERO_DEVELOPMENT_CAPACITY_COLUMN]
+        ),
+        "capacity_sources": {
+            "gaez_sum": float(state[GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN].sum()),
+            "hyde_sum": float(state[HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN].sum()),
+            "zero_development_sum": float(state[ZERO_DEVELOPMENT_CAPACITY_COLUMN].sum()),
+            "gaez_dominant_locations": state.filter(
+                pl.col(GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN)
+                >= pl.col(HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN)
+            ).height,
+            "hyde_dominant_locations": state.filter(
+                pl.col(HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN)
+                > pl.col(GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN)
+            ).height,
+        },
     }
     return state, context, preparation
+
+
+def _attach_zero_development_capacity(
+    state: pl.DataFrame,
+    profile: SimulationProfile,
+) -> pl.DataFrame:
+    """Derive the natural, zero-development baseline from GAEZ and HYDE.
+
+    GAEZ supplies potential even where nobody lives. HYDE supplies independent
+    historical evidence where the physical crop model is too conservative, but
+    only the rainfed share may support the natural baseline. The capacity effect
+    of the observed starting development is backed out so HYDE does not get
+    counted once in the static potential and again through the development
+    modifier. Irrigation is deliberately absent from this calculation.
+    """
+
+    formula = profile.capacity_formula
+    physical = np.maximum(
+        state[PHYSICAL_POPULATION_CAPACITY_COLUMN].to_numpy(),
+        0.0,
+    )
+    development = np.clip(
+        state["development"].to_numpy(),
+        formula.development_min,
+        formula.development_max,
+    )
+    cropland = np.maximum(state[HYDE_CROPLAND_AREA_COLUMN].to_numpy(), 0.0)
+    rainfed = np.maximum(state[HYDE_RAINFED_AREA_COLUMN].to_numpy(), 0.0)
+    rainfed_share = np.divide(
+        rainfed,
+        cropland,
+        out=np.ones_like(rainfed),
+        where=cropland > 1e-12,
+    )
+    rainfed_share = np.clip(rainfed_share, 0.0, 1.0)
+    # HYDE sometimes contains a tiny irrigated trace in a location where the
+    # river/legal/evidence gates do not produce an irrigation building. Such a
+    # trace cannot carry the location in game, so only partition HYDE population
+    # away from the natural baseline when irrigation is actually deployed.
+    has_deployed_irrigation = state[IRRIGATION_LEVELS_COLUMN].to_numpy() > 0.0
+    rainfed_share = np.where(has_deployed_irrigation, rainfed_share, 1.0)
+    hyde_rainfed_population = (
+        np.maximum(state[HYDE_POPULATION_COLUMN].to_numpy(), 0.0)
+        / profile.people_per_game_unit
+        * rainfed_share
+    )
+    hyde_managed_target = (
+        hyde_rainfed_population * profile.hyde_rainfed_capacity_multiplier
+    )
+    development_relative = np.maximum(
+        1.0 + development * formula.development_relative,
+        1e-12,
+    )
+    hyde_static_evidence = np.maximum(
+        hyde_managed_target / development_relative
+        - development * formula.development_absolute,
+        0.0,
+    )
+    gaez_fractional = physical * profile.gaez_zero_development_fraction
+    gaez_density_cap = (
+        np.maximum(state["area_km2"].to_numpy(), 0.0)
+        * profile.gaez_zero_development_density_cap
+        / profile.people_per_game_unit
+    )
+    gaez_static = np.minimum(gaez_fractional, gaez_density_cap)
+    zero_development = np.maximum(gaez_static, hyde_static_evidence)
+    return state.with_columns(
+        pl.Series(GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN, gaez_static),
+        pl.Series(HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN, hyde_static_evidence),
+        pl.Series(ZERO_DEVELOPMENT_CAPACITY_COLUMN, zero_development),
+    )
+
+
+def _attach_deployed_base_capacity(
+    state: pl.DataFrame,
+    profile: SimulationProfile,
+) -> pl.DataFrame:
+    """Quantize the independent static base exactly as the game compiler does."""
+
+    formula = profile.capacity_formula
+    natural = state[ZERO_DEVELOPMENT_CAPACITY_COLUMN].to_numpy()
+    development = state["development"].to_numpy()
+    irrigation = state[IRRIGATION_LEVELS_COLUMN].to_numpy()
+    desired = formula.evaluate(
+        base_capacity=natural,
+        development=development,
+        irrigation_levels=irrigation,
+    )
+    relative = np.maximum(
+        1.0
+        + development * formula.development_relative
+        + irrigation * formula.irrigation_relative,
+        1e-12,
+    )
+    required_static_base = np.maximum(
+        desired / relative
+        - development * formula.development_absolute
+        - irrigation * formula.irrigation_absolute,
+        0.0,
+    )
+    # The compiler contract is integral EU5 population units. Ceil rather than
+    # nearest-round so quantization can never push a location below the modeled
+    # physical/minimum base.
+    deployed_static_base = np.ceil(required_static_base - 1e-12)
+    return state.with_columns(
+        pl.Series(
+            BASE_POPULATION_CAPACITY_COLUMN,
+            deployed_static_base,
+        ),
+        pl.Series("deployed_static_population_capacity", deployed_static_base),
+    )
+
+
+def prepare_population_simulation_state(
+    repo: Path,
+    project: Path,
+    profile: SimulationProfile,
+) -> tuple[pl.DataFrame, SimulationModifierContext, dict[str, Any]]:
+    """Build the canonical profile state used by simulation and deployment."""
+
+    return _prepare_state(repo, project, profile)
+
+
+def _attach_start_owners(state: pl.DataFrame, repo: Path) -> pl.DataFrame:
+    """Attach parser-derived 1337 owners needed for generated starting buildings."""
+
+    artifact = repo / DERIVED_START_LOCATIONS_RELATIVE
+    if artifact.is_file():
+        owners = pl.read_parquet(artifact)
+    else:
+        from prosper_or_perish_constructor import food_building_startup
+        from prosper_or_perish_constructor.food_building_startup import (
+            load_food_startup_config,
+        )
+
+        owners = food_building_startup._load_start_locations(
+            load_food_startup_config(repo)
+        )
+    tag_column = "slug" if "slug" in owners.columns else "location_tag"
+    required = {tag_column, "country_tag", "startup_constructible_owner"}
+    missing = sorted(required - set(owners.columns))
+    if missing:
+        raise ValueError(f"starting-owner data is missing columns: {missing}")
+    owner_frame = owners.select(
+        pl.col(tag_column).cast(pl.String).alias("location_tag"),
+        pl.col("country_tag").cast(pl.String).alias(START_COUNTRY_TAG_COLUMN),
+        pl.col("startup_constructible_owner")
+        .fill_null(False)
+        .cast(pl.Boolean)
+        .alias(START_CONSTRUCTIBLE_OWNER_COLUMN),
+    ).unique("location_tag")
+    return state.join(owner_frame, on="location_tag", how="left").with_columns(
+        pl.col(START_COUNTRY_TAG_COLUMN).fill_null(""),
+        pl.col(START_CONSTRUCTIBLE_OWNER_COLUMN).fill_null(False),
+    )
 
 
 def _capacity_pressure_overrides(
@@ -647,31 +881,20 @@ def _hyde_starting_development(
         0.0,
         1.0,
     )
-    population_density = np.maximum(
-        state[HYDE_POPULATION_COLUMN].to_numpy() / area,
-        0.0,
+    manageable_cropland = np.maximum(
+        state[profile.development_manageable_cropland_column].to_numpy(),
+        profile.development_minimum_manageable_cropland_fraction,
     )
-    urban_density = np.maximum(
-        state[HYDE_URBAN_POPULATION_COLUMN].to_numpy() / area,
+    cropland_utilization = np.clip(
+        cropland_share / manageable_cropland,
         0.0,
+        1.0,
     )
     development = (
         profile.development_base
-        + cropland_share * profile.development_cropland_full_share_points
+        + cropland_utilization * profile.development_cropland_utilization_points
         + pasture_share * profile.development_pasture_full_share_points
-        + np.log1p(population_density)
-        / math.log1p(profile.development_population_density_reference)
-        * profile.development_population_density_points
-        + np.log1p(np.maximum(state[HYDE_POPULATION_COLUMN].to_numpy(), 0.0))
-        / math.log1p(profile.development_population_total_reference)
-        * profile.development_population_total_points
-        + np.log1p(urban_density)
-        / math.log1p(profile.development_urban_density_reference)
-        * profile.development_urban_density_points
     )
-    regions = state[HYDE_REGION_COLUMN].to_numpy()
-    for region_key, offset in profile.development_region_start_offsets.items():
-        development[regions == region_key] += offset
     return np.clip(
         development,
         profile.development_start_min,
@@ -697,8 +920,12 @@ def _attach_irrigation_levels(
         pl.col("river_level").fill_null(0).cast(pl.Int64),
         pl.col(HYDE_IRRIGATED_AREA_COLUMN).fill_null(0.0),
     )
+    vanilla = _vanilla_irrigation_levels(profile)
+    state = state.join(vanilla, on="location_tag", how="left").with_columns(
+        pl.col(VANILLA_IRRIGATION_LEVELS_COLUMN).fill_null(0).cast(pl.Int64),
+    )
 
-    proposed = pl.sum_horizontal(
+    hyde_proposed = pl.sum_horizontal(
         [
             (pl.col(HYDE_IRRIGATED_AREA_COLUMN) >= threshold).cast(pl.Int64)
             for threshold in profile.irrigation_thresholds_km2
@@ -720,15 +947,34 @@ def _attach_irrigation_levels(
         | exception
     )
     if profile.irrigation_require_river_or_lake:
-        proposed = pl.when(supported).then(proposed).otherwise(0)
+        hyde_proposed = pl.when(supported).then(hyde_proposed).otherwise(0)
+    hyde_proposed = (
+        pl.when(pl.col(START_CONSTRUCTIBLE_OWNER_COLUMN).fill_null(False))
+        .then(hyde_proposed)
+        .otherwise(0)
+    )
+    proposed = pl.max_horizontal(
+        hyde_proposed,
+        pl.col(VANILLA_IRRIGATION_LEVELS_COLUMN),
+    )
     state = state.with_columns(
-        legal.clip(lower_bound=0.0).alias(IRRIGATION_LEGAL_CAP_COLUMN),
+        pl.max_horizontal(
+            legal.clip(lower_bound=0.0),
+            pl.col(VANILLA_IRRIGATION_LEVELS_COLUMN).cast(pl.Float64),
+        ).alias(IRRIGATION_LEGAL_CAP_COLUMN),
         proposed.alias("profile_irrigation_proposed_levels"),
     ).with_columns(
         pl.min_horizontal(
             pl.col("profile_irrigation_proposed_levels").cast(pl.Float64),
             pl.col(IRRIGATION_LEGAL_CAP_COLUMN).cast(pl.Float64),
         ).alias(IRRIGATION_LEVELS_COLUMN)
+    ).with_columns(
+        (
+            pl.col(IRRIGATION_LEVELS_COLUMN)
+            - pl.col(VANILLA_IRRIGATION_LEVELS_COLUMN).cast(pl.Float64)
+        )
+        .clip(lower_bound=0.0)
+        .alias(GENERATED_IRRIGATION_LEVELS_COLUMN)
     )
 
     irrigated = state.filter(pl.col(IRRIGATION_LEVELS_COLUMN) > 0)
@@ -749,6 +995,8 @@ def _attach_irrigation_levels(
         "enabled": True,
         "locations": irrigated.height,
         "levels": levels,
+        "vanilla_levels": float(state[VANILLA_IRRIGATION_LEVELS_COLUMN].sum() or 0.0),
+        "generated_levels": float(state[GENERATED_IRRIGATION_LEVELS_COLUMN].sum() or 0.0),
         "river_or_lake_location_fraction": river_or_lake.height / irrigated.height
         if irrigated.height
         else 1.0,
@@ -761,6 +1009,33 @@ def _attach_irrigation_levels(
         "evidence_locations": state.filter(pl.col(HYDE_IRRIGATED_AREA_COLUMN) > 0).height,
     }
     return state, summary
+
+
+def _vanilla_irrigation_levels(profile: SimulationProfile) -> pl.DataFrame:
+    """Read historical irrigation already present in vanilla's 1337 setup."""
+
+    vanilla_root = LoadOrderConfig.load(profile.load_order_path).vanilla_root
+    path = vanilla_root / "game/main_menu/setup/start/07_cities_and_buildings.txt"
+    _require_file(path, "vanilla starting-building setup")
+    rows: dict[str, int] = {}
+    document = parse_file(path)
+    for manager in document.values("building_manager"):
+        if not isinstance(manager, CList):
+            continue
+        for entry in manager.entries:
+            if str(entry.key) != "irrigation_systems" or not isinstance(entry.value, CList):
+                continue
+            location = str(entry.value.first("location") or "").strip()
+            if not location:
+                continue
+            rows[location] = rows.get(location, 0) + int(entry.value.first("level") or 0)
+    return pl.DataFrame(
+        {
+            "location_tag": list(rows),
+            VANILLA_IRRIGATION_LEVELS_COLUMN: list(rows.values()),
+        },
+        schema={"location_tag": pl.String, VANILLA_IRRIGATION_LEVELS_COLUMN: pl.Int64},
+    )
 
 
 def _spherical_cell_area_km2(
@@ -793,6 +1068,11 @@ def _snapshot(state: pl.DataFrame) -> pl.DataFrame:
         START_POPULATION_COLUMN,
         START_DEVELOPMENT_COLUMN,
         BASE_POPULATION_CAPACITY_COLUMN,
+        PHYSICAL_POPULATION_CAPACITY_COLUMN,
+        GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN,
+        HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN,
+        ZERO_DEVELOPMENT_CAPACITY_COLUMN,
+        "deployed_static_population_capacity",
         "area_km2",
         HYDE_POPULATION_COLUMN,
         HYDE_CROPLAND_AREA_COLUMN,
@@ -962,14 +1242,54 @@ def build_population_simulation_report(
             )
         )
 
+    spot_by_tag = {
+        str(row["location_tag"]): row
+        for row in initial.filter(
+            pl.col("location_tag").is_in(profile.spot_check_locations)
+        ).to_dicts()
+    }
+    lines.extend(
+        [
+            "",
+            "## Named start-location checks",
+            "",
+            "| Location | HYDE region | Population | Capacity | Fill | Zero-dev potential | GAEZ zero-dev | HYDE zero-dev | Development | Irrigation |",
+            "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for tag in profile.spot_check_locations:
+        row = spot_by_tag.get(tag)
+        if row is None:
+            lines.append(f"| {tag} | missing | — | — | — | — | — | — | — | — |")
+            continue
+        capacity = float(row["local_population_capacity"] or 0.0)
+        population = float(row["total_population"] or 0.0)
+        lines.append(
+            f"| {tag} | {row.get(HYDE_REGION_COLUMN) or 'unassigned'} | "
+            f"{_people(population, profile)} | {_people(capacity, profile)} | "
+            f"{population / max(capacity, 1e-12):.2f}× | "
+            f"{float(row.get(ZERO_DEVELOPMENT_CAPACITY_COLUMN) or 0.0):,.1f} | "
+            f"{float(row.get(GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN) or 0.0):,.1f} | "
+            f"{float(row.get(HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN) or 0.0):,.1f} | "
+            f"{float(row.get('development') or 0.0):.1f} | "
+            f"{float(row.get(IRRIGATION_LEVELS_COLUMN) or 0.0):.0f} |"
+        )
+
     irrigation = dict(preparation.get("irrigation") or {})
+    capacity_sources = dict(preparation.get("capacity_sources") or {})
     lines.extend(
         [
             "",
             "## Development and capacity settings",
             "",
-            f"- Physical capacity scale: {profile.capacity_formula.physical_scale:g}",
             "- Starting-population capacity floor: none (starting population is validation-only)",
+            (
+                "- Zero-development potential: the larger of "
+                f"{profile.gaez_zero_development_fraction:.1%} of independent GAEZ capacity "
+                f"(capped at {profile.gaez_zero_development_density_cap:g} people/km²) "
+                f"or {profile.hyde_rainfed_capacity_multiplier:g}× HYDE rainfed population "
+                "with the current development effect backed out"
+            ),
             (
                 "- Independent physical inputs: "
                 + ", ".join(profile.physical_capacity_columns)
@@ -985,26 +1305,48 @@ def build_population_simulation_report(
                 f"{profile.capacity_formula.irrigation_relative:+g} relative per level"
             ),
             (
-                "- HYDE-region starting-development offsets: "
-                + (
-                    ", ".join(
-                        f"{key} {value:+g}"
-                        for key, value in sorted(
-                            profile.development_region_start_offsets.items()
-                        )
-                    )
-                    if profile.development_region_start_offsets
-                    else "none"
-                )
+                "- HYDE development model: "
+                f"HYDE cropland / GAEZ `{profile.development_manageable_cropland_column}` "
+                f"× {profile.development_cropland_utilization_points:g} points; full pasture "
+                f"share +{profile.development_pasture_full_share_points:g}; no population or "
+                "regional-offset input"
+            ),
+            "",
+            "```text",
+            (
+                "D = clamp(100 × HYDE cropland share / GAEZ manageable cropland "
+                f"+ {profile.development_pasture_full_share_points:g} × HYDE pasture share, 0, 100)"
             ),
             (
-                "- HYDE development model: "
-                f"base {profile.development_base:g}; full cropland share "
-                f"+{profile.development_cropland_full_share_points:g}; full pasture share "
-                f"+{profile.development_pasture_full_share_points:g}; population density "
-                f"+{profile.development_population_density_points:g}; settlement size "
-                f"+{profile.development_population_total_points:g}; urban density "
-                f"+{profile.development_urban_density_points:g}"
+                "G0 = min("
+                f"{profile.gaez_zero_development_fraction:g} × GAEZ optimal capacity, "
+                f"area × {profile.gaez_zero_development_density_cap:g} people/km²)"
+            ),
+            (
+                "H0 = max(0, "
+                f"{profile.hyde_rainfed_capacity_multiplier:g} × HYDE rainfed population / "
+                f"(1 + {profile.capacity_formula.development_relative:g} × D) - "
+                f"{profile.capacity_formula.development_absolute:g} × D)"
+            ),
+            "P0 = max(G0, H0)",
+            (
+                "Capacity = max(minimum, (ceil(P0) + "
+                f"{profile.capacity_formula.development_absolute:g} × D + "
+                f"{profile.capacity_formula.irrigation_absolute:g} × irrigation) × "
+                f"(1 + {profile.capacity_formula.development_relative:g} × D))"
+            ),
+            "```",
+            "",
+            (
+                "- Zero-development source totals: GAEZ "
+                f"{_people(float(capacity_sources.get('gaez_sum') or 0.0), profile)}, HYDE "
+                f"{_people(float(capacity_sources.get('hyde_sum') or 0.0), profile)}, selected max "
+                f"{_people(float(capacity_sources.get('zero_development_sum') or 0.0), profile)}"
+            ),
+            (
+                "- Dominant zero-development source by location: GAEZ "
+                f"{int(capacity_sources.get('gaez_dominant_locations') or 0):,}; HYDE "
+                f"{int(capacity_sources.get('hyde_dominant_locations') or 0):,}"
             ),
             "",
             "| Development | Minimum | Median | Mean | P90 | Maximum |",
@@ -1268,6 +1610,7 @@ def _region_start_composition_rows(
         capacity = float(current["capacity"] or 0.0)
         rows.append(
             {
+                "key": region.key,
                 "label": region.label,
                 "population": population,
                 "hyde_population": float(current["hyde_population"] or 0.0),
@@ -1320,6 +1663,26 @@ def _sanity_rows(
         float(np.sum(start_population)),
         1e-12,
     )
+    region_start = _region_start_composition_rows(profile, snapshots[0])
+    scored_region_within = [
+        float(row["within_share"])
+        for row in region_start
+        if str(row["key"]) in profile.start_capacity_scored_regions
+    ]
+    min_region_start_within = min(scored_region_within) if scored_region_within else 0.0
+    established_start = populated_start.filter(
+        pl.col("total_population") >= profile.established_population_threshold
+    )
+    established_start_fill = (
+        established_start["total_population"].to_numpy()
+        / np.maximum(
+            established_start["local_population_capacity"].to_numpy(),
+            1e-12,
+        )
+    )
+    max_established_start_fill = (
+        float(np.max(established_start_fill)) if established_start_fill.size else 0.0
+    )
     finite = all(
         np.isfinite(frame[column].to_numpy()).all()
         for frame in primary_snapshots.values()
@@ -1345,6 +1708,19 @@ def _sanity_rows(
             f">= {profile.min_start_population_within_capacity_fraction:.1%}",
             start_population_within_capacity_fraction
             >= profile.min_start_population_within_capacity_fraction,
+        ),
+        _check(
+            "Worst scored HYDE-region start population within local capacity",
+            f"{min_region_start_within:.1%}",
+            f">= {profile.min_region_start_population_within_capacity_fraction:.1%}",
+            min_region_start_within
+            >= profile.min_region_start_population_within_capacity_fraction,
+        ),
+        _check(
+            "Maximum established-location start capacity fill",
+            f"{max_established_start_fill:.3f}×",
+            f"<= {profile.max_established_start_capacity_fill:.3f}×",
+            max_established_start_fill <= profile.max_established_start_capacity_fill,
         ),
         _check(
             "Minimum location capacity",
@@ -1573,6 +1949,12 @@ def _starting_capacity_contradiction_report(
             ),
         ),
         (
+            "Highest established-location starting capacity pressure",
+            frame.filter(
+                pl.col("total_population") >= profile.established_population_threshold
+            ).sort("capacity_fill", descending=True),
+        ),
+        (
             "Largest independent capacities in locations below 10k population",
             frame.filter(pl.col("total_population") < 10.0).sort(
                 "local_population_capacity",
@@ -1585,8 +1967,8 @@ def _starting_capacity_contradiction_report(
             [
                 f"### {title}",
                 "",
-                "| Location | HYDE region | Game population | HYDE population signal | Capacity | Fill | Full physical potential | HYDE cropland share | Development | Irrigation |",
-                "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+                "| Location | HYDE region | Game population | HYDE population signal | Capacity | Fill | GAEZ full | GAEZ zero-dev | HYDE zero-dev | Final zero-dev | HYDE cropland share | Development | Irrigation |",
+                "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
             ]
         )
         for row in selected.head(profile.max_report_locations).to_dicts():
@@ -1596,7 +1978,10 @@ def _starting_capacity_contradiction_report(
                 f"{_people(float(row.get(HYDE_POPULATION_COLUMN) or 0.0) / profile.people_per_game_unit, profile)} | "
                 f"{float(row['local_population_capacity']):,.2f} | "
                 f"{float(row['capacity_fill']):.2f}× | "
-                f"{float(row.get(BASE_POPULATION_CAPACITY_COLUMN) or 0.0):,.1f} | "
+                f"{float(row.get(PHYSICAL_POPULATION_CAPACITY_COLUMN) or 0.0):,.1f} | "
+                f"{float(row.get(GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN) or 0.0):,.1f} | "
+                f"{float(row.get(HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN) or 0.0):,.1f} | "
+                f"{float(row.get(ZERO_DEVELOPMENT_CAPACITY_COLUMN) or 0.0):,.1f} | "
                 f"{float(row['cropland_share']):.1%} | "
                 f"{float(row['development']):.1f} | "
                 f"{float(row.get(IRRIGATION_LEVELS_COLUMN) or 0.0):.0f} |"

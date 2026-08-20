@@ -30,13 +30,17 @@ def test_committed_population_simulation_profile_loads() -> None:
     assert profile.primary_scored_through_year == 200
     assert profile.rank_degrowth_exempt_pop_types == frozenset({"tribesmen"})
     assert profile.food_storage_growth_exempt_pop_types == frozenset({"tribesmen"})
-    assert profile.development_region_start_offsets["south_asia"] == pytest.approx(15.0)
+    assert profile.development_manageable_cropland_column == "allocated_crop_fraction"
+    assert profile.development_cropland_utilization_points == pytest.approx(100.0)
+    assert profile.gaez_zero_development_fraction == pytest.approx(0.25)
+    assert profile.gaez_zero_development_density_cap == pytest.approx(15.0)
+    assert profile.hyde_rainfed_capacity_multiplier == pytest.approx(4.0)
     assert "rainfed_crop_capacity_people_p50" in profile.physical_capacity_columns
     assert len(profile.regions) == 18
     assert profile.regions[0].key == "europe"
     assert profile.regions[-1].key == "southern_cone"
     assert profile.abundant_monthly_food == pytest.approx(8.0)
-    assert profile.available_monthly_food == pytest.approx(4.0)
+    assert profile.available_monthly_food == pytest.approx(3.0)
     assert profile.min_location_capacity == pytest.approx(11.0)
     assert profile.min_irrigation_river_or_lake_fraction == pytest.approx(0.85)
 
@@ -125,6 +129,11 @@ def test_population_simulation_report_contains_targets_and_location_sanity() -> 
                 "profile_start_population": [100.0],
                 "profile_start_development": [10.0],
                 "base_population_capacity": [100.0],
+                "physical_population_capacity": [150.0],
+                "gaez_zero_development_capacity": [15.0],
+                "hyde_rainfed_capacity_evidence": [100.0],
+                "zero_development_population_capacity": [100.0],
+                "deployed_static_population_capacity": [100.0],
                 "area_km2": [100.0],
                 "hyde_population_people": [110_000.0],
                 "hyde_cropland_area_km2": [10.0],

@@ -22,6 +22,16 @@ hyde_irrigated = "data/output_data/hyde_3_5/total_irrigated_1337.tif"
 hyde_pasture = "data/output_data/hyde_3_5/pasture_1337.tif"
 hyde_urban_population = "data/output_data/hyde_3_5/urban_population_1337.tif"
 
+[deployment]
+# One constructor-owned game-facing deployment. The location table is consumed
+# by the existing shared location-modifier compiler; setup files make the
+# starting development and irrigation values match the simulated year-0 state.
+population_capacity_table = "data/population_capacity/population_capacity.csv"
+development_setup = "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/setup/start/14_development.txt"
+irrigation_setup = "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/setup/start/14_pp_population_irrigation.txt"
+manifest = "artifacts/data/population_simulation/deployment.json"
+development_decimals = 2
+
 [capacity]
 # Independent GAEZ/fisheries/terrestrial potential. Historical irrigation is
 # excluded here and enters only through HYDE-driven irrigation-system levels.
@@ -32,32 +42,35 @@ physical_capacity_columns = [
   "freshwater_capacity_people_p50",
   "wild_capacity_people_p50",
 ]
-physical_scale = 0.002
+# At zero development, only this fraction of GAEZ's optimally allocated
+# rainfed/foraging/fisheries carrying capacity is available. HYDE provides a
+# second, historical rainfed viability estimate; the stronger source wins per
+# location after the starting development effect has been backed out.
+gaez_zero_development_fraction = 0.25
+gaez_zero_development_density_cap = 15.0
+hyde_rainfed_capacity_multiplier = 4.0
 
 # EU5 capacity units per point/level, then relative modifier per point/level.
-development_absolute = 0.5
+development_absolute = 1.0
 development_relative = 0.05
-irrigation_absolute = 10.0
+irrigation_absolute = 50.0
 irrigation_relative = 0.0
 development_min = 0.0
 development_max = 100.0
 minimum_capacity = 11.0
 
 [development]
-# Starting development is reconstructed from HYDE rather than copied from EU5:
-# historical cultivated/pasture shares plus log-scaled total and urban density.
-base = 2.0
-cropland_full_share_points = 60.0
+# Development is the share of GAEZ-manageable cropland that HYDE shows under
+# management in 1337. Zero means none of that land is managed; 100 means all of
+# it could be managed optimally if enough people were present. Pasture is a
+# small secondary land-management signal, not a population proxy.
+base = 0.0
+manageable_cropland_column = "allocated_crop_fraction"
+minimum_manageable_cropland_fraction = 0.02
+cropland_utilization_points = 100.0
 pasture_full_share_points = 10.0
-population_density_points = 15.0
-population_density_reference = 100.0
-population_total_points = 25.0
-population_total_reference = 100000.0
-urban_density_points = 10.0
-urban_density_reference = 100.0
-region_start_offsets = { europe = -7.0, near_east = -7.0, central_asia = -12.0, south_asia = 15.0, east_asia = 5.0, southeast_asia = 6.0 }
-start_min = 2.0
-start_max = 70.0
+start_min = 0.0
+start_max = 100.0
 
 [irrigation]
 enabled = true
@@ -78,9 +91,9 @@ exceptions = []
 # Keep the absolute small-location food mechanism. These values may be reduced
 # modestly during tuning, but zero is not the default experiment.
 abundant_monthly_food = 8.0
-available_monthly_food = 4.0
-abundant_peasant_food_consumption = -0.60
-available_peasant_food_consumption = -0.47
+available_monthly_food = 3.0
+abundant_peasant_food_consumption = -0.50
+available_peasant_food_consumption = -0.32
 overpopulation_peasant_food_consumption = 1.00
 
 [population_growth]
@@ -223,15 +236,43 @@ ratios = { "100" = 1.0957, "200" = 1.1929, "300" = 1.1874, "400" = 1.2979, "500"
 
 [sanity]
 max_report_locations = 8
+spot_check_locations = [
+  "wuxian",
+  "changshu",
+  "chongde",
+  "delhi",
+  "bijnot",
+  "cairo",
+  "alexandria",
+  "london",
+  "stockholm",
+  "fanxian",
+]
 min_location_capacity = 11.0
 max_location_capacity = 20000.0
 # Game population units: 10,000 = ten million people in one location.
 max_location_population = 10000.0
 min_global_start_capacity_ratio = 1.0
-min_start_population_within_capacity_fraction = 0.75
+min_start_population_within_capacity_fraction = 0.95
+start_capacity_scored_regions = [
+  "europe",
+  "north_africa",
+  "west_africa",
+  "central_africa",
+  "east_africa",
+  "southern_africa",
+  "near_east",
+  "central_asia",
+  "south_asia",
+  "east_asia",
+  "southeast_asia",
+]
+min_region_start_population_within_capacity_fraction = 0.90
+established_population_threshold = 100.0
+max_established_start_capacity_fill = 2.0
 # Small locations deliberately retain the dominant absolute-food behavior; keep
 # the extreme visible, but only fail on truly unbounded early overshoot.
-max_location_capacity_fill = 8.0
+max_location_capacity_fill = 5.0
 min_location_25y_growth_factor = 0.80
 max_location_25y_growth_factor = 2.0
 min_location_100y_growth_factor = 0.50

@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import polars as pl
 from eu5gameparser.clausewitz.parser import parse_file
 from eu5gameparser.clausewitz.syntax import CList
@@ -36,6 +37,18 @@ GENERATED_MARKER = (
 LOCATION_COUNT = 20_929
 LOCATION_TAG_RE = re.compile(r"^[A-Za-z0-9_:.+-]+$")
 LOCATION_MODIFIER_ALIASES = {"washita": "pp_loc_washita_pp"}
+DEVELOPMENT_SELECTOR_COLUMNS = (
+    "province",
+    "area",
+    "region",
+    "location_rank",
+    "climate",
+    "topography",
+    "vegetation",
+)
+DEVELOPMENT_WEIGHTED_SELECTOR_KEYS = frozenset(
+    {"base", "coastal", "river", "road"}
+)
 
 
 @dataclass(frozen=True)
@@ -50,6 +63,14 @@ class PopulationDeploymentResult:
     irrigation_levels: int
     starting_capacity_values: tuple[int, ...]
     changed_paths: tuple[Path, ...]
+
+
+@dataclass(frozen=True)
+class DevelopmentSetupCompilation:
+    rows: tuple[tuple[str, float], ...]
+    coefficient_decimals: int
+    selector_collision_keys: tuple[str, ...]
+    maximum_effective_error: float
 
 
 def build_population_simulation_deployment(
@@ -122,9 +143,14 @@ def build_population_simulation_deployment(
     )
 
     capacity_text = _render_capacity_csv(capacity_rows)
-    development_text = _render_development_setup(
+    development_compilation = _compile_development_setup_rows(
         development_rows,
-        decimals=profile.deployment_development_decimals,
+        state=state,
+        target_decimals=profile.deployment_development_decimals,
+    )
+    development_text = _render_development_setup(
+        list(development_compilation.rows),
+        decimals=development_compilation.coefficient_decimals,
     )
     irrigation_text = _render_irrigation_setup(irrigation_rows)
     changed: list[Path] = []
@@ -150,6 +176,15 @@ def build_population_simulation_deployment(
         "irrigation_setup_sha256": _sha256_text(irrigation_text),
         "development": {
             "decimals": profile.deployment_development_decimals,
+            "setup_coefficient_decimals": (
+                development_compilation.coefficient_decimals
+            ),
+            "selector_collision_keys": list(
+                development_compilation.selector_collision_keys
+            ),
+            "maximum_effective_error": (
+                development_compilation.maximum_effective_error
+            ),
             "minimum": float(state["development"].min()),
             "mean": float(state["development"].mean()),
             "maximum": float(state["development"].max()),
@@ -269,17 +304,173 @@ def verify_population_simulation_deployment(
         raise ValueError("generated irrigation location count does not match manifest")
     if irrigation_levels != int(expected_irrigation["generated_levels"]):
         raise ValueError("generated irrigation level total does not match manifest")
+    development_manifest = dict(manifest.get("development") or {})
+    maximum_effective_error = float(
+        development_manifest.get("maximum_effective_error") or 0.0
+    )
+    target_decimals = int(development_manifest.get("decimals") or 0)
+    if maximum_effective_error > 0.5 * 10.0 ** (-target_decimals) + 1e-12:
+        raise ValueError(
+            "generated development selector compensation exceeds target precision"
+        )
     _verify_dynamic_capacity_modifiers(profile, project)
     _verify_capacity_pressure_modifiers(profile)
     return {
         "status": "verified",
         "locations": len(expected_capacity),
         "development_locations": development_count,
+        "development_selector_collision_keys": list(
+            development_manifest.get("selector_collision_keys") or []
+        ),
+        "development_maximum_effective_error": maximum_effective_error,
         "irrigation_locations": irrigation_locations,
         "irrigation_levels": irrigation_levels,
         "capacity_min": min(expected_capacity.values()),
         "capacity_max": max(expected_capacity.values()),
     }
+
+
+def _compile_development_setup_rows(
+    rows: list[tuple[str, float]],
+    *,
+    state: pl.DataFrame,
+    target_decimals: int,
+) -> DevelopmentSetupCompilation:
+    """Compile exact location targets through EU5's shared setup-key namespace.
+
+    The ``development`` setup block accepts bare location, province, area,
+    region, rank, climate, topography, and vegetation keys and adds every
+    matching selector. A location such as ``qingchi`` therefore collides with
+    the province of the same name. EU5 does not use numeric location IDs in
+    this table, so solve the small collision system and emit coefficients whose
+    combined in-game values reproduce the intended per-location targets.
+    """
+
+    if target_decimals < 0 or target_decimals > 6:
+        raise ValueError("development target decimals must be between zero and six")
+    tags = [tag for tag, _value in rows]
+    if len(tags) != len(set(tags)):
+        raise ValueError("development setup contains duplicate location tags")
+    weighted_collisions = sorted(set(tags) & DEVELOPMENT_WEIGHTED_SELECTOR_KEYS)
+    if weighted_collisions:
+        raise ValueError(
+            "development location tags collide with weighted setup selectors: "
+            f"{weighted_collisions}"
+        )
+    if "location_tag" not in state.columns:
+        raise ValueError("development selector state is missing location_tag")
+    state_by_tag = state.select(
+        "location_tag",
+        *[
+            column
+            for column in DEVELOPMENT_SELECTOR_COLUMNS
+            if column in state.columns
+        ],
+    )
+    if state_by_tag["location_tag"].n_unique() != state_by_tag.height:
+        raise ValueError("development selector state contains duplicate location tags")
+    missing = sorted(set(tags) - set(state_by_tag["location_tag"].to_list()))
+    if missing:
+        raise ValueError(
+            "development selector state is missing generated locations: "
+            f"{missing[:8]}"
+        )
+    state_by_tag = pl.DataFrame({"location_tag": tags}).join(
+        state_by_tag,
+        on="location_tag",
+        how="left",
+    )
+    tag_set = set(tags)
+    collision_keys: set[str] = set()
+    selector_columns = [
+        column
+        for column in DEVELOPMENT_SELECTOR_COLUMNS
+        if column in state_by_tag.columns
+    ]
+    for column in selector_columns:
+        collision_keys.update(
+            tag_set
+            & {
+                str(value)
+                for value in state_by_tag[column].drop_nulls().unique().to_list()
+            }
+        )
+    ordered_collisions = tuple(sorted(collision_keys))
+    if not ordered_collisions:
+        return DevelopmentSetupCompilation(
+            rows=tuple(rows),
+            coefficient_decimals=target_decimals,
+            selector_collision_keys=(),
+            maximum_effective_error=0.0,
+        )
+
+    tag_index = {tag: index for index, tag in enumerate(tags)}
+    target = np.asarray([value for _tag, value in rows], dtype=np.float64)
+    selector_effect = np.zeros(
+        (len(rows), len(ordered_collisions)),
+        dtype=np.float64,
+    )
+    for column in selector_columns:
+        values = state_by_tag[column].to_numpy()
+        for collision_index, key in enumerate(ordered_collisions):
+            selector_effect[:, collision_index] += values == key
+    collision_row_indices = np.asarray(
+        [tag_index[key] for key in ordered_collisions],
+        dtype=np.int64,
+    )
+    collision_system = (
+        np.eye(len(ordered_collisions), dtype=np.float64)
+        + selector_effect[collision_row_indices, :]
+    )
+    collision_targets = target[collision_row_indices]
+    collision_coefficients, _residuals, rank, _singular = np.linalg.lstsq(
+        collision_system,
+        collision_targets,
+        rcond=None,
+    )
+    if rank != len(ordered_collisions) or not np.allclose(
+        collision_system @ collision_coefficients,
+        collision_targets,
+        atol=1e-10,
+        rtol=0.0,
+    ):
+        raise ValueError(
+            "development selector collisions cannot be represented uniquely: "
+            f"{list(ordered_collisions)}"
+        )
+    coefficients = target - selector_effect @ collision_coefficients
+    if not np.isfinite(coefficients).all():
+        raise ValueError("development selector compilation produced non-finite values")
+
+    allowed_error = 0.5 * 10.0 ** (-target_decimals)
+    compiled: np.ndarray | None = None
+    maximum_error = math.inf
+    coefficient_decimals = target_decimals
+    for decimals in range(target_decimals, 7):
+        candidate = np.round(coefficients, decimals=decimals)
+        effective = (
+            candidate
+            + selector_effect @ candidate[collision_row_indices]
+        )
+        error = float(np.max(np.abs(effective - target)))
+        if error <= allowed_error + 1e-12:
+            compiled = candidate
+            maximum_error = error
+            coefficient_decimals = decimals
+            break
+    if compiled is None:
+        raise ValueError(
+            "development selector collisions exceed target precision after compilation"
+        )
+    return DevelopmentSetupCompilation(
+        rows=tuple(
+            (tag, float(compiled[index]))
+            for index, tag in enumerate(tags)
+        ),
+        coefficient_decimals=coefficient_decimals,
+        selector_collision_keys=ordered_collisions,
+        maximum_effective_error=maximum_error,
+    )
 
 
 def _render_capacity_csv(rows: list[dict[str, int | str]]) -> str:

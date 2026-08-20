@@ -106,6 +106,7 @@ class SimulationProfile:
     development_manageable_cropland_column: str
     development_minimum_manageable_cropland_fraction: float
     development_cropland_utilization_points: float
+    development_cropland_saturation_rate: float
     development_pasture_full_share_points: float
     development_start_min: float
     development_start_max: float
@@ -148,6 +149,13 @@ class SimulationProfile:
     min_location_100y_growth_factor: float
     max_location_100y_growth_factor: float
     max_development: float
+    min_start_development_p90: float
+    max_start_development_p90: float
+    max_start_development_ceiling_fraction: float
+    min_start_natural_capacity_share: float
+    max_start_development_capacity_share: float
+    max_global_100y_development_change: float
+    max_region_100y_development_change: float
     max_global_25y_deviation: float
     max_global_100y_deviation: float
     min_region_25y_ratio: float
@@ -294,6 +302,9 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
         development_cropland_utilization_points=_float(
             development, "cropland_utilization_points"
         ),
+        development_cropland_saturation_rate=_positive_float(
+            development, "cropland_saturation_rate"
+        ),
         development_pasture_full_share_points=_float(
             development, "pasture_full_share_points"
         ),
@@ -374,6 +385,27 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
             sanity, "max_location_100y_growth_factor"
         ),
         max_development=_positive_float(sanity, "max_development"),
+        min_start_development_p90=_nonnegative_float(
+            sanity, "min_start_development_p90"
+        ),
+        max_start_development_p90=_positive_float(
+            sanity, "max_start_development_p90"
+        ),
+        max_start_development_ceiling_fraction=_fraction(
+            sanity, "max_start_development_ceiling_fraction"
+        ),
+        min_start_natural_capacity_share=_fraction(
+            sanity, "min_start_natural_capacity_share"
+        ),
+        max_start_development_capacity_share=_fraction(
+            sanity, "max_start_development_capacity_share"
+        ),
+        max_global_100y_development_change=_nonnegative_float(
+            sanity, "max_global_100y_development_change"
+        ),
+        max_region_100y_development_change=_nonnegative_float(
+            sanity, "max_region_100y_development_change"
+        ),
         max_global_25y_deviation=_fraction(sanity, "max_global_25y_deviation"),
         max_global_100y_deviation=_fraction(sanity, "max_global_100y_deviation"),
         min_region_25y_ratio=_positive_float(sanity, "min_region_25y_ratio"),
@@ -406,6 +438,10 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
         raise ValueError("sanity max_region_25y_ratio must be at least the minimum")
     if profile.max_region_100y_ratio < profile.min_region_100y_ratio:
         raise ValueError("sanity max_region_100y_ratio must be at least the minimum")
+    if profile.max_start_development_p90 < profile.min_start_development_p90:
+        raise ValueError(
+            "sanity max_start_development_p90 must be at least the minimum"
+        )
     missing_global = sorted(set(profile.global_ratios) - set(profile.checkpoint_years))
     if missing_global:
         raise ValueError(f"global targets reference unconfigured checkpoints: {missing_global}")
@@ -533,6 +569,9 @@ def _prepare_state(
         "irrigation": irrigation_summary,
         "starting_development_raw": _numeric_summary(state[START_DEVELOPMENT_COLUMN]),
         "starting_development_profile": _numeric_summary(state["development"]),
+        "development_monthly_per_point": (
+            context.prosperity.development_monthly_per_point
+        ),
         "gaez_zero_development_capacity": _numeric_summary(
             state[GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN]
         ),
@@ -555,6 +594,10 @@ def _prepare_state(
                 > pl.col(GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN)
             ).height,
         },
+        "capacity_attribution": _capacity_attribution(
+            state,
+            profile.capacity_formula,
+        ),
     }
     return state, context, preparation
 
@@ -668,6 +711,57 @@ def _attach_deployed_base_capacity(
         ),
         pl.Series("deployed_static_population_capacity", deployed_static_base),
     )
+
+
+def _capacity_attribution(
+    state: pl.DataFrame,
+    formula: PopulationCapacityFormula,
+) -> dict[str, float]:
+    """Split starting capacity into natural, development, and irrigation increments."""
+
+    base = state[BASE_POPULATION_CAPACITY_COLUMN].to_numpy()
+    development = state["development"].to_numpy()
+    irrigation = state[IRRIGATION_LEVELS_COLUMN].to_numpy()
+    zero = np.zeros_like(development)
+    natural = formula.evaluate(
+        base_capacity=base,
+        development=zero,
+        irrigation_levels=zero,
+    )
+    with_development = formula.evaluate(
+        base_capacity=base,
+        development=development,
+        irrigation_levels=zero,
+    )
+    full = formula.evaluate(
+        base_capacity=base,
+        development=development,
+        irrigation_levels=irrigation,
+    )
+    without_development_absolute = replace(
+        formula,
+        development_absolute=0.0,
+    ).evaluate(
+        base_capacity=base,
+        development=development,
+        irrigation_levels=irrigation,
+    )
+    total = max(float(np.sum(full)), 1e-12)
+    natural_total = float(np.sum(natural))
+    development_total = float(np.sum(with_development - natural))
+    irrigation_total = float(np.sum(full - with_development))
+    development_absolute_total = float(np.sum(full - without_development_absolute))
+    return {
+        "total": total,
+        "natural_total": natural_total,
+        "natural_share": natural_total / total,
+        "development_total": development_total,
+        "development_share": development_total / total,
+        "development_absolute_total": development_absolute_total,
+        "development_absolute_share": development_absolute_total / total,
+        "irrigation_total": irrigation_total,
+        "irrigation_share": irrigation_total / total,
+    }
 
 
 def prepare_population_simulation_state(
@@ -885,14 +979,17 @@ def _hyde_starting_development(
         state[profile.development_manageable_cropland_column].to_numpy(),
         profile.development_minimum_manageable_cropland_fraction,
     )
-    cropland_utilization = np.clip(
+    cropland_evidence_ratio = np.maximum(
         cropland_share / manageable_cropland,
         0.0,
-        1.0,
+    )
+    cropland_management = -np.expm1(
+        -profile.development_cropland_saturation_rate
+        * cropland_evidence_ratio
     )
     development = (
         profile.development_base
-        + cropland_utilization * profile.development_cropland_utilization_points
+        + cropland_management * profile.development_cropland_utilization_points
         + pasture_share * profile.development_pasture_full_share_points
     )
     return np.clip(
@@ -1277,6 +1374,7 @@ def build_population_simulation_report(
 
     irrigation = dict(preparation.get("irrigation") or {})
     capacity_sources = dict(preparation.get("capacity_sources") or {})
+    capacity_attribution = dict(preparation.get("capacity_attribution") or {})
     lines.extend(
         [
             "",
@@ -1300,6 +1398,11 @@ def build_population_simulation_report(
                 f"{profile.capacity_formula.development_relative:+g} relative per point"
             ),
             (
+                "- Parsed inherent development change: "
+                f"{float(preparation.get('development_monthly_per_point') or 0.0):+g} "
+                "local monthly development per current development point"
+            ),
+            (
                 "- Irrigation capacity: "
                 f"+{profile.capacity_formula.irrigation_absolute:g} absolute and "
                 f"{profile.capacity_formula.irrigation_relative:+g} relative per level"
@@ -1307,15 +1410,23 @@ def build_population_simulation_report(
             (
                 "- HYDE development model: "
                 f"HYDE cropland / GAEZ `{profile.development_manageable_cropland_column}` "
-                f"× {profile.development_cropland_utilization_points:g} points; full pasture "
+                f"through an exponential saturation curve at rate "
+                f"{profile.development_cropland_saturation_rate:g} toward "
+                f"{profile.development_cropland_utilization_points:g} points; full pasture "
                 f"share +{profile.development_pasture_full_share_points:g}; no population or "
                 "regional-offset input"
             ),
             "",
             "```text",
             (
-                "D = clamp(100 × HYDE cropland share / GAEZ manageable cropland "
-                f"+ {profile.development_pasture_full_share_points:g} × HYDE pasture share, 0, 100)"
+                "U = HYDE cropland share / GAEZ manageable cropland"
+            ),
+            (
+                "D = clamp("
+                f"{profile.development_cropland_utilization_points:g} × "
+                f"(1 - exp(-{profile.development_cropland_saturation_rate:g} × U)) + "
+                f"{profile.development_pasture_full_share_points:g} × HYDE pasture share, "
+                f"{profile.development_start_min:g}, {profile.development_start_max:g})"
             ),
             (
                 "G0 = min("
@@ -1347,6 +1458,20 @@ def build_population_simulation_report(
                 "- Dominant zero-development source by location: GAEZ "
                 f"{int(capacity_sources.get('gaez_dominant_locations') or 0):,}; HYDE "
                 f"{int(capacity_sources.get('hyde_dominant_locations') or 0):,}"
+            ),
+            (
+                "- Starting capacity attribution: natural Location Potential "
+                f"{float(capacity_attribution.get('natural_share') or 0.0):.1%}, "
+                "Development "
+                f"{float(capacity_attribution.get('development_share') or 0.0):.1%}, "
+                "irrigation "
+                f"{float(capacity_attribution.get('irrigation_share') or 0.0):.1%}"
+            ),
+            (
+                "- Development absolute-term attribution: "
+                f"{_people(float(capacity_attribution.get('development_absolute_total') or 0.0), profile)} "
+                f"({float(capacity_attribution.get('development_absolute_share') or 0.0):.2%} "
+                "of starting capacity)"
             ),
             "",
             "| Development | Minimum | Median | Mean | P90 | Maximum |",
@@ -1683,6 +1808,22 @@ def _sanity_rows(
     max_established_start_fill = (
         float(np.max(established_start_fill)) if established_start_fill.size else 0.0
     )
+    start_development = snapshots[0]["development"].to_numpy()
+    start_development_p90 = float(np.quantile(start_development, 0.90))
+    start_development_ceiling_fraction = float(
+        np.mean(
+            np.isclose(
+                start_development,
+                profile.development_start_max,
+                atol=10 ** (-profile.deployment_development_decimals),
+            )
+        )
+    )
+    capacity_attribution = dict(preparation.get("capacity_attribution") or {})
+    natural_capacity_share = float(capacity_attribution.get("natural_share") or 0.0)
+    development_capacity_share = float(
+        capacity_attribution.get("development_share") or 0.0
+    )
     finite = all(
         np.isfinite(frame[column].to_numpy()).all()
         for frame in primary_snapshots.values()
@@ -1753,6 +1894,37 @@ def _sanity_rows(
             max(float(frame["development"].max()) for frame in primary_snapshots.values())
             <= profile.max_development,
         ),
+        _check(
+            "Starting development P90",
+            f"{start_development_p90:.2f}",
+            (
+                f"{profile.min_start_development_p90:.2f}–"
+                f"{profile.max_start_development_p90:.2f}"
+            ),
+            profile.min_start_development_p90
+            <= start_development_p90
+            <= profile.max_start_development_p90,
+        ),
+        _check(
+            "Locations at starting development ceiling",
+            f"{start_development_ceiling_fraction:.2%}",
+            f"<= {profile.max_start_development_ceiling_fraction:.2%}",
+            start_development_ceiling_fraction
+            <= profile.max_start_development_ceiling_fraction,
+        ),
+        _check(
+            "Natural Location Potential share of starting capacity",
+            f"{natural_capacity_share:.1%}",
+            f">= {profile.min_start_natural_capacity_share:.1%}",
+            natural_capacity_share >= profile.min_start_natural_capacity_share,
+        ),
+        _check(
+            "Development share of starting capacity",
+            f"{development_capacity_share:.1%}",
+            f"<= {profile.max_start_development_capacity_share:.1%}",
+            development_capacity_share
+            <= profile.max_start_development_capacity_share,
+        ),
     ]
     initial_total = float(snapshots[0]["total_population"].sum())
     for year, tolerance in (
@@ -1769,6 +1941,52 @@ def _sanity_rows(
                 f"within {tolerance:.1%} of start",
                 abs(ratio - 1.0) <= tolerance + 1e-12,
             )
+        )
+
+    if 100 in snapshots:
+        global_development_change = abs(
+            float(snapshots[100]["development"].mean())
+            - float(snapshots[0]["development"].mean())
+        )
+        region_keys = [region.key for region in profile.regions]
+        start_region_development = (
+            snapshots[0]
+            .filter(pl.col(HYDE_REGION_COLUMN).is_in(region_keys))
+            .group_by(HYDE_REGION_COLUMN)
+            .agg(pl.col("development").mean().alias("start_development"))
+        )
+        region_development_change = (
+            snapshots[100]
+            .filter(pl.col(HYDE_REGION_COLUMN).is_in(region_keys))
+            .group_by(HYDE_REGION_COLUMN)
+            .agg(pl.col("development").mean().alias("development"))
+            .join(start_region_development, on=HYDE_REGION_COLUMN, how="inner")
+            .with_columns(
+                (pl.col("development") - pl.col("start_development"))
+                .abs()
+                .alias("change")
+            )
+        )
+        max_region_development_change = float(
+            region_development_change["change"].max()
+        )
+        rows.extend(
+            [
+                _check(
+                    "Global mean development change at 100y",
+                    f"{global_development_change:.2f}",
+                    f"<= {profile.max_global_100y_development_change:.2f}",
+                    global_development_change
+                    <= profile.max_global_100y_development_change,
+                ),
+                _check(
+                    "Maximum HYDE-region mean development change at 100y",
+                    f"{max_region_development_change:.2f}",
+                    f"<= {profile.max_region_100y_development_change:.2f}",
+                    max_region_development_change
+                    <= profile.max_region_100y_development_change,
+                ),
+            ]
         )
 
     start_regions = snapshots[0].group_by(HYDE_REGION_COLUMN).agg(

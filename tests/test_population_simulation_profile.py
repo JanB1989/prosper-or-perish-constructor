@@ -30,11 +30,22 @@ def test_committed_population_simulation_profile_loads() -> None:
     assert profile.primary_scored_through_year == 200
     assert profile.rank_degrowth_exempt_pop_types == frozenset({"tribesmen"})
     assert profile.food_storage_growth_exempt_pop_types == frozenset({"tribesmen"})
-    assert profile.development_manageable_cropland_column == "allocated_crop_fraction"
-    assert profile.development_cropland_utilization_points == pytest.approx(100.0)
-    assert profile.gaez_zero_development_fraction == pytest.approx(0.25)
-    assert profile.gaez_zero_development_density_cap == pytest.approx(15.0)
-    assert profile.hyde_rainfed_capacity_multiplier == pytest.approx(4.0)
+    assert profile.development_manageable_cropland_column == "feasible_cultivated_fraction"
+    assert profile.development_cropland_utilization_points == pytest.approx(50.0)
+    assert profile.development_cropland_saturation_rate == pytest.approx(1.5)
+    assert profile.development_start_max == pytest.approx(50.0)
+    assert profile.min_start_development_p90 == pytest.approx(15.0)
+    assert profile.max_start_development_p90 == pytest.approx(25.0)
+    assert profile.max_start_development_ceiling_fraction == pytest.approx(0.005)
+    assert profile.min_start_natural_capacity_share == pytest.approx(0.75)
+    assert profile.max_start_development_capacity_share == pytest.approx(0.20)
+    assert profile.max_global_100y_development_change == pytest.approx(2.0)
+    assert profile.max_region_100y_development_change == pytest.approx(3.0)
+    assert profile.capacity_formula.development_absolute == pytest.approx(0.1)
+    assert profile.capacity_formula.development_relative == pytest.approx(0.02)
+    assert profile.gaez_zero_development_fraction == pytest.approx(0.80)
+    assert profile.gaez_zero_development_density_cap == pytest.approx(25.0)
+    assert profile.hyde_rainfed_capacity_multiplier == pytest.approx(6.0)
     assert "rainfed_crop_capacity_people_p50" in profile.physical_capacity_columns
     assert len(profile.regions) == 18
     assert profile.regions[0].key == "europe"
@@ -151,7 +162,7 @@ def test_population_simulation_report_contains_targets_and_location_sanity() -> 
 
     report, passed = build_population_simulation_report(
         profile=profile,
-        snapshots={0: frame(100.0, 10.0), 25: frame(105.0, 11.0), 100: frame(110.0, 12.0)},
+        snapshots={0: frame(100.0, 20.0), 25: frame(105.0, 21.0), 100: frame(110.0, 22.0)},
         preparation={
             "locations": 1,
             "irrigation": {
@@ -162,8 +173,15 @@ def test_population_simulation_report_contains_targets_and_location_sanity() -> 
                 "river_supported_level_fraction": 1.0,
                 "cap_violations": 0,
             },
-            "starting_development_raw": {"min": 10, "median": 10, "mean": 10, "p90": 10, "max": 10},
-            "starting_development_profile": {"min": 10, "median": 10, "mean": 10, "p90": 10, "max": 10},
+            "starting_development_raw": {"min": 20, "median": 20, "mean": 20, "p90": 20, "max": 20},
+            "starting_development_profile": {"min": 20, "median": 20, "mean": 20, "p90": 20, "max": 20},
+            "capacity_attribution": {
+                "natural_share": 0.80,
+                "development_share": 0.15,
+                "irrigation_share": 0.05,
+                "development_absolute_total": 0.1,
+                "development_absolute_share": 0.001,
+            },
         },
         elapsed_seconds=0.1,
     )

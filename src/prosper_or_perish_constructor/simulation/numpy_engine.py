@@ -234,11 +234,14 @@ class NumPyLocationState:
         )
 
     def _apply_prosperity_development(self, prosperity_scale: np.ndarray) -> None:
-        """Apply prosperity-scaled monthly development: add * (1 + modifier)."""
+        """Apply prosperity growth and the per-development decay from game data."""
         baselines = self.prosperity_baselines
         if baselines is None or self.development.shape[0] != self.n:
             return
-        monthly = prosperity_scale * baselines.get_effect(LOCAL_MONTHLY_DEVELOPMENT_KEY)
+        monthly = (
+            prosperity_scale * baselines.get_effect(LOCAL_MONTHLY_DEVELOPMENT_KEY)
+            + self.development * baselines.development_monthly_per_point
+        )
         modifier = prosperity_scale * baselines.get_effect(LOCAL_MONTHLY_DEVELOPMENT_MODIFIER_KEY)
         self.development = np.clip(
             self.development + monthly * (1.0 + modifier),

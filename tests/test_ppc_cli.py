@@ -820,8 +820,9 @@ def test_build_finalizes_location_potential_localization(
     assert 'STATIC_MODIFIER_DESC_pp_loc_washita: "$pp_location_potential_modifier_desc$"' not in modifier_text
     assert "pp_location_modifiers_title:" not in modifier_text
     assert 'game_concept_pp_location_potential: "Location Potential"' in europedia_text
-    assert "\\n\\n#T Physical factors:#!" in europedia_text
-    assert "Starting population, historical population maps, the location RGO, and RGO output modifiers do not determine the value" in europedia_text
+    assert "\\n\\n#T Physical and historical evidence:#!" in europedia_text
+    assert "Food imports and the game's starting population are not counted" in europedia_text
+    assert "Development and Irrigation Systems increase this baseline separately" in europedia_text
     fixed_time = 1_700_000_000_000_000_000
     os.utime(modifier_localization_path, ns=(fixed_time, fixed_time))
     os.utime(europedia_localization_path, ns=(fixed_time, fixed_time))

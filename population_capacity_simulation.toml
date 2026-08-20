@@ -46,31 +46,33 @@ physical_capacity_columns = [
 # rainfed/foraging/fisheries carrying capacity is available. HYDE provides a
 # second, historical rainfed viability estimate; the stronger source wins per
 # location after the starting development effect has been backed out.
-gaez_zero_development_fraction = 0.25
-gaez_zero_development_density_cap = 15.0
-hyde_rainfed_capacity_multiplier = 4.0
+gaez_zero_development_fraction = 0.80
+gaez_zero_development_density_cap = 25.0
+hyde_rainfed_capacity_multiplier = 6.0
 
 # EU5 capacity units per point/level, then relative modifier per point/level.
-development_absolute = 1.0
-development_relative = 0.05
-irrigation_absolute = 50.0
+development_absolute = 0.1
+development_relative = 0.02
+irrigation_absolute = 110.0
 irrigation_relative = 0.0
 development_min = 0.0
 development_max = 100.0
 minimum_capacity = 11.0
 
 [development]
-# Development is the share of GAEZ-manageable cropland that HYDE shows under
-# management in 1337. Zero means none of that land is managed; 100 means all of
-# it could be managed optimally if enough people were present. Pasture is a
-# small secondary land-management signal, not a population proxy.
+# Development is a bounded infrastructure score ranked by HYDE land use against
+# GAEZ-manageable cropland. The exponential curve requires exceptional repeated
+# land-management evidence to approach the historical ceiling; ordinary full
+# cropland use is not equivalent to optimal infrastructure. Pasture remains a
+# small secondary signal rather than a population proxy.
 base = 0.0
-manageable_cropland_column = "allocated_crop_fraction"
+manageable_cropland_column = "feasible_cultivated_fraction"
 minimum_manageable_cropland_fraction = 0.02
-cropland_utilization_points = 100.0
-pasture_full_share_points = 10.0
+cropland_utilization_points = 50.0
+cropland_saturation_rate = 1.5
+pasture_full_share_points = 5.0
 start_min = 0.0
-start_max = 100.0
+start_max = 50.0
 
 [irrigation]
 enabled = true
@@ -277,7 +279,18 @@ min_location_25y_growth_factor = 0.80
 max_location_25y_growth_factor = 2.0
 min_location_100y_growth_factor = 0.50
 max_location_100y_growth_factor = 4.5
-max_development = 100.0
+max_development = 50.0
+# Starting Development must remain a sparse historical signal, not the hidden
+# carrier of the population-capacity fit. Capacity attribution is evaluated by
+# adding natural potential, Development, and irrigation in that order.
+min_start_development_p90 = 15.0
+max_start_development_p90 = 25.0
+max_start_development_ceiling_fraction = 0.005
+min_start_natural_capacity_share = 0.75
+max_start_development_capacity_share = 0.20
+# Parsed inherent Development decay is active in these stability checks.
+max_global_100y_development_change = 2.0
+max_region_100y_development_change = 3.0
 # Explicit game-start stability gates. Regional bounds are intentionally wider
 # because HYDE, plague timing, and small-region denominators are approximate.
 max_global_25y_deviation = 0.05

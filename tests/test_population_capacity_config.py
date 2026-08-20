@@ -308,7 +308,7 @@ def test_irrigation_systems_use_capacity_instead_of_crop_output_bonuses() -> Non
     ]
 
     assert not present
-    assert "local_population_capacity = 50" in blueprint_text
+    assert "local_population_capacity = 110" in blueprint_text
 
 
 def test_irrigation_maintenance_is_not_tool_focused() -> None:
@@ -393,15 +393,15 @@ def test_location_potential_help_localization_is_shared() -> None:
     assert europedia_text.count("game_concept_pp_location_potential_desc:") == 1
 
     required_terms = (
-        "long-run local equilibrium",
+        "before Development and Irrigation Systems improve it",
         "Topography",
         "Vegetation",
         "Calibrated land area and latitude",
-        "Low-input crop yields",
-        "Fallow, seed, storage, processing, and harvest-risk reserves",
+        "Low-input rainfed crop yields",
         "Pasture, livestock, fisheries, wild foods, and apiary products",
-        "Food imports are not counted",
-        "Starting population, historical population maps, the location RGO, and RGO output modifiers do not determine the value",
+        "HYDE historical rainfed land-use evidence",
+        "Food imports and the game's starting population are not counted",
+        "Development and Irrigation Systems increase this baseline separately",
     )
     missing = [term for term in required_terms if term not in europedia_text]
 
@@ -414,8 +414,8 @@ def test_development_modifier_preserves_population_and_other_static_values() -> 
     development = _entry_block(static_modifiers.entries, "development")
 
     assert development is not None
-    assert _last_value(development, "local_population_capacity") == 1.0
-    assert _last_value(development, "local_population_capacity_modifier") == 0.05
+    assert _last_value(development, "local_population_capacity") == 0.1
+    assert _last_value(development, "local_population_capacity_modifier") == 0.02
     assert _last_value(development, "local_distance_from_capital_speed_propagation") == 0.005
     assert _last_value(development, "local_supply_limit_modifier") == 0.02
     assert _last_value(development, "blockade_force_required") == 0.01

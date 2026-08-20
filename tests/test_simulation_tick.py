@@ -70,6 +70,7 @@ def _test_prosperity(
     food_growth_monthly: float = 0.0,
     global_decay: float = 0.0,
     local_decay: float = 0.0,
+    development_monthly_per_point: float = 0.0,
     effects: dict[str, float] | None = None,
 ) -> ProsperityBaselines:
     return ProsperityBaselines(
@@ -78,6 +79,7 @@ def _test_prosperity(
         global_prosperity_decay=global_decay,
         local_prosperity_decay=local_decay,
         effects=effects or {},
+        development_monthly_per_point=development_monthly_per_point,
     )
 
 
@@ -336,11 +338,13 @@ def test_advance_tick_applies_food_growth_prosperity_income_and_decay() -> None:
 
 
 def test_advance_tick_applies_prosperity_food_consumption_and_development() -> None:
-    # At prosperity 100 → scale 1.0: +0.5 peasant food cons, +0.005 monthly dev * (1+0.25).
+    # At prosperity 100, combine prosperity growth and development's per-point
+    # decay before applying the local monthly development modifier.
     context = _test_context(
         subsistence_agriculture=0.0,
         food_decay_rate=0.0,
         prosperity=_test_prosperity(
+            development_monthly_per_point=-0.00011,
             effects={
                 "local_peasants_food_consumption": 0.5,
                 "local_monthly_development": 0.005,
@@ -365,7 +369,33 @@ def test_advance_tick_applies_prosperity_food_consumption_and_development() -> N
     updated = advance_tick(locations, context, months=1)
     # cons = 10 * 1.0 * (1+0.5) = 15 → food 100-15=85; prosperity decays 0 in this fixture.
     assert updated["food"].item() == pytest.approx(85.0)
-    assert updated["development"].item() == pytest.approx(10.0 + 0.005 * 1.25)
+    expected_development = 10.0 + (0.005 - 10.0 * 0.00011) * 1.25
+    assert updated["development"].item() == pytest.approx(expected_development)
+
+
+def test_advance_tick_applies_development_decay_without_prosperity() -> None:
+    context = _test_context(
+        subsistence_agriculture=0.0,
+        food_decay_rate=0.0,
+        prosperity=_test_prosperity(development_monthly_per_point=-0.00011),
+    )
+    locations = pl.DataFrame(
+        {
+            "location_tag": ["a"],
+            "province": ["prov"],
+            "location_rank": ["rural_settlement"],
+            "food": [0.0],
+            "population_peasants": [0.0],
+            "total_population": [0.0],
+            "unemployed_peasants": [0.0],
+            "prosperity": [0.0],
+            "development": [100.0],
+        }
+    )
+
+    updated = advance_tick(locations, context, months=1)
+
+    assert updated["development"].item() == pytest.approx(100.0 - 0.011)
 
 
 def test_negative_rank_growth_can_exempt_tribesmen_only() -> None:

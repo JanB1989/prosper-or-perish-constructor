@@ -14,6 +14,7 @@ from eu5gameparser.domain.static_modifiers import load_static_modifier_data
 from eu5gameparser.load_order import load_profile
 
 PROSPERITY_MODIFIER_NAME = "prosperity"
+DEVELOPMENT_MODIFIER_NAME = "development"
 LOCATION_BASE_VALUES_NAME = "location_base_values"
 COUNTRY_BASE_VALUES_NAME = "country_base_values"
 GLOBAL_PROSPERITY_DECAY_KEY = "global_prosperity_decay"
@@ -45,6 +46,8 @@ class ProsperityBaselines:
     local_prosperity_decay: float
     # Scaled prosperity static-modifier effects (at full 100 prosperity).
     effects: Mapping[str, float]
+    # The development static modifier is applied once per development point.
+    development_monthly_per_point: float = 0.0
 
     def scale(self, prosperity: float) -> float:
         """Map stored prosperity (0..100) onto the engine's 0..1 multiplier."""
@@ -124,6 +127,13 @@ def load_prosperity_baselines(
         for key, value in dict(static._by_name[PROSPERITY_MODIFIER_NAME].modifiers).items()
         if not isinstance(value, bool)
     }
+    development_monthly_per_point = float(
+        static._by_name[DEVELOPMENT_MODIFIER_NAME].modifiers.get(
+            LOCAL_MONTHLY_DEVELOPMENT_KEY,
+            0.0,
+        )
+        or 0.0
+    )
     try:
         base_monthly = float(
             static.modifier_baseline(LOCATION_BASE_VALUES_NAME, None, LOCAL_MONTHLY_PROSPERITY_KEY)
@@ -147,4 +157,5 @@ def load_prosperity_baselines(
         global_prosperity_decay=global_decay,
         local_prosperity_decay=float(effects.get(LOCAL_PROSPERITY_DECAY_KEY, 0.0) or 0.0),
         effects=effects,
+        development_monthly_per_point=development_monthly_per_point,
     )

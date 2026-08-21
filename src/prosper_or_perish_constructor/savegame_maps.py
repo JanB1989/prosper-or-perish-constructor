@@ -218,6 +218,15 @@ class MapRenderCache:
     color_to_pixels: dict[int, np.ndarray]
 
 
+@dataclass(frozen=True)
+class LocationMetricRaster:
+    """One numeric value per EU5 location, painted onto the game raster."""
+
+    values: np.ndarray
+    mapped_locations: int
+    mapped_pixels: int
+
+
 class Log1pNorm(Normalize):
     scale_name = "log1p"
 
@@ -3389,6 +3398,57 @@ def _build_render_cache(
         flat_packed=flat,
         hatch_mask_flat=hatch_mask_flat,
         color_to_pixels=color_to_pixels,
+    )
+
+
+def paint_location_metric_raster(
+    assets: SavegameMapAssets,
+    locations: pl.DataFrame,
+    *,
+    value_column: str,
+    location_column: str = "location_tag",
+    nodata: float = np.nan,
+) -> LocationMetricRaster:
+    """Paint location values with the same geometry/cache used by notebook maps."""
+
+    missing = {location_column, value_column}.difference(locations.columns)
+    if missing:
+        raise ValueError(
+            f"location metric raster is missing columns: {', '.join(sorted(missing))}"
+        )
+    geometry = _prepared_geometry(assets)
+    mapped = (
+        locations.select(
+            pl.col(location_column).cast(pl.String).alias("location_tag"),
+            pl.col(value_column).cast(pl.Float64).alias("location_metric_value"),
+        )
+        .unique("location_tag")
+        .join(
+            geometry.select("location_tag", "map_color_int").unique("location_tag"),
+            on="location_tag",
+            how="inner",
+        )
+        .filter(pl.col("location_metric_value").is_finite())
+    )
+    cache = _build_render_cache(
+        assets,
+        crop=(0, 0, assets.map_width, assets.map_height),
+        frame_data=mapped,
+    )
+    raster = np.full(cache.flat_packed.shape, np.float32(nodata), dtype=np.float32)
+    mapped_pixels = 0
+    for row in mapped.select("map_color_int", "location_metric_value").iter_rows(
+        named=True
+    ):
+        pixels = cache.color_to_pixels.get(int(row["map_color_int"]))
+        if pixels is None or not pixels.size:
+            continue
+        raster[pixels] = np.float32(row["location_metric_value"])
+        mapped_pixels += int(pixels.size)
+    return LocationMetricRaster(
+        values=raster.reshape(cache.packed.shape),
+        mapped_locations=mapped.height,
+        mapped_pixels=mapped_pixels,
     )
 
 

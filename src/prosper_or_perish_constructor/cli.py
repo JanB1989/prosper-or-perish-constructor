@@ -5652,7 +5652,7 @@ def _population_simulation_fingerprint_paths(
         if hyde_root_value not in (None, "")
         else profile_path.parent
     )
-    for key in ("location_candidates", "location_sample_points"):
+    for key in ("population_snapshot", "location_candidates", "location_sample_points"):
         path_value = profile_paths.get(key)
         if path_value not in (None, ""):
             paths.append(_resolve_config_path(profile_path.parent, path_value))

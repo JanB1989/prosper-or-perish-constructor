@@ -46,6 +46,7 @@ from prosper_or_perish_constructor.simulation.modifiers import (
     load_simulation_modifier_context,
 )
 from prosper_or_perish_constructor.simulation.run import Simulation
+from prosper_or_perish_constructor.simulation.tick import prepare_start_locations
 
 PEASANT_FOOD_CONSUMPTION_KEY = "local_peasants_food_consumption"
 HYDE_REGION_COLUMN = "hyde_region"
@@ -62,6 +63,17 @@ START_CONSTRUCTIBLE_OWNER_COLUMN = "profile_start_constructible_owner"
 VANILLA_IRRIGATION_LEVELS_COLUMN = "vanilla_irrigation_systems_levels"
 GENERATED_IRRIGATION_LEVELS_COLUMN = "generated_irrigation_systems_levels"
 PEOPLE_PER_GAME_UNIT_DEFAULT = 1_000.0
+SIMULATION_POPULATION_COLUMNS = (
+    "population_nobles",
+    "population_clergy",
+    "population_burghers",
+    "population_laborers",
+    "population_soldiers",
+    "population_peasants",
+    "population_slaves",
+    "population_tribesmen",
+    "population_unknown",
+)
 
 
 @dataclass(frozen=True)
@@ -80,6 +92,7 @@ class SimulationProfile:
     checkpoint_years: tuple[int, ...]
     people_per_game_unit: float
     output_path: Path
+    population_snapshot_path: Path
     parser_profile: str
     load_order_path: Path
     candidates_path: Path
@@ -233,6 +246,10 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
         checkpoint_years=checkpoints,
         people_per_game_unit=_positive_float(simulation, "people_per_game_unit"),
         output_path=_resolve(repo, Path(_string(simulation, "output"))),
+        population_snapshot_path=_resolve(
+            repo,
+            Path(_string(paths, "population_snapshot")),
+        ),
         parser_profile=str(simulation.get("parser_profile") or "constructor"),
         load_order_path=_resolve(repo, Path(str(simulation.get("load_order") or "constructor.load_order.toml"))),
         candidates_path=_resolve(repo, Path(_string(paths, "location_candidates"))),
@@ -491,6 +508,7 @@ def _prepare_state(
     profile: SimulationProfile,
 ) -> tuple[pl.DataFrame, SimulationModifierContext, dict[str, Any]]:
     state = load_start_location_frame(repo, project)
+    state, population_snapshot_summary = _attach_population_snapshot(state, profile)
     candidates = pl.read_parquet(profile.candidates_path)
     candidate_columns = [
         "location_tag",
@@ -564,8 +582,10 @@ def _prepare_state(
             profile.food_storage_growth_exempt_pop_types
         ),
     )
+    state = prepare_start_locations(state, context)
     preparation = {
         "locations": state.height,
+        "population_snapshot": population_snapshot_summary,
         "irrigation": irrigation_summary,
         "starting_development_raw": _numeric_summary(state[START_DEVELOPMENT_COLUMN]),
         "starting_development_profile": _numeric_summary(state["development"]),
@@ -600,6 +620,100 @@ def _prepare_state(
         ),
     }
     return state, context, preparation
+
+
+def _attach_population_snapshot(
+    state: pl.DataFrame,
+    profile: SimulationProfile,
+) -> tuple[pl.DataFrame, dict[str, Any]]:
+    """Replace only simulator demographics with one generated save snapshot."""
+
+    _require_file(profile.population_snapshot_path, "simulation population snapshot")
+    snapshot = pl.read_parquet(profile.population_snapshot_path)
+    if "location_tag" not in snapshot.columns and "slug" in snapshot.columns:
+        snapshot = snapshot.rename({"slug": "location_tag"})
+    required = {
+        "location_tag",
+        "total_population",
+        "unemployed_peasants",
+        *SIMULATION_POPULATION_COLUMNS,
+    }
+    missing = sorted(required - set(snapshot.columns))
+    if missing:
+        raise ValueError(f"simulation population snapshot is missing columns: {missing}")
+    if snapshot["location_tag"].n_unique() != snapshot.height:
+        raise ValueError("simulation population snapshot location tags are not unique")
+
+    selected = snapshot.select(
+        pl.col("location_tag").cast(pl.String),
+        pl.col("total_population").cast(pl.Float64),
+        *[pl.col(column).cast(pl.Float64) for column in SIMULATION_POPULATION_COLUMNS],
+        pl.col("unemployed_peasants").cast(pl.Float64),
+    )
+    missing_locations = state.select("location_tag").join(
+        selected.select("location_tag"),
+        on="location_tag",
+        how="anti",
+    )
+    if not missing_locations.is_empty():
+        examples = missing_locations["location_tag"].head(8).to_list()
+        raise ValueError(
+            "simulation population snapshot does not cover all simulator locations; "
+            f"missing={missing_locations.height}, examples={examples}"
+        )
+
+    population_sum = pl.sum_horizontal(
+        pl.col(column) for column in SIMULATION_POPULATION_COLUMNS
+    )
+    max_error = selected.select(
+        (population_sum - pl.col("total_population")).abs().max()
+    ).item()
+    if max_error is not None and float(max_error) > 1e-6:
+        raise ValueError(
+            "simulation population snapshot pop types do not reconcile to total_population; "
+            f"maximum error={float(max_error):.9f}"
+        )
+    invalid_unemployed = selected.filter(
+        (pl.col("unemployed_peasants") < 0.0)
+        | (pl.col("unemployed_peasants") > pl.col("population_peasants") + 1e-6)
+    )
+    if not invalid_unemployed.is_empty():
+        raise ValueError(
+            "simulation population snapshot has unemployed peasants outside the peasant total; "
+            f"locations={invalid_unemployed.height}"
+        )
+
+    replaced = [
+        column
+        for column in state.columns
+        if column.startswith("population_")
+        or column
+        in {
+            "total_population",
+            "peasant_employment",
+            "employed_peasants",
+            "unemployed_peasants",
+            "food",
+        }
+    ]
+    joined = state.drop(replaced).join(selected, on="location_tag", how="left")
+    metadata = snapshot.select(
+        *[
+            pl.col(column)
+            for column in ("snapshot_date", "source_save")
+            if column in snapshot.columns
+        ]
+    )
+    metadata_row = metadata.row(0, named=True) if metadata.width and metadata.height else {}
+    summary = {
+        "path": str(profile.population_snapshot_path),
+        "snapshot_rows": snapshot.height,
+        "matched_locations": joined.height,
+        "total_population": float(selected["total_population"].sum()),
+        "snapshot_date": str(metadata_row.get("snapshot_date") or ""),
+        "source_save": str(metadata_row.get("source_save") or ""),
+    }
+    return joined, summary
 
 
 def _attach_zero_development_capacity(

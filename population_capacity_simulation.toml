@@ -11,6 +11,9 @@ load_order = "constructor.load_order.toml"
 output = "artifacts/data/population_simulation/report.md"
 
 [paths]
+# Regenerate manually from any save:
+# uv run eu5parse savegame population-snapshot --save /path/to/save.eu5 --load-order constructor.load_order.toml --profile constructor --output artifacts/data/population_simulation/baseline_population.parquet
+population_snapshot = "artifacts/data/population_simulation/baseline_population.parquet"
 location_candidates = "artifacts/data/population_capacity/current_capacity_map/location_candidates.parquet"
 location_sample_points = "artifacts/data/population_capacity/location_sample_points.parquet"
 hyde_root = "../ProsperOrPerishStaticModifiersV2"

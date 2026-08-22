@@ -10,6 +10,8 @@ import pytest
 from prosper_or_perish_constructor.simulation.capacity_model import PopulationCapacityFormula
 from prosper_or_perish_constructor.simulation.profile import (
     HydeRegionTarget,
+    SIMULATION_POPULATION_COLUMNS,
+    _attach_population_snapshot,
     _snapshot,
     build_population_simulation_report,
     load_population_simulation_profile,
@@ -25,6 +27,9 @@ def test_committed_population_simulation_profile_loads() -> None:
     )
 
     assert profile.checkpoint_years == (0, 25, 100, 200, 300, 400, 500)
+    assert profile.population_snapshot_path == (
+        ROOT / "artifacts/data/population_simulation/baseline_population.parquet"
+    )
     assert profile.global_ratios[500] == pytest.approx(2.6632)
     assert profile.regional_tolerance == pytest.approx(0.25)
     assert profile.primary_scored_through_year == 200
@@ -62,6 +67,51 @@ def test_committed_profile_has_no_starting_population_capacity_floor() -> None:
     )
 
     assert "starting_population_floor" not in profile_text
+
+
+def test_simulation_population_snapshot_replaces_only_demographics(tmp_path: Path) -> None:
+    loaded = load_population_simulation_profile(
+        ROOT / "population_capacity_simulation.toml",
+        repo=ROOT,
+    )
+    snapshot_path = tmp_path / "population.parquet"
+    population = {column: 0.0 for column in SIMULATION_POPULATION_COLUMNS}
+    population["population_peasants"] = 7.0
+    population["population_laborers"] = 3.0
+    pl.DataFrame(
+        [
+            {
+                "location_tag": "alpha",
+                "total_population": 10.0,
+                "unemployed_peasants": 5.0,
+                **population,
+            }
+        ]
+    ).write_parquet(snapshot_path)
+    state = pl.DataFrame(
+        {
+            "location_tag": ["alpha"],
+            "province": ["alpha_province"],
+            "development": [4.0],
+            "population_peasants": [99.0],
+            "total_population": [99.0],
+            "unemployed_peasants": [99.0],
+            "food": [123.0],
+        }
+    )
+
+    result, summary = _attach_population_snapshot(
+        state,
+        replace(loaded, population_snapshot_path=snapshot_path),
+    )
+
+    assert result.item(0, "development") == 4.0
+    assert result.item(0, "population_peasants") == 7.0
+    assert result.item(0, "population_laborers") == 3.0
+    assert result.item(0, "total_population") == 10.0
+    assert result.item(0, "unemployed_peasants") == 5.0
+    assert "food" not in result.columns
+    assert summary["matched_locations"] == 1
 
 
 def test_population_capacity_formula_combines_all_adjustable_terms() -> None:

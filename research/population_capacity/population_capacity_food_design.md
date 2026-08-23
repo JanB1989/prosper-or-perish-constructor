@@ -13,10 +13,10 @@ gameplay, and the boundaries the implementation must respect.
 | `population_capacity` | `(sum of absolute capacity values) × (sum of capacity modifiers)` | **Absolute:** `location_potential`, `infrastructure`<br>**Modifier:** `development` | Food resources currently available from the land.<br>At capacity, the population can barely feed itself locally. | Determines peasant food consumption and migration through `abundant_free_land`, `available_free_land`, and `overpopulation`. | Numeric value; minimum `0`. | Must fit EU5 starting populations.<br>No location may begin more than 15% over capacity. |
 | `location_potential` | Calibrated flat capacity from natural resources. | Arable land, pasture, wild game, fish, freshwater, climate, and terrain. | The food-supporting potential of the natural, unimproved location. | Provides the permanent natural base of population capacity. | Flat, non-negative absolute capacity value. | Independent of infrastructure, development, and population.<br>Must provide most capacity in undeveloped locations without infrastructure. |
 | `infrastructure` | `sum of flat capacity added by active infrastructure` | Irrigation systems, bunds, land clearing, polders, canals, and similar buildings. | Permanent human alterations that create or unlock additional food resources. | Buildings add flat population capacity for scaling construction and maintenance costs. | Each source adds a non-negative absolute capacity value. | Must be derived independently of population and be the main explanation for exceptional high-capacity locations. |
-| `development` | Converts development points into a population-capacity modifier. | Current development and its capacity effect per point. | How thoroughly the location's land, labor, and food systems are organized and optimized. | Multiplies total capacity.<br>Development grows through investment, prosperity, parliament actions, and buildings. | Bounded from `0` to `100`.<br>Applies to all absolute capacity. | Must be derived independently of population and be high in historically well-developed locations without replacing infrastructure as the explanation for extreme capacity. |
+| `development` | Converts development points into a population-capacity modifier. | Current development and its capacity effect per point. | How thoroughly the location's land, labor, and food systems are organized and optimized. | Multiplies total capacity.<br>Development grows through investment, prosperity, parliament actions, and buildings. | Starting value bounded from `0` to `80`.<br>Applies to all absolute capacity. | Must be derived independently of population and be high in historically well-developed locations without replacing infrastructure as the explanation for extreme capacity. |
 | `prosperity` | `previous prosperity + monthly gains - proportional decay` | Food stored, base prosperity changes, and other prosperity modifiers. | The location's current economic security and wellbeing. | Increases development over time and modifies population growth, food consumption, and unrest. | Bounded from `0` to `100`.<br>Effects scale linearly with prosperity. | Must reward sustained food security without creating an uncontrolled food–prosperity–development feedback loop. |
-| `abundant_free_land` | Active when `population / capacity < 10%` and population is below `10,000`.<br>Strength: `1 - population / capacity`. | Population and population capacity. | The location has far more usable land and food resources than its population can exploit. | Strongly attracts migration, reduces peasant food consumption, and adds local food.<br>Current full-strength values: `+2` attraction, `-50%` consumption, `+8` monthly food. | Exclusive capacity-pressure state.<br>Strength ranges from `0` to `1`. | Reserved for genuinely small, sparsely populated frontier locations. |
-| `available_free_land` | Active from `10%` through `100%` capacity.<br>Strength: `1 - population / capacity`. | Population and population capacity. | Productive land remains available, but becomes scarcer as population approaches capacity. | Attracts migration, reduces peasant food consumption, and adds local food.<br>Current full-strength values: `+1` attraction, `-32%` consumption, `+3` monthly food. | Exclusive capacity-pressure state.<br>Reaches zero strength at capacity. | Benefits must decline smoothly as capacity fills. |
+| `abundant_free_land` | Active when `population / capacity < 10%` and population is below `10,000`.<br>Strength: `1 - population / capacity`. | Population and population capacity. | The location has far more usable land and food resources than its population can exploit. | Strongly attracts migration and reduces peasant food consumption.<br>Current full-strength values: `+2` attraction, `-50%` consumption, `0` absolute monthly food. | Exclusive capacity-pressure state.<br>Strength ranges from `0` to `1`. | Reserved for genuinely small, sparsely populated frontier locations. |
+| `available_free_land` | Active from `10%` through `100%` capacity.<br>Strength: `1 - population / capacity`. | Population and population capacity. | Productive land remains available, but becomes scarcer as population approaches capacity. | Attracts migration and reduces peasant food consumption.<br>Current full-strength values: `+1` attraction, `-32%` consumption, `0` absolute monthly food. | Exclusive capacity-pressure state.<br>Reaches zero strength at capacity. | Benefits must decline smoothly as capacity fills. |
 | `overpopulation` | Active above capacity.<br>Strength: `population / capacity - 1`. | Population and population capacity. | The population exceeds what local resources can normally support. | Raises peasant food consumption, reduces migration attraction, and encourages outward migration.<br>Current full-strength values: `+100%` consumption and `-0.25` attraction. | Exclusive capacity-pressure state.<br>Strength is non-negative and currently uncapped. | No location may start above `0.15` strength.<br>Should create escalating pressure rather than immediate collapse. |
 | `population_food_consumption` | `sum(population of each type × base food rate × max(0, 1 + consumption modifiers))` | Population by type, type-specific base rates, prosperity, capacity pressure, weather, and other modifiers. | The food required by the province's population each month. | Removes food from provincial storage and determines food surplus, food security, and food-supported population growth. | Effective consumption cannot be negative. | Must produce historically plausible demand while preserving meaningful differences between pop types. |
 | `peasant_food_consumption` | `peasant population × 1.0 × max(0, 1 + peasant consumption modifiers)` | All peasants, including employed and unemployed peasants; capacity pressure, prosperity, and other peasant modifiers. | The total food consumed by the peasant population. | Usually the largest part of provincial food demand.<br>Free land reduces it; overpopulation and prosperity increase it. | Base rate is currently `1.0` food per peasant game unit per month.<br>Cannot fall below zero. | Must connect population capacity directly to food pressure without making peasants disappear from the food economy. |
@@ -74,3 +74,45 @@ introduced when the existing pipelines cannot provide the required result.
 When the notebooks, simulator, or deployed modifiers disagree with this document,
 the discrepancy must be made explicit. Design changes should update this document
 in the same change as their implementation.
+
+## Implemented calibration contract
+
+The canonical configuration is
+[`population_capacity_simulation.toml`](../../population_capacity_simulation.toml).
+The simulator and game deployment use exactly:
+
+```text
+population_capacity = (location_potential + infrastructure)
+                    × (1 + development × 0.00125 + global_modifier)
+```
+
+- `location_potential` uses one global constrained decision-tree model over
+  GAEZ, non-population HYDE, geometry, hydrology, and parsed starting-building
+  evidence. The tree is supervised by independent physical capacity, not EU5
+  population, and has `2,310` shared physical regimes with at least `7`
+  locations per regime. Starting population is neither a feature nor a target;
+  it is used only by the one-sided `population / capacity <= 1.15` calibration
+  constraint applied to every ordinary location.
+- Starting development uses HYDE cropland and pasture against GAEZ-manageable
+  land. Population is not an input. Starting development is clamped to `0–80`.
+- Infrastructure placement uses the parsed game-start save buildings, HYDE cropland and
+  irrigation, terrain, rivers, lakes, coasts, and ownership. Land clearance is
+  represented by the existing `farming_village`; wetland drainage/reclamation
+  is represented by `polders` rather than a redundant new building.
+- Flat capacity per level is currently: irrigation systems `9.81`, bunds
+  `9.49`, terraces `2`, polders `6.23`, pound-lock canals `0`, and farming
+  villages `7.65` EU5 population units.
+- Development has no flat capacity term. The optional global modifier is `0%`.
+- Climate, vegetation, location rank, RGO, river-size, and special Nile capacity
+  modifiers are neutralized so they cannot silently alter this formula.
+
+The three tracked provinces for every real macro-region are stored explicitly
+under `[tracking.provinces]` in the canonical TOML, ordered as expected high,
+representative middle, and constrained low. `suzhou_province` and
+`cairo_province` are the explicit China/Lower-Nile global-ranking sentinels.
+
+The year-zero capacity calibration passes all static gates. The separate
+100-year population-growth gate remains unresolved because the unchanged growth
+system contracts almost identically even under infinite capacity. See
+[`population_capacity_calibration_log.md`](population_capacity_calibration_log.md)
+for measured attempts and unresolved source contradictions.

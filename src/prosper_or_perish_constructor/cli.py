@@ -575,6 +575,88 @@ def _build_parser() -> argparse.ArgumentParser:
             "population_capacity_simulation.toml."
         ),
     )
+    population_simulation.add_argument(
+        "--years",
+        type=int,
+        nargs="+",
+        help="Simulation checkpoints in years; for calibration use: --years 0 100.",
+    )
+    population_simulation.add_argument(
+        "--set",
+        dest="profile_overrides",
+        action="append",
+        default=[],
+        metavar="SECTION.KEY=VALUE",
+        help="Temporarily override a TOML value; may be repeated.",
+    )
+    population_simulation.add_argument(
+        "--refresh-cache",
+        action="store_true",
+        help="Rebuild cached source joins before running the simulation.",
+    )
+    population_calibration = _add_command(
+        subcommands,
+        "population-calibration",
+        "Optimize population capacity with the configured constrained algorithm.",
+        _population_calibration,
+    )
+    population_calibration.add_argument(
+        "--profile",
+        type=Path,
+        default=Path("population_capacity_simulation.toml"),
+        help="Simulation and optimization profile TOML relative to --repo.",
+    )
+    population_calibration.add_argument(
+        "--trials",
+        type=int,
+        default=250,
+        help="New trials for iterative optimizers; ignored by exact one-shot algorithms.",
+    )
+    population_calibration.add_argument(
+        "--timeout",
+        type=float,
+        default=None,
+        help="Optional wall-clock limit in seconds.",
+    )
+    population_calibration.add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help="Override the reproducible sampler seed from the TOML.",
+    )
+    population_calibration.add_argument(
+        "--static-only",
+        action="store_true",
+        help="Search year-zero constraints only; skip all 100-year evaluations.",
+    )
+    population_equilibrium = _add_command(
+        subcommands,
+        "population-equilibrium",
+        "Solve algebraic province resting points and validate them against the simulator.",
+        _population_equilibrium,
+    )
+    population_equilibrium.add_argument(
+        "--profile",
+        type=Path,
+        default=Path("population_capacity_simulation.toml"),
+        help=(
+            "Simulation profile TOML relative to --repo. Defaults to "
+            "population_capacity_simulation.toml."
+        ),
+    )
+    population_equilibrium.add_argument(
+        "--output",
+        type=Path,
+        default=Path("artifacts/data/population_equilibrium/report.md"),
+        help="Single Markdown report path relative to --repo.",
+    )
+    population_equilibrium.add_argument(
+        "--years",
+        type=int,
+        nargs="+",
+        default=[100, 200, 500, 1000, 2000, 5000],
+        help="Positive validation checkpoints in years.",
+    )
     population_capacity = subcommands.add_parser(
         "population-capacity",
         help="Build, audit, compare, accept, or render the 1337 carrying-capacity model.",
@@ -710,6 +792,24 @@ def _build_parser() -> argparse.ArgumentParser:
         "Verify tsetse sources, atlas alignment, hashes, and scientific no-op gates without rebuilding.",
         _population_capacity_tsetse_audit,
     )
+    population_fetch_landcover_sources = _add_command(
+        population_capacity_subcommands,
+        "fetch-landcover-sources",
+        "Explicitly freeze LUH2 year 1300 and checksum the SAGE potential-vegetation source.",
+        _population_capacity_fetch_landcover_sources,
+    )
+    population_build_landcover = _add_command(
+        population_capacity_subcommands,
+        "build-landcover",
+        "Intersect LUH2/SAGE land cover with sample-level GAEZ suitability and aggregate it to locations.",
+        _population_capacity_build_landcover,
+    )
+    population_landcover_audit = _add_command(
+        population_capacity_subcommands,
+        "landcover-audit",
+        "Audit the frozen land-cover bridge without rebuilding or accessing the network.",
+        _population_capacity_landcover_audit,
+    )
     population_historical_yields = _add_command(
         population_capacity_subcommands,
         "historical-yields",
@@ -819,6 +919,9 @@ def _build_parser() -> argparse.ArgumentParser:
         population_build_tsetse,
         population_build_tsetse_fallback,
         population_tsetse_audit,
+        population_fetch_landcover_sources,
+        population_build_landcover,
+        population_landcover_audit,
         population_historical_yields,
         population_inventory,
         population_benchmark_audit,
@@ -3615,11 +3718,74 @@ def _population_simulation(
         repo=repo,
         project=project,
         profile_path=profile_path,
+        checkpoint_years=args.years,
+        overrides=args.profile_overrides,
+        refresh_cache=args.refresh_cache,
     )
     status = "PASS" if result.passed else "FAIL"
     print(
         f"population simulation {status} in {result.elapsed_seconds:.1f}s; "
         f"report: {result.report_path}",
+        flush=True,
+    )
+    return 0 if result.passed else 1
+
+
+def _population_calibration(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("population-calibration does not accept extra arguments.")
+    from prosper_or_perish_constructor.simulation.calibration_optimizer import (
+        run_population_capacity_calibration,
+    )
+
+    profile_path = args.profile if args.profile.is_absolute() else repo / args.profile
+    result = run_population_capacity_calibration(
+        repo=repo,
+        project=project,
+        profile_path=profile_path,
+        trials=args.trials,
+        timeout_seconds=args.timeout,
+        seed=args.seed,
+        static_only=args.static_only,
+    )
+    status = "PASS" if result.passed else "FAIL"
+    print(
+        f"population calibration {status} in {result.elapsed_seconds:.1f}s; "
+        f"trials={result.trials_completed}, feasible={result.feasible_trials}, "
+        f"best={result.best_trial_number}; report: {result.report_path}",
+        flush=True,
+    )
+    return 0 if result.passed else 1
+
+
+def _population_equilibrium(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("population-equilibrium does not accept extra arguments.")
+    from prosper_or_perish_constructor.simulation.equilibrium_report import (
+        run_population_equilibrium_report,
+    )
+
+    profile_path = args.profile if args.profile.is_absolute() else repo / args.profile
+    result = run_population_equilibrium_report(
+        repo=repo,
+        project=project,
+        profile_path=profile_path,
+        output_path=args.output,
+        validation_years=args.years,
+    )
+    print(
+        f"population equilibrium report completed in {result.elapsed_seconds:.1f}s; "
+        f"provinces: {result.province_count}; report: {result.report_path}",
         flush=True,
     )
     return 0
@@ -4227,6 +4393,95 @@ def _population_capacity_tsetse_audit(
     )
     print(json.dumps(result, indent=2, sort_keys=True), flush=True)
     return 0
+
+
+def _population_capacity_fetch_landcover_sources(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    _reject_extra_population_capacity_args("fetch-landcover-sources", extra)
+    from prosper_or_perish_constructor.population_capacity_landcover import (
+        fetch_landcover_sources,
+    )
+
+    source_root = (
+        repo
+        / "artifacts"
+        / "data"
+        / "population_capacity"
+        / "landcover_sources"
+    )
+    result = fetch_landcover_sources(source_root, year=1300)
+    print(json.dumps(result, indent=2, sort_keys=True), flush=True)
+    return 0
+
+
+def _population_capacity_build_landcover(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    _reject_extra_population_capacity_args("build-landcover", extra)
+    config = _population_capacity_pipeline_config(args, repo, project)
+    paths = _population_capacity_model_paths(repo, config)
+    from prosper_or_perish_constructor.population_capacity_landcover import (
+        build_landcover_capacity_artifact,
+    )
+
+    source_root = (
+        repo
+        / "artifacts"
+        / "data"
+        / "population_capacity"
+        / "landcover_sources"
+    )
+    output_path = (
+        repo
+        / "artifacts"
+        / "data"
+        / "population_capacity"
+        / "location_landcover_capacity.parquet"
+    )
+    result = build_landcover_capacity_artifact(
+        source_root=source_root,
+        sample_points_path=_verified_population_sample_points(paths),
+        crop_samples_root=(
+            paths["crop_mode_labels"].parent / "crop_mode_samples" / "gaez_v5"
+        ),
+        crop_labels_path=paths["crop_mode_labels"],
+        candidates_path=paths["comparison_dir"] / "location_candidates.parquet",
+        output_path=output_path,
+    )
+    print(json.dumps(result, indent=2, sort_keys=True), flush=True)
+    return 0 if result["passed"] else 1
+
+
+def _population_capacity_landcover_audit(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    _reject_extra_population_capacity_args("landcover-audit", extra)
+    from prosper_or_perish_constructor.population_capacity_landcover import (
+        audit_landcover_capacity_artifact,
+    )
+
+    artifact = (
+        repo
+        / "artifacts"
+        / "data"
+        / "population_capacity"
+        / "location_landcover_capacity.parquet"
+    )
+    _require_population_capacity_inputs("landcover-audit", {"land-cover artifact": artifact})
+    result = audit_landcover_capacity_artifact(
+        artifact_path=artifact,
+        expected_locations=20_929,
+        source_root=(
+            repo
+            / "artifacts"
+            / "data"
+            / "population_capacity"
+            / "landcover_sources"
+        ),
+    )
+    print(json.dumps(result, indent=2, sort_keys=True), flush=True)
+    return 0 if result["passed"] else 1
 
 
 def _population_capacity_historical_yields(

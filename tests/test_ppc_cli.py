@@ -29,11 +29,24 @@ def test_production_profit_import_missing_command_is_registered() -> None:
 
 
 def test_population_simulation_command_is_registered() -> None:
-    args, extra = cli._build_parser().parse_known_args(["population-simulation"])
+    args, extra = cli._build_parser().parse_known_args(
+        [
+            "population-simulation",
+            "--years",
+            "0",
+            "100",
+            "--set",
+            "capacity.global_relative=-0.1",
+            "--refresh-cache",
+        ]
+    )
 
     assert extra == []
     assert args.handler is cli._population_simulation
     assert args.profile == Path("population_capacity_simulation.toml")
+    assert args.years == [0, 100]
+    assert args.profile_overrides == ["capacity.global_relative=-0.1"]
+    assert args.refresh_cache is True
 
 
 def test_population_capacity_fisheries_audit_command_is_registered() -> None:

@@ -1,0 +1,18 @@
+:root {
+  --pp-panel: color-mix(in srgb, var(--marimo-background) 92%, #4c78a8 8%);
+}
+
+marimo-island {
+  max-width: 1600px;
+  margin-inline: auto;
+}
+
+.mo-stat {
+  background: var(--pp-panel);
+}
+
+/* Match Marimo's collapsed-output height in both editor and reader views. */
+.marimo-cell .output-area {
+  max-height: 610px;
+  overflow: auto;
+}

@@ -108,10 +108,7 @@ def _(
         "monthly_development_modifier_at_full_prosperity": parsed.prosperity.get_effect(
             "local_monthly_development_modifier"
         ),
-        "development_population_capacity_per_point": profile.capacity_formula.development_absolute,
         "development_population_capacity_modifier_per_point": profile.capacity_formula.development_relative,
-        "irrigation_population_capacity_per_level": profile.capacity_formula.irrigation_absolute,
-        "irrigation_population_capacity_modifier_per_level": profile.capacity_formula.irrigation_relative,
         "abundant_free_land_population_growth": _capacity_pressure_value(
             "abundant_free_land", "local_population_growth"
         ),
@@ -194,17 +191,8 @@ def _(mo, parsed_constants):
     monthly_development_modifier_input = _number(
         "monthly_development_modifier_at_full_prosperity", 0.01
     )
-    development_population_capacity_input = _number(
-        "development_population_capacity_per_point", 0.01
-    )
     development_population_capacity_modifier_input = _number(
         "development_population_capacity_modifier_per_point", 0.005
-    )
-    irrigation_population_capacity_input = _number(
-        "irrigation_population_capacity_per_level", 5.0
-    )
-    irrigation_population_capacity_modifier_input = _number(
-        "irrigation_population_capacity_modifier_per_level", 0.005
     )
     abundant_free_land_population_growth_input = _number(
         "abundant_free_land_population_growth", 0.001
@@ -262,7 +250,7 @@ def _(mo, parsed_constants):
         start=0,
         stop=10_000,
         step=25,
-        value=500,
+        value=100,
         full_width=True,
     )
 
@@ -386,29 +374,9 @@ def _(mo, parsed_constants):
                 "Development to population capacity",
                 [
                     _parameter_row(
-                        "Capacity per development point",
-                        "development_population_capacity_per_point",
-                        development_population_capacity_input,
-                    ),
-                    _parameter_row(
                         "Capacity modifier per development point",
                         "development_population_capacity_modifier_per_point",
                         development_population_capacity_modifier_input,
-                    ),
-                ],
-            ),
-            _parameter_group(
-                "Irrigation to population capacity",
-                [
-                    _parameter_row(
-                        "Capacity per irrigation level",
-                        "irrigation_population_capacity_per_level",
-                        irrigation_population_capacity_input,
-                    ),
-                    _parameter_row(
-                        "Capacity modifier per irrigation level",
-                        "irrigation_population_capacity_modifier_per_level",
-                        irrigation_population_capacity_modifier_input,
                     ),
                 ],
             ),
@@ -556,10 +524,7 @@ def _(mo, parsed_constants):
         monthly_development_gain_at_full_prosperity=monthly_development_gain_input,
         development_decay_rate_per_point=development_decay_rate_input,
         monthly_development_modifier_at_full_prosperity=monthly_development_modifier_input,
-        development_population_capacity_per_point=development_population_capacity_input,
         development_population_capacity_modifier_per_point=development_population_capacity_modifier_input,
-        irrigation_population_capacity_per_level=irrigation_population_capacity_input,
-        irrigation_population_capacity_modifier_per_level=irrigation_population_capacity_modifier_input,
         abundant_free_land_population_growth=abundant_free_land_population_growth_input,
         abundant_free_land_peasants_food_consumption=abundant_free_land_peasants_food_consumption_input,
         abundant_free_land_monthly_food=abundant_free_land_monthly_food_input,
@@ -661,20 +626,9 @@ def _(parsed, parsed_constants, pl, replace, simulation_form):
     )
     simulation_capacity = replace(
         parsed.capacity_model,
-        development_absolute=float(
-            parameter_values["development_population_capacity_per_point"]
-        ),
         development_relative=float(
             parameter_values[
                 "development_population_capacity_modifier_per_point"
-            ]
-        ),
-        irrigation_absolute=float(
-            parameter_values["irrigation_population_capacity_per_level"]
-        ),
-        irrigation_relative=float(
-            parameter_values[
-                "irrigation_population_capacity_modifier_per_level"
             ]
         ),
     )

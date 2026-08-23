@@ -35,10 +35,10 @@ building:
       }
         raw_modifier = {
             farm_capacity_from_polders = 0.60
+            local_population_capacity = 6.23
         }
 
       modifier = {
-        local_population_capacity = 2.5
         local_monthly_development_modifier = 0.025
         local_road_building_time = -0.05
 

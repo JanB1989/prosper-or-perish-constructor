@@ -20,6 +20,7 @@ from prosper_or_perish_constructor.simulation.capacity_pressure import (
 )
 from prosper_or_perish_constructor.simulation.capacity_model import (
     BASE_POPULATION_CAPACITY_COLUMN,
+    INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN,
     IRRIGATION_LEVELS_COLUMN,
     PopulationCapacityFormula,
 )
@@ -86,6 +87,9 @@ class NumPyLocationState:
     employed_peasants: np.ndarray = field(repr=False, default_factory=lambda: np.zeros(0))
     population_capacity: np.ndarray = field(repr=False, default_factory=lambda: np.zeros(0))
     base_population_capacity: np.ndarray = field(
+        repr=False, default_factory=lambda: np.zeros(0)
+    )
+    infrastructure_population_capacity: np.ndarray = field(
         repr=False, default_factory=lambda: np.zeros(0)
     )
     irrigation_levels: np.ndarray = field(repr=False, default_factory=lambda: np.zeros(0))
@@ -230,7 +234,7 @@ class NumPyLocationState:
         self.population_capacity = self.capacity_model.evaluate(
             base_capacity=self.base_population_capacity,
             development=self.development,
-            irrigation_levels=self.irrigation_levels,
+            infrastructure_capacity=self.infrastructure_population_capacity,
         )
 
     def _apply_prosperity_development(self, prosperity_scale: np.ndarray) -> None:
@@ -368,6 +372,7 @@ class NumPyLocationState:
             UNEMPLOYED_PEASANTS_COLUMN: self.unemployed_peasants,
             POPULATION_CAPACITY_COLUMN: self.population_capacity,
             BASE_POPULATION_CAPACITY_COLUMN: self.base_population_capacity,
+            INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN: self.infrastructure_population_capacity,
             IRRIGATION_LEVELS_COLUMN: self.irrigation_levels,
             PROSPERITY_COLUMN: self.prosperity,
             DEVELOPMENT_COLUMN: self.development,
@@ -447,6 +452,11 @@ def numpy_state_from_polars(
         if IRRIGATION_LEVELS_COLUMN in frame.columns
         else pl.Series(IRRIGATION_LEVELS_COLUMN, [0.0] * frame.height)
     ).fill_null(0.0).cast(pl.Float64).to_numpy().astype(np.float64, copy=True)
+    infrastructure_population_capacity = (
+        frame[INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN]
+        if INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN in frame.columns
+        else pl.Series(INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN, [0.0] * frame.height)
+    ).fill_null(0.0).cast(pl.Float64).to_numpy().astype(np.float64, copy=True)
     prosperity = (
         frame[PROSPERITY_COLUMN].fill_null(0.0).cast(pl.Float64).to_numpy().astype(np.float64, copy=True)
     )
@@ -472,6 +482,7 @@ def numpy_state_from_polars(
         TOTAL_POPULATION_COLUMN,
         POPULATION_CAPACITY_COLUMN,
         BASE_POPULATION_CAPACITY_COLUMN,
+        INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN,
         IRRIGATION_LEVELS_COLUMN,
         PROSPERITY_COLUMN,
         DEVELOPMENT_COLUMN,
@@ -582,6 +593,7 @@ def numpy_state_from_polars(
         unemployed_peasants=unemployed_peasants,
         population_capacity=population_capacity,
         base_population_capacity=base_population_capacity,
+        infrastructure_population_capacity=infrastructure_population_capacity,
         irrigation_levels=irrigation_levels,
         capacity_model=context.capacity_model,
         prosperity=prosperity,

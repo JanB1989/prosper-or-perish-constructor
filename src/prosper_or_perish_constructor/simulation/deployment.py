@@ -18,6 +18,7 @@ from eu5gameparser.clausewitz.syntax import CList
 
 from prosper_or_perish_constructor.simulation.capacity_model import (
     BASE_POPULATION_CAPACITY_COLUMN,
+    INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN,
     IRRIGATION_LEVELS_COLUMN,
 )
 from prosper_or_perish_constructor.simulation.profile import (
@@ -26,6 +27,7 @@ from prosper_or_perish_constructor.simulation.profile import (
     SimulationProfile,
     load_population_simulation_profile,
     prepare_population_simulation_state,
+    _generated_infrastructure_levels_column,
 )
 from prosper_or_perish_population_capacity.merge import load_collection, profile_from
 
@@ -115,19 +117,25 @@ def build_population_simulation_deployment(
         (str(row["location_tag"]), float(row["development"]))
         for row in state.select("location_tag", "development").to_dicts()
     ]
-    irrigation_rows = [
-        (
-            str(row["location_tag"]),
-            str(row[START_COUNTRY_TAG_COLUMN]),
-            int(row[GENERATED_IRRIGATION_LEVELS_COLUMN]),
+    infrastructure_rows: list[tuple[str, str, str, int]] = []
+    for building in profile.infrastructure_capacity_per_level:
+        column = _generated_infrastructure_levels_column(building)
+        infrastructure_rows.extend(
+            (
+                building,
+                str(row["location_tag"]),
+                str(row[START_COUNTRY_TAG_COLUMN]),
+                int(row[column]),
+            )
+            for row in state.filter(pl.col(column) > 0).select(
+                "location_tag",
+                START_COUNTRY_TAG_COLUMN,
+                column,
+            ).to_dicts()
         )
-        for row in state.filter(pl.col(GENERATED_IRRIGATION_LEVELS_COLUMN) > 0).select(
-            "location_tag",
-            START_COUNTRY_TAG_COLUMN,
-            GENERATED_IRRIGATION_LEVELS_COLUMN,
-        ).to_dicts()
+    missing_owners = [
+        tag for _building, tag, owner, _level in infrastructure_rows if not owner
     ]
-    missing_owners = [tag for tag, owner, _level in irrigation_rows if not owner]
     if missing_owners:
         raise ValueError(
             "generated irrigation placements require game-start owners: "
@@ -136,7 +144,9 @@ def build_population_simulation_deployment(
     starting_capacity = profile.capacity_formula.evaluate(
         base_capacity=state[BASE_POPULATION_CAPACITY_COLUMN].to_numpy(),
         development=state["development"].to_numpy(),
-        irrigation_levels=state[IRRIGATION_LEVELS_COLUMN].to_numpy(),
+        infrastructure_capacity=state[
+            INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN
+        ].to_numpy(),
     )
     starting_capacity_values = tuple(
         int(math.ceil(float(value) - 1e-12)) for value in starting_capacity
@@ -152,7 +162,7 @@ def build_population_simulation_deployment(
         list(development_compilation.rows),
         decimals=development_compilation.coefficient_decimals,
     )
-    irrigation_text = _render_irrigation_setup(irrigation_rows)
+    irrigation_text = _render_infrastructure_setup(infrastructure_rows)
     changed: list[Path] = []
     for path, text in (
         (profile.deployment_population_capacity_table_path, capacity_text),
@@ -188,18 +198,35 @@ def build_population_simulation_deployment(
             "minimum": float(state["development"].min()),
             "mean": float(state["development"].mean()),
             "maximum": float(state["development"].max()),
-            "absolute_capacity_per_point": formula.development_absolute,
+            "absolute_capacity_per_point": 0.0,
             "relative_capacity_per_point": formula.development_relative,
         },
+        "infrastructure": {
+            "generated_locations": len(infrastructure_rows),
+            "generated_levels": sum(
+                level for _building, _tag, _owner, level in infrastructure_rows
+            ),
+            "capacity_per_level": dict(profile.infrastructure_capacity_per_level),
+            "placement": preparation.get("infrastructure", {}),
+        },
         "irrigation": {
-            "generated_locations": len(irrigation_rows),
-            "generated_levels": sum(level for _tag, _owner, level in irrigation_rows),
+            "generated_locations": sum(
+                building == "irrigation_systems"
+                for building, _tag, _owner, _level in infrastructure_rows
+            ),
+            "generated_levels": sum(
+                level
+                for building, _tag, _owner, level in infrastructure_rows
+                if building == "irrigation_systems"
+            ),
             "total_starting_locations": int(
                 state.filter(pl.col(IRRIGATION_LEVELS_COLUMN) > 0).height
             ),
             "total_starting_levels": int(state[IRRIGATION_LEVELS_COLUMN].sum()),
-            "absolute_capacity_per_level": formula.irrigation_absolute,
-            "relative_capacity_per_level": formula.irrigation_relative,
+            "absolute_capacity_per_level": profile.infrastructure_capacity_per_level[
+                "irrigation_systems"
+            ],
+            "relative_capacity_per_level": 0.0,
             **preparation.get("irrigation", {}),
         },
         "static_capacity": {
@@ -207,10 +234,11 @@ def build_population_simulation_deployment(
             "mean": float(state["deployed_static_population_capacity"].mean()),
             "maximum": int(state["deployed_static_population_capacity"].max()),
             "gaez_zero_development_fraction": profile.gaez_zero_development_fraction,
-            "gaez_zero_development_density_cap_people_per_km2": (
-                profile.gaez_zero_development_density_cap
+            "physical_density_reference_people_per_km2": (
+                profile.physical_density_reference_people_per_km2
             ),
-            "hyde_rainfed_capacity_multiplier": profile.hyde_rainfed_capacity_multiplier,
+            "physical_density_elasticity": profile.physical_density_elasticity,
+            "location_area_exponent": profile.location_area_exponent,
             "minimum_final_capacity": formula.minimum_capacity,
         },
         "starting_capacity": {
@@ -229,8 +257,15 @@ def build_population_simulation_deployment(
         irrigation_setup_path=profile.deployment_irrigation_setup_path,
         manifest_path=profile.deployment_manifest_path,
         location_count=state.height,
-        irrigation_locations=len(irrigation_rows),
-        irrigation_levels=sum(level for _tag, _owner, level in irrigation_rows),
+        irrigation_locations=sum(
+            building == "irrigation_systems"
+            for building, _tag, _owner, _level in infrastructure_rows
+        ),
+        irrigation_levels=sum(
+            level
+            for building, _tag, _owner, level in infrastructure_rows
+            if building == "irrigation_systems"
+        ),
         starting_capacity_values=starting_capacity_values,
         changed_paths=tuple(changed),
     )
@@ -499,11 +534,11 @@ def _render_development_setup(
     return "\n".join(lines)
 
 
-def _render_irrigation_setup(rows: list[tuple[str, str, int]]) -> str:
+def _render_infrastructure_setup(rows: list[tuple[str, str, str, int]]) -> str:
     lines = [GENERATED_MARKER, "building_manager = {"]
-    for tag, owner, level in rows:
+    for building, tag, owner, level in rows:
         lines.append(
-            "\tirrigation_systems = { "
+            f"\t{building} = {{ "
             f"tag = {owner} level = {level} location = {tag} "
             "}"
         )
@@ -573,7 +608,7 @@ def _verify_dynamic_capacity_modifiers(
     _require_modifier_value(
         development,
         "local_population_capacity",
-        formula.development_absolute,
+        0.0,
         "development",
     )
     _require_modifier_value(
@@ -584,36 +619,32 @@ def _verify_dynamic_capacity_modifiers(
     )
 
     buildings = load_collection(parsed_profile, "building_types")
-    irrigation = _collection_block(buildings.entries, "irrigation_systems")
-    if irrigation is None:
-        raise ValueError("parsed irrigation_systems building is missing")
-    modifier_blocks = [
-        value for value in irrigation.values("raw_modifier") if isinstance(value, CList)
-    ]
-    if not modifier_blocks:
-        raise ValueError("irrigation_systems building raw_modifier is missing")
-    modifier = modifier_blocks[-1]
-    _require_modifier_value(
-        modifier,
-        "local_population_capacity",
-        formula.irrigation_absolute,
-        "irrigation_systems",
-    )
-    observed_relative = _last_numeric(
-        modifier,
-        "local_population_capacity_modifier",
-        default=0.0,
-    )
-    if not math.isclose(
-        observed_relative,
-        formula.irrigation_relative,
-        rel_tol=0.0,
-        abs_tol=1e-9,
-    ):
-        raise ValueError(
-            "irrigation_systems local_population_capacity_modifier does not match "
-            "the simulation profile"
+    for building, expected in profile.infrastructure_capacity_per_level.items():
+        definition = _collection_block(buildings.entries, building)
+        if definition is None:
+            raise ValueError(f"parsed infrastructure building is missing: {building}")
+        modifier_blocks = [
+            value
+            for value in definition.values("raw_modifier")
+            if isinstance(value, CList)
+        ]
+        if not modifier_blocks:
+            raise ValueError(f"{building} raw_modifier is missing")
+        _require_modifier_value(
+            modifier_blocks[-1],
+            "local_population_capacity",
+            expected,
+            building,
         )
+        observed_relative = _last_numeric(
+            modifier_blocks[-1],
+            "local_population_capacity_modifier",
+            default=0.0,
+        )
+        if not math.isclose(observed_relative, 0.0, rel_tol=0.0, abs_tol=1e-9):
+            raise ValueError(
+                f"{building} must not add a relative population-capacity modifier"
+            )
 
 
 def _verify_capacity_pressure_modifiers(profile: SimulationProfile) -> None:

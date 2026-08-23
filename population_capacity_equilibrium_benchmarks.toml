@@ -1,0 +1,364 @@
+schema_version = 1
+target_year = 1337
+people_per_game_unit = 1000
+
+# Human-editable draft for the population-capacity fixed-point calibration.
+# This file is deliberately separate from population_capacity_benchmarks.toml,
+# which is the historical evidence registry.  The current CLI does not consume
+# this file yet; it defines the intended contract for the equilibrium solver.
+#
+# Capacity fill is population / capacity.  Avoid locking a benchmark directly
+# on 0.10 or 1.00 because those values are capacity-pressure band boundaries.
+
+[equilibrium_defaults]
+population_growth_annual_target = 0.0
+population_growth_annual_tolerance = 0.001
+development_change_100y_target = 0.0
+development_change_100y_tolerance = 2.0
+prosperity_change_monthly_target = 0.0
+prosperity_change_monthly_tolerance = 0.01
+food_residual_share_of_consumption_target = 0.0
+food_residual_share_of_consumption_tolerance = 0.01
+require_locally_stable_setpoint = true
+population_perturbation_fraction = 0.10
+development_perturbation_points = 2.0
+prosperity_perturbation_points = 5.0
+
+# Editable mechanics used by the equilibrium solver.  For every modifier,
+# "current" means its current magnitude in the parsed mod/profile.  Location
+# state itself is not summarized here.
+
+[parameters.development]
+value_min = 0.0
+value_max = 50.0
+local_population_capacity_min = 0.1
+local_population_capacity_current = 0.1
+local_population_capacity_max = 0.2
+local_population_capacity_modifier_min = 0.01
+local_population_capacity_modifier_current = 0.02
+local_population_capacity_modifier_max = 0.1
+local_monthly_development_at_full_prosperity_min = 0.0
+local_monthly_development_at_full_prosperity_current = 0.005
+local_monthly_development_at_full_prosperity_max = 0.02
+local_monthly_development_modifier_at_full_prosperity_min = 0.0
+local_monthly_development_modifier_at_full_prosperity_current = 0.25
+local_monthly_development_modifier_at_full_prosperity_max = 1.0
+local_monthly_development_per_point_min = -0.0005
+local_monthly_development_per_point_current = -0.00011
+local_monthly_development_per_point_max = -0.00001
+
+[parameters.prosperity]
+value_min = 0.0
+value_max = 100.0
+starting_value = 0.0
+base_monthly_prosperity_min = 0.0
+base_monthly_prosperity_current = 0.0025
+base_monthly_prosperity_max = 0.01
+global_prosperity_decay_min = 0.0
+global_prosperity_decay_current = 0.01
+global_prosperity_decay_max = 0.05
+local_prosperity_decay_at_full_prosperity_min = 0.0
+local_prosperity_decay_at_full_prosperity_current = 0.005
+local_prosperity_decay_at_full_prosperity_max = 0.05
+pop_food_consumption_modifier_at_full_prosperity_min = 0.0
+pop_food_consumption_modifier_at_full_prosperity_current = 0.5
+pop_food_consumption_modifier_at_full_prosperity_max = 1.0
+
+[parameters.food_storage]
+starting_months_stored_min = 0.0
+starting_months_stored_current = 24.0
+starting_months_stored_max = 60.0
+growth_effect_cap_years_min = 0.0
+growth_effect_cap_years_current = 2.0
+growth_effect_cap_years_max = 5.0
+monthly_decay_rate_min = 0.0
+monthly_decay_rate_current = 0.01
+monthly_decay_rate_max = 0.10
+local_population_growth_per_year_scale_min = 0.0
+local_population_growth_per_year_scale_current = 0.0075
+local_population_growth_per_year_scale_max = 0.02
+local_monthly_prosperity_per_year_scale_min = 0.0
+local_monthly_prosperity_per_year_scale_current = 0.0025
+local_monthly_prosperity_per_year_scale_max = 0.01
+local_province_food_purchase_output_modifier_per_year_scale_min = -1.0
+local_province_food_purchase_output_modifier_per_year_scale_current = -0.5
+local_province_food_purchase_output_modifier_per_year_scale_max = 0.0
+local_province_food_sales_output_modifier_per_year_scale_min = 0.0
+local_province_food_sales_output_modifier_per_year_scale_current = 0.5
+local_province_food_sales_output_modifier_per_year_scale_max = 1.0
+
+[parameters.abundant_free_land]
+fill_min = 0.0
+fill_max = 0.10
+population_max_game_units = 10.0
+local_monthly_food_min = 0.0
+local_monthly_food_current = 8.0
+local_monthly_food_max = 20.0
+local_peasants_food_consumption_min = -1.0
+local_peasants_food_consumption_current = -0.5
+local_peasants_food_consumption_max = 0.0
+rgo_output_modifier_min = 0.0
+rgo_output_modifier_current = 0.4
+rgo_output_modifier_max = 1.0
+
+[parameters.neutral_gap]
+fill_min = 0.0
+fill_max = 0.10
+population_min_game_units = 10.0
+
+[parameters.available_free_land]
+fill_min = 0.10
+fill_max = 1.0
+local_monthly_food_min = 0.0
+local_monthly_food_current = 3.0
+local_monthly_food_max = 10.0
+local_peasants_food_consumption_min = -1.0
+local_peasants_food_consumption_current = -0.32
+local_peasants_food_consumption_max = 0.0
+rgo_output_modifier_min = 0.0
+rgo_output_modifier_current = 0.3
+rgo_output_modifier_max = 1.0
+
+[parameters.overpopulation]
+fill_min = 1.0
+local_peasants_food_consumption_min = 0.0
+local_peasants_food_consumption_current = 1.0
+local_peasants_food_consumption_max = 3.0
+
+[parameters.location_potential]
+# The per-location values remain the static HYDE/GAEZ output.  Calibration may
+# change this shared scale, not assign values from starting population.
+shared_scale_min = 0.25
+shared_scale_current = 1.0
+shared_scale_max = 2.0
+
+[parameters.irrigation_systems]
+starting_level_min = 0
+starting_level_max = 5
+local_population_capacity_min = 0.0
+local_population_capacity_current = 110.0
+local_population_capacity_max = 250.0
+local_population_capacity_modifier_min = 0.0
+local_population_capacity_modifier_current = 0.0
+local_population_capacity_modifier_max = 0.1
+
+[parameters.base_population_growth]
+rural_settlement_min = -0.02
+rural_settlement_current = -0.004
+rural_settlement_max = 0.0
+town_min = -0.02
+town_current = -0.005
+town_max = 0.0
+city_min = -0.02
+city_current = -0.005
+city_max = 0.0
+megalopolis_min = -0.02
+megalopolis_current = -0.005
+megalopolis_max = 0.0
+tribesmen_exempt = true
+
+[parameters.population_base_food_consumption]
+burghers_min = 0.0
+burghers_current = 10.0
+burghers_max = 20.0
+clergy_min = 0.0
+clergy_current = 10.0
+clergy_max = 20.0
+laborers_min = 0.0
+laborers_current = 1.5
+laborers_max = 5.0
+nobles_min = 0.0
+nobles_current = 25.0
+nobles_max = 50.0
+peasants_min = 0.0
+peasants_current = 1.0
+peasants_max = 3.0
+slaves_min = 0.0
+slaves_current = 0.5
+slaves_max = 2.0
+soldiers_min = 0.0
+soldiers_current = 4.0
+soldiers_max = 10.0
+tribesmen_min = 0.0
+tribesmen_current = 0.0
+tribesmen_max = 2.0
+
+[parameters.subsistence_agriculture]
+monthly_food_per_unemployed_peasant_min = 0.0
+monthly_food_per_unemployed_peasant_current = 1.0
+monthly_food_per_unemployed_peasant_max = 3.0
+
+# Starter benchmark set.  All entries are drafts for review.  Food is pooled
+# by province, so a future solver must evaluate the full containing province
+# even when one location is the named anchor.
+
+[[benchmarks]]
+benchmark_id = "east_asia_wuxian_dense"
+label = "Wuxian dense Jiangnan anchor"
+location_tag = "wuxian"
+food_scope = "containing_province"
+hyde_region = "east_asia"
+intent = "Current population, prosperity, and development should be close to a stable dense-rural set point."
+mechanic_band = "available_free_land"
+target_fill_min = 0.70
+target_fill_max = 0.95
+lock_mode = "hard"
+current_population_is_setpoint = true
+current_development_is_setpoint = true
+current_prosperity_is_setpoint = true
+weight = 1.0
+review_status = "draft"
+
+[[benchmarks]]
+benchmark_id = "east_asia_changshu_dense"
+label = "Changshu dense Jiangnan anchor"
+location_tag = "changshu"
+food_scope = "containing_province"
+hyde_region = "east_asia"
+intent = "Dense established land should remain below capacity without receiving a large free-land surplus."
+mechanic_band = "available_free_land"
+target_fill_min = 0.70
+target_fill_max = 0.95
+lock_mode = "hard"
+current_population_is_setpoint = true
+current_development_is_setpoint = true
+current_prosperity_is_setpoint = true
+weight = 1.0
+review_status = "draft"
+
+[[benchmarks]]
+benchmark_id = "east_asia_chongde_dense"
+label = "Chongde dense Jiangnan validation"
+location_tag = "chongde"
+food_scope = "containing_province"
+hyde_region = "east_asia"
+intent = "Test whether the shared model can support a dense location without requiring the current severe overcapacity."
+mechanic_band = "available_free_land"
+target_fill_min = 0.70
+target_fill_max = 0.95
+lock_mode = "hard"
+current_population_is_setpoint = true
+current_development_is_setpoint = true
+current_prosperity_is_setpoint = true
+weight = 1.0
+review_status = "draft"
+
+[[benchmarks]]
+benchmark_id = "south_asia_bijnot_dense"
+label = "Bijnot dense South Asian anchor"
+location_tag = "bijnot"
+food_scope = "containing_province"
+hyde_region = "south_asia"
+intent = "A dense rainfed South Asian location should sit close to, but below, its capacity."
+mechanic_band = "available_free_land"
+target_fill_min = 0.70
+target_fill_max = 0.95
+lock_mode = "hard"
+current_population_is_setpoint = true
+current_development_is_setpoint = true
+current_prosperity_is_setpoint = true
+weight = 1.0
+review_status = "draft"
+
+[[benchmarks]]
+benchmark_id = "north_africa_cairo_irrigated"
+label = "Cairo irrigated dense anchor"
+location_tag = "cairo"
+food_scope = "containing_province"
+hyde_region = "north_africa"
+intent = "High density should be supportable through historically justified river irrigation rather than natural potential alone."
+mechanic_band = "available_free_land"
+target_fill_min = 0.70
+target_fill_max = 0.95
+lock_mode = "hard"
+current_population_is_setpoint = true
+current_development_is_setpoint = true
+current_prosperity_is_setpoint = true
+require_starting_irrigation = true
+weight = 1.0
+review_status = "draft"
+
+[[benchmarks]]
+benchmark_id = "north_africa_alexandria_irrigated"
+label = "Alexandria irrigated medium-fill anchor"
+location_tag = "alexandria"
+food_scope = "containing_province"
+hyde_region = "north_africa"
+intent = "A major irrigated centre with more hinterland headroom than Cairo."
+mechanic_band = "available_free_land"
+target_fill_min = 0.35
+target_fill_max = 0.70
+lock_mode = "soft"
+current_population_is_setpoint = true
+current_development_is_setpoint = true
+current_prosperity_is_setpoint = true
+require_starting_irrigation = true
+weight = 0.75
+review_status = "draft"
+
+[[benchmarks]]
+benchmark_id = "europe_london_low_available"
+label = "London low-fill commercial validation"
+location_tag = "london"
+food_scope = "containing_province"
+hyde_region = "europe"
+intent = "Retain substantial hinterland headroom; urban trade makes this a validation case rather than a natural-capacity scale anchor."
+mechanic_band = "available_free_land"
+target_fill_min = 0.12
+target_fill_max = 0.35
+lock_mode = "soft"
+current_population_is_setpoint = true
+current_development_is_setpoint = false
+current_prosperity_is_setpoint = false
+weight = 0.5
+review_status = "draft"
+
+[[benchmarks]]
+benchmark_id = "europe_stockholm_low_available"
+label = "Stockholm low-fill northern validation"
+location_tag = "stockholm"
+food_scope = "containing_province"
+hyde_region = "europe"
+intent = "A northern urban location should retain headroom without being treated as abundant small-settlement land."
+mechanic_band = "available_free_land"
+target_fill_min = 0.12
+target_fill_max = 0.35
+lock_mode = "soft"
+current_population_is_setpoint = true
+current_development_is_setpoint = false
+current_prosperity_is_setpoint = false
+weight = 0.5
+review_status = "draft"
+
+[[benchmarks]]
+benchmark_id = "east_asia_fanxian_abundant"
+label = "Fanxian abundant small-location anchor"
+location_tag = "fanxian"
+food_scope = "containing_province"
+hyde_region = "east_asia"
+intent = "Exercise the absolute-food-dominated abundant-small-location mechanism."
+mechanic_band = "abundant_free_land"
+target_fill_min = 0.01
+target_fill_max = 0.08
+lock_mode = "hard"
+current_population_is_setpoint = false
+current_development_is_setpoint = false
+current_prosperity_is_setpoint = false
+expected_population_direction = "toward_higher_setpoint"
+weight = 0.75
+review_status = "draft"
+
+[[benchmarks]]
+benchmark_id = "south_asia_delhi_unlocked"
+label = "Delhi branch-selection validation"
+location_tag = "delhi"
+food_scope = "containing_province"
+hyde_region = "south_asia"
+intent = "Leave the band unlocked initially and compare all feasible equilibrium branches."
+mechanic_band = "any"
+lock_mode = "none"
+current_population_is_setpoint = false
+current_development_is_setpoint = false
+current_prosperity_is_setpoint = false
+weight = 0.5
+review_status = "draft"

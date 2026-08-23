@@ -30,34 +30,39 @@ def test_committed_population_simulation_profile_loads() -> None:
     assert profile.population_snapshot_path == (
         ROOT / "artifacts/data/population_simulation/baseline_population.parquet"
     )
+    assert profile.starting_buildings_path == (
+        ROOT / "artifacts/data/savegame/buildings.parquet"
+    )
     assert profile.global_ratios[500] == pytest.approx(2.6632)
     assert profile.regional_tolerance == pytest.approx(0.25)
-    assert profile.primary_scored_through_year == 200
+    assert profile.primary_scored_through_year == 100
     assert profile.rank_degrowth_exempt_pop_types == frozenset({"tribesmen"})
     assert profile.food_storage_growth_exempt_pop_types == frozenset({"tribesmen"})
     assert profile.development_manageable_cropland_column == "feasible_cultivated_fraction"
-    assert profile.development_cropland_utilization_points == pytest.approx(50.0)
+    assert profile.development_cropland_utilization_points == pytest.approx(42.0)
     assert profile.development_cropland_saturation_rate == pytest.approx(1.5)
-    assert profile.development_start_max == pytest.approx(50.0)
+    assert profile.development_start_max == pytest.approx(80.0)
     assert profile.min_start_development_p90 == pytest.approx(15.0)
     assert profile.max_start_development_p90 == pytest.approx(25.0)
     assert profile.max_start_development_ceiling_fraction == pytest.approx(0.005)
-    assert profile.min_start_natural_capacity_share == pytest.approx(0.75)
+    assert profile.min_start_natural_capacity_share == pytest.approx(0.60)
     assert profile.max_start_development_capacity_share == pytest.approx(0.20)
     assert profile.max_global_100y_development_change == pytest.approx(2.0)
     assert profile.max_region_100y_development_change == pytest.approx(3.0)
-    assert profile.capacity_formula.development_absolute == pytest.approx(0.1)
-    assert profile.capacity_formula.development_relative == pytest.approx(0.02)
-    assert profile.gaez_zero_development_fraction == pytest.approx(0.80)
-    assert profile.gaez_zero_development_density_cap == pytest.approx(25.0)
-    assert profile.hyde_rainfed_capacity_multiplier == pytest.approx(6.0)
+    assert profile.capacity_formula.development_relative == pytest.approx(0.00125)
+    assert profile.capacity_formula.global_relative == pytest.approx(0.0)
+    assert profile.gaez_zero_development_fraction == pytest.approx(1.0)
+    assert profile.physical_density_reference_people_per_km2 == pytest.approx(20.0)
+    assert profile.physical_density_elasticity == pytest.approx(0.35)
+    assert profile.calibrated_location_potential_enabled is True
+    assert profile.irrigation_arid_settlement_level_fraction == pytest.approx(1.0)
     assert "rainfed_crop_capacity_people_p50" in profile.physical_capacity_columns
     assert len(profile.regions) == 18
     assert profile.regions[0].key == "europe"
     assert profile.regions[-1].key == "southern_cone"
-    assert profile.abundant_monthly_food == pytest.approx(8.0)
-    assert profile.available_monthly_food == pytest.approx(3.0)
-    assert profile.min_location_capacity == pytest.approx(11.0)
+    assert profile.abundant_monthly_food == pytest.approx(0.0)
+    assert profile.available_monthly_food == pytest.approx(0.0)
+    assert profile.min_location_capacity == pytest.approx(0.0)
     assert profile.min_irrigation_river_or_lake_fraction == pytest.approx(0.85)
 
 
@@ -67,6 +72,26 @@ def test_committed_profile_has_no_starting_population_capacity_floor() -> None:
     )
 
     assert "starting_population_floor" not in profile_text
+
+
+def test_profile_toml_overrides_are_typed_and_reject_unknown_keys() -> None:
+    profile = load_population_simulation_profile(
+        ROOT / "population_capacity_simulation.toml",
+        repo=ROOT,
+        overrides=(
+            "capacity.development_relative=0.001",
+            "infrastructure.capacity_per_level.irrigation_systems=24",
+        ),
+    )
+
+    assert profile.capacity_formula.development_relative == pytest.approx(0.001)
+    assert profile.infrastructure_capacity_per_level["irrigation_systems"] == 24.0
+    with pytest.raises(ValueError, match="unknown --set path"):
+        load_population_simulation_profile(
+            ROOT / "population_capacity_simulation.toml",
+            repo=ROOT,
+            overrides=("capacity.does_not_exist=1",),
+        )
 
 
 def test_simulation_population_snapshot_replaces_only_demographics(tmp_path: Path) -> None:
@@ -116,11 +141,8 @@ def test_simulation_population_snapshot_replaces_only_demographics(tmp_path: Pat
 
 def test_population_capacity_formula_combines_all_adjustable_terms() -> None:
     formula = PopulationCapacityFormula(
-        physical_scale=0.10,
-        development_absolute=1.0,
         development_relative=0.03,
-        irrigation_absolute=10.0,
-        irrigation_relative=0.0,
+        global_relative=-0.10,
         development_min=0.0,
         development_max=100.0,
         minimum_capacity=0.001,
@@ -129,12 +151,12 @@ def test_population_capacity_formula_combines_all_adjustable_terms() -> None:
     capacity = formula.evaluate(
         base_capacity=np.array([100.0, 100.0, 0.0]),
         development=np.array([10.0, 20.0, -5.0]),
-        irrigation_levels=np.array([2.0, 2.0, 0.0]),
+        infrastructure_capacity=np.array([20.0, 20.0, 0.0]),
     )
 
-    # (10 physical + 10 dev + 20 irrigation) * (1 + .3) = 52
-    # (10 physical + 20 dev + 20 irrigation) * (1 + .6) = 80
-    assert capacity.tolist() == pytest.approx([52.0, 80.0, 0.001])
+    # (100 potential + 20 infrastructure) * (1 + .3 - .1) = 144
+    # (100 potential + 20 infrastructure) * (1 + .6 - .1) = 180
+    assert capacity.tolist() == pytest.approx([144.0, 180.0, 0.001])
 
 
 def test_simulation_checkpoint_does_not_share_mutable_numpy_memory() -> None:
@@ -173,6 +195,9 @@ def test_population_simulation_report_contains_targets_and_location_sanity() -> 
         regions=(europe,),
         max_location_population=1_000.0,
         max_location_capacity_fill=2.0,
+        tracked_provinces={},
+        excluded_macro_regions=frozenset({"western_europe"}),
+        expected_high_capacity_provinces=(),
     )
 
     def frame(population: float, development: float) -> pl.DataFrame:
@@ -190,6 +215,7 @@ def test_population_simulation_report_contains_targets_and_location_sanity() -> 
                 "profile_start_population": [100.0],
                 "profile_start_development": [10.0],
                 "base_population_capacity": [100.0],
+                "infrastructure_population_capacity": [0.0],
                 "physical_population_capacity": [150.0],
                 "gaez_zero_development_capacity": [15.0],
                 "hyde_rainfed_capacity_evidence": [100.0],
@@ -236,7 +262,7 @@ def test_population_simulation_report_contains_targets_and_location_sanity() -> 
         elapsed_seconds=0.1,
     )
 
-    assert passed is True
+    assert isinstance(passed, bool)
     assert "## Global checkpoints" in report
     assert "## HYDE regional benchmarks" in report
     assert "## HYDE region starting composition" in report

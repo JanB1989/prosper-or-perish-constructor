@@ -308,7 +308,13 @@ def test_irrigation_systems_use_capacity_instead_of_crop_output_bonuses() -> Non
     ]
 
     assert not present
-    assert "local_population_capacity = 110" in blueprint_text
+    profile = tomllib.loads(
+        (ROOT / "population_capacity_simulation.toml").read_text(encoding="utf-8")
+    )
+    expected = profile["infrastructure"]["capacity_per_level"][
+        "irrigation_systems"
+    ]
+    assert f"local_population_capacity = {expected}" in blueprint_text
 
 
 def test_irrigation_maintenance_is_not_tool_focused() -> None:
@@ -414,8 +420,8 @@ def test_development_modifier_preserves_population_and_other_static_values() -> 
     development = _entry_block(static_modifiers.entries, "development")
 
     assert development is not None
-    assert _last_value(development, "local_population_capacity") == 0.1
-    assert _last_value(development, "local_population_capacity_modifier") == 0.02
+    assert _last_value(development, "local_population_capacity") == 0
+    assert _last_value(development, "local_population_capacity_modifier") == 0.00125
     assert _last_value(development, "local_distance_from_capital_speed_propagation") == 0.005
     assert _last_value(development, "local_supply_limit_modifier") == 0.02
     assert _last_value(development, "blockade_force_required") == 0.01

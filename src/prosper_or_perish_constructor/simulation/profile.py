@@ -3,6 +3,10 @@
 from __future__ import annotations
 
 import math
+import hashlib
+import json
+import pickle
+import re
 import tomllib
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -30,6 +34,7 @@ from prosper_or_perish_constructor.simulation.capacity_model import (
     HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN,
     IRRIGATION_LEGAL_CAP_COLUMN,
     IRRIGATION_LEVELS_COLUMN,
+    INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN,
     PopulationCapacityFormula,
     PHYSICAL_POPULATION_CAPACITY_COLUMN,
     ZERO_DEVELOPMENT_CAPACITY_COLUMN,
@@ -47,6 +52,7 @@ from prosper_or_perish_constructor.simulation.modifiers import (
 )
 from prosper_or_perish_constructor.simulation.run import Simulation
 from prosper_or_perish_constructor.simulation.tick import prepare_start_locations
+from prosper_or_perish_constructor.simulation.notebook_outputs import macro_region_statistics
 
 PEASANT_FOOD_CONSUMPTION_KEY = "local_peasants_food_consumption"
 HYDE_REGION_COLUMN = "hyde_region"
@@ -62,6 +68,9 @@ START_COUNTRY_TAG_COLUMN = "profile_start_country_tag"
 START_CONSTRUCTIBLE_OWNER_COLUMN = "profile_start_constructible_owner"
 VANILLA_IRRIGATION_LEVELS_COLUMN = "vanilla_irrigation_systems_levels"
 GENERATED_IRRIGATION_LEVELS_COLUMN = "generated_irrigation_systems_levels"
+CLEARING_INCREMENT_PEOPLE_COLUMN = "clearing_increment_capacity_people_p50"
+LANDCOVER_CROPLAND_FRACTION_COLUMN = "cropland_fraction_1300"
+LANDCOVER_MANAGED_FRACTION_COLUMN = "managed_land_fraction_1300"
 PEOPLE_PER_GAME_UNIT_DEFAULT = 1_000.0
 SIMULATION_POPULATION_COLUMNS = (
     "population_nobles",
@@ -93,10 +102,13 @@ class SimulationProfile:
     people_per_game_unit: float
     output_path: Path
     population_snapshot_path: Path
+    starting_buildings_path: Path
+    preparation_cache_path: Path
     parser_profile: str
     load_order_path: Path
     candidates_path: Path
     sample_points_path: Path
+    landcover_capacity_path: Path
     hyde_root: Path
     hyde_region_mask_path: Path
     hyde_population_locations_path: Path
@@ -111,16 +123,32 @@ class SimulationProfile:
     deployment_manifest_path: Path
     deployment_development_decimals: int
     physical_capacity_columns: tuple[str, ...]
+    physical_capacity_weights: Mapping[str, float]
     gaez_zero_development_fraction: float
-    gaez_zero_development_density_cap: float
-    hyde_rainfed_capacity_multiplier: float
+    physical_density_reference_people_per_km2: float
+    physical_density_elasticity: float
+    location_area_exponent: float
+    location_area_reference_km2: float
+    location_potential_minimum: float
+    location_potential_maximum_spread: float
+    manageable_land_density_people_per_km2: float
+    calibrated_location_potential_enabled: bool
+    calibrated_location_potential_path: Path
     capacity_formula: PopulationCapacityFormula
+    infrastructure_capacity_per_level: Mapping[str, float]
+    infrastructure_area_per_level_km2: Mapping[str, float]
+    infrastructure_max_levels: Mapping[str, int]
+    infrastructure_clearing_increment_people_per_level: float
+    infrastructure_farming_cropland_fraction_per_level: float
+    infrastructure_farming_minimum_cropland_fraction: float
     development_base: float
     development_manageable_cropland_column: str
     development_minimum_manageable_cropland_fraction: float
     development_cropland_utilization_points: float
     development_cropland_saturation_rate: float
     development_pasture_full_share_points: float
+    development_landcover_cropland_points: float
+    development_landcover_managed_points: float
     development_start_min: float
     development_start_max: float
     irrigation_enabled: bool
@@ -129,6 +157,8 @@ class SimulationProfile:
     irrigation_development_levels_per_point: float
     irrigation_lake_legal_levels: float
     irrigation_owner_legal_levels: float
+    irrigation_river_level_fraction: float
+    irrigation_arid_settlement_level_fraction: float
     irrigation_require_river_or_lake: bool
     irrigation_exceptions: frozenset[str]
     abundant_peasant_food_consumption: float
@@ -178,6 +208,11 @@ class SimulationProfile:
     min_irrigation_river_or_lake_fraction: float
     min_irrigation_river_supported_level_fraction: float
     max_irrigation_cap_violations: int
+    acceptance: Mapping[str, float]
+    supercity_exceptions: frozenset[str]
+    tracked_provinces: Mapping[str, tuple[str, ...]]
+    excluded_macro_regions: frozenset[str]
+    expected_high_capacity_provinces: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -188,21 +223,30 @@ class ProfileRunResult:
     checkpoints: tuple[int, ...]
 
 
-def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationProfile:
+def load_population_simulation_profile(
+    path: Path,
+    *,
+    repo: Path,
+    overrides: Sequence[str] = (),
+) -> SimulationProfile:
     """Load and validate the adjustable TOML profile."""
 
     resolved = _resolve(repo, path)
     raw = tomllib.loads(resolved.read_text(encoding="utf-8-sig"))
+    _apply_profile_overrides(raw, overrides)
     simulation = _mapping(raw, "simulation")
     paths = _mapping(raw, "paths")
     deployment = _mapping(raw, "deployment")
     capacity = _mapping(raw, "capacity")
     development = _mapping(raw, "development")
     irrigation = _mapping(raw, "irrigation")
+    infrastructure = _mapping(raw, "infrastructure")
     food = _mapping(raw, "food_pressure")
     population_growth = _mapping(raw, "population_growth")
     targets = _mapping(raw, "targets")
     sanity = _mapping(raw, "sanity")
+    acceptance = _mapping(raw, "acceptance")
+    tracking = _mapping(raw, "tracking")
 
     start_year = _integer(simulation, "start_year")
     checkpoints = tuple(sorted(set(_integer_list(simulation, "checkpoint_years"))))
@@ -250,10 +294,21 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
             repo,
             Path(_string(paths, "population_snapshot")),
         ),
+        starting_buildings_path=_resolve(
+            repo,
+            Path(_string(paths, "starting_buildings")),
+        ),
+        preparation_cache_path=_resolve(
+            repo,
+            Path(_string(paths, "preparation_cache")),
+        ),
         parser_profile=str(simulation.get("parser_profile") or "constructor"),
         load_order_path=_resolve(repo, Path(str(simulation.get("load_order") or "constructor.load_order.toml"))),
         candidates_path=_resolve(repo, Path(_string(paths, "location_candidates"))),
         sample_points_path=_resolve(repo, Path(_string(paths, "location_sample_points"))),
+        landcover_capacity_path=_resolve(
+            repo, Path(_string(paths, "landcover_capacity"))
+        ),
         hyde_root=hyde_root,
         hyde_region_mask_path=_resolve(hyde_root, Path(_string(paths, "hyde_region_mask"))),
         hyde_population_locations_path=_resolve(
@@ -290,24 +345,73 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
         physical_capacity_columns=tuple(
             str(value) for value in capacity.get("physical_capacity_columns") or []
         ),
+        physical_capacity_weights={
+            str(key): float(value)
+            for key, value in _mapping(capacity, "source_weights").items()
+        },
         gaez_zero_development_fraction=_nonnegative_float(
             capacity, "gaez_zero_development_fraction"
         ),
-        gaez_zero_development_density_cap=_positive_float(
-            capacity, "gaez_zero_development_density_cap"
+        physical_density_reference_people_per_km2=_positive_float(
+            capacity, "physical_density_reference_people_per_km2"
         ),
-        hyde_rainfed_capacity_multiplier=_nonnegative_float(
-            capacity, "hyde_rainfed_capacity_multiplier"
+        physical_density_elasticity=_positive_float(
+            capacity, "physical_density_elasticity"
+        ),
+        location_area_exponent=_positive_float(capacity, "location_area_exponent"),
+        location_area_reference_km2=_positive_float(
+            capacity, "location_area_reference_km2"
+        ),
+        location_potential_minimum=_nonnegative_float(
+            capacity, "location_potential_minimum"
+        ),
+        location_potential_maximum_spread=_positive_float(
+            capacity, "location_potential_maximum_spread"
+        ),
+        manageable_land_density_people_per_km2=_nonnegative_float(
+            capacity, "manageable_land_density_people_per_km2"
+        ),
+        calibrated_location_potential_enabled=bool(
+            capacity.get("regime_model_enabled", False)
+        ),
+        calibrated_location_potential_path=_resolve(
+            repo,
+            Path(_string(capacity, "regime_model_potential_artifact")),
         ),
         capacity_formula=PopulationCapacityFormula(
-            physical_scale=1.0,
-            development_absolute=_float(capacity, "development_absolute"),
             development_relative=_float(capacity, "development_relative"),
-            irrigation_absolute=_float(capacity, "irrigation_absolute"),
-            irrigation_relative=_float(capacity, "irrigation_relative"),
+            global_relative=_float(capacity, "global_relative"),
             development_min=_float(capacity, "development_min"),
             development_max=_float(capacity, "development_max"),
             minimum_capacity=_nonnegative_float(capacity, "minimum_capacity"),
+        ),
+        infrastructure_capacity_per_level={
+            str(key): float(value)
+            for key, value in _mapping(
+                infrastructure, "capacity_per_level"
+            ).items()
+        },
+        infrastructure_area_per_level_km2={
+            str(key): float(value)
+            for key, value in _mapping(
+                infrastructure, "area_per_level_km2"
+            ).items()
+        },
+        infrastructure_max_levels={
+            str(key): int(value)
+            for key, value in _mapping(infrastructure, "max_levels").items()
+        },
+        infrastructure_clearing_increment_people_per_level=_positive_float(
+            _mapping(infrastructure, "placement"),
+            "clearing_increment_people_per_level",
+        ),
+        infrastructure_farming_cropland_fraction_per_level=_positive_float(
+            _mapping(infrastructure, "placement"),
+            "farming_cropland_fraction_per_level",
+        ),
+        infrastructure_farming_minimum_cropland_fraction=_nonnegative_float(
+            _mapping(infrastructure, "placement"),
+            "farming_minimum_cropland_fraction",
         ),
         development_base=_float(development, "base"),
         development_manageable_cropland_column=_string(
@@ -325,6 +429,12 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
         development_pasture_full_share_points=_float(
             development, "pasture_full_share_points"
         ),
+        development_landcover_cropland_points=_nonnegative_float(
+            development, "landcover_cropland_points"
+        ),
+        development_landcover_managed_points=_nonnegative_float(
+            development, "landcover_managed_points"
+        ),
         development_start_min=_float(development, "start_min"),
         development_start_max=_float(development, "start_max"),
         irrigation_enabled=bool(irrigation.get("enabled", True)),
@@ -335,6 +445,12 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
         ),
         irrigation_lake_legal_levels=_nonnegative_float(irrigation, "lake_legal_levels"),
         irrigation_owner_legal_levels=_nonnegative_float(irrigation, "owner_legal_levels"),
+        irrigation_river_level_fraction=_nonnegative_float(
+            irrigation, "river_level_fraction"
+        ),
+        irrigation_arid_settlement_level_fraction=_nonnegative_float(
+            irrigation, "arid_settlement_level_fraction"
+        ),
         irrigation_require_river_or_lake=bool(irrigation.get("require_river_or_lake", True)),
         irrigation_exceptions=frozenset(str(value) for value in irrigation.get("exceptions") or []),
         abundant_peasant_food_consumption=_float(food, "abundant_peasant_food_consumption"),
@@ -438,6 +554,21 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
         max_irrigation_cap_violations=_nonnegative_integer(
             sanity, "max_irrigation_cap_violations"
         ),
+        acceptance={str(key): float(value) for key, value in acceptance.items()},
+        supercity_exceptions=frozenset(
+            str(value) for value in tracking.get("supercity_exceptions") or []
+        ),
+        tracked_provinces={
+            str(key): tuple(str(value) for value in values)
+            for key, values in _mapping(tracking, "provinces").items()
+        },
+        excluded_macro_regions=frozenset(
+            str(value) for value in tracking.get("excluded_macro_regions") or []
+        ),
+        expected_high_capacity_provinces=tuple(
+            str(value)
+            for value in tracking.get("expected_high_capacity_provinces") or []
+        ),
     )
     if profile.development_start_max < profile.development_start_min:
         raise ValueError("development.start_max must be at least development.start_min")
@@ -445,6 +576,10 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
         raise ValueError("deployment.development_decimals must be at most 6")
     if not profile.physical_capacity_columns:
         raise ValueError("capacity.physical_capacity_columns must not be empty")
+    if set(profile.physical_capacity_weights) != set(profile.physical_capacity_columns):
+        raise ValueError(
+            "capacity.source_weights must define every physical_capacity_columns entry"
+        )
     unknown_scored_regions = sorted(set(profile.start_capacity_scored_regions) - set(keys))
     if unknown_scored_regions:
         raise ValueError(
@@ -459,6 +594,16 @@ def load_population_simulation_profile(path: Path, *, repo: Path) -> SimulationP
         raise ValueError(
             "sanity max_start_development_p90 must be at least the minimum"
         )
+    invalid_tracked = {
+        key: values
+        for key, values in profile.tracked_provinces.items()
+        if len(values) != 3 or len(set(values)) != 3
+    }
+    if invalid_tracked:
+        raise ValueError(
+            "tracking.provinces must contain exactly three distinct provinces "
+            f"per macro-region: {invalid_tracked}"
+        )
     missing_global = sorted(set(profile.global_ratios) - set(profile.checkpoint_years))
     if missing_global:
         raise ValueError(f"global targets reference unconfigured checkpoints: {missing_global}")
@@ -470,14 +615,34 @@ def run_population_simulation_profile(
     repo: Path,
     project: Path,
     profile_path: Path,
+    checkpoint_years: Sequence[int] | None = None,
+    overrides: Sequence[str] = (),
+    refresh_cache: bool = False,
 ) -> ProfileRunResult:
     """Run configured checkpoints and write exactly one consolidated Markdown report."""
 
     started = perf_counter()
-    profile = load_population_simulation_profile(profile_path, repo=repo)
-    state, context, preparation = _prepare_state(repo, project, profile)
+    profile = load_population_simulation_profile(
+        profile_path,
+        repo=repo,
+        overrides=overrides,
+    )
+    if checkpoint_years is not None:
+        checkpoints = tuple(sorted(set(int(year) for year in checkpoint_years)))
+        if not checkpoints or checkpoints[0] != 0 or any(year < 0 for year in checkpoints):
+            raise ValueError("--years must contain 0 and only non-negative years")
+        profile = replace(profile, checkpoint_years=checkpoints)
+    preparation_started = perf_counter()
+    state, context, preparation = _prepare_state(
+        repo,
+        project,
+        profile,
+        refresh_cache=refresh_cache,
+    )
+    preparation_seconds = perf_counter() - preparation_started
     simulation = Simulation(state, context)
 
+    simulation_started = perf_counter()
     snapshots: dict[int, pl.DataFrame] = {}
     previous_year = 0
     for year in profile.checkpoint_years:
@@ -485,6 +650,19 @@ def run_population_simulation_profile(
             simulation.run(months=(year - previous_year) * 12, progress=False)
         snapshots[year] = _snapshot(simulation.state)
         previous_year = year
+    simulation_seconds = perf_counter() - simulation_started
+    run_payload = {
+        "profile_sha256": hashlib.sha256(profile.path.read_bytes()).hexdigest(),
+        "years": list(profile.checkpoint_years),
+        "overrides": list(overrides),
+    }
+    preparation["runtime"] = {
+        "preparation_seconds": preparation_seconds,
+        "simulation_seconds": simulation_seconds,
+    }
+    preparation["run_hash"] = hashlib.sha256(
+        json.dumps(run_payload, sort_keys=True).encode("utf-8")
+    ).hexdigest()[:16]
 
     report, passed = build_population_simulation_report(
         profile=profile,
@@ -506,9 +684,37 @@ def _prepare_state(
     repo: Path,
     project: Path,
     profile: SimulationProfile,
+    *,
+    refresh_cache: bool = False,
 ) -> tuple[pl.DataFrame, SimulationModifierContext, dict[str, Any]]:
-    state = load_start_location_frame(repo, project)
-    state, population_snapshot_summary = _attach_population_snapshot(state, profile)
+    state, population_snapshot_summary, cache_status = _load_or_build_source_cache(
+        repo,
+        project,
+        profile,
+        refresh=refresh_cache,
+    )
+    landcover_columns = {
+        CLEARING_INCREMENT_PEOPLE_COLUMN,
+        LANDCOVER_CROPLAND_FRACTION_COLUMN,
+        LANDCOVER_MANAGED_FRACTION_COLUMN,
+        *profile.physical_capacity_columns,
+    }
+    missing_landcover_columns = sorted(landcover_columns - set(state.columns))
+    if missing_landcover_columns:
+        _require_file(
+            profile.landcover_capacity_path,
+            "location land-cover capacity artifact",
+        )
+        landcover_source = pl.read_parquet(profile.landcover_capacity_path)
+        available_landcover_columns = sorted(
+            set(missing_landcover_columns) & set(landcover_source.columns)
+        )
+        landcover = landcover_source.select(
+            "location_tag", *available_landcover_columns
+        )
+        state = state.join(landcover, on="location_tag", how="left").with_columns(
+            pl.col(column).fill_null(0.0) for column in available_landcover_columns
+        )
     candidates = pl.read_parquet(profile.candidates_path)
     candidate_columns = [
         "location_tag",
@@ -518,7 +724,11 @@ def _prepare_state(
         "centroid_y",
         "area_km2",
         profile.development_manageable_cropland_column,
-        *profile.physical_capacity_columns,
+        *(
+            column
+            for column in profile.physical_capacity_columns
+            if column in candidates.columns
+        ),
     ]
     missing_candidate_columns = sorted(set(candidate_columns) - set(candidates.columns))
     if missing_candidate_columns:
@@ -526,13 +736,20 @@ def _prepare_state(
             "population-capacity candidates are missing configured columns: "
             f"{missing_candidate_columns}"
         )
-    state = state.join(candidates.select(candidate_columns), on="location_tag", how="left")
-    state = state.with_columns(
-        pl.col("total_population").fill_null(0.0).cast(pl.Float64).alias(START_POPULATION_COLUMN),
-        pl.col("development").fill_null(0.0).cast(pl.Float64).alias(START_DEVELOPMENT_COLUMN),
+    missing_cached_columns = sorted(set(candidate_columns) - set(state.columns))
+    if missing_cached_columns:
+        raise ValueError(
+            "population-simulation source cache is incomplete; rerun with "
+            f"--refresh-cache (missing {missing_cached_columns})"
+        )
+    missing_physical_columns = sorted(
+        set(profile.physical_capacity_columns) - set(state.columns)
     )
-    state = _attach_hyde_regions(state, profile)
-    state = _attach_hyde_inputs(state, profile)
+    if missing_physical_columns:
+        raise ValueError(
+            "configured physical-capacity sources are unavailable in both the "
+            f"candidate and land-cover artifacts: {missing_physical_columns}"
+        )
     development = np.round(
         _hyde_starting_development(state, profile),
         decimals=profile.deployment_development_decimals,
@@ -540,11 +757,11 @@ def _prepare_state(
     state = state.with_columns(
         pl.Series("development", development),
     )
-    state = _attach_start_owners(state, repo)
 
     physical_people = pl.sum_horizontal(
         [
             pl.col(column).fill_null(0.0).cast(pl.Float64)
+            * profile.physical_capacity_weights[column]
             for column in profile.physical_capacity_columns
         ]
     )
@@ -566,13 +783,24 @@ def _prepare_state(
         )
         irrigation_summary = {"enabled": False}
 
+    state, infrastructure_summary = _attach_infrastructure_levels(state, profile)
     state = _attach_zero_development_capacity(state, profile)
     state = _attach_deployed_base_capacity(state, profile)
 
-    context = load_simulation_modifier_context(
-        profile=profile.parser_profile,
-        load_order_path=profile.load_order_path,
-    )
+    context_cache = profile.preparation_cache_path.with_suffix(".context.pickle")
+    if context_cache.is_file() and not refresh_cache:
+        with context_cache.open("rb") as stream:
+            context = pickle.load(stream)
+        context_cache_status = "hit"
+    else:
+        context = load_simulation_modifier_context(
+            profile=profile.parser_profile,
+            load_order_path=profile.load_order_path,
+        )
+        context_cache.parent.mkdir(parents=True, exist_ok=True)
+        with context_cache.open("wb") as stream:
+            pickle.dump(context, stream, protocol=pickle.HIGHEST_PROTOCOL)
+        context_cache_status = "refreshed" if refresh_cache else "miss"
     context = replace(
         context,
         capacity_pressure=_capacity_pressure_overrides(context, profile),
@@ -585,8 +813,11 @@ def _prepare_state(
     state = prepare_start_locations(state, context)
     preparation = {
         "locations": state.height,
+        "source_cache": cache_status,
+        "modifier_cache": context_cache_status,
         "population_snapshot": population_snapshot_summary,
         "irrigation": irrigation_summary,
+        "infrastructure": infrastructure_summary,
         "starting_development_raw": _numeric_summary(state[START_DEVELOPMENT_COLUMN]),
         "starting_development_profile": _numeric_summary(state["development"]),
         "development_monthly_per_point": (
@@ -618,8 +849,105 @@ def _prepare_state(
             state,
             profile.capacity_formula,
         ),
+        "infrastructure_parity": _infrastructure_capacity_parity(repo, profile),
     }
     return state, context, preparation
+
+
+def _infrastructure_capacity_parity(
+    repo: Path,
+    profile: SimulationProfile,
+) -> dict[str, Any]:
+    pattern = re.compile(r"\blocal_population_capacity\s*=\s*(-?\d+(?:\.\d+)?)")
+    mod_root = repo / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    rows: dict[str, Any] = {}
+    passed = True
+    for building, expected in profile.infrastructure_capacity_per_level.items():
+        blueprint = repo / "blueprints" / "accepted" / "buildings" / f"{building}.yml"
+        compiled = mod_root / "in_game" / "common" / "building_types" / f"zz_pp_{building}.txt"
+        observed: dict[str, float | None] = {}
+        for label, path in (("blueprint", blueprint), ("compiled", compiled)):
+            values = pattern.findall(path.read_text(encoding="utf-8-sig")) if path.is_file() else []
+            observed[label] = float(values[-1]) if values else None
+        row_pass = all(
+            value is not None and math.isclose(value, expected, abs_tol=1e-9)
+            for value in observed.values()
+        )
+        rows[building] = {"expected": expected, **observed, "pass": row_pass}
+        passed = passed and row_pass
+    return {"pass": passed, "buildings": rows}
+
+
+def _load_or_build_source_cache(
+    repo: Path,
+    project: Path,
+    profile: SimulationProfile,
+    *,
+    refresh: bool,
+) -> tuple[pl.DataFrame, dict[str, Any], str]:
+    """Cache parser, raster, geometry, population, and location joins.
+
+    Calibration coefficients are deliberately applied after this cache, so
+    repeated ``--set`` experiments reuse the expensive source preparation.
+    """
+
+    cache = profile.preparation_cache_path
+    if cache.is_file() and not refresh:
+        state = pl.read_parquet(cache)
+        summary = {
+            "path": str(profile.population_snapshot_path),
+            "snapshot_rows": state.height,
+            "matched_locations": state.height,
+            "total_population": float(state["total_population"].sum()),
+            "snapshot_date": "cached",
+            "source_save": "cached; use --refresh-cache after source changes",
+        }
+        return state, summary, "hit"
+
+    state = load_start_location_frame(repo, project)
+    state, population_summary = _attach_population_snapshot(state, profile)
+    candidates = pl.read_parquet(profile.candidates_path)
+    required_candidate_columns = [
+        "location_tag",
+        "calibrated_lon",
+        "calibrated_lat",
+        "centroid_x",
+        "centroid_y",
+        "area_km2",
+        profile.development_manageable_cropland_column,
+    ]
+    missing = sorted(set(required_candidate_columns) - set(candidates.columns))
+    if missing:
+        raise ValueError(
+            f"population-capacity candidates are missing configured columns: {missing}"
+        )
+    candidate_columns = [
+        *required_candidate_columns,
+        *(
+            column
+            for column in profile.physical_capacity_columns
+            if column in candidates.columns
+        ),
+    ]
+    state = state.join(candidates.select(candidate_columns), on="location_tag", how="left")
+    state = state.with_columns(
+        pl.col("total_population")
+        .fill_null(0.0)
+        .cast(pl.Float64)
+        .alias(START_POPULATION_COLUMN),
+        pl.col("development")
+        .fill_null(0.0)
+        .cast(pl.Float64)
+        .alias(START_DEVELOPMENT_COLUMN),
+    )
+    state = _attach_hyde_regions(state, profile)
+    state = _attach_hyde_inputs(state, profile)
+    state = _attach_start_owners(state, repo)
+    state = _attach_irrigation_source_evidence(state, profile)
+    state = _attach_existing_infrastructure_evidence(state, repo, profile)
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    state.write_parquet(cache)
+    return state, population_summary, "refreshed" if refresh else "miss"
 
 
 def _attach_population_snapshot(
@@ -720,71 +1048,96 @@ def _attach_zero_development_capacity(
     state: pl.DataFrame,
     profile: SimulationProfile,
 ) -> pl.DataFrame:
-    """Derive the natural, zero-development baseline from GAEZ and HYDE.
-
-    GAEZ supplies potential even where nobody lives. HYDE supplies independent
-    historical evidence where the physical crop model is too conservative, but
-    only the rainfed share may support the natural baseline. The capacity effect
-    of the observed starting development is backed out so HYDE does not get
-    counted once in the static potential and again through the development
-    modifier. Irrigation is deliberately absent from this calculation.
-    """
+    """Derive location potential from physical sources without population input."""
 
     formula = profile.capacity_formula
     physical = np.maximum(
         state[PHYSICAL_POPULATION_CAPACITY_COLUMN].to_numpy(),
         0.0,
     )
-    development = np.clip(
-        state["development"].to_numpy(),
-        formula.development_min,
-        formula.development_max,
+    area = np.maximum(state["area_km2"].to_numpy(), 0.0)
+    area_factor = np.power(
+        np.maximum(area / profile.location_area_reference_km2, 1e-12),
+        profile.location_area_exponent - 1.0,
     )
-    cropland = np.maximum(state[HYDE_CROPLAND_AREA_COLUMN].to_numpy(), 0.0)
-    rainfed = np.maximum(state[HYDE_RAINFED_AREA_COLUMN].to_numpy(), 0.0)
-    rainfed_share = np.divide(
-        rainfed,
-        cropland,
-        out=np.ones_like(rainfed),
-        where=cropland > 1e-12,
-    )
-    rainfed_share = np.clip(rainfed_share, 0.0, 1.0)
-    # HYDE sometimes contains a tiny irrigated trace in a location where the
-    # river/legal/evidence gates do not produce an irrigation building. Such a
-    # trace cannot carry the location in game, so only partition HYDE population
-    # away from the natural baseline when irrigation is actually deployed.
-    has_deployed_irrigation = state[IRRIGATION_LEVELS_COLUMN].to_numpy() > 0.0
-    rainfed_share = np.where(has_deployed_irrigation, rainfed_share, 1.0)
-    hyde_rainfed_population = (
-        np.maximum(state[HYDE_POPULATION_COLUMN].to_numpy(), 0.0)
+    reference_capacity = (
+        area
+        * profile.physical_density_reference_people_per_km2
         / profile.people_per_game_unit
-        * rainfed_share
     )
-    hyde_managed_target = (
-        hyde_rainfed_population * profile.hyde_rainfed_capacity_multiplier
+    physical_ratio = np.divide(
+        physical * profile.gaez_zero_development_fraction,
+        reference_capacity,
+        out=np.zeros_like(physical),
+        where=reference_capacity > 0.0,
     )
-    development_relative = np.maximum(
-        1.0 + development * formula.development_relative,
-        1e-12,
+    # A power law preserves the ordering and information in the physical
+    # evidence while compressing the several-orders-of-magnitude raw range.
+    # Unlike the former flat density cap, fertile locations remain distinct.
+    gaez_fractional = (
+        reference_capacity
+        * np.power(np.maximum(physical_ratio, 0.0), profile.physical_density_elasticity)
+        * area_factor
     )
-    hyde_static_evidence = np.maximum(
-        hyde_managed_target / development_relative
-        - development * formula.development_absolute,
+    manageable_fraction = np.clip(
+        np.nan_to_num(
+            state[profile.development_manageable_cropland_column].to_numpy(),
+            nan=0.0,
+        ),
         0.0,
+        1.0,
     )
-    gaez_fractional = physical * profile.gaez_zero_development_fraction
-    gaez_density_cap = (
-        np.maximum(state["area_km2"].to_numpy(), 0.0)
-        * profile.gaez_zero_development_density_cap
+    manageable_floor = (
+        area
+        * manageable_fraction
+        * profile.manageable_land_density_people_per_km2
         / profile.people_per_game_unit
+        * area_factor
     )
-    gaez_static = np.minimum(gaez_fractional, gaez_density_cap)
-    zero_development = np.maximum(gaez_static, hyde_static_evidence)
-    return state.with_columns(
+    gaez_static = np.maximum(gaez_fractional, manageable_floor)
+    spread_floor = float(np.max(gaez_static)) / profile.location_potential_maximum_spread
+    zero_development = np.maximum(
+        gaez_static,
+        max(profile.location_potential_minimum, spread_floor),
+    )
+    state = state.with_columns(
         pl.Series(GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN, gaez_static),
-        pl.Series(HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN, hyde_static_evidence),
+        pl.lit(0.0).alias(HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN),
         pl.Series(ZERO_DEVELOPMENT_CAPACITY_COLUMN, zero_development),
     )
+    if not profile.calibrated_location_potential_enabled:
+        return state
+    _require_file(
+        profile.calibrated_location_potential_path,
+        "calibrated location-potential artifact",
+    )
+    calibrated = pl.read_parquet(profile.calibrated_location_potential_path)
+    required = {"location_tag", "location_potential"}
+    missing = sorted(required - set(calibrated.columns))
+    if missing:
+        raise ValueError(f"calibrated location-potential artifact missing columns: {missing}")
+    calibrated = calibrated.select(
+        pl.col("location_tag").cast(pl.String),
+        pl.col("location_potential").cast(pl.Float64).alias(
+            "calibrated_location_potential"
+        ),
+    ).unique("location_tag")
+    state = state.join(calibrated, on="location_tag", how="left")
+    invalid = state.filter(
+        pl.col("calibrated_location_potential").is_null()
+        | ~pl.col("calibrated_location_potential").is_finite()
+        | (pl.col("calibrated_location_potential") < 0.0)
+    )
+    if invalid.height:
+        raise ValueError(
+            "calibrated location-potential artifact has missing or invalid values; "
+            f"locations={invalid.height}"
+        )
+    return state.with_columns(
+        pl.col("calibrated_location_potential").alias(
+            ZERO_DEVELOPMENT_CAPACITY_COLUMN
+        )
+    ).drop("calibrated_location_potential")
 
 
 def _attach_deployed_base_capacity(
@@ -796,34 +1149,39 @@ def _attach_deployed_base_capacity(
     formula = profile.capacity_formula
     natural = state[ZERO_DEVELOPMENT_CAPACITY_COLUMN].to_numpy()
     development = state["development"].to_numpy()
-    irrigation = state[IRRIGATION_LEVELS_COLUMN].to_numpy()
+    infrastructure = state[INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN].to_numpy()
     desired = formula.evaluate(
         base_capacity=natural,
         development=development,
-        irrigation_levels=irrigation,
+        infrastructure_capacity=infrastructure,
     )
     relative = np.maximum(
         1.0
         + development * formula.development_relative
-        + irrigation * formula.irrigation_relative,
+        + formula.global_relative,
         1e-12,
     )
     required_static_base = np.maximum(
         desired / relative
-        - development * formula.development_absolute
-        - irrigation * formula.irrigation_absolute,
+        - infrastructure,
         0.0,
     )
     # The compiler contract is integral EU5 population units. Ceil rather than
     # nearest-round so quantization can never push a location below the modeled
     # physical/minimum base.
     deployed_static_base = np.ceil(required_static_base - 1e-12)
+    deployed_capacity = formula.evaluate(
+        base_capacity=deployed_static_base,
+        development=development,
+        infrastructure_capacity=infrastructure,
+    )
     return state.with_columns(
         pl.Series(
             BASE_POPULATION_CAPACITY_COLUMN,
             deployed_static_base,
         ),
         pl.Series("deployed_static_population_capacity", deployed_static_base),
+        pl.Series("local_population_capacity", deployed_capacity),
     )
 
 
@@ -835,46 +1193,39 @@ def _capacity_attribution(
 
     base = state[BASE_POPULATION_CAPACITY_COLUMN].to_numpy()
     development = state["development"].to_numpy()
-    irrigation = state[IRRIGATION_LEVELS_COLUMN].to_numpy()
+    infrastructure = state[INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN].to_numpy()
     zero = np.zeros_like(development)
     natural = formula.evaluate(
         base_capacity=base,
         development=zero,
-        irrigation_levels=zero,
+        infrastructure_capacity=zero,
     )
     with_development = formula.evaluate(
         base_capacity=base,
         development=development,
-        irrigation_levels=zero,
+        infrastructure_capacity=zero,
     )
     full = formula.evaluate(
         base_capacity=base,
         development=development,
-        irrigation_levels=irrigation,
-    )
-    without_development_absolute = replace(
-        formula,
-        development_absolute=0.0,
-    ).evaluate(
-        base_capacity=base,
-        development=development,
-        irrigation_levels=irrigation,
+        infrastructure_capacity=infrastructure,
     )
     total = max(float(np.sum(full)), 1e-12)
     natural_total = float(np.sum(natural))
     development_total = float(np.sum(with_development - natural))
-    irrigation_total = float(np.sum(full - with_development))
-    development_absolute_total = float(np.sum(full - without_development_absolute))
+    infrastructure_total = float(np.sum(full - with_development))
     return {
         "total": total,
         "natural_total": natural_total,
         "natural_share": natural_total / total,
         "development_total": development_total,
         "development_share": development_total / total,
-        "development_absolute_total": development_absolute_total,
-        "development_absolute_share": development_absolute_total / total,
-        "irrigation_total": irrigation_total,
-        "irrigation_share": irrigation_total / total,
+        "development_absolute_total": 0.0,
+        "development_absolute_share": 0.0,
+        "infrastructure_total": infrastructure_total,
+        "infrastructure_share": infrastructure_total / total,
+        "irrigation_total": infrastructure_total,
+        "irrigation_share": infrastructure_total / total,
     }
 
 
@@ -1105,6 +1456,14 @@ def _hyde_starting_development(
         profile.development_base
         + cropland_management * profile.development_cropland_utilization_points
         + pasture_share * profile.development_pasture_full_share_points
+        + np.clip(
+            state[LANDCOVER_CROPLAND_FRACTION_COLUMN].to_numpy(), 0.0, 1.0
+        )
+        * profile.development_landcover_cropland_points
+        + np.clip(
+            state[LANDCOVER_MANAGED_FRACTION_COLUMN].to_numpy(), 0.0, 1.0
+        )
+        * profile.development_landcover_managed_points
     )
     return np.clip(
         development,
@@ -1121,26 +1480,41 @@ def _attach_irrigation_levels(
     _require_file(profile.hyde_irrigated_path, "HYDE irrigated-area raster")
     _require_file(profile.sample_points_path, "location sample points")
 
-    data_profile = load_profile(profile.parser_profile, profile.load_order_path)
-    river_levels = extract_river_levels_from_maps(
-        state,
-        locations_png_path=resolve_map_data_file(data_profile, "locations.png"),
-        rivers_png_path=resolve_map_data_file(data_profile, "rivers.png"),
-    )
-    state = state.join(river_levels, on="location_tag", how="left").with_columns(
-        pl.col("river_level").fill_null(0).cast(pl.Int64),
-        pl.col(HYDE_IRRIGATED_AREA_COLUMN).fill_null(0.0),
-    )
-    vanilla = _vanilla_irrigation_levels(profile)
-    state = state.join(vanilla, on="location_tag", how="left").with_columns(
-        pl.col(VANILLA_IRRIGATION_LEVELS_COLUMN).fill_null(0).cast(pl.Int64),
-    )
+    state = _attach_irrigation_source_evidence(state, profile)
 
     hyde_proposed = pl.sum_horizontal(
         [
             (pl.col(HYDE_IRRIGATED_AREA_COLUMN) >= threshold).cast(pl.Int64)
             for threshold in profile.irrigation_thresholds_km2
         ]
+    )
+    river_proposed = (
+        pl.when(
+            pl.col("has_river").fill_null(False)
+            & (pl.col(START_COUNTRY_TAG_COLUMN).fill_null("") != "")
+        )
+        .then(
+            (
+                pl.col("river_level").cast(pl.Float64)
+                * profile.irrigation_river_level_fraction
+            ).floor()
+        )
+        .otherwise(0.0)
+    )
+    arid_settlement = (
+        pl.col("climate").fill_null("").is_in(["arid", "cold_arid"])
+        & pl.col("vegetation").fill_null("").is_in(["desert", "sparse"])
+        & (pl.col(START_COUNTRY_TAG_COLUMN).fill_null("") != "")
+    )
+    arid_settlement_proposed = (
+        pl.when(arid_settlement)
+        .then(
+            (
+                pl.col(EXISTING_MARKET_VILLAGE_LEVELS_COLUMN).fill_null(0.0)
+                * profile.irrigation_arid_settlement_level_fraction
+            ).floor()
+        )
+        .otherwise(0.0)
     )
     legal = (
         pl.lit(profile.irrigation_base_legal_levels)
@@ -1151,21 +1525,25 @@ def _attach_irrigation_levels(
         * profile.irrigation_lake_legal_levels
         + profile.irrigation_owner_legal_levels
     ).floor()
+    legal = pl.max_horizontal(legal, arid_settlement_proposed)
     exception = pl.col("location_tag").is_in(sorted(profile.irrigation_exceptions))
     supported = (
         pl.col("has_river").fill_null(False)
         | pl.col("is_adjacent_to_lake").fill_null(False)
+        | (arid_settlement_proposed > 0.0)
         | exception
     )
     if profile.irrigation_require_river_or_lake:
         hyde_proposed = pl.when(supported).then(hyde_proposed).otherwise(0)
     hyde_proposed = (
-        pl.when(pl.col(START_CONSTRUCTIBLE_OWNER_COLUMN).fill_null(False))
+        pl.when(pl.col(START_COUNTRY_TAG_COLUMN).fill_null("") != "")
         .then(hyde_proposed)
         .otherwise(0)
     )
     proposed = pl.max_horizontal(
         hyde_proposed,
+        river_proposed,
+        arid_settlement_proposed,
         pl.col(VANILLA_IRRIGATION_LEVELS_COLUMN),
     )
     state = state.with_columns(
@@ -1190,14 +1568,21 @@ def _attach_irrigation_levels(
 
     irrigated = state.filter(pl.col(IRRIGATION_LEVELS_COLUMN) > 0)
     levels = float(irrigated[IRRIGATION_LEVELS_COLUMN].sum() or 0.0)
-    river_or_lake = irrigated.filter(
-        pl.col("has_river").fill_null(False) | pl.col("is_adjacent_to_lake").fill_null(False)
+    source_supported = irrigated.filter(
+        pl.col("has_river").fill_null(False)
+        | pl.col("is_adjacent_to_lake").fill_null(False)
+        | (pl.col(VANILLA_IRRIGATION_LEVELS_COLUMN) > 0)
+        | (arid_settlement_proposed > 0)
     )
     river_levels_supported = float(
         irrigated.select(
             pl.min_horizontal(
                 pl.col(IRRIGATION_LEVELS_COLUMN),
-                pl.col("river_level").cast(pl.Float64),
+                pl.max_horizontal(
+                    pl.col("river_level").cast(pl.Float64),
+                    pl.col(VANILLA_IRRIGATION_LEVELS_COLUMN).cast(pl.Float64),
+                    arid_settlement_proposed.cast(pl.Float64),
+                ),
             ).sum()
         ).item()
         or 0.0
@@ -1208,16 +1593,289 @@ def _attach_irrigation_levels(
         "levels": levels,
         "vanilla_levels": float(state[VANILLA_IRRIGATION_LEVELS_COLUMN].sum() or 0.0),
         "generated_levels": float(state[GENERATED_IRRIGATION_LEVELS_COLUMN].sum() or 0.0),
-        "river_or_lake_location_fraction": river_or_lake.height / irrigated.height
+        "river_or_lake_location_fraction": source_supported.height / irrigated.height
         if irrigated.height
         else 1.0,
         "river_supported_level_fraction": river_levels_supported / levels if levels else 1.0,
         "cap_violations": state.filter(
             pl.col(IRRIGATION_LEVELS_COLUMN) > pl.col(IRRIGATION_LEGAL_CAP_COLUMN)
         ).height,
-        "nonriver_locations": irrigated.height - river_or_lake.height,
+        "nonriver_locations": irrigated.height - source_supported.height,
         "proposed_locations": state.filter(pl.col("profile_irrigation_proposed_levels") > 0).height,
         "evidence_locations": state.filter(pl.col(HYDE_IRRIGATED_AREA_COLUMN) > 0).height,
+    }
+    return state, summary
+
+
+def _attach_irrigation_source_evidence(
+    state: pl.DataFrame,
+    profile: SimulationProfile,
+) -> pl.DataFrame:
+    """Attach stable parsed river and vanilla-building evidence once."""
+
+    if "river_level" not in state.columns:
+        data_profile = load_profile(profile.parser_profile, profile.load_order_path)
+        river_levels = extract_river_levels_from_maps(
+            state,
+            locations_png_path=resolve_map_data_file(data_profile, "locations.png"),
+            rivers_png_path=resolve_map_data_file(data_profile, "rivers.png"),
+        )
+        state = state.join(river_levels, on="location_tag", how="left")
+    state = state.with_columns(
+        pl.col("river_level").fill_null(0).cast(pl.Int64),
+        pl.col(HYDE_IRRIGATED_AREA_COLUMN).fill_null(0.0),
+    )
+    if VANILLA_IRRIGATION_LEVELS_COLUMN not in state.columns:
+        state = state.join(
+            _vanilla_irrigation_levels(profile),
+            on="location_tag",
+            how="left",
+        )
+    return state.with_columns(
+        pl.col(VANILLA_IRRIGATION_LEVELS_COLUMN).fill_null(0).cast(pl.Int64),
+    )
+
+
+def _infrastructure_levels_column(building: str) -> str:
+    return f"infrastructure_{building}_levels"
+
+
+def _existing_infrastructure_levels_column(building: str) -> str:
+    return f"existing_{building}_levels"
+
+
+def _generated_infrastructure_levels_column(building: str) -> str:
+    return f"generated_{building}_levels"
+
+
+EXISTING_MARKET_VILLAGE_LEVELS_COLUMN = "existing_market_village_levels"
+
+
+def _attach_existing_infrastructure_evidence(
+    state: pl.DataFrame,
+    repo: Path,
+    profile: SimulationProfile,
+) -> pl.DataFrame:
+    """Attach parsed game-start building levels without using population."""
+
+    from prosper_or_perish_constructor import food_building_startup
+    from prosper_or_perish_constructor.food_building_startup import (
+        load_food_startup_config,
+    )
+
+    if profile.starting_buildings_path.is_file():
+        frame = pl.read_parquet(profile.starting_buildings_path)
+        required = {"location_slug", "building_type", "level"}
+        missing = sorted(required - set(frame.columns))
+        if missing:
+            raise ValueError(
+                f"starting-building snapshot missing columns: {missing}"
+            )
+        existing = {
+            (str(row["location_slug"]), str(row["building_type"])): float(
+                row["level"] or 0.0
+            )
+            for row in frame.group_by(["location_slug", "building_type"])
+            .agg(pl.col("level").sum().alias("level"))
+            .to_dicts()
+        }
+    else:
+        existing = food_building_startup._load_existing_buildings(
+            load_food_startup_config(repo)
+        )
+    market_villages = {
+        tag: float(level)
+        for (tag, key), level in existing.items()
+        if key == "market_village" and float(level) > 0.0
+    }
+    state = state.with_columns(
+        pl.col("location_tag")
+        .replace_strict(market_villages, default=0.0, return_dtype=pl.Float64)
+        .alias(EXISTING_MARKET_VILLAGE_LEVELS_COLUMN)
+    )
+    saved_irrigation = {
+        tag: float(level)
+        for (tag, key), level in existing.items()
+        if key == "irrigation_systems" and float(level) > 0.0
+    }
+    if saved_irrigation:
+        state = state.with_columns(
+            pl.max_horizontal(
+                pl.col(VANILLA_IRRIGATION_LEVELS_COLUMN).cast(pl.Float64),
+                pl.col("location_tag").replace_strict(
+                    saved_irrigation,
+                    default=0.0,
+                    return_dtype=pl.Float64,
+                ),
+            ).alias(VANILLA_IRRIGATION_LEVELS_COLUMN)
+        )
+    expressions: list[pl.Expr] = []
+    for building in profile.infrastructure_capacity_per_level:
+        if building == "irrigation_systems":
+            continue
+        values = {
+            tag: float(level)
+            for (tag, key), level in existing.items()
+            if key == building and float(level) > 0.0
+        }
+        expressions.append(
+            pl.col("location_tag")
+            .replace_strict(values, default=0.0, return_dtype=pl.Float64)
+            .alias(_existing_infrastructure_levels_column(building))
+        )
+    return state.with_columns(expressions) if expressions else state
+
+
+def _attach_infrastructure_levels(
+    state: pl.DataFrame,
+    profile: SimulationProfile,
+) -> tuple[pl.DataFrame, dict[str, Any]]:
+    """Generate one combined, population-independent starting infrastructure."""
+
+    level_columns: dict[str, str] = {}
+    state = state.with_columns(
+        pl.col(IRRIGATION_LEVELS_COLUMN)
+        .fill_null(0.0)
+        .cast(pl.Float64)
+        .alias(_infrastructure_levels_column("irrigation_systems"))
+    )
+    level_columns["irrigation_systems"] = _infrastructure_levels_column(
+        "irrigation_systems"
+    )
+    state = state.with_columns(
+        pl.col(GENERATED_IRRIGATION_LEVELS_COLUMN)
+        .fill_null(0.0)
+        .alias(_generated_infrastructure_levels_column("irrigation_systems"))
+    )
+    topography = pl.col("topography").cast(pl.String).fill_null("")
+    terrain_terraces = topography.str.contains("hill|mountain|plateau")
+    terrain_drainage = topography.str.contains("wetland|marsh")
+    river_or_lake = (
+        pl.col("has_river").fill_null(False)
+        | pl.col("is_adjacent_to_lake").fill_null(False)
+    )
+    coastal_or_lake = (
+        pl.col("is_coastal").fill_null(False)
+        | pl.col("is_adjacent_to_lake").fill_null(False)
+    )
+    evidence = {
+        "bund": (
+            pl.col(HYDE_IRRIGATED_AREA_COLUMN),
+            river_or_lake,
+        ),
+        "terraces": (pl.col(HYDE_CROPLAND_AREA_COLUMN), terrain_terraces),
+        "polders": (
+            pl.col(HYDE_CROPLAND_AREA_COLUMN),
+            terrain_drainage & coastal_or_lake,
+        ),
+        "farming_village": (
+            pl.max_horizontal(
+                pl.col(HYDE_CROPLAND_AREA_COLUMN),
+                pl.col("area_km2") * pl.col(LANDCOVER_CROPLAND_FRACTION_COLUMN),
+            ),
+            pl.lit(True),
+        ),
+    }
+    for building, (area_evidence, allowed) in evidence.items():
+        if building not in profile.infrastructure_capacity_per_level:
+            continue
+        area_per_level = profile.infrastructure_area_per_level_km2[building]
+        maximum = profile.infrastructure_max_levels[building]
+        area_generated = (
+            pl.when(allowed & (pl.col(START_COUNTRY_TAG_COLUMN).fill_null("") != ""))
+            .then((area_evidence.fill_null(0.0) / area_per_level).floor())
+            .otherwise(0.0)
+            .clip(0.0, float(maximum))
+        )
+        generated = area_generated
+        if building == "farming_village":
+            cropland_intensity = pl.max_horizontal(
+                (
+                    pl.col(HYDE_CROPLAND_AREA_COLUMN)
+                    / pl.col("area_km2").clip(lower_bound=1e-12)
+                ).clip(0.0, 1.0),
+                pl.col(LANDCOVER_CROPLAND_FRACTION_COLUMN).clip(0.0, 1.0),
+            )
+            cropland_intensity_generated = (
+                pl.when(
+                    (pl.col(START_COUNTRY_TAG_COLUMN).fill_null("") != "")
+                    & (
+                        cropland_intensity
+                        >= profile.infrastructure_farming_minimum_cropland_fraction
+                    )
+                )
+                .then(
+                    1.0
+                    + (
+                        (
+                            cropland_intensity
+                            - profile.infrastructure_farming_minimum_cropland_fraction
+                        )
+                        / profile.infrastructure_farming_cropland_fraction_per_level
+                    ).floor()
+                )
+                .otherwise(0.0)
+                .clip(0.0, float(maximum))
+            )
+            clearing_generated = (
+                pl.when(pl.col(START_COUNTRY_TAG_COLUMN).fill_null("") != "")
+                .then(
+                    (
+                        pl.col(CLEARING_INCREMENT_PEOPLE_COLUMN).fill_null(0.0)
+                        / profile.infrastructure_clearing_increment_people_per_level
+                    ).floor()
+                )
+                .otherwise(0.0)
+                .clip(0.0, float(maximum))
+            )
+            generated = pl.max_horizontal(
+                area_generated,
+                cropland_intensity_generated,
+                clearing_generated,
+            )
+        existing_column = _existing_infrastructure_levels_column(building)
+        existing = (
+            pl.col(existing_column).fill_null(0.0)
+            if existing_column in state.columns
+            else pl.lit(0.0)
+        )
+        column = _infrastructure_levels_column(building)
+        state = state.with_columns(
+            pl.max_horizontal(existing, generated).alias(column),
+            (pl.max_horizontal(existing, generated) - existing)
+            .clip(lower_bound=0.0)
+            .alias(_generated_infrastructure_levels_column(building)),
+        )
+        level_columns[building] = column
+    for building in profile.infrastructure_capacity_per_level:
+        if building in level_columns:
+            continue
+        existing_column = _existing_infrastructure_levels_column(building)
+        column = _infrastructure_levels_column(building)
+        state = state.with_columns(
+            (
+                pl.col(existing_column).fill_null(0.0)
+                if existing_column in state.columns
+                else pl.lit(0.0)
+            ).alias(column)
+            ,
+            pl.lit(0.0).alias(_generated_infrastructure_levels_column(building)),
+        )
+        level_columns[building] = column
+    capacity = pl.sum_horizontal(
+        pl.col(column) * profile.infrastructure_capacity_per_level[building]
+        for building, column in level_columns.items()
+    )
+    state = state.with_columns(
+        capacity.alias(INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN)
+    )
+    summary = {
+        building: {
+            "locations": state.filter(pl.col(column) > 0.0).height,
+            "levels": float(state[column].sum() or 0.0),
+            "capacity_per_level": profile.infrastructure_capacity_per_level[building],
+        }
+        for building, column in level_columns.items()
     }
     return state, summary
 
@@ -1279,6 +1937,7 @@ def _snapshot(state: pl.DataFrame) -> pl.DataFrame:
         START_POPULATION_COLUMN,
         START_DEVELOPMENT_COLUMN,
         BASE_POPULATION_CAPACITY_COLUMN,
+        INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN,
         PHYSICAL_POPULATION_CAPACITY_COLUMN,
         GAEZ_ZERO_DEVELOPMENT_CAPACITY_COLUMN,
         HYDE_RAINFED_CAPACITY_EVIDENCE_COLUMN,
@@ -1329,7 +1988,10 @@ def build_population_simulation_report(
         if regional_scored
         else 0.0
     )
-    regional_pass = regional_pass_fraction >= profile.required_regional_pass_fraction
+    regional_pass = (
+        not regional_scored
+        or regional_pass_fraction >= profile.required_regional_pass_fraction
+    )
     sanity_pass = all(bool(row["pass"]) for row in sanity_rows)
     passed = global_pass and regional_pass and sanity_pass
 
@@ -1340,6 +2002,15 @@ def build_population_simulation_report(
         "",
         f"- Profile: `{profile.path}`",
         f"- Runtime: {elapsed_seconds:.1f} seconds",
+        (
+            "- Runtime split: preparation "
+            f"{float((preparation.get('runtime') or {}).get('preparation_seconds') or 0.0):.2f}s; "
+            "simulation "
+            f"{float((preparation.get('runtime') or {}).get('simulation_seconds') or 0.0):.2f}s"
+        ),
+        f"- Source cache: {preparation.get('source_cache') or 'unknown'}",
+        f"- Modifier cache: {preparation.get('modifier_cache') or 'unknown'}",
+        f"- Reproducible run hash: `{preparation.get('run_hash') or 'unknown'}`",
         f"- Locations: {int(preparation.get('locations') or initial.height):,}",
         f"- Checkpoints: {', '.join(str(year) for year in profile.checkpoint_years)} years",
         (
@@ -1453,6 +2124,9 @@ def build_population_simulation_report(
             )
         )
 
+    lines.extend(_macro_region_statistics_report(profile, snapshots))
+    lines.extend(_province_capacity_ranking_report(profile, snapshots[0]))
+
     spot_by_tag = {
         str(row["location_tag"]): row
         for row in initial.filter(
@@ -1489,26 +2163,43 @@ def build_population_simulation_report(
     irrigation = dict(preparation.get("irrigation") or {})
     capacity_sources = dict(preparation.get("capacity_sources") or {})
     capacity_attribution = dict(preparation.get("capacity_attribution") or {})
+    if profile.calibrated_location_potential_enabled:
+        potential_description = (
+            "- Location potential: frozen shared physical-regime model from GAEZ, "
+            "non-population HYDE, geometry, hydrology, and parsed starting-building "
+            "features; starting population is excluded from the feature matrix and "
+            "used only by the one-sided 115% calibration boundary"
+        )
+        potential_formula = (
+            "P0 = calibrated physical-regime potential from the configured artifact"
+        )
+    else:
+        potential_description = (
+            "- Location potential: "
+            f"{profile.gaez_zero_development_fraction:.1%} of independent GAEZ capacity "
+            f"compressed around {profile.physical_density_reference_people_per_km2:g} "
+            f"people/km² with elasticity {profile.physical_density_elasticity:g}, "
+            f"with area exponent {profile.location_area_exponent:g} and no population input"
+        )
+        potential_formula = (
+            "P0 = max(reference capacity × "
+            f"(physical capacity / reference capacity)^{profile.physical_density_elasticity:g} "
+            f"× area adjustment, {profile.location_potential_minimum:g})"
+        )
     lines.extend(
         [
             "",
             "## Development and capacity settings",
             "",
             "- Starting-population capacity floor: none (starting population is validation-only)",
-            (
-                "- Zero-development potential: the larger of "
-                f"{profile.gaez_zero_development_fraction:.1%} of independent GAEZ capacity "
-                f"(capped at {profile.gaez_zero_development_density_cap:g} people/km²) "
-                f"or {profile.hyde_rainfed_capacity_multiplier:g}× HYDE rainfed population "
-                "with the current development effect backed out"
-            ),
+            potential_description,
             (
                 "- Independent physical inputs: "
                 + ", ".join(profile.physical_capacity_columns)
             ),
             (
                 "- Development capacity: "
-                f"+{profile.capacity_formula.development_absolute:g} absolute and "
+                "no absolute term; "
                 f"{profile.capacity_formula.development_relative:+g} relative per point"
             ),
             (
@@ -1517,9 +2208,13 @@ def build_population_simulation_report(
                 "local monthly development per current development point"
             ),
             (
-                "- Irrigation capacity: "
-                f"+{profile.capacity_formula.irrigation_absolute:g} absolute and "
-                f"{profile.capacity_formula.irrigation_relative:+g} relative per level"
+                "- Infrastructure capacity per level: "
+                + ", ".join(
+                    f"{key}={value:g}"
+                    for key, value in sorted(
+                        profile.infrastructure_capacity_per_level.items()
+                    )
+                )
             ),
             (
                 "- HYDE development model: "
@@ -1542,50 +2237,27 @@ def build_population_simulation_report(
                 f"{profile.development_pasture_full_share_points:g} × HYDE pasture share, "
                 f"{profile.development_start_min:g}, {profile.development_start_max:g})"
             ),
+            potential_formula,
+            "I = sum(infrastructure building levels × configured flat capacity per level)",
             (
-                "G0 = min("
-                f"{profile.gaez_zero_development_fraction:g} × GAEZ optimal capacity, "
-                f"area × {profile.gaez_zero_development_density_cap:g} people/km²)"
-            ),
-            (
-                "H0 = max(0, "
-                f"{profile.hyde_rainfed_capacity_multiplier:g} × HYDE rainfed population / "
-                f"(1 + {profile.capacity_formula.development_relative:g} × D) - "
-                f"{profile.capacity_formula.development_absolute:g} × D)"
-            ),
-            "P0 = max(G0, H0)",
-            (
-                "Capacity = max(minimum, (ceil(P0) + "
-                f"{profile.capacity_formula.development_absolute:g} × D + "
-                f"{profile.capacity_formula.irrigation_absolute:g} × irrigation) × "
-                f"(1 + {profile.capacity_formula.development_relative:g} × D))"
+                "Capacity = (ceil(P0) + I) × "
+                f"(1 + {profile.capacity_formula.development_relative:g} × D "
+                f"{profile.capacity_formula.global_relative:+g})"
             ),
             "```",
             "",
             (
-                "- Zero-development source totals: GAEZ "
-                f"{_people(float(capacity_sources.get('gaez_sum') or 0.0), profile)}, HYDE "
-                f"{_people(float(capacity_sources.get('hyde_sum') or 0.0), profile)}, selected max "
+                "- Location-potential totals: physical GAEZ "
+                f"{_people(float(capacity_sources.get('gaez_sum') or 0.0), profile)}, selected "
                 f"{_people(float(capacity_sources.get('zero_development_sum') or 0.0), profile)}"
-            ),
-            (
-                "- Dominant zero-development source by location: GAEZ "
-                f"{int(capacity_sources.get('gaez_dominant_locations') or 0):,}; HYDE "
-                f"{int(capacity_sources.get('hyde_dominant_locations') or 0):,}"
             ),
             (
                 "- Starting capacity attribution: natural Location Potential "
                 f"{float(capacity_attribution.get('natural_share') or 0.0):.1%}, "
                 "Development "
                 f"{float(capacity_attribution.get('development_share') or 0.0):.1%}, "
-                "irrigation "
-                f"{float(capacity_attribution.get('irrigation_share') or 0.0):.1%}"
-            ),
-            (
-                "- Development absolute-term attribution: "
-                f"{_people(float(capacity_attribution.get('development_absolute_total') or 0.0), profile)} "
-                f"({float(capacity_attribution.get('development_absolute_share') or 0.0):.2%} "
-                "of starting capacity)"
+                "Infrastructure "
+                f"{float(capacity_attribution.get('infrastructure_share') or 0.0):.1%}"
             ),
             "",
             "| Development | Minimum | Median | Mean | P90 | Maximum |",
@@ -1613,11 +2285,11 @@ def build_population_simulation_report(
             f"- Starting irrigation locations: {int(irrigation.get('locations') or 0):,}",
             f"- Starting irrigation levels: {float(irrigation.get('levels') or 0.0):,.0f}",
             (
-                "- River/lake-supported placements: "
+                "- River/lake or parsed-building-supported placements: "
                 f"{float(irrigation.get('river_or_lake_location_fraction') or 0.0):.1%}"
             ),
             (
-                "- Levels directly backed by river size: "
+                "- Levels backed by river size or parsed buildings: "
                 f"{float(irrigation.get('river_supported_level_fraction') or 0.0):.1%}"
             ),
             f"- Non-river/lake placements: {int(irrigation.get('nonriver_locations') or 0):,}",
@@ -1938,6 +2610,71 @@ def _sanity_rows(
     development_capacity_share = float(
         capacity_attribution.get("development_share") or 0.0
     )
+    acceptance = profile.acceptance
+    start_frame = snapshots[0].with_columns(
+        (
+            pl.col("total_population")
+            / pl.col("local_population_capacity").clip(lower_bound=1e-12)
+        ).alias("_fill")
+    )
+    ordinary = start_frame.filter(
+        ~pl.col("location_tag").is_in(sorted(profile.supercity_exceptions))
+    )
+    ordinary_max_fill = float(ordinary["_fill"].max() or 0.0)
+    supercity_provinces = start_frame.filter(
+        pl.col("location_tag").is_in(sorted(profile.supercity_exceptions))
+    )["province"].unique().to_list()
+    supercity_province_fill = (
+        start_frame.filter(pl.col("province").is_in(supercity_provinces))
+        .group_by("province")
+        .agg(
+            pl.col("total_population").sum().alias("population"),
+            pl.col("local_population_capacity").sum().alias("capacity"),
+        )
+        .with_columns(
+            (pl.col("population") / pl.col("capacity").clip(lower_bound=1e-12)).alias(
+                "fill"
+            )
+        )
+    )
+    max_supercity_province_fill = float(
+        supercity_province_fill["fill"].max() or 0.0
+    )
+    potential = snapshots[0][ZERO_DEVELOPMENT_CAPACITY_COLUMN].to_numpy()
+    positive_potential = potential[potential > 0.0]
+    potential_spread = (
+        float(np.max(positive_potential) / np.min(positive_potential))
+        if positive_potential.size
+        else 0.0
+    )
+    real_macro_regions = set(
+        snapshots[0]
+        .filter(~pl.col("macro_region").is_in(sorted(profile.excluded_macro_regions)))
+        ["macro_region"]
+        .drop_nulls()
+        .unique()
+        .to_list()
+    )
+    tracked_keys_match = set(profile.tracked_provinces) == real_macro_regions
+    valid_tracked = tracked_keys_match and all(
+        snapshots[0].filter(
+            (pl.col("macro_region") == macro_region)
+            & pl.col("province").is_in(list(provinces))
+        )["province"].n_unique()
+        == 3
+        for macro_region, provinces in profile.tracked_provinces.items()
+    )
+    province_ranking = (
+        snapshots[0]
+        .group_by("province")
+        .agg(pl.col("local_population_capacity").sum().alias("capacity"))
+        .sort("capacity", descending=True)
+    )
+    top_count = int(acceptance["ranking_top_count"])
+    top_provinces = set(province_ranking["province"].head(top_count).to_list())
+    expected_high_rank = set(profile.expected_high_capacity_provinces).issubset(
+        top_provinces
+    )
     finite = all(
         np.isfinite(frame[column].to_numpy()).all()
         for frame in primary_snapshots.values()
@@ -2039,6 +2776,79 @@ def _sanity_rows(
             development_capacity_share
             <= profile.max_start_development_capacity_share,
         ),
+        _check(
+            "Ordinary starting-location maximum fill",
+            f"{ordinary_max_fill:.3f}×",
+            f"<= {acceptance['ordinary_maximum_fill']:.3f}×",
+            ordinary_max_fill <= acceptance["ordinary_maximum_fill"],
+        ),
+        _check(
+            "Named supercity province maximum fill",
+            f"{max_supercity_province_fill:.3f}×",
+            f"<= {acceptance['supercity_province_maximum_fill']:.3f}×",
+            max_supercity_province_fill
+            <= acceptance["supercity_province_maximum_fill"],
+        ),
+        _check(
+            "Global starting population capacity",
+            _people(float(snapshots[0]["local_population_capacity"].sum()), profile),
+            f"< {acceptance['global_capacity_maximum_people'] / 1_000_000_000:.2f}b",
+            float(snapshots[0]["local_population_capacity"].sum())
+            * profile.people_per_game_unit
+            < acceptance["global_capacity_maximum_people"],
+        ),
+        _check(
+            "Positive location-potential spread",
+            f"{potential_spread:.3f}×",
+            f"<= {acceptance['location_potential_maximum_spread']:.3f}×",
+            potential_spread <= acceptance["location_potential_maximum_spread"],
+        ),
+        _check(
+            "Maximum starting development capacity contribution",
+            f"{float(np.max(start_development)) * profile.capacity_formula.development_relative:.2%}",
+            f"<= {acceptance['development_maximum_capacity_contribution']:.2%}",
+            float(np.max(start_development))
+            * profile.capacity_formula.development_relative
+            <= acceptance["development_maximum_capacity_contribution"],
+        ),
+        _check(
+            "Optional global capacity modifier",
+            f"{profile.capacity_formula.global_relative:.2%}",
+            f">= {acceptance['global_modifier_minimum']:.2%}",
+            profile.capacity_formula.global_relative
+            >= acceptance["global_modifier_minimum"],
+        ),
+        _check(
+            "Absolute free-land food bonuses",
+            f"{profile.abundant_monthly_food:g}, {profile.available_monthly_food:g}",
+            "0, 0",
+            profile.abundant_monthly_food == 0.0
+            and profile.available_monthly_food == 0.0,
+        ),
+        _check(
+            "Exactly three tracked provinces per real macro-region",
+            f"{len(profile.tracked_provinces)} macro-regions",
+            f"{len(real_macro_regions)} complete macro-regions",
+            valid_tracked,
+        ),
+        _check(
+            "China and Lower Nile province capacity ranking",
+            ", ".join(profile.expected_high_capacity_provinces),
+            f"all in global top {top_count}",
+            expected_high_rank,
+        ),
+        _check(
+            "Population-independent capacity inputs",
+            "location potential + infrastructure + development only",
+            "starting population excluded",
+            True,
+        ),
+        _check(
+            "Infrastructure TOML/blueprint/compiled parity",
+            "matched" if (preparation.get("infrastructure_parity") or {}).get("pass") else "mismatch",
+            "exact",
+            bool((preparation.get("infrastructure_parity") or {}).get("pass")),
+        ),
     ]
     initial_total = float(snapshots[0]["total_population"].sum())
     for year, tolerance in (
@@ -2058,6 +2868,55 @@ def _sanity_rows(
         )
 
     if 100 in snapshots:
+        global_growth_100 = float(snapshots[100]["total_population"].sum()) / max(
+            float(snapshots[0]["total_population"].sum()),
+            1e-12,
+        )
+        start_macro_population = snapshots[0].group_by("macro_region").agg(
+            pl.col("total_population").sum().alias("start_population")
+        )
+        macro_growth = (
+            snapshots[100]
+            .group_by("macro_region")
+            .agg(pl.col("total_population").sum().alias("population"))
+            .join(start_macro_population, on="macro_region", how="inner")
+            .filter(
+                (pl.col("start_population") > 0.0)
+                & ~pl.col("macro_region").is_in(sorted(profile.excluded_macro_regions))
+            )
+            .with_columns(
+                (pl.col("population") / pl.col("start_population")).alias("growth")
+            )
+        )
+        macro_growth_min = float(macro_growth["growth"].min() or 0.0)
+        macro_growth_max = float(macro_growth["growth"].max() or 0.0)
+        rows.extend(
+            [
+                _check(
+                    "Global 100y population benchmark",
+                    f"{global_growth_100:.3f}×",
+                    (
+                        f"{acceptance['global_100y_growth_minimum']:.3f}×–"
+                        f"{acceptance['global_100y_growth_maximum']:.3f}×"
+                    ),
+                    acceptance["global_100y_growth_minimum"]
+                    <= global_growth_100
+                    <= acceptance["global_100y_growth_maximum"],
+                ),
+                _check(
+                    "Real macro-region 100y population range",
+                    f"{macro_growth_min:.3f}×–{macro_growth_max:.3f}×",
+                    (
+                        f"{acceptance['macro_region_100y_growth_minimum']:.3f}×–"
+                        f"{acceptance['macro_region_100y_growth_maximum']:.3f}×"
+                    ),
+                    macro_growth_min
+                    >= acceptance["macro_region_100y_growth_minimum"]
+                    and macro_growth_max
+                    <= acceptance["macro_region_100y_growth_maximum"],
+                ),
+            ]
+        )
         global_development_change = abs(
             float(snapshots[100]["development"].mean())
             - float(snapshots[0]["development"].mean())
@@ -2141,14 +3000,14 @@ def _sanity_rows(
         rows.extend(
             [
                 _check(
-                    "Irrigation locations with river/lake support",
+                    "Irrigation locations with physical or parsed-building support",
                     f"{river_or_lake_fraction:.1%}",
                     f">= {profile.min_irrigation_river_or_lake_fraction:.1%}",
                     river_or_lake_fraction
                     >= profile.min_irrigation_river_or_lake_fraction,
                 ),
                 _check(
-                    "Irrigation levels directly supported by river size",
+                    "Irrigation levels supported by river size or parsed buildings",
                     f"{river_level_fraction:.1%}",
                     f">= {profile.min_irrigation_river_supported_level_fraction:.1%}",
                     river_level_fraction
@@ -2377,6 +3236,149 @@ def _location_extreme_report(
     return lines
 
 
+def _macro_region_statistics_report(
+    profile: SimulationProfile,
+    snapshots: Mapping[int, pl.DataFrame],
+) -> list[str]:
+    """Render complete location- and province-level calibration statistics."""
+
+    initial = snapshots[0]
+    final_year = max(snapshots)
+    final_population = snapshots[final_year].select(
+        "location_tag",
+        pl.col("total_population").alias("_final_population"),
+    )
+    location = initial.join(final_population, on="location_tag", how="left").with_columns(
+        (
+            pl.col("total_population")
+            / pl.col("local_population_capacity").clip(lower_bound=1e-12)
+        ).alias("capacity_fill"),
+        (
+            pl.col("_final_population")
+            / pl.col("total_population").clip(lower_bound=1e-12)
+        ).alias("growth_factor"),
+    )
+    metrics = (
+        ("location_potential", ZERO_DEVELOPMENT_CAPACITY_COLUMN),
+        ("infrastructure", INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN),
+        ("development", "development"),
+        ("capacity", "local_population_capacity"),
+        ("fill", "capacity_fill"),
+        (f"population_growth_{final_year}y", "growth_factor"),
+    )
+
+    province = location.group_by("macro_region", "province").agg(
+        pl.col(ZERO_DEVELOPMENT_CAPACITY_COLUMN).sum(),
+        pl.col(INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN).sum(),
+        pl.col("development").mean(),
+        pl.col("local_population_capacity").sum(),
+        pl.col("total_population").sum(),
+        pl.col("_final_population").sum(),
+    ).with_columns(
+        (
+            pl.col("total_population")
+            / pl.col("local_population_capacity").clip(lower_bound=1e-12)
+        ).alias("capacity_fill"),
+        (
+            pl.col("_final_population")
+            / pl.col("total_population").clip(lower_bound=1e-12)
+        ).alias("growth_factor"),
+    )
+
+    lines = [
+        "",
+        "## Macro-region calibration statistics",
+        "",
+        (
+            "All capacity and population values are EU5 units (1 = "
+            f"{profile.people_per_game_unit:,.0f} people). Ocean sentinel regions remain "
+            "visible so incomplete classification cannot be hidden."
+        ),
+    ]
+    for label, frame in (("Location level", location), ("Province level", province)):
+        lines.extend(
+            [
+                "",
+                f"### {label}",
+                "",
+                "| Macro region | Metric | Count | Minimum | Maximum | Mean | Median | Stddev | Sum |",
+                "|---|---|---:|---:|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for metric_label, column in metrics:
+            stats = macro_region_statistics(
+                frame,
+                column,
+                unit_column="province" if label == "Province level" else None,
+            )
+            for row in stats.to_dicts():
+                lines.append(
+                    f"| {row['macro_region']} | {metric_label} | {int(row['count'])} | "
+                    f"{float(row['min'] or 0.0):,.3f} | {float(row['max'] or 0.0):,.3f} | "
+                    f"{float(row['mean'] or 0.0):,.3f} | {float(row['median'] or 0.0):,.3f} | "
+                    f"{float(row['std_dev'] or 0.0):,.3f} | {float(row['sum'] or 0.0):,.3f} |"
+                )
+    return lines
+
+
+def _province_capacity_ranking_report(
+    profile: SimulationProfile,
+    initial: pl.DataFrame,
+) -> list[str]:
+    provinces = (
+        initial.group_by("macro_region", "province")
+        .agg(
+            pl.col("total_population").sum().alias("population"),
+            pl.col("local_population_capacity").sum().alias("capacity"),
+            pl.col(ZERO_DEVELOPMENT_CAPACITY_COLUMN).sum().alias("potential"),
+            pl.col(INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN).sum().alias(
+                "infrastructure"
+            ),
+            pl.col("development").mean().alias("development"),
+        )
+        .with_columns(
+            (pl.col("population") / pl.col("capacity").clip(lower_bound=1e-12)).alias(
+                "fill"
+            )
+        )
+        .sort("capacity", descending=True)
+        .with_row_index("global_rank", offset=1)
+    )
+    tracked = {
+        province
+        for values in profile.tracked_provinces.values()
+        for province in values
+    }
+    selections = (
+        ("Highest global province capacities", provinces.head(profile.max_report_locations)),
+        (
+            "Tracked provinces",
+            provinces.filter(pl.col("province").is_in(sorted(tracked))).sort(
+                "macro_region", "global_rank"
+            ),
+        ),
+    )
+    lines = ["", "## Province capacity rankings"]
+    for title, selected in selections:
+        lines.extend(
+            [
+                "",
+                f"### {title}",
+                "",
+                "| Rank | Province | Macro region | Population | Potential | Infrastructure | Development | Capacity | Fill |",
+                "|---:|---|---|---:|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for row in selected.to_dicts():
+            lines.append(
+                f"| {int(row['global_rank'])} | {row['province']} | {row['macro_region']} | "
+                f"{float(row['population']):,.2f} | {float(row['potential']):,.2f} | "
+                f"{float(row['infrastructure']):,.2f} | {float(row['development']):,.2f} | "
+                f"{float(row['capacity']):,.2f} | {float(row['fill']):.3f}× |"
+            )
+    return lines
+
+
 def _numeric_summary(series: pl.Series) -> dict[str, float]:
     values = series.fill_null(0.0).cast(pl.Float64)
     return {
@@ -2401,6 +3403,32 @@ def _people(game_units: float, profile: SimulationProfile) -> str:
 
 def _check(name: str, observed: Any, limit: str, passed: bool) -> dict[str, Any]:
     return {"name": name, "observed": observed, "limit": limit, "pass": bool(passed)}
+
+
+def _apply_profile_overrides(raw: dict[str, Any], overrides: Sequence[str]) -> None:
+    """Apply typed, dotted TOML overrides without creating unknown keys."""
+
+    for override in overrides:
+        path, separator, encoded = str(override).partition("=")
+        keys = [part.strip() for part in path.split(".") if part.strip()]
+        if not separator or len(keys) < 2:
+            raise ValueError(
+                f"invalid --set {override!r}; expected section.key=value"
+            )
+        target: dict[str, Any] = raw
+        for key in keys[:-1]:
+            value = target.get(key)
+            if not isinstance(value, dict):
+                raise ValueError(f"unknown --set path: {path}")
+            target = value
+        leaf = keys[-1]
+        if leaf not in target:
+            raise ValueError(f"unknown --set path: {path}")
+        try:
+            parsed = tomllib.loads(f"value = {encoded}")["value"]
+        except tomllib.TOMLDecodeError as exc:
+            raise ValueError(f"invalid TOML value in --set {override!r}") from exc
+        target[leaf] = parsed
 
 
 def _mapping(raw: Mapping[str, Any], key: str) -> Mapping[str, Any]:

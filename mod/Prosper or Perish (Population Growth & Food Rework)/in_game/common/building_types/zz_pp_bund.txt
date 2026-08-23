@@ -5,6 +5,7 @@ INJECT:bund = {
 	custom_tags = { pp_food_security_priority pp_water_control_priority }
 	raw_modifier = {
 		farm_capacity_from_bund = 0.60
+        local_population_capacity = 9.49
 	}
 
 	modifier = {

@@ -9,6 +9,7 @@ from eu5gameparser.clausewitz.parser import parse_file
 from eu5gameparser.clausewitz.syntax import CList
 
 from prosper_or_perish_constructor.simulation.capacity_model import (
+    INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN,
     IRRIGATION_LEVELS_COLUMN,
     ZERO_DEVELOPMENT_CAPACITY_COLUMN,
 )
@@ -16,7 +17,7 @@ from prosper_or_perish_constructor.simulation.deployment import (
     _compile_development_setup_rows,
     _render_capacity_csv,
     _render_development_setup,
-    _render_irrigation_setup,
+    _render_infrastructure_setup,
 )
 from prosper_or_perish_constructor.simulation.profile import (
     _attach_deployed_base_capacity,
@@ -54,18 +55,21 @@ def test_deployed_integer_base_preserves_minimum_and_dynamic_development() -> No
             ZERO_DEVELOPMENT_CAPACITY_COLUMN: [0.0, 0.0],
             "development": [0.0, 100.0],
             IRRIGATION_LEVELS_COLUMN: [0.0, 0.0],
+            INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN: [0.0, 0.0],
         }
     )
 
     deployed = _attach_deployed_base_capacity(state, profile)
 
-    assert deployed["deployed_static_population_capacity"].to_list() == [11.0, 0.0]
+    assert deployed["deployed_static_population_capacity"].to_list() == [0.0, 0.0]
     final_capacity = profile.capacity_formula.evaluate(
         base_capacity=deployed["base_population_capacity"].to_numpy(),
         development=deployed["development"].to_numpy(),
-        irrigation_levels=deployed[IRRIGATION_LEVELS_COLUMN].to_numpy(),
+        infrastructure_capacity=deployed[
+            INFRASTRUCTURE_POPULATION_CAPACITY_COLUMN
+        ].to_numpy(),
     )
-    assert final_capacity.tolist() == [11.0, 30.0]
+    assert final_capacity.tolist() == [0.0, 0.0]
 
 
 def test_deployment_renderers_emit_parser_valid_game_data(tmp_path: Path) -> None:
@@ -96,7 +100,9 @@ def test_deployment_renderers_emit_parser_valid_game_data(tmp_path: Path) -> Non
 
     irrigation_path = tmp_path / "14_pp_population_irrigation.txt"
     irrigation_path.write_text(
-        _render_irrigation_setup([("alpha", "AAA", 3)]),
+        _render_infrastructure_setup(
+            [("irrigation_systems", "alpha", "AAA", 3)]
+        ),
         encoding="utf-8",
     )
     manager = parse_file(irrigation_path).values("building_manager")[0]

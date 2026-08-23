@@ -224,6 +224,20 @@ docs/examples/europedia.html
 docs/examples/europedia_entries.json
 ```
 
+### Reactive Population-Simulation Notebook
+
+The Marimo + SymPy playground beside the population-capacity research loads the
+committed fast-simulation profile and exposes its capacity, population-growth,
+and prosperity formulas as reactive sliders and symbolic expressions:
+
+```bash
+uv run marimo edit research/population_capacity/population_simulation_playground.py
+```
+
+Editing a value or formula recomputes every dependent cell. The notebook also
+contains a small standalone symbolic-algebra sandbox for substitution,
+simplification, and numeric evaluation.
+
 ## Setup
 
 ```bash
@@ -408,6 +422,23 @@ For compact linked food-price and victuals-price volatility tables in the notebo
 prices = nb.show_food_price_volatility(data, workbench, top_n=12)
 prices.stats
 ```
+
+## Population-capacity calibration
+
+The canonical fast calibration run uses the existing simulator and
+`population_capacity_simulation.toml`:
+
+```bash
+uv run ppc population-simulation --years 0 100
+uv run ppc population-simulation --years 0 100 --set capacity.global_relative=-0.1
+uv run ppc population-simulation --years 0 100 --refresh-cache
+```
+
+`--set section.key=value` is repeatable and does not edit the TOML. Use
+`--refresh-cache` after parser, raster, population-snapshot, or starting-building
+sources change. The command exits nonzero while any acceptance gate fails and
+writes the complete report to `artifacts/data/population_simulation/report.md`.
+The design contract and attempt log live under `research/population_capacity/`.
 
 ## Building Blueprints
 

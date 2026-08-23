@@ -228,7 +228,8 @@ building:
             }
         }
         construction_demand = village_construction
-        raw_modifier = {
+      raw_modifier = {
+        local_population_capacity = 7.65
           farm_capacity_from_farming_village = -1
         }
 

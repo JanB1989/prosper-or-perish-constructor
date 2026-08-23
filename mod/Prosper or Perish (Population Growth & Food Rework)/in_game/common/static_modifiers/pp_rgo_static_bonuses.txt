@@ -51,7 +51,7 @@ pp_rgo_bonus_cotton = {
 	# Cotton supports textile settlement, but plantation pressure reduces carrying capacity and order.
 	local_cotton_output_modifier = 0.20
 	local_migration_attraction = 0.01
-	local_population_capacity_modifier = -0.03
+	local_population_capacity_modifier = 0
 	local_unrest = 0.01
 }
 
@@ -60,7 +60,7 @@ pp_rgo_bonus_dyes = {
 	# Dye crops and vats improve workshop efficiency, but intensive processing strains land and labor peace.
 	local_dyes_output_modifier = 0.20
 	local_production_efficiency = 0.02
-	local_population_capacity_modifier = -0.02
+	local_population_capacity_modifier = 0
 	local_unrest = 0.01
 }
 
@@ -87,7 +87,7 @@ pp_rgo_bonus_fruit = {
 	# Orchards improve diets and carrying capacity, with slow but steady local development.
 	local_fruit_output_modifier = 0.20
 	local_peasants_food_consumption = -0.03
-	local_population_capacity_modifier = 0.03
+	local_population_capacity_modifier = 0
 	local_monthly_development_modifier = 0.01
 }
 
@@ -115,7 +115,7 @@ pp_rgo_bonus_legumes = {
 	local_legumes_output_modifier = 0.20
 	local_max_rgo_size_modifier = 0.05
 	local_peasants_food_consumption = -0.05
-	local_population_capacity_modifier = 0.03
+	local_population_capacity_modifier = 0
 }
 
 pp_rgo_bonus_livestock = {
@@ -124,7 +124,7 @@ pp_rgo_bonus_livestock = {
 	local_livestock_output_modifier = 0.20
 	local_peasants_food_consumption = -0.04
 	local_supply_limit_modifier = 0.03
-	local_population_capacity_modifier = -0.02
+	local_population_capacity_modifier = 0
 }
 
 pp_rgo_bonus_maize = {
@@ -141,7 +141,7 @@ pp_rgo_bonus_millet = {
 	# Millet stabilizes dryland food supplies and supports marginal settlements and marching stores.
 	local_millet_output_modifier = 0.20
 	local_peasants_food_consumption = -0.05
-	local_population_capacity_modifier = 0.02
+	local_population_capacity_modifier = 0
 	local_supply_limit_modifier = 0.02
 }
 
@@ -222,7 +222,7 @@ pp_rgo_bonus_tobacco = {
 	# Tobacco brings cash-crop settlement, but soil exhaustion and coercive labor strain society.
 	local_tobacco_output_modifier = 0.20
 	local_migration_attraction = 0.01
-	local_population_capacity_modifier = -0.02
+	local_population_capacity_modifier = 0
 	local_unrest = 0.01
 }
 

@@ -18,15 +18,19 @@ def test_prepare_simulation_analysis_state_adds_start_values_and_deltas() -> Non
     starting = pl.DataFrame(
         {
             "location_tag": ["a", "b"],
+            "province": ["p1", "p2"],
             "development": [10.0, 20.0],
             "total_population": [100.0, 200.0],
+            "food": [5.0, 10.0],
         }
     )
     current = pl.DataFrame(
         {
             "location_tag": ["a", "b"],
+            "province": ["p1", "p2"],
             "development": [12.0, 19.0],
             "total_population": [120.0, 180.0],
+            "food": [5.0, 10.0],
             "local_population_capacity": [300.0, 225.0],
             "deployed_static_population_capacity": [240.0, 0.0],
         }
@@ -40,6 +44,33 @@ def test_prepare_simulation_analysis_state_adds_start_values_and_deltas() -> Non
     assert result["population_change"].to_list() == [20.0, -20.0]
     assert result["population_capacity"].to_list() == [300.0, 225.0]
     assert result["capacity_fill"].to_list() == [0.4, 0.8]
+    assert result["province_food_storage_change"].to_list() == [0.0, 0.0]
+
+
+def test_prepare_simulation_analysis_state_broadcasts_latest_province_food_change() -> None:
+    starting = pl.DataFrame(
+        {
+            "location_tag": ["a", "b", "c"],
+            "province": ["p1", "p1", "p2"],
+            "development": [10.0, 20.0, 30.0],
+            "total_population": [100.0, 200.0, 300.0],
+            "food": [10.0, 20.0, 30.0],
+        }
+    )
+    previous = starting.with_columns(pl.col("food").alias("food"))
+    current = starting.with_columns(
+        pl.Series("food", [13.0, 22.0, 26.0]),
+        pl.lit(500.0).alias("population_capacity"),
+    )
+
+    result = prepare_simulation_analysis_state(
+        starting,
+        current,
+        food_change_from_locations=previous,
+        food_change_to_locations=current,
+    ).sort("location_tag")
+
+    assert result["province_food_storage_change"].to_list() == [5.0, 5.0, -4.0]
 
 
 def test_macro_region_statistics_returns_ordinary_descriptive_statistics() -> None:
@@ -60,6 +91,25 @@ def test_macro_region_statistics_returns_ordinary_descriptive_statistics() -> No
     assert west["median"] == 2.0
     assert west["std_dev"] == pytest.approx(1.0)
     assert west["sum"] == 6.0
+
+
+def test_macro_region_statistics_can_count_one_value_per_province() -> None:
+    frame = pl.DataFrame(
+        {
+            "macro_region": ["west", "west", "west"],
+            "province": ["p1", "p1", "p2"],
+            "metric": [5.0, 5.0, -2.0],
+        }
+    )
+
+    west = macro_region_statistics(
+        frame,
+        "metric",
+        unit_column="province",
+    ).row(0, named=True)
+
+    assert west["count"] == 2
+    assert west["sum"] == 3.0
 
 
 def test_write_simulation_metric_geotiff_reuses_eu5_location_raster(

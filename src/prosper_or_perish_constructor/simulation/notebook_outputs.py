@@ -26,6 +26,7 @@ SIMULATION_METRICS = {
     "Prosperity": "prosperity",
     "Population capacity": "population_capacity",
     "Capacity fill": "capacity_fill",
+    "Province food surplus / deficit": "province_food_storage_change",
     "Startup irrigation levels": "irrigation_systems_levels",
 }
 
@@ -44,8 +45,17 @@ class SimulationGeoTiffResult:
 def prepare_simulation_analysis_state(
     starting_locations: pl.DataFrame,
     current_locations: pl.DataFrame,
+    *,
+    food_change_from_locations: pl.DataFrame | None = None,
+    food_change_to_locations: pl.DataFrame | None = None,
 ) -> pl.DataFrame:
-    """Attach comparable start values, deltas, and capacity fill."""
+    """Attach comparable start values, deltas, capacity fill, and food balance.
+
+    Province food surplus/deficit is the change in total stored food during the
+    latest simulated month. A caller can provide a one-month projection as the
+    change target at tick zero while keeping ``current_locations`` untouched.
+    The province value is broadcast to its locations for raster painting.
+    """
 
     current = current_locations
     if "population_capacity" not in current.columns:
@@ -64,8 +74,35 @@ def prepare_simulation_analysis_state(
         pl.col("development").alias("starting_development"),
         pl.col("total_population").alias("starting_population"),
     ).unique("location_tag")
+    if (food_change_from_locations is None) != (food_change_to_locations is None):
+        raise ValueError(
+            "food storage change requires both from-locations and to-locations"
+        )
+    if food_change_from_locations is None:
+        province_food_change = current.select("province").unique().with_columns(
+            pl.lit(0.0).alias("province_food_storage_change"),
+        )
+    else:
+        from_province_food = food_change_from_locations.group_by("province").agg(
+            pl.col("food").sum().alias("_from_province_food")
+        )
+        to_province_food = food_change_to_locations.group_by("province").agg(
+            pl.col("food").sum().alias("_to_province_food")
+        )
+        province_food_change = to_province_food.join(
+            from_province_food,
+            on="province",
+            how="left",
+        ).select(
+            "province",
+            (
+                pl.col("_to_province_food")
+                - pl.col("_from_province_food").fill_null(0.0)
+            ).alias("province_food_storage_change"),
+        )
     return (
         current.join(starting, on="location_tag", how="left")
+        .join(province_food_change, on="province", how="left")
         .with_columns(
             (pl.col("development") - pl.col("starting_development")).alias(
                 "development_change"
@@ -81,22 +118,34 @@ def prepare_simulation_analysis_state(
     )
 
 
-def macro_region_statistics(frame: pl.DataFrame, metric: str) -> pl.DataFrame:
-    """Return ordinary location-level descriptive statistics by macro-region."""
+def macro_region_statistics(
+    frame: pl.DataFrame,
+    metric: str,
+    *,
+    unit_column: str | None = None,
+) -> pl.DataFrame:
+    """Return ordinary descriptive statistics by macro-region."""
 
     required = {"macro_region", metric}
+    if unit_column is not None:
+        required.add(unit_column)
     missing = required.difference(frame.columns)
     if missing:
         raise ValueError(
             f"macro-region statistics are missing columns: {', '.join(sorted(missing))}"
         )
-    values = frame.select(
-        "macro_region",
+    selections: list[pl.Expr | str] = ["macro_region"]
+    if unit_column is not None:
+        selections.append(unit_column)
+    selections.append(
         pl.when(pl.col(metric).cast(pl.Float64).is_finite())
         .then(pl.col(metric).cast(pl.Float64))
         .otherwise(None)
-        .alias("value"),
-    ).filter(pl.col("macro_region").is_not_null())
+        .alias("value")
+    )
+    values = frame.select(selections).filter(pl.col("macro_region").is_not_null())
+    if unit_column is not None:
+        values = values.unique(["macro_region", unit_column])
     return (
         values.group_by("macro_region")
         .agg(

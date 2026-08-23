@@ -1,7 +1,10 @@
 import marimo
 
 __generated_with = "0.24.0"
-app = marimo.App(width="medium")
+app = marimo.App(
+    width="medium",
+    css_file="population_simulation_playground.css",
+)
 
 
 @app.cell(hide_code=True)
@@ -527,7 +530,7 @@ def _(mo, parsed_constants):
             mo.md("#### Global simulation"),
             mo.hstack(
                 [
-                    mo.md("Years to simulate"),
+                    mo.md("Years to simulate (0 = starting conditions)"),
                     mo.md(""),
                     mo.md("{simulation_years}"),
                 ],
@@ -731,12 +734,25 @@ def _(
 ):
     if simulation_form.value is not None:
         _years = int(parameter_values["simulation_years"])
+        _months = _years * 12
         _started = perf_counter()
         _simulation = Simulation(starting_locations, simulation_context)
-        _simulation.run(_years * 12, progress=False)
+        if _months == 0:
+            _display_state = _simulation.state.clone()
+            _food_change_from_state = _display_state
+            _simulation.run(1, progress=False)
+            _food_change_to_state = _simulation.state
+        else:
+            _simulation.run(_months - 1, progress=False)
+            _food_change_from_state = _simulation.state.clone()
+            _simulation.run(1, progress=False)
+            _display_state = _simulation.state
+            _food_change_to_state = _display_state
         set_simulation_result(
             {
-                "state": _simulation.state,
+                "state": _display_state,
+                "food_change_from_state": _food_change_from_state,
+                "food_change_to_state": _food_change_to_state,
                 "years": _years,
                 "elapsed_seconds": perf_counter() - _started,
             }
@@ -762,6 +778,16 @@ def _(
     displayed_locations = prepare_simulation_analysis_state(
         starting_locations,
         _current_locations,
+        food_change_from_locations=(
+            simulation_result["food_change_from_state"]
+            if simulation_result is not None
+            else None
+        ),
+        food_change_to_locations=(
+            simulation_result["food_change_to_state"]
+            if simulation_result is not None
+            else None
+        ),
     )
     _start_population = float(starting_locations["total_population"].sum())
     _end_population = float(displayed_locations["total_population"].sum())
@@ -1091,6 +1117,9 @@ def _(SIMULATION_METRICS, mo):
             mo.md(
                 "Choose one metric for both the map and the descriptive-statistics table."
             ),
+            mo.md(
+                "Province food surplus/deficit is the change in stored food over the latest month. At 0 years, it is projected one month forward from the untouched starting state."
+            ),
             simulation_metric_selector,
         ],
         gap=0.35,
@@ -1099,12 +1128,7 @@ def _(SIMULATION_METRICS, mo):
 
 
 @app.cell(hide_code=True)
-def _(
-    load_map_assets,
-    repo,
-    simulation_metric_selector,
-    simulation_result,
-):
+def _(load_map_assets, repo, simulation_metric_selector, simulation_result):
     _startup_irrigation_map = (
         simulation_metric_selector.value == "irrigation_systems_levels"
     )
@@ -1230,14 +1254,14 @@ def _(
             [
                 mo.md(
                     f"""
-**GeoTIFF:** `{_tiff_result.path}`
+    **GeoTIFF:** `{_tiff_result.path}`
 
-**Coverage:** {_tiff_result.mapped_locations:,} locations / {_tiff_result.mapped_pixels:,} map pixels
+    **Coverage:** {_tiff_result.mapped_locations:,} locations / {_tiff_result.mapped_pixels:,} map pixels
 
-**Display scale:** {_scale_note}
+    **Display scale:** {_scale_note}
 
-    This is the same numeric single-band TIFF displayed below and opened by QGIS. It reuses the existing EU5 `locations.png` geometry and pixel mapping. Its coordinate space is EU5 game-map pixels, so no false geographic CRS is assigned.
-    """
+        This is the same numeric single-band TIFF displayed below and opened by QGIS. It reuses the existing EU5 `locations.png` geometry and pixel mapping. Its coordinate space is EU5 game-map pixels, so no false geographic CRS is assigned.
+        """
                 ),
                 _figure,
             ],
@@ -1256,7 +1280,12 @@ def _(
     simulation_result,
 ):
     _metric = simulation_metric_selector.value
-    _statistics = macro_region_statistics(displayed_locations, _metric).rename(
+    _province_metric = _metric == "province_food_storage_change"
+    _statistics = macro_region_statistics(
+        displayed_locations,
+        _metric,
+        unit_column="province" if _province_metric else None,
+    ).rename(
         {
             "macro_region": "Macro-region",
             "count": "Count",
@@ -1297,9 +1326,9 @@ def _(
         [
             mo.md("### Macro-region statistics"),
             mo.md(
-                f"Location-level statistics for the latest {_metric.replace('_', ' ')} values."
+                f"{'Province' if _province_metric else 'Location'}-level statistics for the latest {_metric.replace('_', ' ')} values."
                 if simulation_result is not None
-                else f"Location-level statistics for the 1337 {_metric.replace('_', ' ')} values."
+                else f"{'Province' if _province_metric else 'Location'}-level statistics for the 1337 {_metric.replace('_', ' ')} values."
             ),
             _statistics_table,
         ],

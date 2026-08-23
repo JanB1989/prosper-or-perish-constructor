@@ -1,0 +1,4 @@
+/* Keep this simulator's visible cell outputs fully expanded vertically. */
+.marimo-cell [data-cell-role="output"] {
+    max-height: none !important;
+}

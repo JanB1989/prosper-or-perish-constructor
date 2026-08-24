@@ -612,7 +612,7 @@ TRY_REPLACE:legal_code_law = {
 		country_modifier = {
 			monthly_towards_serfdom = societal_value_large_monthly_move
 			global_rural_build_buildings_efficiency = 0.1
-			global_rural_build_buildings_efficiency = 0.1
+			pp_irrigated_rice_paddies_price_cost_modifier = -0.2
 			global_pop_conversion_speed_modifier = 0.2
 		}
 		estate_preferences = {
@@ -944,7 +944,7 @@ TRY_REPLACE:mesta_council_law = {
 	}
 		country_modifier = {
 			global_wool_output_modifier = 0.5
-			global_rural_build_buildings_efficiency = -0.17
+			pp_irrigated_rice_paddies_price_cost_modifier = 0.33
 			nobles_estate_max_tax = 0.1
 			tax_income_efficiency = medium_tax_income_efficiency_bonus
 		}

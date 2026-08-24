@@ -17,7 +17,7 @@ TRY_REPLACE:hab_tractatus_incorporalibus = {
 	}
 	
 	country_modifier = {
-		global_rural_build_buildings_efficiency = -0.1
+		pp_irrigated_rice_paddies_price_cost_modifier = 0.2
 		global_peasants_estate_power = 0.1
 		monthly_towards_free_subjects = societal_value_monthly_move
 		peasants_estate_target_satisfaction = medium_privilege_target_satisfaction
@@ -28,7 +28,7 @@ TRY_REPLACE:tribes_pasture_access = {
 	estate = tribes_estate
 	
 	country_modifier = {
-		global_rural_build_buildings_efficiency = 0.01
+		pp_irrigated_rice_paddies_price_cost_modifier = -0.025
 		global_tribes_estate_power = 0.2
 	}
 }

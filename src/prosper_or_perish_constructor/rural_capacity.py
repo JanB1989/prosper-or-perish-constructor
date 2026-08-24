@@ -68,7 +68,12 @@ FOREST_CAP_BUILDINGS = (
     "lumber_mill_improved",
 )
 FARM_WATER_CONTROL_BUILDINGS = (
+    ("land_clearance", "0.60"),
+    ("field_drainage", "0.60"),
     ("irrigation_systems", "0.60"),
+    ("irrigation_reservoirs", "0.60"),
+    ("qanats", "0.60"),
+    ("irrigated_rice_paddies", "0.60"),
     ("bund", "0.60"),
     ("terraces", "0.60"),
     ("polders", "0.60"),

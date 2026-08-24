@@ -6,7 +6,7 @@
 TRY_INJECT:expand_farming_operations = {
 	modifier_when_in_debate = {
 		expand_rgo_farming_cost_modifier = 0.33
-		global_rural_build_buildings_efficiency = 0.17
+		pp_irrigated_rice_paddies_price_cost_modifier = -0.33
 	}
 }
 

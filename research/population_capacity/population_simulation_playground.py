@@ -26,6 +26,7 @@ def _():
     )
     from prosper_or_perish_constructor.simulation.notebook_outputs import (
         SIMULATION_METRICS,
+        attach_theoretical_max_population_capacity,
         macro_region_statistics,
         prepare_simulation_analysis_state,
         write_simulation_metric_geotiff,
@@ -44,6 +45,7 @@ def _():
         SIMULATION_METRICS,
         Simulation,
         TwoSlopeNorm,
+        attach_theoretical_max_population_capacity,
         load_map_assets,
         load_population_simulation_profile,
         macro_region_statistics,
@@ -63,6 +65,7 @@ def _():
 @app.cell(hide_code=True)
 def _(
     Path,
+    attach_theoretical_max_population_capacity,
     load_population_simulation_profile,
     prepare_population_simulation_state,
 ):
@@ -75,6 +78,12 @@ def _(
         repo,
         repo / "constructor.toml",
         profile,
+    )
+    starting_locations = attach_theoretical_max_population_capacity(
+        starting_locations,
+        capacity_per_level=profile.infrastructure_capacity_per_level,
+        development_relative=profile.capacity_formula.development_relative,
+        global_relative=profile.capacity_formula.global_relative,
     )
     rank_population_growth = {
         str(row["location_rank"]): float(row["local_population_growth"])
@@ -961,6 +970,8 @@ def _(displayed_locations, mo, pl, province_selector, simulation_result):
                 "development_change",
                 "prosperity",
                 "population_capacity",
+                "theoretical_max_infrastructure_capacity",
+                "theoretical_max_population_capacity",
                 "capacity_fill",
                 "starting_population",
                 "total_population",
@@ -979,6 +990,8 @@ def _(displayed_locations, mo, pl, province_selector, simulation_result):
                 "development_change": "Development change",
                 "prosperity": "Prosperity",
                 "population_capacity": "Population capacity",
+                "theoretical_max_infrastructure_capacity": "Maximum infrastructure capacity",
+                "theoretical_max_population_capacity": "Theoretical maximum capacity",
                 "capacity_fill": "Capacity fill",
                 "total_population": "Simulated population",
                 "starting_population": "Starting population",
@@ -1016,6 +1029,8 @@ def _(displayed_locations, mo, pl, province_selector, simulation_result):
             "Development change": _two_decimals,
             "Prosperity": _two_decimals,
             "Population capacity": _two_decimals,
+            "Maximum infrastructure capacity": _two_decimals,
+            "Theoretical maximum capacity": _two_decimals,
             "Capacity fill": lambda value: (
                 "" if value is None else f"{float(value):.1%}"
             ),
@@ -1074,6 +1089,9 @@ def _(SIMULATION_METRICS, mo):
             mo.md(
                 "Province food surplus/deficit is the change in stored food over the latest month. At 0 years, it is projected one month forward from the untouched starting state."
             ),
+            mo.md(
+                "The theoretical maximum is static: the deployed location potential plus every compatible population-capacity building at its development-100 maximum, multiplied by the development-100 modifier. Farming Villages use the accepted five-level simulator ceiling because their live maximum is recursively governed by Farming Capacity."
+            ),
             simulation_metric_selector,
         ],
         gap=0.35,
@@ -1082,18 +1100,11 @@ def _(SIMULATION_METRICS, mo):
 
 
 @app.cell(hide_code=True)
-def _(load_map_assets, repo, simulation_metric_selector, simulation_result):
-    _startup_irrigation_map = (
-        simulation_metric_selector.value == "irrigation_systems_levels"
-    )
-    simulation_map_assets = (
-        None
-        if simulation_result is None and not _startup_irrigation_map
-        else load_map_assets(
-            repo=repo,
-            project=repo / "constructor.toml",
-            map_width=2400,
-        )
+def _(load_map_assets, repo):
+    simulation_map_assets = load_map_assets(
+        repo=repo,
+        project=repo / "constructor.toml",
+        map_width=2400,
     )
     return (simulation_map_assets,)
 
@@ -1117,27 +1128,25 @@ def _(
     write_simulation_metric_geotiff,
 ):
     _metric = simulation_metric_selector.value
+    _theoretical_max_map = _metric == "theoretical_max_population_capacity"
     _startup_irrigation_map = _metric == "irrigation_systems_levels"
-    if (
-        simulation_result is None
-        and not _startup_irrigation_map
-    ) or simulation_map_assets is None:
+    _static_metric = _theoretical_max_map or _startup_irrigation_map
+    if simulation_map_assets is None:
         simulation_map_output = mo.callout(
-            mo.md(
-                "Run the global simulation to generate and display this metric's GeoTIFF. "
-                "The startup irrigation map is available before a simulation run."
-            ),
-            kind="info",
+            mo.md("EU5 map assets could not be loaded."),
+            kind="danger",
         )
     else:
         _years = (
             0
-            if _startup_irrigation_map
+            if _static_metric or simulation_result is None
             else int(simulation_result["years"])
         )
         _map_year = profile.start_year + _years
         _tiff_name = (
-            f"startup_irrigation_systems_levels_{profile.start_year}.tif"
+            "theoretical_max_population_capacity_development_100.tif"
+            if _theoretical_max_map
+            else f"startup_irrigation_systems_levels_{profile.start_year}.tif"
             if _startup_irrigation_map
             else f"{_metric}_{_map_year}.tif"
         )
@@ -1175,7 +1184,11 @@ def _(
             _norm = TwoSlopeNorm(vmin=-_limit, vcenter=0.0, vmax=_limit)
             _cmap = "RdYlGn"
             _scale_note = "symmetric at the 98th percentile of absolute change"
-        elif _metric in {"total_population", "population_capacity"}:
+        elif _metric in {
+            "total_population",
+            "population_capacity",
+            "theoretical_max_population_capacity",
+        }:
             _upper = max(float(np.quantile(_finite_values, 0.98)), 1.0)
             _norm = Log1pNorm(vmin=0.0, vmax=_upper)
             _cmap = "viridis"
@@ -1184,6 +1197,11 @@ def _(
             _norm = Normalize(vmin=0.0, vmax=100.0)
             _cmap = "viridis"
             _scale_note = "linear from 0 to 100"
+        elif _metric == "capacity_fill":
+            _upper = max(float(np.max(_finite_values)), 1e-9)
+            _norm = Normalize(vmin=0.0, vmax=_upper)
+            _cmap = "YlOrRd"
+            _scale_note = f"linear from 0 to the maximum fill ({_upper:.2%}); maximum is red"
         elif _startup_irrigation_map:
             _upper = max(float(np.max(_finite_values)), 1.0)
             _norm = Normalize(vmin=0.0, vmax=_upper)
@@ -1200,6 +1218,10 @@ def _(
         _axis.set_title(
             f"Startup irrigation systems levels ({profile.start_year})"
             if _startup_irrigation_map
+            else "Maximum population capacity at development 100"
+            if _theoretical_max_map
+            else f"{_metric_label} ({profile.start_year})"
+            if _static_metric or simulation_result is None
             else f"{_metric_label} after {_years:,} simulated years ({_map_year})"
         )
         _axis.set_axis_off()
@@ -1230,15 +1252,43 @@ def _(
     displayed_locations,
     macro_region_statistics,
     mo,
+    pl,
     simulation_metric_selector,
     simulation_result,
 ):
     _metric = simulation_metric_selector.value
     _province_metric = _metric == "province_food_storage_change"
-    _statistics = macro_region_statistics(
+    _macro_statistics = macro_region_statistics(
         displayed_locations,
         _metric,
         unit_column="province" if _province_metric else None,
+    )
+    _global_source = (
+        displayed_locations.unique("province")
+        if _province_metric
+        else displayed_locations
+    )
+    _global_values = _global_source.select(
+        pl.when(pl.col(_metric).cast(pl.Float64).is_finite())
+        .then(pl.col(_metric).cast(pl.Float64))
+        .otherwise(None)
+        .alias("value")
+    )["value"].drop_nulls()
+    _global_statistics = pl.DataFrame(
+        {
+            "macro_region": ["GLOBAL"],
+            "count": [_global_values.len()],
+            "min": [_global_values.min()],
+            "max": [_global_values.max()],
+            "mean": [_global_values.mean()],
+            "median": [_global_values.median()],
+            "std_dev": [_global_values.std(ddof=1)],
+            "sum": [_global_values.sum()],
+        }
+    )
+    _statistics = pl.concat(
+        [_global_statistics, _macro_statistics],
+        how="vertical_relaxed",
     ).rename(
         {
             "macro_region": "Macro-region",
@@ -1280,9 +1330,9 @@ def _(
         [
             mo.md("### Macro-region statistics"),
             mo.md(
-                f"{'Province' if _province_metric else 'Location'}-level statistics for the latest {_metric.replace('_', ' ')} values."
+                f"Global and {'province' if _province_metric else 'location'}-level macro-region statistics for the latest {_metric.replace('_', ' ')} values."
                 if simulation_result is not None
-                else f"{'Province' if _province_metric else 'Location'}-level statistics for the 1337 {_metric.replace('_', ' ')} values."
+                else f"Global and {'province' if _province_metric else 'location'}-level macro-region statistics for the 1337 {_metric.replace('_', ' ')} values."
             ),
             _statistics_table,
         ],

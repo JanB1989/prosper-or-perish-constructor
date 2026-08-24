@@ -5,7 +5,7 @@
 
 TRY_INJECT:dal_dalmatian_olive_pacts = {
 	expand_rgo_farming_cost_modifier = 0.2
-	global_rural_build_buildings_efficiency = 0.1
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.2
 	global_olives_output_modifier = 0.2
 }
 
@@ -16,22 +16,22 @@ TRY_INJECT:efficient_mining = {
 
 TRY_INJECT:folwark_system = {
 	expand_rgo_farming_cost_modifier = 0.25
-	global_rural_build_buildings_efficiency = 0.13
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.25
 }
 
 TRY_INJECT:gre_greek_viticulture_advance = {
 	expand_rgo_farming_cost_modifier = 0.1
-	global_rural_build_buildings_efficiency = 0.05
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.1
 }
 
 TRY_INJECT:man_po_agriculture = {
 	expand_rgo_farming_cost_modifier = 0.2
-	global_rural_build_buildings_efficiency = 0.1
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.2
 }
 
 TRY_INJECT:mfa_the_monferrato_agricoltura = {
 	expand_rgo_farming_cost_modifier = 0.15
-	global_rural_build_buildings_efficiency = 0.08
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.15
 }
 
 TRY_INJECT:mining_tradition = {
@@ -42,7 +42,7 @@ TRY_INJECT:mining_tradition = {
 
 TRY_INJECT:romagnol_the_agricultural_academies = {
 	expand_rgo_farming_cost_modifier = 0.2
-	global_rural_build_buildings_efficiency = 0.1
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.2
 	global_wheat_output_modifier = 0.1
 	global_wine_output_modifier = 0.1
 }
@@ -73,12 +73,12 @@ TRY_INJECT:slo_the_law_of_the_seven_towns = {
 
 TRY_INJECT:spl_vale_of_spoleto = {
 	expand_rgo_farming_cost_modifier = 0.15
-	global_rural_build_buildings_efficiency = 0.08
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.15
 }
 
 TRY_INJECT:svn_the_alluvial_grant_lands = {
 	expand_rgo_farming_cost_modifier = 0.2
-	global_rural_build_buildings_efficiency = 0.1
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.2
 	global_wheat_output_modifier = 0.15
 }
 
@@ -92,13 +92,13 @@ TRY_INJECT:tra_the_national_mining_academy = {
 
 TRY_INJECT:tro_the_aqueducts_of_popovo_polje = {
 	expand_rgo_farming_cost_modifier = 0.2
-	global_rural_build_buildings_efficiency = 0.1
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.2
 	global_wheat_output_modifier = 0.15
 }
 
 TRY_INJECT:ven_ship_mounted_gunpowder_weapons = {
 	expand_rgo_farming_cost_modifier = 0.15
-	global_rural_build_buildings_efficiency = 0.08
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.15
 }
 
 TRY_INJECT:vid_the_mining_grants = {
@@ -111,6 +111,6 @@ TRY_INJECT:vid_the_mining_grants = {
 
 TRY_INJECT:zmw_experienced_cattle_herder = {
 	expand_rgo_farming_cost_modifier = 0.1
-	global_rural_build_buildings_efficiency = 0.05
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.1
 	global_livestock_output_modifier = 0.1
 }

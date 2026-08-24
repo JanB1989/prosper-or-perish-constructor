@@ -1,0 +1,87 @@
+version: 2
+tag: irrigated_rice_paddies
+building:
+  key: irrigated_rice_paddies
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_irrigated_rice_paddies_maintenance
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = 5
+    increase_per_level_cost = 0.40
+    pop_type = peasants
+    employment_size = 0.50
+    price = pp_irrigated_rice_paddies_price
+    category = infrastructure_category
+    custom_tags = { pp_food_security_priority pp_water_control_priority }
+    icon = irrigated_rice_paddies
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      raw_material = goods:rice
+      OR = {
+        topography = flatland
+        topography = hills
+        topography = plateau
+        topography = wetlands
+      }
+      NOT = {
+        OR = {
+          soil_quality = soil_barren
+          soil_quality = soil_permafrost
+        }
+      }
+    }
+
+    construction_demand = village_construction
+
+    unique_production_methods = {
+      pp_irrigated_rice_paddies_maintenance = {
+        lumber = 0.05
+        tools = 0.025
+        category = building_maintenance
+      }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_irrigated_rice_paddies = 0.60
+      local_population_capacity = 9.49
+    }
+
+    modifier = {
+      local_rice_output_modifier = 0.05
+    }
+
+    forbidden_for_estates = no
+    ai_forbid_shutdown = yes
+localization:
+  entries:
+    irrigated_rice_paddies: Irrigated Rice Paddies
+    irrigated_rice_paddies_desc: Leveled rice fields, low earthen bunds, feeder channels, and small sluices retain and control shallow water throughout the crop cycle.
+    irrigated_rice_paddies_slot_0: Maintenance
+    pp_irrigated_rice_paddies_maintenance: Paddy Maintenance
+    pp_irrigated_rice_paddies_price: Irrigated Rice Paddies Price
+prices:
+  - key: pp_irrigated_rice_paddies_price
+    body: |2-
+      {gold = 75}
+icon:
+  source_png: ../assets/icons/irrigated_rice_paddies.png
+  output_dds: irrigated_rice_paddies.dds
+  size: 512
+  prompt: EU5-inspired detailed historic bitmap cutout for Irrigated Rice Paddies on a perfectly flat magenta chroma-key background. Show carefully leveled rectangular rice fields enclosed by low earthen bunds, shallow water, young rice rows, a timber sluice, and a feeder channel. Material-rich painterly three-quarter-view UI art, not generic mountain terraces, no text, no frame.
+evaluation:
+  production_methods:
+    pp_irrigated_rice_paddies_maintenance:
+      allow_rules:
+        profit_percent: Irrigated rice paddies are capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Paddy crews provide maintenance rather than full worked production.
+        output_throughput: Irrigated rice paddies provide capacity and local rice output rather than a directly traded building output.

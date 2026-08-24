@@ -8,10 +8,69 @@ import rasterio
 from prosper_or_perish_constructor.savegame_maps import SavegameMapAssets
 from prosper_or_perish_constructor.simulation.notebook_outputs import (
     GEOTIFF_NODATA,
+    SIMULATION_METRICS,
+    attach_theoretical_max_population_capacity,
     macro_region_statistics,
     prepare_simulation_analysis_state,
     write_simulation_metric_geotiff,
 )
+
+
+def test_theoretical_max_capacity_uses_buildability_and_development_100() -> None:
+    frame = pl.DataFrame(
+        {
+            "location_tag": ["river_hills", "inland_wetland", "dry_plain"],
+            "deployed_static_population_capacity": [100.0, 100.0, 100.0],
+            "has_river": [True, False, False],
+            "is_adjacent_to_lake": [False, False, False],
+            "is_coastal": [False, False, False],
+            "topography": ["hills", "wetlands", "flatland"],
+            "vegetation": ["forest", "grasslands", "sparse"],
+            "climate": ["arid", "tropical", "arid"],
+            "soil_quality": ["soil_average"] * 3,
+            "raw_material": ["rice", "wheat", "millet"],
+        }
+    )
+    effects = {
+        "irrigation_systems": 9.81,
+        "bund": 9.49,
+        "terraces": 2.0,
+        "polders": 6.23,
+        "land_clearance": 7.65,
+        "field_drainage": 6.23,
+        "irrigation_reservoirs": 9.81,
+        "qanats": 9.81,
+        "irrigated_rice_paddies": 9.49,
+        "farming_village": 7.65,
+        "pound_lock_canal_infrastructure": 0.0,
+    }
+
+    result = attach_theoretical_max_population_capacity(
+        frame,
+        capacity_per_level=effects,
+        development_relative=0.00125,
+        global_relative=0.0,
+    ).sort("location_tag")
+    rows = {row["location_tag"]: row for row in result.to_dicts()}
+
+    river_infrastructure = (
+        24 * 9.81 + 12 * 9.49 + 1 * 2.0 + 5 * 7.65 + 5 * 9.49 + 5 * 7.65
+    )
+    assert rows["river_hills"]["theoretical_max_infrastructure_capacity"] == pytest.approx(
+        river_infrastructure
+    )
+    assert rows["river_hills"]["theoretical_max_population_capacity"] == pytest.approx(
+        (100.0 + river_infrastructure) * 1.125
+    )
+    assert rows["inland_wetland"]["theoretical_max_infrastructure_capacity"] == pytest.approx(
+        5 * 6.23 + 5 * 7.65
+    )
+    assert rows["dry_plain"]["theoretical_max_infrastructure_capacity"] == pytest.approx(
+        5 * 9.81 + 5 * 9.81 + 5 * 7.65
+    )
+    assert SIMULATION_METRICS["Maximum population capacity"] == (
+        "theoretical_max_population_capacity"
+    )
 
 
 def test_prepare_simulation_analysis_state_adds_start_values_and_deltas() -> None:
@@ -22,6 +81,9 @@ def test_prepare_simulation_analysis_state_adds_start_values_and_deltas() -> Non
             "development": [10.0, 20.0],
             "total_population": [100.0, 200.0],
             "food": [5.0, 10.0],
+            "deployed_static_population_capacity": [200.0, 150.0],
+            "infrastructure_population_capacity": [40.0, 50.0],
+            "local_population_capacity": [300.0, 225.0],
         }
     )
     current = pl.DataFrame(
@@ -41,6 +103,9 @@ def test_prepare_simulation_analysis_state_adds_start_values_and_deltas() -> Non
     assert result["starting_development"].to_list() == [10.0, 20.0]
     assert result["development_change"].to_list() == [2.0, -1.0]
     assert result["starting_population"].to_list() == [100.0, 200.0]
+    assert result["starting_location_potential"].to_list() == [200.0, 150.0]
+    assert result["starting_infrastructure_population_capacity"].to_list() == [40.0, 50.0]
+    assert result["starting_population_capacity"].to_list() == [300.0, 225.0]
     assert result["population_change"].to_list() == [20.0, -20.0]
     assert result["population_capacity"].to_list() == [300.0, 225.0]
     assert result["capacity_fill"].to_list() == [0.4, 0.8]
@@ -55,6 +120,9 @@ def test_prepare_simulation_analysis_state_broadcasts_latest_province_food_chang
             "development": [10.0, 20.0, 30.0],
             "total_population": [100.0, 200.0, 300.0],
             "food": [10.0, 20.0, 30.0],
+            "deployed_static_population_capacity": [100.0, 200.0, 300.0],
+            "infrastructure_population_capacity": [10.0, 20.0, 30.0],
+            "local_population_capacity": [150.0, 250.0, 350.0],
         }
     )
     previous = starting.with_columns(pl.col("food").alias("food"))

@@ -1,0 +1,90 @@
+version: 2
+tag: qanats
+building:
+  key: qanats
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_qanats_maintenance
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = 5
+    increase_per_level_cost = 0.40
+    pop_type = laborers
+    employment_size = 0.50
+    price = pp_qanats_price
+    category = infrastructure_category
+    custom_tags = { pp_food_security_priority pp_water_control_priority }
+    icon = qanats
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      NOT = {
+        OR = {
+          has_river = yes
+          is_adjacent_to_lake = yes
+          topography = wetlands
+          topography = atoll
+          topography = mountain_wasteland
+        }
+      }
+      OR = {
+        climate = arid
+        climate = cold_arid
+      }
+      OR = {
+        vegetation = desert
+        vegetation = sparse
+      }
+    }
+
+    construction_demand = village_construction
+
+    unique_production_methods = {
+      pp_qanats_maintenance = {
+        stone = 0.10
+        tools = 0.10
+        category = building_maintenance
+      }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_qanats = 0.60
+      local_population_capacity = 9.81
+    }
+
+    modifier = {
+    }
+
+    forbidden_for_estates = no
+    ai_forbid_shutdown = yes
+localization:
+  entries:
+    qanats: Qanats
+    qanats_desc: Gently sloping underground galleries tap groundwater and convey it to fields by gravity while limiting evaporation in an arid climate.
+    qanats_slot_0: Maintenance
+    pp_qanats_maintenance: Qanat Maintenance
+    pp_qanats_price: Qanats Price
+prices:
+  - key: pp_qanats_price
+    body: |2-
+      {gold = 150}
+icon:
+  source_png: ../assets/icons/qanats.png
+  output_dds: qanats.dds
+  size: 512
+  prompt: EU5-inspired detailed historic bitmap cutout for Qanats on a perfectly flat magenta chroma-key background. Show a gently sloping underground gallery, round vertical access shafts with stone collars, spoil rings, a timber tripod and bucket, and a small outlet channel feeding an oasis garden. Material-rich painterly three-quarter-view UI art, no diagram labels, no text, no frame.
+evaluation:
+  production_methods:
+    pp_qanats_maintenance:
+      allow_rules:
+        profit_percent: Qanats are capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Qanat crews provide maintenance rather than full worked production.
+        output_throughput: Qanats provide capacity rather than a directly traded good.

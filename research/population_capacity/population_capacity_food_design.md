@@ -25,6 +25,61 @@ gameplay, and the boundaries the implementation must respect.
 | `food_decay` | `food before decay × combined decay rate` | Global decay, climate, and storage-infrastructure modifiers. | Food lost through spoilage, pests, leakage, and inadequate storage. | Removes part of stored food every month and makes storage infrastructure valuable. | Loss cannot be negative or exceed the available stock.<br>The simulator currently uses a fixed `1%` monthly rate. | Climate and granaries should eventually modify it without making long-term storage either free or pointless. |
 | `population_growth` | `new population = current population × (1 + total yearly growth)^(1/12)` | Stored-food growth, prosperity, location rank, capacity pressure, and other population-growth modifiers. | Natural population change from births and deaths.<br>Migration is separate. | Changes every pop type each month, which changes food consumption, capacity pressure, and future growth. | Population cannot become negative.<br>The same proportional growth normally applies to every pop type in the location. | Food security must remain the principal source of sustained growth.<br>Must reproduce plausible historical global and regional trajectories without runaway growth. |
 
+## Agricultural-infrastructure split
+
+Infrastructure is divided by physical task, but only where the existing EU5
+catalogue has a real gap. Cultural names are regional names or production methods
+unless they describe a different land transformation. Buildability uses only
+EU5 attributes available in location scope: `topography`, `vegetation`,
+`climate`, `soil_quality`, `raw_material`, `has_river`,
+`is_adjacent_to_lake`, and `is_coastal`.
+
+### Existing buildings retained
+
+| Building key | Clear role |
+|---|---|
+| `irrigation_systems` | Surface irrigation canals supplied by a river or lake. |
+| `bund` | Contour bunds, stone lines, and runoff-retaining field banks; no river or lake required. |
+| `terraces` | Dry cultivation terraces on hills, mountains, and plateaus. |
+| `polders` | Embanked and drained coastal or lakeside wetlands. |
+| `khmer_baray` | The existing Khmer regional reservoir-and-rice system. |
+| `incamisana` | The existing Andean regional terracing and water-management system. |
+| `aqueduct_system` | Large-scale water conveyance into a location. |
+
+### Six new buildings
+
+| Building key | Player-facing name | Physical task | EU5 location-potential gate | Starting-placement evidence |
+|---|---|---|---|---|
+| `land_clearance` | Land Clearance | Converts woodland into maintained farmland through felling, grubbing, burning, stone removal, and control of regrowth; medieval European assarts are one historical form. | `vegetation` is `woods`, `forest`, or `jungle`; exclude `mountain_wasteland`, `atoll`, `soil_barren`, and `soil_permafrost`. | LUH2/PNV clearing increment, non-population HYDE cropland, land cover, and parsed farm buildings. |
+| `field_drainage` | Drainage Ditches | Removes excess surface and root-zone water from inland wet ground using open ditches, ridges, and collector drains. | `topography = wetlands`; exclude coastal and lake-adjacent locations already covered by polders, plus barren and permafrost soil. | Inland wetlands, non-population HYDE cropland, land cover, terrain, and parsed drainage or farm buildings. |
+| `irrigation_reservoirs` | Irrigation Reservoirs | Captures seasonal rainfall and runoff in tanks or small reservoirs, then releases it through sluices when rainfall fails. | No river or lake adjacency; `climate` is `tropical`, `subtropical`, `arid`, or `cold_arid`; `topography` is `flatland`, `hills`, or `plateau`; exclude barren and permafrost soil. | HYDE irrigation, precipitation seasonality, catchment and terrain evidence, and parsed reservoirs. Khmer baray remains the regional special form. |
+| `qanats` | Qanats | Taps groundwater through gently sloping underground galleries, conveying it by gravity while limiting evaporation. | No river or lake adjacency; `climate` is `arid` or `cold_arid`; `vegetation` is `desert` or `sparse`; exclude wetlands, atolls, and mountain wasteland. | Existing groundwater-access pipeline, arid settlement evidence, HYDE irrigation, and parsed qanat/falaj buildings when available. |
+| `irrigated_rice_paddies` | Irrigated Rice Paddies | Levels rice fields and encloses them with small bunds so rainfall or supplied water can be retained and controlled. | `raw_material = goods:rice`; `topography` is `flatland`, `hills`, `plateau`, or `wetlands`; exclude barren and permafrost soil. River or lake adjacency is not required. | HYDE rice and irrigation, GAEZ wet-rice suitability, terrain, and parsed rice infrastructure. |
+| `raised_fields` | Raised Fields | Builds planting platforms above saturated ground while adjacent channels drain, irrigate, and provide fertile sediment. | `topography = wetlands`; exclude coastal locations already covered by polders, barren soil, and permafrost. | Inland wetlands, non-population HYDE cropland, freshwater and land-cover evidence, and regional raised-field evidence. Chinampas and waru-waru are regional forms. |
+
+These gates control where a player may construct a building. Starting levels are
+stricter and must come from the independent evidence in the final column; mere
+eligibility never proves that the infrastructure existed in 1337. Irrigation
+evidence must be partitioned so canals, reservoirs, qanats, and rice paddies do
+not each claim the same irrigated area.
+
+Water-lifting devices such as shadufs, sakias, norias, Persian wheels, and chain
+pumps belong under `irrigation_systems` or `qanats` as production methods. Spate
+irrigation combines irrigation canals with contour bunds. Water meadows belong
+under irrigation production methods, while subak, falaj, foggara, khettara,
+chinampa, waru-waru, and dyke-pond systems are regional names or production
+methods on the closest physical building rather than additional global types.
+
+Historical design references include FAO's descriptions of [tank cascades](https://www.fao.org/giahs/giahs-around-the-world/sri-lanka-cascaded-tank-village-system/en),
+[field drainage](https://www.fao.org/4/Y3796E/y3796e06.htm),
+[spate irrigation](https://www.fao.org/4/i1680e/i1680e00.htm),
+[chinampas](https://www.fao.org/giahs/giahs-around-the-world/mexico-chinampas-agricultural-system/en),
+[Kuttanad reclamation](https://www.fao.org/giahs/giahs-around-the-world/india-kuttanad-farming-system/en),
+and [dyke-pond agriculture](https://www.fao.org/giahs/giahs-around-the-world/china-zhejiang-huzhou-system/en),
+UNESCO's descriptions of [qanats](https://whc.unesco.org/en/list/1506/) and
+[Balinese subak](https://whc.unesco.org/en/list/1194/), and Historic England's
+evidence for [woodland assarting](https://historicengland.org.uk/research/results/reports/5427/TheForestofDeanMappingProjectGloucestershire_AReportfortheNationalMappingProgramme).
+
 ## Population-capacity tuning requirements
 
 The capacity inputs and modifiers must remain tunable enough to satisfy all of

@@ -35,6 +35,10 @@ def _():
         load_population_simulation_profile,
         prepare_population_simulation_state,
     )
+    from prosper_or_perish_constructor.simulation.notebook_outputs import (
+        attach_theoretical_max_population_capacity,
+        macro_region_statistics,
+    )
 
     return (
         LocationCapacityWeights,
@@ -42,6 +46,7 @@ def _():
         Path,
         TwoSlopeNorm,
         asdict,
+        attach_theoretical_max_population_capacity,
         diagnostic_groups,
         evaluate_location_capacity,
         export_location_capacity_run,
@@ -50,6 +55,7 @@ def _():
         load_map_assets,
         load_population_simulation_profile,
         macro_region_attribution,
+        macro_region_statistics,
         mo,
         np,
         paint_location_metric_raster,
@@ -77,6 +83,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(
     Path,
+    attach_theoretical_max_population_capacity,
     hashlib,
     json,
     load_population_simulation_profile,
@@ -96,6 +103,27 @@ def _(
             repo / "constructor.toml",
             profile,
         )
+    )
+    starting_locations = attach_theoretical_max_population_capacity(
+        starting_locations,
+        capacity_per_level=profile.infrastructure_capacity_per_level,
+        development_relative=profile.capacity_formula.development_relative,
+        global_relative=profile.capacity_formula.global_relative,
+    ).with_columns(
+        pl.col("development").alias("accepted_starting_development"),
+        pl.col("deployed_static_population_capacity").alias(
+            "accepted_location_potential"
+        ),
+        pl.col("infrastructure_population_capacity").alias(
+            "accepted_infrastructure_capacity"
+        ),
+        pl.col("local_population_capacity").alias(
+            "accepted_starting_population_capacity"
+        ),
+        pl.when(pl.col("local_population_capacity") > 0.0)
+        .then(pl.col("total_population") / pl.col("local_population_capacity"))
+        .otherwise(None)
+        .alias("accepted_capacity_fill"),
     )
     candidate_source_path = profile.candidates_path
     landcover_source_path = (
@@ -139,6 +167,7 @@ def _(
         profile_defaults,
         repo,
         source_hashes,
+        starting_locations,
     )
 
 
@@ -247,7 +276,10 @@ def _(mo, profile_defaults):
 
     control_layout = mo.vstack(
         [
-            mo.md("## Submitted calibration controls"),
+            mo.md("## Accepted simulation defaults and calibration controls"),
+            mo.md(
+                "The fields open with the accepted values from `population_capacity_simulation.toml`. Clearing and continuous irrigation are neutral because the accepted model now realizes them through flat-capacity buildings."
+            ),
             mo.md("#### Physical uncertainty and base resources"),
             row("Physical quantile", physical_quantile_input),
             row("Open rainfed crop weight", crop_weight_input),
@@ -625,39 +657,16 @@ def _(location_selector, mo, pl, region_subset):
 @app.cell(hide_code=True)
 def _(mo):
     map_metrics = {
-        "LUH2 forest fraction (1300)": "forest_fraction_1300",
-        "LUH2 non-forest natural fraction (1300)": "luh2_nonforest_fraction_1300",
-        "LUH2 cropland fraction (1300)": "cropland_fraction_1300",
-        "LUH2 pasture fraction (1300)": "pasture_fraction_1300",
-        "LUH2 rangeland fraction (1300)": "rangeland_fraction_1300",
-        "SAGE potential forest fraction": "potential_forest_fraction",
-        "Open crop suitability share": "open_crop_suitability_share",
-        "Open rainfed crop source": "source_open_crop_people",
-        "Extensive livestock source": "source_extensive_livestock_people",
-        "Retained wild / forest-food source": "source_retained_wild_people",
-        "Freshwater source": "source_freshwater_people",
-        "Marine source": "source_marine_people",
-        "Tsetse exposure": "tsetse_exposure",
-        "HYDE cropland fraction": "hyde_cropland_fraction",
-        "HYDE pasture fraction": "hyde_pasture_fraction",
-        "HYDE irrigation fraction": "hyde_irrigation_fraction",
-        "Base location potential": "base_location_potential_people",
-        "Starting development": "candidate_starting_development",
-        "Development contribution": "development_total_contribution_people",
-        "Minimum floor contribution": "minimum_floor_contribution_people",
-        "Clearing potential": "clearing_potential_people",
-        "Clearing contribution": "clearing_contribution_people",
-        "Irrigation potential": "irrigation_potential_people",
-        "Irrigation realized fraction": "irrigation_realized_fraction",
-        "Irrigation contribution": "irrigation_contribution_people",
-        "Current population capacity": "current_capacity_people",
-        "Candidate population capacity": "candidate_capacity_people",
-        "Population fill": "population_fill",
-        "Candidate minus current": "candidate_minus_current_people",
+        "Starting development": "accepted_starting_development",
+        "Location potential": "accepted_location_potential",
+        "Infrastructure capacity": "accepted_infrastructure_capacity",
+        "Starting population capacity": "accepted_starting_population_capacity",
+        "Capacity fill": "accepted_capacity_fill",
+        "Maximum population capacity": "theoretical_max_population_capacity",
     }
     map_metric_selector = mo.ui.dropdown(
         options=map_metrics,
-        value="Candidate population capacity",
+        value="Starting population capacity",
         label="Map layer",
         full_width=True,
     )
@@ -678,39 +687,47 @@ def _(load_map_assets, repo):
 @app.cell(hide_code=True)
 def _(
     Normalize,
-    TwoSlopeNorm,
-    location_results,
     map_assets,
-    map_lower_percentile,
     map_metric_selector,
     map_upper_percentile,
     mo,
     np,
     paint_location_metric_raster,
     plt,
+    starting_locations,
 ):
     selected_metric = map_metric_selector.value
     painted_metric = paint_location_metric_raster(
         map_assets,
-        location_results,
+        starting_locations,
         value_column=selected_metric,
         nodata=float("nan"),
     )
-    metric_values = location_results[selected_metric].to_numpy()
+    metric_values = starting_locations[selected_metric].to_numpy()
     finite_metric_values = metric_values[np.isfinite(metric_values)]
-    display_low = float(np.percentile(finite_metric_values, map_lower_percentile))
-    display_high = float(np.percentile(finite_metric_values, map_upper_percentile))
-    if display_high <= display_low:
-        display_high = display_low + 1.0
-    metric_norm = (
-        TwoSlopeNorm(vmin=display_low, vcenter=0.0, vmax=display_high)
-        if display_low < 0.0 < display_high
-        else Normalize(vmin=display_low, vmax=display_high)
-    )
+    display_low = 0.0
+    if selected_metric == "accepted_capacity_fill":
+        display_high = float(finite_metric_values.max())
+        metric_norm = Normalize(vmin=0.0, vmax=max(display_high, 1e-12))
+        metric_cmap = "YlOrRd"
+        range_note = "The observed maximum is mapped to red."
+    elif selected_metric == "accepted_starting_development":
+        display_high = 100.0
+        metric_norm = Normalize(vmin=0.0, vmax=100.0)
+        metric_cmap = "viridis"
+        range_note = "Development uses its full 0–100 gameplay range."
+    else:
+        display_high = float(np.percentile(finite_metric_values, map_upper_percentile))
+        metric_norm = Normalize(vmin=0.0, vmax=max(display_high, 1e-12))
+        metric_cmap = "viridis"
+        range_note = (
+            f"Linear scale from zero to the {map_upper_percentile:g}th percentile; "
+            "only higher outliers use the top colour."
+        )
     map_figure, map_axis = plt.subplots(figsize=(16, 7.5), constrained_layout=True)
     map_image = map_axis.imshow(
         np.ma.masked_invalid(painted_metric.values),
-        cmap="coolwarm" if display_low < 0.0 else "viridis",
+        cmap=metric_cmap,
         norm=metric_norm,
         interpolation="nearest",
     )
@@ -721,10 +738,37 @@ def _(
         [
             mo.md("## In-memory EU5 location-pixel preview"),
             mo.md(
-                f"Display range: **{display_low:,.3g}** to **{display_high:,.3g}** "
-                f"({map_lower_percentile:g}th–{map_upper_percentile:g}th percentiles). No TIFF was written."
+                f"Display range: **{display_low:,.3g}** to **{display_high:,.3g}**. "
+                f"{range_note} No TIFF was written."
             ),
             map_figure,
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(macro_region_statistics, map_metric_selector, mo, pl, starting_locations):
+    _selected_metric = map_metric_selector.value
+    _global_statistics = starting_locations.select(
+        pl.lit("Global").alias("macro_region"),
+        pl.col(_selected_metric).count().alias("count"),
+        pl.col(_selected_metric).min().alias("min"),
+        pl.col(_selected_metric).max().alias("max"),
+        pl.col(_selected_metric).mean().alias("mean"),
+        pl.col(_selected_metric).median().alias("median"),
+        pl.col(_selected_metric).std(ddof=1).alias("std_dev"),
+        pl.col(_selected_metric).sum().alias("sum"),
+    )
+    _macro_statistics = macro_region_statistics(starting_locations, _selected_metric)
+    mo.vstack(
+        [
+            mo.md(f"## Statistics — {map_metric_selector.selected_key}"),
+            mo.ui.table(
+                pl.concat([_global_statistics, _macro_statistics]),
+                selection=None,
+                pagination=False,
+            ),
         ]
     )
     return
@@ -825,7 +869,6 @@ def _(
         )
     export_status
     return
-
 
 if __name__ == "__main__":
     app.run()

@@ -6,7 +6,7 @@
 TRY_INJECT:holy_cooperation = {
 	modifier = {
 		expand_rgo_farming_cost_modifier = 0.1
-		global_rural_build_buildings_efficiency = 0.05
+		pp_irrigated_rice_paddies_price_cost_modifier = -0.1
 	}
 }
 

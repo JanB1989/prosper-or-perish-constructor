@@ -18,6 +18,10 @@ from prosper_or_perish_constructor.simulation.location_capacity_calibration impo
     evaluate_location_capacity,
     export_location_capacity_run,
     summarize_location_capacity,
+    weights_from_profile,
+)
+from prosper_or_perish_constructor.simulation.profile import (
+    load_population_simulation_profile,
 )
 
 
@@ -63,6 +67,30 @@ def _weights() -> LocationCapacityWeights:
         tsetse_weight=0.4,
         minimum_capacity_game_units=0.0,
     )
+
+
+def test_notebook_defaults_match_accepted_population_capacity_profile() -> None:
+    root = Path(__file__).resolve().parents[1]
+    profile = load_population_simulation_profile(
+        root / "population_capacity_simulation.toml",
+        repo=root,
+    )
+
+    defaults = weights_from_profile(profile)
+
+    assert defaults.crop_weight == 1.0
+    assert defaults.livestock_weight == 0.20
+    assert defaults.wild_weight == 0.05
+    assert defaults.freshwater_weight == 0.50
+    assert defaults.marine_weight == 0.20
+    assert defaults.development_crop_points == 42.0
+    assert defaults.development_crop_saturation_rate == 1.5
+    assert defaults.development_pasture_points == 5.0
+    assert defaults.development_maximum == 80.0
+    assert defaults.development_relative == 0.00125
+    assert defaults.global_relative == 0.0
+    assert defaults.clearing_realization == 0.0
+    assert defaults.irrigation_scale == 0.0
 
 
 def test_exact_global_formula_and_people_unit_conversion() -> None:

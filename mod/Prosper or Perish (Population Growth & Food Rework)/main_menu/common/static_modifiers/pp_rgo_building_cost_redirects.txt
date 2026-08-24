@@ -5,22 +5,22 @@
 
 TRY_INJECT:growth_of_the_cattle_trade = {
 	expand_rgo_farming_cost_modifier = 0.1
-	global_rural_build_buildings_efficiency = 0.05
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.1
 }
 
 TRY_INJECT:hatun_pucuy_quilla_modifier = {
 	expand_rgo_farming_cost_modifier = 0.05
-	global_rural_build_buildings_efficiency = 0.03
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.05
 }
 
 TRY_INJECT:lupercalia_modifier = {
 	expand_rgo_farming_cost_modifier = 0.1
-	global_rural_build_buildings_efficiency = 0.05
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.1
 }
 
 TRY_INJECT:parl_farming_innovation_mod = {
 	expand_rgo_farming_cost_modifier = 0.1
-	global_rural_build_buildings_efficiency = 0.05
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.1
 }
 
 TRY_INJECT:parl_hunting_rights_mod = {
@@ -30,12 +30,12 @@ TRY_INJECT:parl_hunting_rights_mod = {
 
 TRY_INJECT:parl_irrigation_projects_mod = {
 	expand_rgo_farming_cost_modifier = 0.25
-	global_rural_build_buildings_efficiency = 0.13
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.25
 }
 
 TRY_INJECT:parl_noble_enclosure_mod = {
 	expand_rgo_farming_cost_modifier = 0.15
-	global_rural_build_buildings_efficiency = 0.08
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.15
 }
 
 TRY_INJECT:parl_rural_crafts_mod = {
@@ -57,12 +57,12 @@ TRY_INJECT:quecholli_mass = {
 
 TRY_INJECT:tozoztontli_gr = {
 	expand_rgo_farming_cost_modifier = 0.05
-	global_rural_build_buildings_efficiency = 0.03
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.05
 }
 
 TRY_INJECT:tozoztontli_mass = {
 	expand_rgo_farming_cost_modifier = 0.1
-	global_rural_build_buildings_efficiency = 0.05
+	pp_irrigated_rice_paddies_price_cost_modifier = -0.1
 }
 
 TRY_INJECT:uinal_zac_modifier = {

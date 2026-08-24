@@ -1,0 +1,82 @@
+version: 2
+tag: field_drainage
+building:
+  key: field_drainage
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_field_drainage_maintenance
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = 5
+    increase_per_level_cost = 0.40
+    pop_type = peasants
+    employment_size = 0.50
+    price = pp_field_drainage_price
+    category = infrastructure_category
+    custom_tags = { pp_food_security_priority pp_water_control_priority }
+    icon = field_drainage
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      topography = wetlands
+      NOT = {
+        OR = {
+          is_coastal = yes
+          is_adjacent_to_lake = yes
+          soil_quality = soil_barren
+          soil_quality = soil_permafrost
+        }
+      }
+    }
+
+    construction_demand = village_construction
+
+    unique_production_methods = {
+      pp_field_drainage_maintenance = {
+        lumber = 0.05
+        tools = 0.05
+        category = building_maintenance
+      }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_field_drainage = 0.60
+      local_population_capacity = 6.23
+    }
+
+    modifier = {
+    }
+
+    forbidden_for_estates = no
+    ai_forbid_shutdown = yes
+localization:
+  entries:
+    field_drainage: Drainage Ditches
+    field_drainage_desc: Open ditches, raised cultivation ridges, and collector drains remove excess water from inland wet ground and keep crop roots aerated.
+    field_drainage_slot_0: Maintenance
+    pp_field_drainage_maintenance: Ditch Maintenance
+    pp_field_drainage_price: Drainage Ditches Price
+prices:
+  - key: pp_field_drainage_price
+    body: |2-
+      {gold = 100}
+icon:
+  source_png: ../assets/icons/field_drainage.png
+  output_dds: field_drainage.dds
+  size: 512
+  prompt: EU5-inspired detailed historic bitmap cutout for Drainage Ditches on a perfectly flat magenta chroma-key background. Show parallel open field drains, raised cultivation ridges, a timber collector sluice, spades, wicker spoil baskets, and a small footbridge. Material-rich painterly three-quarter-view UI art, no sea dike, no polder windmill, no text, no frame.
+evaluation:
+  production_methods:
+    pp_field_drainage_maintenance:
+      allow_rules:
+        profit_percent: Drainage ditches are capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Ditch crews provide light ongoing maintenance rather than full worked production.
+        output_throughput: Drainage ditches provide capacity rather than a directly traded good.

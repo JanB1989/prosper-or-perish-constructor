@@ -93,7 +93,33 @@ def weights_from_profile(profile: Any) -> LocationCapacityWeights:
     """Use the simulator's parsed values as notebook defaults."""
 
     formula = profile.capacity_formula
+    source_weights = profile.physical_capacity_weights
+
+    def source_weight(*columns: str) -> float:
+        for column in columns:
+            if column in source_weights:
+                return float(source_weights[column])
+        raise ValueError(
+            "population-capacity profile is missing source weight: "
+            + " or ".join(columns)
+        )
+
     return LocationCapacityWeights(
+        physical_quantile="p50",
+        crop_weight=source_weight(
+            "open_rainfed_capacity_people_p50",
+            "rainfed_crop_capacity_people_p50",
+        ),
+        livestock_weight=source_weight(
+            "extensive_livestock_capacity_people_p50",
+            "livestock_capacity_people_p50",
+        ),
+        wild_weight=source_weight(
+            "retained_wild_capacity_people_p50",
+            "wild_capacity_people_p50",
+        ),
+        freshwater_weight=source_weight("freshwater_capacity_people_p50"),
+        marine_weight=source_weight("marine_capacity_people_p50"),
         development_base=float(profile.development_base),
         development_minimum_manageable_cropland_fraction=float(
             profile.development_minimum_manageable_cropland_fraction
@@ -107,6 +133,11 @@ def weights_from_profile(profile: Any) -> LocationCapacityWeights:
         development_maximum=float(profile.development_start_max),
         development_relative=float(formula.development_relative),
         global_relative=float(formula.global_relative),
+        # The accepted model realizes clearing and irrigation through flat
+        # population-capacity buildings. Keep the older continuous experiment
+        # controls neutral by default so the notebook does not double-count them.
+        clearing_realization=0.0,
+        irrigation_scale=0.0,
         minimum_capacity_game_units=float(profile.min_location_capacity),
     )
 

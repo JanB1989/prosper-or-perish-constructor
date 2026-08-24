@@ -1,0 +1,54 @@
+﻿# >>> eu5-building-pipeline:land_clearance:building
+land_clearance = {
+is_foreign = no
+max_levels = 5
+increase_per_level_cost = 0.30
+pop_type = peasants
+employment_size = 0.50
+price = pp_land_clearance_price
+category = infrastructure_category
+custom_tags = { pp_food_security_priority }
+icon = land_clearance
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+build_time = infrastructure_build_time
+
+location_potential = {
+  OR = {
+    vegetation = woods
+    vegetation = forest
+    vegetation = jungle
+  }
+  NOT = {
+    OR = {
+      topography = mountain_wasteland
+      topography = atoll
+      soil_quality = soil_barren
+      soil_quality = soil_permafrost
+    }
+  }
+}
+
+construction_demand = village_construction
+
+unique_production_methods = {
+  pp_land_clearance_maintenance = {
+    tools = 0.05
+    category = building_maintenance
+  }
+}
+
+raw_modifier = {
+  farm_capacity_from_land_clearance = 0.60
+  local_population_capacity = 7.65
+}
+
+modifier = {
+}
+
+forbidden_for_estates = no
+ai_forbid_shutdown = yes
+}
+# <<< eu5-building-pipeline:land_clearance:building

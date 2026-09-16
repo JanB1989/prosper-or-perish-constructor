@@ -43,6 +43,7 @@ uv run ppc setup
 uv run ppc inspect
 uv run ppc test
 uv run ppc analyze
+uv run ppc profiler --profile vanilla --label vanilla
 uv run ppc output-modifiers
 uv run ppc location-changes detect --output artifacts/data/labeling/location_template_changes.csv
 uv run ppc production-throughput
@@ -73,6 +74,72 @@ into the configured Paradox mod folder:
 ```bash
 uv run ppc sync --yes
 ```
+
+### In-Game Profiler
+
+After dumping the in-game profiler, build a standalone interactive report:
+
+```bash
+uv run ppc profiler --profile vanilla --label vanilla
+```
+
+The input defaults to the live EU5 `Documents/Paradox Interactive/Europa Universalis V/logs`
+folder (also detected from WSL). Set `[profiler].logs_dir` in ignored
+`constructor.local.toml` for a custom location. An optional positional path accepts an
+archived logs directory or a single CSV, including quoted Windows drive paths.
+
+The report uses `profiling.csv` and `profiling_roots.csv` as separate measurement views,
+and `performance_degradation.log` for frame-time and memory trends when present. It writes
+`index.html`, `profile.json` (schema and column names included), and exhaustive
+`hotspots_summary.csv` / `hotspots_detail.csv` exports under a unique directory such as
+`graphs/profiler/vanilla-20260916T123000.000000Z/`. Timestamps are UTC with microseconds;
+concurrent collisions receive a suffix. Every invocation creates a fresh report, including
+when `--output` is supplied: that option selects the parent directory, never a file to
+overwrite. Open
+`index.html` in a recent browser; no server, network resources or additional packages are
+required. Filter and rank hotspots by self/inclusive/bottleneck time, calls, or per-call
+cost; inspect script context, follow graph nodes, and group costs by file, directory,
+profiler type or source layer.
+
+The exact input bytes are also saved under the report's `inputs/` directory, so a later
+game launch cannot erase the baseline. A live file changing during its read is rejected
+with a rerun message. Missing or empty performance samples are reported explicitly.
+
+Select the source profile that actually produced the capture. `--profile` reads
+`constructor.load_order.toml`; `--load-order` selects another config. Omit both for
+measurement-only analysis. For other mods, use a configured profile or repeated
+`--source 'NAME=/path/to/source-root'` arguments in load order. Extra roots follow the
+profile's roots and later roots win for identical paths. No mod naming convention is
+assumed. Source roots may be install, mod, `game/`, or `in_game/` directories.
+
+For the next mod run, retain the vanilla dump and compare equivalent captures:
+
+```bash
+uv run ppc profiler --profile constructor --label modded \
+  --baseline graphs/profiler/vanilla-TIMESTAMP
+```
+
+Replace `vanilla-TIMESTAMP` with the earlier report directory; `--baseline` automatically
+uses its saved `inputs/`. Raw dump directories and individual CSVs also work.
+
+Baseline matching uses exact profiler type, file and line within the same measurement
+view. The report compares self-time shares in percentage points; it does not claim an
+FPS improvement or correct for changed workloads. Edited line numbers may not match.
+
+**Interpretation:** the CSVs do not contain recorded caller/callee IDs or stacks. Graph
+edges are explicitly inferred from the shared Clausewitz parser's block ancestry and
+literal references to scripted triggers, effects and values in captured source files,
+including file-local declarations. Source-only nodes bridge unmeasured enclosing blocks;
+dotted links distinguish separate profiler types recorded at a shared source entry.
+They are not a measured flame graph, and costs cannot be attributed to individual edges.
+Dynamic dispatch and database `REPLACE`/`INJECT` semantics are not reconstructed.
+Use the exact source versions from the capture; the dump cannot verify source hashes.
+Duplicate locations are aggregated within a view, never across the two CSV views.
+Inclusive times overlap. Self shares refer to profiled script self time, not wall time.
+The engine's bottleneck column is preserved without inventing its meaning. CSV headers
+do not specify timing units, so the default is raw units; pass `--time-unit seconds`
+(or `milliseconds` / `microseconds`) only when independently known. Per-call values are
+recomputed from totals and counts because the exported average columns are rounded.
 
 ### Location-Template Drift
 

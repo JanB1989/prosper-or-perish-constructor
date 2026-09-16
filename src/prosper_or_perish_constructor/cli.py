@@ -208,6 +208,10 @@ def _build_parser() -> argparse.ArgumentParser:
 
     subcommands = parser.add_subparsers(dest="command", required=True)
 
+    from prosper_or_perish_constructor.profiler import add_profiler_command
+
+    add_profiler_command(subcommands)
+
     _add_command(
         subcommands,
         "setup",

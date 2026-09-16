@@ -7,3 +7,7 @@
 [deploy]
 # When running ppc from WSL, use the WSL path to the Windows Documents folder.
 target = "/mnt/c/Users/<windows-user>/Documents/Paradox Interactive/Europa Universalis V/mod/Prosper or Perish (Population Growth & Food Rework)"
+
+# Optional: override the profiler's auto-detected live EU5 logs directory.
+# [profiler]
+# logs_dir = "/mnt/c/Users/<windows-user>/Documents/Paradox Interactive/Europa Universalis V/logs"

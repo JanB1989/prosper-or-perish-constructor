@@ -161,6 +161,45 @@ vanilla_files = [
   "in_game/events/DHE/flavor_ENG.txt",
 ]
 
+[worldbuilder.start]
+# Game-start building placement (rural food buildings and the urban food chain) from the capacity model; replaces the
+# savegame-driven food startup compiler. A farm never pushes a location over its cap: spare land = capacity - pops.
+keep_pops_within_capacity = true
+peasant_work_share = 0.6              # share of a location's peasants that may staff rural buildings at start
+max_farm_levels_per_location = 6
+food_target_ratio = 1.1               # province food supply aimed for, relative to what the pops eat
+subsistence_food_per_1000_peasants = 1.0
+max_cookery_levels_per_location = 6
+max_market_levels_per_location = 3
+laborer_conversion_share = 0.5        # share of a location's peasants that may become the cookeries' laborers
+[worldbuilder.start.processors]
+# raw material -> building placed at game start (its laborers are converted from local peasants); levels as before
+alum = { building = "alum_quarry", levels = 1 }
+clay = { building = "clay_pit", levels = 2 }
+coal = { building = "coal_mine", levels = 1 }
+copper = { building = "copper_mine", levels = 1 }
+fish = { building = "fishing_village", levels = 3 }
+fur = { building = "forest_village", levels = 2 }
+gems = { building = "gem_gravel_pit", levels = 1 }
+goods_gold = { building = "gold_diggings", levels = 1 }
+iron = { building = "iron_mine", levels = 2 }
+lead = { building = "lead_mine", levels = 1 }
+lumber = { building = "lumber_mill", levels = 2 }
+marble = { building = "marble_quarry", levels = 1 }
+mercury = { building = "cinnabar_pit", levels = 1 }
+salt = { building = "inland_saltworks", coastal_building = "salt_collector", levels = 2 }
+saltpeter = { building = "saltpeter_beds", levels = 1 }
+sand = { building = "sand_pit", levels = 1 }
+silver = { building = "silver_mine", levels = 1 }
+stone = { building = "stone_quarry", levels = 1 }
+tin = { building = "tin_streamworks", levels = 1 }
+wild_game = { building = "forest_village", levels = 2 }
+[worldbuilder.start.rank_capacity_people]
+# flat housing of the location ranks, must match pp_location_rank_adjustments.txt (net of vanilla)
+town = 10000
+city = 25000
+megalopolis = 40000
+
 [worldbuilder.level_scale]
 # multiply levels, divide people per level; 1.0 keeps the World Builder units. Chosen so every general building is
 # worth roughly 700-2,600 people per level (niche members: 1.5x their family); only integer scales are safe because caps

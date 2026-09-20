@@ -18,6 +18,7 @@ from prosper_or_perish_constructor.worldbuilder import compat as wb_compat
 from prosper_or_perish_constructor.worldbuilder import development as wb_development
 from prosper_or_perish_constructor.worldbuilder import geography as wb_geography
 from prosper_or_perish_constructor.worldbuilder import modifiers as wb_modifiers
+from prosper_or_perish_constructor.worldbuilder import start_placement as wb_start
 from prosper_or_perish_constructor.worldbuilder.contract import Contract, WorldBuilderConfig, load_config, load_contract
 
 REPORT_RELATIVE_PATH = Path("artifacts/data/worldbuilder/apply_report.json")
@@ -32,14 +33,6 @@ def vanilla_root(repo: Path, project: Path) -> Path:
     lo = tomllib.loads(load_order.read_text(encoding="utf-8"))
     return resolve_load_order_path(str(lo["paths"]["vanilla_root"]), load_order.parent)
 
-
-def start_owners(repo: Path) -> dict[str, str]:
-    """location tag -> owning country tag at game start (vanilla setup)."""
-    from prosper_or_perish_constructor.food_building_startup import _load_start_location_owners, load_food_startup_config
-
-    frame = _load_start_location_owners(load_food_startup_config(repo))
-    tag_column = "slug" if "slug" in frame.columns else "location_tag"
-    return {str(tag): str(owner) for tag, owner in frame.select(tag_column, "country_tag").iter_rows() if owner}
 
 
 def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | None = None) -> dict[str, object]:
@@ -75,7 +68,8 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     # goods output map modes read the engine's own local_<good>_output_modifier
     runpy.run_path(str(repo / "scripts/generate_raw_material_local_map_modes.py"), run_name="__main__")
     report["goods_output_map_modes"] = "regenerated"
-    report["setup"] = wb_buildings.write_setup(contract, cfg, caps, start_owners(repo), mod_root)
+    report["setup"] = wb_buildings.write_setup(contract, cfg, caps, wb_start.load_owners(vanilla_root(repo, project), mod_root), mod_root)
+    report["start_placement"] = wb_start.apply(repo=repo, project=project, mod_root=mod_root, vanilla_root=vanilla_root(repo, project), cfg=cfg, contract=contract, caps=caps, locations=current)
     development = wb_development.compute_vanilla_development(repo, project)
     (mod_root / wb_development.SETUP_RELATIVE_PATH).write_text("﻿" + wb_development.render_development_setup(development), encoding="utf-8", newline="\n")
     wb_development.write_development_export(development, repo / wb_development.EXPORT_RELATIVE_PATH)

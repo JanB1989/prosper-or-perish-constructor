@@ -16,7 +16,6 @@ MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 ROAD_TYPES = MOD_ROOT / "in_game" / "common" / "road_types" / "pp_road_infrastructure_rebalance.txt"
 GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
 ROAD_STARTUP = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_road_infrastructure_startup.txt"
-FOOD_STARTUP = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_food_building_startup_generated.txt"
 
 ROAD_BUILDINGS = {
     "road_wardens_yard": {
@@ -179,4 +178,3 @@ def test_road_wardens_startup_is_deactivated_and_food_startup_is_untouched() -> 
     assert "building_type = building_type:road_wardens_yard" not in startup
     assert "cost_multiplier = 0" not in startup
     assert "can_build_building = building_type:road_wardens_yard" not in startup
-    assert "road_wardens_yard" not in FOOD_STARTUP.read_text(encoding="utf-8-sig")

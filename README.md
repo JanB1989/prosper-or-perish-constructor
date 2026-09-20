@@ -130,6 +130,15 @@ would be scaled by employment, which is zero). All carry
 `[worldbuilder.level_scale]` rescales levels so the general buildings are worth 700-2,600 people per
 level; only integer scales are safe because caps and starting levels are floored.
 
+Game-start buildings are placed by the same stage (`worldbuilder/start_placement.py`, `[worldbuilder.start]`):
+the raw-material building of each location's RGO, then a farm where the farm gate passes with levels =
+min(spare land, available peasants, cap) where spare land = capacity - pops - reserve (a farm never pushes a
+location over its cap), then per province the cookeries and victuals markets that cover the pops' food beyond
+peasant subsistence. Output is setup data: `14_pp_start_buildings.txt` and a regenerated `06_pops.txt` in
+which the laborers those buildings employ are converted from the largest local peasant pop, keeping its culture
+and religion. The former food startup compiler (split-pop on_action from a tick-0 save) and the error-log driven
+setup corrections are gone.
+
 The World Builder classes are children of vanilla classes (the export's `geography_compatibility.json`
 `families` map). `[worldbuilder.compat] vanilla_files` lists the vanilla scripts whose attribute tests
 matter (scripted triggers, some building files, diseases, the Columbian exchange, a few events); apply

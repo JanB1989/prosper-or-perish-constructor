@@ -23,7 +23,7 @@ from prosper_or_perish_constructor.rural_capacity import (
     capacity_max_omitted_buildings_by_building,
     farm_capacity_modifier_for_building,
 )
-from scripts.generate_setup_building_corrections import (
+from prosper_or_perish_constructor.vanilla_setup import (
     expand_town_setup,
     parse_setup_model,
     parse_town_setups,
@@ -2254,9 +2254,7 @@ def test_starting_province_food_is_configurable_and_registered() -> None:
     on_actions = _entry_values(game_start)["on_actions"]
     assert isinstance(on_actions, CList)
     assert "pp_set_starting_province_food" in on_actions.items
-    assert on_actions.items.index("pp_food_building_startup") < on_actions.items.index(
-        "pp_set_starting_province_food"
-    )
+    assert "pp_food_building_startup" not in on_actions.items   # game-start buildings are setup data now
 
     action_entries = {
         entry.key: entry.value for entry in parse_file(STARTING_PROVINCE_FOOD_ACTION).entries
@@ -3133,20 +3131,6 @@ def test_columbian_exchange_debug_event_keys_are_localized() -> None:
         "pp_columbian_exchange_debug.1.a",
     ):
         assert f" {key}:" in localization_text
-
-
-def test_farming_village_uses_baseline_building_price() -> None:
-    data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
-    annotated = annotate_building_data_availability(data.building_data, data.advancements)
-    buildings = {row["name"]: row for row in annotated.buildings.to_dicts()}
-
-    farming_village = buildings["farming_village"]
-    assert farming_village["price"] is None
-    assert farming_village["effective_price"] == "p_building_age_1_traditions"
-    assert farming_village["effective_price_gold"] == 50.0
-    assert farming_village["price_kind"] == "baseline_age"
-
-
 
 
 def _vanilla_estate_buildings() -> tuple[str, ...]:

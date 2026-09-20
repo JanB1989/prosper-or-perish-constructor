@@ -1567,46 +1567,23 @@ def test_game_start_restores_lake_adjacency_modifier() -> None:
     assert "STATIC_MODIFIER_NAME_is_adjacent_to_lake" in localization_text
 
 
-def test_game_start_startup_building_construction_is_compiler_owned() -> None:
+def test_game_start_places_no_buildings_at_runtime() -> None:
+    """Game-start buildings are setup data (14_pp_start_buildings.txt), never on_action effects."""
     text = GAME_START_PATH.read_text(encoding="utf-8-sig")
     game_start = _first_script_block(text, "pp_game_start_effect")
     on_game_start = _first_script_block(text, "on_game_start")
 
     assert re.search(r"(?m)^[ \t]*pp_game_start_effect[ \t]*$", on_game_start)
-    assert re.search(r"(?m)^[ \t]*pp_food_building_startup[ \t]*$", on_game_start)
-    assert on_game_start.index("pp_game_start_effect") < on_game_start.index("pp_food_building_startup")
-
+    assert "pp_food_building_startup" not in on_game_start
+    assert not GAME_START_PATH.with_name("pp_food_building_startup_generated.txt").exists()
     assert "construct_building" not in game_start
     assert "change_building_level_in_location" not in game_start
     assert "can_build_building" not in game_start
     assert "num_pop_type" not in game_start
     assert "location_building_level" not in game_start
     assert "NOT = { has_building" not in game_start
-
-
-def test_generated_startup_script_contains_only_direct_compiler_actions() -> None:
-    startup_path = GAME_START_PATH.with_name("pp_food_building_startup_generated.txt")
-    text = startup_path.read_text(encoding="utf-8-sig")
-
-    assert "pp_food_building_startup = {" in text
-    assert "split_pop = {" in text
-    assert "construct_building = {" in text
-    for building in (
-        "farming_village",
-        "iron_mine",
-        "granary",
-        "cookery",
-        "victuals_market",
-        "victuals_market_import",
-    ):
-        assert f"building_type = building_type:{building}" in text
-
-    assert re.search(r"(?m)^[ \t]*if\s*=\s*\{", text) is None
-    assert "has_owner = yes" not in text
-    assert "num_pop_type" not in text
-    assert "location_building_level" not in text
-    assert "can_build_building" not in text
-    assert "NOT = { has_building" not in text
+    start_setup = GAME_START_PATH.parents[3] / "main_menu" / "setup" / "start" / "14_pp_start_buildings.txt"
+    assert "building_manager = {" in start_setup.read_text(encoding="utf-8-sig")
 
 
 def test_game_start_does_not_add_disabled_farm_capacity_buildings() -> None:
@@ -1963,14 +1940,6 @@ def test_raw_processor_replacements_exclude_matching_raw_materials() -> None:
         assert "location_potential = {" in body
         assert f"raw_material = goods:{good}" in body
         assert re.search(rf"NOT\s*=\s*\{{\s*raw_material\s*=\s*goods:{good}\s*\}}", body)
-
-
-def test_compiler_startup_routes_raw_saltpeter_to_niter_beds() -> None:
-    text = GAME_START_PATH.with_name("pp_food_building_startup_generated.txt").read_text(encoding="utf-8-sig")
-
-    assert "building_type = building_type:saltpeter_beds" in text
-    assert "building_type = building_type:saltpeter_guild" not in text
-    assert "unlock_building = saltpeter_beds" in ADVANCES_PATH.read_text(encoding="utf-8-sig")
 
 
 def test_mining_village_chain_is_deactivated() -> None:

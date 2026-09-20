@@ -266,3 +266,37 @@ def test_expand_attribute_tests_widens_parents_once_and_leaves_the_rest(tmp_path
     assert report == {"files": 1, "tests_widened": 2, "unchanged": ["in_game/common/diseases/none.txt"]}
     assert (mod / "in_game/common/diseases/malaria.txt").is_file() and not (mod / "in_game/common/diseases/none.txt").exists()
 
+
+
+def test_population_capacity_cell_bands_the_gauge_and_names_both_sides_of_the_ratio():
+    from prosper_or_perish_constructor.worldbuilder import geography as wb_geography
+
+    cell = "\t\t\t\t\t\tsize = { 120 28 }\n"
+    text = "\t\t\t\t\t\tsize = { 90 28 }\n" + cell + wb_geography._POP_VBOX + "\n" + wb_geography._POP_TEXT + "\n" + wb_geography._CAPACITY_BAR + "\n"
+    out = wb_geography.merge_population_capacity(text)
+
+    assert "\t\t\t\t\t\tsize = { 90 28 }\n" in out             # the other header cells keep their width
+    assert "\t\t\t\t\t\tsize = { 180 28 }\n" in out            # only the population cell widens
+    assert "ignoreinvisible = yes" in out                       # the hidden gauges must not reserve rows
+    assert "GetTotalPopulation]@population!" not in out
+
+    # Abbreviated above 10k, plain below it; the fallback is Not(<same test>) so a wrong assumption
+    # about the capacity type degrades to the full number rather than to an empty cell.
+    big = "GreaterThanOrEqualTo_int32(Location.GetPopulationCapacity, '(int32)10000')"
+    assert f'visible = "[And(HasPopBreakdownIntelOn(Location.Self), {big})]"' in out
+    assert f'visible = "[And(HasPopBreakdownIntelOn(Location.Self), Not({big}))]"' in out
+    assert 'text = "PP_LOC_POP_OF_CAPACITY_K"' in out
+    assert 'text = "PP_LOC_POP_OF_CAPACITY"' in out
+    assert out.count('block "location_population_sort_highlight" {}') == 2   # one per mutually exclusive variant
+    assert "using = progress_bar_green_alt" not in out         # replaced by four explicitly textured bars
+    assert out.count('name = "pp_pop_capacity_bar_') == 4
+    assert out.count("gfx/interface/progressbars/progress_bar_red_alt.dds") == 1
+
+    # Half-open bands on the 0..1 fill ratio: every ratio lights exactly one bar, with no overlap.
+    percent = "Location.GetCapacityPercentage"
+    assert f"And(HasPopBreakdownIntelOn(Location.Self), LessThan_float({percent}, '(float)0.70'))" in out
+    assert f"And3(HasPopBreakdownIntelOn(Location.Self), GreaterThanOrEqualTo_float({percent}, '(float)0.70'), LessThan_float({percent}, '(float)0.90'))" in out
+    assert f"And(HasPopBreakdownIntelOn(Location.Self), GreaterThanOrEqualTo_float({percent}, '(float)1.00'))" in out
+
+    with pytest.raises(ValueError, match="population-cell anchor"):
+        wb_geography.merge_population_capacity(out)

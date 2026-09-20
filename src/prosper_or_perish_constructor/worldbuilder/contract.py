@@ -37,7 +37,6 @@ class WorldBuilderConfig:
     level_scale: dict[str, float]
     level_limit: int
     goods_floor: float
-    overpopulation_peasant_unrest: float
     sync_geography: bool
     raw: dict[str, Any] = field(default_factory=dict)
     niche: dict[str, dict[str, Any]] = field(default_factory=dict)
@@ -78,7 +77,6 @@ def load_config(repo: Path, project: Path) -> WorldBuilderConfig:
         level_scale={str(k): float(v) for k, v in scale.items()},
         level_limit=int(section.get("level_limit", 20)),
         goods_floor=float(section.get("goods_floor", -0.2)),
-        overpopulation_peasant_unrest=float(section.get("overpopulation_peasant_unrest", 0.1)),
         sync_geography=bool(section.get("sync_geography", True)),
         raw=section,
     )

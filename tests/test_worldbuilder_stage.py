@@ -76,7 +76,7 @@ def test_setup_rows_use_owner_tags_and_scale(tmp_path):
     c = _contract(tmp_path)
     caps = {"land_clearance": {"kind": "clearing", "unit_people": 5200.0, "unit_units": 5.2, "scale": 2.0, "limit": 40}}
     from prosper_or_perish_constructor.worldbuilder.contract import WorldBuilderConfig
-    cfg = WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={"clearing": "land_clearance"}, farm_land={"arable": {"land": 5, "reserve": 5}}, farm_classes={}, level_scale={}, level_limit=20, goods_floor=-0.2, overpopulation_peasant_unrest=0.1, sync_geography=False)
+    cfg = WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={"clearing": "land_clearance"}, farm_land={"arable": {"land": 5, "reserve": 5}}, farm_classes={}, level_scale={}, level_limit=20, goods_floor=-0.2, sync_geography=False)
     mod_root = tmp_path / "mod"
     result = wb_buildings.write_setup(c, cfg, caps, {"a": "SWE"}, mod_root)
     text = (mod_root / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
@@ -94,7 +94,7 @@ def test_location_templates_overlay_replaces_fields_by_tag():
 
 def test_farm_constants_by_class(tmp_path):
     from prosper_or_perish_constructor.worldbuilder.contract import WorldBuilderConfig
-    cfg = WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={}, farm_land={"arable": {"land": 5, "reserve": 5}, "herd": {"land": 2, "reserve": 1}}, farm_classes={"herd": ["sheep_farms"]}, level_scale={}, level_limit=20, goods_floor=-0.2, overpopulation_peasant_unrest=0.1, sync_geography=False)
+    cfg = WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={}, farm_land={"arable": {"land": 5, "reserve": 5}, "herd": {"land": 2, "reserve": 1}}, farm_classes={"herd": ["sheep_farms"]}, level_scale={}, level_limit=20, goods_floor=-0.2, sync_geography=False)
     assert wb_buildings.farm_constants(cfg, "sheep_farms") == (2.0, 1.0) and wb_buildings.farm_constants(cfg, "farming_village") == (5.0, 5.0)
 
 
@@ -104,7 +104,7 @@ def _cfg(tmp_path: Path, niche: dict | None = None):
     return WorldBuilderConfig(
         handover=tmp_path, geography_export=tmp_path, building_map={"clearing": "land_clearance"}, niche=niche or {},
         farm_land={"arable": {"land": 5.0, "reserve": 5.0}}, farm_classes={}, level_scale={}, level_limit=20, goods_floor=-0.2,
-        overpopulation_peasant_unrest=0.1, sync_geography=False,
+        sync_geography=False,
     )
 
 

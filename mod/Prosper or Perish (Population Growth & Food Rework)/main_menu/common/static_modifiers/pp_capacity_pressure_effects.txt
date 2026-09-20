@@ -99,7 +99,8 @@ TRY_REPLACE:overpopulation = {
 	local_migration_attraction = -0.25
 	local_migration_speed = 0.0025
 	local_disease_resistance = -0.03
-	local_peasants_food_consumption = 1
+	local_peasants_food_consumption = 0.5
+	local_peasants_estate_unrest = 0.5
 	# local_population_growth = -0.0015
 	local_mercenaries_modifier = 0.5
 }

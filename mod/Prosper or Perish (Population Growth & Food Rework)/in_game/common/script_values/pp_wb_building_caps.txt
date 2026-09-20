@@ -1337,10 +1337,24 @@ pp_wb_cap_qanats = {
 		}
 	}
 	if = {
+		limit = { vegetation = ha1300_veg_scrubland }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_SCRUBLAND"
+			value = 1
+		}
+	}
+	if = {
 		limit = { vegetation = ha1300_veg_swamp }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_SWAMP"
 			value = 2
+		}
+	}
+	if = {
+		limit = { vegetation = ha1300_veg_thicket }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_THICKET"
+			value = 1
 		}
 	}
 	if = {

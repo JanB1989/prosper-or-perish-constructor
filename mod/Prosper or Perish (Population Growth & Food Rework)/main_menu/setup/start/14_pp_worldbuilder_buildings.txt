@@ -11874,6 +11874,7 @@ building_manager = {
 	bund = { tag = SLZ level = 1 location = ptuj }
 	bund = { tag = PTL level = 1 location = puctlan }
 	bund = { tag = MAB level = 1 location = puddokothai }
+	bund = { tag = PDN level = 2 location = puding }
 	bund = { tag = DLH level = 2 location = pune }
 	bund = { tag = LIT level = 1 location = punia }
 	bund = { tag = VIJ level = 2 location = puvina_padangile }
@@ -12413,6 +12414,7 @@ building_manager = {
 	bund = { tag = BUL level = 1 location = vidin }
 	bund = { tag = HAB level = 1 location = vienna }
 	bund = { tag = SAV level = 2 location = vienne }
+	bund = { tag = VIJ level = 1 location = vijayanagar }
 	bund = { tag = DLH level = 1 location = vijaygarh }
 	bund = { tag = LIT level = 1 location = vilkmerge }
 	bund = { tag = ARA level = 1 location = villa_di_chiesa }
@@ -18656,7 +18658,7 @@ building_manager = {
 	field_management = { tag = POL level = 9 location = zwolen }
 	field_management = { tag = OSW level = 3 location = zywiec }
 	qanats = { tag = ACO level = 1 location = aaku }
-	qanats = { tag = INJ level = 1 location = abadeh }
+	qanats = { tag = INJ level = 2 location = abadeh }
 	qanats = { tag = MZF level = 4 location = abarkuh }
 	qanats = { tag = QHT level = 3 location = abil }
 	qanats = { tag = KHT level = 1 location = abiz }
@@ -18673,14 +18675,16 @@ building_manager = {
 	qanats = { tag = MOR level = 3 location = ameskour }
 	qanats = { tag = MZF level = 3 location = anar }
 	qanats = { tag = MZF level = 1 location = anarak }
-	qanats = { tag = MIH level = 1 location = anardara }
+	qanats = { tag = MIH level = 2 location = anardara }
+	qanats = { tag = XLL level = 1 location = apurlec }
 	qanats = { tag = MZF level = 3 location = aqda }
+	qanats = { tag = FDL level = 1 location = arak }
 	qanats = { tag = MZF level = 2 location = ardakan }
 	qanats = { tag = INJ level = 2 location = ardestan }
-	qanats = { tag = KRM level = 1 location = arzu }
+	qanats = { tag = KRM level = 2 location = arzu }
 	qanats = { tag = ORM level = 1 location = as_sib }
 	qanats = { tag = KLW level = 3 location = awaran }
-	qanats = { tag = SFR level = 1 location = azadvar }
+	qanats = { tag = SFR level = 2 location = azadvar }
 	qanats = { tag = SMA level = 2 location = bab_kot }
 	qanats = { tag = KRM level = 3 location = baghin }
 	qanats = { tag = OMA level = 3 location = bahla }
@@ -18694,7 +18698,7 @@ building_manager = {
 	qanats = { tag = KRM level = 3 location = bardsir }
 	qanats = { tag = BMP level = 2 location = bashagard }
 	qanats = { tag = LST level = 1 location = bastak }
-	qanats = { tag = GRG level = 1 location = bastam }
+	qanats = { tag = GRG level = 2 location = bastam }
 	qanats = { tag = MZF level = 2 location = bavanat }
 	qanats = { tag = BMP level = 3 location = bazman }
 	qanats = { tag = MZF level = 1 location = behabad }
@@ -18708,20 +18712,20 @@ building_manager = {
 	qanats = { tag = TLE level = 2 location = brezina }
 	qanats = { tag = BLA level = 3 location = buleda }
 	qanats = { tag = AAL level = 4 location = burraq }
-	qanats = { tag = NGD level = 1 location = chaman }
+	qanats = { tag = NGD level = 2 location = chaman }
 	qanats = { tag = CHM level = 2 location = chan_chan }
 	qanats = { tag = MIH level = 1 location = chehl_dokhtaran }
 	qanats = { tag = HRC level = 1 location = chilca }
 	qanats = { tag = CIC level = 2 location = chinchay }
-	qanats = { tag = GRG level = 1 location = damghan }
+	qanats = { tag = GRG level = 2 location = damghan }
 	qanats = { tag = INJ level = 2 location = dehagh }
 	qanats = { tag = MZF level = 3 location = dehaj }
 	qanats = { tag = MZF level = 3 location = dehshir }
-	qanats = { tag = MIH level = 1 location = delaram }
+	qanats = { tag = MIH level = 2 location = delaram }
 	qanats = { tag = SMA level = 1 location = dera_bugti }
 	qanats = { tag = KHT level = 3 location = deyhuk }
-	qanats = { tag = SMA level = 1 location = dhadar }
-	qanats = { tag = YEM level = 2 location = dhamar }
+	qanats = { tag = SMA level = 2 location = dhadar }
+	qanats = { tag = YEM level = 3 location = dhamar }
 	qanats = { tag = KHT level = 3 location = doroh }
 	qanats = { tag = INJ level = 3 location = dowlatabad }
 	qanats = { tag = KHN level = 1 location = dowzdab }
@@ -18731,16 +18735,17 @@ building_manager = {
 	qanats = { tag = INJ level = 3 location = eqlid }
 	qanats = { tag = MZF level = 3 location = ernan }
 	qanats = { tag = BMP level = 2 location = espakeh }
-	qanats = { tag = GRG level = 2 location = eyvanekey }
+	qanats = { tag = GRG level = 3 location = eyvanekey }
 	qanats = { tag = KRM level = 4 location = fahraj_narmashir }
 	qanats = { tag = BMP level = 3 location = fahrej }
 	qanats = { tag = XLL level = 2 location = farfan }
-	qanats = { tag = SBZ level = 1 location = farumad }
-	qanats = { tag = LST level = 1 location = fin }
+	qanats = { tag = SBZ level = 2 location = farumad }
+	qanats = { tag = LST level = 2 location = fin }
 	qanats = { tag = GFS level = 2 location = gafsa }
-	qanats = { tag = SMA level = 2 location = gandava }
+	qanats = { tag = ORM level = 1 location = gamrun }
+	qanats = { tag = SMA level = 3 location = gandava }
 	qanats = { tag = TRP level = 3 location = ghariyan }
-	qanats = { tag = KRM level = 1 location = ghobeyra }
+	qanats = { tag = KRM level = 2 location = ghobeyra }
 	qanats = { tag = KRM level = 2 location = golashkerd }
 	qanats = { tag = MKR level = 3 location = gwadar }
 	qanats = { tag = YEM level = 2 location = hajar }
@@ -18752,29 +18757,29 @@ building_manager = {
 	qanats = { tag = CIC level = 2 location = ica }
 	qanats = { tag = MOR level = 1 location = ifni }
 	qanats = { tag = MOR level = 1 location = ifrane }
-	qanats = { tag = INJ level = 1 location = isfahan }
+	qanats = { tag = INJ level = 2 location = isfahan }
 	qanats = { tag = OMA level = 2 location = izki }
 	qanats = { tag = JSK level = 2 location = jagin_zir }
-	qanats = { tag = JSL level = 1 location = jaisalmer }
+	qanats = { tag = JSL level = 2 location = jaisalmer }
 	qanats = { tag = ORM level = 1 location = jalan_buani_buali }
 	qanats = { tag = MOR level = 1 location = jerada }
 	qanats = { tag = SMA level = 2 location = jhal }
 	qanats = { tag = SMA level = 2 location = jhatpat }
-	qanats = { tag = YEM level = 2 location = juban }
-	qanats = { tag = KLA level = 1 location = kalat }
+	qanats = { tag = YEM level = 3 location = juban }
+	qanats = { tag = KLA level = 2 location = kalat }
 	qanats = { tag = MKR level = 3 location = kalmat }
 	qanats = { tag = BMP level = 1 location = karvandar }
-	qanats = { tag = KRM level = 1 location = kerman }
+	qanats = { tag = KRM level = 2 location = kerman }
 	qanats = { tag = MZF level = 1 location = khabar }
-	qanats = { tag = KRM level = 1 location = khabr }
+	qanats = { tag = KRM level = 2 location = khabr }
 	qanats = { tag = KHN level = 4 location = kharan }
 	qanats = { tag = KHF level = 1 location = khargerd }
-	qanats = { tag = SRB level = 1 location = kharturan }
+	qanats = { tag = SRB level = 2 location = kharturan }
 	qanats = { tag = KHN level = 3 location = khash }
 	qanats = { tag = MIH level = 2 location = khash_sistan }
 	qanats = { tag = KRM level = 2 location = khatunabad }
 	qanats = { tag = KHT level = 3 location = khusf }
-	qanats = { tag = KHZ level = 1 location = khuzdar }
+	qanats = { tag = KHZ level = 2 location = khuzdar }
 	qanats = { tag = KHT level = 3 location = khvor }
 	qanats = { tag = GRG level = 3 location = khwar }
 	qanats = { tag = INJ level = 4 location = komshecheh }
@@ -18782,20 +18787,20 @@ building_manager = {
 	qanats = { tag = DLH level = 3 location = kot_marot }
 	qanats = { tag = TFL level = 2 location = ksar_es_souk }
 	qanats = { tag = MKR level = 3 location = kuddan }
-	qanats = { tag = MZF level = 1 location = kuhbanan }
+	qanats = { tag = MZF level = 2 location = kuhbanan }
 	qanats = { tag = KHN level = 3 location = ladiz }
 	qanats = { tag = TLE level = 3 location = laghouat }
 	qanats = { tag = SMA level = 4 location = lahri }
-	qanats = { tag = LST level = 1 location = lar }
+	qanats = { tag = LST level = 2 location = lar }
 	qanats = { tag = GRG level = 1 location = lasjerd }
 	qanats = { tag = DLH level = 1 location = lorelai }
 	qanats = { tag = JSL level = 3 location = ludrava }
 	qanats = { tag = ZAB level = 2 location = madila }
-	qanats = { tag = KRM level = 1 location = mahan }
+	qanats = { tag = KRM level = 2 location = mahan }
 	qanats = { tag = BLA level = 3 location = mahgas }
 	qanats = { tag = TUN level = 3 location = mahres }
 	qanats = { tag = DAJ level = 3 location = malha }
-	qanats = { tag = SND level = 1 location = manora }
+	qanats = { tag = SND level = 2 location = manora }
 	qanats = { tag = ORM level = 3 location = manujan }
 	qanats = { tag = KRM level = 1 location = mardehek }
 	qanats = { tag = KLW level = 4 location = mashkai }
@@ -18805,9 +18810,9 @@ building_manager = {
 	qanats = { tag = KHT level = 3 location = mazhan }
 	qanats = { tag = BQA level = 2 location = mechili }
 	qanats = { tag = GBS level = 3 location = medenine }
-	qanats = { tag = UGH level = 1 location = meshkan }
-	qanats = { tag = TLE level = 1 location = messaad }
-	qanats = { tag = SFR level = 1 location = meyami }
+	qanats = { tag = UGH level = 2 location = meshkan }
+	qanats = { tag = TLE level = 2 location = messaad }
+	qanats = { tag = SFR level = 2 location = meyami }
 	qanats = { tag = MZF level = 3 location = meybod }
 	qanats = { tag = MOR level = 3 location = midelt }
 	qanats = { tag = ORM level = 2 location = minab }
@@ -18815,19 +18820,19 @@ building_manager = {
 	qanats = { tag = BTL level = 3 location = misratah }
 	qanats = { tag = SMA level = 4 location = mithri }
 	qanats = { tag = KUT level = 1 location = morvi }
-	qanats = { tag = INJ level = 2 location = murcheh_khvort }
+	qanats = { tag = INJ level = 3 location = murcheh_khvort }
 	qanats = { tag = BLA level = 3 location = murt }
-	qanats = { tag = YEM level = 2 location = musaymir }
+	qanats = { tag = YEM level = 3 location = musaymir }
 	qanats = { tag = KHN level = 2 location = naalbandin }
 	qanats = { tag = MAM level = 3 location = nabek }
 	qanats = { tag = MZF level = 2 location = nadushan }
 	qanats = { tag = BLA level = 5 location = nagh }
 	qanats = { tag = MZF level = 1 location = nain }
 	qanats = { tag = ORM level = 2 location = nakhal }
-	qanats = { tag = KHZ level = 1 location = nal }
+	qanats = { tag = KHZ level = 2 location = nal }
 	qanats = { tag = INJ level = 3 location = natanz }
 	qanats = { tag = KHT level = 2 location = nayband }
-	qanats = { tag = KRM level = 1 location = negar }
+	qanats = { tag = KRM level = 2 location = negar }
 	qanats = { tag = MIH level = 3 location = nehbandan }
 	qanats = { tag = OMA level = 2 location = nizwa }
 	qanats = { tag = ORM level = 3 location = nowdezh }
@@ -18837,18 +18842,18 @@ building_manager = {
 	qanats = { tag = MKR level = 2 location = pasni }
 	qanats = { tag = CIC level = 3 location = puka_tampu }
 	qanats = { tag = KHT level = 3 location = qala_zari }
-	qanats = { tag = NGD level = 1 location = qalat_ghilji }
+	qanats = { tag = NGD level = 2 location = qalat_ghilji }
 	qanats = { tag = BQA level = 3 location = qaminis }
-	qanats = { tag = MIH level = 1 location = qarnin }
+	qanats = { tag = MIH level = 2 location = qarnin }
 	qanats = { tag = FDL level = 2 location = qaryatayn }
 	qanats = { tag = MKR level = 1 location = qasr_e_qand }
 	qanats = { tag = UGH level = 1 location = qatruyeh }
-	qanats = { tag = GRG level = 1 location = qumis }
-	qanats = { tag = INJ level = 1 location = qumisha }
-	qanats = { tag = AAL level = 2 location = qutayfah }
+	qanats = { tag = GRG level = 2 location = qumis }
+	qanats = { tag = INJ level = 2 location = qumisha }
+	qanats = { tag = AAL level = 3 location = qutayfah }
 	qanats = { tag = YEM level = 1 location = radaa }
 	qanats = { tag = KRM level = 3 location = rafsanjan }
-	qanats = { tag = UTB level = 1 location = raghdan }
+	qanats = { tag = UTB level = 2 location = raghdan }
 	qanats = { tag = DLH level = 1 location = rakni }
 	qanats = { tag = INJ level = 3 location = ramsheh }
 	qanats = { tag = MKR level = 3 location = rask }
@@ -18858,14 +18863,14 @@ building_manager = {
 	qanats = { tag = KRT level = 1 location = roshtkhar }
 	qanats = { tag = ORM level = 3 location = rudkhaneh }
 	qanats = { tag = ORM level = 2 location = rustaq }
-	qanats = { tag = LST level = 1 location = ruydar }
+	qanats = { tag = LST level = 2 location = ruydar }
 	qanats = { tag = KRM level = 1 location = saadatabad }
 	qanats = { tag = QHT level = 3 location = samakh }
 	qanats = { tag = XLL level = 2 location = sana }
 	qanats = { tag = BLA level = 3 location = saravan }
-	qanats = { tag = KHT level = 1 location = sarayan }
+	qanats = { tag = KHT level = 2 location = sarayan }
 	qanats = { tag = MKR level = 1 location = sarbaz }
-	qanats = { tag = KHT level = 1 location = sarbisheh }
+	qanats = { tag = KHT level = 2 location = sarbisheh }
 	qanats = { tag = MZF level = 2 location = saryazd }
 	qanats = { tag = GRG level = 1 location = semnan }
 	qanats = { tag = ORM level = 3 location = senderk }
@@ -18880,19 +18885,20 @@ building_manager = {
 	qanats = { tag = ORM level = 2 location = sirik }
 	qanats = { tag = KRM level = 1 location = sirjan }
 	qanats = { tag = BTL level = 1 location = sirte }
-	qanats = { tag = SMA level = 2 location = siwi }
+	qanats = { tag = SMA level = 3 location = siwi }
 	qanats = { tag = TFL level = 3 location = skoura }
 	qanats = { tag = KRM level = 2 location = soghan }
-	qanats = { tag = INJ level = 1 location = sohrfiruzan }
+	qanats = { tag = INJ level = 2 location = sohrfiruzan }
 	qanats = { tag = KHZ level = 3 location = sonamiani }
 	qanats = { tag = SMA level = 2 location = sui_pakistan }
 	qanats = { tag = BQA level = 2 location = suluntah }
-	qanats = { tag = KLA level = 1 location = surab }
+	qanats = { tag = KLA level = 2 location = surab }
 	qanats = { tag = BLA level = 2 location = suran }
 	qanats = { tag = SBY level = 3 location = tabalah }
-	qanats = { tag = KHT level = 1 location = tabas_al_tamr }
-	qanats = { tag = KHT level = 1 location = tabas_al_unnab }
-	qanats = { tag = MZF level = 1 location = taft }
+	qanats = { tag = KHT level = 2 location = tabas_al_tamr }
+	qanats = { tag = KHT level = 2 location = tabas_al_unnab }
+	qanats = { tag = FDL level = 1 location = tadmur }
+	qanats = { tag = MZF level = 2 location = taft }
 	qanats = { tag = UTB level = 1 location = taif }
 	qanats = { tag = YEM level = 1 location = taizz }
 	qanats = { tag = QHT level = 1 location = tanomah }
@@ -18900,15 +18906,15 @@ building_manager = {
 	qanats = { tag = GBS level = 1 location = tataouine }
 	qanats = { tag = BTL level = 2 location = tawurgha }
 	qanats = { tag = TFL level = 1 location = tazzarine }
+	qanats = { tag = GHA level = 1 location = timbuktu }
 	qanats = { tag = BQA level = 2 location = tmimi }
 	qanats = { tag = TFL level = 3 location = todgha }
 	qanats = { tag = KER level = 1 location = tsiya }
 	qanats = { tag = MKR level = 5 location = tump }
 	qanats = { tag = KHT level = 3 location = tun }
 	qanats = { tag = MKR level = 3 location = turbat }
-	qanats = { tag = DAJ level = 2 location = uri }
 	qanats = { tag = KHN level = 3 location = washuk }
-	qanats = { tag = NGD level = 1 location = wazakhwa }
+	qanats = { tag = NGD level = 2 location = wazakhwa }
 	qanats = { tag = XLL level = 2 location = xllang }
 	qanats = { tag = GBS level = 3 location = yafran }
 	qanats = { tag = MZF level = 3 location = yazd }
@@ -20963,6 +20969,7 @@ building_manager = {
 	irrigation_systems = { tag = TST level = 2 location = tuf_shur_tia }
 	irrigation_systems = { tag = DLH level = 6 location = uch }
 	irrigation_systems = { tag = KOR level = 2 location = uian }
+	irrigation_systems = { tag = DAJ level = 2 location = uri }
 	irrigation_systems = { tag = MAM level = 4 location = ushmum_tannah }
 	irrigation_systems = { tag = GRG level = 2 location = varamin }
 	irrigation_systems = { tag = ALO level = 2 location = wad_madani }

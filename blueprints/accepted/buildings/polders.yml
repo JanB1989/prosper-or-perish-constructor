@@ -4,10 +4,7 @@ building:
   key: polders
   mode: REPLACE
   source: pp_building_adjustments.txt
-  production_method_slots:
-  - name: slot_0
-    methods:
-    - pp_polders_maintenance
+  production_method_slots: []
   possible_production_methods: []
   body: |2-
         audio_tier = 3
@@ -16,10 +13,10 @@ building:
       is_special = yes
       is_foreign = no
       max_levels = pp_wb_cap_polders
-      increase_per_level_cost = 0.40
-      pop_type = laborers
+      increase_per_level_cost = 0.67
+      pop_type = no
       category = infrastructure_category
-      employment_size = village_employment_size # 1000 laborers
+      employment_size = no
       build_time = infrastructure_build_time
       rural_settlement = yes
       town = yes
@@ -36,48 +33,28 @@ building:
         }
       }
         raw_modifier = {
+          local_monthly_development_modifier = 0.025
+          local_road_building_time = -0.05
+          local_wheat_output_modifier = 0.025
+          local_livestock_output_modifier = 0.025
+          local_maize_output_modifier = 0.02
+          local_rice_output_modifier = 0.025
+          local_millet_output_modifier = 0.02
+          local_fiber_crops_output_modifier = 0.005
+          local_horses_output_modifier = 0.0035
           local_population_capacity = 2.2
         }
 
       modifier = {
-        local_monthly_development_modifier = 0.025
-        local_road_building_time = -0.05
-
-        local_wheat_output_modifier = 0.025
-        local_livestock_output_modifier = 0.025
-        local_maize_output_modifier = 0.02
-        local_rice_output_modifier = 0.025
-        local_millet_output_modifier = 0.02
-        local_fiber_crops_output_modifier = 0.005
-        local_horses_output_modifier = 0.0035
       }
 
-      unique_production_methods = {
-        pp_polders_maintenance = {
-          clay = 0.5
-          tools = 0.05
-
-          category = building_maintenance
-        }
-      }
       construction_demand = polders_construction
 
       ai_forbid_shutdown = yes
       forbidden_for_estates = no
 prices:
 - key: pp_polders_price
-  body: '{gold = 200}'
+  body: '{gold = 50}'
 localization:
   entries:
-    polders_slot_0: Maintenance
-    pp_polders_maintenance: Polders Maintenance
     pp_polders_price: Polders Price
-evaluation:
-  building:
-    employment_size: 1.0
-  production_methods:
-    pp_polders_maintenance:
-      allow_rules:
-        profit_percent: Polders maintenance is a support method with upkeep inputs and no direct goods output.
-        input_throughput: Polders maintenance is a low-volume support method, not a worked production method.
-        output_throughput: Polders maintenance is a support method with no direct goods output.

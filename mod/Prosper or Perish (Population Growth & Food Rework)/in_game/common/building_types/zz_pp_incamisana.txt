@@ -1,14 +1,15 @@
 ﻿# >>> eu5-building-pipeline:incamisana:building
 REPLACE:incamisana = {
 audio_tier = 3
+price = pp_incamisana_price
 is_special = yes
 is_foreign = no
 max_levels = pp_wb_cap_incamisana
-increase_per_level_cost = 0.30
-pop_type = clergy
+increase_per_level_cost = 0.20
+pop_type = no
 category = infrastructure_category
 custom_tags = { pp_food_security_priority pp_water_control_priority }
-employment_size = tiny_rural_peasant_produce_employment
+employment_size = no
 rural_settlement = yes
 town = yes
 city = yes
@@ -31,11 +32,6 @@ build_time = rural_build_time
 construction_demand = incamisana_construction
 
 raw_modifier = {
-  local_population_capacity = 5.1
-  pp_wb_levels_incamisana = 1
-}
-
-modifier = {
   local_pop_conversion_speed = 0.01
   local_maize_output_modifier = 0.03
   local_potato_output_modifier = 0.03
@@ -44,7 +40,13 @@ modifier = {
   local_legumes_output_modifier = 0.015
   local_chili_output_modifier = 0.02
   local_fiber_crops_output_modifier = 0.005
+  local_population_capacity = 2.55
+  pp_wb_levels_incamisana = 1
 }
+
+modifier = {
+}
+
 forbidden_for_estates = no
 ai_forbid_shutdown = yes
 }

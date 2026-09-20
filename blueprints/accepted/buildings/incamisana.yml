@@ -5,18 +5,18 @@ building:
   mode: REPLACE
   source: pp_building_adjustments.txt
   production_method_slots: []
-  possible_production_methods:
-  - incamisana_maintennace
+  possible_production_methods: []
   body: |-
     audio_tier = 3
+    price = pp_incamisana_price
     is_special = yes
     is_foreign = no
     max_levels = pp_wb_cap_incamisana
-    increase_per_level_cost = 0.40
-    pop_type = clergy
+    increase_per_level_cost = 0.27
+    pop_type = no
     category = infrastructure_category
     custom_tags = { pp_food_security_priority pp_water_control_priority }
-    employment_size = tiny_rural_peasant_produce_employment
+    employment_size = no
     rural_settlement = yes
     town = yes
     city = yes
@@ -39,11 +39,6 @@ building:
     construction_demand = incamisana_construction
 
     raw_modifier = {
-      local_population_capacity = 5.1
-      pp_wb_levels_incamisana = 1
-    }
-
-    modifier = {
       local_pop_conversion_speed = 0.01
       local_maize_output_modifier = 0.03
       local_potato_output_modifier = 0.03
@@ -52,9 +47,19 @@ building:
       local_legumes_output_modifier = 0.015
       local_chili_output_modifier = 0.02
       local_fiber_crops_output_modifier = 0.005
+      local_population_capacity = 2.55
+      pp_wb_levels_incamisana = 1
     }
+
+    modifier = {
+    }
+
     forbidden_for_estates = no
     ai_forbid_shutdown = yes
 localization:
   entries:
     incamisana_desc: The $incamisana$ is a temple in honor of water and its divine patrons. Its channels and fountains irrigate the terraces below, so Andean lands sustain more people per channel than ordinary irrigation. Incamisanas and irrigation systems share the same water, so their levels count against one cap.
+    pp_incamisana_price: Incamisana Price
+prices:
+- key: pp_incamisana_price
+  body: '{gold = 50}'

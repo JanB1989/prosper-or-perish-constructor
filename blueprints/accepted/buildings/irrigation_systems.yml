@@ -4,21 +4,18 @@ building:
   key: irrigation_systems
   mode: REPLACE
   source: pp_building_adjustments.txt
-  production_method_slots:
-  - name: slot_0
-    methods:
-    - pp_irrigation_maintenance
+  production_method_slots: []
   possible_production_methods: []
   body: |2-
       audio_tier = 1
       is_foreign = no
       max_levels = pp_wb_cap_irrigation_systems
-      increase_per_level_cost = 0.40
-      pop_type = peasants
+      increase_per_level_cost = 0.47
+      pop_type = no
       price = pp_irrigation_systems_price
       category = infrastructure_category
       custom_tags = { pp_food_security_priority pp_water_control_priority }
-      employment_size = generic_peasant_building_employment
+      employment_size = no
       rural_settlement = yes
       town = yes
       city = yes
@@ -35,34 +32,20 @@ building:
         }
       }
       build_time = infrastructure_build_time
-      unique_production_methods = {
-        pp_irrigation_maintenance = {
-          stone = 0.15
-          lumber = 0.05
-          tools = 0.025
-          category = building_maintenance
-        }
-      }
       construction_demand = village_construction
       raw_modifier = {
-        local_population_capacity = 3.4
+        local_population_capacity = 1.7
         pp_wb_levels_irrigation_systems = 1
       }
 
       modifier = {
       }
+
       forbidden_for_estates = no
       ai_forbid_shutdown = yes
 localization:
   entries:
-    irrigation_systems_slot_0: Maintenance
-    pp_irrigation_maintenance: Irrigation Maintenance
     pp_irrigation_systems_price: Irrigation Systems Price
 prices:
 - key: pp_irrigation_systems_price
   body: '{gold = 50}'
-evaluation:
-  production_methods:
-    pp_irrigation_maintenance:
-      allow_rules:
-        profit_percent: Pre-existing support method remains outside the profit band and was not part of the pp error-log economics warnings.

@@ -2,9 +2,9 @@
 qanats = {
 is_foreign = no
 max_levels = pp_wb_cap_qanats
-increase_per_level_cost = 0.30
-pop_type = laborers
-employment_size = 0.50
+increase_per_level_cost = 0.60
+pop_type = no
+employment_size = no
 price = pp_qanats_price
 category = infrastructure_category
 custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -32,14 +32,6 @@ location_potential = {
 }
 
 construction_demand = village_construction
-
-unique_production_methods = {
-  pp_qanats_maintenance = {
-    stone = 0.10
-    tools = 0.10
-    category = building_maintenance
-  }
-}
 
 raw_modifier = {
   local_population_capacity = 1.4

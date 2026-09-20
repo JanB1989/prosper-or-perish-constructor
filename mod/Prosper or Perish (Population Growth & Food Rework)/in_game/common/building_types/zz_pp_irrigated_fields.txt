@@ -2,9 +2,9 @@
 irrigated_fields = {
 is_foreign = no
 max_levels = pp_wb_cap_irrigated_fields
-increase_per_level_cost = 0.30
-pop_type = peasants
-employment_size = 0.50
+increase_per_level_cost = 0.15
+pop_type = no
+employment_size = no
 price = pp_irrigated_fields_price
 category = infrastructure_category
 custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -22,20 +22,12 @@ location_potential = {
 
 construction_demand = village_construction
 
-unique_production_methods = {
-  pp_irrigated_fields_maintenance = {
-    lumber = 0.05
-    tools = 0.025
-    category = building_maintenance
-  }
-}
-
 raw_modifier = {
-  local_population_capacity = 17.8
+  local_rice_output_modifier = 0.05
+  local_population_capacity = 2.23
 }
 
 modifier = {
-  local_rice_output_modifier = 0.05
 }
 
 forbidden_for_estates = no

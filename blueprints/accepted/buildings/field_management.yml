@@ -12,12 +12,12 @@ building:
   body: |-
     is_foreign = no
     max_levels = pp_wb_cap_field_management
-    increase_per_level_cost = 0.40
+    increase_per_level_cost = 0.27
     pop_type = peasants
     employment_size = 0.50
     price = pp_field_management_price
     category = infrastructure_category
-    custom_tags = { pp_food_security_priority }
+    custom_tags = { pp_food_security_priority pp_water_control_priority }
     icon = field_management
     rural_settlement = yes
     town = yes
@@ -33,13 +33,14 @@ building:
 
     unique_production_methods = {
       pp_field_management_maintenance = {
-        tools = 0.05
+            livestock = 0.10
+            tools = 0.025
         category = building_maintenance
       }
     }
 
     raw_modifier = {
-      local_population_capacity = 7.7
+      local_population_capacity = 2.57
     }
 
     modifier = {
@@ -56,12 +57,12 @@ localization:
     pp_field_management_price: Field Management Price
 prices:
 - key: pp_field_management_price
-  body: '{gold = 75}'
+  body: '{gold = 50}'
 icon:
   source_png: ../assets/icons/field_management.png
   output_dds: field_management.dds
   size: 512
-  prompt: EU5-inspired detailed historic bitmap cutout for Field Management on a perfectly flat magenta chroma-key background. Show strip fields under rotation, a marl pit, manure carts, a plough team and a steward with a tally stick. Material-rich painterly three-quarter-view UI art, no text, no frame, no modern machinery.
+  prompt: 'Use case: historical-scene. Create one finished EU5-style building icon for FIELD MANAGEMENT. Material-rich realistic painterly historic bitmap cutout, three-quarter elevated view, matching the weathered timber, earthy materials and detailed miniature realism of Europa Universalis building icons. A compact isolated agricultural worksite: three broad adjacent strips showing crop rotation, golden ripe grain at back, rich green low crops in middle, dark freshly ploughed parallel furrows prominently in front. A substantial recognizable wooden mouldboard plough and a small two-wheeled wooden manure cart beside the furrows, short low dry-stone field boundary. Strong simple silhouette and big coherent color masses, deliberately readable at 48 and 64 pixels. Crops and plough are primary, no large house. Ground is a compact irregular thin patch, not a thick floating block. Entire subject within frame with narrow margin, fills 88% of square canvas. Warm side lighting, crisp focal forms, rich natural ochre earth and green colors. Perfectly flat solid pure magenta #FF00FF background for chroma key removal, including all gaps; no background shadow or magenta bounce. No sky, scenic backdrop, text, lettering, frame, symbols, modern equipment, rice paddies, stumps, cut timber or forest clearance. Produce 1024x1024.'
 evaluation:
   production_methods:
     pp_field_management_maintenance:

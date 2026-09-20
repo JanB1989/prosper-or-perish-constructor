@@ -4,12 +4,12 @@ audio_tier = 4
 is_special = yes
 is_foreign = no
 max_levels = pp_wb_cap_bund
-increase_per_level_cost = 0.30
-pop_type = laborers
+increase_per_level_cost = 0.25
+pop_type = no
 price = pp_bund_price
 category = infrastructure_category
 custom_tags = { pp_food_security_priority pp_water_control_priority }
-employment_size = small_peasant_employment
+employment_size = no
 rural_settlement = yes
 town = yes
 city = yes
@@ -29,31 +29,16 @@ location_potential = {
 
 build_time = infrastructure_build_time
 
-unique_production_methods = {
-  pp_bund_maintenance = {
-    tools = 0.1
-    category = building_maintenance
-  }
-}
 construction_demand = village_construction
 
 raw_modifier = {
-  local_population_capacity = 0.8
-}
-
-modifier = {
-  # The core purpose of bunds: Rice and Terraced Fruit
   local_rice_output_modifier = 0.05
   local_fruit_output_modifier = 0.04
   local_olives_output_modifier = 0.04
-
-  # Soil conservation for other grains
   local_wheat_output_modifier = 0.02
   local_millet_output_modifier = 0.02
   local_maize_output_modifier = 0.02
   local_legumes_output_modifier = 0.015
-
-  # Minimal or indirect impact
   local_potato_output_modifier = 0.01
   local_livestock_output_modifier = 0.005
   local_wool_output_modifier = 0.005
@@ -71,7 +56,12 @@ modifier = {
   local_cloves_output_modifier = 0.012
   local_chili_output_modifier = 0.012
   local_horses_output_modifier = 0.0015
+  local_population_capacity = 0.8
 }
+
+modifier = {
+}
+
 forbidden_for_estates = no
 ai_forbid_shutdown = yes
 }

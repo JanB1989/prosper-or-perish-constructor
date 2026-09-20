@@ -3,12 +3,12 @@ REPLACE:irrigation_systems = {
   audio_tier = 1
   is_foreign = no
   max_levels = pp_wb_cap_irrigation_systems
-  increase_per_level_cost = 0.30
-  pop_type = peasants
+  increase_per_level_cost = 0.35
+  pop_type = no
   price = pp_irrigation_systems_price
   category = infrastructure_category
   custom_tags = { pp_food_security_priority pp_water_control_priority }
-  employment_size = generic_peasant_building_employment
+  employment_size = no
   rural_settlement = yes
   town = yes
   city = yes
@@ -25,22 +25,15 @@ REPLACE:irrigation_systems = {
     }
   }
   build_time = infrastructure_build_time
-  unique_production_methods = {
-    pp_irrigation_maintenance = {
-      stone = 0.15
-      lumber = 0.05
-      tools = 0.025
-      category = building_maintenance
-    }
-  }
   construction_demand = village_construction
   raw_modifier = {
-    local_population_capacity = 3.4
+    local_population_capacity = 1.7
     pp_wb_levels_irrigation_systems = 1
   }
 
   modifier = {
   }
+
   forbidden_for_estates = no
   ai_forbid_shutdown = yes
 }

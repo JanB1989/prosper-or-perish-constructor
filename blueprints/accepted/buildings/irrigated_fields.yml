@@ -4,17 +4,14 @@ building:
   key: irrigated_fields
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots:
-  - name: slot_0
-    methods:
-    - pp_irrigated_fields_maintenance
+  production_method_slots: []
   possible_production_methods: []
   body: |-
     is_foreign = no
     max_levels = pp_wb_cap_irrigated_fields
-    increase_per_level_cost = 0.40
-    pop_type = peasants
-    employment_size = 0.50
+    increase_per_level_cost = 0.20
+    pop_type = no
+    employment_size = no
     price = pp_irrigated_fields_price
     category = infrastructure_category
     custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -32,20 +29,12 @@ building:
 
     construction_demand = village_construction
 
-    unique_production_methods = {
-      pp_irrigated_fields_maintenance = {
-        lumber = 0.05
-        tools = 0.025
-        category = building_maintenance
-      }
-    }
-
     raw_modifier = {
-      local_population_capacity = 17.8
+      local_rice_output_modifier = 0.05
+      local_population_capacity = 2.23
     }
 
     modifier = {
-      local_rice_output_modifier = 0.05
     }
 
     forbidden_for_estates = no
@@ -54,21 +43,12 @@ localization:
   entries:
     irrigated_fields: Irrigated Fields
     irrigated_fields_desc: Leveled fields, low earthen bunds, feeder channels and small sluices retain and control water throughout the crop cycle, whether the crop is rice, wheat or vegetables.
-    irrigated_fields_slot_0: Maintenance
-    pp_irrigated_fields_maintenance: Irrigated Fields Maintenance
     pp_irrigated_fields_price: Irrigated Fields Price
 prices:
 - key: pp_irrigated_fields_price
-  body: '{gold = 75}'
+  body: '{gold = 50}'
 icon:
   source_png: ../assets/icons/irrigated_fields.png
   output_dds: irrigated_fields.dds
   size: 512
-  prompt: EU5-inspired detailed historic bitmap cutout for Irrigated Fields on a perfectly flat magenta chroma-key background. Show carefully leveled rectangular rice fields enclosed by low earthen bunds, shallow water, young rice rows, a timber sluice, and a feeder channel. Material-rich painterly three-quarter-view UI art, not generic mountain terraces, no text, no frame.
-evaluation:
-  production_methods:
-    pp_irrigated_fields_maintenance:
-      allow_rules:
-        profit_percent: Irrigated fields are capacity infrastructure whose payoff is carried by location modifiers.
-        input_throughput: Field crews provide maintenance rather than full worked production.
-        output_throughput: Irrigated fields provide capacity and local rice output rather than a directly traded building output.
+  prompt: 'Use case: historical-scene. Create one finished EU5-style building icon for IRRIGATED FIELDS. Material-rich realistic painterly historic bitmap cutout, elevated three-quarter view, weathered timber and stone, convincing handmade medieval farm engineering. A compact isolated farm irrigation worksite. Main focal point is a large wooden sluice gate with upright posts and lifting beam on a short pale stone headwall at rear left, releasing a bright blue-green stream into an unmistakable broad angular feeder channel that forks between two substantial raised dry crop beds: golden wheat and lush green vegetables. Water only in clearly separated narrow channels below the dry planted soil, NO flooded fields, NO rice, NO paddies, NO mountain terraces. Few bold shapes, channel gleam and tall sluice silhouette immediately recognizable at 48 and 64 pixels. An intimate self-contained miniature worksite, ground a thin irregular patch not a thick floating block. Entire subject fully within frame with narrow margin and fills 88% of square canvas. Warm sunlight on crops and wood, cool teal-blue water, ochre earth, painterly period materials and crisp focal forms. Perfectly flat pure magenta #FF00FF chroma key background in all negative spaces, no background shadow, no magenta reflections. No sky, panorama, large house, people, text, frame, modern equipment, vector art or glyph style. Produce 1024x1024.'

@@ -119,6 +119,16 @@ members' levels, so a location never holds two full sets of the same idea. `ppc 
 fails if any vanilla building with a population capacity line is not fully replaced by an enabled
 blueprint (`vanilla_capacity_leaks`).
 
+Balance of the capacity buildings: every one costs 50 gold at level 1 and differs only in
+`increase_per_level_cost` (how hard the next level is: qanats and polders steep, irrigated fields and
+bund flat, niche members below their family, field management lowest because it is the one building
+with upkeep). Field management employs peasants and consumes livestock and tools; every other capacity
+building has `pop_type = no`, `employment_size = no`, no production method and all of its effects in
+`raw_modifier` (a `modifier` block would be scaled by employment, which is zero). All carry
+`ai_forbid_shutdown` and the `pp_food_security_priority pp_water_control_priority` employment tags.
+`[worldbuilder.level_scale]` rescales levels so the general buildings are worth 700-2,600 people per
+level; only integer scales are safe because caps and starting levels are floored.
+
 ```bash
 uv run ppc worldbuilder apply                # consume ../EU5WorldBuilder/artifacts/handover/latest
 uv run ppc worldbuilder export-development   # vanilla game-start development table for the World Builder

@@ -3,18 +3,17 @@ REPLACE:khmer_baray = {
 audio_tier = 4
 is_special = yes
 is_foreign = no
-pop_type = laborers
+pop_type = no
 max_levels = pp_wb_cap_khmer_baray
-increase_per_level_cost = 0.30
+increase_per_level_cost = 0.20
 price = pp_khmer_baray_price
-employment_size = special_medium_peasant_building
+employment_size = no
 category = infrastructure_category
 custom_tags = { pp_food_security_priority pp_water_control_priority }
 rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
-expensive = yes
 
 # Khmer niche of the irrigation family: shares the irrigation cap, worth more per level (see [worldbuilder.buildings.niche]).
 location_potential = {
@@ -40,20 +39,18 @@ build_time = infrastructure_build_time
 construction_demand = khmer_baray_construction
 
 raw_modifier = {
-  local_population_capacity = 5.1
-  pp_wb_levels_khmer_baray = 1
-}
-
-modifier = {
   local_rice_output_modifier = 0.05
   local_fish_output_modifier = 0.02
   local_cotton_output_modifier = 0.02
   local_sugar_output_modifier = 0.02
   local_tea_output_modifier = 0.01
+  local_population_capacity = 2.55
+  pp_wb_levels_khmer_baray = 1
 }
-capital_country_modifier = {
-  global_monthly_prosperity = 0.001
+
+modifier = {
 }
+
 forbidden_for_estates = no
 ai_forbid_shutdown = yes
 }

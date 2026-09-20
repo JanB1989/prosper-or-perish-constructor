@@ -4,20 +4,17 @@ building:
   key: land_clearance
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots:
-  - name: slot_0
-    methods:
-    - pp_land_clearance_maintenance
+  production_method_slots: []
   possible_production_methods: []
   body: |-
     is_foreign = no
     max_levels = pp_wb_cap_land_clearance
-    increase_per_level_cost = 0.40
-    pop_type = peasants
-    employment_size = 0.50
+    increase_per_level_cost = 0.47
+    pop_type = no
+    employment_size = no
     price = pp_land_clearance_price
     category = infrastructure_category
-    custom_tags = { pp_food_security_priority }
+    custom_tags = { pp_food_security_priority pp_water_control_priority }
     icon = land_clearance
     rural_settlement = yes
     town = yes
@@ -31,15 +28,8 @@ building:
 
     construction_demand = village_construction
 
-    unique_production_methods = {
-      pp_land_clearance_maintenance = {
-        tools = 0.05
-        category = building_maintenance
-      }
-    }
-
     raw_modifier = {
-      local_population_capacity = 5.2
+      local_population_capacity = 2.6
     }
 
     modifier = {
@@ -51,21 +41,12 @@ localization:
   entries:
     land_clearance: Land Clearance
     land_clearance_desc: Felling, grubbing, burning, stone removal, and continued control of regrowth turn wooded ground into maintained farmland.
-    land_clearance_slot_0: Maintenance
-    pp_land_clearance_maintenance: Clearing Crews
     pp_land_clearance_price: Land Clearance Price
 prices:
 - key: pp_land_clearance_price
-  body: '{gold = 75}'
+  body: '{gold = 50}'
 icon:
   source_png: ../assets/icons/land_clearance.png
   output_dds: land_clearance.dds
   size: 512
   prompt: EU5-inspired detailed historic bitmap cutout for Land Clearance on a perfectly flat magenta chroma-key background. Show a newly opened woodland assart with fresh stumps, exposed roots, stacked trunks and brushwood, axes, mattocks, grubbing hoes, an ox-drawn stump drag, and dark cultivated earth. Material-rich painterly three-quarter-view UI art, no text, no frame, no modern machinery.
-evaluation:
-  production_methods:
-    pp_land_clearance_maintenance:
-      allow_rules:
-        profit_percent: Land clearance is capacity infrastructure whose payoff is carried by location modifiers.
-        input_throughput: Clearing crews provide light ongoing maintenance rather than full worked production.
-        output_throughput: Land clearance provides capacity rather than a directly traded good.

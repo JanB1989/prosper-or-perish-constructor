@@ -129,7 +129,18 @@ khmer_baray = { family = "irrigation_systems", strength = 1.5, lock = ["dominant
 incamisana = { family = "irrigation_systems", strength = 1.5 }
 
 [worldbuilder.level_scale]
-# multiply levels, divide people per level; 1.0 keeps the World Builder units
+# multiply levels, divide people per level; 1.0 keeps the World Builder units. Chosen so every general building is
+# worth roughly 700-2,600 people per level (niche members: 1.5x their family); only integer scales are safe because caps
+# and starting levels are floored, so bund and field drainage keep their small World Builder units. A common price per
+# level then means a similar price per person; the level limit scales with it.
+irrigated_fields = 8
+field_management = 3
+land_clearance = 2
+irrigation_systems = 2
+polders = 1
+qanats = 1
+bund = 1
+field_drainage = 1
 
 [worldbuilder.farm_land]
 # capacity units (1 unit = 1,000 people) a farm level takes from subsistence land, and the land that must stay

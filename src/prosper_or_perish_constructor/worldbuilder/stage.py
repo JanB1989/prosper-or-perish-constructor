@@ -106,7 +106,8 @@ def check(repo: Path, project: Path, mod_root: Path) -> dict[str, object]:
     levels = pl.DataFrame(rows)
     inverse = {v: k for k, v in cfg.building_map.items()}
     levels = levels.with_columns(pl.col("building").replace_strict(inverse, default=None).alias("kind")).drop_nulls("kind")
-    caps = {str(r["building"]): float(r["unit_people_per_level"]) for r in contract.building_types.iter_rows(named=True)}
+    scales = {kind: float(cfg.level_scale.get(key, cfg.level_scale.get(kind, 1.0))) for kind, key in cfg.building_map.items()}
+    caps = {str(r["building"]): float(r["unit_people_per_level"]) / scales.get(str(r["building"]), 1.0) for r in contract.building_types.iter_rows(named=True)}
     c = float(contract.meta["attributes"].get("capacity_percent_per_point", 0.0))
     targets = contract.location_targets
     start = levels.group_by("location_tag").agg((pl.col("starting_levels") * pl.col("kind").replace_strict(caps, default=0.0)).sum().alias("start_people"))

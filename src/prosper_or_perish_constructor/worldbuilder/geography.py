@@ -4,6 +4,9 @@ Copies the exported class definitions (climates, vegetation, topography), the lo
 assign them, the soil/fertility startup assignments with their scripted triggers, the river bitmap, colours,
 icons and localization. Test-only files (vanilla building copies, the location window GUI, manifests) are
 not copied. A manifest of copied files is kept so a later sync removes what the export no longer ships.
+
+The location window is the one exception: it is taken from the export and re-patched here, because
+both the stored-food gauge and the population-capacity readout are the main mod's, not the export's.
 """
 
 from __future__ import annotations
@@ -79,6 +82,111 @@ def merge_location_window(text: str) -> str:
     return "".join(lines)
 
 
+_POP_CELL = "\t\t\t\t\t\tsize = { 120 28 }"
+_POP_CELL_WIDE = "\t\t\t\t\t\tsize = { 185 28 }"
+# Only one of the four gauges is ever visible; the cell is 28px tall and cannot afford to reserve
+# space for the hidden three.
+_POP_VBOX = "\t\t\t\t\t\t\t\tmargin_right = 8\n\t\t\t\t\t\t\t\tmargin_bottom = 3"
+_POP_VBOX_IGNORING = _POP_VBOX + "\n\t\t\t\t\t\t\t\tignoreinvisible = yes"
+_POP_TEXT = """\t\t\t\t\t\t\t\ttext_single = {
+\t\t\t\t\t\t\t\t\tlayoutpolicy_horizontal = expanding
+\t\t\t\t\t\t\t\t\tautoresize = no
+\t\t\t\t\t\t\t\t\talign = center
+\t\t\t\t\t\t\t\t\tsize = { -1 15 }
+\t\t\t\t\t\t\t\t\tvisible = "[HasPopBreakdownIntelOn(Location.Self)]"
+\t\t\t\t\t\t\t\t\traw_text = "[Location.GetTotalPopulation]@population!"
+\t\t\t\t\t\t\t\t\tfontsize = 13
+\t\t\t\t\t\t\t\t\tblock "location_population_sort_highlight" {}
+\t\t\t\t\t\t\t\t}"""
+# raw_text, not a localization key: it is evaluated against the widget's own datacontext, which is
+# how vanilla wrote this cell. A `text = "KEY"` here resolved to nothing in game.
+_POP_TEXT_RATIO = """\t\t\t\t\t\t\t\ttext_single = {
+\t\t\t\t\t\t\t\t\tlayoutpolicy_horizontal = expanding
+\t\t\t\t\t\t\t\t\tautoresize = no
+\t\t\t\t\t\t\t\t\talign = center
+\t\t\t\t\t\t\t\t\tsize = { -1 15 }
+\t\t\t\t\t\t\t\t\tvisible = "[HasPopBreakdownIntelOn(Location.Self)]"
+\t\t\t\t\t\t\t\t\traw_text = "[Location.GetTotalPopulation]/[Location.GetPopulationCapacity] · [Location.GetCapacityPercentage|0]%"
+\t\t\t\t\t\t\t\t\tfontsize = 12
+\t\t\t\t\t\t\t\t\tblock "location_population_sort_highlight" {}
+\t\t\t\t\t\t\t\t}"""
+_CAPACITY_BAR = """\t\t\t\t\t\t\t\tprogressbar = {
+\t\t\t\t\t\t\t\t\tlayoutpolicy_horizontal = expanding
+\t\t\t\t\t\t\t\t\tsize = { -1 5 }
+\t\t\t\t\t\t\t\t\tvisible = "[HasPopBreakdownIntelOn(Location.Self)]"
+\t\t\t\t\t\t\t\t\tusing = progress_bar_green_alt
+\t\t\t\t\t\t\t\t\tvalue = "[Location.GetCapacityPercentage]"
+\t\t\t\t\t\t\t\t\tdirection = horizontal
+\t\t\t\t\t\t\t\t}"""
+_CAPACITY_BAND_BAR = """\t\t\t\t\t\t\t\tprogressbar = {
+\t\t\t\t\t\t\t\t\tname = "pp_pop_capacity_bar___NAME__"
+\t\t\t\t\t\t\t\t\tlayoutpolicy_horizontal = expanding
+\t\t\t\t\t\t\t\t\tsize = { -1 5 }
+\t\t\t\t\t\t\t\t\tvisible = "[__VISIBLE__]"
+\t\t\t\t\t\t\t\t\tprogresstexture = "gfx/interface/progressbars/__TEXTURE__.dds"
+\t\t\t\t\t\t\t\t\tnoprogresstexture = "gfx/interface/progressbars/progress_black.dds"
+\t\t\t\t\t\t\t\t\ttexture_density = 2
+\t\t\t\t\t\t\t\t\tspriteType = Corneredstretched
+\t\t\t\t\t\t\t\t\tspriteborder = { 12 0 }
+\t\t\t\t\t\t\t\t\tmin = 0
+\t\t\t\t\t\t\t\t\tmax = 100
+\t\t\t\t\t\t\t\t\tvalue = "[Location.GetCapacityPercentage]"
+\t\t\t\t\t\t\t\t\tdirection = horizontal
+\t\t\t\t\t\t\t\t}"""
+# GetCapacityPercentage is 0..100, not the 0..1 a progressbar expects. Vanilla feeds it straight to
+# a bar with no min/max, which is why the vanilla gauge sits full at every fill; min/max restate the
+# real range instead of rescaling the value, so no arithmetic is needed.
+#
+# Headroom, not fill: green while the location can still grow, red only once it is at or over
+# capacity, where growth stalls and pops starve or leave. Bands are half-open, so exactly one bar is
+# visible at any fill.
+_CAPACITY_BANDS = (
+    ("green", "progress_bar_green_alt", None, "70"),
+    ("yellow", "progress_bar_yellow", "70", "90"),
+    ("orange", "progress_bar_orange", "90", "100"),
+    ("red", "progress_bar_red_alt", "100", None),
+)
+_CAPACITY_PERCENT = "Location.GetCapacityPercentage"
+
+
+def _capacity_band_bar(name: str, texture: str, low: str | None, high: str | None) -> str:
+    tests = ["HasPopBreakdownIntelOn(Location.Self)"]
+    if low is not None:
+        tests.append(f"GreaterThanOrEqualTo_float({_CAPACITY_PERCENT}, '(float){low}')")
+    if high is not None:
+        tests.append(f"LessThan_float({_CAPACITY_PERCENT}, '(float){high}')")
+    joined = ", ".join(tests)
+    visible = f"And3({joined})" if len(tests) == 3 else f"And({joined})"
+    return (
+        _CAPACITY_BAND_BAR.replace("__NAME__", name)
+        .replace("__VISIBLE__", visible)
+        .replace("__TEXTURE__", texture)
+    )
+
+
+def merge_population_capacity(text: str) -> str:
+    """Make population capacity readable in the location header.
+
+    Vanilla shows the population alone above a single green gauge, so a location that is full looks
+    like one with room to grow. Capacity is this mod's core constraint, so the cell states population,
+    capacity and fill, and the gauge is banded by remaining headroom. The engine clamps the gauge at
+    full, which is what we want above capacity: the red band says "over" and the percentage states how
+    far over, which a rescaled gauge could only show by giving up resolution below capacity.
+    """
+    replacements = (
+        (_POP_CELL, _POP_CELL_WIDE),
+        (_POP_VBOX, _POP_VBOX_IGNORING),
+        (_POP_TEXT, _POP_TEXT_RATIO),
+        (_CAPACITY_BAR, "\n\n".join(_capacity_band_bar(*band) for band in _CAPACITY_BANDS)),
+    )
+    for old, new in replacements:
+        found = text.count(old)
+        if found != 1:
+            raise ValueError(f"location_window.gui: expected 1 population-cell anchor, found {found}")
+        text = text.replace(old, new)
+    return text
+
+
 def sync_geography(export_dir: Path, mod_root: Path, repo: Path) -> dict[str, object]:
     """Copy the export into the mod, remove stale copies from a previous sync and the legacy attribute injects."""
     export_dir = Path(export_dir)
@@ -96,7 +204,7 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path) -> dict[str, ob
         dst.parent.mkdir(parents=True, exist_ok=True)
         digest = _sha(src)
         if rel == LOCATION_WINDOW:
-            merged = merge_location_window(src.read_text(encoding="utf-8-sig"))
+            merged = merge_population_capacity(merge_location_window(src.read_text(encoding="utf-8-sig")))
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")
                 changed += 1

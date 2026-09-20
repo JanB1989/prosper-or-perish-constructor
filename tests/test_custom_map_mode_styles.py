@@ -83,7 +83,7 @@ STRUCTURE_SNIPPETS = {
         "color_refresh_counters = { LocationDevelopmentChanged LocationPopulationChanged }",
     ),
     "pp_pop_delta_location": (
-        "category = debug",
+        "category = population",
         "index = 0",
         "allow_allocate_hotkey = no",
         "pp_pop_delta_location_pct",
@@ -97,7 +97,7 @@ STRUCTURE_SNIPPETS = {
         "color_refresh_counters = { LocationPopulationChanged }",
     ),
     "pp_pop_delta_province": (
-        "category = debug",
+        "category = population",
         "index = 0",
         "allow_allocate_hotkey = no",
         "pp_pop_delta_province_pct",
@@ -109,7 +109,7 @@ STRUCTURE_SNIPPETS = {
         "color_refresh_counters = { LocationPopulationChanged }",
     ),
     "pp_pop_delta_area": (
-        "category = debug",
+        "category = population",
         "index = 0",
         "allow_allocate_hotkey = no",
         "pp_pop_delta_area_pct",
@@ -121,7 +121,7 @@ STRUCTURE_SNIPPETS = {
         "color_refresh_counters = { LocationPopulationChanged }",
     ),
     "pp_pop_delta_region": (
-        "category = debug",
+        "category = population",
         "index = 0",
         "allow_allocate_hotkey = no",
         "pp_pop_delta_region_pct",
@@ -133,7 +133,7 @@ STRUCTURE_SNIPPETS = {
         "color_refresh_counters = { LocationPopulationChanged }",
     ),
     "pp_pop_delta_macro_region": (
-        "category = debug",
+        "category = population",
         "index = 0",
         "allow_allocate_hotkey = no",
         "pp_pop_delta_macro_region_pct",
@@ -145,7 +145,7 @@ STRUCTURE_SNIPPETS = {
         "color_refresh_counters = { LocationPopulationChanged }",
     ),
     "pp_pop_delta_super_region": (
-        "category = debug",
+        "category = population",
         "index = 0",
         "allow_allocate_hotkey = no",
         "pp_pop_delta_super_region_pct",
@@ -471,7 +471,9 @@ def test_population_delta_debug_modes_use_shared_percent_change_scale() -> None:
         ]
         assert block.count("lerp = {") >= 4
         assert block.count("legend_key =") == 11
-        assert "category = debug" in block
+        # Not debug: vanilla gates the debug map-mode menu behind [IsBuildDebug] in
+        # hud_bot.gui, so a debug-category mode is unreachable in a retail build.
+        assert "category = population" in block
         assert "index = 0" in block
         assert f"small_map_names = {scope_name}" in block
         assert "small_tooltip_context = location" in block
@@ -845,3 +847,67 @@ def test_custom_map_mode_localization_uses_traffic_light_copy_without_hardcoded_
     assert "Green marks low unemployment" in text
     assert "yellow marks the base price" in text
     assert "pale-to-cyan colors mark the highest capacity" in text
+
+
+def test_population_delta_map_modes_have_picker_icons_and_concept_localization() -> None:
+    """Every pop-delta map mode needs a DDS, a game concept and that concept's loc keys.
+
+    A concept without `game_concept_<id>` / `_desc` still renders its icon but logs
+    "Missing localization key" on every load.
+    """
+    concepts = MOD_ROOT / "main_menu" / "common" / "game_concepts" / "pp_pop_delta_map_modes.txt"
+    assert concepts.is_file()
+    concept_text = concepts.read_text(encoding="utf-8-sig")
+    text = LOCALIZATION.read_text(encoding="utf-8-sig")
+
+    missing: list[str] = []
+    for mode in (
+        "pp_pop_delta_location",
+        "pp_pop_delta_province",
+        "pp_pop_delta_area",
+        "pp_pop_delta_region",
+        "pp_pop_delta_macro_region",
+        "pp_pop_delta_super_region",
+    ):
+        icon = (
+            MOD_ROOT
+            / "main_menu"
+            / "gfx"
+            / "interface"
+            / "icons"
+            / "map_modes"
+            / f"{mode}.dds"
+        )
+        if not icon.is_file():
+            missing.append(f"{mode}: icon")
+        if f'{mode} = {{' not in concept_text:
+            missing.append(f"{mode}: concept block")
+        if f'texture = "map_modes/{mode}"' not in concept_text:
+            missing.append(f"{mode}: concept texture")
+        if f"game_concept_{mode}:" not in text:
+            missing.append(f"{mode}: game_concept loc")
+        if f"game_concept_{mode}_desc:" not in text:
+            missing.append(f"{mode}: game_concept desc loc")
+
+    assert not missing
+
+
+def test_every_mod_game_concept_has_localization() -> None:
+    """Guards the whole game_concepts folder, not just the pop-delta ones."""
+    concept_dir = MOD_ROOT / "main_menu" / "common" / "game_concepts"
+    loc_dir = MOD_ROOT / "main_menu" / "localization" / "english"
+    loc_text = "\n".join(
+        path.read_text(encoding="utf-8-sig") for path in sorted(loc_dir.glob("*.yml"))
+    )
+
+    missing: list[str] = []
+    for path in sorted(concept_dir.glob("*.txt")):
+        body = path.read_text(encoding="utf-8-sig")
+        # Top-level concept ids only: a name at column 0 followed by ` = {`.
+        for concept in re.findall(r"^([a-z_0-9]+) = \{", body, flags=re.MULTILINE):
+            if f"game_concept_{concept}:" not in loc_text:
+                missing.append(f"{path.name}: game_concept_{concept}")
+            if f"game_concept_{concept}_desc:" not in loc_text:
+                missing.append(f"{path.name}: game_concept_{concept}_desc")
+
+    assert not missing

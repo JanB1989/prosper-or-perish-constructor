@@ -1,0 +1,26 @@
+﻿# Map mode picker / encyclopedia icons for the population-delta map modes.
+# Texture basename MUST match the map mode id (see mod .cursorrules).
+# DDS: main_menu/gfx/interface/icons/map_modes/<id>.dds
+pp_pop_delta_location = {
+	texture = "map_modes/pp_pop_delta_location"
+}
+
+pp_pop_delta_province = {
+	texture = "map_modes/pp_pop_delta_province"
+}
+
+pp_pop_delta_area = {
+	texture = "map_modes/pp_pop_delta_area"
+}
+
+pp_pop_delta_region = {
+	texture = "map_modes/pp_pop_delta_region"
+}
+
+pp_pop_delta_macro_region = {
+	texture = "map_modes/pp_pop_delta_macro_region"
+}
+
+pp_pop_delta_super_region = {
+	texture = "map_modes/pp_pop_delta_super_region"
+}

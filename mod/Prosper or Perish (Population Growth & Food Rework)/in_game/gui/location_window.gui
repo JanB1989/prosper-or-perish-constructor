@@ -1312,7 +1312,7 @@
 						# layoutpolicy_horizontal = expanding
 						# size = { -1 28 }
 
-						size = { 120 28 }
+						size = { 185 28 }
 
 						action_tooltip = {
 							click_type = left
@@ -1416,6 +1416,7 @@
 								layoutpolicy_horizontal = expanding
 								margin_right = 8
 								margin_bottom = 3
+								ignoreinvisible = yes
 
 								text_single = {
 									layoutpolicy_horizontal = expanding
@@ -1423,8 +1424,8 @@
 									align = center
 									size = { -1 15 }
 									visible = "[HasPopBreakdownIntelOn(Location.Self)]"
-									raw_text = "[Location.GetTotalPopulation]@population!"
-									fontsize = 13
+									raw_text = "[Location.GetTotalPopulation]/[Location.GetPopulationCapacity] · [Location.GetCapacityPercentage|0]%"
+									fontsize = 12
 									block "location_population_sort_highlight" {}
 								}
 
@@ -1440,10 +1441,65 @@
 								}
 
 								progressbar = {
+									name = "pp_pop_capacity_bar_green"
 									layoutpolicy_horizontal = expanding
 									size = { -1 5 }
-									visible = "[HasPopBreakdownIntelOn(Location.Self)]"
-									using = progress_bar_green_alt
+									visible = "[And(HasPopBreakdownIntelOn(Location.Self), LessThan_float(Location.GetCapacityPercentage, '(float)70'))]"
+									progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds"
+									noprogresstexture = "gfx/interface/progressbars/progress_black.dds"
+									texture_density = 2
+									spriteType = Corneredstretched
+									spriteborder = { 12 0 }
+									min = 0
+									max = 100
+									value = "[Location.GetCapacityPercentage]"
+									direction = horizontal
+								}
+
+								progressbar = {
+									name = "pp_pop_capacity_bar_yellow"
+									layoutpolicy_horizontal = expanding
+									size = { -1 5 }
+									visible = "[And3(HasPopBreakdownIntelOn(Location.Self), GreaterThanOrEqualTo_float(Location.GetCapacityPercentage, '(float)70'), LessThan_float(Location.GetCapacityPercentage, '(float)90'))]"
+									progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds"
+									noprogresstexture = "gfx/interface/progressbars/progress_black.dds"
+									texture_density = 2
+									spriteType = Corneredstretched
+									spriteborder = { 12 0 }
+									min = 0
+									max = 100
+									value = "[Location.GetCapacityPercentage]"
+									direction = horizontal
+								}
+
+								progressbar = {
+									name = "pp_pop_capacity_bar_orange"
+									layoutpolicy_horizontal = expanding
+									size = { -1 5 }
+									visible = "[And3(HasPopBreakdownIntelOn(Location.Self), GreaterThanOrEqualTo_float(Location.GetCapacityPercentage, '(float)90'), LessThan_float(Location.GetCapacityPercentage, '(float)100'))]"
+									progresstexture = "gfx/interface/progressbars/progress_bar_orange.dds"
+									noprogresstexture = "gfx/interface/progressbars/progress_black.dds"
+									texture_density = 2
+									spriteType = Corneredstretched
+									spriteborder = { 12 0 }
+									min = 0
+									max = 100
+									value = "[Location.GetCapacityPercentage]"
+									direction = horizontal
+								}
+
+								progressbar = {
+									name = "pp_pop_capacity_bar_red"
+									layoutpolicy_horizontal = expanding
+									size = { -1 5 }
+									visible = "[And(HasPopBreakdownIntelOn(Location.Self), GreaterThanOrEqualTo_float(Location.GetCapacityPercentage, '(float)100'))]"
+									progresstexture = "gfx/interface/progressbars/progress_bar_red_alt.dds"
+									noprogresstexture = "gfx/interface/progressbars/progress_black.dds"
+									texture_density = 2
+									spriteType = Corneredstretched
+									spriteborder = { 12 0 }
+									min = 0
+									max = 100
 									value = "[Location.GetCapacityPercentage]"
 									direction = horizontal
 								}

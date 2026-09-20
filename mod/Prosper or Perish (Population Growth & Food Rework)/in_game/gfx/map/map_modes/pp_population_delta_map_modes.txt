@@ -1,8 +1,14 @@
-﻿# Population-delta debug map modes.
-# Color = percent change vs snapshotted baseline: (current / saved) - 1.
+﻿# Population-delta map modes.
+# Color = percent change vs the stored baseline: (current / saved) - 1.
 # Continuous traffic-light: -100% (MIN) through 0% (MID) to +200% (MAX).
 # Negative band -50%..0% lerps LOW->MID so medium losses stay visible.
-# Snapshot baselines with: event pp_population_baseline_debug.1
+# The baseline is the reference campaign's population, baked into
+# common/scripted_effects/pp_population_baseline_base_data.txt and loaded at game start,
+# so separate campaigns stay comparable. To re-baseline a running campaign:
+#   event pp_population_baseline_debug.1  -> rebase on the CURRENT population
+#   event pp_population_baseline_debug.2  -> restore the reference baseline
+# Category is population (not debug): the vanilla debug map-mode menu is gated behind
+# [IsBuildDebug] in hud_bot.gui, so debug-category modes are unreachable in a retail build.
 
 @pp_pop_delta_floor = -1
 @pp_pop_delta_neg_strong = -0.5
@@ -129,7 +135,7 @@ pp_pop_delta_location = {
 	enable_snow = no
 	flatmap_behaviour = always
 	use_fow = no
-	category = debug
+	category = population
 	index = 0
 	allow_allocate_hotkey = no
 	map_markers = { all = no }
@@ -256,7 +262,7 @@ pp_pop_delta_province = {
 	enable_snow = no
 	flatmap_behaviour = always
 	use_fow = no
-	category = debug
+	category = population
 	index = 0
 	allow_allocate_hotkey = no
 	map_markers = { all = no }
@@ -383,7 +389,7 @@ pp_pop_delta_area = {
 	enable_snow = no
 	flatmap_behaviour = always
 	use_fow = no
-	category = debug
+	category = population
 	index = 0
 	allow_allocate_hotkey = no
 	map_markers = { all = no }
@@ -510,7 +516,7 @@ pp_pop_delta_region = {
 	enable_snow = no
 	flatmap_behaviour = always
 	use_fow = no
-	category = debug
+	category = population
 	index = 0
 	allow_allocate_hotkey = no
 	map_markers = { all = no }
@@ -637,7 +643,7 @@ pp_pop_delta_macro_region = {
 	enable_snow = no
 	flatmap_behaviour = always
 	use_fow = no
-	category = debug
+	category = population
 	index = 0
 	allow_allocate_hotkey = no
 	map_markers = { all = no }
@@ -764,7 +770,7 @@ pp_pop_delta_super_region = {
 	enable_snow = no
 	flatmap_behaviour = always
 	use_fow = no
-	category = debug
+	category = population
 	index = 0
 	allow_allocate_hotkey = no
 	map_markers = { all = no }

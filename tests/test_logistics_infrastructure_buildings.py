@@ -556,9 +556,12 @@ def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> No
 
 def test_victuals_market_templates_split_export_and_import_flows() -> None:
     manifest = yaml.safe_load((ROOT / "blueprints/buildings.manifest.yml").read_text())
-    assert "buildings/victuals_market_export.yml: false" in (ROOT / "blueprints/buildings.manifest.yml").read_text()
-    assert not VICTUALS_MARKET_RENDERED.exists()
-    export_texts = (VICTUALS_MARKET_BLUEPRINT.read_text(encoding="utf-8-sig"),)
+    assert manifest["enabled"]["buildings/victuals_market_export.yml"] is True
+    assert VICTUALS_MARKET_RENDERED.exists()
+    export_texts = tuple(
+        path.read_text(encoding="utf-8-sig")
+        for path in (VICTUALS_MARKET_BLUEPRINT, VICTUALS_MARKET_RENDERED)
+    )
     import_texts = tuple(
         path.read_text(encoding="utf-8-sig")
         for path in (VICTUALS_MARKET_IMPORT_BLUEPRINT, VICTUALS_MARKET_IMPORT_RENDERED)

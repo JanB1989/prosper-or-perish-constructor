@@ -15,3 +15,19 @@ pp_population_baseline_debug.1 = {
 		name = pp_population_baseline_debug.1.a
 	}
 }
+
+pp_population_baseline_debug.2 = {
+	type = country_event
+	title = pp_population_baseline_debug.2.title
+	desc = pp_population_baseline_debug.2.desc
+	outcome = neutral
+	orphan = yes
+
+	immediate = {
+		pp_load_base_population_baselines = yes
+	}
+
+	option = {
+		name = pp_population_baseline_debug.2.a
+	}
+}

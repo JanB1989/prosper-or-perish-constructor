@@ -14,7 +14,7 @@ building:
     max_levels = pp_wb_cap_field_management
     increase_per_level_cost = 0.27
     pop_type = peasants
-    employment_size = 0.50
+    employment_size = 0.050
     price = pp_field_management_price
     category = infrastructure_category
     custom_tags = { pp_food_security_priority pp_water_control_priority }

@@ -153,7 +153,8 @@ def load_pops(vanilla_root: Path) -> dict[str, list[Pop]]:
 
 
 def load_owners(vanilla_root: Path, mod_root: Path) -> dict[str, str]:
-    """location tag -> owning country tag at game start (countries setup: capital and own_* location lists)."""
+    """location tag -> owning country tag at game start: the countries setup's capital and own_* location lists.
+    add_pops_from_locations is not ownership; buildings placed there are rejected by the game."""
     from eu5gameparser.clausewitz.parser import parse_file
     from eu5gameparser.clausewitz.syntax import CList
 
@@ -177,7 +178,8 @@ def load_owners(vanilla_root: Path, mod_root: Path) -> dict[str, str]:
                     if isinstance(value, str):
                         owners.setdefault(value, tag)
                 for entry in country.value.entries:
-                    if isinstance(entry.value, CList) and (str(entry.key).startswith("own_") or entry.key == "add_pops_from_locations"):
+                    # own_* lists are ownership; add_pops_from_locations only moves pops and must not count
+                    if isinstance(entry.value, CList) and str(entry.key).startswith("own_"):
                         for item in entry.value.items:
                             if isinstance(item, str):
                                 owners.setdefault(item, tag)

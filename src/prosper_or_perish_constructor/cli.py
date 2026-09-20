@@ -3592,7 +3592,7 @@ def _process_exists(pid: int) -> bool:
 
 
 def _sync_stage_fingerprints(repo: Path, project: Path) -> dict[str, str]:
-    config = _load_project_config(project)
+    config = _project_config(project)
     return {
         "worldbuilder": _fingerprint_paths(_worldbuilder_fingerprint_paths(repo, project, config)),
         "blueprints": _fingerprint_paths(_blueprint_fingerprint_paths(repo, project, config)),

@@ -54,7 +54,7 @@ def test_cap_script_value_and_gate_use_game_keys(tmp_path):
     c = _contract(tmp_path)
     eq = json.loads(c.building_types["cap_equation_json"][0])
     text = wb_buildings.cap_script_value(c, "land_clearance", eq, 1.0, 20)
-    assert "limit = { climate = arid }" in text and "limit = { ha1300_fertility_is_high = yes }" in text
+    assert "limit = { climate = arid }" in text and "limit = { has_location_modifier = pp_wb_fertility_high }" in text
     assert "value = development" in text and "multiply = 0.03" in text and "max = 20" in text
     assert wb_buildings.gate_trigger(c, [{"climate": ["arid", "continental"]}]) == ["OR = { climate = arid climate = continental }"]
     assert wb_buildings.gate_trigger(c, []) == ["always = yes"]
@@ -80,7 +80,7 @@ def test_setup_rows_use_owner_tags_and_scale(tmp_path):
     mod_root = tmp_path / "mod"
     result = wb_buildings.write_setup(c, cfg, caps, {"a": "SWE"}, mod_root)
     text = (mod_root / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
-    assert result == {"rows": 1, "unowned_skipped": 0} and "land_clearance = { tag = SWE level = 6 location = a }" in text
+    assert result == {"rows": 1, "unowned_skipped": 0, "clamped_to_cap": 0} and "land_clearance = { tag = SWE level = 6 location = a }" in text
 
 
 def test_location_templates_overlay_replaces_fields_by_tag():
@@ -177,3 +177,32 @@ def test_vanilla_capacity_leaks_need_replace_blueprints(tmp_path):
     assert wb_buildings.vanilla_capacity_leaks(repo, vanilla) == {}
     (repo / wb_buildings.MANIFEST).write_text("enabled:\n  buildings/bund.yml: false\n  buildings/polders.yml: true\n", encoding="utf-8")
     assert "disabled" in wb_buildings.vanilla_capacity_leaks(repo, vanilla)["bund"]
+
+
+def test_setup_never_places_more_levels_than_the_cap(tmp_path):
+    c = _contract(tmp_path)
+    eq = json.loads(c.building_types["cap_equation_json"][0])
+    # location a: arid (+1), fertility moderate (0), development 20 -> base 2 + 1 + 0.6 = 3.6 -> 3 at scale 1, 7 at scale 2
+    assert wb_buildings.cap_levels(eq, {"climate": "arid", "fertility": "moderate", "development": 20.0}, 1.0, 20) == 3
+    assert wb_buildings.cap_levels(eq, {"climate": "arid", "fertility": "moderate", "development": 20.0}, 2.0, 40) == 7
+    caps = {"land_clearance": {"kind": "clearing", "unit_people": 5200.0, "unit_units": 5.2, "scale": 1.0, "limit": 20}}
+    lb = c.location_buildings.with_columns(pl.when(pl.col("location_tag") == "a").then(9).otherwise(pl.col("starting_levels")).alias("starting_levels"))
+    c2 = Contract(root=c.root, meta=c.meta, attribute_rows=c.attribute_rows, building_types=c.building_types, location_buildings=lb, location_targets=c.location_targets, location_attributes=c.location_attributes, goods_floor=c.goods_floor)
+    out = wb_buildings.write_setup(c2, _cfg(tmp_path), caps, {"a": "SWE"}, tmp_path)
+    assert out["clamped_to_cap"] == 1
+    assert "land_clearance = { tag = SWE level = 3 location = a }" in (tmp_path / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
+
+
+def test_static_modifiers_cover_reference_classes_and_are_placed_in_the_setup(tmp_path):
+    c = _contract(tmp_path)
+    vanilla = tmp_path / "vanilla"
+    (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
+    (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("river_flowing_through_1 = {\n\tlocal_population_capacity_modifier = 0.1\n}\n", encoding="utf-8")
+    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla, {})
+    statics = (tmp_path / wb_modifiers.STATIC_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
+    assert "pp_wb_fertility_high = {" in statics and "pp_wb_fertility_moderate = {" in statics   # reference class too
+    setup = (tmp_path / wb_modifiers.SETUP_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
+    assert "locations = {" in setup
+    assert '{ modifier = "pp_wb_fertility_high" start_date = 1111.1.1 date = 9999.1.1 size = 1 }' in setup
+    assert "\ta = {" in setup and "\tb = {" in setup
+

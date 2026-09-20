@@ -27,6 +27,10 @@ pp_wb_fertility_low = {
 	local_wheat_output_modifier = -0.2
 }
 
+pp_wb_fertility_moderate = {
+	game_data = { category = location }
+}
+
 pp_wb_fertility_very_high = {
 	game_data = { category = location }
 	local_population_capacity = 6
@@ -73,6 +77,10 @@ pp_wb_soil_clay = {
 	local_population_capacity = 1.2
 	local_cocoa_output_modifier = -0.14
 	local_saffron_output_modifier = -0.16
+}
+
+pp_wb_soil_loam = {
+	game_data = { category = location }
 }
 
 pp_wb_soil_peat = {

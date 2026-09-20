@@ -150,28 +150,28 @@ pp_wb_cap_land_clearance = {
 		}
 	}
 	if = {
-		limit = { ha1300_fertility_is_high = yes }
+		limit = { has_location_modifier = pp_wb_fertility_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_HIGH"
 			value = 2
 		}
 	}
 	if = {
-		limit = { ha1300_fertility_is_low = yes }
+		limit = { has_location_modifier = pp_wb_fertility_low }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_LOW"
 			value = -2
 		}
 	}
 	if = {
-		limit = { ha1300_fertility_is_very_high = yes }
+		limit = { has_location_modifier = pp_wb_fertility_very_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_HIGH"
 			value = 4
 		}
 	}
 	if = {
-		limit = { ha1300_fertility_is_very_low = yes }
+		limit = { has_location_modifier = pp_wb_fertility_very_low }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_LOW"
 			value = -2
@@ -375,28 +375,28 @@ pp_wb_cap_field_management = {
 		}
 	}
 	if = {
-		limit = { ha1300_fertility_is_high = yes }
+		limit = { has_location_modifier = pp_wb_fertility_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_HIGH"
 			value = 3
 		}
 	}
 	if = {
-		limit = { ha1300_fertility_is_low = yes }
+		limit = { has_location_modifier = pp_wb_fertility_low }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_LOW"
 			value = -3
 		}
 	}
 	if = {
-		limit = { ha1300_fertility_is_very_high = yes }
+		limit = { has_location_modifier = pp_wb_fertility_very_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_HIGH"
 			value = 3
 		}
 	}
 	if = {
-		limit = { ha1300_fertility_is_very_low = yes }
+		limit = { has_location_modifier = pp_wb_fertility_very_low }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_LOW"
 			value = -6
@@ -731,14 +731,14 @@ pp_wb_cap_irrigated_fields = {
 		}
 	}
 	if = {
-		limit = { ha1300_fertility_is_high = yes }
+		limit = { has_location_modifier = pp_wb_fertility_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_HIGH"
 			value = 8
 		}
 	}
 	if = {
-		limit = { ha1300_fertility_is_very_high = yes }
+		limit = { has_location_modifier = pp_wb_fertility_very_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_HIGH"
 			value = 8
@@ -1111,14 +1111,14 @@ pp_wb_cap_field_drainage = {
 		}
 	}
 	if = {
-		limit = { ha1300_fertility_is_high = yes }
+		limit = { has_location_modifier = pp_wb_fertility_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_HIGH"
 			value = 1
 		}
 	}
 	if = {
-		limit = { ha1300_fertility_is_very_high = yes }
+		limit = { has_location_modifier = pp_wb_fertility_very_high }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_HIGH"
 			value = 1

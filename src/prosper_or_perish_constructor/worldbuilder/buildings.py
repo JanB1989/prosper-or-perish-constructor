@@ -4,7 +4,8 @@ Improvement buildings (one per World Builder ledger type, mapped to blueprint ke
 - ``raw_modifier local_population_capacity`` = people per level / 1000 (unscaled by staffing);
 - ``max_levels = pp_wb_cap_<key>``: a script value = base + attribute class terms + levels per development
   point x development, floored, clamped to the level limit; classes are tested with the location's own
-  climate/vegetation/topography, the World Builder soil and fertility scripted triggers, the river size
+  climate/vegetation/topography, the ``pp_wb_fertility_*`` / ``pp_wb_soil_*`` static modifiers (placed in the
+  game-start setup, so they already exist when the engine validates starting levels), the river size
   modifier, coast and lake;
 - ``location_potential``: the World Builder gate (OR of ANDs over the same attributes);
 - starting levels written to ``main_menu/setup/start/14_pp_worldbuilder_buildings.txt`` for owned locations.
@@ -45,8 +46,8 @@ ATTRIBUTE_TRIGGERS = {
     "climate": "climate = {key}",
     "vegetation": "vegetation = {key}",
     "topography": "topography = {key}",
-    "fertility": "ha1300_fertility_is_{value} = yes",
-    "soil_type": "ha1300_soil_is_{value} = yes",
+    "fertility": "has_location_modifier = pp_wb_fertility_{value}",   # placed in the setup, so valid during building validation
+    "soil_type": "has_location_modifier = pp_wb_soil_{value}",
     "river_level": "has_location_modifier = river_flowing_through_{value}",
     "is_coastal": "is_coastal = yes",
     "is_adjacent_to_lake": "is_adjacent_to_lake = yes",
@@ -440,13 +441,30 @@ def patch_farm_blueprints(cfg: WorldBuilderConfig, repo: Path, farm_buildings: l
     return patched
 
 
+def cap_levels(equation: Mapping[str, object], attributes: Mapping[str, object], scale: float, limit: int) -> int:
+    """The cap as the game evaluates it: scaled base + matching class terms + development term, floored, clamped."""
+    cap = float(equation["base_levels"]) * scale
+    for term in equation["class_terms"]:
+        if str(attributes.get(str(term["attribute"]))) == str(term["value"]):
+            cap += float(term["levels"]) * scale
+    cap += float(equation["levels_per_development_point"]) * scale * float(attributes.get("development") or 0.0)
+    return min(max(int(math.floor(cap + 1e-9)), 0), int(limit))
+
+
 def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, Mapping[str, float]], owners: Mapping[str, str], mod_root: Path) -> dict[str, int]:
-    """Starting improvement levels for owned locations (levels rescaled with the building's scale)."""
+    """Starting improvement levels for owned locations (levels rescaled with the building's scale, never above the cap)."""
     rows: list[str] = []
     skipped = 0
+    clamped = 0
     kinds = {str(v["kind"]): k for k, v in caps.items() if not v.get("niche")}
+    equations = {str(r["building"]): json.loads(str(r["cap_equation_json"])) for r in contract.building_types.iter_rows(named=True)}
+    attributes = contract.location_attributes
+    if "development" not in attributes.columns and "development" in contract.location_targets.columns:
+        attributes = attributes.join(contract.location_targets.select("location_tag", "development"), on="location_tag", how="left")
+    by_tag = {str(r["location_tag"]): r for r in attributes.iter_rows(named=True)}
     for row in contract.location_buildings.filter(pl.col("starting_levels") > 0).sort(["building", "location_tag"]).iter_rows(named=True):
-        key = kinds.get(str(row["building"]))
+        kind = str(row["building"])
+        key = kinds.get(kind)
         if key is None:
             continue
         tag = str(row["location_tag"])
@@ -454,18 +472,23 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
         if not owner:
             skipped += 1
             continue
-        level = int(math.floor(int(row["starting_levels"]) * float(caps[key]["scale"]) + 1e-9))
-        level = min(level, int(caps[key]["limit"]))
+        scale = float(caps[key]["scale"])
+        limit = int(caps[key]["limit"])
+        level = min(int(math.floor(int(row["starting_levels"]) * scale + 1e-9)), limit)
+        cap = cap_levels(equations[kind], by_tag.get(tag, {}), scale, limit) if tag in by_tag else level
+        if level > cap:
+            clamped += 1
+            level = cap
         if level <= 0:
             continue
         rows.append(f"\t{key} = {{ tag = {owner} level = {level} location = {tag} }}")
     text = "\n".join([GENERATED, "building_manager = {", *rows, "}", ""])
     (mod_root / SETUP_PATH).parent.mkdir(parents=True, exist_ok=True)
-    (mod_root / SETUP_PATH).write_text("﻿" + text, encoding="utf-8", newline="\n")
+    (mod_root / SETUP_PATH).write_text("\ufeff" + text, encoding="utf-8", newline="\n")
     for rel in LEGACY_SETUP:
         if (mod_root / rel).is_file():
             (mod_root / rel).unlink()
-    return {"rows": len(rows), "unowned_skipped": skipped}
+    return {"rows": len(rows), "unowned_skipped": skipped, "clamped_to_cap": clamped}
 
 
 def vanilla_capacity_buildings(vanilla_root: Path) -> dict[str, str]:

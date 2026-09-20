@@ -25377,6 +25377,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_sand months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_rgo_base_saffron months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_wb_rgo_floor_ghardaia months = -1 mode = replace }
 		}
 		location:ghari = {
 			add_location_modifier = { modifier = pp_wb_fertility_moderate months = -1 mode = replace }
@@ -77537,6 +77538,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_sand months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_rgo_base_saffron months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_wb_rgo_floor_tamacine months = -1 mode = replace }
 		}
 		location:tamaki = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_high months = -1 mode = replace }
@@ -81867,6 +81869,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_sand months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_rgo_base_saffron months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_wb_rgo_floor_tozeur months = -1 mode = replace }
 		}
 		location:tozlan = {
 			add_location_modifier = { modifier = pp_wb_fertility_high months = -1 mode = replace }
@@ -90469,6 +90472,7 @@ pp_wb_apply_attribute_modifiers = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_low months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_soil_sand months = -1 mode = replace }
 			add_location_modifier = { modifier = pp_wb_rgo_base_saffron months = -1 mode = replace }
+			add_location_modifier = { modifier = pp_wb_rgo_floor_yanbu months = -1 mode = replace }
 		}
 		location:yanbu_an_nakhil = {
 			add_location_modifier = { modifier = pp_wb_fertility_very_low months = -1 mode = replace }

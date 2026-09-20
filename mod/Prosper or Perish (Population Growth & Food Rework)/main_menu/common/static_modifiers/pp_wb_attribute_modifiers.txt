@@ -74,7 +74,7 @@ pp_wb_soil_clay = {
 	game_data = { category = location }
 	local_population_capacity = 1.1
 	local_cocoa_output_modifier = -0.14
-	local_saffron_output_modifier = -0.13
+	local_saffron_output_modifier = -0.16
 }
 
 pp_wb_soil_loam = {
@@ -91,6 +91,7 @@ pp_wb_soil_sand = {
 	game_data = { category = location }
 	local_population_capacity = 0.9
 	local_fruit_output_modifier = -0.08
+	local_saffron_output_modifier = -0.14
 }
 
 pp_wb_soil_silt = {
@@ -100,7 +101,7 @@ pp_wb_soil_silt = {
 
 pp_wb_soil_stony = {
 	game_data = { category = location }
-	local_saffron_output_modifier = -0.14
+	local_saffron_output_modifier = -0.17
 }
 
 pp_wb_rgo_base_chili = {
@@ -180,7 +181,7 @@ pp_wb_rgo_base_rice = {
 
 pp_wb_rgo_base_saffron = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.03
+	local_saffron_output_modifier = 0.06
 }
 
 pp_wb_rgo_base_silk = {

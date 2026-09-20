@@ -1138,7 +1138,7 @@ pp_wb_cap_polders = {
 pp_wb_cap_qanats = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
-		value = 1
+		value = 0
 	}
 	if = {
 		limit = { climate = arctic }
@@ -1165,6 +1165,13 @@ pp_wb_cap_qanats = {
 		limit = { climate = ha1300_climate_highland_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_HIGHLAND_MONSOON"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = ha1300_climate_hot_steppe }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_HOT_STEPPE"
 			value = 1
 		}
 	}
@@ -1235,14 +1242,14 @@ pp_wb_cap_qanats = {
 		limit = { topography = atoll }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ATOLL"
-			value = 17
+			value = 1
 		}
 	}
 	if = {
 		limit = { topography = ha1300_topo_deltas }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_DELTAS"
-			value = 17
+			value = 1
 		}
 	}
 	if = {
@@ -1256,7 +1263,7 @@ pp_wb_cap_qanats = {
 		limit = { topography = mountain_wasteland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
-			value = 17
+			value = 1
 		}
 	}
 	if = {
@@ -1267,107 +1274,86 @@ pp_wb_cap_qanats = {
 		}
 	}
 	if = {
+		limit = { topography = plateau }
+		add = {
+			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_PLATEAU"
+			value = 1
+		}
+	}
+	if = {
 		limit = { topography = ha1300_topo_rolling }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ROLLING"
-			value = 17
+			value = 1
 		}
 	}
 	if = {
 		limit = { topography = wetlands }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_WETLANDS"
-			value = 17
+			value = 1
 		}
 	}
 	if = {
 		limit = { vegetation = ha1300_veg_coniferous_forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_CONIFEROUS_FOREST"
-			value = 1
+			value = 2
 		}
 	}
 	if = {
 		limit = { vegetation = desert }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_DESERT"
-			value = 1
-		}
-	}
-	if = {
-		limit = { vegetation = ha1300_veg_dry_forest }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_DRY_FOREST"
-			value = -1
+			value = 2
 		}
 	}
 	if = {
 		limit = { vegetation = farmland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_FARMLAND"
-			value = 1
+			value = 2
 		}
 	}
 	if = {
 		limit = { vegetation = forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_FOREST"
-			value = 1
+			value = 2
 		}
 	}
 	if = {
 		limit = { vegetation = jungle }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_JUNGLE"
-			value = 1
+			value = 2
 		}
 	}
 	if = {
 		limit = { vegetation = ha1300_veg_mixed_forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_MIXED_FOREST"
-			value = 1
-		}
-	}
-	if = {
-		limit = { vegetation = sparse }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_SPARSE"
-			value = -1
+			value = 2
 		}
 	}
 	if = {
 		limit = { vegetation = ha1300_veg_swamp }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_SWAMP"
-			value = 1
-		}
-	}
-	if = {
-		limit = { vegetation = ha1300_veg_tundra }
-		add = {
-			desc = "BUILDING_LEVEL_WB_VEGETATION_TUNDRA"
-			value = -1
+			value = 2
 		}
 	}
 	if = {
 		limit = { vegetation = woods }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_WOODS"
-			value = 1
-		}
-	}
-	if = {
-		limit = { has_location_modifier = pp_wb_fertility_very_high }
-		add = {
-			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_HIGH"
-			value = 1
+			value = 2
 		}
 	}
 	add = {
 		desc = "BUILDING_LEVEL_WB_DEVELOPMENT"
 		value = development
-		multiply = 0.01
+		multiply = 0.05
 	}
 	floor = yes
 	min = 0

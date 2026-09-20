@@ -12,15 +12,15 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_hurdled_sheepcotes_base_wool
-    - name: slot_1
-      methods:
-        - pp_hurdled_sheepcotes_no_primary
-        - pp_hurdled_sheepcotes_foldcourse_husbandry
+  - name: slot_0
+    methods:
+    - pp_hurdled_sheepcotes_base_wool
+  - name: slot_1
+    methods:
+    - pp_hurdled_sheepcotes_no_primary
+    - pp_hurdled_sheepcotes_foldcourse_husbandry
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.16
     pop_type = peasants
@@ -68,6 +68,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_hurdled_sheepcotes = -1
+      local_population_capacity = -2
     }
 
     modifier = {
@@ -75,13 +76,13 @@ building:
         local_wool_output_modifier = 0.001
     }
 advancements:
-  - key: pp_foldcourse_husbandry
-    body: |2-
-      icon = hurdled_sheepcotes
-      age = age_2_renaissance
-      requires = banking_advance
-      unlock_building = hurdled_sheepcotes
-      ai_weight = { add = 125 }
+- key: pp_foldcourse_husbandry
+  body: |-
+    icon = hurdled_sheepcotes
+    age = age_2_renaissance
+    requires = banking_advance
+    unlock_building = hurdled_sheepcotes
+    ai_weight = { add = 125 }
 localization:
   entries:
     hurdled_sheepcotes: Hurdled Sheepcotes
@@ -98,16 +99,15 @@ icon:
   output_dds: hurdled_sheepcotes.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game building icon for Hurdled Sheepcotes on a perfectly flat magenta chroma-key background (#ff00ff). Center a compact medieval sheepfold with portable woven hurdles, a small timber sheepcote, wool bundles, troughs, and shepherding gear. Use detailed historic bitmap cutout style, material-rich painterly brushwork, three-quarter view, readable worksite props, warm wool whites, weathered wood, muted pasture greens, no text, no frame, no modern fencing, no scenic landscape.
-
 evaluation:
   production_methods:
     pp_hurdled_sheepcotes_base_wool:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Passive pasture methods have little direct input cost; foldcourse husbandry carries the tier economy.
         base_output_per_1k: Early pastoral successor keeps passive wool below full-building throughput; worked methods carry the tier economy.
     pp_hurdled_sheepcotes_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Empty selector method intentionally produces no foldcourse output.
     pp_hurdled_sheepcotes_foldcourse_husbandry:

@@ -11,16 +11,16 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_stud_farm_base_horses
-    - name: slot_1
-      methods:
-        - pp_stud_farm_no_primary
-        - pp_stud_farm_approved_stallions
-        - pp_stud_farm_stud_books
+  - name: slot_0
+    methods:
+    - pp_stud_farm_base_horses
+  - name: slot_1
+    methods:
+    - pp_stud_farm_no_primary
+    - pp_stud_farm_approved_stallions
+    - pp_stud_farm_stud_books
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.16
     pop_type = laborers
@@ -79,26 +79,27 @@ building:
 
     raw_modifier = {
       farm_capacity_from_stud_farm = -1
+      local_population_capacity = -2
     }
 
     modifier = {
         local_monthly_food = 0.0
     }
 advancements:
-  - key: pp_stud_farm
-    body: |2-
-      icon = stud_farm
-      age = age_4_reformation
-      requires = artillery_institution_advance
-      unlock_building = stud_farm
-      ai_weight = { add = 125 }
-  - key: pp_stud_books
-    body: |2-
-      icon = stud_farm
-      age = age_5_absolutism
-      requires = scientific_revolution_advance
-      unlock_production_method = pp_stud_farm_stud_books
-      ai_weight = { add = 75 }
+- key: pp_stud_farm
+  body: |-
+    icon = stud_farm
+    age = age_4_reformation
+    requires = artillery_institution_advance
+    unlock_building = stud_farm
+    ai_weight = { add = 125 }
+- key: pp_stud_books
+  body: |-
+    icon = stud_farm
+    age = age_5_absolutism
+    requires = scientific_revolution_advance
+    unlock_production_method = pp_stud_farm_stud_books
+    ai_weight = { add = 75 }
 localization:
   entries:
     stud_farm: State Stud
@@ -118,19 +119,18 @@ icon:
   output_dds: stud_farm.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a State Stud, transparent background. Center a timber-and-stone stable complex with fenced paddocks, two horses, tack, hay stores, feed sacks, and a water trough. Detailed historic bitmap cutout, three-quarter view, warm daylight, no text, no frame, no modern machinery, no fantasy elements.
-
 evaluation:
   allow_rules:
     amortization_months: The stud-farm upgrade is a land-limited rural specialization and keeps horse margins close to break-even rather than driving fast payback.
   production_methods:
     pp_stud_farm_base_horses:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Passive pasture baseline intentionally stays below the global full-building target.
         output_throughput: Passive pasture baseline intentionally stays below the global full-building target.
     pp_stud_farm_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_stud_farm_approved_stallions:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_stud_farm_stud_books:
-      production_efficiency: 1.00
+      production_efficiency: 1.0

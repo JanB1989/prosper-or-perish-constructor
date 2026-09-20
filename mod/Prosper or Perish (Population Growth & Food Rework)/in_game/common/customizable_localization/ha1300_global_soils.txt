@@ -1,0 +1,19 @@
+﻿ha1300_soil_type_name = { type = location
+ text = { localization_key = HA1300_SOIL_SAND_TITLE trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 1 } }
+ text = { localization_key = HA1300_SOIL_LOAM_TITLE trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 2 } }
+ text = { localization_key = HA1300_SOIL_SILT_TITLE trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 3 } }
+ text = { localization_key = HA1300_SOIL_CLAY_TITLE trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 4 } }
+ text = { localization_key = HA1300_SOIL_PEAT_TITLE trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 5 } }
+ text = { localization_key = HA1300_SOIL_STONY_TITLE trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 6 } }
+ text = { localization_key = HA1300_SOIL_UNKNOWN fallback = yes } }
+ha1300_soil_type_description = { type = location
+ text = { localization_key = HA1300_SOIL_SAND_DESC trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 1 } }
+ text = { localization_key = HA1300_SOIL_LOAM_DESC trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 2 } }
+ text = { localization_key = HA1300_SOIL_SILT_DESC trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 3 } }
+ text = { localization_key = HA1300_SOIL_CLAY_DESC trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 4 } }
+ text = { localization_key = HA1300_SOIL_PEAT_DESC trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 5 } }
+ text = { localization_key = HA1300_SOIL_STONY_DESC trigger = { has_variable = ha1300_soil_type var:ha1300_soil_type = 6 } }
+ text = { localization_key = HA1300_SOIL_UNKNOWN_HELP fallback = yes } }ha1300_soil_type_evidence = { type = location
+ text = { localization_key = HA1300_SOIL_INFERRED trigger = { has_variable = ha1300_soil_inferred } }
+ text = { localization_key = HA1300_SOIL_DIRECT fallback = yes }
+}

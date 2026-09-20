@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "source_id": "willcocks_1889_upper_egypt_basins",
+  "title": "Egyptian Irrigation",
+  "author": "William Willcocks",
+  "publication_year": 1889,
+  "game_year": 1337,
+  "url": "https://archive.org/details/egyptianirrigati00will",
+  "source_family": "Willcocks engineering surveys; related to Borsch 2000 citations, not an independent holdout",
+  "license": "Historical work published 1889; no explicit license field in cached Internet Archive metadata. Do not infer a Creative Commons license for the scan.",
+  "sources": [
+    {
+      "path": "artifacts/data/population_capacity/repair_sources/willcocks_1889_archive_metadata.json",
+      "sha256": "aefc9241c41f8c32b88fa5b936abb21b93216675ba8651f618d58047fdd1c739"
+    },
+    {
+      "path": "artifacts/data/population_capacity/repair_sources/willcocks_1889_egyptian_irrigation_ocr.txt",
+      "sha256": "5f9ec31a6914605bdd29e756d4328f7b3f4ccaa1f022f95502c979ae87962eaf"
+    },
+    {
+      "path": "artifacts/data/population_capacity/repair_sources/willcocks_1889_leaf_98.jpg",
+      "sha256": "da1b45128c22a2e2bc253ada5c33d11d1663eb794270d21809f41c4e253a0fc4"
+    },
+    {
+      "path": "artifacts/data/population_capacity/repair_sources/willcocks_1889_leaf_111.jpg",
+      "sha256": "8ea5dfeb11ac83c695a7fbe0996e7e9ad8d314dd0c127cf6fbacae75cd1173e3"
+    },
+    {
+      "path": "artifacts/data/population_capacity/repair_sources/willcocks_1889_leaf_126.jpg",
+      "sha256": "4cd6e28473de5a36d6d05873a9ea13fdd6230cbb7719052ace2bd78b346df666"
+    },
+    {
+      "path": "artifacts/data/population_capacity/repair_sources/willcocks_1889_leaf_96.jpg",
+      "sha256": "2e1d443ccdaff9334e0fdafd78fa0484392ed97de08a32934245ebccac124c39"
+    },
+    {
+      "path": "artifacts/data/population_capacity/repair_sources/willcocks_1889_leaf_112.jpg",
+      "sha256": "47e928373850702630aa659efae5fb976b6e93542c807545421a8daf713ccd55"
+    },
+    {
+      "path": "artifacts/data/population_capacity/repair_sources/willcocks_1889_leaf_34.jpg",
+      "sha256": "6ca2270fdb5d956d84ba5269c703d0f749a8e4e2b7aa4105cc8692448ed16759"
+    }
+  ],
+  "table_path": "research/population_capacity/willcocks_1889_upper_egypt_table.csv",
+  "table_locator": "Table XVIII, printed page 71, Internet Archive leaf 126; visually transcribed from page image",
+  "unit": {
+    "source_unit": "Egyptian acre (feddan)",
+    "calculation_square_metres": 4200,
+    "unit_locator": "Printed page 3, leaf34, visually verified; closing measures note states Egyptian acre used throughout",
+    "appendix_precise_square_metres": 4200.833333,
+    "precision_note": "Appendix gives a more precise feddan. Main engineering calculations use 4200; report the difference, do not mix conventions."
+  },
+  "printed_totals": {
+    "left_basin_feddans": 1174022,
+    "right_basin_feddans": 288392,
+    "printed_basin_feddans": 1462414,
+    "high_berm_feddans": 291000,
+    "summer_tract_feddans": 461586,
+    "printed_total_feddans": 2215000
+  },
+  "expected_source_discrepancies": [
+    {
+      "scope": "row",
+      "recipient": "Assiut",
+      "field": "printed_total_feddans",
+      "printed_minus_components_feddans": -2000
+    },
+    {
+      "scope": "column",
+      "recipient": "total",
+      "field": "summer_tract_feddans",
+      "printed_minus_components_feddans": -2000
+    }
+  ],
+  "roles": [
+    "Dated basin/berm/summer-irrigation distinction",
+    "Spatial cross-check for Upper Nile valley allocation after matching historical sections to game geometry",
+    "Unit and printed-accounting audit"
+  ],
+  "map_locator": "Plate XII, Upper Egypt, leaf 98; section grouping explained on printed page 56, leaf 111",
+  "limitations": [
+    "1889 areas are not observed 1337 areas or capacity ceilings.",
+    "Do not import nineteenth-century perennial irrigation, summer cropping frequency or managed yields into 1337.",
+    "Fayoum and Ibrahimia summer tracts must remain distinct from seasonal basin support.",
+    "The province table contains two linked 2000-feddan discrepancies; no source correction is selected.",
+    "Historical province names are not an exact game-location crosswalk. Section boundaries require spatial reconciliation.",
+    "Borsch cites Willcocks for hydraulic calculations: do not count this source as independent confirmation of Borsch.",
+    "No population, density, survival result or food deficit is used to allocate these areas."
+  ],
+  "model_adoption": false,
+  "southern_basin_observations": {
+    "locator": "Table XVI, printed page 57, leaf 112; visual transcription",
+    "source_year": 1889,
+    "unit": "Egyptian acre (4200 m2 convention)",
+    "section_A": {
+      "basin_numbers": [
+        1
+      ],
+      "name": "Banban",
+      "area_feddans": 1374,
+      "area_km2": 5.7708
+    },
+    "section_B": {
+      "basin_numbers": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "names": [
+        "Ramadi and Edfu",
+        "Edfu and Kilh",
+        "Sibaya",
+        "Namasa",
+        "Esna South",
+        "Kiman, Asphun and Esna"
+      ],
+      "areas_feddans": [
+        3454,
+        6587,
+        3524,
+        4980,
+        3103,
+        11670
+      ],
+      "printed_total_feddans": 33318,
+      "total_km2": 139.9356
+    },
+    "interpretation": "Dated evidence of unequal basin extent along the southern valley; high berms, islands and opposite-bank basins are additional categories. These observations alone are not whole game-location field totals.",
+    "assignment_status": "not allocated; game polygon and bank/section crosswalk required"
+  }
+}

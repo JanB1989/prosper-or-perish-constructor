@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import os
 import re
@@ -25,8 +25,6 @@ PROJECT_CONFIG = ROOT / "constructor.toml"
 MAP_MODE_REL = Path("in_game/gfx/map/map_modes/pp_local_output_modifier_map_modes.txt")
 SCRIPT_VALUES_REL = Path("in_game/common/script_values/pp_local_output_modifier_map_modes.txt")
 LOCAL_OUTPUT_MAP_VALUES_ON_ACTION_REL = Path("in_game/common/on_action/pp_local_output_map_values.txt")
-LOCATION_MODIFIER_APPLICATION_REL = Path("in_game/common/on_action/pp_apply_location_modifiers.txt")
-LOCATION_STATIC_MODIFIERS_REL = Path("main_menu/common/static_modifiers/pp_location_modifiers.txt")
 RGO_STATIC_BONUSES_REL = Path("in_game/common/static_modifiers/pp_rgo_static_bonuses.txt")
 LOCALIZATION_REL = Path("main_menu/localization/english/pp_building_adjustments_l_english.yml")
 MODIFIER_TYPE_DEFINITIONS_REL = Path(
@@ -60,25 +58,13 @@ def main() -> None:
     mod_root = _project_path(project["project"]["mod_root"])
     rgo_bonus_values = _rgo_bonus_output_values(mod_root / RGO_STATIC_BONUSES_REL)
     raw_materials = list(rgo_bonus_values)
-    modifier_locations = _location_modifier_application_locations(mod_root / LOCATION_MODIFIER_APPLICATION_REL)
-    location_potential_values = _location_potential_values(
-        mod_root / LOCATION_STATIC_MODIFIERS_REL,
-        raw_materials,
-        modifier_locations,
-    )
 
     _write_map_modes(mod_root / MAP_MODE_REL, raw_materials)
-    goods_with_location_potential = _goods_with_location_potential(location_potential_values)
-    _write_script_values(mod_root / SCRIPT_VALUES_REL, rgo_bonus_values, goods_with_location_potential)
-    _write_location_potential_variables(
-        mod_root / LOCAL_OUTPUT_MAP_VALUES_ON_ACTION_REL,
-        raw_materials,
-        location_potential_values,
-    )
+    _write_script_values(mod_root / SCRIPT_VALUES_REL, rgo_bonus_values)
+    _remove_obsolete_generated_file(mod_root / LOCAL_OUTPUT_MAP_VALUES_ON_ACTION_REL)
     _remove_obsolete_generated_file(mod_root / MODIFIER_TYPE_DEFINITIONS_REL)
     _remove_obsolete_generated_file(mod_root / MODIFIER_ICONS_REL)
     _remove_obsolete_generated_file(mod_root / MODIFIER_TYPE_LOCALIZATION_REL)
-    _remove_generated_map_value_modifiers(mod_root / LOCATION_STATIC_MODIFIERS_REL)
     _remove_generated_map_value_modifiers(mod_root / RGO_STATIC_BONUSES_REL)
     _upsert_localization(mod_root / LOCALIZATION_REL, raw_materials)
     _ensure_icons(mod_root, raw_materials, project)
@@ -232,89 +218,44 @@ def _output_modifier_legend_keys(upper: str) -> str:
 def _write_script_values(
     path: Path,
     rgo_bonus_values: dict[str, tuple[str, str]],
-    goods_with_location_potential: set[str],
 ) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     blocks = [
         GENERATED_FILE_MARKER,
         "# Static planning values for the raw-material output map modes.",
-        "# Total map value = available generated location potential variable + active raw-material RGO bonus.",
-        "# Location potential variables are emitted only for goods with generated source rows.",
-        "# Variables avoid visible map helper modifier rows and avoid generated trigger tables.",
-        "# RGO bonus checks the raw material directly so pp_rgo_bonus_<good> stays player-facing without helper rows.",
+        "# Total map value = the location's local_<good>_output_modifier as the engine sums it",
+        "# (attribute rows from the World Builder, the RGO base and floor, the RGO bonus).",
+        "# The attribute part is the total minus the active raw-material RGO bonus.",
         "",
     ]
     for good, (_modifier, value) in rgo_bonus_values.items():
-        blocks.extend(
-            _script_value_block(
-                good,
-                value,
-                has_location_potential=good in goods_with_location_potential,
-            )
-        )
+        blocks.extend(_script_value_block(good, value))
         blocks.append("")
     _write_crlf(path, "\n".join(blocks).rstrip() + "\n")
 
 
-def _script_value_block(
-    good: str,
-    rgo_bonus_value: str,
-    *,
-    has_location_potential: bool,
-) -> list[str]:
-    variable_name = _productivity_location_potential_variable_name(good)
-    lines = [
+def _script_value_block(good: str, rgo_bonus_value: str) -> list[str]:
+    return [
         f"{_productivity_value_name(good)} = {{",
+        f"\tvalue = modifier:local_{good}_output_modifier",
+        "}",
+        "",
+        f"{_productivity_location_potential_value_name(good)} = {{",
+        f"\tvalue = modifier:local_{good}_output_modifier",
+        "\tif = {",
+        f"\t\tlimit = {{ raw_material = goods:{good} }}",
+        f"\t\tsubtract = {rgo_bonus_value}",
+        "\t}",
+        "}",
+        "",
+        f"{_productivity_rgo_bonus_value_name(good)} = {{",
         "\tvalue = 0",
+        "\tif = {",
+        f"\t\tlimit = {{ raw_material = goods:{good} }}",
+        f"\t\tadd = {rgo_bonus_value}",
+        "\t}",
+        "}",
     ]
-    if has_location_potential:
-        lines.extend(
-            [
-                "\tif = {",
-                f"\t\tlimit = {{ has_variable = {variable_name} }}",
-                f"\t\tvalue = var:{variable_name}",
-                "\t}",
-            ]
-        )
-    lines.extend(
-        [
-            "\tif = {",
-            f"\t\tlimit = {{ raw_material = goods:{good} }}",
-            f"\t\tadd = {rgo_bonus_value}",
-            "\t}",
-            "}",
-            "",
-            f"{_productivity_location_potential_value_name(good)} = {{",
-            "\tvalue = 0",
-        ]
-    )
-    if has_location_potential:
-        lines.extend(
-            [
-                "\tif = {",
-                f"\t\tlimit = {{ has_variable = {variable_name} }}",
-                f"\t\tvalue = var:{variable_name}",
-                "\t}",
-            ]
-        )
-    lines.extend(
-        [
-            "}",
-            "",
-            f"{_productivity_rgo_bonus_value_name(good)} = {{",
-            "\tvalue = 0",
-            "\tif = {",
-            f"\t\tlimit = {{ raw_material = goods:{good} }}",
-            f"\t\tadd = {rgo_bonus_value}",
-            "\t}",
-            "}",
-        ]
-    )
-    return lines
-
-
-def _goods_with_location_potential(location_potential_values: dict[str, dict[str, str]]) -> set[str]:
-    return {good for values in location_potential_values.values() for good in values}
 
 
 def _rgo_bonus_output_values(path: Path) -> dict[str, tuple[str, str]]:
@@ -347,95 +288,6 @@ def _productivity_location_potential_value_name(good: str) -> str:
 
 def _productivity_rgo_bonus_value_name(good: str) -> str:
     return f"pp_{good}_productivity_rgo_bonus_map_value"
-
-
-def _productivity_location_potential_variable_name(good: str) -> str:
-    return f"pp_{good}_productivity_location_potential_map_var"
-
-
-def _location_modifier_application_locations(path: Path) -> dict[str, str]:
-    text = path.read_text(encoding="utf-8-sig")
-    locations: dict[str, str] = {}
-    pattern = re.compile(
-        r"location:([A-Za-z0-9_]+)\s*=\s*\{\s*"
-        r"add_location_modifier\s*=\s*\{\s*modifier\s*=\s*(pp_loc_[a-z0-9_]+)",
-        re.MULTILINE,
-    )
-    for match in pattern.finditer(text):
-        locations[match.group(2)] = match.group(1)
-    if not locations:
-        raise ValueError(f"Could not find pp_loc_* application mappings in {path}")
-    return locations
-
-
-def _location_potential_values(
-    path: Path,
-    goods: Iterable[str],
-    modifier_locations: dict[str, str],
-) -> dict[str, dict[str, str]]:
-    goods_set = set(goods)
-    values: dict[str, dict[str, str]] = {}
-    text = path.read_text(encoding="utf-8-sig")
-    pattern = re.compile(r"^(pp_loc_[a-z0-9_]+)\s*=\s*\{(?P<body>.*?)^\}", re.DOTALL | re.MULTILINE)
-    for match in pattern.finditer(text):
-        modifier = match.group(1)
-        location = modifier_locations.get(modifier)
-        if location is None:
-            raise ValueError(f"{modifier} in {path} is not applied by {LOCATION_MODIFIER_APPLICATION_REL}")
-        for value_match in re.finditer(
-            r"^\s*local_([a-z0-9_]+)_output_modifier\s*=\s*([-+]?\d+(?:\.\d+)?)\s*$",
-            match.group("body"),
-            flags=re.MULTILINE,
-        ):
-            good = value_match.group(1)
-            value = value_match.group(2)
-            if good in goods_set and not _is_zero_value(value):
-                values.setdefault(location, {})[good] = value
-    return values
-
-
-def _write_location_potential_variables(
-    path: Path,
-    goods: Iterable[str],
-    location_potential_values: dict[str, dict[str, str]],
-) -> None:
-    goods = list(goods)
-    goods_with_location_potential = _goods_with_location_potential(location_potential_values)
-    lines = [
-        GENERATED_FILE_MARKER,
-        "# Hidden per-location variables for raw-material output map modes.",
-        "# Values are generated from pp_loc_* local_<good>_output_modifier source rows.",
-        "",
-        "on_game_start = {",
-        "\ton_actions = {",
-        "\t\tpp_precalculate_local_output_map_values",
-        "\t}",
-        "}",
-        "",
-        "pp_precalculate_local_output_map_values = {",
-        "\teffect = {",
-        "\t\tevery_location_in_the_world = {",
-    ]
-    for good in goods:
-        if good not in goods_with_location_potential:
-            continue
-        lines.append(f"\t\t\tremove_variable = {_productivity_location_potential_variable_name(good)}")
-    lines.append("\t\t}")
-    for location in sorted(location_potential_values):
-        values = location_potential_values[location]
-        if not values:
-            continue
-        lines.append(f"\t\tlocation:{location} = {{")
-        for good in goods:
-            value = values.get(good)
-            if value is None:
-                continue
-            lines.append(
-                f"\t\t\tset_variable = {{ name = {_productivity_location_potential_variable_name(good)} value = {value} }}"
-            )
-        lines.append("\t\t}")
-    lines.extend(["\t}", "}"])
-    _write_crlf(path, "\n".join(lines).rstrip() + "\n")
 
 
 def _remove_obsolete_generated_file(path: Path) -> None:

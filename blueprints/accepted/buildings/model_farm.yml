@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: model_farm
 upgrade_chain:
   family: farming_village
@@ -11,33 +11,33 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_model_farm_base_livestock
-        - pp_model_farm_base_millet
-        - pp_model_farm_base_wheat
-        - pp_model_farm_base_maize
-        - pp_model_farm_base_rice
-        - pp_model_farm_base_legumes
-        - pp_model_farm_base_potato
-        - pp_model_farm_base_olives
-    - name: slot_1
-      methods:
-        - pp_model_farm_no_primary
-        - pp_model_farm_livestock
-        - pp_model_farm_millet
-        - pp_model_farm_wheat
-        - pp_model_farm_maize
-        - pp_model_farm_rice
-        - pp_model_farm_legumes
-        - pp_model_farm_potato
-        - pp_model_farm_olives
-    - name: slot_2
-      methods:
-        - pp_model_farm_no_worker_victuals
-        - pp_model_farm_worker_victuals
+  - name: slot_0
+    methods:
+    - pp_model_farm_base_livestock
+    - pp_model_farm_base_millet
+    - pp_model_farm_base_wheat
+    - pp_model_farm_base_maize
+    - pp_model_farm_base_rice
+    - pp_model_farm_base_legumes
+    - pp_model_farm_base_potato
+    - pp_model_farm_base_olives
+  - name: slot_1
+    methods:
+    - pp_model_farm_no_primary
+    - pp_model_farm_livestock
+    - pp_model_farm_millet
+    - pp_model_farm_wheat
+    - pp_model_farm_maize
+    - pp_model_farm_rice
+    - pp_model_farm_legumes
+    - pp_model_farm_potato
+    - pp_model_farm_olives
+  - name: slot_2
+    methods:
+    - pp_model_farm_no_worker_victuals
+    - pp_model_farm_worker_victuals
   possible_production_methods: []
-  body: |2-
+  body: |-
     # Age 5 is the laborer/capitalized step: surveyed fields, hired hands, drill culture,
     # horse-hoes, planned barns, accounts, and crop-specific storage or water/press works.
     # Inputs stay capped at four goods per method; paper and pottery appear here as higher-tier management/storage goods.
@@ -205,6 +205,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_model_farm = -1
+      local_population_capacity = -5
     }
 
     modifier = {
@@ -212,13 +213,13 @@ building:
         local_laborers_desired_pop = 0.002
     }
 advancements:
-  - key: pp_model_farm
-    body: |2-
-      icon = model_farm
-      age = age_5_absolutism
-      requires = scientific_revolution_advance
-      unlock_building = model_farm
-      ai_weight = { add = 125 }
+- key: pp_model_farm
+  body: |-
+    icon = model_farm
+    age = age_5_absolutism
+    requires = scientific_revolution_advance
+    unlock_building = model_farm
+    ai_weight = { add = 125 }
 localization:
   entries:
     model_farm: Model Farm
@@ -252,70 +253,69 @@ icon:
   output_dds: model_farm.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a Model Farm, transparent background. Center ordered rectangular fields, an improved barn, survey stakes, hand tools, seed sacks, and a small paper ledger or field plan in the foreground. Warm daylight, practical early modern rural infrastructure, no text, no frame, no modern machinery, no steel factory imagery.
-
 evaluation:
   allow_rules:
     amortization_months: The 10k laborer model farm keeps a slower estate-improvement payback than global construction targets; revisit with the rural producer rebalance.
   production_methods:
     pp_model_farm_base_livestock:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_millet:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_wheat:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_maize:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_rice:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_legumes:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_potato:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_base_olives:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_model_farm_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_model_farm_livestock:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_model_farm_millet:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_model_farm_wheat:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_model_farm_maize:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_model_farm_rice:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_model_farm_legumes:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_model_farm_potato:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_model_farm_olives:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_model_farm_worker_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

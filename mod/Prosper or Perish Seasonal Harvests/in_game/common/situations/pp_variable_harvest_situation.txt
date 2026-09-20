@@ -1,0 +1,271 @@
+﻿harvest_situation = {
+	monthly_spawn_chance = monthly_spawn_chance_unique
+	
+	can_start = {
+		always = yes
+	}
+	
+	can_end = {
+		always = no
+	}
+	
+	visible = {
+		NOT = { has_game_rule = pp_variable_harvest_disabled }
+	}
+	on_start = {
+	}
+	on_monthly = {
+		if = {
+			limit = {
+				current_month = 9
+				NOT = { has_game_rule = pp_variable_harvest_disabled }
+			}
+			apply_regional_harvest_effect = yes
+		}
+	}
+	tooltip = {
+		if = {
+			limit = {
+				has_owner = yes
+				province = { is_starving = yes }
+			}
+			custom_tooltip = pp_harvest_province_is_starving_tt
+		}
+		if = {
+			limit = {
+				has_owner = yes
+				this.market ?= { market_monthly_food_balance < 0 }
+			}
+			custom_tooltip = pp_harvest_market_negative_food_balance_tt
+		}
+		if = {
+			limit = {	
+				area = {
+					has_extended_winter = yes
+				}
+			}
+			custom_tooltip = pp_harvest_affected_by_extended_winters_tt
+		}
+	}
+	on_ended = {
+		every_country = {
+			limit = {
+				capital ?= {
+					area = {
+						has_extended_winter = yes
+					}
+				}
+			}
+		
+			trigger_event_non_silently = little_ice_age.100
+		}
+	
+		every_area = {
+			every_location_in_area = {
+				remove_location_modifier = harsh_winters_modifier
+			}
+			remove_extended_winter = this 
+		} 
+	}
+	 
+	
+	map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				province = { is_starving = yes }
+			}
+			value = define:NMapColors|POPULATION_STARVING_COLOR_STRIPE
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				OR = {
+					has_location_modifier = pp_harvest_western_europe_abysmal
+					has_location_modifier = pp_harvest_eastern_europe_abysmal
+					has_location_modifier = pp_harvest_north_asia_abysmal
+					has_location_modifier = pp_harvest_central_asia_abysmal
+					has_location_modifier = pp_harvest_east_asia_abysmal
+					has_location_modifier = pp_harvest_south_asia_abysmal
+					has_location_modifier = pp_harvest_south_east_asia_abysmal
+					has_location_modifier = pp_harvest_middle_east_abysmal
+					has_location_modifier = pp_harvest_north_africa_abysmal
+					has_location_modifier = pp_harvest_west_africa_abysmal
+					has_location_modifier = pp_harvest_east_africa_abysmal
+					has_location_modifier = pp_harvest_central_africa_abysmal
+					has_location_modifier = pp_harvest_southern_africa_abysmal
+					has_location_modifier = pp_harvest_north_america_abysmal
+					has_location_modifier = pp_harvest_south_america_abysmal
+					has_location_modifier = pp_harvest_australasia_abysmal
+					has_location_modifier = pp_harvest_pacific_islands_abysmal
+				}
+			}
+			value = define:NMapColors|MAP_COLOR_MIN
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				OR = {
+					has_location_modifier = pp_harvest_western_europe_very_poor
+					has_location_modifier = pp_harvest_eastern_europe_very_poor
+					has_location_modifier = pp_harvest_north_asia_very_poor
+					has_location_modifier = pp_harvest_central_asia_very_poor
+					has_location_modifier = pp_harvest_east_asia_very_poor
+					has_location_modifier = pp_harvest_south_asia_very_poor
+					has_location_modifier = pp_harvest_south_east_asia_very_poor
+					has_location_modifier = pp_harvest_middle_east_very_poor
+					has_location_modifier = pp_harvest_north_africa_very_poor
+					has_location_modifier = pp_harvest_west_africa_very_poor
+					has_location_modifier = pp_harvest_east_africa_very_poor
+					has_location_modifier = pp_harvest_central_africa_very_poor
+					has_location_modifier = pp_harvest_southern_africa_very_poor
+					has_location_modifier = pp_harvest_north_america_very_poor
+					has_location_modifier = pp_harvest_south_america_very_poor
+					has_location_modifier = pp_harvest_australasia_very_poor
+					has_location_modifier = pp_harvest_pacific_islands_very_poor
+				}
+			}
+			value = define:NMapColors|MAP_COLOR_LOW
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				OR = {
+					has_location_modifier = pp_harvest_western_europe_poor
+					has_location_modifier = pp_harvest_eastern_europe_poor
+					has_location_modifier = pp_harvest_north_asia_poor
+					has_location_modifier = pp_harvest_central_asia_poor
+					has_location_modifier = pp_harvest_east_asia_poor
+					has_location_modifier = pp_harvest_south_asia_poor
+					has_location_modifier = pp_harvest_south_east_asia_poor
+					has_location_modifier = pp_harvest_middle_east_poor
+					has_location_modifier = pp_harvest_north_africa_poor
+					has_location_modifier = pp_harvest_west_africa_poor
+					has_location_modifier = pp_harvest_east_africa_poor
+					has_location_modifier = pp_harvest_central_africa_poor
+					has_location_modifier = pp_harvest_southern_africa_poor
+					has_location_modifier = pp_harvest_north_america_poor
+					has_location_modifier = pp_harvest_south_america_poor
+					has_location_modifier = pp_harvest_australasia_poor
+					has_location_modifier = pp_harvest_pacific_islands_poor
+				}
+			}
+			value = define:NMapColors|MAP_COLOR_MID
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				OR = {
+					has_location_modifier = pp_harvest_western_europe_good
+					has_location_modifier = pp_harvest_eastern_europe_good
+					has_location_modifier = pp_harvest_north_asia_good
+					has_location_modifier = pp_harvest_central_asia_good
+					has_location_modifier = pp_harvest_east_asia_good
+					has_location_modifier = pp_harvest_south_asia_good
+					has_location_modifier = pp_harvest_south_east_asia_good
+					has_location_modifier = pp_harvest_middle_east_good
+					has_location_modifier = pp_harvest_north_africa_good
+					has_location_modifier = pp_harvest_west_africa_good
+					has_location_modifier = pp_harvest_east_africa_good
+					has_location_modifier = pp_harvest_central_africa_good
+					has_location_modifier = pp_harvest_southern_africa_good
+					has_location_modifier = pp_harvest_north_america_good
+					has_location_modifier = pp_harvest_south_america_good
+					has_location_modifier = pp_harvest_australasia_good
+					has_location_modifier = pp_harvest_pacific_islands_good
+				}
+			}
+			value = define:NMapColors|MAP_COLOR_HIGH
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				OR = {
+					has_location_modifier = pp_harvest_western_europe_very_good
+					has_location_modifier = pp_harvest_eastern_europe_very_good
+					has_location_modifier = pp_harvest_north_asia_very_good
+					has_location_modifier = pp_harvest_central_asia_very_good
+					has_location_modifier = pp_harvest_east_asia_very_good
+					has_location_modifier = pp_harvest_south_asia_very_good
+					has_location_modifier = pp_harvest_south_east_asia_very_good
+					has_location_modifier = pp_harvest_middle_east_very_good
+					has_location_modifier = pp_harvest_north_africa_very_good
+					has_location_modifier = pp_harvest_west_africa_very_good
+					has_location_modifier = pp_harvest_east_africa_very_good
+					has_location_modifier = pp_harvest_central_africa_very_good
+					has_location_modifier = pp_harvest_southern_africa_very_good
+					has_location_modifier = pp_harvest_north_america_very_good
+					has_location_modifier = pp_harvest_south_america_very_good
+					has_location_modifier = pp_harvest_australasia_very_good
+					has_location_modifier = pp_harvest_pacific_islands_very_good
+				}
+			}
+			value = define:NMapColors|MAP_COLOR_MAX
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				OR = {
+					has_location_modifier = pp_harvest_western_europe_bountiful
+					has_location_modifier = pp_harvest_eastern_europe_bountiful
+					has_location_modifier = pp_harvest_north_asia_bountiful
+					has_location_modifier = pp_harvest_central_asia_bountiful
+					has_location_modifier = pp_harvest_east_asia_bountiful
+					has_location_modifier = pp_harvest_south_asia_bountiful
+					has_location_modifier = pp_harvest_south_east_asia_bountiful
+					has_location_modifier = pp_harvest_middle_east_bountiful
+					has_location_modifier = pp_harvest_north_africa_bountiful
+					has_location_modifier = pp_harvest_west_africa_bountiful
+					has_location_modifier = pp_harvest_east_africa_bountiful
+					has_location_modifier = pp_harvest_central_africa_bountiful
+					has_location_modifier = pp_harvest_southern_africa_bountiful
+					has_location_modifier = pp_harvest_north_america_bountiful
+					has_location_modifier = pp_harvest_south_america_bountiful
+					has_location_modifier = pp_harvest_australasia_bountiful
+					has_location_modifier = pp_harvest_pacific_islands_bountiful
+				}
+			}
+			value = define:NMapColors|MAP_COLOR_TOP
+		}
+		else = {
+			value = define:NMapColors|DEFAULT_COLOR
+		}
+	}
+	
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_ABYSMAL"
+		color = define:NMapColors|MAP_COLOR_MIN
+	}
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_VERY_POOR"
+		color = define:NMapColors|MAP_COLOR_LOW
+	}
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_POOR"
+		color = define:NMapColors|MAP_COLOR_MID
+	}
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_GOOD"
+		color = define:NMapColors|MAP_COLOR_HIGH
+	}
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_VERY_GOOD"
+		color = define:NMapColors|MAP_COLOR_MAX
+	}
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_BOUNTIFUL"
+		color = define:NMapColors|MAP_COLOR_TOP
+	}
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_AVERAGE"
+		color = define:NMapColors|DEFAULT_COLOR
+	}
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_STARVING"
+		color = define:NMapColors|POPULATION_STARVING_COLOR_STRIPE
+	}
+	legend_key = { 
+		desc = "PP_HARVEST_LEGEND_KEY_FOOD_NEG"
+		color = define:NMapColors|MAP_COLOR_MID
+	}
+}

@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: fiber_crops_farm
 upgrade_chain:
   family: fiber_crops_farm
@@ -11,15 +11,15 @@ building:
   mode: REPLACE
   source: pp_building_adjustments.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_fiber_crops_farm_base_fiber_crops
-    - name: slot_1
-      methods:
-        - pp_fiber_crops_farm_field_harvest
-        - pp_fiber_crops_farm_retting_yards
+  - name: slot_0
+    methods:
+    - pp_fiber_crops_farm_base_fiber_crops
+  - name: slot_1
+    methods:
+    - pp_fiber_crops_farm_field_harvest
+    - pp_fiber_crops_farm_retting_yards
   possible_production_methods: []
-  body: |2-
+  body: |-
     audio_tier = 1
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
@@ -66,6 +66,7 @@ building:
     construction_demand = farm_constructions
     raw_modifier = {
       farm_capacity_from_fiber_crops_farm = -1
+      local_population_capacity = -5
     }
 localization:
   entries:
@@ -74,13 +75,12 @@ localization:
     pp_fiber_crops_farm_base_fiber_crops: Fiber Crop Fields
     pp_fiber_crops_farm_field_harvest: Field Harvest
     pp_fiber_crops_farm_retting_yards: Retting Yards
-
 evaluation:
   allow_rules:
     input_throughput: Fiber crop processing preserves the current accepted farm throughput below the global laborer input target.
     output_throughput: Fiber crop processing preserves the current accepted farm throughput below the global laborer output target.
   production_methods:
     pp_fiber_crops_farm_base_fiber_crops:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_fiber_crops_farm_retting_yards:
-      production_efficiency: 1.10
+      production_efficiency: 1.1

@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: cocoa_grove
 upgrade_chain:
   family: cocoa_grove
@@ -11,15 +11,15 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_cocoa_grove_base_cocoa
-    - name: slot_1
-      methods:
-        - pp_cocoa_grove_no_fermentation
-        - pp_cocoa_grove_fermentation_houses
+  - name: slot_0
+    methods:
+    - pp_cocoa_grove_base_cocoa
+  - name: slot_1
+    methods:
+    - pp_cocoa_grove_no_fermentation
+    - pp_cocoa_grove_fermentation_houses
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.23
     max_levels = farm_capacity_max_cocoa_grove
@@ -66,6 +66,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_cocoa_grove = -1
+      local_population_capacity = -5
     }
 
     modifier = {
@@ -85,7 +86,6 @@ icon:
   output_dds: cocoa_grove.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a cocoa grove, transparent background. Center a tropical cacao tree with yellow, orange, and red ribbed pods, opened pods showing pale pulp and cocoa beans, dark fermented cocoa beans on raised wooden drying trays, and a small wooden fermentation box with leaf-covered beans. Use readable painterly shapes, softly outlined historical UI art, warm cocoa browns, muted wood tan, deep green leaves, cacao pod accents, no text, no frame, not photorealistic, not cartoonish.
-
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
@@ -93,7 +93,7 @@ evaluation:
     amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_cocoa_grove_base_cocoa:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked cocoa output after the high-base rebalance.
     pp_cocoa_grove_fermentation_houses:

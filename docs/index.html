@@ -374,8 +374,8 @@ uv run ppc test</code></pre>
           Ingests saves into the raw parquet dataset read by the analysis workbench notebook.
         </li>
         <li>
-          <strong><code>uv run ppc dashboard</code></strong>
-          Serves the generated population-capacity dashboard locally at <code>http://127.0.0.1:8000/</code>.
+          <strong><code>uv run ppc worldbuilder apply</code></strong>
+          Consumes the World Builder handover: geography, attribute rows, improvement buildings, farm land and game-start setup.
         </li>
         <li>
           <strong><code>uv run ppc publish-docs</code></strong>
@@ -393,8 +393,7 @@ uv run ppc test</code></pre>
       <ul>
         <li><code>blueprints/accepted/</code>: accepted building blueprints.</li>
         <li><code>blueprints/buildings.manifest.yml</code>: blueprint enablement manifest.</li>
-        <li><code>labeling_output_modifiers.yaml</code>: raw-good suitability to local output modifier config.</li>
-        <li><code>population_capacity.toml</code>: generated per-location population capacity config.</li>
+        <li><code>constructor.toml [worldbuilder]</code>: handover and geography export paths, building map, farm land constants.</li>
         <li><code>graphs/</code>: ignored local graph, Europedia, savegame, and notebook artifacts.</li>
         <li><code>docs/examples/</code>: committed public docs snapshots served by GitHub Pages.</li>
         <li><code>constructor.local.toml</code>: ignored machine-local deploy target config.</li>
@@ -416,10 +415,6 @@ uv run ppc test</code></pre>
         <a class="card" href="https://github.com/JanB1989/prosper-or-perish-constructor/blob/main/README.md">
           <h3>Repository README</h3>
           <span>Full command workflow, setup notes, static analysis, savegame analysis, blueprints, and deploy guidance.</span>
-        </a>
-        <a class="card" href="labeling-output-modifiers.md">
-          <h3>Labeling Output Modifiers</h3>
-          <span>How raw-good suitability labels become per-location EU5 output modifiers.</span>
         </a>
         <a class="card" href="https://github.com/JanB1989/prosper-or-perish-constructor">
           <h3>GitHub Repository</h3>

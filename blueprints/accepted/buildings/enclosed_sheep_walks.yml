@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: enclosed_sheep_walks
 output_tag: sheep_farms_hurdled_walks
 upgrade_chain:
@@ -12,15 +12,15 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_enclosed_sheep_walks_base_wool
-    - name: slot_1
-      methods:
-        - pp_enclosed_sheep_walks_no_primary
-        - pp_enclosed_sheep_walks_improved_flocks
+  - name: slot_0
+    methods:
+    - pp_enclosed_sheep_walks_base_wool
+  - name: slot_1
+    methods:
+    - pp_enclosed_sheep_walks_no_primary
+    - pp_enclosed_sheep_walks_improved_flocks
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.16
     pop_type = laborers
@@ -69,6 +69,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_enclosed_sheep_walks = -1
+      local_population_capacity = -2
     }
 
     modifier = {
@@ -76,13 +77,13 @@ building:
         local_wool_output_modifier = 0.003
     }
 advancements:
-  - key: pp_enclosed_sheep_walks
-    body: |2-
-      icon = enclosed_sheep_walks
-      age = age_5_absolutism
-      requires = manufactories_advance
-      unlock_building = enclosed_sheep_walks
-      ai_weight = { add = 125 }
+- key: pp_enclosed_sheep_walks
+  body: |-
+    icon = enclosed_sheep_walks
+    age = age_5_absolutism
+    requires = manufactories_advance
+    unlock_building = enclosed_sheep_walks
+    ai_weight = { add = 125 }
 localization:
   entries:
     enclosed_sheep_walks: Enclosed Sheep Walks
@@ -99,23 +100,22 @@ icon:
   output_dds: enclosed_sheep_walks.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for Enclosed Sheep Walks, transparent background. Center fenced improved sheep walks with orderly sheep pens, a timber shearing shed, bundles of white wool, and shearing tools. Use readable painterly historical UI art, warm natural daylight, no text, no frame, no modern machinery, no steel factory imagery.
-
 evaluation:
   allow_rules:
     amortization_months: 7-pop normalization and 10% lower maintenance inputs intentionally make the upgraded former-food producer modestly profitable; revisit with the rural producer rebalance.
   production_methods:
     pp_enclosed_sheep_walks_base_wool:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Passive pasture methods have little direct input cost; improved flocks carry the tier economy.
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_enclosed_sheep_walks_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Empty selector method intentionally produces no improved-flock output.
     pp_enclosed_sheep_walks_improved_flocks:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         output_throughput: Age 5 enclosed sheep walks intentionally exceed the generic output band while remaining the late chain endpoint.
         profit_percent: Pre-existing support method remains outside the profit band and was not part of the pp error-log economics warnings.

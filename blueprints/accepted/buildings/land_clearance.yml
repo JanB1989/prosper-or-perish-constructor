@@ -5,13 +5,13 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_land_clearance_maintenance
+  - name: slot_0
+    methods:
+    - pp_land_clearance_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
-    max_levels = 5
+    max_levels = pp_wb_cap_land_clearance
     increase_per_level_cost = 0.40
     pop_type = peasants
     employment_size = 0.50
@@ -26,19 +26,7 @@ building:
     build_time = infrastructure_build_time
 
     location_potential = {
-      OR = {
-        vegetation = woods
-        vegetation = forest
-        vegetation = jungle
-      }
-      NOT = {
-        OR = {
-          topography = mountain_wasteland
-          topography = atoll
-          soil_quality = soil_barren
-          soil_quality = soil_permafrost
-        }
-      }
+      OR = { vegetation = forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_coniferous_forest vegetation = woods vegetation = jungle vegetation = ha1300_veg_marsh vegetation = ha1300_veg_swamp vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest vegetation = ha1300_veg_scrubland vegetation = ha1300_veg_savanna vegetation = grasslands vegetation = farmland }
     }
 
     construction_demand = village_construction
@@ -51,8 +39,7 @@ building:
     }
 
     raw_modifier = {
-      farm_capacity_from_land_clearance = 0.60
-      local_population_capacity = 7.65
+      local_population_capacity = 1.7
     }
 
     modifier = {
@@ -68,9 +55,8 @@ localization:
     pp_land_clearance_maintenance: Clearing Crews
     pp_land_clearance_price: Land Clearance Price
 prices:
-  - key: pp_land_clearance_price
-    body: |2-
-      {gold = 75}
+- key: pp_land_clearance_price
+  body: '{gold = 75}'
 icon:
   source_png: ../assets/icons/land_clearance.png
   output_dds: land_clearance.dds

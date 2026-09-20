@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "reference_manifest": "artifacts/data/population_simulation/repair_round_42/acceptance_stable/manifest.json",
+  "overrides": [
+    "capacity.development_relative=0.05",
+    "paths.historical_assignments=\"research/population_capacity/historical_assignments_round_24.json\"",
+    "paths.active_modifier_ledger=\"artifacts/data/population_simulation/repair_round_23/active_modifiers/active_modifier_ledger.parquet\"",
+    "paths.historical_assignments=\"research/population_capacity/historical_assignments_round_40.json\"",
+    "capacity.gaez_zero_development_fraction=3.0",
+    "capacity.location_area_exponent=0.75",
+    "capacity.urban_allowance_per_observed_worker=3.0",
+    "mechanics.subsistence_output=1.3",
+    "paths.annual_crop_evidence=\"artifacts/data/population_capacity/repair_round_41/crop_risk_scenarios/crop_system_scenarios.parquet\""
+  ],
+  "scenario": {
+    "name": "equilibrium_recovery",
+    "common_rank_growth": -0.005,
+    "pressure_decay_compensation": 0.25
+  }
+}

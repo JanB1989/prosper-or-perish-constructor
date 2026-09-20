@@ -1,18 +1,18 @@
-﻿version: 2
+version: 2
 tag: irrigation_systems
 building:
   key: irrigation_systems
   mode: REPLACE
   source: pp_building_adjustments.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_irrigation_maintenance
+  - name: slot_0
+    methods:
+    - pp_irrigation_maintenance
   possible_production_methods: []
   body: |2-
       audio_tier = 1
       is_foreign = no
-      max_levels = irrigant_cap
+      max_levels = pp_wb_cap_irrigation_systems
       increase_per_level_cost = 0.40
       pop_type = peasants
       price = pp_irrigation_systems_price
@@ -25,8 +25,13 @@ building:
       megalopolis = yes
       location_potential = {
         OR = {
-          has_river = yes
+          OR = { has_location_modifier = river_flowing_through_1 has_location_modifier = river_flowing_through_2 has_location_modifier = river_flowing_through_3 has_location_modifier = river_flowing_through_4 has_location_modifier = river_flowing_through_5 }
           is_adjacent_to_lake = yes
+          OR = { topography = ha1300_topo_deltas topography = ha1300_topo_floodplains topography = ha1300_topo_valleys }
+          AND = {
+            is_coastal = yes
+            OR = { topography = flatland topography = wetlands }
+          }
         }
       }
       build_time = infrastructure_build_time
@@ -40,8 +45,7 @@ building:
       }
       construction_demand = village_construction
       raw_modifier = {
-        farm_capacity_from_irrigation_systems = 0.60
-        local_population_capacity = 9.81
+        local_population_capacity = 1.1
       }
 
       modifier = {
@@ -53,12 +57,9 @@ localization:
     irrigation_systems_slot_0: Maintenance
     pp_irrigation_maintenance: Irrigation Maintenance
     pp_irrigation_systems_price: Irrigation Systems Price
-
 prices:
-  - key: pp_irrigation_systems_price
-    body: |2-
-      {gold = 50}
-
+- key: pp_irrigation_systems_price
+  body: '{gold = 50}'
 evaluation:
   production_methods:
     pp_irrigation_maintenance:

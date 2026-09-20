@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "cusco_missing_crop_density_analogue",
+  "historical_evidence": [
+    "cusco_management_evidence.json",
+    "cusco_field_assessment.json"
+  ],
+  "mechanism_source": "https://www.fao.org/giahs/giahs-around-the-world/peru-andean-agriculture/en",
+  "interpretation": "Andean traditional systems include altitude-adapted tubers and grains beyond a single generic crop suitability surface. A zero conditional crop yield on independently reconstructed current fields is an explicit evidence gap. Test transfer from the entire positive-density envelope of same-province, same-native-climate donors; do not choose donors or bounds using population.",
+  "source_ledger": "artifacts/data/population_simulation/repair_round_34/cusco_fields/central_starting_ledger.parquet",
+  "source_ledger_sha256": "6c9e33917b1be0184d59f628a9af1f1cb846f8bd2f4033a261bf27e481966f40",
+  "donor_rule": "province acamama_province, climate arctic, positive source crop density; all matching donors retained",
+  "donors": [
+    {
+      "location_tag": "pikillaqta",
+      "reference_density": 368.75500050828873
+    },
+    {
+      "location_tag": "waqrapukara",
+      "reference_density": 401.19701946399437
+    },
+    {
+      "location_tag": "paucartambo",
+      "reference_density": 122.5447756826975
+    },
+    {
+      "location_tag": "urupampa",
+      "reference_density": 310.1512501077836
+    },
+    {
+      "location_tag": "qusqu",
+      "reference_density": 364.2317486905125
+    },
+    {
+      "location_tag": "chumbivilcas",
+      "reference_density": 277.5269481407264
+    }
+  ],
+  "reference_development": 25.0,
+  "reference_calendar": "Inherited calendar multiplier removed. The canonical model removes reference development effectiveness before applying recipient management.",
+  "density_range": [
+    122.5447756826975,
+    401.19701946399437
+  ],
+  "units": "people per cultivated km2 at reference development; inferred whole cropping-system support, not a quoted measured 1337 yield",
+  "recipient_rule": "Assigned historical system, positive current dry fields and zero original conditional rainfed support only",
+  "coverage": "This is an inferred diagnostic, not independent measured Pisaq yield. No valid positive yield is replaced. Source crop-history and fallow assumptions remain uncertain.",
+  "exclusions": [
+    "No population or density target used in donor selection or range calculation.",
+    "No additional hectares, harvest, irrigation, pasture or food building.",
+    "No later imperial maize yield.",
+    "Do not treat a filled source gap as independently validated evidence."
+  ]
+}

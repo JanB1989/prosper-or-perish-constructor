@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "source": {
+    "id": "bali_ancient_wet_rice_anu.pdf",
+    "url": "https://openresearch-repository.anu.edu.au/bitstreams/166339f6-dd96-43b8-8d7d-dbe202aad370/download",
+    "path": "artifacts/data/population_capacity/repair_sources/bali_ancient_wet_rice_anu.pdf",
+    "sha256": "9826fe4020b823cee421e0408759467a69636213b2b43483e0067e4ce4597a66",
+    "bytes": 8608865,
+    "status": "cached_verified",
+    "source_family": "Mediani 1989 epigraphy and fieldwork",
+    "source_version": "MA thesis, Australian National University, June 1989",
+    "license": "Repository-accessible thesis; reuse license not established; source retained for research, no republication of full text",
+    "units": "dated inscriptions, management descriptions; historical area units unresolved",
+    "role": "historical presence, clearing and cooperative water maintenance; not numerical cultivated-area validation",
+    "transformations": "PDF text extraction with pypdf; original bytes retained"
+  },
+  "observations": [
+    {
+      "pages": "1, 58-65",
+      "date_range": [
+        882,
+        1181
+      ],
+      "mechanisms": [
+        "wet and dry rice cultivation",
+        "cooperative land clearing",
+        "villager-maintained canals and diversion works",
+        "kasuwakan water coordination"
+      ],
+      "interpretation": "Supports inherited managed cultivation in Bali before the starting date; does not establish whole-island adoption hectares or an annual yield."
+    },
+    {
+      "pages": "63-64",
+      "interpretation": "Small cooperative systems do not justify a blanket assumption of centralized hydraulic state organization. Management scores must allow local collective maintenance."
+    },
+    {
+      "pages": "56-57",
+      "date_range": [
+        1884,
+        1930
+      ],
+      "interpretation": "Abang flood destruction and later reconstruction are dated resilience/progression evidence, not starting infrastructure magnitudes."
+    }
+  ],
+  "exclusions": [
+    "Thesis explicitly identifies missing direct information between twelfth and nineteenth centuries.",
+    "Medieval tambuku and related extent terms cannot be converted into hectares from this source.",
+    "Modern or colonial subak hectare totals must not be retrojected to 1337.",
+    "No capacity or cultivated-area increase adopted from this source alone."
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "status": "frozen before preparing/evaluating round56",
+  "date": "2026-09-07",
+  "baseline": "round55 grouped HYDE",
+  "hierarchy": [
+    "world mixed-livelihood uncertainty / basic cultivation",
+    "regional historical practice analogue",
+    "provincial assessment",
+    "existing and added named systems"
+  ],
+  "numerical_role": "Ordinal game assessments with shared low/central/high uncertainty, not measured historical D or hectares. Central values fixed before simulation. No population targets.",
+  "defaults": {
+    "mixed_livelihood_uncertain": {
+      "range": [
+        6.25,
+        31.25
+      ],
+      "interpretation": "No reconstructed crop presence does not establish foraging; retain mixed small-scale cultivation, pastoral and wild-livelihood uncertainty. Supersedes the rejected round48 zero=>forager assignment."
+    },
+    "cultivation_present": {
+      "range": [
+        6.25,
+        31.25
+      ],
+      "interpretation": "Retain the existing basic mixed-farming assessment (central18.75) wherever more intensive practice is unestablished. Do not upgrade all low-latitude farmers merely because cropland exists. Hectares select applicability only."
+    },
+    "missing_evidence": {
+      "range": [
+        0,
+        37.5
+      ],
+      "interpretation": "Explicit unknown; never impute zero land or declare a known livelihood."
+    }
+  },
+  "sources": [
+    {
+      "id": "chen_pu_1149_regional_practice_analogue",
+      "url": "https://afe.easia.columbia.edu/ps/china/farming_chenpu.pdf",
+      "source_date": 1149,
+      "locator": "pp.1-8, finance/labour, plowing, weeding and water control",
+      "role": "Primary translated farming text: maintained cropping practice; regional analogue for current cultivation in the east-China game region excluding Taiwan. Excludes south-China game region with Yunnan/Guizhou frontier coverage. Prescription is not universal adoption; no new crop calendar or water hectares from this rule.",
+      "license": "Copyright 1993 Free Press translation; research copy only."
+    },
+    {
+      "id": "chakravarti_2008_early_medieval_agriculture",
+      "url": "https://journals.sagepub.com/doi/10.1177/097194580801100203",
+      "source_years": [
+        500,
+        1300
+      ],
+      "access": "publisher-indexed abstract, full text not accessible",
+      "role": "Epigraphic/textual research documents diverse crops and agricultural technology; conservative Gangetic practice analogue, no irrigation extent or yield claimed.",
+      "license": "Not established; bibliographic interpretation only."
+    },
+    {
+      "id": "heitzman_1987_chola_epigraphy",
+      "url": "https://journals.sagepub.com/doi/abs/10.1177/001946468702400102",
+      "source_years": [
+        849,
+        1279
+      ],
+      "access": "publisher-indexed references/abstract; full text not accessible",
+      "role": "Chola inscriptional study and established Kaveri irrigation geography; inferred continuity to1337. Province receives management; only named Kaveri core receives inferred water-service range. No historical acreage claimed.",
+      "license": "Not established; bibliographic interpretation only."
+    },
+    {
+      "id": "aye_aye_than_2007_kyaukse",
+      "url": "https://meral.edu.mm/record/705/files/Daw%20Aye%20Aye%20Than.pdf",
+      "title": "Myanmar Costume Through Ages (AD1044-1752)",
+      "source_years": [
+        1044,
+        1752
+      ],
+      "locator": "Chapter3, printed pp.66-67; discussion cites Than Tun2002 p189. This is a historical synthesis within a costume-history thesis, not a field survey.",
+      "role": "Secondary historical thesis cites established Kyaukse canal agriculture; presence evidence only. Water extent is an explicit shared25-75% inference on existing fields, not observed medieval hectares.",
+      "license": "Repository accessible, reuse license not established."
+    },
+    {
+      "id": "christie_early_java_rice",
+      "source_contract": "java_bali_rice_presence_evidence.json",
+      "role": "Reuse dated central/east Java crosswalk and existing25-75% maintained-water analogue. Neither new harvests nor wider cultivation area are inferred from rice availability alone."
+    },
+    {
+      "id": "hyde_luh_related_land",
+      "url": "https://essd.copernicus.org/articles/9/927/2017/",
+      "role": "Related reconstructions, not independent validation. Restore source current extent only where crop-mixture denominator incorrectly clipped it, conserving known land. Zeros are not proof of absence.",
+      "license": "Article CC BY3.0; raster licenses retain upstream manifests."
+    },
+    {
+      "id": "round56_european_rotation_analogue",
+      "source_contract": "population_capacity_technology_registry.toml; paris_management_evidence.json",
+      "source_years": [
+        1200,
+        1400
+      ],
+      "role": "Existing England1300 open-field and French rotation research supports a conservative shared maintained-field analogue for dated European cultivation. Central25 adds field maintenance to the basic mixed18.75 assessment without assuming more intensive inputs everywhere. D12.5-37.5 remains explicitly inferred; named intensive systems supersede it. Soil quality no longer awards management. No extra fallow or crop count."
+    },
+    {
+      "id": "sakurai_1989_red_river_tran",
+      "url": "https://www.jstage.jst.go.jp/article/tak/27/3/27_KJ00000131529/_article/-char/en",
+      "doi": "10.20495/tak.27.3_275",
+      "author": "Yumio Sakurai",
+      "year": 1989,
+      "source_years": [
+        1225,
+        1400
+      ],
+      "access": "publisher English abstract and bibliographic metadata",
+      "role": "Original historical research identifies1248 embankments and expanded floodplain cultivation. Shared50-75 management and25-75% water-service intervals are game inferences on current fields; no numerical historical acreage or universal adoption claimed.",
+      "license": "Copyright1989 Kyoto University CSEAS; reuse license not established."
+    }
+  ],
+  "fixed": {
+    "physical_scale": 4.5,
+    "area_exponent": 0.75,
+    "development_relative": 0.05,
+    "subsistence_output": 1.3,
+    "slave_hiring_fraction": 0.75,
+    "food_and_growth_coefficients": "round55 unchanged",
+    "horizons": [
+      100,
+      200
+    ]
+  },
+  "exclusions": [
+    "No additional fallow correction: annual source already accounts for fallow; no newly assumed second crop.",
+    "Do not select a global physical scale from world population retention. Analytical3.0 versus4.5 comparison will be reported; one main candidate remains4.5 to isolate assignments.",
+    "No culture-wide irrigation entitlement; no game export or building balancing.",
+    "Do not treat total water-managed field support as incremental irrigation gain."
+  ],
+  "source_objects": [
+    {
+      "file": "hyde_2017.pdf",
+      "url": "https://essd.copernicus.org/articles/9/927/2017/essd-9-927-2017.pdf",
+      "sha256": "57c2f9c48a0802387f90213486443d91f6d2737c3eaf3769c80637ed62d9fc32",
+      "bytes": 4276903,
+      "status": "downloaded"
+    },
+    {
+      "file": "andhra_tanks_2013.pdf",
+      "url": "https://journal.southindianhistorycongress.org/journals/articles/2013/SIHC_2013_V33_193.pdf",
+      "status": "unavailable",
+      "error": "500 Server Error: Internal Server Error for url: https://journal.southindianhistorycongress.org/journals/articles/2013/SIHC_2013_V33_193.pdf"
+    },
+    {
+      "file": "medieval_india_technology_2008.html",
+      "url": "https://journals.sagepub.com/doi/10.1177/097194580801100203",
+      "status": "unavailable",
+      "error": "403 Client Error: Forbidden for url: https://journals.sagepub.com/doi/10.1177/097194580801100203"
+    },
+    {
+      "file": "chola_1987.html",
+      "url": "https://journals.sagepub.com/doi/abs/10.1177/001946468702400102",
+      "status": "unavailable",
+      "error": "403 Client Error: Forbidden for url: https://journals.sagepub.com/doi/abs/10.1177/001946468702400102"
+    },
+    {
+      "file": "chen_pu_1149.pdf",
+      "url": "https://afe.easia.columbia.edu/ps/china/farming_chenpu.pdf",
+      "sha256": "617c04a2c79dd9443ece36433193ae94d41ea37daac3467caf4612dc51a22e91",
+      "bytes": 163567,
+      "status": "downloaded"
+    },
+    {
+      "file": "kyaukse_2007.pdf",
+      "url": "https://meral.edu.mm/record/705/files/Daw%20Aye%20Aye%20Than.pdf",
+      "sha256": "885a262fc6d7150b82a39ea0c10088ceb09ac42158c8b079b43a0c4085fdcbba",
+      "status": "downloaded"
+    },
+    {
+      "file": "red_river_tran_1989.html",
+      "url": "https://www.jstage.jst.go.jp/article/tak/27/3/27_KJ00000131529/_article/-char/en",
+      "status": "downloaded",
+      "sha256": "eb99aadae9a619b53b983ed402f565480477f48d491f8395036edca62e0977f2"
+    },
+    {
+      "file": "sukhothai_water.pdf",
+      "url": "https://www.finearts.go.th/storage/contents/file/rkTWVlJ65q8xj0yCUtiZO3NlIGDVxfeHUq2nQnBS.pdf",
+      "status": "downloaded",
+      "sha256": "09b3906545d3127762f91de420ce622e398b79e9a001b15fe2bb4015c95b8bea"
+    },
+    {
+      "file": "mekong_flood_recession_1999.pdf",
+      "url": "https://core.ac.uk/download/pdf/5105389.pdf",
+      "status": "unavailable",
+      "error": "404 Client Error: Not Found for url: https://fileserver-az.core.ac.uk/download/pdf/5105389.pdf"
+    }
+  ],
+  "planned_checks": [
+    "legacy round55 replay on common columns",
+    "hierarchy precedence, source missingness and population independence",
+    "land conservation and no duplicate infrastructure",
+    "macro/region/province/location effects",
+    "100/200-year canonical simulation and annual world totals",
+    "focused and full regression suite"
+  ],
+  "spatial_review": "Broad game regions contain frontier/mountain provinces. Gangetic rule uses an explicit river-plain province crosswalk excluding Himalaya, Punjab and Assam/frontier districts; China excludes Taiwan and the separate southwest-containing region. Crosswalk fixed before simulation.",
+  "reviewed_not_applied": [
+    "Lower Mekong flood-recession hypothesis establishes a research lead, not quantitative inherited irrigation across the delta.",
+    "Sukhothai scanned archaeological water-system PDF cached but not yet text-verified; no new assignment from its uninspected pages."
+  ],
+  "analytical_revision": "Preserved first preflight. Its generic cultivation D25 would upgrade most African/American basic farming without new practice evidence; retain central18.75 instead. Apply explicit uncertain European rotation analogue, and add researched Red River system before the single main simulation.",
+  "final_pre_simulation_review": "Retain only field-maintenance increment in the broad European analogue (D25); additional cultivation intensity requires more specific evidence. No selection based on simulated survival. Two analytical drafts retained; one final main candidate will be simulated."
+}

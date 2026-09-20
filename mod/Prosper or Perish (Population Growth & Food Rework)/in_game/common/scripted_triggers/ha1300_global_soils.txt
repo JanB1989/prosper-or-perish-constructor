@@ -1,0 +1,6 @@
+﻿ha1300_soil_is_sand = { has_variable = ha1300_soil_type var:ha1300_soil_type = 1 }
+ha1300_soil_is_loam = { has_variable = ha1300_soil_type var:ha1300_soil_type = 2 }
+ha1300_soil_is_silt = { has_variable = ha1300_soil_type var:ha1300_soil_type = 3 }
+ha1300_soil_is_clay = { has_variable = ha1300_soil_type var:ha1300_soil_type = 4 }
+ha1300_soil_is_peat = { has_variable = ha1300_soil_type var:ha1300_soil_type = 5 }
+ha1300_soil_is_stony = { has_variable = ha1300_soil_type var:ha1300_soil_type = 6 }

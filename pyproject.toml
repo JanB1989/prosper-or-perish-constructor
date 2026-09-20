@@ -14,8 +14,6 @@ dependencies = [
     "h5py>=3.16.0",
     "numpy>=2.0.0",
     "optuna>=4.6.0,<5",
-    "prosper-or-perish-labeling-pipeline",
-    "prosper-or-perish-population-capacity-pipeline",
     "requests>=2.33.0",
     "scipy>=1.15.0",
     "tqdm>=4.67.0",
@@ -40,8 +38,6 @@ dev = [
 eu5-building-pipeline = { path = "../eu5-building-pipeline", editable = true }
 eu5-mod-orchestrator = { path = "../eu5-mod-orchestrator", editable = true }
 eu5gameparser = { path = "../eu5-game-parser", editable = true }
-prosper-or-perish-labeling-pipeline = { path = "../ProsperOrPerishLabelingPipeline", editable = true }
-prosper-or-perish-population-capacity-pipeline = { path = "../ProsperOrPerishPopulationCapacityPipeline", editable = true }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

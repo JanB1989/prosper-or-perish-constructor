@@ -58,6 +58,7 @@ REPLACE:fruit_orchard = {
     construction_demand = farm_constructions
     raw_modifier = {
       farm_capacity_from_fruit_orchard = -1
+      local_population_capacity = -5
     }
 
     modifier = {

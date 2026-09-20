@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:irrigated_rice_paddies:building
 irrigated_rice_paddies = {
 is_foreign = no
-max_levels = 5
+max_levels = pp_wb_cap_irrigated_rice_paddies
 increase_per_level_cost = 0.30
 pop_type = peasants
 employment_size = 0.50
@@ -16,19 +16,8 @@ megalopolis = yes
 build_time = infrastructure_build_time
 
 location_potential = {
-  raw_material = goods:rice
-  OR = {
-    topography = flatland
-    topography = hills
-    topography = plateau
-    topography = wetlands
-  }
-  NOT = {
-    OR = {
-      soil_quality = soil_barren
-      soil_quality = soil_permafrost
-    }
-  }
+  OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_highland_monsoon climate = ha1300_climate_continental_monsoon climate = ha1300_climate_savanna }
+  OR = { topography = flatland topography = ha1300_topo_floodplains topography = wetlands topography = ha1300_topo_deltas topography = ha1300_topo_valleys topography = hills topography = plateau }
 }
 
 construction_demand = village_construction
@@ -42,8 +31,7 @@ unique_production_methods = {
 }
 
 raw_modifier = {
-  farm_capacity_from_irrigated_rice_paddies = 0.60
-  local_population_capacity = 9.49
+  local_population_capacity = 5
 }
 
 modifier = {

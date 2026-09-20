@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:field_drainage:building
 field_drainage = {
 is_foreign = no
-max_levels = 5
+max_levels = pp_wb_cap_field_drainage
 increase_per_level_cost = 0.30
 pop_type = peasants
 employment_size = 0.50
@@ -16,13 +16,12 @@ megalopolis = yes
 build_time = infrastructure_build_time
 
 location_potential = {
-  topography = wetlands
-  NOT = {
-    OR = {
-      is_coastal = yes
-      is_adjacent_to_lake = yes
-      soil_quality = soil_barren
-      soil_quality = soil_permafrost
+  OR = {
+    OR = { topography = wetlands topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+    OR = { vegetation = ha1300_veg_marsh vegetation = ha1300_veg_swamp }
+    AND = {
+      OR = { climate = continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_dry_summer_continental climate = oceanic climate = ha1300_climate_subpolar_oceanic climate = mediterranean climate = subtropical climate = ha1300_climate_subtropical_monsoon climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_highland_monsoon climate = ha1300_climate_savanna climate = ha1300_climate_hot_steppe climate = ha1300_climate_cold_steppe }
+      OR = { topography = flatland topography = ha1300_topo_floodplains topography = wetlands topography = ha1300_topo_deltas topography = ha1300_topo_valleys topography = hills topography = ha1300_topo_rolling topography = plateau }
     }
   }
 }
@@ -38,8 +37,7 @@ unique_production_methods = {
 }
 
 raw_modifier = {
-  farm_capacity_from_field_drainage = 0.60
-  local_population_capacity = 6.23
+  local_population_capacity = 0.2
 }
 
 modifier = {

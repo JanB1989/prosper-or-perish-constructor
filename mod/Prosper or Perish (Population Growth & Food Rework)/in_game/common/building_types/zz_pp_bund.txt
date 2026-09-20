@@ -1,47 +1,59 @@
 ﻿# >>> eu5-building-pipeline:bund:building
 INJECT:bund = {
-	price = pp_bund_price
-	increase_per_level_cost = 0.30
-	custom_tags = { pp_food_security_priority pp_water_control_priority }
-	raw_modifier = {
-		farm_capacity_from_bund = 0.60
-        local_population_capacity = 9.49
-	}
+  price = pp_bund_price
+  max_levels = pp_wb_cap_bund
+  increase_per_level_cost = 0.30
+  custom_tags = { pp_food_security_priority pp_water_control_priority }
+  raw_modifier = {
+    local_population_capacity = 0.2
+  }
 
-	modifier = {
-		local_monthly_food_modifier = -0.10 # vanilla 0.10
+  modifier = {
+    local_monthly_food_modifier = -0.10 # vanilla 0.10
 
-		# The core purpose of bunds: Rice and Terraced Fruit
-		local_rice_output_modifier = 0.05
-		local_fruit_output_modifier = 0.04
-		local_olives_output_modifier = 0.04
+    # The core purpose of bunds: Rice and Terraced Fruit
+    local_rice_output_modifier = 0.05
+    local_fruit_output_modifier = 0.04
+    local_olives_output_modifier = 0.04
 
-		# Soil conservation for other grains
-		local_wheat_output_modifier = 0.02
-		local_millet_output_modifier = 0.02
-		local_maize_output_modifier = 0.02
-		local_legumes_output_modifier = 0.015
+    # Soil conservation for other grains
+    local_wheat_output_modifier = 0.02
+    local_millet_output_modifier = 0.02
+    local_maize_output_modifier = 0.02
+    local_legumes_output_modifier = 0.015
 
-		# Minimal or indirect impact
-		local_potato_output_modifier = 0.01
-		local_livestock_output_modifier = 0.005
-		local_beeswax_output_modifier = 0.000
-		local_wool_output_modifier = 0.005
-		local_fiber_crops_output_modifier = 0.00375
-		local_cotton_output_modifier = 0.012
-		local_sugar_output_modifier = 0.012
-		local_tobacco_output_modifier = 0.012
-		local_cocoa_output_modifier = 0.012
-		local_tea_output_modifier = 0.025
-		local_coffee_output_modifier = 0.02
-		local_silk_output_modifier = 0.015
-		local_incense_output_modifier = 0.012
-		local_saffron_output_modifier = 0.012
-		local_pepper_output_modifier = 0.012
-		local_cloves_output_modifier = 0.012
-		local_chili_output_modifier = 0.012
-		local_horses_output_modifier = 0.0015
-	}
-	ai_forbid_shutdown = yes
+    # Minimal or indirect impact
+    local_potato_output_modifier = 0.01
+    local_livestock_output_modifier = 0.005
+    local_beeswax_output_modifier = 0.000
+    local_wool_output_modifier = 0.005
+    local_fiber_crops_output_modifier = 0.00375
+    local_cotton_output_modifier = 0.012
+    local_sugar_output_modifier = 0.012
+    local_tobacco_output_modifier = 0.012
+    local_cocoa_output_modifier = 0.012
+    local_tea_output_modifier = 0.025
+    local_coffee_output_modifier = 0.02
+    local_silk_output_modifier = 0.015
+    local_incense_output_modifier = 0.012
+    local_saffron_output_modifier = 0.012
+    local_pepper_output_modifier = 0.012
+    local_cloves_output_modifier = 0.012
+    local_chili_output_modifier = 0.012
+    local_horses_output_modifier = 0.0015
+  }
+  ai_forbid_shutdown = yes
+
+    location_potential = {
+      OR = {
+        OR = { has_location_modifier = river_flowing_through_1 has_location_modifier = river_flowing_through_2 has_location_modifier = river_flowing_through_3 has_location_modifier = river_flowing_through_4 has_location_modifier = river_flowing_through_5 }
+        OR = { topography = ha1300_topo_floodplains topography = wetlands topography = ha1300_topo_deltas }
+        OR = { vegetation = ha1300_veg_marsh vegetation = ha1300_veg_swamp }
+        AND = {
+          OR = { climate = continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_dry_summer_continental climate = oceanic climate = ha1300_climate_subpolar_oceanic climate = mediterranean climate = subtropical climate = ha1300_climate_subtropical_monsoon climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_highland_monsoon climate = ha1300_climate_savanna climate = ha1300_climate_hot_steppe climate = ha1300_climate_cold_steppe }
+          OR = { topography = flatland topography = ha1300_topo_valleys topography = hills }
+        }
+      }
+    }
 }
 # <<< eu5-building-pipeline:bund:building

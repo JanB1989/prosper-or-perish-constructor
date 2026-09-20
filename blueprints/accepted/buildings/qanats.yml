@@ -5,13 +5,13 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_qanats_maintenance
+  - name: slot_0
+    methods:
+    - pp_qanats_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
-    max_levels = 5
+    max_levels = pp_wb_cap_qanats
     increase_per_level_cost = 0.40
     pop_type = laborers
     employment_size = 0.50
@@ -26,22 +26,18 @@ building:
     build_time = infrastructure_build_time
 
     location_potential = {
-      NOT = {
-        OR = {
-          has_river = yes
-          is_adjacent_to_lake = yes
-          topography = wetlands
-          topography = atoll
-          topography = mountain_wasteland
+      OR = {
+        AND = {
+          OR = { climate = arid climate = cold_arid }
+          has_location_modifier = river_flowing_through_0
+          NOT = { is_adjacent_to_lake = yes }
         }
-      }
-      OR = {
-        climate = arid
-        climate = cold_arid
-      }
-      OR = {
-        vegetation = desert
-        vegetation = sparse
+        AND = {
+          OR = { climate = ha1300_climate_hot_steppe climate = ha1300_climate_cold_steppe }
+          OR = { vegetation = desert vegetation = ha1300_veg_scrubland vegetation = sparse }
+          has_location_modifier = river_flowing_through_0
+          NOT = { is_adjacent_to_lake = yes }
+        }
       }
     }
 
@@ -56,8 +52,7 @@ building:
     }
 
     raw_modifier = {
-      farm_capacity_from_qanats = 0.60
-      local_population_capacity = 9.81
+      local_population_capacity = 0.7
     }
 
     modifier = {
@@ -73,9 +68,8 @@ localization:
     pp_qanats_maintenance: Qanat Maintenance
     pp_qanats_price: Qanats Price
 prices:
-  - key: pp_qanats_price
-    body: |2-
-      {gold = 150}
+- key: pp_qanats_price
+  body: '{gold = 150}'
 icon:
   source_png: ../assets/icons/qanats.png
   output_dds: qanats.dds

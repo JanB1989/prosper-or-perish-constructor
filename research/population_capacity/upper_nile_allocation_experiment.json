@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "frozen exploratory spatial allocation; not accepted historical geography",
+  "source_observation": "upper_egypt_1315_basin_area",
+  "source_path": "artifacts/data/population_capacity/repair_sources/borsch_2000_nile_irrigation.pdf",
+  "source_sha256": "35eda29d86810374f0839b94eee9cb3d52922b641d203f63d7383547201a2639",
+  "source_year": 1315,
+  "source_fields_km2": 8400,
+  "source_precision": "Author's rough computation, not an exact surveyed total or numerical confidence interval",
+  "core_provinces": ["qusiyya_province", "asyut_province", "minya_province", "bahnasa_province"],
+  "excluded_locations": ["faiyum"],
+  "boundaries": {"core": [], "with_atfih_giza": ["atfih", "giza"], "with_cairo": ["atfih", "giza", "cairo"]},
+  "boundary_basis": "Nested named-place sensitivity along the Upper Nile valley, including progressively more of the northern transition. Delta Qalyub and Menouf remain excluded. These are inferred game crosswalks, not historical basin polygons.",
+  "weight_methods": {"hyde": "hyde_cropland_area_km2", "luh2": "cropland_fraction_1300 times area_km2"},
+  "allocation": "Conserve existing fields; distribute additional hectares proportionally to dated cultivated-land evidence, saturating at remaining known conversion land. Zero evidence receives no expansion. Reject an infeasible total. Never use population.",
+  "land_bound": "Canonical current fields plus exclusive remaining open/forest conversion; agronomic bound only, not proof of historical floodplain access",
+  "water_interpretation": "Existing hydraulic-system operational coverage range remains 0.8-1.0. Source basin extent and operational water service are separate quantities; no extra annual crop.",
+  "unchanged": ["shared scale", "development coefficient", "management intervals", "crop support densities", "food coefficients", "population composition", "building food", "Fayyum canal system", "Delta assignments"],
+  "expected_effect": "Reclassify physically bounded land opportunity as inherited field infrastructure, increasing Nile support without global buffs",
+  "validation": "Complete Upper Nile provinces plus the existing mandatory central cases at 100/200 years; regional accounting and boundary/weight sensitivity before world comparison",
+  "limitations": ["HYDE and LUH2 are related evidence, not independent holdouts", "Allocation weights are uncertain spatial proxies", "A feasible land ledger does not validate floodplain or water-volume coverage", "Matching the source total by construction is not independent benchmark validation"]
+}

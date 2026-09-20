@@ -43,16 +43,14 @@ uv run ppc setup
 uv run ppc inspect
 uv run ppc test
 uv run ppc analyze
-uv run ppc profiler --profile vanilla --label vanilla
 uv run ppc output-modifiers
-uv run ppc location-changes detect --output artifacts/data/labeling/location_template_changes.csv
+uv run ppc worldbuilder apply
 uv run ppc production-throughput
 uv run ppc savegame
 uv run ppc europedia
 uv run ppc savegame-notebooks build
 uv run ppc savegame-purge
 uv run ppc publish-docs
-uv run ppc dashboard
 uv run ppc blueprint list
 uv run ppc blueprint parity
 uv run ppc blueprint evaluate
@@ -77,97 +75,8 @@ uv run ppc sync --yes
 
 ### In-Game Profiler
 
-After dumping the in-game profiler, build a standalone interactive report:
-
-```bash
-uv run ppc profiler --profile vanilla --label vanilla
-```
-
-The input defaults to the live EU5 `Documents/Paradox Interactive/Europa Universalis V/logs`
-folder (also detected from WSL). Set `[profiler].logs_dir` in ignored
-`constructor.local.toml` for a custom location. An optional positional path accepts an
-archived logs directory or a single CSV, including quoted Windows drive paths.
-
-The report uses `profiling.csv` and `profiling_roots.csv` as separate measurement views,
-and `performance_degradation.log` for frame-time and memory trends when present. It writes
-`index.html`, `profile.json` (schema and column names included), and exhaustive
-`hotspots_summary.csv` / `hotspots_detail.csv` exports under a unique directory such as
-`graphs/profiler/vanilla-20260916T123000.000000Z/`. Timestamps are UTC with microseconds;
-concurrent collisions receive a suffix. Every invocation creates a fresh report, including
-when `--output` is supplied: that option selects the parent directory, never a file to
-overwrite. Open
-`index.html` in a recent browser; no server, network resources or additional packages are
-required. Filter and rank hotspots by self/inclusive/bottleneck time, calls, or per-call
-cost; inspect script context, follow graph nodes, and group costs by file, directory,
-profiler type or source layer.
-
-The exact input bytes are also saved under the report's `inputs/` directory, so a later
-game launch cannot erase the baseline. A live file changing during its read is rejected
-with a rerun message. Missing or empty performance samples are reported explicitly.
-
-Select the source profile that actually produced the capture. `--profile` reads
-`constructor.load_order.toml`; `--load-order` selects another config. Omit both for
-measurement-only analysis. For other mods, use a configured profile or repeated
-`--source 'NAME=/path/to/source-root'` arguments in load order. Extra roots follow the
-profile's roots and later roots win for identical paths. No mod naming convention is
-assumed. Source roots may be install, mod, `game/`, or `in_game/` directories.
-
-For the next mod run, retain the vanilla dump and compare equivalent captures:
-
-```bash
-uv run ppc profiler --profile constructor --label modded \
-  --baseline graphs/profiler/vanilla-TIMESTAMP
-```
-
-Replace `vanilla-TIMESTAMP` with the earlier report directory; `--baseline` automatically
-uses its saved `inputs/`. Raw dump directories and individual CSVs also work.
-
-Baseline matching uses exact profiler type, file and line within the same measurement
-view. The report compares self-time shares in percentage points; it does not claim an
-FPS improvement or correct for changed workloads. Edited line numbers may not match.
-
-**Interpretation:** the CSVs do not contain recorded caller/callee IDs or stacks. Graph
-edges are explicitly inferred from the shared Clausewitz parser's block ancestry and
-literal references to scripted triggers, effects and values in captured source files,
-including file-local declarations. Source-only nodes bridge unmeasured enclosing blocks;
-dotted links distinguish separate profiler types recorded at a shared source entry.
-They are not a measured flame graph, and costs cannot be attributed to individual edges.
-Dynamic dispatch and database `REPLACE`/`INJECT` semantics are not reconstructed.
-Use the exact source versions from the capture; the dump cannot verify source hashes.
-Duplicate locations are aggregated within a view, never across the two CSV views.
-Inclusive times overlap. Self shares refer to profiled script self time, not wall time.
-The engine's bottleneck column is preserved without inventing its meaning. CSV headers
-do not specify timing units, so the default is raw units; pass `--time-unit seconds`
-(or `milliseconds` / `microseconds`) only when independently known. Per-call values are
-recomputed from totals and counts because the exported average columns are rounded.
-
-### Location-Template Drift
-
-Use this before rebuilding location output modifiers after a game update:
-
-```bash
-uv run ppc location-changes detect --output artifacts/data/labeling/location_template_changes.csv
-```
-
-The command compares the labeling baseline against the resolved current
-`location_templates.txt` from `constructor.load_order.toml`. Terminal output
-starts with a stats block:
-
-```text
-location_template_sources=...
-changed_locations=232
-field_counts=climate=2, modifier=1, natural_harbor_suitability=195, raw_material=33, topography=2, vegetation=4
-raw_material_transitions=cotton->saffron=1, ...
-affected_goods_counts=fish=201, saffron=10, ...
-labelable_counts=false=2, true=230
-relabel_status_counts=not_labelable=2, pending=230
-report_csv=artifacts/data/labeling/location_template_changes.csv
-```
-
-When changes exist it then prints one tab-separated row per changed location,
-including old/new values, affected goods, relabel status, canonical target, and
-canonical feature hash. The CSV artifact contains the same machine-readable
-rows for review or focused relabeling.
+Profiler reports use the standalone [Profile Analyzer](https://github.com/JanB1989/profile-analyzer).
+Use the [profile-analyzer skill](.agents/skills/profile-analyzer/SKILL.md) for captures, source graphs, and comparisons.
 
 ## Mod Ownership
 
@@ -178,132 +87,40 @@ directly.
 Generated files are the exception:
 
 - Building outputs come from `blueprints/accepted/` and `blueprints/buildings.manifest.yml`.
-- Per-location output modifiers come from `labeling_output_modifiers.yaml`. Its existing
-  `mod_injector.writer` ETL loads the canonical two-column capacity table and writes
-  `local_population_capacity` into the same per-location static-modifier block as every
-  `local_<good>_output_modifier`.
-- Files with `# >>> eu5-building-pipeline:`, `Generated by mod_injector.writer`, or
+- Population capacity, goods output rows, improvement buildings and the game-start development table
+  come from the World Builder handover (`[worldbuilder]` in `constructor.toml`). `ppc worldbuilder apply`
+  (run automatically by `ppc build`) syncs the World Builder geography into the mod, writes the attribute
+  rows as class injects (`pp_wb_attribute_rows.txt`) and static modifiers (`pp_wb_*`), patches the
+  improvement and farm blueprints, regenerates the rural capacity values and writes
+  `main_menu/setup/start/14_pp_worldbuilder_buildings.txt` and `14_development.txt`.
+- Files with `# >>> eu5-building-pipeline:`, `Generated by ppc worldbuilder`, or
   `do not edit by hand` headers should be changed through their generator inputs.
 
-Population capacity is modeled as absolute locally supported carrying capacity with 1337-feasible
-food systems. Starting population, HYDE population/cropland, region names, and applied RGO output
-modifiers are forbidden model inputs. Gameplay normalization happens only after a candidate is
-accepted. Ordinary builds consume the canonical new-system table and never download sources or
-retrain the model. Scientific audit status remains in `accepted_model.json`; it does not change the
-runtime ingest contract.
+## World Builder handover
 
-The active inspection setting `capacity_scale.mode = "raw"` converts each accepted
-`capacity_people_p50` headcount from people to EU5 population units (1,000 people per game unit)
-and sends that integer to the compiler, with no gameplay-band clamp. Set it to `"normalized"` to
-restore the 10–100 deployment transform; the absolute columns in the accepted table are preserved
-in either mode.
-
-Use the canonical workflow in order:
+The capacity model is one flat number per location, farmland: attribute rows (climate, vegetation,
+topography, soil, fertility, river level) plus improvement buildings, minus the land that farm buildings
+take. The engine multiplies it by 2.5% per development point; the constructor writes vanilla game-start
+development per location so the geography swap cannot change it. Farm buildings' `max_levels` is
+`floor((flat capacity - reserve) / land per level) + own levels`, generated by
+`scripts/generate_rural_capacity_values.py` from `[worldbuilder.farm_land]`. Goods output modifiers are
+rows on the same attributes, fitted where a good is the game's RGO; the RGO keeps a floor. No hidden
+per-location value exists anywhere.
 
 ```bash
-uv run ppc population-capacity fetch-label-sources --engine all
-uv run ppc population-capacity build-labels --engine all
-uv run ppc population-capacity build-pyaez-fallback
-uv run ppc population-capacity label-audit
-uv run ppc population-capacity fetch-tsetse-sources
-uv run ppc population-capacity build-tsetse
-uv run ppc population-capacity tsetse-audit
-uv run ppc population-capacity build-terrestrial
-uv run ppc population-capacity build-tsetse-fallback
-uv run ppc population-capacity closure-audit
-uv run ppc population-capacity research-audit
-uv run ppc population-capacity crosswalk-audit
-uv run ppc population-capacity evidence-merge
-uv run ppc population-capacity inventory
-uv run ppc population-capacity benchmark-audit
-uv run ppc population-capacity compare
-uv run ppc population-capacity train
-uv run ppc population-capacity generalization-audit
-uv run ppc population-capacity accept --candidate mechanistic
-uv run ppc population-capacity render
-uv run ppc sync --yes
+uv run ppc worldbuilder apply                # consume ../EU5WorldBuilder/artifacts/handover/latest
+uv run ppc worldbuilder export-development   # vanilla game-start development table for the World Builder
+uv run ppc worldbuilder check                # fit of the written setup against the handover targets
+uv run ppc build                             # runs apply, renders blueprints, validates, finalizes
 ```
 
-The generated compiler-ingest contract is the two-column
-`data/population_capacity/population_capacity.csv` file (`location_tag`,
-`population_capacity`). `uv run ppc sync --yes` refreshes that table, runs the existing
-location-modifier compiler, verifies the compiled native file, and always uses the new system.
-`uv run ppc population-capacity restore-legacy` is an explicit rollback tool;
-the next ordinary sync intentionally re-applies the new system.
+The handover is produced by `uv run worldbuilder handover` in `EU5WorldBuilder` (contract.json,
+attribute_rows.csv, building_types.csv, location_buildings.csv, location_targets.csv,
+location_attributes.csv, goods_floor.csv; all values in people, 1 game unit = 1,000 people).
 
-The explicit source/label commands construct the exact
-`location × crop × water mode × engine` matrix. GAEZ v5 LRLM and LILM are distinct, checksum-locked
-primary sources; PyAEZ 2.2 is the independent challenger and only permitted physical fallback.
-Numeric zero is never nodata, and unresolved or semantically mismatched rows block `accept`.
-The tsetse fetch freezes FAO's raw genus-level survey workbook and normalizes each georeferenced
-detection or explicit non-detection. `build-tsetse` tests the 600 BP climate and habitat proxy
-against that modern atlas, but it keeps livestock-food, draft-power, and manure factors at exactly
-one. The audit identifies the remaining scientific blockers explicitly: modern occurrence cannot
-prove 1337 presence; historical fly pressure and location-level trypanotolerant breed mixtures are
-not reconstructed; and crop-specific draft/manure dependence is not yet closed. Direct human
-mortality is excluded. These diagnostic labels cannot become an Africa multiplier or pass
-scientific acceptance until those gates are resolved.
-The PyAEZ fetch downloads the 36 monthly CHELSA-TraCE21k precipitation/minimum-temperature/
-maximum-temperature rasters for 600 BP. `build-labels` consumes a reviewed
-`pyaez_1337_yields.parquet`; until vetted 16-crop parameters and all PyAEZ climate inputs produce
-that exact-location artifact, the challenger rows remain `missing` rather than being imputed.
-`inventory`, `benchmark-audit`, and `compare` write review artifacts under
-`artifacts/data/population_capacity/`. `accept` freezes the selected absolute estimates, uncertainty,
-contributions, normalization, model version, and source-manifest hash. `render --dry-run` verifies
-that the existing shared per-location modifiers already match the accepted table. The manifest keeps
-the independent scientific-evidence gate separate from runtime activation, so unresolved research
-status is recorded without changing the active compiler path.
 Static gameplay
 tuning such as climate/topography/vegetation modifiers, advance modifiers, location-rank modifiers,
 and capacity-pressure effects still lives directly in the mod files.
-
-### Local Dashboards
-
-Run the current population-capacity dashboard locally:
-
-```bash
-uv run ppc dashboard
-```
-
-Then open:
-
-```text
-http://127.0.0.1:8000/
-```
-
-This serves:
-
-```text
-artifacts/data/population_capacity/current_capacity_map/index.html
-```
-
-The dashboard artifact is generated by the population-capacity pipeline and is not committed.
-Existing static graph explorers can also be opened directly from:
-
-```text
-graphs/goods_flow_explorer.html
-graphs/savegame_explorer.html
-graphs/europedia.html
-graphs/europedia_entries.json
-docs/examples/goods_flow_explorer.html
-docs/examples/savegame_explorer.html
-docs/examples/europedia.html
-docs/examples/europedia_entries.json
-```
-
-### Reactive Population-Simulation Notebook
-
-The Marimo + SymPy playground beside the population-capacity research loads the
-committed fast-simulation profile and exposes its capacity, population-growth,
-and prosperity formulas as reactive sliders and symbolic expressions:
-
-```bash
-uv run marimo edit research/population_capacity/population_simulation_playground.py
-```
-
-Editing a value or formula recomputes every dependent cell. The notebook also
-contains a small standalone symbolic-algebra sandbox for substitution,
-simplification, and numeric evaluation.
 
 ## Setup
 
@@ -489,23 +306,6 @@ For compact linked food-price and victuals-price volatility tables in the notebo
 prices = nb.show_food_price_volatility(data, workbench, top_n=12)
 prices.stats
 ```
-
-## Population-capacity calibration
-
-The canonical fast calibration run uses the existing simulator and
-`population_capacity_simulation.toml`:
-
-```bash
-uv run ppc population-simulation --years 0 100
-uv run ppc population-simulation --years 0 100 --set capacity.global_relative=-0.1
-uv run ppc population-simulation --years 0 100 --refresh-cache
-```
-
-`--set section.key=value` is repeatable and does not edit the TOML. Use
-`--refresh-cache` after parser, raster, population-snapshot, or starting-building
-sources change. The command exits nonzero while any acceptance gate fails and
-writes the complete report to `artifacts/data/population_simulation/report.md`.
-The design contract and attempt log live under `research/population_capacity/`.
 
 ## Building Blueprints
 

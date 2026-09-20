@@ -39,6 +39,7 @@ REPLACE:sheep_farms = {
     }
     raw_modifier = {
       farm_capacity_from_sheep_farms = -1
+      local_population_capacity = -2
     }
 
     modifier = {

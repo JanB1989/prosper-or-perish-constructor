@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: horse_breeders
 upgrade_chain:
   family: horse_breeders
@@ -11,16 +11,16 @@ building:
   mode: REPLACE
   source: pp_building_adjustments.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_horse_breeders_base_horses
-    - name: slot_1
-      methods:
-        - pp_horse_breeders_pasture_herds
-        - pp_horse_breeders_stud_yards
-        - pp_horse_breeders_selected_stallions
+  - name: slot_0
+    methods:
+    - pp_horse_breeders_base_horses
+  - name: slot_1
+    methods:
+    - pp_horse_breeders_pasture_herds
+    - pp_horse_breeders_stud_yards
+    - pp_horse_breeders_selected_stallions
   possible_production_methods: []
-  body: |2-
+  body: |-
     audio_tier = 1
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
@@ -72,6 +72,7 @@ building:
     construction_demand = horse_breeders_construction
     raw_modifier = {
       farm_capacity_from_horse_breeders = -1
+      local_population_capacity = -2
     }
 localization:
   entries:
@@ -83,23 +84,21 @@ localization:
     pp_horse_breeders_stud_yards: Stud Yards
     pp_selected_stallions: Selected Stallions
     pp_selected_stallions_desc: Local breeders keep chosen stallions, fodder stores, and better tack to improve horse herds before formal state studs appear.
-
 advancements:
-  - key: pp_selected_stallions
-    body: |2-
-      icon = renaissance_advance
-      age = age_3_discovery
-      requires = rgo_size_advance_discovery
-      unlock_production_method = pp_horse_breeders_selected_stallions
-      ai_weight = { add = 75 }
-
+- key: pp_selected_stallions
+  body: |-
+    icon = renaissance_advance
+    age = age_3_discovery
+    requires = rgo_size_advance_discovery
+    unlock_production_method = pp_horse_breeders_selected_stallions
+    ai_weight = { add = 75 }
 evaluation:
   allow_rules:
     input_throughput: Raw horse breeding intentionally uses low-value feed and tack below the global laborer throughput target.
     output_throughput: Raw horse breeding preserves the generated horse RGO baseline rather than the global laborer throughput target.
   production_methods:
     pp_horse_breeders_base_horses:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_horse_breeders_stud_yards:
       production_efficiency: 1.05
     pp_horse_breeders_selected_stallions:

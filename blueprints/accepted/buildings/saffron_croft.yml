@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: saffron_croft
 upgrade_chain:
   family: saffron_croft
@@ -11,15 +11,15 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_saffron_croft_base_saffron
-    - name: slot_1
-      methods:
-        - pp_saffron_croft_no_drying
-        - pp_saffron_croft_toasting_braziers
+  - name: slot_0
+    methods:
+    - pp_saffron_croft_base_saffron
+  - name: slot_1
+    methods:
+    - pp_saffron_croft_no_drying
+    - pp_saffron_croft_toasting_braziers
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.28
     max_levels = farm_capacity_max_saffron_croft
@@ -66,6 +66,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_saffron_croft = -1
+      local_population_capacity = -5
     }
 
     modifier = {
@@ -85,14 +86,13 @@ icon:
   output_dds: saffron_croft.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a saffron croft, transparent background. Center purple saffron crocus flowers in low field beds, vivid red stigmas gathered into a shallow tray, delicate red saffron threads drying beside a small clay brazier or warming pan, and folded saffron-gold dyed cloth as a secondary cue. Use readable painterly shapes, softly outlined historical UI art, purple petals, saffron red threads, saffron-gold cloth, muted green leaves, warm tan wood, matte clay pottery, no text, no frame, not photorealistic, not cartoonish.
-
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_saffron_croft_base_saffron:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked saffron output after the high-base rebalance.
     pp_saffron_croft_toasting_braziers:

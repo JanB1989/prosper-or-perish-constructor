@@ -11,19 +11,19 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_managed_cocoa_grove_base_cocoa
-    - name: slot_1
-      methods:
-        - pp_managed_cocoa_grove_no_fermentation
-        - pp_managed_cocoa_grove_fermentation_boxes
-    - name: slot_2
-      methods:
-        - pp_managed_cocoa_grove_unmanaged_shade
-        - pp_managed_cocoa_grove_managed_shade
+  - name: slot_0
+    methods:
+    - pp_managed_cocoa_grove_base_cocoa
+  - name: slot_1
+    methods:
+    - pp_managed_cocoa_grove_no_fermentation
+    - pp_managed_cocoa_grove_fermentation_boxes
+  - name: slot_2
+    methods:
+    - pp_managed_cocoa_grove_unmanaged_shade
+    - pp_managed_cocoa_grove_managed_shade
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.23
     max_levels = farm_capacity_max_managed_cocoa_grove
@@ -83,19 +83,20 @@ building:
 
     raw_modifier = {
       farm_capacity_from_managed_cocoa_grove = -1
+      local_population_capacity = -5
     }
 
     modifier = {
         local_migration_attraction = 0.003
     }
 advancements:
-  - key: pp_managed_cocoa_grove
-    body: |2-
-      icon = managed_cocoa_grove
-      age = age_3_discovery
-      requires = plantation_buildings_advance
-      unlock_building = managed_cocoa_grove
-      ai_weight = { add = 125 }
+- key: pp_managed_cocoa_grove
+  body: |-
+    icon = managed_cocoa_grove
+    age = age_3_discovery
+    requires = plantation_buildings_advance
+    unlock_building = managed_cocoa_grove
+    ai_weight = { add = 125 }
 localization:
   entries:
     managed_cocoa_grove_slot_0: Cocoa Trees
@@ -115,7 +116,6 @@ icon:
   output_dds: managed_cocoa_grove.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game building icon for a Managed Cocoa Grove on a perfectly flat pure magenta chroma-key background (#ff00ff). Center a three-quarter-view cacao grove with layered shade trees, cacao trunks heavy with red, yellow, and orange pods, workers' woven mats and sacks, pale beans in wooden fermentation boxes, and raised drying trays. Detailed historic bitmap cutout style, material-rich painterly brushwork, readable early modern agricultural props, warm cocoa browns, deep tropical greens, muted fiber tan, no text, no frame, no modern machinery, no plantation mansion, no transparent background.
-
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
@@ -123,7 +123,7 @@ evaluation:
     amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_managed_cocoa_grove_base_cocoa:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries the cocoa grove baseline forward for the managed upgrade.
     pp_managed_cocoa_grove_fermentation_boxes:

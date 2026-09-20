@@ -23,6 +23,7 @@ INTENTIONAL_SOURCE_COST_OVERRIDES = {
     "husbandry_farmstead": "bridge farmstead keeps the existing low staple-farm cadence",
     "saffron_kiln_croft": "successor croft keeps the existing tea/coffee-style crop cadence",
     "shoen": "vanilla inject keeps the existing historical estate cadence",
+    "victuals_market_import": "current accepted import market has zero repeat-cost escalation",
 }
 
 
@@ -99,3 +100,9 @@ def _top_level_increase_per_level_cost(building: str, body: str) -> str | None:
     if not values:
         return None
     return str(values[-1])
+
+
+def test_import_market_preserves_explicit_zero_repeat_cost():
+    path = accepted_blueprint_paths_by_building(ROOT)['victuals_market_import']
+    template = load_template(path)
+    assert Decimal(_top_level_increase_per_level_cost(template.key, template.building_body)) == 0

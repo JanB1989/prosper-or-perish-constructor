@@ -1,0 +1,499 @@
+{
+  "schema_version": 1,
+  "status": "round49 Fayyum canal management candidate; unaccepted; round48 broad fallback excluded",
+  "assessment_dimensions": [
+    "field_maintenance",
+    "water_management",
+    "cultivation_intensity",
+    "coordination"
+  ],
+  "assessment_scale": "Each dimension 0..4 supplies a nominal game assessment. The nominal sum maps to 100*sum/16; named systems carry explicit uncertainty intervals, whose shared selected quantile determines assigned development. These are inferred game mappings, not measured historical development.",
+  "source_reference_development": 25.0,
+  "source_calendar_policy": "remove inherited regional calendar multiplier before applying shared management effectiveness",
+  "archetypes": {
+    "rainfed_dryland_mixed_farming": [
+      1,
+      0,
+      1,
+      1
+    ],
+    "rainfed_open_field_cereal": [
+      2,
+      0,
+      2,
+      2
+    ],
+    "humid_tropical_swidden_agroforest": [
+      1,
+      0,
+      1,
+      1
+    ],
+    "marginal_open_field_cereal": [
+      1,
+      0,
+      1,
+      1
+    ],
+    "irrigated_wet_rice": [
+      3,
+      3,
+      2,
+      2
+    ],
+    "intensive_northern_europe_cereal": [
+      3,
+      1,
+      3,
+      3
+    ],
+    "hydraulic_flood_recession_wet_rice": [
+      3,
+      3,
+      2,
+      3
+    ]
+  },
+  "archetype_role": "inferred analogue from source farm-system classification; not proof of historical adoption, uncertainty retained",
+  "systems": [
+    {
+      "id": "taihu_managed_fields",
+      "selector": {
+        "province": [
+          "suzhou_province",
+          "jiaxing_province",
+          "songjiang_province"
+        ]
+      },
+      "scores": [
+        4,
+        3,
+        3,
+        3
+      ],
+      "development_range": [
+        65,
+        90
+      ],
+      "source_ids": [
+        "taihu_polder_drainage_network",
+        "taihu_rice_wheat_rotation"
+      ],
+      "cultivated_fraction_range": [
+        0.35,
+        0.55
+      ],
+      "cultivated_fraction": 0.45,
+      "water_served_fraction_range": [
+        0.7,
+        1.0
+      ],
+      "water_served_fraction": 0.85,
+      "interpretation": "Maintained embanked and drained fields throughout the Taihu provincial cluster. Extent is an inferred regional range, not a measured cadastral allocation.",
+      "valid_years": [
+        1200,
+        1400
+      ]
+    },
+    {
+      "id": "angkor_managed_fields",
+      "selector": {
+        "location_tag": [
+          "angkor"
+        ]
+      },
+      "scores": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "development_range": [
+        50,
+        80
+      ],
+      "source_ids": [
+        "angkor_managed_rice_landscape"
+      ],
+      "cultivated_area_km2_range": [
+        500,
+        1000
+      ],
+      "cultivated_area_km2": 1000,
+      "water_served_fraction_range": [
+        0.5,
+        1.0
+      ],
+      "water_served_fraction": 0.75,
+      "interpretation": "Dedicated Angkor location approximates the archaeological catchment; maintained-area range accounts for chronology and boundary uncertainty.",
+      "valid_years": [
+        1200,
+        1400
+      ]
+    },
+    {
+      "id": "nile_basin_fields",
+      "selector": {
+        "region": [
+          "egypt_region"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "nile_seasonal_basin_agriculture",
+        "nile_basin_irrigation_annual_winter_crop"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Seasonal basin-water service on inherited cultivated fields in river locations; not a second crop or a whole-desert agricultural entitlement.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true
+    },
+    {
+      "id": "bali_subak_managed_fields",
+      "selector": {
+        "location_tag": [
+          "julah",
+          "samprangan",
+          "melara"
+        ]
+      },
+      "scores": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "development_range": [
+        60,
+        85
+      ],
+      "source_ids": [
+        "bali_subak_evidence.json"
+      ],
+      "water_served_fraction_range": [
+        0.5,
+        0.9
+      ],
+      "valid_years": [
+        1100,
+        1400
+      ],
+      "interpretation": "Medieval cooperative water control and maintained terraces on current cultivated fields. No hectare increase or additional calendar multiplier. Development and served fractions are comparable-system inferences, not source measurements. Lombok and Sasak excluded."
+    },
+    {
+      "id": "trowulan_managed_fields",
+      "selector": {
+        "location_tag": [
+          "trowulan"
+        ]
+      },
+      "scores": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "development_range": [
+        60,
+        85
+      ],
+      "source_ids": [
+        "trowulan_water_management_evidence.json"
+      ],
+      "water_served_fraction_range": [
+        0.5,
+        0.9
+      ],
+      "valid_years": [
+        1293,
+        1500
+      ],
+      "interpretation": "Dated maintained water system; same game assessment range as Bali. Cultivated extent and crop calendar unchanged; archaeological city area is not farm area."
+    },
+    {
+      "id": "eastern_java_established_rice_systems",
+      "selector": {
+        "location_tag": [
+          "bajrajinaparamitapura",
+          "malang",
+          "sadeng",
+          "lumajang",
+          "pakembangan",
+          "balambangan"
+        ]
+      },
+      "scores": [
+        3,
+        2,
+        2,
+        3
+      ],
+      "development_range": [
+        45,
+        70
+      ],
+      "water_served_fraction_range": [
+        0.25,
+        0.75
+      ],
+      "source_ids": [
+        "eastern_java_rice_management_evidence.json"
+      ],
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "interpretation": "Regional historical-system inference on existing fields, with strongest direct coverage in Malang/Brantas. Other eastern locations are explicit analogues, not independently surveyed systems. No cultivated-area or harvest-frequency increase."
+    },
+    {
+      "id": "parisis_maintained_open_fields",
+      "selector": {
+        "province": [
+          "pays_france_province"
+        ]
+      },
+      "scores": [
+        3,
+        0,
+        3,
+        2
+      ],
+      "development_range": [
+        37.5,
+        62.5
+      ],
+      "water_served_fraction_range": [
+        0,
+        0
+      ],
+      "source_ids": [
+        "paris_management_evidence.json"
+      ],
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "interpretation": "Archival research establishes maintained cereal cultivation and three-field rotation in the medieval Parisis. The estate is a system analogue, not a survey of every game location. Apply the common maintained open-field assessment to existing cultivated land; do not infer hectares or attained yields from population, estate size or buildings."
+    },
+    {
+      "id": "northern_niger_flood_agriculture",
+      "selector": {
+        "province": [
+          "timbuktu_province"
+        ]
+      },
+      "scores": [
+        2,
+        2,
+        2,
+        1
+      ],
+      "development_range": [
+        25,
+        50
+      ],
+      "water_served_fraction_range": [
+        0.75,
+        1.0
+      ],
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "source_ids": [
+        "niger_flood_agriculture_evidence.json"
+      ],
+      "interpretation": "Floodplain rice, fishing and seasonal grazing formed complementary livelihoods. Flood timing constrained farming. River commerce supplied Timbuktu from the more productive southern delta; this does not establish an import quantity for 1337. Treat existing northern-delta fields as mainly water-dependent, rather than assigning them almost entirely to zero-yield rainfed cultivation."
+    },
+    {
+      "id": "shuntian_maintained_dryland_cultivation",
+      "selector": {
+        "province": [
+          "shuntian_province"
+        ]
+      },
+      "scores": [
+        3,
+        0,
+        3,
+        2
+      ],
+      "development_range": [
+        37.5,
+        62.5
+      ],
+      "water_served_fraction_range": [
+        0,
+        0
+      ],
+      "valid_years": [
+        1250,
+        1400
+      ],
+      "source_ids": [
+        "shuntian_management_evidence.json",
+        "shuntian_crop_mask_evidence.json"
+      ],
+      "interpretation": "Wang Zhen's 1313 treatise describes established northern dryland farming and animal traction, combining earlier agronomy with observation. It also records the need for restoration after war. Use a maintained dryland-system analogue on Shuntian's existing fields, with the same assessment range as maintained Parisis fields. The treatise is not evidence that every recommended improvement was active locally.",
+      "recover_dated_cropland": true
+    },
+    {
+      "id": "cusco_preimperial_maintained_fields",
+      "selector": {
+        "province": [
+          "acamama_province"
+        ]
+      },
+      "scores": [
+        3,
+        1,
+        2,
+        2
+      ],
+      "development_range": [
+        37.5,
+        62.5
+      ],
+      "water_served_fraction_range": [
+        0,
+        0
+      ],
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_cropland": true,
+      "source_ids": [
+        "cusco_management_evidence.json",
+        "cusco_field_assessment.json",
+        "cusco_missing_crop_evidence.json"
+      ],
+      "missing_rainfed_support_at_reference_development_people_per_km2_range": [
+        122.5447756826975,
+        401.19701946399437
+      ],
+      "rainfed_analogue_evidence": {
+        "source_id": "cusco_missing_crop_evidence.json",
+        "role": "whole comparable-field envelope, source-normalized before recipient management"
+      }
+    },
+    {
+      "id": "lombok_recovering_maintained_fields",
+      "selector": {
+        "location_tag": [
+          "lombok",
+          "sasak"
+        ]
+      },
+      "scores": [
+        2,
+        0,
+        2,
+        2
+      ],
+      "development_range": [
+        25,
+        50
+      ],
+      "source_ids": [
+        "lombok_samalas_recovery_evidence.json"
+      ],
+      "water_served_fraction_range": [
+        0,
+        0
+      ],
+      "valid_years": [
+        1300,
+        1400
+      ],
+      "interpretation": "Inferred maintained mixed agriculture and coordination during post-Samalas recovery. No new cultivated hectares, irrigation, crop-calendar change or transfer of Balinese subak evidence. The 25\u201350 range uses the shared ordinal management scale, independent of population."
+    },
+    {
+      "id": "southern_mexico_lakes_managed_fields",
+      "selector": {
+        "location_tag": [
+          "xochimilco",
+          "chalco"
+        ]
+      },
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "development_range": [
+        37.5,
+        62.5
+      ],
+      "source_ids": [
+        "southern_mexico_lakes_management_evidence.json"
+      ],
+      "water_served_fraction_range": [
+        0,
+        0.5
+      ],
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "interpretation": "INAH regional archaeological history supports earlier lake-margin drainage and maintained cultivation. Moderate shared management assessment; no new hectares or late Mexica expansion. Water-service share remains inferred and ranges down to zero."
+    },
+    {
+      "id": "fayyum_maintained_canal_agriculture",
+      "selector": {
+        "location_tag": [
+          "faiyum"
+        ]
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "numerical_basis": "Reuse the existing maintained Egyptian hydraulic-system game range. Numbers are inferred management and operational-coverage bounds, not measurements in the historical survey. Canal and basin techniques remain distinct source mechanisms.",
+      "source_ids": [
+        "fayyum_canal_management_evidence.json"
+      ],
+      "valid_years": [
+        1240,
+        1347
+      ],
+      "interpretation": "Gravity-fed branch and feeder canals, weirs and village water allocations support maintained agriculture in the Fayyum depression. This is not conditional on a native game river flag. Existing cultivated extent unchanged; shared hydraulic management uncertainty is inferred."
+    }
+  ],
+  "crop_density_contract": "matched_annual_crop_v1",
+  "source_hashes": {
+    "fayyum_canal_management_evidence.json": "3fea9f0eb9693e84a035322de533d99de1216af29a756367b08adffac7fb2784",
+    "../../artifacts/data/population_capacity/repair_sources/fayyum_qmul_village.html": "03ee963f7d2acc6e4666e812ccda49ac09915cba2cde2717481792a1148f936a",
+    "../../artifacts/data/population_capacity/repair_sources/fayyum_qmul_map.html": "0ea96d4ed83cb05e51143f49ebe748a2660f5c92a0dcab30efc85d41f1b0cd57"
+  }
+}

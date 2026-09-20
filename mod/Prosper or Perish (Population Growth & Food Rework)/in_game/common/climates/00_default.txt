@@ -1,0 +1,167 @@
+﻿tropical = {
+	winter = none
+	color = ha1300_color_tropical
+	
+	location_modifier = {
+		local_population_capacity_modifier = 0.50
+		local_monthly_development_modifier = -0.10		
+		local_life_expectancy = -5
+		
+		free_capacity_attracts_pops = yes
+		
+		local_food_decay = 0.002
+
+	}
+	unit_modifier = {
+	}
+
+
+	
+	colonial_migration_size_modifier = -0.33
+	
+	audio_tags = {
+		masDataClimateZone = 1.0
+	}
+	debug_color = rgb { 45 106 67 } # for climate_screenshot mapmode
+}
+
+arid = {
+	winter = none
+	color = ha1300_color_arid
+	has_precipitation = no
+
+	location_modifier = {
+		local_wheat_output_modifier = -0.1
+		local_life_expectancy = -5
+		
+		free_capacity_attracts_pops = yes
+		
+		local_supply_limit_modifier = -0.10
+	}
+	unit_modifier = {
+	}
+	
+	audio_tags = {
+		masDataClimateZone = 0.65
+	}
+	debug_color = rgb { 205 135 74 } # for climate_screenshot mapmode
+}
+
+cold_arid = {
+	winter = mild
+	color = ha1300_color_cold_arid
+	has_precipitation = no
+
+	location_modifier = {
+		local_wheat_output_modifier = -0.05
+
+		free_capacity_attracts_pops = yes
+		
+		local_supply_limit_modifier = -0.05
+	}
+	unit_modifier = {
+	}
+	
+	
+	audio_tags = {
+		masDataClimateZone = 0.65
+	}
+	debug_color = rgb { 189 163 127 } # for climate_screenshot mapmode
+}
+
+mediterranean = {
+	winter = none
+	
+	color = ha1300_color_mediterranean
+	
+	location_modifier = {
+		local_population_capacity_modifier = 1.50
+		free_capacity_attracts_pops = yes
+	}
+	
+	colonial_migration_size_modifier = 0.1
+	
+	audio_tags = {
+		masDataClimateZone = 0.5
+	}
+	debug_color = rgb { 229 197 105 }  # for climate_screenshot mapmode
+}
+
+subtropical = {
+	winter = none
+	color = ha1300_color_subtropical
+	
+	location_modifier = {
+		local_population_capacity_modifier = 1.00
+		
+		local_food_decay = 0.001
+		
+		free_capacity_attracts_pops = yes
+	}
+	unit_modifier = {
+	}
+	
+	
+	
+	audio_tags = {
+		masDataClimateZone = 0.8
+
+	}
+	debug_color = rgb { 103 163 84 } # for climate_screenshot mapmode
+}
+
+oceanic = {
+	winter = mild
+	color = ha1300_color_oceanic
+	
+	location_modifier = {
+		local_population_capacity_modifier = 1.00
+		
+		free_capacity_attracts_pops = yes
+	}
+	unit_modifier = {
+	}
+	
+	audio_tags = {
+		masDataClimateZone = 0.4
+	}
+	debug_color = rgb { 82 150 111 } # for climate_screenshot mapmode
+}
+
+continental = {
+	winter = normal
+	
+	color = ha1300_color_continental
+	
+	location_modifier = {
+		local_population_capacity_modifier = 0.50
+		free_capacity_attracts_pops = yes
+	}
+	
+	audio_tags = {
+		masDataClimateZone = 0.2
+	}
+	debug_color = rgb { 102 164 191 }  # for climate_screenshot mapmode
+}
+
+arctic = {
+	winter = severe
+	
+	color = ha1300_color_arctic
+
+	always_winter = yes # also needs Topography to have always_winter. For making mountain impassables always appear snowy (visual only)
+	
+	location_modifier = {
+		local_population_capacity_modifier = -0.33
+		local_monthly_development_modifier = -0.25
+		local_life_expectancy = -5
+		local_supply_limit_modifier = -0.20
+	}
+	
+	colonial_migration_size_modifier = -0.3
+	
+	audio_tags = {
+		masDataClimateZone = 0.0
+	}
+	debug_color = rgb { 191 204 211 }  # for climate_screenshot mapmode
+}

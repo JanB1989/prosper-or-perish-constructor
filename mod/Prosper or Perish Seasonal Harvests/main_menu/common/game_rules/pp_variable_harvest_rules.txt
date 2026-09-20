@@ -1,0 +1,9 @@
+﻿pp_variable_harvest_rule = {
+	default = pp_variable_harvest_enabled
+	pp_variable_harvest_enabled = {
+		flag = general_rule
+	}
+	pp_variable_harvest_disabled = {
+		flag = general_rule
+	}
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "source_id": "lombok_samalas_recovery_2022",
+  "doi": "10.1016/j.jvolgeores.2022.107688",
+  "url": "https://openresearch-repository.anu.edu.au/items/8c394a4f-928c-44da-b8c7-fc1d396138ca",
+  "acquired": "2026-09-07",
+  "source_date": "2022-12-01",
+  "evidence_family": "Lombok indigenous written sources and volcanic historical reconstruction",
+  "cache_path": "artifacts/data/population_capacity/repair_sources/lombok_samalas_2022_metadata.json",
+  "sha256": "5ab1804b209272de925adecd4a5404cb10867762ccee16fe25f6d9c90843a42f",
+  "license": "Copyright Elsevier; metadata/abstract inspected, no full text redistributed",
+  "inspected": "Repository metadata and abstract; repository original bundle contains no downloadable bitstreams",
+  "historical_scope": [
+    1257,
+    1400
+  ],
+  "units": "qualitative landscape/recovery evidence; no numerical cultivated hectares or crop yields",
+  "interpretation": "Post-eruption agricultural recovery and settlement rebuilding require a separate Lombok assessment rather than transfer of Balinese subak assumptions.",
+  "limitations": [
+    "The abstract reports recovery potentially lasting a century; this is not an annual demographic coefficient.",
+    "Written-source chronology requires corroboration; full text and spatial evidence remain to be inspected.",
+    "The new candidate uses an explicitly inferred management range only; this record supplies no numerical hectares, irrigation or yields."
+  ],
+  "benchmark_role": "Mechanism and chronology; not a population fitting target or acceptance exemption",
+  "candidate_assessment": {
+    "status": "frozen before round40 comparison; not accepted",
+    "mechanism": "Maintained cultivation and local coordination during recovery; no evidence-based claim of Balinese subak irrigation at 1337.",
+    "dimensions": [
+      2,
+      0,
+      2,
+      2
+    ],
+    "development_range": [
+      25,
+      50
+    ],
+    "water_served_fraction_range": [
+      0,
+      0
+    ],
+    "extent": "unchanged dated LUH2 fields, no hectares added",
+    "interpretation": "Shared ordinal assessment of field maintenance, water management, cultivation intensity and coordination. Nominal 37.5, plus/minus 12.5 uncertainty as for generic analogues. Numerical scores are an inference from reported agricultural rebuilding and organized settlements, not measurements or population-fitting inputs.",
+    "exclusions": [
+      "No later royal irrigation works transferred to 1337",
+      "No doubling harvest frequency",
+      "No eruption-based exemption from food or retention criteria",
+      "No inferred recovery rate from the century-long qualitative chronology"
+    ]
+  }
+}

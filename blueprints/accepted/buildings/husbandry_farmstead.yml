@@ -12,37 +12,37 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_husbandry_farmstead_base_livestock
-        - pp_husbandry_farmstead_base_millet
-        - pp_husbandry_farmstead_base_wheat
-        - pp_husbandry_farmstead_base_maize
-        - pp_husbandry_farmstead_base_rice
-        - pp_husbandry_farmstead_base_legumes
-        - pp_husbandry_farmstead_base_potato
-        - pp_husbandry_farmstead_base_olives
-    - name: slot_1
-      methods:
-        - pp_husbandry_farmstead_no_primary
-        - pp_husbandry_farmstead_livestock
-        - pp_husbandry_farmstead_millet
-        - pp_husbandry_farmstead_wheat
-        - pp_husbandry_farmstead_maize
-        - pp_husbandry_farmstead_rice
-        - pp_husbandry_farmstead_legumes
-        - pp_husbandry_farmstead_potato
-        - pp_husbandry_farmstead_olives
-    - name: slot_2
-      methods:
-        - pp_husbandry_farmstead_no_beeswax
-        - pp_husbandry_farmstead_yard_hives
-    - name: slot_3
-      methods:
-        - pp_husbandry_farmstead_no_worker_victuals
-        - pp_husbandry_farmstead_worker_victuals
+  - name: slot_0
+    methods:
+    - pp_husbandry_farmstead_base_livestock
+    - pp_husbandry_farmstead_base_millet
+    - pp_husbandry_farmstead_base_wheat
+    - pp_husbandry_farmstead_base_maize
+    - pp_husbandry_farmstead_base_rice
+    - pp_husbandry_farmstead_base_legumes
+    - pp_husbandry_farmstead_base_potato
+    - pp_husbandry_farmstead_base_olives
+  - name: slot_1
+    methods:
+    - pp_husbandry_farmstead_no_primary
+    - pp_husbandry_farmstead_livestock
+    - pp_husbandry_farmstead_millet
+    - pp_husbandry_farmstead_wheat
+    - pp_husbandry_farmstead_maize
+    - pp_husbandry_farmstead_rice
+    - pp_husbandry_farmstead_legumes
+    - pp_husbandry_farmstead_potato
+    - pp_husbandry_farmstead_olives
+  - name: slot_2
+    methods:
+    - pp_husbandry_farmstead_no_beeswax
+    - pp_husbandry_farmstead_yard_hives
+  - name: slot_3
+    methods:
+    - pp_husbandry_farmstead_no_worker_victuals
+    - pp_husbandry_farmstead_worker_victuals
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.15
     max_levels = farm_capacity_max_husbandry_farmstead
@@ -220,6 +220,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_husbandry_farmstead = -1
+      local_population_capacity = -2
     }
 
     modifier = {
@@ -229,13 +230,13 @@ building:
         local_laborers_desired_pop = 0
     }
 advancements:
-  - key: pp_manuring_and_seed_stores
-    body: |2-
-      icon = husbandry_farmstead
-      age = age_3_discovery
-      requires = rgo_size_advance_discovery
-      unlock_building = husbandry_farmstead
-      ai_weight = { add = 125 }
+- key: pp_manuring_and_seed_stores
+  body: |-
+    icon = husbandry_farmstead
+    age = age_3_discovery
+    requires = rgo_size_advance_discovery
+    unlock_building = husbandry_farmstead
+    ai_weight = { add = 125 }
 localization:
   entries:
     husbandry_farmstead: Husbandry Farmstead
@@ -272,7 +273,6 @@ icon:
   output_dds: husbandry_farmstead.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game building icon for a Husbandry Farmstead on a perfectly flat magenta chroma-key background (#ff00ff). Center a compact medieval peasant farmstead with manure yard, clay-lined seed bins, pottery jars, woven sacks and baskets, a small byre, and mixed fields. Use detailed historic bitmap cutout style, material-rich painterly brushwork, three-quarter view, readable farm storage props, muted earth browns, straw golds, field greens, no text, no frame, no modern machinery, no scenic landscape.
-
 evaluation:
   allow_rules:
     profit_percent: Passive selectors, no-output options, and household sidelines can sit outside the narrow margin band; worked farmstead methods carry the tier balance.
@@ -281,11 +281,11 @@ evaluation:
     output_throughput: Husbandry farmsteads are an age 3 bridge and intentionally stay below rotational farming throughput.
   production_methods:
     pp_husbandry_farmstead_base_livestock:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Early farmstead successor keeps passive baseline output low; worked methods carry the tier economy.
     pp_husbandry_farmstead_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_husbandry_farmstead_livestock:
       production_efficiency: 1.05
     pp_husbandry_farmstead_millet:
@@ -308,6 +308,6 @@ evaluation:
         input_throughput: Yard hives are an auxiliary output and intentionally stay below full-building throughput.
         output_throughput: Yard hives are an auxiliary output and intentionally stay below full-building throughput.
     pp_husbandry_farmstead_worker_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

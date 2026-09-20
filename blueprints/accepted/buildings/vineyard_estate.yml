@@ -1,18 +1,18 @@
-﻿version: 2
+version: 2
 tag: vineyard_estate
 building:
   key: vineyard_estate
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_vineyard_estate_base_wine
-    - name: slot_1
-      methods:
-        - pp_vineyard_estate_press_houses
+  - name: slot_0
+    methods:
+    - pp_vineyard_estate_base_wine
+  - name: slot_1
+    methods:
+    - pp_vineyard_estate_press_houses
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.25
     max_levels = farm_capacity_max_vineyard_estate
@@ -59,6 +59,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_vineyard_estate = -1
+      local_population_capacity = -5
     }
 
     modifier = {
@@ -77,14 +78,13 @@ icon:
   output_dds: vineyard_estate.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a vineyard estate, transparent background. Center orderly grapevine rows on low trellises with dark grape clusters, a modest stone-and-timber estate press shed, a wooden basket of grapes, and a small wine press. Use readable painterly shapes, vine greens, purple grapes, warm stone and wood, no text, no frame, not photorealistic, not cartoonish.
-
 evaluation:
   allow_rules:
     input_throughput: Raw vineyard output preserves the generated wine RGO baseline below the global laborer input target.
     output_throughput: Raw vineyard output preserves the generated wine RGO baseline below the global laborer output target.
   production_methods:
     pp_vineyard_estate_base_wine:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         amortization_months: Raw vineyard estates repay faster than the generic amortization window at the standard small raw-site price.
     pp_vineyard_estate_press_houses:

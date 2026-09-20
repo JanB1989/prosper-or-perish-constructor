@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: coffee_grove
 upgrade_chain:
   family: coffee_grove
@@ -11,15 +11,15 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_coffee_grove_base_coffee
-    - name: slot_1
-      methods:
-        - pp_coffee_grove_no_washing
-        - pp_coffee_grove_washing_stations
+  - name: slot_0
+    methods:
+    - pp_coffee_grove_base_coffee
+  - name: slot_1
+    methods:
+    - pp_coffee_grove_no_washing
+    - pp_coffee_grove_washing_stations
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.23
     max_levels = farm_capacity_max_coffee_grove
@@ -66,6 +66,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_coffee_grove = -1
+      local_population_capacity = -5
     }
 
     modifier = {
@@ -85,14 +86,13 @@ icon:
   output_dds: coffee_grove.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a coffee grove, transparent background. Center glossy dark-green coffee branches with red coffee cherries, picked cherries in a shallow wooden tray, pale green coffee beans drying on a raised wooden bed, and a small rustic washing trough or fermentation vat. Use readable painterly shapes, softly outlined historical UI art, red cherries, warm wood, parchment beige, deep green leaves, no text, no frame, not photorealistic, not cartoonish.
-
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_coffee_grove_base_coffee:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked coffee output after the high-base rebalance.
     pp_coffee_grove_washing_stations:

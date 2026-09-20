@@ -11,15 +11,15 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_fiber_dressing_yard_base_fiber_crops
-    - name: slot_1
-      methods:
-        - pp_fiber_dressing_yard_no_dressing
-        - pp_fiber_dressing_yard_retting_pits
+  - name: slot_0
+    methods:
+    - pp_fiber_dressing_yard_base_fiber_crops
+  - name: slot_1
+    methods:
+    - pp_fiber_dressing_yard_no_dressing
+    - pp_fiber_dressing_yard_retting_pits
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.18
     max_levels = farm_capacity_max_fiber_dressing_yard
@@ -68,15 +68,16 @@ building:
 
     raw_modifier = {
       farm_capacity_from_fiber_dressing_yard = -1
+      local_population_capacity = -5
     }
 advancements:
-  - key: pp_fiber_dressing_yard
-    body: |2-
-      icon = fiber_dressing_yard
-      age = age_3_discovery
-      requires = rgo_logistics_discovery
-      unlock_building = fiber_dressing_yard
-      ai_weight = { add = 125 }
+- key: pp_fiber_dressing_yard
+  body: |-
+    icon = fiber_dressing_yard
+    age = age_3_discovery
+    requires = rgo_logistics_discovery
+    unlock_building = fiber_dressing_yard
+    ai_weight = { add = 125 }
 localization:
   entries:
     fiber_dressing_yard: Fiber Dressing Yard
@@ -93,7 +94,6 @@ icon:
   output_dds: fiber_dressing_yard.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a Fiber Dressing Yard, transparent background. Center clay-lined retting pits with bundled flax or hemp stalks, drying fiber bundles, scutching boards, hackles, ceramic crocks, and a small charcoal brazier. Use readable painterly historical UI art, straw tan, fiber cream, earthen clay browns, muted charcoal black, no text, no frame, no modern machinery, no factory.
-
 evaluation:
   allow_rules:
     amortization_months: Fiber dressing yards follow the current slow rural raw-material payback cadence.
@@ -101,6 +101,6 @@ evaluation:
     output_throughput: The age-4 fiber output modifier carries the requested break-even math; the blueprint evaluator shows the unmodified base output.
   production_methods:
     pp_fiber_dressing_yard_base_fiber_crops:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_fiber_dressing_yard_retting_pits:
-      production_efficiency: 1.00
+      production_efficiency: 1.0

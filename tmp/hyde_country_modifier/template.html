@@ -1,0 +1,37 @@
+<div id="hyde-map" class="hyde-map">
+  <style>
+    .hyde-map{font-family:var(--font-sans,ui-sans-serif,system-ui,sans-serif);color:var(--foreground,#171717);background:var(--background,#fff);padding:16px;box-sizing:border-box}
+    .hyde-map *{box-sizing:border-box}.hyde-map h1{font-size:20px;line-height:1.2;margin:0 0 4px}.hyde-map .sub{font-size:12px;color:var(--muted-foreground,#666);margin-bottom:14px}.hyde-map .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.hyde-map .panel{min-width:0}.hyde-map h2{font-size:14px;margin:0 0 5px}.hyde-map .plot{position:relative;width:100%;aspect-ratio:1.65;border:1px solid var(--border,#ddd);border-radius:7px;overflow:hidden;background:color-mix(in srgb,var(--background,#fff) 94%,var(--muted,#888) 6%)}.hyde-map canvas{display:block;width:100%;height:100%}.hyde-map .legend{height:9px;border-radius:5px;margin-top:7px}.hyde-map .ticks{display:flex;justify-content:space-between;font-size:10px;color:var(--muted-foreground,#666);margin-top:3px}.hyde-map .note{font-size:11px;color:var(--muted-foreground,#666);margin-top:12px}.hyde-map .tip{position:fixed;pointer-events:none;z-index:10;padding:7px 9px;border:1px solid var(--border,#ddd);border-radius:6px;background:var(--popover,var(--background,#fff));color:var(--popover-foreground,var(--foreground,#171717));font-size:11px;line-height:1.45;box-shadow:0 3px 12px #0002;display:none}.hyde-map .nodata{font-size:10px;color:var(--muted-foreground,#666);margin-top:3px}
+    @media(max-width:899px){.hyde-map .grid{grid-template-columns:1fr}.hyde-map .plot{aspect-ratio:2.05}}@media(max-width:420px){.hyde-map{padding:10px}.hyde-map .plot{aspect-ratio:1.45}}
+  </style>
+  <h1>HYDE country cropland requirement mapped to EU5 locations</h1>
+  <div class="sub">Each dot is one EU5 location. It inherits the HYDE cropland-per-person value of the modern country containing its centroid.</div>
+  <div class="grid">
+    <section class="panel"><h2>1337 · hectares per person</h2><div class="plot"><canvas></canvas></div><div class="legend sequential"></div><div class="ticks seqticks"></div></section>
+    <section class="panel"><h2>1837 · hectares per person</h2><div class="plot"><canvas></canvas></div><div class="legend sequential"></div><div class="ticks seqticks"></div></section>
+    <section class="panel"><h2>Change · 1837 minus 1337</h2><div class="plot"><canvas></canvas></div><div class="legend diverging"></div><div class="ticks divticks"></div></section>
+  </div>
+  <div class="note">1337 is interpolated between HYDE 1300/1400; 1837 between 1830/1840. The first two maps use the same country-level quintile bands, so their colors are directly comparable. Higher means HYDE assigns more cropland per person—not more productive land.</div>
+  <div class="tip"></div>
+  <script type="module">
+    import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm";
+    const DATA=__DATA__, root=document.querySelector('#hyde-map'), panels=[...root.querySelectorAll('.panel')], tip=root.querySelector('.tip');
+    const css=()=>getComputedStyle(root), color=(n,fallback)=>{const raw=css().getPropertyValue(n).trim();if(!raw)return fallback;const probe=document.createElement('i');probe.style.color='#010203';probe.style.color=raw.includes('%')&&!raw.includes('(')?`hsl(${raw})`:raw;root.appendChild(probe);const out=getComputedStyle(probe).color;probe.remove();return out==='rgb(1, 2, 3)'?fallback:out};
+    const records=DATA.locations.map(d=>{const c=DATA.countries[d[2]];return {lon:d[0],lat:d[1],tag:d[3],country:c[0],start:c[2],end:c[3],delta:c[2]==null||c[3]==null?null:c[3]-c[2]}});
+    const seqValues=DATA.countries.flatMap(d=>[d[2],d[3]]).filter(Number.isFinite).sort(d3.ascending), seqCuts=[.2,.4,.6,.8].map(q=>d3.quantile(seqValues,q));
+    const absD=records.map(d=>Math.abs(d.delta)).filter(Number.isFinite).sort(d3.ascending), deltaMax=d3.quantile(absD,.98);
+    const land=DATA.land;
+    function fmt(v){return v==null?'no data':d3.format('.2f')(v)+' ha/person'}
+    function draw(panel,i){
+      const box=panel.querySelector('.plot'), canvas=panel.querySelector('canvas'), rect=box.getBoundingClientRect(), ratio=Math.min(devicePixelRatio||1,2); canvas.width=Math.round(rect.width*ratio);canvas.height=Math.round(rect.height*ratio);const ctx=canvas.getContext('2d');ctx.scale(ratio,ratio);
+      const w=rect.width,h=rect.height,projection=d3.geoNaturalEarth1().fitExtent([[4,4],[w-4,h-4]],{type:'Sphere'}),path=d3.geoPath(projection,ctx);
+      const muted=color('--muted','#9ca3af'), border=color('--border','#c9c9c9'), s1=color('--viz-series-1','#2676d2'), s2=color('--viz-series-2','#d05a47'), s3=color('--viz-series-3','#2b9a66');
+      ctx.beginPath();path(land);ctx.fillStyle=color('--background','#fff');ctx.fill();ctx.strokeStyle=border;ctx.lineWidth=.45;ctx.stroke();
+      const scale=i<2?d3.scaleThreshold().domain(seqCuts).range(['#ffffcc','#a1dab4','#41b6c4','#2c7fb8','#253494']):d3.scaleDiverging(t=>t<.5?d3.interpolateRgb(s2,muted)(t*2):d3.interpolateRgb(muted,s3)((t-.5)*2)).domain([-deltaMax,0,deltaMax]).clamp(true);
+      const pts=[];for(const d of records){const v=i===0?d.start:i===1?d.end:d.delta,p=projection([d.lon,d.lat]);if(!p||v==null)continue;ctx.beginPath();ctx.arc(p[0],p[1],Math.max(.7,Math.min(1.45,w/620)),0,Math.PI*2);ctx.fillStyle=scale(v);ctx.fill();pts.push({x:p[0],y:p[1],d})}
+      const q=d3.quadtree().x(d=>d.x).y(d=>d.y).addAll(pts);canvas.onmousemove=e=>{const r=canvas.getBoundingClientRect(),p=q.find(e.clientX-r.left,e.clientY-r.top,10);if(!p){tip.style.display='none';return}const d=p.d;tip.innerHTML=`<strong>${d.tag}</strong> · ${d.country}<br>1337: ${fmt(d.start)}<br>1837: ${fmt(d.end)}<br>change: ${d.delta==null?'no data':d3.format('+.2f')(d.delta)+' ha/person'}`;tip.style.display='block';tip.style.left=Math.min(innerWidth-190,e.clientX+12)+'px';tip.style.top=Math.min(innerHeight-88,e.clientY+12)+'px'};canvas.onmouseleave=()=>tip.style.display='none';
+    }
+    function render(){panels.forEach(draw);const muted=color('--muted','#9ca3af'),s2=color('--viz-series-2','#d05a47'),s3=color('--viz-series-3','#2b9a66');root.querySelectorAll('.sequential').forEach(x=>x.style.background='linear-gradient(90deg,#ffffcc 0 20%,#a1dab4 20% 40%,#41b6c4 40% 60%,#2c7fb8 60% 80%,#253494 80%)');root.querySelector('.diverging').style.background=`linear-gradient(90deg,${s2},${muted},${s3})`;root.querySelectorAll('.seqticks').forEach(x=>x.innerHTML=`<span>low</span><span>${seqCuts.map(d=>d3.format('.2f')(d)).join(' · ')}</span><span>high</span>`);root.querySelector('.divticks').innerHTML=`<span>≤ ${d3.format('+.2f')(-deltaMax)}</span><span>0</span><span>≥ ${d3.format('+.2f')(deltaMax)}</span>`}
+    new ResizeObserver(render).observe(root);render();
+  </script>
+</div>

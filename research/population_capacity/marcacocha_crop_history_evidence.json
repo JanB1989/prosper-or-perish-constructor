@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "source_id": "chepstow_lusty_2009_marcacocha",
+  "title": "Putting the rise of the Inca Empire within a climatic and land management context",
+  "doi": "10.5194/cp-5-375-2009",
+  "url": "https://cp.copernicus.org/articles/5/375/2009/cp-5-375-2009.pdf",
+  "publication_year": 2009,
+  "license": "CC BY 3.0",
+  "local_path": "artifacts/data/population_capacity/repair_sources/chepstow_lusty_2009_cusco.pdf",
+  "sha256": "805328c5d97bfd5270059a45c406e31a2bad66b7ecdfcf69d6b0aa701d2ee660",
+  "source_family": "Marcacocha palaeoecological core; independent of HYDE, related to earlier Chepstow-Lusty reconstructions",
+  "historical_interval": [
+    1100,
+    1400
+  ],
+  "source_locators": [
+    "Section 5.3, printed p.383 / PDF p.9",
+    "Figure 4, printed p.380 / PDF p.6",
+    "Study location, printed p.376 / PDF p.2"
+  ],
+  "observations": [
+    "Rare maize pollen and chenopod recovery accompany agricultural return in AD1100-1400",
+    "Agricultural clearance and possible terrace construction around AD1170",
+    "Site water access includes perennial glacial-fed Patacancha River"
+  ],
+  "limitations": [
+    "Core represents Marcacocha catchment, not measured fields or yields across every Cusco location",
+    "Some proxy material is missing for approximately AD1320-1400 following radiocarbon sampling",
+    "Possible terrace construction is an interpretation, not a mapped hectare estimate",
+    "Current potato cultivation does not by itself date potato use to1337",
+    "No later imperial land expansion may be backdated"
+  ],
+  "model_action": "Pending explicit geographical crosswalk and crop-presence review; no capacity, development, yield or land assignment changed from this record",
+  "population_used_for_assignment": false,
+  "status": "source recorded; not yet a calibrated crop assignment"
+}

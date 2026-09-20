@@ -184,9 +184,9 @@ REPLACE:farming_village = {
     }
     construction_demand = village_construction
   raw_modifier = {
-    local_population_capacity = 7.65
-      farm_capacity_from_farming_village = -1
-    }
+    farm_capacity_from_farming_village = -1
+    local_population_capacity = -5
+  }
 
     modifier = {
         local_monthly_food = 1.5

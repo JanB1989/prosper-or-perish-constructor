@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: farming_village_rotations
 upgrade_chain:
   family: farming_village
@@ -11,37 +11,37 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_farming_village_rotations_base_livestock
-        - pp_farming_village_rotations_base_millet
-        - pp_farming_village_rotations_base_wheat
-        - pp_farming_village_rotations_base_maize
-        - pp_farming_village_rotations_base_rice
-        - pp_farming_village_rotations_base_legumes
-        - pp_farming_village_rotations_base_potato
-        - pp_farming_village_rotations_base_olives
-    - name: slot_1
-      methods:
-        - pp_farming_village_rotations_no_primary
-        - pp_farming_village_rotations_livestock
-        - pp_farming_village_rotations_millet
-        - pp_farming_village_rotations_wheat
-        - pp_farming_village_rotations_maize
-        - pp_farming_village_rotations_rice
-        - pp_farming_village_rotations_legumes
-        - pp_farming_village_rotations_potato
-        - pp_farming_village_rotations_olives
-    - name: slot_2
-      methods:
-        - pp_farming_village_rotations_no_beeswax
-        - pp_farming_village_rotations_hedgerow_hives
-    - name: slot_3
-      methods:
-        - pp_farming_village_rotations_no_worker_victuals
-        - pp_farming_village_rotations_worker_victuals
+  - name: slot_0
+    methods:
+    - pp_farming_village_rotations_base_livestock
+    - pp_farming_village_rotations_base_millet
+    - pp_farming_village_rotations_base_wheat
+    - pp_farming_village_rotations_base_maize
+    - pp_farming_village_rotations_base_rice
+    - pp_farming_village_rotations_base_legumes
+    - pp_farming_village_rotations_base_potato
+    - pp_farming_village_rotations_base_olives
+  - name: slot_1
+    methods:
+    - pp_farming_village_rotations_no_primary
+    - pp_farming_village_rotations_livestock
+    - pp_farming_village_rotations_millet
+    - pp_farming_village_rotations_wheat
+    - pp_farming_village_rotations_maize
+    - pp_farming_village_rotations_rice
+    - pp_farming_village_rotations_legumes
+    - pp_farming_village_rotations_potato
+    - pp_farming_village_rotations_olives
+  - name: slot_2
+    methods:
+    - pp_farming_village_rotations_no_beeswax
+    - pp_farming_village_rotations_hedgerow_hives
+  - name: slot_3
+    methods:
+    - pp_farming_village_rotations_no_worker_victuals
+    - pp_farming_village_rotations_worker_victuals
   possible_production_methods: []
-  body: |2-
+  body: |-
     # Age 4 represents peasant-run village intensification rather than hired estate agriculture.
     # Inputs stay capped at four goods per method and vary by crop: rotations, manure, field boundaries, storage, and water control.
     is_foreign = no
@@ -223,6 +223,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_farming_village_rotations = -1
+      local_population_capacity = -5
     }
 
     modifier = {
@@ -232,13 +233,13 @@ building:
         local_laborers_desired_pop = 0
     }
 advancements:
-  - key: pp_farming_village_rotations
-    body: |2-
-      icon = farming_village_rotations
-      age = age_4_reformation
-      requires = global_trade_advance
-      unlock_building = farming_village_rotations
-      ai_weight = { add = 125 }
+- key: pp_farming_village_rotations
+  body: |-
+    icon = farming_village_rotations
+    age = age_4_reformation
+    requires = global_trade_advance
+    unlock_building = farming_village_rotations
+    ai_weight = { add = 125 }
 localization:
   entries:
     farming_village_rotations: Rotational Farmstead
@@ -277,53 +278,52 @@ icon:
   output_dds: farming_village_rotations.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a Rotational Farmstead, transparent background. Center ordered strip fields, clover or legume plots, managed fallow strips, a manure cart, hedgerows, simple barns, seed sacks, hand tools, and a few small cottage hives at the edge. Warm daylight, practical early modern rural infrastructure, no text, no frame, no modern machinery, no steel factory imagery.
-
 evaluation:
   allow_rules:
     amortization_months: Intermediate farm upgrade intentionally has slower payback than global construction targets; revisit with the rural producer rebalance.
   production_methods:
     pp_farming_village_rotations_base_livestock:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_base_millet:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_base_wheat:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_base_maize:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_base_rice:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_base_legumes:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_base_potato:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_base_olives:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_livestock:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_millet:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_wheat:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_maize:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_rice:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_legumes:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_potato:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_olives:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_no_beeswax:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_rotations_hedgerow_hives:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Hedgerow hive sideline is intentionally smaller than the full-building throughput target.
         output_throughput: Hedgerow hive sideline is intentionally smaller than the full-building throughput target.
     pp_farming_village_rotations_worker_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

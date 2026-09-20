@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "source_id": "inah_cuahilama_southern_lakes_2022",
+  "author": "Juan Carlos Campos-Varela, INAH archaeological salvage directorate",
+  "publication_date": "2022-10-18",
+  "url": "https://arqueologia.inah.gob.mx/publico/especifico.php?id=MTAx",
+  "local_path": "artifacts/data/population_capacity/repair_sources/inah_2022_xochimilco_chalco.html",
+  "sha256": "d3b4a77910d97a1a2f052929d06ecca92b58fa3b08e8a5ce6fcd8c85998d0b90",
+  "license": "Public research webpage; no open redistribution license verified",
+  "source_family": "Southern Basin archaeological synthesis and INAH project; independent of HYDE/LUH2, related to Sanders/Parsons settlement archaeology",
+  "historical_scope": [
+    900,
+    1337
+  ],
+  "source_locators": [
+    "Regional history paragraphs beginning La importancia arqueologica and Las evidencias arqueologicas; separate from later site monuments"
+  ],
+  "observed_mechanisms": [
+    "Early Postclassic lake-margin settlement and marsh drainage in the Chalco-Xochimilco region",
+    "Maintained chinampa agriculture before its later expansion under Mexica rule"
+  ],
+  "excluded_quantities": [
+    "The 400 ha monumental-site extent is not cultivated chinampa area",
+    "The 8 ha Cuahilama site and 1430\u20131521 carvings do not establish 1337 infrastructure",
+    "No transfer of Xaltocan mapped hectares to this province",
+    "No universal multi-harvest yield or future Mexica expansion granted at start"
+  ],
+  "inferred_assessment": {
+    "scores": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "development_range": [
+      37.5,
+      62.5
+    ],
+    "water_served_fraction_range": [
+      0,
+      0.5
+    ],
+    "cultivated_area": "unchanged dated current fields",
+    "geographic_scope": [
+      "xochimilco",
+      "chalco"
+    ],
+    "interpretation": "Moderate maintained-field, water-control, cultivation and coordination assessment on the shared scale. Numerical values and served fractions are inferred uncertainty, not measurements. A zero-water lower case retains uncertainty in the share of location fields represented by lake-margin management."
+  },
+  "population_used_for_assignment": false,
+  "status": "frozen before management comparison; not accepted"
+}

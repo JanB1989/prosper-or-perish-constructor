@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "source_id": "liu_1991_south_china_rice.pdf",
+  "source_url": "https://idv.sinica.edu.tw/ectjliu/%E5%8A%89%E7%BF%A0%E6%BA%B6%E5%AD%B8%E8%A1%93%E8%91%97%E4%BD%9C/W6-%E7%B6%93%E6%BF%9F%E5%8F%B22pdf/1991Rice%20Culture%20in%20South%20China.pdf",
+  "locator": "Table 1 and its unit-conversion note, PDF page 11 (printed page 10)",
+  "original_sources": "Min Tsung-tien (1984), pp. 37-52; compilation by Ts'ui-jung Liu (1991)",
+  "commodity": "gross unhusked rice, one crop",
+  "original_unit": "standardized shih catties per shih mou",
+  "kg_per_catty_explicit_in_source": 0.6,
+  "mou_per_hectare_explicit_in_source": 15,
+  "dry_matter_fraction": null,
+  "observations": [
+    {"id": "taihu_song", "region": "Lake Tai area", "period": "Song", "years": [960, 1279], "catties_per_mou": 450, "kg_paddy_per_ha_per_crop": 4050},
+    {"id": "taihu_ming", "region": "Lake Tai area", "period": "Ming", "years": [1368, 1644], "catties_per_mou": 667, "kg_paddy_per_ha_per_crop": 6003},
+    {"id": "taihu_qing", "region": "Lake Tai area", "period": "Qing", "years": [1644, 1911], "catties_per_mou": 550, "kg_paddy_per_ha_per_crop": 4950},
+    {"id": "hubei_song", "region": "Hubei", "period": "Song", "years": [960, 1279], "catties_per_mou": 200, "kg_paddy_per_ha_per_crop": 1800},
+    {"id": "hunan_song", "region": "Hunan", "period": "Song", "years": [960, 1279], "catties_per_mou": 200, "kg_paddy_per_ha_per_crop": 1800},
+    {"id": "anhui_song", "region": "Anhui", "period": "Song", "years": [960, 1279], "catties_per_mou": 300, "kg_paddy_per_ha_per_crop": 2700},
+    {"id": "fujian_song", "region": "Fujian", "period": "Song", "years": [960, 1279], "catties_per_mou": 360, "kg_paddy_per_ha_per_crop": 3240}
+  ],
+  "role": "field-yield mechanism benchmark, not a population target or whole-location yield override",
+  "limitations": [
+    "Source describes estimates as rough; geographic coverage and cultivation intensity vary",
+    "The source explicitly uses a 0.6 kg catty; substituting a present-day 0.5 kg unit is incorrect here",
+    "Moisture is unspecified; a dry-matter conversion requires a labelled assumption and sensitivity tests",
+    "Single harvest yields are not annual food per total location area",
+    "Adoption area, seed, losses, milling, nutrition and maintenance must be accounted for",
+    "Later Ming and Qing values are progression evidence, not starting yields"
+  ]
+}

@@ -90,23 +90,45 @@ burghers = 2.5
 [blueprint_evaluation.modifier_categories.infrastructure_category]
 modifiers = ["market_access", "local_market_access", "free_building_levels", "local_distance_from_capital_speed_propagation"]
 
-[labeling]
-enabled = true
-config = "labeling_output_modifiers.yaml"
-modifier_prefix = "pp"
-generated_label = "Prosper or Perish"
-managed_write_mode = "mod_root"
 
-[population_capacity]
-enabled = true
-config = "population_capacity.toml"
-simulation_profile = "population_capacity_simulation.toml"
-generated_label = "Prosper or Perish"
-managed_write_mode = "mod_root"
 
 [dependencies]
 parser = "../eu5-game-parser"
 building_pipeline = "../eu5-building-pipeline"
 orchestrator = "../eu5-mod-orchestrator"
-labeling_pipeline = "../ProsperOrPerishLabelingPipeline"
-population_capacity_pipeline = "../ProsperOrPerishPopulationCapacityPipeline"
+
+[worldbuilder]
+# World Builder handover (EU5WorldBuilder `worldbuilder handover`); the constructor consumes this contract only.
+handover = "../EU5WorldBuilder/artifacts/handover/latest"
+# World Builder geography export (`worldbuilder geography-test` build), synced into the mod.
+geography_export = "../EU5WorldBuilder/artifacts/geography_test/EU5 World Builder"
+vanilla_baseline = "data/vanilla/locations_with_raw_material.parquet"
+sync_geography = true
+apply_on_build = true
+level_limit = 20
+goods_floor = -0.2
+overpopulation_peasant_unrest = 0.1
+
+[worldbuilder.buildings.map]
+# World Builder ledger type -> blueprint key
+clearing = "land_clearance"
+management = "field_management"
+water_supply = "irrigation_systems"
+paddy_control = "irrigated_rice_paddies"
+flood_bunds = "bund"
+field_drainage = "field_drainage"
+polders = "polders"
+oasis_irrigation = "qanats"
+
+[worldbuilder.level_scale]
+# multiply levels, divide people per level; 1.0 keeps the World Builder units
+
+[worldbuilder.farm_land]
+# capacity units (1 unit = 1,000 people) a farm level takes from subsistence land, and the land that must stay
+arable = { land = 5, reserve = 5 }
+plantation = { land = 10, reserve = 5 }
+herd = { land = 2, reserve = 1 }
+
+[worldbuilder.farm_land.classes]
+plantation = ["cotton_plantation", "sugar_plantation", "tobacco_plantation", "dye_plantation", "chili_plantation"]
+herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_breeders", "stud_farm", "elephant_kraal", "husbandry_farmstead"]

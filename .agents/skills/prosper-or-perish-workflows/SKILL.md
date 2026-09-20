@@ -63,6 +63,7 @@ Use tracked configuration for game paths:
 
 ## Command Index
 
+- For in-game profiler dumps and bottleneck reports, use the [profile-analyzer skill](../profile-analyzer/SKILL.md), which runs the standalone tool.
 - `uv run ppc setup`: install dev dependencies and inspect the project.
 - `uv run ppc inspect`: inspect the configured constructor project.
 - `uv run ppc test`: run pytest; pass file names or pytest args after the command.
@@ -73,7 +74,8 @@ Use tracked configuration for game paths:
 - STATIC_HTML_GRAPH_UPDATE: run `uv run ppc analyze` for `graphs/goods_flow_explorer.html` and `docs/examples/goods_flow_explorer.html`.
 - STATIC_HTML_GRAPH_UPDATE: run `uv run ppc savegame` for `graphs/savegame_explorer.html` and `docs/examples/savegame_explorer.html`.
 - STATIC_HTML_GRAPH_UPDATE: run `uv run ppc europedia` for `graphs/europedia.html`, `graphs/europedia_entries.json`, and matching files under `docs/examples/`.
-- `uv run ppc dashboard`: serve the current population-capacity dashboard at `http://127.0.0.1:8000/`.
+- `uv run ppc worldbuilder apply`: consume the World Builder handover (geography, attribute rows, improvement buildings, farm land, setup); `ppc build` runs it first.
+- `uv run ppc worldbuilder check`: fit of the written starting levels against the handover targets.
 - `uv run ppc blueprint list`: list accepted blueprints.
 - `uv run ppc blueprint parity`: compare accepted blueprints with generated mod output.
 - `uv run ppc blueprint evaluate`: evaluate blueprint economics and balance rules.
@@ -90,7 +92,7 @@ Use tracked configuration for game paths:
 
 - Do not run `sync --yes` unless the user explicitly asks to update the live Paradox mod folder.
 - If `sync` is requested, confirm `constructor.local.toml` exists and contains the intended deploy target.
-- If dashboard output is missing, generate or refresh the population-capacity artifacts before serving it.
+- If the handover is missing, run `uv run worldbuilder handover` in `../EU5WorldBuilder` first; never edit `pp_wb_*` files by hand.
 - Prefer `test`, `inspect`, `blueprint evaluate`, and `blueprint parity` before changes that affect accepted blueprints or generated output.
 - Use parser/evaluator command output as source of truth for game-data answers; do not infer economics from raw text search.
 

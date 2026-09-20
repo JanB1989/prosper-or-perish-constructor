@@ -11,19 +11,19 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_tea_sorting_garden_base_tea
-    - name: slot_1
-      methods:
-        - pp_tea_sorting_garden_no_withering
-        - pp_tea_sorting_garden_rolling_hearths
-    - name: slot_2
-      methods:
-        - pp_tea_sorting_garden_no_sorting
-        - pp_tea_sorting_garden_paper_packing
+  - name: slot_0
+    methods:
+    - pp_tea_sorting_garden_base_tea
+  - name: slot_1
+    methods:
+    - pp_tea_sorting_garden_no_withering
+    - pp_tea_sorting_garden_rolling_hearths
+  - name: slot_2
+    methods:
+    - pp_tea_sorting_garden_no_sorting
+    - pp_tea_sorting_garden_paper_packing
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.23
     max_levels = farm_capacity_max_tea_sorting_garden
@@ -85,19 +85,20 @@ building:
 
     raw_modifier = {
       farm_capacity_from_tea_sorting_garden = -1
+      local_population_capacity = -5
     }
 
     modifier = {
         local_migration_attraction = 0.003
     }
 advancements:
-  - key: pp_tea_sorting_garden
-    body: |2-
-      icon = tea_sorting_garden
-      age = age_3_discovery
-      requires = trade_range_advance_age_3
-      unlock_building = tea_sorting_garden
-      ai_weight = { add = 125 }
+- key: pp_tea_sorting_garden
+  body: |-
+    icon = tea_sorting_garden
+    age = age_3_discovery
+    requires = trade_range_advance_age_3
+    unlock_building = tea_sorting_garden
+    ai_weight = { add = 125 }
 localization:
   entries:
     tea_sorting_garden_slot_0: Tea Bushes
@@ -116,28 +117,17 @@ icon:
   source_png: ../assets/icons/tea_sorting_garden.png
   output_dds: tea_sorting_garden.dds
   size: 512
-  prompt: >-
-    EU5-inspired hand-painted strategy-game building icon for a Tea Sorting
-    Garden, isolated on a perfectly flat magenta chroma-key background. Center
-    terraced tea bushes beside an early-modern tea-processing yard with shallow
-    bamboo withering mats, light furniture rolling tables, wicker baskets of fresh
-    green tea leaves, dark curled finished tea, clay or pottery firing hearths,
-    sorting trays, and neat paper-wrapped tea packages. Painterly historical UI
-    art matching the approved detailed building-icon reference style,
-    three-quarter view, readable at low resolution, material-rich props, no
-    text, no letters, no frame, no modern machinery, not photorealistic, not
-    cartoonish.
-
+  prompt: EU5-inspired hand-painted strategy-game building icon for a Tea Sorting Garden, isolated on a perfectly flat magenta chroma-key background. Center terraced tea bushes beside an early-modern tea-processing yard with shallow bamboo withering mats, light furniture rolling tables, wicker baskets of fresh green tea leaves, dark curled finished tea, clay or pottery firing hearths, sorting trays, and neat paper-wrapped tea packages. Painterly historical UI art matching the approved detailed building-icon reference style, three-quarter view, readable at low resolution, material-rich props, no text, no letters, no frame, no modern machinery, not photorealistic, not cartoonish.
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_tea_sorting_garden_base_tea:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries a smaller share of the full worked tea output after the high-base rebalance.
     pp_tea_sorting_garden_rolling_hearths:
-      production_efficiency: 1.10
+      production_efficiency: 1.1
     pp_tea_sorting_garden_paper_packing:
       production_efficiency: 1.05

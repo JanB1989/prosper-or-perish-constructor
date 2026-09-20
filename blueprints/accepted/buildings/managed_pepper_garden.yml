@@ -12,19 +12,19 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_managed_pepper_garden_base_pepper
-    - name: slot_1
-      methods:
-        - pp_managed_pepper_garden_no_drying_yard
-        - pp_managed_pepper_garden_bamboo_drying_mats
-    - name: slot_2
-      methods:
-        - pp_managed_pepper_garden_unsorted_harvest
-        - pp_managed_pepper_garden_garbling_tables
+  - name: slot_0
+    methods:
+    - pp_managed_pepper_garden_base_pepper
+  - name: slot_1
+    methods:
+    - pp_managed_pepper_garden_no_drying_yard
+    - pp_managed_pepper_garden_bamboo_drying_mats
+  - name: slot_2
+    methods:
+    - pp_managed_pepper_garden_unsorted_harvest
+    - pp_managed_pepper_garden_garbling_tables
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.28
     max_levels = farm_capacity_max_managed_pepper_garden
@@ -84,19 +84,20 @@ building:
 
     raw_modifier = {
       farm_capacity_from_managed_pepper_garden = -1
+      local_population_capacity = -5
     }
 
     modifier = {
         local_migration_attraction = 0.003
     }
 advancements:
-  - key: pp_managed_pepper_garden
-    body: |2-
-      icon = managed_pepper_garden
-      age = age_3_discovery
-      requires = trade_range_advance_age_3
-      unlock_building = managed_pepper_garden
-      ai_weight = { add = 125 }
+- key: pp_managed_pepper_garden
+  body: |-
+    icon = managed_pepper_garden
+    age = age_3_discovery
+    requires = trade_range_advance_age_3
+    unlock_building = managed_pepper_garden
+    ai_weight = { add = 125 }
 localization:
   entries:
     managed_pepper_garden_slot_0: Pepper Vines
@@ -115,8 +116,7 @@ icon:
   source_png: ../assets/icons/managed_pepper_garden.png
   output_dds: managed_pepper_garden.dds
   size: 512
-  prompt: detailed historic bitmap cutout, painterly three-quarter-view production complex, pepper vines on living support trees, bamboo drying mats, garbling/sorting yard, perfectly flat solid #ff00ff chroma-key background, no text, no frame, no flat vector style.
-
+  prompt: detailed historic bitmap cutout, painterly three-quarter-view production complex, pepper vines on living support trees, bamboo drying mats, garbling/sorting yard, perfectly flat solid
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
@@ -124,7 +124,7 @@ evaluation:
     amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_managed_pepper_garden_base_pepper:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries the pepper garden baseline forward for the managed upgrade.
     pp_managed_pepper_garden_bamboo_drying_mats:

@@ -11,19 +11,19 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_saffron_kiln_croft_base_saffron
-    - name: slot_1
-      methods:
-        - pp_saffron_kiln_croft_unmanured_beds
-        - pp_saffron_kiln_croft_livestock_manure
-    - name: slot_2
-      methods:
-        - pp_saffron_kiln_croft_sun_drying
-        - pp_saffron_kiln_croft_pottery_kilns
+  - name: slot_0
+    methods:
+    - pp_saffron_kiln_croft_base_saffron
+  - name: slot_1
+    methods:
+    - pp_saffron_kiln_croft_unmanured_beds
+    - pp_saffron_kiln_croft_livestock_manure
+  - name: slot_2
+    methods:
+    - pp_saffron_kiln_croft_sun_drying
+    - pp_saffron_kiln_croft_pottery_kilns
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.23
     max_levels = farm_capacity_max_saffron_kiln_croft
@@ -82,19 +82,20 @@ building:
 
     raw_modifier = {
       farm_capacity_from_saffron_kiln_croft = -1
+      local_population_capacity = -5
     }
 
     modifier = {
         local_migration_attraction = 0.003
     }
 advancements:
-  - key: pp_saffron_kiln_croft
-    body: |2-
-      icon = saffron_kiln_croft
-      age = age_3_discovery
-      requires = trade_range_advance_age_3
-      unlock_building = saffron_kiln_croft
-      ai_weight = { add = 125 }
+- key: pp_saffron_kiln_croft
+  body: |-
+    icon = saffron_kiln_croft
+    age = age_3_discovery
+    requires = trade_range_advance_age_3
+    unlock_building = saffron_kiln_croft
+    ai_weight = { add = 125 }
 localization:
   entries:
     saffron_kiln_croft_slot_0: Crocus Beds
@@ -113,20 +114,14 @@ icon:
   source_png: ../assets/icons/saffron_kiln_croft.png
   output_dds: saffron_kiln_croft.dds
   size: 512
-  prompt: >-
-    EU5-inspired hand-painted strategy-game building icon for a Saffron Kiln
-    Croft. Crocus beds, hand-separated stigmas, small kiln and braziers, pottery
-    trays. Detailed historic bitmap cutout, painterly three-quarter-view
-    production complex, perfectly flat solid #ff00ff chroma-key background, no
-    text, no frame, no flat vector style.
-
+  prompt: 'EU5-inspired hand-painted strategy-game building icon for a Saffron Kiln Croft. Crocus beds, hand-separated stigmas, small kiln and braziers, pottery trays. Detailed historic bitmap cutout, painterly three-quarter-view production complex, perfectly flat solid #ff00ff chroma-key background, no text, no frame, no flat vector style.'
 evaluation:
   allow_rules:
     input_throughput: Saffron kiln crofts preserve the accepted low-input specialty RGO scale below the generic laborer throughput baseline.
     output_throughput: Saffron kiln crofts preserve the accepted low-output specialty RGO scale below the generic laborer throughput baseline.
   production_methods:
     pp_saffron_kiln_croft_base_saffron:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries a smaller share of the full worked saffron output after the high-base rebalance.
     pp_saffron_kiln_croft_livestock_manure:

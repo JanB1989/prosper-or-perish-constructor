@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "benchmark_version": "2026-09-07-demographic-evidence-v1",
+  "status": "frozen research comparison, not an accepted universal growth target",
+  "source_id": "madsen_robertson_ye_2019.pdf",
+  "source_sha256": "2f24a9443980d7ac76964fa3957177fe8d84ab7c8e5a019baf9f770e010f0d2b",
+  "url": "https://doi.org/10.1016/j.euroecorev.2019.05.004",
+  "coverage": {
+    "years": [
+      900,
+      1870
+    ],
+    "scope": "up to 17 countries; variable-specific subsamples, principally European historical economies",
+    "warning": "do not apply national wage-convergence estimates as local food-consumption coefficients or native tribal growth rates"
+  },
+  "comparisons": [
+    {
+      "id": "madsen_sur_wage_benchmark",
+      "metric": "half_life_of_wage_deviation_from_steady_state",
+      "value_years": 10.192237588230125,
+      "beta_per_year": -0.029,
+      "observation_interval_years": 30,
+      "formula": "-ln(2) / (ln(1 + beta*T)/T)",
+      "sample_years": [
+        1470,
+        1870
+      ],
+      "sample_countries": 9,
+      "locator": "Table 1 column 2 and accompanying text, PDF pages 11-12",
+      "role": "source-unit regression example; not a population growth coefficient"
+    },
+    {
+      "id": "madsen_preferred_estimate_summary",
+      "metric": "reported_adjustment_half_life",
+      "range_years": [
+        10,
+        30
+      ],
+      "locator": "section 6.5 and conclusion, PDF pages 16-17",
+      "role": "fast-adjustment comparison; individual wage/income/population regressions need separate extraction"
+    },
+    {
+      "id": "contrasting_literature_as_reviewed_by_madsen",
+      "metric": "reported_adjustment_half_life",
+      "range_years": [
+        100,
+        200
+      ],
+      "locator": "section 6.5 and Table 6",
+      "role": "contrasting sensitivity only; direct primary-paper review outstanding",
+      "exclusions": "some studies give much longer half-lives; this range is not an envelope for all literature"
+    }
+  ],
+  "simulation_measurement_contract": [
+    "Perturb a provisioned control around a demonstrated stable equilibrium, holding infrastructure and other coefficients fixed.",
+    "Measure time until a defined population or food-stock deviation halves; report overshoot and non-convergence, not just end-state population.",
+    "Keep population, food stocks and wage variables separate. This simulator does not model historical wages or endogenous fertility/marriage directly.",
+    "Compare regional uncertainty; do not force every population type or location to recover in 10-30 years."
+  ],
+  "acceptance_ready": false,
+  "additional_rate_evidence": [
+    {
+      "id": "owen_1987_natural_increase",
+      "source_id": "owen_1987_sea_natural_increase.html",
+      "url": "https://doi.org/10.1017/S0022463400001247",
+      "publication_year": 1987,
+      "observations": [
+        {
+          "scope": "Java and Philippines",
+          "period": "early nineteenth century",
+          "natural_increase_per_year_approximately": 0.01
+        },
+        {
+          "scope": "Brazil",
+          "years": [
+            1776,
+            1872
+          ],
+          "natural_increase_per_year_approximately": 0.0125,
+          "locator": "note 4; source synthesis excluding immigration and slave imports"
+        },
+        {
+          "scope": "Cebu",
+          "period": "nineteenth century",
+          "natural_increase_per_year_approximately": 0.027,
+          "locator": "note 21; partly frontier age structure"
+        }
+      ],
+      "role": "separate later-period comparisons; not universal medieval rates",
+      "exclusions": "Trend estimates that combine migration and natural increase are not fertility/mortality coefficients. Frontier age structure and later chronology prevent automatic transfer to 1337 controls."
+    },
+    {
+      "id": "geloso_kufenko_frontier",
+      "source_id": "geloso_kufenko_2015_frontier.html",
+      "url": "https://doi.org/10.1007/s12546-015-9153-9",
+      "years": [
+        1688,
+        1860
+      ],
+      "scope": "Quebec and Montreal",
+      "role": "mechanism holdout: abundant land need not prevent food vulnerability; trade integration changes response",
+      "observation": "Wheat-price/mortality checks detected before conquest, weaker subsequently. Cleared/improved estate fractions and trade matter; total potential land is insufficient.",
+      "exclusion": "VAR price/mortality response is not a direct annual population-growth or population-recovery coefficient."
+    }
+  ],
+  "additional_rate_evidence_status": "Source interpretations recorded before the next calibration round; no universal numerical acceptance envelope inferred from these geographically and temporally distinct series."
+}

@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: cotton_farm
 upgrade_chain:
   family: cotton_farm
@@ -11,15 +11,15 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_cotton_farm_base_cotton
-    - name: slot_1
-      methods:
-        - pp_cotton_farm_field_picking
-        - pp_cotton_farm_gin_house
+  - name: slot_0
+    methods:
+    - pp_cotton_farm_base_cotton
+  - name: slot_1
+    methods:
+    - pp_cotton_farm_field_picking
+    - pp_cotton_farm_gin_house
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.18
     max_levels = farm_capacity_max_cotton_farm
@@ -67,6 +67,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_cotton_farm = -1
+      local_population_capacity = -5
     }
 
     modifier = {
@@ -86,7 +87,6 @@ icon:
   output_dds: cotton_farm.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a cotton farm, transparent background. Center rows of cotton bolls, woven picking bags, a small wooden gin house with roller machinery, drying racks, and bundled raw cotton. Use readable painterly historical UI art, natural field greens, white cotton fiber, warm timber, no text, no frame.
-
 evaluation:
   allow_rules:
     input_throughput: Specialty crop farms preserve the accepted low-input rural RGO scale below the generic laborer throughput baseline.
@@ -94,7 +94,7 @@ evaluation:
     amortization_months: Specialty crop farms use a low-cost, slow-payback cadence matching the existing small crop RGO buildings.
   production_methods:
     pp_cotton_farm_base_cotton:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive field output follows the accepted small specialty-crop baseline rather than the generic raw-site band.
     pp_cotton_farm_gin_house:

@@ -11,38 +11,38 @@ building:
   mode: REPLACE
   source: pp_food_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_farming_village_base_livestock
-        - pp_millet_farm_base_millet
-        - pp_wheat_farm_base_wheat
-        - pp_maize_farm_base_maize
-        - pp_rice_farm_base_rice
-        - pp_legumes_farm_base_legumes
-        - pp_potato_farm_base_potato
-        - pp_olives_farm_base_olives
-    - name: slot_1
-      methods:
-        - pp_farming_village_no_primary
-        - pp_farming_village_maintenance
-        - pp_millet_farm_maintenance
-        - pp_millet_farm_livestock
-        - pp_wheat_farm_maintenance
-        - pp_wheat_farm_livestock
-        - pp_maize_farm_maintenance
-        - pp_rice_farm_maintenance
-        - pp_legumes_farm_maintenance
-        - pp_legumes_farm_livestock
-        - pp_potato_farm_maintenance
-        - pp_olives_farm_maintenance
-    - name: slot_2
-      methods:
-        - pp_farming_village_no_beeswax
-        - pp_farming_village_minor_beeswax
-    - name: slot_3
-      methods:
-        - pp_farming_village_no_worker_victuals
-        - pp_farming_village_worker_victuals
+  - name: slot_0
+    methods:
+    - pp_farming_village_base_livestock
+    - pp_millet_farm_base_millet
+    - pp_wheat_farm_base_wheat
+    - pp_maize_farm_base_maize
+    - pp_rice_farm_base_rice
+    - pp_legumes_farm_base_legumes
+    - pp_potato_farm_base_potato
+    - pp_olives_farm_base_olives
+  - name: slot_1
+    methods:
+    - pp_farming_village_no_primary
+    - pp_farming_village_maintenance
+    - pp_millet_farm_maintenance
+    - pp_millet_farm_livestock
+    - pp_wheat_farm_maintenance
+    - pp_wheat_farm_livestock
+    - pp_maize_farm_maintenance
+    - pp_rice_farm_maintenance
+    - pp_legumes_farm_maintenance
+    - pp_legumes_farm_livestock
+    - pp_potato_farm_maintenance
+    - pp_olives_farm_maintenance
+  - name: slot_2
+    methods:
+    - pp_farming_village_no_beeswax
+    - pp_farming_village_minor_beeswax
+  - name: slot_3
+    methods:
+    - pp_farming_village_no_worker_victuals
+    - pp_farming_village_worker_victuals
   possible_production_methods: []
   body: |2-
         audio_tier = 1
@@ -229,9 +229,9 @@ building:
         }
         construction_demand = village_construction
       raw_modifier = {
-        local_population_capacity = 7.65
-          farm_capacity_from_farming_village = -1
-        }
+        farm_capacity_from_farming_village = -1
+        local_population_capacity = -5
+      }
 
         modifier = {
             local_monthly_food = 1.5
@@ -471,7 +471,6 @@ localization:
     pp_wheat_farm_base_wheat: Wheat Fields
     pp_wheat_farm_livestock: Wheat Farm (Oxen)
     pp_wheat_farm_maintenance: Wheat Farm (Horses)
-
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
@@ -479,39 +478,39 @@ evaluation:
     profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
   production_methods:
     pp_farming_village_base_livestock:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
     pp_millet_farm_base_millet:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
     pp_wheat_farm_base_wheat:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
     pp_maize_farm_base_maize:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
     pp_rice_farm_base_rice:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
     pp_legumes_farm_base_legumes:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
     pp_potato_farm_base_potato:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
     pp_olives_farm_base_olives:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
     pp_farming_village_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_maintenance:
       production_efficiency: 1.05
     pp_millet_farm_maintenance:
@@ -535,8 +534,8 @@ evaluation:
     pp_olives_farm_maintenance:
       production_efficiency: 1.05
     pp_farming_village_minor_beeswax:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_farming_village_worker_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "id": "northern_niger_flood_agriculture",
+  "source": {
+    "authors": [
+      "Roderick J. McIntosh",
+      "Susan Keech McIntosh"
+    ],
+    "title": "Forgotten Tells of Mali",
+    "year": 1983,
+    "url": "https://www.penn.museum/sites/expedition/forgotten-tells-of-mali/",
+    "source_family": "Inland Niger Delta archaeological field surveys, 1977 and 1981",
+    "license": "Copyright Penn Museum; no open reuse license established.",
+    "cached_html": "artifacts/data/population_capacity/repair_sources/mcintosh_1983_niger.html",
+    "sha256": "fb294898edd53887deb0ac54d32e2ec3e95a25cc3a02e4c6c440da0b30fc65c2",
+    "accessed": "2026-09-07"
+  },
+  "interpretation": "Floodplain rice, fishing and seasonal grazing formed complementary livelihoods. Flood timing constrained farming. River commerce supplied Timbuktu from the more productive southern delta; this does not establish an import quantity for 1337. Treat existing northern-delta fields as mainly water-dependent, rather than assigning them almost entirely to zero-yield rainfed cultivation.",
+  "assignment": {
+    "selector": {
+      "province": [
+        "timbuktu_province"
+      ]
+    },
+    "scores": [
+      2,
+      2,
+      2,
+      1
+    ],
+    "development_range": [
+      25,
+      50
+    ],
+    "water_served_fraction_range": [
+      0.75,
+      1.0
+    ],
+    "valid_years": [
+      1200,
+      1400
+    ],
+    "range_role": "Inferred regional system mapping, not measured local irrigation or development. Existing field extent remains fixed. The fraction concerns those fields only, not the province's desert area."
+  },
+  "exclusions": [
+    "Do not allocate the entire delta's flooded area as cultivated land.",
+    "Do not turn every flood into controlled irrigation or add rice, fish and grazing on the same resource twice.",
+    "Do not grant extra harvests, cultivated hectares, canals or future water opportunities.",
+    "Do not infer local agricultural self-sufficiency from Timbuktu's trading population."
+  ]
+}

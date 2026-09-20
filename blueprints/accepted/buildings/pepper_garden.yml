@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: pepper_garden
 upgrade_chain:
   family: pepper_garden
@@ -11,15 +11,15 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_pepper_garden_base_pepper
-    - name: slot_1
-      methods:
-        - pp_pepper_garden_no_garbling
-        - pp_pepper_garden_blanched_garbling_yards
+  - name: slot_0
+    methods:
+    - pp_pepper_garden_base_pepper
+  - name: slot_1
+    methods:
+    - pp_pepper_garden_no_garbling
+    - pp_pepper_garden_blanched_garbling_yards
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.28
     max_levels = farm_capacity_max_pepper_garden
@@ -66,6 +66,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_pepper_garden = -1
+      local_population_capacity = -5
     }
 
     modifier = {
@@ -85,14 +86,13 @@ icon:
   output_dds: pepper_garden.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a pepper garden, transparent background. Center pepper vines climbing a support tree or wooden poles, green and red pepper spikes, dark peppercorns drying on woven mats, a small steaming earthen blanching pot, and a sorting tray with peppercorns. Use readable painterly shapes, softly outlined historical UI art, deep vine greens, red and green pepper spikes, dark peppercorn browns, warm tan mats, muted clay pottery, no text, no frame, not photorealistic, not cartoonish.
-
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_pepper_garden_base_pepper:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked pepper output after the high-base rebalance.
         amortization_months: Existing accepted pepper garden payback is faster than the new amortization minimum; revisit during the pepper garden rebalance.

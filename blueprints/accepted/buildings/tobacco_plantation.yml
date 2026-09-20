@@ -1,19 +1,19 @@
-﻿version: 2
+version: 2
 tag: tobacco_plantation
 building:
   key: tobacco_plantation
   mode: REPLACE
   source: pp_building_adjustments.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_tobacco_plantation_base_tobacco
-    - name: slot_1
-      methods:
-        - pp_tobacco_plantation_field_cutting
-        - pp_tobacco_plantation_curing_barns
+  - name: slot_0
+    methods:
+    - pp_tobacco_plantation_base_tobacco
+  - name: slot_1
+    methods:
+    - pp_tobacco_plantation_field_cutting
+    - pp_tobacco_plantation_curing_barns
   possible_production_methods: []
-  body: |2-
+  body: |-
     audio_tier = 2
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
@@ -63,6 +63,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_tobacco_plantation = -1
+      local_population_capacity = -10
     }
 
     modifier = {
@@ -77,7 +78,6 @@ localization:
     pp_tobacco_plantation_base_tobacco: Tobacco Fields
     pp_tobacco_plantation_field_cutting: Field Cutting
     pp_tobacco_plantation_curing_barns: Curing Barns
-
 evaluation:
   building:
     employment_size: 1.0
@@ -87,7 +87,7 @@ evaluation:
     amortization_months: Plantation price is shared with vanilla plantation economics and intentionally outside generic raw payback cadence.
   production_methods:
     pp_tobacco_plantation_base_tobacco:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Plantation employment is smaller than the generic laborer raw-site baseline, so the 30% base share is high per 1k.
     pp_tobacco_plantation_curing_barns:

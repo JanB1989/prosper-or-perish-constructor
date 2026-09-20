@@ -22,6 +22,7 @@ from prosper_or_perish_constructor.rural_capacity import (
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_VALUES_ROOT = MOD_ROOT / "in_game" / "common" / "script_values"
 BUILDING_BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted" / "buildings"
 
@@ -120,81 +121,65 @@ def _script_value(name: str, rows: Iterable[str], comments: Iterable[str] = ()) 
     return "\n".join(lines)
 
 
+def _farm_land_constants() -> tuple[dict[str, tuple[float, float]], tuple[float, float]]:
+    """Per-building (land, reserve) in capacity units from constructor.toml [worldbuilder.farm_land]."""
+    import tomllib
+
+    raw = tomllib.loads((REPO_ROOT / "constructor.toml").read_text(encoding="utf-8"))
+    section = raw.get("worldbuilder", {}).get("farm_land", {})
+    classes = section.get("classes", {})
+    per_building: dict[str, tuple[float, float]] = {}
+    for cls, members in classes.items():
+        values = section[cls]
+        for building in members:
+            per_building[str(building)] = (float(values["land"]), float(values["reserve"]))
+    default = (float(section["arable"]["land"]), float(section["arable"]["reserve"]))
+    return per_building, default
+
+
+def _free_land_rows(land: float, reserve: float, desc: str) -> list[str]:
+    return [
+        _line("add = {", 1),
+        _line(f'desc = "{desc}"', 2),
+        _line("value = modifier:local_population_capacity", 2),
+        _line(f"subtract = {reserve:g}", 2),
+        _line(f"divide = {land:g}", 2),
+        _line("floor = yes", 2),
+        _line("}", 1),
+    ]
+
+
 def _farm_source_rows(
     omit_building: str | None = None,
     omit_buildings: Iterable[str] = (),
 ) -> list[str]:
-    rows = [
-        _line("add = {", 1),
-        _line('desc = "BUILDING_LEVEL_BASE_FARM_RGO"', 2),
-        _line("if = {", 2),
-        _line("limit = { has_variable = pp_farm_base_capacity }", 3),
-        _line("value = var:pp_farm_base_capacity", 3),
-        _line("}", 2),
-        _line("else = { value = 0 }", 2),
-        _line("}", 1),
-        _line("if = {", 1),
-        _line("limit = { has_variable = pp_farm_base_capacity }", 2),
-        _line("add = {", 2),
-        _line('desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"', 3),
-        _line("value = var:pp_farm_base_capacity", 3),
-        _line("multiply = max_rgo_workers", 3),
-        _line("multiply = 0.125", 3),
-        _line("}", 2),
-        _line("}", 1),
-        _line("add = {", 1),
-        _line('desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"', 2),
-        _line("value = modifier:local_population_capacity", 2),
-        _line("multiply = 0.10", 2),
-        _line("}", 1),
-    ]
-    for rank, value in (("megalopolis", "-20"), ("city", "-5"), ("town", "-1")):
+    """Farm capacity = remaining farmland: (flat population capacity - reserve) / land per level.
+
+    The flat already contains -land per built farm level (raw_modifier on each farm building), so the
+    public value is the land still held by subsistence farmers in farming-village levels. Per-building
+    max values add the building's own levels back (its level counter modifier is -1 per level) so the
+    max is the same number no matter how many of it exist; replaceable lower tiers are added back too.
+    """
+    per_building, default = _farm_land_constants()
+    omitted = set(omit_buildings)
+    if omit_building is not None:
+        omitted.add(omit_building)
+    if not omitted:
+        land, reserve = default
+        return _free_land_rows(land, reserve, "BUILDING_LEVEL_WB_FREE_FARMLAND") + [_line("min = 0", 1)]
+    target = omit_building or next(iter(omitted))
+    land, reserve = per_building.get(target, default)
+    rows = _free_land_rows(land, reserve, "BUILDING_LEVEL_WB_FREE_FARMLAND")
+    for building in omitted:
         rows.extend(
             [
-                _line("if = {", 1),
-                _line(f"limit = {{ location_rank = location_rank:{rank} }}", 2),
-                _line("add = {", 2),
-                _line('desc = "BUILDING_LEVEL_FARM_LOCATION_RANK"', 3),
-                _line(f"value = {value}", 3),
-                _line("}", 2),
-                _line("}", 1),
-            ]
-        )
-    rows.extend(
-        [
-            _line("add = {", 1),
-            _line("# River size is bridged through a source-specific modifier so it remains a", 2),
-            _line("# visible row for locations whose river size is stored on static modifiers.", 2),
-            _line('desc = "BUILDING_LEVEL_FARM_RIVER"', 2),
-            _line("value = modifier:farm_capacity_from_river_size", 2),
-            _line("}", 1),
-            _line("if = {", 1),
-            _line("limit = { has_town_rights = town_rights_type:manorial_customals }", 2),
-            _line("add = {", 2),
-            _line('desc = "BUILDING_LEVEL_FARM_MANORIAL_CUSTOMALS"', 3),
-            _line("value = 1", 3),
-            _line("}", 2),
-            _line("}", 1),
-        ]
-    )
-    for building, multiplier in FARM_WATER_CONTROL_BUILDINGS:
-        rows.extend(
-            [
-                _line("add = {", 1),
+                _line("subtract = {", 1),
                 _line(f'desc = "BUILDING_LEVEL_FARM_{building.upper()}"', 2),
                 _line(f"value = modifier:{farm_capacity_modifier_for_building(building)}", 2),
                 _line("}", 1),
             ]
         )
-    rows.extend(
-        _farm_modifier_rows(
-            prefix="FARM",
-            buildings=LAND_FARM_BUILDINGS,
-            omit_building=omit_building,
-            omit_buildings=omit_buildings,
-        )
-    )
-    rows.extend(_building_level_pressure_rows(prefix="FARM"))
+    rows.append(_line("min = 0", 1))
     return rows
 
 

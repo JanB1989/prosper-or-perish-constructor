@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "source_id": "morehart_eisenberg_2009_xaltocan",
+  "title": "Prosperity, power, and change: Modeling maize at Postclassic Xaltocan, Mexico",
+  "doi": "10.1016/j.jaa.2009.10.005",
+  "url": "https://faculty.washington.edu/dtae/manuscripts/morehart%20and%20eisenberg%20-%20Prosperity%2C%20power%2C%20and%20change-%20Modeling%20maize%20at%20Postclassic%20Xaltocan%2C%20Mexico.pdf",
+  "path": "artifacts/data/population_capacity/repair_sources/morehart_eisenberg_2009_xaltocan.pdf",
+  "sha256": "e67700e59d2c2cc2532eb41ed27af51ad4a0833fab882755d691853c26b95786",
+  "version": "2009 article-in-press author-hosted PDF",
+  "license": "Elsevier copyright; cached research copy, no redistribution license verified",
+  "source_family": "Xaltocan excavation and archaeobotany; related to Morehart/Frederick 2014, independent of HYDE/LUH2",
+  "pdf_page": 5,
+  "observed_period_years": [
+    1200,
+    1400
+  ],
+  "mapped_system_area_hectares": [
+    1000,
+    1500
+  ],
+  "area_interpretation": "Reported as at least this extent; not a complete upper bound. Includes a raised-field/canal system, not necessarily 100% crop beds.",
+  "mechanisms": [
+    "Maintained raised fields and freshwater canals",
+    "Canal sediment replenishment, drainage and salt control",
+    "Labour-intensive cultivation and frost mitigation"
+  ],
+  "exclusions": [
+    "No numerical yield observation from this passage.",
+    "Do not assign the footprint to all Basin of Mexico locations.",
+    "Later conquest and abandonment are not a peaceful-control growth coefficient."
+  ],
+  "game_crosswalk": {
+    "location_tag": "xaltocan",
+    "province": "tetzcoco_province",
+    "status": "Named-site mapping identified; field-polygon overlap still requires audit."
+  },
+  "current_model_diagnostic": {
+    "development": 18.75,
+    "cultivated_km2": 26.575175058041932,
+    "water_managed_km2": 0.0,
+    "source_case": "round38 annual"
+  },
+  "role": "Dated agricultural-system evidence and prospective geographical benchmark; not a population capacity target.",
+  "candidate_changed": false
+}

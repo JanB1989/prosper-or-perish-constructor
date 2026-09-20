@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "cusco_preimperial_maintained_fields",
+  "historical_source": "cusco_management_evidence.json",
+  "interpretation": "Test maintained Andean field management on the existing dated cultivated footprint. Covey documents preimperial terraces, canals, dry farming and local organization; later imperial projects remain excluded.",
+  "assessment": {
+    "scores": [
+      3,
+      1,
+      2,
+      2
+    ],
+    "dimensions": [
+      "field_maintenance",
+      "water_management",
+      "cultivation_intensity",
+      "coordination"
+    ],
+    "development_range": [
+      37.5,
+      62.5
+    ],
+    "range_role": "Regional analogue using the same common management-score conversion and uncertainty width as Parisis/Shuntian. Not a measured local score or fitted population target."
+  },
+  "land_contract": "Restore only reconstructed LUH2 current cropland truncated by the crop-mixture mask, retaining baseline accessible fields and displacing existing livelihoods. No new generic cultivated fraction or later terrace-area total.",
+  "water_contract": "No additional water-served hectares assigned: the available preimperial terrace descriptions do not quantify a province-wide irrigated fraction. The management score records maintained systems but this diagnostic grants no irrigation capacity bonus.",
+  "known_unresolved": [
+    "Pisaq has no nonzero crop-density evidence in the cached crop model. Restoring field hectares cannot create a crop yield; report this coverage failure independently of simulation survival.",
+    "LUH2 allocation and HYDE belong to related evidence; this is not independent historical validation.",
+    "Local management and cultivated extent remain uncertain; this regional analogue does not imply uniform attested adoption."
+  ],
+  "exclusions": [
+    "Do not backdate imperial maize yields or later estate hectares.",
+    "Do not use population to allocate land, management or density.",
+    "No consumption or food-building change."
+  ]
+}

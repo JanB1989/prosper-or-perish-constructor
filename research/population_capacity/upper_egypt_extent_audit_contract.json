@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "observation_id": "upper_egypt_1315_basin_area",
+  "status": "geographical bracket for physical audit; not a hectare allocation",
+  "source_pdf": "artifacts/data/population_capacity/repair_sources/borsch_2000_nile_irrigation.pdf",
+  "source_date": 1315,
+  "game_date": 1337,
+  "source_locator": "printed pages 134-136; PDF pages 4-6",
+  "license": "CC-BY-4.0 as printed on cached article",
+  "core_provinces": ["qusiyya_province", "asyut_province", "minya_province", "bahnasa_province"],
+  "northern_boundary_provinces": ["cairo_province"],
+  "interpretation": "Core covers the game's named Upper Nile valley provinces, including the mixed Bahnasa province containing Faiyum. Faiyum is also reported separately because its gravity canal system is not interchangeable with seasonal basins. The broad bracket additionally includes all Cairo province, including its northern boundary contamination; it deliberately overincludes rather than deleting its mixed coverage. Neither bracket is a historical floodplain polygon.",
+  "distinct_hydraulic_locations": ["faiyum"],
+  "exclusions": ["Nile Delta provinces", "Red Sea coast", "western oases", "Sinai", "Libyan coast"],
+  "limitations": [
+    "Cairo province crosses the valley/Delta transition. No centroid cutoff allocates cultivated hectares within it.",
+    "The source calls its estimate rough and provides no numerical confidence interval.",
+    "The 1315 assessment predates the 1337 game state by 22 years.",
+    "A one metre water depth gives a dimensional storage check, not an independently observed water budget.",
+    "No population, food balance or simulation survival informs these scopes or totals."
+  ]
+}

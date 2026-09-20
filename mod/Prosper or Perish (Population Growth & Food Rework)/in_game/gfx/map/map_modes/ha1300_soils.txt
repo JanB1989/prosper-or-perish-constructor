@@ -1,0 +1,53 @@
+﻿ha1300_soil_types = {
+ map_color = {
+ if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 1 } value = rgb { 226 190 91 } }
+ else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 2 } value = rgb { 105 160 83 } }
+ else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 3 } value = rgb { 85 176 195 } }
+ else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 4 } value = rgb { 200 108 80 } }
+ else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 5 } value = rgb { 137 105 178 } }
+ else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 6 } value = rgb { 155 163 171 } }
+ else = { value = rgb { 45 60 72 } } }
+ tooltip_key = {
+ if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 1 } value = HA1300_SOIL_SAND_MAP }
+ else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 2 } value = HA1300_SOIL_LOAM_MAP }
+ else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 3 } value = HA1300_SOIL_SILT_MAP }
+ else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 4 } value = HA1300_SOIL_CLAY_MAP }
+ else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 5 } value = HA1300_SOIL_PEAT_MAP }
+ else_if = { limit = { has_variable = ha1300_soil_type var:ha1300_soil_type = 6 } value = HA1300_SOIL_STONY_MAP }
+ else_if = { limit = { is_land = no } value = HA1300_SOIL_WATER } else = { value = HA1300_SOIL_MAP_UNKNOWN } }
+ legend_key = { desc = "HA1300_SOIL_SAND" color = rgb { 226 190 91 } }
+ legend_key = { desc = "HA1300_SOIL_LOAM" color = rgb { 105 160 83 } }
+ legend_key = { desc = "HA1300_SOIL_SILT" color = rgb { 85 176 195 } }
+ legend_key = { desc = "HA1300_SOIL_CLAY" color = rgb { 200 108 80 } }
+ legend_key = { desc = "HA1300_SOIL_PEAT" color = rgb { 137 105 178 } }
+ legend_key = { desc = "HA1300_SOIL_STONY" color = rgb { 155 163 171 } }
+ small_map_names = location
+ medium_map_names = location
+ large_map_names = none
+ small_tooltip_context = location
+ medium_tooltip_context = location
+ large_tooltip_context = location
+ fill_in_impassable = yes
+ enable_snow = no
+ enable_rivers = yes
+ flatmap_behaviour = always
+ use_fow = no
+ category = geography
+ index = 2
+ allow_allocate_hotkey = yes
+ map_markers = { all = no }
+ gradient_parameters = {
+  zoom_step = 2
+  gradient_alpha_inside = 1
+  gradient_alpha_outside = 1
+  gradient_width = 0.25
+  gradient_color_mult = 0.9
+  edge_width = 0
+  edge_sharpness = 0.01
+  edge_alpha = 0
+  edge_color_mult = 0
+  before_lighting_blend = 0.5
+  after_lighting_blend = 0.5
+ }
+ color_refresh_counters = { LocationOwnerChanged }
+}

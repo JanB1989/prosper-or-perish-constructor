@@ -16,9 +16,7 @@ from prosper_or_perish_constructor.farming_village_unlocks import (
     derive_rgo_unlock_gates,
     effective_rgo_unlock_config,
     load_current_location_frame,
-    load_location_potential_frame,
     load_rgo_unlock_config,
-    load_start_location_frame,
 )
 
 
@@ -65,30 +63,8 @@ def test_rgo_unlock_derivation_uses_per_good_region_threshold() -> None:
     assert gates["maize"].regions == ("alpha_4",)
 
 
-def test_start_location_frame_joins_game_start_population() -> None:
-    geography = load_current_location_frame(ROOT, PROJECT)
-    locations = load_start_location_frame(ROOT, PROJECT)
-
-    assert "population_peasants" in locations.columns
-    assert "total_population" in locations.columns
-    assert "local_population_capacity" in locations.columns
-    assert "location_potential_modifier" in locations.columns
-    assert locations.height == geography.height
-    assert set(geography["location_tag"].to_list()) == set(locations["location_tag"].to_list())
-
-    ebstorf = locations.filter(pl.col("location_tag") == "ebstorf")
-    assert ebstorf.height == 1
-    assert float(ebstorf["total_population"].item()) > 0.0
-    assert ebstorf["location_potential_modifier"].item() == "pp_loc_ebstorf"
-    assert float(ebstorf["local_population_capacity"].item()) > 0.0
 
 
-def test_location_potential_frame_maps_alias_keys() -> None:
-    potential = load_location_potential_frame(ROOT, PROJECT)
-    washita = potential.filter(pl.col("location_tag") == "washita")
-    if washita.is_empty():
-        pytest.skip("washita not present in current Location Potential table")
-    assert washita["location_potential_modifier"].item() == "pp_loc_washita_pp"
 
 
 def test_current_location_data_derives_expected_farming_village_gates() -> None:

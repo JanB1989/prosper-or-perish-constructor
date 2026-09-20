@@ -1,0 +1,332 @@
+{
+  "artifacts": {
+    "location_rankings": "/home/jan/development/ProsperOrPerishConstructor/tmp/population_capacity_design_review/fresh_modifiers_baseline_maximum_location_rankings.csv",
+    "locations": "/home/jan/development/ProsperOrPerishConstructor/tmp/population_capacity_design_review/fresh_modifiers_baseline_maximum.parquet",
+    "macro_regions": "/home/jan/development/ProsperOrPerishConstructor/tmp/population_capacity_design_review/fresh_modifiers_baseline_maximum_macro_regions.csv",
+    "province_statistics": "/home/jan/development/ProsperOrPerishConstructor/tmp/population_capacity_design_review/fresh_modifiers_baseline_maximum_province_statistics.csv",
+    "province_totals": "/home/jan/development/ProsperOrPerishConstructor/tmp/population_capacity_design_review/fresh_modifiers_baseline_maximum_province_totals.csv",
+    "summary": "/home/jan/development/ProsperOrPerishConstructor/tmp/population_capacity_design_review/fresh_modifiers_baseline_maximum_summary.json",
+    "tracked_provinces": "/home/jan/development/ProsperOrPerishConstructor/tmp/population_capacity_design_review/fresh_modifiers_baseline_maximum_tracked_provinces.csv"
+  },
+  "component_summation_exact": true,
+  "evidence_quantile": "p50",
+  "finite_nonnegative": true,
+  "global_maximum_population_capacity_people": 3534317408.3770833,
+  "global_maximum_population_limit_people": 4000000000.0,
+  "global_maximum_population_pass": true,
+  "global_statistics": {
+    "maximum_infrastructure_capacity_people": {
+      "count": 20929,
+      "max": 4237631.581074479,
+      "mean": 113348.24760442272,
+      "median": 35783.68366686191,
+      "min": 0.0,
+      "std_dev": 220753.66665198922,
+      "sum": 2372265474.112963
+    },
+    "maximum_irrigation_capacity_people": {
+      "count": 20929,
+      "max": 2341333.451226292,
+      "mean": 32975.58389514616,
+      "median": 604.6864309843545,
+      "min": 0.0,
+      "std_dev": 93933.01627822494,
+      "sum": 690145995.341514
+    },
+    "maximum_land_improvement_capacity_people": {
+      "count": 20929,
+      "max": 4206447.168762928,
+      "mean": 80372.66370927657,
+      "median": 0.0,
+      "min": 0.0,
+      "std_dev": 208264.66908410576,
+      "sum": 1682119478.7714493
+    },
+    "maximum_population_capacity_development_100_people": {
+      "count": 20929,
+      "max": 4826960.528708789,
+      "mean": 168871.77640484893,
+      "median": 83998.89843604165,
+      "min": 7875.0,
+      "std_dev": 254597.92226819394,
+      "sum": 3534317408.3770833
+    }
+  },
+  "hyde_directional_agreement": {
+    "irrigation_1300": {
+      "available": true,
+      "spearman_rank_correlation": 0.10145251419876011,
+      "top_opportunity_realized_share": 0.10463449593884376
+    },
+    "irrigation_1800": {
+      "available": true,
+      "spearman_rank_correlation": 0.13125091389561072,
+      "top_opportunity_realized_share": 0.1485905398948877
+    },
+    "irrigation_modern": {
+      "available": true,
+      "spearman_rank_correlation": 0.29474172860312486,
+      "top_opportunity_realized_share": 0.49020544672718586
+    },
+    "land_improvement_1300": {
+      "available": true,
+      "spearman_rank_correlation": -0.14827086353259447,
+      "top_opportunity_realized_share": 0.807931199235547
+    },
+    "land_improvement_1800": {
+      "available": true,
+      "spearman_rank_correlation": -0.1019379889704608,
+      "top_opportunity_realized_share": 0.9512661251791686
+    },
+    "land_improvement_modern": {
+      "available": true,
+      "spearman_rank_correlation": 0.05583831521761457,
+      "top_opportunity_realized_share": 0.9765886287625418
+    }
+  },
+  "location_count": 20929,
+  "quantiles_ordered": true,
+  "review_flags": {
+    "validation_implausible_leader": 15,
+    "validation_large_location_artifact": 29,
+    "validation_permafrost_or_wasteland": 1000,
+    "validation_physically_unsupported_dryland": 1234
+  },
+  "source_hashes": {
+    "candidates": "241ef1e9f2f90f230b5ab7fb058da74b51bd5a55a79761ac03e543ab3952270c",
+    "hyde_cropland": "ea71b622de314bc79649cab79c8bc5587e50fe512ba1661b8115c9bb07ad9d26",
+    "hyde_irrigated": "8caf51fe08cf26bc6d9ed5a29eb56d325ba75c5a0353bc7b5bf7dceda53caeb5",
+    "hyde_pasture": "c2b3e127a07b0544f3e692b4d71ac4aa6864998c505cd78e7867b9ad677a6e9c",
+    "landcover": "e6437a79fccada2c15550d0fd34448adb98e587529838e950970fa4d4c055a2b",
+    "profile": "548c713c516eb74a17023f3f7935f2d55b02761771767d1b8c649e6727a07b3c"
+  },
+  "source_quantile_crossing_locations": 15475,
+  "top_locations": [
+    {
+      "location_tag": "uele_ca",
+      "macro_region": "central_africa",
+      "maximum_infrastructure_capacity_people": 4237631.581074479,
+      "maximum_irrigation_capacity_people": 31184.41231155078,
+      "maximum_land_improvement_capacity_people": 4206447.168762928,
+      "maximum_population_capacity_development_100_people": 4826960.528708789,
+      "province": "bomokandi_province"
+    },
+    {
+      "location_tag": "charrua",
+      "macro_region": "south_america",
+      "maximum_infrastructure_capacity_people": 3389010.0107202856,
+      "maximum_irrigation_capacity_people": 30481.0313689957,
+      "maximum_land_improvement_capacity_people": 3358528.97935129,
+      "maximum_population_capacity_development_100_people": 3872261.2620603214,
+      "province": "guenoa_province"
+    },
+    {
+      "location_tag": "yi",
+      "macro_region": "south_america",
+      "maximum_infrastructure_capacity_people": 3367678.28691005,
+      "maximum_irrigation_capacity_people": 16524.639185247965,
+      "maximum_land_improvement_capacity_people": 3351153.647724802,
+      "maximum_population_capacity_development_100_people": 3848263.0727738063,
+      "province": "guenoa_province"
+    },
+    {
+      "location_tag": "yacegua",
+      "macro_region": "south_america",
+      "maximum_infrastructure_capacity_people": 3230981.0041308603,
+      "maximum_irrigation_capacity_people": 36659.52418842781,
+      "maximum_land_improvement_capacity_people": 3194321.4799424326,
+      "maximum_population_capacity_development_100_people": 3677603.6296472177,
+      "province": "guenoa_province"
+    },
+    {
+      "location_tag": "arachan",
+      "macro_region": "south_america",
+      "maximum_infrastructure_capacity_people": 3166224.020598992,
+      "maximum_irrigation_capacity_people": 0.0,
+      "maximum_land_improvement_capacity_people": 3166224.020598992,
+      "maximum_population_capacity_development_100_people": 3604752.023173866,
+      "province": "guenoa_province"
+    },
+    {
+      "location_tag": "kotto",
+      "macro_region": "central_africa",
+      "maximum_infrastructure_capacity_people": 3149471.562104289,
+      "maximum_irrigation_capacity_people": 148263.0267958091,
+      "maximum_land_improvement_capacity_people": 3001208.53530848,
+      "maximum_population_capacity_development_100_people": 3602780.507367325,
+      "province": "djemah_province"
+    },
+    {
+      "location_tag": "isiro",
+      "macro_region": "central_africa",
+      "maximum_infrastructure_capacity_people": 2969581.763488806,
+      "maximum_irrigation_capacity_people": 20735.22495052407,
+      "maximum_land_improvement_capacity_people": 2948846.538538282,
+      "maximum_population_capacity_development_100_people": 3400404.4839249067,
+      "province": "bomokandi_province"
+    },
+    {
+      "location_tag": "bosobolo",
+      "macro_region": "central_africa",
+      "maximum_infrastructure_capacity_people": 2966942.571617645,
+      "maximum_irrigation_capacity_people": 41545.69102602174,
+      "maximum_land_improvement_capacity_people": 2925396.8805916235,
+      "maximum_population_capacity_development_100_people": 3397435.3930698507,
+      "province": "boali_province"
+    },
+    {
+      "location_tag": "guatacuba",
+      "macro_region": "south_america",
+      "maximum_infrastructure_capacity_people": 2973148.9323006724,
+      "maximum_irrigation_capacity_people": 15485.092317497087,
+      "maximum_land_improvement_capacity_people": 2957663.8399831755,
+      "maximum_population_capacity_development_100_people": 3387542.5488382564,
+      "province": "upper_tocantins_province"
+    },
+    {
+      "location_tag": "bangui",
+      "macro_region": "central_africa",
+      "maximum_infrastructure_capacity_people": 2792562.175993134,
+      "maximum_irrigation_capacity_people": 66870.58177001549,
+      "maximum_land_improvement_capacity_people": 2725691.5942231184,
+      "maximum_population_capacity_development_100_people": 3201257.4479922755,
+      "province": "boali_province"
+    },
+    {
+      "location_tag": "pahotcha",
+      "macro_region": "north_america",
+      "maximum_infrastructure_capacity_people": 2657241.350322047,
+      "maximum_irrigation_capacity_people": 2492.164825724229,
+      "maximum_land_improvement_capacity_people": 2654749.1854963223,
+      "maximum_population_capacity_development_100_people": 3032146.5191123025,
+      "province": "iowa_province"
+    },
+    {
+      "location_tag": "nodaway",
+      "macro_region": "north_america",
+      "maximum_infrastructure_capacity_people": 2570915.264921014,
+      "maximum_irrigation_capacity_people": 100.14493713488326,
+      "maximum_land_improvement_capacity_people": 2570815.1199838794,
+      "maximum_population_capacity_development_100_people": 2942904.673036141,
+      "province": "nodaway_province"
+    },
+    {
+      "location_tag": "kiosaquay",
+      "macro_region": "north_america",
+      "maximum_infrastructure_capacity_people": 2598321.1918519232,
+      "maximum_irrigation_capacity_people": 2742.33483784882,
+      "maximum_land_improvement_capacity_people": 2595578.8570140745,
+      "maximum_population_capacity_development_100_people": 2942236.3408334134,
+      "province": "iowa_province"
+    },
+    {
+      "location_tag": "arraias",
+      "macro_region": "south_america",
+      "maximum_infrastructure_capacity_people": 2544803.2897571023,
+      "maximum_irrigation_capacity_people": 27770.49937557926,
+      "maximum_land_improvement_capacity_people": 2517032.790381523,
+      "maximum_population_capacity_development_100_people": 2905653.70097674,
+      "province": "upper_tocantins_province"
+    },
+    {
+      "location_tag": "iowa",
+      "macro_region": "north_america",
+      "maximum_infrastructure_capacity_people": 2521559.1016000533,
+      "maximum_irrigation_capacity_people": 1187.2581427600826,
+      "maximum_land_improvement_capacity_people": 2520371.843457293,
+      "maximum_population_capacity_development_100_people": 2879503.98930006,
+      "province": "iowa_province"
+    },
+    {
+      "location_tag": "ita_cuara",
+      "macro_region": "south_america",
+      "maximum_infrastructure_capacity_people": 2513848.5412812973,
+      "maximum_irrigation_capacity_people": 21793.88468666918,
+      "maximum_land_improvement_capacity_people": 2492054.656594628,
+      "maximum_population_capacity_development_100_people": 2870829.6089414596,
+      "province": "guenoa_province"
+    },
+    {
+      "location_tag": "nudarcha",
+      "macro_region": "north_america",
+      "maximum_infrastructure_capacity_people": 2439783.73791292,
+      "maximum_irrigation_capacity_people": 4221.438366329971,
+      "maximum_land_improvement_capacity_people": 2435562.29954659,
+      "maximum_population_capacity_development_100_people": 2787506.7051520348,
+      "province": "nodaway_province"
+    },
+    {
+      "location_tag": "dolkabaya",
+      "macro_region": "north_america",
+      "maximum_infrastructure_capacity_people": 2341333.451226292,
+      "maximum_irrigation_capacity_people": 2341333.451226292,
+      "maximum_land_improvement_capacity_people": 0.0,
+      "maximum_population_capacity_development_100_people": 2735250.132629579,
+      "province": "guwevkabaya_province"
+    },
+    {
+      "location_tag": "kajkwakratxi",
+      "macro_region": "south_america",
+      "maximum_infrastructure_capacity_people": 2327334.198346321,
+      "maximum_irrigation_capacity_people": 18022.28914010429,
+      "maximum_land_improvement_capacity_people": 2309311.9092062167,
+      "maximum_population_capacity_development_100_people": 2661000.973139611,
+      "province": "juruena_province"
+    },
+    {
+      "location_tag": "bomokandi",
+      "macro_region": "central_africa",
+      "maximum_infrastructure_capacity_people": 2216315.934068857,
+      "maximum_irrigation_capacity_people": 33923.06501178333,
+      "maximum_land_improvement_capacity_people": 2182392.8690570737,
+      "maximum_population_capacity_development_100_people": 2536105.4258274646,
+      "province": "bomokandi_province"
+    },
+    {
+      "location_tag": "apure",
+      "macro_region": "south_america",
+      "maximum_infrastructure_capacity_people": 2231040.76898889,
+      "maximum_irrigation_capacity_people": 199218.07636861218,
+      "maximum_land_improvement_capacity_people": 2031822.692620278,
+      "maximum_population_capacity_development_100_people": 2531295.865112501,
+      "province": "apure_province"
+    },
+    {
+      "location_tag": "wimihsoorita",
+      "macro_region": "north_america",
+      "maximum_infrastructure_capacity_people": 2227448.382474826,
+      "maximum_irrigation_capacity_people": 0.0,
+      "maximum_land_improvement_capacity_people": 2227448.382474826,
+      "maximum_population_capacity_development_100_people": 2525004.4302841793,
+      "province": "nodaway_province"
+    },
+    {
+      "location_tag": "araicuahita",
+      "macro_region": "south_america",
+      "maximum_infrastructure_capacity_people": 2184130.5540254447,
+      "maximum_irrigation_capacity_people": 0.0,
+      "maximum_land_improvement_capacity_people": 2184130.5540254447,
+      "maximum_population_capacity_development_100_people": 2499896.8732786253,
+      "province": "guenoa_province"
+    },
+    {
+      "location_tag": "ikuiapa",
+      "macro_region": "south_america",
+      "maximum_infrastructure_capacity_people": 2164249.54233477,
+      "maximum_irrigation_capacity_people": 9473.804747850438,
+      "maximum_land_improvement_capacity_people": 2154775.737586919,
+      "maximum_population_capacity_development_100_people": 2477530.735126616,
+      "province": "cuiaba_province"
+    },
+    {
+      "location_tag": "bohan",
+      "macro_region": "south_america",
+      "maximum_infrastructure_capacity_people": 2074951.9758480564,
+      "maximum_irrigation_capacity_people": 3239.6007082558144,
+      "maximum_land_improvement_capacity_people": 2071712.3751398006,
+      "maximum_population_capacity_development_100_people": 2353445.9728290634,
+      "province": "la_plata_province"
+    }
+  ],
+  "unique_location_count": 20929
+}

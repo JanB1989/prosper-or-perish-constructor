@@ -1,19 +1,19 @@
-﻿version: 2
+version: 2
 tag: chili_plantation
 building:
   key: chili_plantation
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_chili_plantation_base_chili
-    - name: slot_1
-      methods:
-        - pp_chili_plantation_no_drying
-        - pp_chili_plantation_sun_drying_mats
+  - name: slot_0
+    methods:
+    - pp_chili_plantation_base_chili
+  - name: slot_1
+    methods:
+    - pp_chili_plantation_no_drying
+    - pp_chili_plantation_sun_drying_mats
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.28
     max_levels = farm_capacity_max_chili_plantation
@@ -60,6 +60,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_chili_plantation = -1
+      local_population_capacity = -10
     }
 
     modifier = {
@@ -79,7 +80,6 @@ icon:
   output_dds: chili_plantation.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a chili plantation, transparent background. Center harvested red chili peppers spread on woven drying mats, a shallow wicker basket filled with chilies, small chili plants or leafy stems, and a simple hand sickle or field knife. Use simplified readable shapes, visible painterly brushwork, softly outlined historical UI art, muted straw and wicker browns with warm red chili accents, no text, no frame, not photorealistic, not cartoonish.
-
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
@@ -87,7 +87,7 @@ evaluation:
     amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_chili_plantation_base_chili:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked chili output after the high-base rebalance.
     pp_chili_plantation_sun_drying_mats:

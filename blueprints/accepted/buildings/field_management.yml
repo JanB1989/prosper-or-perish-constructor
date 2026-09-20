@@ -1,0 +1,71 @@
+version: 2
+tag: field_management
+building:
+  key: field_management
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_field_management_maintenance
+  possible_production_methods: []
+  body: |-
+    is_foreign = no
+    max_levels = pp_wb_cap_field_management
+    increase_per_level_cost = 0.40
+    pop_type = peasants
+    employment_size = 0.50
+    price = pp_field_management_price
+    category = infrastructure_category
+    custom_tags = { pp_food_security_priority }
+    icon = field_management
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      always = yes
+    }
+
+    construction_demand = village_construction
+
+    unique_production_methods = {
+      pp_field_management_maintenance = {
+        tools = 0.05
+        category = building_maintenance
+      }
+    }
+
+    raw_modifier = {
+      local_population_capacity = 2.1
+    }
+
+    modifier = {
+    }
+
+    forbidden_for_estates = no
+    ai_forbid_shutdown = yes
+localization:
+  entries:
+    field_management: Field Management
+    field_management_desc: Rotations, manuring, marling and terracing raise how many people the existing fields can feed. Each level is a lasting improvement of the land already under the plough.
+    field_management_slot_0: Maintenance
+    pp_field_management_maintenance: Field Stewards
+    pp_field_management_price: Field Management Price
+prices:
+- key: pp_field_management_price
+  body: '{gold = 75}'
+icon:
+  source_png: ../assets/icons/field_management.png
+  output_dds: field_management.dds
+  size: 512
+  prompt: EU5-inspired detailed historic bitmap cutout for Field Management on a perfectly flat magenta chroma-key background. Show strip fields under rotation, a marl pit, manure carts, a plough team and a steward with a tally stick. Material-rich painterly three-quarter-view UI art, no text, no frame, no modern machinery.
+evaluation:
+  production_methods:
+    pp_field_management_maintenance:
+      allow_rules:
+        profit_percent: Land clearance is capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Clearing crews provide light ongoing maintenance rather than full worked production.
+        output_throughput: Land clearance provides capacity rather than a directly traded good.

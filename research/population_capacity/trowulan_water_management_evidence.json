@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "id": "trowulan_managed_water_system",
+  "url": "https://whc.unesco.org/en/tentativelists/5466/",
+  "source_version": "Indonesian Ministry of Culture and Tourism tentative-list submission, 2009-10-06",
+  "source_family": "Trowulan archaeological survey synthesis",
+  "cached_web_extract": "artifacts/data/population_capacity/repair_sources/trowulan_unesco_2009.web.json",
+  "sha256_web_extract": "9be315230bba4d33c24e8c497682e9faad80908851769074907f04d906205764",
+  "cache_note": "Search-tool extraction; direct origin fetch returned a challenge page and is not treated as source content.",
+  "license": "Source reuse terms not established; research citation and local extraction only.",
+  "historical_years": [
+    1293,
+    1500
+  ],
+  "observations": {
+    "city_site_extent_km2": 99,
+    "city_extent_role": "mixed urban/ritual/industrial/agricultural archaeological footprint, not cultivated hectares",
+    "water_mechanisms": [
+      "canals",
+      "reservoirs",
+      "flood control",
+      "dry-season water management"
+    ],
+    "drought_months_per_year_range": [
+      4,
+      6
+    ]
+  },
+  "assignment": {
+    "location_tag": "trowulan",
+    "dimensions": [
+      "field_maintenance",
+      "water_management",
+      "cultivation_intensity",
+      "coordination"
+    ],
+    "scores": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "development_range": [
+      60,
+      85
+    ],
+    "water_served_fraction_range": [
+      0.5,
+      0.9
+    ],
+    "inference": "Same maintained cooperative/intensive system assessment range as Bali; scores and service fraction are inferred game mappings, not source measurements. Existing cultivated hectares retained."
+  },
+  "exclusions": [
+    "Do not turn the 99 km2 city footprint into 99 km2 of farmland.",
+    "No province-wide archaeological coverage inferred from this site.",
+    "No population fitting or additional harvest assumed."
+  ]
+}

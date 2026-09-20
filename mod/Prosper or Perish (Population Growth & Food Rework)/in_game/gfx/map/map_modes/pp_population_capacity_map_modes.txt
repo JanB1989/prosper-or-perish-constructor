@@ -14,14 +14,14 @@
 @data_edge_color_mult = 0
 @data_before_lighting_blend = 0.5
 @data_after_lighting_blend = 0.5
-@pp_population_capacity_very_low = 159
-@pp_population_capacity_low = 318
-@pp_population_capacity_middle = 477
-@pp_population_capacity_high = 636
-@pp_population_capacity_strong = 795
-@pp_population_capacity_very_strong = 994
-@pp_population_capacity_exceptional = 1232
-@pp_population_capacity_cap = 1590
+@pp_population_capacity_very_low = 46
+@pp_population_capacity_low = 92
+@pp_population_capacity_middle = 137
+@pp_population_capacity_high = 183
+@pp_population_capacity_strong = 229
+@pp_population_capacity_very_strong = 286
+@pp_population_capacity_exceptional = 355
+@pp_population_capacity_cap = 458
 @pp_population_growth_negative_cap = -0.007
 @pp_population_growth_negative_mid = -0.002
 @pp_population_growth_neutral_low = -0.0005
@@ -62,7 +62,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_very_low
-					divide = 159
+					divide = 46
 					max = 1
 					min = 0
 				}
@@ -78,7 +78,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_low
-					divide = 159
+					divide = 45
 					max = 1
 					min = 0
 				}
@@ -94,7 +94,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_middle
-					divide = 159
+					divide = 46
 					max = 1
 					min = 0
 				}
@@ -110,7 +110,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_high
-					divide = 159
+					divide = 46
 					max = 1
 					min = 0
 				}
@@ -126,7 +126,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_strong
-					divide = 199
+					divide = 57
 					max = 1
 					min = 0
 				}
@@ -142,7 +142,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_very_strong
-					divide = 238
+					divide = 69
 					max = 1
 					min = 0
 				}
@@ -158,7 +158,7 @@ pp_population_capacity = {
 				factor = {
 					value = location_max_population
 					subtract = @pp_population_capacity_exceptional
-					divide = 358
+					divide = 103
 					max = 1
 					min = 0
 				}

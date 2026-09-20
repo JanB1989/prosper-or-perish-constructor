@@ -1,0 +1,14 @@
+﻿ha1300_fertility_name = { type = location
+text = { localization_key = HA1300_FERTILITY_VERY_LOW trigger = { has_variable = ha1300_fertility var:ha1300_fertility = 1 } }
+text = { localization_key = HA1300_FERTILITY_LOW trigger = { has_variable = ha1300_fertility var:ha1300_fertility = 2 } }
+text = { localization_key = HA1300_FERTILITY_MODERATE trigger = { has_variable = ha1300_fertility var:ha1300_fertility = 3 } }
+text = { localization_key = HA1300_FERTILITY_HIGH trigger = { has_variable = ha1300_fertility var:ha1300_fertility = 4 } }
+text = { localization_key = HA1300_FERTILITY_VERY_HIGH trigger = { has_variable = ha1300_fertility var:ha1300_fertility = 5 } }
+text = { localization_key = HA1300_FERTILITY_UNKNOWN fallback = yes } }
+ha1300_fertility_desc = { type = location
+text = { localization_key = HA1300_FERTILITY_VERY_LOW_DESC trigger = { has_variable = ha1300_fertility var:ha1300_fertility = 1 } }
+text = { localization_key = HA1300_FERTILITY_LOW_DESC trigger = { has_variable = ha1300_fertility var:ha1300_fertility = 2 } }
+text = { localization_key = HA1300_FERTILITY_MODERATE_DESC trigger = { has_variable = ha1300_fertility var:ha1300_fertility = 3 } }
+text = { localization_key = HA1300_FERTILITY_HIGH_DESC trigger = { has_variable = ha1300_fertility var:ha1300_fertility = 4 } }
+text = { localization_key = HA1300_FERTILITY_VERY_HIGH_DESC trigger = { has_variable = ha1300_fertility var:ha1300_fertility = 5 } }
+text = { localization_key = HA1300_FERTILITY_UNKNOWN_DESC fallback = yes } }

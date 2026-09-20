@@ -1,0 +1,55 @@
+﻿ha1300_topo_rolling = {
+	color = ha1300_topography_rolling
+	movement_cost = 1.0
+	vegetation_density = 1.0
+	weather_front_strength_change_percent = 0 # -0.08 #every FRONT_DEGRADATION_DISTANCE_FOR_TOPOGRAPHY pixels moved
+	weather_cyclone_strength_change_percent = 0
+	weather_tornado_strength_change_percent = 0
+
+	audio_tags = {
+		masDataTopologyElevation = 0.1
+	}
+	debug_color = rgb { 184 162 95 } # for topology_screenshot mapmode
+}
+
+ha1300_topo_valleys = {
+	color = ha1300_topography_valleys
+	movement_cost = 1.0
+	vegetation_density = 1.0
+	weather_front_strength_change_percent = 0 # -0.08 #every FRONT_DEGRADATION_DISTANCE_FOR_TOPOGRAPHY pixels moved
+	weather_cyclone_strength_change_percent = 0
+	weather_tornado_strength_change_percent = 0
+
+	audio_tags = {
+		masDataTopologyElevation = 0.1
+	}
+	debug_color = rgb { 143 175 103 } # for topology_screenshot mapmode
+}
+
+ha1300_topo_floodplains = {
+	color = ha1300_topography_floodplains
+	movement_cost = 1.0
+	vegetation_density = 1.0
+	weather_front_strength_change_percent = 0 # -0.08 #every FRONT_DEGRADATION_DISTANCE_FOR_TOPOGRAPHY pixels moved
+	weather_cyclone_strength_change_percent = 0
+	weather_tornado_strength_change_percent = 0
+
+	audio_tags = {
+		masDataTopologyElevation = 0.1
+	}
+	debug_color = rgb { 60 160 167 } # for topology_screenshot mapmode
+}
+
+ha1300_topo_deltas = {
+	color = ha1300_topography_deltas
+	movement_cost = 1.0
+	vegetation_density = 1.0
+	weather_front_strength_change_percent = 0 # -0.08 #every FRONT_DEGRADATION_DISTANCE_FOR_TOPOGRAPHY pixels moved
+	weather_cyclone_strength_change_percent = 0
+	weather_tornado_strength_change_percent = 0
+
+	audio_tags = {
+		masDataTopologyElevation = 0.1
+	}
+	debug_color = rgb { 78 118 204 } # for topology_screenshot mapmode
+}

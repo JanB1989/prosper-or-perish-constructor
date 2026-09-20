@@ -763,30 +763,6 @@ def test_compile_free_building_level_modifiers_updates_without_clobbering(tmp_pa
     assert "TRY_INJECT:local_governor" in building_types_text
 
 
-def test_geography_local_output_neutralizers_match_vanilla_baselines() -> None:
-    repo = Path(__file__).resolve().parents[1]
-    load_order_path = repo / "constructor.load_order.toml"
-    if not load_order_path.is_file():
-        pytest.skip("constructor.load_order.toml is unavailable")
-    try:
-        baselines = load_modifier_baseline_resolver(repo)
-    except (FileNotFoundError, OSError):
-        pytest.skip("vanilla install is unavailable for geography output neutralizer test")
-
-    mod_root = repo / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
-    targets = {
-        "topography": COMPILE_TOPOGRAPHY_RELATIVE,
-        "vegetation": COMPILE_VEGETATION_RELATIVE,
-        "climate": COMPILE_CLIMATE_RELATIVE,
-    }
-    for factor, relative_path in targets.items():
-        expected = local_output_neutralizer_updates(
-            baselines,
-            factor=factor,
-            inner_header="location_modifier",
-        )
-        actual = _compiled_local_output_neutralizers(mod_root / relative_path)
-        assert actual == expected
 
 
 def test_audit_compile_modifier_baselines_covers_compiled_targets() -> None:

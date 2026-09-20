@@ -2,7 +2,7 @@
 REPLACE:irrigation_systems = {
   audio_tier = 1
   is_foreign = no
-  max_levels = irrigant_cap
+  max_levels = pp_wb_cap_irrigation_systems
   increase_per_level_cost = 0.30
   pop_type = peasants
   price = pp_irrigation_systems_price
@@ -15,8 +15,13 @@ REPLACE:irrigation_systems = {
   megalopolis = yes
   location_potential = {
     OR = {
-      has_river = yes
+      OR = { has_location_modifier = river_flowing_through_1 has_location_modifier = river_flowing_through_2 has_location_modifier = river_flowing_through_3 has_location_modifier = river_flowing_through_4 has_location_modifier = river_flowing_through_5 }
       is_adjacent_to_lake = yes
+      OR = { topography = ha1300_topo_deltas topography = ha1300_topo_floodplains topography = ha1300_topo_valleys }
+      AND = {
+        is_coastal = yes
+        OR = { topography = flatland topography = wetlands }
+      }
     }
   }
   build_time = infrastructure_build_time
@@ -30,8 +35,7 @@ REPLACE:irrigation_systems = {
   }
   construction_demand = village_construction
   raw_modifier = {
-    farm_capacity_from_irrigation_systems = 0.60
-    local_population_capacity = 9.81
+    local_population_capacity = 1.1
   }
 
   modifier = {

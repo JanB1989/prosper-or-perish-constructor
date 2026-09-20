@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "status": "frozen before annual replay; not accepted",
+  "source": {
+    "source_id": "fao_neglected_crops_1994",
+    "title": "Neglected crops: 1492 from a different perspective",
+    "citation_url": "https://www.fao.org/docrep/018/t0646e/t0646e.pdf",
+    "object_url": "https://www.fao.org/docrep/018/t0646e/t0646e.pdf",
+    "object_sha256": "ea89b8329ea2bf9350b43a859ea47272648b769b6995ca97db36b39fa657a2f7",
+    "role": "Historical crop presence and colonial introduction; no population or yield fit"
+  },
+  "local_path": "artifacts/data/population_capacity/repair_sources/fao_1994_neglected_crops.pdf",
+  "negative_domains": [
+    {
+      "domain_id": "mesoamerican_old_world_cereals_before_colonial_introduction",
+      "country_codes": [
+        "MEX",
+        "GTM",
+        "BLZ",
+        "SLV",
+        "HND",
+        "NIC",
+        "CRI",
+        "PAN"
+      ],
+      "crops": [
+        "wheat",
+        "barley",
+        "rye",
+        "rice_dry",
+        "rice_wet"
+      ],
+      "interpretation": "FAO 1994 printed pp. 25 and 29 (PDF 46/50) identifies Iberian colonial introduction of wheat, barley, rye and rice. This extension covers Mexico and mainland Central America using pinned Natural Earth country geometry; it makes no Greenland/Norse or Canada/United States claim. Oryza keys are not Zizania. Original South American exclusions remain in the baseline."
+    }
+  ],
+  "records": [
+    {
+      "evidence_id": "fao_mesoamerican_maize_tradition_anahuac",
+      "location_tags": [
+        "chalco",
+        "xochimilco",
+        "tlacopan",
+        "azcapotzalco",
+        "tenochtitlan"
+      ],
+      "crops": [
+        "maize"
+      ],
+      "evidence_state": "known_available",
+      "attested_by_year": 1337,
+      "source_id": "fao_neglected_crops_1994",
+      "source_object_sha256": "ea89b8329ea2bf9350b43a859ea47272648b769b6995ca97db36b39fa657a2f7",
+      "source_locator": "Printed p. 25 / PDF p. 46: indigenous maize farming in the established Mesoamerican agricultural tradition preceding introduced wheat",
+      "geographic_basis": "Explicit named agricultural-system crosswalk to Anahuac in central Mesoamerica; no blanket maize availability assigned to northern Mexican hunter-gatherer areas. Crop presence is regional historical inference, not a dated individual field excavation.",
+      "interpretation": "Maize was part of the pre-Columbian agricultural system. Availability only; no additional hectares, double harvest, attained-yield or population floor. The 1337 date denotes the modeled pre-contact state, not a precisely dated archaeological maize find."
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "id": "parisis_maintained_open_fields",
+  "source": {
+    "author": "Charles Higounet",
+    "title": "L'assolement triennal dans la plaine de France au XIIIe si\u00e8cle",
+    "year": 1956,
+    "doi": "10.3406/crai.1956.10682",
+    "url": "https://www.persee.fr/doc/crai_0065-0536_1956_num_100_4_10682",
+    "evidence_family": "Chaalis/Vaulerent estate archival research",
+    "accessed": "2026-09-07",
+    "access_scope": "Publisher's text of page 507 and article metadata; full PDF returned HTTP 403. No claim to have inspected all six pages.",
+    "license": "Reuse license not established; citation and research interpretation only.",
+    "cached_web_extract": "artifacts/data/population_capacity/repair_sources/parisis_yuan_source_extract.web.json",
+    "cached_web_extract_sha256": "207d9da22bfa60bac684cfa96ef4a914c44dd00b9d8acb89818cd7ce6ab8482a",
+    "cache_note": "Search-tool extraction, not original publisher HTML or a full PDF. The second article in the same extraction is bibliographic context only."
+  },
+  "interpretation": "Archival research establishes maintained cereal cultivation and three-field rotation in the medieval Parisis. The estate is a system analogue, not a survey of every game location. Apply the common maintained open-field assessment to existing cultivated land; do not infer hectares or attained yields from population, estate size or buildings.",
+  "assignment": {
+    "province": "pays_france_province",
+    "valid_years": [
+      1200,
+      1400
+    ],
+    "scores": [
+      3,
+      0,
+      3,
+      2
+    ],
+    "development_range": [
+      37.5,
+      62.5
+    ],
+    "water_served_fraction_range": [
+      0,
+      0
+    ],
+    "range_role": "Inferred game assessment, not measured historical development. Test low, central and high with every other assignment fixed."
+  },
+  "exclusions": [
+    "No irrigation bonus or extra crop calendar multiplier.",
+    "No additional cultivated hectares or estate-area extrapolation.",
+    "No claim that a peaceful frozen-economy control reproduces historical famine, plague or war.",
+    "Urban food processing and distribution remain cookery/victuals-market contributions."
+  ]
+}

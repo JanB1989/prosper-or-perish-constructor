@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "id": "cusco_preimperial_agriculture",
+  "source": {
+    "author": "R. Alan Covey",
+    "title": "How the Incas Built Their Heartland",
+    "year": 2006,
+    "doi": "10.3998/mpub.88668",
+    "url": "https://press.umich.edu/Books/H/How-the-Incas-Built-Their-Heartland",
+    "download_url": "https://www.fulcrum.org/ebooks/h128nj10q/download?locale=en",
+    "cached_pdf": "artifacts/data/population_capacity/repair_sources/covey_2006_inca_heartland.pdf",
+    "sha256": "c5c19a3a038e435bc1cbd0de020a202395ec1cc3d0b8245018e1270fd6d0383a",
+    "license": "Publisher provides open-access download; copyright University of Michigan 2006, no separate reuse license established.",
+    "pages_read": [
+      8,
+      9,
+      122,
+      124,
+      125,
+      173,
+      272
+    ]
+  },
+  "interpretation": "Early Cusco agriculture included maintained canals and terraces before imperial expansion. Northern basin terraces covered hundreds of hectares. Sacred Valley communities also used higher-elevation dry farming and herding; later valley-bottom maize development cannot all be backdated to 1337.",
+  "quantitative_evidence": [
+    {
+      "kind": "preimperial northern Cusco terraces",
+      "extent": "hundreds of hectares",
+      "page": 124,
+      "role": "order-of-magnitude check, not a complete game-location cultivated-area total"
+    },
+    {
+      "kind": "later imperial Pisaq terraces",
+      "area_ha": 65,
+      "maize_yield_kg_ha": 3000,
+      "pages": [
+        173,
+        272
+      ],
+      "role": "progression/attained-yield context, excluded from automatic starting assignment"
+    }
+  ],
+  "next_model_action": "Audit zero-crop Pisaq against terrace/crop physics and dated cultivated extent. Do not substitute later imperial hectares or populations for current support.",
+  "exclusions": [
+    "No whole-province irrigation fraction inferred from one site.",
+    "No population fitting.",
+    "No automatic modern or imperial maize yield at game start."
+  ]
+}

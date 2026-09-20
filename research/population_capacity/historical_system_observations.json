@@ -1,0 +1,326 @@
+{
+  "schema_version": 1,
+  "status": "research observations; no automatic capacity buffs or fitted population targets",
+  "observations": [
+    {
+      "id": "angkor_managed_rice_landscape",
+      "source_id": "klassen_2021_angkor_provisioning.pdf",
+      "url": "https://doi.org/10.1007/s10816-021-09535-5",
+      "source_family": "Greater Angkor archaeological survey",
+      "source_years": [
+        889,
+        1300
+      ],
+      "mechanism": "managed ricefields, ponds, embankments, transport and collective maintenance",
+      "game_channel": "active improvements; development represents effectiveness without counting hectares twice",
+      "quantity": {
+        "metric": "ricefield_area",
+        "lower_bound": 1000,
+        "unit": "km2",
+        "scope": "Angkor Metropolitan Area",
+        "locator": "The Greater Angkor Region, journal page 768"
+      },
+      "diagnostic_locations": [
+        "angkor"
+      ],
+      "spatial_status": "game location is a diagnostic pointer; survey-to-game footprint crosswalk remains unresolved",
+      "uncertainty": "mapped field traces need dated occupancy and maintenance; study cites possible decline after the late thirteenth century; one game location cannot be assumed to equal the entire study area",
+      "calendar_constraint": "Zhou's three-to-four-harvest report may describe staggered harvests across the landscape; it does not establish three or four annual crops on every hectare",
+      "independent_demographic_validation": false,
+      "independence_note": "field archaeology is distinct from HYDE, but the paper's demographic reconstruction reuses related settlement evidence"
+    },
+    {
+      "id": "taihu_rice_wheat_rotation",
+      "source_id": "liu_1991_south_china_rice.pdf",
+      "url": "https://idv.sinica.edu.tw/ectjliu/%E5%8A%89%E7%BF%A0%E6%BA%B6%E5%AD%B8%E8%A1%93%E8%91%97%E4%BD%9C/W6-%E7%B6%93%E6%BF%9F%E5%8F%B22pdf/1991Rice%20Culture%20in%20South%20China.pdf",
+      "supporting_urls": [
+        "https://yangtzebasin.whlib.ac.cn/CN/abstract/abstract10275.shtml",
+        "https://doi.org/10.13284/j.cnki.rddl.20250418"
+      ],
+      "source_family": "Chinese agricultural historical records",
+      "source_years": [
+        700,
+        1900
+      ],
+      "mechanism": "water-controlled wet rice with a winter wheat crop where climate, labour and drainage allow",
+      "game_channel": "documented starting infrastructure and development; subsequent calendar intensification through advances",
+      "diagnostic_locations": [
+        "wuxian",
+        "wujiang",
+        "kunshan",
+        "changshu",
+        "jiaxing",
+        "huating"
+      ],
+      "spatial_status": "Taihu diagnostic cases; not authority to apply a common intensity to the whole of China",
+      "uncertainty": "the occurrence of a rotation establishes availability, not its adoption share or a universal yield multiplier; the 1991 study focuses on 1500-1900",
+      "calendar_constraint": "rice-wheat is distinct from rice-rice; replace any existing calendar term instead of multiplying a second bonus on top",
+      "independent_demographic_validation": false
+    },
+    {
+      "id": "taihu_polder_drainage_network",
+      "source_id": "suzhou_2026_water_management.html",
+      "url": "https://doi.org/10.13284/j.cnki.rddl.20250418",
+      "source_family": "Chinese historical water-management records",
+      "source_years": [
+        893,
+        1279
+      ],
+      "mechanism": "interconnected embanked fields, dredged drainage channels, gates and maintained freshwater supply; reclamation can obstruct shared drainage",
+      "game_channel": "active land and water improvements; development for effective use and maintenance",
+      "diagnostic_locations": [
+        "wuxian",
+        "wujiang",
+        "kunshan",
+        "changshu",
+        "jiaxing",
+        "huating"
+      ],
+      "spatial_status": "named channels and historical maps establish a regional network; exact hectares and 1337 maintenance still unresolved",
+      "uncertainty": "the paper cites approximately 150,000 qing cultivated in Southern Song Pingjiang; do not convert into game hectares until historical qing, surveyed/tax area, territory and modern shoreline differences are resolved",
+      "calendar_constraint": "water management affects usable area and reliability; do not also award a second full yield gain for the same hydraulic improvement",
+      "independent_demographic_validation": false
+    },
+    {
+      "id": "northeast_china_dated_cropland_counterexample",
+      "source_id": "jia_2024_northeast_v2/metadata.json",
+      "url": "https://doi.org/10.6084/m9.figshare.25450468.v2",
+      "supporting_urls": [
+        "https://doi.org/10.5194/essd-16-4971-2024"
+      ],
+      "source_family": "Northeast Chinese land and household records",
+      "source_years": [
+        1000,
+        1600
+      ],
+      "mechanism": "cultivation concentrates in specific plains and retreats after disruption; extensive suitable land does not demonstrate inherited cultivated hectares",
+      "game_channel": "counterexample to a blanket China improvement; land-access sensitivity and later progression context",
+      "quantity": {
+        "metric": "reconstructed cropland area",
+        "value": 4350.15,
+        "unit": "km2",
+        "scope": "the study's three Northeast China provincial territories in 1300",
+        "locator": "workbook sheet 1300, area times percentage divided by 100"
+      },
+      "diagnostic_locations": [],
+      "spatial_status": "downloaded CGCS2000 1300, 1400 and 1600 polygons; 1300 crosswalk audited against canonical physical samples",
+      "uncertainty": "medieval estimates rely on households, garrisons and assumed land per worker; source excludes unrecorded temporary use/fallow and historical provincial polygons include water; neither reconstructed cultivation nor population is a capacity ceiling",
+      "independent_demographic_validation": false
+    },
+    {
+      "id": "yuan_cropland_reconstruction",
+      "source_id": "li_2018_yuan_cropland.html",
+      "url": "https://doi.org/10.1007/s11442-018-1576-8",
+      "source_family": "Chinese historical land and household records",
+      "source_years": [
+        1290,
+        1328
+      ],
+      "mechanism": "regional land reclamation, measured tax land and military agriculture",
+      "game_channel": "dated inherited land and development evidence; never a per-location population constraint",
+      "quantity": {
+        "metric": "cropland_area",
+        "value": 535.4,
+        "unit": "million modern mu",
+        "modern_mu_m2": 666.7,
+        "scope": "study territory, not modern or game China",
+        "locator": "Table 2, AD 1290 reconstruction"
+      },
+      "diagnostic_locations": [
+        "wuxian",
+        "changshu",
+        "xianju",
+        "ningguo",
+        "jiangning"
+      ],
+      "spatial_status": "historic provincial boundaries require a crosswalk",
+      "uncertainty": "reconstruction uses households and region-specific land-per-household relationships; only Henan, Jiangzhe and Jiangxi have the described 1314-1328 measurement records; Yuan-mu and modern mu must remain distinct",
+      "independent_demographic_validation": false
+    },
+    {
+      "id": "ming_cultivation_progression",
+      "source_id": "li_2020_ming_cropland.html",
+      "url": "https://doi.org/10.11821/dlyj020181315",
+      "source_family": "Chinese historical land and tax records",
+      "source_years": [
+        1393,
+        1583
+      ],
+      "mechanism": "clearing, recovery of abandoned cultivation and military farming",
+      "game_channel": "progression benchmarks; later land must not automatically enter 1337 capacity",
+      "quantity": {
+        "metric": "cropland_area",
+        "values": [
+          495.5,
+          754.3
+        ],
+        "unit": "million modern mu",
+        "modern_mu_m2": 666.7,
+        "scope": "paper's Ming study territory",
+        "locator": "Table 2"
+      },
+      "diagnostic_locations": [
+        "wuxian",
+        "changshu",
+        "xianju",
+        "ningguo"
+      ],
+      "spatial_status": "historic provincial boundaries require a crosswalk",
+      "uncertainty": "registered taxable land includes non-cropland; use corrected cultivated hectares, not uncorrected fiscal totals; geography and dating differ from the Yuan study",
+      "independent_demographic_validation": false
+    },
+    {
+      "id": "java_bali_irrigated_rice",
+      "source_id": "water_rice_early_java_bali.pdf",
+      "url": "https://pure.mpg.de/rest/items/item_922657_3/component/file_3636125/content",
+      "source_family": "Old Javanese and Balinese inscriptions",
+      "source_years": [
+        800,
+        1500
+      ],
+      "mechanism": "wet-rice fields, canal construction and collective maintenance attested by inscriptions",
+      "game_channel": "starting irrigation and land improvements in documented districts; development for coordination",
+      "diagnostic_locations": [],
+      "spatial_status": "site-level inscription crosswalk pending; no whole-Indonesia entitlement",
+      "uncertainty": "availability of an agricultural system does not supply its area, yield or island-wide adoption rate; cached asset is the complete edited book",
+      "independent_demographic_validation": false
+    },
+    {
+      "id": "nile_seasonal_basin_agriculture",
+      "source_id": "bowman_rogan_1999_egypt.pdf",
+      "url": "https://www.thebritishacademy.ac.uk/documents/3871/96p001.pdf",
+      "source_family": "Egyptian agricultural history",
+      "source_years": [
+        1000,
+        1800
+      ],
+      "mechanism": "seasonal Nile inundation, basin embankments and maintained canals",
+      "game_channel": "floodplain base opportunity plus active hydraulic improvements",
+      "diagnostic_locations": [
+        "cairo",
+        "alexandria"
+      ],
+      "spatial_status": "Nile floodplain required; Egypt region includes deserts outside the cultivated corridor",
+      "uncertainty": "rainfed yield can legitimately be zero; present cropland then requires a water-supported account; later perennial irrigation must not be granted at start",
+      "calendar_constraint": "single seasonal basin crop is distinct from later perennial multiple cropping",
+      "independent_demographic_validation": false
+    },
+    {
+      "id": "nile_basin_irrigation_annual_winter_crop",
+      "source_id": "borsch_2000_nile_irrigation.pdf",
+      "url": "https://doi.org/10.6082/M1R49NXD",
+      "source_family": "Mamluk irrigation chronicles",
+      "source_years": [
+        1200,
+        1500
+      ],
+      "mechanism": "annual Nile flood captured behind maintained basin dikes; canals and alluvial fertilization support a winter crop despite negligible rainfed yield",
+      "game_channel": "inherited active water-control improvements, with maintenance effectiveness reconciled against managed yields",
+      "quantity": {
+        "metric": "winter_crop_seed_to_yield_ratio",
+        "upper_bound": 10,
+        "unit": "harvested seed mass / sown seed mass",
+        "locator": "journal page 132, PDF page 2"
+      },
+      "diagnostic_locations": [
+        "cairo",
+        "alexandria"
+      ],
+      "spatial_status": "regional mechanism; no mapped basin hectares or per-location assignment",
+      "uncertainty": "up to 10 is not a mean yield; sowing rate, metrology, losses and basin footprint are needed before converting to people per hectare",
+      "calendar_constraint": "annual winter basin crop is distinct from summer lift irrigation; do not require rainfed support or assign a universal second crop",
+      "independent_demographic_validation": false
+    },
+    {
+      "id": "alexandria_canal_1310_expansion",
+      "source_id": "borsch_2014_maryut_basin.pdf",
+      "url": "https://www.ioa.uni-bonn.de/isl/de/forschung/publikationen/pdf-dateien-ask/ask-wp-14.pdf/@@download/file/ASK%20WP%2014.pdf",
+      "source_family": "Mamluk cadastral and irrigation records",
+      "source_years": [
+        1310,
+        1315
+      ],
+      "mechanism": "expanded canal service and lift irrigation around Alexandria, enabling cultivated land and summer crops",
+      "game_channel": "inherited active improvements by 1337; summer calendar only on documented served fields",
+      "quantity": {
+        "metric": "additional_cultivated_area",
+        "value": 630,
+        "unit": "km2",
+        "original_value": 100000,
+        "original_unit": "feddans",
+        "transformation": "author explicitly converts to 63000 hectares; divide by 100, do not substitute modern feddan",
+        "locator": "PDF page 27"
+      },
+      "diagnostic_locations": [
+        "alexandria"
+      ],
+      "spatial_status": "canal service region, not Alexandria game location; no geographic allocation yet",
+      "uncertainty": "approximate reported expansion; baseline and irrigated-area overlap must be reconciled; southeast Maryut interpretation is an explicit hypothesis contested by other scholarship",
+      "calendar_constraint": "not every additional hectare proves two food crops; cash crops and lift-animal fodder compete for land and water",
+      "independent_demographic_validation": false
+    },
+    {
+      "id": "upper_egypt_1315_basin_area",
+      "source_id": "borsch_2000_nile_irrigation.pdf",
+      "url": "https://knowledge.uchicago.edu/records/6gbs3-fah93",
+      "source_family": "Borsch interpretation of Rawk al-Nasiri 1315 and Willcocks basin hydraulics",
+      "source_years": [
+        1315,
+        1315
+      ],
+      "mechanism": "maintained seasonal basin fields; land and water accounting",
+      "game_channel": "active hydraulic field magnitudes; never a population target",
+      "quantity": {
+        "metric": "basin_area",
+        "estimate": 8400,
+        "unit": "km2",
+        "original_estimate": 2000000,
+        "original_unit": "modern feddans of 4200 m2 explicitly stated by author",
+        "conversion": "2,000,000 * 4,200 / 1,000,000 = 8,400 km2",
+        "scope": "Upper Egypt, not all Egypt or the Nile Delta",
+        "locator": "PDF page 4, printed p134; corroborating water-volume table PDF page 6, printed p136"
+      },
+      "uncertainty": "Author calls the computation rough. Game-province catchment matching remains unresolved; no automatic location allocation.",
+      "benchmark_role": "regional physical-area audit; same article water-volume calculation is not independent validation",
+      "limitations": [
+        "The author uses the modern area unit explicitly; do not substitute an assumed medieval feddan.",
+        "Upper Egypt boundary must be matched to game polygons before assigning location hectares.",
+        "The implied 8.4 billion m3 at one metre mean depth is the same computation, not an independent measured water budget."
+      ]
+    },
+    {
+      "id": "upper_egypt_1889_basin_sections",
+      "source_id": "willcocks_1889_upper_egypt_basins",
+      "url": "https://archive.org/details/egyptianirrigati00will",
+      "source_family": "Willcocks engineering surveys; related to Borsch hydraulic citations",
+      "source_years": [
+        1889,
+        1889
+      ],
+      "mechanism": "Separately mapped seasonal basins, high river berms and summer-irrigation tracts",
+      "game_channel": "Dated spatial check only; no automatic 1337 assignment",
+      "quantity": {
+        "metric": "seasonal_basin_area",
+        "estimate": 6142.1388,
+        "unit": "km2",
+        "original_estimate": 1462414,
+        "original_unit": "Egyptian acres / feddans, 4200 m2",
+        "scope": "Upper Egypt as tabulated in Table XVIII",
+        "locator": "Printed page71, scan leaf126"
+      },
+      "diagnostic_locations": [
+        "aswan",
+        "edfu",
+        "esna",
+        "asyut",
+        "minya",
+        "el_bahnasa"
+      ],
+      "spatial_status": "Basin section map obtained; game polygon crosswalk pending",
+      "uncertainty": "Later observation, not medieval extent or ceiling. Preserve linked2000-feddan discrepancies in total/summer entries; basin sums reconcile.",
+      "evidence_contract": "research/population_capacity/willcocks_1889_basin_evidence.json",
+      "independent_demographic_validation": false,
+      "independence_note": "Borsch uses Willcocks for hydraulic calculations; source family remains linked"
+    }
+  ]
+}

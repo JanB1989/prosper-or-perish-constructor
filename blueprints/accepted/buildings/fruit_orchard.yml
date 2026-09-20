@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: fruit_orchard
 upgrade_chain:
   family: fruit_orchard
@@ -11,17 +11,17 @@ building:
   mode: REPLACE
   source: pp_food_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_fruit_orchard_base_fruit
-    - name: slot_1
-      methods:
-        - pp_fruit_orchard_no_primary
-        - pp_fruit_orchard_maintenance
-    - name: slot_2
-      methods:
-        - pp_fruit_orchard_no_worker_victuals
-        - pp_fruit_orchard_worker_victuals
+  - name: slot_0
+    methods:
+    - pp_fruit_orchard_base_fruit
+  - name: slot_1
+    methods:
+    - pp_fruit_orchard_no_primary
+    - pp_fruit_orchard_maintenance
+  - name: slot_2
+    methods:
+    - pp_fruit_orchard_no_worker_victuals
+    - pp_fruit_orchard_worker_victuals
   possible_production_methods: []
   body: |2-
         audio_tier = 1
@@ -82,6 +82,7 @@ building:
         construction_demand = farm_constructions
         raw_modifier = {
           farm_capacity_from_fruit_orchard = -1
+          local_population_capacity = -5
         }
 
         modifier = {
@@ -97,7 +98,6 @@ localization:
     pp_fruit_orchard_no_primary: No Orchard Work
     pp_fruit_orchard_no_worker_victuals: No Household Victuals
     pp_fruit_orchard_worker_victuals: Household Victuals
-
 evaluation:
   allow_rules:
     profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
@@ -105,14 +105,14 @@ evaluation:
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_fruit_orchard_base_fruit:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
     pp_fruit_orchard_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_fruit_orchard_maintenance:
       production_efficiency: 1.05
     pp_fruit_orchard_worker_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

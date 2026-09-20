@@ -13,7 +13,6 @@ MAP_MODE_ROOT = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes"
 LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_building_adjustments_l_english.yml"
 FOOD_STORAGE_LOCALIZATION = MOD_ROOT / food_storage_gui.FOOD_STORAGE_LOCALIZATION
 CALIBRATION = ROOT / "tools" / "map_mode_scale_calibration.json"
-POPULATION_SIMULATION_DEPLOYMENT = ROOT / "artifacts" / "data" / "population_simulation" / "deployment.json"
 BUILDING_EFFICIENCY_SCRIPT_VALUE = (
     MOD_ROOT / "in_game" / "common" / "script_values" / "pp_building_efficiency_map_mode.txt"
 )
@@ -401,8 +400,6 @@ def test_population_capacity_scale_keeps_high_capacity_locations_distinguishable
     assert _thresholds(block, "location_max_population") == [
         *thresholds,
     ]
-    deployment = json.loads(POPULATION_SIMULATION_DEPLOYMENT.read_text(encoding="utf-8"))
-    assert thresholds[-1] == 2 * float(deployment["starting_capacity"]["maximum"])
     assert block.count("lerp = {") == 8
     assert block.count("legend_key =") == 9
     assert "@pp_population_capacity_map_cap" not in block

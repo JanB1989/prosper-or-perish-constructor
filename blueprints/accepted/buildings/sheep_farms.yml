@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: sheep_farms
 upgrade_chain:
   family: sheep_farms
@@ -11,13 +11,13 @@ building:
   mode: REPLACE
   source: pp_food_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_sheep_farm_base_wool
-    - name: slot_1
-      methods:
-        - pp_sheep_farm_no_primary
-        - pp_sheep_farm_maintenance
+  - name: slot_0
+    methods:
+    - pp_sheep_farm_base_wool
+  - name: slot_1
+    methods:
+    - pp_sheep_farm_no_primary
+    - pp_sheep_farm_maintenance
   possible_production_methods: []
   body: |2-
         audio_tier = 1
@@ -59,6 +59,7 @@ building:
         }
         raw_modifier = {
           farm_capacity_from_sheep_farms = -1
+          local_population_capacity = -2
         }
 
         modifier = {
@@ -74,7 +75,6 @@ localization:
     pp_sheep_farm_base_wool: Wool Pasture
     pp_sheep_farm_maintenance: Sheep Farm Maintenance
     pp_sheep_farm_no_primary: No Sheep Work
-
 evaluation:
   allow_rules:
     profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
@@ -82,10 +82,10 @@ evaluation:
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_sheep_farm_base_wool:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
     pp_sheep_farm_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_sheep_farm_maintenance:
       production_efficiency: 1.05

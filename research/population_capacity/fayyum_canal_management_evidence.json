@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "status": "frozen mechanism and inferred shared management range before simulation; unaccepted",
+  "source_family": "al-Nabulusi cadastral survey, modern scholarly edition and spatial reconstruction; related evidence",
+  "source_years": [1243, 1245],
+  "game_year": 1337,
+  "sources": [
+    {"url": "https://projects.history.qmul.ac.uk/ruralsocietyislam/database/i-1-the-village/", "path": "artifacts/data/population_capacity/repair_sources/fayyum_qmul_village.html", "sha256": "03ee963f7d2acc6e4666e812ccda49ac09915cba2cde2717481792a1148f936a", "locator": "Water Rights", "role": "canal system and local water allocation"},
+    {"url": "https://projects.history.qmul.ac.uk/ruralsocietyislam/map/", "path": "artifacts/data/population_capacity/repair_sources/fayyum_qmul_map.html", "sha256": "0ea96d4ed83cb05e51143f49ebe748a2660f5c92a0dcab30efc85d41f1b0cd57", "locator": "Villages of the Fayyum, 1243", "role": "historical landscape and mapping limitations"}
+  ],
+  "license": "No open redistribution license established for cached project pages; source links and derived findings only in handoff",
+  "mechanism": "Gravity-fed branch and feeder canals, weirs and village water allocations support maintained agriculture in the Fayyum depression. This is not conditional on a native game river flag.",
+  "selector": {"location_tag": ["faiyum"]},
+  "spatial_basis": "Named Faiyum game location at calibrated 29.328 N, 30.806 E; no population-derived selector or area allocation",
+  "assessment": {
+    "scores": [3, 4, 2, 3],
+    "development_range": [55, 85],
+    "water_served_fraction_range": [0.8, 1.0],
+    "numerical_basis": "Reuse the existing maintained Egyptian hydraulic-system game range. Numbers are inferred management and operational-coverage bounds, not measurements in the historical survey. Canal and basin techniques remain distinct source mechanisms."
+  },
+  "expected_effect": "Correct the generic agricultural analogue to maintained canal agriculture; change management effectiveness and incremental water support without adding hectares or future infrastructure",
+  "regression_case": "Complete Bahnasa province, unchanged/low/central/high at 100 and 200 years with all neighbouring assignments, population composition and food-building output fixed",
+  "exclusions": [
+    "No new cultivated hectares or allocation of the Upper Egypt 8,400 km2 estimate",
+    "No automatic additional annual crop or repeated canal/reservoir benefit",
+    "No higher-pop consumption reduction or additional urban food",
+    "No equivalence between medieval tribal affiliations and the native tribesmen population class"
+  ],
+  "uncertainty": [
+    "Continuity from mid-thirteenth-century evidence to 1337 is an inferred pre-plague scenario",
+    "The historical lake level differs from the modern one; extent reconstruction remains separate",
+    "The map combines historical texts, later surveys, modern elevation and revised canal routes; not every settlement is located",
+    "No attained yield estimate is imported, so the existing yield/development normalization remains unchanged"
+  ]
+}

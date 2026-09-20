@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: pomological_orchard
 upgrade_chain:
   family: fruit_orchard
@@ -11,19 +11,19 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_pomological_orchard_base_fruit
-    - name: slot_1
-      methods:
-        - pp_pomological_orchard_no_primary
-        - pp_pomological_orchard_grafted_rows
-    - name: slot_2
-      methods:
-        - pp_pomological_orchard_no_worker_victuals
-        - pp_pomological_orchard_worker_victuals
+  - name: slot_0
+    methods:
+    - pp_pomological_orchard_base_fruit
+  - name: slot_1
+    methods:
+    - pp_pomological_orchard_no_primary
+    - pp_pomological_orchard_grafted_rows
+  - name: slot_2
+    methods:
+    - pp_pomological_orchard_no_worker_victuals
+    - pp_pomological_orchard_worker_victuals
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.25
     pop_type = laborers
@@ -88,19 +88,20 @@ building:
 
     raw_modifier = {
       farm_capacity_from_pomological_orchard = -1
+      local_population_capacity = -5
     }
 
     modifier = {
         local_monthly_food = 3.0
     }
 advancements:
-  - key: pp_pomological_orchard
-    body: |2-
-      icon = pomological_orchard
-      age = age_5_absolutism
-      requires = scientific_revolution_advance
-      unlock_building = pomological_orchard
-      ai_weight = { add = 125 }
+- key: pp_pomological_orchard
+  body: |-
+    icon = pomological_orchard
+    age = age_5_absolutism
+    requires = scientific_revolution_advance
+    unlock_building = pomological_orchard
+    ai_weight = { add = 125 }
 localization:
   entries:
     pomological_orchard: Grafted Orchard
@@ -120,29 +121,28 @@ icon:
   output_dds: pomological_orchard.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a Pomological Orchard, transparent background. Center orderly rows of grafted fruit trees, pruning ladders, wooden trellises, crates of apples and pears, and a small nursery shed with paper ledgers. Warm daylight, early modern agricultural science, no text, no frame, no modern machinery, no steel factory imagery.
-
 evaluation:
   allow_rules:
     amortization_months: Upgraded former-food producer keeps a slower payback than global construction targets; revisit with the rural producer rebalance.
   production_methods:
     pp_pomological_orchard_base_fruit:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Passive orchard methods have little direct input cost; grafted rows carry the tier economy.
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_pomological_orchard_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Empty selector method intentionally produces no grafted-row output.
     pp_pomological_orchard_grafted_rows:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_pomological_orchard_no_worker_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Empty selector method intentionally produces no household victuals.
     pp_pomological_orchard_worker_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Household victuals are auxiliary worker food, not a standalone profit method.
         base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

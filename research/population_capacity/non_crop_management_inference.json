@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "status": "frozen model inference before scenario evaluation; not accepted",
+  "interpretation": "Crop-potential archetypes do not establish historical agricultural management where both related cropland reconstructions and dated irrigation are zero. Use explicit livelihood management uncertainty instead; named historical systems override this fallback.",
+  "applicability": {
+    "cropland_fraction_1300": 0,
+    "hyde_cropland_area_km2": 0,
+    "hyde_irrigated_area_km2": 0,
+    "finite_nonnegative_land_evidence_required": true
+  },
+  "source_family": "HYDE and LUH2 related land reconstructions; not independent evidence of absence",
+  "pastoral": {
+    "scores": [
+      1,
+      0,
+      1,
+      1
+    ],
+    "development_range": [
+      6.25,
+      31.25
+    ]
+  },
+  "foraging": {
+    "scores": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "development_range": [
+      0,
+      12.5
+    ]
+  },
+  "numerical_basis": "Shared ordinal game-management scale. Pastoral estimates retain field/feed maintenance, cultivation and coordination; foraging estimate retains coordination. These are inferred scenario bounds, not measured historical D. Hectares select applicability only and never scale D.",
+  "exclusions": [
+    "No population, population density, fitted capacity or survival target in rule",
+    "No automatic inference from missing land values",
+    "Zero reconstructed cropland is not proof of no cultivation; preserve inferred status and named overrides",
+    "No added land, water, food production or consumption changes"
+  ],
+  "baseline_diagnostic": "artifacts/data/population_simulation/repair_round_47/world/agricultural_management_without_dated_fields.csv"
+}

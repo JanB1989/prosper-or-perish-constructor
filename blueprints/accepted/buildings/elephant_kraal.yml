@@ -1,19 +1,19 @@
-﻿version: 2
+version: 2
 tag: elephant_kraal
 building:
   key: elephant_kraal
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_elephant_kraal_base_elephants
-    - name: slot_1
-      methods:
-        - pp_elephant_kraal_no_capture
-        - pp_elephant_kraal_kheddah_stockades
+  - name: slot_0
+    methods:
+    - pp_elephant_kraal_base_elephants
+  - name: slot_1
+    methods:
+    - pp_elephant_kraal_no_capture
+    - pp_elephant_kraal_kheddah_stockades
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.16
     max_levels = farm_capacity_max_elephant_kraal
@@ -60,6 +60,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_elephant_kraal = -1
+      local_population_capacity = -2
     }
 
     modifier = {
@@ -79,18 +80,17 @@ icon:
   output_dds: elephant_kraal.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for an Elephant Kraal, transparent background. Center a timber elephant stockade in a tropical forest clearing, one calm elephant partly inside the gate, sturdy wooden posts and rails, a raised mahout platform or training post, and bundles of fruit and fodder near the entrance. Use readable painterly shapes, softly outlined historical UI art, muted jungle greens, warm wood browns, natural gray elephant, no text, no frame, not photorealistic, not cartoonish.
-
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_elephant_kraal_base_elephants:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked elephant output after the high-base rebalance.
         amortization_months: Existing accepted elephant kraal payback is faster than the new amortization minimum; revisit during the elephant kraal rebalance.
     pp_elephant_kraal_kheddah_stockades:
-      production_efficiency: 1.10
+      production_efficiency: 1.1
       allow_rules:
         amortization_months: Existing accepted elephant kraal payback is faster than the new amortization minimum; revisit during the elephant kraal rebalance.

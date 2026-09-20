@@ -1,0 +1,204 @@
+﻿ha1300_climate_tropical_monsoon = {
+	winter = none
+	color = ha1300_color_ha1300_climate_tropical_monsoon
+	
+	location_modifier = {
+		local_population_capacity_modifier = 0.50
+		local_monthly_development_modifier = -0.10		
+		local_life_expectancy = -5
+		
+		free_capacity_attracts_pops = yes
+		
+		local_food_decay = 0.002
+
+	}
+	unit_modifier = {
+	}
+
+
+	
+	colonial_migration_size_modifier = -0.33
+	
+	audio_tags = {
+		masDataClimateZone = 1.0
+	}
+	debug_color = rgb { 23 135 133 } # for climate_screenshot mapmode
+}
+
+ha1300_climate_savanna = {
+	winter = none
+	color = ha1300_color_ha1300_climate_savanna
+	
+	location_modifier = {
+		local_population_capacity_modifier = 0.50
+		local_monthly_development_modifier = -0.10		
+		local_life_expectancy = -5
+		
+		free_capacity_attracts_pops = yes
+		
+		local_food_decay = 0.002
+
+	}
+	unit_modifier = {
+	}
+
+
+	
+	colonial_migration_size_modifier = -0.33
+	
+	audio_tags = {
+		masDataClimateZone = 1.0
+	}
+	debug_color = rgb { 173 171 74 } # for climate_screenshot mapmode
+}
+
+ha1300_climate_hot_steppe = {
+	winter = none
+	color = ha1300_color_ha1300_climate_hot_steppe
+	has_precipitation = yes
+
+	location_modifier = {
+		local_wheat_output_modifier = -0.1
+		local_life_expectancy = -5
+		
+		free_capacity_attracts_pops = yes
+		
+		local_supply_limit_modifier = -0.10
+	}
+	unit_modifier = {
+	}
+	
+	audio_tags = {
+		masDataClimateZone = 0.65
+	}
+	debug_color = rgb { 211 182 91 } # for climate_screenshot mapmode
+}
+
+ha1300_climate_cold_steppe = {
+	winter = normal
+	color = ha1300_color_ha1300_climate_cold_steppe
+	has_precipitation = yes
+
+	location_modifier = {
+		local_wheat_output_modifier = -0.05
+
+		free_capacity_attracts_pops = yes
+		
+		local_supply_limit_modifier = -0.05
+	}
+	unit_modifier = {
+	}
+	
+	
+	audio_tags = {
+		masDataClimateZone = 0.65
+	}
+	debug_color = rgb { 174 170 112 } # for climate_screenshot mapmode
+}
+
+ha1300_climate_subtropical_monsoon = {
+	winter = mild
+	color = ha1300_color_ha1300_climate_subtropical_monsoon
+	
+	location_modifier = {
+		local_population_capacity_modifier = 1.00
+		
+		local_food_decay = 0.001
+		
+		free_capacity_attracts_pops = yes
+	}
+	unit_modifier = {
+	}
+	
+	
+	
+	audio_tags = {
+		masDataClimateZone = 0.8
+
+	}
+	debug_color = rgb { 70 156 163 } # for climate_screenshot mapmode
+}
+
+ha1300_climate_highland_monsoon = {
+	winter = mild
+	color = ha1300_color_ha1300_climate_highland_monsoon
+	
+	location_modifier = {
+		local_population_capacity_modifier = 1.00
+		
+		free_capacity_attracts_pops = yes
+	}
+	unit_modifier = {
+	}
+	
+	audio_tags = {
+		masDataClimateZone = 0.4
+	}
+	debug_color = rgb { 117 154 176 } # for climate_screenshot mapmode
+}
+
+ha1300_climate_subpolar_oceanic = {
+	winter = normal
+	color = ha1300_color_ha1300_climate_subpolar_oceanic
+	
+	location_modifier = {
+		local_population_capacity_modifier = 1.00
+		
+		free_capacity_attracts_pops = yes
+	}
+	unit_modifier = {
+	}
+	
+	audio_tags = {
+		masDataClimateZone = 0.4
+	}
+	debug_color = rgb { 98 149 170 } # for climate_screenshot mapmode
+}
+
+ha1300_climate_dry_summer_continental = {
+	winter = normal
+	
+	color = ha1300_color_ha1300_climate_dry_summer_continental
+	
+	location_modifier = {
+		local_population_capacity_modifier = 0.50
+		free_capacity_attracts_pops = yes
+	}
+	
+	audio_tags = {
+		masDataClimateZone = 0.2
+	}
+	debug_color = rgb { 169 137 168 }  # for climate_screenshot mapmode
+}
+
+ha1300_climate_continental_monsoon = {
+	winter = normal
+	
+	color = ha1300_color_ha1300_climate_continental_monsoon
+	
+	location_modifier = {
+		local_population_capacity_modifier = 0.50
+		free_capacity_attracts_pops = yes
+	}
+	
+	audio_tags = {
+		masDataClimateZone = 0.2
+	}
+	debug_color = rgb { 97 113 187 }  # for climate_screenshot mapmode
+}
+
+ha1300_climate_subarctic = {
+	winter = severe
+	
+	color = ha1300_color_ha1300_climate_subarctic
+	
+	location_modifier = {
+		local_population_capacity_modifier = 0.50
+		free_capacity_attracts_pops = yes
+	}
+	
+	audio_tags = {
+		masDataClimateZone = 0.2
+	}
+	debug_color = rgb { 99 118 151 }  # for climate_screenshot mapmode
+}

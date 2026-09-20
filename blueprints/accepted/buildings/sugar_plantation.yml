@@ -1,19 +1,19 @@
-﻿version: 2
+version: 2
 tag: sugar_plantation
 building:
   key: sugar_plantation
   mode: REPLACE
   source: pp_building_adjustments.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_sugar_plantation_base_sugar
-    - name: slot_1
-      methods:
-        - pp_sugar_plantation_cane_fields
-        - pp_sugar_plantation_boiling_house
+  - name: slot_0
+    methods:
+    - pp_sugar_plantation_base_sugar
+  - name: slot_1
+    methods:
+    - pp_sugar_plantation_cane_fields
+    - pp_sugar_plantation_boiling_house
   possible_production_methods: []
-  body: |2-
+  body: |-
     audio_tier = 2
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
@@ -63,6 +63,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_sugar_plantation = -1
+      local_population_capacity = -10
     }
 
     modifier = {
@@ -77,7 +78,6 @@ localization:
     pp_sugar_plantation_base_sugar: Cane Fields
     pp_sugar_plantation_cane_fields: Unpressed Cane Fields
     pp_sugar_plantation_boiling_house: Boiling House
-
 evaluation:
   building:
     employment_size: 1.0
@@ -87,7 +87,7 @@ evaluation:
     amortization_months: Plantation price is shared with vanilla plantation economics and intentionally outside generic raw payback cadence.
   production_methods:
     pp_sugar_plantation_base_sugar:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Plantation employment is smaller than the generic laborer raw-site baseline, so the 30% base share is high per 1k.
     pp_sugar_plantation_boiling_house:

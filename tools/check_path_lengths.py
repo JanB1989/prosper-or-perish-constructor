@@ -25,6 +25,11 @@ ENGINE_REQUIRED_PATH_LIMITS = {
         "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/"
         "icons/trade_goods/illustrations/icon_goods_province_food_sales.dds"
     ): 150,
+    # World Builder climate icon: the engine derives the file name from the climate key.
+    (
+        "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/"
+        "icons/climate/ha1300_climate_dry_summer_continental_frame.dds"
+    ): 150,
 }
 
 

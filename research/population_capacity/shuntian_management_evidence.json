@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "id": "shuntian_maintained_dryland_cultivation",
+  "source": {
+    "author": "Francesca Bray",
+    "title": "Where Did the Animals Go? Presence and Absence of Livestock in Chinese Agricultural Treatises",
+    "year": 2019,
+    "pages": [118, 135, 136],
+    "url": "https://www.cambridge.org/core/books/animals-through-chinese-history/where-did-the-animals-go/E281204414087F0A9ACCDDCEF5358C08",
+    "download_url": "https://pure.mpg.de/rest/items/item_3018873_11/component/file_3284602/content",
+    "cached_pdf": "artifacts/data/population_capacity/repair_sources/bray_2019_chinese_agronomy.pdf",
+    "sha256": "588a9ed4fa701cfe0cc8fe9cdadb946e3a2c3ecf346178ce69a79a8f25c67354",
+    "source_family": "Historical analysis of Chinese agricultural treatises",
+    "license": "Cambridge University Press copyright; institutional repository copy, reuse license not established."
+  },
+  "interpretation": "Wang Zhen's 1313 treatise describes established northern dryland farming and animal traction, combining earlier agronomy with observation. It also records the need for restoration after war. Use a maintained dryland-system analogue on Shuntian's existing fields, with the same assessment range as maintained Parisis fields. The treatise is not evidence that every recommended improvement was active locally.",
+  "assignment": {
+    "selector": {"province": ["shuntian_province"]},
+    "scores": [3, 0, 3, 2],
+    "development_range": [37.5, 62.5],
+    "water_served_fraction_range": [0, 0],
+    "valid_years": [1250, 1400],
+    "range_role": "Explicit regional management analogue, not a measured local score or population-fitted target. No additional hectares or irrigation assigned."
+  },
+  "exclusions": [
+    "Do not treat the publication of an agricultural manual as automatic activation of a country advance or policy.",
+    "No rice-system, second-harvest or extra irrigation bonus.",
+    "No population-derived cultivated-area reconstruction used as a location allocation.",
+    "Northern frontier controls retain their existing assignments."
+  ]
+}

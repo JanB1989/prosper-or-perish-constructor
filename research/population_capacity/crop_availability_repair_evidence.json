@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "source_id": "fao_neglected_crops_1994",
+  "title": "Neglected crops: 1492 from a different perspective",
+  "url": "https://www.fao.org/docrep/018/t0646e/t0646e.pdf",
+  "local_path": "artifacts/data/population_capacity/repair_sources/fao_1994_neglected_crops.pdf",
+  "sha256": "ea89b8329ea2bf9350b43a859ea47272648b769b6995ca97db36b39fa657a2f7",
+  "publisher": "FAO",
+  "publication_year": 1994,
+  "source_family": "historical agricultural synthesis, independent of HYDE/LUH2",
+  "license": "FAO publication; no open redistribution license verified; cache for research, cite and paraphrase only",
+  "target_year": 1337,
+  "interpretations": [
+    {
+      "printed_pages": [
+        25,
+        29
+      ],
+      "pdf_pages": [
+        46,
+        50
+      ],
+      "claim": "Wheat, barley and rye are described as colonial introductions; rice appears among introduced crops accompanying colonial livestock expansion.",
+      "model_implication": "Do not retain 0.5 physical-fallback eligibility for these crops in documented pre-Columbian American agricultural systems.",
+      "crop_keys": [
+        "wheat",
+        "barley",
+        "rye",
+        "rice_dry",
+        "rice_wet"
+      ],
+      "scope": "Documented Spanish/Portuguese American agricultural systems; exact exclusion geometry still to be frozen.",
+      "exclusions": [
+        "Do not infer a Greenland/Norse exclusion from this colonial Latin American account.",
+        "Do not treat Oryza crop keys as North American wild rice (Zizania)."
+      ],
+      "role": "historical availability constraint, not a yield or population fitting target"
+    },
+    {
+      "pdf_pages": [
+        148
+      ],
+      "claim": "Andean quinoa marginalization is associated with introduced barley and wheat.",
+      "model_implication": "Audit missing indigenous Andean crops before interpreting zero current-field crop support as genuinely negligible.",
+      "role": "missing crop-system diagnosis; no numerical yield assignment authorized by this excerpt"
+    }
+  ],
+  "remaining_action": "Resolve crop-system annual-scenario recomputation and freeze exact sourced exclusion geometry before replacing labels. Recompute current and opportunity support together; do not switch the rainfed density contract silently.",
+  "candidate_changed": false
+}

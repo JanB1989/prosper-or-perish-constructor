@@ -1,0 +1,48 @@
+﻿ha1300_fertility = {
+ map_color = { if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 1 } value = rgb { 168 64 59 } }
+else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 2 } value = rgb { 215 125 64 } }
+else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 3 } value = rgb { 219 191 100 } }
+else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 4 } value = rgb { 139 182 94 } }
+else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 5 } value = rgb { 55 139 80 } }
+else = { value = rgb { 45 60 72 } } }
+ tooltip_key = { if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 1 } value = HA1300_FERTILITY_VERY_LOW_MAP }
+else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 2 } value = HA1300_FERTILITY_LOW_MAP }
+else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 3 } value = HA1300_FERTILITY_MODERATE_MAP }
+else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 4 } value = HA1300_FERTILITY_HIGH_MAP }
+else_if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 5 } value = HA1300_FERTILITY_VERY_HIGH_MAP }
+else_if = { limit = { is_land = no } value = HA1300_FERTILITY_WATER } else = { value = HA1300_FERTILITY_UNKNOWN } }
+legend_key = { desc = "HA1300_FERTILITY_VERY_LOW" color = rgb { 168 64 59 } }
+legend_key = { desc = "HA1300_FERTILITY_LOW" color = rgb { 215 125 64 } }
+legend_key = { desc = "HA1300_FERTILITY_MODERATE" color = rgb { 219 191 100 } }
+legend_key = { desc = "HA1300_FERTILITY_HIGH" color = rgb { 139 182 94 } }
+legend_key = { desc = "HA1300_FERTILITY_VERY_HIGH" color = rgb { 55 139 80 } }
+ small_map_names = location
+ medium_map_names = location
+ large_map_names = none
+ small_tooltip_context = location
+ medium_tooltip_context = location
+ large_tooltip_context = location
+ fill_in_impassable = yes
+ enable_snow = no
+ enable_rivers = yes
+ flatmap_behaviour = always
+ use_fow = no
+ category = geography
+ index = 2
+ allow_allocate_hotkey = yes
+ map_markers = { all = no }
+ gradient_parameters = {
+  zoom_step = 2
+  gradient_alpha_inside = 1
+  gradient_alpha_outside = 1
+  gradient_width = 0.25
+  gradient_color_mult = 0.9
+  edge_width = 0
+  edge_sharpness = 0.01
+  edge_alpha = 0
+  edge_color_mult = 0
+  before_lighting_blend = 0.5
+  after_lighting_blend = 0.5
+ }
+ color_refresh_counters = { LocationOwnerChanged }
+}

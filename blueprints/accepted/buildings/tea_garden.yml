@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: tea_garden
 upgrade_chain:
   family: tea_garden
@@ -11,15 +11,15 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_tea_garden_base_tea
-    - name: slot_1
-      methods:
-        - pp_tea_garden_no_withering
-        - pp_tea_garden_bamboo_withering_trays
+  - name: slot_0
+    methods:
+    - pp_tea_garden_base_tea
+  - name: slot_1
+    methods:
+    - pp_tea_garden_no_withering
+    - pp_tea_garden_bamboo_withering_trays
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.23
     max_levels = farm_capacity_max_tea_garden
@@ -66,6 +66,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_tea_garden = -1
+      local_population_capacity = -5
     }
 
     modifier = {
@@ -85,15 +86,14 @@ icon:
   output_dds: tea_garden.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a tea garden, transparent background. Center terraced tea bushes, hand-plucked green leaves in a wicker basket, bamboo or reed withering trays, a clay firing pan or small earthen hearth, and curled green and dark tea leaves in sorting trays. Use readable painterly shapes, softly outlined historical UI art, fresh tea greens, bamboo tan, warm clay browns, dark dried tea leaves, muted earth tones, no text, no frame, not photorealistic, not cartoonish.
-
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_tea_garden_base_tea:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked tea output after the high-base rebalance.
     pp_tea_garden_bamboo_withering_trays:
-      production_efficiency: 1.10
+      production_efficiency: 1.1

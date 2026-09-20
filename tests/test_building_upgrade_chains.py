@@ -27,7 +27,7 @@ def _enabled_manifest_set(manifest: dict | None = None) -> set[str]:
 
 
 LABELING_BASELINE = (
-    ROOT.parent / "ProsperOrPerishLabelingPipeline" / "base_data" / "locations_with_raw_material.parquet"
+    ROOT / "data" / "vanilla" / "locations_with_raw_material.parquet"
 )
 ADVANCES_PATH = (
     ROOT

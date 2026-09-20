@@ -1,4 +1,4 @@
-"""Reusable savegame map rendering helpers for notebooks."""
+﻿"""Reusable savegame map rendering helpers for notebooks."""
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ from prosper_or_perish_constructor.free_building_levels import (
     resolve_map_data_file,
     resolve_parser_config,
 )
-from prosper_or_perish_population_capacity.geometry import build_location_geometry_frame
+from prosper_or_perish_constructor.location_baseline import build_location_geometry_frame
 
 
 GEOGRAPHY_SCOPE_ORDER = ("super_region", "macro_region", "region", "area", "location")

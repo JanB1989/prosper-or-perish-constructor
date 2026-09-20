@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "Frozen comparison before round 36; no rate is accepted",
+  "diagnosis": "Raising urban growth alone shifts provincial composition and worsens retention in some controls. Test equal baselines at the existing urban rate and the midpoint, rather than raising the urban rate to the rural rate.",
+  "units": "native annual generic population growth; unchanged food-stock growth equation, additive tribal rank cancellation",
+  "scenarios": [
+    {"name": "native_rank_no_offset"},
+    {"name": "equal_rank_quarter_offset", "remaining_urban_rank_penalty": 0.0, "pressure_decay_compensation": 0.25},
+    {"name": "common_middle_quarter", "common_rank_growth": -0.0045, "pressure_decay_compensation": 0.25},
+    {"name": "common_slower_quarter", "common_rank_growth": -0.005, "pressure_decay_compensation": 0.25},
+    {"name": "common_slower_half", "common_rank_growth": -0.005, "pressure_decay_compensation": 0.5}
+  ]
+}

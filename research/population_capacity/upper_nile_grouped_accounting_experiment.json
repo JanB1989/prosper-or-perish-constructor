@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "status": "Frozen corrected-accounting spatial analogue; not accepted historical geography",
+  "source_table": "research/population_capacity/willcocks_1889_upper_egypt_table.csv",
+  "source_table_sha256": "744719683441d87cc2998c9ffe050cc02ec37b7bcf3f3acd621ce07b0bfeab8b",
+  "source_evidence": "research/population_capacity/willcocks_1889_basin_evidence.json",
+  "source_weight_column": "printed_basin_feddans",
+  "regional_total_source": "upper_egypt_1315_basin_area",
+  "regional_total_km2": 8400,
+  "spatial_method": "Inferred named-valley province crosswalk, checked against canonical game polygons and Willcocks Plate XII. Province shares from dated1889 seasonal basins constrain the regional distribution; within-group HYDE/LUH2 weights remain alternative related-source proxies.",
+  "groups": [
+    {
+      "source_province": "Esna",
+      "location_tags": [
+        "aswan",
+        "kom_ombo",
+        "edfu",
+        "esna"
+      ]
+    },
+    {
+      "source_province": "Kena",
+      "location_tags": [
+        "qus",
+        "qena",
+        "hiw"
+      ]
+    },
+    {
+      "source_province": "Girga",
+      "location_tags": [
+        "el_balyana",
+        "akhmim"
+      ]
+    },
+    {
+      "source_province": "Assiut",
+      "location_tags": [
+        "asyut",
+        "el_buwit",
+        "manfalut"
+      ]
+    },
+    {
+      "source_province": "Minia",
+      "location_tags": [
+        "ashmunayn",
+        "minya",
+        "tahna"
+      ]
+    },
+    {
+      "source_province": "Beni Suef",
+      "location_tags": [
+        "el_bahnasa",
+        "sharuna",
+        "beni_suef"
+      ]
+    },
+    {
+      "source_province": "Guza",
+      "location_tags": [
+        "atfih",
+        "giza",
+        "cairo"
+      ]
+    }
+  ],
+  "excluded": [
+    "faiyum",
+    "menouf",
+    "qalyub"
+  ],
+  "uncertainty": [
+    "These groups approximate historical provinces; they are not digitized basin polygons.",
+    "1889 basin shares are a spatial analogue552years after1337, not observed1337 shares.",
+    "No transfer of nineteenth-century summer-irrigation acreage or cropping frequency.",
+    "Modern right/left-bank and historical province boundaries do not coincide exactly.",
+    "HYDE/LUH2 alternatives test within-group allocation uncertainty but are related evidence.",
+    "Do not select the analogue merely because food survival improves.",
+    "Existing cultivated hectares beyond the proposed seasonal-basin component remain hydraulically unclassified; their origin is not inferred to be nineteenth-century berms.",
+    "Known-land feasibility is not agronomic or hydraulic proof of the approximate historical footprint."
+  ],
+  "expected_effect": "Test whether historically grouped basin shares reduce southern Nile over-allocation relative to one regional raster allocation; no population, consumption or development fitting",
+  "adoption_gate": "Physical feasibility first, then independently assessed spatial/source uncertainty and100/200behavior; this experiment cannot by itself certify dated geography",
+  "land_budget": "evidenced_known_land",
+  "area_interpretation": "basin_component_minimum",
+  "accounting_correction": "Use the same known-land recovery budget as the canonical historical model, conditional on the sourced extent. Preserve existing fields when the seasonal-basin component is smaller; retain the excess as unclassified existing cultivation, not newly identified berms. No unused recovered land becomes a game improvement opportunity."
+}

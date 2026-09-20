@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import importlib.util
 import sys
@@ -28,10 +28,11 @@ def test_tracked_paths_fit_windows_path_budget() -> None:
     )
 
 
-def test_path_budget_exceptions_are_limited_to_engine_required_trade_good_illustrations() -> None:
-    assert len(check_path_lengths.ENGINE_REQUIRED_PATH_LIMITS) == 3
+def test_path_budget_exceptions_are_limited_to_engine_required_icons() -> None:
+    assert len(check_path_lengths.ENGINE_REQUIRED_PATH_LIMITS) == 4
     assert all(
-        path.endswith(".dds") and "/trade_goods/illustrations/icon_goods_" in path
+        path.endswith(".dds")
+        and ("/trade_goods/illustrations/icon_goods_" in path or "/icons/climate/ha1300_climate_" in path)
         for path in check_path_lengths.ENGINE_REQUIRED_PATH_LIMITS
     )
     assert check_path_lengths.check_paths(

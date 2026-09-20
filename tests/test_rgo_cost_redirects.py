@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -42,7 +42,8 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
         "forestry": "pp_rgo_forestry_building_cost_group",
     }
     assert set(modifiers_by_method) == set(RGO_METHODS)
-    assert all(not modifiers for modifiers in modifiers_by_method.values())
+    # Improvement buildings are gated by World Builder attributes, not by the RGO, so no priced targets remain.
+    assert all(not values for values in modifiers_by_method.values())
 
     # Objective: classify PoP raw-material buildings even when they are not
     # price-modifier targets yet, so a future price pass can wire them in.
@@ -56,6 +57,12 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
     assert classification.unpriced_buildings["clay_pit"] == ("gathering",)
     assert classification.unclassified_price_buildings == {
         "bund": "pp_bund_price",
+        "field_drainage": "pp_field_drainage_price",
+        "field_management": "pp_field_management_price",
+        "irrigated_rice_paddies": "pp_irrigated_rice_paddies_price",
+        "irrigation_reservoirs": "pp_irrigation_reservoirs_price",
+        "land_clearance": "pp_land_clearance_price",
+        "qanats": "pp_qanats_price",
         "irrigation_systems": "pp_irrigation_systems_price",
         "khmer_baray": "pp_khmer_baray_price",
         "macadam_works": "pp_macadam_works_price",
@@ -64,7 +71,6 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
         "polders": "pp_polders_price",
         "road_wardens_yard": "pp_road_wardens_yard_price",
         "terraces": "pp_terraces_price",
-        "victuals_market": "pp_victuals_market_price",
         "victuals_market_import": "pp_victuals_market_import_price",
     }
 
@@ -204,8 +210,7 @@ def test_generated_estate_privilege_rgo_cost_redirects_replace_instead_of_inject
     assert "global_peasants_estate_power" in text
     assert "global_tribes_estate_power" in text
     assert "expand_rgo_farming_cost_modifier" not in text
-    assert "global_rural_build_buildings_efficiency = -0.1" in text
-    assert "global_rural_build_buildings_efficiency = 0.01" in text
+    assert "pp_irrigated_rice_paddies_price_cost_modifier" not in text
     assert RGO_COST_REDIRECT_REPLACE_COLLECTIONS == frozenset({"estate_privileges", "laws"})
 
 

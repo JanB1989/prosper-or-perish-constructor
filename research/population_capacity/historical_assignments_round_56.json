@@ -1,0 +1,1812 @@
+{
+  "schema_version": 1,
+  "status": "round56 frozen hierarchical evidence experiment; no game export; not model acceptance",
+  "assessment_dimensions": [
+    "field_maintenance",
+    "water_management",
+    "cultivation_intensity",
+    "coordination"
+  ],
+  "assessment_scale": "Each dimension 0..4 supplies a nominal game assessment. The nominal sum maps to 100*sum/16; named systems carry explicit uncertainty intervals, whose shared selected quantile determines assigned development. These are inferred game mappings, not measured historical development.",
+  "source_reference_development": 25.0,
+  "source_calendar_policy": "remove inherited regional calendar multiplier before applying shared management effectiveness",
+  "archetypes": {
+    "rainfed_dryland_mixed_farming": [
+      1,
+      0,
+      1,
+      1
+    ],
+    "rainfed_open_field_cereal": [
+      2,
+      0,
+      2,
+      2
+    ],
+    "humid_tropical_swidden_agroforest": [
+      1,
+      0,
+      1,
+      1
+    ],
+    "marginal_open_field_cereal": [
+      1,
+      0,
+      1,
+      1
+    ],
+    "irrigated_wet_rice": [
+      3,
+      3,
+      2,
+      2
+    ],
+    "intensive_northern_europe_cereal": [
+      3,
+      1,
+      3,
+      3
+    ],
+    "hydraulic_flood_recession_wet_rice": [
+      3,
+      3,
+      2,
+      3
+    ]
+  },
+  "archetype_role": "inferred analogue from source farm-system classification; not proof of historical adoption, uncertainty retained",
+  "systems": [
+    {
+      "id": "taihu_managed_fields",
+      "selector": {
+        "province": [
+          "suzhou_province",
+          "jiaxing_province",
+          "songjiang_province"
+        ]
+      },
+      "scores": [
+        4,
+        3,
+        3,
+        3
+      ],
+      "development_range": [
+        65,
+        90
+      ],
+      "source_ids": [
+        "taihu_polder_drainage_network",
+        "taihu_rice_wheat_rotation"
+      ],
+      "cultivated_fraction_range": [
+        0.35,
+        0.55
+      ],
+      "cultivated_fraction": 0.45,
+      "water_served_fraction_range": [
+        0.7,
+        1.0
+      ],
+      "water_served_fraction": 0.85,
+      "interpretation": "Maintained embanked and drained fields throughout the Taihu provincial cluster. Extent is an inferred regional range, not a measured cadastral allocation.",
+      "valid_years": [
+        1200,
+        1400
+      ]
+    },
+    {
+      "id": "angkor_managed_fields",
+      "selector": {
+        "location_tag": [
+          "angkor"
+        ]
+      },
+      "scores": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "development_range": [
+        50,
+        80
+      ],
+      "source_ids": [
+        "angkor_managed_rice_landscape"
+      ],
+      "cultivated_area_km2_range": [
+        500,
+        1000
+      ],
+      "cultivated_area_km2": 1000,
+      "water_served_fraction_range": [
+        0.5,
+        1.0
+      ],
+      "water_served_fraction": 0.75,
+      "interpretation": "Dedicated Angkor location approximates the archaeological catchment; maintained-area range accounts for chronology and boundary uncertainty.",
+      "valid_years": [
+        1200,
+        1400
+      ]
+    },
+    {
+      "id": "nile_basin_fields",
+      "selector": {
+        "location_tag": [
+          "al_mima",
+          "alexandria",
+          "bilbeis",
+          "dakahla",
+          "damanhur",
+          "damietta",
+          "el_burullus",
+          "el_mahalla",
+          "faqus",
+          "fuwa",
+          "kafr_saqr",
+          "kharibta",
+          "mansoura",
+          "menouf",
+          "qalyub",
+          "ramsis",
+          "rashid",
+          "samanoud",
+          "tarrana",
+          "tidah",
+          "tinnis",
+          "ushmum_tannah"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "nile_seasonal_basin_agriculture",
+        "nile_basin_irrigation_annual_winter_crop"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Seasonal basin-water service on inherited cultivated fields in river locations; not a second crop or a whole-desert agricultural entitlement.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true
+    },
+    {
+      "id": "bali_subak_managed_fields",
+      "selector": {
+        "location_tag": [
+          "julah",
+          "samprangan",
+          "melara"
+        ]
+      },
+      "scores": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "development_range": [
+        60,
+        85
+      ],
+      "source_ids": [
+        "bali_subak_evidence.json"
+      ],
+      "water_served_fraction_range": [
+        0.5,
+        0.9
+      ],
+      "valid_years": [
+        1100,
+        1400
+      ],
+      "interpretation": "Medieval cooperative water control and maintained terraces on current cultivated fields. No hectare increase or additional calendar multiplier. Development and served fractions are comparable-system inferences, not source measurements. Lombok and Sasak excluded."
+    },
+    {
+      "id": "trowulan_managed_fields",
+      "selector": {
+        "location_tag": [
+          "trowulan"
+        ]
+      },
+      "scores": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "development_range": [
+        60,
+        85
+      ],
+      "source_ids": [
+        "trowulan_water_management_evidence.json"
+      ],
+      "water_served_fraction_range": [
+        0.5,
+        0.9
+      ],
+      "valid_years": [
+        1293,
+        1500
+      ],
+      "interpretation": "Dated maintained water system; same game assessment range as Bali. Cultivated extent and crop calendar unchanged; archaeological city area is not farm area."
+    },
+    {
+      "id": "eastern_java_established_rice_systems",
+      "selector": {
+        "location_tag": [
+          "bajrajinaparamitapura",
+          "malang",
+          "sadeng",
+          "lumajang",
+          "pakembangan",
+          "balambangan"
+        ]
+      },
+      "scores": [
+        3,
+        2,
+        2,
+        3
+      ],
+      "development_range": [
+        45,
+        70
+      ],
+      "water_served_fraction_range": [
+        0.25,
+        0.75
+      ],
+      "source_ids": [
+        "eastern_java_rice_management_evidence.json"
+      ],
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "interpretation": "Regional historical-system inference on existing fields, with strongest direct coverage in Malang/Brantas. Other eastern locations are explicit analogues, not independently surveyed systems. No cultivated-area or harvest-frequency increase."
+    },
+    {
+      "id": "parisis_maintained_open_fields",
+      "selector": {
+        "province": [
+          "pays_france_province"
+        ]
+      },
+      "scores": [
+        3,
+        0,
+        3,
+        2
+      ],
+      "development_range": [
+        37.5,
+        62.5
+      ],
+      "water_served_fraction_range": [
+        0,
+        0
+      ],
+      "source_ids": [
+        "paris_management_evidence.json"
+      ],
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "interpretation": "Archival research establishes maintained cereal cultivation and three-field rotation in the medieval Parisis. The estate is a system analogue, not a survey of every game location. Apply the common maintained open-field assessment to existing cultivated land; do not infer hectares or attained yields from population, estate size or buildings."
+    },
+    {
+      "id": "northern_niger_flood_agriculture",
+      "selector": {
+        "province": [
+          "timbuktu_province"
+        ]
+      },
+      "scores": [
+        2,
+        2,
+        2,
+        1
+      ],
+      "development_range": [
+        25,
+        50
+      ],
+      "water_served_fraction_range": [
+        0.75,
+        1.0
+      ],
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "source_ids": [
+        "niger_flood_agriculture_evidence.json"
+      ],
+      "interpretation": "Floodplain rice, fishing and seasonal grazing formed complementary livelihoods. Flood timing constrained farming. River commerce supplied Timbuktu from the more productive southern delta; this does not establish an import quantity for 1337. Treat existing northern-delta fields as mainly water-dependent, rather than assigning them almost entirely to zero-yield rainfed cultivation."
+    },
+    {
+      "id": "shuntian_maintained_dryland_cultivation",
+      "selector": {
+        "province": [
+          "shuntian_province"
+        ]
+      },
+      "scores": [
+        3,
+        0,
+        3,
+        2
+      ],
+      "development_range": [
+        37.5,
+        62.5
+      ],
+      "water_served_fraction_range": [
+        0,
+        0
+      ],
+      "valid_years": [
+        1250,
+        1400
+      ],
+      "source_ids": [
+        "shuntian_management_evidence.json",
+        "shuntian_crop_mask_evidence.json"
+      ],
+      "interpretation": "Wang Zhen's 1313 treatise describes established northern dryland farming and animal traction, combining earlier agronomy with observation. It also records the need for restoration after war. Use a maintained dryland-system analogue on Shuntian's existing fields, with the same assessment range as maintained Parisis fields. The treatise is not evidence that every recommended improvement was active locally.",
+      "recover_dated_cropland": true
+    },
+    {
+      "id": "cusco_preimperial_maintained_fields",
+      "selector": {
+        "province": [
+          "acamama_province"
+        ]
+      },
+      "scores": [
+        3,
+        1,
+        2,
+        2
+      ],
+      "development_range": [
+        37.5,
+        62.5
+      ],
+      "water_served_fraction_range": [
+        0,
+        0
+      ],
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_cropland": true,
+      "source_ids": [
+        "cusco_management_evidence.json",
+        "cusco_field_assessment.json",
+        "cusco_missing_crop_evidence.json"
+      ],
+      "missing_rainfed_support_at_reference_development_people_per_km2_range": [
+        122.5447756826975,
+        401.19701946399437
+      ],
+      "rainfed_analogue_evidence": {
+        "source_id": "cusco_missing_crop_evidence.json",
+        "role": "whole comparable-field envelope, source-normalized before recipient management"
+      }
+    },
+    {
+      "id": "lombok_recovering_maintained_fields",
+      "selector": {
+        "location_tag": [
+          "lombok",
+          "sasak"
+        ]
+      },
+      "scores": [
+        2,
+        0,
+        2,
+        2
+      ],
+      "development_range": [
+        25,
+        50
+      ],
+      "source_ids": [
+        "lombok_samalas_recovery_evidence.json"
+      ],
+      "water_served_fraction_range": [
+        0,
+        0
+      ],
+      "valid_years": [
+        1300,
+        1400
+      ],
+      "interpretation": "Inferred maintained mixed agriculture and coordination during post-Samalas recovery. No new cultivated hectares, irrigation, crop-calendar change or transfer of Balinese subak evidence. The 25\u201350 range uses the shared ordinal management scale, independent of population."
+    },
+    {
+      "id": "southern_mexico_lakes_managed_fields",
+      "selector": {
+        "location_tag": [
+          "xochimilco",
+          "chalco"
+        ]
+      },
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "development_range": [
+        37.5,
+        62.5
+      ],
+      "source_ids": [
+        "southern_mexico_lakes_management_evidence.json"
+      ],
+      "water_served_fraction_range": [
+        0,
+        0.5
+      ],
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "interpretation": "INAH regional archaeological history supports earlier lake-margin drainage and maintained cultivation. Moderate shared management assessment; no new hectares or late Mexica expansion. Water-service share remains inferred and ranges down to zero."
+    },
+    {
+      "id": "fayyum_maintained_canal_agriculture",
+      "selector": {
+        "location_tag": [
+          "faiyum"
+        ]
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "numerical_basis": "Reuse the existing maintained Egyptian hydraulic-system game range. Numbers are inferred management and operational-coverage bounds, not measurements in the historical survey. Canal and basin techniques remain distinct source mechanisms.",
+      "source_ids": [
+        "fayyum_canal_management_evidence.json"
+      ],
+      "valid_years": [
+        1240,
+        1347
+      ],
+      "interpretation": "Gravity-fed branch and feeder canals, weirs and village water allocations support maintained agriculture in the Fayyum depression. This is not conditional on a native game river flag. Existing cultivated extent unchanged; shared hydraulic management uncertainty is inferred."
+    },
+    {
+      "id": "upper_nile_extent_akhmim",
+      "selector": {
+        "location_tag": [
+          "akhmim"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        431.55442023558646,
+        431.55442023558646
+      ]
+    },
+    {
+      "id": "upper_nile_extent_ashmunayn",
+      "selector": {
+        "location_tag": [
+          "ashmunayn"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        469.71139107113805,
+        469.71139107113805
+      ]
+    },
+    {
+      "id": "upper_nile_extent_aswan",
+      "selector": {
+        "location_tag": [
+          "aswan"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        64.11887799700158,
+        64.11887799700158
+      ]
+    },
+    {
+      "id": "upper_nile_extent_asyut",
+      "selector": {
+        "location_tag": [
+          "asyut"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        654.5341606903036,
+        654.5341606903036
+      ]
+    },
+    {
+      "id": "upper_nile_extent_atfih",
+      "selector": {
+        "location_tag": [
+          "atfih"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        298.48366231503576,
+        298.48366231503576
+      ]
+    },
+    {
+      "id": "upper_nile_extent_beni_suef",
+      "selector": {
+        "location_tag": [
+          "beni_suef"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        353.21413243168485,
+        353.21413243168485
+      ]
+    },
+    {
+      "id": "upper_nile_extent_cairo",
+      "selector": {
+        "location_tag": [
+          "cairo"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        376.9311234763904,
+        376.9311234763904
+      ]
+    },
+    {
+      "id": "upper_nile_extent_edfu",
+      "selector": {
+        "location_tag": [
+          "edfu"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        68.83093088129193,
+        68.83093088129193
+      ]
+    },
+    {
+      "id": "upper_nile_extent_el_bahnasa",
+      "selector": {
+        "location_tag": [
+          "el_bahnasa"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        506.08660100706504,
+        506.08660100706504
+      ]
+    },
+    {
+      "id": "upper_nile_extent_el_balyana",
+      "selector": {
+        "location_tag": [
+          "el_balyana"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        1211.0078090647346,
+        1211.0078090647346
+      ]
+    },
+    {
+      "id": "upper_nile_extent_el_buwit",
+      "selector": {
+        "location_tag": [
+          "el_buwit"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        635.2360362839959,
+        635.2360362839959
+      ]
+    },
+    {
+      "id": "upper_nile_extent_esna",
+      "selector": {
+        "location_tag": [
+          "esna"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        163.2785614884874,
+        163.2785614884874
+      ]
+    },
+    {
+      "id": "upper_nile_extent_giza",
+      "selector": {
+        "location_tag": [
+          "giza"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        417.3167692881784,
+        417.3167692881784
+      ]
+    },
+    {
+      "id": "upper_nile_extent_hiw",
+      "selector": {
+        "location_tag": [
+          "hiw"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        414.94308964304867,
+        414.94308964304867
+      ]
+    },
+    {
+      "id": "upper_nile_extent_kom_ombo",
+      "selector": {
+        "location_tag": [
+          "kom_ombo"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        104.35313391312886,
+        104.35313391312886
+      ]
+    },
+    {
+      "id": "upper_nile_extent_manfalut",
+      "selector": {
+        "location_tag": [
+          "manfalut"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        646.6398756863837,
+        646.6398756863837
+      ]
+    },
+    {
+      "id": "upper_nile_extent_minya",
+      "selector": {
+        "location_tag": [
+          "minya"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        414.93091697298706,
+        414.93091697298706
+      ]
+    },
+    {
+      "id": "upper_nile_extent_qena",
+      "selector": {
+        "location_tag": [
+          "qena"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        628.4526792081385,
+        628.4526792081385
+      ]
+    },
+    {
+      "id": "upper_nile_extent_qus",
+      "selector": {
+        "location_tag": [
+          "qus"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        273.17559876427606,
+        273.17559876427606
+      ]
+    },
+    {
+      "id": "upper_nile_extent_sharuna",
+      "selector": {
+        "location_tag": [
+          "sharuna"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        207.44425122359607,
+        207.44425122359607
+      ]
+    },
+    {
+      "id": "upper_nile_extent_tahna",
+      "selector": {
+        "location_tag": [
+          "tahna"
+        ]
+      },
+      "requires": {
+        "has_river": true
+      },
+      "scores": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "development_range": [
+        55,
+        85
+      ],
+      "source_ids": [
+        "upper_nile_allocation_experiment.json",
+        "upper_nile_grouped_accounting_experiment.json"
+      ],
+      "water_served_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "water_served_fraction": 1.0,
+      "interpretation": "Exploratory bounded allocation of dated regional basin extent; grouped dated spatial analogy when specified. See frozen contracts. No population fitting.",
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "recover_dated_irrigated_cropland": true,
+      "cultivated_area_km2_range": [
+        319.9626806936742,
+        319.9626806936742
+      ]
+    },
+    {
+      "id": "central_east_java_maintained_rice_analogue",
+      "selector": {
+        "location_tag": [
+          "bagaluhan",
+          "borobudur",
+          "daha",
+          "demak",
+          "dieng",
+          "gresik",
+          "jagaraga",
+          "jepara",
+          "matahun",
+          "mataram",
+          "pacitan",
+          "pajang",
+          "pandansalas",
+          "pati",
+          "pekalongan",
+          "purwalingga",
+          "semarang",
+          "surabaya",
+          "tuban_java",
+          "tulungagung",
+          "wengker"
+        ]
+      },
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "scores": [
+        3,
+        2,
+        2,
+        2
+      ],
+      "development_range": [
+        43.75,
+        68.75
+      ],
+      "source_ids": [
+        "christie_early_java_rice"
+      ],
+      "water_served_fraction_range": [
+        0.25,
+        0.75
+      ],
+      "recover_dated_cropland": true,
+      "interpretation": "Regional maintained-field and water-service analogue on existing dated cultivation only; shared uncertainty, no added harvest or population fitting. Existing core assessments take precedence by excluding their tags."
+    },
+    {
+      "id": "kaveri_maintained_water_system",
+      "selector": {
+        "location_tag": [
+          "thanjavur",
+          "srirangam",
+          "tiruccirapalli",
+          "nagapattinam",
+          "jayankondam"
+        ]
+      },
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "scores": [
+        3,
+        3,
+        2,
+        2
+      ],
+      "development_range": [
+        50,
+        75
+      ],
+      "source_ids": [
+        "heitzman_1987_chola_epigraphy"
+      ],
+      "water_served_fraction_range": [
+        0.25,
+        0.75
+      ],
+      "recover_dated_cropland": true,
+      "interpretation": "Kaveri core regional analogue. Inscriptional system presence supports maintenance; selected game D and water-service fractions are uncertain inferences, not measured hectares. No whole-Deccan irrigation."
+    },
+    {
+      "id": "kyaukse_maintained_water_system",
+      "selector": {
+        "location_tag": [
+          "kyaukse"
+        ]
+      },
+      "valid_years": [
+        1200,
+        1400
+      ],
+      "scores": [
+        3,
+        3,
+        2,
+        2
+      ],
+      "development_range": [
+        50,
+        75
+      ],
+      "source_ids": [
+        "aye_aye_than_2007_kyaukse"
+      ],
+      "water_served_fraction_range": [
+        0.25,
+        0.75
+      ],
+      "recover_dated_cropland": true,
+      "interpretation": "Historical canal-system presence; shared uncertain managed-field assessment on existing reconstructed fields. No retrojection of colonial irrigated hectares or extension to all Burma."
+    },
+    {
+      "id": "red_river_embanked_fields",
+      "selector": {
+        "province": [
+          "thang_long_province",
+          "nam_sach_province",
+          "thien_truong_province"
+        ]
+      },
+      "valid_years": [
+        1248,
+        1400
+      ],
+      "scores": [
+        3,
+        3,
+        2,
+        2
+      ],
+      "development_range": [
+        50,
+        75
+      ],
+      "source_ids": [
+        "sakurai_1989_red_river_tran"
+      ],
+      "water_served_fraction_range": [
+        0.25,
+        0.75
+      ],
+      "recover_dated_cropland": true,
+      "interpretation": "Delta-core shared management analogue based on Tran-period embankment research. Only existing dated cultivation is served; no entire-Vietnam entitlement or extra harvest. Modern/colonial dike length and hectares are excluded."
+    }
+  ],
+  "crop_density_contract": "matched_annual_crop_v1",
+  "source_hashes": {
+    "fayyum_canal_management_evidence.json": "3fea9f0eb9693e84a035322de533d99de1216af29a756367b08adffac7fb2784",
+    "../../artifacts/data/population_capacity/repair_sources/fayyum_qmul_village.html": "03ee963f7d2acc6e4666e812ccda49ac09915cba2cde2717481792a1148f936a",
+    "../../artifacts/data/population_capacity/repair_sources/fayyum_qmul_map.html": "0ea96d4ed83cb05e51143f49ebe748a2660f5c92a0dcab30efc85d41f1b0cd57",
+    "upper_nile_allocation_experiment.json": "a98bffc0680226e139beba1756d5367b22961cd1e19e7a47364cc6179051cb11",
+    "../../artifacts/data/population_capacity/repair_sources/borsch_2000_nile_irrigation.pdf": "35eda29d86810374f0839b94eee9cb3d52922b641d203f63d7383547201a2639",
+    "../../artifacts/data/population_simulation/repair_round_49/world/starting_ledger.parquet": "28138663dce8350ca245f046a4bb7bcff0d1539b5a4b06fa81ff16e8549ae1cc",
+    "upper_nile_grouped_accounting_experiment.json": "10708b453220d876ad89258fc7fb9151a54f886ee041aaf80f3b436db715a547",
+    "willcocks_1889_upper_egypt_table.csv": "744719683441d87cc2998c9ffe050cc02ec37b7bcf3f3acd621ce07b0bfeab8b",
+    "willcocks_1889_basin_evidence.json": "4d14b8c3bfd646bd5ff195b36332a8715a82d9df49fb67f04f0c5b8d74e50866",
+    "hierarchical_management_round_56_evidence.json": "7d61d55864b1d2b1f9a94f7533d6b400d9a5ed2fa5dc7c77d62c42922165e6f0",
+    "java_bali_rice_presence_evidence.json": "98f98a0400062a73b71fe5acede0ede9efb7b4db8a51dc8cafbd456b569c7c84",
+    "eastern_java_rice_management_evidence.json": "65dc3028ac165c34da99af29c5c427f5221a34bf4d4705043af232612c7f58af",
+    "historical_system_observations.json": "37c2f1a58d835843e48ec949ecceb40a9bfdc2eaa0dee92fbd142b308eeefbc2",
+    "../../artifacts/data/population_capacity/repair_round_56/sources/hyde_2017.pdf": "57c2f9c48a0802387f90213486443d91f6d2737c3eaf3769c80637ed62d9fc32",
+    "../../artifacts/data/population_capacity/repair_round_56/sources/chen_pu_1149.pdf": "617c04a2c79dd9443ece36433193ae94d41ea37daac3467caf4612dc51a22e91",
+    "../../artifacts/data/population_capacity/repair_round_56/sources/kyaukse_2007.pdf": "885a262fc6d7150b82a39ea0c10088ceb09ac42158c8b079b43a0c4085fdcbba",
+    "../../artifacts/data/population_capacity/repair_round_56/sources/red_river_tran_1989.html": "eb99aadae9a619b53b983ed402f565480477f48d491f8395036edca62e0977f2",
+    "../../artifacts/data/population_capacity/repair_round_56/sources/sukhothai_water.pdf": "09b3906545d3127762f91de420ce622e398b79e9a001b15fe2bb4015c95b8bea"
+  },
+  "management_hierarchy": {
+    "schema_version": 1,
+    "defaults": {
+      "mixed_livelihood_uncertain": {
+        "scores": [
+          1,
+          0,
+          1,
+          1
+        ],
+        "development_range": [
+          6.25,
+          31.25
+        ],
+        "source_ids": [
+          "round56_mixed_livelihood_uncertainty"
+        ]
+      },
+      "cultivation_present": {
+        "scores": [
+          1,
+          0,
+          1,
+          1
+        ],
+        "development_range": [
+          6.25,
+          31.25
+        ],
+        "source_ids": [
+          "round56_basic_maintained_cultivation"
+        ]
+      },
+      "missing_evidence": {
+        "scores": [
+          1,
+          0,
+          1,
+          1
+        ],
+        "development_range": [
+          0,
+          37.5
+        ],
+        "source_ids": [
+          "round56_missing_land_evidence"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "id": "european_maintained_rotation_analogue",
+        "tier": 1,
+        "selector": {
+          "macro_region": [
+            "western_europe",
+            "eastern_europe"
+          ]
+        },
+        "valid_years": [
+          1200,
+          1400
+        ],
+        "scores": [
+          2,
+          0,
+          1,
+          1
+        ],
+        "development_range": [
+          12.5,
+          37.5
+        ],
+        "source_ids": [
+          "round56_european_rotation_analogue"
+        ]
+      },
+      {
+        "id": "southern_chinese_maintained_cultivation",
+        "tier": 2,
+        "selector": {
+          "province": [
+            "anlu_province",
+            "anqing_province",
+            "baoqing_province",
+            "bozhou_nanzhili_province",
+            "changde_province",
+            "changsha_province",
+            "changzhou_province",
+            "chen_province",
+            "chenzhou_province",
+            "chizhou_province",
+            "chuzhou_province",
+            "chuzhou_zhejiang_province",
+            "daozhou_province",
+            "dean_province",
+            "dingnan_province",
+            "fangzhou_province",
+            "fengyang_province",
+            "funing_province",
+            "fuzhou_jiangxi_province",
+            "fuzhou_province",
+            "ganzhou_province",
+            "gaoyou_province",
+            "guangde_province",
+            "guangxin_province",
+            "guiyang_province",
+            "guizhou_huguang_province",
+            "haizhou_province",
+            "hangzhou_province",
+            "hanyang_province",
+            "he_province",
+            "hengzhou_province",
+            "huaian_province",
+            "huangzhou_province",
+            "huizhou_province",
+            "huzhou_province",
+            "jian_province",
+            "jianchang_province",
+            "jianning_province",
+            "jiaxing_province",
+            "jing_province",
+            "jingmen_province",
+            "jingzhou_province",
+            "jinhua_province",
+            "jiujiang_province",
+            "junzhou_province",
+            "linjiang_province",
+            "lizhou_province",
+            "luan_nanzhili_province",
+            "luzhou_province",
+            "mianyang_province",
+            "nanan_province",
+            "nanchang_province",
+            "nankang_province",
+            "ningbo_province",
+            "ningdu_province",
+            "ningguo_province",
+            "ningzhou_province",
+            "pizhou_province",
+            "quanzhou_province",
+            "quzhou_province",
+            "raozhou_province",
+            "ruizhou_province",
+            "shaowu_province",
+            "shaoxing_province",
+            "shizhou_province",
+            "shouzhou_province",
+            "sizhou_province",
+            "songjiang_province",
+            "suizhou_province",
+            "suzhou_north_province",
+            "suzhou_province",
+            "taihe_province",
+            "taiping_province",
+            "taizhou_nanzhili_province",
+            "taizhou_province",
+            "tingzhou_province",
+            "tongzhou_province",
+            "wenzhou_province",
+            "wuchang_province",
+            "wugang_province",
+            "xiangxiang_province",
+            "xiangyang_province",
+            "xingguo_province",
+            "xinghua_province",
+            "xuzhou_province",
+            "yangzhou_province",
+            "yanping_province",
+            "yanzhou_province",
+            "yiling_province",
+            "yingtian_province",
+            "yingzhou_province",
+            "yongshun_province",
+            "yongzhou_province",
+            "youzhou_province",
+            "yuanzhou_huguang_province",
+            "yuanzhou_province",
+            "yuezhou_province",
+            "zhangzhou_province",
+            "zhenjiang_province"
+          ]
+        },
+        "valid_years": [
+          1200,
+          1400
+        ],
+        "scores": [
+          2,
+          1,
+          2,
+          2
+        ],
+        "development_range": [
+          31.25,
+          56.25
+        ],
+        "source_ids": [
+          "chen_pu_1149_regional_practice_analogue"
+        ]
+      },
+      {
+        "id": "gangetic_established_cultivation",
+        "tier": 2,
+        "selector": {
+          "province": [
+            "arrah_province",
+            "patna_province",
+            "bhagalpur_province",
+            "darbhanga_province",
+            "lower_kosi_province",
+            "east_gandak_province",
+            "west_gandak_province",
+            "bettiah_province",
+            "gorakhpur_province",
+            "bahraich_province",
+            "upper_doab_province",
+            "central_doab_province",
+            "lower_doab_province",
+            "braj_province",
+            "khairabad_province",
+            "azamgarh_province",
+            "awadh_province",
+            "bareilly_province",
+            "lucknow_province",
+            "lower_ghaghara_province",
+            "varanasi_province",
+            "rampur_rokhilkhand_province",
+            "budaun_province",
+            "manikpur_province",
+            "delhi_province",
+            "nadia_province",
+            "pandua_province",
+            "gaur_province",
+            "bogra_province",
+            "purnia_province",
+            "devkot_province"
+          ]
+        },
+        "valid_years": [
+          1200,
+          1400
+        ],
+        "scores": [
+          2,
+          0,
+          2,
+          2
+        ],
+        "development_range": [
+          25,
+          50
+        ],
+        "source_ids": [
+          "chakravarti_2008_early_medieval_agriculture"
+        ]
+      },
+      {
+        "id": "chola_maintained_fields",
+        "tier": 3,
+        "selector": {
+          "province": [
+            "cola_nadu"
+          ]
+        },
+        "valid_years": [
+          1200,
+          1400
+        ],
+        "scores": [
+          3,
+          1,
+          2,
+          2
+        ],
+        "development_range": [
+          37.5,
+          62.5
+        ],
+        "source_ids": [
+          "heitzman_1987_chola_epigraphy"
+        ]
+      }
+    ],
+    "recover_reconstructed_fields": true,
+    "contract": "World uncertain livelihood/practice assessments, then dated regional and provincial analogues, then named systems. Cultivation presence selects applicability; neither hectares nor population scale development. Unknown is not foraging. Source potential classes never assign development in this candidate."
+  }
+}

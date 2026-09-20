@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "source_id": "madsen_robertson_ye_2019",
+  "source_sha256": "2f24a9443980d7ac76964fa3957177fe8d84ab7c8e5a019baf9f770e010f0d2b",
+  "doi": "10.1016/j.euroecorev.2019.05.004",
+  "source_locator": "Table 3 column 2, printed p. 63 / PDF p. 13; interpretation continues PDF p. 14",
+  "extracted_at": "2026-09-07",
+  "metric": "convergence of log population deviation, conditional on regression controls",
+  "coefficient_per_year": -0.028,
+  "coefficient_robust_standard_error": 0.0006,
+  "observation_interval_years": 30,
+  "discrete_deviation_factor": 0.16000000000000003,
+  "implied_monotone_half_life_years": 11.347061960490452,
+  "formula": "-ln(2) / (ln(1 + gamma*T)/T)",
+  "estimator": "SUR with country and time effects",
+  "period": [
+    1470,
+    1870
+  ],
+  "countries": [
+    "Austria",
+    "Belgium",
+    "France",
+    "Germany",
+    "Italy",
+    "Netherlands",
+    "Spain",
+    "Sweden",
+    "United Kingdom"
+  ],
+  "regression_controls": [
+    "epidemics",
+    "land",
+    "scientific knowledge and change in scientific knowledge"
+  ],
+  "comparison_role": "Population-recovery contextual check for comparable fixed-system experiments; separate from the wage benchmark. Not an intrinsic birth/death rate or a universal local acceptance range.",
+  "limitations": [
+    "Log-population deviation is not identical to absolute population deviation; match the metric before comparing.",
+    "The source is an estimated cross-country historical regression, not a food-stock perturbation experiment.",
+    "Country and time controls and changing technology differ from a closed fixed-infrastructure local simulator.",
+    "No automatic application to 1337 tropical or tribal populations.",
+    "Table 3 column 3 gamma=-0.034 at T=30 gives a negative signed deviation factor; the monotone logarithmic half-life formula is inapplicable to that column.",
+    "The paper rounds the column-2 population interpretation to about eleven years; do not borrow the approximately ten-year wage calculation."
+  ],
+  "acceptance_range_frozen": false,
+  "comparison_evaluated": false
+}

@@ -12,19 +12,19 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_market_tobacco_farm_base_tobacco
-    - name: slot_1
-      methods:
-        - pp_market_tobacco_farm_uncured_leaves
-        - pp_market_tobacco_farm_curing_racks
-    - name: slot_2
-      methods:
-        - pp_market_tobacco_farm_loose_packing
-        - pp_market_tobacco_farm_sorting_tables
+  - name: slot_0
+    methods:
+    - pp_market_tobacco_farm_base_tobacco
+  - name: slot_1
+    methods:
+    - pp_market_tobacco_farm_uncured_leaves
+    - pp_market_tobacco_farm_curing_racks
+  - name: slot_2
+    methods:
+    - pp_market_tobacco_farm_loose_packing
+    - pp_market_tobacco_farm_sorting_tables
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.20
     max_levels = farm_capacity_max_market_tobacco_farm
@@ -84,19 +84,20 @@ building:
 
     raw_modifier = {
       farm_capacity_from_market_tobacco_farm = -1
+      local_population_capacity = -5
     }
 
     modifier = {
         local_migration_attraction = 0.003
     }
 advancements:
-  - key: pp_market_tobacco_farm
-    body: |2-
-      icon = market_tobacco_farm
-      age = age_3_discovery
-      requires = plantation_buildings_advance
-      unlock_building = market_tobacco_farm
-      ai_weight = { add = 125 }
+- key: pp_market_tobacco_farm
+  body: |-
+    icon = market_tobacco_farm
+    age = age_3_discovery
+    requires = plantation_buildings_advance
+    unlock_building = market_tobacco_farm
+    ai_weight = { add = 125 }
 localization:
   entries:
     market_tobacco_farm: Market Tobacco Farm
@@ -116,7 +117,6 @@ icon:
   output_dds: market_tobacco_farm.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game building icon for a Market Tobacco Farm on a perfectly flat magenta chroma-key background. Detailed three-quarter-view early modern tobacco worksite with orderly broadleaf tobacco rows, workers' field baskets, open-sided air-curing racks hung with brown leaves, wooden hogsheads, sorting tables, tied leaf bundles, paper tally slips, and a modest farm shed; material-rich painterly bitmap cutout, readable historic UI art, open-air curing only, no smokehouse, no modern machinery, no text, no frame.
-
 evaluation:
   allow_rules:
     input_throughput: Specialty crop farms preserve the accepted low-input rural RGO scale below the generic laborer throughput baseline.
@@ -124,14 +124,14 @@ evaluation:
     amortization_months: Specialty crop farms use a low-cost, slow-payback cadence matching the existing small crop RGO buildings.
   production_methods:
     pp_market_tobacco_farm_base_tobacco:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive field output follows the accepted small specialty-crop baseline rather than the generic raw-site band.
     pp_market_tobacco_farm_uncured_leaves:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_market_tobacco_farm_curing_racks:
       production_efficiency: 1.05
     pp_market_tobacco_farm_loose_packing:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_market_tobacco_farm_sorting_tables:
       production_efficiency: 1.05

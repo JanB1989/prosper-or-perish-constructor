@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "status": "frozen before paired source replay; not accepted",
+  "source": {
+    "source_id": "fao_2008_potato_andean_heritage",
+    "title": "International Year of the Potato2008: New light on a hidden treasure, Andean heritage",
+    "citation_url": "https://www.fao.org/4/i0500e/i0500e02.pdf",
+    "object_url": "https://www.fao.org/4/i0500e/i0500e02.pdf",
+    "object_sha256": "d5ceb7dc9aaab2ec066719fc4962e51c187c415ea373e00b5bb93bb30f3405c8",
+    "role": "Historical Andean maize/potato availability; no attained-yield or land-area target"
+  },
+  "local_path": "artifacts/data/population_capacity/repair_sources/fao_2008_potato_andes.pdf",
+  "records": [
+    {
+      "evidence_id": "fao_cusco_highland_staples_before_1337",
+      "location_tags": [
+        "pikillaqta",
+        "waqrapukara",
+        "paucartambo",
+        "pisaq",
+        "urupampa",
+        "qusqu",
+        "quillarumiyoc",
+        "maukallaqta",
+        "chumbivilcas"
+      ],
+      "crops": [
+        "maize",
+        "white_potato"
+      ],
+      "evidence_state": "known_available",
+      "attested_by_year": 1337,
+      "source_id": "fao_2008_potato_andean_heritage",
+      "source_object_sha256": "d5ceb7dc9aaab2ec066719fc4962e51c187c415ea373e00b5bb93bb30f3405c8",
+      "source_locator": "Printed pp.14-15 / PDF pp.4-5, Andean heritage and pre-Inca maize/potato food systems",
+      "geographic_basis": "Explicit Cusco agricultural-system crosswalk covering the existing Acamama province. Regional crop availability inferred from longstanding Central Andean cultivation; not nine individually dated archaeological finds. Source maize presence is corroborated near the Sacred Valley by marcacocha_crop_history_evidence.json. Physical altitude/suitability and accessible land remain separate.",
+      "interpretation": "The pre-Inca system contains maize and Andean potatoes.1337 denotes modeled pre-contact availability, not a dated sample. White-potato is the existing Solanum tuberosum crop key, not proof of modern cultivars. No potato10t/ha estimate, imperial acreage, extra harvest, irrigation or population floor is adopted."
+    }
+  ],
+  "license": "FAO publication; redistribution license not verified; research cache only",
+  "source_family": "FAO crop-history synthesis, independent of HYDE; related Andean archaeological literature",
+  "limitations": [
+    "Crop availability does not identify every planted field or exact crop shares",
+    "Source yield and population estimates excluded",
+    "Other unknown crop origins and cultivar response remain separate unresolved source questions"
+  ]
+}

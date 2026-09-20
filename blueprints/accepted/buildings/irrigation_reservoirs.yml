@@ -5,11 +5,11 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_irrigation_reservoirs_maintenance
+  - name: slot_0
+    methods:
+    - pp_irrigation_reservoirs_maintenance
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     max_levels = 5
     increase_per_level_cost = 0.40
@@ -60,7 +60,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_irrigation_reservoirs = 0.60
-      local_population_capacity = 9.81
+      local_population_capacity = 0
     }
 
     modifier = {
@@ -76,9 +76,8 @@ localization:
     pp_irrigation_reservoirs_maintenance: Reservoir Maintenance
     pp_irrigation_reservoirs_price: Irrigation Reservoirs Price
 prices:
-  - key: pp_irrigation_reservoirs_price
-    body: |2-
-      {gold = 125}
+- key: pp_irrigation_reservoirs_price
+  body: '{gold = 125}'
 icon:
   source_png: ../assets/icons/irrigation_reservoirs.png
   output_dds: irrigation_reservoirs.dds

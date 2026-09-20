@@ -1,19 +1,19 @@
-﻿version: 2
+version: 2
 tag: dye_plantation
 building:
   key: dye_plantation
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_dye_plantation_base_dyes
-    - name: slot_1
-      methods:
-        - pp_dye_plantation_no_curing
-        - pp_dye_plantation_vat_curing
+  - name: slot_0
+    methods:
+    - pp_dye_plantation_base_dyes
+  - name: slot_1
+    methods:
+    - pp_dye_plantation_no_curing
+    - pp_dye_plantation_vat_curing
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.20
     max_levels = farm_capacity_max_dye_plantation
@@ -60,6 +60,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_dye_plantation = -1
+      local_population_capacity = -10
     }
 
     modifier = {
@@ -79,7 +80,6 @@ icon:
   output_dds: dye_plantation.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a dye plantation, transparent background. Center rows of cultivated dye plants with leafy woad-like greens and madder-like red roots, bundles of harvested leaves and roots, wooden drying racks, shallow wooden vats holding blue, red, and purple dye liquor, and woven trays of plant matter. Use readable painterly shapes, softly outlined historical UI art, muted rural greens and tans with strong blue, red, and purple dye accents, no text, no frame, not photorealistic, not cartoonish.
-
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
@@ -87,7 +87,7 @@ evaluation:
     amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_dye_plantation_base_dyes:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked dye output after the high-base rebalance.
     pp_dye_plantation_vat_curing:

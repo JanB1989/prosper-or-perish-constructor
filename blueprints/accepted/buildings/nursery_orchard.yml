@@ -11,19 +11,19 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_nursery_orchard_base_fruit
-    - name: slot_1
-      methods:
-        - pp_nursery_orchard_no_primary
-        - pp_nursery_orchard_nursery_rows
-    - name: slot_2
-      methods:
-        - pp_nursery_orchard_no_worker_victuals
-        - pp_nursery_orchard_worker_victuals
+  - name: slot_0
+    methods:
+    - pp_nursery_orchard_base_fruit
+  - name: slot_1
+    methods:
+    - pp_nursery_orchard_no_primary
+    - pp_nursery_orchard_nursery_rows
+  - name: slot_2
+    methods:
+    - pp_nursery_orchard_no_worker_victuals
+    - pp_nursery_orchard_worker_victuals
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.25
     pop_type = peasants
@@ -90,19 +90,20 @@ building:
 
     raw_modifier = {
       farm_capacity_from_nursery_orchard = -1
+      local_population_capacity = -5
     }
 
     modifier = {
         local_monthly_food = 1.5
     }
 advancements:
-  - key: pp_orchard_nurseries
-    body: |2-
-      icon = nursery_orchard
-      age = age_3_discovery
-      requires = rgo_logistics_discovery
-      unlock_building = nursery_orchard
-      ai_weight = { add = 125 }
+- key: pp_orchard_nurseries
+  body: |-
+    icon = nursery_orchard
+    age = age_3_discovery
+    requires = rgo_logistics_discovery
+    unlock_building = nursery_orchard
+    ai_weight = { add = 125 }
 localization:
   entries:
     nursery_orchard: Nursery Orchard
@@ -122,16 +123,15 @@ icon:
   output_dds: nursery_orchard.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game building icon for a Nursery Orchard on a perfectly flat magenta chroma-key background (#ff00ff). Center young fruit tree nursery rows with grafted saplings, waxed grafts, pruning knives, woven baskets, pottery crocks, fruit crates, and a small rustic sorting rack. Use detailed historic bitmap cutout style, material-rich painterly brushwork, three-quarter view, readable orchard props, apple reds, leaf greens, clay browns, no text, no frame, no modern machinery, no scenic landscape.
-
 evaluation:
   production_methods:
     pp_nursery_orchard_base_fruit:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Passive orchard methods have little direct input cost; nursery rows carry the tier economy.
         base_output_per_1k: Early orchard successor keeps passive fruit below full-building throughput; worked methods carry the tier economy.
     pp_nursery_orchard_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Empty selector method intentionally produces no nursery-row output.
     pp_nursery_orchard_nursery_rows:
@@ -141,11 +141,11 @@ evaluation:
         input_throughput: Nursery orchards are a modest age 3 bridge and intentionally stay below later grafted orchards.
         output_throughput: Nursery orchards are a modest age 3 bridge and intentionally stay below later grafted orchards.
     pp_nursery_orchard_no_worker_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Empty selector method intentionally produces no household victuals.
     pp_nursery_orchard_worker_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Household victuals are auxiliary worker food, not a standalone profit method.
         base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

@@ -1,19 +1,19 @@
-﻿version: 2
+version: 2
 tag: incense_grove
 building:
   key: incense_grove
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_incense_grove_base_incense
-    - name: slot_1
-      methods:
-        - pp_incense_grove_wild_resins
-        - pp_incense_grove_tapping_camps
+  - name: slot_0
+    methods:
+    - pp_incense_grove_base_incense
+  - name: slot_1
+    methods:
+    - pp_incense_grove_wild_resins
+    - pp_incense_grove_tapping_camps
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.20
     max_levels = farm_capacity_max_incense_grove
@@ -62,6 +62,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_incense_grove = -1
+      local_population_capacity = -5
     }
 
     modifier = {
@@ -81,14 +82,13 @@ icon:
   output_dds: incense_grove.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for an incense grove, transparent background. Center a small grove of frankincense or myrrh trees with pale resin tears on cut bark, a shallow basket of amber resin lumps, and a simple drying tray. Use readable painterly shapes, muted desert greens, warm bark browns, golden resin highlights, no text, no frame, not photorealistic, not cartoonish.
-
 evaluation:
   allow_rules:
     input_throughput: Raw incense extraction preserves the generated incense RGO baseline below the global laborer input target.
     output_throughput: Raw incense extraction preserves the generated incense RGO baseline below the global laborer output target.
   production_methods:
     pp_incense_grove_base_incense:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         amortization_months: Valuable raw incense deposits repay faster than the generic amortization window at the standard small raw-site price.
     pp_incense_grove_tapping_camps:

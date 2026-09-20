@@ -1,19 +1,19 @@
-﻿version: 2
+version: 2
 tag: simplers_grove
 building:
   key: simplers_grove
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_simplers_grove_base_medicaments
-    - name: slot_1
-      methods:
-        - pp_simplers_grove_no_drying
-        - pp_simplers_grove_wicker_drying_racks
+  - name: slot_0
+    methods:
+    - pp_simplers_grove_base_medicaments
+  - name: slot_1
+    methods:
+    - pp_simplers_grove_no_drying
+    - pp_simplers_grove_wicker_drying_racks
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.23
     max_levels = farm_capacity_max_simplers_grove
@@ -60,6 +60,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_simplers_grove = -1
+      local_population_capacity = -5
     }
 
     modifier = {
@@ -79,17 +80,16 @@ icon:
   output_dds: simplers_grove.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a simplers' grove, transparent background. Center herb bundles, roots, small flowers, strips of medicinal bark, wicker baskets, low drying racks, and a small sorting table in a woodland meadow gathering site. Use readable painterly shapes, softly outlined historical UI art, muted herb greens, root browns, bark browns, wicker tan, pale flower accents, no text, no frame, not photorealistic, not cartoonish.
-
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_simplers_grove_base_medicaments:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
     pp_simplers_grove_wicker_drying_racks:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.

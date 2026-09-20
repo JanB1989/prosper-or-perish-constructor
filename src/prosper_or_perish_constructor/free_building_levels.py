@@ -30,8 +30,7 @@ from eu5gameparser.domain.vegetation import VegetationData, load_vegetation_data
 from eu5gameparser.load_order import DataProfile, GameLayer, LoadOrderConfig
 from PIL import Image
 
-from prosper_or_perish_constructor.farming_village_unlocks import load_current_location_frame
-from prosper_or_perish_population_capacity.geometry import build_location_geometry_frame
+from prosper_or_perish_constructor.location_baseline import build_location_geometry_frame, load_current_location_frame
 
 
 SPREADSHEET_ID = "1d_zH-wxb9ufW6RgVZgJdGqToJ-VZP_XPS7WhhUAa18U"
@@ -1151,45 +1150,50 @@ def compile_free_building_level_modifiers(repo: Path, mod_root: Path) -> None:
     weights = read_local_free_building_level_sheet_csv(repo=repo)
     baselines = load_modifier_baseline_resolver(repo)
     updated_files = 0
-    updated_files += _compile_category_file(
+    # Climate, vegetation and topography classes are written by the World Builder stage (pp_wb_attribute_rows),
+    # which re-keys the legacy free-building-level effects onto the World Builder classes; compile them only
+    # when the legacy class files still exist.
+    legacy_class_files = all((mod_root / rel).is_file() for rel in (COMPILE_TOPOGRAPHY_RELATIVE, COMPILE_VEGETATION_RELATIVE, COMPILE_CLIMATE_RELATIVE))
+    if legacy_class_files:
+      updated_files += _compile_category_file(
         mod_root / COMPILE_TOPOGRAPHY_RELATIVE,
-        weights,
-        baselines=baselines,
-        factor="topography",
-        inner_header="location_modifier",
-    )
-    updated_files += _compile_category_file(
-        mod_root / COMPILE_VEGETATION_RELATIVE,
-        weights,
-        baselines=baselines,
-        factor="vegetation",
-        inner_header="location_modifier",
-    )
-    updated_files += _compile_category_file(
-        mod_root / COMPILE_CLIMATE_RELATIVE,
-        weights,
-        baselines=baselines,
-        factor="climate",
-        inner_header="location_modifier",
-    )
-    updated_files += _compile_local_output_neutralizers(
-        mod_root / COMPILE_TOPOGRAPHY_RELATIVE,
-        baselines=baselines,
-        factor="topography",
-        inner_header="location_modifier",
-    )
-    updated_files += _compile_local_output_neutralizers(
-        mod_root / COMPILE_VEGETATION_RELATIVE,
-        baselines=baselines,
-        factor="vegetation",
-        inner_header="location_modifier",
-    )
-    updated_files += _compile_local_output_neutralizers(
-        mod_root / COMPILE_CLIMATE_RELATIVE,
-        baselines=baselines,
-        factor="climate",
-        inner_header="location_modifier",
-    )
+          weights,
+          baselines=baselines,
+          factor="topography",
+          inner_header="location_modifier",
+      )
+      updated_files += _compile_category_file(
+          mod_root / COMPILE_VEGETATION_RELATIVE,
+          weights,
+          baselines=baselines,
+          factor="vegetation",
+          inner_header="location_modifier",
+      )
+      updated_files += _compile_category_file(
+          mod_root / COMPILE_CLIMATE_RELATIVE,
+          weights,
+          baselines=baselines,
+          factor="climate",
+          inner_header="location_modifier",
+      )
+      updated_files += _compile_local_output_neutralizers(
+          mod_root / COMPILE_TOPOGRAPHY_RELATIVE,
+          baselines=baselines,
+          factor="topography",
+          inner_header="location_modifier",
+      )
+      updated_files += _compile_local_output_neutralizers(
+          mod_root / COMPILE_VEGETATION_RELATIVE,
+          baselines=baselines,
+          factor="vegetation",
+          inner_header="location_modifier",
+      )
+      updated_files += _compile_local_output_neutralizers(
+          mod_root / COMPILE_CLIMATE_RELATIVE,
+          baselines=baselines,
+          factor="climate",
+          inner_header="location_modifier",
+      )
     updated_files += _compile_category_file(
         mod_root / COMPILE_LOCATION_RANKS_RELATIVE,
         weights,
@@ -1820,16 +1824,10 @@ def contribution_value_summary(frame: pl.DataFrame) -> pl.DataFrame:
 
 
 def resolve_labeling_baseline_path(repo: Path, project: Path) -> Path:
-    with project.open("rb") as handle:
-        project_config = tomllib.load(handle)
-    labeling = project_config.get("labeling")
-    if not isinstance(labeling, dict):
-        raise ValueError(f"{project}: missing [labeling] section")
-    config_path = _resolve_path(repo, labeling.get("config") or "labeling_output_modifiers.yaml")
-    raw = yaml.safe_load(config_path.read_text(encoding="utf-8"))
-    if not isinstance(raw, dict):
-        raise ValueError(f"{config_path}: expected mapping")
-    return _resolve_path(config_path.parent, raw.get("baseline_parquet"))
+    """The constructor-owned vanilla location baseline (name kept for callers)."""
+    from prosper_or_perish_constructor.location_baseline import baseline_path
+
+    return baseline_path(repo, project)
 
 
 def resolve_parser_config(repo: Path, project: Path) -> dict[str, object]:

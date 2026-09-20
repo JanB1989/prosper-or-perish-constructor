@@ -1,13 +1,13 @@
-﻿version: 2
+version: 2
 tag: polders
 building:
   key: polders
   mode: REPLACE
   source: pp_building_adjustments.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_polders_maintenance
+  - name: slot_0
+    methods:
+    - pp_polders_maintenance
   possible_production_methods: []
   body: |2-
         audio_tier = 3
@@ -15,7 +15,7 @@ building:
       custom_tags = { pp_food_security_priority pp_water_control_priority }
       is_special = yes
       is_foreign = no
-      max_levels = polders_max_level
+      max_levels = pp_wb_cap_polders
       increase_per_level_cost = 0.40
       pop_type = laborers
       category = infrastructure_category
@@ -28,14 +28,15 @@ building:
 
       location_potential = {
         OR = {
-          is_coastal = yes
-          is_adjacent_to_lake = yes
+          AND = {
+            is_coastal = yes
+            OR = { topography = flatland topography = wetlands topography = ha1300_topo_deltas topography = ha1300_topo_floodplains topography = hills topography = ha1300_topo_valleys }
+          }
+          OR = { topography = wetlands topography = ha1300_topo_deltas }
         }
-        topography = wetlands
       }
         raw_modifier = {
-            farm_capacity_from_polders = 0.60
-            local_population_capacity = 6.23
+          local_population_capacity = 0.6
         }
 
       modifier = {
@@ -64,15 +65,13 @@ building:
       ai_forbid_shutdown = yes
       forbidden_for_estates = no
 prices:
-  - key: pp_polders_price
-    body: |2-
-      {gold = 200}
+- key: pp_polders_price
+  body: '{gold = 200}'
 localization:
   entries:
     polders_slot_0: Maintenance
     pp_polders_maintenance: Polders Maintenance
     pp_polders_price: Polders Price
-
 evaluation:
   building:
     employment_size: 1.0

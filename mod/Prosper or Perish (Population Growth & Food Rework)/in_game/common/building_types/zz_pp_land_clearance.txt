@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:land_clearance:building
 land_clearance = {
 is_foreign = no
-max_levels = 5
+max_levels = pp_wb_cap_land_clearance
 increase_per_level_cost = 0.30
 pop_type = peasants
 employment_size = 0.50
@@ -16,19 +16,7 @@ megalopolis = yes
 build_time = infrastructure_build_time
 
 location_potential = {
-  OR = {
-    vegetation = woods
-    vegetation = forest
-    vegetation = jungle
-  }
-  NOT = {
-    OR = {
-      topography = mountain_wasteland
-      topography = atoll
-      soil_quality = soil_barren
-      soil_quality = soil_permafrost
-    }
-  }
+  OR = { vegetation = forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_coniferous_forest vegetation = woods vegetation = jungle vegetation = ha1300_veg_marsh vegetation = ha1300_veg_swamp vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest vegetation = ha1300_veg_scrubland vegetation = ha1300_veg_savanna vegetation = grasslands vegetation = farmland }
 }
 
 construction_demand = village_construction
@@ -41,8 +29,7 @@ unique_production_methods = {
 }
 
 raw_modifier = {
-  farm_capacity_from_land_clearance = 0.60
-  local_population_capacity = 7.65
+  local_population_capacity = 1.7
 }
 
 modifier = {

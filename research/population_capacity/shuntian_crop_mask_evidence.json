@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "id": "shuntian_current_field_mask_recovery",
+  "diagnosis": "The crop-system feasible fraction truncates dated LUH2 cropland. Dongan has 97.499 km2 of current cropland in that series but only 1.219 km2 survives the crop-mixture mask. Daxing, Guan and Yongqing are also truncated. This is a crop-potential constraint, not a dated measurement of abandoned fields.",
+  "source_family": "LUH2 landcover reconstruction, related to HYDE; not independent population validation",
+  "dated_landcover_path": "artifacts/data/population_capacity/location_landcover_capacity.parquet",
+  "historical_system_evidence": "shuntian_management_evidence.json",
+  "contract": "Restore only the dated current cropland fraction, with the existing baseline cultivated area retained. Reconcile displaced wild/grazing land and remaining opportunity through the canonical historical ledger. No irrigation or future land-use series is activated.",
+  "uncertainty": "This is an explicit source-interpretation scenario. Yield transfer to restored fields and the LUH2 allocation remain uncertain. The old crop-mixture bound is retained as a comparison, not relabelled passing.",
+  "exclusions": [
+    "Do not recover generic potential without dated cultivation and a documented agricultural-system assignment.",
+    "Do not treat restored rainfed fields as irrigated fields.",
+    "Do not allocate land using population."
+  ]
+}

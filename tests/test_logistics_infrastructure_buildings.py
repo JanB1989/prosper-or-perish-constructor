@@ -555,10 +555,10 @@ def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> No
 
 
 def test_victuals_market_templates_split_export_and_import_flows() -> None:
-    export_texts = tuple(
-        path.read_text(encoding="utf-8-sig")
-        for path in (VICTUALS_MARKET_BLUEPRINT, VICTUALS_MARKET_RENDERED)
-    )
+    manifest = yaml.safe_load((ROOT / "blueprints/buildings.manifest.yml").read_text())
+    assert "buildings/victuals_market_export.yml: false" in (ROOT / "blueprints/buildings.manifest.yml").read_text()
+    assert not VICTUALS_MARKET_RENDERED.exists()
+    export_texts = (VICTUALS_MARKET_BLUEPRINT.read_text(encoding="utf-8-sig"),)
     import_texts = tuple(
         path.read_text(encoding="utf-8-sig")
         for path in (VICTUALS_MARKET_IMPORT_BLUEPRINT, VICTUALS_MARKET_IMPORT_RENDERED)
@@ -576,9 +576,13 @@ def test_victuals_market_templates_split_export_and_import_flows() -> None:
         assert "produced = province_food_purchase" in text
         assert "pp_province_food_to_market" not in text
 
-    for text in (*export_texts, *import_texts):
+    for text in export_texts:
         assert "local_nobles_estate_power = 0.05" in text
         assert "local_peasant_enfranchisment = -0.01" in text
         assert "local_market_access" not in text
 
+    for text in import_texts:
+        assert "local_monthly_food = 90.0" in text
+        assert "local_nobles_estate_power" not in text
+        assert "local_peasant_enfranchisment" not in text
     assert VICTUALS_MARKET_IMPORT_ICON.read_bytes() == VICTUALS_MARKET_ICON.read_bytes()

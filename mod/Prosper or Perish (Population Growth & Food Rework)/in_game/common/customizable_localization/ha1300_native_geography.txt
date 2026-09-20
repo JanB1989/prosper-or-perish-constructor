@@ -1,0 +1,18 @@
+﻿ha1300_native_coast = {
+ type = location
+ text = { localization_key = HA1300_COASTAL trigger = { is_coastal = yes } }
+ text = { localization_key = HA1300_INLAND fallback = yes }
+}
+ha1300_native_lake = {
+ type = location
+ text = { localization_key = HA1300_LAKESIDE trigger = { is_adjacent_to_lake = yes } }
+ text = { localization_key = HA1300_NO_LAKE fallback = yes }
+}
+ha1300_native_max_winter = {
+ type = location
+ text = { localization_key = HA1300_WINTER_NONE trigger = { location_max_winter_level = none } }
+ text = { localization_key = HA1300_WINTER_MILD trigger = { location_max_winter_level = mild } }
+ text = { localization_key = HA1300_WINTER_NORMAL trigger = { location_max_winter_level = normal } }
+ text = { localization_key = HA1300_WINTER_SEVERE trigger = { location_max_winter_level = severe } }
+ text = { localization_key = HA1300_UNKNOWN fallback = yes }
+}

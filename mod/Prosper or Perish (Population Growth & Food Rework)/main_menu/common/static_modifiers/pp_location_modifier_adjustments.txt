@@ -5,22 +5,24 @@ TRY_REPLACE:province_starving = {
 		category = province
 	}
 	local_population_growth = -0.04
+	# Self-provisioning tribesmen receive half the provincial growth penalty.
+	local_tribesmen_pop_growth = 0.02
 	local_supply_limit_modifier = -0.25
 	local_migration_attraction = -7.5
-	
+
 	local_pop_demotion_speed_modifier = 0.20 # 0.5
 	local_pop_demotion_speed = 0.025
-	
+
 	# local_upper_class_capacity_modifier = -0.75
 	local_life_expectancy = -10
 	# local_province_food_sales_output_modifier = 0.080
-	local_offset_output_modifier = 0.080
+	# local_offset_output_modifier = 0.080
 	local_province_food_purchase_output_modifier = 2.00
-	
+
 	local_migration_speed = 0.015
     local_monthly_prosperity = -0.05
 	local_defensive = -0.30
-	
+
 	local_tribesmen_migration_allowed = yes
 	local_laborers_migration_allowed = yes
 	local_peasants_migration_allowed = yes
@@ -69,6 +71,9 @@ TRY_REPLACE:positive_province_food_growth = {
 	local_province_food_sales_output_modifier = 0.50
 	local_province_food_purchase_output_modifier = -0.50
 	local_population_growth = 0.0075
+	# Native additive rate cancels the food bonus for self-provisioning tribesmen.
+	# Both rates scale with stored years; other tribal growth sources still apply.
+	local_tribesmen_pop_growth = -0.0075
 	local_devastation_recovery = 0.003
 	local_migration_attraction = 0.045
 	local_monthly_prosperity = 0.0025
@@ -121,7 +126,7 @@ TRY_REPLACE:building_levels = {
 }
 TRY_REPLACE:unsupported_building_levels = {
 	game_data = {
-		category = location 
+		category = location
 	}
 	local_build_buildings_efficiency = -0.03
 	local_construction_speed = -0.01
@@ -138,9 +143,9 @@ TRY_REPLACE:total_population = {
 	}
 	supply_limit = 0.02
 	blockade_force_required = 0.02
-	
+
 	local_max_rgo_size = 0.0020
-	
+
 	local_food_capacity = 2.5
 	# local_food_capacity = 300
 }
@@ -215,21 +220,21 @@ TRY_REPLACE:development = {
 	local_trade_center_power = 0.001
 	local_institution_growth_modifier = 0.001
 	local_construction_speed = 0.01
-	
+
 	local_food_capacity = 30
-	
+
 	free_building_levels = 0.3
-	
+
 	local_max_rgo_size = 0.15
-	
+
 	local_life_expectancy = 0.1
-	
+
 	occupation_time = 0.01
-	
+
 	local_build_buildings_efficiency = 0.001
 	maximum_stockpile_capacity = 10
 	local_production_efficiency = 0.0015
-	local_monthly_development = -0.00011
+	local_monthly_development = -0.0001
 	local_population_capacity = 0
 	local_population_capacity_modifier = 0.00125
 }

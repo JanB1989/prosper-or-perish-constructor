@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "source": "Stephens et al. 2019, doi:10.1126/science.aax1192",
+  "archive": "https://doi.org/10.7910/DVN/6ZXAGT",
+  "source_commit": "c724f08a07ecc49fa7797455f9c35d497f4fef88",
+  "data_license": "CC0; attribution requested, per source README",
+  "source_time": "1KBP (approximately 950 CE); no interpolation from 1500 CE",
+  "target_year": 1337,
+  "mapping": "Canonical calibrated centroids transformed into source Eckert IV CRS; no nearest-region imputation",
+  "matched_locations": 20567,
+  "unmapped_locations": 362,
+  "assessment": {
+    "Widespread": [
+      [
+        2,
+        0,
+        2,
+        2
+      ],
+      [
+        18.75,
+        50
+      ]
+    ],
+    "Common": [
+      [
+        2,
+        0,
+        1,
+        2
+      ],
+      [
+        18.75,
+        43.75
+      ]
+    ]
+  },
+  "population_inputs": false,
+  "potential_inputs": false,
+  "uncertainty": [
+    "Regional prevalence is not a local survey or a field intensity measurement.",
+    "Continuity from 950 to 1337 is an explicit inference; later observations are diagnostic only.",
+    "Common means 1-20% and widespread >20% regional prevalence; these are not hectare assignments.",
+    "Game development scores are shared uncertain analogues, not measured historical values.",
+    "Named local evidence overrides this layer. No water hectares or extra crop cycles granted.",
+    "HYDE and ArchaeoGLOBE may share evidence; this layer is not independent validation."
+  ],
+  "baseline": "round56 first frozen candidate; food/growth/scale unchanged",
+  "input_hashes": {
+    "research/population_capacity/build_archaeoglobe_round_56.py": "83ffbe5267fa5bc5683b8b1910f16e7845b52156ac862e1375d8e89f5b128e41",
+    "artifacts/data/population_simulation/repair_round_56/preflight/starting_ledger.parquet": "f82fd15f2defc663beab96d80f2992914872bebad9c866134ace32d82da56825",
+    "artifacts/data/population_capacity/repair_round_56/sources/archaeoglobe/location_practice_crosswalk.csv": "65ef54b1b663079a42dfa44e2bb5b891503f4d4cae7fa652177e9147edecaed2",
+    "research/population_capacity/historical_assignments_round_56.json": "317ac644af32be94440ed7eb665488635b1aee74467c0f6082a2fa120423e4cd"
+  }
+}

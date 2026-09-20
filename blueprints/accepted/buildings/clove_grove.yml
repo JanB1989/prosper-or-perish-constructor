@@ -1,19 +1,19 @@
-﻿version: 2
+version: 2
 tag: clove_grove
 building:
   key: clove_grove
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_clove_grove_base_cloves
-    - name: slot_1
-      methods:
-        - pp_clove_grove_no_curing
-        - pp_clove_grove_curing_houses
+  - name: slot_0
+    methods:
+    - pp_clove_grove_base_cloves
+  - name: slot_1
+    methods:
+    - pp_clove_grove_no_curing
+    - pp_clove_grove_curing_houses
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.28
     max_levels = farm_capacity_max_clove_grove
@@ -60,6 +60,7 @@ building:
 
     raw_modifier = {
       farm_capacity_from_clove_grove = -1
+      local_population_capacity = -5
     }
 
     modifier = {
@@ -79,18 +80,17 @@ icon:
   output_dds: clove_grove.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for a clove grove, transparent background. Center a tropical clove tree branch with green-pink unopened flower buds, dark dried cloves on raised wooden drying racks, a small rustic curing hut or drying screen, and a shallow wicker tray of cloves. Use readable painterly shapes, softly outlined historical UI art, warm dark clove browns, muted wood tan, deep green leaves, small pink-green bud accents, no text, no frame, not photorealistic, not cartoonish.
-
 evaluation:
   allow_rules:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_clove_grove_base_cloves:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Passive base output intentionally carries 30% of the full worked clove output after the high-base rebalance.
         amortization_months: Existing accepted spice grove payback is faster than the new amortization minimum; revisit during the clove grove rebalance.
     pp_clove_grove_curing_houses:
-      production_efficiency: 1.10
+      production_efficiency: 1.1
       allow_rules:
         amortization_months: Existing accepted spice grove payback is faster than the new amortization minimum; revisit during the clove grove rebalance.

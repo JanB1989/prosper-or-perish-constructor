@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "status": "frozen named-place rice-presence correction; not accepted",
+  "source": {
+    "source_id": "christie_early_java_rice",
+    "title": "Water and rice in early Java and Bali",
+    "citation_url": "https://pure.mpg.de/rest/items/item_922657_3/component/file_3636125/content",
+    "object_url": "https://pure.mpg.de/rest/items/item_922657_3/component/file_3636125/content",
+    "object_sha256": "936b5f77366a279e3e78897dedc9e79fda9269fb18190c789028c492f8b680fa",
+    "role": "Dated rice presence in a named cultivated landscape; no yield or acreage target"
+  },
+  "local_path": "artifacts/data/population_capacity/repair_sources/water_rice_early_java_bali.pdf",
+  "records": [
+    {
+      "evidence_id": "christie_malang_rice_before_1337",
+      "location_tags": [
+        "malang"
+      ],
+      "crops": [
+        "rice_dry",
+        "rice_wet"
+      ],
+      "evidence_state": "known_available",
+      "attested_by_year": 1100,
+      "source_id": "christie_early_java_rice",
+      "source_object_sha256": "936b5f77366a279e3e78897dedc9e79fda9269fb18190c789028c492f8b680fa",
+      "source_locator": "PDF pp. 249 and 256; printed pp. 240 and 247",
+      "geographic_basis": "Named Malang uplands mapped explicitly to the existing malang location; not expanded to all Java or to neighbouring locations. This is a landscape-name crosswalk, not archaeological point geolocation or a measured field polygon.",
+      "interpretation": "Early rice cultivation and the 891 charter concerning conversion to wet fields on the Malang-coast route attest rice availability. Both rice water-mode keys represent presence of the rice crop; actual irrigation and suitable hectares remain separate physical constraints. No double harvest; the chapter reports no documented double rice cropping before the fifteenth century."
+    }
+  ]
+}

@@ -46,6 +46,7 @@ unique_production_methods = {
 construction_demand = farm_constructions
 raw_modifier = {
   farm_capacity_from_fiber_crops_farm = -1
+  local_population_capacity = -5
 }
 }
 # <<< eu5-building-pipeline:fiber_crops_farm:building

@@ -29,6 +29,7 @@ import polars as pl
 from prosper_or_perish_constructor.worldbuilder.contract import Contract, WorldBuilderConfig, units
 
 CAPACITY_KEYS = ("local_population_capacity", "local_population_capacity_modifier")
+FOOD_KEY = "local_monthly_food_modifier"   # the mod has no food production on attributes: cancelled exactly, never inherited
 CLASS_DIRS = {"climate": "climates", "vegetation": "vegetation", "topography": "topography"}
 ASSIGNMENT_FILES = {
     "climate": ("climate_assignments.csv", "vanilla_climate", "game_climate"),
@@ -77,7 +78,7 @@ def parse_class_capacity(paths: Iterable[Path]) -> dict[str, dict[str, float]]:
                     current = match.group("key")
                     found.setdefault(current, {})
             if current is not None and depth >= 1:
-                for key, value in re.findall(r"\b(local_population_capacity(?:_modifier)?|local_[a-z_]+_output_modifier)\s*=\s*(-?\d+(?:\.\d+)?)", line):
+                for key, value in re.findall(r"\b(local_population_capacity(?:_modifier)?|local_[a-z_]+_output_modifier|local_monthly_food_modifier)\s*=\s*(-?\d+(?:\.\d+)?)", line):
                     if key not in found[current]:
                         found[current][key] = float(value)
             depth += line.count("{") - line.count("}")
@@ -88,7 +89,7 @@ def parse_class_capacity(paths: Iterable[Path]) -> dict[str, dict[str, float]]:
 
 
 def parse_legacy_effects(path: Path) -> dict[str, dict[str, str]]:
-    """{vanilla class: {modifier: value}} from a legacy TRY_INJECT file, capacity lines removed."""
+    """{vanilla class: {modifier: value}} from a legacy TRY_INJECT file, capacity and food lines removed."""
     effects: dict[str, dict[str, str]] = {}
     current: str | None = None
     for raw in path.read_text(encoding="utf-8-sig").splitlines():
@@ -101,7 +102,7 @@ def parse_legacy_effects(path: Path) -> dict[str, dict[str, str]]:
         if current and "=" in line and not line.endswith("{") and line != "}":
             key, _, value = line.partition("=")
             key, value = key.strip(), value.strip()
-            if key and value and key not in CAPACITY_KEYS:
+            if key and value and key not in CAPACITY_KEYS and key != FOOD_KEY:
                 effects[current][key] = value
         if line == "}" and current and raw.startswith("}"):
             current = None
@@ -207,13 +208,13 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
                 if name != "local_population_capacity":
                     lines[name] = _fmt(v - vanilla.get(name, 0.0))
             for name, v in vanilla.items():
-                if name.endswith("_output_modifier") and name not in lines and abs(v) >= 0.005:
+                if (name.endswith("_output_modifier") or name == FOOD_KEY) and name not in lines and abs(v) >= 0.005:
                     lines[name] = _fmt(-v)
             for name, v in legacy.get(parents.get(key, key), {}).items():
                 lines.setdefault(name, v)
             if lines:
                 blocks.append(render_block(f"TRY_INJECT:{key}", lines, nested="location_modifier"))
-        # classes the fit never saw (no ownable location) still need their vanilla capacity cancelled
+        # classes the fit never saw (no ownable location) still need their vanilla capacity and food cancelled
         for key, vanilla in sorted(defs.items()):
             if key in keys or not vanilla:
                 continue
@@ -222,11 +223,13 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
                 lines["local_population_capacity"] = _fmt(-vanilla["local_population_capacity"])
             if vanilla.get("local_population_capacity_modifier"):
                 lines["local_population_capacity_modifier"] = _fmt(-vanilla["local_population_capacity_modifier"])
+            if vanilla.get(FOOD_KEY):
+                lines[FOOD_KEY] = _fmt(-vanilla[FOOD_KEY])
             for name, v in legacy.get(parents.get(key, key), {}).items():
                 lines.setdefault(name, v)
             if lines:
                 blocks.append(render_block(f"TRY_INJECT:{key}", lines, nested="location_modifier"))
-        text = "\n\n".join([GENERATED, f"# {attribute}: flat capacity rows (people / 1000) and goods output rows from the World Builder fit,", "# vanilla capacity values of each class cancelled exactly, legacy balance effects re-keyed by dominant vanilla parent.", *blocks]) + "\n"
+        text = "\n\n".join([GENERATED, f"# {attribute}: flat capacity rows (people / 1000) and goods output rows from the World Builder fit,", "# vanilla capacity and food values of each class cancelled exactly, legacy balance effects re-keyed by dominant vanilla parent.", *blocks]) + "\n"
         path = mod_root / "in_game/common" / directory / "pp_wb_attribute_rows.txt"
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("﻿" + text, encoding="utf-8", newline="\n")
@@ -236,7 +239,7 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
 
 def static_modifier_bodies(vanilla_root: Path, pattern: str) -> dict[str, list[str]]:
     """Vanilla location static-modifier block lines (inside the braces) for names matching ``pattern``,
-    without their population-capacity lines."""
+    without their population-capacity and food lines."""
     path = vanilla_root / "game/main_menu/common/static_modifiers/location.txt"
     bodies: dict[str, list[str]] = {}
     current: str | None = None
@@ -257,7 +260,7 @@ def static_modifier_bodies(vanilla_root: Path, pattern: str) -> dict[str, list[s
                 current = None
                 depth = 0
                 continue
-            if stripped and "local_population_capacity" not in stripped:
+            if stripped and "local_population_capacity" not in stripped and FOOD_KEY not in stripped:
                 bodies[current].append(stripped)
     return bodies
 
@@ -314,7 +317,7 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
         extra = [f"\t{k} = {_fmt(v)}" for k, v in mods.items()]
         river_blocks.append("\n".join([f"TRY_REPLACE:river_flowing_through_{level} = {{", *[f"\t{l}" for l in body], *extra, "}"]))
     (mod_root / RIVER_MODIFIERS_PATH).parent.mkdir(parents=True, exist_ok=True)
-    (mod_root / RIVER_MODIFIERS_PATH).write_text("﻿" + "\n\n".join([GENERATED, "# River capacity percentages removed; World Builder river-level rows added (levels 1..5 = engine river sizes).", *river_blocks]) + "\n", encoding="utf-8", newline="\n")
+    (mod_root / RIVER_MODIFIERS_PATH).write_text("﻿" + "\n\n".join([GENERATED, "# River capacity percentages and food modifiers removed; World Builder river-level rows added (levels 1..5 = engine river sizes).", *river_blocks]) + "\n", encoding="utf-8", newline="\n")
 
     # goods intercepts: one modifier per good on the locations where it is the RGO
     if rgo_by_location is not None:

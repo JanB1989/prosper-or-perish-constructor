@@ -42,12 +42,12 @@ def test_units_and_class_rows_fold_capacity_intercept_into_climate_only(tmp_path
 
 def test_parse_class_capacity_reads_vanilla_values_and_legacy_effects(tmp_path):
     defs = tmp_path / "00_default.txt"
-    defs.write_text("arid = {\n\tcolor = x\n\tlocation_modifier = {\n\t\tlocal_population_capacity_modifier = 0.50\n\t\tlocal_food_decay = 0.001\n\t}\n}\nfarmland = {\n\tlocation_modifier = { local_population_capacity = 100 }\n}\n", encoding="utf-8")
+    defs.write_text("arid = {\n\tcolor = x\n\tlocation_modifier = {\n\t\tlocal_population_capacity_modifier = 0.50\n\t\tlocal_food_decay = 0.001\n\t\tlocal_monthly_food_modifier = -0.33\n\t}\n}\nfarmland = {\n\tlocation_modifier = { local_population_capacity = 100 }\n}\n", encoding="utf-8")
     found = wb_modifiers.parse_class_capacity([defs])
-    assert found["arid"] == {"local_population_capacity_modifier": 0.5} and found["farmland"] == {"local_population_capacity": 100.0}
+    assert found["arid"] == {"local_population_capacity_modifier": 0.5, "local_monthly_food_modifier": -0.33} and found["farmland"] == {"local_population_capacity": 100.0}
     legacy = tmp_path / "climates.txt"
-    legacy.write_text("TRY_INJECT:arid = {\n\tlocation_modifier = {\n\t\tlocal_population_capacity_modifier = -0.5\n\t\tfree_building_levels = -6\n\t}\n}\n", encoding="utf-8")
-    assert wb_modifiers.parse_legacy_effects(legacy) == {"arid": {"free_building_levels": "-6"}}
+    legacy.write_text("TRY_INJECT:arid = {\n\tlocation_modifier = {\n\t\tlocal_population_capacity_modifier = -0.5\n\t\tlocal_monthly_food_modifier = 0.33\n\t\tfree_building_levels = -6\n\t}\n}\n", encoding="utf-8")
+    assert wb_modifiers.parse_legacy_effects(legacy) == {"arid": {"free_building_levels": "-6"}}   # food never inherited
 
 
 def test_cap_script_value_and_gate_use_game_keys(tmp_path):
@@ -205,4 +205,23 @@ def test_static_modifiers_cover_reference_classes_and_are_placed_in_the_setup(tm
     assert "locations = {" in setup
     assert '{ modifier = "pp_wb_fertility_high" start_date = 1111.1.1 date = 9999.1.1 size = 1 }' in setup
     assert "\ta = {" in setup and "\tb = {" in setup
+
+
+def test_class_injects_cancel_vanilla_food_exactly_and_rivers_drop_food(tmp_path):
+    c = _contract(tmp_path)
+    export = tmp_path / "export"
+    (export / "in_game/common/climates").mkdir(parents=True)
+    (export / "in_game/common/climates/00_default.txt").write_text("arid = {\n\tlocation_modifier = {\n\t\tlocal_monthly_food_modifier = -0.33\n\t}\n}\ncontinental = {\n}\n", encoding="utf-8")
+    for d in ("vegetation", "topography"):
+        (export / "in_game/common" / d).mkdir(parents=True)
+    wb_modifiers.write_class_injects(c, export, tmp_path, tmp_path)
+    text = (tmp_path / "in_game/common/climates/pp_wb_attribute_rows.txt").read_text(encoding="utf-8-sig")
+    arid = text[text.index("TRY_INJECT:arid"):]
+    arid = arid[: arid.index("\n}") + 2]
+    assert "local_monthly_food_modifier = 0.33" in arid      # vanilla -0.33 cancelled exactly
+    assert "local_monthly_food_modifier" not in text.replace(arid, "")   # nowhere else
+    vanilla = tmp_path / "vanilla"
+    (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
+    (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("river_flowing_through_2 = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n\tlocal_population_capacity_modifier = 0.2\n\tlocal_monthly_food_modifier = 0.10\n\tlocal_supply_limit_modifier = 0.10\n}\n", encoding="utf-8")
+    assert wb_modifiers.river_bodies(vanilla)[2] == ["game_data = {", "category = location", "}", "local_supply_limit_modifier = 0.10"]
 

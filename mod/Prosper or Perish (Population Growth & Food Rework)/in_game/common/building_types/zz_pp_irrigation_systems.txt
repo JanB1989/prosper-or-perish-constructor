@@ -36,6 +36,7 @@ REPLACE:irrigation_systems = {
   construction_demand = village_construction
   raw_modifier = {
     local_population_capacity = 3.4
+    pp_wb_levels_irrigation_systems = 1
   }
 
   modifier = {

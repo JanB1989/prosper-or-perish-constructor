@@ -59,7 +59,7 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
         "bund": "pp_bund_price",
         "field_drainage": "pp_field_drainage_price",
         "field_management": "pp_field_management_price",
-        "irrigated_rice_paddies": "pp_irrigated_rice_paddies_price",
+        "irrigated_fields": "pp_irrigated_fields_price",
         "irrigation_reservoirs": "pp_irrigation_reservoirs_price",
         "land_clearance": "pp_land_clearance_price",
         "qanats": "pp_qanats_price",
@@ -210,7 +210,7 @@ def test_generated_estate_privilege_rgo_cost_redirects_replace_instead_of_inject
     assert "global_peasants_estate_power" in text
     assert "global_tribes_estate_power" in text
     assert "expand_rgo_farming_cost_modifier" not in text
-    assert "pp_irrigated_rice_paddies_price_cost_modifier" not in text
+    assert "pp_irrigated_fields_price_cost_modifier" not in text
     assert RGO_COST_REDIRECT_REPLACE_COLLECTIONS == frozenset({"estate_privileges", "laws"})
 
 

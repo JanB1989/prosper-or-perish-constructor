@@ -114,11 +114,19 @@ overpopulation_peasant_unrest = 0.1
 clearing = "land_clearance"
 management = "field_management"
 water_supply = "irrigation_systems"
-paddy_control = "irrigated_rice_paddies"
+paddy_control = "irrigated_fields"
 flood_bunds = "bund"
 field_drainage = "field_drainage"
 polders = "polders"
 oasis_irrigation = "qanats"
+
+[worldbuilder.buildings.niche]
+# Culture- or country-locked vanilla capacity buildings that keep their niche. Each is a full REPLACE blueprint that
+# shares the cap of a general family (levels of every member count against the same equation), is worth `strength` x
+# the family's people per level, and keeps its lock (`lock` lines are ANDed into location_potential; country locks and
+# advance unlocks stay in the blueprint).
+khmer_baray = { family = "irrigation_systems", strength = 1.5, lock = ["dominant_culture ?= culture:khmer_culture"] }
+incamisana = { family = "irrigation_systems", strength = 1.5 }
 
 [worldbuilder.level_scale]
 # multiply levels, divide people per level; 1.0 keeps the World Builder units

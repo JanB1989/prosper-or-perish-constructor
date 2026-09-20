@@ -66,12 +66,12 @@ farm_capacity_max_farming_village_rotations = {
 		value = modifier:farm_capacity_from_farming_village_rotations
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_HUSBANDRY_FARMSTEAD"
-		value = modifier:farm_capacity_from_husbandry_farmstead
-	}
-	subtract = {
 		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE"
 		value = modifier:farm_capacity_from_farming_village
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_HUSBANDRY_FARMSTEAD"
+		value = modifier:farm_capacity_from_husbandry_farmstead
 	}
 	min = 0
 }
@@ -89,16 +89,16 @@ farm_capacity_max_model_farm = {
 		value = modifier:farm_capacity_from_model_farm
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE_ROTATIONS"
-		value = modifier:farm_capacity_from_farming_village_rotations
+		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE"
+		value = modifier:farm_capacity_from_farming_village
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_FARM_HUSBANDRY_FARMSTEAD"
 		value = modifier:farm_capacity_from_husbandry_farmstead
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE"
-		value = modifier:farm_capacity_from_farming_village
+		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE_ROTATIONS"
+		value = modifier:farm_capacity_from_farming_village_rotations
 	}
 	min = 0
 }
@@ -127,12 +127,12 @@ farm_capacity_max_nursery_orchard = {
 		floor = yes
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_FRUIT_ORCHARD"
-		value = modifier:farm_capacity_from_fruit_orchard
-	}
-	subtract = {
 		desc = "BUILDING_LEVEL_FARM_NURSERY_ORCHARD"
 		value = modifier:farm_capacity_from_nursery_orchard
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_FRUIT_ORCHARD"
+		value = modifier:farm_capacity_from_fruit_orchard
 	}
 	min = 0
 }
@@ -203,16 +203,16 @@ farm_capacity_max_enclosed_sheep_walks = {
 		floor = yes
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_HURDLED_SHEEPCOTES"
-		value = modifier:farm_capacity_from_hurdled_sheepcotes
-	}
-	subtract = {
 		desc = "BUILDING_LEVEL_FARM_ENCLOSED_SHEEP_WALKS"
 		value = modifier:farm_capacity_from_enclosed_sheep_walks
 	}
 	subtract = {
 		desc = "BUILDING_LEVEL_FARM_SHEEP_FARMS"
 		value = modifier:farm_capacity_from_sheep_farms
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_HURDLED_SHEEPCOTES"
+		value = modifier:farm_capacity_from_hurdled_sheepcotes
 	}
 	min = 0
 }
@@ -388,12 +388,12 @@ farm_capacity_max_trapiche_sugarcane_farm = {
 		floor = yes
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_SUGARCANE_FARM"
-		value = modifier:farm_capacity_from_sugarcane_farm
-	}
-	subtract = {
 		desc = "BUILDING_LEVEL_FARM_TRAPICHE_SUGARCANE_FARM"
 		value = modifier:farm_capacity_from_trapiche_sugarcane_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_SUGARCANE_FARM"
+		value = modifier:farm_capacity_from_sugarcane_farm
 	}
 	min = 0
 }
@@ -437,12 +437,12 @@ farm_capacity_max_market_tobacco_farm = {
 		floor = yes
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_TOBACCO_FARM"
-		value = modifier:farm_capacity_from_tobacco_farm
-	}
-	subtract = {
 		desc = "BUILDING_LEVEL_FARM_MARKET_TOBACCO_FARM"
 		value = modifier:farm_capacity_from_market_tobacco_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_TOBACCO_FARM"
+		value = modifier:farm_capacity_from_tobacco_farm
 	}
 	min = 0
 }
@@ -516,12 +516,12 @@ farm_capacity_max_managed_cocoa_grove = {
 		floor = yes
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_COCOA_GROVE"
-		value = modifier:farm_capacity_from_cocoa_grove
-	}
-	subtract = {
 		desc = "BUILDING_LEVEL_FARM_MANAGED_COCOA_GROVE"
 		value = modifier:farm_capacity_from_managed_cocoa_grove
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_COCOA_GROVE"
+		value = modifier:farm_capacity_from_cocoa_grove
 	}
 	min = 0
 }
@@ -667,12 +667,12 @@ farm_capacity_max_regulated_sericulture_farm = {
 		floor = yes
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_SERICULTURE_FARM"
-		value = modifier:farm_capacity_from_sericulture_farm
-	}
-	subtract = {
 		desc = "BUILDING_LEVEL_FARM_REGULATED_SERICULTURE_FARM"
 		value = modifier:farm_capacity_from_regulated_sericulture_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_SERICULTURE_FARM"
+		value = modifier:farm_capacity_from_sericulture_farm
 	}
 	min = 0
 }
@@ -716,12 +716,12 @@ farm_capacity_max_tea_sorting_garden = {
 		floor = yes
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_TEA_GARDEN"
-		value = modifier:farm_capacity_from_tea_garden
-	}
-	subtract = {
 		desc = "BUILDING_LEVEL_FARM_TEA_SORTING_GARDEN"
 		value = modifier:farm_capacity_from_tea_sorting_garden
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_TEA_GARDEN"
+		value = modifier:farm_capacity_from_tea_garden
 	}
 	min = 0
 }

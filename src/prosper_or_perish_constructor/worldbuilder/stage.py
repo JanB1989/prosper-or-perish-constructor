@@ -56,6 +56,10 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     caps = wb_buildings.write_caps(contract, cfg, mod_root)
     report["improvement_buildings"] = {k: {"unit_units": v["unit_units"], "scale": v["scale"], "limit": v["limit"]} for k, v in caps.items()}
     report["blueprints_patched"] = wb_buildings.patch_improvement_blueprints(contract, cfg, repo, caps)
+    leaks = wb_buildings.vanilla_capacity_leaks(repo, vanilla_root(repo, project))
+    if leaks:
+        raise ValueError("vanilla population capacity would leak through: " + "; ".join(f"{k}: {v}" for k, v in leaks.items()))
+    report["vanilla_capacity_buildings"] = sorted(wb_buildings.vanilla_capacity_buildings(vanilla_root(repo, project)))
     from prosper_or_perish_constructor.rural_capacity import LAND_FARM_BUILDINGS
 
     report["farm_blueprints_patched"] = wb_buildings.patch_farm_blueprints(cfg, repo, list(LAND_FARM_BUILDINGS))

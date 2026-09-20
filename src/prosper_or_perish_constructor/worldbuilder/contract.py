@@ -40,6 +40,7 @@ class WorldBuilderConfig:
     overpopulation_peasant_unrest: float
     sync_geography: bool
     raw: dict[str, Any] = field(default_factory=dict)
+    niche: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
 def load_config(repo: Path, project: Path) -> WorldBuilderConfig:
@@ -60,10 +61,16 @@ def load_config(repo: Path, project: Path) -> WorldBuilderConfig:
     farm_land = {k: {"land": float(v["land"]), "reserve": float(v["reserve"])} for k, v in farm.items() if isinstance(v, dict) and "land" in v}
     farm_classes = {k: [str(x) for x in v] for k, v in (farm.get("classes") or {}).items()} if isinstance(farm.get("classes"), dict) else {}
     scale = section.get("level_scale") if isinstance(section.get("level_scale"), dict) else {}
+    niche_raw = buildings.get("niche") if isinstance(buildings.get("niche"), dict) else {}
+    niche = {
+        str(k): {"family": str(v["family"]), "strength": float(v.get("strength", 1.5)), "lock": [str(x) for x in (v.get("lock") or [])]}
+        for k, v in niche_raw.items() if isinstance(v, dict) and v.get("family")
+    }
     return WorldBuilderConfig(
         handover=path_of("handover"),
         geography_export=path_of("geography_export"),
         building_map={str(k): str(v) for k, v in (buildings.get("map") or {}).items()},
+        niche=niche,
         farm_land=farm_land,
         farm_classes=farm_classes,
         level_scale={str(k): float(v) for k, v in scale.items()},

@@ -2,6 +2,8 @@
 
 # Improvement building level caps: base + attribute class terms + levels per development point x development.
 
+# Families with niche members: <key>_shared is the equation; each member's cap subtracts the other members' levels.
+
 pp_wb_cap_land_clearance = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
@@ -410,7 +412,7 @@ pp_wb_cap_field_management = {
 	max = 20
 }
 
-pp_wb_cap_irrigation_systems = {
+pp_wb_cap_irrigation_systems_shared = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
 		value = 1
@@ -453,7 +455,46 @@ pp_wb_cap_irrigation_systems = {
 	max = 20
 }
 
-pp_wb_cap_irrigated_rice_paddies = {
+pp_wb_cap_irrigation_systems = {
+	value = pp_wb_cap_irrigation_systems_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
+		value = modifier:pp_wb_levels_khmer_baray
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
+		value = modifier:pp_wb_levels_incamisana
+	}
+	min = 0
+}
+
+pp_wb_cap_khmer_baray = {
+	value = pp_wb_cap_irrigation_systems_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
+		value = modifier:pp_wb_levels_irrigation_systems
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
+		value = modifier:pp_wb_levels_incamisana
+	}
+	min = 0
+}
+
+pp_wb_cap_incamisana = {
+	value = pp_wb_cap_irrigation_systems_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
+		value = modifier:pp_wb_levels_irrigation_systems
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
+		value = modifier:pp_wb_levels_khmer_baray
+	}
+	min = 0
+}
+
+pp_wb_cap_irrigated_fields = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
 		value = 2

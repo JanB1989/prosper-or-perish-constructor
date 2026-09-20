@@ -1,20 +1,60 @@
 ﻿# >>> eu5-building-pipeline:khmer_baray:building
-TRY_INJECT:khmer_baray = {
-	price = pp_khmer_baray_price
-	increase_per_level_cost = 0.30
-	custom_tags = { pp_food_security_priority pp_water_control_priority }
-	raw_modifier = {
-		farm_capacity_from_khmer_baray = 0.60
-	}
+REPLACE:khmer_baray = {
+audio_tier = 4
+is_special = yes
+is_foreign = no
+pop_type = laborers
+max_levels = pp_wb_cap_khmer_baray
+increase_per_level_cost = 0.30
+price = pp_khmer_baray_price
+employment_size = special_medium_peasant_building
+category = infrastructure_category
+custom_tags = { pp_food_security_priority pp_water_control_priority }
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+expensive = yes
 
-	modifier = {
-		local_monthly_food_modifier = -0.20 # vanilla 0.20
-		local_rice_output_modifier = 0.1
-		local_fish_output_modifier = 0.05
-		local_cotton_output_modifier = 0.03
-		local_sugar_output_modifier = 0.03
-		local_tea_output_modifier = 0.02
-	}
-	ai_forbid_shutdown = yes
+# Khmer niche of the irrigation family: shares the irrigation cap, worth more per level (see [worldbuilder.buildings.niche]).
+location_potential = {
+  dominant_culture ?= culture:khmer_culture
+  OR = {
+    OR = { has_location_modifier = river_flowing_through_1 has_location_modifier = river_flowing_through_2 has_location_modifier = river_flowing_through_3 has_location_modifier = river_flowing_through_4 has_location_modifier = river_flowing_through_5 }
+    is_adjacent_to_lake = yes
+    OR = { topography = ha1300_topo_deltas topography = ha1300_topo_floodplains topography = ha1300_topo_valleys }
+    AND = {
+      is_coastal = yes
+      OR = { topography = flatland topography = wetlands }
+    }
+  }
+}
+country_potential = {
+  OR = {
+    tag = KHM
+    culture ?= culture:khmer_culture
+  }
+}
+
+build_time = infrastructure_build_time
+construction_demand = khmer_baray_construction
+
+raw_modifier = {
+  local_population_capacity = 5.1
+  pp_wb_levels_khmer_baray = 1
+}
+
+modifier = {
+  local_rice_output_modifier = 0.05
+  local_fish_output_modifier = 0.02
+  local_cotton_output_modifier = 0.02
+  local_sugar_output_modifier = 0.02
+  local_tea_output_modifier = 0.01
+}
+capital_country_modifier = {
+  global_monthly_prosperity = 0.001
+}
+forbidden_for_estates = no
+ai_forbid_shutdown = yes
 }
 # <<< eu5-building-pipeline:khmer_baray:building

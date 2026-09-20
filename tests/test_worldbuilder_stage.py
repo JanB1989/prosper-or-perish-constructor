@@ -94,3 +94,84 @@ def test_farm_constants_by_class(tmp_path):
     from prosper_or_perish_constructor.worldbuilder.contract import WorldBuilderConfig
     cfg = WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={}, farm_land={"arable": {"land": 5, "reserve": 5}, "herd": {"land": 2, "reserve": 1}}, farm_classes={"herd": ["sheep_farms"]}, level_scale={}, level_limit=20, goods_floor=-0.2, overpopulation_peasant_unrest=0.1, sync_geography=False)
     assert wb_buildings.farm_constants(cfg, "sheep_farms") == (2.0, 1.0) and wb_buildings.farm_constants(cfg, "farming_village") == (5.0, 5.0)
+
+
+def _cfg(tmp_path: Path, niche: dict | None = None):
+    from prosper_or_perish_constructor.worldbuilder.contract import WorldBuilderConfig
+
+    return WorldBuilderConfig(
+        handover=tmp_path, geography_export=tmp_path, building_map={"clearing": "land_clearance"}, niche=niche or {},
+        farm_land={"arable": {"land": 5.0, "reserve": 5.0}}, farm_classes={}, level_scale={}, level_limit=20, goods_floor=-0.2,
+        overpopulation_peasant_unrest=0.1, sync_geography=False,
+    )
+
+
+def test_niche_buildings_share_the_family_cap_and_are_stronger(tmp_path):
+    c = _contract(tmp_path)
+    cfg = _cfg(tmp_path, {"terraces_x": {"family": "land_clearance", "strength": 1.5, "lock": ["dominant_culture ?= culture:x"]}})
+    caps = wb_buildings.write_caps(c, cfg, tmp_path)
+    text = (tmp_path / wb_buildings.CAPS_PATH).read_text(encoding="utf-8-sig")
+    assert "pp_wb_cap_land_clearance_shared = {" in text
+    assert "pp_wb_cap_land_clearance = {\n\tvalue = pp_wb_cap_land_clearance_shared\n\tsubtract = {\n\t\tdesc = \"BUILDING_LEVEL_WB_SHARED_TERRACES_X\"\n\t\tvalue = modifier:pp_wb_levels_terraces_x" in text
+    assert "pp_wb_cap_terraces_x = {\n\tvalue = pp_wb_cap_land_clearance_shared\n\tsubtract = {\n\t\tdesc = \"BUILDING_LEVEL_WB_SHARED_LAND_CLEARANCE\"\n\t\tvalue = modifier:pp_wb_levels_land_clearance" in text
+    assert caps["terraces_x"]["unit_units"] == round(5.2 * 1.5, 2) and caps["terraces_x"]["niche"] and caps["terraces_x"]["family"] == "land_clearance"
+    types = (tmp_path / wb_buildings.LEVELS_TYPES_PATH).read_text(encoding="utf-8-sig")
+    assert "pp_wb_levels_land_clearance = {" in types and "pp_wb_levels_terraces_x = {" in types
+    loc = (tmp_path / "main_menu/localization/english/pp_wb_building_caps_l_english.yml").read_text(encoding="utf-8-sig")
+    assert 'BUILDING_LEVEL_WB_SHARED_TERRACES_X: "Levels of $terraces_x$"' in loc
+    # setup rows only come from the general member (the niche shares its kind)
+    owners = {"a": "SWE"}
+    out = wb_buildings.write_setup(c, cfg, caps, owners, tmp_path)
+    rows = (tmp_path / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
+    assert out["rows"] == 1 and "land_clearance = { tag = SWE level = 3 location = a }" in rows and "terraces_x" not in rows
+
+
+def test_niche_blueprint_gets_lock_gate_counter_and_must_be_replace(tmp_path):
+    import yaml
+
+    c = _contract(tmp_path)
+    cfg = _cfg(tmp_path, {"terraces_x": {"family": "land_clearance", "strength": 1.5, "lock": ["dominant_culture ?= culture:x"]}})
+    bp = tmp_path / wb_buildings.BLUEPRINTS
+    bp.mkdir(parents=True)
+    body = "    is_foreign = no\n    max_levels = 1\n    location_potential = {\n      always = yes\n    }\n    modifier = {\n    }\n"
+    for key, mode in (("land_clearance", "REPLACE"), ("terraces_x", "REPLACE")):
+        (bp / f"{key}.yml").write_text(yaml.safe_dump({"version": 2, "tag": key, "building": {"key": key, "mode": mode, "body": body}}, sort_keys=False), encoding="utf-8")
+    (tmp_path / wb_buildings.MANIFEST).parent.mkdir(parents=True, exist_ok=True)
+    (tmp_path / wb_buildings.MANIFEST).write_text("enabled: {}\n", encoding="utf-8")
+    caps = wb_buildings.write_caps(c, cfg, tmp_path)
+    patched = wb_buildings.patch_improvement_blueprints(c, cfg, tmp_path, caps)
+    assert set(patched) == {"land_clearance", "terraces_x"}
+    niche = yaml.safe_load((bp / "terraces_x.yml").read_text(encoding="utf-8"))["building"]["body"]
+    assert "max_levels = pp_wb_cap_terraces_x" in niche
+    assert "local_population_capacity = 7.8" in niche and "pp_wb_levels_terraces_x = 1" in niche
+    assert "location_potential = {\n      dominant_culture ?= culture:x\n      OR = { climate = arid climate = continental }\n    }" in niche
+    general = yaml.safe_load((bp / "land_clearance.yml").read_text(encoding="utf-8"))["building"]["body"]
+    assert "pp_wb_levels_land_clearance = 1" in general and "dominant_culture" not in general
+    (bp / "terraces_x.yml").write_text(yaml.safe_dump({"version": 2, "tag": "terraces_x", "building": {"key": "terraces_x", "mode": "TRY_INJECT", "body": body}}, sort_keys=False), encoding="utf-8")
+    with pytest.raises(ValueError, match="REPLACE"):
+        wb_buildings.patch_improvement_blueprints(c, cfg, tmp_path, caps)
+
+
+def test_vanilla_capacity_leaks_need_replace_blueprints(tmp_path):
+    import yaml
+
+    vanilla = tmp_path / "vanilla"
+    folder = vanilla / "game/in_game/common/building_types"
+    folder.mkdir(parents=True)
+    (folder / "unique.txt").write_text(
+        "﻿bund = {\n\tmax_levels = 3\n\tmodifier = {\n\t\tlocal_population_capacity = 0.5\n\t}\n}\n\npolders = {\n\tmodifier = {\n\t\tlocal_population_capacity_modifier = 0.025\n\t}\n}\n\nmill = {\n\tmodifier = {\n\t\tlocal_grain_output_modifier = 0.1\n\t}\n}\n",
+        encoding="utf-8",
+    )
+    assert wb_buildings.vanilla_capacity_buildings(vanilla) == {"bund": "unique.txt", "polders": "unique.txt"}
+    repo = tmp_path / "repo"
+    bp = repo / wb_buildings.BLUEPRINTS
+    bp.mkdir(parents=True)
+    (bp / "bund.yml").write_text(yaml.safe_dump({"building": {"key": "bund", "mode": "INJECT", "body": "x"}}), encoding="utf-8")
+    (bp / "polders.yml").write_text(yaml.safe_dump({"building": {"key": "polders", "mode": "REPLACE", "body": "x"}}), encoding="utf-8")
+    (repo / wb_buildings.MANIFEST).write_text("enabled:\n  buildings/bund.yml: true\n  buildings/polders.yml: true\n", encoding="utf-8")
+    leaks = wb_buildings.vanilla_capacity_leaks(repo, vanilla)
+    assert set(leaks) == {"bund"} and "INJECT" in leaks["bund"]
+    (bp / "bund.yml").write_text(yaml.safe_dump({"building": {"key": "bund", "mode": "REPLACE", "body": "x"}}), encoding="utf-8")
+    assert wb_buildings.vanilla_capacity_leaks(repo, vanilla) == {}
+    (repo / wb_buildings.MANIFEST).write_text("enabled:\n  buildings/bund.yml: false\n  buildings/polders.yml: true\n", encoding="utf-8")
+    assert "disabled" in wb_buildings.vanilla_capacity_leaks(repo, vanilla)["bund"]

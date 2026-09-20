@@ -105,14 +105,6 @@ pp_field_drainage_price_cost_modifier={
 	}
 }
 
-pp_irrigated_rice_paddies_price_cost_modifier={
-	color=bad
-	percent=yes
-	game_data={
-		category=country
-	}
-}
-
 pp_irrigation_reservoirs_price_cost_modifier={
 	color=bad
 	percent=yes
@@ -138,6 +130,14 @@ pp_qanats_price_cost_modifier={
 }
 
 pp_field_management_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_irrigated_fields_price_cost_modifier={
 	color=bad
 	percent=yes
 	game_data={

@@ -161,13 +161,12 @@ def _farm_source_rows(
     max is the same number no matter how many of it exist; replaceable lower tiers are added back too.
     """
     per_building, default = _farm_land_constants()
-    omitted = set(omit_buildings)
-    if omit_building is not None:
-        omitted.add(omit_building)
+    # ordered: the building whose max this is comes first (its own land constants apply), then replaceable tiers
+    omitted = list(dict.fromkeys([*([omit_building] if omit_building is not None else []), *omit_buildings]))
     if not omitted:
         land, reserve = default
         return _free_land_rows(land, reserve, "BUILDING_LEVEL_WB_FREE_FARMLAND") + [_line("min = 0", 1)]
-    target = omit_building or next(iter(omitted))
+    target = omitted[0]
     land, reserve = per_building.get(target, default)
     rows = _free_land_rows(land, reserve, "BUILDING_LEVEL_WB_FREE_FARMLAND")
     for building in omitted:
@@ -332,7 +331,7 @@ def _capacity_file(
                 "",
                 _script_value(
                     f"{max_prefix}_{building}",
-                    source_rows(omit_buildings=omitted_buildings),
+                    source_rows(omit_building=building, omit_buildings=omitted_buildings),
                 ),
             )
         )

@@ -105,6 +105,11 @@ class Contract:
     def version(self) -> str:
         return str(self.meta.get("version", self.root.name))
 
+    @property
+    def people_per_development_point(self) -> float:
+        """Flat people of capacity per development point (a known term of the capacity model; 0 when absent)."""
+        return float(self.meta.get("attributes", {}).get("capacity_people_per_development_point", 0.0))
+
 
 def load_contract(root: Path) -> Contract:
     root = Path(root)

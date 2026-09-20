@@ -110,7 +110,7 @@ def check(repo: Path, project: Path, mod_root: Path) -> dict[str, object]:
     targets = contract.location_targets
     start = levels.group_by("location_tag").agg((pl.col("starting_levels") * pl.col("kind").replace_strict(caps, default=0.0)).sum().alias("start_people"))
     joined = targets.join(start, on="location_tag", how="left").with_columns(pl.col("start_people").fill_null(0.0))
-    model = (joined["attribute_flat_people"] + joined["start_people"]) * (1 + c * joined["development"])
+    model = (joined["attribute_flat_people"] + joined["start_people"]) * (1 + c * joined["development"]) + contract.people_per_development_point * joined["development"]
     target = joined["starting_target_people"]
     err = (model - target)
     rel = (err.abs() / target.clip(1.0))

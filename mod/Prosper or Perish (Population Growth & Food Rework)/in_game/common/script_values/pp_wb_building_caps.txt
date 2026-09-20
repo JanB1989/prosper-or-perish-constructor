@@ -10,13 +10,6 @@ pp_wb_cap_land_clearance = {
 		value = 4
 	}
 	if = {
-		limit = { climate = arid }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_ARID"
-			value = 2
-		}
-	}
-	if = {
 		limit = { climate = ha1300_climate_cold_steppe }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_STEPPE"
@@ -28,13 +21,6 @@ pp_wb_cap_land_clearance = {
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_CONTINENTAL_MONSOON"
 			value = 18
-		}
-	}
-	if = {
-		limit = { climate = ha1300_climate_dry_summer_continental }
-		add = {
-			desc = "BUILDING_LEVEL_WB_CLIMATE_DRY_SUMMER_CONTINENTAL"
-			value = 2
 		}
 	}
 	if = {
@@ -101,13 +87,6 @@ pp_wb_cap_land_clearance = {
 		}
 	}
 	if = {
-		limit = { topography = plateau }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_PLATEAU"
-			value = 2
-		}
-	}
-	if = {
 		limit = { topography = ha1300_topo_valleys }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_VALLEYS"
@@ -118,14 +97,14 @@ pp_wb_cap_land_clearance = {
 		limit = { vegetation = desert }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_DESERT"
-			value = 4
+			value = 6
 		}
 	}
 	if = {
 		limit = { vegetation = ha1300_veg_dry_forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_DRY_FOREST"
-			value = 4
+			value = 6
 		}
 	}
 	if = {
@@ -139,14 +118,14 @@ pp_wb_cap_land_clearance = {
 		limit = { vegetation = sparse }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_SPARSE"
-			value = 4
+			value = 6
 		}
 	}
 	if = {
 		limit = { vegetation = ha1300_veg_tundra }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_TUNDRA"
-			value = 4
+			value = 6
 		}
 	}
 	if = {
@@ -196,28 +175,28 @@ pp_wb_cap_field_management = {
 		limit = { climate = arctic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_ARCTIC"
-			value = -9
+			value = -12
 		}
 	}
 	if = {
 		limit = { climate = arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_ARID"
-			value = -9
+			value = -12
 		}
 	}
 	if = {
 		limit = { climate = cold_arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_ARID"
-			value = -9
+			value = -12
 		}
 	}
 	if = {
 		limit = { climate = ha1300_climate_cold_steppe }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_STEPPE"
-			value = -9
+			value = -12
 		}
 	}
 	if = {
@@ -231,7 +210,7 @@ pp_wb_cap_field_management = {
 		limit = { climate = ha1300_climate_dry_summer_continental }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_DRY_SUMMER_CONTINENTAL"
-			value = -3
+			value = -6
 		}
 	}
 	if = {
@@ -273,7 +252,7 @@ pp_wb_cap_field_management = {
 		limit = { climate = ha1300_climate_subpolar_oceanic }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR_OCEANIC"
-			value = -9
+			value = -12
 		}
 	}
 	if = {
@@ -287,7 +266,7 @@ pp_wb_cap_field_management = {
 		limit = { climate = ha1300_climate_subtropical_monsoon }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL_MONSOON"
-			value = -9
+			value = -6
 		}
 	}
 	if = {
@@ -322,7 +301,7 @@ pp_wb_cap_field_management = {
 		limit = { vegetation = ha1300_veg_dry_forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_DRY_FOREST"
-			value = 6
+			value = 3
 		}
 	}
 	if = {
@@ -399,7 +378,7 @@ pp_wb_cap_field_management = {
 		limit = { has_location_modifier = pp_wb_fertility_very_low }
 		add = {
 			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_LOW"
-			value = -6
+			value = -3
 		}
 	}
 	add = {
@@ -671,7 +650,7 @@ pp_wb_cap_irrigated_fields = {
 		limit = { vegetation = farmland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_FARMLAND"
-			value = 16
+			value = 24
 		}
 	}
 	if = {
@@ -692,14 +671,14 @@ pp_wb_cap_irrigated_fields = {
 		limit = { vegetation = ha1300_veg_mixed_forest }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_MIXED_FOREST"
-			value = 8
+			value = 16
 		}
 	}
 	if = {
 		limit = { vegetation = ha1300_veg_savanna }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_SAVANNA"
-			value = 16
+			value = 24
 		}
 	}
 	if = {
@@ -727,7 +706,7 @@ pp_wb_cap_irrigated_fields = {
 		limit = { vegetation = woods }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_WOODS"
-			value = 8
+			value = 16
 		}
 	}
 	if = {
@@ -791,6 +770,13 @@ pp_wb_cap_bund = {
 		limit = { climate = cold_arid }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_ARID"
+			value = -1
+		}
+	}
+	if = {
+		limit = { climate = ha1300_climate_cold_steppe }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_COLD_STEPPE"
 			value = -1
 		}
 	}
@@ -981,7 +967,7 @@ pp_wb_cap_field_drainage = {
 		limit = { climate = mediterranean }
 		add = {
 			desc = "BUILDING_LEVEL_WB_CLIMATE_MEDITERRANEAN"
-			value = -3
+			value = -4
 		}
 	}
 	if = {
@@ -1076,16 +1062,16 @@ pp_wb_cap_field_drainage = {
 		}
 	}
 	if = {
-		limit = { topography = ha1300_topo_rolling }
-		add = {
-			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ROLLING"
-			value = -1
-		}
-	}
-	if = {
 		limit = { topography = wetlands }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_WETLANDS"
+			value = 1
+		}
+	}
+	if = {
+		limit = { vegetation = ha1300_veg_dry_forest }
+		add = {
+			desc = "BUILDING_LEVEL_WB_VEGETATION_DRY_FOREST"
 			value = 1
 		}
 	}
@@ -1155,17 +1141,108 @@ pp_wb_cap_qanats = {
 		value = 1
 	}
 	if = {
+		limit = { climate = arctic }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_ARCTIC"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = ha1300_climate_continental_monsoon }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_CONTINENTAL_MONSOON"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = ha1300_climate_dry_summer_continental }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_DRY_SUMMER_CONTINENTAL"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = ha1300_climate_highland_monsoon }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_HIGHLAND_MONSOON"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = mediterranean }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_MEDITERRANEAN"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = oceanic }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_OCEANIC"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = ha1300_climate_savanna }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_SAVANNA"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = ha1300_climate_subarctic }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBARCTIC"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = ha1300_climate_subpolar_oceanic }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBPOLAR_OCEANIC"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = subtropical }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = ha1300_climate_subtropical_monsoon }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_SUBTROPICAL_MONSOON"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = tropical }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL"
+			value = 1
+		}
+	}
+	if = {
+		limit = { climate = ha1300_climate_tropical_monsoon }
+		add = {
+			desc = "BUILDING_LEVEL_WB_CLIMATE_TROPICAL_MONSOON"
+			value = 1
+		}
+	}
+	if = {
 		limit = { topography = atoll }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ATOLL"
-			value = 18
+			value = 17
 		}
 	}
 	if = {
 		limit = { topography = ha1300_topo_deltas }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_DELTAS"
-			value = 18
+			value = 17
 		}
 	}
 	if = {
@@ -1179,7 +1256,7 @@ pp_wb_cap_qanats = {
 		limit = { topography = mountain_wasteland }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_MOUNTAIN_WASTELAND"
-			value = 18
+			value = 17
 		}
 	}
 	if = {
@@ -1193,14 +1270,14 @@ pp_wb_cap_qanats = {
 		limit = { topography = ha1300_topo_rolling }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_ROLLING"
-			value = 18
+			value = 17
 		}
 	}
 	if = {
 		limit = { topography = wetlands }
 		add = {
 			desc = "BUILDING_LEVEL_WB_TOPOGRAPHY_WETLANDS"
-			value = 18
+			value = 17
 		}
 	}
 	if = {
@@ -1277,6 +1354,13 @@ pp_wb_cap_qanats = {
 		limit = { vegetation = woods }
 		add = {
 			desc = "BUILDING_LEVEL_WB_VEGETATION_WOODS"
+			value = 1
+		}
+	}
+	if = {
+		limit = { has_location_modifier = pp_wb_fertility_very_high }
+		add = {
+			desc = "BUILDING_LEVEL_WB_FERTILITY_VERY_HIGH"
 			value = 1
 		}
 	}

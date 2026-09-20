@@ -298,3 +298,18 @@ def test_population_capacity_cell_bands_the_gauge_and_names_both_sides_of_the_ra
 
     with pytest.raises(ValueError, match="population-cell anchor"):
         wb_geography.merge_population_capacity(out)
+
+
+def test_development_row_from_the_handover(tmp_path):
+    c = _contract(tmp_path)
+    c.meta["attributes"]["capacity_people_per_development_point"] = 1000.0
+    assert c.people_per_development_point == 1000.0
+    vanilla = tmp_path / "vanilla"
+    (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
+    (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("river_flowing_through_1 = {\n\tlocal_population_capacity_modifier = 0.1\n}\n", encoding="utf-8")
+    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla, {})
+    text = (tmp_path / wb_modifiers.DEVELOPMENT_PATH).read_text(encoding="utf-8-sig")
+    assert "TRY_INJECT:development = {" in text and "local_population_capacity = 1" in text
+    c.meta["attributes"]["capacity_people_per_development_point"] = 0.0
+    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla, {})
+    assert not (tmp_path / wb_modifiers.DEVELOPMENT_PATH).exists()

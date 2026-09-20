@@ -538,7 +538,9 @@ def apply(*, repo: Path, project: Path, mod_root: Path, vanilla_root: Path, cfg:
     numbers = {key: blueprint_numbers(repo, key) for key in keys}
     improvements = improvement_people_by_location(mod_root, caps)
     flat = {str(t): float(v) for t, v in contract.location_targets.select("location_tag", "attribute_flat_people").iter_rows()}
-    capacity = {tag: flat.get(tag, 0.0) + improvements.get(tag, 0.0) + float(start.rank_capacity_people.get(ranks.get(tag, ""), 0.0)) for tag in flat}
+    k = contract.people_per_development_point
+    dev = {str(t): float(v or 0.0) for t, v in contract.location_targets.select("location_tag", "development").iter_rows()} if k else {}
+    capacity = {tag: flat.get(tag, 0.0) + improvements.get(tag, 0.0) + float(start.rank_capacity_people.get(ranks.get(tag, ""), 0.0)) + k * dev.get(tag, 0.0) for tag in flat}
     placements, conversions, table, summary = plan(cfg=cfg, start=start, locations=locations, capacity_people=capacity, pops=pops, owners=owners, ranks=ranks, existing=existing, food_consumption=food, numbers=numbers)
     summary["setup_rows"] = write_start_setup(placements, mod_root)
     summary["pops"] = write_pops(vanilla_root, mod_root, conversions)

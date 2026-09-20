@@ -19,7 +19,7 @@ pp_wb_rgo_floor_imbaguarbak = {
 
 pp_wb_rgo_floor_kabeka = {
 	game_data = { category = location }
-	local_chili_output_modifier = 0.14
+	local_chili_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_pashas = {
@@ -28,11 +28,6 @@ pp_wb_rgo_floor_pashas = {
 }
 
 pp_wb_rgo_floor_tucssa = {
-	game_data = { category = location }
-	local_chili_output_modifier = 0.01
-}
-
-pp_wb_rgo_floor_ullantaytampu = {
 	game_data = { category = location }
 	local_chili_output_modifier = 0.01
 }
@@ -97,11 +92,6 @@ pp_wb_rgo_floor_azumi = {
 	local_cotton_output_modifier = 0.05
 }
 
-pp_wb_rgo_floor_bajrajinaparamitapura = {
-	game_data = { category = location }
-	local_cotton_output_modifier = 0.06
-}
-
 pp_wb_rgo_floor_bani_cuba = {
 	game_data = { category = location }
 	local_cotton_output_modifier = 0.06
@@ -109,7 +99,7 @@ pp_wb_rgo_floor_bani_cuba = {
 
 pp_wb_rgo_floor_bikrampur = {
 	game_data = { category = location }
-	local_cotton_output_modifier = 0.04
+	local_cotton_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_cachamay = {
@@ -162,11 +152,6 @@ pp_wb_rgo_floor_fuqing = {
 	local_cotton_output_modifier = 0.02
 }
 
-pp_wb_rgo_floor_haskovo = {
-	game_data = { category = location }
-	local_cotton_output_modifier = 0.05
-}
-
 pp_wb_rgo_floor_hewanorra = {
 	game_data = { category = location }
 	local_cotton_output_modifier = 0.06
@@ -194,7 +179,7 @@ pp_wb_rgo_floor_jiaha = {
 
 pp_wb_rgo_floor_jiaohua = {
 	game_data = { category = location }
-	local_cotton_output_modifier = 0.11
+	local_cotton_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_kandong = {
@@ -204,7 +189,7 @@ pp_wb_rgo_floor_kandong = {
 
 pp_wb_rgo_floor_kyaukse = {
 	game_data = { category = location }
-	local_cotton_output_modifier = 0.11
+	local_cotton_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_lucca = {
@@ -214,7 +199,7 @@ pp_wb_rgo_floor_lucca = {
 
 pp_wb_rgo_floor_maheshpur = {
 	game_data = { category = location }
-	local_cotton_output_modifier = 0.22
+	local_cotton_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_mayapan = {
@@ -224,7 +209,7 @@ pp_wb_rgo_floor_mayapan = {
 
 pp_wb_rgo_floor_menghai = {
 	game_data = { category = location }
-	local_cotton_output_modifier = 0.12
+	local_cotton_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_nanan_quanzhou = {
@@ -254,17 +239,17 @@ pp_wb_rgo_floor_oyo_ile = {
 
 pp_wb_rgo_floor_ozoro = {
 	game_data = { category = location }
-	local_cotton_output_modifier = 0.04
+	local_cotton_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_pacaca = {
 	game_data = { category = location }
-	local_cotton_output_modifier = 0.11
+	local_cotton_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_pebuenmapu = {
 	game_data = { category = location }
-	local_cotton_output_modifier = 0.12
+	local_cotton_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_peedee = {
@@ -279,7 +264,7 @@ pp_wb_rgo_floor_qiubei = {
 
 pp_wb_rgo_floor_sotk = {
 	game_data = { category = location }
-	local_cotton_output_modifier = 0.07
+	local_cotton_output_modifier = 0.02
 }
 
 pp_wb_rgo_floor_talisi = {
@@ -314,7 +299,7 @@ pp_wb_rgo_floor_wuxi = {
 
 pp_wb_rgo_floor_yangchun = {
 	game_data = { category = location }
-	local_cotton_output_modifier = 0.07
+	local_cotton_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_yeongdong = {
@@ -337,11 +322,6 @@ pp_wb_rgo_floor_beni_sabih = {
 	local_dyes_output_modifier = 0.15
 }
 
-pp_wb_rgo_floor_jiroft = {
-	game_data = { category = location }
-	local_dyes_output_modifier = 0.15
-}
-
 pp_wb_rgo_floor_maxorata = {
 	game_data = { category = location }
 	local_dyes_output_modifier = 0.15
@@ -352,17 +332,7 @@ pp_wb_rgo_floor_ouargla = {
 	local_dyes_output_modifier = 0.15
 }
 
-pp_wb_rgo_floor_sehwan = {
-	game_data = { category = location }
-	local_dyes_output_modifier = 0.15
-}
-
 pp_wb_rgo_floor_silla = {
-	game_data = { category = location }
-	local_dyes_output_modifier = 0.15
-}
-
-pp_wb_rgo_floor_teguise = {
 	game_data = { category = location }
 	local_dyes_output_modifier = 0.15
 }
@@ -534,7 +504,7 @@ pp_wb_rgo_floor_dzisna = {
 
 pp_wb_rgo_floor_enisala = {
 	game_data = { category = location }
-	local_fiber_crops_output_modifier = 0.01
+	local_fiber_crops_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_fastiv = {
@@ -1022,11 +992,6 @@ pp_wb_rgo_floor_vetlitsy = {
 	local_fiber_crops_output_modifier = 0.12
 }
 
-pp_wb_rgo_floor_vienna = {
-	game_data = { category = location }
-	local_fiber_crops_output_modifier = 0.12
-}
-
 pp_wb_rgo_floor_vilaka = {
 	game_data = { category = location }
 	local_fiber_crops_output_modifier = 0.12
@@ -1089,1312 +1054,1342 @@ pp_wb_rgo_floor_zhizhets = {
 
 pp_wb_rgo_floor_abiz = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.09
 }
 
 pp_wb_rgo_floor_abu_qasr = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_adrar = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_afif = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_ahel = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_ajdabiya = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_ajim = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.31
+	local_fruit_output_modifier = 0.3
 }
 
 pp_wb_rgo_floor_akola = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.29
+	local_fruit_output_modifier = 0.25
 }
 
 pp_wb_rgo_floor_al_aythamah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_bad = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_bidda = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_fuqarah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_ghat = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_ghazalah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_haddar = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_haqu = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_hawra = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_hufayr = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_hufayrah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_huwayyit = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_jawf = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_kamil_wal_wafi = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_kharabah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_khosuf = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.07
+	local_fruit_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_al_khums = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.31
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_laghfiyyah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_maghib = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_majazah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_mundassah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_muthainiyah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_muwaylih = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_qaiyah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_qara = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_qunfudhah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_suman = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_thulayma = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_al_ukhaydir = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_ula = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_al_yamamah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
+}
+
+pp_wb_rgo_floor_albacete = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_ali_sabieh = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_alicante = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_an_nasifah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_anah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_anew = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.06
+	local_fruit_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_angkor_borei = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.08
+	local_fruit_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_ar_rayn = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_ar_rukai = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_arar = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_ardakan = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_ardestan = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.21
+}
+
+pp_wb_rgo_floor_ariste = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_as_salafiyah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.07
+	local_fruit_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_ash_shaqiqah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_ash_shibahah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_ash_shuaybah_hail = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
-}
-
-pp_wb_rgo_floor_ashmunayn = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_assa = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_asuf = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_auwe = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.2
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_az_zilfi = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_az_zubayir = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_bacuma = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.02
+	local_fruit_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_badr_hunayn = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_bafq = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_baghin = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_bajdah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_bajestan = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_bam = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
+}
+
+pp_wb_rgo_floor_bam_esfarayen = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_bandar_rig = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_baraqish = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_barkdiz = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_bechar = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_bengkalis = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.06
+	local_fruit_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_bent = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_berber = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
+}
+
+pp_wb_rgo_floor_beyza = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.11
 }
 
 pp_wb_rgo_floor_bilghah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_bir_al_qurr = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_birjand = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.17
+}
+
+pp_wb_rgo_floor_borun = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_bost = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_brak = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
+}
+
+pp_wb_rgo_floor_bria = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_bukhara = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_buraydah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_burraq = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.09
 }
 
 pp_wb_rgo_floor_calkini = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.2
+	local_fruit_output_modifier = 0.16
+}
+
+pp_wb_rgo_floor_cantagalo = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_chehl_dokhtaran = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_chibuene = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.2
+	local_fruit_output_modifier = 0.24
 }
 
-pp_wb_rgo_floor_chuuk = {
+pp_wb_rgo_floor_chiluane = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.05
+	local_fruit_output_modifier = 0.04
+}
+
+pp_wb_rgo_floor_dangbon = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_dar_es_salaam = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.08
+	local_fruit_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_dashahai = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.21
 }
 
 pp_wb_rgo_floor_deyhuk = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_dhahran = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_dhi_ain = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_dia = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.31
+	local_fruit_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_dire_dawa = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.31
+	local_fruit_output_modifier = 0.3
 }
 
 pp_wb_rgo_floor_djanet = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_dongola = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
-}
-
-pp_wb_rgo_floor_dunga_bunga = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_durun = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.06
-}
-
-pp_wb_rgo_floor_echemmaia = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_el_alamein = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
-}
-
-pp_wb_rgo_floor_el_balyana = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_el_bayadh = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.09
 }
 
 pp_wb_rgo_floor_el_golea = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_el_guerrara = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_el_metemma = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_eleuthera = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.32
+	local_fruit_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_eqlid = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_fadak = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_fahraj_narmashir = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_fayd = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_firabr = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.21
 }
 
 pp_wb_rgo_floor_gafsa = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_gaiman = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_galkayo = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_gamrun = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
+}
+
+pp_wb_rgo_floor_gbabiri = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_ghadames = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_ghazni = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_ghumayqah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
-}
-
-pp_wb_rgo_floor_gunupur = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.08
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_gwatar = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
-}
-
-pp_wb_rgo_floor_haapai = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.05
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_habiyah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_hajar = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_hami = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.21
 }
 
 pp_wb_rgo_floor_haylan = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_hinglaj = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_hudaida = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.07
+	local_fruit_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_ibri = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_igli = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_itya_mahadu = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.2
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_jagin_zir = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_jahrom = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_jilib = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_jondaq = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_jumento = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.2
+	local_fruit_output_modifier = 0.16
+}
+
+pp_wb_rgo_floor_kaabu = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
+}
+
+pp_wb_rgo_floor_kabul = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.11
 }
 
 pp_wb_rgo_floor_kaditshwene = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_kahnuj = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
+}
+
+pp_wb_rgo_floor_kaiama = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_kandahar = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.31
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_karbala = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_karvandar = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_kaweinag = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.06
+	local_fruit_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_kebili = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_kerman = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_khamir = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.07
-}
-
-pp_wb_rgo_floor_kharibta = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_khaybar = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_khaybar_janoub = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_kilemba = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.08
-}
-
-pp_wb_rgo_floor_kirkuk = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
-}
-
-pp_wb_rgo_floor_kom_ombo = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_korientze = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_korit = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_kurki = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_laayoune = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_laila = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_lash_joveyn = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_lasjerd = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_linah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
+}
+
+pp_wb_rgo_floor_lubudi = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_lyngngam = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.02
+	local_fruit_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_macaca = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.08
+	local_fruit_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_malham = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_manadeley = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_manujan = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_manyakheta = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.08
+	local_fruit_output_modifier = 0.05
 }
 
-pp_wb_rgo_floor_mara_india = {
+pp_wb_rgo_floor_mara = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.02
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_maradah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
-}
-
-pp_wb_rgo_floor_maralbexi = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_mareeg = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_marvast = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_mashdhubah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_mashhad_rizeh = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_masjed_soleyman = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_mawza = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_mazhan = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_mecca = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_medina = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_meyami = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_mora_eth = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_muhammad_tur = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_muhayil = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.07
+	local_fruit_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_murayghan = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_murt = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_murzuk = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_musaymir = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_muwayh = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_muzahmiyah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_nakhal = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_narmashir = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
-}
-
-pp_wb_rgo_floor_naserpur = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_natanz = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_nefta = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
+}
+
+pp_wb_rgo_floor_ngaous = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_nisa = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.06
+	local_fruit_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_nizwa = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_ouarzazate = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
-}
-
-pp_wb_rgo_floor_pakpattan = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.21
 }
 
 pp_wb_rgo_floor_paroom = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
-pp_wb_rgo_floor_pinya = {
+pp_wb_rgo_floor_poli = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.08
+	local_fruit_output_modifier = 0.04
+}
+
+pp_wb_rgo_floor_popocabaca = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
+}
+
+pp_wb_rgo_floor_porto_tibirica = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_pushang = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_qalat_bishah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_qaryat_ulya = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_qaryatayn = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.09
 }
 
 pp_wb_rgo_floor_quban = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_qurayyat_al_milh = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
+}
+
+pp_wb_rgo_floor_raipur_bengal = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_rakhyah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_ramsheh = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_raqqa = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.31
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_rijal_almaa = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.07
+	local_fruit_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_rodrigues = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.32
+	local_fruit_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_sabzevar = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_salumbar = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.07
+	local_fruit_output_modifier = 0.13
+}
+
+pp_wb_rgo_floor_sanzana = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_sara = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_sarayan = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_sayun = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
+}
+
+pp_wb_rgo_floor_sbikha = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_selima = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_shahabad_kerman = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_shaharah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.07
-}
-
-pp_wb_rgo_floor_sheberghan = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_shinas = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_shusef = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.21
 }
 
 pp_wb_rgo_floor_siwa = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_soalara = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_sufaynah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_sukhnah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_suq_al_ghinan = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_tabalah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_tabas_al_tamr = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_tabelbala = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_tabuk_arabia = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_taka_atoll = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_tal_afar = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
-pp_wb_rgo_floor_tarrana = {
+pp_wb_rgo_floor_tapiete = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_tata_MOR = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_tawurgha = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_thadij = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_thadiq = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_thula = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.06
+	local_fruit_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_thung_yang = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.08
+	local_fruit_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_timimoun = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_tiznit = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_tmimi = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_tolga = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_tungkal = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.06
+	local_fruit_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_turaythith = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.12
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_turbah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_turpan = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.21
+}
+
+pp_wb_rgo_floor_tutuala = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_udakh = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_ukbara = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.1
+}
+
+pp_wb_rgo_floor_umatilla = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_umm_al_ghiran = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_umm_al_qulban = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_urayrah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
-}
-
-pp_wb_rgo_floor_urgench = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.18
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_ushmum_tannah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_uyun_al_jiwa = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
-}
-
-pp_wb_rgo_floor_vauvau = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.05
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_washuk = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
+}
+
+pp_wb_rgo_floor_wotjobaluk = {
+	game_data = { category = location }
+	local_fruit_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_yalamlam = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_yambina = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_yanbu_an_nakhil = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_yo = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_zabol = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
-}
-
-pp_wb_rgo_floor_zadian = {
-	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_zuwarah = {
 	game_data = { category = location }
-	local_fruit_output_modifier = 0.19
+	local_fruit_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_abadeh = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_abagaita = {
@@ -2404,172 +2399,152 @@ pp_wb_rgo_floor_abagaita = {
 
 pp_wb_rgo_floor_abiward = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.06
+	local_legumes_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_al_abwa = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_al_bayda_yemen = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_al_farah_ula = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_al_jumum = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_al_mahani = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_amman = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_an_nakhil = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_anar = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.2
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_ancud = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
+	local_legumes_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_arak = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_arandai = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_arari = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.27
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_as_suwayriqiyah = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_asanas = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.2
-}
-
-pp_wb_rgo_floor_asht = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_baba_ata = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_bahla = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_bakel = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.18
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_bakusaya = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_baram = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_barem = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.07
+	local_legumes_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_basand = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
-}
-
-pp_wb_rgo_floor_beni_suef = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_bohai = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.19
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_boiken = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_bojaya = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_bola = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.07
+	local_legumes_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_buluguda = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_burica = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.07
+	local_legumes_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_busayrah = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_camacota = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
-}
-
-pp_wb_rgo_floor_chach = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
-}
-
-pp_wb_rgo_floor_chinali = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_chuqiu = {
@@ -2579,152 +2554,147 @@ pp_wb_rgo_floor_chuqiu = {
 
 pp_wb_rgo_floor_colhue_huapi = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.2
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_corpen_aike = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.2
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_cubuk = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
+	local_legumes_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_dadi_dadi = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_daya_kathyn = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.2
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_deogarh = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.18
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_deping = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_diara = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.18
+	local_legumes_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_doubare = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_dzhulsub = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_eket = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_estok_gna = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_faraveh = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.2
-}
-
-pp_wb_rgo_floor_farkhor = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_feriana = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_gardez = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_gori_gori = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.07
+	local_legumes_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_guaja = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_hadishahr = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_harat = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_hargaya = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.18
+	local_legumes_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_hargeisa = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.18
+	local_legumes_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_hashatjin = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
+	local_legumes_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_hit = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_huth = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_ifrane = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_ilgin = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
+	local_legumes_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_inapiremapu = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
+	local_legumes_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_iparuka = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.11
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_iriirakiicuhat = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_jinghai = {
@@ -2732,494 +2702,444 @@ pp_wb_rgo_floor_jinghai = {
 	local_legumes_output_modifier = 0.05
 }
 
-pp_wb_rgo_floor_kafr_saqr = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
-}
-
 pp_wb_rgo_floor_kaiparowit = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
-}
-
-pp_wb_rgo_floor_kamalia = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.11
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_kanibonzon = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.18
+	local_legumes_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_kate = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.07
+	local_legumes_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_kelinjau = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_kesra = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_khash_sistan = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_khiva = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.2
+	local_legumes_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_khwansar = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_kiriri = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.09
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_koure = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.18
+	local_legumes_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_kubuna = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.07
+	local_legumes_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_kukiya = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_laerdal = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_latje_latje = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_luyi = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.32
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_madinat_far = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_mahgas = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
-}
-
-pp_wb_rgo_floor_mahmudabad = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_makalondi = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_managalang = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.07
+	local_legumes_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_marajoara = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.27
-}
-
-pp_wb_rgo_floor_mardankuyik = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_marind = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.27
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_marwah = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_mastung = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.2
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_mayaimi = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.27
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_maybrat = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_mbara = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_millapel = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_mithri = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_moloka_i = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.09
-}
-
-pp_wb_rgo_floor_mughan = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_muhammerah = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
-}
-
-pp_wb_rgo_floor_muktsar = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.11
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_musi = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_nadushan = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.2
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_namau = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_nauhtlan = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.07
+	local_legumes_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_naupahuasi = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_ndiaganiao = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_negar = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_ngambe = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_ngazidja = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_nhanta = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.18
+	local_legumes_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_norosi = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_olanchito = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_pahva_nits = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_pangvay = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_pasca = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
+	local_legumes_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_piranshahr = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
+	local_legumes_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_pulasari = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.07
+	local_legumes_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_qasr_e_qand = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_qayyarah = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
-}
-
-pp_wb_rgo_floor_qena = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_riantana = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_riz = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_roanoke = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.17
+	local_legumes_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_roon = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_rostaq = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_rudkhaneh = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_rungan = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_sain = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
+	local_legumes_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_sakao = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_salamiyya = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_samakh = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_samiram = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.26
+	local_legumes_output_modifier = 0.28
 }
 
 pp_wb_rgo_floor_sanandaj = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
-}
-
-pp_wb_rgo_floor_sandikli = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
+	local_legumes_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_sar_pol = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_sarkisla = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
+	local_legumes_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_seacal = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.07
+	local_legumes_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_senapelan = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_shajwa = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_shirvan_iran = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_sikieye = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.18
+	local_legumes_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_silae = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.07
+	local_legumes_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_sindagi = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_sintang = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_sivrihisar = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_sohrevard = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_solimandungan = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.07
+	local_legumes_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_sungurlu = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
+	local_legumes_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_surab = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.2
+	local_legumes_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_tampo = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_tes = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_tissint = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.25
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_tu_dotlizh_ndee = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.12
+	local_legumes_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_ulungur = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.22
-}
-
-pp_wb_rgo_floor_wahin_wakpa = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.08
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_waropen = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.3
+	local_legumes_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_worla = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_xicallanco = {
-	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
-}
-
-pp_wb_rgo_floor_xincheng_baoding = {
 	game_data = { category = location }
 	local_legumes_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_xoko = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.09
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_yagalingu = {
 	game_data = { category = location }
-	local_legumes_output_modifier = 0.04
+	local_legumes_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_aashbikkaashee = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_akinka_nup = {
@@ -3264,7 +3184,7 @@ pp_wb_rgo_floor_angoya = {
 
 pp_wb_rgo_floor_apispaha = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_aq_am = {
@@ -3309,7 +3229,7 @@ pp_wb_rgo_floor_balj = {
 
 pp_wb_rgo_floor_balladonia = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.29
+	local_lumber_output_modifier = 0.3
 }
 
 pp_wb_rgo_floor_barylas = {
@@ -3354,7 +3274,7 @@ pp_wb_rgo_floor_bidungu = {
 
 pp_wb_rgo_floor_boanawari = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_bolshaya_laptyuga = {
@@ -3479,7 +3399,7 @@ pp_wb_rgo_floor_disentis = {
 
 pp_wb_rgo_floor_djappuminyou = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_djee = {
@@ -3584,7 +3504,7 @@ pp_wb_rgo_floor_goat_creek = {
 
 pp_wb_rgo_floor_grass_creek = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_grenland = {
@@ -3599,7 +3519,7 @@ pp_wb_rgo_floor_gualamba = {
 
 pp_wb_rgo_floor_guhlkahende = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.14
+	local_lumber_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_guochuan = {
@@ -3634,7 +3554,7 @@ pp_wb_rgo_floor_hinsepu = {
 
 pp_wb_rgo_floor_hot_springs = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_huayuantou = {
@@ -3754,7 +3674,7 @@ pp_wb_rgo_floor_kauipushkakamat = {
 
 pp_wb_rgo_floor_kaurna_pangkarra = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_kazhi = {
@@ -3774,7 +3694,7 @@ pp_wb_rgo_floor_kenamu = {
 
 pp_wb_rgo_floor_kerben = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_khan_khentii = {
@@ -3979,7 +3899,7 @@ pp_wb_rgo_floor_mitse_adazi = {
 
 pp_wb_rgo_floor_moghwachi = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_molvo = {
@@ -3989,7 +3909,7 @@ pp_wb_rgo_floor_molvo = {
 
 pp_wb_rgo_floor_moneta = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_moose_river = {
@@ -4009,7 +3929,7 @@ pp_wb_rgo_floor_mulmuga = {
 
 pp_wb_rgo_floor_na_isha = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_namewaminikan = {
@@ -4134,7 +4054,7 @@ pp_wb_rgo_floor_pokshenga = {
 
 pp_wb_rgo_floor_pushroot = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_puxian = {
@@ -4169,7 +4089,7 @@ pp_wb_rgo_floor_saanen = {
 
 pp_wb_rgo_floor_salkhad = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.29
+	local_lumber_output_modifier = 0.3
 }
 
 pp_wb_rgo_floor_samsu = {
@@ -4344,12 +4264,7 @@ pp_wb_rgo_floor_tatinnai = {
 
 pp_wb_rgo_floor_tavaputs = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.28
-}
-
-pp_wb_rgo_floor_taviwac = {
-	game_data = { category = location }
-	local_lumber_output_modifier = 0.15
+	local_lumber_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_tazin = {
@@ -4449,7 +4364,7 @@ pp_wb_rgo_floor_ugoyan = {
 
 pp_wb_rgo_floor_uintah = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_uivvatok = {
@@ -4469,7 +4384,7 @@ pp_wb_rgo_floor_uluu = {
 
 pp_wb_rgo_floor_unkagarit = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.12
+	local_lumber_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_uolba = {
@@ -4614,7 +4529,7 @@ pp_wb_rgo_floor_ynakhsyt = {
 
 pp_wb_rgo_floor_ypoa = {
 	game_data = { category = location }
-	local_lumber_output_modifier = 0.28
+	local_lumber_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_yukhta = {
@@ -4644,217 +4559,207 @@ pp_wb_rgo_floor_zhebariki_khaya = {
 
 pp_wb_rgo_floor_aaku = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.19
+	local_maize_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_aburra = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.19
+	local_maize_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_akimel_oodham = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.19
+	local_maize_output_modifier = 0.21
 }
 
 pp_wb_rgo_floor_alausi = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_atarque = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_bosa_colombia = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_caraveli = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_caribaro = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_chao = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
+}
+
+pp_wb_rgo_floor_chumuch = {
+	game_data = { category = location }
+	local_maize_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_comcaac = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.19
+	local_maize_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_dzilam = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_elki = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.19
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_gualeguas = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_gueiquesales = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
-}
-
-pp_wb_rgo_floor_guwevkabaya = {
-	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_halchidoma = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.19
+	local_maize_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_ica = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_kileqollo = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_machala = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_mindu = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_muruam = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_nentego = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_omaguacas = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_pame = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
+}
+
+pp_wb_rgo_floor_panama = {
+	game_data = { category = location }
+	local_maize_output_modifier = 0.03
 }
 
 pp_wb_rgo_floor_paramonga = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_paribari = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
-}
-
-pp_wb_rgo_floor_payette = {
-	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_picchu = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_piipaash = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.19
+	local_maize_output_modifier = 0.21
 }
 
 pp_wb_rgo_floor_pikunwijimapu = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_piren = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_piscopeek = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_tetamekanch = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_than_u_ge = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.21
 }
 
 pp_wb_rgo_floor_toponisw = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.21
 }
 
 pp_wb_rgo_floor_tora = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
-}
-
-pp_wb_rgo_floor_tuf_shur_tia = {
-	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_uinkaret = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.19
+	local_maize_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_ures = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_yahandeka = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.21
 }
 
 pp_wb_rgo_floor_yaino = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
-}
-
-pp_wb_rgo_floor_yashikumne = {
-	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_yeme = {
 	game_data = { category = location }
-	local_maize_output_modifier = 0.11
+	local_maize_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_agno = {
@@ -4864,7 +4769,7 @@ pp_wb_rgo_floor_agno = {
 
 pp_wb_rgo_floor_bitterroot = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.15
+	local_medicaments_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_caupolican = {
@@ -4884,12 +4789,12 @@ pp_wb_rgo_floor_fukushima = {
 
 pp_wb_rgo_floor_gonpatsi = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.08
+	local_medicaments_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_havaii = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.08
+	local_medicaments_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_hulu_padas = {
@@ -4899,7 +4804,7 @@ pp_wb_rgo_floor_hulu_padas = {
 
 pp_wb_rgo_floor_jaluit_atoll = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.02
+	local_medicaments_output_modifier = 0.01
 }
 
 pp_wb_rgo_floor_janakkala = {
@@ -4914,12 +4819,12 @@ pp_wb_rgo_floor_jaskis = {
 
 pp_wb_rgo_floor_kauakiekamatsh = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.24
+	local_medicaments_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_kennebango = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.08
+	local_medicaments_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_kipahigan = {
@@ -4929,12 +4834,12 @@ pp_wb_rgo_floor_kipahigan = {
 
 pp_wb_rgo_floor_kirillov = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.15
+	local_medicaments_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_korvala = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.24
+	local_medicaments_output_modifier = 0.23
 }
 
 pp_wb_rgo_floor_ksituan = {
@@ -4949,17 +4854,17 @@ pp_wb_rgo_floor_kuopio = {
 
 pp_wb_rgo_floor_lindjarvi = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.15
+	local_medicaments_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_maaselka = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.24
+	local_medicaments_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_manouane = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.24
+	local_medicaments_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_metabeskega = {
@@ -4969,7 +4874,7 @@ pp_wb_rgo_floor_metabeskega = {
 
 pp_wb_rgo_floor_mica_creek = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.43
+	local_medicaments_output_modifier = 0.41
 }
 
 pp_wb_rgo_floor_minzhou = {
@@ -4984,7 +4889,7 @@ pp_wb_rgo_floor_muang_sing = {
 
 pp_wb_rgo_floor_muhaukamau = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.24
+	local_medicaments_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_nagaoka = {
@@ -4999,7 +4904,7 @@ pp_wb_rgo_floor_natinixwe = {
 
 pp_wb_rgo_floor_nazkot_en = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.15
+	local_medicaments_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_nikolskoye_kema = {
@@ -5014,32 +4919,32 @@ pp_wb_rgo_floor_pyeongchang = {
 
 pp_wb_rgo_floor_rongerik_atoll = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.02
+	local_medicaments_output_modifier = 0.01
 }
 
 pp_wb_rgo_floor_rukajarvi = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.24
+	local_medicaments_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_selanger = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.15
+	local_medicaments_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_sguuxs = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.15
+	local_medicaments_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_sirudal = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.26
+	local_medicaments_output_modifier = 0.25
 }
 
 pp_wb_rgo_floor_skuppah = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.43
+	local_medicaments_output_modifier = 0.41
 }
 
 pp_wb_rgo_floor_verkhoturye = {
@@ -5049,692 +4954,677 @@ pp_wb_rgo_floor_verkhoturye = {
 
 pp_wb_rgo_floor_wli_qospem = {
 	game_data = { category = location }
-	local_medicaments_output_modifier = 0.06
+	local_medicaments_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_afmadow = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_agnam_civol = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
+}
+
+pp_wb_rgo_floor_ain_farah = {
+	game_data = { category = location }
+	local_millet_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_ain_madhi = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_ain_sefra = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_alat = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_alays = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_andolo = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.26
+	local_millet_output_modifier = 0.27
 }
 
 pp_wb_rgo_floor_aurland = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_ayerou = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_babuza = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.06
+	local_millet_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_badra = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_baiyungu = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_balanipa = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.19
+	local_millet_output_modifier = 0.2
 }
 
 pp_wb_rgo_floor_banjar = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_barah = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_bardera = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_baru = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_bayankhot = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
-}
-
-pp_wb_rgo_floor_bayannur = {
-	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_beledweyne = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_bitki = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_boluohe = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_bookabie = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_bou_saada = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_brig = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_bumi_ayu = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_bunratty = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.11
+	local_millet_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_charklik = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_coleraine = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.11
+	local_millet_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_cork = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.11
+	local_millet_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_dargol = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_daura = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
-}
-
-pp_wb_rgo_floor_dingyuan_lingzhou = {
-	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_dumai = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_ed_damer = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_edinburgh = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.11
+	local_millet_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_el_agheila = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_elgin = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.35
+	local_millet_output_modifier = 0.31
 }
 
 pp_wb_rgo_floor_fardawsa = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_galway = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.11
+	local_millet_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_gaotai = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_gode = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_gorontalo = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.19
+	local_millet_output_modifier = 0.2
 }
 
 pp_wb_rgo_floor_goudooumaria = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_goure = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_hamdallaye = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_haomen = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_ikoyi = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.12
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_initao = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.09
+	local_millet_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_inverness = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_jadliaura = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_jadu = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_jingzhou_dorbod = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_kakarakala = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
+}
+
+pp_wb_rgo_floor_kapilkot = {
+	game_data = { category = location }
+	local_millet_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_karangan = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.19
+	local_millet_output_modifier = 0.2
 }
 
 pp_wb_rgo_floor_khanaser = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_khara_khoto = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_khed = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_khovd = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_kosa = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_kota_marudu = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.19
+	local_millet_output_modifier = 0.2
 }
 
 pp_wb_rgo_floor_kotawaringin_lama = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_kualuh = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_kubu = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_kufa = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_kutai_lama = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.36
+	local_millet_output_modifier = 0.37
 }
 
 pp_wb_rgo_floor_kuyu_shazhou = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_kyaukkyi = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.06
+	local_millet_output_modifier = 0.08
+}
+
+pp_wb_rgo_floor_lakhiyarvira = {
+	game_data = { category = location }
+	local_millet_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_latu = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.19
+	local_millet_output_modifier = 0.2
 }
 
 pp_wb_rgo_floor_lillehammer = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_limerick = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.11
+	local_millet_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_limey = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_liulin = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
-}
-
-pp_wb_rgo_floor_madaba = {
-	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_madi_madi = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_majanna = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_makatao = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.06
+	local_millet_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_martuthunira = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_masa_sud = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_mastuj = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
+}
+
+pp_wb_rgo_floor_matano = {
+	game_data = { category = location }
+	local_millet_output_modifier = 0.01
 }
 
 pp_wb_rgo_floor_matmata = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_meru = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_midelt = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_monterado = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_mtetengwe = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_muse = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.06
+	local_millet_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_musi_hilir = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_nanja = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_nasiriyah = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_ngadjuri = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_ngarluma = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
-}
-
-pp_wb_rgo_floor_nguru = {
-	game_data = { category = location }
-	local_millet_output_modifier = 0.16
-}
-
-pp_wb_rgo_floor_niono = {
-	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_oriel = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.11
+	local_millet_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_pak_huei_lang = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.06
+	local_millet_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_pamkala = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_pangkalan_kerinci = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_papora = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.06
+	local_millet_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_phongsali = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.06
+	local_millet_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_pilda = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_port_loko = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_qadisiyyah = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_qidaban = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_quz_rajab = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_ranpur = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_roscommon = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.11
+	local_millet_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_ryfylke = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_safare = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
+}
+
+pp_wb_rgo_floor_sandakan = {
+	game_data = { category = location }
+	local_millet_output_modifier = 0.01
 }
 
 pp_wb_rgo_floor_saribas = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
-}
-
-pp_wb_rgo_floor_sengkae = {
-	game_data = { category = location }
-	local_millet_output_modifier = 0.06
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_sidenreng = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.19
+	local_millet_output_modifier = 0.2
 }
 
 pp_wb_rgo_floor_skoura = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_stavoren = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.35
+	local_millet_output_modifier = 0.31
 }
 
 pp_wb_rgo_floor_stonehaven = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.11
+	local_millet_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_sungai_jujuhan = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_tagmadert = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_tanjungpura = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_tatrang = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.19
 }
 
 pp_wb_rgo_floor_thilogne = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_tinago = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.09
+	local_millet_output_modifier = 0.1
 }
 
 pp_wb_rgo_floor_tivaouane = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_tiyuh_tuha = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.19
+	local_millet_output_modifier = 0.2
 }
 
 pp_wb_rgo_floor_towing = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_tulu_nama_dun = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_uliastai = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_urquhart = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_vik = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
-}
-
-pp_wb_rgo_floor_waounde = {
-	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_waterford = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.11
+	local_millet_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_xagal = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
-}
-
-pp_wb_rgo_floor_xojeli = {
-	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_yamatji = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_zagzuugiin_balgas = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_zankor = {
 	game_data = { category = location }
-	local_millet_output_modifier = 0.16
+	local_millet_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_fuchi = {
 	game_data = { category = location }
-	local_pepper_output_modifier = 0.08
+	local_pepper_output_modifier = 0.09
 }
 
 pp_wb_rgo_floor_takakusa = {
 	game_data = { category = location }
-	local_pepper_output_modifier = 0.08
+	local_pepper_output_modifier = 0.09
 }
 
 pp_wb_rgo_floor_achacachi = {
 	game_data = { category = location }
-	local_potato_output_modifier = 0.16
+	local_potato_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_aconca_hue = {
@@ -5749,7 +5639,7 @@ pp_wb_rgo_floor_aruni = {
 
 pp_wb_rgo_floor_axawiri = {
 	game_data = { category = location }
-	local_potato_output_modifier = 0.16
+	local_potato_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_caurakawin = {
@@ -5764,7 +5654,7 @@ pp_wb_rgo_floor_chacayacu = {
 
 pp_wb_rgo_floor_chullac = {
 	game_data = { category = location }
-	local_potato_output_modifier = 0.16
+	local_potato_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_hatun_killaka = {
@@ -5774,7 +5664,7 @@ pp_wb_rgo_floor_hatun_killaka = {
 
 pp_wb_rgo_floor_hatunqulla = {
 	game_data = { category = location }
-	local_potato_output_modifier = 0.16
+	local_potato_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_huarochiri = {
@@ -5789,22 +5679,22 @@ pp_wb_rgo_floor_incahuasi = {
 
 pp_wb_rgo_floor_kellollampu = {
 	game_data = { category = location }
-	local_potato_output_modifier = 0.16
+	local_potato_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_macaya = {
 	game_data = { category = location }
-	local_potato_output_modifier = 0.16
+	local_potato_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_quillahuaca = {
 	game_data = { category = location }
-	local_potato_output_modifier = 0.16
+	local_potato_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_qusqu = {
 	game_data = { category = location }
-	local_potato_output_modifier = 0.16
+	local_potato_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_soras = {
@@ -5834,242 +5724,247 @@ pp_wb_rgo_floor_yanque = {
 
 pp_wb_rgo_floor_auyo = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_ballou = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_biram = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_dikwa = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_dutsi = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
+}
+
+pp_wb_rgo_floor_eyvanekey = {
+	game_data = { category = location }
+	local_rice_output_modifier = 0.08
+}
+
+pp_wb_rgo_floor_farah = {
+	game_data = { category = location }
+	local_rice_output_modifier = 0.08
+}
+
+pp_wb_rgo_floor_garandoili = {
+	game_data = { category = location }
+	local_rice_output_modifier = 0.08
+}
+
+pp_wb_rgo_floor_garun_gabas = {
+	game_data = { category = location }
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_goronyo = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
+}
+
+pp_wb_rgo_floor_hillah = {
+	game_data = { category = location }
+	local_rice_output_modifier = 0.08
+}
+
+pp_wb_rgo_floor_kot_lalu = {
+	game_data = { category = location }
+	local_rice_output_modifier = 0.08
+}
+
+pp_wb_rgo_floor_kurla = {
+	game_data = { category = location }
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_machul = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_mser = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_ningbian = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_nyamina = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_pouss = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
+}
+
+pp_wb_rgo_floor_quetta = {
+	game_data = { category = location }
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_salmas = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_say = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
-}
-
-pp_wb_rgo_floor_shushtar = {
-	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_surame = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
-}
-
-pp_wb_rgo_floor_talata_mafara = {
-	game_data = { category = location }
-	local_rice_output_modifier = 0.09
-}
-
-pp_wb_rgo_floor_urmia = {
-	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_wenchuan = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_zhigu = {
 	game_data = { category = location }
-	local_rice_output_modifier = 0.09
+	local_rice_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_abengourou = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.2
+	local_saffron_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_abomey = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.33
+	local_saffron_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_amaigbo = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.1
+	local_saffron_output_modifier = 0.11
 }
 
 pp_wb_rgo_floor_andevoranto = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.15
+	local_saffron_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_bemanevika = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.31
+	local_saffron_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_cestos = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.41
+	local_saffron_output_modifier = 0.38
 }
 
 pp_wb_rgo_floor_daoukro = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.2
+	local_saffron_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_epe = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.2
+	local_saffron_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_fahambahy = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.31
-}
-
-pp_wb_rgo_floor_ghardaia = {
-	game_data = { category = location }
-	local_saffron_output_modifier = 0.06
+	local_saffron_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_grand_lahou = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.2
+	local_saffron_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_kibi = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.2
+	local_saffron_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_kissidougou = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.26
+	local_saffron_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_kong = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.18
+	local_saffron_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_mahaela = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.31
+	local_saffron_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_manambato = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.15
+	local_saffron_output_modifier = 0.16
 }
 
 pp_wb_rgo_floor_nakpa = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.05
+	local_saffron_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_ras_hafun = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.09
+	local_saffron_output_modifier = 0.14
 }
 
 pp_wb_rgo_floor_salaga = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.18
+	local_saffron_output_modifier = 0.08
 }
 
 pp_wb_rgo_floor_sanniquellie = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.26
+	local_saffron_output_modifier = 0.24
 }
 
 pp_wb_rgo_floor_segbwema = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.38
+	local_saffron_output_modifier = 0.25
 }
 
 pp_wb_rgo_floor_settra_kru = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.31
-}
-
-pp_wb_rgo_floor_tamacine = {
-	game_data = { category = location }
-	local_saffron_output_modifier = 0.06
-}
-
-pp_wb_rgo_floor_tozeur = {
-	game_data = { category = location }
-	local_saffron_output_modifier = 0.06
+	local_saffron_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_vohipeno = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.31
+	local_saffron_output_modifier = 0.29
 }
 
 pp_wb_rgo_floor_winneba = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.2
+	local_saffron_output_modifier = 0.22
 }
 
 pp_wb_rgo_floor_yagala = {
 	game_data = { category = location }
-	local_saffron_output_modifier = 0.41
-}
-
-pp_wb_rgo_floor_yanbu = {
-	game_data = { category = location }
-	local_saffron_output_modifier = 0.06
+	local_saffron_output_modifier = 0.38
 }
 
 pp_wb_rgo_floor_akyazi = {
 	game_data = { category = location }
-	local_silk_output_modifier = 0.25
+	local_silk_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_chinon = {
@@ -6114,27 +6009,27 @@ pp_wb_rgo_floor_sakju = {
 
 pp_wb_rgo_floor_sangju = {
 	game_data = { category = location }
-	local_silk_output_modifier = 0.06
+	local_silk_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_suwa = {
 	game_data = { category = location }
-	local_silk_output_modifier = 0.08
+	local_silk_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_takai = {
 	game_data = { category = location }
-	local_silk_output_modifier = 0.08
+	local_silk_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_trebizond = {
 	game_data = { category = location }
-	local_silk_output_modifier = 0.25
+	local_silk_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_tsuru = {
 	game_data = { category = location }
-	local_silk_output_modifier = 0.06
+	local_silk_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_unju = {
@@ -6149,12 +6044,17 @@ pp_wb_rgo_floor_zhouzhi = {
 
 pp_wb_rgo_floor_ambilobe = {
 	game_data = { category = location }
-	local_sugar_output_modifier = 0.05
+	local_sugar_output_modifier = 0.04
+}
+
+pp_wb_rgo_floor_azghand = {
+	game_data = { category = location }
+	local_sugar_output_modifier = 0.01
 }
 
 pp_wb_rgo_floor_basai = {
 	game_data = { category = location }
-	local_sugar_output_modifier = 0.19
+	local_sugar_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_cibuaya = {
@@ -6164,7 +6064,7 @@ pp_wb_rgo_floor_cibuaya = {
 
 pp_wb_rgo_floor_jinkang = {
 	game_data = { category = location }
-	local_sugar_output_modifier = 0.19
+	local_sugar_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_karkala = {
@@ -6179,12 +6079,12 @@ pp_wb_rgo_floor_kawliya = {
 
 pp_wb_rgo_floor_ketagalan = {
 	game_data = { category = location }
-	local_sugar_output_modifier = 0.19
+	local_sugar_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_khandwa = {
 	game_data = { category = location }
-	local_sugar_output_modifier = 0.18
+	local_sugar_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_nosy_be = {
@@ -6199,7 +6099,7 @@ pp_wb_rgo_floor_paka = {
 
 pp_wb_rgo_floor_phetchaburi = {
 	game_data = { category = location }
-	local_sugar_output_modifier = 0.05
+	local_sugar_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_sada = {
@@ -6207,9 +6107,14 @@ pp_wb_rgo_floor_sada = {
 	local_sugar_output_modifier = 0.07
 }
 
-pp_wb_rgo_floor_surat = {
+pp_wb_rgo_floor_suwayda = {
 	game_data = { category = location }
-	local_sugar_output_modifier = 0.18
+	local_sugar_output_modifier = 0.05
+}
+
+pp_wb_rgo_floor_zozan = {
+	game_data = { category = location }
+	local_sugar_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_anhua = {
@@ -6234,12 +6139,12 @@ pp_wb_rgo_floor_sunju = {
 
 pp_wb_rgo_floor_east_sabaneque = {
 	game_data = { category = location }
-	local_tobacco_output_modifier = 0.29
+	local_tobacco_output_modifier = 0.28
 }
 
 pp_wb_rgo_floor_guanamacabibes = {
 	game_data = { category = location }
-	local_tobacco_output_modifier = 0.18
+	local_tobacco_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_jaltenango = {
@@ -6249,7 +6154,7 @@ pp_wb_rgo_floor_jaltenango = {
 
 pp_wb_rgo_floor_magorix = {
 	game_data = { category = location }
-	local_tobacco_output_modifier = 0.29
+	local_tobacco_output_modifier = 0.28
 }
 
 pp_wb_rgo_floor_maynoa = {
@@ -6259,532 +6164,547 @@ pp_wb_rgo_floor_maynoa = {
 
 pp_wb_rgo_floor_sotuta = {
 	game_data = { category = location }
-	local_tobacco_output_modifier = 0.29
+	local_tobacco_output_modifier = 0.28
 }
 
 pp_wb_rgo_floor_abadan = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_abha = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_abil = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_abiy_addi = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.16
+	local_wheat_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_ad_dughmiyah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_adham = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
-pp_wb_rgo_floor_agadir = {
+pp_wb_rgo_floor_aghkand = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_aguz = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_al_ajfar = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_amlah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_amwah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_anbar = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_ayn = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
+}
+
+pp_wb_rgo_floor_al_bab = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_al_baharah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_bleiteh = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_burud = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_hadhah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_hegrieah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_husayniyah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_jar = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_khaburah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_khanbarah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_mafalis = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_manjur = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_maramiyah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_marwa = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_mashqar = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_al_tib = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.15
 }
 
-pp_wb_rgo_floor_almudevar = {
+pp_wb_rgo_floor_anchun = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
+	local_wheat_output_modifier = 0.01
+}
+
+pp_wb_rgo_floor_andkhoy = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
+}
+
+pp_wb_rgo_floor_anping = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_aqiq_banu_uqayi = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_ar_rabadha = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_ar_rawdah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_ar_ruwailiyyah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
-}
-
-pp_wb_rgo_floor_arbaji = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
-}
-
-pp_wb_rgo_floor_aror = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_as_suwaydirah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_ash_shuara = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
-}
-
-pp_wb_rgo_floor_asyut = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_azzan = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_bani_saad = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_baqqa = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_barahrah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_bayhan = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_bela = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_belen_ana = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.18
+}
+
+pp_wb_rgo_floor_bira = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.01
 }
 
 pp_wb_rgo_floor_birnin_gwari = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.16
+	local_wheat_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_birnin_kebbi = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_bolgan_ana = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
 }
 
-pp_wb_rgo_floor_bongor = {
+pp_wb_rgo_floor_boyauli = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
+	local_wheat_output_modifier = 0.06
+}
+
+pp_wb_rgo_floor_boye = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_bugur = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
-}
-
-pp_wb_rgo_floor_bula_kongo = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
+	local_wheat_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_buwat = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_cairo = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_changyuan = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_chengfu = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.18
 }
 
-pp_wb_rgo_floor_chishtian = {
+pp_wb_rgo_floor_chinchon = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_chitral = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.18
+	local_wheat_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_dacheng = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
 }
 
-pp_wb_rgo_floor_damanhur = {
+pp_wb_rgo_floor_damoh = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.11
 }
 
 pp_wb_rgo_floor_darghat = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_deir_ez_zor = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
+}
+
+pp_wb_rgo_floor_delijan = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_dhat_al_hajj = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_diakha = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.16
-}
-
-pp_wb_rgo_floor_dijkot = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.05
-}
-
-pp_wb_rgo_floor_dipalpur = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.05
+	local_wheat_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_diriyah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_dogonbadan = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_dongan_shuntian = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.15
-}
-
-pp_wb_rgo_floor_dubbi = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_dunla = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_el_manaqil = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_espe = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_fadisheh = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
+}
+
+pp_wb_rgo_floor_farhadgerd = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_fasa = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_ferrara = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
-}
-
-pp_wb_rgo_floor_firozpur = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_gabes = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_gaia = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.16
+	local_wheat_output_modifier = 0.13
+}
+
+pp_wb_rgo_floor_gaoyuan_jinan = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.01
 }
 
 pp_wb_rgo_floor_gereshk = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.15
+}
+
+pp_wb_rgo_floor_gongkar = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_hail = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_hali = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_haql = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_harad_asir = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_hejian = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_huraydah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_ibra = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
+}
+
+pp_wb_rgo_floor_ilanbalyk = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
+}
+
+pp_wb_rgo_floor_incheh_borun = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_jannat_shahr = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.28
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_jiaohe = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_jingan_shenzhou = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_jinxiang = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.15
+	local_wheat_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_jiyang = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.15
+	local_wheat_output_modifier = 0.01
+}
+
+pp_wb_rgo_floor_juancheng = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.01
 }
 
 pp_wb_rgo_floor_jurrah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
+}
+
+pp_wb_rgo_floor_kadinga = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.05
 }
 
 pp_wb_rgo_floor_kaf = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_kagoma = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
-}
-
-pp_wb_rgo_floor_kairouan = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_kajenje = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
+	local_wheat_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_kalat = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_karasahr = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_karmakshi = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_kashgar = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
-}
-
-pp_wb_rgo_floor_kashmore = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_kerma = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_khalis = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.15
+}
+
+pp_wb_rgo_floor_khantau = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_kherameh = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
-}
-
-pp_wb_rgo_floor_khoja_idat_kala = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_khunj = {
@@ -6792,367 +6712,402 @@ pp_wb_rgo_floor_khunj = {
 	local_wheat_output_modifier = 0.28
 }
 
+pp_wb_rgo_floor_kochkor = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
+}
+
+pp_wb_rgo_floor_koktal = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
+}
+
 pp_wb_rgo_floor_kolokani = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.17
 }
 
-pp_wb_rgo_floor_lalian = {
+pp_wb_rgo_floor_konjikala = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.05
-}
-
-pp_wb_rgo_floor_legnago = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
+	local_wheat_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_lhasa = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.18
+	local_wheat_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_lisino = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.03
+	local_wheat_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_lower_pinda = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
-pp_wb_rgo_floor_mansura = {
+pp_wb_rgo_floor_maraveh = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
-}
-
-pp_wb_rgo_floor_mantova = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_marte = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_mawqaq = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
-}
-
-pp_wb_rgo_floor_mbanza_mbata = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
-}
-
-pp_wb_rgo_floor_minya = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
-}
-
-pp_wb_rgo_floor_mirandola = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_miskah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
-}
-
-pp_wb_rgo_floor_mokwa = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_molundu = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
-}
-
-pp_wb_rgo_floor_mongoffa = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
+	local_wheat_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_mourdiah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_murau = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.03
+	local_wheat_output_modifier = 0.04
+}
+
+pp_wb_rgo_floor_nanpi = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.01
 }
 
 pp_wb_rgo_floor_nguidjilone = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_nimvar = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
-}
-
-pp_wb_rgo_floor_nonantola = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
-}
-
-pp_wb_rgo_floor_nyzvar = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_orta_kuyu = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_pandjih = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_payzawat = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_po = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.16
-}
-
-pp_wb_rgo_floor_poskam = {
 	game_data = { category = location }
 	local_wheat_output_modifier = 0.13
 }
 
 pp_wb_rgo_floor_potiskum = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_qasr_al_qaba = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
-pp_wb_rgo_floor_qus = {
+pp_wb_rgo_floor_qidong = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.01
+}
+
+pp_wb_rgo_floor_qihe = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.01
+}
+
+pp_wb_rgo_floor_radkan = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_raghdan = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_rajabar = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_ranyah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
+}
+
+pp_wb_rgo_floor_renqiu = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_roshtkhar = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_rusafa = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_saadatshahr = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_sadah = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_salde = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
-}
-
-pp_wb_rgo_floor_samanoud = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_samira = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_sansanding = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_sar_mashhad = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_saryadyn = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
 }
 
-pp_wb_rgo_floor_shahpur = {
+pp_wb_rgo_floor_sawran = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.05
+	local_wheat_output_modifier = 0.06
 }
 
-pp_wb_rgo_floor_shayar = {
+pp_wb_rgo_floor_sbiba = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.06
+}
+
+pp_wb_rgo_floor_shirvan = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_shush = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
-}
-
-pp_wb_rgo_floor_sillanwali = {
-	game_data = { category = location }
-	local_wheat_output_modifier = 0.05
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_sironj = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.3
 }
 
-pp_wb_rgo_floor_sitpur = {
+pp_wb_rgo_floor_sojas = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.06
+}
+
+pp_wb_rgo_floor_sugaur = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.11
 }
 
 pp_wb_rgo_floor_taif = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_taihe = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.35
+	local_wheat_output_modifier = 0.18
 }
 
-pp_wb_rgo_floor_tarrega = {
+pp_wb_rgo_floor_tamdy = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.04
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_tas_kichu = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
+}
+
+pp_wb_rgo_floor_tebessa = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
+}
+
+pp_wb_rgo_floor_tejend = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.07
 }
 
 pp_wb_rgo_floor_tenteksor = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
+}
+
+pp_wb_rgo_floor_tiaoxian = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_tikrit = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.15
 }
 
 pp_wb_rgo_floor_tim_samarkand = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.14
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_toksun = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.18
 }
 
-pp_wb_rgo_floor_tripoli = {
+pp_wb_rgo_floor_tongliao = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.01
+}
+
+pp_wb_rgo_floor_tongxu = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_tsaparang = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.18
+	local_wheat_output_modifier = 0.15
 }
 
-pp_wb_rgo_floor_uch = {
+pp_wb_rgo_floor_tufarqan = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.06
+}
+
+pp_wb_rgo_floor_ulan_us = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_ushkan = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.18
 }
 
 pp_wb_rgo_floor_wanqiu = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.35
+	local_wheat_output_modifier = 0.29
+}
+
+pp_wb_rgo_floor_wuqiao = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
+}
+
+pp_wb_rgo_floor_wuyi = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
+}
+
+pp_wb_rgo_floor_xiangyi = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.01
 }
 
 pp_wb_rgo_floor_xihua = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.18
+}
+
+pp_wb_rgo_floor_xindu_jizhou = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_yafran = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.2
+	local_wheat_output_modifier = 0.26
 }
 
 pp_wb_rgo_floor_yahr = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.05
+	local_wheat_output_modifier = 0.15
+}
+
+pp_wb_rgo_floor_yangjibaliq = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
+}
+
+pp_wb_rgo_floor_yijin = {
+	game_data = { category = location }
+	local_wheat_output_modifier = 0.06
 }
 
 pp_wb_rgo_floor_yongqing = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.15
+	local_wheat_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_yuncheng = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.15
+	local_wheat_output_modifier = 0.12
 }
 
 pp_wb_rgo_floor_zondoma = {
 	game_data = { category = location }
-	local_wheat_output_modifier = 0.13
+	local_wheat_output_modifier = 0.17
 }
 
 pp_wb_rgo_floor_massa = {
 	game_data = { category = location }
-	local_wine_output_modifier = 0.01
+	local_wine_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_montreux = {
 	game_data = { category = location }
-	local_wine_output_modifier = 0.01
+	local_wine_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_morella = {
 	game_data = { category = location }
-	local_wine_output_modifier = 0.01
+	local_wine_output_modifier = 0.04
 }
 
 pp_wb_rgo_floor_tsageri = {
 	game_data = { category = location }
-	local_wine_output_modifier = 0.01
+	local_wine_output_modifier = 0.04
 }

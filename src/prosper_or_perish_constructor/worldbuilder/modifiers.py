@@ -233,19 +233,20 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
     return written
 
 
-def river_bodies(vanilla_root: Path) -> dict[int, list[str]]:
-    """Vanilla river_flowing_through_<n> block lines (inside the braces) without the capacity percentage."""
+def static_modifier_bodies(vanilla_root: Path, pattern: str) -> dict[str, list[str]]:
+    """Vanilla location static-modifier block lines (inside the braces) for names matching ``pattern``,
+    without their population-capacity lines."""
     path = vanilla_root / "game/main_menu/common/static_modifiers/location.txt"
-    bodies: dict[int, list[str]] = {}
-    current: int | None = None
+    bodies: dict[str, list[str]] = {}
+    current: str | None = None
     depth = 0
     for raw in path.read_text(encoding="utf-8-sig").splitlines():
         line = raw.split("#", 1)[0]
         stripped = line.strip()
         if depth == 0:
-            match = re.match(r"^river_flowing_through_(\d+)\s*=\s*\{", stripped)
+            match = re.match(rf"^({pattern})\s*=\s*\{{", stripped)
             if match:
-                current = int(match.group(1))
+                current = match.group(1)
                 bodies[current] = []
                 depth = 1
                 continue
@@ -258,6 +259,15 @@ def river_bodies(vanilla_root: Path) -> dict[int, list[str]]:
             if stripped and "local_population_capacity" not in stripped:
                 bodies[current].append(stripped)
     return bodies
+
+
+def river_bodies(vanilla_root: Path) -> dict[int, list[str]]:
+    """Vanilla river_flowing_through_<n> block lines without the capacity percentage."""
+    return {int(name.rsplit("_", 1)[1]): body for name, body in static_modifier_bodies(vanilla_root, r"river_flowing_through_\d+").items()}
+
+
+# Note: vanilla's `development` static modifier (+2.5% capacity per point) is already replaced without its
+# capacity line by the mod's hand-authored pp_location_modifier_adjustments.txt, so no percentage remains.
 
 
 def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path, vanilla_root: Path, rgo_by_location: Mapping[str, str] | None = None) -> dict[str, object]:

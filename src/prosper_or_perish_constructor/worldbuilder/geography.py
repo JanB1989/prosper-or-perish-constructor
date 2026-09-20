@@ -20,7 +20,6 @@ EXCLUDED_PREFIXES = (
     "in_game/common/goods/",             # vanilla copy
     "in_game/common/scripted_triggers/goods_triggers.txt",
     "in_game/common/scripted_triggers/location_triggers.txt",
-    "in_game/gui/",                      # the main mod has its own location window
     ".metadata/",
     "README.md",
 )
@@ -49,6 +48,37 @@ def export_files(export_dir: Path) -> list[str]:
     return keep
 
 
+LOCATION_WINDOW = "in_game/gui/location_window.gui"
+_FOOD_PERCENT = 'value = "[FixedPointToFloat(Province.GetFoodCapacityPercent)]"'
+_FOOD_PERCENT_REST = 'value = "[Subtract_float(\'(float)100.0\', FixedPointToFloat(Province.GetFoodCapacityPercent))]"'
+_FOOD_SCOPES = ("LocationView", "LocationViewSelectProvince.Parent")
+
+
+def merge_location_window(text: str) -> str:
+    """Re-apply the mod's stored-food gauge on the World Builder location window.
+
+    The World Builder file is vanilla plus its native geography view; the mod replaces the vanilla
+    province food-capacity gauge (two pairs of lines: the location view and the province selector) with
+    the stored-food months from `pp_province_food_storage_months`. The divisor is compiled afterwards by
+    the food-storage GUI step, which expects exactly these four lines.
+    """
+    lines = text.splitlines(keepends=True)
+    pair = 0
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped == _FOOD_PERCENT:
+            scope = _FOOD_SCOPES[min(pair // 2, 1)]
+            lines[index] = line.replace(_FOOD_PERCENT, f"value = \"[FixedPointToFloat(Divide_CFixedPoint({scope}.GetLocation.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]\"")
+            pair += 1
+        elif stripped == _FOOD_PERCENT_REST:
+            scope = _FOOD_SCOPES[min((pair - 1) // 2, 1)]
+            lines[index] = line.replace(_FOOD_PERCENT_REST, f"value = \"[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint({scope}.GetLocation.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]\"")
+            pair += 1
+    if pair != 4:
+        raise ValueError(f"location_window.gui: expected 4 vanilla food-capacity gauge lines, found {pair}")
+    return "".join(lines)
+
+
 def sync_geography(export_dir: Path, mod_root: Path, repo: Path) -> dict[str, object]:
     """Copy the export into the mod, remove stale copies from a previous sync and the legacy attribute injects."""
     export_dir = Path(export_dir)
@@ -65,6 +95,13 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path) -> dict[str, ob
         dst = mod_root / rel
         dst.parent.mkdir(parents=True, exist_ok=True)
         digest = _sha(src)
+        if rel == LOCATION_WINDOW:
+            merged = merge_location_window(src.read_text(encoding="utf-8-sig"))
+            if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
+                dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")
+                changed += 1
+            copied[rel] = digest
+            continue
         if not dst.is_file() or _sha(dst) != digest:
             shutil.copyfile(src, dst)
             changed += 1

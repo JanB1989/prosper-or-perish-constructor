@@ -130,6 +130,14 @@ would be scaled by employment, which is zero). All carry
 `[worldbuilder.level_scale]` rescales levels so the general buildings are worth 700-2,600 people per
 level; only integer scales are safe because caps and starting levels are floored.
 
+The World Builder classes are children of vanilla classes (the export's `geography_compatibility.json`
+`families` map). `[worldbuilder.compat] vanilla_files` lists the vanilla scripts whose attribute tests
+matter (scripted triggers, some building files, diseases, the Columbian exchange, a few events); apply
+copies them into the mod with every `attribute = parent` test widened to
+`OR = { attribute = parent attribute = child ... }` and drops copies with nothing to widen. The mod's own
+scripts and blueprints were widened once, in place, with the same rule
+(`worldbuilder.compat.expand_attribute_tests`).
+
 ```bash
 uv run ppc worldbuilder apply                # consume ../EU5WorldBuilder/artifacts/handover/latest
 uv run ppc worldbuilder export-development   # vanilla game-start development table for the World Builder

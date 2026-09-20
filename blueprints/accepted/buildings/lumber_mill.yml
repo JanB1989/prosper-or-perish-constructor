@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: lumber_mill
 upgrade_chain:
   family: lumber_mill
@@ -11,23 +11,23 @@ building:
   mode: REPLACE
   source: pp_building_adjustments.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_lumber_mill_base_lumber
-    - name: slot_1
-      methods:
-        - pp_lumber_mill_no_primary
-        - pp_lumber_mill_horse_tools
-        - pp_lumber_mill_horse_victuals
-        - pp_lumber_mill_livestock_tools
-        - pp_lumber_mill_livestock_victuals
-    - name: slot_2
-      methods:
-        - pp_lumber_mill_no_extra_rations
-        - pp_lumber_mill_extra_rations
-        - pp_lumber_mill_wound_salves
+  - name: slot_0
+    methods:
+    - pp_lumber_mill_base_lumber
+  - name: slot_1
+    methods:
+    - pp_lumber_mill_no_primary
+    - pp_lumber_mill_horse_tools
+    - pp_lumber_mill_horse_victuals
+    - pp_lumber_mill_livestock_tools
+    - pp_lumber_mill_livestock_victuals
+  - name: slot_2
+    methods:
+    - pp_lumber_mill_no_extra_rations
+    - pp_lumber_mill_extra_rations
+    - pp_lumber_mill_wound_salves
   possible_production_methods: []
-  body: |2-
+  body: |-
     audio_tier = 1
     startup_ramp_target = rural_startup_ramp_target
     is_foreign = no
@@ -44,8 +44,8 @@ building:
 
         location_potential = {
             OR = {
-                vegetation = woods
-                vegetation = forest
+                OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+                OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
                 vegetation = jungle
                 raw_material = goods:lumber
                 raw_material = goods:fur
@@ -127,13 +127,13 @@ building:
         }
         construction_demand = basic_construction_needs
 advancements:
-  - key: REPLACE:lumber_improvements_discovery
-    body: |2-
-      icon = lumber_improvements_absolutism
-      age = age_3_discovery
-      requires = improved_book_binding
-      global_lumber_output_modifier = 0.2
-      ai_weight = { add = 150 }
+- key: REPLACE:lumber_improvements_discovery
+  body: |-
+    icon = lumber_improvements_absolutism
+    age = age_3_discovery
+    requires = improved_book_binding
+    global_lumber_output_modifier = 0.2
+    ai_weight = { add = 150 }
 localization:
   entries:
     lumber_mill_slot_0: Woodland Cutting
@@ -150,30 +150,29 @@ localization:
     pp_lumber_mill_no_extra_rations: No Extra Rations
     pp_lumber_mill_no_primary: No Logging Method
     pp_lumber_mill_wound_salves: Wound Salves
-
 evaluation:
   production_methods:
     pp_lumber_mill_base_lumber:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_lumber_mill_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_lumber_mill_horse_tools:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_lumber_mill_horse_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         profit_percent: Provisioned horse logging crews intentionally sit just above the generic profit band after accepted lumber tuning.
     pp_lumber_mill_livestock_tools:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_lumber_mill_livestock_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_lumber_mill_extra_rations:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_lumber_mill_wound_salves:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary logging throughput.
         output_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary logging throughput.

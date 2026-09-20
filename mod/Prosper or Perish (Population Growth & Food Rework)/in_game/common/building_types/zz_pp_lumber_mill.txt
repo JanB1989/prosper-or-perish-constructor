@@ -16,8 +16,8 @@ megalopolis = yes
 
     location_potential = {
         OR = {
-            vegetation = woods
-            vegetation = forest
+            OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+            OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
             vegetation = jungle
             raw_material = goods:lumber
             raw_material = goods:fur

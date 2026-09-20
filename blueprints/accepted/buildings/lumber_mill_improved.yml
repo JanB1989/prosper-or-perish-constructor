@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: lumber_mill_improved
 upgrade_chain:
   family: lumber_mill
@@ -11,22 +11,22 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_lumber_mill_improved_base_lumber
-    - name: slot_1
-      methods:
-        - pp_lumber_mill_improved_no_primary
-        - pp_lumber_mill_improved_horse_tools
-        - pp_lumber_mill_improved_horse_victuals
-        - pp_lumber_mill_improved_livestock_tools
-        - pp_lumber_mill_improved_livestock_victuals
-    - name: slot_2
-      methods:
-        - pp_lumber_mill_improved_no_crew_support
-        - pp_lumber_mill_improved_wound_salves
+  - name: slot_0
+    methods:
+    - pp_lumber_mill_improved_base_lumber
+  - name: slot_1
+    methods:
+    - pp_lumber_mill_improved_no_primary
+    - pp_lumber_mill_improved_horse_tools
+    - pp_lumber_mill_improved_horse_victuals
+    - pp_lumber_mill_improved_livestock_tools
+    - pp_lumber_mill_improved_livestock_victuals
+  - name: slot_2
+    methods:
+    - pp_lumber_mill_improved_no_crew_support
+    - pp_lumber_mill_improved_wound_salves
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.26
     max_levels = forest_capacity_max_lumber_mill_improved
@@ -44,8 +44,8 @@ building:
 
     location_potential = {
         OR = {
-            vegetation = woods
-            vegetation = forest
+            OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+            OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
             vegetation = jungle
             raw_material = goods:lumber
             raw_material = goods:fur
@@ -128,13 +128,13 @@ building:
         local_population_growth = -0.0000
     }
 advancements:
-  - key: REPLACE:lumber_improvements_absolutism
-    body: |2-
-      icon = lumber_mill_improved
-      age = age_5_absolutism
-      requires = rgo_size_advance_absolutism
-      unlock_building = lumber_mill_improved
-      ai_weight = { add = 150 }
+- key: REPLACE:lumber_improvements_absolutism
+  body: |-
+    icon = lumber_mill_improved
+    age = age_5_absolutism
+    requires = rgo_size_advance_absolutism
+    unlock_building = lumber_mill_improved
+    ai_weight = { add = 150 }
 localization:
   entries:
     lumber_improvements_absolutism: Forest Ordinances
@@ -157,38 +157,37 @@ icon:
   output_dds: lumber_mill_improved.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for an upgraded lumber mill and planned forestry works, transparent background. Center a water-powered saw frame beside stacked logs, marked managed forest stands, log landing, and forester survey stakes, no text, no frame, painterly historical UI art.
-
 evaluation:
   production_methods:
     pp_lumber_mill_improved_base_lumber:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for planned saw works; intentionally lower than the global no-input output band.
         amortization_months: Requested passive baseline for planned saw works; intentionally lower than the global no-input output band.
         input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_lumber_mill_improved_horse_tools:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         output_throughput: Horse forest ordinances intentionally sit near the top of the planned saw works throughput band.
     pp_lumber_mill_improved_horse_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         output_throughput: Provisioned horse ordinances intentionally sit near the top of the planned saw works throughput band.
     pp_lumber_mill_improved_livestock_tools:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         output_throughput: Ox forest ordinances intentionally remain close to the planned saw works throughput band.
     pp_lumber_mill_improved_livestock_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         output_throughput: Provisioned ox ordinances intentionally remain close to the planned saw works throughput band.
     pp_lumber_mill_improved_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_lumber_mill_improved_no_crew_support:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_lumber_mill_improved_wound_salves:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         input_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary saw-works throughput.
         output_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary saw-works throughput.

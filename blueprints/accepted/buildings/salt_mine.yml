@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: salt_mine
 upgrade_chain:
   family: salt_mine
@@ -11,15 +11,15 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_salt_mine_base_salt
-    - name: slot_1
-      methods:
-        - pp_salt_mine_no_primary
-        - pp_salt_mine_hand_cut_galleries
+  - name: slot_0
+    methods:
+    - pp_salt_mine_base_salt
+  - name: slot_1
+    methods:
+    - pp_salt_mine_no_primary
+    - pp_salt_mine_hand_cut_galleries
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.21
     max_levels = rural_building_cap
@@ -56,14 +56,14 @@ building:
                     topography = plateau
                 }
                 OR = {
-                    climate = continental
-                    climate = oceanic
+                    OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+                    OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
                     climate = mediterranean
                 }
                 OR = {
-                    vegetation = forest
-                    vegetation = woods
-                    vegetation = grasslands
+                    OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+                    OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+                    OR = { vegetation = grasslands vegetation = ha1300_veg_savanna vegetation = ha1300_veg_marsh }
                     vegetation = farmland
                 }
                 NOT = {
@@ -133,8 +133,8 @@ icon:
 evaluation:
   production_methods:
     pp_salt_mine_base_salt:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_salt_mine_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_salt_mine_hand_cut_galleries:
-      production_efficiency: 1.10
+      production_efficiency: 1.1

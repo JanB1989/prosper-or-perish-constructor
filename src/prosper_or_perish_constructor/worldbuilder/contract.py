@@ -41,6 +41,7 @@ class WorldBuilderConfig:
     sync_geography: bool
     raw: dict[str, Any] = field(default_factory=dict)
     niche: dict[str, dict[str, Any]] = field(default_factory=dict)
+    compat_files: list[str] = field(default_factory=list)
 
 
 def load_config(repo: Path, project: Path) -> WorldBuilderConfig:
@@ -71,6 +72,7 @@ def load_config(repo: Path, project: Path) -> WorldBuilderConfig:
         geography_export=path_of("geography_export"),
         building_map={str(k): str(v) for k, v in (buildings.get("map") or {}).items()},
         niche=niche,
+        compat_files=[str(x) for x in ((section.get("compat") or {}).get("vanilla_files") or [])] if isinstance(section.get("compat"), dict) else [],
         farm_land=farm_land,
         farm_classes=farm_classes,
         level_scale={str(k): float(v) for k, v in scale.items()},

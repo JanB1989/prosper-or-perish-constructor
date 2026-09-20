@@ -92,18 +92,18 @@ pp_fiber_crops_farm_location_potential = {
 		raw_material = goods:fiber_crops
 		AND = {
 			NOT = { climate = arctic }
-			NOT = { climate = cold_arid }
+			NOT = { OR = { climate = cold_arid climate = ha1300_climate_cold_steppe } }
 			OR = {
-				topography = flatland
+				OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
 				topography = hills
 				topography = plateau
 				topography = wetlands
 			}
 			OR = {
 				vegetation = farmland
-				vegetation = grasslands
-				vegetation = woods
-				vegetation = forest
+				OR = { vegetation = grasslands vegetation = ha1300_veg_savanna vegetation = ha1300_veg_marsh }
+				OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+				OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
 			}
 		}
 	}
@@ -123,7 +123,7 @@ pp_horse_breeders_location_potential = {
 		raw_material = goods:livestock
 		raw_material = goods:horses
 		vegetation = farmland
-		vegetation = grasslands
-		vegetation = sparse
+		OR = { vegetation = grasslands vegetation = ha1300_veg_savanna vegetation = ha1300_veg_marsh }
+		OR = { vegetation = sparse vegetation = ha1300_veg_scrubland vegetation = ha1300_veg_tundra }
 	}
 }

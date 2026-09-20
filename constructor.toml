@@ -128,6 +128,40 @@ oasis_irrigation = "qanats"
 khmer_baray = { family = "irrigation_systems", strength = 1.5, lock = ["dominant_culture ?= culture:khmer_culture"] }
 incamisana = { family = "irrigation_systems", strength = 1.5 }
 
+[worldbuilder.compat]
+# Vanilla scripts that test specific climate/vegetation/topography classes. They are copied into the mod with every
+# test of a vanilla parent class widened to its World Builder children (families from the export's
+# geography_compatibility.json), regenerated from the current vanilla files on every apply. Whole-file overrides:
+# keep this list to files where the tests matter for gameplay. Vanilla building files are listed only where a widened
+# building is not already a REPLACE blueprint of the mod (sawmill, spiritual retreat, peasants hunting grounds, oma falaj).
+vanilla_files = [
+  "in_game/common/scripted_triggers/location_triggers.txt",
+  "in_game/common/scripted_triggers/goods_triggers.txt",
+  "in_game/common/building_types/rural_buildings.txt",
+  "in_game/common/building_types/unique_buildings.txt",
+  "in_game/common/building_types/estate_buildings.txt",
+  "in_game/common/building_types/event_only_buildings.txt",
+  "in_game/common/diseases/malaria.txt",
+  "in_game/common/diseases/bubonic_plague.txt",
+  "in_game/common/diseases/great_pestilence.txt",
+  "in_game/common/diseases/smallpox.txt",
+  "in_game/common/diseases/influenza.txt",
+  "in_game/common/generic_actions/columbian_exchange.txt",
+  "in_game/common/generic_actions/italian_wars.txt",
+  "in_game/common/insults/00_insults.txt",
+  "in_game/events/estates/cossacks_estate_events.txt",
+  "in_game/events/exploration/exploration_monthly_events.txt",
+  "in_game/events/religion/pilgrimage_events.txt",
+  "in_game/events/situations/little_ice_age.txt",
+  "in_game/events/character/artist_events.txt",
+  "in_game/events/DHE/flavor_plc.txt",
+  "in_game/events/DHE/flavor_chi_treasure_expedition.txt",
+  "in_game/events/DHE/flavor_TUR.txt",
+  "in_game/events/DHE/flavor_ICE.txt",
+  "in_game/events/DHE/flavor_ETH.txt",
+  "in_game/events/DHE/flavor_ENG.txt",
+]
+
 [worldbuilder.level_scale]
 # multiply levels, divide people per level; 1.0 keeps the World Builder units. Chosen so every general building is
 # worth roughly 700-2,600 people per level (niche members: 1.5x their family); only integer scales are safe because caps

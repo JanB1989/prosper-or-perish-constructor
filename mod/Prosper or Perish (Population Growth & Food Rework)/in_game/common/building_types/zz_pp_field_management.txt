@@ -24,7 +24,7 @@ construction_demand = village_construction
 unique_production_methods = {
   pp_field_management_maintenance = {
         livestock = 0.10
-        tools = 0.025
+        manual_labor_cost = 0.075
     category = building_maintenance
   }
 }

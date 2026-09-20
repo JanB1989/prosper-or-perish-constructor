@@ -25,13 +25,13 @@ location_potential = {
     }
   }
   OR = {
-    climate = tropical
-    climate = subtropical
-    climate = arid
-    climate = cold_arid
+    OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+    OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+    OR = { climate = arid climate = ha1300_climate_hot_steppe }
+    OR = { climate = cold_arid climate = ha1300_climate_cold_steppe }
   }
   OR = {
-    topography = flatland
+    OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
     topography = hills
     topography = plateau
   }

@@ -14,6 +14,7 @@ import polars as pl
 
 from prosper_or_perish_constructor.location_baseline import resolve_load_order_path
 from prosper_or_perish_constructor.worldbuilder import buildings as wb_buildings
+from prosper_or_perish_constructor.worldbuilder import compat as wb_compat
 from prosper_or_perish_constructor.worldbuilder import development as wb_development
 from prosper_or_perish_constructor.worldbuilder import geography as wb_geography
 from prosper_or_perish_constructor.worldbuilder import modifiers as wb_modifiers
@@ -48,6 +49,9 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     if cfg.sync_geography:
         report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo)
     report["class_injects"] = wb_modifiers.write_class_injects(contract, cfg.geography_export, mod_root, repo, vanilla_root(repo, project))
+    if cfg.compat_files:
+        families = wb_compat.load_families(cfg.geography_export)
+        report["compat_patches"] = wb_compat.write_compat_patches(vanilla_root(repo, project), mod_root, repo, families, cfg.compat_files)
     from prosper_or_perish_constructor.location_baseline import load_current_location_frame
 
     current = load_current_location_frame(repo, project)

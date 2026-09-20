@@ -244,3 +244,25 @@ def test_effective_class_files_keep_vanilla_definitions_the_export_does_not_repl
     defs = wb_modifiers.parse_class_capacity(wb_modifiers.effective_class_files(Path("topography"), export, vanilla))
     assert defs["hills"] == {"local_monthly_food_modifier": -0.5}
 
+
+def test_expand_attribute_tests_widens_parents_once_and_leaves_the_rest(tmp_path):
+    from prosper_or_perish_constructor.worldbuilder import compat as wb_compat
+
+    fam = {"vegetation": {"forest": ["ha1300_veg_coniferous_forest", "ha1300_veg_swamp"]}, "climate": {"tropical": ["ha1300_climate_savanna"]}, "topography": {}}
+    text = "x = {\n\tvegetation = forest\n\tNOT = { climate = tropical }   # keep this comment: climate = tropical\n\tvegetation = jungle\n\tOR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_swamp }\n}\n"
+    out, n = wb_compat.expand_attribute_tests(text, fam)
+    assert n == 2
+    assert "\tOR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_swamp }\n" in out
+    assert "NOT = { OR = { climate = tropical climate = ha1300_climate_savanna } }   # keep this comment: climate = tropical" in out
+    assert "vegetation = jungle" in out
+    again, m = wb_compat.expand_attribute_tests(out, fam)
+    assert m == 0 and again == out
+    vanilla = tmp_path / "vanilla"
+    (vanilla / "game/in_game/common/diseases").mkdir(parents=True)
+    (vanilla / "game/in_game/common/diseases/malaria.txt").write_text(text, encoding="utf-8")
+    (vanilla / "game/in_game/common/diseases/none.txt").write_text("y = { vegetation = jungle }\n", encoding="utf-8")
+    mod = tmp_path / "mod"
+    report = wb_compat.write_compat_patches(vanilla, mod, tmp_path, fam, ["in_game/common/diseases/malaria.txt", "in_game/common/diseases/none.txt"])
+    assert report == {"files": 1, "tests_widened": 2, "unchanged": ["in_game/common/diseases/none.txt"]}
+    assert (mod / "in_game/common/diseases/malaria.txt").is_file() and not (mod / "in_game/common/diseases/none.txt").exists()
+

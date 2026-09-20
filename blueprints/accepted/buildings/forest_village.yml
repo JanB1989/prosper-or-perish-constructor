@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: forest_village
 upgrade_chain:
   family: forest_village
@@ -11,23 +11,23 @@ building:
   mode: REPLACE
   source: pp_food_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_forest_village_base_leather
-        - pp_forest_village_base_wild_game
-        - pp_forest_village_base_fur
-        - pp_forest_village_base_beeswax
-    - name: slot_1
-      methods:
-        - pp_forest_village_no_primary
-        - pp_forest_tannery
-        - pp_hunting_lodges
-        - pp_fur_trapping
-        - pp_forest_village_forest_apiary
-    - name: slot_2
-      methods:
-        - pp_forest_village_no_worker_victuals
-        - pp_forest_village_worker_victuals
+  - name: slot_0
+    methods:
+    - pp_forest_village_base_leather
+    - pp_forest_village_base_wild_game
+    - pp_forest_village_base_fur
+    - pp_forest_village_base_beeswax
+  - name: slot_1
+    methods:
+    - pp_forest_village_no_primary
+    - pp_forest_tannery
+    - pp_hunting_lodges
+    - pp_fur_trapping
+    - pp_forest_village_forest_apiary
+  - name: slot_2
+    methods:
+    - pp_forest_village_no_worker_victuals
+    - pp_forest_village_worker_victuals
   possible_production_methods: []
   body: |2-
         audio_tier = 1
@@ -47,8 +47,8 @@ building:
         ai_forbid_shutdown = no
         location_potential = {
             OR = {
-                vegetation = woods
-                vegetation = forest
+                OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+                OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
                 vegetation = jungle
                 raw_material = goods:lumber
                 raw_material = goods:fur
@@ -137,71 +137,71 @@ building:
             local_soldiers_desired_pop = 0.010
         }
 advancements:
-  - key: pp_fur_trapping_advance_native
-    body: |2-
-          age = age_1_traditions
-          unlock_production_method = pp_forest_village_base_fur
-          unlock_production_method = pp_fur_trapping
-          requires = agriculture_advance
-          # icon = renaissance_advance
-          ai_weight = { add = 50 }
-          potential = {
-              exists = capital
-              original_capital ?= {
-                  OR = {
-                      sub_continent = sub_continent:north_asia
-                      sub_continent = sub_continent:eastern_europe
-                      sub_continent = sub_continent:central_asia
-                      region = region:scandinavian_region
-                  }
-              }
-          }
-  - key: pp_fur_trapping_advance_colonial
-    body: |2-
-          age = age_3_discovery
-          unlock_production_method = pp_forest_village_base_fur
-          unlock_production_method = pp_fur_trapping
-          requires = new_world_advance
-          # icon = new_world_advance
-          ai_weight = { add = 50 }
-          potential = {
-              exists = capital
-              original_capital ?= {
-                  AND = {
-                      sub_continent = sub_continent:western_europe
-                      NOT = { region = region:scandinavian_region }
-                  }
-              }
-          }
-  - key: pp_fur_trapping_advance_general
-    body: |2-
-          age = age_4_reformation
-          unlock_production_method = pp_forest_village_base_fur
-          unlock_production_method = pp_fur_trapping
-          requires = global_trade_advance
-          # icon = renaissance_advance
-          ai_weight = { add = 50 }
-          potential = {
-              exists = capital
-              NOT = {
-                  OR = {
-                      original_capital ?= {
-                          OR = {
-                              sub_continent = sub_continent:north_asia
-                              sub_continent = sub_continent:eastern_europe
-                              sub_continent = sub_continent:central_asia
-                              region = region:scandinavian_region
-                          }
-                      }
-                      original_capital ?= {
-                          AND = {
-                              sub_continent = sub_continent:western_europe
-                              NOT = { region = region:scandinavian_region }
-                          }
-                      }
-                  }
-              }
-          }
+- key: pp_fur_trapping_advance_native
+  body: |2-
+        age = age_1_traditions
+        unlock_production_method = pp_forest_village_base_fur
+        unlock_production_method = pp_fur_trapping
+        requires = agriculture_advance
+        # icon = renaissance_advance
+        ai_weight = { add = 50 }
+        potential = {
+            exists = capital
+            original_capital ?= {
+                OR = {
+                    sub_continent = sub_continent:north_asia
+                    sub_continent = sub_continent:eastern_europe
+                    sub_continent = sub_continent:central_asia
+                    region = region:scandinavian_region
+                }
+            }
+        }
+- key: pp_fur_trapping_advance_colonial
+  body: |2-
+        age = age_3_discovery
+        unlock_production_method = pp_forest_village_base_fur
+        unlock_production_method = pp_fur_trapping
+        requires = new_world_advance
+        # icon = new_world_advance
+        ai_weight = { add = 50 }
+        potential = {
+            exists = capital
+            original_capital ?= {
+                AND = {
+                    sub_continent = sub_continent:western_europe
+                    NOT = { region = region:scandinavian_region }
+                }
+            }
+        }
+- key: pp_fur_trapping_advance_general
+  body: |2-
+        age = age_4_reformation
+        unlock_production_method = pp_forest_village_base_fur
+        unlock_production_method = pp_fur_trapping
+        requires = global_trade_advance
+        # icon = renaissance_advance
+        ai_weight = { add = 50 }
+        potential = {
+            exists = capital
+            NOT = {
+                OR = {
+                    original_capital ?= {
+                        OR = {
+                            sub_continent = sub_continent:north_asia
+                            sub_continent = sub_continent:eastern_europe
+                            sub_continent = sub_continent:central_asia
+                            region = region:scandinavian_region
+                        }
+                    }
+                    original_capital ?= {
+                        AND = {
+                            sub_continent = sub_continent:western_europe
+                            NOT = { region = region:scandinavian_region }
+                        }
+                    }
+                }
+            }
+        }
 localization:
   entries:
     forest_village_slot_0: Forest Resources
@@ -225,7 +225,6 @@ localization:
     pp_fur_trapping_advance_native_desc: Traditional fur harvesting in boreal and northern forests.
     pp_forest_village_no_primary: No Forest Work
     pp_hunting_lodges: Hunting Lodges
-
 evaluation:
   allow_rules:
     profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
@@ -233,32 +232,32 @@ evaluation:
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_forest_village_base_leather:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; capped at the old low-output leather total.
     pp_forest_village_base_wild_game:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
     pp_forest_village_base_fur:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; capped at the old low-output fur total.
     pp_forest_village_base_beeswax:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Requested passive baseline for former-food village producers; capped at the old low-output beeswax total.
     pp_forest_village_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_forest_tannery:
-      production_efficiency: 1.10
+      production_efficiency: 1.1
     pp_hunting_lodges:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_fur_trapping:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_forest_village_forest_apiary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_forest_village_worker_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

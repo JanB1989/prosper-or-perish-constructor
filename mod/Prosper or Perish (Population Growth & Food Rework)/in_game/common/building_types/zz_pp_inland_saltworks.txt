@@ -36,14 +36,14 @@ location_potential = {
                     topography = plateau
                 }
                 OR = {
-                    climate = continental
-                    climate = oceanic
+                    OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic }
+                    OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic }
                     climate = mediterranean
                 }
                 OR = {
-                    vegetation = forest
-                    vegetation = woods
-                    vegetation = grasslands
+                    OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
+                    OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+                    OR = { vegetation = grasslands vegetation = ha1300_veg_savanna vegetation = ha1300_veg_marsh }
                     vegetation = farmland
                 }
                 NOT = {

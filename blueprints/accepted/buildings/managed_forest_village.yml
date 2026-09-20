@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 tag: managed_forest_village
 upgrade_chain:
   family: forest_village
@@ -11,25 +11,25 @@ building:
   mode: CREATE
   source: pp_new_buildings.txt
   production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_managed_forest_village_base_leather
-        - pp_managed_forest_village_base_wild_game
-        - pp_managed_forest_village_base_fur
-        - pp_managed_forest_village_base_beeswax
-    - name: slot_1
-      methods:
-        - pp_managed_forest_village_no_primary
-        - pp_managed_forest_village_tannery
-        - pp_managed_forest_village_gamekeepers
-        - pp_managed_forest_village_fur_trappers
-        - pp_managed_forest_village_apiaries
-    - name: slot_2
-      methods:
-        - pp_managed_forest_village_no_worker_victuals
-        - pp_managed_forest_village_worker_victuals
+  - name: slot_0
+    methods:
+    - pp_managed_forest_village_base_leather
+    - pp_managed_forest_village_base_wild_game
+    - pp_managed_forest_village_base_fur
+    - pp_managed_forest_village_base_beeswax
+  - name: slot_1
+    methods:
+    - pp_managed_forest_village_no_primary
+    - pp_managed_forest_village_tannery
+    - pp_managed_forest_village_gamekeepers
+    - pp_managed_forest_village_fur_trappers
+    - pp_managed_forest_village_apiaries
+  - name: slot_2
+    methods:
+    - pp_managed_forest_village_no_worker_victuals
+    - pp_managed_forest_village_worker_victuals
   possible_production_methods: []
-  body: |2-
+  body: |-
     is_foreign = no
     increase_per_level_cost = 0.19
     max_levels = forest_capacity_max_managed_forest_village
@@ -51,8 +51,8 @@ building:
 
     location_potential = {
         OR = {
-            vegetation = woods
-            vegetation = forest
+            OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
+            OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
             vegetation = jungle
             raw_material = goods:lumber
             raw_material = goods:fur
@@ -151,13 +151,13 @@ building:
         local_laborers_desired_pop = 0.003
     }
 advancements:
-  - key: pp_managed_forest_village
-    body: |2-
-      icon = managed_forest_village
-      age = age_4_reformation
-      requires = lumber_improvements_reformation
-      unlock_building = managed_forest_village
-      ai_weight = { add = 125 }
+- key: pp_managed_forest_village
+  body: |-
+    icon = managed_forest_village
+    age = age_4_reformation
+    requires = lumber_improvements_reformation
+    unlock_building = managed_forest_village
+    ai_weight = { add = 125 }
 localization:
   entries:
     managed_forest_village: Managed Forest Village
@@ -183,7 +183,6 @@ icon:
   output_dds: managed_forest_village.dds
   size: 512
   prompt: EU5-inspired hand-painted strategy-game icon for Managed Forest Village, transparent background. Center a compact upgraded woodland settlement with marked tree stands, timber sledges or wagons, stacked hides, beehives, a small tannery shed, survey stakes, and workers' tools. Muted forest greens, bark browns, wax yellow accents, no text, no frame, painterly historical UI art.
-
 evaluation:
   allow_rules:
     input_throughput: 7-pop normalization intentionally lowers per-1k throughput for this upgraded former-food producer family; revisit with the rural producer rebalance.
@@ -191,24 +190,24 @@ evaluation:
     amortization_months: 7-pop normalization and 10% lower maintenance inputs intentionally make this upgraded former-food producer family modestly profitable; revisit with the rural producer rebalance.
   production_methods:
     pp_managed_forest_village_base_leather:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_managed_forest_village_base_wild_game:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_managed_forest_village_base_fur:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_managed_forest_village_base_beeswax:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_managed_forest_village_no_primary:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_managed_forest_village_tannery:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_managed_forest_village_gamekeepers:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_managed_forest_village_fur_trappers:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_managed_forest_village_apiaries:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
     pp_managed_forest_village_worker_victuals:
-      production_efficiency: 1.00
+      production_efficiency: 1.0
       allow_rules:
         base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.

@@ -56,7 +56,7 @@ pp_fishing_climate_breakdown = {
 	type = location
 	text = {
 		localization_key = PP_FISHING_OCEANIC
-		trigger = { climate = oceanic }
+		trigger = { OR = { climate = oceanic climate = ha1300_climate_highland_monsoon climate = ha1300_climate_subpolar_oceanic } }
 	}
 	text = {
 		localization_key = PP_FISHING_MEDITERRANEAN
@@ -64,7 +64,7 @@ pp_fishing_climate_breakdown = {
 	}
 	text = {
 		localization_key = PP_FISHING_SUBTROPICAL
-		trigger = { climate = subtropical }
+		trigger = { OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon } }
 	}
 	text = {
 		localization_key = PP_EMPTY_LOC
@@ -91,7 +91,7 @@ pp_farming_topography_breakdown = {
 	type = location
 	text = {
 		localization_key = PP_FARMING_FLATLAND
-		trigger = { topography = flatland }
+		trigger = { OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas } }
 	}
 	text = {
 		localization_key = PP_FARMING_HILLS
@@ -110,7 +110,7 @@ pp_farming_vegetation_breakdown = {
 	}
 	text = {
 		localization_key = PP_FARMING_GRASSLANDS
-		trigger = { vegetation = grasslands }
+		trigger = { OR = { vegetation = grasslands vegetation = ha1300_veg_savanna vegetation = ha1300_veg_marsh } }
 	}
 	text = {
 		localization_key = PP_EMPTY_LOC
@@ -121,11 +121,11 @@ pp_farming_climate_breakdown = {
 	type = location
 	text = {
 		localization_key = PP_FARMING_CONTINENTAL
-		trigger = { climate = continental }
+		trigger = { OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic } }
 	}
 	text = {
 		localization_key = PP_FARMING_SUBTROPICAL
-		trigger = { climate = subtropical }
+		trigger = { OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon } }
 	}
 	text = {
 		localization_key = PP_FARMING_MEDITERRANEAN
@@ -177,11 +177,11 @@ pp_forest_vegetation_breakdown = {
 	type = location
 	text = {
 		localization_key = PP_FOREST_FOREST
-		trigger = { vegetation = forest }
+		trigger = { OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp } }
 	}
 	text = {
 		localization_key = PP_FOREST_WOODS
-		trigger = { vegetation = woods }
+		trigger = { OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest } }
 	}
 	text = {
 		localization_key = PP_FOREST_JUNGLE
@@ -207,7 +207,7 @@ pp_forest_climate_breakdown = {
 	type = location
 	text = {
 		localization_key = PP_FOREST_CONTINENTAL
-		trigger = { climate = continental }
+		trigger = { OR = { climate = continental climate = ha1300_climate_dry_summer_continental climate = ha1300_climate_continental_monsoon climate = ha1300_climate_subarctic } }
 	}
 	text = {
 		localization_key = PP_EMPTY_LOC

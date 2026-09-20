@@ -81,11 +81,11 @@ pp_forest_base_capacity_value = {
 		add = 4.4
 	}
 	if = {
-		limit = { vegetation = forest }
+		limit = { OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp } }
 		add = 6.6
 	}
 	else_if = {
-		limit = { vegetation = woods }
+		limit = { OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest } }
 		add = 4.4
 	}
 	else_if = {

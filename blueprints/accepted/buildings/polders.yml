@@ -14,9 +14,9 @@ building:
       is_foreign = no
       max_levels = pp_wb_cap_polders
       increase_per_level_cost = 0.67
-      pop_type = no
+      pop_type = laborers
       category = infrastructure_category
-      employment_size = no
+      employment_size = 0
       build_time = infrastructure_build_time
       rural_settlement = yes
       town = yes

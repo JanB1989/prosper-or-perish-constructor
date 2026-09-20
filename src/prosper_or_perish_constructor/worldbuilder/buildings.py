@@ -79,6 +79,8 @@ def trigger_for(contract: Contract, attribute: str, value: str) -> str:
     template = ATTRIBUTE_TRIGGERS[attribute]
     if attribute in ("is_coastal", "is_adjacent_to_lake"):
         return template if str(value) == "True" else f"NOT = {{ {template} }}"
+    if attribute == "river_level" and str(value) == "0":
+        return "has_river = no"  # river_flowing_through_0 does not exist
     return template.format(key=_game_key(contract, attribute, value), value=value)
 
 

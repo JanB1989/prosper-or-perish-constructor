@@ -123,8 +123,9 @@ Balance of the capacity buildings: every one costs 50 gold at level 1 and differ
 `increase_per_level_cost` (how hard the next level is: qanats and polders steep, irrigated fields and
 bund flat, niche members below their family, field management lowest because it is the one building
 with upkeep). Field management employs peasants and consumes livestock and tools; every other capacity
-building has `pop_type = no`, `employment_size = no`, no production method and all of its effects in
-`raw_modifier` (a `modifier` block would be scaled by employment, which is zero). All carry
+building keeps a pop type but has `employment_size = 0` (every vanilla building has a pop type; `pop_type = no`
+crashes at game start), no production method and all of its effects in `raw_modifier` (a `modifier` block
+would be scaled by employment, which is zero). All carry
 `ai_forbid_shutdown` and the `pp_food_security_priority pp_water_control_priority` employment tags.
 `[worldbuilder.level_scale]` rescales levels so the general buildings are worth 700-2,600 people per
 level; only integer scales are safe because caps and starting levels are floored.

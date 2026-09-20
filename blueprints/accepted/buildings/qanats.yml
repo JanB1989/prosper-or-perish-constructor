@@ -10,8 +10,8 @@ building:
     is_foreign = no
     max_levels = pp_wb_cap_qanats
     increase_per_level_cost = 0.80
-    pop_type = no
-    employment_size = no
+    pop_type = laborers
+    employment_size = 0
     price = pp_qanats_price
     category = infrastructure_category
     custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -26,13 +26,13 @@ building:
       OR = {
         AND = {
           OR = { climate = arid climate = cold_arid }
-          has_location_modifier = river_flowing_through_0
+          has_river = no
           NOT = { is_adjacent_to_lake = yes }
         }
         AND = {
           OR = { climate = ha1300_climate_hot_steppe climate = ha1300_climate_cold_steppe }
           OR = { vegetation = desert vegetation = ha1300_veg_scrubland vegetation = sparse }
-          has_location_modifier = river_flowing_through_0
+          has_river = no
           NOT = { is_adjacent_to_lake = yes }
         }
       }

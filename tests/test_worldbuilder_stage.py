@@ -58,6 +58,8 @@ def test_cap_script_value_and_gate_use_game_keys(tmp_path):
     assert "value = development" in text and "multiply = 0.03" in text and "max = 20" in text
     assert wb_buildings.gate_trigger(c, [{"climate": ["arid", "continental"]}]) == ["OR = { climate = arid climate = continental }"]
     assert wb_buildings.gate_trigger(c, []) == ["always = yes"]
+    assert wb_buildings.trigger_for(c, "river_level", "0") == "has_river = no"
+    assert wb_buildings.trigger_for(c, "river_level", "3") == "has_location_modifier = river_flowing_through_3"
 
 
 def test_raw_modifier_replacement_merges_duplicate_blocks_and_drops_bridges():

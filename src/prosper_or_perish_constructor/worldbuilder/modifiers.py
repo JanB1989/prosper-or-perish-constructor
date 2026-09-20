@@ -64,8 +64,24 @@ def pretty(name: str) -> str:
     return " ".join(w.capitalize() for w in str(name).replace("ha1300_", "").replace("climate_", "").replace("veg_", "").replace("topo_", "").split("_"))
 
 
+def effective_class_files(directory: Path, export_dir: Path | None, vanilla_root: Path | None) -> list[Path]:
+    """The definition files the game will load for a class directory: vanilla's files, each replaced by the export's
+    file of the same name, plus the export's new files; sorted by name (the game's load order)."""
+    files: dict[str, Path] = {}
+    if vanilla_root is not None:
+        for path in sorted((Path(vanilla_root) / "game/in_game/common" / directory).glob("*.txt")):
+            files[path.name] = path
+    if export_dir is not None:
+        for path in sorted((Path(export_dir) / "in_game/common" / directory).glob("*.txt")):
+            files[path.name] = path
+    return [files[name] for name in sorted(files)]
+
+
 def parse_class_capacity(paths: Iterable[Path]) -> dict[str, dict[str, float]]:
-    """{class key: {capacity key: value}} for every top-level block in the given definition files (first value wins)."""
+    """{class key: {capacity key: value}} for every top-level block in the given definition files.
+
+    Files are read in the given order and a later file's definition of a class replaces an earlier one (the game's
+    override rule); inside one definition the first value of a key wins."""
     found: dict[str, dict[str, float]] = {}
     for path in paths:
         current: str | None = None
@@ -76,7 +92,7 @@ def parse_class_capacity(paths: Iterable[Path]) -> dict[str, dict[str, float]]:
                 match = _BLOCK_RE.match(line.strip())
                 if match:
                     current = match.group("key")
-                    found.setdefault(current, {})
+                    found[current] = {}
             if current is not None and depth >= 1:
                 for key, value in re.findall(r"\b(local_population_capacity(?:_modifier)?|local_[a-z_]+_output_modifier|local_monthly_food_modifier)\s*=\s*(-?\d+(?:\.\d+)?)", line):
                     if key not in found[current]:
@@ -179,12 +195,12 @@ def render_block(header: str, lines: Mapping[str, str], *, nested: str | None = 
     return "\n".join([f"{header} = {{", *body, "}"])
 
 
-def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, repo: Path) -> dict[str, int]:
-    """One inject file per class directory, cancelling vanilla capacity values and adding the rows."""
+def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, repo: Path, vanilla_root: Path | None = None) -> dict[str, int]:
+    """One inject file per class directory, cancelling the effective vanilla capacity and food values and adding the rows."""
     rows = class_rows(contract)
     written: dict[str, int] = {}
     for attribute, directory in CLASS_DIRS.items():
-        defs = parse_class_capacity((export_dir / "in_game/common" / directory).glob("*.txt"))
+        defs = parse_class_capacity(effective_class_files(Path(directory), export_dir, vanilla_root))
         legacy_path = repo / LEGACY_EFFECTS_DIR / f"{directory}.txt"
         legacy = parse_legacy_effects(legacy_path) if legacy_path.is_file() else {}
         parents = dominant_parents(export_dir, attribute) if legacy else {}

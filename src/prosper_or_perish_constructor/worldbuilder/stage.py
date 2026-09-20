@@ -47,7 +47,7 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     report: dict[str, object] = {"handover": str(contract.root), "version": contract.version, "worldbuilder_commit": contract.meta.get("worldbuilder_commit")}
     if cfg.sync_geography:
         report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo)
-    report["class_injects"] = wb_modifiers.write_class_injects(contract, cfg.geography_export, mod_root, repo)
+    report["class_injects"] = wb_modifiers.write_class_injects(contract, cfg.geography_export, mod_root, repo, vanilla_root(repo, project))
     from prosper_or_perish_constructor.location_baseline import load_current_location_frame
 
     current = load_current_location_frame(repo, project)

@@ -225,3 +225,22 @@ def test_class_injects_cancel_vanilla_food_exactly_and_rivers_drop_food(tmp_path
     (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("river_flowing_through_2 = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n\tlocal_population_capacity_modifier = 0.2\n\tlocal_monthly_food_modifier = 0.10\n\tlocal_supply_limit_modifier = 0.10\n}\n", encoding="utf-8")
     assert wb_modifiers.river_bodies(vanilla)[2] == ["game_data = {", "category = location", "}", "local_supply_limit_modifier = 0.10"]
 
+
+def test_effective_class_files_keep_vanilla_definitions_the_export_does_not_replace(tmp_path):
+    vanilla = tmp_path / "vanilla"
+    export = tmp_path / "export"
+    (vanilla / "game/in_game/common/topography").mkdir(parents=True)
+    (export / "in_game/common/topography").mkdir(parents=True)
+    (vanilla / "game/in_game/common/topography/00_default.txt").write_text("hills = {\n\tlocation_modifier = {\n\t\tlocal_monthly_food_modifier = -0.1\n\t\tlocal_population_capacity_modifier = -0.2\n\t}\n}\n", encoding="utf-8")
+    (export / "in_game/common/topography/ha1300_topography.txt").write_text("ha1300_topo_deltas = {\n\tlocation_modifier = {\n\t}\n}\nhills = {\n\tlocation_modifier = {\n\t\tlocal_monthly_food_modifier = -0.3\n\t}\n}\n", encoding="utf-8")
+    files = wb_modifiers.effective_class_files(Path("topography"), export, vanilla)
+    assert [f.name for f in files] == ["00_default.txt", "ha1300_topography.txt"]
+    defs = wb_modifiers.parse_class_capacity(files)
+    assert defs["hills"] == {"local_monthly_food_modifier": -0.3}      # later file replaces the class definition
+    assert defs["ha1300_topo_deltas"] == {}
+    # the export replacing 00_default.txt wins over vanilla's copy
+    (export / "in_game/common/topography/00_default.txt").write_text("hills = {\n\tlocation_modifier = {\n\t\tlocal_monthly_food_modifier = -0.5\n\t}\n}\n", encoding="utf-8")
+    (export / "in_game/common/topography/ha1300_topography.txt").write_text("ha1300_topo_deltas = {\n}\n", encoding="utf-8")
+    defs = wb_modifiers.parse_class_capacity(wb_modifiers.effective_class_files(Path("topography"), export, vanilla))
+    assert defs["hills"] == {"local_monthly_food_modifier": -0.5}
+

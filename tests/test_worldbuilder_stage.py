@@ -320,3 +320,20 @@ def test_development_row_from_the_handover(tmp_path):
     wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla, {})
     block = adj.read_text(encoding="utf-8-sig").split("TRY_INJECT:river")[0]
     assert "local_population_capacity" not in block and "no population capacity from development" in block
+
+
+def test_river_replacements_fold_in_the_hand_authored_injects(tmp_path):
+    c = _contract(tmp_path)
+    vanilla = tmp_path / "vanilla"
+    (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
+    (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("river_flowing_through_2 = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n\tlocal_population_capacity_modifier = 0.2\n\tlocal_monthly_food_modifier = 0.10\n\tlocal_supply_limit_modifier = 0.10\n}\n", encoding="utf-8")
+    adj = tmp_path / wb_modifiers.ADJUSTMENTS_PATH
+    adj.parent.mkdir(parents=True, exist_ok=True)
+    adj.write_text("TRY_REPLACE:development = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n}\n\nTRY_INJECT:river_flowing_through_2 = {\n\tlocal_population_capacity_modifier = -0.2\n\tfarm_capacity_from_river_size = 1\n\tfree_building_levels = 15\n\tlocal_supply_limit_modifier = 0.05 # vanilla 0.10\n}\n", encoding="utf-8")
+    wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla, {})
+    text = (tmp_path / wb_modifiers.RIVER_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
+    block = text[text.index("TRY_REPLACE:river_flowing_through_2"):]
+    assert "free_building_levels = 15" in block and "farm_capacity_from_river_size = 1" in block
+    assert "local_supply_limit_modifier = 0.15" in block            # vanilla 0.10 + the additive inject 0.05
+    assert "local_population_capacity_modifier" not in block and "local_monthly_food_modifier" not in block
+

@@ -331,13 +331,15 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
 
     # rivers: vanilla body minus the capacity percentage, plus the level's rows
     bodies = river_bodies(vanilla_root)
+    legacy_rivers = legacy_river_lines(mod_root)
     river_blocks: list[str] = []
     for level, body in sorted(bodies.items()):
         mods = rows.get(("river_level", str(level)), {})
+        merged = merge_modifier_lines(body, legacy_rivers.get(level, []))
         extra = [f"\t{k} = {_fmt(v)}" for k, v in mods.items()]
-        river_blocks.append("\n".join([f"TRY_REPLACE:river_flowing_through_{level} = {{", *[f"\t{l}" for l in body], *extra, "}"]))
+        river_blocks.append("\n".join([f"TRY_REPLACE:river_flowing_through_{level} = {{", *[f"\t{l}" for l in merged], *extra, "}"]))
     (mod_root / RIVER_MODIFIERS_PATH).parent.mkdir(parents=True, exist_ok=True)
-    (mod_root / RIVER_MODIFIERS_PATH).write_text("﻿" + "\n\n".join([GENERATED, "# River capacity percentages and food modifiers removed; World Builder river-level rows added (levels 1..5 = engine river sizes).", *river_blocks]) + "\n", encoding="utf-8", newline="\n")
+    (mod_root / RIVER_MODIFIERS_PATH).write_text("﻿" + "\n\n".join([GENERATED, "# River capacity percentages and food modifiers removed; World Builder river-level rows added (levels 1..5 = engine river sizes); the mod's hand-authored river injects are folded in (an inject into a replaced block is ignored by the engine).", *river_blocks]) + "\n", encoding="utf-8", newline="\n")
 
     # goods intercepts: one modifier per good on the locations where it is the RGO
     if rgo_by_location is not None:
@@ -458,4 +460,44 @@ def write_development_capacity(mod_root: Path, people_per_point: float) -> bool:
     text = text[: match.start("body")] + new_body + text[match.end("body"):]
     path.write_bytes((b"\xef\xbb\xbf" if bom else b"") + text.encode("utf-8"))
     return True
+
+
+def legacy_river_lines(mod_root: Path) -> dict[int, list[str]]:
+    """Lines of the hand-authored ``TRY_INJECT:river_flowing_through_<n>`` blocks (capacity and food lines dropped)."""
+    path = mod_root / ADJUSTMENTS_PATH
+    if not path.is_file():
+        return {}
+    text = path.read_text(encoding="utf-8-sig")
+    out: dict[int, list[str]] = {}
+    for match in re.finditer(r"^TRY_INJECT:river_flowing_through_(\d)\s*=\s*\{\n(?P<body>.*?)^\}", text, re.M | re.S):
+        lines = []
+        for raw in match.group("body").splitlines():
+            line = raw.split("#", 1)[0].strip()
+            if not line or "=" not in line:
+                continue
+            key = line.split("=", 1)[0].strip()
+            if key in CAPACITY_KEYS or key == FOOD_KEY:
+                continue
+            lines.append(line)
+        out[int(match.group(1))] = lines
+    return out
+
+
+def merge_modifier_lines(body: list[str], extra: list[str]) -> list[str]:
+    """Vanilla block lines plus the mod's inject lines; a key present in both is summed (injects were additive)."""
+    merged = list(body)
+    for line in extra:
+        key, _, value = line.partition("=")
+        key, value = key.strip(), value.strip()
+        for i, existing in enumerate(merged):
+            ek, _, ev = existing.partition("=")
+            if ek.strip() == key:
+                try:
+                    merged[i] = f"{key} = {_fmt(float(ev.strip()) + float(value))}"
+                except ValueError:
+                    merged[i] = f"{key} = {value}"
+                break
+        else:
+            merged.append(f"{key} = {value}")
+    return merged
 

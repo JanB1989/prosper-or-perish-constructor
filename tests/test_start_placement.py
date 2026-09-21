@@ -76,3 +76,19 @@ def test_start_setup_rows_use_the_building_manager_format(tmp_path):
     n = sp.write_start_setup([sp.Placement("alpha", "SWE", "iron_mine", 2), sp.Placement("alpha", "SWE", "cookery", 1)], tmp_path)
     text = (tmp_path / sp.START_SETUP_PATH).read_text(encoding="utf-8-sig")
     assert n == 2 and "building_manager = {" in text and "\tiron_mine = { tag = SWE level = 2 location = alpha }" in text
+
+
+def test_ranks_and_existing_buildings_come_from_the_vanilla_cities_setup(tmp_path):
+    setup = tmp_path / "game/main_menu/setup/start"
+    setup.mkdir(parents=True)
+    (setup / "07_cities_and_buildings.txt").write_text(
+        "locations={\n\t#egypt\n\tcairo = { rank = megalopolis \t\ttown_setup = cairo_city }\n"
+        "\tjiaxing = { rank = town town_setup = chinese_town }\n}\n"
+        "building_manager = {\n\tcastle \t= { tag = MAM level = 1 location = cairo }\n"
+        "\tfarming_village = { tag = CHI level = 2 location = jiaxing }\n}\n",
+        encoding="utf-8",
+    )
+    ranks = sp.load_ranks(tmp_path, tmp_path / "nomod")
+    assert ranks == {"cairo": "megalopolis", "jiaxing": "town"}
+    assert sp.load_existing_buildings(tmp_path, tmp_path / "nomod") == {("cairo", "castle"), ("jiaxing", "farming_village")}
+

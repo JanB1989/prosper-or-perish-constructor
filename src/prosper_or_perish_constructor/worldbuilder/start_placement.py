@@ -186,39 +186,43 @@ def load_owners(vanilla_root: Path, mod_root: Path) -> dict[str, str]:
     return owners
 
 
-def _walk_cities(vanilla_root: Path, mod_root: Path):
-    """(location, depth-2 line) pairs of the cities setup."""
-    for path in setup_files(vanilla_root, mod_root, "07_cities_and_buildings.txt"):
-        current: str | None = None
-        depth = 0
-        for raw in path.read_text(encoding="utf-8-sig").splitlines():
-            line = raw.split("#", 1)[0]
-            stripped = line.strip()
-            if depth == 1:
-                head = re.match(r"^([A-Za-z0-9_]+)\s*=\s*\{", stripped)
-                if head:
-                    current = head.group(1)
-            if depth >= 2 and current and stripped:
-                yield current, stripped
-            depth += line.count("{") - line.count("}")
+_SETUP_ENTRY = re.compile(r"^\s*([A-Za-z0-9_]+)\s*=\s*\{([^{}]*)\}", re.MULTILINE)
+
+
+def _top_level_block(text: str, name: str) -> str:
+    """Body of the top-level ``name = { ... }`` block (brace-matched), or an empty string."""
+    m = re.search(rf"^\s*{name}\s*=\s*\{{", text, re.MULTILINE)
+    if not m:
+        return ""
+    depth, start = 1, m.end()
+    for i in range(start, len(text)):
+        depth += (text[i] == "{") - (text[i] == "}")
+        if depth == 0:
+            return text[start:i]
+    return text[start:]
+
+
+def _cities_text(vanilla_root: Path, mod_root: Path) -> str:
+    return "\n".join(re.sub(r"#.*", "", path.read_text(encoding="utf-8-sig")) for path in setup_files(vanilla_root, mod_root, "07_cities_and_buildings.txt"))
 
 
 def load_ranks(vanilla_root: Path, mod_root: Path) -> dict[str, str]:
+    """``locations = { tag = { rank = town town_setup = ... } }`` (one entry per line in vanilla)."""
     ranks: dict[str, str] = {}
-    for location, line in _walk_cities(vanilla_root, mod_root):
-        m = re.match(r"^rank\s*=\s*([a-z_]+)", line)
+    for tag, body in _SETUP_ENTRY.findall(_top_level_block(_cities_text(vanilla_root, mod_root), "locations")):
+        m = re.search(r"\brank\s*=\s*([a-z_]+)", body)
         if m:
-            ranks[location] = m.group(1)
+            ranks[tag] = m.group(1)
     return ranks
 
 
 def load_existing_buildings(vanilla_root: Path, mod_root: Path) -> set[tuple[str, str]]:
-    """(location, building) pairs the cities setup already places (no double placement)."""
+    """(location, building) pairs the cities setup already places (``building_manager``; no double placement)."""
     found: set[tuple[str, str]] = set()
-    for location, line in _walk_cities(vanilla_root, mod_root):
-        m = re.match(r"^([a-z_]+)\s*=\s*\d", line)
-        if m and m.group(1) != "rank":
-            found.add((location, m.group(1)))
+    for building, body in _SETUP_ENTRY.findall(_top_level_block(_cities_text(vanilla_root, mod_root), "building_manager")):
+        m = re.search(r"\blocation\s*=\s*([A-Za-z0-9_]+)", body)
+        if m:
+            found.add((m.group(1), building))
     return found
 
 

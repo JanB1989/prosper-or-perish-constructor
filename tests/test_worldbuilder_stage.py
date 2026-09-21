@@ -307,9 +307,16 @@ def test_development_row_from_the_handover(tmp_path):
     vanilla = tmp_path / "vanilla"
     (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
     (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("river_flowing_through_1 = {\n\tlocal_population_capacity_modifier = 0.1\n}\n", encoding="utf-8")
+    adj = tmp_path / wb_modifiers.ADJUSTMENTS_PATH
+    adj.parent.mkdir(parents=True, exist_ok=True)
+    adj.write_text("\ufeffTRY_REPLACE:development = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n\tlocal_supply_limit_modifier = 0.02\n\tlocal_population_capacity = 0\n\tlocal_population_capacity_modifier = 0.00125\n}\n\nTRY_INJECT:river_flowing_through_1 = {\n\tfree_building_levels = 10\n}\n", encoding="utf-8")
     wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla, {})
-    text = (tmp_path / wb_modifiers.DEVELOPMENT_PATH).read_text(encoding="utf-8-sig")
-    assert "TRY_INJECT:development = {" in text and "local_population_capacity = 1" in text
+    text = adj.read_text(encoding="utf-8-sig")
+    block = text[text.index("TRY_REPLACE:development"): text.index("TRY_INJECT:river")]
+    assert block.count("local_population_capacity") == 1 and "local_population_capacity = 1\n" in block and "0.00125" not in block
+    assert "local_supply_limit_modifier = 0.02" in block and "free_building_levels = 10" in text
+    assert not (tmp_path / "main_menu/common/static_modifiers/pp_wb_development.txt").exists()
     c.meta["attributes"]["capacity_people_per_development_point"] = 0.0
     wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla, {})
-    assert not (tmp_path / wb_modifiers.DEVELOPMENT_PATH).exists()
+    block = adj.read_text(encoding="utf-8-sig").split("TRY_INJECT:river")[0]
+    assert "local_population_capacity" not in block and "no population capacity from development" in block

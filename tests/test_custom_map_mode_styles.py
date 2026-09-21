@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import json
 import re
@@ -404,7 +404,7 @@ def test_population_capacity_scale_keeps_high_capacity_locations_distinguishable
     assert "modifier:local_population_capacity" not in block
     assert "MAPMODE_PP_POPULATION_CAPACITY_RANGE_125_155" in text
     assert "MAPMODE_PP_POPULATION_CAPACITY_RANGE_155_200" in text
-    assert f"{int(thresholds[-1])}+ capacity" in text
+    assert f"{int(thresholds[-1])}+ subsistence land" in text
     assert "GetPopulationCapacity|0" in text
     assert "GetModifierValue('local_population_capacity')" not in text
 
@@ -840,7 +840,7 @@ def test_custom_map_mode_localization_uses_traffic_light_copy_without_hardcoded_
     assert "Red marks scarce capacity" in text
     assert "Green marks low unemployment" in text
     assert "yellow marks the base price" in text
-    assert "pale-to-cyan colors mark the highest capacity" in text
+    assert "pale-to-cyan colors mark the most remaining land" in text
 
 
 def test_population_delta_map_modes_have_picker_icons_and_concept_localization() -> None:

@@ -132,6 +132,11 @@ would be scaled by employment, which is zero). All carry
 `[worldbuilder.level_scale]` rescales levels so the general buildings are worth 700-2,600 people per
 level; only integer scales are safe because caps and starting levels are floored.
 
+Starting improvement levels come from the World Builder ledger, clamped to the cap; where the pops at game start
+exceed the attribute rows plus rank housing plus development term, the location's eligible improvements are raised
+to their caps, largest people per level first (`fill_improvements_to_pops`, 2026-09-21). The pops are evidence
+for how far the land had been improved by 1337, never for the caps.
+
 Game-start buildings are placed by the same stage (`worldbuilder/start_placement.py`, `[worldbuilder.start]`):
 the raw-material building of each location's RGO, then a farm where the farm gate passes with levels =
 min(spare land, available peasants, cap) where spare land = capacity - pops - reserve (a farm never pushes a

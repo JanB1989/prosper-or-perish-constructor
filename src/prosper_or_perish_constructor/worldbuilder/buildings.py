@@ -451,44 +451,76 @@ def cap_levels(equation: Mapping[str, object], attributes: Mapping[str, object],
     return min(max(int(math.floor(cap + 1e-9)), 0), int(limit))
 
 
-def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, Mapping[str, float]], owners: Mapping[str, str], mod_root: Path) -> dict[str, int]:
-    """Starting improvement levels for owned locations (levels rescaled with the building's scale, never above the cap)."""
-    rows: list[str] = []
+def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, Mapping[str, float]], owners: Mapping[str, str], mod_root: Path,
+                demand: Mapping[str, float] | None = None) -> dict[str, int]:
+    """Starting improvement levels for owned locations (levels rescaled with the building's scale, never above the cap).
+
+    ``demand`` (people per location the improvements must house so the pops at game start fit their capacity) raises
+    the ledger's levels of the location's eligible buildings up to their caps, largest people per level first. The
+    pops are evidence for how far the land had been improved by 1337, never for the caps themselves.
+    """
+    rows: list[tuple[str, str, str, int]] = []
     skipped = 0
     clamped = 0
+    raised = 0
+    filled: set[str] = set()
+    short: set[str] = set()
     kinds = {str(v["kind"]): k for k, v in caps.items() if not v.get("niche")}
     equations = {str(r["building"]): json.loads(str(r["cap_equation_json"])) for r in contract.building_types.iter_rows(named=True)}
     attributes = contract.location_attributes
     if "development" not in attributes.columns and "development" in contract.location_targets.columns:
         attributes = attributes.join(contract.location_targets.select("location_tag", "development"), on="location_tag", how="left")
     by_tag = {str(r["location_tag"]): r for r in attributes.iter_rows(named=True)}
-    for row in contract.location_buildings.filter(pl.col("starting_levels") > 0).sort(["building", "location_tag"]).iter_rows(named=True):
-        kind = str(row["building"])
-        key = kinds.get(kind)
-        if key is None:
+    eligible: dict[str, dict[str, int]] = {}
+    has_cap = "cap_at_start" in contract.location_buildings.columns
+    for row in contract.location_buildings.iter_rows(named=True):
+        if has_cap and row["cap_at_start"] is None:
             continue
-        tag = str(row["location_tag"])
+        eligible.setdefault(str(row["location_tag"]), {})[str(row["building"])] = int(row["starting_levels"] or 0)
+    for tag in sorted(eligible):
         owner = owners.get(tag, "")
         if not owner:
-            skipped += 1
+            skipped += sum(1 for v in eligible[tag].values() if v > 0)
             continue
-        scale = float(caps[key]["scale"])
-        limit = int(caps[key]["limit"])
-        level = min(int(math.floor(int(row["starting_levels"]) * scale + 1e-9)), limit)
-        cap = cap_levels(equations[kind], by_tag.get(tag, {}), scale, limit) if tag in by_tag else level
-        if level > cap:
-            clamped += 1
-            level = cap
-        if level <= 0:
-            continue
-        rows.append(f"\t{key} = {{ tag = {owner} level = {level} location = {tag} }}")
-    text = "\n".join([GENERATED, "building_manager = {", *rows, "}", ""])
+        levels: dict[str, tuple[int, int]] = {}
+        for kind, start in eligible[tag].items():
+            key = kinds.get(kind)
+            if key is None:
+                continue
+            scale = float(caps[key]["scale"])
+            limit = int(caps[key]["limit"])
+            level = min(int(math.floor(start * scale + 1e-9)), limit)
+            cap = cap_levels(equations[kind], by_tag.get(tag, {}), scale, limit) if tag in by_tag else level
+            if level > cap:
+                clamped += 1
+                level = cap
+            levels[key] = (level, cap)
+        need = float(demand.get(tag, 0.0)) if demand else 0.0
+        need -= sum(level * float(caps[key]["unit_people"]) for key, (level, _) in levels.items())
+        while need > 0:
+            room = [key for key, (level, cap) in levels.items() if level < cap]
+            if not room:
+                short.add(tag)
+                break
+            key = max(room, key=lambda k: float(caps[k]["unit_people"]))
+            level, cap = levels[key]
+            levels[key] = (level + 1, cap)
+            need -= float(caps[key]["unit_people"])
+            raised += 1
+            filled.add(tag)
+        for key, (level, _) in levels.items():
+            if level > 0:
+                rows.append((key, tag, owner, level))
+    rows.sort()
+    lines = [f"\t{key} = {{ tag = {owner} level = {level} location = {tag} }}" for key, tag, owner, level in rows]
+    text = "\n".join([GENERATED, "building_manager = {", *lines, "}", ""])
     (mod_root / SETUP_PATH).parent.mkdir(parents=True, exist_ok=True)
     (mod_root / SETUP_PATH).write_text("\ufeff" + text, encoding="utf-8", newline="\n")
     for rel in LEGACY_SETUP:
         if (mod_root / rel).is_file():
             (mod_root / rel).unlink()
-    return {"rows": len(rows), "unowned_skipped": skipped, "clamped_to_cap": clamped}
+    return {"rows": len(rows), "unowned_skipped": skipped, "clamped_to_cap": clamped, "levels_raised_for_pops": raised,
+            "locations_filled_for_pops": len(filled), "locations_still_short": len(short)}
 
 
 def vanilla_capacity_buildings(vanilla_root: Path) -> dict[str, str]:

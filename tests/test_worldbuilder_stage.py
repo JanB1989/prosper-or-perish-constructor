@@ -80,7 +80,7 @@ def test_setup_rows_use_owner_tags_and_scale(tmp_path):
     mod_root = tmp_path / "mod"
     result = wb_buildings.write_setup(c, cfg, caps, {"a": "SWE"}, mod_root)
     text = (mod_root / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
-    assert result == {"rows": 1, "unowned_skipped": 0, "clamped_to_cap": 0} and "land_clearance = { tag = SWE level = 6 location = a }" in text
+    assert result["rows"] == 1 and result["unowned_skipped"] == 0 and result["clamped_to_cap"] == 0 and "land_clearance = { tag = SWE level = 6 location = a }" in text
 
 
 def test_location_templates_overlay_replaces_fields_by_tag():
@@ -351,4 +351,15 @@ def test_location_window_chips_show_their_modifier_effects():
     assert "ShowModifierEffect('pp_wb_lake')" in out and "HA1300_LAKESIDE" in out
     assert "ShowModifierEffect('pp_wb_coastal')" in out and out.count("ShowModifierEffect('coastal')") == 1
     assert out.count("{") - out.count("}") == gui.count("{") - gui.count("}")   # the rows are balanced
+
+
+def test_setup_levels_rise_to_the_cap_where_the_pops_need_the_room(tmp_path):
+    c = _contract(tmp_path)
+    caps = {"land_clearance": {"kind": "clearing", "unit_people": 5200.0, "unit_units": 5.2, "scale": 1.0, "limit": 20}}
+    # b: ledger 0 levels, cap = base 2 + fertility high 2 + 0.03 x 40 = 5; 12,000 people of demand need 3 levels
+    out = wb_buildings.write_setup(c, _cfg(tmp_path), caps, {"a": "SWE", "b": "DAN"}, tmp_path, demand={"b": 12000.0, "a": 1e9})
+    text = (tmp_path / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
+    assert "land_clearance = { tag = DAN level = 3 location = b }" in text
+    assert "land_clearance = { tag = SWE level = 3 location = a }" in text        # a is already at its cap of 3
+    assert out["levels_raised_for_pops"] == 3 and out["locations_filled_for_pops"] == 1 and out["locations_still_short"] == 1
 

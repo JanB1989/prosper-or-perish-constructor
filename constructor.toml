@@ -165,6 +165,7 @@ vanilla_files = [
 # Game-start building placement (rural food buildings and the urban food chain) from the capacity model; replaces the
 # savegame-driven food startup compiler. A farm never pushes a location over its cap: spare land = capacity - pops.
 keep_pops_within_capacity = true
+fill_improvements_to_pops = true      # starting improvement levels rise to their caps where the 1337 pops need the room
 peasant_work_share = 0.6              # share of a location's peasants that may staff rural buildings at start
 max_farm_levels_per_location = 6
 food_target_ratio = 1.1               # province food supply aimed for, relative to what the pops eat

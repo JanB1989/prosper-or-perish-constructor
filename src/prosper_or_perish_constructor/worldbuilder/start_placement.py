@@ -81,6 +81,7 @@ class StartConfig:
     """``[worldbuilder.start]`` of constructor.toml (all optional)."""
 
     keep_pops_within_capacity: bool = True
+    fill_improvements_to_pops: bool = True   # raise starting improvement levels to their caps where the pops need the room
     peasant_work_share: float = 0.6
     max_farm_levels_per_location: int = 6
     food_target_ratio: float = 1.1
@@ -95,7 +96,7 @@ class StartConfig:
     def from_raw(cls, raw: Mapping[str, Any] | None) -> "StartConfig":
         raw = dict(raw or {})
         kwargs: dict[str, Any] = {}
-        for name in ("keep_pops_within_capacity", "peasant_work_share", "max_farm_levels_per_location", "food_target_ratio",
+        for name in ("keep_pops_within_capacity", "fill_improvements_to_pops", "peasant_work_share", "max_farm_levels_per_location", "food_target_ratio",
                      "subsistence_food_per_1000_peasants", "max_cookery_levels_per_location", "max_market_levels_per_location", "laborer_conversion_share"):
             if name in raw:
                 kwargs[name] = type(getattr(cls, name))(raw[name])
@@ -263,6 +264,21 @@ def blueprint_numbers(repo: Path, key: str) -> dict[str, Any]:
     if m:
         out["pop_type"] = m.group(1)
     return out
+
+
+def improvement_demand(contract, start: StartConfig, vanilla_root: Path, mod_root: Path) -> dict[str, float]:
+    """People per location the improvement buildings must house for the pops at game start to fit: pops minus the
+    attribute rows, the rank housing and the development term (only positive values)."""
+    ranks = load_ranks(vanilla_root, mod_root)
+    pops = {tag: sum(p.size_k for p in ps) * 1000.0 for tag, ps in load_pops(vanilla_root).items()}
+    k = contract.people_per_development_point
+    demand: dict[str, float] = {}
+    for tag, flat, dev in contract.location_targets.select("location_tag", "attribute_flat_people", "development").iter_rows():
+        base = float(flat or 0.0) + float(start.rank_capacity_people.get(ranks.get(str(tag), ""), 0.0)) + k * float(dev or 0.0)
+        need = pops.get(str(tag), 0.0) - base
+        if need > 0:
+            demand[str(tag)] = need
+    return demand
 
 
 def improvement_people_by_location(mod_root: Path, caps: Mapping[str, Mapping[str, float]]) -> dict[str, float]:

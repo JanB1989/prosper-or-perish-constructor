@@ -68,7 +68,9 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     # goods output map modes read the engine's own local_<good>_output_modifier
     runpy.run_path(str(repo / "scripts/generate_raw_material_local_map_modes.py"), run_name="__main__")
     report["goods_output_map_modes"] = "regenerated"
-    report["setup"] = wb_buildings.write_setup(contract, cfg, caps, wb_start.load_owners(vanilla_root(repo, project), mod_root), mod_root)
+    start_cfg = wb_start.StartConfig.from_raw(cfg.raw.get("start") if isinstance(cfg.raw.get("start"), dict) else None)
+    demand = wb_start.improvement_demand(contract, start_cfg, vanilla_root(repo, project), mod_root) if start_cfg.fill_improvements_to_pops else None
+    report["setup"] = wb_buildings.write_setup(contract, cfg, caps, wb_start.load_owners(vanilla_root(repo, project), mod_root), mod_root, demand=demand)
     report["start_placement"] = wb_start.apply(repo=repo, project=project, mod_root=mod_root, vanilla_root=vanilla_root(repo, project), cfg=cfg, contract=contract, caps=caps, locations=current)
     development = wb_development.compute_vanilla_development(repo, project)
     (mod_root / wb_development.SETUP_RELATIVE_PATH).write_text("﻿" + wb_development.render_development_setup(development), encoding="utf-8", newline="\n")

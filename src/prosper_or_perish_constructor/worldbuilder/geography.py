@@ -79,7 +79,35 @@ def merge_location_window(text: str) -> str:
             pair += 1
     if pair != 4:
         raise ValueError(f"location_window.gui: expected 4 vanilla food-capacity gauge lines, found {pair}")
-    return "".join(lines)
+    return add_attribute_effect_rows("".join(lines))
+
+
+FERTILITY_CLASSES = ("very_low", "low", "moderate", "high", "very_high")
+SOIL_CLASSES = ("sand", "loam", "stony", "clay", "silt", "peat")
+_LOC = "LocationView.GetLocation"
+
+
+def _effect_row(modifier: str, visible: str) -> str:
+    return f'TooltipStringPairList = {{ visible = "[{visible}]" textcontext = "[ShowModifierEffect(\'{modifier}\')]" }}'
+
+
+def add_attribute_effect_rows(text: str) -> str:
+    """Fertility, soil, lake and coast chips list the fitted effects of their pp_wb static modifier.
+
+    The World Builder export knows nothing about the constructor's modifier keys, so the rows are added here. Every
+    class row is emitted with a visibility test on the location's class, so chips that serve several classes work.
+    """
+    fert_rows = " ".join(_effect_row(f"pp_wb_fertility_{c}", f"EqualTo_string({_LOC}.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_{c.upper()}'))") for c in FERTILITY_CLASSES)
+    soil_rows = " ".join(_effect_row(f"pp_wb_soil_{c}", f"EqualTo_string({_LOC}.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_{c.upper()}_TITLE'))") for c in SOIL_CLASSES)
+    fert_line = f'blockoverride "tooltip_content" {{ TooltipFlavorTextBlock = {{ blockoverride "text" {{ text = "[{_LOC}.Custom(\'ha1300_fertility_desc\')]" }} }} }}'
+    soil_line = f'blockoverride "tooltip_content" {{ TooltipFlavorTextBlock = {{ blockoverride "text" {{ text = "[{_LOC}.Custom(\'ha1300_soil_type_description\')]" }} }} }}'
+    lake_line = 'blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "HA1300_LAKE_HELP" } } }'
+    coast_anchor = "textcontext = \"[ShowModifierEffect('coastal')]\"\n    } }"
+    text = text.replace(fert_line, fert_line[:-1] + fert_rows + " }")
+    text = text.replace(soil_line, soil_line[:-1] + soil_rows + " }")
+    text = text.replace(lake_line, lake_line[:-1] + _effect_row("pp_wb_lake", f"EqualTo_string({_LOC}.Custom('ha1300_native_lake'), Localize('HA1300_LAKESIDE'))") + " }")
+    text = text.replace(coast_anchor, coast_anchor[:-1] + _effect_row("pp_wb_coastal", f"{_LOC}.IsCoastal") + " }")
+    return text
 
 
 _POP_CELL = "\t\t\t\t\t\tsize = { 120 28 }"

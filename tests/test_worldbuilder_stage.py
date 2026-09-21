@@ -337,3 +337,18 @@ def test_river_replacements_fold_in_the_hand_authored_injects(tmp_path):
     assert "local_supply_limit_modifier = 0.15" in block            # vanilla 0.10 + the additive inject 0.05
     assert "local_population_capacity_modifier" not in block and "local_monthly_food_modifier" not in block
 
+
+def test_location_window_chips_show_their_modifier_effects():
+    from prosper_or_perish_constructor.worldbuilder import geography as wb_geography
+
+    gui = (
+        'blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom(\'ha1300_fertility_desc\')]" } } }\n'
+        'blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "HA1300_LAKE_HELP" } } }\n'
+        'x textcontext = "[ShowModifierEffect(\'coastal\')]"\n    } }\n'
+    )
+    out = wb_geography.add_attribute_effect_rows(gui)
+    assert out.count("ShowModifierEffect('pp_wb_fertility_") == 5 and "pp_wb_fertility_very_high" in out
+    assert "ShowModifierEffect('pp_wb_lake')" in out and "HA1300_LAKESIDE" in out
+    assert "ShowModifierEffect('pp_wb_coastal')" in out and out.count("ShowModifierEffect('coastal')") == 1
+    assert out.count("{") - out.count("}") == gui.count("{") - gui.count("}")   # the rows are balanced
+

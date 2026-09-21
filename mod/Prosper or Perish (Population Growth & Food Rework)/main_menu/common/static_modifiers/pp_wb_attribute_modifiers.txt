@@ -104,6 +104,18 @@ pp_wb_soil_stony = {
 	local_saffron_output_modifier = -0.17
 }
 
+pp_wb_coastal = {
+	game_data = { category = location }
+}
+
+pp_wb_lake = {
+	game_data = { category = location }
+}
+
+TRY_REPLACE:location_closeness_to_equator_impact = {
+	game_data = { category = location }
+}
+
 pp_wb_rgo_base_chili = {
 	game_data = { category = location }
 	local_chili_output_modifier = -0.03

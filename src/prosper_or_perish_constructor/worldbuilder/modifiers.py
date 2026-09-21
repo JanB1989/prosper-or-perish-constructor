@@ -318,13 +318,16 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
                     per_location[str(tag)].append(key)
     for attribute, key, label in (("is_coastal", "pp_wb_coastal", "Coastal Land"), ("is_adjacent_to_lake", "pp_wb_lake", "Lakeside Land")):
         mods = rows.get((attribute, "True"), {})
-        if not mods:
-            continue
+        # always defined (possibly empty): the location window shows the modifier's effects
         names[key] = label
         blocks.append(render_block(key, {"game_data": "{ category = location }", **{k: _fmt(v) for k, v in mods.items()}}))
+        if attribute not in attrs.columns:
+            continue
         for tag, flag in zip(attrs["location_tag"].to_list(), attrs[attribute].to_list()):
             if str(flag) == "True":
                 per_location[str(tag)].append(key)
+    # vanilla's hidden flat capacity by closeness to the equator: cancelled, capacity is farmland only
+    blocks.append(render_block("TRY_REPLACE:location_closeness_to_equator_impact", {"game_data": "{ category = location }"}))
     static_path = mod_root / STATIC_MODIFIERS_PATH
     static_path.parent.mkdir(parents=True, exist_ok=True)
     static_path.write_text("﻿" + "\n\n".join([GENERATED, *blocks]) + "\n", encoding="utf-8", newline="\n")

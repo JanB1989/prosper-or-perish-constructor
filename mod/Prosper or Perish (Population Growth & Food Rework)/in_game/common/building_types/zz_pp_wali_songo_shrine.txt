@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:wali_songo_shrine:building
+INJECT:wali_songo_shrine = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.028
+	}
+}
+# <<< eu5-building-pipeline:wali_songo_shrine:building

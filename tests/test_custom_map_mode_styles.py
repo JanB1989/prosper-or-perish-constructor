@@ -84,8 +84,7 @@ STRUCTURE_SNIPPETS = {
     ),
     "pp_pop_delta_location": (
         "category = population",
-        "index = 0",
-        "allow_allocate_hotkey = no",
+        "index = 1",
         "pp_pop_delta_location_pct",
         "has_variable = pp_pop_baseline",
         "small_map_names = location",
@@ -98,8 +97,7 @@ STRUCTURE_SNIPPETS = {
     ),
     "pp_pop_delta_province": (
         "category = population",
-        "index = 0",
-        "allow_allocate_hotkey = no",
+        "index = 1",
         "pp_pop_delta_province_pct",
         "has_variable = pp_province_pop_baseline",
         "small_map_names = province",
@@ -110,8 +108,7 @@ STRUCTURE_SNIPPETS = {
     ),
     "pp_pop_delta_area": (
         "category = population",
-        "index = 0",
-        "allow_allocate_hotkey = no",
+        "index = 1",
         "pp_pop_delta_area_pct",
         "has_variable = pp_area_pop_baseline",
         "small_map_names = area",
@@ -122,8 +119,7 @@ STRUCTURE_SNIPPETS = {
     ),
     "pp_pop_delta_region": (
         "category = population",
-        "index = 0",
-        "allow_allocate_hotkey = no",
+        "index = 1",
         "pp_pop_delta_region_pct",
         "has_variable = pp_region_pop_baseline",
         "small_map_names = region",
@@ -134,8 +130,7 @@ STRUCTURE_SNIPPETS = {
     ),
     "pp_pop_delta_macro_region": (
         "category = population",
-        "index = 0",
-        "allow_allocate_hotkey = no",
+        "index = 1",
         "pp_pop_delta_macro_region_pct",
         "has_variable = pp_macro_region_pop_baseline",
         "small_map_names = sub_continent",
@@ -146,8 +141,7 @@ STRUCTURE_SNIPPETS = {
     ),
     "pp_pop_delta_super_region": (
         "category = population",
-        "index = 0",
-        "allow_allocate_hotkey = no",
+        "index = 1",
         "pp_pop_delta_super_region_pct",
         "has_variable = pp_super_region_pop_baseline",
         "small_map_names = continent",
@@ -474,7 +468,7 @@ def test_population_delta_debug_modes_use_shared_percent_change_scale() -> None:
         # Not debug: vanilla gates the debug map-mode menu behind [IsBuildDebug] in
         # hud_bot.gui, so a debug-category mode is unreachable in a retail build.
         assert "category = population" in block
-        assert "index = 0" in block
+        assert "index = 1" in block
         assert f"small_map_names = {scope_name}" in block
         assert "small_tooltip_context = location" in block
         assert f"has_variable = {baseline_var}" in block

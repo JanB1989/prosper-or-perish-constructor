@@ -136,8 +136,7 @@ pp_pop_delta_location = {
 	flatmap_behaviour = always
 	use_fow = no
 	category = population
-	index = 0
-	allow_allocate_hotkey = no
+	index = 1
 	map_markers = { all = no }
 	gradient_parameters = {
 		zoom_step = @zoom_step_near
@@ -263,8 +262,7 @@ pp_pop_delta_province = {
 	flatmap_behaviour = always
 	use_fow = no
 	category = population
-	index = 0
-	allow_allocate_hotkey = no
+	index = 1
 	map_markers = { all = no }
 	gradient_parameters = {
 		zoom_step = @zoom_step_near
@@ -390,8 +388,7 @@ pp_pop_delta_area = {
 	flatmap_behaviour = always
 	use_fow = no
 	category = population
-	index = 0
-	allow_allocate_hotkey = no
+	index = 1
 	map_markers = { all = no }
 	gradient_parameters = {
 		zoom_step = @zoom_step_near
@@ -517,8 +514,7 @@ pp_pop_delta_region = {
 	flatmap_behaviour = always
 	use_fow = no
 	category = population
-	index = 0
-	allow_allocate_hotkey = no
+	index = 1
 	map_markers = { all = no }
 	gradient_parameters = {
 		zoom_step = @zoom_step_near
@@ -644,8 +640,7 @@ pp_pop_delta_macro_region = {
 	flatmap_behaviour = always
 	use_fow = no
 	category = population
-	index = 0
-	allow_allocate_hotkey = no
+	index = 1
 	map_markers = { all = no }
 	gradient_parameters = {
 		zoom_step = @zoom_step_near
@@ -771,8 +766,7 @@ pp_pop_delta_super_region = {
 	flatmap_behaviour = always
 	use_fow = no
 	category = population
-	index = 0
-	allow_allocate_hotkey = no
+	index = 1
 	map_markers = { all = no }
 	gradient_parameters = {
 		zoom_step = @zoom_step_near

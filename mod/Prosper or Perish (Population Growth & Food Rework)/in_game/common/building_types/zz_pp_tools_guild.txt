@@ -44,5 +44,8 @@ unique_production_methods = {
 }
 construction_demand = guild_construction
 increase_per_level_cost = 0.16
+	raw_modifier = {
+		local_population_capacity = 0.225
+	}
 }
 # <<< eu5-building-pipeline:tools_guild:building

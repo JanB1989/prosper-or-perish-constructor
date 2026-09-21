@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:fulani_cattle_rearing_pen:building
+INJECT:fulani_cattle_rearing_pen = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = -0.25
+	}
+}
+# <<< eu5-building-pipeline:fulani_cattle_rearing_pen:building

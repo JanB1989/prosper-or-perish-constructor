@@ -37,5 +37,8 @@ modifier = {
 }
 construction_demand = basic_construction_needs
 increase_per_level_cost = 0.21
+	raw_modifier = {
+		local_population_capacity = 0.15
+	}
 }
 # <<< eu5-building-pipeline:schwaz_mine:building

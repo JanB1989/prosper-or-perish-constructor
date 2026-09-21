@@ -1,5 +1,6 @@
 version: 2
 tag: irrigated_fields
+footprint: capacity_source
 building:
   key: irrigated_fields
   mode: CREATE
@@ -31,6 +32,7 @@ building:
 
     raw_modifier = {
       local_population_capacity = 2.23
+      pp_wb_levels_irrigated_fields = 1
     }
 
     modifier = {

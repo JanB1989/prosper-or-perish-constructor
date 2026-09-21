@@ -1,5 +1,6 @@
 version: 2
 tag: field_management
+footprint: capacity_source
 building:
   key: field_management
   mode: CREATE
@@ -41,6 +42,7 @@ building:
 
     raw_modifier = {
       local_population_capacity = 2.57
+      pp_wb_levels_field_management = 1
     }
 
     modifier = {

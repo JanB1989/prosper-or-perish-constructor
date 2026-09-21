@@ -26,6 +26,7 @@ unique_production_methods = {
 }
 construction_demand = mill_construction
 raw_modifier = {
+	local_population_capacity = 0.4
     local_burghers_desired_pop = 0.05
 }
 increase_per_level_cost = 0.19

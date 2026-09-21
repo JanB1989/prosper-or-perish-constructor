@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:walls_of_benin:building
+INJECT:walls_of_benin = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.4
+	}
+}
+# <<< eu5-building-pipeline:walls_of_benin:building

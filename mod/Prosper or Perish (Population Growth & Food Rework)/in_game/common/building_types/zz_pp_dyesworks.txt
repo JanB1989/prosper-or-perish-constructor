@@ -24,5 +24,8 @@ unique_production_methods = {
 obsolete = dyes_workshop
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.15
+	raw_modifier = {
+		local_population_capacity = 0.165
+	}
 }
 # <<< eu5-building-pipeline:dyesworks:building

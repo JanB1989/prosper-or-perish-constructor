@@ -45,6 +45,9 @@ REPLACE:urban_parliament_seat = {
 	possible_production_methods = {
 	}
 	construction_demand = pp_capital_jewelry_construction
+	raw_modifier = {
+		local_population_capacity = 0.07
+	}
 }
 
 REPLACE:chancery = {
@@ -96,6 +99,9 @@ REPLACE:chancery = {
 		}
 	}
 	construction_demand = pp_early_capital_jewelry_construction
+	raw_modifier = {
+		local_population_capacity = 0.07
+	}
 }
 
 REPLACE:provincial_chancery = {
@@ -127,6 +133,9 @@ REPLACE:provincial_chancery = {
 	}
 	possible_production_methods = { pp_chancery_maintenance }
 	construction_demand = town_building_construction
+	raw_modifier = {
+		local_population_capacity = 0.07
+	}
 }
 
 REPLACE:house_of_parliament = {
@@ -174,6 +183,9 @@ REPLACE:house_of_parliament = {
 	graphical_tags = {
 	}
 	construction_demand = pp_early_capital_jewelry_construction
+	raw_modifier = {
+		local_population_capacity = 0.14
+	}
 }
 
 REPLACE:royal_court = {
@@ -220,6 +232,9 @@ REPLACE:royal_court = {
 	graphical_tags = {
 	}
 	construction_demand = pp_early_capital_jewelry_construction
+	raw_modifier = {
+		local_population_capacity = 0.07
+	}
 }
 
 REPLACE:royal_garden = {
@@ -259,6 +274,9 @@ REPLACE:royal_garden = {
 		}
 	}
 	construction_demand = pp_prestige_jewelry_construction
+	raw_modifier = {
+		local_population_capacity = -0.013
+	}
 }
 
 REPLACE:local_governor = {
@@ -336,6 +354,9 @@ REPLACE:local_governor = {
 	modifier = {
 		local_proximity_source = 80
 	}
+	raw_modifier = {
+		local_population_capacity = 0.07
+	}
 }
 
 REPLACE:naval_governor = {
@@ -404,6 +425,9 @@ REPLACE:naval_governor = {
 	modifier = {
 		local_proximity_source = 80
 	}
+	raw_modifier = {
+		local_population_capacity = 0.07
+	}
 }
 
 REPLACE:funduq = {
@@ -452,6 +476,9 @@ REPLACE:funduq = {
 			category = building_maintenance
 		}
 	}
+	raw_modifier = {
+		local_population_capacity = 0.06
+	}
 }
 
 REPLACE:republican_assembly = {
@@ -499,6 +526,9 @@ REPLACE:republican_assembly = {
 	graphical_tags = {
 	}
 	construction_demand = pp_early_capital_jewelry_construction
+	raw_modifier = {
+		local_population_capacity = 0.07
+	}
 }
 
 REPLACE:caravan_stop = {
@@ -544,5 +574,8 @@ REPLACE:caravan_stop = {
 			salt = 0.01
 			category = building_maintenance
 		}
+	}
+	raw_modifier = {
+		local_population_capacity = 0.06
 	}
 }

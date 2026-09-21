@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:institute_of_noble_maidens:building
+INJECT:institute_of_noble_maidens = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.03
+	}
+}
+# <<< eu5-building-pipeline:institute_of_noble_maidens:building

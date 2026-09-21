@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:merchants_quarters:building
+INJECT:merchants_quarters = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.075
+	}
+}
+# <<< eu5-building-pipeline:merchants_quarters:building

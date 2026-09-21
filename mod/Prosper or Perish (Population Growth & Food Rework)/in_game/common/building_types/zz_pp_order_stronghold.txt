@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:order_stronghold:building
+INJECT:order_stronghold = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.2
+	}
+}
+# <<< eu5-building-pipeline:order_stronghold:building

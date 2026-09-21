@@ -2,6 +2,7 @@
 INJECT:construction_center = {
     rural_settlement = yes
     raw_modifier = {
+      local_population_capacity = 0.2
     }
 }
 # <<< eu5-building-pipeline:construction_center:building

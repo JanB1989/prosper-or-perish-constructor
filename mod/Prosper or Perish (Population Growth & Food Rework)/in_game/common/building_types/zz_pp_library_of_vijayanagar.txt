@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:library_of_vijayanagar:building
+INJECT:library_of_vijayanagar = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.3
+	}
+}
+# <<< eu5-building-pipeline:library_of_vijayanagar:building

@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:warrior_monks_training_grounds:building
+INJECT:warrior_monks_training_grounds = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.1
+	}
+}
+# <<< eu5-building-pipeline:warrior_monks_training_grounds:building

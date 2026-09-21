@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:mahmud_gawan_madrasa:building
+INJECT:mahmud_gawan_madrasa = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.6
+	}
+}
+# <<< eu5-building-pipeline:mahmud_gawan_madrasa:building

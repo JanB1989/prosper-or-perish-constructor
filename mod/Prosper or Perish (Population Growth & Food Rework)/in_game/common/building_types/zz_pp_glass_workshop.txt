@@ -30,5 +30,8 @@ custom_tags = {
 }
 obsolete = glass_guild
 increase_per_level_cost = 0.11
+	raw_modifier = {
+		local_population_capacity = 0.225
+	}
 }
 # <<< eu5-building-pipeline:glass_workshop:building

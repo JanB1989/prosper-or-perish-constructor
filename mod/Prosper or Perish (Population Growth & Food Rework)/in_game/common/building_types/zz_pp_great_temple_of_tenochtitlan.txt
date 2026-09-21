@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:great_temple_of_tenochtitlan:building
+INJECT:great_temple_of_tenochtitlan = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.02
+	}
+}
+# <<< eu5-building-pipeline:great_temple_of_tenochtitlan:building

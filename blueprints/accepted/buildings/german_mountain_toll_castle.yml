@@ -1,0 +1,11 @@
+version: 2
+tag: german_mountain_toll_castle
+footprint: trade
+building:
+  key: german_mountain_toll_castle
+  mode: INJECT
+  source: pp_building_footprint.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |-
+    # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.

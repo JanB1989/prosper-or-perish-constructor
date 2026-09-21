@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:local_assembly:building
+INJECT:local_assembly = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.035
+	}
+}
+# <<< eu5-building-pipeline:local_assembly:building

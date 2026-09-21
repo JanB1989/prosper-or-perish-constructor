@@ -39,5 +39,8 @@ custom_tags = {
 }
 modifier = {}
 increase_per_level_cost = 0.14
+	raw_modifier = {
+		local_population_capacity = 0.225
+	}
 }
 # <<< eu5-building-pipeline:cloth_guild:building

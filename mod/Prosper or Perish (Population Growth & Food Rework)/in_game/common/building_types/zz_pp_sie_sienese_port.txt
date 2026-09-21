@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:sie_sienese_port:building
+INJECT:sie_sienese_port = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.18
+	}
+}
+# <<< eu5-building-pipeline:sie_sienese_port:building

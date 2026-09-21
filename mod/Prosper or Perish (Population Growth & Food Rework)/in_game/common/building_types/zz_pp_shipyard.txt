@@ -34,6 +34,7 @@ REPLACE:shipyard = {
     construction_demand = port_building_construction
 
     raw_modifier = {
+      local_population_capacity = 1.2
     }
 
     modifier = {

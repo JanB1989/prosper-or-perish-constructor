@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:general_archive_of_simancas:building
+INJECT:general_archive_of_simancas = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.14
+	}
+}
+# <<< eu5-building-pipeline:general_archive_of_simancas:building

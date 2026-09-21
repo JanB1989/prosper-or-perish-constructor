@@ -43,6 +43,7 @@ modifier = {
     local_monthly_food_modifier = -0.05
 }
 raw_modifier = {
+	local_population_capacity = -0.25
     local_nobles_desired_pop = 0.01
 }
 construction_demand = village_construction

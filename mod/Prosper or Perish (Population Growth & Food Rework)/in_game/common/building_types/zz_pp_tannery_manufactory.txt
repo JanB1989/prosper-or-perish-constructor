@@ -39,5 +39,8 @@ custom_tags = {
 }
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.14
+	raw_modifier = {
+		local_population_capacity = 0.165
+	}
 }
 # <<< eu5-building-pipeline:tannery_manufactory:building

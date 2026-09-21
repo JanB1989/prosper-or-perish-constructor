@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:jesuit_college:building
+INJECT:jesuit_college = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.03
+	}
+}
+# <<< eu5-building-pipeline:jesuit_college:building

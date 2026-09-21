@@ -32,6 +32,7 @@ unique_production_methods = {
 custom_tags = { guild }
 construction_demand = guild_construction
 raw_modifier = {
+	local_population_capacity = 0.075
 }
 }
 # <<< eu5-building-pipeline:saltpeter_guild:building

@@ -35,6 +35,7 @@ REPLACE:dry_dock = {
     construction_demand = port_building_construction
 
     raw_modifier = {
+      local_population_capacity = 0.8
     }
 
     modifier = {

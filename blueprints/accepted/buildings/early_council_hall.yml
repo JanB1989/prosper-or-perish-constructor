@@ -1,0 +1,11 @@
+version: 2
+tag: early_council_hall
+footprint: administration
+building:
+  key: early_council_hall
+  mode: INJECT
+  source: pp_building_footprint.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |-
+    # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.

@@ -1,0 +1,12 @@
+version: 2
+tag: university
+footprint: institutional
+building:
+  key: university
+  mode: INJECT
+  source: pp_culture_building_adjustments.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |-
+    # The mod replaces this building by hand in in_game/common/building_types/pp_culture_building_adjustments.txt.
+    # This blueprint stays disabled and only carries the footprint class; ppc build writes the capacity there.

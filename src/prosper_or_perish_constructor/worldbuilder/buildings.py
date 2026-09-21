@@ -14,7 +14,7 @@ Niche buildings (``[worldbuilder.buildings.niche]``: culture- or country-locked 
 baray) keep their lock and join a general family: every member carries a level counter
 (``raw_modifier pp_wb_levels_<key> = 1``) and its max is the family's cap equation minus the other members' levels,
 so a location never holds two full sets of the same idea. A niche level is worth ``strength`` x the family's people
-per level. Their blueprints must be full ``REPLACE`` definitions (the lock, the gate and the level formula cannot be
+per level. Their blueprints must be full ``REPLACE`` or new ``CREATE`` definitions (the lock, the gate and the level formula cannot be
 injected). ``vanilla_capacity_leaks`` lists vanilla buildings with capacity lines that the mod does not REPLACE.
 
 Farm buildings (the mod's rural land users) take farmland: ``raw_modifier local_population_capacity = -land``
@@ -51,6 +51,8 @@ ATTRIBUTE_TRIGGERS = {
     "river_level": "has_location_modifier = river_flowing_through_{value}",
     "is_coastal": "is_coastal = yes",
     "is_adjacent_to_lake": "is_adjacent_to_lake = yes",
+    "culture": "dominant_culture ?= culture:{value}",
+    "province": "province_definition = province_definition:{value}",
 }
 OTHER_CAPACITY_BLUEPRINTS = (
     "terraces", "irrigation_reservoirs", "aqueduct_system", "pound_lock_canal_infrastructure",
@@ -214,7 +216,7 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
     # tooltip rows for the cap values and the farm values
     keys = sorted(set(re.findall(r'desc = "(BUILDING_LEVEL_WB_[A-Z0-9_]+)"', text)))
     loc = ["l_english:", '  BUILDING_LEVEL_WB_BASE: "Base levels"', '  BUILDING_LEVEL_WB_DEVELOPMENT: "From [development|e]"',
-           '  BUILDING_LEVEL_WB_FREE_FARMLAND: "Free subsistence land"']
+           '  BUILDING_LEVEL_WB_FREE_FARMLAND: "Available Subsistence Land"']
     for key in keys:
         if key in ("BUILDING_LEVEL_WB_BASE", "BUILDING_LEVEL_WB_DEVELOPMENT"):
             continue
@@ -345,8 +347,8 @@ def patch_improvement_blueprints(contract: Contract, cfg: WorldBuilderConfig, re
         if key == "field_management" and not (repo / BLUEPRINTS / "field_management.yml").is_file():
             create_field_management_blueprint(repo)
         path, data = _load_blueprint(repo, key)
-        if info.get("niche") and str(data["building"].get("mode", "")).upper() != "REPLACE":
-            raise ValueError(f"niche building {key}: blueprint must be a full REPLACE (lock, gate and level formula cannot be injected)")
+        if info.get("niche") and str(data["building"].get("mode", "")).upper() not in ("REPLACE", "CREATE"):
+            raise ValueError(f"niche building {key}: blueprint must be a full REPLACE or CREATE (lock, gate and level formula cannot be injected)")
         body = str(data["building"]["body"])
         body = _set_max_levels(body, f"pp_wb_cap_{key}")
         raw = {"local_population_capacity": _fmt(float(info["unit_units"]))}
@@ -354,7 +356,11 @@ def patch_improvement_blueprints(contract: Contract, cfg: WorldBuilderConfig, re
             raw[LEVELS_MODIFIER.format(key=key)] = "1"
         body = _replace_raw_modifier(body, raw, drop_prefixes=("farm_capacity_from_", "pp_wb_levels_"))
         lock = [str(l) for l in cfg.niche.get(key, {}).get("lock", [])]
-        body = _set_location_potential(body, [*lock, *gate_trigger(contract, gates[kind])])
+        extra_gate = cfg.niche.get(key, {}).get("gate", [])
+        trigger = [*lock, *gate_trigger(contract, gates[kind])]
+        if extra_gate:
+            trigger.extend(gate_trigger(contract, extra_gate))
+        body = _set_location_potential(body, trigger)
         data["building"]["body"] = body
         _save_blueprint(path, data)
         patched.append(key)
@@ -451,13 +457,21 @@ def cap_levels(equation: Mapping[str, object], attributes: Mapping[str, object],
     return min(max(int(math.floor(cap + 1e-9)), 0), int(limit))
 
 
+def gate_matches(rules: list[dict[str, list[str]]], attributes: Mapping[str, object]) -> bool:
+    """Evaluate the same OR-of-ANDs gate used in location_potential (CSV booleans are lowercase)."""
+    return not rules or any(all(str(attributes.get(key, "")).lower() in {str(v).lower() for v in values}
+                               for key, values in rule.items()) for rule in rules)
+
+
 def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, Mapping[str, float]], owners: Mapping[str, str], mod_root: Path,
-                demand: Mapping[str, float] | None = None) -> dict[str, int]:
+                demand: Mapping[str, float] | None = None, cultures: Mapping[str, str] | None = None) -> dict[str, int]:
     """Starting improvement levels for owned locations (levels rescaled with the building's scale, never above the cap).
 
     ``demand`` (people per location the improvements must house so the pops at game start fit their capacity) raises
     the ledger's levels of the location's eligible buildings up to their caps, largest people per level first. The
     pops are evidence for how far the land had been improved by 1337, never for the caps themselves.
+    Opted-in regional variants replace their family's levels when their structured gate matches; opaque
+    country or advance locks are not guessed. The highest-capacity eligible member receives the family allocation.
     """
     rows: list[tuple[str, str, str, int]] = []
     skipped = 0
@@ -467,6 +481,10 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
     short: set[str] = set()
     kinds = {str(v["kind"]): k for k, v in caps.items() if not v.get("niche")}
     equations = {str(r["building"]): json.loads(str(r["cap_equation_json"])) for r in contract.building_types.iter_rows(named=True)}
+    gates = {str(r["building"]): json.loads(str(r["gate_json"])) for r in contract.building_types.iter_rows(named=True)}
+    for key, spec in cfg.niche.items():
+        if spec.get("place_at_start") and (spec.get("lock") or not spec.get("gate")):
+            raise ValueError(f"{key}: starting niche placement requires a structured gate and no opaque lock")
     attributes = contract.location_attributes
     if "development" not in attributes.columns and "development" in contract.location_targets.columns:
         attributes = attributes.join(contract.location_targets.select("location_tag", "development"), on="location_tag", how="left")
@@ -494,7 +512,13 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
             if level > cap:
                 clamped += 1
                 level = cap
-            levels[key] = (level, cap)
+            attrs = {**by_tag.get(tag, {}), "culture": (cultures or {}).get(tag, "")}
+            candidates = [key] + [n for n, spec in cfg.niche.items()
+                                  if spec["family"] == key and spec.get("place_at_start")
+                                  and gate_matches(spec.get("gate", []), attrs) and gate_matches(gates[kind], attrs)]
+            # A niche replaces the general family's starting levels; it never adds another full cap.
+            selected = max(candidates, key=lambda k: float(caps[k]["unit_units"]))
+            levels[selected] = (level, cap)
         need = float(demand.get(tag, 0.0)) if demand else 0.0
         need -= sum(level * float(caps[key]["unit_people"]) for key, (level, _) in levels.items())
         while need > 0:
@@ -502,7 +526,7 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
             if not room:
                 short.add(tag)
                 break
-            key = max(room, key=lambda k: float(caps[k]["unit_people"]))
+            key = max(room, key=lambda k: float(caps[k]["unit_units"]))
             level, cap = levels[key]
             levels[key] = (level + 1, cap)
             need -= float(caps[key]["unit_people"])
@@ -555,4 +579,3 @@ def vanilla_capacity_leaks(repo: Path, vanilla_root: Path) -> dict[str, str]:
         if mode != "REPLACE":
             leaks[key] = f"blueprint mode {mode or 'unset'} keeps the vanilla capacity ({source})"
     return leaks
-

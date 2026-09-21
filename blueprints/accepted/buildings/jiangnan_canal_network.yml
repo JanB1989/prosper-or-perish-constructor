@@ -1,0 +1,90 @@
+version: 2
+tag: jiangnan_canal_network
+footprint: capacity_source
+building:
+  key: jiangnan_canal_network
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_jiangnan_canal_network_maintenance
+  possible_production_methods: []
+  body: |-
+    is_foreign = no
+    max_levels = pp_wb_cap_jiangnan_canal_network
+    increase_per_level_cost = 0.27
+    pop_type = peasants
+    employment_size = 0.075
+    price = pp_jiangnan_canal_network_price
+    category = infrastructure_category
+    custom_tags = { pp_food_security_priority pp_water_control_priority }
+    icon = jiangnan_canal_network
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = infrastructure_build_time
+    location_potential = {
+      OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_highland_monsoon climate = ha1300_climate_continental_monsoon climate = ha1300_climate_savanna }
+      OR = { topography = flatland topography = ha1300_topo_floodplains topography = wetlands topography = ha1300_topo_deltas topography = ha1300_topo_valleys topography = hills topography = plateau }
+      OR = {
+        AND = {
+          OR = { dominant_culture ?= culture:wu_culture dominant_culture ?= culture:yue_wu_culture dominant_culture ?= culture:wuzhou_culture dominant_culture ?= culture:xuanzhou_culture dominant_culture ?= culture:jixi_culture }
+          OR = { province_definition = province_definition:suzhou_province province_definition = province_definition:songjiang_province province_definition = province_definition:jiaxing_province province_definition = province_definition:huzhou_province province_definition = province_definition:hangzhou_province province_definition = province_definition:changzhou_province province_definition = province_definition:zhenjiang_province }
+          OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+          OR = { topography = ha1300_topo_deltas topography = wetlands topography = ha1300_topo_floodplains }
+          OR = { has_location_modifier = river_flowing_through_1 has_location_modifier = river_flowing_through_2 has_location_modifier = river_flowing_through_3 has_location_modifier = river_flowing_through_4 has_location_modifier = river_flowing_through_5 }
+        }
+        AND = {
+          OR = { dominant_culture ?= culture:wu_culture dominant_culture ?= culture:yue_wu_culture dominant_culture ?= culture:wuzhou_culture dominant_culture ?= culture:xuanzhou_culture dominant_culture ?= culture:jixi_culture }
+          OR = { province_definition = province_definition:suzhou_province province_definition = province_definition:songjiang_province province_definition = province_definition:jiaxing_province province_definition = province_definition:huzhou_province province_definition = province_definition:hangzhou_province province_definition = province_definition:changzhou_province province_definition = province_definition:zhenjiang_province }
+          OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+          OR = { topography = ha1300_topo_deltas topography = wetlands topography = ha1300_topo_floodplains }
+          is_adjacent_to_lake = yes
+        }
+        AND = {
+          OR = { dominant_culture ?= culture:wu_culture dominant_culture ?= culture:yue_wu_culture dominant_culture ?= culture:wuzhou_culture dominant_culture ?= culture:xuanzhou_culture dominant_culture ?= culture:jixi_culture }
+          OR = { province_definition = province_definition:suzhou_province province_definition = province_definition:songjiang_province province_definition = province_definition:jiaxing_province province_definition = province_definition:huzhou_province province_definition = province_definition:hangzhou_province province_definition = province_definition:changzhou_province province_definition = province_definition:zhenjiang_province }
+          OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+          OR = { topography = ha1300_topo_deltas topography = wetlands topography = ha1300_topo_floodplains }
+          is_coastal = yes
+        }
+      }
+    }
+    construction_demand = village_construction
+    unique_production_methods = {
+      pp_jiangnan_canal_network_maintenance = {
+        manual_labor_cost = 0.1
+        lumber = 0.025
+        category = building_maintenance
+      }
+    }
+    raw_modifier = {
+      local_population_capacity = 5.56
+      pp_wb_levels_jiangnan_canal_network = 1
+    }
+    forbidden_for_estates = no
+    ai_forbid_shutdown = yes
+localization:
+  entries:
+    jiangnan_canal_network: Jiangnan Canal Network
+    jiangnan_canal_network_desc: Interconnected canals, sluices and embankments drain and irrigate the low fields of Jiangnan. Dredging crews and dike keepers maintain this water network. Its levels share the available land with Irrigated Fields.
+    jiangnan_canal_network_slot_0: Maintenance
+    pp_jiangnan_canal_network_maintenance: Canal and Dike Keepers
+    pp_jiangnan_canal_network_price: Jiangnan Canal Network Price
+prices:
+- key: pp_jiangnan_canal_network_price
+  body: '{gold = 75}'
+icon:
+  source_png: ../assets/icons/jiangnan_canal_network.png
+  output_dds: jiangnan_canal_network.dds
+  size: 512
+  prompt: 'Use case: historical-scene. One finished Europa Universalis V building icon, JIANGNAN CANAL NETWORK, Song/Yuan China circa 1337. Detailed material-rich painterly historical bitmap cutout, elevated three-quarter view. Compact isolated Taihu Lougang agricultural canal-and-dike worksite. Primary shapes: broad intersecting teal water canals in a clear T, raised ochre earthen embankments enclosing a small golden-green rice plot, a stout timber water-control gate on stone abutments, one short low pale stone footbridge with a single arch across a branch. Small grey tiled gatekeeper shelter with restrained authentic Jiangnan roof, no pagoda or palace. A moored simple wooden punt and a few digging tools suggest ongoing dredging. Emphasize network and embankments, readable large connected shapes at 48 pixels, not tiny busy scenery. Weathered timber, pale masonry, warm crops against cool water, strong sunlit volumes. Compact irregular ground patch, entire silhouette isolated, fills 88 percent square canvas with margins. Perfectly flat solid magenta #FF00FF background including gaps for local chroma key removal, no magenta reflections, no background shadow. No sky, horizon, landscape backdrop, lettering, text, frame, symbols, modern structures, flat vector or UI glyph look. 1024x1024.'
+evaluation:
+  production_methods:
+    pp_jiangnan_canal_network_maintenance:
+      allow_rules:
+        profit_percent: Maintained land improvements provide population capacity rather than traded output.
+        input_throughput: Peasant crews maintain the existing land and water works.
+        output_throughput: Capacity is carried by the location modifier.

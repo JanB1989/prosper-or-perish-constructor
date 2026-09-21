@@ -210,6 +210,17 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=("apply", "export-development", "check"),
         help="apply writes the mod inputs; export-development writes the vanilla development table; check reports the fit of the written setup.",
     )
+    footprint = _add_command(
+        subcommands,
+        "footprint",
+        "Write each building's footprint population capacity (blueprint footprint class x employment) into the mod.",
+        _footprint,
+    )
+    footprint.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply writes the capacity lines into the compiled mod (ppc build does this too); check validates the classes.",
+    )
     clean_game_rule_presets = _add_command(
         subcommands,
         "clean-game-rule-presets",
@@ -837,6 +848,35 @@ def _worldbuilder(args: argparse.Namespace, extra: Sequence[str], repo: Path, pr
     raise SystemExit(f"unknown worldbuilder action {args.action!r}")
 
 
+def _footprint(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("footprint does not accept extra arguments.")
+    from prosper_or_perish_constructor import building_footprint
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    if args.action == "check":
+        errors = building_footprint.validate(repo, building_footprint.load_config(project), vanilla_root(repo, project))
+        for error in errors:
+            print(error)
+        print("building footprint: " + (f"{len(errors)} problems" if errors else "every building has a footprint class"))
+        return 1 if errors else 0
+    _apply_building_footprint(repo, project, _project_mod_root(repo, project))
+    return 0
+
+
+def _apply_building_footprint(repo: Path, project: Path, mod_root: Path) -> None:
+    from prosper_or_perish_constructor import building_footprint
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    result = building_footprint.apply(repo, mod_root, project, vanilla_root(repo, project))
+    print(
+        f"Building footprint: population capacity written for {result.buildings_written} buildings "
+        f"({result.buildings_ignored} ignored, {len(result.not_in_mod)} not in the mod) across "
+        f"{result.files_changed} changed files; report {building_footprint.REPORT_RELATIVE_PATH}.",
+        flush=True,
+    )
+
+
 def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if _worldbuilder_apply_on_build(project):
         _worldbuilder_apply(repo, project)
@@ -884,6 +924,7 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         f"building entries across {increase_cost_result.files_changed} changed files.",
         flush=True,
     )
+    _apply_building_footprint(repo, project, mod_root)
     if local_free_building_levels_sheet_csv_path(repo).is_file():
         compile_free_building_level_modifiers(repo, mod_root)
     _ensure_farming_capacity_raw_modifier_bridges(repo, mod_root)

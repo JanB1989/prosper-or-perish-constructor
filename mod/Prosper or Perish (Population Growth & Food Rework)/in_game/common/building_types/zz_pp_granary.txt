@@ -30,6 +30,7 @@ REPLACE:granary = {
     }
     construction_demand = granary_construction
     raw_modifier = {
+      local_population_capacity = 0.088
     }
 
     modifier = {

@@ -70,7 +70,8 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     report["goods_output_map_modes"] = "regenerated"
     start_cfg = wb_start.StartConfig.from_raw(cfg.raw.get("start") if isinstance(cfg.raw.get("start"), dict) else None)
     demand = wb_start.improvement_demand(contract, start_cfg, vanilla_root(repo, project), mod_root) if start_cfg.fill_improvements_to_pops else None
-    report["setup"] = wb_buildings.write_setup(contract, cfg, caps, wb_start.load_owners(vanilla_root(repo, project), mod_root), mod_root, demand=demand)
+    cultures = wb_start.dominant_cultures(wb_start.load_pops(vanilla_root(repo, project)))
+    report["setup"] = wb_buildings.write_setup(contract, cfg, caps, wb_start.load_owners(vanilla_root(repo, project), mod_root), mod_root, demand=demand, cultures=cultures)
     report["start_placement"] = wb_start.apply(repo=repo, project=project, mod_root=mod_root, vanilla_root=vanilla_root(repo, project), cfg=cfg, contract=contract, caps=caps, locations=current)
     development = wb_development.compute_vanilla_development(repo, project)
     (mod_root / wb_development.SETUP_RELATIVE_PATH).write_text("﻿" + wb_development.render_development_setup(development), encoding="utf-8", newline="\n")
@@ -104,13 +105,16 @@ def check(repo: Path, project: Path, mod_root: Path) -> dict[str, object]:
         if m:
             rows.append({"building": m.group(1), "starting_levels": int(m.group(2)), "location_tag": m.group(3)})
     levels = pl.DataFrame(rows)
-    inverse = {v: k for k, v in cfg.building_map.items()}
-    levels = levels.with_columns(pl.col("building").replace_strict(inverse, default=None).alias("kind")).drop_nulls("kind")
     scales = {kind: float(cfg.level_scale.get(key, cfg.level_scale.get(kind, 1.0))) for kind, key in cfg.building_map.items()}
-    caps = {str(r["building"]): float(r["unit_people_per_level"]) / scales.get(str(r["building"]), 1.0) for r in contract.building_types.iter_rows(named=True)}
+    from prosper_or_perish_constructor.worldbuilder.contract import units
+
+    people = {cfg.building_map[str(r["building"])]: units(float(r["unit_people_per_level"]) / scales.get(str(r["building"]), 1.0)) * 1000 for r in contract.building_types.iter_rows(named=True)}
+    for key, spec in cfg.niche.items():
+        row = next(r for r in contract.building_types.iter_rows(named=True) if cfg.building_map[str(r["building"])] == spec["family"])
+        people[key] = units(float(row["unit_people_per_level"]) / scales[str(row["building"])] * float(spec["strength"])) * 1000
     c = float(contract.meta["attributes"].get("capacity_percent_per_point", 0.0))
     targets = contract.location_targets
-    start = levels.group_by("location_tag").agg((pl.col("starting_levels") * pl.col("kind").replace_strict(caps, default=0.0)).sum().alias("start_people"))
+    start = levels.group_by("location_tag").agg((pl.col("starting_levels") * pl.col("building").replace_strict(people, default=0.0)).sum().alias("start_people"))
     joined = targets.join(start, on="location_tag", how="left").with_columns(pl.col("start_people").fill_null(0.0))
     model = (joined["attribute_flat_people"] + joined["start_people"]) * (1 + c * joined["development"]) + contract.people_per_development_point * joined["development"]
     target = joined["starting_target_people"]

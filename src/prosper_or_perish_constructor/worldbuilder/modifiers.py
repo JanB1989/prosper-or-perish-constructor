@@ -404,7 +404,7 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
         loc.append(f'  STATIC_MODIFIER_NAME_{key}: "{label}"')
     loc.append('  STATIC_MODIFIER_DESC_pp_wb_rgo_floor: "The people here have always produced this; the established trade keeps its output up even where the land is poor for it."')
     for key in names:
-        loc.append(f'  STATIC_MODIFIER_DESC_{key}: "Population capacity and goods output from this attribute, fitted from geography and historical land use."')
+        loc.append(f'  STATIC_MODIFIER_DESC_{key}: "Subsistence land and goods output from this attribute, fitted from geography and historical land use."')
     (mod_root / LOCALIZATION_PATH).parent.mkdir(parents=True, exist_ok=True)
     (mod_root / LOCALIZATION_PATH).write_text("﻿" + "\n".join(loc) + "\n", encoding="utf-8", newline="\n")
 

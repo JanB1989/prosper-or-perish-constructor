@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:tax_assessor:building
+INJECT:tax_assessor = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.21
+	}
+}
+# <<< eu5-building-pipeline:tax_assessor:building

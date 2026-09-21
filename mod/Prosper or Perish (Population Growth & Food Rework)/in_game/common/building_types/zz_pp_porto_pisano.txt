@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:porto_pisano:building
+INJECT:porto_pisano = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.04
+	}
+}
+# <<< eu5-building-pipeline:porto_pisano:building

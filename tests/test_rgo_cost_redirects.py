@@ -65,6 +65,8 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
         "land_clearance": "pp_land_clearance_price",
         "qanats": "pp_qanats_price",
         "irrigation_systems": "pp_irrigation_systems_price",
+        "jiangnan_canal_network": "pp_jiangnan_canal_network_price",
+        "jiangnan_hill_terraces": "pp_jiangnan_hill_terraces_price",
         "khmer_baray": "pp_khmer_baray_price",
         "macadam_works": "pp_macadam_works_price",
         "paviors_yard": "pp_paviors_yard_price",

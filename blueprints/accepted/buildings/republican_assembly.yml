@@ -1,0 +1,12 @@
+version: 2
+tag: republican_assembly
+footprint: administration
+building:
+  key: republican_assembly
+  mode: INJECT
+  source: pp_gold_to_jewelry_buildings.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |-
+    # The mod replaces this building by hand in in_game/common/building_types/pp_gold_to_jewelry_buildings.txt.
+    # This blueprint stays disabled and only carries the footprint class; ppc build writes the capacity there.

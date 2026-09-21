@@ -153,6 +153,18 @@ def load_pops(vanilla_root: Path) -> dict[str, list[Pop]]:
     return parse_pops((Path(vanilla_root) / "game" / POPS_SETUP_PATH).read_text(encoding="utf-8-sig"))
 
 
+def dominant_cultures(pops: Mapping[str, list[Pop]]) -> dict[str, str]:
+    """Aggregate all pop types before choosing the location's dominant culture."""
+    result = {}
+    for tag, groups in pops.items():
+        totals: dict[str, float] = defaultdict(float)
+        for pop in groups:
+            totals[pop.culture] += pop.size_k
+        if totals:
+            result[tag] = max(sorted(totals), key=totals.get)
+    return result
+
+
 def load_owners(vanilla_root: Path, mod_root: Path) -> dict[str, str]:
     """location tag -> owning country tag at game start: the countries setup's capital and own_* location lists.
     add_pops_from_locations is not ownership; buildings placed there are rejected by the game."""

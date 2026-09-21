@@ -120,12 +120,29 @@ polders = "polders"
 oasis_irrigation = "qanats"
 
 [worldbuilder.buildings.niche]
-# Culture- or country-locked vanilla capacity buildings that keep their niche. Each is a full REPLACE blueprint that
+# Culture- or country-locked capacity buildings. Each is a full REPLACE or new CREATE blueprint that
 # shares the cap of a general family (levels of every member count against the same equation), is worth `strength` x
 # the family's people per level, and keeps its lock (`lock` lines are ANDed into location_potential; country locks and
 # advance unlocks stay in the blueprint).
 khmer_baray = { family = "irrigation_systems", strength = 1.5, lock = ["dominant_culture ?= culture:khmer_culture"] }
 incamisana = { family = "irrigation_systems", strength = 1.5 }
+
+# Song/Yuan-era Lower Yangzi improvements. Geography and local culture are checked both in game and at setup.
+[worldbuilder.buildings.niche.jiangnan_canal_network]
+family = "irrigated_fields"
+strength = 2.5
+place_at_start = true
+gate = [
+  { culture = ["wu_culture","yue_wu_culture","wuzhou_culture","xuanzhou_culture","jixi_culture"], province = ["suzhou_province","songjiang_province","jiaxing_province","huzhou_province","hangzhou_province","changzhou_province","zhenjiang_province"], climate = ["subtropical","subtropical_monsoon"], topography = ["deltas","wetlands","floodplains"], river_level = ["1","2","3","4","5"] },
+  { culture = ["wu_culture","yue_wu_culture","wuzhou_culture","xuanzhou_culture","jixi_culture"], province = ["suzhou_province","songjiang_province","jiaxing_province","huzhou_province","hangzhou_province","changzhou_province","zhenjiang_province"], climate = ["subtropical","subtropical_monsoon"], topography = ["deltas","wetlands","floodplains"], is_adjacent_to_lake = ["True"] },
+  { culture = ["wu_culture","yue_wu_culture","wuzhou_culture","xuanzhou_culture","jixi_culture"], province = ["suzhou_province","songjiang_province","jiaxing_province","huzhou_province","hangzhou_province","changzhou_province","zhenjiang_province"], climate = ["subtropical","subtropical_monsoon"], topography = ["deltas","wetlands","floodplains"], is_coastal = ["True"] },
+]
+
+[worldbuilder.buildings.niche.jiangnan_hill_terraces]
+family = "field_management"
+strength = 3.0
+place_at_start = true
+gate = [{ culture = ["wu_culture","yue_wu_culture","wuzhou_culture","xuanzhou_culture","jixi_culture"], province = ["ningguo_province","huizhou_province","hangzhou_province","huzhou_province","jinhua_province","chuzhou_province","shaoxing_province","ningbo_province","taizhou_province"], climate = ["subtropical","subtropical_monsoon"], topography = ["hills","mountains","plateau","rolling"] }]
 
 [worldbuilder.compat]
 # Vanilla scripts that test specific climate/vegetation/topography classes. They are copied into the mod with every
@@ -203,7 +220,7 @@ megalopolis = 40000
 
 [worldbuilder.level_scale]
 # multiply levels, divide people per level; 1.0 keeps the World Builder units. Chosen so every general building is
-# worth roughly 700-2,600 people per level (niche members: 1.5x their family); only integer scales are safe because caps
+# worth roughly 700-2,600 people per level (niche strengths are configured above); only integer scales are safe because caps
 # and starting levels are floored, so bund and field drainage keep their small World Builder units. A common price per
 # level then means a similar price per person; the level limit scales with it.
 irrigated_fields = 8
@@ -224,3 +241,36 @@ herd = { land = 2, reserve = 1 }
 [worldbuilder.farm_land.classes]
 plantation = ["cotton_plantation", "sugar_plantation", "tobacco_plantation", "dye_plantation", "chili_plantation"]
 herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_breeders", "stud_farm", "elephant_kraal", "husbandry_farmstead"]
+
+[building_footprint]
+# Every accepted blueprint carries `footprint: <class>`. ppc build/sync writes
+# raw_modifier local_population_capacity = share x employment_size per level (rounded to whole people) into the block
+# that owns the building in the compiled mod. A building with a large footprint houses few of its workers (low share);
+# a negative share takes land like a farm. "ignore" leaves the building untouched.
+[building_footprint.classes]
+farm_land = "ignore"          # farms that take land (worldbuilder.farm_land)
+capacity_source = "ignore"    # improvement buildings and other buildings with their own capacity line
+technical = "ignore"          # dummy buildings
+urban_workshop = 0.75         # guilds, workshops, craft shops
+urban_district = 0.75         # quarters and districts that are housing
+administration = 0.70         # chanceries, councils, courts, offices
+institutional = 0.60          # schools, academies, libraries, theatres, hospitals, missions
+trade = 0.60                  # markets, trade offices, banks, trade company buildings, toll posts
+religious = 0.55              # temples, monasteries, madrasas, churches
+manufactory = 0.55            # urban manufactories and food works
+barracks = 0.50               # barracks, armories, garrisons
+rural_village = 0.50          # fishing, forest and market villages, settlements
+mill_works = 0.40             # mills, foundries, factories, smelters
+fishery = 0.40                # offshore fisheries
+infrastructure = 0.40         # roads, transport, bridges, construction
+maritime = 0.40               # docks, shipyards, admiralties, harbours
+rural_processing = 0.35       # windmills, washmills, stamp mills, granaries
+palace_grounds = 0.30         # palaces, residences and villas with grounds
+monument = 0.20               # monument complexes, festival grounds
+forestry = 0.20               # lumber, charcoal, tar, forest camps
+fortification = 0.20          # walls, castles, forts
+mining = 0.15                 # mines and mining villages
+military_grounds = 0.10       # training fields, camps
+estate_land = 0.10            # manors and estates that hold land
+extractive_open = 0.05        # quarries, pits, diggings, salt pans
+land_reserve = -0.25          # hunting grounds, royal forests and gardens, cattle enclosures

@@ -43,5 +43,8 @@ custom_tags = {
 }
 construction_demand = guild_construction
 increase_per_level_cost = 0.19
+	raw_modifier = {
+		local_population_capacity = 0.225
+	}
 }
 # <<< eu5-building-pipeline:weapon_guild:building

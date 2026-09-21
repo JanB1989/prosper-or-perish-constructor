@@ -1,0 +1,11 @@
+$ /home/jan/development/ProsperOrPerishConstructor/.venv/bin/python3 -m pytest --capture=no tests/test_rgo_cost_redirects.py
+============================= test session starts ==============================
+platform linux -- Python 3.14.2, pytest-9.0.3, pluggy-1.6.0
+rootdir: /home/jan/development/ProsperOrPerishConstructor
+configfile: pyproject.toml
+plugins: anyio-4.13.0
+collected 9 items
+
+tests/test_rgo_cost_redirects.py .........
+
+========================= 9 passed in 68.25s (0:01:08) =========================

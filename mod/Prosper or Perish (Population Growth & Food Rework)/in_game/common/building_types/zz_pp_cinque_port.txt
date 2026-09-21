@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:cinque_port:building
+INJECT:cinque_port = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.08
+	}
+}
+# <<< eu5-building-pipeline:cinque_port:building

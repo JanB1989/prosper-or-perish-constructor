@@ -1,0 +1,70 @@
+version: 2
+tag: jiangnan_hill_terraces
+footprint: capacity_source
+building:
+  key: jiangnan_hill_terraces
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_jiangnan_hill_terraces_maintenance
+  possible_production_methods: []
+  body: |-
+    is_foreign = no
+    max_levels = pp_wb_cap_jiangnan_hill_terraces
+    increase_per_level_cost = 0.27
+    pop_type = peasants
+    employment_size = 0.075
+    price = pp_jiangnan_hill_terraces_price
+    category = infrastructure_category
+    custom_tags = { pp_food_security_priority pp_water_control_priority }
+    icon = jiangnan_hill_terraces
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = infrastructure_build_time
+    location_potential = {
+      always = yes
+      OR = { dominant_culture ?= culture:wu_culture dominant_culture ?= culture:yue_wu_culture dominant_culture ?= culture:wuzhou_culture dominant_culture ?= culture:xuanzhou_culture dominant_culture ?= culture:jixi_culture }
+      OR = { province_definition = province_definition:ningguo_province province_definition = province_definition:huizhou_province province_definition = province_definition:hangzhou_province province_definition = province_definition:huzhou_province province_definition = province_definition:jinhua_province province_definition = province_definition:chuzhou_province province_definition = province_definition:shaoxing_province province_definition = province_definition:ningbo_province province_definition = province_definition:taizhou_province }
+      OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+      OR = { topography = hills topography = mountains topography = plateau topography = ha1300_topo_rolling }
+    }
+    construction_demand = village_construction
+    unique_production_methods = {
+      pp_jiangnan_hill_terraces_maintenance = {
+        manual_labor_cost = 0.1
+        lumber = 0.025
+        category = building_maintenance
+      }
+    }
+    raw_modifier = {
+      local_population_capacity = 7.7
+      pp_wb_levels_jiangnan_hill_terraces = 1
+    }
+    forbidden_for_estates = no
+    ai_forbid_shutdown = yes
+localization:
+  entries:
+    jiangnan_hill_terraces: Jiangnan Hill Terraces
+    jiangnan_hill_terraces_desc: Contour walls and carefully graded channels hold soil and water on the cultivated slopes of Jiangnan. Peasant crews repair the banks and clear the channels. Its levels share the available land with Field Management.
+    jiangnan_hill_terraces_slot_0: Maintenance
+    pp_jiangnan_hill_terraces_maintenance: Terrace Maintenance Crews
+    pp_jiangnan_hill_terraces_price: Jiangnan Hill Terraces Price
+prices:
+- key: pp_jiangnan_hill_terraces_price
+  body: '{gold = 75}'
+icon:
+  source_png: ../assets/icons/jiangnan_hill_terraces.png
+  output_dds: jiangnan_hill_terraces.dds
+  size: 512
+  prompt: 'Use case: historical-scene. One finished Europa Universalis V building icon, JIANGNAN HILL TERRACES, Song/Yuan China circa 1337. Detailed material-rich painterly historic bitmap cutout, elevated three-quarter view, realistic period materials matching EU5 building art. Compact self-contained slice of cultivated hillside with FOUR broad bold sweeping curved terrace steps retained by weathered dry-stone walls and packed earthen banks. Large alternating strips of rich green young crops and warm golden ripe grain, narrow gleaming irrigation rill descending stone notches at one side. A small understated grey-tiled timber toolshed tucked at the top, a few wicker harvest baskets at foot. Main subject is unmistakably the stepped contour walls and crops, not the shed. Strong stepped silhouette and coherent bold shapes that remain readable at 48 pixels. Warm natural sunlight and earthy palette, finely painted tactile stone, straw and soil without busy clutter. Entire isolated silhouette fully contained in square canvas with 7 percent margin; no cropped ground or objects. Irregular small ground footprint, no scenic horizon or broad landscape. Perfectly flat solid pure magenta #FF00FF chroma key background in all gaps, no background shadow or magenta reflections. No text, letters, symbols, frame, pagoda, palace, modern equipment, vector art or UI glyph. 1024x1024.'
+evaluation:
+  production_methods:
+    pp_jiangnan_hill_terraces_maintenance:
+      allow_rules:
+        profit_percent: Maintained land improvements provide population capacity rather than traded output.
+        input_throughput: Peasant crews maintain the existing land and water works.
+        output_throughput: Capacity is carried by the location modifier.

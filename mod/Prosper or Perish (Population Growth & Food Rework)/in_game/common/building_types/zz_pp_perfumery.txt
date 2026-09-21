@@ -30,6 +30,7 @@ unique_production_methods = {
 custom_tags = { midgame_manufactory }
 construction_demand = mill_construction
 raw_modifier = {
+	local_population_capacity = 0.15
 }
 }
 # <<< eu5-building-pipeline:perfumery:building

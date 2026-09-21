@@ -102,6 +102,7 @@ REPLACE:fishing_village = {
     }
     construction_demand = village_construction
     raw_modifier = {
+      local_population_capacity = 0.5
     }
 
     modifier = {

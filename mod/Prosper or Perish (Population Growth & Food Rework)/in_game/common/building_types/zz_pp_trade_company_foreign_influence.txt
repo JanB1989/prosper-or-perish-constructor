@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:trade_company_foreign_influence:building
+INJECT:trade_company_foreign_influence = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.12
+	}
+}
+# <<< eu5-building-pipeline:trade_company_foreign_influence:building

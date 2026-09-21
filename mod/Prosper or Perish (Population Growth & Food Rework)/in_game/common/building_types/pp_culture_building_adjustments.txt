@@ -39,6 +39,9 @@ REPLACE:library = {
 	}
 
 	construction_demand = library_construction
+	raw_modifier = {
+		local_population_capacity = 0.06
+	}
 }
 
 REPLACE:university = {
@@ -94,6 +97,9 @@ REPLACE:university = {
 	}
 
 	construction_demand = university_construction
+	raw_modifier = {
+		local_population_capacity = 0.03
+	}
 }
 
 REPLACE:gymnasium_building = {
@@ -149,4 +155,7 @@ REPLACE:gymnasium_building = {
 	}
 
 	construction_demand = university_construction
+	raw_modifier = {
+		local_population_capacity = 0.3
+	}
 }

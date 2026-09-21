@@ -44,5 +44,8 @@ modifier = {
     cannot_upgrade_location = yes
 }
 increase_per_level_cost = 0.17
+	raw_modifier = {
+		local_population_capacity = -0.25
+	}
 }
 # <<< eu5-building-pipeline:eng_royal_forest:building

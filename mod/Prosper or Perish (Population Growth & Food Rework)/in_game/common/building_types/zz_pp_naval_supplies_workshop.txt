@@ -29,5 +29,8 @@ custom_tags = {
 }
 construction_demand = workshop_construction
 increase_per_level_cost = 0.20
+	raw_modifier = {
+		local_population_capacity = 0.225
+	}
 }
 # <<< eu5-building-pipeline:naval_supplies_workshop:building

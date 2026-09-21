@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:ghilman_barracks:building
+INJECT:ghilman_barracks = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 1
+	}
+}
+# <<< eu5-building-pipeline:ghilman_barracks:building

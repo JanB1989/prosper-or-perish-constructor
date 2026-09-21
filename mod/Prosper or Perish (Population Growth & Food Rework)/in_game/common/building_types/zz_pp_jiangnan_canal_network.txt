@@ -1,0 +1,59 @@
+﻿# >>> eu5-building-pipeline:jiangnan_canal_network:building
+jiangnan_canal_network = {
+is_foreign = no
+max_levels = pp_wb_cap_jiangnan_canal_network
+increase_per_level_cost = 0.20
+pop_type = peasants
+employment_size = 0.075
+price = pp_jiangnan_canal_network_price
+category = infrastructure_category
+custom_tags = { pp_food_security_priority pp_water_control_priority }
+icon = jiangnan_canal_network
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+build_time = infrastructure_build_time
+location_potential = {
+  OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_highland_monsoon climate = ha1300_climate_continental_monsoon climate = ha1300_climate_savanna }
+  OR = { topography = flatland topography = ha1300_topo_floodplains topography = wetlands topography = ha1300_topo_deltas topography = ha1300_topo_valleys topography = hills topography = plateau }
+  OR = {
+    AND = {
+      OR = { dominant_culture ?= culture:wu_culture dominant_culture ?= culture:yue_wu_culture dominant_culture ?= culture:wuzhou_culture dominant_culture ?= culture:xuanzhou_culture dominant_culture ?= culture:jixi_culture }
+      OR = { province_definition = province_definition:suzhou_province province_definition = province_definition:songjiang_province province_definition = province_definition:jiaxing_province province_definition = province_definition:huzhou_province province_definition = province_definition:hangzhou_province province_definition = province_definition:changzhou_province province_definition = province_definition:zhenjiang_province }
+      OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+      OR = { topography = ha1300_topo_deltas topography = wetlands topography = ha1300_topo_floodplains }
+      OR = { has_location_modifier = river_flowing_through_1 has_location_modifier = river_flowing_through_2 has_location_modifier = river_flowing_through_3 has_location_modifier = river_flowing_through_4 has_location_modifier = river_flowing_through_5 }
+    }
+    AND = {
+      OR = { dominant_culture ?= culture:wu_culture dominant_culture ?= culture:yue_wu_culture dominant_culture ?= culture:wuzhou_culture dominant_culture ?= culture:xuanzhou_culture dominant_culture ?= culture:jixi_culture }
+      OR = { province_definition = province_definition:suzhou_province province_definition = province_definition:songjiang_province province_definition = province_definition:jiaxing_province province_definition = province_definition:huzhou_province province_definition = province_definition:hangzhou_province province_definition = province_definition:changzhou_province province_definition = province_definition:zhenjiang_province }
+      OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+      OR = { topography = ha1300_topo_deltas topography = wetlands topography = ha1300_topo_floodplains }
+      is_adjacent_to_lake = yes
+    }
+    AND = {
+      OR = { dominant_culture ?= culture:wu_culture dominant_culture ?= culture:yue_wu_culture dominant_culture ?= culture:wuzhou_culture dominant_culture ?= culture:xuanzhou_culture dominant_culture ?= culture:jixi_culture }
+      OR = { province_definition = province_definition:suzhou_province province_definition = province_definition:songjiang_province province_definition = province_definition:jiaxing_province province_definition = province_definition:huzhou_province province_definition = province_definition:hangzhou_province province_definition = province_definition:changzhou_province province_definition = province_definition:zhenjiang_province }
+      OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+      OR = { topography = ha1300_topo_deltas topography = wetlands topography = ha1300_topo_floodplains }
+      is_coastal = yes
+    }
+  }
+}
+construction_demand = village_construction
+unique_production_methods = {
+  pp_jiangnan_canal_network_maintenance = {
+    manual_labor_cost = 0.1
+    lumber = 0.025
+    category = building_maintenance
+  }
+}
+raw_modifier = {
+  local_population_capacity = 5.56
+  pp_wb_levels_jiangnan_canal_network = 1
+}
+forbidden_for_estates = no
+ai_forbid_shutdown = yes
+}
+# <<< eu5-building-pipeline:jiangnan_canal_network:building

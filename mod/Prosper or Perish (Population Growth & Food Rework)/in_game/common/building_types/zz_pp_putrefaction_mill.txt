@@ -31,6 +31,7 @@ unique_production_methods = {
 custom_tags = { lategame_manufactory }
 construction_demand = mill_construction
 raw_modifier = {
+	local_population_capacity = 0.2
 }
 }
 # <<< eu5-building-pipeline:putrefaction_mill:building

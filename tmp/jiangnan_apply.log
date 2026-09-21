@@ -1,0 +1,174 @@
+Generated local output modifier map modes for 52 raw materials.
+World Builder stage applied: {'climate': 18, 'vegetation': 16, 'topography': 10} class injects, 36 static modifiers, 22415 starting building rows, development for 20929 locations.
+{
+  "handover": "/home/jan/development/EU5WorldBuilder/artifacts/handover/latest",
+  "version": "2026-09-21-64eb529",
+  "worldbuilder_commit": "64eb529",
+  "geography": {
+    "files": 91,
+    "changed": 0,
+    "removed_stale": 0,
+    "legacy_removed": 0
+  },
+  "class_injects": {
+    "climate": 18,
+    "vegetation": 16,
+    "topography": 10
+  },
+  "compat_patches": {
+    "files": 14,
+    "tests_widened": 148,
+    "unchanged": [
+      "in_game/common/building_types/unique_buildings.txt",
+      "in_game/common/diseases/great_pestilence.txt",
+      "in_game/common/generic_actions/italian_wars.txt",
+      "in_game/common/insults/00_insults.txt",
+      "in_game/events/religion/pilgrimage_events.txt",
+      "in_game/events/situations/little_ice_age.txt",
+      "in_game/events/character/artist_events.txt",
+      "in_game/events/DHE/flavor_chi_treasure_expedition.txt",
+      "in_game/events/DHE/flavor_TUR.txt",
+      "in_game/events/DHE/flavor_ICE.txt",
+      "in_game/events/DHE/flavor_ETH.txt"
+    ]
+  },
+  "static_modifiers": {
+    "static_modifiers": 36,
+    "river_levels": 5,
+    "floor_lifts": 1426,
+    "locations_with_modifiers": 20893
+  },
+  "improvement_buildings": {
+    "land_clearance": {
+      "unit_units": 2.6,
+      "scale": 2.0,
+      "limit": 40
+    },
+    "field_management": {
+      "unit_units": 2.57,
+      "scale": 3.0,
+      "limit": 60
+    },
+    "jiangnan_hill_terraces": {
+      "unit_units": 3.85,
+      "scale": 3.0,
+      "limit": 60
+    },
+    "irrigation_systems": {
+      "unit_units": 1.6,
+      "scale": 2.0,
+      "limit": 40
+    },
+    "khmer_baray": {
+      "unit_units": 2.4,
+      "scale": 2.0,
+      "limit": 40
+    },
+    "incamisana": {
+      "unit_units": 2.4,
+      "scale": 2.0,
+      "limit": 40
+    },
+    "irrigated_fields": {
+      "unit_units": 2.23,
+      "scale": 8.0,
+      "limit": 160
+    },
+    "jiangnan_canal_network": {
+      "unit_units": 3.34,
+      "scale": 8.0,
+      "limit": 160
+    },
+    "bund": {
+      "unit_units": 0.8,
+      "scale": 1.0,
+      "limit": 20
+    },
+    "field_drainage": {
+      "unit_units": 0.7,
+      "scale": 1.0,
+      "limit": 20
+    },
+    "polders": {
+      "unit_units": 2.2,
+      "scale": 1.0,
+      "limit": 20
+    },
+    "qanats": {
+      "unit_units": 0.7,
+      "scale": 1.0,
+      "limit": 20
+    }
+  },
+  "vanilla_capacity_buildings": [
+    "bund",
+    "incamisana",
+    "irrigation_systems",
+    "khmer_baray",
+    "polders"
+  ],
+  "farm_blueprints_patched": [],
+  "rural_capacity_values": "regenerated",
+  "goods_output_map_modes": "regenerated",
+  "setup": {
+    "rows": 22415,
+    "unowned_skipped": 1184,
+    "clamped_to_cap": 1,
+    "levels_raised_for_pops": 12983,
+    "locations_filled_for_pops": 1069,
+    "locations_still_short": 163
+  },
+  "start_placement": {
+    "locations_planned": 13690,
+    "over_capacity_locations": 163,
+    "rows": 11539,
+    "levels_by_building": {
+      "farming_village": 17037,
+      "cookery": 4443,
+      "sheep_farms": 2434,
+      "lumber_mill": 1561,
+      "fishing_village": 1494,
+      "fruit_orchard": 1400,
+      "forest_village": 1050,
+      "iron_mine": 533,
+      "clay_pit": 530,
+      "victuals_market_import": 469,
+      "salt_collector": 288,
+      "stone_quarry": 240,
+      "inland_saltworks": 208,
+      "sand_pit": 150,
+      "copper_mine": 114,
+      "gold_diggings": 102,
+      "silver_mine": 85,
+      "marble_quarry": 75,
+      "lead_mine": 71,
+      "alum_quarry": 64,
+      "gem_gravel_pit": 62,
+      "coal_mine": 60,
+      "tin_streamworks": 57,
+      "saltpeter_beds": 29,
+      "cinnabar_pit": 14
+    },
+    "farm_land_people": 97053000.0,
+    "farm_limited_by": {
+      "cap": 2290,
+      "land": 1830,
+      "workers": 2380
+    },
+    "converted_people": 8684300,
+    "conversions": 5344,
+    "provinces": 2670,
+    "provinces_below_food_target": 16,
+    "province_food_coverage_median": 1.3142084568903964,
+    "setup_rows": 11539,
+    "pops": {
+      "written": true,
+      "conversions": 5344
+    }
+  },
+  "development": {
+    "locations": 20929,
+    "median": 9.0,
+    "max": 45.0
+  }
+}

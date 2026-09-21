@@ -24,5 +24,8 @@ unique_production_methods = {
 obsolete = tools_workshop
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.16
+	raw_modifier = {
+		local_population_capacity = 0.4
+	}
 }
 # <<< eu5-building-pipeline:iron_foundry:building

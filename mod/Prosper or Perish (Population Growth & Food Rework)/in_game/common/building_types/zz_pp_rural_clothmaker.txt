@@ -38,5 +38,8 @@ unique_production_methods = {
 construction_demand = village_construction
 modifier = {}
 increase_per_level_cost = 0.14
+	raw_modifier = {
+		local_population_capacity = 0.4
+	}
 }
 # <<< eu5-building-pipeline:rural_clothmaker:building

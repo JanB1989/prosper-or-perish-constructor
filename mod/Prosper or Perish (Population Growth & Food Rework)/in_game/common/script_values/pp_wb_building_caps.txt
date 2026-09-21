@@ -166,7 +166,7 @@ pp_wb_cap_land_clearance = {
 	max = 40
 }
 
-pp_wb_cap_field_management = {
+pp_wb_cap_field_management_shared = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
 		value = 18
@@ -391,6 +391,24 @@ pp_wb_cap_field_management = {
 	max = 60
 }
 
+pp_wb_cap_field_management = {
+	value = pp_wb_cap_field_management_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES"
+		value = modifier:pp_wb_levels_jiangnan_hill_terraces
+	}
+	min = 0
+}
+
+pp_wb_cap_jiangnan_hill_terraces = {
+	value = pp_wb_cap_field_management_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT"
+		value = modifier:pp_wb_levels_field_management
+	}
+	min = 0
+}
+
 pp_wb_cap_irrigation_systems_shared = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
@@ -473,7 +491,7 @@ pp_wb_cap_incamisana = {
 	min = 0
 }
 
-pp_wb_cap_irrigated_fields = {
+pp_wb_cap_irrigated_fields_shared = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
 		value = 16
@@ -745,6 +763,24 @@ pp_wb_cap_irrigated_fields = {
 	floor = yes
 	min = 0
 	max = 160
+}
+
+pp_wb_cap_irrigated_fields = {
+	value = pp_wb_cap_irrigated_fields_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_CANAL_NETWORK"
+		value = modifier:pp_wb_levels_jiangnan_canal_network
+	}
+	min = 0
+}
+
+pp_wb_cap_jiangnan_canal_network = {
+	value = pp_wb_cap_irrigated_fields_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATED_FIELDS"
+		value = modifier:pp_wb_levels_irrigated_fields
+	}
+	min = 0
 }
 
 pp_wb_cap_bund = {

@@ -54,5 +54,8 @@ modifier = {
     local_slave_pop_satisfaction = -0.05
 }
 increase_per_level_cost = 0.15
+	raw_modifier = {
+		local_population_capacity = 0.18
+	}
 }
 # <<< eu5-building-pipeline:slave_center:building

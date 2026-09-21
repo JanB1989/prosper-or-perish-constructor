@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:bavarian_academy_of_sciences:building
+INJECT:bavarian_academy_of_sciences = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.03
+	}
+}
+# <<< eu5-building-pipeline:bavarian_academy_of_sciences:building

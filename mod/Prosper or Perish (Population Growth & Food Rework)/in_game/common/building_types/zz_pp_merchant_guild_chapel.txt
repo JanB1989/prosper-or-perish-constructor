@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:merchant_guild_chapel:building
+INJECT:merchant_guild_chapel = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.03
+	}
+}
+# <<< eu5-building-pipeline:merchant_guild_chapel:building

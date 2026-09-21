@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:italian_administration_center:building
+INJECT:italian_administration_center = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.07
+	}
+}
+# <<< eu5-building-pipeline:italian_administration_center:building

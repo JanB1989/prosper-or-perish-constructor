@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:corporation_of_london:building
+INJECT:corporation_of_london = {
+# Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	raw_modifier = {
+		local_population_capacity = 0.21
+	}
+}
+# <<< eu5-building-pipeline:corporation_of_london:building

@@ -38,6 +38,8 @@ def vanilla_root(repo: Path, project: Path) -> Path:
 def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | None = None) -> dict[str, object]:
     cfg: WorldBuilderConfig = load_config(repo, project)
     contract: Contract = load_contract(contract_root or cfg.handover)
+    from . import navigation
+    cfg = navigation.prepare(repo, cfg, contract)
     report: dict[str, object] = {"handover": str(contract.root), "version": contract.version, "worldbuilder_commit": contract.meta.get("worldbuilder_commit")}
     if cfg.sync_geography:
         report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo)
@@ -72,6 +74,7 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     demand = wb_start.improvement_demand(contract, start_cfg, vanilla_root(repo, project), mod_root) if start_cfg.fill_improvements_to_pops else None
     cultures = wb_start.dominant_cultures(wb_start.load_pops(vanilla_root(repo, project)))
     report["setup"] = wb_buildings.write_setup(contract, cfg, caps, wb_start.load_owners(vanilla_root(repo, project), mod_root), mod_root, demand=demand, cultures=cultures)
+    report["navigation"] = navigation.write_runtime(repo, cfg, contract, mod_root, vanilla_root(repo, project))
     report["start_placement"] = wb_start.apply(repo=repo, project=project, mod_root=mod_root, vanilla_root=vanilla_root(repo, project), cfg=cfg, contract=contract, caps=caps, locations=current)
     development = wb_development.compute_vanilla_development(repo, project)
     (mod_root / wb_development.SETUP_RELATIVE_PATH).write_text("﻿" + wb_development.render_development_setup(development), encoding="utf-8", newline="\n")
@@ -94,6 +97,8 @@ def check(repo: Path, project: Path, mod_root: Path) -> dict[str, object]:
     """Recompute the capacity model from the constructor-side levels (setup file) and report the fit."""
     cfg = load_config(repo, project)
     contract = load_contract(cfg.handover)
+    from .navigation import prepare
+    cfg = prepare(repo, cfg, contract, write_blueprints=False)
     setup = mod_root / wb_buildings.SETUP_PATH
     if not setup.is_file():
         raise FileNotFoundError(f"run ppc worldbuilder apply first: {setup}")

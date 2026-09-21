@@ -10,7 +10,7 @@ building:
     methods:
     - pp_jiangnan_canal_network_maintenance
   possible_production_methods: []
-  body: |-
+  body: |
     is_foreign = no
     max_levels = pp_wb_cap_jiangnan_canal_network
     increase_per_level_cost = 0.27
@@ -34,7 +34,7 @@ building:
           OR = { province_definition = province_definition:suzhou_province province_definition = province_definition:songjiang_province province_definition = province_definition:jiaxing_province province_definition = province_definition:huzhou_province province_definition = province_definition:hangzhou_province province_definition = province_definition:changzhou_province province_definition = province_definition:zhenjiang_province }
           OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
           OR = { topography = ha1300_topo_deltas topography = wetlands topography = ha1300_topo_floodplains }
-          OR = { has_location_modifier = river_flowing_through_1 has_location_modifier = river_flowing_through_2 has_location_modifier = river_flowing_through_3 has_location_modifier = river_flowing_through_4 has_location_modifier = river_flowing_through_5 }
+          OR = { pp_navigation_river_level_1 = yes pp_navigation_river_level_2 = yes pp_navigation_river_level_3 = yes pp_navigation_river_level_4 = yes pp_navigation_river_level_5 = yes }
         }
         AND = {
           OR = { dominant_culture ?= culture:wu_culture dominant_culture ?= culture:yue_wu_culture dominant_culture ?= culture:wuzhou_culture dominant_culture ?= culture:xuanzhou_culture dominant_culture ?= culture:jixi_culture }
@@ -48,7 +48,7 @@ building:
           OR = { province_definition = province_definition:suzhou_province province_definition = province_definition:songjiang_province province_definition = province_definition:jiaxing_province province_definition = province_definition:huzhou_province province_definition = province_definition:hangzhou_province province_definition = province_definition:changzhou_province province_definition = province_definition:zhenjiang_province }
           OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
           OR = { topography = ha1300_topo_deltas topography = wetlands topography = ha1300_topo_floodplains }
-          is_coastal = yes
+          has_location_modifier = pp_wb_coastal
         }
       }
     }
@@ -66,6 +66,8 @@ building:
     }
     forbidden_for_estates = no
     ai_forbid_shutdown = yes
+    on_built = { hidden_effect = { location = { pp_navigation_refresh_site = yes } } }
+    on_destroyed = { hidden_effect = { location = { pp_navigation_restore_site = yes } } }
 localization:
   entries:
     jiangnan_canal_network: Jiangnan Canal Network
@@ -75,7 +77,7 @@ localization:
     pp_jiangnan_canal_network_price: Jiangnan Canal Network Price
 prices:
 - key: pp_jiangnan_canal_network_price
-  body: '{gold = 75}'
+  body: '{ gold = 600 }'
 icon:
   source_png: ../assets/icons/jiangnan_canal_network.png
   output_dds: jiangnan_canal_network.dds

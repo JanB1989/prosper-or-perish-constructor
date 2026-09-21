@@ -1,0 +1,6 @@
+﻿pp_navigation_river_level_1 = { OR = { has_location_modifier = pp_nav_original_level_1 AND = { NOT = { has_location_modifier = pp_nav_geography_changed } has_location_modifier = river_flowing_through_1 } } }
+pp_navigation_river_level_2 = { OR = { has_location_modifier = pp_nav_original_level_2 AND = { NOT = { has_location_modifier = pp_nav_geography_changed } has_location_modifier = river_flowing_through_2 } } }
+pp_navigation_river_level_3 = { OR = { has_location_modifier = pp_nav_original_level_3 AND = { NOT = { has_location_modifier = pp_nav_geography_changed } has_location_modifier = river_flowing_through_3 } } }
+pp_navigation_river_level_4 = { OR = { has_location_modifier = pp_nav_original_level_4 AND = { NOT = { has_location_modifier = pp_nav_geography_changed } has_location_modifier = river_flowing_through_4 } } }
+pp_navigation_river_level_5 = { OR = { has_location_modifier = pp_nav_original_level_5 AND = { NOT = { has_location_modifier = pp_nav_geography_changed } has_location_modifier = river_flowing_through_5 } } }
+pp_navigation_has_river = { OR = { pp_navigation_river_level_1 = yes pp_navigation_river_level_2 = yes pp_navigation_river_level_3 = yes pp_navigation_river_level_4 = yes pp_navigation_river_level_5 = yes } }

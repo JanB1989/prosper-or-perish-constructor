@@ -1,0 +1,32 @@
+﻿# >>> eu5-building-pipeline:delta_waterway_works:building
+delta_waterway_works = {
+is_foreign = no
+max_levels = pp_wb_cap_delta_waterway_works
+increase_per_level_cost = 0.56
+pop_type = laborers
+employment_size = 0
+price = pp_delta_waterway_works_price
+category = infrastructure_category
+custom_tags = { pp_food_security_priority pp_water_control_priority }
+icon = delta_waterway_works
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+build_time = 540
+construction_demand = town_building_construction
+location_potential = {
+  OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_highland_monsoon climate = ha1300_climate_continental_monsoon climate = ha1300_climate_savanna }
+  OR = { topography = flatland topography = ha1300_topo_floodplains topography = wetlands topography = ha1300_topo_deltas topography = ha1300_topo_valleys topography = hills topography = plateau }
+  OR = { this = location:amyint this = location:baniachang this = location:butalin this = location:chandrabad this = location:chiang_khong this = location:chiang_saen this = location:dura this = location:fathabad this = location:gaur this = location:hajipur this = location:htamanthi this = location:jinglong this = location:kale this = location:kataka this = location:katihar this = location:kengkham this = location:khagaria this = location:khaliajuri this = location:khaspur this = location:lai_lin_pi this = location:mabein this = location:mawkmai this = location:mingin this = location:minsin this = location:mong_yai this = location:monghsu this = location:monghyr this = location:mongkawng this = location:mongpai this = location:mongyang this = location:muktagacha this = location:narsinghpur this = location:ngasingu this = location:pabna this = location:pagan this = location:pandua this = location:qasba this = location:quy_hoa this = location:rajnagar this = location:ratnagiri this = location:sagaing this = location:saharsa this = location:salay this = location:samastipur this = location:satgaon this = location:sayniabuli this = location:shahjadpur this = location:shwegu this = location:son_la this = location:sonargaon this = location:sreepur this = location:sylhet this = location:takawng this = location:teliagarhi this = location:thaungdut this = location:thayet this = location:thuy_vi this = location:vieng_phouka this = location:waingmaw this = location:weithali }
+}
+raw_modifier = {
+  local_population_capacity = 2.23
+  pp_wb_levels_delta_waterway_works = 1
+}
+on_built = { custom_tooltip = pp_navigation_upgrade_tt hidden_effect = { location = { pp_navigation_refresh_site = yes } } }
+on_destroyed = { hidden_effect = { location = { pp_navigation_restore_site = yes } } }
+forbidden_for_estates = yes
+ai_forbid_shutdown = yes
+}
+# <<< eu5-building-pipeline:delta_waterway_works:building

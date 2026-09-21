@@ -384,6 +384,10 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
         legacy.unlink()
 
     # on_action applying the per-location static modifiers
+    if cfg.raw.get("_navigation"):
+        from .navigation import write_bonus_compensation
+        for tag, keys in write_bonus_compensation(cfg.raw['_navigation'], mod_root, vanilla_root).items():
+            per_location[tag].extend(keys)
     lines = [GENERATED, "", "on_game_start = {", "\ton_actions = {", "\t\tpp_wb_apply_attribute_modifiers", "\t}", "}", "", "pp_wb_apply_attribute_modifiers = {", "\teffect = {"]
     for tag in sorted(per_location):
         keys = per_location[tag]
@@ -503,4 +507,3 @@ def merge_modifier_lines(body: list[str], extra: list[str]) -> list[str]:
         else:
             merged.append(f"{key} = {value}")
     return merged
-

@@ -19,7 +19,7 @@ REPLACE:polders = {
   location_potential = {
     OR = {
       AND = {
-        is_coastal = yes
+        has_location_modifier = pp_wb_coastal
         OR = { topography = flatland topography = wetlands topography = ha1300_topo_deltas topography = ha1300_topo_floodplains topography = hills topography = ha1300_topo_valleys }
       }
       OR = { topography = wetlands topography = ha1300_topo_deltas }
@@ -36,6 +36,7 @@ REPLACE:polders = {
       local_fiber_crops_output_modifier = 0.005
       local_horses_output_modifier = 0.0035
       local_population_capacity = 2.2
+      pp_wb_levels_polders = 1
     }
 
   modifier = {

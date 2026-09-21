@@ -2591,6 +2591,15 @@ building_manager = {
 	bund = { tag = ZUT level = 1 location = zutphen }
 	bund = { tag = LDB level = 1 location = zwickau }
 	bund = { tag = POL level = 1 location = zwolen }
+	caoyun_canal_office = { tag = CHI level = 1 location = dongliu }
+	caoyun_canal_office = { tag = CHI level = 1 location = fuyang_hangzhou }
+	caoyun_canal_office = { tag = CHI level = 1 location = hezhou_he }
+	caoyun_canal_office = { tag = CHI level = 1 location = jiande }
+	caoyun_canal_office = { tag = CHI level = 1 location = shouchun }
+	caoyun_canal_office = { tag = CHI level = 1 location = wuhe }
+	caoyun_canal_office = { tag = CHI level = 1 location = wuwei }
+	caoyun_canal_office = { tag = CHI level = 1 location = xiacai }
+	caoyun_canal_office = { tag = CHI level = 1 location = zongyang }
 	field_drainage = { tag = SLV level = 8 location = aabenraa }
 	field_drainage = { tag = OGK level = 6 location = aachen }
 	field_drainage = { tag = DAN level = 2 location = aalborg }
@@ -14468,7 +14477,7 @@ building_manager = {
 	irrigated_fields = { tag = LAV level = 8 location = dong_si_maha_phot }
 	irrigated_fields = { tag = CHI level = 8 location = dongan_yongzhou }
 	irrigated_fields = { tag = CHI level = 16 location = dongguan }
-	irrigated_fields = { tag = CHI level = 32 location = dongliu }
+	irrigated_fields = { tag = CHI level = 31 location = dongliu }
 	irrigated_fields = { tag = KOR level = 8 location = dongnae }
 	irrigated_fields = { tag = CHI level = 32 location = dongxiang }
 	irrigated_fields = { tag = CHI level = 64 location = dongyang }
@@ -14510,7 +14519,7 @@ building_manager = {
 	irrigated_fields = { tag = CHI level = 32 location = fushui }
 	irrigated_fields = { tag = CHI level = 32 location = fushun }
 	irrigated_fields = { tag = CHI level = 24 location = futian }
-	irrigated_fields = { tag = CHI level = 24 location = fuyang_hangzhou }
+	irrigated_fields = { tag = CHI level = 23 location = fuyang_hangzhou }
 	irrigated_fields = { tag = DBD level = 16 location = galle }
 	irrigated_fields = { tag = JAP level = 16 location = gamou }
 	irrigated_fields = { tag = GWL level = 24 location = gangadvara }
@@ -14594,7 +14603,7 @@ building_manager = {
 	irrigated_fields = { tag = CHI level = 16 location = hepu }
 	irrigated_fields = { tag = KOR level = 16 location = heungyang }
 	irrigated_fields = { tag = CHI level = 16 location = heyuan }
-	irrigated_fields = { tag = CHI level = 40 location = hezhou_he }
+	irrigated_fields = { tag = CHI level = 39 location = hezhou_he }
 	irrigated_fields = { tag = JAP level = 8 location = higashimatsuura }
 	irrigated_fields = { tag = BHP level = 32 location = hijli }
 	irrigated_fields = { tag = JAP level = 32 location = hiki }
@@ -14675,7 +14684,7 @@ building_manager = {
 	irrigated_fields = { tag = STN level = 32 location = jhenaidah }
 	irrigated_fields = { tag = CHI level = 8 location = jiajiang }
 	irrigated_fields = { tag = CHI level = 32 location = jianchang }
-	irrigated_fields = { tag = CHI level = 16 location = jiande }
+	irrigated_fields = { tag = CHI level = 15 location = jiande }
 	irrigated_fields = { tag = CHI level = 16 location = jiangan }
 	irrigated_fields = { tag = CHI level = 80 location = jiangdu }
 	irrigated_fields = { tag = CHI level = 16 location = jiangjin }
@@ -15342,7 +15351,7 @@ building_manager = {
 	irrigated_fields = { tag = DLH level = 16 location = shishgarh }
 	irrigated_fields = { tag = CHI level = 48 location = shishou }
 	irrigated_fields = { tag = CHI level = 24 location = shizhao }
-	irrigated_fields = { tag = CHI level = 32 location = shouchun }
+	irrigated_fields = { tag = CHI level = 31 location = shouchun }
 	irrigated_fields = { tag = DLH level = 16 location = shravasti }
 	irrigated_fields = { tag = CHI level = 16 location = shuangliu }
 	irrigated_fields = { tag = CHI level = 8 location = shuangshui }
@@ -15540,18 +15549,18 @@ building_manager = {
 	irrigated_fields = { tag = CHI level = 80 location = wuchang }
 	irrigated_fields = { tag = CHI level = 16 location = wuchuan_huazhou }
 	irrigated_fields = { tag = CHI level = 8 location = wugang }
-	irrigated_fields = { tag = CHI level = 40 location = wuhe }
+	irrigated_fields = { tag = CHI level = 39 location = wuhe }
 	irrigated_fields = { tag = CHI level = 72 location = wuhu }
 	irrigated_fields = { tag = CHI level = 64 location = wujiang_yingtian }
 	irrigated_fields = { tag = CHI level = 40 location = wuling }
 	irrigated_fields = { tag = CHI level = 21 location = wuning }
 	irrigated_fields = { tag = WNT level = 8 location = wuntho }
 	irrigated_fields = { tag = CHI level = 8 location = wutun }
-	irrigated_fields = { tag = CHI level = 48 location = wuwei }
+	irrigated_fields = { tag = CHI level = 47 location = wuwei }
 	irrigated_fields = { tag = CHI level = 16 location = wuxian_liuzhou }
 	irrigated_fields = { tag = CHI level = 8 location = wuyuan_huizhou }
 	irrigated_fields = { tag = CHI level = 8 location = wuyuan_nanning }
-	irrigated_fields = { tag = CHI level = 8 location = xiacai }
+	irrigated_fields = { tag = CHI level = 7 location = xiacai }
 	irrigated_fields = { tag = CHI level = 8 location = xiakou }
 	irrigated_fields = { tag = CHI level = 16 location = xian_quzhou }
 	irrigated_fields = { tag = CHI level = 32 location = xiangru }
@@ -15671,7 +15680,7 @@ building_manager = {
 	irrigated_fields = { tag = CHI level = 16 location = zitong }
 	irrigated_fields = { tag = CHI level = 40 location = zixian }
 	irrigated_fields = { tag = CHI level = 40 location = ziyang_zizhong }
-	irrigated_fields = { tag = CHI level = 32 location = zongyang }
+	irrigated_fields = { tag = CHI level = 31 location = zongyang }
 	irrigation_systems = { tag = HLG level = 2 location = abadan }
 	irrigation_systems = { tag = MAK level = 4 location = abu_hamed }
 	irrigation_systems = { tag = FDL level = 4 location = abu_kemal }
@@ -15680,7 +15689,7 @@ building_manager = {
 	irrigation_systems = { tag = DLH level = 3 location = ahmednagar }
 	irrigation_systems = { tag = SLD level = 2 location = aiwanj }
 	irrigation_systems = { tag = DLH level = 2 location = ajmer }
-	irrigation_systems = { tag = MAM level = 4 location = akhmim }
+	irrigation_systems = { tag = MAM level = 3 location = akhmim }
 	irrigation_systems = { tag = MNL level = 2 location = aksu }
 	irrigation_systems = { tag = FDL level = 2 location = al_anbar }
 	irrigation_systems = { tag = KLB level = 3 location = al_hajr }
@@ -15708,9 +15717,9 @@ building_manager = {
 	irrigation_systems = { tag = GLH level = 2 location = asanas }
 	irrigation_systems = { tag = MAM level = 4 location = ashmunayn }
 	irrigation_systems = { tag = BKZ level = 4 location = aswan }
-	irrigation_systems = { tag = MAM level = 4 location = asyut }
+	irrigation_systems = { tag = MAM level = 3 location = asyut }
 	irrigation_systems = { tag = ALO level = 4 location = atbara }
-	irrigation_systems = { tag = MAM level = 5 location = atfih }
+	irrigation_systems = { tag = MAM level = 4 location = atfih }
 	irrigation_systems = { tag = DLH level = 2 location = aundh }
 	irrigation_systems = { tag = PCJ level = 2 location = axawiri }
 	irrigation_systems = { tag = MZF level = 2 location = bafq }
@@ -15784,10 +15793,10 @@ building_manager = {
 	irrigation_systems = { tag = ABW level = 3 location = ed_damer }
 	irrigation_systems = { tag = MAK level = 4 location = ed_debba }
 	irrigation_systems = { tag = MAM level = 4 location = edfu }
-	irrigation_systems = { tag = MAM level = 4 location = el_bahnasa }
+	irrigation_systems = { tag = MAM level = 3 location = el_bahnasa }
 	irrigation_systems = { tag = MAM level = 4 location = el_balyana }
 	irrigation_systems = { tag = MAM level = 4 location = el_burullus }
-	irrigation_systems = { tag = MAM level = 4 location = el_buwit }
+	irrigation_systems = { tag = MAM level = 3 location = el_buwit }
 	irrigation_systems = { tag = ALO level = 2 location = el_gadarif }
 	irrigation_systems = { tag = MAM level = 8 location = el_mahalla }
 	irrigation_systems = { tag = ALO level = 4 location = el_manaqil }
@@ -15795,7 +15804,7 @@ building_manager = {
 	irrigation_systems = { tag = DAJ level = 4 location = el_obeid }
 	irrigation_systems = { tag = KPL level = 2 location = ellur }
 	irrigation_systems = { tag = DLH level = 2 location = eminabad }
-	irrigation_systems = { tag = MAM level = 4 location = esna }
+	irrigation_systems = { tag = MAM level = 3 location = esna }
 	irrigation_systems = { tag = MAM level = 2 location = faiyum }
 	irrigation_systems = { tag = CHI level = 2 location = fanchang }
 	irrigation_systems = { tag = CHI level = 2 location = fancheng }
@@ -15808,7 +15817,7 @@ building_manager = {
 	irrigation_systems = { tag = KRT level = 2 location = firozkoh }
 	irrigation_systems = { tag = CHI level = 4 location = funing_huaian }
 	irrigation_systems = { tag = CHI level = 2 location = futian }
-	irrigation_systems = { tag = MAM level = 6 location = fuwa }
+	irrigation_systems = { tag = MAM level = 5 location = fuwa }
 	irrigation_systems = { tag = GBS level = 2 location = gabes }
 	irrigation_systems = { tag = SMA level = 4 location = gandava }
 	irrigation_systems = { tag = SON level = 4 location = gao }
@@ -15840,7 +15849,7 @@ building_manager = {
 	irrigation_systems = { tag = CHI level = 2 location = hezhou_he }
 	irrigation_systems = { tag = HLL level = 2 location = hillah }
 	irrigation_systems = { tag = FDL level = 2 location = hit }
-	irrigation_systems = { tag = MAM level = 4 location = hiw }
+	irrigation_systems = { tag = MAM level = 3 location = hiw }
 	irrigation_systems = { tag = KOR level = 2 location = hongju }
 	irrigation_systems = { tag = HLG level = 2 location = hoveyzeh }
 	irrigation_systems = { tag = CHI level = 2 location = huaining }
@@ -15953,7 +15962,7 @@ building_manager = {
 	irrigation_systems = { tag = TUN level = 2 location = medjez_el_bab }
 	irrigation_systems = { tag = DLH level = 3 location = mehkar }
 	irrigation_systems = { tag = CHI level = 2 location = meizhou }
-	irrigation_systems = { tag = MAM level = 6 location = menouf }
+	irrigation_systems = { tag = MAM level = 5 location = menouf }
 	irrigation_systems = { tag = TUN level = 1 location = meskiana }
 	irrigation_systems = { tag = CHI level = 2 location = minggang }
 	irrigation_systems = { tag = MAM level = 4 location = minya }
@@ -16019,7 +16028,7 @@ building_manager = {
 	irrigation_systems = { tag = PGL level = 4 location = pugal }
 	irrigation_systems = { tag = MIH level = 4 location = qala_fateh }
 	irrigation_systems = { tag = BMP level = 4 location = qaleh_ganj }
-	irrigation_systems = { tag = MAM level = 6 location = qalyub }
+	irrigation_systems = { tag = MAM level = 5 location = qalyub }
 	irrigation_systems = { tag = INJ level = 2 location = qaryat_al_bidh }
 	irrigation_systems = { tag = MAK level = 4 location = qasr_ibrim }
 	irrigation_systems = { tag = MAM level = 4 location = qena }
@@ -16063,7 +16072,7 @@ building_manager = {
 	irrigation_systems = { tag = INJ level = 2 location = shahr_meyan }
 	irrigation_systems = { tag = CHI level = 4 location = shanyang_huaian }
 	irrigation_systems = { tag = CHI level = 2 location = shaoxing }
-	irrigation_systems = { tag = MAM level = 4 location = sharuna }
+	irrigation_systems = { tag = MAM level = 3 location = sharuna }
 	irrigation_systems = { tag = MNL level = 2 location = shayar }
 	irrigation_systems = { tag = MAK level = 4 location = shemkhiya }
 	irrigation_systems = { tag = ABW level = 4 location = shendi }
@@ -16090,7 +16099,7 @@ building_manager = {
 	irrigation_systems = { tag = JHI level = 4 location = suratgarh }
 	irrigation_systems = { tag = DGE level = 2 location = suruc }
 	irrigation_systems = { tag = JAP level = 2 location = tachibana }
-	irrigation_systems = { tag = MAM level = 4 location = tahna }
+	irrigation_systems = { tag = MAM level = 3 location = tahna }
 	irrigation_systems = { tag = CHI level = 2 location = taihe_taihe }
 	irrigation_systems = { tag = DLH level = 2 location = talwandi }
 	irrigation_systems = { tag = JAP level = 4 location = tama }
@@ -21754,6 +21763,19 @@ building_manager = {
 	land_clearance = { tag = ZWE level = 4 location = zweibrucken }
 	land_clearance = { tag = LDB level = 2 location = zwickau }
 	land_clearance = { tag = POL level = 2 location = zwolen }
+	lowland_sluice_works = { tag = HOL level = 1 location = rotterdam }
+	nile_navigation_works = { tag = MAM level = 1 location = akhmim }
+	nile_navigation_works = { tag = MAM level = 1 location = asyut }
+	nile_navigation_works = { tag = MAM level = 1 location = atfih }
+	nile_navigation_works = { tag = MAM level = 1 location = el_bahnasa }
+	nile_navigation_works = { tag = MAM level = 1 location = el_buwit }
+	nile_navigation_works = { tag = MAM level = 1 location = esna }
+	nile_navigation_works = { tag = MAM level = 1 location = fuwa }
+	nile_navigation_works = { tag = MAM level = 1 location = hiw }
+	nile_navigation_works = { tag = MAM level = 1 location = menouf }
+	nile_navigation_works = { tag = MAM level = 1 location = qalyub }
+	nile_navigation_works = { tag = MAM level = 1 location = sharuna }
+	nile_navigation_works = { tag = MAM level = 1 location = tahna }
 	polders = { tag = DAN level = 1 location = aalborg }
 	polders = { tag = HLG level = 1 location = abadan }
 	polders = { tag = ENG level = 1 location = abbeville }
@@ -21989,7 +22011,6 @@ building_manager = {
 	polders = { tag = AQN level = 1 location = rochefort }
 	polders = { tag = ENG level = 1 location = rochester }
 	polders = { tag = MKL level = 1 location = rostock }
-	polders = { tag = HOL level = 1 location = rotterdam }
 	polders = { tag = FER level = 1 location = rovigo }
 	polders = { tag = AQN level = 1 location = royan }
 	polders = { tag = WOL level = 1 location = rugen }

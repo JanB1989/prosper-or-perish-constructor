@@ -462,6 +462,18 @@ pp_wb_cap_irrigation_systems = {
 		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
 		value = modifier:pp_wb_levels_incamisana
 	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_RIVER_NAVIGATION_WORKS"
+		value = modifier:pp_wb_levels_river_navigation_works
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_CANAL_LOCK_WORKS"
+		value = modifier:pp_wb_levels_canal_lock_works
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_NILE_NAVIGATION_WORKS"
+		value = modifier:pp_wb_levels_nile_navigation_works
+	}
 	min = 0
 }
 
@@ -474,6 +486,18 @@ pp_wb_cap_khmer_baray = {
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
 		value = modifier:pp_wb_levels_incamisana
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_RIVER_NAVIGATION_WORKS"
+		value = modifier:pp_wb_levels_river_navigation_works
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_CANAL_LOCK_WORKS"
+		value = modifier:pp_wb_levels_canal_lock_works
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_NILE_NAVIGATION_WORKS"
+		value = modifier:pp_wb_levels_nile_navigation_works
 	}
 	min = 0
 }
@@ -488,7 +512,97 @@ pp_wb_cap_incamisana = {
 		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
 		value = modifier:pp_wb_levels_khmer_baray
 	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_RIVER_NAVIGATION_WORKS"
+		value = modifier:pp_wb_levels_river_navigation_works
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_CANAL_LOCK_WORKS"
+		value = modifier:pp_wb_levels_canal_lock_works
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_NILE_NAVIGATION_WORKS"
+		value = modifier:pp_wb_levels_nile_navigation_works
+	}
 	min = 0
+}
+
+pp_wb_cap_river_navigation_works = {
+	value = pp_wb_cap_irrigation_systems_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
+		value = modifier:pp_wb_levels_irrigation_systems
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
+		value = modifier:pp_wb_levels_khmer_baray
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
+		value = modifier:pp_wb_levels_incamisana
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_CANAL_LOCK_WORKS"
+		value = modifier:pp_wb_levels_canal_lock_works
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_NILE_NAVIGATION_WORKS"
+		value = modifier:pp_wb_levels_nile_navigation_works
+	}
+	min = 0
+	max = 1
+}
+
+pp_wb_cap_canal_lock_works = {
+	value = pp_wb_cap_irrigation_systems_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
+		value = modifier:pp_wb_levels_irrigation_systems
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
+		value = modifier:pp_wb_levels_khmer_baray
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
+		value = modifier:pp_wb_levels_incamisana
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_RIVER_NAVIGATION_WORKS"
+		value = modifier:pp_wb_levels_river_navigation_works
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_NILE_NAVIGATION_WORKS"
+		value = modifier:pp_wb_levels_nile_navigation_works
+	}
+	min = 0
+	max = 1
+}
+
+pp_wb_cap_nile_navigation_works = {
+	value = pp_wb_cap_irrigation_systems_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATION_SYSTEMS"
+		value = modifier:pp_wb_levels_irrigation_systems
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_KHMER_BARAY"
+		value = modifier:pp_wb_levels_khmer_baray
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_INCAMISANA"
+		value = modifier:pp_wb_levels_incamisana
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_RIVER_NAVIGATION_WORKS"
+		value = modifier:pp_wb_levels_river_navigation_works
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_CANAL_LOCK_WORKS"
+		value = modifier:pp_wb_levels_canal_lock_works
+	}
+	min = 0
+	max = 1
 }
 
 pp_wb_cap_irrigated_fields_shared = {
@@ -742,7 +856,7 @@ pp_wb_cap_irrigated_fields_shared = {
 		}
 	}
 	if = {
-		limit = { has_location_modifier = river_flowing_through_5 }
+		limit = { pp_navigation_river_level_5 = yes }
 		add = {
 			desc = "BUILDING_LEVEL_WB_RIVER_LEVEL_5"
 			value = 8
@@ -771,6 +885,14 @@ pp_wb_cap_irrigated_fields = {
 		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_CANAL_NETWORK"
 		value = modifier:pp_wb_levels_jiangnan_canal_network
 	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_CAOYUN_CANAL_OFFICE"
+		value = modifier:pp_wb_levels_caoyun_canal_office
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_DELTA_WATERWAY_WORKS"
+		value = modifier:pp_wb_levels_delta_waterway_works
+	}
 	min = 0
 }
 
@@ -780,7 +902,51 @@ pp_wb_cap_jiangnan_canal_network = {
 		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATED_FIELDS"
 		value = modifier:pp_wb_levels_irrigated_fields
 	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_CAOYUN_CANAL_OFFICE"
+		value = modifier:pp_wb_levels_caoyun_canal_office
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_DELTA_WATERWAY_WORKS"
+		value = modifier:pp_wb_levels_delta_waterway_works
+	}
 	min = 0
+}
+
+pp_wb_cap_caoyun_canal_office = {
+	value = pp_wb_cap_irrigated_fields_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATED_FIELDS"
+		value = modifier:pp_wb_levels_irrigated_fields
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_CANAL_NETWORK"
+		value = modifier:pp_wb_levels_jiangnan_canal_network
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_DELTA_WATERWAY_WORKS"
+		value = modifier:pp_wb_levels_delta_waterway_works
+	}
+	min = 0
+	max = 1
+}
+
+pp_wb_cap_delta_waterway_works = {
+	value = pp_wb_cap_irrigated_fields_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_IRRIGATED_FIELDS"
+		value = modifier:pp_wb_levels_irrigated_fields
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_CANAL_NETWORK"
+		value = modifier:pp_wb_levels_jiangnan_canal_network
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_CAOYUN_CANAL_OFFICE"
+		value = modifier:pp_wb_levels_caoyun_canal_office
+	}
+	min = 0
+	max = 1
 }
 
 pp_wb_cap_bund = {
@@ -1156,7 +1322,7 @@ pp_wb_cap_field_drainage = {
 	max = 20
 }
 
-pp_wb_cap_polders = {
+pp_wb_cap_polders_shared = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_BASE"
 		value = 1
@@ -1169,6 +1335,25 @@ pp_wb_cap_polders = {
 	floor = yes
 	min = 0
 	max = 20
+}
+
+pp_wb_cap_polders = {
+	value = pp_wb_cap_polders_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_LOWLAND_SLUICE_WORKS"
+		value = modifier:pp_wb_levels_lowland_sluice_works
+	}
+	min = 0
+}
+
+pp_wb_cap_lowland_sluice_works = {
+	value = pp_wb_cap_polders_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_POLDERS"
+		value = modifier:pp_wb_levels_polders
+	}
+	min = 0
+	max = 1
 }
 
 pp_wb_cap_qanats = {

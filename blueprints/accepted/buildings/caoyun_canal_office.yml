@@ -1,0 +1,55 @@
+version: 2
+tag: caoyun_canal_office
+footprint: capacity_source
+building:
+  key: caoyun_canal_office
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_caoyun_canal_office_maintenance
+  possible_production_methods: []
+  body: |
+    is_foreign = no
+    max_levels = pp_wb_cap_caoyun_canal_office
+    increase_per_level_cost = 0.75
+    pop_type = laborers
+    employment_size = 0
+    price = pp_caoyun_canal_office_price
+    category = infrastructure_category
+    custom_tags = { pp_food_security_priority pp_water_control_priority }
+    icon = caoyun_canal_office
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = 540
+    construction_demand = town_building_construction
+    location_potential = {
+      OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_highland_monsoon climate = ha1300_climate_continental_monsoon climate = ha1300_climate_savanna }
+      OR = { topography = flatland topography = ha1300_topo_floodplains topography = wetlands topography = ha1300_topo_deltas topography = ha1300_topo_valleys topography = hills topography = plateau }
+      OR = { this = location:baini this = location:baishan this = location:bishan this = location:boluo this = location:cangwu this = location:changan this = location:changsha this = location:chenxi this = location:chongshan this = location:donge this = location:dongguan this = location:donglan this = location:dongliu this = location:duyang this = location:fancheng this = location:fengcheng_fengcheng this = location:fengchuan this = location:fengdu this = location:fugu this = location:fuyang_hangzhou this = location:fuzhou_sichuan this = location:gaoyao this = location:guanghua this = location:guiping this = location:guishan this = location:guzhen this = location:haining this = location:haiyang this = location:hancheng this = location:hanchuan this = location:hanyang this = location:hengshan this = location:hezhou_he this = location:houguan this = location:huangmei this = location:jiande this = location:jiangan this = location:jiangjin this = location:jiangling this = location:jiangxia this = location:jiangyin this = location:jianli this = location:jingling this = location:jishui this = location:jiyang this = location:laibin this = location:langzhong this = location:lijin this = location:linhuai this = location:liucheng this = location:liujiang this = location:longping_pingle this = location:lukou this = location:luodian this = location:luoxiu this = location:luzhou this = location:madi_yuanling this = location:nadi this = location:nanchong this = location:nanhai this = location:ningpu this = location:pinglu this = location:pingnan this = location:puyang this = location:qianjiang_binzhou this = location:qihe this = location:qingjian this = location:qingyuan this = location:qiyang this = location:qujiang_guangan this = location:ruicheng this = location:shipai this = location:shishou this = location:shizhao this = location:shouchun this = location:shouzhang this = location:songzi this = location:taihe_taihe this = location:tam_dai this = location:thang_long this = location:thien_truong this = location:wanan this = location:wanzhou this = location:wuchang this = location:wudang this = location:wuhe this = location:wujiang_bozhou this = location:wuwei this = location:xiacai this = location:xiangru this = location:xincheng this = location:xincheng_xincheng this = location:xindi this = location:xingan_linjiang this = location:xinhui this = location:xuanhua_nanning this = location:yanchang this = location:yanci this = location:yangshou this = location:yicheng this = location:yichuan this = location:yiling this = location:yingde this = location:yingshang this = location:yiyang_changsha this = location:yongchuan this = location:yongxing_xingguo this = location:yuanling this = location:yuanqu this = location:yusha this = location:zhaohua this = location:zongyang }
+    }
+    raw_modifier = {
+      local_population_capacity = 2.23
+      pp_wb_levels_caoyun_canal_office = 1
+    }
+    on_built = { custom_tooltip = pp_navigation_upgrade_tt hidden_effect = { location = { pp_navigation_refresh_site = yes } } }
+    on_destroyed = { hidden_effect = { location = { pp_navigation_restore_site = yes } } }
+    forbidden_for_estates = yes
+    ai_forbid_shutdown = yes
+localization:
+  entries:
+    caoyun_canal_office: Caoyun Canal Office
+    caoyun_canal_office_desc: Canal officials, dredging crews and sluice keepers maintain waterways used by the grain transport system. Completing the works improves the connected river routes. Shares the local allowance for irrigated fields. At a full allowance, replace an existing level to make room.
+    caoyun_canal_office_slot_0: Maintenance
+    pp_caoyun_canal_office_maintenance: Channel and Sluice Keepers
+    pp_caoyun_canal_office_price: Caoyun Canal Office Cost
+prices:
+- key: pp_caoyun_canal_office_price
+  body: '{ gold = 650 }'
+icon:
+  source_png: ../assets/icons/caoyun_canal_office.png
+  output_dds: caoyun_canal_office.dds
+  size: 512

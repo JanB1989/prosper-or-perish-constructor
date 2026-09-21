@@ -1,0 +1,67 @@
+﻿starting_technology_level = 1
+government = {
+	type = tribe
+	heir_selection = tribal_oldest_male
+	
+	centralization_vs_decentralization = 80
+	traditionalist_vs_innovative = -70
+	spiritualist_vs_humanist = -60
+	aristocracy_vs_plutocracy = -80
+	serfdom_vs_free_subjects = 50
+	mercantilism_vs_free_trade = 50
+	belligerent_vs_conciliatory = 100
+	quality_vs_quantity = -75
+	offensive_vs_defensive = 50
+	land_vs_naval = -90
+	capital_economy_vs_traditional_economy = 100
+	individualism_vs_communalism = 60
+	outward_vs_inward = 50
+	parliament = {
+		parliament_type = assembly
+	}
+
+	laws = {
+		marriage_law = polygyny
+		heir_religion_law = heir_same_religion
+	}
+	
+	privilege = {
+		#Nobles
+		nobles_land_rights
+		tribal_autonomy
+
+		#Clergy
+		clerical_advisory_council
+		promote_cultural_unity
+
+		#Burghers
+		market_fairs
+
+		#Commoners
+		peasants_autonomous_villages
+		communal_lands
+		allow_hunting
+		partial_yield
+		peasants_free_peasantry
+		
+		tribes_tribal_levies
+		tribes_allow_gatherings
+	}
+}
+
+discovered_areas = {
+	pp_nav_east_coast_region_area pp_nav_great_plains_region_area
+
+	#east_coast_region
+	illinois_area
+	wisconsin_area
+	indiana_area
+	kentucky_area
+	tennessee_area
+	#great_plains_region
+	missouri_area
+	iowa_area
+	arkansas_area
+	central_plains_area
+}
+

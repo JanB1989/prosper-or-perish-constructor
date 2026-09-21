@@ -98,6 +98,7 @@ building_pipeline = "../eu5-building-pipeline"
 orchestrator = "../eu5-mod-orchestrator"
 
 [worldbuilder]
+navigation_config = "config/river_navigation.json"
 # World Builder handover (EU5WorldBuilder `worldbuilder handover`); the constructor consumes this contract only.
 handover = "../EU5WorldBuilder/artifacts/handover/latest"
 # World Builder geography export (`worldbuilder geography-test` build), synced into the mod.

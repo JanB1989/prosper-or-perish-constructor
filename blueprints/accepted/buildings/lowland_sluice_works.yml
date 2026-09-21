@@ -1,0 +1,60 @@
+version: 2
+tag: lowland_sluice_works
+footprint: capacity_source
+building:
+  key: lowland_sluice_works
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_lowland_sluice_works_maintenance
+  possible_production_methods: []
+  body: |
+    is_foreign = no
+    max_levels = pp_wb_cap_lowland_sluice_works
+    increase_per_level_cost = 0.75
+    pop_type = laborers
+    employment_size = 0
+    price = pp_lowland_sluice_works_price
+    category = infrastructure_category
+    custom_tags = { pp_food_security_priority pp_water_control_priority }
+    icon = lowland_sluice_works
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = 540
+    construction_demand = town_building_construction
+    location_potential = {
+      OR = {
+        AND = {
+          has_location_modifier = pp_wb_coastal
+          OR = { topography = flatland topography = wetlands topography = ha1300_topo_deltas topography = ha1300_topo_floodplains topography = hills topography = ha1300_topo_valleys }
+        }
+        OR = { topography = wetlands topography = ha1300_topo_deltas }
+      }
+      OR = { this = location:london this = location:pont_audemer this = location:rotterdam }
+    }
+    raw_modifier = {
+      local_population_capacity = 2.2
+      pp_wb_levels_lowland_sluice_works = 1
+    }
+    on_built = { custom_tooltip = pp_navigation_upgrade_tt hidden_effect = { location = { pp_navigation_refresh_site = yes } } }
+    on_destroyed = { hidden_effect = { location = { pp_navigation_restore_site = yes } } }
+    forbidden_for_estates = yes
+    ai_forbid_shutdown = yes
+localization:
+  entries:
+    lowland_sluice_works: Lowland Sluice Works
+    lowland_sluice_works_desc: Sluice keepers and water boards coordinate drainage and passage through the lowland waterways. Completing the works improves the connected river routes. Shares the local allowance for polders. At a full allowance, replace an existing level to make room.
+    lowland_sluice_works_slot_0: Maintenance
+    pp_lowland_sluice_works_maintenance: Channel and Sluice Keepers
+    pp_lowland_sluice_works_price: Lowland Sluice Works Cost
+prices:
+- key: pp_lowland_sluice_works_price
+  body: '{ gold = 550 }'
+icon:
+  source_png: ../assets/icons/lowland_sluice_works.png
+  output_dds: lowland_sluice_works.dds
+  size: 512

@@ -1,0 +1,39 @@
+﻿# >>> eu5-building-pipeline:nile_navigation_works:building
+nile_navigation_works = {
+is_foreign = no
+max_levels = pp_wb_cap_nile_navigation_works
+increase_per_level_cost = 0.56
+pop_type = laborers
+employment_size = 0
+price = pp_nile_navigation_works_price
+category = infrastructure_category
+custom_tags = { pp_food_security_priority pp_water_control_priority }
+icon = nile_navigation_works
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+build_time = 540
+construction_demand = town_building_construction
+location_potential = {
+  OR = {
+    OR = { pp_navigation_river_level_1 = yes pp_navigation_river_level_2 = yes pp_navigation_river_level_3 = yes pp_navigation_river_level_4 = yes pp_navigation_river_level_5 = yes }
+    is_adjacent_to_lake = yes
+    OR = { topography = ha1300_topo_deltas topography = ha1300_topo_floodplains topography = ha1300_topo_valleys }
+    AND = {
+      has_location_modifier = pp_wb_coastal
+      OR = { topography = flatland topography = wetlands }
+    }
+  }
+  OR = { this = location:akhmim this = location:asyut this = location:atfih this = location:el_bahnasa this = location:el_buwit this = location:esna this = location:fuwa this = location:hiw this = location:menouf this = location:qalyub this = location:sharuna this = location:tahna }
+}
+raw_modifier = {
+  local_population_capacity = 1.6
+  pp_wb_levels_nile_navigation_works = 1
+}
+on_built = { custom_tooltip = pp_navigation_upgrade_tt hidden_effect = { location = { pp_navigation_refresh_site = yes } } }
+on_destroyed = { hidden_effect = { location = { pp_navigation_restore_site = yes } } }
+forbidden_for_estates = yes
+ai_forbid_shutdown = yes
+}
+# <<< eu5-building-pipeline:nile_navigation_works:building

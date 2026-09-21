@@ -1,0 +1,135 @@
+{
+  "enabled": true,
+  "family": "irrigation_systems",
+  "maximum_levels_per_site": 1,
+  "starting_levels_per_site": 1,
+  "construction_days": 540,
+  "upkeep": {
+    "lumber": 0.04,
+    "tools": 0.02,
+    "stone": 0.01
+  },
+  "building_types": {
+    "river_navigation_works": {
+      "name": "River Navigation Works",
+      "gold": 400,
+      "description": "Maintained channels, towpaths and landing places support navigation and the surrounding cultivated land. Completing the works improves the connected river routes."
+    },
+    "canal_lock_works": {
+      "name": "Canal and Lock Works",
+      "gold": 750,
+      "description": "Locks, sluices and bypass channels improve difficult waterway connections. Completing the works improves the connected river routes."
+    },
+    "caoyun_canal_office": {
+      "name": "Caoyun Canal Office",
+      "gold": 650,
+      "bounds": [
+        105,
+        20,
+        123,
+        41
+      ],
+      "description": "Canal officials, dredging crews and sluice keepers maintain waterways used by the grain transport system. Completing the works improves the connected river routes.",
+      "family": "irrigated_fields"
+    },
+    "lowland_sluice_works": {
+      "name": "Lowland Sluice Works",
+      "gold": 550,
+      "bounds": [
+        -1,
+        49,
+        10,
+        55
+      ],
+      "description": "Sluice keepers and water boards coordinate drainage and passage through the lowland waterways. Completing the works improves the connected river routes.",
+      "family": "polders"
+    },
+    "nile_navigation_works": {
+      "name": "Nile Canal and Basin Works",
+      "gold": 500,
+      "bounds": [
+        28,
+        24,
+        34,
+        32
+      ],
+      "description": "Canal keepers maintain the channels connecting the Nile, cultivated basins and river landings. Completing the works improves the connected river routes. Cataracts remain impassable."
+    },
+    "delta_waterway_works": {
+      "name": "Delta Waterway Works",
+      "gold": 500,
+      "bounds": [
+        85,
+        19,
+        108,
+        26
+      ],
+      "description": "Dredged distributaries, landing channels and embankments sustain transport through the delta. Completing the works improves the connected river routes.",
+      "family": "irrigated_fields"
+    }
+  },
+  "starting_evidence": [
+    {
+      "id": "grand_canal_yuan",
+      "bounds": [
+        116,
+        29,
+        122,
+        40
+      ],
+      "building": "caoyun_canal_office",
+      "source": "https://whc.unesco.org/en/list/1443",
+      "confidence": "regional reconstruction",
+      "note": "Regional allocation of surviving irrigation improvement levels to maintained grain-navigation infrastructure; individual buildings are inferred, not surveyed."
+    },
+    {
+      "id": "nile_basin_channels",
+      "bounds": [
+        29.5,
+        24,
+        32.8,
+        31.8
+      ],
+      "building": "nile_navigation_works",
+      "source": "https://resources.metmuseum.org/resources/metpublications/pdf/An_Egyptian_Bestiary_The_Metropolitan_Museum_of_Art_Bulletin_v_52_no_4_Spring_1995.pdf",
+      "confidence": "long-lived system inference",
+      "note": "Basin irrigation and channel maintenance, not modern barrages or an open cataract route."
+    },
+    {
+      "id": "medieval_delfland",
+      "bounds": [
+        4.0,
+        51.7,
+        4.8,
+        52.3
+      ],
+      "building": "lowland_sluice_works",
+      "source": "https://www.hhdelfland.nl/over-ons/historie-erfgoed/historie/",
+      "confidence": "documented institution; inferred local works",
+      "note": "Water-board authority documented from 1289. No industrial canals or steam drainage."
+    }
+  ],
+  "regional_priority": [
+    "caoyun_canal_office",
+    "nile_navigation_works",
+    "lowland_sluice_works",
+    "delta_waterway_works"
+  ],
+  "notes": [
+    "Regional variants replace existing Irrigation Systems levels one-for-one; identical capacity per level.",
+    "Only documented regional starting envelopes receive automatic placement, and only if an eligible existing family level is available.",
+    "Physical conversion thresholds and road costs live in the World Builder navigation configuration and handover."
+  ],
+  "advance_unlocks": {
+    "river_navigation_works": "road_building",
+    "canal_lock_works": "pound_lock_canals_advance"
+  },
+  "existing_building_links": {
+    "jiangnan_canal_network": {
+      "site_buildings": [
+        "caoyun_canal_office"
+      ],
+      "gold": 600
+    }
+  }
+}

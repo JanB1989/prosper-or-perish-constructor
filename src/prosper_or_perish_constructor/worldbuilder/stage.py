@@ -74,8 +74,8 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     demand = wb_start.improvement_demand(contract, start_cfg, vanilla_root(repo, project), mod_root) if start_cfg.fill_improvements_to_pops else None
     cultures = wb_start.dominant_cultures(wb_start.load_pops(vanilla_root(repo, project)))
     report["setup"] = wb_buildings.write_setup(contract, cfg, caps, wb_start.load_owners(vanilla_root(repo, project), mod_root), mod_root, demand=demand, cultures=cultures)
-    report["navigation"] = navigation.write_runtime(repo, cfg, contract, mod_root, vanilla_root(repo, project))
     report["start_placement"] = wb_start.apply(repo=repo, project=project, mod_root=mod_root, vanilla_root=vanilla_root(repo, project), cfg=cfg, contract=contract, caps=caps, locations=current)
+    report["navigation"] = navigation.write_runtime(repo, cfg, contract, mod_root, vanilla_root(repo, project))
     development = wb_development.compute_vanilla_development(repo, project)
     (mod_root / wb_development.SETUP_RELATIVE_PATH).write_text("﻿" + wb_development.render_development_setup(development), encoding="utf-8", newline="\n")
     wb_development.write_development_export(development, repo / wb_development.EXPORT_RELATIVE_PATH)

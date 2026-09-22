@@ -241,7 +241,7 @@ def _forest_source_rows(
         _line("limit = { has_variable = pp_forest_base_capacity }", 3),
         _line("value = var:pp_forest_base_capacity", 3),
         _line("}", 2),
-        _line("else = { value = 0 }", 2),
+        _line("else = { value = pp_forest_base_capacity_value }", 2),
         _line("}", 1),
         _line("if = {", 1),
         _line("limit = { has_variable = pp_forest_base_capacity }", 2),

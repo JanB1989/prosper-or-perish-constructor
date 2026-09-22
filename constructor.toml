@@ -187,9 +187,10 @@ fill_improvements_to_pops = true      # starting improvement levels rise to thei
 peasant_work_share = 0.6              # share of a location's peasants that may staff rural buildings at start
 max_farm_levels_per_location = 6
 food_target_ratio = 1.1               # province food supply aimed for, relative to what the pops eat
-subsistence_food_per_1000_peasants = 1.0
+# Subsistence is read from NLocation.SUBSISTENCE_AGRICULTURE.
+subsistence_pop_types = ["peasants", "laborers", "slaves"]
 max_cookery_levels_per_location = 6
-max_market_levels_per_location = 3
+# Victuals limits come from the live import/export scripted values.
 laborer_conversion_share = 0.5        # share of a location's peasants that may become the cookeries' laborers
 [worldbuilder.start.processors]
 # raw material -> building placed at game start (its laborers are converted from local peasants); levels as before

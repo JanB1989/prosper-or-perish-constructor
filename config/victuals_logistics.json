@@ -1,0 +1,65 @@
+{
+  "import": {
+    "base": 1,
+    "development": 0.12,
+    "population": 0.025,
+    "harbor": 1.5,
+    "coast": 1,
+    "river_per_level": 0.3,
+    "navigable": 2,
+    "difficult": 0.5,
+    "maintained": 1,
+    "market_center": 2,
+    "rank": {
+      "town": 1,
+      "city": 2,
+      "megalopolis": 4
+    },
+    "food_rgo": 0,
+    "farmland": 0,
+    "maximum": 24
+  },
+  "export": {
+    "base": 1,
+    "development": 0.08,
+    "population": 0.003,
+    "harbor": 1.5,
+    "coast": 1.5,
+    "river_per_level": 0.4,
+    "navigable": 3,
+    "difficult": 0.75,
+    "maintained": 1.5,
+    "market_center": 2,
+    "rank": {
+      "rural_settlement": 1,
+      "town": 1
+    },
+    "food_rgo": 2,
+    "farmland": 1,
+    "maximum": 24
+  },
+  "food_rgos": [
+    "wheat",
+    "rice",
+    "millet",
+    "maize",
+    "legumes",
+    "potato",
+    "livestock",
+    "fruit",
+    "fish",
+    "wild_game",
+    "olives"
+  ],
+  "terrain_penalties": {
+    "mountains": -2,
+    "ha1300_topo_mountains": -2,
+    "hills": -1,
+    "ha1300_topo_hills": -1
+  },
+  "notes": [
+    "Capacity is logistical potential; starting imports and exports additionally require deficit/surplus and available workers.",
+    "River road state is read from the navigation map variables updated on completion and destruction.",
+    "All coefficients are balance choices; no location is hardcoded as an importer or exporter."
+  ]
+}

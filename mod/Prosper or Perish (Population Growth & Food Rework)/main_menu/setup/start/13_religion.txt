@@ -1,0 +1,171 @@
+# Generated: cap-checked starting buildings.
+religion_manager = {
+	catholic = {
+		timed_modifier = {
+			modifier = limited_indulgences_religion
+			start_date = 1000.1.1
+			date = 9999.1.1
+			size = 1
+		}
+		timed_modifier = {
+			modifier = tolerated_simony_religion
+			start_date = 313.1.1
+			date = 9999.1.1
+			size = 1
+		}
+		saint = {
+			character = eng_edward_the_confessor
+			country = ENG
+		}
+		saint = {
+			character = eng_edgar_the_peaceful
+			country = ENG
+		}
+		saint = {
+			character = eng_edward_the_martyr
+			country = ENG
+		}
+		saint = {
+			character = sco_david_i
+			country = SCO
+		}
+		saint = {
+			character = swe_erik_ix_the_holy
+			country = SWE
+		}
+		saint = {
+			character = dan_canute_iv
+			country = DAN
+		}
+		saint = {
+			character = ogk_heinrich_ii_liudolfinger
+			country = OGK
+		}
+		saint = {
+			character = fra_louis_ix_capet
+			country = FRA
+		}
+	}
+	orthodox = {
+		saint = {
+			character = kie_saint_olga
+			country = KIE
+		}
+		saint = {
+			character = kie_volodymyr_the_great_rurikovich
+			country = KIE
+		}
+		saint = {
+			character = kie_mstislav_rurikovich
+			country = KIE
+		}
+		saint = {
+			character = kie_igor_ii_rurikovich
+			country = KIE
+		}
+		saint = {
+			character = kie_mikhail_ii_vsevolodovich_rurikovich
+			country = KIE
+		}
+		saint = {
+			character = kie_vladimir_ii_rurikovich
+			country = KIE
+		}
+		saint = {
+			character = byz_ioannes_iii_vatatzes
+			country = BYZ
+		}
+		saint = {
+			character = ser_stefan_decanski
+			country = SER
+		}
+	}
+	miaphysite = {}
+}
+building_manager = {
+	seat_of_cardinal = {
+		tag = PAP
+		level = 1
+		location = avignon
+	}
+	seat_of_cardinal = {
+		tag = PAP
+		level = 1
+		location = rome
+	}
+	seat_of_cardinal = {
+		tag = PAP
+		level = 1
+		location = tivoli
+	}
+	seat_of_cardinal = {
+		tag = PAP
+		level = 1
+		location = palestrina
+	}
+	seat_of_cardinal = {
+		tag = PAP
+		level = 1
+		location = velletri
+	}
+	seat_of_cardinal = {
+		tag = FRA
+		level = 1
+		location = toulouse
+	}
+	seat_of_cardinal = {
+		tag = FRA
+		level = 1
+		location = bazas
+	}
+	seat_of_cardinal = {
+		tag = FRA
+		level = 1
+		location = lyon
+	}
+	seat_of_cardinal = {
+		tag = FRA
+		level = 1
+		location = langres
+	}
+	seat_of_cardinal = {
+		tag = FRA
+		level = 1
+		location = paris
+	}
+	seat_of_cardinal = {
+		tag = FRA
+		level = 1
+		location = bourges
+	}
+	seat_of_cardinal = {
+		tag = NRB
+		level = 1
+		location = narbonne
+	}
+	seat_of_cardinal = {
+		tag = AUX
+		level = 1
+		location = auxerre
+	}
+	seat_of_cardinal = {
+		tag = NAP
+		level = 1
+		location = manfredonia
+	}
+	seat_of_cardinal = {
+		tag = NAP
+		level = 1
+		location = naples
+	}
+	seat_of_cardinal = {
+		tag = PRO
+		level = 1
+		location = aix_en_provence
+	}
+	seat_of_cardinal = {
+		tag = CAS
+		level = 1
+		location = cartagena
+	}
+}

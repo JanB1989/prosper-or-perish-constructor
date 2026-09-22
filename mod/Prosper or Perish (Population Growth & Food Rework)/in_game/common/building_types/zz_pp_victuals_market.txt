@@ -2,9 +2,9 @@
 victuals_market = {
 is_foreign = no
 increase_per_level_cost = 0.10
-max_levels = victuals_market_max_level
+max_levels = victuals_market_export_max_level
 pop_type = nobles
-employment_size = 0.050
+employment_size = 0.001
 price = pp_victuals_market_price
 category = consumer_goods_category
 custom_tags = { pp_food_security_priority pp_food_distribution_priority }
@@ -33,7 +33,7 @@ unique_production_methods = {
 }
 
 raw_modifier = {
-	local_population_capacity = 0.03
+	local_population_capacity = 0.001
 }
 
 modifier = {

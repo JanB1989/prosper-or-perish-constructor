@@ -14,9 +14,9 @@ building:
   body: |2-
     is_foreign = no
     increase_per_level_cost = 0.13
-    max_levels = victuals_market_max_level
+    max_levels = victuals_market_export_max_level
     pop_type = nobles
-    employment_size = 0.050
+    employment_size = 0.001
     price = pp_victuals_market_price
     category = consumer_goods_category
     custom_tags = { pp_food_security_priority pp_food_distribution_priority }

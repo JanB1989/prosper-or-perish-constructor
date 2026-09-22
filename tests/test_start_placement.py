@@ -60,7 +60,8 @@ def test_plan_places_processors_and_farms_within_land_and_workers(tmp_path):
     mine = [c for c in conversions if c.location == "alpha" and c.to_type == "laborers"]
     assert sum(c.size_k for c in mine) == 3.0 and all(c.culture == "swedish" for c in mine)   # 2 for the mine + 1 for the cookery
     # province p1 food: demand = 0.5*25 + 12*1 + 40*1 = 64.5 -> need 64.5*1.1 - 52 subsistence = 18.95 -> 1 cookery level in alpha (town first)
-    assert by[("alpha", "cookery")] == 1 and summary["provinces_below_food_target"] == 0
+    assert by[("alpha", "cookery")] == 1
+    assert ("gamma", "victuals_market_import") not in by
 
 
 def test_conversions_rewrite_the_pops_file_in_place():

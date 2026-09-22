@@ -2,7 +2,7 @@
 victuals_market_import = {
 is_foreign = no
 increase_per_level_cost = 0.00
-max_levels = victuals_market_max_level
+max_levels = victuals_market_import_max_level
 pop_type = nobles
 employment_size = 0.001
 price = pp_victuals_market_import_price
@@ -24,9 +24,9 @@ construction_demand = victuals_market_construction
 unique_production_methods = {
   pp_province_food_from_market = {
     produced = province_food_purchase
-    victuals = 3.0
+    victuals = 2.0
     manual_labor_cost = 0.5
-    output = 9.0
+    output = 6.0
     category = building_maintenance
   }
 }
@@ -36,7 +36,7 @@ raw_modifier = {
 }
 
 modifier = {
-  local_monthly_food = 90.0
+  local_monthly_food = 60.0
 }
 }
 # <<< eu5-building-pipeline:victuals_market_import:building

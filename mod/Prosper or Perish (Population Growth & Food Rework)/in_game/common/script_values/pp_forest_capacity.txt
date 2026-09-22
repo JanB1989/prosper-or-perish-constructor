@@ -11,7 +11,7 @@ forest_capacity = {
 			limit = { has_variable = pp_forest_base_capacity }
 			value = var:pp_forest_base_capacity
 		}
-		else = { value = 0 }
+		else = { value = pp_forest_base_capacity_value }
 	}
 	if = {
 		limit = { has_variable = pp_forest_base_capacity }
@@ -103,7 +103,7 @@ forest_capacity_max_forest_village = {
 			limit = { has_variable = pp_forest_base_capacity }
 			value = var:pp_forest_base_capacity
 		}
-		else = { value = 0 }
+		else = { value = pp_forest_base_capacity_value }
 	}
 	if = {
 		limit = { has_variable = pp_forest_base_capacity }
@@ -184,7 +184,7 @@ forest_capacity_max_managed_forest_village = {
 			limit = { has_variable = pp_forest_base_capacity }
 			value = var:pp_forest_base_capacity
 		}
-		else = { value = 0 }
+		else = { value = pp_forest_base_capacity_value }
 	}
 	if = {
 		limit = { has_variable = pp_forest_base_capacity }
@@ -258,7 +258,7 @@ forest_capacity_max_lumber_mill = {
 			limit = { has_variable = pp_forest_base_capacity }
 			value = var:pp_forest_base_capacity
 		}
-		else = { value = 0 }
+		else = { value = pp_forest_base_capacity_value }
 	}
 	if = {
 		limit = { has_variable = pp_forest_base_capacity }
@@ -339,7 +339,7 @@ forest_capacity_max_water_sawmill = {
 			limit = { has_variable = pp_forest_base_capacity }
 			value = var:pp_forest_base_capacity
 		}
-		else = { value = 0 }
+		else = { value = pp_forest_base_capacity_value }
 	}
 	if = {
 		limit = { has_variable = pp_forest_base_capacity }
@@ -413,7 +413,7 @@ forest_capacity_max_lumber_mill_improved = {
 			limit = { has_variable = pp_forest_base_capacity }
 			value = var:pp_forest_base_capacity
 		}
-		else = { value = 0 }
+		else = { value = pp_forest_base_capacity_value }
 	}
 	if = {
 		limit = { has_variable = pp_forest_base_capacity }

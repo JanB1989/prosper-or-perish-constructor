@@ -1,22 +1,9 @@
-"""Game-start building placement from the capacity model.
+"""Setup I/O and staffing helpers for cap-constrained starting placement.
 
-Replaces the food startup compiler (savegame-driven planner + split_pop on_action) and the error-log driven
-setup corrections with one offline pass that only reads files the game reads:
-
-- capacity per location = attribute rows + placed improvement levels + rank flat (the same numbers the caps use);
-- pops per location from the vanilla pops setup (type, size, culture, religion);
-- owners from the countries setup, ranks from the cities setup, RGO and terrain from the location frame.
-
-Per location: the raw-material building of its RGO (``[worldbuilder.start.processors]``: mines, quarries,
-saltworks, lumber mills, fishing and forest villages), then a food farm where the farm gate passes (farming
-village, orchard, sheep farm). Farm levels = min(spare land, available peasants, per-location cap) where spare
-land = capacity - pops - reserve when ``keep_pops_within_capacity`` is on: a farm never pushes a location over
-its cap and over-capacity locations get no farms. Per province, the urban food chain (cookery, victuals
-market) is sized to the food the pops need beyond peasant subsistence.
-
-Buildings that employ laborers get them converted from the largest local peasant pop in a regenerated copy of
-the pops setup, keeping that pop's culture and religion (the old on_action split pops without culture or
-religion, which produced foreign pops). Everything is written as setup data, never as runtime effects.
+``apply`` runs the active parsed-game-data planner in ``start_simulation``.
+The small ``plan`` helper remains for compatibility with older callers; the
+constructor build does not use its simplified capacity or food estimates.
+Population conversions preserve each source pop's culture and religion.
 """
 
 from __future__ import annotations
@@ -221,11 +208,12 @@ def _cities_text(vanilla_root: Path, mod_root: Path) -> str:
 
 def load_ranks(vanilla_root: Path, mod_root: Path) -> dict[str, str]:
     """``locations = { tag = { rank = town town_setup = ... } }`` (one entry per line in vanilla)."""
-    ranks: dict[str, str] = {}
-    for tag, body in _SETUP_ENTRY.findall(_top_level_block(_cities_text(vanilla_root, mod_root), "locations")):
-        m = re.search(r"\brank\s*=\s*([a-z_]+)", body)
-        if m:
-            ranks[tag] = m.group(1)
+    from eu5gameparser.clausewitz.parser import parse_text
+    ranks = {}
+    for block in parse_text(_cities_text(vanilla_root, mod_root)).values('locations'):
+        for entry in block.entries:
+            rank=next(iter(entry.value.values('rank')),None)
+            if rank:ranks[entry.key]=str(rank)
     return ranks
 
 
@@ -361,9 +349,10 @@ class _Workers:
             self.existing[p.type] += p.size_k
 
     def levels(self, wanted: int, employment: float, pop_type: str) -> int:
+        if employment <= 0:return max(wanted,0)
         if pop_type == "peasants":
             return max(min(wanted, int(math.floor(self.work_k / employment + 1e-9))), 0)
-        available = self.existing.get(pop_type, 0.0) + self.convert_k
+        available = self.existing.get(pop_type, 0.0) + (max(0,min(self.convert_k,self.work_k)) if pop_type == "laborers" else 0)
         return max(min(wanted, int(math.floor(available / employment + 1e-9))), 0)
 
     def take(self, levels: int, employment: float, pop_type: str, location: str, conversions: list[PopConversion]) -> None:
@@ -374,14 +363,18 @@ class _Workers:
         from_existing = min(self.existing.get(pop_type, 0.0), needed)
         self.existing[pop_type] -= from_existing
         needed -= from_existing
-        if needed > 1e-9 and self.peasant_pops:
-            biggest = self.peasant_pops[0]
-            take = round(min(needed, self.convert_k, biggest.size_k * 0.9), 3)
-            if take > 0:
-                conversions.append(PopConversion(location, "peasants", pop_type, take, biggest.culture, biggest.religion))
+        if needed > 1e-9:
+            if pop_type != 'laborers':raise ValueError('Cannot manufacture specialist workers from peasants')
+            for source in self.peasant_pops:
+                take = round(min(needed, max(0,self.convert_k), max(0,self.work_k), source.size_k), 3)
+                if take <= 0:continue
+                conversions.append(PopConversion(location, 'peasants', pop_type, take, source.culture, source.religion))
                 self.convert_k -= take
                 self.work_k -= take
-                biggest.size_k -= take
+                source.size_k -= take
+                needed -= take
+                if needed < 0.0005:break
+            if needed >= 0.0005:raise ValueError('Placement exceeds convertible worker pool')
 
 
 def plan(*, cfg: WorldBuilderConfig, start: StartConfig, locations: pl.DataFrame, capacity_people: Mapping[str, float], pops: Mapping[str, list[Pop]],
@@ -463,7 +456,7 @@ def plan(*, cfg: WorldBuilderConfig, start: StartConfig, locations: pl.DataFrame
                 cookery_levels += levels
             if remaining > 0 and market_food > 0:
                 capital = candidates[0]
-                levels = min(start.max_market_levels_per_location, int(math.ceil(remaining / market_food)))
+                levels = pools[capital].levels(min(start.max_market_levels_per_location, int(math.ceil(remaining / market_food))), market_emp, market_pop)
                 if levels > 0:
                     placements.append(Placement(capital, owners[capital], "victuals_market_import", levels))
                     pools[capital].take(levels, market_emp, market_pop, capital, conversions)
@@ -524,7 +517,7 @@ def apply_conversions(text: str, conversions: list[PopConversion]) -> str:
             size = float(fields.get("size", "0") or 0)
             added: dict[str, float] = defaultdict(float)
             done: list[PopConversion] = []
-            for c in pending:
+            for c in list(pending):
                 if fields.get("type") == c.from_type and fields.get("culture") == c.culture and fields.get("religion") == c.religion:
                     take = min(c.size_k, size)
                     if take <= 0:
@@ -532,6 +525,9 @@ def apply_conversions(text: str, conversions: list[PopConversion]) -> str:
                     size -= take
                     added[c.to_type] += take
                     done.append(c)
+                    if take < c.size_k - 1e-9:
+                        from dataclasses import replace
+                        pending.append(replace(c,size_k=c.size_k-take))
             if done:
                 line = re.sub(r"size\s*=\s*[0-9.]+", f"size = {size:.3f}", line, count=1)
                 indent = re.match(r"[ \t]*", line).group(0)
@@ -555,33 +551,24 @@ def write_pops(vanilla_root: Path, mod_root: Path, conversions: list[PopConversi
         return {"written": False, "conversions": 0}
     header = f"{GENERATED}\n# Vanilla pops with peasants converted to the workers the game-start buildings employ (same culture and religion).\n"
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text("﻿" + header + apply_conversions(source.read_text(encoding="utf-8-sig"), conversions), encoding="utf-8", newline="\n")
+    original=source.read_text(encoding='utf-8-sig')
+    updated=apply_conversions(original,conversions)
+    before=parse_pops(original);after=parse_pops(updated)
+    expected=defaultdict(float)
+    for tag,groups in before.items():
+        for p in groups:expected[tag,p.type,p.culture,p.religion]+=p.size_k
+    for c in conversions:
+        expected[c.location,c.from_type,c.culture,c.religion]-=c.size_k
+        expected[c.location,c.to_type,c.culture,c.religion]+=c.size_k
+    actual=defaultdict(float)
+    for tag,groups in after.items():
+        for p in groups:actual[tag,p.type,p.culture,p.religion]+=p.size_k
+    mismatches=[key for key in expected.keys()|actual.keys() if not math.isclose(expected[key],actual[key],abs_tol=1e-7)]
+    if mismatches:raise ValueError(f'Starting worker conversions failed conservation: {mismatches[:10]}')
+    target.write_text('\ufeff'+header+updated,encoding='utf-8',newline='\n')
     return {"written": True, "conversions": len(conversions)}
 
 
 def apply(*, repo: Path, project: Path, mod_root: Path, vanilla_root: Path, cfg: WorldBuilderConfig, contract, caps: Mapping[str, Mapping[str, float]], locations: pl.DataFrame) -> dict[str, Any]:
-    start = StartConfig.from_raw(cfg.raw.get("start") if isinstance(cfg.raw.get("start"), dict) else None)
-    owners = load_owners(vanilla_root, mod_root)
-    ranks = load_ranks(vanilla_root, mod_root)
-    pops = load_pops(vanilla_root)
-    existing = load_existing_buildings(vanilla_root, mod_root)
-    food = load_pop_food_consumption(vanilla_root, mod_root)
-    keys = {*FARMS, "cookery", "victuals_market_import", *(str(s.get("building")) for s in start.processors.values()), *(str(s["coastal_building"]) for s in start.processors.values() if s.get("coastal_building"))}
-    numbers = {key: blueprint_numbers(repo, key) for key in keys}
-    improvements = improvement_people_by_location(mod_root, caps)
-    flat = {str(t): float(v) for t, v in contract.location_targets.select("location_tag", "attribute_flat_people").iter_rows()}
-    k = contract.people_per_development_point
-    dev = {str(t): float(v or 0.0) for t, v in contract.location_targets.select("location_tag", "development").iter_rows()} if k else {}
-    capacity = {tag: flat.get(tag, 0.0) + improvements.get(tag, 0.0) + float(start.rank_capacity_people.get(ranks.get(tag, ""), 0.0)) + k * dev.get(tag, 0.0) for tag in flat}
-    placements, conversions, table, summary = plan(cfg=cfg, start=start, locations=locations, capacity_people=capacity, pops=pops, owners=owners, ranks=ranks, existing=existing, food_consumption=food, numbers=numbers)
-    summary["setup_rows"] = write_start_setup(placements, mod_root)
-    summary["pops"] = write_pops(vanilla_root, mod_root, conversions)
-    for rel in LEGACY_FILES:
-        path = mod_root / rel
-        if path.is_file():
-            path.unlink()
-            summary.setdefault("legacy_removed", []).append(rel)
-    (repo / TABLE_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
-    table.write_csv(repo / TABLE_RELATIVE_PATH)
-    (repo / REPORT_RELATIVE_PATH).write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
-    return summary
+    from .start_simulation import run
+    return run(repo=repo,project=project,mod_root=mod_root,vanilla_root=vanilla_root,cfg=cfg,contract=contract,caps=caps,locations=locations)

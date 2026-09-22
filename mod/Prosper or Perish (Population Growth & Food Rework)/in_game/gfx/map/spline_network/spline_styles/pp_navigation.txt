@@ -1,0 +1,28 @@
+﻿pp_navigation = {
+ id = 4
+ spline = {
+  uv_scale = 0.5
+  width = 0.01
+  uv_rounding = yes
+  smooth_fade_distance = 10
+  smooth_iterations = 0
+  smooth_kernel_size = 1
+  tesselation_max_angle = 5.0
+  tesselation_min_distance = 0.05
+  tesselation_max_distance = 0.25
+  opacity_fade_distance = 0.625
+ }
+ effect = {
+  effectname = "SingleTexturePass"
+  shaderfile = "gfx/FX/road_gravel.shader"
+  texture_set = {
+   name = ""
+   texture = { file = "gfx/map/spline_network/road_dirt_diffuse.dds" }
+   texture = { file = "gfx/map/spline_network/road_dirt_normal.dds" srgb = no }
+   texture = { file = "gfx/map/spline_network/road_dirt_properties.dds" }
+   texture = { file = "gfx/map/spline_network/road_flatmap.dds" }
+  }
+ }
+ connections = none
+ heightmap = none
+}

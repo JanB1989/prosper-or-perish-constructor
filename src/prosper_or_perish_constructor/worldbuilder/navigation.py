@@ -13,7 +13,7 @@ import json
 import polars as pl
 import yaml
 
-from . import buildings
+from . import buildings, spline_network
 
 
 def inside(attrs, bounds):
@@ -201,6 +201,40 @@ def exchange_levels(levels,site):
     return count
 
 
+# Navigation roads draw with their own spline style: no road texture on the water and, because the
+# vanilla road vehicles only use the four vanilla styles, no trade wagons on the rivers.
+SPLINE_STYLE_ID = 4
+SPLINE_STYLE = f"""pp_navigation = {{
+ id = {SPLINE_STYLE_ID}
+ spline = {{
+  uv_scale = 0.5
+  width = 0.01
+  uv_rounding = yes
+  smooth_fade_distance = 10
+  smooth_iterations = 0
+  smooth_kernel_size = 1
+  tesselation_max_angle = 5.0
+  tesselation_min_distance = 0.05
+  tesselation_max_distance = 0.25
+  opacity_fade_distance = 0.625
+ }}
+ effect = {{
+  effectname = "SingleTexturePass"
+  shaderfile = "gfx/FX/road_gravel.shader"
+  texture_set = {{
+   name = ""
+   texture = {{ file = "gfx/map/spline_network/road_dirt_diffuse.dds" }}
+   texture = {{ file = "gfx/map/spline_network/road_dirt_normal.dds" srgb = no }}
+   texture = {{ file = "gfx/map/spline_network/road_dirt_properties.dds" }}
+   texture = {{ file = "gfx/map/spline_network/road_flatmap.dds" }}
+  }}
+ }}
+ connections = none
+ heightmap = none
+}}
+"""
+
+
 def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     state=cfg.raw.get('_navigation')
     if not state:return {'enabled':False}
@@ -221,9 +255,11 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
  construction_demand = build_gravel_road_demand
  maintenance_demand = maintain_gravel_road_demand
  color = map_paved_road
- spline_style_id = 1
+ spline_style_id = {SPLINE_STYLE_ID}
 }}''')
     write('in_game/common/road_types/pp_navigation.txt','\n'.join(roads)+'\n')
+    write('in_game/gfx/map/spline_network/spline_styles/pp_navigation.txt',SPLINE_STYLE)
+    spline_report=spline_network.write(mod_root,vanilla_root,[(e['from'],e['to']) for e in state['edges']])
     def edge_line(e,improved=False):
         kind='improved' if improved else e.get('cost_profile',e['state'])
         return f" location:{e['from']} = {{ add_road_to = {{ target = location:{e['to']} type = {road_names[kind]} }} }}"
@@ -286,7 +322,7 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     report={'enabled':True,'tiles':len(state['tiles']),'edges':len(state['edges']),'building_sites':len(state['sites']),
             'site_types':dict(Counter(s['building'] for s in state['sites'].values())),
             'initially_improved_sites':active_sites,'historical_candidate_sites':sum(s['start_levels']>0 for s in state['sites'].values()),
-            'water_tiles_without_capacity_site':state['without_site'],'river_effects_restored':len(lost), 'native_bank_pixels_preserved':state['manifest'].get('preserved_river_pixels',0), 'ocean_connected_passable_tiles':state['manifest']['ocean_connected_passable_tiles'], 'river_ports_changed':state['manifest']['ports_changed'],
+            'water_tiles_without_capacity_site':state['without_site'],'river_effects_restored':len(lost), 'native_bank_pixels_preserved':state['manifest'].get('preserved_river_pixels',0), 'ocean_connected_passable_tiles':state['manifest']['ocean_connected_passable_tiles'], 'river_ports_changed':state['manifest']['ports_changed'], 'spline_network':spline_report,
             'engine_limits':['Roads are undirected; water-to-land script direction is not one-way movement.',
                              'Fleet class cannot be restricted on sea tiles.',
                              'Destruction downgrade needs in-game verification of add_road_to replacing a higher road level.']}

@@ -8,7 +8,6 @@ on_game_start = {
 		pp_raise_zero_rgo_max_workers
 		# pp_reduce_specific_rgo
 		pp_precalculate_building_capacities
-		pp_apply_location_modifiers
 		pp_cull_setup_estate_buildings
 		pp_remove_invalid_fiber_and_stud_farms
 		pp_game_start_effect
@@ -177,17 +176,12 @@ pp_apply_rgo_static_modifiers = {
 pp_precalculate_building_capacities = {
 	effect = {
 		every_location_in_the_world = {
-			set_variable = { name = pp_farm_base_capacity value = 0 }
 			set_variable = { name = pp_fish_base_capacity value = 0 }
 			set_variable = { name = pp_forest_base_capacity value = 0 }
 			set_variable = { name = pp_fruit_orchard_eligible value = 0 }
 		}
 		every_location_in_the_world = {
 			limit = { is_ownable = yes }
-			set_variable = {
-				name = pp_farm_base_capacity
-				value = pp_farm_base_capacity_value
-			}
 			set_variable = {
 				name = pp_fish_base_capacity
 				value = pp_fish_base_capacity_value

@@ -20,8 +20,6 @@ location_potential = {
     OR = {
       has_river = yes
       is_adjacent_to_lake = yes
-      soil_quality = soil_barren
-      soil_quality = soil_permafrost
     }
   }
   OR = {

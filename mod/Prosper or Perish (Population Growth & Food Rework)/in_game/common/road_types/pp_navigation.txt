@@ -10,7 +10,7 @@
  construction_demand = build_gravel_road_demand
  maintenance_demand = maintain_gravel_road_demand
  color = map_paved_road
- spline_style_id = 1
+ spline_style_id = 4
 }
 pp_navigation_difficult = {
  level = 21
@@ -24,7 +24,7 @@ pp_navigation_difficult = {
  construction_demand = build_gravel_road_demand
  maintenance_demand = maintain_gravel_road_demand
  color = map_paved_road
- spline_style_id = 1
+ spline_style_id = 4
 }
 pp_navigation_improvable = {
  level = 22
@@ -38,7 +38,7 @@ pp_navigation_improvable = {
  construction_demand = build_gravel_road_demand
  maintenance_demand = maintain_gravel_road_demand
  color = map_paved_road
- spline_style_id = 1
+ spline_style_id = 4
 }
 pp_navigation_barrier = {
  level = 23
@@ -52,7 +52,7 @@ pp_navigation_barrier = {
  construction_demand = build_gravel_road_demand
  maintenance_demand = maintain_gravel_road_demand
  color = map_paved_road
- spline_style_id = 1
+ spline_style_id = 4
 }
 pp_navigation_improved = {
  level = 24
@@ -66,5 +66,5 @@ pp_navigation_improved = {
  construction_demand = build_gravel_road_demand
  maintenance_demand = maintain_gravel_road_demand
  color = map_paved_road
- spline_style_id = 1
+ spline_style_id = 4
 }

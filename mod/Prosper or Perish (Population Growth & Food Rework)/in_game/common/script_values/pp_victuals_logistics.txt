@@ -19,9 +19,7 @@ victuals_market_import_max_level = {
  if = { limit = { location_rank = location_rank:city } add = { desc = PP_VM_CAP_RANK value = 2 } }
  if = { limit = { location_rank = location_rank:megalopolis } add = { desc = PP_VM_CAP_RANK value = 4 } }
  if = { limit = { topography = mountains } add = { desc = PP_VM_CAP_TERRAIN value = -2 } }
- if = { limit = { topography = ha1300_topo_mountains } add = { desc = PP_VM_CAP_TERRAIN value = -2 } }
  if = { limit = { topography = hills } add = { desc = PP_VM_CAP_TERRAIN value = -1 } }
- if = { limit = { topography = ha1300_topo_hills } add = { desc = PP_VM_CAP_TERRAIN value = -1 } }
  min = 0
  max = 24
  floor = yes
@@ -47,9 +45,7 @@ victuals_market_export_max_level = {
  if = { limit = { OR = { raw_material = goods:wheat raw_material = goods:rice raw_material = goods:millet raw_material = goods:maize raw_material = goods:legumes raw_material = goods:potato raw_material = goods:livestock raw_material = goods:fruit raw_material = goods:fish raw_material = goods:wild_game raw_material = goods:olives } } add = { desc = PP_VM_CAP_RGO value = 2 } }
  if = { limit = { vegetation = farmland } add = { desc = PP_VM_CAP_FARMLAND value = 1 } }
  if = { limit = { topography = mountains } add = { desc = PP_VM_CAP_TERRAIN value = -2 } }
- if = { limit = { topography = ha1300_topo_mountains } add = { desc = PP_VM_CAP_TERRAIN value = -2 } }
  if = { limit = { topography = hills } add = { desc = PP_VM_CAP_TERRAIN value = -1 } }
- if = { limit = { topography = ha1300_topo_hills } add = { desc = PP_VM_CAP_TERRAIN value = -1 } }
  min = 0
  max = 24
  floor = yes

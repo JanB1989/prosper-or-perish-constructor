@@ -31,6 +31,19 @@ Every new river port has an audited coordinate on adjacent passable water and a 
 
 Small riverbank raster fragments may move to an adjoining bank within strict configured size/area limits. Larger banks retain the original location identity on both sides. All original land locations remain and lost adjacencies between different locations receive explicit crossings. Location bisections and all omissions are reported; the global map still needs in-game validation beyond the successful local prototype.
 
+## Road graphics
+
+The engine draws every road, including the navigation connections, from pre-baked strips in the binary
+`in_game/gfx/map/spline_network/spline_network.splnet`. The vanilla file has none for the new water
+locations, and every road redraw logged one `Could not find spline network strip` line per navigation
+connection (about 7,800 per redraw, hundreds of thousands per session). The build now writes a copy of
+the vanilla network with one straight strip per navigation connection (`worldbuilder/spline_network.py`;
+counts in `apply_report.json` under `navigation.spline_network`). Anchors are locations by their 1-based
+position in `definitions.txt`, placed at the unit-stack locator. The navigation road types use their own
+near-invisible spline style (id 4), so no road texture is drawn on the water and the vanilla trade
+wagons, which only use the four vanilla styles, stay off the rivers. The file is regenerated from the
+installed game on every build, so a game patch that changes the vanilla network is picked up by rebuilding.
+
 ## Inspecting results
 
 World Builder writes `artifacts/river_navigation/index.html` (clickable world map), `manifest.json`, `tiles.csv`, `edges.csv`, `shores.csv`, and the river-effect preservation tables. Constructor writes `artifacts/data/worldbuilder/navigation/sites.json`, `report.json`, and a regenerated `building_inventory.csv` containing every site, region, building type, actual starting levels and existing supporting works; starting replacements are counted in `artifacts/data/worldbuilder/apply_report.json`.

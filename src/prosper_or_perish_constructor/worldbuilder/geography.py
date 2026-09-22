@@ -113,7 +113,7 @@ def add_attribute_effect_rows(text: str) -> str:
 
 
 _POP_CELL = "\t\t\t\t\t\tsize = { 120 28 }"
-_POP_CELL_WIDE = "\t\t\t\t\t\tsize = { 185 28 }"
+_POP_CELL_WIDE = "\t\t\t\t\t\tsize = { 139 28 }"
 # Only one of the four gauges is ever visible; the cell is 28px tall and cannot afford to reserve
 # space for the hidden three.
 _POP_VBOX = "\t\t\t\t\t\t\t\tmargin_right = 8\n\t\t\t\t\t\t\t\tmargin_bottom = 3"

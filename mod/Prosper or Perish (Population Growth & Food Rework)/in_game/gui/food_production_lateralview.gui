@@ -244,7 +244,7 @@
 						item = {
 							widget = {
 								size = { 100% 51 }
-								food_production_province = {}
+								pp_food_production_province = {}
 								food_production_location = {}
 							}
 						}
@@ -257,6 +257,253 @@
 
 types FoodProductionTypes {
 	type food_production_province = widget {
+		visible = "[FoodProductionListItem.IsProvinceItem]"
+		layoutpolicy_horizontal = expanding
+		size = { 100% 51 }
+								
+		vbox = {
+			datacontext = "[FoodProductionListItem.AccessProvinceItem]"
+			ignoreinvisible = yes
+			margin = {0 1}
+			spacing = 3
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { -1 51 }
+				widget = {
+					size = { 100% 46 }
+					parentanchor = hcenter|bottom
+					using = bg_paper_card
+					using = bg_card_header_01_production
+					blockoverride "header_pattern_texture_density" {texture_density = 1.4}
+	
+					card_header_button_04 = {
+												
+						size = { 100% 100% }
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							title = "EXPAND_PROVINCE_FOOD_PRODUCTION_TOOLTIP"
+							on_action = "[FoodProvinceItem.Toggle]"
+						}
+
+						action_tooltip = {
+							click_type = right
+							click_mode = single
+							title = "TOGGLE_ALL"
+							on_action = "[FoodProductionLateralView.ToggleAllItems]"
+						}
+
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+					}
+			
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						ignoreinvisible = yes
+						spacing = 5
+						margin = { 10 0 }
+	
+						widget = {
+							using = layoutpolicy_expanding
+							hbox = {
+								spacing = 5
+								icon = {
+									size = {30 30}
+									using = province_texture
+									
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.6
+									}
+								}
+	
+								vbox = {
+									layoutpolicy_horizontal = expanding
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										text_single = {
+											maximumsize = { 220 -1 }
+											autoresize = yes
+											align = left|nobaseline
+											text = "[FoodProvinceItem.GetProvince.GetName]"
+																	
+											sort_by_left_fade_highlight = {
+												position = { -5 0 }
+												name = "name"
+											}
+										}
+										expand = {}
+									}
+	
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										text_single = {
+											maximumsize = { 220 -1 }
+											autoresize = yes
+											fontsize = 13
+											align = left|nobaseline
+											text = "[FoodProvinceItem.GetProvince.GetCapital.GetMarket.GetName]"
+										}
+										expand = {}
+									}
+								}
+														
+								expand = {}
+							}
+						}
+	
+						widget = {
+							layoutpolicy_vertical = expanding
+							size = { 80 -1 }
+	
+							text_single = {
+								maximumsize = {80 -1}
+								parentanchor = right|vcenter
+								align = nobaseline
+								raw_text = "[FoodProvinceItem.GetProvince.GetMonthlyFoodChange|+=]@food!"
+								datacontext = "[FoodProvinceItem.GetProvince]"
+								tooltipwidget = {
+									using = province_food_production
+								}
+	
+								sort_by_small_highlight = {
+									size = { 70 100% }
+									name = "food_balance"
+								}
+							}
+						}
+												
+						widget = {
+							layoutpolicy_vertical = expanding
+							size = { 110 -1 }
+							datacontext = "[FoodProvinceItem.GetProvince]"
+							tooltipwidget = {
+								using = province_food_tooltip
+							}
+							vbox = {
+								expand = {}
+								text_single = {
+									layoutpolicy_horizontal = expanding
+									maximumsize = {120 -1}
+									autoresize = yes
+									align = right|nobaseline
+									text = "game_concept_food_stockpile"
+									default_format = "#explanation_link"
+								}
+	
+								text_single = { ### STOCKPILE BALANCE
+									layoutpolicy_horizontal = expanding
+									raw_text = "[Add_float(FixedPointToFloat(Province.GetFoodFromMarket), FixedPointToFloat(Province.GetMonthlyFood))|+=2]"
+									align = right|nobaseline
+									fontsize = 13
+									minimumsize = { -1 20 }
+									maximumsize = { 120 -1 }
+	
+									sort_by_small_highlight = {
+										name = "food_stockpile_balance"
+										position = { 7 0 }
+									}
+								}
+								expand = {}
+							}
+						}
+	
+						hbox = {
+							spacing = 5
+							piechart = {
+								size = { 30 30 }
+								using = bg_circle
+								using = bg_circle_piechart
+								using = piechart_angles
+								datacontext = "[FoodProvinceItem.GetProvince]"
+								tooltipwidget = {
+									using = province_food_tooltip
+								}
+									
+								pieslice_no_highlight = {
+									texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+									value = "[FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24'))]"
+									color = { 1 1 1 1 }
+								}
+
+								pieslice_no_highlight = {
+									texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+									value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Province.GetCapital.GetModifierValueFixed('pp_province_food_storage_months'), '(CFixedPoint)24')))]"
+									color = { 1 1 1 1 }
+								}
+									
+								icon = {
+									size = { 61% 61% }
+									parentanchor = center
+									texture = "gfx/interface/icons/location_icons/food.dds"
+	
+									modify_texture = {
+										visible = "[Province.IsRiskOfStarving]"	
+										using = color_black_texture
+										alpha = 0.5
+										blend_mode = multiply
+									}
+							
+									modify_texture = {
+										visible = "[Province.IsRiskOfStarving]"	
+										using = color_yellow_texture
+										alpha = 0.6
+									}
+							
+									modify_texture = {
+										visible = "[Province.IsStarving]"															using = color_black_texture
+										alpha = 0.5
+										blend_mode = multiply
+									}
+							
+									modify_texture = {
+										visible = "[Province.IsStarving]"															using = color_black_texture
+										using = color_mid_red_texture
+									}
+								}
+														
+	
+								sort_by_small_highlight = {
+									size = { 120% 120% }
+									name = "food_stockpile_percent"
+								}
+							}
+	
+							icon = {
+								size = { 18 18 }
+								visible = "[Not(FoodProvinceItem.IsExpanded)]"
+								texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+								using = button_regular_icon_color
+								glow = {
+									name = "drop_shadow"
+									glow_radius = 3
+									color = {0.0 0.0 0.0 1.0}
+									alpha = 0.3
+								}
+							}
+							
+							icon = {
+								size = { 18 18 }
+								visible = "[FoodProvinceItem.IsExpanded]"
+								texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+								using = button_regular_icon_color
+								glow = {
+									name = "drop_shadow"
+									glow_radius = 3
+									color = {0.0 0.0 0.0 1.0}
+									alpha = 0.3
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	type pp_food_production_province = widget {
 		visible = "[FoodProductionListItem.IsProvinceItem]"
 		layoutpolicy_horizontal = expanding
 		size = { 100% 51 }

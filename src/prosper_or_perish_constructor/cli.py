@@ -959,6 +959,9 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
             flush=True,
         )
     _ensure_price_cost_modifier_assets(mod_root)
+    from prosper_or_perish_constructor import gui_compat
+
+    gui_compat.strip(mod_root)   # the food-storage compile counts its gauge lines per file
     food_storage_gui_result = compile_food_storage_gui(
         repo=repo,
         mod_root=mod_root,
@@ -983,6 +986,8 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
             f"{localization_status}.",
             flush=True,
         )
+    protected = gui_compat.protect(mod_root)
+    print(f"Protected GUI types from other mods' vanilla copies: {protected}.", flush=True)
     _ensure_constructor_text_boms(mod_root)
 
 

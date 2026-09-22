@@ -281,7 +281,7 @@
 							using = bg_market_card
 							using = bg_cabinet_card_frame
 
-							location_card = {
+							pp_location_card = {
 								blockoverride "location_card_margins" {
 									margin = {0 5}
 									margin_left = 5
@@ -687,7 +687,7 @@ select_menu_left = {
 						using = bg_market_card
 						using = bg_market_card_frame
 
-						location_card = {
+						pp_location_card = {
 							blockoverride "location_card_main_action_button"{
 								action_tooltip = {
 									click_type = left
@@ -734,7 +734,7 @@ select_menu_left = {
 						using = bg_market_card
 						using = bg_market_card_frame
 
-						location_card = {
+						pp_location_card = {
 							blockoverride "location_card_main_action_button"{
 								action_tooltip = {
 									click_type = left

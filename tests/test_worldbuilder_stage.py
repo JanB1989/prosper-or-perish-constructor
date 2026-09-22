@@ -276,7 +276,7 @@ def test_population_capacity_cell_bands_the_gauge_and_names_both_sides_of_the_ra
     out = wb_geography.merge_population_capacity(text)
 
     assert "\t\t\t\t\t\tsize = { 90 28 }\n" in out             # the other header cells keep their width
-    assert "\t\t\t\t\t\tsize = { 185 28 }\n" in out            # only the population cell widens
+    assert "\t\t\t\t\t\tsize = { 139 28 }\n" in out            # only the population cell widens
     assert "ignoreinvisible = yes" in out                       # the hidden gauges must not reserve rows
     assert "GetTotalPopulation]@population!" not in out
 

@@ -48,7 +48,7 @@ def write_map_modes(root,state):
     colors={1:'130 180 170',2:'100 170 130',3:'65 155 100',4:'35 130 70',5:'20 100 45'}
     for n in range(5,0,-1):
         categories.append((f'level_{n}',f'has_location_modifier = river_flowing_through_{n}',colors[n],f'River level {n}',f'Native river level {n}. River bonuses and river-dependent building limits use this level, including preserved banks of converted waterways.'))
-    colorscript=[];tooltips=[];loc=['l_english:', ' MAPMODE_PP_RIVER_NAVIGATION: "Rivers and Navigation"',' MAPMODE_PP_RIVER_NAVIGATION_DESC: "River levels, converted waterways, barriers and navigation works."']
+    colorscript=[];tooltips=[];loc=['l_english:', ' MAPMODE_PP_RIVER_NAVIGATION: "Rivers and Navigation"',' mapmode_pp_river_navigation_name: "Rivers and Navigation"',' MAPMODE_PP_RIVER_NAVIGATION_DESC: "River levels, converted waterways, barriers and navigation works."']
     for i,(key,condition,color,name,desc) in enumerate(categories):
         branch='if' if i==0 else 'else_if';lk='PP_NAV_MAP_'+key.upper()
         colorscript.append(f' {branch} = {{ limit = {{ {condition} }} value = rgb {{ {color} }} }}')

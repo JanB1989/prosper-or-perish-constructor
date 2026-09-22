@@ -23,7 +23,7 @@ location_potential = {
       OR = { province_definition = province_definition:suzhou_province province_definition = province_definition:songjiang_province province_definition = province_definition:jiaxing_province province_definition = province_definition:huzhou_province province_definition = province_definition:hangzhou_province province_definition = province_definition:changzhou_province province_definition = province_definition:zhenjiang_province }
       OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
       OR = { topography = ha1300_topo_deltas topography = wetlands topography = ha1300_topo_floodplains }
-      OR = { pp_navigation_river_level_1 = yes pp_navigation_river_level_2 = yes pp_navigation_river_level_3 = yes pp_navigation_river_level_4 = yes pp_navigation_river_level_5 = yes }
+      has_river = yes
     }
     AND = {
       OR = { dominant_culture ?= culture:wu_culture dominant_culture ?= culture:yue_wu_culture dominant_culture ?= culture:wuzhou_culture dominant_culture ?= culture:xuanzhou_culture dominant_culture ?= culture:jixi_culture }

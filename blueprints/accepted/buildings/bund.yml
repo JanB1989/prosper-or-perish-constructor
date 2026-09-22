@@ -25,7 +25,7 @@ building:
 
     location_potential = {
       OR = {
-        OR = { pp_navigation_river_level_1 = yes pp_navigation_river_level_2 = yes pp_navigation_river_level_3 = yes pp_navigation_river_level_4 = yes pp_navigation_river_level_5 = yes }
+        has_river = yes
         OR = { topography = ha1300_topo_floodplains topography = wetlands topography = ha1300_topo_deltas }
         OR = { vegetation = ha1300_veg_marsh vegetation = ha1300_veg_swamp }
         AND = {

@@ -26,7 +26,9 @@ EXCLUDED_PREFIXES = (
     ".metadata/",
     "README.md",
 )
-EXCLUDED_SUFFIXES = (".csv", "_manifest.json", "geography_compatibility.json", EXPORT_BUILD_FILE)
+# The export's assignment tables are .csv, but the map's ports and adjacencies are game files.
+MAP_DATA_PREFIX = "in_game/map_data/"
+EXCLUDED_SUFFIXES = (".csv","_manifest.json", "geography_compatibility.json", EXPORT_BUILD_FILE)
 LEGACY_ATTRIBUTE_FILES = (
     "in_game/common/climates/pp_climate_changes.txt",
     "in_game/common/vegetation/pp_vegetation_changes.txt",
@@ -45,7 +47,7 @@ def export_files(export_dir: Path) -> list[str]:
         raise ValueError(f"{export_dir / EXPORT_BUILD_FILE}: missing files map")
     keep: list[str] = []
     for rel in sorted(files):
-        if rel.startswith(EXCLUDED_PREFIXES) or rel.endswith(EXCLUDED_SUFFIXES):
+        if rel.startswith(EXCLUDED_PREFIXES) or (rel.endswith(EXCLUDED_SUFFIXES) and not rel.startswith(MAP_DATA_PREFIX)):
             continue
         keep.append(rel)
     return keep

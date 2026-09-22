@@ -324,7 +324,7 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
         if attribute not in attrs.columns:
             continue
         for tag, flag in zip(attrs["location_tag"].to_list(), attrs[attribute].to_list()):
-            if str(flag) == "True":
+            if str(flag).lower() == "true":   # the handover CSV writes lowercase booleans
                 per_location[str(tag)].append(key)
     # vanilla's hidden flat capacity by closeness to the equator: cancelled, capacity is farmland only
     blocks.append(render_block("TRY_REPLACE:location_closeness_to_equator_impact", {"game_data": "{ category = location }"}))
@@ -417,6 +417,46 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
         if path.is_file():
             path.unlink()
     return {"static_modifiers": len(blocks), "river_levels": len(river_blocks), "floor_lifts": lifted, "locations_with_modifiers": len(per_location)}
+
+
+GOODS_TRIGGERS_PATH = Path("in_game/common/scripted_triggers/goods_triggers.txt")
+SETUP_RGO_TRIGGERS_PATH = Path("in_game/common/scripted_triggers/pp_wb_setup_rgos.txt")
+# goods whose RGO potential tests vegetation only: vanilla's setup RGO must survive the World Builder vegetation
+SETUP_RGO_GOODS = {"lumber": "location_wants_lumber_trigger"}
+
+
+def write_setup_rgo_keepers(mod_root: Path, rgo_by_location: Mapping[str, str]) -> dict[str, int]:
+    """Keep the game's setup RGOs whose goods potential no longer matches the World Builder vegetation.
+
+    The game validates each setup RGO against its goods ``location_potential`` and drops the RGO when it fails
+    (``setup to have 'raw_material = lumber' but it failed the 'location_potential' trigger``). The design keeps
+    the game's RGOs, so ``pp_wb_setup_<good>_location`` lists those locations by tag (valid during setup) and is
+    ORed into the goods trigger that the compat patches wrote into goods_triggers.txt.
+    """
+    templates = (mod_root / "in_game/map_data/location_templates.txt").read_text(encoding="utf-8-sig")
+    vegetation = {m[1]: m[2] for m in re.finditer(r"(?m)^(\w+)\s*=\s*\{[^}\n]*?\bvegetation\s*=\s*(\w+)", templates)}
+    triggers_path = mod_root / GOODS_TRIGGERS_PATH
+    goods_triggers = triggers_path.read_text(encoding="utf-8-sig")
+    lines = [GENERATED]
+    kept: dict[str, int] = {}
+    for good, trigger in SETUP_RGO_GOODS.items():
+        body = re.search(rf"(?ms)^{trigger}\s*=\s*\{{\s*\n(\s*)OR\s*=\s*\{{\n(.*?)^\}}", goods_triggers)
+        if not body:
+            raise ValueError(f"{GOODS_TRIGGERS_PATH}: {trigger} is not a single top-level OR")
+        branch = f"pp_wb_setup_{good}_location = yes"
+        if branch not in body[2]:
+            goods_triggers = goods_triggers[:body.start(2)] + f"{body[1]}\t{branch}\n" + goods_triggers[body.start(2):]
+        allowed = set(re.findall(r"vegetation\s*=\s*(\w+)", body[2]))
+        tags = sorted(tag for tag, rgo in rgo_by_location.items() if rgo == good and vegetation.get(tag) not in allowed)
+        kept[good] = len(tags)
+        lines.append(f"pp_wb_setup_{good}_location = {{")
+        lines.append("\tOR = { " + " ".join(f"this = location:{t}" for t in tags) + " }" if tags else "\talways = no")
+        lines.append("}")
+    triggers_path.write_text("﻿" + goods_triggers, encoding="utf-8", newline="\n")
+    path = mod_root / SETUP_RGO_TRIGGERS_PATH
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("﻿" + "\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    return kept
 
 
 def write_setup_modifiers(per_location: Mapping[str, list[str]], mod_root: Path) -> int:

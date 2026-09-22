@@ -31,6 +31,21 @@ Every new river port has an audited coordinate on adjacent passable water and a 
 
 Small riverbank raster fragments may move to an adjoining bank within strict configured size/area limits. Larger banks retain the original location identity on both sides. All original land locations remain and lost adjacencies between different locations receive explicit crossings. Location bisections and all omissions are reported; the global map still needs in-game validation beyond the successful local prototype.
 
+## River ports
+
+The raster makes every bank of a navigable water tile coastal, but only a curated share become ports
+(World Builder `navigation_ports.py`, optional `river_ports` settings in `configs/geography_test.json`): every
+vanilla town, city and megalopolis on a passable tile, plus coverage ports so each tile of a river of level 3 or
+more has a port within three tiles, at most a third of the candidates (currently 649 of 2,406). Natural harbor
+suitability follows vanilla: every river port carries a value, a small tier by discharge plus a settlement
+bonus, capped at 0.5 (the value of Seville). Vanilla ports are never removed. The per-candidate table with
+scores is `EU5WorldBuilder/artifacts/river_navigation/port_selection.csv`. Banks without a port stay coastal to
+the engine, which logs "coastal but has no port setup" once at load.
+
+The geography sync copies `in_game/map_data/ports.csv` and `adjacencies.csv` from the export. Before
+2026-09-22 it skipped every `.csv`, so the game used the vanilla files: no river ports, and none of the 1,199
+land crossings over converted rivers, which left those land connections cut.
+
 ## Road graphics
 
 The engine draws every road, including the navigation connections, from pre-baked strips in the binary

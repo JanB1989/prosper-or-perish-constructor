@@ -202,8 +202,11 @@ def dominant_cultures(pops: Mapping[str, list[Pop]]) -> dict[str, str]:
 
 
 def load_owners(vanilla_root: Path, mod_root: Path) -> dict[str, str]:
-    """location tag -> owning country tag at game start: the countries setup's capital and own_* location lists.
-    add_pops_from_locations is not ownership; buildings placed there are rejected by the game."""
+    """location tag -> owning country tag at game start: the countries setup's own_* location lists.
+
+    Neither add_pops_from_locations nor ``capital`` is ownership: pop countries (tribes) and countries not present
+    at the start name a capital they do not own, and the game rejects setup buildings there (checked 2026-09-22:
+    all 50 capital-only locations with setup buildings were reported as not owned)."""
     from eu5gameparser.clausewitz.parser import parse_file
     from eu5gameparser.clausewitz.syntax import CList
 
@@ -223,9 +226,6 @@ def load_owners(vanilla_root: Path, mod_root: Path) -> dict[str, str]:
                 continue
             for country in entries(countries):
                 tag = str(country.key)
-                for value in country.value.values("capital"):
-                    if isinstance(value, str):
-                        owners.setdefault(value, tag)
                 for entry in country.value.entries:
                     # own_* lists are ownership; add_pops_from_locations only moves pops and must not count
                     if isinstance(entry.value, CList) and str(entry.key).startswith("own_"):

@@ -4185,25 +4185,28 @@ lateralview = {
 					}
 					# BOTTOM CONDITIONS
 					hbox = {
-        name = "ha1300_native_geography_row"
-        layoutpolicy_horizontal = expanding
-        maximumsize = { -1 40 }
-        background = {
-            using = color_dark_blue_texture
-            alpha = 1
-            modify_texture = {
-                using = bg_fade_vertical_up_mask_texture
-                blend_mode = alphamultiply
-                alpha = 1
-            }
-        }
-        hbox = {
-            margin = { 10 8 }
-            using = bg_paper_card
-            using = bg_cabinet_card_frame
-            hbox = {
-                spacing = 5
-                widget = {
+	name = "ha1300_native_geography_row"
+						layoutpolicy_horizontal = expanding
+						maximumsize = { -1 40 }
+						background = {
+							using = color_dark_blue_texture
+							alpha = 1
+
+							modify_texture = {
+								using = bg_fade_vertical_up_mask_texture
+								blend_mode = alphamultiply
+								alpha = 1
+							}
+						}
+						hbox = {
+							margin = {10 8}
+
+							using = bg_paper_card
+							using = bg_cabinet_card_frame
+
+							hbox = {
+	spacing = 5
+widget = {
         name = "ha1300_native_topography"
         size = { 30 30 }
         datacontext = "[LocationView.GetLocation.GetTopography]"
@@ -4578,10 +4581,561 @@ widget = {
         visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_HIGH'))]"
     }
 }
-            }
-        }
-        expand = {}
-    }
+### IS BLOCKADED by ice
+								widget = {
+									size = { 30 30 }
+									visible = "[LocationView.GetLocation.IsBlockadedByIce]"
+									tooltipwidget = {
+
+										ContextualTooltipType = {
+											blockoverride "title_text" {
+												datacontext = "[LocationView.GetLocation]"
+												text = "BLOCKADED_BY_ICE"
+											}
+
+											blockoverride "title_icon_texture" {
+												texture = "gfx/interface/icons/location_icons/coastal_blockade.dds"
+											}
+
+											blockoverride "concept_link" {
+												text = [blockade|E]
+											}
+
+											blockoverride "tooltip_content" {
+												TooltipStringPairList = {
+													textcontext = "[LocationView.GetLocation.GetBlockadeImpact]"
+												}
+											}
+										}
+									}
+									background =  {
+										texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]"
+									}
+									icon = {
+										size = { 30 30 }
+										texture = "gfx/interface/icons/location_icons/blockade_byice.dds"
+										using = overlay_color_light_blue
+										glow = {
+											name = "drop_shadow"
+											glow_radius = 3
+											color = {0.0 0.0 0.0 1.0}
+											alpha = 0.3
+										}
+									}
+								}
+}
+						}
+
+						widget = {
+							using = layoutpolicy_expanding
+
+							hbox = {
+								margin = { 5 5 }
+								spacing = 7
+								# NATURAL HABOUR
+								widget = {
+									visible = "[LocationView.GetLocation.IsCoastal]"
+									size = {28 28}
+
+									datacontext = "[LocationView.GetLocation]"
+									tooltipwidget = {
+										using = HarborCapacity_tooltip
+									}
+
+									piechart = {
+										using = bg_circle
+										size = { 100% 100% }
+										using = piechart_angles
+										using = bg_circle_piechart
+
+										icon = {
+											texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+											size = { 97% 97% }
+											parentanchor = center
+											color = { 0 0 0 1 }
+										}
+
+										pieslice_no_highlight = {
+											texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+											value = "[FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('harbor_suitability'))]"
+											color = { 0.3 0.8 0.3 1 }
+											alpha = 0.8
+										}
+
+										pieslice_no_highlight = {
+											texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+											value = "[Max_float(Subtract_float('(float)1.0', FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('harbor_suitability'))), '(float)0')]"
+											color = { 0.8 0.3 0.3 1 }
+											alpha = 0.8
+										}
+
+										icon = {
+											size = { 19 19 }
+											parentanchor = center
+											texture = "[GetConceptTexture('harbor_capacity')]"
+										}
+									}
+								}
+
+								
+
+								# SOUND TOLL
+								icon = {
+									size = { 30 30 }
+									visible = "[LocationView.GetLocation.IsSoundTollLand]"
+									texture = "[GetConceptTexture('sound_toll')]"
+									datacontext = "[LocationView.GetLocation.GetSoundTollController]"
+
+									tooltipwidget = {
+										using = SoundTollLocationTooltip
+									}
+								}
+
+								# VOLCANO
+								icon = {
+									size = { 30 30 }
+									visible = "[LocationView.GetLocation.HasVolcano]"
+									texture = "gfx/interface/topography/volcano.dds"
+
+									tooltipwidget = {
+										SimpleContextualTooltipType = {
+											blockoverride "title_icon" {
+												icon = {
+													using = tooltip_title_icon_size
+													texture = "gfx/interface/topography/volcano.dds"
+												}
+											}
+											lowpriotextcontext =  "VOLCANO_LOCATION_TOOLTIP"
+										}
+									}
+								}
+
+								# WINTER
+								icon = {
+									size = { 30 30 }
+									visible = "[LocationView.GetLocation.HasWinter]"
+									datacontext = "[LocationView.GetLocation]"
+									texture = "[GetWinterIcon(LocationView.GetLocation)]"
+
+									tooltipwidget = {
+										using = location_winter_tooltip
+									}
+								}
+
+								# EARTQUAKE
+								icon = {
+									size = { 30 30 }
+									visible = "[LocationView.GetLocation.HasEarthquakes]"
+									texture = "gfx/interface/topography/earthquake.dds"
+									tooltipwidget = {
+										SimpleContextualTooltipType = {
+											blockoverride "title_icon" {
+												icon = {
+													using = tooltip_title_icon_size
+													texture = "gfx/interface/topography/earthquake.dds"
+												}
+											}
+											lowpriotextcontext =  "EARTHQUAKE_LOCATION_TOOLTIP"
+										}
+									}
+								}
+
+								# RAISED LEVIES MODIFIERS
+								icon = {
+									size = { 30 30 }
+									visible = "[LocationView.GetLocation.HasRaisedLevies]"
+									texture = "[GetConceptTexture('army_levies')]"
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.3
+									}
+									tooltipwidget = {
+										SimpleContextualStringPairTooltipType = {
+											blockoverride "title_text" {
+												text = "STATIC_MODIFIER_NAME_raised_levies"
+											}
+											blockoverride "title_icon" {
+												icon = {
+													using = tooltip_title_icon_size
+													texture = "[GetConceptTexture('army_levies')]"
+												}
+											}
+											lowpriotextcontext =  "[LocationView.GetLocation.GetLeviesInfo]"
+										}
+									}
+								}
+
+								# HOLY SITES
+								icon = {
+									size = { 30 30 }
+									texture = "gfx/interface/icons/location_icons/holy_sites.dds"
+									visible = "[Not(IsDataModelEmpty(LocationView.GetLocation.GetHolySites))]"
+									datacontext = "[LocationView.GetLocation]"
+
+									tooltipwidget = {
+										SimpleContextualRowTooltipType = {
+											blockoverride "title_icon" {
+												icon = {
+													using = tooltip_title_icon_size
+													texture = "gfx/interface/icons/location_icons/holy_sites.dds"
+												}
+											}
+											blockoverride "concept_link" {
+												text = "[holy_sites|e]"
+											}
+
+											lowpriotextcontext = "[LocationView.GetLocation.GetHolySitesTooltip]"
+										}
+									}
+
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.3
+									}
+								}
+
+								# ATTRITION
+								piechart = {
+									size = {28 28}
+									using = piechart_angles
+									datacontext = "[LocationView.GetLocation]"
+									visible = "[And(GreaterThan_CFixedPoint(Location.GetAppliedAttritionPercentage, '(CFixedPoint)0'), HasAttritionIntelOn(Location.Self))]"
+									tooltipwidget = {
+										SimpleContextualStringPairTooltipType = {
+											blockoverride "title_icon" {
+												icon = {
+													using = tooltip_title_icon_size
+													texture = "gfx/interface/icons/location_icons/attrition.dds"
+												}
+											}
+											blockoverride "concept_link" {
+												text = "[attrition|e]"
+											}
+											lowpriotextcontext =  "[Location.GetAttritionDescription]"
+										}
+									}
+
+									icon = {
+										texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+										size = { 97% 97% }
+										parentanchor = center
+										color = { 0 0 0 1 }
+									}
+
+									pieslice = {
+										texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+										value = "[FixedPointToFloat(Location.GetAppliedAttritionPercentage)]"
+										color = { 0.8 0.3 0.3 1 }
+										alpha = 0.8
+									}
+
+									pieslice = {
+										texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+										value = "[Subtract_float('(float)1.0', FixedPointToFloat(Location.GetAppliedAttritionPercentage))]"
+										using = color_value_progress_gray
+									}
+
+									icon = {
+										size = { 61% 61% }
+										parentanchor = center
+										texture = "gfx/interface/icons/location_icons/attrition.dds"
+									}
+								}
+
+								# DISEASES
+								piechart = {
+									datacontext = "[LocationView.GetLocation]"
+									visible = "[And(LocationView.ShowDisease, HasDiseaseIntelOn(Location.Self))]"
+									using = bg_circle
+									size = {28 28}
+									using = piechart_angles
+									using = bg_circle_piechart
+									tooltipwidget = {
+										using = location_disease_tooltip
+									}
+
+									icon = {
+										texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+										size = { 97% 97% }
+										parentanchor = center
+										color = { 0 0 0 1 }
+									}
+
+									pieslice_no_highlight = {
+										texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+										value = "[FixedPointToFloat(LocationView.GetDiseasePercentage)]"
+										color = { 0.3 0.8 0.3 1 }
+										alpha = 0.8
+									}
+
+									pieslice_no_highlight = {
+										texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+										value = "[Subtract_float('(float)1.0', FixedPointToFloat(LocationView.GetDiseasePercentage))]"
+										color = { 0.8 0.3 0.3 1 }
+										alpha = 0.8
+									}
+
+									icon = {
+										size = { 61% 61% }
+										parentanchor = center
+										texture = "[GetDiseaseIcon(LocationView.GetHigherPresenceDisease)]"
+									}
+								}
+
+								# SPECIFIC BASE MODIFIER
+								icon = {
+									size = { 30 30 }
+									texture = "[LocationView.GetLocation.GetSpecificBaseModifier.GetModifier.GetIcon]"
+									visible = "[LocationView.GetLocation.HasSpecificBaseModifier]"
+									datacontext = "[LocationView.GetLocation]"
+									tooltipwidget = {
+										using = raw_good_location_modifier_tooltip
+									}
+								}
+
+								# Location timed modifiers
+								widget = {
+									size = { 45 26 }
+									visible = "[GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetTimedModifiers), '(int32)0')]"
+
+									# RIGHT DIVISION
+									flowcontainer = {
+										visible = "[Not(GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetTimedModifiers), '(int32)1'))]"
+
+										layoutpolicy_horizontal = expanding
+
+										datamodel = "[LocationView.GetLocation.GetTimedModifiers]"
+										item = {
+											timed_modifier_icon = {
+												datacontext = "[TimedModifier]"
+												tooltipwidget = {
+													using = timed_modifier_tooltip
+													blockoverride "concept_link" {
+														text = "[location_modifier|e]"
+													}
+												}
+											}
+										}
+
+										expand = {}
+									}
+
+									flowcontainer = {
+										visible = "[GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetTimedModifiers), '(int32)1')]"
+
+										text_single = {
+											minimumsize = { -1 26 }
+											align = nobaseline|hcenter
+											text = "[GetDataModelSize(LocationView.GetLocation.GetTimedModifiers)]"
+										}
+										icon = {
+											size = { 26 26 }
+											texture = "gfx/interface/icons/modifiers/locations.dds"
+											texture_density = 2
+
+											tooltipwidget = {
+												ContextualTooltipType = {
+													blockoverride "title_icon" {
+														icon = {
+															texture = "gfx/interface/icons/modifiers/locations.dds"
+															using = tooltip_title_icon_size
+														}
+													}
+													blockoverride "title_text" {
+															text = "game_concept_location_modifier"
+													}
+													blockoverride "concept_link" {
+														text = [location_modifier|e]
+													}
+
+													blockoverride "tooltip_content" {
+														TooltipScrolledRowList = {
+															blockoverride "block_title" { visible = no }
+															blockoverride "rowlist_datamodel_is_empty" { visible = "[IsDataModelEmpty(LocationView.GetLocation.GetTimedModifiers)]"}
+															blockoverride "rowlist_datamodel_has_items" { visible = "[DataModelHasItems(LocationView.GetLocation.GetTimedModifiers)]"}
+															blockoverride "rowlist_datamodel" { datamodel = "[LocationView.GetLocation.GetTimedModifiers]" }
+															blockoverride "rowlist_content" {
+																hbox = {
+																	layoutpolicy_horizontal = expanding
+																	spacing = 10
+																	datacontext = "[TimedModifier]"
+																	tooltipwidget = {
+																		using = timed_modifier_tooltip
+																	}
+																	text_single = {
+																		margin_left = 20
+																		text = "[TimedModifier.GetModifier.GetName]"
+																	}
+																	timed_modifier_icon = {
+																		datacontext = "[TimedModifier]"
+																		tooltipwidget = {
+																			using = timed_modifier_tooltip
+																			blockoverride "concept_link" {
+																				text = "[location_modifier|e]"
+																			}
+																		}
+																	}
+
+																	expand = {}
+																}
+															}
+
+															blockoverride "block_scrollarea" {
+																maximumsize = { -1 210 }
+															}
+
+															blockoverride "row_size" {
+																maximumsize = { -1 40 }
+																minimumsize = { -1 40 }
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+
+								# Province timed modifiers
+								widget = {
+									size = { 45 26 }
+									visible = "[GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), '(int32)0')]"
+
+									# RIGHT DIVISION
+									flowcontainer = {
+										visible = "[Not(GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), '(int32)1'))]"
+
+										layoutpolicy_horizontal = expanding
+
+										datamodel = "[LocationView.GetLocation.GetProvince.GetTimedModifiers]"
+										item = {
+											timed_modifier_icon = {
+												datacontext = "[TimedModifier]"
+												tooltipwidget = {
+													using = timed_modifier_tooltip
+													blockoverride "concept_link" {
+														text = "[province_modifier|e]"
+													}
+												}
+											}
+										}
+
+										expand = {}
+									}
+
+									flowcontainer = {
+										visible = "[GreaterThan_int32(GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers), '(int32)1')]"
+
+										text_single = {
+											minimumsize = { -1 26 }
+											align = nobaseline|hcenter
+											text = "[GetDataModelSize(LocationView.GetLocation.GetProvince.GetTimedModifiers)]"
+										}
+										icon = {
+											size = { 26 26 }
+											texture = "gfx/interface/icons/modifiers/province.dds"
+											texture_density = 2
+
+											tooltipwidget = {
+												ContextualTooltipType = {
+													blockoverride "title_icon" {
+														icon = {
+															texture = "gfx/interface/icons/modifiers/province.dds"
+															using = tooltip_title_icon_size
+														}
+													}
+													blockoverride "title_text" {
+															text = "game_concept_location_modifier"
+													}
+													blockoverride "concept_link" {
+														text = [province_modifier|e]
+													}
+
+													blockoverride "tooltip_content" {
+														TooltipScrolledRowList = {
+															blockoverride "block_title" { visible = no }
+															blockoverride "rowlist_datamodel_is_empty" { visible = "[IsDataModelEmpty(LocationView.GetLocation.GetProvince.GetTimedModifiers)]"}
+															blockoverride "rowlist_datamodel_has_items" { visible = "[DataModelHasItems(LocationView.GetLocation.GetProvince.GetTimedModifiers)]"}
+															blockoverride "rowlist_datamodel" { datamodel = "[LocationView.GetLocation.GetProvince.GetTimedModifiers]" }
+															blockoverride "rowlist_content" {
+																hbox = {
+																	layoutpolicy_horizontal = expanding
+																	spacing = 10
+																	datacontext = "[TimedModifier]"
+																	tooltipwidget = {
+																		using = timed_modifier_tooltip
+																	}
+																	text_single = {
+																		margin_left = 20
+																		text = "[TimedModifier.GetModifier.GetName]"
+																	}
+																	timed_modifier_icon = {
+																		datacontext = "[TimedModifier]"
+																		tooltipwidget = {
+																			using = timed_modifier_tooltip
+																			blockoverride "concept_link" {
+																				text = "[province_modifier|e]"
+																			}
+																		}
+																	}
+
+																	expand = {}
+																}
+															}
+
+															blockoverride "block_scrollarea" {
+																maximumsize = { -1 210 }
+															}
+
+															blockoverride "row_size" {
+																maximumsize = { -1 40 }
+																minimumsize = { -1 40 }
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+
+								# MOVEMENTS
+								widget = {
+									size = { 45 26 }
+									visible = "[DataModelHasItems(GetQuickMovements(LocationView.GetLocation).GetMovements)]"
+									widget = {
+										size = { 26 26 }
+										using = bg_circle_piechart
+										icon = {
+											parentanchor = center 
+											size = { 20 20 }
+	
+											datacontext_from_model = { 
+												datamodel = "[GetQuickMovements(LocationView.GetLocation).GetMovements]" 
+												index = 0 
+											}
+	
+											texture = "[GetMovementDefinitionIcon(Movement.GetMovementDefinition)]"
+											texture_density = 2
+										}
+	
+										datacontext = "[LocationView.GetLocation]"
+										tooltipwidget = {
+											using = location_movements_tooltip
+										}
+									}
+									
+								}
+								expand = {}
+							}
+						}
+
+						expand = {}
+					}
 				}
 			}
 

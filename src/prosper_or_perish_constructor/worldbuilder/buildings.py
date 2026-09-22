@@ -79,13 +79,19 @@ def _game_key(contract: Contract, attribute: str, value: str) -> str:
     return str(rows["game_key"][0]) if len(rows) and rows["game_key"][0] else value
 
 
-def trigger_for(contract: Contract, attribute: str, value: str) -> str:
-    if (contract.root / 'navigation/manifest.json').exists():
-        if attribute == 'is_coastal':
-            trigger = 'has_location_modifier = pp_wb_coastal'
-            return trigger if str(value) == 'True' else f'NOT = {{ {trigger} }}'
-        if attribute == 'river_level':
-            return 'pp_navigation_has_river = no' if str(value) == '0' else f'pp_navigation_river_level_{value} = yes'
+def trigger_for(contract: Contract, attribute: str, value: str, *, gate: bool = False) -> str:
+    navigation = (contract.root / "navigation/manifest.json").exists()
+    if attribute == "river_level" and gate:
+        # A gate must hold while the game validates the setup buildings, before the engine applies the river-size
+        # modifiers, so it uses the map-native trigger. The World Builder gates only ever ask for "any river"
+        # (levels 1-5) or "no river"; the caps' per-size class terms keep the size modifiers below.
+        return "has_river = no" if str(value) == "0" else "has_river = yes"
+    if attribute == "river_level" and navigation:
+        return "pp_navigation_has_river = no" if str(value) == "0" else f"pp_navigation_river_level_{value} = yes"
+    if attribute == "is_coastal" and navigation:
+        # river banks next to navigable water are coastal to the engine; the sea coast is the setup-placed modifier
+        trigger = "has_location_modifier = pp_wb_coastal"
+        return trigger if str(value) == "True" else f"NOT = {{ {trigger} }}"
     template = ATTRIBUTE_TRIGGERS[attribute]
     if attribute in ("is_coastal", "is_adjacent_to_lake"):
         return template if str(value) == "True" else f"NOT = {{ {template} }}"
@@ -106,10 +112,11 @@ def gate_trigger(contract: Contract, rules: list[dict[str, list[str]]]) -> list[
             if not allowed:
                 conditions.append("always = no")
                 continue
-            if len(allowed) == 1:
-                conditions.append(trigger_for(contract, attribute, allowed[0]))
+            triggers = list(dict.fromkeys(trigger_for(contract, attribute, a, gate=True) for a in allowed))
+            if len(triggers) == 1:
+                conditions.append(triggers[0])
             else:
-                conditions.append("OR = { " + " ".join(trigger_for(contract, attribute, a) for a in allowed) + " }")
+                conditions.append("OR = { " + " ".join(triggers) + " }")
         ands.append(conditions)
     if len(ands) == 1:
         return ands[0]
@@ -489,6 +496,7 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
     rows: list[tuple[str, str, str, int]] = []
     skipped = 0
     clamped = 0
+    gated = 0
     raised = 0
     navigation_exchanged = 0
     filled: set[str] = set()
@@ -527,6 +535,10 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
                 clamped += 1
                 level = cap
             attrs = {**by_tag.get(tag, {}), "culture": (cultures or {}).get(tag, "")}
+            if not gate_matches(gates[kind], attrs):
+                # the game rejects a setup building whose location_potential fails ("has an invalid building")
+                gated += 1
+                continue
             candidates = [key] + [n for n, spec in cfg.niche.items()
                                   if spec["family"] == key and spec.get("place_at_start")
                                   and gate_matches(spec.get("gate", []), attrs) and gate_matches(gates[kind], attrs)]
@@ -560,7 +572,7 @@ def write_setup(contract: Contract, cfg: WorldBuilderConfig, caps: Mapping[str, 
     for rel in LEGACY_SETUP:
         if (mod_root / rel).is_file():
             (mod_root / rel).unlink()
-    return {"rows": len(rows), "navigation_levels_exchanged": navigation_exchanged, "unowned_skipped": skipped, "clamped_to_cap": clamped, "levels_raised_for_pops": raised,
+    return {"rows": len(rows), "navigation_levels_exchanged": navigation_exchanged, "unowned_skipped": skipped, "clamped_to_cap": clamped, "gate_rejected": gated, "levels_raised_for_pops": raised,
             "locations_filled_for_pops": len(filled), "locations_still_short": len(short)}
 
 

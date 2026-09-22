@@ -300,6 +300,11 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     loc=['l_english:', ' pp_navigation_navigable: "Navigable Waterway"',' pp_navigation_improvable: "Unimproved Waterway"',
          ' pp_navigation_barrier: "River Barrier"',' pp_navigation_improved: "Maintained Navigation"',
          ' pp_navigation_difficult: "Difficult Waterway"',
+         ' pp_navigation_navigable_desc: "A river reach that boats can use. Movement and trade along it are easier."',
+         ' pp_navigation_difficult_desc: "A river reach with shoals, rapids or strong seasonal floods. Boats can use it, but slowly and at a cost."',
+         ' pp_navigation_improvable_desc: "A river reach that is passable but costly until navigation works on its banks are completed."',
+         ' pp_navigation_barrier_desc: "Falls or rapids that boats cannot pass."',
+         ' pp_navigation_improved_desc: "A river reach kept open by the navigation works on its banks."',
          ' pp_navigation_upgrade_tt: "Improves movement and market access along the waterways maintained from this location."']
     write('main_menu/localization/english/pp_navigation_roads_l_english.yml','\n'.join(loc)+'\n')
     triggers=[]

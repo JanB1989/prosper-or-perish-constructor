@@ -29,6 +29,7 @@ produces_construction_material = {
 
 location_wants_lumber_trigger = {
 	OR = {
+		pp_wb_setup_lumber_location = yes
 		OR = { vegetation = woods vegetation = ha1300_veg_thicket vegetation = ha1300_veg_dry_forest }
 		OR = { vegetation = forest vegetation = ha1300_veg_coniferous_forest vegetation = ha1300_veg_mixed_forest vegetation = ha1300_veg_swamp }
 		vegetation = jungle

@@ -19,13 +19,13 @@ location_potential = {
   OR = {
     AND = {
       OR = { climate = arid climate = cold_arid }
-      pp_navigation_has_river = no
+      has_river = no
       NOT = { is_adjacent_to_lake = yes }
     }
     AND = {
       OR = { climate = ha1300_climate_hot_steppe climate = ha1300_climate_cold_steppe }
       OR = { vegetation = desert vegetation = ha1300_veg_scrubland vegetation = sparse }
-      pp_navigation_has_river = no
+      has_river = no
       NOT = { is_adjacent_to_lake = yes }
     }
   }

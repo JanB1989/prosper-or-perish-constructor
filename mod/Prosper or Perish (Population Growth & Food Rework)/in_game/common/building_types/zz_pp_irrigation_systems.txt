@@ -15,7 +15,7 @@ REPLACE:irrigation_systems = {
   megalopolis = yes
   location_potential = {
     OR = {
-      OR = { pp_navigation_river_level_1 = yes pp_navigation_river_level_2 = yes pp_navigation_river_level_3 = yes pp_navigation_river_level_4 = yes pp_navigation_river_level_5 = yes }
+      has_river = yes
       is_adjacent_to_lake = yes
       OR = { topography = ha1300_topo_deltas topography = ha1300_topo_floodplains topography = ha1300_topo_valleys }
       AND = {

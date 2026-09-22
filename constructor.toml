@@ -219,6 +219,49 @@ wild_game = { building = "forest_village", levels = 2 }
 town = 10000
 city = 25000
 megalopolis = 40000
+# Pops the engine promotes out of the peasants when a campaign starts (per 1,000 pops of the location, by rank),
+# beyond what the pops setup file defines. Nobles eat 25x a peasant, so this is most of a town's food demand.
+# Fitted to a one-month reference save on 2026-09-22; `uv run ppc worldbuilder food-check --save <file>` refits it.
+[worldbuilder.start.engine_promotion.rural_settlement]
+nobles = 2.7
+clergy = 4.6
+burghers = 0.0
+laborers = 107.0
+soldiers = 3.5
+[worldbuilder.start.engine_promotion.town]
+nobles = 9.4
+clergy = 17.0
+burghers = 42.7
+laborers = 106.6
+soldiers = 6.7
+[worldbuilder.start.engine_promotion.city]
+nobles = 8.6
+clergy = 18.0
+burghers = 17.9
+laborers = 103.5
+soldiers = 13.4
+[worldbuilder.start.engine_promotion.megalopolis]
+nobles = 10.9
+clergy = 14.9
+burghers = 13.6
+laborers = 44.8
+soldiers = 13.6
+[worldbuilder.start.rgo_workers_k]
+# peasants (thousands) the location's RGO employs at start by rank; they leave subsistence agriculture (same fit)
+rural_settlement = 1.5
+town = 2.0
+city = 2.4
+megalopolis = 2.3
+[worldbuilder.start.victuals]
+# Victuals are the mod's food in the goods market: cookeries and the villages' worker provisions make them, import
+# victuals markets are the only buildings that turn them back into province food. Per catchment the planner covers
+# the food deficit with cookeries and import markets so the imports buy absorb_share of the victuals made there;
+# more would idle the cookeries (they lay off workers when the victuals do not sell), less starves the towns.
+absorb_share = 0.8
+pop_demand_scale = 0.4    # observed pop demand vs the goods file's demand_add x demand_multiply (price, wealth)
+# victuals per building level as the market shows them (measured from saves 2026-09-22; food-check refits)
+producers = { cookery = 0.65, victuals_market = 2.3, farming_village = 0.05, fishing_village = 0.05, forest_village = 0.05, fruit_orchard = 0.05 }
+consumers = { victuals_market_import = 1.2, lumber_mill = 0.3 }
 
 [worldbuilder.level_scale]
 # multiply levels, divide people per level; 1.0 keeps the World Builder units. Chosen so every general building is

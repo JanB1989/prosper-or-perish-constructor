@@ -76,10 +76,10 @@ def test_worker_pool_cannot_double_use_farm_workers_or_create_nobles():
     start = sp.StartConfig(peasant_work_share=0.6, laborer_conversion_share=0.5)
     pool = sp._Workers([sp.Pop("peasants", 10, "a", "r")], start)
     conversions = []
-    pool.take(5, 1, "peasants", "x", conversions)
-    assert pool.levels(5, 1, "laborers") == 1
+    pool.take(6, 1, "peasants", "x", conversions)       # the whole work share (60 %) staffs farms
+    assert pool.levels(5, 1, "laborers") == 4           # conversions only get the peasants that are left
     assert pool.levels(1, 0.001, "nobles") == 0
-    pool.take(1, 1, "laborers", "x", conversions)
+    pool.take(4, 1, "laborers", "x", conversions)
     assert pool.levels(1, 1, "laborers") == 0
 
 

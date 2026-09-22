@@ -59,6 +59,13 @@ class Rules:
         )
         self.towns = merged("town_setups")
         self.ranks = merged("location_ranks")
+        self.goods = merged("goods")
+        # Location classes carry local_monthly_food_modifier rows (vanilla plus the mod's cancelling injects).
+        self.classes = {
+            "climate": merged("climates"),
+            "vegetation": merged("vegetation"),
+            "topography": merged("topography"),
+        }
         from eu5gameparser.clausewitz.parser import parse_file
 
         # Defines merge per namespace/key, unlike ordinary common databases.
@@ -334,3 +341,35 @@ class Rules:
             "pop_type": self.number(key, "pop_type", "laborers"),
             "local_monthly_food": self.modifiers(key).get("local_monthly_food", 0),
         }
+
+    def victuals_pop_factors(self, good="victuals"):
+        """Monthly demand per 1,000 pops of each type from the good's ``demand_add`` x ``demand_multiply``
+        (the game's nominal demand; the start config scales it to what the market actually shows)."""
+        body = getattr(self, "goods", {}).get(good)
+        adds, mults = {}, {}
+        for block in body.values("demand_add") if isinstance(body, CList) else []:
+            if isinstance(block, CList):
+                adds.update({e.key: float(e.value) for e in block.entries if isinstance(e.value, (int, float))})
+        for block in body.values("demand_multiply") if isinstance(body, CList) else []:
+            if isinstance(block, CList):
+                mults.update({e.key: float(e.value) for e in block.entries if isinstance(e.value, (int, float))})
+        return {kind: add * mults.get(kind, 1.0) for kind, add in adds.items()}
+
+    def food_modifier(self, rank, classes):
+        """Sum of ``local_monthly_food_modifier`` from the rank and the location's classes
+        (``{"climate": key, "vegetation": key, "topography": key}``); scales all local food, subsistence included."""
+
+        def rows(body, section):
+            total = 0.0
+            for block in body.values(section) if isinstance(body, CList) else []:
+                if isinstance(block, CList):
+                    for entry in block.entries:
+                        if entry.key == "local_monthly_food_modifier" and isinstance(entry.value, (int, float)):
+                            total += float(entry.value)
+            return total
+
+        total = rows(getattr(self, "ranks", {}).get(rank), "rank_modifier")
+        for kind, key in (classes or {}).items():
+            if key:
+                total += rows(getattr(self, "classes", {}).get(kind, {}).get(str(key)), "location_modifier")
+        return total

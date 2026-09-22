@@ -12,6 +12,28 @@ and navigation states. It uses the development that the constructor actually
 writes, not the separate World Builder fitting target. Food transfer, employment,
 food consumption, footprints and the subsistence define come from game data.
 
+The engine changes the world between the setup files and the first tick, and the
+budget models that state rather than the files:
+
+- **Setup promotion.** The vanilla pops file is almost all peasants; at tick 0
+  the game promotes roughly 50 million of them into nobles, clergy, burghers,
+  laborers and soldiers (nobles eat 25 food per 1,000, peasants 1). The shares
+  per 1,000 pops by rank live in `[worldbuilder.start.engine_promotion]`; they
+  were fitted to a one-month reference save and are refitted by
+  `uv run ppc worldbuilder food-check --save <file>`. Worker conversions the
+  planner writes into `06_pops.txt` count only where they exceed that share.
+- **RGO hiring.** The location's RGO employs `[worldbuilder.start.rgo_workers_k]`
+  thousand peasants who leave subsistence agriculture.
+- **Local food modifiers.** Subsistence and building food are scaled by the
+  rank's and the classes' `local_monthly_food_modifier` (rural −10 %; the World
+  Builder class rows cancel the vanilla class values exactly).
+- **Province pools are per province and owner** in the engine, which is what
+  the budget groups.
+
+Subsistence is 1.5 food per 1,000 unemployed peasants, laborers and slaves; the
+engine's own production matches this formula with R² 0.98 on the reference save.
+Food decay is deliberately ignored: the starting stock is generous by design.
+
 1. Expand vanilla town presets and include explicit setup buildings, including
    foreign-owned religious buildings. Preserve their ownership and other setup
    metadata. Add the World Builder's initial improvement buildings.
@@ -21,17 +43,43 @@ food consumption, footprints and the subsistence define come from game data.
 3. Reserve available workers for existing buildings. Place configured resource
    processors, appropriate farms, fishing villages and forest villages where
    their live gates, caps, available workers and land permit them.
-4. Group food budgets by province **and owner**. Fund imports from exports in
-   the same estimated trade catchment, retaining the configured food reserve
-   in donor provinces. Ordinary deficit-driven placement avoids opposing
-   transfers in one province. Every city and megalopolis additionally receives
-   at least one import market, even when it is self-sufficient or also exports.
-   This minimum can initially be idle: the offline budget credits it only when
-   workers and unmatched exports in the catchment are available.
-5. Add cookeries to remaining deficits where staffing and caps permit. Convert
-   only the permitted share of local peasants to laborers, preserving culture,
-   religion and total population. Nobles are never fabricated for markets.
+4. Group food budgets by province **and owner**. Place export markets where a
+   province has food beyond its reserve and the catchment has deficits.
+5. Per trade catchment, cover the food deficit with cookeries and import
+   markets together so that the imports buy `absorb_share` of the victuals the
+   catchment makes (see below). Cookeries go to rural deficits first; imports
+   go to urban deficits first, then to the remaining deficits, then the towns
+   and cities take the leftover victuals as importers beyond their own need.
+   Deficits the imports cannot reach fall back to cookeries, whose victuals are
+   again bought by urban import levels. Every city and megalopolis additionally
+   receives at least one import market. Only the permitted share of local
+   peasants becomes laborers, preserving culture, religion and total
+   population. Nobles are never fabricated for markets: the engine's setup
+   promotion supplies them.
 6. Audit all placed building levels and export the budget and sensitivity report.
+
+## Victuals balance
+
+Victuals are the mod's food in the goods market. Cookeries make them (about
+0.65 per level as the market sees it), the villages' worker provisions add a
+baseline (about 0.05 per level), export markets turn province food into them,
+and pops, lumber mills and above all **import victuals markets** (about 1.2
+per level) buy them. Import markets are the only buildings that turn victuals
+back into province food. If far more victuals are made than bought, their
+price collapses, the cookeries become unprofitable and lay off their laborers,
+and the province food they gave disappears months into the campaign.
+
+`[worldbuilder.start.victuals]` in `constructor.toml` holds the per-level
+rates, the pop demand scale (the goods file's `demand_add x demand_multiply`
+against what the market shows) and `absorb_share`, the share of a catchment's
+victuals the imports should buy. The planner solves per catchment
+
+    food:     cookeries x 18 + imports x 60 >= deficit
+    victuals: imports x 1.2 = absorb_share x (existing surplus + cookeries x 0.65)
+
+and reports supply, demand and the absorbed share per catchment in
+`report.json`. `ppc worldbuilder food-check` refits the per-level rates from a
+save.
 
 Existing special buildings may remain understaffed; their food is counted only
 for staffed levels. Ordinary new food buildings must have available workers; the mandatory city
@@ -75,33 +123,35 @@ It contains a searchable province map/table, market levels and caps, CSV audits,
 and a subsistence selector. `start_placement.csv` also records safe startup caps
 and initialized gameplay caps for every planned location.
 
-The original September 2026 pass (before the mandatory city import minimum) audits 56,460 positive location/building records across
-13,690 owned locations. It removes 8,275 excess starting levels and leaves zero
-entries above the evaluated cap, with no unresolved cap rules. New placements
-include 16,119 farming village levels, 11,724 fishing village levels, 6,445 forest
-village levels, 1,265 orchard levels, 636 cookery levels, 44 import-market levels
-and 60 export-market levels. The difference in trade levels is export capacity
-left unmatched after local import staffing/cap restrictions; imports never
-exceed funded exports in their catchment.
+The 22 September 2026 pass (engine start state modelled, victuals balanced)
+plans 13,690 owned locations, removes 8,275 excess starting levels and leaves
+zero entries above the evaluated cap. New placements include 2,632 cookery
+levels, 1,794 import-market levels, 113 export-market levels, 13,872 farming
+village levels, 10,244 fishing village levels, 5,618 forest village levels and
+1,069 orchard levels. Monthly food demand is 412,875 (peasants 241k, laborers
+54k, burghers 42k, nobles 31k, clergy 24k, slaves 15k, soldiers 6k), which
+matches the engine's 420,025 in the one-month reference save. The victuals the
+catchments make (3,519 per month) meet a demand of 2,837, an absorbed share of
+81 % (median 82 % per catchment). The earlier passes had modelled 328,671 food
+demand from the raw pops file and placed 636 cookery levels (73 % of the
+province-owner groups then ran a structural deficit), or 4,224 cookery levels
+against 306 import levels, which flooded the markets with victuals and idled
+the cookeries (32 % staffed, 42 % losing money five years in).
 
 | Subsistence | Province/owner groups short | Food missing per month |
 | --- | ---: | ---: |
-| 1.0 | 2,004 | 15,849.27 |
-| 1.25 | 840 | 3,366.71 |
-| **1.5** | **563** | **1,870.95** |
-| 1.75 | 461 | 1,547.20 |
-| 2.0 | 405 | 1,331.84 |
+| 1.0 | 1,963 | 48,454 |
+| 1.25 | 1,196 | 9,215 |
+| **1.5** | **791** | **2,313** |
+| 1.75 | 794 | 2,382 |
+| 2.0 | 786 | 2,189 |
 
-The subsequent city-minimum pass adds 243 import levels: all 262 cities and
-three megalopolises now have at least one. Total starting import levels are 287.
-The cap audit remains clear. Of those added minimum levels, 231 are treated as
-idle by the offline estimate because workers or unmatched export backing are
-unavailable; they still exist as buildings in the game.
-
-These scenarios hold the original placements fixed. At 1.5, projected unmet demand is about
-0.57% of 328,670.96 monthly food demand. Keeping 1.5 is a provisional balance
-choice: increasing it mainly expands surplus rather than solving isolated
-shortages. The report identifies remaining short provinces for later tuning.
+At 1.5, projected unmet demand is 0.6 % of monthly demand. The remaining short
+groups are small provinces whose demand comes from nobles and burghers while
+the working pops are slaves or tribesmen: the cookeries cannot convert those
+into laborers, which the game shares. Rural provinces are roughly
+self-sufficient; towns and cities cover only about half of their demand from
+subsistence, so the import markets and cookeries carry them.
 
 ## Limits of the estimate
 
@@ -127,3 +177,12 @@ against World Builder targets, not the food budget. The food audit is produced
 by the build itself. Tests cover live cap arithmetic and initialization timing,
 shared capacity, staffing and population conservation, food conservation,
 export reserves, isolated catchments and preservation of foreign-owned buildings.
+
+`uv run ppc worldbuilder food-check [--save <file.eu5>]` compares the model with
+a saved campaign (with `--save` it exports the save first; otherwise it uses the
+existing `artifacts/data/savegame` export). It reports the engine's consumption
+and production per province-owner group next to the model formula evaluated on
+the save's own pops and buildings, the last build's budget for the same groups,
+and the refitted setup-promotion and RGO shares by rank to paste into
+`constructor.toml` when the game's setup changes. A save one month into a fresh
+campaign is the right reference; decay is excluded by construction.

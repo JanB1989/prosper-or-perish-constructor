@@ -207,8 +207,14 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     worldbuilder.add_argument(
         "action",
-        choices=("apply", "export-development", "check"),
-        help="apply writes the mod inputs; export-development writes the vanilla development table; check reports the fit of the written setup.",
+        choices=("apply", "export-development", "check", "food-check"),
+        help="apply writes the mod inputs; export-development writes the vanilla development table; check reports the fit of the written setup; food-check compares the start-food model with the exported save.",
+    )
+    worldbuilder.add_argument(
+        "--save",
+        type=Path,
+        default=None,
+        help="food-check only: export this .eu5 save first (otherwise the existing artifacts/data/savegame export is used).",
     )
     footprint = _add_command(
         subcommands,
@@ -844,6 +850,15 @@ def _worldbuilder(args: argparse.Namespace, extra: Sequence[str], repo: Path, pr
         return 0
     if args.action == "check":
         print(json.dumps(stage.check(repo, project, _project_mod_root(repo, project)), indent=2))
+        return 0
+    if args.action == "food-check":
+        if args.save is not None:
+            result = _run(["eu5-orchestrator", "savegame", "--project", project, "--save", args.save], repo)
+            if result != 0:
+                return result
+        from prosper_or_perish_constructor.worldbuilder import food_check
+
+        print(json.dumps(food_check.run(repo, project, _project_mod_root(repo, project)), indent=2, default=str))
         return 0
     raise SystemExit(f"unknown worldbuilder action {args.action!r}")
 

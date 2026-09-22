@@ -61,6 +61,24 @@ DEFAULT_PROCESSORS: dict[str, dict[str, Any]] = {
     "tin": {"building": "tin_streamworks", "levels": 1},
     "wild_game": {"building": "forest_village", "levels": 2},
 }
+# Pops the engine promotes out of peasants when a campaign starts, per 1,000 pops of the location and by rank, beyond
+# what the pops setup file defines (fitted to a one-month reference save, 2026-09-22; `ppc worldbuilder food-check` refits).
+DEFAULT_ENGINE_PROMOTION: dict[str, dict[str, float]] = {
+    "rural_settlement": {"nobles": 2.7, "clergy": 4.6, "burghers": 0.0, "laborers": 107.0, "soldiers": 3.5},
+    "town": {"nobles": 9.4, "clergy": 17.0, "burghers": 42.7, "laborers": 106.6, "soldiers": 6.7},
+    "city": {"nobles": 8.6, "clergy": 18.0, "burghers": 17.9, "laborers": 103.5, "soldiers": 13.4},
+    "megalopolis": {"nobles": 10.9, "clergy": 14.9, "burghers": 13.6, "laborers": 44.8, "soldiers": 13.6},
+}
+# Peasants (thousands) the location's RGO employs at start by rank; they do not work in subsistence agriculture.
+DEFAULT_RGO_WORKERS_K: dict[str, float] = {"rural_settlement": 1.5, "town": 2.0, "city": 2.4, "megalopolis": 2.3}
+# Victuals (the mod's food trade good) per building level as the market sees them, and the share of a catchment's
+# supply the import markets should buy. Measured from saves 2026-09-22 (`ppc worldbuilder food-check` refits).
+DEFAULT_VICTUALS: dict[str, Any] = {
+    "absorb_share": 0.8,
+    "pop_demand_scale": 0.4,
+    "producers": {"cookery": 0.65, "victuals_market": 2.3, "farming_village": 0.05, "fishing_village": 0.05, "forest_village": 0.05, "fruit_orchard": 0.05},
+    "consumers": {"victuals_market_import": 1.2, "lumber_mill": 0.3},
+}
 
 
 @dataclass(frozen=True)
@@ -78,6 +96,9 @@ class StartConfig:
     laborer_conversion_share: float = 0.5   # share of a location's peasants that may become laborers
     rank_capacity_people: dict[str, float] = field(default_factory=lambda: {"town": 10000.0, "city": 25000.0, "megalopolis": 40000.0})
     processors: dict[str, dict[str, Any]] = field(default_factory=lambda: dict(DEFAULT_PROCESSORS))
+    engine_promotion: dict[str, dict[str, float]] = field(default_factory=lambda: {k: dict(v) for k, v in DEFAULT_ENGINE_PROMOTION.items()})
+    rgo_workers_k: dict[str, float] = field(default_factory=lambda: dict(DEFAULT_RGO_WORKERS_K))
+    victuals: dict[str, Any] = field(default_factory=lambda: {k: (dict(v) if isinstance(v, dict) else v) for k, v in DEFAULT_VICTUALS.items()})
 
     @classmethod
     def from_raw(cls, raw: Mapping[str, Any] | None) -> "StartConfig":
@@ -91,7 +112,35 @@ class StartConfig:
             kwargs["rank_capacity_people"] = {str(k): float(v) for k, v in raw["rank_capacity_people"].items()}
         if isinstance(raw.get("processors"), dict):
             kwargs["processors"] = {str(k): dict(v) for k, v in raw["processors"].items() if isinstance(v, dict) and v.get("building")}
+        if isinstance(raw.get("engine_promotion"), dict):
+            kwargs["engine_promotion"] = {str(rank): {str(t): float(v) for t, v in rates.items()} for rank, rates in raw["engine_promotion"].items() if isinstance(rates, dict)}
+        if isinstance(raw.get("rgo_workers_k"), dict):
+            kwargs["rgo_workers_k"] = {str(k): float(v) for k, v in raw["rgo_workers_k"].items()}
+        if isinstance(raw.get("victuals"), dict):
+            merged = {k: (dict(v) if isinstance(v, dict) else v) for k, v in DEFAULT_VICTUALS.items()}
+            for k, v in raw["victuals"].items():
+                merged[str(k)] = {str(a): float(b) for a, b in v.items()} if isinstance(v, dict) else float(v)
+            kwargs["victuals"] = merged
         return cls(**kwargs)
+
+
+def estimate_start_pops(pops: list["Pop"], rank: str, start: StartConfig) -> dict[str, float]:
+    """Pops (thousands) by type once the engine has run its setup promotion: the configured share of the location's
+    pops leaves the peasants for the listed types (never more peasants than exist; shares scale down together)."""
+    types: dict[str, float] = defaultdict(float)
+    for p in pops:
+        types[p.type] += p.size_k
+    total = sum(types.values())
+    rates = start.engine_promotion.get(rank) or {}
+    wanted = {t: max(0.0, rate) * total / 1000.0 for t, rate in rates.items()}
+    room = types.get("peasants", 0.0)
+    asked = sum(wanted.values())
+    scale = min(1.0, room / asked) if asked > 0 else 0.0
+    for t, n in wanted.items():
+        if n * scale > 0:
+            types[t] += n * scale
+            types["peasants"] -= n * scale
+    return dict(types)
 
 
 @dataclass
@@ -339,9 +388,16 @@ class PopConversion:
 class _Workers:
     """Peasant pool of one location: farms employ peasants, laborer buildings convert them."""
 
-    def __init__(self, pops: list[Pop], start: StartConfig) -> None:
+    def __init__(self, pops: list[Pop], start: StartConfig, peasants_k: float | None = None) -> None:
+        """``peasants_k`` caps the peasants that can work or convert (those left after the engine's setup promotion
+        and the RGO's own workers); the pops themselves stay the file's rows so conversions match them."""
         self.peasant_pops = sorted((p for p in pops if p.type == "peasants"), key=lambda p: -p.size_k)
         peasants = sum(p.size_k for p in self.peasant_pops)
+        if peasants_k is not None:
+            peasants = max(0.0, min(peasants, peasants_k))
+        # Two budgets on the same peasants: the work share staffs peasant buildings, the conversion share becomes
+        # laborers; neither can spend what the other already used beyond the peasants that exist.
+        self.free_k = peasants
         self.work_k = peasants * start.peasant_work_share
         self.convert_k = peasants * start.laborer_conversion_share
         self.existing = defaultdict(float)
@@ -351,14 +407,15 @@ class _Workers:
     def levels(self, wanted: int, employment: float, pop_type: str) -> int:
         if employment <= 0:return max(wanted,0)
         if pop_type == "peasants":
-            return max(min(wanted, int(math.floor(self.work_k / employment + 1e-9))), 0)
-        available = self.existing.get(pop_type, 0.0) + (max(0,min(self.convert_k,self.work_k)) if pop_type == "laborers" else 0)
+            return max(min(wanted, int(math.floor(min(self.work_k, self.free_k) / employment + 1e-9))), 0)
+        available = self.existing.get(pop_type, 0.0) + (max(0,min(self.convert_k,self.free_k)) if pop_type == "laborers" else 0)
         return max(min(wanted, int(math.floor(available / employment + 1e-9))), 0)
 
     def take(self, levels: int, employment: float, pop_type: str, location: str, conversions: list[PopConversion]) -> None:
         needed = levels * employment
         if pop_type == "peasants":
             self.work_k -= needed
+            self.free_k -= needed
             return
         from_existing = min(self.existing.get(pop_type, 0.0), needed)
         self.existing[pop_type] -= from_existing
@@ -366,11 +423,11 @@ class _Workers:
         if needed > 1e-9:
             if pop_type != 'laborers':raise ValueError('Cannot manufacture specialist workers from peasants')
             for source in self.peasant_pops:
-                take = round(min(needed, max(0,self.convert_k), max(0,self.work_k), source.size_k), 3)
+                take = round(min(needed, max(0,self.convert_k), max(0,self.free_k), source.size_k), 3)
                 if take <= 0:continue
                 conversions.append(PopConversion(location, 'peasants', pop_type, take, source.culture, source.religion))
                 self.convert_k -= take
-                self.work_k -= take
+                self.free_k -= take
                 source.size_k -= take
                 needed -= take
                 if needed < 0.0005:break

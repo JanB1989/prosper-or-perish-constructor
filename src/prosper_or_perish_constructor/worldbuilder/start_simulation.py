@@ -578,8 +578,43 @@ class Simulation:
                 need -= n * net
                 if need <= 0:
                     break
+        self.ensure_city_imports(units)
         self.before_trade = before
         self.unallocated_exports = dict(units)
+
+    def ensure_city_imports(self, units):
+        """Every city gets import infrastructure, even if it initially lies idle.
+
+        This minimum is independent of deficit and the ordinary one-direction
+        trade policy. Do not count extra food without both workers and exports.
+        """
+        self.city_import_minimum = {"cities": 0, "added": 0, "idle": []}
+        key = "victuals_market_import"
+        group_for = {tag: group for group, tags in self.groups.items() for tag in tags}
+        for tag in sorted(self.locations):
+            if self.base[tag].get("location_rank") not in ("city", "megalopolis"):
+                continue
+            self.city_import_minimum["cities"] += 1
+            if self.counts[tag][key] >= 1:
+                continue
+            if self.rules.cap(key, self.ctx(tag)) < 1:
+                raise ValueError(f"City import minimum exceeds allowed cap: {tag}")
+            self.counts[tag][key] = 1
+            self.placements.append(sp.Placement(tag, self.owners[tag], key, 1))
+            self.city_import_minimum["added"] += 1
+            num = self.numbers[key]
+            pool = self.pools[tag]
+            market = self.catchments[group_for[tag]]
+            if units.get(market, 0) and pool.levels(
+                1, num["employment_size"], num["pop_type"]
+            ):
+                pool.take(
+                    1, num["employment_size"], num["pop_type"], tag, self.conversions
+                )
+                self.staffed[tag][key] += 1
+                units[market] -= 1
+            else:
+                self.city_import_minimum["idle"].append(tag)
 
     def verify(self):
         failures = []
@@ -786,11 +821,12 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         "food_demand": sum(b["demand"] for b in budgets.values()),
         "subsistence_sensitivity": sensitivity,
         "unallocated_export_levels": sim.unallocated_exports,
+        "city_import_minimum": sim.city_import_minimum,
         "unresolved_rules": dict(rules.unsupported),
         "placement_rejections": dict(sim.rejections),
         "pops": pop_report,
         "assumptions": [
-            "Full staffing of placed food buildings; other historical buildings use available workers.",
+            "Full staffing of ordinary placed food buildings; mandatory city imports count food only with workers and export backing.",
             "Nearest starting market centre within the same game region is an offline catchment proxy, not engine market access.",
             "RGO size and market access use zero lower bounds for cap safety; unsupported rules fail closed.",
             "Budget excludes seasonal harvests, prices, trade competition, armies and engine-only country modifiers.",

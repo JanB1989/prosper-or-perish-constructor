@@ -23,14 +23,19 @@ food consumption, footprints and the subsistence define come from game data.
    their live gates, caps, available workers and land permit them.
 4. Group food budgets by province **and owner**. Fund imports from exports in
    the same estimated trade catchment, retaining the configured food reserve
-   in donor provinces. Do not place opposing transfers in one province.
+   in donor provinces. Ordinary deficit-driven placement avoids opposing
+   transfers in one province. Every city and megalopolis additionally receives
+   at least one import market, even when it is self-sufficient or also exports.
+   This minimum can initially be idle: the offline budget credits it only when
+   workers and unmatched exports in the catchment are available.
 5. Add cookeries to remaining deficits where staffing and caps permit. Convert
    only the permitted share of local peasants to laborers, preserving culture,
    religion and total population. Nobles are never fabricated for markets.
 6. Audit all placed building levels and export the budget and sensitivity report.
 
 Existing special buildings may remain understaffed; their food is counted only
-for staffed levels. All newly placed food buildings must have available workers.
+for staffed levels. Ordinary new food buildings must have available workers; the mandatory city
+import market is an infrastructure minimum and may initially be unstaffed.
 Staffing removes workers from subsistence, so moving a peasant into a farm does
 not count their food twice. Historical buildings are not deleted simply because
 workers are scarce.
@@ -58,9 +63,9 @@ The startup planner uses the lower cap from before/after navigation variables
 are initialized, so it cannot spend an `on_game_start` bonus prematurely.
 Forest capacity also has a geography fallback before its cache is initialized.
 
-Balance coefficients are intentionally modest and adjustable. No particular
-city is forced to import: the game's initial population and its owned provincial
-hinterland may already feed it. Placement policy limits and staffing shares live
+Balance coefficients are intentionally modest and adjustable. Every city gets
+one import market; additional levels depend on deficits, logistics and staffing.
+A self-sufficient city's minimum market can remain idle. Placement policy limits and staffing shares live
 in `[worldbuilder.start]` in `constructor.toml`.
 
 ## Report and current result
@@ -70,7 +75,7 @@ It contains a searchable province map/table, market levels and caps, CSV audits,
 and a subsistence selector. `start_placement.csv` also records safe startup caps
 and initialized gameplay caps for every planned location.
 
-The September 2026 pass audits 56,460 positive location/building records across
+The original September 2026 pass (before the mandatory city import minimum) audits 56,460 positive location/building records across
 13,690 owned locations. It removes 8,275 excess starting levels and leaves zero
 entries above the evaluated cap, with no unresolved cap rules. New placements
 include 16,119 farming village levels, 11,724 fishing village levels, 6,445 forest
@@ -87,7 +92,13 @@ exceed funded exports in their catchment.
 | 1.75 | 461 | 1,547.20 |
 | 2.0 | 405 | 1,331.84 |
 
-These scenarios hold placements fixed. At 1.5, projected unmet demand is about
+The subsequent city-minimum pass adds 243 import levels: all 262 cities and
+three megalopolises now have at least one. Total starting import levels are 287.
+The cap audit remains clear. Of those added minimum levels, 231 are treated as
+idle by the offline estimate because workers or unmatched export backing are
+unavailable; they still exist as buildings in the game.
+
+These scenarios hold the original placements fixed. At 1.5, projected unmet demand is about
 0.57% of 328,670.96 monthly food demand. Keeping 1.5 is a provisional balance
 choice: increasing it mainly expands surplus rather than solving isolated
 shortages. The report identifies remaining short provinces for later tuning.

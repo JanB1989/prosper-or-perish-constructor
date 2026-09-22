@@ -271,3 +271,23 @@ def test_additional_setup_preserves_nonbuilding_sections_and_foreign_owners(tmp_
     )
     assert "tag = PAP" in path.read_text()
     assert setup_counts(path)["x"]["seat"] == 1
+
+
+def test_every_city_gets_import_infrastructure_even_without_workers_or_exports():
+    sim = budget_simulation()
+    sim.base["town"]["location_rank"] = "city"
+    sim.base["isolated"]["location_rank"] = "megalopolis"
+    sim.rules.buildings["victuals_market_import"] = block(
+        "city = yes megalopolis = yes max_levels = 10"
+    )
+    sim.pools["isolated"].existing["nobles"] = 0
+    before = sim.budgets()
+    sim.ensure_city_imports({})
+    assert sim.counts["town"]["victuals_market_import"] == 1
+    assert sim.counts["isolated"]["victuals_market_import"] == 1
+    assert sim.counts["donor"]["victuals_market_import"] == 0
+    assert sim.budgets() == before
+    assert sim.city_import_minimum["added"] == 2
+    sim.ensure_city_imports({})
+    assert sim.city_import_minimum["added"] == 0
+    assert sim.verify() == 2

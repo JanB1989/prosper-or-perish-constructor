@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:field_management_improved:advancement
+pp_field_management_improved = {
+icon = field_management_improved
+age = age_5_absolutism
+requires = scientific_revolution_advance
+unlock_building = field_management_improved
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:field_management_improved:advancement

@@ -1,0 +1,122 @@
+version: 2
+tag: field_management_improved
+footprint: capacity_source
+upgrade_chain:
+  family: field_management
+  tier: 2
+  previous: field_management_convertible
+  next: null
+  unlock_advance: pp_field_management_improved
+building:
+  key: field_management_improved
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_field_management_improved_four_course
+    - pp_field_management_improved_drill
+    - pp_field_management_improved_liming
+  possible_production_methods: []
+  body: |-
+    # Tier 3 of 3: four-course rotation and drill husbandry. Each level built converts one Convertible Husbandry
+    # level; its cap leaves both lower tiers out, so it can also be built over leftover Field Management levels.
+    audio_tier = 3
+    is_foreign = no
+    max_levels = pp_wb_cap_field_management_improved
+    increase_per_level_cost = 0.27
+    pop_type = peasants
+    employment_size = 0.1
+    price = pp_field_management_improved_price
+    category = infrastructure_category
+    custom_tags = { pp_food_security_priority pp_water_control_priority }
+    icon = field_management_improved
+    obsolete = field_management_convertible
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      always = yes
+    }
+
+    construction_demand = village_construction
+
+    unique_production_methods = {
+      pp_field_management_improved_four_course = {
+        legumes = 0.04
+        livestock = 0.02
+        tools = 0.015
+        manual_labor_cost = 0.006
+        category = building_maintenance
+      }
+      pp_field_management_improved_drill = {
+        tools = 0.022
+        horses = 0.015
+        manual_labor_cost = 0.006
+        category = building_maintenance
+      }
+      pp_field_management_improved_liming = {
+        stone = 0.06
+        tools = 0.015
+        manual_labor_cost = 0.008
+        category = building_maintenance
+      }
+    }
+
+    raw_modifier = {
+      local_population_capacity = 5.13
+      pp_wb_levels_field_management_improved = 1
+    }
+
+    modifier = {
+    }
+
+    forbidden_for_estates = no
+    ai_forbid_shutdown = yes
+advancements:
+- key: pp_field_management_improved
+  body: |-
+    icon = field_management_improved
+    age = age_5_absolutism
+    requires = scientific_revolution_advance
+    unlock_building = field_management_improved
+    ai_weight = { add = 125 }
+localization:
+  entries:
+    field_management_improved: Improved Husbandry
+    field_management_improved_desc: Turnips and clover take the place of the fallow in a fixed rotation, seed is drilled in rows and hoed by horse, and the stock kept on the fodder manures every field in turn. Building it converts a level of Convertible Husbandry.
+    field_management_improved_slot_0: Maintenance
+    pp_field_management_improved_four_course: Four-Course Rotation
+    pp_field_management_improved_drill: Drill and Horse-Hoe
+    pp_field_management_improved_liming: Lime Kilns and Marl
+    pp_field_management_improved_price: Improved Husbandry Price
+    pp_field_management_improved: Improved Husbandry
+    pp_field_management_improved_desc: Fodder crops in place of fallow, drilled seed and planned rotations let the same fields feed far more people than the old open-field routine.
+prices:
+- key: pp_field_management_improved_price
+  body: '{gold = 50}'
+icon:
+  source_png: ../assets/icons/field_management_improved.png
+  output_dds: field_management_improved.dds
+  size: 512
+  prompt: 'Use case: historical-scene. Generate one finished square 1024x1024 Europa Universalis-style building icon for IMPROVED HUSBANDRY, early eighteenth century. Reference 1 defines the approved material-rich realistic painterly historic bitmap cutout style; reference 2 shows the earlier agricultural tier. Create a clearly distinctive advanced worksite in this same family. Elevated three-quarter view, warm side lighting, weathered wood and rich earth. Large recognizable period wooden horse-drawn seed drill in foreground: wooden seed hopper, two large spoked wheels and a row of iron sowing coulters, long wooden shafts resting on earth, no horse needed. Behind it four compact orderly crop strips showing golden wheat, pale green leafy turnips, barley and lush dark green clover. Small squat rustic stone lime kiln at rear left with dark arched firing opening and a little pale limestone pile; low clipped hedge along rear edge. Machinery and kiln give strong readable silhouettes at 48px. Compact isolated thin irregular ground patch, no floating block. Subject entirely within frame, fills 88 percent with margin. Flat pure magenta #FF00FF chroma-key background in every gap, no magenta bounce or background shadow. No sky, scenic backdrop, text, border, emblems, tractor, engine, modern machinery. Produce only this single icon.'
+evaluation:
+  production_methods:
+    pp_field_management_improved_four_course:
+      allow_rules:
+        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
+        output_throughput: Field management provides capacity rather than a directly traded good.
+    pp_field_management_improved_drill:
+      allow_rules:
+        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
+        output_throughput: Field management provides capacity rather than a directly traded good.
+    pp_field_management_improved_liming:
+      allow_rules:
+        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
+        output_throughput: Field management provides capacity rather than a directly traded good.

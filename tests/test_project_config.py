@@ -267,7 +267,7 @@ FOOD_SECURITY_PRIORITY_GROUPS = {
             "Irrigation and other water-control buildings need high priority so food production "
             "or capacity are not destroyed through underemployment."
         ),
-        ("irrigation_systems", "bund", "terraces", "polders", "khmer_baray", "incamisana", "land_clearance", "field_management", "field_drainage", "irrigated_fields", "qanats"),
+        ("irrigation_systems", "bund", "terraces", "polders", "khmer_baray", "incamisana", "land_clearance", "field_management", "field_management_convertible", "field_management_improved", "field_drainage", "irrigated_fields", "qanats"),
     ),
     "staple_food_production": (
         90,
@@ -1597,6 +1597,8 @@ def test_water_control_capacity_buildings_use_scaled_gold_prices() -> None:
         "incamisana": ("pp_incamisana_price", 50.0),
         "land_clearance": ("pp_land_clearance_price", 50.0),
         "field_management": ("pp_field_management_price", 50.0),
+        "field_management_convertible": ("pp_field_management_convertible_price", 50.0),
+        "field_management_improved": ("pp_field_management_improved_price", 50.0),
         "field_drainage": ("pp_field_drainage_price", 50.0),
         "irrigated_fields": ("pp_irrigated_fields_price", 50.0),
         "qanats": ("pp_qanats_price", 50.0),
@@ -1987,7 +1989,7 @@ def test_legacy_capacity_culling_is_removed() -> None:
 
 def test_yearly_closed_building_culling_removes_one_level_not_whole_stack() -> None:
     text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
-    action_text = text.split("pp_ai_victuals_market_on_food_crisis", maxsplit=1)[0]
+    action_text = text.split("pp_ai_logistics_on_unsupported_building_levels", maxsplit=1)[0]
 
     assert "pp_yearly_cull_one_closed_building" in action_text
     assert "random_buildings_in_location" in action_text
@@ -1995,23 +1997,7 @@ def test_yearly_closed_building_culling_removes_one_level_not_whole_stack() -> N
     assert "building_can_be_destroyed_by = root" in action_text
     assert "change_building_level = -1" in action_text
     assert "destroy_building = prev" not in action_text
-
-
-def test_ai_victuals_market_crisis_scans_owned_capitals_not_all_provinces() -> None:
-    text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
-    entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
-    action_text = text.split("pp_ai_victuals_market_on_food_crisis", maxsplit=1)[1]
-
-    assert "pp_ai_victuals_market_on_food_crisis" in entries
-    assert "every_owned_location" in action_text
-    assert "limit = { is_province_capital = yes }" in action_text
-    assert "save_scope_as = pp_food_crisis_capital" in action_text
-    assert "scope:pp_food_crisis_capital" in action_text
-    assert "province_monthly_food_production > 100" in action_text
-    assert "province_monthly_food_production < -30" in action_text
-    assert "every_province" not in action_text
-    assert "every_location_in_province" not in action_text
-    assert "any_location_in_province" not in action_text
+    assert action_text.count("NOT = { building_type = building_type:victuals_market_import }") == 2
 
 
 def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -> None:
@@ -2026,7 +2012,6 @@ def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -
     assert on_actions.items == [
         "pp_raise_owned_zero_rgo_max_workers",
         "pp_cull_capacity_buildings_over_max_v2",
-        "pp_ai_victuals_market_on_food_crisis",
         "pp_ai_logistics_on_unsupported_building_levels",
     ]
 
@@ -2886,7 +2871,12 @@ def test_retained_export_offsets_match_food_sales_values() -> None:
         )
         # The disabled export blueprint leaves some old offset modifiers in place.
         # They must still match sales values; new sales sources need no inert clone.
+        # Exception (2026-09-22): the country constant +19.0 on offset is the import market's steady
+        # provisioning leg (20x on a tiny amount, so production efficiency barely moves it).
         from collections import Counter
+        if scope == "global" and path.name == "pp_country_base_values.txt":
+            assert offset == ["19.0"], path
+            continue
         assert not (Counter(offset) - Counter(sales)), path
 
 

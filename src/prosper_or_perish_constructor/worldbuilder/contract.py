@@ -64,7 +64,8 @@ def load_config(repo: Path, project: Path) -> WorldBuilderConfig:
     niche_raw = buildings.get("niche") if isinstance(buildings.get("niche"), dict) else {}
     niche = {
         str(k): {"family": str(v["family"]), "strength": float(v.get("strength", 1.5)), "lock": [str(x) for x in (v.get("lock") or [])],
-                 "gate": v.get("gate", []), "place_at_start": bool(v.get("place_at_start", False))}
+                 "gate": v.get("gate", []), "place_at_start": bool(v.get("place_at_start", False)),
+                 "upgrades": str(v["upgrades"]) if v.get("upgrades") else None}
         for k, v in niche_raw.items() if isinstance(v, dict) and v.get("family")
     }
     return WorldBuilderConfig(

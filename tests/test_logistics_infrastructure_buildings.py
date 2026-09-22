@@ -580,14 +580,14 @@ def test_victuals_market_templates_split_export_and_import_flows() -> None:
         assert "pp_province_food_to_market" not in text
 
     for text in export_texts:
-        assert "local_monthly_food = -60.0" in text
+        assert "local_monthly_food = -90.0" in text
         assert "max_levels = victuals_market_export_max_level" in text
         assert "local_nobles_estate_power = 0.05" in text
         assert "local_peasant_enfranchisment = -0.01" in text
         assert "local_market_access" not in text
 
     for text in import_texts:
-        assert "local_monthly_food = 60.0" in text
+        assert "local_monthly_food = 90.0" in text
         assert "max_levels = victuals_market_import_max_level" in text
         assert "local_nobles_estate_power" not in text
         assert "local_peasant_enfranchisment" not in text

@@ -1,0 +1,61 @@
+﻿# >>> eu5-building-pipeline:field_management_improved:building
+field_management_improved = {
+# Tier 3 of 3: four-course rotation and drill husbandry. Each level built converts one Convertible Husbandry
+# level; its cap leaves both lower tiers out, so it can also be built over leftover Field Management levels.
+audio_tier = 3
+is_foreign = no
+max_levels = pp_wb_cap_field_management_improved
+increase_per_level_cost = 0.20
+pop_type = peasants
+employment_size = 0.1
+price = pp_field_management_improved_price
+category = infrastructure_category
+custom_tags = { pp_food_security_priority pp_water_control_priority }
+icon = field_management_improved
+obsolete = field_management_convertible
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+build_time = infrastructure_build_time
+
+location_potential = {
+  always = yes
+}
+
+construction_demand = village_construction
+
+unique_production_methods = {
+  pp_field_management_improved_four_course = {
+    legumes = 0.04
+    livestock = 0.02
+    tools = 0.015
+    manual_labor_cost = 0.006
+    category = building_maintenance
+  }
+  pp_field_management_improved_drill = {
+    tools = 0.022
+    horses = 0.015
+    manual_labor_cost = 0.006
+    category = building_maintenance
+  }
+  pp_field_management_improved_liming = {
+    stone = 0.06
+    tools = 0.015
+    manual_labor_cost = 0.008
+    category = building_maintenance
+  }
+}
+
+raw_modifier = {
+  local_population_capacity = 5.13
+  pp_wb_levels_field_management_improved = 1
+}
+
+modifier = {
+}
+
+forbidden_for_estates = no
+ai_forbid_shutdown = yes
+}
+# <<< eu5-building-pipeline:field_management_improved:building

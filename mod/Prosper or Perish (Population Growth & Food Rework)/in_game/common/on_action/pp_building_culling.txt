@@ -16,6 +16,7 @@
 }
 
 # One random closed (is_opened = no) building level per owned location, yearly, AI countries only.
+# Import victuals markets are never culled.
 pp_yearly_cull_one_closed_building = {
 	effect = {
 		if = {
@@ -28,6 +29,7 @@ pp_yearly_cull_one_closed_building = {
 						is_opened = no
 						owner = root
 						building_can_be_destroyed_by = root
+						NOT = { building_type = building_type:victuals_market_import }
 					}
 				}
 				random_buildings_in_location = {
@@ -35,72 +37,9 @@ pp_yearly_cull_one_closed_building = {
 						is_opened = no
 						owner = root
 						building_can_be_destroyed_by = root
+						NOT = { building_type = building_type:victuals_market_import }
 					}
 					change_building_level = -1
-				}
-			}
-		}
-	}
-}
-
-pp_ai_victuals_market_on_food_crisis = {
-	effect = {
-		if = {
-			limit = { is_ai = yes }
-			every_owned_location = {
-				limit = { is_province_capital = yes }
-				save_scope_as = pp_food_crisis_capital
-				province = {
-					if = {
-						limit = {
-							province_monthly_food_production > 100
-							scope:pp_food_crisis_capital = {
-								location_building_level = {
-									building_type = building_type:victuals_market
-									value > 0
-								}
-							}
-						}
-						scope:pp_food_crisis_capital = {
-							change_building_level_in_location = { building = building_type:victuals_market value = -1 }
-						}
-					}
-					else_if = {
-						limit = {
-							province_monthly_food_production < -30
-							scope:pp_food_crisis_capital = {
-								OR = {
-									# No victuals_market at all: build the first one.
-									NOT = {
-										any_buildings_in_location = {
-											building_type = building_type:victuals_market
-										}
-									}
-									# Existing victuals_market is healthy and not at max: expand it.
-									AND = {
-										location_building_level = {
-											building_type = building_type:victuals_market
-											value < victuals_market_max_level
-										}
-										any_buildings_in_location = {
-											building_type = building_type:victuals_market
-											is_opened = yes
-											is_full_capacity = yes
-											is_lacking_goods = no
-										}
-									}
-								}
-							}
-						}
-						scope:pp_food_crisis_capital = {
-							construct_building = {
-								building_type = building_type:victuals_market
-								instant = yes
-								cost_multiplier = 0
-								cost_multiplier_reason = "pp_ai_food_crisis"
-							}
-						}
-					}
 				}
 			}
 		}

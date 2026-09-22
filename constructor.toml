@@ -127,6 +127,10 @@ oasis_irrigation = "qanats"
 # advance unlocks stay in the blueprint).
 khmer_baray = { family = "irrigation_systems", strength = 1.5, lock = ["dominant_culture ?= culture:khmer_culture"] }
 incamisana = { family = "irrigation_systems", strength = 1.5 }
+# Later tiers of field management, unlocked by advances. `upgrades` names the tier they replace (blueprint
+# `obsolete`): each level built converts one level of it, so their cap leaves the lower tiers' levels out.
+field_management_convertible = { family = "field_management", strength = 1.5, upgrades = "field_management" }
+field_management_improved = { family = "field_management", strength = 2.0, upgrades = "field_management_convertible" }
 
 # Song/Yuan-era Lower Yangzi improvements. Geography and local culture are checked both in game and at setup.
 [worldbuilder.buildings.niche.jiangnan_canal_network]
@@ -260,8 +264,8 @@ megalopolis = 2.3
 absorb_share = 0.8
 pop_demand_scale = 0.4    # observed pop demand vs the goods file's demand_add x demand_multiply (price, wealth)
 # victuals per building level as the market shows them (measured from saves 2026-09-22; food-check refits)
-producers = { cookery = 0.65, victuals_market = 2.3, farming_village = 0.05, fishing_village = 0.05, forest_village = 0.05, fruit_orchard = 0.05 }
-consumers = { victuals_market_import = 1.2, lumber_mill = 0.3 }
+producers = { cookery = 0.65, victuals_market = 3.45, farming_village = 0.05, fishing_village = 0.05, forest_village = 0.05, fruit_orchard = 0.05 }
+consumers = { victuals_market_import = 1.8, lumber_mill = 0.3 }
 
 [worldbuilder.level_scale]
 # multiply levels, divide people per level; 1.0 keeps the World Builder units. Chosen so every general building is

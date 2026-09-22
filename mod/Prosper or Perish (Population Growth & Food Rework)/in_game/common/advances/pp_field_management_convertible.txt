@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:field_management_convertible:advancement
+pp_field_management_convertible = {
+icon = field_management_convertible
+age = age_3_discovery
+requires = rgo_size_advance_discovery
+unlock_building = field_management_convertible
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:field_management_convertible:advancement

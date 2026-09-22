@@ -66,6 +66,8 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
 
         "field_drainage": "pp_field_drainage_price",
         "field_management": "pp_field_management_price",
+        "field_management_convertible": "pp_field_management_convertible_price",
+        "field_management_improved": "pp_field_management_improved_price",
         "incamisana": "pp_incamisana_price",
         "irrigated_fields": "pp_irrigated_fields_price",
         "irrigation_reservoirs": "pp_irrigation_reservoirs_price",

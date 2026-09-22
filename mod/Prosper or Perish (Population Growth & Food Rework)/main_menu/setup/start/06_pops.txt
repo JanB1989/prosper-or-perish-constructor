@@ -8,8 +8,8 @@ stockholm = {
 	define_pop = {	type = burghers	size = 0.910	culture = swedish	religion = catholic }
 	define_pop = {	type = burghers	size = 0.740	culture = holsatian	religion = catholic }
 	define_pop = {	type = burghers	size = 0.440	culture = lower_saxon	religion = catholic }
-	define_pop = {	type = peasants	size = 18.234	culture = swedish	religion = catholic }
-	define_pop = {	type = laborers	size = 0.674	culture = swedish	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 15.234	culture = swedish	religion = catholic }
+	define_pop = {	type = laborers	size = 3.674	culture = swedish	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 0.691	culture = finnish	religion = catholic }
 }
 norrtalje = {
@@ -1515,7 +1515,8 @@ oslo = {
 	define_pop = {	type = nobles	size = 0.034	culture = norwegian	religion = catholic }
 	define_pop = {	type = clergy	size = 0.081	culture = norwegian	religion = catholic }
 	define_pop = {	type = burghers	size = 1.719	culture = norwegian	religion = catholic }
-	define_pop = {	type = peasants	size = 17.368	culture = norwegian	religion = catholic }
+	define_pop = {	type = peasants	size = 15.415	culture = norwegian	religion = catholic }
+	define_pop = {	type = laborers	size = 1.953	culture = norwegian	religion = catholic }	# pp start: converted from peasants
 }
 ski = {
 	define_pop = {	type = clergy	size = 0.008	culture = norwegian	religion = catholic }
@@ -1595,7 +1596,8 @@ nidaros = {
 	define_pop = {	type = nobles	size = 0.007	culture = norwegian	religion = catholic }
 	define_pop = {	type = clergy	size = 0.236	culture = norwegian	religion = catholic }
 	define_pop = {	type = burghers	size = 0.898	culture = norwegian	religion = catholic }
-	define_pop = {	type = peasants	size = 8.400	culture = norwegian	religion = catholic }
+	define_pop = {	type = peasants	size = 6.596	culture = norwegian	religion = catholic }
+	define_pop = {	type = laborers	size = 1.804	culture = norwegian	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 1.680	culture = sapmi	religion = sapmi_shamanism }
 }
 roros = {
@@ -1615,7 +1617,8 @@ oppdal = {
 }
 orkdal = {
 	define_pop = {	type = clergy	size = 0.008	culture = norwegian	religion = catholic }
-	define_pop = {	type = peasants	size = 6.159	culture = norwegian	religion = catholic }
+	define_pop = {	type = peasants	size = 5.819	culture = norwegian	religion = catholic }
+	define_pop = {	type = laborers	size = 0.340	culture = norwegian	religion = catholic }	# pp start: converted from peasants
 }
 skaun = {
 	define_pop = {	type = clergy	size = 0.008	culture = norwegian	religion = catholic }
@@ -2959,8 +2962,8 @@ groningen = {
 	define_pop = {	type = nobles	size = 0.010	culture = frisian	religion = catholic }
 	define_pop = {	type = clergy	size = 0.045	culture = frisian	religion = catholic }
 	define_pop = {	type = burghers	size = 1.500	culture = frisian	religion = catholic }
-	define_pop = {	type = peasants	size = 10.925	culture = frisian	religion = catholic }
-	define_pop = {	type = laborers	size = 1.985	culture = frisian	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 7.925	culture = frisian	religion = catholic }
+	define_pop = {	type = laborers	size = 4.985	culture = frisian	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 1.959	culture = westphalian	religion = catholic }
 	define_pop = {	type = peasants	size = 0.130	culture = ashkenazi	religion = judaism }
 }
@@ -3196,8 +3199,7 @@ valenciennes = {
 	define_pop = {	type = nobles	size = 0.018	culture = picard	religion = catholic }
 	define_pop = {	type = clergy	size = 0.052	culture = picard	religion = catholic }
 	define_pop = {	type = burghers	size = 2.021	culture = picard	religion = catholic }
-	define_pop = {	type = peasants	size = 28.516	culture = picard	religion = catholic }
-	define_pop = {	type = laborers	size = 1.115	culture = picard	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 29.631	culture = picard	religion = catholic }
 	define_pop = {	type = peasants	size = 1.224	culture = ashkenazi	religion = judaism }
 	define_pop = {	type = peasants	size = 3.367	culture = walloon	religion = catholic }
 }
@@ -3506,7 +3508,8 @@ zerbst = {
 	define_pop = {	type = nobles	size = 0.004	culture = saxon	religion = catholic }
 	define_pop = {	type = clergy	size = 0.016	culture = saxon	religion = catholic }
 	define_pop = {	type = burghers	size = 0.428	culture = saxon	religion = catholic }
-	define_pop = {	type = peasants	size = 18.100	culture = saxon	religion = catholic }
+	define_pop = {	type = peasants	size = 16.846	culture = saxon	religion = catholic }
+	define_pop = {	type = laborers	size = 1.254	culture = saxon	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 0.178	culture = ashkenazi	religion = judaism }
 }
 wittenberg = {
@@ -3563,7 +3566,8 @@ beeskow = {
 	define_pop = {	type = nobles	size = 0.007	culture = sorbian	religion = catholic }
 	define_pop = {	type = clergy	size = 0.040	culture = sorbian	religion = catholic }
 	define_pop = {	type = burghers	size = 1.133	culture = sorbian	religion = catholic }
-	define_pop = {	type = peasants	size = 11.004	culture = sorbian	religion = catholic }
+	define_pop = {	type = peasants	size = 9.653	culture = sorbian	religion = catholic }
+	define_pop = {	type = laborers	size = 1.351	culture = sorbian	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 5.477	culture = brandenburgish	religion = catholic }
 	define_pop = {	type = peasants	size = 0.156	culture = ashkenazi	religion = judaism }
 }
@@ -3848,7 +3852,8 @@ frankfurt = {
 	define_pop = {	type = nobles	size = 0.009	culture = westphalian	religion = catholic }
 	define_pop = {	type = clergy	size = 0.041	culture = westphalian	religion = catholic }
 	define_pop = {	type = burghers	size = 1.186	culture = rhine_franconian	religion = catholic }
-	define_pop = {	type = peasants	size = 20.680	culture = rhine_franconian	religion = catholic }
+	define_pop = {	type = peasants	size = 19.788	culture = rhine_franconian	religion = catholic }
+	define_pop = {	type = laborers	size = 0.892	culture = rhine_franconian	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 0.206	culture = ashkenazi	religion = judaism }
 }
 giessen = {
@@ -4548,8 +4553,8 @@ freiberg = {
 	define_pop = {	type = nobles	size = 0.005	culture = saxon	religion = catholic }
 	define_pop = {	type = clergy	size = 0.029	culture = saxon	religion = catholic }
 	define_pop = {	type = burghers	size = 0.833	culture = saxon	religion = catholic }
-	define_pop = {	type = peasants	size = 16.311	culture = saxon	religion = catholic }
-	define_pop = {	type = laborers	size = 0.091	culture = saxon	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 14.311	culture = saxon	religion = catholic }
+	define_pop = {	type = laborers	size = 2.091	culture = saxon	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 2.799	culture = sorbian	religion = catholic }
 	define_pop = {	type = peasants	size = 0.186	culture = ashkenazi	religion = judaism }
 }
@@ -6006,7 +6011,8 @@ ravensburg = {
 	define_pop = {	type = nobles	size = 0.019	culture = swabian	religion = catholic }
 	define_pop = {	type = clergy	size = 0.088	culture = swabian	religion = catholic }
 	define_pop = {	type = burghers	size = 2.534	culture = high_alemannic	religion = catholic }
-	define_pop = {	type = peasants	size = 8.256	culture = high_alemannic	religion = catholic }
+	define_pop = {	type = peasants	size = 5.391	culture = high_alemannic	religion = catholic }
+	define_pop = {	type = laborers	size = 2.865	culture = high_alemannic	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 1.999	culture = swabian	religion = catholic }
 	define_pop = {	type = peasants	size = 0.098	culture = ashkenazi	religion = judaism }
 }
@@ -6082,7 +6088,8 @@ nuremberg = {
 	define_pop = {	type = nobles	size = 0.019	culture = east_franconian	religion = catholic }
 	define_pop = {	type = clergy	size = 0.088	culture = east_franconian	religion = catholic }
 	define_pop = {	type = burghers	size = 2.553	culture = east_franconian	religion = catholic }
-	define_pop = {	type = peasants	size = 11.704	culture = east_franconian	religion = catholic }
+	define_pop = {	type = peasants	size = 9.247	culture = east_franconian	religion = catholic }
+	define_pop = {	type = laborers	size = 2.457	culture = east_franconian	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 0.115	culture = ashkenazi	religion = judaism }
 }
 schwabach = {
@@ -7047,7 +7054,8 @@ pennines_01 = {
 pennines_02 = {
 }
 york = {
-	define_pop = {	type = peasants	size = 16.941	culture = northumbrian	religion = catholic }
+	define_pop = {	type = peasants	size = 16.400	culture = northumbrian	religion = catholic }
+	define_pop = {	type = laborers	size = 0.541	culture = northumbrian	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 8.469	culture = english	religion = catholic }
 }
 scarborough = {
@@ -7098,8 +7106,8 @@ wakefield = {
 	define_pop = {	type = peasants	size = 4.253	culture = northumbrian	religion = catholic }
 }
 doncaster = {
-	define_pop = {	type = peasants	size = 10.255	culture = english	religion = catholic }
-	define_pop = {	type = laborers	size = 0.305	culture = english	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 8.255	culture = english	religion = catholic }
+	define_pop = {	type = laborers	size = 2.305	culture = english	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 5.280	culture = northumbrian	religion = catholic }
 }
 ripon = {
@@ -9619,8 +9627,7 @@ chalancon = {
 le_puy = {
 	define_pop = {	type = nobles	size = 0.016	culture = auvergnat	religion = catholic }
 	define_pop = {	type = clergy	size = 0.085	culture = auvergnat	religion = catholic }
-	define_pop = {	type = peasants	size = 32.449	culture = auvergnat	religion = catholic }
-	define_pop = {	type = laborers	size = 2.512	culture = auvergnat	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 34.961	culture = auvergnat	religion = catholic }
 }
 montlaur = {
 	define_pop = {	type = peasants	size = 14.050	culture = auvergnat	religion = catholic }
@@ -10062,7 +10069,8 @@ vendome = {
 }
 chartres = {
 	define_pop = {	type = nobles	size = 0.009	culture = french	religion = catholic }
-	define_pop = {	type = peasants	size = 27.181	culture = french	religion = catholic }
+	define_pop = {	type = peasants	size = 26.886	culture = french	religion = catholic }
+	define_pop = {	type = laborers	size = 0.295	culture = french	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 0.535	culture = ashkenazi	religion = judaism }
 }
 auneau = {
@@ -11775,8 +11783,7 @@ girona = {
 	define_pop = {	type = burghers	size = 1.754	culture = catalan	religion = catholic }
 	define_pop = {	type = burghers	size = 0.198	culture = sephardi	religion = judaism }
 	define_pop = {	type = burghers	size = 0.198	culture = languedocien	religion = catholic }
-	define_pop = {	type = peasants	size = 31.515	culture = catalan	religion = catholic }
-	define_pop = {	type = laborers	size = 1.407	culture = catalan	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 32.922	culture = catalan	religion = catholic }
 	define_pop = {	type = peasants	size = 0.790	culture = sephardi	religion = judaism }
 }
 besalu = {
@@ -12831,8 +12838,7 @@ jerez_de_la_frontera = {
 	define_pop = {	type = clergy	size = 0.077	culture = castilian	religion = catholic }
 	define_pop = {	type = burghers	size = 1.585	culture = castilian	religion = catholic }
 	define_pop = {	type = burghers	size = 0.222	culture = sephardi	religion = judaism }
-	define_pop = {	type = peasants	size = 10.890	culture = castilian	religion = catholic }
-	define_pop = {	type = laborers	size = 0.650	culture = castilian	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 11.540	culture = castilian	religion = catholic }
 	define_pop = {	type = peasants	size = 0.393	culture = sephardi	religion = judaism }
 	define_pop = {	type = peasants	size = 1.180	culture = andalusi	religion = sunni }
 }
@@ -14299,7 +14305,8 @@ brescia = {
 	define_pop = {	type = burghers	size = 1.201	culture = italki	religion = judaism }
 	define_pop = {	type = burghers	size = 0.587	culture = venetian	religion = catholic }
 	define_pop = {	type = burghers	size = 0.608	culture = danube_bavarian	religion = catholic }
-	define_pop = {	type = peasants	size = 69.727	culture = lombard	religion = catholic }
+	define_pop = {	type = peasants	size = 69.096	culture = lombard	religion = catholic }
+	define_pop = {	type = laborers	size = 0.631	culture = lombard	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 0.626	culture = italki	religion = judaism }
 	define_pop = {	type = peasants	size = 0.588	culture = venetian	religion = catholic }
 }
@@ -14457,7 +14464,8 @@ pavia = {
 	define_pop = {	type = burghers	size = 0.419	culture = emilian	religion = catholic }
 	define_pop = {	type = burghers	size = 0.329	culture = piedmontese	religion = catholic }
 	define_pop = {	type = burghers	size = 0.348	culture = swabian	religion = catholic }
-	define_pop = {	type = peasants	size = 54.718	culture = lombard	religion = catholic }
+	define_pop = {	type = peasants	size = 53.512	culture = lombard	religion = catholic }
+	define_pop = {	type = laborers	size = 1.206	culture = lombard	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 0.489	culture = italki	religion = judaism }
 	define_pop = {	type = peasants	size = 0.257	culture = emilian	religion = catholic }
 	define_pop = {	type = peasants	size = 0.229	culture = piedmontese	religion = catholic }
@@ -14509,7 +14517,8 @@ ancona = {
 	define_pop = {	type = nobles	size = 0.028	culture = median	religion = catholic }
 	define_pop = {	type = clergy	size = 0.113	culture = median	religion = catholic }
 	define_pop = {	type = burghers	size = 4.967	culture = median	religion = catholic }
-	define_pop = {	type = peasants	size = 26.002	culture = median	religion = catholic }
+	define_pop = {	type = peasants	size = 22.009	culture = median	religion = catholic }
+	define_pop = {	type = laborers	size = 3.993	culture = median	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 2.775	culture = romagnol	religion = catholic }
 }
 ascolipiceno = {
@@ -14748,7 +14757,8 @@ turin = {
 	define_pop = {	type = burghers	size = 1.207	culture = piedmontese	religion = catholic }
 	define_pop = {	type = burghers	size = 0.440	culture = italki	religion = judaism }
 	define_pop = {	type = burghers	size = 0.146	culture = arpitan	religion = catholic }
-	define_pop = {	type = peasants	size = 31.194	culture = piedmontese	religion = catholic }
+	define_pop = {	type = peasants	size = 29.701	culture = piedmontese	religion = catholic }
+	define_pop = {	type = laborers	size = 1.493	culture = piedmontese	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 0.854	culture = italki	religion = judaism }
 	define_pop = {	type = peasants	size = 6.409	culture = arpitan	religion = catholic }
 	define_pop = {	type = peasants	size = 4.272	culture = piedmontese	religion = waldensian }
@@ -16368,7 +16378,8 @@ tata = {
 fehervar = {
 	define_pop = {	type = clergy	size = 0.053	culture = hungarian	religion = catholic }
 	define_pop = {	type = peasants	size = 0.152	culture = ashkenazi	religion = judaism }
-	define_pop = {	type = peasants	size = 17.981	culture = hungarian	religion = catholic }
+	define_pop = {	type = peasants	size = 17.670	culture = hungarian	religion = catholic }
+	define_pop = {	type = laborers	size = 0.311	culture = hungarian	religion = catholic }	# pp start: converted from peasants
 }
 adony = {
 	define_pop = {	type = clergy	size = 0.008	culture = hungarian	religion = catholic }
@@ -16562,7 +16573,8 @@ brasov = {
 cincu = {
 	define_pop = {	type = clergy	size = 0.009	culture = german_transylvanian	religion = catholic }
 	define_pop = {	type = peasants	size = 5.862	culture = transylvanian	religion = orthodox }
-	define_pop = {	type = peasants	size = 8.376	culture = german_transylvanian	religion = catholic }
+	define_pop = {	type = peasants	size = 8.169	culture = german_transylvanian	religion = catholic }
+	define_pop = {	type = laborers	size = 0.207	culture = german_transylvanian	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 2.511	culture = szekely_culture	religion = catholic }
 }
 fagaras = {
@@ -16958,7 +16970,8 @@ tallinn = {
 narva = {
 	define_pop = {	type = clergy	size = 0.006	culture = german_baltic	religion = catholic }
 	define_pop = {	type = peasants	size = 0.623	culture = german_baltic	religion = catholic }
-	define_pop = {	type = peasants	size = 5.016	culture = estonian	religion = catholic }
+	define_pop = {	type = peasants	size = 3.687	culture = estonian	religion = catholic }
+	define_pop = {	type = laborers	size = 1.329	culture = estonian	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 0.623	culture = swedish	religion = catholic }
 }
 padise = {
@@ -17766,8 +17779,8 @@ vilnius = {
 	define_pop = {	type = nobles	size = 0.005	culture = aukstaitian	religion = romuva }
 	define_pop = {	type = clergy	size = 0.048	culture = aukstaitian	religion = romuva }
 	define_pop = {	type = burghers	size = 1.369	culture = aukstaitian	religion = romuva }
-	define_pop = {	type = peasants	size = 8.901	culture = aukstaitian	religion = romuva }
-	define_pop = {	type = laborers	size = 0.989	culture = aukstaitian	religion = romuva }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 7.901	culture = aukstaitian	religion = romuva }
+	define_pop = {	type = laborers	size = 1.989	culture = aukstaitian	religion = romuva }	# pp start: converted from peasants
 	define_pop = {	type = slaves	size = 0.520	culture = crimean	religion = sunni }
 }
 giedraiciai = {
@@ -17779,7 +17792,8 @@ kernave = {
 	define_pop = {	type = slaves	size = 0.217	culture = crimean	religion = sunni }
 }
 medininkai_vilna = {
-	define_pop = {	type = peasants	size = 5.074	culture = aukstaitian	religion = romuva }
+	define_pop = {	type = peasants	size = 4.645	culture = aukstaitian	religion = romuva }
+	define_pop = {	type = laborers	size = 0.429	culture = aukstaitian	religion = romuva }	# pp start: converted from peasants
 	define_pop = {	type = slaves	size = 0.267	culture = crimean	religion = sunni }
 }
 ciechanow = {
@@ -17808,7 +17822,8 @@ liw = {
 	define_pop = {	type = peasants	size = 13.028	culture = mazovian	religion = catholic }
 }
 lomza = {
-	define_pop = {	type = peasants	size = 3.438	culture = mazovian	religion = catholic }
+	define_pop = {	type = peasants	size = 2.806	culture = mazovian	religion = catholic }
+	define_pop = {	type = laborers	size = 0.632	culture = mazovian	religion = catholic }	# pp start: converted from peasants
 }
 kolno = {
 	define_pop = {	type = peasants	size = 3.229	culture = mazovian	religion = catholic }
@@ -18151,7 +18166,8 @@ nowe = {
 }
 swiecie = {
 	define_pop = {	type = clergy	size = 0.010	culture = prussian	religion = catholic }
-	define_pop = {	type = peasants	size = 9.281	culture = kashubian	religion = catholic }
+	define_pop = {	type = peasants	size = 9.055	culture = kashubian	religion = catholic }
+	define_pop = {	type = laborers	size = 0.226	culture = kashubian	religion = catholic }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 5.468	culture = prussian	religion = catholic }
 	define_pop = {	type = peasants	size = 1.822	culture = greater_polish	religion = catholic }
 }
@@ -19322,7 +19338,8 @@ tykhomel = {
 }
 lutsk = {
 	define_pop = {	type = clergy	size = 0.004	culture = volhynian_culture	religion = orthodox }
-	define_pop = {	type = peasants	size = 14.840	culture = volhynian_culture	religion = orthodox }
+	define_pop = {	type = peasants	size = 14.428	culture = volhynian_culture	religion = orthodox }
+	define_pop = {	type = laborers	size = 0.412	culture = volhynian_culture	religion = orthodox }	# pp start: converted from peasants
 }
 chortoryisk = {
 	define_pop = {	type = clergy	size = 0.020	culture = volhynian_culture	religion = orthodox }
@@ -20974,7 +20991,8 @@ seyitler = {
 }
 solkhat = {
 	define_pop = {	type = clergy	size = 0.015	culture = mongolian_culture	religion = sunni }
-	define_pop = {	type = peasants	size = 4.519	culture = crimean	religion = sunni }
+	define_pop = {	type = peasants	size = 4.264	culture = crimean	religion = sunni }
+	define_pop = {	type = laborers	size = 0.255	culture = crimean	religion = sunni }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 0.957	culture = crimean	religion = tengri }
 	define_pop = {	type = tribesmen	size = 1.475	culture = crimean	religion = tengri }
 }
@@ -23709,8 +23727,8 @@ saransk = {
 }
 nizhny_novgorod = {
 	define_pop = {	type = clergy	size = 0.008	culture = muscovite	religion = orthodox }
-	define_pop = {	type = peasants	size = 10.594	culture = muscovite	religion = orthodox }
-	define_pop = {	type = laborers	size = 0.099	culture = muscovite	religion = orthodox }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 8.594	culture = muscovite	religion = orthodox }
+	define_pop = {	type = laborers	size = 2.099	culture = muscovite	religion = orthodox }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 7.128	culture = merya_culture	religion = mari_paganism }
 }
 dalneye_konstantinovo = {
@@ -24051,8 +24069,8 @@ tver = {
 	define_pop = {	type = nobles	size = 0.010	culture = muscovite	religion = orthodox }
 	define_pop = {	type = clergy	size = 0.076	culture = muscovite	religion = orthodox }
 	define_pop = {	type = burghers	size = 0.846	culture = muscovite	religion = orthodox }
-	define_pop = {	type = peasants	size = 21.742	culture = muscovite	religion = orthodox }
-	define_pop = {	type = laborers	size = 0.139	culture = muscovite	religion = orthodox }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 19.742	culture = muscovite	religion = orthodox }
+	define_pop = {	type = laborers	size = 2.139	culture = muscovite	religion = orthodox }	# pp start: converted from peasants
 }
 brody_tver = {
 	define_pop = {	type = peasants	size = 7.554	culture = muscovite	religion = orthodox }
@@ -24087,7 +24105,8 @@ mikulino_tver = {
 	define_pop = {	type = peasants	size = 9.090	culture = muscovite	religion = orthodox }
 }
 yaroslavl = {
-	define_pop = {	type = peasants	size = 13.281	culture = muscovite	religion = orthodox }
+	define_pop = {	type = peasants	size = 12.050	culture = muscovite	religion = orthodox }
+	define_pop = {	type = laborers	size = 1.231	culture = muscovite	religion = orthodox }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 3.318	culture = merya_culture	religion = mari_paganism }
 }
 bolshoye_selo = {
@@ -24807,7 +24826,8 @@ pskov = {
 }
 gdov = {
 	define_pop = {	type = clergy	size = 0.012	culture = novgorodian	religion = orthodox }
-	define_pop = {	type = peasants	size = 6.278	culture = novgorodian	religion = orthodox }
+	define_pop = {	type = peasants	size = 4.951	culture = novgorodian	religion = orthodox }
+	define_pop = {	type = laborers	size = 1.327	culture = novgorodian	religion = orthodox }	# pp start: converted from peasants
 }
 izborsk = {
 	define_pop = {	type = clergy	size = 0.002	culture = novgorodian	religion = orthodox }
@@ -26408,8 +26428,8 @@ dubrovnik = {
 	define_pop = {	type = clergy	size = 0.093	culture = venetian	religion = catholic }
 	define_pop = {	type = burghers	size = 1.811	culture = dalmatian	religion = catholic }
 	define_pop = {	type = peasants	size = 1.461	culture = venetian	religion = catholic }
-	define_pop = {	type = peasants	size = 7.398	culture = dalmatian	religion = catholic }
-	define_pop = {	type = laborers	size = 0.800	culture = dalmatian	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 6.398	culture = dalmatian	religion = catholic }
+	define_pop = {	type = laborers	size = 1.800	culture = dalmatian	religion = catholic }	# pp start: converted from peasants
 }
 brac = {
 	define_pop = {	type = peasants	size = 0.333	culture = venetian	religion = catholic }
@@ -26433,8 +26453,8 @@ lastovo_island_wasteland = {
 }
 slano = {
 	define_pop = {	type = peasants	size = 0.416	culture = venetian	religion = catholic }
-	define_pop = {	type = peasants	size = 6.854	culture = dalmatian	religion = catholic }
-	define_pop = {	type = laborers	size = 1.104	culture = dalmatian	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 5.854	culture = dalmatian	religion = catholic }
+	define_pop = {	type = laborers	size = 2.104	culture = dalmatian	religion = catholic }	# pp start: converted from peasants
 }
 split = {
 	define_pop = {	type = peasants	size = 1.005	culture = croatian	religion = catholic }
@@ -27574,7 +27594,8 @@ bukelon = {
 constantia_bul = {
 	define_pop = {	type = clergy	size = 0.009	culture = greek_culture	religion = orthodox }
 	define_pop = {	type = peasants	size = 4.765	culture = greek_culture	religion = orthodox }
-	define_pop = {	type = peasants	size = 11.125	culture = bulgarian	religion = orthodox }
+	define_pop = {	type = peasants	size = 9.826	culture = bulgarian	religion = orthodox }
+	define_pop = {	type = laborers	size = 1.299	culture = bulgarian	religion = orthodox }	# pp start: converted from peasants
 }
 elhovo = {
 	define_pop = {	type = clergy	size = 0.009	culture = greek_culture	religion = orthodox }
@@ -27851,7 +27872,8 @@ gravia = {
 }
 zetounion = {
 	define_pop = {	type = clergy	size = 0.008	culture = greek_culture	religion = orthodox }
-	define_pop = {	type = peasants	size = 8.221	culture = greek_culture	religion = orthodox }
+	define_pop = {	type = peasants	size = 8.102	culture = greek_culture	religion = orthodox }
+	define_pop = {	type = laborers	size = 0.119	culture = greek_culture	religion = orthodox }	# pp start: converted from peasants
 }
 arta = {
 	define_pop = {	type = nobles	size = 0.026	culture = greek_culture	religion = orthodox }
@@ -28081,7 +28103,8 @@ candia = {
 	define_pop = {	type = clergy	size = 0.080	culture = greek_culture	religion = orthodox }
 	define_pop = {	type = burghers	size = 1.726	culture = greek_culture	religion = orthodox }
 	define_pop = {	type = burghers	size = 0.191	culture = romanyoti	religion = judaism }
-	define_pop = {	type = peasants	size = 16.177	culture = greek_culture	religion = orthodox }
+	define_pop = {	type = peasants	size = 13.919	culture = greek_culture	religion = orthodox }
+	define_pop = {	type = laborers	size = 2.258	culture = greek_culture	religion = orthodox }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 0.500	culture = romanyoti	religion = judaism }
 }
 chania = {
@@ -29146,8 +29169,8 @@ paropamisus_mountains7 = {
 }
 kunduz = {
 	define_pop = {	type = clergy	size = 0.001	culture = mongolian_culture	religion = sunni }
-	define_pop = {	type = peasants	size = 7.304	culture = tajik_culture	religion = sunni }
-	define_pop = {	type = laborers	size = 1.101	culture = tajik_culture	religion = sunni }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 6.304	culture = tajik_culture	religion = sunni }
+	define_pop = {	type = laborers	size = 2.101	culture = tajik_culture	religion = sunni }	# pp start: converted from peasants
 }
 arkhan = {
 	define_pop = {	type = clergy	size = 0.001	culture = mongolian_culture	religion = sunni }
@@ -29282,8 +29305,8 @@ hazarasp = {
 	define_pop = {	type = peasants	size = 29.924	culture = khorezmian_culture	religion = sunni }
 }
 urgench = {
-	define_pop = {	type = peasants	size = 9.056	culture = nogai	religion = sunni }
-	define_pop = {	type = laborers	size = 0.913	culture = nogai	religion = sunni }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 8.056	culture = nogai	religion = sunni }
+	define_pop = {	type = laborers	size = 1.913	culture = nogai	religion = sunni }	# pp start: converted from peasants
 	define_pop = {	type = slaves	size = 5.364	culture = nogai	religion = tengri }
 }
 kyat_kala = {
@@ -30159,7 +30182,8 @@ almaty = {
 	define_pop = {	type = clergy	size = 0.026	culture = mongolian_culture	religion = tengri }
 	define_pop = {	type = burghers	size = 0.660	culture = kyrgyz_culture	religion = tengri }
 	define_pop = {	type = peasants	size = 0.602	culture = mongolian_culture	religion = tengri }
-	define_pop = {	type = peasants	size = 14.994	culture = kyrgyz_culture	religion = tengri }
+	define_pop = {	type = peasants	size = 14.312	culture = kyrgyz_culture	religion = tengri }
+	define_pop = {	type = laborers	size = 0.682	culture = kyrgyz_culture	religion = tengri }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 0.980	culture = mongolian_culture	religion = tengri }
 	define_pop = {	type = tribesmen	size = 25.589	culture = kyrgyz_culture	religion = tengri }
 }
@@ -33187,7 +33211,8 @@ acre = {
 	define_pop = {	type = nobles	size = 0.011	culture = levantine_culture	religion = sunni }
 	define_pop = {	type = clergy	size = 0.081	culture = levantine_culture	religion = sunni }
 	define_pop = {	type = burghers	size = 2.114	culture = levantine_culture	religion = sunni }
-	define_pop = {	type = peasants	size = 18.853	culture = levantine_culture	religion = sunni }
+	define_pop = {	type = peasants	size = 18.734	culture = levantine_culture	religion = sunni }
+	define_pop = {	type = laborers	size = 0.119	culture = levantine_culture	religion = sunni }	# pp start: converted from peasants
 	define_pop = {	type = slaves	size = 9.426	culture = syriac_culture	religion = orthodox }
 	define_pop = {	type = slaves	size = 3.770	culture = mizrahi	religion = judaism }
 	define_pop = {	type = slaves	size = 5.655	culture = levantine_culture	religion = druzism }
@@ -37154,8 +37179,7 @@ isfahan = {
 	define_pop = {	type = burghers	size = 2.328	culture = farsi_culture	religion = sunni }
 	define_pop = {	type = burghers	size = 0.358	culture = kalimi	religion = judaism }
 	define_pop = {	type = burghers	size = 0.895	culture = farsi_culture	religion = zoroastrian }
-	define_pop = {	type = peasants	size = 12.732	culture = farsi_culture	religion = sunni }
-	define_pop = {	type = laborers	size = 0.134	culture = farsi_culture	religion = sunni }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 12.866	culture = farsi_culture	religion = sunni }
 	define_pop = {	type = peasants	size = 3.341	culture = farsi_culture	religion = zoroastrian }
 	define_pop = {	type = slaves	size = 0.500	culture = kalimi	religion = judaism }
 }
@@ -39060,8 +39084,8 @@ minxian = {
 	define_pop = {	type = nobles	size = 0.024	culture = fuzhou_culture	religion = sanjiao }
 	define_pop = {	type = clergy	size = 0.191	culture = fuzhou_culture	religion = sanjiao }
 	define_pop = {	type = burghers	size = 6.012	culture = fuzhou_culture	religion = sanjiao }
-	define_pop = {	type = peasants	size = 43.282	culture = fuzhou_culture	religion = sanjiao }
-	define_pop = {	type = laborers	size = 2.832	culture = fuzhou_culture	religion = sanjiao }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 40.282	culture = fuzhou_culture	religion = sanjiao }
+	define_pop = {	type = laborers	size = 5.832	culture = fuzhou_culture	religion = sanjiao }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 2.422	culture = fuzhou_culture	religion = manichaeism }
 }
 lianjiang = {
@@ -39652,7 +39676,8 @@ suining_jing = {
 }
 huitong = {
 	define_pop = {	type = clergy	size = 0.004	culture = laoxiang_culture	religion = sanjiao }
-	define_pop = {	type = peasants	size = 10.621	culture = laoxiang_culture	religion = sanjiao }
+	define_pop = {	type = peasants	size = 8.463	culture = laoxiang_culture	religion = sanjiao }
+	define_pop = {	type = laborers	size = 2.158	culture = laoxiang_culture	religion = sanjiao }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 15.935	culture = kam_culture	religion = kam_religion }
 }
 tongdao = {
@@ -43620,7 +43645,8 @@ seogyeong = {
 	define_pop = {	type = nobles	size = 0.069	culture = korean_culture	religion = mahayana }
 	define_pop = {	type = clergy	size = 0.244	culture = korean_culture	religion = mahayana }
 	define_pop = {	type = burghers	size = 4.941	culture = korean_culture	religion = mahayana }
-	define_pop = {	type = peasants	size = 34.842	culture = korean_culture	religion = mahayana }
+	define_pop = {	type = peasants	size = 30.242	culture = korean_culture	religion = mahayana }
+	define_pop = {	type = laborers	size = 4.600	culture = korean_culture	religion = mahayana }	# pp start: converted from peasants
 }
 jeungsan = {
 	define_pop = {	type = clergy	size = 0.009	culture = korean_culture	religion = mahayana }
@@ -43892,7 +43918,8 @@ jinju = {
 	define_pop = {	type = nobles	size = 0.069	culture = korean_culture	religion = mahayana }
 	define_pop = {	type = clergy	size = 0.249	culture = korean_culture	religion = mahayana }
 	define_pop = {	type = burghers	size = 4.941	culture = korean_culture	religion = mahayana }
-	define_pop = {	type = peasants	size = 37.766	culture = korean_culture	religion = mahayana }
+	define_pop = {	type = peasants	size = 34.469	culture = korean_culture	religion = mahayana }
+	define_pop = {	type = laborers	size = 3.297	culture = korean_culture	religion = mahayana }	# pp start: converted from peasants
 }
 hadong = {
 	define_pop = {	type = clergy	size = 0.014	culture = korean_culture	religion = mahayana }
@@ -46133,7 +46160,8 @@ khilgoson = {
 }
 ung = {
 	define_pop = {	type = clergy	size = 0.005	culture = mongolian_culture	religion = tengri }
-	define_pop = {	type = peasants	size = 3.885	culture = mongolian_culture	religion = tengri }
+	define_pop = {	type = peasants	size = 3.823	culture = mongolian_culture	religion = tengri }
+	define_pop = {	type = laborers	size = 0.062	culture = mongolian_culture	religion = tengri }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 4.875	culture = mongolian_culture	religion = tengri }
 }
 ude_baikal = {
@@ -47527,7 +47555,8 @@ yanshan_mountains2 = {
 }
 baoan_baoan = {
 	define_pop = {	type = clergy	size = 0.004	culture = jin_culture	religion = sanjiao }
-	define_pop = {	type = peasants	size = 33.788	culture = jin_culture	religion = sanjiao }
+	define_pop = {	type = peasants	size = 32.890	culture = jin_culture	religion = sanjiao }
+	define_pop = {	type = laborers	size = 0.898	culture = jin_culture	religion = sanjiao }	# pp start: converted from peasants
 }
 huailai = {
 	define_pop = {	type = clergy	size = 0.004	culture = jin_culture	religion = sanjiao }
@@ -49055,8 +49084,8 @@ taizhou = {
 }
 guozhou = {
 	define_pop = {	type = clergy	size = 0.004	culture = jin_culture	religion = sanjiao }
-	define_pop = {	type = peasants	size = 41.826	culture = jin_culture	religion = sanjiao }
-	define_pop = {	type = laborers	size = 0.037	culture = jin_culture	religion = sanjiao }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 39.826	culture = jin_culture	religion = sanjiao }
+	define_pop = {	type = laborers	size = 2.037	culture = jin_culture	religion = sanjiao }	# pp start: converted from peasants
 }
 taihangshan8 = {
 }
@@ -52739,7 +52768,8 @@ charasa = {
 kargil = {
 	define_pop = {	type = clergy	size = 0.004	culture = shina_culture	religion = hindu }
 	define_pop = {	type = peasants	size = 0.901	culture = shina_culture	religion = mahayana }
-	define_pop = {	type = peasants	size = 6.507	culture = balti_culture	religion = tibetan_buddhism }
+	define_pop = {	type = peasants	size = 6.474	culture = balti_culture	religion = tibetan_buddhism }
+	define_pop = {	type = laborers	size = 0.033	culture = balti_culture	religion = tibetan_buddhism }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 1.625	culture = balti_culture	religion = bon }
 }
 karpokhar = {
@@ -53188,7 +53218,8 @@ lhasa = {
 	define_pop = {	type = nobles	size = 0.021	culture = utsang_culture	religion = tibetan_buddhism }
 	define_pop = {	type = clergy	size = 0.171	culture = utsang_culture	religion = tibetan_buddhism }
 	define_pop = {	type = burghers	size = 5.411	culture = utsang_culture	religion = tibetan_buddhism }
-	define_pop = {	type = peasants	size = 21.699	culture = utsang_culture	religion = tibetan_buddhism }
+	define_pop = {	type = peasants	size = 21.585	culture = utsang_culture	religion = tibetan_buddhism }
+	define_pop = {	type = laborers	size = 0.114	culture = utsang_culture	religion = tibetan_buddhism }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 5.411	culture = utsang_culture	religion = bon }
 }
 damzhung = {
@@ -53436,8 +53467,8 @@ qingtu_lake = {
 }
 fuzhou_yanan = {
 	define_pop = {	type = clergy	size = 0.004	culture = qin_culture	religion = sanjiao }
-	define_pop = {	type = peasants	size = 38.631	culture = qin_culture	religion = sanjiao }
-	define_pop = {	type = laborers	size = 0.345	culture = qin_culture	religion = sanjiao }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 36.631	culture = qin_culture	religion = sanjiao }
+	define_pop = {	type = laborers	size = 2.345	culture = qin_culture	religion = sanjiao }	# pp start: converted from peasants
 }
 luochuan = {
 	define_pop = {	type = clergy	size = 0.004	culture = qin_culture	religion = sanjiao }
@@ -53562,7 +53593,8 @@ mingsha = {
 }
 fuchuan_ningxia = {
 	define_pop = {	type = clergy	size = 0.004	culture = mongolian_culture	religion = tibetan_buddhism }
-	define_pop = {	type = peasants	size = 21.421	culture = liang_culture	religion = sanjiao }
+	define_pop = {	type = peasants	size = 20.073	culture = liang_culture	religion = sanjiao }
+	define_pop = {	type = laborers	size = 1.348	culture = liang_culture	religion = sanjiao }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 5.840	culture = mi_niah_culture	religion = mahayana }
 	define_pop = {	type = peasants	size = 11.683	culture = qin_culture	religion = sanjiao }
 }
@@ -54304,7 +54336,8 @@ taiping = {
 }
 fuzhou_sichuan = {
 	define_pop = {	type = clergy	size = 0.004	culture = shu_culture	religion = sanjiao }
-	define_pop = {	type = peasants	size = 28.508	culture = shu_culture	religion = sanjiao }
+	define_pop = {	type = peasants	size = 27.047	culture = shu_culture	religion = sanjiao }
+	define_pop = {	type = laborers	size = 1.461	culture = shu_culture	religion = sanjiao }	# pp start: converted from peasants
 }
 changshou_changshou = {
 	define_pop = {	type = clergy	size = 0.004	culture = shu_culture	religion = sanjiao }
@@ -54910,8 +54943,8 @@ zitong = {
 }
 jianzhou = {
 	define_pop = {	type = clergy	size = 0.004	culture = shu_culture	religion = sanjiao }
-	define_pop = {	type = peasants	size = 41.653	culture = shu_culture	religion = sanjiao }
-	define_pop = {	type = laborers	size = 0.054	culture = shu_culture	religion = sanjiao }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 39.653	culture = shu_culture	religion = sanjiao }
+	define_pop = {	type = laborers	size = 2.054	culture = shu_culture	religion = sanjiao }	# pp start: converted from peasants
 }
 zixian = {
 	define_pop = {	type = clergy	size = 0.004	culture = shu_culture	religion = sanjiao }
@@ -59757,7 +59790,8 @@ kutlehar = {
 	define_pop = {	type = nobles	size = 0.027	culture = kangri	religion = hindu }
 	define_pop = {	type = clergy	size = 0.033	culture = punjabi	religion = hindu }
 	define_pop = {	type = peasants	size = 7.212	culture = kangri	religion = hindu }
-	define_pop = {	type = peasants	size = 19.541	culture = punjabi	religion = hindu }
+	define_pop = {	type = peasants	size = 19.410	culture = punjabi	religion = hindu }
+	define_pop = {	type = laborers	size = 0.131	culture = punjabi	religion = hindu }	# pp start: converted from peasants
 }
 kahlur = {
 	define_pop = {	type = nobles	size = 0.013	culture = kangri	religion = hindu }
@@ -60039,8 +60073,8 @@ bhimber = {
 	define_pop = {	type = nobles	size = 0.007	culture = kashmiri_culture	religion = hindu }
 	define_pop = {	type = clergy	size = 0.009	culture = kashmiri_culture	religion = hindu }
 	define_pop = {	type = peasants	size = 6.456	culture = kangri	religion = hindu }
-	define_pop = {	type = peasants	size = 11.977	culture = punjabi	religion = hindu }
-	define_pop = {	type = laborers	size = 0.023	culture = punjabi	religion = hindu }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 10.977	culture = punjabi	religion = hindu }
+	define_pop = {	type = laborers	size = 1.023	culture = punjabi	religion = hindu }	# pp start: converted from peasants
 }
 kohtali = {
 	define_pop = {	type = clergy	size = 0.006	culture = dehlavi	religion = sunni }
@@ -60247,7 +60281,8 @@ kalam_swat = {
 }
 dir = {
 	define_pop = {	type = clergy	size = 0.008	culture = kashmiri_culture	religion = hindu }
-	define_pop = {	type = peasants	size = 4.519	culture = kohistani	religion = hindu }
+	define_pop = {	type = peasants	size = 4.003	culture = kohistani	religion = hindu }
+	define_pop = {	type = laborers	size = 0.516	culture = kohistani	religion = hindu }	# pp start: converted from peasants
 }
 timergara = {
 	define_pop = {	type = clergy	size = 0.009	culture = kashmiri_culture	religion = hindu }
@@ -67570,7 +67605,8 @@ rantau_panjang = {
 temasek = {
 	define_pop = {	type = nobles	size = 0.035	culture = malay_culture	religion = hindu }
 	define_pop = {	type = clergy	size = 0.032	culture = malay_culture	religion = hindu }
-	define_pop = {	type = peasants	size = 22.496	culture = malay_culture	religion = hindu }
+	define_pop = {	type = peasants	size = 21.651	culture = malay_culture	religion = hindu }
+	define_pop = {	type = laborers	size = 0.845	culture = malay_culture	religion = hindu }	# pp start: converted from peasants
 }
 kedah = {
 	define_pop = {	type = nobles	size = 0.016	culture = malay_culture	religion = mahayana }
@@ -67795,8 +67831,8 @@ lamphun = {
 	define_pop = {	type = clergy	size = 0.052	culture = khon_muang_culture	religion = theravada }
 	define_pop = {	type = burghers	size = 3.212	culture = khon_muang_culture	religion = theravada }
 	define_pop = {	type = peasants	size = 7.322	culture = khon_muang_culture	religion = theravada }
-	define_pop = {	type = peasants	size = 6.467	culture = lawa_culture	religion = theravada }
-	define_pop = {	type = laborers	size = 4.516	culture = lawa_culture	religion = theravada }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 9.467	culture = lawa_culture	religion = theravada }
+	define_pop = {	type = laborers	size = 1.516	culture = lawa_culture	religion = theravada }	# pp start: converted from peasants
 }
 muang_wang = {
 	define_pop = {	type = peasants	size = 2.960	culture = khon_muang_culture	religion = theravada }
@@ -70377,7 +70413,8 @@ tondo = {
 maynila = {
 	define_pop = {	type = nobles	size = 0.009	culture = tagalog_culture	religion = hindu }
 	define_pop = {	type = clergy	size = 0.017	culture = tagalog_culture	religion = hindu }
-	define_pop = {	type = peasants	size = 29.622	culture = tagalog_culture	religion = hindu }
+	define_pop = {	type = peasants	size = 29.532	culture = tagalog_culture	religion = hindu }
+	define_pop = {	type = laborers	size = 0.090	culture = tagalog_culture	religion = hindu }	# pp start: converted from peasants
 }
 kainta = {
 	define_pop = {	type = nobles	size = 0.009	culture = tagalog_culture	religion = anitism_religion }
@@ -71545,7 +71582,8 @@ semerlanga = {
 }
 sigli = {
 	define_pop = {	type = clergy	size = 0.007	culture = acehnese_culture	religion = hindu }
-	define_pop = {	type = peasants	size = 3.450	culture = acehnese_culture	religion = hindu }
+	define_pop = {	type = peasants	size = 2.820	culture = acehnese_culture	religion = hindu }
+	define_pop = {	type = laborers	size = 0.630	culture = acehnese_culture	religion = hindu }	# pp start: converted from peasants
 }
 tamiang = {
 	define_pop = {	type = clergy	size = 0.004	culture = acehnese_culture	religion = hindu }
@@ -73030,7 +73068,8 @@ chiloango = {
 bungu_kongo = {
 	define_pop = {	type = nobles	size = 0.013	culture = cabinda	religion = bantu_religion }
 	define_pop = {	type = clergy	size = 0.012	culture = cabinda	religion = bantu_religion }
-	define_pop = {	type = peasants	size = 11.805	culture = cabinda	religion = bantu_religion }
+	define_pop = {	type = peasants	size = 11.085	culture = cabinda	religion = bantu_religion }
+	define_pop = {	type = laborers	size = 0.720	culture = cabinda	religion = bantu_religion }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 18.940	culture = cabinda	religion = bantu_religion }
 }
 dingi = {
@@ -75456,7 +75495,8 @@ garoowe = {
 }
 maduna = {
 	define_pop = {	type = clergy	size = 0.007	culture = somali_culture	religion = sunni }
-	define_pop = {	type = peasants	size = 8.458	culture = somali_culture	religion = sunni }
+	define_pop = {	type = peasants	size = 8.364	culture = somali_culture	religion = sunni }
+	define_pop = {	type = laborers	size = 0.094	culture = somali_culture	religion = sunni }	# pp start: converted from peasants
 }
 qardho = {
 	define_pop = {	type = clergy	size = 0.007	culture = somali_culture	religion = sunni }
@@ -78686,7 +78726,8 @@ arzew = {
 }
 ksar_ibn_senane = {
 	define_pop = {	type = clergy	size = 0.010	culture = zenati	religion = sunni }
-	define_pop = {	type = peasants	size = 8.165	culture = algerian	religion = sunni }
+	define_pop = {	type = peasants	size = 6.662	culture = algerian	religion = sunni }
+	define_pop = {	type = laborers	size = 1.503	culture = algerian	religion = sunni }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 15.166	culture = zenati	religion = sunni }
 }
 nedroma = {
@@ -78995,7 +79036,8 @@ kuku = {
 }
 mansouria = {
 	define_pop = {	type = clergy	size = 0.010	culture = kabyle	religion = sunni }
-	define_pop = {	type = peasants	size = 9.047	culture = algerian	religion = sunni }
+	define_pop = {	type = peasants	size = 6.814	culture = algerian	religion = sunni }
+	define_pop = {	type = laborers	size = 2.233	culture = algerian	religion = sunni }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 16.803	culture = kabyle	religion = sunni }
 }
 setif = {
@@ -79119,8 +79161,8 @@ mahdia = {
 	define_pop = {	type = clergy	size = 0.073	culture = tunisian	religion = sunni }
 	define_pop = {	type = burghers	size = 1.114	culture = tunisian	religion = sunni }
 	define_pop = {	type = burghers	size = 0.125	culture = mustaarabi	religion = judaism }
-	define_pop = {	type = peasants	size = 12.456	culture = tunisian	religion = sunni }
-	define_pop = {	type = laborers	size = 0.935	culture = tunisian	religion = sunni }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 10.456	culture = tunisian	religion = sunni }
+	define_pop = {	type = laborers	size = 2.935	culture = tunisian	religion = sunni }	# pp start: converted from peasants
 	define_pop = {	type = slaves	size = 0.413	culture = mustaarabi	religion = judaism }
 }
 sousse = {
@@ -79146,7 +79188,8 @@ tunis = {
 	define_pop = {	type = clergy	size = 0.110	culture = tunisian	religion = sunni }
 	define_pop = {	type = burghers	size = 1.628	culture = tunisian	religion = sunni }
 	define_pop = {	type = burghers	size = 0.185	culture = mustaarabi	religion = judaism }
-	define_pop = {	type = peasants	size = 27.848	culture = tunisian	religion = sunni }
+	define_pop = {	type = peasants	size = 26.752	culture = tunisian	religion = sunni }
+	define_pop = {	type = laborers	size = 1.096	culture = tunisian	religion = sunni }	# pp start: converted from peasants
 	define_pop = {	type = peasants	size = 2.165	culture = tunisian	religion = catholic }
 	define_pop = {	type = slaves	size = 0.928	culture = mustaarabi	religion = judaism }
 }
@@ -81793,8 +81836,8 @@ bida = {
 	define_pop = {	type = nobles	size = 0.073	culture = nupe	religion = isese_religion }
 	define_pop = {	type = clergy	size = 0.344	culture = nupe	religion = isese_religion }
 	define_pop = {	type = burghers	size = 9.133	culture = nupe	religion = isese_religion }
-	define_pop = {	type = peasants	size = 21.520	culture = nupe	religion = isese_religion }
-	define_pop = {	type = laborers	size = 1.008	culture = nupe	religion = isese_religion }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 19.520	culture = nupe	religion = isese_religion }
+	define_pop = {	type = laborers	size = 3.008	culture = nupe	religion = isese_religion }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 33.063	culture = nupe	religion = isese_religion }
 }
 tada = {
@@ -82565,7 +82608,8 @@ boussouma = {
 	define_pop = {	type = nobles	size = 0.053	culture = mossi	religion = rogo_miki_religion }
 	define_pop = {	type = clergy	size = 0.201	culture = mossi	religion = rogo_miki_religion }
 	define_pop = {	type = burghers	size = 4.309	culture = mossi	religion = rogo_miki_religion }
-	define_pop = {	type = peasants	size = 11.458	culture = mossi	religion = rogo_miki_religion }
+	define_pop = {	type = peasants	size = 10.151	culture = mossi	religion = rogo_miki_religion }
+	define_pop = {	type = laborers	size = 1.307	culture = mossi	religion = rogo_miki_religion }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 11.585	culture = mossi	religion = rogo_miki_religion }
 }
 mane = {
@@ -82575,7 +82619,8 @@ mane = {
 }
 boala = {
 	define_pop = {	type = clergy	size = 0.016	culture = mossi	religion = rogo_miki_religion }
-	define_pop = {	type = peasants	size = 5.824	culture = mossi	religion = rogo_miki_religion }
+	define_pop = {	type = peasants	size = 5.444	culture = mossi	religion = rogo_miki_religion }
+	define_pop = {	type = laborers	size = 0.380	culture = mossi	religion = rogo_miki_religion }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 9.298	culture = mossi	religion = rogo_miki_religion }
 }
 kougouri = {
@@ -82938,7 +82983,8 @@ manan = {
 }
 bodou_sailay = {
 	define_pop = {	type = clergy	size = 0.017	culture = kanembu_culture	religion = sunni }
-	define_pop = {	type = peasants	size = 4.483	culture = kanembu_culture	religion = sunni }
+	define_pop = {	type = peasants	size = 3.687	culture = kanembu_culture	religion = sunni }
+	define_pop = {	type = laborers	size = 0.796	culture = kanembu_culture	religion = sunni }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 4.498	culture = kanembu_culture	religion = sunni }
 	define_pop = {	type = slaves	size = 2.259	culture = zaghawa_culture	religion = karama_religion }
 }
@@ -90698,7 +90744,8 @@ tenochtitlan = {
 	define_pop = {	type = tribesmen	size = 52.894	culture = nahua_culture	religion = nahuatl }
 }
 tlacopan = {
-	define_pop = {	type = peasants	size = 9.093	culture = nahua_culture	religion = nahuatl }
+	define_pop = {	type = peasants	size = 8.005	culture = nahua_culture	religion = nahuatl }
+	define_pop = {	type = laborers	size = 1.088	culture = nahua_culture	religion = nahuatl }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 16.628	culture = nahua_culture	religion = nahuatl }
 }
 azcapotzalco = {
@@ -91099,7 +91146,8 @@ ixtlan = {
 zaachila = {
 	define_pop = {	type = nobles	size = 0.015	culture = zapotec_culture	religion = mesoamerican }
 	define_pop = {	type = clergy	size = 0.033	culture = zapotec_culture	religion = mesoamerican }
-	define_pop = {	type = peasants	size = 6.922	culture = zapotec_culture	religion = mesoamerican }
+	define_pop = {	type = peasants	size = 6.687	culture = zapotec_culture	religion = mesoamerican }
+	define_pop = {	type = laborers	size = 0.235	culture = zapotec_culture	religion = mesoamerican }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 11.936	culture = zapotec_culture	religion = mesoamerican }
 }
 miahuatlan = {
@@ -91236,7 +91284,8 @@ tesechoacan = {
 cuetlaxtlan = {
 	define_pop = {	type = nobles	size = 0.015	culture = nahua_culture	religion = nahuatl }
 	define_pop = {	type = clergy	size = 0.033	culture = nahua_culture	religion = nahuatl }
-	define_pop = {	type = peasants	size = 4.372	culture = nahua_culture	religion = nahuatl }
+	define_pop = {	type = peasants	size = 4.335	culture = nahua_culture	religion = nahuatl }
+	define_pop = {	type = laborers	size = 0.037	culture = nahua_culture	religion = nahuatl }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 4.579	culture = nahua_culture	religion = nahuatl }
 }
 xamapan = {
@@ -92699,7 +92748,8 @@ chinabajul = {
 pismachi = {
 	define_pop = {	type = nobles	size = 0.034	culture = kiche_culture	religion = mayan }
 	define_pop = {	type = clergy	size = 0.038	culture = kiche_culture	religion = mayan }
-	define_pop = {	type = peasants	size = 7.915	culture = kiche_culture	religion = mayan }
+	define_pop = {	type = peasants	size = 7.664	culture = kiche_culture	religion = mayan }
+	define_pop = {	type = laborers	size = 0.251	culture = kiche_culture	religion = mayan }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 13.744	culture = kiche_culture	religion = mayan }
 }
 cuchumatanes_mountains = {
@@ -97319,7 +97369,8 @@ norcacia_jungle = {
 }
 suamox = {
 	define_pop = {	type = clergy	size = 0.018	culture = muisca_culture	religion = muisca_religion }
-	define_pop = {	type = peasants	size = 4.271	culture = muisca_culture	religion = muisca_religion }
+	define_pop = {	type = peasants	size = 4.193	culture = muisca_culture	religion = muisca_religion }
+	define_pop = {	type = laborers	size = 0.078	culture = muisca_culture	religion = muisca_religion }	# pp start: converted from peasants
 	define_pop = {	type = tribesmen	size = 4.325	culture = muisca_culture	religion = muisca_religion }
 }
 leyva = {

@@ -22,12 +22,15 @@ build_time = 365
 construction_demand = victuals_market_construction
 
 unique_production_methods = {
+  # sells 3 victuals (efficiency-immune revenue); 0.375 province_food_sales is the storage leg, rising from
+  # zero at an empty stockpile to 16x at the 24-month cap; the offset input is the fixed cost that puts the
+  # break-even near 18 months at the mean victuals price.
   pp_province_food_to_market = {
     produced = province_food_sales
-    victuals = -2.0
-    offset = 10
-    manual_labor_cost = 0.5
-    output = 6.0
+    victuals = -3.0
+    offset = 11.1
+    manual_labor_cost = 0.3
+    output = 0.375
     category = building_maintenance
   }
 }
@@ -37,8 +40,9 @@ raw_modifier = {
 }
 
 modifier = {
-  local_province_food_sales_output_modifier = -0.012
-  local_monthly_food = -60.0
+  # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
+  local_province_food_sales_output_modifier = -0.10
+  local_monthly_food = -90.0
   local_nobles_estate_power = 0.05
   local_peasant_enfranchisment = -0.01
   local_food_capacity = 1200

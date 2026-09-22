@@ -9,6 +9,9 @@ building:
     - name: slot_0
       methods:
         - pp_province_food_from_market
+    - name: slot_1
+      methods:
+        - pp_province_storage_price
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -32,12 +35,26 @@ building:
     build_time = 365
     construction_demand = victuals_market_construction
 
+    # slot 0: provisioning. Balanced at floor prices (dummy goods = 1 gold, 20 % of default): costs 3 victuals x 3
+    # + 0.3 labour x 1 = 9.3 gold and earns 0.45 offset x 20 (country constant +19) = 9.0 gold -> -0.3 profit.
+    # The x20 constant keeps production efficiency small on this income (+50 % efficiency = +2.5 %).
     unique_production_methods = {
       pp_province_food_from_market = {
+        produced = offset
+        victuals = 3.0
+        manual_labor_cost = 0.3
+        output = 0.45
+        category = building_maintenance
+      }
+    }
+    # slot 1: storage price. 0.375 province_food_purchase whose output modifier runs from 16x at an empty stockpile
+    # (6 gold) to zero at the 24-month cap (+8 more while starving), minus a fixed 3 offset input (3 gold, inputs
+    # ignore production efficiency): +3 gold per level when empty, -3 when full, 0 at 12 months.
+    unique_production_methods = {
+      pp_province_storage_price = {
         produced = province_food_purchase
-        victuals = 2.0
-        manual_labor_cost = 0.5
-        output = 6.0
+        offset = 3.0
+        output = 0.375
         category = building_maintenance
       }
     }
@@ -46,7 +63,9 @@ building:
     }
 
     modifier = {
-      local_monthly_food = 60.0
+      local_monthly_food = 90.0
+      # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
+      local_province_food_purchase_output_modifier = -0.10
     }
 prices:
   - key: pp_victuals_market_import_price
@@ -56,8 +75,10 @@ localization:
   entries:
     victuals_market_import: Victuals Market (Import)
     victuals_market_import_desc: Purchases [ShowGoodsName('victuals')|e] from the goods market and distributes them into the province's food supply.
-    victuals_market_import_slot_0: Victuals Import
+    victuals_market_import_slot_0: Provisioning
+    victuals_market_import_slot_1: Storage Price
     pp_province_food_from_market: Import Market Victuals
+    pp_province_storage_price: Local Storage Price
     pp_victuals_market_import_price: Victuals Market Price
 icon:
   source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/victuals_market.dds
@@ -70,3 +91,4 @@ evaluation:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline.
     amortization_months: Province Food Purchase output intentionally breaks normal payback bounds.
+    base_output_per_1k: The storage-price leg is a no-input dummy signal on one noble per level, not a production line.

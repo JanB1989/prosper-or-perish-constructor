@@ -95,6 +95,26 @@ uses two victuals; export production supplies two. Export market employment now
 matches the import variant (one noble per level), allowing rural surplus sites
 with small noble populations to participate.
 
+Since 2026-09-22 the markets are **two-legged** so they settle instead of
+cycling and so the victuals price sets where they settle. The import has two
+forced methods: *Provisioning* buys the 2 victuals and earns a steady ~3 gold
+from a tiny amount of the `offset` dummy at 20x (country constant +19, so
+production efficiency barely moves it); *Local Storage Price* has no inputs and
+produces 0.25 `province_food_purchase`, whose output modifier runs from 16x at
+an empty stockpile (country constant +15, `positive_province_food_growth` -8
+per stored year, +8 while starving) to zero at the 24-month cap: about +2 gold
+per level when empty and -2 when full, relative to the input cost. The export
+mirrors it: 0.25 `province_food_sales` rising from zero to 16x (constant -1,
++8 per stored year), victuals sold as a negative input, 7.1 `offset` as the
+fixed cost. Each market lowers its storage leg by 0.10 per staffed level so
+staffing settles instead of flipping. Result (simulator): at the mean victuals
+price a town rests near 10 months stored, cheap victuals (70 %) push that to
+~17, dear victuals (130 %) shut imports except while starving; the export
+starts above ~18 months; +50 % production efficiency moves the resting point
+by about a month; storage settles within 2 years without overshoot. Extra
+levels raise throughput, not the resting point. `tools/victuals_market_sim.py`
+is the monthly simulator used to choose these numbers (`--profit`, `--multi`).
+
 `config/victuals_logistics.json` generates distinct live script values:
 
 - Imports favour development, population, town/city rank and market centres.

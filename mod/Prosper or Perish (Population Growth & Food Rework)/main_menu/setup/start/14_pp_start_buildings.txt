@@ -401,7 +401,9 @@ building_manager = {
 	cookery = { tag = DAJ level = 1 location = abesehir }
 	cookery = { tag = SWE level = 2 location = abo }
 	cookery = { tag = ACA level = 1 location = acatic }
+	cookery = { tag = MAM level = 3 location = acre }
 	cookery = { tag = SBY level = 1 location = ad_dilam }
+	cookery = { tag = YEM level = 1 location = adan }
 	cookery = { tag = ADO level = 1 location = ado_ekiti }
 	cookery = { tag = KRT level = 1 location = adraskan }
 	cookery = { tag = CHI level = 1 location = aerzhai }
@@ -419,6 +421,7 @@ building_manager = {
 	cookery = { tag = KAR level = 1 location = aksaray }
 	cookery = { tag = MNL level = 5 location = aksu }
 	cookery = { tag = AKR level = 1 location = akure }
+	cookery = { tag = JRW level = 1 location = al_ahsa }
 	cookery = { tag = YEM level = 1 location = al_bayda_yemen }
 	cookery = { tag = BNL level = 1 location = al_maghib }
 	cookery = { tag = DWS level = 1 location = al_majazah }
@@ -442,7 +445,7 @@ building_manager = {
 	cookery = { tag = GOB level = 5 location = alkalawa }
 	cookery = { tag = BAR level = 1 location = alluyes }
 	cookery = { tag = CHG level = 1 location = almaliq }
-	cookery = { tag = CHG level = 2 location = almaty }
+	cookery = { tag = CHG level = 4 location = almaty }
 	cookery = { tag = GRA level = 3 location = almeria }
 	cookery = { tag = ENG level = 1 location = alnwick }
 	cookery = { tag = HES level = 1 location = alsfeld }
@@ -468,6 +471,7 @@ building_manager = {
 	cookery = { tag = MOM level = 1 location = amulaca }
 	cookery = { tag = KOR level = 1 location = anak }
 	cookery = { tag = CAS level = 1 location = anana }
+	cookery = { tag = ANC level = 5 location = ancona }
 	cookery = { tag = KOR level = 4 location = andong }
 	cookery = { tag = ANR level = 1 location = andorra_la_vella }
 	cookery = { tag = EPI level = 1 location = angelokastron }
@@ -476,11 +480,13 @@ building_manager = {
 	cookery = { tag = AGH level = 1 location = angoche }
 	cookery = { tag = ANG level = 4 location = angouleme }
 	cookery = { tag = TEK level = 2 location = antalya }
+	cookery = { tag = MAM level = 2 location = antioch }
 	cookery = { tag = MOR level = 3 location = aouint_yghomane }
 	cookery = { tag = ENG level = 1 location = appleby }
 	cookery = { tag = KHM level = 1 location = apui }
 	cookery = { tag = XLL level = 1 location = apurlec }
 	cookery = { tag = DWS level = 1 location = aqiq_banu_uqayi }
+	cookery = { tag = BNL level = 1 location = ar_rass }
 	cookery = { tag = ATQ level = 1 location = araban }
 	cookery = { tag = ERE level = 1 location = arapgir }
 	cookery = { tag = QUN level = 1 location = araska }
@@ -506,6 +512,7 @@ building_manager = {
 	cookery = { tag = GLH level = 1 location = astrakhan }
 	cookery = { tag = BYZ level = 1 location = astros }
 	cookery = { tag = POK level = 1 location = asvieja }
+	cookery = { tag = MAM level = 1 location = asyut }
 	cookery = { tag = ATP level = 1 location = atepec }
 	cookery = { tag = CHJ level = 1 location = atico }
 	cookery = { tag = ATT level = 1 location = atitlan }
@@ -544,6 +551,7 @@ building_manager = {
 	cookery = { tag = PKR level = 1 location = balanipa }
 	cookery = { tag = BGT level = 1 location = baldan_bereeven }
 	cookery = { tag = WHL level = 1 location = balibo }
+	cookery = { tag = CHI level = 3 location = baling }
 	cookery = { tag = HOH level = 1 location = balingen }
 	cookery = { tag = BNB level = 1 location = ballenstedt }
 	cookery = { tag = MZK level = 1 location = ballsh }
@@ -557,6 +565,7 @@ building_manager = {
 	cookery = { tag = BTL level = 1 location = bani_walid }
 	cookery = { tag = BTE level = 1 location = bantayan }
 	cookery = { tag = CHI level = 1 location = baoan }
+	cookery = { tag = CHI level = 2 location = baoan_baoan }
 	cookery = { tag = CHI level = 3 location = baochang_nanxiong }
 	cookery = { tag = CHI level = 2 location = baoji }
 	cookery = { tag = BAR level = 1 location = bar_le_duc }
@@ -580,6 +589,7 @@ building_manager = {
 	cookery = { tag = AQN level = 3 location = bayonne }
 	cookery = { tag = ANS level = 1 location = bayreuth }
 	cookery = { tag = FRA level = 1 location = beaujeu }
+	cookery = { tag = BSK level = 2 location = beeskow }
 	cookery = { tag = HZP level = 1 location = behbahan }
 	cookery = { tag = BHL level = 1 location = beichlingen }
 	cookery = { tag = POR level = 1 location = beja }
@@ -602,9 +612,10 @@ building_manager = {
 	cookery = { tag = TUR level = 1 location = beypazari }
 	cookery = { tag = KAR level = 1 location = beysehir }
 	cookery = { tag = FRA level = 4 location = beziers }
+	cookery = { tag = CBH level = 1 location = bhimber }
 	cookery = { tag = LIT level = 1 location = biala_podlaska }
 	cookery = { tag = BIB level = 1 location = biberach }
-	cookery = { tag = NUP level = 4 location = bida }
+	cookery = { tag = NUP level = 6 location = bida }
 	cookery = { tag = BAS level = 1 location = bienne }
 	cookery = { tag = KIT level = 1 location = bigo_bya_mugenyi }
 	cookery = { tag = CRO level = 1 location = bihac }
@@ -630,11 +641,13 @@ building_manager = {
 	cookery = { tag = BBG level = 1 location = blankenburg }
 	cookery = { tag = BXN level = 1 location = bled }
 	cookery = { tag = WER level = 1 location = bludenz }
+	cookery = { tag = BSM level = 2 location = boala }
 	cookery = { tag = MSP level = 1 location = bobbio }
 	cookery = { tag = DRU level = 1 location = bobr }
 	cookery = { tag = BZU level = 1 location = bochuan }
 	cookery = { tag = GEO level = 1 location = bodbe }
 	cookery = { tag = BOD level = 1 location = bodonitsa }
+	cookery = { tag = KBO level = 2 location = bodou_sailay }
 	cookery = { tag = NYM level = 1 location = boeny }
 	cookery = { tag = NAP level = 1 location = bojano }
 	cookery = { tag = GRG level = 1 location = bojnord }
@@ -651,16 +664,20 @@ building_manager = {
 	cookery = { tag = ARB level = 1 location = bosa }
 	cookery = { tag = MIH level = 1 location = bost }
 	cookery = { tag = TFK level = 1 location = bourem }
+	cookery = { tag = BSM level = 3 location = boussouma }
 	cookery = { tag = GRM level = 1 location = bozan }
 	cookery = { tag = ERE level = 1 location = bozok }
+	cookery = { tag = PAP level = 6 location = bracciano }
 	cookery = { tag = NOR level = 1 location = bragernes }
 	cookery = { tag = TLE level = 1 location = brashk }
 	cookery = { tag = LIT level = 1 location = braslaw }
 	cookery = { tag = LBV level = 1 location = braunau }
 	cookery = { tag = MBZ level = 1 location = bregenz }
 	cookery = { tag = SKE level = 1 location = bregne }
+	cookery = { tag = VER level = 5 location = brescia }
 	cookery = { tag = SIT level = 1 location = brig }
 	cookery = { tag = BXN level = 1 location = brixen }
+	cookery = { tag = MVA level = 2 location = brno }
 	cookery = { tag = NOV level = 1 location = bronnitsa }
 	cookery = { tag = WBG level = 1 location = bruckenau }
 	cookery = { tag = FLA level = 6 location = bruges }
@@ -670,6 +687,7 @@ building_manager = {
 	cookery = { tag = MAI level = 1 location = buchen }
 	cookery = { tag = SCB level = 1 location = buckeburg }
 	cookery = { tag = ENG level = 1 location = buckingham }
+	cookery = { tag = SER level = 1 location = budimlja }
 	cookery = { tag = BUG level = 1 location = buganda }
 	cookery = { tag = QCH level = 2 location = bugur }
 	cookery = { tag = CAS level = 1 location = buitrago_de_lozoya }
@@ -677,6 +695,7 @@ building_manager = {
 	cookery = { tag = BYZ level = 1 location = bukelon }
 	cookery = { tag = VUN level = 1 location = bula_kongo }
 	cookery = { tag = LUW level = 1 location = bungi }
+	cookery = { tag = VUN level = 1 location = bungu_kongo }
 	cookery = { tag = BUL level = 1 location = burgas }
 	cookery = { tag = KYB level = 1 location = burgdorf_emmental }
 	cookery = { tag = UBV level = 1 location = burglengenfeld }
@@ -696,10 +715,12 @@ building_manager = {
 	cookery = { tag = CAV level = 2 location = calvas }
 	cookery = { tag = CMR level = 2 location = camerino }
 	cookery = { tag = CHA level = 3 location = camp_po_thit }
+	cookery = { tag = CRT level = 3 location = candia }
 	cookery = { tag = GRR level = 2 location = cangochamba }
 	cookery = { tag = NTA level = 1 location = cantamarca }
 	cookery = { tag = NSR level = 1 location = cantung }
 	cookery = { tag = FRA level = 3 location = carcassonne }
+	cookery = { tag = GMG level = 2 location = cardiff }
 	cookery = { tag = WLS level = 1 location = carmarthen }
 	cookery = { tag = DCI level = 1 location = carrickbeg }
 	cookery = { tag = ULS level = 1 location = carrickfergus }
@@ -719,12 +740,14 @@ building_manager = {
 	cookery = { tag = ARA level = 3 location = cervera }
 	cookery = { tag = CES level = 4 location = cesena }
 	cookery = { tag = HUN level = 1 location = cetatea_balta }
+	cookery = { tag = AMD level = 1 location = chabcha }
 	cookery = { tag = UAY level = 1 location = chacchoben }
 	cookery = { tag = CHI level = 1 location = chagannur }
 	cookery = { tag = VTN level = 1 location = chaiyaphum }
 	cookery = { tag = UAY level = 1 location = chakan_yucatan }
 	cookery = { tag = KOW level = 1 location = chakanbakan }
 	cookery = { tag = PAT level = 1 location = chalandritsa }
+	cookery = { tag = KUS level = 1 location = chalchuapa }
 	cookery = { tag = CLC level = 1 location = chalco }
 	cookery = { tag = LBV level = 1 location = cham }
 	cookery = { tag = KHM level = 1 location = champasak }
@@ -733,12 +756,15 @@ building_manager = {
 	cookery = { tag = CHI level = 6 location = changshu }
 	cookery = { tag = CRA level = 3 location = charka }
 	cookery = { tag = QCH level = 1 location = charklik }
+	cookery = { tag = FRA level = 2 location = chartres }
+	cookery = { tag = FRA level = 2 location = chateau_thierry }
+	cookery = { tag = TAI level = 1 location = chayrama }
 	cookery = { tag = VOL level = 1 location = chelm }
 	cookery = { tag = CHL level = 1 location = chelmno }
+	cookery = { tag = NRM level = 2 location = cherbourg }
 	cookery = { tag = BLO level = 1 location = cherepoves }
 	cookery = { tag = CET level = 1 location = chester }
 	cookery = { tag = DAI level = 1 location = chi_la }
-	cookery = { tag = LNA level = 1 location = chiang_mai }
 	cookery = { tag = LNA level = 1 location = chiang_rai }
 	cookery = { tag = CTL level = 1 location = chiautla }
 	cookery = { tag = INH level = 1 location = chibuene }
@@ -766,14 +792,18 @@ building_manager = {
 	cookery = { tag = KOR level = 1 location = chosan }
 	cookery = { tag = BOH level = 1 location = chrudim }
 	cookery = { tag = CRS level = 1 location = chuluutyn }
-	cookery = { tag = CHI level = 1 location = chunan }
+	cookery = { tag = CHI level = 4 location = chunan }
 	cookery = { tag = KOR level = 1 location = chungju }
 	cookery = { tag = KOR level = 1 location = chunju }
+	cookery = { tag = ZAQ level = 2 location = chunsua }
+	cookery = { tag = CHI level = 2 location = chuqiu }
 	cookery = { tag = BCH level = 1 location = chur }
 	cookery = { tag = CRK level = 1 location = churumekua }
+	cookery = { tag = SUN level = 2 location = cibadak }
 	cookery = { tag = RAW level = 1 location = ciechanow }
 	cookery = { tag = CAS level = 1 location = cieza }
 	cookery = { tag = CIH level = 1 location = cihuatlan }
+	cookery = { tag = HUN level = 2 location = cincu }
 	cookery = { tag = MEN level = 2 location = cine }
 	cookery = { tag = CDC level = 1 location = cittacastello }
 	cookery = { tag = VER level = 1 location = cividale }
@@ -790,6 +820,7 @@ building_manager = {
 	cookery = { tag = CRA level = 1 location = colquechaca }
 	cookery = { tag = WAL level = 1 location = comana }
 	cookery = { tag = CYA level = 1 location = congona }
+	cookery = { tag = BUL level = 3 location = constantia_bul }
 	cookery = { tag = BYZ level = 2 location = constantinople }
 	cookery = { tag = WAL level = 1 location = corabia }
 	cookery = { tag = ALB level = 1 location = corfu }
@@ -802,6 +833,7 @@ building_manager = {
 	cookery = { tag = TEP level = 1 location = cuauhtitlan }
 	cookery = { tag = CUO level = 1 location = cuauhtochco }
 	cookery = { tag = BLD level = 1 location = cudalbi }
+	cookery = { tag = CTX level = 1 location = cuetlaxtlan }
 	cookery = { tag = CJK level = 1 location = cuijk }
 	cookery = { tag = CTE level = 1 location = cuitzeo }
 	cookery = { tag = CUL level = 1 location = culhuacan }
@@ -849,6 +881,7 @@ building_manager = {
 	cookery = { tag = DNB level = 1 location = dinkelsbuhl }
 	cookery = { tag = DFN level = 1 location = dioumara }
 	cookery = { tag = JOL level = 1 location = diourbel }
+	cookery = { tag = CRL level = 1 location = dir }
 	cookery = { tag = JAL level = 1 location = divandarreh }
 	cookery = { tag = TLE level = 3 location = djelfa }
 	cookery = { tag = BMR level = 2 location = djenne }
@@ -858,6 +891,7 @@ building_manager = {
 	cookery = { tag = BOS level = 1 location = doboj }
 	cookery = { tag = TUR level = 1 location = domanic }
 	cookery = { tag = DOM level = 1 location = dompu }
+	cookery = { tag = ENG level = 2 location = doncaster }
 	cookery = { tag = SMO level = 1 location = dorogobuzh }
 	cookery = { tag = IAS level = 1 location = dorohoi }
 	cookery = { tag = DTM level = 2 location = dortmund }
@@ -870,6 +904,7 @@ building_manager = {
 	cookery = { tag = BOS level = 1 location = drijeva }
 	cookery = { tag = GOL level = 1 location = droge }
 	cookery = { tag = DRU level = 1 location = drutsk }
+	cookery = { tag = RAG level = 1 location = dubrovnik }
 	cookery = { tag = VOL level = 1 location = dubrovytsia }
 	cookery = { tag = CHI level = 2 location = ducheng }
 	cookery = { tag = DSN level = 1 location = duhok }
@@ -922,6 +957,7 @@ building_manager = {
 	cookery = { tag = MIH level = 1 location = farah }
 	cookery = { tag = OUA level = 2 location = faramana }
 	cookery = { tag = GRG level = 1 location = faraveh }
+	cookery = { tag = HUN level = 1 location = fehervar }
 	cookery = { tag = MFK level = 1 location = feldkirch }
 	cookery = { tag = GRK level = 1 location = feldkirchen }
 	cookery = { tag = CHI level = 2 location = fengchuan }
@@ -948,11 +984,14 @@ building_manager = {
 	cookery = { tag = TFL level = 1 location = foum_zguid }
 	cookery = { tag = ARA level = 1 location = fraga }
 	cookery = { tag = HES level = 1 location = frankenberg }
+	cookery = { tag = FRN level = 2 location = frankfurt }
+	cookery = { tag = MEI level = 2 location = freiberg }
 	cookery = { tag = FRE level = 1 location = freising }
 	cookery = { tag = THU level = 1 location = freyburg }
 	cookery = { tag = FLK level = 1 location = friedberg_hesse }
 	cookery = { tag = SLZ level = 1 location = friesach }
 	cookery = { tag = TRN level = 1 location = frutigen }
+	cookery = { tag = CHI level = 2 location = fuchuan_ningxia }
 	cookery = { tag = CHI level = 2 location = fugu }
 	cookery = { tag = CHI level = 1 location = fuliang }
 	cookery = { tag = CHI level = 2 location = funing_huaian }
@@ -963,7 +1002,9 @@ building_manager = {
 	cookery = { tag = CHI level = 1 location = fuxin }
 	cookery = { tag = CHI level = 4 location = fuyang_hangzhou }
 	cookery = { tag = SYG level = 2 location = fuzhou_liaoyang }
+	cookery = { tag = CHI level = 2 location = fuzhou_sichuan }
 	cookery = { tag = MNZ level = 1 location = fuzhou_songpan }
+	cookery = { tag = CHI level = 2 location = fuzhou_yanan }
 	cookery = { tag = PLK level = 1 location = gabin }
 	cookery = { tag = KBD level = 2 location = gadegara }
 	cookery = { tag = GEO level = 1 location = gagi }
@@ -981,14 +1022,17 @@ building_manager = {
 	cookery = { tag = IFA level = 1 location = garacad }
 	cookery = { tag = GOB level = 1 location = garadoume }
 	cookery = { tag = MAL level = 1 location = garalo }
+	cookery = { tag = CZK level = 1 location = garwolin }
+	cookery = { tag = PSK level = 2 location = gdov }
 	cookery = { tag = GLH level = 1 location = gebergeyel }
 	cookery = { tag = NCN level = 1 location = gechak }
 	cookery = { tag = LGK level = 1 location = gerik }
 	cookery = { tag = MZB level = 1 location = ghardaia }
 	cookery = { tag = TRP level = 1 location = ghariyan }
+	cookery = { tag = NGD level = 1 location = ghazni }
 	cookery = { tag = ETA level = 1 location = gien }
 	cookery = { tag = HES level = 1 location = giessen }
-	cookery = { tag = ARA level = 4 location = girona }
+	cookery = { tag = WUY level = 1 location = girin_ula }
 	cookery = { tag = SKE level = 1 location = gladsax }
 	cookery = { tag = HAB level = 1 location = glarus }
 	cookery = { tag = GLA level = 1 location = glauchau }
@@ -1013,6 +1057,8 @@ building_manager = {
 	cookery = { tag = HUN level = 1 location = gradiski_brod }
 	cookery = { tag = GRF level = 1 location = grafenau }
 	cookery = { tag = DAU level = 1 location = grenoble }
+	cookery = { tag = LDB level = 2 location = grimma }
+	cookery = { tag = FRI level = 3 location = groningen }
 	cookery = { tag = SIE level = 2 location = grosseto }
 	cookery = { tag = WOL level = 1 location = gryfia_gora }
 	cookery = { tag = STE level = 1 location = gryfow }
@@ -1023,6 +1069,7 @@ building_manager = {
 	cookery = { tag = CHI level = 2 location = guiping }
 	cookery = { tag = SYN level = 1 location = gummersbach }
 	cookery = { tag = HAB level = 1 location = gunzburg }
+	cookery = { tag = CHI level = 2 location = guozhou }
 	cookery = { tag = RAN level = 1 location = gwaram }
 	cookery = { tag = MKR level = 1 location = gwatar }
 	cookery = { tag = GUG level = 1 location = gyanema }
@@ -1034,6 +1081,7 @@ building_manager = {
 	cookery = { tag = AAD level = 1 location = hafar_al_batin }
 	cookery = { tag = CHI level = 3 location = haimen }
 	cookery = { tag = CHI level = 6 location = haiyan }
+	cookery = { tag = SYG level = 2 location = haizhou_liaoyang }
 	cookery = { tag = HUN level = 2 location = hajduszoboszlo }
 	cookery = { tag = LIT level = 1 location = hajnowka }
 	cookery = { tag = MAG level = 1 location = haldensleben }
@@ -1051,7 +1099,7 @@ building_manager = {
 	cookery = { tag = ETH level = 1 location = harro_walabu }
 	cookery = { tag = HBN level = 1 location = hashtrud }
 	cookery = { tag = BYZ level = 1 location = haskovo }
-	cookery = { tag = QUL level = 1 location = hatunqulla }
+	cookery = { tag = QUL level = 3 location = hatunqulla }
 	cookery = { tag = NOR level = 1 location = haugalandet }
 	cookery = { tag = HVB level = 1 location = havelberg }
 	cookery = { tag = WAR level = 1 location = haylan }
@@ -1068,7 +1116,9 @@ building_manager = {
 	cookery = { tag = SNP level = 2 location = heishui }
 	cookery = { tag = CHI level = 2 location = hejian }
 	cookery = { tag = HLF level = 1 location = helfenstein }
+	cookery = { tag = BRU level = 2 location = helmstedt }
 	cookery = { tag = SWE level = 1 location = helsinge }
+	cookery = { tag = CHI level = 3 location = hengyang }
 	cookery = { tag = CHI level = 1 location = heping }
 	cookery = { tag = CHI level = 3 location = hepu }
 	cookery = { tag = CHI level = 2 location = hequ }
@@ -1095,6 +1145,7 @@ building_manager = {
 	cookery = { tag = KIC level = 1 location = huehuetan }
 	cookery = { tag = HJZ level = 1 location = huexotzinco }
 	cookery = { tag = CHI level = 2 location = huichang }
+	cookery = { tag = CHI level = 3 location = huitong }
 	cookery = { tag = CHI level = 2 location = huixian }
 	cookery = { tag = CHI level = 1 location = huizhou }
 	cookery = { tag = ENG level = 1 location = hull }
@@ -1112,6 +1163,7 @@ building_manager = {
 	cookery = { tag = HLG level = 1 location = ilam }
 	cookery = { tag = BLM level = 1 location = ilanz }
 	cookery = { tag = IJS level = 1 location = ilesa }
+	cookery = { tag = AQU level = 1 location = ilirska_bistrica }
 	cookery = { tag = KIR level = 1 location = illereichen }
 	cookery = { tag = OYO level = 1 location = ilorin }
 	cookery = { tag = SZL level = 1 location = ilyinskoye_khovanskoye }
@@ -1122,7 +1174,6 @@ building_manager = {
 	cookery = { tag = TIR level = 3 location = innsbruck }
 	cookery = { tag = ZMW level = 1 location = inyanga }
 	cookery = { tag = SCO level = 1 location = irvine }
-	cookery = { tag = INJ level = 1 location = isfahan }
 	cookery = { tag = KHM level = 1 location = ishanapura }
 	cookery = { tag = GLH level = 1 location = ishkul }
 	cookery = { tag = ICM level = 2 location = ishma }
@@ -1141,6 +1192,7 @@ building_manager = {
 	cookery = { tag = CAS level = 3 location = jaen }
 	cookery = { tag = JLO level = 1 location = jailolo }
 	cookery = { tag = JMB level = 1 location = jambi }
+	cookery = { tag = DOG level = 1 location = jammu }
 	cookery = { tag = KOR level = 1 location = jangjin }
 	cookery = { tag = JRW level = 1 location = jannah }
 	cookery = { tag = SRV level = 1 location = javad }
@@ -1148,18 +1200,20 @@ building_manager = {
 	cookery = { tag = YEM level = 1 location = jazan }
 	cookery = { tag = ARR level = 1 location = jekabpils }
 	cookery = { tag = KOR level = 1 location = jeongeup }
-	cookery = { tag = CAS level = 1 location = jerez_de_la_frontera }
 	cookery = { tag = JEV level = 1 location = jever }
 	cookery = { tag = CHI level = 1 location = jiajiang }
 	cookery = { tag = CHI level = 6 location = jiangning }
 	cookery = { tag = CHI level = 2 location = jiangshan }
+	cookery = { tag = CHI level = 2 location = jianzhou }
 	cookery = { tag = CHI level = 6 location = jiaxing }
 	cookery = { tag = YCH level = 1 location = jicayan }
 	cookery = { tag = CHI level = 1 location = jieyang }
 	cookery = { tag = CHI level = 1 location = jiezhou }
 	cookery = { tag = CHI level = 2 location = jingan_shenzhou }
 	cookery = { tag = CHI level = 1 location = jingbian }
+	cookery = { tag = CHI level = 2 location = jinghai }
 	cookery = { tag = CHI level = 2 location = jingning }
+	cookery = { tag = KOR level = 5 location = jinju }
 	cookery = { tag = JIZ level = 1 location = jishi }
 	cookery = { tag = ALE level = 1 location = joigny }
 	cookery = { tag = QAN level = 1 location = jolom_konob }
@@ -1182,6 +1236,7 @@ building_manager = {
 	cookery = { tag = TUN level = 2 location = kairouan }
 	cookery = { tag = SYG level = 1 location = kaiyuan_jurchen }
 	cookery = { tag = KAQ level = 1 location = kakol_kiej }
+	cookery = { tag = TUN level = 2 location = kalaa_of_ait_abbas }
 	cookery = { tag = JAL level = 1 location = kaleybar }
 	cookery = { tag = POL level = 1 location = kalisz }
 	cookery = { tag = KAS level = 1 location = kalyazin }
@@ -1197,6 +1252,7 @@ building_manager = {
 	cookery = { tag = SUT level = 1 location = karakilise }
 	cookery = { tag = QCH level = 1 location = karasahr }
 	cookery = { tag = BYZ level = 3 location = karditsa }
+	cookery = { tag = MAR level = 1 location = kargil }
 	cookery = { tag = LST level = 1 location = kariyan }
 	cookery = { tag = ARU level = 2 location = karo }
 	cookery = { tag = TWI level = 1 location = karpus_mahal }
@@ -1260,6 +1316,7 @@ building_manager = {
 	cookery = { tag = ARR level = 1 location = koknese }
 	cookery = { tag = KIE level = 1 location = kolomak }
 	cookery = { tag = MOS level = 1 location = kolomna }
+	cookery = { tag = KNG level = 1 location = kong }
 	cookery = { tag = NOR level = 1 location = konghalla }
 	cookery = { tag = NOR level = 1 location = kongsvinger }
 	cookery = { tag = POL level = 1 location = konin }
@@ -1269,6 +1326,7 @@ building_manager = {
 	cookery = { tag = GRS level = 1 location = korenevo }
 	cookery = { tag = BMR level = 1 location = korientze }
 	cookery = { tag = KIE level = 1 location = korsun }
+	cookery = { tag = JAP level = 1 location = koshi }
 	cookery = { tag = KOS level = 1 location = kostroma }
 	cookery = { tag = KMM level = 1 location = koszalin }
 	cookery = { tag = ZAM level = 2 location = kotonkoro }
@@ -1285,18 +1343,21 @@ building_manager = {
 	cookery = { tag = THP level = 1 location = kruje }
 	cookery = { tag = SER level = 1 location = krupanj }
 	cookery = { tag = BYZ level = 1 location = krupnik }
-	cookery = { tag = TLE level = 1 location = ksar_ibn_senane }
+	cookery = { tag = TLE level = 4 location = ksar_ibn_senane }
 	cookery = { tag = INR level = 1 location = kuala_kampar }
 	cookery = { tag = UBV level = 1 location = kufstein }
 	cookery = { tag = SON level = 2 location = kukiya }
 	cookery = { tag = TLE level = 1 location = kuku }
 	cookery = { tag = QUN level = 1 location = kulob }
 	cookery = { tag = AAI level = 1 location = kumayri }
+	cookery = { tag = QUN level = 1 location = kunduz }
 	cookery = { tag = CHI level = 6 location = kunshan }
 	cookery = { tag = BIO level = 1 location = kuressaare }
 	cookery = { tag = QCH level = 3 location = kurla }
+	cookery = { tag = KUS level = 1 location = kuskatan }
 	cookery = { tag = GRM level = 3 location = kutahya }
 	cookery = { tag = GEO level = 1 location = kutaisi }
+	cookery = { tag = KTL level = 1 location = kutlehar }
 	cookery = { tag = NOV level = 1 location = kuvshinovo }
 	cookery = { tag = CHI level = 1 location = kuyu_shazhou }
 	cookery = { tag = PMS level = 1 location = kwidzyn }
@@ -1313,7 +1374,6 @@ building_manager = {
 	cookery = { tag = TUV level = 1 location = lakhva }
 	cookery = { tag = LRT level = 1 location = lamakera }
 	cookery = { tag = POR level = 2 location = lamego }
-	cookery = { tag = LNA level = 3 location = lamphun }
 	cookery = { tag = PLB level = 1 location = lampung }
 	cookery = { tag = SBL level = 1 location = lanark }
 	cookery = { tag = NAP level = 5 location = lanciano }
@@ -1329,7 +1389,6 @@ building_manager = {
 	cookery = { tag = RDL level = 1 location = lauterbach }
 	cookery = { tag = LIT level = 1 location = lazdijai }
 	cookery = { tag = INA level = 2 location = lazkiye }
-	cookery = { tag = FRA level = 4 location = le_puy }
 	cookery = { tag = TEU level = 1 location = lebork }
 	cookery = { tag = BLB level = 1 location = lebus }
 	cookery = { tag = CAS level = 3 location = ledesma }
@@ -1345,6 +1404,7 @@ building_manager = {
 	cookery = { tag = ARG level = 1 location = leukas }
 	cookery = { tag = CKL level = 1 location = lhagang }
 	cookery = { tag = POO level = 1 location = lhari }
+	cookery = { tag = TIB level = 1 location = lhasa }
 	cookery = { tag = TIB level = 1 location = lho_taklung }
 	cookery = { tag = CHI level = 1 location = liangquan }
 	cookery = { tag = CHI level = 2 location = liangxian_ruzhou }
@@ -1354,9 +1414,8 @@ building_manager = {
 	cookery = { tag = MNZ level = 1 location = lidian }
 	cookery = { tag = ENN level = 1 location = lieka }
 	cookery = { tag = GOR level = 1 location = lienz }
-	cookery = { tag = FRA level = 1 location = lille }
 	cookery = { tag = LIM level = 1 location = limbourg }
-	cookery = { tag = CHI level = 6 location = linan }
+	cookery = { tag = CHI level = 11 location = linan }
 	cookery = { tag = CHI level = 1 location = linchuan }
 	cookery = { tag = CHI level = 2 location = lingfang }
 	cookery = { tag = JOL level = 2 location = linguere }
@@ -1380,6 +1439,8 @@ building_manager = {
 	cookery = { tag = SWE level = 1 location = lohja }
 	cookery = { tag = RIE level = 1 location = lohr }
 	cookery = { tag = SAO level = 1 location = loidoriki }
+	cookery = { tag = NUP level = 1 location = lokoja }
+	cookery = { tag = RAW level = 1 location = lomza }
 	cookery = { tag = CHI level = 1 location = longquan }
 	cookery = { tag = KHM level = 1 location = longvek }
 	cookery = { tag = CHI level = 1 location = longxi }
@@ -1387,6 +1448,7 @@ building_manager = {
 	cookery = { tag = LAV level = 3 location = lopburi }
 	cookery = { tag = HZP level = 1 location = lordegan }
 	cookery = { tag = AAI level = 1 location = lori }
+	cookery = { tag = CHI level = 2 location = luan }
 	cookery = { tag = SOR level = 1 location = lubben }
 	cookery = { tag = LCU level = 1 location = lucerne }
 	cookery = { tag = MAC level = 1 location = ludlow }
@@ -1397,6 +1459,7 @@ building_manager = {
 	cookery = { tag = GNG level = 1 location = luoji }
 	cookery = { tag = CHI level = 2 location = lutai }
 	cookery = { tag = KIE level = 1 location = lutava }
+	cookery = { tag = VOL level = 2 location = lutsk }
 	cookery = { tag = LUX level = 2 location = luxembourg }
 	cookery = { tag = NOV level = 1 location = lyuban }
 	cookery = { tag = KOS level = 1 location = lyubim }
@@ -1406,9 +1469,11 @@ building_manager = {
 	cookery = { tag = PCJ level = 2 location = machaqa }
 	cookery = { tag = ZIB level = 1 location = madin_bani_sulaym }
 	cookery = { tag = CAS level = 3 location = madrid }
+	cookery = { tag = IFA level = 1 location = maduna }
 	cookery = { tag = TSK level = 1 location = maerkang }
 	cookery = { tag = MPE level = 1 location = maguela }
 	cookery = { tag = KHM level = 1 location = mahaxay }
+	cookery = { tag = TUN level = 2 location = mahdia }
 	cookery = { tag = SUL level = 1 location = maimbung }
 	cookery = { tag = MIH level = 1 location = maiwand }
 	cookery = { tag = GLH level = 1 location = majar }
@@ -1425,10 +1490,12 @@ building_manager = {
 	cookery = { tag = BOW level = 1 location = manado }
 	cookery = { tag = KBO level = 1 location = manan }
 	cookery = { tag = TEK level = 1 location = manavgat }
+	cookery = { tag = BSM level = 1 location = mane }
 	cookery = { tag = CBK level = 1 location = mang_viet }
 	cookery = { tag = MMA level = 1 location = mangshi }
 	cookery = { tag = SRU level = 2 location = manisa }
 	cookery = { tag = MNJ level = 2 location = manjung }
+	cookery = { tag = TUN level = 3 location = mansouria }
 	cookery = { tag = CHI level = 1 location = manzushir }
 	cookery = { tag = GOB level = 3 location = maradi }
 	cookery = { tag = DUL level = 1 location = marash }
@@ -1447,19 +1514,27 @@ building_manager = {
 	cookery = { tag = MUI level = 1 location = maui }
 	cookery = { tag = FRA level = 3 location = mauriac }
 	cookery = { tag = TRI level = 1 location = mayen }
+	cookery = { tag = ART level = 1 location = maymana }
+	cookery = { tag = MNA level = 2 location = maynila }
 	cookery = { tag = SIC level = 6 location = mazara }
 	cookery = { tag = LIT level = 1 location = mazeikiai }
+	cookery = { tag = KIE level = 1 location = mazyr }
 	cookery = { tag = MBT level = 1 location = mbanza_mbata }
 	cookery = { tag = NSU level = 1 location = mbanza_nsundi }
+	cookery = { tag = JOL level = 1 location = mboune }
+	cookery = { tag = BQA level = 1 location = mechili }
 	cookery = { tag = CAS level = 1 location = medellin }
 	cookery = { tag = GBS level = 1 location = medenine }
+	cookery = { tag = MDA level = 2 location = medina }
 	cookery = { tag = LIT level = 2 location = medininkai }
+	cookery = { tag = LIT level = 1 location = medininkai_vilna }
 	cookery = { tag = HNB level = 1 location = meiningen }
 	cookery = { tag = MEI level = 1 location = meissen }
 	cookery = { tag = CHI level = 1 location = meizhou }
 	cookery = { tag = MED level = 1 location = mendefera }
 	cookery = { tag = SRU level = 1 location = menemen }
 	cookery = { tag = BGT level = 1 location = menen }
+	cookery = { tag = CHI level = 2 location = mengcheng }
 	cookery = { tag = TUR level = 1 location = mengen }
 	cookery = { tag = PLB level = 2 location = menggala }
 	cookery = { tag = UTR level = 1 location = meppel }
@@ -1487,13 +1562,16 @@ building_manager = {
 	cookery = { tag = ZEE level = 3 location = middelburg }
 	cookery = { tag = FRE level = 1 location = miesbach }
 	cookery = { tag = MAI level = 1 location = miltenberg }
-	cookery = { tag = CHI level = 6 location = minxian }
+	cookery = { tag = JAP level = 1 location = minamimorokata }
+	cookery = { tag = NUP level = 1 location = minna }
+	cookery = { tag = CHI level = 9 location = minxian }
 	cookery = { tag = MNZ level = 1 location = minzhou }
 	cookery = { tag = BYZ level = 1 location = mitilene }
 	cookery = { tag = AXO level = 1 location = mixquiahuala }
 	cookery = { tag = MZT level = 1 location = mizantla }
 	cookery = { tag = BTL level = 1 location = mizda }
 	cookery = { tag = LIT level = 1 location = mogilev }
+	cookery = { tag = NUP level = 1 location = mokwa }
 	cookery = { tag = NOR level = 1 location = molde }
 	cookery = { tag = CAS level = 2 location = molina_de_aragon }
 	cookery = { tag = MOG level = 1 location = mologa }
@@ -1530,6 +1608,7 @@ building_manager = {
 	cookery = { tag = MLH level = 1 location = muhlhausen }
 	cookery = { tag = VTN level = 1 location = mukdahan }
 	cookery = { tag = WNA level = 1 location = mumias }
+	cookery = { tag = MUN level = 3 location = munster }
 	cookery = { tag = CHI level = 1 location = muping }
 	cookery = { tag = MRM level = 1 location = murom }
 	cookery = { tag = PLB level = 2 location = musi }
@@ -1552,16 +1631,18 @@ building_manager = {
 	cookery = { tag = MAR level = 1 location = nako }
 	cookery = { tag = GBS level = 1 location = nalut }
 	cookery = { tag = NOV level = 1 location = nalyuchi }
-	cookery = { tag = MOR level = 1 location = namalata }
+	cookery = { tag = MOR level = 5 location = namalata }
 	cookery = { tag = TIB level = 1 location = namtso_doring }
 	cookery = { tag = NAM level = 4 location = namur }
 	cookery = { tag = NMS level = 1 location = namyslow }
 	cookery = { tag = CHI level = 1 location = nanbu }
 	cookery = { tag = CHI level = 1 location = nanchong }
+	cookery = { tag = CHI level = 2 location = nangong }
 	cookery = { tag = CHI level = 3 location = nanhai }
 	cookery = { tag = CHI level = 2 location = nanliu }
 	cookery = { tag = LAC level = 1 location = napinaica }
 	cookery = { tag = NAP level = 6 location = naples }
+	cookery = { tag = DAN level = 2 location = narva }
 	cookery = { tag = BUS level = 2 location = natal }
 	cookery = { tag = QHZ level = 1 location = nauhtlan }
 	cookery = { tag = NMB level = 1 location = naumburg }
@@ -1580,6 +1661,7 @@ building_manager = {
 	cookery = { tag = KBO level = 1 location = ngousa }
 	cookery = { tag = PRO level = 3 location = nice }
 	cookery = { tag = SIC level = 1 location = nicosiasic }
+	cookery = { tag = NOR level = 2 location = nidaros }
 	cookery = { tag = NID level = 1 location = nidda }
 	cookery = { tag = BRZ level = 1 location = niemcza }
 	cookery = { tag = NMD level = 1 location = niemodlin }
@@ -1592,6 +1674,7 @@ building_manager = {
 	cookery = { tag = SER level = 3 location = nis }
 	cookery = { tag = GYT level = 1 location = nixi }
 	cookery = { tag = SRV level = 1 location = niyazabad }
+	cookery = { tag = NZH level = 2 location = nizhny_novgorod }
 	cookery = { tag = KBO level = 3 location = njimi }
 	cookery = { tag = NRI level = 1 location = nnewi }
 	cookery = { tag = HUN level = 1 location = nograd }
@@ -1604,6 +1687,8 @@ building_manager = {
 	cookery = { tag = NRK level = 1 location = novogrudok }
 	cookery = { tag = NWG level = 1 location = nowogard }
 	cookery = { tag = POL level = 1 location = nowy_sacz }
+	cookery = { tag = NUP level = 1 location = nupeko }
+	cookery = { tag = NUR level = 3 location = nuremberg }
 	cookery = { tag = PIN level = 1 location = nwamethin }
 	cookery = { tag = NYA level = 1 location = nyarong }
 	cookery = { tag = LIT level = 1 location = nyasvizh }
@@ -1636,21 +1721,25 @@ building_manager = {
 	cookery = { tag = VYA level = 1 location = orekhovna }
 	cookery = { tag = ARA level = 1 location = orihuela }
 	cookery = { tag = ARB level = 2 location = oristano }
+	cookery = { tag = NOR level = 1 location = orkdal }
 	cookery = { tag = NOR level = 1 location = orland }
 	cookery = { tag = FRA level = 2 location = orleans }
 	cookery = { tag = MKR level = 1 location = ormara }
 	cookery = { tag = KNA level = 1 location = oruro }
 	cookery = { tag = IYA level = 1 location = oshogbo }
+	cookery = { tag = NOR level = 3 location = oslo }
 	cookery = { tag = MKW level = 1 location = osnavieh }
 	cookery = { tag = NOV level = 1 location = ostashkov }
 	cookery = { tag = FLA level = 6 location = ostend }
 	cookery = { tag = BRE level = 1 location = osterholz }
 	cookery = { tag = BYZ level = 1 location = ostrovo }
 	cookery = { tag = OSW level = 1 location = oswiecim }
+	cookery = { tag = KIC level = 1 location = otzoya }
 	cookery = { tag = MOR level = 1 location = oujda }
 	cookery = { tag = ZAB level = 1 location = ouled_djellal }
 	cookery = { tag = CAS level = 1 location = ourense }
 	cookery = { tag = CAS level = 2 location = oviedo }
+	cookery = { tag = KIE level = 1 location = ovruch }
 	cookery = { tag = OWO level = 1 location = owo }
 	cookery = { tag = TTA level = 1 location = oxitlan }
 	cookery = { tag = OXT level = 1 location = oxtlipan }
@@ -1678,9 +1767,12 @@ building_manager = {
 	cookery = { tag = UBV level = 1 location = parsberg }
 	cookery = { tag = GNJ level = 1 location = pasho }
 	cookery = { tag = HNZ level = 1 location = passu }
+	cookery = { tag = NRP level = 1 location = pathankot }
 	cookery = { tag = LGK level = 1 location = pattani }
 	cookery = { tag = BRR level = 1 location = pau }
+	cookery = { tag = PAV level = 5 location = pavia }
 	cookery = { tag = GOR level = 1 location = pazin }
+	cookery = { tag = HUN level = 2 location = pecs }
 	cookery = { tag = CHK level = 1 location = peewareewa }
 	cookery = { tag = PEG level = 3 location = pegu }
 	cookery = { tag = NBH level = 1 location = pembar }
@@ -1696,11 +1788,14 @@ building_manager = {
 	cookery = { tag = MLO level = 4 location = piacenza }
 	cookery = { tag = AQU level = 1 location = pieve }
 	cookery = { tag = PIG level = 1 location = pikillaqta }
+	cookery = { tag = CHI level = 2 location = pingji }
+	cookery = { tag = CHI level = 5 location = pingyang }
 	cookery = { tag = HSP level = 1 location = pinneberg }
 	cookery = { tag = PNK level = 1 location = pinsk }
-	cookery = { tag = PIN level = 2 location = pinya }
+	cookery = { tag = PIN level = 6 location = pinya }
 	cookery = { tag = PIS level = 1 location = piombino }
 	cookery = { tag = BOH level = 1 location = pisek }
+	cookery = { tag = KIC level = 1 location = pismachi }
 	cookery = { tag = PST level = 4 location = pistoia }
 	cookery = { tag = CAS level = 1 location = plasencia }
 	cookery = { tag = PLN level = 1 location = plauen }
@@ -1730,6 +1825,7 @@ building_manager = {
 	cookery = { tag = PUR level = 1 location = purang }
 	cookery = { tag = TAR level = 1 location = puruaran }
 	cookery = { tag = KRT level = 1 location = pushang }
+	cookery = { tag = CHI level = 3 location = putian }
 	cookery = { tag = CHI level = 2 location = puyin }
 	cookery = { tag = KOR level = 1 location = pyeonggang }
 	cookery = { tag = BYZ level = 1 location = pyli }
@@ -1756,6 +1852,7 @@ building_manager = {
 	cookery = { tag = QHZ level = 1 location = quiahuiztlan }
 	cookery = { tag = CSU level = 2 location = quillarumiyoc }
 	cookery = { tag = CHI level = 1 location = qujiang }
+	cookery = { tag = MAM level = 2 location = qus }
 	cookery = { tag = CSU level = 1 location = qusqu }
 	cookery = { tag = DAI level = 1 location = quy_chau }
 	cookery = { tag = MAC level = 1 location = radnor }
@@ -1768,6 +1865,7 @@ building_manager = {
 	cookery = { tag = WAL level = 1 location = ramnicu_sarat }
 	cookery = { tag = ARK level = 1 location = ramree }
 	cookery = { tag = CHI level = 2 location = rangxian }
+	cookery = { tag = RAN level = 4 location = rano }
 	cookery = { tag = DGE level = 1 location = raqqa }
 	cookery = { tag = TLE level = 1 location = ras_al_ain }
 	cookery = { tag = TDE level = 1 location = ras_hafun }
@@ -1778,6 +1876,7 @@ building_manager = {
 	cookery = { tag = SWE level = 1 location = raumo }
 	cookery = { tag = ARR level = 1 location = rauna }
 	cookery = { tag = RAV level = 3 location = ravenna }
+	cookery = { tag = RVA level = 3 location = ravensburg }
 	cookery = { tag = ENG level = 1 location = reading }
 	cookery = { tag = CHR level = 1 location = rechytsa }
 	cookery = { tag = MAN level = 4 location = reggioem }
@@ -1885,6 +1984,8 @@ building_manager = {
 	cookery = { tag = ARU level = 1 location = senapelan }
 	cookery = { tag = SIG level = 1 location = sengkae }
 	cookery = { tag = CRO level = 1 location = senj }
+	cookery = { tag = KOR level = 5 location = seogyeong }
+	cookery = { tag = JAP level = 1 location = sera }
 	cookery = { tag = PRK level = 1 location = serebryanye_prudy }
 	cookery = { tag = SWE level = 2 location = sevede }
 	cookery = { tag = GRM level = 1 location = seyitgazi }
@@ -1900,6 +2001,7 @@ building_manager = {
 	cookery = { tag = TIB level = 1 location = shigatse }
 	cookery = { tag = CHG level = 1 location = shilik }
 	cookery = { tag = CHI level = 2 location = shilong }
+	cookery = { tag = JAP level = 1 location = shimokita }
 	cookery = { tag = CHI level = 2 location = shipai }
 	cookery = { tag = CHI level = 1 location = shiquan_maozhou }
 	cookery = { tag = CHI level = 2 location = shizhao }
@@ -1909,6 +2011,7 @@ building_manager = {
 	cookery = { tag = ENG level = 1 location = shrewsbury }
 	cookery = { tag = SZH level = 1 location = shuitejiang }
 	cookery = { tag = LAL level = 1 location = shulan }
+	cookery = { tag = CHI level = 2 location = shunsheng }
 	cookery = { tag = SZL level = 1 location = shuya }
 	cookery = { tag = PCJ level = 1 location = sicasica }
 	cookery = { tag = SDR level = 1 location = sidenreng }
@@ -1916,6 +2019,7 @@ building_manager = {
 	cookery = { tag = SDZ level = 1 location = sieradz }
 	cookery = { tag = HUN level = 1 location = sighet }
 	cookery = { tag = GLH level = 1 location = sighnaq }
+	cookery = { tag = PSA level = 1 location = sigli }
 	cookery = { tag = WUR level = 1 location = sigmaringen }
 	cookery = { tag = TKR level = 1 location = silla }
 	cookery = { tag = PSZ level = 1 location = simmern }
@@ -1924,10 +2028,13 @@ building_manager = {
 	cookery = { tag = CEB level = 1 location = singhapala }
 	cookery = { tag = SSI level = 1 location = siret }
 	cookery = { tag = INJ level = 1 location = sisakht }
+	cookery = { tag = MAM level = 1 location = siwa }
 	cookery = { tag = MAR level = 1 location = skardu }
 	cookery = { tag = FRE level = 1 location = skofja_loka }
+	cookery = { tag = RAG level = 1 location = slano }
 	cookery = { tag = MSV level = 1 location = slawharad }
 	cookery = { tag = SSK level = 1 location = slutsk }
+	cookery = { tag = LIT level = 1 location = smalyavichy }
 	cookery = { tag = AYD level = 4 location = smyrna }
 	cookery = { tag = RAW level = 1 location = sochaczew }
 	cookery = { tag = DAM level = 1 location = soddo }
@@ -1936,6 +2043,7 @@ building_manager = {
 	cookery = { tag = SER level = 1 location = soko_grad }
 	cookery = { tag = GHA level = 1 location = sokolo }
 	cookery = { tag = BRG level = 1 location = solingen }
+	cookery = { tag = GLH level = 1 location = solkhat }
 	cookery = { tag = SGT level = 1 location = solok }
 	cookery = { tag = SLT level = 1 location = solothurn }
 	cookery = { tag = KHM level = 1 location = song_be }
@@ -1962,14 +2070,18 @@ building_manager = {
 	cookery = { tag = STV level = 1 location = stavelot }
 	cookery = { tag = HAB level = 1 location = steinfeld }
 	cookery = { tag = GLH level = 1 location = stepanevka }
+	cookery = { tag = POL level = 1 location = stezyca }
 	cookery = { tag = NEL level = 1 location = stockach }
+	cookery = { tag = SWE level = 3 location = stockholm }
 	cookery = { tag = PNK level = 1 location = stolin }
 	cookery = { tag = BUL level = 1 location = strelcha }
 	cookery = { tag = STZ level = 1 location = strzelce_opolskie }
+	cookery = { tag = ZAQ level = 1 location = suamox }
 	cookery = { tag = CTC level = 1 location = suchilapan }
 	cookery = { tag = CHI level = 2 location = suide }
 	cookery = { tag = CHI level = 1 location = suixian }
 	cookery = { tag = PLB level = 1 location = sukadana_lampung }
+	cookery = { tag = SKT level = 1 location = suket }
 	cookery = { tag = SUK level = 9 location = sukhothai }
 	cookery = { tag = GEO level = 1 location = sukhumi }
 	cookery = { tag = HDR level = 1 location = sulaymaniyah }
@@ -1979,6 +2091,7 @@ building_manager = {
 	cookery = { tag = ERE level = 1 location = sungurlu }
 	cookery = { tag = NOR level = 1 location = sunnfjord }
 	cookery = { tag = SUR level = 1 location = sura }
+	cookery = { tag = CHI level = 1 location = suriig }
 	cookery = { tag = BBK level = 1 location = sutuko }
 	cookery = { tag = KHM level = 2 location = suwannaphum }
 	cookery = { tag = GLH level = 1 location = suyunduk }
@@ -1986,6 +2099,7 @@ building_manager = {
 	cookery = { tag = LIT level = 1 location = svencionys }
 	cookery = { tag = GWR level = 1 location = swansea }
 	cookery = { tag = BRA level = 1 location = swidwin }
+	cookery = { tag = TEU level = 1 location = swiecie }
 	cookery = { tag = GWI level = 2 location = sya }
 	cookery = { tag = WOL level = 1 location = szadzko }
 	cookery = { tag = HUN level = 1 location = szarvas }
@@ -1996,6 +2110,7 @@ building_manager = {
 	cookery = { tag = FDL level = 1 location = tadmur }
 	cookery = { tag = KOR level = 2 location = taegu }
 	cookery = { tag = MOR level = 1 location = tafedna }
+	cookery = { tag = JAP level = 1 location = tagata }
 	cookery = { tag = GHA level = 1 location = taghaza }
 	cookery = { tag = TFL level = 1 location = tagmadert }
 	cookery = { tag = TLE level = 1 location = tahert }
@@ -2040,6 +2155,7 @@ building_manager = {
 	cookery = { tag = XIU level = 1 location = telantunich }
 	cookery = { tag = TLO level = 1 location = teloloapan }
 	cookery = { tag = TMS level = 1 location = temascaltepec }
+	cookery = { tag = SNG level = 2 location = temasek }
 	cookery = { tag = LAC level = 1 location = tenamitl }
 	cookery = { tag = BMR level = 2 location = tenenkou }
 	cookery = { tag = TLE level = 1 location = tenes }
@@ -2066,7 +2182,7 @@ building_manager = {
 	cookery = { tag = VTN level = 1 location = thakhek }
 	cookery = { tag = LIG level = 1 location = thalang }
 	cookery = { tag = LIG level = 1 location = thammarat }
-	cookery = { tag = DAI level = 2 location = thang_long }
+	cookery = { tag = DAI level = 6 location = thang_long }
 	cookery = { tag = VTN level = 1 location = that_phanom }
 	cookery = { tag = DAN level = 1 location = thisted }
 	cookery = { tag = KHM level = 2 location = thuan_binh }
@@ -2084,6 +2200,7 @@ building_manager = {
 	cookery = { tag = PAP level = 5 location = tivoli }
 	cookery = { tag = AMP level = 1 location = tlacalahuastla }
 	cookery = { tag = TCH level = 1 location = tlachco }
+	cookery = { tag = TCP level = 2 location = tlacopan }
 	cookery = { tag = TLT level = 1 location = tlacotlalpan }
 	cookery = { tag = TZM level = 1 location = tlamazolan }
 	cookery = { tag = TLY level = 1 location = tlapacoya }
@@ -2107,13 +2224,13 @@ building_manager = {
 	cookery = { tag = GEO level = 1 location = tortum }
 	cookery = { tag = BRA level = 1 location = torzym }
 	cookery = { tag = CIN level = 1 location = tosora }
+	cookery = { tag = ZAP level = 1 location = totolapan }
 	cookery = { tag = TGT level = 1 location = touggourt }
 	cookery = { tag = FRA level = 2 location = tours }
 	cookery = { tag = GFS level = 1 location = tozeur }
 	cookery = { tag = TOZ level = 1 location = tozlan }
 	cookery = { tag = ARA level = 3 location = tratalias }
 	cookery = { tag = SER level = 1 location = trebinje }
-	cookery = { tag = TRE level = 1 location = trebizond }
 	cookery = { tag = LGK level = 1 location = trengganu }
 	cookery = { tag = TNT level = 1 location = trento }
 	cookery = { tag = MLO level = 1 location = tresivio }
@@ -2129,15 +2246,20 @@ building_manager = {
 	cookery = { tag = HCN level = 1 location = tuliemao }
 	cookery = { tag = MRM level = 1 location = tuma }
 	cookery = { tag = ZAN level = 1 location = tungi }
+	cookery = { tag = TUN level = 2 location = tunis }
 	cookery = { tag = KRT level = 1 location = turaythith }
 	cookery = { tag = SBY level = 1 location = turbah }
 	cookery = { tag = MKR level = 1 location = turbat }
+	cookery = { tag = HUN level = 2 location = turda }
+	cookery = { tag = PIE level = 5 location = turin }
 	cookery = { tag = TUV level = 1 location = turov }
+	cookery = { tag = JOL level = 1 location = tuubaa }
 	cookery = { tag = TXP level = 1 location = tuxpan }
 	cookery = { tag = CAS level = 3 location = tuy }
 	cookery = { tag = TUZ level = 1 location = tuzantla }
 	cookery = { tag = PPT level = 1 location = tuzapan }
 	cookery = { tag = HSC level = 1 location = tuzara }
+	cookery = { tag = TVE level = 2 location = tver }
 	cookery = { tag = HAL level = 1 location = tysmenytsia }
 	cookery = { tag = TZI level = 1 location = tzitacuaro }
 	cookery = { tag = TZH level = 1 location = tziuhcoac }
@@ -2157,9 +2279,11 @@ building_manager = {
 	cookery = { tag = HMD level = 2 location = uluborlu }
 	cookery = { tag = MAM level = 1 location = umluj }
 	cookery = { tag = BNL level = 1 location = unaizah }
+	cookery = { tag = CHI level = 1 location = ung }
 	cookery = { tag = TRE level = 3 location = unye }
 	cookery = { tag = CHI level = 1 location = uraqai }
 	cookery = { tag = URB level = 3 location = urbino }
+	cookery = { tag = GLH level = 1 location = urgench }
 	cookery = { tag = AYA level = 1 location = urupampa }
 	cookery = { tag = GRM level = 1 location = usak }
 	cookery = { tag = NSW level = 1 location = usingen }
@@ -2168,7 +2292,6 @@ building_manager = {
 	cookery = { tag = SER level = 1 location = uzice }
 	cookery = { tag = VLN level = 3 location = valence }
 	cookery = { tag = CAS level = 2 location = valencia_de_alcantara }
-	cookery = { tag = HAI level = 5 location = valenciennes }
 	cookery = { tag = LIV level = 1 location = valmiera }
 	cookery = { tag = DAI level = 1 location = van_don }
 	cookery = { tag = NOR level = 1 location = vardal }
@@ -2185,6 +2308,7 @@ building_manager = {
 	cookery = { tag = VDU level = 1 location = verdun }
 	cookery = { tag = FCB level = 1 location = vesoul }
 	cookery = { tag = AUV level = 1 location = vic_le_comte }
+	cookery = { tag = VER level = 4 location = vicenza }
 	cookery = { tag = BUL level = 3 location = vidin }
 	cookery = { tag = VTN level = 1 location = vientiane }
 	cookery = { tag = LIT level = 1 location = vilkmerge }
@@ -2193,6 +2317,7 @@ building_manager = {
 	cookery = { tag = DAU level = 1 location = villars }
 	cookery = { tag = CAS level = 1 location = villena }
 	cookery = { tag = HAB level = 1 location = villingen }
+	cookery = { tag = LIT level = 1 location = vilnius }
 	cookery = { tag = VBK level = 1 location = vitebsk }
 	cookery = { tag = VOH level = 1 location = vohemar }
 	cookery = { tag = ZFI level = 1 location = vohipeno }
@@ -2223,13 +2348,16 @@ building_manager = {
 	cookery = { tag = ETH level = 1 location = wej }
 	cookery = { tag = WUR level = 1 location = welzheim }
 	cookery = { tag = MCI level = 1 location = wenchuan }
+	cookery = { tag = CHI level = 2 location = wenxi }
 	cookery = { tag = WER level = 1 location = werdenberg }
 	cookery = { tag = KLE level = 1 location = wesel }
 	cookery = { tag = PIN level = 1 location = wetwin }
 	cookery = { tag = WTZ level = 1 location = wetzlar }
+	cookery = { tag = ENG level = 1 location = weymouth }
 	cookery = { tag = LIG level = 1 location = wiang_sa }
 	cookery = { tag = WIE level = 1 location = wied }
 	cookery = { tag = NSI level = 1 location = wiesbaden }
+	cookery = { tag = ENG level = 1 location = wight }
 	cookery = { tag = MAC level = 1 location = wigmore }
 	cookery = { tag = BRA level = 1 location = wittenberge }
 	cookery = { tag = POL level = 1 location = wloclawek }
@@ -2245,6 +2373,7 @@ building_manager = {
 	cookery = { tag = CHI level = 2 location = wudi }
 	cookery = { tag = CHI level = 1 location = wugang }
 	cookery = { tag = CHI level = 6 location = wujiang }
+	cookery = { tag = CHI level = 2 location = wuling }
 	cookery = { tag = BMS level = 1 location = wurzen }
 	cookery = { tag = CHI level = 1 location = wushan }
 	cookery = { tag = CHI level = 6 location = wuxian }
@@ -2258,16 +2387,18 @@ building_manager = {
 	cookery = { tag = CHI level = 2 location = xian_quzhou }
 	cookery = { tag = CHI level = 1 location = xiangcheng }
 	cookery = { tag = CHI level = 2 location = xiangtan }
+	cookery = { tag = CHI level = 2 location = xiangyuan }
 	cookery = { tag = CHI level = 2 location = xiaogan }
 	cookery = { tag = CHI level = 1 location = xiaoxi }
 	cookery = { tag = XOL level = 1 location = xicallanco }
 	cookery = { tag = TOH level = 1 location = xicaltepec }
 	cookery = { tag = XIC level = 1 location = xicochimalco }
 	cookery = { tag = PTP level = 1 location = xicotepec }
+	cookery = { tag = CHI level = 2 location = xihe }
 	cookery = { tag = XIH level = 1 location = xihutla }
 	cookery = { tag = XIL level = 1 location = xilotepec }
 	cookery = { tag = TZM level = 1 location = xilotlan }
-	cookery = { tag = CHI level = 5 location = xingan_linjiang }
+	cookery = { tag = CHI level = 8 location = xingan_linjiang }
 	cookery = { tag = CHI level = 2 location = xingguo }
 	cookery = { tag = CHI level = 1 location = xingning }
 	cookery = { tag = HCN level = 2 location = xinkai }
@@ -2281,15 +2412,18 @@ building_manager = {
 	cookery = { tag = KOW level = 1 location = xpaicheil }
 	cookery = { tag = CHI level = 2 location = xunyang }
 	cookery = { tag = MRH level = 1 location = yabrin }
+	cookery = { tag = TAI level = 1 location = yaharo }
 	cookery = { tag = HMD level = 1 location = yalvac }
 	cookery = { tag = KKE level = 1 location = yanahuara }
 	cookery = { tag = MDA level = 1 location = yanbu }
+	cookery = { tag = CHI level = 2 location = yanci }
 	cookery = { tag = CHI level = 1 location = yandao }
 	cookery = { tag = INJ level = 1 location = yangabad }
 	cookery = { tag = SSG level = 1 location = yangam }
 	cookery = { tag = CHI level = 1 location = yangzhou }
 	cookery = { tag = YNH level = 1 location = yanhe }
 	cookery = { tag = CHI level = 2 location = yanshan }
+	cookery = { tag = YAR level = 2 location = yaroslavl }
 	cookery = { tag = VTN level = 2 location = yasothon }
 	cookery = { tag = YAT level = 2 location = yatenga }
 	cookery = { tag = YAU level = 1 location = yautepec }
@@ -2313,17 +2447,20 @@ building_manager = {
 	cookery = { tag = CDL level = 1 location = yongping_yongchang }
 	cookery = { tag = CHI level = 5 location = yongxing_xingguo }
 	cookery = { tag = YPZ level = 1 location = yopitzinco }
+	cookery = { tag = ENG level = 2 location = york }
 	cookery = { tag = DMS level = 1 location = youghal }
 	cookery = { tag = CHI level = 1 location = youxi }
 	cookery = { tag = FLA level = 1 location = ypres }
 	cookery = { tag = TPL level = 1 location = yucundaa }
 	cookery = { tag = CHI level = 1 location = yuechi }
+	cookery = { tag = CHI level = 2 location = yuncheng }
 	cookery = { tag = YNL level = 1 location = yunlian }
 	cookery = { tag = TAR level = 2 location = yuririapundaro }
 	cookery = { tag = YRV level = 1 location = yuryev_polsky }
 	cookery = { tag = CHI level = 2 location = yusha }
 	cookery = { tag = CHI level = 2 location = yuyang }
 	cookery = { tag = VUD level = 1 location = yverdon_les_bains }
+	cookery = { tag = ZAP level = 1 location = zaachila }
 	cookery = { tag = ZAT level = 1 location = zacatlan }
 	cookery = { tag = ZCT level = 1 location = zacatollan }
 	cookery = { tag = ZCZ level = 1 location = zacazonapan }
@@ -2335,6 +2472,8 @@ building_manager = {
 	cookery = { tag = IFA level = 1 location = zeila }
 	cookery = { tag = SLZ level = 1 location = zell_am_see }
 	cookery = { tag = TTZ level = 1 location = zempoala }
+	cookery = { tag = ANH level = 2 location = zerbst }
+	cookery = { tag = NEO level = 1 location = zetounion }
 	cookery = { tag = BRE level = 1 location = zeven }
 	cookery = { tag = CKL level = 1 location = zhanggu }
 	cookery = { tag = CHI level = 2 location = zhaoxin }
@@ -16813,386 +16952,328 @@ building_manager = {
 	tin_streamworks = { tag = FRA level = 1 location = vodable }
 	tin_streamworks = { tag = CHI level = 1 location = yidu_qingzhou }
 	tin_streamworks = { tag = CHI level = 1 location = yizhang }
-	victuals_market = { tag = DLH level = 1 location = agra }
 	victuals_market = { tag = DLH level = 4 location = ahmednagar }
 	victuals_market = { tag = DLH level = 1 location = alwar }
 	victuals_market = { tag = DLH level = 3 location = bayana }
 	victuals_market = { tag = HSL level = 1 location = bhavani }
 	victuals_market = { tag = ONW level = 1 location = bihariganj }
 	victuals_market = { tag = DLH level = 1 location = bijapur }
+	victuals_market = { tag = DLH level = 1 location = broach }
 	victuals_market = { tag = DLH level = 4 location = chanderi }
-	victuals_market = { tag = DLH level = 3 location = dabhol }
-	victuals_market = { tag = DLH level = 3 location = dera_ismail_khan }
+	victuals_market = { tag = DLH level = 2 location = dabhol }
+	victuals_market = { tag = DLH level = 2 location = dera_ismail_khan }
 	victuals_market = { tag = DLH level = 1 location = dinkot }
-	victuals_market = { tag = MAM level = 2 location = el_burullus }
+	victuals_market = { tag = MAM level = 1 location = el_burullus }
 	victuals_market = { tag = DLH level = 1 location = eminabad }
-	victuals_market = { tag = SGN level = 2 location = fathabad }
-	victuals_market = { tag = DLH level = 1 location = gujrat }
-	victuals_market = { tag = DLH level = 1 location = hisar }
-	victuals_market = { tag = MAM level = 1 location = jableh }
-	victuals_market = { tag = DLH level = 2 location = jansath }
+	victuals_market = { tag = SGN level = 1 location = fathabad }
+	victuals_market = { tag = DLH level = 1 location = jansath }
 	victuals_market = { tag = ONW level = 1 location = jhanjharpur }
 	victuals_market = { tag = QUN level = 1 location = kabul }
-	victuals_market = { tag = MAM level = 1 location = kafr_saqr }
-	victuals_market = { tag = TRF level = 2 location = khaliajuri }
-	victuals_market = { tag = MAM level = 2 location = kharibta }
+	victuals_market = { tag = TRF level = 1 location = khaliajuri }
+	victuals_market = { tag = MAM level = 1 location = kharibta }
 	victuals_market = { tag = DLH level = 5 location = kolhapur }
 	victuals_market = { tag = DLH level = 1 location = lorelai }
-	victuals_market = { tag = DLH level = 4 location = mandore }
+	victuals_market = { tag = DLH level = 3 location = mandore }
 	victuals_market = { tag = DLH level = 2 location = mandu }
-	victuals_market = { tag = MAJ level = 1 location = mataram }
-	victuals_market = { tag = MAM level = 1 location = minya }
 	victuals_market = { tag = DLH level = 7 location = monghyr }
 	victuals_market = { tag = SMA level = 1 location = moro_sindh }
-	victuals_market = { tag = SGN level = 2 location = muktagacha }
-	victuals_market = { tag = DLH level = 3 location = muktsar }
-	victuals_market = { tag = DLH level = 1 location = nagina }
-	victuals_market = { tag = DLH level = 1 location = nahil }
-	victuals_market = { tag = GAU level = 2 location = pandua_adina }
-	victuals_market = { tag = MAJ level = 1 location = pati }
+	victuals_market = { tag = SGN level = 1 location = muktagacha }
+	victuals_market = { tag = DLH level = 2 location = muktsar }
+	victuals_market = { tag = GAU level = 1 location = pandua_adina }
 	victuals_market = { tag = DLH level = 11 location = patna }
 	victuals_market = { tag = DLH level = 1 location = pindi_bhattian }
-	victuals_market = { tag = DLH level = 2 location = pindi_gheb }
-	victuals_market = { tag = SRG level = 1 location = raigadh }
-	victuals_market = { tag = GAU level = 2 location = rangpur_bengal }
-	victuals_market = { tag = DLH level = 5 location = sabalgarh }
-	victuals_market = { tag = DLH level = 1 location = sambhar }
-	victuals_market = { tag = YEM level = 1 location = sana_yemen }
-	victuals_market = { tag = DLH level = 2 location = sirhind }
-	victuals_market = { tag = BHP level = 3 location = tamluk }
+	victuals_market = { tag = DLH level = 1 location = pindi_gheb }
+	victuals_market = { tag = GAU level = 1 location = rangpur_bengal }
+	victuals_market = { tag = DLH level = 3 location = sabalgarh }
+	victuals_market = { tag = DLH level = 1 location = sirhind }
+	victuals_market = { tag = BHP level = 2 location = tamluk }
 	victuals_market = { tag = SUN level = 1 location = tegal }
-	victuals_market = { tag = MAM level = 2 location = tripoli_syria }
-	victuals_market = { tag = DLH level = 2 location = uch }
+	victuals_market = { tag = MAM level = 1 location = tripoli_syria }
+	victuals_market = { tag = DLH level = 1 location = uch }
 	victuals_market = { tag = DLH level = 4 location = varanasi }
-	victuals_market = { tag = STN level = 1 location = west_sundarban }
-	victuals_market = { tag = DAJ level = 2 location = zankor }
-	victuals_market_import = { tag = AAC level = 3 location = aachen }
-	victuals_market_import = { tag = DAN level = 4 location = aalborg }
+	victuals_market = { tag = DAJ level = 1 location = zankor }
+	victuals_market_import = { tag = AAC level = 2 location = aachen }
+	victuals_market_import = { tag = DAN level = 3 location = aalborg }
 	victuals_market_import = { tag = SCO level = 2 location = aberdeen }
 	victuals_market_import = { tag = CRS level = 1 location = achit_nuur }
 	victuals_market_import = { tag = MAM level = 1 location = acre }
-	victuals_market_import = { tag = YEM level = 2 location = adan }
 	victuals_market_import = { tag = DGL level = 1 location = addu_atoll }
-	victuals_market_import = { tag = FRA level = 3 location = agen }
+	victuals_market_import = { tag = FRA level = 2 location = agen }
 	victuals_market_import = { tag = TAR level = 1 location = aguacana }
 	victuals_market_import = { tag = DLH level = 1 location = ahmednagar }
 	victuals_market_import = { tag = JAP level = 1 location = aita }
-	victuals_market_import = { tag = PRO level = 5 location = aix_en_provence }
+	victuals_market_import = { tag = PRO level = 4 location = aix_en_provence }
 	victuals_market_import = { tag = JAP level = 1 location = akita }
-	victuals_market_import = { tag = JRW level = 4 location = al_ahsa }
-	victuals_market_import = { tag = KLB level = 5 location = al_hajr }
+	victuals_market_import = { tag = JRW level = 2 location = al_ahsa }
+	victuals_market_import = { tag = KLB level = 4 location = al_hajr }
 	victuals_market_import = { tag = YEM level = 1 location = al_mukha }
-	victuals_market_import = { tag = FRA level = 3 location = albi }
-	victuals_market_import = { tag = CAS level = 1 location = alcala_de_henares }
+	victuals_market_import = { tag = FRA level = 1 location = albi }
 	victuals_market_import = { tag = MAM level = 1 location = aleppo }
-	victuals_market_import = { tag = MAM level = 3 location = alexandria }
+	victuals_market_import = { tag = MAM level = 2 location = alexandria }
 	victuals_market_import = { tag = TLE level = 3 location = algiers }
 	victuals_market_import = { tag = GOB level = 1 location = alkalawa }
 	victuals_market_import = { tag = HNK level = 1 location = allpas }
-	victuals_market_import = { tag = CHG level = 1 location = almaty }
-	victuals_market_import = { tag = GRA level = 1 location = almeria }
 	victuals_market_import = { tag = TDJ level = 1 location = amasya }
-	victuals_market_import = { tag = DHU level = 4 location = amber_loc }
-	victuals_market_import = { tag = FRA level = 2 location = amiens }
-	victuals_market_import = { tag = BNL level = 1 location = an_nabhaniyah }
-	victuals_market_import = { tag = ANC level = 2 location = ancona }
+	victuals_market_import = { tag = DHU level = 3 location = amber_loc }
+	victuals_market_import = { tag = FRA level = 1 location = amiens }
+	victuals_market_import = { tag = ANC level = 1 location = ancona }
 	victuals_market_import = { tag = KOR level = 1 location = andong }
 	victuals_market_import = { tag = ANJ level = 2 location = angers }
-	victuals_market_import = { tag = KHM level = 3 location = angkor }
+	victuals_market_import = { tag = KHM level = 2 location = angkor }
 	victuals_market_import = { tag = ANG level = 1 location = angouleme }
-	victuals_market_import = { tag = SME level = 4 location = ani }
+	victuals_market_import = { tag = SME level = 2 location = ani }
 	victuals_market_import = { tag = CHI level = 3 location = anji }
-	victuals_market_import = { tag = AHI level = 3 location = ankara }
+	victuals_market_import = { tag = AHI level = 2 location = ankara }
 	victuals_market_import = { tag = TUN level = 3 location = annaba }
 	victuals_market_import = { tag = CHI level = 2 location = anqiu }
-	victuals_market_import = { tag = TEK level = 1 location = antalya }
 	victuals_market_import = { tag = MAM level = 1 location = antioch }
-	victuals_market_import = { tag = BRB level = 3 location = antwerp }
+	victuals_market_import = { tag = BRB level = 1 location = antwerp }
 	victuals_market_import = { tag = CHI level = 2 location = anxi_dingzhou }
 	victuals_market_import = { tag = CHI level = 2 location = anyang }
-	victuals_market_import = { tag = TTZ level = 1 location = apan }
-	victuals_market_import = { tag = NAP level = 4 location = aquila }
+	victuals_market_import = { tag = NAP level = 3 location = aquila }
 	victuals_market_import = { tag = AZF level = 1 location = ar_rabadha }
-	victuals_market_import = { tag = ARS level = 2 location = arras }
+	victuals_market_import = { tag = ARS level = 1 location = arras }
 	victuals_market_import = { tag = ASC level = 1 location = ascolipiceno }
 	victuals_market_import = { tag = DLH level = 1 location = ashaval }
-	victuals_market_import = { tag = PAP level = 5 location = assisi }
+	victuals_market_import = { tag = PAP level = 3 location = assisi }
 	victuals_market_import = { tag = ASR level = 1 location = astarabad }
 	victuals_market_import = { tag = GLH level = 1 location = astrakhan }
 	victuals_market_import = { tag = MAM level = 1 location = asyut }
 	victuals_market_import = { tag = ATH level = 2 location = athens }
-	victuals_market_import = { tag = AGC level = 4 location = augsburg }
-	victuals_market_import = { tag = PAP level = 2 location = avignon }
+	victuals_market_import = { tag = AGC level = 2 location = augsburg }
+	victuals_market_import = { tag = PAP level = 1 location = avignon }
 	victuals_market_import = { tag = DLH level = 4 location = awadh }
-	victuals_market_import = { tag = ETH level = 6 location = axum }
+	victuals_market_import = { tag = ETH level = 3 location = axum }
 	victuals_market_import = { tag = ADH level = 3 location = ayodhya }
-	victuals_market_import = { tag = TEP level = 8 location = azcapotzalco }
-	victuals_market_import = { tag = CAS level = 2 location = badajoz }
+	victuals_market_import = { tag = TEP level = 6 location = azcapotzalco }
+	victuals_market_import = { tag = CAS level = 1 location = badajoz }
 	victuals_market_import = { tag = JAL level = 1 location = baghdad }
 	victuals_market_import = { tag = KLU level = 1 location = bajaura }
 	victuals_market_import = { tag = KHS level = 1 location = bajura }
 	victuals_market_import = { tag = CHG level = 1 location = balasagun }
-	victuals_market_import = { tag = KRD level = 2 location = balikesir }
-	victuals_market_import = { tag = CHI level = 2 location = baling }
-	victuals_market_import = { tag = SLD level = 3 location = balkh }
-	victuals_market_import = { tag = BAM level = 2 location = bamberg }
+	victuals_market_import = { tag = KRD level = 1 location = balikesir }
+	victuals_market_import = { tag = SLD level = 2 location = balkh }
+	victuals_market_import = { tag = BAM level = 1 location = bamberg }
 	victuals_market_import = { tag = HSL level = 1 location = bangalore }
 	victuals_market_import = { tag = ARA level = 3 location = barcelona }
-	victuals_market_import = { tag = NAP level = 5 location = bari }
+	victuals_market_import = { tag = NAP level = 4 location = bari }
 	victuals_market_import = { tag = CMN level = 3 location = baria }
-	victuals_market_import = { tag = HLG level = 3 location = basra }
-	victuals_market_import = { tag = BAD level = 3 location = baud }
-	victuals_market_import = { tag = CHI level = 3 location = baxian }
-	victuals_market_import = { tag = BSK level = 2 location = beeskow }
-	victuals_market_import = { tag = BON level = 6 location = begho }
-	victuals_market_import = { tag = TUN level = 3 location = bejaia }
-	victuals_market_import = { tag = HUN level = 3 location = belgrad }
+	victuals_market_import = { tag = HLG level = 2 location = basra }
+	victuals_market_import = { tag = BAD level = 2 location = baud }
+	victuals_market_import = { tag = CHI level = 2 location = baxian }
+	victuals_market_import = { tag = BSK level = 1 location = beeskow }
+	victuals_market_import = { tag = BON level = 4 location = begho }
+	victuals_market_import = { tag = TUN level = 1 location = bejaia }
+	victuals_market_import = { tag = HUN level = 2 location = belgrad }
 	victuals_market_import = { tag = CUT level = 1 location = bengmara }
-	victuals_market_import = { tag = BEN level = 6 location = benin }
+	victuals_market_import = { tag = BEN level = 5 location = benin }
 	victuals_market_import = { tag = IFA level = 1 location = berbera }
 	victuals_market_import = { tag = KRD level = 1 location = bergama }
 	victuals_market_import = { tag = MLO level = 1 location = bergamo }
-	victuals_market_import = { tag = NOR level = 1 location = bergen }
-	victuals_market_import = { tag = BRN level = 3 location = bern }
+	victuals_market_import = { tag = BRN level = 2 location = bern }
 	victuals_market_import = { tag = BEI level = 1 location = berune }
 	victuals_market_import = { tag = ENG level = 2 location = berwick }
 	victuals_market_import = { tag = BSC level = 1 location = besancon }
 	victuals_market_import = { tag = FRA level = 1 location = beziers }
 	victuals_market_import = { tag = MSN level = 1 location = bhadrachalam }
-	victuals_market_import = { tag = CBH level = 1 location = bhimber }
-	victuals_market_import = { tag = NUP level = 4 location = bida }
+	victuals_market_import = { tag = NUP level = 1 location = bida }
 	victuals_market_import = { tag = DLH level = 1 location = bidar }
 	victuals_market_import = { tag = DLH level = 1 location = bijapur }
 	victuals_market_import = { tag = AYD level = 1 location = birgi }
 	victuals_market_import = { tag = ZAM level = 2 location = birnin_kebbi }
 	victuals_market_import = { tag = ZAM level = 1 location = birnin_zamfara }
-	victuals_market_import = { tag = SER level = 3 location = bitola }
+	victuals_market_import = { tag = SER level = 2 location = bitola }
 	victuals_market_import = { tag = BLS level = 1 location = blois }
 	victuals_market_import = { tag = BLG level = 3 location = bologna }
 	victuals_market_import = { tag = DLH level = 1 location = bombay }
 	victuals_market_import = { tag = AQN level = 2 location = bordeaux }
 	victuals_market_import = { tag = KMA level = 1 location = bordowa }
-	victuals_market_import = { tag = BUL level = 1 location = boruy }
 	victuals_market_import = { tag = FRA level = 1 location = bourges }
-	victuals_market_import = { tag = BSM level = 3 location = boussouma }
-	victuals_market_import = { tag = PAP level = 3 location = bracciano }
+	victuals_market_import = { tag = BSM level = 1 location = boussouma }
+	victuals_market_import = { tag = PAP level = 1 location = bracciano }
 	victuals_market_import = { tag = HUN level = 2 location = bratislava }
 	victuals_market_import = { tag = BRM level = 2 location = bremen }
-	victuals_market_import = { tag = VER level = 3 location = brescia }
+	victuals_market_import = { tag = VER level = 1 location = brescia }
 	victuals_market_import = { tag = ENG level = 2 location = bristol }
-	victuals_market_import = { tag = MVA level = 2 location = brno }
+	victuals_market_import = { tag = MVA level = 1 location = brno }
 	victuals_market_import = { tag = DLH level = 1 location = broach }
 	victuals_market_import = { tag = FLA level = 1 location = bruges }
-	victuals_market_import = { tag = BRU level = 2 location = brunswick }
-	victuals_market_import = { tag = BRB level = 3 location = brussels }
-	victuals_market_import = { tag = WAL level = 2 location = bucharest }
+	victuals_market_import = { tag = BRU level = 1 location = brunswick }
+	victuals_market_import = { tag = BRB level = 2 location = brussels }
+	victuals_market_import = { tag = WAL level = 1 location = bucharest }
 	victuals_market_import = { tag = HUN level = 2 location = buda }
-	victuals_market_import = { tag = DLH level = 2 location = budaun }
+	victuals_market_import = { tag = DLH level = 1 location = budaun }
 	victuals_market_import = { tag = YSU level = 2 location = bukhara }
-	victuals_market_import = { tag = VUN level = 2 location = bungu_kongo }
+	victuals_market_import = { tag = VUN level = 1 location = bungu_kongo }
 	victuals_market_import = { tag = GLI level = 1 location = bunji }
 	victuals_market_import = { tag = TUR level = 3 location = bursa }
 	victuals_market_import = { tag = CAS level = 1 location = cadiz }
-	victuals_market_import = { tag = NRM level = 3 location = caen }
+	victuals_market_import = { tag = NRM level = 2 location = caen }
 	victuals_market_import = { tag = MAM level = 1 location = cairo }
 	victuals_market_import = { tag = ENG level = 2 location = cambridge }
-	victuals_market_import = { tag = CRT level = 1 location = candia }
-	victuals_market_import = { tag = FRA level = 1 location = carcassonne }
-	victuals_market_import = { tag = GMG level = 1 location = cardiff }
-	victuals_market_import = { tag = ARA level = 3 location = castellon_de_la_plana }
+	victuals_market_import = { tag = ARA level = 1 location = castellon_de_la_plana }
 	victuals_market_import = { tag = SIC level = 1 location = catania }
 	victuals_market_import = { tag = ARA level = 1 location = cervera }
-	victuals_market_import = { tag = AMD level = 1 location = chabcha }
-	victuals_market_import = { tag = CHG level = 3 location = chach }
+	victuals_market_import = { tag = CHG level = 2 location = chach }
 	victuals_market_import = { tag = BHP level = 1 location = chaibasa }
-	victuals_market_import = { tag = CKP level = 3 location = chakan_putum }
+	victuals_market_import = { tag = CKP level = 2 location = chakan_putum }
 	victuals_market_import = { tag = CAB level = 1 location = chamba_india }
 	victuals_market_import = { tag = GNJ level = 6 location = chamdo }
 	victuals_market_import = { tag = CMN level = 1 location = champaner }
-	victuals_market_import = { tag = CHM level = 5 location = chan_chan }
+	victuals_market_import = { tag = CHM level = 4 location = chan_chan }
 	victuals_market_import = { tag = CHI level = 1 location = changqing }
 	victuals_market_import = { tag = CHI level = 1 location = changsha }
-	victuals_market_import = { tag = CHI level = 2 location = changshe }
+	victuals_market_import = { tag = CHI level = 1 location = changshe }
 	victuals_market_import = { tag = CHI level = 1 location = changshu }
 	victuals_market_import = { tag = AHO level = 1 location = charagua }
 	victuals_market_import = { tag = BUR level = 1 location = charolles }
-	victuals_market_import = { tag = FRA level = 1 location = chartres }
-	victuals_market_import = { tag = FRA level = 2 location = chateau_thierry }
 	victuals_market_import = { tag = FRA level = 1 location = chaumont_vexin }
-	victuals_market_import = { tag = CHI level = 3 location = chengdu }
-	victuals_market_import = { tag = CHI level = 2 location = chengji }
-	victuals_market_import = { tag = NRM level = 2 location = cherbourg }
+	victuals_market_import = { tag = CHI level = 2 location = chengdu }
+	victuals_market_import = { tag = CHI level = 1 location = chengji }
+	victuals_market_import = { tag = NRM level = 1 location = cherbourg }
+	victuals_market_import = { tag = TLE level = 1 location = cherchell }
 	victuals_market_import = { tag = CHR level = 4 location = chernihiv }
-	victuals_market_import = { tag = CIC level = 4 location = chinchay }
+	victuals_market_import = { tag = CIC level = 2 location = chinchay }
 	victuals_market_import = { tag = CTR level = 1 location = chitral }
 	victuals_market_import = { tag = ARK level = 1 location = chittagong }
-	victuals_market_import = { tag = MEW level = 4 location = chittor }
+	victuals_market_import = { tag = MEW level = 3 location = chittor }
 	victuals_market_import = { tag = BOH level = 1 location = chrudim }
 	victuals_market_import = { tag = LUP level = 4 location = chucuito }
-	victuals_market_import = { tag = CHI level = 1 location = chunan }
-	victuals_market_import = { tag = ZAQ level = 1 location = chunsua }
-	victuals_market_import = { tag = CHI level = 1 location = chuqiu }
-	victuals_market_import = { tag = SUN level = 2 location = cibadak }
-	victuals_market_import = { tag = HUN level = 2 location = cincu }
-	victuals_market_import = { tag = CAS level = 1 location = ciudad_rodrigo }
+	victuals_market_import = { tag = HUN level = 1 location = cincu }
 	victuals_market_import = { tag = FRA level = 1 location = clermont }
-	victuals_market_import = { tag = HUN level = 2 location = cluj }
-	victuals_market_import = { tag = ENG level = 3 location = colchester }
-	victuals_market_import = { tag = CFC level = 3 location = colmar }
+	victuals_market_import = { tag = HUN level = 1 location = cluj }
+	victuals_market_import = { tag = ENG level = 2 location = colchester }
+	victuals_market_import = { tag = CFC level = 2 location = colmar }
 	victuals_market_import = { tag = KOL level = 3 location = cologne }
 	victuals_market_import = { tag = CHI level = 2 location = conghua }
 	victuals_market_import = { tag = TUN level = 2 location = constantine_ALG }
-	victuals_market_import = { tag = BYZ level = 4 location = constantinople }
-	victuals_market_import = { tag = CAS level = 3 location = cordoba }
+	victuals_market_import = { tag = BYZ level = 3 location = constantinople }
+	victuals_market_import = { tag = CAS level = 2 location = cordoba }
 	victuals_market_import = { tag = ACH level = 1 location = corinth }
 	victuals_market_import = { tag = PLE level = 1 location = cork }
 	victuals_market_import = { tag = NAP level = 3 location = cotrone }
 	victuals_market_import = { tag = ENG level = 2 location = coventry }
 	victuals_market_import = { tag = MLO level = 1 location = cremona }
-	victuals_market_import = { tag = CZK level = 1 location = czersk }
 	victuals_market_import = { tag = CHI level = 1 location = daan }
 	victuals_market_import = { tag = JNT level = 1 location = daboka }
 	victuals_market_import = { tag = CHI level = 3 location = dadu }
 	victuals_market_import = { tag = MAJ level = 1 location = daha }
 	victuals_market_import = { tag = MAM level = 1 location = damascus }
 	victuals_market_import = { tag = MAM level = 2 location = damietta }
-	victuals_market_import = { tag = CHI level = 3 location = dangtu }
-	victuals_market_import = { tag = LUN level = 3 location = dannenberg }
+	victuals_market_import = { tag = CHI level = 2 location = dangtu }
+	victuals_market_import = { tag = LUN level = 2 location = dannenberg }
 	victuals_market_import = { tag = CHI level = 3 location = dantu }
 	victuals_market_import = { tag = CHI level = 3 location = datong_datong }
 	victuals_market_import = { tag = DLH level = 1 location = delhi }
 	victuals_market_import = { tag = AHO level = 1 location = dergaon }
 	victuals_market_import = { tag = DLH level = 1 location = dhar }
 	victuals_market_import = { tag = HSL level = 1 location = dharmapuri }
-	victuals_market_import = { tag = HEZ level = 2 location = dingqiang }
+	victuals_market_import = { tag = HEZ level = 1 location = dingqiang }
 	victuals_market_import = { tag = DIM level = 1 location = diphu }
-	victuals_market_import = { tag = CRL level = 1 location = dir }
 	victuals_market_import = { tag = JNG level = 2 location = diu }
-	victuals_market_import = { tag = SUT level = 2 location = diyarbekir }
+	victuals_market_import = { tag = SUT level = 1 location = diyarbekir }
 	victuals_market_import = { tag = BMR level = 1 location = djenne }
-	victuals_market_import = { tag = ENG level = 1 location = doncaster }
-	victuals_market_import = { tag = CHI level = 3 location = dongguan }
+	victuals_market_import = { tag = CHI level = 2 location = dongguan }
 	victuals_market_import = { tag = CHI level = 1 location = dongliu }
-	victuals_market_import = { tag = MAK level = 3 location = dongola }
+	victuals_market_import = { tag = MAK level = 1 location = dongola }
 	victuals_market_import = { tag = CHI level = 3 location = dongyang }
-	victuals_market_import = { tag = HOL level = 3 location = dordrecht }
+	victuals_market_import = { tag = HOL level = 1 location = dordrecht }
 	victuals_market_import = { tag = DTM level = 1 location = dortmund }
 	victuals_market_import = { tag = BUL level = 1 location = drastar }
-	victuals_market_import = { tag = PLE level = 3 location = dublin }
-	victuals_market_import = { tag = RAG level = 3 location = dubrovnik }
-	victuals_market_import = { tag = CHI level = 1 location = ducheng }
+	victuals_market_import = { tag = PLE level = 2 location = dublin }
+	victuals_market_import = { tag = RAG level = 1 location = dubrovnik }
 	victuals_market_import = { tag = ALB level = 2 location = durres }
 	victuals_market_import = { tag = BRG level = 1 location = dusseldorf }
 	victuals_market_import = { tag = SBL level = 2 location = edinburgh }
 	victuals_market_import = { tag = BYZ level = 1 location = edirne }
-	victuals_market_import = { tag = MAM level = 1 location = el_arish }
 	victuals_market_import = { tag = WAR level = 1 location = el_ayum }
 	victuals_market_import = { tag = DUL level = 1 location = elbistan }
 	victuals_market_import = { tag = CHI level = 1 location = erdao }
-	victuals_market_import = { tag = ERF level = 4 location = erfurt }
+	victuals_market_import = { tag = ERF level = 2 location = erfurt }
 	victuals_market_import = { tag = POR level = 1 location = evora }
-	victuals_market_import = { tag = HUN level = 2 location = fehervar }
-	victuals_market_import = { tag = POR level = 3 location = feira }
+	victuals_market_import = { tag = HUN level = 1 location = fehervar }
+	victuals_market_import = { tag = POR level = 2 location = feira }
 	victuals_market_import = { tag = CHI level = 1 location = fengdu }
 	victuals_market_import = { tag = CHI level = 1 location = fengxiang }
 	victuals_market_import = { tag = CHI level = 3 location = fenning }
-	victuals_market_import = { tag = FER level = 3 location = ferrara }
-	victuals_market_import = { tag = MOR level = 4 location = fez }
+	victuals_market_import = { tag = FER level = 2 location = ferrara }
+	victuals_market_import = { tag = MOR level = 3 location = fez }
 	victuals_market_import = { tag = SLV level = 2 location = flensburg }
 	victuals_market_import = { tag = FLO level = 1 location = florence }
-	victuals_market_import = { tag = FRN level = 2 location = frankfurt }
-	victuals_market_import = { tag = MEI level = 2 location = freiberg }
-	victuals_market_import = { tag = FBG level = 3 location = freiburg }
+	victuals_market_import = { tag = FRN level = 1 location = frankfurt }
+	victuals_market_import = { tag = MEI level = 1 location = freiberg }
+	victuals_market_import = { tag = FBG level = 2 location = freiburg }
 	victuals_market_import = { tag = BRA level = 2 location = freienwalde }
-	victuals_market_import = { tag = CHI level = 1 location = fuchuan_ningxia }
 	victuals_market_import = { tag = CHI level = 1 location = fuliang }
-	victuals_market_import = { tag = CHI level = 1 location = funing_huaian }
 	victuals_market_import = { tag = CHI level = 2 location = fushun }
 	victuals_market_import = { tag = CHI level = 1 location = fuzhou }
-	victuals_market_import = { tag = CHI level = 2 location = fuzhou_sichuan }
-	victuals_market_import = { tag = CHI level = 1 location = fuzhou_yanan }
-	victuals_market_import = { tag = ARA level = 1 location = gandia }
-	victuals_market_import = { tag = JAL level = 4 location = ganja }
+	victuals_market_import = { tag = CHI level = 1 location = fuzhou_sichuan }
+	victuals_market_import = { tag = JAL level = 3 location = ganja }
 	victuals_market_import = { tag = CHI level = 1 location = ganzhou }
 	victuals_market_import = { tag = CHI level = 3 location = gaoan }
-	victuals_market_import = { tag = CHI level = 2 location = gaoyao }
-	victuals_market_import = { tag = CHI level = 2 location = gaoyou }
-	victuals_market_import = { tag = GAU level = 4 location = gaur }
-	victuals_market_import = { tag = TEU level = 3 location = gdansk }
-	victuals_market_import = { tag = GNV level = 4 location = geneve }
+	victuals_market_import = { tag = CHI level = 1 location = gaoyao }
+	victuals_market_import = { tag = CHI level = 1 location = gaoyou }
+	victuals_market_import = { tag = GAU level = 2 location = gaur }
+	victuals_market_import = { tag = TEU level = 2 location = gdansk }
+	victuals_market_import = { tag = GNV level = 2 location = geneve }
 	victuals_market_import = { tag = MHA level = 1 location = gengma }
-	victuals_market_import = { tag = GEN level = 4 location = genoa }
+	victuals_market_import = { tag = GEN level = 3 location = genoa }
 	victuals_market_import = { tag = NGD level = 2 location = ghazni }
-	victuals_market_import = { tag = FLA level = 4 location = ghent }
-	victuals_market_import = { tag = SIC level = 3 location = girgenti }
-	victuals_market_import = { tag = WUY level = 1 location = girin_ula }
-	victuals_market_import = { tag = ARA level = 1 location = girona }
+	victuals_market_import = { tag = FLA level = 3 location = ghent }
+	victuals_market_import = { tag = SIC level = 2 location = girgenti }
+	victuals_market_import = { tag = ARA level = 2 location = girona }
 	victuals_market_import = { tag = VDZ level = 1 location = gladzor }
-	victuals_market_import = { tag = GOA level = 2 location = goa }
-	victuals_market_import = { tag = CHR level = 4 location = gomel }
+	victuals_market_import = { tag = GOA level = 1 location = goa }
+	victuals_market_import = { tag = CHR level = 3 location = gomel }
 	victuals_market_import = { tag = BOH level = 2 location = gorlitz }
-	victuals_market_import = { tag = GOS level = 1 location = goslar }
-	victuals_market_import = { tag = BRU level = 3 location = gottingen }
-	victuals_market_import = { tag = GOW level = 6 location = gowa }
+	victuals_market_import = { tag = BRU level = 2 location = gottingen }
+	victuals_market_import = { tag = GOW level = 4 location = gowa }
 	victuals_market_import = { tag = GRA level = 3 location = granada }
-	victuals_market_import = { tag = HAB level = 4 location = graz }
+	victuals_market_import = { tag = HAB level = 2 location = graz }
 	victuals_market_import = { tag = ZMW level = 1 location = great_zimbabwe }
-	victuals_market_import = { tag = LIT level = 4 location = grodno }
-	victuals_market_import = { tag = FRI level = 3 location = groningen }
-	victuals_market_import = { tag = CHI level = 4 location = guancheng_zhengzhou }
+	victuals_market_import = { tag = LIT level = 3 location = grodno }
+	victuals_market_import = { tag = FRI level = 1 location = groningen }
+	victuals_market_import = { tag = CHI level = 3 location = guancheng_zhengzhou }
 	victuals_market_import = { tag = CHI level = 1 location = guangzhou }
 	victuals_market_import = { tag = MAN level = 1 location = guastalla }
 	victuals_market_import = { tag = DLH level = 1 location = gulbarga }
-	victuals_market_import = { tag = CHI level = 1 location = guozhou }
 	victuals_market_import = { tag = VIJ level = 1 location = gutti }
-	victuals_market_import = { tag = GWA level = 4 location = gwalior }
+	victuals_market_import = { tag = GWA level = 2 location = gwalior }
 	victuals_market_import = { tag = KOR level = 3 location = gyeongju }
-	victuals_market_import = { tag = HUN level = 2 location = gyor }
+	victuals_market_import = { tag = HUN level = 1 location = gyor }
 	victuals_market_import = { tag = CHI level = 1 location = hailing }
-	victuals_market_import = { tag = SYG level = 1 location = haizhou_liaoyang }
 	victuals_market_import = { tag = HBS level = 2 location = halberstadt }
 	victuals_market_import = { tag = MAG level = 2 location = halle_an_der_saale }
-	victuals_market_import = { tag = HDN level = 3 location = hamadan }
+	victuals_market_import = { tag = HDN level = 2 location = hamadan }
 	victuals_market_import = { tag = HAM level = 2 location = hamburg }
 	victuals_market_import = { tag = CHI level = 1 location = hancheng }
-	victuals_market_import = { tag = CHI level = 4 location = handan }
-	victuals_market_import = { tag = CHI level = 2 location = hangzhou }
-	victuals_market_import = { tag = JAP level = 2 location = hata }
-	victuals_market_import = { tag = QUL level = 5 location = hatunqulla }
-	victuals_market_import = { tag = CHI level = 1 location = hedong }
-	victuals_market_import = { tag = PAL level = 4 location = heidelberg }
-	victuals_market_import = { tag = CHI level = 1 location = hengyang }
-	victuals_market_import = { tag = CHI level = 1 location = hepu }
-	victuals_market_import = { tag = KRT level = 2 location = herat }
-	victuals_market_import = { tag = BRB level = 3 location = hertogenbosch }
+	victuals_market_import = { tag = CHI level = 3 location = handan }
+	victuals_market_import = { tag = CHI level = 1 location = hangzhou }
+	victuals_market_import = { tag = JAP level = 1 location = hata }
+	victuals_market_import = { tag = QUL level = 2 location = hatunqulla }
+	victuals_market_import = { tag = PAL level = 3 location = heidelberg }
+	victuals_market_import = { tag = KRT level = 1 location = herat }
+	victuals_market_import = { tag = BRB level = 2 location = hertogenbosch }
 	victuals_market_import = { tag = CHI level = 1 location = hezhong }
 	victuals_market_import = { tag = CHI level = 2 location = hongtong }
 	victuals_market_import = { tag = HUN level = 1 location = hont }
 	victuals_market_import = { tag = ORM level = 2 location = hormuz }
-	victuals_market_import = { tag = CHI level = 1 location = huailai }
 	victuals_market_import = { tag = CHI level = 1 location = huaining }
 	victuals_market_import = { tag = CHI level = 1 location = huanggang }
 	victuals_market_import = { tag = CHI level = 1 location = huanzhou_qingyang }
-	victuals_market_import = { tag = CHI level = 6 location = huating }
+	victuals_market_import = { tag = CHI level = 5 location = huating }
 	victuals_market_import = { tag = CHI level = 1 location = huayin }
-	victuals_market_import = { tag = ARA level = 2 location = huesca }
-	victuals_market_import = { tag = CHI level = 1 location = huitong }
+	victuals_market_import = { tag = ARA level = 1 location = huesca }
 	victuals_market_import = { tag = IAS level = 1 location = iasi }
 	victuals_market_import = { tag = IFE level = 1 location = ife }
 	victuals_market_import = { tag = NRI level = 1 location = igbo_ukwu }
-	victuals_market_import = { tag = AQU level = 1 location = ilirska_bistrica }
-	victuals_market_import = { tag = GLH level = 1 location = ilovlya }
-	victuals_market_import = { tag = KHM level = 1 location = indrapura_khmer }
-	victuals_market_import = { tag = TIR level = 2 location = innsbruck }
-	victuals_market_import = { tag = MOY level = 1 location = inverness }
+	victuals_market_import = { tag = TIR level = 1 location = innsbruck }
 	victuals_market_import = { tag = INJ level = 2 location = isfahan }
-	victuals_market_import = { tag = TUR level = 3 location = izmit }
+	victuals_market_import = { tag = TUR level = 2 location = izmit }
 	victuals_market_import = { tag = JAP level = 1 location = izumi }
 	victuals_market_import = { tag = LMN level = 1 location = jabar_goemba }
-	victuals_market_import = { tag = CAS level = 1 location = jaen }
 	victuals_market_import = { tag = JNT level = 1 location = jaintiapur }
-	victuals_market_import = { tag = DLH level = 4 location = jalandhar }
-	victuals_market_import = { tag = DOG level = 1 location = jammu }
+	victuals_market_import = { tag = DLH level = 2 location = jalandhar }
 	victuals_market_import = { tag = JWR level = 1 location = jawhar }
 	victuals_market_import = { tag = MEC level = 3 location = jeddah }
 	victuals_market_import = { tag = KOR level = 3 location = jeonju }
@@ -17200,106 +17281,93 @@ building_manager = {
 	victuals_market_import = { tag = CHI level = 1 location = jianchang }
 	victuals_market_import = { tag = CHI level = 2 location = jiangdu }
 	victuals_market_import = { tag = CHI level = 2 location = jiangling }
-	victuals_market_import = { tag = CHI level = 2 location = jiangxia }
+	victuals_market_import = { tag = CHI level = 1 location = jiangxia }
 	victuals_market_import = { tag = CHI level = 2 location = jiangyin }
-	victuals_market_import = { tag = LGZ level = 1 location = jiangyou }
-	victuals_market_import = { tag = CHI level = 2 location = jianzhou }
+	victuals_market_import = { tag = CHI level = 1 location = jianzhou }
 	victuals_market_import = { tag = CHI level = 3 location = jiaxing }
 	victuals_market_import = { tag = CHI level = 1 location = jieyang }
 	victuals_market_import = { tag = CHI level = 2 location = jimo }
 	victuals_market_import = { tag = CHI level = 2 location = jincheng_zezhou }
 	victuals_market_import = { tag = CHI level = 1 location = jingbian }
 	victuals_market_import = { tag = CHI level = 1 location = jingchuan }
-	victuals_market_import = { tag = CHI level = 1 location = jinghai }
-	victuals_market_import = { tag = CHI level = 3 location = jingzhao }
+	victuals_market_import = { tag = CHI level = 2 location = jingzhao }
 	victuals_market_import = { tag = CHI level = 3 location = jinjiang }
-	victuals_market_import = { tag = KOR level = 3 location = jinju }
-	victuals_market_import = { tag = CHI level = 1 location = jiyuan }
+	victuals_market_import = { tag = KOR level = 1 location = jinju }
 	victuals_market_import = { tag = CRS level = 1 location = kaa }
 	victuals_market_import = { tag = KOR level = 3 location = kaesong }
 	victuals_market_import = { tag = GAZ level = 1 location = kaffa }
-	victuals_market_import = { tag = JAP level = 3 location = kagoshima }
-	victuals_market_import = { tag = CHI level = 5 location = kaifeng }
+	victuals_market_import = { tag = JAP level = 1 location = kagoshima }
+	victuals_market_import = { tag = CHI level = 4 location = kaifeng }
 	victuals_market_import = { tag = TUN level = 1 location = kairouan }
 	victuals_market_import = { tag = KLH level = 1 location = kalahandinagara }
 	victuals_market_import = { tag = ACH level = 2 location = kalamata }
-	victuals_market_import = { tag = ORI level = 2 location = kalingapattanam }
-	victuals_market_import = { tag = JJK level = 5 location = kalinjar }
-	victuals_market_import = { tag = SWE level = 1 location = kalmar }
+	victuals_market_import = { tag = ORI level = 1 location = kalingapattanam }
+	victuals_market_import = { tag = JJK level = 4 location = kalinjar }
 	victuals_market_import = { tag = SRM level = 1 location = kalsi }
 	victuals_market_import = { tag = DLH level = 1 location = kalyan }
-	victuals_market_import = { tag = JAP level = 4 location = kamakura }
-	victuals_market_import = { tag = KMA level = 4 location = kamatapur }
+	victuals_market_import = { tag = JAP level = 2 location = kamakura }
+	victuals_market_import = { tag = KMA level = 2 location = kamatapur }
 	victuals_market_import = { tag = JAP level = 1 location = kamiagata }
-	victuals_market_import = { tag = JAP level = 1 location = kamikita }
-	victuals_market_import = { tag = DLH level = 5 location = kanauj }
-	victuals_market_import = { tag = SMV level = 2 location = kanchipuram }
+	victuals_market_import = { tag = DLH level = 3 location = kanauj }
+	victuals_market_import = { tag = SMV level = 1 location = kanchipuram }
 	victuals_market_import = { tag = KNK level = 1 location = kanker }
-	victuals_market_import = { tag = KAN level = 3 location = kano }
+	victuals_market_import = { tag = KAN level = 2 location = kano }
 	victuals_market_import = { tag = CHI level = 2 location = karakorum }
-	victuals_market_import = { tag = GNJ level = 1 location = karma_densa }
 	victuals_market_import = { tag = DGH level = 1 location = kashgar }
-	victuals_market_import = { tag = ORI level = 7 location = kataka }
-	victuals_market_import = { tag = KTS level = 3 location = katsina }
+	victuals_market_import = { tag = ORI level = 5 location = kataka }
+	victuals_market_import = { tag = KTS level = 2 location = katsina }
 	victuals_market_import = { tag = LIT level = 2 location = kaunas }
 	victuals_market_import = { tag = JAP level = 1 location = kawanuma }
-	victuals_market_import = { tag = TNK level = 5 location = kayal }
-	victuals_market_import = { tag = ERE level = 3 location = kayseri }
+	victuals_market_import = { tag = TNK level = 4 location = kayal }
+	victuals_market_import = { tag = ERE level = 2 location = kayseri }
 	victuals_market_import = { tag = KMP level = 1 location = kempten }
 	victuals_market_import = { tag = KJA level = 1 location = keonjhar }
-	victuals_market_import = { tag = RKL level = 4 location = kermanshah }
+	victuals_market_import = { tag = RKL level = 2 location = kermanshah }
 	victuals_market_import = { tag = JAP level = 1 location = keta_tajima }
 	victuals_market_import = { tag = LHL level = 1 location = keylong }
 	victuals_market_import = { tag = DLH level = 1 location = khambat }
-	victuals_market_import = { tag = GNJ level = 1 location = khamgar }
-	victuals_market_import = { tag = DGH level = 1 location = khotan }
-	victuals_market_import = { tag = ORI level = 2 location = khurda }
+	victuals_market_import = { tag = ORI level = 1 location = khurda }
 	victuals_market_import = { tag = HPL level = 1 location = kiel }
-	victuals_market_import = { tag = ZAN level = 4 location = kilwa_kisiwani }
+	victuals_market_import = { tag = ZAN level = 3 location = kilwa_kisiwani }
 	victuals_market_import = { tag = KSW level = 1 location = kishtwar }
 	victuals_market_import = { tag = DAN level = 3 location = kobenhavn }
+	victuals_market_import = { tag = DLH level = 1 location = kol }
 	victuals_market_import = { tag = DLH level = 1 location = kolhapur }
-	victuals_market_import = { tag = VND level = 2 location = kollam }
-	victuals_market_import = { tag = KNG level = 3 location = kong }
+	victuals_market_import = { tag = VND level = 1 location = kollam }
+	victuals_market_import = { tag = KNG level = 2 location = kong }
 	victuals_market_import = { tag = TEU level = 2 location = konigsberg }
 	victuals_market_import = { tag = KNZ level = 1 location = konstanz }
-	victuals_market_import = { tag = KAR level = 3 location = konya }
-	victuals_market_import = { tag = JAP level = 1 location = koshi }
+	victuals_market_import = { tag = KAR level = 1 location = konya }
 	victuals_market_import = { tag = HUN level = 2 location = kosice }
 	victuals_market_import = { tag = DBD level = 1 location = kotte }
 	victuals_market_import = { tag = GHA level = 3 location = koumbi_saleh }
-	victuals_market_import = { tag = ZMR level = 2 location = kozhikode }
+	victuals_market_import = { tag = ZMR level = 1 location = kozhikode }
 	victuals_market_import = { tag = POL level = 4 location = krakow }
-	victuals_market_import = { tag = KIE level = 4 location = kremenchuk }
+	victuals_market_import = { tag = KIE level = 3 location = kremenchuk }
 	victuals_market_import = { tag = JAP level = 1 location = kume_houki }
-	victuals_market_import = { tag = QUN level = 1 location = kunduz }
 	victuals_market_import = { tag = LNG level = 1 location = kunming }
-	victuals_market_import = { tag = QCH level = 2 location = kurla }
-	victuals_market_import = { tag = KUS level = 2 location = kuskatan }
-	victuals_market_import = { tag = GRM level = 1 location = kutahya }
-	victuals_market_import = { tag = KTL level = 1 location = kutlehar }
-	victuals_market_import = { tag = KIE level = 5 location = kyiv }
-	victuals_market_import = { tag = JAP level = 3 location = kyoto }
+	victuals_market_import = { tag = QCH level = 1 location = kurla }
+	victuals_market_import = { tag = KUS level = 1 location = kuskatan }
+	victuals_market_import = { tag = KIE level = 4 location = kyiv }
+	victuals_market_import = { tag = JAP level = 2 location = kyoto }
 	victuals_market_import = { tag = AHO level = 1 location = lakhimpur }
 	victuals_market_import = { tag = ETH level = 2 location = lalibela }
 	victuals_market_import = { tag = LNA level = 1 location = lamphun }
 	victuals_market_import = { tag = LDA level = 1 location = landau_rhineland }
-	victuals_market_import = { tag = CHI level = 1 location = lanzhou }
 	victuals_market_import = { tag = FRA level = 1 location = laon }
-	victuals_market_import = { tag = BYZ level = 1 location = larissa }
-	victuals_market_import = { tag = CYP level = 4 location = larnaca }
-	victuals_market_import = { tag = MAR level = 4 location = leh }
-	victuals_market_import = { tag = LDB level = 3 location = leipzig }
+	victuals_market_import = { tag = CYP level = 3 location = larnaca }
+	victuals_market_import = { tag = MAR level = 2 location = leh }
+	victuals_market_import = { tag = LDB level = 1 location = leipzig }
 	victuals_market_import = { tag = CAS level = 2 location = leon }
-	victuals_market_import = { tag = TIB level = 4 location = lhasa }
-	victuals_market_import = { tag = SYG level = 7 location = liaoyang }
+	victuals_market_import = { tag = TIB level = 2 location = lhasa }
+	victuals_market_import = { tag = SYG level = 5 location = liaoyang }
 	victuals_market_import = { tag = CHI level = 2 location = licheng }
-	victuals_market_import = { tag = LIE level = 4 location = liege }
+	victuals_market_import = { tag = LIE level = 2 location = liege }
 	victuals_market_import = { tag = CHI level = 1 location = linchuan }
-	victuals_market_import = { tag = ENG level = 3 location = lincoln }
+	victuals_market_import = { tag = ENG level = 2 location = lincoln }
 	victuals_market_import = { tag = CHI level = 1 location = lingling }
 	victuals_market_import = { tag = CHI level = 1 location = lingshi }
-	victuals_market_import = { tag = JOL level = 2 location = linguere }
+	victuals_market_import = { tag = JOL level = 1 location = linguere }
 	victuals_market_import = { tag = CHI level = 1 location = lingxian_shanxi }
 	victuals_market_import = { tag = CHI level = 1 location = linyi }
 	victuals_market_import = { tag = HAB level = 1 location = linz }
@@ -17311,446 +17379,383 @@ building_manager = {
 	victuals_market_import = { tag = KHM level = 1 location = longvek }
 	victuals_market_import = { tag = CHI level = 1 location = longxi_gongchang }
 	victuals_market_import = { tag = BUR level = 2 location = louhans }
-	victuals_market_import = { tag = CHI level = 1 location = luan }
 	victuals_market_import = { tag = LUB level = 2 location = lubeck }
 	victuals_market_import = { tag = LUC level = 3 location = lucca }
 	victuals_market_import = { tag = CHI level = 1 location = luling }
 	victuals_market_import = { tag = SKE level = 1 location = lund }
-	victuals_market_import = { tag = CHI level = 4 location = luoyang }
-	victuals_market_import = { tag = VOL level = 1 location = lutsk }
+	victuals_market_import = { tag = CHI level = 3 location = luoyang }
 	victuals_market_import = { tag = LUX level = 1 location = luxembourg }
 	victuals_market_import = { tag = CHI level = 2 location = luzhou }
-	victuals_market_import = { tag = HAL level = 4 location = lviv }
-	victuals_market_import = { tag = ENG level = 4 location = lynn }
+	victuals_market_import = { tag = HAL level = 3 location = lviv }
+	victuals_market_import = { tag = ENG level = 2 location = lynn }
 	victuals_market_import = { tag = FRA level = 1 location = lyon }
 	victuals_market_import = { tag = VBG level = 1 location = maastricht }
-	victuals_market_import = { tag = MTA level = 3 location = macerata }
-	victuals_market_import = { tag = IFA level = 1 location = maduna }
+	victuals_market_import = { tag = MTA level = 2 location = macerata }
 	victuals_market_import = { tag = MAB level = 2 location = madurai }
-	victuals_market_import = { tag = MAG level = 3 location = magdeburg }
+	victuals_market_import = { tag = MAG level = 2 location = magdeburg }
 	victuals_market_import = { tag = JFN level = 1 location = mahatittha }
-	victuals_market_import = { tag = TUN level = 2 location = mahdia }
-	victuals_market_import = { tag = JJK level = 5 location = mahoba }
-	victuals_market_import = { tag = MAI level = 3 location = mainz }
-	victuals_market_import = { tag = GRA level = 3 location = malaga }
+	victuals_market_import = { tag = TUN level = 1 location = mahdia }
+	victuals_market_import = { tag = JJK level = 4 location = mahoba }
+	victuals_market_import = { tag = MAI level = 2 location = mainz }
+	victuals_market_import = { tag = GRA level = 2 location = malaga }
 	victuals_market_import = { tag = SWT level = 1 location = malakand }
 	victuals_market_import = { tag = ERE level = 1 location = malatya }
-	victuals_market_import = { tag = NAP level = 3 location = manfredonia }
+	victuals_market_import = { tag = NAP level = 2 location = manfredonia }
 	victuals_market_import = { tag = MSN level = 1 location = mangapet }
-	victuals_market_import = { tag = XIU level = 4 location = mani }
+	victuals_market_import = { tag = XIU level = 2 location = mani }
 	victuals_market_import = { tag = MAM level = 1 location = mansoura }
 	victuals_market_import = { tag = MAN level = 3 location = mantova }
 	victuals_market_import = { tag = MOR level = 1 location = marrakesh }
 	victuals_market_import = { tag = PRO level = 1 location = marseille }
-	victuals_market_import = { tag = PEG level = 3 location = martaban }
+	victuals_market_import = { tag = PEG level = 1 location = martaban }
 	victuals_market_import = { tag = JRN level = 1 location = massawa }
-	victuals_market_import = { tag = NAP level = 3 location = matera }
-	victuals_market_import = { tag = COC level = 4 location = mayapan }
-	victuals_market_import = { tag = ART level = 1 location = maymana }
-	victuals_market_import = { tag = MNA level = 3 location = maynila }
-	victuals_market_import = { tag = KHT level = 1 location = mazhan }
-	victuals_market_import = { tag = KIE level = 1 location = mazyr }
-	victuals_market_import = { tag = BQA level = 1 location = mechili }
-	victuals_market_import = { tag = MDA level = 2 location = medina }
+	victuals_market_import = { tag = NAP level = 2 location = matera }
+	victuals_market_import = { tag = COC level = 3 location = mayapan }
+	victuals_market_import = { tag = MNA level = 2 location = maynila }
+	victuals_market_import = { tag = MDA level = 1 location = medina }
 	victuals_market_import = { tag = MOR level = 1 location = meknes }
-	victuals_market_import = { tag = HAB level = 1 location = melk }
 	victuals_market_import = { tag = MEM level = 1 location = memmingen }
-	victuals_market_import = { tag = CHI level = 1 location = mengcheng }
 	victuals_market_import = { tag = MRV level = 1 location = merv }
 	victuals_market_import = { tag = SIC level = 1 location = messina }
-	victuals_market_import = { tag = MTZ level = 2 location = metz }
-	victuals_market_import = { tag = CHI level = 1 location = mianzhou }
+	victuals_market_import = { tag = MTZ level = 1 location = metz }
 	victuals_market_import = { tag = NND level = 1 location = mictlan }
 	victuals_market_import = { tag = JAP level = 1 location = miki }
-	victuals_market_import = { tag = MLO level = 4 location = milano }
-	victuals_market_import = { tag = JAP level = 1 location = minamimorokata }
-	victuals_market_import = { tag = LIT level = 4 location = minsk }
+	victuals_market_import = { tag = MLO level = 3 location = milano }
+	victuals_market_import = { tag = LIT level = 3 location = minsk }
 	victuals_market_import = { tag = CHI level = 1 location = minxian }
-	victuals_market_import = { tag = JAP level = 2 location = miyagi }
-	victuals_market_import = { tag = FER level = 3 location = modena }
-	victuals_market_import = { tag = MDI level = 6 location = mogadishu }
+	victuals_market_import = { tag = JAP level = 1 location = miyagi }
+	victuals_market_import = { tag = FER level = 2 location = modena }
+	victuals_market_import = { tag = MDI level = 5 location = mogadishu }
 	victuals_market_import = { tag = HAI level = 1 location = mons }
-	victuals_market_import = { tag = FRA level = 4 location = montauban }
-	victuals_market_import = { tag = MLL level = 3 location = montpellier }
+	victuals_market_import = { tag = FRA level = 3 location = montauban }
+	victuals_market_import = { tag = MLL level = 1 location = montpellier }
 	victuals_market_import = { tag = MOS level = 3 location = moscow }
-	victuals_market_import = { tag = SUT level = 2 location = mosul }
+	victuals_market_import = { tag = SUT level = 1 location = mosul }
 	victuals_market_import = { tag = SND level = 3 location = muhammad_tur }
-	victuals_market_import = { tag = MUL level = 3 location = mulhouse }
-	victuals_market_import = { tag = DLH level = 1 location = multan }
-	victuals_market_import = { tag = UBV level = 4 location = munich }
-	victuals_market_import = { tag = MUN level = 3 location = munster }
+	victuals_market_import = { tag = MUL level = 2 location = mulhouse }
+	victuals_market_import = { tag = UBV level = 3 location = munich }
+	victuals_market_import = { tag = MUN level = 2 location = munster }
 	victuals_market_import = { tag = CHI level = 1 location = muping }
-	victuals_market_import = { tag = CAS level = 3 location = murcia }
+	victuals_market_import = { tag = CAS level = 1 location = murcia }
 	victuals_market_import = { tag = HSL level = 2 location = mysore }
 	victuals_market_import = { tag = LUR level = 1 location = nabagram }
-	victuals_market_import = { tag = STN level = 2 location = nadia }
+	victuals_market_import = { tag = STN level = 1 location = nadia }
 	victuals_market_import = { tag = JAP level = 1 location = naka_iwami }
 	victuals_market_import = { tag = HKZ level = 1 location = nakijin }
 	victuals_market_import = { tag = AHO level = 1 location = nakshaparvat }
-	victuals_market_import = { tag = MOR level = 2 location = namalata }
+	victuals_market_import = { tag = MOR level = 1 location = namalata }
 	victuals_market_import = { tag = KOR level = 3 location = namgyeong }
-	victuals_market_import = { tag = CHI level = 3 location = nanchang }
-	victuals_market_import = { tag = CHI level = 3 location = nancheng }
-	victuals_market_import = { tag = CHI level = 1 location = nangong }
+	victuals_market_import = { tag = CHI level = 2 location = nanchang }
+	victuals_market_import = { tag = CHI level = 2 location = nancheng }
 	victuals_market_import = { tag = BRI level = 2 location = nantes }
 	victuals_market_import = { tag = NAP level = 1 location = naples }
 	victuals_market_import = { tag = JAP level = 1 location = nara }
-	victuals_market_import = { tag = NRB level = 2 location = narbonne }
-	victuals_market_import = { tag = PLE level = 2 location = new_ross }
-	victuals_market_import = { tag = MAL level = 6 location = niani }
-	victuals_market_import = { tag = NOR level = 1 location = nidaros }
+	victuals_market_import = { tag = NRB level = 1 location = narbonne }
+	victuals_market_import = { tag = PLE level = 1 location = new_ross }
+	victuals_market_import = { tag = MAL level = 5 location = niani }
 	victuals_market_import = { tag = JPO level = 2 location = nilakamberu }
 	victuals_market_import = { tag = FRA level = 1 location = nimes }
-	victuals_market_import = { tag = CHI level = 4 location = ningguo }
+	victuals_market_import = { tag = CHI level = 3 location = ningguo }
 	victuals_market_import = { tag = CHI level = 3 location = ningxia }
 	victuals_market_import = { tag = CHI level = 1 location = ningyuan }
 	victuals_market_import = { tag = SER level = 1 location = nis }
-	victuals_market_import = { tag = JKR level = 4 location = nishapur }
-	victuals_market_import = { tag = NZH level = 2 location = nizhny_novgorod }
+	victuals_market_import = { tag = JKR level = 2 location = nishapur }
+	victuals_market_import = { tag = NZH level = 1 location = nizhny_novgorod }
 	victuals_market_import = { tag = KBO level = 2 location = njimi }
 	victuals_market_import = { tag = ITZ level = 1 location = noh_peten }
-	victuals_market_import = { tag = MOR level = 1 location = noul_lamta }
 	victuals_market_import = { tag = MLO level = 1 location = novara }
-	victuals_market_import = { tag = NOV level = 3 location = novgorod }
-	victuals_market_import = { tag = CRO level = 3 location = novigrad }
-	victuals_market_import = { tag = NUR level = 3 location = nuremberg }
+	victuals_market_import = { tag = NOV level = 2 location = novgorod }
+	victuals_market_import = { tag = CRO level = 2 location = novigrad }
+	victuals_market_import = { tag = NUR level = 1 location = nuremberg }
 	victuals_market_import = { tag = ATQ level = 1 location = nusaybin }
 	victuals_market_import = { tag = DAN level = 2 location = odense }
 	victuals_market_import = { tag = OET level = 1 location = oettingen }
 	victuals_market_import = { tag = MVA level = 1 location = olomouc }
 	victuals_market_import = { tag = NZN level = 1 location = oozato }
-	victuals_market_import = { tag = OPL level = 4 location = opole }
+	victuals_market_import = { tag = OPL level = 3 location = opole }
 	victuals_market_import = { tag = TLE level = 1 location = oran }
 	victuals_market_import = { tag = CHI level = 1 location = orkhon }
-	victuals_market_import = { tag = NOR level = 2 location = oslo }
-	victuals_market_import = { tag = OSN level = 3 location = osnabruck }
+	victuals_market_import = { tag = NOR level = 1 location = oslo }
+	victuals_market_import = { tag = OSN level = 2 location = osnabruck }
 	victuals_market_import = { tag = TEU level = 1 location = ostroda }
 	victuals_market_import = { tag = JAP level = 1 location = ou }
 	victuals_market_import = { tag = OUA level = 3 location = ouagadougou }
-	victuals_market_import = { tag = KIE level = 1 location = ovruch }
 	victuals_market_import = { tag = ENG level = 2 location = oxford }
 	victuals_market_import = { tag = OYO level = 5 location = oyo_ile }
-	victuals_market_import = { tag = PDB level = 2 location = paderborn }
+	victuals_market_import = { tag = PDB level = 1 location = paderborn }
 	victuals_market_import = { tag = PAD level = 3 location = padova }
 	victuals_market_import = { tag = PIN level = 4 location = pagan }
-	victuals_market_import = { tag = PLB level = 2 location = palembang }
+	victuals_market_import = { tag = PLB level = 1 location = palembang }
 	victuals_market_import = { tag = SIC level = 1 location = palermo }
 	victuals_market_import = { tag = KPL level = 2 location = pallakolu }
 	victuals_market_import = { tag = STN level = 1 location = pandua }
 	victuals_market_import = { tag = RCH level = 1 location = panugallu }
-	victuals_market_import = { tag = FRA level = 4 location = paris }
+	victuals_market_import = { tag = FRA level = 3 location = paris }
 	victuals_market_import = { tag = PAR level = 3 location = parma }
-	victuals_market_import = { tag = PSA level = 2 location = pasai }
-	victuals_market_import = { tag = NRP level = 1 location = pathankot }
+	victuals_market_import = { tag = PSA level = 1 location = pasai }
 	victuals_market_import = { tag = DLH level = 1 location = patna }
 	victuals_market_import = { tag = TAR level = 2 location = patzcuaro }
-	victuals_market_import = { tag = PAV level = 3 location = pavia }
+	victuals_market_import = { tag = PAV level = 1 location = pavia }
 	victuals_market_import = { tag = RDY level = 1 location = pazhaverkadu }
-	victuals_market_import = { tag = HUN level = 2 location = pecs }
+	victuals_market_import = { tag = HUN level = 1 location = pecs }
 	victuals_market_import = { tag = PEG level = 1 location = pegu }
-	victuals_market_import = { tag = CHI level = 2 location = pengshui }
-	victuals_market_import = { tag = PER level = 1 location = perigueux }
-	victuals_market_import = { tag = MLL level = 3 location = perpignan }
-	victuals_market_import = { tag = SBL level = 1 location = perth }
-	victuals_market_import = { tag = PEA level = 3 location = perugia }
-	victuals_market_import = { tag = DLH level = 2 location = peshawar }
+	victuals_market_import = { tag = CHI level = 1 location = pengshui }
+	victuals_market_import = { tag = MLL level = 1 location = perpignan }
+	victuals_market_import = { tag = PEA level = 1 location = perugia }
+	victuals_market_import = { tag = DLH level = 1 location = peshawar }
 	victuals_market_import = { tag = HUN level = 2 location = pest }
 	victuals_market_import = { tag = TIB level = 1 location = phari }
-	victuals_market_import = { tag = MLO level = 1 location = piacenza }
-	victuals_market_import = { tag = CHI level = 1 location = pingji }
-	victuals_market_import = { tag = CHI level = 2 location = pingjin }
+	victuals_market_import = { tag = CHI level = 1 location = pingjin }
 	victuals_market_import = { tag = CHI level = 1 location = pingliang }
-	victuals_market_import = { tag = CHI level = 2 location = pingyang }
 	victuals_market_import = { tag = CHI level = 1 location = pingyin }
-	victuals_market_import = { tag = PIN level = 2 location = pinya }
+	victuals_market_import = { tag = PIN level = 1 location = pinya }
 	victuals_market_import = { tag = PIS level = 3 location = pisa }
 	victuals_market_import = { tag = KIC level = 1 location = pismachi }
-	victuals_market_import = { tag = PLK level = 4 location = plock }
+	victuals_market_import = { tag = PLK level = 3 location = plock }
 	victuals_market_import = { tag = BOH level = 1 location = plzen }
-	victuals_market_import = { tag = FRA level = 3 location = poitiers }
-	victuals_market_import = { tag = POK level = 4 location = polotsk }
-	victuals_market_import = { tag = LUP level = 2 location = pomata }
-	victuals_market_import = { tag = ENG level = 1 location = poole }
+	victuals_market_import = { tag = FRA level = 2 location = poitiers }
+	victuals_market_import = { tag = POK level = 3 location = polotsk }
+	victuals_market_import = { tag = LUP level = 1 location = pomata }
 	victuals_market_import = { tag = PNC level = 1 location = poonch }
-	victuals_market_import = { tag = POR level = 3 location = porto }
-	victuals_market_import = { tag = ENG level = 1 location = portsmouth }
-	victuals_market_import = { tag = POL level = 4 location = poznan }
-	victuals_market_import = { tag = BOH level = 4 location = prague }
-	victuals_market_import = { tag = EPI level = 3 location = preveza }
+	victuals_market_import = { tag = POR level = 2 location = porto }
+	victuals_market_import = { tag = POL level = 3 location = poznan }
+	victuals_market_import = { tag = BOH level = 3 location = prague }
+	victuals_market_import = { tag = EPI level = 2 location = preveza }
 	victuals_market_import = { tag = SER level = 3 location = prizren }
 	victuals_market_import = { tag = PSK level = 1 location = pskov }
 	victuals_market_import = { tag = CHI level = 1 location = pucheng_jianning }
 	victuals_market_import = { tag = ORI level = 1 location = puri }
-	victuals_market_import = { tag = CHI level = 1 location = putian }
 	victuals_market_import = { tag = CHI level = 1 location = puyang }
-	victuals_market_import = { tag = BPR level = 3 location = pyay }
-	victuals_market_import = { tag = CHI level = 1 location = qihe }
+	victuals_market_import = { tag = BPR level = 1 location = pyay }
 	victuals_market_import = { tag = CHI level = 1 location = qingdao }
 	victuals_market_import = { tag = CHI level = 1 location = qingxiang }
-	victuals_market_import = { tag = QOM level = 3 location = qom }
-	victuals_market_import = { tag = CHI level = 2 location = qufu }
+	victuals_market_import = { tag = QOM level = 2 location = qom }
+	victuals_market_import = { tag = CHI level = 1 location = qufu }
 	victuals_market_import = { tag = MAM level = 1 location = qus }
 	victuals_market_import = { tag = MOR level = 3 location = rabat }
-	victuals_market_import = { tag = POL level = 1 location = radom }
 	victuals_market_import = { tag = VIJ level = 1 location = raichur }
 	victuals_market_import = { tag = LWA level = 1 location = ramechhap }
-	victuals_market_import = { tag = RAN level = 2 location = rano }
-	victuals_market_import = { tag = RSH level = 2 location = rasht }
+	victuals_market_import = { tag = RSH level = 1 location = rasht }
 	victuals_market_import = { tag = RJR level = 1 location = rasyal }
-	victuals_market_import = { tag = RVA level = 2 location = ravensburg }
+	victuals_market_import = { tag = RVA level = 1 location = ravensburg }
 	victuals_market_import = { tag = YDR level = 1 location = rayachoti }
-	victuals_market_import = { tag = REG level = 3 location = regensburg }
+	victuals_market_import = { tag = REG level = 2 location = regensburg }
 	victuals_market_import = { tag = FRA level = 2 location = reims }
-	victuals_market_import = { tag = BRI level = 3 location = rennes }
-	victuals_market_import = { tag = BDS level = 4 location = rey }
+	victuals_market_import = { tag = BRI level = 2 location = rennes }
+	victuals_market_import = { tag = BDS level = 2 location = rey }
 	victuals_market_import = { tag = RIG level = 1 location = riga }
-	victuals_market_import = { tag = AQU level = 2 location = rijeka }
+	victuals_market_import = { tag = AQU level = 1 location = rijeka }
 	victuals_market_import = { tag = CHI level = 1 location = rizhao }
-	victuals_market_import = { tag = AMG level = 2 location = rodez }
-	victuals_market_import = { tag = PAP level = 4 location = rome }
-	victuals_market_import = { tag = MKL level = 4 location = rostock }
+	victuals_market_import = { tag = AMG level = 1 location = rodez }
+	victuals_market_import = { tag = PAP level = 2 location = rome }
+	victuals_market_import = { tag = MKL level = 2 location = rostock }
 	victuals_market_import = { tag = RSO level = 1 location = rostov }
 	victuals_market_import = { tag = ROT level = 1 location = rothenburg }
-	victuals_market_import = { tag = NRM level = 3 location = rouen }
+	victuals_market_import = { tag = NRM level = 2 location = rouen }
 	victuals_market_import = { tag = CUT level = 1 location = sadiya }
 	victuals_market_import = { tag = FRZ level = 1 location = saint_etienne }
-	victuals_market_import = { tag = FRA level = 1 location = saint_flour }
 	victuals_market_import = { tag = ARS level = 2 location = saint_omer }
 	victuals_market_import = { tag = PTN level = 2 location = saintala }
-	victuals_market_import = { tag = OYO level = 1 location = saki }
 	victuals_market_import = { tag = CAS level = 2 location = salamanca }
 	victuals_market_import = { tag = NAP level = 1 location = salerno }
 	victuals_market_import = { tag = ENG level = 2 location = salisbury }
-	victuals_market_import = { tag = SLZ level = 2 location = salzburg }
+	victuals_market_import = { tag = SLZ level = 1 location = salzburg }
 	victuals_market_import = { tag = YSU level = 2 location = samarkand }
 	victuals_market_import = { tag = PTN level = 1 location = sambalpur }
-	victuals_market_import = { tag = XLL level = 5 location = sana }
+	victuals_market_import = { tag = XLL level = 3 location = sana }
 	victuals_market_import = { tag = POL level = 1 location = sandomierz }
-	victuals_market_import = { tag = CHI level = 2 location = sanshui_binzhou }
-	victuals_market_import = { tag = CAS level = 3 location = santander }
+	victuals_market_import = { tag = CHI level = 1 location = sanshui_binzhou }
+	victuals_market_import = { tag = CAS level = 2 location = santander }
 	victuals_market_import = { tag = GLH level = 1 location = sarayjuk }
-	victuals_market_import = { tag = STN level = 5 location = satgaon }
+	victuals_market_import = { tag = STN level = 3 location = satgaon }
 	victuals_market_import = { tag = GEN level = 1 location = savona }
 	victuals_market_import = { tag = JAP level = 1 location = sawata }
-	victuals_market_import = { tag = BMR level = 1 location = segou }
-	victuals_market_import = { tag = CAS level = 3 location = segovia }
+	victuals_market_import = { tag = CAS level = 2 location = segovia }
 	victuals_market_import = { tag = FRA level = 1 location = sens }
-	victuals_market_import = { tag = KOR level = 3 location = seogyeong }
-	victuals_market_import = { tag = JAP level = 1 location = sera }
-	victuals_market_import = { tag = CAS level = 4 location = sevilla }
-	victuals_market_import = { tag = CHI level = 1 location = shaazan_khot }
+	victuals_market_import = { tag = KOR level = 1 location = seogyeong }
+	victuals_market_import = { tag = CAS level = 3 location = sevilla }
 	victuals_market_import = { tag = CHI level = 2 location = shangrao }
 	victuals_market_import = { tag = CHI level = 1 location = shangyuan }
 	victuals_market_import = { tag = CHI level = 1 location = shansu }
-	victuals_market_import = { tag = CHI level = 1 location = shanxian }
 	victuals_market_import = { tag = CHI level = 1 location = shanyang }
 	victuals_market_import = { tag = CHI level = 1 location = shaowu }
-	victuals_market_import = { tag = CHI level = 5 location = shaoxing }
+	victuals_market_import = { tag = CHI level = 4 location = shaoxing }
 	victuals_market_import = { tag = SWT level = 1 location = sherwan }
 	victuals_market_import = { tag = CHI level = 1 location = shilou }
 	victuals_market_import = { tag = INJ level = 1 location = shiraz }
 	victuals_market_import = { tag = CHI level = 1 location = shizhao }
 	victuals_market_import = { tag = CHI level = 1 location = shouyang }
-	victuals_market_import = { tag = CHI level = 1 location = shunsheng }
 	victuals_market_import = { tag = SIE level = 3 location = siena }
 	victuals_market_import = { tag = TFL level = 1 location = sijilmasa }
-	victuals_market_import = { tag = FAL level = 1 location = siraf }
 	victuals_market_import = { tag = HUN level = 3 location = sisak }
 	victuals_market_import = { tag = PRO level = 1 location = sisteron }
 	victuals_market_import = { tag = ERE level = 3 location = sivas }
-	victuals_market_import = { tag = MAM level = 1 location = siwa }
-	victuals_market_import = { tag = SER level = 1 location = sjenica }
 	victuals_market_import = { tag = SER level = 3 location = skopje }
-	victuals_market_import = { tag = LIT level = 1 location = smalyavichy }
 	victuals_market_import = { tag = SMO level = 3 location = smolensk }
 	victuals_market_import = { tag = AYD level = 1 location = smyrna }
-	victuals_market_import = { tag = ALO level = 2 location = soba }
-	victuals_market_import = { tag = SWE level = 3 location = soderkoping }
+	victuals_market_import = { tag = ALO level = 1 location = soba }
+	victuals_market_import = { tag = SWE level = 2 location = soderkoping }
 	victuals_market_import = { tag = KOL level = 1 location = soest }
 	victuals_market_import = { tag = ETH level = 1 location = sokota }
-	victuals_market_import = { tag = GLH level = 1 location = soldaia }
 	victuals_market_import = { tag = GRG level = 1 location = soltaniyeh }
-	victuals_market_import = { tag = SGN level = 3 location = sonargaon }
+	victuals_market_import = { tag = SGN level = 2 location = sonargaon }
 	victuals_market_import = { tag = JAP level = 1 location = soo }
 	victuals_market_import = { tag = ZAP level = 1 location = sosola }
 	victuals_market_import = { tag = SYE level = 1 location = speyer }
 	victuals_market_import = { tag = BUL level = 2 location = sredets }
-	victuals_market_import = { tag = KSH level = 5 location = srinagar }
+	victuals_market_import = { tag = KSH level = 3 location = srinagar }
 	victuals_market_import = { tag = NOV level = 1 location = staraya_russa }
 	victuals_market_import = { tag = STE level = 2 location = stettin }
-	victuals_market_import = { tag = SWE level = 2 location = stockholm }
-	victuals_market_import = { tag = WOL level = 4 location = stralsund }
-	victuals_market_import = { tag = SFC level = 4 location = strasbourg }
-	victuals_market_import = { tag = WUR level = 4 location = stuttgart }
+	victuals_market_import = { tag = SWE level = 1 location = stockholm }
+	victuals_market_import = { tag = WOL level = 3 location = stralsund }
+	victuals_market_import = { tag = SFC level = 2 location = strasbourg }
+	victuals_market_import = { tag = WUR level = 3 location = stuttgart }
 	victuals_market_import = { tag = BIA level = 1 location = suceava }
-	victuals_market_import = { tag = CHI level = 4 location = suiyang_guide }
-	victuals_market_import = { tag = SKT level = 1 location = suket }
+	victuals_market_import = { tag = CHI level = 3 location = suiyang_guide }
 	victuals_market_import = { tag = SUK level = 1 location = sukhothai }
-	victuals_market_import = { tag = CHI level = 1 location = sulkhari }
 	victuals_market_import = { tag = SUN level = 1 location = sunda_kelapa }
-	victuals_market_import = { tag = SPN level = 3 location = suphanburi }
-	victuals_market_import = { tag = MAJ level = 3 location = surabaya }
-	victuals_market_import = { tag = TEU level = 1 location = swiecie }
-	victuals_market_import = { tag = SIC level = 3 location = syracuse }
-	victuals_market_import = { tag = HUN level = 2 location = szeged }
-	victuals_market_import = { tag = JAL level = 4 location = tabriz }
+	victuals_market_import = { tag = SPN level = 2 location = suphanburi }
+	victuals_market_import = { tag = MAJ level = 2 location = surabaya }
+	victuals_market_import = { tag = SIC level = 2 location = syracuse }
+	victuals_market_import = { tag = HUN level = 1 location = szeged }
+	victuals_market_import = { tag = JAL level = 2 location = tabriz }
 	victuals_market_import = { tag = TAR level = 1 location = tacambaro }
 	victuals_market_import = { tag = KOR level = 1 location = taegu }
-	victuals_market_import = { tag = JAP level = 1 location = tagata }
 	victuals_market_import = { tag = JAP level = 1 location = tagawa }
 	victuals_market_import = { tag = TLE level = 1 location = tahert }
 	victuals_market_import = { tag = CDL level = 2 location = taihe_dali }
 	victuals_market_import = { tag = CHI level = 2 location = taihe_taihe }
 	victuals_market_import = { tag = CHI level = 2 location = taiping_jiangzhou }
 	victuals_market_import = { tag = JAP level = 1 location = takakusa }
-	victuals_market_import = { tag = DAN level = 2 location = tallinn }
+	victuals_market_import = { tag = DAN level = 1 location = tallinn }
 	victuals_market_import = { tag = KHS level = 1 location = tansen }
-	victuals_market_import = { tag = NAP level = 4 location = taranto }
+	victuals_market_import = { tag = NAP level = 3 location = taranto }
 	victuals_market_import = { tag = FRA level = 1 location = tarbes }
-	victuals_market_import = { tag = WAL level = 3 location = targoviste }
-	victuals_market_import = { tag = BUL level = 3 location = tarnovo }
-	victuals_market_import = { tag = CIL level = 3 location = tarsus }
+	victuals_market_import = { tag = WAL level = 2 location = targoviste }
+	victuals_market_import = { tag = BUL level = 2 location = tarnovo }
+	victuals_market_import = { tag = CIL level = 2 location = tarsus }
 	victuals_market_import = { tag = BID level = 1 location = tartu }
-	victuals_market_import = { tag = GEO level = 6 location = tbilisi }
-	victuals_market_import = { tag = TTZ level = 2 location = tehotihuacan }
-	victuals_market_import = { tag = SNG level = 3 location = temasek }
+	victuals_market_import = { tag = GEO level = 3 location = tbilisi }
+	victuals_market_import = { tag = SNG level = 2 location = temasek }
 	victuals_market_import = { tag = TEN level = 1 location = tenkodogo }
-	victuals_market_import = { tag = TNC level = 7 location = tenochtitlan }
+	victuals_market_import = { tag = TNC level = 6 location = tenochtitlan }
 	victuals_market_import = { tag = TTZ level = 6 location = tetzcoco }
-	victuals_market_import = { tag = TAI level = 1 location = teyuna }
-	victuals_market_import = { tag = DAI level = 8 location = thang_long }
+	victuals_market_import = { tag = DAI level = 6 location = thang_long }
 	victuals_market_import = { tag = MAB level = 1 location = thanjavur }
 	victuals_market_import = { tag = SND level = 1 location = thatta }
 	victuals_market_import = { tag = FEO level = 1 location = theodoro }
-	victuals_market_import = { tag = BYZ level = 3 location = thessaloniki }
+	victuals_market_import = { tag = BYZ level = 1 location = thessaloniki }
 	victuals_market_import = { tag = MLB level = 1 location = thoubal }
 	victuals_market_import = { tag = GHA level = 1 location = timbuktu }
 	victuals_market_import = { tag = TAR level = 1 location = tinguindin }
 	victuals_market_import = { tag = PAP level = 1 location = tivoli }
-	victuals_market_import = { tag = ZAP level = 2 location = tlacolula }
-	victuals_market_import = { tag = TCP level = 5 location = tlacopan }
-	victuals_market_import = { tag = TLE level = 3 location = tlemcen }
-	victuals_market_import = { tag = CAS level = 3 location = toledo }
+	victuals_market_import = { tag = TCP level = 3 location = tlacopan }
+	victuals_market_import = { tag = TLE level = 2 location = tlemcen }
+	victuals_market_import = { tag = CAS level = 2 location = toledo }
 	victuals_market_import = { tag = CHI level = 1 location = tongshan }
 	victuals_market_import = { tag = ARA level = 1 location = tortosa }
 	victuals_market_import = { tag = TEU level = 3 location = torun }
-	victuals_market_import = { tag = FRA level = 3 location = toulouse }
-	victuals_market_import = { tag = FRA level = 2 location = tournai }
+	victuals_market_import = { tag = FRA level = 2 location = toulouse }
+	victuals_market_import = { tag = FRA level = 1 location = tournai }
 	victuals_market_import = { tag = FRA level = 1 location = tours }
 	victuals_market_import = { tag = LIT level = 1 location = trakai }
 	victuals_market_import = { tag = TRE level = 2 location = trebizond }
 	victuals_market_import = { tag = VER level = 3 location = treviso }
 	victuals_market_import = { tag = TRI level = 1 location = trier }
-	victuals_market_import = { tag = TTE level = 3 location = trieste }
+	victuals_market_import = { tag = TTE level = 2 location = trieste }
 	victuals_market_import = { tag = TRP level = 2 location = tripoli }
 	victuals_market_import = { tag = MAJ level = 2 location = trowulan }
-	victuals_market_import = { tag = FRA level = 2 location = troyes }
-	victuals_market_import = { tag = NAV level = 4 location = tudela }
-	victuals_market_import = { tag = TUN level = 3 location = tunis }
-	victuals_market_import = { tag = PIE level = 3 location = turin }
-	victuals_market_import = { tag = QCH level = 3 location = turpan }
-	victuals_market_import = { tag = CAS level = 1 location = tuy }
-	victuals_market_import = { tag = TVE level = 3 location = tver }
+	victuals_market_import = { tag = FRA level = 1 location = troyes }
+	victuals_market_import = { tag = NAV level = 3 location = tudela }
+	victuals_market_import = { tag = TUN level = 1 location = tunis }
+	victuals_market_import = { tag = PIE level = 1 location = turin }
+	victuals_market_import = { tag = QCH level = 2 location = turpan }
+	victuals_market_import = { tag = TVE level = 1 location = tver }
 	victuals_market_import = { tag = TAR level = 2 location = tzintzuntzan }
 	victuals_market_import = { tag = AQU level = 1 location = udine }
 	victuals_market_import = { tag = DLH level = 3 location = ujjain }
-	victuals_market_import = { tag = ULM level = 3 location = ulm }
-	victuals_market_import = { tag = HMD level = 1 location = uluborlu }
+	victuals_market_import = { tag = ULM level = 2 location = ulm }
 	victuals_market_import = { tag = TRE level = 1 location = unye }
 	victuals_market_import = { tag = CHZ level = 1 location = urasoe }
-	victuals_market_import = { tag = DGE level = 2 location = urfa }
-	victuals_market_import = { tag = GLH level = 2 location = urgench }
-	victuals_market_import = { tag = CRL level = 1 location = urtsun }
+	victuals_market_import = { tag = DGE level = 1 location = urfa }
+	victuals_market_import = { tag = GLH level = 1 location = urgench }
 	victuals_market_import = { tag = SWE level = 2 location = utlandet }
-	victuals_market_import = { tag = VLN level = 1 location = valence }
-	victuals_market_import = { tag = ARA level = 3 location = valencia }
-	victuals_market_import = { tag = CAS level = 4 location = valladolid }
-	victuals_market_import = { tag = JLM level = 4 location = van }
+	victuals_market_import = { tag = ARA level = 1 location = valencia }
+	victuals_market_import = { tag = CAS level = 3 location = valladolid }
+	victuals_market_import = { tag = JLM level = 3 location = van }
 	victuals_market_import = { tag = DLH level = 1 location = varanasi }
 	victuals_market_import = { tag = BUL level = 3 location = varna }
 	victuals_market_import = { tag = VEN level = 1 location = venice }
 	victuals_market_import = { tag = VER level = 3 location = verona }
-	victuals_market_import = { tag = VER level = 3 location = vicenza }
+	victuals_market_import = { tag = VER level = 1 location = vicenza }
 	victuals_market_import = { tag = BUL level = 1 location = vidin }
 	victuals_market_import = { tag = HAB level = 1 location = vienna }
-	victuals_market_import = { tag = SAV level = 2 location = vienne }
-	victuals_market_import = { tag = CHA level = 3 location = vijaya }
-	victuals_market_import = { tag = VIJ level = 2 location = vijayanagar }
+	victuals_market_import = { tag = SAV level = 1 location = vienne }
+	victuals_market_import = { tag = CHA level = 2 location = vijaya }
+	victuals_market_import = { tag = VIJ level = 1 location = vijayanagar }
 	victuals_market_import = { tag = LWA level = 1 location = vijayapur }
-	victuals_market_import = { tag = LIT level = 2 location = vilnius }
+	victuals_market_import = { tag = LIT level = 1 location = vilnius }
 	victuals_market_import = { tag = SWE level = 1 location = visby }
 	victuals_market_import = { tag = FRA level = 1 location = viviers }
 	victuals_market_import = { tag = VLR level = 3 location = vladimir }
-	victuals_market_import = { tag = NOV level = 3 location = vologda }
+	victuals_market_import = { tag = NOV level = 2 location = vologda }
 	victuals_market_import = { tag = VLT level = 2 location = volterra }
-	victuals_market_import = { tag = KHM level = 2 location = vyadhapura }
-	victuals_market_import = { tag = GHA level = 1 location = walata }
-	victuals_market_import = { tag = HLG level = 1 location = wasit }
-	victuals_market_import = { tag = CHI level = 3 location = wenchang }
-	victuals_market_import = { tag = CHI level = 1 location = wenxi }
+	victuals_market_import = { tag = KHM level = 1 location = vyadhapura }
+	victuals_market_import = { tag = CHI level = 1 location = wenchang }
 	victuals_market_import = { tag = MNZ level = 1 location = wenxian_gongchang }
 	victuals_market_import = { tag = WTZ level = 1 location = wetzlar }
 	victuals_market_import = { tag = POL level = 1 location = wielun }
 	victuals_market_import = { tag = SWB level = 2 location = wittenberg }
-	victuals_market_import = { tag = RAW level = 1 location = wizna }
 	victuals_market_import = { tag = WRM level = 1 location = worms }
-	victuals_market_import = { tag = WRC level = 4 location = wroclaw }
+	victuals_market_import = { tag = WRC level = 3 location = wroclaw }
 	victuals_market_import = { tag = CHI level = 1 location = wudi }
-	victuals_market_import = { tag = CHI level = 1 location = wuling }
 	victuals_market_import = { tag = WBG level = 3 location = wurzburg }
-	victuals_market_import = { tag = CHI level = 2 location = wuwei }
+	victuals_market_import = { tag = CHI level = 1 location = wuwei }
 	victuals_market_import = { tag = CHI level = 1 location = wuxian }
 	victuals_market_import = { tag = CHI level = 1 location = wuyuan_huizhou }
-	victuals_market_import = { tag = CTX level = 1 location = xamapan }
 	victuals_market_import = { tag = CHI level = 1 location = xiangcheng }
-	victuals_market_import = { tag = CHI level = 3 location = xiangshan_xinhui }
-	victuals_market_import = { tag = CHI level = 2 location = xiangyang }
-	victuals_market_import = { tag = CHI level = 2 location = xiangyuan }
-	victuals_market_import = { tag = CHI level = 1 location = xihe }
-	victuals_market_import = { tag = CHI level = 2 location = xingan_linjiang }
+	victuals_market_import = { tag = CHI level = 2 location = xiangshan_xinhui }
+	victuals_market_import = { tag = CHI level = 1 location = xiangyang }
+	victuals_market_import = { tag = CHI level = 1 location = xiangyuan }
+	victuals_market_import = { tag = CHI level = 1 location = xingan_linjiang }
 	victuals_market_import = { tag = CHI level = 1 location = xingtai }
 	victuals_market_import = { tag = CHI level = 1 location = xingzhong }
 	victuals_market_import = { tag = CHI level = 1 location = xinxing_nanen }
 	victuals_market_import = { tag = CHI level = 1 location = xinzheng }
 	victuals_market_import = { tag = CHI level = 1 location = xiurong }
-	victuals_market_import = { tag = CHI level = 2 location = xuanhua_nanning }
-	victuals_market_import = { tag = CHI level = 1 location = xunyang }
+	victuals_market_import = { tag = CHI level = 1 location = xuanhua_nanning }
 	victuals_market_import = { tag = CHI level = 1 location = xuzhou }
-	victuals_market_import = { tag = CHI level = 2 location = yanci }
-	victuals_market_import = { tag = CHI level = 3 location = yangshan }
-	victuals_market_import = { tag = YAR level = 3 location = yaroslavl }
+	victuals_market_import = { tag = CHI level = 1 location = yanci }
+	victuals_market_import = { tag = CHI level = 2 location = yangshan }
+	victuals_market_import = { tag = YAR level = 1 location = yaroslavl }
 	victuals_market_import = { tag = YAT level = 1 location = yatenga }
 	victuals_market_import = { tag = MZF level = 1 location = yazd }
 	victuals_market_import = { tag = CHI level = 1 location = yexian_laizhou }
 	victuals_market_import = { tag = CHI level = 1 location = yichuan }
 	victuals_market_import = { tag = CHI level = 2 location = yichun }
 	victuals_market_import = { tag = CHI level = 2 location = yilun }
-	victuals_market_import = { tag = CHI level = 2 location = yixian_yizhou }
+	victuals_market_import = { tag = CHI level = 1 location = yixian_yizhou }
 	victuals_market_import = { tag = CHI level = 1 location = yixingzhou }
 	victuals_market_import = { tag = CHI level = 1 location = yiyang }
-	victuals_market_import = { tag = ENG level = 2 location = york }
-	victuals_market_import = { tag = JAP level = 2 location = yoshiki_suou }
+	victuals_market_import = { tag = ENG level = 1 location = york }
+	victuals_market_import = { tag = JAP level = 1 location = yoshiki_suou }
 	victuals_market_import = { tag = CHI level = 1 location = youxi }
-	victuals_market_import = { tag = CHI level = 2 location = yuanling }
+	victuals_market_import = { tag = CHI level = 1 location = yuanling }
 	victuals_market_import = { tag = ZAP level = 3 location = yucucui }
 	victuals_market_import = { tag = SKK level = 1 location = yuksom }
-	victuals_market_import = { tag = CHI level = 1 location = yuncheng }
-	victuals_market_import = { tag = CHI level = 2 location = yushe }
+	victuals_market_import = { tag = CHI level = 1 location = yushe }
 	victuals_market_import = { tag = CHI level = 1 location = yuyang }
 	victuals_market_import = { tag = ZAP level = 6 location = zaachila }
-	victuals_market_import = { tag = CAS level = 2 location = zamora }
-	victuals_market_import = { tag = ARA level = 2 location = zaragoza }
-	victuals_market_import = { tag = MIH level = 5 location = zaranj }
-	victuals_market_import = { tag = ZZZ level = 4 location = zazzau }
-	victuals_market_import = { tag = ANH level = 2 location = zerbst }
-	victuals_market_import = { tag = NEO level = 1 location = zetounion }
+	victuals_market_import = { tag = CAS level = 1 location = zamora }
+	victuals_market_import = { tag = ARA level = 1 location = zaragoza }
+	victuals_market_import = { tag = MIH level = 4 location = zaranj }
+	victuals_market_import = { tag = ZZZ level = 3 location = zazzau }
 	victuals_market_import = { tag = CHI level = 1 location = zhaoyuan }
 	victuals_market_import = { tag = LMN level = 1 location = zhemgang }
 	victuals_market_import = { tag = CHI level = 1 location = zhending }
 	victuals_market_import = { tag = CHI level = 1 location = zhenfan }
-	victuals_market_import = { tag = CHI level = 1 location = zhuanglang }
 	victuals_market_import = { tag = CHI level = 2 location = zichuan }
 	victuals_market_import = { tag = ZUR level = 4 location = zurich }
-	victuals_market_import = { tag = ZUT level = 3 location = zutphen }
-	victuals_market_import = { tag = UTR level = 4 location = zwolle }
+	victuals_market_import = { tag = ZUT level = 2 location = zutphen }
+	victuals_market_import = { tag = UTR level = 3 location = zwolle }
 }

@@ -1,6 +1,12 @@
 version: 2
 tag: field_management
 footprint: capacity_source
+upgrade_chain:
+  family: field_management
+  tier: 0
+  previous: null
+  next: field_management_convertible
+  unlock_advance: null
 building:
   key: field_management
   mode: CREATE
@@ -9,6 +15,8 @@ building:
   - name: slot_0
     methods:
     - pp_field_management_maintenance
+    - pp_field_management_folding
+    - pp_field_management_marling
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -32,10 +40,22 @@ building:
 
     construction_demand = village_construction
 
+    # Tier 1 of 3 (field_management_convertible, field_management_improved). Upkeep is kept light so early
+    # levels do not eat the treasury; the three methods cost about the same at default prices.
     unique_production_methods = {
       pp_field_management_maintenance = {
-            livestock = 0.10
-            manual_labor_cost = 0.075
+        manual_labor_cost = 0.018
+        livestock = 0.005
+        category = building_maintenance
+      }
+      pp_field_management_folding = {
+        livestock = 0.03
+        manual_labor_cost = 0.01
+        category = building_maintenance
+      }
+      pp_field_management_marling = {
+        stone = 0.025
+        manual_labor_cost = 0.014
         category = building_maintenance
       }
     }
@@ -56,6 +76,8 @@ localization:
     field_management_desc: Rotations, manuring, marling and terracing raise how many people the existing fields can feed. Each level is a lasting improvement of the land already under the plough.
     field_management_slot_0: Maintenance
     pp_field_management_maintenance: Field Stewards
+    pp_field_management_folding: Sheepfolds and Manuring
+    pp_field_management_marling: Marling and Liming
     pp_field_management_price: Field Management Price
 prices:
 - key: pp_field_management_price
@@ -69,6 +91,16 @@ evaluation:
   production_methods:
     pp_field_management_maintenance:
       allow_rules:
-        profit_percent: Land clearance is capacity infrastructure whose payoff is carried by location modifiers.
-        input_throughput: Clearing crews provide light ongoing maintenance rather than full worked production.
-        output_throughput: Land clearance provides capacity rather than a directly traded good.
+        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
+        output_throughput: Field management provides capacity rather than a directly traded good.
+    pp_field_management_folding:
+      allow_rules:
+        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
+        output_throughput: Field management provides capacity rather than a directly traded good.
+    pp_field_management_marling:
+      allow_rules:
+        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
+        output_throughput: Field management provides capacity rather than a directly traded good.

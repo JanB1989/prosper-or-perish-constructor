@@ -17,7 +17,7 @@ TRY_REPLACE:province_starving = {
 	local_life_expectancy = -10
 	# local_province_food_sales_output_modifier = 0.080
 	# local_offset_output_modifier = 0.080
-	local_province_food_purchase_output_modifier = 2.00
+	local_province_food_purchase_output_modifier = 8.00 # starving people pay more: +2 gold per import level on the storage leg
 
 	local_migration_speed = 0.015
     local_monthly_prosperity = -0.05
@@ -68,8 +68,13 @@ TRY_REPLACE:positive_province_food_growth = {
 	}
 	# these values are the values for 1 year of stored province consumption they cap at GROWTH_FROM_FOOD_MULTIPLIER_MAX which is defined in years aswell
 	pp_province_food_storage_months = 12
-	local_province_food_sales_output_modifier = 0.50
-	local_province_food_purchase_output_modifier = -0.50
+	# Storage legs of the victuals markets (0.25 units of a dummy good, country constants +15 purchase / -1 sales):
+	# the import's leg falls from 16x at 0 months to zero at the 24-month cap, the export's rises from zero to 16x.
+	# In gold that is about +2 .. -2 per level around the input cost, so the victuals price moves the resting
+	# stockpile a lot (cheap victuals -> ~17 months, dear -> only while starving). Production efficiency adds
+	# into the same pool but the legs are tiny, so +50% moves the resting point by about a month.
+	local_province_food_sales_output_modifier = 8.0
+	local_province_food_purchase_output_modifier = -8.0
 	local_population_growth = 0.0075
 	# Native additive rate cancels the food bonus for self-provisioning tribesmen.
 	# Both rates scale with stored years; other tribal growth sources still apply.

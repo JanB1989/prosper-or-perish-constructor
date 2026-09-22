@@ -2,7 +2,8 @@
 TRY_INJECT:country_base_values = {
 	raw_material_in_province_impact = 0.075 # 0.1
 	global_food_decay = 0.01 # 0.005
-	global_province_food_sales_output_modifier = -0.5
-	global_province_food_purchase_output_modifier = 0.5
+	global_province_food_sales_output_modifier = -1.0 # export storage leg: zero output at 0 months, 16x at the 24-month cap (slope +8.0 per stored year)
+	global_province_food_purchase_output_modifier = 15.0 # import storage leg: 16x output at 0 months, zero at the 24-month cap (slope -8.0 per stored year)
+	global_offset_output_modifier = 19.0 # steady leg of the import market: 20x on a tiny amount so production efficiency barely moves it
 	global_food_capacity_modifier = 10
 }

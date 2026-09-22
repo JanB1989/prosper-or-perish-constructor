@@ -394,6 +394,36 @@ pp_wb_cap_field_management_shared = {
 pp_wb_cap_field_management = {
 	value = pp_wb_cap_field_management_shared
 	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_CONVERTIBLE"
+		value = modifier:pp_wb_levels_field_management_convertible
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_IMPROVED"
+		value = modifier:pp_wb_levels_field_management_improved
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES"
+		value = modifier:pp_wb_levels_jiangnan_hill_terraces
+	}
+	min = 0
+}
+
+pp_wb_cap_field_management_convertible = {
+	value = pp_wb_cap_field_management_shared
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_IMPROVED"
+		value = modifier:pp_wb_levels_field_management_improved
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES"
+		value = modifier:pp_wb_levels_jiangnan_hill_terraces
+	}
+	min = 0
+}
+
+pp_wb_cap_field_management_improved = {
+	value = pp_wb_cap_field_management_shared
+	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_JIANGNAN_HILL_TERRACES"
 		value = modifier:pp_wb_levels_jiangnan_hill_terraces
 	}
@@ -405,6 +435,14 @@ pp_wb_cap_jiangnan_hill_terraces = {
 	subtract = {
 		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT"
 		value = modifier:pp_wb_levels_field_management
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_CONVERTIBLE"
+		value = modifier:pp_wb_levels_field_management_convertible
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_WB_SHARED_FIELD_MANAGEMENT_IMPROVED"
+		value = modifier:pp_wb_levels_field_management_improved
 	}
 	min = 0
 }

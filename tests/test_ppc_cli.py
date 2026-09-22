@@ -762,7 +762,8 @@ def test_province_food_sales_output_modifier_values_use_three_decimal_precision(
     purchases = [abs(float(value)) for value in values_by_good["province_food_purchase"]]
     sales = [abs(float(value)) for value in values_by_good["province_food_sales"]]
     # Current overpopulation balance deliberately distinguishes import and sale pressure.
-    assert purchases[0] == 2.0
+    # province_starving: +8.0 purchase output (starving people pay more on the storage-price leg).
+    assert purchases[0] == 8.0
     assert sales[0] == 0.08
     assert purchases[1:] == sales[1:]
 

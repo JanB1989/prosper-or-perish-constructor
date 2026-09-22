@@ -14,7 +14,9 @@ Niche buildings (``[worldbuilder.buildings.niche]``: culture- or country-locked 
 baray) keep their lock and join a general family: every member carries a level counter
 (``raw_modifier pp_wb_levels_<key> = 1``) and its max is the family's cap equation minus the other members' levels,
 so a location never holds two full sets of the same idea. A niche level is worth ``strength`` x the family's people
-per level. Their blueprints must be full ``REPLACE`` or new ``CREATE`` definitions (the lock, the gate and the level formula cannot be
+per level. A member with ``upgrades = <key>`` is a later tier of that building: its blueprint says ``obsolete = <key>``,
+so each level built converts one lower-tier level, and its cap leaves the lower tiers' levels out (as the farm upgrade
+chains do). Their blueprints must be full ``REPLACE`` or new ``CREATE`` definitions (the lock, the gate and the level formula cannot be
 injected). ``vanilla_capacity_leaks`` lists vanilla buildings with capacity lines that the mod does not REPLACE.
 
 Farm buildings (the mod's rural land users) take farmland: ``raw_modifier local_population_capacity = -land``
@@ -164,6 +166,16 @@ def families(cfg: WorldBuilderConfig) -> dict[str, list[str]]:
     return out
 
 
+def lower_tiers(cfg: WorldBuilderConfig, key: str) -> list[str]:
+    """The buildings ``key`` upgrades (the ``upgrades`` chain of its niche spec), nearest first."""
+    chain: list[str] = []
+    current = cfg.niche.get(key, {}).get("upgrades")
+    while current and current not in chain:
+        chain.append(current)
+        current = cfg.niche.get(current, {}).get("upgrades")
+    return chain
+
+
 def shared_cap_value(name: str, source: str, siblings: list[str]) -> str:
     """``name`` = the family's cap equation minus the levels already used by the other family members."""
     lines = [f"{name} = {{", f"\tvalue = {source}"]
@@ -219,7 +231,9 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
         for niche in members:
             strength = float(cfg.niche[niche]["strength"])
             niche_people = people * strength
-            block = shared_cap_value(f"pp_wb_cap_{niche}", source, [key, *[m for m in members if m != niche]])
+            lower = lower_tiers(cfg, niche)
+            siblings = [m for m in (key, *members) if m != niche and m not in lower]
+            block = shared_cap_value(f"pp_wb_cap_{niche}", source, siblings)
             if cfg.niche[niche].get("maximum_levels"):
                 block = block[:-1] + f"\tmax = {int(cfg.niche[niche]['maximum_levels'])}\n}}"
             blocks.append(block)

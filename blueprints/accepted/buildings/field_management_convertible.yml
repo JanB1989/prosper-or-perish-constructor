@@ -1,0 +1,119 @@
+version: 2
+tag: field_management_convertible
+footprint: capacity_source
+upgrade_chain:
+  family: field_management
+  tier: 1
+  previous: field_management
+  next: field_management_improved
+  unlock_advance: pp_field_management_convertible
+building:
+  key: field_management_convertible
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_field_management_convertible_leys
+    - pp_field_management_convertible_stall_manure
+    - pp_field_management_convertible_marling
+  possible_production_methods: []
+  body: |-
+    # Tier 2 of 3: up-and-down husbandry. Each level built converts one Field Management level and shares its cap.
+    audio_tier = 2
+    is_foreign = no
+    max_levels = pp_wb_cap_field_management_convertible
+    increase_per_level_cost = 0.27
+    pop_type = peasants
+    employment_size = 0.075
+    price = pp_field_management_convertible_price
+    category = infrastructure_category
+    custom_tags = { pp_food_security_priority pp_water_control_priority }
+    icon = field_management_convertible
+    obsolete = field_management
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = infrastructure_build_time
+
+    location_potential = {
+      always = yes
+    }
+
+    construction_demand = village_construction
+
+    unique_production_methods = {
+      pp_field_management_convertible_leys = {
+        legumes = 0.04
+        livestock = 0.02
+        manual_labor_cost = 0.012
+        category = building_maintenance
+      }
+      pp_field_management_convertible_stall_manure = {
+        livestock = 0.05
+        manual_labor_cost = 0.01
+        category = building_maintenance
+      }
+      pp_field_management_convertible_marling = {
+        stone = 0.05
+        tools = 0.01
+        manual_labor_cost = 0.01
+        category = building_maintenance
+      }
+    }
+
+    raw_modifier = {
+      local_population_capacity = 3.85
+      pp_wb_levels_field_management_convertible = 1
+    }
+
+    modifier = {
+    }
+
+    forbidden_for_estates = no
+    ai_forbid_shutdown = yes
+advancements:
+- key: pp_field_management_convertible
+  body: |-
+    icon = field_management_convertible
+    age = age_3_discovery
+    requires = rgo_size_advance_discovery
+    unlock_building = field_management_convertible
+    ai_weight = { add = 125 }
+localization:
+  entries:
+    field_management_convertible: Convertible Husbandry
+    field_management_convertible_desc: Fields alternate between grain and several years of grass and clover leys grazed by stock, so the land rests, is manured where it lies and returns heavier crops. Building it converts a level of Field Management.
+    field_management_convertible_slot_0: Maintenance
+    pp_field_management_convertible_leys: Clover and Grass Leys
+    pp_field_management_convertible_stall_manure: Stall-Fed Manuring
+    pp_field_management_convertible_marling: Marl Pits
+    pp_field_management_convertible_price: Convertible Husbandry Price
+    pp_field_management_convertible: Convertible Husbandry
+    pp_field_management_convertible_desc: Alternating arable and ley pasture on the same fields keeps the soil in heart and lets more people live from the land already under the plough.
+prices:
+- key: pp_field_management_convertible_price
+  body: '{gold = 50}'
+icon:
+  source_png: ../assets/icons/field_management_convertible.png
+  output_dds: field_management_convertible.dds
+  size: 512
+  prompt: 'Use case: historical-scene. Generate one finished square 1024x1024 Europa Universalis-style building icon for CONVERTIBLE HUSBANDRY, sixteenth century. Match the reference images'' material-rich realistic painterly historic bitmap cutout style, detailed weathered wood, earthy materials, warm side lighting and elevated three-quarter perspective. Reference 1 is the approved style example; reference 2 is the earlier agricultural tier to form a family with, but create clearly different composition. Compact isolated agricultural worksite with lush green clover ley as dominant foreground mass, two clearly recognizable brown-and-white cattle grazing, golden cereal strip behind, small open-front weathered timber cattle shelter with thatched roof at rear right, wattle hurdle and modest manure cart beside the shelter. Cattle, clover and shelter form bold readable silhouettes at 48px. Thin irregular patch of earth, no floating block. Entire subject within frame, fills 88 percent with margin. Perfectly flat pure magenta #FF00FF chroma-key background in every gap, no magenta bounce or background shadows. No sky, landscape backdrop, text, labels, border, symbols, modern machinery. Produce only this single icon.'
+evaluation:
+  production_methods:
+    pp_field_management_convertible_leys:
+      allow_rules:
+        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
+        output_throughput: Field management provides capacity rather than a directly traded good.
+    pp_field_management_convertible_stall_manure:
+      allow_rules:
+        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
+        output_throughput: Field management provides capacity rather than a directly traded good.
+    pp_field_management_convertible_marling:
+      allow_rules:
+        profit_percent: Field management is capacity infrastructure whose payoff is carried by location modifiers.
+        input_throughput: Field crews provide light ongoing maintenance rather than full worked production.
+        output_throughput: Field management provides capacity rather than a directly traded good.

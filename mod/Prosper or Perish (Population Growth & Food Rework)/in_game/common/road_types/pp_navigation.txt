@@ -12,8 +12,22 @@
  color = map_paved_road
  spline_style_id = 1
 }
-pp_navigation_improvable = {
+pp_navigation_difficult = {
  level = 21
+ enabled = { always = no }
+ movement_cost = 0.5
+ market_access = 1.5
+ pop_movement = 0
+ proximity = 0
+ build_time_per_unit_distance = 30
+ price_per_unit_distance = build_gravel_road
+ construction_demand = build_gravel_road_demand
+ maintenance_demand = maintain_gravel_road_demand
+ color = map_paved_road
+ spline_style_id = 1
+}
+pp_navigation_improvable = {
+ level = 22
  enabled = { always = no }
  movement_cost = 1.0
  market_access = 2.0
@@ -27,7 +41,7 @@ pp_navigation_improvable = {
  spline_style_id = 1
 }
 pp_navigation_barrier = {
- level = 22
+ level = 23
  enabled = { always = no }
  movement_cost = 2.0
  market_access = 3.0
@@ -41,7 +55,7 @@ pp_navigation_barrier = {
  spline_style_id = 1
 }
 pp_navigation_improved = {
- level = 23
+ level = 24
  enabled = { always = no }
  movement_cost = -0.5
  market_access = -0.75

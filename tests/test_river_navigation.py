@@ -1,4 +1,4 @@
-from prosper_or_perish_constructor.worldbuilder.navigation import exchange_levels, river_bonus_plan
+from prosper_or_perish_constructor.worldbuilder.navigation import exchange_levels
 
 
 def test_starting_works_transfer_capacity_without_adding_it():
@@ -15,36 +15,34 @@ def test_no_starting_capacity_means_no_free_navigation_building():
     assert 'canal_lock_works' not in levels
 
 
-def test_river_conversion_restores_losses_and_cancels_only_new_bonuses():
-    result=river_bonus_plan([{'location_tag':'bank','original_levels':'1,3','remaining_levels':'3,5','original_coastal':False,'new_coastal':True}])['bank']
-    assert 'river_flowing_through_1' in result
-    assert 'river_flowing_through_3' not in result
-    assert 'pp_nav_cancel_river_5' in result
-    assert 'pp_nav_cancel_mouth_3' in result
-    assert 'pp_nav_cancel_mouth_5' in result
-    assert 'pp_nav_original_level_1' in result
-    assert 'pp_nav_original_level_5' not in result
-
-
-def test_original_coastal_river_bonus_is_restored():
-    result=river_bonus_plan([{'location_tag':'bank','original_levels':'5','remaining_levels':None,'original_coastal':True,'new_coastal':True}])['bank']
-    assert 'river_flowing_through_5' in result
-    assert 'river_flowing_through_coast_5' in result
-    assert not any('cancel' in k for k in result)
-
-
-def test_compensation_negates_effects_but_not_metadata(tmp_path):
+def test_native_pixel_preservation_never_stacks_scripted_bonuses(tmp_path):
     from prosper_or_perish_constructor.worldbuilder.navigation import write_bonus_compensation
-    from prosper_or_perish_constructor.worldbuilder.modifiers import RIVER_MODIFIERS_PATH
-    mod=tmp_path/'mod';vanilla=tmp_path/'vanilla'
-    river=mod/RIVER_MODIFIERS_PATH;river.parent.mkdir(parents=True)
-    river.write_text('\n'.join(f'TRY_REPLACE:river_flowing_through_{n} = {{\n game_data = {{\n category = location\n }}\n local_supply_limit_modifier = 0.1\n local_wine_output_modifier = -0.08\n}}' for n in range(1,6)))
-    coast=vanilla/'game/main_menu/common/static_modifiers/location.txt';coast.parent.mkdir(parents=True)
-    coast.write_text('\n'.join(f'river_flowing_through_coast_{n} = {{\n game_data = {{\n category = location\n }}\n natural_harbor_suitability = 0.25\n}}' for n in range(1,6)))
-    (mod/'main_menu/localization/english').mkdir(parents=True)
-    write_bonus_compensation({'river_changes':[]},mod,vanilla)
-    text=(mod/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').read_text()
-    assert text.count('local_supply_limit_modifier = -0.1')==5
-    assert text.count('local_wine_output_modifier = 0.08')==5
-    assert text.count('natural_harbor_suitability = -0.25')==5
-    assert 'category = -' not in text
+    (tmp_path/'main_menu/common/static_modifiers').mkdir(parents=True)
+    (tmp_path/'main_menu/localization/english').mkdir(parents=True)
+    assert write_bonus_compensation({'manifest':{'river_preservation':'native_bank_pixel'}},tmp_path,tmp_path)=={}
+    text=(tmp_path/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').read_text()
+    assert 'cancel' not in text and 'river_flowing_through_' not in text
+
+
+def test_legacy_compensation_contract_requires_rebuild(tmp_path):
+    import pytest
+    from prosper_or_perish_constructor.worldbuilder.navigation import write_bonus_compensation
+    with pytest.raises(ValueError,match='Rebuild World Builder'):
+        write_bonus_compensation({'manifest':{}},tmp_path,tmp_path)
+
+
+def test_map_mode_emits_only_documented_refresh_counters_and_native_levels(tmp_path):
+    from prosper_or_perish_constructor.worldbuilder.navigation_map_modes import write_map_modes
+    write_map_modes(tmp_path,{'tiles':{'water':{'state':'improvable'}},'edges':[{'from':'water','to':'bank','shore':True,'state':'improvable'}]})
+    text=(tmp_path/'in_game/gfx/map/map_modes/pp_river_navigation.txt').read_text()
+    assert 'LocationRoadsChanged' in text
+    assert 'LocationBuildingChanged' not in text
+    assert 'has_location_modifier = river_flowing_through_5' in text
+    assert 'is_port = yes' in text
+
+    loc=(tmp_path/'main_menu/localization/english/pp_river_navigation_map_l_english.yml').read_text()
+    assert chr(92)*2+'n' not in loc
+
+    effects=(tmp_path/'in_game/common/scripted_effects/pp_navigation_map.txt').read_text()
+    assert 'has_road_of_type_to = { target = location:bank type = road_type:pp_navigation_improved }' in effects
+    assert 'value = 6' in effects

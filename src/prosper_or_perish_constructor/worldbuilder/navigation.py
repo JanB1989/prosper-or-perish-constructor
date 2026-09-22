@@ -186,7 +186,7 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
 }}''')
     write('in_game/common/road_types/pp_navigation.txt','\n'.join(roads)+'\n')
     def edge_line(e,improved=False):
-        kind='improved' if improved else e['state']
+        kind='improved' if improved else e.get('cost_profile',e['state'])
         return f" location:{e['from']} = {{ add_road_to = {{ target = location:{e['to']} type = {road_names[kind]} }} }}"
     seed=['pp_navigation_seed = {']+[edge_line(e) for e in state['edges']]+['}']
     refresh=['pp_navigation_refresh_site = {'];restore=['pp_navigation_restore_site = {'];start=[]
@@ -198,9 +198,13 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
         present='OR = { '+' '.join('has_building = building_type:'+k for k in site['supporting_buildings'])+' }'
         if not edges:continue
         refreshed=[' if = {',f'  limit = {{ this = location:{tag} }}']+[edge_line(e,True) for e in edges]+[' }']
+        affected=sorted({w for e in edges for w in (e['from'],e['to']) if w in state['tiles'] and state['tiles'][w]['state']!='barrier'})
+        updates=[f' location:{w} = {{ pp_navigation_map_refresh_{w} = yes }}' for w in affected]
+        refreshed[-1:-1]=updates
         refresh.extend(refreshed)
-        restore.extend([' if = {',f'  limit = {{ this = location:{tag} NOT = {{ {present} }} }}']+[edge_line(e) for e in edges]+[' }'])
-        start.append(f' location:{tag} = {{ if = {{ limit = {{ {present} }} '+ ' '.join(edge_line(e,True) for e in edges)+' } }')
+        reset=updates
+        restore.extend([' if = {',f'  limit = {{ this = location:{tag} NOT = {{ {present} }} }}']+[edge_line(e) for e in edges]+reset+[' }'])
+        start.append(f' location:{tag} = {{ if = {{ limit = {{ {present} }} '+ ' '.join([*(edge_line(e,True) for e in edges),*updates])+' } }')
     refresh.append('}');restore.append('}')
     write('in_game/common/scripted_effects/pp_navigation_routes.txt','\n'.join(seed+refresh+restore)+'\n')
     lost=list(pl.read_csv(contract.root/'navigation/lost_river_effects.csv').iter_rows(named=True))
@@ -215,18 +219,21 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     write('in_game/common/scripted_effects/pp_navigation_river_bonuses.txt','\n'.join(bonus)+'\n')
     write('in_game/common/on_action/pp_navigation.txt','\n'.join([
         'on_game_start = { on_actions = { pp_navigation_start } }','pp_navigation_start = { effect = {',
-        ' pp_navigation_preserve_rivers = yes',' pp_navigation_seed = yes',*start,'} }'])+'\n')
+        ' pp_navigation_preserve_rivers = yes',' pp_navigation_map_seed = yes',' pp_navigation_seed = yes',*start,' pp_navigation_map_refresh = yes','} }'])+'\n')
     unlocks=state['settings'].get('advance_unlocks',{})
     write('in_game/common/advances/pp_navigation.txt','\n'.join(f'TRY_INJECT:{advance} = {{ unlock_building = {key} }}' for key,advance in unlocks.items())+'\n')
     loc=['l_english:', ' pp_navigation_navigable: "Navigable Waterway"',' pp_navigation_improvable: "Unimproved Waterway"',
          ' pp_navigation_barrier: "River Barrier"',' pp_navigation_improved: "Maintained Navigation"',
+         ' pp_navigation_difficult: "Difficult Waterway"',
          ' pp_navigation_upgrade_tt: "Improves movement and market access along the waterways maintained from this location."']
     write('main_menu/localization/english/pp_navigation_roads_l_english.yml','\n'.join(loc)+'\n')
     triggers=[]
     for n in range(1,6):
-        triggers.append(f'pp_navigation_river_level_{n} = {{ OR = {{ has_location_modifier = pp_nav_original_level_{n} AND = {{ NOT = {{ has_location_modifier = pp_nav_geography_changed }} has_location_modifier = river_flowing_through_{n} }} }} }}')
+        triggers.append(f'pp_navigation_river_level_{n} = {{ has_location_modifier = river_flowing_through_{n} }}')
     triggers.append('pp_navigation_has_river = { OR = { '+' '.join(f'pp_navigation_river_level_{n} = yes' for n in range(1,6))+' } }')
     write('in_game/common/scripted_triggers/pp_navigation_rivers.txt','\n'.join(triggers)+'\n')
+    from .navigation_map_modes import write_map_modes
+    write_map_modes(mod_root,state)
     initial=defaultdict(set)
     for key,tag in re.findall(r'(\w+) = \{ tag = \w+ level = [1-9]\d* location = (\w+) \}',(mod_root/buildings.SETUP_PATH).read_text(encoding='utf-8-sig')):
         initial[tag].add(key)
@@ -234,7 +241,7 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     report={'enabled':True,'tiles':len(state['tiles']),'edges':len(state['edges']),'building_sites':len(state['sites']),
             'site_types':dict(Counter(s['building'] for s in state['sites'].values())),
             'initially_improved_sites':active_sites,'historical_candidate_sites':sum(s['start_levels']>0 for s in state['sites'].values()),
-            'water_tiles_without_capacity_site':state['without_site'],'river_effects_restored':len(lost),
+            'water_tiles_without_capacity_site':state['without_site'],'river_effects_restored':len(lost), 'native_bank_pixels_preserved':state['manifest'].get('preserved_river_pixels',0), 'ocean_connected_passable_tiles':state['manifest']['ocean_connected_passable_tiles'], 'river_ports_changed':state['manifest']['ports_changed'],
             'engine_limits':['Roads are undirected; water-to-land script direction is not one-way movement.',
                              'Fleet class cannot be restricted on sea tiles.',
                              'Destruction downgrade needs in-game verification of add_road_to replacing a higher road level.']}
@@ -244,54 +251,10 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     return report
 
 
-def river_bonus_plan(changes):
-    """Keep the original river levels and mouth bonuses through raster edits."""
-    result={}
-    for row in changes:
-        original={int(n) for n in str(row['original_levels'] or '').split(',') if n}
-        remaining={int(n) for n in str(row['remaining_levels'] or '').split(',') if n}
-        keys=['pp_nav_geography_changed']+[f'pp_nav_original_level_{n}' for n in sorted(original)]
-        keys += [f'river_flowing_through_{n}' for n in sorted(original-remaining)]
-        keys += [f'pp_nav_cancel_river_{n}' for n in sorted(remaining-original)]
-        before=original if row['original_coastal'] else set()
-        after=remaining if row['new_coastal'] else set()
-        keys += [f'river_flowing_through_coast_{n}' for n in sorted(before-after)]
-        keys += [f'pp_nav_cancel_mouth_{n}' for n in sorted(after-before)]
-        result[row['location_tag']]=keys
-    return result
-
-
 def write_bonus_compensation(state,mod_root,vanilla_root):
-    from . import modifiers
-    # Read generated effective river blocks. Negate only top-level numeric
-    # modifiers; metadata is not an effect and must not enter the cancellation.
-    river_text=(mod_root/modifiers.RIVER_MODIFIERS_PATH).read_text(encoding='utf-8-sig')
-    coast=modifiers.static_modifier_bodies(vanilla_root,r'river_flowing_through_coast_\d+')
-    blocks=[]
-    markers=['pp_nav_geography_changed']+[f'pp_nav_original_level_{n}' for n in range(1,6)]
-    for key in markers:blocks.append(key+' = { game_data = { category = location } }')
-    for n in range(1,6):
-        match=re.search(r'TRY_REPLACE:river_flowing_through_'+str(n)+r'\s*=\s*\{',river_text)
-        if not match:raise ValueError('Missing effective river modifier '+str(n))
-        pos=match.end();depth=1;end=pos
-        while depth:
-            depth+=(river_text[end]=='{')-(river_text[end]=='}');end+=1
-        for kind,body in [('river',river_text[pos:end-1]),('mouth','\n'.join(coast[f'river_flowing_through_coast_{n}']))]:
-            numeric=[];depth=0
-            for line in body.splitlines():
-                value=re.fullmatch(r'\s*(\w+)\s*=\s*([-+]?\d+(?:\.\d+)?)\s*',line)
-                if depth==0 and value:numeric.append(f' {value[1]} = {-float(value[2]):g}')
-                depth+=line.count('{')-line.count('}')
-            blocks.append(f'pp_nav_cancel_{kind}_{n} = {{\n game_data = {{ category = location }}\n'+'\n'.join(numeric)+'\n}')
-    path=mod_root/'main_menu/common/static_modifiers/pp_navigation_preservation.txt'
-    path.write_text('\ufeff'+'\n\n'.join(blocks)+'\n',encoding='utf-8')
-    loc=['l_english:']
-    for key in markers:
-        loc.append(f' STATIC_MODIFIER_NAME_{key}: "River Geography"')
-        loc.append(f' STATIC_MODIFIER_DESC_{key}: "The river continues to shape cultivation and settlement along its banks."')
-    for kind in ['river','mouth']:
-        for n in range(1,6):
-            loc.append(f' STATIC_MODIFIER_NAME_pp_nav_cancel_{kind}_{n}: "Original Riverbank"')
-            loc.append(f' STATIC_MODIFIER_DESC_pp_nav_cancel_{kind}_{n}: "Navigation works preserve the established riverbank benefits without adding river-mouth advantages inland."')
-    (mod_root/'main_menu/localization/english/pp_navigation_preservation_l_english.yml').write_text('\ufeff'+'\n'.join(loc)+'\n',encoding='utf-8')
-    return river_bonus_plan(state['river_changes'])
+    """Native bank pixels own river effects; never add scripted duplicates."""
+    if state['manifest'].get('river_preservation')!='native_bank_pixel':
+        raise ValueError('Rebuild World Builder navigation: native river preservation contract required')
+    (mod_root/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').write_text('# River effects are preserved by the native river bitmap.\n')
+    (mod_root/'main_menu/localization/english/pp_navigation_preservation_l_english.yml').write_text('\ufeffl_english:\n',encoding='utf-8')
+    return {}

@@ -1,0 +1,141 @@
+﻿pp_river_navigation = {
+ map_color = {
+ if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 } value = rgb { 65 245 170 } }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 } value = rgb { 170 225 85 } }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 } value = rgb { 225 65 65 } }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 } value = rgb { 245 180 60 } }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 } value = rgb { 190 115 200 } }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 } value = rgb { 35 180 245 } }
+ else_if = { limit = { has_location_modifier = river_flowing_through_5 } value = rgb { 20 100 45 } }
+ else_if = { limit = { has_location_modifier = river_flowing_through_4 } value = rgb { 35 130 70 } }
+ else_if = { limit = { has_location_modifier = river_flowing_through_3 } value = rgb { 65 155 100 } }
+ else_if = { limit = { has_location_modifier = river_flowing_through_2 } value = rgb { 100 170 130 } }
+ else_if = { limit = { has_location_modifier = river_flowing_through_1 } value = rgb { 130 180 170 } }
+ else = { value = rgb { 45 60 72 } }
+ }
+ tooltip_key = {
+ if = { limit = { has_variable = pp_navigation_bank has_location_modifier = river_flowing_through_5 is_port = yes } value = PP_NAV_BANK_5_1 }
+ else_if = { limit = { has_variable = pp_navigation_bank has_location_modifier = river_flowing_through_5 is_port = no } value = PP_NAV_BANK_5_0 }
+ else_if = { limit = { has_variable = pp_navigation_bank has_location_modifier = river_flowing_through_4 is_port = yes } value = PP_NAV_BANK_4_1 }
+ else_if = { limit = { has_variable = pp_navigation_bank has_location_modifier = river_flowing_through_4 is_port = no } value = PP_NAV_BANK_4_0 }
+ else_if = { limit = { has_variable = pp_navigation_bank has_location_modifier = river_flowing_through_3 is_port = yes } value = PP_NAV_BANK_3_1 }
+ else_if = { limit = { has_variable = pp_navigation_bank has_location_modifier = river_flowing_through_3 is_port = no } value = PP_NAV_BANK_3_0 }
+ else_if = { limit = { has_variable = pp_navigation_bank has_location_modifier = river_flowing_through_2 is_port = yes } value = PP_NAV_BANK_2_1 }
+ else_if = { limit = { has_variable = pp_navigation_bank has_location_modifier = river_flowing_through_2 is_port = no } value = PP_NAV_BANK_2_0 }
+ else_if = { limit = { has_variable = pp_navigation_bank has_location_modifier = river_flowing_through_1 is_port = yes } value = PP_NAV_BANK_1_1 }
+ else_if = { limit = { has_variable = pp_navigation_bank has_location_modifier = river_flowing_through_1 is_port = no } value = PP_NAV_BANK_1_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 0 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_MAINTAINED_0_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 0 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_MAINTAINED_0_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_MAINTAINED_1_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_MAINTAINED_1_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_MAINTAINED_2_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_MAINTAINED_2_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 3 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_MAINTAINED_3_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 3 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_MAINTAINED_3_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_MAINTAINED_4_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_MAINTAINED_4_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_MAINTAINED_5_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_MAINTAINED_5_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 0 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_PARTIAL_0_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 0 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_PARTIAL_0_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_PARTIAL_1_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_PARTIAL_1_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_PARTIAL_2_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_PARTIAL_2_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 3 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_PARTIAL_3_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 3 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_PARTIAL_3_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_PARTIAL_4_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_PARTIAL_4_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_PARTIAL_5_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_PARTIAL_5_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 0 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_BARRIER_0_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 0 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_BARRIER_0_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_BARRIER_1_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_BARRIER_1_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_BARRIER_2_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_BARRIER_2_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 3 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_BARRIER_3_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 3 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_BARRIER_3_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_BARRIER_4_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_BARRIER_4_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_BARRIER_5_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_BARRIER_5_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 0 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_IMPROVABLE_0_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 0 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_IMPROVABLE_0_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_IMPROVABLE_1_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_IMPROVABLE_1_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_IMPROVABLE_2_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_IMPROVABLE_2_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 3 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_IMPROVABLE_3_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 3 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_IMPROVABLE_3_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_IMPROVABLE_4_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_IMPROVABLE_4_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_IMPROVABLE_5_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_IMPROVABLE_5_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 0 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_DIFFICULT_0_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 0 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_DIFFICULT_0_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_DIFFICULT_1_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_DIFFICULT_1_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_DIFFICULT_2_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_DIFFICULT_2_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 3 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_DIFFICULT_3_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 3 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_DIFFICULT_3_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_DIFFICULT_4_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_DIFFICULT_4_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_DIFFICULT_5_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_DIFFICULT_5_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 0 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_NAVIGABLE_0_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 0 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_NAVIGABLE_0_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_NAVIGABLE_1_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 1 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_NAVIGABLE_1_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_NAVIGABLE_2_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 2 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_NAVIGABLE_2_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 3 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_NAVIGABLE_3_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 3 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_NAVIGABLE_3_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_NAVIGABLE_4_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 4 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_NAVIGABLE_4_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 0 } value = PP_NAV_WATER_NAVIGABLE_5_0 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 has_variable = pp_navigation_water_level var:pp_navigation_water_level = 5 has_variable = pp_navigation_ocean_connected var:pp_navigation_ocean_connected = 1 } value = PP_NAV_WATER_NAVIGABLE_5_1 }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 } value = PP_NAV_MAP_MAINTAINED_TT }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 6 } value = PP_NAV_MAP_PARTIAL_TT }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 3 } value = PP_NAV_MAP_BARRIER_TT }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 2 } value = PP_NAV_MAP_IMPROVABLE_TT }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 5 } value = PP_NAV_MAP_DIFFICULT_TT }
+ else_if = { limit = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 1 } value = PP_NAV_MAP_NAVIGABLE_TT }
+ else_if = { limit = { has_location_modifier = river_flowing_through_5 } value = PP_NAV_MAP_LEVEL_5_TT }
+ else_if = { limit = { has_location_modifier = river_flowing_through_4 } value = PP_NAV_MAP_LEVEL_4_TT }
+ else_if = { limit = { has_location_modifier = river_flowing_through_3 } value = PP_NAV_MAP_LEVEL_3_TT }
+ else_if = { limit = { has_location_modifier = river_flowing_through_2 } value = PP_NAV_MAP_LEVEL_2_TT }
+ else_if = { limit = { has_location_modifier = river_flowing_through_1 } value = PP_NAV_MAP_LEVEL_1_TT }
+ else = { value = PP_NAV_MAP_NONE_TT }
+ }
+ legend_key = { desc = "PP_NAV_MAP_MAINTAINED" color = rgb { 65 245 170 } }
+ legend_key = { desc = "PP_NAV_MAP_PARTIAL" color = rgb { 170 225 85 } }
+ legend_key = { desc = "PP_NAV_MAP_BARRIER" color = rgb { 225 65 65 } }
+ legend_key = { desc = "PP_NAV_MAP_IMPROVABLE" color = rgb { 245 180 60 } }
+ legend_key = { desc = "PP_NAV_MAP_DIFFICULT" color = rgb { 190 115 200 } }
+ legend_key = { desc = "PP_NAV_MAP_NAVIGABLE" color = rgb { 35 180 245 } }
+ legend_key = { desc = "PP_NAV_MAP_LEVEL_5" color = rgb { 20 100 45 } }
+ legend_key = { desc = "PP_NAV_MAP_LEVEL_4" color = rgb { 35 130 70 } }
+ legend_key = { desc = "PP_NAV_MAP_LEVEL_3" color = rgb { 65 155 100 } }
+ legend_key = { desc = "PP_NAV_MAP_LEVEL_2" color = rgb { 100 170 130 } }
+ legend_key = { desc = "PP_NAV_MAP_LEVEL_1" color = rgb { 130 180 170 } }
+ small_map_names = location
+ medium_map_names = location
+ large_map_names = none
+ small_tooltip_context = location
+ medium_tooltip_context = location
+ large_tooltip_context = location
+ fill_in_impassable = yes
+ enable_snow = no
+ enable_rivers = yes
+ flatmap_behaviour = always
+ use_fow = no
+ category = geography
+ index = 4
+ allow_allocate_hotkey = yes
+ map_markers = { all = no }
+ gradient_parameters = { zoom_step = 2 gradient_alpha_inside = 1 gradient_alpha_outside = 1 gradient_width = 0.25 gradient_color_mult = 0.9 edge_width = 0 edge_sharpness = 0.01 edge_alpha = 0 edge_color_mult = 0 before_lighting_blend = 0.5 after_lighting_blend = 0.5 }
+ color_refresh_counters = { LocationRoadsChanged LocationOwnerChanged Day }
+}
+

@@ -34,7 +34,7 @@ building:
         }
         OR = { topography = wetlands topography = ha1300_topo_deltas }
       }
-      OR = { this = location:london this = location:pont_audemer this = location:rotterdam }
+      OR = { this = location:dordrecht this = location:london this = location:pont_audemer this = location:rotterdam }
     }
     raw_modifier = {
       local_population_capacity = 2.2

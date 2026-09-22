@@ -6,9 +6,9 @@ never add people to the geographic capacity budget.
 from collections import Counter, defaultdict
 from dataclasses import replace
 from pathlib import Path
+import csv
 import hashlib
 import json
-import re
 
 import polars as pl
 import yaml
@@ -21,7 +21,38 @@ def inside(attrs, bounds):
     return x is not None and y is not None and bounds[0] <= float(x) <= bounds[2] and bounds[1] <= float(y) <= bounds[3]
 
 
-def prepare(repo, cfg, contract, *, write_blueprints=True):
+def regional_match(attributes, spec):
+    """A regional envelope must satisfy both its geometry and named regions."""
+    return inside(attributes, spec['bounds']) and (
+        not spec.get('regions') or attributes.get('region') in spec['regions']
+    )
+
+
+def historical_evidence(settings, attributes, building):
+    return next((entry for entry in settings['starting_evidence']
+                 if entry['building'] == building and inside(attributes, entry['bounds'])), None)
+
+
+def validate_routes(tiles, edges, sites):
+    """Reject ambiguous undirected connections and unsafe construction hosts."""
+    seen = set()
+    for edge in edges:
+        source, target = edge['from'], edge['to']
+        pair = tuple(sorted((source, target)))
+        if source == target or pair in seen:
+            raise ValueError(f'Duplicate or self-connected navigation route: {pair}')
+        seen.add(pair)
+        if source not in tiles:
+            raise ValueError(f'Unknown navigation source: {source}')
+        blocked = any(tiles.get(tag, {}).get('state') == 'barrier' for tag in pair)
+        if blocked and (edge['state'] != 'barrier' or edge.get('host')):
+            raise ValueError(f'Navigation works would open a barrier: {pair}')
+        host = edge.get('host')
+        if host and (host not in sites or not set(pair).intersection(sites[host]['water_tiles'])):
+            raise ValueError(f'Navigation host has no assigned endpoint: {pair}, {host}')
+
+
+def prepare(repo, cfg, contract, *, write_blueprints=True, locations=None):
     path=cfg.raw.get('navigation_config')
     if not path:return cfg
     settings=json.loads((repo/path).read_text())
@@ -36,6 +67,12 @@ def prepare(repo, cfg, contract, *, write_blueprints=True):
     shores=list(pl.read_csv(root/'shores.csv').iter_rows(named=True))
     edges=list(pl.read_csv(root/'edges.csv').iter_rows(named=True))
     attrs={r['location_tag']:r for r in contract.location_attributes.join(contract.location_targets.select('location_tag','development'),on='location_tag',how='left').iter_rows(named=True)}
+    if locations is not None:
+        regions = dict(locations.select('location_tag', 'region').iter_rows())
+        for tag, attributes in attrs.items():
+            attributes['region'] = regions.get(tag)
+    elif any(spec.get('regions') for spec in settings['building_types'].values()):
+        raise ValueError('Navigation regional rules require the location region table')
     eligibility={}
     for key,spec in settings['building_types'].items():
         family=spec.get('family',settings['family']);kind=next(k for k,v in cfg.building_map.items() if v==family)
@@ -45,7 +82,7 @@ def prepare(repo, cfg, contract, *, write_blueprints=True):
         eligibility[key]={tag for tag,a in attrs.items() if buildings.gate_matches(gate,a) and buildings.cap_levels(equation,a,scale,limit)>0}
     def site_kind(tag,state):
         for regional in settings['regional_priority']:
-            if tag in eligibility[regional] and inside(attrs[tag],settings['building_types'][regional]['bounds']):return regional
+            if tag in eligibility[regional] and regional_match(attrs[tag],settings['building_types'][regional]):return regional
         return 'canal_lock_works' if state=='improvable' else 'river_navigation_works'
     by_water=defaultdict(list)
     for shore in shores:
@@ -61,20 +98,22 @@ def prepare(repo, cfg, contract, *, write_blueprints=True):
         # Prefer a documented starting corridor, then substantial bank frontage.
         def rank(s):
             a=attrs[s['location_tag']]
-            historic=any(inside(a,e['bounds']) for e in settings['starting_evidence'])
+            historic=historical_evidence(settings,a,site_kind(s['location_tag'],tile['state'])) is not None
             return (historic,int(s['shore_pixels']),float(a.get('development') or 0),s['location_tag'])
         host=max(options,key=rank)['location_tag'];water_owner[water]=host
         if host not in sites:
             a=attrs[host];key=site_kind(host,tile['state']);family=settings['building_types'][key].get('family',settings['family'])
-            evidence=next((e for e in settings['starting_evidence'] if e['building']==key and inside(a,e['bounds'])),None)
+            evidence=historical_evidence(settings,a,key)
             sites[host]={'building':key,'family':family,'start_levels':settings['starting_levels_per_site'] if evidence else 0,
-                         'evidence':evidence['id'] if evidence else 'future_investment','water_tiles':[]}
+                         'evidence':evidence['id'] if evidence else 'future_investment','water_tiles':[],
+                         'region':a.get('region','')}
         sites[host]['water_tiles'].append(water)
     for site in sites.values():
         if site['building']=='river_navigation_works' and any(tiles[w]['state']=='improvable' for w in site['water_tiles']):
             site['building']='canal_lock_works'
     for edge in edges:
         edge['host']='' if edge['state']=='barrier' else (water_owner.get(edge['from']) or water_owner.get(edge['to']) or '')
+    validate_routes(tiles,edges,sites)
     # Every regional kind is defined even if current map safety guards omit all
     # its candidate sites. An empty gate disables it instead of making it global.
     niche=dict(cfg.niche)
@@ -234,10 +273,16 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     write('in_game/common/scripted_triggers/pp_navigation_rivers.txt','\n'.join(triggers)+'\n')
     from .navigation_map_modes import write_map_modes
     write_map_modes(mod_root,state)
-    initial=defaultdict(set)
-    for key,tag in re.findall(r'(\w+) = \{ tag = \w+ level = [1-9]\d* location = (\w+) \}',(mod_root/buildings.SETUP_PATH).read_text(encoding='utf-8-sig')):
-        initial[tag].add(key)
-    active_sites={tag:sorted(initial[tag]&set(site['supporting_buildings'])) for tag,site in state['sites'].items() if initial[tag]&set(site['supporting_buildings'])}
+    from eu5gameparser.clausewitz.parser import parse_file
+    initial=defaultdict(dict)
+    setup=parse_file(mod_root/buildings.SETUP_PATH)
+    for manager in setup.entries:
+        if manager.key != 'building_manager':continue
+        for entry in manager.value.entries:
+            values={field.key:field.value for field in entry.value.entries}
+            if int(values.get('level',0))>0:
+                initial[values['location']][entry.key]=int(values['level'])
+    active_sites={tag:sorted(set(initial[tag])&set(site['supporting_buildings'])) for tag,site in state['sites'].items() if set(initial[tag])&set(site['supporting_buildings'])}
     report={'enabled':True,'tiles':len(state['tiles']),'edges':len(state['edges']),'building_sites':len(state['sites']),
             'site_types':dict(Counter(s['building'] for s in state['sites'].values())),
             'initially_improved_sites':active_sites,'historical_candidate_sites':sum(s['start_levels']>0 for s in state['sites'].values()),
@@ -246,6 +291,15 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
                              'Fleet class cannot be restricted on sea tiles.',
                              'Destruction downgrade needs in-game verification of add_road_to replacing a higher road level.']}
     output=repo/'artifacts/data/worldbuilder/navigation';output.mkdir(parents=True,exist_ok=True)
+    with (output/'building_inventory.csv').open('w',newline='',encoding='utf-8') as handle:
+        writer=csv.DictWriter(handle,fieldnames=['location','region','building','building_key','starting_levels','existing_supporting_buildings','navigation_active_at_start','assigned_water_tiles','capacity_family'])
+        writer.writeheader()
+        for tag,site in sorted(state['sites'].items()):
+            key=site['building']
+            writer.writerow({'location':tag,'region':site.get('region',''),'building':state['settings']['building_types'][key]['name'],
+                             'building_key':key,'starting_levels':initial[tag].get(key,0),
+                             'existing_supporting_buildings':';'.join(k for k in site['supporting_buildings'] if k!=key and k in initial[tag]),
+                             'navigation_active_at_start':bool(active_sites.get(tag)), 'assigned_water_tiles':len(site['water_tiles']), 'capacity_family':site['family']})
     (output/'sites.json').write_text(json.dumps(state['sites'],indent=2)+'\n')
     (output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     return report

@@ -39,7 +39,6 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     cfg: WorldBuilderConfig = load_config(repo, project)
     contract: Contract = load_contract(contract_root or cfg.handover)
     from . import navigation
-    cfg = navigation.prepare(repo, cfg, contract)
     report: dict[str, object] = {"handover": str(contract.root), "version": contract.version, "worldbuilder_commit": contract.meta.get("worldbuilder_commit")}
     if cfg.sync_geography:
         report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo)
@@ -50,6 +49,7 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     from prosper_or_perish_constructor.location_baseline import load_current_location_frame
 
     current = load_current_location_frame(repo, project)
+    cfg = navigation.prepare(repo, cfg, contract, locations=current)
     rgo_by_location = {str(tag): str(rgo) for tag, rgo in current.select("location_tag", "raw_material").iter_rows() if rgo}
     report["static_modifiers"] = wb_modifiers.write_static_modifiers(contract, cfg, mod_root, vanilla_root(repo, project), rgo_by_location)
     caps = wb_buildings.write_caps(contract, cfg, mod_root)
@@ -98,7 +98,9 @@ def check(repo: Path, project: Path, mod_root: Path) -> dict[str, object]:
     cfg = load_config(repo, project)
     contract = load_contract(cfg.handover)
     from .navigation import prepare
-    cfg = prepare(repo, cfg, contract, write_blueprints=False)
+    from prosper_or_perish_constructor.location_baseline import load_current_location_frame
+    locations = load_current_location_frame(repo, project) if cfg.raw.get("navigation_config") else None
+    cfg = prepare(repo, cfg, contract, write_blueprints=False, locations=locations)
     setup = mod_root / wb_buildings.SETUP_PATH
     if not setup.is_file():
         raise FileNotFoundError(f"run ppc worldbuilder apply first: {setup}")

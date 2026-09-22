@@ -11,7 +11,8 @@ def write_map_modes(root,state):
     for e in state['edges']:
         if e['shore']:shores[e['to']].add(e['state'])
     seed=['pp_navigation_map_seed = {']
-    rough={e['from'] for e in state['edges'] if e.get('cost_profile')=='difficult'}
+    rough={tag for e in state['edges'] if e.get('cost_profile')=='difficult'
+           for tag in (e['from'],e['to']) if tag in state['tiles']}
     for tag,tile in sorted(state['tiles'].items()):
         status={'navigable':1,'improvable':2,'barrier':3}[tile['state']]
         if status==1 and tag in rough:status=5
@@ -61,7 +62,7 @@ def write_map_modes(root,state):
             k=f'PP_NAV_BANK_{n}_{int(port)}'
             condition=f'has_variable = pp_navigation_bank has_location_modifier = river_flowing_through_{n} is_port = {"yes" if port else "no"}'
             banktips.append(f' {"if" if not banktips else "else_if"} = {{ limit = {{ {condition} }} value = {k} }}')
-            desc='River port: a fleet landing is defined on an adjacent passable waterway.' if port else 'Riverbank without a usable fleet landing; check the adjacent waterway for barriers.'
+            desc='Port location: a fleet landing is defined. An existing coastal port may face the sea instead of this river.' if port else 'Riverbank without a usable fleet landing; check the adjacent waterway for barriers.'
             loc.append(f' {k}: "River level {n}\\n{desc}\\nNormal river bonuses and river-dependent building limits are preserved."')
     watertips=[]
     for key,condition,_,name,desc in categories[:6]:

@@ -30,7 +30,13 @@
         41
       ],
       "description": "Canal officials, dredging crews and sluice keepers maintain waterways used by the grain transport system. Completing the works improves the connected river routes.",
-      "family": "irrigated_fields"
+      "family": "irrigated_fields",
+      "regions": [
+        "north_china_region",
+        "east_china_region",
+        "south_china_region",
+        "west_china_region"
+      ]
     },
     "lowland_sluice_works": {
       "name": "Lowland Sluice Works",
@@ -65,7 +71,11 @@
         26
       ],
       "description": "Dredged distributaries, landing channels and embankments sustain transport through the delta. Completing the works improves the connected river routes.",
-      "family": "irrigated_fields"
+      "family": "irrigated_fields",
+      "regions": [
+        "bengal_region",
+        "indochina_region"
+      ]
     }
   },
   "starting_evidence": [

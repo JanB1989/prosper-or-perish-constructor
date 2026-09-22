@@ -35196,7 +35196,7 @@ pp_navigation_restore_site = {
  location:pp_nav_01722 = { pp_navigation_map_refresh_pp_nav_01722 = yes }
  }
  if = {
-  limit = { this = location:thai_binh NOT = { OR = { has_building = building_type:caoyun_canal_office has_building = building_type:jiangnan_canal_network } } }
+  limit = { this = location:thai_binh NOT = { OR = { has_building = building_type:delta_waterway_works } } }
  location:pp_nav_01887 = { add_road_to = { target = location:pp_nav_01894 type = pp_navigation_difficult } }
  location:pp_nav_01887 = { add_road_to = { target = location:thien_truong type = pp_navigation_difficult } }
  location:pp_nav_01887 = { add_road_to = { target = location:thang_long type = pp_navigation_difficult } }
@@ -35208,7 +35208,7 @@ pp_navigation_restore_site = {
  location:pp_nav_01894 = { pp_navigation_map_refresh_pp_nav_01894 = yes }
  }
  if = {
-  limit = { this = location:thang_long NOT = { OR = { has_building = building_type:caoyun_canal_office has_building = building_type:jiangnan_canal_network } } }
+  limit = { this = location:thang_long NOT = { OR = { has_building = building_type:delta_waterway_works } } }
  location:pp_nav_01884 = { add_road_to = { target = location:pp_nav_01887 type = pp_navigation_difficult } }
  location:pp_nav_01884 = { add_road_to = { target = location:thang_long type = pp_navigation_difficult } }
  location:pp_nav_01884 = { add_road_to = { target = location:tam_dai type = pp_navigation_difficult } }
@@ -35250,7 +35250,7 @@ pp_navigation_restore_site = {
  location:pp_nav_01911 = { pp_navigation_map_refresh_pp_nav_01911 = yes }
  }
  if = {
-  limit = { this = location:thien_truong NOT = { OR = { has_building = building_type:caoyun_canal_office has_building = building_type:jiangnan_canal_network } } }
+  limit = { this = location:thien_truong NOT = { OR = { has_building = building_type:delta_waterway_works } } }
  location:pp_nav_01894 = { add_road_to = { target = location:red_river_delta type = pp_navigation_difficult } }
  location:pp_nav_01894 = { add_road_to = { target = location:thien_truong type = pp_navigation_difficult } }
  location:pp_nav_01894 = { add_road_to = { target = location:bo_hai_khau type = pp_navigation_difficult } }
@@ -37332,7 +37332,7 @@ pp_navigation_restore_site = {
  location:pp_nav_01653 = { pp_navigation_map_refresh_pp_nav_01653 = yes }
  }
  if = {
-  limit = { this = location:yuanmou NOT = { OR = { has_building = building_type:delta_waterway_works } } }
+  limit = { this = location:yuanmou NOT = { OR = { has_building = building_type:river_navigation_works } } }
  location:pp_nav_01760 = { add_road_to = { target = location:yuanmou type = pp_navigation_navigable } }
  location:pp_nav_01760 = { pp_navigation_map_refresh_pp_nav_01760 = yes }
  }

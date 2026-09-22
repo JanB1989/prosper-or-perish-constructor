@@ -46,3 +46,49 @@ def test_map_mode_emits_only_documented_refresh_counters_and_native_levels(tmp_p
     effects=(tmp_path/'in_game/common/scripted_effects/pp_navigation_map.txt').read_text()
     assert 'has_road_of_type_to = { target = location:bank type = road_type:pp_navigation_improved }' in effects
     assert 'value = 6' in effects
+
+
+def test_regional_envelopes_do_not_leak_into_neighbouring_regions():
+    from prosper_or_perish_constructor.worldbuilder.navigation import regional_match
+    spec={'bounds':[105,20,123,41], 'regions':['south_china_region']}
+    attributes={'calibrated_lon':106,'calibrated_lat':22,'region':'indochina_region'}
+    assert not regional_match(attributes,spec)
+    assert regional_match({**attributes,'region':'south_china_region'},spec)
+    assert not regional_match({**attributes,'region':'south_china_region','calibrated_lon':100},spec)
+    assert not regional_match({'calibrated_lon':106,'calibrated_lat':22},spec)
+
+
+def test_historical_host_preference_requires_the_matching_building():
+    from prosper_or_perish_constructor.worldbuilder.navigation import historical_evidence
+    entry={'id':'documented','bounds':[0,0,10,10],'building':'sluices'}
+    settings={'starting_evidence':[entry]}
+    attrs={'calibrated_lon':5,'calibrated_lat':5}
+    assert historical_evidence(settings,attrs,'locks') is None
+    assert historical_evidence(settings,attrs,'sluices') == entry
+
+
+def test_route_validation_rejects_barrier_upgrades_and_duplicate_undirected_edges():
+    import pytest
+    from prosper_or_perish_constructor.worldbuilder.navigation import validate_routes
+    tiles={'water':{'state':'navigable'},'falls':{'state':'barrier'}}
+    sites={'bank':{'water_tiles':['water']}}
+    edge={'from':'water','to':'falls','state':'barrier','shore':False,'host':''}
+    validate_routes(tiles,[edge],sites)
+    with pytest.raises(ValueError,match='open a barrier'):
+        validate_routes(tiles,[{**edge,'host':'bank'}],sites)
+    with pytest.raises(ValueError,match='Duplicate'):
+        validate_routes(tiles,[edge,{**edge,'from':'falls','to':'water'}],sites)
+    with pytest.raises(ValueError,match='no assigned endpoint'):
+        validate_routes(tiles,[{**edge,'to':'ocean','state':'navigable','host':'other'}],sites)
+    validate_routes(tiles,[{**edge,'to':'ocean','state':'navigable','host':'bank'}],sites)
+
+
+def test_map_mode_difficult_routes_count_both_water_endpoints(tmp_path):
+    from prosper_or_perish_constructor.worldbuilder.navigation_map_modes import write_map_modes
+    write_map_modes(tmp_path,{'tiles':{'a':{'state':'navigable'},'b':{'state':'navigable'}},
+        'edges':[{'from':'a','to':'b','shore':False,'state':'navigable','cost_profile':'difficult'}]})
+    effects=(tmp_path/'in_game/common/scripted_effects/pp_navigation_map.txt').read_text()
+    assert 'location:b = { set_variable = { name = pp_navigation_map_state value = 5 }' in effects
+    assert 'else = { set_variable = { name = pp_navigation_map_state value = 5 } }' in effects.split('pp_navigation_map_refresh_b = {')[1]
+    loc=(tmp_path/'main_menu/localization/english/pp_river_navigation_map_l_english.yml').read_text()
+    assert 'existing coastal port may face the sea' in loc

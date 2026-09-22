@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from prosper_or_perish_constructor import gui_compat
 from prosper_or_perish_constructor.food_storage_gui import (
     format_gui_fixed_point,
     load_food_storage_max_months,
@@ -95,6 +96,16 @@ def test_province_tooltip_food_indicators_use_stored_food_months() -> None:
     assert "Province.GetFoodCapacityPercent" not in text
 
 
+def _without_protected_copies(text: str) -> str:
+    """The gauges are counted on the original types; gui_compat repeats them in pp_ copies."""
+    for types in gui_compat.PROTECTED.values():
+        for name in types:
+            span = gui_compat._type_span(text, gui_compat.PREFIX + name)
+            if span:
+                text = text[: span[0]] + text[span[1]:]
+    return text
+
+
 def test_all_remaining_food_indicators_use_stored_food_months() -> None:
     gui_root = MOD_ROOT / "in_game" / "gui"
 
@@ -104,7 +115,7 @@ def test_all_remaining_food_indicators_use_stored_food_months() -> None:
         path = gui_root / relative_path
         assert path.exists()
 
-        text = path.read_text(encoding="utf-8-sig")
+        text = _without_protected_copies(path.read_text(encoding="utf-8-sig"))
         assert text.count("pp_province_food_storage_months") == expected_modifier_refs
         assert text.count(FOOD_STORAGE_DIVISOR) == expected_ratio_refs
 

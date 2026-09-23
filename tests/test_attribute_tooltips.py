@@ -153,7 +153,9 @@ def test_terrain_lines_word_the_engine_fields_with_vanilla_localization():
 def test_write_builds_views_that_hold_effects_and_goods_apart(trees):
     vanilla, mod = trees
     counts = tt.write(mod, vanilla)
-    assert counts == {"climate": 0, "vegetation": 2, "topography": 0, "fertility": 1, "soil": 1, "coast": 1, "lake": 0, "winter": 1, "harvest": 1}
+    # no location files in the fixture: every step and both unsuited lines stay possible
+    cells = 3 * (len(range(tt.STEP_MAX, -11, -1)) + len(tt.LOW_LINES))
+    assert counts == {"climate": 0, "vegetation": 2, "topography": 0, "fertility": 1, "soil": 1, "coast": 1, "lake": 0, "winter": 1, "harvest": 1, "land_potential_cells": cells}
 
     modifiers = (mod / tt.MODIFIERS_PATH).read_text(encoding="utf-8-sig")
     forest = modifiers[modifiers.index("pp_tt_vegetation_forest = {"):]
@@ -218,7 +220,7 @@ def test_goods_tables_use_cells_for_own_values_and_rows_for_shared_ones():
     assert table.count('raw_text = "#N -35%#!"') == 1 and table.count('raw_text = ""') == 1   # value once per group
 
 
-def test_land_potential_sums_the_land_attributes_in_bands(trees):
+def test_land_potential_sums_the_land_attributes(trees):
     vanilla, mod = trees
     tt.write(mod, vanilla)
     values = (mod / tt.SCRIPT_VALUES_PATH).read_text(encoding="utf-8-sig")
@@ -229,14 +231,63 @@ def test_land_potential_sums_the_land_attributes_in_bands(trees):
     assert "winter" not in wheat and "harvest" not in wheat   # transient: not land
     lumber = values[values.index("pp_land_potential_lumber = {"):]
     assert "if = { limit = { vegetation = sparse } add = -0.03 }" in lumber and "if = { limit = { has_location_modifier = pp_wb_coastal } add = 0.07 }" in lumber
-    assert "pp_land_potential_band_tea = {\n\tvalue = pp_land_potential_tea\n\tdivide = 0.05\n\tfloor = yes\n\tmin = -5\n\tmax = 6\n}" in values
-    gui = (mod / tt.GUI_PATH).read_text(encoding="utf-8-sig")
-    chip = gui[gui.index("type pp_land_potential_chip"):gui.index("type pp_attribute_view_")]
+    assert ("pp_land_potential_step_tea = {\n\tvalue = pp_land_potential_tea\n\tmultiply = 100\n\tround = yes\n"
+            "\tdivide = 2\n\tfloor = yes\n\tmin = -11\n\tmax = 20\n}") in values
+    assert "pp_land_potential_low_tea = {\n\tvalue = pp_land_potential_tea\n\tmultiply = 100\n\tround = yes\n\tdivide = 10\n\tfloor = yes\n\tmin = -4\n\tmax = -2\n}" in values
+
+
+def test_land_potential_script_tests_the_most_common_class_first(trees):
+    vanilla, mod = trees
+    views = tt.build_views(vanilla, mod)
+    many_sparse = [{"climate": "arid", "vegetation": "sparse"}] * 3 + [{"climate": "arid", "vegetation": "forest"}]
+    values = tt.render_script_values(views, many_sparse)
+    tea = values[values.index("pp_land_potential_wheat = {"):]
+    assert tea.index("vegetation = forest") > 0   # forest carries wheat; sparse does not, so forest opens the chain
+    both = tt.render_script_values({"vegetation": [
+        tt.View("vegetation", "a", "", "", {}, [("wheat", 0.1)], trigger="vegetation = a"),
+        tt.View("vegetation", "b", "", "", {}, [("wheat", 0.2)], trigger="vegetation = b"),
+    ]}, [{"vegetation": "b"}, {"vegetation": "b"}, {"vegetation": "a"}])
+    assert both.index("if = { limit = { vegetation = b } add = 0.2 }") < both.index("else_if = { limit = { vegetation = a } add = 0.1 }")
+
+
+def test_land_potential_tiers_sort_by_step_and_only_hold_steps_that_occur():
+    views = {
+        "climate": [tt.View("climate", "arid", "", "", {}, [("tea", 0.22), ("wheat", -0.05)], trigger="climate = arid")],
+        "vegetation": [tt.View("vegetation", "forest", "", "", {}, [("tea", 0.02), ("wheat", -0.3)], trigger="vegetation = forest")],
+    }
+    locations = [{"climate": "arid"}, {"climate": "arid", "vegetation": "forest"}]
+    occupied = tt.occupied_percents(views, locations)
+    assert occupied == {"tea": {22, 24}, "wheat": {-5, -35}}
+    assert tt.land_step(-5) == -3 and tt.land_step(-35) == tt.STEP_MIN and tt.land_step(80) == tt.STEP_MAX
+    assert [tt.land_low(p) for p in (-20, -21, -30, -31, -90)] == [-2, -3, -3, -4, -4]
+    assert tt.tier_steps(tt.TIERS[0]) == list(range(20, 9, -1)) and tt.tier_steps(tt.TIERS[-1]) == []
+    assert tt.tier_cells(tt.TIERS[-1], occupied) == [[], [("wheat", -4)]]
+    assert [tt.tier_label(t) for t in (tt.TIERS[0], tt.TIERS[2], tt.TIERS[-1])] == ["Excellent: +20% or more", "Fair: 0% to +9%", "Unsuited: -21% or less"]
+    chip = tt.land_potential_chip(occupied)
     assert chip.count("{") == chip.count("}")
-    # a cell per good in every band, best band first
-    assert chip.count("pp_goods_output_cell = {") == len(tt.BANDS) * 3
-    assert chip.index("'pp_land_potential_band_tea')), '(int32)6')") < chip.index("'pp_land_potential_band_tea')), '(int32)-5')")
+    assert chip.count("pp_land_potential_cell = {") == 3 and chip.count("pp_land_potential_icon = {") == 1   # one per occurring pair
+    # best step first inside the tier; every tier labelled, the icon-only tier on two lines
+    assert chip.index("pp_land_potential_step_tea')), '(int32)12')") < chip.index("pp_land_potential_step_tea')), '(int32)11')")
+    assert all(f'text = "PP_LAND_TIER_{t.key.upper()}"' in chip for t in tt.TIERS)
+    unsuited = chip[chip.index("PP_LAND_TIER_UNSUITED"):]
+    assert unsuited.count("hbox = {") == 2 and "ShowGoodsName('wheat')] [LocationView.GetLocation.MakeScope.ScriptValue('pp_land_potential_wheat')|+=%0]" in unsuited
+    assert "ScriptValue('pp_land_potential_low_wheat')), '(int32)-4')" in unsuited
     assert "EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'wheat')" in chip
+    # without location data every value stays possible
+    assert tt.occupied_percents(views, [])["tea"] == set(range(-100, 101))
+
+
+def test_location_attributes_come_from_the_templates_and_the_setup(tmp_path):
+    (tmp_path / tt.LOCATION_TEMPLATES).parent.mkdir(parents=True)
+    (tmp_path / tt.LOCATION_TEMPLATES).write_text("paris = { topography = flatland vegetation = farmland climate = oceanic religion = catholic }\nsea_x = { topography = ocean }\n", encoding="utf-8")
+    (tmp_path / tt.SETUP_MODIFIERS).parent.mkdir(parents=True)
+    (tmp_path / tt.SETUP_MODIFIERS).write_text(
+        'locations = {\n\tparis = {\n\t\ttimed_modifiers = {\n\t\t\ttimed_modifiers = {\n'
+        '\t\t\t\t{ modifier = "pp_wb_fertility_high" start_date = 1111.1.1 date = 9999.1.1 size = 1 }\n'
+        '\t\t\t\t{ modifier = "pp_wb_soil_loam" start_date = 1111.1.1 date = 9999.1.1 size = 1 }\n'
+        '\t\t\t\t{ modifier = "pp_wb_coastal" start_date = 1111.1.1 date = 9999.1.1 size = 1 }\n'
+        '\t\t\t}\n\t\t}\n\t}\n}\n', encoding="utf-8")
+    assert tt.location_attributes(tmp_path) == [{"topography": "flatland", "vegetation": "farmland", "climate": "oceanic", "fertility": "high", "soil": "loam", "coast": "coastal"}]
 
 
 def test_location_window_chips_use_the_generated_tooltips():

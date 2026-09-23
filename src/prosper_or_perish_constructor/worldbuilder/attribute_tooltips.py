@@ -11,8 +11,10 @@ player opens the tooltip for. For every such value the constructor writes
 - a goods table, best first: one icon and value per good, or one row per value when many goods share it.
 
 The land-potential chip sums the goods output of the land attributes (class, fertility, soil, coast, lake) per good
-in script values and lists the goods in 5% bands, best first: the GUI cannot sort by a value, so each band is a row
-and each good has a cell in every row, shown in the row its value falls in.
+in script values and lists the goods in six labelled tiers. The GUI cannot sort by a value, so a script value puts each
+good in a 2% step and a tier's line holds a cell per (good, step), steps best first, shown only in the good's step.
+Only the (good, step) pairs that occur at some location get a cell (the attributes never change), which keeps the
+tooltip at a few hundred cheap tests.
 
 The values are read back from the files the game loads (the class definitions with the mod's injects, the static
 modifiers), so the views show what applies. The location window is patched before those files are written (geography
@@ -21,7 +23,9 @@ sync), so it refers to the generated templates and types by name only.
 
 from __future__ import annotations
 
+import math
 import re
+from collections import Counter
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -53,9 +57,35 @@ SHORE_GATES = {"pp_wb_coastal": ("coast", f"{_LOC}.IsCoastal"), "pp_wb_lake": ("
 LAND_ATTRIBUTES = ("climate", "vegetation", "topography", "fertility", "soil", "coast", "lake")
 CELLS_PER_ROW = 5
 ICONS_PER_GROUP_ROW = 12
-# land-potential bands: floor(value / 5%), clamped; the top band holds +30% and more, the bottom one below -20%
-BAND_WIDTH = 0.05
-BANDS = range(6, -6, -1)
+LOCATION_TEMPLATES = Path("in_game/map_data/location_templates.txt")
+SETUP_MODIFIERS = Path("main_menu/setup/start/21_pp_wb_attribute_modifiers.txt")
+
+
+@dataclass(frozen=True)
+class Tier:
+    key: str
+    name: str
+    low: int | None          # lowest percent in the tier (None: open)
+    high: int | None         # first percent above the tier (None: open)
+    icons_only: bool = False
+
+
+# Land-potential steps: the rounded percent halved (2% per step), clamped. The top step holds +40% and more; the
+# bottom one (-21% and less) is no tier's: the unsuited tier sorts by tens of percent instead (LOW_LINES).
+STEP = 2
+STEP_MIN, STEP_MAX = -11, 20
+TIERS = (
+    Tier("excellent", "Excellent", 20, None),
+    Tier("good", "Good", 10, 20),
+    Tier("fair", "Fair", 0, 10),
+    Tier("marginal", "Marginal", -10, 0),
+    Tier("poor", "Poor", -20, -10),
+    # usually many goods and little to tell apart: icons only (value on hover), on two lines
+    Tier("unsuited", "Unsuited", None, -20, icons_only=True),
+)
+# The unsuited tier's lines: floor(percent / 10), clamped; -3 is -21% to -30%, -4 is -31% and less, -2 is not unsuited.
+LOW_LINES = (-3, -4)
+LOW_MIN, LOW_MAX = -4, -2
 _OUTPUT = re.compile(r"local_(\w+)_output_modifier")
 _GOODS_ICON = "gfx/interface/icons/trade_goods/icon_goods_{good}.dds"
 
@@ -491,22 +521,155 @@ def land_goods(views: Mapping[str, list[View]]) -> list[str]:
     return sorted({good for attribute in LAND_ATTRIBUTES for view in views.get(attribute, []) for good, _ in view.goods})
 
 
-def land_potential_chip(goods: list[str]) -> str:
-    """The chip: goods in value bands, best band first; within a band in name order. A good has a cell in every band
-    and shows in the one its band script value names; bands without goods take no room."""
-    rgo = f"{_LOC}.GetRawMaterial"
-    rows = []
-    for band in BANDS:
-        cells = " ".join(
-            f"pp_goods_output_cell = {{ visible = \"[EqualTo_int32(FixedPointToInt({_LOC}.MakeScope.ScriptValue('pp_land_potential_band_{good}')), '(int32){band}')]\" "
-            f"blockoverride \"highlight\" {{ visible = \"[And({_LOC}.HasRawMaterial, EqualTo_string({rgo}.GetKey, '{good}'))]\" }} "
-            f"blockoverride \"good_icon\" {{ texture = \"{_GOODS_ICON.format(good=good)}\" tooltip = \"[ShowGoodsName('{good}')]\" }} "
-            f"blockoverride \"good_value\" {{ raw_text = \"[{_LOC}.MakeScope.ScriptValue('pp_land_potential_{good}')|+=%0]\" }} }}"
-            for good in goods
-        )
-        rows.append(f"\t\t\t\t\t\thbox = {{ layoutpolicy_horizontal = expanding ignoreinvisible = yes spacing = 4 {cells} expand = {{}} }}")
-    body = "\n".join(rows)
-    return f"""\ttype pp_land_potential_chip = widget {{
+def land_rows(views: Mapping[str, list[View]]) -> dict[tuple[str, str], dict[str, float]]:
+    return {(attribute, view.value): dict(view.goods) for attribute in LAND_ATTRIBUTES for view in views.get(attribute, [])}
+
+
+def location_attributes(mod_root: Path) -> list[dict[str, str]]:
+    """Every land location's attribute values as the game sets them up: climate, vegetation and topography from the
+    location templates, fertility, soil, coast and lake from the setup's World Builder modifiers."""
+    locations: dict[str, dict[str, str]] = {}
+    templates, setup = Path(mod_root) / LOCATION_TEMPLATES, Path(mod_root) / SETUP_MODIFIERS
+    if templates.is_file():
+        for match in re.finditer(r"(?m)^(\w+)\s*=\s*\{([^\n]*)", templates.read_text(encoding="utf-8-sig")):
+            locations[match[1]] = {a: m[1] for a in CLASS_DIRS if (m := re.search(rf"\b{a}\s*=\s*(\w+)", match[2]))}
+    if setup.is_file():
+        for match in re.finditer(r"(?ms)^\t(\w+) = \{(.*?)^\t\}", setup.read_text(encoding="utf-8-sig")):
+            location = locations.setdefault(match[1], {})
+            for key in re.findall(r'modifier = "(\w+)"', match[2]):
+                for attribute in ("fertility", "soil"):
+                    if key.startswith(f"pp_wb_{attribute}_"):
+                        location[attribute] = key.removeprefix(f"pp_wb_{attribute}_")
+                if key in SHORE_GATES:
+                    location[SHORE_GATES[key][0]] = key.removeprefix("pp_wb_")
+    return [location for location in locations.values() if "climate" in location]
+
+
+def land_step(percent: int) -> int:
+    """The step of a rounded percent, as ``pp_land_potential_step_<good>`` computes it."""
+    return max(STEP_MIN, min(STEP_MAX, percent // STEP))
+
+
+def land_low(percent: int) -> int:
+    """The unsuited line of a rounded percent, as ``pp_land_potential_low_<good>`` computes it."""
+    return max(LOW_MIN, min(LOW_MAX, math.floor(percent / 10)))
+
+
+def occupied_percents(views: Mapping[str, list[View]], locations: list[dict[str, str]]) -> dict[str, set[int]]:
+    """The rounded percents each good takes at some location. The attributes never change, so no other value can occur,
+    and only these get a cell; without locations every percent is kept."""
+    rows, goods = land_rows(views), land_goods(views)
+    if not locations:
+        return {good: set(range(-100, 101)) for good in goods}
+    occupied: dict[str, set[int]] = {good: set() for good in goods}
+    for combination in {tuple(sorted(location.items())) for location in locations}:
+        for good in goods:
+            occupied[good].add(round(sum(rows.get(item, {}).get(good, 0.0) for item in combination) * 100))
+    return occupied
+
+
+def tier_steps(tier: Tier) -> list[int]:
+    """The tier's steps, best first (none for the unsuited tier, which has LOW_LINES)."""
+    if tier.low is None:
+        return []
+    top = STEP_MAX if tier.high is None else tier.high // STEP - 1
+    return list(range(top, tier.low // STEP - 1, -1))
+
+
+def tier_cells(tier: Tier, occupied: Mapping[str, set[int]]) -> list[list[tuple[str, int]]]:
+    """The tier's lines of (good, step or unsuited line) cells, best first, goods in name order within one."""
+    if tier.low is None:
+        return [[(good, line) for good in sorted(occupied) if any(p < tier.high and land_low(p) == line for p in occupied[good])] for line in LOW_LINES]
+    steps = {good: {land_step(p) for p in percents if p >= tier.low and (tier.high is None or p < tier.high)} for good, percents in occupied.items()}
+    return [[(good, step) for step in tier_steps(tier) for good in sorted(occupied) if step in steps[good]]]
+
+
+def _percent(value: int) -> str:
+    return f"+{value}%" if value > 0 else f"{value}%"
+
+
+def tier_label(tier: Tier) -> str:
+    if tier.low is None:
+        return f"{tier.name}: {_percent(tier.high - 1)} or less"
+    if tier.high is None:
+        return f"{tier.name}: {_percent(tier.low)} or more"
+    return f"{tier.name}: {_percent(tier.low)} to {_percent(tier.high - 1)}"
+
+
+def _land_cell(good: str, position: int, icons_only: bool) -> str:
+    potential = f"{_LOC}.MakeScope.ScriptValue('pp_land_potential_{good}')"
+    kind = "low" if icons_only else "step"
+    visible = f"EqualTo_int32(FixedPointToInt({_LOC}.MakeScope.ScriptValue('pp_land_potential_{kind}_{good}')), '(int32){position}')"
+    rgo = f"And({_LOC}.HasRawMaterial, EqualTo_string({_LOC}.GetRawMaterial.GetKey, '{good}'))"
+    if icons_only:
+        return (f'pp_land_potential_icon = {{ visible = "[{visible}]" blockoverride "highlight" {{ visible = "[{rgo}]" }} '
+                f'blockoverride "good_icon" {{ texture = "{_GOODS_ICON.format(good=good)}" tooltip = "[ShowGoodsName(\'{good}\')] [{potential}|+=%0]" }} }}')
+    return (f'pp_land_potential_cell = {{ visible = "[{visible}]" blockoverride "highlight" {{ visible = "[{rgo}]" }} '
+            f'blockoverride "good_icon" {{ texture = "{_GOODS_ICON.format(good=good)}" tooltip = "[ShowGoodsName(\'{good}\')]" }} '
+            f'blockoverride "good_value" {{ raw_text = "[{potential}|+=%0]" }} }}')
+
+
+def land_tier(tier: Tier, occupied: Mapping[str, set[int]]) -> str:
+    """One labelled tier: its steps best first, each step's goods in name order; the icon-only tier on two lines."""
+    hboxes = []
+    for line in tier_cells(tier, occupied):
+        cells = " ".join(_land_cell(good, position, tier.icons_only) for good, position in line)
+        hboxes.append(f"hbox = {{ layoutpolicy_horizontal = expanding ignoreinvisible = yes spacing = 2 {cells} expand = {{}} }}")
+    return (f'\t\t\t\t\t\tpp_land_potential_tier = {{ blockoverride "tier_title" {{ text = "PP_LAND_TIER_{tier.key.upper()}" }} '
+            f'blockoverride "tier_lines" {{ {" ".join(hboxes)} }} }}')
+
+
+_LAND_TYPES = """\
+\ttype pp_land_potential_tier = TooltipListBase {
+\t\tblockoverride "block_title" { block "tier_title" {} }
+\t\tvbox = {
+\t\t\tlayoutpolicy_horizontal = expanding
+\t\t\tmargin = { 8 2 }
+\t\t\tblock "tier_lines" {}
+\t\t}
+\t}
+
+\t# fixed width, so the values line up in columns
+\ttype pp_land_potential_cell = widget {
+\t\tsize = { 56 28 }
+\t\tbackground = {
+\t\t\tusing = bg_round_corners
+\t\t\talpha = 0.6
+\t\t\tblock "highlight" { visible = no }
+\t\t}
+\t\ticon = {
+\t\t\tsize = { 22 22 }
+\t\t\tposition = { 2 3 }
+\t\t\tblock "good_icon" {}
+\t\t}
+\t\ttext_single = {
+\t\t\tusing = text_single_template
+\t\t\tposition = { 26 6 }
+\t\t\tblock "good_value" {}
+\t\t}
+\t}
+
+\ttype pp_land_potential_icon = widget {
+\t\tsize = { 26 28 }
+\t\tbackground = {
+\t\t\tusing = bg_round_corners
+\t\t\talpha = 0.6
+\t\t\tblock "highlight" { visible = no }
+\t\t}
+\t\ticon = {
+\t\t\tsize = { 22 22 }
+\t\t\tposition = { 2 3 }
+\t\t\tblock "good_icon" {}
+\t\t}
+\t}
+"""
+
+
+def land_potential_chip(occupied: Mapping[str, set[int]]) -> str:
+    """The chip: the goods in labelled tiers, best tier first; every tier is shown, so the rows read as a scale."""
+    body = "\n".join(land_tier(tier, occupied) for tier in TIERS)
+    return f"""{_LAND_TYPES}
+\ttype pp_land_potential_chip = widget {{
 \t\tname = "pp_land_potential_chip"
 \t\tsize = {{ 30 30 }}
 \t\ttooltipwidget = {{
@@ -522,11 +685,11 @@ def land_potential_chip(goods: list[str]) -> str:
 \t\t\t\t}}
 \t\t\t\tblockoverride "tooltip_content" {{
 \t\t\t\t\tTooltipTextBlock = {{ blockoverride "text" {{ text = "PP_LAND_POTENTIAL_HELP" }} }}
-\t\t\t\t\tpp_goods_output_table = {{ blockoverride "rows" {{ vbox = {{
+\t\t\t\t\tvbox = {{
 \t\t\t\t\t\tlayoutpolicy_horizontal = expanding
-\t\t\t\t\t\tmargin = {{ 10 4 }}
+\t\t\t\t\t\tspacing = 2
 {body}
-\t\t\t\t\t}} }} }}
+\t\t\t\t\t}}
 \t\t\t\t}}
 \t\t\t}}
 \t\t}}
@@ -535,11 +698,11 @@ def land_potential_chip(goods: list[str]) -> str:
 \t}}"""
 
 
-def render_gui(vanilla_gui: str, views: Mapping[str, list[View]]) -> str:
+def render_gui(vanilla_gui: str, views: Mapping[str, list[View]], occupied: Mapping[str, set[int]]) -> str:
     templates = "\n\n".join(swapped_template(vanilla_gui, attribute) for attribute in SWAPPED_TEMPLATES)
     types = "\n\n".join(view_type(attribute, attribute_views) for attribute, attribute_views in views.items())
     header = f"{GENERATED}\n# Location-window tooltips: effects first, goods output as an icon table after; the land-potential chip (view only)."
-    return f"{header}\n\n{templates}\n\ntypes pp_attribute_tooltips\n{{\n{_TYPES}\n{land_potential_chip(land_goods(views))}\n\n{types}\n}}\n"
+    return f"{header}\n\n{templates}\n\ntypes pp_attribute_tooltips\n{{\n{_TYPES}\n{land_potential_chip(occupied)}\n\n{types}\n}}\n"
 
 
 # --- script and localization ---------------------------------------------------------------------------------------
@@ -553,20 +716,26 @@ def render_modifiers(views: Iterable[View]) -> str:
     return "\n\n".join(blocks) + "\n"
 
 
-def render_script_values(views: Mapping[str, list[View]]) -> str:
-    """Per good: the land attributes' goods output at this location (``pp_land_potential_<good>``) and its 5% band
-    (``pp_land_potential_band_<good>``). Only read by the land-potential chip."""
+def render_script_values(views: Mapping[str, list[View]], locations: list[dict[str, str]] = ()) -> str:
+    """Per good: the land attributes' goods output at this location (``pp_land_potential_<good>``) and its step
+    (``pp_land_potential_step_<good>``: the rounded percent halved, clamped). Only read by the land-potential chip.
+    Each attribute's classes are tested most common first, so a location usually matches early."""
+    common = {attribute: Counter(location.get(attribute) for location in locations) for attribute in LAND_ATTRIBUTES}
     blocks = [GENERATED, "# Land potential (attribute_tooltips.py): goods output from climate, vegetation, topography, fertility, soil, coast and lake."]
     for good in land_goods(views):
         lines = [f"pp_land_potential_{good} = {{", "\tvalue = 0"]
         for attribute in LAND_ATTRIBUTES:
-            terms = [(view.trigger, value) for view in views.get(attribute, []) for g, value in view.goods if g == good and view.trigger]
-            for index, (trigger, value) in enumerate(terms):
-                keyword = "if" if index == 0 or attribute in ("coast", "lake") else "else_if"
-                lines.append(f"\t{keyword} = {{ limit = {{ {trigger} }} add = {_fmt(value)} }}")
+            terms = [(view.value, view.trigger, value) for view in views.get(attribute, []) for g, value in view.goods if g == good and view.trigger]
+            terms.sort(key=lambda term: -common[attribute][term[0]])
+            for index, (_, trigger, value) in enumerate(terms):
+                lines.append(f"\t{'if' if index == 0 else 'else_if'} = {{ limit = {{ {trigger} }} add = {_fmt(value)} }}")
         lines.append("}")
         blocks.append("\n".join(lines))
-        blocks.append(f"pp_land_potential_band_{good} = {{\n\tvalue = pp_land_potential_{good}\n\tdivide = {_fmt(BAND_WIDTH)}\n\tfloor = yes\n\tmin = {min(BANDS)}\n\tmax = {max(BANDS)}\n}}")
+        for kind, divisor, low, high in (("step", STEP, STEP_MIN, STEP_MAX), ("low", 10, LOW_MIN, LOW_MAX)):
+            blocks.append(
+                f"pp_land_potential_{kind}_{good} = {{\n\tvalue = pp_land_potential_{good}\n\tmultiply = 100\n\tround = yes\n"
+                f"\tdivide = {divisor}\n\tfloor = yes\n\tmin = {low}\n\tmax = {high}\n}}"
+            )
     return "\n\n".join(blocks) + "\n"
 
 
@@ -594,7 +763,8 @@ def render_localization(views: Mapping[str, list[View]]) -> str:
         ' PP_TT_GOODS_OUTPUT: "Goods Output"',
         ' PP_TT_KEY_NONE: "none"',
         ' PP_LAND_POTENTIAL_TITLE: "Land Potential"',
-        ' PP_LAND_POTENTIAL_HELP: "How well the land here suits each good: its [climate|e], [vegetation|e], [topography|e], soil and fertility, and a coast or lake shore, best first. [winter|e], harvests and the raw material bonus come on top; the raw material produced here is highlighted."',
+        ' PP_LAND_POTENTIAL_HELP: "How well the land here suits each good, from its [climate|e], [vegetation|e], [topography|e], soil and fertility, and a coast or lake shore; best first in each row. [winter|e], harvests and the raw material bonus come on top. The raw material produced here is highlighted."',
+        *(f' PP_LAND_TIER_{tier.key.upper()}: "{tier_label(tier)}"' for tier in TIERS),
     ]
     for attribute_views in views.values():
         for view in attribute_views:
@@ -618,11 +788,13 @@ def build_views(vanilla_root: Path | None, mod_root: Path) -> dict[str, list[Vie
 def write(mod_root: Path, vanilla_root: Path | None) -> dict[str, int]:
     """Write the tooltips; run after the class injects and the World Builder static modifiers are written."""
     views = build_views(vanilla_root, mod_root)
+    locations = location_attributes(mod_root)
+    occupied = occupied_percents(views, locations)
     vanilla_gui = (Path(vanilla_root) / VANILLA_TOOLTIPS).read_text(encoding="utf-8-sig")
     outputs = {
-        GUI_PATH: render_gui(vanilla_gui, views),
+        GUI_PATH: render_gui(vanilla_gui, views, occupied),
         MODIFIERS_PATH: render_modifiers(view for attribute_views in views.values() for view in attribute_views),
-        SCRIPT_VALUES_PATH: render_script_values(views),
+        SCRIPT_VALUES_PATH: render_script_values(views, locations),
         CUSTOM_LOC_PATH: render_custom_localization(views),
         LOCALIZATION_PATH: render_localization(views),
     }
@@ -630,4 +802,6 @@ def write(mod_root: Path, vanilla_root: Path | None) -> dict[str, int]:
         path = Path(mod_root) / rel
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("﻿" + text, encoding="utf-8", newline="\n")
-    return {attribute: sum(1 for v in attribute_views if v.goods) for attribute, attribute_views in views.items()}
+    report = {attribute: sum(1 for v in attribute_views if v.goods) for attribute, attribute_views in views.items()}
+    report["land_potential_cells"] = sum(len(line) for tier in TIERS for line in tier_cells(tier, occupied))
+    return report

@@ -5295,9 +5295,13 @@ lateralview = {
 							}
 
 							expand = {}
-							# PP STATUS CHIPS
+						}
+						# PP STATUS CHIPS: top right, mirroring the geography card at the bottom left
+						widget = {
+							name = "pp_location_status_row"
+							size = { 120 46 }
+							parentanchor = right|top
 							hbox = {
-								name = "pp_location_status_row"
 								margin = { 10 8 }
 								using = bg_paper_card
 								using = bg_cabinet_card_frame

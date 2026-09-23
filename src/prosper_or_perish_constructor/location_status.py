@@ -1,4 +1,4 @@
-"""Status chips at the top of the location view: stored food, land pressure and this year's harvest.
+"""Status chips at the top right of the location view: stored food, land pressure and this year's harvest.
 
 The geography chips at the bottom of the scene show what a location is; these show what is happening to it. Each chip
 is a set of widgets, one per state, with exclusive visibility tests, like the soil and fertility chips.
@@ -25,7 +25,9 @@ BAD_HARVESTS = ("abysmal", "very_poor", "poor")
 LAND_MARKERS = ("pp_land_overpopulation", "pp_land_abundant", "pp_land_available")
 
 _ANCHOR = "\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\t# BOTTOM CONDITIONS\n"
-_SPLIT = len("\t\t\t\t\t\t\texpand = {}\n")
+_SPLIT = len("\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n")   # after the IO/periphora hbox, inside the row widget
+# Three visible chips of 30 px, 5 px apart, inside the card's 10/8 px margins (the bottom card's sizes).
+_CARD_SIZE = "{ 120 46 }"
 _LOC = "LocationView.GetLocation"
 _ICONS = "gfx/interface/icons"
 
@@ -135,9 +137,12 @@ def status_row(harvests: list[str]) -> str:
     harvest += _chip("pp_status_harvest_average", _harvest_test("average"), f"{_ICONS}/trade_goods/icon_goods_wheat.dds",
                      f"[{state}]", "pp_variable_harvests", _text("PP_HARVEST_CHIP_AVERAGE"))
 
-    return f"""\t\t\t\t\t\t\t# PP STATUS CHIPS
+    return f"""\t\t\t\t\t\t# PP STATUS CHIPS: top right, mirroring the geography card at the bottom left
+\t\t\t\t\t\twidget = {{
+\t\t\t\t\t\t\tname = "pp_location_status_row"
+\t\t\t\t\t\t\tsize = {_CARD_SIZE}
+\t\t\t\t\t\t\tparentanchor = right|top
 \t\t\t\t\t\t\thbox = {{
-\t\t\t\t\t\t\t\tname = "pp_location_status_row"
 \t\t\t\t\t\t\t\tmargin = {{ 10 8 }}
 \t\t\t\t\t\t\t\tusing = bg_paper_card
 \t\t\t\t\t\t\t\tusing = bg_cabinet_card_frame
@@ -145,11 +150,12 @@ def status_row(harvests: list[str]) -> str:
 \t\t\t\t\t\t\t\t\tspacing = 5
 {food}{land}{harvest}\t\t\t\t\t\t\t\t}}
 \t\t\t\t\t\t\t}}
+\t\t\t\t\t\t}}
 """
 
 
 def add_status_row(text: str, harvests: list[str]) -> str:
-    """Put the status chips at the right end of the scene's top row (after the IO and periphora buttons)."""
+    """Anchor the status card to the top-right corner of the scene, beside the IO and periphora buttons' row."""
     found = text.count(_ANCHOR)
     if found != 1:
         raise ValueError(f"location_window.gui: expected 1 top-row anchor for the status chips, found {found}")

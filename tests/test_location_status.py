@@ -31,6 +31,8 @@ def test_status_row_sits_after_the_top_row_spacer_with_exclusive_states():
     out = location_status.add_status_row(_window(), HARVESTS)
     assert out.index("expand = {}") < out.index('name = "pp_location_status_row"') < out.index("# BOTTOM CONDITIONS")
     assert out.count("{") - out.count("}") == _window().count("{") - _window().count("}")
+    # outside the button row's hbox, pinned to the top-right corner (mirrors the bottom-left geography card)
+    assert "expand = {}\n\t\t\t\t\t\t}\n\t\t\t\t\t\t# PP STATUS CHIPS" in out and "parentanchor = right|top" in out
     names = re.findall(r'name = "(pp_status_\w+)"', out)
     assert names == ["pp_status_food_stored", "pp_status_food_starving", "pp_status_land_overpopulation", "pp_status_land_abundant",
                      "pp_status_land_available", "pp_status_land_settled", "pp_status_harvest_good", "pp_status_harvest_bad", "pp_status_harvest_average"]

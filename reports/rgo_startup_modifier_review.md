@@ -6,7 +6,8 @@ Every good keeps its `0.20` own-good output and, with one small exception (mille
 peasant food consumption. The side effects were rewritten so each good has its own combination and every
 line is large enough to notice, while staying at the low end of vanilla magnitudes: estate power
 `0.05`-`0.25`, migration `0.03`-`0.10`, development `0.02`-`0.04`, unrest `0.03`-`0.05`, disease resistance
-`0.02`-`0.05`, named-disease modifiers `0.05`-`0.15`, life expectancy `+1` / `-1` / `-2`.
+`0.02`-`0.05`, named-disease modifiers `0.05`-`0.15`, life expectancy `+1` / `-1` / `-2`, cultural tradition and
+influence `0.02` (a vanilla culture building gives `0.1`-`0.25`, so an RGO gets a fraction of one).
 
 New hooks used: estate power (crown, nobles, clergy, burghers, peasants, tribes), named diseases
 (`local_malaria_impact_modifier` for rice, pepper and sugar; `local_bubonic_plague_resistance_modifier` for

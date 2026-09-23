@@ -13,6 +13,7 @@ from pathlib import Path
 import polars as pl
 
 from prosper_or_perish_constructor.location_baseline import resolve_load_order_path
+from prosper_or_perish_constructor.worldbuilder import attribute_tooltips as wb_tooltips
 from prosper_or_perish_constructor.worldbuilder import buildings as wb_buildings
 from prosper_or_perish_constructor.worldbuilder import compat as wb_compat
 from prosper_or_perish_constructor.worldbuilder import development as wb_development
@@ -54,6 +55,8 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     cfg = navigation.prepare(repo, cfg, contract, locations=current)
     rgo_by_location = {str(tag): str(rgo) for tag, rgo in current.select("location_tag", "raw_material").iter_rows() if rgo}
     report["static_modifiers"] = wb_modifiers.write_static_modifiers(contract, cfg, mod_root, vanilla_root(repo, project), rgo_by_location)
+    # the geography chips' tooltips read back the class injects and static modifiers written above
+    report["attribute_tooltips"] = wb_tooltips.write(mod_root, vanilla_root(repo, project))
     report["setup_rgos_kept"] = wb_modifiers.write_setup_rgo_keepers(mod_root, rgo_by_location)
     caps = wb_buildings.write_caps(contract, cfg, mod_root)
     report["improvement_buildings"] = {k: {"unit_units": v["unit_units"], "scale": v["scale"], "limit": v["limit"]} for k, v in caps.items()}

@@ -5547,7 +5547,7 @@ widget = {
         name = "ha1300_native_topography"
         size = { 30 30 }
         datacontext = "[LocationView.GetLocation.GetTopography]"
-        tooltipwidget = { using = Topography_tooltip }
+        tooltipwidget = { using = pp_attribute_tooltip_topography }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
         icon = { size = { 30 30 } texture = "[GetTopographyIcon(LocationView.GetLocation.GetTopography)]" }
         
@@ -5556,7 +5556,7 @@ widget = {
         name = "ha1300_native_climate"
         size = { 30 30 }
         datacontext = "[LocationView.GetLocation.GetClimate]"
-        tooltipwidget = { using = Climate_tooltip }
+        tooltipwidget = { using = pp_attribute_tooltip_climate }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
         icon = { size = { 30 30 } texture = "[GetClimateIcon(LocationView.GetLocation.GetClimate)]" }
         
@@ -5565,7 +5565,7 @@ widget = {
         name = "ha1300_native_vegetation"
         size = { 30 30 }
         datacontext = "[LocationView.GetLocation.GetVegetation]"
-        tooltipwidget = { using = Vegetation_tooltip }
+        tooltipwidget = { using = pp_attribute_tooltip_vegetation }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
         icon = { size = { 30 30 } texture = "[GetVegetationIcon(LocationView.GetLocation.GetVegetation)]" }
         
@@ -5588,7 +5588,7 @@ widget = {
             
             blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_native_coast')]" } }TooltipTextBlock = { blockoverride "text" { text = "HA1300_COAST_HELP" } }TooltipStringPairList = {
         visible = "[LocationView.GetLocation.IsCoastal]" textcontext = "[ShowModifierEffect('coastal')]"
-    } TooltipStringPairList = { visible = "[LocationView.GetLocation.IsCoastal]" textcontext = "[ShowModifierEffect('pp_wb_coastal')]" } }
+    } pp_attribute_view_coast = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5651,7 +5651,7 @@ widget = {
                 }
             }
             
-            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "HA1300_LAKE_HELP" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_native_lake'), Localize('HA1300_LAKESIDE'))]" textcontext = "[ShowModifierEffect('pp_wb_lake')]" } }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "HA1300_LAKE_HELP" } } pp_attribute_view_lake = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5678,7 +5678,7 @@ widget = {
                 }
             }
             blockoverride "title_button" { mapmode_tooltip_button = { datacontext = "[GetMapMode('ha1300_soil_types')]" } }
-            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SAND_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_sand')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_LOAM_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_loam')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_STONY_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_stony')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_CLAY_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_clay')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SILT_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_silt')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_PEAT_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_peat')]" } }
+            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } pp_attribute_view_soil = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5701,7 +5701,7 @@ widget = {
                 }
             }
             blockoverride "title_button" { mapmode_tooltip_button = { datacontext = "[GetMapMode('ha1300_soil_types')]" } }
-            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SAND_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_sand')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_LOAM_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_loam')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_STONY_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_stony')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_CLAY_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_clay')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SILT_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_silt')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_PEAT_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_peat')]" } }
+            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } pp_attribute_view_soil = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5724,7 +5724,7 @@ widget = {
                 }
             }
             blockoverride "title_button" { mapmode_tooltip_button = { datacontext = "[GetMapMode('ha1300_soil_types')]" } }
-            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SAND_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_sand')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_LOAM_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_loam')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_STONY_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_stony')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_CLAY_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_clay')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SILT_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_silt')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_PEAT_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_peat')]" } }
+            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } pp_attribute_view_soil = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5747,7 +5747,7 @@ widget = {
                 }
             }
             blockoverride "title_button" { mapmode_tooltip_button = { datacontext = "[GetMapMode('ha1300_soil_types')]" } }
-            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SAND_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_sand')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_LOAM_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_loam')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_STONY_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_stony')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_CLAY_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_clay')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SILT_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_silt')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_PEAT_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_peat')]" } }
+            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } pp_attribute_view_soil = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5770,7 +5770,7 @@ widget = {
                 }
             }
             blockoverride "title_button" { mapmode_tooltip_button = { datacontext = "[GetMapMode('ha1300_soil_types')]" } }
-            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SAND_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_sand')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_LOAM_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_loam')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_STONY_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_stony')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_CLAY_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_clay')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SILT_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_silt')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_PEAT_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_peat')]" } }
+            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } pp_attribute_view_soil = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5793,7 +5793,7 @@ widget = {
                 }
             }
             blockoverride "title_button" { mapmode_tooltip_button = { datacontext = "[GetMapMode('ha1300_soil_types')]" } }
-            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SAND_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_sand')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_LOAM_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_loam')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_STONY_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_stony')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_CLAY_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_clay')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SILT_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_silt')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_PEAT_TITLE'))]" textcontext = "[ShowModifierEffect('pp_wb_soil_peat')]" } }
+            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } pp_attribute_view_soil = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5818,7 +5818,7 @@ widget = {
                 }
             }
             blockoverride "title_button" { mapmode_tooltip_button = { datacontext = "[GetMapMode('ha1300_fertility')]" } }
-            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_LOW'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_very_low')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_LOW'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_low')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_MODERATE'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_moderate')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_HIGH'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_high')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_HIGH'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_very_high')]" } }
+            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } pp_attribute_view_fertility = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5841,7 +5841,7 @@ widget = {
                 }
             }
             blockoverride "title_button" { mapmode_tooltip_button = { datacontext = "[GetMapMode('ha1300_fertility')]" } }
-            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_LOW'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_very_low')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_LOW'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_low')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_MODERATE'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_moderate')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_HIGH'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_high')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_HIGH'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_very_high')]" } }
+            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } pp_attribute_view_fertility = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5864,7 +5864,7 @@ widget = {
                 }
             }
             blockoverride "title_button" { mapmode_tooltip_button = { datacontext = "[GetMapMode('ha1300_fertility')]" } }
-            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_LOW'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_very_low')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_LOW'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_low')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_MODERATE'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_moderate')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_HIGH'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_high')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_HIGH'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_very_high')]" } }
+            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } pp_attribute_view_fertility = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5887,7 +5887,7 @@ widget = {
                 }
             }
             blockoverride "title_button" { mapmode_tooltip_button = { datacontext = "[GetMapMode('ha1300_fertility')]" } }
-            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_LOW'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_very_low')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_LOW'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_low')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_MODERATE'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_moderate')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_HIGH'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_high')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_HIGH'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_very_high')]" } }
+            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } pp_attribute_view_fertility = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5910,7 +5910,7 @@ widget = {
                 }
             }
             blockoverride "title_button" { mapmode_tooltip_button = { datacontext = "[GetMapMode('ha1300_fertility')]" } }
-            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_LOW'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_very_low')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_LOW'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_low')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_MODERATE'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_moderate')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_HIGH'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_high')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_HIGH'))]" textcontext = "[ShowModifierEffect('pp_wb_fertility_very_high')]" } }
+            blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } pp_attribute_view_fertility = {} }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }

@@ -161,3 +161,421 @@ template PopulationCapacity_tooltip {
         }
     }
 }
+
+# Vanilla population tooltip with the subsistence land breakdown in a scroll area: the mod's
+# capacity rows (attributes, improvements, footprints) make the list taller than the screen.
+template population_location_tooltip {
+    ContextualTooltipType = {
+        blockoverride "title_icon" {
+            icon = {
+                using = tooltip_title_icon_size
+                texture = "gfx/interface/icons/location_icons/population.dds"
+
+                glow = {
+                    name = "drop_shadow"
+                    glow_radius = 3
+                    color = {0.0 0.0 0.0 1.0}
+                    alpha = 0.3
+                }
+            }
+        }
+        blockoverride "title_text" {
+            text = "LOC_POP_TT_TITLE"
+        }
+
+        blockoverride "concept_link" {
+            text = [population|E]
+        }
+
+        blockoverride "title_button" {
+            mapmode_tooltip_button = {
+                datacontext = "[GetMapMode('population')]"
+            }
+        }
+
+        blockoverride "tooltip_content" {
+            hbox = {
+                margin_left = 10
+                spacing = 30
+
+                icon_pie_left = {
+                    visible = "[HasPopBreakdownIntelOn(Location.Self)]"
+
+                    blockoverride "PieSize" { size = { 70 70 } }
+                    blockoverride "pie_datamodel" {
+                        datamodel = "[Location.GetPopulationChart.GetPopsPiechartWidget.GetCultures]"
+                    }
+
+                    ###Slices and Icon
+                    blockoverride "SliceTooltip" {
+                        tooltipwidget = {
+                            ContextualTooltipType = {
+                                blockoverride "title_text" {
+                                    datacontext = "[Location]"
+                                    text = "POP_CULTURE_OF"
+                                }
+                                blockoverride "title_icon" {
+                                    icon = {
+                                        using = tooltip_title_icon_size
+                                        using = culture_icon
+                                    }
+                                }
+
+                                blockoverride "concept_link" {
+                                    text = [culture|E]
+                                }
+                                blockoverride "tooltip_content" {
+
+                                    pie_chart_legend = {
+                                        blockoverride "datamodel" {	datamodel = "[Location.GetPopulationChart.GetPopsPiechartWidget.GetCultures]" }
+                                        blockoverride "color" { color = "[PopCultureItem.GetColor]" }
+                                        blockoverride "leftside_info" {text = "[PopCultureItem.GetName]"}
+                                        blockoverride "middle_info" {
+                                            text = "[PopCultureItem.GetAbsoluteSize]"
+                                        }
+                                        blockoverride "rightside_info" {
+                                            text = "[PopCultureItem.GetPercentage|%2]"
+                                            alwaystransparent = no
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    blockoverride "SliceValue" { value = "[PopCultureItem.GetPercentage]" }
+                    blockoverride "SliceColor" { color = "[PopCultureItem.GetColor]" }
+                    blockoverride "Icon" {
+                        using = culture_icon
+                        position = { 0 1 }
+
+                        modify_texture = {
+                            using = overlay_stone_texture
+                            blend_mode = overlay
+                            alpha = 1
+                        }
+
+                        using = overlay_window
+
+                        glow = {
+                            name = "drop_shadow"
+                            glow_radius = 3
+                            color = {0.0 0.0 0.0 1.0}
+                            alpha = 0.3
+                        }
+                    }
+                    blockoverride "Icon_Size" {
+                        size = { 30 30 }
+                    }
+                    blockoverride "datamodel" { visible = no }
+                }
+
+                icon_pie_left = {
+                    visible = "[HasPopBreakdownIntelOn(Location.Self)]"
+
+                    blockoverride "PieSize" { size = { 70 70 } }
+                    blockoverride "pie_datamodel" {
+                        datamodel = "[Location.GetPopulationChart.GetPopsPiechartWidget.GetReligions]"
+                    }
+
+                    ###Slices and Icon
+                    blockoverride "SliceTooltip" {
+                        tooltipwidget = {
+                            ContextualTooltipType = {
+                                blockoverride "title_text" {
+                                    datacontext = "[Location]"
+                                    text = "POP_RELIGION_OF"
+                                }
+
+                                blockoverride "title_icon" {
+                                    icon = {
+                                        using = tooltip_title_icon_size
+                                        texture = "gfx/interface/icons/location_icons/main_religion.dds"
+                                    }
+                                }
+                                blockoverride "concept_link" {
+                                    text = [religion|E]
+                                }
+                                blockoverride "tooltip_content" {
+
+                                    pie_chart_legend = {
+                                        blockoverride "datamodel" {	datamodel = "[Location.GetPopulationChart.GetPopsPiechartWidget.GetReligions]" }
+                                        blockoverride "color" { color = "[PopReligionItem.GetColor]" }
+                                        blockoverride "leftside_info" {text = "[PopReligionItem.GetName]"}
+                                        blockoverride "middle_info" {text = "[PopReligionItem.GetAbsoluteSize]"}
+                                        blockoverride "rightside_info" {text = "[PopReligionItem.GetPercentage|%2]"}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    blockoverride "SliceValue" { value = "[PopReligionItem.GetPercentage]" }
+                    blockoverride "SliceColor" { color = "[PopReligionItem.GetColor]" }
+                    blockoverride "Icon" {
+                        texture = "gfx/interface/icons/location_icons/main_religion.dds"
+                    }
+                    blockoverride "Icon_Size" { size = { 35 35 } }
+                    blockoverride "datamodel" { visible = no }
+                }
+
+                icon_pie_left = {
+                    visible = "[HasPopBreakdownIntelOn(Location.Self)]"
+
+                    blockoverride "PieSize" { size = { 70 70 } }
+                    blockoverride "pie_datamodel" {
+                        datamodel = "[Location.GetPopulationChart.GetPopsPiechartWidget.GetPopTypes]"
+                    }
+
+                    ###Slices and Icon
+                    blockoverride "SliceTooltip" {
+                        tooltipwidget = {
+                            ContextualTooltipType = {
+                                blockoverride "title_text" {
+                                    datacontext = "[Location]"
+                                    text = "POP_TYPES_OF"
+                                }
+
+                                blockoverride "title_icon" {
+                                    icon = {
+                                        using = tooltip_title_icon_size
+                                        texture = "gfx/interface/icons/location_icons/estates.dds"
+                                    }
+                                }
+                                blockoverride "title_text" {
+                                    text = "POP_TYPES_OF"
+                                }
+                                blockoverride "concept_link" {
+                                    text = [pop_type|E]
+                                }
+                                blockoverride "tooltip_content" {
+                                    pie_chart_legend = {
+                                        blockoverride "datamodel" {	datamodel = "[Location.GetPopulationChart.GetPopsPiechartWidget.GetPopTypes]" }
+                                        blockoverride "color" { color = "[PopTypeItem.GetColor]" }
+                                        blockoverride "leftside_info" {text = "[PopTypeItem.GetName]"}
+                                        blockoverride "middle_info" {text = "[PopTypeItem.GetAbsoluteSize]"}
+                                        blockoverride "rightside_info" {text = "[PopTypeItem.GetPercentage|%2]"}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    blockoverride "SliceValue" { value = "[PopTypeItem.GetPercentage]" }
+                    blockoverride "SliceColor" { color = "[PopTypeItem.GetColor]" }
+                    blockoverride "Icon" {
+                        texture = "gfx/interface/icons/location_icons/estates.dds"
+                        position = { 0 -2 }
+                    }
+                    blockoverride "Icon_Size" { size = { 38 38 } }
+                    blockoverride "datamodel" { visible = no }
+                }
+
+                icon_pie_left = {
+                    visible = "[HasPopBreakdownIntelOn(Location.Self)]"
+
+                    blockoverride "PieSize" { size = { 70 70 } }
+                    blockoverride "pie_datamodel" {
+                        datamodel = "[Location.GetPopulationChart.GetPopsPiechartWidget.GetPolitics]"
+                    }
+
+                    ###Slices and Icon
+                    blockoverride "SliceTooltip" {
+                        tooltipwidget = {
+                            ContextualTooltipType = {
+                                blockoverride "title_text" {
+                                    datacontext = "[Location]"
+                                    text = "POP_POLITICS_OF"
+                                }
+
+                                blockoverride "title_icon" {
+                                    icon = {
+                                        using = tooltip_title_icon_size
+                                        texture = "gfx/interface/icons/location_icons/government.dds"
+                                    }
+                                }
+
+                                blockoverride "concept_link" {
+                                    text = [political_power|E]
+                                }
+                                blockoverride "tooltip_content" {
+                                    pie_chart_legend = {
+                                        blockoverride "datamodel" {	datamodel = "[Location.GetPopulationChart.GetPopsPiechartWidget.GetPolitics]" }
+                                        blockoverride "color" { color = "[PopPoliticsItem.GetColor]" }
+                                        blockoverride "leftside_info" {text = "[PopPoliticsItem.GetName]"}
+                                        blockoverride "middle_info" {
+                                            text = "[PopPoliticsItem.GetPopulation]"
+                                            tooltip = "[population|e]"
+                                            tagtooltip_enabled = yes
+                                        }
+                                        blockoverride "rightside_info" {
+                                            text = "[PopPoliticsItem.GetPercentage|%2]"
+                                            alwaystransparent = no
+                                            tooltipwidget = {
+                                                ContextualTooltipType = {
+                                                    blockoverride "title_icon" {
+                                                        icon = {
+                                                            using = tooltip_title_icon_size
+                                                            texture = "gfx/interface/icons/location_icons/government.dds"
+                                                        }
+                                                    }
+
+                                                    blockoverride "title_text" {
+                                                        text = "LOCATION_POLITICS_TOOLTIP_INDIVIDUAL"
+                                                    }
+
+                                                    blockoverride "concept_link" {
+                                                        text = "[estate_power|E]"
+                                                    }
+
+                                                    blockoverride "tooltip_content" {
+                                                        TooltipTextBlock = {
+                                                            blockoverride "text" {
+                                                                text = "[PopPoliticsItem.GetTooltip]"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    blockoverride "SliceValue" { value = "[PopPoliticsItem.GetPercentage]" }
+                    blockoverride "SliceColor" { color = "[PopPoliticsItem.GetColor]" }
+                    blockoverride "Icon" {
+                        texture = "gfx/interface/icons/location_icons/government.dds"
+                        position = { 0 -2 }
+                    }
+                    blockoverride "Icon_Size" { size = { 35 35 } }
+                    blockoverride "datamodel" { visible = no }
+                }
+            }
+
+            widget = {
+                size = { 10 10 }
+            }
+
+            widget = {
+                visible = "[HasPopBreakdownIntelOn(Location.Self)]"
+
+                tooltipwidget = {
+                    ContextualTooltipType = {
+                        blockoverride "title_text" {
+                            datacontext = "[Location]"
+                            text = "POP_BREAKDOWN_DET"
+                        }
+
+                        blockoverride "title_icon" {
+                            icon = {
+                                using = tooltip_title_icon_size
+                                texture = "gfx/interface/icons/location_icons/new/population.dds"
+                            }
+                        }
+
+                        blockoverride "concept_link" {
+                            text = [population|E]
+                        }
+
+                        blockoverride "tooltip_content" {
+                            TooltipScrolledColumnList = {
+                                blockoverride "block_scrollarea" { maximumsize = { -1 420 }}
+                                textcontext = "[Location.GetTotalPopList]"
+                            }
+                        }
+                    }
+                }
+                size = { 440 28 }
+                using = fake_table_dark_background
+                text_single = {
+                    text = "[population|e]"
+                }
+                text_single = {
+                    parentanchor = right
+                    align = right
+                    raw_text = "[Location.GetTotalPopulation|L]@population!"
+                }
+            }
+            widget = {
+                visible = "[HasPopBreakdownIntelOn(Location.Self)]"
+
+                size = { 440 28 }
+                using = fake_table_dark_background
+                text_single = {
+                    text = "[population_growth|e]"
+                }
+                text_single = {
+                    parentanchor = right
+                    align = right
+                    text = "[Location.GetPopGrowth|2+=%]"
+
+                    tooltipwidget = {
+                        ContextualTooltipType = {
+                            blockoverride "title_icon" {
+                                icon = {
+                                    using = tooltip_title_icon_size
+                                    texture = "gfx/interface/icons/location_icons/new/population_growth.dds"
+                                }
+                            }
+
+                            blockoverride "title_text" {
+                                datacontext = "[Location]"
+                                text = "POP_GROWTH_TT_HEADER_TEXT"
+                            }
+
+                            blockoverride "concept_link" {
+                                text = [population_growth|E]
+                            }
+
+                            blockoverride "tooltip_content" {
+                                TooltipStringPairList = {
+                                    blockoverride "block_title" {
+                                        text = "POP_GROWTH_TT_TEXT"
+                                    }
+                                    textcontext =  "[Location.GetPopGrowthInfo]"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            widget = {
+                visible = "[HasPopBreakdownIntelOn(Location.Self)]"
+                size = { 440 28 }
+                using = fake_table_light_background
+                text_single = {
+                    text = "[migration_attraction|e]"
+                }
+                text_single = {
+                    parentanchor = right
+                    align = right
+                    text = "[Location.GetLocalMigrationAttraction]"
+                }
+            }
+            widget = {
+                visible = "[Not(HasPopBreakdownIntelOn(Location.Self))]"
+                size = { 440 28 }
+                using = fake_table_light_background
+                text_single = {
+                    text = "INTEL_FOG_LOC_POP_BREAKDOWN_UNKNOWN"
+                }
+            }
+            TooltipScrolledContentSection = {
+                visible = "[HasPopBreakdownIntelOn(Location.Self)]"
+
+                blockoverride "block_scrollarea" {
+                    maximumsize = { -1 450 }
+                }
+
+                blockoverride "section_content" {
+                    TooltipStringPairList = {
+                        datacontext = "[Location]"
+                        blockoverride "block_title" {
+                            text = "POP_CAP_DUE_TO"
+                        }
+                        textcontext = "[Location.GetPopulationCapacityInfo]"
+                    }
+                }
+            }
+        }
+    }
+}

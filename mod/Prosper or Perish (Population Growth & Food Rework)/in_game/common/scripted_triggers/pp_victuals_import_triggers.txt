@@ -7,8 +7,9 @@ pp_victuals_import_wanted = {
 	is_province_capital = yes
 	modifier:pp_province_food_storage_months < pp_victuals_import_low_storage_months
 	OR = {
+		# no market and none queued: a queued first level already exists as a building under construction
 		AND = {
-			NOT = { has_building = building_type:victuals_market_import }
+			NOT = { any_buildings_in_location = { building_type = building_type:victuals_market_import } }
 			can_build_building = building_type:victuals_market_import
 		}
 		any_buildings_in_location = {

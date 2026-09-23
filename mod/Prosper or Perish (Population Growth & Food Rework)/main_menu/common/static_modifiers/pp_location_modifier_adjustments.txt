@@ -207,7 +207,6 @@ TRY_REPLACE:devastation = {
 	local_migration_attraction = 1
 	local_life_expectancy = 10
 	local_mercenaries_modifier = -0.5
-	local_construction_speed = 0.5
 	local_upper_class_capacity_modifier = 0.5
 	local_peasants_food_consumption = 0.10
 	local_defensive = 0.50
@@ -278,9 +277,6 @@ TRY_INJECT:location_template_natural_harbor_suitability_good = {
 }
 
 TRY_INJECT:river_flowing_through_1 = {
-	# Bridge river size into the flat farm_capacity tooltip path. Keep the
-	# player-facing row labelled as river size, not as a generic improvement.
-	farm_capacity_from_river_size = 1
 	fish_capacity_from_river_size = 1
 	irrigant_cap_modifier = 1
 	pp_river_boatmen_yard_cap_modifier = 3
@@ -289,7 +285,6 @@ TRY_INJECT:river_flowing_through_1 = {
 	local_construction_speed = 0.1
 }
 TRY_INJECT:river_flowing_through_2 = {
-	farm_capacity_from_river_size = 1
 	fish_capacity_from_river_size = 1
 	irrigant_cap_modifier = 2
 	pp_river_boatmen_yard_cap_modifier = 6
@@ -298,7 +293,6 @@ TRY_INJECT:river_flowing_through_2 = {
 	local_construction_speed = 0.15
 }
 TRY_INJECT:river_flowing_through_3 = {
-	farm_capacity_from_river_size = 2
 	fish_capacity_from_river_size = 2
 	irrigant_cap_modifier = 3
 	pp_river_boatmen_yard_cap_modifier = 9
@@ -307,7 +301,6 @@ TRY_INJECT:river_flowing_through_3 = {
 	local_construction_speed = 0.2
 }
 TRY_INJECT:river_flowing_through_4 = {
-	farm_capacity_from_river_size = 3
 	fish_capacity_from_river_size = 3
 	irrigant_cap_modifier = 4
 	pp_river_boatmen_yard_cap_modifier = 12
@@ -316,7 +309,6 @@ TRY_INJECT:river_flowing_through_4 = {
 	local_construction_speed = 0.25
 }
 TRY_INJECT:river_flowing_through_5 = {
-	farm_capacity_from_river_size = 4
 	fish_capacity_from_river_size = 4
 	irrigant_cap_modifier = 5
 	pp_river_boatmen_yard_cap_modifier = 15

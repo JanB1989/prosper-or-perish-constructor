@@ -1992,6 +1992,9 @@ def test_ai_victuals_import_review_builds_only_where_food_is_very_short_and_affo
     assert "is_province_capital = yes" in triggers
     assert "modifier:pp_province_food_storage_months < pp_victuals_import_low_storage_months" in triggers
     assert "can_build_building = building_type:victuals_market_import" in triggers
+    # a queued first level exists as a building under construction and must block a second one
+    assert "NOT = { any_buildings_in_location = { building_type = building_type:victuals_market_import } }" in triggers
+    assert "has_building = building_type:victuals_market_import" not in triggers
     for condition in (
         "building_can_be_upgraded_by = root",
         "is_at_max_level = no",
@@ -2015,6 +2018,15 @@ def test_ai_victuals_import_review_builds_only_where_food_is_very_short_and_affo
     assert "monthly_income_total multiply = 6" in spare
     assert "monthly_balance" not in spare  # stored money decides, not the running balance
     assert "min = 0" in spare
+
+
+def test_devastation_does_not_speed_up_construction() -> None:
+    text = (MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifier_adjustments.txt").read_text(
+        encoding="utf-8-sig"
+    )
+    devastation = text.split("TRY_REPLACE:devastation = {", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
+    assert "local_mercenaries_modifier" in devastation
+    assert "local_construction_speed" not in devastation
 
 
 def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -> None:

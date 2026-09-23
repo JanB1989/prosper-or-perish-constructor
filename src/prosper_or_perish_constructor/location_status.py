@@ -11,8 +11,9 @@ How each state is read:
   the GUI reads through `GetModifierValueFixed`. Its value is the modifier's strength, so the tooltip lists every
   effect at its actual value (strength times the base value read from the block at build time).
 - harvest: the modifiers are script-applied, so customizable localizations test `has_location_modifier` and return
-  the active modifier's display name (title and effect rows), its trend (the +/- badge) and its severity (tint and
-  pips); a fourth tests region membership, so the chip shows the harvest region's crop in average years too.
+  the active modifier's display name (title and effect rows), its trend (the tooltip text) and its severity (the
+  frame's colour and the signed badge); a fourth tests region membership, so the chip shows the harvest region's
+  crop in average years too.
 """
 
 from __future__ import annotations
@@ -29,11 +30,15 @@ CUSTOM_LOCALIZATION = "in_game/common/customizable_localization/pp_location_stat
 HARVEST_LOCALIZATION = "main_menu/localization/english/pp_location_status_harvest_l_english.yml"
 GOOD_HARVESTS = ("good", "very_good", "bountiful")
 BAD_HARVESTS = ("abysmal", "very_poor", "poor")
-# Severity at a glance: the tint behind the crop and 1-3 pips; yellow-orange-red for bad years, green-green-gold for good.
-SEVERITY_STYLE = {
-    "poor": ("mid_yellow", 1), "very_poor": ("mid_orange", 2), "abysmal": ("mid_red", 3),
-    "good": ("mid_light_green", 1), "very_good": ("mid_green", 2), "bountiful": ("color_new_gold", 3),
+# Severity at a glance: the colour of the round frame around the crop (recoloured vanilla frames, written by
+# tools/build_harvest_frames.py) and a signed badge; average years keep vanilla's neutral brown frame.
+SEVERITY_COLOURS = {
+    "poor": (200, 170, 70), "very_poor": (205, 110, 40), "abysmal": (175, 45, 35),
+    "good": (140, 190, 90), "very_good": (70, 160, 60), "bountiful": (35, 150, 130),
 }
+SEVERITY_BADGES = {"poor": "-1", "very_poor": "-2", "abysmal": "-3", "good": "+1", "very_good": "+2", "bountiful": "+3"}
+HARVEST_FRAMES = "gfx/interface/icons/pp_harvest/frame_{severity}.dds"
+NEUTRAL_FRAME = "gfx/interface/icons/climate/brown_frame.dds"
 # One recognisable crop per harvest region; plain wheat outside every harvest region.
 REGION_GOODS = {
     "western_europe": "wine", "eastern_europe": "wheat", "north_asia": "wild_game", "central_asia": "cotton",
@@ -65,7 +70,7 @@ class Harvests:
 
 
 def severity(key: str) -> str:
-    return next(s for s in sorted(SEVERITY_STYLE, key=len, reverse=True) if key.endswith(f"_{s}"))
+    return next(s for s in sorted(SEVERITY_COLOURS, key=len, reverse=True) if key.endswith(f"_{s}"))
 
 
 def _trend(key: str) -> str:
@@ -113,7 +118,7 @@ def custom_localization(harvests: Harvests) -> str:
         lines.append(f"\ttext = {{ localization_key = PP_HARVEST_TREND_{trend.upper()} trigger = {{ OR = {{ {tests} }} }} }}")
     lines.append("\ttext = { localization_key = PP_HARVEST_TREND_AVERAGE fallback = yes }\n}\n")
     lines.append("pp_harvest_severity = {\n\ttype = location")
-    for sev in SEVERITY_STYLE:
+    for sev in SEVERITY_COLOURS:
         tests = " ".join(f"has_location_modifier = {key}" for key in keys if severity(key) == sev)
         if tests:
             lines.append(f"\ttext = {{ localization_key = PP_HARVEST_SEVERITY_{sev.upper()} trigger = {{ OR = {{ {tests} }} }} }}")
@@ -133,7 +138,7 @@ def harvest_localization(harvests: Harvests) -> str:
         lines.append(f'  PP_HARVEST_REGION_{sub.upper()}: "{name}"')
         lines.append(f'  PP_HARVEST_AVERAGE_{sub.upper()}: "Average Harvest: {name}"')
     lines.append('  PP_HARVEST_REGION_NONE: "none"')
-    for sev in SEVERITY_STYLE:
+    for sev in SEVERITY_COLOURS:
         lines.append(f'  PP_HARVEST_SEVERITY_{sev.upper()}: "{sev}"')
     lines.append('  PP_HARVEST_SEVERITY_NONE: "none"')
     return "\n".join(lines) + "\n"
@@ -295,16 +300,12 @@ def _custom_is(custom: str, token: str) -> str:
     return f"EqualTo_string({_LOC}.Custom('{custom}'), Localize('{token}'))"
 
 
-def _any(tests: list[str]) -> str:
-    return tests[0] if len(tests) == 1 else f"Or({tests[0]}, {_any(tests[1:])})"
-
-
-def _harvest_layers(harvests: Harvests, tint: str, crop: str) -> str:
-    """Severity tint behind the region's crop; sizes relative to the parent so the chip and title icon share them."""
+def _harvest_layers(harvests: Harvests, frame: str, crop: str) -> str:
+    """The severity's frame over the neutral one, then the region's crop; the chip and its title icon share them."""
     layers = [
-        f'icon = {{ size = {{ {tint} }} parentanchor = center alpha = 0.75 texture = "gfx/interface/colors/{colour}.dds" '
+        f'icon = {{ size = {{ {frame} }} parentanchor = center texture = "{HARVEST_FRAMES.format(severity=sev)}" '
         f'visible = "[{_custom_is("pp_harvest_severity", f"PP_HARVEST_SEVERITY_{sev.upper()}")}]" }}'
-        for sev, (colour, _) in SEVERITY_STYLE.items()
+        for sev in SEVERITY_COLOURS
     ]
     for sub in harvests.regions:
         good = REGION_GOODS.get(sub, "wheat")
@@ -316,19 +317,14 @@ def _harvest_layers(harvests: Harvests, tint: str, crop: str) -> str:
 
 
 def harvest_chip(harvests: Harvests) -> str:
-    """One chip for every harvest: the region's crop on a severity tint, 1-3 pips and a +/- badge."""
+    """One chip for every harvest: the region's crop in a frame coloured by severity, with a signed severity badge."""
     state = f"{_LOC}.Custom('pp_harvest_state')"
-    pips = []
-    for trend, severities, colour in (("good", GOOD_HARVESTS, "mid_light_green"), ("bad", BAD_HARVESTS, "light_red")):
-        for n in (1, 2, 3):
-            shown = [_custom_is("pp_harvest_severity", f"PP_HARVEST_SEVERITY_{s.upper()}") for s in severities if SEVERITY_STYLE[s][1] >= n]
-            pips.append(f'widget = {{ position = {{ {2 + (n - 1) * 5} 22 }} size = {{ 6 6 }} visible = "[{_any(shown)}]" '
-                        f'background = {{ texture = "gfx/interface/colors/super_dark_brown.dds" }} '
-                        f'icon = {{ position = {{ 1 1 }} size = {{ 4 4 }} texture = "gfx/interface/colors/{colour}.dds" }} }}')
+    # Same number box and place as the stored-food chip's months.
     badges = [
-        f'text_single = {{ position = {{ 17 17 }} size = {{ 12 12 }} autoresize = no fontsize = 11 align = center '
-        f'using = bg_number_container_bckg visible = "[{_harvest_test(trend)}]" raw_text = "{text}" }}'
-        for trend, text in (("good", "#G+#!"), ("bad", "#R-#!"))
+        f'text_single = {{ position = {{ 13 18 }} size = {{ 17 12 }} autoresize = no fontsize = 11 align = center '
+        f'using = bg_number_container_bckg visible = "[{_custom_is("pp_harvest_severity", f"PP_HARVEST_SEVERITY_{sev.upper()}")}]" '
+        f'raw_text = "#{"G" if badge.startswith("+") else "R"} {badge}#!" }}'
+        for sev, badge in SEVERITY_BADGES.items()
     ]
     rows = " ".join(_row(key, f"EqualTo_string({state}, Localize('STATIC_MODIFIER_NAME_{key}'))") for key in harvests.keys)
     help_texts = " ".join(
@@ -346,16 +342,15 @@ def harvest_chip(harvests: Harvests) -> str:
             blockoverride "title_icon" {{
                 widget = {{
                     using = tooltip_title_icon_size
-                    background = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}
-        {_harvest_layers(harvests, "88% 88%", "80% 80%")}
+                    background = {{ texture = "{NEUTRAL_FRAME}" }}
+        {_harvest_layers(harvests, "100% 100%", "80% 80%")}
                 }}
             }}
             blockoverride "tooltip_content" {{ {help_texts} {_scrolled(rows) if rows else ""} }}
         }}
     }}
-        background = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}
-        {_harvest_layers(harvests, "26 26", "24 24")}
-        {chr(10).join("        " + p for p in pips).strip()}
+        background = {{ texture = "{NEUTRAL_FRAME}" }}
+        {_harvest_layers(harvests, "30 30", "24 24")}
         {chr(10).join("        " + b for b in badges).strip()}
     }}
 """

@@ -48,19 +48,28 @@ def test_harvest_keys_regions_and_states_come_from_the_harvest_files():
     assert 'PP_HARVEST_REGION_PACIFIC_ISLANDS: "Pacific Islands"' in generated   # fallback name when the loc has none
 
 
-def test_harvest_chip_layers_crop_tint_pips_and_badge():
+def test_harvest_chip_layers_crop_in_a_severity_frame_with_a_signed_badge():
     chip = location_status.harvest_chip(HARVESTS)
     assert chip.count("{") == chip.count("}")
     # crop per region (twice: chip and title icon), wheat outside every region
     assert chip.count("icon_goods_wine.dds") == 2 and chip.count("icon_goods_fish.dds") == 2
     assert chip.count("PP_HARVEST_REGION_WESTERN_EUROPE')") == 2
     assert chip.count("icon_goods_wheat.dds") == 2 and chip.count("PP_HARVEST_REGION_NONE')") == 2
-    # a tint per severity, 3 green and 3 red pips, a green + and a red - badge
-    assert chip.count("gfx/interface/colors/color_new_gold.dds") == 2 and chip.count("gfx/interface/colors/mid_red.dds") == 2
-    assert chip.count("size = { 6 6 }") == 6 and '"#G+#!"' in chip and '"#R-#!"' in chip
-    third_red = [line for line in chip.splitlines() if "position = { 12 22 }" in line and "light_red" in line]
-    assert len(third_red) == 1 and "PP_HARVEST_SEVERITY_ABYSMAL" in third_red[0] and "VERY_POOR" not in third_red[0]
+    # round frames only: the neutral brown one under a recoloured one per severity, no square tints or climate frame
+    assert chip.count("climate/brown_frame.dds") == 2 and "GetClimateFrame" not in chip and "gfx/interface/colors/" not in chip
+    for sev in location_status.SEVERITY_COLOURS:
+        assert chip.count(f"pp_harvest/frame_{sev}.dds") == 2
+    # one badge per severity, in the stored-food chip's number box
+    assert chip.count("using = bg_number_container_bckg") == 6
+    assert 'raw_text = "#R -3#!"' in chip and 'raw_text = "#G +2#!"' in chip
+    badge = next(line for line in chip.splitlines() if "#R -3#!" in line)
+    assert "PP_HARVEST_SEVERITY_ABYSMAL" in badge and "position = { 13 18 }" in badge
     assert "ShowModifierEffect('pp_harvest_y_bountiful')" in chip and "TooltipScrolledContentSection" in chip
+
+
+def test_harvest_frames_ship_with_the_mod():
+    for sev in location_status.SEVERITY_COLOURS:
+        assert (MOD_ROOT / "in_game" / location_status.HARVEST_FRAMES.format(severity=sev)).is_file()
 
 
 def test_status_row_sits_after_the_top_row_spacer_with_exclusive_states():

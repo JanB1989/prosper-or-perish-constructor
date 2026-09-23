@@ -47,7 +47,15 @@ NLocation = {
 
 
 NMarket = {
-	MARKET_BASE_DISTANCE_FACTOR = 0.0035
+	MARKET_BASE_DISTANCE_FACTOR = 0.0035 # 0.005
+	# Rivers and sea carry market access much further than land (from the Building Test transport experiment).
+	MARKET_OPEN_SEA_DISTANCE_FACTOR = 0.15 # 1.5
+	MARKET_SEA_DISTANCE_FACTOR = 0.075 # 0.75
+	MARKET_SEA_TO_LAND_DISTANCE_FACTOR = 0.1 # 0.5
+	MARKET_DOWNSTREAM_FACTOR = 0.025 # 0.5
+	MARKET_UPSTREAM_FACTOR = 0.1 # 0.9
+	MARKET_NO_PORT_EXTRA_DISTANCE = 0.03 # 0.1
+	MARKET_PORT_EXTRA_DISTANCE = 0.005 # 0.02, scaled by 1 - harbor suitability
 	MIN_PRICE_IMPACT = -0.5
  	MAX_PRICE_IMPACT = 1.5 # 6
  	FOOD_CAPACITY_FACTOR = 0 # 0.5

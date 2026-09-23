@@ -5295,6 +5295,218 @@ lateralview = {
 							}
 
 							expand = {}
+							# PP STATUS CHIPS
+							hbox = {
+								name = "pp_location_status_row"
+								margin = { 10 8 }
+								using = bg_paper_card
+								using = bg_cabinet_card_frame
+								hbox = {
+									spacing = 5
+widget = {
+        name = "pp_status_food_stored"
+        size = { 30 30 }
+        visible = "[Not(LocationView.GetLocation.GetProvince.IsStarving)]"
+        datacontext = "[LocationView.GetLocation]"
+        tooltipwidget = {
+        ContextualTooltipType = {
+            blockoverride "title_text" { text = "PP_FOOD_CHIP_TITLE" }
+            blockoverride "concept_link" { visible = yes text = "[pp_food_storage|E]" }
+            blockoverride "title_icon" {
+                widget = {
+                    using = tooltip_title_icon_size
+                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
+                }
+            }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_FOOD_CHIP_STORED" } } TooltipStringPairList = { textcontext = "[ShowModifierEffect('positive_province_food_growth')]" } }
+        }
+    }
+        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
+        text_single = { position = { 13 18 } size = { 17 12 }
+            autoresize = no fontsize = 11 align = center
+            using = bg_number_container_bckg
+            raw_text = "[FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_province_food_storage_months'))|0]" }
+    }
+widget = {
+        name = "pp_status_food_starving"
+        size = { 30 30 }
+        visible = "[LocationView.GetLocation.GetProvince.IsStarving]"
+        datacontext = "[LocationView.GetLocation]"
+        tooltipwidget = {
+        ContextualTooltipType = {
+            blockoverride "title_text" { text = "PP_FOOD_CHIP_STARVING_TITLE" }
+            blockoverride "concept_link" { visible = yes text = "[pp_starvation|E]" }
+            blockoverride "title_icon" {
+                widget = {
+                    using = tooltip_title_icon_size
+                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds" }
+                }
+            }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_FOOD_CHIP_STARVING" } } TooltipStringPairList = { textcontext = "[ShowModifierEffect('province_starving')]" } }
+        }
+    }
+        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds" }
+    }
+widget = {
+        name = "pp_status_land_overpopulation"
+        size = { 30 30 }
+        visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')]"
+        datacontext = "[LocationView.GetLocation]"
+        tooltipwidget = {
+        ContextualTooltipType = {
+            blockoverride "title_text" { text = "PP_LAND_CHIP_OVERPOPULATION_TITLE" }
+            blockoverride "concept_link" { visible = yes text = "[population_capacity|E]" }
+            blockoverride "title_icon" {
+                widget = {
+                    using = tooltip_title_icon_size
+                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/modifiers/overpopulation.dds" }
+                }
+            }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_OVERPOPULATION" } } TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_OVERPOPULATION_STRENGTH" } } TooltipStringPairList = { textcontext = "[ShowModifierEffect('overpopulation')]" } }
+        }
+    }
+        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/modifiers/overpopulation.dds" }
+    }
+widget = {
+        name = "pp_status_land_abundant"
+        size = { 30 30 }
+        visible = "[And(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0'))]"
+        datacontext = "[LocationView.GetLocation]"
+        tooltipwidget = {
+        ContextualTooltipType = {
+            blockoverride "title_text" { text = "PP_LAND_CHIP_ABUNDANT_TITLE" }
+            blockoverride "concept_link" { visible = yes text = "[pp_abundant_free_land|E]" }
+            blockoverride "title_icon" {
+                widget = {
+                    using = tooltip_title_icon_size
+                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/monthly_growth.dds" }
+                }
+            }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_ABUNDANT" } } TooltipStringPairList = { textcontext = "[ShowModifierEffect('abundant_free_land')]" } }
+        }
+    }
+        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/location_icons/monthly_growth.dds" }
+    }
+widget = {
+        name = "pp_status_land_available"
+        size = { 30 30 }
+        visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0'))]"
+        datacontext = "[LocationView.GetLocation]"
+        tooltipwidget = {
+        ContextualTooltipType = {
+            blockoverride "title_text" { text = "PP_LAND_CHIP_AVAILABLE_TITLE" }
+            blockoverride "concept_link" { visible = yes text = "[pp_available_free_land|E]" }
+            blockoverride "title_icon" {
+                widget = {
+                    using = tooltip_title_icon_size
+                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/modifier_types/total_population_capacity_modifier.dds" }
+                }
+            }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_AVAILABLE" } } TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_AVAILABLE_STRENGTH" } } TooltipStringPairList = { textcontext = "[ShowModifierEffect('available_free_land')]" } }
+        }
+    }
+        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/modifier_types/total_population_capacity_modifier.dds" }
+    }
+widget = {
+        name = "pp_status_land_settled"
+        size = { 30 30 }
+        visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0')))]"
+        datacontext = "[LocationView.GetLocation]"
+        tooltipwidget = {
+        ContextualTooltipType = {
+            blockoverride "title_text" { text = "PP_LAND_CHIP_SETTLED_TITLE" }
+            blockoverride "concept_link" { visible = yes text = "[population_capacity|E]" }
+            blockoverride "title_icon" {
+                widget = {
+                    using = tooltip_title_icon_size
+                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/population.dds" }
+                }
+            }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_SETTLED" } } }
+        }
+    }
+        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/location_icons/population.dds" }
+    }
+widget = {
+        name = "pp_status_harvest_good"
+        size = { 30 30 }
+        visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_trend'), Localize('PP_HARVEST_TREND_GOOD'))]"
+        datacontext = "[LocationView.GetLocation]"
+        tooltipwidget = {
+        ContextualTooltipType = {
+            blockoverride "title_text" { text = "[LocationView.GetLocation.Custom('pp_harvest_state')]" }
+            blockoverride "concept_link" { visible = yes text = "[pp_variable_harvests|E]" }
+            blockoverride "title_icon" {
+                widget = {
+                    using = tooltip_title_icon_size
+                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/modifier_types/wheat_positive.dds" }
+                }
+            }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_HARVEST_CHIP_GOOD" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_western_europe_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_western_europe_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_western_europe_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_western_europe_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_western_europe_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_western_europe_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_eastern_europe_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_eastern_europe_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_eastern_europe_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_eastern_europe_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_eastern_europe_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_eastern_europe_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_asia_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_asia_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_asia_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_asia_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_asia_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_asia_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_asia_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_central_asia_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_asia_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_central_asia_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_asia_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_central_asia_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_asia_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_east_asia_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_asia_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_east_asia_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_asia_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_east_asia_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_asia_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_asia_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_asia_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_asia_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_asia_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_asia_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_east_asia_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_east_asia_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_east_asia_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_middle_east_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_middle_east_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_middle_east_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_middle_east_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_middle_east_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_middle_east_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_africa_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_africa_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_africa_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_africa_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_africa_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_africa_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_west_africa_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_west_africa_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_west_africa_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_west_africa_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_west_africa_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_west_africa_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_africa_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_east_africa_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_africa_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_east_africa_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_africa_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_east_africa_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_africa_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_central_africa_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_africa_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_central_africa_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_africa_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_central_africa_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_southern_africa_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_southern_africa_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_southern_africa_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_southern_africa_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_southern_africa_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_southern_africa_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_america_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_america_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_america_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_america_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_america_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_america_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_america_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_america_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_america_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_america_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_america_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_america_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_australasia_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_australasia_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_australasia_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_australasia_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_australasia_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_australasia_bountiful')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_pacific_islands_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_pacific_islands_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_pacific_islands_very_good'))]" textcontext = "[ShowModifierEffect('pp_harvest_pacific_islands_very_good')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_pacific_islands_bountiful'))]" textcontext = "[ShowModifierEffect('pp_harvest_pacific_islands_bountiful')]" } }
+        }
+    }
+        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/modifier_types/wheat_positive.dds" }
+    }
+widget = {
+        name = "pp_status_harvest_bad"
+        size = { 30 30 }
+        visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_trend'), Localize('PP_HARVEST_TREND_BAD'))]"
+        datacontext = "[LocationView.GetLocation]"
+        tooltipwidget = {
+        ContextualTooltipType = {
+            blockoverride "title_text" { text = "[LocationView.GetLocation.Custom('pp_harvest_state')]" }
+            blockoverride "concept_link" { visible = yes text = "[pp_variable_harvests|E]" }
+            blockoverride "title_icon" {
+                widget = {
+                    using = tooltip_title_icon_size
+                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/modifier_types/wheat_negative.dds" }
+                }
+            }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_HARVEST_CHIP_BAD" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_western_europe_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_western_europe_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_western_europe_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_western_europe_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_western_europe_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_western_europe_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_eastern_europe_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_eastern_europe_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_eastern_europe_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_eastern_europe_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_eastern_europe_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_eastern_europe_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_asia_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_asia_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_asia_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_asia_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_asia_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_asia_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_asia_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_central_asia_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_asia_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_central_asia_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_asia_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_central_asia_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_asia_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_east_asia_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_asia_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_east_asia_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_asia_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_east_asia_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_asia_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_asia_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_asia_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_asia_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_asia_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_asia_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_east_asia_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_east_asia_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_east_asia_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_middle_east_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_middle_east_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_middle_east_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_middle_east_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_middle_east_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_middle_east_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_africa_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_africa_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_africa_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_africa_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_africa_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_africa_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_west_africa_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_west_africa_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_west_africa_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_west_africa_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_west_africa_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_west_africa_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_africa_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_east_africa_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_africa_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_east_africa_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_africa_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_east_africa_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_africa_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_central_africa_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_africa_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_central_africa_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_africa_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_central_africa_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_southern_africa_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_southern_africa_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_southern_africa_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_southern_africa_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_southern_africa_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_southern_africa_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_america_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_america_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_america_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_america_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_america_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_north_america_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_america_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_america_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_america_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_america_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_america_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_south_america_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_australasia_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_australasia_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_australasia_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_australasia_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_australasia_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_australasia_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_pacific_islands_abysmal'))]" textcontext = "[ShowModifierEffect('pp_harvest_pacific_islands_abysmal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_pacific_islands_very_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_pacific_islands_very_poor')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_pacific_islands_poor'))]" textcontext = "[ShowModifierEffect('pp_harvest_pacific_islands_poor')]" } }
+        }
+    }
+        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/modifier_types/wheat_negative.dds" }
+    }
+widget = {
+        name = "pp_status_harvest_average"
+        size = { 30 30 }
+        visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_trend'), Localize('PP_HARVEST_TREND_AVERAGE'))]"
+        datacontext = "[LocationView.GetLocation]"
+        tooltipwidget = {
+        ContextualTooltipType = {
+            blockoverride "title_text" { text = "[LocationView.GetLocation.Custom('pp_harvest_state')]" }
+            blockoverride "concept_link" { visible = yes text = "[pp_variable_harvests|E]" }
+            blockoverride "title_icon" {
+                widget = {
+                    using = tooltip_title_icon_size
+                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
+                }
+            }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_HARVEST_CHIP_AVERAGE" } } }
+        }
+    }
+        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        icon = { size = { 30 30 } texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
+    }
+								}
+							}
 						}
 					}
 					# BOTTOM CONDITIONS

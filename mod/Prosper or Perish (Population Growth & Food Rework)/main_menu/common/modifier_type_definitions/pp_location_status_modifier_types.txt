@@ -1,0 +1,26 @@
+﻿# Markers for the location view's land chip (location_status.py in the constructor). Each is set to 1 in the
+# engine-applied land-pressure modifier it names, so its value is that modifier's current strength.
+
+pp_land_abundant={
+	color=neutral
+	percent=yes
+	game_data={
+		category=location
+	}
+}
+
+pp_land_available={
+	color=neutral
+	percent=yes
+	game_data={
+		category=location
+	}
+}
+
+pp_land_overpopulation={
+	color=neutral
+	percent=yes
+	game_data={
+		category=location
+	}
+}

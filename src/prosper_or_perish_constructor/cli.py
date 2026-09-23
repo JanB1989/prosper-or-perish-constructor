@@ -53,6 +53,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/building_footprint.py",
     "src/prosper_or_perish_constructor/free_building_levels.py",
     "src/prosper_or_perish_constructor/location_baseline.py",
+    "src/prosper_or_perish_constructor/location_status.py",
     "src/prosper_or_perish_constructor/rural_capacity.py",
     "src/prosper_or_perish_constructor/yaml_io.py",
     "scripts/generate_rural_capacity_values.py",

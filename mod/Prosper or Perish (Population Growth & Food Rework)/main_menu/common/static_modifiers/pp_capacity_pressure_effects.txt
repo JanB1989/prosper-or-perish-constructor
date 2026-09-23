@@ -2,6 +2,8 @@
 	game_data = {
 		category = location
 	}
+	# Marker for the location view's land chip: the engine applies this modifier, the GUI can only read modifier values.
+	pp_land_abundant = 1
 	# local_disease_resistance = 0.25
 	local_migration_attraction = 2
 	local_population_growth = 0
@@ -48,6 +50,8 @@ TRY_REPLACE:available_free_land = {
 	game_data = {
 		category = location
 	}
+	# Marker for the location view's land chip: the engine applies this modifier, the GUI can only read modifier values.
+	pp_land_available = 1
 	# local_disease_resistance = 0.25
 	local_migration_attraction = 1
 	local_population_growth = 0
@@ -94,6 +98,8 @@ TRY_REPLACE:overpopulation = {
 	game_data = {
 		category = location
 	}
+	# Marker for the location view's land chip: the engine applies this modifier, the GUI can only read modifier values.
+	pp_land_overpopulation = 1
 	cap_maximum_population_growth_at_zero = no
 	local_pop_demotion_speed_modifier = 1
 	local_migration_attraction = -0.25

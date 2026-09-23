@@ -6,7 +6,8 @@ icons and localization. Test-only files (vanilla building copies, the location w
 not copied. A manifest of copied files is kept so a later sync removes what the export no longer ships.
 
 The location window is the one exception: it is taken from the export and re-patched here, because
-the stored-food gauge, the population-capacity readout and the RGO chip are the main mod's, not the export's.
+the stored-food gauge, the population-capacity readout, the RGO chip and the status chips (location_status.py)
+are the main mod's, not the export's.
 """
 
 from __future__ import annotations
@@ -16,6 +17,8 @@ import json
 import re
 import shutil
 from pathlib import Path
+
+from prosper_or_perish_constructor import location_status
 
 MANIFEST_RELATIVE_PATH = Path("artifacts/data/worldbuilder/geography_sync.json")
 EXPORT_BUILD_FILE = "ha1300-build.json"
@@ -287,6 +290,10 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path) -> dict[str, ob
             bonuses = mod_root / RGO_BONUSES
             goods = rgo_bonus_goods(bonuses.read_text(encoding="utf-8-sig")) if bonuses.is_file() else []
             merged = add_rgo_chip(merge_population_capacity(merge_location_window(src.read_text(encoding="utf-8-sig"))), goods)
+            harvest_file = mod_root / location_status.HARVEST_MODIFIERS
+            harvests = location_status.harvest_modifiers(harvest_file.read_text(encoding="utf-8-sig")) if harvest_file.is_file() else []
+            merged = location_status.add_status_row(merged, harvests)
+            location_status.write_custom_localization(mod_root, harvests)
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")
                 changed += 1

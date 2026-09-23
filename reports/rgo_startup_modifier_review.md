@@ -2,23 +2,24 @@
 
 ## 2026-09-23 distinctness pass
 
-Every good keeps its  own-good output and, with small exceptions (millet -0.06, potato and legumes
-unchanged), its peasant food consumption. The side effects were rewritten so each good has its own
-combination and every line is large enough to notice, while staying at the low end of vanilla magnitudes:
-estate power -, migration -, development -, unrest -,
-disease resistance -, named-disease modifiers -, life expectancy /.
+Every good keeps its `0.20` own-good output and, with one small exception (millet `-0.05` -> `-0.06`), its
+peasant food consumption. The side effects were rewritten so each good has its own combination and every
+line is large enough to notice, while staying at the low end of vanilla magnitudes: estate power
+`0.05`-`0.25`, migration `0.03`-`0.10`, development `0.02`-`0.04`, unrest `0.03`-`0.05`, disease resistance
+`0.02`-`0.05`, named-disease modifiers `0.05`-`0.15`, life expectancy `+1` / `-1` / `-2`.
 
 New hooks used: estate power (crown, nobles, clergy, burghers, peasants, tribes), named diseases
-( for rice, pepper and sugar;  for
-wheat;  for livestock),  (fish, fiber crops, pearls),
- (horses, iron),  (potato +, olives -),
- (coffee),  (silk),
- (fruit),  (olives, ivory), 
-(medicaments +, lead and mercury -),  (stone), 
-(marble),  (millet), negative  (tobacco).
+(`local_malaria_impact_modifier` for rice, pepper and sugar; `local_bubonic_plague_resistance_modifier` for
+wheat; `local_measles_resistance_modifier` for livestock), `local_sailors_modifier` (fish, fiber crops, pearls),
+`local_levy_size_modifier` (horses, iron), `local_devastation_recovery` (potato +, olives -),
+`local_institution_growth_modifier` (coffee), `local_pop_promotion_speed_modifier` (silk),
+`local_monthly_prosperity` (fruit), `local_market_access` (olives, ivory), `local_life_expectancy`
+(medicaments +, lead and mercury -), `local_fort_maintenance_efficiency` (stone), `local_cultural_influence`
+(marble), `local_food_capacity_modifier` (millet), negative `local_max_rgo_size_modifier` (tobacco).
 
-Removed: the leftover  lines, generic growth penalties on most mines,
-and the tenfold medicaments growth value ( -> ). Building-level modifiers are deliberately not used.
+Removed: the leftover `local_population_capacity_modifier = 0` lines, the generic growth penalties on most
+mines, and the tenfold medicaments growth value (`0.002` -> `0.0003`). Building-level modifiers are
+deliberately not used.
 
 The per-good sections below describe the earlier pass.
 

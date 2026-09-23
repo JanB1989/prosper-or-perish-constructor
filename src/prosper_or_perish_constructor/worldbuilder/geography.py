@@ -6,13 +6,14 @@ icons and localization. Test-only files (vanilla building copies, the location w
 not copied. A manifest of copied files is kept so a later sync removes what the export no longer ships.
 
 The location window is the one exception: it is taken from the export and re-patched here, because
-both the stored-food gauge and the population-capacity readout are the main mod's, not the export's.
+the stored-food gauge, the population-capacity readout and the RGO chip are the main mod's, not the export's.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -110,6 +111,55 @@ def add_attribute_effect_rows(text: str) -> str:
     text = text.replace(lake_line, lake_line[:-1] + _effect_row("pp_wb_lake", f"EqualTo_string({_LOC}.Custom('ha1300_native_lake'), Localize('HA1300_LAKESIDE'))") + " }")
     text = text.replace(coast_anchor, coast_anchor[:-1] + _effect_row("pp_wb_coastal", f"{_LOC}.IsCoastal") + " }")
     return text
+
+
+RGO_BONUSES = "in_game/common/static_modifiers/pp_rgo_static_bonuses.txt"
+_RGO_ANCHOR = "### IS BLOCKADED by ice\n"
+_RGO = f"{_LOC}.GetRawMaterial"
+_RGO_CHIP = """widget = {
+        name = "pp_rgo_chip"
+        size = { 30 30 }
+        visible = "[__LOC__.HasRawMaterial]"
+        datacontext = "[__RGO__]"
+        tooltipwidget = {
+        ContextualTooltipType = {
+            blockoverride "title_text" { text = "[__RGO__.GetNameWithNoTooltip]" }
+            blockoverride "concept_link" { visible = yes text = "[rgo|E]" }
+            blockoverride "title_icon" {
+                widget = {
+                    using = tooltip_title_icon_size
+                    background = { texture = "[GetClimateFrame(__LOC__.GetClimate)]" }
+                    icon = { using = tooltip_title_icon_size texture = "[GetGoodsIcon(__RGO__)]" }
+                }
+            }
+            blockoverride "title_button" { mapmode_tooltip_button = { datacontext = "[GetMapMode('raw_material')]" } }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_RGO_CHIP_HELP" } } __ROWS__ }
+        }
+    }
+        background = { texture = "[GetClimateFrame(__LOC__.GetClimate)]" }
+        icon = { size = { 24 24 } parentanchor = center texture = "[GetGoodsIcon(__RGO__)]" }
+    }
+"""
+
+
+def rgo_bonus_goods(text: str) -> list[str]:
+    """Goods with a `pp_rgo_bonus_<good>` static modifier, in file order."""
+    return re.findall(r"^pp_rgo_bonus_(\w+)\s*=\s*\{", text, flags=re.MULTILINE)
+
+
+def add_rgo_chip(text: str, goods: list[str]) -> str:
+    """Append the location's raw material to the geography chips, listing the effects of its RGO bonus.
+
+    The bonus is a static modifier per good, so every good gets a row that is only visible for its own raw material.
+    """
+    if not goods:
+        return text
+    found = text.count(_RGO_ANCHOR)
+    if found != 1:
+        raise ValueError(f"location_window.gui: expected 1 geography-row anchor for the RGO chip, found {found}")
+    rows = " ".join(_effect_row(f"pp_rgo_bonus_{good}", f"EqualTo_string({_RGO}.GetKey, '{good}')") for good in goods)
+    chip = _RGO_CHIP.replace("__RGO__", _RGO).replace("__LOC__", _LOC).replace("__ROWS__", rows)
+    return text.replace(_RGO_ANCHOR, chip + _RGO_ANCHOR)
 
 
 _POP_CELL = "\t\t\t\t\t\tsize = { 120 28 }"
@@ -234,7 +284,9 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path) -> dict[str, ob
         dst.parent.mkdir(parents=True, exist_ok=True)
         digest = _sha(src)
         if rel == LOCATION_WINDOW:
-            merged = merge_population_capacity(merge_location_window(src.read_text(encoding="utf-8-sig")))
+            bonuses = mod_root / RGO_BONUSES
+            goods = rgo_bonus_goods(bonuses.read_text(encoding="utf-8-sig")) if bonuses.is_file() else []
+            merged = add_rgo_chip(merge_population_capacity(merge_location_window(src.read_text(encoding="utf-8-sig"))), goods)
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")
                 changed += 1

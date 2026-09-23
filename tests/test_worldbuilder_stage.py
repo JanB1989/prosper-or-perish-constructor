@@ -371,6 +371,29 @@ def test_location_window_chips_show_their_modifier_effects():
     assert out.count("{") - out.count("}") == gui.count("{") - gui.count("}")   # the rows are balanced
 
 
+def test_rgo_chip_lists_the_bonus_of_the_location_raw_material_only():
+    from prosper_or_perish_constructor.worldbuilder import geography as wb_geography
+
+    goods = wb_geography.rgo_bonus_goods("pp_rgo_bonus_wheat = {\n}\n# pp_rgo_bonus_x = {\npp_rgo_bonus_goods_gold = {\n}\n")
+    assert goods == ["wheat", "goods_gold"]
+    gui = "widget = { name = \"ha1300_native_fertility\" }\n### IS BLOCKADED by ice\nwidget = {}\n"
+    out = wb_geography.add_rgo_chip(gui, goods)
+    assert out.index('name = "pp_rgo_chip"') < out.index("### IS BLOCKADED by ice")
+    assert "[LocationView.GetLocation.HasRawMaterial]" in out and "GetMapMode('raw_material')" in out
+    rgo = "LocationView.GetLocation.GetRawMaterial"
+    assert f"visible = \"[EqualTo_string({rgo}.GetKey, 'goods_gold')]\" textcontext = \"[ShowModifierEffect('pp_rgo_bonus_goods_gold')]\"" in out
+    assert out.count("ShowModifierEffect('pp_rgo_bonus_") == 2
+    assert out.count("{") == out.count("}")
+    assert wb_geography.add_rgo_chip(gui, []) == gui
+    with pytest.raises(ValueError, match="RGO chip"):
+        wb_geography.add_rgo_chip(out + "### IS BLOCKADED by ice\n", goods)
+
+
+def test_rgo_chip_help_is_localized():
+    loc = (Path(__file__).resolve().parents[1] / "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/localization/english/pp_rgo_modifiers_l_english.yml").read_text(encoding="utf-8-sig")
+    assert "\nPP_RGO_CHIP_HELP:" in loc
+
+
 def test_setup_levels_rise_to_the_cap_where_the_pops_need_the_room(tmp_path):
     c = _contract(tmp_path)
     caps = {"land_clearance": {"kind": "clearing", "unit_people": 5200.0, "unit_units": 5.2, "scale": 1.0, "limit": 20}}

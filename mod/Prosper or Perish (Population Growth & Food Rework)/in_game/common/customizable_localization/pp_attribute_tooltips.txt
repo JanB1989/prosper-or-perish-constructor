@@ -74,3 +74,11 @@ pp_tt_vegetation = {
 	text = { localization_key = PP_TT_KEY_VEGETATION_HA1300_VEG_SWAMP trigger = { vegetation = ha1300_veg_swamp } }
 	text = { localization_key = PP_TT_KEY_NONE fallback = yes }
 }
+
+pp_tt_winter = {
+	type = location
+	text = { localization_key = PP_TT_KEY_WINTER_MILD trigger = { winter_level = mild } }
+	text = { localization_key = PP_TT_KEY_WINTER_NORMAL trigger = { winter_level = normal } }
+	text = { localization_key = PP_TT_KEY_WINTER_SEVERE trigger = { winter_level = severe } }
+	text = { localization_key = PP_TT_KEY_NONE fallback = yes }
+}

@@ -64,7 +64,8 @@ def test_harvest_chip_layers_crop_in_a_severity_frame_with_a_signed_badge():
     assert 'raw_text = "#R -3#!"' in chip and 'raw_text = "#G +2#!"' in chip
     badge = next(line for line in chip.splitlines() if "#R -3#!" in line)
     assert "PP_HARVEST_SEVERITY_ABYSMAL" in badge and "position = { 13 18 }" in badge
-    assert "ShowModifierEffect('pp_harvest_y_bountiful')" in chip and "TooltipScrolledContentSection" in chip
+    assert "pp_attribute_view_harvest = {}" in chip and "TooltipScrolledContentSection" in chip
+    assert "pp_attribute_view_harvest" not in location_status.harvest_chip(location_status.Harvests(keys=[], regions={}, names={}))
 
 
 def test_harvest_frames_ship_with_the_mod():
@@ -81,8 +82,8 @@ def test_status_row_sits_after_the_top_row_spacer_with_exclusive_states():
     names = re.findall(r'name = "(pp_status_\w+)"', out)
     assert names == ["pp_status_food_stored", "pp_status_food_starving", "pp_status_land_overpopulation", "pp_status_land_abundant",
                      "pp_status_land_available", "pp_status_land_settled", "pp_status_harvest"]
-    # each harvest row is gated on its own modifier's name
-    assert "EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_y_bountiful'))" in out
+    # each harvest view is gated on its own modifier's name
+    assert location_status.harvest_gate("pp_harvest_y_bountiful") == "EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_y_bountiful'))"
     for key in ("positive_province_food_growth", "province_starving", "overpopulation", "abundant_free_land", "available_free_land"):
         assert f"ShowModifierEffect('{key}')" in out
     with pytest.raises(ValueError, match="status chips"):

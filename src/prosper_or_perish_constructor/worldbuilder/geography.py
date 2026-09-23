@@ -89,8 +89,11 @@ def merge_location_window(text: str) -> str:
 
 
 _LOC = "LocationView.GetLocation"
-# vanilla tooltip template of each class chip -> the mod's copy with the goods output split off (attribute_tooltips.py)
-CLASS_TOOLTIPS = {"Topography_tooltip": "pp_attribute_tooltip_topography", "Climate_tooltip": "pp_attribute_tooltip_climate", "Vegetation_tooltip": "pp_attribute_tooltip_vegetation"}
+# vanilla tooltip template of each chip -> the mod's copy with the goods output split off (attribute_tooltips.py)
+CLASS_TOOLTIPS = {
+    "Topography_tooltip": "pp_attribute_tooltip_topography", "Climate_tooltip": "pp_attribute_tooltip_climate",
+    "Vegetation_tooltip": "pp_attribute_tooltip_vegetation", "location_winter_tooltip": "pp_attribute_tooltip_winter",
+}
 
 
 def _effect_row(modifier: str, visible: str) -> str:
@@ -101,14 +104,16 @@ def add_attribute_effect_rows(text: str) -> str:
     """Every geography chip shows its attribute's effects first and its goods output as an icon table after.
 
     The views are generated later in the chain (attribute_tooltips.py, after the modifiers they read are written), so
-    the chips only name them: the class chips use the mod's copy of the vanilla template, the fertility, soil, lake
-    and coast chips get the attribute's view type, which holds every class behind a test on the location's class.
+    the chips only name them: the class and winter chips use the mod's copy of the vanilla template, the fertility,
+    soil, lake and coast chips get the attribute's view type, which holds every class behind a test on the location's
+    class.
     """
     for vanilla, mod in CLASS_TOOLTIPS.items():
-        found = text.count(f"using = {vanilla} }}")
+        pattern = re.compile(rf"using = {vanilla}\b")
+        found = len(pattern.findall(text))
         if found != 1:
-            raise ValueError(f"location_window.gui: expected 1 geography chip using {vanilla}, found {found}")
-        text = text.replace(f"using = {vanilla} }}", f"using = {mod} }}")
+            raise ValueError(f"location_window.gui: expected 1 chip using {vanilla}, found {found}")
+        text = pattern.sub(f"using = {mod}", text)
     fert_line = f'blockoverride "tooltip_content" {{ TooltipFlavorTextBlock = {{ blockoverride "text" {{ text = "[{_LOC}.Custom(\'ha1300_fertility_desc\')]" }} }} }}'
     soil_line = f'blockoverride "tooltip_content" {{ TooltipFlavorTextBlock = {{ blockoverride "text" {{ text = "[{_LOC}.Custom(\'ha1300_soil_type_description\')]" }} }} }}'
     lake_line = 'blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "HA1300_LAKE_HELP" } } }'
@@ -167,6 +172,16 @@ def add_rgo_chip(text: str, goods: list[str]) -> str:
     rows = " ".join(_effect_row(f"pp_rgo_bonus_{good}", f"EqualTo_string({_RGO}.GetKey, '{good}')") for good in goods)
     chip = _RGO_CHIP.replace("__RGO__", _RGO).replace("__LOC__", _LOC).replace("__ROWS__", rows)
     return text.replace(_RGO_ANCHOR, chip + _RGO_ANCHOR)
+
+
+def add_land_potential_chip(text: str) -> str:
+    """Close the geography chips with the land potential: every good's output from the land attributes, best first.
+
+    The chip is a generated type (attribute_tooltips.py), so only its name goes into the window."""
+    found = text.count(_RGO_ANCHOR)
+    if found != 1:
+        raise ValueError(f"location_window.gui: expected 1 geography-row anchor for the land-potential chip, found {found}")
+    return text.replace(_RGO_ANCHOR, "pp_land_potential_chip = {}\n" + _RGO_ANCHOR)
 
 
 _POP_CELL = "\t\t\t\t\t\tsize = { 120 28 }"
@@ -293,7 +308,7 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path |
         if rel == LOCATION_WINDOW:
             bonuses = mod_root / RGO_BONUSES
             goods = rgo_bonus_goods(bonuses.read_text(encoding="utf-8-sig")) if bonuses.is_file() else []
-            merged = add_rgo_chip(merge_population_capacity(merge_location_window(src.read_text(encoding="utf-8-sig"))), goods)
+            merged = add_land_potential_chip(add_rgo_chip(merge_population_capacity(merge_location_window(src.read_text(encoding="utf-8-sig"))), goods))
             harvests = location_status.load_harvests(mod_root)
             merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla))
             location_status.write_harvest_files(mod_root, harvests)

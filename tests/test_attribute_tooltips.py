@@ -45,6 +45,22 @@ template Vegetation_tooltip {
         }
     }
 }
+
+template location_winter_tooltip {
+    ContextualTooltipType = {
+        blockoverride "title_text" { text = "[Location.GetWinterName]" }
+        blockoverride "tooltip_content" {
+
+            TooltipStringPairList = {
+                textcontext = "[Location.GetWinterDetails]"
+            }
+
+			TooltipContentSection = {
+				using = tooltip_location_alt_content
+			}
+        }
+    }
+}
 """
 
 
@@ -66,7 +82,18 @@ def trees(tmp_path: Path) -> tuple[Path, Path]:
     ))
     _write(game / "in_game/common/climates/00_default.txt", "arid = {\n\twinter = mild\n\tlocation_modifier = { local_food_decay = 0.002 }\n}\n")
     _write(game / "in_game/common/topography/00_default.txt", "flatland = {\n\tmovement_cost = 1\n}\n")
-    _write(game / "main_menu/common/static_modifiers/location.txt", "river_flowing_through_1 = {\n\tlocal_supply_limit_modifier = 0.05\n}\n")
+    _write(game / "main_menu/common/static_modifiers/location.txt", (
+        "river_flowing_through_1 = {\n\tlocal_supply_limit_modifier = 0.05\n}\n"
+        "winter_normal = {\n\tgame_data = { category = location }\n\tlocal_construction_speed = -0.5\n}\n"
+    ))
+    # winter and harvest lines live in the in_game folder, which loads after main_menu's
+    _write(mod / "in_game/common/static_modifiers/pp_food.txt", (
+        "TRY_INJECT:winter_normal = {\n\tlocal_wheat_output_modifier = -0.25\n\tlocal_tea_output_modifier = -0.35\n\tlocal_lumber_output_modifier = -0.35\n}\n"
+    ))
+    _write(mod / "in_game/common/static_modifiers/pp_variable_harvest_modifiers.txt", (
+        "pp_harvest_x_poor = {\n\tgame_data = { category = location }\n\tlocal_peasants_food_consumption = 0.1\n"
+        "\tlocal_wheat_output_modifier = -0.2\n\tlocal_tea_output_modifier = -0.2\n\tlocal_lumber_output_modifier = -0.2\n}\n"
+    ))
     _write(game / "main_menu/localization/english/terrains_l_english.yml", (
         'l_english:\n TERRAIN_MOVEMENT_COST: "Movement Cost for [units|e]: $VALUE|-=%V$"\n'
         ' TERRAIN_ATTACKER_PENALTY: "Attacker Penalty in [combat|e]: $VALUE|-=$"\n'
@@ -126,7 +153,7 @@ def test_terrain_lines_word_the_engine_fields_with_vanilla_localization():
 def test_write_builds_views_that_hold_effects_and_goods_apart(trees):
     vanilla, mod = trees
     counts = tt.write(mod, vanilla)
-    assert counts == {"climate": 0, "vegetation": 2, "topography": 0, "fertility": 1, "soil": 1, "coast": 1, "lake": 0}
+    assert counts == {"climate": 0, "vegetation": 2, "topography": 0, "fertility": 1, "soil": 1, "coast": 1, "lake": 0, "winter": 1, "harvest": 1}
 
     modifiers = (mod / tt.MODIFIERS_PATH).read_text(encoding="utf-8-sig")
     forest = modifiers[modifiers.index("pp_tt_vegetation_forest = {"):]
@@ -153,7 +180,8 @@ def test_write_builds_views_that_hold_effects_and_goods_apart(trees):
 
     custom = (mod / tt.CUSTOM_LOC_PATH).read_text(encoding="utf-8-sig")
     assert "text = { localization_key = PP_TT_KEY_VEGETATION_FOREST trigger = { vegetation = forest } }" in custom
-    assert "trigger = { climate = arid }" in custom and custom.count("fallback = yes") == 3
+    assert "trigger = { climate = arid }" in custom and custom.count("fallback = yes") == 4
+    assert "text = { localization_key = PP_TT_KEY_WINTER_NORMAL trigger = { winter_level = normal } }" in custom
 
     loc = (mod / tt.LOCALIZATION_PATH).read_text(encoding="utf-8-sig")
     assert ' PP_TT_KEY_VEGETATION_FOREST: "forest"' in loc and ' PP_TT_GOODS_OUTPUT: "Goods Output"' in loc
@@ -162,11 +190,53 @@ def test_write_builds_views_that_hold_effects_and_goods_apart(trees):
     assert "PP_TT_EXTRAS_CLIMATE_ARID: \"[winter_level_max|e]: [ShowModifier('winter_mild')]\"" in loc
 
 
-def test_goods_tables_wrap_into_rows_of_fixed_cells():
+def test_winter_and_harvest_views_come_from_both_static_modifier_folders(trees):
+    vanilla, mod = trees
+    tt.write(mod, vanilla)
+    modifiers = (mod / tt.MODIFIERS_PATH).read_text(encoding="utf-8-sig")
+    assert "pp_tt_winter_normal = {\n\tgame_data = { category = location }\n\tlocal_construction_speed = -0.5\n}" in modifiers
+    assert "pp_tt_harvest_x_poor = {\n\tgame_data = { category = location }\n\tlocal_peasants_food_consumption = 0.1\n}" in modifiers
+    gui = (mod / tt.GUI_PATH).read_text(encoding="utf-8-sig")
+    winter = gui[gui.index("template pp_attribute_tooltip_winter {"):]
+    winter = winter[:winter.index("\ntypes ")]
+    assert "pp_attribute_view_winter = {}" in winter and "using = tooltip_location_alt_content" in winter
+    assert "Custom('pp_tt_winter'), Localize('PP_TT_KEY_NONE'))]\"\n                textcontext = \"[Location.GetWinterDetails]\"" in winter
+    harvest = gui[gui.index("type pp_attribute_view_harvest"):]
+    assert "Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_x_poor'))" in harvest
+    # the goods share -20%: one row with their icons
+    assert 'pp_goods_output_group_row = { blockoverride "group_value" { raw_text = "#N -20%#!" }' in harvest
+
+
+def test_goods_tables_use_cells_for_own_values_and_rows_for_shared_ones():
     goods = [(f"g{i}", 0.01 * i) for i in range(tt.CELLS_PER_ROW * 2 + 1)]
     table = tt.goods_table(goods)
     assert table.count("pp_goods_output_row") == 3 and table.count("pp_goods_output_cell") == len(goods)
     assert table.count("{") == table.count("}")
+    shared = [(f"g{i}", -0.35) for i in range(tt.ICONS_PER_GROUP_ROW + 1)] + [("h", -0.5), ("k", -0.5)]
+    table = tt.goods_table(shared)
+    assert table.count("pp_goods_output_group_row") == 3 and table.count("icon_goods_") == len(shared)
+    assert table.count('raw_text = "#N -35%#!"') == 1 and table.count('raw_text = ""') == 1   # value once per group
+
+
+def test_land_potential_sums_the_land_attributes_in_bands(trees):
+    vanilla, mod = trees
+    tt.write(mod, vanilla)
+    values = (mod / tt.SCRIPT_VALUES_PATH).read_text(encoding="utf-8-sig")
+    wheat = values[values.index("pp_land_potential_wheat = {"):]
+    wheat = wheat[:wheat.index("\n}\n")]
+    assert "if = { limit = { vegetation = forest } add = -0.04 }" in wheat
+    assert "if = { limit = { has_location_modifier = pp_wb_fertility_high } add = 0.03 }" in wheat
+    assert "winter" not in wheat and "harvest" not in wheat   # transient: not land
+    lumber = values[values.index("pp_land_potential_lumber = {"):]
+    assert "if = { limit = { vegetation = sparse } add = -0.03 }" in lumber and "if = { limit = { has_location_modifier = pp_wb_coastal } add = 0.07 }" in lumber
+    assert "pp_land_potential_band_tea = {\n\tvalue = pp_land_potential_tea\n\tdivide = 0.05\n\tfloor = yes\n\tmin = -5\n\tmax = 6\n}" in values
+    gui = (mod / tt.GUI_PATH).read_text(encoding="utf-8-sig")
+    chip = gui[gui.index("type pp_land_potential_chip"):gui.index("type pp_attribute_view_")]
+    assert chip.count("{") == chip.count("}")
+    # a cell per good in every band, best band first
+    assert chip.count("pp_goods_output_cell = {") == len(tt.BANDS) * 3
+    assert chip.index("'pp_land_potential_band_tea')), '(int32)6')") < chip.index("'pp_land_potential_band_tea')), '(int32)-5')")
+    assert "EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'wheat')" in chip
 
 
 def test_location_window_chips_use_the_generated_tooltips():
@@ -175,6 +245,7 @@ def test_location_window_chips_use_the_generated_tooltips():
     gui = (
         "tooltipwidget = { using = Topography_tooltip }\ntooltipwidget = { using = Climate_tooltip }\n"
         "tooltipwidget = { using = Vegetation_tooltip }\ntooltipwidget = { using = RiverModifier_tooltip }\n"
+        "tooltipwidget = {\n\tusing = location_winter_tooltip\n}\n"
         'blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom(\'ha1300_fertility_desc\')]" } } }\n'
         'blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "HA1300_LAKE_HELP" } } }\n'
         'x textcontext = "[ShowModifierEffect(\'coastal\')]"\n    } }\n'
@@ -182,9 +253,12 @@ def test_location_window_chips_use_the_generated_tooltips():
     out = wb_geography.add_attribute_effect_rows(gui)
     for attribute in ("topography", "climate", "vegetation"):
         assert f"using = pp_attribute_tooltip_{attribute} }}" in out
+    assert "using = pp_attribute_tooltip_winter\n" in out
     assert "using = RiverModifier_tooltip" in out   # rivers carry no goods rows
     assert "pp_attribute_view_fertility = {}" in out and "pp_attribute_view_lake = {}" in out and "pp_attribute_view_coast = {}" in out
     assert "ShowModifierEffect('pp_wb_" not in out and out.count("ShowModifierEffect('coastal')") == 1
     assert out.count("{") - out.count("}") == gui.count("{") - gui.count("}")
     with pytest.raises(ValueError, match="Vegetation_tooltip"):
         wb_geography.add_attribute_effect_rows(gui.replace("using = Vegetation_tooltip", "using = X"))
+    chips = wb_geography.add_land_potential_chip("widget = {}\n### IS BLOCKADED by ice\n")
+    assert chips == "widget = {}\npp_land_potential_chip = {}\n### IS BLOCKADED by ice\n"

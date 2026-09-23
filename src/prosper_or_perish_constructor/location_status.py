@@ -316,6 +316,11 @@ def _harvest_layers(harvests: Harvests, frame: str, crop: str) -> str:
     return "\n        ".join(layers)
 
 
+def harvest_gate(key: str) -> str:
+    """GUI test: the location's active harvest is ``key`` (the customizable localization returns its display name)."""
+    return f"EqualTo_string({_LOC}.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_{key}'))"
+
+
 def harvest_chip(harvests: Harvests) -> str:
     """One chip for every harvest: the region's crop in a frame coloured by severity, with a signed severity badge."""
     state = f"{_LOC}.Custom('pp_harvest_state')"
@@ -326,7 +331,8 @@ def harvest_chip(harvests: Harvests) -> str:
         f'raw_text = "#{"G" if badge.startswith("+") else "R"} {badge}#!" }}'
         for sev, badge in SEVERITY_BADGES.items()
     ]
-    rows = " ".join(_row(key, f"EqualTo_string({state}, Localize('STATIC_MODIFIER_NAME_{key}'))") for key in harvests.keys)
+    # every harvest's effects, then its goods output as an icon table (worldbuilder/attribute_tooltips.py, gated by harvest_gate)
+    rows = "pp_attribute_view_harvest = {}" if harvests.keys else ""
     help_texts = " ".join(
         f'TooltipTextBlock = {{ visible = "[{_harvest_test(trend)}]" blockoverride "text" {{ text = "PP_HARVEST_CHIP_{trend.upper()}" }} }}'
         for trend in ("good", "bad", "average")

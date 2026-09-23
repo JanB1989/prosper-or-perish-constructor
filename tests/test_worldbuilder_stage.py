@@ -210,6 +210,23 @@ def test_static_modifiers_cover_reference_classes_and_are_placed_in_the_setup(tm
     assert "\ta = {" in setup and "\tb = {" in setup
 
 
+def test_shore_modifiers_carry_flavour_effects_but_never_fitted_keys(tmp_path):
+    import dataclasses
+    import pytest
+    c = _contract(tmp_path)
+    vanilla = tmp_path / "vanilla"
+    (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
+    (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("", encoding="utf-8")
+    cfg = dataclasses.replace(_cfg(tmp_path), raw={"flavour": {"pp_wb_lake": {"local_migration_attraction": 0.3, "local_defensive": 0.1}}})
+    wb_modifiers.write_static_modifiers(c, cfg, tmp_path, vanilla, {})
+    statics = (tmp_path / wb_modifiers.STATIC_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
+    lake = statics.split("pp_wb_lake = {")[1].split("\n}")[0]
+    assert "local_migration_attraction = 0.3" in lake and "local_defensive = 0.1" in lake
+    bad = dataclasses.replace(cfg, raw={"flavour": {"pp_wb_lake": {"local_population_capacity": 1.0}}})
+    with pytest.raises(ValueError, match="fitted keys"):
+        wb_modifiers.write_static_modifiers(c, bad, tmp_path, vanilla, {})
+
+
 def test_goods_floor_lifts_attribute_rows_and_no_intercept_modifier_is_written(tmp_path):
     import dataclasses
     c = _contract(tmp_path)

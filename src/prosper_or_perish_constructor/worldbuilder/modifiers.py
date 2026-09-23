@@ -8,7 +8,8 @@
   applied per location at game start by an on_action.
 - river level: ``TRY_REPLACE`` of vanilla ``river_flowing_through_<n>`` without its capacity percentage and
   with the level's rows (World Builder levels 1..5 are the engine's five river sizes).
-- coast / lake: static modifiers applied per location only when the fit gave them a row.
+- coast / lake: static modifiers placed on every shore location, carrying the fit's rows plus the hand-set
+  ``[worldbuilder.flavour.<key>]`` effects from constructor.toml.
 - goods floor: per-location lift for the game's RGO where the rows would leave it under the floor.
 - overpopulation: peasant unrest injected into vanilla's ``overpopulation`` modifier.
 - legacy class effects: the mod's former climate/vegetation/topography injects (construction, food decay,
@@ -347,11 +348,17 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
             key = f"{prefix}{value}"
             names[key] = f"{pretty(value)} {'Fertility' if attribute == 'fertility' else 'Soil'}"
             blocks.append(render_block(key, {"game_data": "{ category = location }", **{k: _fmt(v) for k, v in mods.items()}}))
+    flavour = cfg.raw.get("flavour") if isinstance(cfg.raw.get("flavour"), dict) else {}
     for attribute, key, label in (("is_coastal", "pp_wb_coastal", "Coastal Land"), ("is_adjacent_to_lake", "pp_wb_lake", "Lakeside Land")):
         mods = rows.get((attribute, "True"), {})
+        # hand-set flavour effects ([worldbuilder.flavour.<key>]) sit next to the fitted rows, never on capacity or goods output
+        extra = {str(k): float(v) for k, v in (flavour.get(key) or {}).items()}
+        clash = sorted(k for k in extra if k in mods or k in CAPACITY_KEYS or k.endswith("_output_modifier"))
+        if clash:
+            raise ValueError(f"[worldbuilder.flavour.{key}] must not set fitted keys: {clash}")
         # always defined (possibly empty): the location window shows the modifier's effects
         names[key] = label
-        blocks.append(render_block(key, {"game_data": "{ category = location }", **{k: _fmt(v) for k, v in mods.items()}}))
+        blocks.append(render_block(key, {"game_data": "{ category = location }", **{k: _fmt(v) for k, v in {**mods, **extra}.items()}}))
     # vanilla's hidden flat capacity by closeness to the equator: cancelled, capacity is farmland only
     blocks.append(render_block("TRY_REPLACE:location_closeness_to_equator_impact", {"game_data": "{ category = location }"}))
     static_path = mod_root / STATIC_MODIFIERS_PATH

@@ -182,6 +182,8 @@ pp_wb_coastal = {
 
 pp_wb_lake = {
 	game_data = { category = location }
+	local_migration_attraction = 0.3
+	local_defensive = 0.1
 }
 
 TRY_REPLACE:location_closeness_to_equator_impact = {

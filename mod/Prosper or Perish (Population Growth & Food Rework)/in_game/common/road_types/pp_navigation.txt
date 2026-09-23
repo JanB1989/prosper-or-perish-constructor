@@ -2,7 +2,7 @@
  level = 20
  enabled = { always = no }
  movement_cost = -0.35
- market_access = -0.5
+ market_access = -0.6
  pop_movement = 0
  proximity = 0
  build_time_per_unit_distance = 30
@@ -16,7 +16,7 @@ pp_navigation_difficult = {
  level = 21
  enabled = { always = no }
  movement_cost = 0.5
- market_access = 1.5
+ market_access = 0.5
  pop_movement = 0
  proximity = 0
  build_time_per_unit_distance = 30
@@ -30,7 +30,7 @@ pp_navigation_improvable = {
  level = 22
  enabled = { always = no }
  movement_cost = 1.0
- market_access = 2.0
+ market_access = 1.0
  pop_movement = 0
  proximity = 0
  build_time_per_unit_distance = 30
@@ -44,7 +44,7 @@ pp_navigation_barrier = {
  level = 23
  enabled = { always = no }
  movement_cost = 2.0
- market_access = 3.0
+ market_access = 2.0
  pop_movement = 0
  proximity = 0
  build_time_per_unit_distance = 30
@@ -58,7 +58,7 @@ pp_navigation_improved = {
  level = 24
  enabled = { always = no }
  movement_cost = -0.5
- market_access = -0.75
+ market_access = -0.8
  pop_movement = 0
  proximity = 0
  build_time_per_unit_distance = 30

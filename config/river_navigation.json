@@ -9,6 +9,23 @@
     "tools": 0.02,
     "stone": 0.01
   },
+  "road_costs": {
+    "navigable": {
+      "market_access": -0.6
+    },
+    "improved": {
+      "market_access": -0.8
+    },
+    "difficult": {
+      "market_access": 0.5
+    },
+    "improvable": {
+      "market_access": 1.0
+    },
+    "barrier": {
+      "market_access": 2.0
+    }
+  },
   "building_types": {
     "river_navigation_works": {
       "name": "River Navigation Works",
@@ -128,7 +145,7 @@
   "notes": [
     "Regional variants replace existing Irrigation Systems levels one-for-one; identical capacity per level.",
     "Only documented regional starting envelopes receive automatic placement, and only if an eligible existing family level is available.",
-    "Physical conversion thresholds and road costs live in the World Builder navigation configuration and handover."
+    "Physical conversion thresholds and each route cost profile come from the World Builder handover; road_costs here override what each profile costs in game (step = MARKET_SEA_DISTANCE_FACTOR x (1 + market_access))."
   ],
   "advance_unlocks": {
     "river_navigation_works": "road_building",

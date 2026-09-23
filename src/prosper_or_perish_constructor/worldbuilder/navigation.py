@@ -235,12 +235,22 @@ SPLINE_STYLE = f"""pp_navigation = {{
 """
 
 
+def road_costs(state):
+    """Handover road costs with the constructor's balance overrides (`road_costs` in the navigation config) on top.
+    The World Builder owns which cost profile a route has; the constructor owns what each profile costs in game."""
+    costs={k:dict(v) for k,v in state['manifest']['config']['road_costs'].items()}
+    for name,override in state['settings'].get('road_costs',{}).items():
+        if name not in costs:raise ValueError(f'Unknown navigation road cost profile: {name}')
+        costs[name].update(override)
+    return costs
+
+
 def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     state=cfg.raw.get('_navigation')
     if not state:return {'enabled':False}
     def write(rel,text):
         p=mod_root/rel;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('\ufeff'+text,encoding='utf-8',newline='\n')
-    costs=state['manifest']['config']['road_costs'];road_names={s:'pp_navigation_'+s for s in costs}
+    costs=road_costs(state);road_names={s:'pp_navigation_'+s for s in costs}
     roads=[]
     for i,(name,cost) in enumerate(costs.items(),20):
         roads.append(f'''{road_names[name]} = {{

@@ -1,5 +1,27 @@
 # RGO Startup Modifier Review
 
+## 2026-09-23 distinctness pass
+
+Every good keeps its  own-good output and, with small exceptions (millet -0.06, potato and legumes
+unchanged), its peasant food consumption. The side effects were rewritten so each good has its own
+combination and every line is large enough to notice, while staying at the low end of vanilla magnitudes:
+estate power -, migration -, development -, unrest -,
+disease resistance -, named-disease modifiers -, life expectancy /.
+
+New hooks used: estate power (crown, nobles, clergy, burghers, peasants, tribes), named diseases
+( for rice, pepper and sugar;  for
+wheat;  for livestock),  (fish, fiber crops, pearls),
+ (horses, iron),  (potato +, olives -),
+ (coffee),  (silk),
+ (fruit),  (olives, ivory), 
+(medicaments +, lead and mercury -),  (stone), 
+(marble),  (millet), negative  (tobacco).
+
+Removed: the leftover  lines, generic growth penalties on most mines,
+and the tenfold medicaments growth value ( -> ). Building-level modifiers are deliberately not used.
+
+The per-good sections below describe the earlier pass.
+
 This review covers the startup-applied `pp_rgo_bonus_*` location modifiers.
 Every raw material keeps an own-good local output bonus, raised from `0.15` to
 `0.20`. The side effects were retuned to avoid weak or unsupported hooks and to

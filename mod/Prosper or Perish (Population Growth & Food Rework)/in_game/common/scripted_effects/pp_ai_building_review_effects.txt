@@ -46,3 +46,32 @@ pp_build_wanted_victuals_imports = {
 		}
 	}
 }
+
+# Debug only (pp_ai_building_review_debug.1): country scope, stores what the review sees for the count window.
+pp_ai_building_review_debug_snapshot = {
+	set_variable = { name = pp_debug_gold value = gold }
+	set_variable = { name = pp_debug_debt value = total_debt }
+	set_variable = { name = pp_debug_income value = monthly_income_total }
+	set_variable = { name = pp_debug_spare_gold value = pp_ai_spare_construction_gold }
+	set_variable = { name = pp_debug_import_cost value = building_type:victuals_market_import.building_base_cost_in_gold }
+	set_variable = { name = pp_debug_imports_wanted value = 0 }
+	every_owned_location = {
+		limit = { pp_victuals_import_wanted = yes }
+		root = { change_variable = { name = pp_debug_imports_wanted add = 1 } }
+	}
+}
+
+# Debug only: country scope, counts province capitals with a victuals import under construction.
+pp_ai_building_review_debug_count_queued = {
+	set_variable = { name = pp_debug_imports_queued value = 0 }
+	every_owned_location = {
+		limit = {
+			is_province_capital = yes
+			any_buildings_in_location = {
+				building_type = building_type:victuals_market_import
+				building_levels_under_construction > 0
+			}
+		}
+		root = { change_variable = { name = pp_debug_imports_queued add = 1 } }
+	}
+}

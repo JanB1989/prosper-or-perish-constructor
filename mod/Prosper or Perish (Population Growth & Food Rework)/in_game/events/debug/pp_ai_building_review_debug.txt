@@ -12,12 +12,8 @@ pp_ai_building_review_debug.1 = {
 	option = {
 		name = pp_ai_building_review_debug.1.a
 		hidden_effect = {
-			set_variable = { name = pp_debug_imports_wanted value = 0 }
-			set_variable = { name = pp_debug_spare_gold value = pp_ai_spare_construction_gold }
-			every_owned_location = {
-				limit = { pp_victuals_import_wanted = yes }
-				root = { change_variable = { name = pp_debug_imports_wanted add = 1 } }
-			}
+			pp_ai_building_review_debug_snapshot = yes
+			pp_ai_building_review_debug_count_queued = yes
 			trigger_event_non_silently = pp_ai_building_review_debug.2
 		}
 	}
@@ -26,11 +22,14 @@ pp_ai_building_review_debug.1 = {
 	option = {
 		name = pp_ai_building_review_debug.1.b
 		hidden_effect = {
+			pp_ai_building_review_debug_snapshot = yes
 			every_owned_location = {
 				limit = { pp_victuals_import_wanted = yes }
 				add_to_temporary_list = pp_imports_wanted
 			}
 			pp_build_wanted_victuals_imports = yes
+			pp_ai_building_review_debug_count_queued = yes
+			trigger_event_non_silently = pp_ai_building_review_debug.2
 		}
 	}
 
@@ -51,7 +50,6 @@ pp_ai_building_review_debug.2 = {
 	title = pp_ai_building_review_debug.2.title
 	desc = pp_ai_building_review_debug.2.desc
 	outcome = neutral
-	orphan = yes
 
 	option = {
 		name = pp_debug.1.a

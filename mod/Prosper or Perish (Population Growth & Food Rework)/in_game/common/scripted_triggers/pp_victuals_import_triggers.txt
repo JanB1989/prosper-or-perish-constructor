@@ -9,7 +9,7 @@ pp_victuals_import_wanted = {
 	OR = {
 		AND = {
 			NOT = { has_building = building_type:victuals_market_import }
-			location_and_owner_can_build = { building_type = victuals_market_import }
+			can_build_building = building_type:victuals_market_import
 		}
 		any_buildings_in_location = {
 			building_type = building_type:victuals_market_import

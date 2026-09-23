@@ -1991,7 +1991,7 @@ def test_ai_victuals_import_review_builds_only_where_food_is_very_short_and_affo
     triggers = VICTUALS_IMPORT_TRIGGERS.read_text(encoding="utf-8-sig")
     assert "is_province_capital = yes" in triggers
     assert "modifier:pp_province_food_storage_months < pp_victuals_import_low_storage_months" in triggers
-    assert "location_and_owner_can_build = { building_type = victuals_market_import }" in triggers
+    assert "can_build_building = building_type:victuals_market_import" in triggers
     for condition in (
         "building_can_be_upgraded_by = root",
         "is_at_max_level = no",
@@ -2013,7 +2013,7 @@ def test_ai_victuals_import_review_builds_only_where_food_is_very_short_and_affo
     spare = values.split("pp_ai_spare_construction_gold = {", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
     assert "subtract = total_debt" in spare
     assert "monthly_income_total multiply = 6" in spare
-    assert "monthly_balance multiply = 12" in spare
+    assert "monthly_balance" not in spare  # stored money decides, not the running balance
     assert "min = 0" in spare
 
 

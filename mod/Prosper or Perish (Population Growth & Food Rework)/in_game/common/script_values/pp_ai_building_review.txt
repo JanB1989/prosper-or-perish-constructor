@@ -3,12 +3,11 @@
 # Stored food (months) below which a province counts as very short of food for the AI import review.
 pp_victuals_import_low_storage_months = 3
 
-# Country: gold the AI can put into construction without hurting itself. Borrowed money does not count, half a year
-# of income stays in the bank, and no more than one year of surplus is spent per year.
+# Country: stored gold the AI can put into construction without hurting itself. Borrowed money does not count and
+# half a year of income stays in the bank.
 pp_ai_spare_construction_gold = {
 	value = gold
 	subtract = total_debt
 	subtract = { value = monthly_income_total multiply = 6 }
-	max = { value = monthly_balance multiply = 12 }
 	min = 0
 }

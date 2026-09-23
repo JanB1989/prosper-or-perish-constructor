@@ -263,7 +263,7 @@ types pp_attribute_tooltips
 		size = { 56 28 }
 		background = {
 			using = bg_round_corners
-			alpha = 0.6
+			alpha = 0.9
 			block "highlight" { visible = no }
 		}
 		icon = {
@@ -282,7 +282,7 @@ types pp_attribute_tooltips
 		size = { 26 28 }
 		background = {
 			using = bg_round_corners
-			alpha = 0.6
+			alpha = 0.9
 			block "highlight" { visible = no }
 		}
 		icon = {
@@ -303,7 +303,7 @@ types pp_attribute_tooltips
 					widget = {
 						using = tooltip_title_icon_size
 						background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-						icon = { using = tooltip_title_icon_size texture = "[GetConceptTexture('goods')]" }
+						icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/pp_land_potential.dds" }
 					}
 				}
 				blockoverride "tooltip_content" {
@@ -322,7 +322,7 @@ types pp_attribute_tooltips
 			}
 		}
 		background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-		icon = { size = { 24 24 } parentanchor = center texture = "[GetConceptTexture('goods')]" }
+		icon = { size = { 24 24 } parentanchor = center texture = "gfx/interface/icons/location_icons/pp_land_potential.dds" }
 	}
 
 	type pp_attribute_view_climate = vbox {

@@ -57,6 +57,8 @@ SHORE_GATES = {"pp_wb_coastal": ("coast", f"{_LOC}.IsCoastal"), "pp_wb_lake": ("
 LAND_ATTRIBUTES = ("climate", "vegetation", "topography", "fertility", "soil", "coast", "lake")
 CELLS_PER_ROW = 5
 ICONS_PER_GROUP_ROW = 12
+# composed by tools/build_land_potential_icon.py
+LAND_POTENTIAL_ICON = "gfx/interface/icons/location_icons/pp_land_potential.dds"
 LOCATION_TEMPLATES = Path("in_game/map_data/location_templates.txt")
 SETUP_MODIFIERS = Path("main_menu/setup/start/21_pp_wb_attribute_modifiers.txt")
 
@@ -634,7 +636,7 @@ _LAND_TYPES = """\
 \t\tsize = { 56 28 }
 \t\tbackground = {
 \t\t\tusing = bg_round_corners
-\t\t\talpha = 0.6
+\t\t\talpha = 0.9
 \t\t\tblock "highlight" { visible = no }
 \t\t}
 \t\ticon = {
@@ -653,7 +655,7 @@ _LAND_TYPES = """\
 \t\tsize = { 26 28 }
 \t\tbackground = {
 \t\t\tusing = bg_round_corners
-\t\t\talpha = 0.6
+\t\t\talpha = 0.9
 \t\t\tblock "highlight" { visible = no }
 \t\t}
 \t\ticon = {
@@ -680,7 +682,7 @@ def land_potential_chip(occupied: Mapping[str, set[int]]) -> str:
 \t\t\t\t\twidget = {{
 \t\t\t\t\t\tusing = tooltip_title_icon_size
 \t\t\t\t\t\tbackground = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}
-\t\t\t\t\t\ticon = {{ using = tooltip_title_icon_size texture = "[GetConceptTexture('goods')]" }}
+\t\t\t\t\t\ticon = {{ using = tooltip_title_icon_size texture = "{LAND_POTENTIAL_ICON}" }}
 \t\t\t\t\t}}
 \t\t\t\t}}
 \t\t\t\tblockoverride "tooltip_content" {{
@@ -694,7 +696,7 @@ def land_potential_chip(occupied: Mapping[str, set[int]]) -> str:
 \t\t\t}}
 \t\t}}
 \t\tbackground = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}
-\t\ticon = {{ size = {{ 24 24 }} parentanchor = center texture = "[GetConceptTexture('goods')]" }}
+\t\ticon = {{ size = {{ 24 24 }} parentanchor = center texture = "{LAND_POTENTIAL_ICON}" }}
 \t}}"""
 
 

@@ -277,6 +277,13 @@ def test_land_potential_tiers_sort_by_step_and_only_hold_steps_that_occur():
     assert tt.occupied_percents(views, [])["tea"] == set(range(-100, 101))
 
 
+def test_land_potential_chip_uses_its_own_icon_which_ships_with_the_mod():
+    chip = tt.land_potential_chip({})
+    assert chip.count(f'texture = "{tt.LAND_POTENTIAL_ICON}"') == 2   # chip and tooltip title
+    mod = Path(__file__).resolve().parents[1] / "mod/Prosper or Perish (Population Growth & Food Rework)"
+    assert (mod / "main_menu" / tt.LAND_POTENTIAL_ICON).is_file()
+
+
 def test_location_attributes_come_from_the_templates_and_the_setup(tmp_path):
     (tmp_path / tt.LOCATION_TEMPLATES).parent.mkdir(parents=True)
     (tmp_path / tt.LOCATION_TEMPLATES).write_text("paris = { topography = flatland vegetation = farmland climate = oceanic religion = catholic }\nsea_x = { topography = ocean }\n", encoding="utf-8")

@@ -270,7 +270,7 @@ def merge_population_capacity(text: str) -> str:
     return text
 
 
-def sync_geography(export_dir: Path, mod_root: Path, repo: Path) -> dict[str, object]:
+def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path | None = None) -> dict[str, object]:
     """Copy the export into the mod, remove stale copies from a previous sync and the legacy attribute injects."""
     export_dir = Path(export_dir)
     if not (export_dir / EXPORT_BUILD_FILE).is_file():
@@ -292,7 +292,7 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path) -> dict[str, ob
             merged = add_rgo_chip(merge_population_capacity(merge_location_window(src.read_text(encoding="utf-8-sig"))), goods)
             harvest_file = mod_root / location_status.HARVEST_MODIFIERS
             harvests = location_status.harvest_modifiers(harvest_file.read_text(encoding="utf-8-sig")) if harvest_file.is_file() else []
-            merged = location_status.add_status_row(merged, harvests)
+            merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla))
             location_status.write_custom_localization(mod_root, harvests)
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")

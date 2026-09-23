@@ -43,7 +43,7 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     from . import navigation
     report: dict[str, object] = {"handover": str(contract.root), "version": contract.version, "worldbuilder_commit": contract.meta.get("worldbuilder_commit")}
     if cfg.sync_geography:
-        report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo)
+        report["geography"] = wb_geography.sync_geography(cfg.geography_export, mod_root, repo, vanilla_root(repo, project))
     report["class_injects"] = wb_modifiers.write_class_injects(contract, cfg.geography_export, mod_root, repo, vanilla_root(repo, project))
     if cfg.compat_files:
         families = wb_compat.load_families(cfg.geography_export)

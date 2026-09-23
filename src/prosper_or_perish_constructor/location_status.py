@@ -8,13 +8,15 @@ How each state is read:
   starvation is the engine's `Province.IsStarving`.
 - land: the engine applies `abundant_free_land`, `available_free_land` and `overpopulation` itself, and scripts
   cannot see them, so each carries a marker modifier type (`pp_land_*`, in pp_capacity_pressure_effects.txt) that
-  the GUI reads through `GetModifierValueFixed`.
+  the GUI reads through `GetModifierValueFixed`. Its value is the modifier's strength, so the tooltip lists every
+  effect at its actual value (strength times the base value read from the block at build time).
 - harvest: the modifiers are script-applied, so a customizable localization tests `has_location_modifier` and
   returns the active modifier's display name (for the title and the effect rows) and its trend (for the icon).
 """
 
 from __future__ import annotations
 
+import math
 import re
 from pathlib import Path
 
@@ -98,7 +100,95 @@ def _harvest_test(trend: str) -> str:
     return f"EqualTo_string({_LOC}.Custom('pp_harvest_trend'), Localize('PP_HARVEST_TREND_{trend.upper()}'))"
 
 
-def status_row(harvests: list[str]) -> str:
+PRESSURE_MODIFIERS = "main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt"
+TYPE_DEFINITIONS = "main_menu/common/modifier_type_definitions"
+LAND_MODIFIERS = {"pp_land_overpopulation": "overpopulation", "pp_land_abundant": "abundant_free_land", "pp_land_available": "available_free_land"}
+_GOODS_OUTPUT = re.compile(r"local_\w+_output_modifier")
+
+
+def modifier_types(texts: list[str]) -> dict[str, dict[str, str]]:
+    """Display settings (percent, color, decimals, boolean, already_percent) of every modifier type, later texts win."""
+    types: dict[str, dict[str, str]] = {}
+    for text in texts:
+        for match in re.finditer(r"^(\w+)\s*=\s*\{(.*?)^\}", text, flags=re.MULTILINE | re.DOTALL):
+            body = re.sub(r"#[^\n]*", "", match.group(2))
+            types[match.group(1)] = dict(re.findall(r"\b(percent|color|decimals|boolean|already_percent)\s*=\s*(\w+)", body))
+    return types
+
+
+def modifier_effects(text: str, name: str) -> list[tuple[str, str]]:
+    """`key = value` effects of the hand-authored `TRY_REPLACE:<name>` block, comments and markers dropped."""
+    start = text.index(f"TRY_REPLACE:{name} = {{")
+    body = text[start:text.index("\n}", start)]
+    effects = re.findall(r"^\s*(\w+)\s*=\s*(-?[\d.]+|yes|no)\s*(?:#.*)?$", body, flags=re.MULTILINE)
+    return [(key, value) for key, value in effects if not key.startswith("pp_land_")]
+
+
+def _scaled(marker: str, key: str, base: str, info: dict[str, str]) -> str:
+    percent = info.get("percent") == "yes"
+    # Enough decimals that a partly applied small effect does not round to zero (vanilla's setting is for full values).
+    shown = abs(float(base)) * (100 if percent else 1)
+    decimals = str(max(int(info.get("decimals", 0)), min(4, math.ceil(-math.log10(shown)) + 1 if shown else 1), 1))
+    sign = {"bad": "-", "neutral": ""}.get(info.get("color", "good"), "+")
+    value = f"Multiply_CFixedPoint({_LOC}.GetModifierValueFixed('{marker}'), '(CFixedPoint){base}')"
+    suffix = "%" if info.get("already_percent") == "yes" else ""
+    return f"[{value}|{decimals}{'%' if percent else ''}{sign}]{suffix}"
+
+
+def land_effect_rows(pressure_text: str, types: dict[str, dict[str, str]]) -> dict[str, str]:
+    """Each land modifier's effects at the location's current strength: its marker's value times the base value.
+
+    The game shows static modifiers only at full strength (`ShowModifierEffect`), while the engine scales these three.
+    Goods-output lines with one shared value collapse into a single line.
+    """
+    rows: dict[str, str] = {}
+    for marker, name in LAND_MODIFIERS.items():
+        effects = [(k, v) for k, v in modifier_effects(pressure_text, name) if v not in ("no", "0") and (v == "yes" or float(v) != 0)]
+        goods = [(k, v) for k, v in effects if _GOODS_OUTPUT.fullmatch(k)]
+        shared = len(goods) >= 3 and len({v for _, v in goods}) == 1
+        lines: list[tuple[float, str]] = []
+        for key, value in effects:
+            if shared and _GOODS_OUTPUT.fullmatch(key):
+                continue
+            label = f"[ShowModifierTypeName('{key}')]"
+            if value == "yes":
+                lines.append((float("inf"), label))
+            else:
+                lines.append((_magnitude(value, types.get(key, {})), f"{label}: {_scaled(marker, key, value, types.get(key, {}))}"))
+        if shared:
+            key, value = goods[0]
+            lines.append((_magnitude(value, types.get(key, {})), f"[Localize('PP_LAND_CHIP_GOODS_OUTPUT')]: {_scaled(marker, key, value, types.get(key, {}))}"))
+        # One strength scales every line alike, so the build-time order is the order of the shown values.
+        lines.sort(key=lambda item: -item[0])
+        rows[name] = _scrolled(" ".join(f'TooltipTextBlock = {{ blockoverride "text" {{ raw_text = "{line}" }} }}' for _, line in lines))
+    return rows
+
+
+def _magnitude(value: str, info: dict[str, str]) -> float:
+    """Size of an effect as the tooltip shows it: percent types count in percent points."""
+    return abs(float(value)) * (100 if info.get("percent") == "yes" else 1)
+
+
+def _scrolled(content: str) -> str:
+    """Vanilla's tooltip scroll section, capped like the mod's population breakdown."""
+    return (
+        'TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } '
+        'blockoverride "scrollarea_content" { TooltipContentSection = { set_parent_dimension_to_minimum = height '
+        f'blockoverride "section_content" {{ {content} }} }} }} }}'
+    )
+
+
+def load_land_effect_rows(mod_root: Path, vanilla: Path | None) -> dict[str, str] | None:
+    pressure = mod_root / PRESSURE_MODIFIERS
+    if vanilla is None or not pressure.is_file():
+        return None
+    texts = [p.read_text(encoding="utf-8-sig") for root in (vanilla / "game", mod_root) for p in sorted((root / TYPE_DEFINITIONS).glob("*.txt"))]
+    return land_effect_rows(pressure.read_text(encoding="utf-8-sig"), modifier_types(texts))
+
+
+def status_row(harvests: list[str], land_rows: dict[str, str] | None = None) -> str:
+    # Without the modifier types the land chips fall back to the full-strength effects.
+    land_rows = land_rows or {name: _scrolled(_row(name)) for name in LAND_MODIFIERS.values()}
     starving = f"{_LOC}.GetProvince.IsStarving"
     months = f"[FixedPointToFloat({_LOC}.GetModifierValueFixed('pp_province_food_storage_months'))|0]"
     overlay = f"""
@@ -116,14 +206,14 @@ def status_row(harvests: list[str]) -> str:
     over, abundant, available = (_marker(key) for key in LAND_MARKERS)
     land = _chip("pp_status_land_overpopulation", over, f"{_ICONS}/modifiers/overpopulation.dds",
                  "PP_LAND_CHIP_OVERPOPULATION_TITLE", "population_capacity",
-                 _text("PP_LAND_CHIP_OVERPOPULATION") + " " + _text("PP_LAND_CHIP_OVERPOPULATION_STRENGTH") + " " + _row("overpopulation"))
+                 _text("PP_LAND_CHIP_OVERPOPULATION") + " " + _text("PP_LAND_CHIP_OVERPOPULATION_STRENGTH") + " " + land_rows["overpopulation"])
     land += _chip("pp_status_land_abundant", f"And(Not({over}), {abundant})", f"{_ICONS}/location_icons/monthly_growth.dds",
                   "PP_LAND_CHIP_ABUNDANT_TITLE", "pp_abundant_free_land",
-                  _text("PP_LAND_CHIP_ABUNDANT") + " " + _row("abundant_free_land"))
+                  _text("PP_LAND_CHIP_ABUNDANT") + " " + _text("PP_LAND_CHIP_ABUNDANT_STRENGTH") + " " + land_rows["abundant_free_land"])
     land += _chip("pp_status_land_available", f"And3(Not({over}), Not({abundant}), {available})",
                   f"{_ICONS}/modifier_types/total_population_capacity_modifier.dds",
                   "PP_LAND_CHIP_AVAILABLE_TITLE", "pp_available_free_land",
-                  _text("PP_LAND_CHIP_AVAILABLE") + " " + _text("PP_LAND_CHIP_AVAILABLE_STRENGTH") + " " + _row("available_free_land"))
+                  _text("PP_LAND_CHIP_AVAILABLE") + " " + _text("PP_LAND_CHIP_AVAILABLE_STRENGTH") + " " + land_rows["available_free_land"])
     land += _chip("pp_status_land_settled", f"And3(Not({over}), Not({abundant}), Not({available}))",
                   f"{_ICONS}/location_icons/population.dds",
                   "PP_LAND_CHIP_SETTLED_TITLE", "population_capacity", _text("PP_LAND_CHIP_SETTLED"))
@@ -154,12 +244,12 @@ def status_row(harvests: list[str]) -> str:
 """
 
 
-def add_status_row(text: str, harvests: list[str]) -> str:
+def add_status_row(text: str, harvests: list[str], land_rows: dict[str, str] | None = None) -> str:
     """Anchor the status card to the top-right corner of the scene, beside the IO and periphora buttons' row."""
     found = text.count(_ANCHOR)
     if found != 1:
         raise ValueError(f"location_window.gui: expected 1 top-row anchor for the status chips, found {found}")
-    return text.replace(_ANCHOR, _ANCHOR[:_SPLIT] + status_row(harvests) + _ANCHOR[_SPLIT:])
+    return text.replace(_ANCHOR, _ANCHOR[:_SPLIT] + status_row(harvests, land_rows) + _ANCHOR[_SPLIT:])
 
 
 def write_custom_localization(mod_root: Path, harvests: list[str]) -> bool:

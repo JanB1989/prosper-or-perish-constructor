@@ -46,6 +46,37 @@ def test_status_row_sits_after_the_top_row_spacer_with_exclusive_states():
         location_status.add_status_row(_window() + _window(), HARVESTS)
 
 
+def test_land_rows_show_scaled_values_largest_first_in_a_scroll_area():
+    pressure = (
+        "TRY_REPLACE:overpopulation = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n\tpp_land_overpopulation = 1\n"
+        "\tcap_maximum_population_growth_at_zero = no\n\tlocal_migration_attraction = -0.25\n\tlocal_peasants_food_consumption = 0.5 # note\n"
+        "\t# local_population_growth = -0.0015\n\tlocal_population_growth = 0\n}\n"
+        "TRY_REPLACE:abundant_free_land = {\n\tlocal_migration_attraction = 2\n\tlocal_wheat_output_modifier = 0.40\n"
+        "\tlocal_rice_output_modifier = 0.40\n\tlocal_fish_output_modifier = 0.40\n}\n"
+        "TRY_REPLACE:available_free_land = {\n\tlocal_migration_attraction = 1\n}\n"
+    )
+    types = location_status.modifier_types([
+        "local_migration_attraction={\n\tgame_data={\n\t\tcategory=location\n\t}\n}\n"
+        "local_peasants_food_consumption={\n\tcolor=bad\n\tpercent=yes\n}\nlocal_wheat_output_modifier={\n\tpercent=yes\n}\n"
+        "local_rice_output_modifier={\n\tpercent=yes\n}\nlocal_fish_output_modifier={\n\tpercent=yes\n}\n"
+    ])
+    rows = location_status.land_effect_rows(pressure, types)
+    over = rows["overpopulation"]
+    assert over.startswith("TooltipScrolledContentSection = {") and "maximumsize = { -1 420 }" in over
+    assert over.count("{") == over.count("}")
+    # zeros, "no" flags, comments and the marker are dropped; the food line (50 points) comes before migration (0.25)
+    assert "cap_maximum" not in over and "local_population_growth" not in over and "ShowModifierTypeName('pp_land_" not in over
+    assert over.index("local_peasants_food_consumption") < over.index("local_migration_attraction")
+    assert "Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)0.5')|1%-]" in over
+    assert "'(CFixedPoint)-0.25')|2+]" in over
+    # three goods outputs with one value collapse into one line, and 40 points outrank a flat 2
+    abundant = rows["abundant_free_land"]
+    assert abundant.count("PP_LAND_CHIP_GOODS_OUTPUT") == 1 and "local_rice_output_modifier" not in abundant
+    assert abundant.index("PP_LAND_CHIP_GOODS_OUTPUT") < abundant.index("local_migration_attraction")
+    out = location_status.status_row(HARVESTS, rows)
+    assert out.count("TooltipScrolledContentSection") == 3 and "ShowModifierEffect('overpopulation')" not in out
+
+
 def test_mod_files_carry_the_markers_types_and_localization():
     pressure = (MOD_ROOT / "main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt").read_text(encoding="utf-8-sig")
     types = (MOD_ROOT / "main_menu/common/modifier_type_definitions/pp_location_status_modifier_types.txt").read_text(encoding="utf-8-sig")

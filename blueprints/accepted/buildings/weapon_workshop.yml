@@ -1,6 +1,8 @@
 version: 2
 tag: weapon_workshop
 footprint: urban_workshop
+labour:
+  class: craft_discovery
 building:
   key: weapon_workshop
   mode: REPLACE
@@ -24,10 +26,11 @@ building:
     build_time = workshop_build_time
     unique_production_methods = {
         pp_weapon_workshop_weapon_workshop_maintenance = {
-            lumber = 0.353
-            coal = 0.353
-            iron = 0.294
-            tools = 0.235
+            lumber = 0.31
+            coal = 0.31
+            iron = 0.26
+            tools = 0.21
+            manual_labor_cost = 0.36
             category = workshop_input
             produced = weaponry
             output = 1.1

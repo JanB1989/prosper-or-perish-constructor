@@ -1,6 +1,10 @@
 version: 2
 tag: trapiche_sugarcane_farm
 footprint: farm_land
+labour:
+  class: primary_discovery
+  methods:
+    pp_trapiche_sugarcane_farm_base_sugar: base
 upgrade_chain:
   family: sugarcane_farm
   tier: 1
@@ -51,6 +55,7 @@ building:
 
     unique_production_methods = {
         pp_trapiche_sugarcane_farm_base_sugar = {
+            manual_labor_cost = 0.024
             produced = sugar
             output = 0.040
             category = building_maintenance
@@ -61,8 +66,9 @@ building:
             category = building_maintenance
         }
         pp_trapiche_sugarcane_farm_open_kettles = {
-            pottery = 0.120 # sugar molds and boiling pans
-            tools = 0.004 # skimmers and ladles
+            pottery = 0.1 # sugar molds and boiling pans
+            tools = 0.003 # skimmers and ladles
+            manual_labor_cost = 0.023
             produced = sugar
             output = 0.083
             category = building_maintenance
@@ -73,8 +79,9 @@ building:
             category = building_maintenance
         }
         pp_trapiche_sugarcane_farm_trapiche_pressing = {
-            furniture = 0.045 # trapiche carpentry and wooden rollers
-            tools = 0.006 # roller fittings and cane knives
+            furniture = 0.039 # trapiche carpentry and wooden rollers
+            tools = 0.005 # roller fittings and cane knives
+            manual_labor_cost = 0.021
             produced = sugar
             output = 0.064
             category = building_maintenance

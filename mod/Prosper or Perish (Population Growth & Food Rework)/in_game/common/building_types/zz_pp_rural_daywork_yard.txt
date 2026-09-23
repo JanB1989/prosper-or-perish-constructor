@@ -1,0 +1,35 @@
+﻿# >>> eu5-building-pipeline:rural_daywork_yard:building
+rural_daywork_yard = {
+is_foreign = no
+max_levels = 6
+increase_per_level_cost = 0.14
+pop_type = peasants
+employment_size = 0.75
+price = pp_rural_daywork_yard_price
+category = village_category
+icon = rural_daywork_yard
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+can_close = yes
+forbidden_for_estates = no
+ai_forbid_shutdown = no
+build_time = village_build_time
+construction_demand = village_construction
+
+unique_production_methods = {
+  pp_rural_daywork_yard_crews = {
+    produced = manual_labor_cost
+    output = 3.5
+    victuals = 0.95
+    livestock = 0.5
+    tools = 0.2
+    category = building_maintenance
+  }
+}
+raw_modifier = {
+	local_population_capacity = 0.375
+}
+}
+# <<< eu5-building-pipeline:rural_daywork_yard:building

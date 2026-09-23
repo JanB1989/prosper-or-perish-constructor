@@ -6,4 +6,22 @@ tools = 0.30
 victuals = 0.24
 category = building_maintenance
 }
+
+pp_paviors_yard_hand_setters = {
+masonry = 1.20
+sand = 0.60
+tools = 0.12
+victuals = 0.24
+manual_labor_cost = 1.20
+category = building_maintenance
+}
+
+pp_paviors_yard_dressed_stone_paving = {
+masonry = 0.65
+sand = 0.25
+tools = 0.45
+victuals = 0.16
+paper = 0.06
+category = building_maintenance
+}
 # <<< eu5-building-pipeline:paviors_yard:production_method

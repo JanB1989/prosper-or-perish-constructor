@@ -8,4 +8,24 @@ victuals = 0.20
 paper = 0.0625
 category = building_maintenance
 }
+
+pp_coastal_shipping_office_hand_crews = {
+naval_supplies = 0.10
+tar = 0.04
+lumber = 0.10
+tools = 0.04
+victuals = 0.20
+manual_labor_cost = 1.00
+category = building_maintenance
+}
+
+pp_coastal_shipping_office_rigged_coasters = {
+naval_supplies = 0.22
+tar = 0.04
+lumber = 0.07
+tools = 0.13
+victuals = 0.12
+paper = 0.03
+category = building_maintenance
+}
 # <<< eu5-building-pipeline:coastal_shipping_office:production_method

@@ -1,0 +1,211 @@
+$ /home/jan/development/ProsperOrPerishConstructor/.venv/bin/python3 -m pytest --capture=no
+============================= test session starts ==============================
+platform linux -- Python 3.14.2, pytest-9.0.3, pluggy-1.6.0
+rootdir: /home/jan/development/ProsperOrPerishConstructor
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.13.0
+collected 523 items
+
+tests/test_blueprint_evaluation_rules.py .
+tests/test_building_footprint.py ......
+tests/test_building_icon_uniqueness.py ....
+tests/test_building_increase_per_level_costs.py F...
+tests/test_building_scaling.py .......
+tests/test_building_upgrade_chains.py ..........................................................
+tests/test_buildings_manifest_coverage.py ..
+tests/test_custom_map_mode_styles.py ....................
+tests/test_disease_migration_adjustments.py ..
+tests/test_estate_tooltips.py ...
+tests/test_europedia_export.py ...
+tests/test_event_rgo_requirement_adjustments.py .....
+tests/test_farming_village_rgo_unlocks.py .......
+tests/test_field_management_tiers.py ..
+tests/test_focus_restricted_unlocks.py ...
+tests/test_food_storage_gui.py ..
+tests/test_free_building_levels.py ...............Compiled free building level modifiers into 7 mod file(s).
+...
+tests/test_goods_categories.py .......
+tests/test_goods_output_map_modes.py ........
+tests/test_gui_compat.py .
+tests/test_jiangnan_improvements.py ......
+tests/test_location_food_tooltip.py .....
+tests/test_logistics_infrastructure_buildings.py ...............
+tests/test_no_premature_steel_inputs.py .
+tests/test_path_lengths.py ..
+tests/test_population_baseline_data.py ...
+tests/test_pp_production_sheet.py ......
+tests/test_ppc_cli.py ......preset=/tmp/pytest-of-jan/pytest-203/test_clean_game_rule_presets_r0/eu5-user/player/game_rules/presets.txt
+removed_game_rule_settings=3
+..Production labour check skipped: /tmp/pytest-of-jan/pytest-203/test_sync_full_build_and_force0/constructor.toml: [production_labour] with a [production_labour.classes] table is required
+..Updated docs/examples/goods_flow_explorer.html
+Updated docs/examples/savegame_explorer.html
+Updated docs/examples/europedia.html
+Updated docs/examples/europedia_entries.json
+Updated docs/examples/assets
+.Exported Europedia HTML: /tmp/pytest-of-jan/pytest-203/test_europedia_generates_and_p0/graphs/europedia.html
+Exported Europedia JSON: /tmp/pytest-of-jan/pytest-203/test_europedia_generates_and_p0/graphs/europedia_entries.json
+Updated docs/examples/europedia.html
+Updated docs/examples/europedia_entries.json
+.Updated docs/examples/goods_flow_explorer.html
+............Found 1 .eu5 saves in /tmp/pytest-of-jan/pytest-203/test_savegame_notebooks_build_1/saves
+raw ingest skipped: no new saves processed (1 already digested)
+raw dataset: /tmp/pytest-of-jan/pytest-203/test_savegame_notebooks_build_1/graphs/dataset
+notebook data: /tmp/pytest-of-jan/pytest-203/test_savegame_notebooks_build_1/graphs/dataset
+notebook rewrite: skipped (not required)
+snapshots: 1
+..raw dataset: /tmp/pytest-of-jan/pytest-203/test_savegame_notebooks_build_3/graphs/dataset
+notebook data: /tmp/pytest-of-jan/pytest-203/test_savegame_notebooks_build_3/graphs/dataset
+notebook rewrite: skipped (not required)
+snapshots: 1
+.Found 1 .eu5 saves in /tmp/pytest-of-jan/pytest-203/test_savegame_notebooks_build_4/windows/Documents/Paradox Interactive/Europa Universalis V/save games
+raw ingest skipped: no new saves processed (1 already digested)
+raw dataset: /tmp/pytest-of-jan/pytest-203/test_savegame_notebooks_build_4/graphs/dataset
+notebook data: /tmp/pytest-of-jan/pytest-203/test_savegame_notebooks_build_4/graphs/dataset
+notebook rewrite: skipped (not required)
+raw dataset manifest not found: /tmp/pytest-of-jan/pytest-203/test_savegame_notebooks_build_4/graphs/dataset/manifest.parquet
+global webp exports: skipped (raw dataset manifest missing)
+...Deleted directory: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_deletes_ge0/artifacts/data/savegame
+Deleted file: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_deletes_ge0/graphs/savegame_explorer.html
+Deleted file: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_deletes_ge0/graphs/savegame_progression.html
+Deleted file: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_deletes_ge0/docs/examples/savegame_explorer.html
+Deleted directory: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_deletes_ge0/graphs/dataset
+Deleted directory: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_deletes_ge0/graphs/savegame_notebooks/data
+Deleted directory: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_deletes_ge0/graphs/savegame_notebooks/exports
+Deleted directory: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_deletes_ge0/graphs/dataset_v2
+Deleted directory: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_deletes_ge0/graphs/savegame_progression_dataset
+Deleted directory: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_deletes_ge0/artifacts/data/savegame_progression
+Deleted file: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_deletes_ge0/graphs/dashboard_benchmark_report.json
+.Would delete: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_dry_run_ke0/artifacts/data/savegame
+Would delete: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_dry_run_ke0/graphs/savegame_explorer.html
+Would delete: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_dry_run_ke0/graphs/savegame_progression.html
+Would delete: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_dry_run_ke0/docs/examples/savegame_explorer.html
+Would delete: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_dry_run_ke0/graphs/dataset
+Would delete: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_dry_run_ke0/graphs/savegame_notebooks/data
+Would delete: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_dry_run_ke0/graphs/savegame_notebooks/exports
+Would delete: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_dry_run_ke0/graphs/dataset_v2
+Would delete: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_dry_run_ke0/graphs/savegame_progression_dataset
+Would delete: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_dry_run_ke0/artifacts/data/savegame_progression
+Would delete: /tmp/pytest-of-jan/pytest-203/test_savegame_purge_dry_run_ke0/graphs/dashboard_benchmark_report.json
+.
+tests/test_production_labour.py ..........
+tests/test_project_config.py ...........................................................................................
+tests/test_raw_material_local_map_modes.py ........................
+tests/test_rgo_cost_redirects.py F........
+tests/test_river_navigation.py .........
+tests/test_road_infrastructure_buildings.py .....
+tests/test_savegame_maps.py ..................................
+tests/test_savegame_notebook.py .........
+tests/test_setup_validity.py ...
+tests/test_spline_network.py ...
+tests/test_start_food_model.py ..........
+tests/test_start_placement.py .....
+tests/test_start_simulation.py ................
+tests/test_steam_workshop_description.py .....
+tests/test_update_audit.py ..
+tests/test_vanilla_production_blueprint_coverage.py ......................
+tests/test_variable_harvests.py .............
+tests/test_worldbuilder_stage.py ....................
+
+=================================== FAILURES ===================================
+______ test_goods_producer_blueprints_have_scaled_increase_per_level_cost ______
+
+    def test_goods_producer_blueprints_have_scaled_increase_per_level_cost() -> None:
+        assignments = building_increase_cost_assignments(ROOT, PROJECT)
+        paths_by_building = accepted_blueprint_paths_by_building(ROOT)
+    
+        assert assignments
+        missing = [assignment.building for assignment in assignments if assignment.building not in paths_by_building]
+        assert not missing
+    
+        mismatches: list[str] = []
+        for assignment in assignments:
+            template = load_template(paths_by_building[assignment.building])
+            actual = _top_level_increase_per_level_cost(template.key, template.building_body)
+            if actual is None or Decimal(actual) != Decimal(assignment.scaled_cost_text):
+                if assignment.building in INTENTIONAL_SOURCE_COST_OVERRIDES and actual is not None:
+                    continue
+                mismatches.append(
+                    f"{assignment.building}: expected {assignment.scaled_cost_text} "
+                    f"from {assignment.main_good}, found {actual or '<missing>'}"
+                )
+    
+>       assert not mismatches
+E       AssertionError: assert not ['hired_labor_yard: expected 0.13 from manual_labor_cost, found 0.18', 'rural_daywork_yard: expected 0.13 from manual_labor_cost, found 0.18', 'slave_labor_yard: expected 0.13 from manual_labor_cost, found 0.18']
+
+tests/test_building_increase_per_level_costs.py:50: AssertionError
+_____ test_pop_rgo_building_cost_classification_uses_raw_material_methods ______
+
+    def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> None:
+        profile = load_profile("constructor", LOAD_ORDER)
+    
+        classification = classify_pop_rgo_building_cost_targets(profile, MOD_ROOT)
+        modifiers_by_method = classification.modifiers_by_method()
+    
+        assert RGO_BUILDING_COST_GROUPS == {
+            "farming": "pp_rgo_farming_building_cost_group",
+            "mining": "pp_rgo_mining_building_cost_group",
+            "hunting": "pp_rgo_hunting_building_cost_group",
+            "gathering": "pp_rgo_gathering_building_cost_group",
+            "forestry": "pp_rgo_forestry_building_cost_group",
+        }
+        assert set(modifiers_by_method) == set(RGO_METHODS)
+        # Improvement buildings are gated by World Builder attributes, not by the RGO, so no priced targets remain.
+        assert all(not values for values in modifiers_by_method.values())
+    
+        # Objective: classify PoP raw-material buildings even when they are not
+        # price-modifier targets yet, so a future price pass can wire them in.
+        assert {method for methods in classification.unpriced_buildings.values() for method in methods} == set(
+            RGO_METHODS
+        )
+        assert classification.unpriced_buildings["alum_works"] == ("gathering", "mining")
+        assert classification.unpriced_buildings["cocoa_grove"] == ("farming",)
+        assert classification.unpriced_buildings["ivory_hunting_camp"] == ("hunting",)
+        assert classification.unpriced_buildings["lumber_mill"] == ("forestry",)
+        assert classification.unpriced_buildings["clay_pit"] == ("gathering",)
+>       assert classification.unclassified_price_buildings == {
+            "bund": "pp_bund_price",
+            "river_navigation_works": "pp_river_navigation_works_price",
+            "canal_lock_works": "pp_canal_lock_works_price",
+            "caoyun_canal_office": "pp_caoyun_canal_office_price",
+            "lowland_sluice_works": "pp_lowland_sluice_works_price",
+            "nile_navigation_works": "pp_nile_navigation_works_price",
+            "delta_waterway_works": "pp_delta_waterway_works_price",
+    
+            "field_drainage": "pp_field_drainage_price",
+            "field_management": "pp_field_management_price",
+            "field_management_convertible": "pp_field_management_convertible_price",
+            "field_management_improved": "pp_field_management_improved_price",
+            "incamisana": "pp_incamisana_price",
+            "irrigated_fields": "pp_irrigated_fields_price",
+            "irrigation_reservoirs": "pp_irrigation_reservoirs_price",
+            "land_clearance": "pp_land_clearance_price",
+            "qanats": "pp_qanats_price",
+            "irrigation_systems": "pp_irrigation_systems_price",
+            "jiangnan_canal_network": "pp_jiangnan_canal_network_price",
+            "jiangnan_hill_terraces": "pp_jiangnan_hill_terraces_price",
+            "khmer_baray": "pp_khmer_baray_price",
+            "macadam_works": "pp_macadam_works_price",
+            "paviors_yard": "pp_paviors_yard_price",
+            "permanent_way_depot": "pp_permanent_way_depot_price",
+            "polders": "pp_polders_price",
+            "road_wardens_yard": "pp_road_wardens_yard_price",
+            "terraces": "pp_terraces_price",
+            "victuals_market": "pp_victuals_market_price",
+            "victuals_market_import": "pp_victuals_market_import_price",
+        }
+E       AssertionError: assert {'bund': 'pp_...s_price', ...} == {'bund': 'pp_...s_price', ...}
+E         
+E         Omitting 28 identical items, use -vv to show
+E         Left contains 3 more items:
+E         {'hired_labor_yard': 'pp_hired_labor_yard_price',
+E          'rural_daywork_yard': 'pp_rural_daywork_yard_price',
+E          'slave_labor_yard': 'pp_slave_labor_yard_price'}
+E         Use -v to get more diff
+
+tests/test_rgo_cost_redirects.py:58: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_building_increase_per_level_costs.py::test_goods_producer_blueprints_have_scaled_increase_per_level_cost
+FAILED tests/test_rgo_cost_redirects.py::test_pop_rgo_building_cost_classification_uses_raw_material_methods
+================== 2 failed, 521 passed in 306.58s (0:05:06) ===================
+exit=1

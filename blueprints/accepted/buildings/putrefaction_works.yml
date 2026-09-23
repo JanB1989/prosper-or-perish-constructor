@@ -1,6 +1,8 @@
 ﻿version: 2
 tag: putrefaction_works
 footprint: manufactory
+labour:
+  class: craft_absolutism
 building:
   key: putrefaction_works
   mode: REPLACE
@@ -30,8 +32,9 @@ building:
     }
     unique_production_methods = {
         pp_putrefaction_works_demands = {
-            pottery = 0.6
-            livestock = 1.2
+            pottery = 0.56
+            livestock = 1.12
+            manual_labor_cost = 0.16
             produced = saltpeter
             output = 2.0
             debug_max_profit = 0.75

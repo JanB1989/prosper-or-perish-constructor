@@ -1,13 +1,22 @@
 ﻿version: 2
 tag: river_boatmen_yard
 footprint: infrastructure
+labour:
+  class: keep
 building:
   key: river_boatmen_yard
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots: []
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_river_boatmen_yard_maintenance
+        - pp_river_boatmen_yard_towpath_crews
+        - pp_river_boatmen_yard_fitted_barges
   possible_production_methods:
     - pp_river_boatmen_yard_maintenance
+    - pp_river_boatmen_yard_towpath_crews
+    - pp_river_boatmen_yard_fitted_barges
   body: |2-
     is_foreign = no
     max_levels = pp_river_boatmen_yard_max_level
@@ -36,6 +45,8 @@ building:
 
     possible_production_methods = {
       pp_river_boatmen_yard_maintenance
+      pp_river_boatmen_yard_towpath_crews
+      pp_river_boatmen_yard_fitted_barges
     }
 
     raw_modifier = {
@@ -50,10 +61,30 @@ production_methods:
       victuals = 0.15
       tar = 0.025
       category = building_maintenance
+  - key: pp_river_boatmen_yard_towpath_crews
+    body: |2-
+      naval_supplies = 0.05
+      lumber = 0.10
+      tools = 0.04
+      victuals = 0.12
+      tar = 0.015
+      manual_labor_cost = 0.80
+      category = building_maintenance
+  - key: pp_river_boatmen_yard_fitted_barges
+    body: |2-
+      naval_supplies = 0.15
+      lumber = 0.08
+      tools = 0.12
+      victuals = 0.08
+      tar = 0.015
+      category = building_maintenance
 localization:
   entries:
+    river_boatmen_yard_slot_0: River Crews
     pp_river_boatmen_yard_construction: River Boatmen's Yard Construction
     pp_river_boatmen_yard_maintenance: River Boatmen's Yard Maintenance
+    pp_river_boatmen_yard_towpath_crews: Towpath Haulage Crews
+    pp_river_boatmen_yard_fitted_barges: Fitted Barges and Winches
     river_boatmen_yard: River Boatmen's Yard
     river_boatmen_yard_desc: Boatmen, barges, rope stores, and timber landings turn a riverbank into a working freight yard. Goods move with the current, against it by labor, and into the market by habit.
 icon:

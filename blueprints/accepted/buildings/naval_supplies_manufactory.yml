@@ -1,6 +1,8 @@
 version: 2
 tag: naval_supplies_manufactory
 footprint: manufactory
+labour:
+  class: craft_absolutism
 building:
   key: naval_supplies_manufactory
   mode: REPLACE
@@ -25,10 +27,11 @@ building:
     obsolete = naval_supplies_workshop
     unique_production_methods = {
         pp_naval_supplies_manufactory_naval_supplies_manufactory_maintenance = {
-            lumber = 1.038
-            fiber_crops = 0.779
-            tar = 0.779
-            cloth = 0.259
+            lumber = 0.97
+            fiber_crops = 0.72
+            tar = 0.72
+            cloth = 0.24
+            manual_labor_cost = 0.41
             produced = naval_supplies
             output = 2.0
             debug_max_profit = manufactory_profit_margin

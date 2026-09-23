@@ -1,6 +1,8 @@
 version: 2
 tag: jiangnan_hill_terraces
 footprint: capacity_source
+labour:
+  class: keep
 building:
   key: jiangnan_hill_terraces
   mode: CREATE

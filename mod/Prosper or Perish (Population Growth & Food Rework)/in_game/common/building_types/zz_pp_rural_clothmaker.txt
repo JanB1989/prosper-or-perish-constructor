@@ -14,21 +14,24 @@ city = no
 build_time = rural_build_time
 unique_production_methods = {
     pp_rural_clothmaker_rural_wool_clothmaker = {
-        wool = 0.571
+        wool = 0.43
+        manual_labor_cost = 0.35
         produced = cloth
         output = 0.5
         debug_max_profit = rural_profit_margin
         category = guild_input
     }
     pp_rural_clothmaker_rural_cotton_clothmaker = {
-        cotton = 0.476
+        cotton = 0.36
+        manual_labor_cost = 0.35
         produced = cloth
         output = 0.5
         debug_max_profit = rural_profit_margin
         category = guild_input
     }
     pp_rural_clothmaker_rural_fiber_clothmaker = {
-        fiber_crops = 0.564
+        fiber_crops = 0.42
+        manual_labor_cost = 0.29
         produced = cloth
         output = 0.4
         debug_max_profit = rural_profit_margin

@@ -1,6 +1,8 @@
 version: 2
 tag: steel_mill
 footprint: mill_works
+labour:
+  class: craft_revolutions
 building:
   key: steel_mill
   mode: REPLACE
@@ -25,8 +27,9 @@ building:
     build_time = mills_build_time
     unique_production_methods = {
         pp_steel_mill_steel_mill_maintenance = {
-            iron = 3.583
-            coal = 3.583
+            iron = 3.44
+            coal = 3.44
+            manual_labor_cost = 0.79
             produced = steel
             output = 4.0
             debug_max_profit = mills_profit_margin

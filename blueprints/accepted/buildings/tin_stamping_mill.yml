@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: tin_stamping_mill
 footprint: rural_processing
+labour:
+  class: primary_discovery
+  methods:
+    pp_tin_stamping_mill_base_tin: base
 output_tag: tin_streamworks_stamping_mill
 upgrade_chain:
   family: tin_mine
@@ -53,6 +57,7 @@ building:
 
     unique_production_methods = {
         pp_tin_stamping_mill_base_tin = {
+            manual_labor_cost = 0.04
             produced = tin
             output = 0.1
             category = building_maintenance
@@ -63,8 +68,9 @@ building:
             category = building_maintenance
         }
         pp_tin_stamping_mill_tin = {
-            lumber = 0.425
-            tools = 0.31
+            lumber = 0.37
+            tools = 0.27
+            manual_labor_cost = 0.23
             produced = tin
             output = 0.95
             category = building_maintenance
@@ -75,15 +81,17 @@ building:
             category = building_maintenance
         }
         pp_tin_stamping_mill_copper = {
-            lumber = 0.053
-            tools = 0.03
+            lumber = 0.046
+            tools = 0.026
+            manual_labor_cost = 0.025
             produced = copper
             output = 0.068
             category = building_maintenance
         }
         pp_tin_stamping_mill_lead = {
-            lumber = 0.053
-            tools = 0.03
+            lumber = 0.046
+            tools = 0.026
+            manual_labor_cost = 0.025
             produced = lead
             output = 0.102
             category = building_maintenance

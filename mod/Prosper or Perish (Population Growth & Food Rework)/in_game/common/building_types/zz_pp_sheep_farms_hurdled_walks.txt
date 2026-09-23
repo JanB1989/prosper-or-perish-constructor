@@ -25,6 +25,7 @@ location_potential = {
 
 unique_production_methods = {
     pp_enclosed_sheep_walks_base_wool = {
+        manual_labor_cost = 0.05
         produced = wool
         output = 0.10
         category = building_maintenance
@@ -37,10 +38,11 @@ unique_production_methods = {
     pp_enclosed_sheep_walks_improved_flocks = {
         produced = wool
         output = 1.44
-        tools = 0.26
-        cloth = 0.14
-        leather = 0.13
-        lumber = 0.14
+        tools = 0.24
+        cloth = 0.13
+        leather = 0.12
+        lumber = 0.13
+        manual_labor_cost = 0.14
         debug_max_profit = 0
         category = building_maintenance
     }

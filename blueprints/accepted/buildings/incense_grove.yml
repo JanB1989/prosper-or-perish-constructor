@@ -1,6 +1,10 @@
 version: 2
 tag: incense_grove
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_incense_grove_base_incense: base
 building:
   key: incense_grove
   mode: CREATE
@@ -42,6 +46,7 @@ building:
 
     unique_production_methods = {
         pp_incense_grove_base_incense = {
+            manual_labor_cost = 0.05
             produced = incense
             output = 0.100
             category = building_maintenance
@@ -52,9 +57,10 @@ building:
             category = building_maintenance
         }
         pp_incense_grove_tapping_camps = {
-            fiber_crops = 0.117 # collection cloth and baskets
-            lumber = 0.117 # drying racks and shelters
-            tools = 0.023 # tapping knives
+            fiber_crops = 0.096 # collection cloth and baskets
+            lumber = 0.096 # drying racks and shelters
+            tools = 0.019 # tapping knives
+            manual_labor_cost = 0.092
             produced = incense
             output = 0.222
             category = building_maintenance

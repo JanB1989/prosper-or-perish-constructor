@@ -1,6 +1,10 @@
 version: 2
 tag: tea_garden
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_tea_garden_base_tea: base
 upgrade_chain:
   family: tea_garden
   tier: 0
@@ -47,6 +51,7 @@ building:
 
     unique_production_methods = {
         pp_tea_garden_base_tea = {
+            manual_labor_cost = 0.025
             produced = tea
             output = 0.041
             category = building_maintenance
@@ -57,8 +62,9 @@ building:
             category = building_maintenance
         }
         pp_tea_garden_bamboo_withering_trays = {
-            fiber_crops = 0.098 # bamboo trays
-            clay = 0.078 # firing hearths
+            fiber_crops = 0.08 # bamboo trays
+            clay = 0.064 # firing hearths
+            manual_labor_cost = 0.043
             produced = tea
             output = 0.087
             category = building_maintenance

@@ -30,6 +30,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_sand_washery_base_sand = {
+        manual_labor_cost = 0.011
         produced = sand
         output = 0.11
         category = building_maintenance
@@ -40,8 +41,9 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_sand_washery_riddle_screens = {
-        lumber = 0.05
-        tools = 0.02
+        lumber = 0.043
+        tools = 0.017
+        manual_labor_cost = 0.022
         produced = sand
         output = 0.29
         category = building_maintenance
@@ -52,8 +54,9 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_sand_washery_glass_sand_washing = {
-        lumber = 0.04
-        tools = 0.03
+        lumber = 0.034
+        tools = 0.026
+        manual_labor_cost = 0.024
         produced = sand
         output = 0.31
         category = building_maintenance

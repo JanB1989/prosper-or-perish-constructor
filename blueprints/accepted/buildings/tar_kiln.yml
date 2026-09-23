@@ -1,6 +1,8 @@
 version: 2
 tag: tar_kiln
 footprint: forestry
+labour:
+  class: primary_medieval
 building:
   key: tar_kiln
   mode: REPLACE
@@ -34,7 +36,8 @@ building:
         pp_tar_kiln_tar_kiln_maintenance = {
             produced = tar
             output = 1.0
-            lumber = 1.111
+            lumber = 0.91
+            manual_labor_cost = 0.35
             category = guild_input
             debug_max_profit = rural_profit_margin
         }

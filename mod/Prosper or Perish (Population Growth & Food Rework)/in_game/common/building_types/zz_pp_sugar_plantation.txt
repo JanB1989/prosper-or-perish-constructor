@@ -27,6 +27,7 @@ build_time = plantation_build_time
 
 unique_production_methods = {
     pp_sugar_plantation_base_sugar = {
+        manual_labor_cost = 0.18
         produced = sugar
         output = 0.300
         category = building_maintenance
@@ -37,10 +38,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_sugar_plantation_boiling_house = {
-        slaves_goods = 0.320 # plantation gangs
-        lumber = 0.250 # cane press frames
-        coal = 0.150 # boiling-house fuel
-        tools = 0.029 # rollers and knives
+        slaves_goods = 0.3 # plantation gangs
+        lumber = 0.24 # cane press frames
+        coal = 0.14 # boiling-house fuel
+        tools = 0.028 # rollers and knives
+        manual_labor_cost = 0.1
         produced = sugar
         output = 0.667
         category = building_maintenance

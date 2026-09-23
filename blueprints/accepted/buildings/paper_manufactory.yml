@@ -1,6 +1,8 @@
 version: 2
 tag: paper_manufactory
 footprint: manufactory
+labour:
+  class: craft_absolutism
 building:
   key: paper_manufactory
   mode: REPLACE
@@ -24,9 +26,10 @@ building:
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_paper_manufactory_paper_manufactory_maintenance = {
-            cloth = 0.291
-            fiber_crops = 1.163
-            lumber = 0.291
+            cloth = 0.27
+            fiber_crops = 1.08
+            lumber = 0.27
+            manual_labor_cost = 0.27
             produced = paper
             output = 2.0
             debug_max_profit = manufactory_profit_margin

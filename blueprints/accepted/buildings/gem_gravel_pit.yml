@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: gem_gravel_pit
 footprint: extractive_open
+labour:
+  class: primary_medieval
+  methods:
+    pp_gem_gravel_pit_base_gems: base
 upgrade_chain:
   family: gem_mine
   tier: 0
@@ -51,6 +55,7 @@ building:
 
     unique_production_methods = {
         pp_gem_gravel_pit_base_gems = {
+            manual_labor_cost = 0.056
             produced = gems
             output = 0.07
             category = building_maintenance
@@ -61,8 +66,9 @@ building:
             category = building_maintenance
         }
         pp_gem_gravel_pit_gems = {
-            lumber = 0.322
-            tools = 0.27
+            lumber = 0.26
+            tools = 0.22
+            manual_labor_cost = 0.27
             produced = gems
             output = 0.385
             category = building_maintenance
@@ -73,15 +79,17 @@ building:
             category = building_maintenance
         }
         pp_gem_gravel_pit_gold = {
-            lumber = 0.05
-            tools = 0.03
+            lumber = 0.041
+            tools = 0.025
+            manual_labor_cost = 0.032
             produced = goods_gold
             output = 0.026
             category = building_maintenance
         }
         pp_gem_gravel_pit_sand = {
-            lumber = 0.03
-            tools = 0.01
+            lumber = 0.025
+            tools = 0.008
+            manual_labor_cost = 0.015
             produced = sand
             output = 0.192
             category = building_maintenance

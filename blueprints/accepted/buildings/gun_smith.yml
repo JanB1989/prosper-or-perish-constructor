@@ -1,6 +1,8 @@
 version: 2
 tag: gun_smith
 footprint: urban_workshop
+labour:
+  class: craft_medieval
 building:
   key: gun_smith
   mode: REPLACE
@@ -31,26 +33,29 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_gun_smith_guns_guild_lumber_maintenance = {
-            lumber = 0.134
-            iron = 0.04
-            tools = 0.018
+            lumber = 0.12
+            iron = 0.034
+            tools = 0.015
+            manual_labor_cost = 0.055
             produced = firearms
             output = 0.15
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_gun_smith_guns_guild_bronze_maintenance = {
-            copper = 0.569
-            tin = 0.114
-            tools = 0.342
+            copper = 0.49
+            tin = 0.098
+            tools = 0.29
+            manual_labor_cost = 0.44
             produced = firearms
             output = 1.0
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_gun_smith_guns_guild_iron_maintenance = {
-            iron = 0.559
-            tools = 0.336
+            iron = 0.48
+            tools = 0.29
+            manual_labor_cost = 0.43
             produced = firearms
             output = 1.0
             debug_max_profit = guild_profit_margin
@@ -59,16 +64,18 @@ building:
     }
     unique_production_methods = {
         pp_gun_smith_guns_guild_ammunition_lead_maintenance = {
-            lead = 0.111
-            saltpeter = 0.111
+            lead = 0.095
+            saltpeter = 0.095
+            manual_labor_cost = 0.064
             produced = firearms
             output = 0.16
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_gun_smith_guns_guild_ammunition_iron_maintenance = {
-            iron = 0.102
-            saltpeter = 0.102
+            iron = 0.088
+            saltpeter = 0.088
+            manual_labor_cost = 0.077
             produced = firearms
             output = 0.2
             debug_max_profit = guild_profit_margin

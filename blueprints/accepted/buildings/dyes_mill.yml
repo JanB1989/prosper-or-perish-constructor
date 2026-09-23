@@ -1,6 +1,8 @@
 version: 2
 tag: dyes_mill
 footprint: mill_works
+labour:
+  class: craft_revolutions
 building:
   key: dyes_mill
   mode: REPLACE
@@ -25,8 +27,9 @@ building:
     build_time = mills_build_time
     unique_production_methods = {
         pp_dyes_mill_dyesmill_maintenance = {
-            alum = 0.413
-            lumber = 8.268
+            alum = 0.4
+            lumber = 7.94
+            manual_labor_cost = 0.61
             produced = dyes
             output = 4.0
             debug_max_profit = mills_profit_margin

@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: alum_works
 footprint: rural_processing
+labour:
+  class: primary_discovery
+  methods:
+    pp_alum_works_base_alum: base
 upgrade_chain:
   family: alum_quarry
   tier: 1
@@ -51,6 +55,7 @@ building:
 
     unique_production_methods = {
         pp_alum_works_base_alum = {
+            manual_labor_cost = 0.048
             produced = alum
             output = 0.08
             category = building_maintenance
@@ -61,9 +66,10 @@ building:
             category = building_maintenance
         }
         pp_alum_works_alum = {
-            lumber = 0.327
-            tools = 0.346
-            coal = 0.077
+            lumber = 0.28
+            tools = 0.3
+            coal = 0.066
+            manual_labor_cost = 0.25
             produced = alum
             output = 0.672
             category = building_maintenance
@@ -74,15 +80,17 @@ building:
             category = building_maintenance
         }
         pp_alum_works_stone = {
-            lumber = 0.04
-            tools = 0.03
+            lumber = 0.034
+            tools = 0.026
+            manual_labor_cost = 0.024
             produced = stone
             output = 0.16
             category = building_maintenance
         }
         pp_alum_works_clay = {
-            lumber = 0.03
-            tools = 0.02
+            lumber = 0.026
+            tools = 0.017
+            manual_labor_cost = 0.017
             produced = clay
             output = 0.252
             category = building_maintenance

@@ -1,13 +1,22 @@
 ﻿version: 2
 tag: coastal_shipping_office
 footprint: infrastructure
+labour:
+  class: keep
 building:
   key: coastal_shipping_office
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots: []
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_coastal_shipping_office_maintenance
+        - pp_coastal_shipping_office_hand_crews
+        - pp_coastal_shipping_office_rigged_coasters
   possible_production_methods:
     - pp_coastal_shipping_office_maintenance
+    - pp_coastal_shipping_office_hand_crews
+    - pp_coastal_shipping_office_rigged_coasters
   body: |2-
     is_foreign = no
     max_levels = pp_coastal_shipping_office_max_level
@@ -34,6 +43,8 @@ building:
 
     possible_production_methods = {
       pp_coastal_shipping_office_maintenance
+      pp_coastal_shipping_office_hand_crews
+      pp_coastal_shipping_office_rigged_coasters
     }
 
     raw_modifier = {
@@ -49,12 +60,33 @@ production_methods:
       victuals = 0.20
       paper = 0.0625
       category = building_maintenance
+  - key: pp_coastal_shipping_office_hand_crews
+    body: |2-
+      naval_supplies = 0.10
+      tar = 0.04
+      lumber = 0.10
+      tools = 0.04
+      victuals = 0.20
+      manual_labor_cost = 1.00
+      category = building_maintenance
+  - key: pp_coastal_shipping_office_rigged_coasters
+    body: |2-
+      naval_supplies = 0.22
+      tar = 0.04
+      lumber = 0.07
+      tools = 0.13
+      victuals = 0.12
+      paper = 0.03
+      category = building_maintenance
 localization:
   entries:
+    coastal_shipping_office_slot_0: Coastal Crews
     coastal_shipping_office: Coastal Shipping Office
     coastal_shipping_office_desc: Coasting masters, freight clerks, and hired hands keep short-sea traffic moving between nearby ports. Their office turns loose cargo, small craft, and quay labor into a steadier coastal trade.
     pp_coastal_shipping_office_construction: Coastal Shipping Office Construction
     pp_coastal_shipping_office_maintenance: Coastal Shipping Office Maintenance
+    pp_coastal_shipping_office_hand_crews: Hand-Loaded Coasters
+    pp_coastal_shipping_office_rigged_coasters: Rigged Coasters
 icon:
   source_png: ../assets/icons/coastal_shipping_office.png
   output_dds: coastal_shipping_office.dds

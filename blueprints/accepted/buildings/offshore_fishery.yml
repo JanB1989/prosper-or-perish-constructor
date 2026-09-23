@@ -1,6 +1,11 @@
 ﻿version: 2
 tag: offshore_fishery
 footprint: fishery
+labour:
+  class: primary_reformation
+  methods:
+    pp_offshore_fishery_base_catch: base
+    pp_offshore_fishery_worker_victuals: base
 output_tag: ocean_fishery_offshore
 upgrade_chain:
   family: ocean_fishery
@@ -54,6 +59,7 @@ building:
 
     unique_production_methods = {
         pp_offshore_fishery_base_catch = {
+            manual_labor_cost = 0.018
             produced = fish
             output = 0.09
             category = building_maintenance
@@ -64,29 +70,30 @@ building:
             category = building_maintenance
         }
         pp_offshore_fishery_herring_busses = {
-            lumber = 0.315 # buss hulls
-            fiber_crops = 0.194 # drift nets
-            cloth = 0.015 # small sails and net patches
-            salt = 0.042 # barrel curing
+            lumber = 0.29 # buss hulls
+            fiber_crops = 0.18 # drift nets
+            salt = 0.039 # barrel curing
+            manual_labor_cost = 0.13
             produced = fish
             output = 1.185
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_offshore_fishery_distant_water_schooners = {
-            naval_supplies = 0.270 # rigging stores
-            victuals = 0.150 # fleet provisions
-            salt = 0.050 # catch curing
-            tools = 0.020 # deck gear and repairs
+            naval_supplies = 0.25 # rigging stores
+            victuals = 0.14 # fleet provisions
+            salt = 0.046 # catch curing
+            manual_labor_cost = 0.18
             produced = fish
             output = 1.55
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_offshore_fishery_steam_trawlers = {
-            naval_supplies = 0.225 # trawl gear
-            coal = 0.210 # steam fuel
-            tools = 0.155 # winches, repairs
+            naval_supplies = 0.2 # trawl gear
+            coal = 0.19 # steam fuel
+            tools = 0.14 # winches, repairs
+            manual_labor_cost = 0.16
             produced = fish
             output = 1.80
             debug_max_profit = 0
@@ -98,6 +105,7 @@ building:
             category = building_maintenance
         }
         pp_offshore_fishery_worker_victuals = {
+            manual_labor_cost = 0.04
             produced = victuals
             output = 0.067
             debug_max_profit = 0

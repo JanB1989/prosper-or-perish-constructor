@@ -1,6 +1,10 @@
 version: 2
 tag: cotton_farm
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_cotton_farm_base_cotton: base
 upgrade_chain:
   family: cotton_farm
   tier: 0
@@ -47,6 +51,7 @@ building:
 
     unique_production_methods = {
         pp_cotton_farm_base_cotton = {
+            manual_labor_cost = 0.024
             produced = cotton
             output = 0.040
             category = building_maintenance
@@ -57,9 +62,10 @@ building:
             category = building_maintenance
         }
         pp_cotton_farm_gin_house = {
-            lumber = 0.093 # drying sheds
-            fiber_crops = 0.040 # picking sacks, bale cloth
-            tools = 0.011 # ginning rollers
+            lumber = 0.076 # drying sheds
+            fiber_crops = 0.033 # picking sacks, bale cloth
+            tools = 0.009 # ginning rollers
+            manual_labor_cost = 0.05
             produced = cotton
             output = 0.089
             category = building_maintenance

@@ -27,6 +27,7 @@ build_time = plantation_build_time
 
 unique_production_methods = {
     pp_tobacco_plantation_base_tobacco = {
+        manual_labor_cost = 0.18
         produced = tobacco
         output = 0.300
         category = building_maintenance
@@ -37,10 +38,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tobacco_plantation_curing_barns = {
-        slaves_goods = 0.320 # plantation gangs
-        lumber = 0.350 # curing barns
-        pottery = 0.100 # sweating and storage jars
-        tools = 0.045 # knives and presses
+        slaves_goods = 0.3 # plantation gangs
+        lumber = 0.33 # curing barns
+        pottery = 0.095 # sweating and storage jars
+        tools = 0.043 # knives and presses
+        manual_labor_cost = 0.11
         produced = tobacco
         output = 0.667
         category = building_maintenance

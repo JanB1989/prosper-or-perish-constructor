@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: silver_mine_improved
 footprint: mining
+labour:
+  class: primary_discovery
+  methods:
+    pp_silver_mine_improved_base_silver: base
 upgrade_chain:
   family: silver_mine
   tier: 1
@@ -52,6 +56,7 @@ building:
 
     unique_production_methods = {
         pp_silver_mine_improved_base_silver = {
+            manual_labor_cost = 0.084
             produced = silver
             output = 0.07
             category = building_maintenance
@@ -62,9 +67,10 @@ building:
             category = building_maintenance
         }
         pp_silver_mine_improved_silver = {
-            lumber = 0.24
-            tools = 0.26
-            beeswax = 0.11
+            lumber = 0.21
+            tools = 0.22
+            beeswax = 0.095
+            manual_labor_cost = 0.21
             produced = silver
             output = 0.274
             category = building_maintenance
@@ -75,15 +81,17 @@ building:
             category = building_maintenance
         }
         pp_silver_mine_improved_lead = {
-            lumber = 0.04
-            tools = 0.037
+            lumber = 0.034
+            tools = 0.032
+            manual_labor_cost = 0.027
             produced = lead
             output = 0.102
             category = building_maintenance
         }
         pp_silver_mine_improved_gold = {
-            lumber = 0.04
-            tools = 0.04
+            lumber = 0.034
+            tools = 0.034
+            manual_labor_cost = 0.03
             produced = goods_gold
             output = 0.027
             category = building_maintenance

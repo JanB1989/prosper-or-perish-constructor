@@ -26,6 +26,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_marble_saw_yard_base_marble = {
+        manual_labor_cost = 0.08
         produced = marble
         output = 0.08
         category = building_maintenance
@@ -36,9 +37,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_marble_saw_yard_marble = {
-        lumber = 0.25
-        tools = 0.29
-        leather = 0.07
+        lumber = 0.21
+        tools = 0.24
+        leather = 0.057
+        manual_labor_cost = 0.27
         produced = marble
         output = 0.35
         category = building_maintenance
@@ -49,15 +51,17 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_marble_saw_yard_stone = {
-        lumber = 0.04
-        tools = 0.02
+        lumber = 0.033
+        tools = 0.016
+        manual_labor_cost = 0.025
         produced = stone
         output = 0.144
         category = building_maintenance
     }
     pp_marble_saw_yard_sand = {
-        lumber = 0.03
-        tools = 0.02
+        lumber = 0.025
+        tools = 0.016
+        manual_labor_cost = 0.022
         produced = sand
         output = 0.198
         category = building_maintenance

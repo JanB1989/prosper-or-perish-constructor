@@ -22,7 +22,10 @@ MANIFEST_PATH = ROOT / "blueprints" / "buildings.manifest.yml"
 
 def test_accepted_blueprints_have_no_unallowed_evaluation_rule_violations() -> None:
     config = load_project_config(ROOT / "constructor.toml")
-    price_by_good = load_balance_prices(profile=config.profile, load_order_path=config.load_order_path)
+    price_by_good = {
+        **load_balance_prices(profile=config.profile, load_order_path=config.load_order_path),
+        **config.blueprint_evaluation.price_overrides,
+    }
     raw_material_goods = load_raw_material_goods(profile=config.profile, load_order_path=config.load_order_path)
     global_unlock_age_by_method = load_global_unlock_ages(
         profile=config.profile,

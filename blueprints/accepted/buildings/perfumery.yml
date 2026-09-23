@@ -1,6 +1,8 @@
 ﻿version: 2
 tag: perfumery
 footprint: urban_workshop
+labour:
+  class: craft_absolutism
 building:
   key: perfumery
   mode: REPLACE
@@ -29,8 +31,9 @@ building:
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_perfumery_blended_incense = {
-            liquor = 0.2
-            pepper = 0.25
+            liquor = 0.19
+            pepper = 0.23
+            manual_labor_cost = 0.13
             produced = incense
             output = 1
             debug_max_profit = 0.6

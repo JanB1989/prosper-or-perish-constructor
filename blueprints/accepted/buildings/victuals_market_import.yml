@@ -1,6 +1,8 @@
 version: 2
 tag: victuals_market_import
 footprint: trade
+labour:
+  class: keep
 building:
   key: victuals_market_import
   mode: CREATE

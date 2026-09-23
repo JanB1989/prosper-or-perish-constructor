@@ -25,6 +25,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_lead_mine_base_lead = {
+        manual_labor_cost = 0.036
         produced = lead
         output = 0.09
         category = building_maintenance
@@ -35,11 +36,20 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_lead_mine_lead = {
-        lumber = 0.14
-        tools = 0.25
-        beeswax = 0.04
+        lumber = 0.11
+        tools = 0.21
+        beeswax = 0.033
+        manual_labor_cost = 0.2
         produced = lead
         output = 0.63
+        category = building_maintenance
+    }
+    pp_lead_mine_hushing = {
+        lumber = 0.22
+        beeswax = 0.067
+        manual_labor_cost = 0.43
+        produced = lead
+        output = 0.504
         category = building_maintenance
     }
 }
@@ -48,17 +58,19 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_lead_mine_silver = {
-        lumber = 0.03
-        tools = 0.03
-        lead = 0.02
+        lumber = 0.025
+        tools = 0.025
+        lead = 0.016
+        manual_labor_cost = 0.033
         produced = silver
         output = 0.033
         category = building_maintenance
     }
     pp_lead_mine_gold = {
-        lumber = 0.03
-        tools = 0.03
-        lead = 0.02
+        lumber = 0.025
+        tools = 0.025
+        lead = 0.016
+        manual_labor_cost = 0.033
         produced = goods_gold
         output = 0.026
         category = building_maintenance

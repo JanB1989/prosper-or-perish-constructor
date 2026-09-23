@@ -1,6 +1,10 @@
 version: 2
 tag: horse_breeders
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_horse_breeders_base_horses: base
 upgrade_chain:
   family: horse_breeders
   tier: 0
@@ -42,6 +46,7 @@ building:
 
     unique_production_methods = {
         pp_horse_breeders_base_horses = {
+            manual_labor_cost = 0.06
             produced = horses
             output = 0.100
             category = building_maintenance
@@ -52,16 +57,18 @@ building:
             category = building_maintenance
         }
         pp_horse_breeders_stud_yards = {
-            wheat = 0.433 # fodder grain
-            leather = 0.047 # tack and harness
+            wheat = 0.36 # fodder grain
+            leather = 0.039 # tack and harness
+            manual_labor_cost = 0.097
             produced = horses
             output = 0.222
             category = building_maintenance
         }
         pp_horse_breeders_selected_stallions = {
-            wheat = 0.50 # grain and stable feed
-            legumes = 0.20 # hay and fodder leys
-            leather = 0.07 # tack and harness
+            wheat = 0.41 # grain and stable feed
+            legumes = 0.16 # hay and fodder leys
+            leather = 0.057 # tack and harness
+            manual_labor_cost = 0.17
             produced = horses
             output = 0.34
             debug_max_profit = 0

@@ -1,6 +1,8 @@
 version: 2
 tag: scriptorium
 footprint: urban_workshop
+labour:
+  class: craft_medieval
 building:
   key: scriptorium
   mode: REPLACE
@@ -24,9 +26,10 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_scriptorium_scriptorium_maintenance = {
-            dyes = 0.054
-            paper = 0.213
-            lumber = 0.107
+            dyes = 0.046
+            paper = 0.18
+            lumber = 0.092
+            manual_labor_cost = 0.12
             produced = books
             output = 0.3
             debug_max_profit = guild_profit_margin

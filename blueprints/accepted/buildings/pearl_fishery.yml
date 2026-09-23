@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: pearl_fishery
 footprint: fishery
+labour:
+  class: primary_medieval
+  methods:
+    pp_pearl_fishery_base_pearls: base
 building:
   key: pearl_fishery
   mode: CREATE
@@ -39,6 +43,7 @@ building:
 
     unique_production_methods = {
         pp_pearl_fishery_base_pearls = {
+            manual_labor_cost = 0.08
             produced = pearls
             output = 0.1
             category = building_maintenance
@@ -49,8 +54,9 @@ building:
             category = building_maintenance
         }
         pp_pearl_fishery_dhow_diving_crews = {
-            naval_supplies = 0.03
-            victuals = 0.06
+            naval_supplies = 0.025
+            victuals = 0.049
+            manual_labor_cost = 0.048
             produced = pearls
             output = 0.078
             category = building_maintenance

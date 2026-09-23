@@ -1,6 +1,8 @@
 version: 2
 tag: glass_guild
 footprint: urban_workshop
+labour:
+  class: craft_medieval
 building:
   key: glass_guild
   mode: REPLACE
@@ -28,20 +30,21 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_glass_guild_glass_guild_maintenance = {
-            lumber = 0.219
-            sand = 1.094
-            tools = 0.416
+            lumber = 0.19
+            sand = 0.94
+            tools = 0.36
+            manual_labor_cost = 0.31
             produced = glass
             output = 0.75
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_glass_guild_metal_glass_guild_maintenance = {
-            lumber = 0.355
-            sand = 1.148
-            tools = 0.47
-            alum = 0.046
-            lead = 0.091
+            lumber = 0.32
+            sand = 1.03
+            tools = 0.42
+            lead = 0.082
+            manual_labor_cost = 0.44
             produced = glass
             output = 1.0
             debug_max_profit = guild_profit_margin

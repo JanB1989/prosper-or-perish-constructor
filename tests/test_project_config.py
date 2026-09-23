@@ -2965,8 +2965,10 @@ def test_victuals_market_construction_and_coastal_saltern_debug_keys_are_localiz
     assert isinstance(lined_pans, CList)
     values = _entry_values(lined_pans)
     assert values["output"] == 0.24
-    assert values["clay"] == 1.333
-    assert values["pottery"] == 0.383
+    # production labour (primary class share) replaced part of the goods on 2026-09-23
+    assert values["clay"] == 1.09
+    assert values["pottery"] == 0.31
+    assert values["manual_labor_cost"] == 0.19
 
 
 def test_salt_rgo_bonus_reduces_food_decay_without_affecting_saltpeter() -> None:

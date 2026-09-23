@@ -1,6 +1,10 @@
 version: 2
 tag: salt_mine
 footprint: mining
+labour:
+  class: primary_medieval
+  methods:
+    pp_salt_mine_base_salt: base
 upgrade_chain:
   family: salt_mine
   tier: 0
@@ -90,6 +94,7 @@ building:
 
     unique_production_methods = {
         pp_salt_mine_base_salt = {
+            manual_labor_cost = 0.09
             produced = salt
             output = 0.090
             category = building_maintenance
@@ -100,9 +105,10 @@ building:
             category = building_maintenance
         }
         pp_salt_mine_hand_cut_galleries = {
-            lumber = 0.325 # pit props
-            tools = 0.203 # picks and wedges
-            beeswax = 0.102 # mine candles
+            lumber = 0.27 # pit props
+            tools = 0.17 # picks and wedges
+            beeswax = 0.084 # mine candles
+            manual_labor_cost = 0.24
             produced = salt
             output = 0.280
             category = building_maintenance

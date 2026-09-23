@@ -1,6 +1,19 @@
 ﻿version: 2
 tag: farming_village
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_farming_village_base_livestock: base
+    pp_millet_farm_base_millet: base
+    pp_wheat_farm_base_wheat: base
+    pp_maize_farm_base_maize: base
+    pp_rice_farm_base_rice: base
+    pp_legumes_farm_base_legumes: base
+    pp_potato_farm_base_potato: base
+    pp_olives_farm_base_olives: base
+    pp_farming_village_minor_beeswax: base
+    pp_farming_village_worker_victuals: base
 upgrade_chain:
   family: farming_village
   tier: 0
@@ -71,41 +84,49 @@ building:
 
         unique_production_methods = {
             pp_farming_village_base_livestock = {
+                manual_labor_cost = 0.018
                 output = 0.06
                 produced = livestock
                 category = building_maintenance
             }
             pp_millet_farm_base_millet = {
+                manual_labor_cost = 0.012
                 output = 0.06
                 produced = millet
                 category = building_maintenance
             }
             pp_wheat_farm_base_wheat = {
+                manual_labor_cost = 0.012
                 output = 0.06
                 produced = wheat
                 category = building_maintenance
             }
             pp_maize_farm_base_maize = {
+                manual_labor_cost = 0.012
                 output = 0.06
                 produced = maize
                 category = building_maintenance
             }
             pp_rice_farm_base_rice = {
+                manual_labor_cost = 0.012
                 output = 0.06
                 produced = rice
                 category = building_maintenance
             }
             pp_legumes_farm_base_legumes = {
+                manual_labor_cost = 0.012
                 output = 0.06
                 produced = legumes
                 category = building_maintenance
             }
             pp_potato_farm_base_potato = {
+                manual_labor_cost = 0.012
                 output = 0.06
                 produced = potato
                 category = building_maintenance
             }
             pp_olives_farm_base_olives = {
+                manual_labor_cost = 0.012
                 output = 0.06
                 produced = olives
                 category = building_maintenance
@@ -116,40 +137,45 @@ building:
                 category = building_maintenance
             }
             pp_farming_village_maintenance = {
-                tools = 0.010
-                clay = 0.2
+                tools = 0.008
+                clay = 0.16
+                manual_labor_cost = 0.026
                 output = 0.091
                 produced = livestock
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_millet_farm_maintenance = {
-                tools = 0.03
-                horses = 0.023
+                tools = 0.025
+                horses = 0.019
+                manual_labor_cost = 0.028
                 output = 0.166
                 produced = millet
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_millet_farm_livestock = {
-                tools = 0.03
-                livestock = 0.045
+                tools = 0.025
+                livestock = 0.037
+                manual_labor_cost = 0.028
                 output = 0.166
                 produced = millet
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_wheat_farm_maintenance = {
-                tools = 0.03
-                horses = 0.023
+                tools = 0.025
+                horses = 0.019
+                manual_labor_cost = 0.028
                 output = 0.166
                 produced = wheat
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_wheat_farm_livestock = {
-                tools = 0.03
-                livestock = 0.045
+                tools = 0.025
+                livestock = 0.037
+                manual_labor_cost = 0.028
                 output = 0.166
                 produced = wheat
                 debug_max_profit = 0
@@ -157,7 +183,8 @@ building:
             }
             pp_maize_farm_maintenance = {
                 tools = 0.0
-                livestock = 0.03
+                livestock = 0.024
+                manual_labor_cost = 0.009
                 output = 0.110
                 produced = maize
                 debug_max_profit = 0
@@ -165,23 +192,26 @@ building:
             }
             pp_rice_farm_maintenance = {
                 tools = 0.0
-                livestock = 0.03
+                livestock = 0.024
+                manual_labor_cost = 0.009
                 output = 0.110
                 produced = rice
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_legumes_farm_maintenance = {
-                tools = 0.03
-                horses = 0.023
+                tools = 0.025
+                horses = 0.019
+                manual_labor_cost = 0.028
                 output = 0.166
                 produced = legumes
                 debug_max_profit = 0
                 category = building_maintenance
             }
             pp_legumes_farm_livestock = {
-                tools = 0.03
-                livestock = 0.045
+                tools = 0.025
+                livestock = 0.037
+                manual_labor_cost = 0.028
                 output = 0.166
                 produced = legumes
                 debug_max_profit = 0
@@ -189,7 +219,8 @@ building:
             }
             pp_potato_farm_maintenance = {
                 tools = 0.0
-                livestock = 0.03
+                livestock = 0.024
+                manual_labor_cost = 0.009
                 output = 0.110
                 produced = potato
                 debug_max_profit = 0
@@ -197,7 +228,8 @@ building:
             }
             pp_olives_farm_maintenance = {
                 tools = 0.0
-                livestock = 0.03
+                livestock = 0.024
+                manual_labor_cost = 0.009
                 output = 0.110
                 produced = olives
                 debug_max_profit = 0
@@ -211,6 +243,7 @@ building:
             pp_farming_village_minor_beeswax = {
                 furniture = 0.0
                 cloth = 0.0
+                manual_labor_cost = 0.025
                 produced = beeswax
                 output = 0.063
                 debug_max_profit = 0
@@ -222,6 +255,7 @@ building:
                 category = building_maintenance
             }
             pp_farming_village_worker_victuals = {
+                manual_labor_cost = 0.02
                 produced = victuals
                 output = 0.033
                 debug_max_profit = 0

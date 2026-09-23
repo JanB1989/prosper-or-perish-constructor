@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: gem_sluice
 footprint: extractive_open
+labour:
+  class: primary_reformation
+  methods:
+    pp_gem_sluice_base_gems: base
 upgrade_chain:
   family: gem_mine
   tier: 1
@@ -52,6 +56,7 @@ building:
 
     unique_production_methods = {
         pp_gem_sluice_base_gems = {
+            manual_labor_cost = 0.056
             produced = gems
             output = 0.07
             category = building_maintenance
@@ -62,8 +67,9 @@ building:
             category = building_maintenance
         }
         pp_gem_sluice_gems = {
-            lumber = 0.382
-            tools = 0.34
+            lumber = 0.34
+            tools = 0.3
+            manual_labor_cost = 0.2
             produced = gems
             output = 0.476
             category = building_maintenance
@@ -74,15 +80,17 @@ building:
             category = building_maintenance
         }
         pp_gem_sluice_gold = {
-            lumber = 0.05
-            tools = 0.04
+            lumber = 0.045
+            tools = 0.036
+            manual_labor_cost = 0.022
             produced = goods_gold
             output = 0.026
             category = building_maintenance
         }
         pp_gem_sluice_sand = {
-            lumber = 0.03
-            tools = 0.02
+            lumber = 0.027
+            tools = 0.018
+            manual_labor_cost = 0.012
             produced = sand
             output = 0.198
             category = building_maintenance

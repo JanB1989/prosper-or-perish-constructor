@@ -1,6 +1,8 @@
 version: 2
 tag: printing_press_shop
 footprint: urban_workshop
+labour:
+  class: craft_discovery
 building:
   key: printing_press_shop
   mode: REPLACE
@@ -25,10 +27,10 @@ building:
     build_time = workshop_build_time
     unique_production_methods = {
         pp_printing_press_shop_printing_press_maintenance = {
-            lead = 0.239
-            paper = 0.835
-            tools = 0.03
-            lumber = 0.298
+            lead = 0.22
+            paper = 0.76
+            lumber = 0.27
+            manual_labor_cost = 0.33
             produced = books
             output = 1.0
             debug_max_profit = workshop_profit_margin

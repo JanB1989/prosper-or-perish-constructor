@@ -33,6 +33,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_water_sawmill_base_lumber = {
+        manual_labor_cost = 0.028
         produced = lumber
         output = 0.079
         category = building_maintenance
@@ -45,32 +46,36 @@ unique_production_methods = {
     pp_water_sawmill_horse_tools = {
         produced = lumber
         output = 1.400
-        tools = 0.477 # saw frame, gearing
-        horses = 0.130 # fast log hauling
+        tools = 0.42 # saw frame, gearing
+        horses = 0.12 # fast log hauling
+        manual_labor_cost = 0.22
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_water_sawmill_horse_victuals = {
         produced = lumber
         output = 1.360
-        horses = 0.130 # fast log hauling
-        victuals = 0.560 # sawyer provisions
+        horses = 0.12 # fast log hauling
+        victuals = 0.5 # sawyer provisions
+        manual_labor_cost = 0.21
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_water_sawmill_livestock_tools = {
         produced = lumber
         output = 1.314
-        tools = 0.460 # saw frame, gearing
-        livestock = 0.260 # ox log hauling
+        tools = 0.41 # saw frame, gearing
+        livestock = 0.23 # ox log hauling
+        manual_labor_cost = 0.21
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_water_sawmill_livestock_victuals = {
         produced = lumber
         output = 1.269
-        livestock = 0.260 # ox log hauling
-        victuals = 0.540 # sawyer provisions
+        livestock = 0.23 # ox log hauling
+        victuals = 0.48 # sawyer provisions
+        manual_labor_cost = 0.23
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -80,14 +85,16 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_water_sawmill_extra_rations = {
-        victuals = 0.705 # crew rations
+        victuals = 0.63 # crew rations
+        manual_labor_cost = 0.22
         produced = lumber
         output = 1.208
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_water_sawmill_wound_salves = {
-        medicaments = 0.19 # injury treatment
+        medicaments = 0.17 # injury treatment
+        manual_labor_cost = 0.02
         produced = lumber
         output = 0.138
         debug_max_profit = 0

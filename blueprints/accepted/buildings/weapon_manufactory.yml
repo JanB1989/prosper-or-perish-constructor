@@ -1,6 +1,8 @@
 version: 2
 tag: weapon_manufactory
 footprint: manufactory
+labour:
+  class: craft_absolutism
 building:
   key: weapon_manufactory
   mode: REPLACE
@@ -25,10 +27,11 @@ building:
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_weapon_manufactory_weapon_manufactory_maintenance = {
-            lumber = 0.638
-            coal = 0.638
-            iron = 0.51
-            tools = 0.51
+            lumber = 0.59
+            coal = 0.59
+            iron = 0.47
+            tools = 0.47
+            manual_labor_cost = 0.45
             category = manufactory_input
             produced = weaponry
             output = 2.0

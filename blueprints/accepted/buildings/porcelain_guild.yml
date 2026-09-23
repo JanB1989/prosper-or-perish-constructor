@@ -1,6 +1,8 @@
 version: 2
 tag: porcelain_guild
 footprint: urban_workshop
+labour:
+  class: craft_medieval
 building:
   key: porcelain_guild
   mode: REPLACE
@@ -23,9 +25,10 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_porcelain_guild_porcelain_guild_maintenance = {
-            clay = 3.05
-            coal = 0.61
-            tools = 0.061
+            clay = 2.62
+            coal = 0.52
+            tools = 0.052
+            manual_labor_cost = 0.42
             produced = porcelain
             output = 1.0
             debug_max_profit = guild_profit_margin

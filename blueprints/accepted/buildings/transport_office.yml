@@ -1,13 +1,22 @@
 ﻿version: 2
 tag: transport_office
 footprint: infrastructure
+labour:
+  class: keep
 building:
   key: transport_office
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots: []
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_transport_office_maintenance
+        - pp_transport_office_hand_carts
+        - pp_transport_office_ledgered_dispatch
   possible_production_methods:
     - pp_transport_office_maintenance
+    - pp_transport_office_hand_carts
+    - pp_transport_office_ledgered_dispatch
   body: |2-
     is_foreign = no
     max_levels = 100
@@ -34,6 +43,8 @@ building:
 
     possible_production_methods = {
       pp_transport_office_maintenance
+      pp_transport_office_hand_carts
+      pp_transport_office_ledgered_dispatch
     }
 
     raw_modifier = {
@@ -47,10 +58,28 @@ production_methods:
       tools = 0.20
       cloth = 0.10
       category = building_maintenance
+  - key: pp_transport_office_hand_carts
+    body: |2-
+      victuals = 0.60
+      paper = 0.15
+      tools = 0.08
+      cloth = 0.05
+      manual_labor_cost = 1.45
+      category = building_maintenance
+  - key: pp_transport_office_ledgered_dispatch
+    body: |2-
+      victuals = 0.40
+      paper = 0.40
+      tools = 0.25
+      cloth = 0.04
+      category = building_maintenance
 localization:
   entries:
+    transport_office_slot_0: Freight Crews
     pp_transport_office_construction: Transport Office Construction
     pp_transport_office_maintenance: Transport Office Maintenance
+    pp_transport_office_hand_carts: Handcart Dispatch
+    pp_transport_office_ledgered_dispatch: Ledgered Dispatch
     transport_office: Transport Office
     transport_office_desc: Freight clerks, porters, haulers, and weighmen crowd the transport office. Ledgers, yard gates, and hired hands turn urban bulk into ordered dispatches for the market.
 icon:

@@ -1,6 +1,8 @@
 version: 2
 tag: glass_workshop
 footprint: urban_workshop
+labour:
+  class: craft_reformation
 building:
   key: glass_workshop
   mode: REPLACE
@@ -24,11 +26,11 @@ building:
     build_time = workshop_build_time
     unique_production_methods = {
         pp_glass_workshop_metal_glass_workshop_maintenance = {
-            lumber = 0.376
-            sand = 1.174
-            tools = 0.481
-            alum = 0.047
-            lead = 0.106
+            lumber = 0.35
+            sand = 1.11
+            tools = 0.45
+            lead = 0.1
+            manual_labor_cost = 0.33
             produced = glass
             output = 1.1
             debug_max_profit = workshop_profit_margin

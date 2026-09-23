@@ -1,6 +1,8 @@
 version: 2
 tag: porcelain_manufactory
 footprint: manufactory
+labour:
+  class: craft_absolutism
 building:
   key: porcelain_manufactory
   mode: REPLACE
@@ -24,9 +26,10 @@ building:
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_porcelain_manufactory_porcelain_manufactory_maintenance = {
-            clay = 6.088
-            coal = 0.761
-            tools = 0.381
+            clay = 5.66
+            coal = 0.71
+            tools = 0.35
+            manual_labor_cost = 0.42
             produced = porcelain
             output = 2.0
             debug_max_profit = manufactory_profit_margin

@@ -1,6 +1,8 @@
 version: 2
 tag: tools_workshop
 footprint: urban_workshop
+labour:
+  class: craft_reformation
 building:
   key: tools_workshop
   mode: REPLACE
@@ -24,7 +26,8 @@ building:
     build_time = workshop_build_time
     unique_production_methods = {
         pp_tools_workshop_metalwork_workshop_maintenance = {
-            iron = 0.88
+            iron = 0.79
+            manual_labor_cost = 0.31
             produced = tools
             output = 1.1
             debug_max_profit = workshop_profit_margin

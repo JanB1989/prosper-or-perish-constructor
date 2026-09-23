@@ -1,6 +1,10 @@
 version: 2
 tag: clove_grove
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_clove_grove_base_cloves: base
 building:
   key: clove_grove
   mode: CREATE
@@ -41,6 +45,7 @@ building:
 
     unique_production_methods = {
         pp_clove_grove_base_cloves = {
+            manual_labor_cost = 0.037
             produced = cloves
             output = 0.037
             category = building_maintenance
@@ -51,8 +56,9 @@ building:
             category = building_maintenance
         }
         pp_clove_grove_curing_houses = {
-            lumber = 0.156 # curing racks
-            coal = 0.052 # drying heat
+            lumber = 0.13 # curing racks
+            coal = 0.043 # drying heat
+            manual_labor_cost = 0.064
             produced = cloves
             output = 0.079
             category = building_maintenance

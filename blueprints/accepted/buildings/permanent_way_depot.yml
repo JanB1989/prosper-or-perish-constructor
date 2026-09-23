@@ -1,6 +1,8 @@
 ﻿version: 2
 tag: permanent_way_depot
 footprint: infrastructure
+labour:
+  class: keep
 output_tag: road_3_permanent_way_depot
 upgrade_chain:
   family: road_infrastructure
@@ -12,9 +14,16 @@ building:
   key: permanent_way_depot
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots: []
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_permanent_way_depot_maintenance
+        - pp_permanent_way_depot_hand_laying
+        - pp_permanent_way_depot_standardized_fittings
   possible_production_methods:
     - pp_permanent_way_depot_maintenance
+    - pp_permanent_way_depot_hand_laying
+    - pp_permanent_way_depot_standardized_fittings
   body: |2-
     is_foreign = no
     max_levels = 1
@@ -42,6 +51,8 @@ building:
 
     possible_production_methods = {
       pp_permanent_way_depot_maintenance
+      pp_permanent_way_depot_hand_laying
+      pp_permanent_way_depot_standardized_fittings
     }
 
     raw_modifier = {
@@ -60,6 +71,26 @@ production_methods:
       coal = 0.70
       sand = 2.00
       category = building_maintenance
+  - key: pp_permanent_way_depot_hand_laying
+    body: |2-
+      steel = 1.80
+      lumber = 2.00
+      masonry = 2.00
+      tools = 0.40
+      coal = 0.30
+      sand = 2.00
+      manual_labor_cost = 7.50
+      category = building_maintenance
+  - key: pp_permanent_way_depot_standardized_fittings
+    body: |2-
+      steel = 1.90
+      lumber = 1.10
+      masonry = 0.90
+      tools = 1.45
+      coal = 0.55
+      sand = 0.90
+      paper = 0.15
+      category = building_maintenance
 prices:
   - key: pp_permanent_way_depot_price
     body: |2-
@@ -71,12 +102,15 @@ advancements:
       unlock_production_method = pp_permanent_way_depot_maintenance
 localization:
   entries:
+    permanent_way_depot_slot_0: Permanent Way Crews
     MODIFIER_TYPE_DESC_pp_permanent_way_depot_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('permanent_way_depot')|e].
     MODIFIER_TYPE_NAME_pp_permanent_way_depot_price_cost_modifier: Permanent Way Depot Cost
     permanent_way_depot: Permanent Way Depot
     permanent_way_depot_desc: Platelayers, gangers, timber sleepers, rails, ballast, and tool stores keep the permanent way fit for trains and freight.
     pp_permanent_way_depot_construction: Permanent Way Depot Construction
     pp_permanent_way_depot_maintenance: Permanent Way Crews
+    pp_permanent_way_depot_hand_laying: Hand-Laid Permanent Way
+    pp_permanent_way_depot_standardized_fittings: Standardized Rails and Fittings
     pp_permanent_way_depot_price: Permanent Way Depot Price
 icon:
   source_png: ../assets/icons/permanent_way_depot.png

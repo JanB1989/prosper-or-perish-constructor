@@ -1,6 +1,10 @@
 version: 2
 tag: elephant_kraal
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_elephant_kraal_base_elephants: base
 building:
   key: elephant_kraal
   mode: CREATE
@@ -41,6 +45,7 @@ building:
 
     unique_production_methods = {
         pp_elephant_kraal_base_elephants = {
+            manual_labor_cost = 0.036
             produced = elephants
             output = 0.036
             category = building_maintenance
@@ -51,8 +56,9 @@ building:
             category = building_maintenance
         }
         pp_elephant_kraal_kheddah_stockades = {
-            lumber = 0.103 # stockades, gates
-            fruit = 0.171 # fodder, bait
+            lumber = 0.084 # stockades, gates
+            fruit = 0.14 # fodder, bait
+            manual_labor_cost = 0.064
             produced = elephants
             output = 0.076
             category = building_maintenance

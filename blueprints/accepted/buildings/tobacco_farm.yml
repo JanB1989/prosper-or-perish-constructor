@@ -1,6 +1,10 @@
 version: 2
 tag: tobacco_farm
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_tobacco_farm_base_tobacco: base
 upgrade_chain:
   family: tobacco_farm
   tier: 0
@@ -47,6 +51,7 @@ building:
 
     unique_production_methods = {
         pp_tobacco_farm_base_tobacco = {
+            manual_labor_cost = 0.024
             produced = tobacco
             output = 0.040
             category = building_maintenance
@@ -57,9 +62,10 @@ building:
             category = building_maintenance
         }
         pp_tobacco_farm_curing_barns = {
-            lumber = 0.117 # curing barns
-            fiber_crops = 0.017 # hanging cords, packing twine
-            tools = 0.015 # knives and presses
+            lumber = 0.096 # curing barns
+            fiber_crops = 0.014 # hanging cords, packing twine
+            tools = 0.012 # knives and presses
+            manual_labor_cost = 0.053
             produced = tobacco
             output = 0.089
             category = building_maintenance

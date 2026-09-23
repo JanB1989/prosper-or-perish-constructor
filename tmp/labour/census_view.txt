@@ -1,0 +1,853 @@
+
+##### administration
+ablaq_palace [burghers emp=0.3 REPLACE] 1 pm
+    ~ablaq_palace_maintenance                                silk out=  0.35 val=  1.40 cost=  1.33 c/o= 0.947 L=  0.0 | lumber=0.149 marble=0.213
+
+##### estate_land
+shoen [peasants emp=1.0 REPLACE] 5 pm
+    ~shoen_quarries_maintenance                             stone out=   0.5 val=  0.50 cost=  0.46 c/o=0.9295 L=  0.0 | tools=0.143
+    ~shoen_lumbermills_maintenance                         lumber out=   0.6 val=  1.05 cost=  1.02 c/o=0.9748 L=  0.0 | tools=0.19 fiber_crops=0.203
+    ~shoen_fiber_crops_farm_maintenance               fiber_crops out=   0.5 val=  1.00 cost=  0.97 c/o=0.9665 L=  0.0 | lumber=0.27 tools=0.152
+    ~shoen_ironsand_maintenance                              iron out=   0.3 val=  1.05 cost=  1.03 c/o=0.9819 L=  0.0 | sand=0.697 tools=0.21
+    ~shoen_masonry_maintenance                            masonry out=   0.8 val=  0.80 cost=  0.76 c/o=0.9494 L=  0.0 | lumber=0.304 tools=0.07
+
+##### extractive_open
+alum_quarry [laborers emp=1 CREATE] 4 pm
+    ~base_alum                                               alum out=  0.08 val=  0.24 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~alum                                                    alum out= 0.424 val=  1.27 cost=  1.17 c/o=0.9226 L=  0.0 | lumber=0.197 tools=0.255
+    ~stone                                                  stone out= 0.168 val=  0.17 cost=  0.17 c/o= 0.997 L=  0.0 | lumber=0.04 tools=0.03
+    ~clay                                                    clay out= 0.264 val=  0.13 cost=  0.12 c/o=0.8902 L=  0.0 | lumber=0.03 tools=0.02
+cinnabar_pit [laborers emp=1 CREATE] 4 pm
+    ~base_mercury                                         mercury out=  0.09 val=  0.27 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~mercury                                              mercury out= 0.423 val=  1.27 cost=  1.15 c/o=0.9062 L=  0.0 | lumber=0.22 tools=0.18 beeswax=0.09
+    ~stone                                                  stone out= 0.144 val=  0.14 cost=  0.12 c/o= 0.816 L=  0.0 | lumber=0.03 tools=0.02
+    ~dyes                                                    dyes out=  0.03 val=  0.12 cost=  0.12 c/o=0.9792 L=  0.0 | lumber=0.03 tools=0.02
+clay_pit [laborers emp=1 REPLACE] 2 pm
+    ~base_clay                                               clay out=   0.3 val=  0.15 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~maintenance                                             clay out=  1.44 val=  0.72 cost=  0.67 c/o=0.9306 L=  0.0 | lumber=0.28 livestock=0.12
+coastal_saltern [laborers emp=1 REPLACE] 2 pm
+    ~base_salt                                               salt out=  0.08 val=  0.40 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~lined_evaporation_pans                                  salt out=  0.24 val=  1.20 cost=  1.05 c/o=0.8746 L=  0.0 | clay=1.333 pottery=0.383
+gem_gravel_pit [laborers emp=1 CREATE] 4 pm
+    ~base_gems                                               gems out=  0.07 val=  0.28 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~gems                                                    gems out= 0.385 val=  1.54 cost=  1.44 c/o=0.9357 L=  0.0 | lumber=0.322 tools=0.27
+    ~gold                                              goods_gold out= 0.026 val=  0.23 cost=  0.18 c/o=0.7906 L=  0.0 | lumber=0.05 tools=0.03
+    ~sand                                                    sand out= 0.192 val=  0.10 cost=  0.09 c/o=0.8854 L=  0.0 | lumber=0.03 tools=0.01
+gem_sluice [laborers emp=1 CREATE] 4 pm
+    ~base_gems                                               gems out=  0.07 val=  0.28 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~gems                                                    gems out= 0.476 val=  1.90 cost=  1.77 c/o=0.9315 L=  0.0 | lumber=0.382 tools=0.34
+    ~gold                                              goods_gold out= 0.026 val=  0.23 cost=  0.22 c/o=0.9295 L=  0.0 | lumber=0.05 tools=0.04
+    ~sand                                                    sand out= 0.198 val=  0.10 cost=  0.12 c/o=1.1869 L=  0.0 | lumber=0.03 tools=0.02
+gold_diggings [laborers emp=1 CREATE] 4 pm
+    ~base_gold                                         goods_gold out=   0.1 val=  0.90 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~gold                                              goods_gold out=   0.2 val=  1.80 cost=  1.50 c/o=0.8333 L=  0.0 | lumber=0.43 tools=0.23
+    ~silver                                                silver out=  0.04 val=  0.24 cost=  0.22 c/o=0.9063 L=  0.0 | lumber=0.05 tools=0.04
+    ~copper                                                copper out= 0.056 val=  0.17 cost=  0.17 c/o= 0.997 L=  0.0 | lumber=0.04 tools=0.03
+inland_saltworks [laborers emp=1 CREATE] 2 pm
+    ~base_salt                                               salt out=  0.08 val=  0.40 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~open_pan_boiling                                        salt out= 0.233 val=  1.17 cost=  1.18 c/o=1.0165 L=  0.0 | lumber=0.467 clay=0.2 pottery=0.267
+marble_quarry [laborers emp=1 CREATE] 4 pm
+    ~base_marble                                           marble out=  0.07 val=  0.35 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~marble                                                marble out= 0.301 val=  1.50 cost=  1.38 c/o=0.9153 L=  0.0 | lumber=0.22 tools=0.25 leather=0.06
+    ~stone                                                  stone out= 0.144 val=  0.14 cost=  0.14 c/o=0.9375 L=  0.0 | lumber=0.04 tools=0.02
+    ~sand                                                    sand out= 0.192 val=  0.10 cost=  0.09 c/o=0.8854 L=  0.0 | lumber=0.03 tools=0.01
+saltpeter_beds [laborers emp=1 CREATE] 2 pm
+    ~base_saltpeter                                     saltpeter out=   0.1 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~leaching_vats                                      saltpeter out= 0.222 val=  0.44 cost=  0.38 c/o=0.8637 L=  0.0 | livestock=0.167 pottery=0.083 fiber_crops=0.025
+sand_pit [laborers emp=1 REPLACE] 2 pm
+    ~base_sand                                               sand out= 0.105 val=  0.05 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~screened_pits                                           sand out= 0.233 val=  0.12 cost=  0.11 c/o=0.9635 L=  0.0 | lumber=0.04 tools=0.013
+stone_quarry [laborers emp=1 REPLACE] 2 pm
+    ~base_stone                                             stone out= 0.105 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~cut_stone                                              stone out= 0.233 val=  0.23 cost=  0.22 c/o=0.9421 L=  0.0 | lumber=0.06 leather=0.023 tools=0.014
+stone_quarry_improved [laborers emp=1 CREATE] 4 pm
+    ~base_stone                                             stone out=  0.15 val=  0.15 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~crane_winch_quarrying                                  stone out=  1.66 val=  1.66 cost=  1.62 c/o=0.9744 L=  0.0 | lumber=0.4 tools=0.19 leather=0.05 horses=0.05
+    ~ox_haulage                                             stone out=  1.47 val=  1.47 cost=  1.43 c/o=0.9711 L=  0.0 | lumber=0.38 tools=0.17 leather=0.04 livestock=0.06
+    ~rubble_breaking                                         sand out=   0.3 val=  0.15 cost=  0.17 c/o=1.1167 L=  0.0 | lumber=0.04 tools=0.03
+tin_streamworks [laborers emp=1 CREATE] 4 pm
+    ~base_tin                                                 tin out=   0.1 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~tin                                                      tin out= 0.631 val=  1.26 cost=  1.19 c/o=0.9441 L=  0.0 | lumber=0.328 tools=0.19
+    ~copper                                                copper out= 0.075 val=  0.23 cost=  0.20 c/o=0.8844 L=  0.0 | lumber=0.058 tools=0.03
+    ~lead                                                    lead out=   0.1 val=  0.20 cost=  0.20 c/o= 0.995 L=  0.0 | lumber=0.058 tools=0.03
+
+##### farm_land
+chili_plantation [laborers emp=1 CREATE] 2 pm
+    ~base_chili                                             chili out= 0.037 val=  0.18 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~sun_drying_mats                                        chili out= 0.083 val=  0.41 cost=  0.35 c/o=0.8512 L=  0.0 | fiber_crops=0.097 tools=0.049
+clove_grove [laborers emp=1 CREATE] 2 pm
+    ~base_cloves                                           cloves out= 0.037 val=  0.18 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~curing_houses                                         cloves out= 0.079 val=  0.40 cost=  0.38 c/o=0.9544 L=  0.0 | lumber=0.156 coal=0.052
+cocoa_grove [laborers emp=1 CREATE] 2 pm
+    ~base_cocoa                                             cocoa out=  0.04 val=  0.16 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~fermentation_houses                                    cocoa out= 0.089 val=  0.36 cost=  0.34 c/o=0.9551 L=  0.0 | furniture=0.09 fiber_crops=0.035
+coffee_grove [laborers emp=1 CREATE] 2 pm
+    ~base_coffee                                           coffee out=  0.04 val=  0.12 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~washing_stations                                      coffee out=  0.09 val=  0.27 cost=  0.26 c/o=0.9667 L=  0.0 | lumber=0.116 pottery=0.058
+cotton_farm [laborers emp=1 CREATE] 2 pm
+    ~base_cotton                                           cotton out=  0.04 val=  0.12 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~gin_house                                             cotton out= 0.089 val=  0.27 cost=  0.28 c/o=1.0431 L=  0.0 | lumber=0.093 fiber_crops=0.04 tools=0.011
+cotton_plantation [slaves emp=1 REPLACE] 2 pm
+    ~base_cotton                                           cotton out=   0.3 val=  0.90 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~gin_house                                             cotton out= 0.667 val=  2.00 cost=  1.80 c/o=0.8998 L=  0.0 | slaves_goods=0.32 lumber=0.28 leather=0.08 tools=0.034
+dye_plantation [laborers emp=1 CREATE] 2 pm
+    ~base_dyes                                               dyes out=  0.04 val=  0.16 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~vat_curing                                              dyes out= 0.089 val=  0.36 cost=  0.34 c/o=0.9501 L=  0.0 | lumber=0.119 tools=0.04
+elephant_kraal [laborers emp=1 CREATE] 2 pm
+    ~base_elephants                                     elephants out= 0.036 val=  0.18 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~kheddah_stockades                                  elephants out= 0.076 val=  0.38 cost=  0.35 c/o=0.9243 L=  0.0 | lumber=0.103 fruit=0.171
+enclosed_sheep_walks [laborers emp=1 CREATE] 2 pm
+    ~base_wool                                               wool out=   0.1 val=  0.25 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~improved_flocks                                         wool out=  1.44 val=  3.60 cost=  1.90 c/o=0.5278 L=  0.0 | tools=0.26 cloth=0.14 leather=0.13 lumber=0.14
+farming_village [peasants emp=1 REPLACE] 21 pm
+    ~base_livestock                                     livestock out=  0.06 val=  0.09 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    pp_millet_farm_base_millet                             millet out=  0.06 val=  0.06 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    pp_wheat_farm_base_wheat                                wheat out=  0.06 val=  0.06 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    pp_maize_farm_base_maize                                maize out=  0.06 val=  0.06 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    pp_rice_farm_base_rice                                   rice out=  0.06 val=  0.06 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    pp_legumes_farm_base_legumes                          legumes out=  0.06 val=  0.06 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    pp_potato_farm_base_potato                             potato out=  0.06 val=  0.06 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    pp_olives_farm_base_olives                             olives out=  0.06 val=  0.06 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~maintenance                                        livestock out= 0.091 val=  0.14 cost=  0.13 c/o=0.9707 L=  0.0 | tools=0.01 clay=0.2
+    pp_millet_farm_maintenance                             millet out= 0.166 val=  0.17 cost=  0.17 c/o= 1.003 L=  0.0 | tools=0.03 horses=0.023
+    pp_millet_farm_livestock                               millet out= 0.166 val=  0.17 cost=  0.17 c/o= 0.994 L=  0.0 | tools=0.03 livestock=0.045
+    pp_wheat_farm_maintenance                               wheat out= 0.166 val=  0.17 cost=  0.17 c/o= 1.003 L=  0.0 | tools=0.03 horses=0.023
+    pp_wheat_farm_livestock                                 wheat out= 0.166 val=  0.17 cost=  0.17 c/o= 0.994 L=  0.0 | tools=0.03 livestock=0.045
+    pp_maize_farm_maintenance                               maize out=  0.11 val=  0.11 cost=  0.04 c/o=0.4091 L=  0.0 | tools=0 livestock=0.03
+    pp_rice_farm_maintenance                                 rice out=  0.11 val=  0.11 cost=  0.04 c/o=0.4091 L=  0.0 | tools=0 livestock=0.03
+    pp_legumes_farm_maintenance                           legumes out= 0.166 val=  0.17 cost=  0.17 c/o= 1.003 L=  0.0 | tools=0.03 horses=0.023
+    pp_legumes_farm_livestock                             legumes out= 0.166 val=  0.17 cost=  0.17 c/o= 0.994 L=  0.0 | tools=0.03 livestock=0.045
+    pp_potato_farm_maintenance                             potato out=  0.11 val=  0.11 cost=  0.04 c/o=0.4091 L=  0.0 | tools=0 livestock=0.03
+    pp_olives_farm_maintenance                             olives out=  0.11 val=  0.11 cost=  0.04 c/o=0.4091 L=  0.0 | tools=0 livestock=0.03
+    ~minor_beeswax                                        beeswax out= 0.063 val=  0.13 cost=  0.00 c/o=   0.0 L=  0.0 | furniture=0 cloth=0
+    ~worker_victuals                                     victuals out= 0.033 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+farming_village_rotations [peasants emp=1 CREATE] 18 pm
+    ~base_livestock                                     livestock out=  0.07 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_millet                                           millet out=  0.07 val=  0.07 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_wheat                                             wheat out=  0.07 val=  0.07 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_maize                                             maize out=  0.07 val=  0.07 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_rice                                               rice out=  0.07 val=  0.07 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_legumes                                         legumes out=  0.07 val=  0.07 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_potato                                           potato out=  0.07 val=  0.07 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_olives                                           olives out=  0.07 val=  0.07 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~livestock                                          livestock out=  0.97 val=  1.46 cost=  1.44 c/o= 0.988 L=  0.0 | tools=0.17 horses=0.14 legumes=0.29 lumber=0.1
+    ~millet                                                millet out=  1.54 val=  1.54 cost=  1.50 c/o=0.9724 L=  0.0 | tools=0.21 horses=0.17 livestock=0.11 fiber_crops=0.07
+    ~wheat                                                  wheat out=  1.54 val=  1.54 cost=  1.50 c/o=0.9756 L=  0.0 | tools=0.21 horses=0.17 legumes=0.24 lumber=0.04
+    ~maize                                                  maize out=  1.54 val=  1.54 cost=  1.53 c/o=0.9951 L=  0.0 | tools=0.21 livestock=0.24 lumber=0.12 fiber_crops=0.14
+    ~rice                                                    rice out=  1.54 val=  1.54 cost=  1.50 c/o=0.9724 L=  0.0 | tools=0.21 livestock=0.26 lumber=0.12 clay=0.43
+    ~legumes                                              legumes out=  1.56 val=  1.56 cost=  1.51 c/o=0.9663 L=  0.0 | tools=0.21 horses=0.17 livestock=0.11 cloth=0.05
+    ~potato                                                potato out=  1.56 val=  1.56 cost=  1.52 c/o=0.9728 L=  0.0 | tools=0.21 livestock=0.26 clay=0.29 cloth=0.1
+    ~olives                                                olives out=  1.54 val=  1.54 cost=  1.42 c/o=0.9237 L=  0.0 | tools=0.21 livestock=0.26 lumber=0.12 pottery=0.14
+    ~hedgerow_hives                                       beeswax out=  0.31 val=  0.62 cost=  0.52 c/o=0.8306 L=  0.0 | tools=0.04 lumber=0.1 fiber_crops=0.08 pottery=0.05
+    ~worker_victuals                                     victuals out= 0.033 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+fiber_crops_farm [laborers emp=1 REPLACE] 2 pm
+    ~base_fiber_crops                                 fiber_crops out= 0.088 val=  0.18 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~retting_yards                                    fiber_crops out= 0.187 val=  0.37 cost=  0.34 c/o=0.8984 L=  0.0 | livestock=0.09 clay=0.18 coal=0.03 leather=0.017
+fiber_dressing_yard [laborers emp=1 CREATE] 2 pm
+    ~base_fiber_crops                                 fiber_crops out= 0.105 val=  0.21 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~retting_pits                                     fiber_crops out=  0.57 val=  1.14 cost=  1.20 c/o=1.0526 L=  0.0 | livestock=0.24 legumes=0.24 clay=0.4 coal=0.2
+fruit_orchard [peasants emp=1 REPLACE] 3 pm
+    ~base_fruit                                             fruit out=  0.06 val=  0.06 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~maintenance                                            fruit out= 0.166 val=  0.17 cost=  0.18 c/o=1.1069 L=  0.0 | lumber=0.105
+    ~worker_victuals                                     victuals out= 0.033 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+horse_breeders [laborers emp=1 REPLACE] 3 pm
+    ~base_horses                                           horses out=   0.1 val=  0.30 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~stud_yards                                            horses out= 0.222 val=  0.67 cost=  0.57 c/o=0.8619 L=  0.0 | wheat=0.433 leather=0.047
+    ~selected_stallions                                    horses out=  0.34 val=  1.02 cost=  0.91 c/o=0.8922 L=  0.0 | wheat=0.5 legumes=0.2 leather=0.07
+hurdled_sheepcotes [peasants emp=1 CREATE] 2 pm
+    ~base_wool                                               wool out=  0.09 val=  0.23 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~foldcourse_husbandry                                    wool out=  0.22 val=  0.55 cost=  0.45 c/o=0.8182 L=  0.0 | furniture=0.065 livestock=0.06 victuals=0.055
+husbandry_farmstead [peasants emp=1 CREATE] 18 pm
+    ~base_livestock                                     livestock out=  0.08 val=  0.12 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_millet                                           millet out=  0.08 val=  0.08 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_wheat                                             wheat out=  0.08 val=  0.08 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_maize                                             maize out=  0.08 val=  0.08 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_rice                                               rice out=  0.08 val=  0.08 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_legumes                                         legumes out=  0.08 val=  0.08 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_potato                                           potato out=  0.08 val=  0.08 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_olives                                           olives out=  0.08 val=  0.08 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~livestock                                          livestock out=  0.44 val=  0.66 cost=  0.49 c/o=0.7462 L=  0.0 | livestock=0.145 fiber_crops=0.06 clay=0.135 lumber=0.05
+    ~millet                                                millet out=   0.6 val=  0.60 cost=  0.43 c/o=0.7183 L=  0.0 | horses=0.04 livestock=0.07 fiber_crops=0.078 pottery=0.05
+    ~wheat                                                  wheat out=  0.64 val=  0.64 cost=  0.48 c/o=0.7441 L=  0.0 | horses=0.065 livestock=0.07 tools=0.03 lumber=0.045
+    ~maize                                                  maize out=  0.59 val=  0.59 cost=  0.44 c/o=0.7424 L=  0.0 | livestock=0.09 fiber_crops=0.085 lumber=0.05 tools=0.014
+    ~rice                                                    rice out=  0.64 val=  0.64 cost=  0.48 c/o=0.7461 L=  0.0 | livestock=0.12 clay=0.24 lumber=0.055 tools=0.025
+    ~legumes                                              legumes out=  0.59 val=  0.59 cost=  0.42 c/o=0.7076 L=  0.0 | horses=0.04 livestock=0.055 fiber_crops=0.075 pottery=0.065
+    ~potato                                                potato out=  0.65 val=  0.65 cost=  0.48 c/o=0.7419 L=  0.0 | livestock=0.105 clay=0.22 fiber_crops=0.07 tools=0.023
+    ~olives                                                olives out=  0.59 val=  0.59 cost=  0.44 c/o=0.7415 L=  0.0 | livestock=0.085 tools=0.035 lumber=0.055 pottery=0.1
+    ~yard_hives                                           beeswax out=  0.12 val=  0.24 cost=  0.06 c/o=0.2583 L=  0.0 | fiber_crops=0.025 pottery=0.012
+    ~worker_victuals                                     victuals out= 0.033 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+incense_grove [laborers emp=1 CREATE] 2 pm
+    ~base_incense                                         incense out=   0.1 val=  0.25 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~tapping_camps                                        incense out= 0.222 val=  0.56 cost=  0.51 c/o=0.9252 L=  0.0 | fiber_crops=0.117 lumber=0.117 tools=0.023
+managed_cocoa_grove [laborers emp=1 CREATE] 3 pm
+    ~base_cocoa                                             cocoa out=  0.05 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~fermentation_boxes                                     cocoa out= 0.114 val=  0.46 cost=  0.38 c/o=0.8333 L=  0.0 | furniture=0.1 fiber_crops=0.04
+    ~managed_shade                                          cocoa out= 0.156 val=  0.62 cost=  0.39 c/o=0.6218 L=  0.0 | furniture=0.08 fiber_crops=0.074
+managed_pepper_garden [laborers emp=1 CREATE] 3 pm
+    ~base_pepper                                           pepper out= 0.046 val=  0.23 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~bamboo_drying_mats                                    pepper out= 0.105 val=  0.53 cost=  0.21 c/o=   0.4 L=  0.0 | fiber_crops=0.08 pottery=0.05
+    ~garbling_tables                                       pepper out= 0.058 val=  0.29 cost=  0.18 c/o=0.6207 L=  0.0 | furniture=0.04 fiber_crops=0.03
+market_cotton_farm [laborers emp=1 CREATE] 3 pm
+    ~base_cotton                                           cotton out= 0.052 val=  0.16 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~roller_gin_house                                      cotton out= 0.065 val=  0.20 cost=  0.20 c/o=1.0231 L=  0.0 | furniture=0.06 tools=0.006
+    ~bale_yard                                             cotton out= 0.041 val=  0.12 cost=  0.18 c/o=1.4472 L=  0.0 | fiber_crops=0.045 furniture=0.025 tools=0.004
+market_tobacco_farm [laborers emp=1 CREATE] 3 pm
+    ~base_tobacco                                         tobacco out=  0.06 val=  0.18 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~curing_racks                                         tobacco out=  0.08 val=  0.24 cost=  0.20 c/o=0.8333 L=  0.0 | furniture=0.05 fiber_crops=0.025
+    ~sorting_tables                                       tobacco out= 0.065 val=  0.20 cost=  0.16 c/o=0.8154 L=  0.0 | furniture=0.035 fiber_crops=0.015 paper=0.012
+model_farm [laborers emp=1 CREATE] 17 pm
+    ~base_livestock                                     livestock out=   0.1 val=  0.15 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_millet                                           millet out=   0.1 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_wheat                                             wheat out=   0.1 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_maize                                             maize out=   0.1 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_rice                                               rice out=   0.1 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_legumes                                         legumes out=   0.1 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_potato                                           potato out=   0.1 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_olives                                           olives out=   0.1 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~livestock                                          livestock out=   1.4 val=  2.10 cost=  1.94 c/o=0.9238 L=  0.0 | tools=0.24 horses=0.22 legumes=0.38 paper=0.06
+    ~millet                                                millet out=   2.1 val=  2.10 cost=  2.01 c/o=0.9583 L=  0.0 | tools=0.25 horses=0.22 livestock=0.16 paper=0.15
+    ~wheat                                                  wheat out=  2.12 val=  2.12 cost=  2.07 c/o=0.9776 L=  0.0 | tools=0.25 horses=0.22 legumes=0.3 paper=0.15
+    ~maize                                                  maize out=   2.1 val=  2.10 cost=  1.91 c/o=0.9095 L=  0.0 | tools=0.24 livestock=0.32 lumber=0.2 paper=0.15
+    ~rice                                                    rice out=  2.13 val=  2.13 cost=  1.90 c/o=0.8897 L=  0.0 | tools=0.24 livestock=0.3 lumber=0.18 clay=0.7
+    ~legumes                                              legumes out=  2.08 val=  2.08 cost=  2.06 c/o=0.9892 L=  0.0 | tools=0.23 horses=0.21 livestock=0.12 paper=0.25
+    ~potato                                                potato out=  2.14 val=  2.14 cost=  2.04 c/o=0.9556 L=  0.0 | tools=0.24 livestock=0.31 clay=0.4 paper=0.3
+    ~olives                                                olives out=  2.09 val=  2.09 cost=  1.82 c/o=0.8696 L=  0.0 | tools=0.23 livestock=0.28 lumber=0.2 pottery=0.3
+    ~worker_victuals                                     victuals out= 0.067 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+nursery_orchard [peasants emp=1 CREATE] 3 pm
+    ~base_fruit                                             fruit out= 0.085 val=  0.09 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~nursery_rows                                           fruit out=  0.55 val=  0.55 cost=  0.44 c/o=0.7991 L=  0.0 | fiber_crops=0.095 pottery=0.05 beeswax=0.018 tools=0.03 furniture=0.022
+    ~worker_victuals                                     victuals out= 0.033 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+pepper_garden [laborers emp=1 CREATE] 2 pm
+    ~base_pepper                                           pepper out= 0.034 val=  0.17 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~blanched_garbling_yards                               pepper out= 0.076 val=  0.38 cost=  0.31 c/o=0.8211 L=  0.0 | pottery=0.156 coal=0.078
+pomological_orchard [laborers emp=1 CREATE] 3 pm
+    ~base_fruit                                             fruit out=   0.1 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~grafted_rows                                           fruit out=   2.1 val=  2.10 cost=  2.17 c/o=1.0321 L=  0.0 | tools=0.38 lumber=0.35 paper=0.16
+    ~worker_victuals                                     victuals out= 0.067 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+regulated_sericulture_farm [laborers emp=1 CREATE] 3 pm
+    ~base_silk                                               silk out= 0.052 val=  0.21 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~reeling_house                                           silk out= 0.087 val=  0.35 cost=  0.34 c/o=0.9626 L=  0.0 | furniture=0.07 fiber_crops=0.045 pottery=0.035
+    ~heated_filature                                         silk out=  0.06 val=  0.24 cost=  0.18 c/o=0.7708 L=  0.0 | furniture=0.035 pottery=0.04 coal=0.02
+saffron_croft [laborers emp=1 CREATE] 2 pm
+    ~base_saffron                                         saffron out= 0.023 val=  0.12 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~toasting_braziers                                    saffron out= 0.051 val=  0.26 cost=  0.21 c/o=0.8275 L=  0.0 | pottery=0.105 coal=0.053
+saffron_kiln_croft [laborers emp=1 CREATE] 3 pm
+    ~base_saffron                                         saffron out= 0.055 val=  0.28 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~livestock_manure                                     saffron out=  0.05 val=  0.25 cost=  0.07 c/o=  0.27 L=  0.0 | livestock=0.045
+    ~pottery_kilns                                        saffron out= 0.095 val=  0.47 cost=  0.15 c/o=0.3158 L=  0.0 | pottery=0.08 coal=0.035
+sericulture_farm [laborers emp=1 CREATE] 2 pm
+    ~base_silk                                               silk out=  0.04 val=  0.16 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~cocoon_reeling                                          silk out= 0.089 val=  0.36 cost=  0.34 c/o=0.9501 L=  0.0 | lumber=0.119 tools=0.04
+sheep_farms [peasants emp=1 REPLACE] 2 pm
+    pp_sheep_farm_base_wool                                  wool out=  0.06 val=  0.15 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    pp_sheep_farm_maintenance                                wool out=  0.06 val=  0.15 cost=  0.12 c/o=   0.8 L=  0.0 | lumber=0.05 tools=0.01
+simplers_grove [laborers emp=1 CREATE] 2 pm
+    ~base_medicaments                                 medicaments out=   0.1 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~wicker_drying_racks                              medicaments out= 0.116 val=  0.12 cost=  0.09 c/o=0.7759 L=  0.0 | fiber_crops=0.035 pottery=0.02
+stud_farm [laborers emp=1 CREATE] 3 pm
+    ~base_horses                                           horses out=   0.1 val=  0.30 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~approved_stallions                                    horses out=  0.62 val=  1.86 cost=  1.75 c/o=0.9409 L=  0.0 | wheat=0.65 legumes=0.35 leather=0.12 tools=0.12
+    ~stud_books                                            horses out=  0.72 val=  2.16 cost=  1.94 c/o=0.8981 L=  0.0 | wheat=0.8 legumes=0.45 leather=0.15 paper=0.12
+sugar_plantation [slaves emp=1 REPLACE] 2 pm
+    ~base_sugar                                             sugar out=   0.3 val=  0.90 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~boiling_house                                          sugar out= 0.667 val=  2.00 cost=  1.79 c/o=0.8954 L=  0.0 | slaves_goods=0.32 lumber=0.25 coal=0.15 tools=0.029
+sugarcane_farm [laborers emp=1 CREATE] 2 pm
+    ~base_sugar                                             sugar out=  0.04 val=  0.12 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~boiling_house                                          sugar out= 0.089 val=  0.27 cost=  0.28 c/o=1.0403 L=  0.0 | lumber=0.083 pottery=0.1 tools=0.01
+tea_garden [laborers emp=1 CREATE] 2 pm
+    ~base_tea                                                 tea out= 0.041 val=  0.12 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~bamboo_withering_trays                                   tea out= 0.087 val=  0.26 cost=  0.23 c/o=0.9004 L=  0.0 | fiber_crops=0.098 clay=0.078
+tea_sorting_garden [laborers emp=1 CREATE] 3 pm
+    ~base_tea                                                 tea out= 0.055 val=  0.17 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~rolling_hearths                                          tea out= 0.125 val=  0.38 cost=  0.54 c/o=1.4267 L=  0.0 | furniture=0.105 fiber_crops=0.08 pottery=0.06
+    ~paper_packing                                            tea out=  0.07 val=  0.21 cost=  0.32 c/o=   1.5 L=  0.0 | furniture=0.045 fiber_crops=0.035 paper=0.055
+terraced_coffee_grove [laborers emp=1 CREATE] 3 pm
+    ~base_coffee                                           coffee out= 0.075 val=  0.23 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~washing_frames                                        coffee out=  0.12 val=  0.36 cost=  0.41 c/o= 1.125 L=  0.0 | fiber_crops=0.09 pottery=0.075 furniture=0.05
+    ~terraced_shade_gardens                                coffee out= 0.055 val=  0.17 cost=  0.16 c/o=0.9697 L=  0.0 | fiber_crops=0.035 furniture=0.03
+tobacco_farm [laborers emp=1 CREATE] 2 pm
+    ~base_tobacco                                         tobacco out=  0.04 val=  0.12 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~curing_barns                                         tobacco out= 0.089 val=  0.27 cost=  0.29 c/o=1.0768 L=  0.0 | lumber=0.117 fiber_crops=0.017 tools=0.015
+tobacco_plantation [slaves emp=1 REPLACE] 2 pm
+    ~base_tobacco                                         tobacco out=   0.3 val=  0.90 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~curing_barns                                         tobacco out= 0.667 val=  2.00 cost=  1.82 c/o=0.9089 L=  0.0 | slaves_goods=0.32 lumber=0.35 pottery=0.1 tools=0.045
+trapiche_sugarcane_farm [laborers emp=1 CREATE] 3 pm
+    ~base_sugar                                             sugar out=  0.04 val=  0.12 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~open_kettles                                           sugar out= 0.083 val=  0.25 cost=  0.13 c/o=0.5341 L=  0.0 | pottery=0.12 tools=0.004
+    ~trapiche_pressing                                      sugar out= 0.064 val=  0.19 cost=  0.15 c/o=0.8047 L=  0.0 | furniture=0.045 tools=0.006
+vineyard_estate [laborers emp=1 CREATE] 2 pm
+    ~base_wine                                               wine out=   0.1 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~press_houses                                            wine out= 0.222 val=  0.44 cost=  0.43 c/o=0.9696 L=  0.0 | lumber=0.167 pottery=0.083 tools=0.017
+
+##### fishery
+drift_net_fishery [laborers emp=1 CREATE] 3 pm
+    ~base_catch                                              fish out=  0.09 val=  0.09 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~coastal_drift_nets                                      fish out=  1.08 val=  1.08 cost=  0.79 c/o=0.7326 L=  0.0 | fiber_crops=0.17 cloth=0.035 salt=0.05 lumber=0.055
+    ~worker_victuals                                     victuals out= 0.067 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+ocean_fishery [laborers emp=1 CREATE] 3 pm
+    ~base_catch                                              fish out=  0.09 val=  0.09 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~coastal_boats                                           fish out= 0.834 val=  0.83 cost=  0.93 c/o=1.1136 L=  0.0 | lumber=0.445 salt=0.03
+    ~worker_victuals                                     victuals out= 0.067 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+offshore_fishery [laborers emp=1 CREATE] 5 pm
+    ~base_catch                                              fish out=  0.09 val=  0.09 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~herring_busses                                          fish out= 1.185 val=  1.19 cost=  1.19 c/o=1.0078 L=  0.0 | lumber=0.315 fiber_crops=0.194 cloth=0.015 salt=0.042
+    ~distant_water_schooners                                 fish out=  1.55 val=  1.55 cost=  1.57 c/o=1.0161 L=  0.0 | naval_supplies=0.27 victuals=0.15 salt=0.05 tools=0.02
+    ~steam_trawlers                                          fish out=   1.8 val=  1.80 cost=  1.60 c/o=0.8882 L=  0.0 | naval_supplies=0.225 coal=0.21 tools=0.155
+    ~worker_victuals                                     victuals out= 0.067 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+pearl_fishery [laborers emp=1 CREATE] 2 pm
+    ~base_pearls                                           pearls out=   0.1 val=  0.40 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~dhow_diving_crews                                     pearls out= 0.078 val=  0.31 cost=  0.27 c/o=0.8654 L=  0.0 | naval_supplies=0.03 victuals=0.06
+
+##### forestry
+amber_collector [laborers emp=1 CREATE] 4 pm
+    ~base_amber                                             amber out= 0.039 val=  0.16 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~basket_gathering                                       amber out= 0.087 val=  0.35 cost=  0.30 c/o= 0.875 L=  0.0 | fiber_crops=0.084 tools=0.042
+    ~sand_horses                                             sand out= 0.288 val=  0.14 cost=  0.12 c/o=0.8333 L=  0.0 | horses=0.04
+    ~sand_livestock                                          sand out= 0.288 val=  0.14 cost=  0.12 c/o=0.8333 L=  0.0 | livestock=0.08
+charcoal_maker [laborers emp=1 REPLACE] 1 pm
+    pp_char_coal_maintenance                                 coal out=  0.62 val=  1.24 cost=  1.49 c/o=1.2036 L=  0.0 | lumber=0.51 clay=1.2
+improved_charcoal_maker [laborers emp=1 REPLACE] 1 pm
+    pp_improved_char_coal_maintenance                        coal out=   0.9 val=  1.80 cost=  1.84 c/o=1.0236 L=  0.0 | lumber=0.63 clay=1.48
+ivory_hunting_camp [laborers emp=1 CREATE] 2 pm
+    ~base_ivory                                             ivory out=   0.1 val=  0.40 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~caravan_hunts                                          ivory out= 0.222 val=  0.89 cost=  0.75 c/o=0.8485 L=  0.0 | weaponry=0.15 livestock=0.133 tools=0.032
+lumber_mill [laborers emp=1 REPLACE] 7 pm
+    ~base_lumber                                           lumber out= 0.105 val=  0.18 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~horse_tools                                           lumber out= 0.983 val=  1.72 cost=  1.38 c/o=0.8009 L=  0.0 | tools=0.267 horses=0.17
+    ~horse_victuals                                        lumber out=  0.96 val=  1.68 cost=  1.43 c/o=0.8536 L=  0.0 | horses=0.17 victuals=0.308
+    ~livestock_tools                                       lumber out= 0.926 val=  1.62 cost=  1.32 c/o=0.8161 L=  0.0 | tools=0.25 livestock=0.34
+    ~livestock_victuals                                    lumber out= 0.897 val=  1.57 cost=  1.37 c/o=0.8753 L=  0.0 | livestock=0.34 victuals=0.288
+    ~extra_rations                                         lumber out= 0.796 val=  1.39 cost=  1.29 c/o=0.9261 L=  0.0 | victuals=0.43
+    ~wound_salves                                          lumber out= 0.123 val=  0.22 cost=  0.17 c/o=0.7898 L=  0.0 | medicaments=0.17
+lumber_mill_improved [laborers emp=1 CREATE] 6 pm
+    ~base_lumber                                           lumber out= 0.053 val=  0.09 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~horse_tools                                           lumber out= 1.714 val=  3.00 cost=  2.48 c/o=0.8277 L=  0.0 | tools=0.567 horses=0.2 paper=0.02
+    ~horse_victuals                                        lumber out= 1.669 val=  2.92 cost=  2.62 c/o= 0.897 L=  0.0 | horses=0.2 victuals=0.66 paper=0.02
+    ~livestock_tools                                       lumber out= 1.589 val=  2.78 cost=  2.37 c/o=0.8531 L=  0.0 | tools=0.533 livestock=0.4 paper=0.02
+    ~livestock_victuals                                    lumber out= 1.543 val=  2.70 cost=  2.50 c/o=0.9258 L=  0.0 | livestock=0.4 victuals=0.62 paper=0.02
+    ~wound_salves                                          lumber out= 0.123 val=  0.22 cost=  0.17 c/o=0.7898 L=  0.0 | medicaments=0.17
+tar_kiln [laborers emp=1.0 REPLACE] 1 pm
+    ~tar_kiln_maintenance                                     tar out=   1.0 val=  2.00 cost=  1.94 c/o=0.9721 L=  0.0 | lumber=1.111
+water_sawmill [laborers emp=1 CREATE] 7 pm
+    ~base_lumber                                           lumber out= 0.079 val=  0.14 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~horse_tools                                           lumber out=   1.4 val=  2.45 cost=  1.94 c/o=0.7919 L=  0.0 | tools=0.477 horses=0.13
+    ~horse_victuals                                        lumber out=  1.36 val=  2.38 cost=  2.07 c/o=0.8697 L=  0.0 | horses=0.13 victuals=0.56
+    ~livestock_tools                                       lumber out= 1.314 val=  2.30 cost=  1.89 c/o=0.8197 L=  0.0 | tools=0.46 livestock=0.26
+    ~livestock_victuals                                    lumber out= 1.269 val=  2.22 cost=  2.01 c/o=0.9051 L=  0.0 | livestock=0.26 victuals=0.54
+    ~extra_rations                                         lumber out= 1.208 val=  2.11 cost=  2.12 c/o=1.0005 L=  0.0 | victuals=0.705
+    ~wound_salves                                          lumber out= 0.138 val=  0.24 cost=  0.19 c/o=0.7867 L=  0.0 | medicaments=0.19
+
+##### land_reserve
+elephant_hunting_grounds [peasants emp=1.0 REPLACE] 1 pm
+    ~elephant_hunting_grounds_maintenance                   ivory out=   1.0 val=  4.00 cost=  3.99 c/o=0.9966 L=  0.0 | tools=0.245 weaponry=0.245 elephants=0.491
+eng_royal_forest [peasants emp=1.0 REPLACE] 1 pm
+    ~eng_royal_forest_maintenance                       wild_game out=   1.0 val=  1.00 cost=  0.93 c/o= 0.928 L=  0.0 | weaponry=0.116 wine=0.116 horses=0.116
+
+##### manufactory
+brewery [burghers emp=0.3 REPLACE] 7 pm
+    ~wheat_brewery_maintenance                               beer out=   1.0 val=  2.00 cost=  1.95 c/o=0.9772 L=  0.0 | wheat=1.109 lumber=0.277 tools=0.111
+    ~millet_brewery_maintenance                              beer out=   1.0 val=  2.00 cost=  1.95 c/o=0.9772 L=  0.0 | millet=1.109 lumber=0.277 tools=0.111
+    ~fruit_brewery_maintenance                               beer out=   1.0 val=  2.00 cost=  1.96 c/o= 0.978 L=  0.0 | fruit=1.168 lumber=0.233 tools=0.117
+    ~maize_brewery_maintenance                               beer out=   1.0 val=  2.00 cost=  1.93 c/o= 0.964 L=  0.0 | maize=1.588 pottery=0.34
+    ~bavarian_brewery_maintenance                            beer out=   1.2 val=  2.40 cost=  2.36 c/o=0.9836 L=  0.0 | wheat=1.512 lumber=0.251 tools=0.126
+    ~honey_brewery_maintenance                               beer out=   1.0 val=  2.00 cost=  1.96 c/o= 0.978 L=  0.0 | beeswax=0.292 millet=0.584 lumber=0.233 tools=0.117
+    ~rice_brewery_maintenance                                beer out=   1.0 val=  2.00 cost=  1.95 c/o=0.9772 L=  0.0 | rice=1.109 lumber=0.277 tools=0.111
+brewery_manufactory [burghers emp=0.3 REPLACE] 1 pm
+    ~brewery_manufactory_maintenance                         beer out=   2.0 val=  4.00 cost=  3.75 c/o=0.9386 L=  0.0 | lumber=0.373 wheat=2.494 tools=0.187
+cannon_foundry [burghers emp=0.3 REPLACE] 1 pm
+    ~cannon_foundry_maintenance                           cannons out=   2.0 val=  8.00 cost=  7.87 c/o=0.9834 L=  0.0 | tools=0.642 lead=0.482 saltpeter=0.803 copper=0.803 tin=0.401
+cloth_manufactory [burghers emp=0.3 REPLACE] 3 pm
+    ~wool_cloth_manufactory_maintenance                     cloth out=   2.0 val=  6.00 cost=  5.71 c/o=0.9512 L=  0.0 | wool=1.99 dyes=0.183
+    ~cotton_cloth_manufactory_maintenance                   cloth out=   2.0 val=  6.00 cost=  5.71 c/o=0.9515 L=  0.0 | cotton=1.659 dyes=0.183
+    ~fiber_crops_cloth_manufactory_maintenance              cloth out=   2.0 val=  6.00 cost=  5.71 c/o=0.9513 L=  0.0 | fiber_crops=2.704 dyes=0.075
+cookery [laborers emp=1 CREATE] 24 pm
+    ~khichdi                                             victuals out= 0.721 val=  2.16 cost=  2.35 c/o= 1.086 L=  0.0 | rice=1.172 legumes=0.997 pepper=0.036
+    ~fish_congee                                         victuals out= 0.721 val=  2.16 cost=  2.35 c/o= 1.086 L=  0.0 | rice=1.172 fish=0.997 pepper=0.036
+    ~livestock_pottage                                   victuals out= 0.796 val=  2.39 cost=  2.59 c/o=1.0852 L=  0.0 | wheat=1.135 livestock=0.817 legumes=0.231
+    ~mediterranean_fish                                  victuals out= 0.752 val=  2.26 cost=  2.45 c/o= 1.086 L=  0.0 | fish=1.774 olives=0.532 wine=0.072
+    ~mutton_and_pease                                    victuals out= 0.796 val=  2.39 cost=  2.85 c/o= 1.192 L=  0.0 | wool=0.877 legumes=0.414 salt=0.048
+    ~surstromming                                        victuals out= 0.817 val=  2.45 cost=  2.93 c/o=1.1958 L=  0.0 | fish=1.827 millet=0.184 salt=0.184
+    ~pozole                                              victuals out= 0.727 val=  2.18 cost=  2.37 c/o=1.0867 L=  0.0 | maize=0.732 wild_game=0.923 chili=0.143
+    ~pemmican                                            victuals out= 0.755 val=  2.27 cost=  2.45 c/o= 1.083 L=  0.0 | wild_game=1.597 livestock=0.334 fruit=0.355
+    ~labskaus                                            victuals out= 0.756 val=  2.27 cost=  2.46 c/o=1.0842 L=  0.0 | potato=0.334 fish=0.532 livestock=1.062
+    ~meat_tajine                                         victuals out= 0.828 val=  2.48 cost=  2.70 c/o=1.0884 L=  0.0 | livestock=1.243 fruit=0.569 saffron=0.054
+    ~saltfish_porridge                                   victuals out=   0.8 val=  2.40 cost=  2.61 c/o=1.0879 L=  0.0 | millet=0.923 fish=1.328 salt=0.072
+    ~ika_mata                                            victuals out= 0.765 val=  2.29 cost=  2.77 c/o=1.2074 L=  0.0 | fish=1.703 fruit=0.888 salt=0.036
+    ~kheer                                               victuals out= 0.752 val=  2.26 cost=  2.45 c/o=1.0867 L=  0.0 | rice=1.172 sugar=0.107 livestock=0.639
+    ~honey_gruel                                         victuals out= 0.827 val=  2.48 cost=  2.69 c/o=1.0854 L=  0.0 | wheat=0.851 fruit=0.564 beeswax=0.639
+    ~boreal_hunter_stew                                  victuals out= 0.828 val=  2.48 cost=  2.70 c/o=1.0886 L=  0.0 | fur=0.817 millet=0.71 salt=0.072
+    ~beer                                                victuals out= 0.401 val=  1.20 cost=  1.36 c/o=1.1272 L=  0.0 | beer=0.678
+    ~wine                                                victuals out=  0.41 val=  1.23 cost=  1.36 c/o=1.1024 L=  0.0 | wine=0.678
+    ~liquor                                              victuals out= 0.424 val=  1.27 cost=  1.48 c/o=1.1596 L=  0.0 | liquor=0.59
+    ~chocolate                                           victuals out= 0.312 val=  0.94 cost=  1.03 c/o=1.1026 L=  0.0 | cocoa=0.258
+    ~coffee                                              victuals out= 0.308 val=  0.92 cost=  1.16 c/o=1.2565 L=  0.0 | coffee=0.387
+    ~tea                                                 victuals out= 0.396 val=  1.19 cost=  1.45 c/o=1.2222 L=  0.0 | tea=0.484
+    ~pottery_jars                                        victuals out= 0.256 val=  0.77 cost=  0.90 c/o=1.1771 L=  0.0 | pottery=0.904
+    ~coopered_barrels                                    victuals out= 0.247 val=  0.74 cost=  0.87 c/o=1.1781 L=  0.0 | furniture=0.291
+    ~tin_cans                                            victuals out= 0.456 val=  1.37 cost=  1.61 c/o=1.1806 L=  0.0 | steel=0.323
+distiller_manufactory [burghers emp=0.3 REPLACE] 5 pm
+    ~sugar_distillery_maintenance                          liquor out=   2.0 val=  5.00 cost=  4.71 c/o= 0.941 L=  0.0 | sugar=1.303 pottery=0.13 glass=0.222
+    ~rice_distillery_maintenance                           liquor out=   2.0 val=  5.00 cost=  4.71 c/o=0.9412 L=  0.0 | rice=3.91 pottery=0.13 glass=0.222
+    ~potato_distillery_maintenance                         liquor out=   2.0 val=  5.00 cost=  4.71 c/o=0.9412 L=  0.0 | potato=3.91 pottery=0.13 glass=0.222
+    ~wheat_distillery_maintenance                          liquor out=   2.0 val=  5.00 cost=  4.71 c/o=0.9412 L=  0.0 | pottery=0.13 wheat=3.91 glass=0.222
+    ~scottish_whisky_distillery_maintenance                liquor out=   2.0 val=  5.00 cost=  4.71 c/o=0.9412 L=  0.0 | millet=3.91 pottery=0.13 glass=0.222
+dyesworks [burghers emp=0.3 REPLACE] 1 pm
+    ~dyesworks_maintenance                                   dyes out=   2.0 val=  8.00 cost=  7.71 c/o=0.9636 L=  0.0 | alum=0.364 lumber=3.781
+fine_cloth_manufactory [burghers emp=0.3 REPLACE] 4 pm
+    ~silk_cloth_manufactory_maintenance                fine_cloth out=   2.0 val= 12.00 cost= 11.85 c/o=0.9877 L=  0.0 | silk=2.963
+    ~fine_cloth_manufactory_maintenance                fine_cloth out=   2.0 val= 12.00 cost= 11.85 c/o=0.9878 L=  0.0 | cloth=3.951
+    ~standard_cloth_manufactory_maintenance            fine_cloth out=   0.2 val=  1.20 cost=  1.05 c/o=0.8767 L=  0.0 | dyes=0.263
+    ~alum_fine_cloth_manufactory_maintenance           fine_cloth out=   0.4 val=  2.40 cost=  2.25 c/o=0.9392 L=  0.0 | dyes=0.475 alum=0.118
+firearms_manufactory [burghers emp=0.3 REPLACE] 1 pm
+    ~firearms_manufactory_maintenance                    firearms out=   2.0 val=  6.00 cost=  5.71 c/o=0.9518 L=  0.0 | lumber=0.379 coal=0.379 iron=1.009 lead=0.127 saltpeter=0.252
+furniture_manufactory [burghers emp=0.3 REPLACE] 1 pm
+    ~furniture_manufactory_maintenance                  furniture out=   2.0 val=  6.00 cost=  5.77 c/o=0.9622 L=  0.0 | lumber=2.259 dyes=0.251 tools=0.251
+glassworks [burghers emp=0.3 REPLACE] 1 pm
+    ~glassworks_maintenance                                 glass out=   2.0 val=  6.00 cost=  5.89 c/o=0.9817 L=  0.0 | lumber=0.489 sand=2.574 stone=0.231 tools=0.733 coal=0.489 alum=0.052
+lacquerware_manufactory [burghers emp=0.3 REPLACE] 1 pm
+    ~lacquerware_manufactory_maintenance              lacquerware out=   2.0 val= 10.00 cost=  9.78 c/o=0.9776 L=  0.0 | lumber=2.66 dyes=1.064 tools=0.266
+naval_supplies_manufactory [burghers emp=0.3 REPLACE] 1 pm
+    ~naval_supplies_manufactory_maintenance          naval_supplies out=   2.0 val=  6.00 cost=  5.71 c/o=0.9516 L=  0.0 | lumber=1.038 fiber_crops=0.779 tar=0.779 cloth=0.259
+paper_manufactory [burghers emp=0.3 REPLACE] 1 pm
+    ~paper_manufactory_maintenance                          paper out=   2.0 val=  4.00 cost=  3.71 c/o=0.9271 L=  0.0 | cloth=0.291 fiber_crops=1.163 lumber=0.291
+porcelain_manufactory [burghers emp=0.3 REPLACE] 1 pm
+    ~porcelain_manufactory_maintenance                  porcelain out=   2.0 val=  6.00 cost=  5.80 c/o=0.9674 L=  0.0 | clay=6.088 coal=0.761 tools=0.381
+pottery_manufactory [burghers emp=0.3 REPLACE] 1 pm
+    ~pottery_manufactory_maintenance                      pottery out=   1.5 val=  1.50 cost=  1.24 c/o= 0.824 L=  0.0 | clay=1.136 lumber=0.17 tools=0.114
+printing_manufactory [burghers emp=0.3 REPLACE] 1 pm
+    ~printing_manufactory_maintenance                       books out=   2.0 val=  6.00 cost=  5.72 c/o=0.9533 L=  0.0 | lead=0.387 paper=1.937 tools=0.052 lumber=0.516
+putrefaction_works [burghers emp=0.2 REPLACE] 1 pm
+    ~demands                                            saltpeter out=   2.0 val=  4.00 cost=  2.40 c/o=   0.6 L=  0.0 | pottery=0.6 livestock=1.2
+tannery [burghers emp=0.3 REPLACE] 2 pm
+    ~leather_guild_maintenance                            leather out=   1.0 val=  3.00 cost=  2.98 c/o=0.9922 L=  0.0 | livestock=1.273 sand=0.509 tar=0.096 tools=0.191
+    ~tannery_maintenance                                  leather out=   1.0 val=  3.00 cost=  2.98 c/o=0.9924 L=  0.0 | wild_game=1.91 sand=0.509 tar=0.096 tools=0.191
+tannery_manufactory [burghers emp=0.3 REPLACE] 2 pm
+    ~leather_manufactory_maintenance                      leather out=   2.0 val=  6.00 cost=  5.79 c/o=0.9649 L=  0.0 | livestock=2.554 sand=1.197 tar=0.16 tools=0.32
+    ~tannery_manufactory_maintenance                      leather out=   2.0 val=  6.00 cost=  5.79 c/o= 0.965 L=  0.0 | wild_game=3.778 sand=1.232 tar=0.165 tools=0.328
+victualling_yard [laborers emp=1 CREATE] 24 pm
+    ~khichdi                                             victuals out= 0.782 val=  2.35 cost=  2.42 c/o=1.0315 L=  0.0 | rice=1.208 legumes=1.027 pepper=0.037
+    ~fish_congee                                         victuals out= 0.782 val=  2.35 cost=  2.42 c/o=1.0315 L=  0.0 | rice=1.208 fish=1.027 pepper=0.037
+    ~livestock_pottage                                   victuals out= 0.865 val=  2.60 cost=  2.67 c/o=1.0304 L=  0.0 | wheat=1.172 livestock=0.842 legumes=0.239
+    ~mediterranean_fish                                  victuals out= 0.817 val=  2.45 cost=  2.53 c/o= 1.031 L=  0.0 | fish=1.829 olives=0.55 wine=0.074
+    ~mutton_and_pease                                    victuals out= 0.868 val=  2.60 cost=  2.94 c/o=1.1308 L=  0.0 | wool=0.903 legumes=0.427 salt=0.052
+    ~surstromming                                        victuals out= 0.892 val=  2.68 cost=  3.02 c/o=1.1278 L=  0.0 | fish=1.884 millet=0.189 salt=0.189
+    ~pozole                                              victuals out= 0.788 val=  2.36 cost=  2.44 c/o=1.0305 L=  0.0 | maize=0.754 wild_game=0.952 chili=0.146
+    ~pemmican                                            victuals out= 0.817 val=  2.45 cost=  2.53 c/o=1.0312 L=  0.0 | wild_game=1.647 livestock=0.343 fruit=0.366
+    ~labskaus                                            victuals out=  0.82 val=  2.46 cost=  2.54 c/o=1.0307 L=  0.0 | potato=0.343 fish=0.55 livestock=1.095
+    ~meat_tajine                                         victuals out=   0.9 val=  2.70 cost=  2.78 c/o=1.0296 L=  0.0 | livestock=1.28 fruit=0.585 saffron=0.055
+    ~saltfish_porridge                                   victuals out= 0.869 val=  2.61 cost=  2.69 c/o=1.0318 L=  0.0 | millet=0.952 fish=1.368 salt=0.074
+    ~ika_mata                                            victuals out= 0.834 val=  2.50 cost=  2.86 c/o=1.1423 L=  0.0 | fish=1.757 fruit=0.916 salt=0.037
+    ~kheer                                               victuals out= 0.817 val=  2.45 cost=  2.53 c/o=1.0308 L=  0.0 | rice=1.208 sugar=0.11 livestock=0.659
+    ~honey_gruel                                         victuals out= 0.898 val=  2.69 cost=  2.78 c/o=1.0312 L=  0.0 | wheat=0.878 fruit=0.582 beeswax=0.659
+    ~boreal_hunter_stew                                  victuals out=   0.9 val=  2.70 cost=  2.79 c/o=1.0322 L=  0.0 | fur=0.842 millet=0.733 salt=0.074
+    ~beer                                                victuals out= 0.437 val=  1.31 cost=  1.30 c/o=0.9886 L=  0.0 | beer=0.648
+    ~wine                                                victuals out= 0.448 val=  1.34 cost=  1.40 c/o=1.0387 L=  0.0 | wine=0.698
+    ~liquor                                              victuals out= 0.465 val=  1.40 cost=  1.51 c/o=1.0824 L=  0.0 | liquor=0.604
+    ~chocolate                                           victuals out= 0.341 val=  1.02 cost=  1.16 c/o=1.1378 L=  0.0 | cocoa=0.291
+    ~coffee                                              victuals out= 0.337 val=  1.01 cost=  1.05 c/o=1.0356 L=  0.0 | coffee=0.349
+    ~tea                                                 victuals out= 0.432 val=  1.30 cost=  1.35 c/o=1.0394 L=  0.0 | tea=0.449
+    ~pottery_jars                                        victuals out= 0.281 val=  0.84 cost=  0.93 c/o= 1.102 L=  0.0 | pottery=0.929
+    ~coopered_barrels                                    victuals out= 0.271 val=  0.81 cost=  0.90 c/o= 1.107 L=  0.0 | furniture=0.3
+    ~tin_cans                                            victuals out= 0.501 val=  1.50 cost=  1.67 c/o=1.1078 L=  0.0 | steel=0.333
+weapon_manufactory [burghers emp=0.3 REPLACE] 1 pm
+    ~weapon_manufactory_maintenance                      weaponry out=   2.0 val=  6.00 cost=  5.83 c/o=0.9725 L=  0.0 | lumber=0.638 coal=0.638 iron=0.51 tools=0.51
+winery [burghers emp=0.3 REPLACE] 3 pm
+    ~fruit_winery_maintenance                                wine out=   1.0 val=  2.00 cost=  1.95 c/o=0.9772 L=  0.0 | fruit=1.305 lumber=0.178 tools=0.104
+    ~rice_winery_maintenance                                 wine out=   1.0 val=  2.00 cost=  1.95 c/o= 0.977 L=  0.0 | rice=1.317 lumber=0.169 tools=0.105
+    ~honey_winery_maintenance                                wine out=   1.0 val=  2.00 cost=  1.96 c/o=0.9776 L=  0.0 | beeswax=0.625 lumber=0.208 tools=0.105
+winery_manufactory [burghers emp=0.3 REPLACE] 3 pm
+    ~fruit_winery_manufactory_maintenance                    wine out=   2.0 val=  4.00 cost=  3.76 c/o=0.9412 L=  0.0 | fruit=2.202 lumber=0.464 tools=0.231
+    ~rice_winery_manufactory_maintenance                     wine out=   2.0 val=  4.00 cost=  3.76 c/o=0.9412 L=  0.0 | rice=2.202 lumber=0.464 tools=0.231
+    ~honey_winery_manufactory_maintenance                    wine out=   2.0 val=  4.00 cost=  3.76 c/o=0.9407 L=  0.0 | beeswax=1.123 lumber=0.449 tools=0.225
+
+##### mill_works
+bog_iron_smelter [laborers emp=1 REPLACE] 1 pm
+    pp_bog_iron_maintenance                                  iron out=  0.31 val=  1.08 cost=  0.90 c/o=0.8295 L=  0.0 | coal=0.45
+bog_iron_smelter_blast_furnace [laborers emp=1 CREATE] 2 pm
+    ~maintenance                                             iron out=  0.32 val=  1.12 cost=  0.94 c/o=0.8415 L=  0.0 | coal=0.39 tools=0.05
+    ~finery                                                  iron out=  0.39 val=  1.36 cost=  1.16 c/o=0.8498 L=  0.0 | coal=0.43 tools=0.06 lumber=0.06
+bog_iron_smelter_coke_blast_furnace [laborers emp=1 CREATE] 2 pm
+    ~maintenance                                             iron out=  0.41 val=  1.44 cost=  1.20 c/o=0.8362 L=  0.0 | coal=0.4 tools=0.08 lumber=0.08
+    pp_bog_iron_smelter_hot_blast_refining_maintenan         iron out=  0.46 val=  1.61 cost=  1.38 c/o=0.8587 L=  0.0 | coal=0.45 tools=0.1 lumber=0.09
+brewery_mill [laborers emp=1.0 REPLACE] 1 pm
+    ~brewery_mill_maintenance                                beer out=   4.0 val=  8.00 cost=  7.79 c/o=0.9736 L=  0.0 | lumber=0.642 wheat=5.622 tools=0.321
+cannons_factory [laborers emp=1.0 REPLACE] 1 pm
+    ~gun_factory_maintenance                              cannons out=   4.0 val= 16.00 cost= 15.71 c/o=0.9818 L=  0.0 | steel=2.589 lead=0.518 saltpeter=0.864
+distiller_mill [laborers emp=1.0 REPLACE] 5 pm
+    ~sugar_distillery_mill_maintenance                     liquor out=   4.0 val= 10.00 cost=  9.71 c/o= 0.971 L=  0.0 | sugar=2.632 pottery=0.146 glass=0.556
+    ~rice_distillery_mill_maintenance                      liquor out=   4.0 val= 10.00 cost=  9.71 c/o= 0.971 L=  0.0 | rice=7.372 pottery=0.181 glass=0.719
+    ~potato_distillery_mill_maintenance                    liquor out=   4.0 val= 10.00 cost=  9.71 c/o=0.9708 L=  0.0 | potato=7.436 pottery=0.175 glass=0.699
+    ~wheat_distillery_mill_maintenance                     liquor out=   4.0 val= 10.00 cost=  9.71 c/o=0.9708 L=  0.0 | pottery=0.175 wheat=7.436 glass=0.699
+    ~scottish_whisky_distillery_mill_maintenance           liquor out=   4.0 val= 10.00 cost=  9.71 c/o=0.9707 L=  0.0 | millet=7.328 pottery=0.183 glass=0.732
+dyes_mill [laborers emp=1.0 REPLACE] 1 pm
+    ~dyesmill_maintenance                                    dyes out=   4.0 val= 16.00 cost= 15.71 c/o=0.9818 L=  0.0 | alum=0.413 lumber=8.268
+fine_cloth_mill [laborers emp=1.0 REPLACE] 2 pm
+    ~fine_cloth_mill_maintenance                       fine_cloth out=   4.0 val= 24.00 cost= 23.71 c/o=0.9878 L=  0.0 | cloth=7.249 dyes=0.49
+    ~silk_cloth_mill_maintenance                       fine_cloth out=   4.0 val= 24.00 cost= 23.71 c/o=0.9878 L=  0.0 | silk=5.441 dyes=0.486
+firearms_factory [laborers emp=1.0 REPLACE] 1 pm
+    ~firearms_factory_maintenance                        firearms out=   4.0 val= 12.00 cost= 11.71 c/o=0.9756 L=  0.0 | steel=1.773 lead=0.533 saltpeter=0.888
+furniture_mill [laborers emp=1.0 REPLACE] 1 pm
+    ~furniture_mill_maintenance                         furniture out=   4.0 val= 12.00 cost= 11.84 c/o=0.9867 L=  0.0 | lumber=4.562 dyes=0.532 tools=0.532
+glass_mill [laborers emp=1.0 REPLACE] 1 pm
+    ~glassmill_maintenance                                  glass out=   4.0 val= 12.00 cost= 12.14 c/o=1.0117 L=  0.0 | lumber=0.721 sand=4.329 stone=0.361 tools=1.731 coal=1.082 alum=0.188
+iron_foundry [laborers emp=1.0 REPLACE] 1 pm
+    ~iron_foundry_maintenance                               tools out=   2.0 val=  6.50 cost=  5.71 c/o=0.8782 L=  0.0 | iron=1.427 coal=0.357
+iron_mill [laborers emp=1.0 REPLACE] 2 pm
+    ~iron_mill_maintenance                                  tools out=   4.0 val= 13.00 cost= 11.71 c/o=0.9008 L=  0.0 | iron=2.927 coal=0.733
+    ~steel_tools                                            tools out=   4.0 val= 13.00 cost= 11.71 c/o=0.9008 L=  0.0 | steel=2.342
+mason [laborers emp=1.0 REPLACE] 2 pm
+    ~stone_bricks                                         masonry out=   0.5 val=  0.50 cost=  0.43 c/o= 0.856 L=  0.0 | stone=0.428
+    ~clay_bricks                                          masonry out=   0.5 val=  0.50 cost=  0.43 c/o= 0.856 L=  0.0 | clay=0.856
+naval_supplies_mill [laborers emp=1.0 REPLACE] 1 pm
+    ~naval_supplies_mill_maintenance                 naval_supplies out=   4.0 val= 12.00 cost= 11.71 c/o=0.9757 L=  0.0 | lumber=2.285 fiber_crops=1.713 tar=1.713 cloth=0.286
+paper_mill [laborers emp=1.0 REPLACE] 2 pm
+    ~paper_mill_maintenance                                 paper out=   2.0 val=  4.00 cost=  3.71 c/o=0.9268 L=  0.0 | cloth=0.161 fiber_crops=1.612
+    ~paper_wood_pulp_maintenance                            paper out=   4.5 val=  9.00 cost=  8.71 c/o=0.9676 L=  0.0 | lumber=4.976
+pottery_mill [laborers emp=1.0 REPLACE] 1 pm
+    ~pottery_mill_maintenance                             pottery out=  3.25 val=  3.25 cost=  3.00 c/o=0.9227 L=  0.0 | clay=3.753 lumber=0.333 tools=0.166
+printing_mill [laborers emp=1.0 REPLACE] 1 pm
+    ~printing_mill_maintenance                              books out=   4.0 val= 12.00 cost= 11.73 c/o=0.9771 L=  0.0 | lead=0.727 paper=4.001 tools=0.072 lumber=1.163
+putrefaction_mill [laborers emp=0.5 REPLACE] 1 pm
+    ~demands                                            saltpeter out=   4.0 val=  8.00 cost=  4.10 c/o=0.5125 L=  0.0 | pottery=1.1 livestock=2
+rural_clothmaker [laborers emp=1.0 REPLACE] 3 pm
+    ~rural_wool_clothmaker                                  cloth out=   0.5 val=  1.50 cost=  1.43 c/o=0.9517 L=  0.0 | wool=0.571
+    ~rural_cotton_clothmaker                                cloth out=   0.5 val=  1.50 cost=  1.43 c/o= 0.952 L=  0.0 | cotton=0.476
+    ~rural_fiber_clothmaker                                 cloth out=   0.4 val=  1.20 cost=  1.13 c/o=  0.94 L=  0.0 | fiber_crops=0.564
+rural_glassmaker [laborers emp=1.0 REPLACE] 1 pm
+    ~rural_glassmaker_maintenance                           glass out=   0.2 val=  0.60 cost=  0.53 c/o=  0.88 L=  0.0 | sand=1.056
+steel_mill [laborers emp=1.0 REPLACE] 1 pm
+    ~steel_mill_maintenance                                 steel out=   4.0 val= 20.00 cost= 19.71 c/o=0.9853 L=  0.0 | iron=3.583 coal=3.583
+tannery_mill [laborers emp=1.0 REPLACE] 2 pm
+    ~leather_mill_maintenance                             leather out=   4.0 val= 12.00 cost= 11.85 c/o=0.9872 L=  0.0 | livestock=5.552 sand=2.314 tar=0.277 tools=0.556
+    ~tannery_mill_maintenance                             leather out=   4.0 val= 12.00 cost= 11.84 c/o=0.9863 L=  0.0 | wild_game=8.576 sand=2.144 tar=0.257 tools=0.515
+tatara [peasants emp=1.0 REPLACE] 2 pm
+    ~tamagahane_blacksmith                                  tools out=   0.5 val=  1.62 cost=  1.46 c/o=0.8982 L=  0.0 | iron=0.417
+    ~tamagahane_bladesmith                               weaponry out=   0.2 val=  0.60 cost=  0.58 c/o=0.9742 L=  0.0 | iron=0.167
+textile_mill [laborers emp=1.0 REPLACE] 3 pm
+    ~cotton_mill_maintenance                                cloth out=   3.0 val=  9.00 cost=  8.71 c/o=0.9676 L=  0.0 | cotton=2.464 dyes=0.329
+    ~wool_mill_maintenance                                  cloth out=   2.5 val=  7.50 cost=  7.21 c/o=0.9611 L=  0.0 | wool=2.376 dyes=0.317
+    ~fiber_crops_mill_maintenance                           cloth out=   2.5 val=  7.50 cost=  7.21 c/o=0.9611 L=  0.0 | fiber_crops=3.004 dyes=0.3
+weapon_factory [laborers emp=1.0 REPLACE] 1 pm
+    ~weapon_factory_maintenance                          weaponry out=   4.0 val= 12.00 cost= 11.71 c/o=0.9756 L=  0.0 | steel=1.911 coal=0.574 lumber=0.574
+
+##### mining
+coal_mine [laborers emp=1 CREATE] 3 pm
+    ~base_coal                                               coal out=  0.12 val=  0.24 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~coal                                                    coal out=   1.0 val=  2.00 cost=  1.45 c/o= 0.725 L=  0.0 | lumber=0.24 tools=0.28 beeswax=0.06
+    ~fireclay                                                clay out= 0.336 val=  0.17 cost=  0.17 c/o= 0.997 L=  0.0 | lumber=0.04 tools=0.03
+coal_mine_improved [laborers emp=1 CREATE] 3 pm
+    ~base_coal                                               coal out=  0.14 val=  0.28 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~coal                                                    coal out=  1.75 val=  3.50 cost=  2.50 c/o=0.7157 L=  0.0 | lumber=0.42 tools=0.48 beeswax=0.105
+    ~fireclay                                                clay out=  0.32 val=  0.16 cost=  0.07 c/o=0.4375 L=  0.0 | lumber=0.04 tools=0
+coal_mine_revolutions [laborers emp=1 CREATE] 3 pm
+    ~base_coal                                               coal out=  0.15 val=  0.30 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~coal                                                    coal out=  2.25 val=  4.50 cost=  3.15 c/o=   0.7 L=  0.0 | lumber=0.5 tools=0.62 beeswax=0.13
+    ~fireclay                                                clay out= 0.302 val=  0.15 cost=  0.14 c/o= 0.894 L=  0.0 | lumber=0.04 tools=0.02
+copper_mine [laborers emp=1 CREATE] 5 pm
+    ~base_copper                                           copper out=  0.09 val=  0.27 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~copper                                                copper out=   0.6 val=  1.80 cost=  1.66 c/o=0.9236 L=  0.0 | lumber=0.27 tools=0.32 beeswax=0.075
+    ~silver                                                silver out= 0.033 val=  0.20 cost=  0.19 c/o=0.9596 L=  0.0 | lumber=0.03 tools=0.03 lead=0.02
+    ~gold                                              goods_gold out= 0.026 val=  0.23 cost=  0.19 c/o= 0.812 L=  0.0 | lumber=0.03 tools=0.03 lead=0.02
+    ~tin                                                      tin out=  0.06 val=  0.12 cost=  0.12 c/o=0.9792 L=  0.0 | lumber=0.03 tools=0.02
+copper_mine_adit [laborers emp=1 CREATE] 5 pm
+    ~base_copper                                           copper out=   0.1 val=  0.30 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~copper                                                copper out=  0.78 val=  2.34 cost=  2.15 c/o=0.9199 L=  0.0 | lumber=0.31 tools=0.44 beeswax=0.09
+    ~silver                                                silver out= 0.034 val=  0.20 cost=  0.21 c/o=1.0172 L=  0.0 | lumber=0.04 tools=0.03 lead=0.02
+    ~gold                                              goods_gold out= 0.027 val=  0.24 cost=  0.21 c/o=0.8539 L=  0.0 | lumber=0.04 tools=0.03 lead=0.02
+    ~tin                                                      tin out= 0.059 val=  0.12 cost=  0.12 c/o=0.9958 L=  0.0 | lumber=0.03 tools=0.02
+iron_mine [laborers emp=1 CREATE] 5 pm
+    ~base_iron                                               iron out=  0.08 val=  0.28 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~iron                                                    iron out= 0.424 val=  1.48 cost=  1.16 c/o=0.7845 L=  0.0 | lumber=0.197 tools=0.222 beeswax=0.049
+    ~horse_whim_haulage                                      iron out= 0.251 val=  0.88 cost=  0.63 c/o=0.7171 L=  0.0 | horses=0.13 leather=0.06 beeswax=0.03
+    ~ore_dressing_floors                                     iron out=  0.21 val=  0.73 cost=  0.53 c/o=0.7211 L=  0.0 | fiber_crops=0.13 cloth=0.07 beeswax=0.03
+    ~ochre                                                   dyes out= 0.042 val=  0.17 cost=  0.17 c/o= 0.997 L=  0.0 | lumber=0.04 tools=0.03
+iron_mine_deep [laborers emp=1 CREATE] 6 pm
+    ~base_iron                                               iron out=  0.08 val=  0.28 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~drainage_workings                                       iron out= 0.763 val=  2.67 cost=  2.09 c/o=0.7826 L=  0.0 | lumber=0.36 tools=0.4 beeswax=0.08
+    ~slitting_ore                                            iron out=  0.84 val=  2.94 cost=  2.33 c/o=0.7925 L=  0.0 | lumber=0.38 tools=0.42 beeswax=0.09 coal=0.06
+    ~horse_whim_haulage                                      iron out= 0.442 val=  1.55 cost=  1.08 c/o=0.6981 L=  0.0 | horses=0.22 leather=0.1 beeswax=0.06
+    ~ore_dressing_floors                                     iron out=  0.36 val=  1.26 cost=  0.91 c/o=0.7222 L=  0.0 | fiber_crops=0.23 cloth=0.11 beeswax=0.06
+    ~ochre                                                   dyes out=  0.04 val=  0.16 cost=  0.14 c/o=0.8438 L=  0.0 | lumber=0.04 tools=0.02
+iron_mine_improved [laborers emp=1 CREATE] 6 pm
+    ~base_iron                                               iron out=  0.08 val=  0.28 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~iron                                                    iron out= 0.672 val=  2.35 cost=  1.85 c/o=0.7869 L=  0.0 | lumber=0.327 tools=0.346 beeswax=0.077
+    ~slitting_dressed_ore                                    iron out= 0.734 val=  2.57 cost=  2.03 c/o=0.7892 L=  0.0 | lumber=0.35 tools=0.38 beeswax=0.09
+    ~horse_whim_haulage                                      iron out= 0.358 val=  1.25 cost=  0.91 c/o=0.7263 L=  0.0 | horses=0.18 leather=0.09 beeswax=0.05
+    ~ore_dressing_floors                                     iron out= 0.314 val=  1.10 cost=  0.80 c/o=0.7279 L=  0.0 | fiber_crops=0.2 cloth=0.1 beeswax=0.05
+    ~ochre                                                   dyes out=  0.04 val=  0.16 cost=  0.17 c/o=1.0469 L=  0.0 | lumber=0.04 tools=0.03
+lead_mine [laborers emp=1 CREATE] 4 pm
+    ~base_lead                                               lead out=  0.09 val=  0.18 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~lead                                                    lead out=  0.63 val=  1.26 cost=  1.14 c/o=0.9028 L=  0.0 | lumber=0.14 tools=0.25 beeswax=0.04
+    ~silver                                                silver out= 0.033 val=  0.20 cost=  0.19 c/o=0.9596 L=  0.0 | lumber=0.03 tools=0.03 lead=0.02
+    ~gold                                              goods_gold out= 0.026 val=  0.23 cost=  0.19 c/o= 0.812 L=  0.0 | lumber=0.03 tools=0.03 lead=0.02
+salt_mine [laborers emp=1 CREATE] 2 pm
+    ~base_salt                                               salt out=  0.09 val=  0.45 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~hand_cut_galleries                                      salt out=  0.28 val=  1.40 cost=  1.43 c/o=1.0232 L=  0.0 | lumber=0.325 tools=0.203 beeswax=0.102
+salt_mine_improved [laborers emp=1 CREATE] 2 pm
+    ~base_salt                                               salt out=  0.07 val=  0.35 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~timbered_haulage                                        salt out= 0.366 val=  1.83 cost=  2.10 c/o= 1.147 L=  0.0 | lumber=0.424 tools=0.212 horses=0.106 leather=0.076 beeswax=0.061
+schwaz_mine [laborers emp=1.0 REPLACE] 1 pm
+    ~schwaz_mine_maintenance                               silver out=   1.0 val=  6.00 cost=  6.04 c/o= 1.007 L=  0.0 | tools=0.452 leather=0.544 lumber=0.905 stone=0.905 liquor=0.181
+silver_mine [laborers emp=1 CREATE] 4 pm
+    ~base_silver                                           silver out=  0.07 val=  0.42 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~silver                                                silver out=  0.21 val=  1.26 cost=  1.15 c/o=0.9127 L=  0.0 | lumber=0.22 tools=0.18 beeswax=0.09
+    ~lead                                                    lead out=   0.1 val=  0.20 cost=  0.19 c/o= 0.935 L=  0.0 | lumber=0.04 tools=0.036
+    ~gold                                              goods_gold out= 0.026 val=  0.23 cost=  0.17 c/o=0.7158 L=  0.0 | lumber=0.04 tools=0.03
+silver_mine_improved [laborers emp=1 CREATE] 4 pm
+    ~base_silver                                           silver out=  0.07 val=  0.42 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~silver                                                silver out= 0.274 val=  1.64 cost=  1.49 c/o=0.9033 L=  0.0 | lumber=0.24 tools=0.26 beeswax=0.11
+    ~lead                                                    lead out= 0.102 val=  0.20 cost=  0.19 c/o=0.9326 L=  0.0 | lumber=0.04 tools=0.037
+    ~gold                                              goods_gold out= 0.027 val=  0.24 cost=  0.20 c/o= 0.823 L=  0.0 | lumber=0.04 tools=0.04
+
+##### rural_processing
+alum_works [laborers emp=1 CREATE] 4 pm
+    ~base_alum                                               alum out=  0.08 val=  0.24 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~alum                                                    alum out= 0.672 val=  2.02 cost=  1.85 c/o= 0.918 L=  0.0 | lumber=0.327 tools=0.346 coal=0.077
+    ~stone                                                  stone out=  0.16 val=  0.16 cost=  0.17 c/o=1.0469 L=  0.0 | lumber=0.04 tools=0.03
+    ~clay                                                    clay out= 0.252 val=  0.13 cost=  0.12 c/o=0.9325 L=  0.0 | lumber=0.03 tools=0.02
+clay_washmill [laborers emp=1 CREATE] 4 pm
+    ~base_clay                                               clay out=  0.11 val=  0.06 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~horse_pugging                                           clay out=  0.69 val=  0.34 cost=  0.38 c/o=1.1087 L=  0.0 | lumber=0.11 tools=0.04 horses=0.02
+    ~ox_pugging                                              clay out=  0.69 val=  0.34 cost=  0.40 c/o=1.1522 L=  0.0 | lumber=0.11 tools=0.04 livestock=0.05
+    ~levigation_ponds                                        clay out=  0.23 val=  0.12 cost=  0.12 c/o=1.0217 L=  0.0 | lumber=0.03 tools=0.02
+engineered_brine_saltworks [laborers emp=1 CREATE] 3 pm
+    ~base_salt                                               salt out=  0.07 val=  0.35 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~pumped_brine_channels                                   salt out=  0.33 val=  1.65 cost=  1.66 c/o=1.0076 L=  0.0 | lumber=0.4 tools=0.25 pottery=0.15
+    ~mineral_fired_pans                                      salt out= 0.363 val=  1.81 cost=  1.61 c/o=0.8884 L=  0.0 | coal=0.375 clay=0.25 pottery=0.25 tools=0.15
+gold_stamp_mill [laborers emp=1 CREATE] 4 pm
+    ~base_gold                                         goods_gold out=   0.1 val=  0.90 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~gold                                              goods_gold out=  0.26 val=  2.34 cost=  1.92 c/o=0.8204 L=  0.0 | lumber=0.367 tools=0.31 mercury=0.09
+    ~silver                                                silver out= 0.047 val=  0.28 cost=  0.25 c/o=0.8777 L=  0.0 | lumber=0.05 tools=0.04 mercury=0.01
+    ~copper                                                copper out=   0.1 val=  0.30 cost=  0.21 c/o=0.7167 L=  0.0 | lumber=0.05 tools=0.03 mercury=0.01
+lead_mine_bole_smelting [laborers emp=1 CREATE] 4 pm
+    pp_lead_mine_bole_base_lead                              lead out=  0.09 val=  0.18 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    pp_lead_mine_bole_lead                                   lead out= 0.952 val=  1.90 cost=  1.71 c/o=0.8994 L=  0.0 | lumber=0.16 tools=0.41 beeswax=0.05
+    pp_lead_mine_bole_silver                               silver out= 0.029 val=  0.17 cost=  0.16 c/o=0.9052 L=  0.0 | lumber=0.03 tools=0.02 lead=0.02
+    pp_lead_mine_bole_gold                             goods_gold out= 0.026 val=  0.23 cost=  0.16 c/o=0.6731 L=  0.0 | lumber=0.03 tools=0.02 lead=0.02
+lead_mine_cupola_smelting [laborers emp=1 CREATE] 4 pm
+    pp_lead_mine_cupola_base_lead                            lead out=  0.08 val=  0.16 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    pp_lead_mine_cupola_lead                                 lead out=  1.22 val=  2.44 cost=  2.23 c/o=0.9129 L=  0.0 | lumber=0.22 tools=0.53 beeswax=0.06
+    pp_lead_mine_cupola_silver                             silver out=  0.03 val=  0.18 cost=  0.16 c/o= 0.875 L=  0.0 | lumber=0.03 tools=0.02 lead=0.02
+    pp_lead_mine_cupola_gold                           goods_gold out= 0.027 val=  0.24 cost=  0.16 c/o=0.6481 L=  0.0 | lumber=0.03 tools=0.02 lead=0.02
+marble_saw_yard [laborers emp=1 CREATE] 4 pm
+    ~base_marble                                           marble out=  0.08 val=  0.40 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~marble                                                marble out=  0.35 val=  1.75 cost=  1.59 c/o=0.9086 L=  0.0 | lumber=0.25 tools=0.29 leather=0.07
+    ~stone                                                  stone out= 0.144 val=  0.14 cost=  0.14 c/o=0.9375 L=  0.0 | lumber=0.04 tools=0.02
+    ~sand                                                    sand out= 0.198 val=  0.10 cost=  0.12 c/o=1.1869 L=  0.0 | lumber=0.03 tools=0.02
+quicksilver_retort [laborers emp=1 CREATE] 4 pm
+    ~base_mercury                                         mercury out=  0.09 val=  0.27 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~mercury                                              mercury out=  0.61 val=  1.83 cost=  1.66 c/o= 0.906 L=  0.0 | lumber=0.29 tools=0.29 beeswax=0.104
+    ~stone                                                  stone out=  0.14 val=  0.14 cost=  0.12 c/o=0.8393 L=  0.0 | lumber=0.03 tools=0.02
+    ~dyes                                                    dyes out= 0.027 val=  0.11 cost=  0.12 c/o= 1.088 L=  0.0 | lumber=0.03 tools=0.02
+sand_washery [laborers emp=1 CREATE] 3 pm
+    ~base_sand                                               sand out=  0.11 val=  0.06 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~riddle_screens                                          sand out=  0.29 val=  0.14 cost=  0.15 c/o=1.0517 L=  0.0 | lumber=0.05 tools=0.02
+    ~glass_sand_washing                                      sand out=  0.31 val=  0.15 cost=  0.17 c/o=1.0806 L=  0.0 | lumber=0.04 tools=0.03
+tin_stamping_mill [laborers emp=1 CREATE] 4 pm
+    ~base_tin                                                 tin out=   0.1 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~tin                                                      tin out=  0.95 val=  1.90 cost=  1.75 c/o=0.9217 L=  0.0 | lumber=0.425 tools=0.31
+    ~copper                                                copper out= 0.068 val=  0.20 cost=  0.19 c/o=0.9326 L=  0.0 | lumber=0.053 tools=0.03
+    ~lead                                                    lead out= 0.102 val=  0.20 cost=  0.19 c/o=0.9326 L=  0.0 | lumber=0.053 tools=0.03
+
+##### rural_village
+fishing_village [peasants emp=1 REPLACE] 7 pm
+    ~base_fish                                               fish out=  0.05 val=  0.05 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~maintenance                                             fish out= 0.279 val=  0.28 cost=  0.28 c/o=1.0027 L=  0.0 | salt=0.015 tools=0.063
+    pp_arctic_fishing_village_maintenance                    fish out= 0.085 val=  0.09 cost=  0.08 c/o=0.9529 L=  0.0 | salt=0.005 ivory=0.014
+    ~clinker_craft                                           fish out= 0.042 val=  0.04 cost=  0.05 c/o= 1.125 L=  0.0 | lumber=0.027
+    ~wattle_weirs                                            fish out= 0.059 val=  0.06 cost=  0.06 c/o=1.0085 L=  0.0 | lumber=0.018 fiber_crops=0.014
+    ~stew_ponds                                              fish out=  0.04 val=  0.04 cost=  0.04 c/o=0.8875 L=  0.0 | clay=0.022 lumber=0.014
+    ~worker_victuals                                     victuals out= 0.033 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+forest_village [peasants emp=1 REPLACE] 9 pm
+    ~base_leather                                         leather out=  0.04 val=  0.12 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_wild_game                                     wild_game out=  0.06 val=  0.06 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_fur                                                 fur out= 0.027 val=  0.05 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_beeswax                                         beeswax out=  0.05 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    pp_forest_tannery                                     leather out= 0.039 val=  0.12 cost=  0.10 c/o=0.8547 L=  0.0 | sand=0 tar=0 wild_game=0.1
+    pp_hunting_lodges                                   wild_game out= 0.063 val=  0.06 cost=  0.00 c/o=   0.0 L=  0.0 | weaponry=0
+    pp_fur_trapping                                           fur out= 0.064 val=  0.13 cost=  0.11 c/o=0.8223 L=  0.0 | tools=0.013 weaponry=0.021
+    ~forest_apiary                                        beeswax out=  0.13 val=  0.26 cost=  0.24 c/o=0.9231 L=  0.0 | cloth=0.08
+    ~worker_victuals                                     victuals out= 0.033 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+managed_forest_village [laborers emp=1 CREATE] 9 pm
+    ~base_leather                                         leather out=   0.1 val=  0.30 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_wild_game                                     wild_game out=   0.1 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_fur                                                 fur out=   0.1 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~base_beeswax                                         beeswax out=   0.1 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~tannery                                              leather out= 0.474 val=  1.42 cost=  1.38 c/o=0.9669 L=  0.0 | wild_game=0.54 tools=0.14 horses=0.06 victuals=0.06 paper=0.01
+    ~gamekeepers                                        wild_game out= 1.367 val=  1.37 cost=  1.42 c/o=1.0377 L=  0.0 | tools=0.174 horses=0.122 victuals=0.109 paper=0.01 lumber=0.08
+    ~fur_trappers                                             fur out= 0.685 val=  1.37 cost=  1.43 c/o=1.0405 L=  0.0 | tools=0.174 horses=0.109 victuals=0.109 paper=0.019 lumber=0.096
+    ~apiaries                                             beeswax out= 0.675 val=  1.35 cost=  1.40 c/o=1.0391 L=  0.0 | tools=0.161 cloth=0.096 lumber=0.13 paper=0.032 victuals=0.1
+    ~worker_victuals                                     victuals out= 0.067 val=  0.20 cost=  0.00 c/o=   0.0 L=  0.0 | 
+market_village_market_access [peasants emp=1.0 REPLACE] 5 pm
+    pp_market_village_rural_blacksmith                      tools out=   0.5 val=  1.62 cost=  1.46 c/o=0.8982 L=  0.0 | iron=0.417
+    pp_market_village_rural_millet_brewery                   beer out=   0.5 val=  1.00 cost=  0.95 c/o=0.9483 L=  0.0 | millet=0.524 lumber=0.105 tools=0.074
+    pp_market_village_rural_weaponmaker                  weaponry out=   0.2 val=  0.60 cost=  0.58 c/o=0.9712 L=  0.0 | lumber=0.333
+    pp_market_village_rural_jewelry_carver                jewelry out=   0.1 val=  0.50 cost=  0.43 c/o= 0.856 L=  0.0 | stone=0.428
+    pp_market_village_rural_pottery_maker                 pottery out=   0.2 val=  0.20 cost=  0.17 c/o=0.8325 L=  0.0 | clay=0.333
+net_curing_yard [peasants emp=1 CREATE] 7 pm
+    ~base_fish                                               fish out=  0.07 val=  0.07 cost=  0.00 c/o=   0.0 L=  0.0 | 
+    ~preserved_catch                                         fish out=  0.43 val=  0.43 cost=  0.45 c/o=  1.05 L=  0.0 | salt=0.045 fiber_crops=0.055 pottery=0.028 lumber=0.032 tools=0.01
+    pp_arctic_net_curing_yard_preserved_catch                fish out=  0.17 val=  0.17 cost=  0.13 c/o=0.7412 L=  0.0 | salt=0.008 fiber_crops=0.018 ivory=0.011 pottery=0.006
+    ~clinker_craft                                           fish out= 0.065 val=  0.07 cost=  0.07 c/o=1.0615 L=  0.0 | lumber=0.028 fiber_crops=0.01
+    ~wattle_weirs                                            fish out= 0.075 val=  0.07 cost=  0.07 c/o=0.9467 L=  0.0 | lumber=0.02 fiber_crops=0.018
+    ~stew_ponds                                              fish out= 0.055 val=  0.06 cost=  0.05 c/o=0.9273 L=  0.0 | clay=0.026 lumber=0.016 pottery=0.01
+    ~worker_victuals                                     victuals out= 0.033 val=  0.10 cost=  0.00 c/o=   0.0 L=  0.0 | 
+
+##### trade
+slave_center [burghers emp=0.3 REPLACE] 1 pm
+    ~slave_center_maintenance                        slaves_goods out=   1.0 val=  3.00 cost=  3.04 c/o=1.0125 L=  0.0 | stone=0.45 tools=0.45 firearms=0.225 paper=0.225
+slave_market [burghers emp=0.3 REPLACE] 1 pm
+    ~slave_market_maintenance                        slaves_goods out=   2.0 val=  6.00 cost=  6.07 c/o= 1.012 L=  0.0 | leather=0.624 tools=0.567 weaponry=0.499 paper=0.43
+victuals_market_export [nobles emp=0.001 CREATE] 1 pm
+    pp_province_food_to_market                       province_food_sales out= 0.375 val=  1.88 cost= 46.80 c/o= 24.96 L=  0.3 | victuals=-3 offset=11.1 manual_labor_cost=0.3
+victuals_market_import [nobles emp=0.001 CREATE] 2 pm
+    pp_province_food_from_market                           offset out=  0.45 val=  2.25 cost=  9.30 c/o=4.1333 L=  0.3 | victuals=3 manual_labor_cost=0.3
+    pp_province_storage_price                        province_food_purchase out= 0.375 val=  1.88 cost= 15.00 c/o=   8.0 L=  0.0 | offset=3
+
+##### urban_workshop
+apothecary [burghers emp=0.3 REPLACE] 2 pm
+    ~natural_medicine_apotechary                      medicaments out=   0.5 val=  0.50 cost=  0.43 c/o= 0.854 L=  0.0 | wild_game=0.047 fiber_crops=0.19
+    ~ancient_medicine_apotechary                      medicaments out=   0.5 val=  0.50 cost=  0.43 c/o= 0.858 L=  0.0 | mercury=0.019 ivory=0.093
+beer_workshop [burghers emp=0.3 REPLACE] 7 pm
+    ~wheat_beer_workshop_maintenance                         beer out=   1.1 val=  2.20 cost=  1.97 c/o=0.8951 L=  0.0 | wheat=1.117 lumber=0.279 tools=0.112
+    ~millet_beer_workshop_maintenance                        beer out=   1.1 val=  2.20 cost=  1.97 c/o=0.8951 L=  0.0 | millet=1.117 lumber=0.279 tools=0.112
+    ~fruit_beer_workshop_maintenance                         beer out=   1.1 val=  2.20 cost=  1.97 c/o=0.8953 L=  0.0 | fruit=1.175 lumber=0.235 tools=0.118
+    ~maize_beer_workshop_maintenance                         beer out=   1.1 val=  2.20 cost=  1.94 c/o=0.8818 L=  0.0 | maize=1.576 pottery=0.364
+    ~bavarian_beer_workshop_maintenance                      beer out=   1.3 val=  2.60 cost=  2.37 c/o=0.9126 L=  0.0 | wheat=1.47 lumber=0.267 tools=0.134
+    ~honey_beer_workshop_maintenance                         beer out=   1.1 val=  2.20 cost=  1.97 c/o=0.8958 L=  0.0 | beeswax=0.294 millet=0.588 lumber=0.235 tools=0.118
+    ~rice_beer_workshop_maintenance                          beer out=   1.1 val=  2.20 cost=  1.97 c/o=0.8951 L=  0.0 | rice=1.117 lumber=0.279 tools=0.112
+cannon_maker [burghers emp=0.3 REPLACE] 6 pm
+    ~cannon_maker_lumber_maintenance                      cannons out=   0.1 val=  0.40 cost=  0.38 c/o=0.9562 L=  0.0 | lumber=0.107 iron=0.04 tools=0.017
+    ~cannon_maker_bronze_maintenance                      cannons out=   1.0 val=  4.00 cost=  4.12 c/o=1.0292 L=  0.0 | copper=0.619 tin=0.124 tools=0.619
+    ~cannon_maker_iron_maintenance                        cannons out=   1.0 val=  4.00 cost=  4.10 c/o=1.0244 L=  0.0 | iron=0.66 tools=0.55
+    ~cannon_maker_ammunition_stone_maintenance            cannons out= 0.087 val=  0.35 cost=  0.31 c/o=0.8966 L=  0.0 | stone=0.104 saltpeter=0.104
+    ~cannon_maker_ammunition_lead_maintenance             cannons out=  0.12 val=  0.48 cost=  0.44 c/o= 0.925 L=  0.0 | lead=0.111 saltpeter=0.111
+    ~cannon_maker_ammunition_iron_maintenance             cannons out=  0.16 val=  0.64 cost=  0.60 c/o=0.9453 L=  0.0 | iron=0.11 saltpeter=0.11
+cannon_workshop [burghers emp=0.3 REPLACE] 5 pm
+    ~cannon_workshop_bronze_maintenance                   cannons out=   1.1 val=  4.40 cost=  4.30 c/o=0.9783 L=  0.0 | copper=1.102 tin=0.275 tools=0.138
+    ~cannon_workshop_iron_maintenance                     cannons out=   1.1 val=  4.40 cost=  4.30 c/o=0.9777 L=  0.0 | iron=1.114 tools=0.124
+    ~cannon_workshop_ammunition_stone_maintenance         cannons out=   0.1 val=  0.40 cost=  0.32 c/o=0.8025 L=  0.0 | stone=0.107 saltpeter=0.107
+    ~cannon_workshop_ammunition_lead_maintenance          cannons out=  0.15 val=  0.60 cost=  0.48 c/o=   0.8 L=  0.0 | lead=0.12 saltpeter=0.12
+    ~cannon_workshop_ammunition_iron_maintenance          cannons out=   0.2 val=  0.80 cost=  0.71 c/o=0.8844 L=  0.0 | iron=0.137 saltpeter=0.114
+cloth_guild [burghers emp=0.3 REPLACE] 3 pm
+    ~cotton_cloth_guild_maintenance                         cloth out=   1.0 val=  3.00 cost=  2.93 c/o= 0.976 L=  0.0 | cotton=0.976
+    ~wool_cloth_guild_maintenance                           cloth out=   1.0 val=  3.00 cost=  2.93 c/o=0.9758 L=  0.0 | wool=1.171
+    ~fiber_crops_cloth_guild_maintenance                    cloth out=   0.8 val=  2.40 cost=  2.33 c/o=  0.97 L=  0.0 | fiber_crops=1.164
+cloth_workshop [burghers emp=0.3 REPLACE] 3 pm
+    ~cotton_cloth_workshop_maintenance                      cloth out=   1.1 val=  3.30 cost=  3.04 c/o=0.9209 L=  0.0 | cotton=1.013
+    ~wool_cloth_workshop_maintenance                        cloth out=   1.1 val=  3.30 cost=  3.04 c/o=0.9212 L=  0.0 | wool=1.216
+    ~fiber_crops_cloth_workshop_maintenance                 cloth out=   0.9 val=  2.70 cost=  2.44 c/o=0.9037 L=  0.0 | fiber_crops=1.22
+distillers_guild [burghers emp=0.3 REPLACE] 6 pm
+    ~sugar_liquor_guild_maintenance                        liquor out=   1.0 val=  2.50 cost=  2.43 c/o=0.9716 L=  0.0 | sugar=0.681 pottery=0.113 glass=0.091
+    ~rice_liquor_guild_maintenance                         liquor out=   1.0 val=  2.50 cost=  2.43 c/o=0.9708 L=  0.0 | rice=1.975 pottery=0.113 glass=0.113
+    ~potato_liquor_guild_maintenance                       liquor out=   1.0 val=  2.50 cost=  2.43 c/o=0.9708 L=  0.0 | potato=1.975 pottery=0.113 glass=0.113
+    ~wheat_liquor_guild_maintenance                        liquor out=   1.0 val=  2.50 cost=  2.43 c/o=0.9708 L=  0.0 | wheat=1.975 pottery=0.113 glass=0.113
+    ~beer_liquor_guild_maintenance                         liquor out=   1.0 val=  2.50 cost=  2.43 c/o=0.9704 L=  0.0 | beer=0.983 pottery=0.115 glass=0.115
+    ~wine_liquor_guild_maintenance                         liquor out=   1.0 val=  2.50 cost=  2.43 c/o=0.9704 L=  0.0 | wine=0.983 pottery=0.115 glass=0.115
+distillers_workshop [burghers emp=0.3 REPLACE] 6 pm
+    ~sugar_liquor_workshop_maintenance                     liquor out=   1.1 val=  2.75 cost=  2.49 c/o=0.9055 L=  0.0 | sugar=0.708 pottery=0.117 glass=0.083
+    ~rice_liquor_workshop_maintenance                      liquor out=   1.1 val=  2.75 cost=  2.49 c/o=0.9062 L=  0.0 | rice=2.085 pottery=0.119 glass=0.096
+    ~potato_liquor_workshop_maintenance                    liquor out=   1.1 val=  2.75 cost=  2.49 c/o=0.9062 L=  0.0 | potato=2.085 pottery=0.119 glass=0.096
+    ~wheat_liquor_workshop_maintenance                     liquor out=   1.1 val=  2.75 cost=  2.49 c/o=0.9062 L=  0.0 | wheat=2.085 pottery=0.119 glass=0.096
+    ~beer_liquor_workshop_maintenance                      liquor out=   1.1 val=  2.75 cost=  2.49 c/o=0.9062 L=  0.0 | beer=1.008 pottery=0.119 glass=0.119
+    ~wine_liquor_workshop_maintenance                      liquor out=   1.1 val=  2.75 cost=  2.49 c/o=0.9062 L=  0.0 | wine=1.008 pottery=0.119 glass=0.119
+dyes_guild [burghers emp=0.3 REPLACE] 2 pm
+    ~dyes_guild_maintenance                                  dyes out=   0.2 val=  0.80 cost=  0.78 c/o=0.9712 L=  0.0 | lumber=0.444
+    ~alum_dyes_guild_maintenance                             dyes out=   0.3 val=  1.20 cost=  1.16 c/o= 0.964 L=  0.0 | alum=0.021 lumber=0.625
+dyes_workshop [burghers emp=0.3 REPLACE] 1 pm
+    ~dyes_workshop_maintenance                               dyes out=   0.4 val=  1.60 cost=  1.46 c/o=0.9139 L=  0.0 | alum=0.061 lumber=0.731
+fine_cloth_guild [burghers emp=0.3 REPLACE] 7 pm
+    ~fine_cloth_guild_maintenance                      fine_cloth out=   0.5 val=  3.00 cost=  2.96 c/o= 0.988 L=  0.0 | cloth=0.988
+    ~wool_weavers_maintenance                          fine_cloth out=   0.5 val=  3.00 cost=  2.96 c/o=0.9883 L=  0.0 | wool=1.186
+    ~silk_weavers_maintenance                          fine_cloth out=   0.7 val=  4.20 cost=  4.16 c/o=0.9914 L=  0.0 | silk=1.041
+    ~spanish_cloth_maintenance                         fine_cloth out=   0.5 val=  3.00 cost=  2.96 c/o=0.9883 L=  0.0 | wool=1.186
+    ~standard_fine_cloth_guild_maintenance             fine_cloth out=   0.1 val=  0.60 cost=  0.56 c/o=  0.94 L=  0.0 | dyes=0.141
+    ~alum_fine_cloth_guild_maintenance                 fine_cloth out=   0.2 val=  1.20 cost=  1.16 c/o=0.9692 L=  0.0 | alum=0.061 dyes=0.245
+    ~fur_trim_guild_maintenance                        fine_cloth out=   0.2 val=  1.20 cost=  1.16 c/o=  0.97 L=  0.0 | fur=0.582
+fine_cloth_workshop [burghers emp=0.3 REPLACE] 7 pm
+    ~fine_cloth_workshop_maintenance                   fine_cloth out=   0.6 val=  3.60 cost=  3.47 c/o=0.9642 L=  0.0 | cloth=1.157
+    ~wool_weavers_workshop_maintenance                 fine_cloth out=   0.6 val=  3.60 cost=  3.47 c/o=0.9639 L=  0.0 | wool=1.388
+    ~silk_weavers_workshop_maintenance                 fine_cloth out=   0.8 val=  4.80 cost=  4.67 c/o=0.9733 L=  0.0 | silk=1.168
+    ~spanish_cloth_workshop_maintenance                fine_cloth out=   0.6 val=  3.60 cost=  3.47 c/o=0.9639 L=  0.0 | wool=1.388
+    ~standard_fine_cloth_workshop_maintenance          fine_cloth out=  0.12 val=  0.72 cost=  0.59 c/o=0.8222 L=  0.0 | dyes=0.148
+    ~alum_fine_cloth_workshop_maintenance              fine_cloth out=  0.25 val=  1.50 cost=  1.37 c/o=0.9133 L=  0.0 | alum=0.066 dyes=0.293
+    ~fur_trim_workshop_maintenance                     fine_cloth out=  0.25 val=  1.50 cost=  1.37 c/o=0.9133 L=  0.0 | fur=0.685
+furniture_guild [burghers emp=0.3 REPLACE] 1 pm
+    ~furniture_maintenance                              furniture out=   1.0 val=  3.00 cost=  2.97 c/o=0.9902 L=  0.0 | lumber=1.047 dyes=0.157 tools=0.157
+furniture_workshop [burghers emp=0.3 REPLACE] 1 pm
+    ~furniture_workshop_maintenance                     furniture out=   1.1 val=  3.30 cost=  3.08 c/o=0.9318 L=  0.0 | lumber=1.173 dyes=0.141 tools=0.141
+glass_guild [burghers emp=0.3 REPLACE] 2 pm
+    ~glass_guild_maintenance                                glass out=  0.75 val=  2.25 cost=  2.28 c/o=1.0143 L=  0.0 | lumber=0.219 sand=1.094 tools=0.416
+    ~metal_glass_guild_maintenance                          glass out=   1.0 val=  3.00 cost=  3.04 c/o=1.0142 L=  0.0 | lumber=0.355 sand=1.148 tools=0.47 alum=0.046 lead=0.091
+glass_workshop [burghers emp=0.3 REPLACE] 1 pm
+    ~metal_glass_workshop_maintenance                       glass out=   1.1 val=  3.30 cost=  3.16 c/o= 0.958 L=  0.0 | lumber=0.376 sand=1.174 tools=0.481 alum=0.047 lead=0.106
+gun_smith [burghers emp=0.3 REPLACE] 5 pm
+    ~guns_guild_lumber_maintenance                       firearms out=  0.15 val=  0.45 cost=  0.43 c/o=0.9622 L=  0.0 | lumber=0.134 iron=0.04 tools=0.018
+    ~guns_guild_bronze_maintenance                       firearms out=   1.0 val=  3.00 cost=  3.05 c/o=1.0155 L=  0.0 | copper=0.569 tin=0.114 tools=0.342
+    ~guns_guild_iron_maintenance                         firearms out=   1.0 val=  3.00 cost=  3.05 c/o=1.0162 L=  0.0 | iron=0.559 tools=0.336
+    ~guns_guild_ammunition_lead_maintenance              firearms out=  0.16 val=  0.48 cost=  0.44 c/o= 0.925 L=  0.0 | lead=0.111 saltpeter=0.111
+    ~guns_guild_ammunition_iron_maintenance              firearms out=   0.2 val=  0.60 cost=  0.56 c/o= 0.935 L=  0.0 | iron=0.102 saltpeter=0.102
+guns_workshop [burghers emp=0.3 REPLACE] 4 pm
+    ~guns_workshop_bronze_maintenance                    firearms out=   1.1 val=  3.30 cost=  3.26 c/o=0.9884 L=  0.0 | copper=0.601 tin=0.12 tools=0.375
+    ~guns_workshop_iron_maintenance                      firearms out=   1.0 val=  3.00 cost=  2.95 c/o=0.9838 L=  0.0 | iron=0.534 tools=0.333
+    ~guns_workshop_ammunition_lead_maintenance           firearms out=   0.2 val=  0.60 cost=  0.48 c/o=   0.8 L=  0.0 | lead=0.12 saltpeter=0.12
+    ~guns_workshop_ammunition_iron_maintenance           firearms out=  0.25 val=  0.75 cost=  0.66 c/o=  0.88 L=  0.0 | iron=0.12 saltpeter=0.12
+hand_cannon_guild [burghers emp=0.3 REPLACE] 1 pm
+    ~hand_cannon_guild_maintenance                       firearms out=   0.3 val=  0.90 cost=  0.84 c/o=0.9347 L=  0.0 | tools=0.057 lead=0.011 saltpeter=0.114 alum=0.006 copper=0.114 tin=0.023
+jewelry_guild [burghers emp=0.3 REPLACE] 7 pm
+    ~gold_base                                            jewelry out=   1.0 val=  5.00 cost=  5.59 c/o=1.1178 L=  0.0 | goods_gold=0.621
+    ~silver_base                                          jewelry out=   1.0 val=  5.00 cost=  4.96 c/o=0.9924 L=  0.0 | silver=0.827
+    ~copper_base                                          jewelry out=   1.0 val=  5.00 cost=  4.96 c/o= 0.993 L=  0.0 | copper=1.655
+    ~ivory_enhancement                                    jewelry out=   0.1 val=  0.50 cost=  0.46 c/o= 0.928 L=  0.0 | ivory=0.116
+    ~amber_enhancement                                    jewelry out=   0.1 val=  0.50 cost=  0.46 c/o= 0.928 L=  0.0 | amber=0.116
+    ~gems_enhancement                                     jewelry out=   0.1 val=  0.50 cost=  0.46 c/o= 0.928 L=  0.0 | gems=0.116
+    ~pearls_enhancement                                   jewelry out=   0.1 val=  0.50 cost=  0.46 c/o= 0.928 L=  0.0 | pearls=0.116
+lacquerware_guild [burghers emp=0.3 REPLACE] 1 pm
+    ~lacquerware_shop_maintenance                     lacquerware out=   1.0 val=  5.00 cost=  4.96 c/o=0.9921 L=  0.0 | lumber=1.326 dyes=0.552 tools=0.133
+lucca_silk_production_guild [burghers emp=0.3 REPLACE] 1 pm
+    ~fiber_crops_silk_guild_maintenance                      silk out=   0.6 val=  2.40 cost=  2.33 c/o=  0.97 L=  0.0 | fiber_crops=1.164
+naval_supplies_guild [burghers emp=0.3 REPLACE] 1 pm
+    ~naval_supplies_guild_maintenance                naval_supplies out=   1.0 val=  3.00 cost=  2.93 c/o=0.9759 L=  0.0 | lumber=0.225 fiber_crops=0.564 tar=0.619 cloth=0.056
+naval_supplies_workshop [burghers emp=0.3 REPLACE] 1 pm
+    ~naval_supplies_workshop_maintenance             naval_supplies out=   1.1 val=  3.30 cost=  3.06 c/o=0.9264 L=  0.0 | lumber=0.187 fiber_crops=0.496 tar=0.683 cloth=0.124
+paper_guild [burghers emp=0.3 REPLACE] 3 pm
+    ~paper_guild_leather_maintenance                        paper out=   0.5 val=  1.00 cost=  0.93 c/o=0.9263 L=  0.0 | leather=0.195 lumber=0.195
+    ~paper_guild_fiber_pulp_maintenance                     paper out=   1.0 val=  2.00 cost=  1.93 c/o=0.9639 L=  0.0 | fiber_crops=0.746 lumber=0.249
+    ~paper_guild_cloth_maintenance                          paper out=   1.0 val=  2.00 cost=  1.93 c/o=0.9646 L=  0.0 | cloth=0.576 lumber=0.115
+paper_workshop [burghers emp=0.3 REPLACE] 2 pm
+    ~paper_workshop_fiber_pulp_maintenance                  paper out=   1.0 val=  2.00 cost=  1.76 c/o= 0.879 L=  0.0 | fiber_crops=0.879
+    ~paper_workshop_cloth_maintenance                       paper out=   1.1 val=  2.20 cost=  1.96 c/o=0.8908 L=  0.0 | cloth=0.578 lumber=0.129
+perfumery [burghers emp=0.2 REPLACE] 1 pm
+    ~blended_incense                                      incense out=   1.0 val=  2.50 cost=  1.75 c/o=   0.7 L=  0.0 | liquor=0.2 pepper=0.25
+porcelain_guild [burghers emp=0.3 REPLACE] 1 pm
+    ~porcelain_guild_maintenance                        porcelain out=   1.0 val=  3.00 cost=  2.94 c/o=0.9811 L=  0.0 | clay=3.05 coal=0.61 tools=0.061
+pottery_guild [burghers emp=0.3 REPLACE] 1 pm
+    ~pottery_maintenance                                  pottery out=   1.0 val=  1.00 cost=  0.94 c/o=0.9407 L=  0.0 | clay=1.079 lumber=0.129 tools=0.054
+pottery_workshop [burghers emp=0.3 REPLACE] 1 pm
+    ~pottery_w_maintenance                                pottery out=   1.1 val=  1.10 cost=  0.92 c/o= 0.837 L=  0.0 | clay=1.099 lumber=0.11 tools=0.055
+pounamou_carver [burghers emp=0.3 REPLACE] 1 pm
+    ~pounamou_carver_maintenance                          jewelry out=   0.2 val=  1.00 cost=  0.93 c/o= 0.928 L=  0.0 | gems=0.232
+printing_press_shop [burghers emp=0.3 REPLACE] 1 pm
+    ~printing_press_maintenance                             books out=   1.0 val=  3.00 cost=  2.77 c/o=0.9223 L=  0.0 | lead=0.239 paper=0.835 tools=0.03 lumber=0.298
+saltpeter_guild [burghers emp=0.1 REPLACE] 1 pm
+    ~demands                                            saltpeter out=   1.0 val=  2.00 cost=  1.70 c/o=  0.85 L=  0.0 | pottery=0.2 livestock=1
+saltpeter_workshop [burghers emp=0.1 REPLACE] 1 pm
+    ~demands                                            saltpeter out=   1.1 val=  2.20 cost=  1.50 c/o=0.6818 L=  0.0 | pottery=0.15 livestock=0.9
+scriptorium [clergy emp=0.3 REPLACE] 1 pm
+    ~scriptorium_maintenance                                books out=   0.3 val=  0.90 cost=  0.83 c/o=0.9214 L=  0.0 | dyes=0.054 paper=0.213 lumber=0.107
+tanning_workshop [burghers emp=0.3 REPLACE] 2 pm
+    ~leather_livestock_workshop_maintenance               leather out=   1.1 val=  3.30 cost=  3.10 c/o=0.9388 L=  0.0 | livestock=1.319 sand=0.513 tar=0.074 tools=0.22
+    ~leather_wildgame_workshop_maintenance                leather out=   1.1 val=  3.30 cost=  3.09 c/o=0.9377 L=  0.0 | wild_game=2.001 sand=0.501 tar=0.072 tools=0.215
+tools_guild [burghers emp=0.3 REPLACE] 4 pm
+    ~metalwork_guild_maintenance                            tools out=   1.0 val=  3.25 cost=  2.93 c/o=0.9014 L=  0.0 | iron=0.837
+    ~stone_tools_guild_maintenance                          tools out=  0.25 val=  0.81 cost=  0.68 c/o=0.8345 L=  0.0 | stone=0.678
+    ~bronze_tools_guild_maintenance                         tools out=   0.6 val=  1.95 cost=  1.73 c/o=0.8867 L=  0.0 | copper=0.547 tin=0.044
+    ~copper_tools_guild_maintenance                         tools out=  0.55 val=  1.79 cost=  1.58 c/o=0.8828 L=  0.0 | copper=0.526
+tools_workshop [burghers emp=0.3 REPLACE] 1 pm
+    ~metalwork_workshop_maintenance                         tools out=   1.1 val=  3.58 cost=  3.08 c/o=0.8615 L=  0.0 | iron=0.88
+weapon_guild [burghers emp=0.3 REPLACE] 3 pm
+    ~pre_columbian_weapon_smith_maintenance              weaponry out=   0.4 val=  1.20 cost=  1.13 c/o=0.9396 L=  0.0 | lumber=0.07 stone=1.005
+    ~weapon_smith_maintenance                            weaponry out=   1.0 val=  3.00 cost=  3.07 c/o=1.0244 L=  0.0 | lumber=0.288 coal=0.347 tools=0.577
+    ~weapon_guild_obsidian_maintenance                   weaponry out=   0.4 val=  1.20 cost=  1.13 c/o=0.9404 L=  0.0 | lumber=0.122 stone=0.507 gems=0.102
+weapon_workshop [burghers emp=0.3 REPLACE] 1 pm
+    ~weapon_workshop_maintenance                         weaponry out=   1.1 val=  3.30 cost=  3.12 c/o=0.9444 L=  0.0 | lumber=0.353 coal=0.353 iron=0.294 tools=0.235

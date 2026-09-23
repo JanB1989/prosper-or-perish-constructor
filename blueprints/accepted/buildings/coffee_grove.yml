@@ -1,6 +1,10 @@
 version: 2
 tag: coffee_grove
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_coffee_grove_base_coffee: base
 upgrade_chain:
   family: coffee_grove
   tier: 0
@@ -47,6 +51,7 @@ building:
 
     unique_production_methods = {
         pp_coffee_grove_base_coffee = {
+            manual_labor_cost = 0.024
             produced = coffee
             output = 0.040
             category = building_maintenance
@@ -57,8 +62,9 @@ building:
             category = building_maintenance
         }
         pp_coffee_grove_washing_stations = {
-            lumber = 0.116 # washing troughs
-            pottery = 0.058 # fermentation vats
+            lumber = 0.095 # washing troughs
+            pottery = 0.048 # fermentation vats
+            manual_labor_cost = 0.047
             produced = coffee
             output = 0.090
             category = building_maintenance

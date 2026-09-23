@@ -1,6 +1,11 @@
 version: 2
 tag: pomological_orchard
 footprint: farm_land
+labour:
+  class: primary_absolutism
+  methods:
+    pp_pomological_orchard_base_fruit: base
+    pp_pomological_orchard_worker_victuals: base
 upgrade_chain:
   family: fruit_orchard
   tier: 2
@@ -56,6 +61,7 @@ building:
 
     unique_production_methods = {
         pp_pomological_orchard_base_fruit = {
+            manual_labor_cost = 0.02
             produced = fruit
             output = 0.10
             category = building_maintenance
@@ -68,9 +74,10 @@ building:
         pp_pomological_orchard_grafted_rows = {
             produced = fruit
             output = 2.10
-            tools = 0.38 # pruning tools, grafting knives
-            lumber = 0.35 # trellises, crates, stakes
-            paper = 0.16 # cultivar ledgers
+            tools = 0.35 # pruning tools, grafting knives
+            lumber = 0.32 # trellises, crates, stakes
+            paper = 0.15 # cultivar ledgers
+            manual_labor_cost = 0.17
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -80,6 +87,7 @@ building:
             category = building_maintenance
         }
         pp_pomological_orchard_worker_victuals = {
+            manual_labor_cost = 0.04
             produced = victuals
             output = 0.067
             debug_max_profit = 0

@@ -8,4 +8,26 @@ coal = 0.70
 sand = 2.00
 category = building_maintenance
 }
+
+pp_permanent_way_depot_hand_laying = {
+steel = 1.80
+lumber = 2.00
+masonry = 2.00
+tools = 0.40
+coal = 0.30
+sand = 2.00
+manual_labor_cost = 7.50
+category = building_maintenance
+}
+
+pp_permanent_way_depot_standardized_fittings = {
+steel = 1.90
+lumber = 1.10
+masonry = 0.90
+tools = 1.45
+coal = 0.55
+sand = 0.90
+paper = 0.15
+category = building_maintenance
+}
 # <<< eu5-building-pipeline:permanent_way_depot:production_method

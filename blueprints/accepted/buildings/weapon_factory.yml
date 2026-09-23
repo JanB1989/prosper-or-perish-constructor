@@ -1,6 +1,8 @@
 version: 2
 tag: weapon_factory
 footprint: mill_works
+labour:
+  class: craft_revolutions
 building:
   key: weapon_factory
   mode: REPLACE
@@ -26,9 +28,10 @@ building:
     build_time = mills_build_time
     unique_production_methods = {
         pp_weapon_factory_weapon_factory_maintenance = {
-            steel = 1.911
-            coal = 0.574
-            lumber = 0.574
+            steel = 1.83
+            coal = 0.55
+            lumber = 0.55
+            manual_labor_cost = 0.49
             category = mills_input
             produced = weaponry
             output = 4.0

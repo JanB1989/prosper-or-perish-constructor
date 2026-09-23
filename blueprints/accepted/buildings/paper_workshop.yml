@@ -1,6 +1,8 @@
 version: 2
 tag: paper_workshop
 footprint: urban_workshop
+labour:
+  class: craft_discovery
 building:
   key: paper_workshop
   mode: REPLACE
@@ -25,15 +27,17 @@ building:
     build_time = workshop_build_time
     unique_production_methods = {
         pp_paper_workshop_paper_workshop_fiber_pulp_maintenance = {
-            fiber_crops = 0.879
+            fiber_crops = 0.77
+            manual_labor_cost = 0.22
             produced = paper
             output = 1.0
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_paper_workshop_paper_workshop_cloth_maintenance = {
-            cloth = 0.578
-            lumber = 0.129
+            cloth = 0.51
+            lumber = 0.11
+            manual_labor_cost = 0.24
             produced = paper
             output = 1.1
             debug_max_profit = workshop_profit_margin

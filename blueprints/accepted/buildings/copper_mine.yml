@@ -1,6 +1,11 @@
 ﻿version: 2
 tag: copper_mine
 footprint: mining
+labour:
+  class: primary_medieval
+  methods:
+    pp_copper_mine_fire_setting: hand_work
+    pp_copper_mine_base_copper: base
 upgrade_chain:
   family: copper_mine
   tier: 0
@@ -19,6 +24,7 @@ building:
       methods:
         - pp_copper_mine_no_primary
         - pp_copper_mine_copper
+        - pp_copper_mine_fire_setting
     - name: slot_2
       methods:
         - pp_copper_mine_no_secondary
@@ -52,6 +58,7 @@ building:
 
     unique_production_methods = {
         pp_copper_mine_base_copper = {
+            manual_labor_cost = 0.054
             produced = copper
             output = 0.09
             category = building_maintenance
@@ -62,11 +69,20 @@ building:
             category = building_maintenance
         }
         pp_copper_mine_copper = {
-            lumber = 0.27
-            tools = 0.32
-            beeswax = 0.075
+            lumber = 0.22
+            tools = 0.26
+            beeswax = 0.061
+            manual_labor_cost = 0.31
             produced = copper
             output = 0.6
+            category = building_maintenance
+        }
+        pp_copper_mine_fire_setting = {
+            lumber = 0.33
+            beeswax = 0.092
+            manual_labor_cost = 0.63
+            produced = copper
+            output = 0.48
             category = building_maintenance
         }
     }
@@ -75,24 +91,27 @@ building:
             category = building_maintenance
         }
         pp_copper_mine_silver = {
-            lumber = 0.03
-            tools = 0.03
-            lead = 0.02
+            lumber = 0.025
+            tools = 0.025
+            lead = 0.016
+            manual_labor_cost = 0.033
             produced = silver
             output = 0.033
             category = building_maintenance
         }
         pp_copper_mine_gold = {
-            lumber = 0.03
-            tools = 0.03
-            lead = 0.02
+            lumber = 0.025
+            tools = 0.025
+            lead = 0.016
+            manual_labor_cost = 0.033
             produced = goods_gold
             output = 0.026
             category = building_maintenance
         }
         pp_copper_mine_tin = {
-            lumber = 0.03
-            tools = 0.02
+            lumber = 0.025
+            tools = 0.016
+            manual_labor_cost = 0.022
             produced = tin
             output = 0.06
             category = building_maintenance
@@ -117,6 +136,7 @@ localization:
     pp_copper_mine_base_copper: Copper Outcrop
     pp_copper_mine_no_primary: No Copper Workings
     pp_copper_mine_copper: Hand Copper Workings
+    pp_copper_mine_fire_setting: Fire-Setting
     pp_copper_mine_no_secondary: No Secondary Output
     pp_copper_mine_silver: Argentiferous Ore Picking
     pp_copper_mine_gold: Auriferous Ore Picking
@@ -141,6 +161,13 @@ evaluation:
       production_efficiency: 1.00
       allow_rules:
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+    pp_copper_mine_fire_setting:
+      production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Fire-setting cracks the lode with timber fires instead of iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
+        input_throughput: Fire-setting cracks the lode with timber fires instead of iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
+        output_throughput: Fire-setting cracks the lode with timber fires instead of iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
+        amortization_months: Fire-setting cracks the lode with timber fires instead of iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
     pp_copper_mine_no_secondary:
       production_efficiency: 1.00
     pp_copper_mine_silver:

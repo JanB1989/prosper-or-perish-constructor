@@ -1,6 +1,11 @@
 ﻿version: 2
 tag: lead_mine
 footprint: mining
+labour:
+  class: primary_medieval
+  methods:
+    pp_lead_mine_hushing: hand_work
+    pp_lead_mine_base_lead: base
 upgrade_chain:
   family: lead_mine
   tier: 0
@@ -19,6 +24,7 @@ building:
       methods:
         - pp_lead_mine_no_primary
         - pp_lead_mine_lead
+        - pp_lead_mine_hushing
     - name: slot_2
       methods:
         - pp_lead_mine_no_secondary
@@ -51,6 +57,7 @@ building:
 
     unique_production_methods = {
         pp_lead_mine_base_lead = {
+            manual_labor_cost = 0.036
             produced = lead
             output = 0.09
             category = building_maintenance
@@ -61,11 +68,20 @@ building:
             category = building_maintenance
         }
         pp_lead_mine_lead = {
-            lumber = 0.14
-            tools = 0.25
-            beeswax = 0.04
+            lumber = 0.11
+            tools = 0.21
+            beeswax = 0.033
+            manual_labor_cost = 0.2
             produced = lead
             output = 0.63
+            category = building_maintenance
+        }
+        pp_lead_mine_hushing = {
+            lumber = 0.22
+            beeswax = 0.067
+            manual_labor_cost = 0.43
+            produced = lead
+            output = 0.504
             category = building_maintenance
         }
     }
@@ -74,17 +90,19 @@ building:
             category = building_maintenance
         }
         pp_lead_mine_silver = {
-            lumber = 0.03
-            tools = 0.03
-            lead = 0.02
+            lumber = 0.025
+            tools = 0.025
+            lead = 0.016
+            manual_labor_cost = 0.033
             produced = silver
             output = 0.033
             category = building_maintenance
         }
         pp_lead_mine_gold = {
-            lumber = 0.03
-            tools = 0.03
-            lead = 0.02
+            lumber = 0.025
+            tools = 0.025
+            lead = 0.016
+            manual_labor_cost = 0.033
             produced = goods_gold
             output = 0.026
             category = building_maintenance
@@ -109,6 +127,7 @@ localization:
     pp_lead_mine_base_lead: Exposed Galena Vein
     pp_lead_mine_no_primary: No Lead Mining
     pp_lead_mine_lead: Galena Vein Workings
+    pp_lead_mine_hushing: Hushing
     pp_lead_mine_no_secondary: No Precious Metal Recovery
     pp_lead_mine_silver: Silver-Galena Picking
     pp_lead_mine_gold: Auriferous Galena Picking
@@ -133,6 +152,13 @@ evaluation:
       allow_rules:
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
         input_throughput: Rounded unit-employment inputs sit just below the global input-throughput floor.
+    pp_lead_mine_hushing:
+      production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Hushing scours the vein open with dammed water instead of iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
+        input_throughput: Hushing scours the vein open with dammed water instead of iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
+        output_throughput: Hushing scours the vein open with dammed water instead of iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
+        amortization_months: Hushing scours the vein open with dammed water instead of iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
     pp_lead_mine_no_secondary:
       production_efficiency: 1.00
     pp_lead_mine_silver:

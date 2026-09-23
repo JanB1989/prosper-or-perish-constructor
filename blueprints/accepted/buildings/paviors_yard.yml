@@ -1,6 +1,8 @@
 ﻿version: 2
 tag: paviors_yard
 footprint: infrastructure
+labour:
+  class: keep
 output_tag: road_1_paviors_yard
 upgrade_chain:
   family: road_infrastructure
@@ -12,9 +14,16 @@ building:
   key: paviors_yard
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots: []
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_paviors_yard_maintenance
+        - pp_paviors_yard_hand_setters
+        - pp_paviors_yard_dressed_stone_paving
   possible_production_methods:
     - pp_paviors_yard_maintenance
+    - pp_paviors_yard_hand_setters
+    - pp_paviors_yard_dressed_stone_paving
   body: |2-
     is_foreign = no
     max_levels = 1
@@ -42,6 +51,8 @@ building:
 
     possible_production_methods = {
       pp_paviors_yard_maintenance
+      pp_paviors_yard_hand_setters
+      pp_paviors_yard_dressed_stone_paving
     }
 
     raw_modifier = {
@@ -58,6 +69,22 @@ production_methods:
       tools = 0.30
       victuals = 0.24
       category = building_maintenance
+  - key: pp_paviors_yard_hand_setters
+    body: |2-
+      masonry = 1.20
+      sand = 0.60
+      tools = 0.12
+      victuals = 0.24
+      manual_labor_cost = 1.20
+      category = building_maintenance
+  - key: pp_paviors_yard_dressed_stone_paving
+    body: |2-
+      masonry = 0.65
+      sand = 0.25
+      tools = 0.45
+      victuals = 0.16
+      paper = 0.06
+      category = building_maintenance
 prices:
   - key: pp_paviors_yard_price
     body: |2-
@@ -72,6 +99,7 @@ advancements:
       ai_weight = { add = 125 }
 localization:
   entries:
+    paviors_yard_slot_0: Paving Crews
     MODIFIER_TYPE_DESC_pp_paviors_yard_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('paviors_yard')|e].
     MODIFIER_TYPE_NAME_pp_paviors_yard_price_cost_modifier: Paviors' Yard Cost
     paviors_yard: Paviors' Yard
@@ -80,6 +108,8 @@ localization:
     pp_paviors_yard_desc: Dedicated paving yards coordinate stone dressing, kerb setting, and repair crews for paved streets and causeways.
     pp_paviors_yard_construction: Paviors' Yard Construction
     pp_paviors_yard_maintenance: Paving Crews
+    pp_paviors_yard_hand_setters: Hand-Set Paving
+    pp_paviors_yard_dressed_stone_paving: Dressed-Stone Paving
     pp_paviors_yard_price: Paviors' Yard Price
 icon:
   source_png: ../assets/icons/paviors_yard.png

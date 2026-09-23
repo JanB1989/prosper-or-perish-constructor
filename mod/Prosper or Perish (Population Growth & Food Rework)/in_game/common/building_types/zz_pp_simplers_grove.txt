@@ -26,6 +26,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_simplers_grove_base_medicaments = {
+        manual_labor_cost = 0.02
         produced = medicaments
         output = 0.1
         category = building_maintenance
@@ -36,8 +37,9 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_simplers_grove_wicker_drying_racks = {
-        fiber_crops = 0.035 # baskets, ties, drying screens and mats
-        pottery = 0.020 # crocks and dry storage vessels
+        fiber_crops = 0.029 # baskets, ties, drying screens and mats
+        pottery = 0.016 # crocks and dry storage vessels
+        manual_labor_cost = 0.016
         produced = medicaments
         output = 0.116
         category = building_maintenance

@@ -1,6 +1,10 @@
 version: 2
 tag: fiber_crops_farm
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_fiber_crops_farm_base_fiber_crops: base
 upgrade_chain:
   family: fiber_crops_farm
   tier: 0
@@ -44,6 +48,7 @@ building:
 
     unique_production_methods = {
         pp_fiber_crops_farm_base_fiber_crops = {
+            manual_labor_cost = 0.035
             produced = fiber_crops
             output = 0.088
             category = building_maintenance
@@ -54,10 +59,11 @@ building:
             category = building_maintenance
         }
         pp_fiber_crops_farm_retting_yards = {
-            livestock = 0.090 # manure and light draught
-            clay = 0.180 # lined retting pits
-            coal = 0.030 # controlled drying heat
-            leather = 0.017 # soft handling pads and aprons
+            livestock = 0.074 # manure and light draught
+            clay = 0.15 # lined retting pits
+            coal = 0.025 # controlled drying heat
+            leather = 0.014 # soft handling pads and aprons
+            manual_labor_cost = 0.058
             produced = fiber_crops
             output = 0.187
             category = building_maintenance

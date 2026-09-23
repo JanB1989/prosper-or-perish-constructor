@@ -1,6 +1,8 @@
 ﻿version: 2
 tag: charcoal_maker
 footprint: forestry
+labour:
+  class: primary_medieval
 building:
   key: charcoal_maker
   mode: REPLACE
@@ -42,8 +44,9 @@ building:
 
                 debug_max_profit = 0.1
 
-                lumber = 0.51 # coppice poles and cordwood
-                clay = 1.20 # earth, turf, and clay sealing
+                lumber = 0.42 # coppice poles and cordwood
+                clay = 0.98 # earth, turf, and clay sealing
+                manual_labor_cost = 0.27
                 category = guild_input
             }
 

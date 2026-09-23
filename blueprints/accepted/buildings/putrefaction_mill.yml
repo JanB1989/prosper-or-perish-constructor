@@ -1,6 +1,8 @@
 ﻿version: 2
 tag: putrefaction_mill
 footprint: mill_works
+labour:
+  class: craft_revolutions
 building:
   key: putrefaction_mill
   mode: REPLACE
@@ -30,8 +32,9 @@ building:
     }
     unique_production_methods = {
         pp_putrefaction_mill_demands = {
-            pottery = 1.1
-            livestock = 2.0
+            pottery = 1.06
+            livestock = 1.92
+            manual_labor_cost = 0.16
             produced = saltpeter
             output = 4.0
             debug_max_profit = 1.0

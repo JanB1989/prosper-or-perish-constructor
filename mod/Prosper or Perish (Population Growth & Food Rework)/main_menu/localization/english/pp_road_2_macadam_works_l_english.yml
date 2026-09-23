@@ -1,11 +1,14 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:macadam_works:localization
+  macadam_works_slot_0: "Road Crews"
   MODIFIER_TYPE_DESC_pp_macadam_works_price_cost_modifier: "Affects the cost of building a [ShowBuildingTypeName('macadam_works')|e]."
   MODIFIER_TYPE_NAME_pp_macadam_works_price_cost_modifier: "Macadam Works Cost"
   macadam_works: "Macadam Works"
   macadam_works_desc: "Surveyors and road crews break graded stone, tend rollers and carts, and keep engineered roads crowned, drained, and open to heavy traffic."
   pp_macadam_works_construction: "Macadam Works Construction"
   pp_macadam_works_maintenance: "Macadam Crews"
+  pp_macadam_works_hand_broken_stone: "Hand-Broken Road Stone"
+  pp_macadam_works_graded_aggregate: "Graded Stone and Rollers"
   pp_macadam_works_price: "Macadam Works Price"
 # <<< eu5-building-pipeline:macadam_works:localization

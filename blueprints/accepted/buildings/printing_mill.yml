@@ -1,6 +1,8 @@
 version: 2
 tag: printing_mill
 footprint: mill_works
+labour:
+  class: craft_revolutions
 building:
   key: printing_mill
   mode: REPLACE
@@ -26,10 +28,10 @@ building:
     build_time = mills_build_time
     unique_production_methods = {
         pp_printing_mill_printing_mill_maintenance = {
-            lead = 0.727
-            paper = 4.001
-            tools = 0.072
-            lumber = 1.163
+            lead = 0.71
+            paper = 3.92
+            lumber = 1.14
+            manual_labor_cost = 0.47
             produced = books
             output = 4.0
             debug_max_profit = mills_profit_margin

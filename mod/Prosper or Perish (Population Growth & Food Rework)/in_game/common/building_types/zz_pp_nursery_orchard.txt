@@ -31,6 +31,7 @@ location_potential = {
 
 unique_production_methods = {
     pp_nursery_orchard_base_fruit = {
+        manual_labor_cost = 0.017
         produced = fruit
         output = 0.085
         category = building_maintenance
@@ -43,11 +44,11 @@ unique_production_methods = {
     pp_nursery_orchard_nursery_rows = {
         produced = fruit
         output = 0.55
-        fiber_crops = 0.095 # osier baskets, graft ties, harvest mats
-        pottery = 0.050 # earthen nursery pots and storage crocks
-        beeswax = 0.018 # grafting wax and wound dressing
-        tools = 0.030 # pruning and grafting knives
-        furniture = 0.022 # sorting racks and apple-loft boards
+        fiber_crops = 0.089 # osier baskets, graft ties, harvest mats
+        pottery = 0.047 # earthen nursery pots and storage crocks
+        tools = 0.028 # pruning and grafting knives
+        furniture = 0.021 # sorting racks and apple-loft boards
+        manual_labor_cost = 0.061
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -57,6 +58,7 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_nursery_orchard_worker_victuals = {
+        manual_labor_cost = 0.02
         produced = victuals
         output = 0.033
         debug_max_profit = 0

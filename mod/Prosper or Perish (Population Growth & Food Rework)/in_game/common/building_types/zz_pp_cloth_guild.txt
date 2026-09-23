@@ -12,21 +12,24 @@ megalopolis = yes
 build_time = guild_build_time
 unique_production_methods = {
     pp_cloth_guild_cotton_cloth_guild_maintenance = {
-        cotton = 0.976
+        cotton = 0.84
+        manual_labor_cost = 0.41
         produced = cloth
         output = 1.0
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_cloth_guild_wool_cloth_guild_maintenance = {
-        wool = 1.171
+        wool = 1.01
+        manual_labor_cost = 0.4
         produced = cloth
         output = 1.0
         debug_max_profit = guild_profit_margin
         category = guild_input
     }
     pp_cloth_guild_fiber_crops_cloth_guild_maintenance = {
-        fiber_crops = 1.164
+        fiber_crops = 1
+        manual_labor_cost = 0.33
         produced = cloth
         output = 0.8
         debug_max_profit = guild_profit_margin

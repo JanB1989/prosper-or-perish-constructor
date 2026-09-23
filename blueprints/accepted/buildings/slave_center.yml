@@ -1,6 +1,8 @@
 version: 2
 tag: slave_center
 footprint: trade
+labour:
+  class: craft_medieval
 building:
   key: slave_center
   mode: REPLACE
@@ -49,10 +51,11 @@ building:
     build_time = colonise_build_time
     unique_production_methods = {
         pp_slave_center_slave_center_maintenance = {
-            stone = 0.45
-            tools = 0.45
-            firearms = 0.225
-            paper = 0.225
+            stone = 0.39
+            tools = 0.39
+            firearms = 0.19
+            paper = 0.19
+            manual_labor_cost = 0.43
             produced = slaves_goods
             output = 1.0
             debug_max_profit = -1

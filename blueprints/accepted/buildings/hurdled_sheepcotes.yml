@@ -1,6 +1,10 @@
 version: 2
 tag: hurdled_sheepcotes
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_hurdled_sheepcotes_base_wool: base
 output_tag: sheep_farms_hurdled_sheepcotes
 upgrade_chain:
   family: sheep_farms
@@ -47,6 +51,7 @@ building:
 
     unique_production_methods = {
         pp_hurdled_sheepcotes_base_wool = {
+            manual_labor_cost = 0.045
             produced = wool
             output = 0.09
             category = building_maintenance
@@ -59,9 +64,10 @@ building:
         pp_hurdled_sheepcotes_foldcourse_husbandry = {
             produced = wool
             output = 0.22
-            furniture = 0.065 # hurdles, gates, racks, troughs
-            livestock = 0.060 # replacement ewes and sires
-            victuals = 0.055 # wintering and lambing stores
+            furniture = 0.053 # hurdles, gates, racks, troughs
+            livestock = 0.049 # replacement ewes and sires
+            victuals = 0.045 # wintering and lambing stores
+            manual_labor_cost = 0.082
             debug_max_profit = 0
             category = building_maintenance
         }

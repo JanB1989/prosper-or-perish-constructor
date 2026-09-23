@@ -1,6 +1,8 @@
 version: 2
 tag: fine_cloth_manufactory
 footprint: manufactory
+labour:
+  class: craft_absolutism
 building:
   key: fine_cloth_manufactory
   mode: REPLACE
@@ -30,7 +32,8 @@ building:
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance = {
-            silk = 2.963
+            silk = 2.76
+            manual_labor_cost = 0.81
             produced = fine_cloth
             output = 2.0
             category = manufactory_input
@@ -38,7 +41,8 @@ building:
         }
         pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance = {
             produced = fine_cloth
-            cloth = 3.951
+            cloth = 3.67
+            manual_labor_cost = 0.84
             output = 2.0
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
@@ -46,7 +50,8 @@ building:
     }
     unique_production_methods = {
         pp_fine_cloth_manufactory_standard_cloth_manufactory_maintenance = {
-            dyes = 0.263
+            dyes = 0.24
+            manual_labor_cost = 0.092
             produced = fine_cloth
             output = 0.2
             category = guild_input
@@ -55,8 +60,9 @@ building:
         pp_fine_cloth_manufactory_alum_fine_cloth_manufactory_maintenance = {
             produced = fine_cloth
             output = 0.4
-            dyes = 0.475
-            alum = 0.118
+            dyes = 0.44
+            alum = 0.11
+            manual_labor_cost = 0.16
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }

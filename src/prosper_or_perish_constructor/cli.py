@@ -227,6 +227,22 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=("apply", "check"),
         help="apply writes the capacity lines into the compiled mod (ppc build does this too); check validates the classes.",
     )
+    labour = _add_command(
+        subcommands,
+        "labour",
+        "Set each producing production method's manual labor share (blueprint labour class) in the accepted blueprints.",
+        _labour,
+    )
+    labour.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply rewrites the method inputs in blueprints/accepted; check lists untagged methods and methods off their class.",
+    )
+    labour.add_argument(
+        "--verbose",
+        action="store_true",
+        help="check: also list every method apply would change.",
+    )
     clean_game_rule_presets = _add_command(
         subcommands,
         "clean-game-rule-presets",
@@ -879,6 +895,51 @@ def _footprint(args: argparse.Namespace, extra: Sequence[str], repo: Path, proje
     return 0
 
 
+def _labour(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("labour does not accept extra arguments.")
+    from prosper_or_perish_constructor import production_labour
+
+    result = production_labour.apply(repo, project, write=args.action == "apply")
+    for problem in result.problems:
+        print(problem)
+    if args.action == "check":
+        if args.verbose:
+            for plan in result.changed:
+                print(f"{plan.method.blueprint.name}: {plan.method.name} ({plan.labour_class}) -> {plan.amounts}")
+        print(
+            f"production labour: {len(result.plans)} methods, {len(result.changed)} off their class, "
+            f"{len(result.problems)} problems"
+        )
+        return 1 if result.problems or result.changed else 0
+    if result.problems:
+        print(f"production labour: {len(result.problems)} problems, nothing written")
+        return 1
+    print(
+        f"production labour: {len(result.changed)} methods rewritten in {result.files_changed} blueprints; "
+        f"report {production_labour.REPORT_RELATIVE_PATH}."
+    )
+    return 0
+
+
+def _print_labour_check(repo: Path, project: Path) -> None:
+    """Build-time summary; problems are printed, not fatal (tag new producing methods with ppc labour check)."""
+    from prosper_or_perish_constructor import production_labour
+
+    try:
+        result = production_labour.apply(repo, project, write=False)
+    except Exception as exc:  # noqa: BLE001 - the build must not fail on the advisory check
+        print(f"Production labour check skipped: {exc}", flush=True)
+        return
+    for problem in result.problems:
+        print(f"Production labour: {problem}", flush=True)
+    print(
+        f"Production labour: {len(result.plans)} methods tagged, {len(result.changed)} off their class "
+        f"(run ppc labour apply), {len(result.problems)} problems.",
+        flush=True,
+    )
+
+
 def _apply_building_footprint(repo: Path, project: Path, mod_root: Path) -> None:
     from prosper_or_perish_constructor import building_footprint
     from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
@@ -908,6 +969,7 @@ def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: 
     if build_code != 0:
         return build_code
     _finalize_constructor_mod(repo, project)
+    _print_labour_check(repo, project)
     return 0
 
 
@@ -1707,7 +1769,10 @@ def _load_province_food_sales_profitability_rows(
     evaluation = evaluate_building_blueprint_data(
         blueprint_path,
         config,
-        price_by_good=load_balance_prices(profile=profile, load_order_path=load_order_path),
+        price_by_good={
+            **load_balance_prices(profile=profile, load_order_path=load_order_path),
+            **config.blueprint_evaluation.price_overrides,
+        },
         raw_material_goods=load_raw_material_goods(
             profile=profile,
             load_order_path=load_order_path,

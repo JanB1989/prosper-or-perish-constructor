@@ -27,6 +27,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_managed_cocoa_grove_base_cocoa = {
+        manual_labor_cost = 0.04
         produced = cocoa
         output = 0.050
         category = building_maintenance
@@ -37,8 +38,9 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_managed_cocoa_grove_fermentation_boxes = {
-        furniture = 0.100 # light fermentation boxes and raised trays
-        fiber_crops = 0.040 # drying mats, sacks, and ties
+        furniture = 0.086 # light fermentation boxes and raised trays
+        fiber_crops = 0.034 # drying mats, sacks, and ties
+        manual_labor_cost = 0.054
         produced = cocoa
         output = 0.114
         category = building_maintenance
@@ -49,8 +51,9 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_managed_cocoa_grove_managed_shade = {
-        furniture = 0.080 # light seedling benches and shade frames
-        fiber_crops = 0.074 # nursery ties, picking sacks, and shade mats
+        furniture = 0.069 # light seedling benches and shade frames
+        fiber_crops = 0.064 # nursery ties, picking sacks, and shade mats
+        manual_labor_cost = 0.053
         produced = cocoa
         output = 0.156
         category = building_maintenance

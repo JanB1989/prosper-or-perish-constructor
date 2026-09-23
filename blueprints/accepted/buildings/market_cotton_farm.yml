@@ -1,6 +1,10 @@
 version: 2
 tag: market_cotton_farm
 footprint: farm_land
+labour:
+  class: primary_discovery
+  methods:
+    pp_market_cotton_farm_base_cotton: base
 upgrade_chain:
   family: cotton_farm
   tier: 1
@@ -51,6 +55,7 @@ building:
 
     unique_production_methods = {
         pp_market_cotton_farm_base_cotton = {
+            manual_labor_cost = 0.031
             produced = cotton
             output = 0.052
             category = building_maintenance
@@ -61,8 +66,9 @@ building:
             category = building_maintenance
         }
         pp_market_cotton_farm_roller_gin_house = {
-            furniture = 0.060 # carpentry for roller gin frames
-            tools = 0.006 # metal rollers and adjustment tools
+            furniture = 0.052 # carpentry for roller gin frames
+            tools = 0.005 # metal rollers and adjustment tools
+            manual_labor_cost = 0.027
             produced = cotton
             output = 0.065
             category = building_maintenance
@@ -73,9 +79,10 @@ building:
             category = building_maintenance
         }
         pp_market_cotton_farm_bale_yard = {
-            fiber_crops = 0.045 # picking bags and bale cloth
-            furniture = 0.025 # drying racks and bale press carpentry
-            tools = 0.004 # hand screw press hardware
+            fiber_crops = 0.039 # picking bags and bale cloth
+            furniture = 0.022 # drying racks and bale press carpentry
+            tools = 0.003 # hand screw press hardware
+            manual_labor_cost = 0.024
             produced = cotton
             output = 0.041
             category = building_maintenance

@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: quicksilver_retort
 footprint: rural_processing
+labour:
+  class: primary_reformation
+  methods:
+    pp_quicksilver_retort_base_mercury: base
 upgrade_chain:
   family: mercury_mine
   tier: 1
@@ -52,6 +56,7 @@ building:
 
     unique_production_methods = {
         pp_quicksilver_retort_base_mercury = {
+            manual_labor_cost = 0.054
             produced = mercury
             output = 0.09
             category = building_maintenance
@@ -62,9 +67,10 @@ building:
             category = building_maintenance
         }
         pp_quicksilver_retort_mercury = {
-            lumber = 0.29
-            tools = 0.29
-            beeswax = 0.104
+            lumber = 0.26
+            tools = 0.26
+            beeswax = 0.093
+            manual_labor_cost = 0.17
             produced = mercury
             output = 0.610
             category = building_maintenance
@@ -75,15 +81,17 @@ building:
             category = building_maintenance
         }
         pp_quicksilver_retort_stone = {
-            lumber = 0.03
-            tools = 0.02
+            lumber = 0.027
+            tools = 0.018
+            manual_labor_cost = 0.012
             produced = stone
             output = 0.14
             category = building_maintenance
         }
         pp_quicksilver_retort_dyes = {
-            lumber = 0.03
-            tools = 0.02
+            lumber = 0.027
+            tools = 0.018
+            manual_labor_cost = 0.012
             produced = dyes
             output = 0.027
             category = building_maintenance

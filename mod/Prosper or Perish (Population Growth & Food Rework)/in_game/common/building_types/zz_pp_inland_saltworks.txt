@@ -70,6 +70,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_inland_saltworks_base_salt = {
+        manual_labor_cost = 0.08
         produced = salt
         output = 0.080
         category = building_maintenance
@@ -80,9 +81,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_inland_saltworks_open_pan_boiling = {
-        lumber = 0.467 # pan fuel
-        clay = 0.200 # hearth linings
-        pottery = 0.267 # brine vessels
+        lumber = 0.38 # pan fuel
+        clay = 0.16 # hearth linings
+        pottery = 0.22 # brine vessels
+        manual_labor_cost = 0.22
         produced = salt
         output = 0.233
         category = building_maintenance

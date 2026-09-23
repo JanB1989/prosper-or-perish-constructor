@@ -26,6 +26,7 @@ location_potential = {
 
 unique_production_methods = {
     pp_fiber_dressing_yard_base_fiber_crops = {
+        manual_labor_cost = 0.042
         produced = fiber_crops
         output = 0.105
         category = building_maintenance
@@ -36,10 +37,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_fiber_dressing_yard_retting_pits = {
-        livestock = 0.24 # manure and light draught support
-        legumes = 0.24 # rotation fertility and green manure
-        clay = 0.40 # lined retting pits and daubed floors
-        coal = 0.20 # controlled drying heat
+        livestock = 0.21 # manure and light draught support
+        legumes = 0.21 # rotation fertility and green manure
+        clay = 0.34 # lined retting pits and daubed floors
+        coal = 0.17 # controlled drying heat
+        manual_labor_cost = 0.16
         produced = fiber_crops
         output = 0.57
         category = building_maintenance

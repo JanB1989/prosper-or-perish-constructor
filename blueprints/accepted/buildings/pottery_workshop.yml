@@ -1,6 +1,8 @@
 version: 2
 tag: pottery_workshop
 footprint: urban_workshop
+labour:
+  class: craft_reformation
 building:
   key: pottery_workshop
   mode: REPLACE
@@ -25,9 +27,10 @@ building:
     obsolete = pottery_guild
     unique_production_methods = {
         pp_pottery_workshop_pottery_w_maintenance = {
-            clay = 1.099
-            lumber = 0.11
-            tools = 0.055
+            clay = 0.99
+            lumber = 0.099
+            tools = 0.05
+            manual_labor_cost = 0.09
             produced = pottery
             output = 1.1
             debug_max_profit = workshop_profit_margin

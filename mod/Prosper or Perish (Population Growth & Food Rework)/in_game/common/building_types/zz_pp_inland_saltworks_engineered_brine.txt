@@ -71,6 +71,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_engineered_brine_saltworks_base_salt = {
+        manual_labor_cost = 0.07
         produced = salt
         output = 0.070
         category = building_maintenance
@@ -81,9 +82,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_engineered_brine_saltworks_pumped_brine_channels = {
-        lumber = 0.400 # brine pipes
-        tools = 0.250 # pumps and valves
-        pottery = 0.150 # storage jars
+        lumber = 0.37 # brine pipes
+        tools = 0.23 # pumps and valves
+        pottery = 0.14 # storage jars
+        manual_labor_cost = 0.13
         produced = salt
         output = 0.330
         category = building_maintenance
@@ -94,10 +96,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_engineered_brine_saltworks_mineral_fired_pans = {
-        coal = 0.375 # pan fuel
-        clay = 0.250 # furnace linings
-        pottery = 0.250 # brine vessels
-        tools = 0.150 # iron pans
+        coal = 0.35 # pan fuel
+        clay = 0.23 # furnace linings
+        pottery = 0.23 # brine vessels
+        tools = 0.14 # iron pans
+        manual_labor_cost = 0.11
         produced = salt
         output = 0.363
         category = building_maintenance

@@ -1,6 +1,8 @@
 version: 2
 tag: cannon_workshop
 footprint: urban_workshop
+labour:
+  class: craft_reformation
 building:
   key: cannon_workshop
   mode: REPLACE
@@ -31,17 +33,19 @@ building:
     build_time = workshop_build_time
     unique_production_methods = {
         pp_cannon_workshop_cannon_workshop_bronze_maintenance = {
-            copper = 1.102
-            tin = 0.275
-            tools = 0.138
+            copper = 0.99
+            tin = 0.25
+            tools = 0.12
+            manual_labor_cost = 0.44
             produced = cannons
             output = 1.1
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_cannon_workshop_cannon_workshop_iron_maintenance = {
-            iron = 1.114
-            tools = 0.124
+            iron = 1
+            tools = 0.11
+            manual_labor_cost = 0.44
             produced = cannons
             output = 1.1
             debug_max_profit = workshop_profit_margin
@@ -50,24 +54,27 @@ building:
     }
     unique_production_methods = {
         pp_cannon_workshop_cannon_workshop_ammunition_stone_maintenance = {
-            stone = 0.107
-            saltpeter = 0.107
+            stone = 0.096
+            saltpeter = 0.096
+            manual_labor_cost = 0.033
             produced = cannons
             output = 0.1
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_cannon_workshop_cannon_workshop_ammunition_lead_maintenance = {
-            lead = 0.12
-            saltpeter = 0.12
+            lead = 0.11
+            saltpeter = 0.11
+            manual_labor_cost = 0.04
             produced = cannons
             output = 0.15
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_cannon_workshop_cannon_workshop_ammunition_iron_maintenance = {
-            iron = 0.137
-            saltpeter = 0.114
+            iron = 0.12
+            saltpeter = 0.1
+            manual_labor_cost = 0.088
             produced = cannons
             output = 0.2
             debug_max_profit = workshop_profit_margin

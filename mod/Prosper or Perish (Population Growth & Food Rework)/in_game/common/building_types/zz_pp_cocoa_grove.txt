@@ -26,6 +26,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_cocoa_grove_base_cocoa = {
+        manual_labor_cost = 0.032
         produced = cocoa
         output = 0.040
         category = building_maintenance
@@ -36,8 +37,9 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_cocoa_grove_fermentation_houses = {
-        furniture = 0.090 # light fermentation boxes and raised trays
-        fiber_crops = 0.035 # drying mats, sacks, and ties
+        furniture = 0.074 # light fermentation boxes and raised trays
+        fiber_crops = 0.029 # drying mats, sacks, and ties
+        manual_labor_cost = 0.06
         produced = cocoa
         output = 0.089
         category = building_maintenance

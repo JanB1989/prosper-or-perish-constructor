@@ -1,6 +1,8 @@
 version: 2
 tag: pottery_mill
 footprint: mill_works
+labour:
+  class: craft_revolutions
 building:
   key: pottery_mill
   mode: REPLACE
@@ -26,9 +28,10 @@ building:
     build_time = mills_build_time
     unique_production_methods = {
         pp_pottery_mill_pottery_mill_maintenance = {
-            clay = 3.753
-            lumber = 0.333
-            tools = 0.166
+            clay = 3.6
+            lumber = 0.32
+            tools = 0.16
+            manual_labor_cost = 0.12
             produced = pottery
             output = 3.25
             debug_max_profit = mills_profit_margin

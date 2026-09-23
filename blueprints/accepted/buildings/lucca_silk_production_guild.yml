@@ -1,6 +1,8 @@
 version: 2
 tag: lucca_silk_production_guild
 footprint: urban_workshop
+labour:
+  class: craft_medieval
 building:
   key: lucca_silk_production_guild
   mode: REPLACE
@@ -33,7 +35,8 @@ building:
     }
     unique_production_methods = {
         pp_lucca_silk_production_guild_fiber_crops_silk_guild_maintenance = {
-            fiber_crops = 1.164
+            fiber_crops = 1
+            manual_labor_cost = 0.33
             produced = silk
             output = 0.6
             category = guild_input

@@ -1,6 +1,11 @@
 ﻿version: 2
 tag: tin_streamworks
 footprint: extractive_open
+labour:
+  class: primary_medieval
+  methods:
+    pp_tin_streamworks_hand_streaming: hand_work
+    pp_tin_streamworks_base_tin: base
 upgrade_chain:
   family: tin_mine
   tier: 0
@@ -19,6 +24,7 @@ building:
       methods:
         - pp_tin_streamworks_no_primary
         - pp_tin_streamworks_tin
+        - pp_tin_streamworks_hand_streaming
     - name: slot_2
       methods:
         - pp_tin_streamworks_no_secondary
@@ -51,6 +57,7 @@ building:
 
     unique_production_methods = {
         pp_tin_streamworks_base_tin = {
+            manual_labor_cost = 0.04
             produced = tin
             output = 0.1
             category = building_maintenance
@@ -61,10 +68,18 @@ building:
             category = building_maintenance
         }
         pp_tin_streamworks_tin = {
-            lumber = 0.328
-            tools = 0.19
+            lumber = 0.27
+            tools = 0.16
+            manual_labor_cost = 0.2
             produced = tin
             output = 0.631
+            category = building_maintenance
+        }
+        pp_tin_streamworks_hand_streaming = {
+            lumber = 0.32
+            manual_labor_cost = 0.45
+            produced = tin
+            output = 0.505
             category = building_maintenance
         }
     }
@@ -73,15 +88,17 @@ building:
             category = building_maintenance
         }
         pp_tin_streamworks_copper = {
-            lumber = 0.058
-            tools = 0.03
+            lumber = 0.048
+            tools = 0.025
+            manual_labor_cost = 0.034
             produced = copper
             output = 0.075
             category = building_maintenance
         }
         pp_tin_streamworks_lead = {
-            lumber = 0.058
-            tools = 0.03
+            lumber = 0.048
+            tools = 0.025
+            manual_labor_cost = 0.034
             produced = lead
             output = 0.1
             category = building_maintenance
@@ -106,6 +123,7 @@ localization:
     pp_tin_streamworks_base_tin: Cassiterite Gravel
     pp_tin_streamworks_no_primary: No Tin Streaming
     pp_tin_streamworks_tin: Cassiterite Streaming
+    pp_tin_streamworks_hand_streaming: Hand Streaming
     pp_tin_streamworks_no_secondary: No Associated Ore Sorting
     pp_tin_streamworks_copper: Stannite Sorting
     pp_tin_streamworks_lead: Galena Picking
@@ -129,6 +147,13 @@ evaluation:
       production_efficiency: 1.00
       allow_rules:
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+    pp_tin_streamworks_hand_streaming:
+      production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Hand streaming washes tin gravel in timber launders instead of working it with iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
+        input_throughput: Hand streaming washes tin gravel in timber launders instead of working it with iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
+        output_throughput: Hand streaming washes tin gravel in timber launders instead of working it with iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
+        amortization_months: Hand streaming washes tin gravel in timber launders instead of working it with iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
     pp_tin_streamworks_no_secondary:
       production_efficiency: 1.00
     pp_tin_streamworks_copper:

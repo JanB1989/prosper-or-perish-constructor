@@ -1,6 +1,8 @@
 version: 2
 tag: distiller_manufactory
 footprint: manufactory
+labour:
+  class: craft_absolutism
 building:
   key: distiller_manufactory
   mode: REPLACE
@@ -29,45 +31,45 @@ building:
     obsolete = distillers_workshop
     unique_production_methods = {
         pp_distiller_manufactory_sugar_distillery_maintenance = {
-            sugar = 1.303
-            pottery = 0.13
-            glass = 0.222
+            sugar = 1.25
+            glass = 0.21
+            manual_labor_cost = 0.33
             produced = liquor
             output = 2.0
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_distiller_manufactory_rice_distillery_maintenance = {
-            rice = 3.91
-            pottery = 0.13
-            glass = 0.222
+            rice = 3.74
+            glass = 0.21
+            manual_labor_cost = 0.34
             produced = liquor
             output = 2.0
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_distiller_manufactory_potato_distillery_maintenance = {
-            potato = 3.91
-            pottery = 0.13
-            glass = 0.222
+            potato = 3.74
+            glass = 0.21
+            manual_labor_cost = 0.34
             produced = liquor
             output = 2.0
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_distiller_manufactory_wheat_distillery_maintenance = {
-            pottery = 0.13
-            wheat = 3.91
-            glass = 0.222
+            wheat = 3.74
+            glass = 0.21
+            manual_labor_cost = 0.34
             produced = liquor
             output = 2.0
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_distiller_manufactory_scottish_whisky_distillery_maintenance = {
-            millet = 3.91
-            pottery = 0.13
-            glass = 0.222
+            millet = 3.74
+            glass = 0.21
+            manual_labor_cost = 0.34
             produced = liquor
             output = 2.0
             category = manufactory_input

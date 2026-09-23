@@ -1,6 +1,8 @@
 ﻿version: 2
 tag: bog_iron_smelter
 footprint: mill_works
+labour:
+  class: primary_medieval
 upgrade_chain:
   family: bog_iron_smelter
   tier: 0
@@ -55,7 +57,8 @@ building:
     }
     unique_production_methods = {
         pp_bog_iron_maintenance = {
-            coal = 0.45 # charcoal, furnace fuel
+            coal = 0.37 # charcoal, furnace fuel
+            manual_labor_cost = 0.16
             produced = iron
             output = 0.31
             debug_max_profit = 0.2

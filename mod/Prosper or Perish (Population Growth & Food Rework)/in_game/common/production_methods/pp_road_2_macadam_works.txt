@@ -7,4 +7,22 @@ horses = 0.40
 paper = 0.30
 category = building_maintenance
 }
+
+pp_macadam_works_hand_broken_stone = {
+masonry = 2.50
+sand = 2.00
+tools = 0.35
+paper = 0.10
+manual_labor_cost = 4.75
+category = building_maintenance
+}
+
+pp_macadam_works_graded_aggregate = {
+masonry = 1.40
+sand = 0.90
+tools = 1.15
+horses = 0.30
+paper = 0.42
+category = building_maintenance
+}
 # <<< eu5-building-pipeline:macadam_works:production_method

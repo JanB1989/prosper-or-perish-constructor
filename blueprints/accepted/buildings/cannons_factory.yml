@@ -1,6 +1,8 @@
 version: 2
 tag: cannons_factory
 footprint: mill_works
+labour:
+  class: craft_revolutions
 building:
   key: cannons_factory
   mode: REPLACE
@@ -26,9 +28,10 @@ building:
     obsolete = cannon_foundry
     unique_production_methods = {
         pp_cannons_factory_gun_factory_maintenance = {
-            steel = 2.589
-            lead = 0.518
-            saltpeter = 0.864
+            steel = 2.49
+            lead = 0.5
+            saltpeter = 0.83
+            manual_labor_cost = 0.6
             produced = cannons
             output = 4.0
             debug_max_profit = mills_profit_margin

@@ -1,6 +1,8 @@
 version: 2
 tag: fine_cloth_workshop
 footprint: urban_workshop
+labour:
+  class: craft_reformation
 building:
   key: fine_cloth_workshop
   mode: REPLACE
@@ -32,21 +34,24 @@ building:
     build_time = workshop_build_time
     unique_production_methods = {
         pp_fine_cloth_workshop_fine_cloth_workshop_maintenance = {
-            cloth = 1.157
+            cloth = 1.04
+            manual_labor_cost = 0.35
             produced = fine_cloth
             output = 0.6
             category = workshop_input
             debug_max_profit = workshop_profit_margin
         }
         pp_fine_cloth_workshop_wool_weavers_workshop_maintenance = {
-            wool = 1.388
+            wool = 1.25
+            manual_labor_cost = 0.34
             produced = fine_cloth
             output = 0.6
             category = workshop_input
             debug_max_profit = workshop_profit_margin
         }
         pp_fine_cloth_workshop_silk_weavers_workshop_maintenance = {
-            silk = 1.168
+            silk = 1.05
+            manual_labor_cost = 0.47
             produced = fine_cloth
             output = 0.8
             category = workshop_input
@@ -59,7 +64,8 @@ building:
                     has_variable = spanish_cloth_industry
                 }
             }
-            wool = 1.388
+            wool = 1.25
+            manual_labor_cost = 0.34
             produced = fine_cloth
             output = 0.6
             debug_max_profit = workshop_profit_margin
@@ -69,21 +75,24 @@ building:
     unique_production_methods = {
         pp_fine_cloth_workshop_standard_fine_cloth_workshop_maintenance = {
             produced = fine_cloth
-            dyes = 0.148
+            dyes = 0.13
+            manual_labor_cost = 0.072
             output = 0.12
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_fine_cloth_workshop_alum_fine_cloth_workshop_maintenance = {
-            alum = 0.066
-            dyes = 0.293
+            alum = 0.059
+            dyes = 0.26
+            manual_labor_cost = 0.15
             produced = fine_cloth
             output = 0.25
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_fine_cloth_workshop_fur_trim_workshop_maintenance = {
-            fur = 0.685
+            fur = 0.62
+            manual_labor_cost = 0.13
             produced = fine_cloth
             output = 0.25
             debug_max_profit = workshop_profit_margin

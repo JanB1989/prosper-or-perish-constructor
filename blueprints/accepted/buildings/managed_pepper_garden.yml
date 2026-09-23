@@ -1,6 +1,10 @@
 version: 2
 tag: managed_pepper_garden
 footprint: farm_land
+labour:
+  class: primary_discovery
+  methods:
+    pp_managed_pepper_garden_base_pepper: base
 output_tag: pepper_garden_managed
 upgrade_chain:
   family: pepper_garden
@@ -53,6 +57,7 @@ building:
 
     unique_production_methods = {
         pp_managed_pepper_garden_base_pepper = {
+            manual_labor_cost = 0.046
             produced = pepper
             output = 0.046
             category = building_maintenance
@@ -63,8 +68,9 @@ building:
             category = building_maintenance
         }
         pp_managed_pepper_garden_bamboo_drying_mats = {
-            fiber_crops = 0.080 # bamboo mats, harvest baskets, and vine ties
-            pottery = 0.050 # blanching pots and storage jars
+            fiber_crops = 0.069 # bamboo mats, harvest baskets, and vine ties
+            pottery = 0.043 # blanching pots and storage jars
+            manual_labor_cost = 0.029
             produced = pepper
             output = 0.105
             category = building_maintenance
@@ -75,8 +81,9 @@ building:
             category = building_maintenance
         }
         pp_managed_pepper_garden_garbling_tables = {
-            furniture = 0.040 # light sorting racks and tables
-            fiber_crops = 0.030 # sacks, screens, and woven trays
+            furniture = 0.034 # light sorting racks and tables
+            fiber_crops = 0.026 # sacks, screens, and woven trays
+            manual_labor_cost = 0.026
             produced = pepper
             output = 0.058
             category = building_maintenance

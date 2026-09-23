@@ -7,4 +7,23 @@ victuals = 0.15
 tar = 0.025
 category = building_maintenance
 }
+
+pp_river_boatmen_yard_towpath_crews = {
+naval_supplies = 0.05
+lumber = 0.10
+tools = 0.04
+victuals = 0.12
+tar = 0.015
+manual_labor_cost = 0.80
+category = building_maintenance
+}
+
+pp_river_boatmen_yard_fitted_barges = {
+naval_supplies = 0.15
+lumber = 0.08
+tools = 0.12
+victuals = 0.08
+tar = 0.015
+category = building_maintenance
+}
 # <<< eu5-building-pipeline:river_boatmen_yard:production_method

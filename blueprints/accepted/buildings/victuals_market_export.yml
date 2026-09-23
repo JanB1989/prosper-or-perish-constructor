@@ -1,6 +1,8 @@
 version: 2
 tag: victuals_market_export
 footprint: trade
+labour:
+  class: keep
 output_tag: victuals_market
 building:
   key: victuals_market

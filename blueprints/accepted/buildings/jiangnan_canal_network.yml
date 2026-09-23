@@ -1,6 +1,8 @@
 version: 2
 tag: jiangnan_canal_network
 footprint: capacity_source
+labour:
+  class: keep
 building:
   key: jiangnan_canal_network
   mode: CREATE

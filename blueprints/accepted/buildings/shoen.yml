@@ -1,6 +1,8 @@
 version: 2
 tag: shoen
 footprint: estate_land
+labour:
+  class: primary_medieval
 building:
   key: shoen
   mode: REPLACE
@@ -85,39 +87,44 @@ building:
         pp_shoen_shoen_quarries_maintenance = {
             produced = stone
             output = 0.5
-            tools = 0.143
+            tools = 0.12
+            manual_labor_cost = 0.075
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
         pp_shoen_shoen_lumbermills_maintenance = {
             produced = lumber
             output = 0.6
-            tools = 0.19
-            fiber_crops = 0.203
+            tools = 0.16
+            fiber_crops = 0.17
+            manual_labor_cost = 0.16
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
         pp_shoen_shoen_fiber_crops_farm_maintenance = {
             produced = fiber_crops
             output = 0.5
-            lumber = 0.27
-            tools = 0.152
+            lumber = 0.22
+            tools = 0.12
+            manual_labor_cost = 0.19
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
         pp_shoen_shoen_ironsand_maintenance = {
             produced = iron
             output = 0.3
-            sand = 0.697
-            tools = 0.21
+            sand = 0.57
+            tools = 0.17
+            manual_labor_cost = 0.19
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }
         pp_shoen_shoen_masonry_maintenance = {
             produced = masonry
             output = 0.8
-            lumber = 0.304
-            tools = 0.07
+            lumber = 0.25
+            tools = 0.057
+            manual_labor_cost = 0.14
             debug_max_profit = rural_profit_margin
             category = building_maintenance
         }

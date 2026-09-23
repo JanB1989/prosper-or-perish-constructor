@@ -1,6 +1,10 @@
 version: 2
 tag: salt_mine_improved
 footprint: mining
+labour:
+  class: primary_discovery
+  methods:
+    pp_salt_mine_improved_base_salt: base
 upgrade_chain:
   family: salt_mine
   tier: 1
@@ -91,6 +95,7 @@ building:
 
     unique_production_methods = {
         pp_salt_mine_improved_base_salt = {
+            manual_labor_cost = 0.07
             produced = salt
             output = 0.070
             category = building_maintenance
@@ -101,11 +106,11 @@ building:
             category = building_maintenance
         }
         pp_salt_mine_improved_timbered_haulage = {
-            lumber = 0.424 # timbered galleries
-            tools = 0.212 # pumps and picks
-            horses = 0.106 # hauling teams
-            leather = 0.076 # harness and buckets
-            beeswax = 0.061 # mine candles
+            lumber = 0.39 # timbered galleries
+            tools = 0.19 # pumps and picks
+            horses = 0.097 # hauling teams
+            leather = 0.069 # harness and buckets
+            manual_labor_cost = 0.3
             produced = salt
             output = 0.366
             category = building_maintenance

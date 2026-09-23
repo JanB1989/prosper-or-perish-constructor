@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: saltpeter_beds
 footprint: extractive_open
+labour:
+  class: primary_medieval
+  methods:
+    pp_saltpeter_beds_base_saltpeter: base
 building:
   key: saltpeter_beds
   mode: CREATE
@@ -43,6 +47,7 @@ building:
 
     unique_production_methods = {
         pp_saltpeter_beds_base_saltpeter = {
+            manual_labor_cost = 0.04
             produced = saltpeter
             output = 0.100
             category = building_maintenance
@@ -53,9 +58,10 @@ building:
             category = building_maintenance
         }
         pp_saltpeter_beds_leaching_vats = {
-            livestock = 0.167 # manure beds
-            pottery = 0.083 # leaching vats
-            fiber_crops = 0.025 # straw bedding
+            livestock = 0.14 # manure beds
+            pottery = 0.068 # leaching vats
+            fiber_crops = 0.021 # straw bedding
+            manual_labor_cost = 0.064
             produced = saltpeter
             output = 0.222
             category = building_maintenance

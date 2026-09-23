@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: stone_quarry
 footprint: extractive_open
+labour:
+  class: primary_medieval
+  methods:
+    pp_stone_quarry_base_stone: base
 upgrade_chain:
   family: stone_quarry
   tier: 0
@@ -52,6 +56,7 @@ building:
 
     unique_production_methods = {
         pp_stone_quarry_base_stone = {
+            manual_labor_cost = 0.021
             produced = stone
             output = 0.105
             category = building_maintenance
@@ -62,9 +67,10 @@ building:
             category = building_maintenance
         }
         pp_stone_quarry_cut_stone = {
-            lumber = 0.060 # rollers and shoring
-            leather = 0.023 # hoist straps
-            tools = 0.014 # picks and wedges
+            lumber = 0.049 # rollers and shoring
+            leather = 0.019 # hoist straps
+            tools = 0.011 # picks and wedges
+            manual_labor_cost = 0.041
             produced = stone
             output = 0.233
             category = building_maintenance

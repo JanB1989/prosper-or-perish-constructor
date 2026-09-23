@@ -1,6 +1,8 @@
 version: 2
 tag: tools_guild
 footprint: urban_workshop
+labour:
+  class: craft_medieval
 building:
   key: tools_guild
   mode: REPLACE
@@ -27,29 +29,33 @@ building:
     build_time = guild_build_time
     unique_production_methods = {
         pp_tools_guild_metalwork_guild_maintenance = {
-            iron = 0.837
+            iron = 0.72
+            manual_labor_cost = 0.41
             produced = tools
             output = 1.0
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_tools_guild_stone_tools_guild_maintenance = {
-            stone = 0.678
+            stone = 0.58
+            manual_labor_cost = 0.098
             produced = tools
             output = 0.25
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_tools_guild_bronze_tools_guild_maintenance = {
-            copper = 0.547
-            tin = 0.044
+            copper = 0.47
+            tin = 0.038
+            manual_labor_cost = 0.24
             produced = tools
             output = 0.6
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_tools_guild_copper_tools_guild_maintenance = {
-            copper = 0.526
+            copper = 0.45
+            manual_labor_cost = 0.23
             produced = tools
             output = 0.55
             debug_max_profit = guild_profit_margin

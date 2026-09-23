@@ -1,6 +1,8 @@
 version: 2
 tag: dyes_workshop
 footprint: urban_workshop
+labour:
+  class: craft_reformation
 building:
   key: dyes_workshop
   mode: REPLACE
@@ -25,8 +27,9 @@ building:
     build_time = workshop_build_time
     unique_production_methods = {
         pp_dyes_workshop_dyes_workshop_maintenance = {
-            alum = 0.061
-            lumber = 0.731
+            alum = 0.055
+            lumber = 0.66
+            manual_labor_cost = 0.14
             produced = dyes
             output = 0.4
             debug_max_profit = workshop_profit_margin

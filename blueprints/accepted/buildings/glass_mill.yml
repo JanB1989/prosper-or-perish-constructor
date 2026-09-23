@@ -1,6 +1,8 @@
 version: 2
 tag: glass_mill
 footprint: mill_works
+labour:
+  class: craft_revolutions
 building:
   key: glass_mill
   mode: REPLACE
@@ -25,12 +27,11 @@ building:
     build_time = mills_build_time
     unique_production_methods = {
         pp_glass_mill_glassmill_maintenance = {
-            lumber = 0.721
-            sand = 4.329
-            stone = 0.361
-            tools = 1.731
-            coal = 1.082
-            alum = 0.188
+            lumber = 0.75
+            sand = 4.5
+            tools = 1.8
+            coal = 1.12
+            manual_labor_cost = 0.49
             produced = glass
             output = 4.0
             debug_max_profit = mills_profit_margin

@@ -1,6 +1,10 @@
 version: 2
 tag: sheep_farms
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_sheep_farm_base_wool: base
 upgrade_chain:
   family: sheep_farms
   tier: 0
@@ -41,6 +45,7 @@ building:
         }
         unique_production_methods = {
             pp_sheep_farm_base_wool = {
+                manual_labor_cost = 0.03
                 produced = wool
                 output = 0.06
                 category = building_maintenance
@@ -53,8 +58,9 @@ building:
             pp_sheep_farm_maintenance = {
                 produced = wool
                 output = 0.06
-                lumber = 0.05
-                tools = 0.01
+                lumber = 0.041
+                tools = 0.008
+                manual_labor_cost = 0.022
                 category = building_maintenance
             }
         }

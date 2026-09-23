@@ -1,6 +1,11 @@
 ﻿version: 2
 tag: gold_diggings
 footprint: extractive_open
+labour:
+  class: primary_medieval
+  methods:
+    pp_gold_diggings_hand_panning: hand_work
+    pp_gold_diggings_base_gold: base
 upgrade_chain:
   family: gold_mine
   tier: 0
@@ -19,6 +24,7 @@ building:
       methods:
         - pp_gold_diggings_no_primary
         - pp_gold_diggings_gold
+        - pp_gold_diggings_hand_panning
     - name: slot_2
       methods:
         - pp_gold_diggings_no_secondary
@@ -51,6 +57,7 @@ building:
 
     unique_production_methods = {
         pp_gold_diggings_base_gold = {
+            manual_labor_cost = 0.18
             produced = goods_gold
             output = 0.1
             category = building_maintenance
@@ -61,10 +68,18 @@ building:
             category = building_maintenance
         }
         pp_gold_diggings_gold = {
-            lumber = 0.430
-            tools = 0.23
+            lumber = 0.35
+            tools = 0.19
+            manual_labor_cost = 0.27
             produced = goods_gold
             output = 0.200
+            category = building_maintenance
+        }
+        pp_gold_diggings_hand_panning = {
+            lumber = 0.39
+            manual_labor_cost = 0.57
+            produced = goods_gold
+            output = 0.16
             category = building_maintenance
         }
     }
@@ -73,15 +88,17 @@ building:
             category = building_maintenance
         }
         pp_gold_diggings_silver = {
-            lumber = 0.05
-            tools = 0.04
+            lumber = 0.041
+            tools = 0.033
+            manual_labor_cost = 0.039
             produced = silver
             output = 0.04
             category = building_maintenance
         }
         pp_gold_diggings_copper = {
-            lumber = 0.04
-            tools = 0.03
+            lumber = 0.033
+            tools = 0.025
+            manual_labor_cost = 0.028
             produced = copper
             output = 0.056
             category = building_maintenance
@@ -106,6 +123,7 @@ localization:
     pp_gold_diggings_base_gold: Native Gold Deposit
     pp_gold_diggings_no_primary: No Gold Washing
     pp_gold_diggings_gold: Placer Washing
+    pp_gold_diggings_hand_panning: Hand Panning
     pp_gold_diggings_no_secondary: No Associated Ore Sorting
     pp_gold_diggings_silver: Electrum Sorting
     pp_gold_diggings_copper: Copper Ore Picking
@@ -129,6 +147,13 @@ evaluation:
       production_efficiency: 1.00
       allow_rules:
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+    pp_gold_diggings_hand_panning:
+      production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Hand panning washes gold from gravel in timber cradles instead of working it with iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
+        input_throughput: Hand panning washes gold from gravel in timber cradles instead of working it with iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
+        output_throughput: Hand panning washes gold from gravel in timber cradles instead of working it with iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
+        amortization_months: Hand panning washes gold from gravel in timber cradles instead of working it with iron tools; a labour-heavy fallback for tool shortages, less productive than the main workings.
     pp_gold_diggings_no_secondary:
       production_efficiency: 1.00
     pp_gold_diggings_silver:

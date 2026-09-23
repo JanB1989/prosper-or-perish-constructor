@@ -1,6 +1,10 @@
 version: 2
 tag: dye_plantation
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_dye_plantation_base_dyes: base
 building:
   key: dye_plantation
   mode: CREATE
@@ -41,6 +45,7 @@ building:
 
     unique_production_methods = {
         pp_dye_plantation_base_dyes = {
+            manual_labor_cost = 0.032
             produced = dyes
             output = 0.040
             category = building_maintenance
@@ -51,8 +56,9 @@ building:
             category = building_maintenance
         }
         pp_dye_plantation_vat_curing = {
-            lumber = 0.119 # drying racks, vats
-            tools = 0.040 # knives, presses
+            lumber = 0.098 # drying racks, vats
+            tools = 0.033 # knives, presses
+            manual_labor_cost = 0.059
             produced = dyes
             output = 0.089
             category = building_maintenance

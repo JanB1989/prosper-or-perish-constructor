@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: stone_quarry_improved
 footprint: extractive_open
+labour:
+  class: primary_discovery
+  methods:
+    pp_stone_quarry_improved_base_stone: base
 upgrade_chain:
   family: stone_quarry
   tier: 1
@@ -64,6 +68,7 @@ building:
 
     unique_production_methods = {
         pp_stone_quarry_improved_base_stone = {
+            manual_labor_cost = 0.03
             produced = stone
             output = 0.15
             category = building_maintenance
@@ -74,19 +79,21 @@ building:
             category = building_maintenance
         }
         pp_stone_quarry_improved_crane_winch_quarrying = {
-            lumber = 0.40 # crane frame, skids
-            tools = 0.19 # chisels, wedges, tackle
-            leather = 0.05 # slings and straps
-            horses = 0.05 # hoist and cart teams
+            lumber = 0.34 # crane frame, skids
+            tools = 0.16 # chisels, wedges, tackle
+            leather = 0.043 # slings and straps
+            horses = 0.043 # hoist and cart teams
+            manual_labor_cost = 0.24
             produced = stone
             output = 1.66
             category = building_maintenance
         }
         pp_stone_quarry_improved_ox_haulage = {
-            lumber = 0.38 # skids, block sledges
-            tools = 0.17 # picks, wedges, dressing tools
-            leather = 0.04 # yokes and straps
-            livestock = 0.06 # ox haulage teams
+            lumber = 0.33 # skids, block sledges
+            tools = 0.15 # picks, wedges, dressing tools
+            leather = 0.034 # yokes and straps
+            livestock = 0.052 # ox haulage teams
+            manual_labor_cost = 0.18
             produced = stone
             output = 1.47
             category = building_maintenance
@@ -97,8 +104,9 @@ building:
             category = building_maintenance
         }
         pp_stone_quarry_improved_rubble_breaking = {
-            lumber = 0.04 # sorting screens, bins
-            tools = 0.03 # hammers and sieves
+            lumber = 0.034 # sorting screens, bins
+            tools = 0.026 # hammers and sieves
+            manual_labor_cost = 0.024
             produced = sand
             output = 0.30
             category = building_maintenance

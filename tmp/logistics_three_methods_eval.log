@@ -1,0 +1,204 @@
+$ eu5-orchestrator blueprint evaluate --project /home/jan/development/ProsperOrPerishConstructor/constructor.toml --building pp_logistics_infrastructure_priority
+carrier_inn [carrier_inn]
+  Columns:
+    input, output, profit: monthly gold values at parser base prices; input includes base worker food cost when food data is supplied.
+    profit/bldg: monthly profit for the whole building when this method is selected in its slot and best-profit methods fill other slots.
+    goods: direct goods input cost before worker food.
+    margin: profit divided by input cost.
+    efficiency: output multiplier used by the evaluator.
+    raw_inputs: count of input goods classified as raw materials.
+    input/1k, output/1k, base/1k: values normalized per 1k employed workers.
+    amort_months: months for building cost to be repaid by monthly profit.
+    rules: unallowed rule failures that need fixing; ok means no hard failures.
+    exceptions: rule breaches allowed by blueprint-local exceptions; - means none used.
+  Rules:
+    profit margin: margin low/high when outside -30% to 30%.
+    throughput: input/output low/high when monthly gold per 1k workers misses the pop-and-age target by more than 30%.
+    food50/food100/food150: allocated worker food cost at 50%, 100%, and 150% base food price.
+  method                                    age  input  goods  output  profit  profit/bldg  margin  eff  raw  in/1k  out/1k  base/1k  amort_mo  food50  food100  food150  rules  exceptions     
+  ----------------------------------------  ---  -----  -----  ------  ------  -----------  ------  ---  ---  -----  ------  -------  --------  ------  -------  -------  -----  ---------------
+  pp_carrier_inn_maintenance                -    2.78   2.78   0       -2.78   -2.78        -100%   1    3    0.93   0       -        -         0       0        0        ok     margin-,out-low
+  pp_carrier_inn_hand_porters               -    3.32   3.31   0       -3.32   -3.32        -100%   1    1    1.11   0       -        -         0       0        0        ok     margin-,out-low
+  pp_carrier_inn_waybills_and_fitted_carts  -    2.45   2.44   0       -2.45   -2.45        -100%   1    3    0.82   0       -        -         0       0        0        ok     margin-,out-low
+
+coastal_shipping_office [coastal_shipping_office]
+  Columns:
+    input, output, profit: monthly gold values at parser base prices; input includes base worker food cost when food data is supplied.
+    profit/bldg: monthly profit for the whole building when this method is selected in its slot and best-profit methods fill other slots.
+    goods: direct goods input cost before worker food.
+    margin: profit divided by input cost.
+    efficiency: output multiplier used by the evaluator.
+    raw_inputs: count of input goods classified as raw materials.
+    input/1k, output/1k, base/1k: values normalized per 1k employed workers.
+    amort_months: months for building cost to be repaid by monthly profit.
+    rules: unallowed rule failures that need fixing; ok means no hard failures.
+    exceptions: rule breaches allowed by blueprint-local exceptions; - means none used.
+  Rules:
+    profit margin: margin low/high when outside -30% to 30%.
+    throughput: input/output low/high when monthly gold per 1k workers misses the pop-and-age target by more than 30%.
+    food50/food100/food150: allocated worker food cost at 50%, 100%, and 150% base food price.
+  method                                      age  input  goods  output  profit  profit/bldg  margin  eff  raw  in/1k  out/1k  base/1k  amort_mo  food50  food100  food150  rules  exceptions            
+  ------------------------------------------  ---  -----  -----  ------  ------  -----------  ------  ---  ---  -----  ------  -------  --------  ------  -------  -------  -----  ----------------------
+  pp_coastal_shipping_office_maintenance      -    1.92   1.91   0       -1.92   -1.92        -100%   1    1    0.64   0       -        -         0       0        0.01     ok     margin-,in-low,out-low
+  pp_coastal_shipping_office_hand_crews       -    2.29   2.29   0       -2.29   -2.29        -100%   1    1    0.76   0       -        -         0       0        0.01     ok     margin-,in-low,out-low
+  pp_coastal_shipping_office_rigged_coasters  -    1.71   1.71   0       -1.71   -1.71        -100%   1    1    0.57   0       -        -         0       0        0.01     ok     margin-,in-low,out-low
+
+road_wardens_yard [road_wardens_yard]
+  Columns:
+    input, output, profit: monthly gold values at parser base prices; input includes base worker food cost when food data is supplied.
+    profit/bldg: monthly profit for the whole building when this method is selected in its slot and best-profit methods fill other slots.
+    goods: direct goods input cost before worker food.
+    margin: profit divided by input cost.
+    efficiency: output multiplier used by the evaluator.
+    raw_inputs: count of input goods classified as raw materials.
+    input/1k, output/1k, base/1k: values normalized per 1k employed workers.
+    amort_months: months for building cost to be repaid by monthly profit.
+    rules: unallowed rule failures that need fixing; ok means no hard failures.
+    exceptions: rule breaches allowed by blueprint-local exceptions; - means none used.
+  Rules:
+    profit margin: margin low/high when outside -30% to 30%.
+    throughput: input/output low/high when monthly gold per 1k workers misses the pop-and-age target by more than 30%.
+    food50/food100/food150: allocated worker food cost at 50%, 100%, and 150% base food price.
+    modifier ratios: for configured building categories, value is the raw building modifier; /build, /upkeep, and /1k normalize it by construction cost, monthly upkeep, and 1k workers.
+  method                                 age               input  goods  output  profit  profit/bldg  margin  eff  raw  in/1k  out/1k  base/1k  amort_mo  food50  food100  food150  rules  exceptions             
+  -------------------------------------  ----------------  -----  -----  ------  ------  -----------  ------  ---  ---  -----  ------  -------  --------  ------  -------  -------  -----  -----------------------
+  pp_road_wardens_yard_maintenance       age_1_traditions  1.59   1.59   0       -1.59   -1.59        -100%   1    2    6.36   0       -        -         0       0        0        ok     margin-,in-high,out-low
+  pp_road_wardens_yard_hand_crews        age_1_traditions  1.9    1.9    0       -1.9    -1.9         -100%   1    1    7.6    0       -        -         0       0        0        ok     margin-,in-high,out-low
+  pp_road_wardens_yard_surveyed_repairs  age_1_traditions  1.4    1.4    0       -1.4    -1.4         -100%   1    2    5.58   0       -        -         0       0        0        ok     margin-,in-high,out-low
+  Modifier ratios:
+    method                                 modifier                                       value  /build  /upkeep   /1k
+    -------------------------------------  ---------------------------------------------  -----  ------  --------  ---
+    pp_road_wardens_yard_maintenance       local_distance_from_capital_speed_propagation  0.075  0.0015  0.047162  0.3
+    pp_road_wardens_yard_hand_crews        local_distance_from_capital_speed_propagation  0.075  0.0015  0.039468  0.3
+    pp_road_wardens_yard_surveyed_repairs  local_distance_from_capital_speed_propagation  0.075  0.0015  0.053754  0.3
+
+paviors_yard [paviors_yard]
+  Columns:
+    input, output, profit: monthly gold values at parser base prices; input includes base worker food cost when food data is supplied.
+    profit/bldg: monthly profit for the whole building when this method is selected in its slot and best-profit methods fill other slots.
+    goods: direct goods input cost before worker food.
+    margin: profit divided by input cost.
+    efficiency: output multiplier used by the evaluator.
+    raw_inputs: count of input goods classified as raw materials.
+    input/1k, output/1k, base/1k: values normalized per 1k employed workers.
+    amort_months: months for building cost to be repaid by monthly profit.
+    rules: unallowed rule failures that need fixing; ok means no hard failures.
+    exceptions: rule breaches allowed by blueprint-local exceptions; - means none used.
+  Rules:
+    profit margin: margin low/high when outside -30% to 30%.
+    throughput: input/output low/high when monthly gold per 1k workers misses the pop-and-age target by more than 30%.
+    food50/food100/food150: allocated worker food cost at 50%, 100%, and 150% base food price.
+    modifier ratios: for configured building categories, value is the raw building modifier; /build, /upkeep, and /1k normalize it by construction cost, monthly upkeep, and 1k workers.
+  method                                age              input  goods  output  profit  profit/bldg  margin  eff  raw  in/1k  out/1k  base/1k  amort_mo  food50  food100  food150  rules  exceptions             
+  ------------------------------------  ---------------  -----  -----  ------  ------  -----------  ------  ---  ---  -----  ------  -------  --------  ------  -------  -------  -----  -----------------------
+  pp_paviors_yard_maintenance           age_3_discovery  3.2    3.2    0       -3.2    -3.2         -100%   1    1    6.39   0       -        -         0       0        0        ok     margin-,in-high,out-low
+  pp_paviors_yard_hand_setters          age_3_discovery  3.81   3.81   0       -3.81   -3.81        -100%   1    1    7.62   0       -        -         0       0        0        ok     margin-,in-high,out-low
+  pp_paviors_yard_dressed_stone_paving  age_3_discovery  2.84   2.84   0       -2.84   -2.84        -100%   1    1    5.68   0       -        -         0       0        0        ok     margin-,in-high,out-low
+  Modifier ratios:
+    method                                modifier                                       value  /build  /upkeep   /1k
+    ------------------------------------  ---------------------------------------------  -----  ------  --------  ---
+    pp_paviors_yard_maintenance           local_distance_from_capital_speed_propagation  0.15   0.003   0.046937  0.3
+    pp_paviors_yard_hand_setters          local_distance_from_capital_speed_propagation  0.15   0.003   0.039362  0.3
+    pp_paviors_yard_dressed_stone_paving  local_distance_from_capital_speed_propagation  0.15   0.003   0.052849  0.3
+
+macadam_works [macadam_works]
+  Columns:
+    input, output, profit: monthly gold values at parser base prices; input includes base worker food cost when food data is supplied.
+    profit/bldg: monthly profit for the whole building when this method is selected in its slot and best-profit methods fill other slots.
+    goods: direct goods input cost before worker food.
+    margin: profit divided by input cost.
+    efficiency: output multiplier used by the evaluator.
+    raw_inputs: count of input goods classified as raw materials.
+    input/1k, output/1k, base/1k: values normalized per 1k employed workers.
+    amort_months: months for building cost to be repaid by monthly profit.
+    rules: unallowed rule failures that need fixing; ok means no hard failures.
+    exceptions: rule breaches allowed by blueprint-local exceptions; - means none used.
+  Rules:
+    profit margin: margin low/high when outside -30% to 30%.
+    throughput: input/output low/high when monthly gold per 1k workers misses the pop-and-age target by more than 30%.
+    food50/food100/food150: allocated worker food cost at 50%, 100%, and 150% base food price.
+    modifier ratios: for configured building categories, value is the raw building modifier; /build, /upkeep, and /1k normalize it by construction cost, monthly upkeep, and 1k workers.
+  method                              age               input  goods  output  profit  profit/bldg  margin  eff  raw  in/1k  out/1k  base/1k  amort_mo  food50  food100  food150  rules  exceptions             
+  ----------------------------------  ----------------  -----  -----  ------  ------  -----------  ------  ---  ---  -----  ------  -------  --------  ------  -------  -------  -----  -----------------------
+  pp_macadam_works_maintenance        age_5_absolutism  8.23   8.23   0       -8.23   -8.23        -100%   1    2    10.97  0       -        -         0       0        0        ok     margin-,in-high,out-low
+  pp_macadam_works_hand_broken_stone  age_5_absolutism  9.59   9.59   0       -9.59   -9.59        -100%   1    1    12.78  0       -        -         0       0        0        ok     margin-,in-high,out-low
+  pp_macadam_works_graded_aggregate   age_5_absolutism  7.33   7.33   0       -7.33   -7.33        -100%   1    2    9.77   0       -        -         0       0        0        ok     margin-,in-high,out-low
+  Modifier ratios:
+    method                              modifier                                       value  /build  /upkeep   /1k     
+    ----------------------------------  ---------------------------------------------  -----  ------  --------  --------
+    pp_macadam_works_maintenance        local_distance_from_capital_speed_propagation  0.25   0.005   0.030391  0.333333
+    pp_macadam_works_hand_broken_stone  local_distance_from_capital_speed_propagation  0.25   0.005   0.026073  0.333333
+    pp_macadam_works_graded_aggregate   local_distance_from_capital_speed_propagation  0.25   0.005   0.034113  0.333333
+
+permanent_way_depot [permanent_way_depot]
+  Columns:
+    input, output, profit: monthly gold values at parser base prices; input includes base worker food cost when food data is supplied.
+    profit/bldg: monthly profit for the whole building when this method is selected in its slot and best-profit methods fill other slots.
+    goods: direct goods input cost before worker food.
+    margin: profit divided by input cost.
+    efficiency: output multiplier used by the evaluator.
+    raw_inputs: count of input goods classified as raw materials.
+    input/1k, output/1k, base/1k: values normalized per 1k employed workers.
+    amort_months: months for building cost to be repaid by monthly profit.
+    rules: unallowed rule failures that need fixing; ok means no hard failures.
+    exceptions: rule breaches allowed by blueprint-local exceptions; - means none used.
+  Rules:
+    profit margin: margin low/high when outside -30% to 30%.
+    throughput: input/output low/high when monthly gold per 1k workers misses the pop-and-age target by more than 30%.
+    food50/food100/food150: allocated worker food cost at 50%, 100%, and 150% base food price.
+    modifier ratios: for configured building categories, value is the raw building modifier; /build, /upkeep, and /1k normalize it by construction cost, monthly upkeep, and 1k workers.
+  method                                        age                input  goods  output  profit  profit/bldg  margin  eff  raw  in/1k  out/1k  base/1k  amort_mo  food50  food100  food150  rules  exceptions             
+  --------------------------------------------  -----------------  -----  -----  ------  ------  -----------  ------  ---  ---  -----  ------  -------  --------  ------  -------  -------  -----  -----------------------
+  pp_permanent_way_depot_maintenance            age_6_revolutions  20.8   20.8   0       -20.8   -20.8        -100%   1    3    13.87  0       -        -         0       0        0        ok     margin-,in-high,out-low
+  pp_permanent_way_depot_hand_laying            age_6_revolutions  24.9   24.9   0       -24.9   -24.9        -100%   1    3    16.6   0       -        -         0       0        0        ok     margin-,in-high,out-low
+  pp_permanent_way_depot_standardized_fittings  age_6_revolutions  18.89  18.89  0       -18.89  -18.89       -100%   1    3    12.59  0       -        -         0       0        0        ok     margin-,in-high,out-low
+  Modifier ratios:
+    method                                        modifier                                       value  /build  /upkeep   /1k     
+    --------------------------------------------  ---------------------------------------------  -----  ------  --------  --------
+    pp_permanent_way_depot_maintenance            local_distance_from_capital_speed_propagation  0.4    0.008   0.019229  0.266667
+    pp_permanent_way_depot_hand_laying            local_distance_from_capital_speed_propagation  0.4    0.008   0.016063  0.266667
+    pp_permanent_way_depot_standardized_fittings  local_distance_from_capital_speed_propagation  0.4    0.008   0.021176  0.266667
+
+river_boatmen_yard [river_boatmen_yard]
+  Columns:
+    input, output, profit: monthly gold values at parser base prices; input includes base worker food cost when food data is supplied.
+    profit/bldg: monthly profit for the whole building when this method is selected in its slot and best-profit methods fill other slots.
+    goods: direct goods input cost before worker food.
+    margin: profit divided by input cost.
+    efficiency: output multiplier used by the evaluator.
+    raw_inputs: count of input goods classified as raw materials.
+    input/1k, output/1k, base/1k: values normalized per 1k employed workers.
+    amort_months: months for building cost to be repaid by monthly profit.
+    rules: unallowed rule failures that need fixing; ok means no hard failures.
+    exceptions: rule breaches allowed by blueprint-local exceptions; - means none used.
+  Rules:
+    profit margin: margin low/high when outside -30% to 30%.
+    throughput: input/output low/high when monthly gold per 1k workers misses the pop-and-age target by more than 30%.
+    food50/food100/food150: allocated worker food cost at 50%, 100%, and 150% base food price.
+  method                               age  input  goods  output  profit  profit/bldg  margin  eff  raw  in/1k  out/1k  base/1k  amort_mo  food50  food100  food150  rules  exceptions            
+  -----------------------------------  ---  -----  -----  ------  ------  -----------  ------  ---  ---  -----  ------  -------  --------  ------  -------  -------  -----  ----------------------
+  pp_river_boatmen_yard_maintenance    -    1.39   1.39   0       -1.39   -1.39        -100%   1    1    0.46   0       -        -         0       0        0.01     ok     margin-,in-low,out-low
+  pp_river_boatmen_yard_towpath_crews  -    1.65   1.65   0       -1.65   -1.65        -100%   1    1    0.55   0       -        -         0       0        0.01     ok     margin-,in-low,out-low
+  pp_river_boatmen_yard_fitted_barges  -    1.25   1.25   0       -1.25   -1.25        -100%   1    1    0.42   0       -        -         0       0        0.01     ok     margin-,in-low,out-low
+
+transport_office [transport_office]
+  Columns:
+    input, output, profit: monthly gold values at parser base prices; input includes base worker food cost when food data is supplied.
+    profit/bldg: monthly profit for the whole building when this method is selected in its slot and best-profit methods fill other slots.
+    goods: direct goods input cost before worker food.
+    margin: profit divided by input cost.
+    efficiency: output multiplier used by the evaluator.
+    raw_inputs: count of input goods classified as raw materials.
+    input/1k, output/1k, base/1k: values normalized per 1k employed workers.
+    amort_months: months for building cost to be repaid by monthly profit.
+    rules: unallowed rule failures that need fixing; ok means no hard failures.
+    exceptions: rule breaches allowed by blueprint-local exceptions; - means none used.
+  Rules:
+    profit margin: margin low/high when outside -30% to 30%.
+    throughput: input/output low/high when monthly gold per 1k workers misses the pop-and-age target by more than 30%.
+    food50/food100/food150: allocated worker food cost at 50%, 100%, and 150% base food price.
+  method                                 age  input  goods  output  profit  profit/bldg  margin  eff  raw  in/1k  out/1k  base/1k  amort_mo  food50  food100  food150  rules  exceptions            
+  -------------------------------------  ---  -----  -----  ------  ------  -----------  ------  ---  ---  -----  ------  -------  --------  ------  -------  -------  -----  ----------------------
+  pp_transport_office_maintenance        -    3.35   3.35   0       -3.35   -3.35        -100%   1    0    1.12   0       -        -         0       0        0.01     ok     margin-,out-low       
+  pp_transport_office_hand_carts         -    3.96   3.96   0       -3.96   -3.96        -100%   1    0    1.32   0       -        -         0       0        0.01     ok     margin-,out-low       
+  pp_transport_office_ledgered_dispatch  -    2.94   2.93   0       -2.94   -2.94        -100%   1    0    0.98   0       -        -         0       0        0.01     ok     margin-,in-low,out-low

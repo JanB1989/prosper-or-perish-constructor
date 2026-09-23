@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: coastal_saltern
 footprint: extractive_open
+labour:
+  class: primary_medieval
+  methods:
+    pp_coastal_saltern_base_salt: base
 building:
   key: salt_collector
   mode: REPLACE
@@ -35,6 +39,7 @@ building:
     }
     unique_production_methods = {
         pp_coastal_saltern_base_salt = {
+            manual_labor_cost = 0.08
             produced = salt
             output = 0.080
             category = building_maintenance
@@ -45,8 +50,9 @@ building:
             category = building_maintenance
         }
         pp_coastal_saltern_lined_evaporation_pans = {
-            clay = 1.333 # pan linings
-            pottery = 0.383 # settling vessels
+            clay = 1.09 # pan linings
+            pottery = 0.31 # settling vessels
+            manual_labor_cost = 0.19
             produced = salt
             output = 0.240
             category = building_maintenance

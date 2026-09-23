@@ -1,6 +1,10 @@
 version: 2
 tag: tea_sorting_garden
 footprint: farm_land
+labour:
+  class: primary_discovery
+  methods:
+    pp_tea_sorting_garden_base_tea: base
 upgrade_chain:
   family: tea_garden
   tier: 1
@@ -52,6 +56,7 @@ building:
 
     unique_production_methods = {
         pp_tea_sorting_garden_base_tea = {
+            manual_labor_cost = 0.033
             produced = tea
             output = 0.055
             category = building_maintenance
@@ -62,9 +67,10 @@ building:
             category = building_maintenance
         }
         pp_tea_sorting_garden_rolling_hearths = {
-            furniture = 0.105 # light tray frames and rolling tables
-            fiber_crops = 0.080 # woven withering mats and baskets
-            pottery = 0.060 # firing hearth pans
+            furniture = 0.09 # light tray frames and rolling tables
+            fiber_crops = 0.069 # woven withering mats and baskets
+            pottery = 0.052 # firing hearth pans
+            manual_labor_cost = 0.075
             produced = tea
             output = 0.125
             category = building_maintenance
@@ -75,9 +81,10 @@ building:
             category = building_maintenance
         }
         pp_tea_sorting_garden_paper_packing = {
-            furniture = 0.045 # sorting trays
-            fiber_crops = 0.035 # packing baskets and bale mats
-            paper = 0.055 # wrappers and packing slips
+            furniture = 0.039 # sorting trays
+            fiber_crops = 0.03 # packing baskets and bale mats
+            paper = 0.047 # wrappers and packing slips
+            manual_labor_cost = 0.044
             produced = tea
             output = 0.070
             category = building_maintenance

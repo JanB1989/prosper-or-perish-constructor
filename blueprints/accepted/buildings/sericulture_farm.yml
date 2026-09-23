@@ -1,6 +1,10 @@
 version: 2
 tag: sericulture_farm
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_sericulture_farm_base_silk: base
 upgrade_chain:
   family: sericulture_farm
   tier: 0
@@ -47,6 +51,7 @@ building:
 
     unique_production_methods = {
         pp_sericulture_farm_base_silk = {
+            manual_labor_cost = 0.032
             produced = silk
             output = 0.040
             category = building_maintenance
@@ -57,8 +62,9 @@ building:
             category = building_maintenance
         }
         pp_sericulture_farm_cocoon_reeling = {
-            lumber = 0.119 # rearing trays, frames
-            tools = 0.040 # knives, reels
+            lumber = 0.098 # rearing trays, frames
+            tools = 0.033 # knives, reels
+            manual_labor_cost = 0.059
             produced = silk
             output = 0.089
             category = building_maintenance

@@ -6,4 +6,21 @@ tools = 0.20
 cloth = 0.10
 category = building_maintenance
 }
+
+pp_transport_office_hand_carts = {
+victuals = 0.60
+paper = 0.15
+tools = 0.08
+cloth = 0.05
+manual_labor_cost = 1.45
+category = building_maintenance
+}
+
+pp_transport_office_ledgered_dispatch = {
+victuals = 0.40
+paper = 0.40
+tools = 0.25
+cloth = 0.04
+category = building_maintenance
+}
 # <<< eu5-building-pipeline:transport_office:production_method

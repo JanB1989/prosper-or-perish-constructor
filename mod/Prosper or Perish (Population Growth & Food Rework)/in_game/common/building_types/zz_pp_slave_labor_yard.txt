@@ -1,0 +1,53 @@
+﻿# >>> eu5-building-pipeline:slave_labor_yard:building
+slave_labor_yard = {
+is_foreign = no
+max_levels = 4
+increase_per_level_cost = 0.14
+pop_type = slaves
+employment_size = 1
+price = pp_slave_labor_yard_price
+category = colonial_category
+icon = slave_labor_yard
+rural_settlement = no
+town = no
+city = yes
+megalopolis = yes
+location_potential = {
+  market ?= {
+    is_produced_in_market = goods:slaves_goods
+  }
+}
+allow = {
+  scope:actor = {
+    has_slavery = yes
+  }
+}
+remove_if = {
+  scope:actor = {
+    has_slavery = no
+  }
+}
+can_close = yes
+forbidden_for_estates = no
+ai_forbid_shutdown = no
+build_time = plantation_build_time
+construction_demand = plantation_construction
+
+unique_production_methods = {
+  pp_slave_labor_yard_gangs = {
+    produced = manual_labor_cost
+    output = 6
+    slaves_goods = 1.0
+    victuals = 0.8
+    tools = 0.18
+    category = building_maintenance
+  }
+}
+raw_modifier = {
+	local_population_capacity = 0.1
+}
+modifier = {
+  local_slave_pop_satisfaction = -0.005
+}
+}
+# <<< eu5-building-pipeline:slave_labor_yard:building

@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: clay_washmill
 footprint: rural_processing
+labour:
+  class: primary_discovery
+  methods:
+    pp_clay_washmill_base_clay: base
 upgrade_chain:
   family: clay_pit
   tier: 1
@@ -56,6 +60,7 @@ building:
 
     unique_production_methods = {
         pp_clay_washmill_base_clay = {
+            manual_labor_cost = 0.011
             produced = clay
             output = 0.11
             category = building_maintenance
@@ -66,17 +71,19 @@ building:
             category = building_maintenance
         }
         pp_clay_washmill_horse_pugging = {
-            lumber = 0.11
-            tools = 0.04
-            horses = 0.02
+            lumber = 0.095
+            tools = 0.034
+            horses = 0.017
+            manual_labor_cost = 0.055
             produced = clay
             output = 0.69
             category = building_maintenance
         }
         pp_clay_washmill_ox_pugging = {
-            lumber = 0.11
-            tools = 0.04
-            livestock = 0.05
+            lumber = 0.095
+            tools = 0.034
+            livestock = 0.043
+            manual_labor_cost = 0.056
             produced = clay
             output = 0.69
             category = building_maintenance
@@ -87,8 +94,9 @@ building:
             category = building_maintenance
         }
         pp_clay_washmill_levigation_ponds = {
-            lumber = 0.03
-            tools = 0.02
+            lumber = 0.026
+            tools = 0.017
+            manual_labor_cost = 0.017
             produced = clay
             output = 0.23
             category = building_maintenance

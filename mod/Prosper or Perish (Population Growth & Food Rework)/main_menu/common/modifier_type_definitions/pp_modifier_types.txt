@@ -240,3 +240,27 @@ pp_field_management_improved_price_cost_modifier={
 		category=country
 	}
 }
+
+pp_hired_labor_yard_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_rural_daywork_yard_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_slave_labor_yard_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}

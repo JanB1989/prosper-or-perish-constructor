@@ -6,4 +6,21 @@ horses = 0.10
 victuals = 0.08
 category = building_maintenance
 }
+
+pp_road_wardens_yard_hand_crews = {
+sand = 0.80
+tools = 0.08
+victuals = 0.08
+manual_labor_cost = 1.00
+category = building_maintenance
+}
+
+pp_road_wardens_yard_surveyed_repairs = {
+sand = 0.35
+tools = 0.24
+horses = 0.07
+victuals = 0.05
+paper = 0.04
+category = building_maintenance
+}
 # <<< eu5-building-pipeline:road_wardens_yard:production_method

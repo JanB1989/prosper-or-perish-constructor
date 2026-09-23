@@ -1,6 +1,8 @@
 version: 2
 tag: rural_glassmaker
 footprint: mill_works
+labour:
+  class: cottage
 building:
   key: rural_glassmaker
   mode: REPLACE
@@ -28,7 +30,8 @@ building:
     build_time = rural_build_time
     unique_production_methods = {
         pp_rural_glassmaker_rural_glassmaker_maintenance = {
-            sand = 1.056
+            sand = 0.79
+            manual_labor_cost = 0.13
             produced = glass
             output = 0.2
             debug_max_profit = rural_profit_margin

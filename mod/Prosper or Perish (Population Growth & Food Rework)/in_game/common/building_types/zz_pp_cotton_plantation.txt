@@ -27,6 +27,7 @@ build_time = plantation_build_time
 
 unique_production_methods = {
     pp_cotton_plantation_base_cotton = {
+        manual_labor_cost = 0.18
         produced = cotton
         output = 0.300
         category = building_maintenance
@@ -37,10 +38,11 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_cotton_plantation_gin_house = {
-        slaves_goods = 0.320 # plantation gangs
-        lumber = 0.280 # drying sheds
-        leather = 0.080 # picking bags
-        tools = 0.034 # ginning rollers
+        slaves_goods = 0.3 # plantation gangs
+        lumber = 0.27 # drying sheds
+        leather = 0.076 # picking bags
+        tools = 0.032 # ginning rollers
+        manual_labor_cost = 0.096
         produced = cotton
         output = 0.667
         category = building_maintenance

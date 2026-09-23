@@ -287,6 +287,7 @@ RAW_MATERIAL_BASE_PRODUCERS = {
     "tobacco_plantation": ("tobacco", "pp_tobacco_plantation_base_tobacco"),
     "tobacco_farm": ("tobacco", "pp_tobacco_farm_base_tobacco"),
 }
+LABOUR_GOOD = "manual_labor_cost"
 SLAVE_PLANTATION_REPLACEMENTS = {
     "cotton_plantation": "cotton",
     "sugar_plantation": "sugar",
@@ -298,9 +299,10 @@ NON_SLAVE_CROP_FARMS = {
         "base_method": "pp_cotton_farm_base_cotton",
         "worked_method": "pp_cotton_farm_gin_house",
         "inputs": {
-            "lumber": "0.093",
-            "fiber_crops": "0.040",
-            "tools": "0.011",
+            "lumber": "0.076",
+            "fiber_crops": "0.033",
+            "tools": "0.009",
+            "manual_labor_cost": "0.05",
         },
         "removed_inputs": {"leather", "slaves_goods"},
     },
@@ -309,9 +311,10 @@ NON_SLAVE_CROP_FARMS = {
         "base_method": "pp_sugarcane_farm_base_sugar",
         "worked_method": "pp_sugarcane_farm_boiling_house",
         "inputs": {
-            "lumber": "0.083",
-            "pottery": "0.100",
-            "tools": "0.010",
+            "lumber": "0.068",
+            "pottery": "0.082",
+            "tools": "0.008",
+            "manual_labor_cost": "0.051",
         },
         "removed_inputs": {"coal", "slaves_goods"},
     },
@@ -320,9 +323,10 @@ NON_SLAVE_CROP_FARMS = {
         "base_method": "pp_tobacco_farm_base_tobacco",
         "worked_method": "pp_tobacco_farm_curing_barns",
         "inputs": {
-            "lumber": "0.117",
-            "fiber_crops": "0.017",
-            "tools": "0.015",
+            "lumber": "0.096",
+            "fiber_crops": "0.014",
+            "tools": "0.012",
+            "manual_labor_cost": "0.053",
         },
         "removed_inputs": {"pottery", "slaves_goods"},
     },
@@ -644,7 +648,8 @@ def _base_production_method_input_offenders(path: Path) -> list[str]:
             block_lines.append(block_line)
         for block_line in block_lines:
             key_match = re.match(r"\s*(?P<key>[A-Za-z][A-Za-z0-9_]*)\s*=", block_line)
-            if key_match and key_match.group("key") not in {"produced", "output", "category"}:
+            # base methods pay only a token labour cost (production labour, base class)
+            if key_match and key_match.group("key") not in {"produced", "output", "category", LABOUR_GOOD}:
                 relative = path.relative_to(ROOT)
                 offenders.append(f"{relative}:{index + 1}: {method} has input {key_match.group('key')}")
 
@@ -655,8 +660,13 @@ def _production_method_has_inputs_or_outputs(row: dict) -> bool:
     return bool(row["input_goods"]) or (row["produced"] is not None and row["output"] is not None)
 
 
+def _material_inputs(row: dict) -> list[str]:
+    """Input goods other than labour (base methods pay a token labour cost and still count as input-free)."""
+    return [good for good in row["input_goods"] or [] if good != LABOUR_GOOD]
+
+
 def _production_method_outputs_without_inputs(row: dict) -> bool:
-    return not row["input_goods"] and row["produced"] is not None and row["output"] is not None
+    return not _material_inputs(row) and row["produced"] is not None and row["output"] is not None
 
 
 def _is_baseline_victuals_output_method(row: dict) -> bool:
@@ -733,7 +743,7 @@ def _inline_production_method_blocks(body: str) -> dict[str, str]:
 
 
 def _inline_production_method_inputs(body: str) -> dict[str, set[str]]:
-    non_input_keys = {"produced", "output", "category", "debug_max_profit"}
+    non_input_keys = {"produced", "output", "category", "debug_max_profit", LABOUR_GOOD}
     inputs: dict[str, set[str]] = {}
     for method, block in _inline_production_method_blocks(body).items():
         keys = set(re.findall(r"(?m)^\s*([A-Za-z][A-Za-z0-9_]*)\s*=", block))
@@ -899,8 +909,9 @@ def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> Non
             flags=re.S,
         )
 
+    # production labour (2026-09-23) folded the small cloth input into labour
     assert re.search(
-        r"pp_offshore_fishery_herring_busses\s*=\s*\{.*?\bcloth\s*=\s*0\.015\b",
+        r"pp_offshore_fishery_herring_busses\s*=\s*\{.*?\bfiber_crops\s*=\s*0\.18\b.*?\bmanual_labor_cost\s*=\s*0\.13\b",
         body,
         flags=re.S,
     )
@@ -1804,7 +1815,7 @@ def test_target_raw_material_producers_have_no_input_base_methods() -> None:
         row = methods[method]
         assert row["building"] == building
         assert row["produced"] == good
-        assert row["input_goods"] == []
+        assert _material_inputs(row) == []
 
 
 def test_slave_plantation_replacements_keep_colonial_rgo_gate_and_farm_capacity() -> None:

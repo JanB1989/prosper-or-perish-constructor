@@ -26,6 +26,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_saffron_croft_base_saffron = {
+        manual_labor_cost = 0.023
         produced = saffron
         output = 0.023
         category = building_maintenance
@@ -36,8 +37,9 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_saffron_croft_toasting_braziers = {
-        pottery = 0.105 # warming pans
-        coal = 0.053 # brazier fuel
+        pottery = 0.086 # warming pans
+        coal = 0.043 # brazier fuel
+        manual_labor_cost = 0.039
         produced = saffron
         output = 0.051
         category = building_maintenance

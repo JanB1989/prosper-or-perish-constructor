@@ -1,6 +1,8 @@
 version: 2
 tag: iron_foundry
 footprint: mill_works
+labour:
+  class: craft_absolutism
 building:
   key: iron_foundry
   mode: REPLACE
@@ -24,8 +26,9 @@ building:
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_iron_foundry_iron_foundry_maintenance = {
-            iron = 1.427
-            coal = 0.357
+            iron = 1.33
+            coal = 0.33
+            manual_labor_cost = 0.39
             category = manufactory_input
             produced = tools
             output = 2.0

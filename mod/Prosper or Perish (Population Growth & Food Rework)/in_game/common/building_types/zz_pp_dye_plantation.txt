@@ -26,6 +26,7 @@ can_close = yes
 
 unique_production_methods = {
     pp_dye_plantation_base_dyes = {
+        manual_labor_cost = 0.032
         produced = dyes
         output = 0.040
         category = building_maintenance
@@ -36,8 +37,9 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_dye_plantation_vat_curing = {
-        lumber = 0.119 # drying racks, vats
-        tools = 0.040 # knives, presses
+        lumber = 0.098 # drying racks, vats
+        tools = 0.033 # knives, presses
+        manual_labor_cost = 0.059
         produced = dyes
         output = 0.089
         category = building_maintenance

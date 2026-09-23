@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: clay_pit
 footprint: extractive_open
+labour:
+  class: primary_medieval
+  methods:
+    pp_clay_pit_base_clay: base
 upgrade_chain:
   family: clay_pit
   tier: 0
@@ -44,6 +48,7 @@ building:
 
     unique_production_methods = {
         pp_clay_pit_base_clay = {
+            manual_labor_cost = 0.03
             produced = clay
             output = 0.3
                 category = building_maintenance
@@ -51,8 +56,9 @@ building:
             pp_clay_pit_maintenance = {
                 produced = clay
                 output = 1.44
-                lumber = 0.28
-                livestock = 0.12
+                lumber = 0.23
+                livestock = 0.098
+                manual_labor_cost = 0.12
                 category = building_maintenance
             }
         }

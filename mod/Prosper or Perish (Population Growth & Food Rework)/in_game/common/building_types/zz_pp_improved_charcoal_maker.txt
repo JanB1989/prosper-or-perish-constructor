@@ -31,8 +31,9 @@ increase_per_level_cost = 0.18
 
             debug_max_profit = 0.3
 
-            lumber = 0.63 # coppice poles and cordwood
-            clay = 1.48 # sealed kiln and retort lining
+            lumber = 0.58 # coppice poles and cordwood
+            clay = 1.36 # sealed kiln and retort lining
+            manual_labor_cost = 0.15
             category = guild_input
         }
 

@@ -1,0 +1,64 @@
+version: 2
+tag: hired_labor_yard
+footprint: trade
+building:
+  key: hired_labor_yard
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_hired_labor_yard_crews
+  possible_production_methods: []
+  body: |-
+    is_foreign = no
+    max_levels = 8
+    increase_per_level_cost = 0.18
+    pop_type = laborers
+    employment_size = 2
+    price = pp_hired_labor_yard_price
+    category = trade_category
+    icon = hired_labor_yard
+    town = yes
+    city = yes
+    megalopolis = yes
+    can_close = yes
+    forbidden_for_estates = no
+    ai_forbid_shutdown = no
+    build_time = workshop_build_time
+    construction_demand = workshop_construction
+
+    unique_production_methods = {
+      pp_hired_labor_yard_crews = {
+        produced = manual_labor_cost
+        output = 8
+        victuals = 2.0
+        cloth = 0.45
+        paper = 0.3
+        tools = 0.3
+        category = building_maintenance
+      }
+    }
+    raw_modifier = {
+    }
+prices:
+  - key: pp_hired_labor_yard_price
+    body: '{gold = 80}'
+localization:
+  entries:
+    hired_labor_yard: Porters' Hall
+    hired_labor_yard_desc: Porters and other hired hands gather with provisions, tools and carts to move loads and take work across the town and its market.
+    hired_labor_yard_slot_0: Work Crews
+    pp_hired_labor_yard_crews: Organized Porters' Crews
+    pp_hired_labor_yard_price: Porters' Hall Price
+icon:
+  source_png: ../assets/icons/hired_labor_yard.png
+  output_dds: hired_labor_yard.dds
+  size: 512
+  prompt: 'Material-rich painterly historical EU5 building icon for Porters Hall: a large timber hiring hall, organized porter crews, handcarts and tools, elevated three-quarter view, isolated transparent cutout.'
+evaluation:
+  allow_rules:
+    profit_percent: Manual labor normally sits at 20% of base price; this yard is priced for scarcity, not base-price margins.
+    input_throughput: Large crews and provisions deliberately exceed ordinary trade-building throughput.
+    output_throughput: Large crews deliberately add substantial manual labor when its market price rises.
+    amortization_months: Labor prices above the floor determine whether the hall earns enough to repay its cost.

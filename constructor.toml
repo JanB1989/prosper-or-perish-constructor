@@ -74,12 +74,16 @@ age_throughput_growth = 0.10
 throughput_tolerance = 0.30
 amortization_months_max = 360
 amortization_months_min = 120
+base_method_input_goods = ["manual_labor_cost"]  # base methods pay a token labour cost and stay base methods
 
 [building_scaling]
 worker_victuals_food_need_ratio = 1.0
 increase_per_level_cost_multiplier = 0.75
 burgher_building_employment_size = 0.3
 
+
+[blueprint_evaluation.price_overrides]
+manual_labor_cost = 1.0   # labour is balanced at its price floor (20 % of 5), see [production_labour]
 
 [blueprint_evaluation.throughput_gold_per_1k]
 peasants = 1.0
@@ -323,3 +327,34 @@ military_grounds = 0.10       # training fields, camps
 estate_land = 0.10            # manors and estates that hold land
 extractive_open = 0.05        # quarries, pits, diggings, salt pans
 land_reserve = -0.25          # hunting grounds, royal forests and gardens, cattle enclosures
+
+[production_labour]
+# Every producing production method pays part of its input cost in manual_labor_cost. Enabled blueprints tag their
+# producing methods with `labour: { class: <class>, methods: { <method>: <class> } }`. `ppc labour apply` rewrites the
+# method bodies so labour takes the class share of the total input cost at base prices (the cost itself stays);
+# `ppc labour check` reports untagged methods and methods off their class (ppc build prints it).
+good = "manual_labor_cost"
+price_floor_share = 0.2       # balance labour at its price floor: 20 % of the default price 5 = 1 gold (labour yards sell into scarcity)
+tolerance = 0.02              # a method within this share of its class is left alone (a rounding step moves about 0.01)
+min_good_share = 0.05         # goods worth less than this share of a method's input cost are folded into the rest
+max_goods = 4                 # at most this many goods per method besides labour (the cheapest go first)
+
+[production_labour.classes]
+# Share of the total input cost paid as labour. Later ages mechanise: the later the building, the smaller the share.
+# "primary" = farms, villages, groves, pits, quarries, mines, fisheries, forestry and rural processing;
+# "craft" = guilds, workshops, manufactories, mills and factories.
+keep = "keep"                 # already carried labour or trade dummy goods (victuals markets): left as they are
+base = { output_share = 0.20 } # methods without goods inputs (base yields, worker victuals): labour worth 20 % of the output
+hand_work = 0.45              # labour-heavy fallback methods for input shortages (lower output, fewer tools)
+cottage = 0.25                # village home crafts: market village crafts, rural cloth- and glassmakers, tatara, brickmaking
+primary_medieval = 0.18       # ages 1-2
+primary_discovery = 0.14      # age 3
+primary_reformation = 0.11    # age 4
+primary_absolutism = 0.08     # age 5
+primary_revolutions = 0.05    # age 6
+plantation = 0.05             # slave plantations: slaves_goods already stands for the work
+craft_medieval = 0.14         # guilds and cookeries, ages 1-2
+craft_discovery = 0.12        # age 3 workshops
+craft_reformation = 0.10      # age 4 workshops
+craft_absolutism = 0.07       # age 5 manufactories, victualling yards
+craft_revolutions = 0.04      # age 6 mills and factories

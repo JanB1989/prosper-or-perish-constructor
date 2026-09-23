@@ -25,7 +25,8 @@ allow = {
 }
 unique_production_methods = {
     pp_pounamou_carver_pounamou_carver_maintenance = {
-        gems = 0.232
+        gems = 0.2
+        manual_labor_cost = 0.13
         produced = jewelry
         output = 0.2
         debug_max_profit = rural_profit_margin

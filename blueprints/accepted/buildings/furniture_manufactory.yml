@@ -1,6 +1,8 @@
 version: 2
 tag: furniture_manufactory
 footprint: manufactory
+labour:
+  class: craft_absolutism
 building:
   key: furniture_manufactory
   mode: REPLACE
@@ -25,9 +27,10 @@ building:
     obsolete = furniture_workshop
     unique_production_methods = {
         pp_furniture_manufactory_furniture_manufactory_maintenance = {
-            lumber = 2.259
-            dyes = 0.251
-            tools = 0.251
+            lumber = 2.1
+            dyes = 0.23
+            tools = 0.23
+            manual_labor_cost = 0.43
             produced = furniture
             output = 2.0
             category = manufactory_input

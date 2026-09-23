@@ -1,6 +1,10 @@
 version: 2
 tag: saffron_kiln_croft
 footprint: farm_land
+labour:
+  class: primary_discovery
+  methods:
+    pp_saffron_kiln_croft_base_saffron: base
 upgrade_chain:
   family: saffron_croft
   tier: 1
@@ -52,6 +56,7 @@ building:
 
     unique_production_methods = {
         pp_saffron_kiln_croft_base_saffron = {
+            manual_labor_cost = 0.055
             produced = saffron
             output = 0.055
             category = building_maintenance
@@ -62,7 +67,8 @@ building:
             category = building_maintenance
         }
         pp_saffron_kiln_croft_livestock_manure = {
-            livestock = 0.045 # manure for richer crocus beds
+            livestock = 0.039 # manure for richer crocus beds
+            manual_labor_cost = 0.009
             produced = saffron
             output = 0.050
             category = building_maintenance
@@ -73,8 +79,9 @@ building:
             category = building_maintenance
         }
         pp_saffron_kiln_croft_pottery_kilns = {
-            pottery = 0.080 # trays and covered drying pans
-            coal = 0.035 # light brazier and kiln fuel
+            pottery = 0.069 # trays and covered drying pans
+            coal = 0.03 # light brazier and kiln fuel
+            manual_labor_cost = 0.021
             produced = saffron
             output = 0.095
             category = building_maintenance

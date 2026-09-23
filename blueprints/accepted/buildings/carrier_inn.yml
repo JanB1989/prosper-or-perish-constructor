@@ -1,13 +1,22 @@
 ﻿version: 2
 tag: carrier_inn
 footprint: infrastructure
+labour:
+  class: keep
 building:
   key: carrier_inn
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots: []
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_carrier_inn_maintenance
+        - pp_carrier_inn_hand_porters
+        - pp_carrier_inn_waybills_and_fitted_carts
   possible_production_methods:
     - pp_carrier_inn_maintenance
+    - pp_carrier_inn_hand_porters
+    - pp_carrier_inn_waybills_and_fitted_carts
   body: |2-
     is_foreign = no
     max_levels = 100
@@ -33,6 +42,8 @@ building:
 
     possible_production_methods = {
       pp_carrier_inn_maintenance
+      pp_carrier_inn_hand_porters
+      pp_carrier_inn_waybills_and_fitted_carts
     }
 
     raw_modifier = {
@@ -47,12 +58,31 @@ production_methods:
       lumber = 0.20
       tools = 0.10
       category = building_maintenance
+  - key: pp_carrier_inn_hand_porters
+    body: |2-
+      victuals = 0.35
+      lumber = 0.20
+      tools = 0.05
+      manual_labor_cost = 1.75
+      category = building_maintenance
+  - key: pp_carrier_inn_waybills_and_fitted_carts
+    body: |2-
+      victuals = 0.28
+      horses = 0.12
+      livestock = 0.08
+      lumber = 0.10
+      tools = 0.23
+      paper = 0.10
+      category = building_maintenance
 localization:
   entries:
+    carrier_inn_slot_0: Carrier Crews
     carrier_inn: Carrier Inn
     carrier_inn_desc: Packhorses, carts, and stable yards gather at carrier inns before setting out along the roads. Their keepers turn scattered rural loads into regular traffic for nearby markets.
     pp_carrier_inn_construction: Carrier Inn Construction
     pp_carrier_inn_maintenance: Carrier Inn Maintenance
+    pp_carrier_inn_hand_porters: Hand-Carried Loads
+    pp_carrier_inn_waybills_and_fitted_carts: Waybills and Fitted Carts
 icon:
   source_png: ../assets/icons/carrier_inn.png
   output_dds: carrier_inn.dds

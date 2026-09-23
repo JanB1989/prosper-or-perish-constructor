@@ -1,6 +1,10 @@
 version: 2
 tag: chili_plantation
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_chili_plantation_base_chili: base
 building:
   key: chili_plantation
   mode: CREATE
@@ -41,6 +45,7 @@ building:
 
     unique_production_methods = {
         pp_chili_plantation_base_chili = {
+            manual_labor_cost = 0.037
             produced = chili
             output = 0.037
             category = building_maintenance
@@ -51,8 +56,9 @@ building:
             category = building_maintenance
         }
         pp_chili_plantation_sun_drying_mats = {
-            fiber_crops = 0.097 # drying mats
-            tools = 0.049 # harvest knives
+            fiber_crops = 0.08 # drying mats
+            tools = 0.04 # harvest knives
+            manual_labor_cost = 0.063
             produced = chili
             output = 0.083
             category = building_maintenance

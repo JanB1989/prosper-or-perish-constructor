@@ -1,0 +1,35 @@
+﻿# >>> eu5-building-pipeline:hired_labor_yard:building
+hired_labor_yard = {
+is_foreign = no
+max_levels = 8
+increase_per_level_cost = 0.14
+pop_type = laborers
+employment_size = 2
+price = pp_hired_labor_yard_price
+category = trade_category
+icon = hired_labor_yard
+town = yes
+city = yes
+megalopolis = yes
+can_close = yes
+forbidden_for_estates = no
+ai_forbid_shutdown = no
+build_time = workshop_build_time
+construction_demand = workshop_construction
+
+unique_production_methods = {
+  pp_hired_labor_yard_crews = {
+    produced = manual_labor_cost
+    output = 8
+    victuals = 2.0
+    cloth = 0.45
+    paper = 0.3
+    tools = 0.3
+    category = building_maintenance
+  }
+}
+raw_modifier = {
+	local_population_capacity = 1.2
+}
+}
+# <<< eu5-building-pipeline:hired_labor_yard:building

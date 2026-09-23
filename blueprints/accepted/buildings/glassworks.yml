@@ -1,6 +1,8 @@
 version: 2
 tag: glassworks
 footprint: manufactory
+labour:
+  class: craft_absolutism
 building:
   key: glassworks
   mode: REPLACE
@@ -24,12 +26,11 @@ building:
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_glassworks_glassworks_maintenance = {
-            lumber = 0.489
-            sand = 2.574
-            stone = 0.231
-            tools = 0.733
-            coal = 0.489
-            alum = 0.052
+            lumber = 0.49
+            sand = 2.56
+            tools = 0.73
+            coal = 0.49
+            manual_labor_cost = 0.4
             produced = glass
             output = 2.0
             debug_max_profit = manufactory_profit_margin

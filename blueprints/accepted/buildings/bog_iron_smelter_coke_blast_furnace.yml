@@ -1,6 +1,8 @@
 ﻿version: 2
 tag: bog_iron_smelter_coke_blast_furnace
 footprint: mill_works
+labour:
+  class: primary_absolutism
 upgrade_chain:
   family: bog_iron_smelter
   tier: 2
@@ -55,17 +57,19 @@ building:
     }
     unique_production_methods = {
         pp_bog_iron_smelter_coke_blast_furnace_maintenance = {
-            coal = 0.40 # coke fuel, furnace heat
-            tools = 0.08 # tuyere, bellows upkeep
-            lumber = 0.08 # racks, furnace frames
+            coal = 0.37 # coke fuel, furnace heat
+            tools = 0.074 # tuyere, bellows upkeep
+            lumber = 0.074 # racks, furnace frames
+            manual_labor_cost = 0.09
             produced = iron
             output = 0.41
             category = building_maintenance
         }
         pp_bog_iron_smelter_hot_blast_refining_maintenance = {
-            coal = 0.45 # coke fuel, hot blast
-            tools = 0.10 # blast gear, repairs
-            lumber = 0.09 # drying racks, staging
+            coal = 0.41 # coke fuel, hot blast
+            tools = 0.092 # blast gear, repairs
+            lumber = 0.083 # drying racks, staging
+            manual_labor_cost = 0.12
             produced = iron
             output = 0.46
             category = building_maintenance

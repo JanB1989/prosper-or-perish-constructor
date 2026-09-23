@@ -1,6 +1,8 @@
 version: 2
 tag: field_management_convertible
 footprint: capacity_source
+labour:
+  class: keep
 upgrade_chain:
   family: field_management
   tier: 1

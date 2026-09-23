@@ -1,6 +1,8 @@
 version: 2
 tag: furniture_mill
 footprint: mill_works
+labour:
+  class: craft_revolutions
 building:
   key: furniture_mill
   mode: REPLACE
@@ -26,9 +28,10 @@ building:
     build_time = mills_build_time
     unique_production_methods = {
         pp_furniture_mill_furniture_mill_maintenance = {
-            lumber = 4.562
-            dyes = 0.532
-            tools = 0.532
+            lumber = 4.38
+            dyes = 0.51
+            tools = 0.51
+            manual_labor_cost = 0.48
             produced = furniture
             output = 4.0
             debug_max_profit = mills_profit_margin

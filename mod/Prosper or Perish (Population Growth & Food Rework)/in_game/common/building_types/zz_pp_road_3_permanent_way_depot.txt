@@ -26,6 +26,8 @@ construction_demand = pp_permanent_way_depot_construction
 
 possible_production_methods = {
   pp_permanent_way_depot_maintenance
+  pp_permanent_way_depot_hand_laying
+  pp_permanent_way_depot_standardized_fittings
 }
 
 raw_modifier = {

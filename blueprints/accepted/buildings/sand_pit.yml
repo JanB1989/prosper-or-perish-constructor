@@ -1,6 +1,10 @@
 ﻿version: 2
 tag: sand_pit
 footprint: extractive_open
+labour:
+  class: primary_medieval
+  methods:
+    pp_sand_pit_base_sand: base
 upgrade_chain:
   family: sand_pit
   tier: 0
@@ -46,6 +50,7 @@ building:
 
     unique_production_methods = {
         pp_sand_pit_base_sand = {
+            manual_labor_cost = 0.011
             produced = sand
             output = 0.105
             category = building_maintenance
@@ -56,8 +61,9 @@ building:
             category = building_maintenance
         }
         pp_sand_pit_screened_pits = {
-            lumber = 0.040 # screens and pit shoring
-            tools = 0.013 # shovels and sieves
+            lumber = 0.033 # screens and pit shoring
+            tools = 0.011 # shovels and sieves
+            manual_labor_cost = 0.019
             produced = sand
             output = 0.233
             category = building_maintenance

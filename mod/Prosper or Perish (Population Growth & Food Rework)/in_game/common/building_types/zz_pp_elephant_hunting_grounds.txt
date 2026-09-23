@@ -32,9 +32,10 @@ unique_production_methods = {
     pp_elephant_hunting_grounds_elephant_hunting_grounds_maintenance = {
         produced = ivory
         output = 1.0
-        tools = 0.245
-        weaponry = 0.245
-        elephants = 0.491
+        tools = 0.2
+        weaponry = 0.2
+        elephants = 0.4
+        manual_labor_cost = 0.74
         debug_max_profit = rural_profit_margin
         category = guild_input
     }

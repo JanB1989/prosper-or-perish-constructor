@@ -1,6 +1,8 @@
 ﻿version: 2
 tag: macadam_works
 footprint: infrastructure
+labour:
+  class: keep
 output_tag: road_2_macadam_works
 upgrade_chain:
   family: road_infrastructure
@@ -12,9 +14,16 @@ building:
   key: macadam_works
   mode: CREATE
   source: pp_new_buildings.txt
-  production_method_slots: []
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_macadam_works_maintenance
+        - pp_macadam_works_hand_broken_stone
+        - pp_macadam_works_graded_aggregate
   possible_production_methods:
     - pp_macadam_works_maintenance
+    - pp_macadam_works_hand_broken_stone
+    - pp_macadam_works_graded_aggregate
   body: |2-
     is_foreign = no
     max_levels = 1
@@ -42,6 +51,8 @@ building:
 
     possible_production_methods = {
       pp_macadam_works_maintenance
+      pp_macadam_works_hand_broken_stone
+      pp_macadam_works_graded_aggregate
     }
 
     raw_modifier = {
@@ -59,6 +70,22 @@ production_methods:
       horses = 0.40
       paper = 0.30
       category = building_maintenance
+  - key: pp_macadam_works_hand_broken_stone
+    body: |2-
+      masonry = 2.50
+      sand = 2.00
+      tools = 0.35
+      paper = 0.10
+      manual_labor_cost = 4.75
+      category = building_maintenance
+  - key: pp_macadam_works_graded_aggregate
+    body: |2-
+      masonry = 1.40
+      sand = 0.90
+      tools = 1.15
+      horses = 0.30
+      paper = 0.42
+      category = building_maintenance
 prices:
   - key: pp_macadam_works_price
     body: |2-
@@ -69,12 +96,15 @@ advancements:
       unlock_building = macadam_works
 localization:
   entries:
+    macadam_works_slot_0: Road Crews
     MODIFIER_TYPE_DESC_pp_macadam_works_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('macadam_works')|e].
     MODIFIER_TYPE_NAME_pp_macadam_works_price_cost_modifier: Macadam Works Cost
     macadam_works: Macadam Works
     macadam_works_desc: Surveyors and road crews break graded stone, tend rollers and carts, and keep engineered roads crowned, drained, and open to heavy traffic.
     pp_macadam_works_construction: Macadam Works Construction
     pp_macadam_works_maintenance: Macadam Crews
+    pp_macadam_works_hand_broken_stone: Hand-Broken Road Stone
+    pp_macadam_works_graded_aggregate: Graded Stone and Rollers
     pp_macadam_works_price: Macadam Works Price
 icon:
   source_png: ../assets/icons/macadam_works.png

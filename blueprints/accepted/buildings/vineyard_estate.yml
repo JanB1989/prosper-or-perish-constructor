@@ -1,6 +1,10 @@
 version: 2
 tag: vineyard_estate
 footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_vineyard_estate_base_wine: base
 building:
   key: vineyard_estate
   mode: CREATE
@@ -42,6 +46,7 @@ building:
 
     unique_production_methods = {
         pp_vineyard_estate_base_wine = {
+            manual_labor_cost = 0.04
             produced = wine
             output = 0.100
             category = building_maintenance
@@ -49,9 +54,10 @@ building:
     }
     unique_production_methods = {
         pp_vineyard_estate_press_houses = {
-            lumber = 0.167 # presses, stakes, and cask staves
-            pottery = 0.083 # fermentation jars and storage vessels
-            tools = 0.017 # pruning knives and press hardware
+            lumber = 0.14 # presses, stakes, and cask staves
+            pottery = 0.068 # fermentation jars and storage vessels
+            tools = 0.014 # pruning knives and press hardware
+            manual_labor_cost = 0.072
             produced = wine
             output = 0.222
             category = building_maintenance

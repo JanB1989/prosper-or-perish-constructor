@@ -1,6 +1,8 @@
 version: 2
 tag: firearms_manufactory
 footprint: manufactory
+labour:
+  class: craft_absolutism
 building:
   key: firearms_manufactory
   mode: REPLACE
@@ -25,11 +27,11 @@ building:
     build_time = manufactory_build_time
     unique_production_methods = {
         pp_firearms_manufactory_firearms_manufactory_maintenance = {
-            lumber = 0.379
-            coal = 0.379
-            iron = 1.009
-            lead = 0.127
-            saltpeter = 0.252
+            lumber = 0.37
+            coal = 0.37
+            iron = 0.98
+            saltpeter = 0.25
+            manual_labor_cost = 0.39
             category = manufactory_input
             produced = firearms
             output = 2.0

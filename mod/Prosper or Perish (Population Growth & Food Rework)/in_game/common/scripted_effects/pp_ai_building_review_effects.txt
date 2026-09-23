@@ -1,0 +1,48 @@
+﻿# Prosper or Perish - yearly AI building review: one pass over the country's locations
+
+# Location scope, root = the owning country. Removes one closed building level; import markets are kept because they
+# close by design while food is plentiful.
+pp_cull_one_closed_building = {
+	random_buildings_in_location = {
+		limit = {
+			is_opened = no
+			owner = root
+			building_can_be_destroyed_by = root
+			NOT = { building_type = building_type:victuals_market_import }
+		}
+		change_building_level = -1
+	}
+}
+
+# Country scope. Culls one closed level per location, then adds one victuals import level to each province capital
+# that wants one (pp_victuals_import_wanted).
+pp_ai_building_review_effect = {
+	every_owned_location = {
+		pp_cull_one_closed_building = yes
+		if = {
+			limit = { pp_victuals_import_wanted = yes }
+			add_to_temporary_list = pp_imports_wanted
+		}
+	}
+	pp_build_wanted_victuals_imports = yes
+}
+
+# Country scope, after the locations were collected in the temporary list pp_imports_wanted: hungriest province
+# first, one level each, while the spare construction gold lasts.
+pp_build_wanted_victuals_imports = {
+	set_local_variable = { name = pp_import_budget value = pp_ai_spare_construction_gold }
+	ordered_in_list = {
+		list = pp_imports_wanted
+		order_by = { value = modifier:pp_province_food_storage_months multiply = -1 }
+		max = 1000
+		check_range_bounds = no
+		if = {
+			limit = { local_var:pp_import_budget >= building_type:victuals_market_import.building_base_cost_in_gold }
+			construct_building = { building_type = building_type:victuals_market_import }
+			change_local_variable = {
+				name = pp_import_budget
+				subtract = building_type:victuals_market_import.building_base_cost_in_gold
+			}
+		}
+	}
+}

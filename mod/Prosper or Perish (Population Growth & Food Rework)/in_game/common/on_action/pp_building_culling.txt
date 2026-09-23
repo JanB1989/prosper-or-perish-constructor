@@ -15,33 +15,13 @@
 	}
 }
 
-# One random closed (is_opened = no) building level per owned location, yearly, AI countries only.
-# Import victuals markets are never culled.
-pp_yearly_cull_one_closed_building = {
+# Yearly AI building review, AI countries only: one pass over the owned locations that culls one closed building level
+# per location and adds victuals import levels where provinces are very short of food (pp_ai_building_review_effects.txt).
+pp_yearly_ai_building_review = {
 	effect = {
 		if = {
-			limit = {
-				is_ai = yes
-			}
-			every_owned_location = {
-				limit = {
-					any_buildings_in_location = {
-						is_opened = no
-						owner = root
-						building_can_be_destroyed_by = root
-						NOT = { building_type = building_type:victuals_market_import }
-					}
-				}
-				random_buildings_in_location = {
-					limit = {
-						is_opened = no
-						owner = root
-						building_can_be_destroyed_by = root
-						NOT = { building_type = building_type:victuals_market_import }
-					}
-					change_building_level = -1
-				}
-			}
+			limit = { is_ai = yes }
+			pp_ai_building_review_effect = yes
 		}
 	}
 }

@@ -36,3 +36,7 @@
  pp_population_baseline_debug.2.title: "DEBUG: Reload Reference Population Baseline"
  pp_population_baseline_debug.2.desc: "Restores the population baseline of the reference campaign for every location and each parent geographic scope. The Population Delta map modes then measure change from the reference campaign again."
  pp_population_baseline_debug.2.a: "OK"
+ pp_ai_building_review_debug.1.title: "DEBUG: Run AI Building Review"
+ pp_ai_building_review_debug.1.desc: "Runs the yearly AI building review now: one closed building level is removed per location, and province capitals that are very short of food get a victuals import level while spare gold lasts."
+ pp_ai_building_review_debug.1.a: "Queue victuals imports in my country (nothing is culled)"
+ pp_ai_building_review_debug.1.b: "Run it for every AI country"

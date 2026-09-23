@@ -85,6 +85,12 @@ CAPACITY_CULLING_EFFECTS = (
 )
 COUNTRY_FOUR_YEARLY = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_country_four_yearly.txt"
 COUNTRY_YEARLY = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_country_yearly.txt"
+AI_BUILDING_REVIEW_EFFECTS = (
+    MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_ai_building_review_effects.txt"
+)
+VICTUALS_IMPORT_TRIGGERS = (
+    MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_victuals_import_triggers.txt"
+)
 MARKET_FOOD_PRICE_EXTREME_ON_ACTION = (
     MOD_ROOT / "in_game" / "common" / "on_action" / "pp_market_food_price_extremes.txt"
 )
@@ -1950,7 +1956,7 @@ def test_legacy_capacity_culling_is_removed() -> None:
     text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
     entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
 
-    assert "pp_yearly_cull_one_closed_building" in entries
+    assert "pp_yearly_ai_building_review" in entries
     assert "pp_cull_over_cap_buildings" not in entries
     assert "farm_capacity_remaining < 0" not in text
     assert "fish_capacity_remaining < 0" not in text
@@ -1959,16 +1965,56 @@ def test_legacy_capacity_culling_is_removed() -> None:
 
 
 def test_yearly_closed_building_culling_removes_one_level_not_whole_stack() -> None:
-    text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
-    action_text = text.split("pp_ai_logistics_on_unsupported_building_levels", maxsplit=1)[0]
+    action_text = BUILDING_CULLING.read_text(encoding="utf-8-sig").split(
+        "pp_ai_logistics_on_unsupported_building_levels", maxsplit=1
+    )[0]
+    assert "pp_yearly_ai_building_review" in action_text
+    assert "is_ai = yes" in action_text
+    assert "pp_ai_building_review_effect = yes" in action_text
 
-    assert "pp_yearly_cull_one_closed_building" in action_text
-    assert "random_buildings_in_location" in action_text
-    assert "is_opened = no" in action_text
-    assert "building_can_be_destroyed_by = root" in action_text
-    assert "change_building_level = -1" in action_text
-    assert "destroy_building = prev" not in action_text
-    assert action_text.count("NOT = { building_type = building_type:victuals_market_import }") == 2
+    effects = AI_BUILDING_REVIEW_EFFECTS.read_text(encoding="utf-8-sig")
+    cull = effects.split("pp_cull_one_closed_building = {", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
+    assert "random_buildings_in_location" in cull
+    assert "is_opened = no" in cull
+    assert "building_can_be_destroyed_by = root" in cull
+    assert "change_building_level = -1" in cull
+    assert "destroy_building = prev" not in cull
+    assert "NOT = { building_type = building_type:victuals_market_import }" in cull
+    # the cull and the import review share one pass over the owned locations
+    review = effects.split("pp_ai_building_review_effect = {", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
+    assert review.count("every_owned_location") == 1
+    assert "pp_cull_one_closed_building = yes" in review
+    assert "add_to_temporary_list = pp_imports_wanted" in review
+
+
+def test_ai_victuals_import_review_builds_only_where_food_is_very_short_and_affordable() -> None:
+    triggers = VICTUALS_IMPORT_TRIGGERS.read_text(encoding="utf-8-sig")
+    assert "is_province_capital = yes" in triggers
+    assert "modifier:pp_province_food_storage_months < pp_victuals_import_low_storage_months" in triggers
+    assert "location_and_owner_can_build = { building_type = victuals_market_import }" in triggers
+    for condition in (
+        "building_can_be_upgraded_by = root",
+        "is_at_max_level = no",
+        "building_levels_under_construction = 0",
+        "is_full_capacity = yes",
+        "is_lacking_goods = no",
+        "building_profit > 0",
+        "building_type = building_type:victuals_market\n",
+    ):
+        assert condition in triggers
+
+    effects = AI_BUILDING_REVIEW_EFFECTS.read_text(encoding="utf-8-sig")
+    build = effects.split("pp_build_wanted_victuals_imports = {", maxsplit=1)[1]
+    assert "value = pp_ai_spare_construction_gold" in build
+    assert "construct_building = { building_type = building_type:victuals_market_import }" in build
+    assert "change_building_level" not in build
+
+    values = (SCRIPT_VALUES_ROOT / "pp_ai_building_review.txt").read_text(encoding="utf-8-sig")
+    spare = values.split("pp_ai_spare_construction_gold = {", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
+    assert "subtract = total_debt" in spare
+    assert "monthly_income_total multiply = 6" in spare
+    assert "monthly_balance multiply = 12" in spare
+    assert "min = 0" in spare
 
 
 def test_four_yearly_capacity_culling_v2_is_wired_without_legacy_double_cull() -> None:
@@ -2009,7 +2055,7 @@ def test_four_yearly_zero_rgo_floor_repairs_owned_locations_for_all_countries() 
     text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
     entries = {entry.key for entry in parse_file(BUILDING_CULLING).entries}
     action_text = text.split("pp_raise_owned_zero_rgo_max_workers", maxsplit=1)[1].split(
-        "pp_yearly_cull_one_closed_building", maxsplit=1
+        "pp_yearly_ai_building_review", maxsplit=1
     )[0]
 
     assert "pp_raise_owned_zero_rgo_max_workers" in entries
@@ -2062,7 +2108,7 @@ def test_monthly_market_food_stockpile_topup_is_defined_but_weather_hook_is_disa
     on_actions = _entry_values(pulse)["on_actions"]
     assert isinstance(on_actions, CList)
 
-    assert on_actions.items == ["pp_yearly_cull_one_closed_building"]
+    assert on_actions.items == ["pp_yearly_ai_building_review"]
 
     global_pulse_entries = {
         entry.key: entry.value for entry in parse_file(MARKET_FOOD_PRICE_EXTREME_ON_ACTION).entries
@@ -2858,8 +2904,6 @@ def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
         icon_root / "trade_goods" / "icon_goods_province_food_purchase.dds",
         icon_root / "modifier_types" / "province_food_sales_positive.dds",
         icon_root / "modifier_types" / "province_food_purchase_positive.dds",
-        icon_root / "trade_goods" / "icon_goods_local_food.dds",
-        icon_root / "modifier_types" / "local_food_positive.dds",
         icon_root / "trade_goods" / "icon_goods_manual_labor_cost.dds",
         icon_root / "modifier_types" / "manual_labor_cost_positive.dds",
         icon_root / "trade_goods" / "icon_goods_offset.dds",
@@ -2867,7 +2911,6 @@ def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
         icon_root / "modifier_types" / "pp_province_food_storage_months.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_province_food_sales.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_province_food_purchase.dds",
-        icon_root / "trade_goods" / "illustrations" / "icon_goods_local_food.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_manual_labor_cost.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_offset.dds",
     )

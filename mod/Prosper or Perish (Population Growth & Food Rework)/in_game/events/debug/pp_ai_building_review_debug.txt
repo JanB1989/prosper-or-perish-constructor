@@ -1,0 +1,27 @@
+﻿namespace = pp_ai_building_review_debug
+
+pp_ai_building_review_debug.1 = {
+	type = country_event
+	title = pp_ai_building_review_debug.1.title
+	desc = pp_ai_building_review_debug.1.desc
+	outcome = neutral
+	orphan = yes
+
+	# the player's own country: imports only, nothing is culled
+	option = {
+		name = pp_ai_building_review_debug.1.a
+		every_owned_location = {
+			limit = { pp_victuals_import_wanted = yes }
+			add_to_temporary_list = pp_imports_wanted
+		}
+		pp_build_wanted_victuals_imports = yes
+	}
+
+	option = {
+		name = pp_ai_building_review_debug.1.b
+		every_country = {
+			limit = { is_ai = yes }
+			pp_ai_building_review_effect = yes
+		}
+	}
+}

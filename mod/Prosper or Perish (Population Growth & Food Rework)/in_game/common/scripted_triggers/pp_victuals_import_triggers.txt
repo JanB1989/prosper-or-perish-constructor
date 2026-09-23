@@ -1,0 +1,34 @@
+﻿# Prosper or Perish - when the AI adds a victuals import level (yearly AI building review)
+
+# Location scope, root = the owning country. A province capital whose province is very short of food and whose
+# import market is either missing or already fully at work and paying (the victuals price enters through that profit).
+# The province must not be exporting food at the same time.
+pp_victuals_import_wanted = {
+	is_province_capital = yes
+	modifier:pp_province_food_storage_months < pp_victuals_import_low_storage_months
+	OR = {
+		AND = {
+			NOT = { has_building = building_type:victuals_market_import }
+			location_and_owner_can_build = { building_type = victuals_market_import }
+		}
+		any_buildings_in_location = {
+			building_type = building_type:victuals_market_import
+			building_can_be_upgraded_by = root
+			is_at_max_level = no
+			building_levels_under_construction = 0
+			is_full_capacity = yes
+			is_lacking_goods = no
+			building_profit > 0
+		}
+	}
+	province = {
+		NOT = {
+			any_location_in_province = {
+				any_buildings_in_location = {
+					building_type = building_type:victuals_market
+					is_opened = yes
+				}
+			}
+		}
+	}
+}

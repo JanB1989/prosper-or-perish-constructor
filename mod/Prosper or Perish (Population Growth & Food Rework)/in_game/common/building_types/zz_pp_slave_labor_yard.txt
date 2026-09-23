@@ -34,12 +34,27 @@ build_time = plantation_build_time
 construction_demand = plantation_construction
 
 unique_production_methods = {
-  pp_slave_labor_yard_gangs = {
+  pp_slave_labor_yard_grain_rations = {
     produced = manual_labor_cost
-    output = 6
+    output = 2.85
+    slaves_goods = 0.8
+    millet = 0.8
+    cloth = 0.2
+    category = building_maintenance
+  }
+  pp_slave_labor_yard_salt_fish_rations = {
+    produced = manual_labor_cost
+    output = 2.75
+    slaves_goods = 0.8
+    fish = 1.0
+    salt = 0.08
+    category = building_maintenance
+  }
+  pp_slave_labor_yard_provision_grounds = {
+    produced = manual_labor_cost
+    output = 2.5
     slaves_goods = 1.0
-    victuals = 0.8
-    tools = 0.18
+    fiber_crops = 0.3
     category = building_maintenance
   }
 }
@@ -47,7 +62,7 @@ raw_modifier = {
 	local_population_capacity = 0.1
 }
 modifier = {
-  local_slave_pop_satisfaction = -0.005
+  local_slave_pop_satisfaction = -0.01
 }
 }
 # <<< eu5-building-pipeline:slave_labor_yard:building

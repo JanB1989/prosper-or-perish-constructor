@@ -8,7 +8,9 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_slave_labor_yard_gangs
+        - pp_slave_labor_yard_grain_rations
+        - pp_slave_labor_yard_salt_fish_rations
+        - pp_slave_labor_yard_provision_grounds
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -45,19 +47,34 @@ building:
     construction_demand = plantation_construction
 
     unique_production_methods = {
-      pp_slave_labor_yard_gangs = {
+      pp_slave_labor_yard_grain_rations = {
         produced = manual_labor_cost
-        output = 6
+        output = 2.85
+        slaves_goods = 0.8
+        millet = 0.8
+        cloth = 0.2
+        category = building_maintenance
+      }
+      pp_slave_labor_yard_salt_fish_rations = {
+        produced = manual_labor_cost
+        output = 2.75
+        slaves_goods = 0.8
+        fish = 1.0
+        salt = 0.08
+        category = building_maintenance
+      }
+      pp_slave_labor_yard_provision_grounds = {
+        produced = manual_labor_cost
+        output = 2.5
         slaves_goods = 1.0
-        victuals = 0.8
-        tools = 0.18
+        fiber_crops = 0.3
         category = building_maintenance
       }
     }
     raw_modifier = {
     }
     modifier = {
-      local_slave_pop_satisfaction = -0.005
+      local_slave_pop_satisfaction = -0.01
     }
 prices:
   - key: pp_slave_labor_yard_price
@@ -65,9 +82,11 @@ prices:
 localization:
   entries:
     slave_labor_yard: Slave Gang Barracks
-    slave_labor_yard_desc: Enslaved people are housed and supplied in city barracks before being hired out in work gangs. The barracks supply manual labor to the market where the slave trade is established.
+    slave_labor_yard_desc: Enslaved people are housed and fed in city barracks before being hired out in work gangs. The barracks supply manual labor to the market where the slave trade is established.
     slave_labor_yard_slot_0: Work Gangs
-    pp_slave_labor_yard_gangs: Hired-Out Slave Gangs
+    pp_slave_labor_yard_grain_rations: Grain-Ration Gangs
+    pp_slave_labor_yard_salt_fish_rations: Salt-Fish Gangs
+    pp_slave_labor_yard_provision_grounds: Provision-Ground Gangs
     pp_slave_labor_yard_price: Slave Gang Barracks Price
 icon:
   source_png: ../assets/icons/slave_labor_yard.png
@@ -76,5 +95,7 @@ icon:
   prompt: 'Material-rich painterly historical EU5 building icon for Slave Gang Barracks: a fenced forced-labor worksite, timber barrack, hand tools and rough stone blocks, elevated three-quarter view, isolated transparent cutout.'
 evaluation:
   allow_rules:
-    profit_percent: Inputs approximately equal revenue at the usual 20% manual-labor price; rising prices make hired-out gangs profitable.
-    amortization_months: Upkeep is deliberately near revenue at the labor-price floor; payback improves when labor becomes scarce.
+    profit_percent: Manual labor sits at its 20% floor of 1 gold; the gangs lose money there and pay from a labour price of about 1.3, the cheapest labour in the market.
+    input_throughput: Gangs consume enslaved people and their rations rather than following ordinary colonial-building throughput.
+    output_throughput: The barracks add labour to the market only when labour is scarce enough to pay for the gangs.
+    amortization_months: Labour prices above the floor determine whether the barracks earn enough to repay their cost.

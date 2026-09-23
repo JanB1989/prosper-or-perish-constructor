@@ -8,7 +8,9 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_rural_daywork_yard_crews
+        - pp_rural_daywork_yard_harvest_gangs
+        - pp_rural_daywork_yard_ox_teams
+        - pp_rural_daywork_yard_ditch_gangs
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -30,12 +32,26 @@ building:
     construction_demand = village_construction
 
     unique_production_methods = {
-      pp_rural_daywork_yard_crews = {
+      pp_rural_daywork_yard_harvest_gangs = {
         produced = manual_labor_cost
-        output = 3.5
-        victuals = 0.95
-        livestock = 0.5
-        tools = 0.2
+        output = 1.45
+        beer = 0.6
+        fiber_crops = 0.5
+        category = building_maintenance
+      }
+      pp_rural_daywork_yard_ox_teams = {
+        produced = manual_labor_cost
+        output = 1.5
+        livestock = 1.0
+        leather = 0.25
+        category = building_maintenance
+      }
+      pp_rural_daywork_yard_ditch_gangs = {
+        produced = manual_labor_cost
+        output = 1.45
+        clay = 1.2
+        lumber = 0.6
+        beer = 0.35
         category = building_maintenance
       }
     }
@@ -47,9 +63,11 @@ prices:
 localization:
   entries:
     rural_daywork_yard: Hiring Fair
-    rural_daywork_yard_desc: Peasant households bring carts and hand tools to a village hiring fair, taking paid work in the fields and at nearby worksites.
+    rural_daywork_yard_desc: Peasant households come to a village hiring fair to take paid work in the fields, with their oxen, and at ditches and dykes nearby.
     rural_daywork_yard_slot_0: Day Workers
-    pp_rural_daywork_yard_crews: Fair-Day Hiring
+    pp_rural_daywork_yard_harvest_gangs: Harvest Gangs
+    pp_rural_daywork_yard_ox_teams: Ox-Team Hire
+    pp_rural_daywork_yard_ditch_gangs: Ditch-and-Dyke Gangs
     pp_rural_daywork_yard_price: Hiring Fair Price
 icon:
   source_png: ../assets/icons/rural_daywork_yard.png
@@ -58,7 +76,7 @@ icon:
   prompt: 'Material-rich painterly historical EU5 building icon for a Hiring Fair: thatched village work shed, peasant day workers, ox cart, tools and a ploughed patch, elevated three-quarter view, isolated transparent cutout.'
 evaluation:
   allow_rules:
-    profit_percent: Manual labor normally sits at 20% of base price; day work becomes attractive above that floor.
-    input_throughput: The yard buys provisions and draft help for crews rather than following normal village manufacturing throughput.
-    output_throughput: The yard deliberately adds substantial manual labor when its market price rises.
-    amortization_months: Labor prices above the floor determine whether the fair earns enough to repay its cost.
+    profit_percent: Manual labor sits at its 20% floor of 1 gold; every day-work method loses money there and pays from a labour price of about 1.4-1.5.
+    input_throughput: Day workers are paid in ale and twine, oxen and harness, or clay and timber for earthworks rather than following normal village manufacturing throughput.
+    output_throughput: The fair adds labour to the market only when labour is scarce enough to pay for its workers.
+    amortization_months: Labour prices above the floor determine whether the fair earns enough to repay its cost.

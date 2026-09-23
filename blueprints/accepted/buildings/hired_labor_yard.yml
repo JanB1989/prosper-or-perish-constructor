@@ -8,11 +8,13 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_hired_labor_yard_crews
+        - pp_hired_labor_yard_sack_porters
+        - pp_hired_labor_yard_carters
+        - pp_hired_labor_yard_labour_exchange
   possible_production_methods: []
   body: |-
     is_foreign = no
-    max_levels = 8
+    max_levels = 6
     increase_per_level_cost = 0.18
     pop_type = laborers
     employment_size = 2
@@ -29,13 +31,27 @@ building:
     construction_demand = workshop_construction
 
     unique_production_methods = {
-      pp_hired_labor_yard_crews = {
+      pp_hired_labor_yard_sack_porters = {
         produced = manual_labor_cost
-        output = 8
-        victuals = 2.0
-        cloth = 0.45
-        paper = 0.3
-        tools = 0.3
+        output = 2.85
+        fiber_crops = 1.0
+        beer = 0.8
+        leather = 0.3
+        category = building_maintenance
+      }
+      pp_hired_labor_yard_carters = {
+        produced = manual_labor_cost
+        output = 4.1
+        horses = 1.2
+        lumber = 1.6
+        category = building_maintenance
+      }
+      pp_hired_labor_yard_labour_exchange = {
+        produced = manual_labor_cost
+        output = 4
+        furniture = 0.8
+        paper = 0.6
+        liquor = 0.8
         category = building_maintenance
       }
     }
@@ -44,12 +60,18 @@ building:
 prices:
   - key: pp_hired_labor_yard_price
     body: '{gold = 80}'
+advancements:
+  - key: TRY_INJECT:merchants_quarters_advance
+    body: |2-
+      unlock_production_method = pp_hired_labor_yard_labour_exchange
 localization:
   entries:
     hired_labor_yard: Porters' Hall
-    hired_labor_yard_desc: Porters and other hired hands gather with provisions, tools and carts to move loads and take work across the town and its market.
+    hired_labor_yard_desc: Porters, carters and other hired hands gather at the hall to move loads and take work across the town and its market.
     hired_labor_yard_slot_0: Work Crews
-    pp_hired_labor_yard_crews: Organized Porters' Crews
+    pp_hired_labor_yard_sack_porters: Sack-and-Basket Porters
+    pp_hired_labor_yard_carters: Carters' Yard
+    pp_hired_labor_yard_labour_exchange: Labour Exchange
     pp_hired_labor_yard_price: Porters' Hall Price
 icon:
   source_png: ../assets/icons/hired_labor_yard.png
@@ -58,7 +80,7 @@ icon:
   prompt: 'Material-rich painterly historical EU5 building icon for Porters Hall: a large timber hiring hall, organized porter crews, handcarts and tools, elevated three-quarter view, isolated transparent cutout.'
 evaluation:
   allow_rules:
-    profit_percent: Manual labor normally sits at 20% of base price; this yard is priced for scarcity, not base-price margins.
-    input_throughput: Large crews and provisions deliberately exceed ordinary trade-building throughput.
-    output_throughput: Large crews deliberately add substantial manual labor when its market price rises.
-    amortization_months: Labor prices above the floor determine whether the hall earns enough to repay its cost.
+    profit_percent: Manual labor sits at its 20% floor of 1 gold; every crew method loses money there and pays from a labour price of about 1.4-1.5.
+    input_throughput: Crews are paid in goods (sacks and ale, horses and carts, or benches, tallies and drink) rather than following ordinary trade-building throughput.
+    output_throughput: The hall adds labour to the market only when labour is scarce enough to pay for its crews.
+    amortization_months: Labour prices above the floor determine whether the hall earns enough to repay its cost.

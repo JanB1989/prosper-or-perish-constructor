@@ -181,6 +181,17 @@ STRUCTURE_SNIPPETS = {
         "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
         "market.pp_victuals_market_price_map_value",
     ),
+    "pp_manual_labor_market_price": (
+        "category = economy",
+        "index = 3",
+        "small_map_names = market",
+        "small_tooltip_context = market",
+        "market_marker = yes",
+        "toll_marker = yes",
+        "map_lines_mode = ToMarketCenter",
+        "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
+        "market.pp_manual_labor_market_price_map_value",
+    ),
     "pp_positive_province_food_growth": (
         "category = economy",
         "index = 3",
@@ -534,6 +545,33 @@ def test_victuals_market_price_uses_default_price_centered_buckets() -> None:
     assert "max_color = define:NMapColors|MAP_COLOR_MIN" in block
     assert "market_marker = yes" in block
     assert "map_lines_mode = ToMarketCenter" in block
+
+
+def test_manual_labor_market_price_uses_floor_anchored_buckets() -> None:
+    # Labour trades near its 20 % floor (1 gold), so the scale starts at the floor
+    # instead of centring on the default price like victuals.
+    block = _all_blocks()["pp_manual_labor_market_price"]
+
+    assert _thresholds(block, "market.pp_manual_labor_market_price_map_value") == [
+        1.05,
+        1.25,
+        1.5,
+        2.0,
+        2.5,
+    ]
+    assert block.count("lerp = {") == 4
+    for bucket in ("VERY_CHEAP", "CHEAP", "NEUTRAL", "EXPENSIVE", "SEVERE"):
+        assert f"MAPMODE_PP_MANUAL_LABOR_MARKET_PRICE_{bucket}" in block
+    assert "min_color = define:NMapColors|MAP_COLOR_MAX" in block
+    assert "max_color = define:NMapColors|MAP_COLOR_MIN" in block
+
+    loc = (
+        MOD_ROOT / "main_menu" / "localization" / "english" / "pp_manual_labor_map_mode_l_english.yml"
+    ).read_text(encoding="utf-8-sig")
+    for key in re.findall(r'"?(MAPMODE_PP_MANUAL_LABOR_MARKET_PRICE\w*)', block):
+        assert f"{key}:" in loc, key
+    icon = MOD_ROOT / "main_menu" / "gfx" / "interface" / "icons" / "map_modes" / "pp_manual_labor_market_price.dds"
+    assert icon.is_file()
 
 
 def test_population_growth_preserves_working_gradient_and_stripes() -> None:

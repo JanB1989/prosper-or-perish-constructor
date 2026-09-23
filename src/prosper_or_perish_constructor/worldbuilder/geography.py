@@ -290,10 +290,9 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path |
             bonuses = mod_root / RGO_BONUSES
             goods = rgo_bonus_goods(bonuses.read_text(encoding="utf-8-sig")) if bonuses.is_file() else []
             merged = add_rgo_chip(merge_population_capacity(merge_location_window(src.read_text(encoding="utf-8-sig"))), goods)
-            harvest_file = mod_root / location_status.HARVEST_MODIFIERS
-            harvests = location_status.harvest_modifiers(harvest_file.read_text(encoding="utf-8-sig")) if harvest_file.is_file() else []
+            harvests = location_status.load_harvests(mod_root)
             merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla))
-            location_status.write_custom_localization(mod_root, harvests)
+            location_status.write_harvest_files(mod_root, harvests)
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")
                 changed += 1

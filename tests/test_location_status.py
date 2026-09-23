@@ -10,21 +10,57 @@ import pytest
 from prosper_or_perish_constructor import location_status
 
 MOD_ROOT = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
-HARVESTS = ["pp_harvest_x_abysmal", "pp_harvest_x_very_good", "pp_harvest_y_poor", "pp_harvest_y_bountiful"]
+HARVESTS = location_status.Harvests(
+    keys=["pp_harvest_x_abysmal", "pp_harvest_x_very_good", "pp_harvest_y_poor", "pp_harvest_y_bountiful"],
+    regions={"western_europe": ["r1", "r2"], "pacific_islands": ["r3"]},
+    names={"western_europe": "Region X"},
+)
 
 
 def _window() -> str:
     return "hbox = {\n\t\t\t\t\t\t\tbutton = {}\n\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\t# BOTTOM CONDITIONS\n"
 
 
-def test_harvest_keys_and_trends_come_from_the_modifier_file():
+def test_harvest_keys_regions_and_states_come_from_the_harvest_files():
     text = "pp_harvest_x_abysmal = {\n}\npp_harvest_x_very_good = {\n}\n# pp_harvest_z_good = {\npp_other = {\n}\n"
     assert location_status.harvest_modifiers(text) == ["pp_harvest_x_abysmal", "pp_harvest_x_very_good"]
+    effects = (
+        "region:r1 = {\n\t\tpp_roll_region_harvest_for_good_shock = { subcontinent = x }\n\t}\n"
+        "region:r1 = {\n\t\tpp_roll_region_harvest_for_bad_shock = { subcontinent = x }\n\t}\n"
+        "region:r3 = {\n\t\tpp_roll_region_harvest_for_good_shock = { subcontinent = y }\n\t}\n"
+    )
+    assert location_status.harvest_regions(effects) == {"x": ["r1"], "y": ["r3"]}
+    names = '  STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_abysmal: "Failed Harvest: South East Asia"\n'
+    assert location_status.harvest_region_names(names) == {"south_east_asia": "South East Asia"}
+    assert [location_status.severity(k) for k in HARVESTS.keys] == ["abysmal", "very_good", "poor", "bountiful"]
+
     loc = location_status.custom_localization(HARVESTS)
     assert "localization_key = STATIC_MODIFIER_NAME_pp_harvest_y_poor trigger = { has_location_modifier = pp_harvest_y_poor }" in loc
     good = next(line for line in loc.splitlines() if "PP_HARVEST_TREND_GOOD" in line)
     assert "pp_harvest_x_very_good" in good and "pp_harvest_y_bountiful" in good and "poor" not in good and "abysmal" not in good
-    assert loc.count("fallback = yes") == 2 and loc.count("{") == loc.count("}")
+    # average years still name the region; the crop follows region membership, not the modifier
+    assert "localization_key = PP_HARVEST_AVERAGE_WESTERN_EUROPE trigger = { OR = { region ?= region:r1 region ?= region:r2 } }" in loc
+    assert "localization_key = PP_HARVEST_REGION_PACIFIC_ISLANDS trigger = { OR = { region ?= region:r3 } }" in loc
+    assert "localization_key = PP_HARVEST_SEVERITY_VERY_GOOD trigger = { OR = { has_location_modifier = pp_harvest_x_very_good } }" in loc
+    assert loc.count("fallback = yes") == 4 and loc.count("{") == loc.count("}")
+    generated = location_status.harvest_localization(HARVESTS)
+    assert 'PP_HARVEST_AVERAGE_WESTERN_EUROPE: "Average Harvest: Region X"' in generated
+    assert 'PP_HARVEST_REGION_PACIFIC_ISLANDS: "Pacific Islands"' in generated   # fallback name when the loc has none
+
+
+def test_harvest_chip_layers_crop_tint_pips_and_badge():
+    chip = location_status.harvest_chip(HARVESTS)
+    assert chip.count("{") == chip.count("}")
+    # crop per region (twice: chip and title icon), wheat outside every region
+    assert chip.count("icon_goods_wine.dds") == 2 and chip.count("icon_goods_fish.dds") == 2
+    assert chip.count("PP_HARVEST_REGION_WESTERN_EUROPE')") == 2
+    assert chip.count("icon_goods_wheat.dds") == 2 and chip.count("PP_HARVEST_REGION_NONE')") == 2
+    # a tint per severity, 3 green and 3 red pips, a green + and a red - badge
+    assert chip.count("gfx/interface/colors/color_new_gold.dds") == 2 and chip.count("gfx/interface/colors/mid_red.dds") == 2
+    assert chip.count("size = { 6 6 }") == 6 and '"#G+#!"' in chip and '"#R-#!"' in chip
+    third_red = [line for line in chip.splitlines() if "position = { 12 22 }" in line and "light_red" in line]
+    assert len(third_red) == 1 and "PP_HARVEST_SEVERITY_ABYSMAL" in third_red[0] and "VERY_POOR" not in third_red[0]
+    assert "ShowModifierEffect('pp_harvest_y_bountiful')" in chip and "TooltipScrolledContentSection" in chip
 
 
 def test_status_row_sits_after_the_top_row_spacer_with_exclusive_states():
@@ -35,11 +71,9 @@ def test_status_row_sits_after_the_top_row_spacer_with_exclusive_states():
     assert "expand = {}\n\t\t\t\t\t\t}\n\t\t\t\t\t\t# PP STATUS CHIPS" in out and "parentanchor = right|top" in out
     names = re.findall(r'name = "(pp_status_\w+)"', out)
     assert names == ["pp_status_food_stored", "pp_status_food_starving", "pp_status_land_overpopulation", "pp_status_land_abundant",
-                     "pp_status_land_available", "pp_status_land_settled", "pp_status_harvest_good", "pp_status_harvest_bad", "pp_status_harvest_average"]
-    # each harvest row is gated on its own modifier's name, in the chip of its trend
-    good = out[out.index('"pp_status_harvest_good"'):out.index('"pp_status_harvest_bad"')]
-    assert "ShowModifierEffect('pp_harvest_x_very_good')" in good and "pp_harvest_x_abysmal" not in good
-    assert "Localize('STATIC_MODIFIER_NAME_pp_harvest_y_bountiful')" in good
+                     "pp_status_land_available", "pp_status_land_settled", "pp_status_harvest"]
+    # each harvest row is gated on its own modifier's name
+    assert "EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_y_bountiful'))" in out
     for key in ("positive_province_food_growth", "province_starving", "overpopulation", "abundant_free_land", "available_free_land"):
         assert f"ShowModifierEffect('{key}')" in out
     with pytest.raises(ValueError, match="status chips"):
@@ -73,8 +107,11 @@ def test_land_rows_show_scaled_values_largest_first_in_a_scroll_area():
     abundant = rows["abundant_free_land"]
     assert abundant.count("PP_LAND_CHIP_GOODS_OUTPUT") == 1 and "local_rice_output_modifier" not in abundant
     assert abundant.index("PP_LAND_CHIP_GOODS_OUTPUT") < abundant.index("local_migration_attraction")
+    # ... with the affected goods as icons under it, in file order
+    icons = re.findall(r"trade_goods/icon_goods_(\w+)\.dds", abundant)
+    assert icons == ["wheat", "rice", "fish"] and "[ShowGoodsName('rice')]" in abundant and abundant.count("{") == abundant.count("}")
     out = location_status.status_row(HARVESTS, rows)
-    assert out.count("TooltipScrolledContentSection") == 3 and "ShowModifierEffect('overpopulation')" not in out
+    assert out.count("TooltipScrolledContentSection") == 4 and "ShowModifierEffect('overpopulation')" not in out
 
 
 def test_mod_files_carry_the_markers_types_and_localization():
@@ -89,5 +126,6 @@ def test_mod_files_carry_the_markers_types_and_localization():
     gui = location_status.status_row(HARVESTS)
     used = set(re.findall(r'"(PP_[A-Z_]+)"', gui)) | set(re.findall(r"Localize\('(PP_[A-Z_]+)'\)", gui))
     used |= set(re.findall(r"localization_key = (PP_[A-Z_]+)", location_status.custom_localization(HARVESTS)))
+    loc += location_status.harvest_localization(HARVESTS)
     missing = sorted(key for key in used if f"\n  {key}:" not in loc)
     assert not missing

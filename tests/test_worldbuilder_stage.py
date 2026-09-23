@@ -30,15 +30,17 @@ def _contract(tmp_path: Path) -> Contract:
     return Contract(root=tmp_path, meta=meta, attribute_rows=rows, building_types=types, location_buildings=lb, location_targets=lt, location_attributes=la, goods_floor=floors)
 
 
-def test_units_and_class_rows_fold_capacity_intercept_into_climate_only(tmp_path):
+def test_units_and_class_rows_fold_intercepts_into_climate_only(tmp_path):
     c = _contract(tmp_path)
     assert units(5200) == 5.2
     rows = wb_modifiers.class_rows(c)
     assert rows[("climate", "arid")]["local_population_capacity"] == units(20000 - 9000)
-    assert rows[("climate", "arid")]["local_wheat_output_modifier"] == -0.2       # no goods intercept on the class
-    assert rows[("climate", "continental")]["local_population_capacity"] == 20.0  # reference class carries the intercept
-    assert rows[("fertility", "high")] == {"local_population_capacity": 2.4, "local_wheat_output_modifier": 0.12}
-    assert wb_modifiers.goods_intercepts(c) == {"wheat": 0.05, "incense": -0.1}
+    assert rows[("climate", "arid")]["local_wheat_output_modifier"] == -0.15      # -0.2 + the wheat intercept 0.05
+    assert rows[("climate", "arid")]["local_incense_output_modifier"] == 0.3      # 0.4 + the incense intercept -0.1
+    assert rows[("climate", "continental")] == {"local_population_capacity": 20.0, "local_wheat_output_modifier": 0.05, "local_incense_output_modifier": -0.1}
+    assert rows[("fertility", "high")] == {"local_population_capacity": 2.4, "local_wheat_output_modifier": 0.12}   # no intercept off climate
+    # RGO prediction = the good's rows over the location's classes (its climate row carries the level)
+    assert wb_modifiers.rgo_row_predictions(c, {"a": "wheat", "b": "incense", "c": "iron"}) == {"a": ("wheat", -0.15), "b": ("incense", -0.1)}
 
 
 def test_parse_class_capacity_reads_vanilla_values_and_legacy_effects(tmp_path):
@@ -206,6 +208,21 @@ def test_static_modifiers_cover_reference_classes_and_are_placed_in_the_setup(tm
     assert "locations = {" in setup
     assert '{ modifier = "pp_wb_fertility_high" start_date = 1111.1.1 date = 9999.1.1 size = 1 }' in setup
     assert "\ta = {" in setup and "\tb = {" in setup
+
+
+def test_goods_floor_lifts_attribute_rows_and_no_intercept_modifier_is_written(tmp_path):
+    import dataclasses
+    c = _contract(tmp_path)
+    vanilla = tmp_path / "vanilla"
+    (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
+    (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("", encoding="utf-8")
+    cfg = dataclasses.replace(_cfg(tmp_path), goods_floor=0.0)
+    wb_modifiers.write_static_modifiers(c, cfg, tmp_path, vanilla, {"a": "wheat", "b": "incense"})
+    statics = (tmp_path / wb_modifiers.STATIC_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
+    assert "pp_wb_rgo_base" not in statics     # the raw-material bonus (pp_rgo_bonus_<good>) is the base
+    floors = (tmp_path / wb_modifiers.FLOOR_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
+    assert "pp_wb_rgo_floor_a = {\n\tgame_data = { category = location }\n\tlocal_wheat_output_modifier = 0.15\n}" in floors
+    assert "pp_wb_rgo_floor_b = {\n\tgame_data = { category = location }\n\tlocal_incense_output_modifier = 0.1\n}" in floors
 
 
 def test_class_injects_cancel_vanilla_food_exactly_and_rivers_drop_food(tmp_path):

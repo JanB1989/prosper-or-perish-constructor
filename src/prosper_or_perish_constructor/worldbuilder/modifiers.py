@@ -143,44 +143,57 @@ def dominant_parents(export_dir: Path, attribute: str) -> dict[str, str]:
 
 
 def class_rows(contract: Contract) -> dict[tuple[str, str], dict[str, float]]:
-    """(attribute, class) -> {modifier: value} from attribute_rows.csv, intercepts folded into climate rows."""
+    """(attribute, class) -> {modifier: value} from attribute_rows.csv, intercepts (capacity and goods output)
+    folded into the climate rows: every location has exactly one climate, so a climate row reads as the
+    absolute value for that climate and no per-good base modifier is needed."""
     rows = contract.attribute_rows
     goods = contract.goods
     intercept = rows.filter(pl.col("attribute") == "reference").row(0, named=True)
-    out: dict[tuple[str, str], dict[str, float]] = {}
-    for row in rows.filter(pl.col("attribute") != "reference").iter_rows(named=True):
-        attr, value = str(row["attribute"]), str(row["value"])
+
+    def num(v) -> float:
+        return float(v) if v not in (None, "") else 0.0
+
+    def modifiers(row, fold: bool) -> dict[str, float]:
         mods: dict[str, float] = {}
-        cap = float(row["capacity_people"] or 0.0)
-        if attr == "climate":
-            cap += float(intercept["capacity_people"] or 0.0)
+        cap = num(row.get("capacity_people")) + (num(intercept["capacity_people"]) if fold else 0.0)
         if cap:
             mods["local_population_capacity"] = units(cap)
         for good in goods:
-            v = row.get(f"output_{good}")
-            v = float(v) if v not in (None, "") else 0.0
+            v = num(row.get(f"output_{good}")) + (num(intercept.get(f"output_{good}")) if fold else 0.0)
             if abs(v) >= 0.005:
                 mods[f"local_{good}_output_modifier"] = round(v, 2)
-        out[(attr, value)] = mods
-    # reference classes are absent from the fit rows; the climate reference still carries the capacity intercept
+        return mods
+
+    out: dict[tuple[str, str], dict[str, float]] = {}
+    for row in rows.filter(pl.col("attribute") != "reference").iter_rows(named=True):
+        attr, value = str(row["attribute"]), str(row["value"])
+        out[(attr, value)] = modifiers(row, attr == "climate")
+    # the climate reference (and any climate without a fit row) is the intercept alone
     ref = {f: str(v) for f, v in contract.meta["attributes"]["reference_classes"].items()}
-    if ("climate", ref["climate"]) not in out:
-        mods = {}
-        if float(intercept["capacity_people"] or 0.0):
-            mods["local_population_capacity"] = units(float(intercept["capacity_people"]))
-        out[("climate", ref["climate"])] = mods
+    climates = {ref["climate"]}
+    if "climate" in contract.location_attributes.columns:
+        climates |= {str(c) for c in contract.location_attributes["climate"].unique().to_list() if c}
+    for climate in climates:
+        if ("climate", climate) not in out:
+            out[("climate", climate)] = modifiers({}, True)
     return out
 
 
-def goods_intercepts(contract: Contract) -> dict[str, float]:
-    """good -> fitted intercept of its output modifier; applied only where the good is the location's RGO,
-    so climate tooltips carry class terms only."""
-    intercept = contract.attribute_rows.filter(pl.col("attribute") == "reference").row(0, named=True)
-    out: dict[str, float] = {}
-    for good in contract.goods:
-        base = intercept.get(f"output_{good}")
-        if base not in (None, "") and abs(float(base)) >= 0.005:
-            out[good] = round(float(base), 2)
+def rgo_row_predictions(contract: Contract, rgo_by_location: Mapping[str, str]) -> dict[str, tuple[str, float]]:
+    """location tag -> (RGO good, sum of that good's attribute output rows over the location's classes), for
+    every location whose RGO has fitted rows. The fit intercept is not part of it (not written to the mod)."""
+    rows = class_rows(contract)
+    goods = set(contract.goods)
+    attrs = contract.location_attributes
+    columns = [a for a in {attr for attr, _ in rows} if a in attrs.columns]
+    out: dict[str, tuple[str, float]] = {}
+    for row in attrs.select("location_tag", *columns).iter_rows(named=True):
+        tag = str(row["location_tag"])
+        good = rgo_by_location.get(tag)
+        if good not in goods:
+            continue
+        key = f"local_{good}_output_modifier"
+        out[tag] = (good, round(sum(rows.get((a, str(row[a])), {}).get(key, 0.0) for a in columns), 2))
     return out
 
 
@@ -357,36 +370,25 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
     (mod_root / RIVER_MODIFIERS_PATH).parent.mkdir(parents=True, exist_ok=True)
     (mod_root / RIVER_MODIFIERS_PATH).write_text("﻿" + "\n\n".join([GENERATED, "# River capacity percentages and food modifiers removed; World Builder river-level rows added (levels 1..5 = engine river sizes); the mod's hand-authored river injects are folded in (an inject into a replaced block is ignored by the engine).", *river_blocks]) + "\n", encoding="utf-8", newline="\n")
 
-    # goods intercepts: one modifier per good on the locations where it is the RGO
-    if rgo_by_location is not None:
-        for good, base in sorted(goods_intercepts(contract).items()):
-            key = f"pp_wb_rgo_base_{good}"
-            names[key] = f"Local {pretty(good)} Produce"
-            blocks.append(render_block(key, {"game_data": "{ category = location }", f"local_{good}_output_modifier": _fmt(base)}))
-            for tag, rgo in rgo_by_location.items():
-                if rgo == good:
-                    per_location[tag].append(key)
-        static_path.write_text("﻿" + "\n\n".join([GENERATED, *blocks]) + "\n", encoding="utf-8", newline="\n")
+    # no goods intercept modifier: the per-good base output at the RGO is the hand-authored raw-material bonus
+    # (pp_rgo_bonus_<good>, re-applied when the raw material changes); the fit intercept is dropped
 
-    # goods floor for the game's RGO
+    # goods floor for the game's RGO, on the attribute rows alone (the raw-material bonus comes on top)
     floor_blocks: list[str] = []
     floor_names: dict[str, str] = {}
     lifted = 0
-    for row in contract.goods_floor.iter_rows(named=True):
-        predicted = row.get("predicted")
-        if predicted in (None, ""):
-            continue
-        lift = cfg.goods_floor - float(predicted)
+    predicted_rows = rgo_row_predictions(contract, rgo_by_location) if rgo_by_location is not None else {}
+    for tag, (good, predicted) in sorted(predicted_rows.items()):
+        lift = round(cfg.goods_floor - predicted, 2)
         if lift < 0.005:
             continue
-        tag, good = str(row["location_tag"]), str(row["good"])
         key = f"pp_wb_rgo_floor_{tag}"
         floor_blocks.append(render_block(key, {"game_data": "{ category = location }", f"local_{good}_output_modifier": _fmt(lift)}))
         floor_names[key] = "Established Local Produce"
         per_location[tag].append(key)
         lifted += 1
     (mod_root / FLOOR_MODIFIERS_PATH).parent.mkdir(parents=True, exist_ok=True)
-    (mod_root / FLOOR_MODIFIERS_PATH).write_text("﻿" + "\n\n".join([GENERATED, f"# Lifts the game's own RGO to at least {_fmt(cfg.goods_floor)} output where the attribute rows would leave it lower.", *floor_blocks]) + "\n", encoding="utf-8", newline="\n")
+    (mod_root / FLOOR_MODIFIERS_PATH).write_text("﻿" + "\n\n".join([GENERATED, f"# Lifts the game's own RGO to at least {_fmt(cfg.goods_floor)} output where the attribute rows would leave it lower (the raw-material bonus comes on top).", *floor_blocks]) + "\n", encoding="utf-8", newline="\n")
 
     # flat capacity per development point (the handover's known term), written INTO the hand-authored
     # TRY_REPLACE:development block: the engine ignores a TRY_INJECT into a block the mod itself replaces

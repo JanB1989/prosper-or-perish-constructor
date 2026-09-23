@@ -2020,6 +2020,18 @@ def test_ai_victuals_import_review_builds_only_where_food_is_very_short_and_affo
     assert "min = 0" in spare
 
 
+def test_only_abundant_free_land_gives_foraging_food() -> None:
+    text = (MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_capacity_pressure_effects.txt").read_text(
+        encoding="utf-8-sig"
+    )
+
+    def block(name: str) -> str:
+        return text.split(f"TRY_REPLACE:{name} = {{", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
+
+    assert "\tlocal_monthly_food = 1\n" in block("abundant_free_land")
+    assert "\tlocal_monthly_food = 0\n" in block("available_free_land")
+
+
 def test_devastation_does_not_speed_up_construction() -> None:
     text = (MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifier_adjustments.txt").read_text(
         encoding="utf-8-sig"

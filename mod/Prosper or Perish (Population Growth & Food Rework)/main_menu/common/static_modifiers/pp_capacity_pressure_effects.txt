@@ -8,7 +8,8 @@
 	local_migration_attraction = 2
 	local_population_growth = 0
 	local_monthly_food_modifier = 0
-	local_monthly_food = 0
+	# foraging on empty land: full value far below capacity, fading out as the engine scales the modifier down
+	local_monthly_food = 1
 	local_peasants_food_consumption = -0.5
 	local_chili_output_modifier = 0.40
 	local_cloves_output_modifier = 0.40

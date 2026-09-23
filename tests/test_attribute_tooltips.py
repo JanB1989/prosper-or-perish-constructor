@@ -233,7 +233,7 @@ def test_land_potential_sums_the_land_attributes(trees):
     assert "if = { limit = { vegetation = sparse } add = -0.03 }" in lumber and "if = { limit = { has_location_modifier = pp_wb_coastal } add = 0.07 }" in lumber
     assert ("pp_land_potential_step_tea = {\n\tvalue = pp_land_potential_tea\n\tmultiply = 100\n\tround = yes\n"
             "\tdivide = 2\n\tfloor = yes\n\tmin = -11\n\tmax = 20\n}") in values
-    assert "pp_land_potential_low_tea = {\n\tvalue = pp_land_potential_tea\n\tmultiply = 100\n\tround = yes\n\tdivide = 10\n\tfloor = yes\n\tmin = -4\n\tmax = -2\n}" in values
+    assert "pp_land_potential_low_tea = {\n\tvalue = pp_land_potential_tea\n\tmultiply = 100\n\tround = yes\n\tdivide = 5\n\tfloor = yes\n\tmin = -8\n\tmax = -4\n}" in values
 
 
 def test_land_potential_script_tests_the_most_common_class_first(trees):
@@ -259,19 +259,25 @@ def test_land_potential_tiers_sort_by_step_and_only_hold_steps_that_occur():
     occupied = tt.occupied_percents(views, locations)
     assert occupied == {"tea": {22, 24}, "wheat": {-5, -35}}
     assert tt.land_step(-5) == -3 and tt.land_step(-35) == tt.STEP_MIN and tt.land_step(80) == tt.STEP_MAX
-    assert [tt.land_low(p) for p in (-20, -21, -30, -31, -90)] == [-2, -3, -3, -4, -4]
+    assert [tt.land_low(p) for p in (-20, -21, -25, -26, -35, -36, -90)] == [-4, -5, -5, -6, -7, -8, -8]
     assert tt.tier_steps(tt.TIERS[0]) == list(range(20, 9, -1)) and tt.tier_steps(tt.TIERS[-1]) == []
-    assert tt.tier_cells(tt.TIERS[-1], occupied) == [[], [("wheat", -4)]]
+    assert tt.tier_cells(tt.TIERS[-1], occupied) == [[], [], [("wheat", -7)], []]
     assert [tt.tier_label(t) for t in (tt.TIERS[0], tt.TIERS[2], tt.TIERS[-1])] == ["Excellent: +20% or more", "Fair: 0% to +9%", "Unsuited: -21% or less"]
     chip = tt.land_potential_chip(occupied)
     assert chip.count("{") == chip.count("}")
-    assert chip.count("pp_land_potential_cell = {") == 3 and chip.count("pp_land_potential_icon = {") == 1   # one per occurring pair
-    # best step first inside the tier; every tier labelled, the icon-only tier on two lines
+    assert chip.count("pp_land_potential_cell = {") == 4   # one per occurring pair
+    # best step first inside the tier; every tier labelled; the unsuited tier in 5% lines, with values
     assert chip.index("pp_land_potential_step_tea')), '(int32)12')") < chip.index("pp_land_potential_step_tea')), '(int32)11')")
     assert all(f'text = "PP_LAND_TIER_{t.key.upper()}"' in chip for t in tt.TIERS)
     unsuited = chip[chip.index("PP_LAND_TIER_UNSUITED"):]
-    assert unsuited.count("hbox = {") == 2 and "ShowGoodsName('wheat')] [LocationView.GetLocation.MakeScope.ScriptValue('pp_land_potential_wheat')|+=%0]" in unsuited
-    assert "ScriptValue('pp_land_potential_low_wheat')), '(int32)-4')" in unsuited
+    # only lines that can hold a good get a row
+    assert unsuited.count("hbox = {") == 1 and "ScriptValue('pp_land_potential_low_wheat')), '(int32)-7')" in unsuited
+    assert "raw_text = \"[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_potential_wheat')|+=%0]\"" in unsuited
+    # a long unsuited line continues on rows of at most ROW_CELLS cells, in the same order
+    crowded = {f"g{i:02}": {-22} for i in range(tt.ROW_CELLS + 2)}
+    rows = tt.land_tier(tt.TIERS[-1], crowded).split("hbox = {")[1:]
+    assert [row.count("pp_land_potential_cell") for row in rows] == [tt.ROW_CELLS, 2]
+    assert "'pp_land_potential_low_g06'" in rows[0] and "'pp_land_potential_low_g07'" in rows[1]
     assert "EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'wheat')" in chip
     # without location data every value stays possible
     assert tt.occupied_percents(views, [])["tea"] == set(range(-100, 101))

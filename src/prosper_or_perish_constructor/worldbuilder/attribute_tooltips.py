@@ -69,11 +69,10 @@ class Tier:
     name: str
     low: int | None          # lowest percent in the tier (None: open)
     high: int | None         # first percent above the tier (None: open)
-    icons_only: bool = False
 
 
 # Land-potential steps: the rounded percent halved (2% per step), clamped. The top step holds +40% and more; the
-# bottom one (-21% and less) is no tier's: the unsuited tier sorts by tens of percent instead (LOW_LINES).
+# bottom one (-21% and less) is no tier's: the unsuited tier sorts in coarser lines instead (LOW_LINES).
 STEP = 2
 STEP_MIN, STEP_MAX = -11, 20
 TIERS = (
@@ -82,12 +81,13 @@ TIERS = (
     Tier("fair", "Fair", 0, 10),
     Tier("marginal", "Marginal", -10, 0),
     Tier("poor", "Poor", -20, -10),
-    # usually many goods and little to tell apart: icons only (value on hover), on two lines
-    Tier("unsuited", "Unsuited", None, -20, icons_only=True),
+    Tier("unsuited", "Unsuited", None, -20),
 )
-# The unsuited tier's lines: floor(percent / 10), clamped; -3 is -21% to -30%, -4 is -31% and less, -2 is not unsuited.
-LOW_LINES = (-3, -4)
-LOW_MIN, LOW_MAX = -4, -2
+# The unsuited tier holds many goods at once: 5% lines, floor(percent / 5) clamped (-5 is -21% to -25%, ..., -8 is
+# -36% and less, -4 is not unsuited), each line wrapping onto a second row in the same order.
+LOW_DIVISOR = 5
+LOW_LINES = (-5, -6, -7, -8)
+LOW_MIN, LOW_MAX = -8, -4
 _OUTPUT = re.compile(r"local_(\w+)_output_modifier")
 _GOODS_ICON = "gfx/interface/icons/trade_goods/icon_goods_{good}.dds"
 
@@ -554,7 +554,7 @@ def land_step(percent: int) -> int:
 
 def land_low(percent: int) -> int:
     """The unsuited line of a rounded percent, as ``pp_land_potential_low_<good>`` computes it."""
-    return max(LOW_MIN, min(LOW_MAX, math.floor(percent / 10)))
+    return max(LOW_MIN, min(LOW_MAX, math.floor(percent / LOW_DIVISOR)))
 
 
 def occupied_percents(views: Mapping[str, list[View]], locations: list[dict[str, str]]) -> dict[str, set[int]]:
@@ -598,25 +598,29 @@ def tier_label(tier: Tier) -> str:
     return f"{tier.name}: {_percent(tier.low)} to {_percent(tier.high - 1)}"
 
 
-def _land_cell(good: str, position: int, icons_only: bool) -> str:
+def _land_cell(good: str, position: int, kind: str) -> str:
     potential = f"{_LOC}.MakeScope.ScriptValue('pp_land_potential_{good}')"
-    kind = "low" if icons_only else "step"
     visible = f"EqualTo_int32(FixedPointToInt({_LOC}.MakeScope.ScriptValue('pp_land_potential_{kind}_{good}')), '(int32){position}')"
     rgo = f"And({_LOC}.HasRawMaterial, EqualTo_string({_LOC}.GetRawMaterial.GetKey, '{good}'))"
-    if icons_only:
-        return (f'pp_land_potential_icon = {{ visible = "[{visible}]" blockoverride "highlight" {{ visible = "[{rgo}]" }} '
-                f'blockoverride "good_icon" {{ texture = "{_GOODS_ICON.format(good=good)}" tooltip = "[ShowGoodsName(\'{good}\')] [{potential}|+=%0]" }} }}')
     return (f'pp_land_potential_cell = {{ visible = "[{visible}]" blockoverride "highlight" {{ visible = "[{rgo}]" }} '
             f'blockoverride "good_icon" {{ texture = "{_GOODS_ICON.format(good=good)}" tooltip = "[ShowGoodsName(\'{good}\')]" }} '
             f'blockoverride "good_value" {{ raw_text = "[{potential}|+=%0]" }} }}')
 
 
+# cells that fit one row of the tooltip. An unsuited line continues on further rows of at most this many cells, in the
+# same order, so no location's row is wider than the tooltip (the other tiers rarely hold more than this).
+ROW_CELLS = 7
+
+
 def land_tier(tier: Tier, occupied: Mapping[str, set[int]]) -> str:
-    """One labelled tier: its steps best first, each step's goods in name order; the icon-only tier on two lines."""
+    """One labelled tier: its steps best first, each step's goods in name order; unsuited lines in rows of ROW_CELLS."""
+    kind = "low" if tier.low is None else "step"
     hboxes = []
     for line in tier_cells(tier, occupied):
-        cells = " ".join(_land_cell(good, position, tier.icons_only) for good, position in line)
-        hboxes.append(f"hbox = {{ layoutpolicy_horizontal = expanding ignoreinvisible = yes spacing = 2 {cells} expand = {{}} }}")
+        rows = [line[i:i + ROW_CELLS] for i in range(0, len(line), ROW_CELLS)] if tier.low is None else [line]
+        for row in rows:
+            cells = " ".join(_land_cell(good, position, kind) for good, position in row)
+            hboxes.append(f"hbox = {{ layoutpolicy_horizontal = expanding ignoreinvisible = yes spacing = 2 {cells} expand = {{}} }}")
     return (f'\t\t\t\t\t\tpp_land_potential_tier = {{ blockoverride "tier_title" {{ text = "PP_LAND_TIER_{tier.key.upper()}" }} '
             f'blockoverride "tier_lines" {{ {" ".join(hboxes)} }} }}')
 
@@ -648,20 +652,6 @@ _LAND_TYPES = """\
 \t\t\tusing = text_single_template
 \t\t\tposition = { 26 6 }
 \t\t\tblock "good_value" {}
-\t\t}
-\t}
-
-\ttype pp_land_potential_icon = widget {
-\t\tsize = { 26 28 }
-\t\tbackground = {
-\t\t\tusing = bg_round_corners
-\t\t\talpha = 0.9
-\t\t\tblock "highlight" { visible = no }
-\t\t}
-\t\ticon = {
-\t\t\tsize = { 22 22 }
-\t\t\tposition = { 2 3 }
-\t\t\tblock "good_icon" {}
 \t\t}
 \t}
 """
@@ -733,7 +723,7 @@ def render_script_values(views: Mapping[str, list[View]], locations: list[dict[s
                 lines.append(f"\t{'if' if index == 0 else 'else_if'} = {{ limit = {{ {trigger} }} add = {_fmt(value)} }}")
         lines.append("}")
         blocks.append("\n".join(lines))
-        for kind, divisor, low, high in (("step", STEP, STEP_MIN, STEP_MAX), ("low", 10, LOW_MIN, LOW_MAX)):
+        for kind, divisor, low, high in (("step", STEP, STEP_MIN, STEP_MAX), ("low", LOW_DIVISOR, LOW_MIN, LOW_MAX)):
             blocks.append(
                 f"pp_land_potential_{kind}_{good} = {{\n\tvalue = pp_land_potential_{good}\n\tmultiply = 100\n\tround = yes\n"
                 f"\tdivide = {divisor}\n\tfloor = yes\n\tmin = {low}\n\tmax = {high}\n}}"

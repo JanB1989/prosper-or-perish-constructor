@@ -1,5 +1,9 @@
 ﻿# >>> eu5-building-pipeline:hired_labor_yard:advancement
-TRY_INJECT:merchants_quarters_advance = {
+pp_labour_exchange = {
+icon = hired_labor_yard
+age = age_3_discovery
+requires = printing_press_advance
 unlock_production_method = pp_hired_labor_yard_labour_exchange
+ai_weight = { add = 100 }
 }
 # <<< eu5-building-pipeline:hired_labor_yard:advancement

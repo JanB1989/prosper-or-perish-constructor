@@ -27,162 +27,162 @@ increase_per_level_cost = 0.10
 unique_production_methods = {
 		# --- ASIA ---
 		pp_victualling_yard_khichdi = {
-        rice = 1.12
-        legumes = 0.96
-        pepper = 0.034
-        manual_labor_cost = 0.17
+        rice = 1.23
+        legumes = 1.06
+        pepper = 0.037
+        manual_labor_cost = 0.19
 			produced = victuals
-        output = 0.782
+        output = 0.903
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_fish_congee = { # Adjusted: Swapped game for fish to match the name and Asian RGOs
-        rice = 1.12
-        fish = 0.96
-        pepper = 0.034
-        manual_labor_cost = 0.17
+        rice = 1.23
+        fish = 1.06
+        pepper = 0.037
+        manual_labor_cost = 0.19
 			produced = victuals
-        output = 0.782
+        output = 0.903
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 
 		# --- EUROPE ---
 		pp_victualling_yard_livestock_pottage = {
-        wheat = 1.09
-        livestock = 0.78
-        legumes = 0.22
-        manual_labor_cost = 0.19
+        wheat = 1.2
+        livestock = 0.86
+        legumes = 0.24
+        manual_labor_cost = 0.21
 			produced = victuals
-        output = 0.865
+        output = 0.999
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_mediterranean_fish = {
-        fish = 1.7
-        olives = 0.51
-        wine = 0.069
-        manual_labor_cost = 0.18
+        fish = 1.87
+        olives = 0.56
+        wine = 0.076
+        manual_labor_cost = 0.2
 			produced = victuals
-        output = 0.817
+        output = 0.944
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_mutton_and_pease = {
-        wool = 0.84
-        legumes = 0.4
-        salt = 0.048
-        manual_labor_cost = 0.2
+        wool = 0.92
+        legumes = 0.44
+        salt = 0.053
+        manual_labor_cost = 0.22
 			produced = victuals
-        output = 0.868
+        output = 1.003
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_surstromming = {
-        fish = 1.75
-        millet = 0.18
-        salt = 0.18
-        manual_labor_cost = 0.19
+        fish = 1.93
+        millet = 0.2
+        salt = 0.2
+        manual_labor_cost = 0.21
 			produced = victuals
-        output = 0.892
+        output = 1.030
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 
 		# --- AMERICA ---
 		pp_victualling_yard_pozole = {
-        maize = 0.7
-        wild_game = 0.89
-        chili = 0.14
-        manual_labor_cost = 0.15
+        maize = 0.77
+        wild_game = 0.98
+        chili = 0.15
+        manual_labor_cost = 0.17
 			produced = victuals
-        output = 0.788
+        output = 0.910
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_pemmican = { # Adjusted: Flipped livestock and game to match American RGO dominance
-        wild_game = 1.53
-        livestock = 0.32
-        fruit = 0.34
-        manual_labor_cost = 0.18
+        wild_game = 1.68
+        livestock = 0.35
+        fruit = 0.37
+        manual_labor_cost = 0.2
 			produced = victuals
-        output = 0.817
+        output = 0.944
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_labskaus = { # Note: Requires potato, which only exists in America in your data!
-        potato = 0.32
-        fish = 0.51
-        livestock = 1.02
-        manual_labor_cost = 0.18
+        potato = 0.35
+        fish = 0.56
+        livestock = 1.12
+        manual_labor_cost = 0.2
 			produced = victuals
-        output = 0.820
+        output = 0.947
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 
 		# --- AFRICA (NEW) ---
 		pp_victualling_yard_meat_tajine = { # Uses Africa's massive livestock, fruit, and saffron RGOs
-        livestock = 1.19
-        fruit = 0.54
-        saffron = 0.051
-        manual_labor_cost = 0.2
+        livestock = 1.31
+        fruit = 0.59
+        saffron = 0.056
+        manual_labor_cost = 0.22
 			produced = victuals
-        output = 0.900
+        output = 1.040
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_saltfish_porridge = { # Also fits Africa/Middle East perfectly
-        millet = 0.89
-        fish = 1.27
-        salt = 0.069
-        manual_labor_cost = 0.19
+        millet = 0.98
+        fish = 1.4
+        salt = 0.076
+        manual_labor_cost = 0.21
 			produced = victuals
-        output = 0.869
+        output = 1.004
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 
 		# --- OCEANIA (NEW) ---
 		pp_victualling_yard_ika_mata = { # Capitalizes on Oceania's massive 18.9 fish and 11.7 fruit RGOs
-        fish = 1.63
-        fruit = 0.85
-        salt = 0.034
-        manual_labor_cost = 0.21
+        fish = 1.79
+        fruit = 0.94
+        salt = 0.037
+        manual_labor_cost = 0.23
 			produced = victuals
-        output = 0.834
+        output = 0.963
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 
 		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
 		pp_victualling_yard_kheer = { # Sugar-led; primary fantasy SA / NA / ME; valid anywhere with sugar + starch + livestock
-        rice = 1.12
-        sugar = 0.1
-        livestock = 0.61
-        manual_labor_cost = 0.19
+        rice = 1.23
+        sugar = 0.11
+        livestock = 0.67
+        manual_labor_cost = 0.21
 			produced = victuals
-        output = 0.817
+        output = 0.944
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_honey_gruel = {
-        wheat = 0.82
-        fruit = 0.54
-        beeswax = 0.61
-        manual_labor_cost = 0.2
+        wheat = 0.9
+        fruit = 0.59
+        beeswax = 0.67
+        manual_labor_cost = 0.22
 			produced = victuals
-        output = 0.898
+        output = 1.037
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_boreal_hunter_stew = { # Fur belt: North Asia, North America, Eastern Europe â€” game stew; fur = trapping economy
-        fur = 0.78
-        millet = 0.68
-        salt = 0.069
-        manual_labor_cost = 0.2
+        fur = 0.86
+        millet = 0.75
+        salt = 0.076
+        manual_labor_cost = 0.22
 			produced = victuals
-        output = 0.900
+        output = 1.040
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -197,50 +197,50 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_victualling_yard_beer = {
-        beer = 0.6
-        manual_labor_cost = 0.096
+        beer = 0.66
+        manual_labor_cost = 0.11
 			produced = victuals
-        output = 0.437
+        output = 0.505
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_wine = {
-        wine = 0.65
-        manual_labor_cost = 0.096
+        wine = 0.72
+        manual_labor_cost = 0.11
 			produced = victuals
-        output = 0.448
+        output = 0.517
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_liquor = {
-        liquor = 0.56
-        manual_labor_cost = 0.11
+        liquor = 0.62
+        manual_labor_cost = 0.12
 			produced = victuals
-        output = 0.465
+        output = 0.537
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_chocolate = {
-        cocoa = 0.27
-        manual_labor_cost = 0.084
+        cocoa = 0.3
+        manual_labor_cost = 0.092
 			produced = victuals
-        output = 0.341
+        output = 0.394
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_coffee = {
-        coffee = 0.32
-        manual_labor_cost = 0.087
+        coffee = 0.35
+        manual_labor_cost = 0.096
 			produced = victuals
-        output = 0.337
+        output = 0.389
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_tea = {
-        tea = 0.42
-        manual_labor_cost = 0.087
+        tea = 0.46
+        manual_labor_cost = 0.096
 			produced = victuals
-        output = 0.432
+        output = 0.499
 			debug_max_profit = 0
 			category = building_maintenance
 		}
@@ -254,26 +254,26 @@ unique_production_methods = {
 			category = building_maintenance
 		}
 		pp_victualling_yard_pottery_jars = {
-        pottery = 0.86
-        manual_labor_cost = 0.069
+        pottery = 0.95
+        manual_labor_cost = 0.076
 			produced = victuals
-        output = 0.281
+        output = 0.325
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_coopered_barrels = {
-        furniture = 0.28
-        manual_labor_cost = 0.06
+        furniture = 0.31
+        manual_labor_cost = 0.066
 			produced = victuals
-        output = 0.271
+        output = 0.313
 			debug_max_profit = 0
 			category = building_maintenance
 		}
 		pp_victualling_yard_tin_cans = {
-        steel = 0.31
-        manual_labor_cost = 0.11
+        steel = 0.34
+        manual_labor_cost = 0.12
 			produced = victuals
-        output = 0.501
+        output = 0.579
 			debug_max_profit = 0
 			category = building_maintenance
 		}

@@ -1,5 +1,5 @@
-﻿import json
-import os
+﻿import ast
+import json
 import re
 from pathlib import Path
 from types import SimpleNamespace
@@ -26,22 +26,6 @@ def test_production_profit_import_missing_command_is_registered() -> None:
     assert args.handler is cli._production_profit
     assert args.import_missing is True
     assert args.dry_run is True
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def _write_minimal_europedia_sources(repo: Path) -> None:
@@ -108,33 +92,7 @@ def _write_savegame_manifest(repo: Path, save_path: Path | None = None) -> None:
     ).write_parquet(manifest)
 
 
-def test_test_command_disables_pytest_capture_by_default(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    repo = _repo(tmp_path)
-    calls: list[list[str]] = []
-
-    def fake_run(command, cwd):
-        calls.append([str(part) for part in command])
-        assert cwd == repo
-        return 0
-
-    monkeypatch.setattr(cli, "_run", fake_run)
-
-    assert cli.main(["--repo", str(repo), "test", "tests/test_project_config.py"]) == 0
-
-    assert calls == [
-        [
-            cli.sys.executable,
-            "-m",
-            "pytest",
-            "--capture=no",
-            "tests/test_project_config.py",
-        ]
-    ]
-
-
-def test_test_command_preserves_explicit_capture_args(
+def test_test_command_passes_arguments_through_to_pytest(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repo = _repo(tmp_path)
@@ -267,12 +225,6 @@ def test_sync_requires_explicit_confirmation(tmp_path: Path) -> None:
         cli.main(["--repo", str(repo), "sync"])
 
 
-
-
-
-
-
-
 def test_sync_full_build_and_force_deploy_use_recovery_path(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -300,8 +252,94 @@ def test_sync_full_build_and_force_deploy_use_recovery_path(
     assert recorded == [repo / "constructor.toml"]
 
 
+def test_smart_sync_reruns_world_builder_only_when_its_inputs_change(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = tmp_path
+    (repo / "constructor.toml").write_text(
+        '[project]\nname = "test"\nmod_root = "mod/test-mod"\n'
+        '[building_blueprints]\nmanifest = "blueprints/buildings.manifest.yml"\n',
+        encoding="utf-8",
+    )
+    (repo / "constructor.local.toml").write_text("[deploy]\ntarget = 'live'\n", encoding="utf-8")
+    (repo / "constructor.load_order.toml").write_text('[paths]\nvanilla_root = "missing"\n', encoding="utf-8")
+    (repo / "blueprints" / "accepted" / "buildings").mkdir(parents=True)
+    (repo / "blueprints" / "buildings.manifest.yml").write_text("enabled: {}\n", encoding="utf-8")
+    farm = repo / "blueprints" / "accepted" / "buildings" / "farm.yml"
+    farm.write_text("max_levels: 3\n", encoding="utf-8")
+    setup = repo / "mod" / "test-mod" / "main_menu" / "setup" / "start" / "05_hand_written.txt"
+    setup.parent.mkdir(parents=True)
+    setup.write_text("locations = {}\n", encoding="utf-8")
+    runs: list[str] = []
+
+    def fake_apply(repo_arg, project_arg):
+        # Like the real stage: patches a blueprint it also reads and writes setup files it also parses.
+        runs.append("worldbuilder")
+        text = farm.read_text(encoding="utf-8")
+        if "patched" not in text:
+            farm.write_text(text + "patched: yes\n", encoding="utf-8")
+        (setup.parent / "14_pp_start_buildings.txt").write_text("building_manager = {}\n", encoding="utf-8")
+
+    def fake_run(command, cwd):
+        runs.append(str(command[1]))
+        return 0
+
+    monkeypatch.setattr(cli, "_worldbuilder_apply", fake_apply)
+    monkeypatch.setattr(cli, "_run", fake_run)
+    monkeypatch.setattr(cli, "_finalize_constructor_mod", lambda repo_arg, project_arg: None)
+
+    def sync() -> list[str]:
+        runs.clear()
+        assert cli.main(["--repo", str(repo), "sync", "--yes"]) == 0
+        return [run for run in runs if run != "deploy"]
+
+    assert sync() == ["worldbuilder", "render", "validate"]
+    assert sync() == []  # its own blueprint patch and setup output do not trigger a rerun
+
+    farm.write_text(farm.read_text(encoding="utf-8").replace("max_levels: 3", "max_levels: 4"), encoding="utf-8")
+    assert sync() == ["worldbuilder", "render", "validate"]
+    assert sync() == []
+
+    setup.write_text("locations = { rome = {} }\n", encoding="utf-8")
+    assert sync() == ["worldbuilder", "validate"]
 
 
+def test_world_builder_fingerprint_covers_the_code_the_stage_imports() -> None:
+    package = ROOT / "src" / "prosper_or_perish_constructor"
+    covered = [ROOT / relative for relative in cli.WORLDBUILDER_CODE_AND_DATA]
+    seen: set[Path] = set()
+    pending = [package / "worldbuilder" / "stage.py"]
+    while pending:
+        path = pending.pop()
+        if path in seen:
+            continue
+        seen.add(path)
+        module = path.relative_to(package.parent).with_suffix("").parts
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8-sig"))):
+            if isinstance(node, ast.ImportFrom):
+                base = list(module[: len(module) - node.level]) if node.level else []
+                names = [[*base, *(node.module or "").split(".")]]
+                names += [[*names[0], alias.name] for alias in node.names]
+            elif isinstance(node, ast.Import):
+                names = [alias.name.split(".") for alias in node.names]
+            else:
+                continue
+            for parts in names:
+                parts = [part for part in parts if part]
+                if parts[:1] != ["prosper_or_perish_constructor"]:
+                    continue
+                target = package.parent.joinpath(*parts)
+                for candidate in (target.with_suffix(".py"), target / "__init__.py"):
+                    if candidate.is_file():
+                        pending.append(candidate)
+
+    uncovered = [
+        str(path.relative_to(ROOT))
+        for path in sorted(seen)
+        if path.name != "__init__.py" or path.parent == package / "worldbuilder"
+        if not any(path == entry or entry in path.parents for entry in covered)
+    ]
+    assert uncovered == []
 
 
 def test_build_does_not_finalize_after_failed_orchestrator_build(
@@ -932,10 +970,6 @@ def test_production_throughput_can_include_specific_gated_methods(
     assert lines[2].split() == ["fish", "0.00", "4.00"]
 
 
-
-
-
-
 def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -1141,10 +1175,6 @@ def test_savegame_notebooks_build_reports_empty_save_dir(tmp_path: Path) -> None
         cli.main(["--repo", str(repo), "savegame-notebooks", "build", "--save-dir", str(save_dir)])
 
 
-
-
-
-
 def test_savegame_purge_deletes_generated_savegame_outputs(tmp_path: Path) -> None:
     repo = _repo(tmp_path)
     savegame_dir = repo / "artifacts" / "data" / "savegame"
@@ -1205,9 +1235,5 @@ def test_savegame_purge_dry_run_keeps_generated_outputs(tmp_path: Path) -> None:
     assert cli.main(["--repo", str(repo), "savegame-purge", "--dry-run"]) == 0
 
     assert savegame_dir.exists()
-
-
-
-
 
 

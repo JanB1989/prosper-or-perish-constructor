@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import Iterable
 
 from prosper_or_perish_constructor.rural_capacity import (
-    FARM_WATER_CONTROL_BUILDINGS,
     FISH_CAP_BUILDINGS,
     FOREST_CAP_BUILDINGS,
     LAND_FARM_BUILDINGS,

@@ -3,7 +3,6 @@
 from pathlib import Path
 
 import pytest
-import yaml
 
 from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
@@ -26,6 +25,7 @@ from prosper_or_perish_constructor.production_profit import (
     validate_employment_size_step,
 )
 from prosper_or_perish_constructor.rural_capacity import LAND_FARM_BUILDINGS
+from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -94,7 +94,7 @@ def test_vanilla_production_blueprints_are_full_replacements_not_cost_stubs() ->
     assert coverage.stub_only_buildings == set()
     for building in sorted(coverage.vanilla_buildings):
         path = coverage.accepted_blueprints_by_building[building]
-        raw = yaml.safe_load(path.read_text(encoding="utf-8-sig"))
+        raw = yaml_io.safe_load(path.read_text(encoding="utf-8-sig"))
         body = str(raw.get("building", {}).get("body") or "")
         assert raw.get("building", {}).get("mode") == "REPLACE", building
         assert raw.get("building", {}).get("production_method_slots"), building
@@ -124,7 +124,7 @@ def test_vanilla_production_blueprint_employment_sizes_use_50_pop_steps() -> Non
 
     for building in sorted(coverage.vanilla_buildings):
         path = coverage.accepted_blueprints_by_building[building]
-        raw = yaml.safe_load(path.read_text(encoding="utf-8-sig"))
+        raw = yaml_io.safe_load(path.read_text(encoding="utf-8-sig"))
         body = str(raw.get("building", {}).get("body") or "")
         match = next(
             (
@@ -361,7 +361,7 @@ def test_enable_manifest_entries_appends_missing_paths(tmp_path: Path) -> None:
     empty = tmp_path / "empty.yml"
     empty.write_text("enabled: {}\n", encoding="utf-8")
     _enable_manifest_entries(empty, ["buildings/brewery.yml"])
-    empty_raw = yaml.safe_load(empty.read_text(encoding="utf-8"))
+    empty_raw = yaml_io.safe_load(empty.read_text(encoding="utf-8"))
     assert empty_raw["enabled"] == {"buildings/brewery.yml": True}
 
     existing = tmp_path / "existing.yml"
@@ -430,9 +430,9 @@ def test_import_missing_writes_faithful_replace_yaml_without_touching_accepted(
     )
 
     written = tmp_path / "blueprints" / "accepted" / "buildings" / "brewery.yml"
-    raw = yaml.safe_load(written.read_text(encoding="utf-8"))
+    raw = yaml_io.safe_load(written.read_text(encoding="utf-8"))
     body = str(raw["building"]["body"])
-    enabled = yaml.safe_load(manifest.read_text(encoding="utf-8"))["enabled"]
+    enabled = yaml_io.safe_load(manifest.read_text(encoding="utf-8"))["enabled"]
 
     assert [result.building for result in results] == ["brewery"]
     assert results[0].changed is True

@@ -5,7 +5,6 @@ from pathlib import Path
 import re
 
 import pytest
-import yaml
 from eu5_building_pipeline.template import load_template
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5_mod_orchestrator.config import load_project_config
@@ -21,6 +20,7 @@ from prosper_or_perish_constructor.building_scaling import (
     scaled_increase_per_level_cost_text,
     worker_victuals_output_amount,
 )
+from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -59,7 +59,7 @@ def test_burgher_buildings_do_not_exceed_configured_employment_baseline() -> Non
     baseline_count = 0
 
     for entry in enabled_manifest_entries(
-        yaml.safe_load(MANIFEST.read_text(encoding="utf-8")).get("enabled", []),
+        yaml_io.safe_load(MANIFEST.read_text(encoding="utf-8")).get("enabled", []),
         source=MANIFEST,
     ):
         template = load_template(ROOT / "blueprints" / "accepted" / entry)
@@ -250,7 +250,7 @@ def _good_food(good: str) -> Decimal:
 
 
 def _accepted_worker_victual_buildings() -> set[str]:
-    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST.read_text(encoding="utf-8"))
     result: set[str] = set()
     for entry in enabled_manifest_entries(manifest.get("enabled", []), source=MANIFEST):
         template = load_template(ROOT / "blueprints" / "accepted" / entry)

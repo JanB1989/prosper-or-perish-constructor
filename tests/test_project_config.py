@@ -4,14 +4,12 @@ import os
 import re
 from pathlib import Path
 
-import yaml
 
 from eu5_building_pipeline.template import load_template
 from eu5gameparser.clausewitz.parser import parse_file, parse_text
 from eu5gameparser.clausewitz.serializer import normalized_value
 from eu5gameparser.clausewitz.syntax import CList
 from eu5gameparser.domain.availability import annotate_building_data_availability
-from eu5gameparser.domain.building_types import load_building_type_data
 from eu5gameparser.domain.eu5 import load_eu5_data
 from eu5gameparser.load_order import LoadOrderConfig, load_merged_directory
 from eu5_mod_orchestrator.adapters.parser import load_raw_material_goods
@@ -21,13 +19,13 @@ from prosper_or_perish_constructor import cli
 from prosper_or_perish_constructor.rural_capacity import (
     FARM_WATER_CONTROL_BUILDINGS,
     capacity_max_omitted_buildings_by_building,
-    farm_capacity_modifier_for_building,
 )
 from prosper_or_perish_constructor.vanilla_setup import (
     expand_town_setup,
     parse_setup_model,
     parse_town_setups,
 )
+from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -104,16 +102,6 @@ MODIFIER_TYPE_DEFINITIONS = MOD_ROOT / "main_menu" / "common" / "modifier_type_d
 MODIFIER_ICONS = MOD_ROOT / "main_menu" / "common" / "modifier_icons"
 GAME_CONCEPT_ROOT = MOD_ROOT / "main_menu" / "common" / "game_concepts"
 LOCALIZATION_ROOT = MOD_ROOT / "main_menu" / "localization" / "english"
-FARMING_CAPACITY_RAW_MODIFIER_BRIDGES = (
-    BUILDING_TYPE_ROOT / "zzzz_pp_farming_capacity_raw_modifier_bridges.txt"
-)
-FARMING_CAPACITY_MODIFIER_LOCALIZATION = (
-    LOCALIZATION_ROOT / "pp_farming_capacity_modifier_types_l_english.yml"
-)
-REMOVED_FARM_OTHER_BUILDINGS_CAPACITY_MODIFIER = "farm_capacity_from_other_buildings"
-BUILDING_MAINTENANCE_RULES = (
-    MOD_ROOT / "main_menu" / "common" / "game_rules" / "pp_building_maintenance_rules.txt"
-)
 STARTING_PROVINCE_FOOD_RULES = (
     MOD_ROOT / "main_menu" / "common" / "game_rules" / "pp_starting_province_food_rules.txt"
 )
@@ -181,7 +169,6 @@ LAND_FARM_BUILDINGS = (
     "vineyard_estate",
 )
 LAND_FARM_BLUEPRINTS = tuple(BUILDING_BLUEPRINT_ROOT / f"{key}.yml" for key in LAND_FARM_BUILDINGS)
-FARM_CAPACITY_MAX_VALUES = tuple(f"farm_capacity_max_{key}" for key in LAND_FARM_BUILDINGS)
 FISH_CAP_BUILDINGS = (
     "fishing_village",
     "net_curing_yard",
@@ -200,10 +187,6 @@ FISH_CAPACITY_MAX_VALUES = tuple(f"fish_capacity_max_{key}" for key in FISH_CAP_
 FOREST_CAPACITY_MAX_VALUES = tuple(f"forest_capacity_max_{key}" for key in FOREST_CAP_BUILDINGS)
 FISH_CAP_BLUEPRINTS = tuple(BUILDING_BLUEPRINT_ROOT / f"{key}.yml" for key in FISH_CAP_BUILDINGS)
 FOREST_CAP_BLUEPRINTS = tuple(BUILDING_BLUEPRINT_ROOT / f"{key}.yml" for key in FOREST_CAP_BUILDINGS)
-LAND_FARM_MAX_OMISSIONS = capacity_max_omitted_buildings_by_building(
-    blueprint_root=BUILDING_BLUEPRINT_ROOT,
-    capacity_buildings=LAND_FARM_BUILDINGS,
-)
 FISH_CAP_MAX_OMISSIONS = capacity_max_omitted_buildings_by_building(
     blueprint_root=BUILDING_BLUEPRINT_ROOT,
     capacity_buildings=FISH_CAP_BUILDINGS,
@@ -381,8 +364,6 @@ def test_constructor_config_loads() -> None:
     assert config.building_artifact_dir == ROOT / "artifacts" / "data" / "buildings"
     assert config.savegame_artifact_dir == ROOT / "artifacts" / "data" / "savegame"
     assert config.graph_dir == ROOT / "graphs"
-    assert config.labeling is None
-    assert config.population_capacity is None
     assert config.blueprint_evaluation.raw_input_efficiency_per_good == 0.05
     assert config.blueprint_evaluation.profit_percent_min == -0.30
     assert config.blueprint_evaluation.profit_percent_max == 0.30
@@ -403,7 +384,7 @@ def test_constructor_config_loads() -> None:
     )
 
 
-def test_constructor_path_configuration_is_portable_and_documented() -> None:
+def test_constructor_path_configuration_is_portable_and_documented(tmp_path: Path) -> None:
     load_order_text = (ROOT / "constructor.load_order.toml").read_text(encoding="utf-8")
     load_order_example = (ROOT / "constructor.load_order.example.toml").read_text(encoding="utf-8")
     local_example = (ROOT / "constructor.local.example.toml").read_text(encoding="utf-8")
@@ -420,7 +401,10 @@ def test_constructor_path_configuration_is_portable_and_documented() -> None:
 
     assert "/mnt/c/Users/<windows-user>/Documents/Paradox Interactive/Europa Universalis V" in local_example
 
-    load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
+    # The tracked file on its own, without a machine-local constructor.load_order.local.toml override.
+    tracked = tmp_path / "constructor.load_order.toml"
+    tracked.write_text(load_order_text, encoding="utf-8")
+    load_order = LoadOrderConfig.load(tracked)
     expected_vanilla_root = (
         Path(r"C:\Games\steamapps\common\Europa Universalis V")
         if os.name == "nt"
@@ -466,19 +450,6 @@ def test_building_blueprints_do_not_emit_orphaned_optional_comparisons() -> None
     assert not offenders
 
 
-
-
-def test_rural_capacity_max_level_invariant_example() -> None:
-    total_capacity = 10
-    levels = {"farming_village": 3, "fruit_orchard": 1}
-
-    remaining_capacity = total_capacity - sum(levels.values())
-    farming_village_max = remaining_capacity + levels["farming_village"]
-    fruit_orchard_max = remaining_capacity + levels["fruit_orchard"]
-
-    assert remaining_capacity == 6
-    assert farming_village_max == 9
-    assert fruit_orchard_max == 7
 
 
 def test_granary_storage_and_startup_placement_are_compatible() -> None:
@@ -1439,7 +1410,7 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
 def _assert_absent_or_cost_only_building_inject(path: Path) -> None:
     if not path.exists():
         return
-    raw = yaml.safe_load(path.read_text(encoding="utf-8-sig"))
+    raw = yaml_io.safe_load(path.read_text(encoding="utf-8-sig"))
     building = raw["building"]
     body = building["body"]
 
@@ -3242,13 +3213,13 @@ def _accepted_blueprint_building_values_from_path(blueprint: Path) -> dict[str, 
 
 def _normalized_production_site_blueprints() -> tuple[tuple[str, Path], ...]:
     config = load_project_config(ROOT / "constructor.toml")
-    manifest = yaml.safe_load((ROOT / "blueprints" / "buildings.manifest.yml").read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load((ROOT / "blueprints" / "buildings.manifest.yml").read_text(encoding="utf-8"))
     raw_material_goods = set(load_raw_material_goods(profile=config.profile, load_order_path=config.load_order_path))
 
     buildings: list[tuple[str, Path]] = []
     for entry in enabled_manifest_entries(manifest.get("enabled", []), source=ROOT / "blueprints" / "buildings.manifest.yml"):
         blueprint = ROOT / "blueprints" / "accepted" / entry
-        data = yaml.safe_load(blueprint.read_text(encoding="utf-8-sig"))
+        data = yaml_io.safe_load(blueprint.read_text(encoding="utf-8-sig"))
         building = data.get("building") or {}
         key = building.get("key")
         mode = building.get("mode")
@@ -3267,17 +3238,6 @@ def _normalized_production_site_blueprints() -> tuple[tuple[str, Path], ...]:
             buildings.append((key, blueprint))
 
     return tuple(buildings)
-
-
-def _expected_farming_capacity_raw_modifiers(building: str) -> dict[str, float | int]:
-    updates: dict[str, float | int] = {}
-    if building in LAND_FARM_BUILDINGS:
-        updates[farm_capacity_modifier_for_building(building)] = -1
-    for water_control_building, value in FARM_WATER_CONTROL_BUILDINGS:
-        if building == water_control_building:
-            updates[farm_capacity_modifier_for_building(building)] = float(value)
-            break
-    return updates
 
 
 def _rgo_bonus_values() -> dict[str, dict[str, object]]:

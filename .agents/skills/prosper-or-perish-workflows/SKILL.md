@@ -60,13 +60,15 @@ Use tracked configuration for game paths:
 - `[paths].vanilla_root` may be a Windows path such as `C:\Games\steamapps\common\Europa Universalis V`; parser tooling resolves it to `/mnt/c/...` on WSL/Linux.
 - Keep `[[mods]].root` relative to the repo so clones can live anywhere.
 - Machine-local live deploy targets belong in ignored `constructor.local.toml`; start from `constructor.local.example.toml`.
+- The ignored `constructor.load_order.local.toml` (written by `uv run ppc vanilla-mirror`) points `vanilla_root` at a local copy of the game files; the parser warns and falls back to the install after a game update until the command is re-run.
 
 ## Command Index
 
 - For in-game profiler dumps and bottleneck reports, use the [profile-analyzer skill](../profile-analyzer/SKILL.md), which runs the standalone tool.
 - `uv run ppc setup`: install dev dependencies and inspect the project.
 - `uv run ppc inspect`: inspect the configured constructor project.
-- `uv run ppc test`: run pytest; pass file names or pytest args after the command.
+- `uv run ppc test`: run pytest on 8 parallel workers; pass file names or pytest args after the command (`-n0` for a serial run, e.g. with `-s` or `--pdb`).
+- `uv run ppc vanilla-mirror`: copy the game's data files to the local disk and point the load order at the copy; re-run after a game update.
 - `uv run ppc analyze`: export static parser tables and refresh the goods-flow docs example.
 - `uv run ppc savegame`: export latest savegame facts and the savegame explorer.
 - `uv run ppc europedia`: export the custom Prosper or Perish Europedia into the docs examples.

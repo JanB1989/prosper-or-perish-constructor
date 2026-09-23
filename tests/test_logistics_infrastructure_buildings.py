@@ -2,7 +2,6 @@ import re
 from pathlib import Path
 
 import pytest
-import yaml
 from eu5_mod_orchestrator.adapters.building_pipeline import evaluate_building_blueprint_data
 from eu5_mod_orchestrator.adapters.parser import (
     load_balance_prices,
@@ -14,6 +13,7 @@ from eu5_mod_orchestrator.adapters.parser import (
 from eu5_mod_orchestrator.config import load_project_config
 from eu5gameparser.clausewitz.syntax import CList
 from eu5gameparser.load_order import load_merged_directory, load_profile
+from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -306,7 +306,7 @@ def test_logistics_infrastructure_buildings_are_tagged_for_modifier_evaluation()
     priority_tags = {building: tag for building, tag, _priority in LOGISTICS_PRIORITY_GROUPS}
     for blueprint in LOGISTICS_BLUEPRINTS:
         text = blueprint.read_text(encoding="utf-8")
-        building = yaml.safe_load(text)["building"]["key"]
+        building = yaml_io.safe_load(text)["building"]["key"]
         assert "category = infrastructure_category" in text
         assert _custom_tags(text) == {
             "pp_logistics_infrastructure_priority",
@@ -317,7 +317,7 @@ def test_logistics_infrastructure_buildings_are_tagged_for_modifier_evaluation()
 
 def test_logistics_infrastructure_balance_targets_are_current() -> None:
     for blueprint_path in LOGISTICS_BLUEPRINTS:
-        blueprint = yaml.safe_load(blueprint_path.read_text(encoding="utf-8"))
+        blueprint = yaml_io.safe_load(blueprint_path.read_text(encoding="utf-8"))
         key = blueprint["building"]["key"]
         expected = LOGISTICS_BALANCE_TARGETS[key]
         body = blueprint["building"]["body"]
@@ -555,7 +555,7 @@ def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> No
 
 
 def test_victuals_market_templates_split_export_and_import_flows() -> None:
-    manifest = yaml.safe_load((ROOT / "blueprints/buildings.manifest.yml").read_text())
+    manifest = yaml_io.safe_load((ROOT / "blueprints/buildings.manifest.yml").read_text())
     assert manifest["enabled"]["buildings/victuals_market_export.yml"] is True
     assert VICTUALS_MARKET_RENDERED.exists()
     export_texts = tuple(

@@ -8,7 +8,6 @@ Population conversions preserve each source pop's culture and religion.
 
 from __future__ import annotations
 
-import json
 import math
 import re
 from collections import defaultdict
@@ -18,10 +17,10 @@ from pathlib import Path
 from typing import Any
 
 import polars as pl
-import yaml
 
 from prosper_or_perish_constructor.worldbuilder.buildings import BLUEPRINTS, GENERATED, SETUP_PATH as IMPROVEMENT_SETUP_PATH, farm_constants
 from prosper_or_perish_constructor.worldbuilder.contract import WorldBuilderConfig
+from prosper_or_perish_constructor import yaml_io
 
 START_SETUP_PATH = Path("main_menu/setup/start/14_pp_start_buildings.txt")
 POPS_SETUP_PATH = Path("main_menu/setup/start/06_pops.txt")
@@ -302,7 +301,7 @@ def blueprint_numbers(repo: Path, key: str) -> dict[str, Any]:
     path = repo / BLUEPRINTS / f"{key}.yml"
     if not path.is_file():
         return out
-    body = str(yaml.safe_load(path.read_text(encoding="utf-8-sig"))["building"]["body"])
+    body = str(yaml_io.safe_load(path.read_text(encoding="utf-8-sig"))["building"]["body"])
     m = re.search(r"^\s*employment_size\s*=\s*([0-9.]+)", body, re.M)
     if m:
         out["employment_size"] = float(m.group(1))
@@ -626,6 +625,6 @@ def write_pops(vanilla_root: Path, mod_root: Path, conversions: list[PopConversi
     return {"written": True, "conversions": len(conversions)}
 
 
-def apply(*, repo: Path, project: Path, mod_root: Path, vanilla_root: Path, cfg: WorldBuilderConfig, contract, caps: Mapping[str, Mapping[str, float]], locations: pl.DataFrame) -> dict[str, Any]:
+def apply(*, repo: Path, project: Path, mod_root: Path, vanilla_root: Path, cfg: WorldBuilderConfig, contract, caps: Mapping[str, Mapping[str, float]], locations: pl.DataFrame, development: pl.DataFrame | None = None) -> dict[str, Any]:
     from .start_simulation import run
-    return run(repo=repo,project=project,mod_root=mod_root,vanilla_root=vanilla_root,cfg=cfg,contract=contract,caps=caps,locations=locations)
+    return run(repo=repo,project=project,mod_root=mod_root,vanilla_root=vanilla_root,cfg=cfg,contract=contract,caps=caps,locations=locations,development=development)

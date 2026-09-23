@@ -37,6 +37,7 @@ import polars as pl
 import yaml
 
 from prosper_or_perish_constructor.worldbuilder.contract import Contract, WorldBuilderConfig, units
+from prosper_or_perish_constructor import yaml_io
 
 CAPS_PATH = Path("in_game/common/script_values/pp_wb_building_caps.txt")
 SETUP_PATH = Path("main_menu/setup/start/14_pp_worldbuilder_buildings.txt")
@@ -342,7 +343,7 @@ def _load_blueprint(repo: Path, key: str) -> tuple[Path, dict]:
     path = repo / BLUEPRINTS / f"{key}.yml"
     if not path.is_file():
         raise FileNotFoundError(f"blueprint missing: {path}")
-    return path, yaml.safe_load(path.read_text(encoding="utf-8"))
+    return path, yaml_io.safe_load(path.read_text(encoding="utf-8"))
 
 
 class _Dumper(yaml.SafeDumper):
@@ -402,7 +403,7 @@ def patch_improvement_blueprints(contract: Contract, cfg: WorldBuilderConfig, re
         path = repo / BLUEPRINTS / f"{key}.yml"
         if not path.is_file():
             continue
-        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        data = yaml_io.safe_load(path.read_text(encoding="utf-8"))
         body = str(data["building"]["body"])
         if "local_population_capacity" in body:
             body = re.sub(r"local_population_capacity\s*=\s*-?\d+(?:\.\d+)?", "local_population_capacity = 0", body)
@@ -417,7 +418,7 @@ def create_field_management_blueprint(repo: Path) -> Path:
     src, data = _load_blueprint(repo, "land_clearance")
     text = yaml.dump(data, Dumper=_Dumper, sort_keys=False, allow_unicode=True, width=10_000)
     text = text.replace("land_clearance", "field_management").replace("Land Clearance", "Field Management")
-    data = yaml.safe_load(text)
+    data = yaml_io.safe_load(text)
     entries = data.get("localization", {}).get("entries", {})
     entries["field_management"] = "Field Management"
     entries["field_management_desc"] = "Rotations, manuring, marling and terracing raise how many people the existing fields can feed. Each level is a lasting improvement of the land already under the plough."
@@ -442,7 +443,7 @@ def create_field_management_blueprint(repo: Path) -> Path:
     path = repo / BLUEPRINTS / "field_management.yml"
     _save_blueprint(path, data)
     manifest_path = repo / MANIFEST
-    manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(manifest_path.read_text(encoding="utf-8"))
     manifest.setdefault("enabled", {})["buildings/field_management.yml"] = True
     manifest_path.write_text(yaml.dump(manifest, sort_keys=False, allow_unicode=True), encoding="utf-8")
     # placeholder art until the real icon exists
@@ -471,7 +472,7 @@ def patch_farm_blueprints(cfg: WorldBuilderConfig, repo: Path, farm_buildings: l
         if not path.is_file():
             continue
         land, _ = farm_constants(cfg, key)
-        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        data = yaml_io.safe_load(path.read_text(encoding="utf-8"))
         body = str(data["building"]["body"])
         new = _replace_raw_modifier(body, {"local_population_capacity": _fmt(-land)})
         if new != body:
@@ -606,7 +607,7 @@ def vanilla_capacity_buildings(vanilla_root: Path) -> dict[str, str]:
 
 def vanilla_capacity_leaks(repo: Path, vanilla_root: Path) -> dict[str, str]:
     """Vanilla capacity buildings the mod does not fully REPLACE (their vanilla capacity would leak into the flat)."""
-    manifest = yaml.safe_load((repo / MANIFEST).read_text(encoding="utf-8")) or {}
+    manifest = yaml_io.safe_load((repo / MANIFEST).read_text(encoding="utf-8")) or {}
     enabled = manifest.get("enabled", {}) if isinstance(manifest, dict) else {}
     leaks: dict[str, str] = {}
     for key, source in vanilla_capacity_buildings(vanilla_root).items():
@@ -617,7 +618,7 @@ def vanilla_capacity_leaks(repo: Path, vanilla_root: Path) -> dict[str, str]:
         if not enabled.get(f"buildings/{key}.yml", False):
             leaks[key] = f"blueprint disabled in manifest ({source})"
             continue
-        data = yaml.safe_load(path.read_text(encoding="utf-8-sig")) or {}
+        data = yaml_io.safe_load(path.read_text(encoding="utf-8-sig")) or {}
         mode = str((data.get("building") or {}).get("mode", "")).upper()
         if mode != "REPLACE":
             leaks[key] = f"blueprint mode {mode or 'unset'} keeps the vanilla capacity ({source})"

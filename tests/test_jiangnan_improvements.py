@@ -3,12 +3,12 @@ from pathlib import Path
 
 import polars as pl
 import pytest
-import yaml
 
 from prosper_or_perish_constructor.worldbuilder import buildings as b
 from prosper_or_perish_constructor.worldbuilder.contract import load_config
 from prosper_or_perish_constructor.worldbuilder.start_placement import Pop, dominant_cultures
 from test_worldbuilder_stage import _contract, _cfg
+from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -84,7 +84,7 @@ def test_capacity_check_counts_regional_levels(tmp_path, monkeypatch):
 def test_new_niches_are_complete_buildings_with_upkeep_and_owned_icons(tmp_path):
     cfg = load_config(ROOT, ROOT / 'constructor.toml')
     for key in ('jiangnan_canal_network', 'jiangnan_hill_terraces'):
-        data = yaml.safe_load((ROOT / b.BLUEPRINTS / f'{key}.yml').read_text())
+        data = yaml_io.safe_load((ROOT / b.BLUEPRINTS / f'{key}.yml').read_text())
         assert data['building']['mode'] == 'CREATE'
         assert data['footprint'] == 'capacity_source'
         assert 'manual_labor_cost = 0.1' in data['building']['body']

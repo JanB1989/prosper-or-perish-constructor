@@ -5,7 +5,6 @@ never add people to the geographic capacity budget.
 """
 from collections import Counter, defaultdict
 from dataclasses import replace
-from pathlib import Path
 import csv
 import hashlib
 import json
@@ -14,6 +13,7 @@ import polars as pl
 import yaml
 
 from . import buildings, spline_network
+from prosper_or_perish_constructor import yaml_io
 
 
 def inside(attrs, bounds):
@@ -132,7 +132,7 @@ def prepare(repo, cfg, contract, *, write_blueprints=True, locations=None):
 
 
 def ensure_blueprints(repo,settings):
-    asset=yaml.safe_load((repo/'blueprints/accepted/buildings/jiangnan_canal_network.yml').read_text())['icon']
+    asset=yaml_io.safe_load((repo/'blueprints/accepted/buildings/jiangnan_canal_network.yml').read_text())['icon']
     for key,spec in settings['building_types'].items():
         icon=dict(asset);icon['source_png']='../assets/icons/'+key+'.png';icon['output_dds']=key+'.dds';icon.pop('prompt',None)
         pm='pp_'+key+'_maintenance';price='pp_'+key+'_price'
@@ -178,13 +178,13 @@ ai_forbid_shutdown = yes
         buildings._save_blueprint(target,data)
     for key,spec in settings.get('existing_building_links',{}).items():
         path=repo/'blueprints/accepted/buildings'/f'{key}.yml'
-        data=yaml.safe_load(path.read_text());body=data['building']['body']
+        data=yaml_io.safe_load(path.read_text());body=data['building']['body']
         if 'pp_navigation_refresh_site' not in body:
             body+='\non_built = { hidden_effect = { location = { pp_navigation_refresh_site = yes } } }\non_destroyed = { hidden_effect = { location = { pp_navigation_restore_site = yes } } }\n'
         data['building']['body']=body
         for price in data['prices']:price['body']='{ gold = '+str(spec['gold'])+' }'
         buildings._save_blueprint(path,data)
-    path=repo/'blueprints/buildings.manifest.yml';manifest=yaml.safe_load(path.read_text())
+    path=repo/'blueprints/buildings.manifest.yml';manifest=yaml_io.safe_load(path.read_text())
     for key in settings['building_types']:manifest['enabled']['buildings/'+key+'.yml']=True
     path.write_text(yaml.safe_dump(manifest,sort_keys=False),encoding='utf-8')
 

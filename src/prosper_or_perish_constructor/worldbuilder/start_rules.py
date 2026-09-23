@@ -10,10 +10,13 @@ import math
 import re
 from collections import Counter, defaultdict
 
-import yaml
 from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
 from eu5gameparser.load_order import load_merged_directory, load_profile
+from prosper_or_perish_constructor import yaml_io
+
+
+BUILDING_LEVEL = re.compile(r"location_building_level\(building_type:(\w+)\)")
 
 
 class Unresolved(ValueError):
@@ -85,12 +88,12 @@ class Rules:
         self.unsupported = Counter()
         self.footprint_classes = cfg["building_footprint"]["classes"]
         self.footprints = {}
-        enabled = yaml.safe_load(
+        enabled = yaml_io.safe_load(
             (repo / "blueprints/buildings.manifest.yml").read_text()
         )["enabled"]
         # Accepted blueprints are authoritative before the normal render step.
         for path in sorted((repo / "blueprints/accepted/buildings").glob("*.yml")):
-            data = yaml.safe_load(path.read_text(encoding="utf-8-sig"))
+            data = yaml_io.safe_load(path.read_text(encoding="utf-8-sig"))
             b = data.get("building", {})
             self.footprints[b.get("key", path.stem)] = data.get("footprint")
             if (
@@ -135,7 +138,7 @@ class Rules:
             return 0.0
         if key.startswith("var:"):
             return float(ctx.get("variables", {}).get(key[4:], 0))
-        match = re.fullmatch(r"location_building_level\(building_type:(\w+)\)", key)
+        match = BUILDING_LEVEL.fullmatch(key)
         if match:
             return float(ctx.get("buildings", {}).get(match[1], 0))
         if key == "total_building_levels":
@@ -213,12 +216,7 @@ class Rules:
             if key in self.triggers:
                 trigger = self.triggers[key]
                 if isinstance(v, CList):
-                    from eu5gameparser.clausewitz.serializer import render_value
-
-                    text = render_value(trigger)
-                    for arg in v.entries:
-                        text = text.replace("$" + arg.key + "$", str(arg.value))
-                    trigger = parse_text("trigger = " + text).entries[0].value
+                    trigger = self._bound_trigger(key, v)
                 return self.test(trigger, ctx, depth + 1) == bool(v)
             if key == "any_neighbor_location":
                 return any(self.test(v, n, depth + 1) for n in ctx.get("neighbors", []))
@@ -270,6 +268,20 @@ class Rules:
             raise Unresolved("comparison " + op)
 
         return all(single(*entry) for entry in entries(node))
+
+    def _bound_trigger(self, key, args):
+        """A scripted trigger with its ``$arg$`` parameters substituted, parsed once per argument set."""
+        cache_key = (key, tuple((arg.key, str(arg.value)) for arg in args.entries))
+        cache = self.__dict__.setdefault("_bound_triggers", {})
+        bound = cache.get(cache_key)
+        if bound is None:
+            from eu5gameparser.clausewitz.serializer import render_value
+
+            text = render_value(self.triggers[key])
+            for name, value in cache_key[1]:
+                text = text.replace("$" + name + "$", value)
+            bound = cache[cache_key] = parse_text("trigger = " + text).entries[0].value
+        return bound
 
     def cap(self, key, ctx, *, gates=True):
         try:

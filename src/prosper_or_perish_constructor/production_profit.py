@@ -20,6 +20,7 @@ from eu5gameparser.load_order import LoadOrderConfig, load_merged_directory, loa
 from eu5gameparser.savegame.notebook_labels import NotebookLabelResolver
 
 from prosper_or_perish_constructor.rural_capacity import LAND_FARM_BUILDINGS
+from prosper_or_perish_constructor import yaml_io
 
 
 BUILDING_BLUEPRINT_MANIFEST_RELATIVE = Path("blueprints/buildings.manifest.yml")
@@ -639,7 +640,7 @@ def _optional_icon_spec(building_row: Mapping[str, Any], vanilla_root: Path) -> 
 
 def _enable_manifest_entries(manifest_path: Path, entries: Sequence[str]) -> None:
     existing = manifest_path.read_text(encoding="utf-8")
-    raw = yaml.safe_load(existing) if existing.strip() else {}
+    raw = yaml_io.safe_load(existing) if existing.strip() else {}
     if not isinstance(raw, dict):
         raise ValueError(f"{manifest_path}: expected mapping")
     enabled = raw.get("enabled") or {}
@@ -669,7 +670,7 @@ def _manifest_blueprint_paths(repo: Path) -> list[Path]:
 
 
 def _load_yaml(path: Path) -> dict[str, Any]:
-    raw = yaml.safe_load(path.read_text(encoding="utf-8-sig"))
+    raw = yaml_io.safe_load(path.read_text(encoding="utf-8-sig"))
     if not isinstance(raw, dict):
         raise ValueError(f"{path}: expected mapping")
     return raw

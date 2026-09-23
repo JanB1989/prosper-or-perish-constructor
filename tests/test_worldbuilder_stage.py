@@ -12,6 +12,7 @@ from prosper_or_perish_constructor.location_baseline import apply_location_templ
 from prosper_or_perish_constructor.worldbuilder import buildings as wb_buildings
 from prosper_or_perish_constructor.worldbuilder import modifiers as wb_modifiers
 from prosper_or_perish_constructor.worldbuilder.contract import Contract, units
+from prosper_or_perish_constructor import yaml_io
 
 
 def _contract(tmp_path: Path) -> Contract:
@@ -143,11 +144,11 @@ def test_niche_blueprint_gets_lock_gate_counter_and_must_be_replace(tmp_path):
     caps = wb_buildings.write_caps(c, cfg, tmp_path)
     patched = wb_buildings.patch_improvement_blueprints(c, cfg, tmp_path, caps)
     assert set(patched) == {"land_clearance", "terraces_x"}
-    niche = yaml.safe_load((bp / "terraces_x.yml").read_text(encoding="utf-8"))["building"]["body"]
+    niche = yaml_io.safe_load((bp / "terraces_x.yml").read_text(encoding="utf-8"))["building"]["body"]
     assert "max_levels = pp_wb_cap_terraces_x" in niche
     assert "local_population_capacity = 7.8" in niche and "pp_wb_levels_terraces_x = 1" in niche
     assert "location_potential = {\n      dominant_culture ?= culture:x\n      OR = { climate = arid climate = continental }\n    }" in niche
-    general = yaml.safe_load((bp / "land_clearance.yml").read_text(encoding="utf-8"))["building"]["body"]
+    general = yaml_io.safe_load((bp / "land_clearance.yml").read_text(encoding="utf-8"))["building"]["body"]
     assert "pp_wb_levels_land_clearance = 1" in general and "dominant_culture" not in general
     (bp / "terraces_x.yml").write_text(yaml.safe_dump({"version": 2, "tag": "terraces_x", "building": {"key": "terraces_x", "mode": "TRY_INJECT", "body": body}}, sort_keys=False), encoding="utf-8")
     with pytest.raises(ValueError, match="REPLACE"):

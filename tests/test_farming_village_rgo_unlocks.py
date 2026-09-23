@@ -4,7 +4,6 @@ from pathlib import Path
 
 import polars as pl
 import pytest
-import yaml
 from eu5_building_pipeline.generator import render_advancements
 from eu5_building_pipeline.template import load_template
 from eu5gameparser.domain.availability import annotate_building_data_availability
@@ -18,6 +17,7 @@ from prosper_or_perish_constructor.farming_village_unlocks import (
     load_current_location_frame,
     load_rgo_unlock_config,
 )
+from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -238,7 +238,7 @@ def _farming_village_family_buildings(*, include_base: bool) -> tuple[str, ...]:
     buildings: list[str] = []
     for path in sorted((ROOT / "blueprints" / "accepted" / "buildings").glob("*.yml")):
         with path.open("r", encoding="utf-8-sig") as handle:
-            raw = yaml.safe_load(handle)
+            raw = yaml_io.safe_load(handle)
         chain = raw.get("upgrade_chain") if isinstance(raw, dict) else None
         if not isinstance(chain, dict) or chain.get("family") != "farming_village":
             continue

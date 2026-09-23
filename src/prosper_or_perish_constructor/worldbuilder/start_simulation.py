@@ -337,6 +337,7 @@ class Simulation:
 
     def refresh_navigation(self):
         navigation = self.navigation
+        self._caps = {}  # neighbour states feed the caps
         self.neighbors = defaultdict(list)
         for edge in navigation.get("edges", []):
             if not edge["shore"]:
@@ -366,6 +367,16 @@ class Simulation:
                 mods[k] += v * n
         return {**base, "buildings": self.counts[tag], "modifiers": dict(mods)}
 
+    def cap(self, tag, key, gates=True):
+        """``Rules.cap`` on the location's current state. Between navigation refreshes the context depends only
+        on the location's building levels, so results are memoised per level state."""
+        state = (tag, key, gates, tuple(sorted((k, n) for k, n in self.counts[tag].items() if n)))
+        cache = self.__dict__.setdefault("_caps", {})
+        cached = cache.get(state)
+        if cached is None:
+            cached = cache[state] = self.rules.cap(key, self.ctx(tag), gates=gates)
+        return cached
+
     def clamp(self):
         # Caps can share pools or shrink with urbanisation: iterate to a stable
         # state, always removing levels and never silently raising the cap.
@@ -375,7 +386,7 @@ class Simulation:
                 for key, n in sorted(self.counts[tag].items()):
                     if not n:
                         continue
-                    cap = self.rules.cap(key, self.ctx(tag), gates=False)
+                    cap = self.cap(tag, key, gates=False)
                     if n > cap:
                         self.trimmed.append(
                             {
@@ -438,20 +449,18 @@ class Simulation:
         pool = self.pools[tag]
         count = 0
         for _ in range(max(wanted, 0)):
-            ctx = self.ctx(tag)
-            if self.counts[tag][key] >= self.rules.cap(key, ctx):
+            if self.counts[tag][key] >= self.cap(tag, key):
                 self.rejections[key + ": cap or gate"] += 1
                 break
             if pool.levels(1, num["employment_size"], num["pop_type"]) < 1:
                 self.rejections[key + ": workers"] += 1
                 break
             self.counts[tag][key] += 1
-            ctx = self.ctx(tag)
             # Forest pressure and all other shared caps must remain valid after
             # every placement, including the building's own level.
             if any(
-                n > self.rules.cap(k, ctx, gates=False)
-                for k, n in self.counts[tag].items()
+                n > self.cap(tag, k, gates=False)
+                for k, n in list(self.counts[tag].items())
                 if n
             ):
                 self.counts[tag][key] -= 1
@@ -461,7 +470,7 @@ class Simulation:
             if (
                 raw.get("local_population_capacity", 0) < 0
                 and self.start.keep_pops_within_capacity
-                and ctx["modifiers"]["local_population_capacity"] < ctx["population"]
+                and (ctx := self.ctx(tag))["modifiers"]["local_population_capacity"] < ctx["population"]
             ):
                 self.counts[tag][key] -= 1
                 self.rejections[key + ": shared cap or land"] += 1
@@ -552,7 +561,7 @@ class Simulation:
         return sorted(
             tags,
             key=lambda t: (
-                -self.rules.cap(key, self.ctx(t)),
+                -self.cap(t, key),
                 -self.base[t]["population"],
                 t,
             ),
@@ -590,6 +599,7 @@ class Simulation:
         scaled by the observed share), before any import markets are placed."""
         v = self.start.victuals
         supply = demand = 0.0
+        converted = sim_converted(self)
         for group, tags in self.groups.items():
             if self.catchments[group] != catchment:
                 continue
@@ -598,7 +608,7 @@ class Simulation:
                     supply += n * float(v["producers"].get(key, 0.0))
                     if key != "victuals_market_import":
                         demand += n * float(v["consumers"].get(key, 0.0))
-                pops = self.location_pops(tag, sim_converted(self)[tag])
+                pops = self.location_pops(tag, converted[tag])
                 demand += float(v["pop_demand_scale"]) * sum(
                     n * self.victuals_pop_factors.get(kind, 0.0) for kind, n in pops.items()
                 )
@@ -763,7 +773,7 @@ class Simulation:
             self.city_import_minimum["cities"] += 1
             if self.counts[tag][key] >= 1:
                 continue
-            if self.rules.cap(key, self.ctx(tag)) < 1:
+            if self.cap(tag, key) < 1:
                 raise ValueError(f"City import minimum exceeds allowed cap: {tag}")
             self.counts[tag][key] = 1
             self.placements.append(sp.Placement(tag, self.owners[tag], key, 1))
@@ -800,7 +810,7 @@ class Simulation:
         return len(self.audit)
 
 
-def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations):
+def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations, development=None):
     write_market_caps(repo, mod_root)
     rules = Rules(repo, project)
     start = sp.StartConfig.from_raw(cfg.raw.get("start"))
@@ -826,9 +836,10 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
     for path in sp.setup_files(vanilla_root, mod_root, "03_markets.txt"):
         for manager in parse_file(path).values("market_manager"):
             centres.update(str(v) for v in manager.values("add_market"))
-    from .development import compute_vanilla_development
+    if development is None:
+        from .development import compute_vanilla_development
 
-    development = compute_vanilla_development(repo, project)
+        development = compute_vanilla_development(repo, project)
     targets = (
         contract.location_targets.drop("development")
         .join(development, on="location_tag", how="left")
@@ -971,8 +982,9 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         )
     pl.DataFrame(diagnostics).write_csv(repo / sp.TABLE_RELATIVE_PATH)
     demand_by_type = Counter()
+    converted = sim_converted(sim)
     for tag in sim.locations:
-        for kind, n in sim.location_pops(tag, sim_converted(sim)[tag]).items():
+        for kind, n in sim.location_pops(tag, converted[tag]).items():
             demand_by_type[kind] += n * food.get(kind, 0)
     summary = {
         "locations_planned": len(sim.locations),

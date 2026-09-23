@@ -1,6 +1,7 @@
 ﻿from __future__ import annotations
 
 from collections import Counter, defaultdict
+from functools import cache
 from pathlib import Path
 
 from eu5gameparser.clausewitz.parser import parse_file
@@ -309,10 +310,16 @@ def _generated_leaf(
 
 
 def _merged_entry(profile, scope: str, collection: str, top_key: str):
-    for entry in load_merged_directory(profile, collection, scope=scope).entries:
-        if entry.key == top_key:
-            return entry
-    raise AssertionError(f"missing merged entry {scope}/{collection}/{top_key}")
+    entry = _merged_index(profile, scope, collection).get(top_key)
+    if entry is None:
+        raise AssertionError(f"missing merged entry {scope}/{collection}/{top_key}")
+    return entry
+
+
+@cache
+def _merged_index(profile, scope: str, collection: str):
+    # The assertions look up hundreds of keys; merge each directory once.
+    return {entry.key: entry for entry in load_merged_directory(profile, collection, scope=scope).entries}
 
 
 def _nested_block(block: CList, nested_path: tuple[str, ...]) -> CList | None:

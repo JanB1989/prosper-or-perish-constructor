@@ -7,11 +7,11 @@ import re
 import tomllib
 from typing import Any
 
-import yaml
 from eu5_building_pipeline.template import load_template
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
+from prosper_or_perish_constructor import yaml_io
 
 
 CONFIG_SECTION = "building_scaling"
@@ -168,7 +168,7 @@ def _accepted_blueprint_increase_per_level_costs(repo: Path) -> dict[str, Decima
     manifest_path = repo / BUILDING_BLUEPRINT_MANIFEST_RELATIVE
     if not manifest_path.is_file():
         return {}
-    raw = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    raw = yaml_io.safe_load(manifest_path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
         raise ValueError(f"{manifest_path}: expected mapping")
 

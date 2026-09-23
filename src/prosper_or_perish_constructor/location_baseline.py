@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 import polars as pl
+from eu5gameparser.load_order import read_load_order
 
 DEFAULT_BASELINE_RELATIVE_PATH = Path("data/vanilla/locations_with_raw_material.parquet")
 LOCATION_TEMPLATES_RELATIVE_PATH = Path("in_game/map_data/location_templates.txt")
@@ -100,7 +101,7 @@ def location_template_paths_from_load_order(
     ``layers`` restricts the layers to consider (for example ``("vanilla",)`` for the vanilla-only view).
     """
     path = Path(load_order_path).expanduser().resolve()
-    raw = tomllib.loads(path.read_text(encoding="utf-8"))
+    raw = read_load_order(path)
     base = path.parent
     profiles = raw.get("profiles")
     if not isinstance(profiles, dict) or profile not in profiles:

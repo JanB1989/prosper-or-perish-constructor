@@ -18,7 +18,6 @@ from typing import Any
 
 import numpy as np
 import polars as pl
-import yaml
 from eu5gameparser.clausewitz.parser import parse_file
 from eu5gameparser.clausewitz.syntax import CEntry, CList
 from eu5gameparser.domain._modifier_blocks import ModifierBlockData, load_modifier_block_data

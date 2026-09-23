@@ -32,10 +32,10 @@ import re
 import tomllib
 from typing import Any
 
-import yaml
 
 from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
+from prosper_or_perish_constructor import yaml_io
 
 CONFIG_SECTION = "production_labour"
 KEEP = "keep"
@@ -145,14 +145,14 @@ def load_prices(repo: Path, project: Path) -> dict[str, float]:
 
 
 def enabled_blueprints(repo: Path) -> list[Path]:
-    manifest = yaml.safe_load((repo / MANIFEST_RELATIVE).read_text(encoding="utf-8-sig")) or {}
+    manifest = yaml_io.safe_load((repo / MANIFEST_RELATIVE).read_text(encoding="utf-8-sig")) or {}
     enabled = manifest.get("enabled") or {}
     return [repo / BLUEPRINT_ROOT_RELATIVE / entry for entry, on in enabled.items() if on and str(entry).startswith("buildings/")]
 
 
 def blueprint_methods(path: Path) -> list[Method]:
     """Every production method in the blueprint body, in order."""
-    data = yaml.safe_load(_read(path)) or {}
+    data = yaml_io.safe_load(_read(path)) or {}
     building = data.get("building") if isinstance(data.get("building"), dict) else {}
     key = str(building.get("key") or data.get("tag") or path.stem)
     body = building.get("body") or ""
@@ -189,7 +189,7 @@ def blueprint_methods(path: Path) -> list[Method]:
 
 def blueprint_tag(path: Path) -> tuple[str | None, dict[str, str]]:
     """(default class, per-method classes) of the blueprint's ``labour`` tag."""
-    data = yaml.safe_load(_read(path)) or {}
+    data = yaml_io.safe_load(_read(path)) or {}
     tag = data.get("labour")
     if tag is None:
         return None, {}

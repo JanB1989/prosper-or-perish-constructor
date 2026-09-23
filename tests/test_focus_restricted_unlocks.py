@@ -6,10 +6,10 @@ import json
 from pathlib import Path
 import re
 
-import yaml
 
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5gameparser.domain.eu5 import load_eu5_data
+from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -174,14 +174,14 @@ def _restricted_unlock_offenders(
 
 
 def _accepted_constructor_blueprint_unlocks() -> tuple[set[str], set[str]]:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     buildings: set[str] = set()
     production_methods: set[str] = set()
 
     for entry in enabled_manifest_entries(manifest.get("enabled", []), source=MANIFEST_PATH):
         if not str(entry).startswith("buildings/"):
             continue
-        raw = yaml.safe_load((BLUEPRINT_ROOT / entry).read_text(encoding="utf-8-sig"))
+        raw = yaml_io.safe_load((BLUEPRINT_ROOT / entry).read_text(encoding="utf-8-sig"))
         building = raw.get("building") or {}
         building_key = building.get("key")
         if building.get("mode") == "CREATE" and isinstance(building_key, str):

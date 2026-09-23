@@ -2,7 +2,6 @@
 
 from pathlib import Path
 
-import yaml
 
 from eu5_mod_orchestrator.adapters.building_pipeline import evaluate_building_blueprint_data
 from eu5_mod_orchestrator.adapters.parser import (
@@ -14,6 +13,7 @@ from eu5_mod_orchestrator.adapters.parser import (
 )
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5_mod_orchestrator.config import load_project_config
+from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,7 +36,7 @@ def test_accepted_blueprints_have_no_unallowed_evaluation_rule_violations() -> N
         load_order_path=config.load_order_path,
     )
     script_values = load_script_values(profile=config.profile, load_order_path=config.load_order_path)
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled_blueprints = [
         config.accepted_blueprints_dir / entry
         for entry in enabled_manifest_entries(manifest.get("enabled", []), source=MANIFEST_PATH)

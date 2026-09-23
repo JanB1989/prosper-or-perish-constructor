@@ -13,10 +13,10 @@ from typing import Any
 import polars as pl
 
 from prosper_or_perish_constructor.location_baseline import load_current_location_frame  # noqa: F401  (re-exported for callers)
-import yaml
 from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
 from eu5gameparser.domain.availability import AGE_ORDER
+from prosper_or_perish_constructor import yaml_io
 
 
 BLUEPRINT_RELATIVE_PATH = Path("blueprints/accepted/buildings/farming_village.yml")
@@ -390,7 +390,7 @@ def _load_project_config(project: Path) -> dict[str, Any]:
 
 def _load_yaml_mapping(path: Path) -> Mapping[str, Any]:
     with path.open("r", encoding="utf-8-sig") as handle:
-        raw = yaml.safe_load(handle)
+        raw = yaml_io.safe_load(handle)
     return _mapping(raw, str(path))
 
 

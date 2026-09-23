@@ -4,8 +4,8 @@ from collections import defaultdict
 import json
 import math
 import subprocess
-import yaml
 from eu5gameparser.clausewitz.parser import parse_text,parse_file
+from prosper_or_perish_constructor import yaml_io
 
 ROOT=Path(__file__).resolve().parents[1]
 MOD=ROOT/'mod/Prosper or Perish (Population Growth & Food Rework)'
@@ -27,7 +27,7 @@ def weights(keys,previous=False):
     values={}
     for key in sorted(keys):
         p=Path('blueprints/accepted/buildings')/(key+'.yml')
-        blueprint=yaml.safe_load(old(p) if previous else (ROOT/p).read_text())
+        blueprint=yaml_io.safe_load(old(p) if previous else (ROOT/p).read_text())
         body=parse_text(blueprint['building']['body'])
         raw=next(e.value for e in body.entries if e.key=='raw_modifier')
         values[key]=float(next(e.value for e in raw.entries if e.key=='local_population_capacity'))

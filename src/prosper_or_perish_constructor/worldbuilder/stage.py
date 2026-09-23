@@ -30,7 +30,9 @@ def vanilla_root(repo: Path, project: Path) -> Path:
     raw = tomllib.loads(project.read_text(encoding="utf-8"))
     parser = raw.get("parser") if isinstance(raw.get("parser"), dict) else {}
     load_order = repo / str(parser.get("load_order") or "constructor.load_order.toml")
-    lo = tomllib.loads(load_order.read_text(encoding="utf-8"))
+    from eu5gameparser.load_order import read_load_order
+
+    lo = read_load_order(load_order)
     return resolve_load_order_path(str(lo["paths"]["vanilla_root"]), load_order.parent)
 
 
@@ -75,9 +77,9 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     demand = wb_start.improvement_demand(contract, start_cfg, vanilla_root(repo, project), mod_root) if start_cfg.fill_improvements_to_pops else None
     cultures = wb_start.dominant_cultures(wb_start.load_pops(vanilla_root(repo, project)))
     report["setup"] = wb_buildings.write_setup(contract, cfg, caps, wb_start.load_owners(vanilla_root(repo, project), mod_root), mod_root, demand=demand, cultures=cultures)
-    report["start_placement"] = wb_start.apply(repo=repo, project=project, mod_root=mod_root, vanilla_root=vanilla_root(repo, project), cfg=cfg, contract=contract, caps=caps, locations=current)
-    report["navigation"] = navigation.write_runtime(repo, cfg, contract, mod_root, vanilla_root(repo, project))
     development = wb_development.compute_vanilla_development(repo, project)
+    report["start_placement"] = wb_start.apply(repo=repo, project=project, mod_root=mod_root, vanilla_root=vanilla_root(repo, project), cfg=cfg, contract=contract, caps=caps, locations=current, development=development)
+    report["navigation"] = navigation.write_runtime(repo, cfg, contract, mod_root, vanilla_root(repo, project))
     (mod_root / wb_development.SETUP_RELATIVE_PATH).write_text("﻿" + wb_development.render_development_setup(development), encoding="utf-8", newline="\n")
     wb_development.write_development_export(development, repo / wb_development.EXPORT_RELATIVE_PATH)
     report["development"] = {"locations": int(development.height), "median": float(development["development"].median() or 0.0), "max": float(development["development"].max() or 0.0)}

@@ -2,9 +2,9 @@
 
 from pathlib import Path
 
-import yaml
 
 from eu5_mod_orchestrator.blueprints import declared_manifest_entries
+from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,7 +20,7 @@ def _on_disk_building_entries() -> set[str]:
 
 
 def _manifest_declared_entries() -> list[str]:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     assert isinstance(manifest, dict)
     return declared_manifest_entries(manifest.get("enabled", []), source=MANIFEST_PATH)
 

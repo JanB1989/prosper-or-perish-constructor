@@ -31,6 +31,7 @@ dev = [
     "marimo>=0.24.0",
     "pre-commit>=4.6.0",
     "pytest>=9.0.3",
+    "pytest-xdist>=3.8.0",
     "scikit-learn>=1.9.0",
 ]
 
@@ -42,3 +43,5 @@ eu5gameparser = { path = "../eu5-game-parser", editable = true }
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+# Parallel by default (8 workers are as fast as 32 here); pass -n0 for a serial run.
+addopts = ["-n", "8", "--dist", "worksteal"]

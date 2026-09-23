@@ -3,14 +3,12 @@
 from __future__ import annotations
 
 import argparse
-import csv
 import hashlib
 import json
 import math
 import os
 import re
 import shutil
-import signal
 import subprocess
 import sys
 import time
@@ -22,10 +20,6 @@ from typing import Any, Mapping, Sequence
 ROOT_MARKER = "constructor.toml"
 CONSTRUCTOR_PROFILE = "constructor"
 CONSTRUCTOR_LOAD_ORDER = Path("constructor.load_order.toml")
-FOCUSED_RELABEL_DEFAULT_MAX_ROUNDS_PER_GOOD = 8
-FOCUSED_RELABEL_DEFAULT_MIN_TARGET_APPEARANCES = 5
-FOCUSED_RELABEL_DEFAULT_TARGET_SIGMA_RATIO = 1.0
-POPULATION_CAPACITY_LOCATION_COUNT = 20_929
 SAVEGAME_DATASET = Path("graphs/dataset")
 SAVEGAME_NOTEBOOK_DATA = Path("graphs/savegame_notebooks/data")
 SAVEGAME_NOTEBOOK_EXPORTS = Path("graphs/savegame_notebooks/exports")
@@ -38,21 +32,42 @@ SAVEGAME_LEGACY_DATASETS = (
 SAVEGAME_ARTIFACT_DIR = Path("artifacts/data/savegame")
 SYNC_STATE_PATH = Path("artifacts/sync/state.json")
 GOODS_FLOW_EXPLORER = Path("graphs/goods_flow_explorer.html")
-PUBLISHED_GOODS_FLOW_EXPLORER = Path("docs/examples/goods_flow_explorer.html")
 SAVEGAME_EXPLORER = Path("graphs/savegame_explorer.html")
 SAVEGAME_PROGRESSION_EXPLORER = Path("graphs/savegame_progression.html")
 PUBLISHED_SAVEGAME_EXPLORER = Path("docs/examples/savegame_explorer.html")
 EUROPEDIA_EXPORT = Path("graphs/europedia.html")
 EUROPEDIA_ENTRIES = Path("graphs/europedia_entries.json")
-PUBLISHED_EUROPEDIA_EXPORT = Path("docs/examples/europedia.html")
-PUBLISHED_EUROPEDIA_ENTRIES = Path("docs/examples/europedia_entries.json")
 PUBLISHED_GRAPH_EXAMPLES = (
     GOODS_FLOW_EXPLORER.name,
     SAVEGAME_EXPLORER.name,
     EUROPEDIA_EXPORT.name,
     EUROPEDIA_ENTRIES.name,
 )
-SYNC_STAGES = ("blueprints", "worldbuilder")
+# The World Builder stage patches blueprints, so it runs before the render stage (as in `ppc build`).
+SYNC_STAGES = ("worldbuilder", "blueprints")
+# Everything `ppc worldbuilder apply` reads besides the project TOML, the handover and the blueprints: the code it
+# runs (stage.py's import closure and the scripts it executes), repo data, and the mod folders it parses through
+# the constructor load order (scripts, setup, map data).
+WORLDBUILDER_CODE_AND_DATA = (
+    "src/prosper_or_perish_constructor/worldbuilder",
+    "src/prosper_or_perish_constructor/building_footprint.py",
+    "src/prosper_or_perish_constructor/free_building_levels.py",
+    "src/prosper_or_perish_constructor/location_baseline.py",
+    "src/prosper_or_perish_constructor/rural_capacity.py",
+    "src/prosper_or_perish_constructor/yaml_io.py",
+    "scripts/generate_rural_capacity_values.py",
+    "scripts/generate_raw_material_local_map_modes.py",
+    "tools/map_mode_styles.py",
+    "config",
+    "data",
+)
+WORLDBUILDER_MOD_INPUTS = (
+    "in_game/common",
+    "in_game/map_data",
+    "main_menu/common",
+    "main_menu/setup",
+    "loading_screen/common",
+)
 SAVEGAME_PURGE_PATHS = (
     SAVEGAME_ARTIFACT_DIR,
     SAVEGAME_EXPLORER,
@@ -498,6 +513,19 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Use the previous full eu5-orchestrator build workflow before deploy.",
     )
+    vanilla_mirror = _add_command(
+        subcommands,
+        "vanilla-mirror",
+        "Copy the game's data files to the local disk and point the load order at the copy "
+        "(re-run after a game update).",
+        _vanilla_mirror,
+    )
+    vanilla_mirror.add_argument(
+        "--target",
+        type=Path,
+        default=None,
+        help="Directory for the copy. Defaults to ~/.cache/eu5-vanilla.",
+    )
 
     blueprint = subcommands.add_parser(
         "blueprint",
@@ -789,10 +817,22 @@ def _clean_game_rule_presets(
 
 
 def _test(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
-    pytest_args = list(extra)
-    if not any(arg == "-s" or arg == "--capture" or arg.startswith("--capture=") for arg in pytest_args):
-        pytest_args.insert(0, "--capture=no")
-    return _run([sys.executable, "-m", "pytest", *pytest_args], repo)
+    # Parallel workers come from [tool.pytest.ini_options] addopts; pass -n0 for a serial run.
+    return _run([sys.executable, "-m", "pytest", *extra], repo)
+
+
+def _vanilla_mirror(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("vanilla-mirror does not accept extra arguments.")
+    from prosper_or_perish_constructor import vanilla_mirror
+
+    result = vanilla_mirror.mirror(repo / CONSTRUCTOR_LOAD_ORDER, args.target or vanilla_mirror.DEFAULT_TARGET)
+    print(
+        f"Game data copied from {result['source']} (build {result['buildid']}) to {result['target']}; "
+        f"{result['override']} now points vanilla_root at the copy.",
+        flush=True,
+    )
+    return 0
 
 
 def _farming_village_unlocks(
@@ -2890,252 +2930,6 @@ def _portable_published_text(text: str, repo: Path) -> str:
     return text
 
 
-def _write_population_capacity_ingest_table(
-    source: Path,
-    target: Path,
-    manifest_path: Path | None = None,
-    *,
-    deployment_mode: str = "normalized",
-    people_per_game_population_unit: int = 1_000,
-) -> None:
-    """Write the minimal game-ingest artifact: exactly location and capacity.
-
-    ``normalized`` preserves the gameplay-band deployment contract. ``raw``
-    maps the accepted absolute p50 headcount from people into EU5 population
-    units (one unit per ``people_per_game_population_unit`` people) without the
-    gameplay-band normalization/clamp.
-    """
-
-    if not source.is_file():
-        raise SystemExit(f"Accepted population-capacity table not found: {source}")
-    if deployment_mode not in {"normalized", "raw"}:
-        raise SystemExit(f"Unknown population-capacity deployment mode: {deployment_mode!r}")
-    if people_per_game_population_unit <= 0:
-        raise SystemExit("People per game population unit must be greater than zero")
-    with source.open(newline="", encoding="utf-8-sig") as handle:
-        rows = list(csv.DictReader(handle))
-    value_column = "capacity_people_p50" if deployment_mode == "raw" else "normalized_capacity"
-    if not rows or "location_tag" not in rows[0] or value_column not in rows[0]:
-        raise SystemExit(
-            f"Accepted population-capacity table must contain location_tag and {value_column}"
-        )
-    seen: set[str] = set()
-    output: list[dict[str, int | str]] = []
-    for row in rows:
-        tag = str(row["location_tag"]).strip()
-        if not tag or tag in seen:
-            raise SystemExit(f"Population-capacity ingest table has duplicate/empty location: {tag!r}")
-        seen.add(tag)
-        try:
-            people_or_game_units = int(row[value_column])
-        except (TypeError, ValueError) as exc:
-            raise SystemExit(f"Invalid {deployment_mode} capacity for {tag!r}") from exc
-        if people_or_game_units < 0:
-            raise SystemExit(f"Population capacity cannot be negative for {tag!r}")
-        if deployment_mode == "raw":
-            # The physical model is in people; EU5 population is stored in
-            # thousands. Use deterministic half-up rounding at this boundary.
-            capacity = (
-                people_or_game_units + people_per_game_population_unit // 2
-            ) // people_per_game_population_unit
-        else:
-            capacity = people_or_game_units
-        output.append({"location_tag": tag, "population_capacity": capacity})
-    if len(output) != POPULATION_CAPACITY_LOCATION_COUNT:
-        raise SystemExit(
-            f"Population-capacity ingest table covers {len(output)} locations; "
-            f"expected {POPULATION_CAPACITY_LOCATION_COUNT}"
-        )
-    target.parent.mkdir(parents=True, exist_ok=True)
-    with target.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=("location_tag", "population_capacity"))
-        writer.writeheader()
-        writer.writerows(output)
-    if manifest_path is not None and manifest_path.is_file():
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        manifest["population_capacity_table"] = target.name
-        manifest["population_capacity_table_sha256"] = hashlib.sha256(target.read_bytes()).hexdigest()
-        manifest["population_capacity_deployment_mode"] = deployment_mode
-        manifest["population_capacity_people_per_game_population_unit"] = (
-            people_per_game_population_unit
-        )
-        manifest_path.write_text(
-            json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-        )
-
-
-def _configured_population_simulation_profile(
-    repo: Path,
-    project: Path,
-) -> Path | None:
-    population = _mapping(_project_config(project).get("population_capacity", {}))
-    value = population.get("simulation_profile")
-    if value in (None, ""):
-        return None
-    path = _resolve_config_path(repo, value)
-    if not path.is_file():
-        raise SystemExit(f"Population simulation profile not found: {path}")
-    return path
-
-
-def _require_matching_population_capacity_targets(
-    profile_target: Path,
-    compiler_target: Path,
-) -> None:
-    if profile_target.resolve() != compiler_target.resolve():
-        raise SystemExit(
-            "Population simulation and compiler capacity-table paths differ: "
-            f"{profile_target} != {compiler_target}"
-        )
-
-
-def _compile_population_capacity_map_mode(
-    repo: Path, project: Path, capacity_table: Path
-) -> None:
-    from prosper_or_perish_constructor.population_capacity_map_mode import (
-        compile_population_capacity_map_mode,
-    )
-
-    mod_root = _project_mod_root(repo, project)
-    result = compile_population_capacity_map_mode(
-        capacity_table=capacity_table,
-        map_mode_path=(
-            mod_root
-            / "in_game/gfx/map/map_modes/pp_population_capacity_map_modes.txt"
-        ),
-        localization_path=(
-            mod_root
-            / "main_menu/localization/english/pp_building_adjustments_l_english.yml"
-        ),
-        calibration_path=repo / "tools/map_mode_scale_calibration.json",
-    )
-    print(
-        "Population-capacity map-mode scale compiled: "
-        f"start max={result['start_max_capacity']}, "
-        f"display cap={result['display_cap']}, "
-        f"thresholds={result['thresholds']}",
-        flush=True,
-    )
-
-
-def _compile_population_capacity_map_mode_values(
-    repo: Path,
-    project: Path,
-    values: tuple[int, ...],
-) -> None:
-    from prosper_or_perish_constructor.population_capacity_map_mode import (
-        compile_population_capacity_map_mode_values,
-    )
-
-    mod_root = _project_mod_root(repo, project)
-    result = compile_population_capacity_map_mode_values(
-        values=values,
-        map_mode_path=(
-            mod_root
-            / "in_game/gfx/map/map_modes/pp_population_capacity_map_modes.txt"
-        ),
-        localization_path=(
-            mod_root
-            / "main_menu/localization/english/pp_building_adjustments_l_english.yml"
-        ),
-        calibration_path=repo / "tools/map_mode_scale_calibration.json",
-    )
-    print(
-        "Population-capacity map-mode scale compiled from full starting capacity: "
-        f"start max={result['start_max_capacity']}, "
-        f"display cap={result['display_cap']}, "
-        f"thresholds={result['thresholds']}",
-        flush=True,
-    )
-
-
-def _preferred_population_geometry(paths: Mapping[str, Path]) -> Path:
-    calibrated = paths["calibrated_geometry"]
-    return calibrated if calibrated.is_file() else paths["geometry"]
-
-
-def _verified_population_sample_points(paths: Mapping[str, Path]) -> Path:
-    _verify_population_geometry_contract(paths)
-    return paths["sample_points"]
-
-
-def _verify_population_geometry_contract(paths: Mapping[str, Path]) -> None:
-    required = {
-        "calibrated geometry": paths["calibrated_geometry"],
-        "coordinate transform": paths["geometry_transform"],
-        "canonical sample points": paths["sample_points"],
-        "sample acceptance audit": paths["sample_points_audit"],
-        "coordinate resolution audit": paths["geometry_resolution_audit"],
-    }
-    missing = [f"{label}: {path}" for label, path in required.items() if not path.is_file()]
-    if missing:
-        raise SystemExit(
-            "Population-capacity geometry contract is incomplete:\n- "
-            + "\n- ".join(missing)
-        )
-    sample_audit = json.loads(paths["sample_points_audit"].read_text(encoding="utf-8"))
-    resolution_audit = json.loads(
-        paths["geometry_resolution_audit"].read_text(encoding="utf-8")
-    )
-    failures: list[str] = []
-    if sample_audit.get("accepted") is not True:
-        failures.append("sample acceptance audit is not accepted")
-    if resolution_audit.get("accepted") is not True:
-        failures.append("coordinate resolution audit is not accepted")
-    if int(sample_audit.get("unresolved_sample_count", -1)) != 0:
-        failures.append("sample acceptance audit contains unresolved samples")
-    if int(resolution_audit.get("unresolved_samples", -1)) != 0:
-        failures.append("coordinate resolution audit contains unresolved samples")
-    if sample_audit.get("source_values", {}).get("gshhg_resolution_code") != "f":
-        failures.append("sample acceptance audit is not full-resolution GSHHG")
-    expected_hashes = {
-        "sample_points_sha256": paths["sample_points"],
-        "calibrated_geometry_sha256": paths["calibrated_geometry"],
-        "geometry_transform_file_sha256": paths["geometry_transform"],
-    }
-    for field, path in expected_hashes.items():
-        expected = sample_audit.get(field)
-        if not isinstance(expected, str) or len(expected) != 64:
-            failures.append(f"sample acceptance audit is missing {field}")
-        elif _sha256_path(path) != expected:
-            failures.append(f"stale geometry contract hash: {field}")
-    if failures:
-        raise SystemExit(
-            "Population-capacity geometry contract failed verification:\n- "
-            + "\n- ".join(failures)
-        )
-
-
-def _sha256_path(path: Path, *, chunk_size: int = 1024 * 1024) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        while chunk := handle.read(chunk_size):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def _existing_optional(path: Path) -> Path | None:
-    return path if path.is_file() else None
-
-
-def _require_population_capacity_inputs(
-    command: str,
-    inputs: Mapping[str, Path],
-) -> None:
-    missing = [f"{description}: {path}" for description, path in inputs.items() if not path.is_file()]
-    if missing:
-        details = "\n  - ".join(missing)
-        raise SystemExit(
-            f"population-capacity {command} is blocked by missing required inputs:\n"
-            f"  - {details}"
-        )
-
-
-def _reject_extra_population_capacity_args(command: str, extra: Sequence[str]) -> None:
-    if extra:
-        raise SystemExit(f"population-capacity {command} does not accept extra arguments.")
-
-
 def _extract_report_count(output: str, key: str) -> int | None:
     match = re.search(rf"(?m)^{re.escape(key)}:\s*(\d+)\s*$", output)
     return int(match.group(1)) if match else None
@@ -3364,189 +3158,33 @@ def _windows_userprofile_from_cmd() -> str | None:
     return converted.stdout.strip()
 
 
-def _stop_existing_dashboard_processes(markers: Sequence[str], port: int | None = None) -> None:
-    pids = set(_matching_processes(markers))
-    if port is not None:
-        pids.update(_matching_listening_port_processes(port))
-
-    current_pid = os.getpid()
-    pids = sorted(pid for pid in pids if pid != current_pid)
-    if not pids:
-        return
-
-    print(f"Stopping existing dashboard process(es): {', '.join(str(pid) for pid in pids)}", flush=True)
-    for pid in pids:
-        _terminate_process(pid, signal.SIGTERM)
-
-    deadline = time.monotonic() + 5
-    while time.monotonic() < deadline:
-        remaining = [pid for pid in pids if _process_exists(pid)]
-        if not remaining:
-            return
-        time.sleep(0.1)
-
-    kill_signal = getattr(signal, "SIGKILL", signal.SIGTERM)
-    for pid in pids:
-        if _process_exists(pid):
-            _terminate_process(pid, kill_signal)
-
-
-def _matching_processes(markers: Sequence[str]) -> set[int]:
-    if os.name == "nt":
-        return _matching_windows_processes(markers)
-    return _matching_procfs_processes(markers)
-
-
-def _matching_listening_port_processes(port: int) -> set[int]:
-    if os.name == "nt":
-        return _matching_windows_listening_port_processes(port)
-    return _matching_procfs_listening_port_processes(port)
-
-
-def _matching_procfs_processes(markers: Sequence[str]) -> set[int]:
-    matches: set[int] = set()
-    proc = Path("/proc")
-    if not proc.is_dir():
-        return matches
-
-    for entry in proc.iterdir():
-        if not entry.name.isdigit():
-            continue
-        try:
-            raw = (entry / "cmdline").read_bytes()
-        except OSError:
-            continue
-        command = raw.replace(b"\0", b" ").decode(errors="ignore")
-        if command and all(marker in command for marker in markers):
-            matches.add(int(entry.name))
-    return matches
-
-
-def _matching_procfs_listening_port_processes(port: int) -> set[int]:
-    proc = Path("/proc")
-    if not proc.is_dir():
-        return set()
-
-    socket_inodes = _listening_socket_inodes(port)
-    if not socket_inodes:
-        return set()
-
-    matches: set[int] = set()
-    for entry in proc.iterdir():
-        if not entry.name.isdigit():
-            continue
-        fd_dir = entry / "fd"
-        try:
-            fds = list(fd_dir.iterdir())
-        except OSError:
-            continue
-        for fd in fds:
-            try:
-                target = fd.readlink()
-            except OSError:
-                continue
-            if str(target).startswith("socket:[") and str(target)[8:-1] in socket_inodes:
-                matches.add(int(entry.name))
-                break
-    return matches
-
-
-def _listening_socket_inodes(port: int) -> set[str]:
-    inodes: set[str] = set()
-    for table in (Path("/proc/net/tcp"), Path("/proc/net/tcp6")):
-        try:
-            lines = table.read_text().splitlines()
-        except OSError:
-            continue
-        for line in lines[1:]:
-            columns = line.split()
-            if len(columns) <= 9:
-                continue
-            local_address = columns[1]
-            state = columns[3]
-            inode = columns[9]
-            try:
-                local_port = int(local_address.rsplit(":", 1)[1], 16)
-            except (IndexError, ValueError):
-                continue
-            if local_port == port and state == "0A" and inode != "0":
-                inodes.add(inode)
-    return inodes
-
-
-def _matching_windows_processes(markers: Sequence[str]) -> set[int]:
-    command = ["wmic", "process", "get", "ProcessId,CommandLine", "/FORMAT:CSV"]
-    completed = subprocess.run(command, check=False, capture_output=True, text=True)
-    if completed.returncode != 0:
-        return set()
-
-    matches: set[int] = set()
-    for line in completed.stdout.splitlines():
-        if not line.strip() or line.startswith("Node,"):
-            continue
-        try:
-            command_line, pid = line.rsplit(",", 1)
-            pid_value = int(pid)
-        except ValueError:
-            continue
-        if all(marker in command_line for marker in markers):
-            matches.add(pid_value)
-    return matches
-
-
-def _matching_windows_listening_port_processes(port: int) -> set[int]:
-    completed = subprocess.run(
-        ["netstat", "-ano", "-p", "tcp"],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    if completed.returncode != 0:
-        return set()
-
-    matches: set[int] = set()
-    for line in completed.stdout.splitlines():
-        columns = line.split()
-        if len(columns) < 5 or columns[0].upper() != "TCP":
-            continue
-        local_address, state, pid = columns[1], columns[3], columns[4]
-        if state.upper() != "LISTENING":
-            continue
-        try:
-            local_port = int(local_address.rsplit(":", 1)[1])
-            pid_value = int(pid)
-        except (IndexError, ValueError):
-            continue
-        if local_port == port:
-            matches.add(pid_value)
-    return matches
-
-
-def _terminate_process(pid: int, sig: signal.Signals) -> None:
-    try:
-        os.kill(pid, sig)
-    except ProcessLookupError:
-        return
-    except PermissionError as error:
-        print(f"Could not stop dashboard process {pid}: {error}", flush=True)
-
-
-def _process_exists(pid: int) -> bool:
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True
-    return True
-
-
 def _sync_stage_fingerprints(repo: Path, project: Path) -> dict[str, str]:
+    return {stage: _sync_stage_fingerprint(repo, project, stage) for stage in SYNC_STAGES}
+
+
+def _sync_stage_fingerprint(repo: Path, project: Path, stage: str) -> str:
     config = _project_config(project)
-    return {
-        "worldbuilder": _fingerprint_paths(_worldbuilder_fingerprint_paths(repo, project, config)),
-        "blueprints": _fingerprint_paths(_blueprint_fingerprint_paths(repo, project, config)),
-    }
+    if stage == "blueprints":
+        return _fingerprint_paths(_blueprint_fingerprint_paths(repo, project, config))
+    from eu5gameparser.load_order import local_load_order_path
+
+    from prosper_or_perish_constructor.vanilla_mirror import installed_build_id
+
+    load_order = repo / CONSTRUCTOR_LOAD_ORDER
+    digest = hashlib.sha256(
+        _fingerprint_paths(
+            [
+                *_worldbuilder_fingerprint_paths(repo, project, config),
+                *_blueprint_fingerprint_paths(repo, project, config),
+                load_order,
+                local_load_order_path(load_order),
+            ],
+            file_filter=_is_fingerprint_input,
+        ).encode()
+    )
+    # The game data itself is too large to hash; its Steam build stands in for it.
+    digest.update(f"game build {installed_build_id(load_order)}".encode())
+    return digest.hexdigest()
 
 
 def _worldbuilder_fingerprint_paths(repo: Path, project: Path, config: dict[str, Any]) -> list[Path]:
@@ -3558,30 +3196,19 @@ def _worldbuilder_fingerprint_paths(repo: Path, project: Path, config: dict[str,
             continue
         root = Path(str(raw))
         root = root if root.is_absolute() else (repo / root)
+        # contract.json pins every handover file by SHA-256.
         for name in ("contract.json", "ha1300-build.json"):
             candidate = root / name
             if candidate.is_file():
                 paths.append(candidate)
-    paths.extend(sorted((repo / "src/prosper_or_perish_constructor/worldbuilder").glob("*.py")))
-    paths.append(repo / "scripts/generate_rural_capacity_values.py")
-    return [path for path in paths if path.is_file()]
+    paths.extend(repo / relative for relative in WORLDBUILDER_CODE_AND_DATA)
+    mod_root = _project_mod_root(repo, project)
+    paths.extend(mod_root / relative for relative in WORLDBUILDER_MOD_INPUTS)
+    return paths
 
 
-def _evaluator_fingerprint_paths(evaluator_path: Path) -> list[Path]:
-    if not evaluator_path.is_file():
-        return []
-    raw = _load_yaml_mapping(evaluator_path)
-    trade_good = str(raw.get("trade_good", raw.get("tradeGood", "good")) or "good").strip() or "good"
-    goods_data_dir = raw.get("goods_data_dir") or f"../../goods_data/{trade_good}"
-    runs_filename = raw.get("runs_filename", raw.get("runsFilename")) or f"{trade_good}_ranking_runs.parquet"
-    results_filename = raw.get("results_filename", raw.get("resultsFilename")) or f"{trade_good}_labels.parquet"
-    dealbreaker = raw.get("dealbreaker_rules_csv", raw.get("dealbreakerRulesCsv", "dealbreakers.csv"))
-    return [
-        _resolve_config_path(evaluator_path.parent, raw.get("baseline_parquet") or "../../base_data/locations_with_raw_material.parquet"),
-        _resolve_config_path(evaluator_path.parent, dealbreaker),
-        _resolve_config_path(evaluator_path.parent, goods_data_dir) / str(runs_filename),
-        _resolve_config_path(evaluator_path.parent, goods_data_dir) / str(results_filename),
-    ]
+def _is_fingerprint_input(path: Path) -> bool:
+    return "__pycache__" not in path.parts and path.suffix != ".pyc"
 
 
 def _blueprint_fingerprint_paths(repo: Path, project: Path, config: dict[str, Any]) -> list[Path]:
@@ -3646,25 +3273,9 @@ def _config_path(repo: Path, value: object) -> Path | None:
     return _resolve_config_path(repo, value)
 
 
-def _existing_config_paths(base: Path, raw: dict[str, Any], keys: Sequence[str]) -> list[Path]:
-    paths = []
-    for key in keys:
-        value = raw.get(key)
-        if value not in (None, ""):
-            paths.append(_resolve_config_path(base, value))
-    return paths
-
-
 def _resolve_config_path(base: Path, value: object) -> Path:
     path = Path(str(value))
     return path if path.is_absolute() else (base / path).resolve()
-
-
-def _load_yaml_mapping(path: Path) -> dict[str, Any]:
-    import yaml
-
-    raw = yaml.safe_load(path.read_text(encoding="utf-8-sig"))
-    return raw if isinstance(raw, dict) else {}
 
 
 def _load_sync_state(repo: Path) -> dict[str, str]:
@@ -3698,10 +3309,10 @@ def _deploy_built_mod(repo: Path, project: Path, *, force: bool) -> int:
 
 def _smart_sync(args: argparse.Namespace, repo: Path, project: Path) -> int:
     state = _load_sync_state(repo)
-    fingerprints = _sync_stage_fingerprints(repo, project)
     ran_generator = False
     for stage in SYNC_STAGES:
-        if not args.force_build and state.get(stage) == fingerprints[stage]:
+        # Taken when the stage is reached: the World Builder stage patches blueprints the render stage reads.
+        if not args.force_build and state.get(stage) == _sync_stage_fingerprint(repo, project, stage):
             print(f"Smart sync: {stage} inputs unchanged; skipping.", flush=True)
             continue
         if stage == "worldbuilder":
@@ -3710,9 +3321,11 @@ def _smart_sync(args: argparse.Namespace, repo: Path, project: Path) -> int:
             result = _run(["eu5-orchestrator", "render", "--project", project, "--overwrite"], repo)
             if result != 0:
                 return result
-        state[stage] = fingerprints[stage]
         ran_generator = True
     _finalize_constructor_mod(repo, project)
+    # The stages rewrite blueprints and mod files they also read, so the inputs are recorded as this sync
+    # leaves them; the next sync reruns a stage only if something changed them since.
+    state.update(_sync_stage_fingerprints(repo, project))
     validation_before = _validation_fingerprint(repo, project)
     if ran_generator or args.force_build or state.get("validation") != validation_before:
         result = _run(["eu5-orchestrator", "validate", "--project", project], repo)

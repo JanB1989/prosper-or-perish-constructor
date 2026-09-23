@@ -1,11 +1,12 @@
 ﻿from __future__ import annotations
 
 import re
-import tomllib
 from collections import Counter
+from functools import cache
 from pathlib import Path
 
 from eu5gameparser.domain.eu5 import load_eu5_data
+from eu5gameparser.load_order import LoadOrderConfig
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,11 +15,6 @@ MAP_MODES = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes" / "pp_goods_outpu
 SCRIPT_VALUES = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_goods_output_map_modes_generated.txt"
 LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_goods_output_map_modes_l_english.yml"
 ICON_DIR = MOD_ROOT / "in_game" / "gfx" / "interface" / "icons" / "map_modes"
-LIVE_SCALE_ARTIFACTS = (
-    MOD_ROOT / "in_game" / "common" / "generic_actions" / "pp_goods_output_map_scale_actions.txt",
-    MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_goods_output_map_scale_effects.txt",
-    MOD_ROOT / "in_game" / "events" / "debug" / "pp_goods_output_map_scale_debug.txt",
-)
 GOODS_OUTPUT_BUCKETS = ((0, 10), (10, 30), (30, 60), (60, 100), (100, 150), (150, 300))
 VANILLA_TRAFFIC_COLORS = (
     "define:NMapColors|MAP_COLOR_MIN",
@@ -54,18 +50,8 @@ def _goods_with_output_map_modes() -> set[str]:
     return _all_goods() - GOODS_WITHOUT_OUTPUT_MAP_MODES
 
 
-def _host_path(path: Path) -> Path:
-    match = re.match(r"^([A-Za-z]):[\\/](.*)$", str(path))
-    if match is None:
-        return path
-    return Path("/mnt") / match.group(1).lower() / match.group(2).replace("\\", "/")
-
-
 def _vanilla_root() -> Path:
-    with (ROOT / "constructor.load_order.toml").open("rb") as stream:
-        raw = tomllib.load(stream)
-    path = _host_path(Path(raw["paths"]["vanilla_root"]))
-    return path if path.is_absolute() else (ROOT / path).resolve()
+    return LoadOrderConfig.load(ROOT / "constructor.load_order.toml").vanilla_root
 
 
 def _modifier_type_definition_text() -> str:
@@ -93,8 +79,16 @@ def _english_localization_text() -> str:
 
 
 def _localization_value(text: str, key: str) -> str | None:
-    matches = re.findall(rf"^\s*{re.escape(key)}:\s*\"(.*)\"\s*$", text, flags=re.MULTILINE)
-    return matches[-1] if matches else None
+    return _localization_index(text).get(key)
+
+
+@cache
+def _localization_index(text: str) -> dict[str, str]:
+    # One pass over the (large) localization text; later definitions win, as in game.
+    return {
+        match.group(1): match.group(2)
+        for match in re.finditer(r"^\s*([^\s:]+):\s*\"(.*)\"\s*$", text, flags=re.MULTILINE)
+    }
 
 
 def _uses_goods_name_reference(value: str, good: str) -> bool:
@@ -283,10 +277,6 @@ def test_goods_output_map_modes_do_not_use_calibrated_or_live_thresholds() -> No
     assert "pp_livestock_output_live_" not in generated_files
     assert "pp_refresh_livestock_output_map_scale" not in generated_files
     assert "map_mode_scale_calibration" not in generated_files
-
-
-def test_goods_output_map_modes_do_not_ship_live_scale_action_artifacts() -> None:
-    assert not [path for path in LIVE_SCALE_ARTIFACTS if path.exists()]
 
 
 def test_goods_output_map_modes_preserve_context_and_refresh_behavior() -> None:

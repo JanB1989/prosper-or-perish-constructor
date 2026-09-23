@@ -23,7 +23,7 @@ from pathlib import Path
 import re
 import tomllib
 
-import yaml
+from prosper_or_perish_constructor import yaml_io
 
 CONFIG_SECTION = "building_footprint"
 IGNORE = "ignore"
@@ -86,7 +86,7 @@ def blueprint_classes(repo: Path) -> dict[str, tuple[str, Path]]:
     """Building key -> (footprint class, blueprint path) for every accepted blueprint, enabled or not."""
     out: dict[str, tuple[str, Path]] = {}
     for path in sorted((repo / BLUEPRINT_ROOT_RELATIVE).glob("*.yml")):
-        data = yaml.safe_load(path.read_text(encoding="utf-8-sig")) or {}
+        data = yaml_io.safe_load(path.read_text(encoding="utf-8-sig")) or {}
         building = data.get("building") if isinstance(data.get("building"), dict) else {}
         key = str(building.get("key") or data.get("tag") or path.stem)
         out[key] = (str(data.get("footprint") or ""), path)

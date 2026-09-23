@@ -41,6 +41,7 @@ Other common workflows:
 ```bash
 uv run ppc setup
 uv run ppc inspect
+uv run ppc vanilla-mirror
 uv run ppc test
 uv run ppc analyze
 uv run ppc output-modifiers
@@ -72,6 +73,13 @@ into the configured Paradox mod folder:
 ```bash
 uv run ppc sync --yes
 ```
+
+Sync is incremental. The World Builder stage (about 40 s) reruns only when one of its inputs changed since the
+last successful sync: the handover, `constructor.toml`, the load order and the installed game build, the
+blueprints and manifest, `config/`, `data/`, the code it runs, or the mod's `common`, `setup` and `map_data`
+folders. The blueprint render reruns when the blueprints or manifest changed. Inputs are recorded as the sync
+leaves them, so the stages' own rewrites of blueprints and mod files do not cause reruns. `--force-build` runs
+every stage.
 
 ### In-Game Profiler
 
@@ -191,6 +199,20 @@ machine-specific install root when moving machines.
 
 Use `constructor.load_order.example.toml` as the portable template for new
 machines or new constructor repos.
+
+Under WSL every read from the Windows drive is a slow round trip, and builds and tests read thousands of
+game files. Copy the game's data files to the local disk once:
+
+```bash
+uv run ppc vanilla-mirror   # ~/.cache/eu5-vanilla; about 12 GB, a few minutes the first time
+```
+
+It writes the ignored `constructor.load_order.local.toml`, which overrides `[paths].vanilla_root` for this
+machine (every parser consumer reads it). The copy records the Steam build it came from; after a game update
+the parser warns and reads the install again until you re-run `ppc vanilla-mirror`.
+
+`uv run ppc test` (or plain `uv run pytest`) runs the suite on 8 parallel workers (`addopts` in
+`pyproject.toml`); add `-n0` for a serial run, for example when debugging with `-s` or `--pdb`.
 
 Machine-local deploy targets stay in ignored `constructor.local.toml`; copy
 `constructor.local.example.toml` and edit the Windows user name or drive. Example

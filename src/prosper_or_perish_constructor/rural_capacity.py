@@ -6,7 +6,7 @@ from collections import defaultdict
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 
-import yaml
+from prosper_or_perish_constructor import yaml_io
 
 
 LAND_FARM_BUILDINGS = (
@@ -99,7 +99,7 @@ def capacity_max_omitted_buildings_by_building(
     chains: dict[str, list[tuple[int, str]]] = defaultdict(list)
 
     for path in sorted(blueprint_root.glob("*.yml")):
-        raw = yaml.safe_load(path.read_text(encoding="utf-8-sig")) or {}
+        raw = yaml_io.safe_load(path.read_text(encoding="utf-8-sig")) or {}
         if not isinstance(raw, Mapping):
             continue
         building = raw.get("building")

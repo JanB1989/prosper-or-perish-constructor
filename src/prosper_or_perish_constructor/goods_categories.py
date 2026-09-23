@@ -9,10 +9,10 @@ import tomllib
 from typing import Any
 
 import polars as pl
-import yaml
 from eu5_building_pipeline.template import load_template
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5gameparser.domain.buildings import load_building_data
+from prosper_or_perish_constructor import yaml_io
 
 
 GOODS_CATEGORIES_RELATIVE = Path("config/goods_categories.csv")
@@ -142,7 +142,7 @@ def building_increase_cost_assignments(
 
 def accepted_blueprint_paths_by_building(repo: Path) -> dict[str, Path]:
     manifest_path = repo / BUILDING_BLUEPRINT_MANIFEST_RELATIVE
-    raw = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    raw = yaml_io.safe_load(manifest_path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
         raise ValueError(f"{manifest_path}: expected mapping")
 
@@ -393,7 +393,7 @@ def _top_level_indent(lines: list[str]) -> str:
 
 def _append_manifest_entries(manifest_path: Path, entries: list[str]) -> None:
     existing = _read_text_preserving_newlines(manifest_path, encoding="utf-8")
-    raw = yaml.safe_load(existing) if existing.strip() else {}
+    raw = yaml_io.safe_load(existing) if existing.strip() else {}
     if not isinstance(raw, dict):
         raise ValueError(f"{manifest_path}: expected mapping")
     enabled = raw.get("enabled", {})

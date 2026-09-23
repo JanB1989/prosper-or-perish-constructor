@@ -5,11 +5,11 @@ from pathlib import Path
 import re
 
 import polars as pl
-import yaml
 
 from eu5gameparser.domain.eu5 import load_eu5_data
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5_mod_orchestrator.config import load_project_config
+from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,7 +18,7 @@ MANIFEST_PATH = ROOT / "blueprints" / "buildings.manifest.yml"
 
 
 def _enabled_manifest_entries(manifest: dict | None = None) -> list[str]:
-    raw = manifest if manifest is not None else yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    raw = manifest if manifest is not None else yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     return enabled_manifest_entries(raw.get("enabled", []), source=MANIFEST_PATH)
 
 
@@ -26,7 +26,7 @@ def _enabled_manifest_set(manifest: dict | None = None) -> set[str]:
     return set(_enabled_manifest_entries(manifest))
 
 
-LABELING_BASELINE = (
+VANILLA_LOCATIONS = (
     ROOT / "data" / "vanilla" / "locations_with_raw_material.parquet"
 )
 ADVANCES_PATH = (
@@ -39,15 +39,6 @@ ADVANCES_PATH = (
     / "pp_local_resource_productivity_advances.txt"
 )
 ADVANCE_ROOT = ADVANCES_PATH.parent
-PROSPERITY_ADVANCES_PATH = (
-    ROOT
-    / "mod"
-    / "Prosper or Perish (Population Growth & Food Rework)"
-    / "in_game"
-    / "common"
-    / "advances"
-    / "pp_prosperity_advances_adjustments.txt"
-)
 FISHING_ADVANCES_PATH = (
     ROOT
     / "mod"
@@ -214,59 +205,6 @@ DEACTIVATED_MINING_VILLAGE_BLUEPRINTS = {
     "buildings/mining_village_coke_blast_furnace.yml",
     "buildings/mining_village_hot_blast_furnace.yml",
 }
-GAME_START_DIRECT_RGO_BUILDINGS = {
-    "alum_quarry",
-    "coal_mine",
-    "copper_mine",
-    "gem_gravel_pit",
-    "gold_diggings",
-    "iron_mine",
-    "lead_mine",
-    "marble_quarry",
-    "cinnabar_pit",
-    "salt_collector",
-    "salt_mine",
-    "inland_saltworks",
-    "silver_mine",
-    "saltpeter_beds",
-    "tin_streamworks",
-}
-GAME_START_CAPACITY_BUILDING_GATES = {
-    "farming_village": "farm_capacity",
-    "fiber_crops_farm": "farm_capacity",
-    "fishing_village": "fish_capacity",
-    "forest_village": "forest_capacity",
-    "fruit_orchard": "farm_capacity",
-    "horse_breeders": "farm_capacity",
-    "lumber_mill": "forest_capacity",
-    "ocean_fishery": "fish_capacity",
-    "sheep_farms": "farm_capacity",
-}
-GAME_START_DISABLED_CAPACITY_STARTUP_BUILDINGS: set[str] = set()
-FARMING_VILLAGE_STARTUP_RAW_MATERIALS = {
-    "beeswax",
-    "legumes",
-    "livestock",
-    "maize",
-    "millet",
-    "olives",
-    "potato",
-    "rice",
-    "wheat",
-}
-FARMING_VILLAGE_STARTUP_THRESHOLDS = (
-    (1, 10, 5),
-    (2, 20, 10),
-    (3, 30, 15),
-    (4, 40, 20),
-    (5, 50, 25),
-    (6, 60, 30),
-    (7, 70, 35),
-    (8, 80, 40),
-)
-FISHING_VILLAGE_STARTUP_THRESHOLDS = FARMING_VILLAGE_STARTUP_THRESHOLDS
-FRUIT_ORCHARD_STARTUP_THRESHOLDS = FARMING_VILLAGE_STARTUP_THRESHOLDS
-SHEEP_FARMS_STARTUP_THRESHOLDS = FARMING_VILLAGE_STARTUP_THRESHOLDS
 RAW_MATERIAL_BASE_PRODUCERS = {
     "horse_breeders": ("horses", "pp_horse_breeders_base_horses"),
     "sand_pit": ("sand", "pp_sand_pit_base_sand"),
@@ -465,7 +403,7 @@ SALT_MINE_EXCLUDED_REGIONS = {
 
 def _load_blueprint(key: str) -> dict:
     with (BLUEPRINT_ROOT / "buildings" / f"{key}.yml").open("r", encoding="utf-8") as stream:
-        raw = yaml.safe_load(stream)
+        raw = yaml_io.safe_load(stream)
     assert isinstance(raw, dict)
     return raw
 
@@ -759,7 +697,7 @@ def _inline_production_method_input_amounts(body: str, input_good: str) -> list[
     return amounts
 
 def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = _enabled_manifest_set(manifest)
     advances = "\n".join(
         path.read_text(encoding="utf-8-sig")
@@ -798,7 +736,7 @@ def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
 
 
 def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = _enabled_manifest_set(manifest)
     advances = "\n".join(
         (
@@ -922,7 +860,7 @@ def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> Non
 
 
 def test_salt_production_families_are_explicit_and_unlockable() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = _enabled_manifest_set(manifest)
     advances = ADVANCES_PATH.read_text(encoding="utf-8")
 
@@ -1035,7 +973,7 @@ def test_salt_building_location_potentials_are_mutually_exclusive() -> None:
 
 
 def test_salt_location_split_matches_current_location_data() -> None:
-    baseline = pl.read_parquet(LABELING_BASELINE).select(
+    baseline = pl.read_parquet(VANILLA_LOCATIONS).select(
         [
             "location_tag",
             "region",
@@ -1111,7 +1049,7 @@ def test_salt_location_split_matches_current_location_data() -> None:
 
 
 def test_clay_sand_and_stone_quarry_upgrade_chains_are_explicit_and_unlockable() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = _enabled_manifest_set(manifest)
     expected_chains = {
         "clay_pit": [
@@ -1157,7 +1095,7 @@ def test_clay_sand_and_stone_quarry_upgrade_chains_are_explicit_and_unlockable()
 
 
 def test_lumber_mill_upgrade_chain_is_explicit_and_unlockable() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = _enabled_manifest_set(manifest)
     chain = [
         ("lumber_mill", None),
@@ -1195,7 +1133,7 @@ def test_lumber_mill_upgrade_chain_is_explicit_and_unlockable() -> None:
 
 
 def test_rural_food_building_upgrade_chains_are_explicit() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = _enabled_manifest_set(manifest)
     expected_chains = {
         "horse_breeders": [
@@ -1256,7 +1194,7 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
 
 
 def test_upgrade_building_names_do_not_reuse_predecessor_method_names() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = {
         (BLUEPRINT_ROOT / entry).stem
         for entry in _enabled_manifest_entries(manifest)
@@ -1335,14 +1273,14 @@ def test_husbandry_farmstead_keeps_crop_specific_worked_methods() -> None:
 def test_blueprint_upgrade_successors_load_after_obsolete_predecessors() -> None:
     config = load_project_config(ROOT / "constructor.toml")
     mod_root = BUILDING_TYPES_ROOT.parents[2]
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = {
         (BLUEPRINT_ROOT / entry).stem
         for entry in _enabled_manifest_entries(manifest)
         if str(entry).startswith("buildings/")
     }
     blueprints = {
-        path.stem: yaml.safe_load(path.read_text(encoding="utf-8"))
+        path.stem: yaml_io.safe_load(path.read_text(encoding="utf-8"))
         for path in sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml"))
         if path.stem in enabled
     }
@@ -1393,7 +1331,7 @@ def test_blueprint_upgrade_successors_load_after_obsolete_predecessors() -> None
 def test_accepted_building_upgrade_chains_obsolete_only_direct_predecessor() -> None:
     offenders: list[str] = []
     for path in sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml")):
-        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        raw = yaml_io.safe_load(path.read_text(encoding="utf-8"))
         assert isinstance(raw, dict)
 
         upgrade_chain = raw.get("upgrade_chain")
@@ -1414,14 +1352,14 @@ def test_accepted_building_upgrade_chains_obsolete_only_direct_predecessor() -> 
 
 
 def test_enabled_upgrade_chain_location_requirements_match_initial_building() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = {
         (BLUEPRINT_ROOT / entry).stem
         for entry in _enabled_manifest_entries(manifest)
         if str(entry).startswith("buildings/")
     }
     blueprints = {
-        path.stem: yaml.safe_load(path.read_text(encoding="utf-8-sig"))
+        path.stem: yaml_io.safe_load(path.read_text(encoding="utf-8-sig"))
         for path in sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml"))
         if path.stem in enabled
     }
@@ -1483,14 +1421,14 @@ def test_food_upgrade_successors_use_obsolete_instead_of_manual_building_gates()
         "ocean_fishery",
         "sheep_farms",
     }
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = {
         (BLUEPRINT_ROOT / entry).stem
         for entry in _enabled_manifest_entries(manifest)
         if str(entry).startswith("buildings/")
     }
     blueprints = {
-        path.stem: yaml.safe_load(path.read_text(encoding="utf-8-sig"))
+        path.stem: yaml_io.safe_load(path.read_text(encoding="utf-8-sig"))
         for path in sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml"))
         if path.stem in enabled
     }
@@ -1595,14 +1533,6 @@ def test_game_start_places_no_buildings_at_runtime() -> None:
     assert "NOT = { has_building" not in game_start
     start_setup = GAME_START_PATH.parents[3] / "main_menu" / "setup" / "start" / "14_pp_start_buildings.txt"
     assert "building_manager = {" in start_setup.read_text(encoding="utf-8-sig")
-
-
-def test_game_start_does_not_add_disabled_farm_capacity_buildings() -> None:
-    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
-    game_start = _first_script_block(text, "pp_game_start_effect")
-
-    for building in GAME_START_DISABLED_CAPACITY_STARTUP_BUILDINGS:
-        assert f"building_type:{building}" not in game_start
 
 
 def test_game_start_rgo_reduction_cannot_zero_max_workers() -> None:
@@ -1886,7 +1816,7 @@ def test_non_slave_crop_farms_are_default_rgo_laborer_buildings() -> None:
 
 
 def test_cash_crop_upgrade_chains_use_dedicated_discovery_advances_and_clean_inputs() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = _enabled_manifest_set(manifest)
 
     for family, chain in CASH_CROP_UPGRADE_CHAINS.items():
@@ -1954,7 +1884,7 @@ def test_raw_processor_replacements_exclude_matching_raw_materials() -> None:
 
 
 def test_mining_village_chain_is_deactivated() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = _enabled_manifest_set(manifest)
     advances = ADVANCES_PATH.read_text(encoding="utf-8")
 
@@ -1963,7 +1893,7 @@ def test_mining_village_chain_is_deactivated() -> None:
 
 
 def test_old_bog_iron_extra_tiers_are_deactivated() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = _enabled_manifest_set(manifest)
     advances = ADVANCES_PATH.read_text(encoding="utf-8")
 
@@ -2013,7 +1943,7 @@ def test_raw_material_output_advances_convert_to_rgo_size() -> None:
 
 
 def test_added_mine_buildings_are_tagged_and_have_site_modifiers() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = _enabled_manifest_set(manifest)
     tagged_buildings: set[str] = set()
 
@@ -2111,7 +2041,7 @@ def test_marble_quarry_tiers_are_marble_deposit_only_and_have_unique_icons() -> 
 
 
 def test_manifest_uses_dedicated_gold_mines_not_mining_village() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = _enabled_manifest_set(manifest)
 
     assert "buildings/gold_diggings.yml" in enabled
@@ -2120,7 +2050,7 @@ def test_manifest_uses_dedicated_gold_mines_not_mining_village() -> None:
 
 
 def test_manifest_uses_dedicated_tin_mines_not_mining_village() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = _enabled_manifest_set(manifest)
 
     assert "buildings/tin_streamworks.yml" in enabled

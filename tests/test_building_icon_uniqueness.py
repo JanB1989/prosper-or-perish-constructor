@@ -7,7 +7,7 @@ from typing import Any
 
 from eu5_building_pipeline import render_template, write_icon_asset
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
-import yaml
+from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,13 +26,13 @@ MOD_ICON_ROOT = (
 
 
 def _enabled_blueprints() -> dict[str, dict[str, Any]]:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     raw_enabled = enabled_manifest_entries(manifest.get("enabled", []), source=MANIFEST_PATH)
 
     blueprints: dict[str, dict[str, Any]] = {}
     for relative in raw_enabled:
         path = BLUEPRINT_ROOT / relative
-        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        raw = yaml_io.safe_load(path.read_text(encoding="utf-8"))
         assert isinstance(raw, dict)
         raw["_path"] = path
         blueprints[raw["building"]["key"]] = raw

@@ -8,6 +8,8 @@ import tomllib
 from pathlib import Path
 from typing import Iterable
 
+from eu5gameparser.load_order import read_load_order
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
@@ -94,8 +96,7 @@ def _host_path(path: Path) -> Path:
 def _vanilla_root(project: dict) -> Path:
     parser = project.get("parser", {})
     load_order = _project_path(str(parser.get("load_order") or "constructor.load_order.toml"))
-    with load_order.open("rb") as stream:
-        raw = tomllib.load(stream)
+    raw = read_load_order(load_order)
     paths = raw.get("paths", {})
     vanilla_root = _host_path(Path(str(paths.get("vanilla_root", ""))))
     if not vanilla_root.is_absolute():

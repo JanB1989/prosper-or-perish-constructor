@@ -4,9 +4,9 @@ from pathlib import Path
 import re
 
 import pytest
-import yaml
 
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
+from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -76,7 +76,7 @@ GOOD_PRICES = {
 
 
 def _load_blueprint(building: str) -> dict:
-    return yaml.safe_load((BLUEPRINT_ROOT / f"{building}.yml").read_text(encoding="utf-8"))
+    return yaml_io.safe_load((BLUEPRINT_ROOT / f"{building}.yml").read_text(encoding="utf-8"))
 
 
 def _field(body: str, key: str) -> str:
@@ -101,7 +101,7 @@ def _goods_total(body: str) -> float:
 
 
 def test_road_infrastructure_blueprints_are_manifested_and_one_level_infrastructure() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = yaml_io.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(enabled_manifest_entries(manifest.get("enabled", []), source=MANIFEST_PATH))
 
     for building, expected in ROAD_BUILDINGS.items():

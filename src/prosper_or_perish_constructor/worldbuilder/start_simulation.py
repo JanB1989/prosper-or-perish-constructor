@@ -19,7 +19,8 @@ from eu5gameparser.clausewitz.syntax import CList
 
 from . import start_placement as sp
 from .market_capacity import write as write_market_caps
-from .start_rules import Rules, first
+from .modifiers import setup_modifier_keys
+from .start_rules import Rules, Unresolved, first
 
 
 def setup_counts(path):
@@ -134,6 +135,33 @@ def additional_setups(vanilla_root, mod_root):
     return result
 
 
+TOPUP_PATH = Path("in_game/common/scripted_effects/pp_start_river_topup.txt")
+
+
+def without_river(ctx, rules):
+    """The location context as if the engine had traced no river through it."""
+    mods = dict(ctx["modifiers"])
+    statics = {s for s in ctx["static_modifiers"] if s.startswith("river_flowing_through_")}
+    for key in statics:
+        for k, v in summed(rules.statics.get(key)).items():
+            if k != "local_population_capacity":
+                mods[k] = mods.get(k, 0.0) - v
+    return {**ctx, "modifiers": mods, "static_modifiers": set(ctx["static_modifiers"]) - statics, "has_river": False}
+
+
+def write_topup(topup, owners, mod_root):
+    """``pp_start_river_topup``: the river share of the starting buildings (called by pp_navigation_start)."""
+    lines = [SETUP_MARKER.replace("cap-checked starting buildings", "river share of the starting buildings (start_simulation.river_topup)"),
+             "pp_start_river_topup = {"]
+    for (tag, key), n in sorted(topup.items()):
+        if n > 0 and tag in owners:
+            lines.append(f" location:{tag} = {{ change_building_level_in_location = {{ building = building_type:{key} value = {n} }} }}")
+    lines.append("}")
+    path = mod_root / TOPUP_PATH
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("﻿" + "\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+
+
 def plan_food_chain(deficit, victuals_surplus, food_per_import, food_per_cookery, victuals_per_cookery, victuals_per_import, absorb):
     """Cookery and import-market levels that cover a catchment's food deficit while the imports buy ``absorb`` of
     the victuals the catchment makes (existing surplus plus the new cookeries'). Returns (cookery, import) levels.
@@ -234,6 +262,7 @@ class Simulation:
         self.food_mult = {}
         self.rgo_k = {}
         self.victuals_pop_factors = rules.victuals_pop_factors()
+        setup_keys = setup_modifier_keys(contract)
         for tag, loc in self.locations.items():
             a = self.attrs.get(tag, {})
             target = self.targets.get(tag, {})
@@ -275,6 +304,13 @@ class Simulation:
                 static.add(key)
                 for k, v in summed(rules.statics.get(key)).items():
                     if k != "local_population_capacity":
+                        mods[k] += v
+            # Fertility, soil, sea coast and lake shore modifiers from the setup: the caps test for them
+            # (fertility alone moves field management by 3 levels). Their capacity rows are in the attribute flat.
+            for key in setup_keys.get(tag, ()):
+                static.add(key)
+                for k, v in summed(rules.statics.get(key)).items():
+                    if not k.startswith("local_population_capacity"):
                         mods[k] += v
             ctx = {
                 **loc,
@@ -376,6 +412,57 @@ class Simulation:
         if cached is None:
             cached = cache[state] = self.rules.cap(key, self.ctx(tag), gates=gates)
         return cached
+
+    def drop_invalid(self):
+        """Remove setup rows the engine reports as invalid: a location rank the building may not stand in, or a
+        failing location_potential (vanilla tar kilns on land the World Builder made unwooded). The engine keeps
+        such buildings anyway; this keeps error.log clean. Gates the evaluator cannot resolve are kept."""
+        for tag in sorted(self.locations):
+            ctx = self.ctx(tag)
+            rank = ctx.get("location_rank", "rural_settlement")
+            for key, n in sorted(self.counts[tag].items()):
+                body = self.rules.buildings.get(key)
+                if not n or body is None:
+                    continue
+                try:
+                    valid = first(body, rank, False) in (True, "setup_only") and self.rules.test(
+                        first(body, "location_potential"), ctx
+                    )
+                except Unresolved:
+                    continue
+                if not valid:
+                    self.trimmed.append({"location": tag, "building": key, "before": n, "after": 0})
+                    self.counts[tag][key] = 0
+
+    def river_topup(self):
+        """(location, building) -> starting levels that need the location's river; added at game start.
+
+        The engine validates setup buildings against the river sizes it traces from rivers.png, and drops some
+        bank remnants of the navigable rivers the World Builder still counts (Mechelen, Hanyang). Which ones
+        cannot be told offline, so the setup carries only the levels that hold without any river (gate and cap);
+        pp_start_river_topup adds the rest at game start, after pp_navigation_preserve_rivers."""
+        topup = {}
+        for tag in sorted(self.locations):
+            ctx = self.ctx(tag)
+            if not ctx["has_river"]:
+                continue
+            dry = without_river(ctx, self.rules)
+            for key, n in sorted(self.counts[tag].items()):
+                body = self.rules.buildings.get(key)
+                if not n or body is None:
+                    continue
+                before = Counter(self.rules.unsupported)
+                try:
+                    valid = self.rules.test(first(body, "location_potential"), dry)
+                except Unresolved:
+                    valid = True
+                keep = min(n, self.rules.cap(key, dry, gates=False)) if valid else 0
+                if self.rules.unsupported != before:   # an unresolved rule on the dry path: keep the setup as is
+                    self.rules.unsupported = before
+                    keep = n
+                if keep < n:
+                    topup[(tag, key)] = n - keep
+        return topup
 
     def clamp(self):
         # Caps can share pools or shrink with urbanisation: iterate to a stable
@@ -860,6 +947,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         improvement_keys=set(caps),
         market_centres=centres,
     )
+    sim.drop_invalid()
     sim.clamp()
     sim.refresh_navigation()
     # Keep source rows split: improvements, expanded vanilla presets, new plan.
@@ -878,9 +966,21 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         raise ValueError(
             "Unresolved starting rules: " + json.dumps(dict(rules.unsupported))
         )
-    for name, (extra_doc, counts) in extra.items():
+    # Merge repeated incremental placements into a single setup row.
+    counts = defaultdict(Counter)
+    for p in sim.placements:
+        counts[p.location][p.building] += p.level
+    # The river share of each starting building is added at game start, not in the setup (river_topup).
+    topup = sim.river_topup()
+    for (tag, key), n in topup.items():
+        for source in (counts, kept_vanilla, kept_improvements):
+            take = min(n, source[tag][key])
+            source[tag][key] -= take
+            n -= take
+    write_topup(topup, owners, mod_root)
+    for name, (extra_doc, counts_extra) in extra.items():
         kept = defaultdict(Counter)
-        for tag, local in counts.items():
+        for tag, local in counts_extra.items():
             for key, n in local.items():
                 kept[tag][key] = min(n, kept_vanilla[tag][key])
                 kept_vanilla[tag][key] -= kept[tag][key]
@@ -900,10 +1000,6 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         + "\n}\n",
         encoding="utf-8",
     )
-    # Merge repeated incremental placements into a single setup row.
-    counts = defaultdict(Counter)
-    for p in sim.placements:
-        counts[p.location][p.building] += p.level
     placements = [
         sp.Placement(tag, owners[tag], key, n)
         for tag, local in sorted(counts.items())
@@ -990,6 +1086,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         "locations_planned": len(sim.locations),
         "rows": len(placements),
         "levels_by_building": dict(sum(counts.values(), Counter())),
+        "river_topup_levels": dict(sum((Counter({key: n}) for (_, key), n in topup.items()), Counter())),
         "subsistence_define": rules.subsistence,
         "demand_by_pop_type": {k: round(v, 1) for k, v in sorted(demand_by_type.items(), key=lambda kv: -kv[1])},
         "engine_promotion_people": round(

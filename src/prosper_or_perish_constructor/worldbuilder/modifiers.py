@@ -294,11 +294,32 @@ def river_bodies(vanilla_root: Path) -> dict[int, list[str]]:
 # capacity line by the mod's hand-authored pp_location_modifier_adjustments.txt, so no percentage remains.
 
 
+def setup_modifier_keys(contract: Contract) -> dict[str, list[str]]:
+    """Location tag -> the attribute modifiers the setup places: fertility, soil, sea coast, lake shore.
+
+    The starting-building caps read them with has_location_modifier, so the offline start placement needs the
+    same list the setup file gets."""
+    per_location: dict[str, list[str]] = defaultdict(list)
+    attrs = contract.location_attributes
+    tags = [str(t) for t in attrs["location_tag"].to_list()]
+    for attribute, prefix in (("fertility", "pp_wb_fertility_"), ("soil_type", "pp_wb_soil_")):
+        if attribute in attrs.columns:
+            for tag, value in zip(tags, attrs[attribute].to_list()):
+                if value and str(value) != "None":
+                    per_location[tag].append(f"{prefix}{value}")
+    for attribute, key in (("is_coastal", "pp_wb_coastal"), ("is_adjacent_to_lake", "pp_wb_lake")):
+        if attribute in attrs.columns:
+            for tag, flag in zip(tags, attrs[attribute].to_list()):
+                if str(flag).lower() == "true":   # the handover CSV writes lowercase booleans
+                    per_location[tag].append(key)
+    return per_location
+
+
 def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path, vanilla_root: Path, rgo_by_location: Mapping[str, str] | None = None) -> dict[str, object]:
     rows = class_rows(contract)
     names: dict[str, str] = {}
     blocks: list[str] = []
-    per_location: dict[str, list[str]] = defaultdict(list)   # location tag -> modifier keys
+    per_location = setup_modifier_keys(contract)   # location tag -> modifier keys
     attrs = contract.location_attributes
     for attribute, prefix in (("fertility", "pp_wb_fertility_"), ("soil_type", "pp_wb_soil_")):
         if attribute not in attrs.columns:
@@ -313,19 +334,11 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
             key = f"{prefix}{value}"
             names[key] = f"{pretty(value)} {'Fertility' if attribute == 'fertility' else 'Soil'}"
             blocks.append(render_block(key, {"game_data": "{ category = location }", **{k: _fmt(v) for k, v in mods.items()}}))
-            for tag, cls in zip(tags, column):
-                if cls == value:
-                    per_location[str(tag)].append(key)
     for attribute, key, label in (("is_coastal", "pp_wb_coastal", "Coastal Land"), ("is_adjacent_to_lake", "pp_wb_lake", "Lakeside Land")):
         mods = rows.get((attribute, "True"), {})
         # always defined (possibly empty): the location window shows the modifier's effects
         names[key] = label
         blocks.append(render_block(key, {"game_data": "{ category = location }", **{k: _fmt(v) for k, v in mods.items()}}))
-        if attribute not in attrs.columns:
-            continue
-        for tag, flag in zip(attrs["location_tag"].to_list(), attrs[attribute].to_list()):
-            if str(flag).lower() == "true":   # the handover CSV writes lowercase booleans
-                per_location[str(tag)].append(key)
     # vanilla's hidden flat capacity by closeness to the equator: cancelled, capacity is farmland only
     blocks.append(render_block("TRY_REPLACE:location_closeness_to_equator_impact", {"game_data": "{ category = location }"}))
     static_path = mod_root / STATIC_MODIFIERS_PATH

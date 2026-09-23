@@ -290,11 +290,20 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
         if row['original_coastal']:
             key=f'river_flowing_through_coast_{level}'
             bonus.append(f' location:{tag} = {{ if = {{ limit = {{ NOT = {{ has_location_modifier = {key} }} }} add_location_modifier = {{ modifier = {key} days = -1 mode = replace }} }} }}')
+    # The engine traces its river sizes from rivers.png and drops some bank remnants the navigation export keeps
+    # (Hanyang, Mechelen: no river size at all), while the World Builder still gives them a river level. Such a
+    # location gets its level back; one the engine sized differently keeps the engine's (no double bonus).
+    lost_tags={row['location_tag'] for row in lost}
+    for row in contract.location_attributes.select('location_tag','river_level').iter_rows(named=True):
+        level=int(row['river_level'] or 0)
+        if level and row['location_tag'] not in lost_tags:
+            bonus.append(f" location:{row['location_tag']} = {{ if = {{ limit = {{ NOT = {{ pp_navigation_has_river = yes }} }} add_location_modifier = {{ modifier = river_flowing_through_{level} days = -1 mode = replace }} }} }}")
     bonus.append('}')
     write('in_game/common/scripted_effects/pp_navigation_river_bonuses.txt','\n'.join(bonus)+'\n')
+    # Starting building levels that need the river are added after the rivers are restored (start_simulation).
     write('in_game/common/on_action/pp_navigation.txt','\n'.join([
         'on_game_start = { on_actions = { pp_navigation_start } }','pp_navigation_start = { effect = {',
-        ' pp_navigation_preserve_rivers = yes',' pp_navigation_map_seed = yes',' pp_navigation_seed = yes',*start,' pp_navigation_map_refresh = yes','} }'])+'\n')
+        ' pp_navigation_preserve_rivers = yes',' pp_start_river_topup = yes',' pp_navigation_map_seed = yes',' pp_navigation_seed = yes',*start,' pp_navigation_map_refresh = yes','} }'])+'\n')
     unlocks=state['settings'].get('advance_unlocks',{})
     write('in_game/common/advances/pp_navigation.txt','\n'.join(f'TRY_INJECT:{advance} = {{ unlock_building = {key} }}' for key,advance in unlocks.items())+'\n')
     loc=['l_english:', ' pp_navigation_navigable: "Navigable Waterway"',' pp_navigation_improvable: "Unimproved Waterway"',

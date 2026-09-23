@@ -235,6 +235,7 @@ def test_sync_full_build_and_force_deploy_use_recovery_path(
 
     monkeypatch.setattr(cli, "_finalize_constructor_mod", lambda repo_arg, project_arg: None)
     monkeypatch.setattr(cli, "_record_current_sync_state", lambda repo_arg, project_arg: recorded.append(project_arg))
+    monkeypatch.setattr(cli, "_game_running", lambda: False)
 
     def fake_run(command, cwd):
         calls.append([str(part) for part in command])
@@ -250,6 +251,23 @@ def test_sync_full_build_and_force_deploy_use_recovery_path(
         ["eu5-orchestrator", "deploy", "--project", str(repo / "constructor.toml"), "--clean", "--force"],
     ]
     assert recorded == [repo / "constructor.toml"]
+
+
+def test_sync_does_not_deploy_while_the_game_runs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # A deploy into a running debug-mode game hot-reloads the REPLACEd building types and floods error.log.
+    repo = _repo(tmp_path)
+    (repo / "constructor.local.toml").write_text("[deploy]\ntarget = 'live'\n", encoding="utf-8")
+    calls: list[str] = []
+    monkeypatch.setattr(cli, "_finalize_constructor_mod", lambda repo_arg, project_arg: None)
+    monkeypatch.setattr(cli, "_record_current_sync_state", lambda repo_arg, project_arg: None)
+    monkeypatch.setattr(cli, "_run", lambda command, cwd: calls.append(str(command[1])) or 0)
+    monkeypatch.setattr(cli, "_game_running", lambda: True)
+
+    assert cli.main(["--repo", str(repo), "sync", "--yes", "--full-build"]) == 3
+    assert calls == ["build"]
+
+    assert cli.main(["--repo", str(repo), "sync", "--yes", "--full-build", "--while-running"]) == 0
+    assert calls == ["build", "build", "deploy"]
 
 
 def test_smart_sync_reruns_world_builder_only_when_its_inputs_change(
@@ -286,6 +304,7 @@ def test_smart_sync_reruns_world_builder_only_when_its_inputs_change(
 
     monkeypatch.setattr(cli, "_worldbuilder_apply", fake_apply)
     monkeypatch.setattr(cli, "_run", fake_run)
+    monkeypatch.setattr(cli, "_game_running", lambda: False)
     monkeypatch.setattr(cli, "_finalize_constructor_mod", lambda repo_arg, project_arg: None)
 
     def sync() -> list[str]:

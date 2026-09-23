@@ -513,6 +513,11 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Use the previous full eu5-orchestrator build workflow before deploy.",
     )
+    sync.add_argument(
+        "--while-running",
+        action="store_true",
+        help="Deploy even while EU5 is running (its debug-mode filewatcher then hot-reloads the mod).",
+    )
     vanilla_mirror = _add_command(
         subcommands,
         "vanilla-mirror",
@@ -1033,6 +1038,8 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     )
     from prosper_or_perish_constructor.rgo_cost_redirects import write_rgo_cost_redirects
 
+    from prosper_or_perish_constructor import profit_margins
+
     mod_root = _project_mod_root(repo, project)
     increase_cost_result = apply_increase_per_level_cost_multiplier(repo, mod_root, project)
     print(
@@ -1090,6 +1097,19 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         )
     protected = gui_compat.protect(mod_root)
     print(f"Protected GUI types from other mods' vanilla copies: {protected}.", flush=True)
+    if load_order_path.is_file():
+        from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+        margins = profit_margins.apply(
+            mod_root, vanilla_root(repo, project), profit_margins.goods_prices(load_order_path, CONSTRUCTOR_PROFILE)
+        )
+        print(
+            f"Profit margins: debug_max_profit kept at the base-price profit on {margins.methods_written} production "
+            f"methods ({margins.files_changed} mod files changed, {len(margins.vanilla_replaced)} vanilla shared "
+            f"methods replaced); still flagged: {len(margins.mod_losing)} mod methods that lose money at base "
+            f"prices and {len(margins.vanilla_unchanged)} vanilla methods (see profit_margins.py).",
+            flush=True,
+        )
     _ensure_constructor_text_boms(mod_root)
 
 
@@ -3300,7 +3320,35 @@ def _record_current_sync_state(repo: Path, project: Path) -> None:
     _save_sync_state(repo, state)
 
 
-def _deploy_built_mod(repo: Path, project: Path, *, force: bool) -> int:
+GAME_PROCESS = "eu5.exe"
+
+
+def _game_running() -> bool:
+    """Whether EU5 runs on the Windows host (checked through tasklist.exe from WSL)."""
+    try:
+        result = subprocess.run(
+            ["tasklist.exe", "/FI", f"IMAGENAME eq {GAME_PROCESS}", "/FO", "CSV", "/NH"],
+            capture_output=True, timeout=20, check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False
+    # tasklist prints localized text in the OEM codepage (not UTF-8); the image name is ASCII, so match the raw bytes.
+    return GAME_PROCESS.lower().encode("ascii") in result.stdout.lower()
+
+
+def _deploy_built_mod(repo: Path, project: Path, *, force: bool, while_running: bool = False) -> int:
+    # With -debug_mode the game's filewatcher reloads changed script files. Reloading building types that
+    # the mod REPLACEs re-adds vanilla's production methods, so error.log fills with thousands of false
+    # "duplicated production method name" and "Unexpected token" lines and the running game is left
+    # in a mixed state. Deploy only while the game is closed.
+    if not while_running and _game_running():
+        print(
+            "EU5 is running: the build is ready but NOT deployed, because the game would hot-reload the mod "
+            "and log false duplicate/unexpected-token errors. Close the game and re-run `uv run ppc sync --yes` "
+            "(the smart sync then only deploys), or pass --while-running.",
+            flush=True,
+        )
+        return 3
     command: list[str | os.PathLike[str]] = ["eu5-orchestrator", "deploy", "--project", project, "--clean"]
     if force:
         command.append("--force")
@@ -3335,7 +3383,7 @@ def _smart_sync(args: argparse.Namespace, repo: Path, project: Path) -> int:
     else:
         print("Smart sync: validation inputs unchanged; skipping validation.", flush=True)
     _save_sync_state(repo, state)
-    return _deploy_built_mod(repo, project, force=args.force_deploy)
+    return _deploy_built_mod(repo, project, force=args.force_deploy, while_running=args.while_running)
 
 
 def _sync(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
@@ -3355,7 +3403,7 @@ def _sync(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: P
         if build_result != 0:
             return build_result
         _record_current_sync_state(repo, project)
-        return _deploy_built_mod(repo, project, force=args.force_deploy)
+        return _deploy_built_mod(repo, project, force=args.force_deploy, while_running=args.while_running)
     return _smart_sync(args, repo, project)
 
 

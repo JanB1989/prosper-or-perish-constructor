@@ -586,8 +586,9 @@ def _base_production_method_input_offenders(path: Path) -> list[str]:
             block_lines.append(block_line)
         for block_line in block_lines:
             key_match = re.match(r"\s*(?P<key>[A-Za-z][A-Za-z0-9_]*)\s*=", block_line)
-            # base methods pay only a token labour cost (production labour, base class)
-            if key_match and key_match.group("key") not in {"produced", "output", "category", LABOUR_GOOD}:
+            # base methods pay only a token labour cost (production labour, base class); debug_max_profit is
+            # the load-check target the finalize step keeps at the method's profit (profit_margins.py)
+            if key_match and key_match.group("key") not in {"produced", "output", "category", LABOUR_GOOD, "debug_max_profit"}:
                 relative = path.relative_to(ROOT)
                 offenders.append(f"{relative}:{index + 1}: {method} has input {key_match.group('key')}")
 

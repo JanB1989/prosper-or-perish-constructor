@@ -10,7 +10,7 @@ import math
 import re
 from collections import Counter, defaultdict
 
-from eu5gameparser.clausewitz.parser import parse_text
+from eu5gameparser.clausewitz.parser import parse_file, parse_text
 from eu5gameparser.clausewitz.syntax import CList
 from eu5gameparser.load_order import load_merged_directory, load_profile
 from prosper_or_perish_constructor import yaml_io
@@ -21,6 +21,27 @@ BUILDING_LEVEL = re.compile(r"location_building_level\(building_type:(\w+)\)")
 
 class Unresolved(ValueError):
     pass
+
+
+REPLACE_MODES = ("REPLACE", "TRY_REPLACE", "REPLACE_OR_CREATE")
+INJECT_MODES = ("INJECT", "TRY_INJECT", "INJECT_OR_CREATE")
+_PARSED = {}
+
+
+def engine_value(entry):
+    """The block as the engine reads it. The engine ignores an INJECT into a block a mod REPLACEd (the in-game
+    caps confirm it: river_flowing_through_N counts its fish row once), while the generic merger folds it in."""
+    history = entry.source_history
+    replaced = [s for s in history if s.mode in REPLACE_MODES]
+    if not replaced or history[-1].mode not in INJECT_MODES:
+        return entry.value
+    source = replaced[-1]
+    if source.file not in _PARSED:
+        _PARSED[source.file] = parse_file(source.file)
+    for parsed in _PARSED[source.file].entries:
+        if parsed.location.line == source.line:
+            return parsed.value
+    raise Unresolved(f"replaced block {entry.key} not found at {source.file}:{source.line}")
 
 
 def first(node, key, default=None):
@@ -48,7 +69,7 @@ class Rules:
 
         def merged(name, scope="in_game"):
             return {
-                e.key: e.value
+                e.key: engine_value(e)
                 for e in load_merged_directory(
                     profile, name, scope=scope, include_scalars=True
                 ).entries
@@ -244,6 +265,8 @@ class Rules:
             if key == "current_age_or_later":
                 return first(v, "age") == "age_1_traditions"
             if key == "this":
+                if not str(v).startswith("location:"):
+                    raise Unresolved("trigger this = " + str(v))   # e.g. c:HSA.capital
                 return ctx.get("location_tag") == str(v).split(":")[-1]
             if key in ctx and not isinstance(v, CList):
                 actual = ctx[key]

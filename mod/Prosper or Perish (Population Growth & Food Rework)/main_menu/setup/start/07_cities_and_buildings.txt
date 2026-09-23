@@ -3234,7 +3234,7 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = SWE
-		level = 2
+		level = 1
 		location = soderala
 	}
 	tar_kiln = {
@@ -3254,7 +3254,7 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = NOR
-		level = 4
+		level = 3
 		location = bragernes
 	}
 	tar_kiln = {
@@ -3269,7 +3269,7 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = NOR
-		level = 2
+		level = 1
 		location = ringerike
 	}
 	tar_kiln = {
@@ -3339,7 +3339,7 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = BIO
-		level = 3
+		level = 2
 		location = lihula
 	}
 	tar_kiln = {
@@ -4053,18 +4053,8 @@ building_manager = {
 		location = kidderminster
 	}
 	tar_kiln = {
-		tag = ENG
-		level = 4
-		location = shrewsbury
-	}
-	tar_kiln = {
-		tag = ENG
-		level = 4
-		location = stafford
-	}
-	tar_kiln = {
 		tag = SCO
-		level = 2
+		level = 1
 		location = inverary
 	}
 	castle = {
@@ -4268,11 +4258,6 @@ building_manager = {
 		location = london
 	}
 	merchants_guild = {
-		tag = ENG
-		level = 1
-		location = london
-	}
-	bridge_infrastructure = {
 		tag = ENG
 		level = 1
 		location = london
@@ -5809,11 +5794,6 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = CAS
-		level = 4
-		location = beteta
-	}
-	tar_kiln = {
-		tag = CAS
 		level = 3
 		location = segura_de_la_sierra
 	}
@@ -5821,11 +5801,6 @@ building_manager = {
 		tag = MOR
 		level = 3
 		location = ronda
-	}
-	tar_kiln = {
-		tag = POR
-		level = 3
-		location = chao_de_couce
 	}
 	barcelona_royal_shipyard = {
 		tag = ARA
@@ -5946,11 +5921,6 @@ building_manager = {
 		tag = BUL
 		level = 2
 		location = razgrad
-	}
-	tar_kiln = {
-		tag = BUL
-		level = 3
-		location = sozopol
 	}
 	tar_kiln = {
 		tag = ORT
@@ -6313,21 +6283,6 @@ building_manager = {
 		location = insterburg
 	}
 	tar_kiln = {
-		tag = LIT
-		level = 3
-		location = kraziai
-	}
-	tar_kiln = {
-		tag = LIT
-		level = 3
-		location = vilkmerge
-	}
-	tar_kiln = {
-		tag = LIT
-		level = 4
-		location = lida
-	}
-	tar_kiln = {
 		tag = TEU
 		level = 2
 		location = tuchola
@@ -6346,11 +6301,6 @@ building_manager = {
 		tag = POL
 		level = 3
 		location = lodz
-	}
-	tar_kiln = {
-		tag = POL
-		level = 3
-		location = leczyca
 	}
 	castle = {
 		tag = LUX
@@ -6459,7 +6409,7 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = HNB
-		level = 4
+		level = 3
 		location = saalfeld
 	}
 	castle = {
@@ -6744,12 +6694,12 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = NOV
-		level = 3
+		level = 2
 		location = beloozero
 	}
 	tar_kiln = {
 		tag = NOV
-		level = 2
+		level = 1
 		location = kargopol
 	}
 	tar_kiln = {
@@ -6764,7 +6714,7 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = MOS
-		level = 3
+		level = 2
 		location = vologda
 	}
 	tar_kiln = {
@@ -6774,7 +6724,7 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = MOS
-		level = 2
+		level = 1
 		location = vyatka
 	}
 	tar_kiln = {
@@ -6933,19 +6883,9 @@ building_manager = {
 		location = paris
 	}
 	tar_kiln = {
-		tag = FRA
-		level = 4
-		location = mende
-	}
-	tar_kiln = {
 		tag = VNT
-		level = 4
-		location = ventadour
-	}
-	tar_kiln = {
-		tag = BRI
 		level = 3
-		location = josselin
+		location = ventadour
 	}
 	cathedral = {
 		tag = FRA
@@ -7449,7 +7389,7 @@ building_manager = {
 	}
 	market_village = {
 		tag = ZMW
-		level = 2
+		level = 1
 		location = muchuchu
 	}
 	great_enclosure = {
@@ -7936,11 +7876,6 @@ building_manager = {
 		tag = ZAQ
 		level = 1
 		location = chunsua
-	}
-	terraces = {
-		tag = QUL
-		level = 1
-		location = hatunqulla
 	}
 	terraces = {
 		tag = LUP
@@ -12109,12 +12044,12 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = GRM
-		level = 4
+		level = 3
 		location = gediz
 	}
 	tar_kiln = {
 		tag = BFR
-		level = 4
+		level = 3
 		location = gerze
 	}
 	madrasa = {
@@ -12139,7 +12074,7 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = SUT
-		level = 4
+		level = 3
 		location = sirnak
 	}
 	tar_kiln = {
@@ -12153,13 +12088,8 @@ building_manager = {
 		location = dulab
 	}
 	tar_kiln = {
-		tag = MAM
-		level = 3
-		location = deir_qamar
-	}
-	tar_kiln = {
 		tag = DLH
-		level = 4
+		level = 3
 		location = nasik
 	}
 	tar_kiln = {
@@ -12169,12 +12099,12 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = DLH
-		level = 4
+		level = 3
 		location = chakan
 	}
 	tar_kiln = {
 		tag = ORI
-		level = 4
+		level = 3
 		location = asika
 	}
 	tar_kiln = {
@@ -12924,7 +12854,7 @@ building_manager = {
 	}
 	tar_kiln = {
 		tag = KHM
-		level = 4
+		level = 3
 		location = peam
 	}
 	market_village = {
@@ -22115,9 +22045,8 @@ building_manager = {
  fiber_crops_farm = { tag = ZAN level = 1 location = kisiju }
  kilwan_shipwrights = { tag = ZAN level = 1 location = kisiju }
  local_markets = { tag = ZAN level = 1 location = kisiju }
- market_village = { tag = ZAN level = 3 location = kisiju }
+ market_village = { tag = ZAN level = 2 location = kisiju }
  mason = { tag = ZAN level = 1 location = kisiju }
- pottery_guild = { tag = ZAN level = 1 location = kisiju }
  brewery = { tag = HAB level = 2 location = klagenfurt }
  granary = { tag = HAB level = 1 location = klagenfurt }
  marketplace = { tag = HAB level = 2 location = klagenfurt }
@@ -22844,7 +22773,6 @@ building_manager = {
  local_markets = { tag = ZAN level = 1 location = lindi }
  market_village = { tag = ZAN level = 1 location = lindi }
  mason = { tag = ZAN level = 1 location = lindi }
- pottery_guild = { tag = ZAN level = 1 location = lindi }
  brewery = { tag = CHI level = 1 location = lingling }
  cloth_guild = { tag = CHI level = 2 location = lingling }
  dyes_guild = { tag = CHI level = 1 location = lingling }
@@ -23997,9 +23925,8 @@ building_manager = {
  fiber_crops_farm = { tag = ZAN level = 1 location = mikindani }
  kilwan_shipwrights = { tag = ZAN level = 1 location = mikindani }
  local_markets = { tag = ZAN level = 1 location = mikindani }
- market_village = { tag = ZAN level = 2 location = mikindani }
+ market_village = { tag = ZAN level = 1 location = mikindani }
  mason = { tag = ZAN level = 1 location = mikindani }
- pottery_guild = { tag = ZAN level = 1 location = mikindani }
  fine_cloth_guild = { tag = MLO level = 1 location = milano }
  tools_guild = { tag = MLO level = 1 location = milano }
  weapon_guild = { tag = MLO level = 4 location = milano }
@@ -24051,9 +23978,8 @@ building_manager = {
  fiber_crops_farm = { tag = ZAN level = 1 location = mitimiri }
  kilwan_shipwrights = { tag = ZAN level = 1 location = mitimiri }
  local_markets = { tag = ZAN level = 1 location = mitimiri }
- market_village = { tag = ZAN level = 2 location = mitimiri }
+ market_village = { tag = ZAN level = 1 location = mitimiri }
  mason = { tag = ZAN level = 1 location = mitimiri }
- pottery_guild = { tag = ZAN level = 1 location = mitimiri }
  brewery = { tag = JAP level = 1 location = miyagi }
  granary = { tag = JAP level = 1 location = miyagi }
  marketplace = { tag = JAP level = 1 location = miyagi }

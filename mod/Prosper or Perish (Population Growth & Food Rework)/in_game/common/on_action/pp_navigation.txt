@@ -1,6 +1,7 @@
 ﻿on_game_start = { on_actions = { pp_navigation_start } }
 pp_navigation_start = { effect = {
  pp_navigation_preserve_rivers = yes
+ pp_start_river_topup = yes
  pp_navigation_map_seed = yes
  pp_navigation_seed = yes
  location:aaboukingon = { if = { limit = { OR = { has_building = building_type:river_navigation_works } }  location:pp_nav_01279 = { add_road_to = { target = location:aaboukingon type = pp_navigation_improved } }  location:pp_nav_01279 = { pp_navigation_map_refresh_pp_nav_01279 = yes } } }

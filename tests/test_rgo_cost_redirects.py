@@ -85,6 +85,10 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
         "terraces": "pp_terraces_price",
         "victuals_market": "pp_victuals_market_price",
         "victuals_market_import": "pp_victuals_market_import_price",
+
+        "hired_labor_yard": "pp_hired_labor_yard_price",
+        "rural_daywork_yard": "pp_rural_daywork_yard_price",
+        "slave_labor_yard": "pp_slave_labor_yard_price",
     }
 
 

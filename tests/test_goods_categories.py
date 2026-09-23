@@ -56,6 +56,7 @@ ALLOWED_SUBCATEGORIES = {
         "coerced_labor",
         "construction_materials",
         "industrial_inputs",
+        "labour",
         "luxury_crafts",
         "metal_goods",
         "military_goods",

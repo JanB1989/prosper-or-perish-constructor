@@ -48,7 +48,11 @@ ROAD_BUILDINGS = {
     },
     "permanent_way_depot": {
         "advance": "railroad_advance",
-        "method_unlock": "pp_permanent_way_depot_maintenance",
+        "method_unlocks": (
+            "pp_permanent_way_depot_maintenance",
+            "pp_permanent_way_depot_hand_laying",
+            "pp_permanent_way_depot_standardized_fittings",
+        ),
         "previous": "macadam_works",
         "next": None,
         "pop_type": "laborers",
@@ -134,7 +138,7 @@ def test_road_infrastructure_buildings_require_any_road_and_unlocks() -> None:
         assert "type = road_type:" not in body
 
         expected_body = f"unlock_building = {building}"
-        if method_unlock := expected.get("method_unlock"):
+        for method_unlock in expected.get("method_unlocks", ()):
             expected_body = f"{expected_body}\nunlock_production_method = {method_unlock}"
         if requires := expected.get("requires"):
             expected_body = (

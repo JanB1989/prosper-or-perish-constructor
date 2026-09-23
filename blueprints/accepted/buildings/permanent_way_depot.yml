@@ -100,6 +100,8 @@ advancements:
     body: |2-
       unlock_building = permanent_way_depot
       unlock_production_method = pp_permanent_way_depot_maintenance
+      unlock_production_method = pp_permanent_way_depot_hand_laying
+      unlock_production_method = pp_permanent_way_depot_standardized_fittings
 localization:
   entries:
     permanent_way_depot_slot_0: Permanent Way Crews

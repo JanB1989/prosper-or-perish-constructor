@@ -55,3 +55,5 @@ localization:
 evaluation:
   allow_rules:
     profit_percent: Grain houses are food-security infrastructure with upkeep inputs and no direct goods output.
+    input_throughput: Grain houses are food-security infrastructure; their token stone upkeep is not a production input.
+    output_throughput: Grain houses are food-security infrastructure with no direct goods output.

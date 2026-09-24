@@ -9,7 +9,7 @@ TRY_INJECT:megalopolis = {
 		local_province_food_sales_output_modifier = 0.10
 		local_offset_output_modifier = 0.10
 		local_province_food_purchase_output_modifier = 0.10
-		local_population_growth = -0.005 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
+		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 		# Tribesmen self-provision outside the provincial food-growth gate.
 		local_tribesmen_pop_growth = 0.005
 
@@ -32,7 +32,7 @@ TRY_INJECT:city = {
 		local_offset_output_modifier = 0.05
 		local_province_food_purchase_output_modifier = 0.05
 
-		local_population_growth = -0.005 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
+		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 		# Tribesmen self-provision outside the provincial food-growth gate.
 		local_tribesmen_pop_growth = 0.005
 
@@ -44,7 +44,7 @@ TRY_INJECT:city = {
 
 TRY_INJECT:town = {
 	rank_modifier = {
-		local_population_growth = -0.005 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
+		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 		# Tribesmen self-provision outside the provincial food-growth gate.
 		local_tribesmen_pop_growth = 0.005
 
@@ -67,7 +67,7 @@ TRY_INJECT:rural_settlement = {
 		local_offset_output_modifier = 0.00
 		local_province_food_purchase_output_modifier = 0.00
 		free_building_levels = 30
-		local_population_growth = -0.005 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
+		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 		# Tribesmen self-provision outside the provincial food-growth gate.
 		local_tribesmen_pop_growth = 0.004
 		local_build_buildings_efficiency = -0.3

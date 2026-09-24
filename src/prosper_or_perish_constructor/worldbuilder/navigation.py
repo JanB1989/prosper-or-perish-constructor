@@ -119,7 +119,8 @@ def prepare(repo, cfg, contract, *, write_blueprints=True, locations=None):
     niche=dict(cfg.niche)
     for key in settings['building_types']:
         locations=sorted(tag for tag,s in sites.items() if s['building']==key)
-        niche[key]={'family':settings['building_types'][key].get('family',settings['family']),'strength':1.0,'lock':[], 'gate':[{'location_tag':locations}],
+        # The tag list stays the offline gate; the game tests the site marker placed on the same locations.
+        niche[key]={'family':settings['building_types'][key].get('family',settings['family']),'strength':1.0,'lock':[], 'gate':[{'location_tag':locations}],'marker':site_marker(key),
                     'place_at_start':False,'maximum_levels':int(settings['maximum_levels_per_site'])}
     for site in sites.values():
         site['supporting_buildings']=[site['building']]+[key for key,spec in settings.get('existing_building_links',{}).items() if site['building'] in spec['site_buildings']]
@@ -365,10 +366,27 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     return report
 
 
+def site_marker(key):
+    return f'pp_navigation_site_{key}'
+
+
+def site_markers(state):
+    """Location -> its site marker. The works' gates test the setup-placed marker in one lookup; a list of
+    every site tag costs one comparison per tag on each location_potential check (the profiler's largest mod row)."""
+    return {tag:[site_marker(site['building'])] for tag,site in (state or {}).get('sites',{}).items()}
+
+
 def write_bonus_compensation(state,mod_root,vanilla_root):
-    """Native bank pixels own river effects; never add scripted duplicates."""
+    """Native bank pixels own river effects; never add scripted duplicates. Also defines the site markers."""
     if state['manifest'].get('river_preservation')!='native_bank_pixel':
         raise ValueError('Rebuild World Builder navigation: native river preservation contract required')
-    (mod_root/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').write_text('# River effects are preserved by the native river bitmap.\n')
-    (mod_root/'main_menu/localization/english/pp_navigation_preservation_l_english.yml').write_text('\ufeffl_english:\n',encoding='utf-8')
+    types=state.get('settings',{}).get('building_types',{})
+    blocks=['# River effects are preserved by the native river bitmap.','# Site markers: placed in the setup on each navigation site, tested by the works gates.']
+    blocks+=[f'{site_marker(k)} = {{\n\tgame_data = {{ category = location }}\n}}' for k in sorted(types)]
+    (mod_root/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').write_text('\n\n'.join(blocks)+'\n')
+    loc=['\ufeffl_english:']
+    for k,spec in sorted(types.items()):
+        loc.append(f'  STATIC_MODIFIER_NAME_{site_marker(k)}: "{spec["name"]} Site"')
+        loc.append(f'  STATIC_MODIFIER_DESC_{site_marker(k)}: "The waterway here can be improved with {spec["name"]}."')
+    (mod_root/'main_menu/localization/english/pp_navigation_preservation_l_english.yml').write_text('\n'.join(loc)+'\n',encoding='utf-8')
     return {}

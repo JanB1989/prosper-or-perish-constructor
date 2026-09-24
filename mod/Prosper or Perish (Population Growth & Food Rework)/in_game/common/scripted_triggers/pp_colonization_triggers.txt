@@ -1,0 +1,70 @@
+﻿# Prosper or Perish - the mod's economy leaves countries with a smaller tax base than vanilla, so the AI
+# reached vanilla's absolute colonization (100) and exploration (30) tax-base gates decades late.
+# Vanilla definitions with only those thresholds lowered; keep the rest in sync with vanilla.
+
+REPLACE:ai_country_should_colonize = {	#Root should be the country
+	OR = {
+		country_tax_base > 60
+		yearly_gold > 0
+		tag = SWE
+		tag = POR
+		tag = KUR
+		is_subject_type = colonial_nation
+	}
+	
+	
+	OR = {
+		has_game_rule = all_countries_colonize
+		trigger_if = {
+			limit = {
+				has_game_rule = western_colonisation_only
+			}
+			this != c:PAP
+			not = { has_preference_tag = "warfare" }
+			OR = {
+				capital.continent = continent:europe
+				and = {
+					is_subject = yes
+					overlord = {
+						capital.continent = continent:europe
+					}
+				}
+			}
+			
+		}
+	}
+
+	OR = {
+		is_subject = no
+		is_subject_type = colonial_nation
+	}
+}
+
+REPLACE:country_can_start_exploration_trigger = {
+	modifier:may_explore = yes
+	OR = {
+		is_ai = no
+		AND = {
+			country_tax_base > 20
+			OR = {
+				has_game_rule = all_countries_explore
+				trigger_if = {
+					limit = {
+						has_game_rule = western_exploration_only
+					}
+					this != c:PAP
+					not = { has_preference_tag = "warfare" }
+					OR = {
+						capital.continent = continent:europe
+						and = {
+							is_subject = yes
+							overlord ?= {
+								capital.continent = continent:europe
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

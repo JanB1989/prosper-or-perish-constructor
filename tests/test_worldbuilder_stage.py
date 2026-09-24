@@ -65,6 +65,18 @@ def test_cap_script_value_and_gate_use_game_keys(tmp_path):
     assert wb_buildings.trigger_for(c, "river_level", "3") == "has_location_modifier = river_flowing_through_3"
 
 
+def test_cap_terms_of_one_exclusive_attribute_chain_with_else_if(tmp_path):
+    c = _contract(tmp_path)
+    eq = {"base_levels": 1, "levels_per_development_point": 0, "class_terms": [
+        {"attribute": "climate", "value": "arid", "levels": 1}, {"attribute": "climate", "value": "tropical", "levels": 0},
+        {"attribute": "climate", "value": "oceanic", "levels": 2}, {"attribute": "fertility", "value": "high", "levels": 2},
+        {"attribute": "river_level", "value": "2", "levels": 1}, {"attribute": "river_level", "value": "3", "levels": 1}]}
+    text = wb_buildings.cap_script_value(c, "x", eq, 1.0, 20)
+    branches = [line.strip().split(" ")[0] for line in text.splitlines() if line.strip().startswith(("if =", "else_if ="))]
+    # climate chains (the zero term emits nothing), fertility starts its own chain, river levels stay independent
+    assert branches == ["if", "else_if", "if", "if", "if"]
+
+
 def test_raw_modifier_replacement_merges_duplicate_blocks_and_drops_bridges():
     body = "    max_levels = 5\n    raw_modifier = {\n      farm_capacity_from_land_clearance = 0.60\n      local_population_capacity = 7.65\n    }\n\n      raw_modifier = {\n          farm_capacity_from_x = -1\n        }\n\n    modifier = {\n    }\n"
     out = wb_buildings._replace_raw_modifier(body, {"local_population_capacity": "2.8"}, drop_prefixes=("farm_capacity_from_land",))
@@ -364,11 +376,11 @@ def test_river_replacements_fold_in_the_hand_authored_injects(tmp_path):
     (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("river_flowing_through_2 = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n\tlocal_population_capacity_modifier = 0.2\n\tlocal_monthly_food_modifier = 0.10\n\tlocal_supply_limit_modifier = 0.10\n}\n", encoding="utf-8")
     adj = tmp_path / wb_modifiers.ADJUSTMENTS_PATH
     adj.parent.mkdir(parents=True, exist_ok=True)
-    adj.write_text("TRY_REPLACE:development = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n}\n\nTRY_INJECT:river_flowing_through_2 = {\n\tlocal_population_capacity_modifier = -0.2\n\tfarm_capacity_from_river_size = 1\n\tfree_building_levels = 15\n\tlocal_supply_limit_modifier = 0.05 # vanilla 0.10\n}\n", encoding="utf-8")
+    adj.write_text("TRY_REPLACE:development = {\n\tgame_data = {\n\t\tcategory = location\n\t}\n}\n\nTRY_INJECT:river_flowing_through_2 = {\n\tlocal_population_capacity_modifier = -0.2\n\tfish_capacity_from_river_size = 1\n\tfree_building_levels = 15\n\tlocal_supply_limit_modifier = 0.05 # vanilla 0.10\n}\n", encoding="utf-8")
     wb_modifiers.write_static_modifiers(c, _cfg(tmp_path), tmp_path, vanilla, {})
     text = (tmp_path / wb_modifiers.RIVER_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
     block = text[text.index("TRY_REPLACE:river_flowing_through_2"):]
-    assert "free_building_levels = 15" in block and "farm_capacity_from_river_size = 1" in block
+    assert "free_building_levels = 15" in block and "fish_capacity_from_river_size = 1" in block
     assert "local_supply_limit_modifier = 0.15" in block            # vanilla 0.10 + the additive inject 0.05
     assert "local_population_capacity_modifier" not in block and "local_monthly_food_modifier" not in block
 

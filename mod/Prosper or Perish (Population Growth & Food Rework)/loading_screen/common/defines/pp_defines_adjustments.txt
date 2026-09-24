@@ -12,6 +12,7 @@ NAI = {
 	#   in it permanently, and the AI then keeps building food, about 40% of it where no province is short.
 	#   Our markets hold no food, so both sit below zero: market food never steers the AI.
 	AI_MARKET_LOW_FOOD_THRESHOLD = -0.5 # 0.5
+	AI_EARLY_GAME_MONTHS = 0 # TEMPORARY (vanilla 36): Province Food rework test runs, revert when done
 	AI_MARKET_CRITICAL_FOOD_THRESHOLD = -0.5 # 0.1
 	AI_PROVINCE_FOOD_STOCKPILE_UTILITY = 0.50
 	# AI_MAXIMUM_EXPECT_TOWN_RATIO = 0.2
@@ -28,8 +29,8 @@ NAI = {
 	AI_DEVELOPMENT_UTILITY = 0.2
 	AI_PROFIT_MARGIN_TARGET = 0.10
 	AI_PROFITABILITY_THRESHOLD_FOR_MISSING_GOODS_UTIL = 1.01
-	# Light nudge so already-eligible AI colonizers start and maintain charters earlier.
-	AI_BASE_COLONY_UTILITY = 4
+	# Nudge so eligible AI colonizers start and maintain charters earlier (tax-base gates: scripted_triggers/pp_colonization_triggers.txt).
+	AI_BASE_COLONY_UTILITY = 6 # 3
 	AI_COLONIAL_RANGE_UTILITY = 0.00004
 	AI_GREAT_POWER_COLONIAL_RANGE_UTILITY = 0.0003
 	AI_SAVING_MODE_COLONIAL_MAINTENANCE = 0.65

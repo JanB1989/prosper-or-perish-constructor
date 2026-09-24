@@ -58,6 +58,8 @@ ATTRIBUTE_TRIGGERS = {
     "culture": "dominant_culture ?= culture:{value}",
     "province": "province_definition = province_definition:{value}",
 }
+# One class per location: the engine's climate/vegetation/topography, the setup's single fertility and soil modifier.
+EXCLUSIVE_ATTRIBUTES = frozenset({"climate", "vegetation", "topography", "fertility", "soil_type"})
 OTHER_CAPACITY_BLUEPRINTS = (
     "terraces", "irrigation_reservoirs", "aqueduct_system", "pound_lock_canal_infrastructure",
 )
@@ -138,13 +140,17 @@ def gate_trigger(contract: Contract, rules: list[dict[str, list[str]]]) -> list[
 def cap_script_value(contract: Contract, key: str, equation: Mapping[str, object], scale: float, level_limit: int, *, name: str | None = None) -> str:
     base = float(equation["base_levels"]) * scale
     lines = [f"{name or f'pp_wb_cap_{key}'} = {{", "\tadd = {", '\t\tdesc = "BUILDING_LEVEL_WB_BASE"', f"\t\tvalue = {_fmt(base)}", "\t}"]
+    previous = None
     for term in equation["class_terms"]:
         levels = float(term["levels"]) * scale
         if not levels:
             continue
         attribute, value = str(term["attribute"]), str(term["value"])
+        # A location has one class per exclusive attribute: its terms chain, so the checks stop at the match.
+        branch = "else_if" if attribute == previous and attribute in EXCLUSIVE_ATTRIBUTES else "if"
+        previous = attribute
         lines.extend([
-            "\tif = {",
+            f"\t{branch} = {{",
             f"\t\tlimit = {{ {trigger_for(contract, attribute, value)} }}",
             "\t\tadd = {",
             f'\t\t\tdesc = "BUILDING_LEVEL_WB_{attribute.upper()}_{value.upper()}"',
@@ -392,8 +398,10 @@ def patch_improvement_blueprints(contract: Contract, cfg: WorldBuilderConfig, re
         body = _replace_raw_modifier(body, raw, drop_prefixes=("farm_capacity_from_", "pp_wb_levels_"))
         lock = [str(l) for l in cfg.niche.get(key, {}).get("lock", [])]
         extra_gate = cfg.niche.get(key, {}).get("gate", [])
-        trigger = [*lock, *gate_trigger(contract, gates[kind])]
-        if extra_gate:
+        marker = cfg.niche.get(key, {}).get("marker")
+        # A setup-placed marker on the gate's locations replaces the tag list in game (one lookup, tested first).
+        trigger = [*lock, *([f"has_location_modifier = {marker}"] if marker else []), *gate_trigger(contract, gates[kind])]
+        if extra_gate and not marker:
             trigger.extend(gate_trigger(contract, extra_gate))
         body = _set_location_potential(body, trigger)
         data["building"]["body"] = body

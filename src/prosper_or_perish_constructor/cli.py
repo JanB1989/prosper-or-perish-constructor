@@ -3153,16 +3153,17 @@ def _wsl_windows_user_dirs() -> list[Path]:
 def _windows_userprofile_from_cmd() -> str | None:
     if shutil.which("cmd.exe") is None:
         return None
+    # /u makes cmd write piped output as UTF-16LE; without it the output is in the OEM codepage
+    # (cp850 on German hosts), which is not UTF-8 and garbles non-ASCII user names.
     completed = subprocess.run(
-        ["cmd.exe", "/c", "echo", "%USERPROFILE%"],
+        ["cmd.exe", "/d", "/u", "/c", "echo %USERPROFILE%"],
         check=False,
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
-        text=True,
     )
     if completed.returncode != 0:
         return None
-    value = completed.stdout.strip()
+    value = completed.stdout.decode("utf-16-le").strip()
     if not value or "%" in value:
         return None
     if shutil.which("wslpath") is None:

@@ -1,10 +1,10 @@
 ﻿local_food = {
 	category = produced
 	color = goods_local_food
-	# 10 food per unit at the 20 % floor price of 1 gold = 0.1 gold per food, the victuals markets rate at the
-	# victuals default price (3 victuals = 90 food). Markets hold no food, so it cannot be traded away.
-	default_market_price = 5
+	# Province Food: 1 food per unit, 0.10 gold at the 20 % price floor (default 0.5), the victuals-market rate
+	# (3 victuals x 3 gold = 90 food). Markets hold no food, so it never leaves the province that makes it.
+	default_market_price = 0.5
 	transport_cost = 100.0
-	food = 10
-	base_production = 1000.0 # huge base supply pins the price at the 20 % floor at once (like offset)
+	food = 1
+	base_production = 1000.0 # huge base supply pins the price at the floor from day one (like offset)
 }

@@ -27,6 +27,7 @@ building:
     build_time = 540
     construction_demand = town_building_construction
     location_potential = {
+      has_location_modifier = pp_navigation_site_nile_navigation_works
       OR = {
         has_river = yes
         is_adjacent_to_lake = yes
@@ -36,7 +37,6 @@ building:
           OR = { topography = flatland topography = wetlands }
         }
       }
-      OR = { this = location:akhmim this = location:asyut this = location:atfih this = location:el_bahnasa this = location:el_buwit this = location:esna this = location:fuwa this = location:giza this = location:hiw this = location:menouf this = location:ramsis this = location:sharuna this = location:tahna }
     }
     raw_modifier = {
       local_population_capacity = 1.6

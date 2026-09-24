@@ -3,7 +3,7 @@
 	color = goods_victuals
 	default_market_price = 3.0 # 2.50
 	transport_cost = 3.0
-	food = 0 # 30
+	food = 0 # preserved trade good, no food value: food only appears as Province Food (local_food)
 	# Baseline demand so it is relevant even before special logic is added.
 	demand_add = {
 		nobles = 0.01

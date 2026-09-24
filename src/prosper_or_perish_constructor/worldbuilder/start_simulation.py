@@ -262,7 +262,7 @@ class Simulation:
         self.food_mult = {}
         self.rgo_k = {}
         self.victuals_pop_factors = rules.victuals_pop_factors()
-        setup_keys = setup_modifier_keys(contract)
+        setup_keys = setup_modifier_keys(contract, self.navigation)
         for tag, loc in self.locations.items():
             a = self.attrs.get(tag, {})
             target = self.targets.get(tag, {})

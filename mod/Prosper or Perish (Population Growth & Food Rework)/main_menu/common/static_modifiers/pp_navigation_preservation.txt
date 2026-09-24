@@ -1,1 +1,27 @@
 ﻿# River effects are preserved by the native river bitmap.
+
+# Site markers: placed in the setup on each navigation site, tested by the works gates.
+
+pp_navigation_site_canal_lock_works = {
+	game_data = { category = location }
+}
+
+pp_navigation_site_caoyun_canal_office = {
+	game_data = { category = location }
+}
+
+pp_navigation_site_delta_waterway_works = {
+	game_data = { category = location }
+}
+
+pp_navigation_site_lowland_sluice_works = {
+	game_data = { category = location }
+}
+
+pp_navigation_site_nile_navigation_works = {
+	game_data = { category = location }
+}
+
+pp_navigation_site_river_navigation_works = {
+	game_data = { category = location }
+}

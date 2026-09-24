@@ -27,6 +27,7 @@ building:
     build_time = 540
     construction_demand = town_building_construction
     location_potential = {
+      has_location_modifier = pp_navigation_site_lowland_sluice_works
       OR = {
         AND = {
           has_location_modifier = pp_wb_coastal
@@ -34,7 +35,6 @@ building:
         }
         OR = { topography = wetlands topography = ha1300_topo_deltas }
       }
-      OR = { this = location:dordrecht this = location:london this = location:pont_audemer this = location:rotterdam }
     }
     raw_modifier = {
       local_population_capacity = 2.2

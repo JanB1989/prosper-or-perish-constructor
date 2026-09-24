@@ -24,6 +24,18 @@ def test_native_pixel_preservation_never_stacks_scripted_bonuses(tmp_path):
     assert 'cancel' not in text and 'river_flowing_through_' not in text
 
 
+def test_site_markers_are_defined_and_placed_on_each_site(tmp_path):
+    from prosper_or_perish_constructor.worldbuilder.navigation import site_markers, write_bonus_compensation
+    (tmp_path/'main_menu/common/static_modifiers').mkdir(parents=True)
+    (tmp_path/'main_menu/localization/english').mkdir(parents=True)
+    state={'manifest':{'river_preservation':'native_bank_pixel'},'settings':{'building_types':{'river_navigation_works':{'name':'River Works'}}},
+           'sites':{'a':{'building':'river_navigation_works'},'b':{'building':'canal_lock_works'}}}
+    assert site_markers(state)=={'a':['pp_navigation_site_river_navigation_works'],'b':['pp_navigation_site_canal_lock_works']}
+    write_bonus_compensation(state,tmp_path,tmp_path)
+    assert 'pp_navigation_site_river_navigation_works = {' in (tmp_path/'main_menu/common/static_modifiers/pp_navigation_preservation.txt').read_text()
+    assert 'STATIC_MODIFIER_NAME_pp_navigation_site_river_navigation_works' in (tmp_path/'main_menu/localization/english/pp_navigation_preservation_l_english.yml').read_text(encoding='utf-8')
+
+
 def test_legacy_compensation_contract_requires_rebuild(tmp_path):
     import pytest
     from prosper_or_perish_constructor.worldbuilder.navigation import write_bonus_compensation

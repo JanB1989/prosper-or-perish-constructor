@@ -5,8 +5,10 @@
 NAI = {
 	# AI_UTILITY_PER_CAPITA_THRESHOLD = 0.15
 	# AI_UTILITY_PER_CAPITA_BASE_EMPLOYMENT = 0.7
-	AI_MARKET_LOW_FOOD_THRESHOLD = 0.00 # 0.50
-	AI_MARKET_CRITICAL_FOOD_THRESHOLD = 0.00 # 0.35
+	# Markets hold no food (NMarket FOOD_CAPACITY_FACTOR = 0), so market food must never steer the AI.
+	# Below zero the empty market never counts as low or critical; province food utilities below stay active.
+	AI_MARKET_LOW_FOOD_THRESHOLD = -0.5 # 0.50
+	AI_MARKET_CRITICAL_FOOD_THRESHOLD = -0.5 # 0.10
 	AI_PROVINCE_FOOD_STOCKPILE_UTILITY = 0.50
 	# AI_MAXIMUM_EXPECT_TOWN_RATIO = 0.2
 	# AI_MIN_ALLOWED_URBANIZE_FOOD_LOCATION_RATIO = 0.15
@@ -60,12 +62,12 @@ NMarket = {
 	MARKET_PORT_EXTRA_DISTANCE = 0.02 # 0.02, scaled by 1 - harbor suitability
 	MIN_PRICE_IMPACT = -0.5
  	MAX_PRICE_IMPACT = 1.5 # 6
- 	FOOD_CAPACITY_FACTOR = 0 # 0.5
  	MONTHLY_PRICE_CHANGE = 0.15 # 0.04
- 	FOOD_PRICE = 0.001
- 	FOOD_PRICE_IMPACT_ON_PRICES = 0.00
- 	FOOD_PROPORTION_TO_PRESERVE_IN_MARKET_IF_POSSIBLE = 0.50
- 	MARKET_FOOD_STOCKPILE_TRESHOLD_MONTHS = 24.0
+	# Vanilla market food is switched off; victuals are the only food moving between provinces.
+	FOOD_CAPACITY_FACTOR = 0 # 1.0; markets hold no food, so none is bought, sold or traded between markets
+	FOOD_PROVINCE_LOCAL_RESERVE_RATIO = 1000 # 0.75; provinces never hand surplus food to the market
+	FOOD_PRICE = 0.001 # 0.05; the food slider still bills unmet demand at this price
+	FOOD_PRICE_IMPACT_ON_PRICES = 0.00 # 0.25; the idle food price does not move other goods
 }
 
 NPop = {

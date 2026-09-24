@@ -66,7 +66,6 @@ def build_calibration() -> dict:
                 good: _signed_scale_dict(local_output_samples.get(good, []))
                 for good in raw_materials
             },
-            "market_food_price": _reference_scale_dict(_market_food_price_values()),
             "food_capacity": {
                 "fish": _sequential_scale_dict(_food_capacity_thresholds("fish", food_capacity_samples.get("fish", []))),
                 "farm": _sequential_scale_dict(_food_capacity_thresholds("farm", food_capacity_samples.get("farm", []))),
@@ -139,17 +138,6 @@ def _local_output_modifier_samples(path: Path) -> dict[str, list[float]]:
     ):
         samples.setdefault(good, []).append(float(value))
     return samples
-
-
-def _market_food_price_values() -> list[float]:
-    try:
-        import polars as pl
-    except ImportError:
-        return []
-    path = ROOT / "artifacts" / "data" / "savegame" / "market_food.parquet"
-    if not path.exists():
-        return []
-    return pl.read_parquet(path).filter(pl.col("food_price") > 0)["food_price"].to_list()
 
 
 def _unemployment_values() -> list[float]:
@@ -392,39 +380,6 @@ def _signed_output_scale_thresholds(values: Iterable[float]) -> dict[str, object
     }
 
 
-def _reference_scale_dict(values: list[float]) -> dict[str, object]:
-    reference = 0.12
-    lows = sorted(value for value in values if 0 < value < reference)
-    highs = sorted(value for value in values if value > reference)
-    if len(lows) >= 5:
-        low_thresholds = _strict_thresholds(
-            [_round_price(_quantile(lows, 0.20)), _round_price(_quantile(lows, 0.80))],
-            minimum=0.001,
-        )
-    else:
-        low_thresholds = [0.02, 0.08]
-    if len(highs) >= 5:
-        high_thresholds = _strict_thresholds(
-            [_round_price(_quantile(highs, 0.45)), _round_price(_quantile(highs, 0.90))],
-            minimum=0.001,
-        )
-    else:
-        high_thresholds = [0.18, 0.30]
-    low_thresholds = [min(low_thresholds[0], reference - 0.002), min(low_thresholds[1], reference - 0.001)]
-    if not low_thresholds[0] < low_thresholds[1] < reference:
-        low_thresholds = [0.02, 0.08]
-    high_thresholds = [max(high_thresholds[0], reference + 0.001), max(high_thresholds[1], reference + 0.002)]
-    if not reference < high_thresholds[0] < high_thresholds[1]:
-        high_thresholds = [0.18, 0.30]
-    return {
-        "kind": "reference_centered",
-        "reference": reference,
-        "low_thresholds": low_thresholds,
-        "high_thresholds": high_thresholds,
-        "source": "market_food_price_distribution" if values else "fallback_market_food_price_scale",
-    }
-
-
 def _building_efficiency_scale_dict() -> dict[str, object]:
     return {
         "kind": "signed_centered",
@@ -461,10 +416,6 @@ def _round_quantity(value: float) -> float:
 
 def _round_modifier(value: float) -> float:
     return round(value, 2)
-
-
-def _round_price(value: float) -> float:
-    return round(value, 3)
 
 
 def _strict_thresholds(values: Iterable[float], *, minimum: float) -> list[float]:

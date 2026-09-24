@@ -2142,7 +2142,11 @@ def test_monthly_market_food_stockpile_topup_is_defined_but_weather_hook_is_disa
     assert isinstance(global_pulse, CList)
     global_on_actions = _entry_values(global_pulse)["on_actions"]
     assert isinstance(global_on_actions, CList)
-    assert global_on_actions.items == ["pp_monthly_market_food_stockpile_topup_on_weather_pulse"]
+    # the stockpile top-up stays disabled; the victuals export delivery rides the same monthly pulse
+    assert global_on_actions.items == [
+        "pp_monthly_market_food_stockpile_topup_on_weather_pulse",
+        "pp_victuals_export_delivery_on_weather_pulse",
+    ]
     assert "effect" not in _entry_values(global_pulse)
 
     global_effect_action = global_pulse_entries["pp_monthly_market_food_stockpile_topup_on_weather_pulse"]

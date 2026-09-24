@@ -21,27 +21,19 @@ AI_ignore_available_worker_flag = yes
 build_time = 365
 construction_demand = victuals_market_construction
 
-# slot 0: storage leg. 0.375 province_food_sales rises from zero at an empty stockpile to 16x at the
+# sells 3 victuals as a negative input (efficiency-immune revenue, lowers the market's victuals demand);
+# 0.375 province_food_sales is the storage leg, rising from zero at an empty stockpile to 16x at the
 # 24-month cap; the offset input is the fixed cost that puts the break-even near 18 months at the mean
-# victuals price. The victuals used to be a -3 input here, but a negative input only lowers the market's
-# demand figure and never adds goods, so exported food vanished; they are real output in slot 1 now.
+# victuals price. A negative input never puts goods into the market, so the 1 export_tally per
+# level counts the export volume and pp_deliver_victuals_exports adds the matching victuals each month.
 unique_production_methods = {
   pp_province_food_to_market = {
     produced = province_food_sales
-    offset = 10.2
+    victuals = -3.0
+    export_tally = 1.0
+    offset = 11.1
     manual_labor_cost = 0.3
     output = 0.375
-    category = building_maintenance
-  }
-}
-# slot 1: the exported food reaches the goods market as victuals. Real output scales with production
-# efficiency and victuals output modifiers (accepted: the only engine route that adds supply), so it is
-# 2.7 per 90 food, the import market's 3 minus its 0.3 labour: an export -> import round trip only
-# creates food above +11 % efficiency. Slot 0's offset input is 0.9 lower to keep the break-even.
-unique_production_methods = {
-  pp_province_food_victuals = {
-    produced = victuals
-    output = 2.7
     category = building_maintenance
   }
 }

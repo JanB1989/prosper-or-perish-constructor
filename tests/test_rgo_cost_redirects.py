@@ -90,8 +90,6 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
         "hired_labor_yard": "pp_hired_labor_yard_price",
         "rural_daywork_yard": "pp_rural_daywork_yard_price",
         "slave_labor_yard": "pp_slave_labor_yard_price",
-
-        "pp_food_switch_test": "pp_food_switch_test_price",
     }
 
 

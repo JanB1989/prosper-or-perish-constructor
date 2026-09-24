@@ -6,5 +6,5 @@
 	default_market_price = 5
 	transport_cost = 100.0
 	food = 10
-	base_production = 0
+	base_production = 1000.0 # huge base supply pins the price at the 20 % floor at once (like offset)
 }

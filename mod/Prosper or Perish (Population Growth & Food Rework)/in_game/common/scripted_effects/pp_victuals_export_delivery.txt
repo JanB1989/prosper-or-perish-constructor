@@ -1,19 +1,12 @@
 ﻿# The victuals export market sells its food as a negative victuals input: efficiency-immune revenue and a lower
 # market demand figure, but a negative input never puts goods into the market. Each month this adds the
 # matching victuals to every market with staffed exports, read from the tally good instead of a building scan.
-# The pp_dbg_* market variables are a temporary record for checking the engine behaviour in a save.
 pp_deliver_victuals_exports = {
 	every_market_in_world = {
 		limit = { pp_export_tally_in_market > 0 }
-		set_variable = { name = pp_dbg_export_tally value = pp_export_tally_in_market }
-		set_variable = { name = pp_dbg_victuals_supply_before value = pp_victuals_supply_in_market }
-		set_variable = { name = pp_dbg_victuals_demand_before value = pp_victuals_demand_in_market }
-		set_variable = { name = pp_dbg_victuals_stockpile_before value = pp_victuals_stockpile_in_market }
 		add_goods_supply = {
 			goods = goods:victuals
 			amount = pp_victuals_export_delivery_amount
 		}
-		set_variable = { name = pp_dbg_victuals_supply_after value = pp_victuals_supply_in_market }
-		set_variable = { name = pp_dbg_victuals_stockpile_after value = pp_victuals_stockpile_in_market }
 	}
 }

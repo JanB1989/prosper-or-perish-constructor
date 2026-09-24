@@ -5,7 +5,12 @@
 NAI = {
 	# AI_UTILITY_PER_CAPITA_THRESHOLD = 0.15
 	# AI_UTILITY_PER_CAPITA_BASE_EMPLOYMENT = 0.7
-	# Markets hold no food, so market food must never steer the AI (tested: below zero the empty market never reads as low).
+	# AI food building (tested 2026-09-24):
+	#   AI_MARKET_LOW_FOOD_THRESHOLD / AI_MARKET_CRITICAL_FOOD_THRESHOLD: the engine AI builds food buildings only while
+	#   its market's food stock (share of market food capacity) is below these thresholds. It does not react to province
+	#   shortages by itself. Below zero it never enters that mode. At vanilla values an empty market keeps every country
+	#   in it permanently, and the AI then keeps building food, about 40% of it where no province is short.
+	#   Our markets hold no food, so both sit below zero: market food never steers the AI.
 	AI_MARKET_LOW_FOOD_THRESHOLD = -0.5 # 0.5
 	AI_MARKET_CRITICAL_FOOD_THRESHOLD = -0.5 # 0.1
 	AI_PROVINCE_FOOD_STOCKPILE_UTILITY = 0.50
@@ -14,6 +19,9 @@ NAI = {
 	# AI_MAX_ALLOWED_URBANIZE_FOOD_LOCATION_RATIO = 0.25
 	# AI_AVERAGE_MARKET_FOOD_FOR_MAX_FOOD_URBANIZATION = 20
 	# MARKET_ACCESS_IMPORTANCE = 0.99 # How much the AI values having high market access per raw tax base, measured in monthly ducats (assuming large markets)
+	# FOOD_NEGATIVE_IN_PROV_UTILITY: tested at 0.1, 1 and 10, no effect on what the AI builds.
+	# Also tested without effect on AI food building (not set here): AI_PERFORMANCE_EVALUATE_MARKET_RATIO_PER_BUILDING = 1,
+	# AI_ALLOWED_PARALLEL_SAME_TYPE_CONSTRUCTION_RATIO / _MINIMUM = 0.2 / 10, AI_GOLD_COST_UTIL_FROM_LOW_PROFIT_MARGIN = 0.
 	FOOD_NEGATIVE_IN_PROV_UTILITY = 0.5
 	PEASANT_BUILDING_IN_CITY_UTILITY_MULT = 0.9
 	AI_ALLOWED_BUILDING_MAINTENANCE = 0.3
@@ -61,6 +69,21 @@ NMarket = {
 	MARKET_PORT_EXTRA_DISTANCE = 0.02 # 0.02, scaled by 1 - harbor suitability
 	MIN_PRICE_IMPACT = -0.5
  	MAX_PRICE_IMPACT = 1.5 # 6
+	# Market food (tested 2026-09-24), each month:
+	#   FOOD_PROVINCE_LOCAL_RESERVE_RATIO: a province hands its stored food above ratio x its food capacity to the
+	#     market. 1000 = never.
+	#   FOOD_CAPACITY_FACTOR: scales market food capacity (factor x about the sum of its provinces' food capacity).
+	#     0 = markets hold nothing, so no province can buy market food and markets trade none between them.
+	#   Pass 1: provinces with a food shortage get their need from the market first. The two defines below never
+	#     affect pass 1.
+	#   Pass 2: other provinces refill their storage, but only from market stock above
+	#     FOOD_PROPORTION_TO_PRESERVE_IN_MARKET_IF_POSSIBLE x market food capacity (vanilla 0.25), and each province
+	#     takes at most FOOD_PASS2_MAX_MONTHS_OF_DEFICIT x its monthly deficit (vanilla 3). If that product is 0
+	#     (no deficit, or the define is 0) there is no cap.
+	#   FOOD_PRICE: an empty market's food price sits exactly at it. The food slider bills
+	#     needed food x FOOD_PRICE x slider, even when the market delivers nothing.
+	#   Goods with a food value carry market food when traded; from an empty market those trades never run.
+	#     All food goods here have food = 0 (goods/pp_goods_adjustments.txt), so they trade as normal goods.
  	FOOD_CAPACITY_FACTOR = 0 # 1.0; markets hold no food: no province buys it, markets trade none
  	FOOD_PROVINCE_LOCAL_RESERVE_RATIO = 1000 # 0.75; provinces never hand food to the market
  	MONTHLY_PRICE_CHANGE = 0.15 # 0.04

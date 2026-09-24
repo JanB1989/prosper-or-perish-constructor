@@ -1,0 +1,47 @@
+﻿# >>> eu5-building-pipeline:pp_food_switch_test:building
+pp_food_switch_test = {
+is_foreign = no
+increase_per_level_cost = 0.10
+max_levels = 1
+pop_type = peasants
+employment_size = 0.001
+price = pp_food_switch_test_price
+category = consumer_goods_category
+icon = pp_food_switch_test
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+ai_forbid_shutdown = yes
+important_for_AI = no
+can_close = yes
+forbidden_for_estates = no
+AI_ignore_available_worker_flag = yes
+build_time = 3
+construction_demand = victuals_market_construction
+
+# Method-switch test (2026-09-24). Spawned by console; the owner picks the method by profit.
+# money: 0.25 province_food_sales, output modifier 0x at an empty store, 8x at 12 months, 16x at the 24-month
+#   cap -> 0 .. 2 .. 4 gold at the 1 gold floor price.
+# local food: fixed 2 local_food = 20 food and 2 gold. Nothing scales it with storage.
+# Expected: local food below ~12 months stored, money above.
+unique_production_methods = {
+  pp_food_switch_test_money = {
+    produced = province_food_sales
+    output = 0.25
+    category = building_maintenance
+  }
+  pp_food_switch_test_local_food = {
+    produced = local_food
+    output = 2.0
+    category = building_maintenance
+  }
+}
+
+raw_modifier = {
+}
+
+modifier = {
+}
+}
+# <<< eu5-building-pipeline:pp_food_switch_test:building

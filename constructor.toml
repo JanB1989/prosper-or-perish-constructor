@@ -254,8 +254,20 @@ megalopolis = 2.3
 absorb_share = 0.8
 pop_demand_scale = 0.4    # observed pop demand vs the goods file's demand_add x demand_multiply (price, wealth)
 # victuals per building level as the market shows them (measured from saves 2026-09-22; food-check refits)
+# cookery: Serve is the default, but 0.0 here (tried 2026-09-25) cut the deficit-driven import markets from 616 to 62
+# levels and left victuals supply at 269 against 838 demand, so the measured 0.65 stays until a save says otherwise
 producers = { cookery = 0.65, victuals_market = 3.45 }
 consumers = { victuals_market_import = 1.8, lumber_mill = 0.3 }
+[worldbuilder.start.province_food]
+# Province Food (the local_food good, 1 food per unit) one staffed level makes on top of its local_monthly_food, as the
+# start budget counts it (worldbuilder/start_simulation.py province_food_per_level). Read from the building
+# definitions: the output of the building's Provisioning method (method_pattern; crop farms 0.96 x M with M = tier base
+# output / 0.06, fishing villages 0.8, forest villages and orchards 0.96) and, for the buildings under serve, the named
+# Serve method (the cookery's Serve replaced its flat local_monthly_food). The budget assumes that method runs and does
+# not scale it by the local food modifier. per_level = { building = value } overrides a derived value.
+method_pattern = "pp_{building}_provision"
+serve = { cookery = "pp_cookery_livestock_pottage_serve" }   # 27.57 food per level, the European pottage
+per_level = {}
 [worldbuilder.start.crops]
 # The farming village is split into one farm per crop; at game start a location's farm levels are spread over the
 # crop farms. Livestock first takes round(g x levels), g = its grazing share (World Builder grazing / (grazing +
@@ -266,7 +278,9 @@ rgo_bonus = 0.5                    # added to the RGO crop's weight, or to g on 
 grain_min_levels_from = 3          # from this many levels on at least one staple crop is placed
 livestock_share_default = 0.2      # grazing share where the World Builder table has no value
 livestock_share_min = 0.1
-livestock_share_max = 0.7          # +0.2 on livestock/wool/horses RGOs and grasslands/sparse vegetation, then clipped
+livestock_share_max = 0.35         # 0.7 -> 49 % cattle, 0.5 -> 43 %, 0.35 -> 28 % of the game-start crop levels (2026-09-25)
+livestock_bonus = 0.1              # added on livestock/wool/horses RGOs and grasslands/sparse vegetation, then clipped
+                                   # (0.2 with max 0.5 still gave cattle 43 %; lowered 2026-09-25)
 livestock_source = "../EU5WorldBuilder/artifacts/locations/locations.csv"
 gated_goods = ["rice", "maize", "potato", "olives"]   # only in their native sub-continents/regions (config/crop_farms.toml [unlocks] gates)
 grains = ["wheat", "millet", "rice", "maize", "legumes", "potato"]

@@ -40,7 +40,7 @@ def test_plan_places_processors_and_farms_within_land_and_workers(tmp_path):
     pops = sp.parse_pops(POPS)
     locations = pl.DataFrame({
         "location_tag": ["alpha", "beta", "gamma"], "province": ["p1", "p1", "p2"],
-        "raw_material": ["iron", "wheat", "wheat"], "vegetation": ["forest", "farmland", "grasslands"], "is_coastal": [False, False, False],
+        "raw_material": ["iron", "fruit", "fruit"], "vegetation": ["forest", "farmland", "grasslands"], "is_coastal": [False, False, False],
     })
     numbers = {"iron_mine": {"employment_size": 1.0, "pop_type": "laborers", "local_monthly_food": 0.0}, "wheat_farm": {"employment_size": 1.0, "pop_type": "peasants", "local_monthly_food": 0.0},
                "fruit_orchard": {"employment_size": 1.0, "pop_type": "peasants", "local_monthly_food": 0.0}, "sheep_farms": {"employment_size": 1.0, "pop_type": "peasants", "local_monthly_food": 0.0},
@@ -51,9 +51,9 @@ def test_plan_places_processors_and_farms_within_land_and_workers(tmp_path):
     placements, conversions, table, summary = sp.plan(cfg=_cfg(tmp_path), start=start, locations=locations, capacity_people={"alpha": 60000.0, "beta": 45000.0, "gamma": 60000.0}, pops=pops,
                                                       owners={"alpha": "SWE", "beta": "DAN", "gamma": "DAN"}, ranks={"alpha": "town"}, existing=set(), food_consumption={"nobles": 25.0, "peasants": 1.0, "laborers": 1.5}, numbers=numbers)
     by = {(p.location, p.building): p.level for p in placements}
-    assert by[("alpha", "iron_mine")] == 2 and ("alpha", "wheat_farm") not in by
-    assert ("beta", "wheat_farm") not in by                  # over the spare land: no farm on a full location
-    assert by[("gamma", "wheat_farm")] == 3                  # workers limit 6k x 0.6 = 3
+    assert by[("alpha", "iron_mine")] == 2 and ("alpha", "fruit_orchard") not in by
+    assert ("beta", "fruit_orchard") not in by               # over the spare land: no farm on a full location
+    assert by[("gamma", "fruit_orchard")] == 3               # workers limit 6k x 0.6 = 3
     assert table.filter(pl.col("location_tag") == "beta")["farm_limit"][0] == "land"
     assert summary["farm_land_people"] == 15000.0
     # the mine's laborers come from alpha's largest peasant pop, culture kept
@@ -62,6 +62,17 @@ def test_plan_places_processors_and_farms_within_land_and_workers(tmp_path):
     # province p1 food: demand = 0.5*25 + 12*1 + 40*1 = 64.5 -> need 64.5*1.1 - 52 subsistence = 18.95 -> 1 cookery level in alpha (town first)
     assert by[("alpha", "cookery")] == 1
     assert ("gamma", "victuals_market_import") not in by
+
+
+def test_farm_for_keeps_orchards_and_pastures_and_leaves_crops_to_the_allocator():
+    assert sp.farm_for({"raw_material": "fruit"}) == "fruit_orchard"
+    assert sp.farm_for({"raw_material": "wool", "vegetation": "farmland"}) == "sheep_farms"
+    # no wheat placeholder: farmable RGOs and farmland spread their levels over the crop farms instead
+    assert sp.farm_for({"raw_material": "wheat"}) is None and sp.crop_location({"raw_material": "wheat"})
+    assert sp.crop_location({"raw_material": "iron", "vegetation": "farmland"})
+    assert not sp.crop_location({"raw_material": "iron", "vegetation": "forest"})
+    assert not sp.crop_location({"raw_material": "fruit"})
+    assert {"wheat_farm", "rice_farm", "cattle_farm", "olive_farm", "fruit_orchard", "sheep_farms"} <= set(sp.FARMS)
 
 
 def test_conversions_rewrite_the_pops_file_in_place():

@@ -118,3 +118,57 @@ def test_start_config_merges_victuals_overrides_into_defaults():
     start = sp.StartConfig.from_raw({"victuals": {"absorb_share": 0.7, "consumers": {"victuals_market_import": 1.0}}})
     assert start.victuals["absorb_share"] == 0.7 and start.victuals["consumers"] == {"victuals_market_import": 1.0}
     assert start.victuals["producers"]["cookery"] == sp.DEFAULT_VICTUALS["producers"]["cookery"]
+
+
+def test_province_food_per_level_reads_the_provisioning_and_serve_methods():
+    import pytest
+
+    from prosper_or_perish_constructor.worldbuilder.start_simulation import province_food_per_level
+
+    r = Rules.__new__(Rules)
+    r.buildings = {
+        "wheat_farm": block(
+            "unique_production_methods = { pp_wheat_farm_base = { produced = wheat output = 0.06 } } "
+            "unique_production_methods = { pp_wheat_farm_provision = { wheat = 0.08 produced = local_food output = 0.96 } "
+            "pp_wheat_farm_sell_surplus = { produced = province_food_sales output = 0.005 } }"
+        ),
+        "wheat_farmstead": block("unique_production_methods = { pp_wheat_farmstead_provision = { produced = local_food output = 1.28 } }"),
+        "fishing_village": block("unique_production_methods = { pp_fishing_village_provision = { fish = 0.067 produced = local_food output = 0.8 } }"),
+        "cookery": block(
+            "unique_production_methods = { pp_cookery_khichdi_serve = { produced = local_food output = 24.99 } "
+            "pp_cookery_livestock_pottage_serve = { produced = local_food output = 27.57 } "
+            "pp_cookery_livestock_pottage = { produced = victuals output = 0.919 } }"
+        ),
+        "iron_mine": block("max_levels = 2"),
+    }
+    spec = sp.StartConfig().province_food
+    assert province_food_per_level(r, spec) == {"cookery": 27.57, "fishing_village": 0.8, "wheat_farm": 0.96, "wheat_farmstead": 1.28}
+    assert province_food_per_level(r, {**spec, "per_level": {"iron_mine": 2}})["iron_mine"] == 2.0
+    with pytest.raises(ValueError):
+        province_food_per_level(r, {**spec, "serve": {"cookery": "pp_cookery_missing_serve"}})
+
+
+def test_start_config_merges_the_province_food_section():
+    start = sp.StartConfig.from_raw({"province_food": {"serve": {"cookery": "pp_cookery_kheer_serve"}, "per_level": {"x": "1.5"}}})
+    assert start.province_food["serve"] == {"cookery": "pp_cookery_kheer_serve"} and start.province_food["per_level"] == {"x": 1.5}
+    assert start.province_food["method_pattern"] == sp.DEFAULT_PROVINCE_FOOD["method_pattern"]
+    assert sp.StartConfig().province_food == sp.DEFAULT_PROVINCE_FOOD
+
+
+def test_province_food_is_added_per_level_unscaled_and_feeds_the_cookery():
+    from types import SimpleNamespace
+
+    sim = Simulation.__new__(Simulation)
+    sim.numbers = {
+        "wheat_farm": {"employment_size": 1, "pop_type": "peasants", "local_monthly_food": 1.5},
+        "cookery": {"employment_size": 1, "pop_type": "laborers", "local_monthly_food": 0},
+    }
+    sim.province_food = {"wheat_farm": 0.96, "cookery": 27.57}
+    sim.food_mult = {"x": 0.9}
+    sim.food = {"peasants": 1.0, "laborers": 1.5}
+    sim.rules = SimpleNamespace(subsistence=1.5)
+    assert abs(sim.food_per_level("wheat_farm", 0.9) - (0.9 * 1.5 + 0.96)) < 1e-9     # local food scaled, Province Food not
+    assert sim.food_per_level("absent") == 0.0
+    # the cookery's Serve output minus the laborer's lost subsistence (scaled) and extra consumption
+    assert abs(sim.cookery_net_food("x") - (27.57 - 0.9 * 1.5 - 0.5)) < 1e-9
+    assert Simulation.province_food == {}                                               # class default: no term

@@ -291,3 +291,101 @@ def test_every_city_gets_import_infrastructure_even_without_workers_or_exports()
     sim.ensure_city_imports({})
     assert sim.city_import_minimum["added"] == 0
     assert sim.verify() == 2
+
+
+def test_budget_counts_province_food_of_staffed_levels_unscaled():
+    sim = budget_simulation()
+    sim.numbers["farm"] = {"employment_size": 1, "pop_type": "peasants", "local_monthly_food": 1.5}
+    sim.province_food = {"farm": 0.96}
+    before = sim.budgets()[("AAA", "donor")]["supply"]
+    sim.staffed["donor"]["farm"] = 5
+    assert abs(sim.budgets()[("AAA", "donor")]["supply"] - (before + 5 * 0.96)) < 1e-9
+
+
+def crop_simulation():
+    """budget_simulation plus two rural crop locations with a fake crop plan (weights and availability)."""
+    from prosper_or_perish_constructor.worldbuilder import crop_allocation as ca
+
+    sim = budget_simulation()
+    farm = "rural_settlement = yes max_levels = 10"
+    for key in ("wheat_farm", "rice_farm", "cattle_farm", "maize_farm", "potato_farm"):
+        sim.rules.buildings[key] = block(farm)
+    sim.rules.buildings["millet_farm"] = block("rural_settlement = yes max_levels = 1")          # refuses its second level
+    sim.rules.buildings["legume_farm"] = block("rural_settlement = yes max_levels = legume_cap")
+    sim.rules.values["legume_cap"] = block("value = 10 if = { limit = { location_tag = farm_b } value = 2 }")
+    sim.rules.buildings["olive_farm"] = block(farm + " location_potential = { climate = mediterranean }")
+    for key in sim.rules.buildings:
+        if key.endswith("_farm"):
+            sim.numbers[key] = {"employment_size": 1, "pop_type": "peasants", "local_monthly_food": 1.5}
+    for tag, rgo in (("farm_a", "wheat"), ("farm_b", "rice")):
+        sim.pops[tag] = [sp.Pop("peasants", 20, "a", "r")]
+        sim.owners[tag] = "AAA"
+        sim.locations[tag] = {"region": "test", "raw_material": rgo, "vegetation": "farmland"}
+        sim.groups[("AAA", tag)] = [tag]
+        sim.catchments[("AAA", tag)] = "farms"
+        sim.base[tag] = {
+            "location_tag": tag,
+            "location_rank": "rural_settlement",
+            "climate": "oceanic",
+            "population": 20,
+            "modifiers": {"local_population_capacity": 1000},
+        }
+    sim.crop_cfg = ca.CropConfig()
+    zero = {g: 0.0 for g in sim.crop_cfg.goods}
+    sim.crop_weights = {
+        # wheat is the RGO (+0.5); olives are heavier but fail their location potential; legumes fall under the floor
+        "farm_a": {**zero, "wheat": 1.0, "millet": 1.2, "legumes": 0.5, "olives": 3.0, "livestock": 0.2},
+        # rice is the RGO but not native here (unavailable): no bonus, no levels
+        "farm_b": {**zero, "wheat": 1.0, "millet": 0.5, "legumes": 1.1, "rice": 3.0, "livestock": 0.1},
+    }
+    ungated = frozenset({"wheat", "millet", "legumes", "livestock"})
+    sim.crop_available = {"farm_a": ungated | {"olives"}, "farm_b": ungated}
+    sim.crop_plan = {}
+    sim.workers()
+    return sim
+
+
+def test_place_spreads_farm_levels_over_crop_farms_and_gives_refused_levels_to_the_rgo_crop():
+    sim = crop_simulation()
+    sim.place()
+    a, b = sim.counts["farm_a"], sim.counts["farm_b"]
+    # farm_a plan: livestock round(0.2 x 6) = 1, wheat (RGO) 3, millet 2; millet stops at its cap of 1 and the
+    # refused level goes to the RGO crop's farm
+    assert sim.crop_plan["farm_a"] == {"wheat_farm": 3, "millet_farm": 2, "cattle_farm": 1}
+    assert (a["wheat_farm"], a["millet_farm"], a["cattle_farm"], a["olive_farm"], a["legume_farm"]) == (4, 1, 1, 0, 0)
+    # farm_b plan: legumes 3, wheat 2, livestock 1; legumes stop at 2 there and, the RGO (rice) being unavailable,
+    # the refused level goes to the heaviest other candidate that has room (wheat)
+    assert sim.crop_plan["farm_b"] == {"legume_farm": 3, "wheat_farm": 2, "cattle_farm": 1}
+    assert (b["legume_farm"], b["wheat_farm"], b["cattle_farm"], b["rice_farm"]) == (2, 3, 1, 0)
+    for tag in ("farm_a", "farm_b"):
+        crop_levels = sum(sim.counts[tag][k] for k in sim.crop_cfg.buildings.values())
+        assert crop_levels == sim.start.max_farm_levels_per_location == sum(sim.crop_placed[tag].values())
+    assert sim.rejections["millet_farm: cap or gate"] == 1 and sim.rejections["legume_farm: cap or gate"] == 1
+
+
+def test_crop_placement_stops_when_no_peasants_are_left():
+    sim = crop_simulation()
+    sim.pops["farm_a"] = [sp.Pop("peasants", 5, "a", "r")]     # 5k x 0.6 work share = 3 staffed levels
+    sim.workers()
+    sim.place()
+    a = sim.counts["farm_a"]
+    assert sum(a[k] for k in sim.crop_cfg.buildings.values()) == 3
+    # wheat takes its 3 planned levels, millet finds no worker and placing stops (no leftover attempts)
+    assert a["wheat_farm"] == 3 and sim.rejections["millet_farm: workers"] == 1
+    assert sim.rejections["cattle_farm: workers"] == 0
+
+
+def test_cattle_takes_at_most_one_fallback_level_and_the_rest_is_not_placed():
+    sim = crop_simulation()
+    sim.rules.buildings["wheat_farm"] = block("rural_settlement = yes max_levels = wheat_cap")
+    sim.rules.values["wheat_cap"] = block("value = 10 if = { limit = { location_tag = farm_a } value = 1 }")
+    sim.rules.values["legume_cap"] = block(
+        "value = 10 if = { limit = { location_tag = farm_b } value = 2 } else_if = { limit = { location_tag = farm_a } value = 0 }"
+    )
+    sim.place()
+    a = sim.counts["farm_a"]
+    # plan wheat 3, millet 2, cattle 1: wheat and millet stop at 1, no other crop has room, cattle gets its planned
+    # level plus one fallback level and the last 2 levels are not placed
+    assert sim.crop_plan["farm_a"] == {"wheat_farm": 3, "millet_farm": 2, "cattle_farm": 1}
+    assert (a["wheat_farm"], a["millet_farm"], a["cattle_farm"], a["legume_farm"]) == (1, 1, 2, 0)
+    assert sim.rejections["crop farms: no room"] == 2

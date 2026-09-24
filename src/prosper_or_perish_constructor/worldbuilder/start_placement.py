@@ -34,7 +34,10 @@ LEGACY_FILES = (
 RANK_ORDER = {"megalopolis": 0, "city": 1, "town": 2, "rural_settlement": 3}
 FARMABLE_RGOS = {"livestock", "wheat", "legumes", "fruit", "millet", "wool", "rice", "beeswax", "maize", "olives", "potato"}
 PASTURE_RGOS = {"livestock", "wool", "horses"}
-FARMS = ("wheat_farm", "fruit_orchard", "sheep_farms")   # peasant farms that take farmland
+# peasant farms that take farmland: the eight tier-0 crop farms (crop_allocation spreads a location's farm levels over
+# them), orchards and sheep farms
+FARMS = ("wheat_farm", "rice_farm", "millet_farm", "maize_farm", "legume_farm", "potato_farm", "olive_farm", "cattle_farm",
+         "fruit_orchard", "sheep_farms")
 _POP_RE = re.compile(r"define_pop\s*=\s*\{([^}]*)\}")
 _FIELD_RE = re.compile(r"(\w+)\s*=\s*([A-Za-z0-9_.\-]+)")
 DEFAULT_PROCESSORS: dict[str, dict[str, Any]] = {
@@ -78,6 +81,14 @@ DEFAULT_VICTUALS: dict[str, Any] = {
     "producers": {"cookery": 0.65, "victuals_market": 2.3},
     "consumers": {"victuals_market_import": 1.2, "lumber_mill": 0.3},
 }
+# Province Food (``local_food``, 1 food per unit) per staffed level on top of ``local_monthly_food``: the output of the
+# building's Provisioning method (``method_pattern``) and, for the buildings in ``serve``, the named Serve method, both
+# read from the building definitions; ``per_level`` overrides a derived value. ``[worldbuilder.start.province_food]``.
+DEFAULT_PROVINCE_FOOD: dict[str, Any] = {
+    "method_pattern": "pp_{building}_provision",
+    "serve": {"cookery": "pp_cookery_livestock_pottage_serve"},
+    "per_level": {},
+}
 
 
 @dataclass(frozen=True)
@@ -98,6 +109,7 @@ class StartConfig:
     engine_promotion: dict[str, dict[str, float]] = field(default_factory=lambda: {k: dict(v) for k, v in DEFAULT_ENGINE_PROMOTION.items()})
     rgo_workers_k: dict[str, float] = field(default_factory=lambda: dict(DEFAULT_RGO_WORKERS_K))
     victuals: dict[str, Any] = field(default_factory=lambda: {k: (dict(v) if isinstance(v, dict) else v) for k, v in DEFAULT_VICTUALS.items()})
+    province_food: dict[str, Any] = field(default_factory=lambda: {k: (dict(v) if isinstance(v, dict) else v) for k, v in DEFAULT_PROVINCE_FOOD.items()})
 
     @classmethod
     def from_raw(cls, raw: Mapping[str, Any] | None) -> "StartConfig":
@@ -120,6 +132,16 @@ class StartConfig:
             for k, v in raw["victuals"].items():
                 merged[str(k)] = {str(a): float(b) for a, b in v.items()} if isinstance(v, dict) else float(v)
             kwargs["victuals"] = merged
+        if isinstance(raw.get("province_food"), dict):
+            food = {k: (dict(v) if isinstance(v, dict) else v) for k, v in DEFAULT_PROVINCE_FOOD.items()}
+            for k, v in raw["province_food"].items():
+                if k == "per_level" and isinstance(v, dict):
+                    food[k] = {str(a): float(b) for a, b in v.items()}
+                elif isinstance(v, dict):
+                    food[str(k)] = {str(a): str(b) for a, b in v.items()}
+                else:
+                    food[str(k)] = str(v)
+            kwargs["province_food"] = food
         return cls(**kwargs)
 
 
@@ -345,18 +367,21 @@ def improvement_people_by_location(mod_root: Path, caps: Mapping[str, Mapping[st
 # ------------------------------------------------------------------ gates (mirror the blueprints' location_potential)
 
 def farm_for(loc: Mapping[str, Any]) -> str | None:
-    """The peasant farm the location's RGO and vegetation call for (orchards, pastures, else the crop farm).
-
-    Placeholder until the crop allocator (``crop_allocation.py``) is wired in: every farmable location gets the wheat
-    farm, whose location gate decides whether it may stand there."""
+    """The single peasant farm the location's RGO calls for: orchards on fruit, sheep farms on wool. Every other
+    farmable location spreads its farm levels over the crop farms (:func:`crop_location`, ``crop_allocation.py``)."""
     rgo = str(loc.get("raw_material") or "")
     if rgo == "fruit":
         return "fruit_orchard"
     if rgo == "wool":
         return "sheep_farms"
-    if rgo in FARMABLE_RGOS or str(loc.get("vegetation")) == "farmland":
-        return "wheat_farm"
     return None
+
+
+def crop_location(loc: Mapping[str, Any]) -> bool:
+    """Whether the location gets crop farms at game start: a farmable RGO or farmland, and no orchard/pasture RGO."""
+    if farm_for(loc) is not None:
+        return False
+    return str(loc.get("raw_material") or "") in FARMABLE_RGOS or str(loc.get("vegetation")) == "farmland"
 
 
 def processor_for(loc: Mapping[str, Any], processors: Mapping[str, Mapping[str, Any]]) -> tuple[str, int] | None:

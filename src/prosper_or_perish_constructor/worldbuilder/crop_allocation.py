@@ -307,23 +307,28 @@ def write_report(
     cfg: CropConfig | None = None,
     available: Mapping[str, frozenset[str]] | None = None,
     tags: Iterable[str] | None = None,
+    placed: Mapping[str, Mapping[str, int]] | None = None,
 ) -> int:
     """CSV ``location_tag, good, building, available, weight, levels``: one row per location (``tags``, default the
     planned ones) and good. ``weight`` is the crop weight, for livestock the grazing share. ``available`` is empty
-    when no availability map is given. Returns the row count."""
+    when no availability map is given. With ``placed`` (tag -> building -> levels actually built, e.g. after caps,
+    land and workers) a last column ``placed`` is added. Returns the row count."""
     cfg = cfg or CropConfig()
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     count = 0
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
-        writer.writerow(REPORT_COLUMNS)
+        writer.writerow(REPORT_COLUMNS + (("placed",) if placed is not None else ()))
         for tag in sorted(set(tags) if tags is not None else set(plan)):
             by_building = plan.get(tag, {})
             for good in cfg.goods:
                 building = cfg.buildings[good]
                 avail = "" if available is None else str(good in available.get(tag, frozenset())).lower()
-                writer.writerow([tag, good, building, avail, f"{float(weights.get(tag, {}).get(good, 0.0)):.4f}", int(by_building.get(building, 0))])
+                row = [tag, good, building, avail, f"{float(weights.get(tag, {}).get(good, 0.0)):.4f}", int(by_building.get(building, 0))]
+                if placed is not None:
+                    row.append(int(placed.get(tag, {}).get(building, 0)))
+                writer.writerow(row)
                 count += 1
     return count
 

@@ -17,6 +17,7 @@ from eu5gameparser.clausewitz.parser import parse_file
 from eu5gameparser.clausewitz.serializer import render_entry
 from eu5gameparser.clausewitz.syntax import CList
 
+from . import crop_allocation as ca
 from . import start_placement as sp
 from .market_capacity import write as write_market_caps
 from .modifiers import setup_modifier_keys
@@ -136,6 +137,7 @@ def additional_setups(vanilla_root, mod_root):
 
 
 TOPUP_PATH = Path("in_game/common/scripted_effects/pp_start_river_topup.txt")
+CROP_REPORT_RELATIVE_PATH = Path("artifacts/data/worldbuilder/crop_allocation.csv")
 
 
 def without_river(ctx, rules):
@@ -200,6 +202,42 @@ def summed(block):
     return result
 
 
+PROVINCE_FOOD_GOOD = "local_food"
+
+
+def method_output(body, method, good=PROVINCE_FOOD_GOOD):
+    """Output of the building's unique production method ``method`` when it produces ``good`` (else 0)."""
+    for block in body.values("unique_production_methods") if isinstance(body, CList) else []:
+        node = first(block, method)
+        if isinstance(node, CList) and str(first(node, "produced", "")) == good:
+            return float(first(node, "output", 0) or 0)
+    return 0.0
+
+
+def province_food_per_level(rules, spec):
+    """building -> Province Food (``local_food``, 1 food per unit) one staffed level makes on top of its
+    ``local_monthly_food``: the Provisioning method's output (``spec["method_pattern"]``, e.g. crop farms 0.96 x M,
+    fishing villages 0.8) and, for the buildings in ``spec["serve"]``, the named Serve method; ``spec["per_level"]``
+    overrides. A configured Serve method that the building does not have is an error, not a silent zero."""
+    pattern = str(spec.get("method_pattern") or "pp_{building}_provision")
+    serve = dict(spec.get("serve") or {})
+    out = {}
+    for key, body in rules.buildings.items():
+        if key in serve:
+            continue
+        value = method_output(body, pattern.format(building=key))
+        if value:
+            out[key] = value
+    for key, method in serve.items():
+        value = method_output(rules.buildings.get(key), str(method))
+        if not value:
+            raise ValueError(f"[worldbuilder.start.province_food] serve: {key} has no {method} producing {PROVINCE_FOOD_GOOD}")
+        out[key] = value
+    for key, value in (spec.get("per_level") or {}).items():
+        out[str(key)] = float(value)
+    return dict(sorted(out.items()))
+
+
 class Simulation:
     # Engine start state per location (filled in __init__; empty means "as the pops file says").
     est_pops: dict = {}
@@ -207,6 +245,8 @@ class Simulation:
     rgo_k: dict = {}
     victuals_pop_factors: dict = {}
     victuals: dict = {}
+    province_food: dict = {}   # building -> Province Food per staffed level (province_food_per_level)
+    crop_cfg = None            # crop_allocation.CropConfig; None skips the crop farms
 
     def __init__(
         self,
@@ -223,8 +263,12 @@ class Simulation:
         initial,
         improvement_keys,
         market_centres,
+        repo=None,
+        crop_threshold=0.60,
+        province_food=None,
     ):
         self.rules, self.cfg, self.start = rules, cfg, start
+        self.province_food = dict(province_food or {})
         self.pops, self.owners, self.ranks, self.food = pops, owners, ranks, food
         self.counts = initial
         self.improvement_keys = improvement_keys
@@ -316,6 +360,7 @@ class Simulation:
                 **loc,
                 "location_tag": tag,
                 "location_rank": rank,
+                "sub_continent": loc.get("sub_continent") or loc.get("macro_region"),
                 "population": sum(p.size_k for p in pops.get(tag, [])),
                 "development": float(target.get("development") or 0),
                 "owner": owners[tag],
@@ -370,6 +415,28 @@ class Simulation:
             self.catchments[group] = (
                 min(sorted(choices), key=distance) if choices else str(region)
             )
+        # Crop farms: a crop location's farm levels are spread over the tier-0 crop farms (crop_allocation). The plan
+        # here filters on the buildings' gates; place() re-allocates each location on its live caps.
+        self.crop_cfg = ca.load_crop_config({"worldbuilder": cfg.raw}, repo=repo)
+        gates = ca.crop_gates(locations, self.crop_cfg, crop_threshold)
+        self.crop_weights = ca.crop_weights(contract, locations, self.crop_cfg)
+        self.crop_available = ca.available_by_location(locations, gates, self.crop_cfg)
+        self.crop_placed = defaultdict(Counter)
+        budget = {
+            tag: start.max_farm_levels_per_location
+            for tag, loc in self.locations.items()
+            if sp.crop_location(loc)
+        }
+        self.crop_plan = ca.plan_all(
+            contract,
+            locations,
+            gates,
+            self.crop_cfg,
+            budget,
+            weights=self.crop_weights,
+            candidate_filter=self.crop_gate,
+        )
+
 
     def refresh_navigation(self):
         navigation = self.navigation
@@ -402,6 +469,107 @@ class Simulation:
             for k, v in self.raw.get(key, {}).items():
                 mods[k] += v * n
         return {**base, "buildings": self.counts[tag], "modifiers": dict(mods)}
+
+    def food_per_level(self, key, mult=1.0):
+        """Province food one staffed level makes: ``local_monthly_food`` scaled by the local food modifier ``mult``,
+        plus the Province Food good its Provisioning or Serve method makes (a good: not scaled)."""
+        return mult * self.numbers.get(key, {}).get("local_monthly_food", 0) + float(self.province_food.get(key, 0.0))
+
+    def crop_gate(self, tag, good):
+        """Whether ``good``'s crop farm may stand in the location: rank, ``location_potential`` and ``allow`` as
+        ``Rules.cap`` evaluates them (no level room check). Unresolved syntax fails closed and is reported."""
+        key = self.crop_cfg.buildings.get(good)
+        body = self.rules.buildings.get(key)
+        if body is None or tag not in self.base:
+            return False
+        ctx = self.ctx(tag)
+        try:
+            return (
+                first(body, ctx.get("location_rank", "rural_settlement"), False) is True
+                and self.rules.test(first(body, "location_potential"), ctx)
+                and self.rules.test(first(body, "allow"), ctx)
+            )
+        except Unresolved as exc:
+            self.rules.unsupported[f"{key}: {exc}"] += 1
+            return False
+
+    def crop_candidates(self, tag):
+        """Crop goods whose tier-0 farm has room for a level in the location now (``Rules.cap``: gates and cap)."""
+        return frozenset(
+            good
+            for good, key in self.crop_cfg.buildings.items()
+            if key in self.numbers and self.cap(tag, key) > self.counts[tag][key]
+        )
+
+    def _staffable(self, tag, key):
+        num = self.numbers.get(key)
+        return bool(num) and self.pools[tag].levels(1, num["employment_size"], num["pop_type"]) >= 1
+
+    def place_crops(self, tag):
+        """Spread the location's farm levels (``max_farm_levels_per_location``) over the crop farms.
+
+        The plan is ``crop_allocation.allocate`` over the goods that are available here (native gates) and whose farm
+        passes its live cap; it replaces the location's entry in ``crop_plan``. Levels are placed farm by farm, most
+        planned levels first, each through ``add`` (caps, workers, shared land, pops within capacity). Levels a farm
+        refuses go to the RGO crop's farm, else the heaviest other candidate, livestock last and never beyond one level
+        over its planned share (a herd level takes little land and would otherwise absorb every refused level); what
+        no farm takes is not placed (rejection ``crop farms: no room``). Placing stops as soon as no peasant is left
+        to staff a level. Returns the levels placed."""
+        cfg = self.crop_cfg
+        budget = self.start.max_farm_levels_per_location
+        rgo = str(self.locations[tag].get("raw_material") or "") or None
+        weights = self.crop_weights.get(tag, {})
+        candidates = self.crop_candidates(tag)
+        available = self.crop_available.get(tag, frozenset())
+        allowed = candidates & available
+        split = ca.allocate(budget, weights, available, rgo, cfg, candidate_filter=candidates.__contains__)
+        plan = {cfg.buildings[g]: n for g, n in split.items()}
+        self.crop_plan[tag] = plan
+        if not plan:
+            return 0
+        rank = {key: i for i, key in enumerate(cfg.buildings.values())}
+        placed_here = self.__dict__.setdefault("crop_placed", defaultdict(Counter))[tag]
+        placed = 0
+        refused = set()
+        for key, wanted in sorted(plan.items(), key=lambda kv: (-kv[1], rank[kv[0]])):
+            n = self.add(tag, key, min(wanted, budget - placed))
+            placed_here[key] += n
+            placed += n
+            if n < wanted:
+                refused.add(key)
+                if not self._staffable(tag, key):
+                    return placed
+        crops = sorted(
+            (g for g in allowed if g != ca.LIVESTOCK),
+            key=lambda g: (-float(weights.get(g, 0.0)), rank[cfg.buildings[g]]),
+        )
+        fallback = ([rgo] if rgo in allowed else []) + crops + ([ca.LIVESTOCK] if ca.LIVESTOCK in allowed else [])
+        cattle = cfg.buildings[ca.LIVESTOCK]
+        for good in dict.fromkeys(fallback):
+            leftover = min(sum(plan.values()), budget) - placed
+            key = cfg.buildings[good]
+            if leftover <= 0:
+                break
+            if key in refused:
+                continue
+            wanted = leftover
+            if key == cattle:
+                # a herd level takes far less land than an arable one: without this bound cattle would absorb every
+                # level the crops refuse. It gets at most one level beyond its planned share.
+                wanted = min(leftover, plan.get(cattle, 0) + 1 - placed_here[cattle])
+                if wanted <= 0:
+                    continue
+            n = self.add(tag, key, wanted)
+            placed_here[key] += n
+            placed += n
+            if n < wanted:
+                refused.add(key)
+                if not self._staffable(tag, key):
+                    return placed
+        leftover = min(sum(plan.values()), budget) - placed
+        if leftover > 0:
+            self.rejections["crop farms: no room"] += leftover   # no crop farm could take them: not placed
+        return placed
 
     def cap(self, tag, key, gates=True):
         """``Rules.cap`` on the location's current state. Between navigation refreshes the context depends only
@@ -512,7 +680,7 @@ class Simulation:
             for key, n in sorted(
                 self.counts[tag].items(),
                 key=lambda kv: (
-                    -self.numbers.get(kv[0], {}).get("local_monthly_food", 0),
+                    -self.food_per_level(kv[0]),
                     kv[0],
                 ),
             ):
@@ -613,8 +781,8 @@ class Simulation:
                         employed += self.rgo_k.get(tag, 0.0)
                     # Workers weighted by the local food modifier so subsistence = workers x define.
                     unemployed += max(0, types[kind] - employed) * mult
-                supply += mult * sum(
-                    n * self.numbers[k]["local_monthly_food"]
+                supply += sum(
+                    n * self.food_per_level(k, mult)
                     for k, n in self.staffed[tag].items()
                 )
             subs = unemployed * value
@@ -667,18 +835,22 @@ class Simulation:
             farm = sp.farm_for(loc)
             if farm:
                 self.add(tag, farm, self.start.max_farm_levels_per_location)
+            elif self.crop_cfg is not None and sp.crop_location(loc):
+                self.place_crops(tag)
             for key in ("fishing_village", "forest_village"):
                 self.add(tag, key, max(0, 2 - self.counts[tag][key]))
         self.place_trade_and_cookeries()
 
     def cookery_net_food(self, tag):
-        """Food one cookery level adds to its province: its output minus the subsistence and extra consumption of the
-        peasants it turns into laborers; local food is scaled by the location's modifier."""
+        """Food one cookery level adds to its province: its output (the Serve method's Province Food plus any local
+        food) minus the subsistence and extra consumption of the peasants it turns into laborers; local food and
+        subsistence are scaled by the location's modifier."""
         num = self.numbers["cookery"]
-        return self.food_mult.get(tag, 1.0) * (
-            num["local_monthly_food"] - num["employment_size"] * self.rules.subsistence
-        ) - num["employment_size"] * max(
-            0, self.food.get(num["pop_type"], 0) - self.food.get("peasants", 0)
+        mult = self.food_mult.get(tag, 1.0)
+        return (
+            self.food_per_level("cookery", mult)
+            - mult * num["employment_size"] * self.rules.subsistence
+            - num["employment_size"] * max(0, self.food.get(num["pop_type"], 0) - self.food.get("peasants", 0))
         )
 
     def victuals_balance(self, catchment):
@@ -746,7 +918,7 @@ class Simulation:
             need = {g: max(0.0, budgets[g]["demand"] * target - budgets[g]["supply"]) for g in members}
             deficit = sum(need.values())
             supply0, demand0 = self.victuals_balance(catchment)
-            plan = plan_food_chain(deficit, supply0 - demand0, imports, self.numbers["cookery"]["local_monthly_food"] - self.numbers["cookery"]["employment_size"] * (self.rules.subsistence + max(0, self.food.get("laborers", 0) - self.food.get("peasants", 0))), per_cookery, per_import, absorb)
+            plan = plan_food_chain(deficit, supply0 - demand0, imports, self.food_per_level("cookery") - self.numbers["cookery"]["employment_size"] * (self.rules.subsistence + max(0, self.food.get("laborers", 0) - self.food.get("peasants", 0))), per_cookery, per_import, absorb)
             cookery_budget = plan[0]
             placed_cookeries = 0
             # Cookeries: rural deficits first (their peasants convert; towns keep their nobles for imports).
@@ -933,7 +1105,13 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         .with_columns(pl.col("development").fill_null(0))
     )
     contract = replace(contract, location_targets=targets)
+    from prosper_or_perish_constructor.crop_farms import load_crop_table
+
+    province_food = province_food_per_level(rules, start.province_food)
     sim = Simulation(
+        repo=repo,
+        crop_threshold=load_crop_table(repo).threshold,
+        province_food=province_food,
         rules=rules,
         cfg=cfg,
         start=start,
@@ -1067,6 +1245,10 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
                 "setup_export_cap": rules.cap("victuals_market", current),
                 "import_levels": sim.counts[tag]["victuals_market_import"],
                 "export_levels": sim.counts[tag]["victuals_market"],
+                "crop_location": sp.crop_location(sim.locations[tag]),
+                "crop_planned_levels": sum(sim.crop_plan.get(tag, {}).values()),
+                "crop_placed_levels": sum(sim.crop_placed.get(tag, {}).values()),
+                **{f"{key}_levels": sim.counts[tag][key] for key in sp.FARMS},
                 "food_modifier": round(sim.food_mult[tag] - 1.0, 4),
                 "rgo_workers_k": round(sim.rgo_k[tag], 3),
                 "engine_promoted_k": round(
@@ -1077,6 +1259,30 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
             }
         )
     pl.DataFrame(diagnostics).write_csv(repo / sp.TABLE_RELATIVE_PATH)
+    crop_tags = sorted(t for t, loc in sim.locations.items() if sp.crop_location(loc))
+    ca.write_report(
+        sim.crop_plan,
+        sim.crop_weights,
+        repo / CROP_REPORT_RELATIVE_PATH,
+        cfg=sim.crop_cfg,
+        available=sim.crop_available,
+        tags=crop_tags,
+        placed=sim.crop_placed,
+    )
+    crop_by_building = Counter()
+    for local in sim.crop_placed.values():
+        crop_by_building.update({k: n for k, n in local.items() if n})
+    good_of = {b: g for g, b in sim.crop_cfg.buildings.items()}
+    crop_total = sum(crop_by_building.values())
+    crops = {
+        "locations": len(crop_tags),
+        "locations_with_crop_farms": sum(1 for t in crop_tags if sum(sim.crop_placed.get(t, {}).values())),
+        "planned_levels": sum(sum(p.values()) for p in sim.crop_plan.values()),
+        "placed_levels": crop_total,
+        "levels_by_building": dict(sorted(crop_by_building.items(), key=lambda kv: -kv[1])),
+        "livestock_share": round(crop_by_building.get(sim.crop_cfg.buildings[ca.LIVESTOCK], 0) / crop_total, 4) if crop_total else None,
+        "report": str(CROP_REPORT_RELATIVE_PATH),
+    }
     demand_by_type = Counter()
     converted = sim_converted(sim)
     for tag in sim.locations:
@@ -1086,6 +1292,10 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         "locations_planned": len(sim.locations),
         "rows": len(placements),
         "levels_by_building": dict(sum(counts.values(), Counter())),
+        "crop_levels_total": crop_total,
+        "crop_levels_by_good": {good_of[k]: n for k, n in sorted(crop_by_building.items(), key=lambda kv: -kv[1])},
+        "crops": crops,
+        "province_food_per_level": {k: v for k, v in province_food.items() if k in sim.numbers and any(sim.counts[t][k] for t in sim.locations)},
         "river_topup_levels": dict(sum((Counter({key: n}) for (_, key), n in topup.items()), Counter())),
         "subsistence_define": rules.subsistence,
         "demand_by_pop_type": {k: round(v, 1) for k, v in sorted(demand_by_type.items(), key=lambda kv: -kv[1])},
@@ -1140,6 +1350,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
             "RGO size and market access use zero lower bounds for cap safety; unsupported rules fail closed.",
             "Budget excludes seasonal harvests, prices, trade competition, armies and engine-only country modifiers.",
             "Subsistence includes unemployed peasants, laborers and slaves; engine RGO employment and RGO food are not simulated.",
+            "Province Food (local_food) of the Provisioning and Serve methods counts per staffed level as if that method runs, unscaled by the local food modifier.",
         ],
     }
     (repo / sp.REPORT_RELATIVE_PATH).write_text(json.dumps(summary, indent=2) + "\n")

@@ -122,23 +122,30 @@ def run(repo: Path, project: Path, mod_root: Path) -> dict[str, Any]:
             numbers[key] = rules.numbers(key) if key in rules.buildings else {"employment_size": 0.0, "pop_type": "", "local_monthly_food": 0.0}
         return numbers[key]
 
+    from .start_simulation import province_food_per_level
+
+    province_food = province_food_per_level(rules, start.province_food)   # Province Food: not scaled by the modifier
     bfood: Counter = Counter()
+    pfood: Counter = Counter()
     for row in buildings.iter_rows(named=True):
-        n = num(str(row["building_type"]))
-        if n["local_monthly_food"] and n["employment_size"] > 0:
+        key = str(row["building_type"])
+        n = num(key)
+        if (n["local_monthly_food"] or province_food.get(key)) and n["employment_size"] > 0:
             levels = min(float(row["employed"] or 0.0) / n["employment_size"], float(row["level"] or 0.0))
             bfood[int(row["location_id"])] += levels * n["local_monthly_food"]
+            pfood[int(row["location_id"])] += levels * province_food.get(key, 0.0)
     mults = {}
     for row in locations.select("location_id", "slug", "rank").iter_rows(named=True):
         a = attrs.get(row["slug"], {})
         mults[row["location_id"]] = max(0.0, 1.0 + rules.food_modifier(row["rank"] or "rural_settlement", {k: a.get(k) for k in ("climate", "vegetation", "topography")}))
     frame = locations.with_columns(
         pl.col("location_id").replace_strict(bfood, default=0.0, return_dtype=pl.Float64).alias("building_food"),
+        pl.col("location_id").replace_strict(pfood, default=0.0, return_dtype=pl.Float64).alias("province_food"),
         pl.col("location_id").replace_strict(mults, default=1.0, return_dtype=pl.Float64).alias("food_mult"),
         sum(pl.col(f"population_{t}").fill_null(0.0) * float(food.get(t, 0.0)) for t in POP_TYPES).alias("demand_formula"),
         sum(pl.col(f"unemployed_{t}").fill_null(0.0) for t in subsistence_types).alias("subsistence_pops_k"),
     ).with_columns(
-        ((pl.col("subsistence_pops_k") * rules.subsistence + pl.col("building_food")) * pl.col("food_mult")).alias("supply_formula"),
+        ((pl.col("subsistence_pops_k") * rules.subsistence + pl.col("building_food")) * pl.col("food_mult") + pl.col("province_food")).alias("supply_formula"),
     )
     groups = frame.group_by(["province_slug", "owner_country_id"]).agg(
         pl.col("region").first(),

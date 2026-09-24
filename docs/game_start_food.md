@@ -42,7 +42,10 @@ Food decay is deliberately ignored: the starting stock is generous by design.
    stops generation instead of silently granting space.
 3. Reserve available workers for existing buildings. Place configured resource
    processors, appropriate farms, fishing villages and forest villages where
-   their live gates, caps, available workers and land permit them.
+   their live gates, caps, available workers and land permit them. Fruit and
+   wool RGOs get an orchard or sheep farm; every other farmable location
+   (farmable RGO or farmland) spreads its farm levels over the crop farms
+   (see *Crop farms at game start*).
 4. Group food budgets by province **and owner**. Place export markets where a
    province has food beyond its reserve and the catchment has deficits.
 5. Per trade catchment, cover the food deficit with cookeries and import
@@ -58,11 +61,55 @@ Food decay is deliberately ignored: the starting stock is generous by design.
    promotion supplies them.
 6. Audit all placed building levels and export the budget and sensitivity report.
 
+## Crop farms at game start
+
+The farming village is split into eight crop farms (`wheat_farm`, `rice_farm`,
+`millet_farm`, `maize_farm`, `legume_farm`, `potato_farm`, `olive_farm`,
+`cattle_farm`). A crop location keeps the farm-level budget the single farming
+village had (`max_farm_levels_per_location`, 6). `Simulation` spreads it with
+`worldbuilder/crop_allocation.py` (`[worldbuilder.start.crops]`):
+
+- only goods **available** there count: rice, maize, potato and olives only in
+  their native sub-continents or regions (the same gates as the crop-farm
+  advances), and only goods whose tier-0 farm passes its live cap
+  (rank, `location_potential`, `allow`, `max_levels`) right now;
+- livestock takes `round(g x levels)`, `g` the location's grazing share,
+  clipped to `livestock_share_min..max`; the crops share the rest by their World
+  Builder output rows, the RGO crop with a bonus;
+- the levels are then placed farm by farm (most planned levels first), one level
+  at a time through the ordinary checks (cap, workers, shared land, pops within
+  capacity). Levels a farm refuses go to the RGO crop's farm, else to the
+  heaviest other candidate, livestock last and at most one level beyond its
+  planned share (a herd level takes 2 land against 5, so it would otherwise soak
+  up every refused level); what no farm takes is not placed (rejection
+  `crop farms: no room`). Placing stops once no peasant is left to staff a
+  level. A location never gets more than the budget.
+
+`start_placement.json` reports `crop_levels_total`, `crop_levels_by_good` and a
+`crops` block (planned and placed levels, levels per farm, livestock share);
+`start_placement.csv` has the planned/placed levels and one `<farm>_levels`
+column per farm; `artifacts/data/worldbuilder/crop_allocation.csv` lists per
+crop location and good the availability, weight, planned and placed levels.
+
+## Province Food per level
+
+Food buildings feed the province two ways: their flat `local_monthly_food`
+(scaled by the local food modifier, like subsistence) and the **Province Food**
+good (`local_food`, 1 food per unit) their Provisioning or Serve method makes.
+The budget counts both per staffed level, the second as if that method runs and
+unscaled. `[worldbuilder.start.province_food]` says where the second comes from:
+the output of `pp_<building>_provision` read from the building definitions (crop
+farms 0.96 x M with M = tier base output / 0.06, so 0.96 at tier 0 and 1.28 at
+the farmstead; fishing villages 0.8; forest villages and orchards 0.96) and, for
+the cookery, the named Serve method (`pp_cookery_livestock_pottage_serve`,
+27.57 per level; the cookery has no flat food any more). `per_level` overrides a
+derived value. Crop farms and villages no longer make victuals: their
+provisioning is Province Food. `ppc worldbuilder food-check` adds the same term.
+
 ## Victuals balance
 
 Victuals are the mod's food in the goods market. Cookeries make them (about
-0.65 per level as the market sees it), the villages' worker provisions add a
-baseline (about 0.05 per level), export markets turn province food into them,
+0.65 per level as the market sees it), export markets turn province food into them,
 and pops, lumber mills and above all **import victuals markets** (about 1.2
 per level) buy them. Import markets are the only buildings that turn victuals
 back into province food. If far more victuals are made than bought, their
@@ -74,12 +121,13 @@ rates, the pop demand scale (the goods file's `demand_add x demand_multiply`
 against what the market shows) and `absorb_share`, the share of a catchment's
 victuals the imports should buy. The planner solves per catchment
 
-    food:     cookeries x 18 + imports x 60 >= deficit
+    food:     cookeries x net cookery food + imports x 60 >= deficit
     victuals: imports x 1.2 = absorb_share x (existing surplus + cookeries x 0.65)
 
 and reports supply, demand and the absorbed share per catchment in
-`report.json`. `ppc worldbuilder food-check` refits the per-level rates from a
-save.
+`report.json`. The net cookery food is its Serve output (27.57) minus the
+subsistence and extra consumption of the laborers it employs. `ppc worldbuilder
+food-check` refits the per-level rates from a save.
 
 Existing special buildings may remain understaffed; their food is counted only
 for staffed levels. Ordinary new food buildings must have available workers; the mandatory city
@@ -142,6 +190,15 @@ Open `artifacts/data/worldbuilder/food_simulation/index.html` after a build.
 It contains a searchable province map/table, market levels and caps, CSV audits,
 and a subsistence selector. `start_placement.csv` also records safe startup caps
 and initialized gameplay caps for every planned location.
+
+The 25 September 2026 pass (crop farms and Province Food) places 14,681 crop
+farm levels on 3,319 of 5,224 crop locations (cattle 6,241, wheat 3,112, millet
+1,954, legumes 1,950, rice 1,131, olives 243, maize 49, potato 1; cattle 43 %,
+driven by the grazing shares: median 0.36 on crop locations, 44 % of them at the
+0.5 cap), 2,298 cookery
+levels (973 planned, 1,325 fallback), 711 import-market and 73 export-market
+levels. 730 province/owner groups remain short, 2,446 food of 412,802 demand;
+the catchments make 1,764 victuals against a demand of 1,835.
 
 The 22 September 2026 pass (engine start state modelled, victuals balanced)
 plans 13,690 owned locations, removes 8,275 excess starting levels and leaves

@@ -190,7 +190,7 @@ def test_load_crop_config_reads_constructor_toml():
     raw = tomllib.loads((ROOT / "constructor.toml").read_text(encoding="utf-8"))
     cfg = ca.load_crop_config(raw, ROOT)
     assert cfg.floor_share == 0.6 and cfg.rgo_bonus == 0.5 and cfg.grain_min_levels_from == 3
-    assert (cfg.livestock_share_default, cfg.livestock_share_min, cfg.livestock_share_max) == (0.2, 0.1, 0.7)
+    assert (cfg.livestock_share_default, cfg.livestock_share_min, cfg.livestock_share_max) == (0.2, 0.1, 0.35)
     assert cfg.gated_goods == ("rice", "maize", "potato", "olives")
     assert cfg.grains == ("wheat", "millet", "rice", "maize", "legumes", "potato")
     assert cfg.buildings == ca.DEFAULT_BUILDINGS

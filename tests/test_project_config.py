@@ -2689,6 +2689,7 @@ def test_land_vs_naval_output_modifiers_are_capped_and_targeted() -> None:
         "global_iron_output_modifier",
         "global_horses_output_modifier",
         "global_stone_output_modifier",
+        "global_local_food_output_modifier",
         *staple_output_keys,
     }
     expected_right = {
@@ -2698,6 +2699,7 @@ def test_land_vs_naval_output_modifiers_are_capped_and_targeted() -> None:
         "global_salt_output_modifier",
         "global_pearls_output_modifier",
         "global_tar_output_modifier",
+        "global_victuals_output_modifier",
     }
 
     assert _global_output_values(left) == {key: 0.05 for key in expected_left}
@@ -2986,7 +2988,7 @@ def test_victuals_market_construction_and_coastal_saltern_debug_keys_are_localiz
     )
     coastal_saltern = load_template(ROOT / "blueprints" / "accepted" / "buildings" / "coastal_saltern.yml")
 
-    assert victuals_market.localization["victuals_market_construction"] == "Victuals Market Construction"
+    assert victuals_market.localization["victuals_market_construction"] == "Victualler Construction"
 
     rendered = parse_text(
         f"{coastal_saltern.key} = {{\n{coastal_saltern.building_body}\n}}\n",

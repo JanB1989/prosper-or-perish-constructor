@@ -96,14 +96,16 @@ REPLACE:fishing_village = {
         }
     }
     unique_production_methods = {
-        pp_fishing_village_no_worker_victuals = {
+        pp_fishing_village_provision = {
+            fish = 0.067
+            produced = local_food
+            output = 0.8
+            debug_max_profit = 4.970
             category = building_maintenance
         }
-        pp_fishing_village_worker_victuals = {
-            manual_labor_cost = 0.02
-            produced = victuals
-            output = 0.033
-            debug_max_profit = 0
+        pp_fishing_village_sell_surplus = {
+            produced = province_food_sales
+            output = 0.004
             category = building_maintenance
         }
     }

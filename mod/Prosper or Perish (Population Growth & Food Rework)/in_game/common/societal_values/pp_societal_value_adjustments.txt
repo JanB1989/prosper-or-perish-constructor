@@ -31,6 +31,7 @@ TRY_INJECT:capital_economy_vs_traditional_economy = {
 		global_wild_game_output_modifier = -0.3
 		global_fur_output_modifier = -0.3
 		global_victuals_output_modifier = -0.20
+		global_local_food_output_modifier = 0.10
 	}
 	right_modifier = {
 		global_raw_material_output = -0.2
@@ -38,6 +39,7 @@ TRY_INJECT:capital_economy_vs_traditional_economy = {
 		global_monthly_food_modifier = -0.2
 		global_victuals_output_modifier = 0.10
 		global_population_capacity_modifier = -0.25
+		global_local_food_output_modifier = -0.10
 	}
 }
 
@@ -54,6 +56,7 @@ TRY_INJECT:land_vs_naval = {
 		global_maize_output_modifier = 0.05
 		global_legumes_output_modifier = 0.05
 		global_potato_output_modifier = 0.05
+		global_local_food_output_modifier = 0.05
 	}
 	right_modifier = {
 		global_merchant_capacity_modifier = 0.30
@@ -64,6 +67,7 @@ TRY_INJECT:land_vs_naval = {
 		global_salt_output_modifier = 0.05
 		global_pearls_output_modifier = 0.05
 		global_tar_output_modifier = 0.05
+		global_victuals_output_modifier = 0.05
 	}
 }
 
@@ -78,6 +82,7 @@ TRY_INJECT:serfdom_vs_free_subjects = {
 		global_raw_material_output = -0.10
 		global_max_rgo_size_modifier = 0.20
 		global_slaves_food_consumption = -0.20
+		global_local_food_output_modifier = 0.05
 	}
 	right_modifier = {
 		global_victuals_output_modifier = 0.05
@@ -87,6 +92,7 @@ TRY_INJECT:serfdom_vs_free_subjects = {
 TRY_INJECT:centralization_vs_decentralization = {
 	left_modifier = {
 		global_urban_build_buildings_efficiency = 0.20
+		global_victuals_output_modifier = 0.05
 	}
 	right_modifier = {
 		global_rural_build_buildings_efficiency = 0.20
@@ -95,12 +101,14 @@ TRY_INJECT:centralization_vs_decentralization = {
 		global_province_food_sales_output_modifier = 0.05
 		global_offset_output_modifier = 0.05
 		global_province_food_purchase_output_modifier = 0.05
+		global_local_food_output_modifier = 0.10
 	}
 }
 
 TRY_INJECT:individualism_vs_communalism = {
 	left_modifier = {
 		global_production_efficiency = 0.05
+		global_victuals_output_modifier = 0.05
 	}
 	right_modifier = {
 		building_upkeep_efficiency = 0.05
@@ -109,6 +117,7 @@ TRY_INJECT:individualism_vs_communalism = {
 		global_offset_output_modifier = -0.05
 		global_province_food_purchase_output_modifier = -0.05
 		global_food_capacity_modifier = 0.20
+		global_local_food_output_modifier = 0.10
 	}
 }
 

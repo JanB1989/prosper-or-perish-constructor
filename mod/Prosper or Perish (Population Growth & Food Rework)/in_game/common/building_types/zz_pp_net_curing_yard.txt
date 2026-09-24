@@ -102,14 +102,16 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_net_curing_yard_no_worker_victuals = {
+    pp_net_curing_yard_provision = {
+        fish = 0.093
+        produced = local_food
+        output = 1.12
+        debug_max_profit = 5.022
         category = building_maintenance
     }
-    pp_net_curing_yard_worker_victuals = {
-        manual_labor_cost = 0.02
-        produced = victuals
-        output = 0.033
-        debug_max_profit = 0
+    pp_net_curing_yard_sell_surplus = {
+        produced = province_food_sales
+        output = 0.006
         category = building_maintenance
     }
 }

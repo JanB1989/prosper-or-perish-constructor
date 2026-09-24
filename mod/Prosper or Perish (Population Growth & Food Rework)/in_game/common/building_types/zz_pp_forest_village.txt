@@ -92,14 +92,16 @@ REPLACE:forest_village = {
         }
     }
     unique_production_methods = {
-        pp_forest_village_no_worker_victuals = {
+        pp_forest_village_provision = {
+            wild_game = 0.08
+            produced = local_food
+            output = 0.96
+            debug_max_profit = 5.000
             category = building_maintenance
         }
-        pp_forest_village_worker_victuals = {
-            manual_labor_cost = 0.02
-            produced = victuals
-            output = 0.033
-            debug_max_profit = 0
+        pp_forest_village_sell_surplus = {
+            produced = province_food_sales
+            output = 0.005
             category = building_maintenance
         }
     }

@@ -3,7 +3,7 @@
 # >>> eu5-building-pipeline:offshore_fishery:localization
   offshore_fishery_slot_0: "Offshore Waters"
   offshore_fishery_slot_1: "Offshore Fleet"
-  offshore_fishery_slot_2: "Household Food"
+  offshore_fishery_slot_2: "Provisioning"
   offshore_fishery: "Offshore Fishery"
   offshore_fishery_desc: "Offshore fleets use herring busses, bank schooners, and later steam trawlers to reach richer waters. Salt, provisions, and gear keep the catch moving home."
   pp_offshore_fishery_base_catch: "Offshore Waters"
@@ -11,6 +11,8 @@
   pp_offshore_fishery_herring_busses: "Herring Busses"
   pp_offshore_fishery_distant_water_schooners: "Distant-Water Schooners"
   pp_offshore_fishery_steam_trawlers: "Steam Trawlers"
-  pp_offshore_fishery_no_worker_victuals: "No Household Victuals"
-  pp_offshore_fishery_worker_victuals: "Household Victuals"
+  pp_offshore_fishery_provision: "Provision with Fish"
+  pp_offshore_fishery_provision_desc: "The household buys its own catch back and cooks for the province. Worth it while the province store is low and the good is cheap."
+  pp_offshore_fishery_sell_surplus: "Sell the Surplus"
+  pp_offshore_fishery_sell_surplus_desc: "The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty."
 # <<< eu5-building-pipeline:offshore_fishery:localization

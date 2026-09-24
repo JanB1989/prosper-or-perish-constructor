@@ -53,14 +53,16 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_pomological_orchard_no_worker_victuals = {
+    pp_pomological_orchard_provision = {
+        fruit = 0.133
+        produced = local_food
+        output = 1.6
+        debug_max_profit = 5.015
         category = building_maintenance
     }
-    pp_pomological_orchard_worker_victuals = {
-        manual_labor_cost = 0.04
-        produced = victuals
-        output = 0.067
-        debug_max_profit = 0.005
+    pp_pomological_orchard_sell_surplus = {
+        produced = province_food_sales
+        output = 0.008
         category = building_maintenance
     }
 }

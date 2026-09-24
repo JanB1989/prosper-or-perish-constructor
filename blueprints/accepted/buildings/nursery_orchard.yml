@@ -5,7 +5,8 @@ labour:
   class: primary_discovery
   methods:
     pp_nursery_orchard_base_fruit: base
-    pp_nursery_orchard_worker_victuals: base
+    pp_nursery_orchard_provision: keep
+    pp_nursery_orchard_sell_surplus: keep
 upgrade_chain:
   family: fruit_orchard
   tier: 1
@@ -26,8 +27,8 @@ building:
     - pp_nursery_orchard_nursery_rows
   - name: slot_2
     methods:
-    - pp_nursery_orchard_no_worker_victuals
-    - pp_nursery_orchard_worker_victuals
+    - pp_nursery_orchard_provision
+    - pp_nursery_orchard_sell_surplus
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -84,14 +85,16 @@ building:
         }
     }
     unique_production_methods = {
-        pp_nursery_orchard_no_worker_victuals = {
+        pp_nursery_orchard_provision = {
+            fruit = 0.113
+            produced = local_food
+            output = 1.36
+            debug_max_profit = 0
             category = building_maintenance
         }
-        pp_nursery_orchard_worker_victuals = {
-            manual_labor_cost = 0.02
-            produced = victuals
-            output = 0.033
-            debug_max_profit = 0
+        pp_nursery_orchard_sell_surplus = {
+            produced = province_food_sales
+            output = 0.007
             category = building_maintenance
         }
     }
@@ -118,14 +121,16 @@ localization:
     nursery_orchard_desc: Nursery orchards use young tree rows, waxed grafts, baskets, and storage crocks to replace poor trees and steady fruit harvests.
     nursery_orchard_slot_0: Fruit Trees
     nursery_orchard_slot_1: Nursery Rows
-    nursery_orchard_slot_2: Household Food
+    nursery_orchard_slot_2: Provisioning
     pp_orchard_nurseries: Orchard Nurseries
     pp_orchard_nurseries_desc: Nursery rows, waxed grafts, and careful basket handling let village orchards replace poor trees and bring steadier fruit to market.
     pp_nursery_orchard_base_fruit: Fruit Trees
     pp_nursery_orchard_nursery_rows: Nursery Rows
     pp_nursery_orchard_no_primary: No Nursery Rows
-    pp_nursery_orchard_no_worker_victuals: No Household Victuals
-    pp_nursery_orchard_worker_victuals: Household Victuals
+    pp_nursery_orchard_provision: Provision with Fruit
+    pp_nursery_orchard_provision_desc: The household buys its own fruit back and cooks for the province. Worth it while the province store is low and the good is cheap.
+    pp_nursery_orchard_sell_surplus: Sell the Surplus
+    pp_nursery_orchard_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
 icon:
   source_png: ../assets/icons/nursery_orchard.png
   output_dds: nursery_orchard.dds
@@ -148,12 +153,11 @@ evaluation:
         profit_percent: Nursery rows intentionally sit just above the generic profit band as the worked orchard bridge method.
         input_throughput: Nursery orchards are a modest age 3 bridge and intentionally stay below later grafted orchards.
         output_throughput: Nursery orchards are a modest age 3 bridge and intentionally stay below later grafted orchards.
-    pp_nursery_orchard_no_worker_victuals:
-      production_efficiency: 1.0
+    pp_nursery_orchard_provision:
       allow_rules:
-        profit_percent: Empty selector method intentionally produces no household victuals.
-    pp_nursery_orchard_worker_victuals:
-      production_efficiency: 1.0
+        profit_percent: Provisioning loses money at the Province Food floor by design; the storage signal decides the switch.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
+    pp_nursery_orchard_sell_surplus:
       allow_rules:
-        profit_percent: Household victuals are auxiliary worker food, not a standalone profit method.
-        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.
+        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.

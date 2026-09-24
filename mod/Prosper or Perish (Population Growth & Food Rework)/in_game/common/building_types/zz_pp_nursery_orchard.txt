@@ -54,14 +54,16 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_nursery_orchard_no_worker_victuals = {
+    pp_nursery_orchard_provision = {
+        fruit = 0.113
+        produced = local_food
+        output = 1.36
+        debug_max_profit = 5.018
         category = building_maintenance
     }
-    pp_nursery_orchard_worker_victuals = {
-        manual_labor_cost = 0.02
-        produced = victuals
-        output = 0.033
-        debug_max_profit = 0
+    pp_nursery_orchard_sell_surplus = {
+        produced = province_food_sales
+        output = 0.007
         category = building_maintenance
     }
 }

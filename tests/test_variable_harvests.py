@@ -353,7 +353,8 @@ def _parser_confirmed_farmed_goods() -> set[str]:
         methods.filter(
             pl.col("building").is_in(LAND_FARM_BUILDINGS)
             & pl.col("produced").is_not_null()
-            & (pl.col("produced") != "victuals")
+            # prepared food and the Provisioning slot's province food are not harvested goods
+            & ~pl.col("produced").is_in(["victuals", "local_food", "province_food_sales"])
         )["produced"].unique()
     )
 

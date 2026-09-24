@@ -1,0 +1,922 @@
+# Crop farm chains: data for the generator that splits the single farming_village chain
+# (farming_village -> husbandry_farmstead -> farming_village_rotations -> model_farm, eight crops as production methods)
+# into eight crop chains x four tiers = 32 blueprints.
+#
+# Building key = <stem>_<tier_suffix>, e.g. wheat_farm, wheat_farmstead, wheat_rotations, wheat_model_farm.
+# Method key   = pp_<building>_<method key>, e.g. pp_wheat_farm_ox_ard.
+# Tier-level numbers are copied from the four current blueprints in blueprints/accepted/buildings/
+# (farming_village.yml, husbandry_farmstead.yml, farming_village_rotations.yml, model_farm.yml).
+# Cultivation method inputs are the derived values that keep today's cost per tier and crop; the labour pass
+# (`ppc labour apply`, [production_labour] in constructor.toml) adds manual_labor_cost from the method's labour class.
+
+[general]
+tier_advances = { 1 = "pp_manuring_and_seed_stores", 2 = "pp_farming_village_rotations", 3 = "pp_model_farm" }
+tier_suffix = { 0 = "farm", 1 = "farmstead", 2 = "rotations", 3 = "model_farm" }
+tier_labour_class = { 0 = "primary_medieval", 1 = "primary_discovery", 2 = "primary_reformation", 3 = "primary_absolutism" }
+tier_base_output = { 0 = 0.06, 1 = 0.08, 2 = 0.07, 3 = 0.10 }
+# manual_labor_cost of the passive base method (slot 0) for the arable crops; cattle overrides with crops.base_labour
+tier_base_labour = { 0 = 0.012, 1 = 0.016, 2 = 0.014, 3 = 0.02 }
+base_labour_class = "base"                  # base methods are tagged `base` in the blueprint labour block
+tier_pop_type = { 0 = "peasants", 1 = "peasants", 2 = "peasants", 3 = "laborers" }
+tier_build_time = { 0 = "village_build_time", 1 = "workshop_build_time", 2 = "workshop_build_time", 3 = "workshop_build_time" }
+tier_construction_demand = { 0 = "village_construction", 1 = "workshop_construction", 2 = "workshop_construction", 3 = "workshop_construction" }
+tier_increase_per_level_cost = { 0 = 0.15, 1 = 0.15, 2 = 0.15, 3 = 0.15 }
+tier_local_monthly_food = { 0 = 1.5, 1 = 1.5, 2 = 1.5, 3 = 3.0 }
+# icon line in the building body; tier 0 has no icon line today (farming_village uses the vanilla icon by key)
+tier_icon = { 0 = "", 1 = "husbandry_farmstead", 2 = "farming_village_rotations", 3 = "model_farm" }
+tier_can_close = { 0 = false, 1 = true, 2 = true, 3 = true }
+tier_obsoletes_previous = { 0 = false, 1 = true, 2 = true, 3 = true }   # obsolete = <previous tier building of the same crop>
+# land each level takes (raw_modifier local_population_capacity), as the blueprints carry it today; the World Builder
+# farm stage rewrites it from [worldbuilder.farm_land] by land_class (arable land 5, herd land 2)
+tier_land_today = { 0 = -5, 1 = -2, 2 = -5, 3 = -5 }
+footprint = "farm_land"
+location_potential_base = "pp_general_farmable_food_location_potential"   # AND-ed with crops.location_rule unless location_rule_standalone
+max_levels_pattern = "farm_capacity_max_{building}"
+farm_capacity_line_pattern = "farm_capacity_from_{building} = -1"
+
+# Body lines shared by every tier (values as in the blueprints)
+[general.body]
+is_foreign = "no"
+employment_size = 1
+category = "village_category"
+custom_tags = ["farming_capacity", "pp_food_security_priority", "pp_staple_food_priority"]
+rural_settlement = "yes"
+town = "yes"
+city = "yes"
+megalopolis = "yes"
+forbidden_for_estates = "yes"
+ai_forbid_shutdown = "no"
+
+# Extra body lines only tier 0 (farming_village) carries today
+[general.body_tier0]
+audio_tier = 1
+startup_ramp_target = "rural_startup_ramp_target"
+
+# Building modifier block per tier (scaled by employment)
+[general.tier_modifier.0]
+local_monthly_food = 1.5
+local_peasants_estate_power = 0.040
+local_peasant_enfranchisment = 0.002
+local_laborers_desired_pop = 0
+local_soldiers_desired_pop = 0
+
+[general.tier_modifier.1]
+local_monthly_food = 1.5
+local_peasants_estate_power = 0.030
+local_peasant_enfranchisment = 0.002
+local_laborers_desired_pop = 0
+
+[general.tier_modifier.2]
+local_monthly_food = 1.5
+local_peasants_estate_power = 0.021
+local_peasant_enfranchisment = 0.002
+local_laborers_desired_pop = 0
+
+[general.tier_modifier.3]
+local_monthly_food = 3.0
+local_laborers_desired_pop = 0.002
+
+# Tier advances (unlock the tier's building of every crop chain)
+[tier_advance.pp_manuring_and_seed_stores]
+tier = 1
+icon = "husbandry_farmstead"
+age = "age_3_discovery"
+requires = "rgo_size_advance_discovery"
+ai_weight = 125
+name = "Manuring and Seed Stores"
+desc = "Peasant households select seed, keep it dry, and recycle livestock manure into established fields before formal rotational farming."
+
+[tier_advance.pp_farming_village_rotations]
+tier = 2
+icon = "farming_village_rotations"
+age = "age_4_reformation"
+requires = "global_trade_advance"
+ai_weight = 125
+name = "Rotational Farmsteads"
+desc = "Legume rotations, managed fallow, hedges, manure carts, and mixed husbandry make peasant village fields more reliable without turning them into planned model farms."
+
+[tier_advance.pp_model_farm]
+tier = 3
+icon = "model_farm"
+age = "age_5_absolutism"
+requires = "scientific_revolution_advance"
+ai_weight = 125
+name = "Model Farms"
+desc = "Field surveys, seed drills, horse-hoes, crop rotations, and printed agronomy organize village cultivation into a larger managed farm."
+
+# Evaluation data per tier, copied from the blueprints' evaluation blocks
+[evaluation.0]
+production_efficiency = { base = 1.0, none = 1.0, cultivation = 1.05, beekeeping = 1.0 }
+allow_rules = { input_throughput = "Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.", output_throughput = "Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.", profit_percent = "Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance." }
+base_allow_rules = { base_output_per_1k = "Requested passive baseline for former-food village producers; intentionally below the global no-input output band." }
+herd_base_allow_rules = { base_output_per_1k = "Requested passive baseline for former-food village producers; intentionally below the global no-input output band." }
+beekeeping_allow_rules = {}
+
+[evaluation.1]
+production_efficiency = { base = 1.0, none = 1.0, cultivation = 1.05, beekeeping = 1.05 }
+allow_rules = { profit_percent = "Passive selectors, no-output options, and household sidelines can sit outside the narrow margin band; worked farmstead methods carry the tier balance.", base_output_per_1k = "Early farmstead selectors keep passive food output small; worked crop methods carry the tier economy.", input_throughput = "Husbandry farmsteads are an age 3 bridge and intentionally stay below rotational farming throughput.", output_throughput = "Husbandry farmsteads are an age 3 bridge and intentionally stay below rotational farming throughput." }
+base_allow_rules = {}   # today only the livestock base method carries a method-level rule at this tier
+herd_base_allow_rules = { base_output_per_1k = "Early farmstead successor keeps passive baseline output low; worked methods carry the tier economy." }
+beekeeping_allow_rules = { input_throughput = "Yard hives are an auxiliary output and intentionally stay below full-building throughput.", output_throughput = "Yard hives are an auxiliary output and intentionally stay below full-building throughput." }
+
+[evaluation.2]
+production_efficiency = { base = 1.0, none = 1.0, cultivation = 1.0, beekeeping = 1.0 }
+allow_rules = { amortization_months = "Intermediate farm upgrade intentionally has slower payback than global construction targets; revisit with the rural producer rebalance." }
+base_allow_rules = {}
+herd_base_allow_rules = {}
+beekeeping_allow_rules = { input_throughput = "Hedgerow hive sideline is intentionally smaller than the full-building throughput target.", output_throughput = "Hedgerow hive sideline is intentionally smaller than the full-building throughput target." }
+
+[evaluation.3]
+production_efficiency = { base = 1.0, none = 1.0, cultivation = 1.0 }
+allow_rules = { amortization_months = "The 10k laborer model farm keeps a slower estate-improvement payback than global construction targets; revisit with the rural producer rebalance." }
+base_allow_rules = { input_throughput = "Method throughput intentionally stays below the global full-building target after error-log input tuning.", output_throughput = "Method throughput intentionally stays below the global full-building target after error-log input tuning." }
+herd_base_allow_rules = { input_throughput = "Method throughput intentionally stays below the global full-building target after error-log input tuning.", output_throughput = "Method throughput intentionally stays below the global full-building target after error-log input tuning." }
+
+# Gated goods: a general unlock advance for everyone, and a game-start advance for countries whose original capital
+# lies in a sub-continent/region where the good is established (share of locations >= subcontinent_region_threshold).
+[unlocks]
+goods = ["rice", "maize", "potato", "olives"]
+subcontinent_region_threshold = 0.60
+advance_key_pattern = "pp_{good}_farm_advance_{kind}"   # kind = general | game_start
+ai_weight = 50
+
+[unlocks.game_start]
+age = "age_1_traditions"
+requires = "agriculture_advance"
+
+[unlocks.general.rice]
+age = "age_3_discovery"
+requires = "new_world_advance"
+name = "Rice Cultivation"
+desc = "Adopt techniques for cultivating rice as a staple crop in suitable regions."
+game_start_name = "Established Rice Cultivation"
+game_start_desc = "Traditional rice cultivation in regions where the crop is already established."
+
+[unlocks.general.maize]
+age = "age_4_reformation"
+requires = "global_trade_advance"
+name = "Maize Cultivation"
+desc = "Adopt maize cultivation through colonial and trade networks."
+game_start_name = "Established Maize Cultivation"
+game_start_desc = "Traditional maize cultivation in regions where the crop is already established."
+
+[unlocks.general.potato]
+age = "age_5_absolutism"
+requires = "newspapers_advance"
+name = "Potato Cultivation"
+desc = "Adopt the potato as a reliable staple crop."
+game_start_name = "Established Potato Cultivation"
+game_start_desc = "Traditional potato cultivation in regions where the crop is already established."
+
+[unlocks.general.olives]
+age = "age_4_reformation"
+requires = "global_trade_advance"
+name = "Olive Cultivation"
+desc = "Adopt olive cultivation through trade and regional exchange."
+game_start_name = "Established Olive Cultivation"
+game_start_desc = "Traditional olive cultivation in regions where the crop is already established."
+
+# New method advances (vanilla keys verified in game/in_game/common/advances: horse_riding_advance is age_1_traditions,
+# food_advance_reformation is age_4_reformation)
+[advances.pp_heavy_plough]
+age = "age_1_traditions"
+requires = "horse_riding_advance"
+name = "Heavy Plough"
+desc = "Mouldboard ploughs pulled by horse teams turn heavy soils."
+
+[advances.pp_improved_rotations]
+age = "age_4_reformation"
+requires = "food_advance_reformation"
+name = "Improved Rotations"
+desc = "Marl, fodder crops and seed selection lift the yields of village rotations."
+
+[advances.pp_water_lifting]
+age = "age_4_reformation"
+requires = "food_advance_reformation"
+name = "Water Lifting"
+desc = "Chain pumps and channels bring water to paddies and groves."
+
+# Hive methods of the beekeeping slot (chains with beekeeping = true, tiers 0-2), copied from the current blueprints:
+# tier 0 pp_farming_village_minor_beeswax, tier 1 pp_husbandry_farmstead_yard_hives, tier 2 pp_farming_village_rotations_hedgerow_hives.
+# manual_labor_cost is today's value; labour_class "" = tier class.
+[beekeeping.0]
+key = "cottage_hives"
+name = "Cottage Hives"
+desc = "A few skeps stand by orchards and hedges, tended in spare moments between fieldwork. Beekeeping is a modest household sideline, valued but never the village's main concern."
+inputs = { furniture = 0.0, cloth = 0.0 }
+manual_labor_cost = 0.025
+output = 0.063
+labour_class = "base"
+
+[beekeeping.1]
+key = "yard_hives"
+name = "Yard Hives"
+desc = ""
+inputs = { fiber_crops = 0.022, pottery = 0.01 }
+manual_labor_cost = 0.008
+output = 0.12
+labour_class = ""
+
+[beekeeping.2]
+key = "hedgerow_hives"
+name = "Hedgerow Hives"
+desc = "Cottage hives line hedges and orchard edges, adding wax from the same improved field boundaries."
+inputs = { tools = 0.036, lumber = 0.089, fiber_crops = 0.071, pottery = 0.045 }
+manual_labor_cost = 0.055
+output = 0.31
+labour_class = ""
+
+[loc]
+slot_cultivation = "Cultivation"
+slot_beekeeping = "Beekeeping"
+slot_provisioning = "Provisioning"
+no_cultivation = "No Cultivation"
+no_beekeeping = "No Beekeeping"
+sell_surplus = "Sell the Surplus"
+provision_desc = "The household buys its own crop back and cooks for the province. Worth it while the province store is low and the crop is cheap."
+sell_surplus_desc = "The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty."
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Crops
+# ---------------------------------------------------------------------------------------------------------------------
+
+[[crops]]
+stem = "wheat"
+good = "wheat"
+gated = false
+land_class = "arable"
+icon_badge = "wheat"
+names = { 0 = "Wheat Farm", 1 = "Wheat Farmstead", 2 = "Wheat Rotation Farm", 3 = "Wheat Model Farm" }
+slot0_name = "Fields"
+descs = { 0 = "Peasant households plough and sow wheat on the open village fields.", 1 = "Manure yards, seed stores and granaries keep the wheat fields in good heart.", 2 = "Clover and pulse leys take turns with the wheat so the fields rest without lying bare.", 3 = "Surveyed fields, seed drills and hired hands raise wheat on a larger managed farm." }
+provision_name = "Provision with Wheat"
+beekeeping = false
+side_modifiers = {}
+location_rule = '''
+OR = {
+	raw_material = goods:wheat
+	AND = {
+		NOT = { OR = { climate = arctic climate = ha1300_climate_subarctic } }
+		NOT = { OR = { vegetation = jungle vegetation = ha1300_veg_tundra } }
+	}
+}
+'''
+
+[[crops.methods]]
+tier = 0
+key = "ox_ard"
+name = "Ox-drawn Ard"
+desc = "Oxen draw a light ard that scratches the soil open for sowing."
+inputs = { livestock = 0.045, tools = 0.017 }
+output = 0.150
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 0
+key = "heavy_plough"
+name = "Heavy Plough Team"
+desc = "A horse team pulls a mouldboard plough through heavy soils."
+inputs = { horses = 0.020, tools = 0.023 }
+output = 0.166
+labour_class = ""
+advance = "pp_heavy_plough"
+
+[[crops.methods]]
+tier = 1
+key = "manured_three_field"
+name = "Manured Three-Field"
+desc = "Winter corn, spring corn and a manured fallow follow each other on the fields."
+inputs = { horses = 0.05, livestock = 0.10, tools = 0.02, lumber = 0.026 }
+output = 0.64
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "clover_ley"
+name = "Clover Ley Rotation"
+desc = "Clover and pulse leys replace the bare fallow."
+inputs = { tools = 0.18, horses = 0.16, legumes = 0.27 }
+output = 1.54
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "marled_fields"
+name = "Marled Fields"
+desc = "Marl and clay dressings sweeten sour fields between the leys."
+inputs = { tools = 0.17, horses = 0.15, legumes = 0.20, clay = 0.26 }
+output = 1.60
+labour_class = ""
+advance = "pp_improved_rotations"
+
+[[crops.methods]]
+tier = 3
+key = "seed_drill"
+name = "Seed Drill and Horse-Hoe"
+desc = "Seed drills sow in rows and horse-hoes keep the rows clean."
+inputs = { tools = 0.24, horses = 0.20, legumes = 0.25, paper = 0.13 }
+output = 2.12
+labour_class = ""
+advance = ""
+
+[[crops]]
+stem = "rice"
+good = "rice"
+gated = true
+land_class = "arable"
+icon_badge = "rice"
+names = { 0 = "Rice Paddy", 1 = "Rice Farmstead", 2 = "Rice Paddy Estate", 3 = "Rice Model Farm" }
+slot0_name = "Paddies"
+descs = { 0 = "Households sow and transplant rice on flooded or well-watered plots.", 1 = "Earth bunds and wooden sluices hold water on the paddies through the season.", 2 = "Bunded paddies carry more than one crop of rice in a year.", 3 = "Levelled paddies, planned channels and hired hands raise rice on a large managed estate." }
+provision_name = "Provision with Rice"
+beekeeping = false
+side_modifiers = {}
+location_rule = '''
+OR = {
+	raw_material = goods:rice
+	AND = {
+		OR = {
+			climate = tropical
+			climate = ha1300_climate_tropical_monsoon
+			climate = subtropical
+			climate = ha1300_climate_subtropical_monsoon
+			climate = ha1300_climate_continental_monsoon
+			climate = ha1300_climate_highland_monsoon
+			climate = ha1300_climate_savanna
+			climate = mediterranean
+		}
+		OR = {
+			has_river = yes
+			is_adjacent_to_lake = yes
+			topography = wetlands
+			topography = ha1300_topo_floodplains
+			topography = ha1300_topo_deltas
+			vegetation = ha1300_veg_marsh
+			vegetation = ha1300_veg_swamp
+		}
+	}
+}
+'''
+
+[[crops.methods]]
+tier = 0
+key = "dryland_rice"
+name = "Dryland Rice"
+desc = "Rice is sown on rain-fed ground without standing water."
+inputs = { livestock = 0.016, tools = 0.004 }
+output = 0.100
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 0
+key = "wet_paddy"
+name = "Wet Paddy Transplanting"
+desc = "Seedlings raised in a nursery are planted by hand into flooded plots."
+inputs = { livestock = 0.010, clay = 0.020 }
+output = 0.110
+labour_class = "hand_work"
+advance = ""
+
+[[crops.methods]]
+tier = 1
+key = "bunded_paddies"
+name = "Bunded Paddies and Sluices"
+desc = "Earth bunds and sluice gates hold water on the fields."
+inputs = { livestock = 0.10, clay = 0.24, lumber = 0.05, tools = 0.016 }
+output = 0.64
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "double_cropping"
+name = "Double Cropping"
+desc = "An early and a late rice crop follow each other on the same paddy."
+inputs = { tools = 0.17, livestock = 0.23, clay = 0.45, lumber = 0.12 }
+output = 1.54
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "chain_pump"
+name = "Chain-Pump Paddies"
+desc = "Treadle chain pumps lift water onto the higher paddies."
+inputs = { tools = 0.16, livestock = 0.20, clay = 0.36, lumber = 0.19 }
+output = 1.60
+labour_class = ""
+advance = "pp_water_lifting"
+
+[[crops.methods]]
+tier = 3
+key = "surveyed_paddies"
+name = "Surveyed Paddy Estate"
+desc = "Levelled paddies and planned channels are run as one estate."
+inputs = { tools = 0.22, livestock = 0.28, clay = 0.60, lumber = 0.26 }
+output = 2.13
+labour_class = ""
+advance = ""
+
+[[crops]]
+stem = "millet"
+good = "millet"
+gated = false
+land_class = "arable"
+icon_badge = "millet"
+names = { 0 = "Millet Farm", 1 = "Millet Farmstead", 2 = "Millet Rotation Farm", 3 = "Millet Model Farm" }
+slot0_name = "Fields"
+descs = { 0 = "Households sow millet on light and dry soils that suit little else.", 1 = "Manured plots and sealed seed stores steady the millet harvest.", 2 = "Millet takes turns with fallow and pulses to keep thin soils working.", 3 = "Drilled rows, horse teams and field accounts raise millet on a larger managed farm." }
+provision_name = "Provision with Millet"
+beekeeping = false
+side_modifiers = {}
+location_rule = '''
+OR = {
+	raw_material = goods:millet
+	AND = {
+		NOT = { OR = { climate = arctic climate = ha1300_climate_subarctic climate = ha1300_climate_subpolar_oceanic } }
+		NOT = { vegetation = ha1300_veg_tundra }
+	}
+}
+'''
+
+[[crops.methods]]
+tier = 0
+key = "broadcast_hoe"
+name = "Broadcast and Hoe"
+desc = "Seed is broadcast by hand and the weeds are kept down with the hoe."
+inputs = { tools = 0.025 }
+output = 0.150
+labour_class = "hand_work"
+advance = ""
+
+[[crops.methods]]
+tier = 0
+key = "millet_pulses"
+name = "Millet with Pulses"
+desc = "Pulses grow between the millet and feed the soil."
+inputs = { legumes = 0.05, tools = 0.02, livestock = 0.014 }
+output = 0.166
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 1
+key = "manured_hill_plots"
+name = "Manured Hill Plots"
+desc = "Manured plots and sealed seed jars steady the harvest."
+inputs = { livestock = 0.10, fiber_crops = 0.06, pottery = 0.04, tools = 0.019 }
+output = 0.60
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "millet_fallow"
+name = "Millet-Fallow Rotation"
+desc = "Millet alternates with grazed and manured fallow."
+inputs = { tools = 0.18, horses = 0.14, livestock = 0.12, fiber_crops = 0.075 }
+output = 1.54
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "sorghum_cowpea"
+name = "Sorghum and Cowpea Rotation"
+desc = "Sorghum and cowpeas take turns on the same fields."
+inputs = { tools = 0.17, horses = 0.12, legumes = 0.27, pottery = 0.15 }
+output = 1.60
+labour_class = ""
+advance = "pp_improved_rotations"
+
+[[crops.methods]]
+tier = 3
+key = "drilled_rows"
+name = "Drilled Millet Rows"
+desc = "Millet is drilled in rows and worked with horse-hoes."
+inputs = { tools = 0.23, horses = 0.18, livestock = 0.16, paper = 0.18 }
+output = 2.10
+labour_class = ""
+advance = ""
+
+[[crops]]
+stem = "maize"
+good = "maize"
+gated = true
+land_class = "arable"
+icon_badge = "maize"
+names = { 0 = "Maize Field", 1 = "Maize Farmstead", 2 = "Maize Rotation Farm", 3 = "Maize Model Farm" }
+slot0_name = "Fields"
+descs = { 0 = "Households plant maize in hills worked with the hoe.", 1 = "Manure feeds the maize fields and slatted cribs keep the harvest dry.", 2 = "Ploughed rows and bean rotations raise more maize from the same fields.", 3 = "Horse-hoes, planned cribs and hired hands raise maize on a larger managed farm." }
+provision_name = "Provision with Maize"
+beekeeping = false
+side_modifiers = {}
+location_rule = '''
+OR = {
+	raw_material = goods:maize
+	AND = {
+		NOT = { OR = { climate = arctic climate = ha1300_climate_subarctic climate = ha1300_climate_subpolar_oceanic climate = cold_arid } }
+		NOT = { vegetation = ha1300_veg_tundra }
+	}
+}
+'''
+
+[[crops.methods]]
+tier = 0
+key = "hill_planting"
+name = "Hill Planting"
+desc = "Maize is planted by hand in hoed hills."
+inputs = { tools = 0.007 }
+output = 0.100
+labour_class = "hand_work"
+advance = ""
+
+[[crops.methods]]
+tier = 0
+key = "milpa"
+name = "Milpa with Beans"
+desc = "Beans climb the maize stalks and feed the soil."
+inputs = { legumes = 0.02, livestock = 0.011 }
+output = 0.110
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 1
+key = "manured_cribs"
+name = "Manured Maize Cribs"
+desc = "Manure feeds the fields and slatted cribs dry the ears."
+inputs = { livestock = 0.08, fiber_crops = 0.07, lumber = 0.045, tools = 0.012 }
+output = 0.59
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "ploughed_rows"
+name = "Ploughed Maize Rows"
+desc = "Draught animals plough straight rows for the maize."
+inputs = { tools = 0.19, livestock = 0.20, lumber = 0.11, fiber_crops = 0.11 }
+output = 1.54
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "maize_bean_rotation"
+name = "Maize-Bean Rotation"
+desc = "Maize and beans take turns on the same fields."
+inputs = { tools = 0.17, livestock = 0.18, legumes = 0.30, lumber = 0.12 }
+output = 1.60
+labour_class = ""
+advance = "pp_improved_rotations"
+
+[[crops.methods]]
+tier = 3
+key = "horse_hoed"
+name = "Horse-Hoed Maize"
+desc = "Horse-hoes clean the rows between the maize."
+inputs = { tools = 0.22, livestock = 0.28, lumber = 0.18, paper = 0.22 }
+output = 2.10
+labour_class = ""
+advance = ""
+
+[[crops]]
+stem = "legume"
+good = "legumes"
+gated = false
+land_class = "arable"
+icon_badge = "legumes"
+names = { 0 = "Legume Farm", 1 = "Legume Farmstead", 2 = "Pulse Rotation Farm", 3 = "Legume Model Farm" }
+slot0_name = "Fields"
+descs = { 0 = "Households grow peas, beans and lentils that feed both the table and the soil.", 1 = "Fodder leys and sealed seed jars tie pulse growing to the village livestock.", 2 = "Pulses move through the rotation and leave the soil richer for the grain that follows.", 3 = "Drilled pulse rows and seed ledgers raise legumes on a larger managed farm." }
+provision_name = "Provision with Legumes"
+beekeeping = true
+side_modifiers = { local_wheat_output_modifier = 0.02, local_millet_output_modifier = 0.02, local_maize_output_modifier = 0.02 }
+location_rule = '''
+OR = {
+	raw_material = goods:legumes
+	AND = {
+		NOT = { climate = arctic }
+		NOT = { vegetation = ha1300_veg_tundra }
+	}
+}
+'''
+
+[[crops.methods]]
+tier = 0
+key = "pease_bean_field"
+name = "Pease and Bean Field"
+desc = "Peas and beans are sown in the open field."
+inputs = { tools = 0.02, livestock = 0.038 }
+output = 0.150
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 0
+key = "stubble_sowing"
+name = "Sown on Stubble"
+desc = "A horse team sows pulses into the grain stubble."
+inputs = { horses = 0.020, tools = 0.023 }
+output = 0.166
+labour_class = ""
+advance = "pp_heavy_plough"
+
+[[crops.methods]]
+tier = 1
+key = "fodder_leys"
+name = "Fodder Leys and Seed Jars"
+desc = "Fodder leys feed the herds and seed jars keep next year's sowing."
+inputs = { horses = 0.035, livestock = 0.05, fiber_crops = 0.06, pottery = 0.06 }
+output = 0.59
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "pulse_rotation"
+name = "Pulse Rotation"
+desc = "Pulses take their turn in the field rotation."
+inputs = { tools = 0.19, horses = 0.15, livestock = 0.10, cloth = 0.04 }
+output = 1.56
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "vetch_lentil"
+name = "Vetch and Lentil Fodder"
+desc = "Vetch and lentils are grown for fodder as well as food."
+inputs = { tools = 0.17, horses = 0.14, livestock = 0.12, fiber_crops = 0.09 }
+output = 1.62
+labour_class = ""
+advance = "pp_improved_rotations"
+
+[[crops.methods]]
+tier = 3
+key = "drilled_rows"
+name = "Drilled Pulse Rows"
+desc = "Pulses are drilled in rows and their seed is kept in ledgers."
+inputs = { tools = 0.21, horses = 0.19, livestock = 0.12, paper = 0.23 }
+output = 2.08
+labour_class = ""
+advance = ""
+
+[[crops]]
+stem = "potato"
+good = "potato"
+gated = true
+land_class = "arable"
+icon_badge = "potato"
+names = { 0 = "Potato Field", 1 = "Potato Farmstead", 2 = "Potato Ridge Farm", 3 = "Potato Model Farm" }
+slot0_name = "Fields"
+descs = { 0 = "Households raise potatoes in spade-dug beds on poor and wet ground.", 1 = "Manured ridges grow the crop and earth clamps keep the seed potatoes through winter.", 2 = "Potatoes take turns with grain and fodder on ridges that drain well.", 3 = "Drilled ridges, planned clamps and field accounts raise potatoes on a larger managed farm." }
+provision_name = "Provision with Potatoes"
+beekeeping = false
+side_modifiers = {}
+location_rule = '''
+OR = {
+	raw_material = goods:potato
+	AND = {
+		NOT = { climate = arctic }
+		OR = {
+			NOT = { OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna climate = arid climate = ha1300_climate_hot_steppe } }
+			topography = hills
+			topography = mountains
+			topography = plateau
+		}
+	}
+}
+'''
+
+[[crops.methods]]
+tier = 0
+key = "lazy_beds"
+name = "Lazy Beds"
+desc = "Potatoes are planted in spade-dug beds on poor ground."
+inputs = { tools = 0.007 }
+output = 0.100
+labour_class = "hand_work"
+advance = ""
+
+[[crops.methods]]
+tier = 0
+key = "ridged_fields"
+name = "Ridged Fields"
+desc = "Ridges drain the ground and manure feeds them."
+inputs = { livestock = 0.016, tools = 0.004 }
+output = 0.110
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 1
+key = "manured_ridges"
+name = "Manured Ridges and Clamps"
+desc = "Manured ridges grow the crop and earth clamps store it."
+inputs = { livestock = 0.09, clay = 0.19, fiber_crops = 0.06, tools = 0.02 }
+output = 0.65
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "potato_rotation"
+name = "Potato Rotation"
+desc = "Potatoes take turns with grain on the same ground."
+inputs = { tools = 0.19, livestock = 0.23, clay = 0.26, cloth = 0.08 }
+output = 1.56
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "seed_selection"
+name = "Selected Seed Potatoes"
+desc = "Sound seed tubers are picked out and stored apart."
+inputs = { tools = 0.17, livestock = 0.22, clay = 0.30, fiber_crops = 0.15 }
+output = 1.62
+labour_class = ""
+advance = "pp_improved_rotations"
+
+[[crops.methods]]
+tier = 3
+key = "drilled_ridges"
+name = "Drilled Potato Ridges"
+desc = "Ridges are drilled in straight lines and worked with horse-hoes."
+inputs = { tools = 0.22, livestock = 0.29, clay = 0.37, paper = 0.28 }
+output = 2.14
+labour_class = ""
+advance = ""
+
+[[crops]]
+stem = "olive"
+good = "olives"
+gated = true
+land_class = "arable"
+icon_badge = "olives"
+names = { 0 = "Olive Grove", 1 = "Olive Farmstead", 2 = "Olive Estate", 3 = "Olive Model Estate" }
+slot0_name = "Groves"
+descs = { 0 = "Households prune and harvest olive trees on dry hillsides.", 1 = "Manured groves and a small press turn the harvest into stored oil.", 2 = "Grafted trees and tended terraces make the groves bear more evenly.", 3 = "Beam presses, oil stores and hired hands work the groves as one managed estate." }
+provision_name = "Provision with Olives"
+beekeeping = true
+side_modifiers = {}
+location_rule = '''
+OR = {
+	raw_material = goods:olives
+	climate = mediterranean
+}
+'''
+
+[[crops.methods]]
+tier = 0
+key = "pruned_grove"
+name = "Pruned Grove"
+desc = "Old trees are pruned and harvested by hand."
+inputs = { tools = 0.007 }
+output = 0.100
+labour_class = "hand_work"
+advance = ""
+
+[[crops.methods]]
+tier = 0
+key = "terraced_grove"
+name = "Terraced Grove"
+desc = "Stone terraces hold soil and water around the trees."
+inputs = { livestock = 0.012, stone = 0.019 }
+output = 0.110
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 1
+key = "manured_grove"
+name = "Manured Grove and Press"
+desc = "Manured trees and a small press turn the fruit into oil."
+inputs = { livestock = 0.075, tools = 0.03, lumber = 0.045, pottery = 0.088 }
+output = 0.59
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "grafted_grove"
+name = "Grafted Grove"
+desc = "Grafted trees bear more and oil jars keep the pressing."
+inputs = { tools = 0.19, livestock = 0.22, lumber = 0.11, pottery = 0.20 }
+output = 1.54
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "irrigated_grove"
+name = "Irrigated Grove"
+desc = "Channels and cisterns water the trees through the dry season."
+inputs = { tools = 0.17, livestock = 0.18, lumber = 0.18, clay = 0.39 }
+output = 1.60
+labour_class = ""
+advance = "pp_water_lifting"
+
+[[crops.methods]]
+tier = 3
+key = "beam_press"
+name = "Beam-Press Estate"
+desc = "Beam presses and oil stores serve the whole estate."
+inputs = { tools = 0.21, livestock = 0.26, lumber = 0.18, pottery = 0.51 }
+output = 2.09
+labour_class = ""
+advance = ""
+
+[[crops]]
+stem = "cattle"
+good = "livestock"
+gated = false
+land_class = "herd"
+icon_badge = "livestock"
+names = { 0 = "Cattle Farm", 1 = "Cattle Farmstead", 2 = "Cattle Ley Farm", 3 = "Cattle Model Farm" }
+slot0_name = "Pastures"
+descs = { 0 = "Households graze cattle on common pasture and bring them in at night.", 1 = "Stall feeding and manure yards carry the herd through the lean months.", 2 = "Sown leys and fodder crops let the herd graze fields that rest from grain.", 3 = "Selected breeding stock, dairies and fodder leys raise cattle on a larger managed farm." }
+provision_name = "Provision with Livestock"
+beekeeping = false
+side_modifiers = { local_legumes_output_modifier = 0.02 }
+# base-slot labour of the herd: pp_farming_village_base_livestock and its tier equivalents
+base_labour = { 0 = 0.018, 1 = 0.024, 2 = 0.021, 3 = 0.03 }
+# the cattle rule already contains the farmable base (pasture-friendly OR general farmable); do not AND it with
+# location_potential_base, which would drop the pasture-only locations
+location_rule_standalone = true
+location_rule = '''
+OR = {
+	pp_pasture_friendly_location_potential = yes
+	pp_general_farmable_food_location_potential = yes
+}
+OR = {
+	raw_material = goods:livestock
+	NOT = { climate = arctic }
+}
+'''
+
+[[crops.methods]]
+tier = 0
+key = "open_pasture"
+name = "Open Pasture"
+desc = "Cattle graze the common land and salt licks keep them healthy."
+inputs = { salt = 0.006, tools = 0.011 }
+output = 0.082
+labour_class = "hand_work"
+advance = ""
+
+[[crops.methods]]
+tier = 0
+key = "byres_yards"
+name = "Byres and Yards"
+desc = "Byres and yards shelter the herd and gather its manure."
+inputs = { tools = 0.008, clay = 0.16 }
+output = 0.091
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 1
+key = "stall_feeding"
+name = "Stall Feeding"
+desc = "Cattle are fed in stalls on fodder and pulses."
+inputs = { livestock = 0.12, legumes = 0.10, clay = 0.12, lumber = 0.047 }
+output = 0.44
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "ley_grazing"
+name = "Ley Grazing"
+desc = "Cattle graze sown leys on fields resting from grain."
+inputs = { tools = 0.15, horses = 0.10, legumes = 0.33, lumber = 0.089 }
+output = 0.97
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 2
+key = "transhumance"
+name = "Transhumance Drove"
+desc = "Drovers move the herd between summer and winter pastures."
+inputs = { horses = 0.12, salt = 0.06, tools = 0.10, livestock = 0.19 }
+output = 0.97
+labour_class = ""
+advance = ""
+
+[[crops.methods]]
+tier = 3
+key = "dairy_breeding"
+name = "Dairy and Breeding Herd"
+desc = "Selected bulls and planned dairies improve the herd."
+inputs = { tools = 0.20, horses = 0.18, legumes = 0.35, paper = 0.12 }
+output = 1.40
+labour_class = ""
+advance = ""

@@ -1,10 +1,10 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:victuals_market:localization
-  victuals_market: "Victuals Market (Export)"
-  victuals_market_desc: "Collects food from the province and sells it into the goods market as [ShowGoodsName('victuals')|e]."
-  victuals_market_slot_0: "Victuals Export"
-  victuals_market_construction: "Victuals Market Construction"
-  pp_province_food_to_market: "Export Province Food"
-  pp_victuals_market_price: "Victuals Market Price"
+  victuals_market: "Victualler (Export)"
+  victuals_market_desc: "Turns stored province food into [ShowGoodsName('victuals')|e] for the goods market. It pays off when the province store is full."
+  victuals_market_slot_0: "Export"
+  victuals_market_construction: "Victualler Construction"
+  pp_province_food_to_market: "Export Victuals"
+  pp_victuals_market_price: "Victualler (Export) Price"
 # <<< eu5-building-pipeline:victuals_market:localization

@@ -5,7 +5,8 @@ labour:
   class: primary_reformation
   methods:
     pp_offshore_fishery_base_catch: base
-    pp_offshore_fishery_worker_victuals: base
+    pp_offshore_fishery_provision: keep
+    pp_offshore_fishery_sell_surplus: keep
 output_tag: ocean_fishery_offshore
 upgrade_chain:
   family: ocean_fishery
@@ -29,8 +30,8 @@ building:
         - pp_offshore_fishery_steam_trawlers
     - name: slot_2
       methods:
-        - pp_offshore_fishery_no_worker_victuals
-        - pp_offshore_fishery_worker_victuals
+        - pp_offshore_fishery_provision
+        - pp_offshore_fishery_sell_surplus
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -101,14 +102,16 @@ building:
         }
     }
     unique_production_methods = {
-        pp_offshore_fishery_no_worker_victuals = {
+        pp_offshore_fishery_provision = {
+            fish = 0.12
+            produced = local_food
+            output = 1.44
+            debug_max_profit = 0
             category = building_maintenance
         }
-        pp_offshore_fishery_worker_victuals = {
-            manual_labor_cost = 0.04
-            produced = victuals
-            output = 0.067
-            debug_max_profit = 0
+        pp_offshore_fishery_sell_surplus = {
+            produced = province_food_sales
+            output = 0.008
             category = building_maintenance
         }
     }
@@ -128,7 +131,7 @@ localization:
   entries:
     offshore_fishery_slot_0: Offshore Waters
     offshore_fishery_slot_1: Offshore Fleet
-    offshore_fishery_slot_2: Household Food
+    offshore_fishery_slot_2: Provisioning
     offshore_fishery: Offshore Fishery
     offshore_fishery_desc: Offshore fleets use herring busses, bank schooners, and later steam trawlers to reach richer waters. Salt, provisions, and gear keep the catch moving home.
     pp_offshore_fishery_base_catch: Offshore Waters
@@ -136,8 +139,10 @@ localization:
     pp_offshore_fishery_herring_busses: Herring Busses
     pp_offshore_fishery_distant_water_schooners: Distant-Water Schooners
     pp_offshore_fishery_steam_trawlers: Steam Trawlers
-    pp_offshore_fishery_no_worker_victuals: No Household Victuals
-    pp_offshore_fishery_worker_victuals: Household Victuals
+    pp_offshore_fishery_provision: Provision with Fish
+    pp_offshore_fishery_provision_desc: The household buys its own catch back and cooks for the province. Worth it while the province store is low and the good is cheap.
+    pp_offshore_fishery_sell_surplus: Sell the Surplus
+    pp_offshore_fishery_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
 icon:
   source_png: ../assets/icons/offshore_fishery.png
   output_dds: offshore_fishery.dds
@@ -171,7 +176,11 @@ evaluation:
       allow_rules:
         input_throughput: Steam trawlers keep a pre-steel-tool input profile while becoming the clear late offshore fishing tier.
         output_throughput: Late-game offshore fish output is capped below generic laborer throughput while staying above schooners.
-    pp_offshore_fishery_worker_victuals:
-      production_efficiency: 1.00
+    pp_offshore_fishery_provision:
       allow_rules:
-        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.
+        profit_percent: Provisioning loses money at the Province Food floor by design; the storage signal decides the switch.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
+    pp_offshore_fishery_sell_surplus:
+      allow_rules:
+        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.

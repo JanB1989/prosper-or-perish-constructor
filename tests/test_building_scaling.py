@@ -4,51 +4,36 @@ from decimal import Decimal
 from pathlib import Path
 import re
 
-import pytest
 from eu5_building_pipeline.template import load_template
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5_mod_orchestrator.config import load_project_config
 from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
-from eu5gameparser.domain.goods import load_goods_data
 from eu5gameparser.domain.pop_types import load_pop_type_data
 from prosper_or_perish_constructor.building_scaling import (
     apply_increase_per_level_cost_multiplier,
     format_increase_per_level_cost,
-    format_output_amount,
     load_building_scaling_config,
     scaled_increase_per_level_cost_text,
-    worker_victuals_output_amount,
 )
-from prosper_or_perish_constructor import yaml_io
+from prosper_or_perish_constructor import provisioning, yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "constructor.toml"
 BUILDING_BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted" / "buildings"
 MANIFEST = ROOT / "blueprints" / "buildings.manifest.yml"
-PRIMARY_WORKER_VICTUAL_BUILDINGS = (
-    "farming_village",
-    "husbandry_farmstead",
-    "farming_village_rotations",
-    "model_farm",
-    "fruit_orchard",
-    "nursery_orchard",
-    "pomological_orchard",
-    "fishing_village",
-    "net_curing_yard",
-    "ocean_fishery",
-    "drift_net_fishery",
-    "offshore_fishery",
-    "forest_village",
-    "managed_forest_village",
-)
+METHOD_KEYS = {"produced", "output", "category", "debug_max_profit", "potential", "allow", "no_upkeep", "ai_will_do"}
 
 
-def test_building_scaling_config_loads_worker_victuals_ratio() -> None:
+def test_building_scaling_config_loads_provisioning_constants() -> None:
     config = load_building_scaling_config(PROJECT)
+    provision = provisioning.load_provisioning_config(PROJECT)
 
-    assert config.worker_victuals_food_need_ratio == Decimal("1.0")
+    assert provision.input_per_level == Decimal("0.08")
+    assert provision.food_per_gold == Decimal("12")
+    assert provision.sell_per_level == Decimal("0.005")
+    assert provision.reference_base_output == Decimal("0.06")
     assert config.increase_per_level_cost_multiplier == Decimal("0.75")
     assert config.burgher_building_employment_size == Decimal("0.3")
 
@@ -96,7 +81,6 @@ def test_increase_per_level_cost_compilation_is_idempotent(tmp_path: Path) -> No
 
     project.write_text(
         "[building_scaling]\n"
-        "worker_victuals_food_need_ratio = 1.0\n"
         "increase_per_level_cost_multiplier = 0.75\n",
         encoding="utf-8",
     )
@@ -142,66 +126,67 @@ def test_increase_per_level_cost_compilation_is_idempotent(tmp_path: Path) -> No
     )
 
 
-def test_primary_food_buildings_worker_victuals_slots_match_configured_worker_food_need() -> None:
-    scaling = load_building_scaling_config(PROJECT)
-    victuals_food = _good_food("victuals")
+def test_provisioning_slots_match_configured_amounts() -> None:
+    config = provisioning.load_provisioning_config(PROJECT)
 
-    for building in PRIMARY_WORKER_VICTUAL_BUILDINGS:
+    for building in provisioning.PROVISIONING_BUILDINGS:
         template = load_template(BUILDING_BLUEPRINT_ROOT / f"{building}.yml")
-        worker_method = f"pp_{building}_worker_victuals"
-        no_worker_method = f"pp_{building}_no_worker_victuals"
+        provision, sell = provisioning.slot_methods(building)
+        good = provisioning.provisioned_good(building)
+        assert good is not None
 
-        assert (no_worker_method, worker_method) in {slot.methods for slot in template.production_method_slots}
+        slots = [
+            slot.methods
+            for slot in template.production_method_slots
+            if provision in slot.methods or sell in slot.methods
+        ]
+        assert slots == [(provision, sell)], building
 
         block = _building_block(template.key, template.building_body)
-        pop_type = str(_last_value(block, "pop_type"))
-        employment_size = Decimal(str(_last_value(block, "employment_size")))
-        method = _unique_method_values(block, worker_method)
-        assert method["produced"] == "victuals"
-        actual_output = Decimal(str(method["output"]))
-        assert actual_output > 0
+        amounts = provisioning.provisioning_amounts(
+            _base_output(block, template.production_method_slots[0].methods, good),
+            config=config,
+        )
 
-        if victuals_food > 0:
-            pop_food_consumption = _pop_food_consumption(pop_type)
-            expected_output = worker_victuals_output_amount(
-                employment_size=employment_size,
-                pop_food_consumption=pop_food_consumption,
-                victuals_food=victuals_food,
-                food_need_ratio=scaling.worker_victuals_food_need_ratio,
-            )
+        provision_values = _unique_method_values(block, provision)
+        provision_inputs = {key: value for key, value in provision_values.items() if key not in METHOD_KEYS}
+        assert set(provision_inputs) == {good}, building
+        assert Decimal(str(provision_inputs[good])) == amounts.input, building
+        assert provision_values["produced"] == "local_food"
+        assert Decimal(str(provision_values["output"])) == amounts.output, building
 
-            assert str(actual_output) == format_output_amount(expected_output)
-            actual_food = actual_output * victuals_food
-            target_food = employment_size * pop_food_consumption * scaling.worker_victuals_food_need_ratio
-            assert float(actual_food) == pytest.approx(float(target_food), rel=0.02)
+        sell_values = _unique_method_values(block, sell)
+        assert {key for key in sell_values if key not in METHOD_KEYS} == set(), building
+        assert sell_values["produced"] == "province_food_sales"
+        assert Decimal(str(sell_values["output"])) == amounts.sell, building
 
 
-def test_worker_victuals_slots_are_limited_to_primary_food_buildings() -> None:
-    assert _accepted_worker_victual_buildings() == set(PRIMARY_WORKER_VICTUAL_BUILDINGS)
+def test_provisioning_slots_are_limited_to_calorie_buildings() -> None:
+    assert _accepted_buildings_with_method_suffix("_sell_surplus") == set(provisioning.PROVISIONING_BUILDINGS)
 
 
-def test_victuals_producers_supply_local_food_above_worker_consumption() -> None:
-    for building in PRIMARY_WORKER_VICTUAL_BUILDINGS + ("eng_royal_forest", "victualling_yard"):
+def test_no_blueprint_keeps_worker_victuals() -> None:
+    assert _accepted_buildings_with_method_suffix("_worker_victuals") == set()
+
+
+def test_provisioning_feeds_at_least_the_workers() -> None:
+    """Provision output (Province Food, 1 food each) per level covers most of what the building's own workers eat."""
+    for building in provisioning.PROVISIONING_BUILDINGS:
         template = load_template(BUILDING_BLUEPRINT_ROOT / f"{building}.yml")
         block = _building_block(template.key, template.building_body)
         pop_type = str(_last_value(block, "pop_type"))
         employment_size = Decimal(str(_last_value(block, "employment_size")))
         worker_food = employment_size * _pop_food_consumption(pop_type)
-        modifier = _last_block(block, "modifier")
-        local_food = Decimal(str(_last_value(modifier, "local_monthly_food")))
-
-        assert local_food >= worker_food * Decimal("1.5")
-        assert re.search(
-            rf"local_monthly_food\s*=\s*{re.escape(str(local_food))}(?:\.0)?\b",
-            template.building_body,
+        provision = re.search(
+            rf"pp_{re.escape(building)}_provision\s*=\s*\{{[^}}]*?output\s*=\s*([0-9.]+)", template.building_body, re.S
         )
+        assert provision, building
+        assert Decimal(provision.group(1)) >= worker_food * Decimal("0.75"), building
 
     cookery = load_template(BUILDING_BLUEPRINT_ROOT / "cookery.yml")
-    cookery_block = _building_block(cookery.key, cookery.building_body)
-    cookery_modifier = _last_block(cookery_block, "modifier")
-    cookery_local_food = Decimal(str(_last_value(cookery_modifier, "local_monthly_food")))
-    assert cookery_local_food == Decimal("20.0")
-    assert "local_monthly_food = 20.0" in cookery.building_body
+    assert "local_monthly_food" not in cookery.building_body  # food comes from the Serve methods now
+    serve = re.search(r"pp_cookery_livestock_pottage_serve\s*=\s*\{[^}]*?output\s*=\s*([0-9.]+)", cookery.building_body, re.S)
+    assert serve and Decimal(serve.group(1)) >= Decimal("20")
 
 
 def _building_block(building: str, body: str) -> CList:
@@ -241,15 +226,16 @@ def _pop_food_consumption(pop_type: str) -> Decimal:
     return Decimal(str(rows[0]["pop_food_consumption"]))
 
 
-def _good_food(good: str) -> Decimal:
-    project = load_project_config(PROJECT)
-    data = load_goods_data(profile=project.profile, load_order_path=project.load_order_path)
-    rows = data.goods.filter(data.goods["name"] == good).select("food").to_dicts()
-    assert rows
-    return Decimal(str(rows[0]["food"]))
+def _base_output(block: CList, slot_0: tuple[str, ...], good: str) -> Decimal:
+    """Output of the first slot-0 method that produces the building's own good."""
+    for method in slot_0:
+        values = _unique_method_values(block, method)
+        if values.get("produced") == good:
+            return Decimal(str(values["output"]))
+    raise AssertionError(f"no slot-0 method produces {good}")
 
 
-def _accepted_worker_victual_buildings() -> set[str]:
+def _accepted_buildings_with_method_suffix(suffix: str) -> set[str]:
     manifest = yaml_io.safe_load(MANIFEST.read_text(encoding="utf-8"))
     result: set[str] = set()
     for entry in enabled_manifest_entries(manifest.get("enabled", []), source=MANIFEST):
@@ -258,7 +244,7 @@ def _accepted_worker_victual_buildings() -> set[str]:
             method
             for slot in template.production_method_slots
             for method in slot.methods
-            if method.endswith("_worker_victuals")
+            if method.endswith(suffix)
         }
         if methods:
             result.add(template.key)

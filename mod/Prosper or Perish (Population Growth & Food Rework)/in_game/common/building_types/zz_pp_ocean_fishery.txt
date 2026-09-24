@@ -46,14 +46,16 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_ocean_fishery_no_worker_victuals = {
+    pp_ocean_fishery_provision = {
+        fish = 0.12
+        produced = local_food
+        output = 1.44
+        debug_max_profit = 5.000
         category = building_maintenance
     }
-    pp_ocean_fishery_worker_victuals = {
-        manual_labor_cost = 0.04
-        produced = victuals
-        output = 0.067
-        debug_max_profit = 0.005
+    pp_ocean_fishery_sell_surplus = {
+        produced = province_food_sales
+        output = 0.008
         category = building_maintenance
     }
 }

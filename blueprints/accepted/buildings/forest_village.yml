@@ -9,7 +9,8 @@ labour:
     pp_forest_village_base_fur: base
     pp_forest_village_base_beeswax: base
     pp_hunting_lodges: base
-    pp_forest_village_worker_victuals: base
+    pp_forest_village_provision: keep
+    pp_forest_village_sell_surplus: keep
 upgrade_chain:
   family: forest_village
   tier: 0
@@ -36,8 +37,8 @@ building:
     - pp_forest_village_forest_apiary
   - name: slot_2
     methods:
-    - pp_forest_village_no_worker_victuals
-    - pp_forest_village_worker_victuals
+    - pp_forest_village_provision
+    - pp_forest_village_sell_surplus
   possible_production_methods: []
   body: |2-
         audio_tier = 1
@@ -132,14 +133,16 @@ building:
             }
         }
         unique_production_methods = {
-            pp_forest_village_no_worker_victuals = {
+            pp_forest_village_provision = {
+                wild_game = 0.08
+                produced = local_food
+                output = 0.96
+                debug_max_profit = 0
                 category = building_maintenance
             }
-            pp_forest_village_worker_victuals = {
-                manual_labor_cost = 0.02
-                produced = victuals
-                output = 0.033
-                debug_max_profit = 0
+            pp_forest_village_sell_surplus = {
+                produced = province_food_sales
+                output = 0.005
                 category = building_maintenance
             }
         }
@@ -225,7 +228,7 @@ localization:
   entries:
     forest_village_slot_0: Forest Resources
     forest_village_slot_1: Forest Work
-    forest_village_slot_2: Household Food
+    forest_village_slot_2: Provisioning
     pp_forest_tannery: Forest Tannery
     pp_forest_village_base_beeswax: Forest Bloom
     pp_forest_village_base_fur: Forest Fur
@@ -233,8 +236,10 @@ localization:
     pp_forest_village_base_wild_game: Forest Game
     pp_forest_village_forest_apiary: Forest apiary
     pp_forest_village_forest_apiary_desc: Here beekeeping is the principal occupation. Families work the forest bloom, keeping and moving hives through the woods; wax and honey are the foundation of the settlementâ€™s livelihood.
-    pp_forest_village_no_worker_victuals: No Household Victuals
-    pp_forest_village_worker_victuals: Household Victuals
+    pp_forest_village_provision: Provision with Game
+    pp_forest_village_provision_desc: The household buys its own game back and cooks for the province. Worth it while the province store is low and the good is cheap.
+    pp_forest_village_sell_surplus: Sell the Surplus
+    pp_forest_village_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
     pp_fur_trapping: Fur Trapping
     pp_fur_trapping_advance_colonial: Colonial Fur Trade
     pp_fur_trapping_advance_colonial_desc: Establish organized fur trapping through North American colonial trade.
@@ -276,7 +281,11 @@ evaluation:
       production_efficiency: 1.0
     pp_forest_village_forest_apiary:
       production_efficiency: 1.0
-    pp_forest_village_worker_victuals:
-      production_efficiency: 1.0
+    pp_forest_village_provision:
       allow_rules:
-        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.
+        profit_percent: Provisioning loses money at the Province Food floor by design; the storage signal decides the switch.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
+    pp_forest_village_sell_surplus:
+      allow_rules:
+        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.

@@ -75,7 +75,7 @@ DEFAULT_RGO_WORKERS_K: dict[str, float] = {"rural_settlement": 1.5, "town": 2.0,
 DEFAULT_VICTUALS: dict[str, Any] = {
     "absorb_share": 0.8,
     "pop_demand_scale": 0.4,
-    "producers": {"cookery": 0.65, "victuals_market": 2.3, "farming_village": 0.05, "fishing_village": 0.05, "forest_village": 0.05, "fruit_orchard": 0.05},
+    "producers": {"cookery": 0.65, "victuals_market": 2.3},
     "consumers": {"victuals_market_import": 1.2, "lumber_mill": 0.3},
 }
 

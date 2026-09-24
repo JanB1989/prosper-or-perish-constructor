@@ -3,10 +3,12 @@
 # >>> eu5-building-pipeline:fruit_orchard:localization
   fruit_orchard_slot_0: "Fruit Trees"
   fruit_orchard_slot_1: "Orchard Work"
-  fruit_orchard_slot_2: "Household Food"
+  fruit_orchard_slot_2: "Provisioning"
   pp_fruit_orchard_base_fruit: "Fruit Trees"
   pp_fruit_orchard_maintenance: "Fruit Orchard Maintenance"
   pp_fruit_orchard_no_primary: "No Orchard Work"
-  pp_fruit_orchard_no_worker_victuals: "No Household Victuals"
-  pp_fruit_orchard_worker_victuals: "Household Victuals"
+  pp_fruit_orchard_provision: "Provision with Fruit"
+  pp_fruit_orchard_provision_desc: "The household buys its own fruit back and cooks for the province. Worth it while the province store is low and the good is cheap."
+  pp_fruit_orchard_sell_surplus: "Sell the Surplus"
+  pp_fruit_orchard_sell_surplus_desc: "The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty."
 # <<< eu5-building-pipeline:fruit_orchard:localization

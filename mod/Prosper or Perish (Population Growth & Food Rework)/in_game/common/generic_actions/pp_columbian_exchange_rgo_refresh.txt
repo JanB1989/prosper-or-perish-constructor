@@ -330,6 +330,29 @@ TRY_REPLACE:move_nw_good_to_new_location = {
 			pp_refresh_rgo_static_bonus = yes
 			pp_refresh_fruit_orchard_eligibility = yes
 		}
+		# a New World crop arriving teaches the acting country to farm it (unless it already knows how)
+		scope:actor ?= {
+			if = {
+				limit = {
+					scope:target_good = goods:maize
+					NOR = {
+						has_advance = pp_maize_farm_advance_general
+						has_advance = pp_maize_farm_advance_game_start
+					}
+				}
+				research_advance = advance_type:pp_maize_farm_advance_general
+			}
+			if = {
+				limit = {
+					scope:target_good = goods:potato
+					NOR = {
+						has_advance = pp_potato_farm_advance_general
+						has_advance = pp_potato_farm_advance_game_start
+					}
+				}
+				research_advance = advance_type:pp_potato_farm_advance_general
+			}
+		}
 	}
 
 	ai_will_do = {
@@ -825,6 +848,29 @@ TRY_REPLACE:move_ow_good_to_new_location = {
 			change_raw_material = scope:target_good
 			pp_refresh_rgo_static_bonus = yes
 			pp_refresh_fruit_orchard_eligibility = yes
+		}
+		# a New World crop arriving teaches the acting country to farm it (unless it already knows how)
+		scope:actor ?= {
+			if = {
+				limit = {
+					scope:target_good = goods:maize
+					NOR = {
+						has_advance = pp_maize_farm_advance_general
+						has_advance = pp_maize_farm_advance_game_start
+					}
+				}
+				research_advance = advance_type:pp_maize_farm_advance_general
+			}
+			if = {
+				limit = {
+					scope:target_good = goods:potato
+					NOR = {
+						has_advance = pp_potato_farm_advance_general
+						has_advance = pp_potato_farm_advance_game_start
+					}
+				}
+				research_advance = advance_type:pp_potato_farm_advance_general
+			}
 		}
 	}
 

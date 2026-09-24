@@ -8,7 +8,8 @@ labour:
     pp_managed_forest_village_base_wild_game: base
     pp_managed_forest_village_base_fur: base
     pp_managed_forest_village_base_beeswax: base
-    pp_managed_forest_village_worker_victuals: base
+    pp_managed_forest_village_provision: keep
+    pp_managed_forest_village_sell_surplus: keep
 upgrade_chain:
   family: forest_village
   tier: 1
@@ -35,8 +36,8 @@ building:
     - pp_managed_forest_village_apiaries
   - name: slot_2
     methods:
-    - pp_managed_forest_village_no_worker_victuals
-    - pp_managed_forest_village_worker_victuals
+    - pp_managed_forest_village_provision
+    - pp_managed_forest_village_sell_surplus
   possible_production_methods: []
   body: |-
     is_foreign = no
@@ -144,14 +145,16 @@ building:
         }
     }
     unique_production_methods = {
-        pp_managed_forest_village_no_worker_victuals = {
+        pp_managed_forest_village_provision = {
+            wild_game = 0.133
+            produced = local_food
+            output = 1.6
+            debug_max_profit = 0
             category = building_maintenance
         }
-        pp_managed_forest_village_worker_victuals = {
-            manual_labor_cost = 0.04
-            produced = victuals
-            output = 0.067
-            debug_max_profit = 0
+        pp_managed_forest_village_sell_surplus = {
+            produced = province_food_sales
+            output = 0.008
             category = building_maintenance
         }
     }
@@ -178,7 +181,7 @@ localization:
     managed_forest_village_desc: Managed forest villages use ordinances, marked stands, and recorded rights to organize woodland work. Hides, game, fur, and wax move through the same forest yards.
     managed_forest_village_slot_0: Managed Forest
     managed_forest_village_slot_1: Forest Work
-    managed_forest_village_slot_2: Household Food
+    managed_forest_village_slot_2: Provisioning
     pp_managed_forest_village: Managed Forest Villages
     pp_managed_forest_village_base_beeswax: Forest Apiaries
     pp_managed_forest_village_base_fur: Forest Fur
@@ -189,9 +192,11 @@ localization:
     pp_managed_forest_village_fur_trappers: Registered Fur Trappers
     pp_managed_forest_village_gamekeepers: Gamekeepers
     pp_managed_forest_village_no_primary: No Managed Forest Work
-    pp_managed_forest_village_no_worker_victuals: No Household Victuals
+    pp_managed_forest_village_provision: Provision with Game
+    pp_managed_forest_village_provision_desc: The household buys its own game back and cooks for the province. Worth it while the province store is low and the good is cheap.
+    pp_managed_forest_village_sell_surplus: Sell the Surplus
+    pp_managed_forest_village_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
     pp_managed_forest_village_tannery: Managed Forest Tannery
-    pp_managed_forest_village_worker_victuals: Household Victuals
 icon:
   source_png: ../assets/icons/managed_forest_village.png
   output_dds: managed_forest_village.dds
@@ -221,7 +226,11 @@ evaluation:
       production_efficiency: 1.0
     pp_managed_forest_village_apiaries:
       production_efficiency: 1.0
-    pp_managed_forest_village_worker_victuals:
-      production_efficiency: 1.0
+    pp_managed_forest_village_provision:
       allow_rules:
-        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.
+        profit_percent: Provisioning loses money at the Province Food floor by design; the storage signal decides the switch.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
+    pp_managed_forest_village_sell_surplus:
+      allow_rules:
+        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.

@@ -608,8 +608,8 @@ def _production_method_outputs_without_inputs(row: dict) -> bool:
     return not _material_inputs(row) and row["produced"] is not None and row["output"] is not None
 
 
-def _is_baseline_victuals_output_method(row: dict) -> bool:
-    return row["produced"] == "victuals" and str(row["name"]).endswith("_worker_victuals")
+def _is_provisioning_sale_method(row: dict) -> bool:
+    return row["produced"] == "province_food_sales" and str(row["name"]).endswith("_sell_surplus")
 
 
 def _matching_brace_index(text: str, opening_index: int) -> int:
@@ -1681,7 +1681,7 @@ def test_non_base_production_method_slots_have_inputs_or_outputs() -> None:
     assert offenders == []
 
 
-def test_buildings_have_at_most_one_free_output_slot_except_baseline_victuals() -> None:
+def test_buildings_have_at_most_one_free_output_slot_except_provisioning_sales() -> None:
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
     slots_by_building: dict[str, dict[int, list[str]]] = {}
     for row in data.building_data.production_methods.select(
@@ -1706,9 +1706,7 @@ def test_buildings_have_at_most_one_free_output_slot_except_baseline_victuals() 
             continue
         if not _production_method_outputs_without_inputs(row):
             continue
-        if _is_baseline_victuals_output_method(row):
-            continue
-        if building == "pp_food_switch_test":  # temporary method-switch test building (2026-09-24)
+        if _is_provisioning_sale_method(row):
             continue
 
         source_file = Path(str(row["source_file"]))

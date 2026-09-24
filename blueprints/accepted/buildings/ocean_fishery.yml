@@ -5,7 +5,8 @@ labour:
   class: primary_medieval
   methods:
     pp_ocean_fishery_base_catch: base
-    pp_ocean_fishery_worker_victuals: base
+    pp_ocean_fishery_provision: keep
+    pp_ocean_fishery_sell_surplus: keep
 upgrade_chain:
   family: ocean_fishery
   tier: 0
@@ -26,8 +27,8 @@ building:
         - pp_ocean_fishery_coastal_boats
     - name: slot_2
       methods:
-        - pp_ocean_fishery_no_worker_victuals
-        - pp_ocean_fishery_worker_victuals
+        - pp_ocean_fishery_provision
+        - pp_ocean_fishery_sell_surplus
   possible_production_methods: []
   body: |2-
     is_foreign = no
@@ -76,14 +77,16 @@ building:
         }
     }
     unique_production_methods = {
-        pp_ocean_fishery_no_worker_victuals = {
+        pp_ocean_fishery_provision = {
+            fish = 0.12
+            produced = local_food
+            output = 1.44
+            debug_max_profit = 0
             category = building_maintenance
         }
-        pp_ocean_fishery_worker_victuals = {
-            manual_labor_cost = 0.04
-            produced = victuals
-            output = 0.067
-            debug_max_profit = 0
+        pp_ocean_fishery_sell_surplus = {
+            produced = province_food_sales
+            output = 0.008
             category = building_maintenance
         }
     }
@@ -103,14 +106,16 @@ localization:
   entries:
     ocean_fishery_slot_0: Coastal Waters
     ocean_fishery_slot_1: Coastal Gear
-    ocean_fishery_slot_2: Household Food
+    ocean_fishery_slot_2: Provisioning
     ocean_fishery: Coastal Fishery
     ocean_fishery_desc: Coastal crews work small boats, nets, curing barrels, and shore landings. They supply nearby markets from familiar waters.
     pp_ocean_fishery_base_catch: Coastal Waters
     pp_ocean_fishery_no_coastal_gear: No Coastal Gear
     pp_ocean_fishery_coastal_boats: Coastal Boats
-    pp_ocean_fishery_no_worker_victuals: No Household Victuals
-    pp_ocean_fishery_worker_victuals: Household Victuals
+    pp_ocean_fishery_provision: Provision with Fish
+    pp_ocean_fishery_provision_desc: The household buys its own catch back and cooks for the province. Worth it while the province store is low and the good is cheap.
+    pp_ocean_fishery_sell_surplus: Sell the Surplus
+    pp_ocean_fishery_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
 icon:
   source_png: ../assets/icons/ocean_fishery.png
   output_dds: ocean_fishery.dds
@@ -130,7 +135,11 @@ evaluation:
       allow_rules:
         input_throughput: Coastal boats keep a lower gear profile after repeated fish-output tuning, intentionally below the generic full-building input target.
         output_throughput: Coastal boats keep strong coastal output after repeated fish-output tuning, intentionally below the generic full-building output target.
-    pp_ocean_fishery_worker_victuals:
-      production_efficiency: 1.00
+    pp_ocean_fishery_provision:
       allow_rules:
-        base_output_per_1k: Auxiliary worker victuals are sized from configured worker food need rather than the global no-input output band.
+        profit_percent: Provisioning loses money at the Province Food floor by design; the storage signal decides the switch.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
+    pp_ocean_fishery_sell_surplus:
+      allow_rules:
+        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.

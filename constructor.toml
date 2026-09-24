@@ -77,13 +77,19 @@ amortization_months_min = 120
 base_method_input_goods = ["manual_labor_cost"]  # base methods pay a token labour cost and stay base methods
 
 [building_scaling]
-worker_victuals_food_need_ratio = 1.0
 increase_per_level_cost_multiplier = 0.75
 burgher_building_employment_size = 0.3
+# Provisioning slot of calorie buildings (provisioning.py): per level of a building whose base output equals the
+# reference, the gold of its own good bought back, Province Food per gold of that good, and Surplus Sales output.
+provision_input_per_level = 0.08
+provision_food_per_gold = 12
+sell_surplus_per_level = 0.005
+provisioning_reference_base_output = 0.06
 
 
 [blueprint_evaluation.price_overrides]
 manual_labor_cost = 1.0   # labour is balanced at its price floor (20 % of 5), see [production_labour]
+local_food = 0.1          # Province Food is pinned at its price floor (20 % of 0.5) by its base supply
 
 [blueprint_evaluation.throughput_gold_per_1k]
 peasants = 1.0
@@ -267,15 +273,30 @@ town = 2.0
 city = 2.4
 megalopolis = 2.3
 [worldbuilder.start.victuals]
-# Victuals are the mod's food in the goods market: cookeries and the villages' worker provisions make them, import
+# Victuals are the mod's food in the goods market: cookeries make them, import
 # victuals markets are the only buildings that turn them back into province food. Per catchment the planner covers
 # the food deficit with cookeries and import markets so the imports buy absorb_share of the victuals made there;
 # more would idle the cookeries (they lay off workers when the victuals do not sell), less starves the towns.
 absorb_share = 0.8
 pop_demand_scale = 0.4    # observed pop demand vs the goods file's demand_add x demand_multiply (price, wealth)
 # victuals per building level as the market shows them (measured from saves 2026-09-22; food-check refits)
-producers = { cookery = 0.65, victuals_market = 3.45, farming_village = 0.05, fishing_village = 0.05, forest_village = 0.05, fruit_orchard = 0.05 }
+producers = { cookery = 0.65, victuals_market = 3.45 }
 consumers = { victuals_market_import = 1.8, lumber_mill = 0.3 }
+[worldbuilder.start.crops]
+# The farming village is split into one farm per crop; at game start a location's farm levels are spread over the
+# crop farms. Livestock first takes round(g x levels), g = its grazing share (World Builder grazing / (grazing +
+# starting crop) area); the crops share the rest by crop weight = max(0, 1 + the good's World Builder output rows over
+# the location's classes). See src/prosper_or_perish_constructor/worldbuilder/crop_allocation.py.
+floor_share = 0.6                  # crops under this share of the heaviest crop weight are dropped (never the RGO crop)
+rgo_bonus = 0.5                    # added to the RGO crop's weight, or to g on a livestock RGO (then capped at the max)
+grain_min_levels_from = 3          # from this many levels on at least one staple crop is placed
+livestock_share_default = 0.2      # grazing share where the World Builder table has no value
+livestock_share_min = 0.1
+livestock_share_max = 0.7          # +0.2 on livestock/wool/horses RGOs and grasslands/sparse vegetation, then clipped
+livestock_source = "../EU5WorldBuilder/artifacts/locations/locations.csv"
+gated_goods = ["rice", "maize", "potato", "olives"]   # only in their native sub-continents/regions (farming_village_rgo_unlocks gates)
+grains = ["wheat", "millet", "rice", "maize", "legumes", "potato"]
+buildings = { wheat = "wheat_farm", rice = "rice_farm", millet = "millet_farm", maize = "maize_farm", legumes = "legume_farm", potato = "potato_farm", olives = "olive_grove", livestock = "cattle_farm" }
 
 [worldbuilder.level_scale]
 # multiply levels, divide people per level; 1.0 keeps the World Builder units. Chosen so every general building is
@@ -350,7 +371,7 @@ max_goods = 4                 # at most this many goods per method besides labou
 # "primary" = farms, villages, groves, pits, quarries, mines, fisheries, forestry and rural processing;
 # "craft" = guilds, workshops, manufactories, mills and factories.
 keep = "keep"                 # already carried labour or trade dummy goods (victuals markets): left as they are
-base = { output_share = 0.20 } # methods without goods inputs (base yields, worker victuals): labour worth 20 % of the output
+base = { output_share = 0.20 } # methods without goods inputs (base yields): labour worth 20 % of the output
 hand_work = 0.45              # labour-heavy fallback methods for input shortages (lower output, fewer tools)
 cottage = 0.25                # village home crafts: market village crafts, rural cloth- and glassmakers, tatara, brickmaking
 primary_medieval = 0.18       # ages 1-2

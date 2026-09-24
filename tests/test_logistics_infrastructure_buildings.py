@@ -567,13 +567,13 @@ def test_victuals_market_templates_split_export_and_import_flows() -> None:
         for path in (VICTUALS_MARKET_IMPORT_BLUEPRINT, VICTUALS_MARKET_IMPORT_RENDERED)
     )
 
-    assert "victuals_market: Victuals Market (Export)" in export_texts[0]
+    assert "victuals_market: Victualler (Export)" in export_texts[0]
     for text in export_texts:
         assert "pp_province_food_to_market" in text
         assert "produced = province_food_sales" in text
         assert "pp_province_food_from_market" not in text
 
-    assert "victuals_market_import: Victuals Market (Import)" in import_texts[0]
+    assert "victuals_market_import: Victualler" in import_texts[0]
     for text in import_texts:
         assert "pp_province_food_from_market" in text
         assert "produced = province_food_purchase" in text

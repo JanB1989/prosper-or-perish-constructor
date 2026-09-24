@@ -12,7 +12,9 @@ import polars as pl
 from eu5_building_pipeline.template import load_template
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5gameparser.domain.buildings import load_building_data
-from prosper_or_perish_constructor import yaml_io
+from prosper_or_perish_constructor import provisioning, yaml_io
+
+LOCAL_FOOD_GOODS = frozenset({"local_food", "province_food_sales"})
 
 
 GOODS_CATEGORIES_RELATIVE = Path("config/goods_categories.csv")
@@ -224,6 +226,8 @@ def _produced_good_candidates_by_building(
         .select(["building", "name", "produced", "output", "output_value"])
         .to_dicts()
     ):
+        if row["name"] in provisioning.slot_methods(str(row["building"])) or row["produced"] in LOCAL_FOOD_GOODS:
+            continue  # province food and its storage dummies are the local half of a building, never its market good
         _append_candidate(candidates, row["building"], row, row["name"])
 
     global_methods = {

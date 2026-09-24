@@ -1522,6 +1522,19 @@
         "source": "generated_location_modifier_distribution"
       }
     },
+    "market_food_price": {
+      "high_thresholds": [
+        0.171,
+        0.462
+      ],
+      "kind": "reference_centered",
+      "low_thresholds": [
+        0.014,
+        0.054
+      ],
+      "reference": 0.12,
+      "source": "market_food_price_distribution"
+    },
     "population_capacity": {
       "kind": "sequential",
       "source": "accepted_start_capacity_max_times_two",

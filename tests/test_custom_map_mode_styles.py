@@ -160,6 +160,16 @@ STRUCTURE_SNIPPETS = {
         "MAPMODE_PP_POPULATION_GROWTH_STARVING",
         "color_refresh_counters = { LocationDevelopmentChanged LocationPopulationChanged }",
     ),
+    "pp_market_food_price": (
+        "category = economy",
+        "index = 3",
+        "small_map_names = market",
+        "small_tooltip_context = market",
+        "market_marker = yes",
+        "toll_marker = yes",
+        "map_lines_mode = ToMarketCenter",
+        "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
+    ),
     "pp_victuals_market_price": (
         "category = economy",
         "index = 3",
@@ -491,6 +501,28 @@ def test_population_delta_debug_modes_use_shared_percent_change_scale() -> None:
     assert "MAPMODE_PP_POP_DELTA_PLUS_50" in text
     assert "MAPMODE_PP_POP_DELTA_PLUS_200" in text
     assert "MAPMODE_PP_POP_DELTA_NO_BASELINE" in text
+
+
+def test_market_food_price_uses_reference_centered_buckets() -> None:
+    block = _all_blocks()["pp_market_food_price"]
+    scale = json.loads(CALIBRATION.read_text(encoding="utf-8"))["scales"]["market_food_price"]
+
+    expected_thresholds = [
+        *[float(value) for value in scale["low_thresholds"]],
+        float(scale["reference"]),
+        *[float(value) for value in scale["high_thresholds"]],
+    ]
+    assert _thresholds(block, "market.food_price") == expected_thresholds
+    assert block.count("lerp = {") == 4
+    assert "@pp_market_food_price_max" not in block
+    assert "divide = @pp_market_food_price_max" not in block
+    assert "MAPMODE_PP_MARKET_FOOD_PRICE_VERY_CHEAP" in block
+    assert "MAPMODE_PP_MARKET_FOOD_PRICE_CHEAP" in block
+    assert "MAPMODE_PP_MARKET_FOOD_PRICE_NEUTRAL" in block
+    assert "MAPMODE_PP_MARKET_FOOD_PRICE_EXPENSIVE" in block
+    assert "MAPMODE_PP_MARKET_FOOD_PRICE_SEVERE" in block
+    assert "min_color = define:NMapColors|MAP_COLOR_MAX" in block
+    assert "max_color = define:NMapColors|MAP_COLOR_MIN" in block
 
 
 def test_victuals_market_price_uses_default_price_centered_buckets() -> None:
@@ -845,7 +877,7 @@ def test_custom_map_mode_localization_uses_traffic_light_copy_without_hardcoded_
     assert not re.search(r"(?<!\d)0-70(?!\d)", text)
     assert "Red marks scarce capacity" in text
     assert "Green marks low unemployment" in text
-    assert "yellow marks the default price" in text
+    assert "yellow marks the base price" in text
     assert "pale-to-cyan colors mark the most remaining land" in text
 
 

@@ -1664,6 +1664,83 @@ def test_fish_and_forest_capacity_maps_use_current_capacity_and_tooltips_show_so
     assert "Fishing Capacity modifiers, including river size and town rights" not in localization_text
 
 
+def test_market_food_price_map_mode_uses_market_price_scale_and_assets() -> None:
+    map_text = FOOD_MAP_MODES.read_text(encoding="utf-8-sig")
+    localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
+        encoding="utf-8-sig"
+    )
+    block = _text_block_between(
+        map_text,
+        "pp_market_food_price = {",
+        "\npp_victuals_market_price = {",
+    )
+
+    assert "@pp_market_food_price_neutral = 0.12" in map_text
+    assert "@pp_market_food_price_cheap = 0.054" in map_text
+    assert "@pp_market_food_price_expensive = 0.171" in map_text
+    required_map_snippets = (
+        "value = market.food_price",
+        "limit = { has_owner = yes }",
+        "min_color = define:NMapColors|MAP_COLOR_MAX",
+        "max_color = define:NMapColors|MAP_COLOR_MIN",
+        "market.food_price < @pp_market_food_price_cheap",
+        "market.food_price < @pp_market_food_price_neutral",
+        "market.food_price < @pp_market_food_price_expensive",
+        "max = 1",
+        "min = 0",
+        "category = economy",
+        "small_map_names = market",
+        "market_marker = yes",
+        "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
+        "map_lines_mode = ToMarketCenter",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_VERY_CHEAP",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_CHEAP",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_NEUTRAL",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_EXPENSIVE",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_SEVERE",
+    )
+    missing_map_snippets = [snippet for snippet in required_map_snippets if snippet not in block]
+    assert not missing_map_snippets
+    assert block.count("lerp = {") == 4
+
+    required_localization = (
+        "mapmode_pp_market_food_price_name",
+        "MAPMODE_PP_MARKET_FOOD_PRICE",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_VERY_CHEAP",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_CHEAP",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_NEUTRAL",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_EXPENSIVE",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_SEVERE",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_TT_LAND",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_TT_WATER",
+        "[Market.GetName]",
+        "[Market.GetFoodPrice|2]",
+    )
+    missing_localization = [
+        snippet for snippet in required_localization if snippet not in localization_text
+    ]
+    assert not missing_localization
+
+    assert (
+        MOD_ROOT
+        / "main_menu"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "map_modes"
+        / "pp_market_food_price.dds"
+    ).is_file()
+    assert not (
+        MOD_ROOT
+        / "in_game"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "map_modes"
+        / "pp_market_food_price.dds"
+    ).exists()
+
+
 def test_victuals_market_price_map_mode_uses_default_relative_scale_and_assets() -> None:
     map_text = FOOD_MAP_MODES.read_text(encoding="utf-8-sig")
     localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(

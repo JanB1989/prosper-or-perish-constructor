@@ -317,19 +317,131 @@ pp_remove_invalid_buildings = {
 					}
 				}
 			}
-			# Farming village: only allowed in general farmable food locations.
+			# Crop farms: only allowed where their crop's location gate holds (pp_crop_farm_triggers.txt).
 			if = {
 				limit = {
 					location_building_level = {
-						building_type = building_type:farming_village
+						building_type = building_type:wheat_farm
 						value > 0
 					}
-					NOT = { pp_general_farmable_food_location_potential = yes }
+					NOT = { pp_wheat_farm_location_potential = yes }
 				}
 				change_building_level_in_location = {
-					building = building_type:farming_village
+					building = building_type:wheat_farm
 					value = {
-						value = "location_building_level(building_type:farming_village)"
+						value = "location_building_level(building_type:wheat_farm)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:rice_farm
+						value > 0
+					}
+					NOT = { pp_rice_farm_location_potential = yes }
+				}
+				change_building_level_in_location = {
+					building = building_type:rice_farm
+					value = {
+						value = "location_building_level(building_type:rice_farm)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:millet_farm
+						value > 0
+					}
+					NOT = { pp_millet_farm_location_potential = yes }
+				}
+				change_building_level_in_location = {
+					building = building_type:millet_farm
+					value = {
+						value = "location_building_level(building_type:millet_farm)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:maize_farm
+						value > 0
+					}
+					NOT = { pp_maize_farm_location_potential = yes }
+				}
+				change_building_level_in_location = {
+					building = building_type:maize_farm
+					value = {
+						value = "location_building_level(building_type:maize_farm)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:legume_farm
+						value > 0
+					}
+					NOT = { pp_legume_farm_location_potential = yes }
+				}
+				change_building_level_in_location = {
+					building = building_type:legume_farm
+					value = {
+						value = "location_building_level(building_type:legume_farm)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:potato_farm
+						value > 0
+					}
+					NOT = { pp_potato_farm_location_potential = yes }
+				}
+				change_building_level_in_location = {
+					building = building_type:potato_farm
+					value = {
+						value = "location_building_level(building_type:potato_farm)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:olive_farm
+						value > 0
+					}
+					NOT = { pp_olive_farm_location_potential = yes }
+				}
+				change_building_level_in_location = {
+					building = building_type:olive_farm
+					value = {
+						value = "location_building_level(building_type:olive_farm)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:cattle_farm
+						value > 0
+					}
+					NOT = { pp_cattle_farm_location_potential = yes }
+				}
+				change_building_level_in_location = {
+					building = building_type:cattle_farm
+					value = {
+						value = "location_building_level(building_type:cattle_farm)"
 						multiply = -1
 					}
 				}

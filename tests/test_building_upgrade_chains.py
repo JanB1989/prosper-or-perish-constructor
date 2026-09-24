@@ -10,6 +10,7 @@ from eu5gameparser.domain.eu5 import load_eu5_data
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5_mod_orchestrator.config import load_project_config
 from prosper_or_perish_constructor import yaml_io
+from prosper_or_perish_constructor.crop_farms import load_crop_table
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -399,6 +400,15 @@ SALT_MINE_EXCLUDED_REGIONS = {
     "west_china_region",
     "xinjiang_region",
 }
+
+
+def _crop_farm_chains() -> dict[str, list[tuple[str, str | None]]]:
+    """family -> [(building, unlock advance)] of the crop farm chains, from config/crop_farms.toml."""
+    table = load_crop_table(ROOT)
+    return {
+        f"{crop.stem}_farm": [(table.building(crop, tier), table.tier_advance(tier)) for tier in range(4)]
+        for crop in table.crops
+    }
 
 
 def _load_blueprint(key: str) -> dict:
@@ -1150,12 +1160,7 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
             ("hurdled_sheepcotes", "pp_foldcourse_husbandry"),
             ("enclosed_sheep_walks", "pp_enclosed_sheep_walks"),
         ],
-        "farming_village": [
-            ("farming_village", None),
-            ("husbandry_farmstead", "pp_manuring_and_seed_stores"),
-            ("farming_village_rotations", "pp_farming_village_rotations"),
-            ("model_farm", "pp_model_farm"),
-        ],
+        **_crop_farm_chains(),
         "fishing_village": [
             ("fishing_village", None),
             ("net_curing_yard", "pp_net_curing_yards"),
@@ -1227,46 +1232,29 @@ def test_upgrade_building_names_do_not_reuse_predecessor_method_names() -> None:
     assert not offenders, "\n".join(offenders)
 
 
-def test_husbandry_farmstead_keeps_crop_specific_worked_methods() -> None:
-    raw = _load_blueprint("husbandry_farmstead")
-    body = raw["building"]["body"]
-    blocks = _inline_production_method_blocks(body)
-    inputs = _inline_production_method_inputs(body)
+def test_crop_farmsteads_keep_crop_specific_worked_methods() -> None:
+    table = load_crop_table(ROOT)
+    signatures: dict[str, tuple] = {}
+    outputs: dict[str, float] = {}
 
-    worked_methods = [
-        "pp_husbandry_farmstead_livestock",
-        "pp_husbandry_farmstead_millet",
-        "pp_husbandry_farmstead_wheat",
-        "pp_husbandry_farmstead_maize",
-        "pp_husbandry_farmstead_rice",
-        "pp_husbandry_farmstead_legumes",
-        "pp_husbandry_farmstead_potato",
-        "pp_husbandry_farmstead_olives",
-    ]
-    signatures = {
-        method: tuple(
-            re.findall(
-                r"(?m)^\s*(horses|livestock|fiber_crops|clay|pottery|lumber|tools)\s*=\s*(-?\d+(?:\.\d+)?)\b",
-                blocks[method],
+    for crop in table.crops:
+        building = table.building(crop, 1)
+        body = _load_blueprint(building)["building"]["body"]
+        blocks = _inline_production_method_blocks(body)
+        inputs = _inline_production_method_inputs(body)
+        worked_methods = [f"pp_{building}_{method.key}" for method in crop.tier_methods(1)]
+        assert worked_methods
+        for method in worked_methods:
+            assert inputs[method], method
+            signatures[method] = tuple(
+                re.findall(
+                    r"(?m)^\s*(horses|livestock|legumes|fiber_crops|clay|pottery|lumber|tools)\s*=\s*(-?\d+(?:\.\d+)?)\b",
+                    blocks[method],
+                )
             )
-        )
-        for method in worked_methods
-    }
+            outputs[method] = float(re.search(r"(?m)^\s*output\s*=\s*(\d+(?:\.\d+)?)\b", blocks[method]).group(1))
 
-    assert len(set(signatures.values())) == len(worked_methods)
-    assert all("livestock" in inputs[method] for method in worked_methods)
-    assert {"horses", "livestock", "fiber_crops", "pottery"} <= inputs["pp_husbandry_farmstead_millet"]
-    assert {"horses", "livestock", "tools", "lumber"} <= inputs["pp_husbandry_farmstead_wheat"]
-    assert {"livestock", "fiber_crops", "lumber", "tools"} <= inputs["pp_husbandry_farmstead_maize"]
-    assert {"livestock", "clay", "lumber", "tools"} <= inputs["pp_husbandry_farmstead_rice"]
-    assert {"horses", "livestock", "fiber_crops", "pottery"} <= inputs["pp_husbandry_farmstead_legumes"]
-    assert {"livestock", "clay", "fiber_crops", "tools"} <= inputs["pp_husbandry_farmstead_potato"]
-    assert {"livestock", "tools", "lumber", "pottery"} <= inputs["pp_husbandry_farmstead_olives"]
-
-    outputs = {
-        method: float(re.search(r"(?m)^\s*output\s*=\s*(\d+(?:\.\d+)?)\b", blocks[method]).group(1))
-        for method in worked_methods
-    }
+    assert len(set(signatures.values())) == len(signatures)   # every crop works its fields differently
     assert max(outputs.values()) < 0.70
     assert min(outputs.values()) > 0.40
 
@@ -1416,7 +1404,7 @@ def test_enabled_upgrade_chain_location_requirements_match_initial_building() ->
 
 def test_food_upgrade_successors_use_obsolete_instead_of_manual_building_gates() -> None:
     affected_families = {
-        "farming_village",
+        *_crop_farm_chains(),
         "fishing_village",
         "fruit_orchard",
         "ocean_fishery",

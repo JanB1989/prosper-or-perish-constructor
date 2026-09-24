@@ -42,7 +42,7 @@ def test_plan_places_processors_and_farms_within_land_and_workers(tmp_path):
         "location_tag": ["alpha", "beta", "gamma"], "province": ["p1", "p1", "p2"],
         "raw_material": ["iron", "wheat", "wheat"], "vegetation": ["forest", "farmland", "grasslands"], "is_coastal": [False, False, False],
     })
-    numbers = {"iron_mine": {"employment_size": 1.0, "pop_type": "laborers", "local_monthly_food": 0.0}, "farming_village": {"employment_size": 1.0, "pop_type": "peasants", "local_monthly_food": 0.0},
+    numbers = {"iron_mine": {"employment_size": 1.0, "pop_type": "laborers", "local_monthly_food": 0.0}, "wheat_farm": {"employment_size": 1.0, "pop_type": "peasants", "local_monthly_food": 0.0},
                "fruit_orchard": {"employment_size": 1.0, "pop_type": "peasants", "local_monthly_food": 0.0}, "sheep_farms": {"employment_size": 1.0, "pop_type": "peasants", "local_monthly_food": 0.0},
                "cookery": {"employment_size": 1.0, "pop_type": "laborers", "local_monthly_food": 20.0}, "victuals_market_import": {"employment_size": 0.001, "pop_type": "nobles", "local_monthly_food": 90.0}}
     start = sp.StartConfig(processors={"iron": {"building": "iron_mine", "levels": 2}})
@@ -51,9 +51,9 @@ def test_plan_places_processors_and_farms_within_land_and_workers(tmp_path):
     placements, conversions, table, summary = sp.plan(cfg=_cfg(tmp_path), start=start, locations=locations, capacity_people={"alpha": 60000.0, "beta": 45000.0, "gamma": 60000.0}, pops=pops,
                                                       owners={"alpha": "SWE", "beta": "DAN", "gamma": "DAN"}, ranks={"alpha": "town"}, existing=set(), food_consumption={"nobles": 25.0, "peasants": 1.0, "laborers": 1.5}, numbers=numbers)
     by = {(p.location, p.building): p.level for p in placements}
-    assert by[("alpha", "iron_mine")] == 2 and ("alpha", "farming_village") not in by
-    assert ("beta", "farming_village") not in by                  # over the spare land: no farm on a full location
-    assert by[("gamma", "farming_village")] == 3                  # workers limit 6k x 0.6 = 3
+    assert by[("alpha", "iron_mine")] == 2 and ("alpha", "wheat_farm") not in by
+    assert ("beta", "wheat_farm") not in by                  # over the spare land: no farm on a full location
+    assert by[("gamma", "wheat_farm")] == 3                  # workers limit 6k x 0.6 = 3
     assert table.filter(pl.col("location_tag") == "beta")["farm_limit"][0] == "land"
     assert summary["farm_land_people"] == 15000.0
     # the mine's laborers come from alpha's largest peasant pop, culture kept

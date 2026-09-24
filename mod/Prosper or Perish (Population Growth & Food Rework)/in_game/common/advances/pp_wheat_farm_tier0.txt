@@ -1,0 +1,28 @@
+﻿# >>> eu5-building-pipeline:wheat_farm:advancement
+pp_heavy_plough = {
+age = age_1_traditions
+requires = horse_riding_advance
+unlock_production_method = pp_wheat_farm_heavy_plough
+unlock_production_method = pp_legume_farm_stubble_sowing
+ai_weight = { add = 50 }
+}
+
+pp_improved_rotations = {
+age = age_4_reformation
+requires = pp_farming_village_rotations
+unlock_production_method = pp_wheat_rotations_marled_fields
+unlock_production_method = pp_millet_rotations_sorghum_cowpea
+unlock_production_method = pp_maize_rotations_maize_bean_rotation
+unlock_production_method = pp_legume_rotations_vetch_lentil
+unlock_production_method = pp_potato_rotations_seed_selection
+ai_weight = { add = 50 }
+}
+
+pp_water_lifting = {
+age = age_4_reformation
+requires = pp_farming_village_rotations
+unlock_production_method = pp_rice_rotations_chain_pump
+unlock_production_method = pp_olive_rotations_irrigated_grove
+ai_weight = { add = 50 }
+}
+# <<< eu5-building-pipeline:wheat_farm:advancement

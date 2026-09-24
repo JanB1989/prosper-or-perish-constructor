@@ -1,0 +1,18 @@
+﻿# >>> eu5-building-pipeline:maize_farm:advancement
+pp_maize_farm_advance_general = {
+age = age_4_reformation
+requires = global_trade_advance
+ai_weight = { add = 50 }
+potential = {
+    exists = capital
+    NOT = {
+        original_capital ?= {
+            OR = {
+                sub_continent = sub_continent:north_america
+                sub_continent = sub_continent:south_america
+            }
+        }
+    }
+}
+}
+# <<< eu5-building-pipeline:maize_farm:advancement

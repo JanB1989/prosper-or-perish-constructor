@@ -34,7 +34,7 @@ LEGACY_FILES = (
 RANK_ORDER = {"megalopolis": 0, "city": 1, "town": 2, "rural_settlement": 3}
 FARMABLE_RGOS = {"livestock", "wheat", "legumes", "fruit", "millet", "wool", "rice", "beeswax", "maize", "olives", "potato"}
 PASTURE_RGOS = {"livestock", "wool", "horses"}
-FARMS = ("farming_village", "fruit_orchard", "sheep_farms")   # peasant farms that take farmland
+FARMS = ("wheat_farm", "fruit_orchard", "sheep_farms")   # peasant farms that take farmland
 _POP_RE = re.compile(r"define_pop\s*=\s*\{([^}]*)\}")
 _FIELD_RE = re.compile(r"(\w+)\s*=\s*([A-Za-z0-9_.\-]+)")
 DEFAULT_PROCESSORS: dict[str, dict[str, Any]] = {
@@ -345,14 +345,17 @@ def improvement_people_by_location(mod_root: Path, caps: Mapping[str, Mapping[st
 # ------------------------------------------------------------------ gates (mirror the blueprints' location_potential)
 
 def farm_for(loc: Mapping[str, Any]) -> str | None:
-    """The peasant farm the location's RGO and vegetation call for (the farming village gate, orchards, pastures)."""
+    """The peasant farm the location's RGO and vegetation call for (orchards, pastures, else the crop farm).
+
+    Placeholder until the crop allocator (``crop_allocation.py``) is wired in: every farmable location gets the wheat
+    farm, whose location gate decides whether it may stand there."""
     rgo = str(loc.get("raw_material") or "")
     if rgo == "fruit":
         return "fruit_orchard"
     if rgo == "wool":
         return "sheep_farms"
     if rgo in FARMABLE_RGOS or str(loc.get("vegetation")) == "farmland":
-        return "farming_village"
+        return "wheat_farm"
     return None
 
 

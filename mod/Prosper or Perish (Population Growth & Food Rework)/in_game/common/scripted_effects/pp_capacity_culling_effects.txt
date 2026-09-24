@@ -3,10 +3,38 @@
 pp_cull_capacity_buildings_over_max_v2_effect = {
 	every_owned_location = {
 		# Land farm capacity
-		pp_cull_capacity_building_above_max = { building = farming_village max_level = farm_capacity_max_farming_village }
-		pp_cull_capacity_building_above_max = { building = husbandry_farmstead max_level = farm_capacity_max_husbandry_farmstead }
-		pp_cull_capacity_building_above_max = { building = farming_village_rotations max_level = farm_capacity_max_farming_village_rotations }
-		pp_cull_capacity_building_above_max = { building = model_farm max_level = farm_capacity_max_model_farm }
+		pp_cull_capacity_building_above_max = { building = wheat_farm max_level = farm_capacity_max_wheat_farm }
+		pp_cull_capacity_building_above_max = { building = wheat_farmstead max_level = farm_capacity_max_wheat_farmstead }
+		pp_cull_capacity_building_above_max = { building = wheat_rotations max_level = farm_capacity_max_wheat_rotations }
+		pp_cull_capacity_building_above_max = { building = wheat_model_farm max_level = farm_capacity_max_wheat_model_farm }
+		pp_cull_capacity_building_above_max = { building = rice_farm max_level = farm_capacity_max_rice_farm }
+		pp_cull_capacity_building_above_max = { building = rice_farmstead max_level = farm_capacity_max_rice_farmstead }
+		pp_cull_capacity_building_above_max = { building = rice_rotations max_level = farm_capacity_max_rice_rotations }
+		pp_cull_capacity_building_above_max = { building = rice_model_farm max_level = farm_capacity_max_rice_model_farm }
+		pp_cull_capacity_building_above_max = { building = millet_farm max_level = farm_capacity_max_millet_farm }
+		pp_cull_capacity_building_above_max = { building = millet_farmstead max_level = farm_capacity_max_millet_farmstead }
+		pp_cull_capacity_building_above_max = { building = millet_rotations max_level = farm_capacity_max_millet_rotations }
+		pp_cull_capacity_building_above_max = { building = millet_model_farm max_level = farm_capacity_max_millet_model_farm }
+		pp_cull_capacity_building_above_max = { building = maize_farm max_level = farm_capacity_max_maize_farm }
+		pp_cull_capacity_building_above_max = { building = maize_farmstead max_level = farm_capacity_max_maize_farmstead }
+		pp_cull_capacity_building_above_max = { building = maize_rotations max_level = farm_capacity_max_maize_rotations }
+		pp_cull_capacity_building_above_max = { building = maize_model_farm max_level = farm_capacity_max_maize_model_farm }
+		pp_cull_capacity_building_above_max = { building = legume_farm max_level = farm_capacity_max_legume_farm }
+		pp_cull_capacity_building_above_max = { building = legume_farmstead max_level = farm_capacity_max_legume_farmstead }
+		pp_cull_capacity_building_above_max = { building = legume_rotations max_level = farm_capacity_max_legume_rotations }
+		pp_cull_capacity_building_above_max = { building = legume_model_farm max_level = farm_capacity_max_legume_model_farm }
+		pp_cull_capacity_building_above_max = { building = potato_farm max_level = farm_capacity_max_potato_farm }
+		pp_cull_capacity_building_above_max = { building = potato_farmstead max_level = farm_capacity_max_potato_farmstead }
+		pp_cull_capacity_building_above_max = { building = potato_rotations max_level = farm_capacity_max_potato_rotations }
+		pp_cull_capacity_building_above_max = { building = potato_model_farm max_level = farm_capacity_max_potato_model_farm }
+		pp_cull_capacity_building_above_max = { building = olive_farm max_level = farm_capacity_max_olive_farm }
+		pp_cull_capacity_building_above_max = { building = olive_farmstead max_level = farm_capacity_max_olive_farmstead }
+		pp_cull_capacity_building_above_max = { building = olive_rotations max_level = farm_capacity_max_olive_rotations }
+		pp_cull_capacity_building_above_max = { building = olive_model_farm max_level = farm_capacity_max_olive_model_farm }
+		pp_cull_capacity_building_above_max = { building = cattle_farm max_level = farm_capacity_max_cattle_farm }
+		pp_cull_capacity_building_above_max = { building = cattle_farmstead max_level = farm_capacity_max_cattle_farmstead }
+		pp_cull_capacity_building_above_max = { building = cattle_rotations max_level = farm_capacity_max_cattle_rotations }
+		pp_cull_capacity_building_above_max = { building = cattle_model_farm max_level = farm_capacity_max_cattle_model_farm }
 		pp_cull_capacity_building_above_max = { building = fruit_orchard max_level = farm_capacity_max_fruit_orchard }
 		pp_cull_capacity_building_above_max = { building = nursery_orchard max_level = farm_capacity_max_nursery_orchard }
 		pp_cull_capacity_building_above_max = { building = pomological_orchard max_level = farm_capacity_max_pomological_orchard }

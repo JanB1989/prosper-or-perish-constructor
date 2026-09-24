@@ -12,7 +12,7 @@ and what the location farmed:
   a default where unknown), raised on pastoral RGOs and open vegetation and clipped. The weights mapping carries
   ``g`` itself under ``"livestock"``; the crops share the levels livestock leaves,
 - the New World and regional crops (``gated_goods``) are only candidates inside their native sub-continents and
-  regions (the gates of :func:`farming_village_unlocks.derive_rgo_unlock_gates`); a caller filter can further
+  regions (the gates of :func:`crop_farms.derive_rgo_unlock_gates`); a caller filter can further
   exclude goods whose building fails its ``location_potential`` in a location.
 
 Pure and deterministic: no randomness, fixed good order for every tie.
@@ -29,7 +29,7 @@ from typing import Any
 
 import polars as pl
 
-from prosper_or_perish_constructor.farming_village_unlocks import RgoUnlockGate, derive_rgo_unlock_gates
+from prosper_or_perish_constructor.crop_farms import RgoUnlockGate, derive_rgo_unlock_gates
 from prosper_or_perish_constructor.worldbuilder.contract import Contract
 from prosper_or_perish_constructor.worldbuilder.modifiers import class_rows
 
@@ -41,7 +41,7 @@ DEFAULT_BUILDINGS: dict[str, str] = {
     "maize": "maize_farm",
     "legumes": "legume_farm",
     "potato": "potato_farm",
-    "olives": "olive_grove",
+    "olives": "olive_farm",
     LIVESTOCK: "cattle_farm",
 }
 REPORT_COLUMNS = ("location_tag", "good", "building", "available", "weight", "levels")
@@ -185,7 +185,7 @@ def availability(gates: Sequence[RgoUnlockGate] | Mapping[str, RgoUnlockGate], m
 
 def crop_gates(locations_frame: pl.DataFrame, cfg: CropConfig, threshold: float) -> tuple[RgoUnlockGate, ...]:
     """Native gates of the gated crops, derived exactly as the farming-village RGO unlocks
-    (``threshold`` = ``[farming_village_rgo_unlocks].subcontinent_region_threshold``)."""
+    (``threshold`` = ``[unlocks].subcontinent_region_threshold`` of config/crop_farms.toml)."""
     return derive_rgo_unlock_gates(locations_frame, list(cfg.gated_goods), threshold)
 
 

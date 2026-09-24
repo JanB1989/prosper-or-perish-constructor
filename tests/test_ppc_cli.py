@@ -1256,3 +1256,32 @@ def test_savegame_purge_dry_run_keeps_generated_outputs(tmp_path: Path) -> None:
     assert savegame_dir.exists()
 
 
+
+
+def test_crop_farms_command_is_registered_and_checks_by_default() -> None:
+    args, extra = cli._build_parser().parse_known_args(["crop-farms", "--check"])
+
+    assert extra == []
+    assert args.handler is cli._crop_farms
+    assert args.check is True and args.write is False
+    assert cli._build_parser().parse_known_args(["crop-farms", "--write"])[0].write is True
+
+
+def test_crop_farms_check_passes_on_the_repo(capsys: pytest.CaptureFixture[str]) -> None:
+    assert cli.main(["--repo", str(ROOT), "crop-farms", "--check"]) == 0
+    assert "crop_farms=ok" in capsys.readouterr().out
+
+
+def test_build_stops_when_crop_farms_are_stale(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from prosper_or_perish_constructor import crop_farms
+
+    repo = _repo(tmp_path)
+    (repo / "config").mkdir()
+    (repo / "config" / "crop_farms.toml").write_text("", encoding="utf-8")
+    ran: list[object] = []
+    monkeypatch.setattr(cli, "_worldbuilder_apply_on_build", lambda project: False)
+    monkeypatch.setattr(crop_farms, "check", lambda repo_arg, project_arg: ["wheat_farm.yml: stale"])
+    monkeypatch.setattr(cli, "_run", lambda command, cwd: ran.append(command) or 0)
+
+    assert cli.main(["--repo", str(repo), "build"]) == 1
+    assert ran == []

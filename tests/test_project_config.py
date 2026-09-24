@@ -128,13 +128,14 @@ COLUMBIAN_EXCHANGE_DEBUG_EVENT = (
     MOD_ROOT / "in_game" / "events" / "debug" / "pp_columbian_exchange_debug.txt"
 )
 BUILDING_BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted" / "buildings"
-FARMING_VILLAGE_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "farming_village.yml"
-MODEL_FARM_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "model_farm.yml"
+WHEAT_FARM_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "wheat_farm.yml"
+WHEAT_MODEL_FARM_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "wheat_model_farm.yml"
+# The crop farm chains of config/crop_farms.toml, stem-major, tier 0..3 within a chain.
+CROP_FARM_STEMS = ("wheat", "rice", "millet", "maize", "legume", "potato", "olive", "cattle")
+CROP_FARM_TIER_SUFFIXES = ("farm", "farmstead", "rotations", "model_farm")
+CROP_FARM_BUILDINGS = tuple(f"{stem}_{suffix}" for stem in CROP_FARM_STEMS for suffix in CROP_FARM_TIER_SUFFIXES)
 LAND_FARM_BUILDINGS = (
-    "farming_village",
-    "husbandry_farmstead",
-    "farming_village_rotations",
-    "model_farm",
+    *CROP_FARM_BUILDINGS,
     "fruit_orchard",
     "nursery_orchard",
     "pomological_orchard",
@@ -265,10 +266,7 @@ FOOD_SECURITY_PRIORITY_GROUPS = {
             "by non-food-related buildings."
         ),
         (
-            "farming_village",
-            "husbandry_farmstead",
-            "farming_village_rotations",
-            "model_farm",
+            *CROP_FARM_BUILDINGS,
             "fishing_village",
             "net_curing_yard",
             "ocean_fishery",
@@ -1139,10 +1137,11 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
         assert "location_potential = {" in text
         assert "pp_farming_village_fixed_env_bonus" not in text
 
-    for blueprint in (FARMING_VILLAGE_BLUEPRINT, MODEL_FARM_BLUEPRINT):
+    for blueprint in (WHEAT_FARM_BLUEPRINT, WHEAT_MODEL_FARM_BLUEPRINT):
         text = blueprint.read_text(encoding="utf-8-sig")
 
-        assert "pp_general_farmable_food_location_potential = yes" in text
+        # the crop gate trigger (pp_crop_farm_triggers.txt) ANDs the general farmable gate with the crop's rule
+        assert "pp_wheat_farm_location_potential = yes" in text
         assert "max_rgo_workers > 0" not in text
         assert "modifier:local_population_capacity > 0" not in text
 
@@ -1459,7 +1458,9 @@ def test_fruit_and_sheep_families_use_shared_eligibility_gates() -> None:
     assert "NOT = { has_variable = pp_fruit_orchard_eligible }" in fruit_text
 
     game_start = GAME_START.read_text(encoding="utf-8-sig")
-    assert "NOT = { pp_general_farmable_food_location_potential = yes }" in game_start
+    for stem in CROP_FARM_STEMS:
+        assert f"NOT = {{ pp_{stem}_farm_location_potential = yes }}" in game_start
+    assert "building_type:farming_village" not in game_start
     assert game_start.count("NOT = { pp_fruit_orchard_location_potential = yes }") == 2
     assert "NOT = { pp_orchard_friendly_location_potential = yes }" not in game_start
     assert "NOT = { pp_pasture_friendly_location_potential = yes }" in game_start
@@ -1875,7 +1876,8 @@ def test_building_capacity_europedia_explains_capacity_pools_and_rural_cap() -> 
         "river size",
         "Manorial Customals",
         "development",
-        "ShowBuildingTypeName('farming_village')",
+        "ShowBuildingTypeName('wheat_farm')",
+        "ShowBuildingTypeName('wheat_model_farm')",
         "ShowBuildingTypeName('fishing_village')",
         "ShowBuildingTypeName('net_curing_yard')",
         "ShowBuildingTypeName('drift_net_fishery')",
@@ -2593,7 +2595,7 @@ def test_cookery_building_line_has_resolved_prices() -> None:
 
 def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -> None:
     scoped_blueprints = _normalized_production_site_blueprints()
-    assert len(scoped_blueprints) == 102
+    assert len(scoped_blueprints) == 130   # 102 before the crop farm split: 4 farm tiers became 32
 
     for building, blueprint in scoped_blueprints:
         blueprint_values = _accepted_blueprint_building_values_from_path(blueprint)

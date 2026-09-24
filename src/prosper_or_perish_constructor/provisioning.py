@@ -35,6 +35,7 @@ FOOD_PER_GOLD_FIELD = "provision_food_per_gold"
 SELL_PER_LEVEL_FIELD = "sell_surplus_per_level"
 REFERENCE_BASE_OUTPUT_FIELD = "provisioning_reference_base_output"
 DEFAULT_PROJECT = Path(__file__).resolve().parents[2] / "constructor.toml"
+CROP_TABLE = Path(__file__).resolve().parents[2] / "config" / "crop_farms.toml"
 
 PROVINCE_FOOD_GOOD = "local_food"
 SURPLUS_SALES_GOOD = "province_food_sales"
@@ -45,15 +46,32 @@ SELL_DESC = (
     "and nothing while it is empty."
 )
 
-# The good each calorie family provisions with, keyed by blueprint `upgrade_chain.family`.
+def _crop_table(path: Path = CROP_TABLE) -> dict[str, Any]:
+    """``config/crop_farms.toml``, read straight from the table (``crop_farms.py`` imports this module)."""
+    return tomllib.loads(path.read_text(encoding="utf-8-sig")) if path.is_file() else {}
+
+
+def _crop_farm_goods(raw: dict[str, Any]) -> dict[str, str]:
+    """Building -> good of the crop farm chains (``<stem>_<tier suffix>``, chain order)."""
+    suffixes = raw.get("general", {}).get("tier_suffix", {})
+    tiers = sorted(suffixes, key=int)
+    return {f"{crop['stem']}_{suffixes[tier]}": str(crop["good"]) for crop in raw.get("crops", []) for tier in tiers}
+
+
+_CROP_TABLE = _crop_table()
+CROP_FARM_GOODS: dict[str, str] = _crop_farm_goods(_CROP_TABLE)
+CROP_FARM_FAMILY_GOODS: dict[str, str] = {f"{crop['stem']}_farm": str(crop["good"]) for crop in _CROP_TABLE.get("crops", [])}
+
+# The good each calorie family provisions with, keyed by blueprint `upgrade_chain.family` (crop chains: `<stem>_farm`).
 PROVISIONED_GOOD_BY_FAMILY: dict[str, str] = {
     "fishing_village": "fish",
     "ocean_fishery": "fish",
     "fruit_orchard": "fruit",
     "forest_village": "wild_game",
+    **CROP_FARM_FAMILY_GOODS,
 }
 
-# Buildings with a Provisioning slot, in a stable order (crop farms are appended by their own step).
+# Buildings with a Provisioning slot, in a stable order; the crop farms follow the fisheries, orchards and forest villages.
 PROVISIONED_GOOD_BY_BUILDING: dict[str, str] = {
     "fishing_village": "fish",
     "net_curing_yard": "fish",
@@ -65,8 +83,16 @@ PROVISIONED_GOOD_BY_BUILDING: dict[str, str] = {
     "pomological_orchard": "fruit",
     "forest_village": "wild_game",
     "managed_forest_village": "wild_game",
+    **CROP_FARM_GOODS,
 }
 PROVISIONING_BUILDINGS: tuple[str, ...] = tuple(PROVISIONED_GOOD_BY_BUILDING)
+
+# Market price of a provisioned good where it is not 1 (the Provision input is the same gold of the good per level).
+PROVISIONED_GOOD_PRICES: dict[str, Decimal] = {"livestock": Decimal("1.5")}
+
+
+def provisioned_good_price(good: str) -> Decimal:
+    return PROVISIONED_GOOD_PRICES.get(good, Decimal("1"))
 
 # Player-facing words per good: (method-name label, noun in the description).
 GOOD_WORDS: dict[str, tuple[str, str]] = {

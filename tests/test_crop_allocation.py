@@ -9,7 +9,7 @@ from pathlib import Path
 import polars as pl
 import pytest
 
-from prosper_or_perish_constructor.farming_village_unlocks import RgoUnlockGate
+from prosper_or_perish_constructor.crop_farms import RgoUnlockGate
 from prosper_or_perish_constructor.worldbuilder import crop_allocation as ca
 from prosper_or_perish_constructor.worldbuilder.contract import Contract
 

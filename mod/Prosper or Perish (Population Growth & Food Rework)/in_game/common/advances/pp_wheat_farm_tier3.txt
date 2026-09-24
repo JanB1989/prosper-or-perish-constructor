@@ -1,0 +1,16 @@
+﻿# >>> eu5-building-pipeline:wheat_model_farm:advancement
+pp_model_farm = {
+icon = model_farm
+age = age_5_absolutism
+requires = scientific_revolution_advance
+unlock_building = wheat_model_farm
+unlock_building = rice_model_farm
+unlock_building = millet_model_farm
+unlock_building = maize_model_farm
+unlock_building = legume_model_farm
+unlock_building = potato_model_farm
+unlock_building = olive_model_farm
+unlock_building = cattle_model_farm
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:wheat_model_farm:advancement

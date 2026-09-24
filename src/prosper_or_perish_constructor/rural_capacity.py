@@ -5,15 +5,26 @@ from __future__ import annotations
 from collections import defaultdict
 from collections.abc import Iterable, Mapping
 from pathlib import Path
+import tomllib
 
 from prosper_or_perish_constructor import yaml_io
 
 
+CROP_TABLE = Path(__file__).resolve().parents[2] / "config" / "crop_farms.toml"
+
+
+def crop_farm_buildings(path: Path = CROP_TABLE) -> tuple[str, ...]:
+    """The crop farm chains of config/crop_farms.toml in chain order (<stem>_<tier suffix>, stem-major)."""
+    if not path.is_file():
+        return ()
+    raw = tomllib.loads(path.read_text(encoding="utf-8-sig"))
+    suffixes = raw.get("general", {}).get("tier_suffix", {})
+    return tuple(f"{crop['stem']}_{suffixes[tier]}" for crop in raw.get("crops", []) for tier in sorted(suffixes, key=int))
+
+
+CROP_FARM_BUILDINGS = crop_farm_buildings()
 LAND_FARM_BUILDINGS = (
-    "farming_village",
-    "husbandry_farmstead",
-    "farming_village_rotations",
-    "model_farm",
+    *CROP_FARM_BUILDINGS,
     "fruit_orchard",
     "nursery_orchard",
     "pomological_orchard",

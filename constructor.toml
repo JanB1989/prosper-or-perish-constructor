@@ -29,32 +29,6 @@ clean_paths = [
 profile = "constructor"
 load_order = "constructor.load_order.toml"
 
-[farming_village_rgo_unlocks]
-goods = ["rice", "maize", "potato", "olives"]
-subcontinent_region_threshold = 0.60
-
-[farming_village_rgo_unlocks.methods]
-rice = ["pp_rice_farm_base_rice", "pp_rice_farm_maintenance"]
-maize = ["pp_maize_farm_base_maize", "pp_maize_farm_maintenance"]
-potato = ["pp_potato_farm_base_potato", "pp_potato_farm_maintenance"]
-olives = ["pp_olives_farm_base_olives", "pp_olives_farm_maintenance"]
-
-[farming_village_rgo_unlocks.general_unlocks.rice]
-age = "age_3_discovery"
-requires = "new_world_advance"
-
-[farming_village_rgo_unlocks.general_unlocks.maize]
-age = "age_4_reformation"
-requires = "global_trade_advance"
-
-[farming_village_rgo_unlocks.general_unlocks.potato]
-age = "age_5_absolutism"
-requires = "newspapers_advance"
-
-[farming_village_rgo_unlocks.general_unlocks.olives]
-age = "age_4_reformation"
-requires = "global_trade_advance"
-
 [building_outputs]
 prefix = "pp_"
 building_types = "in_game/common/building_types/zz_{prefix}{tag}.txt"
@@ -294,9 +268,9 @@ livestock_share_default = 0.2      # grazing share where the World Builder table
 livestock_share_min = 0.1
 livestock_share_max = 0.7          # +0.2 on livestock/wool/horses RGOs and grasslands/sparse vegetation, then clipped
 livestock_source = "../EU5WorldBuilder/artifacts/locations/locations.csv"
-gated_goods = ["rice", "maize", "potato", "olives"]   # only in their native sub-continents/regions (farming_village_rgo_unlocks gates)
+gated_goods = ["rice", "maize", "potato", "olives"]   # only in their native sub-continents/regions (config/crop_farms.toml [unlocks] gates)
 grains = ["wheat", "millet", "rice", "maize", "legumes", "potato"]
-buildings = { wheat = "wheat_farm", rice = "rice_farm", millet = "millet_farm", maize = "maize_farm", legumes = "legume_farm", potato = "potato_farm", olives = "olive_grove", livestock = "cattle_farm" }
+buildings = { wheat = "wheat_farm", rice = "rice_farm", millet = "millet_farm", maize = "maize_farm", legumes = "legume_farm", potato = "potato_farm", olives = "olive_farm", livestock = "cattle_farm" }
 
 [worldbuilder.level_scale]
 # multiply levels, divide people per level; 1.0 keeps the World Builder units. Chosen so every general building is
@@ -320,7 +294,7 @@ herd = { land = 2, reserve = 1 }
 
 [worldbuilder.farm_land.classes]
 plantation = ["cotton_plantation", "sugar_plantation", "tobacco_plantation", "dye_plantation", "chili_plantation"]
-herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_breeders", "stud_farm", "elephant_kraal", "husbandry_farmstead"]
+herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_breeders", "stud_farm", "elephant_kraal", "cattle_farm", "cattle_farmstead", "cattle_rotations", "cattle_model_farm"]
 
 [building_footprint]
 # Every accepted blueprint carries `footprint: <class>`. ppc build/sync writes

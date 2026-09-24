@@ -176,8 +176,9 @@ desc = "Adopt olive cultivation through trade and regional exchange."
 game_start_name = "Established Olive Cultivation"
 game_start_desc = "Traditional olive cultivation in regions where the crop is already established."
 
-# New method advances (vanilla keys verified in game/in_game/common/advances: horse_riding_advance is age_1_traditions,
-# food_advance_reformation is age_4_reformation)
+# New method advances (vanilla keys verified in game/in_game/common/advances: horse_riding_advance is age_1_traditions).
+# The age 4 advances require the tier 2 advance: an age 2+ advance that unlocks constructor content needs an
+# institution-gated ancestor (tests/test_focus_restricted_unlocks.py), which food_advance_reformation lacks.
 [advances.pp_heavy_plough]
 age = "age_1_traditions"
 requires = "horse_riding_advance"
@@ -186,13 +187,13 @@ desc = "Mouldboard ploughs pulled by horse teams turn heavy soils."
 
 [advances.pp_improved_rotations]
 age = "age_4_reformation"
-requires = "food_advance_reformation"
+requires = "pp_farming_village_rotations"
 name = "Improved Rotations"
 desc = "Marl, fodder crops and seed selection lift the yields of village rotations."
 
 [advances.pp_water_lifting]
 age = "age_4_reformation"
-requires = "food_advance_reformation"
+requires = "pp_farming_village_rotations"
 name = "Water Lifting"
 desc = "Chain pumps and channels bring water to paddies and groves."
 

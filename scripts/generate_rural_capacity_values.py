@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_VALUES_ROOT = MOD_ROOT / "in_game" / "common" / "script_values"
+CULLING_EFFECTS_PATH = MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_capacity_culling_effects.txt"
 BUILDING_BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted" / "buildings"
 
 
@@ -337,6 +338,53 @@ def _capacity_file(
     return "\n".join(parts).rstrip() + "\n"
 
 
+def _culling_effects_file() -> str:
+    """One culling call per land, fish and forest capacity building (the order of the capacity tuples), plus the
+    helper that removes a level while a building stands above its maximum."""
+    lines = [
+        "# Prosper or Perish - shared building capacity culling helpers",
+        "",
+        "pp_cull_capacity_buildings_over_max_v2_effect = {",
+        _line("every_owned_location = {", 1),
+    ]
+    groups = (
+        ("Land farm capacity", "farm_capacity_max", LAND_FARM_BUILDINGS),
+        ("Fish capacity", "fish_capacity_max", FISH_CAP_BUILDINGS),
+        ("Forest capacity", "forest_capacity_max", FOREST_CAP_BUILDINGS),
+    )
+    for index, (title, prefix, buildings) in enumerate(groups):
+        if index:
+            lines.append("")
+        lines.append(_line(f"# {title}", 2))
+        lines.extend(
+            _line(f"pp_cull_capacity_building_above_max = {{ building = {building} max_level = {prefix}_{building} }}", 2)
+            for building in buildings
+        )
+    lines.extend(
+        [
+            _line("}", 1),
+            "}",
+            "",
+            "pp_cull_capacity_building_above_max = {",
+            _line("if = {", 1),
+            _line("limit = {", 2),
+            _line("has_building = building_type:$building$", 3),
+            _line("location_building_level = {", 3),
+            _line("building_type = building_type:$building$", 4),
+            _line("value > $max_level$", 4),
+            _line("}", 3),
+            _line("}", 2),
+            _line("change_building_level_in_location = {", 2),
+            _line("building = building_type:$building$", 3),
+            _line("value = -1", 3),
+            _line("}", 2),
+            _line("}", 1),
+            "}",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def main() -> None:
     farm_max_omissions = capacity_max_omitted_buildings_by_building(
         blueprint_root=BUILDING_BLUEPRINT_ROOT,
@@ -378,6 +426,7 @@ def main() -> None:
     }
     for filename, text in outputs.items():
         (SCRIPT_VALUES_ROOT / filename).write_text(text, encoding="utf-8-sig")
+    CULLING_EFFECTS_PATH.write_text(_culling_effects_file(), encoding="utf-8-sig", newline="\n")
 
 
 if __name__ == "__main__":

@@ -145,6 +145,7 @@ def test_provisioning_slots_match_configured_amounts() -> None:
         block = _building_block(template.key, template.building_body)
         amounts = provisioning.provisioning_amounts(
             _base_output(block, template.production_method_slots[0].methods, good),
+            good_price=provisioning.provisioned_good_price(good),
             config=config,
         )
 

@@ -1,0 +1,150 @@
+version: 2
+tag: cattle_farmstead
+output_tag: cattle_farm_tier1
+footprint: farm_land
+labour:
+  class: primary_discovery
+  methods:
+    pp_cattle_farmstead_base: base
+    pp_cattle_farmstead_provision: keep
+    pp_cattle_farmstead_sell_surplus: keep
+upgrade_chain:
+  family: cattle_farm
+  tier: 1
+  previous: cattle_farm
+  next: cattle_rotations
+  unlock_advance: pp_manuring_and_seed_stores
+building:
+  key: cattle_farmstead
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_cattle_farmstead_base
+  - name: slot_1
+    methods:
+    - pp_cattle_farmstead_no_cultivation
+    - pp_cattle_farmstead_stall_feeding
+  - name: slot_2
+    methods:
+    - pp_cattle_farmstead_provision
+    - pp_cattle_farmstead_sell_surplus
+  possible_production_methods: []
+  body: |-
+    is_foreign = no
+    increase_per_level_cost = 0.16
+    max_levels = farm_capacity_max_cattle_farmstead
+    pop_type = peasants
+    employment_size = 1
+    category = village_category
+    custom_tags = { farming_capacity pp_food_security_priority pp_staple_food_priority }
+    icon = cattle_farmstead
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = cattle_farm
+    forbidden_for_estates = yes
+    ai_forbid_shutdown = no
+    can_close = yes
+    build_time = workshop_build_time
+    construction_demand = workshop_construction
+
+    location_potential = {
+        pp_cattle_farm_location_potential = yes
+    }
+
+    unique_production_methods = {
+        pp_cattle_farmstead_base = {
+            manual_labor_cost = 0.024
+            produced = livestock
+            output = 0.08
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_cattle_farmstead_no_cultivation = {
+            category = building_maintenance
+        }
+        pp_cattle_farmstead_stall_feeding = {
+            livestock = 0.1
+            legumes = 0.086
+            clay = 0.1
+            lumber = 0.04
+            manual_labor_cost = 0.066
+            produced = livestock
+            output = 0.44
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_cattle_farmstead_provision = {
+            livestock = 0.071
+            produced = local_food
+            output = 1.28
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_cattle_farmstead_sell_surplus = {
+            produced = province_food_sales
+            output = 0.007
+            category = building_maintenance
+        }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_cattle_farmstead = -1
+      local_population_capacity = -2
+    }
+
+    modifier = {
+        local_monthly_food = 1.5
+        local_peasants_estate_power = 0.03
+        local_peasant_enfranchisment = 0.002
+        local_laborers_desired_pop = 0
+        local_legumes_output_modifier = 0.02
+    }
+localization:
+  entries:
+    cattle_farmstead: Cattle Farmstead
+    cattle_farmstead_desc: Stall feeding and manure yards carry the herd through the lean months.
+    cattle_farmstead_slot_0: Pastures
+    cattle_farmstead_slot_1: Cultivation
+    cattle_farmstead_slot_2: Provisioning
+    pp_cattle_farmstead_base: Pastures
+    pp_cattle_farmstead_no_cultivation: No Cultivation
+    pp_cattle_farmstead_stall_feeding: Stall Feeding
+    pp_cattle_farmstead_stall_feeding_desc: Cattle are fed in stalls on fodder and pulses.
+    pp_cattle_farmstead_provision: Provision with Livestock
+    pp_cattle_farmstead_provision_desc: The household buys its own crop back and cooks for the province. Worth it while the province store is low and the crop is cheap.
+    pp_cattle_farmstead_sell_surplus: Sell the Surplus
+    pp_cattle_farmstead_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+icon:
+  source_png: ../assets/icons/cattle_farmstead.png
+  output_dds: cattle_farmstead.dds
+  size: 512
+evaluation:
+  allow_rules:
+    profit_percent: Passive selectors, no-output options, and household sidelines can sit outside the narrow margin band; worked farmstead methods carry the tier balance.
+    base_output_per_1k: Early farmstead selectors keep passive food output small; worked crop methods carry the tier economy.
+    input_throughput: Husbandry farmsteads are an age 3 bridge and intentionally stay below rotational farming throughput.
+    output_throughput: Husbandry farmsteads are an age 3 bridge and intentionally stay below rotational farming throughput.
+  production_methods:
+    pp_cattle_farmstead_base:
+      production_efficiency: 1.0
+      allow_rules:
+        base_output_per_1k: Early farmstead successor keeps passive baseline output low; worked methods carry the tier economy.
+    pp_cattle_farmstead_no_cultivation:
+      production_efficiency: 1.0
+    pp_cattle_farmstead_stall_feeding:
+      production_efficiency: 1.05
+    pp_cattle_farmstead_provision:
+      allow_rules:
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the storage signal decides the switch.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
+    pp_cattle_farmstead_sell_surplus:
+      allow_rules:
+        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.

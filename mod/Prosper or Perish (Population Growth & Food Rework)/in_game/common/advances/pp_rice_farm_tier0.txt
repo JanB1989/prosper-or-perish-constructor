@@ -1,0 +1,29 @@
+﻿# >>> eu5-building-pipeline:rice_farm:advancement
+pp_rice_farm_advance_general = {
+age = age_3_discovery
+requires = new_world_advance
+ai_weight = { add = 50 }
+potential = {
+    exists = capital
+    NOT = {
+        original_capital ?= {
+            OR = {
+                sub_continent = sub_continent:east_asia
+                sub_continent = sub_continent:middle_east
+                sub_continent = sub_continent:south_asia
+                sub_continent = sub_continent:south_east_asia
+                sub_continent = sub_continent:west_africa
+                region = region:central_africa_region
+                region = region:egypt_region
+                region = region:great_lakes_region
+                region = region:iberia_region
+                region = region:italy_region
+                region = region:madagascar_region
+                region = region:swahili_coast_region
+                region = region:zimbabwe_region
+            }
+        }
+    }
+}
+}
+# <<< eu5-building-pipeline:rice_farm:advancement

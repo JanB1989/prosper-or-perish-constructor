@@ -51,6 +51,7 @@ SYNC_STAGES = ("worldbuilder", "blueprints")
 WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/worldbuilder",
     "src/prosper_or_perish_constructor/building_footprint.py",
+    "src/prosper_or_perish_constructor/crop_farms.py",
     "src/prosper_or_perish_constructor/free_building_levels.py",
     "src/prosper_or_perish_constructor/location_baseline.py",
     "src/prosper_or_perish_constructor/location_status.py",
@@ -283,22 +284,22 @@ def _build_parser() -> argparse.ArgumentParser:
         "Inspect the configured constructor project.",
         _orchestrator("inspect"),
     )
-    farming_village_unlocks = _add_command(
+    crop_farms = _add_command(
         subcommands,
-        "farming-village-unlocks",
-        "Check or regenerate data-driven farming-village RGO unlock advances.",
-        _farming_village_unlocks,
+        "crop-farms",
+        "Check or regenerate the crop farm blueprints and gate triggers from config/crop_farms.toml.",
+        _crop_farms,
     )
-    farming_village_unlocks_mode = farming_village_unlocks.add_mutually_exclusive_group()
-    farming_village_unlocks_mode.add_argument(
+    crop_farms_mode = crop_farms.add_mutually_exclusive_group()
+    crop_farms_mode.add_argument(
         "--check",
         action="store_true",
-        help="Fail if farming_village.yml unlock advances are stale. This is the default.",
+        help="Fail if the crop farm blueprints, triggers or manifest entries are stale. This is the default.",
     )
-    farming_village_unlocks_mode.add_argument(
+    crop_farms_mode.add_argument(
         "--write",
         action="store_true",
-        help="Regenerate the farming_village.yml unlock advances from current location data.",
+        help="Regenerate the 32 crop farm blueprints, the farming_village tombstone and the gate triggers.",
     )
     _add_command(
         subcommands,
@@ -841,37 +842,32 @@ def _vanilla_mirror(args: argparse.Namespace, extra: Sequence[str], repo: Path, 
     return 0
 
 
-def _farming_village_unlocks(
+def _crop_farms(
     args: argparse.Namespace,
     extra: Sequence[str],
     repo: Path,
     project: Path,
 ) -> int:
     if extra:
-        raise SystemExit("farming-village-unlocks does not accept extra arguments.")
+        raise SystemExit("crop-farms does not accept extra arguments.")
 
-    from prosper_or_perish_constructor.farming_village_unlocks import (
-        check_blueprint_advancements,
-        write_blueprint_advancements,
-    )
+    from prosper_or_perish_constructor import crop_farms
 
     if args.write:
-        changed = write_blueprint_advancements(repo, project)
-        print(
-            "farming_village_unlocks=updated" if changed else "farming_village_unlocks=unchanged",
-            flush=True,
-        )
+        changed = crop_farms.write(repo, project)
+        for path in changed:
+            print(f"crop_farms: wrote {path}", flush=True)
+        print("crop_farms=updated" if changed else "crop_farms=unchanged", flush=True)
         return 0
 
-    check = check_blueprint_advancements(repo, project)
-    if check.ok:
-        print("farming_village_unlocks=ok", flush=True)
+    problems = crop_farms.check(repo, project)
+    if not problems:
+        print("crop_farms=ok", flush=True)
         return 0
-    print("farming_village_unlocks=stale", flush=True)
-    diff = check.unified_diff()
-    if diff:
-        print(diff, flush=True)
-    print("Run: uv run ppc farming-village-unlocks --write", flush=True)
+    print("crop_farms=stale", flush=True)
+    for problem in problems:
+        print(problem, flush=True)
+    print("Run: uv run ppc crop-farms --write", flush=True)
     return 1
 
 
@@ -1002,15 +998,15 @@ def _apply_building_footprint(repo: Path, project: Path, mod_root: Path) -> None
 def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if _worldbuilder_apply_on_build(project):
         _worldbuilder_apply(repo, project)
-    if _has_farming_village_blueprint(repo):
-        unlock_code = _farming_village_unlocks(
+    if _has_crop_farm_table(repo):
+        crop_code = _crop_farms(
             argparse.Namespace(write=False, check=True),
             (),
             repo,
             project,
         )
-        if unlock_code != 0:
-            return unlock_code
+        if crop_code != 0:
+            return crop_code
     build_code = _run(["eu5-orchestrator", "build", "--project", project, "--overwrite", *extra], repo)
     if build_code != 0:
         return build_code
@@ -1019,10 +1015,10 @@ def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: 
     return 0
 
 
-def _has_farming_village_blueprint(repo: Path) -> bool:
-    from prosper_or_perish_constructor.farming_village_unlocks import BLUEPRINT_RELATIVE_PATH
+def _has_crop_farm_table(repo: Path) -> bool:
+    from prosper_or_perish_constructor.crop_farms import TABLE_RELATIVE_PATH
 
-    return (repo / BLUEPRINT_RELATIVE_PATH).is_file()
+    return (repo / TABLE_RELATIVE_PATH).is_file()
 
 
 def _finalize_constructor_mod(repo: Path, project: Path) -> None:

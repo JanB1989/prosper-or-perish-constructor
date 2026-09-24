@@ -1,0 +1,77 @@
+﻿# >>> eu5-building-pipeline:millet_farmstead:building
+millet_farmstead = {
+is_foreign = no
+increase_per_level_cost = 0.11
+max_levels = farm_capacity_max_millet_farmstead
+pop_type = peasants
+employment_size = 1
+category = village_category
+custom_tags = { farming_capacity pp_food_security_priority pp_staple_food_priority }
+icon = millet_farmstead
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = millet_farm
+forbidden_for_estates = yes
+ai_forbid_shutdown = no
+can_close = yes
+build_time = workshop_build_time
+construction_demand = workshop_construction
+
+location_potential = {
+    pp_millet_farm_location_potential = yes
+}
+
+unique_production_methods = {
+    pp_millet_farmstead_base = {
+        manual_labor_cost = 0.016
+        produced = millet
+        output = 0.08
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_millet_farmstead_no_cultivation = {
+        category = building_maintenance
+    }
+    pp_millet_farmstead_manured_hill_plots = {
+        livestock = 0.086
+        fiber_crops = 0.052
+        pottery = 0.034
+        tools = 0.016
+        manual_labor_cost = 0.053
+        produced = millet
+        output = 0.6
+        debug_max_profit = 0.027
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_millet_farmstead_provision = {
+        millet = 0.107
+        produced = local_food
+        output = 1.28
+        debug_max_profit = 4.981
+        category = building_maintenance
+    }
+    pp_millet_farmstead_sell_surplus = {
+        produced = province_food_sales
+        output = 0.007
+        category = building_maintenance
+    }
+}
+
+raw_modifier = {
+  farm_capacity_from_millet_farmstead = -1
+  local_population_capacity = -5
+}
+
+modifier = {
+    local_monthly_food = 1.5
+    local_peasants_estate_power = 0.03
+    local_peasant_enfranchisment = 0.002
+    local_laborers_desired_pop = 0
+}
+}
+# <<< eu5-building-pipeline:millet_farmstead:building

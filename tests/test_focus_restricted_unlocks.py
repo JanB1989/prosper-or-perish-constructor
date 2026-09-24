@@ -10,6 +10,7 @@ import re
 from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5gameparser.domain.eu5 import load_eu5_data
 from prosper_or_perish_constructor import yaml_io
+from prosper_or_perish_constructor.crop_farms import load_crop_table
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +18,13 @@ BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted"
 MANIFEST_PATH = ROOT / "blueprints" / "buildings.manifest.yml"
 FOCUS_VALUES = {"adm", "dip", "mil"}
 INTENTIONAL_ZERO_NET_ADVANCE_PATCH_FILES = {"pp_rgo_building_cost_redirects.txt"}
+
+
+def _crop_flag_advances() -> set[str]:
+    """General crop advances (rice, maize, potato, olives): flags the crop farms' country_potential checks with
+    has_advance, so they carry no modifier or unlock of their own."""
+    table = load_crop_table(ROOT)
+    return {table.general_advance(crop) for crop in table.crops if crop.gated}
 
 
 def test_constructor_owned_unlocks_do_not_depend_on_age_focus_advances() -> None:
@@ -104,16 +112,23 @@ def test_constructor_sourced_advances_are_not_empty_player_techs() -> None:
         profile="constructor",
         load_order_path=ROOT / "constructor.load_order.toml",
     )
+    flag_advances = _crop_flag_advances()
 
     offenders = [
         f"{row['name']} at {_source_location(row)}"
         for row in data.advancements.to_dicts()
         if row.get("source_layer") == "constructor"
         and Path(row["source_file"]).name not in INTENTIONAL_ZERO_NET_ADVANCE_PATCH_FILES
+        and row["name"] not in flag_advances
         and not _advance_has_player_payload(row)
     ]
 
     assert offenders == []
+    blueprint_text = "\n".join(
+        path.read_text(encoding="utf-8-sig") for path in (BLUEPRINT_ROOT / "buildings").glob("*.yml")
+    )
+    for advance in flag_advances:
+        assert f"has_advance = {advance}" in blueprint_text, advance
 
 
 def _focus_restricted_roots_by_advance(

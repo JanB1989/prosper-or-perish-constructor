@@ -1,0 +1,148 @@
+version: 2
+tag: legume_model_farm
+output_tag: legume_farm_tier3
+footprint: farm_land
+labour:
+  class: primary_absolutism
+  methods:
+    pp_legume_model_farm_base: base
+    pp_legume_model_farm_provision: keep
+    pp_legume_model_farm_sell_surplus: keep
+upgrade_chain:
+  family: legume_farm
+  tier: 3
+  previous: legume_rotations
+  next: null
+  unlock_advance: pp_model_farm
+building:
+  key: legume_model_farm
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_legume_model_farm_base
+  - name: slot_1
+    methods:
+    - pp_legume_model_farm_no_cultivation
+    - pp_legume_model_farm_drilled_rows
+  - name: slot_2
+    methods:
+    - pp_legume_model_farm_provision
+    - pp_legume_model_farm_sell_surplus
+  possible_production_methods: []
+  body: |-
+    is_foreign = no
+    increase_per_level_cost = 0.15
+    max_levels = farm_capacity_max_legume_model_farm
+    pop_type = laborers
+    employment_size = 1
+    category = village_category
+    custom_tags = { farming_capacity pp_food_security_priority pp_staple_food_priority }
+    icon = legume_model_farm
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = legume_rotations
+    forbidden_for_estates = yes
+    ai_forbid_shutdown = no
+    can_close = yes
+    build_time = workshop_build_time
+    construction_demand = workshop_construction
+
+    location_potential = {
+        pp_legume_farm_location_potential = yes
+    }
+
+    unique_production_methods = {
+        pp_legume_model_farm_base = {
+            manual_labor_cost = 0.02
+            produced = legumes
+            output = 0.1
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_legume_model_farm_no_cultivation = {
+            category = building_maintenance
+        }
+        pp_legume_model_farm_drilled_rows = {
+            tools = 0.19
+            horses = 0.17
+            livestock = 0.11
+            paper = 0.21
+            manual_labor_cost = 0.18
+            produced = legumes
+            output = 2.08
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_legume_model_farm_provision = {
+            legumes = 0.133
+            produced = local_food
+            output = 1.6
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_legume_model_farm_sell_surplus = {
+            produced = province_food_sales
+            output = 0.008
+            category = building_maintenance
+        }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_legume_model_farm = -1
+      local_population_capacity = -5
+    }
+
+    modifier = {
+        local_monthly_food = 3
+        local_laborers_desired_pop = 0.002
+        local_wheat_output_modifier = 0.02
+        local_millet_output_modifier = 0.02
+        local_maize_output_modifier = 0.02
+    }
+localization:
+  entries:
+    legume_model_farm: Legume Model Farm
+    legume_model_farm_desc: Drilled pulse rows and seed ledgers raise legumes on a larger managed farm.
+    legume_model_farm_slot_0: Fields
+    legume_model_farm_slot_1: Cultivation
+    legume_model_farm_slot_2: Provisioning
+    pp_legume_model_farm_base: Fields
+    pp_legume_model_farm_no_cultivation: No Cultivation
+    pp_legume_model_farm_drilled_rows: Drilled Pulse Rows
+    pp_legume_model_farm_drilled_rows_desc: Pulses are drilled in rows and their seed is kept in ledgers.
+    pp_legume_model_farm_provision: Provision with Legumes
+    pp_legume_model_farm_provision_desc: The household buys its own crop back and cooks for the province. Worth it while the province store is low and the crop is cheap.
+    pp_legume_model_farm_sell_surplus: Sell the Surplus
+    pp_legume_model_farm_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+icon:
+  source_png: ../assets/icons/legume_model_farm.png
+  output_dds: legume_model_farm.dds
+  size: 512
+evaluation:
+  allow_rules:
+    amortization_months: The 10k laborer model farm keeps a slower estate-improvement payback than global construction targets; revisit with the rural producer rebalance.
+  production_methods:
+    pp_legume_model_farm_base:
+      production_efficiency: 1.0
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+    pp_legume_model_farm_no_cultivation:
+      production_efficiency: 1.0
+    pp_legume_model_farm_drilled_rows:
+      production_efficiency: 1.0
+    pp_legume_model_farm_provision:
+      allow_rules:
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the storage signal decides the switch.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
+    pp_legume_model_farm_sell_surplus:
+      allow_rules:
+        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.

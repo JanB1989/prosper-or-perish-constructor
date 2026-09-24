@@ -20,7 +20,6 @@ from prosper_or_perish_constructor.goods_categories import (
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "constructor.toml"
 INTENTIONAL_SOURCE_COST_OVERRIDES = {
-    "husbandry_farmstead": "bridge farmstead keeps the existing low staple-farm cadence",
     "saffron_kiln_croft": "successor croft keeps the existing tea/coffee-style crop cadence",
     "shoen": "vanilla inject keeps the existing historical estate cadence",
     "victuals_market_import": "current accepted import market has zero repeat-cost escalation",

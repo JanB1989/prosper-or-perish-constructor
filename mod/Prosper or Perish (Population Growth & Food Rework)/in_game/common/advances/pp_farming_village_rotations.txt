@@ -1,9 +1,0 @@
-﻿# >>> eu5-building-pipeline:farming_village_rotations:advancement
-pp_farming_village_rotations = {
-icon = farming_village_rotations
-age = age_4_reformation
-requires = global_trade_advance
-unlock_building = farming_village_rotations
-ai_weight = { add = 125 }
-}
-# <<< eu5-building-pipeline:farming_village_rotations:advancement

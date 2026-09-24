@@ -944,7 +944,7 @@
                                                     hbox = {
                                                         margin = { 40 0 }
                                                         margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/buildings/farming_village.dds" size = { 45 45 } }
+                                                        icon = { texture = "gfx/interface/icons/buildings/wheat_farm.dds" size = { 45 45 } }
                                                         text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_farm_capacity" }
                                                     }
                                                 }

@@ -1,0 +1,198 @@
+version: 2
+tag: rice_farm
+output_tag: rice_farm_tier0
+footprint: farm_land
+labour:
+  class: primary_medieval
+  methods:
+    pp_rice_farm_base: base
+    pp_rice_farm_wet_paddy: hand_work
+    pp_rice_farm_provision: keep
+    pp_rice_farm_sell_surplus: keep
+upgrade_chain:
+  family: rice_farm
+  tier: 0
+  previous: null
+  next: rice_farmstead
+  unlock_advance: null
+building:
+  key: rice_farm
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+  - name: slot_0
+    methods:
+    - pp_rice_farm_base
+  - name: slot_1
+    methods:
+    - pp_rice_farm_no_cultivation
+    - pp_rice_farm_dryland_rice
+    - pp_rice_farm_wet_paddy
+  - name: slot_2
+    methods:
+    - pp_rice_farm_provision
+    - pp_rice_farm_sell_surplus
+  possible_production_methods: []
+  body: |-
+    audio_tier = 1
+    startup_ramp_target = rural_startup_ramp_target
+    is_foreign = no
+    increase_per_level_cost = 0.15
+    max_levels = farm_capacity_max_rice_farm
+    pop_type = peasants
+    employment_size = 1
+    category = village_category
+    custom_tags = { farming_capacity pp_food_security_priority pp_staple_food_priority }
+    icon = rice_farm
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    forbidden_for_estates = yes
+    ai_forbid_shutdown = no
+    build_time = village_build_time
+    construction_demand = village_construction
+
+    location_potential = {
+        pp_rice_farm_location_potential = yes
+    }
+    country_potential = {
+        OR = {
+            pp_rice_native_country = yes
+            has_advance = pp_rice_farm_advance_general
+        }
+    }
+
+    unique_production_methods = {
+        pp_rice_farm_base = {
+            manual_labor_cost = 0.012
+            produced = rice
+            output = 0.06
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_rice_farm_no_cultivation = {
+            category = building_maintenance
+        }
+        pp_rice_farm_dryland_rice = {
+            livestock = 0.014
+            tools = 0.003
+            manual_labor_cost = 0.006
+            produced = rice
+            output = 0.1
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_rice_farm_wet_paddy = {
+            livestock = 0.006
+            clay = 0.011
+            manual_labor_cost = 0.011
+            produced = rice
+            output = 0.11
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_rice_farm_provision = {
+            rice = 0.08
+            produced = local_food
+            output = 0.96
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_rice_farm_sell_surplus = {
+            produced = province_food_sales
+            output = 0.005
+            category = building_maintenance
+        }
+    }
+
+    raw_modifier = {
+      farm_capacity_from_rice_farm = -1
+      local_population_capacity = -5
+    }
+
+    modifier = {
+        local_monthly_food = 1.5
+        local_peasants_estate_power = 0.04
+        local_peasant_enfranchisment = 0.002
+        local_laborers_desired_pop = 0
+        local_soldiers_desired_pop = 0
+    }
+advancements:
+- key: pp_rice_farm_advance_general
+  body: |-
+    age = age_3_discovery
+    requires = new_world_advance
+    ai_weight = { add = 50 }
+    potential = {
+        exists = capital
+        NOT = {
+            original_capital ?= {
+                OR = {
+                    sub_continent = sub_continent:east_asia
+                    sub_continent = sub_continent:middle_east
+                    sub_continent = sub_continent:south_asia
+                    sub_continent = sub_continent:south_east_asia
+                    sub_continent = sub_continent:west_africa
+                    region = region:central_africa_region
+                    region = region:egypt_region
+                    region = region:great_lakes_region
+                    region = region:iberia_region
+                    region = region:italy_region
+                    region = region:madagascar_region
+                    region = region:swahili_coast_region
+                    region = region:zimbabwe_region
+                }
+            }
+        }
+    }
+localization:
+  entries:
+    rice_farm: Rice Paddy
+    rice_farm_desc: Households sow and transplant rice on flooded or well-watered plots.
+    rice_farm_slot_0: Paddies
+    rice_farm_slot_1: Cultivation
+    rice_farm_slot_2: Provisioning
+    pp_rice_farm_base: Paddies
+    pp_rice_farm_no_cultivation: No Cultivation
+    pp_rice_farm_dryland_rice: Dryland Rice
+    pp_rice_farm_dryland_rice_desc: Rice is sown on rain-fed ground without standing water.
+    pp_rice_farm_wet_paddy: Wet Paddy Transplanting
+    pp_rice_farm_wet_paddy_desc: Seedlings raised in a nursery are planted by hand into flooded plots.
+    pp_rice_farm_provision: Provision with Rice
+    pp_rice_farm_provision_desc: The household buys its own crop back and cooks for the province. Worth it while the province store is low and the crop is cheap.
+    pp_rice_farm_sell_surplus: Sell the Surplus
+    pp_rice_farm_sell_surplus_desc: The household sells what the province does not need. It pays more the fuller the province store is, and nothing while it is empty.
+    pp_rice_farm_advance_general: Rice Cultivation
+    pp_rice_farm_advance_general_desc: Adopt techniques for cultivating rice as a staple crop in suitable regions.
+icon:
+  source_png: ../assets/icons/rice_farm.png
+  output_dds: rice_farm.dds
+  size: 512
+evaluation:
+  allow_rules:
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
+    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
+  production_methods:
+    pp_rice_farm_base:
+      production_efficiency: 1.0
+      allow_rules:
+        base_output_per_1k: Requested passive baseline for former-food village producers; intentionally below the global no-input output band.
+    pp_rice_farm_no_cultivation:
+      production_efficiency: 1.0
+    pp_rice_farm_dryland_rice:
+      production_efficiency: 1.05
+    pp_rice_farm_wet_paddy:
+      production_efficiency: 1.05
+    pp_rice_farm_provision:
+      allow_rules:
+        profit_percent: Provisioning is balanced at the Province Food floor (12 food per gold of crop); the storage signal decides the switch.
+        input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+        output_throughput: Existing accepted output scale predates the global employment throughput baseline.
+    pp_rice_farm_sell_surplus:
+      allow_rules:
+        base_output_per_1k: Sell the Surplus is a no-input dummy signal, not a production line.

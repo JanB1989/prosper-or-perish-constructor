@@ -109,8 +109,9 @@ def test_location_templates_overlay_replaces_fields_by_tag():
 
 def test_farm_constants_by_class(tmp_path):
     from prosper_or_perish_constructor.worldbuilder.contract import WorldBuilderConfig
-    cfg = WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={}, farm_land={"arable": {"land": 5, "reserve": 5}, "herd": {"land": 2, "reserve": 1}}, farm_classes={"herd": ["sheep_farms"]}, level_scale={}, level_limit=20, goods_floor=-0.2, sync_geography=False)
-    assert wb_buildings.farm_constants(cfg, "sheep_farms") == (2.0, 1.0) and wb_buildings.farm_constants(cfg, "farming_village") == (5.0, 5.0)
+    cfg = WorldBuilderConfig(handover=tmp_path, geography_export=tmp_path, building_map={}, farm_land={"arable": {"land": 5, "reserve": 5}, "herd": {"land": 2, "reserve": 1}}, farm_classes={"herd": ["sheep_farms", "cattle_farm"]}, level_scale={}, level_limit=20, goods_floor=-0.2, sync_geography=False)
+    assert wb_buildings.farm_constants(cfg, "sheep_farms") == (2.0, 1.0) and wb_buildings.farm_constants(cfg, "wheat_farm") == (5.0, 5.0)
+    assert wb_buildings.farm_constants(cfg, "cattle_farm") == (2.0, 1.0)
 
 
 def _cfg(tmp_path: Path, niche: dict | None = None):

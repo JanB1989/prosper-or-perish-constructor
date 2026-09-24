@@ -1,0 +1,22 @@
+﻿# >>> eu5-building-pipeline:olive_farm:advancement
+pp_olives_farm_advance_general = {
+age = age_4_reformation
+requires = global_trade_advance
+ai_weight = { add = 50 }
+potential = {
+    exists = capital
+    NOT = {
+        original_capital ?= {
+            OR = {
+                sub_continent = sub_continent:middle_east
+                sub_continent = sub_continent:north_africa
+                region = region:balkan_region
+                region = region:france_region
+                region = region:iberia_region
+                region = region:italy_region
+            }
+        }
+    }
+}
+}
+# <<< eu5-building-pipeline:olive_farm:advancement

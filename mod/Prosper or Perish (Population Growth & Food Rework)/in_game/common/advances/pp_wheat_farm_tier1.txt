@@ -1,0 +1,16 @@
+﻿# >>> eu5-building-pipeline:wheat_farmstead:advancement
+pp_manuring_and_seed_stores = {
+icon = husbandry_farmstead
+age = age_3_discovery
+requires = rgo_size_advance_discovery
+unlock_building = wheat_farmstead
+unlock_building = rice_farmstead
+unlock_building = millet_farmstead
+unlock_building = maize_farmstead
+unlock_building = legume_farmstead
+unlock_building = potato_farmstead
+unlock_building = olive_farmstead
+unlock_building = cattle_farmstead
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:wheat_farmstead:advancement

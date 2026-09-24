@@ -1,0 +1,18 @@
+﻿# >>> eu5-building-pipeline:potato_farm:advancement
+pp_potato_farm_advance_general = {
+age = age_5_absolutism
+requires = newspapers_advance
+ai_weight = { add = 50 }
+potential = {
+    exists = capital
+    NOT = {
+        original_capital ?= {
+            OR = {
+                region = region:andes_region
+                region = region:colombia_region
+            }
+        }
+    }
+}
+}
+# <<< eu5-building-pipeline:potato_farm:advancement

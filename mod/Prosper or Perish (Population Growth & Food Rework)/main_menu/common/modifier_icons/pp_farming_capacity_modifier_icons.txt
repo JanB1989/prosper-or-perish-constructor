@@ -56,24 +56,164 @@ farm_capacity_from_aqueduct_system = {
 	negative = "gfx/interface/icons/buildings/aqueduct_system.dds"
 }
 
-farm_capacity_from_farming_village = {
-	positive = "gfx/interface/icons/buildings/farming_village.dds"
-	negative = "gfx/interface/icons/buildings/farming_village.dds"
+farm_capacity_from_wheat_farm = {
+	positive = "gfx/interface/icons/buildings/wheat_farm.dds"
+	negative = "gfx/interface/icons/buildings/wheat_farm.dds"
 }
 
-farm_capacity_from_husbandry_farmstead = {
-	positive = "gfx/interface/icons/buildings/husbandry_farmstead.dds"
-	negative = "gfx/interface/icons/buildings/husbandry_farmstead.dds"
+farm_capacity_from_wheat_farmstead = {
+	positive = "gfx/interface/icons/buildings/wheat_farmstead.dds"
+	negative = "gfx/interface/icons/buildings/wheat_farmstead.dds"
 }
 
-farm_capacity_from_farming_village_rotations = {
-	positive = "gfx/interface/icons/buildings/farming_village_rotations.dds"
-	negative = "gfx/interface/icons/buildings/farming_village_rotations.dds"
+farm_capacity_from_wheat_rotations = {
+	positive = "gfx/interface/icons/buildings/wheat_rotations.dds"
+	negative = "gfx/interface/icons/buildings/wheat_rotations.dds"
 }
 
-farm_capacity_from_model_farm = {
-	positive = "gfx/interface/icons/buildings/model_farm.dds"
-	negative = "gfx/interface/icons/buildings/model_farm.dds"
+farm_capacity_from_wheat_model_farm = {
+	positive = "gfx/interface/icons/buildings/wheat_model_farm.dds"
+	negative = "gfx/interface/icons/buildings/wheat_model_farm.dds"
+}
+
+farm_capacity_from_rice_farm = {
+	positive = "gfx/interface/icons/buildings/rice_farm.dds"
+	negative = "gfx/interface/icons/buildings/rice_farm.dds"
+}
+
+farm_capacity_from_rice_farmstead = {
+	positive = "gfx/interface/icons/buildings/rice_farmstead.dds"
+	negative = "gfx/interface/icons/buildings/rice_farmstead.dds"
+}
+
+farm_capacity_from_rice_rotations = {
+	positive = "gfx/interface/icons/buildings/rice_rotations.dds"
+	negative = "gfx/interface/icons/buildings/rice_rotations.dds"
+}
+
+farm_capacity_from_rice_model_farm = {
+	positive = "gfx/interface/icons/buildings/rice_model_farm.dds"
+	negative = "gfx/interface/icons/buildings/rice_model_farm.dds"
+}
+
+farm_capacity_from_millet_farm = {
+	positive = "gfx/interface/icons/buildings/millet_farm.dds"
+	negative = "gfx/interface/icons/buildings/millet_farm.dds"
+}
+
+farm_capacity_from_millet_farmstead = {
+	positive = "gfx/interface/icons/buildings/millet_farmstead.dds"
+	negative = "gfx/interface/icons/buildings/millet_farmstead.dds"
+}
+
+farm_capacity_from_millet_rotations = {
+	positive = "gfx/interface/icons/buildings/millet_rotations.dds"
+	negative = "gfx/interface/icons/buildings/millet_rotations.dds"
+}
+
+farm_capacity_from_millet_model_farm = {
+	positive = "gfx/interface/icons/buildings/millet_model_farm.dds"
+	negative = "gfx/interface/icons/buildings/millet_model_farm.dds"
+}
+
+farm_capacity_from_maize_farm = {
+	positive = "gfx/interface/icons/buildings/maize_farm.dds"
+	negative = "gfx/interface/icons/buildings/maize_farm.dds"
+}
+
+farm_capacity_from_maize_farmstead = {
+	positive = "gfx/interface/icons/buildings/maize_farmstead.dds"
+	negative = "gfx/interface/icons/buildings/maize_farmstead.dds"
+}
+
+farm_capacity_from_maize_rotations = {
+	positive = "gfx/interface/icons/buildings/maize_rotations.dds"
+	negative = "gfx/interface/icons/buildings/maize_rotations.dds"
+}
+
+farm_capacity_from_maize_model_farm = {
+	positive = "gfx/interface/icons/buildings/maize_model_farm.dds"
+	negative = "gfx/interface/icons/buildings/maize_model_farm.dds"
+}
+
+farm_capacity_from_legume_farm = {
+	positive = "gfx/interface/icons/buildings/legume_farm.dds"
+	negative = "gfx/interface/icons/buildings/legume_farm.dds"
+}
+
+farm_capacity_from_legume_farmstead = {
+	positive = "gfx/interface/icons/buildings/legume_farmstead.dds"
+	negative = "gfx/interface/icons/buildings/legume_farmstead.dds"
+}
+
+farm_capacity_from_legume_rotations = {
+	positive = "gfx/interface/icons/buildings/legume_rotations.dds"
+	negative = "gfx/interface/icons/buildings/legume_rotations.dds"
+}
+
+farm_capacity_from_legume_model_farm = {
+	positive = "gfx/interface/icons/buildings/legume_model_farm.dds"
+	negative = "gfx/interface/icons/buildings/legume_model_farm.dds"
+}
+
+farm_capacity_from_potato_farm = {
+	positive = "gfx/interface/icons/buildings/potato_farm.dds"
+	negative = "gfx/interface/icons/buildings/potato_farm.dds"
+}
+
+farm_capacity_from_potato_farmstead = {
+	positive = "gfx/interface/icons/buildings/potato_farmstead.dds"
+	negative = "gfx/interface/icons/buildings/potato_farmstead.dds"
+}
+
+farm_capacity_from_potato_rotations = {
+	positive = "gfx/interface/icons/buildings/potato_rotations.dds"
+	negative = "gfx/interface/icons/buildings/potato_rotations.dds"
+}
+
+farm_capacity_from_potato_model_farm = {
+	positive = "gfx/interface/icons/buildings/potato_model_farm.dds"
+	negative = "gfx/interface/icons/buildings/potato_model_farm.dds"
+}
+
+farm_capacity_from_olive_farm = {
+	positive = "gfx/interface/icons/buildings/olive_farm.dds"
+	negative = "gfx/interface/icons/buildings/olive_farm.dds"
+}
+
+farm_capacity_from_olive_farmstead = {
+	positive = "gfx/interface/icons/buildings/olive_farmstead.dds"
+	negative = "gfx/interface/icons/buildings/olive_farmstead.dds"
+}
+
+farm_capacity_from_olive_rotations = {
+	positive = "gfx/interface/icons/buildings/olive_rotations.dds"
+	negative = "gfx/interface/icons/buildings/olive_rotations.dds"
+}
+
+farm_capacity_from_olive_model_farm = {
+	positive = "gfx/interface/icons/buildings/olive_model_farm.dds"
+	negative = "gfx/interface/icons/buildings/olive_model_farm.dds"
+}
+
+farm_capacity_from_cattle_farm = {
+	positive = "gfx/interface/icons/buildings/cattle_farm.dds"
+	negative = "gfx/interface/icons/buildings/cattle_farm.dds"
+}
+
+farm_capacity_from_cattle_farmstead = {
+	positive = "gfx/interface/icons/buildings/cattle_farmstead.dds"
+	negative = "gfx/interface/icons/buildings/cattle_farmstead.dds"
+}
+
+farm_capacity_from_cattle_rotations = {
+	positive = "gfx/interface/icons/buildings/cattle_rotations.dds"
+	negative = "gfx/interface/icons/buildings/cattle_rotations.dds"
+}
+
+farm_capacity_from_cattle_model_farm = {
+	positive = "gfx/interface/icons/buildings/cattle_model_farm.dds"
+	negative = "gfx/interface/icons/buildings/cattle_model_farm.dds"
 }
 
 farm_capacity_from_fruit_orchard = {

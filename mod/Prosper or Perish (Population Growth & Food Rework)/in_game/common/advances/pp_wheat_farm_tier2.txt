@@ -1,0 +1,16 @@
+﻿# >>> eu5-building-pipeline:wheat_rotations:advancement
+pp_farming_village_rotations = {
+icon = farming_village_rotations
+age = age_4_reformation
+requires = global_trade_advance
+unlock_building = wheat_rotations
+unlock_building = rice_rotations
+unlock_building = millet_rotations
+unlock_building = maize_rotations
+unlock_building = legume_rotations
+unlock_building = potato_rotations
+unlock_building = olive_rotations
+unlock_building = cattle_rotations
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:wheat_rotations:advancement

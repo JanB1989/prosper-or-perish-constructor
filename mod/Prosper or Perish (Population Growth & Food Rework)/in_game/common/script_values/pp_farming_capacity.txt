@@ -19,7 +19,7 @@ farm_capacity = {
 # but omits that building's own capacity-consumption row.
 # Selected upgrade targets also omit replaceable lower-tier rows.
 
-farm_capacity_max_farming_village = {
+farm_capacity_max_wheat_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
@@ -28,13 +28,586 @@ farm_capacity_max_farming_village = {
 		floor = yes
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE"
-		value = modifier:farm_capacity_from_farming_village
+		desc = "BUILDING_LEVEL_FARM_WHEAT_FARM"
+		value = modifier:farm_capacity_from_wheat_farm
 	}
 	min = 0
 }
 
-farm_capacity_max_husbandry_farmstead = {
+farm_capacity_max_wheat_farmstead = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_WHEAT_FARMSTEAD"
+		value = modifier:farm_capacity_from_wheat_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_WHEAT_FARM"
+		value = modifier:farm_capacity_from_wheat_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_wheat_rotations = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_WHEAT_ROTATIONS"
+		value = modifier:farm_capacity_from_wheat_rotations
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_WHEAT_FARM"
+		value = modifier:farm_capacity_from_wheat_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_WHEAT_FARMSTEAD"
+		value = modifier:farm_capacity_from_wheat_farmstead
+	}
+	min = 0
+}
+
+farm_capacity_max_wheat_model_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_WHEAT_MODEL_FARM"
+		value = modifier:farm_capacity_from_wheat_model_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_WHEAT_FARM"
+		value = modifier:farm_capacity_from_wheat_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_WHEAT_FARMSTEAD"
+		value = modifier:farm_capacity_from_wheat_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_WHEAT_ROTATIONS"
+		value = modifier:farm_capacity_from_wheat_rotations
+	}
+	min = 0
+}
+
+farm_capacity_max_rice_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_RICE_FARM"
+		value = modifier:farm_capacity_from_rice_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_rice_farmstead = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_RICE_FARMSTEAD"
+		value = modifier:farm_capacity_from_rice_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_RICE_FARM"
+		value = modifier:farm_capacity_from_rice_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_rice_rotations = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_RICE_ROTATIONS"
+		value = modifier:farm_capacity_from_rice_rotations
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_RICE_FARM"
+		value = modifier:farm_capacity_from_rice_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_RICE_FARMSTEAD"
+		value = modifier:farm_capacity_from_rice_farmstead
+	}
+	min = 0
+}
+
+farm_capacity_max_rice_model_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_RICE_MODEL_FARM"
+		value = modifier:farm_capacity_from_rice_model_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_RICE_FARM"
+		value = modifier:farm_capacity_from_rice_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_RICE_FARMSTEAD"
+		value = modifier:farm_capacity_from_rice_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_RICE_ROTATIONS"
+		value = modifier:farm_capacity_from_rice_rotations
+	}
+	min = 0
+}
+
+farm_capacity_max_millet_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MILLET_FARM"
+		value = modifier:farm_capacity_from_millet_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_millet_farmstead = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MILLET_FARMSTEAD"
+		value = modifier:farm_capacity_from_millet_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MILLET_FARM"
+		value = modifier:farm_capacity_from_millet_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_millet_rotations = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MILLET_ROTATIONS"
+		value = modifier:farm_capacity_from_millet_rotations
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MILLET_FARM"
+		value = modifier:farm_capacity_from_millet_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MILLET_FARMSTEAD"
+		value = modifier:farm_capacity_from_millet_farmstead
+	}
+	min = 0
+}
+
+farm_capacity_max_millet_model_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MILLET_MODEL_FARM"
+		value = modifier:farm_capacity_from_millet_model_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MILLET_FARM"
+		value = modifier:farm_capacity_from_millet_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MILLET_FARMSTEAD"
+		value = modifier:farm_capacity_from_millet_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MILLET_ROTATIONS"
+		value = modifier:farm_capacity_from_millet_rotations
+	}
+	min = 0
+}
+
+farm_capacity_max_maize_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MAIZE_FARM"
+		value = modifier:farm_capacity_from_maize_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_maize_farmstead = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MAIZE_FARMSTEAD"
+		value = modifier:farm_capacity_from_maize_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MAIZE_FARM"
+		value = modifier:farm_capacity_from_maize_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_maize_rotations = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MAIZE_ROTATIONS"
+		value = modifier:farm_capacity_from_maize_rotations
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MAIZE_FARM"
+		value = modifier:farm_capacity_from_maize_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MAIZE_FARMSTEAD"
+		value = modifier:farm_capacity_from_maize_farmstead
+	}
+	min = 0
+}
+
+farm_capacity_max_maize_model_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MAIZE_MODEL_FARM"
+		value = modifier:farm_capacity_from_maize_model_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MAIZE_FARM"
+		value = modifier:farm_capacity_from_maize_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MAIZE_FARMSTEAD"
+		value = modifier:farm_capacity_from_maize_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_MAIZE_ROTATIONS"
+		value = modifier:farm_capacity_from_maize_rotations
+	}
+	min = 0
+}
+
+farm_capacity_max_legume_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_LEGUME_FARM"
+		value = modifier:farm_capacity_from_legume_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_legume_farmstead = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_LEGUME_FARMSTEAD"
+		value = modifier:farm_capacity_from_legume_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_LEGUME_FARM"
+		value = modifier:farm_capacity_from_legume_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_legume_rotations = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_LEGUME_ROTATIONS"
+		value = modifier:farm_capacity_from_legume_rotations
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_LEGUME_FARM"
+		value = modifier:farm_capacity_from_legume_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_LEGUME_FARMSTEAD"
+		value = modifier:farm_capacity_from_legume_farmstead
+	}
+	min = 0
+}
+
+farm_capacity_max_legume_model_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_LEGUME_MODEL_FARM"
+		value = modifier:farm_capacity_from_legume_model_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_LEGUME_FARM"
+		value = modifier:farm_capacity_from_legume_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_LEGUME_FARMSTEAD"
+		value = modifier:farm_capacity_from_legume_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_LEGUME_ROTATIONS"
+		value = modifier:farm_capacity_from_legume_rotations
+	}
+	min = 0
+}
+
+farm_capacity_max_potato_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_POTATO_FARM"
+		value = modifier:farm_capacity_from_potato_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_potato_farmstead = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_POTATO_FARMSTEAD"
+		value = modifier:farm_capacity_from_potato_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_POTATO_FARM"
+		value = modifier:farm_capacity_from_potato_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_potato_rotations = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_POTATO_ROTATIONS"
+		value = modifier:farm_capacity_from_potato_rotations
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_POTATO_FARM"
+		value = modifier:farm_capacity_from_potato_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_POTATO_FARMSTEAD"
+		value = modifier:farm_capacity_from_potato_farmstead
+	}
+	min = 0
+}
+
+farm_capacity_max_potato_model_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_POTATO_MODEL_FARM"
+		value = modifier:farm_capacity_from_potato_model_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_POTATO_FARM"
+		value = modifier:farm_capacity_from_potato_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_POTATO_FARMSTEAD"
+		value = modifier:farm_capacity_from_potato_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_POTATO_ROTATIONS"
+		value = modifier:farm_capacity_from_potato_rotations
+	}
+	min = 0
+}
+
+farm_capacity_max_olive_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_OLIVE_FARM"
+		value = modifier:farm_capacity_from_olive_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_olive_farmstead = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_OLIVE_FARMSTEAD"
+		value = modifier:farm_capacity_from_olive_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_OLIVE_FARM"
+		value = modifier:farm_capacity_from_olive_farm
+	}
+	min = 0
+}
+
+farm_capacity_max_olive_rotations = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_OLIVE_ROTATIONS"
+		value = modifier:farm_capacity_from_olive_rotations
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_OLIVE_FARM"
+		value = modifier:farm_capacity_from_olive_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_OLIVE_FARMSTEAD"
+		value = modifier:farm_capacity_from_olive_farmstead
+	}
+	min = 0
+}
+
+farm_capacity_max_olive_model_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 5
+		divide = 5
+		floor = yes
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_OLIVE_MODEL_FARM"
+		value = modifier:farm_capacity_from_olive_model_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_OLIVE_FARM"
+		value = modifier:farm_capacity_from_olive_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_OLIVE_FARMSTEAD"
+		value = modifier:farm_capacity_from_olive_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_OLIVE_ROTATIONS"
+		value = modifier:farm_capacity_from_olive_rotations
+	}
+	min = 0
+}
+
+farm_capacity_max_cattle_farm = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
@@ -43,62 +616,77 @@ farm_capacity_max_husbandry_farmstead = {
 		floor = yes
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_HUSBANDRY_FARMSTEAD"
-		value = modifier:farm_capacity_from_husbandry_farmstead
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE"
-		value = modifier:farm_capacity_from_farming_village
+		desc = "BUILDING_LEVEL_FARM_CATTLE_FARM"
+		value = modifier:farm_capacity_from_cattle_farm
 	}
 	min = 0
 }
 
-farm_capacity_max_farming_village_rotations = {
+farm_capacity_max_cattle_farmstead = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
-		subtract = 5
-		divide = 5
+		subtract = 1
+		divide = 2
 		floor = yes
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE_ROTATIONS"
-		value = modifier:farm_capacity_from_farming_village_rotations
+		desc = "BUILDING_LEVEL_FARM_CATTLE_FARMSTEAD"
+		value = modifier:farm_capacity_from_cattle_farmstead
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE"
-		value = modifier:farm_capacity_from_farming_village
-	}
-	subtract = {
-		desc = "BUILDING_LEVEL_FARM_HUSBANDRY_FARMSTEAD"
-		value = modifier:farm_capacity_from_husbandry_farmstead
+		desc = "BUILDING_LEVEL_FARM_CATTLE_FARM"
+		value = modifier:farm_capacity_from_cattle_farm
 	}
 	min = 0
 }
 
-farm_capacity_max_model_farm = {
+farm_capacity_max_cattle_rotations = {
 	add = {
 		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
 		value = modifier:local_population_capacity
-		subtract = 5
-		divide = 5
+		subtract = 1
+		divide = 2
 		floor = yes
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_MODEL_FARM"
-		value = modifier:farm_capacity_from_model_farm
+		desc = "BUILDING_LEVEL_FARM_CATTLE_ROTATIONS"
+		value = modifier:farm_capacity_from_cattle_rotations
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE"
-		value = modifier:farm_capacity_from_farming_village
+		desc = "BUILDING_LEVEL_FARM_CATTLE_FARM"
+		value = modifier:farm_capacity_from_cattle_farm
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_HUSBANDRY_FARMSTEAD"
-		value = modifier:farm_capacity_from_husbandry_farmstead
+		desc = "BUILDING_LEVEL_FARM_CATTLE_FARMSTEAD"
+		value = modifier:farm_capacity_from_cattle_farmstead
+	}
+	min = 0
+}
+
+farm_capacity_max_cattle_model_farm = {
+	add = {
+		desc = "BUILDING_LEVEL_WB_FREE_FARMLAND"
+		value = modifier:local_population_capacity
+		subtract = 1
+		divide = 2
+		floor = yes
 	}
 	subtract = {
-		desc = "BUILDING_LEVEL_FARM_FARMING_VILLAGE_ROTATIONS"
-		value = modifier:farm_capacity_from_farming_village_rotations
+		desc = "BUILDING_LEVEL_FARM_CATTLE_MODEL_FARM"
+		value = modifier:farm_capacity_from_cattle_model_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_CATTLE_FARM"
+		value = modifier:farm_capacity_from_cattle_farm
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_CATTLE_FARMSTEAD"
+		value = modifier:farm_capacity_from_cattle_farmstead
+	}
+	subtract = {
+		desc = "BUILDING_LEVEL_FARM_CATTLE_ROTATIONS"
+		value = modifier:farm_capacity_from_cattle_rotations
 	}
 	min = 0
 }

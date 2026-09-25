@@ -27,10 +27,13 @@ Run:
   uv run python tools/province_food_sim.py --sweep [--seeds 8] [--png out.png]
   uv run python tools/province_food_sim.py --trace base pair --seed 1
   uv run python tools/province_food_sim.py --sweep --set import.prem_amount=0.75 --set export.offset_cost=12.5
+  uv run python tools/province_food_sim.py --depop calibrate --seeds 16      (population loop, see PopRules)
+  uv run python tools/province_food_sim.py --depop levers --case collapse,control --seeds 16
 """
 from __future__ import annotations
 
 import argparse
+import math
 import random
 import statistics
 from dataclasses import dataclass, field, fields, replace
@@ -501,6 +504,267 @@ def lever_scenarios() -> list[Scenario]:
 
 
 # ---------------------------------------------------------------------------------------------
+# population loop (depopulation study 2026-09-25, fresh game saves 1337.4 / 1361.3 / 1385.2)
+#
+# Measured from the saves (province pools = province x owner):
+# * base_food_consumption = sum of pops x rate per 1k (peasants 1, laborers 1.5, burghers/clergy 10, nobles 25,
+#   soldiers 4, slaves 0.5, tribesmen 0), R2 1.00.
+# * production (= cached_structural_food_change + base_food_consumption) = 1.44..1.57 x unemployed
+#   (peasants + laborers + slaves) + building food (farms 1.5 flat + 0.96 Provision, Serve ~27.6, import 90 per
+#   staffed level), R2 0.95..0.97; RGO slots and employed pops add nothing. So subsistence is the define
+#   SUBSISTENCE_AGRICULTURE 1.5 per 1k unemployed worker; pops in jobs (RGO, buildings) eat but do not farm.
+# * growth is a yearly rate applied /12 per month: not starving -0.004 (rank) + 0.0075-0.0084 x stored years
+#   (fit over 2,700 pools, R2 0.6-0.8); starving pools lose 0.043/yr (Starvation = -0.04 province_starving
+#   -0.004 rank), plus some out-migration.
+# * collapse provinces keep their jobs while the subsistence farmers die: 1337->1361 pop x0.41, unemployed
+#   x0.23, employed x0.59 -> the employment elasticity below.
+# ---------------------------------------------------------------------------------------------
+HARVEST_CONS = ((0.30, 0.05), (0.20, 0.10), (0.11, 0.15), (0.0, 0.40), (-0.11, 0.15), (-0.20, 0.10), (-0.30, 0.05))
+# pp_harvest_<region>_<quality>: local_peasants_food_consumption +0.30 (abysmal) .. -0.30 (bountiful), rolled
+# yearly per region (20 % bad / 60 % neutral / 20 % good shock with memory); the weights here are an iid stand-in.
+
+
+@dataclass
+class PopCase:
+    name: str
+    pop0: float          # k pops at 1337 (tribesmen included; they eat nothing)
+    cons_pc: float       # base_food_consumption per 1k pop per month
+    work_share: float    # peasants + laborers + slaves share of pop
+    emp0: float          # workers in jobs (k): peasants + laborers + slaves minus their unemployed
+    sub_yield: float     # food per 1k unemployed worker per month ((production - building food) / unemployed)
+    fixed_food: float    # building food at 1337 (farms, Provision, Serve, staffed imports)
+    months0: float       # stored months at 1337
+    cap_months: float    # max_food_value / consumption
+    vprice: float        # market victuals price at 1337
+    victuals_supply: float = 15.0   # market victuals supply per month (collapse median 14.8)
+    pop1361: float | None = None
+    pop1385: float | None = None
+    peasant_share: float = 0.6      # share of consumption that the harvest shock moves
+    builds: tuple = ()              # AI builds seen in the later saves: (month, "import"|"cookery", levels, staffed share)
+
+
+# per-province inputs from ~/scratch/switch/depop_b_inputs.py (save nb = 1337.4.1, final build)
+PROVINCE_CASES = {
+    # collapse set medians (176 food provinces that lost >= 50 % by 1361)
+    "collapse": PopCase("collapse", 42.11, 1.329, 0.925, 17.675, 1.11, 4.23, 3.675, 41.75, 2.48, 14.8,
+                        42.11 * 0.409, 42.11 * 0.406),
+    # matched control medians (pop within +-10 % by 1361, same starting size)
+    "control": PopCase("control", 46.43, 1.264, 0.937, 20.555, 1.819, 4.71, 3.69, 46.65, 2.33, 18.3,
+                       46.43 * 0.982, 46.43 * 1.051),
+    "penza": PopCase("penza", 70.07, 0.9323, 0.987, 18.91, 0.763, 1.5, 7.01, 70.1, 2.25, 2.0, 24.98, 17.34),
+    # 1 Victualler by 1361 (60 % staffed then, 25 % in 1385)
+    "finland": PopCase("finland", 30.6, 2.0848, 0.889, 19.0, 0.999, 9.0, 2.98, 29.8, 1.87, 24.0, 10.72, 10.98,
+                       builds=((216, "import", 1, 0.4),)),
+    # 2 Victualler levels by 1361 (20 % staffed, 60 % in 1385)
+    "kremenets": PopCase("kremenets", 47.95, 1.2297, 0.981, 24.6, 1.824, 11.88, 4.75, 47.5, 2.21, 18.0, 49.61, 53.54,
+                         builds=((144, "import", 2, 0.2), (288, "import", 0, 0.6))),
+    # cookery on Serve: 2 levels by 1361, 4 by 1385 (build dates unknown; midpoints assumed)
+    "pocutia": PopCase("pocutia", 26.08, 1.323, 0.976, 18.63, 2.443, 4.5, 7.27, 72.7, 2.18, 18.0, 23.59, 27.4,
+                       builds=((72, "cookery", 2, 1.0), (432, "cookery", 2, 1.0))),
+}
+CALIBRATION_CASES = ("penza", "finland", "kremenets", "pocutia")
+
+
+@dataclass
+class PopRules:
+    subsistence: float = 1.5          # NLocation SUBSISTENCE_AGRICULTURE; sub_yield scales with subsistence / 1.5
+    growth_base: float = -0.004       # yearly (location rank term); fitted intercept -0.004..-0.005
+    growth_per_year: float = 0.0075   # positive_province_food_growth per stored year (cap 2 years)
+    starving_growth: float = -0.04    # province_starving local_population_growth
+    starving_migration: float = -0.005  # yearly net out-migration while starving (migration attraction -7.5)
+    emp_elasticity: float = 0.6       # jobs held = emp0 x (pop / pop0) ^ e   (collapse set: 0.59 = 0.41 ^ 0.6)
+    free_land: float = 0.0            # per-capita consumption falls d x (1 - pop/pop0): free-land peasant discounts,
+                                      # upper classes dying first (calibrated)
+    yield_mult: float = 1.0           # seasonal / snapshot correction on sub_yield (calibrated)
+    ramp: float = 0.05                # staffing change per month
+    harvest: bool = True
+
+
+@dataclass
+class PopLever:
+    name: str
+    note: str
+    imports: int = 0                  # Victualler levels built at build_month
+    import_spec: str = "current"      # "current" = dead band numbers (REC), "old" = numbers of the fresh-game run
+    nobles: bool = True               # False: no noble in the location, the import never staffs
+    cookery: int = 0                  # cookery levels on Serve (1k laborers each, 27.6 Province Food per level)
+    farms: int = 0                    # extra farm levels on Provision (1k peasants each, 1.5 flat + 0.96 Provision)
+    build_month: int = 12
+    rules: dict = field(default_factory=dict)
+
+
+def import_spec(kind: str) -> ImportSpec:
+    if kind == "old":
+        return ImportSpec()
+    rec = recommended()
+    return replace(ImportSpec(), **rec.imp)
+
+
+@dataclass
+class PopRun:
+    pop: list[float]
+    months: list[float]
+    starving: list[bool]
+    import_staff: list[float]
+    import_profit: list[float]
+
+
+def simulate_pop(case: PopCase, lever: PopLever, seed: int | None, rules: PopRules | None = None,
+                 months: int = 576) -> PopRun:
+    r = replace(rules or PopRules(), **lever.rules)
+    spec = import_spec(lever.import_spec)
+    rng = random.Random(seed if seed is not None else 0)
+    N, N0 = case.pop0, case.pop0
+    C0 = case.cons_pc * N0
+    food = case.months0 * C0
+    cap = case.cap_months * C0
+    y = case.sub_yield * r.yield_mult * r.subsistence / 1.5
+    s_imp = 0.0
+    s_cook = 0.0
+    h = 0.0
+    starving = False
+    out = PopRun([], [], [], [], [])
+    for t in range(months):
+        if r.harvest and seed is not None and t % 12 == SEPTEMBER:
+            x, acc = rng.random(), 0.0
+            for v, wgt in HARVEST_CONS:
+                acc += wgt
+                if x < acc:
+                    h = v
+                    break
+        built = t >= lever.build_month
+        L = lever.imports if built else 0
+        K = lever.cookery if built else 0
+        Fm = lever.farms if built else 0
+        Lc = sum(b[2] for b in case.builds if b[1] == "import" and t >= b[0])
+        cap_c = next((b[3] for b in reversed(case.builds) if b[1] == "import" and t >= b[0]), 0.0)
+        Kc = sum(b[2] for b in case.builds if b[1] == "cookery" and t >= b[0])
+        K += Kc
+        jobs = case.emp0 * (N / N0) ** r.emp_elasticity + K * s_cook + Fm
+        workers = case.work_share * N
+        U = max(0.0, workers - min(jobs, workers))
+        cons_pc = case.cons_pc * (1.0 - r.free_land * max(0.0, 1.0 - N / N0))
+        cons = cons_pc * N * (1.0 + h * case.peasant_share) + 0.5 * K * s_cook
+        years = min(2.0, food / max(cons, 1e-9) / 12.0)
+        # Victualler: staffing ramps toward the sign of its profit per staffed level
+        pi = spec.profit(years, starving, L * s_imp, case.vprice) if L else 0.0
+        imported = min(FOOD_PER_LEVEL * (L * s_imp + Lc * cap_c), 30.0 * case.victuals_supply)
+        prod = y * U + case.fixed_food + imported + 27.6 * K * s_cook + (1.5 + 0.96) * Fm
+        food = min(cap, max(0.0, food + prod - cons))
+        starving = food <= 0.0
+        if L and lever.nobles:
+            s_imp = min(1.0, max(0.0, s_imp + (r.ramp if pi > 0 else -r.ramp)))
+        if K:
+            s_cook = min(1.0, s_cook + r.ramp)
+        g = r.growth_base + (r.starving_growth + r.starving_migration if starving
+                             else r.growth_per_year * min(2.0, food / max(cons, 1e-9) / 12.0))
+        N *= 1.0 + g / 12.0
+        out.pop.append(N)
+        out.months.append(food / max(cons, 1e-9))
+        out.starving.append(starving)
+        out.import_staff.append(s_imp)
+        out.import_profit.append(pi * L * s_imp)
+    return out
+
+
+def pop_at(run: PopRun, years: float) -> float:
+    return run.pop[min(len(run.pop), int(years * 12)) - 1]
+
+
+def pop_seeds(case: PopCase, lever: PopLever, seeds: list[int], rules: PopRules | None = None, months: int = 576):
+    return [simulate_pop(case, lever, s, rules, months) for s in seeds]
+
+
+def calibrate_pop(seeds: list[int]) -> tuple[PopRules, list]:
+    """Grid fit of emp_elasticity, free_land and yield_mult on the calibration cases (log error at 24 and 48 years)."""
+    base = PopLever("asis", "as is")
+    best = None
+    for e in (0.4, 0.6, 0.8, 1.0, 1.25, 1.5):
+        for d in (0.0, 0.2, 0.4, 0.6):
+            for ym in (0.9, 1.0, 1.1, 1.2, 1.3):
+                rules = PopRules(emp_elasticity=e, free_land=d, yield_mult=ym)
+                err = 0.0
+                for name in CALIBRATION_CASES:
+                    c = PROVINCE_CASES[name]
+                    runs = pop_seeds(c, base, seeds, rules, 576)
+                    p24 = statistics.median(pop_at(x, 24) for x in runs)
+                    p48 = statistics.median(pop_at(x, 48) for x in runs)
+                    err += math.log(p24 / c.pop1361) ** 2 + math.log(p48 / c.pop1385) ** 2
+                if best is None or err < best[0]:
+                    best = (err, rules)
+    return best[1], best
+
+
+def pop_levers() -> list[PopLever]:
+    return [
+        PopLever("a", "as is (buildings of 1337, no AI builds)"),
+        PopLever("b1-old", "Victualler 1 level, numbers of this run", imports=1, import_spec="old"),
+        PopLever("b1", "Victualler 1 level (current dead-band numbers)", imports=1),
+        PopLever("b2", "Victualler 2 levels (current)", imports=2),
+        PopLever("b4", "Victualler 4 levels (current)", imports=4),
+        PopLever("b1-nonoble", "Victualler 1 level, no noble in the location", imports=1, nobles=False),
+        PopLever("c", "cookery 1 level on Serve", cookery=1),
+        PopLever("d", "+2 farm levels on Provision", farms=2),
+        PopLever("e2.0", "subsistence define 1.5 -> 2.0", rules=dict(subsistence=2.0)),
+        PopLever("e2.5", "subsistence define 1.5 -> 2.5", rules=dict(subsistence=2.5)),
+        PopLever("f", "starving growth -0.04 -> -0.02", rules=dict(starving_growth=-0.02)),
+    ]
+
+
+def run_depop(mode: str, seeds: list[int], case_names: list[str], fixed: str | None = None) -> None:
+    def fitted() -> PopRules:
+        if fixed:
+            e, d, ym = (float(x) for x in fixed.split(","))
+            return PopRules(emp_elasticity=e, free_land=d, yield_mult=ym)
+        return calibrate_pop(seeds)[0]
+
+    if mode == "calibrate":
+        rules, best = calibrate_pop(seeds)
+        print(f"fit: emp_elasticity {rules.emp_elasticity}, free_land {rules.free_land}, yield_mult {rules.yield_mult}"
+              f" (sum of squared log errors {best[0]:.3f}, {len(seeds)} harvest seeds)")
+        print("case         pop 1337   1361 obs / sim     1385 obs / sim   R (subsistence capacity)")
+        for name in list(CALIBRATION_CASES) + ["collapse", "control"]:
+            c = PROVINCE_CASES[name]
+            runs = pop_seeds(c, PopLever("a", "as is"), seeds, rules)
+            p24 = statistics.median(pop_at(x, 24) for x in runs)
+            p48 = statistics.median(pop_at(x, 48) for x in runs)
+            R = (c.sub_yield * c.work_share * c.pop0 + c.fixed_food) / (c.cons_pc * c.pop0)
+            print(f"{name:10s} {c.pop0:8.1f}   {c.pop1361:6.1f} / {p24:6.1f}    {c.pop1385:6.1f} / {p48:6.1f}      {R:4.2f}")
+        return
+    rules = PopRules()
+    if mode.startswith("levers"):
+        rules = fitted()
+        print(f"rules: emp_elasticity {rules.emp_elasticity}, free_land {rules.free_land},"
+              f" yield_mult {rules.yield_mult}; {len(seeds)} harvest seeds, medians")
+        for name in case_names:
+            c = PROVINCE_CASES[name]
+            print(f"=== {name}: pop {c.pop0:.1f}k, consumption {c.cons_pc * c.pop0:.1f}/month,"
+                  f" balance {((c.sub_yield * (c.work_share * c.pop0 - c.emp0) + c.fixed_food) / (c.cons_pc * c.pop0) - 1):+.2f},"
+                  f" storage {c.months0:.1f} months, victuals {c.vprice:.2f}")
+            print("lever        pop 12y   24y    48y  (x start)   starving share   import staffed  import profit/mo   note")
+            for lv in pop_levers():
+                runs = pop_seeds(c, lv, seeds, rules)
+                ps = [statistics.median(pop_at(x, yy) for x in runs) for yy in (12, 24, 48)]
+                st = statistics.fmean(sum(x.starving) / len(x.starving) for x in runs)
+                si = statistics.fmean(statistics.fmean(x.import_staff[lv.build_month:]) for x in runs)
+                pr = statistics.fmean(statistics.fmean(x.import_profit[lv.build_month:]) for x in runs)
+                print(f"{lv.name:11s} {ps[0]:6.1f} {ps[1]:6.1f} {ps[2]:6.1f}  (x{ps[2] / c.pop0:4.2f})"
+                      f"      {st:5.0%}           {si:4.0%}         {pr:+6.2f}        {lv.note}")
+        return
+    if mode == "trace":
+        rules = fitted()
+        c = PROVINCE_CASES[case_names[0]]
+        for lv in pop_levers():
+            if lv.name in ("a", "b1"):
+                r = simulate_pop(c, lv, seeds[0], rules)
+                print(f"--- {c.name} {lv.name}: year, pop, stored months, starving months in year, import staffed")
+                for yy in range(0, 48, 3):
+                    sl = slice(yy * 12, yy * 12 + 12)
+                    print(f"  {yy:3d} {r.pop[yy * 12]:7.2f} {r.months[yy * 12]:6.1f} {sum(r.starving[sl]):3d}"
+                          f" {r.import_staff[yy * 12]:4.2f}")
+
+
+# ---------------------------------------------------------------------------------------------
 # reporting
 # ---------------------------------------------------------------------------------------------
 def fmt_settle(v) -> str:
@@ -558,7 +822,14 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--png", help="plot stored months for baseline vs --best on the three archetypes")
     ap.add_argument("--best", default="REC", help="scenario plotted against the baseline")
+    ap.add_argument("--depop", choices=("calibrate", "levers", "trace"),
+                    help="population loop: fit on saved provinces, lever table, or a trace")
+    ap.add_argument("--case", default="collapse", help="comma list of PROVINCE_CASES for --depop levers/trace")
+    ap.add_argument("--pop-rules", help="skip the fit: emp_elasticity,free_land,yield_mult (e.g. 0.6,0.4,1.0)")
     args = ap.parse_args()
+    if args.depop:
+        run_depop(args.depop, list(range(1, args.seeds + 1)), args.case.split(","), args.pop_rules)
+        return
     ov = merge(REGIMES[args.regime], parse_sets(args.set))
     seeds = list(range(1, args.seeds + 1))
     scs = {s.name: s for s in scenarios()}

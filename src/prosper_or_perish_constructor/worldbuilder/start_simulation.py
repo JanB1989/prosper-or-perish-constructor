@@ -273,6 +273,12 @@ class Simulation:
             for r in locations.iter_rows(named=True)
             if r["location_tag"] in owners
         }
+        # unowned land (tribal mostly): only the validator's tribesmen pools read it (food_sim.unowned_pools)
+        self.unowned_locations = {
+            r["location_tag"]: r
+            for r in locations.iter_rows(named=True)
+            if r["location_tag"] not in owners and pops.get(r["location_tag"])
+        }
         self.markets = market_centres
         self.raw = {
             key: rules.modifiers(key, "raw_modifier") for key in rules.buildings

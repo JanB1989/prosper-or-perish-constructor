@@ -14,9 +14,13 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   (``tribesmen_food`` per 1,000, the pop type's ``pop_food_consumption``; negative = they feed the province). A
   province whose total consumption is zero or below gets no storage growth bonus (engine, verified 2026-09-25);
 * tribesmen (engine, verified 2026-09-25): the location growth below also carries ``tribal_growth`` x tribal share for
-  every pop; when it is positive tribesmen are born at it x the free-land factor max(0, 1 - ``tribal_land_slope`` x
-  pop / capacity) (``global_tribesmen_pop_growth = -1`` + ``local_tribesmen_pop_growth = 1`` in the scaled free-land
-  modifiers; slope fitted on the 1345 save), when it is negative they lose it unscaled like every pop type;
+  every pop; when it is positive tribesmen are born at it x ``tribal_land_births`` (0.19) x the free-land factor
+  max(0, 1 - ``tribal_land_slope`` x pop / capacity) (the ranks' ``local_tribesmen_pop_growth = -1`` + 0.19 in the
+  scaled free-land modifiers since 2026-09-26; slope fitted on the 1345 save), when it is negative they lose it
+  unscaled like every pop type;
+* unowned tribal land (owner ``---``, one pool per province, no buildings or markets) runs the same tribesmen rule;
+  ``unowned_brake = false`` reproduces the engine before 2026-09-26, when the brake was a country modifier and unowned
+  land got births x (1 + the free-land share) (tribesmen ~ +1 %/yr there);
 * farms, villages and orchards run Provisioning from month 6 while the store is below ~11 months (their Sell leg
   pays above that); Cookshops serve every dish as Province Food from month 1 (they make no victuals);
 * Taverns and Victualling Yards ramp their staffing 0.15 a month toward the sign of their profit per level at the
@@ -80,6 +84,8 @@ class SimRules:
     # tribesmen (pp_pop_adjustments.txt, pp_capacity_pressure_effects.txt, pp_country_base_values.txt)
     tribal_growth: float = 0.012        # pop_percentage_impact local_population_growth (every pop in the location)
     tribal_land_slope: float = 0.75     # free-land factor 1 - slope x pop / capacity (1345 save: 0.75 at start capacity)
+    tribal_land_births: float = 0.19    # local_tribesmen_pop_growth of the free-land modifiers (rank brake -1.0)
+    unowned_brake: bool = True          # the rank brake also holds on unowned land (false: the pre-2026-09-26 country brake)
     tribal_feeding: float = 0.0         # -pop_percentage_impact local_pop_food_consumption (0 = the tribe feeds nobody)
     tribal_tavern_premium: float = 0.0  # pop_percentage_impact local_province_food_purchase_output_modifier (mod: none;
                                         # -16 tested 2026-09-25: tribal pools starving 38 -> 92, rejected)
@@ -233,11 +239,15 @@ def fed_share(p: Pool, n: float, t: float, share0: float, rules: SimRules) -> fl
     return min(1.0, rules.tribal_feeding * p.tribal_fed_share * share / share0)
 
 
+UNOWNED = "---"
+
+
 def free_land_factor(p: Pool, pop: float, rules: SimRules) -> float:
-    """Tribesmen birth multiplier: -100 % (country) + 100 % x the engine-scaled free-land modifiers."""
-    if p.pop_capacity <= 0:
-        return 0.0
-    return max(0.0, min(1.0, 1.0 - rules.tribal_land_slope * pop / p.pop_capacity))
+    """Tribesmen birth multiplier: -100 % (rank) + ``tribal_land_births`` x the engine-scaled free-land modifiers. Unowned
+    land without the brake (the old country modifier) keeps its +100 %."""
+    free = max(0.0, min(1.0, 1.0 - rules.tribal_land_slope * pop / p.pop_capacity)) if p.pop_capacity > 0 else 0.0
+    brake = 1.0 if (p.owner != UNOWNED or rules.unowned_brake) else 0.0
+    return (1.0 - brake) + rules.tribal_land_births * free
 
 
 def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
@@ -421,6 +431,11 @@ def summarize(rows: list[dict[str, Any]], rules: SimRules) -> dict[str, Any]:
         "tribal_pools": sum(1 for r in rows if r["tribal"]),
         "tribal_pools_starving": sum(1 for r in rows if r["tribal"] and r["months_starving"] > 0),
         "tribal_pools_collapsing": sum(1 for r in rows if r["tribal"] and r["collapsing"]),
+        "unowned_pools": sum(1 for r in rows if r["owner"] == UNOWNED),
+        "unowned_tribesmen_start_k": round(ut := sum(r["tribesmen_start_k"] for r in rows if r["owner"] == UNOWNED)),
+        "unowned_tribesmen_change": round(sum(r["tribesmen_end_k"] for r in rows if r["owner"] == UNOWNED) / ut - 1.0, 4) if ut else None,
+        "owned_tribesmen_change": round(sum(r["tribesmen_end_k"] for r in rows if r["owner"] != UNOWNED)
+                                        / max(1e-9, sum(r["tribesmen_start_k"] for r in rows if r["owner"] != UNOWNED)) - 1.0, 4),
         "migration": bool(rules.migration),
         "migrated_k": round(sum(r.get("migrated_out_k", 0.0) for r in rows), 1),
         "note": "population loop from the planned start (seeded harvest rolls); report only",
@@ -582,6 +597,50 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
             pop_capacity=capacity, attraction_fixed=fixed / len(tags) if tags else 0.1,
             type_shares={k: v / sum(by_type.values()) for k, v in by_type.items()} if by_type else {},
             religion=max(religions, key=religions.get) if religions else "",
+        ))
+    out.extend(unowned_pools(sim))
+    return out
+
+
+def unowned_pools(sim) -> list[Pool]:
+    """One pool per province of unowned land (tribal land mostly): its pops from the setup, population capacity from the
+    World Builder attribute rows, no buildings, jobs or markets."""
+    from .start_food_model_v2 import food_capacity
+
+    rows = getattr(sim, "unowned_locations", {}) or {}
+    by_province: dict[str, list[str]] = defaultdict(list)
+    for tag, loc in rows.items():
+        if sim.pops.get(tag):
+            by_province[str(loc.get("province") or tag)].append(tag)
+    tribesmen_food = float(sim.food.get("tribesmen", 0.0))
+    out = []
+    for province, tags in sorted(by_province.items()):
+        tribesmen = settled = workers = peasant_food = capacity_k = 0.0
+        cap_rows = []
+        for tag in tags:
+            for pop in sim.pops.get(tag, []):
+                if pop.type == "tribesmen":
+                    tribesmen += pop.size_k
+                else:
+                    settled += pop.size_k * float(sim.food.get(pop.type, 0.0))
+                    if pop.type in ("peasants", "slaves"):
+                        workers += pop.size_k
+                    if pop.type == "peasants":
+                        peasant_food += pop.size_k * float(sim.food.get("peasants", 0.0))
+            target = sim.targets.get(tag, {})
+            capacity_k += float(target.get("attribute_flat_people") or 0.0) / 1000.0
+            cap_rows.append((float(target.get("development") or 0.0), sum(p.size_k for p in sim.pops.get(tag, [])), "rural_settlement"))
+        pop0 = sum(p.size_k for t in tags for p in sim.pops.get(t, []))
+        if pop0 <= 0:
+            continue
+        food_cap = food_capacity(cap_rows, sim.food_model)
+        out.append(Pool(
+            owner=UNOWNED, province=province, catchment=UNOWNED, pop0=pop0, tribesmen=tribesmen, demand0=settled,
+            workers0=workers, jobs0=0.0, yield_=float(sim.rules.subsistence), flat_food=0.0, provision_food=0.0,
+            serve_food=0.0, cookshop_levels=0.0, taverns=0.0, yards=0.0, capacity=food_cap,
+            start_food=sim.food_model.start_food_share * food_cap, victuals_demand=0.0,
+            peasant_share=peasant_food / settled if settled > 1e-9 else 0.0, tribesmen_food=tribesmen_food,
+            n_locations=float(len(tags)), pop_capacity=capacity_k,
         ))
     return out
 

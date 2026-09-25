@@ -5,11 +5,9 @@ TRY_INJECT:country_base_values = {
 	global_province_food_sales_output_modifier = -1.0 # storage leg of the farms' Sell the Surplus and the Victualling Yard: zero output at 0 months, 16x at the 24-month cap (slope +8.0 per stored year)
 	global_province_food_purchase_output_modifier = 15.0 # import storage leg: 16x output at 0 months, zero at the 24-month cap (slope -8.0 per stored year)
 	global_offset_output_modifier = 19.0 # steady leg of the import market: 20x on a tiny amount so production efficiency barely moves it
-	# Tribesmen grow with free land only: -100 % of the location growth here, +100 % x free-land share back in the
-	# abundant/available_free_land static modifiers (pp_capacity_pressure_effects.txt). The growth they multiply
-	# comes from their own pop_percentage_impact (pp_pop_adjustments.txt), so food storage, starvation and ranks
-	# no longer move tribesmen births. Verified 2026-09-25: the per-type modifier multiplies that type's births.
-	global_tribesmen_pop_growth = -1.0
+	# Tribesmen grow with free land only: the -100 % birth brake is a location rank modifier since 2026-09-26
+	# (pp_location_rank_adjustments.txt), because a country modifier never reached unowned tribal land, where
+	# tribesmen grew ~1 %/yr (47M -> 186M in 1352-1482 in a test campaign).
 	food_purchase_efficiency = 10000 # markets hold no food, so the food slider only bills unmet demand; this makes that bill ~0
 	# Exploration. Monthly progress = explorer speed x exploration_mission_speed_modifier, and vanilla's only source of that
 	# modifier is the exploration slider (exploration_maintenance_mod, +100 % x slider). AI saving mode cuts the slider to 0,

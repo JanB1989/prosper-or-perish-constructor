@@ -99,3 +99,36 @@ def test_tribal_share_can_cut_the_scarcity_premium():
     assert rules.tavern_profit(0.0, False, 1.0, 1.0) < fs.SimRules().tavern_profit(0.0, False, 1.0, 1.0)
     assert rules.tavern_profit(0.0, True, 1.0, 0.6) > 0                 # a starving tribal province still imports
     assert fs.SimRules().tavern_profit(0.0, False, 1.0, 1.0) == fs.SimRules().tavern_profit(0.0, False, 1.0)
+
+
+def _unowned_tribe(capacity_k):
+    """10k tribesmen on unowned land (feeding themselves), no settled pops."""
+    return fs.Pool(owner=fs.UNOWNED, province="steppe", catchment=fs.UNOWNED, pop0=10.0, tribesmen=10.0, demand0=0.0,
+                   workers0=0.0, jobs0=0.0, yield_=1.5, flat_food=0.0, provision_food=0.0, serve_food=0.0,
+                   cookshop_levels=0.0, taverns=0.0, yards=0.0, capacity=500.0, start_food=50.0, victuals_demand=0.0,
+                   tribesmen_food=-1.0, pop_capacity=capacity_k)
+
+
+def test_tribesmen_grow_at_most_about_015_percent_a_year_even_on_unowned_land():
+    rules = fs.SimRules(harvest=False, months=120)
+    empty = fs.simulate([_unowned_tribe(1000.0)], rules)[0]
+    full = fs.simulate([_unowned_tribe(10.0 * 0.75)], rules)[0]        # where the free-land factor 1 - 0.75 pop/cap is 0
+    yearly = (empty["tribesmen_end_k"] / 10.0) ** (1 / 10) - 1
+    assert 0.0005 < yearly <= 0.0016                                  # ~0.14 %/yr on empty land
+    assert abs(full["tribesmen_end_k"] - 10.0) < 1e-6                  # no births at capacity
+    # the engine before 2026-09-26 (brake as a country modifier): unowned tribesmen grew ~1 %/yr
+    old = fs.simulate([_unowned_tribe(1000.0)], fs.SimRules(harvest=False, months=120, unowned_brake=False, tribal_land_births=1.0))[0]
+    assert (old["tribesmen_end_k"] / 10.0) ** (1 / 10) - 1 > 0.01
+
+
+def test_the_tribesmen_birth_brake_is_a_rank_modifier_not_a_country_one():
+    from pathlib import Path
+
+    mod = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    ranks = (mod / "in_game/common/location_ranks/pp_location_rank_adjustments.txt").read_text(encoding="utf-8-sig")
+    country = (mod / "in_game/common/auto_modifiers/pp_country_base_values.txt").read_text(encoding="utf-8-sig")
+    land = (mod / "main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt").read_text(encoding="utf-8-sig")
+    assert ranks.count("local_tribesmen_pop_growth = -1.0") == 4          # every rank, so unowned land too
+    assert "global_tribesmen_pop_growth" not in country.split("# (pp_location_rank_adjustments.txt)")[-1]
+    assert not any(l.strip().startswith("global_tribesmen_pop_growth") for l in country.splitlines())
+    assert land.count("local_tribesmen_pop_growth = 0.19") == 2

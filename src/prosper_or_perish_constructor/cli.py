@@ -1053,7 +1053,9 @@ def _print_food_sim(repo: Path) -> None:
     print(
         f"Start food validator ({s.get('months')} months): {s.get('collapsing_food_pools')} of {s.get('food_pools')} food pools "
         f"lose >= 25 % ({s.get('collapsing_pools')} of all {s.get('pools')}), {s.get('pinned_pools')} pinned at the storage "
-        f"cap, world population {100 * (s.get('world_pop_change') or 0):+.2f} %; report {OUTPUT_RELATIVE_PATH / 'pools.csv'}.",
+        f"cap, world population {100 * (s.get('world_pop_change') or 0):+.2f} %, tribesmen owned "
+        f"{100 * (s.get('owned_tribesmen_change') or 0):+.2f} % / unowned {100 * (s.get('unowned_tribesmen_change') or 0):+.2f} %; "
+        f"report {OUTPUT_RELATIVE_PATH / 'pools.csv'}.",
         flush=True,
     )
 

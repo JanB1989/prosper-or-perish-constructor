@@ -242,8 +242,9 @@ seeded harvest roll (peasant consumption +0.30..-0.30), growth -0.0048 + 0.0086
 x stored years (starving: -0.056). Tribesmen (engine rules verified 2026-09-25):
 the food of their pop type (-1 per 1k: they feed the province) enters the
 province consumption, every pop gets +0.012 x the tribal share, tribesmen are
-born at the positive location growth x the free-land factor 1 - 0.75 x pop /
-capacity and lose negative growth unscaled like everyone; a province with zero
+born at the positive location growth x 0.19 x the free-land factor 1 - 0.75 x pop /
+capacity (since 2026-09-26: the -100 % brake is a rank modifier, so it also holds on unowned land, which the
+validator runs as its own pools; before, unowned tribesmen grew ~1 %/yr) and lose negative growth unscaled like everyone; a province with zero
 or negative consumption gets no storage growth bonus. It reports the
 pools that lose >= 25 % (food pools: tribesmen < 50 %), the pools pinned at the
 storage cap (24 months or full) for more than 48 months, the world population

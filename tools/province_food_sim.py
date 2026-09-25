@@ -28,7 +28,8 @@ Run:
   uv run python tools/province_food_sim.py --trace base pair --seed 1
   uv run python tools/province_food_sim.py --sweep --set import.prem_amount=0.75 --set export.offset_cost=12.5
   uv run python tools/province_food_sim.py --depop calibrate --seeds 16      (population loop, see PopRules)
-  uv run python tools/province_food_sim.py --depop levers --case collapse,control --seeds 16
+  uv run python tools/province_food_sim.py --depop levers --case pre_collapse,pre_control --pop-years 8,24
+  (--calib plague reproduces the first fit on the plague-culled 1361/1385 endpoints)
 """
 from __future__ import annotations
 
@@ -518,6 +519,18 @@ def lever_scenarios() -> list[Scenario]:
 #   -0.004 rank), plus some out-migration.
 # * collapse provinces keep their jobs while the subsistence farmers die: 1337->1361 pop x0.41, unemployed
 #   x0.23, employed x0.59 -> the employment elasticity below.
+#
+# Recalibrated 2026-09-25 on PRE-PLAGUE saves of the same game (1337.4 / 1341.3 / 1345.3; the Black Death spawns
+# after 1346.1, so the 1361/1385 endpoints above are plague-culled and must not be used for calibration):
+# * not starving: yearly growth -0.0048 + 0.0086 x stored years (+0.002 x prosperity), 2,500 pools, R2 0.52;
+#   starving: Starvation -0.043/yr flat (any deficit above ~8 %), net migration -0.012/yr.
+# * subsistence 1.44..1.45 per 1k unemployed worker (R2 0.94..0.97).
+# * pools that lost >= 25 % by 1345 (food pools): jobs fall with elasticity ~0.44 to pop, consumption per head
+#   x0.875 at pop x0.67 (upper classes flee/starve first: nobles -65 %, burghers -60 %, laborers -51 %,
+#   peasants -21 %) -> free_land ~0.4.
+# * nobles leave starving pools: 3 % of loser pools had no noble at 1337, 30 % at 1341, 40 % at 1345 (control
+#   pools 0 / 1 / 2 %). A Victualler (pop_type nobles, 1 pop per level) in such a pool cannot staff:
+#   noble_hazard = chance per starving year that the pool loses its last noble (fit to 30 % after 4 years).
 # ---------------------------------------------------------------------------------------------
 HARVEST_CONS = ((0.30, 0.05), (0.20, 0.10), (0.11, 0.15), (0.0, 0.40), (-0.11, 0.15), (-0.20, 0.10), (-0.30, 0.05))
 # pp_harvest_<region>_<quality>: local_peasants_food_consumption +0.30 (abysmal) .. -0.30 (bountiful), rolled
@@ -541,6 +554,10 @@ class PopCase:
     pop1385: float | None = None
     peasant_share: float = 0.6      # share of consumption that the harvest shock moves
     builds: tuple = ()              # AI builds seen in the later saves: (month, "import"|"cookery", levels, staffed share)
+    obs: tuple = ()                 # observed endpoints ((years, pop k), ...); empty -> (24, pop1361), (48, pop1385)
+
+    def endpoints(self) -> tuple:
+        return self.obs or ((24, self.pop1361), (48, self.pop1385))
 
 
 # per-province inputs from ~/scratch/switch/depop_b_inputs.py (save nb = 1337.4.1, final build)
@@ -562,20 +579,51 @@ PROVINCE_CASES = {
     "pocutia": PopCase("pocutia", 26.08, 1.323, 0.976, 18.63, 2.443, 4.5, 7.27, 72.7, 2.18, 18.0, 23.59, 27.4,
                        builds=((72, "cookery", 2, 1.0), (432, "cookery", 2, 1.0))),
 }
-CALIBRATION_CASES = ("penza", "finland", "kremenets", "pocutia")
+CALIBRATION_CASES = ("penza", "finland", "kremenets", "pocutia")   # plague-culled endpoints: do not calibrate on
+
+
+def _pre(name, pop0, cons_pc, work_share, emp0, sub_yield, fixed_food, months0, cap_months, vprice, supply,
+         pop41, pop45, peasant_share, provision=0.0, serve=0.0) -> PopCase:
+    # provision / serve: farm levels switching to Provision and standing cookeries switching to Serve by 1341
+    # (seen in the 1341 save; month 6 assumed)
+    builds = tuple(b for b in ((6, "provision", provision, 1.0), (6, "serve", serve, 1.0)) if b[2])
+    return PopCase(name, pop0, cons_pc, work_share, emp0, sub_yield, fixed_food, months0, cap_months, vprice, supply,
+                   peasant_share=peasant_share, builds=builds, obs=((4, pop41), (8, pop45)))
+
+
+# pre-plague pool inputs from ~/scratch/switch/pre_inputs.py (pools = province x owner, same owner and locations
+# 1337.4 / 1341.3 / 1345.3; endpoints at 4 and 8 years)
+PRE_CASES = {
+    # medians of the 223 food pools that lost >= 25 % by 1345 (pop x0.816 by 1341, x0.672 by 1345)
+    "pre_collapse": _pre("pre_collapse", 17.64, 1.306, 0.941, 0.464 * 17.64, 1.065, 0.0, 4.62, 52.1, 2.36, 17.1,
+                         17.64 * 0.816, 17.64 * 0.672, 0.24, provision=1.0, serve=0.04),
+    # medians of the matched controls (pop within +-5 % by 1345)
+    "pre_control": _pre("pre_control", 17.64, 1.285, 0.98, 0.548 * 17.64, 1.993, 3.0, 4.36, 47.1, 2.24, 39.7,
+                        17.64 * 1.002, 17.64 * 1.004, 0.59, provision=1.8, serve=0.13),
+    # collapsing pools (no Victualler / Serve built by 1345)
+    "saratov": _pre("saratov", 39.35, 0.9451, 0.986, 10.49, 0.287, 1.5, 6.36, 63.6, 2.25, 1.7, 32.37, 26.15, 0.153, provision=1),
+    "hanyang": _pre("hanyang", 52.53, 2.3857, 0.865, 23.05, 1.237, 11.88, 2.21, 22.1, 2.78, 87.8, 42.04, 29.82, 0.283, provision=2),
+    # stable pools with a structural deficit at 1337
+    "wielun": _pre("wielun", 37.65, 1.2764, 0.971, 24.65, 1.026, 21.0, 4.75, 47.5, 2.18, 21.3, 37.59, 39.17, 0.638, serve=1),
+    "lutsk": _pre("lutsk", 54.86, 1.2932, 0.979, 39.11, 0.643, 28.38, 5.72, 57.2, 2.21, 28.9, 55.44, 56.86, 0.574, provision=6, serve=1),
+}
+PROVINCE_CASES.update(PRE_CASES)
+PRE_CALIBRATION_CASES = ("saratov", "hanyang", "wielun", "lutsk")
 
 
 @dataclass
 class PopRules:
     subsistence: float = 1.5          # NLocation SUBSISTENCE_AGRICULTURE; sub_yield scales with subsistence / 1.5
-    growth_base: float = -0.004       # yearly (location rank term); fitted intercept -0.004..-0.005
-    growth_per_year: float = 0.0075   # positive_province_food_growth per stored year (cap 2 years)
+    growth_base: float = -0.0048      # yearly (location rank term); pre-plague fit -0.0048..-0.0049
+    growth_per_year: float = 0.0086   # positive_province_food_growth per stored year (cap 2 years); pre-plague fit
     starving_growth: float = -0.04    # province_starving local_population_growth
-    starving_migration: float = -0.005  # yearly net out-migration while starving (migration attraction -7.5)
-    emp_elasticity: float = 0.6       # jobs held = emp0 x (pop / pop0) ^ e   (collapse set: 0.59 = 0.41 ^ 0.6)
-    free_land: float = 0.0            # per-capita consumption falls d x (1 - pop/pop0): free-land peasant discounts,
-                                      # upper classes dying first (calibrated)
-    yield_mult: float = 1.0           # seasonal / snapshot correction on sub_yield (calibrated)
+    starving_migration: float = -0.012  # yearly net out-migration while starving (pre-plague median -0.012 / -0.008)
+    noble_hazard: float = 0.09        # chance per starving year that the pool loses its last noble (pre-plague fit)
+    emp_elasticity: float = 0.5       # jobs held = emp0 x (pop / pop0) ^ e   (pre-plague loser pools 0.44..0.59)
+    free_land: float = 0.4            # per-capita consumption falls d x (1 - pop/pop0): upper classes flee and
+                                      # starve first (pre-plague loser pools: x0.875 at pop x0.67 -> 0.38)
+    yield_mult: float = 1.5           # correction on the 1337 snapshot's sub_yield (pre-plague fit 1.5: the loser
+                                      # pools' food per subsistence worker rose 1.07 -> 1.68 by 1345)
     ramp: float = 0.05                # staffing change per month
     harvest: bool = True
 
@@ -587,6 +635,8 @@ class PopLever:
     imports: int = 0                  # Victualler levels built at build_month
     import_spec: str = "current"      # "current" = dead band numbers (REC), "old" = numbers of the fresh-game run
     nobles: bool = True               # False: no noble in the location, the import never staffs
+    staff_pop: str = "nobles"         # "nobles": staffing stops once starvation drove the last noble out
+                                      # (PopRules.noble_hazard); "peasants": pop_type peasants, staff always there
     cookery: int = 0                  # cookery levels on Serve (1k laborers each, 27.6 Province Food per level)
     farms: int = 0                    # extra farm levels on Provision (1k peasants each, 1.5 flat + 0.96 Provision)
     build_month: int = 12
@@ -614,6 +664,8 @@ def simulate_pop(case: PopCase, lever: PopLever, seed: int | None, rules: PopRul
     r = replace(rules or PopRules(), **lever.rules)
     spec = import_spec(lever.import_spec)
     rng = random.Random(seed if seed is not None else 0)
+    rng_nob = random.Random(7919 * (seed if seed is not None else 0) + 1)   # own stream: levers stay paired
+    has_nobles = True
     N, N0 = case.pop0, case.pop0
     C0 = case.cons_pc * N0
     food = case.months0 * C0
@@ -640,6 +692,10 @@ def simulate_pop(case: PopCase, lever: PopLever, seed: int | None, rules: PopRul
         cap_c = next((b[3] for b in reversed(case.builds) if b[1] == "import" and t >= b[0]), 0.0)
         Kc = sum(b[2] for b in case.builds if b[1] == "cookery" and t >= b[0])
         K += Kc
+        # method switches of buildings standing at 1337 (setup runs every farm on Sell and no cookery on Serve;
+        # by 1341 58 % of farm levels run Provision): food only, their jobs are already in emp0
+        switched = sum(b[2] * (0.96 if b[1] == "provision" else 27.6) for b in case.builds
+                       if b[1] in ("provision", "serve") and t >= b[0])
         jobs = case.emp0 * (N / N0) ** r.emp_elasticity + K * s_cook + Fm
         workers = case.work_share * N
         U = max(0.0, workers - min(jobs, workers))
@@ -649,11 +705,16 @@ def simulate_pop(case: PopCase, lever: PopLever, seed: int | None, rules: PopRul
         # Victualler: staffing ramps toward the sign of its profit per staffed level
         pi = spec.profit(years, starving, L * s_imp, case.vprice) if L else 0.0
         imported = min(FOOD_PER_LEVEL * (L * s_imp + Lc * cap_c), 30.0 * case.victuals_supply)
-        prod = y * U + case.fixed_food + imported + 27.6 * K * s_cook + (1.5 + 0.96) * Fm
+        prod = y * U + case.fixed_food + switched + imported + 27.6 * K * s_cook + (1.5 + 0.96) * Fm
         food = min(cap, max(0.0, food + prod - cons))
         starving = food <= 0.0
-        if L and lever.nobles:
+        if starving and has_nobles and seed is not None and rng_nob.random() < r.noble_hazard / 12.0:
+            has_nobles = False
+        staffable = lever.nobles and (lever.staff_pop == "peasants" or has_nobles)
+        if L and staffable:
             s_imp = min(1.0, max(0.0, s_imp + (r.ramp if pi > 0 else -r.ramp)))
+        elif L:
+            s_imp = max(0.0, s_imp - r.ramp)
         if K:
             s_cook = min(1.0, s_cook + r.ramp)
         g = r.growth_base + (r.starving_growth + r.starving_migration if starving
@@ -675,21 +736,30 @@ def pop_seeds(case: PopCase, lever: PopLever, seeds: list[int], rules: PopRules 
     return [simulate_pop(case, lever, s, rules, months) for s in seeds]
 
 
-def calibrate_pop(seeds: list[int]) -> tuple[PopRules, list]:
-    """Grid fit of emp_elasticity, free_land and yield_mult on the calibration cases (log error at 24 and 48 years)."""
+def calibration_set(name: str) -> tuple:
+    return PRE_CALIBRATION_CASES if name == "pre" else CALIBRATION_CASES
+
+
+def calibrate_pop(seeds: list[int], cases: tuple = PRE_CALIBRATION_CASES) -> tuple[PopRules, list]:
+    """Grid fit of emp_elasticity, free_land and yield_mult on the calibration cases (squared log error at each
+    observed endpoint; pre-plague cases: 4 and 8 years, plague-era cases: 24 and 48 years)."""
     base = PopLever("asis", "as is")
     best = None
-    for e in (0.4, 0.6, 0.8, 1.0, 1.25, 1.5):
-        for d in (0.0, 0.2, 0.4, 0.6):
-            for ym in (0.9, 1.0, 1.1, 1.2, 1.3):
+    # over 8 years the fit is flat in emp_elasticity and free_land (collapsing pools starve all along; SSE 0.0178
+    # anywhere in e 0.5..2, d 0..0.8), so the pre-plague fit pins them to the values measured in the loser set
+    # (jobs elasticity 0.44..0.59, consumption per head x0.875 at pop x0.67) and fits yield_mult only
+    pre = cases == PRE_CALIBRATION_CASES
+    for e in ((0.5,) if pre else (0.2, 0.4, 0.6, 0.8, 1.0, 1.25)):
+        for d in ((0.4,) if pre else (0.0, 0.2, 0.4, 0.6)):
+            for ym in (0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8):
                 rules = PopRules(emp_elasticity=e, free_land=d, yield_mult=ym)
                 err = 0.0
-                for name in CALIBRATION_CASES:
+                for name in cases:
                     c = PROVINCE_CASES[name]
-                    runs = pop_seeds(c, base, seeds, rules, 576)
-                    p24 = statistics.median(pop_at(x, 24) for x in runs)
-                    p48 = statistics.median(pop_at(x, 48) for x in runs)
-                    err += math.log(p24 / c.pop1361) ** 2 + math.log(p48 / c.pop1385) ** 2
+                    horizon = int(max(yy for yy, _ in c.endpoints()) * 12)
+                    runs = pop_seeds(c, base, seeds, rules, horizon)
+                    for yy, obs in c.endpoints():
+                        err += math.log(statistics.median(pop_at(x, yy) for x in runs) / obs) ** 2
                 if best is None or err < best[0]:
                     best = (err, rules)
     return best[1], best
@@ -703,6 +773,14 @@ def pop_levers() -> list[PopLever]:
         PopLever("b2", "Victualler 2 levels (current)", imports=2),
         PopLever("b4", "Victualler 4 levels (current)", imports=4),
         PopLever("b1-nonoble", "Victualler 1 level, no noble in the location", imports=1, nobles=False),
+        PopLever("b1-peas", "Victualler 1 level, pop_type peasants (staff always available)", imports=1,
+                 staff_pop="peasants"),
+        PopLever("b2-peas", "Victualler 2 levels, pop_type peasants", imports=2, staff_pop="peasants"),
+        # AI timing seen pre-plague: queued once storage runs low (~month 5), 365-day build that stalls on missing
+        # lumber / masonry / tools (median progress 45 %; 48 of 260 queued by 1341 unfinished in 1345) -> month 30
+        PopLever("b1-ai", "Victualler 1 level at month 30 (AI timing), nobles", imports=1, build_month=30),
+        PopLever("b1-ai-peas", "Victualler 1 level at month 30, pop_type peasants", imports=1, build_month=30,
+                 staff_pop="peasants"),
         PopLever("c", "cookery 1 level on Serve", cookery=1),
         PopLever("d", "+2 farm levels on Provision", farms=2),
         PopLever("e2.0", "subsistence define 1.5 -> 2.0", rules=dict(subsistence=2.0)),
@@ -711,45 +789,52 @@ def pop_levers() -> list[PopLever]:
     ]
 
 
-def run_depop(mode: str, seeds: list[int], case_names: list[str], fixed: str | None = None) -> None:
+def run_depop(mode: str, seeds: list[int], case_names: list[str], fixed: str | None = None,
+              calib: str = "pre", years: tuple = (12, 24, 48)) -> None:
+    cases = calibration_set(calib)
+
     def fitted() -> PopRules:
         if fixed:
             e, d, ym = (float(x) for x in fixed.split(","))
             return PopRules(emp_elasticity=e, free_land=d, yield_mult=ym)
-        return calibrate_pop(seeds)[0]
+        return calibrate_pop(seeds, cases)[0]
 
     if mode == "calibrate":
-        rules, best = calibrate_pop(seeds)
-        print(f"fit: emp_elasticity {rules.emp_elasticity}, free_land {rules.free_land}, yield_mult {rules.yield_mult}"
-              f" (sum of squared log errors {best[0]:.3f}, {len(seeds)} harvest seeds)")
-        print("case         pop 1337   1361 obs / sim     1385 obs / sim   R (subsistence capacity)")
-        for name in list(CALIBRATION_CASES) + ["collapse", "control"]:
+        rules, best = calibrate_pop(seeds, cases)
+        print(f"fit on {calib} cases {cases}: emp_elasticity {rules.emp_elasticity}, free_land {rules.free_land},"
+              f" yield_mult {rules.yield_mult} (sum of squared log errors {best[0]:.3f}, {len(seeds)} harvest seeds)")
+        print("case           pop 1337   endpoints: years obs / sim ...                    R (subsistence capacity)")
+        extra = ["pre_collapse", "pre_control"] if calib == "pre" else ["collapse", "control"]
+        for name in list(cases) + extra:
             c = PROVINCE_CASES[name]
-            runs = pop_seeds(c, PopLever("a", "as is"), seeds, rules)
-            p24 = statistics.median(pop_at(x, 24) for x in runs)
-            p48 = statistics.median(pop_at(x, 48) for x in runs)
+            horizon = int(max(yy for yy, _ in c.endpoints()) * 12)
+            runs = pop_seeds(c, PopLever("a", "as is"), seeds, rules, horizon)
+            cells = "   ".join(f"{yy:>2}y {obs:6.1f} / {statistics.median(pop_at(x, yy) for x in runs):6.1f}"
+                               for yy, obs in c.endpoints())
             R = (c.sub_yield * c.work_share * c.pop0 + c.fixed_food) / (c.cons_pc * c.pop0)
-            print(f"{name:10s} {c.pop0:8.1f}   {c.pop1361:6.1f} / {p24:6.1f}    {c.pop1385:6.1f} / {p48:6.1f}      {R:4.2f}")
+            print(f"{name:13s} {c.pop0:8.1f}   {cells}      {R:4.2f}")
         return
     rules = PopRules()
     if mode.startswith("levers"):
         rules = fitted()
+        horizon = int(max(years) * 12)
         print(f"rules: emp_elasticity {rules.emp_elasticity}, free_land {rules.free_land},"
-              f" yield_mult {rules.yield_mult}; {len(seeds)} harvest seeds, medians")
+              f" yield_mult {rules.yield_mult}, noble_hazard {rules.noble_hazard}; {len(seeds)} harvest seeds, medians")
         for name in case_names:
             c = PROVINCE_CASES[name]
             print(f"=== {name}: pop {c.pop0:.1f}k, consumption {c.cons_pc * c.pop0:.1f}/month,"
                   f" balance {((c.sub_yield * (c.work_share * c.pop0 - c.emp0) + c.fixed_food) / (c.cons_pc * c.pop0) - 1):+.2f},"
                   f" storage {c.months0:.1f} months, victuals {c.vprice:.2f}")
-            print("lever        pop 12y   24y    48y  (x start)   starving share   import staffed  import profit/mo   note")
+            print("lever      " + "".join(f"  pop {yy:>2}y" for yy in years)
+                  + "  (x start)  starving share  import staffed  import profit/mo   note")
             for lv in pop_levers():
-                runs = pop_seeds(c, lv, seeds, rules)
-                ps = [statistics.median(pop_at(x, yy) for x in runs) for yy in (12, 24, 48)]
+                runs = pop_seeds(c, lv, seeds, rules, horizon)
+                ps = [statistics.median(pop_at(x, yy) for x in runs) for yy in years]
                 st = statistics.fmean(sum(x.starving) / len(x.starving) for x in runs)
                 si = statistics.fmean(statistics.fmean(x.import_staff[lv.build_month:]) for x in runs)
                 pr = statistics.fmean(statistics.fmean(x.import_profit[lv.build_month:]) for x in runs)
-                print(f"{lv.name:11s} {ps[0]:6.1f} {ps[1]:6.1f} {ps[2]:6.1f}  (x{ps[2] / c.pop0:4.2f})"
-                      f"      {st:5.0%}           {si:4.0%}         {pr:+6.2f}        {lv.note}")
+                print(f"{lv.name:10s} " + "".join(f"  {p:8.1f}" for p in ps) + f"   (x{ps[-1] / c.pop0:4.2f})"
+                      f"      {st:5.0%}          {si:4.0%}          {pr:+6.2f}        {lv.note}")
         return
     if mode == "trace":
         rules = fitted()
@@ -826,9 +911,13 @@ def main() -> None:
                     help="population loop: fit on saved provinces, lever table, or a trace")
     ap.add_argument("--case", default="collapse", help="comma list of PROVINCE_CASES for --depop levers/trace")
     ap.add_argument("--pop-rules", help="skip the fit: emp_elasticity,free_land,yield_mult (e.g. 0.6,0.4,1.0)")
+    ap.add_argument("--calib", default="pre", choices=("pre", "plague"),
+                    help="calibration cases: pre-plague pools (4/8-year endpoints) or the plague-era ones (24/48)")
+    ap.add_argument("--pop-years", default="12,24,48", help="years reported by --depop levers (e.g. 8,24)")
     args = ap.parse_args()
     if args.depop:
-        run_depop(args.depop, list(range(1, args.seeds + 1)), args.case.split(","), args.pop_rules)
+        run_depop(args.depop, list(range(1, args.seeds + 1)), args.case.split(","), args.pop_rules, args.calib,
+                  tuple(int(x) for x in args.pop_years.split(",")))
         return
     ov = merge(REGIMES[args.regime], parse_sets(args.set))
     seeds = list(range(1, args.seeds + 1))

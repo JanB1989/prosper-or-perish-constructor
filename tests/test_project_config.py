@@ -1994,6 +1994,8 @@ def test_ai_victuals_import_review_builds_only_where_food_is_very_short_and_affo
     triggers = VICTUALS_IMPORT_TRIGGERS.read_text(encoding="utf-8-sig")
     assert "is_province_capital = yes" in triggers
     assert "modifier:pp_province_food_storage_months < pp_victuals_import_low_storage_months" in triggers
+    # the storage marker reads 0 in net-producing provinces (tribesmen): require a real shortage too
+    assert "is_starving = yes" in triggers and "province_monthly_food_production < 0" in triggers
     assert "can_build_building = building_type:victuals_market_import" in triggers
     # a queued first level exists as a building under construction and must block a second one
     assert "NOT = { any_buildings_in_location = { building_type = building_type:victuals_market_import } }" in triggers

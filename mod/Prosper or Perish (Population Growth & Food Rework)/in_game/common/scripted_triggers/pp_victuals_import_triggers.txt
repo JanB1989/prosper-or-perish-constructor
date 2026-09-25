@@ -6,6 +6,16 @@
 pp_victuals_import_wanted = {
 	is_province_capital = yes
 	modifier:pp_province_food_storage_months < pp_victuals_import_low_storage_months
+	# ...and the store is really short: the engine drops the storage modifier (and this marker) when the province's
+	# consumption is zero or negative, e.g. tribesmen feeding it, so a full surplus province reads 0 months above.
+	# province_monthly_food_production is the net monthly change (verified 2026-09-25: tribal Taoer +315, Uppland -169);
+	# starving provinces whose balance already turned positive stay eligible.
+	province = {
+		OR = {
+			is_starving = yes
+			province_monthly_food_production < 0
+		}
+	}
 	OR = {
 		# no market and none queued: a queued first level already exists as a building under construction
 		AND = {

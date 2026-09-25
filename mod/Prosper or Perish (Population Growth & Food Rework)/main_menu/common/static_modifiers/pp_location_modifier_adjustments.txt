@@ -5,8 +5,8 @@ TRY_REPLACE:province_starving = {
 		category = province
 	}
 	local_population_growth = -0.04
-	# Self-provisioning tribesmen receive half the provincial growth penalty.
-	local_tribesmen_pop_growth = 0.02
+	# Self-provisioning tribesmen are exempt from the provincial starvation penalty (Jan, 2026-09-25); they neither die of it nor leave.
+	local_tribesmen_pop_growth = 0.04
 	local_supply_limit_modifier = -0.25
 	local_migration_attraction = -7.5
 
@@ -23,7 +23,7 @@ TRY_REPLACE:province_starving = {
     local_monthly_prosperity = -0.05
 	local_defensive = -0.30
 
-	local_tribesmen_migration_allowed = yes
+	# local_tribesmen_migration_allowed = yes  # tribesmen do not emigrate from a starving province
 	local_laborers_migration_allowed = yes
 	local_peasants_migration_allowed = yes
 }

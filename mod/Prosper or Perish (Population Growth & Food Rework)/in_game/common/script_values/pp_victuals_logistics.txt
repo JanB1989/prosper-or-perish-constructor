@@ -15,9 +15,9 @@ tavern_max_level = {
  else_if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 2 var:pp_navigation_map_state = 5 } } } add = { desc = PP_VM_CAP_DIFFICULT value = 0.75 } }
  if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 } } add = { desc = PP_VM_CAP_MAINTAINED value = 1.5 } }
  if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 3 } }
- if = { limit = { location_rank = location_rank:town } add = { desc = PP_VM_CAP_RANK value = 1.5 } }
- if = { limit = { location_rank = location_rank:city } add = { desc = PP_VM_CAP_RANK value = 3 } }
- if = { limit = { location_rank = location_rank:megalopolis } add = { desc = PP_VM_CAP_RANK value = 6 } }
+ if = { limit = { location_rank ?= location_rank:town } add = { desc = PP_VM_CAP_RANK value = 1.5 } }
+ if = { limit = { location_rank ?= location_rank:city } add = { desc = PP_VM_CAP_RANK value = 3 } }
+ if = { limit = { location_rank ?= location_rank:megalopolis } add = { desc = PP_VM_CAP_RANK value = 6 } }
  if = { limit = { topography = mountains } add = { desc = PP_VM_CAP_TERRAIN value = -2 } }
  if = { limit = { topography = hills } add = { desc = PP_VM_CAP_TERRAIN value = -1 } }
  min = 0
@@ -40,7 +40,7 @@ victualling_yard_max_level = {
  else_if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state OR = { var:pp_navigation_map_state = 2 var:pp_navigation_map_state = 5 } } } add = { desc = PP_VM_CAP_DIFFICULT value = 1 } }
  if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state var:pp_navigation_map_state = 4 } } add = { desc = PP_VM_CAP_MAINTAINED value = 2 } }
  if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 3 } }
- if = { limit = { location_rank = location_rank:town } add = { desc = PP_VM_CAP_RANK value = 1 } }
+ if = { limit = { location_rank ?= location_rank:town } add = { desc = PP_VM_CAP_RANK value = 1 } }
  if = { limit = { topography = mountains } add = { desc = PP_VM_CAP_TERRAIN value = -2 } }
  if = { limit = { topography = hills } add = { desc = PP_VM_CAP_TERRAIN value = -1 } }
  min = 0

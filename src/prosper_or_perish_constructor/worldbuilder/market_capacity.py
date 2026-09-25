@@ -64,7 +64,8 @@ def write(repo, mod_root):
             when("is_market_center = yes", "MARKET", spec["market_center"]),
         ]
         for rank, n in spec["rank"].items():
-            body.append(when(f"location_rank = location_rank:{rank}", "RANK", n))
+            # ?= : locations without a rank (unsettled) also evaluate these caps.
+            body.append(when(f"location_rank ?= location_rank:{rank}", "RANK", n))
         if spec["food_rgo"]:
             body.append(
                 when(

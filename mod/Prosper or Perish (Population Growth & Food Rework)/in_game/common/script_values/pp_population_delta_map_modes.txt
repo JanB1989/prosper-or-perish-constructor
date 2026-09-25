@@ -23,6 +23,7 @@ pp_pop_delta_location_pct = {
 pp_pop_delta_province_pct = {
 	if = {
 		limit = {
+			exists = province	# unowned locations have no province
 			has_variable = pp_province_pop_baseline
 			var:pp_province_pop_baseline > 0
 		}
@@ -179,9 +180,12 @@ pp_pop_current_display = {
 }
 
 pp_province_pop_current_display = {
-	value = province.population
-	multiply = 1000
-	floor = yes
+	if = {
+		limit = { exists = province }
+		value = province.population
+		multiply = 1000
+		floor = yes
+	}
 	min = 0
 }
 

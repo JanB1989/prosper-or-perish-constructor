@@ -163,6 +163,7 @@ pp_pop_delta_province = {
 		else_if = {
 			limit = {
 				OR = {
+					NOT = { exists = province }
 					NOT = { has_variable = pp_province_pop_baseline }
 					var:pp_province_pop_baseline <= 0
 				}

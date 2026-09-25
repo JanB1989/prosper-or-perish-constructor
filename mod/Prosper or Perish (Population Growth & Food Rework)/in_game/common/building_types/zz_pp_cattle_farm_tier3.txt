@@ -70,7 +70,10 @@ raw_modifier = {
 modifier = {
     local_monthly_food = 3
     local_laborers_desired_pop = 0.002
-    local_legumes_output_modifier = 0.02
+    local_wheat_output_modifier = 0.01
+    local_millet_output_modifier = 0.01
+    local_maize_output_modifier = 0.01
+    local_potato_output_modifier = 0.01
 }
 }
 # <<< eu5-building-pipeline:cattle_model_farm:building

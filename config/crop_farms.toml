@@ -597,7 +597,8 @@ slot0_name = "Fields"
 descs = { 0 = "Households grow peas, beans and lentils that feed both the table and the soil.", 1 = "Fodder leys and sealed seed jars tie pulse growing to the village livestock.", 2 = "Pulses move through the rotation and leave the soil richer for the grain that follows.", 3 = "Drilled pulse rows and seed ledgers raise legumes on a larger managed farm." }
 provision_name = "Provision with Legumes"
 beekeeping = true
-side_modifiers = { local_wheat_output_modifier = 0.02, local_millet_output_modifier = 0.02, local_maize_output_modifier = 0.02 }
+# nitrogen for the grain that follows (+2 % per level) and fodder for the herd (+1 % livestock per level)
+side_modifiers = { local_wheat_output_modifier = 0.02, local_millet_output_modifier = 0.02, local_maize_output_modifier = 0.02, local_livestock_output_modifier = 0.01 }
 location_rule = '''
 OR = {
 	raw_material = goods:legumes
@@ -845,7 +846,8 @@ slot0_name = "Pastures"
 descs = { 0 = "Households graze cattle on common pasture and bring them in at night.", 1 = "Stall feeding and manure yards carry the herd through the lean months.", 2 = "Sown leys and fodder crops let the herd graze fields that rest from grain.", 3 = "Selected breeding stock, dairies and fodder leys raise cattle on a larger managed farm." }
 provision_name = "Provision with Livestock"
 beekeeping = false
-side_modifiers = { local_legumes_output_modifier = 0.02 }
+# manure: +1 % per level on the manured field crops of the same location (sheep give +0.75 %, in their blueprints)
+side_modifiers = { local_wheat_output_modifier = 0.01, local_millet_output_modifier = 0.01, local_maize_output_modifier = 0.01, local_potato_output_modifier = 0.01 }
 # base-slot labour of the herd: pp_farming_village_base_livestock and its tier equivalents
 base_labour = { 0 = 0.018, 1 = 0.024, 2 = 0.021, 3 = 0.03 }
 # the cattle rule already contains the farmable base (pasture-friendly OR general farmable); do not AND it with

@@ -1,0 +1,42 @@
+# pp_mig: per-location migration inputs as location/country variables (read from the next save)
+every_country = {
+	limit = { any_owned_location = { always = yes } }
+	set_variable = { name = pp_gms value = modifier:global_migration_speed }
+	set_variable = { name = pp_gmsm value = modifier:global_migration_speed_modifier }
+	set_variable = { name = pp_gma value = modifier:global_migration_attraction }
+	set_variable = { name = pp_rma value = modifier:rural_migration_attraction }
+	set_variable = { name = pp_nrma value = modifier:non_rural_migration_attraction }
+	set_variable = { name = pp_dmb value = modifier:disallow_migration_beyond_borders }
+	set_variable = { name = pp_ga_nobles value = modifier:global_nobles_migration_allowed }
+	set_variable = { name = pp_ga_clergy value = modifier:global_clergy_migration_allowed }
+	set_variable = { name = pp_ga_burghers value = modifier:global_burghers_migration_allowed }
+	set_variable = { name = pp_ga_laborers value = modifier:global_laborers_migration_allowed }
+	set_variable = { name = pp_ga_soldiers value = modifier:global_soldiers_migration_allowed }
+	set_variable = { name = pp_ga_peasants value = modifier:global_peasants_migration_allowed }
+	set_variable = { name = pp_ga_tribesmen value = modifier:global_tribesmen_migration_allowed }
+	set_variable = { name = pp_ga_slaves value = modifier:global_slaves_migration_allowed }
+	every_owned_location = {
+		set_variable = { name = pp_ma value = migration_attraction }
+		set_variable = { name = pp_lma value = modifier:local_migration_attraction }
+		set_variable = { name = pp_lms value = modifier:local_migration_speed }
+		set_variable = { name = pp_lmsm value = modifier:local_migration_speed_modifier }
+		set_variable = { name = pp_la_nobles value = modifier:local_nobles_migration_allowed }
+		set_variable = { name = pp_la_clergy value = modifier:local_clergy_migration_allowed }
+		set_variable = { name = pp_la_burghers value = modifier:local_burghers_migration_allowed }
+		set_variable = { name = pp_la_laborers value = modifier:local_laborers_migration_allowed }
+		set_variable = { name = pp_la_soldiers value = modifier:local_soldiers_migration_allowed }
+		set_variable = { name = pp_la_peasants value = modifier:local_peasants_migration_allowed }
+		set_variable = { name = pp_la_tribesmen value = modifier:local_tribesmen_migration_allowed }
+		set_variable = { name = pp_la_slaves value = modifier:local_slaves_migration_allowed }
+		if = { limit = { province = { is_starving = yes } } set_variable = { name = pp_stv value = 1 } }
+		else = { set_variable = { name = pp_stv value = 0 } }
+	}
+}
+location:london = {
+	set_global_variable = { name = pp_t1 value = migration_attraction }
+	set_global_variable = { name = pp_t2 value = modifier:local_migration_attraction }
+	set_global_variable = { name = pp_t3 value = modifier:local_migration_speed }
+	set_global_variable = { name = pp_t4 value = var:pp_stv }
+	owner = { set_global_variable = { name = pp_t5 value = modifier:global_migration_speed } }
+}
+error_log = "PPMIG;london ma=[GetGlobalVariable('pp_t1').GetValue|3];lma=[GetGlobalVariable('pp_t2').GetValue|3];lms=[GetGlobalVariable('pp_t3').GetValue|4];stv=[GetGlobalVariable('pp_t4').GetValue|0];gms=[GetGlobalVariable('pp_t5').GetValue|5]"

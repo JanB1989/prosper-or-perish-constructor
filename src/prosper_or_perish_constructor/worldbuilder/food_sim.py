@@ -20,6 +20,12 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
 * growth per year: -0.0048 + 0.0086 x stored years (cap 2) when fed, -0.0048 - 0.04 - 0.012 when starving;
 * each September a pool rolls its harvest (``pp_harvest_*``: peasant food consumption +0.30 .. -0.30, 40 % neutral)
   from a seeded generator, so the run is reproducible; ``harvest = false`` turns the rolls off.
+* ``migration = true`` replaces the starving out-migration sink by the engine's market migration (``migration.py``,
+  docs/migration_rulebook.md) between pools: each pool stands for its locations (fixed attraction from the setup
+  plus the monthly starving, free land, overpopulation, jobs and food-storage terms), the market average and the
+  1,000-people sender floor are per location, targets are chosen with the km decay, capped pop types (all but peasants)
+  find room while the target pool is below its start size (``migration_room``), and the moved people leave one pool
+  and join the other.
 
 ``[worldbuilder.start.food_sim]`` in constructor.toml overrides every rule. The run validates the placement, it does
 not forecast a campaign.
@@ -35,6 +41,8 @@ from collections import defaultdict
 from dataclasses import asdict, dataclass, field, fields
 from pathlib import Path
 from typing import Any, Mapping
+
+from . import migration as mig
 
 OUTPUT_RELATIVE_PATH = Path("artifacts/data/worldbuilder/food_sim")
 # pp_harvest_<region>_<quality>: local_peasants_food_consumption per yearly roll, and its weight
@@ -65,6 +73,12 @@ class SimRules:
     start_staffed: float = 1.0          # the setup staffs every market level on day 0 (nb.eu5)
     harvest: bool = True
     seed: int = 1
+    # market migration between pools (migration.py); off = the flat starving_migration sink above
+    migration: bool = False
+    migration_decay_km: float = 900.0
+    migration_speed_modifier: float = 0.0   # country speed modifiers (1345: mostly -0.1 .. -0.4)
+    migration_room: float = 1.0             # capped types (not peasants) find room while the target pool is below
+                                            # this x its start size of the type (stand-in for population_ratio)
     # Victualler import (per level; blueprints/accepted/buildings/victuals_market_import.yml)
     import_income: float = 5.0          # 0.25 offset x (1 + 19)
     import_victuals: float = 3.0
@@ -131,10 +145,58 @@ class Pool:
     overpop_consumption: float = 0.5
     cookery_victuals: float = 1.0      # victuals per cookery level (start_food_model_v2.cookery_victuals)
     peasant_share: float = 0.6         # share of the demand the peasants eat (the harvest roll moves it)
+    # migration inputs (only read with migration = true)
+    n_locations: float = 1.0
+    lat: float = 0.0
+    lon: float = 0.0
+    pop_capacity: float = 0.0          # population capacity of the pool's locations (k)
+    attraction_fixed: float = 0.1      # mean fixed migration attraction of its locations (base, development, statics)
+    type_shares: dict = field(default_factory=dict)   # non-tribal pops by type, share of pop0 - tribesmen
+    religion: str = ""                 # dominant pop religion
 
 
 def overpopulation(pool: Pool, f: float) -> float:
     return pool.overpop_consumption * sum(p * f * max(0.0, f * r - 1.0) for p, r in pool.overpop)
+
+
+def _km(a: Pool, b: Pool) -> float:
+    x = math.radians(b.lon - a.lon) * math.cos(math.radians((a.lat + b.lat) / 2))
+    return 6371.0 * math.hypot(x, math.radians(b.lat - a.lat))
+
+
+def migration_month(pools: list[Pool], N: list[float], base: list[float], starving: list[bool], food_years: list[float],
+                    rules: SimRules) -> tuple[list[float], list[float]]:
+    """One monthly market-migration tick between pools; returns (out, in) in k per pool (migration.py rules)."""
+    places = {}
+    for i, p in enumerate(pools):
+        n = max(1, int(round(p.n_locations)))
+        f = N[i] / base[i]
+        pop = N[i] + p.tribesmen
+        jobs = p.jobs0 * f ** rules.emp_elasticity
+        workers = p.workers0 * f
+        _, _, op = mig.free_land_scales(pop / n, p.pop_capacity / n)
+        attraction = p.attraction_fixed + mig.dynamic_attraction(
+            starving=starving[i], pop_k=pop / n, capacity_k=p.pop_capacity / n, food_years=food_years[i],
+            surplus_jobs=mig.surplus_jobs_scale(max(0.0, jobs - workers) / n, 0.0),
+            unemployed_peasants_k=max(0.0, workers - jobs) / n)
+        rel = p.religion or None
+        shares = {t: s for t, s in p.type_shares.items() if s > 0}
+        places[str(i)] = mig.Place(
+            key=str(i), owner=p.owner, market=p.catchment, attraction=attraction,
+            speed=mig.speed(starving=starving[i], overpopulation=op, modifier=rules.migration_speed_modifier),
+            allowed=mig.allowed_types(starving=starving[i]),
+            pops={t: [(N[i] * s / n, rel)] * n for t, s in shares.items()},
+            # room: the pool's start size of each type stands in for its population_ratio caps
+            caps={t: base[i] * s * rules.migration_room for t, s in shares.items()},
+            religion=rel, owned=pop / n >= mig.MIN_SOURCE_POP, weight=n)
+    flows = mig.monthly_flows(places.values(), lambda a, b: _km(pools[int(a.key)], pools[int(b.key)]),
+                              decay=rules.migration_decay_km, min_source_pop=0.0)
+    out = [0.0] * len(pools)
+    inn = [0.0] * len(pools)
+    for fl in flows:
+        out[int(fl.source)] += fl.amount
+        inn[int(fl.target)] += fl.amount
+    return out, inn
 
 
 def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
@@ -152,6 +214,9 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
     min_months = [math.inf] * n
     imported = [0.0] * n
     exported = [0.0] * n
+    migrated_out = [0.0] * n
+    migrated_in = [0.0] * n
+    years_end = [0.0] * n
     by_market: dict[str, list[int]] = defaultdict(list)
     for i, p in enumerate(pools):
         by_market[p.catchment].append(i)
@@ -224,10 +289,18 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
                 pe = rules.export_profit(years[i], E)
                 s_exp[i] = min(1.0, max(0.0, s_exp[i] + (rules.ramp if pe > 0 else -rules.ramp)))
             if starving[i]:
-                g = rules.growth_base + rules.starving_growth + rules.starving_migration
+                g = rules.growth_base + rules.starving_growth + (0.0 if rules.migration else rules.starving_migration)
             else:
                 g = rules.growth_base + rules.growth_per_year * min(2.0, months_after / 12.0)
             N[i] *= 1.0 + g / 12.0
+            years_end[i] = min(2.0, months_after / 12.0)
+        if rules.migration:
+            out, inn = migration_month(pools, N, base, starving, years_end, rules)
+            for i in range(n):
+                moved = min(out[i], N[i])
+                N[i] += inn[i] - moved
+                migrated_out[i] += moved
+                migrated_in[i] += inn[i]
     out = []
     for i, p in enumerate(pools):
         end = N[i] + p.tribesmen
@@ -256,6 +329,8 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             "export_staffed_end": round(s_exp[i], 3),
             "imported_food": round(imported[i], 1),
             "exported_food": round(exported[i], 1),
+            "migrated_out_k": round(migrated_out[i], 3),
+            "migrated_in_k": round(migrated_in[i], 3),
             "collapsing": p.pop0 > 0 and end / p.pop0 - 1.0 <= -rules.collapse_share,
             "pinned": months_pinned[i] > rules.pinned_limit_months,
         })
@@ -284,6 +359,8 @@ def summarize(rows: list[dict[str, Any]], rules: SimRules) -> dict[str, Any]:
         "world_pop_change": round(end / start - 1.0, 4) if start else None,
         "food_pools_pop_change": round(fend / fstart - 1.0, 4) if fstart else None,
         "pools_R_below_1": sum(1 for r in rows if r["R"] is not None and r["R"] < 1.0),
+        "migration": bool(rules.migration),
+        "migrated_k": round(sum(r.get("migrated_out_k", 0.0) for r in rows), 1),
         "note": "population loop from the planned start (seeded harvest rolls); report only",
     }
 
@@ -300,6 +377,7 @@ def write_inputs(path: Path, pools: list[Pool]) -> None:
         for p in pools:
             row = asdict(p)
             row["overpop"] = json.dumps([[round(a, 4), round(b, 4)] for a, b in p.overpop])
+            row["type_shares"] = json.dumps({k: round(v, 5) for k, v in sorted(p.type_shares.items())})
             writer.writerow(row)
 
 
@@ -310,8 +388,12 @@ def read_inputs(path: Path) -> list[Pool]:
         for row in csv.DictReader(handle):
             kwargs: dict[str, Any] = {}
             for name, value in row.items():
+                if name not in types:
+                    continue
                 if name == "overpop":
                     kwargs[name] = [tuple(x) for x in json.loads(value or "[]")]
+                elif name == "type_shares":
+                    kwargs[name] = json.loads(value or "{}")
                 elif types[name] in ("str", str):  # annotations are strings (from __future__)
                     kwargs[name] = value
                 else:
@@ -358,13 +440,42 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
     for c in sim.conversions:
         converted[c.location][c.to_type] += c.size_k
     out = []
+    from .start_simulation import summed
+
+    def rgo_attraction(tag):
+        good = str(sim.locations[tag].get("raw_material") or "")
+        body = sim.rules.statics.get(f"pp_rgo_bonus_{good}") if good else None
+        return summed(body).get("local_migration_attraction", 0.0) if body is not None else 0.0
+
     for group, tags in sim.groups.items():
         b = budgets[group]
         tribesmen = flat = provision = serve = cookery = victuals = other_supply = peasant_food = 0.0
         imports = exports = 0.0
         pairs = []
+        by_type = defaultdict(float)
+        religions = defaultdict(float)
+        capacity = lat = lon = weight = fixed = 0.0
+        capital = sim.province_capital(group)
         for tag in tags:
             types = sim.location_pops(tag, converted[tag])
+            for kind, k in types.items():
+                if kind != "tribesmen" and k > 0:
+                    by_type[kind] += k
+            for pop in sim.pops.get(tag, []):
+                religions[pop.religion] += pop.size_k
+            ctx = sim.base[tag]
+            a = sim.attrs.get(tag, {})
+            w = max(1e-6, float(ctx.get("population") or 0.0))
+            lat += w * float(a.get("calibrated_lat") or 0.0)
+            lon += w * float(a.get("calibrated_lon") or 0.0)
+            weight += w
+            capacity += max(0.0, sim.capacity_k(tag))
+            buildings = sum(n * sim.rules.modifiers(key).get("local_migration_attraction", 0.0)
+                            for key, n in sim.staffed[tag].items() if n)
+            fixed += 0.0025 * float(ctx.get("development") or 0.0) + mig.fixed_attraction(
+                province_capital=tag == capital, market_center=bool(ctx.get("is_market_center")),
+                static_modifiers=ctx["modifiers"].get("local_migration_attraction", 0.0) + rgo_attraction(tag),
+                buildings=buildings)
             tribesmen += max(0.0, types.get("tribesmen", 0.0))
             peasant_food += max(0.0, types.get("peasants", 0.0)) * float(sim.food.get("peasants", 0.0))
             here = sum(max(0.0, x) for x in types.values())
@@ -402,6 +513,10 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
             victuals_other_supply=other_supply, overpop=pairs, overpop_consumption=model.overpopulation_consumption,
             cookery_victuals=cookery_victuals(model),
             peasant_share=peasant_food / b["demand_base"] if b["demand_base"] > 1e-9 else 0.0,
+            n_locations=float(len(tags)), lat=lat / weight if weight else 0.0, lon=lon / weight if weight else 0.0,
+            pop_capacity=capacity, attraction_fixed=fixed / len(tags) if tags else 0.1,
+            type_shares={k: v / sum(by_type.values()) for k, v in by_type.items()} if by_type else {},
+            religion=max(religions, key=religions.get) if religions else "",
         ))
     return out
 

@@ -1,0 +1,104 @@
+# Probe marker types (copy to <live mod>/main_menu/common/modifier_type_definitions/zz_pp_mig_probe_types.txt
+# for one test, delete afterwards). One marker per engine-applied static modifier.
+pp_probe_surplus_jobs={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_unemployed_peasants={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_prosperity={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_development={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_raw_material_relative_price={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_devastation={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_capital={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_province_capital={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_market_center={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_location_base_values={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_province_starving={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_cheap_food_in_location={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_expensive_food_in_location={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_overpopulation={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_available_free_land={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_abundant_free_land={
+	game_data={
+		category=location
+	}
+}
+
+pp_probe_positive_province_food_growth={
+	game_data={
+		category=location
+	}
+}
+

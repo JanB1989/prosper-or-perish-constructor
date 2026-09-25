@@ -354,6 +354,9 @@ max_levels_per_location = 2
 # loop calibrated on the pre-plague saves 1337.4 / 1341.3 / 1345.3 (tools/province_food_sim.py --depop).
 months = 96
 victuals_price = 2.7
+# true = the engine's market migration between pools (worldbuilder/migration.py, docs/migration_rulebook.md) replaces
+# the flat starving out-migration; `ppc worldbuilder food-sim --migration` turns it on for one run.
+migration = false
 
 [worldbuilder.start.crops]
 # The farming village is split into one farm per crop; at game start a location's farm levels are spread over the

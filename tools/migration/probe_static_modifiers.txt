@@ -1,0 +1,53 @@
+# Probe markers (copy to <live mod>/main_menu/common/static_modifiers/zz_pp_mig_probe.txt for one test, delete
+# afterwards). modifier:pp_probe_<name> then reads the engine scale of <name>; it reads 0 where the mod TRY_REPLACEs it.
+TRY_INJECT:surplus_jobs = {
+	pp_probe_surplus_jobs = 1
+}
+TRY_INJECT:unemployed_peasants = {
+	pp_probe_unemployed_peasants = 1
+}
+TRY_INJECT:prosperity = {
+	pp_probe_prosperity = 1
+}
+TRY_INJECT:development = {
+	pp_probe_development = 1
+}
+TRY_INJECT:raw_material_relative_price = {
+	pp_probe_raw_material_relative_price = 1
+}
+TRY_INJECT:devastation = {
+	pp_probe_devastation = 1
+}
+TRY_INJECT:capital = {
+	pp_probe_capital = 1
+}
+TRY_INJECT:province_capital = {
+	pp_probe_province_capital = 1
+}
+TRY_INJECT:market_center = {
+	pp_probe_market_center = 1
+}
+TRY_INJECT:location_base_values = {
+	pp_probe_location_base_values = 1
+}
+TRY_INJECT:province_starving = {
+	pp_probe_province_starving = 1
+}
+TRY_INJECT:cheap_food_in_location = {
+	pp_probe_cheap_food_in_location = 1
+}
+TRY_INJECT:expensive_food_in_location = {
+	pp_probe_expensive_food_in_location = 1
+}
+TRY_INJECT:overpopulation = {
+	pp_probe_overpopulation = 1
+}
+TRY_INJECT:available_free_land = {
+	pp_probe_available_free_land = 1
+}
+TRY_INJECT:abundant_free_land = {
+	pp_probe_abundant_free_land = 1
+}
+TRY_INJECT:positive_province_food_growth = {
+	pp_probe_positive_province_food_growth = 1
+}

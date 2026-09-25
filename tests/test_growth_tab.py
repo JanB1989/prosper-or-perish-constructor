@@ -37,9 +37,15 @@ def test_tab_button_follows_demography_and_pane_precedes_it():
 def test_rows_show_growth_and_actual_change_apart():
     merged = growth_tab.add_growth_tab(_window())
     assert 'datamodel = "[LocationView.GetPops]"' in merged
-    for fn in ("LocationPopItem.GetTotalSize", "LocationPopItem.GetGrowth]", "LocationPopItem.GetGrowthForUI|Y",
+    for fn in ("LocationPopItem.GetTotalSize", "LocationPopItem.GetGrowthForUI|Y",
                "Location.GetGrowthTooltip(PopType.Self)", "Location.GetPopGrowth", "PopType.GetKey, '_pop_growth'"):
         assert fn in merged, fn
+
+
+def test_merge_is_idempotent():
+    once = growth_tab.add_growth_tab(_window())
+    assert growth_tab.add_growth_tab(once) == once
+    assert growth_tab.strip_growth_tab(once) == _window()
 
 
 def test_anchor_count_is_enforced():
@@ -54,8 +60,8 @@ def test_localization_covers_every_key_the_pane_uses():
     for key in used:
         assert key in keys, key
     for key in ("PP_GROWTH_TAB_LOCATION_GROWTH", "PP_GROWTH_TAB_MIGRATION_ATTRACTION", "PP_GROWTH_TAB_FREE_LAND",
-                "PP_GROWTH_TAB_COL_ESTATE", "PP_GROWTH_TAB_COL_POPS", "PP_GROWTH_TAB_COL_GROWTH",
-                "PP_GROWTH_TAB_COL_CHANGE", "PP_GROWTH_TAB_COL_RATE"):
+                "PP_GROWTH_TAB_COL_ESTATE", "PP_GROWTH_TAB_COL_POPS", "PP_GROWTH_TAB_COL_CHANGE",
+                "PP_GROWTH_TAB_COL_RATE"):
         assert key in growth_tab._PANE and f"{key}:" in keys, key
 
 

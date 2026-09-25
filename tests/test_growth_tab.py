@@ -32,13 +32,18 @@ def test_tab_button_follows_demography_and_pane_precedes_it():
     assert merged.index("# PP GROWTH (growth_tab.py)") < merged.index("# DEMOGRAPHY")
     for block in (growth_tab._TAB_BUTTON, growth_tab._PANE):
         assert block.count("{") == block.count("}")
+        assert "{{" not in block and "}}" not in block   # a stray f-string escape broke the window once (2026-09-25)
+    for line in growth_tab._PANE.splitlines():
+        s = line.strip()
+        if s.startswith("visible = ") or s.startswith("datacontext = ") or s.startswith("datamodel = "):
+            assert s.endswith(']"') and '= "[' in s, s
 
 
 def test_rows_show_growth_and_actual_change_apart():
     merged = growth_tab.add_growth_tab(_window())
     assert 'datamodel = "[LocationView.GetPops]"' in merged
-    for fn in ("LocationPopItem.GetTotalSize", "LocationPopItem.GetGrowthForUI|Y",
-               "Location.GetGrowthTooltip(PopType.Self)", "Location.GetPopGrowth", "PopType.GetKey, '_pop_growth'"):
+    for fn in ("LocationPopItem.GetTotalSize", "LocationPopItem.GetGrowthForUI|Y", "using = LocationPopItem_Breakdown",
+               "Location.GetPopGrowth", "PopType.GetKey, '_pop_growth'"):
         assert fn in merged, fn
 
 
@@ -60,8 +65,8 @@ def test_localization_covers_every_key_the_pane_uses():
     for key in used:
         assert key in keys, key
     for key in ("PP_GROWTH_TAB_LOCATION_GROWTH", "PP_GROWTH_TAB_MIGRATION_ATTRACTION", "PP_GROWTH_TAB_FREE_LAND",
-                "PP_GROWTH_TAB_COL_ESTATE", "PP_GROWTH_TAB_COL_POPS", "PP_GROWTH_TAB_COL_CHANGE",
-                "PP_GROWTH_TAB_COL_RATE"):
+                "PP_GROWTH_TAB_COL_POPS", "PP_GROWTH_TAB_COL_CHANGE", "PP_GROWTH_TAB_COL_RATE",
+                "PP_GROWTH_TAB_CHANGE_TT"):
         assert key in growth_tab._PANE and f"{key}:" in keys, key
 
 

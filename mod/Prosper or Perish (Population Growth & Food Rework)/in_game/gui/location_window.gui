@@ -10595,83 +10595,87 @@ pp_land_potential_chip = {}
 					}
 				}
 
-				# PP GROWTH (growth_tab.py): population growth per estate, growth and migration apart
+				# PP GROWTH (growth_tab.py): population growth per estate, laid out like the Demography table
 				vbox = {
 					visible = "[LocationView.Vars.HasValue( 'tab', 'growth' )]"
 					layoutpolicy_horizontal = expanding
 					layoutpolicy_vertical = expanding
+					maximumsize = { 540 -1 }
 					margin_top = 5
-					datacontext = "[LocationView.GetLocation]"
 
 					# the location: growth, migration attraction, free land
-					vbox = {
+					hbox = {
 						layoutpolicy_horizontal = expanding
-						margin = { 10 4 }
-						spacing = 2
+						margin = { 15 4 }
+						spacing = 14
+						datacontext = "[LocationView.GetLocation]"
 						text_single = {
-							layoutpolicy_horizontal = expanding
+							size = { 165 16 }
+							autoresize = no
+							elide = right
 							align = left|nobaseline
 							fontsize = 14
-							tooltipwidget = { using = yearly_pop_growth_tooltip }
-							raw_text = "[Localize('PP_GROWTH_TAB_LOCATION_GROWTH')]: [Location.GetPopGrowth|2+=%]"
+							tooltip = "[Location.GetPopGrowthInfo]"
+							raw_text = "#medium [Localize('PP_GROWTH_TAB_LOCATION_GROWTH')]#! [Location.GetPopGrowth|2+=%]"
 						}
 						text_single = {
-							layoutpolicy_horizontal = expanding
+							size = { 165 16 }
+							autoresize = no
+							elide = right
 							align = left|nobaseline
 							fontsize = 14
 							tooltip = "[Location.GetLocalMigrationAttractionInfo]"
-							raw_text = "[Localize('PP_GROWTH_TAB_MIGRATION_ATTRACTION')]: [Location.GetLocalMigrationAttraction|2+=]"
+							raw_text = "#medium [Localize('PP_GROWTH_TAB_MIGRATION_ATTRACTION')]#! [Location.GetLocalMigrationAttraction|2+=]"
 						}
 						text_single = {
-							layoutpolicy_horizontal = expanding
+							size = { 165 16 }
+							autoresize = no
+							elide = right
 							align = left|nobaseline
 							fontsize = 14
 							tooltip = "PP_GROWTH_TAB_FREE_LAND_TT"
-							raw_text = "[Localize('PP_GROWTH_TAB_FREE_LAND')]: [Location.GetModifierValueFixed('pp_land_available')|1%]"
+							raw_text = "#medium [Localize('PP_GROWTH_TAB_FREE_LAND')]#! [Location.GetModifierValueFixed('pp_land_available')|1%]"
 						}
-					}
-
-					# column headers
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						margin = { 10 2 }
-						spacing = 4
-						widget = { size = { 26 18 } }
-							text_single = {
-								size = { 96 18 }
-								autoresize = no
-								align = left|nobaseline
-								fontsize = 14
-								default_format = "#medium"
-								text = "PP_GROWTH_TAB_COL_ESTATE"
-							}
-							text_single = {
-								size = { 64 18 }
-								autoresize = no
-								align = right|nobaseline
-								fontsize = 14
-								default_format = "#medium"
-								text = "PP_GROWTH_TAB_COL_POPS"
-							}
-							text_single = {
-								size = { 70 18 }
-								autoresize = no
-								align = right|nobaseline
-								fontsize = 14
-								default_format = "#medium"
-								text = "PP_GROWTH_TAB_COL_RATE"
-							}
-							text_single = {
-								size = { 70 18 }
-								autoresize = no
-								align = right|nobaseline
-								fontsize = 14
-								default_format = "#medium"
-								text = "PP_GROWTH_TAB_COL_CHANGE"
-							}
 						expand = {}
 					}
 
+					# column headers, right-aligned over the row columns (chip 105 | expand | 65 | 60 | 55)
+					widget = {
+						layoutpolicy_horizontal = expanding
+						size = { -1 18 }
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							margin = { 22 0 }
+							spacing = 3
+							expand = {}
+							text_single = {
+								size = { 65 14 }
+								autoresize = no
+								align = right|nobaseline
+								default_format = "#medium"
+								fontsize = 12
+								text = "PP_GROWTH_TAB_COL_POPS"
+							}
+							text_single = {
+								size = { 60 14 }
+								autoresize = no
+								align = right|nobaseline
+								default_format = "#medium"
+								fontsize = 12
+								text = "PP_GROWTH_TAB_COL_RATE"
+							}
+							text_single = {
+								size = { 55 14 }
+								autoresize = no
+								align = right|nobaseline
+								default_format = "#medium"
+								fontsize = 12
+								text = "PP_GROWTH_TAB_COL_CHANGE"
+							}
+						}
+					}
+
+					# the Demography list, one card row per estate
 					scrollarea = {
 						using = layoutpolicy_expanding
 						scrollbarpolicy_horizontal = always_off
@@ -10680,77 +10684,117 @@ pp_land_potential_chip = {}
 							using = Scrollbar_Vertical
 						}
 						scrollwidget = {
-							vbox = {
-								layoutpolicy_horizontal = expanding
-								margin = { 10 2 }
-								spacing = 4
+							fixedgridbox = {
+								addcolumn = 520
+								addrow = 32
 								datamodel = "[LocationView.GetPops]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										visible = "[LocationPopItem.HasPop]"
-										datacontext = "[LocationPopItem.GetType]"
-										datacontext = "[LocationPopItem.GetLocation]"
-										using = bg_dark_paper_card
+									widget = {
+										size = { 510 32 }
 										hbox = {
-											layoutpolicy_horizontal = expanding
-											margin = { 4 2 }
-											spacing = 4
-											tooltipwidget = { using = LocationPopItem_Breakdown }
-											icon = {
-												size = { 26 26 }
-												texture = "[GetGraphicalCultureTextureForLocationPopType(Location.Self, PopType.Self)]"
+											margin = { 5 2 }
+											widget = {
+												using = layoutpolicy_expanding
+												using = bg_dark_paper_card
+												hbox = {
+													datacontext = "[LocationPopItem.GetType]"
+													datacontext = "[LocationPopItem.GetLocation]"
+													margin_right = 5
+													spacing = 3
+												widget = {
+													size = { 105 28 }
+													using = bg_building_card_colors
+													blockoverride "building_color" {
+														color = "[LocationPopItem.GetColor]"
+														alpha = 0.7
+														blend_mode = overlay
+													}
+													card_header_button_04 = {
+														allow_outside = yes
+														size = { 100% 100% }
+														datacontext = "[LocationPopItem.GetType]"
+														datacontext = "[LocationPopItem.GetLocation]"
+														tooltipmeta = {
+															texture = "[GetGraphicalCultureTextureForLocationPopType(Location.Self, PopType.Self)]"
+														}
+														tooltipwidget = {
+															using = LocationPopItem_Breakdown
+														}
+														action_tooltip = {
+															click_type = left
+															click_mode = single
+															title = "OPEN_POP_TYPE_PEOPLE_VIEW"
+															on_action = "[ShowCountryPeopleViewWithPopFilter(PopType.Self, '(bool)yes')]"
+															on_action = "[ShowCountryPeopleViewWithLocation(Location.GetId, '(bool)no')]"
+														}
+														hbox = {
+															margin = { 3 0 }
+															spacing = 1
+															widget = {
+																size = { 20 20 }
+																using = bg_circle_piechart
+																icon = {
+																	size = { 92% 92% }
+																	parentanchor = center
+																	position = {-1 0}
+																	texture = "[GetGraphicalCultureTextureForLocationPopType(Location.Self, LocationPopItem.GetType)]"
+																	glow = {
+																		name = "drop_shadow"
+																		glow_radius = 3
+																		color = {0.0 0.0 0.0 1.0}
+																		alpha = 0.3
+																	}
+																}
+															}
+															text_single = {
+																size = {70 12}
+																autoresize = no
+																align = left|nobaseline
+																text = "[LocationPopItem.GetType.GetNameWithNoTooltip|L]"
+															}
+														}
+													}
+												}
+												expand = {}
+												text_single = {
+													size = { 65 12 }
+													autoresize = no
+													align = right|nobaseline
+													text = "[LocationPopItem.GetTotalSize]"
+												}
+												text_single = {
+													visible = "[Location.HasOwner]"
+													size = { 60 12 }
+													autoresize = no
+													align = right|nobaseline
+													tooltip = "PP_GROWTH_TAB_RATE_TT"
+													text = "[Max_CFixedPoint(Multiply_CFixedPoint(Location.GetPopGrowth, Add_CFixedPoint('(CFixedPoint)1', Add_CFixedPoint(Location.GetModifierValueFixed(Concatenate('local_', Concatenate(PopType.GetKey, '_pop_growth'))), Location.GetOwner.GetModifierRawValue(Concatenate('global_', Concatenate(PopType.GetKey, '_pop_growth')))))), '(CFixedPoint)0')|2+=%]"
+												}
+												text_single = {
+													visible = "[Not(Location.HasOwner)]"
+													size = { 60 12 }
+													autoresize = no
+													align = right|nobaseline
+													tooltip = "PP_GROWTH_TAB_RATE_TT"
+													text = "[Max_CFixedPoint(Multiply_CFixedPoint(Location.GetPopGrowth, Add_CFixedPoint('(CFixedPoint)1', Location.GetModifierValueFixed(Concatenate('local_', Concatenate(PopType.GetKey, '_pop_growth'))))), '(CFixedPoint)0')|2+=%]"
+												}
+												text_single = {
+													size = { 55 12 }
+													autoresize = no
+													align = right|nobaseline
+													tooltip = "PP_GROWTH_TAB_CHANGE_TT"
+													text = "[LocationPopItem.GetGrowthForUI|Y]"
+												}
+												text_single = {
+													visible = "[Not(HasPopBreakdownIntelOn(Location.Self))]"
+													size = { 180 12 }
+													autoresize = no
+													align = right|nobaseline
+													tagtooltip_enabled = yes
+													text = "INTEL_FOG_LOC_POP_BREAKDOWN_UNKNOWN"
+												}
+												}
 											}
-											text_single = {
-												size = { 96 18 }
-												autoresize = no
-												align = left|nobaseline
-												fontsize = 14
-												text = "[PopType.GetNameWithNoTooltip|L]"
-											}
-											text_single = {
-												size = { 64 18 }
-												autoresize = no
-												align = right|nobaseline
-												fontsize = 14
-												text = "[LocationPopItem.GetTotalSize]"
-											}
-											text_single = {
-												size = { 70 18 }
-												autoresize = no
-												align = right|nobaseline
-												fontsize = 14
-												visible = "[Location.HasOwner]"
-												tooltip = "PP_GROWTH_TAB_RATE_TT"
-												text = "[Max_CFixedPoint(Multiply_CFixedPoint(Location.GetPopGrowth, Add_CFixedPoint('(CFixedPoint)1', Add_CFixedPoint(Location.GetModifierValueFixed(Concatenate('local_', Concatenate(PopType.GetKey, '_pop_growth'))), Location.GetOwner.GetModifierRawValue(Concatenate('global_', Concatenate(PopType.GetKey, '_pop_growth')))))), '(CFixedPoint)0')|2+=%]"
-											}
-											text_single = {
-												size = { 70 18 }
-												autoresize = no
-												align = right|nobaseline
-												fontsize = 14
-												visible = "[Not(Location.HasOwner)]"
-												tooltip = "PP_GROWTH_TAB_RATE_TT"
-												text = "[Max_CFixedPoint(Multiply_CFixedPoint(Location.GetPopGrowth, Add_CFixedPoint('(CFixedPoint)1', Location.GetModifierValueFixed(Concatenate('local_', Concatenate(PopType.GetKey, '_pop_growth'))))), '(CFixedPoint)0')|2+=%]"
-											}
-											text_single = {
-												size = { 70 18 }
-												autoresize = no
-												align = right|nobaseline
-												fontsize = 14
-												text = "[LocationPopItem.GetGrowthForUI|Y]"
-											}
-											expand = {}
-										}
-										# the engine's change lines for this estate (born, starved, migrated, class changes)
-										text_multi = {
-											layoutpolicy_horizontal = expanding
-											autoresize = yes
-											margin = { 34 0 }
-											margin_bottom = 4
-											fontsize = 13
-											visible = "[Not(StringIsEmpty(Location.GetGrowthTooltip(PopType.Self)))]"
-											text = "[Location.GetGrowthTooltip(PopType.Self)]"
 										}
 									}
 								}

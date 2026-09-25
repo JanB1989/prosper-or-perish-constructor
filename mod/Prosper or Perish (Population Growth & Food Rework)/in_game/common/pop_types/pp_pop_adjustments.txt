@@ -83,7 +83,13 @@ TRY_INJECT:slaves = {
 # Tribesmen grow with free land only (2026-09-25): their share of the location adds this growth, and the per-type
 # multiplier (-100 % in pp_country_base_values.txt, +100 % x free-land share in abundant/available_free_land) turns
 # it into births only where land is free. Settled pops in mixed locations get the same share-weighted addition.
+# Tribesmen live off herds, hunting and tribute, outside the province food store: a negative consumption adds food
+# (verified in game 2026-09-25; a percentage consumption modifier stops at -100 % and cannot do this). 1k tribesmen
+# bring in what 1k peasants eat, so the settled pops among them are fed and the province does not starve on their
+# account. A province whose total consumption turns negative gets no storage growth bonus: tribal land then grows by
+# the base rate plus the share-weighted growth above, i.e. by land, not by food.
 TRY_INJECT:tribesmen = {
+	pop_food_consumption = -1.0
 	pop_percentage_impact = {
 		local_population_growth = 0.012
 	}

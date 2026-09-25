@@ -9,7 +9,14 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
 
 * jobs = jobs0 x (N / N0) ^ 0.5; jobless = peasants and slaves - jobs; subsistence = jobless x yield;
 * consumption = demand0 x N / N0 x (1 - 0.4 x (1 - N / N0)) + overpopulation (+0.5 peasant food per unit of
-  pop / capacity - 1, location by location); tribesmen neither eat nor starve and are held constant;
+  pop / capacity - 1, location by location), less the share the tribe feeds (``tribal_feeding`` x the demand-weighted
+  tribal share of the pool's locations, scaled with the pool's tribal share), plus the tribesmen's own food
+  (``tribesmen_food`` per 1,000, the pop type's ``pop_food_consumption``; negative = they feed the province). A
+  province whose total consumption is zero or below gets no storage growth bonus (engine, verified 2026-09-25);
+* tribesmen (engine, verified 2026-09-25): the location growth below also carries ``tribal_growth`` x tribal share for
+  every pop; when it is positive tribesmen are born at it x the free-land factor max(0, 1 - ``tribal_land_slope`` x
+  pop / capacity) (``global_tribesmen_pop_growth = -1`` + ``local_tribesmen_pop_growth = 1`` in the scaled free-land
+  modifiers; slope fitted on the 1345 save), when it is negative they lose it unscaled like every pop type;
 * farms, villages and orchards run Provisioning from month 6 while the store is below ~11 months (their Sell leg
   pays above that); cookeries serve on ``cookery_serve_share`` of their levels from month 1 (the rest and their
   container and drink slots make victuals);
@@ -70,6 +77,10 @@ class SimRules:
     pinned_limit_months: int = 48
     collapse_share: float = 0.25
     tribal_share: float = 0.5
+    # tribesmen (pp_pop_adjustments.txt, pp_capacity_pressure_effects.txt, pp_country_base_values.txt)
+    tribal_growth: float = 0.012        # pop_percentage_impact local_population_growth (every pop in the location)
+    tribal_land_slope: float = 0.75     # free-land factor 1 - slope x pop / capacity (1345 save: 0.75 at start capacity)
+    tribal_feeding: float = 0.0         # -pop_percentage_impact local_pop_food_consumption (0 = the tribe feeds nobody)
     start_staffed: float = 1.0          # the setup staffs every market level on day 0 (nb.eu5)
     harvest: bool = True
     seed: int = 1
@@ -126,8 +137,8 @@ class Pool:
     province: str
     catchment: str
     pop0: float                 # k, tribesmen included
-    tribesmen: float            # k, held constant
-    demand0: float              # base food consumption at start
+    tribesmen: float            # k at start
+    demand0: float              # base food consumption of the settled pops at start (tribesmen's own food excluded)
     workers0: float             # peasants + slaves (k)
     jobs0: float                # of them in jobs (RGO, buildings)
     yield_: float               # food per 1k jobless worker
@@ -145,6 +156,8 @@ class Pool:
     overpop_consumption: float = 0.5
     cookery_victuals: float = 1.0      # victuals per cookery level (start_food_model_v2.cookery_victuals)
     peasant_share: float = 0.6         # share of the demand the peasants eat (the harvest roll moves it)
+    tribesmen_food: float = 0.0        # food per 1,000 tribesmen (pop type pop_food_consumption; negative = produce)
+    tribal_fed_share: float = 0.0      # settled demand x tribal share of its location, over the settled demand
     # migration inputs (only read with migration = true)
     n_locations: float = 1.0
     lat: float = 0.0
@@ -165,13 +178,13 @@ def _km(a: Pool, b: Pool) -> float:
 
 
 def migration_month(pools: list[Pool], N: list[float], base: list[float], starving: list[bool], food_years: list[float],
-                    rules: SimRules) -> tuple[list[float], list[float]]:
+                    rules: SimRules, T: list[float] | None = None) -> tuple[list[float], list[float]]:
     """One monthly market-migration tick between pools; returns (out, in) in k per pool (migration.py rules)."""
     places = {}
     for i, p in enumerate(pools):
         n = max(1, int(round(p.n_locations)))
         f = N[i] / base[i]
-        pop = N[i] + p.tribesmen
+        pop = N[i] + (T[i] if T is not None else p.tribesmen)
         jobs = p.jobs0 * f ** rules.emp_elasticity
         workers = p.workers0 * f
         _, _, op = mig.free_land_scales(pop / n, p.pop_capacity / n)
@@ -199,11 +212,37 @@ def migration_month(pools: list[Pool], N: list[float], base: list[float], starvi
     return out, inn
 
 
+def stored_months(food: float, consumption: float) -> float:
+    """Months of stored food; zero or negative consumption gives the storage signal nothing (engine: no
+    positive_province_food_growth scale, verified 2026-09-25)."""
+    return food / consumption if consumption > 1e-9 else 0.0
+
+
+def fed_share(p: Pool, n: float, t: float, share0: float, rules: SimRules) -> float:
+    """Share of the settled consumption the tribe feeds (tribesmen pop_percentage_impact local_pop_food_consumption,
+    capped at -100 % per location): the start's demand-weighted tribal share, moved with the pool's tribal share."""
+    if rules.tribal_feeding <= 0 or p.tribal_fed_share <= 0 or share0 <= 0:
+        return 0.0
+    share = t / (n + t) if n + t > 0 else 0.0
+    return min(1.0, rules.tribal_feeding * p.tribal_fed_share * share / share0)
+
+
+def free_land_factor(p: Pool, pop: float, rules: SimRules) -> float:
+    """Tribesmen birth multiplier: -100 % (country) + 100 % x the engine-scaled free-land modifiers."""
+    if p.pop_capacity <= 0:
+        return 0.0
+    return max(0.0, min(1.0, 1.0 - rules.tribal_land_slope * pop / p.pop_capacity))
+
+
 def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
     """Run all pools month by month (markets couple them through the victuals)."""
     n = len(pools)
     base = [max(1e-9, p.pop0 - p.tribesmen) for p in pools]
     N = list(base)
+    T = [max(0.0, p.tribesmen) for p in pools]
+    share0 = [T[i] / p.pop0 if p.pop0 > 0 else 0.0 for i, p in enumerate(pools)]
+    born = [0.0] * n
+    lost = [0.0] * n
     food = [min(p.start_food, p.capacity) for p in pools]
     s_imp = [rules.start_staffed if p.imports else 0.0 for p in pools]
     s_exp = [rules.start_staffed if p.exports else 0.0 for p in pools]
@@ -238,10 +277,10 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
         serving = t >= rules.serve_month
         for i, p in enumerate(pools):
             f = N[i] / base[i]
-            cons[i] = (p.demand0 * f * (1.0 - rules.free_land * max(0.0, 1.0 - f)) * (1.0 + harvest[i] * p.peasant_share)
+            settled = (p.demand0 * f * (1.0 - rules.free_land * max(0.0, 1.0 - f)) * (1.0 + harvest[i] * p.peasant_share)
                        + overpopulation(p, f) * (1.0 + harvest[i]))
-            months = food[i] / cons[i] if cons[i] > 1e-9 else rules.pin_months
-            years[i] = min(2.0, months / 12.0)
+            cons[i] = settled * (1.0 - fed_share(p, N[i], T[i], share0[i], rules)) + p.tribesmen_food * T[i]
+            years[i] = min(2.0, stored_months(food[i], cons[i]) / 12.0)
         # victuals per market: cookeries on Preserve, staffed exports, other producers; imports and pops buy
         fill = [1.0] * n
         for market, members in by_market.items():
@@ -263,7 +302,7 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             jobs = p.jobs0 * f ** rules.emp_elasticity
             workers = p.workers0 * f
             jobless = max(0.0, workers - min(jobs, workers))
-            months = food[i] / cons[i] if cons[i] > 1e-9 else rules.pin_months
+            months = stored_months(food[i], cons[i])
             prov = t >= rules.provision_month and months < rules.provision_below_months
             L = p.imports * s_imp[i]
             E = p.exports * s_exp[i]
@@ -275,12 +314,13 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             exported[i] += outflow
             food[i] = min(p.capacity, max(0.0, food[i] + prod - cons[i]))
             starving[i] = food[i] <= 0.0
-            months_after = food[i] / cons[i] if cons[i] > 1e-9 else rules.pin_months
-            min_months[i] = min(min_months[i], months_after)
+            months_after = stored_months(food[i], cons[i])
+            if cons[i] > 1e-9:
+                min_months[i] = min(min_months[i], months_after)
             if starving[i]:
                 months_starving[i] += 1
                 nobles[i] *= 1.0 - rules.noble_hazard / 12.0
-            if food[i] >= min(p.capacity, rules.pin_months * cons[i]) * 0.999:
+            if food[i] >= (min(p.capacity, rules.pin_months * cons[i]) if cons[i] > 1e-9 else p.capacity) * 0.999:
                 months_pinned[i] += 1
             if p.imports:
                 pi = rules.import_profit(years[i], starving[i], L)
@@ -292,10 +332,18 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
                 g = rules.growth_base + rules.starving_growth + (0.0 if rules.migration else rules.starving_migration)
             else:
                 g = rules.growth_base + rules.growth_per_year * min(2.0, months_after / 12.0)
+            pop = N[i] + T[i]
+            g += rules.tribal_growth * (T[i] / pop if pop > 0 else 0.0)
             N[i] *= 1.0 + g / 12.0
+            # tribesmen: no starving out-migration; births x the free-land factor, losses unscaled
+            gt = g - (rules.starving_migration if starving[i] and not rules.migration else 0.0)
+            dt = T[i] * (gt * free_land_factor(p, pop, rules) if gt > 0 else gt) / 12.0
+            born[i] += max(0.0, dt)
+            lost[i] -= min(0.0, dt)
+            T[i] += dt
             years_end[i] = min(2.0, months_after / 12.0)
         if rules.migration:
-            out, inn = migration_month(pools, N, base, starving, years_end, rules)
+            out, inn = migration_month(pools, N, base, starving, years_end, rules, T)
             for i in range(n):
                 moved = min(out[i], N[i])
                 N[i] += inn[i] - moved
@@ -303,7 +351,7 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
                 migrated_in[i] += inn[i]
     out = []
     for i, p in enumerate(pools):
-        end = N[i] + p.tribesmen
+        end = N[i] + T[i]
         cons0 = p.demand0 + overpopulation(p, 1.0)
         out.append({
             "owner": p.owner,
@@ -313,6 +361,10 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             "pop_end_k": round(end, 3),
             "change": round(end / p.pop0 - 1.0, 4) if p.pop0 > 0 else 0.0,
             "tribal": p.pop0 > 0 and p.tribesmen >= rules.tribal_share * p.pop0,
+            "tribesmen_start_k": round(p.tribesmen, 3),
+            "tribesmen_end_k": round(T[i], 3),
+            "tribesmen_born_k": round(born[i], 3),
+            "tribesmen_lost_k": round(lost[i], 3),
             "consumption_start": round(cons0, 2),
             "R": round((p.yield_ * max(0.0, p.workers0 - p.jobs0) + p.flat_food + p.provision_food + p.serve_food) / cons0, 3)
             if cons0 > 1e-9 else None,
@@ -322,7 +374,7 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             "start_months": round(p.start_food / cons0, 2) if cons0 > 1e-9 else None,
             "capacity_months": round(p.capacity / cons0, 2) if cons0 > 1e-9 else None,
             "min_months": round(min_months[i], 2) if min_months[i] < math.inf else None,
-            "end_months": round(food[i] / max(1e-9, cons[i]), 2),
+            "end_months": round(food[i] / cons[i], 2) if cons[i] > 1e-9 else None,
             "months_starving": months_starving[i],
             "months_pinned": months_pinned[i],
             "import_staffed_end": round(s_imp[i], 3),
@@ -359,6 +411,11 @@ def summarize(rows: list[dict[str, Any]], rules: SimRules) -> dict[str, Any]:
         "world_pop_change": round(end / start - 1.0, 4) if start else None,
         "food_pools_pop_change": round(fend / fstart - 1.0, 4) if fstart else None,
         "pools_R_below_1": sum(1 for r in rows if r["R"] is not None and r["R"] < 1.0),
+        "tribesmen_start_k": round(tstart := sum(r["tribesmen_start_k"] for r in rows)),
+        "tribesmen_change": round(sum(r["tribesmen_end_k"] for r in rows) / tstart - 1.0, 4) if tstart else None,
+        "tribal_pools": sum(1 for r in rows if r["tribal"]),
+        "tribal_pools_starving": sum(1 for r in rows if r["tribal"] and r["months_starving"] > 0),
+        "tribal_pools_collapsing": sum(1 for r in rows if r["tribal"] and r["collapsing"]),
         "migration": bool(rules.migration),
         "migrated_k": round(sum(r.get("migrated_out_k", 0.0) for r in rows), 1),
         "note": "population loop from the planned start (seeded harvest rolls); report only",
@@ -454,7 +511,7 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
         pairs = []
         by_type = defaultdict(float)
         religions = defaultdict(float)
-        capacity = lat = lon = weight = fixed = 0.0
+        capacity = lat = lon = weight = fixed = fed_num = fed_den = 0.0
         capital = sim.province_capital(group)
         for tag in tags:
             types = sim.location_pops(tag, converted[tag])
@@ -479,6 +536,9 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
             tribesmen += max(0.0, types.get("tribesmen", 0.0))
             peasant_food += max(0.0, types.get("peasants", 0.0)) * float(sim.food.get("peasants", 0.0))
             here = sum(max(0.0, x) for x in types.values())
+            settled = sum(n * float(sim.food.get(kind, 0.0)) for kind, n in types.items() if kind != "tribesmen" and n > 0)
+            fed_num += settled * (max(0.0, types.get("tribesmen", 0.0)) / here if here > 0 else 0.0)
+            fed_den += settled
             cap = sim.capacity_k(tag)
             peasants = sum(types.get(t, 0.0) for t in model.overpopulation_pop_types)
             if cap > 0 and peasants > 0:
@@ -502,17 +562,20 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
                     provision += n * float(sim.province_food.get(key, 0.0))
                     other_supply += n * float(v["producers"].get(key, 0.0))
                     victuals += n * float(v["consumers"].get(key, 0.0))
+        tribesmen_food = float(sim.food.get("tribesmen", 0.0))
+        demand0 = b["demand_base"] - tribesmen_food * tribesmen   # the start demand counts the tribesmen at their rate
         jobless = b["subsistence_workers_k"]
         yield_ = b["subsistence"] / jobless if jobless > 1e-9 else sum(sim.location_yield(t) for t in tags) / len(tags)
         out.append(Pool(
             owner=str(group[0]), province=str(group[1]), catchment=str(sim.catchments[group]),
-            pop0=b["pop_k"], tribesmen=tribesmen, demand0=b["demand_base"], workers0=b["workers_k"], jobs0=b["jobs_k"],
+            pop0=b["pop_k"], tribesmen=tribesmen, demand0=demand0, workers0=b["workers_k"], jobs0=b["jobs_k"],
             yield_=yield_, flat_food=flat, provision_food=provision, serve_food=serve, cookery_levels=cookery,
             imports=imports, exports=exports, capacity=b["food_capacity"],
             start_food=model.start_food_share * b["food_capacity"], victuals_demand=victuals,
             victuals_other_supply=other_supply, overpop=pairs, overpop_consumption=model.overpopulation_consumption,
             cookery_victuals=cookery_victuals(model),
-            peasant_share=peasant_food / b["demand_base"] if b["demand_base"] > 1e-9 else 0.0,
+            peasant_share=peasant_food / demand0 if demand0 > 1e-9 else 0.0,
+            tribesmen_food=tribesmen_food, tribal_fed_share=fed_num / fed_den if fed_den > 1e-9 else 0.0,
             n_locations=float(len(tags)), lat=lat / weight if weight else 0.0, lon=lon / weight if weight else 0.0,
             pop_capacity=capacity, attraction_fixed=fixed / len(tags) if tags else 0.1,
             type_shares={k: v / sum(by_type.values()) for k, v in by_type.items()} if by_type else {},

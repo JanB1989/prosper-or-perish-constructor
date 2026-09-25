@@ -156,7 +156,7 @@ farming_village = {
 			
 			produced = livestock
 			
-			debug_max_profit = rural_profit_margin
+			debug_max_profit = 0.188
 	
 			category = building_maintenance
 		}
@@ -305,7 +305,7 @@ rural_glassmaker = {
 			produced = glass
 			output = 0.2
 
-			debug_max_profit = rural_profit_margin
+			debug_max_profit = 0.200
 			category = guild_input
 		}
 	}
@@ -350,7 +350,7 @@ rural_clothmaker = {
 			produced = cloth
 			output = 0.5
 
-			debug_max_profit = rural_profit_margin
+			debug_max_profit = 0.200
 			category = guild_input
 		}
 
@@ -360,7 +360,7 @@ rural_clothmaker = {
 			produced = cloth
 			output = 0.5
 
-			debug_max_profit = rural_profit_margin
+			debug_max_profit = 0.199
 			category = guild_input
 		}
 
@@ -370,7 +370,7 @@ rural_clothmaker = {
 			produced = cloth
 			output = 0.4
 
-			debug_max_profit = rural_profit_margin
+			debug_max_profit = 0.200
 			category = guild_input
 		}
 
@@ -406,7 +406,7 @@ charcoal_maker = {
 			produced = coal
 			output = 0.8
 
-			debug_max_profit = rural_profit_margin
+			debug_max_profit = 0.029
 		
 			lumber = 0.8889
 			category = guild_input
@@ -443,7 +443,7 @@ improved_charcoal_maker = {
 			produced = coal
 			output = 1.2
 
-			debug_max_profit = rural_profit_margin
+			debug_max_profit = 0.029
 		
 			lumber = 1.3333
 			category = guild_input
@@ -500,7 +500,7 @@ elephant_hunting_grounds = {
 			tools = 0.208
 			weaponry = 0.208
 			elephants = 0.417
-			debug_max_profit = rural_profit_margin
+			debug_max_profit = 0.182
 			category = guild_input
 		}
 
@@ -686,7 +686,7 @@ sheep_farms = {
 
 			lumber = 0.496
 			tools = 0.099
-			debug_max_profit = rural_profit_margin
+			debug_max_profit = 0.051
 			category = building_maintenance
 		}
 	}

@@ -909,7 +909,7 @@ schwaz_mine = {
 			produced = silver
 			output = 1.0
 			
-			debug_max_profit = rural_profit_margin		#unique building only 1 level, acceptable to have a high profit.
+			debug_max_profit = 0.133		#unique building only 1 level, acceptable to have a high profit.
 			
 			category = building_maintenance
 		}

@@ -324,8 +324,8 @@ class Rules:
                 raise Unresolved("missing max_levels")
             result = self.value(value, ctx)
             if ctx.get("initializing") and key in (
-                "victuals_market",
-                "victuals_market_import",
+                "victualling_yard",
+                "tavern",
             ):
                 # Navigation state variables are seeded by on_game_start, after
                 # setup buildings: do not spend that extra room prematurely.

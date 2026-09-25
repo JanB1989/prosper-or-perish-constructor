@@ -89,7 +89,7 @@ AI_BUILDING_REVIEW_EFFECTS = (
     MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_ai_building_review_effects.txt"
 )
 VICTUALS_IMPORT_TRIGGERS = (
-    MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_victuals_import_triggers.txt"
+    MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_tavern_triggers.txt"
 )
 MARKET_FOOD_PRICE_EXTREME_ON_ACTION = (
     MOD_ROOT / "in_game" / "common" / "on_action" / "pp_market_food_price_extremes.txt"
@@ -204,8 +204,8 @@ FOREST_CAP_MAX_OMISSIONS = capacity_max_omitted_buildings_by_building(
 )
 EXCLUDED_FARM_CAP_BUILDINGS = (
     "perfumery",
-    "cookery",
-    "victualling_yard",
+    "cookshop",
+    "public_kitchen",
     "saltpeter_guild",
     "saltpeter_workshop",
     "putrefaction_mill",
@@ -244,12 +244,12 @@ FOOD_SECURITY_PRIORITY_GROUPS = {
     "direct_food_production": (
         110,
         "Direct food production needs second highest priority so we do not enter starvation loops.",
-        ("cookery", "victualling_yard"),
+        ("cookshop", "public_kitchen"),
     ),
     "food_distribution": (
         120,
-        "Victuals markets receive the highest food-security priority so prepared food is distributed reliably.",
-        ("victuals_market_import",),
+        "Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.",
+        ("tavern",),
     ),
     "water_control": (
         95,
@@ -337,9 +337,9 @@ EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY = (
     "capitalism_prioritising_infrastructure_trade_and_culture",
 )
 FOOD_SECURITY_WORKER_BUILDINGS = {
-    "cookery": ("laborers", 1),
-    "victualling_yard": ("laborers", 1),
-    "victuals_market_import": ("nobles", 0.001),
+    "cookshop": ("laborers", 1),
+    "public_kitchen": ("laborers", 1),
+    "tavern": ("nobles", 0.001),
     "granary": ("laborers", 0.25),
 }
 NORMALIZED_PRODUCTION_SITE_CATEGORIES = {
@@ -347,8 +347,8 @@ NORMALIZED_PRODUCTION_SITE_CATEGORIES = {
     "village_category",
     "colonial_category",
 }
-NORMALIZED_DIRECT_PRODUCTION_BUILDINGS = {"cookery", "victualling_yard"}
-NORMALIZED_EXCLUDED_PRODUCTION_BUILDINGS = {"victuals_market", "victuals_market_import"}
+NORMALIZED_DIRECT_PRODUCTION_BUILDINGS = {"cookshop", "public_kitchen"}
+NORMALIZED_EXCLUDED_PRODUCTION_BUILDINGS = {"victualling_yard", "tavern"}
 
 
 def test_constructor_config_loads() -> None:
@@ -1673,7 +1673,7 @@ def test_market_food_price_map_mode_uses_market_price_scale_and_assets() -> None
     block = _text_block_between(
         map_text,
         "pp_market_food_price = {",
-        "\npp_victuals_market_price = {",
+        "\npp_victuals_price = {",
     )
 
     assert "@pp_market_food_price_neutral = 0.12" in map_text
@@ -1742,7 +1742,7 @@ def test_market_food_price_map_mode_uses_market_price_scale_and_assets() -> None
     ).exists()
 
 
-def test_victuals_market_price_map_mode_uses_default_relative_scale_and_assets() -> None:
+def test_victuals_price_map_mode_uses_default_relative_scale_and_assets() -> None:
     map_text = FOOD_MAP_MODES.read_text(encoding="utf-8-sig")
     localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
         encoding="utf-8-sig"
@@ -1752,26 +1752,26 @@ def test_victuals_market_price_map_mode_uses_default_relative_scale_and_assets()
         / "in_game"
         / "common"
         / "script_values"
-        / "pp_victuals_market_price_map_mode.txt"
+        / "pp_victuals_price_map_mode.txt"
     ).read_text(encoding="utf-8-sig")
     block = _text_block_between(
         map_text,
-        "pp_victuals_market_price = {",
+        "pp_victuals_price = {",
         "\npp_positive_province_food_growth = {",
     )
 
-    assert "@pp_victuals_market_price_neutral = 3.0" in map_text
-    assert "@pp_victuals_market_price_very_cheap = 1.5" in map_text
-    assert "@pp_victuals_market_price_severe = 6.0" in map_text
+    assert "@pp_victuals_price_neutral = 3.0" in map_text
+    assert "@pp_victuals_price_very_cheap = 1.5" in map_text
+    assert "@pp_victuals_price_severe = 6.0" in map_text
     assert 'value = "market_price(goods:victuals)"' in script_value_text
     required_map_snippets = (
-        "value = market.pp_victuals_market_price_map_value",
+        "value = market.pp_victuals_price_map_value",
         "limit = { has_owner = yes }",
         "min_color = define:NMapColors|MAP_COLOR_MAX",
         "max_color = define:NMapColors|MAP_COLOR_MIN",
-        "market.pp_victuals_market_price_map_value < @pp_victuals_market_price_cheap",
-        "market.pp_victuals_market_price_map_value < @pp_victuals_market_price_neutral",
-        "market.pp_victuals_market_price_map_value < @pp_victuals_market_price_expensive",
+        "market.pp_victuals_price_map_value < @pp_victuals_price_cheap",
+        "market.pp_victuals_price_map_value < @pp_victuals_price_neutral",
+        "market.pp_victuals_price_map_value < @pp_victuals_price_expensive",
         "max = 1",
         "min = 0",
         "category = economy",
@@ -1779,28 +1779,28 @@ def test_victuals_market_price_map_mode_uses_default_relative_scale_and_assets()
         "market_marker = yes",
         "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
         "map_lines_mode = ToMarketCenter",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE_VERY_CHEAP",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE_CHEAP",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE_NEUTRAL",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE_EXPENSIVE",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE_SEVERE",
+        "MAPMODE_PP_VICTUALS_PRICE_VERY_CHEAP",
+        "MAPMODE_PP_VICTUALS_PRICE_CHEAP",
+        "MAPMODE_PP_VICTUALS_PRICE_NEUTRAL",
+        "MAPMODE_PP_VICTUALS_PRICE_EXPENSIVE",
+        "MAPMODE_PP_VICTUALS_PRICE_SEVERE",
     )
     missing_map_snippets = [snippet for snippet in required_map_snippets if snippet not in block]
     assert not missing_map_snippets
     assert block.count("lerp = {") == 4
 
     required_localization = (
-        "mapmode_pp_victuals_market_price_name",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE_VERY_CHEAP",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE_CHEAP",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE_NEUTRAL",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE_EXPENSIVE",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE_SEVERE",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE_TT_LAND",
-        "MAPMODE_PP_VICTUALS_MARKET_PRICE_TT_WATER",
+        "mapmode_pp_victuals_price_name",
+        "MAPMODE_PP_VICTUALS_PRICE",
+        "MAPMODE_PP_VICTUALS_PRICE_VERY_CHEAP",
+        "MAPMODE_PP_VICTUALS_PRICE_CHEAP",
+        "MAPMODE_PP_VICTUALS_PRICE_NEUTRAL",
+        "MAPMODE_PP_VICTUALS_PRICE_EXPENSIVE",
+        "MAPMODE_PP_VICTUALS_PRICE_SEVERE",
+        "MAPMODE_PP_VICTUALS_PRICE_TT_LAND",
+        "MAPMODE_PP_VICTUALS_PRICE_TT_WATER",
         "[Market.GetName]",
-        "ScriptValue('pp_victuals_market_price_map_value')",
+        "ScriptValue('pp_victuals_price_map_value')",
         "ShowGoodsName('victuals')",
     )
     missing_localization = [
@@ -1815,7 +1815,7 @@ def test_victuals_market_price_map_mode_uses_default_relative_scale_and_assets()
         / "interface"
         / "icons"
         / "map_modes"
-        / "pp_victuals_market_price.dds"
+        / "pp_victuals_price.dds"
     ).is_file()
     assert not (
         MOD_ROOT
@@ -1824,7 +1824,7 @@ def test_victuals_market_price_map_mode_uses_default_relative_scale_and_assets()
         / "interface"
         / "icons"
         / "map_modes"
-        / "pp_victuals_market_price.dds"
+        / "pp_victuals_price.dds"
     ).exists()
 
 
@@ -1981,7 +1981,7 @@ def test_yearly_closed_building_culling_removes_one_level_not_whole_stack() -> N
     assert "building_can_be_destroyed_by = root" in cull
     assert "change_building_level = -1" in cull
     assert "destroy_building = prev" not in cull
-    assert "NOT = { building_type = building_type:victuals_market_import }" in cull
+    assert "NOT = { building_type = building_type:tavern }" in cull
     # the cull and the import review share one pass over the owned locations
     review = effects.split("pp_ai_building_review_effect = {", maxsplit=1)[1].split("\n}", maxsplit=1)[0]
     assert review.count("every_owned_location") == 1
@@ -1992,13 +1992,13 @@ def test_yearly_closed_building_culling_removes_one_level_not_whole_stack() -> N
 def test_ai_victuals_import_review_builds_only_where_food_is_very_short_and_affordable() -> None:
     triggers = VICTUALS_IMPORT_TRIGGERS.read_text(encoding="utf-8-sig")
     assert "is_province_capital = yes" in triggers
-    assert "modifier:pp_province_food_storage_months < pp_victuals_import_low_storage_months" in triggers
+    assert "modifier:pp_province_food_storage_months < pp_tavern_low_storage_months" in triggers
     # the storage marker reads 0 in net-producing provinces (tribesmen): require a real shortage too
     assert "is_starving = yes" in triggers and "province_monthly_food_production < 0" in triggers
-    assert "can_build_building = building_type:victuals_market_import" in triggers
+    assert "can_build_building = building_type:tavern" in triggers
     # a queued first level exists as a building under construction and must block a second one
-    assert "NOT = { any_buildings_in_location = { building_type = building_type:victuals_market_import } }" in triggers
-    assert "has_building = building_type:victuals_market_import" not in triggers
+    assert "NOT = { any_buildings_in_location = { building_type = building_type:tavern } }" in triggers
+    assert "has_building = building_type:tavern" not in triggers
     for condition in (
         "building_can_be_upgraded_by = root",
         "is_at_max_level = no",
@@ -2006,14 +2006,14 @@ def test_ai_victuals_import_review_builds_only_where_food_is_very_short_and_affo
         "is_full_capacity = yes",
         "is_lacking_goods = no",
         "building_profit > 0",
-        "building_type = building_type:victuals_market\n",
+        "building_type = building_type:victualling_yard\n",
     ):
         assert condition in triggers
 
     effects = AI_BUILDING_REVIEW_EFFECTS.read_text(encoding="utf-8-sig")
-    build = effects.split("pp_build_wanted_victuals_imports = {", maxsplit=1)[1]
+    build = effects.split("pp_build_wanted_taverns = {", maxsplit=1)[1]
     assert "value = pp_ai_spare_construction_gold" in build
-    assert "construct_building = { building_type = building_type:victuals_market_import }" in build
+    assert "construct_building = { building_type = building_type:tavern }" in build
     assert "change_building_level" not in build
 
     values = (SCRIPT_VALUES_ROOT / "pp_ai_building_review.txt").read_text(encoding="utf-8-sig")
@@ -2146,10 +2146,10 @@ def test_monthly_market_food_stockpile_topup_is_defined_but_weather_hook_is_disa
     assert isinstance(global_pulse, CList)
     global_on_actions = _entry_values(global_pulse)["on_actions"]
     assert isinstance(global_on_actions, CList)
-    # the stockpile top-up stays disabled; the victuals export delivery rides the same monthly pulse
+    # the stockpile top-up stays disabled; no other script rides the monthly pulse (the Victualling Yard sells real
+    # victuals, so no export delivery script is needed)
     assert global_on_actions.items == [
         "pp_monthly_market_food_stockpile_topup_on_weather_pulse",
-        "pp_victuals_export_delivery_on_weather_pulse",
     ]
     assert "effect" not in _entry_values(global_pulse)
 
@@ -2573,26 +2573,26 @@ def test_constructor_building_methods_are_resolved_and_unique() -> None:
     assert data.building_data.warnings == []
 
 
-def test_cookery_building_line_has_resolved_prices() -> None:
+def test_cookshop_building_line_has_resolved_prices() -> None:
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
     annotated = annotate_building_data_availability(data.building_data, data.advancements)
     buildings = {row["name"]: row for row in annotated.buildings.to_dicts()}
 
-    assert buildings["cookery"]["price"] is None
-    assert buildings["cookery"]["effective_price"] == "p_building_age_1_traditions"
-    assert buildings["cookery"]["effective_price_gold"] == 50.0
-    assert buildings["cookery"]["price_kind"] == "baseline_age"
+    assert buildings["cookshop"]["price"] is None
+    assert buildings["cookshop"]["effective_price"] == "p_building_age_1_traditions"
+    assert buildings["cookshop"]["effective_price_gold"] == 50.0
+    assert buildings["cookshop"]["price_kind"] == "baseline_age"
 
-    assert buildings["victualling_yard"]["price"] is None
-    assert buildings["victualling_yard"]["effective_price"] == "p_building_age_5_absolutism"
-    assert buildings["victualling_yard"]["effective_price_gold"] == 800.0
-    assert buildings["victualling_yard"]["price_kind"] == "baseline_age"
+    assert buildings["public_kitchen"]["price"] is None
+    assert buildings["public_kitchen"]["effective_price"] == "p_building_age_5_absolutism"
+    assert buildings["public_kitchen"]["effective_price_gold"] == 800.0
+    assert buildings["public_kitchen"]["price_kind"] == "baseline_age"
 
-    assert buildings["victuals_market_import"]["price"] == "pp_victuals_market_import_price"
-    assert buildings["victuals_market_import"]["price_gold"] == 50.0
-    assert buildings["victuals_market_import"]["effective_price"] == "pp_victuals_market_import_price"
-    assert buildings["victuals_market_import"]["effective_price_gold"] == 50.0
-    assert buildings["victuals_market_import"]["price_kind"] == "explicit"
+    assert buildings["tavern"]["price"] == "pp_tavern_price"
+    assert buildings["tavern"]["price_gold"] == 35.0
+    assert buildings["tavern"]["effective_price"] == "pp_tavern_price"
+    assert buildings["tavern"]["effective_price_gold"] == 35.0
+    assert buildings["tavern"]["price_kind"] == "explicit"
 
 
 def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -> None:
@@ -2614,12 +2614,13 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
         assert buildings[building]["price_kind"] == "baseline_age", building
 
     for building, price in (
-        ("victuals_market_import", "pp_victuals_market_import_price"),
+        ("tavern", "pp_tavern_price"),
+        ("victualling_yard", "pp_victualling_yard_price"),
     ):
-        victuals_market = buildings[building]
-        assert victuals_market["employment_size"] == 0.001
-        assert victuals_market["price"] == price
-        assert victuals_market["price_kind"] == "explicit"
+        victualling_yard = buildings[building]
+        assert victualling_yard["employment_size"] == 0.001
+        assert victualling_yard["price"] == price
+        assert victualling_yard["price_kind"] == "explicit"
 
 
 def test_victuals_pop_demand_uses_scalar_database_value() -> None:
@@ -2986,13 +2987,13 @@ def test_current_megalopolis_buildings_allow_megalopolis() -> None:
         assert values["megalopolis"] is True
 
 
-def test_victuals_market_construction_and_coastal_saltern_debug_keys_are_localized() -> None:
-    victuals_market = load_template(
-        ROOT / "blueprints" / "accepted" / "buildings" / "victuals_market_export.yml"
+def test_victuals_trade_construction_and_coastal_saltern_debug_keys_are_localized() -> None:
+    victualling_yard = load_template(
+        ROOT / "blueprints" / "accepted" / "buildings" / "victualling_yard.yml"
     )
     coastal_saltern = load_template(ROOT / "blueprints" / "accepted" / "buildings" / "coastal_saltern.yml")
 
-    assert victuals_market.localization["victuals_market_construction"] == "Victualler Construction"
+    assert victualling_yard.localization["victuals_trade_construction"] == "Victuals Trade Construction"
 
     rendered = parse_text(
         f"{coastal_saltern.key} = {{\n{coastal_saltern.building_body}\n}}\n",
@@ -3273,7 +3274,7 @@ def _goods_by_subcategory(subcategory: str) -> set[str]:
 
 
 def _accepted_blueprint_building_values(building: str) -> dict[str, object]:
-    filename = "victuals_market_export.yml" if building == "victuals_market" else f"{building}.yml"
+    filename = "victualling_yard.yml" if building == "victualling_yard" else f"{building}.yml"
     return _accepted_blueprint_building_values_from_path(BUILDING_BLUEPRINT_ROOT / filename)
 
 

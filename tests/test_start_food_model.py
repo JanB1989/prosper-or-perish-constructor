@@ -102,9 +102,9 @@ def test_victuals_pop_factors_multiply_demand_add_by_demand_multiply():
 
 
 def test_start_config_merges_victuals_overrides_into_defaults():
-    start = sp.StartConfig.from_raw({"victuals": {"absorb_share": 0.7, "consumers": {"victuals_market_import": 1.0}}})
-    assert start.victuals["absorb_share"] == 0.7 and start.victuals["consumers"] == {"victuals_market_import": 1.0}
-    assert start.victuals["producers"]["cookery"] == sp.DEFAULT_VICTUALS["producers"]["cookery"]
+    start = sp.StartConfig.from_raw({"victuals": {"absorb_share": 0.7, "consumers": {"tavern": 1.0}}})
+    assert start.victuals["absorb_share"] == 0.7 and start.victuals["consumers"] == {"tavern": 1.0}
+    assert start.victuals["producers"]["cookshop"] == sp.DEFAULT_VICTUALS["producers"]["cookshop"]
 
 
 def test_province_food_per_level_reads_the_provisioning_and_serve_methods():
@@ -121,44 +121,44 @@ def test_province_food_per_level_reads_the_provisioning_and_serve_methods():
         ),
         "wheat_farmstead": block("unique_production_methods = { pp_wheat_farmstead_provision = { produced = local_food output = 1.28 } }"),
         "fishing_village": block("unique_production_methods = { pp_fishing_village_provision = { fish = 0.067 produced = local_food output = 0.8 } }"),
-        "cookery": block(
-            "unique_production_methods = { pp_cookery_khichdi_serve = { produced = local_food output = 24.99 } "
-            "pp_cookery_livestock_pottage_serve = { produced = local_food output = 27.57 } "
-            "pp_cookery_livestock_pottage = { produced = victuals output = 0.919 } }"
+        "cookshop": block(
+            "unique_production_methods = { pp_cookshop_khichdi_serve = { produced = local_food output = 24.99 } "
+            "pp_cookshop_livestock_pottage_serve = { produced = local_food output = 27.57 } "
+            "pp_cookshop_livestock_pottage = { produced = victuals output = 0.919 } }"
         ),
         "iron_mine": block("max_levels = 2"),
     }
     spec = sp.StartConfig().province_food
-    assert province_food_per_level(r, spec) == {"cookery": 27.57, "fishing_village": 0.8, "wheat_farm": 0.96, "wheat_farmstead": 1.28}
+    assert province_food_per_level(r, spec) == {"cookshop": 27.57, "fishing_village": 0.8, "wheat_farm": 0.96, "wheat_farmstead": 1.28}
     assert province_food_per_level(r, {**spec, "per_level": {"iron_mine": 2}})["iron_mine"] == 2.0
     with pytest.raises(ValueError):
-        province_food_per_level(r, {**spec, "serve": {"cookery": "pp_cookery_missing_serve"}})
+        province_food_per_level(r, {**spec, "serve": {"cookshop": "pp_cookshop_missing_serve"}})
 
 
 def test_start_config_merges_the_province_food_section():
-    start = sp.StartConfig.from_raw({"province_food": {"serve": {"cookery": "pp_cookery_kheer_serve"}, "per_level": {"x": "1.5"}}})
-    assert start.province_food["serve"] == {"cookery": "pp_cookery_kheer_serve"} and start.province_food["per_level"] == {"x": 1.5}
+    start = sp.StartConfig.from_raw({"province_food": {"serve": {"cookshop": "pp_cookshop_kheer_serve"}, "per_level": {"x": "1.5"}}})
+    assert start.province_food["serve"] == {"cookshop": "pp_cookshop_kheer_serve"} and start.province_food["per_level"] == {"x": 1.5}
     assert start.province_food["method_pattern"] == sp.DEFAULT_PROVINCE_FOOD["method_pattern"]
     assert sp.StartConfig().province_food == sp.DEFAULT_PROVINCE_FOOD
 
 
-def test_province_food_is_added_per_level_unscaled_and_feeds_the_cookery():
+def test_province_food_is_added_per_level_unscaled_and_feeds_the_cookshop():
     from types import SimpleNamespace
 
     sim = Simulation.__new__(Simulation)
     sim.numbers = {
         "wheat_farm": {"employment_size": 1, "pop_type": "peasants", "local_monthly_food": 1.5},
-        "cookery": {"employment_size": 1, "pop_type": "laborers", "local_monthly_food": 0},
+        "cookshop": {"employment_size": 1, "pop_type": "laborers", "local_monthly_food": 0},
     }
-    sim.province_food = {"wheat_farm": 0.96, "cookery": 27.57}
+    sim.province_food = {"wheat_farm": 0.96, "cookshop": 27.57}
     sim.food_mult = {"x": 0.9}
     sim.food = {"peasants": 1.0, "laborers": 1.5}
     sim.rules = SimpleNamespace(subsistence=1.5)
     assert abs(sim.food_per_level("wheat_farm", 0.9) - (0.9 * 1.5 + 0.96)) < 1e-9     # local food scaled, Province Food not
     assert sim.food_per_level("absent") == 0.0
-    # the cookery's Serve output on the share of levels that serve, minus the laborer's lost subsistence (the
-    # location's yield: define x local food modifier without a fitted one) and extra consumption
-    assert abs(sim.cookery_net_food("x") - (0.5 * 27.57 - 0.9 * 1.5 - 0.5)) < 1e-9
+    # the Cookshop's Serve output (every level serves) and its drink slot's Province Food, minus the laborer's lost
+    # subsistence (the location's yield: define x local food modifier without a fitted one) and extra consumption
+    assert abs(sim.cookshop_net_food("x") - (1.0 * 27.57 + 12.0 - 0.9 * 1.5 - 0.5)) < 1e-9
     assert Simulation.province_food == {}                                               # class default: no term
 
 
@@ -167,10 +167,10 @@ def test_food_model_config_reads_the_section_and_keeps_defaults():
     from prosper_or_perish_constructor.worldbuilder import start_food_model_v2 as fm
 
     cfg = fm.FoodModelConfig.from_raw({"yield_rank": {"town": "0.9"}, "yield_climate": {"arid": 0.8}, "capacity": {"per_location": 50},
-                                       "subsistence_pop_types": ["peasants"], "cookery_serve_share": 0.3})
+                                       "subsistence_pop_types": ["peasants"], "cookshop_serve_share": 0.3})
     assert cfg.yield_rank == {"town": 0.9} and cfg.yield_climate == {"arid": 0.8}
     assert cfg.capacity["per_location"] == 50.0 and cfg.capacity["per_development"] == fm.DEFAULT_CAPACITY["per_development"]
-    assert cfg.subsistence_pop_types == ("peasants",) and cfg.cookery_serve_share == 0.3
+    assert cfg.subsistence_pop_types == ("peasants",) and cfg.cookshop_serve_share == 0.3
     assert fm.FoodModelConfig().subsistence_pop_types == ("peasants", "slaves")      # laborers do not farm
 
 
@@ -202,13 +202,14 @@ def test_overpopulation_adds_half_the_peasant_food_per_unit_over_capacity():
     assert fm.overpopulation_food(80, 40, 0, cfg) == 0.0                          # no capacity known: no term
 
 
-def test_food_capacity_and_cookery_victuals():
+def test_food_capacity_and_the_cookshop_makes_no_victuals():
     from prosper_or_perish_constructor.worldbuilder import start_food_model_v2 as fm
 
-    cfg = fm.FoodModelConfig(capacity={"per_development": 30.0, "per_population_k": 4.0, "per_location": 100.0, "rank": {"town": 500.0}},
-                             cookery_serve_share=0.5, preserve_victuals_per_level=0.64, cookery_victuals_other=0.67)
+    cfg = fm.FoodModelConfig(capacity={"per_development": 30.0, "per_population_k": 4.0, "per_location": 100.0, "rank": {"town": 500.0}})
     assert fm.food_capacity([(10, 20, "town"), (0, 5, "rural_settlement")], cfg) == 300 + 80 + 100 + 500 + 20 + 100
-    assert abs(fm.cookery_victuals(cfg) - (0.67 + 0.5 * 0.64)) < 1e-9
+    # the Cookshop serves everything (no Preserve recipes); victuals come from the Victualling Yard only
+    assert cfg.cookshop_serve_share == 1.0 and not hasattr(fm, "cookshop_victuals")
+    assert cfg.tavern_victuals_per_level == 2.0 and cfg.yard_victuals_per_level == 1.5
 
 
 def test_fit_yields_recovers_rank_and_climate_factors():
@@ -236,7 +237,7 @@ def test_fit_yields_recovers_rank_and_climate_factors():
     assert abs(fit["yield_rank"]["town"] - true_r["town"] * s) < 1e-3
 
 
-def test_budget_v2_jobless_laborers_do_not_farm_and_cookeries_serve_their_share():
+def test_budget_v2_jobless_laborers_do_not_farm_and_cookshops_serve_their_share():
     from types import SimpleNamespace
 
     from prosper_or_perish_constructor.worldbuilder.start_food_model_v2 import FoodModelConfig
@@ -244,7 +245,7 @@ def test_budget_v2_jobless_laborers_do_not_farm_and_cookeries_serve_their_share(
     sim = Simulation.__new__(Simulation)
     sim.rules = SimpleNamespace(subsistence=1.5)
     sim.start = sp.StartConfig()
-    sim.food_model = FoodModelConfig(cookery_serve_share=0.5, capacity={"per_development": 0.0, "per_population_k": 0.0, "per_location": 0.0, "rank": {}})
+    sim.food_model = FoodModelConfig(cookshop_serve_share=0.5, capacity={"per_development": 0.0, "per_population_k": 0.0, "per_location": 0.0, "rank": {}})
     sim.pops = {"x": [sp.Pop("peasants", 100, "a", "r"), sp.Pop("laborers", 20, "a", "r")]}
     sim.groups = {("AAA", "p"): ["x"]}
     sim.catchments = {("AAA", "p"): "m"}
@@ -257,18 +258,18 @@ def test_budget_v2_jobless_laborers_do_not_farm_and_cookeries_serve_their_share(
     sim.base = {"x": {"modifiers": {"local_population_capacity": 60.0}, "location_rank": "rural_settlement", "development": 0.0}}
     sim.raw = {}
     sim.conversions = []
-    sim.numbers = {"cookery": {"employment_size": 1, "pop_type": "laborers", "local_monthly_food": 0},
+    sim.numbers = {"cookshop": {"employment_size": 1, "pop_type": "laborers", "local_monthly_food": 0},
                    "wheat_farm": {"employment_size": 1, "pop_type": "peasants", "local_monthly_food": 1.5}}
-    sim.province_food = {"cookery": 27.57, "wheat_farm": 0.96}
+    sim.province_food = {"cookshop": 27.57, "wheat_farm": 0.96}
     from collections import defaultdict
-    sim.counts = defaultdict(Counter, {"x": Counter({"cookery": 2, "wheat_farm": 3})})
-    sim.staffed = defaultdict(Counter, {"x": Counter({"cookery": 2, "wheat_farm": 3})})
+    sim.counts = defaultdict(Counter, {"x": Counter({"cookshop": 2, "wheat_farm": 3})})
+    sim.staffed = defaultdict(Counter, {"x": Counter({"cookshop": 2, "wheat_farm": 3})})
     b = sim.budgets()[("AAA", "p")]
     jobless = 100 - 3 - 2.0                                  # peasants minus farm staff minus RGO workers
     assert abs(b["subsistence"] - 1.4 * jobless) < 1e-9 and b["subsistence_workers_k"] == jobless
     assert abs(b["demand_base"] - 130) < 1e-9
     assert abs(b["overpopulation"] - 0.5 * 100 * (120 / 60 - 1)) < 1e-9     # twice the capacity
-    assert abs(b["serve_food"] - 0.5 * 2 * 27.57) < 1e-9
+    assert abs(b["serve_food"] - 2 * (0.5 * 27.57 + 12.0)) < 1e-9          # Serve share + the drink slot
     assert abs(b["building_food"] - 3 * (1.5 + 0.96)) < 1e-9
     assert abs(b["day0_production"] - (1.4 * jobless + 3 * 1.5 - b["overpopulation"])) < 1e-9   # no Provisioning, no Serve yet
     assert abs(b["R"] - (b["subsistence"] + b["building_food"] + b["serve_food"]) / b["demand"]) < 1e-9

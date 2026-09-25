@@ -138,7 +138,7 @@ class SavegameNotebookData:
         snapshot_date: int | None = None,
         good_search: str | None = "victuals",
         market_search: str | None = None,
-        building_search: str | None = "cookery",
+        building_search: str | None = "cookshop",
         pm_drilldown_search: str | None = None,
         country_search: str | None = "england",
         group_by: str = "super_region",

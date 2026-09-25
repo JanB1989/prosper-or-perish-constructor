@@ -183,9 +183,9 @@ max_farm_levels_per_location = 6
 food_target_ratio = 1.1               # province food supply aimed for, relative to what the pops eat
 # Subsistence is read from NLocation.SUBSISTENCE_AGRICULTURE.
 subsistence_pop_types = ["peasants", "laborers", "slaves"]
-max_cookery_levels_per_location = 6
+max_cookshop_levels_per_location = 6
 # Victuals limits come from the live import/export scripted values.
-laborer_conversion_share = 0.5        # share of a location's peasants that may become the cookeries' laborers
+laborer_conversion_share = 0.5        # share of a location's peasants that may become the Cookshops' laborers
 [worldbuilder.start.processors]
 # raw material -> building placed at game start (its laborers are converted from local peasants); levels as before
 alum = { building = "alum_quarry", levels = 1 }
@@ -268,25 +268,24 @@ town = 2.0
 city = 2.4
 megalopolis = 2.3
 [worldbuilder.start.victuals]
-# Victuals are the mod's food in the goods market: cookeries make them, import victuals markets are the only buildings
-# that turn them back into province food. The planner (placement v2, [worldbuilder.start.food_model]) keeps each
-# market's victuals supply >= demand x victuals_target; these numbers feed its pop demand and `ppc worldbuilder
+# Victuals are the mod's food in the goods market: Victualling Yards pack them from full province stores, Taverns are
+# the only buildings that turn them back into province food. The planner (placement v2, [worldbuilder.start.food_model])
+# keeps each market's victuals supply >= demand x victuals_target; these numbers feed its pop demand and `ppc worldbuilder
 # food-check`'s refit.
 pop_demand_scale = 0.305  # observed pop demand vs the goods file's demand_add x demand_multiply (food-check refit on nb.eu5, 2026-09-25; was 0.4)
-# victuals per building level as the market shows them (measured from saves 2026-09-22; food-check refits)
-# cookery: Serve is the default, but 0.0 here (tried 2026-09-25) cut the deficit-driven import markets from 616 to 62
-# levels and left victuals supply at 269 against 838 demand, so the measured 0.65 stays until a save says otherwise
-producers = { cookery = 0.65, victuals_market = 3.45 }
-consumers = { victuals_market_import = 1.8, lumber_mill = 0.3 }
+# victuals per building level as the market shows them (food-check refits). Cookshops make none since 2026-09-25 (Serve
+# only); the Yard packs 1.5 per level loose and the Tavern buys 2 (the former 90-food Victualler's measured 1.8 x 2/3).
+producers = { victualling_yard = 1.5 }
+consumers = { tavern = 1.2, lumber_mill = 0.3 }
 [worldbuilder.start.province_food]
 # Province Food (the local_food good, 1 food per unit) one staffed level makes on top of its local_monthly_food, as the
 # start budget counts it (worldbuilder/start_simulation.py province_food_per_level). Read from the building
 # definitions: the output of the building's Provisioning method (method_pattern; crop farms 0.96 x M with M = tier base
 # output / 0.06, fishing villages 0.8, forest villages and orchards 0.96) and, for the buildings under serve, the named
-# Serve method (the cookery's Serve replaced its flat local_monthly_food). The budget assumes that method runs and does
+# Serve method (on top of the Cookshop's flat local_monthly_food). The budget assumes that method runs and does
 # not scale it by the local food modifier. per_level = { building = value } overrides a derived value.
 method_pattern = "pp_{building}_provision"
-serve = { cookery = "pp_cookery_livestock_pottage_serve" }   # 27.57 food per level, the European pottage
+serve = { cookshop = "pp_cookshop_livestock_pottage_serve" }   # 27.57 food per level, the European pottage
 per_level = {}
 [worldbuilder.start.food_model]
 # Food model v2 (worldbuilder/start_food_model_v2.py), fitted 2026-09-25 on the day-0 save nb.eu5 (1337.4.1, 4,018
@@ -304,25 +303,25 @@ start_food_share = 0.10            # game rule pp_starting_province_food default
 # province food capacity per pool (max_food_value), fitted on nb.eu5 (R2 0.968); buildings' local_food_capacity adds
 capacity = { per_development = 31.97, per_population_k = 3.65, per_location = 99.9, rank = { town = 521.3, city = 815.2, megalopolis = 1240.8 } }
 # placement v2 (start_simulation.place_food_chain)
-market_victuals_per_level = 3.0    # victuals a staffed Victualler buys / an export sells per month
-# cookeries: the engine runs the dish slot on Serve for about half the levels (53 % in 1341, 49 % in 1345, 28 % in short
-# pools: it picks by price, not by need); container and drink slots make victuals on every level (nb.eu5 day 0)
-cookery_serve_share = 0.5
-preserve_victuals_per_level = 0.64 # the dish slot on Preserve (nb.eu5: 1,471 victuals from 2,301 levels)
-cookery_victuals_other = 0.67      # pottery jars, wine, beer, tea ... (nb.eu5: 1,540 victuals from 2,301 levels)
-victuals_target = 1.1              # per market: victuals supply >= demand (imports + pops) x this
-export_surplus_share = 0.25        # exports only in pools that feed themselves by more than +25 %
-export_min_capacity_months = 18.0  # ... and whose store can reach the export band (18 months)
+tavern_victuals_per_level = 2.0    # victuals a staffed Tavern buys per month (60 food, 30 per victual)
+yard_victuals_per_level = 1.5      # victuals a staffed Victualling Yard packs per month (60 food, loose stores)
+# Cookshops serve every dish as Province Food (no Preserve recipes since 2026-09-25)
+cookshop_serve_share = 1.0
+cookshop_drink_food = 12.0         # drink slot Province Food per level (estimate; refit from a save with food-check)
+victuals_target = 1.1              # per market: victuals supply >= demand (Taverns + pops) x this
+yard_surplus_share = 0.25          # Yards only in pools that feed themselves by more than +25 %
+yard_min_capacity_months = 20.0    # ... and whose store can reach the Yard's band (20 months)
+yard_min_level_share = 0.3         # a Yard level once the spare food fills 30 % of one (levels staff partly)
 raw_goods_per_rgo_k = 1.5          # raw food goods per 1,000 RGO workers (nb.eu5 median 1.50)
-serve_raw_goods_share = 0.2        # share of the market's raw food output new Serve cookeries may use (nb.eu5: 21 % spare)
-serve_fallback_raw_goods_share = 0.5   # when the market cannot supply the imports' victuals
+serve_raw_goods_share = 0.2        # share of the market's raw food output new Serve Cookshops may use (nb.eu5: 21 % spare)
+serve_fallback_raw_goods_share = 0.5   # when the market cannot supply the Taverns' victuals
 
 [worldbuilder.start.construction_materials]
 # Every market gets a minimum monthly supply of lumber, masonry and tools from its starting buildings: AI-queued
-# Victuallers (victuals_market_construction: lumber 0.25, masonry 0.1, tools 0.1 for 365 days) and every other early
-# build stall in markets without them (233 of 1,567 AI Victuallers unfinished by 1345). Expected demand = margin x the
-# construction demand per million pops of the same campaign in 1341 (pre41.eu5: lumber 216, masonry 271, tools 64 on
-# 354 M pops; nb.eu5 on day 0 has none yet) + per queued Victualler the placement still wanted. Producer outputs per
+# Taverns (victuals_trade_construction: lumber 0.25, masonry 0.1, tools 0.1 for 365 days) and every other early
+# build stall in markets without them (233 of 1,567 AI Victuallers, now Taverns, unfinished by 1345). Expected demand =
+# margin x the construction demand per million pops of the same campaign in 1341 (pre41.eu5: lumber 216, masonry 271,
+# tools 64 on 354 M pops; nb.eu5 on day 0 has none yet) + per queued Tavern the placement still wanted. Producer outputs per
 # level are nb.eu5's market supply per building level (day 0).
 margin = 2.0
 [worldbuilder.start.construction_materials.goods.lumber]
@@ -330,7 +329,7 @@ producers = { lumber_mill = 0.70, water_sawmill = 1.0, lumber_mill_improved = 1.
 rgo_output_per_location = 1.16     # lumber is also a raw material: nb.eu5 RGO output 2,905 on 2,514 locations
 place = ["lumber_mill"]
 construction_per_million_pops = 0.61
-per_victualler = 0.25
+per_tavern = 0.25
 max_levels_per_location = 2
 [worldbuilder.start.construction_materials.goods.masonry]
 producers = { mason = 0.49 }
@@ -338,7 +337,7 @@ place = ["mason"]
 inputs = ["stone", "clay"]
 input_buildings = ["stone_quarry", "clay_pit"]
 construction_per_million_pops = 0.77
-per_victualler = 0.1
+per_tavern = 0.1
 max_levels_per_location = 2
 [worldbuilder.start.construction_materials.goods.tools]
 producers = { tools_guild = 0.18, market_village = 0.144, tatara = 0.5 }
@@ -346,7 +345,7 @@ place = ["tools_guild", "market_village"]
 inputs = ["iron", "stone", "copper"]
 input_buildings = ["iron_mine", "stone_quarry", "copper_mine"]
 construction_per_million_pops = 0.18
-per_victualler = 0.1
+per_tavern = 0.1
 max_levels_per_location = 2
 
 [worldbuilder.start.food_sim]
@@ -448,7 +447,7 @@ max_goods = 4                 # at most this many goods per method besides labou
 # Share of the total input cost paid as labour. Later ages mechanise: the later the building, the smaller the share.
 # "primary" = farms, villages, groves, pits, quarries, mines, fisheries, forestry and rural processing;
 # "craft" = guilds, workshops, manufactories, mills and factories.
-keep = "keep"                 # already carried labour or trade dummy goods (victuals markets): left as they are
+keep = "keep"                 # already carried labour or trade dummy goods (Taverns, Victualling Yards): left as they are
 base = { output_share = 0.20 } # methods without goods inputs (base yields): labour worth 20 % of the output
 hand_work = 0.45              # labour-heavy fallback methods for input shortages (lower output, fewer tools)
 cottage = 0.25                # village home crafts: market village crafts, rural cloth- and glassmakers, tatara, brickmaking
@@ -458,8 +457,8 @@ primary_reformation = 0.11    # age 4
 primary_absolutism = 0.08     # age 5
 primary_revolutions = 0.05    # age 6
 plantation = 0.05             # slave plantations: slaves_goods already stands for the work
-craft_medieval = 0.14         # guilds and cookeries, ages 1-2
+craft_medieval = 0.14         # guilds and Cookshops, ages 1-2
 craft_discovery = 0.12        # age 3 workshops
 craft_reformation = 0.10      # age 4 workshops
-craft_absolutism = 0.07       # age 5 manufactories, victualling yards
+craft_absolutism = 0.07       # age 5 manufactories, Public Kitchens
 craft_revolutions = 0.04      # age 6 mills and factories

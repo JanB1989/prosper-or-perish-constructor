@@ -45,14 +45,15 @@ budget models that state rather than the files:
    (farmable RGO or farmland) spreads its farm levels over the crop farms
    (see *Crop farms at game start*).
 4. Per market (the nearest starting market centre within the region), run the
-   food chain v2 (see *Placement v2*): cookeries where the market's raw goods
-   allow, Victualler imports sized to each deficit pool's remaining need at its
-   province capital, export markets in surplus pools until the market's victuals
-   cover the imports, and Serve cookeries where the market cannot. Every city and
-   megalopolis additionally receives at least one import market (not in a
-   province that exports). Only the permitted share of local peasants becomes
-   laborers, preserving culture, religion and total population. Nobles are never
-   fabricated for markets: the engine's setup promotion supplies them.
+   food chain v2 (see *Placement v2*): Cookshops where the market's raw goods
+   allow, Taverns sized to each deficit pool's remaining need at its province
+   capital, Victualling Yards in surplus pools (well-connected first) until the
+   market's victuals cover the Taverns, and further Cookshops where the market
+   cannot. Every city and megalopolis additionally receives at least one Tavern
+   (not in a province with a Victualling Yard). Only the permitted share of local
+   peasants becomes laborers, preserving culture, religion and total population.
+   Nobles are never fabricated for Taverns or Yards: the engine's setup promotion
+   supplies them.
 5. Per market, place lumber, masonry and tools producers where the market's
    supply falls short of the construction it will need (see *Construction
    materials*).
@@ -112,12 +113,13 @@ pools; production = `base_food_consumption + cached_structural_food_change`):
   jobless worker before the term, 1.39 after).
 - **Building food** per staffed level: `local_monthly_food` (scaled by the
   stack) plus the Province Food good of the Provisioning method (farms, fishing
-  and forest villages, orchards). Cookeries count their Serve food on
-  `cookery_serve_share` (0.5) of their levels: the engine picks the dish slot's
-  method by price, not by need (53 % of cookery levels on Serve in 1341, 49 % in
-  1345, only 28 % in short pools); the rest run Preserve. Victualler imports add
-  +90, exports -90 per staffed level.
-- **Day 0**: no farm runs Provisioning and no cookery Serve yet (see *Day-0
+  and forest villages, orchards). Cookshops (and Public Kitchens) serve every
+  dish as Province Food since 2026-09-25 (`cookshop_serve_share` 1, no Preserve
+  recipes) plus `cookshop_drink_food` (12, an estimate: about 0.4 of the 0.67
+  victuals the old drink and packing slots made per level on `nb.eu5`, x30) from
+  the drink slot, on top of their flat `local_monthly_food`. Taverns add +60,
+  Victualling Yards -60 per staffed level.
+- **Day 0**: no farm runs Provisioning and no cookshop Serve yet (see *Day-0
   stores*), so `day0_production` leaves the Province Food out.
 
 Per pool the budget reports `demand` (pops' food plus overpopulation), `R` =
@@ -143,39 +145,44 @@ continental monsoon 0.89 to subtropical monsoon 1.08 (the cold ones carry the
 April winter consumption of the reference save). The province food capacity is
 fitted as 32 per development point + 3.65 per 1,000 pops + 100 per location +
 rank (town 521, city 815, megalopolis 1,241), R² 0.968; buildings add their
-`local_food_capacity` (an export level 1,200).
+`local_food_capacity` (a Victualling Yard level 1,200).
 
 ## Placement v2
 
 `start_simulation.place_food_chain`, per market:
 
-1. **Cookeries** in pools that fall short of `demand x food_target_ratio`
-   (largest need first), as far as the market's raw food goods allow:
-   `serve_raw_goods_share` (0.2) of its RGOs' output of the Serve inputs
-   (1.5 goods per 1,000 RGO workers) divided by the goods one level uses (2.07).
-2. **Victualler imports** sized to each pool's remaining need / 90, at the
-   province capital (the pool's highest-ranked location, a market centre first,
-   then the most populous; the engine's province capital is not in the setup
-   files), then at its other locations; caps (`victuals_market_import_max_level`),
-   nobles and the no-export rule apply.
-3. **Victuals balance.** Every import must be backed by the market's victuals:
-   cookeries (0.67 victuals per level from their container and drink slots plus
-   0.64 x the Preserve share from the dish slot), other configured producers,
-   and **exports** in surplus pools (own food above +25 % of demand, a store that
-   can reach the 18-month export band, no import in the province; levels =
-   surplus beyond the reserve / 90, cap `victuals_market_export_max_level`), until
-   supply >= demand x `victuals_target` (1.1). Demand is the pops' victuals and
-   what the Victuallers will actually buy: an import only runs while its pool is
-   short (its storage leg stops paying above 12 months), so it buys its pool's
-   gap / 30 food per victual, at most 3 per level.
+1. **Cookshops** in pools that fall short of `demand x food_target_ratio`, as
+   far as the market's raw food goods allow: `serve_raw_goods_share` (0.2) of its
+   RGOs' output of the Serve inputs (1.5 goods per 1,000 RGO workers) divided by
+   the goods one level uses (2.07). A Cookshop feeds only its own province, so the
+   levels go one at a time to the pool whose remaining need is the largest share
+   of its demand (the market's crops are spread over its short provinces instead
+   of filling the largest one).
+2. **Taverns** sized to each pool's remaining need / 60, at the province capital
+   (the pool's highest-ranked location, a market centre first, then the most
+   populous; the engine's province capital is not in the setup files), then at its
+   other locations; caps (`tavern_max_level`), nobles and the no-Yard rule apply.
+3. **Victuals balance.** Every Tavern must be backed by the market's victuals:
+   configured producers and **Victualling Yards** in surplus pools (own food above
+   +25 % of demand, a store that can reach the Yard's 20-month band, no Tavern in
+   the province; a level once the spare food beyond the reserve fills
+   `yard_min_level_share` (0.3) of its 60 food, since the engine staffs levels
+   partly; cap `victualling_yard_max_level`), until supply >= demand x
+   `victuals_target` (1.1). Well-connected pools come first: surplus x the pool's
+   best Yard cap, which rewards rivers, coasts, harbours and market centres. A Yard
+   packs its pool's surplus / 40 food per victual, at most 1.5 per level (loose
+   stores). Demand is the pops' victuals and what the Taverns will actually buy: a
+   Tavern only runs while its pool is short (its storage leg stops paying above 12
+   months), so it buys its pool's gap / 30 food per victual, at most 2 per level.
+   Cookshops make no victuals.
 4. Pools that would otherwise collapse (fed below `import_priority_coverage`,
    0.85) get the market's victuals first, cheapest first; the rest by coverage.
-5. What the victuals cannot cover goes to further cookeries
-   (`serve_fallback_raw_goods_share`, 0.5 of the raw goods), whose victuals feed
-   further imports; steps 2-5 repeat until nothing more can be placed.
+5. What the victuals cannot cover goes to further Cookshops
+   (`serve_fallback_raw_goods_share`, 0.5 of the raw goods); steps 2-5 repeat
+   until nothing more can be placed.
 
 `start_placement.json` has per market (`victuals.catchments`) the deficit, raw
-goods, cookeries, wanted/placed imports and exports, the unmet food and the
+goods, Cookshops, wanted/placed Taverns and Yards, the unmet food and the
 victuals supply, demand and cover.
 
 ## Day-0 stores
@@ -184,9 +191,9 @@ The setup files have no province food or stockpile field. The engine fills every
 province store to its capacity when the setup loads, then the mod's
 `on_game_start` action `pp_set_starting_province_food` lowers it to the game
 rule's share (default `pp_starting_province_food_010`: 10 % of capacity, 1.5 to
-12.9 months of consumption, median ~3.7). The farms' and cookeries' methods are
-chosen against the full store first, so **every farm starts on Sell and every
-cookery on Preserve for the first month**; they switch once the store reads low.
+12.9 months of consumption, median ~3.7). The farms' methods are chosen against
+the full store first, so **every farm starts on Sell for the first month**; they
+switch once the store reads low.
 A months-based start (for example 6 months) is not possible in script: there is
 no trigger or value for a province's food consumption (only `province_food`,
 `province_max_food` and `province_monthly_food_production`). The validator shows
@@ -196,8 +203,8 @@ third iteration's placement), world +1.0 point; 12 months: 64 pools, +2.0 points
 ## Construction materials
 
 Every build the AI queues early stalls in a market without lumber, masonry or
-tools (233 of 1,567 AI-queued Victuallers in the pre-plague run never finished;
-`victuals_market_construction`: lumber 0.25, masonry 0.1, tools 0.1 for 365
+tools (233 of 1,567 AI-queued Victuallers, now Taverns, in the pre-plague run never finished;
+`victuals_trade_construction`: lumber 0.25, masonry 0.1, tools 0.1 for 365
 days). `start_simulation.place_construction_materials`,
 `[worldbuilder.start.construction_materials]`:
 
@@ -206,7 +213,7 @@ days). `start_simulation.place_construction_materials`,
   village 0.144) plus, for lumber, its lumber RGOs (1.16 each);
 - expected construction demand = `margin` (2) x the construction demand per
   million pops the same campaign had in 1341 (lumber 0.61, masonry 0.77, tools
-  0.18; `nb.eu5` itself has none on day 0) + the construction of the Victuallers
+  0.18; `nb.eu5` itself has none on day 0) + the construction of the Taverns
   the placement still wanted but could not place;
 - short markets (those with no supply first) get lumber mills, masons, tools
   guilds (then market villages) through the ordinary checks; a market that makes
@@ -226,10 +233,11 @@ prints its summary (a report, never a failure). It runs the population loop of
 start: jobs = jobs0 x (N/N0)^0.5, jobless peasants and slaves x yield,
 consumption falls 0.4 x the lost share (upper classes leave first) plus the
 overpopulation term, farms on Provisioning from month 6 while the store is below
-~11 months, cookeries on Serve on their share, Victuallers and exports staffing
-by the sign of their profit per level at a victuals price of 2.7 (import pays
-below 12 stored months, export above 18), imports limited by their market's
-victuals, a starving pool losing its Victualler's noble at 0.09 a year, a yearly
+~11 months, Cookshops serving from month 1, Taverns and Victualling Yards staffing
+by the sign of their profit per level at a victuals price of 2.7 (the Tavern pays
+below 12 stored months, the Yard above 20; each moves 60 food), Taverns limited by
+their market's victuals (the Yards' 1.5 per staffed level and other producers), a
+starving pool losing its Tavern's noble at 0.09 a year, a yearly
 seeded harvest roll (peasant consumption +0.30..-0.30), growth -0.0048 + 0.0086
 x stored years (starving: -0.056). Tribesmen (engine rules verified 2026-09-25):
 the food of their pop type (-1 per 1k: they feed the province) enters the
@@ -266,10 +274,11 @@ materials), with the validator after each placement iteration:
 | 2 | imports and cookeries alternate until the victuals are used | 142 | -2.5 % |
 | - | model fix: linear engine promotion (same rules) | 438 | -2.3 % |
 | 3 | an import costs its market the victuals its pool's gap needs | 99 | +0.6 % |
-| 4 | collapse-risk pools first for scarce victuals; construction materials | **84** | **+0.8 %** |
+| 4 | collapse-risk pools first for scarce victuals; construction materials | 84 | +0.8 % |
+| 5 | food niches (2026-09-25): Cookshops serve only, victuals from Victualling Yards, Taverns at 60 food; Cookshops spread by coverage, partial Yard levels, drink food counted | **37** | **+2.5 %** |
 
-The final placement: 2,974 cookery levels, 2,492 import levels (2,400 by the
-food chain, 151 city minimums), 17 export levels, 13,265 crop farm levels, 304
+Iteration 5 (the food niches) replaced the victuals chain; before it the placement had 2,974 cookshop levels,
+2,492 import levels (2,400 by the food chain, 151 city minimums), 17 export levels, 13,265 crop farm levels, 304
 masons, 94 lumber mills, 56 tools guilds and 140 market villages for
 construction; 1,123 worker conversions. 2,550 pools feed less than their demand
 without trade; 538 remain short after it (7.5k of 424.8k food a month). 115 of
@@ -284,40 +293,49 @@ without any supply in brackets): lumber 41 (29) -> 22 (15); masonry 62 (11) ->
 13 (10), 11 without stone or clay; tools 54 (12) -> 25 (11), 9 without iron,
 stone or copper.
 
-## Victuals markets
+## Taverns and Victualling Yards
 
-Both variants transfer **90 food per fully staffed level**; the import buys and
-the export sells 3 victuals. They are **two-legged**: the import's
-*Provisioning* buys the victuals and earns a steady 5 gold from 0.25 `offset` at
-20x; its *Scarcity Premium* leg (0.8 `province_food_purchase`, constant +15, -8
-per stored year, +8 while starving) pays while the store is below 12 months at
-the mean victuals price. The export sells its victuals as a negative input and
-its storage leg (1.425 `province_food_sales`, the farms' Surplus Sales good, constant -1,
-+8 per stored year, offset 24.9) pays
-above 18 months. Each staffed level lowers its own leg by 0.3 so staffing
-settles. `tools/province_food_sim.py` is the monthly simulator used to choose
-these numbers.
+Both move **60 food per fully staffed level** (one noble each). They are
+**two-legged**:
+
+- The **Tavern** serves bought-in victuals: *Serving* buys 2 victuals and earns a
+  steady 3.34 gold from 0.167 `offset` at 20x; its *Scarcity Premium* leg (0.533
+  `province_food_purchase`, constant +15, -8 per stored year, +8 while starving)
+  pays while the store is below 12 months at the mean victuals price. It keeps the
+  former Victualler's behaviour at two thirds of its throughput.
+- The **Victualling Yard** packs the lasting part of a full store: *Pack
+  Provisions* is a real victuals output (1.5 per level, production efficiency
+  scales it; no negative input, no pulse script), *Sell the Surplus* is its
+  storage leg (2.0 `province_food_sales`, the farms' Surplus Sales good, constant
+  -1, +8 per stored year, offset 30.52), paying above 20 months. Its *Packing*
+  slot (pottery jars, coopered barrels, tin cans; each breaks even at default
+  prices) adds victuals up to 1:30. Loose stores pack at 1:40, so food that goes
+  out through a Yard and back through a Tavern always loses; the 12-20 month dead
+  band between the two only closes at about +125 % production efficiency.
+
+Each staffed level lowers its own leg by 0.2 so staffing settles.
 
 `config/victuals_logistics.json` generates distinct live script values:
 
-- Imports favour development, population, town/city rank and market centres.
-- Exports favour rural food resources, farmland and water transport.
-- Both include native river level, coastal access, natural harbour suitability,
-  mountain/hill penalties and adjacent navigation state.
+- Taverns favour development, population, town/city rank and market centres (1.5x
+  the former Victualler's coefficients, maximum 36).
+- Victualling Yards favour water transport and market centres: harbour, coast,
+  river level, navigable neighbours; no crop or population terms (they pack the
+  province store, not the location's own output).
+- Both include mountain/hill penalties and adjacent navigation state.
 - Open and maintained waterways grant more capacity than difficult waterways.
   Navigation works can increase the cap during play. A barrier grants no
   navigability bonus, although its native coastline may still supply coast credit.
-- Caps are floored, bounded from zero to the configured maximum (currently 24),
-  and are logistical potential, not a promise that demand or workers exist.
+- Caps are floored, bounded from zero to the configured maximum, and are
+  logistical potential, not a promise that demand or workers exist.
 
 The startup planner uses the lower cap from before/after navigation variables
 are initialized, so it cannot spend an `on_game_start` bonus prematurely.
 Forest capacity also has a geography fallback before its cache is initialized.
 
-Balance coefficients are intentionally modest and adjustable. Every city gets
-one import market; additional levels depend on deficits, logistics and staffing.
-A self-sufficient city's minimum market can remain idle. Placement policy limits and staffing shares live
-in `[worldbuilder.start]` in `constructor.toml`.
+Every city gets one Tavern; additional levels depend on deficits, logistics and
+staffing. A self-sufficient city's minimum Tavern can remain idle. Placement policy
+limits and staffing shares live in `[worldbuilder.start]` in `constructor.toml`.
 
 ## Limits of the estimate
 

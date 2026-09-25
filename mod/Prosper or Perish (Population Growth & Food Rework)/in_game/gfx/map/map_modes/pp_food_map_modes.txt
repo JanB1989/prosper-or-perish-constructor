@@ -23,11 +23,11 @@
 @pp_market_food_price_expensive = 0.171
 @pp_market_food_price_severe = 0.462
 # Victuals default_market_price = 3.0; buckets are half / three-quarters / default / 1.5x / 2x.
-@pp_victuals_market_price_very_cheap = 1.5
-@pp_victuals_market_price_cheap = 2.25
-@pp_victuals_market_price_neutral = 3.0
-@pp_victuals_market_price_expensive = 4.5
-@pp_victuals_market_price_severe = 6.0
+@pp_victuals_price_very_cheap = 1.5
+@pp_victuals_price_cheap = 2.25
+@pp_victuals_price_neutral = 3.0
+@pp_victuals_price_expensive = 4.5
+@pp_victuals_price_severe = 6.0
 # Manual labour default_market_price = 5.0, price floor 20% = 1.0. Prices sit near the floor,
 # so buckets are anchored on it: at floor / slightly above / half again / double / 2.5x.
 @pp_manual_labor_market_price_very_cheap = 1.05
@@ -200,26 +200,26 @@ pp_market_food_price = {
 	map_lines_mode = ToMarketCenter
 }
 
-pp_victuals_market_price = {
+pp_victuals_price = {
 	map_color = {
 		if = {
 			limit = {
 				has_owner = yes
-				market.pp_victuals_market_price_map_value < @pp_victuals_market_price_very_cheap
+				market.pp_victuals_price_map_value < @pp_victuals_price_very_cheap
 			}
 			value = define:NMapColors|MAP_COLOR_MAX
 		}
 		else_if = {
 			limit = {
 				has_owner = yes
-				market.pp_victuals_market_price_map_value < @pp_victuals_market_price_cheap
+				market.pp_victuals_price_map_value < @pp_victuals_price_cheap
 			}
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_MAX
 				max_color = define:NMapColors|MAP_COLOR_HIGH
 				factor = {
-					value = market.pp_victuals_market_price_map_value
-					subtract = @pp_victuals_market_price_very_cheap
+					value = market.pp_victuals_price_map_value
+					subtract = @pp_victuals_price_very_cheap
 					divide = 0.75
 					max = 1
 					min = 0
@@ -229,14 +229,14 @@ pp_victuals_market_price = {
 		else_if = {
 			limit = {
 				has_owner = yes
-				market.pp_victuals_market_price_map_value < @pp_victuals_market_price_neutral
+				market.pp_victuals_price_map_value < @pp_victuals_price_neutral
 			}
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_HIGH
 				max_color = define:NMapColors|MAP_COLOR_MID
 				factor = {
-					value = market.pp_victuals_market_price_map_value
-					subtract = @pp_victuals_market_price_cheap
+					value = market.pp_victuals_price_map_value
+					subtract = @pp_victuals_price_cheap
 					divide = 0.75
 					max = 1
 					min = 0
@@ -246,14 +246,14 @@ pp_victuals_market_price = {
 		else_if = {
 			limit = {
 				has_owner = yes
-				market.pp_victuals_market_price_map_value < @pp_victuals_market_price_expensive
+				market.pp_victuals_price_map_value < @pp_victuals_price_expensive
 			}
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_MID
 				max_color = define:NMapColors|MAP_COLOR_LOW
 				factor = {
-					value = market.pp_victuals_market_price_map_value
-					subtract = @pp_victuals_market_price_neutral
+					value = market.pp_victuals_price_map_value
+					subtract = @pp_victuals_price_neutral
 					divide = 1.5
 					max = 1
 					min = 0
@@ -263,14 +263,14 @@ pp_victuals_market_price = {
 		else_if = {
 			limit = {
 				has_owner = yes
-				market.pp_victuals_market_price_map_value < @pp_victuals_market_price_severe
+				market.pp_victuals_price_map_value < @pp_victuals_price_severe
 			}
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_LOW
 				max_color = define:NMapColors|MAP_COLOR_MIN
 				factor = {
-					value = market.pp_victuals_market_price_map_value
-					subtract = @pp_victuals_market_price_expensive
+					value = market.pp_victuals_price_map_value
+					subtract = @pp_victuals_price_expensive
 					divide = 1.5
 					max = 1
 					min = 0
@@ -287,29 +287,29 @@ pp_victuals_market_price = {
 	}
 
 	legend_key = {
-		desc = "MAPMODE_PP_VICTUALS_MARKET_PRICE_VERY_CHEAP"
+		desc = "MAPMODE_PP_VICTUALS_PRICE_VERY_CHEAP"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		desc = "MAPMODE_PP_VICTUALS_MARKET_PRICE_CHEAP"
+		desc = "MAPMODE_PP_VICTUALS_PRICE_CHEAP"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
 	legend_key = {
-		desc = "MAPMODE_PP_VICTUALS_MARKET_PRICE_NEUTRAL"
+		desc = "MAPMODE_PP_VICTUALS_PRICE_NEUTRAL"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
 	legend_key = {
-		desc = "MAPMODE_PP_VICTUALS_MARKET_PRICE_EXPENSIVE"
+		desc = "MAPMODE_PP_VICTUALS_PRICE_EXPENSIVE"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
 	legend_key = {
-		desc = "MAPMODE_PP_VICTUALS_MARKET_PRICE_SEVERE"
+		desc = "MAPMODE_PP_VICTUALS_PRICE_SEVERE"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
 
 	tooltip_key = {
-		if = { limit = { has_owner = yes } value = MAPMODE_PP_VICTUALS_MARKET_PRICE_TT_LAND }
-		else = { value = MAPMODE_PP_VICTUALS_MARKET_PRICE_TT_WATER }
+		if = { limit = { has_owner = yes } value = MAPMODE_PP_VICTUALS_PRICE_TT_LAND }
+		else = { value = MAPMODE_PP_VICTUALS_PRICE_TT_WATER }
 	}
 
 	small_map_names = market

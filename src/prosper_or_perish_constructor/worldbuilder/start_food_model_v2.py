@@ -14,12 +14,11 @@ Fitted 2026-09-25 on the day-0 save of a fresh campaign (nb.eu5, 1337.4.1, 4,018
   This, not the land, is why deserts and very-low-fertility land looked barren in the pre-plague analysis.
 * **Building food** per staffed level: ``local_monthly_food`` (scaled by the stack) plus the Province Food good
   (``local_food``) of the method that runs. Farms, fishing and forest villages and orchards run Provisioning once
-  stores are low; the cookery's dish slot runs Serve on ``cookery_serve_share`` of the levels (53 % in 1341, 49 % in
-  1345 of the same campaign, 28 % in short pools: the engine picks by price, not by need) and Preserve (victuals) on
-  the rest, and its container and drink slots make victuals on every level (0.67 per level on day 0); Victualler
-  imports add +90, exports -90 per staffed level.
+  stores are low; the Cookshop (and its upgrade, the Public Kitchen) serves every dish to the province
+  (``cookshop_serve_share`` = 1: it has no victuals recipes since 2026-09-25); Taverns add +60 food per staffed level
+  (buying 2 victuals), Victualling Yards take -60 (packing 1.5 victuals).
 
-At day 0 the engine has not switched any farm to Provisioning nor any cookery to Serve yet (the setup reads full
+At day 0 the engine has not switched any farm to Provisioning nor any cookshop to Serve yet (the setup reads full
 stores), so ``day0`` in the budget leaves the Province Food out.
 
 ``[worldbuilder.start.food_model]`` in constructor.toml holds the numbers; ``ppc worldbuilder food-check`` refits the
@@ -63,14 +62,17 @@ class FoodModelConfig:
     capacity: Mapping[str, Any] = field(default_factory=lambda: {k: (dict(v) if isinstance(v, dict) else v) for k, v in DEFAULT_CAPACITY.items()})
     start_food_share: float = 0.10                   # game rule pp_starting_province_food default: 10 % of capacity
     # placement v2
-    market_victuals_per_level: float = 3.0           # victuals a staffed import buys / an export sells per month
-    cookery_serve_share: float = 0.5                 # share of cookery levels whose dish slot runs Serve
-    preserve_victuals_per_level: float = 0.64        # the dish slot on Preserve (nb.eu5: 1,471 victuals / 2,301 levels)
-    cookery_victuals_other: float = 0.67             # container and drink slots, every level (nb.eu5: 1,540 / 2,301)
+    tavern_victuals_per_level: float = 2.0           # victuals a staffed Tavern buys per month (60 food)
+    yard_victuals_per_level: float = 1.5             # victuals a staffed Victualling Yard packs per month (60 food, loose)
+    cookshop_serve_share: float = 1.0                # share of cookshop levels whose dish slot runs Serve (all: no Preserve)
+    cookshop_drink_food: float = 12.0                # Province Food of the drink slot per level (estimate: ~0.4 of the
+                                                     # 0.67 victuals drinks + packing made per level on nb.eu5, x30)
     victuals_target: float = 1.1                     # victuals supply >= demand x this per market
-    export_surplus_share: float = 0.25               # a pool exports only above this surplus (share of its demand)
-    export_min_capacity_months: float = 18.0         # ... and only if its store can reach the export band
-    serve_raw_goods_share: float = 0.2               # share of a market's raw food output new Serve cookeries may use
+    yard_surplus_share: float = 0.25                 # a pool packs victuals only above this surplus (share of its demand)
+    yard_min_capacity_months: float = 20.0           # ... and only if its store can reach the Yard's band (20 months)
+    yard_min_level_share: float = 0.3                # a pool gets a Yard level once its spare food fills this share of one
+                                                     # (the engine staffs levels partly, so a level need not be full)
+    serve_raw_goods_share: float = 0.2               # share of a market's raw food output new Serve Cookshops may use
     raw_goods_per_rgo_k: float = 1.5                 # raw food goods per 1,000 RGO workers (nb.eu5: 1.50 median)
     serve_fallback_raw_goods_share: float = 0.5      # raw goods share allowed when the market cannot afford imports
     import_priority_coverage: float = 0.85           # pools fed below this share come first for the market's victuals
@@ -90,9 +92,9 @@ class FoodModelConfig:
             for k, v in raw["capacity"].items():
                 cap[str(k)] = {str(a): float(b) for a, b in v.items()} if isinstance(v, Mapping) else float(v)
             kwargs["capacity"] = cap
-        for name in ("overpopulation_consumption", "start_food_share", "market_victuals_per_level", "preserve_victuals_per_level",
-                     "cookery_serve_share", "cookery_victuals_other",
-                     "victuals_target", "export_surplus_share", "export_min_capacity_months", "serve_raw_goods_share",
+        for name in ("overpopulation_consumption", "start_food_share", "tavern_victuals_per_level", "yard_victuals_per_level",
+                     "cookshop_serve_share", "cookshop_drink_food",
+                     "victuals_target", "yard_surplus_share", "yard_min_capacity_months", "yard_min_level_share", "serve_raw_goods_share",
                      "raw_goods_per_rgo_k", "serve_fallback_raw_goods_share", "import_priority_coverage"):
             if name in raw:
                 kwargs[name] = float(raw[name])
@@ -148,12 +150,6 @@ def food_capacity(rows: Iterable[tuple[float, float, str]], cfg: FoodModelConfig
             + float(rank_bonus.get(str(rank), 0.0))
         )
     return total
-
-
-def cookery_victuals(cfg: FoodModelConfig) -> float:
-    """Victuals one staffed cookery level makes per month: its container and drink slots plus the dish slot on the
-    levels that run Preserve."""
-    return float(cfg.cookery_victuals_other) + (1.0 - float(cfg.cookery_serve_share)) * float(cfg.preserve_victuals_per_level)
 
 
 def structural_ratio(supply: float, demand: float) -> float:

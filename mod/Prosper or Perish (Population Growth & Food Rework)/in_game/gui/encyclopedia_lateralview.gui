@@ -459,8 +459,8 @@
                                 button_regular = {
                                     layoutpolicy_horizontal = expanding
                                     raw_text = "New Buildings"
-                                    onclick = "[GetVariableSystem.Set('pp_filter', 'cookery')]"
-                                    down = "[GetVariableSystem.HasValue('pp_filter', 'cookery')]"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'new_buildings')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'new_buildings')]"
                                     action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
                                     tooltipwidget = { BasicFunctionalTooltip = {} }
 
@@ -853,7 +853,7 @@
 
                                         # ---- New Buildings ----
                                         vbox = {
-                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'cookery'))]"
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'new_buildings'))]"
                                             set_parent_size_to_minimum = yes
                                             margin = { 0 10 }
                                             vbox = {
@@ -873,13 +873,13 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/balance/buildings_abroad.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_cookery" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_new_buildings" }
                                                     }
                                                 }
                                                 TooltipListScrollArea = {
                                                     blockoverride "scrollarea_content" {
                                                         vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_cookery_desc" margin = { 40 10 } }
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_new_buildings_desc" margin = { 40 10 } }
                                                         }
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }

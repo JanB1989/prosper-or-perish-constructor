@@ -1,5 +1,5 @@
 ﻿# Prosper or Perish - Game Start Building Setup
-# Adds cookeries to towns and cities based on population and development thresholds.
+# Game-start hooks (starting buildings come from the setup files).
 # pp_apply_adjacent_to_lake_modifier
 on_game_start = {
 	on_actions = {

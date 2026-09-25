@@ -392,6 +392,7 @@ version = "0.1.0"
 source = { editable = "../eu5-building-pipeline" }
 dependencies = [
     { name = "eu5gameparser" },
+    { name = "numpy" },
     { name = "pillow" },
     { name = "polars" },
     { name = "pyyaml" },
@@ -400,6 +401,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "eu5gameparser", editable = "../eu5-game-parser" },
+    { name = "numpy", specifier = ">=2.0.0" },
     { name = "pillow", specifier = ">=12.2.0" },
     { name = "polars", specifier = ">=1.36.1" },
     { name = "pyyaml", specifier = ">=6.0.3" },

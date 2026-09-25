@@ -124,7 +124,7 @@ def test_enabled_building_icons_do_not_render_duplicate_hashes() -> None:
         by_hash[digest].append(f"{key}:{output}")
 
     allowed_duplicate_sets = {
-        frozenset({"victuals_market", "victuals_market_import"}),
+        frozenset({"victualling_yard", "tavern"}),
     }
     duplicates = {
         digest: names

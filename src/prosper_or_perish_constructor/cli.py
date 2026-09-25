@@ -145,8 +145,8 @@ PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MIN = -0.4
 PROVINCE_FOOD_SALES_TOTAL_MODIFIER_MAX = 0.4
 PROVINCE_FOOD_SALES_GROWTH_CAP_TARGET = 2.0
 PROVINCE_FOOD_SALES_TOLERANCE = 0.000001
-PROVINCE_FOOD_SALES_PROFITABILITY_BLUEPRINT = Path("buildings/victuals_market_export.yml")
-PROVINCE_FOOD_SALES_PROFITABILITY_METHOD = "pp_province_food_to_market"
+PROVINCE_FOOD_SALES_PROFITABILITY_BLUEPRINT = Path("buildings/victualling_yard.yml")
+PROVINCE_FOOD_SALES_PROFITABILITY_METHOD = "pp_victualling_yard_pack_provisions"
 PROVINCE_FOOD_SALES_STATIC_TARGETS = {
     "cheap_food_in_location": -0.900,
     "expensive_food_in_location": 0.248,
@@ -380,7 +380,7 @@ def _build_parser() -> argparse.ArgumentParser:
     province_food_sales_check = _add_command(
         subcommands,
         "province-food-sales-check",
-        "Check parsed Surplus Sales (farms and Victualler export storage leg) modifier edge conditions.",
+        "Check parsed Surplus Sales (farms and Victualling Yard storage leg) modifier edge conditions.",
         _province_food_sales_check,
     )
     province_food_sales_check.add_argument(
@@ -2410,7 +2410,7 @@ def _format_province_food_sales_check_report(report: Mapping[str, Any]) -> str:
     profitability_rows = list(report.get("profitability_rows") or [])
     if profitability_rows:
         lines.append("")
-        lines.append("victuals market base-condition profitability:")
+        lines.append("Tavern/Victualling Yard base-condition profitability:")
         lines.append(
             "scenario       food_price  input  base_out  req_mod  actual_mod  margin_mod  output  profit  status"
         )
@@ -2438,7 +2438,7 @@ def _format_province_food_sales_check_report(report: Mapping[str, Any]) -> str:
     rank_profitability_rows = list(report.get("rank_profitability_rows") or [])
     if rank_profitability_rows:
         lines.append("")
-        lines.append("victuals market base price + full storage profitability by rank:")
+        lines.append("Tavern/Victualling Yard base price + full storage profitability by rank:")
         lines.append("rank              total_mod  output  profit  profit_ex_food  status")
         lines.append("----------------  ---------  ------  ------  --------------  ------")
         for row in rank_profitability_rows:

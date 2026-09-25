@@ -18,12 +18,11 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   pop / capacity) (``global_tribesmen_pop_growth = -1`` + ``local_tribesmen_pop_growth = 1`` in the scaled free-land
   modifiers; slope fitted on the 1345 save), when it is negative they lose it unscaled like every pop type;
 * farms, villages and orchards run Provisioning from month 6 while the store is below ~11 months (their Sell leg
-  pays above that); cookeries serve on ``cookery_serve_share`` of their levels from month 1 (the rest and their
-  container and drink slots make victuals);
-* Victualler imports and exports ramp their staffing 0.05 a month toward the sign of their profit per level at the
-  market victuals price (2.7): the import pays below 12 stored months, the export above 18; each staffed level moves
-  90 food; imports only get the victuals their market has (cookeries on Preserve, staffed exports, pops compete);
-  a starving pool loses the noble who staffs its import at 0.09 a year;
+  pays above that); Cookshops serve every dish as Province Food from month 1 (they make no victuals);
+* Taverns and Victualling Yards ramp their staffing 0.05 a month toward the sign of their profit per level at the
+  market victuals price (2.7): the Tavern pays below 12 stored months, the Yard above 20; each staffed level moves
+  60 food (a Tavern buys 2 victuals, a Yard packs 1.5); Taverns only get the victuals their market has (staffed
+  Yards and other producers; pops compete); a starving pool loses the noble who staffs its Tavern at 0.09 a year;
 * growth per year: -0.0048 + 0.0086 x stored years (cap 2) when fed, -0.0048 - 0.04 - 0.012 when starving;
 * each September a pool rolls its harvest (``pp_harvest_*``: peasant food consumption +0.30 .. -0.30, 40 % neutral)
   from a seeded generator, so the run is reproducible; ``harvest = false`` turns the rolls off.
@@ -69,7 +68,8 @@ class SimRules:
     free_land: float = 0.4
     noble_hazard: float = 0.09
     ramp: float = 0.05
-    food_per_market_level: float = 90.0
+    tavern_food: float = 60.0            # food per staffed Tavern level (local_monthly_food)
+    yard_food: float = 60.0              # food per staffed Victualling Yard level (-local_monthly_food)
     provision_month: int = 6
     provision_below_months: float = 11.4
     serve_month: int = 1
@@ -81,7 +81,7 @@ class SimRules:
     tribal_growth: float = 0.012        # pop_percentage_impact local_population_growth (every pop in the location)
     tribal_land_slope: float = 0.75     # free-land factor 1 - slope x pop / capacity (1345 save: 0.75 at start capacity)
     tribal_feeding: float = 0.0         # -pop_percentage_impact local_pop_food_consumption (0 = the tribe feeds nobody)
-    tribal_import_premium: float = 0.0  # pop_percentage_impact local_province_food_purchase_output_modifier (mod: none;
+    tribal_tavern_premium: float = 0.0  # pop_percentage_impact local_province_food_purchase_output_modifier (mod: none;
                                         # -16 tested 2026-09-25: tribal pools starving 38 -> 92, rejected)
     start_staffed: float = 1.0          # the setup staffs every market level on day 0 (nb.eu5)
     harvest: bool = True
@@ -92,24 +92,25 @@ class SimRules:
     migration_speed_modifier: float = 0.0   # country speed modifiers (1345: mostly -0.1 .. -0.4)
     migration_room: float = 1.0             # capped types (not peasants) find room while the target pool is below
                                             # this x its start size of the type (stand-in for population_ratio)
-    # Victualler import (per level; blueprints/accepted/buildings/victuals_market_import.yml)
-    import_income: float = 5.0          # 0.25 offset x (1 + 19)
-    import_victuals: float = 3.0
-    import_labour: float = 0.3
-    import_amount: float = 0.8          # province_food_purchase
-    import_const: float = 15.0
-    import_per_year: float = -8.0
-    import_starving: float = 8.0
-    import_cost: float = 3.0
-    import_droop: float = -0.3
-    # Victualler (Export)
-    export_victuals: float = 3.0
-    export_amount: float = 1.425        # province_food_sales (shared with the farms' Sell the Surplus)
-    export_const: float = -1.0
-    export_per_year: float = 8.0
-    export_droop: float = -0.3
-    export_cost: float = 24.9
-    export_labour: float = 0.3
+    # Tavern (per level; blueprints/accepted/buildings/tavern.yml)
+    tavern_income: float = 3.34         # 0.167 offset x (1 + 19)
+    tavern_victuals: float = 2.0
+    tavern_labour: float = 0.2
+    tavern_amount: float = 0.533        # province_food_purchase
+    tavern_const: float = 15.0
+    tavern_per_year: float = -8.0
+    tavern_starving: float = 8.0
+    tavern_cost: float = 2.0
+    tavern_droop: float = -0.2
+    # Victualling Yard (per level; blueprints/accepted/buildings/victualling_yard.yml)
+    yard_victuals: float = 1.5          # Pack Provisions (loose stores)
+    yard_packing_victuals: float = 0.0  # a Packing method's extra victuals (what-if; its goods cost is not modelled)
+    yard_amount: float = 2.0            # province_food_sales (shared with the farms' Sell the Surplus)
+    yard_const: float = -1.0
+    yard_per_year: float = 8.0
+    yard_droop: float = -0.2
+    yard_cost: float = 30.52
+    yard_labour: float = 0.2
 
     @classmethod
     def from_raw(cls, raw: Mapping[str, Any] | None) -> "SimRules":
@@ -120,18 +121,21 @@ class SimRules:
                 kwargs[f.name] = type(getattr(cls, f.name))(raw[f.name])
         return cls(**kwargs)
 
-    def import_profit(self, years: float, starving: bool, staffed: float, tribal_share: float = 0.0) -> float:
-        m = (1.0 + self.import_const + self.import_per_year * years + self.import_droop * staffed
-             + self.tribal_import_premium * tribal_share)
+    def tavern_profit(self, years: float, starving: bool, staffed: float, tribal_share: float = 0.0) -> float:
+        m = (1.0 + self.tavern_const + self.tavern_per_year * years + self.tavern_droop * staffed
+             + self.tribal_tavern_premium * tribal_share)
         if starving:
-            m += self.import_starving
-        return (self.import_income - self.import_victuals * self.victuals_price - self.import_labour
-                + self.import_amount * max(0.0, m) - self.import_cost)
+            m += self.tavern_starving
+        return (self.tavern_income - self.tavern_victuals * self.victuals_price - self.tavern_labour
+                + self.tavern_amount * max(0.0, m) - self.tavern_cost)
 
-    def export_profit(self, years: float, staffed: float) -> float:
-        m = 1.0 + self.export_const + self.export_per_year * years + self.export_droop * staffed
-        return (self.export_victuals * self.victuals_price + self.export_amount * max(0.0, m)
-                - self.export_cost - self.export_labour)
+    def yard_packed(self) -> float:
+        return self.yard_victuals + self.yard_packing_victuals
+
+    def yard_profit(self, years: float, staffed: float) -> float:
+        m = 1.0 + self.yard_const + self.yard_per_year * years + self.yard_droop * staffed
+        return (self.yard_packed() * self.victuals_price + self.yard_amount * max(0.0, m)
+                - self.yard_cost - self.yard_labour)
 
 
 @dataclass
@@ -147,17 +151,16 @@ class Pool:
     yield_: float               # food per 1k jobless worker
     flat_food: float            # building local food (scaled), markets excluded
     provision_food: float       # Province Food of the Provisioning methods (farms, villages, orchards)
-    serve_food: float           # cookeries' Serve output on the levels that run Serve
-    cookery_levels: float
-    imports: float              # staffed import levels
-    exports: float              # staffed export levels
+    serve_food: float           # Cookshops' Serve output
+    cookshop_levels: float
+    taverns: float              # staffed Tavern levels
+    yards: float                # staffed Victualling Yard levels
     capacity: float             # food capacity (max stored food)
     start_food: float
     victuals_demand: float      # the pops' and other buildings' victuals demand at start
     victuals_other_supply: float = 0.0
     overpop: list = field(default_factory=list)   # [(peasants k, pop / capacity)] per location
     overpop_consumption: float = 0.5
-    cookery_victuals: float = 1.0      # victuals per cookery level (start_food_model_v2.cookery_victuals)
     peasant_share: float = 0.6         # share of the demand the peasants eat (the harvest roll moves it)
     tribesmen_food: float = 0.0        # food per 1,000 tribesmen (pop type pop_food_consumption; negative = produce)
     tribal_fed_share: float = 0.0      # settled demand x tribal share of its location, over the settled demand
@@ -247,15 +250,15 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
     born = [0.0] * n
     lost = [0.0] * n
     food = [min(p.start_food, p.capacity) for p in pools]
-    s_imp = [rules.start_staffed if p.imports else 0.0 for p in pools]
-    s_exp = [rules.start_staffed if p.exports else 0.0 for p in pools]
+    s_tav = [rules.start_staffed if p.taverns else 0.0 for p in pools]
+    s_yard = [rules.start_staffed if p.yards else 0.0 for p in pools]
     nobles = [1.0] * n
     starving = [False] * n
     months_pinned = [0] * n
     months_starving = [0] * n
     min_months = [math.inf] * n
-    imported = [0.0] * n
-    exported = [0.0] * n
+    tavern_food = [0.0] * n
+    yard_food = [0.0] * n
     migrated_out = [0.0] * n
     migrated_in = [0.0] * n
     years_end = [0.0] * n
@@ -284,17 +287,16 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
                        + overpopulation(p, f) * (1.0 + harvest[i]))
             cons[i] = settled * (1.0 - fed_share(p, N[i], T[i], share0[i], rules)) + p.tribesmen_food * T[i]
             years[i] = min(2.0, stored_months(food[i], cons[i]) / 12.0)
-        # victuals per market: cookeries on Preserve, staffed exports, other producers; imports and pops buy
+        # victuals per market: staffed Victualling Yards and other producers; Taverns and pops buy
         fill = [1.0] * n
         for market, members in by_market.items():
             supply = demand = buy = 0.0
             for i in members:
                 p = pools[i]
                 f = N[i] / base[i]
-                supply += p.cookery_levels * p.cookery_victuals
-                supply += p.exports * s_exp[i] * rules.export_victuals + p.victuals_other_supply
+                supply += p.yards * s_yard[i] * rules.yard_packed() + p.victuals_other_supply
                 demand += p.victuals_demand * f
-                buy += p.imports * s_imp[i] * rules.import_victuals
+                buy += p.taverns * s_tav[i] * rules.tavern_victuals
             total = demand + buy
             share = min(1.0, supply / total) if total > 1e-9 else 1.0
             fill_log[market].append(share)
@@ -307,14 +309,14 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             jobless = max(0.0, workers - min(jobs, workers))
             months = stored_months(food[i], cons[i])
             prov = t >= rules.provision_month and months < rules.provision_below_months
-            L = p.imports * s_imp[i]
-            E = p.exports * s_exp[i]
-            inflow = rules.food_per_market_level * L * fill[i]
-            outflow = rules.food_per_market_level * E
+            L = p.taverns * s_tav[i]
+            E = p.yards * s_yard[i]
+            inflow = rules.tavern_food * L * fill[i]
+            outflow = rules.yard_food * E
             prod = (p.yield_ * jobless + p.flat_food + (p.provision_food if prov else 0.0)
                     + (p.serve_food if serving else 0.0) + inflow - outflow)
-            imported[i] += inflow
-            exported[i] += outflow
+            tavern_food[i] += inflow
+            yard_food[i] += outflow
             food[i] = min(p.capacity, max(0.0, food[i] + prod - cons[i]))
             starving[i] = food[i] <= 0.0
             months_after = stored_months(food[i], cons[i])
@@ -325,12 +327,12 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
                 nobles[i] *= 1.0 - rules.noble_hazard / 12.0
             if food[i] >= (min(p.capacity, rules.pin_months * cons[i]) if cons[i] > 1e-9 else p.capacity) * 0.999:
                 months_pinned[i] += 1
-            if p.imports:
-                pi = rules.import_profit(years[i], starving[i], L, T[i] / (N[i] + T[i]) if N[i] + T[i] > 0 else 0.0)
-                s_imp[i] = min(nobles[i], max(0.0, s_imp[i] + (rules.ramp if pi > 0 else -rules.ramp)))
-            if p.exports:
-                pe = rules.export_profit(years[i], E)
-                s_exp[i] = min(1.0, max(0.0, s_exp[i] + (rules.ramp if pe > 0 else -rules.ramp)))
+            if p.taverns:
+                pi = rules.tavern_profit(years[i], starving[i], L, T[i] / (N[i] + T[i]) if N[i] + T[i] > 0 else 0.0)
+                s_tav[i] = min(nobles[i], max(0.0, s_tav[i] + (rules.ramp if pi > 0 else -rules.ramp)))
+            if p.yards:
+                pe = rules.yard_profit(years[i], E)
+                s_yard[i] = min(1.0, max(0.0, s_yard[i] + (rules.ramp if pe > 0 else -rules.ramp)))
             if starving[i]:
                 g = rules.growth_base + rules.starving_growth + (0.0 if rules.migration else rules.starving_migration)
             else:
@@ -371,19 +373,19 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             "consumption_start": round(cons0, 2),
             "R": round((p.yield_ * max(0.0, p.workers0 - p.jobs0) + p.flat_food + p.provision_food + p.serve_food) / cons0, 3)
             if cons0 > 1e-9 else None,
-            "imports": p.imports,
-            "exports": p.exports,
-            "cookery_levels": p.cookery_levels,
+            "taverns": p.taverns,
+            "yards": p.yards,
+            "cookshop_levels": p.cookshop_levels,
             "start_months": round(p.start_food / cons0, 2) if cons0 > 1e-9 else None,
             "capacity_months": round(p.capacity / cons0, 2) if cons0 > 1e-9 else None,
             "min_months": round(min_months[i], 2) if min_months[i] < math.inf else None,
             "end_months": round(food[i] / cons[i], 2) if cons[i] > 1e-9 else None,
             "months_starving": months_starving[i],
             "months_pinned": months_pinned[i],
-            "import_staffed_end": round(s_imp[i], 3),
-            "export_staffed_end": round(s_exp[i], 3),
-            "imported_food": round(imported[i], 1),
-            "exported_food": round(exported[i], 1),
+            "tavern_staffed_end": round(s_tav[i], 3),
+            "yard_staffed_end": round(s_yard[i], 3),
+            "tavern_food": round(tavern_food[i], 1),
+            "yard_food": round(yard_food[i], 1),
             "migrated_out_k": round(migrated_out[i], 3),
             "migrated_in_k": round(migrated_in[i], 3),
             "collapsing": p.pop0 > 0 and end / p.pop0 - 1.0 <= -rules.collapse_share,
@@ -490,10 +492,8 @@ def run_file(repo: Path, raw: Mapping[str, Any] | None = None, months: int | Non
 # ---------------------------------------------------------------------------------------------------- from the planner
 def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> list[Pool]:
     """One validator pool per province/owner group of the start simulation (start_simulation.Simulation)."""
-    from .start_food_model_v2 import cookery_victuals
-
     model = sim.food_model
-    share = float(model.cookery_serve_share)
+    share = float(model.cookshop_serve_share)
     v = sim.start.victuals
     serve_keys = sim.serve_keys()
     converted = defaultdict(lambda: defaultdict(float))
@@ -509,8 +509,8 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
 
     for group, tags in sim.groups.items():
         b = budgets[group]
-        tribesmen = flat = provision = serve = cookery = victuals = other_supply = peasant_food = 0.0
-        imports = exports = 0.0
+        tribesmen = flat = provision = serve = cookshop = victuals = other_supply = peasant_food = 0.0
+        taverns = yards = 0.0
         pairs = []
         by_type = defaultdict(float)
         religions = defaultdict(float)
@@ -551,16 +551,16 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
             for key, n in sim.staffed[tag].items():
                 if not n:
                     continue
-                if key == "victuals_market_import":
-                    imports += n
+                if key == "tavern":
+                    taverns += n
                     continue
-                if key == "victuals_market":
-                    exports += n
+                if key == "victualling_yard":
+                    yards += n
                     continue
                 flat += n * mult * sim.numbers.get(key, {}).get("local_monthly_food", 0)
                 if key in serve_keys:
-                    cookery += n
-                    serve += n * share * float(sim.province_food.get(key, 0.0))
+                    cookshop += n
+                    serve += n * (share * float(sim.province_food.get(key, 0.0)) + float(model.cookshop_drink_food))
                 else:
                     provision += n * float(sim.province_food.get(key, 0.0))
                     other_supply += n * float(v["producers"].get(key, 0.0))
@@ -572,11 +572,10 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
         out.append(Pool(
             owner=str(group[0]), province=str(group[1]), catchment=str(sim.catchments[group]),
             pop0=b["pop_k"], tribesmen=tribesmen, demand0=demand0, workers0=b["workers_k"], jobs0=b["jobs_k"],
-            yield_=yield_, flat_food=flat, provision_food=provision, serve_food=serve, cookery_levels=cookery,
-            imports=imports, exports=exports, capacity=b["food_capacity"],
+            yield_=yield_, flat_food=flat, provision_food=provision, serve_food=serve, cookshop_levels=cookshop,
+            taverns=taverns, yards=yards, capacity=b["food_capacity"],
             start_food=model.start_food_share * b["food_capacity"], victuals_demand=victuals,
             victuals_other_supply=other_supply, overpop=pairs, overpop_consumption=model.overpopulation_consumption,
-            cookery_victuals=cookery_victuals(model),
             peasant_share=peasant_food / demand0 if demand0 > 1e-9 else 0.0,
             tribesmen_food=tribesmen_food, tribal_fed_share=fed_num / fed_den if fed_den > 1e-9 else 0.0,
             n_locations=float(len(tags)), lat=lat / weight if weight else 0.0, lon=lon / weight if weight else 0.0,

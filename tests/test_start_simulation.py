@@ -118,13 +118,13 @@ def test_multiline_setup_counts_and_ranks_are_not_lost(tmp_path):
 
 def test_initial_placements_do_not_spend_on_start_navigation_bonus():
     r = rules()
-    r.buildings["victuals_market"] = block("rural_settlement = yes max_levels = cap")
+    r.buildings["victualling_yard"] = block("rural_settlement = yes max_levels = cap")
     r.values["cap"] = block(
         "value = 2 if = { limit = { any_neighbor_location = { has_variable = pp_navigation_map_state } } add = 5 }"
     )
     ctx = {"neighbors": [{"variables": {"pp_navigation_map_state": 1}}]}
-    assert r.cap("victuals_market", ctx) == 7
-    assert r.cap("victuals_market", {**ctx, "initializing": True}) == 2
+    assert r.cap("victualling_yard", ctx) == 7
+    assert r.cap("victualling_yard", {**ctx, "initializing": True}) == 2
 
 
 def test_sanitized_setup_preserves_foreign_building_owner(tmp_path):
@@ -165,7 +165,7 @@ def budget_simulation():
     sim = Simulation.__new__(Simulation)
     sim.rules = rules()
     sim.rules.subsistence = 1.5
-    for key in ("victuals_market", "victuals_market_import"):
+    for key in ("victualling_yard", "tavern"):
         sim.rules.buildings[key] = block("town = yes max_levels = 10")
     sim.start = sp.StartConfig(processors={}, food_target_ratio=1.1)
     sim.cfg = SimpleNamespace(raw={})
@@ -192,17 +192,17 @@ def budget_simulation():
     sim.trimmed = []
     sim.audit = []
     sim.numbers = {
-        "victuals_market": {
+        "victualling_yard": {
             "employment_size": 0.001,
             "pop_type": "nobles",
             "local_monthly_food": -60,
         },
-        "victuals_market_import": {
+        "tavern": {
             "employment_size": 0.001,
             "pop_type": "nobles",
             "local_monthly_food": 60,
         },
-        "cookery": {
+        "cookshop": {
             "employment_size": 1,
             "pop_type": "laborers",
             "local_monthly_food": 0,
@@ -226,10 +226,10 @@ def test_trade_conserves_food_and_keeps_donor_reserve_and_catchment_boundary():
     sim.place()
     after = sim.budgets()
     # the town needs 60 x 1.1 = 66 food: two import levels of 60, whose 3 victuals (its gap / 20 food per victual) the
-    # donor's exports must supply x 1.1 -> two export levels; the isolated province's market has no victuals
-    assert sim.counts["donor"]["victuals_market"] == 2
-    assert sim.counts["town"]["victuals_market_import"] == 2
-    assert sim.counts["isolated"]["victuals_market_import"] == 0
+    # donor's Yards must supply x 1.1 -> Yard levels; the isolated province's market has no victuals
+    assert sim.counts["donor"]["victualling_yard"] == 2
+    assert sim.counts["town"]["tavern"] == 2
+    assert sim.counts["isolated"]["tavern"] == 0
     assert abs(sum(r["supply"] for r in before.values()) - sum(r["supply"] for r in after.values())) < 1e-9
     assert after[("AAA", "donor")]["coverage"] >= 1.1
     assert after[("AAA", "town")]["shortfall"] == 0 < before[("AAA", "town")]["shortfall"]
@@ -250,11 +250,11 @@ def test_staffed_production_subtracts_lost_subsistence():
 
 def test_clamp_removes_levels_when_live_cap_falls():
     sim = budget_simulation()
-    sim.counts["donor"]["victuals_market"] = 15
+    sim.counts["donor"]["victualling_yard"] = 15
     sim.clamp()
-    assert sim.counts["donor"]["victuals_market"] == 10
+    assert sim.counts["donor"]["victualling_yard"] == 10
     assert sim.trimmed == [
-        {"location": "donor", "building": "victuals_market", "before": 15, "after": 10}
+        {"location": "donor", "building": "victualling_yard", "before": 15, "after": 10}
     ]
 
 
@@ -276,23 +276,23 @@ def test_additional_setup_preserves_nonbuilding_sections_and_foreign_owners(tmp_
     assert setup_counts(path)["x"]["seat"] == 1
 
 
-def test_every_city_gets_import_infrastructure_even_without_workers_or_exports():
+def test_every_city_gets_a_tavern_even_without_workers_or_yards():
     sim = budget_simulation()
     sim.base["town"]["location_rank"] = "city"
     sim.base["isolated"]["location_rank"] = "megalopolis"
-    sim.rules.buildings["victuals_market_import"] = block(
+    sim.rules.buildings["tavern"] = block(
         "city = yes megalopolis = yes max_levels = 10"
     )
     sim.pools["isolated"].existing["nobles"] = 0
     before = sim.budgets()
-    sim.ensure_city_imports({})
-    assert sim.counts["town"]["victuals_market_import"] == 1
-    assert sim.counts["isolated"]["victuals_market_import"] == 1
-    assert sim.counts["donor"]["victuals_market_import"] == 0
+    sim.ensure_city_taverns({})
+    assert sim.counts["town"]["tavern"] == 1
+    assert sim.counts["isolated"]["tavern"] == 1
+    assert sim.counts["donor"]["tavern"] == 0
     assert sim.budgets() == before
-    assert sim.city_import_minimum["added"] == 2
-    sim.ensure_city_imports({})
-    assert sim.city_import_minimum["added"] == 0
+    assert sim.city_tavern_minimum["added"] == 2
+    sim.ensure_city_taverns({})
+    assert sim.city_tavern_minimum["added"] == 0
     assert sim.verify() == 2
 
 
@@ -414,76 +414,76 @@ def v2_simulation():
             "population": sum(p.size_k for p in pops), "modifiers": {"local_population_capacity": 1000}}
         for t, pops in sim.pops.items()
     }
-    for key in ("victuals_market", "victuals_market_import"):
+    for key in ("victualling_yard", "tavern"):
         sim.rules.buildings[key] = block("town = yes rural_settlement = yes max_levels = 10")
     sim.numbers["brewery"] = {"employment_size": 0, "pop_type": "peasants", "local_monthly_food": 0}
     sim.counts["brewery"]["brewery"] = 1
     return sim
 
 
-def test_deficit_pool_gets_victualler_levels_sized_to_its_need_at_the_province_capital():
+def test_deficit_pool_gets_tavern_levels_sized_to_its_need_at_the_province_capital():
     sim = v2_simulation()
     sim.start = sp.StartConfig(processors={}, food_target_ratio=1.1,
                                victuals={"producers": {"brewery": 100.0}, "consumers": {}, "pop_demand_scale": 0.0})
     sim.workers()
     need = sim.budgets()[("AAA", "deficit")]
-    assert need["cookery_levels"] == 0 and need["subsistence"] > 0
+    assert need["cookshop_levels"] == 0 and need["subsistence"] > 0
     sim.place()
     wanted = -(-(need["demand"] * 1.1 - need["supply"]) // 60)          # ceil(need / 60 food per level)
-    assert sim.counts["burgh"]["victuals_market_import"] == wanted       # the town is the province capital
-    assert sim.counts["hamlet"]["victuals_market_import"] == 0
+    assert sim.counts["burgh"]["tavern"] == wanted       # the town is the province capital
+    assert sim.counts["hamlet"]["tavern"] == 0
     assert sim.budgets()[("AAA", "deficit")]["coverage"] >= 1.1
-    assert sim.counts["farms"]["victuals_market"] == 0                  # the brewery covers the victuals: no export
+    assert sim.counts["farms"]["victualling_yard"] == 0                  # the brewery covers the victuals: no export
 
 
-def test_market_short_of_victuals_gets_exports_in_its_surplus_pool_and_stays_balanced():
+def test_market_short_of_victuals_gets_yards_in_its_surplus_pool_and_stays_balanced():
     sim = v2_simulation()
     sim.start = sp.StartConfig(processors={}, food_target_ratio=1.1,
                                victuals={"producers": {"brewery": 1.0}, "consumers": {}, "pop_demand_scale": 0.0})
     sim.workers()
     sim.place()
-    assert sim.counts["farms"]["victuals_market"] >= 1
-    assert sim.counts["burgh"]["victuals_market_import"] >= 1
+    assert sim.counts["farms"]["victualling_yard"] >= 1
+    assert sim.counts["burgh"]["tavern"] >= 1
     report = sim.victuals["market"]
-    assert report["placed_export_levels"] == sim.counts["farms"]["victuals_market"]
+    assert report["placed_yard_levels"] == sim.counts["farms"]["victualling_yard"]
     assert report["covered"] >= sim.food_model.victuals_target - 1e-9       # per-market victuals balance
-    # food is conserved: the exports' food is what the imports move, and both sides keep their reserve
+    # food is conserved: the Yards' food is what the Taverns move, and both sides keep their reserve
     b = sim.budgets()
     assert b[("AAA", "surplus")]["coverage"] >= 1.1 and b[("AAA", "deficit")]["coverage"] > 1.0
 
 
-def test_no_province_gets_both_an_import_and_an_export():
+def test_no_province_gets_both_a_tavern_and_a_yard():
     sim = v2_simulation()
     # the surplus province already has an import market (a vanilla setup row): it must not export as well
-    sim.counts["farms"]["victuals_market_import"] = 1
+    sim.counts["farms"]["tavern"] = 1
     sim.start = sp.StartConfig(processors={}, food_target_ratio=1.1,
                                victuals={"producers": {"brewery": 1.0}, "consumers": {}, "pop_demand_scale": 0.0})
     sim.workers()
     sim.place()
     for tags in sim.groups.values():
-        exports = sum(sim.counts[t]["victuals_market"] for t in tags)
-        imports = sum(sim.counts[t]["victuals_market_import"] for t in tags)
-        assert not (exports and imports)
-    assert sim.counts["farms"]["victuals_market"] == 0
+        yards = sum(sim.counts[t]["victualling_yard"] for t in tags)
+        taverns = sum(sim.counts[t]["tavern"] for t in tags)
+        assert not (yards and taverns)
+    assert sim.counts["farms"]["victualling_yard"] == 0
 
 
-def test_market_that_cannot_supply_imports_places_serve_cookeries_instead():
+def test_market_that_cannot_supply_taverns_places_serve_cookshops_instead():
     sim = v2_simulation()
     sim.pops["hamlet"] = [sp.Pop("peasants", 20, "a", "r"), sp.Pop("laborers", 6, "a", "r"), sp.Pop("nobles", 0.01, "a", "r")]
-    sim.pops["burgh"] = [sp.Pop("clergy", 40, "a", "r")]   # no noble: the capital cannot staff a Victualler
+    sim.pops["burgh"] = [sp.Pop("clergy", 40, "a", "r")]   # no noble: the capital cannot staff a Tavern
     sim.base["hamlet"]["population"] = 26.01
-    sim.rules.buildings["cookery"] = block("rural_settlement = yes town = yes max_levels = 10")
-    sim.numbers["cookery"] = {"employment_size": 1, "pop_type": "laborers", "local_monthly_food": 0}
-    sim.province_food = {"cookery": 27.57}
+    sim.rules.buildings["cookshop"] = block("rural_settlement = yes town = yes max_levels = 10")
+    sim.numbers["cookshop"] = {"employment_size": 1, "pop_type": "laborers", "local_monthly_food": 0}
+    sim.province_food = {"cookshop": 27.57}
     sim.rgo_k = {"hamlet": 10.0}
     sim.locations["hamlet"] = {"region": "test", "raw_material": "wheat"}
     sim.__dict__["_serve_inputs"] = (frozenset({"wheat"}), 2.0)
-    sim.start = sp.StartConfig(processors={}, food_target_ratio=1.1, max_cookery_levels_per_location=6,
+    sim.start = sp.StartConfig(processors={}, food_target_ratio=1.1, max_cookshop_levels_per_location=6,
                                victuals={"producers": {}, "consumers": {}, "pop_demand_scale": 0.0})
     sim.workers()
     sim.place()
-    assert sim.counts["hamlet"]["cookery"] > 0
-    assert sim.victuals["market"]["serve_cookery_levels"] + sim.victuals["market"]["fallback_cookery_levels"] == sim.counts["hamlet"]["cookery"]
+    assert sim.counts["hamlet"]["cookshop"] > 0
+    assert sim.victuals["market"]["serve_cookshop_levels"] + sim.victuals["market"]["fallback_cookshop_levels"] == sim.counts["hamlet"]["cookshop"]
 
 
 def test_construction_materials_fill_markets_without_supply():
@@ -495,7 +495,7 @@ def test_construction_materials_fill_markets_without_supply():
     sim.locations["farms"] = {"region": "test", "raw_material": "stone"}
     sim.cfg = SimpleNamespace(raw={"start": {"construction_materials": {"margin": 2.0, "goods": {
         "masonry": {"producers": {"mason": 0.5}, "place": ["mason"], "inputs": ["stone"], "construction_per_million_pops": 1000.0,
-                    "per_victualler": 0.1, "max_levels_per_location": 5},
+                    "per_tavern": 0.1, "max_levels_per_location": 5},
         "tools": {"producers": {"tools_guild": 0.2}, "place": ["tools_guild"], "inputs": ["iron"], "construction_per_million_pops": 1.0},
     }}}})
     sim.workers()

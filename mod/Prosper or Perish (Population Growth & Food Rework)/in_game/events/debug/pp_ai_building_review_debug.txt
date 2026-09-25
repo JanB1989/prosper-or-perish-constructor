@@ -24,10 +24,10 @@ pp_ai_building_review_debug.1 = {
 		hidden_effect = {
 			pp_ai_building_review_debug_snapshot = yes
 			every_owned_location = {
-				limit = { pp_victuals_import_wanted = yes }
+				limit = { pp_tavern_wanted = yes }
 				add_to_temporary_list = pp_imports_wanted
 			}
-			pp_build_wanted_victuals_imports = yes
+			pp_build_wanted_taverns = yes
 			pp_ai_building_review_debug_count_queued = yes
 			trigger_event_non_silently = pp_ai_building_review_debug.2
 		}

@@ -70,7 +70,7 @@ def test_write_europedia_export_writes_html_and_json_smoke(tmp_path: Path) -> No
         tmp_path,
         {
             "game_concept_pp_food": "P&P: Food Production",
-            "game_concept_pp_food_desc": "#T Food#!\n$BULLET$ Build [ShowBuildingTypeName('cookery')|e].",
+            "game_concept_pp_food_desc": "#T Food#!\n$BULLET$ Build [ShowBuildingTypeName('cookshop')|e].",
             "game_concept_pp_faq": "F.A.Q.",
             "game_concept_pp_faq_desc": "Question text.",
         },

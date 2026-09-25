@@ -3,9 +3,9 @@
 # Location scope, root = the owning country. A province capital whose province is very short of food and whose
 # import market is either missing or already fully at work and paying (the victuals price enters through that profit).
 # The province must not be exporting food at the same time.
-pp_victuals_import_wanted = {
+pp_tavern_wanted = {
 	is_province_capital = yes
-	modifier:pp_province_food_storage_months < pp_victuals_import_low_storage_months
+	modifier:pp_province_food_storage_months < pp_tavern_low_storage_months
 	# ...and the store is really short: the engine drops the storage modifier (and this marker) when the province's
 	# consumption is zero or negative, e.g. tribesmen feeding it, so a full surplus province reads 0 months above.
 	# province_monthly_food_production is the net monthly change (verified 2026-09-25: tribal Taoer +315, Uppland -169);
@@ -19,11 +19,11 @@ pp_victuals_import_wanted = {
 	OR = {
 		# no market and none queued: a queued first level already exists as a building under construction
 		AND = {
-			NOT = { any_buildings_in_location = { building_type = building_type:victuals_market_import } }
-			can_build_building = building_type:victuals_market_import
+			NOT = { any_buildings_in_location = { building_type = building_type:tavern } }
+			can_build_building = building_type:tavern
 		}
 		any_buildings_in_location = {
-			building_type = building_type:victuals_market_import
+			building_type = building_type:tavern
 			building_can_be_upgraded_by = root
 			is_at_max_level = no
 			building_levels_under_construction = 0
@@ -36,7 +36,7 @@ pp_victuals_import_wanted = {
 		NOT = {
 			any_location_in_province = {
 				any_buildings_in_location = {
-					building_type = building_type:victuals_market
+					building_type = building_type:victualling_yard
 					is_opened = yes
 				}
 			}

@@ -44,7 +44,7 @@ def test_plan_places_processors_and_farms_within_land_and_workers(tmp_path):
     })
     numbers = {"iron_mine": {"employment_size": 1.0, "pop_type": "laborers", "local_monthly_food": 0.0}, "wheat_farm": {"employment_size": 1.0, "pop_type": "peasants", "local_monthly_food": 0.0},
                "fruit_orchard": {"employment_size": 1.0, "pop_type": "peasants", "local_monthly_food": 0.0}, "sheep_farms": {"employment_size": 1.0, "pop_type": "peasants", "local_monthly_food": 0.0},
-               "cookery": {"employment_size": 1.0, "pop_type": "laborers", "local_monthly_food": 20.0}, "victuals_market_import": {"employment_size": 0.001, "pop_type": "nobles", "local_monthly_food": 90.0}}
+               "cookshop": {"employment_size": 1.0, "pop_type": "laborers", "local_monthly_food": 20.0}, "tavern": {"employment_size": 0.001, "pop_type": "nobles", "local_monthly_food": 90.0}}
     start = sp.StartConfig(processors={"iron": {"building": "iron_mine", "levels": 2}})
     # alpha: 12.5k pops on 60k capacity -> spare (60-12.5-5)/5 = 8 land levels, 12k peasants x 0.6 = 7 worker levels -> farming village? no: iron RGO, forest -> no farm gate
     # beta: 40k pops on 45k capacity -> spare 0 land levels -> no farm although wheat; gamma: 6k pops on 60k -> land 9, workers 3 -> 3 levels
@@ -58,10 +58,10 @@ def test_plan_places_processors_and_farms_within_land_and_workers(tmp_path):
     assert summary["farm_land_people"] == 15000.0
     # the mine's laborers come from alpha's largest peasant pop, culture kept
     mine = [c for c in conversions if c.location == "alpha" and c.to_type == "laborers"]
-    assert sum(c.size_k for c in mine) == 3.0 and all(c.culture == "swedish" for c in mine)   # 2 for the mine + 1 for the cookery
-    # province p1 food: demand = 0.5*25 + 12*1 + 40*1 = 64.5 -> need 64.5*1.1 - 52 subsistence = 18.95 -> 1 cookery level in alpha (town first)
-    assert by[("alpha", "cookery")] == 1
-    assert ("gamma", "victuals_market_import") not in by
+    assert sum(c.size_k for c in mine) == 3.0 and all(c.culture == "swedish" for c in mine)   # 2 for the mine + 1 for the cookshop
+    # province p1 food: demand = 0.5*25 + 12*1 + 40*1 = 64.5 -> need 64.5*1.1 - 52 subsistence = 18.95 -> 1 cookshop level in alpha (town first)
+    assert by[("alpha", "cookshop")] == 1
+    assert ("gamma", "tavern") not in by
 
 
 def test_farm_for_keeps_orchards_and_pastures_and_leaves_crops_to_the_allocator():
@@ -85,7 +85,7 @@ def test_conversions_rewrite_the_pops_file_in_place():
 
 
 def test_start_setup_rows_use_the_building_manager_format(tmp_path):
-    n = sp.write_start_setup([sp.Placement("alpha", "SWE", "iron_mine", 2), sp.Placement("alpha", "SWE", "cookery", 1)], tmp_path)
+    n = sp.write_start_setup([sp.Placement("alpha", "SWE", "iron_mine", 2), sp.Placement("alpha", "SWE", "cookshop", 1)], tmp_path)
     text = (tmp_path / sp.START_SETUP_PATH).read_text(encoding="utf-8-sig")
     assert n == 2 and "building_manager = {" in text and "\tiron_mine = { tag = SWE level = 2 location = alpha }" in text
 

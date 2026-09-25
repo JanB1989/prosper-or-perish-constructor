@@ -148,7 +148,7 @@ for how far the land had been improved by 1337, never for the caps.
 Game-start buildings are placed by the same stage (`worldbuilder/start_placement.py`, `[worldbuilder.start]`):
 the raw-material building of each location's RGO, then a farm where the farm gate passes with levels =
 min(spare land, available peasants, cap) where spare land = capacity - pops - reserve (a farm never pushes a
-location over its cap), then per province the cookeries and victuals markets that cover the pops' food beyond
+location over its cap), then per province the Cookshops, Taverns and Victualling Yards that cover the pops' food beyond
 peasant subsistence. Output is setup data: `14_pp_start_buildings.txt` and a regenerated `06_pops.txt` in
 which the laborers those buildings employ are converted from the largest local peasant pop, keeping its culture
 and religion. The former food startup compiler (split-pop on_action from a tick-0 save) and the error-log driven

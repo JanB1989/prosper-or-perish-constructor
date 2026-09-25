@@ -8,28 +8,28 @@ pp_cull_one_closed_building = {
 			is_opened = no
 			owner = root
 			building_can_be_destroyed_by = root
-			NOT = { building_type = building_type:victuals_market_import }
+			NOT = { building_type = building_type:tavern }
 		}
 		change_building_level = -1
 	}
 }
 
 # Country scope. Culls one closed level per location, then adds one victuals import level to each province capital
-# that wants one (pp_victuals_import_wanted).
+# that wants one (pp_tavern_wanted).
 pp_ai_building_review_effect = {
 	every_owned_location = {
 		pp_cull_one_closed_building = yes
 		if = {
-			limit = { pp_victuals_import_wanted = yes }
+			limit = { pp_tavern_wanted = yes }
 			add_to_temporary_list = pp_imports_wanted
 		}
 	}
-	pp_build_wanted_victuals_imports = yes
+	pp_build_wanted_taverns = yes
 }
 
 # Country scope, after the locations were collected in the temporary list pp_imports_wanted: hungriest province
 # first, one level each, while the spare construction gold lasts.
-pp_build_wanted_victuals_imports = {
+pp_build_wanted_taverns = {
 	set_local_variable = { name = pp_import_budget value = pp_ai_spare_construction_gold }
 	ordered_in_list = {
 		list = pp_imports_wanted
@@ -37,11 +37,11 @@ pp_build_wanted_victuals_imports = {
 		max = 1000
 		check_range_bounds = no
 		if = {
-			limit = { local_var:pp_import_budget >= building_type:victuals_market_import.building_base_cost_in_gold }
-			construct_building = { building_type = building_type:victuals_market_import }
+			limit = { local_var:pp_import_budget >= building_type:tavern.building_base_cost_in_gold }
+			construct_building = { building_type = building_type:tavern }
 			change_local_variable = {
 				name = pp_import_budget
-				subtract = building_type:victuals_market_import.building_base_cost_in_gold
+				subtract = building_type:tavern.building_base_cost_in_gold
 			}
 		}
 	}
@@ -53,10 +53,10 @@ pp_ai_building_review_debug_snapshot = {
 	set_variable = { name = pp_debug_debt value = total_debt }
 	set_variable = { name = pp_debug_income value = monthly_income_total }
 	set_variable = { name = pp_debug_spare_gold value = pp_ai_spare_construction_gold }
-	set_variable = { name = pp_debug_import_cost value = building_type:victuals_market_import.building_base_cost_in_gold }
+	set_variable = { name = pp_debug_import_cost value = building_type:tavern.building_base_cost_in_gold }
 	set_variable = { name = pp_debug_imports_wanted value = 0 }
 	every_owned_location = {
-		limit = { pp_victuals_import_wanted = yes }
+		limit = { pp_tavern_wanted = yes }
 		root = { change_variable = { name = pp_debug_imports_wanted add = 1 } }
 	}
 }
@@ -68,7 +68,7 @@ pp_ai_building_review_debug_count_queued = {
 		limit = {
 			is_province_capital = yes
 			any_buildings_in_location = {
-				building_type = building_type:victuals_market_import
+				building_type = building_type:tavern
 				building_levels_under_construction > 0
 			}
 		}

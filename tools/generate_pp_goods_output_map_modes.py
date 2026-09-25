@@ -33,7 +33,6 @@ GOODS_WITHOUT_OUTPUT_MAP_MODES = {
     "province_food_purchase",
     "offset",
     "manual_labor_cost",
-    "export_tally",
 }
 
 

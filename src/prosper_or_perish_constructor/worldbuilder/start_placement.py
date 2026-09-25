@@ -77,15 +77,15 @@ DEFAULT_RGO_WORKERS_K: dict[str, float] = {"rural_settlement": 1.5, "town": 2.0,
 # supply the import markets should buy. Measured from saves 2026-09-22 (`ppc worldbuilder food-check` refits).
 DEFAULT_VICTUALS: dict[str, Any] = {
     "pop_demand_scale": 0.305,
-    "producers": {"cookery": 0.65, "victuals_market": 2.3},
-    "consumers": {"victuals_market_import": 1.2, "lumber_mill": 0.3},
+    "producers": {"cookshop": 0.65, "victualling_yard": 2.3},
+    "consumers": {"tavern": 1.2, "lumber_mill": 0.3},
 }
 # Province Food (``local_food``, 1 food per unit) per staffed level on top of ``local_monthly_food``: the output of the
 # building's Provisioning method (``method_pattern``) and, for the buildings in ``serve``, the named Serve method, both
 # read from the building definitions; ``per_level`` overrides a derived value. ``[worldbuilder.start.province_food]``.
 DEFAULT_PROVINCE_FOOD: dict[str, Any] = {
     "method_pattern": "pp_{building}_provision",
-    "serve": {"cookery": "pp_cookery_livestock_pottage_serve"},
+    "serve": {"cookshop": "pp_cookshop_livestock_pottage_serve"},
     "per_level": {},
 }
 
@@ -100,7 +100,7 @@ class StartConfig:
     max_farm_levels_per_location: int = 6
     food_target_ratio: float = 1.1
     subsistence_food_per_1000_peasants: float = 1.0
-    max_cookery_levels_per_location: int = 6
+    max_cookshop_levels_per_location: int = 6
     max_market_levels_per_location: int = 3
     laborer_conversion_share: float = 0.5   # share of a location's peasants that may become laborers
     rank_capacity_people: dict[str, float] = field(default_factory=lambda: {"town": 10000.0, "city": 25000.0, "megalopolis": 40000.0})
@@ -119,7 +119,7 @@ class StartConfig:
         raw = dict(raw or {})
         kwargs: dict[str, Any] = {}
         for name in ("keep_pops_within_capacity", "fill_improvements_to_pops", "peasant_work_share", "max_farm_levels_per_location", "food_target_ratio",
-                     "subsistence_food_per_1000_peasants", "max_cookery_levels_per_location", "max_market_levels_per_location", "laborer_conversion_share"):
+                     "subsistence_food_per_1000_peasants", "max_cookshop_levels_per_location", "max_market_levels_per_location", "laborer_conversion_share"):
             if name in raw:
                 kwargs[name] = type(getattr(cls, name))(raw[name])
         if isinstance(raw.get("rank_capacity_people"), dict):
@@ -526,38 +526,38 @@ def plan(*, cfg: WorldBuilderConfig, start: StartConfig, locations: pl.DataFrame
     table = pl.DataFrame(rows)
 
     # 3. the urban food chain per province
-    cookery, market = numbers["cookery"], numbers["victuals_market_import"]
-    cookery_food, market_food = float(cookery["local_monthly_food"]), float(market["local_monthly_food"])
-    cookery_emp, cookery_pop = float(cookery["employment_size"]) or 1.0, str(cookery["pop_type"])
+    cookshop, market = numbers["cookshop"], numbers["tavern"]
+    cookshop_food, market_food = float(cookshop["local_monthly_food"]), float(market["local_monthly_food"])
+    cookshop_emp, cookshop_pop = float(cookshop["employment_size"]) or 1.0, str(cookshop["pop_type"])
     market_emp, market_pop = float(market["employment_size"]) or 0.001, str(market["pop_type"])
     province_rows: list[dict[str, Any]] = []
     for province, tags in by_province.items():
         demand = sum(p.size_k * float(food_consumption.get(p.type, 0.0)) for t in tags for p in pops.get(t, []))
         subsistence = sum(p.size_k for t in tags for p in pops.get(t, []) if p.type == "peasants") * start.subsistence_food_per_1000_peasants
         need = demand * start.food_target_ratio - subsistence
-        cookery_levels = market_levels = 0
-        if need > 0 and cookery_food > 0:
+        cookshop_levels = market_levels = 0
+        if need > 0 and cookshop_food > 0:
             candidates = sorted(tags, key=lambda t: (RANK_ORDER.get(ranks.get(t, "rural_settlement"), 3), -sum(p.size_k for p in pops.get(t, []))))
             remaining = need
             for tag in candidates:
                 if remaining <= 0:
                     break
-                levels = pools[tag].levels(min(start.max_cookery_levels_per_location, int(math.ceil(remaining / cookery_food))), cookery_emp, cookery_pop)
+                levels = pools[tag].levels(min(start.max_cookshop_levels_per_location, int(math.ceil(remaining / cookshop_food))), cookshop_emp, cookshop_pop)
                 if levels <= 0:
                     continue
-                placements.append(Placement(tag, owners[tag], "cookery", levels))
-                pools[tag].take(levels, cookery_emp, cookery_pop, tag, conversions)
-                remaining -= levels * cookery_food
-                cookery_levels += levels
+                placements.append(Placement(tag, owners[tag], "cookshop", levels))
+                pools[tag].take(levels, cookshop_emp, cookshop_pop, tag, conversions)
+                remaining -= levels * cookshop_food
+                cookshop_levels += levels
             if remaining > 0 and market_food > 0:
                 capital = candidates[0]
                 levels = pools[capital].levels(min(start.max_market_levels_per_location, int(math.ceil(remaining / market_food))), market_emp, market_pop)
                 if levels > 0:
-                    placements.append(Placement(capital, owners[capital], "victuals_market_import", levels))
+                    placements.append(Placement(capital, owners[capital], "tavern", levels))
                     pools[capital].take(levels, market_emp, market_pop, capital, conversions)
                     market_levels = levels
-        supply = subsistence + cookery_levels * cookery_food + market_levels * market_food
-        province_rows.append({"province": province, "demand": demand, "subsistence": subsistence, "cookery_levels": cookery_levels, "market_levels": market_levels, "coverage": (supply / demand) if demand else 1.0})
+        supply = subsistence + cookshop_levels * cookshop_food + market_levels * market_food
+        province_rows.append({"province": province, "demand": demand, "subsistence": subsistence, "cookshop_levels": cookshop_levels, "market_levels": market_levels, "coverage": (supply / demand) if demand else 1.0})
     provinces = pl.DataFrame(province_rows) if province_rows else pl.DataFrame({"province": [], "coverage": []})
     by_building: dict[str, int] = defaultdict(int)
     for p in placements:

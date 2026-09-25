@@ -1,41 +1,40 @@
 {
-  "import": {
-    "base": 1,
-    "development": 0.12,
-    "population": 0.025,
-    "harbor": 1.5,
-    "coast": 1,
-    "river_per_level": 0.3,
-    "navigable": 2,
-    "difficult": 0.5,
-    "maintained": 1,
-    "market_center": 2,
-    "rank": {
-      "town": 1,
-      "city": 2,
-      "megalopolis": 4
-    },
-    "food_rgo": 0,
-    "farmland": 0,
-    "maximum": 24
-  },
-  "export": {
-    "base": 1,
-    "development": 0.08,
-    "population": 0.003,
-    "harbor": 1.5,
+  "tavern": {
+    "base": 1.5,
+    "development": 0.18,
+    "population": 0.0375,
+    "harbor": 2.25,
     "coast": 1.5,
-    "river_per_level": 0.4,
+    "river_per_level": 0.45,
     "navigable": 3,
     "difficult": 0.75,
     "maintained": 1.5,
-    "market_center": 2,
+    "market_center": 3,
     "rank": {
-      "rural_settlement": 1,
+      "town": 1.5,
+      "city": 3,
+      "megalopolis": 6
+    },
+    "food_rgo": 0,
+    "farmland": 0,
+    "maximum": 36
+  },
+  "victualling_yard": {
+    "base": 1,
+    "development": 0.06,
+    "population": 0,
+    "harbor": 2,
+    "coast": 2,
+    "river_per_level": 0.6,
+    "navigable": 4,
+    "difficult": 1,
+    "maintained": 2,
+    "market_center": 3,
+    "rank": {
       "town": 1
     },
-    "food_rgo": 2,
-    "farmland": 1,
+    "food_rgo": 0,
+    "farmland": 0,
     "maximum": 24
   },
   "food_rgos": [
@@ -56,8 +55,10 @@
     "hills": -1
   },
   "notes": [
-    "Capacity is logistical potential; starting imports and exports additionally require deficit/surplus and available workers.",
+    "Capacity is logistical potential; starting Taverns and Victualling Yards additionally require deficit/surplus and available workers.",
+    "Tavern coefficients are 1.5x the former 90-food Victualler caps, so a location can still take in the same food at 60 food per level.",
+    "The Victualling Yard packs the province store, so its cap rewards water transport and market centres, not the location's own crops or people.",
     "River road state is read from the navigation map variables updated on completion and destruction.",
-    "All coefficients are balance choices; no location is hardcoded as an importer or exporter."
+    "All coefficients are balance choices; no location is hardcoded as a Tavern or Victualling Yard site."
   ]
 }

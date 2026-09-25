@@ -1,4 +1,4 @@
-"""Render live import/export caps; the offline planner evaluates these same scripts."""
+"""Render the live Tavern / Victualling Yard caps; the offline planner evaluates these same scripts."""
 
 import json
 
@@ -31,7 +31,7 @@ def write(repo, mod_root):
     lines = [
         "# Generated from config/victuals_logistics.json. Both the planner and game use these values."
     ]
-    for role, spec in ((k, cfg[k]) for k in ("import", "export")):
+    for role, spec in ((k, cfg[k]) for k in ("tavern", "victualling_yard")):
         body = [
             add("BASE", spec["base"]),
             add("DEVELOPMENT", f"development multiply = {spec['development']}"),
@@ -81,7 +81,7 @@ def write(repo, mod_root):
             body.append(when("topography = " + terrain, "TERRAIN", n))
         body += ["min = 0", f"max = {spec['maximum']}", "floor = yes"]
         lines.append(
-            f"victuals_market_{role}_max_level = {{\n " + "\n ".join(body) + "\n}"
+            f"{role}_max_level = {{\n " + "\n ".join(body) + "\n}"
         )
     path = mod_root / "in_game/common/script_values/pp_victuals_logistics.txt"
     path.write_text("\ufeff" + "\n\n".join(lines) + "\n", encoding="utf-8")

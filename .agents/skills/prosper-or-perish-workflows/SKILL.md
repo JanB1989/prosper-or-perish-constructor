@@ -85,7 +85,7 @@ Use tracked configuration for game paths:
 - `uv run ppc blueprint good <good>`: compare methods that produce one trade good.
 - `uv run ppc blueprint build`: build accepted blueprints into the constructor mod copy.
 - `uv run ppc build`: same build workflow as `blueprint build`.
-- Game-start buildings (raw-material buildings, farms, cookeries, victuals markets) and the laborers they employ are placed by `ppc worldbuilder apply` (`worldbuilder/start_placement.py`, `[worldbuilder.start]`) as setup data; there is no runtime startup script and no error-log correction step any more.
+- Game-start buildings (raw-material buildings, farms, Cookshops, Taverns, Victualling Yards) and the laborers they employ are placed by `ppc worldbuilder apply` (`worldbuilder/start_placement.py`, `[worldbuilder.start]`) as setup data; there is no runtime startup script and no error-log correction step any more.
 - `uv run ppc sync --yes`: guarded live mirror into the configured Paradox mod folder.
 
 ## Safety Rules

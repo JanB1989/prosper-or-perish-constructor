@@ -584,7 +584,7 @@ class PopCase:
     pop1361: float | None = None
     pop1385: float | None = None
     peasant_share: float = 0.6      # share of consumption that the harvest shock moves
-    builds: tuple = ()              # AI builds seen in the later saves: (month, "import"|"cookery", levels, staffed share)
+    builds: tuple = ()              # AI builds seen in the later saves: (month, "import"|"cookshop", levels, staffed share)
     obs: tuple = ()                 # observed endpoints ((years, pop k), ...); empty -> (24, pop1361), (48, pop1385)
 
     def endpoints(self) -> tuple:
@@ -606,9 +606,9 @@ PROVINCE_CASES = {
     # 2 Victualler levels by 1361 (20 % staffed, 60 % in 1385)
     "kremenets": PopCase("kremenets", 47.95, 1.2297, 0.981, 24.6, 1.824, 11.88, 4.75, 47.5, 2.21, 18.0, 49.61, 53.54,
                          builds=((144, "import", 2, 0.2), (288, "import", 0, 0.6))),
-    # cookery on Serve: 2 levels by 1361, 4 by 1385 (build dates unknown; midpoints assumed)
+    # cookshop on Serve: 2 levels by 1361, 4 by 1385 (build dates unknown; midpoints assumed)
     "pocutia": PopCase("pocutia", 26.08, 1.323, 0.976, 18.63, 2.443, 4.5, 7.27, 72.7, 2.18, 18.0, 23.59, 27.4,
-                       builds=((72, "cookery", 2, 1.0), (432, "cookery", 2, 1.0))),
+                       builds=((72, "cookshop", 2, 1.0), (432, "cookshop", 2, 1.0))),
 }
 CALIBRATION_CASES = ("penza", "finland", "kremenets", "pocutia")   # plague-culled endpoints: do not calibrate on
 
@@ -668,7 +668,7 @@ class PopLever:
     nobles: bool = True               # False: no noble in the location, the import never staffs
     staff_pop: str = "nobles"         # "nobles": staffing stops once starvation drove the last noble out
                                       # (PopRules.noble_hazard); "peasants": pop_type peasants, staff always there
-    cookery: int = 0                  # cookery levels on Serve (1k laborers each, 27.6 Province Food per level)
+    cookshop: int = 0                  # cookshop levels on Serve (1k laborers each, 27.6 Province Food per level)
     farms: int = 0                    # extra farm levels on Provision (1k peasants each, 1.5 flat + 0.96 Provision)
     build_month: int = 12
     rules: dict = field(default_factory=dict)
@@ -717,13 +717,13 @@ def simulate_pop(case: PopCase, lever: PopLever, seed: int | None, rules: PopRul
                     break
         built = t >= lever.build_month
         L = lever.imports if built else 0
-        K = lever.cookery if built else 0
+        K = lever.cookshop if built else 0
         Fm = lever.farms if built else 0
         Lc = sum(b[2] for b in case.builds if b[1] == "import" and t >= b[0])
         cap_c = next((b[3] for b in reversed(case.builds) if b[1] == "import" and t >= b[0]), 0.0)
-        Kc = sum(b[2] for b in case.builds if b[1] == "cookery" and t >= b[0])
+        Kc = sum(b[2] for b in case.builds if b[1] == "cookshop" and t >= b[0])
         K += Kc
-        # method switches of buildings standing at 1337 (setup runs every farm on Sell and no cookery on Serve;
+        # method switches of buildings standing at 1337 (setup runs every farm on Sell and no cookshop on Serve;
         # by 1341 58 % of farm levels run Provision): food only, their jobs are already in emp0
         switched = sum(b[2] * (0.96 if b[1] == "provision" else 27.6) for b in case.builds
                        if b[1] in ("provision", "serve") and t >= b[0])
@@ -812,7 +812,7 @@ def pop_levers() -> list[PopLever]:
         PopLever("b1-ai", "Victualler 1 level at month 30 (AI timing), nobles", imports=1, build_month=30),
         PopLever("b1-ai-peas", "Victualler 1 level at month 30, pop_type peasants", imports=1, build_month=30,
                  staff_pop="peasants"),
-        PopLever("c", "cookery 1 level on Serve", cookery=1),
+        PopLever("c", "cookshop 1 level on Serve", cookshop=1),
         PopLever("d", "+2 farm levels on Provision", farms=2),
         PopLever("e2.0", "subsistence define 1.5 -> 2.0", rules=dict(subsistence=2.0)),
         PopLever("e2.5", "subsistence define 1.5 -> 2.5", rules=dict(subsistence=2.5)),

@@ -6,8 +6,8 @@ from prosper_or_perish_constructor.worldbuilder import food_sim as fs
 
 
 def pools():
-    common = dict(catchment="m", tribesmen=0.0, flat_food=0.0, provision_food=0.0, serve_food=0.0, cookery_levels=0.0,
-                  imports=0.0, exports=0.0, victuals_demand=0.0, peasant_share=0.8)
+    common = dict(catchment="m", tribesmen=0.0, flat_food=0.0, provision_food=0.0, serve_food=0.0, cookshop_levels=0.0,
+                  taverns=0.0, yards=0.0, victuals_demand=0.0, peasant_share=0.8)
     return [
         # 100k pops eating 100 while their 90k jobless make 0.6 x 100: starves and collapses
         fs.Pool(owner="A", province="short", pop0=100.0, demand0=100.0, workers0=90.0, jobs0=0.0, yield_=60 / 90,
@@ -34,16 +34,16 @@ def test_validator_reports_collapse_pinning_and_world_change(tmp_path):
     assert abs(summary["world_pop_change"] - (sum(r["pop_end_k"] for r in rows) / start - 1)) < 1e-3
 
 
-def test_victualler_import_rescues_the_short_pool_when_the_market_has_victuals(tmp_path):
+def test_tavern_rescues_the_short_pool_when_the_market_has_victuals(tmp_path):
     rules = fs.SimRules(harvest=False)
     ps = pools()
-    ps[0].imports = 1.0
+    ps[0].taverns = 1.0
     ps[2].victuals_other_supply = 10.0
     rows = {r["province"]: r for r in fs.simulate(ps, rules)}
-    assert not rows["short"]["collapsing"] and rows["short"]["imported_food"] > 0
+    assert not rows["short"]["collapsing"] and rows["short"]["tavern_food"] > 0
     ps[2].victuals_other_supply = 0.0                           # no victuals in the market: the import cannot help
     rows = {r["province"]: r for r in fs.simulate(ps, rules)}
-    assert rows["short"]["collapsing"] and rows["short"]["imported_food"] == 0
+    assert rows["short"]["collapsing"] and rows["short"]["tavern_food"] == 0
 
 
 def test_inputs_round_trip_and_run_file(tmp_path):
@@ -61,8 +61,8 @@ def test_inputs_round_trip_and_run_file(tmp_path):
 def tribal_pool(**kw):
     """90k tribesmen around 10k settled pops who eat 30 a month and farm nothing."""
     args = dict(owner="T", province="steppe", catchment="m", pop0=100.0, tribesmen=90.0, demand0=30.0, workers0=0.0,
-                jobs0=0.0, yield_=0.0, flat_food=0.0, provision_food=0.0, serve_food=0.0, cookery_levels=0.0,
-                imports=0.0, exports=0.0, capacity=600.0, start_food=30.0, victuals_demand=0.0, peasant_share=0.0,
+                jobs0=0.0, yield_=0.0, flat_food=0.0, provision_food=0.0, serve_food=0.0, cookshop_levels=0.0,
+                taverns=0.0, yards=0.0, capacity=600.0, start_food=30.0, victuals_demand=0.0, peasant_share=0.0,
                 pop_capacity=1000.0)
     args.update(kw)
     return fs.Pool(**args)
@@ -94,8 +94,8 @@ def test_the_tribe_can_feed_the_settled_share_up_to_all_of_it():
     assert fs.fed_share(p, 0.0, 90.0, 0.5, fs.SimRules(tribal_feeding=2.0)) == 1.0
 
 
-def test_tribal_share_can_cut_the_import_premium():
-    rules = fs.SimRules(tribal_import_premium=-16.0)
-    assert rules.import_profit(0.0, False, 1.0, 1.0) < fs.SimRules().import_profit(0.0, False, 1.0, 1.0)
-    assert rules.import_profit(0.0, True, 1.0, 0.6) > 0                 # a starving tribal province still imports
-    assert fs.SimRules().import_profit(0.0, False, 1.0, 1.0) == fs.SimRules().import_profit(0.0, False, 1.0)
+def test_tribal_share_can_cut_the_scarcity_premium():
+    rules = fs.SimRules(tribal_tavern_premium=-16.0)
+    assert rules.tavern_profit(0.0, False, 1.0, 1.0) < fs.SimRules().tavern_profit(0.0, False, 1.0, 1.0)
+    assert rules.tavern_profit(0.0, True, 1.0, 0.6) > 0                 # a starving tribal province still imports
+    assert fs.SimRules().tavern_profit(0.0, False, 1.0, 1.0) == fs.SimRules().tavern_profit(0.0, False, 1.0)

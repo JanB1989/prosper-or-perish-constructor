@@ -71,10 +71,10 @@ TRY_REPLACE:positive_province_food_growth = {
 	# these values are the values for 1 year of stored province consumption they cap at GROWTH_FROM_FOOD_MULTIPLIER_MAX which is defined in years aswell
 	pp_province_food_storage_months = 12
 	# Storage legs, both +/-8 per stored year on top of their country constants:
-	# - Victualler import (0.8 province_food_purchase, constant +15): 16x at 0 months, zero at the 24-month cap.
+	# - Tavern (0.533 province_food_purchase, constant +15): 16x at 0 months, zero at the 24-month cap.
 	# - Surplus Sales (province_food_sales, constant -1): zero at 0 months, 16x at the 24-month cap. It pays the
-	#   farms' Sell the Surplus and the Victualler (Export) (1.425 per level, its fixed cost sets the break-even).
-	# At the mean victuals price the import breaks even at 12 months and the export at 18; between them neither
+	#   farms' Sell the Surplus and the Victualling Yard (2.0 per level, its fixed cost sets the break-even).
+	# At the mean victuals price the Tavern breaks even at 12 months and the Yard at 20; between them neither
 	# pays, and neither can run on the victuals price alone. Production efficiency adds into the same pool,
 	# so +50% moves the break-even points by a few weeks.
 	local_province_food_sales_output_modifier = 8.0

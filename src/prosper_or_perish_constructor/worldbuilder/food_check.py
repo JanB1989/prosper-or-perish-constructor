@@ -385,7 +385,7 @@ def model_v2_on_engine_state(repo: Path, rules, cfg, locations: pl.DataFrame, bu
         "refit": {**fit, "note": "paste yield_rank and yield_climate into [worldbuilder.start.food_model] when they drift"},
         "pools": frame,
     }
-    # the last build's plan against the engine at day 0 (no farm on Provisioning, no cookery on Serve yet)
+    # the last build's plan against the engine at day 0 (no farm on Provisioning, no cookshop on Serve yet)
     budget_path = repo / "artifacts/data/worldbuilder/food_simulation/provinces.csv"
     if budget_path.is_file():
         budget = pl.read_csv(budget_path)

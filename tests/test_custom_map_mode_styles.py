@@ -170,7 +170,7 @@ STRUCTURE_SNIPPETS = {
         "map_lines_mode = ToMarketCenter",
         "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
     ),
-    "pp_victuals_market_price": (
+    "pp_victuals_price": (
         "category = economy",
         "index = 3",
         "small_map_names = market",
@@ -179,7 +179,7 @@ STRUCTURE_SNIPPETS = {
         "toll_marker = yes",
         "map_lines_mode = ToMarketCenter",
         "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
-        "market.pp_victuals_market_price_map_value",
+        "market.pp_victuals_price_map_value",
     ),
     "pp_manual_labor_market_price": (
         "category = economy",
@@ -525,10 +525,10 @@ def test_market_food_price_uses_reference_centered_buckets() -> None:
     assert "max_color = define:NMapColors|MAP_COLOR_MIN" in block
 
 
-def test_victuals_market_price_uses_default_price_centered_buckets() -> None:
-    block = _all_blocks()["pp_victuals_market_price"]
+def test_victuals_price_uses_default_price_centered_buckets() -> None:
+    block = _all_blocks()["pp_victuals_price"]
 
-    assert _thresholds(block, "market.pp_victuals_market_price_map_value") == [
+    assert _thresholds(block, "market.pp_victuals_price_map_value") == [
         1.5,
         2.25,
         3.0,
@@ -536,11 +536,11 @@ def test_victuals_market_price_uses_default_price_centered_buckets() -> None:
         6.0,
     ]
     assert block.count("lerp = {") == 4
-    assert "MAPMODE_PP_VICTUALS_MARKET_PRICE_VERY_CHEAP" in block
-    assert "MAPMODE_PP_VICTUALS_MARKET_PRICE_CHEAP" in block
-    assert "MAPMODE_PP_VICTUALS_MARKET_PRICE_NEUTRAL" in block
-    assert "MAPMODE_PP_VICTUALS_MARKET_PRICE_EXPENSIVE" in block
-    assert "MAPMODE_PP_VICTUALS_MARKET_PRICE_SEVERE" in block
+    assert "MAPMODE_PP_VICTUALS_PRICE_VERY_CHEAP" in block
+    assert "MAPMODE_PP_VICTUALS_PRICE_CHEAP" in block
+    assert "MAPMODE_PP_VICTUALS_PRICE_NEUTRAL" in block
+    assert "MAPMODE_PP_VICTUALS_PRICE_EXPENSIVE" in block
+    assert "MAPMODE_PP_VICTUALS_PRICE_SEVERE" in block
     assert "min_color = define:NMapColors|MAP_COLOR_MAX" in block
     assert "max_color = define:NMapColors|MAP_COLOR_MIN" in block
     assert "market_marker = yes" in block

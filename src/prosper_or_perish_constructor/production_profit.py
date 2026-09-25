@@ -48,7 +48,6 @@ DISABLED_PRODUCTION_EXPERIMENTS = frozenset(
         "mining_village_coke_blast_furnace",
         "mining_village_hot_blast_furnace",
         "mining_village_slitting_mills",
-        "victuals_market_export",
     }
 )
 FAITHFUL_IMPORT_ALLOW_RULES = {

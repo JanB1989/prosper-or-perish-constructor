@@ -1,14 +1,8 @@
-﻿version: 2
+version: 2
 tag: victualling_yard
-footprint: manufactory
+footprint: trade
 labour:
-  class: craft_absolutism
-upgrade_chain:
-  family: cookery
-  tier: 1
-  previous: cookery
-  next: null
-  unlock_advance: pp_victualling_yard
+  class: keep
 building:
   key: victualling_yard
   mode: CREATE
@@ -16,711 +10,155 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_victualling_yard_khichdi_serve
-        - pp_victualling_yard_khichdi
-        - pp_victualling_yard_fish_congee_serve
-        - pp_victualling_yard_fish_congee
-        - pp_victualling_yard_livestock_pottage_serve
-        - pp_victualling_yard_livestock_pottage
-        - pp_victualling_yard_mediterranean_fish_serve
-        - pp_victualling_yard_mediterranean_fish
-        - pp_victualling_yard_mutton_and_pease_serve
-        - pp_victualling_yard_mutton_and_pease
-        - pp_victualling_yard_surstromming_serve
-        - pp_victualling_yard_surstromming
-        - pp_victualling_yard_pozole_serve
-        - pp_victualling_yard_pozole
-        - pp_victualling_yard_pemmican_serve
-        - pp_victualling_yard_pemmican
-        - pp_victualling_yard_labskaus_serve
-        - pp_victualling_yard_labskaus
-        - pp_victualling_yard_meat_tajine_serve
-        - pp_victualling_yard_meat_tajine
-        - pp_victualling_yard_saltfish_porridge_serve
-        - pp_victualling_yard_saltfish_porridge
-        - pp_victualling_yard_ika_mata_serve
-        - pp_victualling_yard_ika_mata
-        - pp_victualling_yard_kheer_serve
-        - pp_victualling_yard_kheer
-        - pp_victualling_yard_honey_gruel_serve
-        - pp_victualling_yard_honey_gruel
-        - pp_victualling_yard_boreal_hunter_stew_serve
-        - pp_victualling_yard_boreal_hunter_stew
+        - pp_victualling_yard_pack_provisions
     - name: slot_1
       methods:
-        - pp_victualling_yard_well_water
-        - pp_victualling_yard_beer
-        - pp_victualling_yard_wine
-        - pp_victualling_yard_liquor
-        - pp_victualling_yard_chocolate
-        - pp_victualling_yard_coffee
-        - pp_victualling_yard_tea
+        - pp_victualling_yard_surplus_sales
     - name: slot_2
       methods:
-        - pp_victualling_yard_no_packaging
+        - pp_victualling_yard_loose_stores
         - pp_victualling_yard_pottery_jars
         - pp_victualling_yard_coopered_barrels
         - pp_victualling_yard_tin_cans
   possible_production_methods: []
   body: |2-
-    	is_foreign = no
+    is_foreign = no
     increase_per_level_cost = 0.13
-    	max_levels = cookery_max_level
-    	pop_type = laborers
-        employment_size = 1
-    	category = consumer_goods_category
-    	custom_tags = { pp_food_security_priority pp_direct_food_priority }
-    	icon = victualling_yard
-    	obsolete = cookery
-    	rural_settlement = yes
-    	town = yes
-    	city = yes
-    	megalopolis = yes
-    	build_time = workshop_build_time
-    	construction_demand = workshop_construction
-    	ai_forbid_shutdown = no
-    	forbidden_for_estates = no
-    	important_for_AI = yes
-    	AI_ignore_available_worker_flag = yes
-    	can_close = yes
-    	# ==========================================
-    	# 1. MAIN DISH (pick ONE)
-    	# - Main food preparations
-    	# - Serve = Province Food (local_food), Preserve = victuals
-    	# ==========================================
+    max_levels = victualling_yard_max_level
+    pop_type = nobles
+    employment_size = 0.001
+    price = pp_victualling_yard_price
+    category = consumer_goods_category
+    custom_tags = { pp_food_security_priority pp_food_distribution_priority }
+    icon = victualling_yard
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    ai_forbid_shutdown = yes
+    important_for_AI = yes
+    can_close = yes
+    forbidden_for_estates = no
+    AI_ignore_available_worker_flag = yes
+    build_time = 365
+    construction_demand = victuals_trade_construction
+
+    # The Victualling Yard packs the lasting part of a full province store into victuals for the goods market:
+    # each staffed level takes 60 food (the modifier below) and packs 1.5 victuals loose, 1:40 against the Tavern's
+    # 1:30, so food that goes out and comes back always loses a quarter. Packing goods lift it to at most 1:30.
+    # slot 0: packing the store. A real, positive victuals output (production efficiency scales it).
     unique_production_methods = {
-    		# --- ASIA ---
-    		pp_victualling_yard_khichdi_serve = {
-            rice = 1.23
-            legumes = 1.06
-            pepper = 0.037
-            manual_labor_cost = 0.19
-    			produced = local_food
-            output = 27.09
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_khichdi = {
-            rice = 1.23
-            legumes = 1.06
-            pepper = 0.037
-            manual_labor_cost = 0.19
-    			produced = victuals
-            output = 0.903
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_fish_congee_serve = {
-            rice = 1.23
-            fish = 1.06
-            pepper = 0.037
-            manual_labor_cost = 0.19
-    			produced = local_food
-            output = 27.09
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_fish_congee = { # Adjusted: Swapped game for fish to match the name and Asian RGOs
-            rice = 1.23
-            fish = 1.06
-            pepper = 0.037
-            manual_labor_cost = 0.19
-    			produced = victuals
-            output = 0.903
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
+      pp_victualling_yard_pack_provisions = {
+        produced = victuals
+        manual_labor_cost = 0.2
+        output = 1.5
+        category = building_maintenance
+      }
+    }
+    # slot 1: surplus sales, the storage leg (the farms' Surplus Sales good): output modifier = country constant -1
+    # + 8 per stored year = 8y; the 30.52 offset input is the fixed cost. Per level at floor prices (dummy goods and
+    # labour 1 gold, y = stored years, capped at 2, loose stores): profit = 1.5p - 30.72 + 2.0 x 8y
+    # -> at p = 2.7: -10.7 at 12 months, 0 at 20, +5.3 at 24. The Tavern stops at 12 months, so the two keep a
+    # 12-20 month dead band that only closes at about +125 % production efficiency.
+    unique_production_methods = {
+      pp_victualling_yard_surplus_sales = {
+        produced = province_food_sales
+        offset = 30.52
+        output = 2.0
+        category = building_maintenance
+      }
+    }
+    # slot 2: packing goods. Each breaks even at default prices; they only pay where the packing good is cheap.
+    unique_production_methods = {
+      pp_victualling_yard_loose_stores = {
+        category = building_maintenance
+      }
+      pp_victualling_yard_pottery_jars = {
+        pottery = 0.65
+        manual_labor_cost = 0.11
+        produced = victuals
+        output = 0.25
+        debug_max_profit = 0
+        category = building_maintenance
+      }
+      pp_victualling_yard_coopered_barrels = {
+        furniture = 0.30
+        manual_labor_cost = 0.16
+        produced = victuals
+        output = 0.35
+        debug_max_profit = 0
+        category = building_maintenance
+      }
+      pp_victualling_yard_tin_cans = {
+        steel = 0.26
+        manual_labor_cost = 0.22
+        produced = victuals
+        output = 0.5
+        debug_max_profit = 0
+        category = building_maintenance
+      }
+    }
 
-    		# --- EUROPE ---
-    		pp_victualling_yard_livestock_pottage_serve = {
-            wheat = 1.2
-            livestock = 0.86
-            legumes = 0.24
-            manual_labor_cost = 0.21
-    			produced = local_food
-            output = 29.97
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_livestock_pottage = {
-            wheat = 1.2
-            livestock = 0.86
-            legumes = 0.24
-            manual_labor_cost = 0.21
-    			produced = victuals
-            output = 0.999
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_mediterranean_fish_serve = {
-            fish = 1.87
-            olives = 0.56
-            wine = 0.076
-            manual_labor_cost = 0.2
-    			produced = local_food
-            output = 28.32
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_mediterranean_fish = {
-            fish = 1.87
-            olives = 0.56
-            wine = 0.076
-            manual_labor_cost = 0.2
-    			produced = victuals
-            output = 0.944
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_mutton_and_pease_serve = {
-            wool = 0.92
-            legumes = 0.44
-            salt = 0.053
-            manual_labor_cost = 0.22
-    			produced = local_food
-            output = 30.09
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_mutton_and_pease = {
-            wool = 0.92
-            legumes = 0.44
-            salt = 0.053
-            manual_labor_cost = 0.22
-    			produced = victuals
-            output = 1.003
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_surstromming_serve = {
-            fish = 1.93
-            millet = 0.2
-            salt = 0.2
-            manual_labor_cost = 0.21
-    			produced = local_food
-            output = 30.9
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_surstromming = {
-            fish = 1.93
-            millet = 0.2
-            salt = 0.2
-            manual_labor_cost = 0.21
-    			produced = victuals
-            output = 1.030
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
+    raw_modifier = {
+    }
 
-    		# --- AMERICA ---
-    		pp_victualling_yard_pozole_serve = {
-            maize = 0.77
-            wild_game = 0.98
-            chili = 0.15
-            manual_labor_cost = 0.17
-    			produced = local_food
-            output = 27.3
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_pozole = {
-            maize = 0.77
-            wild_game = 0.98
-            chili = 0.15
-            manual_labor_cost = 0.17
-    			produced = victuals
-            output = 0.910
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_pemmican_serve = {
-            wild_game = 1.68
-            livestock = 0.35
-            fruit = 0.37
-            manual_labor_cost = 0.2
-    			produced = local_food
-            output = 28.32
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_pemmican = { # Adjusted: Flipped livestock and game to match American RGO dominance
-            wild_game = 1.68
-            livestock = 0.35
-            fruit = 0.37
-            manual_labor_cost = 0.2
-    			produced = victuals
-            output = 0.944
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_labskaus_serve = {
-            potato = 0.35
-            fish = 0.56
-            livestock = 1.12
-            manual_labor_cost = 0.2
-    			produced = local_food
-            output = 28.41
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_labskaus = { # Note: Requires potato, which only exists in America in your data!
-            potato = 0.35
-            fish = 0.56
-            livestock = 1.12
-            manual_labor_cost = 0.2
-    			produced = victuals
-            output = 0.947
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-
-    		# --- AFRICA (NEW) ---
-    		pp_victualling_yard_meat_tajine_serve = {
-            livestock = 1.31
-            fruit = 0.59
-            saffron = 0.056
-            manual_labor_cost = 0.22
-    			produced = local_food
-            output = 31.2
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_meat_tajine = { # Uses Africa's massive livestock, fruit, and saffron RGOs
-            livestock = 1.31
-            fruit = 0.59
-            saffron = 0.056
-            manual_labor_cost = 0.22
-    			produced = victuals
-            output = 1.040
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_saltfish_porridge_serve = {
-            millet = 0.98
-            fish = 1.4
-            salt = 0.076
-            manual_labor_cost = 0.21
-    			produced = local_food
-            output = 30.12
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_saltfish_porridge = { # Also fits Africa/Middle East perfectly
-            millet = 0.98
-            fish = 1.4
-            salt = 0.076
-            manual_labor_cost = 0.21
-    			produced = victuals
-            output = 1.004
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-
-    		# --- OCEANIA (NEW) ---
-    		pp_victualling_yard_ika_mata_serve = {
-            fish = 1.79
-            fruit = 0.94
-            salt = 0.037
-            manual_labor_cost = 0.23
-    			produced = local_food
-            output = 28.89
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_ika_mata = { # Capitalizes on Oceania's massive 18.9 fish and 11.7 fruit RGOs
-            fish = 1.79
-            fruit = 0.94
-            salt = 0.037
-            manual_labor_cost = 0.23
-    			produced = victuals
-            output = 0.963
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-
-    		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
-    		pp_victualling_yard_kheer_serve = {
-            rice = 1.23
-            sugar = 0.11
-            livestock = 0.67
-            manual_labor_cost = 0.21
-    			produced = local_food
-            output = 28.32
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_kheer = { # Sugar-led; primary fantasy SA / NA / ME; valid anywhere with sugar + starch + livestock
-            rice = 1.23
-            sugar = 0.11
-            livestock = 0.67
-            manual_labor_cost = 0.21
-    			produced = victuals
-            output = 0.944
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_honey_gruel_serve = {
-            wheat = 0.9
-            fruit = 0.59
-            beeswax = 0.67
-            manual_labor_cost = 0.22
-    			produced = local_food
-            output = 31.11
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_honey_gruel = {
-            wheat = 0.9
-            fruit = 0.59
-            beeswax = 0.67
-            manual_labor_cost = 0.22
-    			produced = victuals
-            output = 1.037
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_boreal_hunter_stew_serve = {
-            fur = 0.86
-            millet = 0.75
-            salt = 0.076
-            manual_labor_cost = 0.22
-    			produced = local_food
-            output = 31.2
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_boreal_hunter_stew = { # Fur belt: North Asia, North America, Eastern Europe â€” game stew; fur = trapping economy
-            fur = 0.86
-            millet = 0.75
-            salt = 0.076
-            manual_labor_cost = 0.22
-    			produced = victuals
-            output = 1.040
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    	}
-    	# ==========================================
-    	# 2. TABLE BEVERAGES (pick ONE)
-    	# - Baseline: well water (no trade goods; EU5 has no water good)
-    	# - Upgrades: one drink good each (weights sum prior two-input recipes for similar cost)
-    	# ==========================================
-    	unique_production_methods = {
-    		pp_victualling_yard_well_water = {
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_beer = {
-            beer = 0.66
-            manual_labor_cost = 0.11
-    			produced = victuals
-            output = 0.505
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_wine = {
-            wine = 0.72
-            manual_labor_cost = 0.11
-    			produced = victuals
-            output = 0.517
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_liquor = {
-            liquor = 0.62
-            manual_labor_cost = 0.12
-    			produced = victuals
-            output = 0.537
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_chocolate = {
-            cocoa = 0.3
-            manual_labor_cost = 0.092
-    			produced = victuals
-            output = 0.394
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_coffee = {
-            coffee = 0.35
-            manual_labor_cost = 0.096
-    			produced = victuals
-            output = 0.389
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_tea = {
-            tea = 0.46
-            manual_labor_cost = 0.096
-    			produced = victuals
-            output = 0.499
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    	}
-    	# ==========================================
-    	# 3. PACKING (pick ONE)
-    	# - One packaging good per tier (or none)
-    	# ==========================================
-    	unique_production_methods = {
-    		pp_victualling_yard_no_packaging = {
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_pottery_jars = {
-            pottery = 0.95
-            manual_labor_cost = 0.076
-    			produced = victuals
-            output = 0.325
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_coopered_barrels = {
-            furniture = 0.31
-            manual_labor_cost = 0.066
-    			produced = victuals
-            output = 0.313
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    		pp_victualling_yard_tin_cans = {
-            steel = 0.34
-            manual_labor_cost = 0.12
-    			produced = victuals
-            output = 0.579
-    			debug_max_profit = 0
-    			category = building_maintenance
-    		}
-    	}
-    	raw_modifier = {
-    	}
-
-    	modifier = {
-        local_food_capacity = 800
-    		local_victuals_output_modifier = 0.00
-    	}
-advancements:
-  - key: pp_victualling_yard
+    modifier = {
+      local_monthly_food = -60.0
+      # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
+      # (location-wide, so it also trims the farms' Sell the Surplus there; -0.2 per 60 food as before per food)
+      local_province_food_sales_output_modifier = -0.2
+      local_nobles_estate_power = 0.05
+      local_peasant_enfranchisment = -0.01
+      local_food_capacity = 1200
+      # yards provisioned and refitted the fleets
+      local_repair_speed = 0.01
+      local_sailors = 0.01
+    }
+prices:
+  - key: pp_victualling_yard_price
     body: |2-
-      icon = victualling_yard
-      age = age_5_absolutism
-      requires = manufactories_advance
-      unlock_building = victualling_yard
-      ai_weight = { add = 125 }
+      {gold = 35}
+advancements:
+  - key: victualling_yard_tin_cans_advance
+    body: |2-
+      age = age_6_revolutions
+      unlock_production_method = pp_victualling_yard_tin_cans
+      requires = steel_mill_advance
+      icon = victualling_yard_tin_cans_advance
+      ai_weight = { add = 150 }
 localization:
   entries:
     victualling_yard: Victualling Yard
-    victualling_yard_desc: Larger ration yards with stores, kettles and cooperage. Each dish can be served to the province as Province Food or preserved as Victuals at city and army-supply scale.
-    victualling_yard_slot_0: Main Dish
-    victualling_yard_slot_1: Ration Drink
+    victualling_yard_desc: Packs the lasting part of a full province store into [ShowGoodsName('victuals')|e] for the goods market, as the great yards that provisioned fleets and armies did. It pays off when the province store is full, and packing goods waste less of the food.
+    victualling_yard_slot_0: Provisions
+    victualling_yard_slot_1: Surplus Sales
     victualling_yard_slot_2: Packing
-    pp_victualling_yard: Victualling Yards
-    pp_victualling_yard_desc: Larger ration yards organize stores, kettles, cooperage, and labor crews for durable prepared victuals.
-    pp_victualling_yard_beer: Beer
-    pp_victualling_yard_boreal_hunter_stew: Preserve Boreal Hunter's Stew
-    pp_victualling_yard_boreal_hunter_stew_serve: Serve Boreal Hunter's Stew
-    pp_victualling_yard_chocolate: Chocolate
-    pp_victualling_yard_coffee: Coffee
-    pp_victualling_yard_coopered_barrels: Coopered Barrels
-    pp_victualling_yard_fish_congee: Preserve Fish Congee
-    pp_victualling_yard_fish_congee_serve: Serve Fish Congee
-    pp_victualling_yard_honey_gruel: Preserve Honeyed Gruel
-    pp_victualling_yard_honey_gruel_serve: Serve Honeyed Gruel
-    pp_victualling_yard_ika_mata: Preserve Ika Mata
-    pp_victualling_yard_ika_mata_serve: Serve Ika Mata
-    pp_victualling_yard_kheer: Preserve Kheer
-    pp_victualling_yard_kheer_serve: Serve Kheer
-    pp_victualling_yard_khichdi: Preserve Khichdi
-    pp_victualling_yard_khichdi_serve: Serve Khichdi
-    pp_victualling_yard_labskaus: Preserve Labskaus
-    pp_victualling_yard_labskaus_serve: Serve Labskaus
-    pp_victualling_yard_liquor: Liquor
-    pp_victualling_yard_livestock_pottage: Preserve Commoners Stew
-    pp_victualling_yard_livestock_pottage_serve: Serve Commoners Stew
-    pp_victualling_yard_meat_tajine: Preserve Tajine
-    pp_victualling_yard_meat_tajine_serve: Serve Tajine
-    pp_victualling_yard_mediterranean_fish: Preserve Bouillabaisse
-    pp_victualling_yard_mediterranean_fish_serve: Serve Bouillabaisse
-    pp_victualling_yard_mutton_and_pease: Preserve Mutton and Pease
-    pp_victualling_yard_mutton_and_pease_serve: Serve Mutton and Pease
-    pp_victualling_yard_no_packaging: No Packing
-    pp_victualling_yard_pemmican: Preserve Pemmican
-    pp_victualling_yard_pemmican_serve: Serve Pemmican
+    victuals_trade_construction: Victuals Trade Construction
+    pp_victualling_yard_pack_provisions: Pack Provisions
+    pp_victualling_yard_surplus_sales: Sell the Surplus
+    pp_victualling_yard_loose_stores: Loose Stores
     pp_victualling_yard_pottery_jars: Pottery Jars
-    pp_victualling_yard_pozole: Preserve Pozole
-    pp_victualling_yard_pozole_serve: Serve Pozole
-    pp_victualling_yard_saltfish_porridge: Preserve Saltfish Porridge
-    pp_victualling_yard_saltfish_porridge_serve: Serve Saltfish Porridge
-    pp_victualling_yard_surstromming: Preserve Surstroemming
-    pp_victualling_yard_surstromming_serve: Serve Surstroemming
-    pp_victualling_yard_tea: Tea
+    pp_victualling_yard_coopered_barrels: Coopered Barrels
     pp_victualling_yard_tin_cans: Tin Cans
-    pp_victualling_yard_well_water: Well Water
-    pp_victualling_yard_wine: Wine
+    pp_victualling_yard_price: Victualling Yard Price
+    victualling_yard_tin_cans_advance: Tin Cans
+    victualling_yard_tin_cans_advance_desc: Develop canning and tinning methods that pack victuals in metal containers for longer transport and storage.
 icon:
-  source_png: ../assets/icons/victualling_yard.png
+  source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/victualling_yard.dds
   output_dds: victualling_yard.dds
   size: 512
-  prompt: EU5-inspired hand-painted strategy-game icon for a victualling yard, transparent background. Center a large dockside provisioning complex with timber and stone storehouses, stacked barrels, crates, grain and salt sacks, hanging smoked meat, hardtack boxes, loading tackle, a pier edge, and a ship mast. Make it clearly larger, more maritime, and more logistical than a small cookery. Use readable painterly shapes, softly outlined historical UI art, weathered wood, muted stone, tan canvas, barrel browns, small sea-blue accents, no text, no frame, not photorealistic, not cartoonish.
 
 evaluation:
   allow_rules:
-    input_throughput: Base prepared-victual recipes intentionally received two 10% throughput passes (the second on 2026-09-23 with a 5% output buff); beverage and packing slots remain partial add-ons.
-    output_throughput: Base prepared-victual recipes intentionally received two 10% throughput passes (the second on 2026-09-23 with a 5% output buff); beverage and packing slots remain partial add-ons.
+    profit_percent: Province food market transfers intentionally use internal balancing goods.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline.
+    amortization_months: Surplus Sales output intentionally breaks normal payback bounds.
+    base_output_per_1k: The packing leg turns stored province food into victuals on one noble per level, not a production line.
   production_methods:
-    pp_victualling_yard_khichdi_serve:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_khichdi:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_fish_congee_serve:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_fish_congee:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_livestock_pottage_serve:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_livestock_pottage:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_mediterranean_fish_serve:
-      production_efficiency: 1.15
-    pp_victualling_yard_mediterranean_fish:
-      production_efficiency: 1.15
-    pp_victualling_yard_mutton_and_pease_serve:
-      production_efficiency: 1.15
-      allow_rules:
-        input_throughput: Dense prepared recipe intentionally sits above the age 5 input band after the 10% base-recipe throughput pass.
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_mutton_and_pease:
-      production_efficiency: 1.15
-      allow_rules:
-        input_throughput: Dense prepared recipe intentionally sits above the age 5 input band after the 10% base-recipe throughput pass.
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_surstromming_serve:
-      production_efficiency: 1.15
-      allow_rules:
-        input_throughput: Dense prepared recipe intentionally sits above the age 5 input band after the 10% base-recipe throughput pass.
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_surstromming:
-      production_efficiency: 1.15
-      allow_rules:
-        input_throughput: Dense prepared recipe intentionally sits above the age 5 input band after the 10% base-recipe throughput pass.
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_pozole_serve:
-      production_efficiency: 1.15
-    pp_victualling_yard_pozole:
-      production_efficiency: 1.15
-    pp_victualling_yard_pemmican_serve:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_pemmican:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_labskaus_serve:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_labskaus:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_meat_tajine_serve:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_meat_tajine:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_saltfish_porridge_serve:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_saltfish_porridge:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_ika_mata_serve:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_ika_mata:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_kheer_serve:
-      production_efficiency: 1.15
-    pp_victualling_yard_kheer:
-      production_efficiency: 1.15
-    pp_victualling_yard_honey_gruel_serve:
-      production_efficiency: 1.15
-    pp_victualling_yard_honey_gruel:
-      production_efficiency: 1.15
-    pp_victualling_yard_boreal_hunter_stew_serve:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_boreal_hunter_stew:
-      production_efficiency: 1.15
-      allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_victualling_yard_beer:
-      production_efficiency: 1.00
-      allow_rules:
-        input_throughput: Ration drinks are partial-slot victualling add-ons, not full prepared-victual throughput.
-        output_throughput: Ration drinks are partial-slot victualling add-ons, not full prepared-victual throughput.
-    pp_victualling_yard_wine:
-      production_efficiency: 1.05
-      allow_rules:
-        input_throughput: Ration drinks are partial-slot victualling add-ons, not full prepared-victual throughput.
-        output_throughput: Ration drinks are partial-slot victualling add-ons, not full prepared-victual throughput.
-    pp_victualling_yard_liquor:
-      production_efficiency: 1.00
-      allow_rules:
-        input_throughput: Ration drinks are partial-slot victualling add-ons, not full prepared-victual throughput.
-        output_throughput: Ration drinks are partial-slot victualling add-ons, not full prepared-victual throughput.
-        amortization_months: Liquor service is an optional ration drink slot, so building-level payback is carried by prepared victuals.
-    pp_victualling_yard_chocolate:
-      production_efficiency: 1.05
-      allow_rules:
-        input_throughput: Ration drinks are partial-slot victualling add-ons, not full prepared-victual throughput.
-        output_throughput: Ration drinks are partial-slot victualling add-ons, not full prepared-victual throughput.
-    pp_victualling_yard_coffee:
-      production_efficiency: 1.05
-      allow_rules:
-        input_throughput: Ration drinks are partial-slot victualling add-ons, not full prepared-victual throughput.
-        output_throughput: Ration drinks are partial-slot victualling add-ons, not full prepared-victual throughput.
-    pp_victualling_yard_tea:
-      production_efficiency: 1.05
-      allow_rules:
-        input_throughput: Ration drinks are partial-slot victualling add-ons, not full prepared-victual throughput.
-        output_throughput: Ration drinks are partial-slot victualling add-ons, not full prepared-victual throughput.
     pp_victualling_yard_pottery_jars:
       production_efficiency: 1.00
-      allow_rules:
-        input_throughput: Packing methods are partial-slot victualling add-ons, not full prepared-victual throughput.
-        output_throughput: Packing methods are partial-slot victualling add-ons, not full prepared-victual throughput.
-        amortization_months: Packing is an optional support slot, so building-level payback is carried by prepared victuals.
     pp_victualling_yard_coopered_barrels:
       production_efficiency: 1.00
-      allow_rules:
-        input_throughput: Packing methods are partial-slot victualling add-ons, not full prepared-victual throughput.
-        output_throughput: Packing methods are partial-slot victualling add-ons, not full prepared-victual throughput.
-        amortization_months: Packing is an optional support slot, so building-level payback is carried by prepared victuals.
     pp_victualling_yard_tin_cans:
       production_efficiency: 1.00
-      allow_rules:
-        input_throughput: Packing methods are partial-slot victualling add-ons, not full prepared-victual throughput.
-        output_throughput: Packing methods are partial-slot victualling add-ons, not full prepared-victual throughput.

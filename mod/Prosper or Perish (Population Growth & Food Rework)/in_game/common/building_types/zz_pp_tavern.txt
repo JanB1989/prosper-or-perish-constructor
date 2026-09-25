@@ -1,0 +1,66 @@
+﻿# >>> eu5-building-pipeline:tavern:building
+tavern = {
+is_foreign = no
+increase_per_level_cost = 0.00
+max_levels = tavern_max_level
+pop_type = nobles
+employment_size = 0.001
+price = pp_tavern_price
+category = consumer_goods_category
+custom_tags = { pp_food_security_priority pp_food_distribution_priority }
+icon = tavern
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+ai_forbid_shutdown = yes
+important_for_AI = yes
+can_close = yes
+forbidden_for_estates = no
+AI_ignore_available_worker_flag = yes
+build_time = 365
+construction_demand = victuals_trade_construction
+
+# The Tavern serves bought-in victuals to the province: 2 victuals -> 60 food per staffed level (1 victual =
+# 30 food). Its money is set by the province store, not by the victuals price.
+# slot 0: serving. At floor prices (dummy goods = 1 gold, 20 % of default; labour 1 gold) it costs
+# 2 victuals x p + 0.2 labour and earns 0.167 offset x 20 (country constant +19) = 3.34 gold, so this slot
+# alone loses money whenever the victuals price p > 1.57: the Tavern cannot run on the price alone.
+# The x20 constant keeps production efficiency small on this income (+50 % efficiency = +2.5 %).
+unique_production_methods = {
+  pp_tavern_serve_victuals = {
+    produced = offset
+    victuals = 2.0
+    manual_labor_cost = 0.2
+    output = 0.167
+    category = building_maintenance
+  }
+}
+# slot 1: scarcity premium. 0.533 province_food_purchase whose output modifier runs from 16x at an empty store
+# (8.53 gold) to zero at the 24-month cap (+8 more while starving), minus a fixed 2 offset input (2 gold,
+# inputs ignore production efficiency).
+# Per level (y = stored years, capped at 2): profit = 3.34 - 2p - 0.2 + 0.533 x (16 - 8y) - 2
+# -> at p = 2.7: +4.27 gold when empty, 0 at 12 months, -4.27 at the 24-month cap.
+unique_production_methods = {
+  pp_tavern_scarcity_premium = {
+    produced = province_food_purchase
+    offset = 2.0
+    output = 0.533
+    category = building_maintenance
+  }
+}
+
+raw_modifier = {
+	local_population_capacity = 0.001
+}
+
+modifier = {
+  local_monthly_food = 60.0
+  # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
+  # (-0.2 per 60 food = the same droop per unit of food as the former 90-food level's -0.3)
+  local_province_food_purchase_output_modifier = -0.2
+  # inns quartered and fed marching troops
+  local_supply_limit_modifier = 0.01
+}
+}
+# <<< eu5-building-pipeline:tavern:building

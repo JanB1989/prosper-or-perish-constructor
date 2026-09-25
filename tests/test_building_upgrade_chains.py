@@ -162,9 +162,9 @@ EXPECTED_CHAINS = {
         ("bog_iron_smelter_blast_furnace", "blast_furnace"),
         ("bog_iron_smelter_coke_blast_furnace", "coke_blast_furnace"),
     ],
-    "cookery": [
-        ("cookery", None),
-        ("victualling_yard", "pp_victualling_yard"),
+    "cookshop": [
+        ("cookshop", None),
+        ("public_kitchen", "pp_public_kitchen"),
     ],
 }
 

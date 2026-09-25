@@ -87,29 +87,29 @@ MARKET_VILLAGE_MARKET_ACCESS_RENDERED = (
     / "building_types"
     / "zz_pp_market_village_market_access.txt"
 )
-VICTUALS_MARKET_BLUEPRINT = (
-    ROOT / "blueprints" / "accepted" / "buildings" / "victuals_market_export.yml"
+VICTUALLING_YARD_BLUEPRINT = (
+    ROOT / "blueprints" / "accepted" / "buildings" / "victualling_yard.yml"
 )
-VICTUALS_MARKET_IMPORT_BLUEPRINT = (
-    ROOT / "blueprints" / "accepted" / "buildings" / "victuals_market_import.yml"
+TAVERN_BLUEPRINT = (
+    ROOT / "blueprints" / "accepted" / "buildings" / "tavern.yml"
 )
-VICTUALS_MARKET_RENDERED = (
-    MOD_ROOT / "in_game" / "common" / "building_types" / "zz_pp_victuals_market.txt"
+VICTUALLING_YARD_RENDERED = (
+    MOD_ROOT / "in_game" / "common" / "building_types" / "zz_pp_victualling_yard.txt"
 )
-VICTUALS_MARKET_IMPORT_RENDERED = (
-    MOD_ROOT / "in_game" / "common" / "building_types" / "zz_pp_victuals_market_import.txt"
+TAVERN_RENDERED = (
+    MOD_ROOT / "in_game" / "common" / "building_types" / "zz_pp_tavern.txt"
 )
-VICTUALS_MARKET_ICON = (
-    MOD_ROOT / "in_game" / "gfx" / "interface" / "icons" / "buildings" / "victuals_market.dds"
+VICTUALLING_YARD_ICON = (
+    MOD_ROOT / "in_game" / "gfx" / "interface" / "icons" / "buildings" / "victualling_yard.dds"
 )
-VICTUALS_MARKET_IMPORT_ICON = (
+TAVERN_ICON = (
     MOD_ROOT
     / "in_game"
     / "gfx"
     / "interface"
     / "icons"
     / "buildings"
-    / "victuals_market_import.dds"
+    / "tavern.dds"
 )
 FOUR_YEARLY_COUNTRY_PULSE = (
     MOD_ROOT / "in_game" / "common" / "on_action" / "pp_country_four_yearly.txt"
@@ -554,48 +554,53 @@ def test_market_village_market_access_is_neutralized_by_inject_blueprint() -> No
     assert total == 0.0
 
 
-def test_victuals_market_templates_split_export_and_import_flows() -> None:
+def test_victuals_trade_templates_split_export_and_import_flows() -> None:
     manifest = yaml_io.safe_load((ROOT / "blueprints/buildings.manifest.yml").read_text())
-    assert manifest["enabled"]["buildings/victuals_market_export.yml"] is True
-    assert VICTUALS_MARKET_RENDERED.exists()
-    export_texts = tuple(
+    assert manifest["enabled"]["buildings/victualling_yard.yml"] is True
+    assert manifest["enabled"]["buildings/tavern.yml"] is True
+    assert VICTUALLING_YARD_RENDERED.exists()
+    yard_texts = tuple(
         path.read_text(encoding="utf-8-sig")
-        for path in (VICTUALS_MARKET_BLUEPRINT, VICTUALS_MARKET_RENDERED)
+        for path in (VICTUALLING_YARD_BLUEPRINT, VICTUALLING_YARD_RENDERED)
     )
-    import_texts = tuple(
+    tavern_texts = tuple(
         path.read_text(encoding="utf-8-sig")
-        for path in (VICTUALS_MARKET_IMPORT_BLUEPRINT, VICTUALS_MARKET_IMPORT_RENDERED)
+        for path in (TAVERN_BLUEPRINT, TAVERN_RENDERED)
     )
 
-    assert "victuals_market: Victualler (Export)" in export_texts[0]
-    for text in export_texts:
-        assert "pp_province_food_to_market" in text
+    # the Victualling Yard packs the province store into real victuals: a positive output, no negative input
+    assert "victualling_yard: Victualling Yard" in yard_texts[0]
+    for text in yard_texts:
+        assert "pp_victualling_yard_pack_provisions" in text
+        assert re.search(r"pp_victualling_yard_pack_provisions = \{[^}]*produced = victuals[^}]*output = 1\.5", text, re.S)
+        assert re.search(r"pp_victualling_yard_surplus_sales = \{[^}]*offset = 30\.52[^}]*output = 2(\.0)?\b", text, re.S)
         assert "produced = province_food_sales" in text
-        assert "export_sales" not in text
-        assert "local_province_food_sales_output_modifier = -0.3" in text
-        assert "offset = 24.9" in text
-        assert "output = 1.425" in text
-        assert "pp_province_food_from_market" not in text
+        assert not re.search(r"\bvictuals = -", text)
+        assert "export_tally" not in text
+        assert "local_province_food_sales_output_modifier = -0.2" in text
+        assert "pp_tavern_serve_victuals" not in text
+        for packing in ("loose_stores", "pottery_jars", "coopered_barrels", "tin_cans"):
+            assert f"pp_victualling_yard_{packing}" in text
 
-    assert "victuals_market_import: Victualler" in import_texts[0]
-    for text in import_texts:
-        assert "pp_province_food_from_market" in text
+    assert "tavern: Tavern" in tavern_texts[0]
+    for text in tavern_texts:
+        assert "pp_tavern_serve_victuals" in text
         assert "produced = province_food_purchase" in text
-        assert "output = 0.25" in text
-        assert "output = 0.8" in text
-        assert "local_province_food_purchase_output_modifier = -0.3" in text
-        assert "pp_province_food_to_market" not in text
+        assert "output = 0.167" in text
+        assert "output = 0.533" in text
+        assert "victuals = 2.0" in text
+        assert "local_province_food_purchase_output_modifier = -0.2" in text
+        assert "pp_victualling_yard_pack_provisions" not in text
 
-    for text in export_texts:
-        assert "local_monthly_food = -90.0" in text
-        assert "max_levels = victuals_market_export_max_level" in text
+    for text in yard_texts:
+        assert "local_monthly_food = -60.0" in text
+        assert "max_levels = victualling_yard_max_level" in text
         assert "local_nobles_estate_power = 0.05" in text
         assert "local_peasant_enfranchisment = -0.01" in text
         assert "local_market_access" not in text
 
-    for text in import_texts:
-        assert "local_monthly_food = 90.0" in text
-        assert "max_levels = victuals_market_import_max_level" in text
+    for text in tavern_texts:
+        assert "local_monthly_food = 60.0" in text
+        assert "max_levels = tavern_max_level" in text
         assert "local_nobles_estate_power" not in text
         assert "local_peasant_enfranchisment" not in text
-    assert VICTUALS_MARKET_IMPORT_ICON.read_bytes() == VICTUALS_MARKET_ICON.read_bytes()

@@ -60,7 +60,7 @@ vbox = {
         encoding="utf-8",
     )
     title = json.dumps("P&P: Food Production")
-    desc = json.dumps("#T Food#!\n$BULLET$ Build cookeries.")
+    desc = json.dumps("#T Food#!\n$BULLET$ Build Cookshops.")
     loc.write_text(
         "l_english:\n"
         f"  game_concept_pp_food: {title}\n"
@@ -602,7 +602,7 @@ def test_province_food_sales_check_prints_parsed_price_and_rank_edges(
     assert cheap_50_line.split() == ["cheap_50", "-0.225", "0.775"]
     rural_summary_line = next(line for line in lines if line.startswith("rural_settlement"))
     assert rural_summary_line.split()[:3] == ["rural_settlement", "+0.050", "-0.400"]
-    threshold_start = lines.index("victuals market base-condition profitability:")
+    threshold_start = lines.index("Tavern/Victualling Yard base-condition profitability:")
     threshold_rows = lines[threshold_start + 3 : threshold_start + 6]
     assert threshold_rows[0].split() == [
         "cheap_50",
@@ -629,7 +629,7 @@ def test_province_food_sales_check_prints_parsed_price_and_rank_edges(
         "loss",
     ]
     rank_threshold_start = lines.index(
-        "victuals market base price + full storage profitability by rank:"
+        "Tavern/Victualling Yard base price + full storage profitability by rank:"
     )
     rank_threshold_rows = lines[rank_threshold_start + 3 : rank_threshold_start + 7]
     assert rank_threshold_rows[0].split() == [
@@ -838,8 +838,8 @@ def test_production_throughput_prints_best_available_building_slot_sums(
             ["berries", "tools", "victuals"],
             [
                 {
-                    "name": "cookery_slot_0_low",
-                    "building": "cookery",
+                    "name": "cookshop_slot_0_low",
+                    "building": "cookshop",
                     "production_method_group_index": 0,
                     "produced": "victuals",
                     "input_goods": ["grain"],
@@ -849,8 +849,8 @@ def test_production_throughput_prints_best_available_building_slot_sums(
                     "effective_availability_kind": "available_by_default",
                 },
                 {
-                    "name": "cookery_slot_0_high",
-                    "building": "cookery",
+                    "name": "cookshop_slot_0_high",
+                    "building": "cookshop",
                     "production_method_group_index": 0,
                     "produced": "victuals",
                     "input_goods": ["meat"],
@@ -860,8 +860,8 @@ def test_production_throughput_prints_best_available_building_slot_sums(
                     "effective_availability_kind": "available_by_default",
                 },
                 {
-                    "name": "cookery_slot_1",
-                    "building": "cookery",
+                    "name": "cookshop_slot_1",
+                    "building": "cookshop",
                     "production_method_group_index": 1,
                     "produced": "victuals",
                     "input_goods": ["wine"],
@@ -872,7 +872,7 @@ def test_production_throughput_prints_best_available_building_slot_sums(
                 },
                 {
                     "name": "yard_slot_0",
-                    "building": "victualling_yard",
+                    "building": "public_kitchen",
                     "production_method_group_index": 0,
                     "produced": "victuals",
                     "input_goods": ["meat"],
@@ -884,7 +884,7 @@ def test_production_throughput_prints_best_available_building_slot_sums(
                 },
                 {
                     "name": "yard_slot_1",
-                    "building": "victualling_yard",
+                    "building": "public_kitchen",
                     "production_method_group_index": 1,
                     "produced": "victuals",
                     "input_goods": ["salt"],

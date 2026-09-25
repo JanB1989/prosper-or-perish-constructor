@@ -22,7 +22,7 @@ PROJECT = ROOT / "constructor.toml"
 INTENTIONAL_SOURCE_COST_OVERRIDES = {
     "saffron_kiln_croft": "successor croft keeps the existing tea/coffee-style crop cadence",
     "shoen": "vanilla inject keeps the existing historical estate cadence",
-    "victuals_market_import": "current accepted import market has zero repeat-cost escalation",
+    "tavern": "current accepted import market has zero repeat-cost escalation",
 }
 
 
@@ -55,7 +55,8 @@ def test_goods_producer_main_output_is_documented_by_assignment() -> None:
     assignment_by_building = {assignment.building: assignment for assignment in assignments}
     assert assignment_by_building["market_village"].main_good == "tools"
     assert assignment_by_building["ablaq_palace"].main_good == "silk"
-    assert assignment_by_building["cookery"].main_good == "victuals"
+    # the Cookshop line only makes Province Food, which is never a main good; victuals are the Victualling Yard's
+    assert "cookshop" not in assignment_by_building and "public_kitchen" not in assignment_by_building
 
 
 def test_rendered_goods_producers_have_final_scaled_increase_per_level_cost() -> None:
@@ -102,6 +103,6 @@ def _top_level_increase_per_level_cost(building: str, body: str) -> str | None:
 
 
 def test_import_market_preserves_explicit_zero_repeat_cost():
-    path = accepted_blueprint_paths_by_building(ROOT)['victuals_market_import']
+    path = accepted_blueprint_paths_by_building(ROOT)['tavern']
     template = load_template(path)
     assert Decimal(_top_level_increase_per_level_cost(template.key, template.building_body)) == 0

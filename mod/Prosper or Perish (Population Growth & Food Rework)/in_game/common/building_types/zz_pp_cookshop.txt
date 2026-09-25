@@ -1,0 +1,258 @@
+﻿# >>> eu5-building-pipeline:cookshop:building
+cookshop = {
+	is_foreign = no
+increase_per_level_cost = 0.10
+	max_levels = cookshop_max_level
+	pop_type = laborers
+	employment_size = 1
+	category = consumer_goods_category
+	custom_tags = { pp_food_security_priority pp_direct_food_priority }
+	icon = cookshop
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+	build_time = workshop_build_time
+	construction_demand = workshop_construction
+	ai_forbid_shutdown = no
+	forbidden_for_estates = no
+	important_for_AI = yes
+	AI_ignore_available_worker_flag = yes
+	can_close = yes
+	# ==========================================
+	# 1. MAIN DISH (pick ONE)
+	# - Main food preparations
+	# - every dish is served to the province as Province Food (local_food); victuals are the Victualling Yard's
+	# ==========================================
+unique_production_methods = {
+		# --- ASIA ---
+		pp_cookshop_khichdi_serve = {
+        rice = 1.11
+        legumes = 0.95
+        pepper = 0.034
+        manual_labor_cost = 0.35
+			produced = local_food
+        output = 24.99
+			debug_max_profit = 2.139
+			category = building_maintenance
+		}
+		pp_cookshop_fish_congee_serve = {
+        rice = 1.11
+        fish = 0.95
+        pepper = 0.034
+        manual_labor_cost = 0.35
+			produced = local_food
+        output = 24.99
+			debug_max_profit = 2.139
+			category = building_maintenance
+		}
+
+		# --- EUROPE ---
+		pp_cookshop_livestock_pottage_serve = {
+        wheat = 1.08
+        livestock = 0.77
+        legumes = 0.22
+        manual_labor_cost = 0.4
+			produced = local_food
+        output = 27.57
+			debug_max_profit = 2.094
+			category = building_maintenance
+		}
+		pp_cookshop_mediterranean_fish_serve = {
+        fish = 1.68
+        olives = 0.51
+        wine = 0.068
+        manual_labor_cost = 0.37
+			produced = local_food
+        output = 26.07
+			debug_max_profit = 2.121
+			category = building_maintenance
+		}
+		pp_cookshop_mutton_and_pease_serve = {
+        wool = 0.83
+        legumes = 0.4
+        salt = 0.045
+        manual_labor_cost = 0.45
+			produced = local_food
+        output = 27.57
+			debug_max_profit = 1.785
+			category = building_maintenance
+		}
+		pp_cookshop_surstromming_serve = {
+        fish = 1.73
+        millet = 0.18
+        salt = 0.18
+        manual_labor_cost = 0.44
+			produced = local_food
+        output = 28.32
+			debug_max_profit = 1.826
+			category = building_maintenance
+		}
+
+		# --- AMERICA ---
+		pp_cookshop_pozole_serve = {
+        maize = 0.69
+        wild_game = 0.87
+        chili = 0.13
+        manual_labor_cost = 0.39
+			produced = local_food
+        output = 25.2
+			debug_max_profit = 2.029
+			category = building_maintenance
+		}
+		pp_cookshop_pemmican_serve = {
+        wild_game = 1.51
+        livestock = 0.32
+        fruit = 0.34
+        manual_labor_cost = 0.37
+			produced = local_food
+        output = 26.16
+			debug_max_profit = 2.129
+			category = building_maintenance
+		}
+		pp_cookshop_labskaus_serve = {
+        potato = 0.32
+        fish = 0.51
+        livestock = 1
+        manual_labor_cost = 0.37
+			produced = local_food
+        output = 26.19
+			debug_max_profit = 2.133
+			category = building_maintenance
+		}
+
+		# --- AFRICA (NEW) ---
+		pp_cookshop_meat_tajine_serve = {
+        livestock = 1.18
+        fruit = 0.54
+        saffron = 0.051
+        manual_labor_cost = 0.42
+			produced = local_food
+        output = 28.68
+			debug_max_profit = 2.074
+			category = building_maintenance
+		}
+		pp_cookshop_saltfish_porridge_serve = {
+        millet = 0.87
+        fish = 1.25
+        salt = 0.068
+        manual_labor_cost = 0.41
+			produced = local_food
+        output = 27.72
+			debug_max_profit = 2.073
+			category = building_maintenance
+		}
+
+		# --- OCEANIA (NEW) ---
+		pp_cookshop_ika_mata_serve = {
+        fish = 1.61
+        fruit = 0.84
+        salt = 0.034
+        manual_labor_cost = 0.44
+			produced = local_food
+        output = 26.52
+			debug_max_profit = 1.751
+			category = building_maintenance
+		}
+
+		# --- BASE GOODS COVERAGE (all_base_goods): sugar, beeswax as honey, fur ---
+		pp_cookshop_kheer_serve = {
+        rice = 1.11
+        sugar = 0.1
+        livestock = 0.61
+        manual_labor_cost = 0.37
+			produced = local_food
+        output = 26.07
+			debug_max_profit = 2.122
+			category = building_maintenance
+		}
+		pp_cookshop_honey_gruel_serve = {
+        wheat = 0.8
+        fruit = 0.54
+        beeswax = 0.61
+        manual_labor_cost = 0.41
+			produced = local_food
+        output = 28.65
+			debug_max_profit = 2.107
+			category = building_maintenance
+		}
+		pp_cookshop_boreal_hunter_stew_serve = {
+        fur = 0.77
+        millet = 0.67
+        salt = 0.068
+        manual_labor_cost = 0.42
+			produced = local_food
+        output = 28.68
+			debug_max_profit = 2.084
+			category = building_maintenance
+		}
+	}
+	# ==========================================
+	# 2. TABLE BEVERAGES (pick ONE), served as Province Food
+	# - Baseline: well water (no trade goods; EU5 has no water good)
+	# - Upgrades: one drink good each (weights sum prior two-input recipes for similar cost)
+	# ==========================================
+	unique_production_methods = {
+		pp_cookshop_well_water = {
+			category = building_maintenance
+		}
+		pp_cookshop_beer = {
+			beer = 0.64
+			manual_labor_cost = 0.22
+			produced = local_food
+			output = 13.89
+			debug_max_profit = 1.918
+			category = building_maintenance
+		}
+		pp_cookshop_wine = {
+			wine = 0.64
+			manual_labor_cost = 0.22
+			produced = local_food
+			output = 14.22
+			debug_max_profit = 1.987
+			category = building_maintenance
+		}
+		pp_cookshop_liquor = {
+        liquor = 0.56
+        manual_labor_cost = 0.22
+			produced = local_food
+			output = 14.7
+			debug_max_profit = 1.940
+			category = building_maintenance
+		}
+		pp_cookshop_chocolate = {
+			cocoa = 0.24
+			manual_labor_cost = 0.17
+			produced = local_food
+			output = 10.8
+			debug_max_profit = 1.983
+			category = building_maintenance
+		}
+		pp_cookshop_coffee = {
+			coffee = 0.36
+			manual_labor_cost = 0.19
+			produced = local_food
+			output = 10.68
+			debug_max_profit = 1.631
+			category = building_maintenance
+		}
+		pp_cookshop_tea = {
+			tea = 0.46
+			manual_labor_cost = 0.21
+			produced = local_food
+			output = 13.71
+			debug_max_profit = 1.821
+			category = building_maintenance
+		}
+	}
+	raw_modifier = {
+		local_population_capacity = 0.55
+	}
+
+	modifier = {
+		local_monthly_food = 10.0
+		local_food_capacity = 400
+		local_migration_attraction = 0.025
+	}
+}
+# <<< eu5-building-pipeline:cookshop:building

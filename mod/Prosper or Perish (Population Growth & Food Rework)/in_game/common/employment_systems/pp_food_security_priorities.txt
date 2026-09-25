@@ -24,7 +24,7 @@
 				limit = { has_tag = pp_direct_food_priority }
 				add = 110
 			}
-			# Victuals markets receive the highest food-security priority so prepared food is distributed reliably.
+			# Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.
 			else_if = {
 				limit = { has_tag = pp_food_distribution_priority }
 				add = 120
@@ -107,7 +107,7 @@ TRY_REPLACE:first_come_first_serve = {
 				limit = { has_tag = pp_direct_food_priority }
 				add = 110
 			}
-			# Victuals markets receive the highest food-security priority so prepared food is distributed reliably.
+			# Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.
 			else_if = {
 				limit = { has_tag = pp_food_distribution_priority }
 				add = 120
@@ -189,7 +189,7 @@ TRY_REPLACE:capitalism = {
 				limit = { has_tag = pp_direct_food_priority }
 				add = 110
 			}
-			# Victuals markets receive the highest food-security priority so prepared food is distributed reliably.
+			# Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.
 			else_if = {
 				limit = { has_tag = pp_food_distribution_priority }
 				add = 120
@@ -282,7 +282,7 @@ TRY_REPLACE:capitalism_prioritising_infrastructure = {
 				limit = { has_tag = pp_direct_food_priority }
 				add = 110
 			}
-			# Victuals markets receive the highest food-security priority so prepared food is distributed reliably.
+			# Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.
 			else_if = {
 				limit = { has_tag = pp_food_distribution_priority }
 				add = 120
@@ -389,7 +389,7 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade = {
 				limit = { has_tag = pp_direct_food_priority }
 				add = 110
 			}
-			# Victuals markets receive the highest food-security priority so prepared food is distributed reliably.
+			# Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.
 			else_if = {
 				limit = { has_tag = pp_food_distribution_priority }
 				add = 120
@@ -504,7 +504,7 @@ TRY_REPLACE:capitalism_prioritising_infrastructure_trade_and_culture = {
 				limit = { has_tag = pp_direct_food_priority }
 				add = 110
 			}
-			# Victuals markets receive the highest food-security priority so prepared food is distributed reliably.
+			# Taverns and Victualling Yards receive the highest food-security priority so prepared food is distributed reliably.
 			else_if = {
 				limit = { has_tag = pp_food_distribution_priority }
 				add = 120

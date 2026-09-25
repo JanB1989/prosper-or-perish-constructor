@@ -1,0 +1,9 @@
+﻿# >>> eu5-building-pipeline:public_kitchen:advancement
+pp_public_kitchen = {
+icon = public_kitchen
+age = age_5_absolutism
+requires = manufactories_advance
+unlock_building = public_kitchen
+ai_weight = { add = 125 }
+}
+# <<< eu5-building-pipeline:public_kitchen:advancement

@@ -31,7 +31,7 @@ TRY_INJECT:serfdom = {
 	ai_weight = { add = 15 }
 }
 # Food advances: keep storage/capacity effects without broad per-good output bonuses
-# food_advance_renaissance: Herring Buss (c.1415), cookery-aligned goods
+# food_advance_renaissance: Herring Buss (c.1415), cookshop-aligned goods
 TRY_INJECT:food_advance_renaissance = {
 	global_food_capacity_modifier = 0.06
 	global_monthly_food_modifier = -0.10

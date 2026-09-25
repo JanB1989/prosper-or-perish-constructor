@@ -95,8 +95,8 @@ def test_scale_helpers():
 
 
 def pools():
-    common = dict(catchment="m", tribesmen=0.0, flat_food=0.0, provision_food=0.0, serve_food=0.0, cookery_levels=0.0,
-                  imports=0.0, exports=0.0, victuals_demand=0.0, peasant_share=0.8, n_locations=5.0, lon=0.0,
+    common = dict(catchment="m", tribesmen=0.0, flat_food=0.0, provision_food=0.0, serve_food=0.0, cookshop_levels=0.0,
+                  taverns=0.0, yards=0.0, victuals_demand=0.0, peasant_share=0.8, n_locations=5.0, lon=0.0,
                   type_shares={"peasants": 0.8, "laborers": 0.1, "nobles": 0.05, "clergy": 0.05}, religion="cath")
     return [
         fs.Pool(owner="A", province="short", pop0=100.0, demand0=100.0, workers0=90.0, jobs0=0.0, yield_=60 / 90,

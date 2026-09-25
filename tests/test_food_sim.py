@@ -92,3 +92,10 @@ def test_the_tribe_can_feed_the_settled_share_up_to_all_of_it():
     assert abs(fs.fed_share(p, 10.0, 90.0, 0.9, rules) - 0.9) < 1e-9
     assert fs.fed_share(p, 10.0, 90.0, 0.9, fs.SimRules()) == 0.0
     assert fs.fed_share(p, 0.0, 90.0, 0.5, fs.SimRules(tribal_feeding=2.0)) == 1.0
+
+
+def test_tribal_share_can_cut_the_import_premium():
+    rules = fs.SimRules(tribal_import_premium=-16.0)
+    assert rules.import_profit(0.0, False, 1.0, 1.0) < fs.SimRules().import_profit(0.0, False, 1.0, 1.0)
+    assert rules.import_profit(0.0, True, 1.0, 0.6) > 0                 # a starving tribal province still imports
+    assert fs.SimRules().import_profit(0.0, False, 1.0, 1.0) == fs.SimRules().import_profit(0.0, False, 1.0)

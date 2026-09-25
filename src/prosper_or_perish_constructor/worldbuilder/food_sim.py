@@ -81,6 +81,8 @@ class SimRules:
     tribal_growth: float = 0.012        # pop_percentage_impact local_population_growth (every pop in the location)
     tribal_land_slope: float = 0.75     # free-land factor 1 - slope x pop / capacity (1345 save: 0.75 at start capacity)
     tribal_feeding: float = 0.0         # -pop_percentage_impact local_pop_food_consumption (0 = the tribe feeds nobody)
+    tribal_import_premium: float = 0.0  # pop_percentage_impact local_province_food_purchase_output_modifier (mod: none;
+                                        # -16 tested 2026-09-25: tribal pools starving 38 -> 92, rejected)
     start_staffed: float = 1.0          # the setup staffs every market level on day 0 (nb.eu5)
     harvest: bool = True
     seed: int = 1
@@ -118,8 +120,9 @@ class SimRules:
                 kwargs[f.name] = type(getattr(cls, f.name))(raw[f.name])
         return cls(**kwargs)
 
-    def import_profit(self, years: float, starving: bool, staffed: float) -> float:
-        m = 1.0 + self.import_const + self.import_per_year * years + self.import_droop * staffed
+    def import_profit(self, years: float, starving: bool, staffed: float, tribal_share: float = 0.0) -> float:
+        m = (1.0 + self.import_const + self.import_per_year * years + self.import_droop * staffed
+             + self.tribal_import_premium * tribal_share)
         if starving:
             m += self.import_starving
         return (self.import_income - self.import_victuals * self.victuals_price - self.import_labour
@@ -323,7 +326,7 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
             if food[i] >= (min(p.capacity, rules.pin_months * cons[i]) if cons[i] > 1e-9 else p.capacity) * 0.999:
                 months_pinned[i] += 1
             if p.imports:
-                pi = rules.import_profit(years[i], starving[i], L)
+                pi = rules.import_profit(years[i], starving[i], L, T[i] / (N[i] + T[i]) if N[i] + T[i] > 0 else 0.0)
                 s_imp[i] = min(nobles[i], max(0.0, s_imp[i] + (rules.ramp if pi > 0 else -rules.ramp)))
             if p.exports:
                 pe = rules.export_profit(years[i], E)

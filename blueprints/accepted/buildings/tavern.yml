@@ -91,9 +91,10 @@ localization:
     pp_tavern_scarcity_premium: Scarcity Premium
     pp_tavern_price: Tavern Price
 icon:
-  source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/victualling_yard.dds
+  source_png: ../assets/icons/tavern.png
   output_dds: tavern.dds
   size: 512
+  drawing: ../../../assets/icon_drawings/tavern/draw.py
 
 evaluation:
   allow_rules:

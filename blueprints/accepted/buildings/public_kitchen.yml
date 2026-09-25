@@ -349,7 +349,7 @@ icon:
   source_png: ../assets/icons/public_kitchen.png
   output_dds: public_kitchen.dds
   size: 512
-  prompt: EU5-inspired hand-painted strategy-game icon for a victualling yard, transparent background. Center a large dockside provisioning complex with timber and stone storehouses, stacked barrels, crates, grain and salt sacks, hanging smoked meat, hardtack boxes, loading tackle, a pier edge, and a ship mast. Make it clearly larger, more maritime, and more logistical than a small cookshop. Use readable painterly shapes, softly outlined historical UI art, weathered wood, muted stone, tan canvas, barrel browns, small sea-blue accents, no text, no frame, not photorealistic, not cartoonish.
+  drawing: ../../../assets/icon_drawings/public_kitchen/draw.py
 
 evaluation:
   allow_rules:

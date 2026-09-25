@@ -120,7 +120,7 @@ icon:
   source_png: ../assets/icons/ocean_fishery.png
   output_dds: ocean_fishery.dds
   size: 512
-  prompt: EU5-inspired hand-painted strategy-game icon for an ocean fishery, transparent background. Center a small offshore herring buss or wooden fishing vessel in shallow coastal water, with drift nets, fish baskets, curing barrels, salt sacks, and a modest sandy shore landing. Use readable painterly shapes, softly outlined historical UI art, muted sea blues, weathered wood, tan nets, silver fish, white salt sacks, no text, no frame, not photorealistic, not cartoonish.
+  drawing: ../../../assets/icon_drawings/ocean_fishery/draw.py
 
 evaluation:
   production_methods:

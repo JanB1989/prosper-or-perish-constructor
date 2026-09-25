@@ -93,7 +93,7 @@ icon:
   source_png: ../assets/icons/tobacco_farm.png
   output_dds: tobacco_farm.dds
   size: 512
-  prompt: EU5-inspired hand-painted strategy-game icon for a tobacco farm, transparent background. Center rows of broad tobacco leaves, cut stalks, hanging leaves in a timber curing barn, clay storage jars, and hand knives. Use readable painterly historical UI art, deep greens, cured leaf browns, warm timber, no text, no frame.
+  drawing: ../../../assets/icon_drawings/tobacco_farm/draw.py
 evaluation:
   allow_rules:
     input_throughput: Specialty crop farms preserve the accepted low-input rural RGO scale below the generic laborer throughput baseline.

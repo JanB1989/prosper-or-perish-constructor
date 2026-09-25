@@ -144,9 +144,10 @@ localization:
     victualling_yard_tin_cans_advance: Tin Cans
     victualling_yard_tin_cans_advance_desc: Develop canning and tinning methods that pack victuals in metal containers for longer transport and storage.
 icon:
-  source_dds: ../../../mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/icons/buildings/victualling_yard.dds
+  source_png: ../assets/icons/victualling_yard.png
   output_dds: victualling_yard.dds
   size: 512
+  drawing: ../../../assets/icon_drawings/victualling_yard/draw.py
 
 evaluation:
   allow_rules:

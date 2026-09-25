@@ -135,7 +135,9 @@ def prepare(repo, cfg, contract, *, write_blueprints=True, locations=None):
 def ensure_blueprints(repo,settings):
     asset=yaml_io.safe_load((repo/'blueprints/accepted/buildings/jiangnan_canal_network.yml').read_text())['icon']
     for key,spec in settings['building_types'].items():
-        icon=dict(asset);icon['source_png']='../assets/icons/'+key+'.png';icon['output_dds']=key+'.dds';icon.pop('prompt',None)
+        icon=dict(asset);icon['source_png']='../assets/icons/'+key+'.png';icon['output_dds']=key+'.dds';icon.pop('prompt',None);icon.pop('drawing',None)
+        if (repo/'assets/icon_drawings'/key/'draw.py').exists():  # procedural icon (eu5-building icon install)
+            icon['drawing']='../../../assets/icon_drawings/'+key+'/draw.py'
         pm='pp_'+key+'_maintenance';price='pp_'+key+'_price'
         upkeep='\n'.join(f'    {k} = {v}' for k,v in settings['upkeep'].items())
         body=f'''is_foreign = no

@@ -18,7 +18,7 @@ import re
 import shutil
 from pathlib import Path
 
-from prosper_or_perish_constructor import growth_tab, location_status
+from prosper_or_perish_constructor import location_status
 
 MANIFEST_RELATIVE_PATH = Path("artifacts/data/worldbuilder/geography_sync.json")
 EXPORT_BUILD_FILE = "ha1300-build.json"
@@ -311,9 +311,7 @@ def sync_geography(export_dir: Path, mod_root: Path, repo: Path, vanilla: Path |
             merged = add_land_potential_chip(add_rgo_chip(merge_population_capacity(merge_location_window(src.read_text(encoding="utf-8-sig"))), goods))
             harvests = location_status.load_harvests(mod_root)
             merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla))
-            merged = growth_tab.add_growth_tab(merged)
             location_status.write_harvest_files(mod_root, harvests)
-            growth_tab.write_localization(mod_root)
             if not dst.is_file() or dst.read_text(encoding="utf-8-sig") != merged:
                 dst.write_text("﻿" + merged, encoding="utf-8", newline="\n")
                 changed += 1

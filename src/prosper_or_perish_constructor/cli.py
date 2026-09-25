@@ -53,7 +53,6 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/building_footprint.py",
     "src/prosper_or_perish_constructor/crop_farms.py",
     "src/prosper_or_perish_constructor/free_building_levels.py",
-    "src/prosper_or_perish_constructor/growth_tab.py",
     "src/prosper_or_perish_constructor/goods_categories.py",      # crop_farms (start crop allocation) imports these
     "src/prosper_or_perish_constructor/location_baseline.py",
     "src/prosper_or_perish_constructor/location_status.py",

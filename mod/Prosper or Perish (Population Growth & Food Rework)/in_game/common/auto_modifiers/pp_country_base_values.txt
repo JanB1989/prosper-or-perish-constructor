@@ -11,4 +11,14 @@ TRY_INJECT:country_base_values = {
 	# no longer move tribesmen births. Verified 2026-09-25: the per-type modifier multiplies that type's births.
 	global_tribesmen_pop_growth = -1.0
 	food_purchase_efficiency = 10000 # markets hold no food, so the food slider only bills unmet demand; this makes that bill ~0
+	# Exploration. Monthly progress = explorer speed x exploration_mission_speed_modifier, and vanilla's only source of that
+	# modifier is the exploration slider (exploration_maintenance_mod, +100 % x slider). AI saving mode cuts the slider to 0,
+	# which froze explorations for years (autosaves 1462-1482: +0.06 progress in 5 years). Half the speed is now a base
+	# value and half comes from the slider (pp_country_modifiers.txt), so full funding keeps vanilla speed and an unfunded
+	# exploration still moves at half speed.
+	exploration_mission_speed_modifier = 0.5
+	exploration_maintenance_efficiency = 0.25 # monthly gold cost -25 %
+	start_exploration_sea_cost_modifier = -0.25
+	start_exploration_land_cost_modifier = -0.25
+	recruit_explorer_cost_modifier = -0.25
 }

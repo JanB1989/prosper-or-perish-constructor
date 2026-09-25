@@ -1,3 +1,12 @@
 ﻿TRY_INJECT:inflation_impact = {
 	building_upkeep_efficiency = 0.80
 }
+
+# Exploration slider: +50 % progress x slider (vanilla +100 %). The other +50 % is a base value in
+# pp_country_base_values.txt, so an exploration keeps moving when the AI's saving mode cuts the slider to 0.
+TRY_REPLACE:exploration_maintenance_mod = {
+	game_data = {
+		category = country
+	}
+	exploration_mission_speed_modifier = 0.5
+}

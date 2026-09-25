@@ -19,7 +19,7 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   modifiers; slope fitted on the 1345 save), when it is negative they lose it unscaled like every pop type;
 * farms, villages and orchards run Provisioning from month 6 while the store is below ~11 months (their Sell leg
   pays above that); Cookshops serve every dish as Province Food from month 1 (they make no victuals);
-* Taverns and Victualling Yards ramp their staffing 0.05 a month toward the sign of their profit per level at the
+* Taverns and Victualling Yards ramp their staffing 0.15 a month toward the sign of their profit per level at the
   market victuals price (2.7): the Tavern pays below 12 stored months, the Yard above 20; each staffed level moves
   60 food (a Tavern buys 2 victuals, a Yard packs 1.5); Taverns only get the victuals their market has (staffed
   Yards and other producers; pops compete); a starving pool loses the noble who staffs its Tavern at 0.09 a year;
@@ -67,7 +67,7 @@ class SimRules:
     emp_elasticity: float = 0.5
     free_land: float = 0.4
     noble_hazard: float = 0.09
-    ramp: float = 0.05
+    ramp: float = 0.15                  # staffing change per month (defines LAID_OFF / REHIRED_PERCENTAGE = 15)
     tavern_food: float = 60.0            # food per staffed Tavern level (local_monthly_food)
     yard_food: float = 60.0              # food per staffed Victualling Yard level (-local_monthly_food)
     provision_month: int = 6

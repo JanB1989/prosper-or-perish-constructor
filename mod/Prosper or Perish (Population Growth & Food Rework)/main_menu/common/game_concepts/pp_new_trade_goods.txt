@@ -9,6 +9,11 @@ pp_province_food_sales = {
 	texture = "flat_icons/trade_market/food_stockpile"
 }
 
+pp_export_sales = {
+	family = food
+	texture = "flat_icons/trade_market/food_stockpile"
+}
+
 pp_province_food_purchase = {
 	family = food
 	texture = "flat_icons/trade_market/food_stockpile"

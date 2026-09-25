@@ -135,7 +135,8 @@ FARMING_CAPACITY_MODIFIER_ICONS = Path(
 FARMING_CAPACITY_MODIFIER_LOCALIZATION = Path(
     "main_menu/localization/english/pp_farming_capacity_modifier_types_l_english.yml"
 )
-PROVINCE_FOOD_SALES_MODIFIER_KEY = "local_province_food_sales_output_modifier"
+# The check covers the Victualler (Export), whose storage leg is the export_sales dummy good.
+PROVINCE_FOOD_SALES_MODIFIER_KEY = "local_export_sales_output_modifier"
 PROVINCE_FOOD_SALES_PRICE_SCENARIO_SCALE = 0.25
 PROVINCE_FOOD_SALES_PRICE_CAP_SCALE = 0.5
 PROVINCE_FOOD_SALES_CHEAP_CAP_TARGET = -0.450
@@ -369,7 +370,7 @@ def _build_parser() -> argparse.ArgumentParser:
     province_food_sales_check = _add_command(
         subcommands,
         "province-food-sales-check",
-        "Check parsed Province Food Sales modifier edge conditions.",
+        "Check parsed Export Sales (Victualler export storage leg) modifier edge conditions.",
         _province_food_sales_check,
     )
     province_food_sales_check.add_argument(

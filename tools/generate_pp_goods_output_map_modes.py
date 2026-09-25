@@ -30,6 +30,7 @@ GOODS_OUTPUT_CAP_COLOR = "rgb { 245 245 245 }"
 GOODS_OUTPUT_OVERFLOW_COLOR = "rgb { 70 210 255 }"
 GOODS_WITHOUT_OUTPUT_MAP_MODES = {
     "province_food_sales",
+    "export_sales",
     "province_food_purchase",
     "offset",
     "manual_labor_cost",

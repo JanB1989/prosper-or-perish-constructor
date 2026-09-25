@@ -8,9 +8,12 @@ Engine rules (verified in game 2026-09-24/25), one province, monthly steps:
 * market staffing ramps +/- RAMP per month toward the sign of the building's current profit per staffed
   level (never rests, 0..1). Levels are fixed per scenario (the AI only adds levels).
 * farms are always staffed; each level runs Provision when provision_margin > sell_income, else Sell.
-* each September the region's harvest h is re-rolled from {-0.5 (20 %), 0 (60 %), +0.5 (20 %)} and held;
+* each September the region's harvest h is re-rolled from {-a (20 %), 0 (60 %), +a (20 %)} and held;
   the crop price follows crop_base / (1 + h) clipped 0.6..1.8. The victuals price is the market's:
-  a mean-reverting walk around P_MEAN, optionally pushed by a market-wide harvest correlated with the local one.
+  a mean-reverting walk around p_mean (spread p_sd, reversion p_revert), pushed by a market-wide harvest
+  correlated with the local one.
+
+Observed-style metrics sample a save every 36 months (9 saves = 24 years); runs are 300 months.
 
 Current methods per level (prices at their floors: dummies 1.0, labour 1.0, victuals p):
   import slot 0: 0.45 offset x 20 = 9.0 - 3p - 0.3          slot 1: 0.375 x (1 + 15 - 8y + 8 starving - 0.1 N) - 3
@@ -102,13 +105,13 @@ class World:
     harvest_amp: float = 0.5      # size of a bad/good roll (20 % each, 60 % neutral)
     crop_base: float = 0.73       # crop price at a neutral harvest
     p_mean: float = 2.7           # victuals price level of the market
-    p_sigma: float = 0.10         # monthly noise of the victuals price (gold)
-    p_revert: float = 0.15        # monthly mean reversion of the victuals price
+    p_sd: float = 0.19            # stationary spread of the victuals price walk (gold)
+    p_revert: float = 0.15        # monthly mean reversion of the victuals price (0.02 = ~4-year memory)
     p_beta: float = 0.3           # victuals price response to the market harvest: p* = p_mean / (1 + beta h_m)
                                   # (0.3: a -0.8 market harvest lifts 2.7 to 3.5, the observed p90)
     p_corr: float = 0.5           # chance the market harvest equals the local roll (else an independent roll)
     harvest: bool = True
-    months: int = 120
+    months: int = 300
 
 
 @dataclass
@@ -179,7 +182,7 @@ def simulate(arch: Archetype, sc: Scenario, seed: int | None, overrides: dict | 
     arch = replace(arch, **{k: (int(v) if k in ("imports", "exports", "farms") else v)
                            for k, v in ov.get("arch", {}).items()})
     if seed is None:
-        w = replace(w, harvest=False, p_sigma=0.0)
+        w = replace(w, harvest=False, p_sd=0.0)
 
     n_imp, n_exp = arch.imports, arch.exports
     if sc.exclusive:
@@ -200,14 +203,15 @@ def simulate(arch: Archetype, sc: Scenario, seed: int | None, overrides: dict | 
     s_i = s_e = 0.0
     h = h_m = 0.0
     p = w.p_mean
+    p_sigma = w.p_sd * (1.0 - (1.0 - w.p_revert) ** 2) ** 0.5   # monthly step for that stationary spread
     out = Run([], [], [], [], [], [], [], [], [], [], [])
     for t in range(int(w.months)):
         if w.harvest and t % 12 == SEPTEMBER:
             h = roll(rng, w.harvest_amp)
             h_m = h if rng.random() < w.p_corr else roll(rng, w.harvest_amp)
-        if w.harvest or w.p_sigma:
+        if w.harvest or w.p_sd:
             target = w.p_mean / (1.0 + w.p_beta * h_m)
-            p += w.p_revert * (target - p) + rng.gauss(0.0, w.p_sigma)
+            p += w.p_revert * (target - p) + rng.gauss(0.0, p_sigma)
             p = min(2.0 * w.p_mean, max(0.4 * w.p_mean, p))
         crop = min(1.8, max(0.6, w.crop_base / (1.0 + h)))
 
@@ -277,6 +281,27 @@ def quarterly_flips(qs: list[float]) -> int:
     return sum(1 for a, b in zip(d, d[1:]) if (a > 0) != (b > 0))
 
 
+OBS_START, OBS_EVERY, OBS_SAMPLES = 11, 36, 9   # a save every 36 months, 9 saves = 24 years
+
+
+def cycle_period(xs: list[float], max_lag: int = 150) -> float | None:
+    """Lag of the first autocorrelation peak (> 0.1) after the autocorrelation turns negative."""
+    n = len(xs)
+    mean = statistics.fmean(xs)
+    d = [x - mean for x in xs]
+    var = sum(v * v for v in d)
+    if var < 1e-9:
+        return None
+    acf = [sum(d[i] * d[i + k] for i in range(n - k)) / var for k in range(min(max_lag, n // 2) + 1)]
+    k = 1
+    while k < len(acf) and acf[k] > 0:
+        k += 1
+    for j in range(k + 1, len(acf) - 1):
+        if acf[j] >= acf[j - 1] and acf[j] >= acf[j + 1] and acf[j] > 0.1:
+            return float(j)
+    return None
+
+
 def settle_month(xs: list[float], band: float = 2.0) -> int | None:
     final = statistics.fmean(xs[-12:])
     last_bad = None
@@ -302,14 +327,18 @@ class Metrics:
     s_imp: float
     s_exp: float
     farms_prov: float
-    q_amp: float       # observed-style: max-min of quarterly samples, months 24..48
-    q_flips: float     # observed-style: direction flips in those 9 samples (per 8 quarters)
+    period: float | None
+    q_amp: float       # observed-style: max-min of 9 saves 36 months apart
+    q_flips: float     # observed-style: direction flips in those 9 saves (8 intervals)
+    q_step: float      # mean |change| between consecutive saves (per 36-month interval)
+    win36: float       # mean max-min within each 36-month window (the swing inside one interval)
 
 
 def metrics(r: Run) -> Metrics:
     tail = r.months[24:]
     years = len(tail) / 12.0
-    q = r.months[24:49:3]
+    q = r.months[OBS_START::OBS_EVERY][:OBS_SAMPLES]
+    wins = [r.months[i:i + OBS_EVERY] for i in range(24, len(r.months) - OBS_EVERY + 1, OBS_EVERY)]
     return Metrics(
         amp=max(tail) - min(tail),
         flips_yr=zigzag_flips(tail) / years,
@@ -321,14 +350,18 @@ def metrics(r: Run) -> Metrics:
         s_imp=statistics.fmean(r.s_imp[24:]),
         s_exp=statistics.fmean(r.s_exp[24:]),
         farms_prov=statistics.fmean(r.farms_prov[24:]),
+        period=cycle_period(tail),
         q_amp=max(q) - min(q),
         q_flips=quarterly_flips(q),
+        q_step=statistics.fmean(abs(b - a) for a, b in zip(q, q[1:])),
+        win36=statistics.fmean(max(w) - min(w) for w in wins),
     )
 
 
 def aggregate(ms: list[Metrics]) -> dict:
     med = lambda k: statistics.median(getattr(m, k) for m in ms)  # noqa: E731
     settled = [m.settle for m in ms if m.settle is not None]
+    periods = [m.period for m in ms if m.period is not None]
     return dict(
         amp=med("amp"), flips_yr=med("flips_yr"), money=med("money"), final=med("final"),
         starving=statistics.fmean(m.starving for m in ms), s_imp=med("s_imp"), s_exp=med("s_exp"),
@@ -336,7 +369,9 @@ def aggregate(ms: list[Metrics]) -> dict:
         farms_prov=statistics.fmean(m.farms_prov for m in ms),
         settle=(statistics.median(settled) if len(settled) * 2 > len(ms) else None),
         settled_share=len(settled) / len(ms),
-        q_amp=med("q_amp"), q_flips=statistics.fmean(m.q_flips for m in ms),
+        q_amp=med("q_amp"), q_flips=statistics.fmean(m.q_flips for m in ms), q_step=med("q_step"),
+        win36=med("win36"),
+        period=(statistics.median(periods) if len(periods) * 2 > len(ms) else None),
     )
 
 
@@ -346,21 +381,24 @@ def evaluate(arch: Archetype, sc: Scenario, seeds: list[int], overrides: dict | 
     agg["settle_nh"] = det.settle
     agg["amp_nh"] = det.amp
     agg["final_nh"] = det.final
+    agg["period_nh"] = det.period
     return agg
 
 
 
 # ---------------------------------------------------------------------------------------------
-# regimes: the stated province size vs the loop gain that reproduces the observed swings
+# regimes. Observed saves are 36 months apart (9 saves = 24 years): pair swing 26 months max-min,
+# 2.5 direction flips in 8 intervals, both markets ~half staffed; import only 18; no market 8.7.
 # ---------------------------------------------------------------------------------------------
 REGIMES = {
-    # 90 food per level = 9 % of consumption, ramp as the define says, harvest +/-0.5 on 80 % of production
-    "spec": {},
-    # calibrated on the observed paired provinces (quarterly amplitude ~20-25, ~2.5 flips per 8 quarters):
-    # 90 food per level = 90 % of consumption, effective ramp 0.15/month (observed staffing moves 0.13-0.15
-    # per month), harvest +/-0.8 on all local production (no-market quarterly amplitude 8.0 vs 8.7 observed)
-    "calibrated": {"arch": {"consumption": 100.0},
-                   "world": {"ramp": 0.15, "harvest_amp": 0.8, "farmed_share": 1.0}},
+    # stated numbers: 90 food per level = 9 % of consumption, ramp 0.05, harvest +/-0.5 on 80 % of production,
+    # victuals price a short-memory walk (spread 0.19 gold, 15 %/month reversion)
+    "stated": {},
+    # calibrated 2026-09-25 on the 36-month saves: 90 food per level = 22.5 % of consumption (400/month),
+    # ramp 0.05, harvest +/-0.35 on 80 % of production, victuals price a slow walk with the observed
+    # cross-market spread (sd 0.66 gold ~ p10 1.8 / p90 3.5) and 1 %/month reversion (~8-year memory)
+    "calibrated": {"arch": {"consumption": 400.0},
+                   "world": {"harvest_amp": 0.35, "p_sd": 0.66, "p_revert": 0.01}},
 }
 
 
@@ -466,7 +504,11 @@ def lever_scenarios() -> list[Scenario]:
 # reporting
 # ---------------------------------------------------------------------------------------------
 def fmt_settle(v) -> str:
-    return ">120" if v is None else f"{v:.0f}"
+    return "never" if v is None else f"{v:.0f}"
+
+
+def fmt_period(v) -> str:
+    return "none" if v is None else f"{v:.0f}"
 
 
 def print_row(label: str, a: dict) -> None:
@@ -474,17 +516,21 @@ def print_row(label: str, a: dict) -> None:
           f" ({a['settled_share']:4.0%})  nh {fmt_settle(a['settle_nh']):>4s}/{a['amp_nh']:4.1f}"
           f"  |profit| {a['money']:5.1f}  final {a['final']:5.1f}  starv {a['starving']:4.0%}"
           f"  staff i {a['s_imp']:4.0%} e {a['s_exp']:4.0%}  prov {a['farms_prov']:4.0%}"
-          f"  | obs-style q-amp {a['q_amp']:5.1f} q-flips {a['q_flips']:3.1f}")
+          f"  | saves every 36 months: amp {a['q_amp']:5.1f} flips {a['q_flips']:3.1f} step {a['q_step']:4.1f}"
+          f"  | swing within 36 months {a['win36']:4.1f}  period {fmt_period(a['period'])}"
+          f" (no harvest {fmt_period(a['period_nh'])})")
 
 
-TABLE_HEAD = ("scenario  archetype  |  amp  flips/yr  settle(seeds)  settle/amp no-harvest  |  |profit|/mo"
-              "  final  starving  staff i/e  churn food/mo")
+TABLE_HEAD = ("scenario  archetype  |  amp  flips/yr  period (no-harv)  settle(seeds)  settle/amp no-harvest"
+              "  |  |profit|/mo  final  starving  staff i/e  churn food/mo  | 36-mo saves: amp  flips")
 
 
 def print_table_row(sc: str, arch: str, a: dict) -> None:
-    print(f"{sc:8s}  {arch:9s}  | {a['amp']:5.1f}  {a['flips_yr']:6.2f}   {fmt_settle(a['settle']):>4s} ({a['settled_share']:4.0%})"
-          f"   {fmt_settle(a['settle_nh']):>4s} / {a['amp_nh']:4.1f}        | {a['money']:7.2f}"
-          f"   {a['final']:5.1f}  {a['starving']:5.0%}    {a['s_imp']:3.0%}/{a['s_exp']:3.0%}  {a['churn']:7.1f}")
+    print(f"{sc:8s}  {arch:9s}  | {a['amp']:5.1f}  {a['flips_yr']:6.2f}   {fmt_period(a['period']):>5s} "
+          f"({fmt_period(a['period_nh']):>4s})    {fmt_settle(a['settle']):>5s} ({a['settled_share']:4.0%})"
+          f"   {fmt_settle(a['settle_nh']):>5s} / {a['amp_nh']:4.1f}        | {a['money']:7.2f}"
+          f"   {a['final']:5.1f}  {a['starving']:5.0%}    {a['s_imp']:3.0%}/{a['s_exp']:3.0%}  {a['churn']:7.1f}"
+          f"        | {a['q_amp']:5.1f}  {a['q_flips']:4.1f}")
 
 
 def parse_sets(items: list[str]) -> dict:
@@ -527,8 +573,8 @@ def main() -> None:
         return
 
     if args.calibrate:
-        print(f"regime {args.regime}; observed (world medians, months 24-48, quarterly): pair q-amp 26,"
-              " q-flips 2.5 per 8 quarters, both markets ~50 %; import-only 18; no market 8.7")
+        print(f"regime {args.regime}; observed (world medians, 9 saves 36 months apart): pair amp 26,"
+              " 2.5 flips in 8 intervals, both markets ~50 %; import-only 18; no market 8.7")
         for name in ("nomarket", "importonly", "pair"):
             print_row(f"{name}", evaluate(ARCHETYPES[name], scs["base"], list(range(1, 201)), ov))
         return
@@ -568,6 +614,7 @@ def main() -> None:
                 ax.set_title(f"{a} ({args.regime}): stored months, 3 harvest seeds", fontsize=9, loc="left")
                 ax.set_ylabel("months")
                 ax.set_ylim(0, 37)
+                ax.set_xlim(0, len(r.months))
                 ax.grid(alpha=0.3)
                 ax.legend(fontsize=7, loc="upper right")
             axes[-1].set_xlabel("month")

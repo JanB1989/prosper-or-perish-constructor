@@ -36,18 +36,21 @@ building:
     construction_demand = victuals_market_construction
 
     # sells 3 victuals as a negative input (efficiency-immune revenue, lowers the market's victuals demand);
-    # 0.375 province_food_sales is the storage leg, rising from zero at an empty stockpile to 16x at the
-    # 24-month cap; the offset input is the fixed cost that puts the break-even near 18 months at the mean
-    # victuals price. A negative input never puts goods into the market, so the 1 export_tally per
+    # 1.425 export_sales is the storage leg: its output modifier (country constant -9, +8 per stored year) is
+    # zero below 12 months and rises to 8x at the 24-month cap; the 13.5 offset input is the fixed cost.
+    # Per level at floor prices (dummy goods and labour 1 gold, y = stored years, capped at 2):
+    # profit = 3p - 13.8 + 1.425 x max(0, 8y - 8) -> at p = 2.7: -5.7 below 12 months, 0 at 18, +5.7 at 24;
+    # at an empty store exports cannot switch on until p > 4.6.
+    # A negative input never puts goods into the market, so the 1 export_tally per
     # level counts the export volume and pp_deliver_victuals_exports adds the matching victuals each month.
     unique_production_methods = {
       pp_province_food_to_market = {
-        produced = province_food_sales
+        produced = export_sales
         victuals = -3.0
         export_tally = 1.0
-        offset = 11.1
+        offset = 13.5
         manual_labor_cost = 0.3
-        output = 0.375
+        output = 1.425
         category = building_maintenance
       }
     }
@@ -57,7 +60,7 @@ building:
 
     modifier = {
       # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
-      local_province_food_sales_output_modifier = -0.10
+      local_export_sales_output_modifier = -0.3
       local_monthly_food = -90.0
       local_nobles_estate_power = 0.05
       local_peasant_enfranchisment = -0.01
@@ -85,4 +88,4 @@ evaluation:
     profit_percent: Province food market transfers intentionally use internal balancing goods.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline.
-    amortization_months: Province Food Sales output intentionally breaks normal payback bounds.
+    amortization_months: Export Sales output intentionally breaks normal payback bounds.

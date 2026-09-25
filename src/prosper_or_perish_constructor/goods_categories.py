@@ -14,7 +14,7 @@ from eu5_mod_orchestrator.blueprints import enabled_manifest_entries
 from eu5gameparser.domain.buildings import load_building_data
 from prosper_or_perish_constructor import provisioning, yaml_io
 
-LOCAL_FOOD_GOODS = frozenset({"local_food", "province_food_sales"})
+LOCAL_FOOD_GOODS = frozenset({"local_food", "province_food_sales", "export_sales"})
 
 
 GOODS_CATEGORIES_RELATIVE = Path("config/goods_categories.csv")

@@ -45,6 +45,7 @@ SOCIETAL_VALUE_ADJUSTMENTS = (
 )
 GOODS_CATEGORIES = ROOT / "config" / "goods_categories.csv"
 PROVINCE_FOOD_SALES_GOOD = MOD_ROOT / "in_game" / "common" / "goods" / "pp_goods_province_food_sales.txt"
+EXPORT_SALES_GOOD = MOD_ROOT / "in_game" / "common" / "goods" / "pp_goods_export_sales.txt"
 PROVINCE_FOOD_PURCHASE_GOOD = MOD_ROOT / "in_game" / "common" / "goods" / "pp_goods_province_food_purchase.txt"
 OFFSET_GOOD = MOD_ROOT / "in_game" / "common" / "goods" / "pp_goods_offset.txt"
 SCRIPT_VALUES_ROOT = MOD_ROOT / "in_game" / "common" / "script_values"
@@ -2858,6 +2859,21 @@ def test_victuals_pop_demand_modifier_type_is_registered() -> None:
     assert "global_province_food_sales_modifier" in modifier_icons
     assert "MODIFIER_TYPE_NAME_global_province_food_sales_modifier:" in localization_text
     assert "MODIFIER_TYPE_DESC_global_province_food_sales_modifier:" in localization_text
+    for key in (
+        "ban_exports_of_export_sales",
+        "ban_imports_of_export_sales",
+        "local_export_sales_output_modifier",
+        "global_export_sales_output_modifier",
+        "global_export_sales_modifier",
+        "global_export_sales_pop_demand",
+        "can_extract_export_sales",
+        "export_sales_impacts_inflation",
+        "export_sales_used_for_minting",
+    ):
+        assert key in modifier_types, key
+        assert key in modifier_icons, key
+        assert f"MODIFIER_TYPE_NAME_{key}:" in localization_text, key
+        assert f"MODIFIER_TYPE_DESC_{key}:" in localization_text, key
     assert "global_province_food_purchase_modifier" in modifier_types
     assert "global_province_food_purchase_modifier" in modifier_icons
     assert "MODIFIER_TYPE_NAME_global_province_food_purchase_modifier:" in localization_text
@@ -2874,7 +2890,7 @@ def test_victuals_pop_demand_modifier_type_is_registered() -> None:
 
 def test_province_food_market_goods_share_balance_values() -> None:
     goods = {}
-    for path in (PROVINCE_FOOD_SALES_GOOD, PROVINCE_FOOD_PURCHASE_GOOD, OFFSET_GOOD):
+    for path in (PROVINCE_FOOD_SALES_GOOD, EXPORT_SALES_GOOD, PROVINCE_FOOD_PURCHASE_GOOD, OFFSET_GOOD):
         goods.update(
             {
                 entry.key: _entry_values(entry.value)
@@ -2884,9 +2900,12 @@ def test_province_food_market_goods_share_balance_values() -> None:
         )
 
     sales = dict(goods["province_food_sales"])
+    export_sales = dict(goods["export_sales"])
     purchase = dict(goods["province_food_purchase"])
     offset = dict(goods["offset"])
     assert sales.pop("color") == "goods_province_food_sales"
+    assert export_sales.pop("color") == "goods_export_sales"
+    assert export_sales == sales
     assert purchase.pop("color") == "goods_province_food_purchase"
     assert offset.pop("color") == "goods_offset"
     assert offset["category"] == sales["category"]
@@ -2929,10 +2948,40 @@ def test_retained_export_offsets_match_food_sales_values() -> None:
         assert not (Counter(offset) - Counter(sales)), path
 
 
+def test_export_sales_carries_the_sales_tilts_with_its_own_constant() -> None:
+    """The export's storage leg (export_sales) keeps the rank/value flavour of province_food_sales but has its
+    own country constant (-9: zero below 12 months stored), so the farms' Sell-the-Surplus leg keeps -1."""
+    modifier_sources = (
+        (MOD_ROOT / "in_game" / "common" / "location_ranks" / "pp_location_rank_adjustments.txt", "local"),
+        (MOD_ROOT / "in_game" / "common" / "societal_values" / "pp_societal_value_adjustments.txt", "global"),
+        (
+            MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifier_adjustments.txt",
+            "local",
+        ),
+    )
+    for path, scope in modifier_sources:
+        text = path.read_text(encoding="utf-8-sig")
+        values = {
+            good: re.findall(
+                rf"^[\t ]*{scope}_{good}_output_modifier[\t ]*=[\t ]*([^\s#]+)", text, flags=re.MULTILINE
+            )
+            for good in ("province_food_sales", "export_sales")
+        }
+        assert values["export_sales"], path
+        assert values["export_sales"] == values["province_food_sales"], path
+
+    constants = (MOD_ROOT / "in_game" / "common" / "auto_modifiers" / "pp_country_base_values.txt").read_text(
+        encoding="utf-8-sig"
+    )
+    assert re.search(r"^\tglobal_province_food_sales_output_modifier = -1\.0\b", constants, re.MULTILINE)
+    assert re.search(r"^\tglobal_export_sales_output_modifier = -9\.0\b", constants, re.MULTILINE)
+
+
 def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
     icon_root = MOD_ROOT / "main_menu" / "gfx" / "interface" / "icons"
     paths = (
         icon_root / "trade_goods" / "icon_goods_province_food_sales.dds",
+        icon_root / "trade_goods" / "icon_goods_export_sales.dds",
         icon_root / "trade_goods" / "icon_goods_province_food_purchase.dds",
         icon_root / "modifier_types" / "province_food_sales_positive.dds",
         icon_root / "modifier_types" / "province_food_purchase_positive.dds",
@@ -2942,6 +2991,7 @@ def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
         icon_root / "modifier_types" / "offset_positive.dds",
         icon_root / "modifier_types" / "pp_province_food_storage_months.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_province_food_sales.dds",
+        icon_root / "trade_goods" / "illustrations" / "icon_goods_export_sales.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_province_food_purchase.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_manual_labor_cost.dds",
         icon_root / "trade_goods" / "illustrations" / "icon_goods_offset.dds",

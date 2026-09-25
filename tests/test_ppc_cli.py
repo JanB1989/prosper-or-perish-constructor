@@ -803,7 +803,7 @@ def test_province_food_sales_output_modifier_values_use_three_decimal_precision(
     ]
     patterns = {
         good: re.compile(rf"\blocal_{good}_output_modifier\s*=\s*(-?\d+\.(\d+))\b")
-        for good in ("province_food_sales", "province_food_purchase")
+        for good in ("province_food_sales", "export_sales", "province_food_purchase")
     }
     values_by_good: dict[str, list[str]] = {}
 
@@ -823,6 +823,8 @@ def test_province_food_sales_output_modifier_values_use_three_decimal_precision(
     assert purchases[0] == 8.0
     assert sales[0] == 0.08
     assert purchases[1:] == sales[1:]
+    # export_sales mirrors the live (uncommented) sales lines: storage +8, unsupported levels, rank tilts.
+    assert values_by_good["export_sales"] == values_by_good["province_food_sales"][3:]
 
 
 def test_production_throughput_prints_best_available_building_slot_sums(

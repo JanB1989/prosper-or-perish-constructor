@@ -57,6 +57,7 @@ def test_pp_specific_adjustments_are_present_in_export() -> None:
     assert rows["wheat"] == [1.0, 1.0, 0.0, None]
     assert rows["victuals"] == [3.0, 3.0, 0.0, 0.003]
     assert rows["province_food_sales"] == [5.0, 100.0, None, 1.0]
+    assert rows["export_sales"] == [5.0, 100.0, None, 1.0]
     assert rows["local_food"] == [0.5, 100.0, 1.0, 1000.0]
 
 

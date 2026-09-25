@@ -83,7 +83,6 @@ TRY_REPLACE:positive_province_food_growth = {
 	local_population_growth = 0.0075
 	# Native additive rate cancels the food bonus for self-provisioning tribesmen.
 	# Both rates scale with stored years; other tribal growth sources still apply.
-	local_tribesmen_pop_growth = -0.0075
 	local_devastation_recovery = 0.003
 	local_migration_attraction = 0.045
 	local_monthly_prosperity = 0.0025

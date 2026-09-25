@@ -80,10 +80,11 @@ TRY_INJECT:slaves = {
 	pop_food_consumption = 0.5 # 1.0
 }
 
-# Tribesmen self-provision outside the provincial food-growth gate: their share of the location cancels the ranks' -0.004
-# growth gate (local_tribesmen_pop_growth is a percentage multiplier and cannot add a rate).
+# Tribesmen grow with free land only (2026-09-25): their share of the location adds this growth, and the per-type
+# multiplier (-100 % in pp_country_base_values.txt, +100 % x free-land share in abundant/available_free_land) turns
+# it into births only where land is free. Settled pops in mixed locations get the same share-weighted addition.
 TRY_INJECT:tribesmen = {
 	pop_percentage_impact = {
-		local_population_growth = 0.004
+		local_population_growth = 0.012
 	}
 }

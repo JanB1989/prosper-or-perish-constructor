@@ -292,7 +292,8 @@ the export sells 3 victuals. They are **two-legged**: the import's
 20x; its *Scarcity Premium* leg (0.8 `province_food_purchase`, constant +15, -8
 per stored year, +8 while starving) pays while the store is below 12 months at
 the mean victuals price. The export sells its victuals as a negative input and
-its storage leg (1.425 `export_sales`, constant -9, +8 per stored year) pays
+its storage leg (1.425 `province_food_sales`, the farms' Surplus Sales good, constant -1,
++8 per stored year, offset 24.9) pays
 above 18 months. Each staffed level lowers its own leg by 0.3 so staffing
 settles. `tools/province_food_sim.py` is the monthly simulator used to choose
 these numbers.

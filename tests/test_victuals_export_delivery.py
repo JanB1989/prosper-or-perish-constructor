@@ -50,22 +50,17 @@ def test_tally_good_is_a_cheap_always_supplied_dummy() -> None:
         assert (MOD_ROOT / f"main_menu/gfx/interface/icons/trade_goods/{sub}icon_goods_export_tally.dds").is_file()
 
 
-def test_export_has_its_own_storage_dummy_good() -> None:
-    """The export storage leg is export_sales, so the farms keep province_food_sales and its -1 constant."""
+def test_export_shares_the_farms_surplus_sales_good() -> None:
+    """The export storage leg pays on province_food_sales (constant -1); its fixed cost sets the 18-month break-even."""
     building = _read("in_game/common/building_types/zz_pp_victuals_market.txt")
-    assert "produced = export_sales" in building
-    assert "province_food_sales" not in building
-
-    good = _read("in_game/common/goods/pp_goods_export_sales.txt")
-    assert "color = goods_export_sales" in good
-    assert "default_market_price = 5" in good
-    assert "goods_export_sales" in _read("main_menu/common/named_colors/pp_goods_colors.txt")
-    assert "pp_export_sales = {" in _read("main_menu/common/game_concepts/pp_new_trade_goods.txt")
-    goods_loc = _read("main_menu/localization/english/pp_goods_l_english.yml")
-    for key in ("export_sales:", "export_sales_desc:", "game_concept_pp_export_sales:", "game_concept_pp_export_sales_desc:"):
-        assert f"  {key}" in goods_loc, key
-    for sub in ("", "illustrations/"):
-        assert (MOD_ROOT / f"main_menu/gfx/interface/icons/trade_goods/{sub}icon_goods_export_sales.dds").is_file()
-
-    storage = _read("main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt")
-    assert "\tlocal_export_sales_output_modifier = 8.0" in storage
+    assert "produced = province_food_sales" in building
+    assert "offset = 24.9" in building
+    assert "local_province_food_sales_output_modifier = -0.3" in building
+    assert "export_sales" not in building
+    assert not (MOD_ROOT / "in_game/common/goods/pp_goods_export_sales.txt").exists()
+    for rel in (
+        "in_game/common/auto_modifiers/pp_country_base_values.txt",
+        "main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt",
+        "main_menu/localization/english/pp_goods_l_english.yml",
+    ):
+        assert "export_sales" not in _read(rel), rel

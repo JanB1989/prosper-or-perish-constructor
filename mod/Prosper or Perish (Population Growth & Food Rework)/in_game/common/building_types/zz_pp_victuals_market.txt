@@ -22,19 +22,20 @@ build_time = 365
 construction_demand = victuals_market_construction
 
 # sells 3 victuals as a negative input (efficiency-immune revenue, lowers the market's victuals demand);
-# 1.425 export_sales is the storage leg: its output modifier (country constant -9, +8 per stored year) is
-# zero below 12 months and rises to 8x at the 24-month cap; the 13.5 offset input is the fixed cost.
-# Per level at floor prices (dummy goods and labour 1 gold, y = stored years, capped at 2):
-# profit = 3p - 13.8 + 1.425 x max(0, 8y - 8) -> at p = 2.7: -5.7 below 12 months, 0 at 18, +5.7 at 24;
-# at an empty store exports cannot switch on until p > 4.6.
+# 1.425 province_food_sales is the storage leg, the farms' Surplus Sales good: its output modifier (country
+# constant -1, +8 per stored year) is 8y; the 24.9 offset input is the fixed cost (13.5 + 1.425 x 8: the former
+# separate -9 export constant folded into the cost). Per level at floor prices (dummy goods and labour 1 gold,
+# y = stored years, capped at 2): profit = 3p - 25.2 + 1.425 x 8y -> at p = 2.7: -5.7 at 12 months, 0 at 18,
+# +5.7 at 24; below 12 months it only loses more (staffing follows the sign of profit), and at an empty store
+# exports cannot switch on until p > 8.4.
 # A negative input never puts goods into the market, so the 1 export_tally per
 # level counts the export volume and pp_deliver_victuals_exports adds the matching victuals each month.
 unique_production_methods = {
   pp_province_food_to_market = {
-    produced = export_sales
+    produced = province_food_sales
     victuals = -3.0
     export_tally = 1.0
-    offset = 13.5
+    offset = 24.9
     manual_labor_cost = 0.3
     output = 1.425
     category = building_maintenance
@@ -47,7 +48,8 @@ raw_modifier = {
 
 modifier = {
   # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
-  local_export_sales_output_modifier = -0.3
+  # (location-wide, so it also trims the farms' Sell the Surplus there)
+  local_province_food_sales_output_modifier = -0.3
   local_monthly_food = -90.0
   local_nobles_estate_power = 0.05
   local_peasant_enfranchisment = -0.01

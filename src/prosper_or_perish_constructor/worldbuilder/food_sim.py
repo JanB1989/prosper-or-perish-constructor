@@ -104,11 +104,11 @@ class SimRules:
     import_droop: float = -0.3
     # Victualler (Export)
     export_victuals: float = 3.0
-    export_amount: float = 1.425        # export_sales
-    export_const: float = -9.0
+    export_amount: float = 1.425        # province_food_sales (shared with the farms' Sell the Surplus)
+    export_const: float = -1.0
     export_per_year: float = 8.0
     export_droop: float = -0.3
-    export_cost: float = 13.5
+    export_cost: float = 24.9
     export_labour: float = 0.3
 
     @classmethod

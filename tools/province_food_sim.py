@@ -89,13 +89,20 @@ class FarmSpec:
     local_food_price: float = 0.10
     crop_in: float = 0.08
     sell_scale: float = 0.005     # province_food_sales per level on Sell
+    # None: the farms sell the export's good (its constant, slope and droop). Set sales_c/sales_k for a good of
+    # their own; shared_droop says whether the export's per-level droop still reaches the farms' good.
+    sales_c: float | None = None
+    sales_k: float | None = None
+    shared_droop: bool = True
 
     def provision_margin(self, crop_price: float) -> float:
         return self.M * (self.provision_food * self.local_food_price - self.crop_in * crop_price)
 
     def sell_income(self, years: float, export_staffed: float, sales: ExportSpec) -> float:
         # the sales output modifier is location-wide: the export's droop also hits the farms' sell leg
-        m = 1.0 + sales.sales_c + sales.sales_k * years + sales.droop * export_staffed
+        c = sales.sales_c if self.sales_c is None else self.sales_c
+        k = sales.sales_k if self.sales_k is None else self.sales_k
+        m = 1.0 + c + k * years + (sales.droop * export_staffed if self.shared_droop else 0.0)
         return self.M * self.sell_scale * max(0.0, m)
 
 
@@ -460,7 +467,31 @@ def band_scenarios() -> list[Scenario]:
 
 
 def scenarios() -> list[Scenario]:
-    return lever_scenarios() + band_scenarios() + [recommended()]
+    return lever_scenarios() + band_scenarios() + [recommended(), live(), merged()]
+
+
+# the farms' own Surplus Sales leg in game: 0.005 x (1 - 1 + 8y)
+FARM_OWN_SALES = dict(sales_c=-1.0, sales_k=8.0)
+
+
+def live() -> Scenario:
+    """REC as shipped (e724de95): the export on its own export_sales good, the farms on province_food_sales."""
+    rec = recommended()
+    return Scenario("LIVE", "REC with the farms on their own good (-1 constant, no export droop)",
+                    imp=rec.imp, exp=rec.exp, farm=dict(FARM_OWN_SALES, shared_droop=False))
+
+
+def merged() -> Scenario:
+    """2026-09-25: the export pays on the farms' province_food_sales; its fixed cost takes the old -8 constant gap.
+
+    Above 12 months 1.425 x (8y - 0.3 N) - 11.4 equals 1.425 x (8y - 8 - 0.3 N): the same export. Below it the
+    export only loses more (staffing follows the sign of profit), and its droop now also reaches the farms.
+    """
+    rec = recommended()
+    gap = rec.exp["sales_amount"] * (rec.exp["sales_c"] - FARM_OWN_SALES["sales_c"])  # 1.425 x -8 = -11.4
+    exp = dict(rec.exp, sales_c=FARM_OWN_SALES["sales_c"], offset_cost=round(rec.exp["offset_cost"] - gap, 3))
+    return Scenario("MERGED", f"LIVE with the export on province_food_sales, offset {exp['offset_cost']}",
+                    imp=rec.imp, exp=exp, farm=dict(FARM_OWN_SALES, shared_droop=True))
 
 
 def recommended() -> Scenario:

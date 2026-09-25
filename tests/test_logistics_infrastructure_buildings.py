@@ -570,10 +570,10 @@ def test_victuals_market_templates_split_export_and_import_flows() -> None:
     assert "victuals_market: Victualler (Export)" in export_texts[0]
     for text in export_texts:
         assert "pp_province_food_to_market" in text
-        assert "produced = export_sales" in text
-        assert "province_food_sales" not in text
-        assert "local_export_sales_output_modifier = -0.3" in text
-        assert "offset = 13.5" in text
+        assert "produced = province_food_sales" in text
+        assert "export_sales" not in text
+        assert "local_province_food_sales_output_modifier = -0.3" in text
+        assert "offset = 24.9" in text
         assert "output = 1.425" in text
         assert "pp_province_food_from_market" not in text
 

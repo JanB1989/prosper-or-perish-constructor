@@ -93,6 +93,6 @@ NMarket = {
 }
 
 NPop = {
- 	GOODS_PRICE_SATISFACTION_SCALE = -0.25 # 0.5
+ 	GOODS_PRICE_SATISFACTION_SCALE = -0.10 # vanilla -0.05; -0.25 swung slave satisfaction between -0.30 and +0.45 and drove the slave revolts (2026-09-25)
 	POP_JOB_SURPLUS_SCALE_CAP = 1 # vanilla 5
 }

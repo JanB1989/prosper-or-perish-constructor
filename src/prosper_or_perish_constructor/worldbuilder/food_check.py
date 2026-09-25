@@ -199,6 +199,19 @@ def run(repo: Path, project: Path, mod_root: Path) -> dict[str, Any]:
     )
     promotion = {}
     rgo = {}
+    linear: dict[str, dict[str, list[float]]] = {}
+    import numpy as np
+
+    fit_rows = with_vanilla.drop_nulls(["total_population", "development"])
+    for rank in RANKS:
+        part = fit_rows.filter(pl.col("rank") == rank)
+        if part.height < 3:
+            continue
+        x = np.column_stack([np.ones(part.height), part["total_population"].to_numpy(), part["development"].to_numpy()])
+        for t in PROMOTED_TYPES:
+            y = (part[f"population_{t}"].fill_null(0.0) - part[f"v_{t}"].fill_null(0.0)).to_numpy()
+            coef, *_ = np.linalg.lstsq(x, y, rcond=None)
+            linear.setdefault(rank, {})[t] = [round(float(c), 4) for c in coef]
     for row in by_rank.iter_rows(named=True):
         rank = str(row["rank"])
         if rank not in RANKS or not row["pop_k"]:
@@ -243,6 +256,10 @@ def run(repo: Path, project: Path, mod_root: Path) -> dict[str, Any]:
             "configured": start.victuals,
         }
 
+    v2 = model_v2_on_engine_state(repo, rules, cfg, locations, buildings, joined, attrs)
+    if "pools" in v2:
+        joined = joined.join(v2.pop("pools"), on=["province_slug", "owner_country_id"], how="left")
+
     out = repo / REPORT_RELATIVE_PATH
     out.mkdir(parents=True, exist_ok=True)
     joined.sort("cached_structural_food_change").write_csv(out / "groups.csv")
@@ -266,7 +283,9 @@ def run(repo: Path, project: Path, mod_root: Path) -> dict[str, Any]:
             "subsistence_define": rules.subsistence,
         },
         "last_build_budget": model_short,
+        "model_v2": v2,
         "engine_promotion_per_1000_pops": promotion,
+        "engine_promotion_linear": {"note": "k promoted per location = const + per 1,000 pops x pop k + per development point x development; paste into [worldbuilder.start.engine_promotion_linear]", **linear},
         "rgo_workers_k": rgo,
         "victuals": victuals,
         "configured": {"engine_promotion": start.engine_promotion, "rgo_workers_k": start.rgo_workers_k},
@@ -274,3 +293,116 @@ def run(repo: Path, project: Path, mod_root: Path) -> dict[str, Any]:
     }
     (out / "summary.json").write_text(__import__("json").dumps(summary, indent=2, default=str) + "\n", encoding="utf-8")
     return summary
+
+
+def model_v2_on_engine_state(repo: Path, rules, cfg, locations: pl.DataFrame, buildings: pl.DataFrame, joined: pl.DataFrame, attrs: dict) -> dict[str, Any]:
+    """Food model v2 (``start_food_model_v2``) evaluated on the save's own pops, jobless workers, staffed levels and
+    running methods, the yields refitted per rank and climate, and the last build's day-0 budget against the engine.
+
+    Location capacity (for the overpopulation term) is the last build's ``start_placement.csv``: the save must come
+    from that build."""
+    import numpy as np
+
+    from . import start_food_model_v2 as fm
+    from .contract import load_contract
+    from .modifiers import setup_modifier_keys
+    from .start_simulation import method_output
+
+    model = fm.FoodModelConfig.from_raw((cfg.raw.get("start") or {}).get("food_model"))
+    table = repo / sp.TABLE_RELATIVE_PATH
+    if not table.is_file():
+        return {"skipped": f"no {sp.TABLE_RELATIVE_PATH}: run ppc worldbuilder apply first"}
+    capacity = {r["location_tag"]: float(r["capacity_people"] or 0.0) / 1000.0 for r in pl.read_csv(table).iter_rows(named=True)}
+    static_keys = setup_modifier_keys(load_contract(cfg.handover))
+    # building food of the staffed levels by the methods that actually run
+    cache: dict[tuple[str, str], float] = {}
+    numbers: dict[str, dict[str, Any] | None] = {}
+    flat: Counter = Counter()
+    province_food: Counter = Counter()
+    for row in buildings.iter_rows(named=True):
+        key = str(row["building_type"])
+        if key not in numbers:
+            numbers[key] = rules.numbers(key) if key in rules.buildings else None
+        n = numbers[key]
+        if not n or n["employment_size"] <= 0:
+            continue
+        levels = min(float(row["employed"] or 0.0) / n["employment_size"], float(row["level"] or 0.0))
+        lid = int(row["location_id"])
+        flat[lid] += levels * float(n["local_monthly_food"] or 0.0)
+        for method in row["active_method_ids"] or []:
+            if (key, method) not in cache:
+                cache[key, method] = method_output(rules.buildings.get(key), str(method))
+            province_food[lid] += levels * cache[key, method]
+    keys = ["province_slug", "owner_country_id"]
+    pools = joined.select(*keys, "base_food_consumption", "engine_production")
+    index = {k: i for i, k in enumerate(pools.select(keys).iter_rows())}
+    pool_index, jobless, stack, ranks, climates, overpop, fixed = [], [], [], [], [], [], []
+    for r in locations.iter_rows(named=True):
+        slot = index.get((r["province_slug"], r["owner_country_id"]))
+        if slot is None:
+            continue
+        tag = str(r["slug"])
+        a = attrs.get(tag, {})
+        rank = str(r["rank"] or "rural_settlement")
+        river = int(a.get("river_level") or 0)
+        keys_here = list(static_keys.get(tag, ())) + ([f"river_flowing_through_{river}"] if river else [])
+        s = fm.static_food_modifier(rules, rank, {k: a.get(k) for k in ("climate", "vegetation", "topography")}, keys_here)
+        pool_index.append(slot)
+        jobless.append(sum(float(r.get(f"unemployed_{t}") or 0.0) for t in model.subsistence_pop_types))
+        stack.append(s)
+        ranks.append(rank)
+        climates.append(str(a.get("climate") or "none"))
+        pop = float(r["total_population"] or 0.0)
+        peasants = sum(float(r.get(f"population_{t}") or 0.0) for t in model.overpopulation_pop_types)
+        overpop.append(fm.overpopulation_food(peasants, pop, capacity.get(tag, pop), model))
+        lid = int(r["location_id"])
+        fixed.append(flat[lid] * max(0.0, 1.0 + s) + province_food[lid])
+    idx = np.array(pool_index, dtype=int)
+    n = pools.height
+    production = pools["engine_production"].to_numpy().astype(float)
+    fixed_pool = np.bincount(idx, np.array(fixed), n)
+    overpop_pool = np.bincount(idx, np.array(overpop), n)
+    fit = fm.fit_yields(idx, np.array(jobless), np.array(stack), ranks, climates, overpop_pool, fixed_pool, production,
+                        define=rules.subsistence, overpopulation_consumption=model.overpopulation_consumption)
+    # the configured model (not the refit) on the engine state
+    y = np.array([fm.location_yield(rules.subsistence, s, r, c, model) for s, r, c in zip(stack, ranks, climates)])
+    subsistence = np.bincount(idx, y * np.array(jobless), n)
+    predicted = subsistence + fixed_pool - overpop_pool
+    frame = pools.select(keys).with_columns(
+        pl.Series("v2_subsistence", subsistence),
+        pl.Series("v2_building_food", fixed_pool),
+        pl.Series("v2_overpopulation", overpop_pool),
+        pl.Series("v2_production", predicted),
+    )
+    result: dict[str, Any] = {
+        "note": "production = base_food_consumption + cached_structural_food_change; model = subsistence (jobless peasants and "
+                "slaves x yield) + building food of the running methods - overpopulation consumption",
+        "configured": {"r2_production": fm.r2(production, predicted), "aggregate_model": round(float(predicted.sum())),
+                       "aggregate_engine": round(float(production.sum())),
+                       "aggregate_error": round(float(predicted.sum() / production.sum() - 1.0), 4) if production.sum() else None,
+                       "subsistence": round(float(subsistence.sum())), "building_food": round(float(fixed_pool.sum())),
+                       "overpopulation": round(float(overpop_pool.sum()))},
+        "refit": {**fit, "note": "paste yield_rank and yield_climate into [worldbuilder.start.food_model] when they drift"},
+        "pools": frame,
+    }
+    # the last build's plan against the engine at day 0 (no farm on Provisioning, no cookery on Serve yet)
+    budget_path = repo / "artifacts/data/worldbuilder/food_simulation/provinces.csv"
+    if budget_path.is_file():
+        budget = pl.read_csv(budget_path)
+        if "day0_production" in budget.columns:
+            plan = joined.select("owner", "province_slug", "engine_production", "base_food_consumption").join(
+                budget.select(pl.col("owner"), pl.col("province").alias("province_slug"), "day0_production", "demand_base"),
+                on=["owner", "province_slug"], how="inner")
+            if plan.height:
+                result["last_build_day0"] = {
+                    "note": "the last build's plan with day-0 methods (no Provisioning, no Serve) against the engine",
+                    "groups_compared": plan.height,
+                    "r2_production": fm.r2(plan["engine_production"].to_numpy(), plan["day0_production"].to_numpy()),
+                    "aggregate_model": round(float(plan["day0_production"].sum())),
+                    "aggregate_engine": round(float(plan["engine_production"].sum())),
+                    "aggregate_error": round(float(plan["day0_production"].sum() / plan["engine_production"].sum() - 1.0), 4),
+                    "r2_demand": fm.r2(plan["base_food_consumption"].to_numpy(), plan["demand_base"].to_numpy()),
+                    "engine_short": int((plan["engine_production"] < plan["base_food_consumption"]).sum()),
+                    "model_short": int((plan["day0_production"] < plan["demand_base"]).sum()),
+                }
+    return result

@@ -84,19 +84,6 @@ def test_parse_provinces_reads_the_food_block_and_owner(tmp_path):
     assert frame.filter(frame["province_definition"] == "empty_province")["owner_country_id"][0] is None
 
 
-def test_food_chain_plan_balances_victuals_with_the_import_markets():
-    from prosper_or_perish_constructor.worldbuilder.start_simulation import plan_food_chain
-
-    # 60 food per import, 18 net per cookery, 0.65 victuals per cookery, 1.2 per import, imports buy 80 %
-    cookery, imports = plan_food_chain(1000, 0.0, 60, 18, 0.65, 1.2, 0.8)
-    assert cookery > 0 and imports > 0
-    assert cookery * 18 + imports * 60 >= 1000
-    assert abs(imports * 1.2 - 0.8 * cookery * 0.65) < 1.2 + 1e-9          # imports absorb 80 % of the new victuals
-    # an existing victuals surplus feeds imports first; no cookeries when it covers the deficit
-    assert plan_food_chain(100, 500.0, 60, 18, 0.65, 1.2, 0.8) == (0, 2)
-    assert plan_food_chain(0, 500.0, 60, 18, 0.65, 1.2, 0.8) == (0, 0)
-
-
 def test_worker_budgets_for_farms_and_conversions_do_not_starve_each_other():
     start = sp.StartConfig(peasant_work_share=0.6, laborer_conversion_share=0.5)
     pool = sp._Workers([sp.Pop("peasants", 10, "a", "r")], start)
@@ -169,6 +156,129 @@ def test_province_food_is_added_per_level_unscaled_and_feeds_the_cookery():
     sim.rules = SimpleNamespace(subsistence=1.5)
     assert abs(sim.food_per_level("wheat_farm", 0.9) - (0.9 * 1.5 + 0.96)) < 1e-9     # local food scaled, Province Food not
     assert sim.food_per_level("absent") == 0.0
-    # the cookery's Serve output minus the laborer's lost subsistence (scaled) and extra consumption
-    assert abs(sim.cookery_net_food("x") - (27.57 - 0.9 * 1.5 - 0.5)) < 1e-9
+    # the cookery's Serve output on the share of levels that serve, minus the laborer's lost subsistence (the
+    # location's yield: define x local food modifier without a fitted one) and extra consumption
+    assert abs(sim.cookery_net_food("x") - (0.5 * 27.57 - 0.9 * 1.5 - 0.5)) < 1e-9
     assert Simulation.province_food == {}                                               # class default: no term
+
+
+# ------------------------------------------------------------------ food model v2 (start_food_model_v2)
+def test_food_model_config_reads_the_section_and_keeps_defaults():
+    from prosper_or_perish_constructor.worldbuilder import start_food_model_v2 as fm
+
+    cfg = fm.FoodModelConfig.from_raw({"yield_rank": {"town": "0.9"}, "yield_climate": {"arid": 0.8}, "capacity": {"per_location": 50},
+                                       "subsistence_pop_types": ["peasants"], "cookery_serve_share": 0.3})
+    assert cfg.yield_rank == {"town": 0.9} and cfg.yield_climate == {"arid": 0.8}
+    assert cfg.capacity["per_location"] == 50.0 and cfg.capacity["per_development"] == fm.DEFAULT_CAPACITY["per_development"]
+    assert cfg.subsistence_pop_types == ("peasants",) and cfg.cookery_serve_share == 0.3
+    assert fm.FoodModelConfig().subsistence_pop_types == ("peasants", "slaves")      # laborers do not farm
+
+
+def test_location_yield_scales_the_define_by_the_static_stack_rank_and_climate():
+    from prosper_or_perish_constructor.worldbuilder import start_food_model_v2 as fm
+
+    cfg = fm.FoodModelConfig(yield_rank={"town": 0.8}, yield_climate={"arid": 0.5})
+    assert fm.location_yield(1.5, 0.2, "town", "arid", cfg) == 1.5 * 1.2 * 0.8 * 0.5
+    assert fm.location_yield(1.5, 0.0, "city", "oceanic", cfg) == 1.5          # unfitted classes keep factor 1
+    assert fm.location_yield(1.5, -2.0, "town", None, cfg) == 0.0               # a stack below -100 % yields nothing
+
+
+def test_static_food_modifier_sums_rank_classes_and_setup_statics():
+    from prosper_or_perish_constructor.worldbuilder import start_food_model_v2 as fm
+
+    r = Rules.__new__(Rules)
+    r.ranks = {"rural_settlement": block("rank_modifier = { local_monthly_food_modifier = 0.1 } rank_modifier = { local_monthly_food_modifier = -0.1 }")}
+    r.classes = {"vegetation": {"desert": block("location_modifier = { local_monthly_food_modifier = -0.33 }")}}
+    r.statics = {"volcanic_soil": block("local_monthly_food_modifier = 0.5 local_population_capacity = 3"), "pp_wb_coastal": block("local_food_capacity = 10")}
+    assert abs(fm.static_food_modifier(r, "rural_settlement", {"vegetation": "desert"}, ["volcanic_soil", "pp_wb_coastal", "absent"]) - 0.17) < 1e-9
+
+
+def test_overpopulation_adds_half_the_peasant_food_per_unit_over_capacity():
+    from prosper_or_perish_constructor.worldbuilder import start_food_model_v2 as fm
+
+    cfg = fm.FoodModelConfig()
+    assert fm.overpopulation_food(80, 100, 50, cfg) == 0.5 * 80 * 1.0            # twice the capacity: +50 %
+    assert fm.overpopulation_food(80, 40, 50, cfg) == 0.0
+    assert fm.overpopulation_food(80, 40, 0, cfg) == 0.0                          # no capacity known: no term
+
+
+def test_food_capacity_and_cookery_victuals():
+    from prosper_or_perish_constructor.worldbuilder import start_food_model_v2 as fm
+
+    cfg = fm.FoodModelConfig(capacity={"per_development": 30.0, "per_population_k": 4.0, "per_location": 100.0, "rank": {"town": 500.0}},
+                             cookery_serve_share=0.5, preserve_victuals_per_level=0.64, cookery_victuals_other=0.67)
+    assert fm.food_capacity([(10, 20, "town"), (0, 5, "rural_settlement")], cfg) == 300 + 80 + 100 + 500 + 20 + 100
+    assert abs(fm.cookery_victuals(cfg) - (0.67 + 0.5 * 0.64)) < 1e-9
+
+
+def test_fit_yields_recovers_rank_and_climate_factors():
+    import numpy as np
+
+    from prosper_or_perish_constructor.worldbuilder import start_food_model_v2 as fm
+
+    rng = np.random.default_rng(1)
+    n_loc, n_pool = 600, 150
+    pool = rng.integers(0, n_pool, n_loc)
+    jobless = rng.uniform(1000, 5000, n_loc)
+    ranks = list(rng.choice(["rural_settlement", "town"], n_loc))
+    climates = list(rng.choice(["arid", "oceanic"], n_loc))
+    true_r = {"rural_settlement": 1.05, "town": 0.9}
+    true_c = {"arid": 0.8, "oceanic": 1.2}
+    w = {"arid": jobless[np.array(climates) == "arid"].sum(), "oceanic": jobless[np.array(climates) == "oceanic"].sum()}
+    s = (true_c["arid"] * w["arid"] + true_c["oceanic"] * w["oceanic"]) / (w["arid"] + w["oceanic"])   # normalised mean 1
+    y = np.array([1.5 * true_r[r] * true_c[c] for r, c in zip(ranks, climates)])
+    fixed = rng.uniform(0, 100, n_pool)
+    overpop = rng.uniform(0, 50, n_pool)
+    production = np.bincount(pool, y * jobless, n_pool) + fixed - overpop
+    fit = fm.fit_yields(pool, jobless, np.zeros(n_loc), ranks, climates, overpop, fixed, production, define=1.5, min_weight_k=1.0)
+    assert fit["r2_production"] > 0.999 and abs(fit["aggregate_error"]) < 1e-6
+    assert abs(fit["yield_climate"]["arid"] - true_c["arid"] / s) < 1e-3
+    assert abs(fit["yield_rank"]["town"] - true_r["town"] * s) < 1e-3
+
+
+def test_budget_v2_jobless_laborers_do_not_farm_and_cookeries_serve_their_share():
+    from types import SimpleNamespace
+
+    from prosper_or_perish_constructor.worldbuilder.start_food_model_v2 import FoodModelConfig
+
+    sim = Simulation.__new__(Simulation)
+    sim.rules = SimpleNamespace(subsistence=1.5)
+    sim.start = sp.StartConfig()
+    sim.food_model = FoodModelConfig(cookery_serve_share=0.5, capacity={"per_development": 0.0, "per_population_k": 0.0, "per_location": 0.0, "rank": {}})
+    sim.pops = {"x": [sp.Pop("peasants", 100, "a", "r"), sp.Pop("laborers", 20, "a", "r")]}
+    sim.groups = {("AAA", "p"): ["x"]}
+    sim.catchments = {("AAA", "p"): "m"}
+    sim.locations = {"x": {"region": "r"}}
+    sim.attrs = {}
+    sim.food = {"peasants": 1.0, "laborers": 1.5}
+    sim.food_mult = {"x": 1.0}
+    sim.yield_k = {"x": 1.4}
+    sim.rgo_k = {"x": 2.0}
+    sim.base = {"x": {"modifiers": {"local_population_capacity": 60.0}, "location_rank": "rural_settlement", "development": 0.0}}
+    sim.raw = {}
+    sim.conversions = []
+    sim.numbers = {"cookery": {"employment_size": 1, "pop_type": "laborers", "local_monthly_food": 0},
+                   "wheat_farm": {"employment_size": 1, "pop_type": "peasants", "local_monthly_food": 1.5}}
+    sim.province_food = {"cookery": 27.57, "wheat_farm": 0.96}
+    from collections import defaultdict
+    sim.counts = defaultdict(Counter, {"x": Counter({"cookery": 2, "wheat_farm": 3})})
+    sim.staffed = defaultdict(Counter, {"x": Counter({"cookery": 2, "wheat_farm": 3})})
+    b = sim.budgets()[("AAA", "p")]
+    jobless = 100 - 3 - 2.0                                  # peasants minus farm staff minus RGO workers
+    assert abs(b["subsistence"] - 1.4 * jobless) < 1e-9 and b["subsistence_workers_k"] == jobless
+    assert abs(b["demand_base"] - 130) < 1e-9
+    assert abs(b["overpopulation"] - 0.5 * 100 * (120 / 60 - 1)) < 1e-9     # twice the capacity
+    assert abs(b["serve_food"] - 0.5 * 2 * 27.57) < 1e-9
+    assert abs(b["building_food"] - 3 * (1.5 + 0.96)) < 1e-9
+    assert abs(b["day0_production"] - (1.4 * jobless + 3 * 1.5 - b["overpopulation"])) < 1e-9   # no Provisioning, no Serve yet
+    assert abs(b["R"] - (b["subsistence"] + b["building_food"] + b["serve_food"]) / b["demand"]) < 1e-9
+
+
+def test_linear_engine_promotion_follows_the_rgo_not_the_population():
+    start = sp.StartConfig(engine_promotion={"rural_settlement": {"nobles": 2.0, "laborers": 100.0}},
+                           engine_promotion_linear={"rural_settlement": {"laborers": (1.0, 0.01, 0.1)}})
+    est = sp.estimate_start_pops([sp.Pop("peasants", 300, "a", "r")], "rural_settlement", start, development=20)
+    assert abs(est["laborers"] - (1.0 + 0.01 * 300 + 0.1 * 20)) < 1e-9       # 6k, not 30k
+    assert abs(est["nobles"] - 0.6) < 1e-9                                   # per-1,000 share where no linear term
+    raw = sp.StartConfig.from_raw({"engine_promotion_linear": {"town": {"laborers": [1, "0.02", 0]}}})
+    assert raw.engine_promotion_linear == {"town": {"laborers": (1.0, 0.02, 0.0)}}

@@ -18,6 +18,7 @@ from eu5gameparser.clausewitz.serializer import render_entry
 from eu5gameparser.clausewitz.syntax import CList
 
 from . import crop_allocation as ca
+from . import start_food_model_v2 as fm
 from . import start_placement as sp
 from .market_capacity import write as write_market_caps
 from .modifiers import setup_modifier_keys
@@ -164,27 +165,6 @@ def write_topup(topup, owners, mod_root):
     path.write_text("﻿" + "\n".join(lines) + "\n", encoding="utf-8", newline="\n")
 
 
-def plan_food_chain(deficit, victuals_surplus, food_per_import, food_per_cookery, victuals_per_cookery, victuals_per_import, absorb):
-    """Cookery and import-market levels that cover a catchment's food deficit while the imports buy ``absorb`` of
-    the victuals the catchment makes (existing surplus plus the new cookeries'). Returns (cookery, import) levels.
-
-    Food: cookery x food_per_cookery + imports x food_per_import >= deficit.
-    Victuals: imports x victuals_per_import = absorb x (victuals_surplus + cookery x victuals_per_cookery).
-    """
-    if deficit <= 0 or food_per_import <= 0 or victuals_per_import <= 0:
-        return 0, 0
-    food_per_import_victual = food_per_import * absorb / victuals_per_import
-    from_surplus = food_per_import_victual * max(0.0, victuals_surplus)
-    if from_surplus >= deficit:
-        return 0, math.ceil(deficit / food_per_import)
-    per_cookery = food_per_cookery + food_per_import_victual * victuals_per_cookery
-    if per_cookery <= 0:
-        return 0, 0
-    cookery = math.ceil((deficit - from_surplus) / per_cookery)
-    imports = math.ceil(absorb * (max(0.0, victuals_surplus) + cookery * victuals_per_cookery) / victuals_per_import)
-    return cookery, imports
-
-
 def sim_converted(sim):
     """Planner conversions per location and target type (thousands)."""
     converted = defaultdict(Counter)
@@ -247,6 +227,8 @@ class Simulation:
     victuals: dict = {}
     province_food: dict = {}   # building -> Province Food per staffed level (province_food_per_level)
     crop_cfg = None            # crop_allocation.CropConfig; None skips the crop farms
+    food_model = fm.FoodModelConfig()
+    yield_k: dict = {}         # location -> food per 1,000 jobless peasants/slaves (start_food_model_v2)
 
     def __init__(
         self,
@@ -305,13 +287,15 @@ class Simulation:
         self.est_pops = {}
         self.food_mult = {}
         self.rgo_k = {}
+        self.yield_k = {}
+        self.food_model = fm.FoodModelConfig.from_raw((cfg.raw.get("start") or {}).get("food_model"))
         self.victuals_pop_factors = rules.victuals_pop_factors()
         setup_keys = setup_modifier_keys(contract, self.navigation)
         for tag, loc in self.locations.items():
             a = self.attrs.get(tag, {})
             target = self.targets.get(tag, {})
             rank = ranks.get(tag, "rural_settlement")
-            self.est_pops[tag] = sp.estimate_start_pops(pops.get(tag, []), rank, start)
+            self.est_pops[tag] = sp.estimate_start_pops(pops.get(tag, []), rank, start, float(target.get("development") or 0))
             self.food_mult[tag] = max(
                 0.0,
                 1.0
@@ -384,6 +368,11 @@ class Simulation:
             )
             ctx["variables"]["pp_fish_base_capacity"] = rules.value(
                 "pp_fish_base_capacity_value", ctx
+            )
+            # the setup's static modifiers (fertility, soil, coast, lake, river) join the rank and class food stack
+            self.food_mult[tag] = max(0.0, self.food_mult[tag] + fm.statics_food_modifier(rules.statics, static))
+            self.yield_k[tag] = fm.location_yield(
+                rules.subsistence, self.food_mult[tag] - 1.0, rank, a.get("climate") or loc.get("climate"), self.food_model
             )
             self.base[tag] = ctx
         self.groups = defaultdict(list)
@@ -754,61 +743,137 @@ class Simulation:
                 types["peasants"] -= added
         return types
 
-    def budgets(self, subsistence=None, groups=None):
-        value = self.rules.subsistence if subsistence is None else subsistence
-        converted = defaultdict(Counter)
-        for c in self.conversions:
-            converted[c.location][c.to_type] += c.size_k
-        subsistence_types = self.cfg.raw.get("start", {}).get(
-            "subsistence_pop_types", ["peasants", "laborers", "slaves"]
+    def capacity_k(self, tag):
+        """Population capacity (thousands) of the location with its current building levels."""
+        base = self.base.get(tag, {}).get("modifiers", {}).get("local_population_capacity", 0.0)
+        return base + sum(
+            self.raw.get(k, {}).get("local_population_capacity", 0.0) * n for k, n in self.counts[tag].items() if n
         )
+
+    def location_yield(self, tag):
+        """Food per 1,000 jobless peasants/slaves (start_food_model_v2); define x local food modifier without one."""
+        y = self.yield_k.get(tag)
+        return y if y is not None else self.rules.subsistence * self.food_mult.get(tag, 1.0)
+
+    def food_capacity_per_level(self):
+        """building -> province food capacity (``local_food_capacity``) one staffed level adds (exports: 1,200)."""
+        cached = self.__dict__.get("_food_capacity_per_level")
+        if cached is None:
+            modifiers = getattr(self.rules, "modifiers", None)
+            cached = {}
+            if callable(modifiers) and getattr(self.rules, "buildings", None):
+                for key in self.numbers:
+                    try:
+                        value = modifiers(key).get("local_food_capacity", 0)
+                    except Exception:  # noqa: BLE001 - a building without a readable modifier block adds nothing
+                        value = 0
+                    if value:
+                        cached[key] = float(value)
+            self._food_capacity_per_level = cached
+        return cached
+
+    def serve_keys(self):
+        return set((self.start.province_food.get("serve") or {}))
+
+    def budgets(self, subsistence=None, groups=None):
+        """Food budget per province/owner pool (start_food_model_v2).
+
+        demand = the pops' food plus the overpopulation consumption; subsistence = jobless peasants and slaves x the
+        location's yield (pops in jobs and the RGO's workers do not farm; laborers never do); building food = staffed
+        levels' local food (scaled) plus the Province Food of their Provisioning method; cookeries count their Serve
+        food on ``cookery_serve_share`` of the levels (the rest run Preserve and make victuals); markets move 90 food
+        per staffed level. ``day0_production`` is what the engine shows on the first day (no
+        Provisioning or Serve yet, overpopulation netted out as the save's production does)."""
+        model = self.food_model
+        share = float(model.cookery_serve_share)
+        scale = 1.0 if subsistence is None else float(subsistence) / float(self.rules.subsistence)
+        converted = sim_converted(self)
+        serve_keys = self.serve_keys()
         result = {}
         for group, tags in (
             (g, self.groups[g]) for g in (groups if groups is not None else self.groups)
         ):
-            demand = unemployed = supply = 0.0
+            demand = overpop = jobless = workers = subs = own_food = day0_flat = serve_food = market_food = pop = store = 0.0
+            cookery = imports = exports = 0
+            cap_rows = []
             for tag in tags:
                 types = self.location_pops(tag, converted[tag])
                 demand += sum(n * self.food.get(kind, 0) for kind, n in types.items())
-                mult = self.food_mult.get(tag, 1.0)
-                for kind in subsistence_types:
-                    employed = sum(
-                        n * self.numbers[k]["employment_size"]
-                        for k, n in self.staffed[tag].items()
-                        if self.numbers[k]["pop_type"] == kind
-                    )
-                    if kind == "peasants":
-                        employed += self.rgo_k.get(tag, 0.0)
-                    # Workers weighted by the local food modifier so subsistence = workers x define.
-                    unemployed += max(0, types[kind] - employed) * mult
-                supply += sum(
-                    n * self.food_per_level(k, mult)
-                    for k, n in self.staffed[tag].items()
+                here = sum(max(0.0, n) for n in types.values())
+                pop += here
+                overpop += fm.overpopulation_food(
+                    sum(types.get(t, 0.0) for t in model.overpopulation_pop_types), here, self.capacity_k(tag), model
                 )
-            subs = unemployed * value
-            supply += subs
+                employed = Counter()
+                for k, n in self.staffed[tag].items():
+                    num = self.numbers.get(k)
+                    if num and n:
+                        employed[num["pop_type"]] += n * num["employment_size"]
+                employed["peasants"] += self.rgo_k.get(tag, 0.0)
+                y = self.location_yield(tag) * scale
+                for kind in model.subsistence_pop_types:
+                    have = max(0.0, types.get(kind, 0.0))
+                    idle = max(0.0, have - employed.get(kind, 0.0))
+                    jobless += idle
+                    workers += have
+                    subs += idle * y
+                mult = self.food_mult.get(tag, 1.0)
+                for k, n in self.staffed[tag].items():
+                    if not n:
+                        continue
+                    flat = n * mult * self.numbers.get(k, {}).get("local_monthly_food", 0)
+                    if k == "victuals_market_import":
+                        imports += n
+                        market_food += flat
+                    elif k == "victuals_market":
+                        exports += n
+                        market_food += flat
+                    elif k in serve_keys:
+                        cookery += n
+                        serve_food += n * share * float(self.province_food.get(k, 0.0))
+                        own_food += flat
+                        day0_flat += flat
+                    else:
+                        own_food += flat + n * float(self.province_food.get(k, 0.0))
+                        day0_flat += flat
+                base = self.base.get(tag, {})
+                cap_rows.append((base.get("development", 0.0), here, base.get("location_rank", "rural_settlement")))
+                per_level = self.food_capacity_per_level()
+                store += sum(n * per_level.get(k, 0.0) for k, n in self.staffed[tag].items() if n)
+            eats = demand + overpop
+            fed = subs + own_food + serve_food
+            supply = fed + market_food
+            capacity = fm.food_capacity(cap_rows, model) + store
             result[group] = {
                 "owner": group[0],
                 "province": group[1],
                 "catchment": self.catchments[group],
                 "region": self.locations[tags[0]].get("region", ""),
-                "longitude": sum(
-                    float(self.attrs.get(t, {}).get("calibrated_lon") or 0)
-                    for t in tags
-                )
-                / len(tags),
-                "latitude": sum(
-                    float(self.attrs.get(t, {}).get("calibrated_lat") or 0)
-                    for t in tags
-                )
-                / len(tags),
-                "demand": demand,
+                "longitude": sum(float(self.attrs.get(t, {}).get("calibrated_lon") or 0) for t in tags) / len(tags),
+                "latitude": sum(float(self.attrs.get(t, {}).get("calibrated_lat") or 0) for t in tags) / len(tags),
+                "pop_k": pop,
+                "demand": eats,
+                "demand_base": demand,
+                "overpopulation": overpop,
                 "subsistence": subs,
-                "subsistence_workers_k": unemployed,
+                "subsistence_workers_k": jobless,
+                "workers_k": workers,
+                "jobs_k": workers - jobless,
+                "building_food": own_food,
+                "cookery_levels": cookery,
+                "serve_food": serve_food,
+                "import_levels": imports,
+                "export_levels": exports,
+                "market_food": market_food,
                 "supply": supply,
-                "balance": supply - demand,
-                "coverage": supply / demand if demand else 1.0,
-                "shortfall": max(0, demand - supply),
+                "balance": supply - eats,
+                "coverage": supply / eats if eats else 1.0,
+                "shortfall": max(0, eats - supply),
+                "structural_balance": fed - eats,
+                "R": fed / eats if eats else None,
+                "day0_production": subs + day0_flat + market_food - overpop,
+                "food_capacity": capacity,
+                "capacity_months": capacity / eats if eats else None,
             }
         return result
 
@@ -839,183 +904,386 @@ class Simulation:
                 self.place_crops(tag)
             for key in ("fishing_village", "forest_village"):
                 self.add(tag, key, max(0, 2 - self.counts[tag][key]))
-        self.place_trade_and_cookeries()
+        self.place_food_chain()
+        self.place_construction_materials()
 
     def cookery_net_food(self, tag):
-        """Food one cookery level adds to its province: its output (the Serve method's Province Food plus any local
-        food) minus the subsistence and extra consumption of the peasants it turns into laborers; local food and
-        subsistence are scaled by the location's modifier."""
+        """Food one cookery level adds to its province: its local food plus the Serve method's Province Food on the
+        share of levels that run Serve, minus the subsistence of the peasant it turns into a laborer (the location's
+        yield) and the laborer's extra consumption."""
         num = self.numbers["cookery"]
         mult = self.food_mult.get(tag, 1.0)
         return (
-            self.food_per_level("cookery", mult)
-            - mult * num["employment_size"] * self.rules.subsistence
+            mult * num.get("local_monthly_food", 0)
+            + float(self.food_model.cookery_serve_share) * float(self.province_food.get("cookery", 0.0))
+            - num["employment_size"] * self.location_yield(tag)
             - num["employment_size"] * max(0, self.food.get(num["pop_type"], 0) - self.food.get("peasants", 0))
         )
 
-    def victuals_balance(self, catchment):
-        """Victuals the catchment's buildings make and take each month, and what its pops buy (game demand
-        scaled by the observed share), before any import markets are placed."""
+    # ------------------------------------------------------------------ food chain v2 (deficit and surplus pools)
+    IMPORT = "victuals_market_import"
+    EXPORT = "victuals_market"
+
+    def province_capital(self, group):
+        """The pool's province capital: the engine's province capital is not in the setup files, so the highest
+        ranked location stands in for it (a market centre first, then the most populous)."""
+        return min(
+            self.groups[group],
+            key=lambda t: (
+                fm.RANK_ORDER.get(self.base[t].get("location_rank"), 4),
+                not self.base[t].get("is_market_center", False),
+                -float(self.base[t].get("population", 0.0)),
+                t,
+            ),
+        )
+
+    def serve_inputs(self):
+        """(raw goods any cookery Serve method uses, raw goods one level of the configured Serve method uses)."""
+        cached = self.__dict__.get("_serve_inputs")
+        if cached is None:
+            goods, per_level = set(), 0.0
+            body = self.rules.buildings.get("cookery")
+            serve = str((self.start.province_food.get("serve") or {}).get("cookery", ""))
+            known = set(getattr(self.rules, "goods", {}) or {})
+            for block in body.values("unique_production_methods") if isinstance(body, CList) else []:
+                for method in block.entries:
+                    if not (isinstance(method.value, CList) and method.key.endswith("_serve")):
+                        continue
+                    inputs = {
+                        e.key: float(e.value) for e in method.value.entries
+                        if isinstance(e.value, (int, float)) and (e.key in known or not known)
+                        and e.key not in ("output", "manual_labor_cost", "debug_max_profit")
+                    }
+                    goods.update(inputs)
+                    if method.key == serve:
+                        per_level = sum(inputs.values())
+            cached = self._serve_inputs = (frozenset(goods), per_level or 2.0)
+        return cached
+
+    def market_raw_goods(self, members):
+        """Raw food goods the market makes each month (the Serve cookeries' inputs): its RGO workers on those goods
+        x ``raw_goods_per_rgo_k`` (nb.eu5: 1.50 per 1,000 RGO workers)."""
+        goods, _ = self.serve_inputs()
+        return sum(
+            self.rgo_k.get(t, 0.0) * self.food_model.raw_goods_per_rgo_k
+            for g in members
+            for t in self.groups[g]
+            if str(self.locations[t].get("raw_material") or "") in goods
+        )
+
+    def victuals_v2(self, members, budgets):
+        """(supply, demand without the import markets, import levels) of the market's victuals per month: cookeries
+        (container and drink slots, the dish on Preserve) and other configured producers (the exports' victuals:
+        market_victuals_use); the pops'
+        demand (game demand x ``pop_demand_scale``) and other configured consumers."""
         v = self.start.victuals
-        supply = demand = 0.0
+        model = self.food_model
+        serve_keys = self.serve_keys()
         converted = sim_converted(self)
-        for group, tags in self.groups.items():
-            if self.catchments[group] != catchment:
-                continue
-            for tag in tags:
-                for key, n in self.counts[tag].items():
-                    supply += n * float(v["producers"].get(key, 0.0))
-                    if key != "victuals_market_import":
+        supply = demand = 0.0
+        imports = 0
+        per_cookery = fm.cookery_victuals(model)
+        for group in members:
+            for tag in self.groups[group]:
+                for key, n in self.staffed[tag].items():
+                    if not n:
+                        continue
+                    if key == self.IMPORT:
+                        imports += n
+                    elif key == self.EXPORT:
+                        pass   # the exports' victuals follow their pool's surplus (market_victuals_use)
+                    elif key in serve_keys:
+                        supply += n * per_cookery
+                    else:
+                        supply += n * float(v["producers"].get(key, 0.0))
                         demand += n * float(v["consumers"].get(key, 0.0))
                 pops = self.location_pops(tag, converted[tag])
-                demand += float(v["pop_demand_scale"]) * sum(
-                    n * self.victuals_pop_factors.get(kind, 0.0) for kind, n in pops.items()
-                )
-        return supply, demand
+                demand += float(v["pop_demand_scale"]) * sum(n * self.victuals_pop_factors.get(kind, 0.0) for kind, n in pops.items())
+        return supply, demand, imports
 
-    def place_trade_and_cookeries(self):
-        before = self.budgets()
-        export = -self.numbers["victuals_market"]["local_monthly_food"]
-        imports = self.numbers["victuals_market_import"]["local_monthly_food"]
-        if export <= 0 or imports <= 0:
-            raise ValueError("Start trade requires positive food transfer units")
-        v = self.start.victuals
-        per_import = float(v["consumers"].get("victuals_market_import", 0.0))
-        per_cookery = float(v["producers"].get("cookery", 0.0))
-        absorb = float(v["absorb_share"])
-        target = self.start.food_target_ratio
-        units = defaultdict(int)
-        # Export only food beyond the local reserve target, up to what the catchment's deficits could use.
-        requested = defaultdict(int)
-        for group, b in before.items():
-            requested[self.catchments[group]] += max(0, math.ceil((b["demand"] * target - b["supply"]) / imports))
-        for group, tags in sorted(self.groups.items(), key=lambda kv: -before[kv[0]]["balance"]):
-            b = before[group]
-            market = self.catchments[group]
-            spare = min(
-                max(0, math.floor((b["supply"] - b["demand"] * target) / export)),
-                max(0, requested[market] - units[market]),
-            )
-            for tag in self.order(tags, "victuals_market"):
-                if not spare:
+    def market_victuals_use(self, b):
+        """Expected victuals per month the pool's Victualler imports buy (+) or its exports sell (-): a staffed
+        import only keeps running while the pool is short, so it buys what the pool's gap needs (gap / 30 food per
+        victual) up to 3 per level; an export sells what the pool's surplus gives, up to 3 per level."""
+        model = self.food_model
+        per_victual = self.numbers[self.IMPORT]["local_monthly_food"] / model.market_victuals_per_level
+        fed = b["supply"] - b["market_food"]
+        gap = b["demand"] - fed
+        use = 0.0
+        if b["import_levels"]:
+            use += min(b["import_levels"] * model.market_victuals_per_level, max(0.0, gap) / per_victual)
+        if b["export_levels"]:
+            use -= min(b["export_levels"] * model.market_victuals_per_level, max(0.0, -gap) / per_victual)
+        return use
+
+    def _serve_cookeries(self, members, need, room, budgets):
+        """Cookeries in the pools with a remaining need (largest first), at most ``room`` levels."""
+        placed = 0
+        for group in sorted(members, key=lambda g: (-need.get(g, 0.0), g)):
+            if room <= 0:
+                break
+            if need.get(group, 0.0) <= 0:
+                continue
+            for tag in self.order(self.groups[group], "cookery"):
+                net = self.cookery_net_food(tag)
+                if net <= 0 or room <= 0 or need[group] <= 0:
                     break
-                n = self.add(tag, "victuals_market", spare)
-                spare -= n
-                units[market] += n
-        # Per catchment: cover the deficit with cookeries (food plus victuals) and import markets (victuals into
-        # food) so that the imports buy the configured share of the victuals the catchment makes.
+                want = min(self.start.max_cookery_levels_per_location, math.ceil(need[group] / net), room)
+                n = self.add(tag, "cookery", want)
+                need[group] -= n * net
+                room -= n
+                placed += n
+        return placed
+
+    def _exporters(self, members, budgets, target):
+        """Pools that may export: their own food beyond (1 + ``export_surplus_share``) x demand, a store that can
+        reach the export band, and no import market in the province. Largest surplus first: (group, spare levels)."""
+        model = self.food_model
+        per_level = -self.numbers[self.EXPORT]["local_monthly_food"]
+        out = []
+        for group in members:
+            b = budgets[group]
+            eats = b["demand"]
+            fed = b["supply"] - b["market_food"]
+            if eats <= 0 or fed < eats * (1.0 + model.export_surplus_share):
+                continue
+            if (b["capacity_months"] or 0.0) < model.export_min_capacity_months:
+                continue
+            if any(self.counts[t][self.IMPORT] for t in self.groups[group]):
+                continue
+            spare = math.floor((fed - eats * target) / per_level) - b["export_levels"]
+            if spare > 0:
+                out.append((group, spare, fed - eats))
+        return [(g, n) for g, n, _ in sorted(out, key=lambda x: (-x[2], x[0]))]
+
+    def _place_exports(self, members, budgets, target, levels):
+        placed = 0
+        for group, spare in self._exporters(members, budgets, target):
+            if levels <= 0:
+                break
+            want = min(spare, levels)
+            for tag in self.order(self.groups[group], self.EXPORT):
+                if want <= 0:
+                    break
+                n = self.add(tag, self.EXPORT, want)
+                want -= n
+                levels -= n
+                placed += n
+        return placed
+
+    def _place_imports(self, group, levels):
+        """Import levels at the province capital first, then at the pool's other locations (never next to an
+        export market in the same province)."""
+        if levels <= 0 or any(self.counts[t][self.EXPORT] for t in self.groups[group]):
+            return 0
+        capital = self.province_capital(group)
+        placed = 0
+        for tag in [capital] + [t for t in self.order(self.groups[group], self.IMPORT) if t != capital]:
+            if levels <= 0:
+                break
+            n = self.add(tag, self.IMPORT, levels)
+            levels -= n
+            placed += n
+        return placed
+
+    def place_food_chain(self):
+        """Placement v2 per market (catchment): Serve cookeries where the market's raw goods allow, Victualler
+        imports sized to the remaining need at the province capital, exports in surplus pools until the market's
+        victuals cover the imports x ``victuals_target``; imports the market cannot supply become Serve cookeries."""
+        model = self.food_model
+        target = self.start.food_target_ratio
+        per_import = self.numbers[self.IMPORT]["local_monthly_food"]
+        per_export = -self.numbers[self.EXPORT]["local_monthly_food"]
+        if per_import <= 0 or per_export <= 0:
+            raise ValueError("Start trade requires positive food transfer units")
+        vict = model.market_victuals_per_level
+        _, raw_per_level = self.serve_inputs()
+        self.before_trade = self.budgets()
         by_catchment = defaultdict(list)
         for group in self.groups:
             by_catchment[self.catchments[group]].append(group)
         self.victuals = {}
-        urban_ranks = ("town", "city", "megalopolis")
+        self.market_slack = {}
 
-        def is_urban(group):
-            return any(self.base[t]["location_rank"] in urban_ranks for t in self.groups[group])
+        def needs(b):
+            return {g: max(0.0, b[g]["demand"] * target - b[g]["supply"]) for g in b}
 
         for catchment, members in sorted(by_catchment.items()):
-            budgets = self.budgets(groups=members)
-            need = {g: max(0.0, budgets[g]["demand"] * target - budgets[g]["supply"]) for g in members}
-            deficit = sum(need.values())
-            supply0, demand0 = self.victuals_balance(catchment)
-            plan = plan_food_chain(deficit, supply0 - demand0, imports, self.food_per_level("cookery") - self.numbers["cookery"]["employment_size"] * (self.rules.subsistence + max(0, self.food.get("laborers", 0) - self.food.get("peasants", 0))), per_cookery, per_import, absorb)
-            cookery_budget = plan[0]
-            placed_cookeries = 0
-            # Cookeries: rural deficits first (their peasants convert; towns keep their nobles for imports).
-            for group in sorted(members, key=lambda g: (is_urban(g), -need[g])):
-                if cookery_budget <= 0 or need[group] <= 0:
-                    continue
-                for tag in self.order(self.groups[group], "cookery"):
-                    net = self.cookery_net_food(tag)
-                    if net <= 0 or cookery_budget <= 0 or need[group] <= 0:
-                        break
-                    n = self.add(tag, "cookery", min(self.start.max_cookery_levels_per_location, math.ceil(need[group] / net), cookery_budget))
-                    need[group] -= n * net
-                    cookery_budget -= n
-                    placed_cookeries += n
-            # Imports buy the configured share of the victuals actually made: the existing surplus plus the
-            # cookeries that were really placed. Urban deficits first, then the rest, then extra urban levels.
-            import_budget = max(0, math.floor(absorb * (max(0.0, supply0 - demand0) + placed_cookeries * per_cookery) / per_import)) if per_import > 0 else 0
-            placed_imports = 0
+            b = self.budgets(groups=members)
+            need0 = needs(b)
+            raw = self.market_raw_goods(members)
 
-            def place_imports(group, levels):
-                n_total = 0
-                for tag in self.order(self.groups[group], "victuals_market_import"):
-                    if levels <= 0:
-                        break
-                    if any(self.counts[t]["victuals_market"] for t in self.groups[group]):
-                        break   # never opposite transfers in one province
-                    n = self.add(tag, "victuals_market_import", levels)
-                    levels -= n
-                    n_total += n
-                return n_total
+            def room(share, members=members, raw=raw):
+                used = sum(self.budgets(groups=members)[g]["cookery_levels"] for g in members) * raw_per_level
+                return max(0, math.floor((share * raw - used) / raw_per_level))
 
-            import_budget_total = import_budget
-            for group in sorted(members, key=lambda g: (not is_urban(g), -need[g])):
-                if import_budget <= 0 or need[group] <= 0:
-                    continue
-                n = place_imports(group, min(import_budget, math.ceil(need[group] / imports)))
-                need[group] -= n * imports
-                import_budget -= n
-                placed_imports += n
-            imports_for_need = placed_imports
-            urban = sorted((g for g in members if is_urban(g)), key=lambda g: -budgets[g]["demand"])
+            # 1. cookeries where the market's raw goods allow (Serve food on their share, victuals from the rest)
+            serve = self._serve_cookeries(members, dict(need0), room(model.serve_raw_goods_share), b)
+            wanted = None
+            placed_imports = exports = fallback = 0
+            # 2. imports sized to the remaining need, as far as the market's victuals reach (exports in surplus pools
+            # first); what the imports cannot cover goes to further cookeries, whose victuals feed more imports. A
+            # Victualler buys only what its pool's gap needs (market_victuals_use), so a small town's level costs
+            # the market a victual or two, not three.
+            per_victual = per_import / vict
+            for _ in range(8):
+                b = self.budgets(groups=members)
+                want = {g: math.ceil(n / per_import) for g, n in needs(b).items() if n > 1e-6}
+                if wanted is None:
+                    wanted = sum(want.values())
+                if not want:
+                    break
+                supply, other, _ = self.victuals_v2(members, b)
 
-            def spread(budget):
-                """Leftover budget: the towns and cities become importers beyond their deficit (round-robin,
-                one level per pass, so the victuals find buyers without piling up in one place)."""
-                nonlocal placed_imports
-                while budget > 0 and urban:
-                    progressed = False
-                    for group in urban:
-                        if budget <= 0:
-                            break
-                        n = place_imports(group, 1)
-                        if n:
-                            budget -= n
-                            placed_imports += n
-                            progressed = True
-                    if not progressed:
-                        break
-                return budget
+                def flows(b):
+                    uses = [self.market_victuals_use(b[g]) for g in members]
+                    return sum(u for u in uses if u > 0), -sum(u for u in uses if u < 0)
 
-            import_budget = spread(import_budget)
-            # Deficits the imports could not reach (rural caps, no nobles, budget spent) fall back to cookeries;
-            # the victuals those make are bought by further urban import levels.
-            fallback = 0
-            for group in sorted(members, key=lambda g: -need[g]):
-                if need[group] <= 0:
-                    continue
-                for tag in self.order(self.groups[group], "cookery"):
-                    net = self.cookery_net_food(tag)
-                    if net <= 0 or need[group] <= 0:
-                        break
-                    n = self.add(tag, "cookery", min(self.start.max_cookery_levels_per_location, math.ceil(need[group] / net)))
-                    need[group] -= n * net
-                    fallback += n
-            if fallback and per_import > 0:
-                extra = math.floor(absorb * fallback * per_cookery / per_import) + import_budget
-                import_budget_total += extra - import_budget
-                import_budget = spread(extra)
-            supply, demand = self.victuals_balance(catchment)
-            demand += placed_imports * per_import
+                bought, sold = flows(b)
+                cost = {g: min(want[g] * vict, max(0.0, b[g]["demand"] - (b[g]["supply"] - b[g]["market_food"])) / per_victual
+                               - max(0.0, self.market_victuals_use(b[g]))) for g in want}
+                missing = max(0.0, (other + bought + sum(max(0.0, c) for c in cost.values())) * model.victuals_target - supply - sold)
+                if missing > 1e-6:
+                    placed = self._place_exports(members, b, target, math.ceil(missing / vict))
+                    exports += placed
+                    if placed:
+                        b = self.budgets(groups=members)
+                        bought, sold = flows(b)
+                left = (supply + sold) / model.victuals_target - other - bought
+                progress = 0
+                # pools that would collapse without food from outside first, cheapest (smallest gap) first: when the
+                # market's victuals run out they save the most pools; then the rest from the poorest-fed up
+                risk = model.import_priority_coverage
+                for g in sorted(want, key=lambda g: (b[g]["coverage"] >= risk, cost[g] if b[g]["coverage"] < risk else b[g]["coverage"], g)):
+                    c = max(0.0, cost[g])
+                    if c > left + 1e-9:
+                        continue
+                    n = self._place_imports(g, want[g])
+                    if n:
+                        left -= min(c, n * vict)
+                        progress += n
+                placed_imports += progress
+                b = self.budgets(groups=members)
+                rest = needs(b)
+                if any(n > 1e-6 for n in rest.values()):
+                    c = self._serve_cookeries(members, rest, room(model.serve_fallback_raw_goods_share), b)
+                    fallback += c
+                    progress += c
+                if not progress:
+                    break
+            after = self.budgets(groups=members)
+            supply_after, other_after, imports_after = self.victuals_v2(members, after)
+            flows = [self.market_victuals_use(after[g]) for g in members]
+            supply_after -= sum(f for f in flows if f < 0)            # the exports' expected victuals
+            demand_after = other_after + sum(f for f in flows if f > 0)
+            self.market_slack[catchment] = max(0, math.floor((supply_after / model.victuals_target - demand_after) / vict))
             self.victuals[catchment] = {
-                "deficit": round(deficit, 1),
-                "planned_cookery_levels": plan[0],
-                "placed_cookery_levels": placed_cookeries,
+                "deficit": round(sum(need0.values()), 1),
+                "raw_goods": round(raw, 1),
+                "serve_cookery_levels": serve,
                 "fallback_cookery_levels": fallback,
-                "planned_import_levels": plan[1],
-                "import_budget": import_budget_total,
+                "wanted_import_levels": wanted or 0,
                 "placed_import_levels": placed_imports,
-                "imports_for_deficits": imports_for_need,
-                "unmet_food": round(sum(max(0.0, n) for n in need.values()), 1),
-                "victuals_supply": round(supply, 1),
-                "victuals_demand": round(demand, 1),
-                "absorbed": round(demand / supply, 3) if supply else None,
+                "placed_export_levels": exports,
+                "import_levels": imports_after,
+                "unmet_food": round(sum(needs(after).values()), 1),
+                "victuals_supply": round(supply_after, 1),
+                "victuals_demand": round(demand_after, 1),
+                "covered": round(supply_after / demand_after, 3) if demand_after else None,
             }
-        self.ensure_city_imports(units)
-        self.before_trade = before
-        self.unallocated_exports = dict(units)
+        self.ensure_city_imports(self.market_slack)
+        self.unallocated_exports = dict(self.market_slack)
+
+    # ------------------------------------------------------------------ construction materials
+    def construction_config(self):
+        """``[worldbuilder.start.construction_materials]``: per good the producers (building -> output per level as the
+        market sees it), the buildings to place (in order), their inputs, the expected construction demand per
+        million pops and per queued Victualler level."""
+        return dict((self.cfg.raw.get("start") or {}).get("construction_materials") or {})
+
+    def material_balance(self, members, good, spec, pending_imports=0):
+        """(supply, expected construction demand) of ``good`` in the market per month."""
+        producers = {str(k): float(v) for k, v in (spec.get("producers") or {}).items()}
+        supply = sum(
+            n * producers.get(key, 0.0)
+            for g in members for t in self.groups[g] for key, n in self.counts[t].items() if n
+        )
+        # a raw material's RGOs supply it too (lumber: 1.16 per lumber RGO on day 0)
+        rgo = float(spec.get("rgo_output_per_location", 0.0))
+        if rgo:
+            supply += rgo * sum(1 for g in members for t in self.groups[g] if str(self.locations[t].get("raw_material") or "") == good)
+        pop_m = sum(self.base[t].get("population", 0.0) for g in members for t in self.groups[g]) / 1000.0
+        cfg = self.construction_config()
+        demand = float(cfg.get("margin", 2.0)) * float(spec.get("construction_per_million_pops", 0.0)) * pop_m
+        demand += float(spec.get("per_victualler", 0.0)) * pending_imports
+        return supply, demand
+
+    def material_inputs(self, members, spec):
+        """Whether the market makes one of the good's inputs (an RGO or a placed producer of it)."""
+        inputs = set(spec.get("inputs") or ())
+        if not inputs:
+            return True
+        makers = {str(k) for k in (spec.get("input_buildings") or ())}
+        for g in members:
+            for t in self.groups[g]:
+                if str(self.locations[t].get("raw_material") or "") in inputs:
+                    return True
+                if any(self.counts[t][k] for k in makers):
+                    return True
+        return False
+
+    def place_construction_materials(self):
+        """Every market gets a minimum monthly supply of the base construction materials (lumber, masonry, tools):
+        the expected construction demand of its first years (``margin`` x the 1341 demand per million pops, plus the
+        Victuallers it still wants) against what its placed buildings make; missing producer levels go to the
+        market's locations through the ordinary checks (caps, gates, workers, land), markets without any supply
+        first. A market that makes none of a good's inputs gets no producer (reported as ``no_inputs``)."""
+        cfg = self.construction_config()
+        goods = {str(k): dict(v) for k, v in (cfg.get("goods") or {}).items()}
+        self.construction = {}
+        if not goods:
+            return
+        by_catchment = defaultdict(list)
+        for group in self.groups:
+            by_catchment[self.catchments[group]].append(group)
+        pending = {c: max(0, int(v.get("wanted_import_levels", 0)) - int(v.get("placed_import_levels", 0)))
+                   for c, v in getattr(self, "victuals", {}).items()}
+        for good, spec in goods.items():
+            report = {"markets": len(by_catchment), "short_before": 0, "zero_before": 0, "short_after": 0, "zero_after": 0,
+                      "no_inputs": 0, "levels_added": Counter(), "supply_before": 0.0, "supply_after": 0.0, "demand": 0.0}
+            rows = []
+            for catchment, members in by_catchment.items():
+                supply, demand = self.material_balance(members, good, spec, pending.get(catchment, 0))
+                rows.append((supply, catchment, members, demand))
+            for supply, catchment, members, demand in sorted(rows, key=lambda r: (r[0] > 1e-9, r[0] - r[3], r[1])):
+                report["supply_before"] += supply
+                report["demand"] += demand
+                report["short_before"] += supply + 1e-9 < demand
+                report["zero_before"] += supply <= 1e-9
+                if supply + 1e-9 < demand:
+                    if not self.material_inputs(members, spec):
+                        report["no_inputs"] += 1
+                    else:
+                        for key in spec.get("place") or ():
+                            per_level = float((spec.get("producers") or {}).get(key, 0.0))
+                            if per_level <= 0 or key not in self.numbers:
+                                continue
+                            tags = sorted({t for g in members for t in self.groups[g]}, key=lambda t: (-self.cap(t, key), -self.base[t]["population"], t))
+                            for tag in tags:
+                                if supply + 1e-9 >= demand:
+                                    break
+                                n = self.add(tag, key, min(int(spec.get("max_levels_per_location", 2)), math.ceil((demand - supply) / per_level)))
+                                supply += n * per_level
+                                report["levels_added"][key] += n
+                            if supply + 1e-9 >= demand:
+                                break
+                report["supply_after"] += supply
+                report["short_after"] += supply + 1e-9 < demand
+                report["zero_after"] += supply <= 1e-9
+            report["levels_added"] = dict(report["levels_added"])
+            for k in ("supply_before", "supply_after", "demand"):
+                report[k] = round(report[k], 1)
+            self.construction[good] = report
 
     def ensure_city_imports(self, units):
         """Every city gets import infrastructure, even if it initially lies idle.
@@ -1023,7 +1291,7 @@ class Simulation:
         This minimum is independent of deficit and the ordinary one-direction
         trade policy. Do not count extra food without both workers and exports.
         """
-        self.city_import_minimum = {"cities": 0, "added": 0, "idle": []}
+        self.city_import_minimum = {"cities": 0, "added": 0, "idle": [], "exporting": []}
         key = "victuals_market_import"
         group_for = {tag: group for group, tags in self.groups.items() for tag in tags}
         for tag in sorted(self.locations):
@@ -1031,6 +1299,9 @@ class Simulation:
                 continue
             self.city_import_minimum["cities"] += 1
             if self.counts[tag][key] >= 1:
+                continue
+            if any(self.counts[t]["victuals_market"] for t in self.groups[group_for[tag]]):
+                self.city_import_minimum["exporting"].append(tag)   # never both directions in one province
                 continue
             if self.cap(tag, key) < 1:
                 raise ValueError(f"City import minimum exceeds allowed cap: {tag}")
@@ -1311,15 +1582,27 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         "victuals": {
             "supply": round(sum(c["victuals_supply"] for c in sim.victuals.values()), 1),
             "demand": round(sum(c["victuals_demand"] for c in sim.victuals.values()), 1),
-            "planned_cookery_levels": sum(c["planned_cookery_levels"] for c in sim.victuals.values()),
-            "placed_cookery_levels": sum(c["placed_cookery_levels"] for c in sim.victuals.values()),
+            "serve_cookery_levels": sum(c["serve_cookery_levels"] for c in sim.victuals.values()),
             "fallback_cookery_levels": sum(c["fallback_cookery_levels"] for c in sim.victuals.values()),
-            "planned_import_levels": sum(c["planned_import_levels"] for c in sim.victuals.values()),
-            "import_budget": sum(c["import_budget"] for c in sim.victuals.values()),
+            "wanted_import_levels": sum(c["wanted_import_levels"] for c in sim.victuals.values()),
             "placed_import_levels": sum(c["placed_import_levels"] for c in sim.victuals.values()),
-            "imports_for_deficits": sum(c["imports_for_deficits"] for c in sim.victuals.values()),
+            "placed_export_levels": sum(c["placed_export_levels"] for c in sim.victuals.values()),
             "unmet_food": round(sum(c["unmet_food"] for c in sim.victuals.values()), 1),
+            "markets": len(sim.victuals),
+            "markets_covered": sum(1 for c in sim.victuals.values() if c["covered"] is None or c["covered"] >= sim.food_model.victuals_target - 1e-9),
             "catchments": sim.victuals,
+        },
+        "construction_materials": getattr(sim, "construction", {}),
+        "food_model": {
+            "structural_short_pools": sum(1 for b in sim.before_trade.values() if b["structural_balance"] < 0),
+            "pools_R_below_1": sum(1 for b in budgets.values() if b["R"] is not None and b["R"] < 1.0),
+            "demand_base": round(sum(b["demand_base"] for b in budgets.values())),
+            "overpopulation": round(sum(b["overpopulation"] for b in budgets.values())),
+            "subsistence": round(sum(b["subsistence"] for b in budgets.values())),
+            "building_food": round(sum(b["building_food"] for b in budgets.values())),
+            "serve_food": round(sum(b["serve_food"] for b in budgets.values())),
+            "market_food": round(sum(b["market_food"] for b in budgets.values())),
+            "day0_production": round(sum(b["day0_production"] for b in budgets.values())),
         },
         "market_import_food": sim.numbers["victuals_market_import"][
             "local_monthly_food"
@@ -1349,10 +1632,14 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
             "Nearest starting market centre within the same game region is an offline catchment proxy, not engine market access.",
             "RGO size and market access use zero lower bounds for cap safety; unsupported rules fail closed.",
             "Budget excludes seasonal harvests, prices, trade competition, armies and engine-only country modifiers.",
-            "Subsistence includes unemployed peasants, laborers and slaves; engine RGO employment and RGO food are not simulated.",
-            "Province Food (local_food) of the Provisioning and Serve methods counts per staffed level as if that method runs, unscaled by the local food modifier.",
+            "Subsistence (start_food_model_v2): jobless peasants and slaves x the location's fitted yield; the RGO's workers and pops in jobs do not farm, laborers never do.",
+            "Overpopulation adds +0.5 peasant consumption per unit of pop / capacity - 1 (the mod's overpopulation modifier).",
+            "Province Food (local_food) of the Provisioning methods counts per staffed level, unscaled; the cookeries' Serve food counts only in pools that cannot feed themselves (elsewhere they run Preserve).",
         ],
     }
+    from . import food_sim
+
+    summary["validator"] = food_sim.write_inputs_and_run(repo, sim, budgets, cfg)
     (repo / sp.REPORT_RELATIVE_PATH).write_text(json.dumps(summary, indent=2) + "\n")
     (folder / "report.json").write_text(json.dumps(summary, indent=2) + "\n")
     from .food_report import write as write_report

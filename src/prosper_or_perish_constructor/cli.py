@@ -228,8 +228,14 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     worldbuilder.add_argument(
         "action",
-        choices=("apply", "export-development", "check", "food-check"),
-        help="apply writes the mod inputs; export-development writes the vanilla development table; check reports the fit of the written setup; food-check compares the start-food model with the exported save.",
+        choices=("apply", "export-development", "check", "food-check", "food-sim"),
+        help="apply writes the mod inputs; export-development writes the vanilla development table; check reports the fit of the written setup; food-check compares the start-food model with the exported save; food-sim reruns the start-food validator (population loop per province pool) on the last apply's input.",
+    )
+    worldbuilder.add_argument(
+        "--months",
+        type=int,
+        default=None,
+        help="food-sim only: months to simulate (default [worldbuilder.start.food_sim] months, 96).",
     )
     worldbuilder.add_argument(
         "--save",
@@ -922,6 +928,15 @@ def _worldbuilder(args: argparse.Namespace, extra: Sequence[str], repo: Path, pr
 
         print(json.dumps(food_check.run(repo, project, _project_mod_root(repo, project)), indent=2, default=str))
         return 0
+    if args.action == "food-sim":
+        from prosper_or_perish_constructor.worldbuilder import food_sim
+        from prosper_or_perish_constructor.worldbuilder.contract import load_config
+
+        raw = (load_config(repo, project).raw.get("start") or {}).get("food_sim")
+        summary = food_sim.run_file(repo, raw, args.months)
+        print(json.dumps(summary, indent=2))
+        print(f"per pool: {food_sim.OUTPUT_RELATIVE_PATH / 'pools.csv'}")
+        return 0
     raise SystemExit(f"unknown worldbuilder action {args.action!r}")
 
 
@@ -1016,7 +1031,25 @@ def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: 
         return build_code
     _finalize_constructor_mod(repo, project)
     _print_labour_check(repo, project)
+    _print_food_sim(repo)
     return 0
+
+
+def _print_food_sim(repo: Path) -> None:
+    """Build-time report of the start-food validator (written by the World Builder stage); never fatal."""
+    from prosper_or_perish_constructor.worldbuilder.food_sim import OUTPUT_RELATIVE_PATH
+
+    path = repo / OUTPUT_RELATIVE_PATH / "summary.json"
+    if not path.is_file():
+        print("Start food validator: no report (run ppc worldbuilder apply).", flush=True)
+        return
+    s = json.loads(path.read_text(encoding="utf-8"))
+    print(
+        f"Start food validator ({s.get('months')} months): {s.get('collapsing_food_pools')} of {s.get('food_pools')} food pools "
+        f"lose >= 25 % ({s.get('collapsing_pools')} of all {s.get('pools')}), {s.get('pinned_pools')} pinned at the storage "
+        f"cap, world population {100 * (s.get('world_pop_change') or 0):+.2f} %; report {OUTPUT_RELATIVE_PATH / 'pools.csv'}.",
+        flush=True,
+    )
 
 
 def _has_crop_farm_table(repo: Path) -> bool:

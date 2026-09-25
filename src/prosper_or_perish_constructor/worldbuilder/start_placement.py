@@ -76,8 +76,7 @@ DEFAULT_RGO_WORKERS_K: dict[str, float] = {"rural_settlement": 1.5, "town": 2.0,
 # Victuals (the mod's food trade good) per building level as the market sees them, and the share of a catchment's
 # supply the import markets should buy. Measured from saves 2026-09-22 (`ppc worldbuilder food-check` refits).
 DEFAULT_VICTUALS: dict[str, Any] = {
-    "absorb_share": 0.8,
-    "pop_demand_scale": 0.4,
+    "pop_demand_scale": 0.305,
     "producers": {"cookery": 0.65, "victuals_market": 2.3},
     "consumers": {"victuals_market_import": 1.2, "lumber_mill": 0.3},
 }
@@ -107,6 +106,10 @@ class StartConfig:
     rank_capacity_people: dict[str, float] = field(default_factory=lambda: {"town": 10000.0, "city": 25000.0, "megalopolis": 40000.0})
     processors: dict[str, dict[str, Any]] = field(default_factory=lambda: dict(DEFAULT_PROCESSORS))
     engine_promotion: dict[str, dict[str, float]] = field(default_factory=lambda: {k: dict(v) for k, v in DEFAULT_ENGINE_PROMOTION.items()})
+    # rank -> pop type -> (constant k, per 1,000 pops, per development point): the engine's setup promotion per
+    # location. Takes precedence over the per-1,000 shares where given (the laborers the engine promotes follow the
+    # RGO's desired workers, not the population: a 300k city does not get 30k laborers).
+    engine_promotion_linear: dict[str, dict[str, tuple[float, float, float]]] = field(default_factory=dict)
     rgo_workers_k: dict[str, float] = field(default_factory=lambda: dict(DEFAULT_RGO_WORKERS_K))
     victuals: dict[str, Any] = field(default_factory=lambda: {k: (dict(v) if isinstance(v, dict) else v) for k, v in DEFAULT_VICTUALS.items()})
     province_food: dict[str, Any] = field(default_factory=lambda: {k: (dict(v) if isinstance(v, dict) else v) for k, v in DEFAULT_PROVINCE_FOOD.items()})
@@ -125,6 +128,11 @@ class StartConfig:
             kwargs["processors"] = {str(k): dict(v) for k, v in raw["processors"].items() if isinstance(v, dict) and v.get("building")}
         if isinstance(raw.get("engine_promotion"), dict):
             kwargs["engine_promotion"] = {str(rank): {str(t): float(v) for t, v in rates.items()} for rank, rates in raw["engine_promotion"].items() if isinstance(rates, dict)}
+        if isinstance(raw.get("engine_promotion_linear"), dict):
+            kwargs["engine_promotion_linear"] = {
+                str(rank): {str(t): tuple(float(x) for x in v) for t, v in rates.items()}
+                for rank, rates in raw["engine_promotion_linear"].items() if isinstance(rates, dict)
+            }
         if isinstance(raw.get("rgo_workers_k"), dict):
             kwargs["rgo_workers_k"] = {str(k): float(v) for k, v in raw["rgo_workers_k"].items()}
         if isinstance(raw.get("victuals"), dict):
@@ -145,15 +153,18 @@ class StartConfig:
         return cls(**kwargs)
 
 
-def estimate_start_pops(pops: list["Pop"], rank: str, start: StartConfig) -> dict[str, float]:
-    """Pops (thousands) by type once the engine has run its setup promotion: the configured share of the location's
-    pops leaves the peasants for the listed types (never more peasants than exist; shares scale down together)."""
+def estimate_start_pops(pops: list["Pop"], rank: str, start: StartConfig, development: float = 0.0) -> dict[str, float]:
+    """Pops (thousands) by type once the engine has run its setup promotion: per type either the linear model
+    ``engine_promotion_linear`` (constant + per 1,000 pops + per development point) or the configured share of the
+    location's pops leaves the peasants (never more peasants than exist; the amounts scale down together)."""
     types: dict[str, float] = defaultdict(float)
     for p in pops:
         types[p.type] += p.size_k
     total = sum(types.values())
     rates = start.engine_promotion.get(rank) or {}
     wanted = {t: max(0.0, rate) * total / 1000.0 for t, rate in rates.items()}
+    for t, (const, per_k, per_dev) in (start.engine_promotion_linear.get(rank) or {}).items():
+        wanted[t] = max(0.0, const + per_k * total + per_dev * float(development or 0.0)) if total > 0 else 0.0
     room = types.get("peasants", 0.0)
     asked = sum(wanted.values())
     scale = min(1.0, room / asked) if asked > 0 else 0.0

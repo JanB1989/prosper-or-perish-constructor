@@ -240,6 +240,27 @@ clergy = 14.9
 burghers = 13.6
 laborers = 44.8
 soldiers = 13.6
+# The same promotion per location as constant k + per 1,000 pops + per development point (fitted on nb.eu5, 1337.4.1,
+# 2026-09-25; `ppc worldbuilder food-check` refits it as engine_promotion_linear). It replaces the per-1,000 shares
+# above where given: the laborers follow the RGO's desired workers, not the population (a 300k location gets ~10k,
+# not 32k), which put ~200k too many non-farming laborers into dense provinces. Megalopolis keeps the shares (3 samples).
+[worldbuilder.start.engine_promotion_linear.rural_settlement]
+nobles = [0.0081, 0.0024, -0.0001]
+clergy = [-0.0066, 0.0045, 0.0006]
+laborers = [0.9124, 0.0283, 0.0684]
+soldiers = [0.0153, 0.0001, 0.0054]
+[worldbuilder.start.engine_promotion_linear.town]
+nobles = [0.0498, 0.0094, -0.0021]
+clergy = [0.1576, 0.0113, 0.0056]
+burghers = [-1.5255, 0.007, 0.1418]
+laborers = [1.8261, 0.0136, 0.1472]
+soldiers = [0.5122, -0.0006, -0.0061]
+[worldbuilder.start.engine_promotion_linear.city]
+nobles = [0.0859, 0.0088, -0.0036]
+clergy = [0.3084, 0.0109, 0.0071]
+burghers = [0.5813, -0.0036, 0.0355]
+laborers = [1.6061, 0.0176, 0.1833]
+soldiers = [0.4942, 0.0007, 0.0148]
 [worldbuilder.start.rgo_workers_k]
 # peasants (thousands) the location's RGO employs at start by rank; they leave subsistence agriculture (same fit)
 rural_settlement = 1.5
@@ -247,12 +268,11 @@ town = 2.0
 city = 2.4
 megalopolis = 2.3
 [worldbuilder.start.victuals]
-# Victuals are the mod's food in the goods market: cookeries make them, import
-# victuals markets are the only buildings that turn them back into province food. Per catchment the planner covers
-# the food deficit with cookeries and import markets so the imports buy absorb_share of the victuals made there;
-# more would idle the cookeries (they lay off workers when the victuals do not sell), less starves the towns.
-absorb_share = 0.8
-pop_demand_scale = 0.4    # observed pop demand vs the goods file's demand_add x demand_multiply (price, wealth)
+# Victuals are the mod's food in the goods market: cookeries make them, import victuals markets are the only buildings
+# that turn them back into province food. The planner (placement v2, [worldbuilder.start.food_model]) keeps each
+# market's victuals supply >= demand x victuals_target; these numbers feed its pop demand and `ppc worldbuilder
+# food-check`'s refit.
+pop_demand_scale = 0.305  # observed pop demand vs the goods file's demand_add x demand_multiply (food-check refit on nb.eu5, 2026-09-25; was 0.4)
 # victuals per building level as the market shows them (measured from saves 2026-09-22; food-check refits)
 # cookery: Serve is the default, but 0.0 here (tried 2026-09-25) cut the deficit-driven import markets from 616 to 62
 # levels and left victuals supply at 269 against 838 demand, so the measured 0.65 stays until a save says otherwise
@@ -268,6 +288,73 @@ consumers = { victuals_market_import = 1.8, lumber_mill = 0.3 }
 method_pattern = "pp_{building}_provision"
 serve = { cookery = "pp_cookery_livestock_pottage_serve" }   # 27.57 food per level, the European pottage
 per_level = {}
+[worldbuilder.start.food_model]
+# Food model v2 (worldbuilder/start_food_model_v2.py), fitted 2026-09-25 on the day-0 save nb.eu5 (1337.4.1, 4,018
+# province/owner pools, production = base_food_consumption + cached_structural_food_change): R2 0.989 per pool,
+# aggregate +0.9 %. Subsistence = define (NLocation.SUBSISTENCE_AGRICULTURE) x (1 + static local_monthly_food_modifier
+# stack) x yield_rank x yield_climate per 1,000 jobless peasants and slaves (jobless laborers produce nothing: fitted
+# -0.03). `uv run ppc worldbuilder food-check --save <file>` refits yield_rank / yield_climate (model_v2.refit).
+subsistence_pop_types = ["peasants", "slaves"]
+yield_rank = { rural_settlement = 1.04, town = 1.019, city = 0.972, megalopolis = 0.924 }
+# climates with >= 500k jobless workers; the cold ones carry the April winter consumption of the reference save
+yield_climate = { arctic = 0.428, arid = 1.013, cold_arid = 0.95, cold_steppe = 0.839, continental = 1.035, continental_monsoon = 0.889, dry_summer_continental = 1.069, highland_monsoon = 0.641, hot_steppe = 1.048, mediterranean = 0.98, oceanic = 1.001, savanna = 1.023, subtropical = 0.964, subtropical_monsoon = 1.082, tropical = 1.056, tropical_monsoon = 1.044 }
+# the overpopulation modifier: local_peasants_food_consumption +0.5 per unit of pop / capacity - 1 (fitted -0.47..-0.51)
+overpopulation_consumption = 0.5
+start_food_share = 0.10            # game rule pp_starting_province_food default (10 % of the province's food capacity)
+# province food capacity per pool (max_food_value), fitted on nb.eu5 (R2 0.968); buildings' local_food_capacity adds
+capacity = { per_development = 31.97, per_population_k = 3.65, per_location = 99.9, rank = { town = 521.3, city = 815.2, megalopolis = 1240.8 } }
+# placement v2 (start_simulation.place_food_chain)
+market_victuals_per_level = 3.0    # victuals a staffed Victualler buys / an export sells per month
+# cookeries: the engine runs the dish slot on Serve for about half the levels (53 % in 1341, 49 % in 1345, 28 % in short
+# pools: it picks by price, not by need); container and drink slots make victuals on every level (nb.eu5 day 0)
+cookery_serve_share = 0.5
+preserve_victuals_per_level = 0.64 # the dish slot on Preserve (nb.eu5: 1,471 victuals from 2,301 levels)
+cookery_victuals_other = 0.67      # pottery jars, wine, beer, tea ... (nb.eu5: 1,540 victuals from 2,301 levels)
+victuals_target = 1.1              # per market: victuals supply >= demand (imports + pops) x this
+export_surplus_share = 0.25        # exports only in pools that feed themselves by more than +25 %
+export_min_capacity_months = 18.0  # ... and whose store can reach the export band (18 months)
+raw_goods_per_rgo_k = 1.5          # raw food goods per 1,000 RGO workers (nb.eu5 median 1.50)
+serve_raw_goods_share = 0.2        # share of the market's raw food output new Serve cookeries may use (nb.eu5: 21 % spare)
+serve_fallback_raw_goods_share = 0.5   # when the market cannot supply the imports' victuals
+
+[worldbuilder.start.construction_materials]
+# Every market gets a minimum monthly supply of lumber, masonry and tools from its starting buildings: AI-queued
+# Victuallers (victuals_market_construction: lumber 0.25, masonry 0.1, tools 0.1 for 365 days) and every other early
+# build stall in markets without them (233 of 1,567 AI Victuallers unfinished by 1345). Expected demand = margin x the
+# construction demand per million pops of the same campaign in 1341 (pre41.eu5: lumber 216, masonry 271, tools 64 on
+# 354 M pops; nb.eu5 on day 0 has none yet) + per queued Victualler the placement still wanted. Producer outputs per
+# level are nb.eu5's market supply per building level (day 0).
+margin = 2.0
+[worldbuilder.start.construction_materials.goods.lumber]
+producers = { lumber_mill = 0.70, water_sawmill = 1.0, lumber_mill_improved = 1.0 }
+rgo_output_per_location = 1.16     # lumber is also a raw material: nb.eu5 RGO output 2,905 on 2,514 locations
+place = ["lumber_mill"]
+construction_per_million_pops = 0.61
+per_victualler = 0.25
+max_levels_per_location = 2
+[worldbuilder.start.construction_materials.goods.masonry]
+producers = { mason = 0.49 }
+place = ["mason"]
+inputs = ["stone", "clay"]
+input_buildings = ["stone_quarry", "clay_pit"]
+construction_per_million_pops = 0.77
+per_victualler = 0.1
+max_levels_per_location = 2
+[worldbuilder.start.construction_materials.goods.tools]
+producers = { tools_guild = 0.18, market_village = 0.144, tatara = 0.5 }
+place = ["tools_guild", "market_village"]
+inputs = ["iron", "stone", "copper"]
+input_buildings = ["iron_mine", "stone_quarry", "copper_mine"]
+construction_per_million_pops = 0.18
+per_victualler = 0.1
+max_levels_per_location = 2
+
+[worldbuilder.start.food_sim]
+# Start-food validator (worldbuilder/food_sim.py; `ppc worldbuilder food-sim`, reported by `ppc build`). Population
+# loop calibrated on the pre-plague saves 1337.4 / 1341.3 / 1345.3 (tools/province_food_sim.py --depop).
+months = 96
+victuals_price = 2.7
+
 [worldbuilder.start.crops]
 # The farming village is split into one farm per crop; at game start a location's farm levels are spread over the
 # crop farms. Livestock first takes round(g x levels), g = its grazing share (World Builder grazing / (grazing +

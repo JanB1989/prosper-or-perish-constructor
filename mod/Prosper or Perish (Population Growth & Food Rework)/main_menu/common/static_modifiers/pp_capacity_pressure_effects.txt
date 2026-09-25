@@ -4,7 +4,7 @@
 	}
 	# Marker for the location view's land chip: the engine applies this modifier, the GUI can only read modifier values.
 	pp_land_abundant = 1
-	# Tribesmen growth is land-driven: gives back a little of the rank's -100 % birth brake while land is free
+	# Tribesmen growth is land-driven: gives back a little of the topography's -100 % birth brake while land is free
 	# (the engine scales this by 1 - pop / capacity). 0.19 x their ~0.8 %/yr location growth = at most ~0.15 %/yr on
 	# empty land, zero at capacity.
 	local_tribesmen_pop_growth = 0.19
@@ -57,7 +57,7 @@ TRY_REPLACE:available_free_land = {
 	}
 	# Marker for the location view's land chip: the engine applies this modifier, the GUI can only read modifier values.
 	pp_land_available = 1
-	# Tribesmen growth is land-driven: gives back a little of the rank's -100 % birth brake while land is free
+	# Tribesmen growth is land-driven: gives back a little of the topography's -100 % birth brake while land is free
 	# (the engine scales this by 1 - pop / capacity). 0.19 x their ~0.8 %/yr location growth = at most ~0.15 %/yr on
 	# empty land, zero at capacity.
 	local_tribesmen_pop_growth = 0.19

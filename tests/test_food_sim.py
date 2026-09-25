@@ -121,14 +121,16 @@ def test_tribesmen_grow_at_most_about_015_percent_a_year_even_on_unowned_land():
     assert (old["tribesmen_end_k"] / 10.0) ** (1 / 10) - 1 > 0.01
 
 
-def test_the_tribesmen_birth_brake_is_a_rank_modifier_not_a_country_one():
+def test_the_tribesmen_birth_brake_is_on_every_topography_not_a_rank_or_country():
     from pathlib import Path
 
     mod = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
     ranks = (mod / "in_game/common/location_ranks/pp_location_rank_adjustments.txt").read_text(encoding="utf-8-sig")
     country = (mod / "in_game/common/auto_modifiers/pp_country_base_values.txt").read_text(encoding="utf-8-sig")
     land = (mod / "main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt").read_text(encoding="utf-8-sig")
-    assert ranks.count("local_tribesmen_pop_growth = -1.0") == 4          # every rank, so unowned land too
-    assert "global_tribesmen_pop_growth" not in country.split("# (pp_location_rank_adjustments.txt)")[-1]
+    topo = (mod / "in_game/common/topography/pp_wb_attribute_rows.txt").read_text(encoding="utf-8-sig")
+    blocks = topo.count("TRY_INJECT:")
+    assert blocks >= 20 and topo.count("local_tribesmen_pop_growth = -1.0") == blocks   # every topography, owned or not
+    assert "local_tribesmen_pop_growth" not in ranks                     # unowned land gets no rank modifiers
     assert not any(l.strip().startswith("global_tribesmen_pop_growth") for l in country.splitlines())
     assert land.count("local_tribesmen_pop_growth = 0.19") == 2

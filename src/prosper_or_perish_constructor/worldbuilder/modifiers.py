@@ -32,6 +32,9 @@ from prosper_or_perish_constructor.worldbuilder.contract import Contract, WorldB
 CAPACITY_KEYS = ("local_population_capacity", "local_population_capacity_modifier")
 FOOD_KEY = "local_monthly_food_modifier"   # the mod has no food production on attributes: cancelled exactly, never inherited
 CLASS_DIRS = {"climate": "climates", "vegetation": "vegetation", "topography": "topography"}
+# Every location has exactly one topography, owned or not (unowned land gets no rank or country modifiers), so the
+# tribesmen birth brake rides on it: -100 % births, the free-land modifiers give a little back (2026-09-26).
+TRIBESMEN_BRAKE = ("local_tribesmen_pop_growth", "-1.0")
 ASSIGNMENT_FILES = {
     "climate": ("climate_assignments.csv", "vanilla_climate", "game_climate"),
     "vegetation": ("vegetation_assignments.csv", "vanilla_vegetation", "applied_game_vegetation"),
@@ -246,11 +249,13 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
                     lines[name] = _fmt(-v)
             for name, v in legacy.get(parents.get(key, key), {}).items():
                 lines.setdefault(name, v)
+            if attribute == "topography":
+                lines[TRIBESMEN_BRAKE[0]] = TRIBESMEN_BRAKE[1]
             if lines:
                 blocks.append(render_block(f"TRY_INJECT:{key}", lines, nested="location_modifier"))
         # classes the fit never saw (no ownable location) still need their vanilla capacity and food cancelled
         for key, vanilla in sorted(defs.items()):
-            if key in keys or not vanilla:
+            if key in keys or (not vanilla and attribute != "topography"):
                 continue
             lines = {}
             if vanilla.get("local_population_capacity"):
@@ -261,6 +266,8 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
                 lines[FOOD_KEY] = _fmt(-vanilla[FOOD_KEY])
             for name, v in legacy.get(parents.get(key, key), {}).items():
                 lines.setdefault(name, v)
+            if attribute == "topography":
+                lines[TRIBESMEN_BRAKE[0]] = TRIBESMEN_BRAKE[1]
             if lines:
                 blocks.append(render_block(f"TRY_INJECT:{key}", lines, nested="location_modifier"))
         text = "\n\n".join([GENERATED, f"# {attribute}: flat capacity rows (people / 1000) and goods output rows from the World Builder fit,", "# vanilla capacity and food values of each class cancelled exactly, legacy balance effects re-keyed by dominant vanilla parent.", *blocks]) + "\n"

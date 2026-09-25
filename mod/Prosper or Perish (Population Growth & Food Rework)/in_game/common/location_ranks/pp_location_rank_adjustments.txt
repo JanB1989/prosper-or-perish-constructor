@@ -1,13 +1,10 @@
 ﻿# In general cities and towns are now way worse at producing food.
 # The -0.004 growth gate below is cancelled for tribesmen by their pop-type pop_percentage_impact (pp_pop_adjustments.txt).
-# The tribesmen birth brake sits here, not in the country base values, so it also holds on unowned land.
+# The tribesmen birth brake is on the topography classes (worldbuilder/modifiers.py): unowned land gets no rank modifiers.
 # Building in cities and towns is also more expensive in general to slow snowball down a bit
 # They are better at storing food though.
 TRY_INJECT:megalopolis = {
 	rank_modifier = {
-		# tribesmen births: -100 % on every location, owned or not (the free-land modifiers in
-		# pp_capacity_pressure_effects.txt give a little back while land is free)
-		local_tribesmen_pop_growth = -1.0
 		local_population_capacity = -360   # vanilla 400: net +40 (x1,000 people) of housing for the rank
 		local_population_capacity_modifier = -0.5
 		local_monthly_food_modifier = 0.67
@@ -23,9 +20,6 @@ TRY_INJECT:megalopolis = {
 }
 TRY_INJECT:city = {
 	rank_modifier = {
-		# tribesmen births: -100 % on every location, owned or not (the free-land modifiers in
-		# pp_capacity_pressure_effects.txt give a little back while land is free)
-		local_tribesmen_pop_growth = -1.0
 		local_burghers_desired_pop = -0.50
 		local_laborers_desired_pop = -0.50
 		local_soldiers_desired_pop = -0.05
@@ -48,9 +42,6 @@ TRY_INJECT:city = {
 
 TRY_INJECT:town = {
 	rank_modifier = {
-		# tribesmen births: -100 % on every location, owned or not (the free-land modifiers in
-		# pp_capacity_pressure_effects.txt give a little back while land is free)
-		local_tribesmen_pop_growth = -1.0
 		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 
 		local_population_capacity = -10   # vanilla 20: net +10 (x1,000 people) of housing for the rank
@@ -66,9 +57,6 @@ TRY_INJECT:town = {
 
 TRY_INJECT:rural_settlement = {
 	rank_modifier = {
-		# tribesmen births: -100 % on every location, owned or not (the free-land modifiers in
-		# pp_capacity_pressure_effects.txt give a little back while land is free)
-		local_tribesmen_pop_growth = -1.0
 		local_max_rgo_size_modifier = -0.50
 		local_monthly_food_modifier = -0.10
 		local_province_food_sales_output_modifier = 0.00

@@ -15,7 +15,7 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   province whose total consumption is zero or below gets no storage growth bonus (engine, verified 2026-09-25);
 * tribesmen (engine, verified 2026-09-25): the location growth below also carries ``tribal_growth`` x tribal share for
   every pop; when it is positive tribesmen are born at it x ``tribal_land_births`` (0.19) x the free-land factor
-  max(0, 1 - ``tribal_land_slope`` x pop / capacity) (the ranks' ``local_tribesmen_pop_growth = -1`` + 0.19 in the
+  max(0, 1 - ``tribal_land_slope`` x pop / capacity) (the topographies' ``local_tribesmen_pop_growth = -1`` + 0.19 in the
   scaled free-land modifiers since 2026-09-26; slope fitted on the 1345 save), when it is negative they lose it
   unscaled like every pop type;
 * unowned tribal land (owner ``---``, one pool per province, no buildings or markets) runs the same tribesmen rule;
@@ -243,7 +243,7 @@ UNOWNED = "---"
 
 
 def free_land_factor(p: Pool, pop: float, rules: SimRules) -> float:
-    """Tribesmen birth multiplier: -100 % (rank) + ``tribal_land_births`` x the engine-scaled free-land modifiers. Unowned
+    """Tribesmen birth multiplier: -100 % (topography) + ``tribal_land_births`` x the engine-scaled free-land modifiers. Unowned
     land without the brake (the old country modifier) keeps its +100 %."""
     free = max(0.0, min(1.0, 1.0 - rules.tribal_land_slope * pop / p.pop_capacity)) if p.pop_capacity > 0 else 0.0
     brake = 1.0 if (p.owner != UNOWNED or rules.unowned_brake) else 0.0

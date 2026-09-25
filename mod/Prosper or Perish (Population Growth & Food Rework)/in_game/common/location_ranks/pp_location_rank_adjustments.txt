@@ -1,4 +1,5 @@
 ﻿# In general cities and towns are now way worse at producing food.
+# The -0.004 growth gate below is cancelled for tribesmen by their pop-type pop_percentage_impact (pp_pop_adjustments.txt).
 # Building in cities and towns is also more expensive in general to slow snowball down a bit
 # They are better at storing food though.
 TRY_INJECT:megalopolis = {
@@ -11,8 +12,6 @@ TRY_INJECT:megalopolis = {
 		local_offset_output_modifier = 0.10
 		local_province_food_purchase_output_modifier = 0.10
 		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
-		# Tribesmen self-provision outside the provincial food-growth gate.
-		local_tribesmen_pop_growth = 0.005
 
 		free_building_levels = -130
 		local_build_buildings_efficiency = -0.3
@@ -35,8 +34,6 @@ TRY_INJECT:city = {
 		local_province_food_purchase_output_modifier = 0.05
 
 		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
-		# Tribesmen self-provision outside the provincial food-growth gate.
-		local_tribesmen_pop_growth = 0.005
 
 		free_building_levels = -50
 		local_build_buildings_efficiency = -0.3
@@ -47,8 +44,6 @@ TRY_INJECT:city = {
 TRY_INJECT:town = {
 	rank_modifier = {
 		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
-		# Tribesmen self-provision outside the provincial food-growth gate.
-		local_tribesmen_pop_growth = 0.005
 
 		local_population_capacity = -10   # vanilla 20: net +10 (x1,000 people) of housing for the rank
 		local_population_capacity_modifier = -0.10
@@ -72,8 +67,6 @@ TRY_INJECT:rural_settlement = {
 		local_province_food_purchase_output_modifier = 0.00
 		free_building_levels = 30
 		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
-		# Tribesmen self-provision outside the provincial food-growth gate.
-		local_tribesmen_pop_growth = 0.004
 		local_build_buildings_efficiency = -0.3
 		local_construction_speed = -0.3
 	}

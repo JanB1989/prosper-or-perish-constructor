@@ -79,3 +79,11 @@ TRY_INJECT:peasants = {
 TRY_INJECT:slaves = {
 	pop_food_consumption = 0.5 # 1.0
 }
+
+# Tribesmen self-provision outside the provincial food-growth gate: their share of the location cancels the ranks' -0.004
+# growth gate (local_tribesmen_pop_growth is a percentage multiplier and cannot add a rate).
+TRY_INJECT:tribesmen = {
+	pop_percentage_impact = {
+		local_population_growth = 0.004
+	}
+}

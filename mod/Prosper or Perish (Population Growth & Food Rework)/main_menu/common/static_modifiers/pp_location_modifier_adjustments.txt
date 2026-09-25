@@ -5,8 +5,10 @@ TRY_REPLACE:province_starving = {
 		category = province
 	}
 	local_population_growth = -0.04
-	# Self-provisioning tribesmen are exempt from the provincial starvation penalty (Jan, 2026-09-25); they neither die of it nor leave.
-	local_tribesmen_pop_growth = 0.04
+	# Tribesmen (pop_food_consumption 0) still die in a starving province: the engine's starvation deaths hit every pop type
+	# and no per-type exemption exists (tested 2026-09-25: local_tribesmen_pop_growth is a percentage multiplier on their
+	# growth and changes nothing about the Starvation flow). What the mod does exempt them from: the starving-province
+	# migration (flag removed below) and the ranks' -0.004 growth gate (pop_percentage_impact in pp_pop_adjustments.txt).
 	local_supply_limit_modifier = -0.25
 	local_migration_attraction = -7.5
 

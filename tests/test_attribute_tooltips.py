@@ -173,7 +173,7 @@ def test_write_builds_views_that_hold_effects_and_goods_apart(trees):
         assert f"Custom('pp_tt_{attribute}'), Localize('PP_TT_KEY_NONE'))]\"" in gui
     assert "template Vegetation_tooltip" not in gui and "debug_text = \"[Topography.GetDebugText]\"" in gui
     section = gui[gui.index("Localize('PP_TT_KEY_VEGETATION_FOREST')"):]
-    section = section[:section.index("TooltipContentSection")]
+    section = section[:section.index("DataModelRepeatedItem")]   # up to the next value's lazily built section
     assert "ShowModifierEffect('pp_tt_vegetation_forest')" in section and "PP_TT_EXTRAS_VEGETATION_FOREST" in section
     assert section.index("icon_goods_tea.dds") < section.index("icon_goods_wheat.dds")   # best first
     assert 'raw_text = "#P +18%#!"' in section and 'raw_text = "#N -4%#!"' in section    # 0.1 vanilla - 0.14 fit
@@ -204,7 +204,11 @@ def test_winter_and_harvest_views_come_from_both_static_modifier_folders(trees):
     assert "pp_attribute_view_winter = {}" in winter and "using = tooltip_location_alt_content" in winter
     assert "Custom('pp_tt_winter'), Localize('PP_TT_KEY_NONE'))]\"\n                textcontext = \"[Location.GetWinterDetails]\"" in winter
     harvest = gui[gui.index("type pp_attribute_view_harvest"):]
-    assert "Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_x_poor'))" in harvest
+    # built only in its region, then only at its severity
+    region = harvest.index("Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_X'))")
+    severity = harvest.index("Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR'))")
+    assert region < severity < harvest.index("ShowModifierEffect('pp_tt_harvest_x_poor')")
+    assert "pp_harvest_state" not in harvest and "visible =" not in harvest
     # the goods share -20%: one row with their icons
     assert 'pp_goods_output_group_row = { blockoverride "group_value" { raw_text = "#N -20%#!" }' in harvest
 

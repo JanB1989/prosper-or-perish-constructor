@@ -10,6 +10,9 @@ player opens the tooltip for. For every such value the constructor writes
   block, worded from vanilla's own localization;
 - a goods table, best first: one icon and value per good, or one row per value when many goods share it.
 
+A view holds a section for every value, but builds only the one of the location (``lazy``); a hidden widget would
+still be built, so the harvest view (102 goods tables) used to build thousands of icons per hover.
+
 The land-potential chip sums the goods output of the land attributes (class, fertility, soil, coast, lake) per good
 in script values and lists the goods in six labelled tiers. The GUI cannot sort by a value, so a script value puts each
 good in a 2% step and a tier's line holds a cell per (good, step), steps best first, shown only in the good's step.
@@ -445,6 +448,14 @@ def goods_table(goods: list[tuple[str, float]]) -> str:
     return "\t\t\t\tpp_goods_output_table = { blockoverride \"rows\" {\n" + "\n".join(rows) + "\n\t\t\t\t} }"
 
 
+def lazy(gate: str, body: str) -> str:
+    """``body`` built only while ``gate`` holds: a list of one mock item or none (vanilla's army-slot trick). A hidden
+    widget is still built with its tooltip; this keeps the tooltip at the one value that shows."""
+    return (f'\t\tvbox = {{\n\t\t\tlayoutpolicy_horizontal = expanding\n'
+            f'\t\t\tdatamodel = "[DataModelRepeatedItem(Select_int32({gate}, \'(int32)1\', \'(int32)0\'))]"\n'
+            f'\t\t\titem = {{\n{body}\n\t\t\t}}\n\t\t}}')
+
+
 def view_section(view: View) -> str:
     parts = []
     if view.effects:
@@ -454,12 +465,26 @@ def view_section(view: View) -> str:
     if view.goods:
         parts.append(goods_table(view.goods))
     body = "\n".join(parts)
-    return f'\t\tTooltipContentSection = {{\n\t\t\tvisible = "[{view.gate}]"\n\t\t\tblockoverride "section_content" {{\n{body}\n\t\t\t}}\n\t\t}}'
+    return f'\t\tTooltipContentSection = {{\n\t\t\tblockoverride "section_content" {{\n{body}\n\t\t\t}}\n\t\t}}'
+
+
+def harvest_sections(views: list[View]) -> list[str]:
+    """Harvests nest by region, then severity: about 17 cheap region tests and 6 severity tests per frame instead of a
+    full harvest lookup per harvest (102 of them)."""
+    regions: dict[str, list[tuple[str, View]]] = {}
+    for view in views:
+        sev = location_status.severity(view.value)
+        regions.setdefault(view.value.removesuffix(f"_{sev}"), []).append((sev, view))
+    return [lazy(location_status.harvest_region_gate(region), "\t\tvbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n"
+                 + "\n".join(lazy(location_status.harvest_severity_gate(sev), view_section(view)) for sev, view in members) + "\n\t\t}")
+            for region, members in regions.items()]
 
 
 def view_type(attribute: str, views: list[View]) -> str:
-    sections = "\n".join(view_section(view) for view in views if view.effects or view.extras or view.goods)
-    return f"\ttype pp_attribute_view_{attribute} = vbox {{\n\t\tlayoutpolicy_horizontal = expanding\n\t\tspacing = 10\n\t\tignoreinvisible = yes\n{sections}\n\t}}"
+    """Each value's section is built only at a location with that value, so one shows and no spacing is needed."""
+    shown = [view for view in views if view.effects or view.extras or view.goods]
+    sections = "\n".join(harvest_sections(shown) if attribute == "harvest" else (lazy(view.gate, view_section(view)) for view in shown))
+    return f"\ttype pp_attribute_view_{attribute} = vbox {{\n\t\tlayoutpolicy_horizontal = expanding\n{sections}\n\t}}"
 
 
 def _close(text: str, start: int) -> int:

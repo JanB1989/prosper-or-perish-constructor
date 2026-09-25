@@ -313,10 +313,11 @@ types pp_attribute_tooltips
 
 	type pp_attribute_view_climate = vbox {
 		layoutpolicy_horizontal = expanding
-		spacing = 10
-		ignoreinvisible = yes
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_TROPICAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_TROPICAL'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_tropical')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_TROPICAL" } }
@@ -329,8 +330,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_ARID')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_ARID'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_arid')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_ARID" } }
@@ -343,8 +349,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_COLD_ARID')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_COLD_ARID'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_cold_arid')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_COLD_ARID" } }
@@ -357,8 +368,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_MEDITERRANEAN')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_MEDITERRANEAN'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_mediterranean')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_MEDITERRANEAN" } }
@@ -371,8 +387,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_SUBTROPICAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_SUBTROPICAL'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_subtropical')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_SUBTROPICAL" } }
@@ -385,8 +406,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_OCEANIC')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_OCEANIC'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_oceanic')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_OCEANIC" } }
@@ -399,8 +425,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_CONTINENTAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_CONTINENTAL'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_continental')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_CONTINENTAL" } }
@@ -413,8 +444,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_ARCTIC')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_ARCTIC'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_arctic')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_ARCTIC" } }
@@ -427,8 +463,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_TROPICAL_MONSOON')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_TROPICAL_MONSOON'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_ha1300_climate_tropical_monsoon')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_HA1300_CLIMATE_TROPICAL_MONSOON" } }
@@ -441,8 +482,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_SAVANNA')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_SAVANNA'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_ha1300_climate_savanna')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_HA1300_CLIMATE_SAVANNA" } }
@@ -455,8 +501,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_HOT_STEPPE')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_HOT_STEPPE'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_ha1300_climate_hot_steppe')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_HA1300_CLIMATE_HOT_STEPPE" } }
@@ -469,8 +520,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_COLD_STEPPE')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_COLD_STEPPE'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_ha1300_climate_cold_steppe')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_HA1300_CLIMATE_COLD_STEPPE" } }
@@ -483,8 +539,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_SUBTROPICAL_MONSOON')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_SUBTROPICAL_MONSOON'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_ha1300_climate_subtropical_monsoon')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_HA1300_CLIMATE_SUBTROPICAL_MONSOON" } }
@@ -497,8 +558,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_HIGHLAND_MONSOON')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_HIGHLAND_MONSOON'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_ha1300_climate_highland_monsoon')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_HA1300_CLIMATE_HIGHLAND_MONSOON" } }
@@ -511,8 +577,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_SUBPOLAR_OCEANIC')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_SUBPOLAR_OCEANIC'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_ha1300_climate_subpolar_oceanic')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_HA1300_CLIMATE_SUBPOLAR_OCEANIC" } }
@@ -532,8 +603,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_DRY_SUMMER_CONTINENTAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_DRY_SUMMER_CONTINENTAL'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_ha1300_climate_dry_summer_continental')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_HA1300_CLIMATE_DRY_SUMMER_CONTINENTAL" } }
@@ -546,8 +622,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_CONTINENTAL_MONSOON')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_CONTINENTAL_MONSOON'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_ha1300_climate_continental_monsoon')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_HA1300_CLIMATE_CONTINENTAL_MONSOON" } }
@@ -560,8 +641,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_SUBARCTIC')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_climate'), Localize('PP_TT_KEY_CLIMATE_HA1300_CLIMATE_SUBARCTIC'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_climate_ha1300_climate_subarctic')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_CLIMATE_HA1300_CLIMATE_SUBARCTIC" } }
@@ -574,14 +660,17 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
 	}
 
 	type pp_attribute_view_vegetation = vbox {
 		layoutpolicy_horizontal = expanding
-		spacing = 10
-		ignoreinvisible = yes
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_DESERT')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_DESERT'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_desert')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_DESERT" } }
@@ -592,21 +681,36 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_SPARSE')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_SPARSE'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_sparse')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_SPARSE" } }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_GRASSLANDS')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_GRASSLANDS'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_grasslands')]" }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_FARMLAND')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_FARMLAND'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_farmland')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_FARMLAND" } }
@@ -615,8 +719,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_WOODS')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_WOODS'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_woods')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_WOODS" } }
@@ -627,8 +736,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_FOREST')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_FOREST'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_forest')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_FOREST" } }
@@ -638,8 +752,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_JUNGLE')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_JUNGLE'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_jungle')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_JUNGLE" } }
@@ -650,8 +769,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_SCRUBLAND')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_SCRUBLAND'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_ha1300_veg_scrubland')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_HA1300_VEG_SCRUBLAND" } }
@@ -662,8 +786,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_THICKET')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_THICKET'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_ha1300_veg_thicket')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_HA1300_VEG_THICKET" } }
@@ -674,8 +803,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_SAVANNA')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_SAVANNA'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_ha1300_veg_savanna')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -684,8 +818,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_TUNDRA')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_TUNDRA'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_ha1300_veg_tundra')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_HA1300_VEG_TUNDRA" } }
@@ -694,8 +833,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_CONIFEROUS_FOREST')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_CONIFEROUS_FOREST'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_ha1300_veg_coniferous_forest')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_HA1300_VEG_CONIFEROUS_FOREST" } }
@@ -706,8 +850,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_MIXED_FOREST')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_MIXED_FOREST'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_ha1300_veg_mixed_forest')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_HA1300_VEG_MIXED_FOREST" } }
@@ -719,8 +868,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_DRY_FOREST')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_DRY_FOREST'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_ha1300_veg_dry_forest')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_HA1300_VEG_DRY_FOREST" } }
@@ -731,8 +885,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_MARSH')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_MARSH'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_ha1300_veg_marsh')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -741,8 +900,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_SWAMP')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_vegetation'), Localize('PP_TT_KEY_VEGETATION_HA1300_VEG_SWAMP'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_vegetation_ha1300_veg_swamp')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_VEGETATION_HA1300_VEG_SWAMP" } }
@@ -754,14 +918,17 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
 	}
 
 	type pp_attribute_view_topography = vbox {
 		layoutpolicy_horizontal = expanding
-		spacing = 10
-		ignoreinvisible = yes
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_MOUNTAINS')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_MOUNTAINS'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_mountains')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_MOUNTAINS" } }
@@ -773,8 +940,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HILLS')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HILLS'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_hills')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_HILLS" } }
@@ -783,8 +955,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_PLATEAU')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_PLATEAU'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_plateau')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_PLATEAU" } }
@@ -793,8 +970,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_WETLANDS')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_WETLANDS'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_wetlands')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_WETLANDS" } }
@@ -803,102 +985,182 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_OCEAN')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_OCEAN'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_ocean')]" }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_DEEP_OCEAN')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_DEEP_OCEAN'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_deep_ocean')]" }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_INLAND_SEA')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_INLAND_SEA'))]"
 			blockoverride "section_content" {
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_INLAND_SEA" } }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_NARROWS')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_NARROWS'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_narrows')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_NARROWS" } }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_LAKES')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_LAKES'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_lakes')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_LAKES" } }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HIGH_LAKES')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HIGH_LAKES'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_high_lakes')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_HIGH_LAKES" } }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_ATOLL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_ATOLL'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_atoll')]" }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_FLATLAND_WASTELAND')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_FLATLAND_WASTELAND'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_flatland_wasteland')]" }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HILLS_WASTELAND')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HILLS_WASTELAND'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_hills_wasteland')]" }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_PLATEAU_WASTELAND')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_PLATEAU_WASTELAND'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_plateau_wasteland')]" }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_WETLANDS_WASTELAND')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_WETLANDS_WASTELAND'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_wetlands_wasteland')]" }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_DUNE_WASTELAND')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_DUNE_WASTELAND'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_dune_wasteland')]" }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_MESA_WASTELAND')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_MESA_WASTELAND'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_mesa_wasteland')]" }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_MOUNTAIN_WASTELAND')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_MOUNTAIN_WASTELAND'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_mountain_wasteland')]" }
 				TooltipTextBlock = { blockoverride "text" { text = "PP_TT_EXTRAS_TOPOGRAPHY_MOUNTAIN_WASTELAND" } }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_OCEAN_WASTELAND')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_OCEAN_WASTELAND'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_ocean_wasteland')]" }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HA1300_TOPO_ROLLING')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HA1300_TOPO_ROLLING'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_ha1300_topo_rolling')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -907,8 +1169,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HA1300_TOPO_VALLEYS')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HA1300_TOPO_VALLEYS'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_ha1300_topo_valleys')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -916,16 +1183,26 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HA1300_TOPO_FLOODPLAINS')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HA1300_TOPO_FLOODPLAINS'))]"
 			blockoverride "section_content" {
 				pp_goods_output_table = { blockoverride "rows" {
 					pp_goods_output_row = { blockoverride "cells" { pp_goods_output_cell = { blockoverride "good_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds" tooltip = "[ShowGoodsName('cloves')]" } blockoverride "good_value" { raw_text = "#P +5%#!" } } pp_goods_output_cell = { blockoverride "good_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_tea.dds" tooltip = "[ShowGoodsName('tea')]" } blockoverride "good_value" { raw_text = "#N -7%#!" } } } }
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HA1300_TOPO_DELTAS')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_topography'), Localize('PP_TT_KEY_TOPOGRAPHY_HA1300_TOPO_DELTAS'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_topography_ha1300_topo_deltas')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -935,14 +1212,17 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
 	}
 
 	type pp_attribute_view_fertility = vbox {
 		layoutpolicy_horizontal = expanding
-		spacing = 10
-		ignoreinvisible = yes
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_HIGH')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_HIGH'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_fertility_high')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -953,8 +1233,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_LOW')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_LOW'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_fertility_low')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -966,8 +1251,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_HIGH')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_HIGH'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_fertility_very_high')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -979,8 +1269,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_LOW')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_LOW'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_fertility_very_low')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -992,14 +1287,17 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
 	}
 
 	type pp_attribute_view_soil = vbox {
 		layoutpolicy_horizontal = expanding
-		spacing = 10
-		ignoreinvisible = yes
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_CLAY_TITLE')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_CLAY_TITLE'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_soil_clay')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1008,8 +1306,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_PEAT_TITLE')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_PEAT_TITLE'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_soil_peat')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1019,8 +1322,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SAND_TITLE')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SAND_TITLE'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_soil_sand')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1029,8 +1337,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SILT_TITLE')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SILT_TITLE'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_soil_silt')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1039,48 +1352,62 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_STONY_TITLE')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_STONY_TITLE'))]"
 			blockoverride "section_content" {
 				pp_goods_output_table = { blockoverride "rows" {
 					pp_goods_output_row = { blockoverride "cells" { pp_goods_output_cell = { blockoverride "good_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" tooltip = "[ShowGoodsName('lumber')]" } blockoverride "good_value" { raw_text = "#P +4%#!" } } pp_goods_output_cell = { blockoverride "good_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds" tooltip = "[ShowGoodsName('cloves')]" } blockoverride "good_value" { raw_text = "#N -5%#!" } } } }
 				} }
 			}
 		}
+			}
+		}
 	}
 
 	type pp_attribute_view_coast = vbox {
 		layoutpolicy_horizontal = expanding
-		spacing = 10
-		ignoreinvisible = yes
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(LocationView.GetLocation.IsCoastal, '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[LocationView.GetLocation.IsCoastal]"
 			blockoverride "section_content" {
 				pp_goods_output_table = { blockoverride "rows" {
 					pp_goods_output_row = { blockoverride "cells" { pp_goods_output_cell = { blockoverride "good_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" tooltip = "[ShowGoodsName('lumber')]" } blockoverride "good_value" { raw_text = "#P +7%#!" } } } }
 				} }
 			}
 		}
+			}
+		}
 	}
 
 	type pp_attribute_view_lake = vbox {
 		layoutpolicy_horizontal = expanding
-		spacing = 10
-		ignoreinvisible = yes
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('ha1300_native_lake'), Localize('HA1300_LAKESIDE')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_native_lake'), Localize('HA1300_LAKESIDE'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_lake_lake')]" }
+			}
+		}
 			}
 		}
 	}
 
 	type pp_attribute_view_winter = vbox {
 		layoutpolicy_horizontal = expanding
-		spacing = 10
-		ignoreinvisible = yes
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_winter'), Localize('PP_TT_KEY_WINTER_MILD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_winter'), Localize('PP_TT_KEY_WINTER_MILD'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_winter_mild')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1096,8 +1423,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_winter'), Localize('PP_TT_KEY_WINTER_NORMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_winter'), Localize('PP_TT_KEY_WINTER_NORMAL'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_winter_normal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1118,8 +1450,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_tt_winter'), Localize('PP_TT_KEY_WINTER_SEVERE')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_tt_winter'), Localize('PP_TT_KEY_WINTER_SEVERE'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_winter_severe')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1138,14 +1475,23 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
 	}
 
 	type pp_attribute_view_harvest = vbox {
 		layoutpolicy_horizontal = expanding
-		spacing = 10
-		ignoreinvisible = yes
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_WESTERN_EUROPE')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_western_europe_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_western_europe_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1160,8 +1506,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_western_europe_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_western_europe_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1176,8 +1527,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_western_europe_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_western_europe_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1191,8 +1547,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_western_europe_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_western_europe_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1206,8 +1567,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_western_europe_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_western_europe_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1222,8 +1588,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_western_europe_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_western_europe_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1238,8 +1609,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_EASTERN_EUROPE')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_eastern_europe_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_eastern_europe_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1255,8 +1640,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_eastern_europe_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_eastern_europe_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1272,8 +1662,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_eastern_europe_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_eastern_europe_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1288,8 +1683,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_eastern_europe_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_eastern_europe_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1304,8 +1704,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_eastern_europe_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_eastern_europe_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1321,8 +1726,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_eastern_europe_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_eastern_europe_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1338,8 +1748,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_NORTH_ASIA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_asia_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_asia_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1354,8 +1778,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_asia_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_asia_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1370,8 +1799,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_asia_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_asia_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1384,8 +1818,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_asia_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_asia_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1398,8 +1837,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_asia_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_asia_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1414,8 +1858,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_asia_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_asia_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1430,8 +1879,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_CENTRAL_ASIA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_asia_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_central_asia_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1446,8 +1909,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_asia_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_central_asia_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1461,8 +1929,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_asia_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_central_asia_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1477,8 +1950,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_asia_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_central_asia_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1493,8 +1971,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_asia_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_central_asia_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1508,8 +1991,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_asia_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_central_asia_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1524,8 +2012,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_EAST_ASIA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_asia_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_east_asia_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1540,8 +2042,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_asia_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_east_asia_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1556,8 +2063,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_asia_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_east_asia_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1571,8 +2083,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_asia_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_east_asia_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1586,8 +2103,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_asia_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_east_asia_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1602,8 +2124,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_asia_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_east_asia_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1618,8 +2145,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_SOUTH_ASIA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_asia_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_asia_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1635,8 +2176,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_asia_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_asia_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1652,8 +2198,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_asia_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_asia_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1668,8 +2219,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_asia_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_asia_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1684,8 +2240,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_asia_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_asia_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1701,8 +2262,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_asia_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_asia_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1718,8 +2284,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_SOUTH_EAST_ASIA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_east_asia_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1733,8 +2313,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_east_asia_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1748,8 +2333,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_east_asia_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1763,8 +2353,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_east_asia_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1778,8 +2373,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_east_asia_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1793,8 +2393,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_east_asia_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_east_asia_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1808,8 +2413,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_MIDDLE_EAST')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_middle_east_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_middle_east_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1825,8 +2444,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_middle_east_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_middle_east_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1842,8 +2466,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_middle_east_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_middle_east_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1859,8 +2488,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_middle_east_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_middle_east_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1876,8 +2510,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_middle_east_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_middle_east_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1893,8 +2532,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_middle_east_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_middle_east_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1910,8 +2554,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_NORTH_AFRICA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_africa_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_africa_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1927,8 +2585,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_africa_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_africa_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1944,8 +2607,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_africa_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_africa_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1961,8 +2629,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_africa_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_africa_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1978,8 +2651,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_africa_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_africa_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -1995,8 +2673,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_africa_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_africa_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2012,8 +2695,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_WEST_AFRICA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_west_africa_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_west_africa_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2029,8 +2726,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_west_africa_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_west_africa_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2046,8 +2748,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_west_africa_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_west_africa_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2062,8 +2769,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_west_africa_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_west_africa_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2078,8 +2790,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_west_africa_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_west_africa_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2095,8 +2812,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_west_africa_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_west_africa_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2112,8 +2834,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_EAST_AFRICA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_africa_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_east_africa_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2128,8 +2864,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_africa_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_east_africa_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2144,8 +2885,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_africa_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_east_africa_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2159,8 +2905,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_africa_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_east_africa_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2174,8 +2925,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_africa_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_east_africa_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2190,8 +2946,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_east_africa_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_east_africa_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2206,8 +2967,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_CENTRAL_AFRICA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_africa_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_central_africa_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2221,8 +2996,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_africa_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_central_africa_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2236,8 +3016,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_africa_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_central_africa_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2250,8 +3035,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_africa_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_central_africa_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2264,8 +3054,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_africa_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_central_africa_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2279,8 +3074,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_central_africa_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_central_africa_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2294,8 +3094,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_SOUTHERN_AFRICA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_southern_africa_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_southern_africa_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2310,8 +3124,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_southern_africa_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_southern_africa_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2326,8 +3145,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_southern_africa_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_southern_africa_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2342,8 +3166,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_southern_africa_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_southern_africa_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2358,8 +3187,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_southern_africa_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_southern_africa_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2374,8 +3208,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_southern_africa_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_southern_africa_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2390,8 +3229,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_NORTH_AMERICA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_america_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_america_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2406,8 +3259,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_america_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_america_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2422,8 +3280,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_america_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_america_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2437,8 +3300,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_america_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_america_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2452,8 +3320,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_america_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_america_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2468,8 +3341,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_north_america_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_north_america_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2484,8 +3362,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_SOUTH_AMERICA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_america_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_america_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2499,8 +3391,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_america_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_america_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2514,8 +3411,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_america_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_america_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2528,8 +3430,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_america_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_america_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2542,8 +3449,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_america_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_america_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2557,8 +3469,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_south_america_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_south_america_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2572,8 +3489,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_AUSTRALASIA')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_australasia_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_australasia_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2588,8 +3519,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_australasia_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_australasia_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2604,8 +3540,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_australasia_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_australasia_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2620,8 +3561,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_australasia_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_australasia_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2636,8 +3582,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_australasia_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_australasia_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2652,8 +3603,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_australasia_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_australasia_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2668,8 +3624,22 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_region'), Localize('PP_HARVEST_REGION_PACIFIC_ISLANDS')), '(int32)1', '(int32)0'))]"
+			item = {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_pacific_islands_abysmal'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_pacific_islands_abysmal')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2684,8 +3654,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_pacific_islands_very_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_pacific_islands_very_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2700,8 +3675,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_pacific_islands_poor'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_pacific_islands_poor')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2715,8 +3695,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_pacific_islands_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_pacific_islands_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2730,8 +3715,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_GOOD')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_pacific_islands_very_good'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_pacific_islands_very_good')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2746,8 +3736,13 @@ types pp_attribute_tooltips
 				} }
 			}
 		}
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[DataModelRepeatedItem(Select_int32(EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_BOUNTIFUL')), '(int32)1', '(int32)0'))]"
+			item = {
 		TooltipContentSection = {
-			visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_pacific_islands_bountiful'))]"
 			blockoverride "section_content" {
 				TooltipStringPairList = { textcontext = "[ShowModifierEffect('pp_tt_harvest_pacific_islands_bountiful')]" }
 				pp_goods_output_table = { blockoverride "rows" {
@@ -2760,6 +3755,11 @@ types pp_attribute_tooltips
 					pp_goods_output_group_row = { blockoverride "group_value" { raw_text = "#P +10%#!" } blockoverride "group_icons" { icon = { size = { 24 24 } texture = "gfx/interface/icons/trade_goods/icon_goods_fish.dds" tooltip = "[ShowGoodsName('fish')]" } icon = { size = { 24 24 } texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" tooltip = "[ShowGoodsName('fur')]" } icon = { size = { 24 24 } texture = "gfx/interface/icons/trade_goods/icon_goods_wild_game.dds" tooltip = "[ShowGoodsName('wild_game')]" } } }
 					pp_goods_output_group_row = { blockoverride "group_value" { raw_text = "#P +4%#!" } blockoverride "group_icons" { icon = { size = { 24 24 } texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" tooltip = "[ShowGoodsName('horses')]" } } }
 				} }
+			}
+		}
+			}
+		}
+		}
 			}
 		}
 	}

@@ -321,6 +321,16 @@ def harvest_gate(key: str) -> str:
     return f"EqualTo_string({_LOC}.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_{key}'))"
 
 
+def harvest_region_gate(region: str) -> str:
+    """GUI test: the location lies in this harvest region (each map region belongs to one)."""
+    return _custom_is("pp_harvest_region", f"PP_HARVEST_REGION_{region.upper()}")
+
+
+def harvest_severity_gate(sev: str) -> str:
+    """GUI test: the location's active harvest has this severity, in whichever region."""
+    return _custom_is("pp_harvest_severity", f"PP_HARVEST_SEVERITY_{sev.upper()}")
+
+
 def harvest_chip(harvests: Harvests) -> str:
     """One chip for every harvest: the region's crop in a frame coloured by severity, with a signed severity badge."""
     state = f"{_LOC}.Custom('pp_harvest_state')"

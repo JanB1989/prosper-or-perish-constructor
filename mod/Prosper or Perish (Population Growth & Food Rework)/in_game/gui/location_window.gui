@@ -5393,7 +5393,7 @@ widget = {
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/monthly_growth.dds" }
                 }
             }
-            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_ABUNDANT" } } TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_ABUNDANT_STRENGTH" } } TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } blockoverride "scrollarea_content" { TooltipContentSection = { set_parent_dimension_to_minimum = height blockoverride "section_content" { TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_tribesmen_pop_growth')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)1.0')|1%+]" } } TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_peasants_food_consumption')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)-0.5')|1%-]" } } TooltipListBase = { vbox = { layoutpolicy_horizontal = expanding margin = { @tooltip_inner_margin @tooltip_inner_margin } spacing = 4 textbox = { using = tooltip_text_block_template raw_text = "[Localize('PP_LAND_CHIP_GOODS_OUTPUT')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)0.40')|1%+]" } hbox = { layoutpolicy_horizontal = expanding spacing = 3 icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_chili.dds" tooltip = "[ShowGoodsName('chili')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds" tooltip = "[ShowGoodsName('cloves')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cocoa.dds" tooltip = "[ShowGoodsName('cocoa')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_coffee.dds" tooltip = "[ShowGoodsName('coffee')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cotton.dds" tooltip = "[ShowGoodsName('cotton')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_dyes.dds" tooltip = "[ShowGoodsName('dyes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fiber_crops.dds" tooltip = "[ShowGoodsName('fiber_crops')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fruit.dds" tooltip = "[ShowGoodsName('fruit')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_incense.dds" tooltip = "[ShowGoodsName('incense')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_legumes.dds" tooltip = "[ShowGoodsName('legumes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" tooltip = "[ShowGoodsName('lumber')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_maize.dds" tooltip = "[ShowGoodsName('maize')]" } expand = {} } hbox = { layoutpolicy_horizontal = expanding spacing = 3 icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_medicaments.dds" tooltip = "[ShowGoodsName('medicaments')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_millet.dds" tooltip = "[ShowGoodsName('millet')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_olives.dds" tooltip = "[ShowGoodsName('olives')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_pepper.dds" tooltip = "[ShowGoodsName('pepper')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_potato.dds" tooltip = "[ShowGoodsName('potato')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_rice.dds" tooltip = "[ShowGoodsName('rice')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_saffron.dds" tooltip = "[ShowGoodsName('saffron')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_sugar.dds" tooltip = "[ShowGoodsName('sugar')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tea.dds" tooltip = "[ShowGoodsName('tea')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tobacco.dds" tooltip = "[ShowGoodsName('tobacco')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" tooltip = "[ShowGoodsName('wheat')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wine.dds" tooltip = "[ShowGoodsName('wine')]" } expand = {} } hbox = { layoutpolicy_horizontal = expanding spacing = 3 icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_beeswax.dds" tooltip = "[ShowGoodsName('beeswax')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_elephants.dds" tooltip = "[ShowGoodsName('elephants')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fish.dds" tooltip = "[ShowGoodsName('fish')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" tooltip = "[ShowGoodsName('fur')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" tooltip = "[ShowGoodsName('horses')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_ivory.dds" tooltip = "[ShowGoodsName('ivory')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_livestock.dds" tooltip = "[ShowGoodsName('livestock')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_silk.dds" tooltip = "[ShowGoodsName('silk')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wild_game.dds" tooltip = "[ShowGoodsName('wild_game')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wool.dds" tooltip = "[ShowGoodsName('wool')]" } expand = {} } } } TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_migration_attraction')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)2')|1+]" } } TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_monthly_food')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)1')|1+]" } } } } } } }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_ABUNDANT" } } TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_ABUNDANT_STRENGTH" } } TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } blockoverride "scrollarea_content" { TooltipContentSection = { set_parent_dimension_to_minimum = height blockoverride "section_content" { TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_tribesmen_pop_growth')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)1.0')|1%+]" } } TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_peasants_food_consumption')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)-0.5')|1%-]" } } TooltipListBase = { vbox = { layoutpolicy_horizontal = expanding margin = { 10 10 } spacing = 4 textbox = { using = tooltip_text_block_template raw_text = "[Localize('PP_LAND_CHIP_GOODS_OUTPUT')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)0.40')|1%+]" } hbox = { layoutpolicy_horizontal = expanding spacing = 3 icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_chili.dds" tooltip = "[ShowGoodsName('chili')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds" tooltip = "[ShowGoodsName('cloves')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cocoa.dds" tooltip = "[ShowGoodsName('cocoa')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_coffee.dds" tooltip = "[ShowGoodsName('coffee')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cotton.dds" tooltip = "[ShowGoodsName('cotton')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_dyes.dds" tooltip = "[ShowGoodsName('dyes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fiber_crops.dds" tooltip = "[ShowGoodsName('fiber_crops')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fruit.dds" tooltip = "[ShowGoodsName('fruit')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_incense.dds" tooltip = "[ShowGoodsName('incense')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_legumes.dds" tooltip = "[ShowGoodsName('legumes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" tooltip = "[ShowGoodsName('lumber')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_maize.dds" tooltip = "[ShowGoodsName('maize')]" } expand = {} } hbox = { layoutpolicy_horizontal = expanding spacing = 3 icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_medicaments.dds" tooltip = "[ShowGoodsName('medicaments')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_millet.dds" tooltip = "[ShowGoodsName('millet')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_olives.dds" tooltip = "[ShowGoodsName('olives')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_pepper.dds" tooltip = "[ShowGoodsName('pepper')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_potato.dds" tooltip = "[ShowGoodsName('potato')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_rice.dds" tooltip = "[ShowGoodsName('rice')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_saffron.dds" tooltip = "[ShowGoodsName('saffron')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_sugar.dds" tooltip = "[ShowGoodsName('sugar')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tea.dds" tooltip = "[ShowGoodsName('tea')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tobacco.dds" tooltip = "[ShowGoodsName('tobacco')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" tooltip = "[ShowGoodsName('wheat')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wine.dds" tooltip = "[ShowGoodsName('wine')]" } expand = {} } hbox = { layoutpolicy_horizontal = expanding spacing = 3 icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_beeswax.dds" tooltip = "[ShowGoodsName('beeswax')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_elephants.dds" tooltip = "[ShowGoodsName('elephants')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fish.dds" tooltip = "[ShowGoodsName('fish')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" tooltip = "[ShowGoodsName('fur')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" tooltip = "[ShowGoodsName('horses')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_ivory.dds" tooltip = "[ShowGoodsName('ivory')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_livestock.dds" tooltip = "[ShowGoodsName('livestock')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_silk.dds" tooltip = "[ShowGoodsName('silk')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wild_game.dds" tooltip = "[ShowGoodsName('wild_game')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wool.dds" tooltip = "[ShowGoodsName('wool')]" } expand = {} } } } TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_migration_attraction')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)2')|1+]" } } TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_monthly_food')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)1')|1+]" } } } } } } }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -5415,7 +5415,7 @@ widget = {
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/modifier_types/total_population_capacity_modifier.dds" }
                 }
             }
-            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_AVAILABLE" } } TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_AVAILABLE_STRENGTH" } } TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } blockoverride "scrollarea_content" { TooltipContentSection = { set_parent_dimension_to_minimum = height blockoverride "section_content" { TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_tribesmen_pop_growth')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)1.0')|1%+]" } } TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_peasants_food_consumption')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)-0.32')|1%-]" } } TooltipListBase = { vbox = { layoutpolicy_horizontal = expanding margin = { @tooltip_inner_margin @tooltip_inner_margin } spacing = 4 textbox = { using = tooltip_text_block_template raw_text = "[Localize('PP_LAND_CHIP_GOODS_OUTPUT')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)0.30')|1%+]" } hbox = { layoutpolicy_horizontal = expanding spacing = 3 icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_chili.dds" tooltip = "[ShowGoodsName('chili')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds" tooltip = "[ShowGoodsName('cloves')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cocoa.dds" tooltip = "[ShowGoodsName('cocoa')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_coffee.dds" tooltip = "[ShowGoodsName('coffee')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cotton.dds" tooltip = "[ShowGoodsName('cotton')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_dyes.dds" tooltip = "[ShowGoodsName('dyes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fiber_crops.dds" tooltip = "[ShowGoodsName('fiber_crops')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fruit.dds" tooltip = "[ShowGoodsName('fruit')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_incense.dds" tooltip = "[ShowGoodsName('incense')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_legumes.dds" tooltip = "[ShowGoodsName('legumes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" tooltip = "[ShowGoodsName('lumber')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_maize.dds" tooltip = "[ShowGoodsName('maize')]" } expand = {} } hbox = { layoutpolicy_horizontal = expanding spacing = 3 icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_medicaments.dds" tooltip = "[ShowGoodsName('medicaments')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_millet.dds" tooltip = "[ShowGoodsName('millet')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_olives.dds" tooltip = "[ShowGoodsName('olives')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_pepper.dds" tooltip = "[ShowGoodsName('pepper')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_potato.dds" tooltip = "[ShowGoodsName('potato')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_rice.dds" tooltip = "[ShowGoodsName('rice')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_saffron.dds" tooltip = "[ShowGoodsName('saffron')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_sugar.dds" tooltip = "[ShowGoodsName('sugar')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tea.dds" tooltip = "[ShowGoodsName('tea')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tobacco.dds" tooltip = "[ShowGoodsName('tobacco')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" tooltip = "[ShowGoodsName('wheat')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wine.dds" tooltip = "[ShowGoodsName('wine')]" } expand = {} } hbox = { layoutpolicy_horizontal = expanding spacing = 3 icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_beeswax.dds" tooltip = "[ShowGoodsName('beeswax')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_elephants.dds" tooltip = "[ShowGoodsName('elephants')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fish.dds" tooltip = "[ShowGoodsName('fish')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" tooltip = "[ShowGoodsName('fur')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" tooltip = "[ShowGoodsName('horses')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_ivory.dds" tooltip = "[ShowGoodsName('ivory')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_livestock.dds" tooltip = "[ShowGoodsName('livestock')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_silk.dds" tooltip = "[ShowGoodsName('silk')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wild_game.dds" tooltip = "[ShowGoodsName('wild_game')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wool.dds" tooltip = "[ShowGoodsName('wool')]" } expand = {} } } } TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_migration_attraction')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)1')|1+]" } } } } } } }
+            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_AVAILABLE" } } TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_AVAILABLE_STRENGTH" } } TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } blockoverride "scrollarea_content" { TooltipContentSection = { set_parent_dimension_to_minimum = height blockoverride "section_content" { TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_tribesmen_pop_growth')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)1.0')|1%+]" } } TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_peasants_food_consumption')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)-0.32')|1%-]" } } TooltipListBase = { vbox = { layoutpolicy_horizontal = expanding margin = { 10 10 } spacing = 4 textbox = { using = tooltip_text_block_template raw_text = "[Localize('PP_LAND_CHIP_GOODS_OUTPUT')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)0.30')|1%+]" } hbox = { layoutpolicy_horizontal = expanding spacing = 3 icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_chili.dds" tooltip = "[ShowGoodsName('chili')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds" tooltip = "[ShowGoodsName('cloves')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cocoa.dds" tooltip = "[ShowGoodsName('cocoa')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_coffee.dds" tooltip = "[ShowGoodsName('coffee')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cotton.dds" tooltip = "[ShowGoodsName('cotton')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_dyes.dds" tooltip = "[ShowGoodsName('dyes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fiber_crops.dds" tooltip = "[ShowGoodsName('fiber_crops')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fruit.dds" tooltip = "[ShowGoodsName('fruit')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_incense.dds" tooltip = "[ShowGoodsName('incense')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_legumes.dds" tooltip = "[ShowGoodsName('legumes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" tooltip = "[ShowGoodsName('lumber')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_maize.dds" tooltip = "[ShowGoodsName('maize')]" } expand = {} } hbox = { layoutpolicy_horizontal = expanding spacing = 3 icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_medicaments.dds" tooltip = "[ShowGoodsName('medicaments')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_millet.dds" tooltip = "[ShowGoodsName('millet')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_olives.dds" tooltip = "[ShowGoodsName('olives')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_pepper.dds" tooltip = "[ShowGoodsName('pepper')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_potato.dds" tooltip = "[ShowGoodsName('potato')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_rice.dds" tooltip = "[ShowGoodsName('rice')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_saffron.dds" tooltip = "[ShowGoodsName('saffron')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_sugar.dds" tooltip = "[ShowGoodsName('sugar')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tea.dds" tooltip = "[ShowGoodsName('tea')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tobacco.dds" tooltip = "[ShowGoodsName('tobacco')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" tooltip = "[ShowGoodsName('wheat')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wine.dds" tooltip = "[ShowGoodsName('wine')]" } expand = {} } hbox = { layoutpolicy_horizontal = expanding spacing = 3 icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_beeswax.dds" tooltip = "[ShowGoodsName('beeswax')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_elephants.dds" tooltip = "[ShowGoodsName('elephants')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fish.dds" tooltip = "[ShowGoodsName('fish')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" tooltip = "[ShowGoodsName('fur')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" tooltip = "[ShowGoodsName('horses')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_ivory.dds" tooltip = "[ShowGoodsName('ivory')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_livestock.dds" tooltip = "[ShowGoodsName('livestock')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_silk.dds" tooltip = "[ShowGoodsName('silk')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wild_game.dds" tooltip = "[ShowGoodsName('wild_game')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wool.dds" tooltip = "[ShowGoodsName('wool')]" } expand = {} } } } TooltipTextBlock = { blockoverride "text" { raw_text = "[ShowModifierTypeName('local_migration_attraction')]: [Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)1')|1+]" } } } } } } }
         }
     }
         background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
@@ -6553,6 +6553,20 @@ pp_land_potential_chip = {}
 							on_action = "[LocationView.Vars.Set( 'tab', 'demography' )]"
 						}
 						down = "[LocationView.Vars.HasValue( 'tab', 'demography' )]"
+					}
+
+					# PP GROWTH TAB (growth_tab.py)
+					button_secondary_tab_alt = {
+						using = layoutpolicy_expanding
+						blockoverride "tab_text"{
+							text = "PP_LOC_VIEW_GROWTH_TAB"
+						}
+						tooltip = "PP_LOC_VIEW_GROWTH_TAB_TT"
+						action_tooltip = {
+							title = "OPEN_TAB"
+							on_action = "[LocationView.Vars.Set( 'tab', 'growth' )]"
+						}
+						down = "[LocationView.Vars.HasValue( 'tab', 'growth' )]"
 					}
 				}
 			}
@@ -10579,6 +10593,171 @@ pp_land_potential_chip = {}
 							}
 						}
 					}
+				}
+
+				# PP GROWTH (growth_tab.py): population growth per estate, growth and migration apart
+				vbox = {
+					visible = "[LocationView.Vars.HasValue( 'tab', 'growth' )]"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					margin_top = 5
+					datacontext = "[LocationView.GetLocation]"
+
+					# location lines: growth, migration attraction, free land
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						margin = { 10 4 }
+						spacing = 12
+						text_single = {
+							fontsize = 13
+							align = left|nobaseline
+							tooltipwidget = { using = yearly_pop_growth_tooltip }
+							raw_text = "[Localize('PP_GROWTH_TAB_LOCATION_GROWTH')]: [Location.GetPopGrowth|2+=%]"
+						}
+						text_single = {
+							fontsize = 13
+							align = left|nobaseline
+							tooltip = "[Location.GetLocalMigrationAttractionInfo]"
+							raw_text = "[Localize('PP_GROWTH_TAB_MIGRATION_ATTRACTION')]: [Location.GetLocalMigrationAttraction|2+=]"
+						}
+						text_single = {
+							fontsize = 13
+							align = left|nobaseline
+							tooltip = "PP_GROWTH_TAB_FREE_LAND_TT"
+							raw_text = "[Localize('PP_GROWTH_TAB_FREE_LAND')]: [Location.GetModifierValueFixed('pp_land_available')|1%]"
+						}
+						expand = {}
+					}
+
+					# column headers
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						margin = { 10 2 }
+						spacing = 4
+						widget = { size = { 26 16 } }
+										text_single = {
+											size = { 90 16 }
+											autoresize = no
+											align = left|nobaseline
+											fontsize = 13
+											default_format = "#medium"
+											text = "PP_GROWTH_TAB_COL_ESTATE"
+										}
+										text_single = {
+											size = { 60 16 }
+											autoresize = no
+											align = right|nobaseline
+											fontsize = 13
+											default_format = "#medium"
+											text = "PP_GROWTH_TAB_COL_POPS"
+										}
+										text_single = {
+											size = { 60 16 }
+											autoresize = no
+											align = right|nobaseline
+											fontsize = 13
+											default_format = "#medium"
+											text = "PP_GROWTH_TAB_COL_GROWTH"
+										}
+										text_single = {
+											size = { 60 16 }
+											autoresize = no
+											align = right|nobaseline
+											fontsize = 13
+											default_format = "#medium"
+											text = "PP_GROWTH_TAB_COL_CHANGE"
+										}
+										text_single = {
+											size = { 60 16 }
+											autoresize = no
+											align = right|nobaseline
+											fontsize = 13
+											default_format = "#medium"
+											text = "PP_GROWTH_TAB_COL_RATE"
+										}
+						expand = {}
+					}
+
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						margin = { 10 2 }
+						spacing = 2
+						datamodel = "[LocationView.GetPops]"
+						item = {
+							vbox = {
+								layoutpolicy_horizontal = expanding
+								visible = "[LocationPopItem.HasPop]"
+								datacontext = "[LocationPopItem.GetType]"
+								datacontext = "[LocationPopItem.GetLocation]"
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									spacing = 4
+									tooltipwidget = { using = LocationPopItem_Breakdown }
+									icon = {
+										size = { 26 26 }
+										texture = "[GetGraphicalCultureTextureForLocationPopType(Location.Self, PopType.Self)]"
+									}
+										text_single = {
+											size = { 90 16 }
+											autoresize = no
+											align = left|nobaseline
+											fontsize = 13
+											text = "[PopType.GetNameWithNoTooltip|L]"
+										}
+										text_single = {
+											size = { 60 16 }
+											autoresize = no
+											align = right|nobaseline
+											fontsize = 13
+											text = "[LocationPopItem.GetTotalSize]"
+										}
+										text_single = {
+											size = { 60 16 }
+											autoresize = no
+											align = right|nobaseline
+											fontsize = 13
+											text = "[LocationPopItem.GetGrowth]"
+										}
+										text_single = {
+											size = { 60 16 }
+											autoresize = no
+											align = right|nobaseline
+											fontsize = 13
+											text = "[LocationPopItem.GetGrowthForUI|Y]"
+										}
+									text_single = {
+										size = { 60 16 }
+										autoresize = no
+										align = right|nobaseline
+										fontsize = 13
+										visible = "[Location.HasOwner]"
+										tooltip = "PP_GROWTH_TAB_RATE_TT"
+										text = "[Max_CFixedPoint(Multiply_CFixedPoint(Location.GetPopGrowth, Add_CFixedPoint('(CFixedPoint)1', Add_CFixedPoint(Location.GetModifierValueFixed(Concatenate('local_', Concatenate(PopType.GetKey, '_pop_growth'))), Location.GetOwner.GetModifierRawValue(Concatenate('global_', Concatenate(PopType.GetKey, '_pop_growth')))))), '(CFixedPoint)0')|2+=%]"
+									}
+									text_single = {
+										size = { 60 16 }
+										autoresize = no
+										align = right|nobaseline
+										fontsize = 13
+										visible = "[Not(Location.HasOwner)]"
+										tooltip = "PP_GROWTH_TAB_RATE_TT"
+										text = "[Max_CFixedPoint(Multiply_CFixedPoint(Location.GetPopGrowth, Add_CFixedPoint('(CFixedPoint)1', Location.GetModifierValueFixed(Concatenate('local_', Concatenate(PopType.GetKey, '_pop_growth'))))), '(CFixedPoint)0')|2+=%]"
+									}
+									expand = {}
+								}
+								# the engine's change lines for this estate (born, starved, migrated, class changes)
+								text_multi = {
+									layoutpolicy_horizontal = expanding
+									autoresize = yes
+									margin_left = 30
+									fontsize = 12
+									visible = "[Not(StringIsEmpty(Location.GetGrowthTooltip(PopType.Self)))]"
+									text = "[Location.GetGrowthTooltip(PopType.Self)]"
+								}
+							}
+						}
+					}
+					expand = {}
 				}
 
 				# DEMOGRAPHY

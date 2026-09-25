@@ -269,7 +269,7 @@ def _goods_block(line: str, goods: list[str]) -> str:
         rows.append(f"hbox = {{ layoutpolicy_horizontal = expanding spacing = 3 {icons} expand = {{}} }}")
     return (
         "TooltipListBase = { vbox = { layoutpolicy_horizontal = expanding "
-        "margin = { @tooltip_inner_margin @tooltip_inner_margin } spacing = 4 "
+        "margin = { 10 10 } spacing = 4 "
         f'textbox = {{ using = tooltip_text_block_template raw_text = "{line}" }} {" ".join(rows)} }} }}'
     )
 

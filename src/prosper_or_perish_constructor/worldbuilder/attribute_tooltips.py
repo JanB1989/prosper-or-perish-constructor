@@ -434,7 +434,7 @@ def goods_table(goods: list[tuple[str, float]]) -> str:
     if len(groups) * 2 <= len(goods):
         for value, members in groups:
             for start in range(0, len(members), ICONS_PER_GROUP_ROW):
-                label = format_value(value, "+=%") if start == 0 else ""
+                label = format_value(value, "+=%") if start == 0 else " "  # blank, not empty: an empty raw_text shows "default"
                 icons = " ".join(_good_icon(good) for good in members[start:start + ICONS_PER_GROUP_ROW])
                 rows.append(f'\t\t\t\t\tpp_goods_output_group_row = {{ blockoverride "group_value" {{ raw_text = "{label}" }} blockoverride "group_icons" {{ {icons} }} }}')
     else:

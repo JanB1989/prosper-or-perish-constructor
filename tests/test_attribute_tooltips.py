@@ -221,7 +221,7 @@ def test_goods_tables_use_cells_for_own_values_and_rows_for_shared_ones():
     shared = [(f"g{i}", -0.35) for i in range(tt.ICONS_PER_GROUP_ROW + 1)] + [("h", -0.5), ("k", -0.5)]
     table = tt.goods_table(shared)
     assert table.count("pp_goods_output_group_row") == 3 and table.count("icon_goods_") == len(shared)
-    assert table.count('raw_text = "#N -35%#!"') == 1 and table.count('raw_text = ""') == 1   # value once per group
+    assert table.count('raw_text = "#N -35%#!"') == 1 and table.count('raw_text = " "') == 1   # value once per group; blank, never empty ("default")
 
 
 def test_land_potential_sums_the_land_attributes(trees):

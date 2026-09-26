@@ -45,11 +45,43 @@ def test_publish_keeps_newest_runs_in_one_commit(tmp_path: Path) -> None:
     subprocess.run(["git", "clone", "-q", remote, str(check)], check=True)
     log = subprocess.run(["git", "-C", str(check), "log", "--oneline"], capture_output=True, text=True, check=True)
     assert len(log.stdout.splitlines()) == 1
-    assert sorted(p.name for p in (check / "runs").iterdir()) == ["run_b"]
-    index = (check / "index.html").read_text(encoding="utf-8")
+    assert sorted(p.name for p in (check / "runs").iterdir() if p.is_dir()) == ["run_b"]
+    index = (check / "runs" / "index.html").read_text(encoding="utf-8")
     assert "Second run" in index and "First run" not in index
     page = (check / "runs" / "run_b" / "index.html").read_text(encoding="utf-8")
     assert 'content="https://someone.github.io/runs/runs/run_b/maps/political.png"' in page
+    assert '<meta name="robots" content="noindex">' in page
+
+
+def test_wip_replaces_the_root_and_keeps_the_runs(tmp_path: Path) -> None:
+    remote = _bare_site(tmp_path)
+    reports = tmp_path / "reports"
+    rr.push_publish(
+        rr.prepare_publish(_fake_report(reports, "run_a", "First run"), site_repo="Someone/preview",
+                           work_root=tmp_path / "work", remote=remote)
+    )
+    docs = tmp_path / "docs"
+    (docs / "examples").mkdir(parents=True)
+    (docs / "index.html").write_text("<html><head><title>Docs</title></head><body><h1>Docs</h1></body></html>", encoding="utf-8")
+    (docs / "examples" / "explorer.html").write_text("<html><head></head><body>x</body></html>", encoding="utf-8")
+    for commit in ("abc1234", "def5678"):
+        plan = rr.prepare_wip(docs, site_repo="Someone/preview", work_root=tmp_path / "work", branch="0.10",
+                              commit=commit, dirty=False, remote=remote)
+        rr.push_publish(plan)
+    # a later run publish keeps the WIP docs at the root
+    rr.push_publish(
+        rr.prepare_publish(_fake_report(tmp_path / "reports2", "run_b", "Second run"), site_repo="Someone/preview",
+                           work_root=tmp_path / "work", remote=remote)
+    )
+
+    check = tmp_path / "check"
+    subprocess.run(["git", "clone", "-q", remote, str(check)], check=True)
+    log = subprocess.run(["git", "-C", str(check), "log", "--oneline"], capture_output=True, text=True, check=True)
+    assert len(log.stdout.splitlines()) == 1
+    root = (check / "index.html").read_text(encoding="utf-8")
+    assert "Work in progress</b>: 0.10 @ def5678" in root and "abc1234" not in root
+    assert '<meta name="robots" content="noindex">' in (check / "examples" / "explorer.html").read_text(encoding="utf-8")
+    assert sorted(p.name for p in (check / "runs").iterdir() if p.is_dir()) == ["run_a", "run_b"]
 
 
 def test_scales_map_values_into_the_colour_ramp() -> None:

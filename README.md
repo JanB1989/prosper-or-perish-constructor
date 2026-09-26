@@ -346,26 +346,34 @@ graphs/report/<playthrough>/charts/*.png    progression charts
 
 `uv run ppc report` rebuilds it on its own (`--playthrough` for another run, `--fps`, `--width`).
 
-### Sharing a run
+### Sharing a run and work-in-progress docs (preview site)
 
-The map videos can be dragged into Discord or a GitHub issue as they are (H.264 MP4 under 10 MB). To put
-the whole page online, publish it to the GitHub Pages site (a separate repository that only ever holds one
-commit with the newest runs, so it never grows):
+The map videos can be dragged into Discord or a GitHub issue as they are (H.264 MP4 under 10 MB). Whole
+pages go to the preview site https://janb1989.github.io/prosper-or-perish-preview/, a separate public
+repository. The released docs (`main:/docs`, https://janb1989.github.io/prosper-or-perish-constructor/)
+change only when a version merges into main; the preview can be overwritten at will:
+
+- site root: a work-in-progress copy of `docs/` from the current branch (uncommitted changes included),
+  with a banner naming branch and commit;
+- `runs/`: the observer-run reports, newest 5 kept.
 
 ```bash
-uv run ppc report --create-site            # once: creates the public repository and turns on Pages
-uv run ppc report --no-build --publish     # dry run: shows what would go online
+uv run ppc publish-wip                     # dry run: shows what would go online
+uv run ppc publish-wip --yes               # replace the WIP docs (runs/ stays)
+uv run ppc report --no-build --publish     # dry run for the newest run report
 uv run ppc report --no-build --publish --yes
 ```
 
-The site repository and how many runs stay online come from `[report] site_repo` / `keep` in
-`constructor.toml` (defaults `JanB1989/prosper-or-perish-runs`, 5).
+Each publish replaces only its own part and pushes one fresh commit, so the repository never grows. The
+pages carry `noindex`. `--create-site` (on either command) creates the repository once.
+`[report] site_repo` / `keep` in `constructor.toml` override the defaults
+(`JanB1989/prosper-or-perish-preview`, 5).
 
 Useful options:
 
 ```bash
 uv run ppc savegame-notebooks build --save-dir /path/to/saves
-uv run ppc savegame-notebooks build --workers 6   # saves parsed at once (default 4)
+uv run ppc savegame-notebooks build --workers 8   # saves parsed at once (default 12, EU5SAVE_JOBS)
 uv run ppc savegame-notebooks build --no-ingest
 uv run ppc savegame-notebooks build --force
 ```

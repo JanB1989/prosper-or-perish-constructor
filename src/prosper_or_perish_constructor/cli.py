@@ -491,8 +491,17 @@ def _build_parser() -> argparse.ArgumentParser:
     report.add_argument("--publish", action="store_true", help="Stage the report on the GitHub Pages site and show the plan.")
     report.add_argument("--yes", action="store_true", help="With --publish: push the staged site (the run becomes public).")
     report.add_argument("--create-site", action="store_true", help="Create the public site repository and enable GitHub Pages.")
-    report.add_argument("--site-repo", default=None, help="owner/name of the site repository (default [report] site_repo).")
+    report.add_argument("--site-repo", default=None, help="owner/name of the preview site repository (default [report] site_repo).")
     report.add_argument("--keep", type=int, default=None, help="Runs kept on the site, newest first (default [report] keep, 5).")
+    publish_wip = _add_command(
+        subcommands,
+        "publish-wip",
+        "Publish a work-in-progress copy of docs/ to the preview site (main and its released docs stay untouched).",
+        _publish_wip,
+    )
+    publish_wip.add_argument("--yes", action="store_true", help="Push the staged site (the WIP docs become public).")
+    publish_wip.add_argument("--create-site", action="store_true", help="Create the public preview repository first.")
+    publish_wip.add_argument("--site-repo", default=None, help="owner/name of the preview site repository (default [report] site_repo).")
     savegame_purge = _add_command(
         subcommands,
         "savegame-purge",
@@ -2902,7 +2911,7 @@ def _report(args: argparse.Namespace, extra: Sequence[str], repo: Path, project:
 
     with project.open("rb") as handle:
         settings = tomllib.load(handle).get("report", {})
-    site_repo = args.site_repo or settings.get("site_repo", "JanB1989/prosper-or-perish-runs")
+    site_repo = args.site_repo or settings.get("site_repo", run_report.DEFAULT_SITE_REPO)
     keep = args.keep or int(settings.get("keep", 5))
     if args.create_site:
         run_report.create_site_repo(site_repo)
@@ -2938,6 +2947,38 @@ def _report(args: argparse.Namespace, extra: Sequence[str], repo: Path, project:
         return 0
     run_report.push_publish(plan)
     print(f"published: {plan.url}runs/{plan.added}/ (GitHub Pages may take a minute to update)", flush=True)
+    return 0
+
+
+def _publish_wip(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("publish-wip does not accept extra arguments.")
+    from prosper_or_perish_constructor import run_report
+
+    with project.open("rb") as handle:
+        settings = tomllib.load(handle).get("report", {})
+    site_repo = args.site_repo or settings.get("site_repo", run_report.DEFAULT_SITE_REPO)
+    if args.create_site:
+        run_report.create_site_repo(site_repo)
+        print(f"created {site_repo}", flush=True)
+
+    def git(*command: str) -> str:
+        return subprocess.run(["git", "-C", str(repo), *command], capture_output=True, text=True, check=True).stdout.strip()
+
+    branch, commit = git("rev-parse", "--abbrev-ref", "HEAD"), git("rev-parse", "--short", "HEAD")
+    dirty = bool(git("status", "--porcelain", "--", "docs"))
+    plan = run_report.prepare_wip(
+        repo / "docs", site_repo=site_repo, work_root=repo / "artifacts" / "report_site",
+        branch=branch, commit=commit, dirty=dirty,
+    )
+    print(f"site {site_repo} -> {plan.url}", flush=True)
+    print(f"  root: docs/ from {branch} @ {commit}{' (with uncommitted changes)' if dirty else ''}", flush=True)
+    print(f"  runs/: {len(plan.runs)} run report(s) kept", flush=True)
+    if not args.yes:
+        print("dry run: nothing was pushed. Add --yes to make this public.", flush=True)
+        return 0
+    run_report.push_publish(plan)
+    print(f"published: {plan.url} (GitHub Pages may take a minute to update)", flush=True)
     return 0
 
 

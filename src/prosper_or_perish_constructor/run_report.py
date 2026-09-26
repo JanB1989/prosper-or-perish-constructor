@@ -20,6 +20,7 @@ from __future__ import annotations
 import html
 import json
 import math
+import re
 import shutil
 import subprocess
 import time
@@ -739,7 +740,15 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
 
 
 # --------------------------------------------------------------------------------------------------------
-# Publishing (GitHub Pages)
+# Publishing: the preview site on GitHub Pages
+#
+# One public repository (default JanB1989/prosper-or-perish-preview), separate from the constructor and its
+# released docs on main: the site root holds a work-in-progress copy of docs/ (`ppc publish-wip`), runs/
+# the observer-run reports (`ppc report --publish`). Each command replaces only its own part and pushes one
+# fresh commit, so the repository never accumulates history. Both are dry runs unless --yes.
+
+DEFAULT_SITE_REPO = "JanB1989/prosper-or-perish-preview"
+RELEASED_DOCS_URL = "https://janb1989.github.io/prosper-or-perish-constructor/"
 
 
 @dataclass
@@ -750,45 +759,24 @@ class PublishPlan:
     runs: list[dict[str, object]]
     added: str
     dropped: list[str]
+    message: str = ""
 
 
 def _git(site: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess:
     return subprocess.run(["git", "-C", str(site), *args], check=check, capture_output=True, text=True)
 
 
-def _site_index(runs: list[dict[str, object]], title: str) -> str:
-    esc = html.escape
-    cards = "".join(
-        f"<a class=card href='runs/{esc(str(r['playthrough_id']))}/'>"
-        f"<img loading=lazy src='runs/{esc(str(r['playthrough_id']))}/maps/political.png' alt=''>"
-        f"<div><b>{esc(str(r['name']))}</b><br><span>{r['years'][0]}–{r['years'][1]} · {r['saves']} saves</span></div></a>"
-        for r in runs
-    )
-    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(title)}</title><style>
-:root{{--bg:#f6f6f4;--card:#fcfcfb;--ink:#1d1d1b;--muted:#6b6b67;--line:#e2e2de}}
-@media (prefers-color-scheme: dark){{:root{{--bg:#121418;--card:#1a1d22;--ink:#eceef0;--muted:#a0a6b0;--line:#2c3038}}}}
-body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}} main{{max-width:1100px;margin:0 auto;padding:28px 16px}}
-.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:20px}}
-.card{{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}}
-.card img{{display:block;width:100%;background:#12161c}} .card div{{padding:10px 14px}} .card span{{color:var(--muted);font-size:13px}}
-</style></head><body><main><h1>{esc(title)}</h1>
-<p style="color:var(--muted)">Observer runs of the Prosper or Perish mod for Europa Universalis V: map videos and progression charts, newest first.</p>
-<div class=grid>{cards}</div></main></body></html>
-"""
+def _noindex(page: str) -> str:
+    """Keep search engines off the preview (the pages stay reachable by link)."""
+    meta = '<meta name="robots" content="noindex">'
+    if 'name="robots"' in page:
+        return page
+    if not re.search(r"<head[\s>]", page, flags=re.IGNORECASE):
+        return meta + page
+    return re.sub(r"(<head(?:\s[^>]*)?>)", lambda m: m.group(1) + meta, page, count=1, flags=re.IGNORECASE)
 
 
-def prepare_publish(
-    report_dir: Path,
-    *,
-    site_repo: str,
-    work_root: Path,
-    keep: int = 5,
-    remote: str | None = None,
-    title: str = "Prosper or Perish runs",
-) -> PublishPlan:
-    """Stage a site checkout with this run added (newest `keep` runs kept); nothing is pushed yet."""
-    report = json.loads((report_dir / "report.json").read_text(encoding="utf-8"))
+def _clone_site(site_repo: str, work_root: Path, remote: str | None) -> tuple[Path, str, str]:
     owner, name = site_repo.split("/", 1)
     remote = remote or f"https://github.com/{site_repo}.git"
     url = f"https://{owner.lower()}.github.io/{name}/"
@@ -800,8 +788,64 @@ def prepare_publish(
     if clone.returncode != 0:
         message = clone.stderr.lower()
         if "not found" in message or "does not exist" in message or "does not appear to be a git repository" in message:
-            raise SystemExit(f"{site_repo} does not exist yet; create it with `ppc report --create-site` (public repository).")
+            raise SystemExit(f"{site_repo} does not exist yet; create it with `ppc publish-wip --create-site` (public repository).")
         raise SystemExit(f"cannot clone {remote}: {clone.stderr.strip()}")
+    return site, remote, url
+
+
+def _published_runs(runs_dir: Path) -> list[dict[str, object]]:
+    runs = []
+    if runs_dir.is_dir():
+        for folder in runs_dir.iterdir():
+            meta = folder / "report.json"
+            if meta.is_file():
+                runs.append(json.loads(meta.read_text(encoding="utf-8")))
+    return sorted(runs, key=lambda r: str(r.get("published_at", "")), reverse=True)
+
+
+def _site_index(runs: list[dict[str, object]], title: str) -> str:
+    esc = html.escape
+    cards = "".join(
+        f"<a class=card href='{esc(str(r['playthrough_id']))}/'>"
+        f"<img loading=lazy src='{esc(str(r['playthrough_id']))}/maps/political.png' alt=''>"
+        f"<div><b>{esc(str(r['name']))}</b><br><span>{r['years'][0]}–{r['years'][1]} · {r['saves']} saves</span></div></a>"
+        for r in runs
+    )
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex"><title>{esc(title)}</title><style>
+:root{{--bg:#f6f6f4;--card:#fcfcfb;--ink:#1d1d1b;--muted:#6b6b67;--line:#e2e2de}}
+@media (prefers-color-scheme: dark){{:root{{--bg:#121418;--card:#1a1d22;--ink:#eceef0;--muted:#a0a6b0;--line:#2c3038}}}}
+body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}} main{{max-width:1100px;margin:0 auto;padding:28px 16px}}
+a{{color:inherit}} .grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:20px}}
+.card{{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}}
+.card img{{display:block;width:100%;background:#12161c}} .card div{{padding:10px 14px}} .card span{{color:var(--muted);font-size:13px}}
+</style></head><body><main><p><a href="../">← Work-in-progress docs</a></p><h1>{esc(title)}</h1>
+<p style="color:var(--muted)">Observer runs of the Prosper or Perish mod for Europa Universalis V: map videos and progression charts, newest first.</p>
+<div class=grid>{cards}</div></main></body></html>
+"""
+
+
+def _placeholder_root(site: Path) -> None:
+    if not (site / "index.html").exists():
+        (site / "index.html").write_text(
+            '<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><title>Prosper or Perish preview</title>'
+            '<p>Work-in-progress docs are not published yet. <a href="runs/">Observer runs</a></p>',
+            encoding="utf-8",
+        )
+
+
+def prepare_publish(
+    report_dir: Path,
+    *,
+    site_repo: str,
+    work_root: Path,
+    keep: int = 5,
+    remote: str | None = None,
+    title: str = "Prosper or Perish runs",
+) -> PublishPlan:
+    """Stage a site checkout with this run added under runs/ (newest `keep` runs kept); nothing is pushed yet."""
+    report = json.loads((report_dir / "report.json").read_text(encoding="utf-8"))
+    site, remote, url = _clone_site(site_repo, work_root, remote)
     runs_dir = site / "runs"
     runs_dir.mkdir(exist_ok=True)
     run_id = str(report["playthrough_id"])
@@ -814,45 +858,107 @@ def prepare_publish(
     # absolute preview image for link unfurls (Discord and other chat apps)
     page = target / "index.html"
     page.write_text(
-        page.read_text(encoding="utf-8").replace(
-            'content="maps/political.png"', f'content="{url}runs/{run_id}/maps/political.png"'
+        _noindex(
+            page.read_text(encoding="utf-8").replace(
+                'content="maps/political.png"', f'content="{url}runs/{run_id}/maps/political.png"'
+            )
         ),
         encoding="utf-8",
     )
-    runs = []
-    for folder in runs_dir.iterdir():
-        meta = folder / "report.json"
-        if meta.is_file():
-            runs.append(json.loads(meta.read_text(encoding="utf-8")))
     # newest first; the run being published always leads
-    runs.sort(key=lambda r: (str(r["playthrough_id"]) == run_id, str(r.get("published_at", ""))), reverse=True)
+    runs = sorted(_published_runs(runs_dir), key=lambda r: str(r["playthrough_id"]) == run_id, reverse=True)
     dropped = [str(r["playthrough_id"]) for r in runs[keep:]]
     for old in dropped:
         shutil.rmtree(runs_dir / old, ignore_errors=True)
     runs = runs[:keep]
-    (site / "index.html").write_text(_site_index(runs, title), encoding="utf-8")
+    (runs_dir / "index.html").write_text(_site_index(runs, title), encoding="utf-8")
+    _placeholder_root(site)
     (site / ".nojekyll").write_text("", encoding="utf-8")
-    return PublishPlan(site=site, remote=remote, url=url, runs=runs, added=run_id, dropped=dropped)
+    message = f"Publish {len(runs)} run(s), newest {run_id}"
+    return PublishPlan(site=site, remote=remote, url=url, runs=runs, added=run_id, dropped=dropped, message=message)
+
+
+def _wip_banner(branch: str, commit: str, dirty: bool, published: str) -> str:
+    esc = html.escape
+    state = " with uncommitted changes" if dirty else ""
+    return (
+        '<div style="background:#fff7e3;border-bottom:1px solid #e6c35c;color:#3a2f10;padding:8px 16px;'
+        'font:14px/1.5 system-ui,sans-serif">'
+        f"<b>Work in progress</b>: {esc(branch)} @ {esc(commit)}{state}, published {esc(published)}. "
+        f'Not a release: the released docs are at <a href="{RELEASED_DOCS_URL}">{RELEASED_DOCS_URL}</a>. '
+        '<a href="runs/">Observer runs →</a></div>'
+    )
+
+
+def prepare_wip(
+    docs_dir: Path,
+    *,
+    site_repo: str,
+    work_root: Path,
+    branch: str,
+    commit: str,
+    dirty: bool,
+    remote: str | None = None,
+) -> PublishPlan:
+    """Stage a site checkout whose root is replaced by a copy of docs/ (runs/ kept); nothing is pushed yet."""
+    site, remote, url = _clone_site(site_repo, work_root, remote)
+    for entry in site.iterdir():
+        if entry.name in {".git", "runs"}:
+            continue
+        if entry.is_dir():
+            shutil.rmtree(entry)
+        else:
+            entry.unlink()
+    for entry in docs_dir.iterdir():
+        if entry.name == "runs":
+            continue
+        target = site / entry.name
+        if entry.is_dir():
+            shutil.copytree(entry, target)
+        else:
+            shutil.copy2(entry, target)
+    for page in site.rglob("*.html"):
+        if "runs" in page.relative_to(site).parts[:1] or ".git" in page.parts:
+            continue
+        text = page.read_text(encoding="utf-8", errors="surrogateescape")
+        text = _noindex(text)
+        if page == site / "index.html":
+            published = datetime.now().strftime("%Y-%m-%d %H:%M")
+            text = re.sub(
+                r"(<body[^>]*>)", lambda m: m.group(1) + _wip_banner(branch, commit, dirty, published),
+                text, count=1, flags=re.IGNORECASE,
+            )
+        page.write_text(text, encoding="utf-8", errors="surrogateescape")
+    (site / "wip.json").write_text(
+        json.dumps({"branch": branch, "commit": commit, "dirty": dirty, "published_at": datetime.now().isoformat()}, indent=2),
+        encoding="utf-8",
+    )
+    (site / ".nojekyll").write_text("", encoding="utf-8")
+    runs = _published_runs(site / "runs")
+    message = f"Publish work-in-progress docs from {branch} @ {commit}{' (dirty)' if dirty else ''}"
+    return PublishPlan(site=site, remote=remote, url=url, runs=runs, added="wip", dropped=[], message=message)
 
 
 def push_publish(plan: PublishPlan) -> None:
-    """One fresh commit (no history, so old videos never pile up) force-pushed to main."""
+    """One fresh commit (no history, so old videos and docs never pile up) force-pushed to main."""
     site = plan.site
     _git(site, "checkout", "--quiet", "--orphan", "publish")
     _git(site, "add", "--all")
     _git(
         site, "-c", "user.name=ppc report", "-c", "user.email=ppc-report@users.noreply.github.com",
-        "commit", "--quiet", "-m", f"Publish {len(plan.runs)} run(s), newest {plan.added}",
+        "commit", "--quiet", "-m", plan.message or f"Publish {plan.added}",
     )
     _git(site, "push", "--quiet", "--force", "origin", "publish:main")
 
 
-def create_site_repo(site_repo: str, *, description: str = "Prosper or Perish observer runs: map videos and charts") -> None:
+def create_site_repo(
+    site_repo: str, *, description: str = "Prosper or Perish work-in-progress preview: docs and observer-run reports"
+) -> None:
     """Create the public GitHub repository with a placeholder page and enable Pages on main (gh CLI)."""
     subprocess.run(["gh", "repo", "create", site_repo, "--public", "--description", description], check=True)
     placeholder = Path(subprocess.run(["mktemp", "-d"], capture_output=True, text=True, check=True).stdout.strip())
     _git(placeholder, "init", "--quiet", "-b", "main")
-    (placeholder / "index.html").write_text("<!doctype html><title>Prosper or Perish runs</title><p>Coming soon.</p>", encoding="utf-8")
+    _placeholder_root(placeholder)
     _git(placeholder, "add", "--all")
     _git(
         placeholder, "-c", "user.name=ppc report", "-c", "user.email=ppc-report@users.noreply.github.com",

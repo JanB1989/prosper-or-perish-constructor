@@ -299,6 +299,11 @@ STATIC_HTML_GRAPH_UPDATE: `uv run ppc savegame` regenerates
 By default this uses the newest `.eu5` save under the EU5 documents save folder. Pass `--save` or
 `--save-dir` to choose a different save.
 
+Saves are parsed by the Rust engine `eu5save` (`../eu5-game-parser/eu5save/`, see its README): about
+1–3 s and ~1 GB per 600 MB save. It needs a Rust toolchain (`rustup`) and, for the Windows build that
+reads saves on the Windows drive natively, `uv tool install cargo-zigbuild`; both builds are rebuilt
+automatically when their sources change. EU5 must write plain-text saves.
+
 Savegame parquet tables are written to:
 
 ```text
@@ -345,7 +350,7 @@ Useful options:
 
 ```bash
 uv run ppc savegame-notebooks build --save-dir /path/to/saves
-uv run ppc savegame-notebooks build --workers 8
+uv run ppc savegame-notebooks build --workers 6   # saves parsed at once (default 4)
 uv run ppc savegame-notebooks build --no-ingest
 uv run ppc savegame-notebooks build --force
 ```

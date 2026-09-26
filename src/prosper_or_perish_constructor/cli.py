@@ -627,24 +627,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "--workers",
         type=int,
         default=4,
-        help="Parallel save parser workers. Defaults to 4.",
+        help="Saves the Rust savegame engine parses at once. Defaults to 4.",
     )
     savegame_notebooks_build.add_argument(
         "--no-ingest",
         action="store_true",
         help="Only rebuild notebook parquet from an existing graphs/dataset.",
-    )
-    savegame_notebooks_build.set_defaults(extended=False)
-    savegame_notebooks_build.add_argument(
-        "--extended",
-        action="store_true",
-        help="Include full slower legacy tables such as population, provinces, and characters.",
-    )
-    savegame_notebooks_build.add_argument(
-        "--no-extended",
-        action="store_false",
-        dest="extended",
-        help=argparse.SUPPRESS,
     )
     savegame_notebooks_build.add_argument(
         "--force",
@@ -3527,7 +3515,6 @@ def _savegame_notebooks_build(
                 _repo_path(repo, args.load_order),
                 "--workers",
                 str(args.workers),
-                *(["--extended"] if args.extended else []),
             ],
             repo,
             env=_native_temp_subprocess_env(repo),

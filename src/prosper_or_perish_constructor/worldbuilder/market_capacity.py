@@ -20,6 +20,7 @@ def write(repo, mod_root):
         "RGO": "Food-producing hinterland",
         "FARMLAND": "Cultivated hinterland",
         "TERRAIN": "Land transport difficulty",
+        "ROADS": "Roads",
     }
 
     def add(label, value):
@@ -80,12 +81,46 @@ def write(repo, mod_root):
             body.append(when("vegetation = farmland", "FARMLAND", spec["farmland"]))
         for terrain, n in cfg["terrain_penalties"].items():
             body.append(when("topography = " + terrain, "TERRAIN", n))
+        if role == "victualling_yard":
+            # Harbour sites only: elsewhere the cap is 0, so the four-yearly cull clears Yards an old save left inland.
+            body.append("if = { limit = { NOT = { pp_victualling_yard_site = yes } } multiply = 0 }")
         body += ["min = 0", f"max = {spec['maximum']}", "floor = yes"]
         lines.append(
             f"{role}_max_level = {{\n " + "\n ".join(body) + "\n}"
         )
+    # The Grange, the Yard's overland twin at province capitals: base, roads, market centre, development.
+    g = cfg["grange"]
+    body = [add("BASE", g["base"])]
+    for n in range(1, int(g["road_max"] / g["per_road"]) + 1):
+        body.append(when(f"num_roads >= {n}", "ROADS", g["per_road"]))
+    body += [
+        when("is_market_center = yes", "MARKET", g["market_center"]),
+        add("DEVELOPMENT", f"development multiply = {g['development']}"),
+        "if = { limit = { OR = { is_province_capital = no pp_victualling_yard_site = yes } } multiply = 0 }",
+        "min = 0",
+        f"max = {g['maximum']}",
+        "floor = yes",
+    ]
+    lines.append("grange_max_level = {\n " + "\n ".join(body) + "\n}")
     path = mod_root / "in_game/common/script_values/pp_victuals_logistics.txt"
     path.write_text("\ufeff" + "\n\n".join(lines) + "\n", encoding="utf-8")
+    # Victualling Yard sites: good harbours on the sea coast (pp_wb_coastal marks the World Builder's sea coast, river
+    # ports excluded) or very good harbours anywhere, never in cold climates. The engine's harbour value includes the
+    # river-mouth bonus, so a great river alone (river size 5 = +0.25) cannot pass the second tier.
+    site = cfg["yard_site"]
+    cold = " ".join(f"climate = {c}" for c in site["cold_climates"])
+    trigger = (
+        "# Generated from config/victuals_logistics.json (yard_site).\n"
+        "pp_victualling_yard_site = {\n"
+        f"\tNOR = {{ {cold} }}\n"
+        "\tOR = {\n"
+        f"\t\tAND = {{ has_location_modifier = pp_wb_coastal modifier:natural_harbor_suitability >= {site['sea_harbor']} }}\n"
+        f"\t\tmodifier:natural_harbor_suitability >= {site['any_harbor']}\n"
+        "\t}\n"
+        "}\n"
+    )
+    trigger_path = mod_root / "in_game/common/scripted_triggers/pp_victuals_site_triggers.txt"
+    trigger_path.write_text("\ufeff" + trigger, encoding="utf-8")
     loc = (
         mod_root / "main_menu/localization/english/pp_victuals_logistics_l_english.yml"
     )

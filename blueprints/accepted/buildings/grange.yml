@@ -1,0 +1,175 @@
+version: 2
+tag: grange
+footprint: trade
+labour:
+  class: keep
+building:
+  key: grange
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_grange_porters
+        - pp_grange_ox_carts
+        - pp_grange_horse_wagons
+    - name: slot_1
+      methods:
+        - pp_grange_surplus_sales
+    - name: slot_2
+      methods:
+        - pp_grange_loose_stores
+        - pp_grange_pottery_jars
+        - pp_grange_coopered_barrels
+        - pp_grange_tin_cans
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    # Steep level cost: most provinces should keep one or two, only market centres grow large.
+    increase_per_level_cost = 0.35
+    max_levels = grange_max_level
+    pop_type = nobles
+    employment_size = 0.001
+    price = pp_grange_price
+    category = consumer_goods_category
+    custom_tags = { pp_food_security_priority pp_food_distribution_priority }
+    icon = grange
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    ai_forbid_shutdown = yes
+    important_for_AI = yes
+    can_close = yes
+    forbidden_for_estates = no
+    AI_ignore_available_worker_flag = yes
+    build_time = 365
+    construction_demand = victuals_trade_construction
+    # The overland twin of the Victualling Yard: the landowners gather the province's surplus at its capital and send it
+    # to the regional markets. Harbour sites have the Victualling Yard instead (pp_victuals_site_triggers.txt).
+    location_potential = {
+      is_province_capital = yes
+      NOT = { pp_victualling_yard_site = yes }
+    }
+
+    # Same food chain as the Victualling Yard: each staffed level takes 60 food (the modifier below) and packs 1.5
+    # victuals, 1:40 against the Tavern's 1:30. slot 0: how the store reaches the market. The three methods pack the
+    # same amount; the carts and wagons swap labour for animals and gear, so they pay only where labour is dear
+    # (at default goods prices: Porters below labour 1.3, Ox Carts 1.3 to 1.55, Horse Wagons above).
+    unique_production_methods = {
+      pp_grange_porters = {
+        produced = victuals
+        manual_labor_cost = 0.2
+        output = 1.5
+        category = building_maintenance
+      }
+      pp_grange_ox_carts = {
+        livestock = 0.04
+        lumber = 0.04
+        manual_labor_cost = 0.1
+        produced = victuals
+        output = 1.5
+        category = building_maintenance
+      }
+      pp_grange_horse_wagons = {
+        horses = 0.03
+        tools = 0.03
+        lumber = 0.02
+        manual_labor_cost = 0.04
+        produced = victuals
+        output = 1.5
+        category = building_maintenance
+      }
+    }
+    # slot 1: surplus sales, the storage leg, as on the Victualling Yard (profit = 1.5p - 30.72 + 2.0 x 8y per level at
+    # floor prices; break-even near 20 months stored).
+    unique_production_methods = {
+      pp_grange_surplus_sales = {
+        produced = province_food_sales
+        offset = 30.52
+        output = 2.0
+        category = building_maintenance
+      }
+    }
+    # slot 2: packing goods, as on the Victualling Yard.
+    unique_production_methods = {
+      pp_grange_loose_stores = {
+        category = building_maintenance
+      }
+      pp_grange_pottery_jars = {
+        pottery = 0.65
+        manual_labor_cost = 0.11
+        produced = victuals
+        output = 0.25
+        debug_max_profit = 0
+        category = building_maintenance
+      }
+      pp_grange_coopered_barrels = {
+        furniture = 0.30
+        manual_labor_cost = 0.16
+        produced = victuals
+        output = 0.35
+        debug_max_profit = 0
+        category = building_maintenance
+      }
+      pp_grange_tin_cans = {
+        steel = 0.26
+        manual_labor_cost = 0.22
+        produced = victuals
+        output = 0.5
+        debug_max_profit = 0
+        category = building_maintenance
+      }
+    }
+
+    raw_modifier = {
+    }
+
+    modifier = {
+      local_monthly_food = -60.0
+      # droop: each staffed level lowers the storage leg a little, so staffing settles instead of flipping
+      local_province_food_sales_output_modifier = -0.2
+      local_nobles_estate_power = 0.05
+      local_peasant_enfranchisment = -0.01
+      local_food_capacity = 1200
+    }
+prices:
+  - key: pp_grange_price
+    body: |2-
+      {gold = 35}
+localization:
+  entries:
+    grange: Grange
+    grange_desc: The landowners gather the lasting part of a full province store at the province capital, pack it into [ShowGoodsName('victuals')|e] and send it overland to the regional markets. It pays off when the province store is full; carts and wagons save labour where it is dear, and packing goods waste less of the food.
+    grange_slot_0: Haulage
+    grange_slot_1: Surplus Sales
+    grange_slot_2: Packing
+    pp_grange_porters: Porters and Pack Animals
+    pp_grange_ox_carts: Ox Carts
+    pp_grange_horse_wagons: Horse Wagons
+    pp_grange_surplus_sales: Sell the Surplus
+    pp_grange_loose_stores: Loose Stores
+    pp_grange_pottery_jars: Pottery Jars
+    pp_grange_coopered_barrels: Coopered Barrels
+    pp_grange_tin_cans: Tin Cans
+    pp_grange_price: Grange Price
+icon:
+  source_png: ../assets/icons/grange.png
+  output_dds: grange.dds
+  size: 512
+  drawing: ../../../assets/icon_drawings/grange/draw.py
+
+evaluation:
+  allow_rules:
+    profit_percent: Province food market transfers intentionally use internal balancing goods.
+    input_throughput: Existing accepted input scale predates the global employment throughput baseline.
+    output_throughput: Existing accepted output scale predates the global employment throughput baseline.
+    amortization_months: Surplus Sales output intentionally breaks normal payback bounds.
+    base_output_per_1k: The packing leg turns stored province food into victuals on one noble per level, not a production line.
+  production_methods:
+    pp_grange_pottery_jars:
+      production_efficiency: 1.00
+    pp_grange_coopered_barrels:
+      production_efficiency: 1.00
+    pp_grange_tin_cans:
+      production_efficiency: 1.00

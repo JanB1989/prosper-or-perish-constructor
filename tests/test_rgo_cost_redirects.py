@@ -85,6 +85,7 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
         "road_wardens_yard": "pp_road_wardens_yard_price",
         "terraces": "pp_terraces_price",
         "victualling_yard": "pp_victualling_yard_price",
+        "grange": "pp_grange_price",
         "tavern": "pp_tavern_price",
 
         "hired_labor_yard": "pp_hired_labor_yard_price",

@@ -37,6 +37,23 @@
     "farmland": 0,
     "maximum": 24
   },
+  "grange": {
+    "base": 1,
+    "per_road": 0.5,
+    "road_max": 3,
+    "market_center": 4,
+    "development": 0.08,
+    "maximum": 12
+  },
+  "yard_site": {
+    "sea_harbor": 0.25,
+    "any_harbor": 0.4,
+    "cold_climates": [
+      "arctic",
+      "ha1300_climate_subarctic",
+      "ha1300_climate_subpolar_oceanic"
+    ]
+  },
   "food_rgos": [
     "wheat",
     "rice",
@@ -59,6 +76,8 @@
     "Tavern coefficients are 1.5x the former 90-food Victualler caps, so a location can still take in the same food at 60 food per level.",
     "The Victualling Yard packs the province store, so its cap rewards water transport and market centres, not the location's own crops or people.",
     "River road state is read from the navigation map variables updated on completion and destruction.",
-    "All coefficients are balance choices; no location is hardcoded as a Tavern or Victualling Yard site."
+    "All coefficients are balance choices; no location is hardcoded as a Tavern or Victualling Yard site.",
+    "Victualling Yard sites (2026-09-26): not a cold climate, and natural harbour suitability >= sea_harbor next to real sea (a water neighbour without the river navigation variable) or >= any_harbor anywhere. The engine's harbour value includes river_flowing_through_coast (+0.05 per river size), river ports count as coastal. Fitted on historic ports vs empty regions: 1,205 sites, 85 of 98 historic hubs.",
+    "The Grange is the overland twin: province capitals that are not Yard sites; its cap grows with roads, market centres and development, and its level cost is steep."
   ]
 }

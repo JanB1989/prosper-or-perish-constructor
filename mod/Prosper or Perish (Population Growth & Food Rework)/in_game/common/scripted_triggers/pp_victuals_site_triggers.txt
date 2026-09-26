@@ -1,0 +1,8 @@
+﻿# Generated from config/victuals_logistics.json (yard_site).
+pp_victualling_yard_site = {
+	NOR = { climate = arctic climate = ha1300_climate_subarctic climate = ha1300_climate_subpolar_oceanic }
+	OR = {
+		AND = { has_location_modifier = pp_wb_coastal modifier:natural_harbor_suitability >= 0.25 }
+		modifier:natural_harbor_suitability >= 0.4
+	}
+}

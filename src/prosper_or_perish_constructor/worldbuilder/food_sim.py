@@ -727,7 +727,7 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
                 if key == "tavern":
                     taverns += n
                     continue
-                if key == "victualling_yard":
+                if key in ("victualling_yard", "grange"):
                     yards += n
                     continue
                 flat += n * mult * sim.numbers.get(key, {}).get("local_monthly_food", 0)

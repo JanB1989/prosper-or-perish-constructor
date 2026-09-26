@@ -312,7 +312,7 @@ megalopolis = 2.3
 pop_demand_scale = 0.305  # observed pop demand vs the goods file's demand_add x demand_multiply (food-check refit on nb.eu5, 2026-09-25; was 0.4)
 # victuals per building level as the market shows them (food-check refits). Cookshops make none since 2026-09-25 (Serve
 # only); the Yard packs 1.5 per level loose and the Tavern buys 2 (the former 90-food Victualler's measured 1.8 x 2/3).
-producers = { victualling_yard = 1.5 }
+producers = { victualling_yard = 1.5, grange = 1.5 }
 consumers = { tavern = 1.2, lumber_mill = 0.3 }
 [worldbuilder.start.province_food]
 # Province Food (the local_food good, 1 food per unit) one staffed level makes on top of its local_monthly_food, as the

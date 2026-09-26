@@ -25,6 +25,17 @@ from .modifiers import setup_modifier_keys
 from .start_rules import Rules, Unresolved, first
 
 
+VANILLA_CLIMATES = {"arctic", "arid", "cold_arid", "continental", "mediterranean", "oceanic", "subtropical", "tropical"}
+
+
+def climate_key(name):
+    """The game's climate key for a World Builder class (the handover writes 'subarctic' for ha1300_climate_subarctic)."""
+    if not name:
+        return None
+    name = str(name)
+    return name if name in VANILLA_CLIMATES or name.startswith("ha1300_climate_") else "ha1300_climate_" + name
+
+
 def setup_counts(path):
     result = defaultdict(Counter)
     if not path.exists():
@@ -297,6 +308,14 @@ class Simulation:
         self.food_model = fm.FoodModelConfig.from_raw((cfg.raw.get("start") or {}).get("food_model"))
         self.victuals_pop_factors = rules.victuals_pop_factors()
         setup_keys = setup_modifier_keys(contract, self.navigation)
+        # The engine's province capitals at game start (config/start_province_capitals.txt, read from a start save):
+        # the setup files do not name them and no rule reproduces the engine's pick.
+        capitals_file = Path(repo or ".") / "config/start_province_capitals.txt"
+        self.province_capitals = (
+            {line.strip() for line in capitals_file.read_text(encoding="utf-8").splitlines() if line.strip() and not line.startswith("#")}
+            if capitals_file.exists()
+            else None
+        )
         for tag, loc in self.locations.items():
             a = self.attrs.get(tag, {})
             target = self.targets.get(tag, {})
@@ -339,6 +358,14 @@ class Simulation:
                 for k, v in summed(rules.statics.get(key)).items():
                     if k != "local_population_capacity":
                         mods[k] += v
+            coastal = bool(loc.get("is_coastal")) or bool(self.neighbors[tag])
+            if level and coastal:
+                # The engine adds river_flowing_through_coast_N (natural harbour +0.05 per river size) to every coastal
+                # location with a river; river ports count as coastal (checked in game on Samara: 0 + 0.25).
+                key = f"river_flowing_through_coast_{level}"
+                static.add(key)
+                for k, v in summed(rules.statics.get(key)).items():
+                    mods[k] += v
             # Fertility, soil, sea coast and lake shore modifiers from the setup: the caps test for them
             # (fertility alone moves field management by 3 levels). Their capacity rows are in the attribute flat.
             for key in setup_keys.get(tag, ()):
@@ -356,7 +383,10 @@ class Simulation:
                 "owner": owners[tag],
                 "is_ownable": True,
                 "has_river": bool(level),
-                "is_coastal": bool(loc.get("is_coastal")) or bool(self.neighbors[tag]),
+                "is_coastal": coastal,
+                "is_province_capital": tag in self.province_capitals if self.province_capitals is not None else False,
+                "num_roads": 0,   # setup roads are not modelled: a lower bound for road-scaled caps
+                "climate": climate_key(a.get("climate") or loc.get("climate")),
                 "is_adjacent_to_lake": str(a.get("is_adjacent_to_lake", "")).lower()
                 == "true",
                 "market_access": 0.0,
@@ -835,7 +865,7 @@ class Simulation:
                     if k == self.TAVERN:
                         taverns += n
                         market_food += flat
-                    elif k == self.YARD:
+                    elif k in self.YARDS:
                         yards += n
                         market_food += flat
                     elif k in serve_keys:
@@ -935,6 +965,13 @@ class Simulation:
     COOKSHOP = "cookshop"
     TAVERN = "tavern"
     YARD = "victualling_yard"
+    GRANGE = "grange"
+    # One producer role, two buildings: the Victualling Yard on harbour sites, the Grange at the other province
+    # capitals. Same food chain per level (the Yard's numbers stand for both).
+    YARDS = (YARD, GRANGE)
+
+    def yard_levels(self, tags):
+        return sum(self.counts[t][k] for t in tags for k in self.YARDS)
 
     def province_capital(self, group):
         """The pool's province capital: the engine's province capital is not in the setup files, so the highest
@@ -1000,7 +1037,7 @@ class Simulation:
                         continue
                     if key == self.TAVERN:
                         imports += n
-                    elif key == self.YARD:
+                    elif key in self.YARDS:
                         pass   # the Yards' victuals follow their pool's surplus (market_victuals_use)
                     elif key in serve_keys:
                         pass   # Cookshops serve every dish as Province Food
@@ -1078,7 +1115,7 @@ class Simulation:
                 continue
             spare = math.floor((fed - eats * target) / per_level + 1.0 - model.yard_min_level_share) - b["yard_levels"]
             if spare > 0:
-                reach = max(self.cap(t, self.YARD) for t in self.groups[group])
+                reach = max(self.cap(t, k) for t in self.groups[group] for k in self.YARDS)
                 out.append((group, spare, (fed - eats) * reach))
         return [(g, n) for g, n, _ in sorted(out, key=lambda x: (-x[2], x[0]))]
 
@@ -1088,19 +1125,21 @@ class Simulation:
             if levels <= 0:
                 break
             want = min(spare, levels)
-            for tag in self.order(self.groups[group], self.YARD):
-                if want <= 0:
-                    break
-                n = self.add(tag, self.YARD, want)
-                want -= n
-                levels -= n
-                placed += n
+            # harbour Yard sites first, then the province capital's Grange
+            for key in self.YARDS:
+                for tag in self.order(self.groups[group], key):
+                    if want <= 0:
+                        break
+                    n = self.add(tag, key, want)
+                    want -= n
+                    levels -= n
+                    placed += n
         return placed
 
     def _place_taverns(self, group, levels):
         """Tavern levels at the province capital first, then at the pool's other locations (never next to a
         Victualling Yard in the same province)."""
-        if levels <= 0 or any(self.counts[t][self.YARD] for t in self.groups[group]):
+        if levels <= 0 or self.yard_levels(self.groups[group]):
             return 0
         capital = self.province_capital(group)
         placed = 0
@@ -1326,7 +1365,7 @@ class Simulation:
             self.city_tavern_minimum["cities"] += 1
             if self.counts[tag][key] >= 1:
                 continue
-            if any(self.counts[t][self.YARD] for t in self.groups[group_for[tag]]):
+            if self.yard_levels(self.groups[group_for[tag]]):
                 self.city_tavern_minimum["packing"].append(tag)   # never both directions in one province
                 continue
             if self.cap(tag, key) < 1:
@@ -1540,6 +1579,8 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
                 "setup_yard_cap": rules.cap(sim.YARD, current),
                 "tavern_levels": sim.counts[tag][sim.TAVERN],
                 "yard_levels": sim.counts[tag][sim.YARD],
+                "grange_cap": rules.cap(sim.GRANGE, {**current, "initializing": False}),
+                "grange_levels": sim.counts[tag][sim.GRANGE],
                 "crop_location": sp.crop_location(sim.locations[tag]),
                 "crop_planned_levels": sum(sim.crop_plan.get(tag, {}).values()),
                 "crop_placed_levels": sum(sim.crop_placed.get(tag, {}).values()),

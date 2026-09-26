@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:victualling_yard:localization
   victualling_yard: "Victualling Yard"
-  victualling_yard_desc: "Packs the lasting part of a full province store into [ShowGoodsName('victuals')|e] for the goods market, as the great yards that provisioned fleets and armies did. It pays off when the province store is full, and packing goods waste less of the food."
+  victualling_yard_desc: "Packs the lasting part of a full province store into [ShowGoodsName('victuals')|e] and ships it out, as the great harbour yards that provisioned fleets did. Only good harbours and the great river ports can hold one; elsewhere the Grange sends the surplus overland. It pays off when the province store is full, and packing goods waste less of the food."
   victualling_yard_slot_0: "Provisions"
   victualling_yard_slot_1: "Surplus Sales"
   victualling_yard_slot_2: "Packing"

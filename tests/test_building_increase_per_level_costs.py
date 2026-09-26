@@ -23,6 +23,7 @@ INTENTIONAL_SOURCE_COST_OVERRIDES = {
     "saffron_kiln_croft": "successor croft keeps the existing tea/coffee-style crop cadence",
     "shoen": "vanilla inject keeps the existing historical estate cadence",
     "tavern": "current accepted import market has zero repeat-cost escalation",
+    "grange": "steep repeat cost so only market centres and developed capitals grow large Granges",
 }
 
 

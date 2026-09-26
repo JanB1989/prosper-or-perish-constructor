@@ -36,7 +36,10 @@ pp_tavern_wanted = {
 		NOT = {
 			any_location_in_province = {
 				any_buildings_in_location = {
-					building_type = building_type:victualling_yard
+					OR = {
+						building_type = building_type:victualling_yard
+						building_type = building_type:grange
+					}
 					is_opened = yes
 				}
 			}

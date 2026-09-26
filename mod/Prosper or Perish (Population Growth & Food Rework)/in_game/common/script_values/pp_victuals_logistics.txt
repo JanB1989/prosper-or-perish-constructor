@@ -43,7 +43,24 @@ victualling_yard_max_level = {
  if = { limit = { location_rank ?= location_rank:town } add = { desc = PP_VM_CAP_RANK value = 1 } }
  if = { limit = { topography = mountains } add = { desc = PP_VM_CAP_TERRAIN value = -2 } }
  if = { limit = { topography = hills } add = { desc = PP_VM_CAP_TERRAIN value = -1 } }
+ if = { limit = { NOT = { pp_victualling_yard_site = yes } } multiply = 0 }
  min = 0
  max = 24
+ floor = yes
+}
+
+grange_max_level = {
+ add = { desc = PP_VM_CAP_BASE value = 1 }
+ if = { limit = { num_roads >= 1 } add = { desc = PP_VM_CAP_ROADS value = 0.5 } }
+ if = { limit = { num_roads >= 2 } add = { desc = PP_VM_CAP_ROADS value = 0.5 } }
+ if = { limit = { num_roads >= 3 } add = { desc = PP_VM_CAP_ROADS value = 0.5 } }
+ if = { limit = { num_roads >= 4 } add = { desc = PP_VM_CAP_ROADS value = 0.5 } }
+ if = { limit = { num_roads >= 5 } add = { desc = PP_VM_CAP_ROADS value = 0.5 } }
+ if = { limit = { num_roads >= 6 } add = { desc = PP_VM_CAP_ROADS value = 0.5 } }
+ if = { limit = { is_market_center = yes } add = { desc = PP_VM_CAP_MARKET value = 4 } }
+ add = { desc = PP_VM_CAP_DEVELOPMENT value = development multiply = 0.08 }
+ if = { limit = { OR = { is_province_capital = no pp_victualling_yard_site = yes } } multiply = 0 }
+ min = 0
+ max = 12
  floor = yes
 }

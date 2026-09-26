@@ -2188,6 +2188,9 @@ def test_capacity_culling_v2_calls_helper_for_each_capacity_building() -> None:
         *((building, f"farm_capacity_max_{building}") for building in LAND_FARM_BUILDINGS),
         *((building, f"fish_capacity_max_{building}") for building in FISH_CAP_BUILDINGS),
         *((building, f"forest_capacity_max_{building}") for building in FOREST_CAP_BUILDINGS),
+        # victuals packing: caps are 0 in the wrong kind of location, so the cull also clears misplaced ones
+        ("victualling_yard", "victualling_yard_max_level"),
+        ("grange", "grange_max_level"),
     ]
 
     effect_entries = {entry.key: entry.value for entry in parse_file(CAPACITY_CULLING_EFFECTS).entries}

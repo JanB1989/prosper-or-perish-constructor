@@ -87,6 +87,10 @@ pp_cull_capacity_buildings_over_max_v2_effect = {
 		pp_cull_capacity_building_above_max = { building = lumber_mill max_level = forest_capacity_max_lumber_mill }
 		pp_cull_capacity_building_above_max = { building = water_sawmill max_level = forest_capacity_max_water_sawmill }
 		pp_cull_capacity_building_above_max = { building = lumber_mill_improved max_level = forest_capacity_max_lumber_mill_improved }
+
+		# Victuals packing
+		pp_cull_capacity_building_above_max = { building = victualling_yard max_level = victualling_yard_max_level }
+		pp_cull_capacity_building_above_max = { building = grange max_level = grange_max_level }
 	}
 }
 

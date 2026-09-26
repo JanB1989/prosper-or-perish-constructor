@@ -165,7 +165,4 @@ evaluation:
     input_throughput: Existing accepted input scale predates the global employment throughput baseline.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline.
     base_output_per_1k: The Yard packs and ships victuals on one burgher per level, not a production line.
-  production_methods:
-    pp_victualling_yard_river_barges:
-      allow_rules:
-        amortization_months: Cheap barges pay back fast once the storage leg is gone (2026-09-26); the margin is deliberate.
+    amortization_months: A cheap harbour house (price 50) that pays back fast once the storage leg is gone (2026-09-26); the margin is deliberate.
